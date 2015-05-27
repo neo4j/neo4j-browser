@@ -1,0 +1,26 @@
+<div id="login-container">
+  Custom Login:
+  <br>
+  <form>
+    <fieldset>
+      <input type="text" name="user" placeholder="email" ng-model="user" ng-disabled="loading" />
+      <br>
+      <input type="password" name="pass" placeholder="password" ng-model="pass" ng-disabled="loading" />
+      <br>
+      <button type="submit" ng-disabled="loading" ng-click="doLogin()">login</button>
+    </fieldset>
+  </form>
+  Custom Signup with Extra Fields:
+  <br>
+  <form>
+    <fieldset>
+      <input type="text" name="user" placeholder="email" ng-model="signup.user" />
+      <br>
+      <input type="password" name="pass" placeholder="password" ng-model="signup.pass" />
+      <br>
+      <input type="text" name="color" placeholder="favorite color" ng-model="signup.favColor" />
+      <br>
+      <button type="submit" ng-click="doSignup()">signup</button>
+    </fieldset>
+  </form>
+</div>

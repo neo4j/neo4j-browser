@@ -1,0 +1,23 @@
+{
+  "name": "auth0-angular-html5mode",
+  "version": "0.0.0",
+  "description": "Auth0-angular-html5mode",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "2.3.1",
+    "express": "~3.3.8",
+    "express-jwt": "0.2.1",
+    "moment": "2.6.0",
+    "tuiter": "0.2.12"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  }
+}
