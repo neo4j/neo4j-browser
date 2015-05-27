@@ -1,0 +1,870 @@
+/*==========  Includes  ==========*/
+@import "animate.less";
+
+/*========= Animated Fast ========*/
+.animated.fast {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+/*==========  Spinner  ==========*/
+.spinner-css{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -2.5em;
+  display:block;
+  width: 5em;
+  font-size: 30px;
+  color: #D0D2D3;
+  border-radius: 2.5em 0 2.5em 2.5em;
+  -webkit-animation: spinner 2s ease-in-out 0s infinite;
+  -moz-animation: spinner 2s ease-in-out 0s infinite;
+  animation: spinner 2s ease-in-out 0s infinite;
+
+  &:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 1.8em;
+    top: 2.5em;
+    left: 1.6em;
+    font-family: "auth0" !important;
+    content: "f";
+  }
+}
+
+@-webkit-keyframes spinner {
+  from {
+    -webkit-transform: rotateY(0deg);
+  }
+  to {
+    -webkit-transform: rotateY(360deg);
+  }
+}
+
+@-moz-keyframes spinner {
+  from {
+    -moz-transform: rotateY(0deg);
+  }
+  to {
+    -moz-transform: rotateY(360deg);
+  }
+}
+
+
+@keyframes spinner {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/*-----  End of Spinner  ------*/
+
+/*==========  Fonts  ==========*/
+
+/*
+ * Auth0Lock icon's font
+ */
+
+@font-face {
+  font-family: "auth0";
+  src: url(data:application/x-font-woff;charset=utf-8;base64,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) format("woff"),
+      url("https://cdn.auth0.com/fonts/widget/fonts/auth0-widget.eot") format("embedded-opentype"),
+      url("https://cdn.auth0.com/fonts/widget/fonts/auth0-widget.ttf") format("truetype"),
+      url("https://cdn.auth0.com/fonts/widget/fonts/auth0-widget.svg#auth0-widget") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+.iconbase {
+  font-family: "auth0" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="a0-icon-"]:before,
+[class*=" a0-icon-"]:before {
+  font-family: "auth0" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-budicon-2:before {
+  content: "d";
+}
+.icon-budicon-3:before {
+  content: "e";
+}
+.icon-budicon-9:before {
+  content: "p";
+}
+.icon-budicon-1:before {
+  content: "g";
+}
+.icon-budicon:before {
+  content: "c";
+}
+.icon-badge:before {
+  content: "a";
+}
+.icon-badge:before {
+  content: "f";
+}
+.icon-budicon-4:before {
+  content: "a";
+}
+.icon-budicon-5:before {
+  content: "b";
+}
+
+
+/*-----  End of Fonts  ------*/
+
+
+.btn-small{
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid #f1f1f1;
+  padding: 4px 10px 4px 11px;
+  margin: 0 5px;
+  border-radius: 100px;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover{
+    background: #f1f1f1;
+  }
+  &:focus{
+    background: #e9e9e9;
+    border-color: #e9e9e9;
+  }
+}
+
+
+/*==========  Panel  ==========*/
+.panel{
+  text-align: center;
+  border-radius: 3px;
+  box-shadow: 0 1px 10px rgba(0,0,0,.4);
+  font-size: 13px;
+  position: relative;
+  color: #4d4d4d;
+  display: block;
+  // overflow: auto;
+  zoom: 1;
+
+  *{
+    font-family: Helvetica, Arial, sans-serif!important;
+  }
+
+  .mode{
+    -webkit-animation-name: fadein;
+    -webkit-animation-duration: .3s;
+    -webkit-animation-iteration-count: once;
+    -webkit-animation-timing-function: ease-in;
+    padding: 0 20px 20px 20px;
+    margin: auto;
+  }
+
+  *, input{
+    font-smoothing: antialiased;
+  }
+
+  h1,h2,h3{
+  }
+
+  a, button{
+    transition: all 0.2s ease;
+    font-weight: bold;
+  }
+
+
+
+  .header{
+    margin-bottom: 0;
+    margin-top: 0;
+    h1{
+      font-size: 24px;
+      font-weight: 100;
+      margin-bottom: 10px;
+    }
+
+  }
+
+  .icon-container {
+    height: 90px;
+
+    .image {
+      margin: auto;
+      display: inline-block;
+      margin-bottom: 10px;
+      margin-top: 20px;
+      &.gravatar img {
+        border-radius: 58px;
+      }
+      img {
+        width: auto;
+        height: 58px;
+      }
+    }
+
+    .avatar{
+      background: #f1f1f1;
+      margin: auto;
+      display: inline-block;
+      margin-bottom: 10px;
+      border-radius: 100%;
+      width: 60px;
+      height: 60px;
+      margin-top: 20px;
+      i{
+        color: #EB5424;
+        font-size: 28px;
+        display: block;
+        padding-top: 16px;
+      }
+    }
+  }
+
+  .footer{
+    margin-top: 0;
+    margin-bottom: 10px;
+    display: block;
+    overflow: hidden;
+
+    .logo{
+      margin-top: 0;
+      display: block;
+      i{
+        color: #EB5424;
+        font-size: 18px;
+      }
+    }
+  }
+
+  .instructions {
+    margin-bottom: 10px;
+    line-height: 18px;
+  }
+
+  .last-time{
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .corporate-credentials {
+    margin-bottom: 10px;
+  }
+
+  /*==========  Forms  ==========*/
+
+  .username, .email {
+    border-bottom: 1px solid #ccc;
+  }
+
+  .password, .repeatPassword{
+    border-top: 1px solid #ccc;
+  }
+
+  .password {
+    border: none;
+  }
+
+  .not-loggedin, .reset {
+    .email {
+      border-top: none;
+    }
+  }
+
+  .sso-notice-container {
+    margin-top: 20px;
+
+    i {
+      position: relative;
+      top: 1px;
+      margin-right: 2px;
+      font-size: 11px;
+
+    }
+    .sso-notice {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+
+    }
+  }
+
+
+  .email, .username, .password, .repeatPassword{
+    .input-box{
+      position: relative;
+      height: 50px;
+
+      i{
+        font-size: 14px;
+        z-index: 1000;
+        top: 18px;
+        left: 16px;
+        position: absolute;
+        color: #999;
+      }
+
+      &.error-input {
+        input, .icon-budicon {
+          color: red;
+        }
+      }
+    }
+
+  }
+
+  .email  input, .username input, .password input, .repeatPassword input{
+    box-sizing: border-box;
+    padding: 16px 10px;
+    padding-left: 40px;
+    border-radius: 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    background: #fff;
+    max-width: 248px;
+    width:100%;
+    &:focus{
+      background: #fff;
+    }
+  }
+
+  input::-webkit-input-placeholder {
+    color: #9da4ad;
+    -webkit-transition: color .2s ease-in;
+  }
+
+  input:-moz-placeholder {
+    color: #9da4ad;
+  }
+
+  input::-moz-placeholder {
+    color: #9da4ad;
+  }
+
+  input:-ms-input-placeholder {
+    color: #9da4ad;
+  }
+
+
+  input:focus::-webkit-input-placeholder {
+    color: #666;
+  }
+
+  input:focus:-moz-placeholder {
+    color: #666;
+  }
+
+  input:focus::-moz-placeholder {
+    color: #666;
+  }
+
+  input:focus:-ms-input-placeholder {
+    color: #666;
+  }
+
+  .inputs{
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .email input{
+    border-bottom: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .username input{
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+
+  .password input{
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+
+  .separator {
+    margin-bottom: 10px;
+    margin-top: 6px;
+    color: #999;
+    font-size: 12px;
+    span{
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+  }
+
+  button.primary{
+    padding: 20px 10px;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    display: block !important;
+    width: 100% !important;
+    float: none;
+    min-width: auto;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    background-color: #16214D;
+    color: white;
+    cursor: pointer;
+    display: block;
+    border-radius: 3px;
+    &:hover {
+      background: #0b1025
+    }
+    &:focus {
+      background: #3e4975;
+    }
+  }
+
+  input[disabled]{
+    background-color: rgb(217, 222, 224);
+  }
+
+  .success{color: green}
+  .error{color: red}
+  .error, .success {margin-bottom: 10px; padding: 0 15px;}
+
+  &.errors{
+    // border-color: red;
+
+    &.errors-global{
+      border-color: red;
+    }
+
+    .error-input{
+
+      i {
+        color: red;
+      }
+
+      span{
+        position: absolute;
+        top: 15px;
+        right: 14px;
+        font-size: 9px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: red;
+        border: 1px solid red;
+        padding: 4px 6px 4px 7px;
+        border-radius: 3px;
+        display: block;
+        z-index: 10000;
+      }
+
+      input{
+        color: red;
+      }
+
+      input::-webkit-input-placeholder {
+        color: red;
+      }
+
+      input:-moz-placeholder {
+        color: red;
+      }
+
+      input::-moz-placeholder {
+        color: red;
+      }
+
+      input:-ms-input-placeholder {
+        color: red;
+      }
+
+    }
+  }
+
+  /*-----  End of forms  ------*/
+
+
+  .close{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: block;
+    cursor: pointer;
+    font-size: 16px;
+    color: #ccc;
+  }
+
+  .close:hover{
+    color: #333;
+  }
+
+
+  /*==========  Footer text  ==========*/
+  .signup-footer small{
+    margin-top: 10px;
+    display: block;
+  }
+
+  .signin-footer small{
+    margin-top: 10px;
+    display: block;
+  }
+
+  .reset-footer small{
+    margin-top: 10px;
+    display: block;
+  }
+
+  /*==========  Password Policy  ==========*/
+
+  .password_policy_arrow {
+    background: #1F242E;
+
+    &:after {
+      top: 100%;
+      left: 18px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-color: rgba(31, 36, 46, 0);
+      border-top-color: #1F242E;
+      border-top-color: rgba(31, 36, 46, 0.95);
+      border-width: 9px;
+      margin-left: -9px;
+    }
+  }
+
+  .password_policy {
+    display: none;
+
+    -webkit-animation-name: fadein;
+    -webkit-animation-duration: .3s;
+    -webkit-animation-iteration-count: once;
+    -webkit-animation-timing-function: ease-in;
+
+    box-sizing: border-box;
+  }
+
+  &.active-pwd-strength {
+    .inputs-wrapper {
+      position: relative;
+    }
+
+    .password_policy {
+      .password_policy_arrow;
+      position: absolute;
+      bottom: 50px;
+      left: 2.5%;
+      width: 95%;
+      display: block;
+      text-align: left;
+      margin-top: 15px;
+      padding: 15px;
+      padding-top: 12px;
+      background: #1F242E;
+      background: rgba(31, 36, 46, 0.95);
+      border-radius: 5px;
+      z-index: 1000;
+
+      li, ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: #dd4b39;
+      }
+
+      ul li ul {
+        li {
+          color: white;
+
+          &:before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border-radius: 7px;
+            border: 2px solid #fff;
+            display: inline-block;
+            top: 7px;
+            left: 2px;
+          }
+
+          &.checked {
+            &:before {
+              top: 3px;
+              left: 0;
+            }
+          }
+        }
+      }
+
+      li {
+        line-height: 1.5;
+        margin-top: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        transition: color .3s ease-in;
+        position: relative;
+        padding-left: 18px;
+      }
+
+      li.checked {
+        color: #7ED321;
+
+        &:before {
+          .iconbase;
+          content: "a";
+          border: 0;
+          width: auto;
+          height: auto;
+          border-radius: 0;
+          font-size: 12px;
+        }
+      }
+
+      li:before {
+        .iconbase;
+        content: "e";
+        margin-right: 10px;
+        font-size: 11px;
+        position: absolute;
+        top: 3px;
+        left: 0;
+        text-transform: none;
+      }
+    }
+
+    #change_password {
+      .password_policy {
+        bottom: 100px;
+      }
+    }
+  }
+
+  /*==========  Forgot Password  ==========*/
+
+  #change_password{
+    .password{
+      margin-bottom: 0;
+      input{
+        // border-bottom: 1px solid #ccc;
+        border-radius: 0;
+      }
+
+    }
+
+    .collapse-reset{
+      .instructions{
+        margin-top: 0;
+        margin-bottom: 20px;
+      }
+    }
+    .reset_easy_password{
+      input{
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+        // border-bottom: 1px solid #ccc;
+      }
+    }
+  }
+  /*-----  End of Forgot Password  ------*/
+
+}
+
+/*-----  End of Panel  ------*/
+
+
+
+
+
+
+
+/*===============================================
+=            No Placeholder Fallback            =
+===============================================*/
+.sad-placeholder{
+  display: none;
+}
+
+.no-placeholder-support{
+  .sad-placeholder{
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin: 14px 0 10px 0;
+  }
+
+  .inputs{
+    border: 0 !important;
+
+    .email, .username, .password, .repeatPassword{border: 0;}
+
+    .input-box{
+      border: 1px solid #ccc;
+
+      input{
+        border: 0 !important;
+      }
+    }
+  }
+}
+
+
+/*=====================================
+=            Cordova                  =
+======================================*/
+.cordova.ios .centrix {
+  padding-top: 20px;
+}
+
+
+/*=====================================
+=            Media Queries            =
+=====================================*/
+
+@media screen and (max-width: 480px) {
+
+  .ie8-overlay{
+    background: none !important;
+  }
+
+  #onestep{
+    transition: none;
+  }
+
+  .panel {
+    &.active-pwd-strength {
+      .emailPassword {
+        position: static;
+      }
+
+      .password_policy {
+        position: static;
+        width: auto;
+        left: auto;
+        top: auto;
+        background: none;
+        padding: 0 15px;
+
+        li.checked {
+          color: #5E9D19;
+        }
+
+        ul li ul {
+          li {
+            color: #3e4975;
+
+            &:before {
+              border-color: #3e4975;
+            }
+          }
+        }
+
+        &:before {
+          display: block;
+          text-transform: uppercase;
+          display: block;
+          margin-bottom: 10px;
+          font-size: 11px;
+          content: "Password Policy:";
+          color: #999;
+        }
+
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .popup{
+
+    .overlay{
+      display: block;
+      overflow: auto;
+      position: absolute;
+      background: white;
+    }
+
+    .centrix{
+      vertical-align: top;
+      display: block;
+      position: static;
+      .panel{
+        box-shadow: none;
+        background: white;
+
+        .mode{
+          padding: 0 20px 20px 20px;
+        }
+        .icon-container {
+          height: 60px;
+          .image{
+            margin-top: 10px;
+            img {
+              height: 40px;
+              width: auto;
+            }
+          }
+          .avatar{
+            margin-top: 10px;
+            width: 40px;
+            height: 40px;
+            i{
+              font-size: 20px;
+              padding-top: 10px;
+            }
+          }
+        }
+        h1{
+          margin-bottom: 10px;
+        }
+
+        #change_password .collapse-reset .instructions{
+          margin-bottom: 10px;
+        }
+
+        .db-actions, .options{
+          margin-top: 20px;
+          font-size: 14px;
+        }
+
+        .footer{
+          margin-top: 40px;
+        }
+
+      }
+    }
+    // .centrix
+  }
+}

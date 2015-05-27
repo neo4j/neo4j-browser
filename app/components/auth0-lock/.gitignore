@@ -1,0 +1,26 @@
+### Node ###
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+
+npm-debug.log
+node_modules
+
+release
+
+# Sourcemaps
+build/auth0-lock-*.js.map
+
+# do not include bundle
+example/auth0.js
+
+.idea

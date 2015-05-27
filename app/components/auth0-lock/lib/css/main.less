@@ -1,0 +1,37 @@
+#lock{
+  // reset and normalize
+  @import "normalize.less";
+  @import "reset.less";
+
+  // Widget styles
+  @import "keyframes.less";
+
+  &.theme-default {
+    @import "zocial.less";
+  }
+
+  @import "common.less";
+
+  &.theme-default {
+    @import "themes/default.less";
+  }
+}
+
+
+
+@media screen and (max-width: 480px) {
+  body.lock-open {
+    & > *{
+      display: none;
+    }
+
+    .lock-container {
+      display: block;
+    }
+  }
+
+  .lock-container {
+    background: white;
+    opacity: 1;
+  }
+}

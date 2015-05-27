@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <script data-main="scripts/config.js" data-require="require.js@2.1.4" data-semver="2.1.4" src="scripts/require.js"></script>
+
+  <title>Sample Angular App with Auth0</title>
+</head>
+
+<body>
+  <div>
+    <div ng-controller="MenuCtrl" ng-controller="MsgCtrl">
+      <a href="" ng-click="go('/')">main</a>
+      <a href="" ng-click="go('/login')">login</a>
+      <a href="" ng-click="go('/logout')">logout</a>
+    </div>
+
+    <div style="margin-top: 10px;">{{message}}</div>
+    <div ng-view>
+    </div>
+  </div>
+
+</body>
+</html>
