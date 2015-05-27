@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+var path = require('path');
+var bump = require('bump');
+
+function run(cmd, done) {
+  var exec = require('child_process').exec;
+  var proc = exec(cmd, done);
+  proc.stdout.pipe(process.stdout);
+  proc.stderr.pipe(process.stderr);
+}
+
+try {
+  var res = bump(path.resolve(__dirname, ".."), process.argv.pop());
+
+  run('git commit -am "release: ' + res.version + '"', function (err) {
+    if (err) {
+      run('git checkout .', function () {
+        process.exit(1);
+      });
+    }
+    process.exit(0);
+  });
+
+} catch (err) {
+  console.error(err.message);
+  process.exit(1);
+}

@@ -1,0 +1,19 @@
+ui: mocha-bdd
+tunnel:
+  type: ngrok
+  authtoken: 5P5swTMSDDRlnMBkBWJt
+  proto: https
+scripts:
+  - "/node_modules/jquery/dist/jquery.min.js"
+  - "/node_modules/expect.js/expect.js"
+  - "/node_modules/bean/bean.min.js"
+  - "/build/auth0-lock.js"
+browsers:
+  - name: chrome
+    version: latest
+  - name: safari
+    version: latest
+  - name: firefox
+    version: latest
+  - name: ie
+    version: 9..latest
