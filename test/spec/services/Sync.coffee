@@ -18,9 +18,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-angular.module('neo4jApp')
-.run([
-  'DefaultContentService'
-  (DefaultContentService) ->
-    DefaultContentService.loadDefaultIfEmpty()
-])
+'use strict'
+
+describe 'Service: Sync', () ->
+  SyncService = {}
+  Storage = {}
+  $rScope = {}
+
+  beforeEach module 'neo4jApp.services'
+  beforeEach inject (_SyncService_, _localStorageService_, $rootScope) ->
+    SyncService = _SyncService_
+    Storage = _localStorageService_
+    $rScope = $rootScope.$new()
+
+    spyOn(Storage, 'get').andCallFake((key) -> [{content: 'hej'}])
+
+  it 'should expose syncKeys', ->
+    expect(JSON.stringify(SyncService.syncKeys)).toBe(JSON.stringify(['documents', 'folders', 'grass']))
+   
+  it 'should get the current data in local storage for syncKeys', ->
+    #res = SyncService.

@@ -18,9 +18,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-angular.module('neo4jApp')
-.run([
-  'DefaultContentService'
-  (DefaultContentService) ->
-    DefaultContentService.loadDefaultIfEmpty()
-])
+'use strict';
+
+angular.module('neo4jApp.directives')
+  .directive('execTopic', ['$rootScope', 'Frame', 'Settings', ($rootScope, Frame, Settings) ->
+    restrict: 'A'
+    link: (scope, element, attrs) ->
+      topic = attrs.execTopic
+      return unless topic
+      element.on 'click', (e) ->
+        e.preventDefault()
+        topic = topic.toLowerCase().trim().replace('-', ' ')
+        Frame.create(input: "#{Settings.cmdchar}#{topic}")
+        $rootScope.$apply() unless $rootScope.$$phase
+  ])

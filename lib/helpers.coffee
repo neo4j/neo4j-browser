@@ -44,6 +44,28 @@ class neo.helpers
     @firstWord = (input) ->
       input.split(/\n| /)[0]
 
+    @equals = (one, two) ->
+      return no unless typeof one is typeof two
+      if typeof one is 'string' and typeof two is 'string'
+        return one is two
+      JSON.stringify(one) is JSON.stringify(two)
+
+    @mergeDocumentArrays = (arr1, arr2) ->
+      [].concat(arr1, arr2)
+        .reduce((tot, curr) -> 
+          return tot if tot.done.indexOf(curr.content) > -1
+          tot.done.push(curr.content)
+          tot.out.push(curr)
+          return tot
+        , {out: [], done: []}).out
+
+    @removeDocumentsFromArray = (toRemove, removeFrom) ->
+      toRemoveContent = toRemove.map((doc) -> doc.content)
+      removeFrom.reduce((out, curr)->
+        return out if toRemoveContent.indexOf(curr.content) > -1
+        out.concat(curr)
+      , [])
+
     @extendDeep = (dst) =>
       that = @
       for index, obj of arguments
@@ -124,3 +146,16 @@ class neo.helpers
       return true if is_enterprise and (not whitelist or whitelist is '*')
       whitelisted_hosts = if is_enterprise then whitelist.split(",") else ['http://guides.neo4j.com', 'https://guides.neo4j.com', 'http://localhost', 'https://localhost']
       hostname in whitelisted_hosts     
+
+    @getBrowserName = ->
+      return 'Opera' if !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
+      return 'Firefox' if typeof InstallTrigger != 'undefined'
+      return 'Safari' if Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+      return 'Chrome' if !!window.chrome
+      return 'Internet Explorer' if !!document.documentMode
+      return 'Edge' if !!window.StyleMedia
+      'Unknown'
+      
+    @getServerHostname = (Settings) ->
+      if Settings.host then Settings.host else location.href
+        

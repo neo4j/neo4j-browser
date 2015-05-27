@@ -335,6 +335,32 @@ angular.module('neo4jApp')
       ]
 
 
+    FrameProvider.interpreters.push
+      type: 'account'
+      templateUrl: 'views/frame-login.html'
+      matches: ["#{cmdchar}login"]
+      exec: ['CurrentUser', '$rootScope', (CurrentUser, $rootScope) ->
+        (input, q) ->
+          CurrentUser.login()
+          .then(->
+            q.resolve(CurrentUser.instance())
+          , ->
+            q.reject("Unable to log in")
+          )
+          q.promise
+      ]
+
+    FrameProvider.interpreters.push
+      type: 'account'
+      templateUrl: 'views/frame-logout.html'
+      matches: ["#{cmdchar}logout"]
+      exec: ['CurrentUser', (CurrentUser) ->
+        (input, q) ->
+          p = CurrentUser.logout()
+          p.then(q.resolve, -> q.reject("Unable to log out"))
+          q.promise
+      ]
+
     # Profile a cypher command
     # FrameProvider.interpreters.push
     #   type: 'cypher'

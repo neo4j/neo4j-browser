@@ -1,0 +1,17 @@
+div(fullscreen)
+  .outer
+    include partials/frame-common-actions
+    .inner
+      .view-result
+        .view-result-graph(ng-if='!frame.hasErrors')
+          .status-bar
+            .status
+              span(ng-show='frame.isLoading') Initated logout...
+              span(ng-show='!frame.isLoading') Logged out
+
+        .view-result-error.result(ng-if='frame.hasErrors')
+          .status-bar.error
+            .status
+              span
+                .icon-warning-sign
+              {{frame.errorText}}

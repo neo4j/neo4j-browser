@@ -32,6 +32,12 @@ Run in development mode::
 This listens on port 9000, serving up static documents, and forwarding other requests to Neo4j on port 7474. 
 Any local changes to the browser code will be applied immediatley by reloading the page.
 
+=== Sync server ===
+To setup a local sync login server go to project root and invoke `node sync-server/server.js`.  
+An express server now started on https://localhost:9001 with self signed TLS certificates.  
+To use this server instead of the remote login server you temporarly need to change the URL 
+in `NTN.coffee` around line 70.
+
 == Feedback ==
 
 * mailto:andreas@neotechnology.com[Andreas Kollegger] - questions or comments? send an email to me

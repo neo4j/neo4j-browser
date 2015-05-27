@@ -1,0 +1,106 @@
+.inner
+  h4.subtitled
+    .sub(ng-if="!currentUser") Neo4j Sync
+    .sub(ng-if="currentUser") {{currentUser.name}}
+      small(ng-if='syncService.inSync && currentUser') Synced&nbsp;
+        span(am-time-ago='syncService.lastSyncedAt')
+      small.error(ng-if='!syncService.inSync && currentUser', ng-click='syncService.push()')
+        a Out of sync
+
+  //- h5(ng-if="currentUser && ConnectionStatusService.isConnected()") Connection credentials
+  //- div(ng-show="currentUser && CurrentUser.isAuthenticated() && !CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id && ConnectionStatusService.isConnected()")
+  //-   p
+  //-     | Current Neo4j connection
+  //-     i is not 
+  //-     | being synced.
+  //-   br
+  //-   button.btn.btn-popup(ng-click="CurrentUser.addCurrentStoreCreds(neo4j.store_id)") Sync credentials
+
+  //- div(ng-show="CurrentUser.isAuthenticated() && CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id && ConnectionStatusService.isConnected()")
+  //-   p
+  //-     | Current Neo4j connection 
+  //-     i is 
+  //-     | being synced.
+  //-   br
+  //-   button.btn.btn-popup(ng-click="CurrentUser.removeCurrentStoreCreds(neo4j.store_id)") Forget credentials
+
+
+  //- h5(ng-if="currentUser") Actions
+  //- div(ng-if="currentUser")
+  //-   p
+  //-     button.btn.btn-popup(ng-click="syncService.push()") Push to overwrite remote &#x25B2;
+  //-   p
+  //-     button.btn.btn-popup(ng-click="syncService.fetch()") Pull to overwrite local &#x25BC;
+
+  h5(ng-if="currentUser") Versions
+  div(ng-if="currentUser")
+    p You have access to the last 5 versions, in case you want to restore to an older version.
+    div(ng-repeat="key in syncService.syncKeys", ng-controller="SyncVersionRestoreKeyCtrl")
+      h6(style="margin-top: 15px") {{key | uppercase}}
+      select.form-control.version-select(ng-options="val.syncedAt as ((val.syncedAt | toYYYYMMDDHis) + ' (' + val.client + ')') for val in ntn_data[key]", 
+        ng-model="pickedTimestamp"
+      )
+        option No saved version available
+      button.btn.btn-popup.restore-button(ng-click="syncService.restoreToVersion(key, pickedTimestamp, removeElementCallback(this))", 
+        ng-show="pickedTimestamp && pickedTimestamp != ntn_data[key][0].syncedAt"
+      ) 
+        | Restore
+      .clearfix
+
+  h5 Manage local data
+  .local-data-holderdiv(ng-if="!currentUser")
+    .local-data-confirm(ng-show="!clearSingleClicked")
+      p
+        | This will clear your favourite scrips, grass, command history etc. locally.
+      div
+        button.btn.btn-popup(ng-click="updateClearSingleClicked(1)") Clear local data &nbsp;
+          i.fa.fa-trash
+    .local-data-confirm(ng-show="clearSingleClicked")
+      div
+        p
+          b WARNING:&nbsp;
+          | This WILL erase your data stored in this web browsers local storage.
+        p
+          | What do you want to do?
+          br
+          span.small (nothing, &nbsp;
+            a(ng-click="updateClearSingleClicked(0)") cancel
+            | )
+      div
+        button.btn.btn-popup.btn-non-destructive(ng-click="signoutAndClearLocalStorage()") Clear local data
+
+  .local-data-holderdiv(ng-if="currentUser")
+    .local-data-confirm(ng-show="!clearSingleClicked")
+      p
+        | This will clear your favourite scrips, grass, command history etc. locally.
+      div
+        button.btn.btn-popup(ng-click="updateClearSingleClicked(1)") Clear local data &nbsp;
+          i.fa.fa-trash
+    .local-data-confirm(ng-show="clearSingleClicked")
+      div
+        p
+          b WARNING:&nbsp;
+          | If you don't sign out from Neo4j Sync first, the sync servers data could be cleared as well.
+          | Your data could be lost.
+        p
+          | What do you want to do?
+          br
+          span.small (nothing, &nbsp;
+            a(ng-click="updateClearSingleClicked(0)") cancel
+            | )
+      div
+        button.btn.btn-popup.btn-non-destructive(ng-click="signoutAndClearLocalStorage()") Sign out + clear
+
+  div(ng-if="currentUser")
+    p &nbsp;
+    p
+      button.btn.btn-popup.btn-destructive(ng-click="CurrentUser.logout(); toggleDrawer('profile') ") Sign out
+
+  div(ng-if="!currentUser")
+    p &nbsp;
+    p With Neo4j Sync you are able to always have fast access to your favorite scripts, styles and database credentials (maybe).
+    button.btn.btn-popup(ng-click="CurrentUser.login()") Sign in to Neo4j Sync
+
+footer
+  p What's this?&nbsp;
+    a(href="http://neo4j.com/neo4j-sync") Learn More

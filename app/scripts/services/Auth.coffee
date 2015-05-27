@@ -86,6 +86,7 @@ angular.module('neo4jApp.services')
                 q.resolve r
               ,
               (r) ->
+                ConnectionStatusService.setConnected no
                 q.reject r
             )
         )

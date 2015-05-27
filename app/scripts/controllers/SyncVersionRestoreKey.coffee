@@ -18,9 +18,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-angular.module('neo4jApp')
-.run([
-  'DefaultContentService'
-  (DefaultContentService) ->
-    DefaultContentService.loadDefaultIfEmpty()
-])
+'use strict'
+
+angular.module('neo4jApp.controllers')
+  .controller 'SyncVersionRestoreKeyCtrl', [
+    '$scope'
+    'SyncService'
+    ($scope, SyncService) ->
+      $scope.removeElementCallback = (el) ->
+        (err, success) ->
+          $scope.pickedTimestamp = 0 unless err
+  ]
