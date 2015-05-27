@@ -1,0 +1,138 @@
+<html>
+<head>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 200
+    }
+    .spinner1 {
+      content: "";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border: solid 30px;
+      border-radius: 5em;
+      border-color: #0099ff transparent #0099ff transparent;
+      animation: spin 1s linear infinite;
+    }
+    .dot:before, .dot:after {
+      content: ".";
+    }
+    .dot {
+      animation: fade 1s linear infinite;
+    }
+    .dot:after {
+      animation: fade 2s linear infinite;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes fade {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    #spinner-wrapper {
+      text-align: center;
+      display: table;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+    #wrap {
+      box-sizing: border-box;
+      display: table-cell;
+      vertical-align: middle;
+    }
+    .item {
+      display: inline-block;
+      padding: 0 5em;
+    }
+  </style>
+  <script src="//cdn.auth0.com/js/lock-7.12.min.js"></script>
+  <script src="//cdn.auth0.com/w2/auth0-6.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      lock.show({
+        closable: false,
+        authParams: { scope: 'openid offline_access'},
+        callbackURL: location.href,
+        responseType: 'token',
+        disableSignupAction: true,
+        icon: 'http://neo4j.com/wp-content/themes/neo4jweb/assets/images/neo4j-logo-2015.png',
+        dict: {
+          signin: {
+            title: 'Sign in'
+          }
+        }
+      });
+    });
+    var lock = new Auth0Lock('OEWOmp34xybu0efvGQ8eM4zNTNUTJJOB', 'neo4j-sync.auth0.com');
+    var userProfile = null;
+    var auth0 = new Auth0({
+      domain:       'neo4j-sync.auth0.com',
+      clientID:     'OEWOmp34xybu0efvGQ8eM4zNTNUTJJOB',
+      callbackURL:  location.href,
+      callbackOnLocationHash: true
+    });
+
+    function getFirebaseToken(id_token, cb) {
+      var options = {
+        id_token: id_token,
+        api: 'firebase'
+      };
+      auth0.getDelegationToken(options, function (err, delegationResult) {
+          cb(delegationResult)
+      });
+    }
+  </script>
+</head>
+<body>
+  <div id="spinner-wrapper">
+    <div id="wrap">
+      <div class="item">
+        <div class="spinner1"></div>
+        <p>Loading<span class="dot">.</span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var hash = lock.parseHash();
+    if (hash) {
+      if (hash.error) {
+        console.log("There was an error logging in", hash.error);
+      } else {
+        lock.getProfile(hash.id_token, function(err, profile) {
+          if(!err) {
+            lock.hide()
+          }
+          window.addEventListener('message',function(event) {
+            getFirebaseToken(hash.id_token, function(res){
+              var mapObj = {
+                profile: profile,
+                data_token: res.id_token,
+                token: hash.id_token,
+                accessToken: hash.access_token,
+                state: hash.state,
+                refreshToken: hash.refresh_token
+              }
+              event.source.postMessage(mapObj, event.origin);  
+            })
+          },false);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

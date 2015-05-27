@@ -51,9 +51,13 @@ div(ng-controller="AuthCtrl")
                 ul.big.undecorated
                   li
                     span.center-tbl-left-col.inline
-                      | You are connected as user:&nbsp;
+                      | You are connected as user&nbsp;
                     code
                       | {{static_user}}
+                    br
+                    span.center-tbl-left-col.inline
+                      | to the server&nbsp;
+                    code {{static_host}}    
                   li
                     p.lead {{policy_message}}
       .view-result.fade(ng-show="password_change_required")

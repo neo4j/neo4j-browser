@@ -53,6 +53,8 @@ p.lead
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
+  &.hero-top
+    margin-top 0em
   p
     margin: 0
   > p.motd-bang
@@ -60,5 +62,13 @@ p.lead
       font-size: 17px
       &:before
         content: "\f071"
+
+
 .box-max
   max-width:320px
+
+.panel-login
+  @extend .hero-unit
+  background-color: #fff
+  border-width: 1px
+  border-color: #ccc

@@ -25,6 +25,10 @@ indent-hover = 22px
       color: #fff
       border-color: #fff
       outline: 0
+  .btn-destructive
+    &:hover
+      border-color: #D43F3A
+      color: #D43F3A
   .droppable
     user-select: none
     ul
@@ -40,6 +44,18 @@ indent-hover = 22px
     padding-bottom: 42px
     h4
       margin: -9px -24px 0
+    .version-select
+      width: 80%
+      display: inline-block
+      font-size: 10px
+    .restore-button
+      display: inline-block
+      margin: 0
+      width: 45px
+      font-size: 10px
+      vertical-align: top
+      height: 35px
+      padding: 0
   p
     line-height: 1.35em
   h3, h4, h5
@@ -62,8 +78,21 @@ indent-hover = 22px
     color: #fff
   h4
     background-color: darken(drawer-color-bg, 15%)
-    line-height: 73px;
-    font-size: 17px;
+    font-size: 17px
+    height: 73px
+    padding-top: 28px
+    small
+      display: none
+      &.error a
+        color: color-error
+    &.subtitled
+      padding-top: 19px
+      small
+        display: block
+        font-size: 11px
+        margin-top: 5px
+      a.create-folder
+        margin-top: 12px
     a.add
       absolute: top -18px right 8px
       font-size: 16px
@@ -289,6 +318,33 @@ indent-hover = 22px
         border-color: #FFF
         color: #FFF
 
+  .local-data-holder
+    position: relative
+    height: 150px
+    .local-data-confirm
+      position: absolute
+      &.ng-hide-add-active
+        display: block !important
+        transition: 0.5s linear all
+      &.ng-hide-remove-active
+        display: block!important
+        transition: 0.5s linear all
+        transition-delay: 0.5s
+      &.ng-hide
+        opacity: 0
+
+  .sync-version-list-item
+    margin-top: 5px
+    padding: 0px 3px 0px 3px
+    position: relative
+    height: 38px
+    &:hover
+      //background-color: #404345
+      color: white
+    button
+      position: absolute
+      top: 2px
+      right: 2px
   hr
     border-top: 1px dashed lighten(drawer-color-border, 10%)
     margin-top: 13px

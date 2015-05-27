@@ -18,9 +18,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-angular.module('neo4jApp')
-.run([
-  'DefaultContentService'
-  (DefaultContentService) ->
-    DefaultContentService.loadDefaultIfEmpty()
-])
+'use strict';
+
+addLeadingZero = (num) ->
+  ('00' + num).slice(-2)
+
+angular.module('neo4jApp.filters')
+  .filter 'toDateString', () ->
+    (input) ->
+      return '' unless input?
+      (new Date(input)).toDateString()
+
+  .filter 'toISOString', () ->
+    (input) ->
+      return '' unless input?
+      (new Date(input)).toISOString()
+
+  .filter 'toYYYYMMDDHis', () ->
+    (input) ->
+      return '' unless input?
+      date = new Date(input)
+      date.getUTCFullYear() + 
+        '-' + addLeadingZero(date.getUTCMonth()) + 
+        '-' + addLeadingZero(date.getUTCDate()) +
+        ' ' + addLeadingZero(date.getUTCHours()) + 
+        ':' + addLeadingZero(date.getUTCMinutes()) + 
+        ':' + addLeadingZero(date.getUTCSeconds()) + 
+        ' UTC'
