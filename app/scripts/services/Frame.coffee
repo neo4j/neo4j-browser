@@ -167,6 +167,10 @@ angular.module('neo4jApp.services')
                 frame.closeAttempts++
             )
 
+          closeWhere: (input) ->
+            rv = @where {input: input}
+            @close(f) for f in rv
+
           createOne: (data = {}) ->
             last = @last()
             return if last?.input == data.input

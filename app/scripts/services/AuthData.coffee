@@ -30,7 +30,9 @@ angular.module('neo4jApp.services')
     cached_credential_timeout = null
     @setAuthData = (authdata) ->
       return unless authdata
-      encoded = $base64.encode(authdata)
+      @setEncodedAuthData $base64.encode(authdata)
+    @setEncodedAuthData = (encoded) ->
+      return unless encoded
       cached_authorization_data = encoded
       if @getPolicies().storeCredentials isnt no
         localStorageService.set('authorization_data', encoded)

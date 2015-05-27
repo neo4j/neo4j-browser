@@ -26,9 +26,10 @@ angular.module('neo4jApp.controllers')
     'AuthService'
     'ConnectionStatusService'
     'Frame'
+    'CurrentUser'
     'Settings'
     '$timeout'
-    ($scope, AuthService, ConnectionStatusService, Frame, Settings, $timeout) ->
+    ($scope, AuthService, ConnectionStatusService, Frame, CurrentUser, Settings, $timeout) ->
       $scope.username = 'neo4j'
       $scope.password = ''
       $scope.current_password = ''
@@ -36,6 +37,7 @@ angular.module('neo4jApp.controllers')
       $scope.static_user = $scope.connection_summary.user
       $scope.static_is_authenticated = $scope.connection_summary.is_connected
       $scope.policy_message = ''
+      $scope.CurrentUser = CurrentUser
 
       setPolicyMessage = ->
         return unless $scope.static_is_authenticated

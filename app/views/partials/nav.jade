@@ -1,18 +1,22 @@
 #nav
   ul.nav.list-group
     li.nav-header(ng-class='{active: showingDrawer("database") }')
-      .cover(ng-click='toggleDrawer("database")', tooltip='Overview', tooltip-placement='bottom')
+      .cover(ng-click='toggleDrawer("database")')
       a Neo4j
         .logo(fancy-logo ng-class='{loading: currentFrame.isLoading}')
           .ball.one
           .ball.two
           .ball.three
-    li(ng-class='{active: showingDrawer("scripts") }', tooltip='Favorites', tooltip-placement='bottom')
+    li(ng-class='{active: showingDrawer("scripts") }')
       a.fa.fa-star(ng-click='toggleDrawer("scripts")')
-    li(ng-class='{active: showingDrawer("info") }', tooltip='Information', tooltip-placement='bottom')
+    li(ng-class='{active: showingDrawer("info") }')
       a.fa.fa-info-circle(ng-click='toggleDrawer("info")')
-  ul.nav.list-group.bottom
+  ul.nav.bottom
+    li.nav-user(ng-class='{active: showingDrawer("profile") }')
+      a(ng-click='toggleDrawer("profile")')
+        .avatar(ng-style='{"background-image": "url("+currentUser.picture+")"}', ng-if='currentUser.picture') &nbsp;
+        i.nf.nf-logo(style="")
     li(ng-class='{active: showingDrawer("preferences") }', tooltip='Configuration', tooltip-placement='top')
-      a.fa.fa-cog(ng-click='toggleDrawer("preferences")')
-    li(ng-class='{active: showingDrawer("credits") }', tooltip='About', tooltip-placement='top')
+      a.fa.fa-cog(ng-click='toggleDrawer("preferences")')    
+    li(ng-class='{active: showingDrawer("credits") }')
       a(ng-click='toggleDrawer("credits")') &#64;

@@ -1,0 +1,74 @@
+.inner
+  h4.subtitled
+    .sub(ng-if="!currentUser") Neo4j Sync
+    .sub(ng-if="currentUser") {{currentUser.name}}
+      small(ng-if='syncService.inSync && currentUser') Synced&nbsp;
+        span(am-time-ago='syncService.lastSyncedAt')
+      small.error(ng-if='!syncService.inSync && currentUser', ng-click='syncService.push()')
+        a Out of sync
+
+  h5(ng-if="currentUser && ConnectionStatusService.isConnected()") Connection credentials
+  div(ng-show="currentUser && CurrentUser.isAuthenticated() && !CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id && ConnectionStatusService.isConnected()")
+    p
+      | Current Neo4j connection
+      i is not
+      | being synced.
+    br
+    button.btn.btn-popup(ng-click="CurrentUser.addCurrentStoreCreds(neo4j.store_id)") Sync credentials
+
+  div(ng-show="CurrentUser.isAuthenticated() && CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id && ConnectionStatusService.isConnected()")
+    p
+      | Current Neo4j connection
+      i is
+      | being synced.
+    br
+    button.btn.btn-popup(ng-click="CurrentUser.removeCurrentStoreCreds(neo4j.store_id)") Forget credentials
+
+
+  h5(ng-if="currentUser") Actions
+  div(ng-if="currentUser")
+    p
+      button.btn.btn-popup(ng-click="syncService.push()") Push to overwrite remote &#x25B2;
+    p
+      button.btn.btn-popup(ng-click="syncService.fetch()") Pull to overwrite local &#x25BC;
+
+  h5 Manage local data
+  .local-data-holder
+    .local-data-confirm(ng-hide="clearSingleClicked")
+      p
+        | This will clear your favourite scrips, grass, command history etc.
+      div
+        button.btn.btn-popup(ng-click="clearSingleClicked = true") Clear local data &nbsp;
+          i.fa.fa-trash
+
+    .local-data-confirm(ng-hide="!clearSingleClicked")
+      div
+        p
+          b WARNING:&nbsp;
+          | If you don't sign out from Neo4j Sync first, the sync servers data will be cleared as well.
+          | Your data will be lost.
+        p
+          | What do you want to do?
+          br
+          span.small (nothing, &nbsp;
+            a(ng-click="clearSingleClicked = false") cancel
+            | )
+
+      div
+        button.btn.btn-popup.btn-non-destructive(ng-click="signoutAndClearLocalStorage()") Sign out + clear
+        button.btn.btn-popup.btn-destructive(ng-click="clearLocalStorage()") Clear + sync
+
+  //- h5(ng-if="currentUser") Sign out
+  div(ng-if="currentUser")
+    p &nbsp;
+    p
+      button.btn.btn-danger(ng-click="CurrentUser.logout(); toggleDrawer('profile') ") Sign out
+
+  //- h5(ng-if="!currentUser") Sign in
+  div(ng-if="!currentUser")
+    p &nbsp;
+    button.btn.btn-popup(ng-click="CurrentUser.login()") Sign in
+
+footer
+  p What's this?&nbsp;
+    a(href="http://neo4j.com/neo4j-sync") Learn More

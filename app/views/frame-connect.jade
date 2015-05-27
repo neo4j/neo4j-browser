@@ -10,31 +10,34 @@ div(ng-controller="AuthCtrl")
                 h3 Connect to Neo4j
                 p.lead
                   | Database access requires an authenticated connection.
-              .details.col-sm-9(ng-hide="static_is_authenticated")
-                .form
-                  .row
-                    .col-sm-5
-                      | Username
-                      br
-                      input.form-control(type='text', on-enter="focus", on-enter-target-id="connect_password", focus-on="1", ng-model="username", style="margin: 0")
-                      br
-                  .row
-                    .col-sm-5
-                      | Password
-                      br
+                p.lead Just installed? Use the default username/password:
+                  b neo4j
+                  | /
+                  b neo4j
+                  | . Then follow instructions to change the password. That'll complete the installation process.
+              .details.col-sm-4(ng-hide="static_is_authenticated").panel.panel-default
+                .panel-body
+                  .form
+                    .form-group
+                      label(for="username") Username
+                      input.form-control(id="username", type='text', on-enter="focus", on-enter-target-id="connect_password", focus-on="1", ng-model="username", style="margin: 0")
+                    .form-group
+                      label(for="password") Password
                       input.form-control(id="connect_password", on-enter="click", on-enter-target-id="connect_button", type='password', ng-model="password", style="margin: 0")
-                      br
+                    button.btn.btn-default.btn-primary(id="connect_button", ng-click="authenticate()", style="margin: 0") Connect
+                  hr
                   .row.form-info
-                    .col-sm-5
-                      | Default username/password:&nbsp;
-                      b neo4j
-                      /
-                      b neo4j
-                  .row
-                    .col-sm-5
-                      br
-                      button.btn.btn-default(id="connect_button", ng-click="authenticate()", style="margin: 0") Connect
-            .section.row-fluid.summary(ng-if="static_is_authenticated && !password_change_required && !static_user")
+                    .col-sm-10
+                      p.help-block Default:&nbsp;
+                        b neo4j
+                        /
+                        b neo4j
+
+              .details.col-sm-4(ng-hide="CurrentUser.isAuthenticated()")
+                include partials/arc-login
+              .details.col-sm-4(ng-show="CurrentUser.isAuthenticated()")
+                include partials/arc-loggedin
+            .section.row-fluid.summary.panel.panel-login(ng-if="static_is_authenticated && !password_change_required && !static_user")
               .summary.col-sm-3
                 h3 Connection to Neo4j
                 p.lead
@@ -46,16 +49,27 @@ div(ng-controller="AuthCtrl")
                 h3 Connected to Neo4j
                 p.lead
                   | Nice to meet you.
-              .details.col-sm-9
-                p
-                ul.big.undecorated
-                  li
-                    span.center-tbl-left-col.inline
-                      | You are connected as user:&nbsp;
-                    code
-                      | {{static_user}}
-                  li
-                    p.lead {{policy_message}}
+              .details.col-sm-4.panel.panel-default
+                .panel-body
+                  h4 Connected
+                  ul.big.undecorated
+                    li
+                      span.center-tbl-left-col.inline
+                        | Username:&nbsp;
+                      code
+                        | {{static_user}}
+                    li
+                      p.lead {{policy_message}}
+                //p(ng-show="CurrentUser.isAuthenticated() && !CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id", style="margin-top: 10px") This Neo4j stores credentials is not synced with Neo4j Arc.
+                  br
+                  button.btn.btn-default(ng-click="CurrentUser.addCurrentStoreCreds(neo4j.store_id)", style="margin-top: 10px") Sync with Neo4j Arc
+                //p(ng-show="CurrentUser.isAuthenticated() && CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id", style="margin-top: 10px") This Neo4j stores credentials is synced with Neo4j Arc.
+
+                  button.btn.btn-default(ng-click="CurrentUser.removeCurrentStoreCreds(neo4j.store_id)", style="margin-top: 10px") Remove from Neo4j Arc
+              .details.col-sm-4(ng-hide="CurrentUser.isAuthenticated()")
+                include partials/arc-login
+              .details.col-sm-4(ng-show="CurrentUser.isAuthenticated()")
+                include partials/arc-loggedin
       .view-result.fade(ng-show="password_change_required")
         include partials/frame-change-password
       .status-bar(ng-class='{error: frame.detailedErrorText, loading: frame.isLoading}')

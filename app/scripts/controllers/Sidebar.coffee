@@ -28,7 +28,9 @@ angular.module('neo4jApp.controllers')
     'Frame'
     'Folder'
     'GraphStyle'
-    ($scope, Document, Editor, Frame, Folder, GraphStyle) ->
+    'SyncService'
+    'CurrentUser'
+    ($scope, Document, Editor, Frame, Folder, GraphStyle, SyncService, CurrentUser) ->
       ###*
        * Local methods
       ###
@@ -40,6 +42,19 @@ angular.module('neo4jApp.controllers')
       ###*
        * Scope methods
       ###
+
+      $scope.clearSingleClicked = no
+
+      $scope.signoutAndClearLocalStorage = ->
+        CurrentUser.logout().then(->
+          $scope.clearLocalStorage()
+          $scope.clearSingleClicked = no
+        )
+
+      $scope.clearLocalStorage = ->
+        CurrentUser.clear()
+        $scope.clearSingleClicked = no
+
       $scope.removeFolder = (folder) ->
         return unless confirm("Are you sure you want to delete the folder?")
         Folder.destroy(folder)
@@ -108,7 +123,11 @@ angular.module('neo4jApp.controllers')
 
       $scope.folders = nestedFolderStructure()
 
-      $scope.$on 'localStorage:updated', ->
+      $scope.$on 'LocalStorageModule.notification.setitem', (evt, item) ->
+        # Reload folders and documents
+        return unless item.key in ['documents', 'folders']
+        Folder.fetch()
+        Document.fetch()
         $scope.folders = nestedFolderStructure()
 
       # Expose editor service to be able to play saved scripts
@@ -122,4 +141,5 @@ angular.module('neo4jApp.controllers')
         query.replace(/<token>/g, escapedToken)
 
       $scope.folderService = Folder
+      $scope.syncService = SyncService
   ]
