@@ -54,6 +54,9 @@ div(ng-controller="CypherResultCtrl", fullscreen)
                         .close-notification
                           a.fa.fa-times-circle(ng-click="close(notification); $event.stopPropagation();")
               .graph-contents
+                .zoom-holder(ng-show='isFullScreen()')
+                  button.zoom_in +
+                  button.zoom_out -
                 svg.graph(neo-graph
                   graph-data='frame.response.graph'
                   on-item-click='onItemClick($item, "graphItem")'
