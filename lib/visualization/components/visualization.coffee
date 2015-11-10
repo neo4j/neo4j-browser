@@ -65,11 +65,31 @@ neo.viz = (el, measureSize, graph, layout, style) ->
   onRelMouseOver = (rel) -> viz.trigger('relMouseOver', rel)
   onRelMouseOut = (rel) -> viz.trigger('relMouseOut', rel)
 
-  panned = ->
-    panning = yes
-    container.attr("transform", "translate(" + d3.event.translate + ")scale(1)")
+  zoomed = ->
+    viz.update() #This triggers the `wobble` effect of nodes between zoom levels
+    container.attr("transform", "translate(" + zoomBehavior.translate() + ")" + "scale(" + zoomBehavior.scale() + ")")
 
-  zoomBehavior = d3.behavior.zoom().on("zoom", panned)
+  zoomBehavior = d3.behavior.zoom().scaleExtent([0.6, 5]).on("zoom", zoomed)
+  currentZoom = zoomBehavior.scale()
+
+  zoomClick = ->
+    panning = yes
+    d3.event.preventDefault
+
+    direction = if this.className is 'zoom_in' then 1 else -1
+    currentZoom = zoomBehavior.scale() * (1 + 0.2 * direction);
+    if currentZoom < zoomBehavior.scaleExtent()[0] or currentZoom > zoomBehavior.scaleExtent()[1] then return false
+
+    interpolateZoom(zoomBehavior.translate(), currentZoom)
+
+  interpolateZoom = (translate, scale) ->
+    d3.transition().duration(500).tween("zoom", ->
+      t = d3.interpolate(zoomBehavior.translate(), translate)
+      s = d3.interpolate(zoomBehavior.scale(), scale)
+      (a)->
+        zoomBehavior.scale(s(a)).translate(t(a))
+        zoomed())
+
 
   # Background click event
   # Check if panning is ongoing
@@ -229,5 +249,7 @@ neo.viz = (el, measureSize, graph, layout, style) ->
   clickHandler = neo.utils.clickHandler()
   clickHandler.on 'click', onNodeClick
   clickHandler.on 'dblclick', onNodeDblClick
+
+  d3.selectAll('button').on('click', zoomClick);
 
   viz

@@ -40,6 +40,8 @@ angular.module('neo4jApp.directives')
     controller: ['$scope', ($scope) ->
       $scope.toggleFullscreen = (state = !$scope.fullscreen) ->
         $scope.fullscreen = state
+      $scope.isFullScreen = ->
+        $scope.fullscreen
     ]
     link: (scope, element, attrs) ->
       parent = element.parent()
