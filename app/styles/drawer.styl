@@ -25,6 +25,10 @@ indent-hover = 22px
       color: #fff
       border-color: #fff
       outline: 0
+  .btn-destructive
+    &:hover
+      border-color: #D43F3A
+      color: #D43F3A
   .droppable
     user-select: none
     ul
@@ -62,8 +66,21 @@ indent-hover = 22px
     color: #fff
   h4
     background-color: darken(drawer-color-bg, 15%)
-    line-height: 73px;
-    font-size: 17px;
+    font-size: 17px
+    height: 73px
+    padding-top: 28px
+    small
+      display: none
+      &.error a
+        color: color-error
+    &.subtitled
+      padding-top: 19px
+      small
+        display: block
+        font-size: 11px
+        margin-top: 5px
+      a.create-folder
+        margin-top: 12px
     a.add
       absolute: top -18px right 8px
       font-size: 16px
@@ -288,6 +305,21 @@ indent-hover = 22px
       &:hover
         border-color: #FFF
         color: #FFF
+
+  .local-data-holder
+    position: relative
+    height: 150px
+    .local-data-confirm
+      position: absolute
+      &.ng-hide-add-active
+        display: block !important
+        transition: 0.5s linear all
+      &.ng-hide-remove-active
+        display: block!important
+        transition: 0.5s linear all
+        transition-delay: 0.5s
+      &.ng-hide
+        opacity: 0
 
   hr
     border-top: 1px dashed lighten(drawer-color-border, 10%)

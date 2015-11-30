@@ -28,24 +28,27 @@ angular.module('neo4jApp.controllers')
       'Server'
       'Frame'
       'AuthService'
+      'AuthDataService'
       'ConnectionStatusService'
       'Settings'
       'motdService'
       'UsageDataCollectionService'
       'Utils'
-      ($scope, $window, Server, Frame, AuthService, ConnectionStatusService, Settings, motdService, UDC, Utils) ->
+      'CurrentUser'
+      ($scope, $window, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, motdService, UDC, Utils, CurrentUser) ->
+        $scope.CurrentUser = CurrentUser
+        $scope.ConnectionStatusService = ConnectionStatusService
+
         $scope.kernel = {}
         $scope.refresh = ->
           return '' if $scope.unauthorized || $scope.offline
-
           $scope.labels = Server.labels $scope.labels
           $scope.relationships = Server.relationships $scope.relationships
           $scope.propertyKeys = Server.propertyKeys $scope.propertyKeys
           $scope.server = Server.info $scope.server
           $scope.version = Server.version $scope.version
           $scope.host = $window.location.host
-
-          # gather info from jmx
+          fetchJMX()
           Server.jmx(
             [
               "org.neo4j:instance=kernel#0,name=Configuration"
@@ -113,21 +116,62 @@ angular.module('neo4jApp.controllers')
           $scope.check()
           if is_connected
             ConnectionStatusService.setSessionStartTimer new Date()
+        fetchJMX = ->
+          Server.jmx(
+            [
+              "org.neo4j:instance=kernel#0,name=Configuration"
+              "org.neo4j:instance=kernel#0,name=Kernel"
+              "org.neo4j:instance=kernel#0,name=Store file sizes"
+            ]).success((response) ->
+            for r in response
+              for a in r.attributes
+                $scope.kernel[a.name] = a.value
+            UDC.set('store_id',   $scope.kernel['StoreId'])
+            UDC.set('neo4j_version', $scope.server.neo4j_version)
+          ).error((r)-> $scope.kernel = {})
+            
+        fetchServerInfo = ->
+          Server.get('/db/manage/server/storeid/').success((response) ->
+            $scope.neo4j.store_id = response.storeid
+          )
+        fetchServerInfo()
 
-        # Authorization
-        AuthService.hasValidAuthorization().then(
-          ->
-            Frame.create({input:"#{Settings.initCmd}"})
-          ,
-          (r) ->
-            if r.status is 404
+        pickFirstFrame = (ls_setup = no) ->
+          CurrentUser.autoLogin()
+          AuthService.hasValidAuthorization().then(
+            ->
+              Frame.closeWhere "#{Settings.cmdchar}server connect"
               Frame.create({input:"#{Settings.initCmd}"})
-            else
-              $scope.$emit 'auth:disconnected'
-        )
+            ,
+            (r) ->
+              if r.status is 404
+                Frame.closeWhere "#{Settings.cmdchar}server connect"
+                Frame.create({input:"#{Settings.initCmd}"})
+              else
+                if !ls_setup and CurrentUser.isAuthenticated()
+                  tryAutoConnect()
+                  return
+                Frame.createOne({input:"#{Settings.cmdchar}server connect"})
+          )
+        pickFirstFrame()
+
+        tryAutoConnect = ->
+          fetchServerInfo().then( ->
+            store_creds = CurrentUser.getCurrentStoreCreds $scope.neo4j.store_id
+            return Frame.createOne({input:"#{Settings.cmdchar}server connect"}) unless store_creds.creds
+            AuthDataService.setEncodedAuthData store_creds.creds
+            AuthService.hasValidAuthorization().catch(->
+              CurrentUser.removeCurrentStoreCreds $scope.neo4j.store_id
+            ).finally(-> pickFirstFrame yes)
+          ,->
+            Frame.createOne({input:"#{Settings.cmdchar}server connect"})
+          )
 
         $scope.$on 'auth:disconnected', ->
           Frame.createOne({input:"#{Settings.cmdchar}server connect"})
+        $scope.$on 'ntn:data_loaded', (evt, authenticated) ->
+          return if ConnectionStatusService.isConnected()
+          tryAutoConnect()
 
         $scope.$watch 'version', (val) ->
           return '' if not val
@@ -144,7 +188,8 @@ angular.module('neo4jApp.controllers')
   .run([
     '$rootScope'
     'Editor'
-    ($scope, Editor) ->
+    'SyncService'
+    ($scope, Editor, SyncService) ->
       $scope.unauthorized = yes
       # everything should be assembled
       # Editor.setContent(":play intro")

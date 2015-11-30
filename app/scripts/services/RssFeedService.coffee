@@ -30,7 +30,7 @@ class RssFeedService
 
       $http.jsonp(apiUrl)
       .error (results) ->
-        return results
+        results
       .then (response) ->
         return [] unless response.data
         response.data

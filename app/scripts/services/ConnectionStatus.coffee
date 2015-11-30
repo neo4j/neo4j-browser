@@ -84,6 +84,7 @@ angular.module('neo4jApp.services')
       if old_connection != is_connected
         $rootScope.$emit 'auth:status_updated', is_connected
       $rootScope.$emit 'auth:disconnected' unless is_connected
+      @setConnectedUser @plainConnectionAuthData()[0] if is_connected
 
     @isConnected = ->
       return @is_connected

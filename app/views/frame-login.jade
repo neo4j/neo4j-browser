@@ -1,0 +1,19 @@
+div(fullscreen)
+  .outer
+    include partials/frame-common-actions
+    .inner
+      .view-result
+        pre(output-raw = "frame.response", ng-hide="frame.hasErrors")
+        pre(output-raw = "data", ng-hide="frame.hasErrors")
+      .status-bar
+        .status(ng-hide='frame.isLoading')
+          span(ng-show='frame.hasErrors')
+            .fa.fa-exclamation-triangle.icon-warning-sign &nbsp;
+            {{frame.errorText}}
+          div(ng-hide='frame.hasErrors')
+            div(ng-show='frame.response')
+              .fa.fa-ok
+              | Logged in as {{frame.response.name}} ({{frame.response.identities[0].provider}})
+        span(ng-show='frame.isLoading')
+          .fa.fa-spinner.fa-spin
+          | Initated login...

@@ -1,0 +1,12 @@
+{
+  "name": "auth0-angular-sample",
+  "description": "Server part of an Angular App that uses Auth0.",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "express-jwt": "*",
+    "xtend": "~2.1.2",
+    "cors": "~2.2.0"
+  }
+}

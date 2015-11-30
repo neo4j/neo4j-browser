@@ -225,6 +225,12 @@ angular.module('neo4jApp.services')
       # Import/export
       #
 
+      reloadFromStorage: ->
+        try
+          @loadRules(@storage?.get('grass'))
+        catch e
+          return
+
       importGrass: (string) ->
         try
           rules = @parse(string)
@@ -317,7 +323,7 @@ angular.module('neo4jApp.services')
       defaultArrayWidths: -> provider.defaultArrayWidths
       defaultColors: -> angular.copy(provider.defaultColors)
       interpolate: (str, item) ->
-        ips = str.replace( #Caption from user set properties as {property} 
+        ips = str.replace( #Caption from user set properties as {property}
           /\{([^{}]*)\}/g,
           (a, b) ->
             r = item.propertyMap[b]
@@ -325,7 +331,7 @@ angular.module('neo4jApp.services')
               r = r.join(', ')
             return if (typeof r is 'string' or typeof r is 'number') then r else ''
         )
-        
+
         #Backwards compability
         ips = '<type>' if ips.length < 1 and str == "{type}" and item.isRelationship
         ips = '<id>' if ips.length < 1 and str == "{id}" and item.isNode

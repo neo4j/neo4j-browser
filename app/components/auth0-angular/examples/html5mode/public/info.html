@@ -1,0 +1,11 @@
+<div class="logged-in-box auth0-box">
+  <img ng-src="{{auth.profile.picture}}" class="avatar"/>
+  <h3>Welcome {{auth.profile.name}}</h3>
+
+  <div class="profile-info row">
+      <div class="profile-info-label col-xs-6">Nickname</div>
+      <div class="profile-info-content col-xs-6">{{auth.profile.nickname}}</div>
+  </div>
+
+  <a href="" ng-click="logout()">Logout</a>
+</div>

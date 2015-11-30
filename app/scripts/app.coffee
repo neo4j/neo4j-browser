@@ -42,6 +42,17 @@ app = angular.module('neo4jApp', [
   'ui.bootstrap.carousel'
   'ui.codemirror'
   'ui.sortable'
-  #'angularMoment'
+  'angularMoment'
   'ngSanitize'
+  'auth0'
+  'angular-jwt'
+  'firebase'
 ])
+.config((authProvider) ->
+  authProvider.init(
+    domain: 'hanelabs.auth0.com'
+    clientID: 'lWhypa70vXqCjkVTIqv58yhbBxAngljr'
+  )
+).run((auth) ->
+  auth.hookEvents()
+)
