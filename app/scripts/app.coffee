@@ -47,6 +47,7 @@ app = angular.module('neo4jApp', [
   'auth0'
   'angular-jwt'
   'firebase'
+  'ui.bootstrap-slider'
 ])
 .config((authProvider) ->
   authProvider.init(
