@@ -58,7 +58,7 @@ angular.module('neo4jApp.services')
           tmp = item.map((subitem) ->
             if Array.isArray subitem
               subitem = '[' + subitem.join(", ") + ']'
-            if typeof subitem in ['number', 'string']
+            if typeof subitem in ['number', 'string'] or subitem is null
               return {'-': subitem }
             return subitem
           )
@@ -137,6 +137,8 @@ angular.module('neo4jApp.services')
               line_data[line_number].push @pad('', col.width)
             else
               line_prefix = if keys[line_number].charAt(0) is '-' then '' else "#{keys[line_number]}: "
+              data_column[keys[line_number]] = '(null)' if data_column[keys[line_number]] is null
+              data_column[keys[line_number]] = '(empty)' if data_column[keys[line_number]].length + line_prefix.length is 0
               line_data[line_number].push @pad("#{line_prefix}#{data_column[keys[line_number]]}", col.width)
           lines.push '|' + line_data[line_number].join('|') + '|'
           line_number++
