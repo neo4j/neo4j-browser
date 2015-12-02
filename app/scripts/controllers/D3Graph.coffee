@@ -32,8 +32,7 @@ angular.module('neo4jApp.controllers')
     'CircularLayout'
     'GraphExplorer'
     'GraphStyle'
-    'CypherGraphModel'
-    ($attrs, $element, $parse, $window, $rootScope, $scope, $interval, CircularLayout, GraphExplorer, GraphStyle, CypherGraphModel) ->
+    ($attrs, $element, $parse, $window, $rootScope, $scope, $interval, CircularLayout, GraphExplorer, GraphStyle) ->
       graphView = null
       @getGraphView = -> return graphView
 
