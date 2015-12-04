@@ -40,16 +40,20 @@ neo.viz = (el, measureSize, graph, layout, style) ->
 
   # This flags that a panning is ongoing and won't trigger
   # 'canvasClick' event when panning ends.
-  panning = no
+  draw = no
 
   # Arbitrary dimension used to keep force layout aligned with
   # the centre of the svg view-port.
   layoutDimension = 200
 
+  updateViz = yes
+
   # To be overridden
   viz.trigger = (event, args...) ->
 
-  onNodeClick = (node) => viz.trigger('nodeClicked', node)
+  onNodeClick = (node) =>
+    updateViz = no
+    viz.trigger('nodeClicked', node)
 
   onNodeDblClick = (node) => viz.trigger('nodeDblClicked', node)
 
@@ -57,6 +61,7 @@ neo.viz = (el, measureSize, graph, layout, style) ->
 
   onRelationshipClick = (relationship) =>
     d3.event.stopPropagation()
+    updateViz = no
     viz.trigger('relationshipClicked', relationship)
 
   onNodeMouseOver = (node) -> viz.trigger('nodeMouseOver', node)
@@ -65,22 +70,63 @@ neo.viz = (el, measureSize, graph, layout, style) ->
   onRelMouseOver = (rel) -> viz.trigger('relMouseOver', rel)
   onRelMouseOut = (rel) -> viz.trigger('relMouseOut', rel)
 
-  panned = ->
-    panning = yes
-    container.attr("transform", "translate(" + d3.event.translate + ")scale(1)")
+  zoomLevel = null
 
-  zoomBehavior = d3.behavior.zoom().on("zoom", panned)
+  zoomed = ->
+    draw = yes
+    container.attr("transform", "translate(" + zoomBehavior.translate() + ")" + "scale(" + zoomBehavior.scale() + ")")
+
+  zoomBehavior = d3.behavior.zoom().scaleExtent([0.2, 1]).on("zoom", zoomed)
+
+  interpolateZoom = (translate, scale) ->
+    d3.transition().duration(500).tween("zoom", ->
+      t = d3.interpolate(zoomBehavior.translate(), translate)
+      s = d3.interpolate(zoomBehavior.scale(), scale)
+      (a)->
+        zoomBehavior.scale(s(a)).translate(t(a))
+        zoomed())
+
+  isZoomingIn = true
+
+  zoomInClick = ->
+    isZoomingIn = true
+    zoomClick this
+
+  zoomOutClick = ->
+    isZoomingIn = false
+    zoomClick this
+
+  zoomClick = (element) ->
+    draw = yes
+    d3.event.preventDefault
+    d3.select(element.parentNode).selectAll("button").classed('faded', false)
+
+    if isZoomingIn
+      zoomLevel = Number (zoomBehavior.scale() * (1 + 0.2 * 1)).toFixed(2)
+      if zoomLevel >= zoomBehavior.scaleExtent()[1]
+        d3.select(element).classed("faded", true)
+        interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[1])
+      else
+        interpolateZoom(zoomBehavior.translate(), zoomLevel)
+
+    else
+      zoomLevel = Number (zoomBehavior.scale() * (1 + 0.2 * -1)).toFixed(2)
+      if zoomLevel <= zoomBehavior.scaleExtent()[0]
+        d3.select(element).classed("faded", true)
+        interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[0])
+      else
+        interpolateZoom(zoomBehavior.translate(), zoomLevel)
 
   # Background click event
   # Check if panning is ongoing
   rect.on('click', ->
-    if not panning then viz.trigger('canvasClicked', el)
+    if not draw then viz.trigger('canvasClicked', el)
   )
 
   base_group.call(zoomBehavior)
       .on("dblclick.zoom", null)
       #Single click is not panning
-      .on("click.zoom", -> panning = no)
+      .on("click.zoom", -> draw = no)
       .on("DOMMouseScroll.zoom", null)
       .on("wheel.zoom", null)
       .on("mousewheel.zoom", null)
@@ -212,10 +258,13 @@ neo.viz = (el, measureSize, graph, layout, style) ->
 
     nodeGroups.exit().remove();
 
-    force.update(graph, [layoutDimension, layoutDimension])
+    if updateViz
+      force.update(graph, [layoutDimension, layoutDimension])
 
-    viz.resize()
-    viz.trigger('updated')
+      viz.resize()
+      viz.trigger('updated')
+
+    updateViz = yes
 
   viz.resize = ->
     size = measureSize()
@@ -229,5 +278,8 @@ neo.viz = (el, measureSize, graph, layout, style) ->
   clickHandler = neo.utils.clickHandler()
   clickHandler.on 'click', onNodeClick
   clickHandler.on 'dblclick', onNodeDblClick
+
+  d3.select(root.node().parentNode).select('button.zoom_in').on('click', zoomInClick)
+  d3.select(root.node().parentNode).select('button.zoom_out').on('click', zoomOutClick)
 
   viz
