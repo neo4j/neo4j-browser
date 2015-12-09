@@ -215,4 +215,8 @@ angular.module('neo4jApp.controllers')
       if event.stopPropagation then event.stopPropagation()
       $scope.$broadcast 'frame.notif.max_neighbour_limit', result
 
+    $scope.$on 'graph:initial_node_display_limit', (event, result) ->
+      if event.stopPropagation then event.stopPropagation()
+      $scope.$broadcast 'frame.notif.initial_node_display_limit', result
+
   ]

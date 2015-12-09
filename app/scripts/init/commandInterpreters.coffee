@@ -352,6 +352,13 @@ angular.module('neo4jApp')
 
     extractGraphModel = (response, CypherGraphModel) ->
       graph = new neo.models.Graph()
+
+      if response.size > Settings.initialNodeDisplay
+        response.nodes = response.nodes.slice(0, Settings.initialNodeDisplay)
+        graph.display =
+          initialNodeDisplay: Settings.initialNodeDisplay
+          nodeCount: response.size
+
       graph.addNodes(response.nodes.map(CypherGraphModel.convertNode()))
       graph.addRelationships(response.relationships.map(CypherGraphModel.convertRelationship(graph)))
       graph

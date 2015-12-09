@@ -11,7 +11,7 @@
         label(for="shouldReportUdc")
           input#shouldReportUdc(type="checkbox", ng-model="settings.shouldReportUdc", ng-change="save()")
           span &nbsp; Share non-sensitive data?
-      button.btn.btn-default.btn-sm(ng-click="showMessenger()") 
+      button.btn.btn-default.btn-sm(ng-click="showMessenger()")
         span.glyphicon.glyphicon-envelope &nbsp;Messenger
 
     h5 User Interface
@@ -32,17 +32,17 @@
     .form-group
       label(for="initCmd", tooltip="This command gets executed when connected.", tooltip-placement="top") Initial Command
         input.form-control.input#initCmd(type='string', ng-model="settings.initCmd", ng-change="save()")
-    
+
     h5 Preferences
     .checkbox
       label(for="shouldReportUdc")
         input#shouldReportUdc(type="checkbox", ng-model="settings.shouldReportUdc", ng-change="save()")
-        span &nbsp; Help improve Neo4j? 
-        a.fa.fa-info-circle(href='http://neo4j.com/legal/neo4j-user-experience/') 
+        span &nbsp; Help improve Neo4j?
+        a.fa.fa-info-circle(href='http://neo4j.com/legal/neo4j-user-experience/')
     .checkbox(ng-show="neo4j.enterpriseEdition")
       label(for="storeCredentials")
         input#storeCredentials(type='checkbox', ng-model="settings.storeCredentials", ng-change="save()")
-        span(tooltip="Remember connection credentials in browser.", tooltip-placement="right") 
+        span(tooltip="Remember connection credentials in browser.", tooltip-placement="right")
           | &nbsp; Save login credentials
     .checkbox
       label(for="enableMotd")
@@ -62,7 +62,7 @@
 
     h5 Result Frames
     .form-group
-      label(for="maxFrames", tooltip="Max number of frames in stream. When reached, old frames gets retired.", tooltip-placement="top") 
+      label(for="maxFrames", tooltip="Max number of frames in stream. When reached, old frames gets retired.", tooltip-placement="top")
         | Max Frames
         input.form-control.input#maxFrames(type='number', ng-model="settings.maxFrames", ng-change="save()")
     .form-group
@@ -76,11 +76,16 @@
 
     h5 Graph Visualization
     .form-group
+      label(for="initialNodeDisplay", tooltip="Limit number of nodes displayed on first load of the graph visualization.", tooltip-placement="top")
+        | Initial Node Display
+        input.form-control.input#initialNodeDisplay(type='number', ng-model="settings.initialNodeDisplay", ng-change="save()")
+    .form-group
       label(for="maxNeighbours", tooltip="Limit exploratary queries to this limit.", tooltip-placement="top")
         | Max Neighbors
         input.form-control.input#maxNeighbours(type='number', ng-model="settings.maxNeighbours", ng-change="save()")
     .form-group
-      label(for="maxRows", tooltip="Max number of rows to render in 'Rows' result view.", tooltip-placement="top") Max Rows
+      label(for="maxRows", tooltip="Max number of rows to render in 'Rows' result view.", tooltip-placement="top")
+        | Max Rows
         input.form-control.input#maxRows(type='number', ng-model="settings.maxRows", ng-change="save()")
     .form-group
       label(for="maxRawSize", tooltip="Limit rendering of raw output to this number of characters.", tooltip-placement="top") 
