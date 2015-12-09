@@ -26,6 +26,7 @@ angular.module('neo4jApp.services')
     (AuthDataService) ->
       interceptor =
         request: (config) ->
+          config.headers['X-Ajax-Browser-Auth'] = true
           isLocalRequest = yes
           if /^https?:/.test config.url
             url = document.location.origin || window.location.protocol + "//" + window.location.host
