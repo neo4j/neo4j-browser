@@ -80,6 +80,8 @@ angular.module('neo4jApp.controllers')
           graphView.update()
 
       initGraphView = (graph) ->
+
+        checkMaxNodesReached graph
         graphView = new neo.graphView($element[0], measureSize, graph, GraphStyle)
 
         $scope.style = GraphStyle.rules
@@ -147,7 +149,10 @@ angular.module('neo4jApp.controllers')
 
       checkLimitsReached = (result) ->
         if result.neighbourSize > result.neighbourDisplayedSize
-          $scope.$emit 'graph:max_neighbour_limit', result
+          return $scope.$emit 'graph:max_neighbour_limit', result
+
+      checkMaxNodesReached = (graph) ->
+        if graph.display? then $scope.$emit 'graph:initial_node_display_limit', graph.display
 
       return @
   ])

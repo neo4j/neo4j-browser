@@ -64,4 +64,10 @@ angular.module('neo4jApp.controllers')
       Editor.setContent "#{Settings.cmdchar}config maxNeighbours: #{result.neighbourDisplayedSize}"
     addNotification 'default', msg, fn, 10000
 
+  $scope.$on 'frame.notif.initial_node_display_limit', (event, result) ->
+    msg = "Showing #{result.initialNodeDisplay} of #{result.nodeCount} nodes. Click to adjust initialNodeDisplay nodes."
+    fn = ->
+      Editor.setContent "#{Settings.cmdchar}config initialNodeDisplay: #{result.initialNodeDisplay}"
+    addNotification 'default', msg, fn, 10000
+
 ]
