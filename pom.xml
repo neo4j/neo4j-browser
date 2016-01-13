@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.neo4j.app</groupId>
+  <groupId>org.neo4j.client</groupId>
   <artifactId>neo4j-browser</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
   <name>Neo4j - Browser</name>
   <description>Graph database client.</description>
 
@@ -15,7 +15,7 @@
     <attach-javadoc-phase>none</attach-javadoc-phase>
     <attach-docs-phase>none</attach-docs-phase>
     <neo4j.java.version>1.8</neo4j.java.version>
-    <neo4j.version>3.0.0-M01</neo4j.version>
+    <neo4j.version>3.0.0-M02</neo4j.version>
   </properties>
 
   <scm>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.neo4j</groupId>
       <artifactId>neo4j-lucene-index</artifactId>
-      <version>3.0.0-M01</version>
+      <version>${neo4j.version}</version>
       <scope>test</scope>
     </dependency>
 
