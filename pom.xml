@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.neo4j.client</groupId>
   <artifactId>neo4j-browser</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <name>Neo4j - Browser</name>
   <description>Graph database client.</description>
 
@@ -17,6 +17,16 @@
     <neo4j.java.version>1.8</neo4j.java.version>
     <neo4j.version>3.0.0-M02</neo4j.version>
   </properties>
+
+  <developers>
+    <developer>
+      <id>neo4j</id>
+      <name>The Neo4j Team</name>
+      <url>http://neo4j.org/</url>
+      <organization>Neo Technology</organization>
+      <organizationUrl>http://www.neotechnology.com/</organizationUrl>
+    </developer>
+  </developers>
 
   <scm>
     <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
