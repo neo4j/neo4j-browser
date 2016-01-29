@@ -1,3 +1,10 @@
+script(id="inspector/contextMenu.html", type="text/ng-template")
+  ul.list-inline
+    li(ng-if="item.menuSelection")
+      .token.token-label.token-conext-menu-key(ng-bind="item.label")
+    li.pair
+      .value(ng-bind="item.menuContent")
+
 script(id="inspector/graphItem.html", type="text/ng-template")
   ul.list-inline
     li(ng-if="item.isNode", ng-repeat="label in item.labels")
