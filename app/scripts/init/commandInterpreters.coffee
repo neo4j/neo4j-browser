@@ -359,8 +359,12 @@ angular.module('neo4jApp')
           initialNodeDisplay: Settings.initialNodeDisplay
           nodeCount: response.size
 
-      graph.addNodes(response.nodes.map(CypherGraphModel.convertNode()))
-      graph.addRelationships(response.relationships.map(CypherGraphModel.convertRelationship(graph)))
+      graph.addNodes(response.nodes
+        .map(CypherGraphModel.convertNode())
+        .filter((node)-> return node))
+      graph.addRelationships(response.relationships
+        .map(CypherGraphModel.convertRelationship(graph))
+        .filter((rel)-> return rel))
       graph
 
     # Cypher handler

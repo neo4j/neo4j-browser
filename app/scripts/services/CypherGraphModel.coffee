@@ -28,10 +28,12 @@ angular.module('neo4jApp.services')
 
     @convertNode = () ->
       (node) ->
+        return false if node.deleted
         new neo.models.Node(node.id, node.labels, node.properties)
 
     @convertRelationship = (graph) ->
       (relationship) ->
+        return false if relationship.deleted
         source = graph.findNode(relationship.startNode) or throw malformed()
         target = graph.findNode(relationship.endNode) or throw malformed()
         new neo.models.Relationship(relationship.id, source, target, relationship.type, relationship.properties)
