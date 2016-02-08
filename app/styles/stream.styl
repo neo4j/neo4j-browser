@@ -298,7 +298,7 @@
 
 .frame-slider-wrapper
   position: absolute
-  top: 6px
+  top: 8px
   right: 20px
   width: 225px
   span
@@ -308,23 +308,37 @@
     font-size: 11px
   .frame-slider
     position: absolute
-    top: 0
+    top: 4px
     right: 0
     width: 100px
-    .slider.slider-horizontal 
+    input[type="range"]
+      -webkit-appearance: none
+      outline: none
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0)
+      background: #ddd
+      border-radius: 14px
+      padding: 1px 2px
       width: 100%
-      .slider-track
-        margin-left: 5px
-        height: 4px
-        margin-top:  -2px
-    .slider-handle
-      background: RGBA(82, 88, 100, 1)
-      width: 10px
-      height: 10px
-      margin-top: -3px
-      &:hover
-          background: #5DADE2
-
+      height: 8px
+      margin-top: 3px
+      &::-moz-range-track
+        border: inherit
+        background: transparent
+      &::-ms-track
+        border: inherit
+        color: transparent
+        background: transparent
+      &::-ms-fill-lower, &::-ms-fill-upper
+        background: transparent
+      &::-ms-tooltip
+        display: none    
+      &::-webkit-slider-thumb
+        -webkit-appearance: none
+        slider-thumb()
+      &::-moz-range-thumb
+        slider-thumb()
+      &::-ms-thumb
+        slider-thumb()
 .frame-notifications
   width: 30%
   max-width: 355px
