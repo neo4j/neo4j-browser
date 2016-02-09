@@ -6,4 +6,4 @@ p(ng-hide='frame.hasErrors')
   div.frame-slider-wrapper(ng-show='isActive("text")')
     span Max column width: 
     div.frame-slider
-      slider(ng-model="ascii_col_width", min="slider.min", max="slider.max", slider-tooltip="hide")
+      range-slider.text-table-slider(ng-range-min="slider.min", ng-range-max="slider.max", ng-model="ascii_col_width")
