@@ -1,0 +1,54 @@
+{
+  "name": "ascii-data-table",
+  "description": "Render data in a width adjustable ascii table.",
+  "main": "lib/bundle.js",
+  "authors": [
+    {
+      "name": "Oskar Hane",
+      "email": "bower@oskarhane.com"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "ascii table",
+    "table data",
+    "ascii",
+    "text table",
+    "copy data",
+    "draw ascii"
+  ],
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "src",
+    "node_modules",
+    "bower_components",
+    "test",
+    "examples/ascii-data-table-slider.gif",
+    ".gitignore",
+    ".npmignore",
+    "karma.config.js",
+    "tests.webpack.js",
+    "webpack.config.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oskarhane/ascii-data-table.git"
+  },
+  "homepage": "https://github.com/oskarhane/ascii-data-table",
+  "version": "1.1.1",
+  "_release": "1.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.1",
+    "commit": "dfbd819fe247d0976eaf7d2156b550e12381cffd"
+  },
+  "_source": "git://github.com/oskarhane/ascii-data-table.git",
+  "_target": "^1.1.1",
+  "_originalSource": "ascii-data-table",
+  "_direct": true
+}
