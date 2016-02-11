@@ -117,7 +117,7 @@ public class CannedCypherExecutionTest
                                     }
 
                                     assertThat( format( "Query [%s] should only produce %s notifications. [%s]",
-                                                    ignorableStatusCodes, statement, fileName ),
+                                                    statement, ignorableStatusCodes, fileName ),
                                             filteredNotifications, empty() );
 
                                     explainCount.incrementAndGet();
