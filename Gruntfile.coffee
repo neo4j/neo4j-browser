@@ -174,7 +174,7 @@ module.exports = (grunt) ->
             '<%= yeoman.lib %>/visualization/neod3.coffee'
             '<%= yeoman.lib %>/visualization/components/*.coffee'
             '<%= yeoman.lib %>/visualization/utils/*.coffee'
-            '<%= yeoman.lib %>/visualization/init.coffee'
+            '<%= yeoman.lib %>/visualization/renders/*.coffee'
           ]
         ]
       lib:

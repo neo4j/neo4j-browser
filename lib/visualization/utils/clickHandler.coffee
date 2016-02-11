@@ -49,7 +49,7 @@ neo.utils.clickHandler = ->
             ->
               event.click e.target.__data__
               wait = null
-          )(d3.event), 250)
+          )(d3.event), 50)
 
   event = d3.dispatch("click", "dblclick")
   d3.rebind cc, event, "on"

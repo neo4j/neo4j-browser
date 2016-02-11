@@ -25,6 +25,7 @@ window.neo = window.neo || {}
 neo.models = {}
 
 neo.renderers =
+  menu: []
   node: []
   relationship: []
 

@@ -28,6 +28,10 @@ angular.module('neo4jApp.services')
     'Settings'
     ($q, Cypher, CypherGraphModel, Settings) ->
       return  {
+        removeNodesAndRelationships: (node, graph) ->
+          graph.removeNode node
+          graph.removeConnectedRelationships node
+
         exploreNeighbours: (node, graph, withInternalRelationships) ->
           q = $q.defer()
           currentNeighbourIds = graph.findNodeNeighbourIds node.id
