@@ -118,7 +118,7 @@ angular.module('neo4jApp.controllers')
               hits += collectHits(child)
           hits
 
-        message = "Cypher version: #{root.version}, planner: #{root.planner}."
+        message = "Cypher version: #{root.version}, planner: #{root.planner}, runtime: #{root.runtime}."
         if collectHits(root)
           message += " #{collectHits(root)} total db hits in #{frame.response.responseTime} ms."
         message
