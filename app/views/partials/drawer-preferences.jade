@@ -44,11 +44,6 @@
         input#storeCredentials(type='checkbox', ng-model="settings.storeCredentials", ng-change="save()")
         span(tooltip="Remember connection credentials in browser.", tooltip-placement="right")
           | &nbsp; Save login credentials
-    .checkbox
-      label(for="enableMotd")
-        input#enableMotd(type='checkbox', ng-model="settings.enableMotd", ng-change="save()")
-        span(tooltip="Show 'Message of the Day' link on start frame.", tooltip-placement="right")
-          |  &nbsp; Enable MOTD feed
 
     h5 Network Connection
     .form-group
