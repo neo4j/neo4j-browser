@@ -28,7 +28,7 @@ angular.module('neo4jApp.services')
     'Settings'
     ($rootScope, rssFeedService, motdFeedParser, Settings) ->
       class Motd
-
+        trackingData = '?utm_source=browser&utm_medium=motd&utm_content=blog&utm_campaign=browser'
         choices =
           quotes: [
             { 'text':'When you label me, you negate me.', 'author':'Soren Kierkegaard' }
@@ -65,16 +65,41 @@ angular.module('neo4jApp.services')
           callToAction: [
             {
               'd': "Every good graph starts with Neo4j."
-              'u':'http://neo4j.com'
-            }
+              'u':'http://neo4j.com/' + trackingData
+            },
+            {
+              'd': 'Import 10M Stack Overflow Questions into Neo4j In Just 3 Minutes',
+              'u': 'http://neo4j.com/blog/import-10m-stack-overflow-questions/' + trackingData
+            },
+            {
+              'd': "Graph Databases for Beginners: Why a Database Query Language Matters"
+              'u':'http://neo4j.com/blog/why-database-query-language-matters/' + trackingData
+            },
+            {
+              'd': "Building the Graph Your Network App with the Neo4j Docker Image"
+              'u':'http://neo4j.com/blog/graph-your-network-neo4j-docker-image/' + trackingData
+            },
+            {
+              'd': "OSCON Twitter Graph"
+              'u':'http://neo4j.com/blog/oscon-twitter-graph/' + trackingData
+            },
+            {
+              'd': "Tuning Your Cypher: Tips & Tricks for More Effective Queries"
+              'u':'http://neo4j.com/blog/tuning-cypher-queries/' + trackingData
+            },
+            {
+              'd': "Cypher: LOAD JSON from URL AS Data"
+              'u':'http://neo4j.com/blog/cypher-load-json-from-url/' + trackingData
+            },
+            {
+              'd': "RDBMS & Graphs: Why Relational Databases Aren’t Always Enough"
+              'u':'http://neo4j.com/blog/rdbms-graphs-why-relational-databases-arent-enough/' + trackingData
+            },
           ]
 
         quote: ""
-
         tip: ""
-
         unrecognized: ""
-
         emptiness: ""
 
         constructor: ->
@@ -88,18 +113,18 @@ angular.module('neo4jApp.services')
           that = @
           match_filter =
             version: (val) ->
-              return true unless val
+              return yes unless val
               re = new RegExp('^' + val)
               res = re.test(that.cta_version)
             combo: (val) ->
-              return false unless val
+              return no unless val
               res = /^!/.test val
           item = motdFeedParser.getFirstMatch(feed, match_filter)
 
           if not item?.d
             match_filter =
               version: (val) ->
-                return true unless val
+                return yes unless val
                 re = new RegExp('^' + val)
                 hit = re.test(that.cta_version)
                 return hit or val is 'neo4j'
@@ -116,11 +141,8 @@ angular.module('neo4jApp.services')
           @emptiness = @pickRandomlyFrom(choices.emptiness)
           @disconnected = @pickRandomlyFrom(choices.disconnected)
           @callToAction = @pickRandomlyFrom(choices.callToAction)
-
-          return if Settings.enableMotd is false
+          return if Settings.enableMotd is no
           return if not $rootScope.neo4j.config.allow_outgoing_browser_connections
-          rssFeedService.get().then (feed) => @callToAction = @getCallToActionFeedItem feed
-
 
         pickRandomlyFrom: (fromThis) ->
           return fromThis[Math.floor(Math.random() * fromThis.length)]
@@ -128,6 +150,5 @@ angular.module('neo4jApp.services')
         pickRandomlyFromChoiceName: (choiceName) ->
           return '' unless choices[choiceName]
           @pickRandomlyFrom(choices[choiceName])
-
       new Motd
 ]
