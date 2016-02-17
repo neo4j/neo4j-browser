@@ -1,5 +1,5 @@
 ###!
-Copyright (c) 2002-2014 "Neo Technology,"
+Copyright (c) 2002-2016 "Neo Technology,"
 Network Engine for Objects in Lund AB [http://neotechnology.com]
 
 This file is part of Neo4j.
@@ -18,17 +18,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-'use strict';
+'use strict'
 
-angular.module('neo4jApp.services')
-.factory 'AsciiTable', () ->
-  at = window.AsciiTable
-  class AsciiTable
-    constructor: () ->
-      @maxWidth = 0
-    get: (items, options = {}) ->
-      @maxWidth = at.getMaxColumnWidth items unless @maxWidth
-      at.run items, options
-  return {
-    getInstance: -> return new AsciiTable()
-  }
+describe 'Service: AsciiTable', () ->
+  AsciiTable = {}
+  beforeEach ->
+    module 'neo4jApp.services'
+    inject((_AsciiTable_) ->
+      AsciiTable = _AsciiTable_
+    )
+
+  it ' - instance should not be singleton ', ->
+    i1 = AsciiTable.getInstance()
+    i2 = AsciiTable.getInstance()
+    i1.maxWidth = 100
+    expect(i1.maxWidth).toBe(100)
+    expect(i2.maxWidth).toBe(0)

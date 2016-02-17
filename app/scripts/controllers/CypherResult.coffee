@@ -24,11 +24,11 @@ angular.module('neo4jApp.controllers')
   .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTable', ($rootScope, $scope, AsciiTable) ->
     $scope.displayInternalRelationships = $rootScope.stickyDisplayInternalRelationships ? true
     $scope.availableModes = []
-    $scope.$watch 'frame.response', (resp) ->
-    asciiTable = new AsciiTable()
     $scope.slider = {min: 4, max: 20}
+    asciiTable = AsciiTable.getInstance()
     $scope.ascii = ''
     $scope.ascii_col_width = 30
+    tableData = []
 
     $scope.$watch 'frame.response', (resp, old) ->
       return unless resp
@@ -45,7 +45,8 @@ angular.module('neo4jApp.controllers')
       $scope.availableModes.push('errors') if resp.errors
       $scope.availableModes.push('messages') if resp.raw?.response.data.notifications
       $scope.availableModes.push('text') if resp.table?.size
-      $scope.loadAscii resp.table
+      tableData = resp.table._response if resp.table?._response.data.length
+      $scope.loadAscii()
 
       # Initialise tab state from user selected if any
       $scope.tab = $rootScope.stickyTab
@@ -65,18 +66,16 @@ angular.module('neo4jApp.controllers')
       # Override user tab selection if that mode doesn't exists
       $scope.tab = 'table' unless $scope.availableModes.indexOf($scope.tab) >= 0
 
-    $scope.loadAscii = (data) ->
-      return unless data
-      rows = data._response.data.map((data_obj) -> return data_obj.row)
-      res = asciiTable.get(rows, {columns: data._response.columns, max_column_width: $scope.ascii_col_width})
-      $scope.slider.max = asciiTable.max_original_col_width
+    $scope.loadAscii = () ->
+      return if not tableData or not tableData.data
+      rows = tableData.data.map((data_obj) -> return data_obj.row)
+      rows.splice(0, 0, tableData.columns)
+      res = asciiTable.get(rows, {maxColumnWidth: $scope.ascii_col_width})
+      $scope.slider.max = asciiTable.maxWidth
       $scope.ascii = res
 
-    $scope.reloadAscii = ->
-      $scope.ascii = asciiTable.reloadWithOptions({max_column_width: $scope.ascii_col_width})
-
     $scope.$watch('ascii_col_width', (n, o) ->
-      $scope.reloadAscii()
+      $scope.loadAscii()
     )
 
     $scope.setActive = (tab) ->
