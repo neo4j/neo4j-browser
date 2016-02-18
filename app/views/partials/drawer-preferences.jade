@@ -36,9 +36,14 @@
     h5 Preferences
     .checkbox
       label(for="shouldReportUdc")
-        input#shouldReportUdc(type="checkbox", ng-model="settings.shouldReportUdc", ng-change="save()")
+        input#shouldReportUdcPref(type="checkbox", ng-model="settings.shouldReportUdc", ng-change="save()")
         span &nbsp; Help improve Neo4j?
         a.fa.fa-info-circle(href='http://neo4j.com/legal/neo4j-user-experience/')
+    .checkbox
+      label(for="experimentalFeatures")
+        input#experimentalFeatures(type="checkbox", ng-model="settings.experimentalFeatures", ng-change="save()")
+        span(tooltip="Up coming features that are in beta.", tooltip-placement="top") &nbsp; Enable experimental features?
+
     .checkbox(ng-show="neo4j.enterpriseEdition")
       label(for="storeCredentials")
         input#storeCredentials(type='checkbox', ng-model="settings.storeCredentials", ng-change="save()")
@@ -53,7 +58,7 @@
     .form-group
       label(for="heartbeat", tooltip="Check connection and update meta data with this interval (in seconds)", tooltip-placement="top")
         | Heartbeat interval
-        input.form-control.input#maxExecutionTime(type='number', ng-model="settings.heartbeat", ng-change="save()")
+        input.form-control.input#heartbeatInterval(type='number', ng-model="settings.heartbeat", ng-change="save()")
 
     h5 Result Frames
     .form-group

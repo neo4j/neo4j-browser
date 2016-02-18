@@ -53,6 +53,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     theme: "normal"
     storeCredentials: yes
     shouldReportUdc: no
+    experimentalFeatures: no
   })
 
 angular.module('neo4jApp.settings')
