@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict'
 
 angular.module('neo4jApp.controllers')
-  .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTable', ($rootScope, $scope, AsciiTable) ->
+  .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTableFactory', ($rootScope, $scope, AsciiTableFactory) ->
     $scope.displayInternalRelationships = $rootScope.stickyDisplayInternalRelationships ? true
     $scope.availableModes = []
     $scope.slider = {min: 4, max: 20}
-    asciiTable = AsciiTable.getInstance()
+    asciiTable = AsciiTableFactory.getInstance()
     $scope.ascii = ''
     $scope.ascii_col_width = 30
     tableData = []

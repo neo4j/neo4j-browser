@@ -1,4 +1,3 @@
-var AsciiTable =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,9 +42,9 @@ var AsciiTable =
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!**********************!*\
-  !*** ./src/entry.js ***!
-  \**********************/
+/*!******************************!*\
+  !*** ./src/entry-angular.js ***!
+  \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56,7 +55,9 @@ var AsciiTable =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	module.exports = _asciiDataTable2.default;
+	module.exports = angular.module('AsciiTableModule', []).service('AsciiTable', function () {
+	  return _asciiDataTable2.default;
+	}); /* global angular */
 
 /***/ },
 /* 1 */
@@ -233,4 +234,4 @@ var AsciiTable =
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=bundle-angular.js.map

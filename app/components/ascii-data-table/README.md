@@ -59,13 +59,16 @@ Usage in Node.js varies depending if the will be used within a ES2015 applicatio
 import AsciiTable from 'ascii-data-table'
 
 // or if installed by cloning git repo, use the correct path
-//import AsciiTable from '../lib/ascii-data-table'
+//import AsciiTable from 'lib/ascii-data-table'
 
 // The data to render
 const items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
 
+// Not required, default is 30
+const options = {maxColumnWidth: 15}
+
 // Render and save in 'res'
-const res = AsciiTable.run(items)
+const res = AsciiTable.run(items, options)
 ```
 
 **In ES 5.5**
@@ -75,17 +78,17 @@ const res = AsciiTable.run(items)
 var AsciiTable = require('ascii-data-table').default
 
 // or if installed by cloning git repo, use the correct path
-//var AsciiTable = require('../lib/ascii-data-table').default
+//var AsciiTable = require('lib/ascii-data-table').default
 
 var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
 var res = AsciiTable.run(items)
 ```
 
 ### In web browsers
-A bundle for web browsers is created and can be found in `./lib`.
+A bundle for web browsers is created and can be found in `lib`.
 
 ```hmtl
-<script type="text/javascript" src="../lib/bundle.js"></script>
+<script type="text/javascript" src="/components/lib/bundle.js"></script>
 <script type="text/javascript">
   var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
   var output = AsciiTable.run(items)
@@ -93,9 +96,34 @@ A bundle for web browsers is created and can be found in `./lib`.
   console.log(output)
 </script>
 ```
+
+### For Angular 1.X
+A bundle for Angular 1.X is created and can be found in `lib/bundle-angular.js` and 
+assumes there's a global variable named `angular` available.
+
+```
+<html>
+  <head>
+    <script type="text/javascript" src="/components/angular/angular.js"></script>
+    <script type="text/javascript" src="/components/lib/bundle-angular.js"></script>
+    <script type="text/javascript">
+      var app = angular
+        .module('myApp', ['AsciiTableModule'])
+        .controller('TableController', ['$scope', 'AsciiTable', function($scope, AsciiTable){
+          var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
+          $scope.data = AsciiTable.run(items)
+        }])
+    </script>
+  </head>
+  <body ng-app="myApp">
+    <pre id="table" ng-controller="TableController" ng-bind="data"></pre>
+  </body>
+</html>
+```
+
 ## Examples / Demo
 You can try online here: [Online demo](https://oskarhane-dropshare-eu.s3-eu-central-1.amazonaws.com/index-zcqLpvoR0Z/index.html)  
-In the `./examples` folder there are examples for node and web browser environments.  
+In the `examples` folder there are examples for node and web browser environments.  
 One cool thing in the browser demo is that you can hook up a range slider to the maximun 
 width of the columns, giving this effect:  
 ![slider-gif-demo](https://oskarhane-dropshare-eu.s3-eu-central-1.amazonaws.com/ascii-data-table-slider-lfbBzm2sql/ascii-data-table-slider.gif)

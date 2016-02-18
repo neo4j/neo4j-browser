@@ -21,14 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-.factory 'AsciiTable', () ->
-  at = window.AsciiTable
-  class AsciiTable
+.factory 'AsciiTableFactory', ['AsciiTable', (AsciiTable) ->
+  at = AsciiTable
+  class AsciiTableClass
     constructor: () ->
       @maxWidth = 0
     get: (items, options = {}) ->
       @maxWidth = at.getMaxColumnWidth items unless @maxWidth
       at.run items, options
   return {
-    getInstance: -> return new AsciiTable()
+    getInstance: -> return new AsciiTableClass()
   }
+]

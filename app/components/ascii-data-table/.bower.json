@@ -40,15 +40,14 @@
     "url": "https://github.com/oskarhane/ascii-data-table.git"
   },
   "homepage": "https://github.com/oskarhane/ascii-data-table",
-  "version": "1.1.1",
-  "_release": "1.1.1",
+  "version": "1.2.0",
+  "_release": "1.2.0",
   "_resolution": {
     "type": "version",
-    "tag": "v1.1.1",
-    "commit": "dfbd819fe247d0976eaf7d2156b550e12381cffd"
+    "tag": "v1.2.0",
+    "commit": "00b6ee7c8b8f928276c2f1e36135fdb497a5fb62"
   },
   "_source": "git://github.com/oskarhane/ascii-data-table.git",
-  "_target": "^1.1.1",
-  "_originalSource": "ascii-data-table",
-  "_direct": true
+  "_target": "^1.1.0",
+  "_originalSource": "ascii-data-table"
 }

@@ -20,17 +20,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict'
 
-describe 'Service: AsciiTable', () ->
-  AsciiTable = {}
+describe 'Service: AsciiTableFactory', () ->
+  AsciiTableFactory = {}
   beforeEach ->
     module 'neo4jApp.services'
-    inject((_AsciiTable_) ->
-      AsciiTable = _AsciiTable_
+    inject((_AsciiTableFactory_) ->
+      AsciiTableFactory = _AsciiTableFactory_
     )
 
   it ' - instance should not be singleton ', ->
-    i1 = AsciiTable.getInstance()
-    i2 = AsciiTable.getInstance()
+    i1 = AsciiTableFactory.getInstance()
+    i2 = AsciiTableFactory.getInstance()
     i1.maxWidth = 100
     expect(i1.maxWidth).toBe(100)
     expect(i2.maxWidth).toBe(0)
+
+  it ' - should generate a simple table '  , ->
+    res = AsciiTableFactory.getInstance().get([['x'], ['y']])
+    expect(res).toBe([
+      '+===+',
+      '|x  |',
+      '+===+',
+      '|y  |',
+      '+---+'].join('\n')
+    )
