@@ -34,6 +34,7 @@ neo.viz = (el, measureSize, graph, layout, style) ->
     .attr('y', '-2500')
     .attr('width', '5000')
     .attr('height', '5000')
+    .attr('transform', 'scale(1)')
 
   container = base_group.append('g')
   geometry = new NeoD3Geometry(style)
