@@ -24,8 +24,11 @@ CodeMirror.defineMode "cypher", (config) ->
   tokenBase = (stream, state) ->
     ch = stream.next()
     curPunc = null
-    if ch is "\"" or ch is "'"
-      stream.match /.+?["']/
+    if ch is "\""
+      stream.match /.+?["]/
+      return "string"
+    if ch is "'"
+      stream.match /.+?[']/
       return "string"
     if /[{}\(\),\.;\[\]]/.test(ch)
       curPunc = ch
