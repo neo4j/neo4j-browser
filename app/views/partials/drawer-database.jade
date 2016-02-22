@@ -29,8 +29,8 @@
       .key Version:
       .value {{ neo4j.version }}
     li.pair
-      .key Location:
-      .value {{kernel.StoreDirectory || '-'}}
+      .key Name:
+      .value {{kernel.DatabaseName || '-'}}
     li.pair
       .key Size:
       .value {{kernel.TotalStoreSize | humanReadableBytes}}
