@@ -54,20 +54,20 @@
     .form-group
       label(for="maxExecutionTime", tooltip="Query timeout in seconds.", tooltip-placement="top")
         | Max Execution Time
-        input.form-control.input#maxExecutionTime(type='number', ng-model="settings.maxExecutionTime", ng-change="save()")
+        input.form-control.input#maxExecutionTime(type='number', min="1", ng-model="settings.maxExecutionTime", ng-change="save()")
     .form-group
       label(for="heartbeat", tooltip="Check connection and update meta data with this interval (in seconds)", tooltip-placement="top")
         | Heartbeat interval
-        input.form-control.input#heartbeatInterval(type='number', ng-model="settings.heartbeat", ng-change="save()")
+        input.form-control.input#heartbeatInterval(type='number', min="1", ng-model="settings.heartbeat", ng-change="save()")
 
     h5 Result Frames
     .form-group
       label(for="maxFrames", tooltip="Max number of frames in stream. When reached, old frames gets retired.", tooltip-placement="top")
         | Max Frames
-        input.form-control.input#maxFrames(type='number', ng-model="settings.maxFrames", ng-change="save()")
+        input.form-control.input#maxFrames(type='number', min="1", ng-model="settings.maxFrames", ng-change="save()")
     .form-group
       label(for="maxHistory", tooltip="Max number of history entries. When reached, old entries gets retired.", tooltip-placement="top") Max History
-        input.form-control.input#maxHistory(type='number', ng-model="settings.maxHistory", ng-change="save()")
+        input.form-control.input#maxHistory(type='number', min="1", ng-model="settings.maxHistory", ng-change="save()")
     .checkbox
       label(for="scrollToTop")
         input#scrollToTop(type='checkbox', ng-model="settings.scrollToTop", ng-change="save()")
@@ -78,20 +78,20 @@
     .form-group
       label(for="initialNodeDisplay", tooltip="Limit number of nodes displayed on first load of the graph visualization.", tooltip-placement="top")
         | Initial Node Display
-        input.form-control.input#initialNodeDisplay(type='number', ng-model="settings.initialNodeDisplay", ng-change="save()")
+        input.form-control.input#initialNodeDisplay(type='number', min="1", ng-model="settings.initialNodeDisplay", ng-change="save()")
     .form-group
       label(for="maxNeighbours", tooltip="Limit exploratary queries to this limit.", tooltip-placement="top")
         | Max Neighbors
-        input.form-control.input#maxNeighbours(type='number', ng-model="settings.maxNeighbours", ng-change="save()")
+        input.form-control.input#maxNeighbours(type='number', min="1", ng-model="settings.maxNeighbours", ng-change="save()")
     .form-group
       label(for="maxRows", tooltip="Max number of rows to render in 'Rows' result view.", tooltip-placement="top")
         | Max Rows
-        input.form-control.input#maxRows(type='number', ng-model="settings.maxRows", ng-change="save()")
+        input.form-control.input#maxRows(type='number', min="1", ng-model="settings.maxRows", ng-change="save()")
     .form-group
       label(for="maxRawSize", tooltip="Limit rendering of raw output to this number of characters.", tooltip-placement="top") 
         | Max Raw Size
-        input.form-control.input#maxRawSize(type='number', ng-model="settings.maxRawSize", ng-change="save()")
+        input.form-control.input#maxRawSize(type='number', min="1", ng-model="settings.maxRawSize", ng-change="save()")
     .form-group
       label(for="refreshInterval", tooltip="Refresh auto-refreshing frames on this interval (in seconds)", tooltip-placement="top")
         | Refresh Interval
-        input.form-control.input#refreshInterval(type='number', ng-model="settings.refreshInterval", ng-change="save()")
+        input.form-control.input#refreshInterval(type='number', min="1", ng-model="settings.refreshInterval", ng-change="save()")
