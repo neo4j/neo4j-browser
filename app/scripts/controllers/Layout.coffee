@@ -148,7 +148,7 @@ angular.module('neo4jApp.controllers')
           else
             Editor.maximize()
         else if e.keyCode is 191 # '/'
-          unless $scope.isEditorFocused()
+          unless $scope.isEditorFocused() || e.target.localName is 'input'
             e.preventDefault()
             $scope.focusEditor()
 
