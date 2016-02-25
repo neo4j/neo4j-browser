@@ -109,6 +109,12 @@ class neo.utils.pairwiseArcsRelationshipRouting
         delete relationship.arrow
 
       middleRelationshipIndex = (nodePair.relationships.length - 1) / 2
+      defaultDeflectionStep = 30
+      maximumTotalDeflection = 150
+      numberOfSteps = nodePair.relationships.length - 1
+      totalDeflection = defaultDeflectionStep * numberOfSteps
+
+      deflectionStep = if totalDeflection > maximumTotalDeflection then maximumTotalDeflection/numberOfSteps else defaultDeflectionStep
 
       for relationship, i in nodePair.relationships
 
@@ -117,11 +123,10 @@ class neo.utils.pairwiseArcsRelationshipRouting
         headHeight = headWidth
 
         if nodePair.isLoop()
-          spread = 30
           relationship.arrow = new neo.utils.loopArrow(
             relationship.source.radius,
             40,
-            spread,
+            defaultDeflectionStep,
             shaftWidth,
             headWidth,
             headHeight,
@@ -139,7 +144,8 @@ class neo.utils.pairwiseArcsRelationshipRouting
                 relationship.captionLayout
             )
           else
-            deflection = 30 * (i - middleRelationshipIndex)
+            deflection = deflectionStep * (i - middleRelationshipIndex)
+
             if nodePair.nodeA isnt relationship.source
               deflection *= -1
 
