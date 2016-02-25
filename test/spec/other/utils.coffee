@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-describe 'Utils: firstWord', () ->
+describe 'Utils', () ->
 
 
 
@@ -124,3 +124,15 @@ describe 'Utils: firstWord', () ->
     expect(Utils.hostIsAllowed host, host, no).toBe no
     expect(Utils.hostIsAllowed host, whitelist, no).toBe no
     expect(Utils.hostIsAllowed 'http://guides.neo4j.com', whitelist, no).toBe yes
+
+  it 'should construct a REST "rows" format object from a bolt single row result object', ->
+    boltResult = '[{"n":{"identity":0,"labels":["Movie"],"properties":{"tagline":"Welcome to the Real World","title":"The Matrix","released":1999}},"r":{"identity":15,"start":17,"end":0,"type":"ACTED_IN","properties":{"roles":["Emil"]}},"m":{"identity":17,"labels":["Person"],"properties":{"born":1978,"name":"Emil Eifrem"}},"h":"hello"}]'
+    httpResult = '{"data":{"results":[{"columns":["n","r","m","h"],"data":[{"row":[{"tagline":"Welcome to the Real World","title":"The Matrix","released":1999},{"roles":["Emil"]},{"born":1978,"name":"Emil Eifrem"},"hello"]}]}],"errors":[]},"config":{}}'
+    res = Utils.boltResultToRESTResult JSON.parse(boltResult)
+    expect(JSON.stringify(res.data)).toBe(JSON.stringify(JSON.parse(httpResult).data))
+
+  it 'should construct a REST "rows" format object from a bolt multiple row result object', ->
+    boltResult = '[{"n":{"identity":0,"labels":["Movie"],"properties":{"tagline":"Welcome to the Real World","title":"The Matrix","released":1999}},"r":{"identity":15,"start":17,"end":0,"type":"ACTED_IN","properties":{"roles":["Emil"]}},"m":{"identity":17,"labels":["Person"],"properties":{"born":1978,"name":"Emil Eifrem"}},"h":"hello"},{"n":{"identity":0,"labels":["Movie"],"properties":{"tagline":"Welcome to the Real World","title":"The Matrix","released":1999}},"r":{"identity":13,"start":15,"end":0,"type":"PRODUCED","properties":{}},"m":{"identity":15,"labels":["Person"],"properties":{"born":1952,"name":"Joel Silver"}},"h":"hello"}]'
+    httpResult = '{"data":{"results":[{"columns":["n","r","m","h"],"data":[{"row":[{"tagline":"Welcome to the Real World","title":"The Matrix","released":1999},{"roles":["Emil"]},{"born":1978,"name":"Emil Eifrem"},"hello"]},{"row":[{"tagline":"Welcome to the Real World","title":"The Matrix","released":1999},{},{"born":1952,"name":"Joel Silver"},"hello"]}]}],"errors":[]},"config":{}}'
+    res = Utils.boltResultToRESTResult JSON.parse(boltResult)
+    expect(JSON.stringify(res.data)).toBe(JSON.stringify(JSON.parse(httpResult).data))

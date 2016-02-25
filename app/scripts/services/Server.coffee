@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.services')
   .factory 'Server', [
     '$http'
+    'HTTP'
+    'Bolt'
     '$q'
     'Settings'
-    ($http, $q, Settings) ->
+    ($http, HTTP, Bolt, $q, Settings) ->
 
       # http://docs.angularjs.org/api/ng.$http
       httpOptions =

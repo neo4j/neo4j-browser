@@ -32,10 +32,6 @@ angular.module('neo4jApp.controllers')
 
     $scope.$watch 'frame.response', (resp, old) ->
       return unless resp
-      return if old
-      # available combos:
-      # - Graph + Table
-      # - Table only
       $scope.availableModes = []
       if not resp.errors
         $scope.availableModes.push('graph') if resp.graph._nodes.length

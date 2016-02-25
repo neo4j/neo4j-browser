@@ -38,4 +38,8 @@ angular.module('neo4jApp.services')
         target = graph.findNode(relationship.endNode) or throw malformed()
         new neo.models.Relationship(relationship.id, source, target, relationship.type, relationship.properties)
 
+    @filterRelationshipsOnNodes = (relationships, nodes) ->
+      nodeIDs = nodes.map((n) -> n.id)
+      relationships.filter((rel) -> nodeIDs.indexOf(rel.startNode) > -1 && nodeIDs.indexOf(rel.endNode) > -1)
+
     return @

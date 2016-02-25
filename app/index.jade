@@ -83,6 +83,7 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     script(src='components/angular-base64/angular-base64.js')
     script(src="components/canvg/dist/canvg.bundle.min.js")
     script(src="components/ascii-data-table/lib/bundle-angular.js")
+    script(src="components/neo4j-javascript-driver/lib/browser/neo4j-web.min.js")
     //endbuild
 
     //build:js(.tmp) scripts/scripts.js
@@ -190,6 +191,11 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     script(src='scripts/directives/cypherHint.js')
     script(src='scripts/directives/playSrc.js')
     script(src='scripts/directives/rangeSlider.js')
+    script(src='scripts/services/HTTP.js')
+    script(src='scripts/services/Bolt.js')
+    script(src='scripts/services/CypherResult.js')
+    script(src='scripts/services/CypherTransactionREST.js')
+    script(src='scripts/services/CypherTransactionBolt.js')
     script(src='lib/helpers.js')
     script(src='lib/serializer.js')
     //endbuild     
