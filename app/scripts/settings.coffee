@@ -54,6 +54,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     storeCredentials: yes
     shouldReportUdc: no
     experimentalFeatures: no
+    useBolt: yes
   })
 
 angular.module('neo4jApp.settings')

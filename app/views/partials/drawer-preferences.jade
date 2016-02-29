@@ -51,6 +51,11 @@
           | &nbsp; Save login credentials
 
     h5 Network Connection
+    .checkbox
+      label(for="useBolt")
+        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-change="save()")
+        span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="right")
+          | &nbsp; Use Bolt protocol
     .form-group
       label(for="maxExecutionTime", tooltip="Query timeout in seconds.", tooltip-placement="top")
         | Max Execution Time

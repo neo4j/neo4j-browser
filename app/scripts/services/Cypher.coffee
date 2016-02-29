@@ -26,9 +26,8 @@ angular.module('neo4jApp.services')
     '$rootScope'
     'Server'
     'UsageDataCollectionService'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    ($q, $rootScope, Server, UDC, CypherTransactionREST, CypherTransactionBolt) ->
+    'ProtocolFactory'
+    ($q, $rootScope, Server, UDC, ProtocolFactory) ->
 
       class CypherService
         constructor: () ->
@@ -48,7 +47,7 @@ angular.module('neo4jApp.services')
           Object.keys(@_active_requests)
 
         transaction: ->
-          transaction = new CypherTransactionBolt()
+          transaction = ProtocolFactory.getCypherTransaction()
           transaction.delegate = @
           transaction
 
