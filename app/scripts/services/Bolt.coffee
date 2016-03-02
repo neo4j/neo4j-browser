@@ -32,14 +32,22 @@ angular.module('neo4jApp.services')
         obj = {
           config: {},
           headers: -> [],
-          data: {results: [{columns: [], data: []}], errors: []}
+          data: {
+            results: [{
+              columns: [], 
+              data: [],
+              stats: {},
+              }],
+            errors: []
+          }
         }
         if result.fields
           obj.data.errors = result.fields
           return obj
-        return obj if not res[0]  
-        keys = Object.keys(res[0])
+        keys = if res.length then Object.keys(res[0]) else []
         obj.data.results[0].columns = keys
+        obj.data.results[0].plan = boltPlanToRESTPlan result.summary.plan if result.summary.plan
+        obj.data.results[0].plan = boltPlanToRESTPlan result.summary.profile if result.summary.profile
         res = itemIntToString res
         rows = res.map((record) ->
           return {
@@ -113,6 +121,28 @@ angular.module('neo4jApp.services')
           obj[key] = itemIntToString obj[key]
         )
         obj
+
+      boltPlanToRESTPlan = (plan) ->
+        obj = boltPlanToRESTPlanShared plan
+        obj['runtime-impl'] = "INTERPRETED"
+        obj['planner-impl'] = "IDP"
+        obj['version'] = "CYPHER 3.0"
+        obj['KeyNames'] = "p"
+        obj['planner'] = "COST"
+        obj['runtime'] = "INTERPRETED"
+        {root: obj}
+
+      boltPlanToRESTPlanShared = (plan) ->
+        return {
+          operatorType: plan.operatorType,
+          LegacyExpression: plan.arguments.LegacyExpression,
+          ExpandExpression: plan.arguments.ExpandExpression,
+          DbHits: plan.dbHits,
+          Rows: plan.rows,
+          EstimatedRows: plan.arguments.EstimatedRows,
+          identifiers: plan.identifiers,
+          children: plan.children.map boltPlanToRESTPlanShared
+        }
 
       return {
         beginTransaction: (opts) -> 

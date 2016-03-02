@@ -119,7 +119,7 @@ angular.module('neo4jApp.services')
           cb = (err, res) ->
             cm.clearGutter 'cypher-hints'
             return if err
-            if res.raw.response.data.notifications?.length
+            if res.raw && res.raw.response.data.notifications?.length
               for item in res.raw.response.data.notifications
                 if not item.position
                   item.position = {line:1}

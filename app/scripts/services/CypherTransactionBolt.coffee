@@ -35,8 +35,7 @@ angular.module('neo4jApp.services')
         q = $q.defer()
         promise.then(
           (r) =>
-            raw = {request: r.config, response: {headers: r.headers(), data: r.data}}
-            raw.request.status = r.status
+            raw = no
             if not r
               q.reject({raw: raw})
             else if r.data.errors && r.data.errors.length > 0
