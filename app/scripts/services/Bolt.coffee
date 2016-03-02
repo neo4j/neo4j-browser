@@ -27,14 +27,15 @@ angular.module('neo4jApp.services')
       bolt = window.neo4j.v1
       driver = bolt.driver("bolt://localhost:7687")
 
-      boltResultToRESTResult = (res) ->
+      boltResultToRESTResult = (result) ->
+        res = result.records
         obj = {
           config: {},
           headers: -> [],
           data: {results: [{columns: [], data: []}], errors: []}
         }
-        if res.fields
-          obj.data.errors = res.fields
+        if result.fields
+          obj.data.errors = result.fields
           return obj
         return obj if not res[0]  
         keys = Object.keys(res[0])
@@ -50,22 +51,21 @@ angular.module('neo4jApp.services')
         return obj
 
       getRESTRowsFromBolt = (record, keys) ->
-        keys.reduce((tot, curr)->
-          col = if typeof record[curr]['identity'] isnt 'undefined' then record[curr].properties else record[curr]
-          tot.concat col
-        , [])
+        keys.reduce(((tot, curr) -> tot.concat(extractDataForRowsFormat(record[curr]))), [])
 
       getRESTGraphFromBolt = (record, keys) ->
         items = keys.map((key) -> record[key])
-        graphItems = items.filter((item) -> typeof item['identity'] isnt 'undefined')
-          .map((item) -> 
-            item.id = item.identity
-            delete item.identity
-            Object.keys
-            return item
-          )
-        nodes = graphItems.filter((item) -> typeof item['labels'] isnt 'undefined')
-        rels = graphItems.filter((item) -> typeof item['type'] isnt 'undefined')
+        graphItems = items.filter((item) -> item instanceof bolt.types.Node || item instanceof bolt.types.Relationship)
+        paths = items.filter((item) -> item instanceof bolt.types.Path)
+        extractedPaths = extractPathsForGraphFormat paths
+        graphItems = graphItems.concat extractedPaths
+        graphItems.map((item) -> 
+          item.id = item.identity
+          delete item.identity
+          return item
+        )
+        nodes = graphItems.filter((item) -> item instanceof bolt.types.Node)
+        rels = graphItems.filter((item) -> item instanceof bolt.types.Relationship)
           .map((item) ->
             item.startNode = item.start
             item.endNode = item.end 
@@ -74,6 +74,29 @@ angular.module('neo4jApp.services')
             return item
           )
         {nodes: nodes, relationships: rels}
+
+      extractDataForRowsFormat = (item) ->
+        return item.properties if item instanceof bolt.types.Node
+        return item.properties if item instanceof bolt.types.Relationship
+        return extractPathForRowsFormat item if item instanceof bolt.types.Path
+        item
+
+      extractPathForRowsFormat = (path) ->
+        path.segments.map((segment) -> [
+          extractDataForRowsFormat(segment.start), 
+          extractDataForRowsFormat(segment.relationship),
+          extractDataForRowsFormat(segment.end)
+        ])
+
+      extractPathsForGraphFormat = (paths) ->
+        paths.reduce((all, path) ->
+          path.segments.forEach((segment) ->
+            all.push(segment.start)
+            all.push(segment.end)
+            all.push(segment.relationship)
+          )
+          return all
+        , [])
 
       itemIntToString = (item) ->
         return arrayIntToString item if Array.isArray(item)
@@ -86,11 +109,10 @@ angular.module('neo4jApp.services')
        arr.map((item) -> itemIntToString item)
 
       objIntToString = (obj) ->
-        outObj = {}
         Object.keys(obj).forEach((key) ->
-          outObj[key] = itemIntToString obj[key]
+          obj[key] = itemIntToString obj[key]
         )
-        outObj
+        obj
 
       return {
         beginTransaction: (opts) -> 
