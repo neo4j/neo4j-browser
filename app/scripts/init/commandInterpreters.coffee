@@ -396,11 +396,14 @@ angular.module('neo4jApp')
                   responseTime: timer.stop().time()
                   table: response
                   graph: extractGraphModel(response, CypherGraphModel)
-                  notifications: response.notifications
+                  notifications: response.notifications || [],
+                  protocol: response.protocol
                 )
               ,
               (r) ->
-                q.reject(mapError r)
+                obj = mapError r
+                obj.notifications ||= []
+                q.reject(obj)
             )
 
           #Periodic commits cannot be sent to an open transaction.

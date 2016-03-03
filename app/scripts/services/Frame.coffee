@@ -89,7 +89,6 @@ angular.module('neo4jApp.services')
 
             $q.when(intrPromise).then(
               (result) =>
-                #console.log JSON.stringify(result)
                 @isLoading = no
                 @response = result
                 @requests = intrPromise?.transaction?.requests || []

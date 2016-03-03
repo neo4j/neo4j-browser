@@ -39,12 +39,13 @@ angular.module('neo4jApp.services')
             raw = {request: r.config, response: {headers: r.headers(), data: r.data}}
             raw.request.status = r.status
             if not r
-              q.reject({raw: raw})
+              q.reject({protocol: 'rest', raw: raw})
             else if r.data.errors && r.data.errors.length > 0
-              q.reject({errors: r.data.errors, raw: raw})
+              q.reject({protocol: 'rest', errors: r.data.errors, raw: raw})
             else
               results = []
               partResult = new CypherResult(r.data.results[0] || {})
+              partResult.protocol = 'rest'
               partResult.raw = raw
               partResult.notifications = r.data.notifications
               results.push partResult
@@ -53,7 +54,7 @@ angular.module('neo4jApp.services')
         (r) ->
           raw = {request: r.config, response: {headers: r.headers(), data: r.data}}
           raw.request.status = r.status
-          q.reject({errors: r.errors, raw: raw})
+          q.reject({protocol: 'rest', errors: r.errors, raw: raw})
         )
         q.promise
 

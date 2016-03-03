@@ -34,22 +34,30 @@ angular.module('neo4jApp.services')
       promiseResult = (promise) ->
         q = $q.defer()
         promise.then(
-          (r) =>
-            raw = no
-            if not r
-              q.reject({raw: raw})
-            else if r.data.errors && r.data.errors.length > 0
-              q.reject({errors: r.data.errors, raw: raw})
+          (res) =>
+            raw = res.original
+            remapped = res.remapped
+            if not remapped
+              q.reject({protocol: 'bolt', raw: raw})
+            else if remapped.data.errors && remapped.data.errors.length > 0
+              q.reject({protocol: 'bolt', errors: remapped.data.errors, raw: raw})
             else
               results = []
-              partResult = new CypherResult(r.data.results[0] || {})
+              partResult = new CypherResult(remapped.data.results[0] || {})
+              partResult.protocol = 'bolt'
               partResult.raw = raw
-              partResult.notifications = r.data.notifications
+              partResult.notifications = remapped.data.notifications
               results.push partResult
               q.resolve(results[0])
         ,
-        (r) ->
-          q.reject({errors: r.data.errors})
+        (res) ->
+          remapped = res.remapped
+          q.reject({
+            protocol: 'bolt', 
+            raw: res.original, 
+            errors: remapped.data.errors,
+            notifications: remapped.data.notifications
+          })
         )
         q.promise
 
@@ -90,8 +98,8 @@ angular.module('neo4jApp.services')
           q = $q.defer()
           {tx, promise} = Bolt.transaction(statements, @tx)
           @tx = tx
-          promise.then((r) -> q.resolve(Bolt.constructResult r))
-            .catch((r) -> q.reject Bolt.constructResult r)
+          promise.then((r) -> q.resolve({original: r, remapped: Bolt.constructResult(r)}))
+            .catch((r) -> q.reject({original: r, remapped: Bolt.constructResult(r)}))
 
           res = promiseResult(q.promise)
           res.then(
