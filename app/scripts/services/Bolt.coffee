@@ -53,6 +53,7 @@ angular.module('neo4jApp.services')
         rows = res.map((record) ->
           return {
             row: getRESTRowsFromBolt record, keys
+            meta: getRESTMetaFromBolt record, keys
             graph: getRESTGraphFromBolt record, keys
           }
         )
@@ -61,6 +62,15 @@ angular.module('neo4jApp.services')
 
       getRESTRowsFromBolt = (record, keys) ->
         keys.reduce(((tot, curr) -> tot.concat(extractDataForRowsFormat(record[curr]))), [])
+
+      getRESTMetaFromBolt = (record, keys) ->
+        items = keys.map((key) -> record[key])
+        items.map((item) ->
+          type = 'node' if item instanceof bolt.types.Node
+          type = 'relationship' if item instanceof bolt.types.Relationship
+          return {id: item.identity, type: type} if type
+          null
+        )
 
       getRESTGraphFromBolt = (record, keys) ->
         items = keys.map((key) -> record[key])
