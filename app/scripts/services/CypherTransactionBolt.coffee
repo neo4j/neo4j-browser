@@ -44,6 +44,7 @@ angular.module('neo4jApp.services')
               results = []
               partResult = new CypherResult(r.data.results[0] || {})
               partResult.raw = raw
+              partResult.notifications = r.data.notifications
               results.push partResult
               q.resolve(results[0])
         ,

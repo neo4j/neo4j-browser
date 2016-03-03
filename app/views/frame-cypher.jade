@@ -150,7 +150,7 @@ div(ng-controller="CypherResultCtrl", fullscreen)
           .view-result-messages.result.with-frame-menu(ng-show='isActive("messages")')
             .messages-holder
               article.help.no-data.has-status-bar
-                .cypher-messages(ng-repeat="(index, message) in frame.response.raw.response.data.notifications")
+                .cypher-messages(ng-repeat="(index, message) in frame.response.notifications")
                   .cypher-message(class="cypher-message-{{message.severity | lowercase}}")
                     | {{message.severity}}
                   h4

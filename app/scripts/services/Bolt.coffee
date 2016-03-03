@@ -38,6 +38,7 @@ angular.module('neo4jApp.services')
               data: [],
               stats: {},
               }],
+            notifications: result.summary.notifications,
             errors: []
           }
         }
