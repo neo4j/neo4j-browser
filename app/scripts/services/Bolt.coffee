@@ -48,6 +48,7 @@ angular.module('neo4jApp.services')
         obj.data.results[0].columns = keys
         obj.data.results[0].plan = boltPlanToRESTPlan result.summary.plan if result.summary.plan
         obj.data.results[0].plan = boltPlanToRESTPlan result.summary.profile if result.summary.profile
+        obj.data.results[0].stats = boltStatsToRESTStats result.summary
         res = itemIntToString res
         rows = res.map((record) ->
           return {
@@ -143,6 +144,16 @@ angular.module('neo4jApp.services')
           identifiers: plan.identifiers,
           children: plan.children.map boltPlanToRESTPlanShared
         }
+
+      boltStatsToRESTStats = (summary) ->
+        stats = summary.updateStatistics._stats
+        newStats = {}
+        Object.keys(stats).forEach((key) ->
+          newKey = key.replace(/([A-Z]+)/, (m) -> '_' + m.toLowerCase())
+          newStats[newKey] = stats[key]
+        )
+        newStats['contains_updates'] = summary.updateStatistics.containsUpdates()
+        newStats
 
       return {
         beginTransaction: (opts) -> 
