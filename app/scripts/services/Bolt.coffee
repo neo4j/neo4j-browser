@@ -23,9 +23,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.services')
   .factory 'Bolt', [
     'Settings'
-    (Settings) ->
+    'AuthDataService'
+    'localStorageService'
+    '$rootScope'
+    (Settings, AuthDataService, localStorageService, $rootScope) ->
       bolt = window.neo4j.v1
-      driver = bolt.driver("bolt://localhost:7687")
+      _driver = null
+
+      connect = () ->
+        authData = AuthDataService.getPlainAuthData()
+        [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
+        _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
 
       boltResultToRESTResult = (result) ->
         res = result.records
@@ -166,14 +174,20 @@ angular.module('neo4jApp.services')
         newStats['contains_updates'] = summary.updateStatistics.containsUpdates()
         newStats
 
+      connect()
+      $rootScope.$on 'LocalStorageModule.notification.setitem', (evt, item) =>
+        connect() if item.key is 'authorization_data'
+      $rootScope.$on 'LocalStorageModule.notification.removeitem', (evt, item) =>
+        connect() if item.key is 'authorization_data'
+
       return {
         beginTransaction: (opts) -> 
           statement = opts[0]?.statement || ''
-          tx = driver.session().beginTransaction()
+          tx = _driver.session().beginTransaction()
           return {tx: tx, promise: null} unless statement
           return {tx: tx, promise: tx.run(statement)}
         transaction: (opts, tx) -> 
-          tx = tx || driver.session().beginTransaction()
+          tx = tx || _driver.session().beginTransaction()
           statement = opts[0]?.statement || ''
           p = tx.run(opts[0].statement)
           tx.commit()

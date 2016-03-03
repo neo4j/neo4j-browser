@@ -44,4 +44,6 @@ app = angular.module('neo4jApp', [
   'ui.sortable'
   #'angularMoment'
   'ngSanitize'
-])
+]).config((localStorageServiceProvider) ->
+  localStorageServiceProvider.setNotify(yes, yes)
+)
