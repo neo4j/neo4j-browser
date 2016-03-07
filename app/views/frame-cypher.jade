@@ -117,7 +117,35 @@ div(ng-controller="CypherResultCtrl", fullscreen)
             .raw-holder
               article.help.no-data.has-status-bar(ng-show='!isAvailable("raw")')
                 p No raw data found.
-              .raw-contents.clearfix(ng-show='isAvailable("raw")')
+              .raw-contents.clearfix(ng-show='isAvailable("raw") &&  frame.response.protocol == "bolt"')
+                .request-card.bolt-contents
+                  h4 Request through Bolt
+                  .frame-card
+                    p.lead.div-toggler Statement
+                    .frame-card-contents
+                      table.table.data
+                        tbody
+                          tr
+                            td Parameters
+                            td {{JSON.stringify(frame.response.raw.summary.statement.parameters)}}
+                          tr
+                            td Text
+                            td {{frame.response.raw.summary.statement.text}}
+                  h4 Response through Bolt
+                  .frame-card
+                    p.lead.div-toggler Response
+                    .frame-card-contents
+                      table.table.data
+                        tbody
+                          tr
+                            td Data
+                            td 
+                              div
+                                pre(output-raw="frame.response.raw.records", override-size-limit="true")
+                          tr
+                            td statementType
+                            td {{frame.response.raw.summary.statementType}}
+              .raw-contents.clearfix(ng-show='isAvailable("raw") &&  frame.response.protocol != "bolt"')
                 .request-card(ng-repeat="(index, request) in frame.requests")
                   h4 {{ getRequestTitle(frame.requests.length, index) }}
                   .frame-card
