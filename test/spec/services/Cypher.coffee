@@ -50,6 +50,6 @@ describe 'Service: Cypher', () ->
           errors: []
         })]
       )
-      Cypher.transaction().commit('START n=node(*) RETURN n;')
+      Cypher.transaction(no).commit('START n=node(*) RETURN n;')
       scope.$apply()
       backend.flush()

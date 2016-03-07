@@ -46,8 +46,8 @@ angular.module('neo4jApp.services')
         getTransactionIDs: () ->
           Object.keys(@_active_requests)
 
-        transaction: ->
-          transaction = ProtocolFactory.getCypherTransaction()
+        transaction: (useBolt = null) ->
+          transaction = ProtocolFactory.getCypherTransaction useBolt
           transaction.delegate = @
           transaction
 

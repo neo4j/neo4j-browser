@@ -86,7 +86,7 @@ describe 'Service: UDC', () ->
       UsageDataCollectionService.reset()
       Settings.shouldReportUdc = yes
       setUDCData UsageDataCollectionService
-      current_transaction = Cypher.transaction()
+      current_transaction = Cypher.transaction(no)
       httpBackend.expectPOST("#{Settings.endpoint.transaction}")
       .respond(->
         return [200, JSON.stringify({
@@ -130,7 +130,7 @@ describe 'Service: UDC', () ->
       UsageDataCollectionService.reset()
       Settings.shouldReportUdc = yes
       setUDCData UsageDataCollectionService
-      current_transaction = Cypher.transaction()
+      current_transaction = Cypher.transaction(no)
 
       httpBackend.expectPOST("#{Settings.endpoint.transaction}/commit")
       .respond(->
@@ -158,7 +158,7 @@ describe 'Service: UDC', () ->
       UsageDataCollectionService.reset()
       Settings.shouldReportUdc = yes
       setUDCData UsageDataCollectionService
-      current_transaction = Cypher.transaction()
+      current_transaction = Cypher.transaction(no)
       httpBackend.expectPOST("#{Settings.endpoint.transaction}")
       .respond(->
         return [200, JSON.stringify({
@@ -195,7 +195,7 @@ describe 'Service: UDC', () ->
       UsageDataCollectionService.reset()
       Settings.shouldReportUdc = yes
       setUDCData UsageDataCollectionService
-      current_transaction = Cypher.transaction()
+      current_transaction = Cypher.transaction(no)
 
       httpBackend.expectPOST("#{Settings.endpoint.transaction}/commit")
       .respond(->
