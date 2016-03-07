@@ -25,18 +25,22 @@ describe 'Service: UDC', () ->
   Settings = {}
   httpBackend = {}
   Cypher = {}
+  Bolt = {}
   scope = {}
+  q = {}
 
   # load the service's module
   beforeEach module 'neo4jApp.services'
 
   beforeEach ->
-    inject((_UsageDataCollectionService_, _Settings_, $httpBackend, _Cypher_, $rootScope) ->
+    inject((_UsageDataCollectionService_, _Settings_, $httpBackend, _Cypher_, _Bolt_, $rootScope, $q) ->
       UsageDataCollectionService = _UsageDataCollectionService_
       Settings = _Settings_
       httpBackend = $httpBackend
       Cypher = _Cypher_
+      Bolt = _Bolt_
       scope = $rootScope.$new()
+      q = $q
     )
 
 
@@ -215,3 +219,42 @@ describe 'Service: UDC', () ->
       )
       scope.$apply()
       httpBackend.flush()
+
+    it 'should detect a successful bolt transaction', ->
+      UsageDataCollectionService.reset()
+      Settings.shouldReportUdc = yes
+      setUDCData UsageDataCollectionService
+      qq = q.defer()
+      qq.resolve({records: [], summary: {updateStatistics: {_stats: [], containsUpdates: ->}}})
+      spyOn(Bolt, "transaction").and.returnValue({tx: null, promise: qq.promise})
+      current_transaction = Cypher.transaction(yes)
+      p = current_transaction.commit("MATCH n RETURN n")
+      p.then(
+        ->
+          expect(UsageDataCollectionService.data.cypher_attempts).toBe(1)
+          expect(UsageDataCollectionService.data.cypher_wins).toBe(1)
+        ->
+          expect("This should never happen").toBe('Nope')
+      )
+      scope.$apply()
+
+    it 'should detect a failure in a bolt transaction', ->
+      UsageDataCollectionService.reset()
+      Settings.shouldReportUdc = yes
+      setUDCData UsageDataCollectionService
+      qq = q.defer()
+      qq.reject({fields: [{code: 'TestFail', message:'This is a wanted failure.'}]})
+      spyOn(Bolt, "transaction").and.returnValue({tx: null, promise: qq.promise})
+      current_transaction = Cypher.transaction(yes)
+      p = current_transaction.commit("MATCH n RETURN n")
+      p.then(
+        ->
+          expect("This should never happen").toBe('Nope')
+        ->
+          wins_type = typeof UsageDataCollectionService.data['cypher_wins']
+          expect(wins_type).toBe('undefined')
+          expect(UsageDataCollectionService.data.cypher_attempts).toBe(1)
+          expect(UsageDataCollectionService.data.cypher_fails).toBe(1)
+      )
+      scope.$apply()
+
