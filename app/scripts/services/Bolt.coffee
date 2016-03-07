@@ -144,12 +144,12 @@ angular.module('neo4jApp.services')
 
       boltPlanToRESTPlan = (plan) ->
         obj = boltPlanToRESTPlanShared plan
-        obj['runtime-impl'] = "INTERPRETED"
-        obj['planner-impl'] = "IDP"
-        obj['version'] = "CYPHER 3.0"
-        obj['KeyNames'] = "p"
-        obj['planner'] = "COST"
-        obj['runtime'] = "INTERPRETED"
+        obj['runtime-impl'] = plan.arguments['runtime-impl']
+        obj['planner-impl'] = plan.arguments['planner-impl']
+        obj['version'] = plan.arguments['version']
+        obj['KeyNames'] = plan.arguments['KeyNames']
+        obj['planner'] = plan.arguments['planner']
+        obj['runtime'] = plan.arguments['runtime']
         {root: obj}
 
       boltPlanToRESTPlanShared = (plan) ->
