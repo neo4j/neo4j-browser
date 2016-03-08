@@ -18,8 +18,8 @@
           a(exportable ng-click='exportPlanSVG()', ng-show='isActive("plan")') Export SVG
           a(exportable ng-click='exportGraphPNG()', ng-show='isActive("graph")') Export PNG
           a(exportable ng-click='exportPlanPNG()', ng-show='isActive("plan")') Export PNG
-          a(exportable ng-click='exportJSON(frame.response.table._response)') Export JSON
-          a(exportable ng-click='exportCSV(frame.response.table)') Export CSV
+          a(exportable ng-click='exportJSON(frame.response.raw.records || frame.response.table._response)') Export JSON
+          a(ng-hide="frame.response.protocol=='bolt'", exportable ng-click='exportCSV(frame.response.table)') Export CSV
     li
       a.button.fa.fa-thumb-tack(ng-click='pin(frame)', ng-class="{selected: pinned}", tooltip-placement='bottom', tooltip='Pin at top')
     li

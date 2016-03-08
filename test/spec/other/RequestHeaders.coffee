@@ -52,6 +52,6 @@ describe 'AJAX Header', () ->
           errors: []
         })]
       )
-      Cypher.transaction().commit('RETURN 1')
+      Cypher.transaction(no).commit('RETURN 1')
       scope.$apply()
       backend.flush()

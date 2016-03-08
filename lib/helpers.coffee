@@ -123,4 +123,4 @@ class neo.helpers
     @hostIsAllowed = (hostname, whitelist, is_enterprise) ->
       return true if is_enterprise and (not whitelist or whitelist is '*')
       whitelisted_hosts = if is_enterprise then whitelist.split(",") else ['http://guides.neo4j.com', 'https://guides.neo4j.com', 'http://localhost', 'https://localhost']
-      hostname in whitelisted_hosts
+      hostname in whitelisted_hosts     

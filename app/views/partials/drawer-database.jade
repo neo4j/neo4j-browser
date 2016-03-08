@@ -14,7 +14,7 @@
   span(ng-show="!relationships.length").
     No relationships in database
   span(ng-repeat='relationshipType in relationships | orderBy: identity')
-    a.token.token-relationship-type(ng-click="editor.execScript(substituteToken('MATCH ()-[r:<token>]->() RETURN r LIMIT 25', relationshipType))") {{relationshipType}}
+    a.token.token-relationship-type(ng-click="editor.execScript(substituteToken('MATCH p=()-[r:<token>]->() RETURN p LIMIT 25', relationshipType))") {{relationshipType}}
 
   div(ng-show='propertyKeys')
     h5 Property keys

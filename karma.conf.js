@@ -66,6 +66,7 @@ module.exports = function(config) {
       'app/components/UUID.js/src/uuid.js',
       'app/components/angular-base64/angular-base64.min.js',
       'app/components/ascii-data-table/lib/bundle-angular.js',
+      'app/components/neo4j-javascript-driver/lib/browser/neo4j-web.min.js',
       'app/scripts/*.coffee',
       'lib/*.coffee',
       'app/scripts/**/*.coffee',
