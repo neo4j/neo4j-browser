@@ -21,20 +21,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'ProtocolFactory', [
+  .factory 'AuthBolt', [
+    'Bolt'
     'Settings'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    'AuthREST'
-    'AuthBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt) ->
+    '$q'
+    (Bolt, Settings, $q) ->
       {
-        getCypherTransaction: (useBolt = Settings.useBolt) ->
-          return new CypherTransactionBolt() if useBolt
-          return new CypherTransactionREST()
-
-        getAuthService: (useBolt = Settings.useBolt) ->
-          return AuthBolt if useBolt
-          return AuthREST
+        makeRequest: (withoutCredentials) ->
+          q = $q.defer()
+          r = Bolt.connect withoutCredentials
+          r.then((r) -> 
+            res = Bolt.constructResult r
+            return q.resolve({}) unless res.data.errors.length
+            return q.reject({status: 401, data: res})
+          ).catch((err) -> 
+            errObj = Bolt.constructResult err
+            if errObj.data.errors[0].code is 'Neo.ClientError.Security.CredentialsExpired'
+              errObj.data.password_change = 'true'
+              errObj.status = 403
+            else
+              errObj.status = 401
+            q.reject errObj
+          )
+          q.promise
       }
 ]

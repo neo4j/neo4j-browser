@@ -30,10 +30,14 @@ angular.module('neo4jApp.services')
       bolt = window.neo4j.v1
       _driver = null
 
-      connect = () ->
+      connect = (withoutCredentials) ->
         authData = AuthDataService.getPlainAuthData()
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
-        _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
+        if withoutCredentials
+          _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic('', ''))
+        else
+          _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
+        _driver.session().run("RETURN 1")
 
       boltResultToRESTResult = (result) ->
         res = result.records
@@ -194,5 +198,6 @@ angular.module('neo4jApp.services')
           {tx: tx, promise: p}
         constructResult: (res) ->
           boltResultToRESTResult res
+        connect: connect
       }
   ]

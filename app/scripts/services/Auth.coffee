@@ -23,10 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.services')
 .service 'AuthService', [
   'ConnectionStatusService'
-  'Server'
+  'ProtocolFactory'
   'Settings'
   '$q'
-  (ConnectionStatusService, Server, Settings, $q) ->
+  (ConnectionStatusService, ProtocolFactory, Settings, $q) ->
 
     setConnectionAuthData = (username, password) ->
       ConnectionStatusService.setConnectionAuthData username, password
@@ -57,7 +57,7 @@ angular.module('neo4jApp.services')
       authorizationRequired: ->
         #Make call without auth headers
         q = $q.defer()
-        p = @makeRequest(skip_auth_header = yes)
+        p = @makeRequest(withoutCredentials = yes)
         p.then(
           (r) ->
             ##Success, no auth required
@@ -106,9 +106,8 @@ angular.module('neo4jApp.services')
         )
         q.promise
 
-      makeRequest: (skip_auth_header = no) ->
-        opts = if skip_auth_header then {skipAuthHeader: skip_auth_header} else {}
-        p = Server.get("#{Settings.endpoint.rest}/", opts)
+      makeRequest: (withoutCredentials = no) ->
+        ProtocolFactory.getAuthService().makeRequest(withoutCredentials)
 
       forget: =>
         if ConnectionStatusService.connectedAsUser()
@@ -116,20 +115,19 @@ angular.module('neo4jApp.services')
         @hasValidAuthorization()
 
       setNewPassword: (old_passwd, new_passwd) ->
-        q = $q.defer()
         that = @
+        q = $q.defer()
         setConnectionAuthData ConnectionStatusService.connectedAsUser(), old_passwd
-        Server.post("#{Settings.endpoint.authUser}/#{ConnectionStatusService.connectedAsUser()}/password"
-          , {password: new_passwd})
-        .then(
-          (r) ->
-            setConnectionAuthData ConnectionStatusService.connectedAsUser(), new_passwd
-            q.resolve r
-          ,
-          (r) ->
-            that.forget() if r.status is 401
-            q.reject r
-        )
+        ProtocolFactory.getAuthService(useBolt = no).setNewPassword(ConnectionStatusService.connectedAsUser(), new_passwd)
+          .then(
+            (r) ->
+              setConnectionAuthData ConnectionStatusService.connectedAsUser(), new_passwd
+              q.resolve r
+            ,
+            (r) ->
+              that.forget() if r.status is 401
+              q.reject r
+          )
         q.promise
 
       getCurrentUser: ->

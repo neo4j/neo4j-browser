@@ -21,20 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'ProtocolFactory', [
+  .factory 'AuthREST', [
+    'Server'
     'Settings'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    'AuthREST'
-    'AuthBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt) ->
+    (Server, Settings) ->
       {
-        getCypherTransaction: (useBolt = Settings.useBolt) ->
-          return new CypherTransactionBolt() if useBolt
-          return new CypherTransactionREST()
-
-        getAuthService: (useBolt = Settings.useBolt) ->
-          return AuthBolt if useBolt
-          return AuthREST
+        makeRequest: (withoutCredentials) ->
+          opts = if withoutCredentials then {skipAuthHeader: withoutCredentials} else {}
+          p = Server.get("#{Settings.endpoint.rest}/", opts)
+        setNewPassword: (username, newPasswd) ->
+          Server.post("#{Settings.endpoint.authUser}/#{username}/password", {password: newPasswd})
       }
 ]
