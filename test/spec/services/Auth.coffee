@@ -96,16 +96,16 @@ describe 'Service: AuthService', () ->
       expect(status.authorization_required).toBe false
 
     it ' - should wait for version and edition before setting policies', ->
-      ConnectionStatusService.setAuthPolicies {storeCredentials: no, credentialTimeout: 0}
-      expect(AuthDataService.getPolicies().storeCredentials).toBe(null)
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: no, credentialTimeout: 0}
+      expect(AuthDataService.getPolicies().retainConnectionCredentials).toBe(null)
       $scope.neo4j = {version: '1.0', edition: 'enterprise', enterpriseEdition: yes}
       $scope.$emit 'db:updated:edition', $scope.neo4j.edition
-      expect(AuthDataService.getPolicies().storeCredentials).toBe(no)
+      expect(AuthDataService.getPolicies().retainConnectionCredentials).toBe(no)
 
-    it ' - should honor storeCredentials flag on enterprise', ->
+    it ' - should honor retainConnectionCredentials flag on enterprise', ->
       $scope.neo4j = {version: '1.0', edition: 'enterprise', enterpriseEdition: yes}
       $scope.$emit 'db:updated:edition', $scope.neo4j.edition
-      ConnectionStatusService.setAuthPolicies {storeCredentials: no, credentialTimeout: 0}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: no, credentialTimeout: 0}
       httpBackend.when('GET', "#{Settings.endpoint.rest}/")
       .respond(->
         return [200, JSON.stringify({})]
@@ -121,26 +121,26 @@ describe 'Service: AuthService', () ->
       expect(ConnectionStatusService.connectedAsUser()).toBe('test')
       expect(localStorageService.get('authorization_data')).toBeFalsy()
 
-      ConnectionStatusService.setAuthPolicies {storeCredentials: yes, credentialTimeout: 0}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: yes, credentialTimeout: 0}
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
-      Settings.storeCredentials = no
+      Settings.retainConnectionCredentials = no
       SettingsStore.save()
       expect(localStorageService.get('authorization_data')).toBeFalsy()
 
-      Settings.storeCredentials = yes
+      Settings.retainConnectionCredentials = yes
       SettingsStore.save()
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
-      ConnectionStatusService.setAuthPolicies {storeCredentials: yes, credentialTimeout: 600}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: yes, credentialTimeout: 600}
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
       timeout.flush()
       expect(localStorageService.get('authorization_data')).toBeFalsy()
 
-    it ' - should not honor storeCredentials flag on community', ->
+    it ' - should not honor retainConnectionCredentials flag on community', ->
       $scope.neo4j = {version: '1.0', edition: 'community', enterpriseEdition: no}
       $scope.$emit 'db:updated:edition', $scope.neo4j.edition
-      ConnectionStatusService.setAuthPolicies {storeCredentials: no, credentialTimeout: 0}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: no, credentialTimeout: 0}
       httpBackend.when('GET', "#{Settings.endpoint.rest}/")
       .respond(->
         return [200, JSON.stringify({})]
@@ -156,27 +156,27 @@ describe 'Service: AuthService', () ->
       expect(ConnectionStatusService.connectedAsUser()).toBe('test')
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
-      ConnectionStatusService.setAuthPolicies {storeCredentials: yes, credentialTimeout: 0}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: yes, credentialTimeout: 0}
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
-      Settings.storeCredentials = no
+      Settings.retainConnectionCredentials = no
       SettingsStore.save()
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
-      Settings.storeCredentials = yes
+      Settings.retainConnectionCredentials = yes
       SettingsStore.save()
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
-      ConnectionStatusService.setAuthPolicies {storeCredentials: yes, credentialTimeout: 600}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: yes, credentialTimeout: 600}
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
       timeout.flush()
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
-    it ' - should not store credentials when connecting with storeCredentials flag false on enterprise', ->
-      Settings.storeCredentials = no
+    it ' - should not store credentials when connecting with retainConnectionCredentials flag false on enterprise', ->
+      Settings.retainConnectionCredentials = no
       $scope.neo4j = {version: '1.0', edition: 'enterprise', enterpriseEdition: yes}
       $scope.$emit 'db:updated:edition', $scope.neo4j.edition
-      ConnectionStatusService.setAuthPolicies {storeCredentials: yes, credentialTimeout: 0}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: yes, credentialTimeout: 0}
       httpBackend.when('GET', "#{Settings.endpoint.rest}/")
       .respond(->
         return [200, JSON.stringify({})]
@@ -192,11 +192,11 @@ describe 'Service: AuthService', () ->
       expect(ConnectionStatusService.connectedAsUser()).toBe('test')
       expect(localStorageService.get('authorization_data')).toBeFalsy()
 
-      it ' - should store credentials when connecting with storeCredentials flag false on community', ->
-      Settings.storeCredentials = no
+      it ' - should store credentials when connecting with retainConnectionCredentials flag false on community', ->
+      Settings.retainConnectionCredentials = no
       $scope.neo4j = {version: '1.0', edition: 'community', enterpriseEdition: no}
       $scope.$emit 'db:updated:edition', $scope.neo4j.edition
-      ConnectionStatusService.setAuthPolicies {storeCredentials: yes, credentialTimeout: 0}
+      ConnectionStatusService.setAuthPolicies {retainConnectionCredentials: yes, credentialTimeout: 0}
       httpBackend.when('GET', "#{Settings.endpoint.rest}/")
       .respond(->
         return [200, JSON.stringify({})]
