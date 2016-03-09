@@ -21,26 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'ProtocolFactory', [
-    'Settings'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    'AuthREST'
-    'AuthBolt'
-    'MetaREST'
-    'MetaBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt, MetaREST, MetaBolt) ->
-      {
-        getCypherTransaction: (useBolt = Settings.useBolt) ->
-          return new CypherTransactionBolt() if useBolt
-          return new CypherTransactionREST()
-
-        getAuthService: (useBolt = Settings.useBolt) ->
-          return AuthBolt if useBolt
-          return AuthREST
-
-        getStoredProcedureService: (useBolt = Settings.useBolt) ->
-          return MetaBolt if useBolt
-          return MetaREST
-      }
+  .factory 'MetaREST', [
+    'Server'
+    '$q'
+    (Server, $q) ->
+      fetch: () ->
+        q = $q.defer()
+        obj =
+          labels: Server.labels()
+          relationships: Server.relationships()
+          propertyKeys: Server.propertyKeys()
+        q.resolve obj
+        q.promise
 ]

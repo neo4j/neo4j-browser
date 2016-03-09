@@ -33,14 +33,20 @@ angular.module('neo4jApp.controllers')
       'motdService'
       'UsageDataCollectionService'
       'Utils'
-      ($scope, $window, Server, Frame, AuthService, ConnectionStatusService, Settings, motdService, UDC, Utils) ->
+      'ProtocolFactory'
+      ($scope, $window, Server, Frame, AuthService, ConnectionStatusService, Settings, motdService, UDC, Utils, ProtocolFactory) ->
         $scope.kernel = {}
         $scope.refresh = ->
           return '' if $scope.unauthorized || $scope.offline
 
-          $scope.labels = Server.labels $scope.labels
-          $scope.relationships = Server.relationships $scope.relationships
-          $scope.propertyKeys = Server.propertyKeys $scope.propertyKeys
+          ProtocolFactory.getStoredProcedureService().fetch().then(
+            (res) ->
+              $scope.labels = res.labels
+              $scope.relationships = res.relationships
+              $scope.propertyKeys = res.propertyKeys
+          )
+
+
           $scope.server = Server.info $scope.server
           $scope.version = Server.version $scope.version
           $scope.host = $window.location.host
