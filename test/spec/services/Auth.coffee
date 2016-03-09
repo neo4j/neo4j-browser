@@ -45,6 +45,7 @@ describe 'Service: AuthService', () ->
       localStorageService = _localStorageService_
       httpBackend = $httpBackend
       timeout = $timeout
+      Settings.useBolt = no
     )
 
   describe ' - Auth tests', ->
