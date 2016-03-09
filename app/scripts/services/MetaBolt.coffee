@@ -27,12 +27,12 @@ angular.module('neo4jApp.services')
     'Bolt'
     ($q, CypherResult, Bolt) ->
 
-      commit = (query) ->
+      callProc = (query) ->
         statements = if query then [{statement: "CALL " + query}] else []
-        {tx, promise} = Bolt.transaction(statements)
+        result = Bolt.transaction(statements)
 
         q = $q.defer()
-        promise.then(
+        result.promise.then(
           (res) =>
             q.resolve(res.records)
         ,
@@ -47,16 +47,12 @@ angular.module('neo4jApp.services')
 
       fetch: ->
         q = $q.defer()
-        metaData = {}
         $q.all([
-          commit("db.labels"),
-          commit("db.relationshipTypes"),
-          commit("db.propertyKeys")
+          callProc("db.labels"),
+          callProc("db.relationshipTypes"),
+          callProc("db.propertyKeys")
         ]).then((data) ->
-          metaData.labels = data[0].map (o) -> o.label
-          metaData.relationships = data[1].map (o) -> o.relationshipType
-          metaData.propertyKeys =  data[2].map (o) -> o.propertyKey
-          q.resolve(metaData)
+          q.resolve(Bolt.constructMetaResult data)
         )
         q.promise
 

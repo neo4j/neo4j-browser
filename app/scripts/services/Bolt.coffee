@@ -45,6 +45,11 @@ angular.module('neo4jApp.services')
       createSession = () ->
         _driver.session()
 
+      boltResultToSimpleRESTResult = (result) ->
+        labels: result[0].map (o) -> o.label
+        relationships: result[1].map (o) -> o.relationshipType
+        propertyKeys:  result[2].map (o) -> o.propertyKey
+
       boltResultToRESTResult = (result) ->
         res = result.records
         obj = {
@@ -207,6 +212,8 @@ angular.module('neo4jApp.services')
           {tx: tx, promise: p}
         constructResult: (res) ->
           boltResultToRESTResult res
+        constructMetaResult: (res) ->
+          boltResultToSimpleRESTResult res
         connect: connect
       }
   ]
