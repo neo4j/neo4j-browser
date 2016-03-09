@@ -46,7 +46,7 @@ angular.module('neo4jApp.controllers')
           , 1000)
           return
         msg = ""
-        if _connection_summary.store_credentials
+        if _connection_summary.retain_connection_credentials
           msg += "Connection credentials are stored in your web browser"
         else
           msg += "Connection credentials are not stored in your web browser"

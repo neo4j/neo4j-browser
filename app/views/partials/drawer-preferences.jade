@@ -45,10 +45,10 @@
         span(tooltip="Up coming features that are in beta.", tooltip-placement="top") &nbsp; Enable experimental features?
 
     .checkbox(ng-show="neo4j.enterpriseEdition")
-      label(for="storeCredentials")
-        input#storeCredentials(type='checkbox', ng-model="settings.storeCredentials", ng-change="save()")
+      label(for="retainConnectionCredentials")
+        input#retainConnectionCredentials(type='checkbox', ng-model="settings.retainConnectionCredentials", ng-change="save()")
         span(tooltip="Remember connection credentials in browser.", tooltip-placement="right")
-          | &nbsp; Save login credentials
+          | &nbsp; Retain login credentials
 
     h5 Network Connection
     .checkbox

@@ -51,7 +51,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     refreshInterval: 10 # in seconds
     userName: "Graph Friend"
     theme: "normal"
-    storeCredentials: yes
+    retainConnectionCredentials: yes
     shouldReportUdc: no
     experimentalFeatures: no
     useBolt: yes

@@ -35,14 +35,14 @@ angular.module('neo4jApp.services')
     @unpersistCredentials = ->
       AuthDataService.clearPersistentAuthData()
 
-    @updateStoreCredentials = (storeCredentials)->
+    @updateRetainConnectionCredentials = (retainConnectionCredentials)->
       if not $rootScope.neo4j?.enterpriseEdition
-        storeCredentials = yes
-      else if storeCredentials is yes
-        storeCredentials = [no, 'false', 'no'].indexOf(Settings.storeCredentials) < 0 ? yes : no
+        retainConnectionCredentials = yes
+      else if retainConnectionCredentials is yes
+        retainConnectionCredentials = [no, 'false', 'no'].indexOf(Settings.retainConnectionCredentials) < 0 ? yes : no
 
-      @unpersistCredentials() unless storeCredentials
-      AuthDataService.setStoreCredentials storeCredentials
+      @unpersistCredentials() unless retainConnectionCredentials
+      AuthDataService.setStoreCredentials retainConnectionCredentials
 
     @updateCredentialTimeout = (credentialTimeout) ->
       if not $rootScope.neo4j?.enterpriseEdition then credentialTimeout = 0
@@ -91,18 +91,18 @@ angular.module('neo4jApp.services')
     @setAuthPolicies = (policies) ->
       if not $rootScope.neo4j or not $rootScope.neo4j.version
         return @waiting_policies = policies
-      if not policies.storeCredentials
-        @updateStoreCredentials no
-      else if policies.storeCredentials
-        @updateStoreCredentials yes
+      if not policies.retainConnectionCredentials
+        @updateRetainConnectionCredentials no
+      else if policies.retainConnectionCredentials
+        @updateRetainConnectionCredentials yes
         AuthDataService.persistCachedAuthData()
       if @getCredentialTimeout() isnt policies.credentialTimeout
         @updateCredentialTimeout policies.credentialTimeout
         @restartSessionCountdown()
       @waiting_policies = no
 
-    @getStoreCredentials = ->
-      AuthDataService.getPolicies().storeCredentials
+    @getRetainConnectionCredentials = ->
+      AuthDataService.getPolicies().retainConnectionCredentials
 
     @getCredentialTimeout = ->
       AuthDataService.getPolicies().credentialTimeout
@@ -143,14 +143,14 @@ angular.module('neo4jApp.services')
         user: @connectedAsUser(),
         authorization_required: @authorizationRequired(),
         is_connected: @isConnected(),
-        store_credentials: @getStoreCredentials(),
+        retain_connection_credentials: @getRetainConnectionCredentials(),
         credential_timeout: @getCredentialTimeout(),
         connection_age: @getConnectionAge()
       }
 
     $rootScope.$on('settings:saved', ->
-      that.setAuthPolicies({storeCredentials: Settings.storeCredentials, credentialTimeout: AuthDataService.getPolicies().credentialTimeout})
-      if AuthDataService.getPolicies().storeCredentials is no
+      that.setAuthPolicies({retainConnectionCredentials: Settings.retainConnectionCredentials, credentialTimeout: AuthDataService.getPolicies().credentialTimeout})
+      if AuthDataService.getPolicies().retainConnectionCredentials is no
         that.unpersistCredentials()
       else
         AuthDataService.persistCachedAuthData()

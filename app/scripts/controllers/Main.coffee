@@ -57,7 +57,7 @@ angular.module('neo4jApp.controllers')
                   $scope.kernel[a.name] = a.value
               UDC.set('store_id',   $scope.kernel['StoreId'])
               UDC.set('neo4j_version', $scope.server.neo4j_version)
-              refreshPolicies $scope.kernel['dbms.browser.store_credentials'], $scope.kernel['dbms.browser.credential_timeout']
+              refreshPolicies $scope.kernel['dbms.browser.retain_connection_credentials'], $scope.kernel['dbms.browser.credential_timeout']
               allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['dbms.security.allow_outgoing_browser_connections']) < 0 ? yes : no
               refreshAllowOutgoingConnections allow_connections
             ).error((r)-> $scope.kernel = {})
@@ -72,10 +72,10 @@ angular.module('neo4jApp.controllers')
           else if not allow_connections
             UDC.unloadUDC()
 
-        refreshPolicies = (storeCredentials = yes, credentialTimeout = 0) ->
-          storeCredentials = [no, 'false', 'no'].indexOf(storeCredentials) < 0 ? yes : no
+        refreshPolicies = (retainConnectionCredentials = yes, credentialTimeout = 0) ->
+          retainConnectionCredentials = [no, 'false', 'no'].indexOf(retainConnectionCredentials) < 0 ? yes : no
           credentialTimeout = Utils.parseTimeMillis(credentialTimeout) / 1000
-          ConnectionStatusService.setAuthPolicies {storeCredentials, credentialTimeout}
+          ConnectionStatusService.setAuthPolicies {retainConnectionCredentials, credentialTimeout}
 
         mapServerConfig = (key, val) ->
           return unless $scope.neo4j.config[key] != val
