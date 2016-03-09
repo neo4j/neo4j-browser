@@ -27,65 +27,36 @@ angular.module('neo4jApp.services')
     'Bolt'
     ($q, CypherResult, Bolt) ->
 
-      promiseResult = (promise) ->
+      commit = (query) ->
+        statements = if query then [{statement: "CALL " + query}] else []
+        {tx, promise} = Bolt.transaction(statements)
+
         q = $q.defer()
         promise.then(
           (res) =>
-            raw = res.original
-            remapped = res.remapped
-            if not remapped
-              q.reject({protocol: 'bolt', raw: raw})
-            else if remapped.data.errors && remapped.data.errors.length > 0
-              q.reject({protocol: 'bolt', errors: remapped.data.errors, raw: raw})
-            else
-              results = []
-              partResult = new CypherResult(remapped.data.results[0] || {})
-              partResult.protocol = 'bolt'
-              partResult.raw = raw
-              partResult.notifications = remapped.data.notifications
-              results.push partResult
-              q.resolve(results[0])
+            q.resolve(res.records)
         ,
           (res) ->
-            remapped = res.remapped
             q.reject({
               protocol: 'bolt',
-              raw: res.original,
-              errors: remapped.data.errors,
-              notifications: remapped.data.notifications
+              raw: res
             })
         )
         q.promise
 
-      commit = (query) ->
-        statements = if query then [{statement: "CALL " + query}] else []
-        q = $q.defer()
-        {tx, promise} = Bolt.transaction(statements)
-        promise.then((r) -> q.resolve({original: r, remapped: Bolt.constructResult(r)}))
-        .catch((r) -> q.reject({original: r, remapped: Bolt.constructResult(r)}))
-
-        res = promiseResult(q.promise)
-        res
-
 
       fetch: ->
         q = $q.defer()
-        x = {}
-        commit("db.labels").then(
-          (r)-> x.labels = r.raw.records.map (o) -> o['label']
-          (r)-> []
-        ).then
-        commit("db.relationshipTypes").then(
-          (r)-> x.relationships = r.raw.records.map (o) -> o['relationshipType']
-          (r)-> []
-        ).then
-        commit("db.propertyKeys").then(
-          (r)->
-            x.propertyKeys = r.raw.records.map (o) -> o['propertyKey']
-            q.resolve(x)
-          (r)->
-            []
-            q.resolve(x)
+        metaData = {}
+        $q.all([
+          commit("db.labels"),
+          commit("db.relationshipTypes"),
+          commit("db.propertyKeys")
+        ]).then((data) ->
+          metaData.labels = data[0].map (o) -> o.label
+          metaData.relationships = data[1].map (o) -> o.relationshipType
+          metaData.propertyKeys =  data[2].map (o) -> o.propertyKey
+          q.resolve(metaData)
         )
         q.promise
 
