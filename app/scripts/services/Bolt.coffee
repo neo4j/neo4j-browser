@@ -37,7 +37,13 @@ angular.module('neo4jApp.services')
           _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic('', ''))
         else
           _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
-        _driver.session().run("RETURN 1")
+        session = createSession()
+        p = session.run("RETURN 1")
+        p.then(-> session.close()).catch(-> session.close())
+        p
+
+      createSession = () ->
+        _driver.session()
 
       boltResultToRESTResult = (result) ->
         res = result.records
@@ -187,14 +193,17 @@ angular.module('neo4jApp.services')
       return {
         beginTransaction: (opts) -> 
           statement = opts[0]?.statement || ''
-          tx = _driver.session().beginTransaction()
-          return {tx: tx, promise: null} unless statement
-          return {tx: tx, promise: tx.run(statement)}
-        transaction: (opts, tx) -> 
-          tx = tx || _driver.session().beginTransaction()
+          session = createSession()
+          tx = session.beginTransaction()
+          return {tx: tx, session: session, promise: null} unless statement
+          return {tx: tx, session: session, promise: tx.run(statement)}
+        transaction: (opts, session, tx) -> 
+          session = session || createSession()
+          tx = tx || session.beginTransaction()
           statement = opts[0]?.statement || ''
-          p = tx.run(opts[0].statement)
+          p = tx.run(statement)
           tx.commit()
+          p.then(-> session.close()).catch(-> session.close())
           {tx: tx, promise: p}
         constructResult: (res) ->
           boltResultToRESTResult res

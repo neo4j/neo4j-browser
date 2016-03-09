@@ -66,6 +66,7 @@ angular.module('neo4jApp.services')
           @_reset()
           @requests = []
           delegate = null
+          @session = null
           @tx = null
 
         _requestDone: (promise) ->
@@ -87,8 +88,9 @@ angular.module('neo4jApp.services')
         begin: (query) ->
           q = $q.defer()
           statements = if query then [{statement:query}] else []
-          {tx, promise} = Bolt.beginTransaction(statements: statements)
+          {tx, session, promise} = Bolt.beginTransaction(statements: statements)
           @tx = tx
+          @session = session
           q.resolve()
           q.promise
           
@@ -96,7 +98,7 @@ angular.module('neo4jApp.services')
           statements = if query then [{statement:query}] else []
           UDC.increment('cypher_attempts')
           q = $q.defer()
-          {tx, promise} = Bolt.transaction(statements, @tx)
+          {tx, promise} = Bolt.transaction(statements, @session, @tx)
           @tx = tx
           promise.then((r) -> q.resolve({original: r, remapped: Bolt.constructResult(r)}))
             .catch((r) -> q.reject({original: r, remapped: Bolt.constructResult(r)}))
