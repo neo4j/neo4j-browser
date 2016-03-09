@@ -34,7 +34,7 @@ angular.module('neo4jApp.services')
         authData = AuthDataService.getPlainAuthData()
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
         if withoutCredentials
-          _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic('', ''))
+          _driver = bolt.driver("bolt://localhost:7687")
         else
           _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
         session = createSession()
