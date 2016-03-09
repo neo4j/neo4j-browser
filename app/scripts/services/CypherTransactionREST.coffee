@@ -54,7 +54,7 @@ angular.module('neo4jApp.services')
         (r) ->
           raw = {request: r.config, response: {headers: r.headers(), data: r.data}}
           raw.request.status = r.status
-          q.reject({protocol: 'rest', errors: r.errors, raw: raw})
+          q.reject({protocol: 'rest', errors: r.data.errors || r.errors, raw: raw})
         )
         q.promise
 
