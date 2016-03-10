@@ -21,26 +21,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'ProtocolFactory', [
-    'Settings'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    'AuthREST'
-    'AuthBolt'
-    'MetaREST'
-    'MetaBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt, MetaREST, MetaBolt) ->
-      {
-        getCypherTransaction: (useBolt = Settings.useBolt) ->
-          return new CypherTransactionBolt() if useBolt
-          return new CypherTransactionREST()
+  .factory 'MetaBolt', [
+    '$q'
+    'CypherResult'
+    'Bolt'
+    ($q, CypherResult, Bolt) ->
 
-        getAuthService: (useBolt = Settings.useBolt) ->
-          return AuthBolt if useBolt
-          return AuthREST
+      callProc = (query) ->
+        statements = if query then [{statement: "CALL " + query}] else []
+        result = Bolt.transaction(statements)
 
-        getMetaService: (useBolt = Settings.useBolt) ->
-          return MetaBolt if useBolt
-          return MetaREST
-      }
+        q = $q.defer()
+        result.promise.then(
+          (res) =>
+            q.resolve(res.records)
+        ,
+          (res) ->
+            q.resolve([])
+        )
+        q.promise
+
+
+      fetch: ->
+        q = $q.defer()
+        $q.all([
+          callProc("db.labels"),
+          callProc("db.relationshipTypes"),
+          callProc("db.propertyKeys")
+        ]).then((data) ->
+          q.resolve(Bolt.constructMetaResult data[0], data[1], data[2])
+        )
+        q.promise
+
 ]
+

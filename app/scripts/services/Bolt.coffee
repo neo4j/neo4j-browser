@@ -45,6 +45,11 @@ angular.module('neo4jApp.services')
       createSession = () ->
         _driver.session()
 
+      metaResultToRESTResult = (labels, realtionshipTypes, propertyKeys) ->
+        labels: labels.map (o) -> o.label
+        relationships: realtionshipTypes.map (o) -> o.relationshipType
+        propertyKeys:  propertyKeys.map (o) -> o.propertyKey
+
       boltResultToRESTResult = (result) ->
         res = result.records
         obj = {
@@ -52,7 +57,7 @@ angular.module('neo4jApp.services')
           headers: -> [],
           data: {
             results: [{
-              columns: [], 
+              columns: [],
               data: [],
               stats: {},
               }],
@@ -97,7 +102,7 @@ angular.module('neo4jApp.services')
         paths = items.filter((item) -> item instanceof bolt.types.Path)
         extractedPaths = extractPathsForGraphFormat paths
         graphItems = graphItems.concat extractedPaths
-        graphItems.map((item) -> 
+        graphItems.map((item) ->
           item.id = item.identity
           delete item.identity
           return item
@@ -106,7 +111,7 @@ angular.module('neo4jApp.services')
         rels = graphItems.filter((item) -> item instanceof bolt.types.Relationship)
           .map((item) ->
             item.startNode = item.start
-            item.endNode = item.end 
+            item.endNode = item.end
             delete item.start
             delete item.end
             return item
@@ -121,7 +126,7 @@ angular.module('neo4jApp.services')
 
       extractPathForRowsFormat = (path) ->
         path.segments.map((segment) -> [
-          extractDataForRowsFormat(segment.start), 
+          extractDataForRowsFormat(segment.start),
           extractDataForRowsFormat(segment.relationship),
           extractDataForRowsFormat(segment.end)
         ])
@@ -191,13 +196,13 @@ angular.module('neo4jApp.services')
         connect() if item.key is 'authorization_data'
 
       return {
-        beginTransaction: (opts) -> 
+        beginTransaction: (opts) ->
           statement = opts[0]?.statement || ''
           session = createSession()
           tx = session.beginTransaction()
           return {tx: tx, session: session, promise: null} unless statement
           return {tx: tx, session: session, promise: tx.run(statement)}
-        transaction: (opts, session, tx) -> 
+        transaction: (opts, session, tx) ->
           session = session || createSession()
           tx = tx || session.beginTransaction()
           statement = opts[0]?.statement || ''
@@ -207,6 +212,8 @@ angular.module('neo4jApp.services')
           {tx: tx, promise: p}
         constructResult: (res) ->
           boltResultToRESTResult res
+        constructMetaResult: (labels, realtionshipTypes, propertyKeys) ->
+          metaResultToRESTResult labels, realtionshipTypes, propertyKeys
         connect: connect
       }
   ]
