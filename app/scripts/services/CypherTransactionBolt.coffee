@@ -113,7 +113,7 @@ angular.module('neo4jApp.services')
 
         rollback: ->
           q = $q.defer()
-          @tx.rollback()
+          @tx.rollback() if @tx
           @_reset()
           q.resolve {}
           q.promise
