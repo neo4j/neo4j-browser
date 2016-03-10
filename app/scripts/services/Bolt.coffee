@@ -203,11 +203,13 @@ angular.module('neo4jApp.services')
           return {tx: tx, session: session, promise: null} unless statement
           return {tx: tx, session: session, promise: tx.run(statement)}
         transaction: (opts, session, tx) ->
-          session = session || createSession()
-          tx = tx || session.beginTransaction()
           statement = opts[0]?.statement || ''
-          p = tx.run(statement)
-          tx.commit()
+          session = session || createSession()
+          if tx
+            p = tx.run statement
+            tx.commit()
+          else
+            p = session.run statement
           p.then(-> session.close()).catch(-> session.close())
           {tx: tx, promise: p}
         constructResult: (res) ->
