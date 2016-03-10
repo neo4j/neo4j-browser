@@ -31,7 +31,8 @@ angular.module('neo4jApp.services')
   'jwtHelper'
   '$q'
   '$rootScope'
-  (Settings, Editor, AuthService, NTN, localStorageService, AuthDataService, jwtHelper, $q, $rootScope) ->
+  'UsageDataCollectionService'
+  (Settings, Editor, AuthService, NTN, localStorageService, AuthDataService, jwtHelper, $q, $rootScope, UDC) ->
     class CurrentUser
       _user: {}
       store: null
@@ -84,8 +85,10 @@ angular.module('neo4jApp.services')
             (store) ->
               that.store = store
               q.resolve()
-              $rootScope.$emit 'ntn:authenticated', 'yes'
+              data = localStorageService.get 'ntn_profile' || {}
+              $rootScope.$emit 'ntn:authenticated', 'yes', data
           )
+
         else
           q.resolve()
         q.promise
@@ -126,6 +129,8 @@ angular.module('neo4jApp.services')
             NTN.login().then((res) ->
               that.persist res
               that.autoLogin()
+              data = localStorageService.get 'ntn_profile' || {}
+              $rootScope.$emit 'ntn:login', data
               q.resolve(res)
             )
         )

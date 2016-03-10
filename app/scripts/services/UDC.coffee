@@ -51,7 +51,8 @@ angular.module('neo4jApp.services')
         loadUDC: ->
           Intercom.load()
           Intercom.reload()
-          
+          @connectUser()
+
         unloadUDC: ->
           Intercom.unload()
 
@@ -144,6 +145,9 @@ angular.module('neo4jApp.services')
         newMessage: (message) ->
           @connectUser()
           Intercom.newMessage message
+
+        trackEvent: (name, data) ->
+          Intercom.event(name, data)
 
       new UsageDataCollectionService()
   ]

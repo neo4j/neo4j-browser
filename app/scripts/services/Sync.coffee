@@ -72,7 +72,8 @@ angular.module('neo4jApp.services')
 
         $rootScope.$on 'ntn:authenticated', (evt, authenticated) =>
           @authenticated = authenticated
-          @currentFavs = Utils.removeDocumentsFromArray(DefaultContentService.getDefaultDocuments(), getStorage().documents)
+          documents = getStorage().documents || []
+          @currentFavs = Utils.removeDocumentsFromArray(DefaultContentService.getDefaultDocuments(), documents)
           @fetch() if authenticated
 
         $rootScope.$on 'ntn:data_loaded', (evt, didLoad) =>
