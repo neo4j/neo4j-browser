@@ -39,7 +39,7 @@ angular.module('neo4jApp.controllers')
         $scope.refresh = ->
           return '' if $scope.unauthorized || $scope.offline
 
-          ProtocolFactory.getStoredProcedureService().fetch().then(
+          ProtocolFactory.getMetaService().fetch().then(
             (res) ->
               $scope.labels = res.labels
               $scope.relationships = res.relationships

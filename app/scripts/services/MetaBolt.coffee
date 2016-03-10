@@ -37,10 +37,7 @@ angular.module('neo4jApp.services')
             q.resolve(res.records)
         ,
           (res) ->
-            q.reject({
-              protocol: 'bolt',
-              raw: res
-            })
+            q.resolve([])
         )
         q.promise
 
@@ -52,8 +49,9 @@ angular.module('neo4jApp.services')
           callProc("db.relationshipTypes"),
           callProc("db.propertyKeys")
         ]).then((data) ->
-          q.resolve(Bolt.constructMetaResult data)
+          q.resolve(Bolt.constructMetaResult data[0], data[1], data[2])
         )
         q.promise
 
-  ]
+]
+

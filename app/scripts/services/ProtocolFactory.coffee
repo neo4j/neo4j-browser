@@ -39,7 +39,7 @@ angular.module('neo4jApp.services')
           return AuthBolt if useBolt
           return AuthREST
 
-        getStoredProcedureService: (useBolt = Settings.useBolt) ->
+        getMetaService: (useBolt = Settings.useBolt) ->
           return MetaBolt if useBolt
           return MetaREST
       }
