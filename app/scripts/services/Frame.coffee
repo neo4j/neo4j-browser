@@ -123,6 +123,9 @@ angular.module('neo4jApp.services')
             if result.is_remote and result.status is 0
               result = {errors: [{code: 0, message: "No 'Access-Control-Allow-Origin' header is present on the requested resource and can therefore not be played."}]}
 
+            # When there's no socket connection open
+            result = result.data if result.status is 0 and result.data.errors[0].code is 'Socket.Error'
+
             errors = result.errors[0]
             @errorText = "#{errors.code}"
             @detailedErrorText = errors.message

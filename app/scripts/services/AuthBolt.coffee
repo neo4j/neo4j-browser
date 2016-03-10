@@ -39,6 +39,8 @@ angular.module('neo4jApp.services')
             if errObj.data.errors[0].code is 'Neo.ClientError.Security.CredentialsExpired'
               errObj.data.password_change = 'true'
               errObj.status = 403
+            else if errObj.data.errors[0].code is 'Socket.Error'
+              errObj.status = 0
             else
               errObj.status = 401
             q.reject errObj
