@@ -31,10 +31,10 @@ describe 'Service: Sync', () ->
     Storage = _localStorageService_
     $rScope = $rootScope.$new()
 
-    spyOn(Storage, 'get').andCallFake((key) -> [{content: 'hej'}])
 
   it 'should expose syncKeys', ->
     expect(JSON.stringify(SyncService.syncKeys)).toBe(JSON.stringify(['documents', 'folders', 'grass']))
-   
+
   it 'should get the current data in local storage for syncKeys', ->
+    #spyOn(Storage, 'get').andCallFake((key) -> [{content: 'hej'}])
     #res = SyncService.
