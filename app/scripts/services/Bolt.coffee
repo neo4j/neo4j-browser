@@ -26,24 +26,71 @@ angular.module('neo4jApp.services')
     'AuthDataService'
     'localStorageService'
     '$rootScope'
-    (Settings, AuthDataService, localStorageService, $rootScope) ->
+    '$q'
+    (Settings, AuthDataService, localStorageService, $rootScope, $q) ->
       bolt = window.neo4j.v1
       _driver = null
 
       connect = (withoutCredentials) ->
+        q = $q.defer()
         authData = AuthDataService.getPlainAuthData()
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
         if withoutCredentials
           _driver = bolt.driver("bolt://localhost:7687")
         else
           _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
+        _driver.onError = (e) -> 
+          if e instanceof Event and e.type is 'error'
+            _driver = null 
+            q.reject getSocketErrorObj()
         session = createSession()
         p = session.run("RETURN 1")
-        p.then(-> session.close()).catch(-> session.close())
-        p
+        p.then((r) ->
+          session.close()
+          q.resolve r
+        ).catch((e)-> 
+          session.close()
+          q.reject e
+        )
+        q.promise
 
       createSession = () ->
-        _driver.session()
+        return _driver.session() if _driver
+        return no
+
+      beginTransaction = (opts) ->
+        q = $q.defer()
+        statement = opts[0]?.statement || ''
+        session = createSession()
+        if not session
+          tx = null
+          q.reject getSocketErrorObj()
+        else
+          tx = session.beginTransaction()
+          q.resolve() unless statement
+          tx.run(statement).then((r)-> q.resolve(r)).catch((e)-> q.reject(e)) if statement
+        return {tx: tx, session: session, promise: q.promise}
+
+      transaction = (opts, session, tx) -> 
+        statement = opts[0]?.statement || ''
+        q = $q.defer()
+        session = session || createSession()
+        if not session
+          q.reject getSocketErrorObj()
+        else
+          if tx
+            p = tx.run statement
+            tx.commit()
+          else
+            p = session.run statement  
+          p.then((r) ->
+            session.close()
+            q.resolve r
+          ).catch((e) -> 
+            session.close()
+            q.reject e
+          )
+        {tx: tx, promise: q.promise}
 
       metaResultToRESTResult = (labels, realtionshipTypes, propertyKeys) ->
         labels: labels.map (o) -> o.label
@@ -51,7 +98,7 @@ angular.module('neo4jApp.services')
         propertyKeys:  propertyKeys.map (o) -> o.propertyKey
 
       boltResultToRESTResult = (result) ->
-        res = result.records
+        res = result.records || []
         obj = {
           config: {},
           headers: -> [],
@@ -70,8 +117,8 @@ angular.module('neo4jApp.services')
           return obj
         keys = if res.length then Object.keys(res[0]) else []
         obj.data.results[0].columns = keys
-        obj.data.results[0].plan = boltPlanToRESTPlan result.summary.plan if result.summary.plan
-        obj.data.results[0].plan = boltPlanToRESTPlan result.summary.profile if result.summary.profile
+        obj.data.results[0].plan = boltPlanToRESTPlan result.summary.plan if result.summary and result.summary.plan
+        obj.data.results[0].plan = boltPlanToRESTPlan result.summary.profile if result.summary and result.summary.profile
         obj.data.results[0].stats = boltStatsToRESTStats result.summary
         res = itemIntToString res
         rows = res.map((record) ->
@@ -180,6 +227,7 @@ angular.module('neo4jApp.services')
         }
 
       boltStatsToRESTStats = (summary) ->
+        return {} unless summary and summary.updateStatistics
         stats = summary.updateStatistics._stats
         newStats = {}
         Object.keys(stats).forEach((key) ->
@@ -189,6 +237,17 @@ angular.module('neo4jApp.services')
         newStats['contains_updates'] = summary.updateStatistics.containsUpdates()
         newStats
 
+      getSocketErrorObj = ->
+        buildErrorObj 'Socket.Error', 'Socket error. Is the server online and have websockets open?'
+
+      buildErrorObj = (code, message) ->
+        return {
+          fields: [{
+            code: code,
+            message: message
+          }]  
+        }
+
       connect()
       $rootScope.$on 'LocalStorageModule.notification.setitem', (evt, item) =>
         connect() if item.key is 'authorization_data'
@@ -196,26 +255,12 @@ angular.module('neo4jApp.services')
         connect() if item.key is 'authorization_data'
 
       return {
-        beginTransaction: (opts) ->
-          statement = opts[0]?.statement || ''
-          session = createSession()
-          tx = session.beginTransaction()
-          return {tx: tx, session: session, promise: null} unless statement
-          return {tx: tx, session: session, promise: tx.run(statement)}
-        transaction: (opts, session, tx) ->
-          statement = opts[0]?.statement || ''
-          session = session || createSession()
-          if tx
-            p = tx.run statement
-            tx.commit()
-          else
-            p = session.run statement
-          p.then(-> session.close()).catch(-> session.close())
-          {tx: tx, promise: p}
+        connect: connect,
+        beginTransaction: beginTransaction,
+        transaction: transaction,
         constructResult: (res) ->
           boltResultToRESTResult res
         constructMetaResult: (labels, realtionshipTypes, propertyKeys) ->
           metaResultToRESTResult labels, realtionshipTypes, propertyKeys
-        connect: connect
       }
   ]
