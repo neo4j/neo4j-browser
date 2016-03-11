@@ -58,6 +58,40 @@ angular.module('neo4jApp.services')
         return _driver.session() if _driver
         return no
 
+      beginTransaction = (opts) ->
+        q = $q.defer()
+        statement = opts[0]?.statement || ''
+        session = createSession()
+        if not session
+          tx = null
+          q.reject getSocketErrorObj()
+        else
+          tx = session.beginTransaction()
+          q.resolve() unless statement
+          tx.run(statement).then((r)-> q.resolve(r)).catch((e)-> q.reject(e)) if statement
+        return {tx: tx, session: session, promise: q.promise}
+
+      transaction = (opts, session, tx) -> 
+        statement = opts[0]?.statement || ''
+        q = $q.defer()
+        session = session || createSession()
+        if not session
+          q.reject getSocketErrorObj()
+        else
+          if tx
+            p = tx.run statement
+            tx.commit()
+          else
+            p = session.run statement  
+          p.then((r) ->
+            session.close()
+            q.resolve r
+          ).catch((e) -> 
+            session.close()
+            q.reject e
+          )
+        {tx: tx, promise: q.promise}
+
       metaResultToRESTResult = (labels, realtionshipTypes, propertyKeys) ->
         labels: labels.map (o) -> o.label
         relationships: realtionshipTypes.map (o) -> o.relationshipType
@@ -202,8 +236,8 @@ angular.module('neo4jApp.services')
         )
         newStats['contains_updates'] = summary.updateStatistics.containsUpdates()
         newStats
-      getSocketErrorObj = ->
 
+      getSocketErrorObj = ->
         buildErrorObj 'Socket.Error', 'Socket error. Is the server online and have websockets open?'
 
       buildErrorObj = (code, message) ->
@@ -221,42 +255,12 @@ angular.module('neo4jApp.services')
         connect() if item.key is 'authorization_data'
 
       return {
-        beginTransaction: (opts) ->
-          q = $q.defer()
-          statement = opts[0]?.statement || ''
-          session = createSession()
-          if not session
-            tx = null
-            q.reject getSocketErrorObj()
-          else
-            tx = session.beginTransaction()
-            tx.run(statement).then((r)-> q.resolve(r)).catch((e)-> q.reject(e)) if statement
-          return {tx: tx, session: session, promise: null} unless statement
-          return {tx: tx, session: session, promise: q.promise}
-        transaction: (opts, session, tx) -> 
-          statement = opts[0]?.statement || ''
-          q = $q.defer()
-          session = session || createSession()
-          if not session
-            q.reject getSocketErrorObj()
-          else
-            if tx
-              p = tx.run statement
-              tx.commit()
-            else
-              p = session.run statement  
-            p.then((r) ->
-              session.close()
-              q.resolve r
-            ).catch((e) -> 
-              session.close()
-              q.reject e
-            )
-          {tx: tx, promise: q.promise}
+        connect: connect,
+        beginTransaction: beginTransaction,
+        transaction: transaction,
         constructResult: (res) ->
           boltResultToRESTResult res
         constructMetaResult: (labels, realtionshipTypes, propertyKeys) ->
           metaResultToRESTResult labels, realtionshipTypes, propertyKeys
-        connect: connect
       }
   ]
