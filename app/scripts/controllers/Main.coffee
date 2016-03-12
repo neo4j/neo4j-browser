@@ -63,8 +63,8 @@ angular.module('neo4jApp.controllers')
                   $scope.kernel[a.name] = a.value
               UDC.set('store_id',   $scope.kernel['StoreId'])
               UDC.set('neo4j_version', $scope.server.neo4j_version)
-              refreshPolicies $scope.kernel['dbms.browser.retain_connection_credentials'], $scope.kernel['dbms.browser.credential_timeout']
-              allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['dbms.security.allow_outgoing_browser_connections']) < 0 ? yes : no
+              refreshPolicies $scope.kernel['browser.retain_connection_credentials'], $scope.kernel['browser.credential_timeout']
+              allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['browser.allow_outgoing_browser_connections']) < 0 ? yes : no
               refreshAllowOutgoingConnections allow_connections
             ).error((r)-> $scope.kernel = {})
 
