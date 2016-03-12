@@ -131,12 +131,12 @@ angular.module('neo4jApp')
             is_remote = yes
             url = input[('play'.length+2)..]
             host = url.match(/^(https?:\/\/[^\/]+)/)[1]
-            host_ok = Utils.hostIsAllowed host, $rootScope.kernel['dbms.browser.remote_content_hostname_whitelist'], $rootScope.neo4j.enterpriseEdition
+            host_ok = Utils.hostIsAllowed host, $rootScope.kernel['browser.remote_content_hostname_whitelist'], $rootScope.neo4j.enterpriseEdition
           else
             topic = topicalize(clean_url) or 'start'
             url = "content/guides/#{topic}.html"
           if is_remote and not host_ok
-            q.reject({page: url, contents: '', is_remote: is_remote, errors: [{code: "0", message: "Requested host is not whitelisted in dbms.browser.remote_content_hostname_whitelist."}]})  
+            q.reject({page: url, contents: '', is_remote: is_remote, errors: [{code: "0", message: "Requested host is not whitelisted in browser.remote_content_hostname_whitelist."}]})  
             return q.promise
           $http.get(url)
           .then(
