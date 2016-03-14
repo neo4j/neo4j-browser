@@ -23,18 +23,77 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 describe 'Service: Sync', () ->
   SyncService = {}
   Storage = {}
-  $rScope = {}
+  $rootScope = {}
 
   beforeEach module 'neo4jApp.services'
-  beforeEach inject (_SyncService_, _localStorageService_, $rootScope) ->
+  beforeEach inject (_SyncService_, _localStorageService_, _$rootScope_) ->
     SyncService = _SyncService_
     Storage = _localStorageService_
-    $rScope = $rootScope.$new()
-
+    $rootScope = _$rootScope_
 
   it 'should expose syncKeys', ->
     expect(JSON.stringify(SyncService.syncKeys)).toBe(JSON.stringify(['documents', 'folders', 'grass']))
 
-  it 'should get the current data in local storage for syncKeys', ->
-    #spyOn(Storage, 'get').andCallFake((key) -> [{content: 'hej'}])
-    #res = SyncService.
+  it 'should update sync time when item "updated_at" is supplied', ->
+    timeBefore = SyncService.lastSyncedAt
+    $rootScope.$digest()
+    SyncService.authenticated = yes
+    SyncService.syncItem {key: 'updated_at'}
+    $rootScope.$digest()
+    timeAfter = SyncService.lastSyncedAt
+    expect(timeBefore).not.toBe(timeAfter)
+
+  it 'should have the state inSync = no when not authenticated and never signed in (ntn_data empty)', ->
+    expect($rootScope.ntn_data).toBe undefined
+    stateBefore = SyncService.inSync
+    SyncService.syncItem({key: 'grass', newvalue: JSON.stringify({node: {diameter: '50px'}})})
+    $rootScope.$digest()
+    stateAfter = SyncService.inSync
+    expect(stateBefore).toBeFalsy()
+    expect(stateBefore).toBe(stateAfter)
+    expect(SyncService.authenticated).toBeFalsy()
+    expect($rootScope.ntn_data).toBe undefined
+
+   # TODO: Separate 'updated_at' (for localstorage) and lastSyncedAt (for remote serverice)
+   # Writing to localstorage != in sync with remote service. The test below shows this.
+   # it 'should have the state inSync = no when not authenticated', ->
+   #  expect($rootScope.ntn_data).toBe undefined
+   #  $rootScope.ntn_data = {grass: 'x'} # Set to anything to fake that we once were signed in
+   #  stateBefore = SyncService.inSync
+   #  SyncService.syncItem({key: 'grass', newvalue: JSON.stringify({node: {diameter: '50px'}})})
+   #  $rootScope.$digest()
+   #  stateAfter = SyncService.inSync
+   #  expect(stateBefore).toBeFalsy()
+   #  expect(stateBefore).toEqual(stateAfter)
+   #  expect(SyncService.authenticated).toBeFalsy()
+
+  it 'should have the state inSync = yes when authenticated', ->
+    expect($rootScope.ntn_data).toBe undefined
+    $rootScope.$digest()
+    $rootScope.ntn_data = {grass: 'x'} # Set $id to pretend we're connected to service
+    $rootScope.$digest()
+    SyncService.authenticated = yes # Fake authenticated
+    stateBefore = SyncService.inSync
+    $rootScope.$digest()
+    SyncService.syncItem({key: 'grass', newvalue: JSON.stringify({node: {diameter: '50px'}})})
+    $rootScope.$digest()
+    stateAfter = SyncService.inSync
+    expect(stateBefore).toBeFalsy()
+    expect(stateBefore).not.toBe(stateAfter)
+    expect(SyncService.authenticated).toBeTruthy()
+
+  it 'should call push for new users', ->
+    expect($rootScope.ntn_data).toBe undefined
+    $rootScope.$digest()
+    $rootScope.ntn_data = {$id: 1} # Set $id to pretend we're connected to service, but no 'documents' = new user
+    SyncService.authenticated = yes # Fake authenticated
+    stateBefore = SyncService.inSync
+    spyOn(SyncService, 'push').and.returnValue(yes)
+    $rootScope.$digest()
+    SyncService.syncItem({key: 'grass', newvalue: JSON.stringify({node: {diameter: '50px'}})})
+    $rootScope.$digest()
+    stateAfter = SyncService.inSync
+    expect(stateBefore).toBeFalsy()
+    expect(stateBefore).not.toBe(stateAfter)
+    expect(SyncService.authenticated).toBeTruthy()
+    expect(SyncService.push).toHaveBeenCalled()
