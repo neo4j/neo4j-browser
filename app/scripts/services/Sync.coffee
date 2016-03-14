@@ -84,11 +84,11 @@ angular.module('neo4jApp.services')
           setStorageForKey 'documents', newFavs
 
       syncItem: (item) -> 
-        return @setSyncedAt() if item.key is 'updated_at'
+        return @setSyncedAt() if item.key is 'updated_at' and @authenticated
         return unless item.key in syncKeys
         newvalue = if item.key is 'grass' then item.newvalue else JSON.parse item.newvalue
         newvalue = @getObjectStruct newvalue
-        return @inSync = yes unless $rootScope.ntn_data
+        return @inSync = no unless $rootScope.ntn_data
         newSyncVal = @upgradeFormat $rootScope.ntn_data[item.key], item
         return if Utils.equals newSyncVal[0].data, newvalue.data
         newSyncVal.splice(0, 0, newvalue) # Prepend new val
