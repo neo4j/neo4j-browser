@@ -44,7 +44,7 @@ angular.module('neo4jApp.services')
             _driver = null 
             q.reject getSocketErrorObj()
         session = createSession()
-        p = session.run("RETURN 1")
+        p = session.run("CALL db.labels")
         p.then((r) ->
           session.close()
           q.resolve r
