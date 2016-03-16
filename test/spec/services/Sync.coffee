@@ -113,3 +113,24 @@ describe 'Service: Sync', () ->
     expect(stateBefore).not.toBe(stateAfter)
     expect(SyncService.authenticated).toBeTruthy()
     expect(SyncService.push).toHaveBeenCalled()
+
+  it 'should be able to restore documents to an older version', (done) ->
+    docs = [
+      {
+        data: [{content: 'query1'}],
+        syncedAt: 2000
+      },{
+        data: [{content: 'query2'}],
+        syncedAt: 1000
+      },
+    ]
+    $rootScope.ntn_data = {$id: 1, documents: docs}
+    $rootScope.$digest()
+    expect($rootScope.ntn_data.documents[0].syncedAt).toBe(2000)
+    SyncService.restoreToVersion('documents', 1000, (err, res) ->
+      expect(res).toBe(1)
+      expect($rootScope.ntn_data.documents[0].syncedAt).toBeGreaterThan(2000) # Sync time gets renewed
+      expect($rootScope.ntn_data.documents[0].data[0].content).toBe('query2')
+      expect($rootScope.ntn_data.documents[1].syncedAt).toBe(2000)
+      done()
+    )
