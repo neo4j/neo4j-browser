@@ -82,6 +82,22 @@ describe 'Service: Sync', () ->
     expect(stateBefore).not.toBe(stateAfter)
     expect(SyncService.authenticated).toBeTruthy()
 
+  it 'should not call push for existing users', ->
+    expect($rootScope.ntn_data).toBe undefined
+    $rootScope.$digest()
+    $rootScope.ntn_data = {$id: 1, documents: [{data: []}]} # Set $id to pretend we're connected to service and 'documents' = existing user
+    SyncService.authenticated = yes # Fake authenticated
+    stateBefore = SyncService.inSync
+    spyOn(SyncService, 'push').and.returnValue(yes)
+    $rootScope.$digest()
+    SyncService.syncItem({key: 'grass', newvalue: JSON.stringify({node: {diameter: '50px'}})})
+    $rootScope.$digest()
+    stateAfter = SyncService.inSync
+    expect(stateBefore).toBeFalsy()
+    expect(stateBefore).not.toBe(stateAfter)
+    expect(SyncService.authenticated).toBeTruthy()
+    expect(SyncService.push).not.toHaveBeenCalled()
+
   it 'should call push for new users', ->
     expect($rootScope.ntn_data).toBe undefined
     $rootScope.$digest()
