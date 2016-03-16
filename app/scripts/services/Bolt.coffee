@@ -132,7 +132,11 @@ angular.module('neo4jApp.services')
         return obj
 
       getRESTRowsFromBolt = (record, keys) ->
-        keys.reduce(((tot, curr) -> tot.concat(extractDataForRowsFormat(record[curr]))), [])
+        keys.reduce((tot, curr) -> 
+          res = extractDataForRowsFormat(record[curr])
+          res = [res] if Array.isArray res
+          tot.concat res
+        , [])
 
       getRESTMetaFromBolt = (record, keys) ->
         items = keys.map((key) -> record[key])
@@ -169,7 +173,10 @@ angular.module('neo4jApp.services')
         return item.properties if item instanceof bolt.types.Node
         return item.properties if item instanceof bolt.types.Relationship
         return extractPathForRowsFormat item if item instanceof bolt.types.Path
-        return [item] if Array.isArray item
+        return item if item is null
+        return item.map((subitem) -> extractDataForRowsFormat subitem) if Array.isArray item
+        if typeof item is 'object'
+          Object.keys(item).forEach((key) => item[key] = extractDataForRowsFormat(item[key]))
         item
 
       extractPathForRowsFormat = (path) ->
