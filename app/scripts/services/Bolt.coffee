@@ -169,6 +169,7 @@ angular.module('neo4jApp.services')
         return item.properties if item instanceof bolt.types.Node
         return item.properties if item instanceof bolt.types.Relationship
         return extractPathForRowsFormat item if item instanceof bolt.types.Path
+        return [item] if Array.isArray item
         item
 
       extractPathForRowsFormat = (path) ->
