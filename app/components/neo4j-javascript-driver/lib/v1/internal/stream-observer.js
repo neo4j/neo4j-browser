@@ -17,16 +17,6 @@
  * limitations under the License.
  */
 
-/**
- * Handles a RUN/PULL_ALL, or RUN/DISCARD_ALL requests, maps the responses
- * in a way that a user-provided observer can see these as a clean Stream
- * of records.
- * This class will queue up incoming messages until a user-provided observer
- * for the incoming stream is registered. Thus, we keep fields around
- * for tracking head/records/tail. These are only used if there is no
- * observer registered.
- * @access private
- */
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37,6 +27,19 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var _record = require("../record");
+
+/**
+ * Handles a RUN/PULL_ALL, or RUN/DISCARD_ALL requests, maps the responses
+ * in a way that a user-provided observer can see these as a clean Stream
+ * of records.
+ * This class will queue up incoming messages until a user-provided observer
+ * for the incoming stream is registered. Thus, we keep fields around
+ * for tracking head/records/tail. These are only used if there is no
+ * observer registered.
+ * @access private
+ */
+
 var StreamObserver = (function () {
   /**
    * @constructor
@@ -45,7 +48,8 @@ var StreamObserver = (function () {
   function StreamObserver() {
     _classCallCheck(this, StreamObserver);
 
-    this._head = null;
+    this._fieldKeys = null;
+    this._fieldLookup = null;
     this._queuedRecords = [];
     this._tail = null;
     this._error = null;
@@ -61,26 +65,29 @@ var StreamObserver = (function () {
   _createClass(StreamObserver, [{
     key: "onNext",
     value: function onNext(rawRecord) {
-      var record = {};
-      for (var i = 0; i < this._head.length; i++) {
-        record[this._head[i]] = rawRecord[i];
-      }
+      var record = new _record.Record(this._fieldKeys, rawRecord, this._fieldLookup);
       if (this._observer) {
         this._observer.onNext(record);
       } else {
         this._queuedRecords.push(record);
       }
     }
-
-    /**
-     * TODO
-     */
   }, {
     key: "onCompleted",
     value: function onCompleted(meta) {
-      if (this._head === null) {
-        // Stream header
-        this._head = meta.fields;
+      if (this._fieldKeys === null) {
+        // Stream header, build a name->index field lookup table
+        // to be used by records. This is an optimization to make it
+        // faster to look up fields in a record by name, rather than by index.
+        // Since the records we get back via Bolt are just arrays of values.
+        this._fieldKeys = [];
+        this._fieldLookup = {};
+        if (meta.fields && meta.fields.length > 0) {
+          this._fieldKeys = meta.fields;
+          for (var i = 0; i < meta.fields.length; i++) {
+            this._fieldLookup[meta.fields[i]] = i;
+          }
+        }
       } else {
         // End of stream
         if (this._observer) {
