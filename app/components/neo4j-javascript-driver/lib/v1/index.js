@@ -23,24 +23,14 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 var _integer = require('./integer');
 
 var _driver = require('./driver');
 
-var _driver2 = _interopRequireDefault(_driver);
-
-var _version = require('../version');
-
 var _graphTypes = require('./graph-types');
 
-var USER_AGENT = "neo4j-javascript/" + _version.VERSION;
-
 exports['default'] = {
-  driver: function driver(url, token) {
-    return new _driver2['default'](url, USER_AGENT, token);
-  },
+  driver: _driver.driver,
   int: _integer.int,
   isInt: _integer.isInt,
   auth: {

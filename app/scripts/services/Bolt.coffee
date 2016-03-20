@@ -93,9 +93,9 @@ angular.module('neo4jApp.services')
         {tx: tx, promise: q.promise}
 
       metaResultToRESTResult = (labels, realtionshipTypes, propertyKeys) ->
-        labels: labels.map (o) -> o.label
-        relationships: realtionshipTypes.map (o) -> o.relationshipType
-        propertyKeys:  propertyKeys.map (o) -> o.propertyKey
+        labels: labels.map (o) -> o.get('label')
+        relationships: realtionshipTypes.map (o) -> o.get('relationshipType')
+        propertyKeys: propertyKeys.map (o) -> o.get('propertyKey')
 
       boltResultToRESTResult = (result) ->
         res = result.records || []
@@ -115,7 +115,7 @@ angular.module('neo4jApp.services')
         if result.fields
           obj.data.errors = result.fields
           return obj
-        keys = if res.length then Object.keys(res[0]) else []
+        keys = if res.length then res[0].keys else []
         obj.data.results[0].columns = keys
         obj.data.results[0].plan = boltPlanToRESTPlan result.summary.plan if result.summary and result.summary.plan
         obj.data.results[0].plan = boltPlanToRESTPlan result.summary.profile if result.summary and result.summary.profile
@@ -132,10 +132,14 @@ angular.module('neo4jApp.services')
         return obj
 
       getRESTRowsFromBolt = (record, keys) ->
-        keys.reduce(((tot, curr) -> tot.concat(extractDataForRowsFormat(record[curr]))), [])
+        keys.reduce((tot, curr) -> 
+          res = extractDataForRowsFormat(record.get(curr))
+          res = [res] if Array.isArray res
+          tot.concat res
+        , [])
 
       getRESTMetaFromBolt = (record, keys) ->
-        items = keys.map((key) -> record[key])
+        items = keys.map((key) -> record.get(key))
         items.map((item) ->
           type = 'node' if item instanceof bolt.types.Node
           type = 'relationship' if item instanceof bolt.types.Relationship
@@ -144,11 +148,8 @@ angular.module('neo4jApp.services')
         )
 
       getRESTGraphFromBolt = (record, keys) ->
-        items = keys.map((key) -> record[key])
-        graphItems = items.filter((item) -> item instanceof bolt.types.Node || item instanceof bolt.types.Relationship)
-        paths = items.filter((item) -> item instanceof bolt.types.Path)
-        extractedPaths = extractPathsForGraphFormat paths
-        graphItems = graphItems.concat extractedPaths
+        items = keys.map((key) -> record.get(key))
+        graphItems = [].concat.apply([],  extractDataForGraphFormat(items))
         graphItems.map((item) ->
           item.id = item.identity
           delete item.identity
@@ -168,7 +169,13 @@ angular.module('neo4jApp.services')
       extractDataForRowsFormat = (item) ->
         return item.properties if item instanceof bolt.types.Node
         return item.properties if item instanceof bolt.types.Relationship
-        return extractPathForRowsFormat item if item instanceof bolt.types.Path
+        return [].concat.apply([], extractPathForRowsFormat(item)) if item instanceof bolt.types.Path
+        return item if item is null
+        return item.map((subitem) -> extractDataForRowsFormat subitem) if Array.isArray item
+        if typeof item is 'object'
+          out = {}
+          Object.keys(item).forEach((key) => out[key] = extractDataForRowsFormat(item[key]))
+          return out
         item
 
       extractPathForRowsFormat = (path) ->
@@ -179,6 +186,7 @@ angular.module('neo4jApp.services')
         ])
 
       extractPathsForGraphFormat = (paths) ->
+        paths = [paths] unless Array.isArray paths
         paths.reduce((all, path) ->
           path.segments.forEach((segment) ->
             all.push(segment.start)
@@ -187,6 +195,18 @@ angular.module('neo4jApp.services')
           )
           return all
         , [])
+
+      extractDataForGraphFormat = (item) ->
+        return item if item instanceof bolt.types.Node
+        return item if item instanceof bolt.types.Relationship
+        return [].concat.apply([], extractPathsForGraphFormat(item)) if item instanceof bolt.types.Path
+        return no if item is null
+        return item.map((subitem) -> extractDataForGraphFormat subitem).filter((i) -> i) if Array.isArray item
+        if typeof item is 'object'
+          out = Object.keys(item).map((key) -> extractDataForGraphFormat(item[key])).filter((i) -> i)
+          return no if not out.length
+          return out
+        no
 
       itemIntToString = (item) ->
         return arrayIntToString item if Array.isArray(item)

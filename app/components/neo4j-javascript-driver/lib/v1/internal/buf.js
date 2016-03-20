@@ -444,7 +444,7 @@ var HeapBuffer = (function (_BaseBuffer) {
   }
 
   /**
-   * Represents a view of slice of another buffer.
+   * Represents a view as slice of another buffer.
    * @access private
    */
 
@@ -490,7 +490,7 @@ var HeapBuffer = (function (_BaseBuffer) {
         var copy = new HeapBuffer(length);
         for (var i = 0; i < length; i++) {
           copy.putUInt8(i, this.getUInt8(i + start));
-        };
+        }
         return copy;
       }
     }
@@ -605,7 +605,7 @@ var CombinedBuffer = (function (_BaseBuffer3) {
         } else {
           return buffer.getInt8(position);
         }
-      };
+      }
     }
   }, {
     key: "getFloat64",
@@ -695,12 +695,12 @@ try {
 } catch (e) {}
 
 /**
-* Allocate a new buffer using whatever mechanism is most sensible for the
-* current platform
-* @access private
-* @param {Integer} size
-* @return new buffer
-*/
+ * Allocate a new buffer using whatever mechanism is most sensible for the
+ * current platform
+ * @access private
+ * @param {Integer} size
+ * @return new buffer
+ */
 function alloc(size) {
   return new _DefaultBuffer(size);
 }

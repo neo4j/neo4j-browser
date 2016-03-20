@@ -102,7 +102,7 @@ var Relationship = (function () {
   _createClass(Relationship, [{
     key: "toString",
     value: function toString() {
-      var s = "(" + this.start.split('/')[1] + ")-[:" + this.type;
+      var s = "(" + this.start + ")-[:" + this.type;
       var keys = Object.keys(this.properties);
       if (keys.length > 0) {
         s += " {";
@@ -112,7 +112,7 @@ var Relationship = (function () {
         }
         s += "}";
       }
-      s += "]->(" + this.end.split('/')[1] + ")";
+      s += "]->(" + this.end + ")";
       return s;
     }
   }]);
@@ -196,14 +196,16 @@ function PathSegment(start, rel, end) {
 var Path =
 /**
  * @constructor
+ * @param {Node} start  - start node
+ * @param {Node} end - end node
  * @param {Array} segments - Array of Segments
  */
-function Path(segments) {
+function Path(start, end, segments) {
   _classCallCheck(this, Path);
 
+  this.start = start;
+  this.end = end;
   this.segments = segments;
-  this.start = segments[0].start;
-  this.end = segments[segments.length - 1].end;
   this.length = segments.length;
 };
 

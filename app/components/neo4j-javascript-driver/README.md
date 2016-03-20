@@ -27,15 +27,15 @@ We build a special browser version of the driver, which supports connecting to N
 This will make a global `neo4j` object available, where you can access the `v1` API at `neo4j.v1`:
 
 ```javascript
-var driver = neo4j.v1.driver("bolt://localhost");
+var driver = neo4j.v1.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
 ```
 
 ## Usage examples
 
 ```javascript
 
-// Create a driver instance
-var driver = neo4j.driver("bolt://localhost");
+// Create a driver instance, for the user neo4j with password neo4j.
+var driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
 
 // Create a session to run Cypher statements in.
 // Note: Always make sure to close sessions when you are done using them!
@@ -61,8 +61,8 @@ session
 // the Promise way, where the complete result is collected before we act on it:
 session
   .run("MATCH (alice {name : {nameParam} }) RETURN alice.age", { nameParam:'Alice' })
-  .then(function(records){
-    records.forEach(function(record) {
+  .then(function(result){
+    result.records.forEach(function(record) {
       console.log(record);
     });
 
