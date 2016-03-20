@@ -149,10 +149,7 @@ angular.module('neo4jApp.services')
 
       getRESTGraphFromBolt = (record, keys) ->
         items = keys.map((key) -> record[key])
-        graphItems = items.filter((item) -> item instanceof bolt.types.Node || item instanceof bolt.types.Relationship)
-        paths = items.filter((item) -> item instanceof bolt.types.Path)
-        extractedPaths = extractPathsForGraphFormat paths
-        graphItems = graphItems.concat extractedPaths
+        graphItems = [].concat.apply([],  extractDataForGraphFormat(items))
         graphItems.map((item) ->
           item.id = item.identity
           delete item.identity
@@ -176,7 +173,9 @@ angular.module('neo4jApp.services')
         return item if item is null
         return item.map((subitem) -> extractDataForRowsFormat subitem) if Array.isArray item
         if typeof item is 'object'
-          Object.keys(item).forEach((key) => item[key] = extractDataForRowsFormat(item[key]))
+          out = {}
+          Object.keys(item).forEach((key) => out[key] = extractDataForRowsFormat(item[key]))
+          return out
         item
 
       extractPathForRowsFormat = (path) ->
@@ -187,6 +186,7 @@ angular.module('neo4jApp.services')
         ])
 
       extractPathsForGraphFormat = (paths) ->
+        paths = [paths] unless Array.isArray paths
         paths.reduce((all, path) ->
           path.segments.forEach((segment) ->
             all.push(segment.start)
@@ -195,6 +195,18 @@ angular.module('neo4jApp.services')
           )
           return all
         , [])
+
+      extractDataForGraphFormat = (item) ->
+        return item if item instanceof bolt.types.Node
+        return item if item instanceof bolt.types.Relationship
+        return extractPathsForGraphFormat item if item instanceof bolt.types.Path
+        return no if item is null
+        return item.map((subitem) -> extractDataForGraphFormat subitem).filter((i) -> i) if Array.isArray item
+        if typeof item is 'object'
+          out = Object.keys(item).map((key) -> extractDataForGraphFormat(item[key])).filter((i) -> i)
+          return no if not out.length
+          return out
+        no
 
       itemIntToString = (item) ->
         return arrayIntToString item if Array.isArray(item)
