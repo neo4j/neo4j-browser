@@ -41,6 +41,10 @@ var _chunking = require("./chunking");
 
 var _chunking2 = _interopRequireDefault(_chunking);
 
+var _features = require("./features");
+
+var _features2 = _interopRequireDefault(_features);
+
 var _packstream = require("./packstream");
 
 var _packstream2 = _interopRequireDefault(_packstream);
@@ -52,6 +56,8 @@ var _graphTypes = require('../graph-types');
 var _graphTypes2 = _interopRequireDefault(_graphTypes);
 
 var _integer = require('../integer');
+
+var _error = require('./error');
 
 var Channel = undefined;
 if (_chWebsocket2["default"].available) {
@@ -66,8 +72,10 @@ var
 // Signature bytes for each message type
 INIT = 0x01,
     // 0000 0001 // INIT <user_agent>
-ACK_FAILURE = 0x0F,
-    // 0000 1111 // ACK_FAILURE
+ACK_FAILURE = 0x0D,
+    // 0000 1101 // ACK_FAILURE
+RESET = 0x0F,
+    // 0000 1111 // RESET
 RUN = 0x10,
     // 0001 0000 // RUN <statement> <parameters>
 DISCARD_ALL = 0x2F,
@@ -105,16 +113,12 @@ function port(url) {
   return url.match(URLREGEX)[3];
 }
 
-function NO_OP() {};
-
-function LOG(err) {
-  console.log(err);
-};
+function NO_OP() {}
 
 var NO_OP_OBSERVER = {
   onNext: NO_OP,
   onCompleted: NO_OP,
-  onError: LOG
+  onError: NO_OP
 };
 
 /** Maps from packstream structures to Neo4j domain objects */
@@ -145,6 +149,7 @@ var _mappers = {
         sequence = unpacker.unpack(buf);
     var prevNode = nodes[0],
         segments = [];
+
     for (var i = 0; i < sequence.length; i += 2) {
       var relIndex = sequence[i],
           nextNode = nodes[sequence[i + 1]],
@@ -169,7 +174,7 @@ var _mappers = {
       segments.push(new _graphTypes2["default"].PathSegment(prevNode, rel, nextNode));
       prevNode = nextNode;
     }
-    return new _graphTypes2["default"].Path(segments);
+    return new _graphTypes2["default"].Path(nodes[0], nodes[nodes.length - 1], segments);
   }
 };
 
@@ -211,6 +216,9 @@ var Connection = (function () {
     this._unpacker = new _packstream2["default"].Unpacker();
     this._isHandlingFailure = false;
 
+    // Set to true on fatal errors, to get this out of session pool.
+    this._isBroken = false;
+
     // For deserialization, explain to the unpacker how to unpack nodes, rels, paths;
     this._unpacker.structMappers[NODE] = _mappers.node;
     this._unpacker.structMappers[RELATIONSHIP] = _mappers.rel;
@@ -218,6 +226,9 @@ var Connection = (function () {
     this._unpacker.structMappers[PATH] = _mappers.path;
 
     var self = this;
+    // TODO: Using `onmessage` and `onerror` came from the WebSocket API,
+    // it reads poorly and has several annoying drawbacks. Swap to having
+    // Channel extend EventEmitter instead, then we can use `on('data',..)`
     this._ch.onmessage = function (buf) {
       var proposed = buf.readInt32();
       if (proposed == 1) {
@@ -231,10 +242,21 @@ var Connection = (function () {
           self._dechunker.write(buf.readSlice(buf.remaining()));
         }
       } else {
-        // TODO: Report error
-        console.log("FATAL, unknown protocol version:", proposed);
+        self._handleFatalError((0, _error.newError)("Unknown Bolt protocol version: " + proposed));
       }
     };
+
+    // Listen to connection errors. Important note though;
+    // In some cases we will get a channel that is already broken (for instance,
+    // if the user passes invalid configuration options). In this case, onerror
+    // will have "already triggered" before we add out listener here. So the line
+    // below also checks that the channel is not already failed. This could be nicely
+    // encapsulated into Channel if we used `on('error', ..)` rather than `onerror=..`
+    // as outlined in the comment about `onmessage` further up in this file.
+    this._ch.onerror = this._handleFatalError.bind(this);
+    if (this._ch._error) {
+      this._handleFatalError(this._ch._error);
+    }
 
     this._dechunker.onmessage = function (buf) {
       self._handleMessage(self._unpacker.unpack(buf));
@@ -256,11 +278,35 @@ var Connection = (function () {
    * Crete new connection to the provided url.
    * @access private
    * @param {string} url - 'neo4j'-prefixed URL to Neo4j Bolt endpoint
-   * @param {Channel} channel - Optionally inject Channel to be used.
+   * @param {object} config
    * @return {Connection} - New connection
    */
 
+  /**
+   * "Fatal" means the connection is dead. Only call this if something
+   * happens that cannot be recovered from. This will lead to all subscribers
+   * failing, and the connection getting ejected from the session pool.
+   *
+   * @param err an error object, forwarded to all current and future subscribers
+   * @private
+   */
+
   _createClass(Connection, [{
+    key: "_handleFatalError",
+    value: function _handleFatalError(err) {
+      this._isBroken = true;
+      this._error = err;
+      if (this._currentObserver && this._currentObserver.onError) {
+        this._currentObserver.onError(err);
+      }
+      while (this._pendingObservers.length > 0) {
+        var observer = this._pendingObservers.shift();
+        if (observer && observer.onError) {
+          observer.onError(err);
+        }
+      }
+    }
+  }, {
     key: "_handleMessage",
     value: function _handleMessage(msg) {
       var _this = this;
@@ -307,13 +353,13 @@ var Connection = (function () {
           break;
         case IGNORED:
           try {
-            if (this._errorMsg) this._currentObserver.onError(this._errorMsg);else this._currentObserver.onError(msg);
+            if (this._errorMsg && this._currentObserver.onError) this._currentObserver.onError(this._errorMsg);else if (this._currentObserver.onError) this._currentObserver.onError(msg);
           } finally {
             this._currentObserver = this._pendingObservers.shift();
           }
           break;
         default:
-          console.log("UNKNOWN MESSAGE: ", msg);
+          this._handleFatalError((0, _error.newError)("Unknown Bolt protocol message: " + msg));
       }
     }
 
@@ -353,6 +399,15 @@ var Connection = (function () {
       this._chunker.messageBoundary();
     }
 
+    /** Queue a RESET-message to be sent to the database */
+  }, {
+    key: "reset",
+    value: function reset(observer) {
+      this._queueObserver(observer);
+      this._packer.packStruct(RESET);
+      this._chunker.messageBoundary();
+    }
+
     /** Queue a ACK_FAILURE-message to be sent to the database */
   }, {
     key: "_ackFailure",
@@ -364,7 +419,16 @@ var Connection = (function () {
   }, {
     key: "_queueObserver",
     value: function _queueObserver(observer) {
+      if (this._isBroken) {
+        if (observer && observer.onError) {
+          observer.onError(this._error);
+        }
+        return;
+      }
       observer = observer || NO_OP_OBSERVER;
+      observer.onCompleted = observer.onCompleted || NO_OP;
+      observer.onError = observer.onError || NO_OP;
+      observer.onNext = observer.onNext || NO_OP;
       if (this._currentObserver === undefined) {
         this._currentObserver = observer;
       } else {
@@ -382,6 +446,13 @@ var Connection = (function () {
       this._chunker.flush();
     }
 
+    /** Check if this connection is in working condition */
+  }, {
+    key: "isOpen",
+    value: function isOpen() {
+      return !this._isBroken && this._ch._open;
+    }
+
     /**
      * Call close on the channel.
      * @param {function} cb - Function to call on close.
@@ -397,12 +468,18 @@ var Connection = (function () {
 })();
 
 function connect(url) {
-  var channel = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+  var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  channel = channel || Channel;
-  return new Connection(new channel({
+  var Ch = config.channel || Channel;
+  return new Connection(new Ch({
     host: host(url),
-    port: port(url)
+    port: port(url) || 7687,
+    // Default to using encryption if trust-on-first-use is available
+    encrypted: config.encrypted || (0, _features2["default"])("trust_on_first_use"),
+    // Default to using trust-on-first-use if it is available
+    trust: config.trust || ((0, _features2["default"])("trust_on_first_use") ? "TRUST_ON_FIRST_USE" : "TRUST_SIGNED_CERTIFICATES"),
+    trustedCertificates: config.trustedCertificates || [],
+    knownHosts: config.knownHosts
   }));
 }
 

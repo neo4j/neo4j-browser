@@ -120,7 +120,7 @@ var ProfiledPlan =
 /**
  * Create a ProfiledPlan instance
  * @constructor
- * @param {Object} plan - Object with plan data
+ * @param {Object} profile - Object with profile data
  */
 function ProfiledPlan(profile) {
   _classCallCheck(this, ProfiledPlan);
@@ -155,7 +155,7 @@ var StatementStatistics = (function () {
 
     this._stats = {
       nodesCreated: 0,
-      nodesDelete: 0,
+      nodesDeleted: 0,
       relationshipsCreated: 0,
       relationshipsDeleted: 0,
       propertiesSet: 0,
@@ -167,11 +167,10 @@ var StatementStatistics = (function () {
       constraintsRemoved: 0
     };
     Object.keys(statistics).forEach(function (index) {
-      var val = (0, _integer.isInt)(statistics[index]) ? statistics[index].toInt() : statistics[index];
       //To camelCase
       _this._stats[index.replace(/(\-\w)/g, function (m) {
         return m[1].toUpperCase();
-      })] = val;
+      })] = (0, _integer.isInt)(statistics[index]) ? statistics[index].toInt() : statistics[index];
     });
   }
 
@@ -310,11 +309,12 @@ var Notification = (function () {
 
     this.code = notification.code;
     this.title = notification.title;
-    this.description = notification.desciption;
-    this.position = this._constructPosition(notification.position);
+    this.description = notification.description;
+    this.severity = notification.severity;
+    this.position = Notification._constructPosition(notification.position);
   }
 
-  _createClass(Notification, [{
+  _createClass(Notification, null, [{
     key: '_constructPosition',
     value: function _constructPosition(pos) {
       if (!pos) {

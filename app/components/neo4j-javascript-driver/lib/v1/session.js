@@ -73,14 +73,16 @@ var Session = (function () {
 
   _createClass(Session, [{
     key: 'run',
-    value: function run(statement, parameters) {
+    value: function run(statement) {
+      var parameters = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
       if (typeof statement === 'object' && statement.text) {
         parameters = statement.parameters || {};
         statement = statement.text;
       }
       var streamObserver = new _internalStreamObserver2['default']();
       if (!this._hasTx) {
-        this._conn.run(statement, parameters || {}, streamObserver);
+        this._conn.run(statement, parameters, streamObserver);
         this._conn.pullAll(streamObserver);
         this._conn.sync();
       } else {
@@ -93,7 +95,7 @@ var Session = (function () {
      * Begin a new transaction in this session. A session can have at most one transaction running at a time, if you
      * want to run multiple concurrent transactions, you should use multiple concurrent sessions.
      *
-     * While a transaction is open the session cannot be used to run statements.
+     * While a transaction is open the session cannot be used to run statements outside the transaction.
      *
      * @returns {Transaction} - New Transaction
      */
@@ -113,15 +115,18 @@ var Session = (function () {
     }
 
     /**
-     * Close connection
-     * @param {function()} cb - Function to be called on connection close
+     * Close this session.
+     * @param {function()} cb - Function to be called after the session has been closed
      * @return
      */
   }, {
     key: 'close',
-    value: function close(cb) {
-      this._onClose();
-      this._conn.close(cb);
+    value: function close() {
+      var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {
+        return null;
+      } : arguments[0];
+
+      this._onClose(cb);
     }
   }]);
 
