@@ -65,7 +65,7 @@ angular.module('neo4jApp.services')
         reload: ->
           @_Intercom = $window.Intercom
           @booted = false
-          
+
         do: (command, params...) ->
           return unless @_Intercom
           that = @
@@ -78,6 +78,7 @@ angular.module('neo4jApp.services')
             app_id: 'lq70afwx'
             user_id: userID
           }
+
           angular.extend(intercomSettings, userData)
           if not @booted
             @do('boot', intercomSettings)
@@ -112,6 +113,11 @@ angular.module('neo4jApp.services')
         event: (eventName, eventData) ->
           @do('trackEvent', eventName, eventData)
 
+        isLoaded: () ->
+          return !!@_Intercom
+
+        disconnect: () ->
+          @do('shutdown')
 
       new IntercomService()
     ]

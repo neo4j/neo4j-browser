@@ -66,8 +66,7 @@ angular.module('neo4jApp.controllers')
               for r in response
                 for a in r.attributes
                   $scope.kernel[a.name] = a.value
-              UDC.set('store_id',   $scope.kernel['StoreId'])
-              UDC.set('neo4j_version', $scope.server.neo4j_version)
+              UDC.updateStoreAndServerVersion($scope.server.neo4j_version, $scope.kernel['StoreId'])
               refreshPolicies $scope.kernel['browser.retain_connection_credentials'], $scope.kernel['browser.credential_timeout']
               allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['browser.allow_outgoing_browser_connections']) < 0 ? yes : no
               refreshAllowOutgoingConnections allow_connections
@@ -77,7 +76,7 @@ angular.module('neo4jApp.controllers')
           return unless $scope.neo4j.config.allow_outgoing_browser_connections != allow_connections
           allow_connections = if $scope.neo4j.enterpriseEdition then allow_connections else yes
           mapServerConfig 'allow_outgoing_browser_connections', allow_connections
-          if allow_connections 
+          if allow_connections
             $scope.motd.refresh()
             UDC.loadUDC()
           else if not allow_connections
@@ -116,7 +115,7 @@ angular.module('neo4jApp.controllers')
         $scope.$watch 'offline', (serverIsOffline) ->
           if (serverIsOffline?)
             if not serverIsOffline
-              UDC.ping("connect")
+              UDC.trackConnectEvent()
             else
               $scope.errorMessage = motdService.pickRandomlyFromChoiceName('disconnected')
 
@@ -124,6 +123,7 @@ angular.module('neo4jApp.controllers')
           $scope.check()
           if is_connected
             ConnectionStatusService.setSessionStartTimer new Date()
+
         fetchJMX = ->
           Server.jmx(
             [
@@ -134,11 +134,11 @@ angular.module('neo4jApp.controllers')
             for r in response
               for a in r.attributes
                 $scope.kernel[a.name] = a.value
-            UDC.set('store_id', $scope.kernel['StoreId'])
             $scope.neo4j.store_id = $scope.kernel['StoreId']
-            UDC.set('neo4j_version', $scope.server.neo4j_version)
+            UDC.updateStoreAndServerVersion($scope.server.neo4j_version, $scope.kernel['StoreId'])
+
           ).error((r)-> $scope.kernel = {})
-            
+
         fetchServerInfo = ->
           Server.get('/db/manage/server/storeid/').success((response) ->
             $scope.neo4j.store_id = response.storeid
@@ -163,7 +163,7 @@ angular.module('neo4jApp.controllers')
           return Frame.create({input:"#{Settings.cmdchar}server connect"}) if !newUser
 
         $scope.$on 'ntn:authenticated', (evt, authenticated) ->
-          Frame.closeWhere "#{Settings.cmdchar}play sign-in" 
+          Frame.closeWhere "#{Settings.cmdchar}play sign-in"
 
         $scope.$watch 'version', (val) ->
           return '' if not val
