@@ -35,18 +35,17 @@ angular.module('neo4jApp.services')
           @data = @reset() unless angular.isObject(@data)
           @data.client_starts = (@data.client_starts || 0) + 1
           @save()
+          @connectedUser = no
 
         reset: ->
           @data = {
             uuid: UUID.genV1().toString()
             created_at: Math.round(Date.now() / 1000)
             client_starts: 0
+            events: []
           }
           @save()
           return @data
-
-        save: ->
-          localStorageService.set(storageKey, JSON.stringify(@data))
 
         loadUDC: ->
           Intercom.load()
@@ -55,6 +54,11 @@ angular.module('neo4jApp.services')
 
         unloadUDC: ->
           Intercom.unload()
+
+        reloadUDC: ->
+          Intercom.unload()
+          Intercom.load()
+          Intercom.reload()
 
         set: (key, value) ->
           @data[key] = value
@@ -66,88 +70,97 @@ angular.module('neo4jApp.services')
           @save()
           return @data[key]
 
-        ping: (event) ->
-          if (@shouldPing(event))
-            switch event
-              when 'connect'
-                @connectUser()
-                Intercom.update({
-                  "companies": [
-                      {
-                        type: "company"
-                        name: "Neo4j " + @data.neo4j_version + " " + @data.store_id
-                        company_id: @data.store_id
-                        # custom_attibutes: {
-                        #   neo4j_version: @data.neo4j_version
-                        # }
-                      }
-                    ]
-                  })
-                Intercom.event('connect', {
-                    store_id: @data.store_id
-                    neo4j_version: @data.neo4j_version
-                    client_starts: @data.client_starts
-                    cypher_attempts: @data.cypher_attempts
-                    cypher_wins: @data.cypher_wins
-                    cypher_fails: @data.cypher_fails
-                    accepts_replies: Settings.acceptsReplies
-                  })
+        updateStoreAndServerVersion: (neo4jVersion, storeId) ->
+          @set('store_id',  storeId)
+          @set('neo4j_version',neo4jVersion)
+          if @connectedUser
+            Intercom.update(@userData())
 
-        connectUser: ->
-          userData = if Settings.shouldReportUdc then @data else {}
-          userData.name = Settings.userName
-          Intercom.user(@data.uuid, userData)
+        connectUserWithUserId: (userId) ->
+          @set("user_id", userId)
+          @connectUser()
 
-        pingLater: (event) =>
-          timer = $timeout(
-            () =>
-              @ping(event)
-            ,
-            (Settings.heartbeat * 1000)
-          )
+        disconnectUser: () ->
+          @connectedUser = no
+          @set("user_id", no)
+          Intercom.disconnect()
+          @reloadUDC()
 
-        shouldPing: (event) =>
-          # TODO: return true only when debugging. maybe use an env var?
-          # return true
-          if not (Settings.shouldReportUdc?)
-            @pingLater(event)
-            return false
-          if not @hasRequiredData()
-            @pingLater(event)
-            return false
-          if @isBeta() || Settings.shouldReportUdc
-            pingTime = new Date(@data.pingTime || 0)
-            today = new Date()
-            today = new Date(today.getFullYear(), today.getMonth(), today.getDay())
+        trackEvent: (name, data) ->
+          if @connectedUser  && (@isBeta() || Settings.shouldReportUdc)
+            Intercom.event(name, data)
+          else
+            @data.events = @data.events || []
+            @data.events.push({
+              name: name
+              data: data
+            })
+            @save()
 
-            if (pingTime < today)
-              @set("pingTime", today.getTime())
-              return true
+        trackConnectEvent: () ->
+          if @shouldTriggerConnectEvent()
+            @trackEvent('connect', {
+              store_id: @data.store_id
+              neo4j_version: @data.neo4j_version
+              client_starts: @data.client_starts
+              cypher_attempts: @data.cypher_attempts
+              cypher_wins: @data.cypher_wins
+              cypher_fails: @data.cypher_fails
+              accepts_replies: Settings.acceptsReplies
+            })
+
+        toggleMessenger: ->
+          Intercom.toggle()
+
+        showMessenger: ->
+          Intercom.showMessenger()
+
+        newMessage: (message) ->
+          Intercom.newMessage message
+
+        connectUser: () ->
+          if not @connectedUser && @shouldConnect()
+            if @isBeta() || Settings.shouldReportUdc
+              Intercom.user(@data.user_id, @userData())
+              Intercom.event(event.name, event.data) for event in @data.events
+              @data.events = []
             else
-              return false
+              Intercom.user(@data.user_id, {})
+            @connectedUser=true
+          return @connectedUser
+
+        userData: ->
+          userData = $.extend({}, @data, "events")
+          delete(userData.events)
+          userData.name = Settings.userName
+          if ( @data.neo4j_version && @data.store_id )
+            userData.companies = [
+              {
+                type: "company"
+                name: "Neo4j " + @data.neo4j_version + " " + @data.store_id
+                company_id: @data.store_id
+              }
+            ]
+          userData
+
+        shouldConnect: () =>
+         return  @data.user_id && Intercom.isLoaded()
+
+        shouldTriggerConnectEvent: ->
+          pingTime = new Date(@data.pingTime || 0)
+          today = new Date()
+          today = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+          if (pingTime < today)
+            @set("pingTime", today.getTime())
+            return true
           else
             return false
 
         isBeta: ->
           return /-M\d\d/.test(@data.neo4j_version)
 
-        hasRequiredData: ->
-          return @data.store_id and @data.neo4j_version
-
-        toggleMessenger: ->
-          @connectUser()
-          Intercom.toggle()
-
-        showMessenger: ->
-          @connectUser()
-          Intercom.showMessenger()
-
-        newMessage: (message) ->
-          @connectUser()
-          Intercom.newMessage message
-
-        trackEvent: (name, data) ->
-          Intercom.event(name, data)
+        save: ->
+          localStorageService.set(storageKey, JSON.stringify(@data))
 
       new UsageDataCollectionService()
   ]
