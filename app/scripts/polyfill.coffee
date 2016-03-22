@@ -38,3 +38,21 @@ Object.keys = Object.keys or (o, k, r) ->
 
   # return result
   r
+
+if not Function.prototype.bind
+  Function.prototype.bind = (oThis) ->
+    if typeof this isnt 'function'
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable')
+
+    aArgs = Array.prototype.slice.call(arguments, 1)
+    fToBind = this
+    fNOP = ->
+    fBound = ->
+      return fToBind.apply(
+        (if this instanceof fNOP then this else oThis)
+        , aArgs.concat(Array.prototype.slice.call(arguments)))
+
+    if this.prototype
+      fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP()
+    return fBound
