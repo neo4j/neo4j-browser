@@ -83,7 +83,12 @@ angular.module('neo4jApp.services')
           return if $rootScope.ntn_data.documents[0].data.length is newFavs.length
           setStorageForKey 'documents', newFavs
 
-      syncItem: (item) -> 
+        $rootScope.$on 'ntn:logout', () =>
+          syncKeys.forEach((key) ->
+            setStorageForKey key, null
+          )
+
+      syncItem: (item) ->
         return @setSyncedAt() if item.key is 'updated_at' and @authenticated
         return unless item.key in syncKeys
         newvalue = if item.key is 'grass' then item.newvalue else JSON.parse item.newvalue
@@ -149,7 +154,7 @@ angular.module('neo4jApp.services')
 
       restoreToVersion: (key, versionTimestamp, cb) ->
         cb = cb || ->
-        indexToRestore = $rootScope.ntn_data[key].reduce((pass, curr, index) -> 
+        indexToRestore = $rootScope.ntn_data[key].reduce((pass, curr, index) ->
           return pass unless curr.syncedAt is versionTimestamp
           index
         , -1)
