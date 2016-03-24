@@ -54,7 +54,7 @@ angular.module('neo4jApp.services')
         p.then((r) ->
           session.close()
           q.resolve r
-        ).catch((e)-> 
+        ).catch((e)->
           session.close()
           q.reject e
         )
@@ -100,7 +100,7 @@ angular.module('neo4jApp.services')
           tx.run(statement).then((r)-> q.resolve(r)).catch((e)-> q.reject(e)) if statement
         return {tx: tx, session: session, promise: q.promise}
 
-      transaction = (opts, session, tx) -> 
+      transaction = (opts, session, tx) ->
         statement = opts[0]?.statement || ''
         q = $q.defer()
         session = session || createSession()
@@ -111,20 +111,53 @@ angular.module('neo4jApp.services')
             p = tx.run statement
             tx.commit()
           else
-            p = session.run statement  
+            p = session.run statement
           p.then((r) ->
             session.close()
             q.resolve r
-          ).catch((e) -> 
+          ).catch((e) ->
             session.close()
             q.reject e
           )
         {tx: tx, promise: q.promise}
 
+      callProc = (query) ->
+        statements = if query then [{statement: "CALL " + query}] else []
+        result = transaction(statements)
+
+        q = $q.defer()
+        result.promise.then(
+          (res) =>
+            q.resolve(res.records)
+        ,
+          (res) ->
+            q.resolve([])
+        )
+        q.promise
+
       metaResultToRESTResult = (labels, realtionshipTypes, propertyKeys) ->
         labels: labels.map (o) -> o.get('label')
         relationships: realtionshipTypes.map (o) -> o.get('relationshipType')
         propertyKeys: propertyKeys.map (o) -> o.get('propertyKey')
+
+      schemaResultToRESTResult = (indexes, constraints) ->
+        indexString = ""
+        constraintsString = ""
+        if (indexes.length == 0)
+          indexString =  "No indexes"
+        else
+          indexString = "Indexes"
+          for index in indexes
+            indexString += "\n  #{index.get('description').replace('INDEX','')} #{index.get('state').toUpperCase()}"
+            if index.get("type") == "node_unique_property"
+              indexString += " (for uniqueness constraint)"
+        if (constraints.length == 0)
+          constraintsString = "No constraints"
+        else
+          constraintsString = "Constraints"
+          for constraint in constraints
+            constraintsString += "\n  #{constraint.get('description').replace('CONSTRAINT','')}"
+        return "#{indexString}\n\n #{constraintsString}\n"
 
       boltResultToRESTResult = (result) ->
         res = result.records || []
@@ -163,7 +196,7 @@ angular.module('neo4jApp.services')
         return obj
 
       getRESTRowsFromBolt = (record, keys) ->
-        keys.reduce((tot, curr) -> 
+        keys.reduce((tot, curr) ->
           res = extractDataForRowsFormat(record.get(curr))
           res = [res] if Array.isArray res
           tot.concat res
@@ -296,7 +329,7 @@ angular.module('neo4jApp.services')
           fields: [{
             code: code,
             message: message
-          }]  
+          }]
         }
 
       connect()
@@ -310,9 +343,13 @@ angular.module('neo4jApp.services')
         connect: connect,
         beginTransaction: beginTransaction,
         transaction: transaction,
+        callProcedure: (procedureName) ->
+          callProc(procedureName)
         constructResult: (res) ->
           boltResultToRESTResult res
         constructMetaResult: (labels, realtionshipTypes, propertyKeys) ->
           metaResultToRESTResult labels, realtionshipTypes, propertyKeys
+        constructSchemaResult: (indexes, constraints) ->
+          schemaResultToRESTResult indexes, constraints
       }
   ]
