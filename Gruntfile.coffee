@@ -23,6 +23,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 mountFolder = (connect, dir) ->
   connect.static require("path").resolve(dir)
 proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+standardProxies = [{
+  context: '/db',
+  host: 'localhost',
+  port: 7474,
+  https: false,
+  changeOrigin: false
+},{
+  context: '/user',
+  host: 'localhost',
+  port: 7474,
+  https: false,
+  changeOrigin: false
+}]
+
+httpsProxies = [{
+  context: '/db',
+  host: 'localhost',
+  port: 7473,
+  https: true,
+  changeOrigin: false
+},{
+  context: '/user',
+  host: 'localhost',
+  port: 7473,
+  https: true,
+  changeOrigin: false
+}]
 
 module.exports = (grunt) ->
 
@@ -96,31 +123,28 @@ module.exports = (grunt) ->
           port: 9001
           middleware: (connect) ->
             [proxySnippet, mountFolder(connect, yeomanConfig.dist)]
+        proxies: standardProxies
       livereload:
         options:
+          port: 9000
+          hostname: "0.0.0.0"
           middleware: (connect) ->
             [proxySnippet, require('connect-livereload')(), mountFolder(connect, ".tmp"), mountFolder(connect, yeomanConfig.app)]
+        proxies: standardProxies
+      livereloadhttps:
+        options:
+          port: 9001
+          protocol: 'https'
+          hostname: "0.0.0.0"
+          middleware: (connect) ->
+            [proxySnippet, require('connect-livereload')(), mountFolder(connect, ".tmp"), mountFolder(connect, yeomanConfig.app)]
+        proxies: httpsProxies
       test:
         options:
           port: 9000
           middleware: (connect) ->
             [mountFolder(connect, ".tmp"), mountFolder(connect, "test")]
-      proxies: [
-          {
-              context: '/db',
-              host: 'localhost',
-              port: 7474,
-              https: false,
-              changeOrigin: false
-          },
-          {
-              context: '/user',
-              host: 'localhost',
-              port: 7474,
-              https: false,
-              changeOrigin: false
-          }
-      ]
+        proxies: standardProxies
 
     open:
       server:
@@ -298,10 +322,11 @@ module.exports = (grunt) ->
   # load all grunt tasks
   require("matchdep").filterDev("grunt-*").forEach grunt.loadNpmTasks
 
-  grunt.registerTask "server", ["clean:server", "coffee", "configureProxies", "stylus", "jade", "connect:livereload", "watch"]
+  grunt.registerTask "server", ["clean:server", "coffee", "configureProxies:livereload", "stylus", "jade", "connect:livereload", "watch"]
+  grunt.registerTask "server:tls", ["clean:server", "coffee", "configureProxies:livereloadhttps", "stylus", "jade", "connect:livereloadhttps", "watch"]
   grunt.registerTask "test", ["clean:server", "coffee", "connect:test", "karma", "exec:csv_test_prep"]
   grunt.registerTask "build", ["clean:dist", "coffee", "test", "jade", "stylus", "useminPrepare", "concat", "copy", "imagemin", "cssmin", "htmlmin", "uglify", "rev", "usemin", "replace"]
-  grunt.registerTask "server:dist", ["build", "configureProxies", "connect:dist:keepalive"]
+  grunt.registerTask "server:dist", ["build", "configureProxies:dist", "connect:dist:keepalive"]
   grunt.registerTask "default", ["build"]
 
   grunt.task.loadTasks "tasks"

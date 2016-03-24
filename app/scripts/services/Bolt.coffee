@@ -26,18 +26,20 @@ angular.module('neo4jApp.services')
     'AuthDataService'
     'localStorageService'
     '$rootScope'
+    '$location'
     '$q'
-    (Settings, AuthDataService, localStorageService, $rootScope, $q) ->
+    (Settings, AuthDataService, localStorageService, $rootScope, $location, $q) ->
       bolt = window.neo4j.v1
       _driver = null
 
       getDriverObj = (withoutCredentials = no) ->
         authData = AuthDataService.getPlainAuthData()
+        encrypted = if $location.protocol() is 'https' then yes else no
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
         if withoutCredentials
-          driver = bolt.driver("bolt://localhost:7687")
+          driver = bolt.driver("bolt://localhost", {}, {encrypted: encrypted})
         else
-          driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
+          driver = bolt.driver("bolt://localhost", bolt.auth.basic(username, password), {encrypted: encrypted})
         driver
 
       testQuery = (driver) ->
@@ -45,6 +47,8 @@ angular.module('neo4jApp.services')
         driver.onError = (e) -> 
           if e instanceof Event and e.type is 'error'
             q.reject getSocketErrorObj()
+          else if e.code and e.message # until Neo4jError is in drivers public API
+            q.reject buildErrorObj(e.code, e.message)
         session = driver.session()
         p = session.run("CALL db.labels")
         p.then((r) ->
@@ -140,6 +144,8 @@ angular.module('neo4jApp.services')
         if result.fields
           obj.data.errors = result.fields
           return obj
+        if result.code and result.message  # until Neo4jError is in drivers public API
+          return boltResultToRESTResult(buildErrorObj(result.code, result.message))
         keys = if res.length then res[0].keys else []
         obj.data.results[0].columns = keys
         obj.data.results[0].plan = boltPlanToRESTPlan result.summary.plan if result.summary and result.summary.plan

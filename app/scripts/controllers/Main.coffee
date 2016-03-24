@@ -145,12 +145,6 @@ angular.module('neo4jApp.controllers')
           ).error((r)-> $scope.kernel = {})
 
         fetchServerInfo = ->
-          Server.get('/db/manage/server/storeid/').success((response) ->
-            $scope.neo4j.store_id = response.storeid
-          )
-        #fetchServerInfo()
-
-        pickFirstFrame = () ->
           CurrentUser.autoLogin()
           AuthService.hasValidAuthorization().then(
             ->
@@ -182,8 +176,6 @@ angular.module('neo4jApp.controllers')
 
   .run([
     '$rootScope'
-    'Editor'
-    'SyncService'
-    ($scope, Editor, SyncService) ->
+    ($scope) ->
       $scope.unauthorized = yes
   ])

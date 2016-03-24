@@ -23,16 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.controllers')
   .controller 'SettingsCtrl', [
     '$scope'
-    '$sce'
-    '$log'
+    'Frame'
     'Settings'
     'SettingsStore'
-    ($scope, $sce, $log, Settings, SettingsStore) ->
-
-
+    ($scope, Frame, Settings, SettingsStore) ->
       $scope.settings = Settings
-
       $scope.save = () ->
         SettingsStore.save()
-        
+      $scope.openBoltHelp = () ->
+        Frame.create({input: Settings.cmdchar + 'help bolt encryption'})
   ]

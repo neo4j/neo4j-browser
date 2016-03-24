@@ -172,7 +172,7 @@ div(ng-controller="CypherResultCtrl", fullscreen)
           .view-result-error.result.with-frame-menu(ng-show='isActive("errors")')
             .error-holder
               article.help.no-data.has-status-bar
-                pre(ng-bind="frame.detailedErrorText")
+                pre.frame-error(ng-bind="frame.detailedErrorText")
             include partials/error-status-bar
 
           .view-result-messages.result.with-frame-menu(ng-show='isActive("messages")')
