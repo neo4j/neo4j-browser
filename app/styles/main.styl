@@ -116,7 +116,6 @@ table.json-object
   white-space: nowrap
   overflow: hidden
   border-top: 1px solid #e6e9ef
-
   .btn-group
     absolute: top 3px right 12px
   .icon-warning-sign
@@ -150,9 +149,12 @@ table.json-object
     float:right
     margin-right horizontal-padding
   &.error
+    min-height: middlebar-height
     color: color-error
-    > .status
-      line-height middlebar-height - inspector-footer-row-margin
+    white-space: normal
+    line-height: 12px
+    height: auto
+    padding-top: 9px
     &.client-warning
       color: color-warning-on-white
   i[class*="fa-"]

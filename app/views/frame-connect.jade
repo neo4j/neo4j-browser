@@ -65,4 +65,4 @@ div(ng-controller="AuthCtrl")
       .status-bar(ng-class='{error: frame.detailedErrorText, loading: frame.isLoading}')
         .status(ng-show="frame.detailedErrorText")
           .fa.fa-exclamation-triangle.icon-warning-sign &nbsp;
-          {{frame.detailedErrorText}}
+          span {{frame.detailedErrorText}}
