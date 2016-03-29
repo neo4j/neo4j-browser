@@ -74,7 +74,8 @@ angular.module('neo4jApp.controllers')
               refreshPolicies $scope.kernel['browser.retain_connection_credentials'], $scope.kernel['browser.credential_timeout']
               allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['browser.allow_outgoing_browser_connections']) < 0 ? yes : no
               refreshAllowOutgoingConnections allow_connections
-            ).error((r)-> $scope.kernel = {})
+            ).error((r) -> $scope.kernel = {})
+          )
 
         refreshAllowOutgoingConnections = (allow_connections) ->
           return unless $scope.neo4j.config.allow_outgoing_browser_connections != allow_connections
