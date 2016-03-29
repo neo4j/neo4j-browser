@@ -134,16 +134,6 @@ angular.module('neo4jApp.controllers')
           getNodeNeigbours(d)
           $rootScope.$apply() unless $rootScope.$$phase
         )
-        .on('nodeExpand', (d) ->
-          d.contextMenuEvent = yes
-          toggleSelection null
-          d.minified = no
-          return if d.expanded
-          getNodeNeigbours(d)
-          # New in Angular 1.1.5
-          # https://github.com/angular/angular.js/issues/2371
-          $rootScope.$apply() unless $rootScope.$$phase
-        )
         .on('deleteNode', (d) ->
           Editor.setContent "MATCH (n) WHERE id(n) = " + d.id + " DETACH DELETE n"
           $scope.focusEditor()

@@ -104,7 +104,7 @@ do ->
   )
 
   donutExpandNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeExpand', 2, 'expand_node', [0, 4], '\uf0b2', 'Expand child relationships')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeDblClicked', 2, 'expand_node', [0, 4], '\uf0b2', 'Expand child relationships')
 
     onTick: noop
   )
