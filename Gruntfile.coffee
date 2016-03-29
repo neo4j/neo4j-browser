@@ -37,20 +37,6 @@ standardProxies = [{
   changeOrigin: false
 }]
 
-httpsProxies = [{
-  context: '/db',
-  host: 'localhost',
-  port: 7473,
-  https: true,
-  changeOrigin: false
-},{
-  context: '/user',
-  host: 'localhost',
-  port: 7473,
-  https: true,
-  changeOrigin: false
-}]
-
 module.exports = (grunt) ->
 
   grunt.registerMultiTask "append", "Append specified header to source files if it doesn't exists", ->
@@ -138,7 +124,7 @@ module.exports = (grunt) ->
           hostname: "0.0.0.0"
           middleware: (connect) ->
             [proxySnippet, require('connect-livereload')(), mountFolder(connect, ".tmp"), mountFolder(connect, yeomanConfig.app)]
-        proxies: httpsProxies
+        proxies: standardProxies
       test:
         options:
           port: 9000
