@@ -144,7 +144,7 @@ angular.module('neo4jApp.controllers')
 
           ).error((r)-> $scope.kernel = {})
 
-        fetchServerInfo = ->
+        pickFirstFrame = ->
           CurrentUser.autoLogin()
           AuthService.hasValidAuthorization().then(
             ->
