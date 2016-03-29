@@ -2,7 +2,7 @@
   h4 Configuration
 
   form(ng-controller="SettingsCtrl")
-    div(ng-show="neo4j.config.allow_outgoing_browser_connections")
+    div(ng-show="showMessengerButton()")
       h5 Messaging
       .form-group
         label(for="userName", tooltip="For in-browser chat with Neo4j staff", tooltip-placement="top") Name
@@ -93,7 +93,7 @@
         | Max Rows
         input.form-control.input#maxRows(type='number', min="1", ng-model="settings.maxRows", ng-change="save()")
     .form-group
-      label(for="maxRawSize", tooltip="Limit rendering of raw output to this number of characters.", tooltip-placement="top") 
+      label(for="maxRawSize", tooltip="Limit rendering of raw output to this number of characters.", tooltip-placement="top")
         | Max Raw Size
         input.form-control.input#maxRawSize(type='number', min="1", ng-model="settings.maxRawSize", ng-change="save()")
     .form-group

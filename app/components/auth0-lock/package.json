@@ -1,0 +1,78 @@
+{
+  "name": "auth0-lock",
+  "version": "7.5.4",
+  "description": "Auth0 Lock",
+  "main": "./index.js",
+  "keywords": [
+    "auth0",
+    "auth",
+    "openid",
+    "authentication",
+    "jwt",
+    "browser"
+  ],
+  "scripts": {
+    "test": "grunt integration",
+    "example": "grunt example",
+    "dev": "grunt dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/auth0/lock"
+  },
+  "author": "Auth0 <support@auth0.com> (http://auth0.com)",
+  "license": "MIT",
+  "dependencies": {
+    "auth0-js": "~6.4.2",
+    "bean": "~1.0.4",
+    "blueimp-md5": "^1.1.0",
+    "bonzo": "^1.3.6",
+    "debug": "^2.1.2",
+    "domready": "~0.2.13",
+    "password-sheriff": "^0.4.0",
+    "sizzle": "^2.0.0",
+    "trim": "0.0.1",
+    "underscore": "~1.5.2"
+  },
+  "devDependencies": {
+    "brfs": "0.0.8",
+    "browserify": "^8.1.1",
+    "bump": "git://github.com/ianstormtaylor/bump",
+    "css-prefix": "0.0.2",
+    "ejsify": "0.1.0",
+    "expect.js": "~0.2.0",
+    "grunt": "^0.4.5",
+    "grunt-autoprefixer": "~0.4.0",
+    "grunt-aws-s3": "~0.9.3",
+    "grunt-browserify": "~3.3.0",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-less": "~0.8.1",
+    "grunt-contrib-outdated": "~0.0.1",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-exec": "~0.4.2",
+    "grunt-fastly": "~0.1.3",
+    "grunt-http": "^1.5.0",
+    "jquery": "^2.1.3",
+    "mocha": "1.20.1",
+    "mold-source-map": "^0.3.0",
+    "packageify": "^0.2.0",
+    "phantomjs": "^1.9.7-15",
+    "rimraf": "~2.2.2",
+    "through": "^2.3.4",
+    "uglify-js": "~2.4.15",
+    "zuul": "https://github.com/jfromaniello/zuul/tarball/phantom_custom_port",
+    "zuul-ngrok": "^2.0.1"
+  },
+  "browserify": {
+    "transform": [
+      "ejsify",
+      "brfs",
+      "packageify"
+    ]
+  }
+}

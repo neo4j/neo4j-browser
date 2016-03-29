@@ -23,7 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.controllers', ['neo4jApp.utils'])
 angular.module('neo4jApp.directives', ['ui.bootstrap.modal', 'neo4jApp.utils'])
 angular.module('neo4jApp.filters', [])
-angular.module('neo4jApp.services', ['LocalStorageModule', 'neo4jApp.settings', 'neo4jApp.utils', 'base64', 'AsciiTableModule'])
+angular.module('neo4jApp.services', [
+  'LocalStorageModule', 
+  'neo4jApp.settings', 
+  'neo4jApp.utils', 
+  'base64', 
+  'AsciiTableModule', 
+  'auth0',
+  'firebase',
+  'angular-jwt'
+])
 
 app = angular.module('neo4jApp', [
   'ngAnimate'
@@ -42,8 +51,15 @@ app = angular.module('neo4jApp', [
   'ui.bootstrap.carousel'
   'ui.codemirror'
   'ui.sortable'
-  #'angularMoment'
+  'angularMoment'
   'ngSanitize'
-]).config((localStorageServiceProvider) ->
+])
+.config((authProvider, localStorageServiceProvider) ->
+  authProvider.init(
+    domain: 'neo4j-sync.auth0.com'
+    clientID: 'OEWOmp34xybu0efvGQ8eM4zNTNUTJJOB'
+  )
   localStorageServiceProvider.setNotify(yes, yes)
+).run((auth) ->
+  auth.hookEvents()
 )

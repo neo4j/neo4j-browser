@@ -1,0 +1,17 @@
+article.guide
+  .container-fluid.sign-in-frame
+    .row
+      .col-sm-3
+        .box-max
+          img.img-responsive(src='images/neo4j-world.png')
+          p.lead.text-center BROWSER
+      .col-sm-7.col-sm-offset-1
+        h3 Sign in on Neo4j.com
+        p &nbsp;
+        .row
+          p.col-sm-7.lead Register / Sign in on Neo4j.com for a developer account to automatically 
+            | keep your saved favorite queries and styling synced and backed up.
+        .button-row.row.col-sm-12
+          button.btn.btn-primary(ng-click="CurrentUser.login()") Register / Sign In
+          span.spacer &nbsp;
+          a.no-thanks(ng-click="editor.execScript(settings.cmdchar + 'play welcome')") No thanks

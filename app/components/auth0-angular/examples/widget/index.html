@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js" type="text/javascript"> </script>
+  <script src="//cdn.auth0.com/js/lock-7.js" type="text/javascript"> </script>
+  <script src="//cdn.rawgit.com/auth0/angular-storage/master/dist/angular-storage.js" type="text/javascript"> </script>
+  <script src="//cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js" type="text/javascript"> </script>
+  <script src="//code.angularjs.org/1.2.16/angular-route.min.js" type="text/javascript"> </script>
+  <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js" type="text/javascript"> </script>
+  <script src="./scripts/myApp.js" type="text/javascript"> </script>
+
+  <script src="./scripts/auth0-angular.js" type="text/javascript"> </script>
+  <script src="./scripts/controllers.js" type="text/javascript"> </script>
+
+  <title>Sample Angular App with Auth0</title>
+</head>
+
+<body>
+  <div ng-app="myApp">
+    <div ng-controller="MenuCtrl" ng-controller="MsgCtrl">
+      <a href="" ng-click="login()">click to login</a>
+      <a href="" ng-click="signup()">Signup</a>
+      <a href="" ng-click="reset()">Reset password</a>
+      <br />
+      <a href="" ng-click="go('/')">main</a>
+      <a href="" ng-click="go('/logout')">logout</a>
+    </div>
+
+    <div style="margin-top: 10px;">{{message}}</div>
+    <div ng-view>
+    </div>
+  </div>
+
+</body>
+</html>

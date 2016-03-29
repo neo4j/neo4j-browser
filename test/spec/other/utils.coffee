@@ -18,6 +18,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
+getDocument = (content) ->
+  {
+    content: content
+    folder: 'general',
+    id: 'ssdf-sdfsdf-sdfsdf-sfsdf',
+    name: 'Unnamed docuemnt'
+  }
+
 describe 'Utils', () ->
 
 
@@ -124,3 +132,18 @@ describe 'Utils', () ->
     expect(Utils.hostIsAllowed host, host, no).toBe no
     expect(Utils.hostIsAllowed host, whitelist, no).toBe no
     expect(Utils.hostIsAllowed 'http://guides.neo4j.com', whitelist, no).toBe yes
+
+  it 'should merge two arrays with documents without duplicates', ->
+    arr1 = [getDocument('MATCH (n) RETURN n'), getDocument('//My script\nRETURN "me"')]
+    arr2 = [getDocument('MATCH (n)-(m) RETURN n'), getDocument('//My script\nRETURN "me"'), getDocument('RETURN 1')]
+    expect(JSON.stringify(Utils.mergeDocumentArrays(arr1, arr2)))
+      .toBe(JSON.stringify([getDocument('MATCH (n) RETURN n'), 
+          getDocument('//My script\nRETURN "me"'), 
+          getDocument('MATCH (n)-(m) RETURN n'),
+          getDocument('RETURN 1')]))
+
+  it 'should remove chosen documents from an array', ->
+    toRemove = [getDocument('MATCH (n) RETURN n'), getDocument('//My script\nRETURN "me"')]
+    removeFrom = [getDocument('MATCH (n)-(m) RETURN n'), getDocument('//My script\nRETURN "me"'), getDocument('RETURN 1')]
+    expect(JSON.stringify(Utils.removeDocumentsFromArray(toRemove, removeFrom)))
+      .toBe(JSON.stringify([getDocument('MATCH (n)-(m) RETURN n'), getDocument('RETURN 1')]))

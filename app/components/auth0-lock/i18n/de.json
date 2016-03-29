@@ -1,0 +1,48 @@
+{
+  "//": "This is an automatic translation. Help us to improve it.",
+  "loadingTitle": "Bitte warten...",
+  "close": "Schließen",
+  "signin": {
+    "title": "Anmelden",
+    "action": "Anmelden",
+    "all": "Alle anzeigen",
+    "strategyEmailEmpty": "Die E-Mail Adresse ist leer.",
+    "strategyEmailInvalid": "Die E-Mail Adresse ist ungültig.",
+    "strategyDomainInvalid": "{domain} wurde nicht eingerichtet.",
+    "signupText": "Anmelden",
+    "forgotText": "Passwort vergessen?",
+    "emailPlaceholder": "E-Mail Adresse",
+    "usernamePlaceholder": "Benutzername",
+    "passwordPlaceholder": "Passwort",
+    "separatorText": "oder",
+    "serverErrorText": "Es gab einen Fehler beim Verarbeiten der Anmeldung.",
+    "returnUserLabel": "Zuletzt waren Sie angemeldet als...",
+    "wrongEmailPasswordErrorText": "Falsche E-Mail Adresse oder Passwort.",
+    "or": "... oder melden Sie sich an mit",
+    "loadingMessage": "Bei der Anmeldung mit {connection}..."
+  },
+  "signup": {
+    "description": "",
+    "title": "Anmelden",
+    "action": "Anmelden",
+    "emailPlaceholder": "E-Mail Adresse",
+    "passwordPlaceholder": "Erstellen Sie ein Passwort",
+    "cancelAction": "Abbrechen",
+    "headerText": "Bitte geben Sie Ihre E-Mail Adresse und das Passwort ein",
+    "footerText": "Durch Klicken auf \"Anmelden\", stimmen Sie unseren Nutzungsbedingungen oder Datenschutzrichtlinien zu.",
+    "signupOnSSODomainErrorText": "Die Domain {domain} wurde für Single Sign On konfiguriert. Sie können daher kein neues Konto erstellen. Bitte versuchen Sie stattdessen sich direkt anzumelden.",
+    "serverErrorText": "Es gab einen Fehler beim Verarbeiten der Daten auf dem Server."
+  },
+  "reset": {
+    "title": "Passwort zurücksetzen",
+    "action": "Senden",
+    "emailPlaceholder": "E-Mail Adresse",
+    "passwordPlaceholder": "Neues Passwort",
+    "repeatPasswordPlaceholder": "Neues Passwort bestätigen",
+    "cancelAction": "Abbrechen",
+    "successText": "Wir haben Ihnen eine E-Mail zum Zurücksetzen Ihres Passworts geschickt.",
+    "enterSamePasswordText": "Bitte geben Sie das gleiche Passwort erneut ein.",
+    "headerText": "Bitte geben Sie Ihre E-Mail Adresse und das neue Passwort ein. Wir senden Ihnen dann eine E-Mail zur Bestätigung der Passwortänderung.",
+    "serverErrorText": "Es gab einen Fehler beim Verarbeiten des neuen Passworts."
+  }
+}

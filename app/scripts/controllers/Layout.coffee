@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Handles UI state and current page
 #
+
 angular.module('neo4jApp.controllers')
   .controller 'LayoutCtrl', [
     '$rootScope'
@@ -56,7 +57,10 @@ angular.module('neo4jApp.controllers')
 
       $scope.showMessenger = () ->
         UsageDataCollectionService.showMessenger()
-        
+
+      $scope.showMessengerButton = () ->
+        UsageDataCollectionService.connectedUser
+
       $scope.suggestionPlaceholder = 'I want to X, tried Y, suggest Z'
 
       $scope.newMessage = (suggestion) ->
@@ -156,6 +160,10 @@ angular.module('neo4jApp.controllers')
         $scope.showVizDiagnostics = Settings.showVizDiagnostics
         if Settings.showVizDiagnostics
           $scope.visualizationStats = stats
+
+      $scope.$on 'LocalStorageModule.notification.setitem', (evt, item) ->
+        return unless item.key is 'grass'
+        GraphStyle.reloadFromStorage()
 
       resizeStream = Utils.debounce((ignored) ->
         unless $scope.editor.maximized

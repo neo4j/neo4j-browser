@@ -26,16 +26,20 @@ angular.module('neo4jApp.controllers')
     'AuthService'
     'ConnectionStatusService'
     'Frame'
+    'CurrentUser'
     'Settings'
+    'Utils'
     '$timeout'
-    ($scope, AuthService, ConnectionStatusService, Frame, Settings, $timeout) ->
+    ($scope, AuthService, ConnectionStatusService, Frame, CurrentUser, Settings, Utils, $timeout) ->
       $scope.username = 'neo4j'
       $scope.password = ''
       $scope.current_password = ''
       $scope.connection_summary = ConnectionStatusService.getConnectionStatusSummary()
       $scope.static_user = $scope.connection_summary.user
+      $scope.static_host = Utils.getServerHostname(Settings)
       $scope.static_is_authenticated = $scope.connection_summary.is_connected
       $scope.policy_message = ''
+      $scope.CurrentUser = CurrentUser
 
       setPolicyMessage = ->
         return unless $scope.static_is_authenticated
@@ -73,6 +77,7 @@ angular.module('neo4jApp.controllers')
             $scope.connection_summary = ConnectionStatusService.getConnectionStatusSummary()
             $scope.static_user = $scope.connection_summary.user
             $scope.static_is_authenticated = $scope.connection_summary.is_connected
+            $scope.static_host = Utils.getServerHostname(Settings)
             setPolicyMessage()
             Frame.create({input:"#{Settings.initCmd}"})
             $scope.focusEditor()

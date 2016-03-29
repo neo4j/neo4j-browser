@@ -1,0 +1,7 @@
+{
+  "name": "auth0-angular-signup-sample",
+  "description": "Server part of an Angular App that uses Auth0.",
+  "dependencies": {"auth0": "*", "express": "~3.x", "xtend": "~2.1.2"},
+  "private": true,
+  "version": "0.0.1"
+}
