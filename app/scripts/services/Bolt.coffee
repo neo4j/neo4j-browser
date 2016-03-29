@@ -31,19 +31,21 @@ angular.module('neo4jApp.services')
       bolt = window.neo4j.v1
       _driver = null
 
-      connect = (withoutCredentials) ->
-        q = $q.defer()
+      getDriverObj = (withoutCredentials = no) ->
         authData = AuthDataService.getPlainAuthData()
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
         if withoutCredentials
-          _driver = bolt.driver("bolt://localhost:7687")
+          driver = bolt.driver("bolt://localhost:7687")
         else
-          _driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
-        _driver.onError = (e) -> 
+          driver = bolt.driver("bolt://localhost:7687", bolt.auth.basic(username, password))
+        driver
+
+      testQuery = (driver) ->
+        q = $q.defer()
+        driver.onError = (e) -> 
           if e instanceof Event and e.type is 'error'
-            _driver = null 
             q.reject getSocketErrorObj()
-        session = createSession()
+        session = driver.session()
         p = session.run("CALL db.labels")
         p.then((r) ->
           session.close()
@@ -52,6 +54,29 @@ angular.module('neo4jApp.services')
           session.close()
           q.reject e
         )
+        q.promise
+
+      testConnection = (withoutCredentials = no) ->
+        q = $q.defer()
+        driver = getDriverObj withoutCredentials
+        testQuery(driver).then((r) -> 
+          q.resolve r
+          driver.close()
+        ).catch((e) -> 
+          q.reject e
+          driver.close()
+        )
+        q.promise
+
+      connect = (withoutCredentials = no) ->
+        q = $q.defer()
+        _driver = getDriverObj withoutCredentials
+        testQuery(_driver)
+          .then((r) -> q.resolve r)
+          .catch((e) -> 
+            _driver = null
+            q.reject e
+          )
         q.promise
 
       createSession = () ->
@@ -275,6 +300,7 @@ angular.module('neo4jApp.services')
         connect() if item.key is 'authorization_data'
 
       return {
+        testConnection: testConnection,
         connect: connect,
         beginTransaction: beginTransaction,
         transaction: transaction,

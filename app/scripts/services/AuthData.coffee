@@ -36,6 +36,7 @@ angular.module('neo4jApp.services')
         localStorageService.set('authorization_data', encoded)
     @persistCachedAuthData = ->
       if @getPolicies().retainConnectionCredentials isnt no
+        return unless cached_authorization_data isnt localStorageService.get('authorization_data')
         localStorageService.set('authorization_data', cached_authorization_data)
     @clearAuthData = ->
       localStorageService.remove('authorization_data')

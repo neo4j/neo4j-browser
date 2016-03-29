@@ -29,7 +29,7 @@ angular.module('neo4jApp.services')
       {
         makeRequest: (withoutCredentials) ->
           q = $q.defer()
-          r = Bolt.connect withoutCredentials
+          r = Bolt.testConnection withoutCredentials
           r.then((r) -> 
             res = Bolt.constructResult r
             return q.resolve({}) unless res.data.errors.length

@@ -49,7 +49,7 @@ angular.module('neo4jApp.services')
             r
           ,
           (r) ->
-            that.forget() unless r.status == 403 #Forbidden
+            that.forget() unless r.status is 403 #Forbidden
             r
         )
         promise
