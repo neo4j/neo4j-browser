@@ -27,6 +27,7 @@ target
 release.properties
 pom.xml.next
 pom.xml.releaseBackup
+pom.xml.versionsBackup
 pom.xml.tag
 
 # ignore sauce labs artifacts

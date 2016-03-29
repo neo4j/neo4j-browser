@@ -127,25 +127,12 @@
     <resources>
       <resource>
         <directory>dist</directory>
+        <filtering>true</filtering>
       </resource>
     </resources>
 
     <plugins>
 
-      <!--<plugin>-->
-        <!--<artifactId>maven-antrun-plugin</artifactId>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<phase>generate-sources</phase>-->
-            <!--<configuration>-->
-              <!--<target>1.7</target>-->
-            <!--</configuration>-->
-            <!--<goals>-->
-              <!--<goal>run</goal>-->
-            <!--</goals>-->
-          <!--</execution>-->
-        <!--</executions>-->
-      <!--</plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -215,6 +202,24 @@
               <goal>aggregate</goal>
             </goals>
             <phase>site</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <configuration>
+              <tasks>
+                <copy file="target/classes/browser/index.html"
+                      toFile="dist/browser/index.html" overwrite="true"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
