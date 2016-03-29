@@ -45,9 +45,9 @@ neo.utils.clickHandler = ->
           wait = null
           event.dblclick d3.event.target.__data__
         else
+          event.click d3.event.target.__data__
           wait = window.setTimeout(((e) ->
             ->
-              event.click e.target.__data__
               wait = null
           )(d3.event), 250)
 

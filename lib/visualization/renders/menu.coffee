@@ -53,6 +53,7 @@ do ->
 
   createMenuItem = (selection, viz, eventName, itemNumber, className, position, textValue, helpValue) ->
     path = selection.selectAll('path.' + className).data(getSelectedNode)
+    textpath = selection.selectAll('text.' + className).data(getSelectedNode)
 
     tab = path.enter()
     .append('path')
@@ -61,7 +62,7 @@ do ->
     .attr
         d: (node) -> arc(node.radius, itemNumber, 1)()
 
-    text = path.enter()
+    text = textpath.enter()
     .append('text')
     .classed('context-menu-item', true)
     .text(textValue)
@@ -81,8 +82,6 @@ do ->
         d: (node) -> arc(node.radius, itemNumber)()
 
     text
-    .transition()
-    .duration(200)
     .attr("transform", "scale(1)")
 
     path
@@ -91,6 +90,11 @@ do ->
     .duration(200)
     .attr
         d: (node) -> arc(node.radius, itemNumber, 1)()
+    .remove()
+
+    textpath
+    .exit()
+    .attr("transform", "scale(0)")
     .remove()
 
   donutRemoveNode = new neo.Renderer(

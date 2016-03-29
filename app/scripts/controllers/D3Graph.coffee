@@ -128,6 +128,12 @@ angular.module('neo4jApp.controllers')
           d.fixed = no
           toggleSelection(null)
         )
+        .on('nodeDblClicked', (d) ->
+          d.minified = no
+          return if d.expanded
+          getNodeNeigbours(d)
+          $rootScope.$apply() unless $rootScope.$$phase
+        )
         .on('nodeExpand', (d) ->
           d.contextMenuEvent = yes
           toggleSelection null
