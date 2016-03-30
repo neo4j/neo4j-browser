@@ -118,6 +118,43 @@ describe 'Utils', () ->
     text = 'hello<script>alert(1)</script> <p onclick="alert(1)" ng-show=\'false\'>xxx</p>'
     expect(Utils.cleanHTML text).toBe 'hello <p>xxx</p>'
 
+  it 'should create hrefs from strings that are hyperlinks', ->
+    testCases = [
+      "http://test.com",
+      "http://www.test.com",
+      "https://test.com",
+      "https://www.test.com",
+      "http://test.com?a=b",
+      "http://test.com/a/b"
+    ]
+
+    testCases.forEach (text) ->
+      encodeUrl = Utils.escapeHTML text
+      expect(Utils.replaceHyperlinkOrEncodeHTML text).toBe "<a href='#{text}' target='_blank'>#{encodeUrl}</a>"
+
+  it 'should create hrefs from strings that contain hyperlinks', ->
+    link = "http://test.com"
+    link2 = "http://dsfasdfsd.com/random?fdsff=d"
+
+    textBefore = "Text here #{link}"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textBefore).toContain "</a>"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textBefore).toContain "Text here"
+
+    textAfter = "#{link} text there"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textAfter).toContain "</a>"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textAfter).toContain "text there"
+
+    textBothSides = "Text here #{link} text there"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textBothSides).toContain "</a>"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textBothSides).toContain "Text here"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textBothSides).toContain "text there"
+
+    textWithTwoLinks = "Text here #{link} text there #{link2} and again"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textWithTwoLinks).toContain "</a>"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textWithTwoLinks).toContain "Text here"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textWithTwoLinks).toContain "text there"
+    expect(Utils.replaceHyperlinkOrEncodeHTML textWithTwoLinks).toContain "and again"
+
   it 'should respect whitelist for enterprise edition', ->
     host = 'http://first.com'
     whitelist = 'http://second.com,http://third.com'

@@ -122,15 +122,15 @@ class neo.helpers
         s = s + "" + String.fromCharCode ua[i]
       s
 
-    @escapeHTML = (string) ->
-      entityMap =
-        "&": "&amp;"
-        "<": "&lt;"
-        ">": "&gt;"
-        '"': '&quot;'
-        "'": '&#39;'
-        "/": '&#x2F;'
-      String(string).replace(/[&<>"'\/]/g, (s) -> entityMap[s])
+    @replaceHyperlinkOrEncodeHTML = (string) ->
+      regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/ig
+      if string.match regex
+        string.replace regex, (match) ->
+          "<a href='#{match}' target='_blank'>#{replaceHtml match}</a>"
+      else
+        replaceHtml string
+
+    @escapeHTML= (string) -> replaceHtml string
 
     @cleanHTML = (string) ->
       @stripNGAttributes @stripScripts string
@@ -158,4 +158,14 @@ class neo.helpers
       
     @getServerHostname = (Settings) ->
       if Settings.host then Settings.host else location.href
+
+    replaceHtml = (string) ->
+      entityMap =
+        "&": "&amp;"
+        "<": "&lt;"
+        ">": "&gt;"
+        '"': '&quot;'
+        "'": '&#39;'
+        "/": '&#x2F;'
+      String(string).replace(/[&<>"'\/]/g, (s) -> entityMap[s])
         

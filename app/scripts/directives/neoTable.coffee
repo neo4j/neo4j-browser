@@ -42,7 +42,7 @@ angular.module('neo4jApp.directives')
         cell2html = (cell) ->
           if angular.isString(cell)
             return emptyMarker() unless cell.length
-            Utils.escapeHTML(cell)
+            Utils.replaceHyperlinkOrEncodeHTML(cell)
           else if angular.isArray(cell)
             "["+((cell2html(el) for el in cell).join(', '))+"]"
           else if angular.isObject(cell)

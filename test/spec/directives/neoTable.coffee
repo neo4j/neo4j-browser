@@ -33,3 +33,14 @@ describe 'Directive: neoTable', () ->
       columns: -> ['col']
     scope.$apply()
     expect(element.html()).toContain('&lt;script&gt;')
+
+  it 'should build hrefs for hyperlinks in values', inject ($rootScope, $compile) ->
+    scope = $rootScope.$new()
+    element = angular.element '<neo-table table-data="val"></neo-table>'
+    element = $compile(element)(scope)
+    scope.val =
+      rows: -> [['http://test.com']]
+      displayedSize: 1
+      columns: -> ['col']
+    scope.$apply()
+    expect(element.html()).toContain('href')
