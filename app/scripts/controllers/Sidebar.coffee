@@ -112,14 +112,21 @@ angular.module('neo4jApp.controllers')
           folder = angular.element(e.target).scope().folder
           ui.item.folder = if folder? then folder.id else false
 
+      addMissingFolderDocumentsToRoot = (documents, folders) ->
+        documents.filter((key) ->
+          key.folder not in (item.id for item in folders) and key.folder isnt no
+        ).map((doc)->
+          doc.folder = 'root'
+          doc)
+
       nestedFolderStructure = ->
         nested = for folder in Folder.all()
           documents = (doc for doc in Document.where({folder: folder.id}))
           folder.documents = documents
           folder
-
         noFolder = Folder.new(id: 'root')
         noFolder.documents = (doc for doc in Document.where({folder: false}))
+        noFolder.documents = noFolder.documents.concat(addMissingFolderDocumentsToRoot(Document.all(), Folder.all()))
         nested.push noFolder
 
         nested
