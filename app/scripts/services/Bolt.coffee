@@ -124,14 +124,11 @@ angular.module('neo4jApp.services')
       callProc = (query) ->
         statements = if query then [{statement: "CALL " + query}] else []
         result = transaction(statements)
-
         q = $q.defer()
-        result.promise.then(
-          (res) =>
-            q.resolve(res.records)
-        ,
-          (res) ->
-            q.resolve([])
+        result.promise.then((res) ->
+          q.resolve(res.records)
+        ).catch((err) ->
+          q.resolve([])
         )
         q.promise
 
