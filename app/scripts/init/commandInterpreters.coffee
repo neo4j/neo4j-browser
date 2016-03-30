@@ -109,12 +109,11 @@ angular.module('neo4jApp')
             (res) ->
               q.resolve(res)
             ,
-              (r) ->
-                q.reject(r)
+            (r) ->
+              q.reject(r)
           )
           q.promise
       ]
-
 
     # play handler
     FrameProvider.interpreters.push

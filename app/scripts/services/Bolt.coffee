@@ -154,7 +154,7 @@ angular.module('neo4jApp.services')
           constraintsString = "Constraints"
           for constraint in constraints
             constraintsString += "\n  #{constraint.get('description').replace('CONSTRAINT','')}"
-        return "#{indexString}\n\n #{constraintsString}\n"
+        return "#{indexString}\n\n#{constraintsString}\n"
 
       boltResultToRESTResult = (result) ->
         res = result.records || []
