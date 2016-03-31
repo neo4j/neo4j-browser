@@ -145,12 +145,11 @@ angular.module('neo4jApp.services')
         localStorageService.remove 'ntn_refresh_token'
         localStorageService.remove 'ntn_profile'
         localStorageService.remove 'stores'
-        $rootScope.$emit 'ntn:logout'
         AuthService.forget().finally( ->
           q.resolve()
+          $rootScope.$emit 'ntn:logout'
           Editor.execScript "#{Settings.cmdchar}server disconnect"
         )
-
         q.promise
 
       instance: -> angular.copy(@_user)

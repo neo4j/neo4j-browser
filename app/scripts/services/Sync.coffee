@@ -83,10 +83,11 @@ angular.module('neo4jApp.services')
           return if $rootScope.ntn_data.documents[0].data.length is newFavs.length
           setStorageForKey 'documents', newFavs
 
-        $rootScope.$on 'ntn:logout', () =>
-          syncKeys.forEach((key) ->
-            setStorageForKey key, null
-          )
+        $rootScope.$on 'ntn:logout', () ->
+          CurrentUser.clear()
+          $rootScope.ntn_data = {}
+          DefaultContentService.clearAll()
+          DefaultContentService.loadDefaultIfEmpty()
 
       syncItem: (item) ->
         return @setSyncedAt() if item.key is 'updated_at' and @authenticated
