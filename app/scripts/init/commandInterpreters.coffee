@@ -102,20 +102,18 @@ angular.module('neo4jApp')
       type: 'shell'
       templateUrl: 'views/frame-rest.html'
       matches: "#{cmdchar}schema"
-      exec: ['Server', (Server) ->
+      exec: ['ProtocolFactory', (ProtocolFactory) ->
         (input, q) ->
-          Server.console(input.substr(1))
+          ProtocolFactory.getSchemaService().fetch(input)
           .then(
+            (res) ->
+              q.resolve(res)
+            ,
             (r) ->
-              response = r.data[0]
-              if response.match('Unknown')
-                q.reject(error("Unknown action", null, response))
-              else
-                q.resolve(response)
+              q.reject(r)
           )
           q.promise
       ]
-
 
     # play handler
     FrameProvider.interpreters.push
@@ -136,7 +134,7 @@ angular.module('neo4jApp')
             topic = topicalize(clean_url) or 'start'
             url = "content/guides/#{topic}.html"
           if is_remote and not host_ok
-            q.reject({page: url, contents: '', is_remote: is_remote, errors: [{code: "0", message: "Requested host is not whitelisted in browser.remote_content_hostname_whitelist."}]})  
+            q.reject({page: url, contents: '', is_remote: is_remote, errors: [{code: "0", message: "Requested host is not whitelisted in browser.remote_content_hostname_whitelist."}]})
             return q.promise
           $http.get(url)
           .then(
@@ -378,7 +376,7 @@ angular.module('neo4jApp')
 
     extractGraphModel = (response, CypherGraphModel) ->
       graph = new neo.models.Graph()
-      
+
       nodes = response.nodes.reduce((all, curr) -> # Only count unique nodes
         return all if all.taken.indexOf(curr.id) > -1
         all.nodes.push(curr)

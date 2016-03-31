@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'MetaBolt', [
+  .factory 'SchemaBolt', [
     '$q'
     'CypherResult'
     'Bolt'
@@ -30,11 +30,10 @@ angular.module('neo4jApp.services')
       fetch: ->
         q = $q.defer()
         $q.all([
-          Bolt.callProcedure("db.labels"),
-          Bolt.callProcedure("db.relationshipTypes"),
-          Bolt.callProcedure("db.propertyKeys")
+          Bolt.callProcedure("db.indexes"),
+          Bolt.callProcedure("db.constraints"),
         ]).then((data) ->
-          q.resolve(Bolt.constructMetaResult data[0], data[1], data[2])
+          q.resolve(Bolt.constructSchemaResult data[0], data[1])
         )
         q.promise
 

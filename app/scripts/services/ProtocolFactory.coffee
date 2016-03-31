@@ -29,7 +29,9 @@ angular.module('neo4jApp.services')
     'AuthBolt'
     'MetaREST'
     'MetaBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt, MetaREST, MetaBolt) ->
+    'SchemaREST'
+    'SchemaBolt'
+    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt, MetaREST, MetaBolt, SchemaRest, SchemaBolt) ->
       {
         getCypherTransaction: (useBolt = Settings.useBolt) ->
           return new CypherTransactionBolt() if useBolt
@@ -42,5 +44,9 @@ angular.module('neo4jApp.services')
         getMetaService: (useBolt = Settings.useBolt) ->
           return MetaBolt if useBolt
           return MetaREST
+
+        getSchemaService: (useBolt = Settings.useBolt) ->
+          return SchemaBolt if useBolt
+          return SchemaRest
       }
 ]

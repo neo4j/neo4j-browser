@@ -21,22 +21,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'MetaBolt', [
+  .factory 'SchemaREST', [
+    'Server'
     '$q'
-    'CypherResult'
-    'Bolt'
-    ($q, CypherResult, Bolt) ->
-
-      fetch: ->
+    (Server, $q) ->
+      fetch: (input) ->
         q = $q.defer()
-        $q.all([
-          Bolt.callProcedure("db.labels"),
-          Bolt.callProcedure("db.relationshipTypes"),
-          Bolt.callProcedure("db.propertyKeys")
-        ]).then((data) ->
-          q.resolve(Bolt.constructMetaResult data[0], data[1], data[2])
+        Server.console(input.substr(1))
+        .then(
+          (r) ->
+            response = r.data[0]
+            if response.match('Unknown')
+              q.reject(error("Unknown action", null, response))
+            else
+              q.resolve(response)
         )
         q.promise
-
 ]
-
