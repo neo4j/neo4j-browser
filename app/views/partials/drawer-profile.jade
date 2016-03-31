@@ -36,13 +36,13 @@
   div(ng-if="currentUser")
     p You have access to the last 5 versions, in case you want to restore to an older version.
     div(ng-repeat="key in syncService.syncKeys", ng-controller="SyncVersionRestoreKeyCtrl")
-      h6(style="margin-top: 15px") {{key | uppercase}}
-      select.form-control.version-select(ng-options="val.syncedAt as ((val.syncedAt | toYYYYMMDDHis) + ' (' + val.client + ')') for val in ntn_data[key]", 
+      h6(style="margin-top: 15px") {{key.display | uppercase}}
+      select.form-control.version-select(ng-options="val.syncedAt as ((val.syncedAt | toYYYYMMDDHis) + ' (' + val.client + ')') for val in ntn_data[key.value]",
         ng-model="pickedTimestamp"
       )
         option No saved version available
-      button.btn.btn-popup.restore-button(ng-click="syncService.restoreToVersion(key, pickedTimestamp, removeElementCallback(this))", 
-        ng-show="pickedTimestamp && pickedTimestamp != ntn_data[key][0].syncedAt"
+      button.btn.btn-popup.restore-button(ng-click="syncService.restoreToVersion(key.value, pickedTimestamp, removeElementCallback(this))",
+        ng-show="pickedTimestamp && pickedTimestamp != ntn_data[key.value][0].syncedAt"
       ) 
         | Restore
       .clearfix

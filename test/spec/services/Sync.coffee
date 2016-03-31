@@ -32,7 +32,7 @@ describe 'Service: Sync', () ->
     $rootScope = _$rootScope_
 
   it 'should expose syncKeys', ->
-    expect(JSON.stringify(SyncService.syncKeys)).toBe(JSON.stringify(['documents', 'folders', 'grass']))
+    expect(JSON.stringify(SyncService.syncKeys)).toBe(JSON.stringify([{value:'documents', display:'favorites'}, {value:'folders', display:'folders'}, {value: 'grass', display:'grass'}]))
 
   it 'should update sync time when item "updated_at" is supplied', ->
     timeBefore = SyncService.lastSyncedAt
