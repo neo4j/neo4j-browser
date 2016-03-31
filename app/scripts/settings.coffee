@@ -55,6 +55,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     shouldReportUdc: no
     experimentalFeatures: no
     useBolt: yes
+    boltHost: "" # $location.host() is default
   })
 
 angular.module('neo4jApp.settings')

@@ -34,12 +34,13 @@ angular.module('neo4jApp.services')
 
       getDriverObj = (withoutCredentials = no) ->
         authData = AuthDataService.getPlainAuthData()
+        host = Settings.boltHost || $location.host()
         encrypted = if $location.protocol() is 'https' then yes else no
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
         if withoutCredentials
-          driver = bolt.driver("bolt://localhost", {}, {encrypted: encrypted})
+          driver = bolt.driver("bolt://" + host, {}, {encrypted: encrypted})
         else
-          driver = bolt.driver("bolt://localhost", bolt.auth.basic(username, password), {encrypted: encrypted})
+          driver = bolt.driver("bolt://" + host, bolt.auth.basic(username, password), {encrypted: encrypted})
         driver
 
       testQuery = (driver) ->
