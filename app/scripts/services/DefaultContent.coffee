@@ -252,6 +252,9 @@ angular.module('neo4jApp.services')
         constructor: ->
         getDefaultDocuments: ->
           general_scripts.concat system_scripts
+        resetToDefault: ->
+          Document.reset()
+          @loadDefaultIfEmpty()
         loadDefaultIfEmpty: ->
           if Document.length is 0
             Document.add(general_scripts.concat(system_scripts)).save()

@@ -49,14 +49,11 @@ angular.module('neo4jApp.controllers')
         $scope.clearSingleClicked = val
 
       $scope.signoutAndClearLocalStorage = ->
-        CurrentUser.logout().then(->
-          $scope.clearLocalStorage()
-        )
+        CurrentUser.logout()
 
       $scope.clearLocalStorage = ->
         CurrentUser.clear()
         $scope.updateClearSingleClicked(0)
-        DefaultContentService.loadDefaultIfEmpty()
 
       $scope.removeFolder = (folder) ->
         return unless confirm("Are you sure you want to delete the folder?")

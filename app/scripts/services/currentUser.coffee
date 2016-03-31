@@ -32,7 +32,9 @@ angular.module('neo4jApp.services')
   '$q'
   '$rootScope'
   'UsageDataCollectionService'
-  (Settings, Editor, AuthService, NTN, localStorageService, AuthDataService, jwtHelper, $q, $rootScope, UDC) ->
+  'DefaultContentService'
+  'GraphStyle'
+  (Settings, Editor, AuthService, NTN, localStorageService, AuthDataService, jwtHelper, $q, $rootScope, UDC, DefaultContentService, GraphStyle) ->
     class CurrentUser
       _user: {}
       store: null
@@ -115,6 +117,8 @@ angular.module('neo4jApp.services')
 
       clear: () ->
         localStorageService.clearAll()
+        DefaultContentService.resetToDefault()
+        GraphStyle.resetToDefault()
         @loadUserFromLocalStorage()
 
       login: ->
@@ -137,6 +141,7 @@ angular.module('neo4jApp.services')
         q.promise
 
       logout: ->
+        that = @
         q = $q.defer()
         $rootScope.currentUser = null
         NTN.logout()
@@ -145,12 +150,12 @@ angular.module('neo4jApp.services')
         localStorageService.remove 'ntn_refresh_token'
         localStorageService.remove 'ntn_profile'
         localStorageService.remove 'stores'
-        $rootScope.$emit 'ntn:logout'
         AuthService.forget().finally( ->
           q.resolve()
+          that.clear()
+          $rootScope.$emit 'ntn:logout'
           Editor.execScript "#{Settings.cmdchar}server disconnect"
         )
-
         q.promise
 
       instance: -> angular.copy(@_user)
