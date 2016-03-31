@@ -137,6 +137,11 @@ angular.module('neo4jApp.services')
           CypherParser.runHints(cm, cb) if input and input[0] isnt Settings.cmdchar
 
 
+      moveCursorToEndOfLine = (cm) ->
+        $timeout(->
+          cm.setCursor(cm.lineCount(), 0)
+        ,0)
+
       editor = new Editor()
 
       # Configure codemirror
@@ -160,8 +165,11 @@ angular.module('neo4jApp.services')
 
       CodeMirror.commands.historyPrev = (cm) ->
         editor.historyPrev()
+        moveCursorToEndOfLine cm
+
       CodeMirror.commands.historyNext = (cm) ->
         editor.historyNext()
+        moveCursorToEndOfLine cm
 
       CodeMirror.commands.execCurrent = (cm) ->
         editor.execCurrent()
