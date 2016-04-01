@@ -154,12 +154,14 @@ angular.module('neo4jApp.services')
       CodeMirror.commands.handleUp = (cm) ->
         if cm.lineCount() == 1
           editor.historyPrev()
+          moveCursorToEndOfLine cm
         else
           CodeMirror.commands.goLineUp(cm)
 
       CodeMirror.commands.handleDown = (cm) ->
         if cm.lineCount() == 1
           editor.historyNext()
+          moveCursorToEndOfLine cm
         else
           CodeMirror.commands.goLineDown(cm)
 
