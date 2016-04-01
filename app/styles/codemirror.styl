@@ -2,7 +2,7 @@
 @import 'mixins'
 @import 'nib'
 
-left-margin = 6px
+left-margin = 12px
 
 .code-style
   font-family: mono-font-family
@@ -39,8 +39,10 @@ left-margin = 6px
     .CodeMirror
       margin-right: left-margin
   .CodeMirror
-    background-color: transparent
-    margin: 25px 168px 25px left-margin
+    background-color: #fff
+    padding: 12px
+    border-radius: 4px
+    margin: 12px 128px 12px left-margin
     transist: all
     @extend .code-style
     pre
@@ -73,9 +75,10 @@ left-margin = 6px
     transist top
 
   .prompt
-    absolute: top 24px left (left-margin + 22px)
+    absolute: top 24px left (left-margin + 34px)
     color: #93969b
     opacity: 0
+    z-index: 100
 
   .one-line
     .prompt
