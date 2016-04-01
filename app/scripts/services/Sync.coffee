@@ -31,9 +31,29 @@ angular.module('neo4jApp.services')
   '$rootScope'
   (localStorageService, NTN, CurrentUser, Utils, DefaultContentService, $q, $rootScope) ->
 
-    syncKeys = ['documents', 'folders', 'grass']
+    class SyncKeys
+      constructor: ->
+        @syncKeys = [
+          new SyncKey('documents', 'favorites'),
+          new SyncKey('folders'),
+          new SyncKey('grass'),
+        ]
+
+      get: ->
+        @syncKeys
+
+      getValues: ->
+        @syncKeys.map((k) -> k.value)
+
+      class SyncKey
+        constructor: (value, display = null) ->
+          @value = value
+          @display = display || @value
+
+    syncKeys = new SyncKeys()
+
     setStorageJSON = (response) ->
-      for key in syncKeys
+      for key in syncKeys.getValues()
         if typeof response[key] is 'undefined'
           localStorageService.remove key
           continue
@@ -60,7 +80,7 @@ angular.module('neo4jApp.services')
         syncService.push()
       else
         forStorage = {}
-        syncKeys.forEach((key) ->
+        syncKeys.getValues().forEach((key) ->
           forStorage[key] = if Array.isArray(ntn_data[key]) then ntn_data[key][0].data else ntn_data[key]
         )
         setStorageJSON forStorage
@@ -85,7 +105,7 @@ angular.module('neo4jApp.services')
 
       syncItem: (item) ->
         return @setSyncedAt() if item.key is 'updated_at' and @authenticated
-        return unless item.key in syncKeys
+        return unless item.key in (key for key in syncKeys.getValues())
         newvalue = if item.key is 'grass' then item.newvalue else JSON.parse item.newvalue
         newvalue = @getObjectStruct newvalue
         return @inSync = no unless $rootScope.ntn_data
@@ -123,7 +143,7 @@ angular.module('neo4jApp.services')
         return unless @authenticated
         currentLocal = getStorage()
         that = @
-        syncKeys.forEach((key) ->
+        syncKeys.getValues().forEach((key) ->
           tmpObj = {key: key, newvalue: (if key isnt 'grass' then JSON.stringify(currentLocal[key]) else currentLocal[key])}
           that.syncItem(tmpObj)
         )
@@ -163,7 +183,7 @@ angular.module('neo4jApp.services')
       conflict: no
       inSync: no
       lastSyncedAt: null
-      syncKeys: syncKeys
+      syncKeys: syncKeys.get()
 
     syncService = new SyncService()
     return syncService
