@@ -114,9 +114,6 @@ angular.module('neo4jApp.controllers')
         $scope.today = Date.now()
         $scope.cmdchar = Settings.cmdchar
 
-        #IE < 11 has MSIE in the user agent. IE >= 11 do not.
-        $scope.goodBrowser = !/msie/.test(navigator.userAgent.toLowerCase())
-
         $scope.$watch 'offline', (serverIsOffline) ->
           if (serverIsOffline?)
             if not serverIsOffline

@@ -36,16 +36,6 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     include views/template/carousel/carousel
     include views/template/carousel/slide
 
-    // banner for going to webadmin, only if needed
-    div.ng-cloak(ng-hide="goodBrowser")
-        div(style="position: fixed; bottom: 0; right: 0; border: 0; z-index: 998")
-            a(href="../webadmin")
-                img(src="images/webadmin-banner.png", alt="Switch to Classic UI")
-        div(style="position: fixed; bottom: 0; right: 0; border: 0; z-index: 999")
-            a(ng-click="hideWebadminBanner = true")
-                img(src="images/dismiss.png", alt="Dismiss")
-
-
     //build:js scripts/components.js
     script(src='components/jquery/dist/jquery.js')
     script(src='components/jquery-ui/ui/core.js')
