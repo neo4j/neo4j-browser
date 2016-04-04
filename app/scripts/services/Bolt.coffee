@@ -330,15 +330,8 @@ angular.module('neo4jApp.services')
           }]
         }
 
-      connect()
-      $rootScope.$on 'LocalStorageModule.notification.setitem', (evt, item) =>
-        connect() if item.key is 'authorization_data'
-      $rootScope.$on 'LocalStorageModule.notification.removeitem', (evt, item) =>
-        connect() if item.key is 'authorization_data'
-
       return {
         testConnection: testConnection,
-        connect: connect,
         beginTransaction: beginTransaction,
         transaction: transaction,
         callProcedure: (procedureName) ->

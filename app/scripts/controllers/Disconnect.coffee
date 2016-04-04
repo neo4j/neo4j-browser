@@ -26,10 +26,9 @@ angular.module('neo4jApp.controllers')
     'AuthService'
     'ConnectionStatusService'
     ($scope, AuthService, ConnectionStatusService) ->
-      AuthService.forget().then( ->
-        $scope.static_user = ConnectionStatusService.connectedAsUser()
-        $scope.static_is_authenticated = ConnectionStatusService.isConnected()
-      )
+      AuthService.forget()
+      $scope.static_user = ConnectionStatusService.connectedAsUser()
+      $scope.static_is_authenticated = ConnectionStatusService.isConnected()
 
       $scope.focusEditor()
   ]

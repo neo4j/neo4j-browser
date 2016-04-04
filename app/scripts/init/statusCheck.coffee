@@ -60,5 +60,5 @@ angular.module('neo4jApp').run([
           ).then(-> $scope.refresh() )
           r
       )
-    $scope.check()
+    $timeout($scope.check, 20000)
 ])
