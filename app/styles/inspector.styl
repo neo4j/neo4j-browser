@@ -19,12 +19,16 @@ inspector-row-height = 21px
     display: none
 
   &.contracted
-    max-height: inspector-row-height
+    margin-top: 3px
+    max-height: 39px
     overflow: hidden
+    .inspector-footer-row > ul
+      line-height: 39px
 
   .inspector-footer-row > ul
     word-break: break-word
     margin-top: -3px
+    line-height: 21px
     li
       vertical-align: middle
     li.pair
