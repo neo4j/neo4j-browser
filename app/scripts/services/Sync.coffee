@@ -103,6 +103,11 @@ angular.module('neo4jApp.services')
           return if $rootScope.ntn_data.documents[0].data.length is newFavs.length
           setStorageForKey 'documents', newFavs
 
+        $rootScope.$on('ntn:connection_status', (s, isConnected) ->
+          syncService.setSyncConnection(isConnected))
+
+        $rootScope.$on('ntn:last_synced', -> syncService.setSyncedAt())
+
       syncItem: (item) ->
         return @setSyncedAt() if item.key is 'updated_at' and @authenticated
         return unless item.key in (key for key in syncKeys.getValues())
@@ -117,7 +122,6 @@ angular.module('neo4jApp.services')
         $rootScope.ntn_data[item.key] = newSyncVal
         if @authenticated
           @inSync = yes
-          @setSyncedAt()
         else
           @inSync = no
 
@@ -160,6 +164,9 @@ angular.module('neo4jApp.services')
       setSyncConnection: (isConnected) ->
         @hasConnection = isConnected
         @setSyncedAt()
+
+      setSyncConnection: (isConnected) ->
+        @hasConnection = isConnected
 
       upgradeFormat: (data, item) ->
         return [@getObjectStruct(data)] unless data

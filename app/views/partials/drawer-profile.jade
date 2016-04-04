@@ -6,31 +6,8 @@
         span(am-time-ago='syncService.lastSyncedAt')
       small.error(ng-if='!syncService.inSync && currentUser', ng-click='syncService.push()')
         a Out of sync
-
-  //- h5(ng-if="currentUser && ConnectionStatusService.isConnected()") Connection credentials
-  //- div(ng-show="currentUser && CurrentUser.isAuthenticated() && !CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id && ConnectionStatusService.isConnected()")
-  //-   p
-  //-     | Current Neo4j connection
-  //-     i is not 
-  //-     | being synced.
-  //-   br
-  //-   button.btn.btn-popup(ng-click="CurrentUser.addCurrentStoreCreds(neo4j.store_id)") Sync credentials
-
-  //- div(ng-show="CurrentUser.isAuthenticated() && CurrentUser.getCurrentStoreCreds(neo4j.store_id).store_id && ConnectionStatusService.isConnected()")
-  //-   p
-  //-     | Current Neo4j connection 
-  //-     i is 
-  //-     | being synced.
-  //-   br
-  //-   button.btn.btn-popup(ng-click="CurrentUser.removeCurrentStoreCreds(neo4j.store_id)") Forget credentials
-
-
-  //- h5(ng-if="currentUser") Actions
-  //- div(ng-if="currentUser")
-  //-   p
-  //-     button.btn.btn-popup(ng-click="syncService.push()") Push to overwrite remote &#x25B2;
-  //-   p
-  //-     button.btn.btn-popup(ng-click="syncService.fetch()") Pull to overwrite local &#x25BC;
+      small(ng-show='syncService.hasConnection') Connected
+      small(ng-hide='syncService.hasConnection') Not Connected
 
   h5(ng-if="currentUser") Versions
   div(ng-if="currentUser")

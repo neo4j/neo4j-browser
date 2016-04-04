@@ -6,6 +6,8 @@
         | New folder
       small(ng-if='syncService.inSync') Synced&nbsp;
         span(am-time-ago='syncService.lastSyncedAt')
+      small(ng-show='syncService.hasConnection') Connected
+      small(ng-hide='syncService.hasConnection') Not Connected
       small.error(ng-if='!syncService.inSync', ng-click='syncService.push()')
         a Out of sync
   .droppable(ng-repeat='folder in folders')

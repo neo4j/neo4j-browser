@@ -197,11 +197,17 @@ angular.module('neo4jApp.services')
           that.autoLogin()
         )
 
+      init: ->
+        NTN.connection()
+
       $rootScope.$on 'ntn:token_will_expire', () ->
         cu.refreshToken()
 
       $rootScope.$on 'ntn:token_expired', () ->
         cu.autoLogin()
+
+      $rootScope.$on 'ntn:connection_status', (s, isConnected) ->
+        if isConnected then cu.autoLogin()
 
     cu = new CurrentUser
     cu
