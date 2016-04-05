@@ -3,7 +3,7 @@
 @import 'mixins'
 
 #editor
-  cursor: text
+  cursor: default
   user-select: none
   min-height: 72px
   position: relative
@@ -11,6 +11,7 @@
   left: 0
   right: 0
   z-index: 100
+  margin: 0 24px 0px 24px
 
   .file-bar
     color: #fff
@@ -81,7 +82,7 @@
     left: 0
     right: 0
     top: 0
-    background-color: #fff
+    background-color: #EFEFF4
     box-shadow: 0 1px 4px rgba(0,0,0,0.1)
 
   .message-bar
@@ -99,7 +100,7 @@
       color: #fff
     .actions
       a
-        font-size: 18px
+        font-size: 16px
         position: absolute
         top: 10px
         right: 10px
@@ -128,12 +129,16 @@
 
   ul.controls
     z-index: 1000
-    absolute: top 20px right 16px
+    absolute: top 20px right 8px
     .divider
       margin: 0 6px
       width: 1px
       padding: 0
       background-color: #E4E9F1
+    li
+      padding: 0px
+      padding-left: 8px
+    // 2.x behavior
     a.balled
       transist: all 0.2s
       transform: scale(1)
@@ -183,12 +188,65 @@
             color: color-link
             border: 2px solid color-link
 
-      [class*="fa-"]
-        font-size: 18px
+      [class*="sl-"]
+        font-size: 32px
         line-height: 32px
         position: relative
-        &.fa-play
-          font-size: 16px
-          left: 1px
-        &.fa-star
-          font-size: 19px
+        // &.sl-play-circle
+        // &.sl-star-circle
+    a.circled
+      // transist: all 0.2s
+      transform: scale(1)
+      color: #d2d2d3
+      // border: 2px solid white
+      // background-color: #E5E5E7
+      cursor: default
+      display: inline-block
+      width: 28px
+      height: 28px
+      font-size: 28px
+      line-height: 32px
+      text-align: center
+      border-radius: 50%
+      vertical-align: middle
+
+      &.active
+        cursor: pointer
+        box-shadow: none
+        text-shadow: none
+        color: #717172
+        // border: 2px solid #BCBEC0
+        // background-color: #fff
+
+        // &:hover
+        //   transform: scale(1.2)
+
+        &.play
+          &:hover
+            color: color-button-hover
+            // background-color: color-button-hover
+            // border: 2px solid color-success
+        &.favorites
+          &.enabled, &.enabled:hover
+            color: color-favorites
+            // background-color: color-button-hover
+            // background-color: color-star
+            // border: 2px solid darken(color-star, 8%)
+          &.changed
+            color: color-favorites
+            // border: 2px solid darken(color-star, 8%)
+          &:hover
+            color: color-button-hover
+            // background-color: color-button-hover
+            // border: 2px solid darken(color-star, 8%)
+        &.delete
+          &:hover
+            color: color-button-hover
+            // background-color: color-button-hover
+            // border: 2px solid color-link
+// [class*="sl-"]
+//   font-size: 32px
+//   line-height: 32px
+//   position: relative
+// &.sl-play-circle
+// &.sl-star-circle

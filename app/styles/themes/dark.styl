@@ -133,8 +133,8 @@ body.theme-dark
     .intro
       background: url(../images/intro.png) 50% 48% no-repeat
 
-    .view-editor, .view-editor pre
-      background-color: tertiary-background-color
+    .view-editor
+      background-color: secondary-background-color
       z-index: -1
 
     footer
@@ -158,7 +158,28 @@ body.theme-dark
       .cm-variable, .cm-qualifier
         color: #1ABC9C
   #editor
+    ul.controls
+      a.circled
+        color: #858585
+        &.active
+          color: #cecece
+          &.play
+            &:hover
+              color: #cecece
+          &.favorites
+            &.enabled, &.enabled:hover
+              color: color-favorites
+            &.changed
+              color: color-favorites
+            &:hover
+              color: #cecece
+          &.delete
+            &:hover
+              color: #cecece
     .CodeMirror
+      background-color: tertiary-background-color
+      pre
+        background-color: tertiary-background-color
       .CodeMirror-placeholder
         color: #E0E2E6
       .CodeMirror-lines

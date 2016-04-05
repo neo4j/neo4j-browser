@@ -2,6 +2,15 @@
 @import 'mixins'
 @import 'nib'
 
+@keyframes neo4j-pulse {
+  0%, 100% {
+    color: #1bf621;
+  }
+  50% {
+    color: #00a3ff;
+  }
+}
+
 @keyframes move-ball-one
     0%
       opacity: 1
@@ -76,21 +85,36 @@
             //background-color: #202930
         > a
           line-height: 72px
-          text-indent: -9999px
+          // text-indent: -9999px
       > a
-        text-align: center
-        width: 80px
-        position: relative
-        box-shadow: none
-        padding: 0
-        margin: 0
+        text-align:  center
+        width:       80px
+        position:    relative
+        box-shadow:  none
+        padding:     0
+        margin:      0
         text-shadow: none
-        color: navbar-color-fg
+        color:       navbar-color-fg
         line-height: 60px
-        font-size: 28px
+        font-size:   28px
+        font-weight: 200
         &:hover
           color: #fff
           background: none
+          &.database
+            color: color-database
+          &.favorites
+            color: color-favorites
+          &.guides
+            color: color-guides
+          &.cloud
+            color: color-cloud
+          &.preferences
+            color: color-preferences
+          &.credits
+            animation: neo4j-pulse 2s infinite;
+            animation-timing-function: ease-in-out;
+            // font-weight: 300
         .avatar
           width: 40px
           height: 40px
@@ -102,14 +126,21 @@
           border: 2px solid #d8dde2
       &.active
         > a
-          color: #fff
-          text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+          // color: #fff
+          // text-shadow: 0 1px 2px rgba(0,0,0,0.4)
           background-color: drawer-color-bg
-        > .fa-star
-          color: color-star
-        > .fa-info-circle
-          color: color-info
-
+        > .database
+          color: color-database
+        > .favorites
+          color: color-favorites
+        > .guides
+          color: color-guides
+        > .cloud
+          color: color-cloud
+        > .preferences
+          color: color-preferences
+        > .credits
+          font-weight: 300
   absolute: top left
   width: 80px
   bottom: 0

@@ -61,9 +61,9 @@ div(ng-controller="CypherResultCtrl", fullscreen)
               .graph-contents
                 .zoom-holder(ng-show='isFullScreen()')
                   button.zoom_in.faded
-                    i(class="fa fa-search-plus")
+                    i.sl.sl-zoom-in
                   button.zoom_out
-                    i(class="fa fa-search-minus")
+                    i.sl.sl-zoom-out
 
                 svg.graph(neo-graph
                   graph-data='frame.response.graph'
@@ -74,10 +74,11 @@ div(ng-controller="CypherResultCtrl", fullscreen)
                   on-canvas-clicked='onItemClick()'
                   ng-controller='D3GraphCtrl'
                   style="pointer-events:fill;")
-              .status-bar(ng-show='isActive("graph")')
-                .cell
-                  .status
-                    include partials/inspector
+              .status-bar(ng-show='true') 
+                //- isActive("graph")')
+                //- .cell
+                .status
+                  include partials/inspector
 
           .view-result-table.result(ng-show='isActive("table") && !frame.isTerminating')
             .table-holder

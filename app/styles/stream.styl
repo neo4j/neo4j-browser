@@ -15,7 +15,7 @@
 
   .frame
     overflow: hidden
-  
+
     .btn.btn-small
       background: #FFF
 
@@ -333,7 +333,7 @@
       &::-ms-fill-lower, &::-ms-fill-upper
         background: transparent
       &::-ms-tooltip
-        display: none    
+        display: none
       &::-webkit-slider-thumb
         -webkit-appearance: none
         slider-thumb()
@@ -484,7 +484,7 @@
     transist: all 0.2s
     float: left
     border-left: 1px solid #E6E9EF
-    padding-top: 11px
+    // padding-top: 11px
     height: 39px
     font-size: 16px
     vertical-align: center
@@ -494,8 +494,11 @@
     text-align: center
     &.selected
       color: #30333a
+    &.pinned
+      color: #E6E9EF
+      background-color: #9B9DA2
     &:hover
-      background: #40454f
+      background: color-button-hover
       color: #fff
     &.active, &.active:hover {
       color: #30333a
@@ -511,7 +514,7 @@
       padding-top: 12px
     &.fa-fullscreen
       padding-top: 12px
-      font-size: 15px
+      font-size: 16px
   .btn
     margin-left: 4px
 
