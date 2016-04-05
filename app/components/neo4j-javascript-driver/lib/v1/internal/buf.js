@@ -241,6 +241,15 @@ var BaseBuffer = (function () {
      * Read from state position.
      */
   }, {
+    key: "readUInt32",
+    value: function readUInt32() {
+      return this.getUInt32(this._updatePos(4));
+    }
+
+    /**
+     * Read from state position.
+     */
+  }, {
     key: "readInt16",
     value: function readInt16() {
       return this.getInt16(this._updatePos(2));

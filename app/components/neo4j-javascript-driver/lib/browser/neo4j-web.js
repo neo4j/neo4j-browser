@@ -25011,7 +25011,7 @@ var Driver = (function () {
     this._sessionIdGenerator = 0;
     this._token = token;
     this._config = config;
-    this._pool = new _internalPool.Pool(this._createConnection.bind(this), this._destroyConnection.bind(this), this._validateConnection.bind(this));
+    this._pool = new _internalPool.Pool(this._createConnection.bind(this), this._destroyConnection.bind(this), this._validateConnection.bind(this), config.connectionPoolSize);
   }
 
   /** Internal stream observer used for connection state */
@@ -26588,6 +26588,15 @@ var BaseBuffer = (function () {
      * Read from state position.
      */
   }, {
+    key: "readUInt32",
+    value: function readUInt32() {
+      return this.getUInt32(this._updatePos(4));
+    }
+
+    /**
+     * Read from state position.
+     */
+  }, {
     key: "readInt16",
     value: function readInt16() {
       return this.getInt16(this._updatePos(2));
@@ -27815,8 +27824,8 @@ var
 // Signature bytes for each message type
 INIT = 0x01,
     // 0000 0001 // INIT <user_agent>
-ACK_FAILURE = 0x0D,
-    // 0000 1101 // ACK_FAILURE
+ACK_FAILURE = 0x0E,
+    // 0000 1110 // ACK_FAILURE
 RESET = 0x0F,
     // 0000 1111 // RESET
 RUN = 0x10,
@@ -28929,6 +28938,7 @@ var StreamObserver = (function () {
     this._queuedRecords = [];
     this._tail = null;
     this._error = null;
+    this._hasFailed = false;
   }
 
   /**
@@ -28983,6 +28993,10 @@ var StreamObserver = (function () {
   }, {
     key: "onError",
     value: function onError(error) {
+      if (this._hasFailed) {
+        return;
+      }
+      this._hasFailed = true;
       if (this._observer) {
         if (this._observer.onError) {
           this._observer.onError(error);
@@ -29913,7 +29927,15 @@ var Session = (function () {
         return null;
       } : arguments[0];
 
-      this._onClose(cb);
+      if (this._onClose) {
+        try {
+          this._onClose(cb);
+        } finally {
+          this._onClose = null;
+        }
+      } else {
+        cb();
+      }
     }
   }]);
 

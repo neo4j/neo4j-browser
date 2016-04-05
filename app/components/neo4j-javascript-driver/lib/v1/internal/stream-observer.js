@@ -53,6 +53,7 @@ var StreamObserver = (function () {
     this._queuedRecords = [];
     this._tail = null;
     this._error = null;
+    this._hasFailed = false;
   }
 
   /**
@@ -107,6 +108,10 @@ var StreamObserver = (function () {
   }, {
     key: "onError",
     value: function onError(error) {
+      if (this._hasFailed) {
+        return;
+      }
+      this._hasFailed = true;
       if (this._observer) {
         if (this._observer.onError) {
           this._observer.onError(error);

@@ -82,7 +82,7 @@ var Driver = (function () {
     this._sessionIdGenerator = 0;
     this._token = token;
     this._config = config;
-    this._pool = new _internalPool.Pool(this._createConnection.bind(this), this._destroyConnection.bind(this), this._validateConnection.bind(this));
+    this._pool = new _internalPool.Pool(this._createConnection.bind(this), this._destroyConnection.bind(this), this._validateConnection.bind(this), config.connectionPoolSize);
   }
 
   /** Internal stream observer used for connection state */

@@ -72,8 +72,8 @@ var
 // Signature bytes for each message type
 INIT = 0x01,
     // 0000 0001 // INIT <user_agent>
-ACK_FAILURE = 0x0D,
-    // 0000 1101 // ACK_FAILURE
+ACK_FAILURE = 0x0E,
+    // 0000 1110 // ACK_FAILURE
 RESET = 0x0F,
     // 0000 1111 // RESET
 RUN = 0x10,

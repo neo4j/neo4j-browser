@@ -126,7 +126,15 @@ var Session = (function () {
         return null;
       } : arguments[0];
 
-      this._onClose(cb);
+      if (this._onClose) {
+        try {
+          this._onClose(cb);
+        } finally {
+          this._onClose = null;
+        }
+      } else {
+        cb();
+      }
     }
   }]);
 
