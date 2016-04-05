@@ -2,6 +2,15 @@
 @import 'mixins'
 @import 'nib'
 
+@keyframes neo4j-pulse {
+  0%, 100% {
+    color: #1bf621;
+  }
+  50% {
+    color: #00a3ff;
+  }
+}
+
 @keyframes move-ball-one
     0%
       opacity: 1
@@ -103,7 +112,9 @@
           &.preferences
             color: color-preferences
           &.credits
-            font-weight: 300
+            animation: neo4j-pulse 2s infinite;
+            animation-timing-function: ease-in-out;
+            // font-weight: 300
         .avatar
           width: 40px
           height: 40px
