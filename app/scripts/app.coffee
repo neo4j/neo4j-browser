@@ -54,12 +54,12 @@ app = angular.module('neo4jApp', [
   'angularMoment'
   'ngSanitize'
 ])
-.config((authProvider, localStorageServiceProvider) ->
+.config(['authProvider', 'localStorageServiceProvider', (authProvider, localStorageServiceProvider) ->
   authProvider.init(
     domain: 'neo4j-sync.auth0.com'
     clientID: 'OEWOmp34xybu0efvGQ8eM4zNTNUTJJOB'
   )
   localStorageServiceProvider.setNotify(yes, yes)
-).run((auth) ->
+]).run(['auth', (auth) ->
   auth.hookEvents()
-)
+])
