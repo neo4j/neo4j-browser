@@ -153,8 +153,13 @@ angular.module('neo4jApp.services')
         setStorageJSON(response)
 
       setSyncedAt: ->
-        @inSync = yes
-        @lastSyncedAt = new Date()
+        if @hasConnection
+          @inSync = yes
+          @lastSyncedAt = new Date()
+
+      setSyncConnection: (isConnected) ->
+        @hasConnection = isConnected
+        @setSyncedAt()
 
       upgradeFormat: (data, item) ->
         return [@getObjectStruct(data)] unless data
