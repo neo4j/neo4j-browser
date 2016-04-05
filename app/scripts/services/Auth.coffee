@@ -122,7 +122,7 @@ angular.module('neo4jApp.services')
         that = @
         q = $q.defer()
         setConnectionAuthData ConnectionStatusService.connectedAsUser(), old_passwd
-        ProtocolFactory.getAuthService(useBolt = no).setNewPassword(ConnectionStatusService.connectedAsUser(), new_passwd)
+        ProtocolFactory.getAuthService().setNewPassword(ConnectionStatusService.connectedAsUser(), new_passwd)
           .then(
             (r) ->
               setConnectionAuthData ConnectionStatusService.connectedAsUser(), new_passwd, emitChange = yes
