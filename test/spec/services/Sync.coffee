@@ -34,14 +34,25 @@ describe 'Service: Sync', () ->
   it 'should expose syncKeys', ->
     expect(JSON.stringify(SyncService.syncKeys)).toBe(JSON.stringify([{value:'documents', display:'favorites'}, {value:'folders', display:'folders'}, {value: 'grass', display:'grass'}]))
 
-  it 'should update sync time when item "updated_at" is supplied', ->
+  it 'should update sync time when item "updated_at" is supplied and service has connection', ->
     timeBefore = SyncService.lastSyncedAt
     $rootScope.$digest()
     SyncService.authenticated = yes
+    SyncService.hasConnection = yes
     SyncService.syncItem {key: 'updated_at'}
     $rootScope.$digest()
     timeAfter = SyncService.lastSyncedAt
     expect(timeBefore).not.toBe(timeAfter)
+
+  it 'should not update sync time when item "updated_at" is supplied but service does not have connection', ->
+    timeBefore = SyncService.lastSyncedAt
+    $rootScope.$digest()
+    SyncService.authenticated = yes
+    SyncService.hasConnection = no
+    SyncService.syncItem {key: 'updated_at'}
+    $rootScope.$digest()
+    timeAfter = SyncService.lastSyncedAt
+    expect(timeBefore).toBe(timeAfter)
 
   it 'should have the state inSync = no when not authenticated and never signed in (ntn_data empty)', ->
     expect($rootScope.ntn_data).toBe undefined

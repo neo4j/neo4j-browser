@@ -20,7 +20,7 @@
         option No saved version available
       button.btn.btn-popup.restore-button(ng-click="syncService.restoreToVersion(key.value, pickedTimestamp, removeElementCallback(this))",
         ng-show="pickedTimestamp && pickedTimestamp != ntn_data[key.value][0].syncedAt"
-      ) 
+      )
         | Restore
       .clearfix
 
@@ -68,15 +68,19 @@
       div
         button.btn.btn-popup.btn-non-destructive(ng-click="signoutAndClearLocalStorage()") Sign out + clear
 
-  div(ng-if="currentUser")
+  div(ng-if="currentUser && syncService.hasConnection")
     p &nbsp;
     p
       button.btn.btn-popup.btn-destructive(ng-click="CurrentUser.logout(); toggleDrawer('profile') ") Sign out
 
-  div(ng-if="!currentUser")
+  div(ng-if="!currentUser && syncService.hasConnection")
     p &nbsp;
     p With Neo4j Sync you are able to always have fast access to your favorite scripts, styles and database credentials (maybe).
     button.btn.btn-popup(ng-click="CurrentUser.login()") Sign in to Neo4j Sync
+
+  div.connection-error(ng-if="!syncService.hasConnection && !currentUser")
+    p &nbsp;
+    p It is not possible to connect to Neo4j Sync right now.
 
 footer
   p What's this?&nbsp;
