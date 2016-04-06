@@ -55,9 +55,10 @@ angular.module('neo4jApp.services')
     @session_countdown = null
     @waiting_policies = no
 
-    @setConnectionAuthData = (username, password) ->
+    @setConnectionAuthData = (username, password, emitChange = no) ->
       @setConnectedUser username
       @updatePersistentAuthData "#{username}:#{password}"
+      $rootScope.$emit 'connection:authdata_updated' if emitChange
     @connectionAuthData = ->
       AuthDataService.getAuthData()
     @plainConnectionAuthData = ->

@@ -27,11 +27,12 @@ angular.module('neo4jApp.services')
     '$q'
     (Bolt, Settings, $q) ->
       {
-        makeRequest: (withoutCredentials) ->
+        makeRequest: (withoutCredentials, retainConnection) ->
           q = $q.defer()
           r = Bolt.testConnection withoutCredentials
           r.then((r) -> 
             res = Bolt.constructResult r
+            Bolt.connect() if retainConnection
             return q.resolve({}) unless res.data.errors.length
             return q.reject({status: 401, data: res})
           ).catch((err) -> 

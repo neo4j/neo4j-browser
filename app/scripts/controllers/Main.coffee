@@ -43,39 +43,15 @@ angular.module('neo4jApp.controllers')
         $scope.kernel = {}
         $scope.refresh = ->
           return '' if $scope.unauthorized || $scope.offline
-          ProtocolFactory.getMetaService().fetch().then(
-            (res) ->
-              $scope.labels = res.labels
-              $scope.relationships = res.relationships
-              $scope.propertyKeys = res.propertyKeys
-          )
-
           ProtocolFactory.getMetaService().fetch().then((res) ->
             $scope.labels = res.labels
             $scope.relationships = res.relationships
             $scope.propertyKeys = res.propertyKeys
-
+          )
           $scope.server = Server.info $scope.server
           $scope.version = Server.version $scope.version
           $scope.host = $window.location.host
           fetchJMX()
-
-          # gather info from jmx
-          Server.jmx(
-            [
-              "org.neo4j:instance=kernel#0,name=Configuration"
-              "org.neo4j:instance=kernel#0,name=Kernel"
-              "org.neo4j:instance=kernel#0,name=Store file sizes"
-            ]).success((response) ->
-              for r in response
-                for a in r.attributes
-                  $scope.kernel[a.name] = a.value
-              UDC.updateStoreAndServerVersion($scope.server.neo4j_version, $scope.kernel['StoreId'])
-              refreshPolicies $scope.kernel['browser.retain_connection_credentials'], $scope.kernel['browser.credential_timeout']
-              allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['browser.allow_outgoing_browser_connections']) < 0 ? yes : no
-              refreshAllowOutgoingConnections allow_connections
-            ).error((r) -> $scope.kernel = {})
-          )
 
         refreshAllowOutgoingConnections = (allow_connections) ->
           return unless $scope.neo4j.config.allow_outgoing_browser_connections != allow_connections
@@ -136,14 +112,15 @@ angular.module('neo4jApp.controllers')
             for r in response
               for a in r.attributes
                 $scope.kernel[a.name] = a.value
-            $scope.neo4j.store_id = $scope.kernel['StoreId']
             UDC.updateStoreAndServerVersion($scope.server.neo4j_version, $scope.kernel['StoreId'])
-
-          ).error((r)-> $scope.kernel = {})
+            refreshPolicies $scope.kernel['browser.retain_connection_credentials'], $scope.kernel['browser.credential_timeout']
+            allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['browser.allow_outgoing_browser_connections']) < 0 ? yes : no
+            refreshAllowOutgoingConnections allow_connections
+          ).error((r) -> $scope.kernel = {})
 
         pickFirstFrame = ->
           CurrentUser.autoLogin()
-          AuthService.hasValidAuthorization().then(
+          AuthService.hasValidAuthorization(retainConnection = yes).then(
             ->
               Frame.closeWhere "#{Settings.cmdchar}server connect"
               Frame.create({input:"#{Settings.initCmd}"})
