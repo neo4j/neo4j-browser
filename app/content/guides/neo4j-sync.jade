@@ -1,0 +1,36 @@
+article.guide
+  .container-fluid.sign-in-frame
+    .row
+      .col-sm-3
+        .box-max
+          img.img-responsive(src='images/neo4j-world.png')
+          h1.subhead.text-right NEO4J SYNC
+      .col-sm-4.col-sm-offset-1
+        .box-max(ng-if="!currentUser")
+          h3 Connect to the Cloud
+          p &nbsp;
+          p.lead Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social 
+            | sign-in to elevate your graph experience. 
+          .button-row.row.col-sm-12
+            button.btn.btn-primary(ng-click="CurrentUser.login()") Register / Sign In
+            span.spacer &nbsp;
+            a.no-thanks(ng-click="editor.execScript(settings.initCmd)") No thanks
+        .box-max(ng-if="currentUser") 
+          h3 Hello {{currentUser.name}}!
+          p &nbsp;
+          p.lead Your Neo4j Sync account is active.
+          p &nbsp;
+          p
+            button.btn.btn-popup.btn-destructive(ng-click="CurrentUser.logout(); toggleDrawer('profile') ") Sign Out
+
+      .col-sm-4
+        ul.big.undecorated
+          li
+            i.sl.sl-cloud-sync.fa-lg
+            | &nbsp; Sync queries &amp; graph style sheets
+          li
+            i.sl.sl-hierarchy.fa-lg
+            | &nbsp; Restore previous versions of scripts
+          li
+            i.sl.sl-bubble-comment.fa-lg
+            | &nbsp; Get update notices, suggestions and help

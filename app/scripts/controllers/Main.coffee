@@ -149,7 +149,8 @@ angular.module('neo4jApp.controllers')
               Frame.create({input:"#{Settings.initCmd}"})
             ,
             (r) ->
-              Frame.createOne({input:"#{Settings.cmdchar}play sign-in"})
+              if !CurrentUser.isAuthenticated()
+                Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
           )
         pickFirstFrame()
 
@@ -158,8 +159,8 @@ angular.module('neo4jApp.controllers')
           return Frame.create({input:"#{Settings.cmdchar}play welcome"}) if newUser
           return Frame.create({input:"#{Settings.cmdchar}server connect"}) if !newUser
 
-        $scope.$on 'ntn:authenticated', (evt, authenticated) ->
-          Frame.closeWhere "#{Settings.cmdchar}play sign-in"
+        # $scope.$on 'ntn:authenticated', (evt, authenticated) ->
+        #   Frame.closeWhere "#{Settings.cmdchar}play neo4j-sync"
 
         $scope.$watch 'version', (val) ->
           return '' if not val
