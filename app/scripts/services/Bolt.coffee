@@ -112,7 +112,10 @@ angular.module('neo4jApp.services')
         else
           if tx
             p = tx.run statement, parameters
-            tx.commit()
+            p.then((r) -> 
+              if tx then tx.commit()
+              r
+            )
           else
             p = session.run statement, parameters
           p.then((r) ->

@@ -76,14 +76,13 @@ angular.module('neo4jApp.services')
               else
                 intrPromise.reject 'cancel main request'
               @isTerminating = yes
-              intrPromise.transaction.rollback().then(
-                (r) =>
-                  @isTerminating = no
-                  q.resolve r
-                ,
-                (r) =>
-                  @isTerminating = no
-                  q.reject r
+              that = @
+              intrPromise.transaction.rollback().then((r) ->
+                that.isTerminating = no
+                q.resolve r
+              ).catch((r) ->
+                that.isTerminating = no
+                q.reject r
               )
               return q.promise
 
@@ -166,6 +165,7 @@ angular.module('neo4jApp.services')
               ,
               (r) =>
                 return @remove frame unless frame.closeAttempts < 1
+                frame.response = r
                 frame.setError r
                 frame.closeAttempts++
             )

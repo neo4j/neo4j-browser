@@ -100,8 +100,14 @@ angular.module('neo4jApp.services')
           q = $q.defer()
           {tx, promise} = Bolt.transaction(statements, @session, @tx)
           @tx = tx
-          promise.then((r) -> q.resolve({original: r, remapped: Bolt.constructResult(r)}))
-            .catch((r) -> q.reject({original: r, remapped: Bolt.constructResult(r)}))
+          that = @
+          promise.then((r) -> 
+            that._reset()
+            q.resolve({original: r, remapped: Bolt.constructResult(r)})
+          ).catch((r) -> 
+            that._reset()
+            q.reject({original: r, remapped: Bolt.constructResult(r)})
+          )
 
           res = promiseResult(q.promise)
           res.then(
@@ -113,10 +119,19 @@ angular.module('neo4jApp.services')
 
         rollback: ->
           q = $q.defer()
-          @tx.rollback() if @tx
-          @_reset()
-          q.resolve {}
-          q.promise
+          that = @
+          if @tx
+            @tx.rollback().then((r) ->
+              that._reset()
+              q.resolve {original: r, remapped: Bolt.constructResult(r)}
+            ).catch((e)->
+              that._reset()
+              orig = {code: 'N/A', message: e.error}
+              q.reject {original: orig, remapped: Bolt.constructResult(orig)}
+            )
+          else
+            q.resolve({original: {}, remapped: Bolt.constructResult({})})
+          promiseResult(q.promise)
 
       return CypherTransactionBolt
   ]
