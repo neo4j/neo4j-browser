@@ -330,8 +330,12 @@ angular.module('neo4jApp.services')
           }]
         }
 
+      $rootScope.$on 'connection:authdata_updated', () ->
+        connect()
+
       return {
         testConnection: testConnection,
+        connect: connect,
         beginTransaction: beginTransaction,
         transaction: transaction,
         callProcedure: (procedureName) ->

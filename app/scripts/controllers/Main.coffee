@@ -47,12 +47,11 @@ angular.module('neo4jApp.controllers')
             $scope.labels = res.labels
             $scope.relationships = res.relationships
             $scope.propertyKeys = res.propertyKeys
-
+          )
           $scope.server = Server.info $scope.server
           $scope.version = Server.version $scope.version
           $scope.host = $window.location.host
           fetchJMX()
-          )
 
         refreshAllowOutgoingConnections = (allow_connections) ->
           return unless $scope.neo4j.config.allow_outgoing_browser_connections != allow_connections
@@ -121,7 +120,7 @@ angular.module('neo4jApp.controllers')
 
         pickFirstFrame = ->
           CurrentUser.autoLogin()
-          AuthService.hasValidAuthorization().then(
+          AuthService.hasValidAuthorization(retainConnection = yes).then(
             ->
               Frame.closeWhere "#{Settings.cmdchar}server connect"
               Frame.create({input:"#{Settings.initCmd}"})
