@@ -31,7 +31,9 @@ angular.module('neo4jApp.services')
     'MetaBolt'
     'SchemaREST'
     'SchemaBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt, MetaREST, MetaBolt, SchemaRest, SchemaBolt) ->
+    'JmxREST'
+    'JmxBolt'
+    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt, MetaREST, MetaBolt, SchemaREST, SchemaBolt, JmxREST, JmxBolt) ->
       {
         getCypherTransaction: (useBolt = Settings.useBolt) ->
           return new CypherTransactionBolt() if useBolt
@@ -47,6 +49,10 @@ angular.module('neo4jApp.services')
 
         getSchemaService: (useBolt = Settings.useBolt) ->
           return SchemaBolt if useBolt
-          return SchemaRest
+          return SchemaREST
+
+        getJmxService: (useBolt = Settings.useBolt) ->
+          return JmxBolt if useBolt
+          return JmxREST
       }
 ]

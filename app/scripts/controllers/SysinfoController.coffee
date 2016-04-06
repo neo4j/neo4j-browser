@@ -22,70 +22,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'SysinfoController', [
-    '$scope', 'Settings', 'Server', '$timeout'
-  ($scope, Settings, Server, $timeout) ->
-
+    '$scope', 'Settings', 'ProtocolFactory', '$timeout'
+  ($scope, Settings, ProtocolFactory, $timeout) ->
     $scope.autoRefresh = false
-
     $scope.sysinfo = {}
-
     $scope.refresh = () ->
-
       # kernel info from JMX
       $scope.sysinfo.kernel ?= {}
-      Server.jmx(
+      ProtocolFactory.getJmxService().getJmx(
         [
           "org.neo4j:instance=kernel#0,name=Configuration"
           "org.neo4j:instance=kernel#0,name=Kernel"
           "org.neo4j:instance=kernel#0,name=Store file sizes"
-        ]).success((response) ->
-          for r in response
+        ]).then((response) ->
+          for r in response.data
             for a in r.attributes
               $scope.sysinfo.kernel[a.name] = a.value
-        ).error((r)-> $scope.sysinfo.kernel = {})
+        ).catch((r)-> $scope.sysinfo.kernel = {})
 
       # primitive counts from JMX
       $scope.sysinfo.primitives ?= {}
-      Server.jmx(
+      ProtocolFactory.getJmxService().getJmx(
         [
           "org.neo4j:instance=kernel#0,name=Primitive count"
-        ]).success((response) ->
-          for r in response
+        ]).then((response) ->
+          for r in response.data
             for a in r.attributes
               $scope.sysinfo.primitives[a.name] = a.value
-        ).error((r)-> $scope.sysinfo.primitives = {})
+        ).catch((r)-> $scope.sysinfo.primitives = {})
 
       # page cache data from JMX
       $scope.sysinfo.cache ?= { available: false }
-      Server.jmx(
+      ProtocolFactory.getJmxService().getJmx(
         [
           "org.neo4j:instance=kernel#0,name=Page cache"
-        ]).success((response) ->
-          for r in response
+        ]).then((response) ->
+          for r in response.data
             $scope.sysinfo.cache.available = true
             for a in r.attributes
               $scope.sysinfo.cache[a.name] = a.value
-        ).error((r)-> $scope.sysinfo.cache = { available: false })
+        ).catch((r)-> $scope.sysinfo.cache = { available: false })
 
       # transactions from JMX
       $scope.sysinfo.tx ?= { available: false }
-      Server.jmx(
+      ProtocolFactory.getJmxService().getJmx(
         [
           "org.neo4j:instance=kernel#0,name=Transactions"
-        ]).success((response) ->
-          for r in response
+        ]).then((response) ->
+          for r in response.data
             $scope.sysinfo.tx.available = true
             for a in r.attributes
               $scope.sysinfo.tx[a.name] = a.value
-        ).error((r)-> $scope.sysinfo.tx = {available: false})
+        ).catch((r)-> $scope.sysinfo.tx = {available: false})
 
       # transactions from JMX
       $scope.sysinfo.ha ?= { }
-      Server.jmx(
+      ProtocolFactory.getJmxService().getJmx(
         [
           "org.neo4j:instance=kernel#0,name=High Availability"
-        ]).success((response) ->
-          for r in response
+        ]).then((response) ->
+          for r in response.data
             $scope.sysinfo.ha.clustered = true
             for a in r.attributes
               if a.name is "InstancesInCluster"
@@ -101,7 +97,7 @@ angular.module('neo4jApp.controllers')
                   connectedMemberId = a.value
                 $scope.sysinfo.ha[a.name] = a.value
             $scope.sysinfo.ha.ClusterMembers[connectedMemberId].connected = true
-        ).error((r)-> $scope.sysinfo.ha = { clustered: false })
+        ).catch((r)-> $scope.sysinfo.ha = { clustered: false })
 
     timer = null
     refreshLater = () =>

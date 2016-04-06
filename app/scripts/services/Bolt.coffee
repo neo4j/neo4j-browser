@@ -91,6 +91,7 @@ angular.module('neo4jApp.services')
       beginTransaction = (opts) ->
         q = $q.defer()
         statement = opts[0]?.statement || ''
+        parameters = opts[0]?.parameters || {}
         session = createSession()
         if not session
           tx = null
@@ -98,21 +99,22 @@ angular.module('neo4jApp.services')
         else
           tx = session.beginTransaction()
           q.resolve() unless statement
-          tx.run(statement).then((r)-> q.resolve(r)).catch((e)-> q.reject(e)) if statement
+          tx.run(statement, parameters).then((r)-> q.resolve(r)).catch((e)-> q.reject(e)) if statement
         return {tx: tx, session: session, promise: q.promise}
 
       transaction = (opts, session, tx) ->
         statement = opts[0]?.statement || ''
+        parameters = opts[0]?.parameters || {}
         q = $q.defer()
         session = session || createSession()
         if not session
           q.reject getSocketErrorObj()
         else
           if tx
-            p = tx.run statement
+            p = tx.run statement, parameters
             tx.commit()
           else
-            p = session.run statement
+            p = session.run statement, parameters
           p.then((r) ->
             session.close()
             q.resolve r
@@ -122,21 +124,41 @@ angular.module('neo4jApp.services')
           )
         {tx: tx, promise: q.promise}
 
-      callProc = (query) ->
-        statements = if query then [{statement: "CALL " + query}] else []
+      boltTransaction = (query, parameters = {}) ->
+        statements = if query then [{statement: query, parameters: parameters}] else []
+        transaction(statements)
+
+      callProcedure = (query, parameters = {}) ->
+        statements = if query then [{statement: "CALL " + query, parameters: parameters}] else []
         result = transaction(statements)
         q = $q.defer()
-        result.promise.then((res) ->
-          q.resolve(res.records)
-        ).catch((err) ->
-          q.resolve([])
-        )
+        result.promise
+          .then((res) -> q.resolve(res.records))
+          .catch((err) -> q.resolve([]))
         q.promise
 
       metaResultToRESTResult = (labels, realtionshipTypes, propertyKeys) ->
         labels: labels.map (o) -> o.get('label')
         relationships: realtionshipTypes.map (o) -> o.get('relationshipType')
         propertyKeys: propertyKeys.map (o) -> o.get('propertyKey')
+
+      jmxResultToRESTResult = (r, whatToGet = []) ->
+        return {data: []} unless r.records
+        r.records = itemIntToString r.records
+        filtered = r.records.filter((record) -> whatToGet.indexOf(record.get('name')) > -1)
+          .map((record) -> 
+            origAttributes = record.get('attributes')
+            return {
+              name: record.get('name'), 
+              description: record.get('description'), 
+              attributes: Object.keys(record.get('attributes')).map((attributeName) -> {
+                name: attributeName,
+                description: origAttributes[attributeName].description,
+                value: origAttributes[attributeName].value
+              })
+            }
+          )
+        {data: filtered}
 
       schemaResultToRESTResult = (indexes, constraints) ->
         indexString = ""
@@ -338,13 +360,14 @@ angular.module('neo4jApp.services')
         connect: connect,
         beginTransaction: beginTransaction,
         transaction: transaction,
-        callProcedure: (procedureName) ->
-          callProc(procedureName)
+        boltTransaction: boltTransaction,
+        callProcedure: callProcedure,
         constructResult: (res) ->
           boltResultToRESTResult res
         constructMetaResult: (labels, realtionshipTypes, propertyKeys) ->
           metaResultToRESTResult labels, realtionshipTypes, propertyKeys
         constructSchemaResult: (indexes, constraints) ->
           schemaResultToRESTResult indexes, constraints
+        constructJmxResult: jmxResultToRESTResult
       }
   ]
