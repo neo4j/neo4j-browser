@@ -25,54 +25,25 @@ angular.module('neo4jApp.services')
   'Document'
   'Folder'
     (Document, Folder) ->
-      general_scripts = [
+      basic_scripts = [
         {
-          folder: 'general'
+          folder: 'basics'
           content: """
-  // Create a node
+// Query Template
+:play query-template
+          """
+        }
+        {
+          folder: 'basics'
+          content: """
+  // Hello World!
   CREATE (n {name:"World"}) RETURN "hello", n.name
           """
         }
         {
-          folder: 'general'
+          folder: 'basics'
           content: """
-  // Get some data
-  MATCH (n) RETURN n LIMIT 100
-          """
-        }
-        {
-          folder: 'general'
-          content: """
-  // What is related, and how
-  MATCH (a)-[r]->(b)
-  WHERE labels(a) <> [] AND labels(b) <> []
-  RETURN DISTINCT head(labels(a)) AS This, type(r) as To, head(labels(b)) AS That
-  LIMIT 10
-          """
-        }
-        {
-          folder: 'general'
-          content: """
-  // REST API
-  :GET /db/data
-          """
-        }
-      ]
-
-      node_scripts = [
-        {
-          folder: 'nodes'
-          content: """
-  // Count nodes
-  // Warning: may take a long time.
-  MATCH (n)
-  RETURN count(n)
-          """
-        }
-        {
-          folder: 'nodes'
-          content: """
-  // Create index
+  // Create an index index
   // Replace:
   //   'LabelName' with label to index
   //   'propertyKey' with property to be indexed
@@ -80,108 +51,72 @@ angular.module('neo4jApp.services')
           """
         }
         {
-          folder: 'nodes'
+          folder: 'basics'
           content: """
-  // Create indexed node
+  // Create unique property constraint
   // Replace:
-  //   'LabelName' with label to apply to new node
-  //   'propertyKey' with property to add
-  //   'property_value' with value of the added property
-  CREATE (n:LabelName { propertyKey:"property_value" }) RETURN n
+  //   'LabelName' with node label
+  //   'propertyKey' with property that should be unique
+  CREATE CONSTRAINT ON (n:LabelName) ASSERT n.propertyKey IS UNIQUE
           """
         }
         {
-          folder: 'nodes'
+          folder: 'basics'
           content: """
-  // Create node
-  CREATE (n) RETURN n
-          """
-        }
-        {
-          folder: 'nodes'
-          content: """
-  // Delete a node
-  // Replace:
-  //   'LabelName' with label of node to delete
-  //   'propertyKey' with property to find
-  //   'expected_value' with value of property
-  START n=node(*) 
-  MATCH (n:LabelName)-[r?]-()
-  WHERE n.propertyKey = "expected_value"
-  DELETE n,r
-          """
-        }
-        {
-          folder: 'nodes'
-          content: """
-  // Drop index
-  // Replace:
-  //   'LabelName' with label index
-  //   'propertyKey' with indexed property
-  DROP INDEX ON :LabelName(propertyKey)
-          """
-        }
-        {
-          folder: 'nodes'
-          content: """
-  // Find a node
-  MATCH (n{{':'+label-name}})
-  WHERE n.{{property-name}} = "{{property-value}}" RETURN n
+  // Get some data
+  MATCH (n) OPTIONAL MATCH (n)-[r]-() RETURN n,r LIMIT 100
           """
         }
       ]
 
-      relationship_scripts = [
+      profile_scripts = [
         {
-          folder: 'relationships'
+          folder: 'profile'
           content: """
-  // Isolate node
-  // Description: Delete some relationships to a particular node
-  // Replace:
-  //   'RELATIONSHIP' with relationship type to match (or remove for all)
-  //   'propertyKey' with property by which to find the node
-  //   'expected_value' with the property value to find
-  MATCH (a)-[r:RELATIONSHIP]-()
-  WHERE a.propertyKey = "expected_value"
-  DELETE r
+  // Count all nodes
+  MATCH (n)
+  RETURN count(n)
           """
         }
         {
-          folder: 'relationships'
+          folder: 'profile'
           content: """
-  // Relate nodes
-  // Replace:
-  //   'propertyKey' with property to evaluate on either node
-  //   'expected_value_a' with property value to find node a
-  //   'expected_value_b' with property value to find node b
-  //   'RELATIONSHP' with type of new relationship between a and b
-  MATCH (a),(b)
-  WHERE a.propertyKey = "expected_value_a"
-  AND b.propertyKey = "expected_value_b"
-  CREATE (a)-[r:RELATIONSHIP]->(b)
-  RETURN a,r,b
+// Count all relationships
+MATCH ()-->() RETURN count(*);
           """
         }
         {
-          folder: 'relationships'
+          folder: 'profile'
           content: """
-  // Shortest path
-  // Replace:
-  //   'propertyKey' with property to evaluate on either node
-  //   'expected_value_a' with property value to find node a
-  //   'expected_value_b' with property value to find node b
-  MATCH p = shortestPath( (a)-[*..4]->(b) )
-  WHERE a.propertyKey='expected_value_a' AND b.propertyKey='expected_value_b'
-  RETURN p
+// What kind of nodes exist
+// Sample some nodes, reporting on property and relationship counts per node.
+MATCH (n) WHERE rand() <= 0.1
+RETURN
+DISTINCT labels(n),
+count(*) AS SampleSize,
+avg(size(keys(n))) as Avg_PropertyCount,
+min(size(keys(n))) as Min_PropertyCount,
+max(size(keys(n))) as Max_PropertyCount,
+avg(size( (n)-[]-() ) ) as Avg_RelationshipCount,
+min(size( (n)-[]-() ) ) as Min_RelationshipCount,
+max(size( (n)-[]-() ) ) as Max_RelationshipCount
           """
         }
         {
-          folder: 'relationships'
+          folder: 'profile'
           content: """
-  // Whats related
-  // Description: find a random sample of nodes, revealing how they are related
-  MATCH (a)-[r]-(b)
-  RETURN DISTINCT head(labels(a)), type(r), head(labels(b)) LIMIT 100
+// What is related, and how
+// Sample the graph, reporting the patterns of connected labels,
+// with min, max, avg degrees and associated node and relationship properties.
+MATCH (n) where rand() <= 0.1
+MATCH (n)-[r]->(m)
+WITH n, type(r) as via, m
+RETURN labels(n) as from,
+   reduce(keys = [], keys_n in collect(keys(n)) | keys + filter(k in keys_n WHERE NOT k IN keys)) as props_from,
+   via,
+   labels(m) as to,
+   reduce(keys = [], keys_m in collect(keys(m)) | keys + filter(k in keys_m WHERE NOT k IN keys)) as props_to,
+   count(*) as freq
           """
         }
       ]
@@ -222,46 +157,41 @@ angular.module('neo4jApp.services')
   :GET /db/data/ext
           """
         }
-        
+
       ]
 
       folders = [
         {
-          id: "general"
-          name: "General"
+          id: "basics"
+          name: "Basic Queries"
           expanded: yes
         }
-        # {
-        #   id: "nodes"
-        #   name: "Nodes"
-        #   expanded: no
-        # }
-        # {
-        #   id: "relationships"
-        #   name: "Relationships"
-        #   expanded: no
-        # }
+        {
+          id: "profile"
+          name: "Data Profiling"
+          expanded: yes
+        }
         {
           id: "system"
           name: "System"
           expanded: no
         }
-      ]     
+      ]
 
       class DefaultContent
         constructor: ->
         getDefaultDocuments: ->
-          general_scripts.concat system_scripts
+          basic_scripts.concat profile_scripts.concat system_scripts
         resetToDefault: ->
           Document.reset()
           @loadDefaultIfEmpty()
         loadDefaultIfEmpty: ->
           if Document.length is 0
-            Document.add(general_scripts.concat(system_scripts)).save()
+            Document.add( @getDefaultDocuments() ).save()
             Folder.add(folders).save()
           for doc in Document.all()
             continue unless doc.folder
             if not Folder.get(doc.folder)
-              Folder.create(id: doc.folder)  
+              Folder.create(id: doc.folder)
       new DefaultContent
 ])
