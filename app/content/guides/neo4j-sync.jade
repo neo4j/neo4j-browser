@@ -14,7 +14,7 @@ article.guide
           .button-row.row.col-sm-12
             button.btn.btn-primary(ng-click="CurrentUser.login()") Register / Sign In
             span.spacer &nbsp;
-            a.no-thanks(ng-click="editor.execScript(settings.initCmd)") No thanks
+            a.no-thanks(ng-click="editor.execScript(settings.cmdchar + 'server connect')") No thanks
         .box-max(ng-if="currentUser") 
           h3 Hello {{currentUser.name}}!
           p &nbsp;
