@@ -159,9 +159,6 @@ angular.module('neo4jApp.controllers')
           return Frame.create({input:"#{Settings.cmdchar}play welcome"}) if newUser
           return Frame.create({input:"#{Settings.cmdchar}server connect"}) if !newUser
 
-        # $scope.$on 'ntn:authenticated', (evt, authenticated) ->
-        #   Frame.closeWhere "#{Settings.cmdchar}play neo4j-sync"
-
         $scope.$watch 'version', (val) ->
           return '' if not val
           $scope.neo4j.version = val.version
