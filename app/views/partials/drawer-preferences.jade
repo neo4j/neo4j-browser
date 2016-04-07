@@ -53,7 +53,7 @@
     h5 Network Connection
     .checkbox
       label(for="useBolt")
-        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-change="save()")
+        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-change="save(); toggleBoltUsage()")
         span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
           | &nbsp; Use Bolt protocol when available&nbsp;
           a.sl.sl-question-mark(ng-click='openBoltHelp()')

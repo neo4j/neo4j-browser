@@ -26,10 +26,14 @@ angular.module('neo4jApp.controllers')
     'Frame'
     'Settings'
     'SettingsStore'
-    ($scope, Frame, Settings, SettingsStore) ->
+    'Bolt'
+    ($scope, Frame, Settings, SettingsStore, Bolt) ->
       $scope.settings = Settings
       $scope.save = () ->
         SettingsStore.save()
       $scope.openBoltHelp = () ->
         Frame.create({input: Settings.cmdchar + 'help bolt encryption'})
+      $scope.toggleBoltUsage = () ->
+        return unless Settings.useBolt
+        Bolt.connect()
   ]
