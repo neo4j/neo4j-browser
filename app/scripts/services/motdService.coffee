@@ -68,33 +68,45 @@ angular.module('neo4jApp.services')
               'u':'http://neo4j.com/' + trackingData
             },
             {
-              'd': 'Import 10M Stack Overflow Questions into Neo4j In Just 3 Minutes',
-              'u': 'http://neo4j.com/blog/import-10m-stack-overflow-questions/' + trackingData
+              'd': 'Start coding your application with a driver for your language of choice.',
+              'u': 'http://neo4j.com/developer/language-guides/' + trackingData
             },
             {
-              'd': "Graph Databases for Beginners: Why a Database Query Language Matters"
-              'u':'http://neo4j.com/blog/why-database-query-language-matters/' + trackingData
+              'd': "Visualize even more of your graph, using one of these great tools."
+              'u':'http://neo4j.com/developer/guide-data-visualization/' + trackingData
             },
             {
-              'd': "Building the Graph Your Network App with the Neo4j Docker Image"
-              'u':'http://neo4j.com/blog/graph-your-network-neo4j-docker-image/' + trackingData
+              'd': "Keep this handy Cypher Reference Card with you at all times ;)"
+              'u':'http://neo4j.com/docs/stable/cypher-refcard/' + trackingData
             },
             {
-              'd': "OSCON Twitter Graph"
-              'u':'http://neo4j.com/blog/oscon-twitter-graph/' + trackingData
+              'd': "Free online training, to level-up your Neo4j skills."
+              'u':'http://neo4j.com/graphacademy/online-training/' + trackingData
             },
             {
-              'd': "Tuning Your Cypher: Tips & Tricks for More Effective Queries"
-              'u':'http://neo4j.com/blog/tuning-cypher-queries/' + trackingData
+              'd': "Join the thousands who have graduated from Graph Academy."
+              'u':'http://neo4j.com/graphacademy/' + trackingData
             },
             {
-              'd': "Cypher: LOAD JSON from URL AS Data"
-              'u':'http://neo4j.com/blog/cypher-load-json-from-url/' + trackingData
+              'd': "Got data? Learn how to import it into Neo4j."
+              'u':'http://neo4j.com/developer/guide-import-csv/' + trackingData
             },
             {
-              'd': "RDBMS & Graphs: Why Relational Databases Aren’t Always Enough"
-              'u':'http://neo4j.com/blog/rdbms-graphs-why-relational-databases-arent-enough/' + trackingData
+              'd': "Ready to launch? Check the Neo4j Performance Tuning Guide to maximize your success"
+              'u':'http://neo4j.com/developer/guide-performance-tuning/' + trackingData
             },
+            {
+              'd': "Fraud! Everything you need to know about detecting it with Neo4j."
+              'u': "http://neo4j.com/use-cases/fraud-detection/"
+            },
+            {
+              'd': "People like you have read this. Now they can make recommendations like an Amazonian."
+              'u': "http://neo4j.com/use-cases/real-time-recommendation-engine/"
+            },
+            {
+              'd': "Everything is social. Manage people relationships in your graph."
+              'u': "http://neo4j.com/use-cases/social-network/"
+            }
           ]
 
         quote: ""
