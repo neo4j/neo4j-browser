@@ -117,7 +117,12 @@ body.theme-outline
     .frame
       .outer
         border: 1px solid tertiary-border-color
-
+        .left-frame-toggle
+          border-right: 1px solid primary-text
+        .left-toggle-menu 
+          border-right: 1px solid primary-text
+          button
+            border-bottom: 1px solid primary-text
       .view-result
         .view-result-graph
           background-color: tertiary-background-color
@@ -126,6 +131,8 @@ body.theme-outline
             border-color: tertiary-border-color
 
       .code-bar
+        .actions li a
+          border-left: 1px solid primary-text
         .code
           color: secondary-text-color
         background-color: secondary-background-color
