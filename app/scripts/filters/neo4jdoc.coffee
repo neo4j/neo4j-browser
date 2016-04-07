@@ -23,8 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.filters')
   .filter 'neo4jdoc', () ->
     (input) ->
-      return '' unless input?
-      if input.indexOf('SNAPSHOT') > 0
-        'snapshot'
-      else
-        input
+      return switch
+        when not (input?) then ''
+        when input.indexOf('SNAPSHOT') > 0 then 'snapshot'
+        else input.slice(0, input.lastIndexOf('.'))
