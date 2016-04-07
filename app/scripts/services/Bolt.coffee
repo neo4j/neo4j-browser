@@ -124,7 +124,8 @@ angular.module('neo4jApp.services')
                   session.close()
                   q.reject txe
                 )
-              else  
+              else
+                session.close()
                 q.resolve r
             ).catch((e) ->
               session.close()
