@@ -38,7 +38,7 @@
       label(for="shouldReportUdc")
         input#shouldReportUdcPref(type="checkbox", ng-model="settings.shouldReportUdc", ng-change="save()")
         span &nbsp; Help improve Neo4j?&nbsp;
-        a.fa.fa-info-circle(href='http://neo4j.com/legal/neo4j-user-experience/')
+        a.sl.sl-question-mark(href='http://neo4j.com/legal/neo4j-user-experience/')
     .checkbox
       label(for="experimentalFeatures")
         input#experimentalFeatures(type="checkbox", ng-model="settings.experimentalFeatures", ng-change="save()")
@@ -55,8 +55,8 @@
       label(for="useBolt")
         input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-change="save()")
         span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
-          | &nbsp; Use Bolt protocol where available&nbsp;
-          a.fa.fa-info-circle(ng-click='openBoltHelp()')
+          | &nbsp; Use Bolt protocol when available&nbsp;
+          a.sl.sl-question-mark(ng-click='openBoltHelp()')
 
     .form-group
       label(for="maxExecutionTime", tooltip="Query timeout in seconds.", tooltip-placement="top")
