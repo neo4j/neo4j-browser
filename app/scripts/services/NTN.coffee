@@ -69,7 +69,7 @@ angular.module('neo4jApp.services')
     _login = ->
       q = $q.defer()
       domain = 'https://auth.neo4j.com/index.html'
-      win = window.open domain, "loginWindow", "location=0,status=0,scrollbars=0, width=400,height=600"
+      win = window.open domain, "loginWindow", "location=0,status=0,scrollbars=0, width=1080,height=720"
       win.moveTo 500, 300
       window.addEventListener('message',(event) ->
         clearInterval pollInterval
