@@ -119,8 +119,8 @@ angular.module('neo4jApp.controllers')
             ConnectionStatusService.setSessionStartTimer new Date()
 
         pickFirstFrame = ->
-          AuthService.hasValidAuthorization(retainConnection = yes).then(
           CurrentUser.init()
+          AuthService.hasValidAuthorization(retainConnection = yes).then(
             ->
               Frame.closeWhere "#{Settings.cmdchar}server connect"
               Frame.create({input:"#{Settings.initCmd}"})

@@ -164,10 +164,7 @@ angular.module('neo4jApp.services')
       setSyncConnection: (isConnected) ->
         @hasConnection = isConnected
         @setSyncedAt()
-
-      setSyncConnection: (isConnected) ->
-        @hasConnection = isConnected
-
+        
       upgradeFormat: (data, item) ->
         return [@getObjectStruct(data)] unless data
         if item.key is 'grass'
