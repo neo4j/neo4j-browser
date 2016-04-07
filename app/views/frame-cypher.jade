@@ -18,7 +18,7 @@ div(ng-controller="CypherResultCtrl", fullscreen)
             button.btn(ng-class='{active: isActive("text")}', ng-click='setActive("text")')
               i.fa.fa-font
               span.mini-menu-item-text Text
-            br  
+            br
           .button-holder(ng-show="isAvailable('plan')")
             button.btn(ng-class='{active: isActive("plan")}', ng-click='setActive("plan")')
               i.fa.fa-code-fork
@@ -74,11 +74,11 @@ div(ng-controller="CypherResultCtrl", fullscreen)
                   on-canvas-clicked='onItemClick()'
                   ng-controller='D3GraphCtrl'
                   style="pointer-events:fill;")
-              .status-bar(ng-show='true') 
-                //- isActive("graph")')
-                //- .cell
-                .status
-                  include partials/inspector
+            .status-bar(ng-show='true')
+              //- isActive("graph")')
+              //- .cell
+              .status
+                include partials/inspector
 
           .view-result-table.result(ng-show='isActive("table") && !frame.isTerminating')
             .table-holder
@@ -140,7 +140,7 @@ div(ng-controller="CypherResultCtrl", fullscreen)
                         tbody
                           tr
                             td Data
-                            td 
+                            td
                               div
                                 pre(output-raw="frame.response.raw", override-size-limit="true")
                           tr
