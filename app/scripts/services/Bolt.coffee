@@ -111,20 +111,32 @@ angular.module('neo4jApp.services')
           q.reject getSocketErrorObj()
         else
           if tx
+            # We need to look for error messages from
+            # the commit() call even though run() 
+            # reported a successful operation
             p = tx.run statement, parameters
             p.then((r) -> 
-              if tx then tx.commit()
-              r
+              if tx # The tx might have been rolled back
+                tx.commit().then((txr) -> 
+                  session.close()
+                  q.resolve r
+                ).catch((txe) ->
+                  session.close()
+                  q.reject txe
+                )
+            ).catch((e) ->
+              session.close()
+              q.reject e
             )
           else
             p = session.run statement, parameters
-          p.then((r) ->
-            session.close()
-            q.resolve r
-          ).catch((e) ->
-            session.close()
-            q.reject e
-          )
+            p.then((r) ->
+              session.close()
+              q.resolve r
+            ).catch((e) ->
+              session.close()
+              q.reject e
+            )
         {tx: tx, promise: q.promise}
 
       boltTransaction = (query, parameters = {}) ->
