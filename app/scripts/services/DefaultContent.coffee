@@ -121,6 +121,23 @@ RETURN labels(n) as from,
         }
       ]
 
+      example_graphs = [
+        {
+          folder: 'graphs'
+          content: """
+// Movie Graph
+:play movie-graph
+          """
+        }
+        {
+          folder: 'graphs'
+          content: """
+// Northwind Graph
+:play northwind-graph
+          """
+        }
+      ]
+
       system_scripts = [
         {
           folder: 'system'
@@ -167,6 +184,11 @@ RETURN labels(n) as from,
           expanded: yes
         }
         {
+          id: 'graphs'
+          name: "Example Graphs"
+          expanded: yes
+        }
+        {
           id: "profile"
           name: "Data Profiling"
           expanded: yes
@@ -181,7 +203,7 @@ RETURN labels(n) as from,
       class DefaultContent
         constructor: ->
         getDefaultDocuments: ->
-          basic_scripts.concat profile_scripts.concat system_scripts
+          basic_scripts.concat example_graphs.concat profile_scripts.concat system_scripts
         resetToDefault: ->
           Document.reset()
           @loadDefaultIfEmpty()
