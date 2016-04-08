@@ -47,11 +47,5 @@ angular.module('neo4jApp.services')
             q.reject errObj
           )
           q.promise
-        setNewPassword: (username, newPasswd) ->
-          q = $q.defer()
-          Bolt.boltTransaction("CALL sys.changePassword({password})", {password: newPasswd}).promise
-            .then((r) -> q.resolve Bolt.constructResult r)
-            .catch((e) -> q.reject Bolt.constructResult e)
-          q.promise
       }
 ]
