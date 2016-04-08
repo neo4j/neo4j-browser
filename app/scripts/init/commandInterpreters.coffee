@@ -354,8 +354,8 @@ angular.module('neo4jApp')
       matches: ["#{cmdchar}logout"]
       exec: ['CurrentUser', (CurrentUser) ->
         (input, q) ->
-          p = CurrentUser.logout()
-          p.then(q.resolve, -> q.reject("Unable to log out"))
+          CurrentUser.logout()
+          q.resolve()
           q.promise
       ]
 
