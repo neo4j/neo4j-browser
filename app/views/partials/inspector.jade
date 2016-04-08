@@ -8,7 +8,7 @@
 .inspector-footer(ng-if="Inspector.length == 0")
   .inspector-footer-row
     span {{ graphStatistics(frame) }}
-    .actions.status-bar-actions
+    .actions
       .toggle(ng-click='toggleDisplayInternalRelationships()')
         a.toggle-text Auto-complete
         .switch
