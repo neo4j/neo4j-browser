@@ -75,7 +75,7 @@
 
   div(ng-if="!currentUser && syncService.hasConnection")
     p &nbsp;
-    p With Neo4j Sync you are able to always have fast access to your favorite scripts, styles and database credentials (maybe).
+    p With Neo4j Sync you are able to always have fast access to your favorite scripts and styles.
     button.btn.btn-popup(ng-click="CurrentUser.login()") Sign in to Neo4j Sync
 
   div.connection-error(ng-if="!syncService.hasConnection && !currentUser")
