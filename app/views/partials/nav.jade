@@ -16,9 +16,10 @@
   ul.nav.bottom
     li.nav-user(ng-class='{active: showingDrawer("profile") }', tooltip='Cloud Services',tooltip-placement='right', tooltip-enable='!showingDrawer("profile")')
       a.cloud(ng-click='toggleDrawer("profile")')
-        .avatar(ng-style='{"background-image": "url("+currentUser.picture+")"}', ng-if='currentUser.picture') &nbsp;
-        i.sl.sl-cloud(style="")
+        .avatar(ng-style='{"background-image": "url("+currentUser.picture+")"}', ng-if='currentUser.picture && syncService.hasConnection') &nbsp;
+        i.sl.sl-cloud(style="", ng-if='syncService.hasConnection')
+        i.sl.sl-cloud-delete.error(style="", ng-if='!syncService.hasConnection')
     li(ng-class='{active: showingDrawer("preferences") }', tooltip='Browser Settings', tooltip-placement='right', tooltip-enable='!showingDrawer("preferences")')
-      a.preferences.sl.sl-setting-gear(ng-click='toggleDrawer("preferences")')    
+      a.preferences.sl.sl-setting-gear(ng-click='toggleDrawer("preferences")')
     li(ng-class='{active: showingDrawer("credits") }', tooltip='About Neo4j',tooltip-placement='right', tooltip-enable='!showingDrawer("credits")')
-      a.credits.nw.nw-neo4j-outline-32px(ng-click='toggleDrawer("credits")') 
+      a.credits.nw.nw-neo4j-outline-32px(ng-click='toggleDrawer("credits")')

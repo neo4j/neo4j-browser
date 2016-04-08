@@ -141,8 +141,6 @@ angular.module('neo4jApp.services')
         q.promise
 
       logout: ->
-        that = @
-        q = $q.defer()
         $rootScope.currentUser = null
         NTN.logout()
         localStorageService.remove 'ntn_token'
@@ -150,13 +148,10 @@ angular.module('neo4jApp.services')
         localStorageService.remove 'ntn_refresh_token'
         localStorageService.remove 'ntn_profile'
         localStorageService.remove 'stores'
-        AuthService.forget().finally( ->
-          q.resolve()
-          that.clear()
-          $rootScope.$emit 'ntn:logout'
-          Editor.execScript "#{Settings.cmdchar}server disconnect"
-        )
-        q.promise
+        AuthService.forget()
+        @clear()
+        $rootScope.$emit 'ntn:logout'
+        Editor.execScript "#{Settings.cmdchar}server disconnect"
 
       instance: -> angular.copy(@_user)
 
@@ -197,11 +192,17 @@ angular.module('neo4jApp.services')
           that.autoLogin()
         )
 
+      init: ->
+        NTN.connection()
+
       $rootScope.$on 'ntn:token_will_expire', () ->
         cu.refreshToken()
 
       $rootScope.$on 'ntn:token_expired', () ->
         cu.autoLogin()
+
+      $rootScope.$on 'ntn:connection_status', (s, isConnected) ->
+        if isConnected then cu.autoLogin()
 
     cu = new CurrentUser
     cu

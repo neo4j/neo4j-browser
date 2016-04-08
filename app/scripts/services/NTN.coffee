@@ -27,6 +27,15 @@ angular.module('neo4jApp.services')
     _unbind = ->
     _sync_object = no
 
+    _connection = ->
+      connectedRef = new Firebase("https://fiery-heat-7952.firebaseio.com/.info/connected")
+      connectedRef.on 'value', (snapshot) ->
+        variable = snapshot.val()
+        if variable
+          $rootScope.$broadcast 'ntn:connection_status', true
+        else
+          $rootScope.$broadcast 'ntn:connection_status', false
+
     _getUserStore = (id, token) ->
       q = $q.defer()
       ref = new Firebase("https://fiery-heat-7952.firebaseio.com/users/#{id}/")
@@ -115,5 +124,6 @@ angular.module('neo4jApp.services')
       fetch: _fetch
       push: _push
       getUserStore: _getUserStore
+      connection: _connection
     }
 ]

@@ -52,7 +52,7 @@ angular.module('neo4jApp.controllers')
           $scope.version = Server.version $scope.version
           $scope.host = $window.location.host
           fetchJMX()
-  
+
         fetchJMX = ->
           ProtocolFactory.getJmxService().getJmx([
             "org.neo4j:instance=kernel#0,name=Configuration"
@@ -119,7 +119,7 @@ angular.module('neo4jApp.controllers')
             ConnectionStatusService.setSessionStartTimer new Date()
 
         pickFirstFrame = ->
-          CurrentUser.autoLogin()
+          CurrentUser.init()
           AuthService.hasValidAuthorization(retainConnection = yes).then(
             ->
               Frame.closeWhere "#{Settings.cmdchar}server connect"
