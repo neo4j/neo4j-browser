@@ -26,7 +26,8 @@ angular.module('neo4jApp.services')
     'CypherResult'
     'Bolt'
     'UsageDataCollectionService'
-    ($q, CypherResult, Bolt, UDC) ->
+    'Timer'
+    ($q, CypherResult, Bolt, UDC, Timer) ->
       parseId = (resource = "") ->
         id = resource.split('/').slice(-2, -1)
         return parseInt(id, 10)
@@ -100,12 +101,12 @@ angular.module('neo4jApp.services')
           q = $q.defer()
           {tx, promise} = Bolt.transaction(statements, @session, @tx)
           @tx = tx
-          that = @
+          timer = Timer.start()
           promise.then((r) -> 
-            that._reset()
+            r.responseTime = timer.stop().time()
             q.resolve({original: r, remapped: Bolt.constructResult(r)})
           ).catch((r) -> 
-            that._reset()
+            r.responseTime = timer.stop().time()
             q.reject({original: r, remapped: Bolt.constructResult(r)})
           )
 

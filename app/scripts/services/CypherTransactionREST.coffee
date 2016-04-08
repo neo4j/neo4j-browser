@@ -26,17 +26,17 @@ angular.module('neo4jApp.services')
     'CypherResult'
     'Server'
     'UsageDataCollectionService'
-    ($q, CypherResult, Server, UDC) ->
+    'Timer'
+    ($q, CypherResult, Server, UDC, Timer) ->
       parseId = (resource = "") ->
         id = resource.split('/').slice(-2, -1)
         return parseInt(id, 10)
 
       promiseResult = (promise) ->
         q = $q.defer()
-
         promise.then(
-          (r) =>
-            raw = {request: r.config, response: {headers: r.headers(), data: r.data}}
+          (r) ->
+            raw = {responseTime: r.data.responseTime || 0, request: r.config, response: {headers: r.headers(), data: r.data}}
             raw.request.status = r.status
             if not r
               q.reject({protocol: 'rest', raw: raw})
@@ -111,18 +111,20 @@ angular.module('neo4jApp.services')
         commit: (query) ->
           statements = if query then [{statement:query}] else []
           UDC.increment('cypher_attempts')
+          timer = Timer.start()
           if @id
             q = $q.defer()
             rr = Server.transaction(
               path: "/#{@id}/commit"
               statements: statements
-            ).success(
-              (r) =>
-                @delegate?.transactionFinished.call(@delegate, @id)
-                @_reset()
-                q.resolve(r)
-            ).error((r) =>
-                q.reject(r)
+            ).success((r) =>
+              r.responseTime = timer.stop().time()
+              @delegate?.transactionFinished.call(@delegate, @id)
+              @_reset()
+              q.resolve(r)
+            ).error((r) ->
+              r.responseTime = timer.stop().time()
+              q.reject(r)
             )
             res = promiseResult(rr)
             res.then(
@@ -132,10 +134,15 @@ angular.module('neo4jApp.services')
             @_requestDone res
             res
           else
-            res = promiseResult(Server.transaction(
+            p = Server.transaction(
               path: "/commit"
               statements: statements
-            ))
+            )
+            p.then((r) ->
+              r.responseTime = timer.stop().time()
+              return r
+            ).catch((r) -> r.responseTime = timer.stop().time())
+            res = promiseResult p
             res.then(
               -> UDC.increment('cypher_wins')
               -> UDC.increment('cypher_fails')
