@@ -76,6 +76,7 @@ angular.module('neo4jApp.services')
             if errObj.data.errors[0].code is 'Neo.ClientError.Security.CredentialsExpired'
               errObj.data.password_change = 'true'
               errObj.status = 403
+              Bolt.connect() if retainConnection
             else if errObj.data.errors[0].code is 'Socket.Error'
               errObj.status = 0
             else
