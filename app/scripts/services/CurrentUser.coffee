@@ -124,7 +124,6 @@ angular.module('neo4jApp.services')
       login: ->
         q = $q.defer()
         that = @
-
         @autoLogin().then(
           ->
             q.resolve()
@@ -132,7 +131,6 @@ angular.module('neo4jApp.services')
           ->
             NTN.login().then((res) ->
               that.persist res
-              that.autoLogin()
               data = localStorageService.get 'ntn_profile' || {}
               $rootScope.$emit 'ntn:login', data
               q.resolve(res)
@@ -155,7 +153,7 @@ angular.module('neo4jApp.services')
 
       instance: -> angular.copy(@_user)
 
-      isAuthenticated: -> NTN.isAuthenticated()
+      isAuthenticated: -> localStorageService.get 'ntn_data_token'
 
       autoLogin: ->
         that = @
@@ -167,22 +165,7 @@ angular.module('neo4jApp.services')
         if not token
           q.reject()
           return q.promise
-        if not jwtHelper.isTokenExpired token
-          NTN.authenticate(localStorageService.get('ntn_profile'), token).then(
-            ->
-              that.loadUserFromLocalStorage()
-              q.resolve()
-            ,
-              q.reject()
-          )
-        else
-          that.refreshToken().then(
-            ->
-              that.autoLogin().then(
-                ->
-                  q.resolve()
-              )
-          )
+        q.reject()
         q.promise
 
       refreshToken: ->
