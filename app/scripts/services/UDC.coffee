@@ -36,6 +36,7 @@ angular.module('neo4jApp.services')
           @data.client_starts = (@data.client_starts || 0) + 1
           @save()
           @connectedUser = no
+          @user_id = no
 
         reset: ->
           @data = {
@@ -77,12 +78,12 @@ angular.module('neo4jApp.services')
             Intercom.update(@userData())
 
         connectUserWithUserId: (userId) ->
-          @set("user_id", userId)
+          @user_id =  userId
           @connectUser()
 
         disconnectUser: () ->
           @connectedUser = no
-          @set("user_id", no)
+          @user_id = no
           Intercom.disconnect()
           @reloadUDC()
 
@@ -121,16 +122,16 @@ angular.module('neo4jApp.services')
         connectUser: () ->
           if not @connectedUser && @shouldConnect()
             if @isBeta() || Settings.shouldReportUdc
-              Intercom.user(@data.user_id, @userData())
+              Intercom.user(@user_id, @userData())
               Intercom.event(event.name, event.data) for event in @data.events
               @data.events = []
             else
-              Intercom.user(@data.user_id, {})
+              Intercom.user(@user_id, {})
             @connectedUser=true
           return @connectedUser
 
         userData: ->
-          userData = $.extend({}, @data, "events")
+          userData = $.extend({}, @data)
           delete(userData.events)
           userData.name = Settings.userName
           if ( @data.neo4j_version && @data.store_id )
@@ -144,7 +145,7 @@ angular.module('neo4jApp.services')
           userData
 
         shouldConnect: () =>
-         return  @data.user_id && Intercom.isLoaded()
+         return  @user_id && Intercom.isLoaded()
 
         shouldTriggerConnectEvent: ->
           pingTime = new Date(@data.pingTime || 0)
