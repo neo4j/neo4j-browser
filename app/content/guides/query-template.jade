@@ -67,6 +67,7 @@ article.guide(ng-controller="AdLibDataController")
               |  of &quot;{{propertyValueA}}&quot;
               |  create a &quot;{{relationshipType}}&quot;
               |  relationship to a &quot;{{nodeLabelB}}&quot; with &quot;{{propertyKeyB}}&quot; value &quot;{{propertyValueB}}&quot;.
+              |  Nodes 'a' and 'b' must already exist.
               figure
                 pre.code.runnable.standalone-example.
                   MATCH (a:{{nodeLabelA | tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' }), (b:{{nodeLabelB | tickitize}} { {{propertyKeyB | tickitize}}: '{{propertyValueB}}' })
