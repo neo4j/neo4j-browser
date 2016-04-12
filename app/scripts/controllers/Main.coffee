@@ -108,6 +108,8 @@ angular.module('neo4jApp.controllers')
         $scope.today = Date.now()
         $scope.cmdchar = Settings.cmdchar
 
+        $scope.goodBrowser = !/msie/.test(navigator.userAgent.toLowerCase())
+
         $scope.$watch 'offline', (serverIsOffline) ->
           if (serverIsOffline?)
             if not serverIsOffline

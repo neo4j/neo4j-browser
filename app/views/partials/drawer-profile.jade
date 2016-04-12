@@ -76,6 +76,11 @@
   div(ng-if="!currentUser && syncService.hasConnection", ng-controller="SyncSigninController")
     p &nbsp;
     p With Neo4j Sync you are able to always have fast access to your favorite scripts and styles.
+    alert.top-padded(ng-hide="goodBrowser") 
+      | Neo4j Sync is currently only available for some versions of Internet Explorer.
+      | If you have any trouble, we'd love to hear from you at&nbsp;
+      a(href="mailto:feedback@neotechnology.com")
+        | feedback@neotechnology.com
     button.btn.btn-popup(ng-click="signInToSync()") Sign in to Neo4j Sync
     .box-max
       .checkbox
@@ -87,8 +92,6 @@
           a(href="http://neo4j.com/privacy-policy/") Privacy Policy
           |.  
     alert(ng-show='showSignupWarning', close="closeWarning()") Before you can sign in, please check the box above to agree to the terms of use and privacy policy.
-
-    
 
   div.connection-error(ng-if="!syncService.hasConnection && !currentUser")
     p &nbsp;

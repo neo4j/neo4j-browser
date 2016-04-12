@@ -8,24 +8,29 @@ article.guide(ng-controller="SyncSigninController")
       .col-sm-4.col-sm-offset-1
         .box-max(ng-if="!currentUser")
           h3 Connect to the Cloud
-          p.lead Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social 
-            | sign-in to elevate your graph experience. 
+          p.lead Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social
+            | sign-in to elevate your graph experience.
+          alert.top-padded(ng-hide="goodBrowser") 
+            | Neo4j Sync is currently only available for some versions of Internet Explorer.
+            | If you have any trouble, we'd love to hear from you at&nbsp;
+            a(href="mailto:feedback@neotechnology.com")
+              | feedback@neotechnology.com
           .box-max(ng-show="!settings.shownTermsAndPrivacy || !settings.acceptedTermsAndPrivacy")
             .checkbox
               label.muted(for="acceptedTermsAndPrivacyCheckBox")
                 input#acceptedTermsAndPrivacyCheckBox(type="checkbox", ng-model="settings.acceptedTermsAndPrivacy", ng-change="save()")
-                | By checking this box you are agreeing to the 
+                | By checking this box you are agreeing to the
                 a(href="http://neo4j.com/terms/neo4j-sync/") Neo4j Sync Terms of Use
                 | &nbsp;and our&nbsp;
                 a(href="http://neo4j.com/privacy-policy/") Privacy Policy
-                |.  
+                |.
           alert(ng-show='showSignupWarning', close="closeWarning()") Before you can sign in, please check the box above to agree to the terms of use and privacy policy.
 
           .button-row.row.col-sm-12
             button.btn.btn-primary(ng-click="signInToSync()") Register / Sign In
             span.spacer &nbsp;
             a.no-thanks(ng-click="noThanks()") No thanks
-        .box-max(ng-if="currentUser") 
+        .box-max(ng-if="currentUser")
           h3 Hello {{currentUser.name}}!
           p &nbsp;
           p.lead Your Neo4j Sync account is active.
