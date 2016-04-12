@@ -40,8 +40,6 @@ function newError(message) {
   return new Neo4jError(message, code);
 }
 
-// TODO: This should be moved into public API
-
 var Neo4jError = (function (_Error) {
   _inherits(Neo4jError, _Error);
 

@@ -21,6 +21,18 @@
 // https://github.com/dcodeIO/Long.js
 // License Apache 2
 
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _error = require("./error");
+
 /**
  * Constructs a 64 bit two's-complement integer, given its low and high 32 bit values as *signed* integers.
  *  See the from* functions below for more convenient ways of constructing Integers.
@@ -31,15 +43,6 @@
  * @param {number} high The high (signed) 32 bits of the long
  * @constructor
  */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var Integer = (function () {
   function Integer(low, high) {
@@ -473,7 +476,7 @@ var Integer = (function () {
      */
     value: function div(divisor) {
       if (!Integer.isInteger(divisor)) divisor = Integer.fromValue(divisor);
-      if (divisor.isZero()) throw new Error('division by zero');
+      if (divisor.isZero()) throw (0, _error.newError)('division by zero');
       if (this.isZero()) return Integer.ZERO;
       var approx, rem, res;
       if (this.equals(Integer.MIN_VALUE)) {
@@ -709,13 +712,13 @@ Integer.fromBits = function (lowBits, highBits) {
  * @expose
  */
 Integer.fromString = function (str, radix) {
-  if (str.length === 0) throw Error('number format error: empty string');
+  if (str.length === 0) throw (0, _error.newError)('number format error: empty string');
   if (str === "NaN" || str === "Infinity" || str === "+Infinity" || str === "-Infinity") return Integer.ZERO;
   radix = radix || 10;
-  if (radix < 2 || 36 < radix) throw Error('radix out of range: ' + radix);
+  if (radix < 2 || 36 < radix) throw (0, _error.newError)('radix out of range: ' + radix);
 
   var p;
-  if ((p = str.indexOf('-')) > 0) throw Error('number format error: interior "-" character: ' + str);else if (p === 0) return Integer.fromString(str.substring(1), radix).negate();
+  if ((p = str.indexOf('-')) > 0) throw (0, _error.newError)('number format error: interior "-" character: ' + str);else if (p === 0) return Integer.fromString(str.substring(1), radix).negate();
 
   // Do several (8) digits each time through the loop, so as to
   // minimize the calls to the very expensive emulated div.

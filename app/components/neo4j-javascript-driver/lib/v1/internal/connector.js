@@ -57,7 +57,7 @@ var _graphTypes2 = _interopRequireDefault(_graphTypes);
 
 var _integer = require('../integer');
 
-var _error = require('./error');
+var _error = require('./../error');
 
 var Channel = undefined;
 if (_chWebsocket2["default"].available) {
@@ -65,7 +65,7 @@ if (_chWebsocket2["default"].available) {
 } else if (_chNode2["default"].available) {
   Channel = _chNode2["default"].channel;
 } else {
-  throw new Error("Fatal: No compatible transport available. Need to run on a platform with the WebSocket API.");
+  throw (0, _error.newError)("Fatal: No compatible transport available. Need to run on a platform with the WebSocket API.");
 }
 
 var

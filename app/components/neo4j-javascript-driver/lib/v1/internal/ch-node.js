@@ -49,7 +49,7 @@ var _os = require('os');
 
 var _buf = require('./buf');
 
-var _error = require('./error');
+var _error = require('./../error');
 
 var _CONNECTION_IDGEN = 0;
 
@@ -107,6 +107,7 @@ var TrustStrategy = {
         onSuccess();
       }
     });
+    socket.on('error', onFailure);
     return socket;
   },
   TRUST_ON_FIRST_USE: function TRUST_ON_FIRST_USE(opts, onSuccess, onFailure) {
@@ -142,6 +143,7 @@ var TrustStrategy = {
         }
       });
     });
+    socket.on('error', onFailure);
     return socket;
   }
 };
@@ -152,7 +154,9 @@ function connect(opts, onSuccess) {
   } : arguments[2];
 
   if (opts.encrypted === false) {
-    return _net2['default'].connect(opts.port, opts.host, onSuccess);
+    var conn = _net2['default'].connect(opts.port, opts.host, onSuccess);
+    conn.on('error', onFailure);
+    return conn;
   } else if (TrustStrategy[opts.trust]) {
     return TrustStrategy[opts.trust](opts, onSuccess, onFailure);
   } else {
@@ -233,7 +237,7 @@ var NodeChannel = (function () {
         // console.log( "[Conn#"+this.id+"] SEND: ", buffer.toString() );
         this._conn.write(buffer._buffer);
       } else {
-        throw new Error("Don't know how to write: " + buffer);
+        throw (0, _error.newError)("Don't know how to write: " + buffer);
       }
     }
 
