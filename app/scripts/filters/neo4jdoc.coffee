@@ -23,7 +23,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.filters')
   .filter 'neo4jdoc', () ->
     (input) ->
-      return switch
-        when not (input?) then ''
-        when input.indexOf('SNAPSHOT') > 0 then 'snapshot'
-        else input.slice(0, input.lastIndexOf('.'))
+      return '' unless typeof input is 'string'
+      input.replace /^(\d\.\d)\.\d((-.+)?)$/, '$1$3'

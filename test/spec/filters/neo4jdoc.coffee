@@ -30,18 +30,26 @@ describe 'Filter: neo4jdoc', () ->
   beforeEach inject ($filter) ->
     neo4jdoc = $filter 'neo4jdoc'
 
+  it 'should return empty string for empty string', () ->
+    text = ''
+    expect(neo4jdoc text).toBe ''
+
+  it 'should return empty string for non strings', () ->
+    text = {}
+    expect(neo4jdoc text).toBe ''
+
   it 'should return major version for 3.0.0', () ->
     text = '3.0.0'
     expect(neo4jdoc text).toBe '3.0'
 
-  it 'should return major version for 2.3.3', () ->
-    text = '2.3.3'
-    expect(neo4jdoc text).toBe '2.3'
+  it 'should return "X.Y-MX" version on milestones', () ->
+    text = '3.0.1-M01'
+    expect(neo4jdoc text).toBe '3.0-M01'
 
-  it 'should return major version on milestones', () ->
-    text = '3.0.0-M01'
-    expect(neo4jdoc text).toBe '3.0'
-
-  it 'should return "snapshot" for snapshot versions', () ->
+  it 'should return "X.Y-SNAPSHOT" for snapshot versions', () ->
     text = '3.0.0-SNAPSHOT'
-    expect(neo4jdoc text).toBe 'snapshot'
+    expect(neo4jdoc text).toBe '3.0-SNAPSHOT'
+
+  it 'should return "X.Y-RCZ" for RC releases', () ->
+    text = '3.1.0-RC2'
+    expect(neo4jdoc text).toBe '3.1-RC2'
