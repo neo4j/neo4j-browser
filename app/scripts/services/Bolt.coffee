@@ -160,6 +160,10 @@ angular.module('neo4jApp.services')
         relationships: realtionshipTypes.map (o) -> o.get('relationshipType')
         propertyKeys: propertyKeys.map (o) -> o.get('propertyKey')
 
+      versionResultToRESTResult = (r) ->
+        return null unless r.records
+        {version: r.records[0].get('versions')[0], edition: r.records[0].get('edition')}
+
       jmxResultToRESTResult = (r, whatToGet = []) ->
         return {data: []} unless r.records
         r.records = itemIntToString r.records
@@ -387,5 +391,6 @@ angular.module('neo4jApp.services')
         constructSchemaResult: (indexes, constraints) ->
           schemaResultToRESTResult indexes, constraints
         constructJmxResult: jmxResultToRESTResult
+        constructVersionResult: versionResultToRESTResult
       }
   ]

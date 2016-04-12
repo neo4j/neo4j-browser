@@ -25,34 +25,32 @@ angular.module('neo4jApp.services')
     'Settings'
     'CypherTransactionREST'
     'CypherTransactionBolt'
-    'AuthREST'
-    'AuthBolt'
-    'MetaREST'
-    'MetaBolt'
-    'SchemaREST'
-    'SchemaBolt'
-    'JmxREST'
-    'JmxBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, AuthREST, AuthBolt, MetaREST, MetaBolt, SchemaREST, SchemaBolt, JmxREST, JmxBolt) ->
+    'UtilityREST'
+    'UtilityBolt'
+    (Settings, CypherTransactionREST, CypherTransactionBolt, UtilityREST, UtilityBolt) ->
       {
         getCypherTransaction: (useBolt = Settings.useBolt) ->
           return new CypherTransactionBolt() if useBolt
           return new CypherTransactionREST()
 
         getAuthService: (useBolt = Settings.useBolt) ->
-          return AuthBolt if useBolt
-          return AuthREST
+          return UtilityBolt if useBolt
+          return UtilityREST
 
         getMetaService: (useBolt = Settings.useBolt) ->
-          return MetaBolt if useBolt
-          return MetaREST
+          return UtilityBolt if useBolt
+          return UtilityREST
 
         getSchemaService: (useBolt = Settings.useBolt) ->
-          return SchemaBolt if useBolt
-          return SchemaREST
+          return UtilityBolt if useBolt
+          return UtilityREST
 
         getJmxService: (useBolt = Settings.useBolt) ->
-          return JmxBolt if useBolt
-          return JmxREST
+          return UtilityBolt if useBolt
+          return UtilityREST
+
+        getVersionService: (useBolt = Settings.useBolt) ->
+          return UtilityBolt if useBolt
+          return UtilityREST
       }
 ]

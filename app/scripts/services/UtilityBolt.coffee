@@ -21,12 +21,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'AuthBolt', [
+  .factory 'UtilityBolt', [
     'Bolt'
     'Settings'
     '$q'
     (Bolt, Settings, $q) ->
       {
+        getSchema: ->
+          q = $q.defer()
+          $q.all([
+            Bolt.callProcedure("db.indexes"),
+            Bolt.callProcedure("db.constraints"),
+          ]).then((data) ->
+            q.resolve(Bolt.constructSchemaResult data[0], data[1])
+          )
+          q.promise
+
+        getMeta: ->
+          q = $q.defer()
+          $q.all([
+            Bolt.callProcedure("db.labels"),
+            Bolt.callProcedure("db.relationshipTypes"),
+            Bolt.callProcedure("db.propertyKeys")
+          ]).then((data) ->
+            q.resolve(Bolt.constructMetaResult data[0], data[1], data[2])
+          )
+          q.promise
+
+        getVersion: ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL sys.components()").promise
+            .then((r) -> q.resolve(Bolt.constructVersionResult(r)))
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        getJmx: (whatToGet = []) ->
+          q = $q.defer()
+          name = if whatToGet.length is 1 then whatToGet[0] else "*:*"
+          Bolt.boltTransaction("CALL sys.queryJmx('#{name}')").promise
+            .then((r) -> q.resolve(Bolt.constructJmxResult(r, whatToGet)))
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
         makeRequest: (withoutCredentials, retainConnection) ->
           q = $q.defer()
           r = Bolt.testConnection withoutCredentials
