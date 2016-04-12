@@ -57,7 +57,7 @@ angular.module('neo4jApp.services')
       _sync_object = $firebaseObject(_store)
       _sync_object.$bindTo($rootScope, 'ntn_data').then(
         (unbind) ->
-          newUser = if $rootScope.ntn_data.documents?.length then no else yes 
+          newUser = if $rootScope.ntn_data.documents?.length then no else yes
           $rootScope.$emit 'ntn:data_loaded', yes, newUser
           _unbind = unbind
         ,
@@ -79,12 +79,14 @@ angular.module('neo4jApp.services')
       q = $q.defer()
       domain = 'https://auth.neo4j.com/index.html'
       win = window.open domain, "loginWindow", "location=0,status=0,scrollbars=0, width=1080,height=720"
-      win.moveTo 500, 300
+      try
+        win.moveTo(500, 300);
+      catch e
       window.addEventListener('message',(event) ->
         clearInterval pollInterval
         con event.data
         win.close()
-      , false) 
+      , false)
       pollInterval = setInterval(()->
         message = 'Polling for results'
         win.postMessage message, domain
