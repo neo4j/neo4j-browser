@@ -1,4 +1,4 @@
-article.guide
+article.guide(ng-controller="SyncSigninController")
   .container-fluid.sign-in-frame
     .row
       .col-sm-3
@@ -8,13 +8,23 @@ article.guide
       .col-sm-4.col-sm-offset-1
         .box-max(ng-if="!currentUser")
           h3 Connect to the Cloud
-          p &nbsp;
           p.lead Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social 
             | sign-in to elevate your graph experience. 
+          .box-max(ng-show="!settings.shownTermsAndPrivacy")
+            .checkbox
+              label.muted(for="acceptedTermsAndPrivacyCheckBox")
+                input#acceptedTermsAndPrivacyCheckBox(type="checkbox", ng-model="settings.acceptedTermsAndPrivacy", ng-change="save()")
+                | By checking this box you are agreeing to the 
+                a(href="http://neo4j.com/terms/neo4j-sync/") Neo4j Sync Terms of Use
+                | &nbsp;and our&nbsp;
+                a(href="http://neo4j.com/privacy-policy/") Privacy Policy
+                |.  
+          alert(ng-show='showSignupWarning', close="closeWarning()") Before you can sign in, please check the box above to agree to the terms of use and privacy policy.
+
           .button-row.row.col-sm-12
-            button.btn.btn-primary(ng-click="CurrentUser.login()") Register / Sign In
+            button.btn.btn-primary(ng-click="signInToSync()") Register / Sign In
             span.spacer &nbsp;
-            a.no-thanks(ng-click="editor.execScript(settings.cmdchar + 'server connect')") No thanks
+            a.no-thanks(ng-click="noThanks()") No thanks
         .box-max(ng-if="currentUser") 
           h3 Hello {{currentUser.name}}!
           p &nbsp;
