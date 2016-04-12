@@ -35,6 +35,7 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     include views/template/inspector-rows
     include views/template/carousel/carousel
     include views/template/carousel/slide
+    include views/template/alert
 
     //build:js scripts/components.js
     script(src='components/jquery/dist/jquery.js')
@@ -57,6 +58,7 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     script(src='components/angular-ui-bootstrap/src/position/position.js')
     script(src='components/angular-ui-bootstrap/src/tabs/tabs.js')
     script(src='components/angular-ui-bootstrap/src/carousel/carousel.js')
+    script(src='components/angular-ui-bootstrap/src/alert/alert.js')
     script(src='components/angular-ui-sortable/sortable.js')
     script(src='components/moment/moment.js')
     script(src='components/angular-moment/angular-moment.js')
@@ -211,6 +213,7 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     script(src='scripts/services/JmxBolt.js')
     script(src='scripts/services/JmxREST.js')
     script(src='scripts/services/ProtocolFactory.js')
+    script(src='scripts/controllers/SyncSigninController.js')
     script(src='lib/helpers.js')
     script(src='lib/serializer.js')
     //endbuild

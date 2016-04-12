@@ -24,11 +24,11 @@ angular.module('neo4jApp.controllers', ['neo4jApp.utils'])
 angular.module('neo4jApp.directives', ['ui.bootstrap.modal', 'neo4jApp.utils'])
 angular.module('neo4jApp.filters', [])
 angular.module('neo4jApp.services', [
-  'LocalStorageModule', 
-  'neo4jApp.settings', 
-  'neo4jApp.utils', 
-  'base64', 
-  'AsciiTableModule', 
+  'LocalStorageModule',
+  'neo4jApp.settings',
+  'neo4jApp.utils',
+  'base64',
+  'AsciiTableModule',
   'auth0',
   'firebase',
   'angular-jwt'
@@ -49,6 +49,7 @@ app = angular.module('neo4jApp', [
   'ui.bootstrap.popover'
   'ui.bootstrap.tabs'
   'ui.bootstrap.carousel'
+  'ui.bootstrap.alert'
   'ui.codemirror'
   'ui.sortable'
   'angularMoment'
