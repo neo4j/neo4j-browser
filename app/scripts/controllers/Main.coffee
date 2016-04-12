@@ -124,10 +124,10 @@ angular.module('neo4jApp.controllers')
             ->
               Frame.closeWhere "#{Settings.cmdchar}server connect"
               Frame.create({input:"#{Settings.initCmd}"})
+              Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
             ,
             (r) ->
-              if !CurrentUser.isAuthenticated()
-                Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
+              Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
           )
         pickFirstFrame()
 
