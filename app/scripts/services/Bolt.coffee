@@ -79,7 +79,7 @@ angular.module('neo4jApp.services')
         testQuery(_driver)
           .then((r) -> q.resolve r)
           .catch((e) -> 
-            _driver = null
+            _driver = null unless e.fields[0].code is 'Neo.ClientError.Security.CredentialsExpired'
             q.reject e
           )
         q.promise

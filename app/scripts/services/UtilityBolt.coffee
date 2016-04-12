@@ -76,12 +76,19 @@ angular.module('neo4jApp.services')
             if errObj.data.errors[0].code is 'Neo.ClientError.Security.CredentialsExpired'
               errObj.data.password_change = 'true'
               errObj.status = 403
+              Bolt.connect() if retainConnection
             else if errObj.data.errors[0].code is 'Socket.Error'
               errObj.status = 0
             else
               errObj.status = 401
             q.reject errObj
           )
+          q.promise
+        setNewPassword: (username, newPasswd) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL sys.changePassword({password})", {password: newPasswd}).promise
+            .then((r) -> q.resolve Bolt.constructResult r)
+            .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
       }
 ]
