@@ -10,7 +10,8 @@ article.guide(ng-controller="SyncSigninController")
           h3 Connect to the Cloud
           p.lead Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social
             | sign-in to elevate your graph experience.
-          p(ng-hide="goodBrowser") Sorry, Neo4j Sync has initial availability for some versions of Internet Explorer.
+          alert.top-padded(ng-hide="goodBrowser") 
+            | Neo4j Sync is currently only available for some versions of Internet Explorer.
             | If you have any trouble, we'd love to hear from you at&nbsp;
             a(href="mailto:feedback@neotechnology.com")
               | feedback@neotechnology.com
