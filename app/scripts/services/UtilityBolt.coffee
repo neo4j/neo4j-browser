@@ -50,7 +50,7 @@ angular.module('neo4jApp.services')
 
         getVersion: ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL sys.components()").promise
+          Bolt.boltTransaction("CALL dbms.components()").promise
             .then((r) -> q.resolve(Bolt.constructVersionResult(r)))
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
@@ -58,7 +58,7 @@ angular.module('neo4jApp.services')
         getJmx: (whatToGet = []) ->
           q = $q.defer()
           name = if whatToGet.length is 1 then whatToGet[0] else "*:*"
-          Bolt.boltTransaction("CALL sys.queryJmx('#{name}')").promise
+          Bolt.boltTransaction("CALL dbms.queryJmx('#{name}')").promise
             .then((r) -> q.resolve(Bolt.constructJmxResult(r, whatToGet)))
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
@@ -86,7 +86,7 @@ angular.module('neo4jApp.services')
           q.promise
         setNewPassword: (username, newPasswd) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL sys.changePassword({password})", {password: newPasswd}).promise
+          Bolt.boltTransaction("CALL dbms.changePassword({password})", {password: newPasswd}).promise
             .then((r) -> q.resolve Bolt.constructResult r)
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
