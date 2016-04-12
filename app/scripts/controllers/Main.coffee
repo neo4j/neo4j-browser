@@ -43,13 +43,15 @@ angular.module('neo4jApp.controllers')
         $scope.kernel = {}
         $scope.refresh = ->
           return '' if $scope.unauthorized || $scope.offline
-          ProtocolFactory.getMetaService().fetch().then((res) ->
+          ProtocolFactory.getMetaService().getMeta().then((res) ->
             $scope.labels = res.labels
             $scope.relationships = res.relationships
             $scope.propertyKeys = res.propertyKeys
           )
           $scope.server = Server.info $scope.server
-          $scope.version = Server.version $scope.version
+          ProtocolFactory.getVersionService().getVersion($scope.version).then((res) ->
+            $scope.version = res
+          )
           $scope.host = $window.location.host
           fetchJMX()
 

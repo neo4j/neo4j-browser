@@ -21,11 +21,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.services')
-  .factory 'AuthREST', [
+  .factory 'UtilityREST', [
     'Server'
     'Settings'
-    (Server, Settings) ->
+    '$q'
+    (Server, Settings, $q) ->
       {
+        getJmx: (whatToGet = []) ->
+          Server.jmx(whatToGet)
+
+        getVersion: (version) ->
+          q = $q.defer()
+          q.resolve Server.version(version)
+          q.promise
+
+        getSchema: (input) ->
+          q = $q.defer()
+          Server.console(input.substr(1))
+          .then(
+            (r) ->
+              response = r.data[0]
+              if response.match('Unknown')
+                q.reject(error("Unknown action", null, response))
+              else
+                q.resolve(response)
+          )
+          q.promise
+
+        getMeta: ->
+          q = $q.defer()
+          obj =
+            labels: Server.labels()
+            relationships: Server.relationships()
+            propertyKeys: Server.propertyKeys()
+          q.resolve obj
+          q.promise
+
         makeRequest: (withoutCredentials) ->
           opts = if withoutCredentials then {skipAuthHeader: withoutCredentials} else {}
           p = Server.get("#{Settings.endpoint.rest}/", opts)
