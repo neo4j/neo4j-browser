@@ -10,7 +10,7 @@ article.guide(ng-controller="SyncSigninController")
           h3 Connect to the Cloud
           p.lead Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social 
             | sign-in to elevate your graph experience. 
-          .box-max(ng-show="!settings.shownTermsAndPrivacy")
+          .box-max(ng-show="!settings.shownTermsAndPrivacy || !settings.acceptedTermsAndPrivacy")
             .checkbox
               label.muted(for="acceptedTermsAndPrivacyCheckBox")
                 input#acceptedTermsAndPrivacyCheckBox(type="checkbox", ng-model="settings.acceptedTermsAndPrivacy", ng-change="save()")
