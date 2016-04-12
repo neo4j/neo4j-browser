@@ -96,6 +96,7 @@ angular.module('neo4jApp.services')
           q.promise
           
         commit: (query) ->
+          that = @
           statements = if query then [{statement:query}] else []
           UDC.increment('cypher_attempts')
           q = $q.defer()
@@ -105,11 +106,12 @@ angular.module('neo4jApp.services')
           promise.then((r) -> 
             r.responseTime = timer.stop().time()
             q.resolve({original: r, remapped: Bolt.constructResult(r)})
+            that.tx = null
           ).catch((r) -> 
             r.responseTime = timer.stop().time()
             q.reject({original: r, remapped: Bolt.constructResult(r)})
+            that.tx = null
           )
-
           res = promiseResult(q.promise)
           res.then(
             -> UDC.increment('cypher_wins')
