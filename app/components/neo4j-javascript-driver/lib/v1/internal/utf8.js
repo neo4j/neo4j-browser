@@ -20,19 +20,21 @@
 // This module defines a cross-platform UTF-8 encoder and decoder that works
 // with the Buffer API defined in buf.js
 
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _buf = require("./buf");
 
 var _buf2 = _interopRequireDefault(_buf);
 
 var _string_decoder = require('string_decoder');
+
+var _error = require('./../error');
 
 var platformObj = {};
 
@@ -45,15 +47,15 @@ try {
 
     platformObj = {
       "encode": function encode(str) {
-        return new _buf2["default"].NodeBuffer(new node.Buffer(str, "UTF-8"));
+        return new _buf2['default'].NodeBuffer(new node.Buffer(str, "UTF-8"));
       },
       "decode": function decode(buffer, length) {
-        if (buffer instanceof _buf2["default"].NodeBuffer) {
+        if (buffer instanceof _buf2['default'].NodeBuffer) {
           var start = buffer.position,
               end = start + length;
           buffer.position = end;
           return buffer._buffer.toString('utf8', start, end);
-        } else if (buffer instanceof _buf2["default"].CombinedBuffer) {
+        } else if (buffer instanceof _buf2['default'].CombinedBuffer) {
           var out = streamDecodeCombinedBuffer(buffer._buffers, length, function (partBuffer) {
             return decoder.write(partBuffer._buffer);
           }, function () {
@@ -61,7 +63,7 @@ try {
           });
           return out;
         } else {
-          throw new Error("Don't know how to decode strings from `" + buffer + "`.");
+          throw (0, _error.newError)("Don't know how to decode strings from `" + buffer + "`.");
         }
       }
     };
@@ -79,15 +81,15 @@ try {
 
     platformObj = {
       "encode": function encode(str) {
-        return new _buf2["default"].HeapBuffer(encoder.encode(str).buffer);
+        return new _buf2['default'].HeapBuffer(encoder.encode(str).buffer);
       },
       "decode": function decode(buffer, length) {
-        if (buffer instanceof _buf2["default"].HeapBuffer) {
+        if (buffer instanceof _buf2['default'].HeapBuffer) {
           return decoder.decode(buffer.readView(length));
         } else {
           // Decoding combined buffer is complicated. For simplicity, for now,
           // we simply copy the combined buffer into a regular buffer and decode that.
-          var tmpBuf = _buf2["default"].alloc(length);
+          var tmpBuf = _buf2['default'].alloc(length);
           for (var i = 0; i < length; i++) {
             tmpBuf.writeUInt8(buffer.readUInt8());
           };
@@ -119,5 +121,5 @@ var streamDecodeCombinedBuffer = function streamDecodeCombinedBuffer(combinedBuf
   return out + endFn();
 };
 
-exports["default"] = platformObj;
-module.exports = exports["default"];
+exports['default'] = platformObj;
+module.exports = exports['default'];

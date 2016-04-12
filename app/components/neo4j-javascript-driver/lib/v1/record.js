@@ -27,7 +27,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _internalError = require("./internal/error");
+var _error = require("./error");
 
 function generateFieldLookup(keys) {
   var lookup = {};
@@ -110,14 +110,14 @@ var Record = (function () {
       if (!(typeof key === "number")) {
         index = this._fieldLookup[key];
         if (index === undefined) {
-          throw (0, _internalError.newError)("This record has no field with key '" + key + "', available key are: [" + this.keys + "].");
+          throw (0, _error.newError)("This record has no field with key '" + key + "', available key are: [" + this.keys + "].");
         }
       } else {
         index = key;
       }
 
       if (index > this._fields.length - 1 || index < 0) {
-        throw (0, _internalError.newError)("This record has no field with index '" + index + "'. Remember that indexes start at `0`, " + "and make sure your statement returns records in the shape you meant it to.");
+        throw (0, _error.newError)("This record has no field with index '" + index + "'. Remember that indexes start at `0`, " + "and make sure your statement returns records in the shape you meant it to.");
       }
 
       return this._fields[index];

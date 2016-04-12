@@ -39,6 +39,8 @@ var _utf82 = _interopRequireDefault(_utf8);
 
 var _integer = require("../integer");
 
+var _error = require('./../error');
+
 var MAX_CHUNK_SIZE = 16383,
     TINY_STRING = 0x80,
     TINY_LIST = 0x90,
@@ -146,7 +148,7 @@ var Packer = (function () {
           this.pack(x[key]);
         }
       } else {
-        throw new Error("Cannot pack this value: " + x);
+        throw (0, _error.newError)("Cannot pack this value: " + x);
       }
     }
   }, {
@@ -212,7 +214,7 @@ var Packer = (function () {
         this._ch.writeUInt8(size % 256);
         this._ch.writeBytes(bytes);
       } else {
-        throw new ProtocolError("UTF-8 strings of size " + size + " are not supported");
+        throw (0, _error.newError)("UTF-8 strings of size " + size + " are not supported");
       }
     }
   }, {
@@ -234,7 +236,7 @@ var Packer = (function () {
         this._ch.writeUInt8((size / 256 >> 0) % 256);
         this._ch.writeUInt8(size % 256);
       } else {
-        throw new ProtocolError("Lists of size " + size + " are not supported");
+        throw (0, _error.newError)("Lists of size " + size + " are not supported");
       }
     }
   }, {
@@ -256,7 +258,7 @@ var Packer = (function () {
         this._ch.writeUInt8((size / 256 >> 0) % 256);
         this._ch.writeUInt8(size % 256);
       } else {
-        throw new ProtocolError("Maps of size " + size + " are not supported");
+        throw (0, _error.newError)("Maps of size " + size + " are not supported");
       }
     }
   }, {
@@ -274,7 +276,7 @@ var Packer = (function () {
         this._ch.writeUInt8(size / 256 >> 0);
         this._ch.writeUInt8(size % 256);
       } else {
-        throw new ProtocolError("Structures of size " + size + " are not supported");
+        throw (0, _error.newError)("Structures of size " + size + " are not supported");
       }
     }
   }]);
@@ -387,7 +389,7 @@ var Unpacker = (function () {
       } else if (markerHigh == 0xB0) {
         return this.unpackStruct(markerLow, buffer);
       } else {
-        throw new ProtocolError("Unknown packed value with marker " + marker.toString(16));
+        throw (0, _error.newError)("Unknown packed value with marker " + marker.toString(16));
       }
     }
   }]);

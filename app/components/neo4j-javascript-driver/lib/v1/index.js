@@ -29,10 +29,13 @@ var _driver = require('./driver');
 
 var _graphTypes = require('./graph-types');
 
+var _error = require('./error');
+
 exports['default'] = {
   driver: _driver.driver,
   int: _integer.int,
   isInt: _integer.isInt,
+  Neo4jError: _error.Neo4jError,
   auth: {
     basic: function basic(username, password) {
       return { scheme: "basic", principal: username, credentials: password };

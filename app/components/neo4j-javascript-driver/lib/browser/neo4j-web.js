@@ -4133,10 +4133,7 @@ exports['1.3.132.0.35'] = 'p521'
   // BN
 
   function BN (number, base, endian) {
-    // May be `new BN(bn)` ?
-    if (number !== null &&
-      typeof number === 'object' &&
-      Array.isArray(number.words)) {
+    if (BN.isBN(number)) {
       return number;
     }
 
@@ -4164,6 +4161,17 @@ exports['1.3.132.0.35'] = 'p521'
 
   BN.BN = BN;
   BN.wordSize = 26;
+
+  var Buffer;
+  try {
+    Buffer = require('buf' + 'fer').Buffer;
+  } catch (e) {
+  }
+
+  BN.isBN = function isBN (num) {
+    return num !== null && typeof num === 'object' &&
+      num.constructor.name === 'BN' && Array.isArray(num.words);
+  };
 
   BN.max = function max (left, right) {
     if (left.cmp(right) > 0) return left;
@@ -4423,6 +4431,13 @@ exports['1.3.132.0.35'] = 'p521'
     return r;
   };
 
+  BN.prototype._expand = function _expand (size) {
+    while (this.length < size) {
+      this.words[this.length++] = 0;
+    }
+    return this;
+  };
+
   // Remove leading `0` from `this`
   BN.prototype.strip = function strip () {
     while (this.length > 1 && this.words[this.length - 1] === 0) {
@@ -4609,7 +4624,16 @@ exports['1.3.132.0.35'] = 'p521'
     return this.toString(16);
   };
 
+  BN.prototype.toBuffer = function toBuffer (endian, length) {
+    assert(typeof Buffer !== 'undefined');
+    return this.toArrayLike(Buffer, endian, length);
+  };
+
   BN.prototype.toArray = function toArray (endian, length) {
+    return this.toArrayLike(Array, endian, length);
+  };
+
+  BN.prototype.toArrayLike = function toArrayLike (ArrayType, endian, length) {
     var byteLength = this.byteLength();
     var reqLength = length || Math.max(1, byteLength);
     assert(byteLength <= reqLength, 'byte array longer than desired length');
@@ -4617,7 +4641,7 @@ exports['1.3.132.0.35'] = 'p521'
 
     this.strip();
     var littleEndian = endian === 'le';
-    var res = new Array(reqLength);
+    var res = new ArrayType(reqLength);
 
     var b, i;
     var q = this.clone();
@@ -4889,9 +4913,7 @@ exports['1.3.132.0.35'] = 'p521'
     var bitsLeft = width % 26;
 
     // Extend the buffer with leading zeroes
-    while (this.length < bytesNeeded) {
-      this.words[this.length++] = 0;
-    }
+    this._expand(bytesNeeded);
 
     if (bitsLeft > 0) {
       bytesNeeded--;
@@ -4922,9 +4944,7 @@ exports['1.3.132.0.35'] = 'p521'
     var off = (bit / 26) | 0;
     var wbit = bit % 26;
 
-    while (this.length <= off) {
-      this.words[this.length++] = 0;
-    }
+    this._expand(off + 1);
 
     if (val) {
       this.words[off] = this.words[off] | (1 << wbit);
@@ -5982,6 +6002,7 @@ exports['1.3.132.0.35'] = 'p521'
 
   BN.prototype.imuln = function imuln (num) {
     assert(typeof num === 'number');
+    assert(num < 0x4000000);
 
     // Carry
     var carry = 0;
@@ -6213,6 +6234,7 @@ exports['1.3.132.0.35'] = 'p521'
   // Add plain number `num` to `this`
   BN.prototype.iaddn = function iaddn (num) {
     assert(typeof num === 'number');
+    assert(num < 0x4000000);
     if (num < 0) return this.isubn(-num);
 
     // Possible sign change
@@ -6253,6 +6275,7 @@ exports['1.3.132.0.35'] = 'p521'
   // Subtract plain number `num` from `this`
   BN.prototype.isubn = function isubn (num) {
     assert(typeof num === 'number');
+    assert(num < 0x4000000);
     if (num < 0) return this.iaddn(-num);
 
     if (this.negative !== 0) {
@@ -6297,24 +6320,10 @@ exports['1.3.132.0.35'] = 'p521'
   };
 
   BN.prototype._ishlnsubmul = function _ishlnsubmul (num, mul, shift) {
-    // Bigger storage is needed
     var len = num.length + shift;
     var i;
-    if (this.words.length < len) {
-      var t = new Array(len);
-      for (i = 0; i < this.length; i++) {
-        t[i] = this.words[i];
-      }
-      this.words = t;
-    } else {
-      i = this.length;
-    }
 
-    // Zeroify rest
-    this.length = Math.max(this.length, len);
-    for (; i < this.length; i++) {
-      this.words[i] = 0;
-    }
+    this._expand(len);
 
     var w;
     var carry = 0;
@@ -6414,11 +6423,25 @@ exports['1.3.132.0.35'] = 'p521'
       a.iushrn(shift);
     }
 
-    return { div: q || null, mod: a };
+    return {
+      div: q || null,
+      mod: a
+    };
   };
 
+  // NOTE: 1) `mode` can be set to `mod` to request mod only,
+  //       to `div` to request div only, or be absent to
+  //       request both div & mod
+  //       2) `positive` is true if unsigned mod is requested
   BN.prototype.divmod = function divmod (num, mode, positive) {
     assert(!num.isZero());
+
+    if (this.isZero()) {
+      return {
+        div: new BN(0),
+        mod: new BN(0)
+      };
+    }
 
     var div, mod, res;
     if (this.negative !== 0 && num.negative === 0) {
@@ -6448,7 +6471,10 @@ exports['1.3.132.0.35'] = 'p521'
         div = res.div.neg();
       }
 
-      return { div: div, mod: res.mod };
+      return {
+        div: div,
+        mod: res.mod
+      };
     }
 
     if ((this.negative & num.negative) !== 0) {
@@ -6471,17 +6497,26 @@ exports['1.3.132.0.35'] = 'p521'
 
     // Strip both numbers to approximate shift value
     if (num.length > this.length || this.cmp(num) < 0) {
-      return { div: new BN(0), mod: this };
+      return {
+        div: new BN(0),
+        mod: this
+      };
     }
 
     // Very short reduction
     if (num.length === 1) {
       if (mode === 'div') {
-        return { div: this.divn(num.words[0]), mod: null };
+        return {
+          div: this.divn(num.words[0]),
+          mod: null
+        };
       }
 
       if (mode === 'mod') {
-        return { div: null, mod: new BN(this.modn(num.words[0])) };
+        return {
+          div: null,
+          mod: new BN(this.modn(num.words[0]))
+        };
       }
 
       return {
@@ -6706,8 +6741,8 @@ exports['1.3.132.0.35'] = 'p521'
   };
 
   BN.prototype.gcd = function gcd (num) {
-    if (this.isZero()) return num.clone();
-    if (num.isZero()) return this.clone();
+    if (this.isZero()) return num.abs();
+    if (num.isZero()) return this.abs();
 
     var a = this.clone();
     var b = num.clone();
@@ -6771,17 +6806,14 @@ exports['1.3.132.0.35'] = 'p521'
 
     // Fast case: bit is much higher than all existing words
     if (this.length <= s) {
-      for (var i = this.length; i < s + 1; i++) {
-        this.words[i] = 0;
-      }
+      this._expand(s + 1);
       this.words[s] |= q;
-      this.length = s + 1;
       return this;
     }
 
     // Add bit and propagate, if needed
     var carry = q;
-    for (i = s; carry !== 0 && i < this.length; i++) {
+    for (var i = s; carry !== 0 && i < this.length; i++) {
       var w = this.words[i] | 0;
       w += carry;
       carry = w >>> 26;
@@ -6820,9 +6852,7 @@ exports['1.3.132.0.35'] = 'p521'
       var w = this.words[0] | 0;
       res = w === num ? 0 : w < num ? -1 : 1;
     }
-    if (this.negative !== 0) {
-      res = -res;
-    }
+    if (this.negative !== 0) return -res | 0;
     return res;
   };
 
@@ -6835,8 +6865,7 @@ exports['1.3.132.0.35'] = 'p521'
     if (this.negative === 0 && num.negative !== 0) return 1;
 
     var res = this.ucmp(num);
-    if (this.negative !== 0) return -res;
-
+    if (this.negative !== 0) return -res | 0;
     return res;
   };
 
@@ -6953,7 +6982,7 @@ exports['1.3.132.0.35'] = 'p521'
 
   BN.prototype.redShl = function redShl (num) {
     assert(this.red, 'redShl works only with red numbers');
-    return this.red.ushl(this, num);
+    return this.red.shl(this, num);
   };
 
   BN.prototype.redMul = function redMul (num) {
@@ -7098,8 +7127,13 @@ exports['1.3.132.0.35'] = 'p521'
       input.words[i - 10] = ((next & mask) << 4) | (prev >>> 22);
       prev = next;
     }
-    input.words[i - 10] = prev >>> 22;
-    input.length -= 9;
+    prev >>>= 22;
+    input.words[i - 10] = prev;
+    if (prev === 0 && input.length > 10) {
+      input.length -= 10;
+    } else {
+      input.length -= 9;
+    }
   };
 
   K256.prototype.imulK = function imulK (num) {
@@ -9832,7 +9866,7 @@ EC.prototype.recoverPubKey = function(msg, signature, j, enc) {
   // 1.6.1 Compute Q = r^-1 (sR -  eG)
   //               Q = r^-1 (sR + -eG)
   var rInv = signature.r.invm(n);
-  return r.mul(s).add(this.g.mul(eNeg)).mul(rInv);
+  return this.g.mulAdd(eNeg, r, s).mul(rInv);
 };
 
 EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
@@ -12652,15 +12686,20 @@ exports.shr64_lo = shr64_lo;
 },{"inherits":200}],65:[function(require,module,exports){
 module.exports={
   "name": "elliptic",
-  "version": "6.2.2",
+  "version": "6.2.3",
   "description": "EC cryptography",
   "main": "lib/elliptic.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "test": "make lint && istanbul test _mocha --reporter=spec test/*-test.js",
-    "coveralls": "cat ./coverage/lcov.info | coveralls"
+    "coverage": "npm run unit --coverage",
+    "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls",
+    "jscs": "jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/*.js",
+    "jshint": "jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/*.js",
+    "lint": "npm run jscs && npm run jshint",
+    "test": "npm run lint && npm run unit",
+    "unit": "istanbul test _mocha --reporter=spec test/*-test.js"
   },
   "repository": {
     "type": "git",
@@ -12682,13 +12721,11 @@ module.exports={
   },
   "homepage": "https://github.com/indutny/elliptic",
   "devDependencies": {
-    "browserify": "^3.44.2",
     "coveralls": "^2.11.3",
-    "istanbul": "^0.3.17",
-    "jscs": "^1.11.3",
+    "istanbul": "^0.4.2",
+    "jscs": "^2.9.0",
     "jshint": "^2.6.0",
-    "mocha": "^2.1.0",
-    "uglify-js": "^2.4.13"
+    "mocha": "^2.1.0"
   },
   "dependencies": {
     "bn.js": "^4.0.0",
@@ -12696,9 +12733,9 @@ module.exports={
     "hash.js": "^1.0.0",
     "inherits": "^2.0.1"
   },
-  "gitHead": "628eb61186a7f1c81247cf991d808dc9ead83645",
-  "_id": "elliptic@6.2.2",
-  "_shasum": "806bfa651a5aa4996a1e79c92b573761ea7d7574",
+  "gitHead": "c32f20b22b420eb6af3c6dda28963deb7facf823",
+  "_id": "elliptic@6.2.3",
+  "_shasum": "18e46d7306b0951275a2d42063270a14b74ebe99",
   "_from": "elliptic@>=6.0.0 <7.0.0",
   "_npmVersion": "3.3.12",
   "_nodeVersion": "5.4.1",
@@ -12707,8 +12744,8 @@ module.exports={
     "email": "fedor@indutny.com"
   },
   "dist": {
-    "shasum": "806bfa651a5aa4996a1e79c92b573761ea7d7574",
-    "tarball": "http://registry.npmjs.org/elliptic/-/elliptic-6.2.2.tgz"
+    "shasum": "18e46d7306b0951275a2d42063270a14b74ebe99",
+    "tarball": "http://registry.npmjs.org/elliptic/-/elliptic-6.2.3.tgz"
   },
   "maintainers": [
     {
@@ -12717,7 +12754,8 @@ module.exports={
     }
   ],
   "directories": {},
-  "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.2.2.tgz"
+  "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.2.3.tgz",
+  "readme": "ERROR: No README data found!"
 }
 
 },{}],66:[function(require,module,exports){
@@ -13193,19 +13231,21 @@ base.Node = require('./node');
 },{"./buffer":72,"./node":74,"./reporter":75}],74:[function(require,module,exports){
 var Reporter = require('../base').Reporter;
 var EncoderBuffer = require('../base').EncoderBuffer;
+var DecoderBuffer = require('../base').DecoderBuffer;
 var assert = require('minimalistic-assert');
 
 // Supported tags
 var tags = [
-  'seq', 'seqof', 'set', 'setof', 'octstr', 'bitstr', 'objid', 'bool',
-  'gentime', 'utctime', 'null_', 'enum', 'int', 'ia5str', 'utf8str', 'bmpstr',
-  'numstr', 'printstr'
+  'seq', 'seqof', 'set', 'setof', 'objid', 'bool',
+  'gentime', 'utctime', 'null_', 'enum', 'int',
+  'bitstr', 'bmpstr', 'charstr', 'genstr', 'graphstr', 'ia5str', 'iso646str',
+  'numstr', 'octstr', 'printstr', 't61str', 'unistr', 'utf8str', 'videostr'
 ];
 
 // Public methods list
 var methods = [
   'key', 'obj', 'use', 'optional', 'explicit', 'implicit', 'def', 'choice',
-  'any'
+  'any', 'contains'
 ].concat(tags);
 
 // Overrided methods list
@@ -13241,6 +13281,7 @@ function Node(enc, parent) {
   state['default'] = null;
   state.explicit = null;
   state.implicit = null;
+  state.contains = null;
 
   // Should create new instance on each method
   if (!state.parent) {
@@ -13445,6 +13486,15 @@ Node.prototype.choice = function choice(obj) {
   return this;
 };
 
+Node.prototype.contains = function contains(item) {
+  var state = this._baseState;
+
+  assert(state.use === null);
+  state.contains = item;
+
+  return this;
+};
+
 //
 // Decoding
 //
@@ -13539,13 +13589,17 @@ Node.prototype._decode = function decode(input) {
 
     // Decode children
     if (!state.any && state.choice === null && state.children !== null) {
-      var fail = state.children.some(function decodeChildren(child) {
+      state.children.forEach(function decodeChildren(child) {
         // NOTE: We are ignoring errors here, to let parser continue with other
         // parts of encoded data
         child._decode(input);
       });
-      if (fail)
-        return err;
+    }
+
+    // Decode contained/encoded by schema, only in bit or octet strings
+    if (state.contains && (state.tag === 'octstr' || state.tag === 'bitstr')) {
+      var data = new DecoderBuffer(result);
+      result = this._getUse(state.contains, input._reporterState.obj)._decode(data);
     }
   }
 
@@ -13567,11 +13621,7 @@ Node.prototype._decodeGeneric = function decodeGeneric(tag, input) {
     return null;
   if (tag === 'seqof' || tag === 'setof')
     return this._decodeList(input, tag, state.args[0]);
-  else if (tag === 'octstr' || tag === 'bitstr')
-    return this._decodeStr(input, tag);
-  else if (tag === 'ia5str' || tag === 'utf8str' || tag === 'bmpstr')
-    return this._decodeStr(input, tag);
-  else if (tag === 'numstr' || tag === 'printstr')
+  else if (/str$/.test(tag))
     return this._decodeStr(input, tag);
   else if (tag === 'objid' && state.args)
     return this._decodeObjid(input, state.args[0], state.args[1]);
@@ -13690,6 +13740,9 @@ Node.prototype._encodeValue = function encode(data, reporter, parent) {
     result = this._createEncoderBuffer(data);
   } else if (state.choice) {
     result = this._encodeChoice(data, reporter);
+  } else if (state.contains) {
+    content = this._getUse(state.contains, parent)._encode(data, reporter);
+    primitive = true;
   } else if (state.children) {
     content = state.children.map(function(child) {
       if (child._baseState.tag === 'null_')
@@ -13709,7 +13762,6 @@ Node.prototype._encodeValue = function encode(data, reporter, parent) {
     }, this).filter(function(child) {
       return child;
     });
-
     content = this._createEncoderBuffer(content);
   } else {
     if (state.tag === 'seqof' || state.tag === 'setof') {
@@ -13773,11 +13825,7 @@ Node.prototype._encodeChoice = function encodeChoice(data, reporter) {
 Node.prototype._encodePrimitive = function encodePrimitive(tag, data) {
   var state = this._baseState;
 
-  if (tag === 'octstr' || tag === 'bitstr' || tag === 'ia5str')
-    return this._encodeStr(data, tag);
-  else if (tag === 'utf8str' || tag === 'bmpstr')
-    return this._encodeStr(data, tag);
-  else if (tag === 'numstr' || tag === 'printstr')
+  if (/str$/.test(tag))
     return this._encodeStr(data, tag);
   else if (tag === 'objid' && state.args)
     return this._encodeObjid(data, state.reverseArgs[0], state.args[1]);
@@ -13802,6 +13850,7 @@ Node.prototype._isNumstr = function isNumstr(str) {
 Node.prototype._isPrintstr = function isPrintstr(str) {
   return /^[A-Za-z0-9 '\(\)\+,\-\.\/:=\?]*$/.test(str);
 };
+
 },{"../base":73,"minimalistic-assert":84}],75:[function(require,module,exports){
 var inherits = require('inherits');
 
@@ -14017,7 +14066,8 @@ DERNode.prototype._peekTag = function peekTag(buffer, tag, any) {
 
   buffer.restore(state);
 
-  return decodedTag.tag === tag || decodedTag.tagStr === tag || any;
+  return decodedTag.tag === tag || decodedTag.tagStr === tag ||
+    (decodedTag.tagStr + 'of') === tag || any;
 };
 
 DERNode.prototype._decodeTag = function decodeTag(buffer, tag, any) {
@@ -14097,33 +14147,12 @@ DERNode.prototype._decodeList = function decodeList(buffer, tag, decoder) {
 };
 
 DERNode.prototype._decodeStr = function decodeStr(buffer, tag) {
-  if (tag === 'octstr') {
-    return buffer.raw();
-  } else if (tag === 'bitstr') {
+  if (tag === 'bitstr') {
     var unused = buffer.readUInt8();
     if (buffer.isError(unused))
       return unused;
-
     return { unused: unused, data: buffer.raw() };
-  } else if (tag === 'ia5str' || tag === 'utf8str') {
-    return buffer.raw().toString();
-  } else if(tag === 'numstr') {
-    var numstr = buffer.raw().toString('ascii');
-    if (!this._isNumstr(numstr)) {
-      return buffer.error('Decoding of string type: ' +
-                          'numstr unsupported characters');
-    }
-
-    return numstr;
-  } else if (tag === 'printstr') {
-    var printstr = buffer.raw().toString('ascii');
-    if (!this._isPrintstr(printstr)) {
-      return buffer.error('Decoding of string type: ' +
-                          'printstr unsupported characters');
-    }
-
-    return printstr;
-  } else if(tag === 'bmpstr') {
+  } else if (tag === 'bmpstr') {
     var raw = buffer.raw();
     if (raw.length % 2 === 1)
       return buffer.error('Decoding of string type: bmpstr length mismatch');
@@ -14133,12 +14162,31 @@ DERNode.prototype._decodeStr = function decodeStr(buffer, tag) {
       str += String.fromCharCode(raw.readUInt16BE(i * 2));
     }
     return str;
+  } else if (tag === 'numstr') {
+    var numstr = buffer.raw().toString('ascii');
+    if (!this._isNumstr(numstr)) {
+      return buffer.error('Decoding of string type: ' +
+                          'numstr unsupported characters');
+    }
+    return numstr;
+  } else if (tag === 'octstr') {
+    return buffer.raw();
+  } else if (tag === 'printstr') {
+    var printstr = buffer.raw().toString('ascii');
+    if (!this._isPrintstr(printstr)) {
+      return buffer.error('Decoding of string type: ' +
+                          'printstr unsupported characters');
+    }
+    return printstr;
+  } else if (/str$/.test(tag)) {
+    return buffer.raw().toString();
   } else {
     return buffer.error('Decoding of string type: ' + tag + ' unsupported');
   }
 };
 
 DERNode.prototype._decodeObjid = function decodeObjid(buffer, values, relative) {
+  var result;
   var identifiers = [];
   var ident = 0;
   while (!buffer.isEmpty()) {
@@ -14417,12 +14465,8 @@ DERNode.prototype._encodeComposite = function encodeComposite(tag,
 };
 
 DERNode.prototype._encodeStr = function encodeStr(str, tag) {
-  if (tag === 'octstr') {
-    return this._createEncoderBuffer(str);
-  } else if (tag === 'bitstr') {
+  if (tag === 'bitstr') {
     return this._createEncoderBuffer([ str.unused | 0, str.data ]);
-  } else if (tag === 'ia5str' || tag === 'utf8str') {
-    return this._createEncoderBuffer(str);
   } else if (tag === 'bmpstr') {
     var buf = new Buffer(str.length * 2);
     for (var i = 0; i < str.length; i++) {
@@ -14434,7 +14478,6 @@ DERNode.prototype._encodeStr = function encodeStr(str, tag) {
       return this.reporter.error('Encoding of string type: numstr supports ' +
                                  'only digits and space');
     }
-
     return this._createEncoderBuffer(str);
   } else if (tag === 'printstr') {
     if (!this._isPrintstr(str)) {
@@ -14445,7 +14488,8 @@ DERNode.prototype._encodeStr = function encodeStr(str, tag) {
                                  'dot, slash, colon, equal sign, ' +
                                  'question mark');
     }
-
+    return this._createEncoderBuffer(str);
+  } else if (/str$/.test(tag)) {
     return this._createEncoderBuffer(str);
   } else {
     return this.reporter.error('Encoding of string type: ' + tag +
@@ -15763,6 +15807,10 @@ exports.sha512 = require('./sha512')
 var inherits = require('inherits')
 var Hash = require('./hash')
 
+var K = [
+  0x5a827999, 0x6ed9eba1, 0x8f1bbcdc | 0, 0xca62c1d6 | 0
+]
+
 var W = new Array(80)
 
 function Sha () {
@@ -15775,61 +15823,51 @@ function Sha () {
 inherits(Sha, Hash)
 
 Sha.prototype.init = function () {
-  this._a = 0x67452301 | 0
-  this._b = 0xefcdab89 | 0
-  this._c = 0x98badcfe | 0
-  this._d = 0x10325476 | 0
-  this._e = 0xc3d2e1f0 | 0
+  this._a = 0x67452301
+  this._b = 0xefcdab89
+  this._c = 0x98badcfe
+  this._d = 0x10325476
+  this._e = 0xc3d2e1f0
 
   return this
 }
 
-/*
- * Bitwise rotate a 32-bit number to the left.
- */
-function rol (num, cnt) {
-  return (num << cnt) | (num >>> (32 - cnt))
+function rotl5 (num) {
+  return (num << 5) | (num >>> 27)
+}
+
+function rotl30 (num) {
+  return (num << 30) | (num >>> 2)
+}
+
+function ft (s, b, c, d) {
+  if (s === 0) return (b & c) | ((~b) & d)
+  if (s === 2) return (b & c) | (b & d) | (c & d)
+  return b ^ c ^ d
 }
 
 Sha.prototype._update = function (M) {
   var W = this._w
 
-  var a = this._a
-  var b = this._b
-  var c = this._c
-  var d = this._d
-  var e = this._e
+  var a = this._a | 0
+  var b = this._b | 0
+  var c = this._c | 0
+  var d = this._d | 0
+  var e = this._e | 0
 
-  var j = 0
-  var k
+  for (var i = 0; i < 16; ++i) W[i] = M.readInt32BE(i * 4)
+  for (; i < 80; ++i) W[i] = W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16]
 
-  /*
-   * SHA-1 has a bitwise rotate left operation. But, SHA is not
-   * function calcW() { return rol(W[j - 3] ^ W[j -  8] ^ W[j - 14] ^ W[j - 16], 1) }
-   */
-  function calcW () { return W[j - 3] ^ W[j - 8] ^ W[j - 14] ^ W[j - 16] }
-  function loop (w, f) {
-    W[j] = w
-
-    var t = rol(a, 5) + f + e + w + k
+  for (var j = 0; j < 80; ++j) {
+    var s = ~~(j / 20)
+    var t = (rotl5(a) + ft(s, b, c, d) + e + W[j] + K[s]) | 0
 
     e = d
     d = c
-    c = rol(b, 30)
+    c = rotl30(b)
     b = a
     a = t
-    j++
   }
-
-  k = 1518500249
-  while (j < 16) loop(M.readInt32BE(j * 4), (b & c) | ((~b) & d))
-  while (j < 20) loop(calcW(), (b & c) | ((~b) & d))
-  k = 1859775393
-  while (j < 40) loop(calcW(), b ^ c ^ d)
-  k = -1894007588
-  while (j < 60) loop(calcW(), (b & c) | (b & d) | (c & d))
-  k = -899497514
-  while (j < 80) loop(calcW(), b ^ c ^ d)
 
   this._a = (a + this._a) | 0
   this._b = (b + this._b) | 0
@@ -15852,7 +15890,6 @@ Sha.prototype._hash = function () {
 
 module.exports = Sha
 
-
 }).call(this,require("buffer").Buffer)
 },{"./hash":136,"buffer":3,"inherits":200}],139:[function(require,module,exports){
 (function (Buffer){
@@ -15868,6 +15905,10 @@ module.exports = Sha
 var inherits = require('inherits')
 var Hash = require('./hash')
 
+var K = [
+  0x5a827999, 0x6ed9eba1, 0x8f1bbcdc | 0, 0xca62c1d6 | 0
+]
+
 var W = new Array(80)
 
 function Sha1 () {
@@ -15880,57 +15921,55 @@ function Sha1 () {
 inherits(Sha1, Hash)
 
 Sha1.prototype.init = function () {
-  this._a = 0x67452301 | 0
-  this._b = 0xefcdab89 | 0
-  this._c = 0x98badcfe | 0
-  this._d = 0x10325476 | 0
-  this._e = 0xc3d2e1f0 | 0
+  this._a = 0x67452301
+  this._b = 0xefcdab89
+  this._c = 0x98badcfe
+  this._d = 0x10325476
+  this._e = 0xc3d2e1f0
 
   return this
 }
 
-/*
- * Bitwise rotate a 32-bit number to the left.
- */
-function rol (num, cnt) {
-  return (num << cnt) | (num >>> (32 - cnt))
+function rotl1 (num) {
+  return (num << 1) | (num >>> 31)
+}
+
+function rotl5 (num) {
+  return (num << 5) | (num >>> 27)
+}
+
+function rotl30 (num) {
+  return (num << 30) | (num >>> 2)
+}
+
+function ft (s, b, c, d) {
+  if (s === 0) return (b & c) | ((~b) & d)
+  if (s === 2) return (b & c) | (b & d) | (c & d)
+  return b ^ c ^ d
 }
 
 Sha1.prototype._update = function (M) {
   var W = this._w
 
-  var a = this._a
-  var b = this._b
-  var c = this._c
-  var d = this._d
-  var e = this._e
+  var a = this._a | 0
+  var b = this._b | 0
+  var c = this._c | 0
+  var d = this._d | 0
+  var e = this._e | 0
 
-  var j = 0
-  var k
+  for (var i = 0; i < 16; ++i) W[i] = M.readInt32BE(i * 4)
+  for (; i < 80; ++i) W[i] = rotl1(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16])
 
-  function calcW () { return rol(W[j - 3] ^ W[j - 8] ^ W[j - 14] ^ W[j - 16], 1) }
-  function loop (w, f) {
-    W[j] = w
-
-    var t = rol(a, 5) + f + e + w + k
+  for (var j = 0; j < 80; ++j) {
+    var s = ~~(j / 20)
+    var t = (rotl5(a) + ft(s, b, c, d) + e + W[j] + K[s]) | 0
 
     e = d
     d = c
-    c = rol(b, 30)
+    c = rotl30(b)
     b = a
     a = t
-    j++
   }
-
-  k = 1518500249
-  while (j < 16) loop(M.readInt32BE(j * 4), (b & c) | ((~b) & d))
-  while (j < 20) loop(calcW(), (b & c) | ((~b) & d))
-  k = 1859775393
-  while (j < 40) loop(calcW(), b ^ c ^ d)
-  k = -1894007588
-  while (j < 60) loop(calcW(), (b & c) | (b & d) | (c & d))
-  k = -899497514
-  while (j < 80) loop(calcW(), b ^ c ^ d)
 
   this._a = (a + this._a) | 0
   this._b = (b + this._b) | 0
@@ -15981,14 +16020,14 @@ function Sha224 () {
 inherits(Sha224, Sha256)
 
 Sha224.prototype.init = function () {
-  this._a = 0xc1059ed8 | 0
-  this._b = 0x367cd507 | 0
-  this._c = 0x3070dd17 | 0
-  this._d = 0xf70e5939 | 0
-  this._e = 0xffc00b31 | 0
-  this._f = 0x68581511 | 0
-  this._g = 0x64f98fa7 | 0
-  this._h = 0xbefa4fa4 | 0
+  this._a = 0xc1059ed8
+  this._b = 0x367cd507
+  this._c = 0x3070dd17
+  this._d = 0xf70e5939
+  this._e = 0xffc00b31
+  this._f = 0x68581511
+  this._g = 0x64f98fa7
+  this._h = 0xbefa4fa4
 
   return this
 }
@@ -16055,39 +16094,39 @@ function Sha256 () {
 inherits(Sha256, Hash)
 
 Sha256.prototype.init = function () {
-  this._a = 0x6a09e667 | 0
-  this._b = 0xbb67ae85 | 0
-  this._c = 0x3c6ef372 | 0
-  this._d = 0xa54ff53a | 0
-  this._e = 0x510e527f | 0
-  this._f = 0x9b05688c | 0
-  this._g = 0x1f83d9ab | 0
-  this._h = 0x5be0cd19 | 0
+  this._a = 0x6a09e667
+  this._b = 0xbb67ae85
+  this._c = 0x3c6ef372
+  this._d = 0xa54ff53a
+  this._e = 0x510e527f
+  this._f = 0x9b05688c
+  this._g = 0x1f83d9ab
+  this._h = 0x5be0cd19
 
   return this
 }
 
-function Ch (x, y, z) {
+function ch (x, y, z) {
   return z ^ (x & (y ^ z))
 }
 
-function Maj (x, y, z) {
+function maj (x, y, z) {
   return (x & y) | (z & (x | y))
 }
 
-function Sigma0 (x) {
+function sigma0 (x) {
   return (x >>> 2 | x << 30) ^ (x >>> 13 | x << 19) ^ (x >>> 22 | x << 10)
 }
 
-function Sigma1 (x) {
+function sigma1 (x) {
   return (x >>> 6 | x << 26) ^ (x >>> 11 | x << 21) ^ (x >>> 25 | x << 7)
 }
 
-function Gamma0 (x) {
+function gamma0 (x) {
   return (x >>> 7 | x << 25) ^ (x >>> 18 | x << 14) ^ (x >>> 3)
 }
 
-function Gamma1 (x) {
+function gamma1 (x) {
   return (x >>> 17 | x << 15) ^ (x >>> 19 | x << 13) ^ (x >>> 10)
 }
 
@@ -16103,29 +16142,22 @@ Sha256.prototype._update = function (M) {
   var g = this._g | 0
   var h = this._h | 0
 
-  var j = 0
+  for (var i = 0; i < 16; ++i) W[i] = M.readInt32BE(i * 4)
+  for (; i < 64; ++i) W[i] = (gamma1(W[i - 2]) + W[i - 7] + gamma0(W[i - 15]) + W[i - 16]) | 0
 
-  function calcW () { return Gamma1(W[j - 2]) + W[j - 7] + Gamma0(W[j - 15]) + W[j - 16] }
-  function loop (w) {
-    W[j] = w
-
-    var T1 = h + Sigma1(e) + Ch(e, f, g) + K[j] + w
-    var T2 = Sigma0(a) + Maj(a, b, c)
+  for (var j = 0; j < 64; ++j) {
+    var T1 = (h + sigma1(e) + ch(e, f, g) + K[j] + W[j]) | 0
+    var T2 = (sigma0(a) + maj(a, b, c)) | 0
 
     h = g
     g = f
     f = e
-    e = d + T1
+    e = (d + T1) | 0
     d = c
     c = b
     b = a
-    a = T1 + T2
-
-    j++
+    a = (T1 + T2) | 0
   }
-
-  while (j < 16) loop(M.readInt32BE(j * 4))
-  while (j < 64) loop(calcW())
 
   this._a = (a + this._a) | 0
   this._b = (b + this._b) | 0
@@ -16173,23 +16205,23 @@ function Sha384 () {
 inherits(Sha384, SHA512)
 
 Sha384.prototype.init = function () {
-  this._a = 0xcbbb9d5d | 0
-  this._b = 0x629a292a | 0
-  this._c = 0x9159015a | 0
-  this._d = 0x152fecd8 | 0
-  this._e = 0x67332667 | 0
-  this._f = 0x8eb44a87 | 0
-  this._g = 0xdb0c2e0d | 0
-  this._h = 0x47b5481d | 0
+  this._ah = 0xcbbb9d5d
+  this._bh = 0x629a292a
+  this._ch = 0x9159015a
+  this._dh = 0x152fecd8
+  this._eh = 0x67332667
+  this._fh = 0x8eb44a87
+  this._gh = 0xdb0c2e0d
+  this._hh = 0x47b5481d
 
-  this._al = 0xc1059ed8 | 0
-  this._bl = 0x367cd507 | 0
-  this._cl = 0x3070dd17 | 0
-  this._dl = 0xf70e5939 | 0
-  this._el = 0xffc00b31 | 0
-  this._fl = 0x68581511 | 0
-  this._gl = 0x64f98fa7 | 0
-  this._hl = 0xbefa4fa4 | 0
+  this._al = 0xc1059ed8
+  this._bl = 0x367cd507
+  this._cl = 0x3070dd17
+  this._dl = 0xf70e5939
+  this._el = 0xffc00b31
+  this._fl = 0x68581511
+  this._gl = 0x64f98fa7
+  this._hl = 0xbefa4fa4
 
   return this
 }
@@ -16202,12 +16234,12 @@ Sha384.prototype._hash = function () {
     H.writeInt32BE(l, offset + 4)
   }
 
-  writeInt64BE(this._a, this._al, 0)
-  writeInt64BE(this._b, this._bl, 8)
-  writeInt64BE(this._c, this._cl, 16)
-  writeInt64BE(this._d, this._dl, 24)
-  writeInt64BE(this._e, this._el, 32)
-  writeInt64BE(this._f, this._fl, 40)
+  writeInt64BE(this._ah, this._al, 0)
+  writeInt64BE(this._bh, this._bl, 8)
+  writeInt64BE(this._ch, this._cl, 16)
+  writeInt64BE(this._dh, this._dl, 24)
+  writeInt64BE(this._eh, this._el, 32)
+  writeInt64BE(this._fh, this._fl, 40)
 
   return H
 }
@@ -16275,23 +16307,23 @@ function Sha512 () {
 inherits(Sha512, Hash)
 
 Sha512.prototype.init = function () {
-  this._a = 0x6a09e667 | 0
-  this._b = 0xbb67ae85 | 0
-  this._c = 0x3c6ef372 | 0
-  this._d = 0xa54ff53a | 0
-  this._e = 0x510e527f | 0
-  this._f = 0x9b05688c | 0
-  this._g = 0x1f83d9ab | 0
-  this._h = 0x5be0cd19 | 0
+  this._ah = 0x6a09e667
+  this._bh = 0xbb67ae85
+  this._ch = 0x3c6ef372
+  this._dh = 0xa54ff53a
+  this._eh = 0x510e527f
+  this._fh = 0x9b05688c
+  this._gh = 0x1f83d9ab
+  this._hh = 0x5be0cd19
 
-  this._al = 0xf3bcc908 | 0
-  this._bl = 0x84caa73b | 0
-  this._cl = 0xfe94f82b | 0
-  this._dl = 0x5f1d36f1 | 0
-  this._el = 0xade682d1 | 0
-  this._fl = 0x2b3e6c1f | 0
-  this._gl = 0xfb41bd6b | 0
-  this._hl = 0x137e2179 | 0
+  this._al = 0xf3bcc908
+  this._bl = 0x84caa73b
+  this._cl = 0xfe94f82b
+  this._dl = 0x5f1d36f1
+  this._el = 0xade682d1
+  this._fl = 0x2b3e6c1f
+  this._gl = 0xfb41bd6b
+  this._hl = 0x137e2179
 
   return this
 }
@@ -16300,15 +16332,15 @@ function Ch (x, y, z) {
   return z ^ (x & (y ^ z))
 }
 
-function Maj (x, y, z) {
+function maj (x, y, z) {
   return (x & y) | (z & (x | y))
 }
 
-function Sigma0 (x, xl) {
+function sigma0 (x, xl) {
   return (x >>> 28 | xl << 4) ^ (xl >>> 2 | x << 30) ^ (xl >>> 7 | x << 25)
 }
 
-function Sigma1 (x, xl) {
+function sigma1 (x, xl) {
   return (x >>> 14 | xl << 18) ^ (x >>> 18 | xl << 14) ^ (xl >>> 9 | x << 23)
 }
 
@@ -16328,17 +16360,21 @@ function Gamma1l (x, xl) {
   return (x >>> 19 | xl << 13) ^ (xl >>> 29 | x << 3) ^ (x >>> 6 | xl << 26)
 }
 
+function getCarry (a, b) {
+  return (a >>> 0) < (b >>> 0) ? 1 : 0
+}
+
 Sha512.prototype._update = function (M) {
   var W = this._w
 
-  var a = this._a | 0
-  var b = this._b | 0
-  var c = this._c | 0
-  var d = this._d | 0
-  var e = this._e | 0
-  var f = this._f | 0
-  var g = this._g | 0
-  var h = this._h | 0
+  var ah = this._ah | 0
+  var bh = this._bh | 0
+  var ch = this._ch | 0
+  var dh = this._dh | 0
+  var eh = this._eh | 0
+  var fh = this._fh | 0
+  var gh = this._gh | 0
+  var hh = this._hh | 0
 
   var al = this._al | 0
   var bl = this._bl | 0
@@ -16349,98 +16385,87 @@ Sha512.prototype._update = function (M) {
   var gl = this._gl | 0
   var hl = this._hl | 0
 
-  var i = 0
-  var j = 0
-  var Wi, Wil
-  function calcW () {
-    var x = W[j - 15 * 2]
-    var xl = W[j - 15 * 2 + 1]
-    var gamma0 = Gamma0(x, xl)
-    var gamma0l = Gamma0l(xl, x)
+  for (var i = 0; i < 32; i += 2) {
+    W[i] = M.readInt32BE(i * 4)
+    W[i + 1] = M.readInt32BE(i * 4 + 4)
+  }
+  for (; i < 160; i += 2) {
+    var xh = W[i - 15 * 2]
+    var xl = W[i - 15 * 2 + 1]
+    var gamma0 = Gamma0(xh, xl)
+    var gamma0l = Gamma0l(xl, xh)
 
-    x = W[j - 2 * 2]
-    xl = W[j - 2 * 2 + 1]
-    var gamma1 = Gamma1(x, xl)
-    var gamma1l = Gamma1l(xl, x)
+    xh = W[i - 2 * 2]
+    xl = W[i - 2 * 2 + 1]
+    var gamma1 = Gamma1(xh, xl)
+    var gamma1l = Gamma1l(xl, xh)
 
     // W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16]
-    var Wi7 = W[j - 7 * 2]
-    var Wi7l = W[j - 7 * 2 + 1]
+    var Wi7h = W[i - 7 * 2]
+    var Wi7l = W[i - 7 * 2 + 1]
 
-    var Wi16 = W[j - 16 * 2]
-    var Wi16l = W[j - 16 * 2 + 1]
+    var Wi16h = W[i - 16 * 2]
+    var Wi16l = W[i - 16 * 2 + 1]
 
-    Wil = gamma0l + Wi7l
-    Wi = gamma0 + Wi7 + ((Wil >>> 0) < (gamma0l >>> 0) ? 1 : 0)
-    Wil = Wil + gamma1l
-    Wi = Wi + gamma1 + ((Wil >>> 0) < (gamma1l >>> 0) ? 1 : 0)
-    Wil = Wil + Wi16l
-    Wi = Wi + Wi16 + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0)
+    var Wil = (gamma0l + Wi7l) | 0
+    var Wih = (gamma0 + Wi7h + getCarry(Wil, gamma0l)) | 0
+    Wil = (Wil + gamma1l) | 0
+    Wih = (Wih + gamma1 + getCarry(Wil, gamma1l)) | 0
+    Wil = (Wil + Wi16l) | 0
+    Wih = (Wih + Wi16h + getCarry(Wil, Wi16l)) | 0
+
+    W[i] = Wih
+    W[i + 1] = Wil
   }
 
-  function loop () {
-    W[j] = Wi
-    W[j + 1] = Wil
+  for (var j = 0; j < 160; j += 2) {
+    Wih = W[j]
+    Wil = W[j + 1]
 
-    var maj = Maj(a, b, c)
-    var majl = Maj(al, bl, cl)
+    var majh = maj(ah, bh, ch)
+    var majl = maj(al, bl, cl)
 
-    var sigma0h = Sigma0(a, al)
-    var sigma0l = Sigma0(al, a)
-    var sigma1h = Sigma1(e, el)
-    var sigma1l = Sigma1(el, e)
+    var sigma0h = sigma0(ah, al)
+    var sigma0l = sigma0(al, ah)
+    var sigma1h = sigma1(eh, el)
+    var sigma1l = sigma1(el, eh)
 
-    // t1 = h + sigma1 + ch + K[i] + W[i]
-    var Ki = K[j]
+    // t1 = h + sigma1 + ch + K[j] + W[j]
+    var Kih = K[j]
     var Kil = K[j + 1]
 
-    var ch = Ch(e, f, g)
+    var chh = Ch(eh, fh, gh)
     var chl = Ch(el, fl, gl)
 
-    var t1l = hl + sigma1l
-    var t1 = h + sigma1h + ((t1l >>> 0) < (hl >>> 0) ? 1 : 0)
-    t1l = t1l + chl
-    t1 = t1 + ch + ((t1l >>> 0) < (chl >>> 0) ? 1 : 0)
-    t1l = t1l + Kil
-    t1 = t1 + Ki + ((t1l >>> 0) < (Kil >>> 0) ? 1 : 0)
-    t1l = t1l + Wil
-    t1 = t1 + Wi + ((t1l >>> 0) < (Wil >>> 0) ? 1 : 0)
+    var t1l = (hl + sigma1l) | 0
+    var t1h = (hh + sigma1h + getCarry(t1l, hl)) | 0
+    t1l = (t1l + chl) | 0
+    t1h = (t1h + chh + getCarry(t1l, chl)) | 0
+    t1l = (t1l + Kil) | 0
+    t1h = (t1h + Kih + getCarry(t1l, Kil)) | 0
+    t1l = (t1l + Wil) | 0
+    t1h = (t1h + Wih + getCarry(t1l, Wil)) | 0
 
     // t2 = sigma0 + maj
-    var t2l = sigma0l + majl
-    var t2 = sigma0h + maj + ((t2l >>> 0) < (sigma0l >>> 0) ? 1 : 0)
+    var t2l = (sigma0l + majl) | 0
+    var t2h = (sigma0h + majh + getCarry(t2l, sigma0l)) | 0
 
-    h = g
+    hh = gh
     hl = gl
-    g = f
+    gh = fh
     gl = fl
-    f = e
+    fh = eh
     fl = el
     el = (dl + t1l) | 0
-    e = (d + t1 + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0
-    d = c
+    eh = (dh + t1h + getCarry(el, dl)) | 0
+    dh = ch
     dl = cl
-    c = b
+    ch = bh
     cl = bl
-    b = a
+    bh = ah
     bl = al
     al = (t1l + t2l) | 0
-    a = (t1 + t2 + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0
-
-    i++
-    j += 2
-  }
-
-  while (i < 16) {
-    Wi = M.readInt32BE(j * 4)
-    Wil = M.readInt32BE(j * 4 + 4)
-
-    loop()
-  }
-
-  while (i < 80) {
-    calcW()
-    loop()
+    ah = (t1h + t2h + getCarry(al, t1l)) | 0
   }
 
   this._al = (this._al + al) | 0
@@ -16452,14 +16477,14 @@ Sha512.prototype._update = function (M) {
   this._gl = (this._gl + gl) | 0
   this._hl = (this._hl + hl) | 0
 
-  this._a = (this._a + a + ((this._al >>> 0) < (al >>> 0) ? 1 : 0)) | 0
-  this._b = (this._b + b + ((this._bl >>> 0) < (bl >>> 0) ? 1 : 0)) | 0
-  this._c = (this._c + c + ((this._cl >>> 0) < (cl >>> 0) ? 1 : 0)) | 0
-  this._d = (this._d + d + ((this._dl >>> 0) < (dl >>> 0) ? 1 : 0)) | 0
-  this._e = (this._e + e + ((this._el >>> 0) < (el >>> 0) ? 1 : 0)) | 0
-  this._f = (this._f + f + ((this._fl >>> 0) < (fl >>> 0) ? 1 : 0)) | 0
-  this._g = (this._g + g + ((this._gl >>> 0) < (gl >>> 0) ? 1 : 0)) | 0
-  this._h = (this._h + h + ((this._hl >>> 0) < (hl >>> 0) ? 1 : 0)) | 0
+  this._ah = (this._ah + ah + getCarry(this._al, al)) | 0
+  this._bh = (this._bh + bh + getCarry(this._bl, bl)) | 0
+  this._ch = (this._ch + ch + getCarry(this._cl, cl)) | 0
+  this._dh = (this._dh + dh + getCarry(this._dl, dl)) | 0
+  this._eh = (this._eh + eh + getCarry(this._el, el)) | 0
+  this._fh = (this._fh + fh + getCarry(this._fl, fl)) | 0
+  this._gh = (this._gh + gh + getCarry(this._gl, gl)) | 0
+  this._hh = (this._hh + hh + getCarry(this._hl, hl)) | 0
 }
 
 Sha512.prototype._hash = function () {
@@ -16470,14 +16495,14 @@ Sha512.prototype._hash = function () {
     H.writeInt32BE(l, offset + 4)
   }
 
-  writeInt64BE(this._a, this._al, 0)
-  writeInt64BE(this._b, this._bl, 8)
-  writeInt64BE(this._c, this._cl, 16)
-  writeInt64BE(this._d, this._dl, 24)
-  writeInt64BE(this._e, this._el, 32)
-  writeInt64BE(this._f, this._fl, 40)
-  writeInt64BE(this._g, this._gl, 48)
-  writeInt64BE(this._h, this._hl, 56)
+  writeInt64BE(this._ah, this._al, 0)
+  writeInt64BE(this._bh, this._bl, 8)
+  writeInt64BE(this._ch, this._cl, 16)
+  writeInt64BE(this._dh, this._dl, 24)
+  writeInt64BE(this._eh, this._el, 32)
+  writeInt64BE(this._fh, this._fl, 40)
+  writeInt64BE(this._gh, this._gl, 48)
+  writeInt64BE(this._hh, this._hl, 56)
 
   return H
 }
@@ -17479,8 +17504,9 @@ function randomBytes (size, cb) {
 
   // This will not work in older browsers.
   // See https://developer.mozilla.org/en-US/docs/Web/API/window.crypto.getRandomValues
-  crypto.getRandomValues(rawBytes)
-
+  if (size > 0) {  // getRandomValues fails on IE if size == 0
+    crypto.getRandomValues(rawBytes)
+  }
   // phantomjs doesn't like a buffer being passed here
   var bytes = new Buffer(rawBytes.buffer)
 
@@ -17494,7 +17520,7 @@ function randomBytes (size, cb) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"_process":205,"buffer":3}],199:[function(require,module,exports){
+},{"_process":204,"buffer":3}],199:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -17842,11 +17868,6 @@ module.exports = function (obj) {
 }
 
 },{}],202:[function(require,module,exports){
-module.exports = Array.isArray || function (arr) {
-  return Object.prototype.toString.call(arr) == '[object Array]';
-};
-
-},{}],203:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {
@@ -17893,7 +17914,7 @@ exports.tmpdir = exports.tmpDir = function () {
 
 exports.EOL = '\n';
 
-},{}],204:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -18121,7 +18142,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":205}],205:[function(require,module,exports){
+},{"_process":204}],204:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -18214,10 +18235,10 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],206:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":207}],207:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":206}],206:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -18226,21 +18247,20 @@ module.exports = require("./lib/_stream_duplex.js")
 'use strict';
 
 /*<replacement>*/
+
 var objectKeys = Object.keys || function (obj) {
   var keys = [];
-  for (var key in obj) keys.push(key);
-  return keys;
-}
+  for (var key in obj) {
+    keys.push(key);
+  }return keys;
+};
 /*</replacement>*/
-
 
 module.exports = Duplex;
 
 /*<replacement>*/
 var processNextTick = require('process-nextick-args');
 /*</replacement>*/
-
-
 
 /*<replacement>*/
 var util = require('core-util-is');
@@ -18255,26 +18275,21 @@ util.inherits(Duplex, Readable);
 var keys = objectKeys(Writable.prototype);
 for (var v = 0; v < keys.length; v++) {
   var method = keys[v];
-  if (!Duplex.prototype[method])
-    Duplex.prototype[method] = Writable.prototype[method];
+  if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
 }
 
 function Duplex(options) {
-  if (!(this instanceof Duplex))
-    return new Duplex(options);
+  if (!(this instanceof Duplex)) return new Duplex(options);
 
   Readable.call(this, options);
   Writable.call(this, options);
 
-  if (options && options.readable === false)
-    this.readable = false;
+  if (options && options.readable === false) this.readable = false;
 
-  if (options && options.writable === false)
-    this.writable = false;
+  if (options && options.writable === false) this.writable = false;
 
   this.allowHalfOpen = true;
-  if (options && options.allowHalfOpen === false)
-    this.allowHalfOpen = false;
+  if (options && options.allowHalfOpen === false) this.allowHalfOpen = false;
 
   this.once('end', onend);
 }
@@ -18283,8 +18298,7 @@ function Duplex(options) {
 function onend() {
   // if we allow half-open state, or if the writable side ended,
   // then we're ok.
-  if (this.allowHalfOpen || this._writableState.ended)
-    return;
+  if (this.allowHalfOpen || this._writableState.ended) return;
 
   // no more data can be written.
   // But allow more writes to happen in this tick.
@@ -18295,13 +18309,12 @@ function onEndNT(self) {
   self.end();
 }
 
-function forEach (xs, f) {
+function forEach(xs, f) {
   for (var i = 0, l = xs.length; i < l; i++) {
     f(xs[i], i);
   }
 }
-
-},{"./_stream_readable":209,"./_stream_writable":211,"core-util-is":212,"inherits":200,"process-nextick-args":213}],208:[function(require,module,exports){
+},{"./_stream_readable":208,"./_stream_writable":210,"core-util-is":211,"inherits":200,"process-nextick-args":213}],207:[function(require,module,exports){
 // a passthrough stream.
 // basically just the most minimal sort of Transform stream.
 // Every written chunk gets output as-is.
@@ -18320,17 +18333,15 @@ util.inherits = require('inherits');
 util.inherits(PassThrough, Transform);
 
 function PassThrough(options) {
-  if (!(this instanceof PassThrough))
-    return new PassThrough(options);
+  if (!(this instanceof PassThrough)) return new PassThrough(options);
 
   Transform.call(this, options);
 }
 
-PassThrough.prototype._transform = function(chunk, encoding, cb) {
+PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-
-},{"./_stream_transform":210,"core-util-is":212,"inherits":200}],209:[function(require,module,exports){
+},{"./_stream_transform":209,"core-util-is":211,"inherits":200}],208:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -18340,11 +18351,9 @@ module.exports = Readable;
 var processNextTick = require('process-nextick-args');
 /*</replacement>*/
 
-
 /*<replacement>*/
 var isArray = require('isarray');
 /*</replacement>*/
-
 
 /*<replacement>*/
 var Buffer = require('buffer').Buffer;
@@ -18355,21 +18364,20 @@ Readable.ReadableState = ReadableState;
 var EE = require('events');
 
 /*<replacement>*/
-var EElistenerCount = function(emitter, type) {
+var EElistenerCount = function (emitter, type) {
   return emitter.listeners(type).length;
 };
 /*</replacement>*/
 
-
-
 /*<replacement>*/
 var Stream;
-(function (){try{
-  Stream = require('st' + 'ream');
-}catch(_){}finally{
-  if (!Stream)
-    Stream = require('events').EventEmitter;
-}}())
+(function () {
+  try {
+    Stream = require('st' + 'ream');
+  } catch (_) {} finally {
+    if (!Stream) Stream = require('events').EventEmitter;
+  }
+})();
 /*</replacement>*/
 
 var Buffer = require('buffer').Buffer;
@@ -18379,11 +18387,9 @@ var util = require('core-util-is');
 util.inherits = require('inherits');
 /*</replacement>*/
 
-
-
 /*<replacement>*/
 var debugUtil = require('util');
-var debug;
+var debug = undefined;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
 } else {
@@ -18405,17 +18411,16 @@ function ReadableState(options, stream) {
   // make all the buffer merging and length checks go away
   this.objectMode = !!options.objectMode;
 
-  if (stream instanceof Duplex)
-    this.objectMode = this.objectMode || !!options.readableObjectMode;
+  if (stream instanceof Duplex) this.objectMode = this.objectMode || !!options.readableObjectMode;
 
   // the point at which it stops calling _read() to fill the buffer
   // Note: 0 is a valid value, means "don't call _read preemptively ever"
   var hwm = options.highWaterMark;
   var defaultHwm = this.objectMode ? 16 : 16 * 1024;
-  this.highWaterMark = (hwm || hwm === 0) ? hwm : defaultHwm;
+  this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
 
   // cast to ints.
-  this.highWaterMark = ~~this.highWaterMark;
+  this.highWaterMark = ~ ~this.highWaterMark;
 
   this.buffer = [];
   this.length = 0;
@@ -18437,6 +18442,7 @@ function ReadableState(options, stream) {
   this.needReadable = false;
   this.emittedReadable = false;
   this.readableListening = false;
+  this.resumeScheduled = false;
 
   // Crypto is kind of old and crusty.  Historically, its default string
   // encoding is 'binary' so we have to make this configurable.
@@ -18456,8 +18462,7 @@ function ReadableState(options, stream) {
   this.decoder = null;
   this.encoding = null;
   if (options.encoding) {
-    if (!StringDecoder)
-      StringDecoder = require('string_decoder/').StringDecoder;
+    if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
     this.decoder = new StringDecoder(options.encoding);
     this.encoding = options.encoding;
   }
@@ -18467,16 +18472,14 @@ var Duplex;
 function Readable(options) {
   Duplex = Duplex || require('./_stream_duplex');
 
-  if (!(this instanceof Readable))
-    return new Readable(options);
+  if (!(this instanceof Readable)) return new Readable(options);
 
   this._readableState = new ReadableState(options, this);
 
   // legacy
   this.readable = true;
 
-  if (options && typeof options.read === 'function')
-    this._read = options.read;
+  if (options && typeof options.read === 'function') this._read = options.read;
 
   Stream.call(this);
 }
@@ -18485,7 +18488,7 @@ function Readable(options) {
 // This returns true if the highWaterMark has not been hit yet,
 // similar to how Writable.write() returns true if you should
 // write() some more.
-Readable.prototype.push = function(chunk, encoding) {
+Readable.prototype.push = function (chunk, encoding) {
   var state = this._readableState;
 
   if (!state.objectMode && typeof chunk === 'string') {
@@ -18500,12 +18503,12 @@ Readable.prototype.push = function(chunk, encoding) {
 };
 
 // Unshift should *always* be something directly out of read()
-Readable.prototype.unshift = function(chunk) {
+Readable.prototype.unshift = function (chunk) {
   var state = this._readableState;
   return readableAddChunk(this, state, chunk, '', true);
 };
 
-Readable.prototype.isPaused = function() {
+Readable.prototype.isPaused = function () {
   return this._readableState.flowing === false;
 };
 
@@ -18524,26 +18527,28 @@ function readableAddChunk(stream, state, chunk, encoding, addToFront) {
       var e = new Error('stream.unshift() after end event');
       stream.emit('error', e);
     } else {
-      if (state.decoder && !addToFront && !encoding)
+      var skipAdd;
+      if (state.decoder && !addToFront && !encoding) {
         chunk = state.decoder.write(chunk);
+        skipAdd = !state.objectMode && chunk.length === 0;
+      }
 
-      if (!addToFront)
-        state.reading = false;
+      if (!addToFront) state.reading = false;
 
-      // if we want the data now, just emit it.
-      if (state.flowing && state.length === 0 && !state.sync) {
-        stream.emit('data', chunk);
-        stream.read(0);
-      } else {
-        // update the buffer info.
-        state.length += state.objectMode ? 1 : chunk.length;
-        if (addToFront)
-          state.buffer.unshift(chunk);
-        else
-          state.buffer.push(chunk);
+      // Don't add to the buffer if we've decoded to an empty string chunk and
+      // we're not in object mode
+      if (!skipAdd) {
+        // if we want the data now, just emit it.
+        if (state.flowing && state.length === 0 && !state.sync) {
+          stream.emit('data', chunk);
+          stream.read(0);
+        } else {
+          // update the buffer info.
+          state.length += state.objectMode ? 1 : chunk.length;
+          if (addToFront) state.buffer.unshift(chunk);else state.buffer.push(chunk);
 
-        if (state.needReadable)
-          emitReadable(stream);
+          if (state.needReadable) emitReadable(stream);
+        }
       }
 
       maybeReadMore(stream, state);
@@ -18555,7 +18560,6 @@ function readableAddChunk(stream, state, chunk, encoding, addToFront) {
   return needMoreData(state);
 }
 
-
 // if it's past the high water mark, we can push in some more.
 // Also, if we have no data yet, we can stand some
 // more bytes.  This is to work around cases where hwm=0,
@@ -18564,16 +18568,12 @@ function readableAddChunk(stream, state, chunk, encoding, addToFront) {
 // needReadable was set, then we ought to push more, so that another
 // 'readable' event will be triggered.
 function needMoreData(state) {
-  return !state.ended &&
-         (state.needReadable ||
-          state.length < state.highWaterMark ||
-          state.length === 0);
+  return !state.ended && (state.needReadable || state.length < state.highWaterMark || state.length === 0);
 }
 
 // backwards compatibility.
-Readable.prototype.setEncoding = function(enc) {
-  if (!StringDecoder)
-    StringDecoder = require('string_decoder/').StringDecoder;
+Readable.prototype.setEncoding = function (enc) {
+  if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
   this._readableState.decoder = new StringDecoder(enc);
   this._readableState.encoding = enc;
   return this;
@@ -18598,29 +18598,22 @@ function computeNewHighWaterMark(n) {
 }
 
 function howMuchToRead(n, state) {
-  if (state.length === 0 && state.ended)
-    return 0;
+  if (state.length === 0 && state.ended) return 0;
 
-  if (state.objectMode)
-    return n === 0 ? 0 : 1;
+  if (state.objectMode) return n === 0 ? 0 : 1;
 
   if (n === null || isNaN(n)) {
     // only flow one buffer at a time
-    if (state.flowing && state.buffer.length)
-      return state.buffer[0].length;
-    else
-      return state.length;
+    if (state.flowing && state.buffer.length) return state.buffer[0].length;else return state.length;
   }
 
-  if (n <= 0)
-    return 0;
+  if (n <= 0) return 0;
 
   // If we're asking for more than the target buffer level,
   // then raise the water mark.  Bump up to the next highest
   // power of 2, to prevent increasing it excessively in tiny
   // amounts.
-  if (n > state.highWaterMark)
-    state.highWaterMark = computeNewHighWaterMark(n);
+  if (n > state.highWaterMark) state.highWaterMark = computeNewHighWaterMark(n);
 
   // don't have that much.  return null, unless we've ended.
   if (n > state.length) {
@@ -18636,25 +18629,19 @@ function howMuchToRead(n, state) {
 }
 
 // you can override either this method, or the async _read(n) below.
-Readable.prototype.read = function(n) {
+Readable.prototype.read = function (n) {
   debug('read', n);
   var state = this._readableState;
   var nOrig = n;
 
-  if (typeof n !== 'number' || n > 0)
-    state.emittedReadable = false;
+  if (typeof n !== 'number' || n > 0) state.emittedReadable = false;
 
   // if we're doing read(0) to trigger a readable event, but we
   // already have a bunch of data in the buffer, then just trigger
   // the 'readable' event and move on.
-  if (n === 0 &&
-      state.needReadable &&
-      (state.length >= state.highWaterMark || state.ended)) {
+  if (n === 0 && state.needReadable && (state.length >= state.highWaterMark || state.ended)) {
     debug('read: emitReadable', state.length, state.ended);
-    if (state.length === 0 && state.ended)
-      endReadable(this);
-    else
-      emitReadable(this);
+    if (state.length === 0 && state.ended) endReadable(this);else emitReadable(this);
     return null;
   }
 
@@ -18662,8 +18649,7 @@ Readable.prototype.read = function(n) {
 
   // if we've ended, and we're now clear, then finish it up.
   if (n === 0 && state.ended) {
-    if (state.length === 0)
-      endReadable(this);
+    if (state.length === 0) endReadable(this);
     return null;
   }
 
@@ -18711,8 +18697,7 @@ Readable.prototype.read = function(n) {
     state.reading = true;
     state.sync = true;
     // if the length is currently zero, then we *need* a readable event.
-    if (state.length === 0)
-      state.needReadable = true;
+    if (state.length === 0) state.needReadable = true;
     // call internal read method
     this._read(state.highWaterMark);
     state.sync = false;
@@ -18720,14 +18705,10 @@ Readable.prototype.read = function(n) {
 
   // If _read pushed data synchronously, then `reading` will be false,
   // and we need to re-evaluate how much data we can return to the user.
-  if (doRead && !state.reading)
-    n = howMuchToRead(nOrig, state);
+  if (doRead && !state.reading) n = howMuchToRead(nOrig, state);
 
   var ret;
-  if (n > 0)
-    ret = fromList(n, state);
-  else
-    ret = null;
+  if (n > 0) ret = fromList(n, state);else ret = null;
 
   if (ret === null) {
     state.needReadable = true;
@@ -18738,31 +18719,23 @@ Readable.prototype.read = function(n) {
 
   // If we have nothing in the buffer, then we want to know
   // as soon as we *do* get something into the buffer.
-  if (state.length === 0 && !state.ended)
-    state.needReadable = true;
+  if (state.length === 0 && !state.ended) state.needReadable = true;
 
   // If we tried to read() past the EOF, then emit end on the next tick.
-  if (nOrig !== n && state.ended && state.length === 0)
-    endReadable(this);
+  if (nOrig !== n && state.ended && state.length === 0) endReadable(this);
 
-  if (ret !== null)
-    this.emit('data', ret);
+  if (ret !== null) this.emit('data', ret);
 
   return ret;
 };
 
 function chunkInvalid(state, chunk) {
   var er = null;
-  if (!(Buffer.isBuffer(chunk)) &&
-      typeof chunk !== 'string' &&
-      chunk !== null &&
-      chunk !== undefined &&
-      !state.objectMode) {
+  if (!Buffer.isBuffer(chunk) && typeof chunk !== 'string' && chunk !== null && chunk !== undefined && !state.objectMode) {
     er = new TypeError('Invalid non-string/buffer chunk');
   }
   return er;
 }
-
 
 function onEofChunk(stream, state) {
   if (state.ended) return;
@@ -18788,10 +18761,7 @@ function emitReadable(stream) {
   if (!state.emittedReadable) {
     debug('emitReadable', state.flowing);
     state.emittedReadable = true;
-    if (state.sync)
-      processNextTick(emitReadable_, stream);
-    else
-      emitReadable_(stream);
+    if (state.sync) processNextTick(emitReadable_, stream);else emitReadable_(stream);
   }
 }
 
@@ -18800,7 +18770,6 @@ function emitReadable_(stream) {
   stream.emit('readable');
   flow(stream);
 }
-
 
 // at this point, the user has presumably seen the 'readable' event,
 // and called read() to consume some data.  that may have triggered
@@ -18817,15 +18786,12 @@ function maybeReadMore(stream, state) {
 
 function maybeReadMore_(stream, state) {
   var len = state.length;
-  while (!state.reading && !state.flowing && !state.ended &&
-         state.length < state.highWaterMark) {
+  while (!state.reading && !state.flowing && !state.ended && state.length < state.highWaterMark) {
     debug('maybeReadMore read 0');
     stream.read(0);
     if (len === state.length)
       // didn't get any data, stop spinning.
-      break;
-    else
-      len = state.length;
+      break;else len = state.length;
   }
   state.readingMore = false;
 }
@@ -18834,11 +18800,11 @@ function maybeReadMore_(stream, state) {
 // call cb(er, data) where data is <= n in length.
 // for virtual (non-string, non-buffer) streams, "length" is somewhat
 // arbitrary, and perhaps not very meaningful.
-Readable.prototype._read = function(n) {
+Readable.prototype._read = function (n) {
   this.emit('error', new Error('not implemented'));
 };
 
-Readable.prototype.pipe = function(dest, pipeOpts) {
+Readable.prototype.pipe = function (dest, pipeOpts) {
   var src = this;
   var state = this._readableState;
 
@@ -18856,15 +18822,10 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
   state.pipesCount += 1;
   debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
 
-  var doEnd = (!pipeOpts || pipeOpts.end !== false) &&
-              dest !== process.stdout &&
-              dest !== process.stderr;
+  var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
 
   var endFn = doEnd ? onend : cleanup;
-  if (state.endEmitted)
-    processNextTick(endFn);
-  else
-    src.once('end', endFn);
+  if (state.endEmitted) processNextTick(endFn);else src.once('end', endFn);
 
   dest.on('unpipe', onunpipe);
   function onunpipe(readable) {
@@ -18906,9 +18867,7 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     // flowing again.
     // So, if this is awaiting a drain, then we just call it now.
     // If we don't know, then assume that we are waiting for one.
-    if (state.awaitDrain &&
-        (!dest._writableState || dest._writableState.needDrain))
-      ondrain();
+    if (state.awaitDrain && (!dest._writableState || dest._writableState.needDrain)) ondrain();
   }
 
   src.on('data', ondata);
@@ -18919,10 +18878,7 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
       // If the user unpiped during `dest.write()`, it is possible
       // to get stuck in a permanently paused state if that write
       // also returned false.
-      if (state.pipesCount === 1 &&
-          state.pipes[0] === dest &&
-          src.listenerCount('data') === 1 &&
-          !cleanedUp) {
+      if (state.pipesCount === 1 && state.pipes[0] === dest && src.listenerCount('data') === 1 && !cleanedUp) {
         debug('false write response, pause', src._readableState.awaitDrain);
         src._readableState.awaitDrain++;
       }
@@ -18936,18 +18892,11 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     debug('onerror', er);
     unpipe();
     dest.removeListener('error', onerror);
-    if (EElistenerCount(dest, 'error') === 0)
-      dest.emit('error', er);
+    if (EElistenerCount(dest, 'error') === 0) dest.emit('error', er);
   }
   // This is a brutally ugly hack to make sure that our error handler
   // is attached before any userland ones.  NEVER DO THIS.
-  if (!dest._events || !dest._events.error)
-    dest.on('error', onerror);
-  else if (isArray(dest._events.error))
-    dest._events.error.unshift(onerror);
-  else
-    dest._events.error = [onerror, dest._events.error];
-
+  if (!dest._events || !dest._events.error) dest.on('error', onerror);else if (isArray(dest._events.error)) dest._events.error.unshift(onerror);else dest._events.error = [onerror, dest._events.error];
 
   // Both close and finish should trigger unpipe, but only once.
   function onclose() {
@@ -18980,11 +18929,10 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
 };
 
 function pipeOnDrain(src) {
-  return function() {
+  return function () {
     var state = src._readableState;
     debug('pipeOnDrain', state.awaitDrain);
-    if (state.awaitDrain)
-      state.awaitDrain--;
+    if (state.awaitDrain) state.awaitDrain--;
     if (state.awaitDrain === 0 && EElistenerCount(src, 'data')) {
       state.flowing = true;
       flow(src);
@@ -18992,29 +18940,24 @@ function pipeOnDrain(src) {
   };
 }
 
-
-Readable.prototype.unpipe = function(dest) {
+Readable.prototype.unpipe = function (dest) {
   var state = this._readableState;
 
   // if we're not piping anywhere, then do nothing.
-  if (state.pipesCount === 0)
-    return this;
+  if (state.pipesCount === 0) return this;
 
   // just one destination.  most common case.
   if (state.pipesCount === 1) {
     // passed in one, but it's not the right one.
-    if (dest && dest !== state.pipes)
-      return this;
+    if (dest && dest !== state.pipes) return this;
 
-    if (!dest)
-      dest = state.pipes;
+    if (!dest) dest = state.pipes;
 
     // got a match.
     state.pipes = null;
     state.pipesCount = 0;
     state.flowing = false;
-    if (dest)
-      dest.emit('unpipe', this);
+    if (dest) dest.emit('unpipe', this);
     return this;
   }
 
@@ -19028,20 +18971,18 @@ Readable.prototype.unpipe = function(dest) {
     state.pipesCount = 0;
     state.flowing = false;
 
-    for (var i = 0; i < len; i++)
-      dests[i].emit('unpipe', this);
-    return this;
+    for (var _i = 0; _i < len; _i++) {
+      dests[_i].emit('unpipe', this);
+    }return this;
   }
 
   // try to find the right one.
   var i = indexOf(state.pipes, dest);
-  if (i === -1)
-    return this;
+  if (i === -1) return this;
 
   state.pipes.splice(i, 1);
   state.pipesCount -= 1;
-  if (state.pipesCount === 1)
-    state.pipes = state.pipes[0];
+  if (state.pipesCount === 1) state.pipes = state.pipes[0];
 
   dest.emit('unpipe', this);
 
@@ -19050,7 +18991,7 @@ Readable.prototype.unpipe = function(dest) {
 
 // set up data events if they are asked for
 // Ensure readable listeners eventually get something
-Readable.prototype.on = function(ev, fn) {
+Readable.prototype.on = function (ev, fn) {
   var res = Stream.prototype.on.call(this, ev, fn);
 
   // If listening to data, and it has not explicitly been paused,
@@ -19059,7 +19000,7 @@ Readable.prototype.on = function(ev, fn) {
     this.resume();
   }
 
-  if (ev === 'readable' && this.readable) {
+  if (ev === 'readable' && !this._readableState.endEmitted) {
     var state = this._readableState;
     if (!state.readableListening) {
       state.readableListening = true;
@@ -19084,7 +19025,7 @@ function nReadingNextTick(self) {
 
 // pause() and resume() are remnants of the legacy readable stream API
 // If the user uses them, then switch into old mode.
-Readable.prototype.resume = function() {
+Readable.prototype.resume = function () {
   var state = this._readableState;
   if (!state.flowing) {
     debug('resume');
@@ -19110,11 +19051,10 @@ function resume_(stream, state) {
   state.resumeScheduled = false;
   stream.emit('resume');
   flow(stream);
-  if (state.flowing && !state.reading)
-    stream.read(0);
+  if (state.flowing && !state.reading) stream.read(0);
 }
 
-Readable.prototype.pause = function() {
+Readable.prototype.pause = function () {
   debug('call pause flowing=%j', this._readableState.flowing);
   if (false !== this._readableState.flowing) {
     debug('pause');
@@ -19137,32 +19077,27 @@ function flow(stream) {
 // wrap an old-style stream as the async data source.
 // This is *not* part of the readable stream interface.
 // It is an ugly unfortunate mess of history.
-Readable.prototype.wrap = function(stream) {
+Readable.prototype.wrap = function (stream) {
   var state = this._readableState;
   var paused = false;
 
   var self = this;
-  stream.on('end', function() {
+  stream.on('end', function () {
     debug('wrapped end');
     if (state.decoder && !state.ended) {
       var chunk = state.decoder.end();
-      if (chunk && chunk.length)
-        self.push(chunk);
+      if (chunk && chunk.length) self.push(chunk);
     }
 
     self.push(null);
   });
 
-  stream.on('data', function(chunk) {
+  stream.on('data', function (chunk) {
     debug('wrapped data');
-    if (state.decoder)
-      chunk = state.decoder.write(chunk);
+    if (state.decoder) chunk = state.decoder.write(chunk);
 
     // don't skip over falsy values in objectMode
-    if (state.objectMode && (chunk === null || chunk === undefined))
-      return;
-    else if (!state.objectMode && (!chunk || !chunk.length))
-      return;
+    if (state.objectMode && (chunk === null || chunk === undefined)) return;else if (!state.objectMode && (!chunk || !chunk.length)) return;
 
     var ret = self.push(chunk);
     if (!ret) {
@@ -19175,21 +19110,23 @@ Readable.prototype.wrap = function(stream) {
   // important when wrapping filters and duplexes.
   for (var i in stream) {
     if (this[i] === undefined && typeof stream[i] === 'function') {
-      this[i] = function(method) { return function() {
-        return stream[method].apply(stream, arguments);
-      }; }(i);
+      this[i] = function (method) {
+        return function () {
+          return stream[method].apply(stream, arguments);
+        };
+      }(i);
     }
   }
 
   // proxy certain important events.
   var events = ['error', 'close', 'destroy', 'pause', 'resume'];
-  forEach(events, function(ev) {
+  forEach(events, function (ev) {
     stream.on(ev, self.emit.bind(self, ev));
   });
 
   // when we try to consume some more bytes, simply unpause the
   // underlying stream.
-  self._read = function(n) {
+  self._read = function (n) {
     debug('wrapped _read', n);
     if (paused) {
       paused = false;
@@ -19199,7 +19136,6 @@ Readable.prototype.wrap = function(stream) {
 
   return self;
 };
-
 
 // exposed for testing purposes only.
 Readable._fromList = fromList;
@@ -19214,21 +19150,11 @@ function fromList(n, state) {
   var ret;
 
   // nothing in the list, definitely empty.
-  if (list.length === 0)
-    return null;
+  if (list.length === 0) return null;
 
-  if (length === 0)
-    ret = null;
-  else if (objectMode)
-    ret = list.shift();
-  else if (!n || n >= length) {
+  if (length === 0) ret = null;else if (objectMode) ret = list.shift();else if (!n || n >= length) {
     // read it all, truncate the array.
-    if (stringMode)
-      ret = list.join('');
-    else if (list.length === 1)
-      ret = list[0];
-    else
-      ret = Buffer.concat(list, length);
+    if (stringMode) ret = list.join('');else if (list.length === 1) ret = list[0];else ret = Buffer.concat(list, length);
     list.length = 0;
   } else {
     // read just some of it.
@@ -19244,25 +19170,16 @@ function fromList(n, state) {
     } else {
       // complex case.
       // we have enough to cover it, but it spans past the first buffer.
-      if (stringMode)
-        ret = '';
-      else
-        ret = new Buffer(n);
+      if (stringMode) ret = '';else ret = new Buffer(n);
 
       var c = 0;
       for (var i = 0, l = list.length; i < l && c < n; i++) {
         var buf = list[0];
         var cpy = Math.min(n - c, buf.length);
 
-        if (stringMode)
-          ret += buf.slice(0, cpy);
-        else
-          buf.copy(ret, c, 0, cpy);
+        if (stringMode) ret += buf.slice(0, cpy);else buf.copy(ret, c, 0, cpy);
 
-        if (cpy < buf.length)
-          list[0] = buf.slice(cpy);
-        else
-          list.shift();
+        if (cpy < buf.length) list[0] = buf.slice(cpy);else list.shift();
 
         c += cpy;
       }
@@ -19277,8 +19194,7 @@ function endReadable(stream) {
 
   // If we get here before consuming all the bytes, then that is a
   // bug in node.  Should never happen.
-  if (state.length > 0)
-    throw new Error('endReadable called on non-empty stream');
+  if (state.length > 0) throw new Error('endReadable called on non-empty stream');
 
   if (!state.endEmitted) {
     state.ended = true;
@@ -19295,21 +19211,20 @@ function endReadableNT(state, stream) {
   }
 }
 
-function forEach (xs, f) {
+function forEach(xs, f) {
   for (var i = 0, l = xs.length; i < l; i++) {
     f(xs[i], i);
   }
 }
 
-function indexOf (xs, x) {
+function indexOf(xs, x) {
   for (var i = 0, l = xs.length; i < l; i++) {
     if (xs[i] === x) return i;
   }
   return -1;
 }
-
 }).call(this,require('_process'))
-},{"./_stream_duplex":207,"_process":205,"buffer":3,"core-util-is":212,"events":199,"inherits":200,"isarray":202,"process-nextick-args":213,"string_decoder/":220,"util":2}],210:[function(require,module,exports){
+},{"./_stream_duplex":206,"_process":204,"buffer":3,"core-util-is":211,"events":199,"inherits":200,"isarray":212,"process-nextick-args":213,"string_decoder/":220,"util":2}],209:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -19365,9 +19280,8 @@ util.inherits = require('inherits');
 
 util.inherits(Transform, Duplex);
 
-
 function TransformState(stream) {
-  this.afterTransform = function(er, data) {
+  this.afterTransform = function (er, data) {
     return afterTransform(stream, er, data);
   };
 
@@ -19375,6 +19289,7 @@ function TransformState(stream) {
   this.transforming = false;
   this.writecb = null;
   this.writechunk = null;
+  this.writeencoding = null;
 }
 
 function afterTransform(stream, er, data) {
@@ -19383,17 +19298,14 @@ function afterTransform(stream, er, data) {
 
   var cb = ts.writecb;
 
-  if (!cb)
-    return stream.emit('error', new Error('no writecb in Transform class'));
+  if (!cb) return stream.emit('error', new Error('no writecb in Transform class'));
 
   ts.writechunk = null;
   ts.writecb = null;
 
-  if (data !== null && data !== undefined)
-    stream.push(data);
+  if (data !== null && data !== undefined) stream.push(data);
 
-  if (cb)
-    cb(er);
+  cb(er);
 
   var rs = stream._readableState;
   rs.reading = false;
@@ -19402,10 +19314,8 @@ function afterTransform(stream, er, data) {
   }
 }
 
-
 function Transform(options) {
-  if (!(this instanceof Transform))
-    return new Transform(options);
+  if (!(this instanceof Transform)) return new Transform(options);
 
   Duplex.call(this, options);
 
@@ -19423,24 +19333,19 @@ function Transform(options) {
   this._readableState.sync = false;
 
   if (options) {
-    if (typeof options.transform === 'function')
-      this._transform = options.transform;
+    if (typeof options.transform === 'function') this._transform = options.transform;
 
-    if (typeof options.flush === 'function')
-      this._flush = options.flush;
+    if (typeof options.flush === 'function') this._flush = options.flush;
   }
 
-  this.once('prefinish', function() {
-    if (typeof this._flush === 'function')
-      this._flush(function(er) {
-        done(stream, er);
-      });
-    else
-      done(stream);
+  this.once('prefinish', function () {
+    if (typeof this._flush === 'function') this._flush(function (er) {
+      done(stream, er);
+    });else done(stream);
   });
 }
 
-Transform.prototype.push = function(chunk, encoding) {
+Transform.prototype.push = function (chunk, encoding) {
   this._transformState.needTransform = false;
   return Duplex.prototype.push.call(this, chunk, encoding);
 };
@@ -19455,28 +19360,25 @@ Transform.prototype.push = function(chunk, encoding) {
 // Call `cb(err)` when you are done with this chunk.  If you pass
 // an error, then that'll put the hurt on the whole operation.  If you
 // never call cb(), then you'll never get another chunk.
-Transform.prototype._transform = function(chunk, encoding, cb) {
+Transform.prototype._transform = function (chunk, encoding, cb) {
   throw new Error('not implemented');
 };
 
-Transform.prototype._write = function(chunk, encoding, cb) {
+Transform.prototype._write = function (chunk, encoding, cb) {
   var ts = this._transformState;
   ts.writecb = cb;
   ts.writechunk = chunk;
   ts.writeencoding = encoding;
   if (!ts.transforming) {
     var rs = this._readableState;
-    if (ts.needTransform ||
-        rs.needReadable ||
-        rs.length < rs.highWaterMark)
-      this._read(rs.highWaterMark);
+    if (ts.needTransform || rs.needReadable || rs.length < rs.highWaterMark) this._read(rs.highWaterMark);
   }
 };
 
 // Doesn't matter what the args are here.
 // _transform does all the work.
 // That we got here means that the readable side wants more data.
-Transform.prototype._read = function(n) {
+Transform.prototype._read = function (n) {
   var ts = this._transformState;
 
   if (ts.writechunk !== null && ts.writecb && !ts.transforming) {
@@ -19489,26 +19391,22 @@ Transform.prototype._read = function(n) {
   }
 };
 
-
 function done(stream, er) {
-  if (er)
-    return stream.emit('error', er);
+  if (er) return stream.emit('error', er);
 
   // if there's nothing in the write buffer, then that means
   // that nothing more will ever be provided
   var ws = stream._writableState;
   var ts = stream._transformState;
 
-  if (ws.length)
-    throw new Error('calling transform done when ws.length != 0');
+  if (ws.length) throw new Error('calling transform done when ws.length != 0');
 
-  if (ts.transforming)
-    throw new Error('calling transform done when still transforming');
+  if (ts.transforming) throw new Error('calling transform done when still transforming');
 
   return stream.push(null);
 }
-
-},{"./_stream_duplex":207,"core-util-is":212,"inherits":200}],211:[function(require,module,exports){
+},{"./_stream_duplex":206,"core-util-is":211,"inherits":200}],210:[function(require,module,exports){
+(function (process){
 // A bit simpler than readable streams.
 // Implement an async ._write(chunk, encoding, cb), and it'll handle all
 // the drain event emission and buffering.
@@ -19521,6 +19419,9 @@ module.exports = Writable;
 var processNextTick = require('process-nextick-args');
 /*</replacement>*/
 
+/*<replacement>*/
+var asyncWrite = !process.browser && ['v0.10', 'v0.9.'].indexOf(process.version.slice(0, 5)) > -1 ? setImmediate : processNextTick;
+/*</replacement>*/
 
 /*<replacement>*/
 var Buffer = require('buffer').Buffer;
@@ -19528,12 +19429,10 @@ var Buffer = require('buffer').Buffer;
 
 Writable.WritableState = WritableState;
 
-
 /*<replacement>*/
 var util = require('core-util-is');
 util.inherits = require('inherits');
 /*</replacement>*/
-
 
 /*<replacement>*/
 var internalUtil = {
@@ -19541,16 +19440,15 @@ var internalUtil = {
 };
 /*</replacement>*/
 
-
-
 /*<replacement>*/
 var Stream;
-(function (){try{
-  Stream = require('st' + 'ream');
-}catch(_){}finally{
-  if (!Stream)
-    Stream = require('events').EventEmitter;
-}}())
+(function () {
+  try {
+    Stream = require('st' + 'ream');
+  } catch (_) {} finally {
+    if (!Stream) Stream = require('events').EventEmitter;
+  }
+})();
 /*</replacement>*/
 
 var Buffer = require('buffer').Buffer;
@@ -19576,18 +19474,17 @@ function WritableState(options, stream) {
   // contains buffers or objects.
   this.objectMode = !!options.objectMode;
 
-  if (stream instanceof Duplex)
-    this.objectMode = this.objectMode || !!options.writableObjectMode;
+  if (stream instanceof Duplex) this.objectMode = this.objectMode || !!options.writableObjectMode;
 
   // the point at which write() starts returning false
   // Note: 0 is a valid value, means that we always return false if
   // the entire buffer is not flushed immediately on write()
   var hwm = options.highWaterMark;
   var defaultHwm = this.objectMode ? 16 : 16 * 1024;
-  this.highWaterMark = (hwm || hwm === 0) ? hwm : defaultHwm;
+  this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
 
   // cast to ints.
-  this.highWaterMark = ~~this.highWaterMark;
+  this.highWaterMark = ~ ~this.highWaterMark;
 
   this.needDrain = false;
   // at the start of calling end()
@@ -19631,7 +19528,7 @@ function WritableState(options, stream) {
   this.bufferProcessing = false;
 
   // the callback that's passed to _write(chunk,cb)
-  this.onwrite = function(er) {
+  this.onwrite = function (er) {
     onwrite(stream, er);
   };
 
@@ -19654,6 +19551,14 @@ function WritableState(options, stream) {
 
   // True if the error was already emitted and should not be thrown again
   this.errorEmitted = false;
+
+  // count buffered requests
+  this.bufferedRequestCount = 0;
+
+  // create the two objects needed to store the corked requests
+  // they are not a linked list, as no new elements are inserted in there
+  this.corkedRequestsFree = new CorkedRequest(this);
+  this.corkedRequestsFree.next = new CorkedRequest(this);
 }
 
 WritableState.prototype.getBuffer = function writableStateGetBuffer() {
@@ -19666,15 +19571,15 @@ WritableState.prototype.getBuffer = function writableStateGetBuffer() {
   return out;
 };
 
-(function (){try {
-Object.defineProperty(WritableState.prototype, 'buffer', {
-  get: internalUtil.deprecate(function() {
-    return this.getBuffer();
-  }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' +
-     'instead.')
-});
-}catch(_){}}());
-
+(function () {
+  try {
+    Object.defineProperty(WritableState.prototype, 'buffer', {
+      get: internalUtil.deprecate(function () {
+        return this.getBuffer();
+      }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' + 'instead.')
+    });
+  } catch (_) {}
+})();
 
 var Duplex;
 function Writable(options) {
@@ -19682,8 +19587,7 @@ function Writable(options) {
 
   // Writable ctor is applied to Duplexes, though they're not
   // instanceof Writable, they're instanceof Readable.
-  if (!(this instanceof Writable) && !(this instanceof Duplex))
-    return new Writable(options);
+  if (!(this instanceof Writable) && !(this instanceof Duplex)) return new Writable(options);
 
   this._writableState = new WritableState(options, this);
 
@@ -19691,21 +19595,18 @@ function Writable(options) {
   this.writable = true;
 
   if (options) {
-    if (typeof options.write === 'function')
-      this._write = options.write;
+    if (typeof options.write === 'function') this._write = options.write;
 
-    if (typeof options.writev === 'function')
-      this._writev = options.writev;
+    if (typeof options.writev === 'function') this._writev = options.writev;
   }
 
   Stream.call(this);
 }
 
 // Otherwise people can pipe Writable streams, which is just wrong.
-Writable.prototype.pipe = function() {
+Writable.prototype.pipe = function () {
   this.emit('error', new Error('Cannot pipe. Not readable.'));
 };
-
 
 function writeAfterEnd(stream, cb) {
   var er = new Error('write after end');
@@ -19722,11 +19623,7 @@ function writeAfterEnd(stream, cb) {
 function validChunk(stream, state, chunk, cb) {
   var valid = true;
 
-  if (!(Buffer.isBuffer(chunk)) &&
-      typeof chunk !== 'string' &&
-      chunk !== null &&
-      chunk !== undefined &&
-      !state.objectMode) {
+  if (!Buffer.isBuffer(chunk) && typeof chunk !== 'string' && chunk !== null && chunk !== undefined && !state.objectMode) {
     var er = new TypeError('Invalid non-string/buffer chunk');
     stream.emit('error', er);
     processNextTick(cb, er);
@@ -19735,7 +19632,7 @@ function validChunk(stream, state, chunk, cb) {
   return valid;
 }
 
-Writable.prototype.write = function(chunk, encoding, cb) {
+Writable.prototype.write = function (chunk, encoding, cb) {
   var state = this._writableState;
   var ret = false;
 
@@ -19744,17 +19641,11 @@ Writable.prototype.write = function(chunk, encoding, cb) {
     encoding = null;
   }
 
-  if (Buffer.isBuffer(chunk))
-    encoding = 'buffer';
-  else if (!encoding)
-    encoding = state.defaultEncoding;
+  if (Buffer.isBuffer(chunk)) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
 
-  if (typeof cb !== 'function')
-    cb = nop;
+  if (typeof cb !== 'function') cb = nop;
 
-  if (state.ended)
-    writeAfterEnd(this, cb);
-  else if (validChunk(this, state, chunk, cb)) {
+  if (state.ended) writeAfterEnd(this, cb);else if (validChunk(this, state, chunk, cb)) {
     state.pendingcb++;
     ret = writeOrBuffer(this, state, chunk, encoding, cb);
   }
@@ -19762,42 +19653,31 @@ Writable.prototype.write = function(chunk, encoding, cb) {
   return ret;
 };
 
-Writable.prototype.cork = function() {
+Writable.prototype.cork = function () {
   var state = this._writableState;
 
   state.corked++;
 };
 
-Writable.prototype.uncork = function() {
+Writable.prototype.uncork = function () {
   var state = this._writableState;
 
   if (state.corked) {
     state.corked--;
 
-    if (!state.writing &&
-        !state.corked &&
-        !state.finished &&
-        !state.bufferProcessing &&
-        state.bufferedRequest)
-      clearBuffer(this, state);
+    if (!state.writing && !state.corked && !state.finished && !state.bufferProcessing && state.bufferedRequest) clearBuffer(this, state);
   }
 };
 
 Writable.prototype.setDefaultEncoding = function setDefaultEncoding(encoding) {
   // node::ParseEncoding() requires lower case.
-  if (typeof encoding === 'string')
-    encoding = encoding.toLowerCase();
-  if (!(['hex', 'utf8', 'utf-8', 'ascii', 'binary', 'base64',
-'ucs2', 'ucs-2','utf16le', 'utf-16le', 'raw']
-.indexOf((encoding + '').toLowerCase()) > -1))
-    throw new TypeError('Unknown encoding: ' + encoding);
+  if (typeof encoding === 'string') encoding = encoding.toLowerCase();
+  if (!(['hex', 'utf8', 'utf-8', 'ascii', 'binary', 'base64', 'ucs2', 'ucs-2', 'utf16le', 'utf-16le', 'raw'].indexOf((encoding + '').toLowerCase()) > -1)) throw new TypeError('Unknown encoding: ' + encoding);
   this._writableState.defaultEncoding = encoding;
 };
 
 function decodeChunk(state, chunk, encoding) {
-  if (!state.objectMode &&
-      state.decodeStrings !== false &&
-      typeof chunk === 'string') {
+  if (!state.objectMode && state.decodeStrings !== false && typeof chunk === 'string') {
     chunk = new Buffer(chunk, encoding);
   }
   return chunk;
@@ -19809,16 +19689,14 @@ function decodeChunk(state, chunk, encoding) {
 function writeOrBuffer(stream, state, chunk, encoding, cb) {
   chunk = decodeChunk(state, chunk, encoding);
 
-  if (Buffer.isBuffer(chunk))
-    encoding = 'buffer';
+  if (Buffer.isBuffer(chunk)) encoding = 'buffer';
   var len = state.objectMode ? 1 : chunk.length;
 
   state.length += len;
 
   var ret = state.length < state.highWaterMark;
   // we must ensure that previous needDrain will not be reset to false.
-  if (!ret)
-    state.needDrain = true;
+  if (!ret) state.needDrain = true;
 
   if (state.writing || state.corked) {
     var last = state.lastBufferedRequest;
@@ -19828,6 +19706,7 @@ function writeOrBuffer(stream, state, chunk, encoding, cb) {
     } else {
       state.bufferedRequest = state.lastBufferedRequest;
     }
+    state.bufferedRequestCount += 1;
   } else {
     doWrite(stream, state, false, len, chunk, encoding, cb);
   }
@@ -19840,19 +19719,13 @@ function doWrite(stream, state, writev, len, chunk, encoding, cb) {
   state.writecb = cb;
   state.writing = true;
   state.sync = true;
-  if (writev)
-    stream._writev(chunk, state.onwrite);
-  else
-    stream._write(chunk, encoding, state.onwrite);
+  if (writev) stream._writev(chunk, state.onwrite);else stream._write(chunk, encoding, state.onwrite);
   state.sync = false;
 }
 
 function onwriteError(stream, state, sync, er, cb) {
   --state.pendingcb;
-  if (sync)
-    processNextTick(cb, er);
-  else
-    cb(er);
+  if (sync) processNextTick(cb, er);else cb(er);
 
   stream._writableState.errorEmitted = true;
   stream.emit('error', er);
@@ -19872,30 +19745,26 @@ function onwrite(stream, er) {
 
   onwriteStateUpdate(state);
 
-  if (er)
-    onwriteError(stream, state, sync, er, cb);
-  else {
+  if (er) onwriteError(stream, state, sync, er, cb);else {
     // Check if we're actually ready to finish, but don't emit yet
     var finished = needFinish(state);
 
-    if (!finished &&
-        !state.corked &&
-        !state.bufferProcessing &&
-        state.bufferedRequest) {
+    if (!finished && !state.corked && !state.bufferProcessing && state.bufferedRequest) {
       clearBuffer(stream, state);
     }
 
     if (sync) {
-      processNextTick(afterWrite, stream, state, finished, cb);
+      /*<replacement>*/
+      asyncWrite(afterWrite, stream, state, finished, cb);
+      /*</replacement>*/
     } else {
-      afterWrite(stream, state, finished, cb);
-    }
+        afterWrite(stream, state, finished, cb);
+      }
   }
 }
 
 function afterWrite(stream, state, finished, cb) {
-  if (!finished)
-    onwriteDrain(stream, state);
+  if (!finished) onwriteDrain(stream, state);
   state.pendingcb--;
   cb();
   finishMaybe(stream, state);
@@ -19911,7 +19780,6 @@ function onwriteDrain(stream, state) {
   }
 }
 
-
 // if there's something in the buffer waiting, then process it
 function clearBuffer(stream, state) {
   state.bufferProcessing = true;
@@ -19919,26 +19787,26 @@ function clearBuffer(stream, state) {
 
   if (stream._writev && entry && entry.next) {
     // Fast case, write everything using _writev()
-    var buffer = [];
-    var cbs = [];
+    var l = state.bufferedRequestCount;
+    var buffer = new Array(l);
+    var holder = state.corkedRequestsFree;
+    holder.entry = entry;
+
+    var count = 0;
     while (entry) {
-      cbs.push(entry.callback);
-      buffer.push(entry);
+      buffer[count] = entry;
       entry = entry.next;
+      count += 1;
     }
 
-    // count the one we are adding, as well.
-    // TODO(isaacs) clean this up
+    doWrite(stream, state, true, state.length, buffer, '', holder.finish);
+
+    // doWrite is always async, defer these to save a bit of time
+    // as the hot path ends with doWrite
     state.pendingcb++;
     state.lastBufferedRequest = null;
-    doWrite(stream, state, true, state.length, buffer, '', function(err) {
-      for (var i = 0; i < cbs.length; i++) {
-        state.pendingcb--;
-        cbs[i](err);
-      }
-    });
-
-    // Clear buffer
+    state.corkedRequestsFree = holder.next;
+    holder.next = null;
   } else {
     // Slow case, write chunks one-by-one
     while (entry) {
@@ -19958,20 +19826,21 @@ function clearBuffer(stream, state) {
       }
     }
 
-    if (entry === null)
-      state.lastBufferedRequest = null;
+    if (entry === null) state.lastBufferedRequest = null;
   }
+
+  state.bufferedRequestCount = 0;
   state.bufferedRequest = entry;
   state.bufferProcessing = false;
 }
 
-Writable.prototype._write = function(chunk, encoding, cb) {
+Writable.prototype._write = function (chunk, encoding, cb) {
   cb(new Error('not implemented'));
 };
 
 Writable.prototype._writev = null;
 
-Writable.prototype.end = function(chunk, encoding, cb) {
+Writable.prototype.end = function (chunk, encoding, cb) {
   var state = this._writableState;
 
   if (typeof chunk === 'function') {
@@ -19983,8 +19852,7 @@ Writable.prototype.end = function(chunk, encoding, cb) {
     encoding = null;
   }
 
-  if (chunk !== null && chunk !== undefined)
-    this.write(chunk, encoding);
+  if (chunk !== null && chunk !== undefined) this.write(chunk, encoding);
 
   // .end() fully uncorks
   if (state.corked) {
@@ -19993,17 +19861,11 @@ Writable.prototype.end = function(chunk, encoding, cb) {
   }
 
   // ignore unnecessary end() calls.
-  if (!state.ending && !state.finished)
-    endWritable(this, state, cb);
+  if (!state.ending && !state.finished) endWritable(this, state, cb);
 };
 
-
 function needFinish(state) {
-  return (state.ending &&
-          state.length === 0 &&
-          state.bufferedRequest === null &&
-          !state.finished &&
-          !state.writing);
+  return state.ending && state.length === 0 && state.bufferedRequest === null && !state.finished && !state.writing;
 }
 
 function prefinish(stream, state) {
@@ -20031,15 +19893,38 @@ function endWritable(stream, state, cb) {
   state.ending = true;
   finishMaybe(stream, state);
   if (cb) {
-    if (state.finished)
-      processNextTick(cb);
-    else
-      stream.once('finish', cb);
+    if (state.finished) processNextTick(cb);else stream.once('finish', cb);
   }
   state.ended = true;
+  stream.writable = false;
 }
 
-},{"./_stream_duplex":207,"buffer":3,"core-util-is":212,"events":199,"inherits":200,"process-nextick-args":213,"util-deprecate":214}],212:[function(require,module,exports){
+// It seems a linked list but it is not
+// there will be only 2 of these for each stream
+function CorkedRequest(state) {
+  var _this = this;
+
+  this.next = null;
+  this.entry = null;
+
+  this.finish = function (err) {
+    var entry = _this.entry;
+    _this.entry = null;
+    while (entry) {
+      var cb = entry.callback;
+      state.pendingcb--;
+      cb(err);
+      entry = entry.next;
+    }
+    if (state.corkedRequestsFree) {
+      state.corkedRequestsFree.next = _this;
+    } else {
+      state.corkedRequestsFree = _this;
+    }
+  };
+}
+}).call(this,require('_process'))
+},{"./_stream_duplex":206,"_process":204,"buffer":3,"core-util-is":211,"events":199,"inherits":200,"process-nextick-args":213,"util-deprecate":214}],211:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -20150,7 +20035,9 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../../../insert-module-globals/node_modules/is-buffer/index.js")})
-},{"../../../../insert-module-globals/node_modules/is-buffer/index.js":201}],213:[function(require,module,exports){
+},{"../../../../insert-module-globals/node_modules/is-buffer/index.js":201}],212:[function(require,module,exports){
+arguments[4][6][0].apply(exports,arguments)
+},{"dup":6}],213:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -20174,7 +20061,7 @@ function nextTick(fn) {
 }
 
 }).call(this,require('_process'))
-},{"_process":205}],214:[function(require,module,exports){
+},{"_process":204}],214:[function(require,module,exports){
 (function (global){
 
 /**
@@ -20248,7 +20135,7 @@ function config (name) {
 },{}],215:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":208}],216:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":207}],216:[function(require,module,exports){
 var Stream = (function (){
   try {
     return require('st' + 'ream'); // hack to fix a circular dependency issue when used with browserify
@@ -20262,13 +20149,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":207,"./lib/_stream_passthrough.js":208,"./lib/_stream_readable.js":209,"./lib/_stream_transform.js":210,"./lib/_stream_writable.js":211}],217:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":206,"./lib/_stream_passthrough.js":207,"./lib/_stream_readable.js":208,"./lib/_stream_transform.js":209,"./lib/_stream_writable.js":210}],217:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":210}],218:[function(require,module,exports){
+},{"./lib/_stream_transform.js":209}],218:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":211}],219:[function(require,module,exports){
+},{"./lib/_stream_writable.js":210}],219:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -20397,7 +20284,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":199,"inherits":200,"readable-stream/duplex.js":206,"readable-stream/passthrough.js":215,"readable-stream/readable.js":216,"readable-stream/transform.js":217,"readable-stream/writable.js":218}],220:[function(require,module,exports){
+},{"events":199,"inherits":200,"readable-stream/duplex.js":205,"readable-stream/passthrough.js":215,"readable-stream/readable.js":216,"readable-stream/transform.js":217,"readable-stream/writable.js":218}],220:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -21741,7 +21628,7 @@ module.exports = function(arr, obj){
 }).call(this);
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":205}],224:[function(require,module,exports){
+},{"_process":204}],224:[function(require,module,exports){
 // This is free and unencumbered software released into the public domain.
 // See LICENSE.md for more information.
 
@@ -24926,7 +24813,7 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"./v1/index":230}],228:[function(require,module,exports){
+},{"./v1/index":231}],228:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -25212,7 +25099,69 @@ function driver(url, authToken) {
 exports.Driver = Driver;
 exports.driver = driver;
 
-},{"../version":249,"./internal/connector":236,"./internal/pool":241,"./internal/stream-observer":242,"./session":247}],229:[function(require,module,exports){
+},{"../version":249,"./internal/connector":237,"./internal/pool":241,"./internal/stream-observer":242,"./session":247}],229:[function(require,module,exports){
+/**
+ * Copyright (c) 2002-2016 "Neo Technology,"
+ * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ *
+ * This file is part of Neo4j.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// A common place for constructing error objects, to keep them
+// uniform across the driver surface.
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function newError(message) {
+  var code = arguments.length <= 1 || arguments[1] === undefined ? "N/A" : arguments[1];
+
+  // TODO: Idea is that we can check the cod here and throw sub-classes
+  // of Neo4jError as appropriate
+  return new Neo4jError(message, code);
+}
+
+var Neo4jError = (function (_Error) {
+  _inherits(Neo4jError, _Error);
+
+  function Neo4jError(message) {
+    var code = arguments.length <= 1 || arguments[1] === undefined ? "N/A" : arguments[1];
+
+    _classCallCheck(this, Neo4jError);
+
+    _get(Object.getPrototypeOf(Neo4jError.prototype), "constructor", this).call(this, message);
+    this.message = message;
+    this.code = code;
+  }
+
+  return Neo4jError;
+})(Error);
+
+exports.newError = newError;
+exports.Neo4jError = Neo4jError;
+
+},{}],230:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -25433,7 +25382,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{}],230:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -25465,10 +25414,13 @@ var _driver = require('./driver');
 
 var _graphTypes = require('./graph-types');
 
+var _error = require('./error');
+
 exports['default'] = {
   driver: _driver.driver,
   int: _integer.int,
   isInt: _integer.isInt,
+  Neo4jError: _error.Neo4jError,
   auth: {
     basic: function basic(username, password) {
       return { scheme: "basic", principal: username, credentials: password };
@@ -25484,7 +25436,7 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"./driver":228,"./graph-types":229,"./integer":231}],231:[function(require,module,exports){
+},{"./driver":228,"./error":229,"./graph-types":230,"./integer":232}],232:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -25508,6 +25460,18 @@ module.exports = exports['default'];
 // https://github.com/dcodeIO/Long.js
 // License Apache 2
 
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _error = require("./error");
+
 /**
  * Constructs a 64 bit two's-complement integer, given its low and high 32 bit values as *signed* integers.
  *  See the from* functions below for more convenient ways of constructing Integers.
@@ -25518,15 +25482,6 @@ module.exports = exports['default'];
  * @param {number} high The high (signed) 32 bits of the long
  * @constructor
  */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var Integer = (function () {
   function Integer(low, high) {
@@ -25960,7 +25915,7 @@ var Integer = (function () {
      */
     value: function div(divisor) {
       if (!Integer.isInteger(divisor)) divisor = Integer.fromValue(divisor);
-      if (divisor.isZero()) throw new Error('division by zero');
+      if (divisor.isZero()) throw (0, _error.newError)('division by zero');
       if (this.isZero()) return Integer.ZERO;
       var approx, rem, res;
       if (this.equals(Integer.MIN_VALUE)) {
@@ -26196,13 +26151,13 @@ Integer.fromBits = function (lowBits, highBits) {
  * @expose
  */
 Integer.fromString = function (str, radix) {
-  if (str.length === 0) throw Error('number format error: empty string');
+  if (str.length === 0) throw (0, _error.newError)('number format error: empty string');
   if (str === "NaN" || str === "Infinity" || str === "+Infinity" || str === "-Infinity") return Integer.ZERO;
   radix = radix || 10;
-  if (radix < 2 || 36 < radix) throw Error('radix out of range: ' + radix);
+  if (radix < 2 || 36 < radix) throw (0, _error.newError)('radix out of range: ' + radix);
 
   var p;
-  if ((p = str.indexOf('-')) > 0) throw Error('number format error: interior "-" character: ' + str);else if (p === 0) return Integer.fromString(str.substring(1), radix).negate();
+  if ((p = str.indexOf('-')) > 0) throw (0, _error.newError)('number format error: interior "-" character: ' + str);else if (p === 0) return Integer.fromString(str.substring(1), radix).negate();
 
   // Do several (8) digits each time through the loop, so as to
   // minimize the calls to the very expensive emulated div.
@@ -26344,7 +26299,7 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{}],232:[function(require,module,exports){
+},{"./error":229}],233:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -26382,6 +26337,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _error = require('./../error');
 
 var _node = require("buffer");
 /**
@@ -26925,7 +26882,7 @@ var CombinedBuffer = (function (_BaseBuffer3) {
     var length = 0;
     for (var i = 0; i < buffers.length; i++) {
       length += buffers[i].length;
-    };
+    }
     _get(Object.getPrototypeOf(CombinedBuffer.prototype), "constructor", this).call(this, length);
     this._buffers = buffers;
   }
@@ -26947,7 +26904,7 @@ var CombinedBuffer = (function (_BaseBuffer3) {
         } else {
           return buffer.getUInt8(position);
         }
-      };
+      }
     }
   }, {
     key: "getInt8",
@@ -27030,7 +26987,7 @@ var NodeBuffer = (function (_BaseBuffer4) {
         val._buffer.copy(this._buffer, position, val.position, val.position + bytesToCopy);
         val.position += bytesToCopy;
       } else {
-        throw new Error("Copying not yet implemented.");
+        throw (0, _error.newError)("Copying not yet implemented.");
       }
     }
   }, {
@@ -27071,7 +27028,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{"buffer":3}],233:[function(require,module,exports){
+},{"./../error":229,"buffer":3}],234:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -27123,7 +27080,7 @@ var _os = require('os');
 
 var _buf = require('./buf');
 
-var _error = require('./error');
+var _error = require('./../error');
 
 var _CONNECTION_IDGEN = 0;
 
@@ -27181,6 +27138,7 @@ var TrustStrategy = {
         onSuccess();
       }
     });
+    socket.on('error', onFailure);
     return socket;
   },
   TRUST_ON_FIRST_USE: function TRUST_ON_FIRST_USE(opts, onSuccess, onFailure) {
@@ -27216,6 +27174,7 @@ var TrustStrategy = {
         }
       });
     });
+    socket.on('error', onFailure);
     return socket;
   }
 };
@@ -27226,7 +27185,9 @@ function connect(opts, onSuccess) {
   } : arguments[2];
 
   if (opts.encrypted === false) {
-    return _net2['default'].connect(opts.port, opts.host, onSuccess);
+    var conn = _net2['default'].connect(opts.port, opts.host, onSuccess);
+    conn.on('error', onFailure);
+    return conn;
   } else if (TrustStrategy[opts.trust]) {
     return TrustStrategy[opts.trust](opts, onSuccess, onFailure);
   } else {
@@ -27307,7 +27268,7 @@ var NodeChannel = (function () {
         // console.log( "[Conn#"+this.id+"] SEND: ", buffer.toString() );
         this._conn.write(buffer._buffer);
       } else {
-        throw new Error("Don't know how to write: " + buffer);
+        throw (0, _error.newError)("Don't know how to write: " + buffer);
       }
     }
 
@@ -27347,7 +27308,7 @@ try {
 exports['default'] = _nodeChannelModule;
 module.exports = exports['default'];
 
-},{"./buf":232,"./error":237,"crypto":7,"fs":1,"net":1,"os":203,"path":204,"readline":1,"tls":1}],234:[function(require,module,exports){
+},{"./../error":229,"./buf":233,"crypto":7,"fs":1,"net":1,"os":202,"path":203,"readline":1,"tls":1}],235:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -27381,7 +27342,7 @@ var _log = require("./log");
 
 var _buf = require("./buf");
 
-var _error = require('./error');
+var _error = require('./../error');
 
 /**
  * Create a new WebSocketChannel to be used in web browsers.
@@ -27414,11 +27375,18 @@ var WebSocketChannel = (function () {
         return;
       }
     }
-    this._url = scheme + ":" + opts.host + ":" + opts.port;
+    this._url = scheme + "://" + opts.host + ":" + opts.port;
     this._ws = new WebSocket(this._url);
     this._ws.binaryType = "arraybuffer";
 
     var self = this;
+    //All connection errors are not sent to the error handler
+    //we must also check for dirty close calls
+    this._ws.onclose = function (e) {
+      if (!e.wasClean) {
+        self._handleConnectionError();
+      }
+    };
     this._ws.onopen = function () {
       // Drain all pending messages
       var pending = self._pending;
@@ -27464,7 +27432,7 @@ var WebSocketChannel = (function () {
       } else if (buffer instanceof _buf.HeapBuffer) {
         this._ws.send(buffer._buffer);
       } else {
-        throw new Error("Don't know how to send buffer: " + buffer);
+        throw (0, _error.newError)("Don't know how to send buffer: " + buffer);
       }
     }
 
@@ -27494,7 +27462,7 @@ var _websocketChannelModule = { channel: WebSocketChannel, available: available 
 exports["default"] = _websocketChannelModule;
 module.exports = exports["default"];
 
-},{"./buf":232,"./error":237,"./log":239}],235:[function(require,module,exports){
+},{"./../error":229,"./buf":233,"./log":239}],236:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -27749,7 +27717,7 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"./buf":232}],236:[function(require,module,exports){
+},{"./buf":233}],237:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -27809,7 +27777,7 @@ var _graphTypes2 = _interopRequireDefault(_graphTypes);
 
 var _integer = require('../integer');
 
-var _error = require('./error');
+var _error = require('./../error');
 
 var Channel = undefined;
 if (_chWebsocket2["default"].available) {
@@ -27817,7 +27785,7 @@ if (_chWebsocket2["default"].available) {
 } else if (_chNode2["default"].available) {
   Channel = _chNode2["default"].channel;
 } else {
-  throw new Error("Fatal: No compatible transport available. Need to run on a platform with the WebSocket API.");
+  throw (0, _error.newError)("Fatal: No compatible transport available. Need to run on a platform with the WebSocket API.");
 }
 
 var
@@ -28241,71 +28209,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{"../graph-types":229,"../integer":231,"./buf":232,"./ch-node":233,"./ch-websocket":234,"./chunking":235,"./error":237,"./features":238,"./packstream":240}],237:[function(require,module,exports){
-/**
- * Copyright (c) 2002-2016 "Neo Technology,"
- * Network Engine for Objects in Lund AB [http://neotechnology.com]
- *
- * This file is part of Neo4j.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// A common place for constructing error objects, to keep them
-// uniform across the driver surface.
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function newError(message) {
-  var code = arguments.length <= 1 || arguments[1] === undefined ? "N/A" : arguments[1];
-
-  // TODO: Idea is that we can check the cod here and throw sub-classes
-  // of Neo4jError as appropriate
-  return new Neo4jError(message, code);
-}
-
-// TODO: This should be moved into public API
-
-var Neo4jError = (function (_Error) {
-  _inherits(Neo4jError, _Error);
-
-  function Neo4jError(message) {
-    var code = arguments.length <= 1 || arguments[1] === undefined ? "N/A" : arguments[1];
-
-    _classCallCheck(this, Neo4jError);
-
-    _get(Object.getPrototypeOf(Neo4jError.prototype), "constructor", this).call(this, message);
-    this.message = message;
-    this.code = code;
-  }
-
-  return Neo4jError;
-})(Error);
-
-exports.newError = newError;
-exports.Neo4jError = Neo4jError;
-
-},{}],238:[function(require,module,exports){
+},{"../graph-types":230,"../integer":232,"./../error":229,"./buf":233,"./ch-node":234,"./ch-websocket":235,"./chunking":236,"./features":238,"./packstream":240}],238:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -28428,6 +28332,8 @@ var _utf82 = _interopRequireDefault(_utf8);
 
 var _integer = require("../integer");
 
+var _error = require('./../error');
+
 var MAX_CHUNK_SIZE = 16383,
     TINY_STRING = 0x80,
     TINY_LIST = 0x90,
@@ -28535,7 +28441,7 @@ var Packer = (function () {
           this.pack(x[key]);
         }
       } else {
-        throw new Error("Cannot pack this value: " + x);
+        throw (0, _error.newError)("Cannot pack this value: " + x);
       }
     }
   }, {
@@ -28601,7 +28507,7 @@ var Packer = (function () {
         this._ch.writeUInt8(size % 256);
         this._ch.writeBytes(bytes);
       } else {
-        throw new ProtocolError("UTF-8 strings of size " + size + " are not supported");
+        throw (0, _error.newError)("UTF-8 strings of size " + size + " are not supported");
       }
     }
   }, {
@@ -28623,7 +28529,7 @@ var Packer = (function () {
         this._ch.writeUInt8((size / 256 >> 0) % 256);
         this._ch.writeUInt8(size % 256);
       } else {
-        throw new ProtocolError("Lists of size " + size + " are not supported");
+        throw (0, _error.newError)("Lists of size " + size + " are not supported");
       }
     }
   }, {
@@ -28645,7 +28551,7 @@ var Packer = (function () {
         this._ch.writeUInt8((size / 256 >> 0) % 256);
         this._ch.writeUInt8(size % 256);
       } else {
-        throw new ProtocolError("Maps of size " + size + " are not supported");
+        throw (0, _error.newError)("Maps of size " + size + " are not supported");
       }
     }
   }, {
@@ -28663,7 +28569,7 @@ var Packer = (function () {
         this._ch.writeUInt8(size / 256 >> 0);
         this._ch.writeUInt8(size % 256);
       } else {
-        throw new ProtocolError("Structures of size " + size + " are not supported");
+        throw (0, _error.newError)("Structures of size " + size + " are not supported");
       }
     }
   }]);
@@ -28776,7 +28682,7 @@ var Unpacker = (function () {
       } else if (markerHigh == 0xB0) {
         return this.unpackStruct(markerLow, buffer);
       } else {
-        throw new ProtocolError("Unknown packed value with marker " + marker.toString(16));
+        throw (0, _error.newError)("Unknown packed value with marker " + marker.toString(16));
       }
     }
   }]);
@@ -28791,7 +28697,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{"../integer":231,"./buf":232,"./log":239,"./utf8":243}],241:[function(require,module,exports){
+},{"../integer":232,"./../error":229,"./buf":233,"./log":239,"./utf8":243}],241:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -29063,19 +28969,21 @@ module.exports = exports["default"];
 // This module defines a cross-platform UTF-8 encoder and decoder that works
 // with the Buffer API defined in buf.js
 
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _buf = require("./buf");
 
 var _buf2 = _interopRequireDefault(_buf);
 
 var _string_decoder = require('string_decoder');
+
+var _error = require('./../error');
 
 var platformObj = {};
 
@@ -29088,15 +28996,15 @@ try {
 
     platformObj = {
       "encode": function encode(str) {
-        return new _buf2["default"].NodeBuffer(new node.Buffer(str, "UTF-8"));
+        return new _buf2['default'].NodeBuffer(new node.Buffer(str, "UTF-8"));
       },
       "decode": function decode(buffer, length) {
-        if (buffer instanceof _buf2["default"].NodeBuffer) {
+        if (buffer instanceof _buf2['default'].NodeBuffer) {
           var start = buffer.position,
               end = start + length;
           buffer.position = end;
           return buffer._buffer.toString('utf8', start, end);
-        } else if (buffer instanceof _buf2["default"].CombinedBuffer) {
+        } else if (buffer instanceof _buf2['default'].CombinedBuffer) {
           var out = streamDecodeCombinedBuffer(buffer._buffers, length, function (partBuffer) {
             return decoder.write(partBuffer._buffer);
           }, function () {
@@ -29104,7 +29012,7 @@ try {
           });
           return out;
         } else {
-          throw new Error("Don't know how to decode strings from `" + buffer + "`.");
+          throw (0, _error.newError)("Don't know how to decode strings from `" + buffer + "`.");
         }
       }
     };
@@ -29122,15 +29030,15 @@ try {
 
     platformObj = {
       "encode": function encode(str) {
-        return new _buf2["default"].HeapBuffer(encoder.encode(str).buffer);
+        return new _buf2['default'].HeapBuffer(encoder.encode(str).buffer);
       },
       "decode": function decode(buffer, length) {
-        if (buffer instanceof _buf2["default"].HeapBuffer) {
+        if (buffer instanceof _buf2['default'].HeapBuffer) {
           return decoder.decode(buffer.readView(length));
         } else {
           // Decoding combined buffer is complicated. For simplicity, for now,
           // we simply copy the combined buffer into a regular buffer and decode that.
-          var tmpBuf = _buf2["default"].alloc(length);
+          var tmpBuf = _buf2['default'].alloc(length);
           for (var i = 0; i < length; i++) {
             tmpBuf.writeUInt8(buffer.readUInt8());
           };
@@ -29162,10 +29070,10 @@ var streamDecodeCombinedBuffer = function streamDecodeCombinedBuffer(combinedBuf
   return out + endFn();
 };
 
-exports["default"] = platformObj;
-module.exports = exports["default"];
+exports['default'] = platformObj;
+module.exports = exports['default'];
 
-},{"../../external/text-encoding/index":224,"./buf":232,"buffer":3,"string_decoder":220}],244:[function(require,module,exports){
+},{"../../external/text-encoding/index":224,"./../error":229,"./buf":233,"buffer":3,"string_decoder":220}],244:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -29195,7 +29103,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _internalError = require("./internal/error");
+var _error = require("./error");
 
 function generateFieldLookup(keys) {
   var lookup = {};
@@ -29278,14 +29186,14 @@ var Record = (function () {
       if (!(typeof key === "number")) {
         index = this._fieldLookup[key];
         if (index === undefined) {
-          throw (0, _internalError.newError)("This record has no field with key '" + key + "', available key are: [" + this.keys + "].");
+          throw (0, _error.newError)("This record has no field with key '" + key + "', available key are: [" + this.keys + "].");
         }
       } else {
         index = key;
       }
 
       if (index > this._fields.length - 1 || index < 0) {
-        throw (0, _internalError.newError)("This record has no field with index '" + index + "'. Remember that indexes start at `0`, " + "and make sure your statement returns records in the shape you meant it to.");
+        throw (0, _error.newError)("This record has no field with index '" + index + "'. Remember that indexes start at `0`, " + "and make sure your statement returns records in the shape you meant it to.");
       }
 
       return this._fields[index];
@@ -29297,7 +29205,7 @@ var Record = (function () {
 
 exports.Record = Record;
 
-},{"./internal/error":237}],245:[function(require,module,exports){
+},{"./error":229}],245:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -29644,7 +29552,7 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"./integer":231}],246:[function(require,module,exports){
+},{"./integer":232}],246:[function(require,module,exports){
 /**
  * Copyright (c) 2002-2016 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -29906,7 +29814,7 @@ var Session = (function () {
       var _this = this;
 
       if (this._hasTx) {
-        throw new Error("Cannot have multiple transactions open for the session. Use multiple sessions or close the transaction before opening a new one.");
+        throw new newError("Cannot have multiple transactions open for the session. Use multiple sessions or close the transaction before opening a new one.");
       }
 
       this._hasTx = true;

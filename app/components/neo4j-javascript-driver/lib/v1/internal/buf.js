@@ -36,6 +36,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var _error = require('./../error');
+
 var _node = require("buffer");
 /**
   * Common base with default implementation for most buffer methods.
@@ -578,7 +580,7 @@ var CombinedBuffer = (function (_BaseBuffer3) {
     var length = 0;
     for (var i = 0; i < buffers.length; i++) {
       length += buffers[i].length;
-    };
+    }
     _get(Object.getPrototypeOf(CombinedBuffer.prototype), "constructor", this).call(this, length);
     this._buffers = buffers;
   }
@@ -600,7 +602,7 @@ var CombinedBuffer = (function (_BaseBuffer3) {
         } else {
           return buffer.getUInt8(position);
         }
-      };
+      }
     }
   }, {
     key: "getInt8",
@@ -683,7 +685,7 @@ var NodeBuffer = (function (_BaseBuffer4) {
         val._buffer.copy(this._buffer, position, val.position, val.position + bytesToCopy);
         val.position += bytesToCopy;
       } else {
-        throw new Error("Copying not yet implemented.");
+        throw (0, _error.newError)("Copying not yet implemented.");
       }
     }
   }, {

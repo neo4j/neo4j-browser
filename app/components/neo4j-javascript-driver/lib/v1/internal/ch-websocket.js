@@ -31,7 +31,7 @@ var _log = require("./log");
 
 var _buf = require("./buf");
 
-var _error = require('./error');
+var _error = require('./../error');
 
 /**
  * Create a new WebSocketChannel to be used in web browsers.
@@ -64,11 +64,18 @@ var WebSocketChannel = (function () {
         return;
       }
     }
-    this._url = scheme + ":" + opts.host + ":" + opts.port;
+    this._url = scheme + "://" + opts.host + ":" + opts.port;
     this._ws = new WebSocket(this._url);
     this._ws.binaryType = "arraybuffer";
 
     var self = this;
+    //All connection errors are not sent to the error handler
+    //we must also check for dirty close calls
+    this._ws.onclose = function (e) {
+      if (!e.wasClean) {
+        self._handleConnectionError();
+      }
+    };
     this._ws.onopen = function () {
       // Drain all pending messages
       var pending = self._pending;
@@ -114,7 +121,7 @@ var WebSocketChannel = (function () {
       } else if (buffer instanceof _buf.HeapBuffer) {
         this._ws.send(buffer._buffer);
       } else {
-        throw new Error("Don't know how to send buffer: " + buffer);
+        throw (0, _error.newError)("Don't know how to send buffer: " + buffer);
       }
     }
 
