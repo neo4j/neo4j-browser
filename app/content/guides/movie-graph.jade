@@ -629,14 +629,14 @@ article.guide
         ol
           li Variable length patterns
           li Built-in shortestPath() algorithm
-        hr
-        p
-          small Neo4j Manual
-            ul
-              li
-                a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-variable-length-relationships') variable length relationships
-              li
-                a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-shortest-path') shortestPath
+        //- hr
+        //- p
+        //-   small Neo4j Manual
+        //-     ul
+        //-       li
+        //-         a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-variable-length-relationships') variable length relationships
+        //-       li
+        //-         a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-shortest-path') shortestPath
       .col-sm-9
         p.lead Movies and actors up to 4 "hops" away from Kevin Bacon
         figure
@@ -664,14 +664,14 @@ article.guide
         ol
           li Find actors that Tom Hanks hasn't yet worked with, but his co-actors have.
           li Find someone who can introduce Tom to his potential co-actor.
-        hr
-        p
-          small Neo4j Manual
-            ul
-              li
-                a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-variable-length-relationships') variable length relationships
-              li
-                a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-shortest-path') shortestPath
+        //- hr
+        //- p
+        //-   small Neo4j Manual
+        //-     ul
+        //-       li
+        //-         a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-variable-length-relationships') variable length relationships
+        //-       li
+        //-         a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/query-match.html#match-shortest-path') shortestPath
       .col-sm-9
         p.lead Extend Tom Hanks co-actors, to find co-co-actors who haven't work with Tom Hanks...
         figure
@@ -733,4 +733,4 @@ article.guide
           li
             a(href='http://neo4j.com/developer') Developer resources
           li
-            a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/') Neo4j Manual
+            a(href='{{settings.docs.developer}}{{neo4j.version | neo4jdoc }}/') Neo4j Developer Manual
