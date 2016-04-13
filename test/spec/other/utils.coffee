@@ -132,6 +132,17 @@ describe 'Utils', () ->
       encodeUrl = Utils.escapeHTML text
       expect(Utils.replaceHyperlinkOrEncodeHTML text).toBe "<a href='#{text}' target='_blank'>#{encodeUrl}</a>"
 
+  it 'should not create hrefs from strings that do not contain hypertext protocol', ->
+    testCases = [
+      "www.test.com",
+      "test.com",
+      "bolt://test.com"
+    ]
+
+    testCases.forEach (text) ->
+      console.log text, Utils.replaceHyperlinkOrEncodeHTML text
+      expect(Utils.replaceHyperlinkOrEncodeHTML text).not.toContain "href"
+
   it 'should create hrefs from strings that contain hyperlinks', ->
     link = "http://test.com"
     link2 = "http://dsfasdfsd.com/random?fdsff=d"

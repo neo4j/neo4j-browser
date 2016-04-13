@@ -34,7 +34,7 @@ describe 'Directive: neoTable', () ->
     scope.$apply()
     expect(element.html()).toContain('&lt;script&gt;')
 
-  it 'should build hrefs for hyperlinks in values', inject ($rootScope, $compile) ->
+  it 'should build hrefs for hyperlinks in values for http://neo4j.com', inject ($rootScope, $compile) ->
     scope = $rootScope.$new()
     element = angular.element '<neo-table table-data="val"></neo-table>'
     element = $compile(element)(scope)
@@ -44,3 +44,16 @@ describe 'Directive: neoTable', () ->
       columns: -> ['col']
     scope.$apply()
     expect(element.html()).toContain('href')
+    expect(element.html()).toContain('http://test.com')
+
+  it 'should not build hrefs for www.neo4j.com', inject ($rootScope, $compile) ->
+    scope = $rootScope.$new()
+    element = angular.element '<neo-table table-data="val"></neo-table>'
+    element = $compile(element)(scope)
+    scope.val =
+      rows: -> [['www.neo4j.com']]
+      displayedSize: 1
+      columns: -> ['col']
+    scope.$apply()
+    expect(element.html()).not.toContain('href')
+    expect(element.html()).toContain('www.neo4j.com')

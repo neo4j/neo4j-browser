@@ -124,9 +124,11 @@ class neo.helpers
 
     @replaceHyperlinkOrEncodeHTML = (string) ->
       regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/ig
-      if string.match regex
+      if string.match(regex)
         string.replace regex, (match) ->
-          "<a href='#{match}' target='_blank'>#{replaceHtml match}</a>"
+          if string.match(/(https?)/ig)
+            "<a href='#{match}' target='_blank'>#{replaceHtml match}</a>"
+          else replaceHtml string
       else
         replaceHtml string
 
