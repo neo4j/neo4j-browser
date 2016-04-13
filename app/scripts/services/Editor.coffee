@@ -134,7 +134,7 @@ angular.module('neo4jApp.services')
                       return r)()
                   )
           input = cm.getValue()
-          CypherParser.runHints(cm, cb) if input and input[0] isnt Settings.cmdchar
+          CypherParser.runHints(cm, cb) if not input or (input and input[0] isnt Settings.cmdchar)
 
 
       moveCursorToEndOfLine = (cm) ->
