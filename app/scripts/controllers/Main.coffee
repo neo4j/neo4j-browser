@@ -25,6 +25,7 @@ angular.module('neo4jApp.controllers')
     $controllerProvider.register 'MainCtrl', [
       '$rootScope',
       '$window'
+      '$q'
       'Server'
       'Frame'
       'AuthService'
@@ -36,24 +37,29 @@ angular.module('neo4jApp.controllers')
       'Utils'
       'CurrentUser'
       'ProtocolFactory'
-      ($scope, $window, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, motdService, UDC, Utils, CurrentUser, ProtocolFactory) ->
+      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, motdService, UDC, Utils, CurrentUser, ProtocolFactory) ->
         $scope.CurrentUser = CurrentUser
         $scope.ConnectionStatusService = ConnectionStatusService
 
         $scope.kernel = {}
         $scope.refresh = ->
           return '' if $scope.unauthorized || $scope.offline
-          ProtocolFactory.getMetaService().getMeta().then((res) ->
-            $scope.labels = res.labels
-            $scope.relationships = res.relationships
-            $scope.propertyKeys = res.propertyKeys
-          )
           $scope.server = Server.info $scope.server
-          ProtocolFactory.getVersionService().getVersion($scope.version).then((res) ->
-            $scope.version = res
-          )
           $scope.host = $window.location.host
-          fetchJMX()
+          $q.when()
+          .then( ->
+            ProtocolFactory.getMetaService().getMeta().then((res) ->
+              $scope.labels = res.labels
+              $scope.relationships = res.relationships
+              $scope.propertyKeys = res.propertyKeys
+            )
+          ).then( ->
+            ProtocolFactory.getVersionService().getVersion($scope.version).then((res) ->
+              $scope.version = res
+            )
+          ).then( ->
+            fetchJMX()
+          )
 
         fetchJMX = ->
           ProtocolFactory.getJmxService().getJmx([
