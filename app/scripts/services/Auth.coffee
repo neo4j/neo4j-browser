@@ -56,7 +56,7 @@ angular.module('neo4jApp.services')
       authorizationRequired: ->
         #Make call without auth headers
         q = $q.defer()
-        p = @makeRequest(withoutCredentials = yes)
+        p = @makeRequest(withoutCredentials = yes, retainConnection = yes)
         p.then(
           (r) ->
             ##Success, no auth required
