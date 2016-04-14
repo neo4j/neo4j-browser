@@ -145,3 +145,58 @@ describe 'Service: Sync', () ->
       expect($rootScope.ntn_data.documents[1].syncedAt).toBe(2000)
       done()
     )
+
+  describe 'syncItem', ->
+    describe 'when item key is not grass', ->
+      it 'should add item as json object to new array if key not present', ->
+        expect($rootScope.ntn_data).toBe undefined
+        $rootScope.$digest()
+        $rootScope.ntn_data = {$id: 1} # Set $id to pretend we're connected to service, but no 'documents' = new user
+        SyncService.authenticated = yes # Fake authenticated
+        spyOn(SyncService, 'push').and.returnValue(yes)
+        $rootScope.$digest()
+        SyncService.syncItem({key: 'documents', newvalue: JSON.stringify([{content: 'query1'}])})
+        $rootScope.$digest()
+        expect($rootScope.ntn_data['documents'].length).toBe(1)
+        expect($rootScope.ntn_data['documents'][0].data).toEqual([{content: 'query1'}])
+        expect($rootScope.ntn_data['documents'][0].syncedAt).not.toEqual(0)
+
+      it 'should prepend item as json array to existing array if key already present ', ->
+        $rootScope.$digest()
+        $rootScope.ntn_data = {$id: 1, documents: [{data: [{content: 'query1'}]}]} #data has array structure
+        SyncService.authenticated = yes # Fake authenticated
+        spyOn(SyncService, 'push').and.returnValue(yes)
+        $rootScope.$digest()
+        SyncService.syncItem({key: 'documents', newvalue: JSON.stringify([{content: 'query2'}])})
+        $rootScope.$digest()
+        expect($rootScope.ntn_data['documents'].length).toBe(2)
+        expect($rootScope.ntn_data['documents'][0].data).toEqual([{content: 'query2'}])
+        expect($rootScope.ntn_data['documents'][1].data).toEqual([{content: 'query1'}])
+
+    describe 'when item key is grass', ->
+      it 'should add item as string to new array if key not present', ->
+        expect($rootScope.ntn_data).toBe undefined
+        $rootScope.$digest()
+        $rootScope.ntn_data = {$id: 1} # Set $id to pretend we're connected to service, but no 'grass' key
+        SyncService.authenticated = yes # Fake authenticated
+        spyOn(SyncService, 'push').and.returnValue(yes)
+        $rootScope.$digest()
+        SyncService.syncItem({key: 'grass', newvalue: JSON.stringify({node: {diameter: '50px'}})})
+        $rootScope.$digest()
+        expect($rootScope.ntn_data['grass'].length).toBe(1)
+        expect($rootScope.ntn_data['grass'][0].data).toEqual(JSON.stringify({node: {diameter: '50px'}}))
+        expect($rootScope.ntn_data['grass'][0].syncedAt).not.toEqual(0)
+
+      it 'should prepend new item as string to existing array if key already present ', ->
+        $rootScope.$digest()
+        $rootScope.ntn_data = {$id: 1, grass: [{data: JSON.stringify({node: {diameter: '10px'}})}]} #data is a string
+        SyncService.authenticated = yes # Fake authenticated
+        spyOn(SyncService, 'push').and.returnValue(yes)
+        $rootScope.$digest()
+        SyncService.syncItem({key: 'grass', newvalue: JSON.stringify({node: {diameter: '50px'}})})
+        $rootScope.$digest()
+        expect($rootScope.ntn_data['grass'].length).toBe(2)
+        expect($rootScope.ntn_data['grass'][0].data).toEqual(JSON.stringify({node: {diameter: '50px'}}))
+        expect($rootScope.ntn_data['grass'][1].data).toEqual(JSON.stringify({node: {diameter: '10px'}}))
+
+
