@@ -115,7 +115,7 @@ angular.module('neo4jApp.services')
         newvalue = @getObjectStruct newvalue
         return @inSync = no unless $rootScope.ntn_data
         newSyncVal = @upgradeFormat $rootScope.ntn_data[item.key], item
-        return if Utils.equals newSyncVal[0].data, newvalue.data
+        return if newSyncVal.length &&  Utils.equals newSyncVal[0].data, newvalue.data
         newSyncVal.splice(0, 0, newvalue) # Prepend new val
         newSyncVal.splice(-1,1) unless newSyncVal.length <= 5 #Save history of 5
         newSyncVal[0].syncedAt = (new Date()).getTime()
@@ -164,9 +164,9 @@ angular.module('neo4jApp.services')
       setSyncConnection: (isConnected) ->
         @hasConnection = isConnected
         @setSyncedAt()
-        
+
       upgradeFormat: (data, item) ->
-        return [@getObjectStruct(data)] unless data
+        return [] unless data
         if item.key is 'grass'
           data = [@getObjectStruct(data)] unless Array.isArray(data)
         else
