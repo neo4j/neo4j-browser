@@ -32,12 +32,13 @@ angular.module('neo4jApp.controllers')
       'AuthDataService'
       'ConnectionStatusService'
       'Settings'
+      'SettingsStore'
       'motdService'
       'UsageDataCollectionService'
       'Utils'
       'CurrentUser'
       'ProtocolFactory'
-      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, motdService, UDC, Utils, CurrentUser, ProtocolFactory) ->
+      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory) ->
         $scope.CurrentUser = CurrentUser
         $scope.ConnectionStatusService = ConnectionStatusService
 
@@ -128,17 +129,27 @@ angular.module('neo4jApp.controllers')
           if is_connected
             ConnectionStatusService.setSessionStartTimer new Date()
 
+        setAndSaveSetting = (key, value) ->
+          Settings[key] = value
+          SettingsStore.save()
+
+        onboardingSequence = ->
+          Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
+          setAndSaveSetting('onboarding', false)
+
         pickFirstFrame = ->
           CurrentUser.init()
           AuthService.hasValidAuthorization(retainConnection = yes).then(
             ->
               Frame.closeWhere "#{Settings.cmdchar}server connect"
               Frame.create({input:"#{Settings.initCmd}"})
-              Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
+              onboardingSequence() if Settings.onboarding
             ,
             (r) ->
-              Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
+              if Settings.onboarding then onboardingSequence()
+              else Frame.create({input:"#{Settings.cmdchar}server connect"})
           )
+
         pickFirstFrame()
 
         $scope.$on 'ntn:data_loaded', (evt, authenticated, newUser) ->

@@ -28,7 +28,7 @@
   .local-data-holderdiv(ng-if="!currentUser")
     .local-data-confirm(ng-show="!clearSingleClicked")
       p
-        | This will clear your favourite scripts, grass, command history etc. locally.
+        | This will reset your local storage, clearing favorite scripts, grass, command history and settings.
       div
         button.btn.btn-popup(ng-click="updateClearSingleClicked(1)") Clear local data &nbsp;
           i.sl.sl-bin
@@ -75,13 +75,17 @@
 
   div(ng-if="!currentUser && syncService.hasConnection", ng-controller="SyncSigninController")
     p &nbsp;
-    p With Neo4j Sync you are able to always have fast access to your favorite scripts and styles.
+    h5 Sign In or Register
+    p Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social sign-in
+      | to get started.
+    p 
+      a(play-topic="neo4j-sync") About Neo4j Sync
     alert.top-padded(ng-hide="goodBrowser") 
       | Neo4j Sync is currently only available for some versions of Internet Explorer.
       | If you have any trouble, we'd love to hear from you at&nbsp;
       a(href="mailto:feedback@neotechnology.com")
         | feedback@neotechnology.com
-    button.btn.btn-popup(ng-click="signInToSync()") Sign in to Neo4j Sync
+    button.btn.btn-popup(ng-click="signInToSync()") Sign In / Register
     .box-max
       .checkbox
         label.muted(for="acceptedTermsAndPrivacyCheckBox")
