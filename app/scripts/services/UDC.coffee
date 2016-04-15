@@ -66,6 +66,10 @@ angular.module('neo4jApp.services')
           @save()
           return value
 
+        deleteKey: (key) ->
+          delete @data[key]
+          @save()
+
         increment: (key) ->
           @data[key] = (@data[key] || 0) + 1
           @save()
@@ -77,8 +81,10 @@ angular.module('neo4jApp.services')
           if @connectedUser
             Intercom.update(@userData())
 
-        connectUserWithUserId: (userId) ->
+        connectUserWithUserIdAndName: (userId, name) ->
+          @deleteKey('user_id') # this is to ensure user id is not stored in local storage
           @user_id =  userId
+          @set("name", name ? name : 'Graph Friend')
           @connectUser()
 
         disconnectUser: () ->
@@ -133,7 +139,6 @@ angular.module('neo4jApp.services')
         userData: ->
           userData = $.extend({}, @data)
           delete(userData.events)
-          userData.name = Settings.userName
           if ( @data.neo4j_version && @data.store_id )
             userData.companies = [
               {
