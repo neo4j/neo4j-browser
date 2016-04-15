@@ -1,17 +1,17 @@
 article.guide
   .container-fluid
     .row
-      .col-sm-3
+      .col-sm-2
         .box-max
           img.img-responsive(src='images/neo4j-world.png')
           p.lead.text-right {{ neo4j.edition | uppercase }} EDITION
           p.lead.text-right {{ neo4j.version }}
-      .col-sm-9
+      .col-sm-10
         .teaser.teaser-3
           h3 Learn about Neo4j
           p.lead A graph epiphany awaits you.
           .icon-holder
-            img.icon(src="images/learn-icon.png")
+            .icon.sl.sl-network.green.icon
             ul.topic-bullets
               li What is a graph database?
               li How can I query a graph?
@@ -23,7 +23,7 @@ article.guide
           h3 Jump into code
           p.lead Use Cypher, the graph query language.
           .icon-holder
-            img.icon(src="images/code-icon.png")
+            .icon.sl.sl-window-code.yellow.icon
             ul.topic-bullets
               li Code walk-throughs
               li RDBMS to Graph
@@ -35,7 +35,7 @@ article.guide
           h3 Monitor the system
           p.lead Key system health and status metrics.
           .icon-holder
-            img.icon(src="images/health-icon.png")
+            .icon.sl.sl-heart.red.icon
             ul.topic-bullets
               li Disk utilization
               li Cache activity

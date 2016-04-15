@@ -46,7 +46,8 @@
       position: relative
       &.teaser-3
         width: 30%
-        min-width: 240px
+        min-width: 190px
+        overflow: hidden
       button
         position: absolute
         bottom: 5px
@@ -55,10 +56,20 @@
         outline: none
       .icon
         float: left
+        max-width: 67px
+        width: 25%
+        &.sl
+          font-size: 35px
+          &.green
+            color: #65B144
+          &.yellow
+            color: #FDCC59
+          &.red
+            color: #FF5641
       .topic-bullets
         float: left
         word-wrap: break-word
-        min-width: 150px
+        min-width: 100px
         max-width: 65%
         list-style: none
         padding-left: 10px
