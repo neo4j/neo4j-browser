@@ -4,9 +4,6 @@
   form(ng-controller="SettingsCtrl")
     div(ng-show="showMessengerButton()")
       h5 Messaging
-      .form-group
-        label(for="userName", tooltip="For in-browser chat with Neo4j staff", tooltip-placement="top") Name
-          input.form-control.input#userName(type='text', ng-model="settings.userName", ng-change="save()")
       .checkbox
         label(for="shouldReportUdc")
           input#shouldReportUdc(type="checkbox", ng-model="settings.shouldReportUdc", ng-change="save()")

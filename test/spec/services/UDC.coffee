@@ -61,13 +61,13 @@ describe 'Service: UDC', () ->
       UsageDataCollectionService.reset()
       UsageDataCollectionService.loadUDC()
       expect(Intercom.user).not.toHaveBeenCalled()
-      UsageDataCollectionService.connectUserWithUserId("userid")
+      UsageDataCollectionService.connectUserWithUserIdAndName("userid")
       expect(Intercom.user).toHaveBeenCalledWith("userid", jasmine.any(Object))
       expect(UsageDataCollectionService.connectedUser).toBeTruthy()
 
     it 'should connect user with id once UDC has been loaded', ->
       UsageDataCollectionService.reset()
-      UsageDataCollectionService.connectUserWithUserId("userid")
+      UsageDataCollectionService.connectUserWithUserIdAndName("userid")
       expect(Intercom.user).not.toHaveBeenCalled()
       UsageDataCollectionService.loadUDC()
       expect(Intercom.user).toHaveBeenCalledWith("userid", jasmine.any(Object))
@@ -75,20 +75,20 @@ describe 'Service: UDC', () ->
 
     it 'should send user data on connect when "shouldReportUdc" in Settings is set to true', ->
       Settings.shouldReportUdc = yes
-      UsageDataCollectionService.connectUserWithUserId("userid")
+      UsageDataCollectionService.connectUserWithUserIdAndName("userid", 'Person A')
       UsageDataCollectionService.loadUDC()
-      expect(Intercom.user).toHaveBeenCalledWith('userid', jasmine.objectContaining({name: 'Graph Friend'}))
+      expect(Intercom.user).toHaveBeenCalledWith('userid', jasmine.objectContaining({name: 'Person A'}))
 
     it 'should send user data on connect when "shouldReportUdc" in Settings is set to true', ->
       Settings.shouldReportUdc = no
-      UsageDataCollectionService.connectUserWithUserId("userid")
+      UsageDataCollectionService.connectUserWithUserIdAndName("userid")
       UsageDataCollectionService.loadUDC()
       expect(Intercom.user).toHaveBeenCalledWith('userid', {})
 
     describe 'events', ->
       it 'should send event if user is connected and "shouldReportUdc" in Settings is set to true', ->
         Settings.shouldReportUdc = yes
-        UsageDataCollectionService.connectUserWithUserId("userid")
+        UsageDataCollectionService.connectUserWithUserIdAndName("userid")
         UsageDataCollectionService.loadUDC()
         spyOn(Intercom, "event")
         UsageDataCollectionService.trackEvent("event", {"some_key":"some_value"})
@@ -96,7 +96,7 @@ describe 'Service: UDC', () ->
 
       it 'should not send event if user is connected but "shouldReportUdc" in Settings is set to false', ->
         Settings.shouldReportUdc = no
-        UsageDataCollectionService.connectUserWithUserId("userid")
+        UsageDataCollectionService.connectUserWithUserIdAndName("userid")
         UsageDataCollectionService.loadUDC()
         spyOn(Intercom, "event")
         UsageDataCollectionService.trackEvent("event", {"some_key":"some_value"})
@@ -109,7 +109,7 @@ describe 'Service: UDC', () ->
         UsageDataCollectionService.trackEvent("event", {"some_key":"some_value"})
         expect(Intercom.event).not.toHaveBeenCalled()
 
-        UsageDataCollectionService.connectUserWithUserId("userid")
+        UsageDataCollectionService.connectUserWithUserIdAndName("userid")
         expect(Intercom.event).toHaveBeenCalledWith("event", {"some_key":"some_value"})
 
         it 'should not send events on later connect if "shouldReportUdc" in Settings is set to false', ->
@@ -119,14 +119,14 @@ describe 'Service: UDC', () ->
           UsageDataCollectionService.trackEvent("event", {"some_key":"some_value"})
           expect(Intercom.event).not.toHaveBeenCalled()
 
-          UsageDataCollectionService.connectUserWithUserId("userid")
+          UsageDataCollectionService.connectUserWithUserIdAndName("userid")
           expect(Intercom.event).not.toHaveBeenCalled()
 
         describe "Connect event frequency frequency", ->
           it 'should only trigger connect event once', ->
             Settings.shouldReportUdc = yes
             UsageDataCollectionService.loadUDC()
-            UsageDataCollectionService.connectUserWithUserId("userid")
+            UsageDataCollectionService.connectUserWithUserIdAndName("userid")
             spyOn(Intercom, "event")
 
             UsageDataCollectionService.trackConnectEvent()
@@ -140,7 +140,7 @@ describe 'Service: UDC', () ->
         spyOn(Intercom, "disconnect")
 
         UsageDataCollectionService.loadUDC()
-        UsageDataCollectionService.connectUserWithUserId("userid")
+        UsageDataCollectionService.connectUserWithUserIdAndName("userid")
         expect(Intercom.user).toHaveBeenCalled()
         expect(UsageDataCollectionService.connectedUser).toBeTruthy()
 
@@ -156,7 +156,7 @@ describe 'Service: UDC', () ->
       it 'should send an update to intercom with company info if user is connected', ->
         spyOn(Intercom, "update")
         UsageDataCollectionService.loadUDC()
-        UsageDataCollectionService.connectUserWithUserId("userid")
+        UsageDataCollectionService.connectUserWithUserIdAndName("userid")
         UsageDataCollectionService.updateStoreAndServerVersion('Neo4j-test-version', 'test-store-id')
 
         expect(Intercom.update).toHaveBeenCalledWith(jasmine.objectContaining({companies:[{
@@ -170,7 +170,7 @@ describe 'Service: UDC', () ->
         UsageDataCollectionService.loadUDC()
         UsageDataCollectionService.updateStoreAndServerVersion('Neo4j-test-version', 'test-store-id')
         expect(Intercom.update).not.toHaveBeenCalled()
-        UsageDataCollectionService.connectUserWithUserId("userid")
+        UsageDataCollectionService.connectUserWithUserIdAndName("userid")
         expect(Intercom.user).toHaveBeenCalledWith("userid", jasmine.objectContaining({companies:[{
           type: "company"
           name: "Neo4j Neo4j-test-version test-store-id"
