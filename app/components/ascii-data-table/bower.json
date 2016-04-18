@@ -31,7 +31,9 @@
     ".npmignore",
     "karma.config.js",
     "tests.webpack.js",
-    "webpack.config.js"
+    "webpack.config.js",
+    "webpack.angular.config.js",
+    "webpack.react.config.js"
   ],
   "repository": {
     "type": "git",

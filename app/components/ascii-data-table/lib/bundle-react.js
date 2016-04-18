@@ -1,4 +1,4 @@
-var AsciiTable =
+var AsciiTableComponent =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,9 +43,9 @@ var AsciiTable =
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!**********************!*\
-  !*** ./src/entry.js ***!
-  \**********************/
+/*!*****************************!*\
+  !*** ./src/entry-react.jsx ***!
+  \*****************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56,7 +56,13 @@ var AsciiTable =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	module.exports = _asciiDataTable2.default;
+	module.exports = function (props) {
+	  return React.createElement(
+	    'pre',
+	    { style: { width: 300, height: 300 } },
+	    _asciiDataTable2.default.run(props.rows)
+	  );
+	};
 
 /***/ },
 /* 1 */
@@ -234,4 +240,4 @@ var AsciiTable =
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=bundle-react.js.map

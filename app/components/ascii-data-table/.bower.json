@@ -33,21 +33,24 @@
     ".npmignore",
     "karma.config.js",
     "tests.webpack.js",
-    "webpack.config.js"
+    "webpack.config.js",
+    "webpack.angular.config.js",
+    "webpack.react.config.js"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/oskarhane/ascii-data-table.git"
   },
   "homepage": "https://github.com/oskarhane/ascii-data-table",
-  "version": "1.2.0",
-  "_release": "1.2.0",
+  "version": "1.3.1",
+  "_release": "1.3.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.2.0",
-    "commit": "00b6ee7c8b8f928276c2f1e36135fdb497a5fb62"
+    "tag": "v1.3.1",
+    "commit": "a073da704a84a45f1b32d74116f31b9d621f008f"
   },
-  "_source": "git://github.com/oskarhane/ascii-data-table.git",
-  "_target": "^1.1.0",
-  "_originalSource": "ascii-data-table"
+  "_source": "https://github.com/oskarhane/ascii-data-table.git",
+  "_target": "^1.3.1",
+  "_originalSource": "ascii-data-table",
+  "_direct": true
 }

@@ -87,7 +87,7 @@ var res = AsciiTable.run(items)
 ### In web browsers
 A bundle for web browsers is created and can be found in `lib`.
 
-```hmtl
+```html
 <script type="text/javascript" src="/components/lib/bundle.js"></script>
 <script type="text/javascript">
   var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
@@ -97,15 +97,41 @@ A bundle for web browsers is created and can be found in `lib`.
 </script>
 ```
 
+### For React >= 0.14
+A functional / stateless React Component is created and lies in `lib/bundle-react.js`. It 
+assumes there's a global varaible `React` available.
+
+```html
+<html>
+  <head>
+    <script src="//fb.me/react-0.14.3.js"></script>
+    <script src="//fb.me/react-dom-0.14.3.js"></script>
+    <script src="/components/ascii-data-table/lib/bundle-react.js"></script>
+    <script type="text/javascript">
+      var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
+      function load() {
+        ReactDOM.render(
+          React.createElement(AsciiTableComponent, {rows: items}), 
+          document.getElementById('myApp')
+        )
+      }
+    </script>
+  </head>
+  <body onload="load()">
+    <div id="myApp">loading...</div>
+  </body>
+</html>
+```
+
 ### For Angular 1.X
 A bundle for Angular 1.X is created and can be found in `lib/bundle-angular.js` and 
 assumes there's a global variable named `angular` available.
 
-```
+```html
 <html>
   <head>
     <script type="text/javascript" src="/components/angular/angular.js"></script>
-    <script type="text/javascript" src="/components/lib/bundle-angular.js"></script>
+    <script type="text/javascript" src="/components/ascii-data-table/lib/bundle-angular.js"></script>
     <script type="text/javascript">
       var app = angular
         .module('myApp', ['AsciiTableModule'])
