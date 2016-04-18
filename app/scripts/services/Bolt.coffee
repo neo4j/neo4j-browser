@@ -314,7 +314,7 @@ angular.module('neo4jApp.services')
 
       itemIntToString = (item) ->
         return arrayIntToString item if Array.isArray(item)
-        return item if typeof item in ['number', 'string']
+        return item if typeof item in ['number', 'string', 'boolean']
         return item if item is null
         return item.toString() if bolt.isInt item
         return objIntToString item if typeof item is 'object'
