@@ -18,30 +18,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-'use strict';
+'use strict'
 
-addLeadingZero = (num) ->
-  ('00' + num).slice(-2)
+describe 'Filter: toYYYYMMDDHis', () ->
 
-angular.module('neo4jApp.filters')
-  .filter 'toDateString', () ->
-    (input) ->
-      return '' unless input?
-      (new Date(input)).toDateString()
+# load the filter's module
+  beforeEach module 'neo4jApp.filters'
 
-  .filter 'toISOString', () ->
-    (input) ->
-      return '' unless input?
-      (new Date(input)).toISOString()
+  # initialize a new instance of the filter before each test
+  dateFormatter = {}
+  beforeEach inject ($filter) ->
+    dateFormatter = $filter 'toYYYYMMDDHis'
 
-  .filter 'toYYYYMMDDHis', () ->
-    (input) ->
-      return '' unless input?
-      date = new Date(input)
-      date.getUTCFullYear() +
-        '-' + addLeadingZero(date.getUTCMonth() + 1) +
-        '-' + addLeadingZero(date.getUTCDate()) +
-        ' ' + addLeadingZero(date.getUTCHours()) +
-        ':' + addLeadingZero(date.getUTCMinutes()) +
-        ':' + addLeadingZero(date.getUTCSeconds()) +
-        ' UTC'
+  it 'should correctly format date', () ->
+    date = new Date(Date.UTC(2016,3,1,5,6,5))
+    expect(dateFormatter date).toBe "2016-04-01 05:06:05 UTC"
