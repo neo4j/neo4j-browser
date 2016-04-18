@@ -7,7 +7,7 @@
     //-       .ball.one
     //-       .ball.two
     //-       .ball.three
-    li.nav-header(ng-class='{active: showingDrawer("database") }', tooltip='Database',tooltip-placement='right', tooltip-enable='!showingDrawer("database")')
+    li(ng-class='{active: showingDrawer("database") }', tooltip='Database',tooltip-placement='right', tooltip-enable='!showingDrawer("database")')
       a.database.sl.sl-database(ng-click='toggleDrawer("database")')
     li(ng-class='{active: showingDrawer("scripts") }', tooltip='Favorites',tooltip-placement='right', tooltip-enable='!showingDrawer("scripts")')
       a.favorites.sl.sl-star(ng-click='toggleDrawer("scripts")')
