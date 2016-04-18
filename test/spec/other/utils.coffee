@@ -147,3 +147,7 @@ describe 'Utils', () ->
     removeFrom = [getDocument('MATCH (n)-(m) RETURN n'), getDocument('//My script\nRETURN "me"'), getDocument('RETURN 1')]
     expect(JSON.stringify(Utils.removeDocumentsFromArray(toRemove, removeFrom)))
       .toBe(JSON.stringify([getDocument('MATCH (n)-(m) RETURN n'), getDocument('RETURN 1')]))
+
+  it 'should flatten nested arrays', ->
+    t1 = [1, [2], [[3], 'hello', {k: 1}]]
+    expect(JSON.stringify(Utils.flattenArray(t1))).toBe(JSON.stringify([1, 2, 3, 'hello', {k: 1}]))

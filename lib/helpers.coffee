@@ -158,4 +158,13 @@ class neo.helpers
       
     @getServerHostname = (Settings) ->
       if Settings.host then Settings.host else location.href
+
+    @flattenArray = (arr) ->
+      that = @
+      return no unless Array.isArray arr
+      arr.reduce((flat, item) ->
+        flat.push item unless Array.isArray item
+        flat = [].concat.apply(flat, [].concat.apply(that.flattenArray(item))) if Array.isArray item
+        flat
+      , [])
         
