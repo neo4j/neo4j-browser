@@ -28,7 +28,8 @@ angular.module('neo4jApp.services')
     '$rootScope'
     '$location'
     '$q'
-    (Settings, AuthDataService, localStorageService, $rootScope, $location, $q) ->
+    'Utils'
+    (Settings, AuthDataService, localStorageService, $rootScope, $location, $q, Utils) ->
       bolt = window.neo4j.v1
       _driver = null
 
@@ -255,7 +256,7 @@ angular.module('neo4jApp.services')
 
       getRESTGraphFromBolt = (record, keys) ->
         items = keys.map((key) -> record.get(key))
-        graphItems = [].concat.apply([],  extractDataForGraphFormat(items))
+        graphItems = Utils.flattenArray [extractDataForGraphFormat items]
         graphItems.map((item) ->
           item.id = item.identity
           item
