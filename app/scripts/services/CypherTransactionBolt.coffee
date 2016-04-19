@@ -123,14 +123,10 @@ angular.module('neo4jApp.services')
         rollback: ->
           q = $q.defer()
           that = @
-          if @tx
-            @tx.rollback().then((r) ->
-              that._reset()
-              q.resolve {original: r, remapped: Bolt.constructResult(r)}
-            ).catch((e)->
-              that._reset()
-              orig = {code: 'N/A', message: e.error}
-              q.reject {original: orig, remapped: Bolt.constructResult(orig)}
+          if @session and @tx
+            @session.close( ->
+              that.tx = null
+              q.resolve({original: {}, remapped: Bolt.constructResult({})})
             )
           else
             q.resolve({original: {}, remapped: Bolt.constructResult({})})
