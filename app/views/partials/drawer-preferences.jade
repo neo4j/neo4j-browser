@@ -54,7 +54,9 @@
         span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
           | &nbsp; Use Bolt protocol when available&nbsp;
           a.sl.sl-question-mark(ng-click='openBoltHelp()')
-
+    .form-group
+      label(for="boltHost", tooltip="Set host:port for server Bolt interface.", tooltip-placement="top") Bolt host
+        input.form-control.input#initCmd(type='string', ng-model="settings.boltHost", ng-change="save(); updateBoltConnection()")
     .form-group
       label(for="maxExecutionTime", tooltip="Query timeout in seconds.", tooltip-placement="top")
         | Max Execution Time

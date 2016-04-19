@@ -36,4 +36,6 @@ angular.module('neo4jApp.controllers')
       $scope.toggleBoltUsage = () ->
         return unless Settings.useBolt
         Bolt.connect()
+      $scope.updateBoltConnection = () ->
+        Bolt.connect()
   ]
