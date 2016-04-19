@@ -117,7 +117,7 @@ angular.module('neo4jApp.services')
             # reported a successful operation
             p = tx.run statement, parameters
             p.then((r) -> 
-              if tx # The tx might have been rolled back
+              if tx # The tx might have been terminated
                 tx.commit().then((txr) -> 
                   session.close()
                   q.resolve r
