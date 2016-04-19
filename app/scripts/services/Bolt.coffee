@@ -32,6 +32,7 @@ angular.module('neo4jApp.services')
     (Settings, AuthDataService, localStorageService, $rootScope, $location, $q, Utils) ->
       bolt = window.neo4j.v1
       _driver = null
+      _errorStatus = null
 
       getDriverObj = (withoutCredentials = no) ->
         authData = AuthDataService.getPlainAuthData()
@@ -67,9 +68,11 @@ angular.module('neo4jApp.services')
         driver = getDriverObj withoutCredentials
         testQuery(driver).then((r) -> 
           q.resolve r
+          _errorStatus = null
           driver.close()
         ).catch((e) -> 
           q.reject e
+          _errorStatus = e
           driver.close()
         )
         q.promise
@@ -362,6 +365,7 @@ angular.module('neo4jApp.services')
         newStats
 
       getSocketErrorObj = ->
+        return _errorStatus if _errorStatus
         buildErrorObj 'Socket.Error', 'Socket error. Is the server online and have websockets open?'
 
       buildErrorObj = (code, message) ->
