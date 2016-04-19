@@ -21,7 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.filters')
-  .filter 'neo4jdoc', () ->
+  .filter('neo4jdoc', () ->
     (input) ->
       return '' unless typeof input is 'string'
       input.replace /^(\d\.\d)\.\d((-.+)?)$/, '$1$3'
+  ).filter('neo4jDeveloperDoc', ['neo4jdocFilter', (neo4jdocFilter) ->
+    (input) ->
+      return '' unless typeof input is 'string'
+      return 'http://neo4j.com/docs/developer-manual/' + neo4jdocFilter(input)
+  ])
+  .filter('neo4jOperationsDoc', ['neo4jdocFilter', (neo4jdocFilter) ->
+    (input) ->
+      return '' unless typeof input is 'string'
+      return 'http://neo4j.com/docs/operations-manual/' + neo4jdocFilter(input)
+  ])

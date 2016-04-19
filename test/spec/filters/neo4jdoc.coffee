@@ -27,8 +27,13 @@ describe 'Filter: neo4jdoc', () ->
 
   # initialize a new instance of the filter before each test
   neo4jdoc = {}
+  neo4jdev = {}
+  neo4jops = {}
+
   beforeEach inject ($filter) ->
     neo4jdoc = $filter 'neo4jdoc'
+    neo4jdev = $filter 'neo4jDeveloperDoc'
+    neo4jops = $filter 'neo4jOperationsDoc'
 
   it 'should return empty string for empty string', () ->
     text = ''
@@ -53,3 +58,11 @@ describe 'Filter: neo4jdoc', () ->
   it 'should return "X.Y-RCZ" for RC releases', () ->
     text = '3.1.0-RC2'
     expect(neo4jdoc text).toBe '3.1-RC2'
+
+  it 'should return full URL to developer docs', () ->
+    text = '3.1.0-RC2'
+    expect(neo4jdev text).toBe 'http://neo4j.com/docs/developer-manual/3.1-RC2'
+
+  it 'should return full URL to operations docs', () ->
+    text = '3.1.0-RC2'
+    expect(neo4jops text).toBe 'http://neo4j.com/docs/operations-manual/3.1-RC2'
