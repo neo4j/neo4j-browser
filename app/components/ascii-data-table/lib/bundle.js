@@ -181,8 +181,8 @@ var AsciiTable =
 	      lineIndex: lineMeta.lineIndex,
 	      rowHeight: rowHeights[lineMeta.rowIndex],
 	      colWidths: colWidths
-	    }).lines.join('|');
-	    out.push('|' + rowLines + '|');
+	    }).lines.join('│');
+	    out.push('│' + rowLines + '│');
 	    return out;
 	  }, []);
 	  output = insertRowSeparators(output, rowHeights, colWidths);
@@ -192,25 +192,36 @@ var AsciiTable =
 	var insertRowSeparators = function insertRowSeparators(lines, rowHeights, colWidths) {
 	  return rowHeights.reduce(function (out, rowHeight, rowIndex) {
 	    out.curr.push.apply(out.curr, out.feeder.splice(0, rowHeight));
-	    if (rowIndex !== 0) out.curr.push(getThinSeparatorLine(colWidths));
-	    if (rowIndex === 0) out.curr.push(getThickSeparatorLine(colWidths));
+	    if (rowIndex === 0) {
+	      out.curr.push(getThickSeparatorLine(colWidths));
+	    } else if (rowIndex === rowHeights.length - 1) {
+	      out.curr.push(getBottomSeparatorLine(colWidths));
+	    } else {
+	      out.curr.push(getThinSeparatorLine(colWidths));
+	    }
 	    return out;
 	  }, {
 	    feeder: lines,
-	    curr: [getThickSeparatorLine(colWidths)]
+	    curr: [getTopSeparatorLine(colWidths)]
 	  }).curr;
 	};
 	
+	var getTopSeparatorLine = function getTopSeparatorLine(colWidths) {
+	  return getSeparatorLine('═', '╒', '╤', '╕', colWidths);
+	};
 	var getThickSeparatorLine = function getThickSeparatorLine(colWidths) {
-	  return getSeparatorLine('=', '+', colWidths);
+	  return getSeparatorLine('═', '╞', '╪', '╡', colWidths);
 	};
 	var getThinSeparatorLine = function getThinSeparatorLine(colWidths) {
-	  return getSeparatorLine('-', '+', colWidths);
+	  return getSeparatorLine('─', '├', '┼', '┤', colWidths);
 	};
-	var getSeparatorLine = function getSeparatorLine(horChar, vertChar, colWidths) {
-	  return vertChar + colWidths.map(function (w) {
+	var getBottomSeparatorLine = function getBottomSeparatorLine(colWidths) {
+	  return getSeparatorLine('─', '└', '┴', '┘', colWidths);
+	};
+	var getSeparatorLine = function getSeparatorLine(horChar, leftChar, crossChar, rightChar, colWidths) {
+	  return leftChar + colWidths.map(function (w) {
 	    return padString(horChar, w);
-	  }).join(vertChar) + vertChar;
+	  }).join(crossChar) + rightChar;
 	};
 	
 	var padString = function padString(character, width) {
