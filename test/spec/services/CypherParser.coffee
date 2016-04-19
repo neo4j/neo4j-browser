@@ -36,7 +36,16 @@ describe 'Service: CypherParser', () ->
       "Using Periodic Commit\n"
       " Using Periodic Commit 200"
       "//This is a comment\nUSING PERIODIC COMMIT"
-      "//Comment\n\ncypher planner=rule USING PERIODIC COMMIT 200"
+      "cypher planner=rule USING PERIODIC COMMIT 200"
     ]
     for query in shouldMatchPeriodicCommit
       expect(CypherParser.isPeriodicCommit(query)).toBe(true)
+
+  it 'should find these queries NOT to be periodic commits', ->
+    shouldNotMatchPeriodicCommit = [
+          "MATCH (r:Person) WHERE "
+          "//Comment\nMATCH (r:Person) WHERE "
+          'MATCH (r:Person {title: "USING PERIODIC COMMIT"}) '
+        ]
+    for query in shouldNotMatchPeriodicCommit
+      expect(CypherParser.isPeriodicCommit(query)).toBe(false)
