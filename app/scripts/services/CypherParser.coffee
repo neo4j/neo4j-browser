@@ -31,7 +31,7 @@ angular.module('neo4jApp.services')
           @last_checked_query = ''
 
         isPeriodicCommit: (input)->
-          pattern = /^\s*USING\sPERIODIC\sCOMMIT/i
+          pattern = /USING\s*PERIODIC\s*COMMIT/i
           clean_input = Utils.stripComments input
           pattern.test clean_input
 
