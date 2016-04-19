@@ -1,6 +1,6 @@
 .inner
   h4.subtitled
-    .sub(ng-if="!currentUser") Neo4j Sync
+    .sub(ng-if="!currentUser") Neo4j Browser Sync
     .sub(ng-if="currentUser") {{currentUser.name}}
       small(ng-if='syncService.inSync && currentUser') Synced&nbsp;
         span(am-time-ago='syncService.lastSyncedAt')
@@ -57,7 +57,7 @@
       div
         p
           b WARNING:&nbsp;
-          | If you don't sign out from Neo4j Sync first, the sync servers data could be cleared as well.
+          | If you don't sign out from Neo4j Browser Sync first, the sync servers data could be cleared as well.
           | Your data could be lost.
         p
           | What do you want to do?
@@ -76,12 +76,12 @@
   div(ng-if="!currentUser && syncService.hasConnection", ng-controller="SyncSigninController")
     p &nbsp;
     h5 Sign In or Register
-    p Neo4j Sync is a companion cloud service for Neo4j Browser. Connect through a simple social sign-in
+    p Neo4j Browser Sync is a companion cloud service for Neo4j Browser. Connect through a simple social sign-in
       | to get started.
     p 
-      a(play-topic="neo4j-sync") About Neo4j Sync
+      a(play-topic="neo4j-sync") About Neo4j Browser Sync
     alert.top-padded(ng-hide="goodBrowser") 
-      | Neo4j Sync is currently only available for some versions of Internet Explorer.
+      | Neo4j Browser Sync is currently only available for some versions of Internet Explorer.
       | If you have any trouble, we'd love to hear from you at&nbsp;
       a(href="mailto:feedback@neotechnology.com")
         | feedback@neotechnology.com
@@ -91,7 +91,7 @@
         label.muted(for="acceptedTermsAndPrivacyCheckBox")
           input#acceptedTermsAndPrivacyCheckBox(type="checkbox", ng-model="settings.acceptedTermsAndPrivacy", ng-change="save()")
           | By checking this box you are agreeing to the 
-          a(href="http://neo4j.com/terms/neo4j-sync/") Neo4j Sync Terms of Use
+          a(href="http://neo4j.com/terms/neo4j-browser-sync/") Neo4j Browser Sync Terms of Use
           | &nbsp;and our&nbsp;
           a(href="http://neo4j.com/privacy-policy/") Privacy Policy
           |.  
@@ -99,8 +99,8 @@
 
   div.connection-error(ng-if="!syncService.hasConnection && !currentUser")
     p &nbsp;
-    p It is not possible to connect to Neo4j Sync right now.
+    p It is not possible to connect to Neo4j Browser Sync right now.
 
 footer
   p What's this?&nbsp;
-    a(href="http://neo4j.com/neo4j-sync") Learn More
+    a(href="http://neo4j.com/neo4j-browser-sync") Learn More
