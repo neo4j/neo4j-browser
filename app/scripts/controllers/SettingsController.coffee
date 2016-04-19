@@ -27,7 +27,8 @@ angular.module('neo4jApp.controllers')
     'Settings'
     'SettingsStore'
     'Bolt'
-    ($scope, Frame, Settings, SettingsStore, Bolt) ->
+    '$location'
+    ($scope, Frame, Settings, SettingsStore, Bolt, $location) ->
       $scope.settings = Settings
       $scope.save = () ->
         SettingsStore.save()
@@ -36,4 +37,7 @@ angular.module('neo4jApp.controllers')
       $scope.toggleBoltUsage = () ->
         return unless Settings.useBolt
         Bolt.connect()
+      $scope.updateBoltConnection = () ->
+        Bolt.connect()
+      $scope.defaultBoltHost = $location.host()
   ]
