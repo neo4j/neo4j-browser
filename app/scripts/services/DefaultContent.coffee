@@ -177,43 +177,38 @@ RETURN labels(n) as from,
 
       ]
 
-      folders = [
-        {
-          id: "basics"
-          name: "Basic Queries"
-          expanded: yes
-        }
-        {
-          id: 'graphs'
-          name: "Example Graphs"
-          expanded: yes
-        }
-        {
-          id: "profile"
-          name: "Data Profiling"
-          expanded: yes
-        }
-        {
-          id: "system"
-          name: "System"
-          expanded: no
-        }
-      ]
-
       class DefaultContent
         constructor: ->
         getDefaultDocuments: ->
           basic_scripts.concat example_graphs.concat profile_scripts.concat system_scripts
         resetToDefault: ->
           Document.reset()
-          @loadDefaultIfEmpty()
         loadDefaultIfEmpty: ->
-          if Document.length is 0
-            Document.add( @getDefaultDocuments() ).save()
-            Folder.add(folders).save()
-          for doc in Document.all()
-            continue unless doc.folder
-            if not Folder.get(doc.folder)
-              Folder.create(id: doc.folder)
+          [
+            {
+              id: "basics"
+              name: "Basic Queries"
+              expanded: no
+              documents: basic_scripts
+            }
+            {
+              id: 'graphs'
+              name: "Example Graphs"
+              expanded: no
+              documents: example_graphs
+            }
+            {
+              id: "profile"
+              name: "Data Profiling"
+              expanded: no
+              documents: profile_scripts
+            }
+            {
+              id: "system"
+              name: "System"
+              expanded: no
+              documents: system_scripts
+            }
+          ]
       new DefaultContent
 ])

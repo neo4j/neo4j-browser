@@ -129,6 +129,8 @@ angular.module('neo4jApp.controllers')
         nested
 
       $scope.folders = nestedFolderStructure()
+      $scope.sampleScripts = DefaultContentService.loadDefaultIfEmpty()
+      $scope.run = (doc) -> Editor.setContent(doc.content)
 
       $scope.$on 'LocalStorageModule.notification.setitem', (evt, item) ->
         # Reload folders and documents
