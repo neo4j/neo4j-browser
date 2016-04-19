@@ -39,13 +39,19 @@
     .checkbox
       label(for="experimentalFeatures")
         input#experimentalFeatures(type="checkbox", ng-model="settings.experimentalFeatures", ng-change="save()")
-        span(tooltip="Up coming features that are in beta.", tooltip-placement="top") &nbsp; Enable experimental features?
+        span(tooltip="Upcoming features that are in beta.", tooltip-placement="top") &nbsp; Enable experimental features?
 
     .checkbox(ng-show="neo4j.enterpriseEdition")
       label(for="retainConnectionCredentials")
         input#retainConnectionCredentials(type='checkbox', ng-model="settings.retainConnectionCredentials", ng-change="save()")
         span(tooltip="Remember connection credentials in browser.", tooltip-placement="right")
           | &nbsp; Retain login credentials
+
+    .checkbox
+      label(for="showSampleScripts")
+        input#showSampleScripts(type='checkbox', ng-model="settings.showSampleScripts", ng-change="save()")
+        span(tooltip="Show sample scripts in favorites drawer.", tooltip-placement="top")
+          | &nbsp; Show sample scripts
 
     h5 Network Connection
     .checkbox
