@@ -86,12 +86,8 @@ angular.module('neo4jApp.services')
         _reset: ->
           @tx = null
 
-        begin: (query) ->
+        begin: () ->
           q = $q.defer()
-          statements = if query then [{statement:query}] else []
-          {tx, session, promise} = Bolt.beginTransaction(statements: statements)
-          @tx = tx
-          @session = session
           q.resolve()
           q.promise
           
