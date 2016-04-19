@@ -36,6 +36,7 @@ describe 'Service: CypherParser', () ->
       "Using Periodic Commit\n"
       " Using Periodic Commit 200"
       "//This is a comment\nUSING PERIODIC COMMIT"
+      "cypher planner=rule USING PERIODIC COMMIT 200"
     ]
     for query in shouldMatchPeriodicCommit
       expect(CypherParser.isPeriodicCommit(query)).toBe(true)

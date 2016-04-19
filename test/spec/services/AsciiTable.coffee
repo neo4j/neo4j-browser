@@ -38,9 +38,9 @@ describe 'Service: AsciiTableFactory', () ->
   it ' - should generate a simple table '  , ->
     res = AsciiTableFactory.getInstance().get([['x'], ['y']])
     expect(res).toBe([
-      '+===+',
-      '|x  |',
-      '+===+',
-      '|y  |',
-      '+---+'].join('\n')
+      '╒═══╕',
+      '│x  │',
+      '╞═══╡',
+      '│y  │',
+      '└───┘'].join('\n')
     )
