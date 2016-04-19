@@ -10,19 +10,20 @@
       small(ng-hide='syncService.hasConnection') Not Connected
       small.error(ng-if='!syncService.inSync', ng-click='syncService.push()')
         a Out of sync
-  h5.subheading Sample Scripts
-  div(ng-repeat='folder in sampleScripts')
-    h5.folder(ng-click='folder.expanded = !folder.expanded', ng-class="{folded: !folder.expanded}")
-      i.fa.fa-caret-right(ng-class="{'fa-rotate-90': folder.expanded}")
-      div {{ folder.name }}
-    ul(ng-show='folder.expanded', ng-class="{'indented': folder.id != 'root'}")
-      li(ng-repeat="document in folder.documents")
-        .list-item(ng-click='run(document)')
-          a.fa.icon.fa-circle-thin(ng-click='playDocument(document.content);$event.stopPropagation()')
-          a.fa.fa-play-circle.icon-inactive(ng-click='playDocument(document.content);$event.stopPropagation()')
-          .contents
-            a {{document.content | autotitle}}
-  h5.subheading My Scripts
+  div(ng-show="settings.showSampleScripts")
+    h5 Sample Scripts
+    div(ng-repeat='folder in sampleScripts')
+      h5.folder(ng-click='folder.expanded = !folder.expanded', ng-class="{folded: !folder.expanded}")
+        i.fa.fa-caret-right(ng-class="{'fa-rotate-90': folder.expanded}")
+        div {{ folder.name }}
+      ul(ng-show='folder.expanded', ng-class="{'indented': folder.id != 'root'}")
+        li(ng-repeat="document in folder.documents")
+          .list-item(ng-click='run(document)')
+            a.fa.icon.fa-circle-thin(ng-click='playDocument(document.content);$event.stopPropagation()')
+            a.fa.fa-play-circle.icon-inactive(ng-click='playDocument(document.content);$event.stopPropagation()')
+            .contents
+              a {{document.content | autotitle}}
+  h5(ng-show="settings.showSampleScripts") Saved Scripts
   .droppable(ng-repeat='folder in folders')
     h5.folder(ng-click='folderService.expand(folder)', ng-if="folder.id != 'root'", ng-class="{folded: !folder.expanded}")
       i.fa.fa-caret-right(ng-class="{'fa-rotate-90': folder.expanded}")
