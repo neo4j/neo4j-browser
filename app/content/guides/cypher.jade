@@ -148,7 +148,7 @@ article.guide
         h3 Live Cypher warnings
         p.lead Identify query problems in real time
       .col-sm-5
-        p As you type, the query editor notifies you about deprecated features 
+        p As you type, the query editor notifies you about deprecated features
           | and potentially expensive queries.
       .col-sm-4
         img.img-responsive(src='images/screen_cypher_warn.png')
@@ -178,6 +178,6 @@ article.guide
           li
             a(href='http://neo4j.com/developer/guide-importing-data-and-etl/') Full Northwind import example
           li
-            a(href='http://neo4j.com/docs/{{neo4j.version | neo4jdoc }}/cypher-refcard') Cypher
+            a(href="{{ neo4j.version | neo4jCypherRefcardDoc }}/") Cypher
           li
             a(href='{{ neo4j.version | neo4jDeveloperDoc }}/') Neo4j Developer Manual

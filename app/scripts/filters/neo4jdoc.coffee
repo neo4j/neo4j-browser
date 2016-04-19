@@ -35,3 +35,8 @@ angular.module('neo4jApp.filters')
       return '' unless typeof input is 'string'
       return 'http://neo4j.com/docs/operations-manual/' + neo4jdocFilter(input)
   ])
+  .filter('neo4jCypherRefcardDoc', ['neo4jdocFilter', (neo4jdocFilter) ->
+    (input) ->
+      return '' unless typeof input is 'string'
+      return 'http://neo4j.com/docs/cypher-refcard/' + neo4jdocFilter(input)
+  ])
