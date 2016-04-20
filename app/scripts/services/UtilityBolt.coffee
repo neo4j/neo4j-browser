@@ -27,6 +27,7 @@ angular.module('neo4jApp.services')
     '$q'
     (Bolt, Settings, $q) ->
       {
+        clearConnection: -> Bolt.clearConnection()
         getSchema: ->
           q = $q.defer()
           $q.all([

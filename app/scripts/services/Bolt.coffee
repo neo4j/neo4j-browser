@@ -88,6 +88,10 @@ angular.module('neo4jApp.services')
           )
         q.promise
 
+      clearConnection = ->
+        _driver.close() if _driver?
+        _driver = null
+
       createSession = () ->
         return _driver.session() if _driver
         return no
@@ -394,5 +398,6 @@ angular.module('neo4jApp.services')
           schemaResultToRESTResult indexes, constraints
         constructJmxResult: jmxResultToRESTResult
         constructVersionResult: versionResultToRESTResult
+        clearConnection: clearConnection
       }
   ]

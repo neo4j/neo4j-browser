@@ -117,6 +117,7 @@ angular.module('neo4jApp.services')
         if @getCurrentUser()
           clearConnectionAuthData()
         ConnectionStatusService.setConnected no
+        ProtocolFactory.getAuthService().clearConnection()
 
       setNewPassword: (old_passwd, new_passwd) ->
         that = @

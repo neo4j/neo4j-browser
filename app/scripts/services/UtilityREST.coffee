@@ -27,6 +27,7 @@ angular.module('neo4jApp.services')
     '$q'
     (Server, Settings, $q) ->
       {
+        clearConnection: -> angular.noop
         getJmx: (whatToGet = []) ->
           Server.jmx(whatToGet)
 
