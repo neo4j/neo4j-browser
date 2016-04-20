@@ -110,7 +110,7 @@ do ->
   )
 
   donutUnlockNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [4, 0], '\uf09c', 'Unlock the node to relayout the graph')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [4, 0], '\uf09c', 'Unlock the node to re-layout the graph')
 
     onTick: noop
   )
