@@ -124,11 +124,14 @@ angular.module('neo4jApp.controllers')
         noFolder = Folder.new(id: 'root')
         noFolder.documents = (doc for doc in Document.where({folder: false}))
         noFolder.documents = noFolder.documents.concat(addMissingFolderDocumentsToRoot(Document.all(), Folder.all()))
-        nested.push noFolder
-
+        nested.push noFolder unless noFolder.documents.length < 1
         nested
 
       $scope.folders = nestedFolderStructure()
+      $scope.sampleScripts = DefaultContentService.loadDefaultIfEmpty()
+      $scope.run = (doc) -> Editor.setContent(doc.content)
+      $scope.haveSavedScripts = () ->
+        $scope.folders.length
 
       $scope.$on 'LocalStorageModule.notification.setitem', (evt, item) ->
         # Reload folders and documents
