@@ -1,4 +1,4 @@
-#editor(ng-controller = "EditorCtrl", ng-mousedown="focusEditor($event)", ng-class="{'file-loaded': settings.filemode && editor.document.id, 'maximize-editor': editor.maximized}")
+#editor(ng-if="show.editor", ng-controller = "EditorCtrl", ng-mousedown="focusEditor($event)", ng-class="{'file-loaded': settings.filemode && editor.document.id, 'maximize-editor': editor.maximized}")
   .file-bar.slide-down(ng-if="settings.filemode && editor.document.id")
     .title
       {{editor.document.content | autotitle}}

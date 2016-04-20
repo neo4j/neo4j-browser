@@ -47,6 +47,10 @@ angular.module('neo4jApp.controllers')
         keyboard: yes
         size: 'lg'
 
+      $scope.show =
+        editor: !Settings.onboarding
+        sidebar: !Settings.onboarding
+
       $scope.theme = Settings.theme
       $scope.$on('settings:saved', () ->
         $scope.theme = Settings.theme

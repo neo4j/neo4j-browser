@@ -1,10 +1,37 @@
-article.guide
+article.guide(ng-controller="WelcomeController")
   .container-fluid
     .row
       .col-sm-3
         .box-max
           img.img-responsive(src='images/neo4j-world.png')
-          p.lead.text-center BROWSER
-      .col-sm-7.col-sm-offset-1
-        h3 Welcome to Neo4j
-        p &nbsp;
+          h1.subhead.text-right NEO4J BROWSER
+      .col-sm-4.col-sm-offset-1
+        .box-max(ng-if="!currentUser")
+          h3 Welcome!
+          p &nbsp;
+          p.lead This is Neo4j Browser, a client application built into Neo4j. 
+          .button-row.row.col-sm-12
+            button.btn.btn-primary(ng-click="CurrentUser.login()") Register / Sign In
+            span.spacer &nbsp;
+        .box-max(ng-if="currentUser") 
+          h3 Hello {{currentUser.name}}!
+          p &nbsp;
+          p.lead Your Neo4j Sync account is active.
+          p &nbsp;
+          p
+            button.btn.btn-popup.btn-destructive(ng-click="CurrentUser.logout(); toggleDrawer('profile') ") Sign Out
+
+      .col-sm-4
+        ul.big.undecorated
+          li
+            i.sl.sl-cloud-sync.fa-lg
+            | &nbsp; Sync queries &amp; graph style sheets
+          li
+            i.sl.sl-hierarchy.fa-lg
+            | &nbsp; Restore previous versions of scripts
+          li
+            i.sl.sl-bubble-comment.fa-lg
+            | &nbsp; Get update notices, suggestions and help
+  footer.tight
+    p.text-right
+      a.no-thanks(ng-click="skipIntro()") Skip Intro
