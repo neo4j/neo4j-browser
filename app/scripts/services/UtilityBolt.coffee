@@ -25,7 +25,8 @@ angular.module('neo4jApp.services')
     'Bolt'
     'Settings'
     '$q'
-    (Bolt, Settings, $q) ->
+    '$rootScope'
+    (Bolt, Settings, $q, $rootScope) ->
       {
         clearConnection: -> Bolt.clearConnection()
         getSchema: ->
@@ -67,19 +68,23 @@ angular.module('neo4jApp.services')
         makeRequest: (withoutCredentials, retainConnection) ->
           q = $q.defer()
           r = Bolt.testConnection withoutCredentials
-          r.then((r) -> 
+          r.then((r) ->
             res = Bolt.constructResult r
             Bolt.connect() if retainConnection
-            return q.resolve({}) unless res.data.errors.length
-            return q.reject({status: 401, data: res})
-          ).catch((err) -> 
+            if not res.data.errors.length
+              $rootScope.bolt_connection_failure = no
+              return q.resolve({})
+            else
+              return q.reject({status: 401, data: res})
+          ).catch((err) ->
             errObj = Bolt.constructResult err
             if errObj.data.errors[0].code is 'Neo.ClientError.Security.CredentialsExpired'
               errObj.data.password_change = 'true'
               errObj.status = 403
               Bolt.connect() if retainConnection
-            else if errObj.data.errors[0].code is 'Socket.Error'
+            else if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
               errObj.status = 0
+              $rootScope.bolt_connection_failure = yes
             else
               errObj.status = 401
             q.reject errObj

@@ -27,7 +27,8 @@ angular.module('neo4jApp.services')
     'Bolt'
     'UsageDataCollectionService'
     'Timer'
-    ($q, CypherResult, Bolt, UDC, Timer) ->
+    '$rootScope'
+    ($q, CypherResult, Bolt, UDC, Timer, $rootScope) ->
       parseId = (resource = "") ->
         id = resource.split('/').slice(-2, -1)
         return parseInt(id, 10)
@@ -54,8 +55,8 @@ angular.module('neo4jApp.services')
         (res) ->
           remapped = res.remapped
           q.reject({
-            protocol: 'bolt', 
-            raw: res.original, 
+            protocol: 'bolt',
+            raw: res.original,
             errors: remapped.data.errors,
             notifications: remapped.data.notifications
           })
@@ -91,7 +92,7 @@ angular.module('neo4jApp.services')
           q = $q.defer()
           q.resolve()
           q.promise
-          
+
         commit: (query) ->
           that = @
           statements = if query then [{statement:query}] else []
@@ -101,11 +102,13 @@ angular.module('neo4jApp.services')
           @tx = tx
           @session = session
           timer = Timer.start()
-          promise.then((r) -> 
+          promise.then((r) ->
+            $rootScope.bolt_connection_failure = no
             r.responseTime = timer.stop().time()
             q.resolve({original: r, remapped: Bolt.constructResult(r)})
             that._reset()
           ).catch((r) -> 
+            $rootScope.bolt_connection_failure = yes
             r.responseTime = timer.stop().time()
             q.reject({original: r, remapped: Bolt.constructResult(r)})
             that._reset()

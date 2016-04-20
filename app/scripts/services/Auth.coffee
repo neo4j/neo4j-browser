@@ -26,8 +26,7 @@ angular.module('neo4jApp.services')
   'ProtocolFactory'
   'Settings'
   '$q'
-  '$rootScope'
-  (ConnectionStatusService, ProtocolFactory, Settings, $q, $rootScope) ->
+  (ConnectionStatusService, ProtocolFactory, Settings, $q) ->
 
     setConnectionAuthData = (username, password, emitChange) ->
       ConnectionStatusService.setConnectionAuthData username, password, emitChange
@@ -46,12 +45,9 @@ angular.module('neo4jApp.services')
         promise.then(
           (r) ->
             ConnectionStatusService.setConnected yes
-            $rootScope.connectionFailure = no
             r
           ,
           (r) ->
-            if r.data.errors[0].message.indexOf('WebSocket connection failure') == 0
-              $rootScope.connectionFailure = yes
             that.forget() unless r.status is 403 #Forbidden
             r
         )
