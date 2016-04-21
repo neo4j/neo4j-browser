@@ -148,7 +148,7 @@ angular.module('neo4jApp.services')
               session.close()
               q.reject e
             )
-        {tx: tx, promise: q.promise}
+        {tx: tx, promise: q.promise, session: session}
 
       boltTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
