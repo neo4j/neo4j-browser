@@ -37,7 +37,7 @@ angular.module('neo4jApp.controllers')
         Frame.create({input: Settings.cmdchar + 'help bolt encryption'})
       $scope.toggleBoltUsage = () ->
         $rootScope.bolt_connection_failure = no
-      if Settings.useBolt
+        if Settings.useBolt
           Bolt.connect()
       $scope.updateBoltConnection = () ->
         Bolt.connect()
