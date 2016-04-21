@@ -121,8 +121,9 @@ angular.module('neo4jApp.controllers')
           if (serverIsOffline?)
             if not serverIsOffline
               UDC.trackConnectEvent()
+              $scope.bolt_connection_failure = no
             else
-              $scope.errorMessage = motdService.pickRandomlyFromChoiceName('disconnected')
+              $scope.bolt_connection_failure = yes
 
         $scope.$on 'auth:status_updated', (e, is_connected) ->
           $scope.check()
