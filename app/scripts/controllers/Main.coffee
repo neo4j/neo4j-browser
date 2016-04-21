@@ -121,6 +121,7 @@ angular.module('neo4jApp.controllers')
           if (serverIsOffline?)
             if not serverIsOffline
               UDC.trackConnectEvent()
+              $scope.bolt_connection_failure = no
             else
               $scope.bolt_connection_failure = yes
 
