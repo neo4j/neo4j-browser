@@ -198,15 +198,15 @@ angular.module('neo4jApp.services')
         else
           indexString = "Indexes"
           for index in indexes
-            indexString += "\n  #{index.get('description').replace('INDEX','')} #{index.get('state').toUpperCase()}"
-            if index.get("type") == "node_unique_property"
+            indexString += "\n  #{index.description.replace('INDEX','')} #{index.state.toUpperCase()}"
+            if index.type == "node_unique_property"
               indexString += " (for uniqueness constraint)"
         if (constraints.length == 0)
           constraintsString = "No constraints"
         else
           constraintsString = "Constraints"
           for constraint in constraints
-            constraintsString += "\n  #{constraint.get('description').replace('CONSTRAINT','')}"
+            constraintsString += "\n  #{constraint.description.replace('CONSTRAINT','')}"
         return "#{indexString}\n\n#{constraintsString}\n"
 
       boltResultToRESTResult = (result) ->
