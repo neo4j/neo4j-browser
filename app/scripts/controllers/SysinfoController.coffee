@@ -51,6 +51,7 @@ angular.module('neo4jApp.controllers')
               for a in r.attributes
                 $scope.sysinfo.primitives[a.name] = a.value
             else if r.name == "org.neo4j:instance=kernel#0,name=Page cache"
+              $scope.sysinfo.cache.available = true
               for a in r.attributes
                 $scope.sysinfo.cache[a.name] = a.value
             else if "org.neo4j:instance=kernel#0,name=Transactions"
@@ -73,7 +74,12 @@ angular.module('neo4jApp.controllers')
                     connectedMemberId = a.value
                   $scope.sysinfo.ha[a.name] = a.value
               $scope.sysinfo.ha.ClusterMembers[connectedMemberId].connected = true
-        ).catch((r)-> $scope.sysinfo.kernel = {})
+        ).catch((r) ->
+          $scope.sysinfo.kernel = {}
+          $scope.sysinfo.primitives = {}
+          $scope.sysinfo.cache = { available: false }
+          $scope.sysinfo.tx = {available: false}
+          $scope.sysinfo.ha = { clustered: false })
 
     timer = null
     refreshLater = () =>
