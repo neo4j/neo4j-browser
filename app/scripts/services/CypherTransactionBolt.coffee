@@ -85,6 +85,7 @@ angular.module('neo4jApp.services')
 
         _reset: ->
           @tx = null
+          @session = null
 
         begin: () ->
           q = $q.defer()
@@ -96,17 +97,18 @@ angular.module('neo4jApp.services')
           statements = if query then [{statement:query}] else []
           UDC.increment('cypher_attempts')
           q = $q.defer()
-          {tx, promise} = Bolt.transaction(statements, @session, @tx)
+          {tx, promise, session} = Bolt.transaction(statements, @session, @tx)
           @tx = tx
+          @session = session
           timer = Timer.start()
           promise.then((r) -> 
             r.responseTime = timer.stop().time()
             q.resolve({original: r, remapped: Bolt.constructResult(r)})
-            that.tx = null
+            that._reset()
           ).catch((r) -> 
             r.responseTime = timer.stop().time()
             q.reject({original: r, remapped: Bolt.constructResult(r)})
-            that.tx = null
+            that._reset()
           )
           res = promiseResult(q.promise)
           res.then(
@@ -119,9 +121,9 @@ angular.module('neo4jApp.services')
         rollback: ->
           q = $q.defer()
           that = @
-          if @session and @tx
+          if @session
             @session.close( ->
-              that.tx = null
+              that._reset()
               q.resolve({original: {}, remapped: Bolt.constructResult({})})
             )
           else
