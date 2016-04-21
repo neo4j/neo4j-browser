@@ -47,6 +47,10 @@ angular.module('neo4jApp.controllers')
         keyboard: yes
         size: 'lg'
 
+      $scope.show =
+        editor: !Settings.onboarding
+        sidebar: !Settings.onboarding
+
       $scope.theme = Settings.theme
       $scope.$on('settings:saved', () ->
         $scope.theme = Settings.theme
@@ -109,6 +113,7 @@ angular.module('neo4jApp.controllers')
       $scope.isDrawerShown = false
       $scope.whichDrawer = ""
       $scope.toggleDrawer = (selectedDrawer = "", state) ->
+        $scope.show.sidebar = yes
         state ?= !$scope.isDrawerShown or (selectedDrawer != $scope.whichDrawer)
         $scope.isDrawerShown = state
         $scope.whichDrawer = selectedDrawer

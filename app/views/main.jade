@@ -4,7 +4,7 @@
 #leftbar(ng-controller = "SidebarCtrl")
   include partials/nav
   include partials/drawer
-#main
+#main(ng-class="{fullwidth: !show.sidebar}")
   include partials/editor
   div(frame-stream)
   //- include partials/stream

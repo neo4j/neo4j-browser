@@ -121,7 +121,7 @@ angular.module('neo4jApp.services')
           for item in @items
             matches = 0
             for key, val of attrs
-              matches++ if item[key] is val
+              matches++ if new RegExp(val).test(item[key])
 
             rv.push item if numAttrs is matches
 

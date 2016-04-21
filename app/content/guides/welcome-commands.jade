@@ -1,0 +1,19 @@
+article.guide(ng-controller="WelcomeController")
+  .container-fluid.prez
+    .row
+      .col-sm-3
+        .box-max
+          img.img-responsive(src='images/neo4j-world.png')
+          h1.subhead.text-right Commands
+      .col-sm-6.col-sm-offset-1
+        .prez
+          p This is a command-driven interface.
+          p Let's try a command. Just click on the following text box then hit return...
+          figure
+            pre.pre-scrollable.code.runnable(ng-click="showEditor()").
+              :play welcome-to-the-graph 
+          p &nbsp;
+
+  footer.tight
+    p.text-right
+      a.no-thanks(ng-click="skipIntro()") Skip Intro

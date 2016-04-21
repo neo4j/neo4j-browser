@@ -1,10 +1,21 @@
-article.guide
-  .container-fluid
+article.guide(ng-controller="WelcomeController", ng-init="start()")
+  .container-fluid.prez
     .row
       .col-sm-3
         .box-max
           img.img-responsive(src='images/neo4j-world.png')
-          p.lead.text-center BROWSER
-      .col-sm-7.col-sm-offset-1
-        h3 Welcome to Neo4j
-        p &nbsp;
+          h1.subhead.text-right Welcome!
+      .col-sm-6.col-sm-offset-1
+        .prez
+          p Hello and welcome to Neo4j Browser, 
+            br
+            | a client application built into Neo4j. 
+          p &nbsp;
+          .button-row.row.col-sm-12
+            button.btn.btn-primary(ng-click="introduceEditor()") Okay, thanks!
+            span.spacer &nbsp;
+          p &nbsp;
+
+  footer.tight
+    p.text-right
+      a.no-thanks(ng-click="skipIntro()") Skip Intro

@@ -1,0 +1,19 @@
+article.guide(ng-controller="WelcomeController")
+  .container-fluid.prez
+    .row
+      .col-sm-3
+        .box-max
+          img.img-responsive(src='images/neo4j-world.png')
+          h1.subhead.text-right Start Your Path
+      .col-sm-6.col-sm-offset-1
+        .prez
+          p Great. You're ready to explore!
+          p One last thing: For the best connected experience, register for Neo4j Browser Sync. 
+          .button-row.row.col-sm-12
+            button.btn.btn-primary(ng-click="offerSync()") 
+              span.sl.sl-cloud &nbsp; Consider the Cloud &nbsp;
+          p &nbsp;
+  
+  footer.tight
+    p.text-right
+      a.no-thanks(ng-click="skipIntro()") Skip Intro

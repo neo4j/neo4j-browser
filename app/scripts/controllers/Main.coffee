@@ -134,21 +134,22 @@ angular.module('neo4jApp.controllers')
           SettingsStore.save()
 
         onboardingSequence = ->
-          Frame.createOne({input:"#{Settings.cmdchar}play neo4j-sync"})
-          setAndSaveSetting('onboarding', false)
+          Frame.createOne({input:"#{Settings.cmdchar}play welcome"})
 
         pickFirstFrame = ->
           CurrentUser.init()
           AuthService.hasValidAuthorization(retainConnection = yes).then(
             ->
               Frame.closeWhere "#{Settings.cmdchar}server connect"
-              Frame.create({input:"#{Settings.initCmd}"})
+              Frame.createOne({input:"#{Settings.initCmd}"})
               onboardingSequence() if Settings.onboarding
             ,
             (r) ->
               if Settings.onboarding then onboardingSequence()
-              else Frame.create({input:"#{Settings.cmdchar}server connect"})
+              else Frame.createOne({input:"#{Settings.cmdchar}server connect"})
           )
+
+        $scope.pickFirstFrame = pickFirstFrame
 
         pickFirstFrame()
 
