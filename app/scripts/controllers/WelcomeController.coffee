@@ -24,16 +24,41 @@ angular.module('neo4jApp.controllers')
   .controller 'WelcomeController', [
     '$scope'
     'Settings'
+    'SettingsStore'
     'Frame'
-    ($scope, Settings, Frame) ->
+    'Editor'
+    ($scope, Settings, SettingsStore, Frame, Editor) ->
       $scope.settings = Settings
-      $scope.show.sidebar = no
-      $scope.show.editor = no
+
+      $scope.start = () ->
+        $scope.show.sidebar = no
+        $scope.show.editor = no
+        Settings['onboarding'] = true
+        # SettingsStore.save()
+
+      $scope.introduceEditor = () ->
+        Frame.create({input:":play welcome-commands"})
+        $scope.show.editor = yes
+
+      $scope.offerSync = () ->
+        completeOnboarding()
+        Frame.create({input:":play neo4j-sync"})
+
+      $scope.showEditor = () ->
+        $scope.show.editor = yes
+
+      $scope.revealInEditor = (content) ->
+        Editor.setContent(content)
+        $scope.focusEditor()
 
       $scope.skipIntro = () ->
+        completeOnboarding()
+        $scope.pickFirstFrame()
+
+      completeOnboarding = () ->
+        Frame.closeWhere "#{Settings.cmdchar}play welcome"
         $scope.show.sidebar = yes
         $scope.show.editor = yes
-        Frame.closeWhere "#{Settings.cmdchar}play welcome"
-        Frame.create({input:"#{Settings.initCmd}"})
-
+        Settings['onboarding'] = false
+        SettingsStore.save()
   ]

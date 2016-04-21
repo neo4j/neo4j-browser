@@ -47,13 +47,13 @@
           ng-class="{active: editorHasContent, 'sl-play-filled': hoveringPlay}", 
           tooltip='Play', 
           tooltip-placement='left')
-
-    .message-bar.error.slide-down(ng-if='editor.showMessage', ng-class="editor.errorCode")
-      span(ng-bind-html-unsafe="editor.errorMessage")
-      |  Type <code click-to-code="':help commands'">:help commands</code> for a list of available commands.
-      .actions
-        a.fa.fa-times-circle(ng-click='editor.showMessage = null')
-    .message-bar.info(ng-if='unauthorized', ng-class="editor.errorCode")
-      span
-        | Database access not available. Please use <code click-to-code="':server connect'">:server connect</code>
-        | to establish connection. There's a graph waiting for you.
+    div(ng-if='!settings.onboarding')
+      .message-bar.error.slide-down(ng-if='editor.showMessage', ng-class="editor.errorCode")
+        span(ng-bind-html-unsafe="editor.errorMessage")
+        |  Type <code click-to-code="':help commands'">:help commands</code> for a list of available commands.
+        .actions
+          a.fa.fa-times-circle(ng-click='editor.showMessage = null')
+      .message-bar.info(ng-if='unauthorized', ng-class="editor.errorCode")
+        span
+          | Database access not available. Please use <code click-to-code="':server connect'">:server connect</code>
+          | to establish connection. There's a graph waiting for you.

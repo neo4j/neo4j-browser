@@ -113,6 +113,7 @@ angular.module('neo4jApp.controllers')
       $scope.isDrawerShown = false
       $scope.whichDrawer = ""
       $scope.toggleDrawer = (selectedDrawer = "", state) ->
+        $scope.show.sidebar = yes
         state ?= !$scope.isDrawerShown or (selectedDrawer != $scope.whichDrawer)
         $scope.isDrawerShown = state
         $scope.whichDrawer = selectedDrawer
