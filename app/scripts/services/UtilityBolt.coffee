@@ -31,12 +31,18 @@ angular.module('neo4jApp.services')
         clearConnection: -> Bolt.clearConnection()
         getSchema: ->
           q = $q.defer()
-          $q.all([
-            Bolt.callProcedure("db.indexes"),
-            Bolt.callProcedure("db.constraints"),
-          ]).then((data) ->
-            q.resolve(Bolt.constructSchemaResult data[0], data[1])
-          )
+          Bolt.boltTransaction(
+            "CALL db.indexes() YIELD description, state, type " +
+            "WITH COLLECT({description: description, state: state, type: type}) AS indexes " +
+            "RETURN 'indexes' AS name, indexes AS items " +
+            "UNION " +
+            "CALL db.constraints() YIELD description " +
+            "WITH COLLECT({description: description}) AS constraints " + 
+            "RETURN 'constraints' AS name, constraints AS items"
+          ).promise.then((result) ->
+            return q.resolve(Bolt.constructSchemaResult([], [])) unless result.records.length
+            q.resolve(Bolt.constructSchemaResult result.records[0].get('items'), result.records[1].get('items'))
+          ).catch( (e) -> q.reject Bolt.constructResult e)
           q.promise
 
         getMeta: ->
