@@ -163,10 +163,10 @@ angular.module('neo4jApp.services')
           .catch((err) -> q.resolve([]))
         q.promise
 
-      metaResultToRESTResult = (labels, realtionshipTypes, propertyKeys) ->
-        labels: labels.map (o) -> o.get('label')
-        relationships: realtionshipTypes.map (o) -> o.get('relationshipType')
-        propertyKeys: propertyKeys.map (o) -> o.get('propertyKey')
+      metaResultToRESTResult = (labels, relationshipTypes, propertyKeys) ->
+        labels: labels.get(1)
+        relationships: relationshipTypes.get(1)
+        propertyKeys: propertyKeys.get(1)
 
       versionResultToRESTResult = (r) ->
         return null unless r.records
@@ -392,8 +392,8 @@ angular.module('neo4jApp.services')
         callProcedure: callProcedure,
         constructResult: (res) ->
           boltResultToRESTResult res
-        constructMetaResult: (labels, realtionshipTypes, propertyKeys) ->
-          metaResultToRESTResult labels, realtionshipTypes, propertyKeys
+        constructMetaResult: (labels, relationshipTypes, propertyKeys) ->
+          metaResultToRESTResult labels, relationshipTypes, propertyKeys
         constructSchemaResult: (indexes, constraints) ->
           schemaResultToRESTResult indexes, constraints
         constructJmxResult: jmxResultToRESTResult

@@ -41,12 +41,24 @@ angular.module('neo4jApp.services')
 
         getMeta: ->
           q = $q.defer()
-          $q.all([
-            Bolt.callProcedure("db.labels"),
-            Bolt.callProcedure("db.relationshipTypes"),
-            Bolt.callProcedure("db.propertyKeys")
-          ]).then((data) ->
-            q.resolve(Bolt.constructMetaResult data[0], data[1], data[2])
+          Bolt.boltTransaction(
+            """CALL db.labels() YIELD label
+            WITH COLLECT(label) AS labels
+            RETURN 'labels' as a, labels as result
+            UNION
+            CALL db.relationshipTypes() YIELD relationshipType
+            WITH COLLECT(relationshipType) AS relationshipTypes
+            RETURN 'relationshipTypes'as a, relationshipTypes as result
+            UNION
+            CALL db.propertyKeys() YIELD propertyKey
+            WITH COLLECT(propertyKey) AS propertyKeys
+            RETURN 'propertyKeys' as a, propertyKeys as result"""
+          ).promise.then((result) ->
+            return q.resolve(Bolt.constructMetaResult([], [], [])) unless result.records.length
+            res = result.records[0]
+            res2 = result.records[1]
+            res3 = result.records[2]
+            q.resolve(Bolt.constructMetaResult res, res2, res3)
           )
           q.promise
 
