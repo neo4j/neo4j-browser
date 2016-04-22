@@ -37,15 +37,15 @@
     "url": "https://github.com/neo4j/neo4j-javascript-driver.git"
   },
   "homepage": "https://github.com/neo4j/neo4j-javascript-driver",
-  "version": "1.0.0-RC2",
-  "_release": "1.0.0-RC2",
+  "version": "1.0.0",
+  "_release": "1.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.0-RC2",
-    "commit": "cbe8d30e07ce5a7bf6a7b46bfee5bfa0a51c37a3"
+    "tag": "1.0.0",
+    "commit": "21c4ba839f6ad8e0926cf25cab9e1e72b3c0b8d1"
   },
   "_source": "https://github.com/neo4j/neo4j-javascript-driver.git",
-  "_target": "^1.0.0-RC2",
+  "_target": "^1.0.0",
   "_originalSource": "neo4j-driver",
   "_direct": true
 }
