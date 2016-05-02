@@ -1,0 +1,16 @@
+#nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  align-items: center;
+}
+#nav ul li {
+  width: 100%;
+  height: 70px;
+  border-bottom: 1px solid black;
+  text-align: center;
+  flex: 0 0 70px;
+  cursor: pointer;
+  line-height: 75px;
+}

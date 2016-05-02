@@ -1,11 +1,9 @@
 import App from './App'
-import Home from './Home'
-import Foo from './Foo'
-import Bar from './Bar'
+import Main from './Main'
+import SingleFrame from './SingleFrame'
 
 export {
-    App,
-    Home,
-    Foo,
-    Bar
+  App,
+  Main,
+  SingleFrame
 }

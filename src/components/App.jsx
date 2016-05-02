@@ -1,19 +1,20 @@
 import React from 'react'
-import { Link } from 'react-router'
+import LeftNav from './LeftNav'
 
 export default function App ({ children }) {
+  const wrapperStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    height: '100vh'
+  }
+  const mainStyle = {
+    flex: '1',
+    backgroundColor: '#fdfdfd'
+  }
   return (
-    <div>
-      <header>
-        Links:
-        {' '}
-        <Link to='/'>Home</Link>
-        {' '}
-        <Link to='/foo'>Foo</Link>
-        {' '}
-        <Link to='/bar'>Bar</Link>
-      </header>
-      <div style={{ marginTop: '1.5em' }}>{children}</div>
+    <div id='wrapper' style={wrapperStyle}>
+      <LeftNav />
+      <div id='main' style={mainStyle}>hello main</div>
     </div>
   )
 }
