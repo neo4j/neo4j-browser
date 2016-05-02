@@ -163,3 +163,15 @@ describe 'Utils', () ->
       expect(Utils.getUrlParam(tCase.paramName, tCase.location)).toBe(tCase.expect)
     )
 
+  it 'should decide to clean HTML or not depending on source', ->
+    toClean = [
+      {page: 'http://neo4j.com', is_remote: yes},
+      {page: 'https://guides.neo4i.com/my_guide.html', is_remote: yes}
+    ]
+    toClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(yes))
+
+    notToClean = [
+      {page: 'page.html', is_remote: no}
+      {page: 'https://guides.neo4j.com/my_guide.html', is_remote: yes}
+    ]
+    notToClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(no))

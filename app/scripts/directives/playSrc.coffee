@@ -25,7 +25,7 @@ angular.module('neo4jApp.directives')
     (scope, element, attrs) ->
       unbind = scope.$watch 'frame.response', (response) ->
         return unless response
-        if response.is_remote
+        if Utils.isTrustedSource response
           response.contents = Utils.cleanHTML response.contents
         element.html(response.contents)
         $compile(element.contents())(scope)
