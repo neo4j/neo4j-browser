@@ -170,6 +170,10 @@ angular.module('neo4jApp.controllers')
 
   .run([
     '$rootScope'
-    ($scope) ->
+    'Utils'
+    'Settings'
+    'Editor'
+    ($scope, Utils, Settings, Editor) ->
       $scope.unauthorized = yes
+      if playUrl = Utils.getUrlParam('play', window.location.href) then Editor.setContent(Settings.cmdchar + 'play ' + playUrl)
   ])
