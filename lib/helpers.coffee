@@ -147,6 +147,10 @@ class neo.helpers
       whitelisted_hosts = if is_enterprise then whitelist.split(",") else ['http://guides.neo4j.com', 'https://guides.neo4j.com', 'http://localhost', 'https://localhost']
       hostname in whitelisted_hosts     
 
+    @isTrustedSource = (response = {}) ->
+      return yes unless response.is_remote
+      /^https?:\/\/(guides\.neo4j\.com|localhost)/.test(response.page)
+
     @getBrowserName = ->
       return 'Opera' if !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
       return 'Firefox' if typeof InstallTrigger != 'undefined'
@@ -168,3 +172,7 @@ class neo.helpers
         flat
       , [])
         
+    @getUrlParam = (name, theLocation) ->
+      return no unless theLocation
+      results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(theLocation)
+      return (results && results[1]) || undefined

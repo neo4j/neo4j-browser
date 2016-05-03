@@ -21,13 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 angular.module('neo4jApp.directives')
-  .directive('playSrc', ['$compile', '$rootScope', 'Utils', ($compile, $rootScope, Utils) ->
-    (scope, element, attrs) ->
-      unbind = scope.$watch 'frame.response', (response) ->
-        return unless response
-        if response.is_remote
-          response.contents = Utils.cleanHTML response.contents
-        element.html(response.contents)
-        $compile(element.contents())(scope)
-        unbind()
+  .directive('playSrc', [
+    '$compile', 
+    '$rootScope', 
+    'Utils', 
+    'Settings', 
+    ($compile, $rootScope, Utils, Settings) ->
+      (scope, element, attrs) ->
+        unbind = scope.$watch 'frame.response', (response) ->
+          return unless response
+          if response.is_remote
+            if Settings.allowLoadingRemoteScripts is no or not Utils.isTrustedSource response
+              response.contents = Utils.cleanHTML response.contents
+          element.html(response.contents)
+          $compile(element.contents())(scope)
+          unbind()
   ])

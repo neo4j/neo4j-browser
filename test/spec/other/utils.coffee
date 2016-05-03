@@ -151,3 +151,27 @@ describe 'Utils', () ->
   it 'should flatten nested arrays', ->
     t1 = [1, [2], [[3], 'hello', {k: 1}]]
     expect(JSON.stringify(Utils.flattenArray(t1))).toBe(JSON.stringify([1, 2, 3, 'hello', {k: 1}]))
+
+  it 'should read URL params correctly', ->
+    urls = [
+      {location: 'http://neo4j.com/?param=1', paramName: 'param', expect: '1'},
+      {location: 'http://neo4j.com/?param2=2&param=1', paramName: 'param', expect: '1'},
+      {location: 'http://neo4j.com/?param=', paramName: 'param', expect: undefined},
+      {location: 'http://neo4j.com/', paramName: 'param', expect: undefined}
+    ]
+    urls.forEach((tCase) -> 
+      expect(Utils.getUrlParam(tCase.paramName, tCase.location)).toBe(tCase.expect)
+    )
+
+  it 'should decide to clean HTML or not depending on source', ->
+    toClean = [
+      {page: 'http://neo4j.com', is_remote: yes},
+      {page: 'https://guides.neo4i.com/my_guide.html', is_remote: yes}
+    ]
+    toClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(no))
+
+    notToClean = [
+      {page: 'page.html', is_remote: no}
+      {page: 'https://guides.neo4j.com/my_guide.html', is_remote: yes}
+    ]
+    notToClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(yes))
