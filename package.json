@@ -9,6 +9,9 @@
     "test": "npm run lint && mocha --compilers js:babel-core/register --require ./test/setup.js 'test/**/*.@(js|jsx)'",
     "test:watch": "npm run test -- --watch --watch-extensions jsx"
   },
+  "standard": {
+    "globals": [ "it", "describe" ]
+  },
   "repository": {},
   "keywords": [],
   "author": "",

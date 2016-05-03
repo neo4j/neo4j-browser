@@ -1,12 +1,24 @@
-const initialState = {
-  number: 1
+
+function setState (state, newState) {
+  return newState
 }
 
-export default function app (state = initialState, action) {
-  if (action.type === 'INCREASE') {
-    return { number: state.number + action.amount }
-  } else if (action.type === 'DECREASE') {
-    return { number: state.number - action.amount }
+function addFrame (state, newState) {
+  return Object.assign(state, {frames: state.frames.concat(newState)})
+}
+
+function removeFrame (state, newState) {
+  return Object.assign(state, {frames: state.frames.filter((frame) => frame.id !== newState.id)})
+}
+
+export default function (state = {}, action) {
+  switch (action.type) {
+    case 'SET_STATE':
+      return setState(state, action.state)
+    case 'ADD_FRAME':
+      return addFrame(state, action.state)
+    case 'REMOVE_FRAME':
+      return removeFrame(state, action.state)
   }
   return state
 }
