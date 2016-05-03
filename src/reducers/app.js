@@ -11,7 +11,7 @@ function removeFrame (state, newState) {
   return Object.assign(state, {frames: state.frames.filter((frame) => frame.id !== newState.id)})
 }
 
-export default function (state = {}, action) {
+export default function app (state = {}, action) {
   switch (action.type) {
     case 'SET_STATE':
       return setState(state, action.state)

@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import app from '../../src/reducers/app.js'
+import {app} from '../../src/reducers'
 
 describe('app reducer SET_STATE', () => {
   it('handles SET_STATE with plain JS payload', () => {
