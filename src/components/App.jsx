@@ -1,5 +1,6 @@
 import React from 'react'
-import LeftNav from './LeftNav'
+import Sidebar from './Sidebar'
+import Main from './Main'
 
 export default function App ({ children }) {
   const wrapperStyle = {
@@ -7,14 +8,10 @@ export default function App ({ children }) {
     flexDirection: 'row',
     height: '100vh'
   }
-  const mainStyle = {
-    flex: '1',
-    backgroundColor: '#fdfdfd'
-  }
   return (
     <div id='wrapper' style={wrapperStyle}>
-      <LeftNav />
-      <div id='main' style={mainStyle}>hello main</div>
+      <Sidebar />
+      <Main />
     </div>
   )
 }
