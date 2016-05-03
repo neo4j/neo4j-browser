@@ -168,10 +168,10 @@ describe 'Utils', () ->
       {page: 'http://neo4j.com', is_remote: yes},
       {page: 'https://guides.neo4i.com/my_guide.html', is_remote: yes}
     ]
-    toClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(yes))
+    toClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(no))
 
     notToClean = [
       {page: 'page.html', is_remote: no}
       {page: 'https://guides.neo4j.com/my_guide.html', is_remote: yes}
     ]
-    notToClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(no))
+    notToClean.forEach((p) -> expect(Utils.isTrustedSource(p)).toBe(yes))

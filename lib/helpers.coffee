@@ -148,7 +148,8 @@ class neo.helpers
       hostname in whitelisted_hosts     
 
     @isTrustedSource = (response = {}) ->
-      response.is_remote and not /^https?:\/\/(guides\.neo4j\.com|localhost)/.test(response.page)
+      return yes unless response.is_remote
+      /^https?:\/\/(guides\.neo4j\.com|localhost)/.test(response.page)
 
     @getBrowserName = ->
       return 'Opera' if !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
