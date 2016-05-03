@@ -49,16 +49,37 @@ do ->
 
   nodeCaption = new neo.Renderer(
     onGraphChange: (selection, viz) ->
-      text = selection.selectAll('text').data((node) -> node.caption)
+      text = selection.selectAll('text.caption').data((node) -> node.caption)
 
       text.enter().append('text')
+      .classed('caption', true)
       .attr('text-anchor': 'middle')
       .attr('pointer-events': 'none')
 
       text
       .text((line) -> line.text)
-      .attr('y', (line) -> line.baseline)
+      .attr('y', (line) -> line.baseline )
       .attr('font-size', (line) -> viz.style.forNode(line.node).get('font-size'))
+      .attr('fill': (line) -> viz.style.forNode(line.node).get('text-color-internal'))
+
+      text.exit().remove()
+
+    onTick: noop
+  )
+
+  nodeIcon = new neo.Renderer(
+    onGraphChange: (selection, viz) ->
+      text = selection.selectAll('text').data((node) -> node.caption)
+
+      text.enter().append('text')
+      .attr('text-anchor': 'middle')
+      .attr('pointer-events': 'none')
+      .attr('font-family': 'streamline')
+
+      text
+      .text((line) -> viz.style.forNode(line.node).get('icon-code'))
+      .attr('dy', (line) ->  line.node.radius/16)
+      .attr('font-size', (line) -> line.node.radius)
       .attr('fill': (line) -> viz.style.forNode(line.node).get('text-color-internal'))
 
       text.exit().remove()
@@ -152,6 +173,7 @@ do ->
   )
 
   neo.renderers.node.push(nodeOutline)
+  neo.renderers.node.push(nodeIcon)
   neo.renderers.node.push(nodeCaption)
   neo.renderers.node.push(nodeRing)
   neo.renderers.relationship.push(arrowPath)

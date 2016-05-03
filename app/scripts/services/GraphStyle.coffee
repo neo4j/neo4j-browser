@@ -73,6 +73,15 @@ angular.module('neo4jApp.services')
       { color: '#FB95AF', 'border-color': '#E0849B', 'text-color-internal': '#FFFFFF' }
       { color: '#FFD86E', 'border-color': '#EDBA39', 'text-color-internal': '#604A0E' }
     ]
+    @defaultIconCodes = [
+      { 'icon-code': 'a' }
+      { 'icon-code': '"' }
+      { 'icon-code': 'z' }
+      { 'icon-code': '_' }
+      { 'icon-code': '/' }
+      { 'icon-code': '>' }
+      { 'icon-code': 'k' }
+  ]
 
     class Selector
       constructor: (@tag, @classes = []) ->
@@ -322,6 +331,7 @@ angular.module('neo4jApp.services')
       defaultSizes: -> provider.defaultSizes
       defaultArrayWidths: -> provider.defaultArrayWidths
       defaultColors: -> angular.copy(provider.defaultColors)
+      defaultIconCodes: -> provider.defaultIconCodes
       interpolate: (str, item) ->
         ips = str.replace( #Caption from user set properties as {property}
           /\{([^{}]*)\}/g,

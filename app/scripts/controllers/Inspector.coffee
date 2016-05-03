@@ -29,6 +29,7 @@ angular.module('neo4jApp.controllers')
     ($scope, graphStyle, Collection, $timeout) ->
       $scope.sizes = graphStyle.defaultSizes()
       $scope.arrowWidths = graphStyle.defaultArrayWidths()
+      $scope.iconCodes = graphStyle.defaultIconCodes()
       $scope.colors = graphStyle.defaultColors()
       $scope.currentItem = null
       $scope.inspectorContracted = yes
@@ -101,6 +102,10 @@ angular.module('neo4jApp.controllers')
       $scope.selectArrowWidth = (item, size) ->
         $scope.$emit 'close.contextMenu'
         item.style = graphStyle.changeForSelector(item.style.selector, size)
+
+      $scope.selectIcon = (item, iconCode) ->
+        $scope.$emit 'close.contextMenu'
+        item.style = graphStyle.changeForSelector(item.style.selector, iconCode)
 
       $scope.selectCaption = (item, caption) ->
         $scope.$emit 'close.contextMenu'
