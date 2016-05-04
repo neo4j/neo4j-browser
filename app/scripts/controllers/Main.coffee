@@ -41,6 +41,7 @@ angular.module('neo4jApp.controllers')
       ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory) ->
         $scope.CurrentUser = CurrentUser
         $scope.ConnectionStatusService = ConnectionStatusService
+        initailConnect = yes
 
         $scope.kernel = {}
         $scope.refresh = ->
@@ -76,6 +77,7 @@ angular.module('neo4jApp.controllers')
             refreshPolicies $scope.kernel['browser.retain_connection_credentials'], $scope.kernel['browser.credential_timeout']
             allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['browser.allow_outgoing_browser_connections']) < 0 ? yes : no
             refreshAllowOutgoingConnections allow_connections
+            executePostConnectCmd $scope.kernel['browser.post_connect_cmd']
           ).catch((r)-> $scope.kernel = {})
 
         refreshAllowOutgoingConnections = (allow_connections) ->
@@ -152,6 +154,12 @@ angular.module('neo4jApp.controllers')
           )
 
         pickFirstFrame()
+
+        executePostConnectCmd = (cmd) ->
+          return unless cmd
+          return unless initailConnect
+          initailConnect = no
+          Frame.create({input:"#{Settings.cmdchar}#{cmd}"})
 
         $scope.$on 'ntn:data_loaded', (evt, authenticated, newUser) ->
           return Frame.createOne({input:"#{Settings.initCmd}"}) if ConnectionStatusService.isConnected()
