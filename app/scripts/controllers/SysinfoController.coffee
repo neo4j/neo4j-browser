@@ -54,11 +54,11 @@ angular.module('neo4jApp.controllers')
               $scope.sysinfo.cache.available = true
               for a in r.attributes
                 $scope.sysinfo.cache[a.name] = a.value
-            else if "org.neo4j:instance=kernel#0,name=Transactions"
+            else if r.name == "org.neo4j:instance=kernel#0,name=Transactions"
               $scope.sysinfo.tx.available = true
               for a in r.attributes
                 $scope.sysinfo.tx[a.name] = a.value
-            else if  "org.neo4j:instance=kernel#0,name=High Availability"
+            else if r.name == "org.neo4j:instance=kernel#0,name=High Availability"
               $scope.sysinfo.ha.clustered = true
               for a in r.attributes
                 if a.name is "InstancesInCluster"
