@@ -177,10 +177,8 @@ angular.module('neo4jApp.controllers')
       $scope.unauthorized = yes
 
       if cmdParam = Utils.getUrlParam('cmd', window.location.href)
-        if cmdParam[0] is 'cypher'
-          cmdCommand = ''
-        else
-          cmdCommand = "#{Settings.cmdchar}#{cmdParam[0]} "
+        return unless cmdParam[0] is 'play'
+        cmdCommand = "#{Settings.cmdchar}#{cmdParam[0]} "
         cmdArgs = Utils.getUrlParam('arg', decodeURIComponent(window.location.href)) || []
         Editor.setContent(cmdCommand + cmdArgs.join(' '))
   ])
