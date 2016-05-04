@@ -68,10 +68,22 @@ angular.module('neo4jApp.controllers')
         graphView.update()
         selectItem(selectedItem)
 
+      closeContextMenuForItem = (d) =>
+        if d is selectedItem
+          d?.selected = no
+          selectedItem = null
+        else
+          selectedItem?.selected = no
+          d?.selected = yes
+          selectedItem = d
+
+        graphView.update()
+        selectedItem
+
       $rootScope.$on 'layout.changed', (-> graphView?.resize())
 
       $rootScope.$on 'close.contextMenu', (->
-        toggleSelection(selectedItem)
+        closeContextMenuForItem selectedItem
       )
 
       $scope.$watch 'displayInternalRelationships', (displayInternalRelationships) ->
