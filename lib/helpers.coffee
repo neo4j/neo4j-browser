@@ -168,3 +168,11 @@ class neo.helpers
         flat
       , [])
         
+    @getUrlParam = (name, theLocation) ->
+      return no unless theLocation
+      out = []
+      re = new RegExp('[\\?&]' + name + '=([^&#]*)', 'g')
+      while (results = re.exec(theLocation)) isnt null
+        out.push(results[1]) if results and results[1]
+      return undefined if not out.length
+      out
