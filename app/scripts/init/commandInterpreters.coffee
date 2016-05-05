@@ -63,8 +63,8 @@ angular.module('neo4jApp')
       type: 'style'
       matches: "#{cmdchar}style"
       exec: [
-        '$rootScope', 'exportService', 'GraphStyle',
-        ($rootScope, exportService, GraphStyle) ->
+        '$rootScope', 'exportService', 'GraphStyle', '$http'
+        ($rootScope, exportService, GraphStyle, $http) ->
           (input, q) ->
             switch argv(input)[1]
               when 'reset'
@@ -72,7 +72,20 @@ angular.module('neo4jApp')
               when 'export'
                 exportService.download('graphstyle.grass', 'text/plain;charset=utf-8', GraphStyle.toString())
               else
-                $rootScope.togglePopup('styling')
+                clean_input = input[('style'.length+1)..].trim()
+                if /^https?:\/\//i.test(clean_input)
+                  $http.get(clean_input)
+                  .then(
+                    (res) ->
+                      GraphStyle.importGrass(res.data)
+                  ,
+                    (r)->
+                      console.log("failed to load grass, because ", r)
+                  )
+                else if clean_input.length > 0
+                  GraphStyle.importGrass(clean_input)
+                else
+                  $rootScope.togglePopup('styling')
             true
       ]
 
