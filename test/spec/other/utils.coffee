@@ -118,20 +118,16 @@ describe 'Utils', () ->
     text = 'hello<script>alert(1)</script> <p onclick="alert(1)" ng-show=\'false\'>xxx</p>'
     expect(Utils.cleanHTML text).toBe 'hello <p>xxx</p>'
 
-  it 'should respect whitelist for enterprise edition', ->
+  it 'should respect whitelist from server', ->
     host = 'http://first.com'
     whitelist = 'http://second.com,http://third.com'
-    expect(Utils.hostIsAllowed host, '*', yes).toBe yes
-    expect(Utils.hostIsAllowed host, host, yes).toBe yes
-    expect(Utils.hostIsAllowed host, whitelist, yes).toBe no
-
-  it 'should ignore whitelist for non enterprise editions', ->
-    host = 'http://first.com'
-    whitelist = 'http://second.com,http://third.com'
-    expect(Utils.hostIsAllowed host, '*', no).toBe no
-    expect(Utils.hostIsAllowed host, host, no).toBe no
-    expect(Utils.hostIsAllowed host, whitelist, no).toBe no
-    expect(Utils.hostIsAllowed 'http://guides.neo4j.com', whitelist, no).toBe yes
+    expect(Utils.hostIsAllowed host, '*').toBe yes
+    expect(Utils.hostIsAllowed host, null).toBe no
+    expect(Utils.hostIsAllowed host, '').toBe no
+    expect(Utils.hostIsAllowed host, host).toBe yes
+    expect(Utils.hostIsAllowed host, whitelist).toBe no
+    expect(Utils.hostIsAllowed 'http://guides.neo4j.com', null).toBe yes
+    expect(Utils.hostIsAllowed 'http://guides.neo4j.com', '').toBe yes
 
   it 'should merge two arrays with documents without duplicates', ->
     arr1 = [getDocument('MATCH (n) RETURN n'), getDocument('//My script\nRETURN "me"')]
