@@ -151,3 +151,24 @@ describe 'Utils', () ->
   it 'should flatten nested arrays', ->
     t1 = [1, [2], [[3], 'hello', {k: 1}]]
     expect(JSON.stringify(Utils.flattenArray(t1))).toBe(JSON.stringify([1, 2, 3, 'hello', {k: 1}]))
+
+  it 'should read URL params correctly', ->
+    urls = [
+      {location: 'http://neo4j.com/?param=1', paramName: 'param', expect: '1'},
+      {location: 'http://neo4j.com/?param2=2&param=1', paramName: 'param', expect: '1'},
+      {location: 'http://neo4j.com/?param=', paramName: 'param', expect: undefined},
+      {location: 'http://neo4j.com/', paramName: 'param', expect: undefined}
+    ]
+    urls.forEach((tCase) -> 
+      res = Utils.getUrlParam tCase.paramName, tCase.location
+      val = if res then res[0] else res
+      expect(val).toBe(tCase.expect)
+    )
+
+  it 'should read URL array params correctly', ->
+    single = 'http://neo4j.com/?cmd=play&arg=cypher'
+    expect(Utils.getUrlParam('arg', single)[0]).toBe('cypher')
+
+    multi = 'http://neo4j.com/?cmd=play&arg=cypher&arg=hello'
+    expect(Utils.getUrlParam('arg', multi)[0]).toBe('cypher')
+    expect(Utils.getUrlParam('arg', multi)[1]).toBe('hello')
