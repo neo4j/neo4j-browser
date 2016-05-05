@@ -142,10 +142,10 @@ class neo.helpers
     @stripNGAttributes = (string = '') ->
       string.replace(/(\s+(ng|data|x)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/ig, '')
 
-    @hostIsAllowed = (hostname, whitelist, is_enterprise) ->
-      return true if is_enterprise and (not whitelist or whitelist is '*')
-      whitelisted_hosts = if is_enterprise then whitelist.split(",") else ['http://guides.neo4j.com', 'https://guides.neo4j.com', 'http://localhost', 'https://localhost']
-      hostname in whitelisted_hosts     
+    @hostIsAllowed = (hostname, whitelist) ->
+      return true if whitelist is '*'
+      whitelisted_hosts = if whitelist? and whitelist isnt '' then whitelist.split(",") else ['http://guides.neo4j.com', 'https://guides.neo4j.com', 'http://localhost', 'https://localhost']
+      hostname in whitelisted_hosts
 
     @getBrowserName = ->
       return 'Opera' if !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0

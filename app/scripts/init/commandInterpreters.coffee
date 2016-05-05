@@ -142,7 +142,7 @@ angular.module('neo4jApp')
             is_remote = yes
             url = input[('play'.length+2)..]
             host = url.match(/^(https?:\/\/[^\/]+)/)[1]
-            host_ok = Utils.hostIsAllowed host, $rootScope.kernel['browser.remote_content_hostname_whitelist'], $rootScope.neo4j.enterpriseEdition
+            host_ok = Utils.hostIsAllowed host, $rootScope.kernel['browser.remote_content_hostname_whitelist']
           else
             topic = topicalize(clean_url) or 'start'
             url = "content/guides/#{topic}.html"
