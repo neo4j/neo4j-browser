@@ -11,7 +11,7 @@ import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 import * as reducers from './reducers'
 import { App, Main, SingleFrame } from './components'
-require('./style.css')
+import './styles/style.css'
 
 const reducer = combineReducers({
   ...reducers,

@@ -44,7 +44,6 @@
 }
 #main #editor {
   flex: 1 0 70px;
-  height: 70px;
   background-color: white;
   border-bottom: 1px solid black;
 }
