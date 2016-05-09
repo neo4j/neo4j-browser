@@ -8,7 +8,6 @@ import { toggleDrawer } from '../action_creators'
 
 const mapStateToProps = (state) => {
   return {
-    frames: state.frames,
     drawer: state.drawer
   }
 }

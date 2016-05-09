@@ -1,13 +1,21 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-export default class Stream extends React.Component {
-  render () {
-    return (
-      <div id='stream'>
-        Hello Stream
-        <div style={{height: '1500px'}}>x</div>
-        Hello from the other side
-      </div>
-    )
+const StreamComponent = ({frames}) => {
+  const framesList = frames.map((frame) => {
+    return <div className='frame' key={frame.id}>{frame.cmd}</div>
+  })
+  return (
+    <div id='stream'>
+      {framesList}
+    </div>
+  )
+}
+
+const mapStateToProps = (state) => {
+  return {
+    frames: [].concat(state.frames).reverse()
   }
 }
+
+export default connect(mapStateToProps)(StreamComponent)

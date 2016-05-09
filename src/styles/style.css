@@ -48,9 +48,14 @@
   border-bottom: 1px solid black;
 }
 #main #stream {
-  height: 100%;
   overflow: auto;
-  flex: 1;
+  flex: 1 1 100vh;
+}
+
+#stream .frame {
+  margin: 10px 10px 10px 10px;
+  padding: 20px;
+  border: 1px solid grey;
 }
 
 

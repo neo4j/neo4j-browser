@@ -1,10 +1,11 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 
-export default class Editor extends React.Component {
+class EditorComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -21,7 +22,8 @@ export default class Editor extends React.Component {
     this.codeMirrorInstance.commands.newlineAndIndent(cm)
   }
   execCurrent (cm) {
-    console.log('Executing')
+    this.props.onExecute(cm.getValue())
+    cm.setValue('')
   }
   componentDidMount () {
     this.codeMirror = this.refs.editor.getCodeMirror()
@@ -57,3 +59,14 @@ export default class Editor extends React.Component {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onExecute: (cmd) => {
+      dispatch({type: 'USER_COMMAND_QUEUED', cmd: cmd})
+    }
+  }
+}
+
+const Editor = connect(null, mapDispatchToProps)(EditorComponent)
+export default Editor

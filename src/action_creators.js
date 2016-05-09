@@ -1,3 +1,4 @@
+import uuid from 'uuid'
 
 function toggleDrawer (id) {
   return {
@@ -6,6 +7,14 @@ function toggleDrawer (id) {
   }
 }
 
+function addFrame (cmd) {
+  return {
+    type: 'ADD_FRAME',
+    state: {cmd: cmd, id: uuid.v1()}
+  }
+}
+
 export {
-  toggleDrawer
+  toggleDrawer,
+  addFrame
 }
