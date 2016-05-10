@@ -23,15 +23,9 @@ const reducer = combineReducers({
   routing: routerReducer
 })
 
-const DevTools = createDevTools(
-  <DockMonitor toggleVisibilityKey='ctrl-h' changePositionKey='ctrl-q'>
-    <LogMonitor theme='tomorrow' preserveScrollTop={false} />
-  </DockMonitor>
-)
-
 const enhancer = compose(
   applyMiddleware(sagaMiddleware),
-  DevTools.instrument()
+  window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
 const store = createStore(
@@ -50,7 +44,6 @@ ReactDOM.render(
           <Route path='stream/:frameId' component={SingleFrame}/>
         </Route>
       </Router>
-      <DevTools />
     </div>
   </Provider>,
   document.getElementById('mount')

@@ -1,6 +1,5 @@
 import jsdom from 'jsdom'
-import chai from 'chai'
-import chaiImmutable from 'chai-immutable'
+import chai from 'chai' // eslint-disable-line
 import 'babel-polyfill'
 
 const doc = jsdom.jsdom('<!doctype html><html><body></body></html>')
@@ -14,5 +13,3 @@ Object.keys(window).forEach((key) => {
     global[key] = window[key]
   }
 })
-
-chai.use(chaiImmutable)
