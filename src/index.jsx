@@ -1,7 +1,4 @@
 import 'babel-polyfill'
-import { createDevTools } from 'redux-devtools'
-import LogMonitor from 'redux-devtools-log-monitor'
-import DockMonitor from 'redux-devtools-dock-monitor'
 import createSagaMiddleware from 'redux-saga'
 
 import React from 'react'
