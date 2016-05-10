@@ -1,0 +1,112 @@
+{
+  "_args": [
+    [
+      "neo4j-driver",
+      "/Users/oskarhane/Development/neo4j-browser-react"
+    ]
+  ],
+  "_from": "neo4j-driver@latest",
+  "_id": "neo4j-driver@1.0.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/neo4j-driver",
+  "_nodeVersion": "0.10.25",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/neo4j-driver-1.0.0.tgz_1461253841919_0.15065546589903533"
+  },
+  "_npmUser": {
+    "email": "npm@neo4j.com",
+    "name": "neo4j-organization"
+  },
+  "_npmVersion": "3.8.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "neo4j-driver",
+    "raw": "neo4j-driver",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/neo4j-driver/-/neo4j-driver-1.0.0.tgz",
+  "_shasum": "52e365dd2042f7b97b622a783855bfd33f19c3b2",
+  "_shrinkwrap": null,
+  "_spec": "neo4j-driver",
+  "_where": "/Users/oskarhane/Development/neo4j-browser-react",
+  "author": {
+    "name": "Neo Technology Inc."
+  },
+  "bugs": {
+    "url": "https://github.com/neo4j/neo4j-javascript-driver/issues"
+  },
+  "dependencies": {},
+  "description": "Connect to Neo4j 3.0.0 and up from JavaScript",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babelify": "^6.3.0",
+    "browserify": "^11.0.0",
+    "esdoc": "^0.4.0",
+    "esdoc-importpath-plugin": "0.0.1",
+    "glob": "^5.0.14",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^5.2.1",
+    "gulp-batch": "^1.0.5",
+    "gulp-concat": "^2.6.0",
+    "gulp-cucumber": "0.0.14",
+    "gulp-decompress": "^1.2.0",
+    "gulp-download": "^0.0.1",
+    "gulp-if": "^1.2.5",
+    "gulp-jasmine": "^2.1.0",
+    "gulp-jasmine-browser": "^0.2.3",
+    "gulp-replace": "^0.5.4",
+    "gulp-shell": "^0.4.3",
+    "gulp-uglify": "^1.4.2",
+    "gulp-util": "^3.0.6",
+    "gulp-watch": "^4.3.5",
+    "jasmine-reporters": "^2.0.7",
+    "merge-stream": "^1.0.0",
+    "minimist": "^1.2.0",
+    "phantomjs2-ext": "^0.1.0",
+    "run-sequence": "^1.1.4",
+    "through2": "~2.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "52e365dd2042f7b97b622a783855bfd33f19c3b2",
+    "tarball": "https://registry.npmjs.org/neo4j-driver/-/neo4j-driver-1.0.0.tgz"
+  },
+  "homepage": "https://github.com/neo4j/neo4j-javascript-driver#readme",
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "maintainers": [
+    {
+      "email": "jakewins@gmail.com",
+      "name": "jakewins"
+    },
+    {
+      "email": "npm@neo4j.com",
+      "name": "neo4j-organization"
+    }
+  ],
+  "name": "neo4j-driver",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/neo4j/neo4j-javascript-driver.git"
+  },
+  "scripts": {
+    "build": "gulp all",
+    "docs": "esdoc -c esdoc.json",
+    "start-neo4j": "gulp start-neo4j",
+    "stop-neo4j": "gulp stop-neo4j",
+    "test": "gulp test"
+  },
+  "version": "1.0.0"
+}

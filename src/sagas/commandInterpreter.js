@@ -1,7 +1,8 @@
-import { put, take, select } from 'redux-saga/effects'
+import { put, take, select, call } from 'redux-saga/effects'
 import { addFrame } from '../action_creators'
 import { getSettings } from '../selectors'
 import { cleanCommand } from '../services/commandUtils'
+import bolt from '../services/bolt'
 
 function * watchCommands () {
   let action = ''
@@ -12,9 +13,10 @@ function * watchCommands () {
     settings = yield select(getSettings)
     cleanCmd = cleanCommand(action.cmd)
     if (cleanCmd[0] === settings.cmdchar) {
-      yield put(addFrame(action.cmd))
+      yield put(addFrame({cmd: action.cmd}))
     } else {
-      yield put(addFrame(action.cmd))
+      const res = yield call(bolt.transaction, action.cmd)
+      yield put(addFrame({cmd: action.cmd, resultPromise: res}))
     }
   }
 }

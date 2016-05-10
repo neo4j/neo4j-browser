@@ -7,10 +7,10 @@ function toggleDrawer (id) {
   }
 }
 
-function addFrame (cmd) {
+function addFrame ({cmd, resultPromise}) {
   return {
     type: 'ADD_FRAME',
-    state: {cmd: cmd, id: uuid.v1()}
+    state: {cmd: cmd, resultPromise: resultPromise, id: uuid.v1()}
   }
 }
 

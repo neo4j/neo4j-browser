@@ -11,7 +11,7 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      exclude: /node_modules/,
+      exclude: /node_modules|dist/,
       loader: 'react-hot!babel'
     }, {
       test: /\.css$/,
@@ -26,11 +26,20 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
+  externals: {
+    'neo4j': 'neo4j'
+  },
   devServer: {
     contentBase: './dist',
     hot: true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
-  ]
+  ],
+  node: {
+    net: 'empty',
+    tls: 'empty',
+    readline: 'empty',
+    fs: 'empty'
+  }
 }
