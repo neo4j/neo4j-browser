@@ -19,10 +19,14 @@ module.exports = function (config) {
     },
     reporters: [ 'mocha', 'coverage' ],
     webpack: {
+      resolve: {
+        extensions: ['', '.js', '.jsx']
+      },
       devtool: 'inline-source-map',
       module: {
         loaders: [
-          { test: /\.jsx?$/, loader: 'babel', exclude: /node_modules|dist/ }
+          { test: /\.jsx?$/, loader: 'babel', exclude: /node_modules|dist/ },
+          { test: /\.css$/, loader: 'style!css' }
         ],
         postLoaders: [ {
           test: /\.js$/,
