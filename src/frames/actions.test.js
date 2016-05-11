@@ -4,7 +4,7 @@ import frames from '.'
 describe('Frames actions', () => {
   it('should handle adding frames', () => {
     // Given
-    const obj = {cmd: ':help', id: 1, result: null}
+    const obj = {cmd: ':help', id: 1}
     const expected = { type: frames.actionTypes.ADD, state: obj }
 
     // When

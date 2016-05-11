@@ -14,13 +14,13 @@ function * watchCommands () {
     settings = yield select(getSettings)
     cleanCmd = cleanCommand(action.cmd)
     if (cleanCmd[0] === settings.cmdchar) {
-      yield put(frames.actions.add({cmd: action.cmd}))
+      yield put(frames.actions.add({cmd: action.cmd, type: 'cmd'}))
     } else {
       try {
         const res = yield call(bolt.transaction, action.cmd)
-        yield put(frames.actions.add({cmd: action.cmd, result: res}))
+        yield put(frames.actions.add({cmd: action.cmd, result: res, type: 'cypher'}))
       } catch (e) {
-        yield put(frames.actions.add({cmd: 'ERROR'}))
+        yield put(frames.actions.add({cmd: action.cmd, errors: e, type: 'cypher'}))
       }
     }
   }
