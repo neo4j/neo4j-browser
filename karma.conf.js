@@ -29,7 +29,7 @@ module.exports = function (config) {
           { test: /\.css$/, loader: 'style!css' }
         ],
         postLoaders: [ {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           exclude: /(test|node_modules|bower_components|dist)\//,
           loader: 'istanbul-instrumenter' } ]
       }
