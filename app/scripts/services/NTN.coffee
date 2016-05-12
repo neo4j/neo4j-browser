@@ -41,10 +41,7 @@ angular.module('neo4jApp.services')
       ref = new Firebase("https://fiery-heat-7952.firebaseio.com/users/#{id}/")
       fbauth = $firebaseAuth ref
       fbauth.$authWithCustomToken(token).then(
-        (auth_data)->
-          if auth_data.expires - Math.round((new Date()).getTime()/1000) < 60*60*12
-            $rootScope.$emit 'ntn:token_will_expire'
-
+        (success) ->
           q.resolve(ref)
         ,
         (err) ->
@@ -63,7 +60,6 @@ angular.module('neo4jApp.services')
         ,
         (err)->
           _unbind()
-          $rootScope.$emit 'ntn:token_expired'
       )
 
     _push = (_store, data) ->
