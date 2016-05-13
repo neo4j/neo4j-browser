@@ -7,13 +7,10 @@ import editor from '../editor'
 import bolt from '../services/bolt'
 
 function * watchCommands () {
-  let action = ''
-  let cleanCmd = ''
-  let settings = yield select(getSettings)
   while (true) {
-    action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
-    settings = yield select(getSettings)
-    cleanCmd = cleanCommand(action.cmd)
+    const action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
+    const settings = yield select(getSettings)
+    const cleanCmd = cleanCommand(action.cmd)
     if (cleanCmd[0] === settings.cmdchar) {
       yield call(handleClientCommand, settings.cmdchar, action.cmd)
     } else {

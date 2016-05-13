@@ -13,7 +13,6 @@ describe('watchCommands Saga', () => {
     const settings = {cmdchar: ':'}
 
     // When
-    watchSaga.next() // Trigger settings read
     const rec = watchSaga.next().value
     watchSaga.next(payload) // Settings read again
     const actualCallAction = watchSaga.next(settings).value
@@ -31,7 +30,6 @@ describe('watchCommands Saga', () => {
     const settings = {cmdchar: ':'}
 
     // When
-    watchSaga.next() // Trigger settings read
     const rec = watchSaga.next().value
     watchSaga.next(payload) // Settings read again
     const actualBoltAction = watchSaga.next(settings).value
