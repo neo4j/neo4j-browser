@@ -58,7 +58,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     boltHost: "" # $location.host() is default
     shownTermsAndPrivacy: no
     acceptedTermsAndPrivacy: no
-    onboarding: yes
+    onboarding: no
     showSampleScripts: yes
   })
 
