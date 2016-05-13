@@ -14,6 +14,8 @@ export default function frames (state = [], action) {
       return addFrame(state, action.state)
     case t.REMOVE:
       return removeFrame(state, action.state)
+    case t.CLEAR_ALL:
+      return []
   }
   return state
 }

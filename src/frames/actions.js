@@ -8,6 +8,13 @@ function add (payload) {
   }
 }
 
+function clear () {
+  return {
+    type: t.CLEAR_ALL
+  }
+}
+
 export {
-  add
+  add,
+  clear
 }

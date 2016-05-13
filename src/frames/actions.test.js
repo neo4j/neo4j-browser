@@ -13,4 +13,16 @@ describe('Frames actions', () => {
     // Then
     expect(actual).to.deep.equal(expected)
   })
+
+  it('should have a clear() method that returns CLEAR_ALL', () => {
+    // Given
+    const obj = {cmd: ':clear'}
+    const expected = { type: frames.actionTypes.CLEAR_ALL }
+
+    // When
+    const actual = frames.actions.clear(obj)
+
+    // Then
+    expect(actual).to.deep.equal(expected)
+  })
 })
