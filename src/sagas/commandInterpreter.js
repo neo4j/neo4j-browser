@@ -1,4 +1,5 @@
 import { put, take, select, call } from 'redux-saga/effects'
+import helper from '../services/commandInterpreterHelper'
 import frames from '../frames'
 import { getSettings } from '../selectors'
 import { cleanCommand } from '../services/commandUtils'
@@ -27,8 +28,13 @@ function * watchCommands () {
 }
 
 function * handleClientCommand (cmdchar, cmd) {
-  if (cmd === cmdchar + 'clear') {
+  const interpreted = helper.interpret(cmd.substr(cmdchar.length))
+
+  if (interpreted.name === 'clear') {
     yield put(frames.actions.clear())
+  } else if (interpreted.name === 'config') {
+    const settings = yield select(getSettings)
+    yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settings, null, 2)}))
   } else {
     yield put(frames.actions.add({cmd: cmd, type: 'cmd'}))
   }
