@@ -124,17 +124,13 @@ angular.module('neo4jApp.services')
       login: ->
         q = $q.defer()
         that = @
-        @autoLogin().then(
-          ->
-            q.resolve()
-          ,
-          ->
-            NTN.login().then((res) ->
-              that.persist res
-              data = localStorageService.get 'ntn_profile' || {}
-              $rootScope.$emit 'ntn:login', data
-              q.resolve(res)
-            )
+        NTN.login().then((res) ->
+          that.persist res
+          data = localStorageService.get 'ntn_profile' || {}
+          $rootScope.$emit 'ntn:login', data
+          q.resolve(res)
+        ,
+          (err) -> q.reject()
         )
         q.promise
 
@@ -156,37 +152,8 @@ angular.module('neo4jApp.services')
 
       isAuthenticated: -> localStorageService.get 'ntn_data_token'
 
-      autoLogin: ->
-        that = @
-        q = $q.defer()
-        if NTN.isAuthenticated()
-          q.resolve()
-          return q.promise
-        token = localStorageService.get('ntn_token')
-        if not token
-          q.reject()
-          return q.promise
-        q.reject()
-        q.promise
-
-      refreshToken: ->
-        that = @
-        NTN.refreshToken(localStorageService.get('ntn_refresh_token')).then((token)->
-          that.persist({token: token.token, data_token: token.data_token})
-          that.autoLogin()
-        )
-
       init: ->
         NTN.connection()
-
-      $rootScope.$on 'ntn:token_will_expire', () ->
-        cu.refreshToken()
-
-      $rootScope.$on 'ntn:token_expired', () ->
-        cu.autoLogin()
-
-      $rootScope.$on 'ntn:connection_status', (s, isConnected) ->
-        if isConnected then cu.autoLogin()
 
     cu = new CurrentUser
     cu
