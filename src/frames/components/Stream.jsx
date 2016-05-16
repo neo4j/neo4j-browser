@@ -10,6 +10,12 @@ const StreamComponent = ({frames}) => {
     if (frame.type === 'pre') {
       return <div className='frame' key={frame.id}><pre>{frame.contents}</pre></div>
     }
+    if (frame.type === 'history') {
+      const historyRows = frame.history.map((entry, index) => {
+        return <li key={index}>{entry.cmd}</li>
+      })
+      return <div className='frame' key={frame.id}><ul className='history-list'>{historyRows}</ul></div>
+    }
     return <div className='frame' key={frame.id}>{frame.cmd}</div>
   })
   return (

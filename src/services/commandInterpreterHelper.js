@@ -5,6 +5,9 @@ const availableCommands = [{
   name: 'config',
   match: (cmd) => /^config(\s|$)/.test(cmd)
 }, {
+  name: 'history',
+  match: (cmd) => cmd === 'history'
+}, {
   name: 'catch-all',
   match: (_) => true
 }]

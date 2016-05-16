@@ -1,18 +1,20 @@
 import { put, take, select, call } from 'redux-saga/effects'
 import helper from '../services/commandInterpreterHelper'
 import frames from '../frames'
-import { getSettings } from '../selectors'
-import { cleanCommand } from '../services/commandUtils'
+import settings from '../settings'
+import { getSettings, getHistory } from '../selectors'
+import { cleanCommand, parseConfigInput } from '../services/commandUtils'
 import editor from '../editor'
 import bolt from '../services/bolt'
 
 function * watchCommands () {
   while (true) {
     const action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
-    const settings = yield select(getSettings)
+    yield put(editor.actions.addHistory({cmd: action.cmd}))
+    const settingsState = yield select(getSettings)
     const cleanCmd = cleanCommand(action.cmd)
-    if (cleanCmd[0] === settings.cmdchar) {
-      yield call(handleClientCommand, settings.cmdchar, action.cmd)
+    if (cleanCmd[0] === settingsState.cmdchar) {
+      yield call(handleClientCommand, settingsState.cmdchar, action.cmd)
     } else {
       try {
         const res = yield call(bolt.transaction, action.cmd)
@@ -30,14 +32,29 @@ function * handleClientCommand (cmdchar, cmd) {
   if (interpreted.name === 'clear') {
     yield put(frames.actions.clear())
   } else if (interpreted.name === 'config') {
-    const settings = yield select(getSettings)
-    yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settings, null, 2)}))
+    yield call(handleConfigCommand, cmd.substr(cmdchar.length))
+  } else if (interpreted.name === 'history') {
+    const historyState = yield select(getHistory)
+    yield put(frames.actions.add({cmd: cmd, type: 'history', history: historyState}))
   } else {
     yield put(frames.actions.add({cmd: cmd, type: 'cmd'}))
   }
 }
 
+function * handleConfigCommand (cmd) {
+  const toBeSet = parseConfigInput(cmd)
+  if (cmd === 'config' || toBeSet === false) {
+    const settingsState = yield select(getSettings)
+    yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState, null, 2)}))
+    return
+  }
+  yield put(settings.actions.update(toBeSet))
+  const settingsState = yield select(getSettings)
+  yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState, null, 2)}))
+}
+
 export {
   watchCommands,
-  handleClientCommand
+  handleClientCommand,
+  handleConfigCommand
 }

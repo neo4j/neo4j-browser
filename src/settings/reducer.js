@@ -1,7 +1,8 @@
 import * as t from './actionTypes'
 
 const initialState = {
-  cmdchar: ':'
+  cmdchar: ':',
+  maxHistory: 10
 }
 
 export default function settings (state = initialState, action) {
