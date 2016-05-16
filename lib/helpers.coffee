@@ -52,7 +52,7 @@ class neo.helpers
 
     @mergeDocumentArrays = (arr1, arr2) ->
       [].concat(arr1, arr2)
-        .reduce((tot, curr) -> 
+        .reduce((tot, curr) ->
           return tot if tot.done.indexOf(curr.content) > -1
           tot.done.push(curr.content)
           tot.out.push(curr)
@@ -142,10 +142,15 @@ class neo.helpers
     @stripNGAttributes = (string = '') ->
       string.replace(/(\s+(ng|data|x)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/ig, '')
 
-    @hostIsAllowed = (hostname, whitelist) ->
+    @hostIsAllowed = (uri, whitelist) ->
       return true if whitelist is '*'
-      whitelisted_hosts = if whitelist? and whitelist isnt '' then whitelist.split(",") else ['http://guides.neo4j.com', 'https://guides.neo4j.com', 'http://localhost', 'https://localhost']
-      hostname in whitelisted_hosts
+      host_without_port = document.createElement('a')
+      host_without_port.setAttribute('href', uri)
+      hostnamePlusProtocol = host_without_port.protocol + '//' + host_without_port.hostname
+      hostname = host_without_port.hostname
+
+      whitelisted_hosts = if whitelist? and whitelist isnt '' then whitelist.split(",") else ['guides.neo4j.com', 'localhost']
+      hostname in whitelisted_hosts ||  hostnamePlusProtocol in whitelisted_hosts
 
     @getBrowserName = ->
       return 'Opera' if !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
@@ -155,7 +160,7 @@ class neo.helpers
       return 'Internet Explorer' if !!document.documentMode
       return 'Edge' if !!window.StyleMedia
       'Unknown'
-      
+
     @getServerHostname = (Settings) ->
       if Settings.host then Settings.host else location.href
 
@@ -167,7 +172,7 @@ class neo.helpers
         flat = [].concat.apply(flat, [].concat.apply(that.flattenArray(item))) if Array.isArray item
         flat
       , [])
-        
+
     @getUrlParam = (name, theLocation) ->
       return no unless theLocation
       out = []

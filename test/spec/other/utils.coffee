@@ -47,7 +47,7 @@ describe 'Utils', () ->
     text = """
           cypher queries
           will often be more
-          legible on multiple lines 
+          legible on multiple lines
           than squashed onto a single line
           """
     expect(Utils.firstWord text).toBe 'cypher'
@@ -119,22 +119,30 @@ describe 'Utils', () ->
     expect(Utils.cleanHTML text).toBe 'hello <p>xxx</p>'
 
   it 'should respect whitelist from server', ->
-    host = 'http://first.com'
-    whitelist = 'http://second.com,http://third.com'
-    expect(Utils.hostIsAllowed host, '*').toBe yes
-    expect(Utils.hostIsAllowed host, null).toBe no
-    expect(Utils.hostIsAllowed host, '').toBe no
-    expect(Utils.hostIsAllowed host, host).toBe yes
-    expect(Utils.hostIsAllowed host, whitelist).toBe no
-    expect(Utils.hostIsAllowed 'http://guides.neo4j.com', null).toBe yes
-    expect(Utils.hostIsAllowed 'http://guides.neo4j.com', '').toBe yes
+    whitelist = 'https://second.com,fourth.com'
+    expect(Utils.hostIsAllowed 'http://first.com', whitelist).toBe no
+    expect(Utils.hostIsAllowed 'http://second.com', whitelist).toBe no
+    expect(Utils.hostIsAllowed 'https://second.com', whitelist).toBe yes
+    expect(Utils.hostIsAllowed 'http://fourth.com', whitelist).toBe yes
+    expect(Utils.hostIsAllowed 'https://fourth.com', whitelist).toBe yes
+
+  it 'should treat * from server as all hosts allowed', ->
+    expect(Utils.hostIsAllowed 'anything', '*').toBe yes
+
+  it 'should use defaults if no whitelist specified', ->
+    expect(Utils.hostIsAllowed 'http://anything.com', null).toBe no
+    expect(Utils.hostIsAllowed 'http://anything.com', '').toBe no
+    expect(Utils.hostIsAllowed 'guides.neo4j.com', null).toBe yes
+    expect(Utils.hostIsAllowed 'guides.neo4j.com', '').toBe yes
+    expect(Utils.hostIsAllowed 'localhost', '').toBe yes
+    expect(Utils.hostIsAllowed 'localhost', '').toBe yes
 
   it 'should merge two arrays with documents without duplicates', ->
     arr1 = [getDocument('MATCH (n) RETURN n'), getDocument('//My script\nRETURN "me"')]
     arr2 = [getDocument('MATCH (n)-(m) RETURN n'), getDocument('//My script\nRETURN "me"'), getDocument('RETURN 1')]
     expect(JSON.stringify(Utils.mergeDocumentArrays(arr1, arr2)))
-      .toBe(JSON.stringify([getDocument('MATCH (n) RETURN n'), 
-          getDocument('//My script\nRETURN "me"'), 
+      .toBe(JSON.stringify([getDocument('MATCH (n) RETURN n'),
+          getDocument('//My script\nRETURN "me"'),
           getDocument('MATCH (n)-(m) RETURN n'),
           getDocument('RETURN 1')]))
 
@@ -155,7 +163,7 @@ describe 'Utils', () ->
       {location: 'http://neo4j.com/?param=', paramName: 'param', expect: undefined},
       {location: 'http://neo4j.com/', paramName: 'param', expect: undefined}
     ]
-    urls.forEach((tCase) -> 
+    urls.forEach((tCase) ->
       res = Utils.getUrlParam tCase.paramName, tCase.location
       val = if res then res[0] else res
       expect(val).toBe(tCase.expect)
