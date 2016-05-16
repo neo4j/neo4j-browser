@@ -104,6 +104,10 @@ neo.queryPlan = (element)->
       wordWrap(identifiers.filter((d) -> not (/^  /.test(d))).join(', '), 'identifiers')
       details.push { className: 'padding' }
 
+    if index = operator.Index
+      wordWrap(index, 'index')
+      details.push { className: 'padding' }
+
     if expression = operator.LegacyExpression ? operator.ExpandExpression ? operator.LabelName
       wordWrap(expression, 'expression')
       details.push { className: 'padding' }

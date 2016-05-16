@@ -354,6 +354,7 @@ angular.module('neo4jApp.services')
           Rows: plan.rows,
           EstimatedRows: plan.arguments.EstimatedRows,
           identifiers: plan.identifiers,
+          Index: plan.arguments.Index,
           children: plan.children.map boltPlanToRESTPlanShared
         }
 
