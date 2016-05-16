@@ -138,10 +138,11 @@ angular.module('neo4jApp.services')
               path: "/commit"
               statements: statements
             )
-            p.then((r) ->
+            p.success((r) ->
               r.responseTime = timer.stop().time()
-              return r
-            ).catch((r) -> r.responseTime = timer.stop().time())
+            ).error((r) ->
+              r.responseTime = timer.stop().time()
+            )
             res = promiseResult p
             res.then(
               -> UDC.increment('cypher_wins')
