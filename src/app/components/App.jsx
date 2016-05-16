@@ -19,10 +19,10 @@ const mapDispatchToProps = (dispatch) => {
 export const AppComponent = ({drawer, children, onNavClick}) => {
   return (
     <div id='wrapper'>
-      <sidebar.components.Sidebar onNavClick={onNavClick} openDrawer={drawer} />
+      <sidebar.components.Sidebar onNavClick={onNavClick} openDrawer={drawer}/>
       <main.components.Main />
     </div>
   )
 }
-
 export const App = connect(mapStateToProps, mapDispatchToProps)(AppComponent)
+

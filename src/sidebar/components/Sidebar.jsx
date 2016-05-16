@@ -1,5 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
+import dbInfo from '../../dbInfo'
 
 class Sidebar extends React.Component {
   render () {
@@ -9,6 +10,12 @@ class Sidebar extends React.Component {
       {name: 'DB', icon: ''},
       {name: 'Fav', icon: ''}
     ]
+    const drawerContentMap = (openDrawer) => {
+      if (openDrawer === 'db') {
+        return <dbInfo.components.DatabaseDrawer/>
+      }
+      return openDrawer
+    }
     const navItems = navItemsList.map((item, index) => {
       const itemClass = classNames({
         open: item.name.toLowerCase() === openDrawer
@@ -27,7 +34,9 @@ class Sidebar extends React.Component {
         <div id='nav'>
           <ul>{navItems}</ul>
         </div>
-        <div id='drawer' className={drawerClass}>{openDrawer}</div>
+        <div id='drawer' className={drawerClass}>
+          {drawerContentMap(openDrawer)}
+        </div>
       </div>
     )
   }
