@@ -25,6 +25,12 @@ export class EditorComponent extends React.Component {
   execCurrent (cm) {
     this.props.onExecute(cm.getValue())
     cm.setValue('')
+    this.updateCode('')
+  }
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.content !== this.state.code) {
+      this.setState({ code: nextProps.content })
+    }
   }
   componentDidMount () {
     this.codeMirror = this.refs.editor.getCodeMirror()
@@ -69,4 +75,10 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const Editor = connect(null, mapDispatchToProps)(EditorComponent)
+const mapStateToProps = (state) => {
+  return {
+    content: state.editor.content
+  }
+}
+
+export const Editor = connect(mapStateToProps, mapDispatchToProps)(EditorComponent)

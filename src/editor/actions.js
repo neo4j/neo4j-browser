@@ -13,3 +13,10 @@ export const setMaxHistory = (maxHistory) => {
     maxHistory: maxHistory
   }
 }
+
+export const setContent = (cmd) => {
+  return {
+    type: t.SET_CONTENT,
+    cmd: cmd
+  }
+}

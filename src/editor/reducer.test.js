@@ -1,13 +1,14 @@
 import {expect} from 'chai'
 import editor from '.'
 
-describe('editor reducer add history', () => {
+describe('editor reducer', () => {
   it('handles editor.actionTypes.ADD_HISTORY', () => {
     const helpAction = editor.actions.addHistory({cmd: ':help'})
     const nextState = editor.reducer(undefined, helpAction)
     expect(nextState).to.deep.equal({
       history: [{ cmd: ':help' }],
-      maxHistory: 20
+      maxHistory: 20,
+      content: ''
     })
 
     // One more time
@@ -15,7 +16,8 @@ describe('editor reducer add history', () => {
     const nextnextState = editor.reducer(nextState, historyAction)
     expect(nextnextState).to.deep.equal({
       history: [{ cmd: ':history' }, { cmd: ':help' }],
-      maxHistory: 20
+      maxHistory: 20,
+      content: ''
     })
   })
 
@@ -37,6 +39,28 @@ describe('editor reducer add history', () => {
         { cmd: ':help' }
       ],
       maxHistory: 3
+    })
+  })
+
+  it('should handle editor.actionTypes.SET_CONTENT', () => {
+    const initalState = {
+      history: [
+        { cmd: ':help' },
+        { cmd: ':help' },
+        { cmd: ':help' }
+      ],
+      maxHistory: 3
+    }
+    const action = editor.actions.setContent(':history')
+    const nextState = editor.reducer(initalState, action)
+    expect(nextState).to.deep.equal({
+      history: [
+        { cmd: ':help' },
+        { cmd: ':help' },
+        { cmd: ':help' }
+      ],
+      maxHistory: 3,
+      content: ':history'
     })
   })
 })
