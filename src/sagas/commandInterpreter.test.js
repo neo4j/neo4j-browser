@@ -14,12 +14,15 @@ describe('watchCommands Saga', () => {
 
     // When
     const rec = watchSaga.next().value
-    watchSaga.next(payload) // Settings read again
+    const actualHistoryPut = watchSaga.next(payload).value
+    const expectedHistoryPut = put(editor.actions.addHistory(payload))
+    watchSaga.next() // Settings read
     const actualCallAction = watchSaga.next(settings).value
     const expectedCallAction = call(handleClientCommand, settings.cmdchar, payload.cmd)
 
     // Then
     expect(rec).to.deep.equal(take(editor.actionTypes.USER_COMMAND_QUEUED))
+    expect(actualHistoryPut).to.deep.equal(expectedHistoryPut)
     expect(actualCallAction).to.deep.equal(expectedCallAction)
   })
 
@@ -31,7 +34,9 @@ describe('watchCommands Saga', () => {
 
     // When
     const rec = watchSaga.next().value
-    watchSaga.next(payload) // Settings read again
+    const actualHistoryPut = watchSaga.next(payload).value
+    const expectedHistoryPut = put(editor.actions.addHistory(payload))
+    watchSaga.next() // Settings read
     const actualBoltAction = watchSaga.next(settings).value
     const expectedBoltAction = call(bolt.transaction, payload.cmd)
     const actualPutAction = watchSaga.next().value
@@ -39,6 +44,7 @@ describe('watchCommands Saga', () => {
 
     // Then
     expect(rec).to.deep.equal(take(editor.actionTypes.USER_COMMAND_QUEUED))
+    expect(actualHistoryPut).to.deep.equal(expectedHistoryPut)
     expect(actualBoltAction).to.deep.equal(expectedBoltAction)
     // We cannot do deep equal here because of uuid
     expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)

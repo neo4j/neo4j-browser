@@ -23,4 +23,28 @@ describe('commandutils', () => {
       expect(utils.stripEmptyCommandLines(str)).to.equal('RETURN 1')
     })
   })
+
+  it('splitStringOnFirst should split strings on first occurance of delimiter ', () => {
+    const testStrs = [
+      {str: ':config test:"hello :space"', delimiter: ' ', expect: [':config', 'test:"hello :space"']},
+      {str: 'test:"hello :space"', delimiter: ':', expect: ['test', '"hello :space"']}
+    ]
+    testStrs.forEach((obj) => {
+      expect(utils.splitStringOnFirst(obj.str, obj.delimiter)).to.deep.equal(obj.expect)
+    })
+  })
+
+  it('parseConfigInput should create an object from string input ', () => {
+    const testStrs = [
+      {str: ':config test:"hello :space"', expect: {test: 'hello :space'}},
+      {str: ':config test:10', expect: {test: 10}},
+      {str: ':config test:null', expect: {test: null}},
+      {str: ':config test:""', expect: {test: ''}},
+      {str: ':config test: 10', expect: {test: 10}}, // space before value
+      {str: ':config test', expect: false} // Not valid
+    ]
+    testStrs.forEach((obj) => {
+      expect(utils.parseConfigInput(obj.str)).to.deep.equal(obj.expect)
+    })
+  })
 })
