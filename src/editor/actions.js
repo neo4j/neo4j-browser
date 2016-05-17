@@ -1,5 +1,12 @@
 import * as t from './actionTypes'
 
+export const executeCommand = (cmd) => {
+  return {
+    type: t.USER_COMMAND_QUEUED,
+    cmd
+  }
+}
+
 export const addHistory = (state) => {
   return {
     type: t.ADD_HISTORY,

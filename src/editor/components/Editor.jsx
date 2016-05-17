@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as t from '../actionTypes'
+import editor from '../'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
@@ -70,7 +70,7 @@ export class EditorComponent extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     onExecute: (cmd) => {
-      dispatch({type: t.USER_COMMAND_QUEUED, cmd: cmd})
+      dispatch(editor.actions.executeCommand(cmd))
     }
   }
 }
