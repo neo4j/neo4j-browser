@@ -26,6 +26,18 @@ describe('commandInterpreterHelper', () => {
     expect(actualCommandName).to.equal(expectedCommandName)
   })
 
+  it('should find :play helper with params', () => {
+    // Given
+    const cmd = 'play fileLocation'
+    const expectedCommandName = 'play'
+
+    // When
+    const actualCommandName = helper.interpret(cmd).name
+
+    // Then
+    expect(actualCommandName).to.equal(expectedCommandName)
+  })
+
   it('should give the "catch-all" match back whn unkown command', () => {
     // Given
     const cmd = 'nomatch'

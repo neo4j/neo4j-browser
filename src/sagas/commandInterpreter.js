@@ -29,7 +29,9 @@ function * watchCommands () {
 function * handleClientCommand (cmdchar, cmd) {
   const interpreted = helper.interpret(cmd.substr(cmdchar.length))
 
-  if (interpreted.name === 'clear') {
+  if (interpreted.name === 'play') {
+    yield put(frames.actions.add({cmd: cmd, type: 'play'}))
+  } else if (interpreted.name === 'clear') {
     yield put(frames.actions.clear())
   } else if (interpreted.name === 'config') {
     yield call(handleConfigCommand, cmd.substr(cmdchar.length))

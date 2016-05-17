@@ -75,8 +75,28 @@ describe('handleClientCommand Saga', () => {
 
     // When
     const actualPutAction = handleClientCommandSaga.next().value
+    console.log(actualPutAction)
     const expectedPutAction = put(frames.actions.clear())
 
+    console.log(expectedPutAction)
+
+    // Then
+    expect(actualPutAction).to.deep.equal(expectedPutAction)
+  })
+
+  it('should put action frames.action.play on :play command', () => {
+    // Given
+    const payload = {cmd: ':play hello'}
+    const settings = {cmdchar: ':'}
+    const handleClientCommandSaga = handlePlayCommand(settings.cmdchar, payload.cmd)
+
+    // When
+    const actualPutAction = handleClientCommandSaga.next().value
+    console.log('--------------')
+    console.log(actualPutAction)
+    const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, type: 'play'}))
+    console.log(expectedPutAction)
+    console.log('--------------')
     // Then
     expect(actualPutAction).to.deep.equal(expectedPutAction)
   })
