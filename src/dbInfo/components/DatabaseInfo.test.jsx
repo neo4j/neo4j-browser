@@ -1,13 +1,15 @@
 import React from 'react'
 import DatabaseInfo from './DatabaseInfo'
-import { expect } from 'chai'
+import chai from 'chai'
 import { shallow } from 'enzyme'
+import chaiEnzyme from 'chai-enzyme'
+import spies from 'chai-spies'
 
 describe('DatabaseDrawer', () => {
-  let cypherCommandFromLastCallback = null
-  const onItemClick = (cypherCmd) => {
-    cypherCommandFromLastCallback = cypherCmd
-  }
+  const expect = chai.expect
+  chai.use(spies)
+  chai.use(chaiEnzyme())
+  const onItemClick = chai.spy()
   describe('labels', () => {
     it('should not show labels when there are no labels', () => {
       const labels = []
@@ -24,15 +26,16 @@ describe('DatabaseDrawer', () => {
       const labels = ['Person']
       const wrapper = shallow(<DatabaseInfo labels={labels} onItemClick={onItemClick}/>)
       wrapper.find('.token-label').first().simulate('click')
-      expect(cypherCommandFromLastCallback).to.equal('MATCH (n) RETURN n LIMIT 25')
+      expect(onItemClick).have.been.called.with('MATCH (n) RETURN n LIMIT 25')
     })
     it('should call on click callback with correct cypher when a non * label is clicked', () => {
       const labels = ['Person']
       const wrapper = shallow(<DatabaseInfo labels={labels} onItemClick={onItemClick}/>)
       wrapper.find('.token-label').last().simulate('click')
-      expect(cypherCommandFromLastCallback).to.equal('MATCH (n:Person) RETURN n LIMIT 25')
+      expect(onItemClick).have.been.called.with('MATCH (n:Person) RETURN n LIMIT 25')
     })
   })
+
   describe('relationshipTypes', () => {
     it('should not show relationshipTypes when there are no relationshipTypes', () => {
       const relationshipTypes = []
@@ -49,15 +52,16 @@ describe('DatabaseDrawer', () => {
       const relationshipTypes = ['DIRECTED']
       const wrapper = shallow(<DatabaseInfo relationshipTypes={relationshipTypes} onItemClick={onItemClick}/>)
       wrapper.find('.token-relationship').first().simulate('click')
-      expect(cypherCommandFromLastCallback).to.equal('MATCH ()-[r]->() RETURN r LIMIT 25')
+      expect(onItemClick).have.been.called.with('MATCH ()-[r]->() RETURN r LIMIT 25')
     })
     it('should call on click callback with correct cypher when a non * relationship is clicked', () => {
       const relationshipTypes = ['DIRECTED']
       const wrapper = shallow(<DatabaseInfo relationshipTypes={relationshipTypes} onItemClick={onItemClick}/>)
       wrapper.find('.token-relationship').last().simulate('click')
-      expect(cypherCommandFromLastCallback).to.equal('MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 25')
+      expect(onItemClick).have.been.called.with('MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 25')
     })
   })
+  
   describe('properties', () => {
     it('should not show properties when there are no properties', () => {
       const properties = []
@@ -74,7 +78,7 @@ describe('DatabaseDrawer', () => {
       const properties = ['born']
       const wrapper = shallow(<DatabaseInfo properties={properties} onItemClick={onItemClick}/>)
       wrapper.find('.token-property').first().simulate('click')
-      expect(cypherCommandFromLastCallback).to.equal('MATCH (n) WHERE EXISTS(n.born) RETURN DISTINCT "node" as element, n.born AS born LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.born) RETURN DISTINCT "relationship" AS element, r.born AS born LIMIT 25')
+      expect(onItemClick).have.been.called.with('MATCH (n) WHERE EXISTS(n.born) RETURN DISTINCT "node" as element, n.born AS born LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.born) RETURN DISTINCT "relationship" AS element, r.born AS born LIMIT 25')
     })
   })
 })
