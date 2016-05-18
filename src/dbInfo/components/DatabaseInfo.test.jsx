@@ -61,7 +61,7 @@ describe('DatabaseDrawer', () => {
       expect(onItemClick).have.been.called.with('MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 25')
     })
   })
-  
+
   describe('properties', () => {
     it('should not show properties when there are no properties', () => {
       const properties = []
