@@ -30,7 +30,7 @@ function * handleClientCommand (cmdchar, cmd) {
   const interpreted = helper.interpret(cmd.substr(cmdchar.length))
 
   if (interpreted.name === 'play') {
-    yield put(frames.actions.add({cmd: cmd, type: 'play'}))
+    yield put(frames.actions.add({cmd: cmd, type: interpreted.name}))
   } else if (interpreted.name === 'clear') {
     yield put(frames.actions.clear())
   } else if (interpreted.name === 'config') {

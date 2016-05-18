@@ -1,0 +1,169 @@
+<article class="guide">
+  <carousel class="deck container-fluid">
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Cypher</h3>
+        <p class="lead">Neo4j's graph query language</p>
+      </div>
+      <div class="col-sm-9">
+        <p>Neo4j's Cypher language is purpose built for working with graph data.</p>
+        <ul class="big">
+          <li>uses patterns to describe graph data</li>
+          <li>familiar SQL-like clauses</li>
+          <li>declarative, describing what to find, not how to find it</li>
+        </ul>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>CREATE</h3>
+        <p class="lead">Create a node</p>
+      </div>
+      <div class="col-sm-9">
+        <p>Let's use Cypher to generate a small social graph.</p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code runnable">CREATE (ee:Person { name: &quot;Emil&quot;, from: &quot;Sweden&quot;, klout: 99 })</pre>
+        </figure>
+        <ul>
+          <li><code>CREATE</code> clause to create data</li>
+          <li><code>()</code> parenthesis to indicate a node</li>
+          <li><code>ee:Person</code> a variable 'ee' and label 'Person' for the new node</li>
+          <li><code>{}</code> brackets to add properties to the node</li>
+        </ul>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>MATCH</h3>
+        <p class="lead">Finding nodes</p>
+      </div>
+      <div class="col-sm-9">
+        <p>Now find the node representing Emil:</p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code runnable">MATCH (ee:Person) WHERE ee.name = &quot;Emil&quot; RETURN ee;</pre>
+        </figure>
+        <ul>
+          <li><code>MATCH</code> clause to specify a pattern of nodes and relationships</li>
+          <li><code>(ee:Person)</code> a single node pattern with label 'Person' which will assign matches to the variable 'ee'</li>
+          <li><code>WHERE</code> clause to constrain the results</li>
+          <li><code>ee.name = "Emil"</code> compares name property to the value "Emil"</li>
+          <li><code>RETURN</code> clause used to request particular results</li>
+        </ul>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>CREATE more</h3>
+        <p class="lead">Nodes and relationships</p>
+      </div>
+      <div class="col-sm-9">
+        <p><code>CREATE</code>clauses can create many nodes and relationships at once.</p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code runnable">MATCH (ee:Person) WHERE ee.name = &quot;Emil&quot;
+CREATE (js:Person { name: &quot;Johan&quot;, from: &quot;Sweden&quot;, learn: &quot;surfing&quot; }),
+(ir:Person { name: &quot;Ian&quot;, from: &quot;England&quot;, title: &quot;author&quot; }),
+(rvb:Person { name: &quot;Rik&quot;, from: &quot;Belgium&quot;, pet: &quot;Orval&quot; }),
+(ally:Person { name: &quot;Allison&quot;, from: &quot;California&quot;, hobby: &quot;surfing&quot; }),
+(ee)-[:KNOWS {since: 2001}]-&gt;(js),(ee)-[:KNOWS {rating: 5}]-&gt;(ir),
+(js)-[:KNOWS]-&gt;(ir),(js)-[:KNOWS]-&gt;(rvb),
+(ir)-[:KNOWS]-&gt;(js),(ir)-[:KNOWS]-&gt;(ally),
+(rvb)-[:KNOWS]-&gt;(ally)</pre>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Pattern matching</h3>
+        <p class="lead">Describe what to find in the graph</p>
+      </div>
+      <div class="col-sm-9">
+        <p class="summary">For instance, a pattern can be used to find Emil's friends:</p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code runnable">MATCH (ee:Person)-[:KNOWS]-(friends)
+WHERE ee.name = &quot;Emil&quot; RETURN ee, friends</pre>
+        </figure>
+        <ul>
+          <li><code>MATCH</code>clause to describe the pattern from known Nodes to found Nodes</li>
+          <li><code>(ee)</code>starts the pattern with a Person (qualified by WHERE)</li>
+          <li><code>-[:KNOWS]-</code>matches "KNOWS" relationships (in either direction)</li>
+          <li><code>(friends)</code>will be bound to Emil's friends</li>
+        </ul>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Recommend</h3>
+        <p class="lead">Using patterns</p>
+      </div>
+      <div class="col-sm-9">
+        <p class="summary">
+          Pattern matching can be used to make recommendations. Johan is learning to surf, so he may want to find
+          a new friend who already does:
+        </p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code runnable">MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
+WHERE js.name = &quot;Johan&quot; AND surfer.hobby = &quot;surfing&quot;
+RETURN DISTINCT surfer</pre>
+        </figure>
+        <ul>
+          <li><code>()</code>empty parenthesis to ignore these nodes</li>
+          <li><code>DISTINCT</code>because more than one path will match the pattern</li>
+          <li><code>surfer</code>will contain Allison, a friend of a friend who surfs</li>
+        </ul>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Analyze</h3>
+        <p class="lead">Using the visual query plan</p>
+      </div>
+      <div class="col-sm-9">
+        <p class="summary">Understand how your query works by prepending&nbsp;<code>EXPLAIN</code>&nbsp; or &nbsp;<code>PROFILE</code>:</p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code runnable">PROFILE MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
+WHERE js.name = &quot;Johan&quot; AND surfer.hobby = &quot;surfing&quot;
+RETURN DISTINCT surfer</pre>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Live Cypher warnings</h3>
+        <p class="lead">Identify query problems in real time</p>
+      </div>
+      <div class="col-sm-5">
+        <p>
+          As you type, the query editor notifies you about deprecated features
+          and potentially expensive queries.
+        </p>
+      </div>
+      <div class="col-sm-4"><img src="images/screen_cypher_warn.png" class="img-responsive"></div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-4">
+        <h3>Next steps</h3>
+        <p>
+          Start your application using Cypher to create and query graph data. Use the REST API
+          to monitor the database. In special cases, consider a plugin.
+        </p>
+      </div>
+      <div class="col-sm-4">
+        <h3>Keep getting started</h3>
+        <ul class="undecorated">
+          <li><a play-topic="intro">Intro</a> - a guided tour</li>
+          <li><a play-topic="concepts">Concepts</a> - GraphDB 101</li>
+          <li><a play-topic="movie-graph">The Movie Graph</a> - create the movie graph</li>
+          <li><a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to graph</li>
+        </ul>
+      </div>
+      <div class="col-sm-4">
+        <h3>Reference</h3>
+        <ul class="undecorated">
+          <li><a href="http://neo4j.com/developer/guide-importing-data-and-etl/">Full Northwind import example</a></li>
+          <li><a href="{{ neo4j.version | neo4jCypherRefcardDoc }}/">Cypher</a></li>
+          <li><a href="{{ neo4j.version | neo4jDeveloperDoc }}/">Neo4j Developer Manual</a></li>
+        </ul>
+      </div>
+    </slide>
+  </carousel>
+</article>

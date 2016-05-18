@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { CypherFrame } from './CypherFrame'
 import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
-import editor from '../../editor'
 
 const StreamComponent = (props) => {
   const frames = props.frames
@@ -15,7 +14,7 @@ const StreamComponent = (props) => {
       return <div className='frame' key={frame.id}><pre>{frame.contents}</pre></div>
     }
     if (frame.type === 'play') {
-      return <PlayFrame key={frame.id} contents={frame.contents} />
+      return <PlayFrame key={frame.id} contents={frame.contents} command={frame.cmd} />
     }
     if (frame.type === 'history') {
       return <HistoryFrame key={frame.id} frame={frame}/>

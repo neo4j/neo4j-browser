@@ -1,0 +1,219 @@
+<article ng-controller="SysinfoController" class="help">
+  <div class="container-fluid">
+    <section class="row">
+      <div class="col-md-3 col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Store Sizes</h4>
+            <div class="panel-heading-info-icon"><a target="_blank" href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-store-file-sizes" class="sl sl-question-mark no-out-symbol"></a></div>
+          </div>
+          <table class="table table-condensed">
+            <tr>
+              <th>Array Store</th>
+              <td>{{sysinfo.kernel.ArrayStoreSize | humanReadableBytes}}</td>
+            </tr>
+            <tr>
+              <th>Logical Log</th>
+              <td>{{sysinfo.kernel.LogicalLogSize | humanReadableBytes}}</td>
+            </tr>
+            <tr>
+              <th>Node Store</th>
+              <td>{{sysinfo.kernel.NodeStoreSize | humanReadableBytes}}</td>
+            </tr>
+            <tr>
+              <th>Property Store</th>
+              <td>{{sysinfo.kernel.PropertyStoreSize | humanReadableBytes}}</td>
+            </tr>
+            <tr>
+              <th>Relationship Store</th>
+              <td>{{sysinfo.kernel.RelationshipStoreSize | humanReadableBytes}}</td>
+            </tr>
+            <tr>
+              <th>String Store Size</th>
+              <td>{{sysinfo.kernel.StringStoreSize | humanReadableBytes}}</td>
+            </tr>
+            <tr>
+              <th>Total Store Size</th>
+              <td>{{sysinfo.kernel.TotalStoreSize | humanReadableBytes}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>ID Allocation</h4>
+            <div class="panel-heading-info-icon"><a target="_blank" href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-primitive-count" class="sl sl-question-mark no-out-symbol"></a></div>
+          </div>
+          <table class="table table-condensed">
+            <tr>
+              <th>Node ID</th>
+              <td>{{sysinfo.primitives.NumberOfNodeIdsInUse}}</td>
+            </tr>
+            <tr>
+              <th>Property ID</th>
+              <td>{{sysinfo.primitives.NumberOfPropertyIdsInUse}}</td>
+            </tr>
+            <tr>
+              <th>Relationship ID</th>
+              <td>{{sysinfo.primitives.NumberOfRelationshipIdsInUse}}</td>
+            </tr>
+            <tr>
+              <th>Relationship Type ID</th>
+              <td>{{sysinfo.primitives.NumberOfRelationshipTypeIdsInUse}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-4 col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Page Cache</h4>
+            <div class="panel-heading-info-icon"><a target="_blank" href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-page-cache" class="sl sl-question-mark no-out-symbol"></a></div>
+          </div>
+          <div ng-hide="sysinfo.cache.available" class="panel-body">
+            <p>No statistics available.</p>
+          </div>
+          <table ng-show="sysinfo.cache.available" class="table table-condensed">
+            <tr>
+              <th>Faults</th>
+              <td>{{sysinfo.cache.Faults}}</td>
+              <td>&nbsp;</td>
+              <th>Flushes</th>
+              <td>{{sysinfo.cache.Flushes}}</td>
+            </tr>
+            <tr>
+              <th>Evictions</th>
+              <td>{{sysinfo.cache.Evictions}}</td>
+              <td>&nbsp;</td>
+              <th>Eviction Exceptions</th>
+              <td>{{sysinfo.cache.EvictionExceptions}}</td>
+            </tr>
+            <tr>
+              <th>File Mappings</th>
+              <td>{{sysinfo.cache.FileMappings}}</td>
+              <td>&nbsp;</td>
+              <th>File Unmappings</th>
+              <td>{{sysinfo.cache.FileUnmappings}}</td>
+            </tr>
+            <tr>
+              <th>Bytes Read</th>
+              <td>{{sysinfo.cache.BytesRead}}</td>
+              <td>&nbsp;</td>
+              <th>Bytes Written</th>
+              <td>{{sysinfo.cache.BytesWritten}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section class="row">
+      <div class="col-md-3 col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Transactions</h4>
+            <div class="panel-heading-info-icon"><a target="_blank" href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-transactions" class="sl sl-question-mark no-out-symbol"></a></div>
+          </div>
+          <div ng-hide="sysinfo.tx.available" class="panel-body">
+            <p>Not available.</p>
+          </div>
+          <table ng-show="sysinfo.tx.available" class="table table-condensed">
+            <tr>
+              <th>Last Tx Id</th>
+              <td>{{sysinfo.tx.LastCommittedTxId}}</td>
+            </tr>
+            <tr>
+              <th>Current</th>
+              <td>{{sysinfo.tx.NumberOfOpenTransactions}}</td>
+            </tr>
+            <tr>
+              <th>Peak</th>
+              <td>{{sysinfo.tx.PeakNumberOfConcurrentTransactions}}</td>
+            </tr>
+            <tr>
+              <th>Opened</th>
+              <td>{{sysinfo.tx.NumberOfOpenedTransactions}}</td>
+            </tr>
+            <tr>
+              <th>Committed</th>
+              <td>{{sysinfo.tx.NumberOfCommittedTransactions}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>High Availability</h4>
+            <div class="panel-heading-info-icon"><a target="_blank" href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-high-availability" class="sl sl-question-mark no-out-symbol"></a></div>
+          </div>
+          <div ng-hide="sysinfo.ha.clustered" class="panel-body">
+            <p>Not enabled.</p>
+          </div>
+          <table ng-show="sysinfo.ha.clustered" class="table table-condensed">
+            <tr>
+              <th>InstanceId</th>
+              <td>{{sysinfo.ha.InstanceId}}</td>
+            </tr>
+            <tr>
+              <th>Role</th>
+              <td>{{sysinfo.ha.Role}}</td>
+            </tr>
+            <tr>
+              <th>Alive</th>
+              <td>{{sysinfo.ha.Alive}}</td>
+            </tr>
+            <tr>
+              <th>Available</th>
+              <td>{{sysinfo.ha.Available}}</td>
+            </tr>
+            <tr>
+              <th>Last Committed Tx Id</th>
+              <td>{{sysinfo.ha.LastCommittedTxId}}</td>
+            </tr>
+            <tr>
+              <th>Last Update Time</th>
+              <td>{{sysinfo.ha.LastUpdateTime}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Cluster</h4>
+            <div class="panel-heading-info-icon"><a target="_blank" href="{{ neo4j.version | neo4jOperationsDoc }}/#_neo4j_cluster_install" class="sl sl-question-mark no-out-symbol"></a></div>
+          </div>
+          <div ng-hide="sysinfo.ha.clustered" class="panel-body">
+            <p>No cluster.</p>
+          </div>
+          <table ng-show="sysinfo.ha.clustered" class="table table-condensed">
+            <tr>
+              <th>Id</th>
+              <th colspan="5">Status</th>
+            </tr>
+            <tr ng-repeat="member in sysinfo.ha.ClusterMembers" ng-class="{info: member.connected, warning: !member.available, danger: !member.alive }">
+              <td>{{ member.instanceId }}</td>
+              <td><span ng-show="member.alive"><i class="fa fa-smile-o">&nbsp;</i></span><span ng-show="!member.alive"><i class="fa fa-frown-o">&nbsp;</i></span></td>
+              <td><span ng-show="member.available"><i class="fa fa-check-circle">&nbsp;</i></span><span ng-show="!member.available"><i class="fa fa-exclamation-circle">&nbsp;</i></span></td>
+              <td><i ng-class="{'fa-gavel': isMaster(member) }" class="ha-master fa"></i></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer class="tight"><small>Note: some metrics only available in Neo4j Enterprise.</small>
+    <div class="actions">
+      <div ng-click="toggleAutoRefresh()" class="toggle toggle-footer-margin"><a class="toggle-text">Auto-refresh</a>
+        <div class="switch">
+          <label>
+            <div ng-class="{right: autoRefresh}" class="switch-inner"><span class="right-text">ON</span>
+              <div class="handle"></div><span class="left-text">OFF</span>
+            </div>
+          </label>
+        </div>
+      </div><a ng-click="refresh()" class="button fa fa-refresh"></a>
+    </div>
+  </footer>
+</article>

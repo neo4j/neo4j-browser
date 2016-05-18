@@ -1,0 +1,210 @@
+<article class="guide">
+  <carousel class="deck container-fluid">
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Northwind Graph</h3>
+        <p class="lead">From RDBMS to Graph, using a classic dataset</p>
+      </div>
+      <div class="col-sm-9">
+        <p>The<em>Northwind Graph</em> demonstrates how to migrate from a
+          relational database to Neo4j. The transformation
+          is iterative and deliberate, emphasizing the conceptual shift from
+          relational tables to the nodes and relationships of a graph.
+        </p>
+        <p>This guide will show you how to:</p>
+        <ol class="big">
+          <li>Load: create data from external CSV files</li>
+          <li>Index: index nodes based on label</li>
+          <li>Relate: transform foreign key references into data relationships</li>
+          <li>Promote: transform join records into relationships</li>
+        </ol>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Product Catalog</h3>
+        <p>
+          Northwind sells food products in a few categories, provided by suppliers.
+          Let's start by loading the product catalog tables.
+        </p>
+        <p>The load statements to the right require public internet access.<code>LOAD CSV</code> will retrieve a CSV file from a valid URL, applying a Cypher statement to
+          each row using a named map (here we're using the name `row`).
+        </p>
+        <p><img src="images/northwind/product-category-supplier.png" class="img-responsive"></p>
+        <hr>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="load-csv">LOAD CSV</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Load records</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/northwind/products.csv&quot; AS row
+CREATE (n:Product)
+SET n = row,
+  n.unitPrice = toFloat(row.unitPrice),
+  n.unitsInStock = toInt(row.unitsInStock), n.unitsOnOrder = toInt(row.unitsOnOrder),
+  n.reorderLevel = toInt(row.reorderLevel), n.discontinued = (row.discontinued &lt;&gt; &quot;0&quot;)</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/northwind/categories.csv&quot; AS row
+CREATE (n:Category)
+SET n = row</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/northwind/suppliers.csv&quot; AS row
+CREATE (n:Supplier)
+SET n = row</pre>
+        </figure>
+        <h4>Create indexes</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">CREATE INDEX ON :Product(productID)</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">CREATE INDEX ON :Category(categoryID)</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">CREATE INDEX ON :Supplier(supplierID)</pre>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Product Catalog Graph</h3>
+        <p>
+          The products, categories and suppliers are related through foreign key references.
+          Let's promote those to data relationships to realize the graph.
+        </p>
+        <p><img src="images/northwind/product-graph.png" class="img-responsive"></p>
+        <hr>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="match">MATCH</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Create data relationships</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">MATCH (p:Product),(c:Category)
+WHERE p.categoryID = c.categoryID
+CREATE (p)-[:PART_OF]-&gt;(c)</pre>
+          <aside class="warn">Note you only need to compare property values like this when first creating relationships</aside>
+          <figcaption>Calculate join, materialize relationship. (See&nbsp;<a href="http://neo4j.com/developer/guide-importing-data-and-etl">&nbsp; importing guide</a> for more details)</figcaption>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">MATCH (p:Product),(s:Supplier)
+WHERE p.supplierID = s.supplierID
+CREATE (s)-[:SUPPLIES]-&gt;(p)</pre>
+          <aside class="warn">Note you only need to compare property values like this when first creating relationships</aside>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Querying Product Catalog Graph</h3>
+        <p>Lets try some queries using patterns.</p>
+        <p><img src="images/northwind/product-graph.png" class="img-responsive"></p>
+        <hr>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="match">MATCH</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Query using patterns</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">MATCH (s:Supplier)--&gt;(:Product)--&gt;(c:Category)
+RETURN s.companyName as Company, collect(distinct c.categoryName) as Categories</pre>
+          <figcaption>List the product categories provided by each supplier.</figcaption>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">MATCH (c:Category {categoryName:&quot;Produce&quot;})&lt;--(:Product)&lt;--(s:Supplier)
+RETURN DISTINCT s.companyName as ProduceSuppliers</pre>
+          <figcaption>Find the produce suppliers.</figcaption>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Customer Orders</h3>
+        <p>
+          Northwind customers place orders which may detail multiple
+          products.<img src="images/northwind/customer-orders.png" class="img-responsive">
+        </p>
+        <hr>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="load-csv">LOAD CSV</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Load and index records</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/northwind/customers.csv&quot; AS row
+CREATE (n:Customer)
+SET n = row</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/northwind/orders.csv&quot; AS row
+CREATE (n:Order)
+SET n = row</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">CREATE INDEX ON :Customer(customerID)</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">CREATE INDEX ON :Order(orderID)</pre>
+        </figure>
+        <h4>Create data relationships</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">MATCH (c:Customer),(o:Order)
+WHERE c.customerID = o.customerID
+CREATE (c)-[:PURCHASED]-&gt;(o)</pre>
+          <aside class="warn">Note you only need to compare property values like this when first creating relationships</aside>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Customer Order Graph</h3>
+        <p>Notice that Order Details are always part of an Order and that they<i>relate</i> the Order to a Product &mdash; they're a join table. Join tables
+          are always a sign of a data relationship, indicating shared information
+          between two other records.
+        </p>
+        <p>Here, we'll directly promote each OrderDetail record into a relationship in the graph.<img src="images/northwind/order-graph.png" class="img-responsive"></p>
+        <hr>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="load-csv">LOAD CSV</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Load and index records</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/northwind/order-details.csv&quot; AS row
+MATCH (p:Product), (o:Order)
+WHERE p.productID = row.productID AND o.orderID = row.orderID
+CREATE (o)-[details:ORDERS]-&gt;(p)
+SET details = row,
+  details.quantity = toInt(row.quantity)</pre>
+          <aside class="warn">Note you only need to compare property values like this when first creating relationships</aside>
+        </figure>
+        <h4>Query using patterns</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">MATCH (cust:Customer)-[:PURCHASED]-&gt;(:Order)-[o:ORDERS]-&gt;(p:Product),
+      (p)-[:PART_OF]-&gt;(c:Category {categoryName:&quot;Produce&quot;})
+RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased
+</pre>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid header">
+      <div class="col-sm-4">
+        <h4>Northwind Graph</h4><br>
+        <h3>Next steps</h3>
+      </div>
+      <div class="col-sm-4">
+        <h3>More code</h3>
+        <ul class="undecorated">
+          <li><a play-topic="movie-graph">Movie Graph</a> - actors &amp; movies</li>
+          <li><a play-topic="query-template">Query Templates</a> - common ad-hoc queries</li>
+          <li><a play-topic="cypher">Cypher</a> - query language fundamentals</li>
+        </ul>
+      </div>
+      <div class="col-sm-4">
+        <h3>Reference</h3>
+        <ul class="undecorated">
+          <li><a href="http://neo4j.com/developer/guide-importing-data-and-etl/">Full Northwind import example</a></li>
+          <li><a href="http://neo4j.com/developer">Developer resources</a></li>
+          <li><a href="{{ neo4j.version | neo4jDeveloperDoc }}/">Neo4j Developer Manual</a></li>
+        </ul>
+      </div>
+    </slide>
+  </carousel>
+</article>

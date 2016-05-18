@@ -1,0 +1,62 @@
+<article class="guide">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-2">
+        <div class="box-max"><img src="images/neo4j-world.png" class="img-responsive">
+          <p class="lead text-right">{{ neo4j.edition | uppercase }} EDITION</p>
+          <p class="lead text-right">{{ neo4j.version }}</p>
+        </div>
+      </div>
+      <div class="col-sm-10">
+        <div class="teaser teaser-3">
+          <h3>Learn about Neo4j</h3>
+          <p class="lead">A graph epiphany awaits you.</p>
+          <div class="icon-holder">
+            <div class="icon sl sl-network green icon"></div>
+            <ul class="topic-bullets">
+              <li>What is a graph database?</li>
+              <li>How can I query a graph?</li>
+              <li>What do people do with Neo4j?</li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <button play-topic="concepts" class="btn btn-cta">Start Learning</button>
+        </div>
+        <div class="teaser teaser-3">
+          <h3>Jump into code</h3>
+          <p class="lead">Use Cypher, the graph query language.</p>
+          <div class="icon-holder">
+            <div class="icon sl sl-window-code yellow icon"></div>
+            <ul class="topic-bullets">
+              <li>Code walk-throughs</li>
+              <li>RDBMS to Graph</li>
+              <li>Query templates</li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <button play-topic="write-code" class="btn btn-cta">Write Code</button>
+        </div>
+        <div class="teaser teaser-3">
+          <h3>Monitor the system</h3>
+          <p class="lead">Key system health and status metrics.</p>
+          <div class="icon-holder">
+            <div class="icon sl sl-heart red icon"></div>
+            <ul class="topic-bullets">
+              <li>Disk utilization</li>
+              <li>Cache activity</li>
+              <li>Cluster health and status</li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <button play-topic="sysinfo" class="btn btn-cta">Monitor</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-unit">
+      <p ng-class="{'motd-bang': motd.callToAction.bang}"><a href="{{ motd.callToAction.u}}">{{ motd.callToAction.d }}</a></p>
+    </div>
+    <footer class="tight">
+      <p class="text-muted">Copyright &copy;<a href="http://neo4j.com/" class="no-icon"> Neo Technology</a>&nbsp;2002–<span>2016</span></p>
+    </footer>
+  </div>
+</article>

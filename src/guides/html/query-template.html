@@ -1,0 +1,265 @@
+<article ng-controller="AdLibDataController" class="guide">
+  <carousel class="deck container-fluid">
+    <slide class="row-fluid">
+      <div class="col-sm-4">
+        <h3>Query Template - Create</h3>
+        <p class="lead">Generate nodes and relationships</p>
+        <form>
+          <div class="node">
+            <div class="form-group">
+              <p class="help-block">From Node A</p>
+              <label>Label</label>
+              <input ng-model="nodeLabelA" class="form-control">
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Property</label>
+                  <input ng-model="propertyKeyA" class="form-control">
+                </div>
+                <div class="col-sm-6">
+                  <label>Value</label>
+                  <input ng-model="propertyValueA" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="relationship">
+            <div class="form-group">
+              <p class="help-block">through a Relationship</p>
+              <label>Type</label>
+              <input ng-model="relationshipType">
+            </div>
+          </div>
+          <div class="node">
+            <div class="form-group">
+              <p class="help-block">to Node B</p>
+              <label>Label</label>
+              <input ng-model="nodeLabelB">
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Property</label>
+                  <input ng-model="propertyKeyB" class="form-control">
+                </div>
+                <div class="col-sm-6">
+                  <label>Value</label>
+                  <input ng-model="propertyValueB" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-8">
+        <table class="table table-striped table-bordered table-fixed th-100">
+          <tr>
+            <th>Using Data</th>
+            <td>
+              From a node labeled &quot;{{nodeLabelA}}&quot;
+               with a property called &quot;{{propertyKeyA}}&quot;
+               which has value &quot;{{propertyValueA}}&quot;
+               , through a relationship of type &quot;{{relationshipType}}&quot;
+               to another node labeled &quot;{{nodeLabelB}}&quot;
+               with a property called &quot;{{propertyKeyB}}&quot;
+               which has value &quot;{{propertyValueB}}&quot;
+            </td>
+          </tr>
+          <tr>
+            <th>Create</th>
+            <td>
+              Create a &quot;{{nodeLabelA}}&quot; node
+               with a property called &quot;{{propertyKeyA}}&quot;
+               that has value &quot;{{propertyValueA}}&quot;. (Or create Node B)
+              <figure>
+                <pre class="code runnable standalone-example">CREATE (n:{{nodeLabelA | tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' }) RETURN n</pre>
+              </figure>
+              <figure>
+                <pre class="code runnable standalone-example">CREATE (n:{{nodeLabelB | tickitize}} { {{propertyKeyB | tickitize}}: '{{propertyValueB}}' }) RETURN n</pre>
+              </figure>
+            </td>
+          </tr>
+          <tr>
+            <th>Relate</th>
+            <td>
+              From a &quot;{{nodeLabelA}}&quot; node
+               with a &quot;{{propertyKeyA}}&quot; property
+               of &quot;{{propertyValueA}}&quot;
+               create a &quot;{{relationshipType}}&quot;
+               relationship to a &quot;{{nodeLabelB}}&quot; with &quot;{{propertyKeyB}}&quot; value &quot;{{propertyValueB}}&quot;.
+               Nodes 'a' and 'b' must already exist.
+              <figure>
+                <pre class="code runnable standalone-example">MATCH (a:{{nodeLabelA | tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' }), (b:{{nodeLabelB | tickitize}} { {{propertyKeyB | tickitize}}: '{{propertyValueB}}' })
+CREATE (a)-[:{{relationshipType | tickitize}}]-&gt;(b)</pre>
+              </figure>
+            </td>
+          </tr>
+          <tr>
+            <th>Merge node</th>
+            <td>
+              Find or create a &quot;{{nodeLabelA}}&quot; node
+               with &quot;{{propertyKeyA}}&quot; of &quot;{{propertyValueA}}&quot;.
+              <figure>
+                <pre class="code runnable standalone-example">MERGE (n:{{nodeLabelA | tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' }) RETURN n</pre>
+              </figure>
+            </td>
+          </tr>
+          <tr>
+            <th>Merge relationship</th>
+            <td>
+              Find or create a relationship from a &quot;{{nodeLabelA}} with &quot;{{propertyKeyA}}&quot; of &quot;{{propertyValueA}}&quot;
+               through a &quot;{{relationshipType}}&quot; relationship
+               to a &quot;{{nodeLabelB}}&quot; node with &quot;{{propertyKeyB}}&quot; of &quot;{{propertyValueB}}&quot;.
+              <figure>
+                <pre class="code runnable standalone-example">MATCH (a:{{nodeLabelA | tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' }), (b:{{nodeLabelB | tickitize}} { {{propertyKeyB | tickitize}}: '{{propertyValueB}}' })
+MERGE (a)-[:{{relationshipType}}]-&gt;(b)</pre>
+              </figure>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-4">
+        <h3>Query Template - Find</h3>
+        <p class="lead">Find data using common graph patterns</p>
+        <form>
+          <div class="node">
+            <div class="form-group">
+              <p class="help-block">From Node A</p>
+              <label>Label</label>
+              <input ng-model="nodeLabelA" class="form-control">
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Property</label>
+                  <input ng-model="propertyKeyA" class="form-control">
+                </div>
+                <div class="col-sm-6">
+                  <label>Value</label>
+                  <input ng-model="propertyValueA" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="relationship">
+            <div class="form-group">
+              <p class="help-block">through a Relationship</p>
+              <label>Type</label>
+              <input ng-model="relationshipType">
+            </div>
+          </div>
+          <div class="node">
+            <div class="form-group">
+              <p class="help-block">to Node B</p>
+              <label>Label</label>
+              <input ng-model="nodeLabelB">
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Property</label>
+                  <input ng-model="propertyKeyB" class="form-control">
+                </div>
+                <div class="col-sm-6">
+                  <label>Value</label>
+                  <input ng-model="propertyValueB" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-8">
+        <table class="table table-striped table-bordered table-fixed th-100">
+          <tr>
+            <th>Using Data</th>
+            <td>
+              From a node labeled &quot;{{nodeLabelA}}&quot;
+               with a property called &quot;{{propertyKeyA}}&quot;
+               which has value &quot;{{propertyValueA}}&quot;
+               , through a relationship of type &quot;{{relationshipType}}&quot;
+               to another node labeled &quot;{{nodeLabelB}}&quot;
+               with a property called &quot;{{propertyKeyB}}&quot;
+               which has value &quot;{{propertyValueB}}&quot;
+            </td>
+          </tr>
+          <tr>
+            <th>Find one</th>
+            <td>
+              Find a node labeled &quot;{{nodeLabelA}}&quot;
+               with a property called &quot;{{propertyKeyA}}&quot;
+               that has value &quot;{{propertyValueA}}&quot;.
+              <figure>
+                <pre class="code runnable standalone-example">MATCH (n:{{nodeLabelA | tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' }) RETURN n</pre>
+              </figure>
+            </td>
+          </tr>
+          <tr>
+            <th>Find related neighbors</th>
+            <td>
+              From a &quot;{{nodeLabelA}}&quot; node
+               with a &quot;{{propertyKeyA}}&quot;
+               of &quot;{{propertyValueA}}&quot;
+               find neighbors related by &quot;{{relationshipType}}&quot;.
+              <figure>
+                <pre class="code runnable standalone-example">MATCH (n:{{nodeLabelA| tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' })-[:{{relationshipType | tickitize}}]-(neighbors) RETURN n,neighbors</pre>
+              </figure>
+            </td>
+          </tr>
+          <tr>
+            <th>Variable length paths</th>
+            <td>
+              From a &quot;{{nodeLabelA}}&quot; node
+               with a &quot;{{propertyKeyA}}&quot;
+               of &quot;{{propertyValueA}}&quot;
+               follow &quot;{{relationshipType}}&quot; relationships up to {{relationshipDepth}} hops away.
+              <figure>
+                <pre class="code runnable standalone-example">MATCH (n:{{nodeLabelA}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' })-[:{{relationshipType | tickitize}}*1..{{relationshipDepth}}]-(neighbors) RETURN n, collect(DISTINCT neighbors)</pre>
+              </figure>
+            </td>
+          </tr>
+          <tr>
+            <th>Shortest path</th>
+            <td>
+              From a &quot;{{nodeLabelA}}&quot; node
+               with a &quot;{{propertyKeyA}}&quot;
+               of &quot;{{propertyValueA}}&quot;
+               find the shortest &quot;{{relationshipType}}&quot; path to
+              a &quot;{{nodeLabelB}}&quot; node with &quot;{{propertyKeyB}}&quot; of &quot;{{propertyValueB}}&quot;
+              <figure>
+                <pre class="code runnable standalone-example">MATCH p=shortestPath(
+  (a:{{nodeLabelA | tickitize}} { {{propertyKeyA | tickitize}}: '{{propertyValueA}}' })-[:{{relationshipType | tickitize}}]-(b:{{nodeLabelB | tickitize}} { {{propertyKeyB | tickitize}}: '{{propertyValueB}}'})
+)
+RETURN p
+</pre>
+              </figure>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </slide>
+    <slide class="row-fluid header">
+      <div class="col-sm-4">
+        <h3>Next steps</h3>
+      </div>
+      <div class="col-sm-4">
+        <h3>More code</h3>
+        <ul class="undecorated">
+          <li><a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to graph</li>
+          <li><a play-topic="movie-graph">Movie Graph</a> - common ad-hoc queries</li>
+          <li><a play-topic="cypher">Cypher</a> - query language fundamentals</li>
+        </ul>
+      </div>
+      <div class="col-sm-4">
+        <h3>Reference</h3>
+        <ul class="undecorated">
+          <li><a href="http://neo4j.com/developer">Developer resources</a></li>
+          <li><a href="{{ neo4j.version | neo4jDeveloperDoc }}/">Neo4j Developer Manual</a></li>
+        </ul>
+      </div>
+    </slide>
+  </carousel>
+</article>

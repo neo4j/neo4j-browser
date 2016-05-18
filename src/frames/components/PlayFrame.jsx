@@ -2,22 +2,25 @@ import React from 'react'
 import guides from '../../guides'
 
 export const PlayFrame = ({command}) => {
-  const guideName = command.replace('play', '').trim()
-
-  console.log('--------------')
-  console.log(command)
-  console.log(guideName)
-  console.log('--------------')
-
-  const guides = () => {
+  const guideName = command.replace(':play', '').trim()
+  const guide = () => {
     if (guideName !== '') {
-      return <div><guides.components.Slide html={guides.html[guideName]}/></div>
+      const content = guides.html[guideName]
+      if (content !== undefined) {
+        return (
+          <div>
+            <guides.components.Slide html={guides.html[guideName]}/>
+          </div>
+        )
+      } else {
+        return 'Guide not found'
+      }
     }
-    return 'Guide not found'
+    return 'Play guide not specified'
   }
   return (
     <div className='playFrame frame'>
-      {guides()}
+      {guide()}
     </div>
     )
 }

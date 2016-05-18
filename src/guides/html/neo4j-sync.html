@@ -1,0 +1,53 @@
+<article ng-controller="SyncSigninController" class="guide">
+  <div class="container-fluid sign-in-frame">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="box-max"><img src="images/neo4j-world.png" class="img-responsive">
+          <h1 class="subhead text-right">NEO4J BROWSER SYNC</h1>
+        </div>
+      </div>
+      <div class="col-sm-4 col-sm-offset-1">
+        <div ng-if="!currentUser" class="box-max">
+          <h3>Connect to the Cloud</h3>
+          <p class="lead">
+            Neo4j Browser Sync is a companion cloud service for Neo4j Browser. Connect through a simple social
+            sign-in to elevate your graph experience.
+          </p>
+          <alert ng-hide="goodBrowser" class="top-padded">
+             
+            Sync is currently only available for some versions of Internet Explorer.
+            If you have any trouble, we'd love to hear from you at&nbsp;<a href="mailto:feedback@neotechnology.com">feedback@neotechnology.com</a>
+          </alert>
+          <div ng-show="!settings.shownTermsAndPrivacy || !settings.acceptedTermsAndPrivacy" class="box-max">
+            <div class="checkbox">
+              <label for="acceptedTermsAndPrivacyCheckBox" class="muted">
+                <input id="acceptedTermsAndPrivacyCheckBox" type="checkbox" ng-model="settings.acceptedTermsAndPrivacy" ng-change="save()">By checking this box you are agreeing to the&nbsp;<a href="http://neo4j.com/terms/neo4j-browser-sync/">Neo4j Browser Sync Terms of Use</a>&nbsp;and our&nbsp;<a href="http://neo4j.com/privacy-policy/">Privacy Policy</a>.
+              </label>
+            </div>
+          </div>
+          <alert ng-show="showSignupWarning" close="closeWarning()">Before you can sign in, please check the box above to agree to the terms of use and privacy policy.</alert>
+          <div class="button-row row col-sm-12">
+            <button ng-click="signInToSync()" class="btn btn-primary">Register / Sign In</button><span class="spacer">&nbsp;</span><a ng-click="noThanks()" class="no-thanks">No thanks</a>
+          </div>
+        </div>
+        <div ng-if="currentUser" class="box-max">
+          <h3>Hello {{currentUser.name}}!</h3>
+          <p>&nbsp;</p>
+          <p class="lead">Your Neo4j Browser Sync account is active.</p>
+          <p>&nbsp;</p>
+          <p>
+            <button ng-click="CurrentUser.logout(); toggleDrawer('profile') " class="btn btn-popup btn-destructive">Sign Out</button>
+          </p>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <ul class="big undecorated">
+          <li><i class="sl sl-cloud-sync fa-lg"></i>&nbsp; Sync queries &amp; graph style sheets</li>
+          <li><i class="sl sl-hierarchy fa-lg"></i>&nbsp; Restore previous versions of scripts</li>
+          <li><i class="sl sl-bubble-comment fa-lg"></i>&nbsp; Get update notices, suggestions and help</li>
+          <li><i class="sl sl-question-mark fa-lg"> </i><a href="http://neo4j.com/neo4j-browser-sync">&nbsp;Learn More</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</article>
