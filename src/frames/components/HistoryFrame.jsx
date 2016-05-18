@@ -5,7 +5,7 @@ import { HistoryRowComponent } from './HistoryRow'
 
 const HistoryFrameComponent = ({frame, onHistoryClick}) => {
   const historyRows = frame.history.map((entry, index) => {
-    return <HistoryRowComponent key={index} onHistoryClick={onHistoryClick} entry={entry}/>
+    return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry}/>
   })
   return <div className='frame'><ul className='history-list'>{historyRows}</ul></div>
 }
