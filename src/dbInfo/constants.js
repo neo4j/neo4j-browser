@@ -1,1 +1,1 @@
-export const NAME = 'labels'
+export const NAME = 'meta'
