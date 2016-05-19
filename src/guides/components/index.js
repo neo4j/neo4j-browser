@@ -1,4 +1,3 @@
-import { Movies } from './Movies'
-import { Slide } from './Slide'
+import Slide from './Slide'
 
-export default { Movies, Slide }
+export default { Slide }
