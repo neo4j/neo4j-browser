@@ -1,4 +1,4 @@
-import React from 'React'
+import React from 'react'
 import Intro from 'html!./../html/test.html'
 import { Slide } from './Slide'
 
