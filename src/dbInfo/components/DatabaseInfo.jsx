@@ -1,6 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import editor from '../../editor'
 
-const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties = [], onItemClick }) => {
+const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties = [], onItemClick }) => {
   const createItems = (originalList, className, editorCommandTemplate, showStar = true) => {
     let items = [...originalList]
     if (showStar) {
@@ -56,4 +58,22 @@ const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties = [], on
     </div>
   )
 }
-export default DatabaseInfo
+
+const mapStateToProps = (state) => {
+  return state.meta
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onItemClick: (cmd) => {
+      dispatch(editor.actions.setContent(cmd))
+    }
+  }
+}
+
+const DatabaseInfo = connect(mapStateToProps, mapDispatchToProps)(DatabaseInfoComponent)
+export {
+  DatabaseInfoComponent,
+  DatabaseInfo
+}
+

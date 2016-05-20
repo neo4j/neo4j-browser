@@ -1,3 +1,3 @@
-import {DatabaseDrawer} from './DatabaseDrawerWrapper'
+import {DatabaseInfo} from './DatabaseInfo'
 
-export default {DatabaseDrawer}
+export default {DatabaseInfo}

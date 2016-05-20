@@ -12,7 +12,7 @@ class Sidebar extends React.Component {
     ]
     const drawerContentMap = (openDrawer) => {
       if (openDrawer === 'db') {
-        return <dbInfo.components.DatabaseDrawer/>
+        return <dbInfo.components.DatabaseInfo/>
       }
       return openDrawer
     }
