@@ -75,6 +75,7 @@ export class EditorComponent extends React.Component {
     this.setState({
       code: newCode
     })
+    this.props.updateContent(newCode)
   }
   render () {
     const options = {
@@ -102,6 +103,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onExecute: (cmd) => {
       dispatch(editor.actions.executeCommand(cmd))
+    },
+    updateContent: (cmd) => {
+      dispatch(editor.actions.setContent(cmd))
     }
   }
 }
