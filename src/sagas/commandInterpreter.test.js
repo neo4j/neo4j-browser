@@ -4,6 +4,7 @@ import frames from '../frames'
 import editor from '../editor'
 import { watchCommands, handleClientCommand } from './commandInterpreter'
 import bolt from '../services/bolt'
+import remote from '../services/remote'
 
 describe('watchCommands Saga', () => {
   it('should listen to editor.actionTypes.USER_COMMAND_QUEUED starting with :', () => {
@@ -90,6 +91,30 @@ describe('handleClientCommand Saga', () => {
     // When
     const actualPutAction = handleClientCommandSaga.next().value
     const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, type: payload.type}))
+    // Then
+    expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)
+    expect(actualPutAction.PUT.action.state.type).to.equal(expectedPutAction.PUT.action.state.type)
+  })
+
+  it('should put action frames.action.add on :play `url` command', () => {
+    const url = 'http://test.test'
+
+    // Given
+    const payload = {cmd: ':play ' + url, type: 'play-remote'}
+    const settings = {cmdchar: ':'}
+    const handleClientCommandSaga = handleClientCommand(settings.cmdchar, payload.cmd)
+
+    // When
+    const actualBoltAction = handleClientCommandSaga.next('http://test.test').value
+    const expectedBoltAction = call(remote.get, 'http://test.test')
+
+    // Then
+    expect(actualBoltAction).to.deep.equal(expectedBoltAction)
+
+    // When
+    const actualPutAction = handleClientCommandSaga.next().value
+    const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, type: payload.type}))
+
     // Then
     expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)
     expect(actualPutAction.PUT.action.state.type).to.equal(expectedPutAction.PUT.action.state.type)

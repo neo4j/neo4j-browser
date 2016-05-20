@@ -20,4 +20,17 @@ describe('PlayFrame', () => {
     expect(wrapper.find('.playFrame')).to.have.length(1)
     expect(wrapper.find('.playFrame').html()).to.equal(content)
   })
+  it('should render contents when contents is passed to PlayFrame', () => {
+    const content = '<div class="playFrame frame"><div>Hello</div></div>'
+    const wrapper = shallow(<PlayFrame contents={'Hello'} />)
+    expect(wrapper.find('.playFrame')).to.have.length(1)
+    expect(wrapper.find('.playFrame').html()).to.equal(content)
+  })
+
+  it('should render contents when contents and command are passed to PlayFrame', () => {
+    const content = '<div class="playFrame frame"><div>Hello</div></div>'
+    const wrapper = shallow(<PlayFrame command={':play movies'} contents={'Hello'} />)
+    expect(wrapper.find('.playFrame')).to.have.length(1)
+    expect(wrapper.find('.playFrame').html()).to.equal(content)
+  })
 })

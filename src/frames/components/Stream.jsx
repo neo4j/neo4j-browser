@@ -13,7 +13,7 @@ const StreamComponent = (props) => {
     if (frame.type === 'pre') {
       return <div className='frame' key={frame.id}><pre>{frame.contents}</pre></div>
     }
-    if (frame.type === 'play') {
+    if (frame.type === 'play' || frame.type === 'play-remote') {
       return <PlayFrame key={frame.id} contents={frame.contents} command={frame.cmd} />
     }
     if (frame.type === 'history') {

@@ -38,6 +38,18 @@ describe('commandInterpreterHelper', () => {
     expect(actualCommandName).to.equal(expectedCommandName)
   })
 
+  it('should find :play `url` helper with params', () => {
+    // Given
+    const cmd = 'play http://neo4j.com'
+    const expectedCommandName = 'play-remote'
+
+    // When
+    const actualCommandName = helper.interpret(cmd).name
+
+    // Then
+    expect(actualCommandName).to.equal(expectedCommandName)
+  })
+
   it('should give the "catch-all" match back whn unkown command', () => {
     // Given
     const cmd = 'nomatch'

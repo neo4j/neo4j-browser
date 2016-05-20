@@ -6,6 +6,7 @@ import { getSettings, getHistory } from '../selectors'
 import { cleanCommand, parseConfigInput } from '../services/commandUtils'
 import editor from '../editor'
 import bolt from '../services/bolt'
+import remote from '../services/remote'
 
 function * watchCommands () {
   while (true) {
@@ -28,8 +29,15 @@ function * watchCommands () {
 
 function * handleClientCommand (cmdchar, cmd) {
   const interpreted = helper.interpret(cmd.substr(cmdchar.length))
-
-  if (interpreted.name === 'play') {
+  if (interpreted.name === 'play-remote') {
+    const url = cmd.substr(cmdchar.length + 'play '.length)
+    try {
+      const content = yield call(remote.get, url)
+      yield put(frames.actions.add({cmd: cmd, type: interpreted.name, contents: content}))
+    } catch (e) {
+      yield put(frames.actions.add({cmd: cmd, type: interpreted.name, contents: 'Can not fetch remote guide: ' + e}))
+    }
+  } else if (interpreted.name === 'play') {
     yield put(frames.actions.add({cmd: cmd, type: interpreted.name}))
   } else if (interpreted.name === 'clear') {
     yield put(frames.actions.clear())

@@ -5,6 +5,9 @@ const availableCommands = [{
   name: 'config',
   match: (cmd) => /^config(\s|$)/.test(cmd)
 }, {
+  name: 'play-remote',
+  match: (cmd) => /^play(\s|$)https?/.test(cmd)
+}, {
   name: 'play',
   match: (cmd) => /^play(\s|$)/.test(cmd)
 }, {
