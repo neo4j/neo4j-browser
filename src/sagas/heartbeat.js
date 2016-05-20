@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects'
 import bolt from '../services/bolt'
-import dbInfo from '../dbInfo'
+import dbInfo from '../sidebar/dbInfo'
 
 const delay = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))

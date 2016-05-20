@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
-import dbInfo from '../../dbInfo'
+import dbInfo from '../dbInfo'
 
 class Sidebar extends React.Component {
   render () {

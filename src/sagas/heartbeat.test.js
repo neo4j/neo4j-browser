@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { call, put } from 'redux-saga/effects'
 import { startHeartbeat, metaQuery } from './heartbeat'
-import dbInfo from '../dbInfo'
+import dbInfo from '../sidebar/dbInfo'
 import bolt from '../services/bolt'
 
 describe('heartbeat Saga', () => {

@@ -3,7 +3,7 @@ import frames from './frames'
 import settings from './settings'
 import sidebar from './sidebar'
 import editor from './editor'
-import dbInfo from './dbInfo'
+import dbInfo from './sidebar/dbInfo'
 
 export default {
   [app.constants.NAME]: app.reducer,
