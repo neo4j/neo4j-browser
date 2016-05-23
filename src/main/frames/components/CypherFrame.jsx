@@ -1,6 +1,6 @@
 import React from 'react'
 import asciitable from 'ascii-data-table'
-import bolt from '../../services/bolt'
+import bolt from '../../../services/bolt'
 
 const CypherFrame = ({frame}) => {
   const errors = frame.errors && frame.errors.fields || false

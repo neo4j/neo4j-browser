@@ -1,6 +1,6 @@
 import React from 'react'
-import editor from '../../editor'
-import frames from '../../frames'
+import editor from '../editor'
+import frames from '../frames'
 
 const Main = () => {
   return (

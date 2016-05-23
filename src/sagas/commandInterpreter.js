@@ -1,10 +1,10 @@
 import { put, take, select, call } from 'redux-saga/effects'
 import helper from '../services/commandInterpreterHelper'
-import frames from '../frames'
+import frames from '../main/frames'
 import settings from '../settings'
 import { getSettings, getHistory } from '../selectors'
 import { cleanCommand, parseConfigInput } from '../services/commandUtils'
-import editor from '../editor'
+import editor from '../main/editor'
 import bolt from '../services/bolt'
 import remote from '../services/remote'
 

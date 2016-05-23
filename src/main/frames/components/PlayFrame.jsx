@@ -1,5 +1,5 @@
 import React from 'react'
-import guides from '../../guides'
+import guides from '../../../guides'
 
 export const PlayFrame = ({command, contents}) => {
   let guide = 'Play guide not specified'

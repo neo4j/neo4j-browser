@@ -10,7 +10,7 @@ import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 import reducers from './rootReducer'
 import app from './app'
-import frames from './frames'
+import frames from './main/frames'
 import main from './main'
 
 import sagas from './sagas'

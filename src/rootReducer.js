@@ -1,8 +1,8 @@
 import app from './app'
-import frames from './frames'
 import settings from './settings'
+import frames from './main/frames'
+import editor from './main/editor'
 import sidebar from './sidebar'
-import editor from './editor'
 import dbInfo from './sidebar/dbInfo'
 
 export default {
