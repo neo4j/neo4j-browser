@@ -7,6 +7,7 @@ import { cleanCommand, parseConfigInput } from '../services/commandUtils'
 import editor from '../main/editor'
 import bolt from '../services/bolt'
 import remote from '../services/remote'
+import { cleanHtml } from '../services/remoteUtils'
 
 function * watchCommands () {
   while (true) {
@@ -33,7 +34,7 @@ function * handleClientCommand (cmdchar, cmd) {
     const url = cmd.substr(cmdchar.length + 'play '.length)
     try {
       const content = yield call(remote.get, url)
-      yield put(frames.actions.add({cmd: cmd, type: interpreted.name, contents: content}))
+      yield put(frames.actions.add({cmd: cmd, type: interpreted.name, contents: cleanHtml(content)}))
     } catch (e) {
       yield put(frames.actions.add({cmd: cmd, type: interpreted.name, contents: 'Can not fetch remote guide: ' + e}))
     }

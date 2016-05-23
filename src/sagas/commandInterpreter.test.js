@@ -105,11 +105,11 @@ describe('handleClientCommand Saga', () => {
     const handleClientCommandSaga = handleClientCommand(settings.cmdchar, payload.cmd)
 
     // When
-    const actualBoltAction = handleClientCommandSaga.next('http://test.test').value
-    const expectedBoltAction = call(remote.get, 'http://test.test')
+    const actualRemoteGetAction = handleClientCommandSaga.next('http://test.test').value
+    const expectedRemoteGetAction = call(remote.get, 'http://test.test')
 
     // Then
-    expect(actualBoltAction).to.deep.equal(expectedBoltAction)
+    expect(actualRemoteGetAction).to.deep.equal(expectedRemoteGetAction)
 
     // When
     const actualPutAction = handleClientCommandSaga.next().value
