@@ -34,6 +34,16 @@ describe('commandutils', () => {
     })
   })
 
+  it('splitStringOnLast should split strings on last occurance of delimiter ', () => {
+    const testStrs = [
+      {str: ':config test:"hello :space"', delimiter: ' ', expect: [':config test:"hello', ':space"']},
+      {str: 'test:"hello :space"', delimiter: ':', expect: ['test:"hello ', 'space"']}
+    ]
+    testStrs.forEach((obj) => {
+      expect(utils.splitStringOnLast(obj.str, obj.delimiter)).to.deep.equal(obj.expect)
+    })
+  })
+
   it('parseConfigInput should create an object from string input ', () => {
     const testStrs = [
       {str: ':config test:"hello :space"', expect: {test: 'hello :space'}},

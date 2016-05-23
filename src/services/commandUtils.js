@@ -17,6 +17,11 @@ export function splitStringOnFirst (str, delimiter) {
   return [].concat(parts[0], parts.slice(1).join(delimiter))
 }
 
+export function splitStringOnLast (str, delimiter) {
+  const parts = str.split(delimiter)
+  return [].concat(parts.slice(0, parts.length - 1).join(delimiter), parts[parts.length - 1])
+}
+
 export function parseConfigInput (str) {
   const settingString = splitStringOnFirst(str, ' ')
   const setting = splitStringOnFirst(settingString[1], ':')

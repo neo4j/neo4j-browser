@@ -3,7 +3,7 @@ import helper from '../services/commandInterpreterHelper'
 import frames from '../main/frames'
 import settings from '../settings'
 import { getSettings, getHistory } from '../selectors'
-import { cleanCommand, parseConfigInput } from '../services/commandUtils'
+import { cleanCommand, parseConfigInput, splitStringOnFirst, splitStringOnLast } from '../services/commandUtils'
 import editor from '../main/editor'
 import bolt from '../services/bolt'
 import remote from '../services/remote'
@@ -43,6 +43,8 @@ function * handleClientCommand (cmdchar, cmd) {
     yield put(frames.actions.clear())
   } else if (interpreted.name === 'config') {
     yield call(handleConfigCommand, cmd.substr(cmdchar.length))
+  } else if (interpreted.name === 'server') {
+    yield call(handleServerCommand, cmd.substr(cmdchar.length))
   } else if (interpreted.name === 'history') {
     const historyState = yield select(getHistory)
     yield put(frames.actions.add({cmd: cmd, type: 'history', history: historyState}))
@@ -61,6 +63,18 @@ function * handleConfigCommand (cmd) {
   yield put(settings.actions.update(toBeSet))
   const settingsState = yield select(getSettings)
   yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState, null, 2)}))
+}
+
+function * handleServerCommand (cmd) {
+  const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(cmd, ' ')[1], ' ')
+  if (serverCmd !== 'add') return
+  // :server add name username:password@host:port
+  const [name, creds] = splitStringOnFirst(props, ' ')
+  const [userCreds, host] = splitStringOnLast(creds, '@')
+  const [username, password] = splitStringOnFirst(userCreds, ':')
+  yield put(settings.actions.addServerBookmark({name, username, password, host}))
+  const settingsState = yield select(getSettings)
+  yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState.bookmarks, null, 2)}))
 }
 
 export {
