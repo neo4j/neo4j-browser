@@ -1,8 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { FrameTitlebar } from './FrameTitlebar'
 import { CypherFrame } from './CypherFrame'
 import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
+import { Frame } from './Frame'
 
 const StreamComponent = (props) => {
   const frames = props.frames
@@ -11,7 +13,12 @@ const StreamComponent = (props) => {
       return <CypherFrame key={frame.id} frame={frame} />
     }
     if (frame.type === 'pre') {
-      return <div className='frame' key={frame.id}><pre>{frame.contents}</pre></div>
+      return (
+        <div className='frame' key={frame.id}>
+          <FrameTitlebar frame={frame} />
+          <div className='frame-contents'><pre>{frame.contents}</pre></div>
+        </div>
+      )
     }
     if (frame.type === 'play' || frame.type === 'play-remote') {
       return <PlayFrame key={frame.id} contents={frame.contents} command={frame.cmd} />
@@ -19,7 +26,7 @@ const StreamComponent = (props) => {
     if (frame.type === 'history') {
       return <HistoryFrame key={frame.id} frame={frame}/>
     }
-    return <div className='frame' key={frame.id}>{frame.cmd}</div>
+    return <Frame key={frame.id} frame={frame} />
   })
   return (
     <div id='stream'>

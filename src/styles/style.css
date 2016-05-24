@@ -54,10 +54,20 @@
 
 #stream .frame {
   margin: 10px 10px 10px 10px;
-  padding: 20px;
   border: 1px solid grey;
 }
 
+.frame .frame-titlebar {
+  color: #ccc;
+  border-bottom: 1px solid #ddd;
+  padding: 3px 3px 3px 5px;
+}
+.frame .frame-titlebar .frame-titlebar-cmd {
+  cursor: pointer;
+}
+.frame .frame-contents {
+  padding: 20px;
+}
 .frame .history-list {
   list-style: none;
 }

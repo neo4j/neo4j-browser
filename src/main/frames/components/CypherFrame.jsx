@@ -1,4 +1,5 @@
 import React from 'react'
+import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../services/bolt'
 
@@ -17,7 +18,12 @@ const CypherFrame = ({frame}) => {
       </div>
     )
   }
-  return <div className='frame'>{frameContents}</div>
+  return (
+    <div className='frame'>
+      <FrameTitlebar frame={frame} />
+      <div className='frame-contents'>{frameContents}</div>
+    </div>
+  )
 }
 
 export {
