@@ -3,7 +3,7 @@ import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../services/bolt'
 
-const CypherFrame = ({frame}) => {
+const CypherFrame = ({frame, handleTitlebarClick}) => {
   const errors = frame.errors && frame.errors.fields || false
   const result = frame.result || false
   let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
@@ -20,7 +20,7 @@ const CypherFrame = ({frame}) => {
   }
   return (
     <div className='frame'>
-      <FrameTitlebar frame={frame} />
+      <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
       <div className='frame-contents'>{frameContents}</div>
     </div>
   )

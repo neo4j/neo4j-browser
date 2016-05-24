@@ -4,13 +4,13 @@ import { FrameTitlebar } from './FrameTitlebar'
 import editor from '../../editor'
 import { HistoryRowComponent } from './HistoryRow'
 
-const HistoryFrameComponent = ({frame, onHistoryClick}) => {
+const HistoryFrameComponent = ({frame, onHistoryClick, handleTitlebarClick}) => {
   const historyRows = frame.history.map((entry, index) => {
     return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry}/>
   })
   return (
     <div className='frame'>
-      <FrameTitlebar frame={frame} />
+      <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
       <div className='frame-contents'><ul className='history-list'>{historyRows}</ul></div>
     </div>
   )

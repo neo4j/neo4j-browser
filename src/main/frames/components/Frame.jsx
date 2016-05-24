@@ -1,23 +1,22 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
 
-const Frame = ({frame}) => {
+const Frame = ({frame, handleTitlebarClick}) => {
   const errors = frame.errors || false
   const contents = frame.contents || false
   let frameContents = contents
   if (errors) {
     frameContents = (
       <div>
-        <pre>{errors}</pre>
+        <pre>{errors.message}</pre>
       </div>
     )
-  }
-  else if (frame.type === 'unknown') {
+  } else if (frame.type === 'unknown') {
     frameContents = 'Unknown command'
   }
   return (
     <div className='frame'>
-      <FrameTitlebar frame={frame} />
+      <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
       <div className='frame-contents'>{frameContents}</div>
     </div>
   )
