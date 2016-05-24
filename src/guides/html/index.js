@@ -1,31 +1,33 @@
-// import concepts from 'html!./concepts.html'
-// import cypher from 'html!./cypher.html'
-// import explore from 'html!./explore.html'
-// import graphs from 'html!./graphs.html'
-// import intro from 'html!./intro.html'
-import moviegraph from 'html!./movie-graph.html'
-import movies from 'html!./movies.html'
-// import neo4jsync from 'html!./neo4j-sync.html'
-// import northwindgraph from 'html!./northwind-graph.html'
+import concepts from './concepts.html'
+import cypher from './cypher.html'
+import explore from './explore.html'
+import graphs from './graphs.html'
+import intro from './intro.html'
+import learn from './learn.html'
+import moviegraph from './movie-graph.html'
+import movies from './movies.html'
+import neo4jsync from './neo4j-sync.html'
+import northwindgraph from './northwind-graph.html'
 import querytemplate from 'html!./query-template.html'
-// import start from 'html!./start.html'
-import sysinfo from 'html!./sysinfo.html'
-// import welcome from 'html!./welcome.html'
-// import writecode from 'html!./write-code.html'
+import start from './start.html'
+import sysinfo from './sysinfo.html'
+import welcome from './welcome.html'
+import writecode from './write-code.html'
 
 export default {
-  // concepts,
-  // cypher,
-  // explore,
-  // graphs,
-  // intro,
+  concepts,
+  cypher,
+  explore,
+  graphs,
+  intro,
+  learn,
   movies,
   moviegraph,
-  // neo4jsync,
-  // northwindgraph,
+  neo4jsync,
+  northwindgraph,
   querytemplate,
-  // start,
-  sysinfo
-  // welcome,
-  // writecode
+  start,
+  sysinfo,
+  welcome,
+  writecode
 }
