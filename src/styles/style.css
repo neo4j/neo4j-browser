@@ -4,13 +4,19 @@
   height: 100vh;
 }
 
+#cypherTabs {
+  flex: 0;
+  display: flex;
+  flex-direction: row;
+}
+
 #sidebar {
   flex: 0;
   background-color: #ddd;
   display: flex;
   flex-direction: row;
 }
-#sidebar #nav ul {
+.nav ul {
   width: 70px;
   list-style: none;
   display: flex;
@@ -18,7 +24,7 @@
   align-content: flex-start;
   align-items: flex-start;
 }
-#sidebar #nav ul li {
+.nav ul li {
   width: 100%;
   height: 70px;
   border-bottom: 1px solid black;
@@ -27,10 +33,10 @@
   cursor: pointer;
   line-height: 75px;
 }
-#sidebar #nav ul li.open {
+#sidebar .nav ul li.open {
   background-color: #666
 }
-#sidebar #drawer {
+#sidebar .tab {
   flex: 0 0 200px;
   width: 200px;
   background-color: #666

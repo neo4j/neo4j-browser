@@ -1,24 +1,22 @@
 import React from 'react'
 import sidebar from '../'
 import { expect } from 'chai'
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
 describe('Sidebar', () => {
-  it('renders a list of navigation links', () => {
-    const drawer = null
-    const wrapper = shallow(<sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/>)
-    expect(wrapper.find('li').length).to.be.above(0)
-  })
+  const store = createStore(sidebar.reducer)
 
-  it('hides drawer when no drawer should be open', () => {
-    const drawer = null
-    const wrapper = shallow(<sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/>)
-    expect(wrapper.find('#drawer').hasClass('hidden')).to.equal(true)
-  })
-
-  it('shows drawer when drawer should be open', () => {
+  it('shopuld show db drawer whem it is open', () => {
     const drawer = 'db'
-    const wrapper = shallow(<sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/>)
-    expect(wrapper.find('#drawer').hasClass('hidden')).to.equal(false)
+    const wrapper = mount(<Provider store={store}><sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/></Provider>)
+    expect(wrapper.find('#db-drawer')).has.length(1)
+  })
+
+  it('shopuld show fav drawer whem it is open', () => {
+    const drawer = 'fav'
+    const wrapper = mount(<Provider store={store}><sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/></Provider>)
+    expect(wrapper.find('.tab').first().text()).to.equal('Fav')
   })
 })
