@@ -2,10 +2,17 @@
 import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
 
+function connectionError (message, code = 'Connection Error') {
+  return {fields: [{
+    code,
+    message
+  }]}
+}
+
 function openConnection ({name, username, password, host}) {
   const transactionFn = (connection) => {
     return (input, parameters) => {
-      transaction(connection, input, parameters)
+      return transaction(connection, input, parameters)
     }
   }
   return connectionHandler.open({name, username, password, host}, connect, validateConnection, transactionFn)
@@ -33,14 +40,19 @@ function validateConnection (connection) {
 
 function transaction (connection, input, parameters) {
   const session = connection.session()
-  return session.run(input, parameters).then((_) => session.close())
+  return session.run(input, parameters).then((r) => {
+    session.close()
+    return r
+  })
 }
 
 export default {
   openConnection,
   getConnection: connectionHandler.get,
   transaction: (input, parameters) => {
-    return connectionHandler.get().transaction(input, parameters)
+    const c = connectionHandler.get()
+    if (c) return c.transaction(input, parameters)
+    return Promise.reject(new connectionError('No connection'))
   },
   recordsToTableArray: (records) => {
     const intChecker = neo4j.v1.isInt
