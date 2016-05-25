@@ -3,7 +3,7 @@ import { put, take, call } from 'redux-saga/effects'
 import frames from '../main/frames'
 import editor from '../main/editor'
 import { watchCommands, handleClientCommand, handleServerCommand, handleServerAddCommand } from './commandInterpreter'
-import bolt from '../services/bolt'
+import bolt from '../services/bolt/bolt'
 import remote from '../services/remote'
 import settings from '../settings'
 

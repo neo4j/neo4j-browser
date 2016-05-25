@@ -5,7 +5,7 @@ import settings from '../settings'
 import { getSettings, getHistory } from '../selectors'
 import { cleanCommand, parseConfigInput, splitStringOnFirst, splitStringOnLast } from '../services/commandUtils'
 import editor from '../main/editor'
-import bolt from '../services/bolt'
+import bolt from '../services/bolt/bolt'
 import remote from '../services/remote'
 
 function UserException (message) {
