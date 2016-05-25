@@ -1,6 +1,6 @@
 import * as t from './actionTypes'
 
-export default function labels (state = '', action) {
+export default function labels (state = {}, action) {
   switch (action.type) {
     case t.UPDATE_META:
       return {
