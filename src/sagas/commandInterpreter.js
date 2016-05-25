@@ -1,13 +1,14 @@
 import { put, take, select, call } from 'redux-saga/effects'
 import helper from '../services/commandInterpreterHelper'
 import frames from '../main/frames'
-import settings from '../settings'
 import { getSettings, getHistory } from '../selectors'
-import { cleanCommand, parseConfigInput } from '../services/commandUtils'
+import { cleanCommand } from '../services/commandUtils'
 import editor from '../main/editor'
-import bolt from '../services/bolt'
+import bolt from '../services/bolt/bolt'
 import remote from '../services/remote'
 import { cleanHtml } from '../services/remoteUtils'
+import { handleServerCommand } from './command_sagas/serverCommand'
+import { handleConfigCommand } from './command_sagas/configCommand'
 
 function * watchCommands () {
   while (true) {
@@ -16,7 +17,7 @@ function * watchCommands () {
     const settingsState = yield select(getSettings)
     const cleanCmd = cleanCommand(action.cmd)
     if (cleanCmd[0] === settingsState.cmdchar) {
-      yield call(handleClientCommand, settingsState.cmdchar, action.cmd)
+      yield call(handleClientCommand, action.cmd, settingsState.cmdchar)
     } else {
       try {
         const res = yield call(bolt.transaction, action.cmd)
@@ -28,7 +29,7 @@ function * watchCommands () {
   }
 }
 
-function * handleClientCommand (cmdchar, cmd) {
+function * handleClientCommand (cmd, cmdchar) {
   const interpreted = helper.interpret(cmd.substr(cmdchar.length))
   if (interpreted.name === 'play-remote') {
     const url = cmd.substr(cmdchar.length + 'play '.length)
@@ -43,29 +44,18 @@ function * handleClientCommand (cmdchar, cmd) {
   } else if (interpreted.name === 'clear') {
     yield put(frames.actions.clear())
   } else if (interpreted.name === 'config') {
-    yield call(handleConfigCommand, cmd.substr(cmdchar.length))
+    yield call(handleConfigCommand, cmd, cmdchar)
+  } else if (interpreted.name === 'server') {
+    yield call(handleServerCommand, cmd, cmdchar)
   } else if (interpreted.name === 'history') {
     const historyState = yield select(getHistory)
     yield put(frames.actions.add({cmd: cmd, type: 'history', history: historyState}))
   } else {
-    yield put(frames.actions.add({cmd: cmd, type: 'cmd'}))
+    yield put(frames.actions.add({cmd: cmd, type: 'unknown'}))
   }
-}
-
-function * handleConfigCommand (cmd) {
-  const toBeSet = parseConfigInput(cmd)
-  if (cmd === 'config' || toBeSet === false) {
-    const settingsState = yield select(getSettings)
-    yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState, null, 2)}))
-    return
-  }
-  yield put(settings.actions.update(toBeSet))
-  const settingsState = yield select(getSettings)
-  yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState, null, 2)}))
 }
 
 export {
   watchCommands,
-  handleClientCommand,
-  handleConfigCommand
+  handleClientCommand
 }

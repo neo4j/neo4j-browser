@@ -1,13 +1,13 @@
 import React from 'react'
 import guides from '../../../guides'
+import { FrameTitlebar } from './FrameTitlebar'
 
-export const PlayFrame = ({command, contents}) => {
+export const PlayFrame = ({frame, handleTitlebarClick}) => {
   let guide = 'Play guide not specified'
-
-  if (contents) {
-    guide = <guides.components.Slide html={contents}/>
+  if (frame.contents) {
+    guide = <guides.components.Slide html={frame.contents}/>
   } else {
-    const guideName = command.replace(':play', '').trim()
+    const guideName = frame.cmd.replace(':play', '').trim()
     if (guideName !== '') {
       const content = guides.html[guideName]
       if (content !== undefined) {
@@ -19,7 +19,8 @@ export const PlayFrame = ({command, contents}) => {
   }
   return (
     <div className='playFrame frame'>
-      {guide}
+      <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
+      <div className='frame-contents'>{guide}</div>
     </div>
     )
 }

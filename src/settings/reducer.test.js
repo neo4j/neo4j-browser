@@ -34,4 +34,31 @@ describe('settings reducer', () => {
       type: 'dog'
     })
   })
+
+  it('handles settings.actionTypes.ADD_SERVER_BOOKMARK without initial state', () => {
+    const state = {name: 'w', username: 'x', password: 'y', host: 'z'}
+    const action = settings.actions.addServerBookmark(state)
+    const nextState = settings.reducer(undefined, action)
+    expect(nextState.bookmarks).to.deep.equal([state])
+  })
+
+  it('handles settings.actionTypes.ADD_SERVER_BOOKMARK by adding new bookmarks to the end', () => {
+    const initialState = {
+      bookmarks: [{name: 'v', username: 'x', password: 'y', host: 'z'}]
+    }
+    const state = {name: 'w', username: 'x', password: 'y', host: 'z'}
+    const action = settings.actions.addServerBookmark(state)
+    const nextState = settings.reducer(initialState, action)
+    expect(nextState.bookmarks).to.deep.equal(initialState.bookmarks.concat([state]))
+  })
+
+  it('handles settings.actionTypes.ADD_SERVER_BOOKMARK by overwriting bookmarks with the same name', () => {
+    const initialState = {
+      bookmarks: [{name: 'v', username: 'x', password: 'y', host: 'z'}]
+    }
+    const state = {name: 'v', username: 'z', password: 'y', host: 'z'}
+    const action = settings.actions.addServerBookmark(state)
+    const nextState = settings.reducer(initialState, action)
+    expect(nextState.bookmarks).to.deep.equal([state])
+  })
 })

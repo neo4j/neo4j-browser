@@ -1,6 +1,7 @@
 import React from 'react'
+import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
-import bolt from '../../../services/bolt'
+import bolt from '../../../services/bolt/bolt'
 import tabNavigation from '../../../tabNavigation'
 
 class CypherFrame extends React.Component {
