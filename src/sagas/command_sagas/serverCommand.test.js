@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { put } from 'redux-saga/effects'
 import frames from '../../main/frames'
-import { handleServerCommand, handleServerAddCommand } from './serverCommandSagas'
+import { handleServerCommand, handleServerAddCommand } from './serverCommand'
 import settings from '../../settings'
 
 describe('serverCommandSagas', () => {

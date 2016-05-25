@@ -1,13 +1,13 @@
 import { put, take, select, call } from 'redux-saga/effects'
 import helper from '../services/commandInterpreterHelper'
 import frames from '../main/frames'
-import settings from '../settings'
 import { getSettings, getHistory } from '../selectors'
-import { cleanCommand, parseConfigInput } from '../services/commandUtils'
+import { cleanCommand } from '../services/commandUtils'
 import editor from '../main/editor'
 import bolt from '../services/bolt/bolt'
 import remote from '../services/remote'
-import { handleServerCommand } from './command_sagas/serverCommandSagas'
+import { handleServerCommand } from './command_sagas/serverCommand'
+import { handleConfigCommand } from './command_sagas/configCommand'
 
 function * watchCommands () {
   while (true) {
@@ -54,21 +54,7 @@ function * handleClientCommand (cmd, cmdchar) {
   }
 }
 
-function * handleConfigCommand (cmd, cmdchar) {
-  const strippedCmd = cmd.substr(cmdchar.length)
-  const toBeSet = parseConfigInput(strippedCmd)
-  if (strippedCmd === 'config' || toBeSet === false) {
-    const settingsState = yield select(getSettings)
-    yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState, null, 2)}))
-    return
-  }
-  yield put(settings.actions.update(toBeSet))
-  const settingsState = yield select(getSettings)
-  yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState, null, 2)}))
-}
-
 export {
   watchCommands,
-  handleClientCommand,
-  handleConfigCommand
+  handleClientCommand
 }
