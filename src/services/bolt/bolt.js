@@ -42,6 +42,9 @@ function transaction (connection, input, parameters) {
 
 export default {
   openConnection,
+  useConnection: (name) => {
+    connectionHandler.setDefault(name)
+  },
   getConnection: connectionHandler.get,
   transaction: (input, parameters) => {
     const c = connectionHandler.get()

@@ -1,8 +1,9 @@
 import { expect } from 'chai'
-import { put } from 'redux-saga/effects'
+import { put, call } from 'redux-saga/effects'
 import frames from '../../main/frames'
 import { handleServerCommand, handleServerAddCommand } from './serverCommand'
 import settings from '../../settings'
+import bolt from '../../services/bolt/bolt'
 
 describe('serverCommandSagas', () => {
   describe('handleServerCommand Saga', () => {
@@ -55,6 +56,24 @@ describe('serverCommandSagas', () => {
 
       // Then
       expect(actualPutAction).to.deep.equal(expectedPutAction)
+    })
+
+    it('should handle :server use command for switching connection', () => {
+      // Given
+      const connection = {name: 'myname'}
+      const payload = {cmd: ':server use myname'}
+      const storeSettings = {cmdchar: ':'}
+      const handleServerCommandSaga = handleServerCommand(payload.cmd, storeSettings.cmdchar)
+
+      // When
+      const actualCallGetConnectionAction = handleServerCommandSaga.next().value
+      const expectedCallGetConnectionAction = call(bolt.getConnection, connection.name)
+      const actualCallUseConnectionAction = handleServerCommandSaga.next(connection).value
+      const expectedCallUseConnectionAction = call(bolt.useConnection, connection.name)
+
+      // Then
+      expect(actualCallGetConnectionAction).to.deep.equal(expectedCallGetConnectionAction)
+      expect(actualCallUseConnectionAction).to.deep.equal(expectedCallUseConnectionAction)
     })
   })
 })

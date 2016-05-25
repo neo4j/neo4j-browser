@@ -12,6 +12,17 @@ export function * handleServerCommand (cmd, cmdchar) {
     yield call(handleServerAddCommand, cmd, cmdchar)
     return
   }
+  if (serverCmd === 'use') {
+    const connectionName = props
+    try {
+      const connection = yield call(bolt.getConnection, connectionName)
+      if (!connection) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
+      yield call(bolt.useConnection, connection.name)
+    } catch (e) {
+      yield put(frames.actions.add({cmd: cmd, errors: e, type: 'cmd'}))
+    }
+    return
+  }
   if (serverCmd === 'connect') {
     const connectionName = props
     const settingsState = yield select(getSettings)
