@@ -98,27 +98,18 @@ describe('commandInterpreter Sagas', () => {
     })
 
     it('should put action frames.action.add on :play `url` command', () => {
-      const url = 'http://test.test'
-
       // Given
+      const url = 'http://test.test'
       const payload = {cmd: ':play ' + url, type: 'play-remote'}
       const storeSettings = {cmdchar: ':'}
       const handleClientCommandSaga = handleClientCommand(payload.cmd, storeSettings.cmdchar)
 
-    // When
-    const actualRemoteGetAction = handleClientCommandSaga.next('http://test.test').value
-    const expectedRemoteGetAction = call(remote.get, 'http://test.test')
-
-    // Then
-    expect(actualRemoteGetAction).to.deep.equal(expectedRemoteGetAction)
-
       // When
-      const actualPutAction = handleClientCommandSaga.next().value
-      const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, type: payload.type}))
+      const actualRemoteGetAction = handleClientCommandSaga.next('http://test.test').value
+      const expectedRemoteGetAction = call(remote.get, 'http://test.test')
 
       // Then
-      expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)
-      expect(actualPutAction.PUT.action.state.type).to.equal(expectedPutAction.PUT.action.state.type)
+      expect(actualRemoteGetAction).to.deep.equal(expectedRemoteGetAction)
     })
   })
 })

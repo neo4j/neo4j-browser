@@ -16,6 +16,7 @@ class CypherFrame extends React.Component {
     this.setState({openView: viewName})
   }
   render () {
+    const handleTitlebarClick = this.props.handleTitlebarClick
     const frame = this.props.frame
     const errors = frame.errors && frame.errors.fields || false
     const result = frame.result || false
@@ -32,7 +33,7 @@ class CypherFrame extends React.Component {
         {name: 'CODE', icon: '', content: Code},
         {name: 'TEXT', icon: '', content: Text}
       ]
-      return <tabNavigation.components.Navigation openDrawer={this.state.openView} navItems={navItemsList} onNavClick={this.onNavClick.bind(this)} styleId='cypherTabs'/>
+      frameContents = <tabNavigation.components.Navigation openDrawer={this.state.openView} navItems={navItemsList} onNavClick={this.onNavClick.bind(this)} styleId='cypherTabs'/>
     } else if (errors) {
       frameContents = (
         <div>
@@ -41,7 +42,12 @@ class CypherFrame extends React.Component {
         </div>
       )
     }
-    return <div className='frame'>{frameContents}</div>
+    return (
+      <div className='frame'>
+        <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
+        <div className='frame-contents'>{frameContents}</div>
+      </div>
+    )
   }
 }
 
