@@ -23,7 +23,7 @@ function * watchCommands () {
       yield call(handleClientCommand, action.cmd, settingsState.cmdchar)
     } else {
       try {
-        const res = yield call((cmd) => { return bolt.getConnection().transaction(cmd) }, action.cmd)
+        const res = yield call(bolt.transaction, action.cmd)
         yield put(frames.actions.add({cmd: action.cmd, result: res, type: 'cypher'}))
       } catch (e) {
         yield put(frames.actions.add({cmd: action.cmd, errors: e, type: 'cypher'}))
@@ -74,7 +74,7 @@ function * handleConfigCommand (cmd, cmdchar) {
 function * handleServerCommand (cmd, cmdchar) {
   const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(cmd.substr(cmdchar.length), ' ')[1], ' ')
   if (serverCmd === 'add') {
-    yield call(handleServerCommandAdd, cmd, cmdchar)
+    yield call(handleServerAddCommand, cmd, cmdchar)
     return
   }
   if (serverCmd === 'connect') {
@@ -83,7 +83,7 @@ function * handleServerCommand (cmd, cmdchar) {
     try {
       const connectionCreds = settingsState.bookmarks.filter((c) => c.name === connectionName)
       if (!connectionCreds) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
-      const res = yield call(bolt.openConnection, connectionCreds[0])
+      yield call(bolt.openConnection, connectionCreds[0])
     } catch (e) {
       yield put(frames.actions.add({cmd: cmd, errors: e, type: 'cmd'}))
     }
@@ -93,7 +93,7 @@ function * handleServerCommand (cmd, cmdchar) {
   return
 }
 
-function * handleServerCommandAdd (cmd, cmdchar) {
+function * handleServerAddCommand (cmd, cmdchar) {
   // :server add name username:password@host:port
   const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(cmd.substr(cmdchar.length), ' ')[1], ' ')
   const [name, creds] = splitStringOnFirst(props, ' ')
@@ -118,5 +118,6 @@ export {
   watchCommands,
   handleClientCommand,
   handleConfigCommand,
-  handleServerCommand
+  handleServerCommand,
+  handleServerAddCommand
 }

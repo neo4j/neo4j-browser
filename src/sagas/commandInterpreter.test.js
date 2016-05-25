@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { put, take, call } from 'redux-saga/effects'
 import frames from '../main/frames'
 import editor from '../main/editor'
-import { watchCommands, handleClientCommand, handleServerCommand } from './commandInterpreter'
+import { watchCommands, handleClientCommand, handleServerCommand, handleServerAddCommand } from './commandInterpreter'
 import bolt from '../services/bolt'
 import remote from '../services/remote'
 import settings from '../settings'
@@ -143,10 +143,10 @@ describe('commandInterpreter Sagas', () => {
       // Given
       const payload = {cmd: ':server add user:pass@server:8585'} // missing name
       const storeSettings = {cmdchar: ':'}
-      const handleServerCommandSaga = handleServerCommand(payload.cmd, storeSettings.cmdchar)
+      const handleServerAddCommandSaga = handleServerAddCommand(payload.cmd, storeSettings.cmdchar)
 
       // When
-      const actualPutAction = handleServerCommandSaga.next().value
+      const actualPutAction = handleServerAddCommandSaga.next().value
       const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, errors: {}, type: 'cmd'}))
 
       // Then
@@ -165,10 +165,10 @@ describe('commandInterpreter Sagas', () => {
       }
       const payload = {cmd: `:server add ${conf.name} ${conf.username}:${conf.password}@${conf.host}`}
       const storeSettings = {cmdchar: ':'}
-      const handleServerCommandSaga = handleServerCommand(payload.cmd, storeSettings.cmdchar)
+      const handleServerAddCommandSaga = handleServerAddCommand(payload.cmd, storeSettings.cmdchar)
 
       // When
-      const actualPutAction = handleServerCommandSaga.next().value
+      const actualPutAction = handleServerAddCommandSaga.next().value
       const expectedPutAction = put(settings.actions.addServerBookmark(conf))
 
       // Then

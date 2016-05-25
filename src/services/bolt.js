@@ -1,4 +1,5 @@
 /* global neo4j */
+import * as mappings from './boltMappings'
 let connections = []
 
 function createConnectionObject (name, connection) {
@@ -15,8 +16,9 @@ function createConnectionObject (name, connection) {
 const openConnection = ({name, username, password, host}) => {
   const p = new Promise((resolve, reject) => {
     const exists = connections.filter((c) => c.name === name)
-    if (exists.length)
+    if (exists.length) {
       return validateConnection(exists[0]).then((c) => resolve(c)).catch((e) => reject(e))
+    }
     connect({username, password, host})
       .then((c) => {
         validateConnection(c).then((_) => {
@@ -73,42 +75,21 @@ function validateConnection (connection) {
 
 function transaction (connection, input, parameters) {
   const session = connection.session()
-  return session.run(input, parameters)
-}
-
-function recordsToTableArray (records) {
-  const recordValues = records.map((record) => {
-    let out = []
-    record.forEach((val, key) => out.push(itemIntToString(val)))
-    return out
-  })
-  const keys = records[0].keys
-  return [[...keys], ...recordValues]
-}
-
-function itemIntToString (item) {
-  if (Array.isArray(item)) return arrayIntToString(item)
-  if (['number', 'string', 'boolean'].indexOf(typeof item) !== -1) return item
-  if (item === null) return item
-  if (neo4j.v1.isInt(item)) return item.toString()
-  if (typeof item === 'object') return objIntToString(item)
-}
-
-function arrayIntToString (arr) {
-  return arr.map((item) => itemIntToString(item))
-}
-
-function objIntToString (obj) {
-  Object.keys(obj).forEach((key) => {
-    obj[key] = itemIntToString(obj[key])
-  })
-  return obj
+  return session.run(input, parameters).then((_) => session.close())
 }
 
 export default {
   getConnection,
   setDefaultConnection,
   openConnection,
-  recordsToTableArray,
+  closeConnection,
+  transaction: (input, parameters) => {
+    return getConnection().transaction(input, parameters)
+  },
+  recordsToTableArray: (records) => {
+    const intChecker = neo4j.v1.isInt
+    const intConverter = (val) => val.toString()
+    return mappings.recordsToTableArray(records, intChecker, intConverter)
+  },
   neo4j: neo4j.v1
 }
