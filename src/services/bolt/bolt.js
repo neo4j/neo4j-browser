@@ -1,13 +1,7 @@
 /* global neo4j */
 import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
-
-function connectionError (message, code = 'Connection Error') {
-  return {fields: [{
-    code,
-    message
-  }]}
-}
+import { ConnectionException } from '../exceptions'
 
 function openConnection ({name, username, password, host}) {
   const transactionFn = (connection) => {
@@ -52,7 +46,7 @@ export default {
   transaction: (input, parameters) => {
     const c = connectionHandler.get()
     if (c) return c.transaction(input, parameters)
-    return Promise.reject(new connectionError('No connection'))
+    return Promise.reject(new ConnectionException('No connection'))
   },
   recordsToTableArray: (records) => {
     const intChecker = neo4j.v1.isInt
