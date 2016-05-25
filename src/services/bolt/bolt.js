@@ -1,14 +1,14 @@
 /* global neo4j */
-import * as connectionHandler from './connectionHandler'
+import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
 
 function openConnection ({name, username, password, host}) {
-  const p = connectionHandler.open({name, username, password, host}, connect, validateConnection)
-  p.then((conn) => {
-    conn.transaction = ((_connection) => {
-      return (input, parameters) => transaction(_connection, input, parameters)
-    })(conn.connection)
-  })
+  const transactionFn = (connection) => {
+    return (input, parameters) => {
+      transaction(connection, input, parameters)
+    }
+  }
+  return connectionHandler.open({name, username, password, host}, connect, validateConnection, transactionFn)
 }
 
 function connect (props) {
