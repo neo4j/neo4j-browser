@@ -80,6 +80,7 @@ export class EditorComponent extends React.Component {
           onChange={this.props.updateContent.bind(this)}
           options={options}
         />
+        <input type='button' value='+' onClick={() => this.props.onFavortieClick(this.props.content)}/>
       </div>
     )
   }
@@ -87,6 +88,9 @@ export class EditorComponent extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onFavortieClick: (cmd) => {
+      dispatch(editor.actions.addFavorite(cmd))
+    },
     onExecute: (cmd) => {
       dispatch(editor.actions.executeCommand(cmd))
     },

@@ -5,10 +5,12 @@ import { mount } from 'enzyme'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import dbInfo from '../dbInfo'
+import favorites from '../favorites'
 
 describe('Sidebar', () => {
   const reducer = combineReducers({
-    meta: dbInfo.reducer
+    meta: dbInfo.reducer,
+    favorites: favorites.reducer
   })
   const store = createStore(reducer)
 
@@ -18,9 +20,9 @@ describe('Sidebar', () => {
     expect(wrapper.find('#db-drawer')).has.length(1)
   })
 
-  it('should show fav drawer whem it is open', () => {
-    const drawer = 'fav'
+  it('should show favorites drawer when it is open', () => {
+    const drawer = 'favorites'
     const wrapper = mount(<Provider store={store}><sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/></Provider>)
-    expect(wrapper.find('.tab').first().text()).to.equal('Fav')
+    expect(wrapper.find('#db-favorites')).has.length(1)
   })
 })
