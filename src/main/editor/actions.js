@@ -31,6 +31,6 @@ export const setContent = (cmd) => {
 export const addFavorite = (cmd) => {
   return {
     type: t.ADD_FAVORITE,
-    cmd: cmd
+    cmd
   }
 }

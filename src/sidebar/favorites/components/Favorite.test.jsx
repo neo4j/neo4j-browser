@@ -8,10 +8,36 @@ import { FavoriteComponent } from './Favorite'
 describe('FavoriteComponent', () => {
   const expect = chai.expect
 
-  it('should show name of script', () => {
-    const wrapper = shallow(<FavoriteComponent name={'Test script'} content={''}/>)
-    expect(wrapper.find('.favorite')).to.have.length(1)
-    expect(wrapper.find('.favorite').text()).to.equal('Test script')
+  describe('should show name of script', () => {
+    const testCases = [
+      {
+        command: '//Test script \nABC',
+        expected: 'Test script'
+      },
+      {
+        command: '//Test script ABC',
+        expected: 'Test script ABC'
+      },
+      {
+        command: '// Test script ABC   ',
+        expected: 'Test script ABC'
+      },
+      {
+        command: '// Test \n\n\nscript ABC   ',
+        expected: 'Test'
+      },
+      {
+        command: '// //Test//',
+        expected: '//Test//'
+      }
+    ]
+    testCases.forEach((testCase, i) => {
+      it(`should extract name of script from case ${i}`, () => {
+        const wrapper = shallow(<FavoriteComponent content={testCase.command}/>)
+        expect(wrapper.find('.favorite')).to.have.length(1)
+        expect(wrapper.find('.favorite').text()).to.equal(testCase.expected)
+      })
+    })
   })
 
   it('should show tigger event with content of script', () => {
@@ -19,7 +45,7 @@ describe('FavoriteComponent', () => {
     chai.use(spies)
     chai.use(chaiEnzyme())
     const onItemClick = chai.spy()
-    const wrapper = shallow(<FavoriteComponent name={'Test script'} content={'Cypher'} onItemClick={onItemClick}/>)
+    const wrapper = shallow(<FavoriteComponent content={'Cypher'} onItemClick={onItemClick}/>)
     const favoriteElement = wrapper.find('.favorite')
     expect(favoriteElement).to.have.length(1)
     favoriteElement.first().simulate('click')

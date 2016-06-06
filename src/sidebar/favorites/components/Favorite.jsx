@@ -3,7 +3,21 @@ import { connect } from 'react-redux'
 import editor from '../../../main/editor'
 import favorite from '../'
 
-const FavoriteComponent = ({name, id, content, onItemClick = () => {}, removeClick = () => {}}) => {
+function extractNameFromCommand (input) {
+  if (input === '' || input === undefined) {
+    return ''
+  }
+
+  let firstRow = input.split('\n')[0]
+  if (firstRow.indexOf('//') === 0) {
+    return firstRow.substr(2).trim()
+  } else {
+    return input.trim()
+  }
+}
+
+const FavoriteComponent = ({id, content, onItemClick = () => {}, removeClick = () => {}}) => {
+  const name = extractNameFromCommand(content)
   return (
     <div>
       <div className='favorite' onClick={() => onItemClick(content)}>{name}</div>

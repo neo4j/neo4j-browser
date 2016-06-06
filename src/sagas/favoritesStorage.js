@@ -27,7 +27,7 @@ function * watchFavorites () {
   while (true) {
     const action = yield take(editor.actionTypes.ADD_FAVORITE)
     let scripts = getScripts()
-    scripts.push({id: uuid.v4(), name: 'Unnamed script', content: action.cmd})
+    scripts.push({id: uuid.v4(), content: action.cmd})
     window.localStorage.setItem(favoritesKey, JSON.stringify(scripts))
     yield put(favorites.actions.loadFavorites(getScripts()))
   }
