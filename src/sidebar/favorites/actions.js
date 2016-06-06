@@ -3,10 +3,18 @@ import * as t from './actionTypes'
 function loadFavorites (favorites) {
   return {
     type: t.LOAD_FAVORITES,
-    state: {favorites: favorites}
+    favorites
+  }
+}
+
+function removeFavorite (id) {
+  return {
+    type: t.REMOVE_FAVORITE,
+    id
   }
 }
 
 export {
-  loadFavorites
+  loadFavorites,
+  removeFavorite
 }

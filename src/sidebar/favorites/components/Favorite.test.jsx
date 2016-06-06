@@ -1,6 +1,6 @@
 import React from 'react'
 import chai from 'chai'
-import { shallow } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 import chaiEnzyme from 'chai-enzyme'
 import spies from 'chai-spies'
 import { FavoriteComponent } from './Favorite'
@@ -20,8 +20,22 @@ describe('FavoriteComponent', () => {
     chai.use(chaiEnzyme())
     const onItemClick = chai.spy()
     const wrapper = shallow(<FavoriteComponent name={'Test script'} content={'Cypher'} onItemClick={onItemClick}/>)
-    expect(wrapper.find('.favorite')).to.have.length(1)
-    wrapper.find('.favorite').first().simulate('click')
+    const favoriteElement = wrapper.find('.favorite')
+    expect(favoriteElement).to.have.length(1)
+    favoriteElement.first().simulate('click')
     expect(onItemClick).have.been.called.with('Cypher')
+  })
+
+  it('should remove favorite that has been clicked', () => {
+    const id = 'SomeId'
+    const expect = chai.expect
+    chai.use(spies)
+    chai.use(chaiEnzyme())
+    const onRemoveClick = chai.spy()
+    const wrapper = mount(<FavoriteComponent id={id} removeClick={onRemoveClick}/>)
+    const favoriteElement = wrapper.find('.favorite')
+    expect(favoriteElement).to.have.length(1)
+    wrapper.find('.remove').simulate('click')
+    expect(onRemoveClick).have.been.called.with('SomeId')
   })
 })

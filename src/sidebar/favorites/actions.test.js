@@ -1,4 +1,5 @@
 import {expect} from 'chai'
+import uuid from 'uuid'
 import favorites from '.'
 
 describe('Favorites actions', () => {
@@ -6,8 +7,16 @@ describe('Favorites actions', () => {
     const favs = 'favorites object'
     const expected = {
       type: favorites.actionTypes.LOAD_FAVORITES,
-      state: {favorites: favs}
+      favorites: favs
     }
     expect(favorites.actions.loadFavorites(favs)).to.deep.equal(expected)
+  })
+  it('should handle removing favorite', () => {
+    const id = uuid.v4()
+    const expected = {
+      type: favorites.actionTypes.REMOVE_FAVORITE,
+      id
+    }
+    expect(favorites.actions.removeFavorite(id)).to.deep.equal(expected)
   })
 })

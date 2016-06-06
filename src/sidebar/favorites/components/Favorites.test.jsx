@@ -13,8 +13,8 @@ describe('FavoritesComponent', () => {
   const store = createStore(reducer)
 
   it('should show list of favorties', () => {
-    const favorties = {scripts: [{name: 'Hello', content: '//Test'}, {name: 'Hello', content: '//Test'}]}
-    const wrapper = mount(<Provider store={store}><FavoritesComponent favorties={favorties}/></Provider>)
-    expect(wrapper.find('.favorite')).to.have.length(1)
+    const favorties = [{id: '1', name: 'Hello', content: '//Test'}, {id: '2', name: 'Hello', content: '//Test'}]
+    const wrapper = mount(<Provider store={store}><FavoritesComponent scripts={favorties}/></Provider>)
+    expect(wrapper.find('.favorite')).to.have.length(2)
   })
 })

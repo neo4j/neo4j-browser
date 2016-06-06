@@ -1,11 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import uuid from 'uuid'
 import { Favorite } from './Favorite'
 
-const FavoritesComponent = ({ favorites = { scripts: [ { name: '', content: '' } ] }, onItemClick }) => {
-  const ListOfFavorites = favorites.scripts.map((entry) => {
-    return <Favorite key={uuid.v1()} name={entry.name} content={entry.content} onItemClick={onItemClick}/>
+const FavoritesComponent = ({scripts, onItemClick}) => {
+  const ListOfFavorites = scripts.map((entry) => {
+    return <Favorite key={entry.id} name={entry.name} content={entry.content} onItemClick={onItemClick} id={entry.id}/>
   })
   return (
     <div id='db-favorites'>
@@ -17,7 +16,7 @@ const FavoritesComponent = ({ favorites = { scripts: [ { name: '', content: '' }
 
 const mapStateToProps = (state) => {
   return {
-    favorites: state.favorites
+    scripts: state.favorites.scripts
   }
 }
 
