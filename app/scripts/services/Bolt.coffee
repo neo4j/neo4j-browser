@@ -31,6 +31,7 @@ angular.module('neo4jApp.services')
     'Utils'
     (Settings, AuthDataService, localStorageService, $rootScope, $location, $q, Utils) ->
       bolt = window.neo4j.v1
+      bignumber = window.BigNumber
       _driver = null
       _errorStatus = null
 
@@ -47,7 +48,7 @@ angular.module('neo4jApp.services')
 
       testQuery = (driver) ->
         q = $q.defer()
-        driver.onError = (e) -> 
+        driver.onError = (e) ->
           if e instanceof Event and e.type is 'error'
             q.reject getSocketErrorObj()
           else if e.code and e.message # until Neo4jError is in drivers public API
@@ -66,11 +67,11 @@ angular.module('neo4jApp.services')
       testConnection = (withoutCredentials = no) ->
         q = $q.defer()
         driver = getDriverObj withoutCredentials
-        testQuery(driver).then((r) -> 
+        testQuery(driver).then((r) ->
           q.resolve r
           _errorStatus = null
           driver.close()
-        ).catch((e) -> 
+        ).catch((e) ->
           q.reject e
           _errorStatus = e
           driver.close()
@@ -82,7 +83,7 @@ angular.module('neo4jApp.services')
         _driver = getDriverObj withoutCredentials
         testQuery(_driver)
           .then((r) -> q.resolve r)
-          .catch((e) -> 
+          .catch((e) ->
             _driver = null unless e.fields[0].code is 'Neo.ClientError.Security.CredentialsExpired'
             q.reject e
           )
@@ -120,12 +121,12 @@ angular.module('neo4jApp.services')
         else
           if tx
             # We need to look for error messages from
-            # the commit() call even though run() 
+            # the commit() call even though run()
             # reported a successful operation
             p = tx.run statement, parameters
-            p.then((r) -> 
+            p.then((r) ->
               if tx # The tx might have been terminated
-                tx.commit().then((txr) -> 
+                tx.commit().then((txr) ->
                   session.close()
                   q.resolve r
                 ).catch((txe) ->
@@ -176,11 +177,11 @@ angular.module('neo4jApp.services')
         return {data: []} unless r.records
         r.records = itemIntToString r.records
         filtered = r.records.filter((record) -> whatToGet.indexOf(record.get('name')) > -1)
-          .map((record) -> 
+          .map((record) ->
             origAttributes = record.get('attributes')
             return {
-              name: record.get('name'), 
-              description: record.get('description'), 
+              name: record.get('name'),
+              description: record.get('description'),
               attributes: Object.keys(record.get('attributes')).map((attributeName) -> {
                 name: attributeName,
                 description: origAttributes[attributeName].description,
@@ -282,6 +283,7 @@ angular.module('neo4jApp.services')
         return item.properties if item instanceof bolt.types.Relationship
         return [].concat.apply([], extractPathForRowsFormat(item)) if item instanceof bolt.types.Path
         return item if item is null
+        return item if item instanceof BigNumber
         return item.map((subitem) -> extractDataForRowsFormat subitem) if Array.isArray item
         if typeof item is 'object'
           out = {}
@@ -312,6 +314,7 @@ angular.module('neo4jApp.services')
         return item if item instanceof bolt.types.Relationship
         return [].concat.apply([], extractPathsForGraphFormat(item)) if item instanceof bolt.types.Path
         return no if item is null
+        return item if item instanceof BigNumber
         return item.map((subitem) -> extractDataForGraphFormat subitem).filter((i) -> i) if Array.isArray item
         if typeof item is 'object'
           out = Object.keys(item).map((key) -> extractDataForGraphFormat(item[key])).filter((i) -> i)
@@ -323,7 +326,7 @@ angular.module('neo4jApp.services')
         return arrayIntToString item if Array.isArray(item)
         return item if typeof item in ['number', 'string', 'boolean']
         return item if item is null
-        return item.toString() if bolt.isInt item
+        return new BigNumber(item.toString()) if bolt.isInt item
         return objIntToString item if typeof item is 'object'
 
       arrayIntToString = (arr) ->
