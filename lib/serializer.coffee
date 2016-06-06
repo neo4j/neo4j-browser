@@ -47,9 +47,10 @@ class neo.serializer
 
     @output = -> @_output
 
+
     @_escape = (string) ->
       return '' unless string?
-      string = JSON.stringify(string) unless typeof string is 'string'
+      string = new neo.boltIntHelpers().stringify(string) unless typeof string is 'string'
       return '""' unless string.length
       if string.indexOf(@options.delimiter) > 0 or string.indexOf('"') >= 0
         string = '"' + string.replace(/"/g, '""') + '"'

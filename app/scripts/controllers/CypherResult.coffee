@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict'
 
 angular.module('neo4jApp.controllers')
-  .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTableFactory', ($rootScope, $scope, AsciiTableFactory) ->
+  .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTableFactory', 'BoltIntHelpers',  ($rootScope, $scope, AsciiTableFactory, BoltIntHelpers) ->
     $scope.displayInternalRelationships = $rootScope.stickyDisplayInternalRelationships ? true
     $scope.availableModes = []
     $scope.slider = {min: 4, max: 20}
@@ -64,7 +64,7 @@ angular.module('neo4jApp.controllers')
 
     $scope.loadAscii = () ->
       return if not tableData or not tableData.data
-      rows = tableData.data.map((data_obj) -> return data_obj.row)
+      rows = tableData.data.map((data_obj) -> return BoltIntHelpers.mapBoltIntsToStrings(data_obj.row))
       rows.splice(0, 0, tableData.columns)
       res = asciiTable.get(rows, {maxColumnWidth: $scope.ascii_col_width})
       $scope.slider.max = asciiTable.maxWidth

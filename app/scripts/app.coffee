@@ -31,7 +31,8 @@ angular.module('neo4jApp.services', [
   'AsciiTableModule',
   'auth0',
   'firebase',
-  'angular-jwt'
+  'angular-jwt',
+  'neo.boltint'
 ])
 
 app = angular.module('neo4jApp', [
