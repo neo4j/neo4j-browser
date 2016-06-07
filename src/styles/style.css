@@ -58,6 +58,10 @@
   flex: 1 1 100vh;
 }
 
+#stream .stream-filter {
+  margin: 10px 0 10px 10px
+}
+
 #stream .frame {
   margin: 10px 10px 10px 10px;
   border: 1px solid grey;
@@ -93,4 +97,17 @@
 
 .hidden {
   display: none;
+}
+
+.checkbox-button {
+  border: 1px solid black;
+  margin: 5px 0 5px 0;
+  padding: 3px;
+  cursor: pointer;
+}
+.checkbox-button.checked {
+  box-shadow: inset 0px 0px 8px -2px #000
+}
+.checkbox-button input {
+  display: none
 }

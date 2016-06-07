@@ -14,7 +14,15 @@ function clear () {
   }
 }
 
+function toggleVisibleFilter (type) {
+  return {
+    type: t.FRAME_TYPE_FILTER_UPDATED,
+    frameType: type
+  }
+}
+
 export {
   add,
-  clear
+  clear,
+  toggleVisibleFilter
 }
