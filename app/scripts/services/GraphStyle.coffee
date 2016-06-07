@@ -327,6 +327,7 @@ angular.module('neo4jApp.services')
           /\{([^{}]*)\}/g,
           (a, b) ->
             r = item.propertyMap[b]
+            return r.toString() if r instanceof BigNumber
             if typeof r is 'object'
               r = r.join(', ')
             return if (typeof r is 'string' or typeof r is 'number') then r else ''
@@ -340,6 +341,7 @@ angular.module('neo4jApp.services')
           /^<(id|type)>$/,
           (a,b) ->
             r = item[b]
+            return r.toString() if r instanceof BigNumber
             return if (typeof r is 'string' or typeof r is 'number') then r else ''
         )
 

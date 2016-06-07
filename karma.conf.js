@@ -68,6 +68,7 @@ module.exports = function(config) {
       'app/components/ascii-data-table/lib/bundle-angular.js',
       'app/components/auth0-angular/build/auth0-angular.min.js',
       'app/components/neo4j-driver/lib/browser/neo4j-web.min.js',
+      'app/components/bignumber.js/bignumber.min.js',
       'app/components/angularfire/dist/angularfire.min.js',
       'app/components/angular-jwt/dist/angular-jwt.min.js',
       'app/scripts/*.coffee',
