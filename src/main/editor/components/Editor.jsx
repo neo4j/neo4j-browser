@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import editor from '../'
+import favorites from '../../../sidebar/favorites'
 import { getHistory, getEditorContent } from '../../../selectors'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
@@ -89,7 +90,7 @@ export class EditorComponent extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     onFavortieClick: (cmd) => {
-      dispatch(editor.actions.addFavorite(cmd))
+      dispatch(favorites.actions.addFavorite(cmd))
     },
     onExecute: (cmd) => {
       dispatch(editor.actions.executeCommand(cmd))

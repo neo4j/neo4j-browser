@@ -1,22 +1,30 @@
 import * as t from './actionTypes'
+import uuid from 'uuid'
 
-export default function load (state = { scripts: [ { name: 'Example', content: 'match (n) return n limit 1' } ] }, action) {
+const staticScriptsList = [
+  {
+    id: uuid.v4(),
+    name: 'Movie Graph',
+    content: ':play movie-graph'
+  },
+  {
+    id: uuid.v4(),
+    name: 'Northwind Graph',
+    content: ':play northwind-graph'
+  }
+]
+
+export default function load (state = {scripts: staticScriptsList}, action) {
   switch (action.type) {
     case t.REMOVE_FAVORITE:
-      let favorites = state.scripts
-      if (favorites) {
-        favorites = favorites.filter((favorite) => favorite.id !== action.id)
-      }
-
-      window.localStorage.setItem('neo4j.documents', JSON.stringify(favorites))
-
-      return {
-        scripts: favorites
-      }
+      return Object.assign({}, state, {scripts: state.scripts.filter((favorite) => favorite.id !== action.id)})
+    case t.ADD_FAVORITE:
+      return Object.assign({}, state, {scripts: state.scripts.concat([{id: uuid.v4(), content: action.cmd}])})
     case t.LOAD_FAVORITES:
-      return {
-        scripts: action.favorites
+      if (action.favorites !== null) {
+        return action.favorites
       }
+      return {scripts: staticScriptsList}
   }
   return state
 }

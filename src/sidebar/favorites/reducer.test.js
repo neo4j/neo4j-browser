@@ -11,7 +11,7 @@ describe('updating favorites', () => {
       favorites: [favoriteScript]
     }
     const nextState = favorites.reducer(initialState, action)
-    expect(nextState.scripts).to.deep.equal([favoriteScript])
+    expect(nextState).to.deep.equal([favoriteScript])
   })
 
   it('should update state for favorites when favorite is removed and only one item is in the list', () => {

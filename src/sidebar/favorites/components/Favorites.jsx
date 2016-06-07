@@ -1,17 +1,25 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Favorite } from './Favorite'
+import * as t from '../actionTypes'
 
-const FavoritesComponent = ({scripts, onItemClick}) => {
-  const ListOfFavorites = scripts.map((entry) => {
-    return <Favorite key={entry.id} name={entry.name} content={entry.content} onItemClick={onItemClick} id={entry.id}/>
-  })
-  return (
-    <div id='db-favorites'>
-      <h4>Favorite</h4>
-      {ListOfFavorites}
-    </div>
-  )
+export class FavoritesComponent extends React.Component {
+  componentDidMount () {
+    this.props.dispatch({type: t.FAVORITES_READ})
+  }
+  render () {
+    const scripts = this.props.scripts || []
+    const onItemClick = this.props.onItemClick
+    const ListOfFavorites = scripts.map((entry) => {
+      return <Favorite key={entry.id} name={entry.name} content={entry.content} onItemClick={onItemClick} id={entry.id}/>
+    })
+    return (
+      <div id='db-favorites'>
+        <h4>Favorite</h4>
+        {ListOfFavorites}
+      </div>
+    )
+  }
 }
 
 const mapStateToProps = (state) => {
@@ -20,8 +28,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-const Favorites = connect(mapStateToProps, null)(FavoritesComponent)
-export {
-  FavoritesComponent,
-  Favorites
-}
+export const Favorites = connect(mapStateToProps, null)(FavoritesComponent)

@@ -27,10 +27,3 @@ export const setContent = (cmd) => {
     cmd: cmd
   }
 }
-
-export const addFavorite = (cmd) => {
-  return {
-    type: t.ADD_FAVORITE,
-    cmd
-  }
-}
