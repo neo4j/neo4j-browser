@@ -1,64 +1,117 @@
 import { expect } from 'chai'
+import remote from '../services/remote'
+import { put, call } from 'redux-saga/effects'
+import frames from '../main/frames'
 import helper from './commandInterpreterHelper'
 
 describe('commandInterpreterHelper', () => {
-  it('should recognize :clear command', () => {
-    // Given
-    const cmd = 'clear'
-    const expectedCommandName = 'clear'
+  describe('discover commands', () => {
+    it('should recognize :clear command', () => {
+      // Given
+      const cmd = 'clear'
+      const expectedCommandName = 'clear'
 
-    // When
-    const actualCommandName = helper.interpret(cmd).name
+      // When
+      const actualCommandName = helper.interpret(cmd).name
 
-    // Then
-    expect(actualCommandName).to.equal(expectedCommandName)
+      // Then
+      expect(actualCommandName).to.equal(expectedCommandName)
+    })
+
+    it('should find :config helper with params', () => {
+      // Given
+      const cmd = 'config cmdchar:"/"'
+      const expectedCommandName = 'config'
+
+      // When
+      const actualCommandName = helper.interpret(cmd).name
+
+      // Then
+      expect(actualCommandName).to.equal(expectedCommandName)
+    })
+
+    it('should find :play helper with params', () => {
+      // Given
+      const cmd = 'play fileLocation'
+      const expectedCommandName = 'play'
+
+      // When
+      const actualCommandName = helper.interpret(cmd).name
+
+      // Then
+      expect(actualCommandName).to.equal(expectedCommandName)
+    })
+
+    it('should find :play `url` helper with params', () => {
+      // Given
+      const cmd = 'play http://neo4j.com'
+      const expectedCommandName = 'play-remote'
+
+      // When
+      const actualCommandName = helper.interpret(cmd).name
+
+      // Then
+      expect(actualCommandName).to.equal(expectedCommandName)
+    })
+
+    it('should give the "catch-all" match back whn unkown command', () => {
+      // Given
+      const cmd = 'nomatch'
+      const expectedCommandName = 'catch-all'
+
+      // When
+      const actualCommandName = helper.interpret(cmd).name
+
+      // Then
+      expect(actualCommandName).to.equal(expectedCommandName)
+    })
   })
 
-  it('should find :config helper with params', () => {
-    // Given
-    const cmd = 'config cmdchar:"/"'
-    const expectedCommandName = 'config'
+  describe('commands execution', () => {
+    it('should put action frames.action.clear on :clear command', () => {
+      // Given
+      const payload = {cmd: ':clear'}
+      const storeSettings = {cmdchar: ':'}
+      const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
+      const handleClientCommandSaga = interpreted.exec(payload.cmd, storeSettings.cmdchar)
 
-    // When
-    const actualCommandName = helper.interpret(cmd).name
+      // When
+      const actualPutAction = handleClientCommandSaga.next().value
+      const expectedPutAction = put(frames.actions.clear())
 
-    // Then
-    expect(actualCommandName).to.equal(expectedCommandName)
-  })
+      // Then
+      expect(actualPutAction).to.deep.equal(expectedPutAction)
+    })
 
-  it('should find :play helper with params', () => {
-    // Given
-    const cmd = 'play fileLocation'
-    const expectedCommandName = 'play'
+    it('should put action frames.action.add on :play command', () => {
+      // Given
+      const payload = {cmd: ':play a', type: 'play'}
+      const storeSettings = {cmdchar: ':'}
+      const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
+      const handleClientCommandSaga = interpreted.exec(payload.cmd, storeSettings.cmdchar)
 
-    // When
-    const actualCommandName = helper.interpret(cmd).name
+      // When
+      const actualPutAction = handleClientCommandSaga.next().value
+      const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, type: payload.type}))
+      // Then
+      expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)
+      expect(actualPutAction.PUT.action.state.type).to.equal(expectedPutAction.PUT.action.state.type)
+    })
 
-    // Then
-    expect(actualCommandName).to.equal(expectedCommandName)
-  })
+    it('should put action frames.action.add on :play `url` command', () => {
+      // Given
+      const url = 'http://test.test'
+      const payload = {cmd: ':play ' + url, type: 'play-remote'}
+      const storeSettings = {cmdchar: ':'}
+      const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
+      const handleClientCommandSaga = interpreted.exec(payload.cmd, storeSettings.cmdchar)
 
-  it('should find :play `url` helper with params', () => {
-    // Given
-    const cmd = 'play http://neo4j.com'
-    const expectedCommandName = 'play-remote'
+      // When
+      const actualRemoteGetAction = handleClientCommandSaga.next('http://test.test').value
+      const expectedRemoteGetAction = call(remote.get, 'http://test.test')
 
-    // When
-    const actualCommandName = helper.interpret(cmd).name
-
-    // Then
-    expect(actualCommandName).to.equal(expectedCommandName)
-  })
-
-  it('should give the "catch-all" match back whn unkown command', () => {
-    // Given
-    const cmd = 'nomatch'
-    const expectedCommandName = 'catch-all'
-
-    // When
-    const actualCommandName = helper.interpret(cmd).name
-
-    // Then
-    expect(actualCommandName).to.equal(expectedCommandName)
+      // Then
+      expect(actualRemoteGetAction).to.deep.equal(expectedRemoteGetAction)
+    })
   })
 })
