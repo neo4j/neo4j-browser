@@ -14,7 +14,7 @@ const addBookmark = (bookmarks, obj) => {
 export default function settings (state = initialState, action) {
   switch (action.type) {
     case t.UPDATE:
-      return Object.assign(state, action.state)
+      return Object.assign({}, state, action.state)
     case t.ADD_SERVER_BOOKMARK:
       return Object.assign({}, state, {bookmarks: addBookmark(state.bookmarks, action.bookmark)})
   }
