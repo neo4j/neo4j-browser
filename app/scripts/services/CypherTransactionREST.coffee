@@ -108,8 +108,8 @@ angular.module('neo4jApp.services')
           @_requestDone parsed_result
           parsed_result
 
-        commit: (query) ->
-          statements = if query then [{statement:query}] else []
+        commit: (query, params = null) ->
+          statements = if query then [{statement:query, parameters: params}] else []
           UDC.increment('cypher_attempts')
           timer = Timer.start()
           if @id

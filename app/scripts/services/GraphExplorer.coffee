@@ -88,14 +88,14 @@ angular.module('neo4jApp.services')
           if newNodes.length is 0
             q.resolve()
             return q.promise
-          newNodeIds = newNodes.map((node) -> node.id)
+          newNodeIds = newNodes.map((node) -> parseInt(node.id))
           existingNodeIds = existingNodes.map((node) -> node.id).concat(newNodeIds)
           Cypher.transaction()
           .commit("""
-            MATCH (a)-[r]-(b) WHERE id(a) IN[#{existingNodeIds.join(',')}]
-            AND id(b) IN[#{newNodeIds.join(',')}]
+            MATCH (a)-[r]->(b) WHERE id(a) IN {node_ids}
+            AND id(b) IN {node_ids}
             RETURN r;"""
-          )
+          , {node_ids: newNodeIds})
           .then (result) =>
             graph.addInternalRelationships(result.relationships.map(CypherGraphModel.convertRelationship(graph)))
             q.resolve()

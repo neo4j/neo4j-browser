@@ -93,9 +93,9 @@ angular.module('neo4jApp.services')
           q.resolve()
           q.promise
 
-        commit: (query) ->
+        commit: (query, params = null) ->
           that = @
-          statements = if query then [{statement:query}] else []
+          statements = if query then [{statement:query, parameters: params}] else []
           UDC.increment('cypher_attempts')
           q = $q.defer()
           {tx, promise, session} = Bolt.transaction(statements, @session, @tx)
