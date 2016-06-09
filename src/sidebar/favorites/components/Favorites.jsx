@@ -4,9 +4,6 @@ import { Favorite } from './Favorite'
 import * as t from '../actionTypes'
 
 export class FavoritesComponent extends React.Component {
-  componentDidMount () {
-    this.props.dispatch({type: t.FAVORITES_READ})
-  }
   render () {
     const scripts = this.props.scripts || []
     const onItemClick = this.props.onItemClick
