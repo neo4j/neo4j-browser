@@ -37,16 +37,22 @@ class neo.boltIntHelpers
 
 
   mapBoltIntsToStrings = (val) ->
-    return val.toString() if bolt.isInt val
-    return val.map(mapBoltIntsToStrings) if Array.isArray(val)
-    return val if val is null
-    if typeof val == 'object'
+    return mapBoltInts(val, (boltInt) -> boltInt.toString())
+
+  mapBoltIntsToInts = (val) ->
+    return mapBoltInts(val, (boltInt) -> parseInt(boltInt.toString()))
+
+  mapBoltInts = (val, mappingFunc) ->
+    return mappingFunc val if bolt.isInt val
+    return val.map((item) -> mapBoltInts(item, mappingFunc)) if Array.isArray(val)
+    if typeof val == 'object' && val != null
       out = {}
       Object.keys(val).forEach((key) ->
-        out[key] = mapBoltIntsToStrings(val[key]))
+        out[key] = mapBoltInts(val[key], mappingFunc))
       return out
     return val
 
   constructor: ->
     @stringify = stringify
     @mapBoltIntsToStrings = mapBoltIntsToStrings
+    @mapBoltIntsToInts = mapBoltIntsToInts

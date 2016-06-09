@@ -68,7 +68,8 @@ angular.module('neo.exportable', ['neo.csv'])
       '$scope',
       'CSV',
       'exportService'
-      ($scope, CSV, exportService) ->
+      'BoltIntHelpers'
+      ($scope, CSV, exportService, BoltIntHelpers) ->
 
         $scope.exportGraphSVG = ->
           $scope.$emit('frame.export.graph.svg')
@@ -88,6 +89,7 @@ angular.module('neo.exportable', ['neo.csv'])
 
         $scope.exportJSON = (data) ->
           return unless data
+          data = BoltIntHelpers.mapBoltIntsToInts data
           exportService.download('result.json', 'application/json', JSON.stringify(data))
 
         $scope.exportCSV = (data) ->

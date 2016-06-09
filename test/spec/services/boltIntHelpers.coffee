@@ -56,12 +56,12 @@ describe 'BoltIntHelpers', () ->
       obj = {a:bolt.int("1"), arrayKey: arr, anotherKey: null}
       expect(BoltIntHelpers.stringify(obj)).toBe '{"a":1,"arrayKey":[9999,{"b":43243242423434324}],"anotherKey":null}'
 
-  describe 'mapBigIntegersToStrings', ->
+  describe 'mapBoltIntegersToStrings', ->
 
-    it 'should map big integers to strings', ->
+    it 'should map bolt integers to strings', ->
       expect(BoltIntHelpers.mapBoltIntsToStrings(bolt.int("922337203685477580"))).toBe '922337203685477580'
 
-    it 'should map all big integers to strings in nested obejcts', ->
+    it 'should map all bolt integers to strings in nested obejcts', ->
       arr = [bolt.int("9999"), {b: bolt.int("43243242423434324")}]
       obj = {a:bolt.int("1"), arrayKey: arr}
 
@@ -72,6 +72,24 @@ describe 'BoltIntHelpers', () ->
 
     it 'should return null if obejct is null', ->
       expect(BoltIntHelpers.mapBoltIntsToStrings(null)).toBe null
+
+  describe 'mapBoltIntegersToInts', ->
+
+    it 'should map bolt integers to plain integers', ->
+      expect(BoltIntHelpers.mapBoltIntsToInts(bolt.int("922337203685477580"))).toBe 922337203685477600
+
+    it 'should map all bolt integers to integers in nested obejcts', ->
+      arr = [bolt.int("9999"), {b: bolt.int("43243242423434324")}]
+      obj = {a:bolt.int("1"), arrayKey: arr}
+
+      mappedObj = BoltIntHelpers.mapBoltIntsToInts(obj)
+      expect(mappedObj.a).toBe(1)
+      expect(mappedObj.arrayKey[0]).toBe(9999)
+      expect(mappedObj.arrayKey[1].b).toBe(43243242423434324)
+
+    it 'should return null if obejct is null', ->
+      expect(BoltIntHelpers.mapBoltIntsToInts(null)).toBe null
+
 
 
 
