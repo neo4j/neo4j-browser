@@ -12,7 +12,7 @@ export class EditorComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      code: '',
+      code: props.content,
       historyIndex: -1,
       buffer: null
     }
