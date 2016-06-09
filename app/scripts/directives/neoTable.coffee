@@ -35,7 +35,7 @@ angular.module('neo4jApp.directives')
         json2html = (obj) ->
           return emptyMarker() unless Object.keys(obj).length
           html  = "<table class='json-object'><tbody>"
-          html += "<tr><th>#{k}</th><td>#{cell2html(v)}</td></tr>" for own k, v of obj
+          html += "<tr><th>#{Utils.escapeHTML(k)}</th><td>#{cell2html(v)}</td></tr>" for own k, v of obj
           html += "</tbody></table>"
           html
 
@@ -59,7 +59,7 @@ angular.module('neo4jApp.directives')
           html  = "<table class='table data'>"
           html += "<thead><tr>"
           for col in cols
-            html += "<th>#{col}</th>"
+            html += "<th>#{Utils.escapeHTML(col)}</th>"
           html += "</tr></thead>"
           html += "<tbody>"
           if result.displayedSize
