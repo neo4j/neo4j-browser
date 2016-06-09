@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 angular.module('neo4jApp.directives')
   .directive('neoTable', ['Utils', (Utils) ->
+      bolt = window.neo4j.v1
       replace: yes
       restrict: 'E'
       link: (scope, elm, attr) ->
@@ -40,7 +41,9 @@ angular.module('neo4jApp.directives')
           html
 
         cell2html = (cell) ->
-          if angular.isString(cell)
+          if bolt.isInt cell
+            return cell.toString()
+          else if angular.isString(cell)
             return emptyMarker() unless cell.length
             Utils.escapeHTML(cell)
           else if angular.isArray(cell)

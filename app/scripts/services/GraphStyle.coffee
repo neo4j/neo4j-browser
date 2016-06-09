@@ -112,6 +112,7 @@ angular.module('neo4jApp.services')
         @props[attr] or ''
 
     class GraphStyle
+      bolt = window.neo4j.v1
       constructor: (@storage) ->
         @rules = []
         try
@@ -327,6 +328,7 @@ angular.module('neo4jApp.services')
           /\{([^{}]*)\}/g,
           (a, b) ->
             r = item.propertyMap[b]
+            return r.toString() if bolt.isInt r
             if typeof r is 'object'
               r = r.join(', ')
             return if (typeof r is 'string' or typeof r is 'number') then r else ''
@@ -340,6 +342,7 @@ angular.module('neo4jApp.services')
           /^<(id|type)>$/,
           (a,b) ->
             r = item[b]
+            return r.toString() if bolt.isInt r
             return if (typeof r is 'string' or typeof r is 'number') then r else ''
         )
 
