@@ -17,6 +17,11 @@ export class EditorComponent extends React.Component {
       buffer: null
     }
   }
+  focusEditor () {
+    const cm = this.codeMirror
+    cm.focus()
+    cm.setCursor(cm.lineCount(), 0)
+  }
   handleEnter (cm) {
     if (cm.lineCount() === 1) {
       return this.execCurrent(cm)
@@ -52,8 +57,11 @@ export class EditorComponent extends React.Component {
     this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
   }
   componentWillReceiveProps (nextProps) {
-    if (nextProps.content !== this.state.code) {
-      this.setState({ code: nextProps.content })
+    if (nextProps.content !== null && nextProps.content !== this.state.code) {
+      this.setEditorValue(this.codeMirror, nextProps.content)
+    }
+    if (nextProps.content !== null) {
+      this.props.updateContent(null)
     }
   }
   componentDidMount () {
@@ -69,14 +77,13 @@ export class EditorComponent extends React.Component {
     this.codeMirrorInstance.keyMap['default']['Ctrl-Down'] = this.historyNext.bind(this)
   }
   setEditorValue (cm, cmd) {
-    cm.setValue(cmd)
-    this.updateCode(cmd)
+    this.codeMirror.setValue(cmd)
+    this.updateCode(cmd, () => this.focusEditor())
   }
-  updateCode (newCode) {
+  updateCode (newCode, cb = () => {}) {
     this.setState({
       code: newCode
-    })
-    this.props.updateContent(newCode)
+    }, cb)
   }
   render () {
     const options = {
