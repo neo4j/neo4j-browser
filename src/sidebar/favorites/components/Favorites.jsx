@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Favorite } from './Favorite'
-import * as t from '../actionTypes'
 
 export class FavoritesComponent extends React.Component {
   render () {
