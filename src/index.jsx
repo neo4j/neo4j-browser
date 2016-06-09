@@ -12,11 +12,11 @@ import reducers from './rootReducer'
 import app from './app'
 import frames from './main/frames'
 import main from './main'
-import favorites from './sidebar/favorites'
 
 import sagas from './sagas'
 import './styles/style.css'
 import './styles/codemirror.css'
+import { getStorageForKeys, createPersistingStoreListener } from './services/localstorage'
 
 const sagaMiddleware = createSagaMiddleware()
 const reducer = combineReducers({
@@ -29,26 +29,18 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
+const persistedStateKeys = ['drawer', 'settings', 'editor', 'favorites']
+const persistedStateStorage = window.localStorage
+
 const store = createStore(
   reducer,
+  getStorageForKeys(persistedStateKeys, persistedStateStorage),
   enhancer
 )
-
-let currentValue
-function favoritesChange () {
-  let previousValue = currentValue
-  currentValue = store.getState().favorites
-  if (previousValue !== currentValue) {
-    store.dispatch({
-      type: favorites.actionTypes.FAVORITES_UPDATED,
-      scripts: currentValue
-    })
-  }
-}
-
-store.subscribe(favoritesChange)
+store.subscribe(createPersistingStoreListener(store, persistedStateKeys, persistedStateStorage))
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)
+
 ReactDOM.render(
   <Provider store={store}>
     <div>
