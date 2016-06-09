@@ -12,78 +12,69 @@ describe('Editor', () => {
   chai.use(chaiEnzyme())
   const onExecute = chai.spy()
   it('should render Codemirror component with correct properties', () => {
-    const updateContent = chai.spy()
     let content = 'content-' + Math.random()
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history='' />
+      <EditorComponent onExecute={onExecute} content={content} history='' />
     )
     const codeMirror = wrapper.find(Codemirror)
     expect(codeMirror.props().value).to.equal(content)
-    codeMirror.props().onChange(content)
-    expect(updateContent).have.been.called.with(content)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).have.been.called()
   })
 
   it('should execute current command on Cmd-Enter', () => {
-    const updateContent = chai.spy()
     let content = 'content-' + Math.random()
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history='' />
+      <EditorComponent onExecute={onExecute} content={content} history='' />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).have.been.called.with(content)
-    expect(updateContent).have.been.called.with('')
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('')
   })
 
   it('should execute current command on Ctrl-Enter', () => {
-    const updateContent = chai.spy()
     let content = 'content-' + Math.random()
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history='' />
+      <EditorComponent onExecute={onExecute} content={content} history='' />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Ctrl-Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).have.been.called.with(content)
-    expect(updateContent).have.been.called.with('')
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('')
   })
 
   it('should replace content as with history as user arrows up and down', () => {
-    const updateContent = chai.spy()
     let content = 'content-' + Math.random()
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history={history}/>
+      <EditorComponent onExecute={onExecute} content={content} history={history}/>
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
-    expect(updateContent).have.been.called.with('latest')
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('latest')
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
-    expect(updateContent).have.been.called.with('middle')
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('middle')
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
-    expect(updateContent).have.been.called.with('oldest')
-    updateContent.reset()
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('oldest')
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Down'](codeMirror.get(0).getCodeMirror())
-    expect(updateContent).have.been.called.with('middle')
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('middle')
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Ctrl-Down'](codeMirror.get(0).getCodeMirror())
-    expect(updateContent).have.been.called.with('latest')
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('latest')
   })
 
   it('should resest history after execution', () => {
-    const updateContent = chai.spy()
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} updateContent={updateContent} content='' history={history}/>
+      <EditorComponent onExecute={onExecute} content='' history={history}/>
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
-    expect(updateContent).have.been.called.with('middle')
-    updateContent.reset()
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('middle')
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
-    expect(updateContent).have.been.called.with('latest')
+    expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('latest')
   })
 
   it('should call execute on Enter if there is only 1 line in the command', () => {

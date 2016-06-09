@@ -12,10 +12,15 @@ export class EditorComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      code: '',
+      code: props.content,
       historyIndex: -1,
       buffer: null
     }
+  }
+  focusEditor () {
+    const cm = this.codeMirror
+    cm.focus()
+    cm.setCursor(cm.lineCount(), 0)
   }
   handleEnter (cm) {
     if (cm.lineCount() === 1) {
@@ -28,7 +33,7 @@ export class EditorComponent extends React.Component {
   }
   execCurrent (cm) {
     this.props.onExecute(cm.getValue())
-    this.props.updateContent('')
+    this.setEditorValue(cm, '')
     this.setState({historyIndex: -1, buffer: null})
   }
   historyPrev (cm) {
@@ -38,20 +43,27 @@ export class EditorComponent extends React.Component {
       this.setState({buffer: cm.getValue()})
     }
     this.setState({historyIndex: this.state.historyIndex + 1})
-    this.props.updateContent(this.props.history[this.state.historyIndex].cmd)
+    this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
   }
   historyNext (cm) {
     if (!this.props.history.length) return
     if (this.state.historyIndex <= -1) return
     if (this.state.historyIndex === 0) { // Should read from buffer
       this.setState({historyIndex: -1})
-      this.props.updateContent(this.state.buffer)
+      this.setEditorValue(cm, this.state.buffer)
       return
     }
     this.setState({historyIndex: this.state.historyIndex - 1})
-    this.props.updateContent(this.props.history[this.state.historyIndex].cmd)
+    this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
   }
-
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.content !== null && nextProps.content !== this.state.code) {
+      this.setEditorValue(this.codeMirror, nextProps.content)
+    }
+    if (nextProps.content !== null) {
+      this.props.updateContent(null)
+    }
+  }
   componentDidMount () {
     this.codeMirror = this.refs.editor.getCodeMirror()
     this.codeMirrorInstance = this.refs.editor.getCodeMirrorInstance()
@@ -63,6 +75,15 @@ export class EditorComponent extends React.Component {
     this.codeMirrorInstance.keyMap['default']['Ctrl-Up'] = this.historyPrev.bind(this)
     this.codeMirrorInstance.keyMap['default']['Cmd-Down'] = this.historyNext.bind(this)
     this.codeMirrorInstance.keyMap['default']['Ctrl-Down'] = this.historyNext.bind(this)
+  }
+  setEditorValue (cm, cmd) {
+    this.codeMirror.setValue(cmd)
+    this.updateCode(cmd, () => this.focusEditor())
+  }
+  updateCode (newCode, cb = () => {}) {
+    this.setState({
+      code: newCode
+    }, cb)
   }
   render () {
     const options = {
@@ -77,8 +98,8 @@ export class EditorComponent extends React.Component {
       <div id='editor'>
         <Codemirror
           ref='editor'
-          value={this.props.content}
-          onChange={this.props.updateContent.bind(this)}
+          value={this.state.code}
+          onChange={this.updateCode.bind(this)}
           options={options}
         />
         <input type='button' value='+' onClick={() => this.props.onFavortieClick(this.props.content)}/>
