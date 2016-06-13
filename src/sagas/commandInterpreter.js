@@ -8,10 +8,17 @@ import bolt from '../services/bolt/bolt'
 
 function * watchCommands () {
   while (true) {
-    const action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
+    let action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
     yield put(editor.actions.addHistory({cmd: action.cmd}))
     const settingsState = yield select(getSettings)
     const cleanCmd = cleanCommand(action.cmd)
+    if (settingsState.singleFrameMode) {
+      const currentFrames = yield select((state) => frames.selectors.getFrames(state))
+      action.id = null
+      if (currentFrames.length) {
+        action.id = currentFrames[currentFrames.length - 1].id
+      }
+    }
     if (cleanCmd[0] === settingsState.cmdchar) {
       yield call(handleClientCommand, action, settingsState.cmdchar)
     } else {
