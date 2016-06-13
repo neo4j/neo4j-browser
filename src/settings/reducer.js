@@ -3,7 +3,8 @@ import * as t from './actionTypes'
 const initialState = {
   cmdchar: ':',
   maxHistory: 10,
-  bookmarks: []
+  bookmarks: [],
+  singleFrameMode: false
 }
 
 const addBookmark = (bookmarks, obj) => {
