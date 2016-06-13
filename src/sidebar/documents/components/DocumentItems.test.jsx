@@ -15,8 +15,6 @@ describe('DocumentItems', () => {
   it('should open href in new tab/window', () => {
     const wrapper = shallow(<DocumentItems items={[link]}/>)
     const renderedLink = wrapper.find('.link')
-    console.log(renderedLink)
-
     expect(renderedLink.html()).to.contain('target="_blank"')
   })
 
