@@ -2,7 +2,6 @@ import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../services/bolt/bolt'
-import tabNavigation from '../../../tabNavigation'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -23,18 +22,8 @@ class CypherFrame extends React.Component {
     const result = frame.result || false
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result) {
-      const Text = () => {
-        const rows = bolt.recordsToTableArray(result.records)
-        return <div className='frame'><pre>{asciitable.run(rows)}</pre></div>
-      }
-      const Code = () => {
-        return <div className='frame'><pre>{JSON.stringify(result, null, 2)}</pre></div>
-      }
-      const navItemsList = [
-        {name: 'CODE', icon: '', content: Code},
-        {name: 'TEXT', icon: '', content: Text}
-      ]
-      frameContents = <tabNavigation.components.Navigation openDrawer={this.state.openView} navItems={navItemsList} onNavClick={this.onNavClick.bind(this)} styleId='cypherTabs'/>
+      const rows = bolt.recordsToTableArray(result.records)
+      frameContents = <pre>{asciitable.run(rows)}</pre>
     } else if (errors) {
       frameContents = (
         <div>
@@ -46,7 +35,7 @@ class CypherFrame extends React.Component {
     return (
       <div className='frame'>
         <FrameTitlebar
-          handleCloseClick={() => handleCloseClick(frame.id)} 
+          handleCloseClick={() => handleCloseClick(frame.id)}
           handleTitlebarClick={() => handleTitlebarClick(frame.cmd)}
           frame={frame}
         />

@@ -47,6 +47,7 @@
   display: flex;
   flex-direction: column;
   background-color: #fdfdfd;
+  min-width: 0;
 }
 #main #editor {
   flex: 1 0 70px;
@@ -55,16 +56,49 @@
 }
 #main #stream {
   overflow: auto;
-  flex: 1 1 100vh;
+  flex: 0 1 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 #stream .stream-filter {
-  margin: 10px 0 10px 10px
+  margin: 10px 0 10px 10px;
+  flex: none;
 }
 
 #stream .frame {
   margin: 10px 10px 10px 10px;
   border: 1px solid grey;
+  flex: 1;
+}
+
+.frame .frame-titlebar {
+  flex: none;
+  color: #ccc;
+  border-bottom: 1px solid #ddd;
+  padding: 3px 3px 3px 5px;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+.frame .frame-titlebar .frame-command {
+  padding-right: 3px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.frame .frame-titlebar .frame-titlebar-cmd {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 30px;
+  cursor: pointer;
+  display: block;
+}
+.frame .frame-titlebar .frame-action-buttons {
+  flex: 0 0 30px;
+  line-height: 30px;
+}
 .frame .frame-action-button {
   width: 30px;
   height: 30px;
@@ -73,20 +107,9 @@
   text-align: center;
   line-height: 30px;
 }
-
-.frame .frame-titlebar {
-  color: #ccc;
-  border-bottom: 1px solid #ddd;
-  padding: 3px 3px 3px 5px;
-  position: relative;
-  height: 30px;
-}
-.frame .frame-titlebar .frame-titlebar-cmd {
-  line-height: 30px;
-  cursor: pointer;
-}
 .frame .frame-contents {
   padding: 20px;
+  flex: 0 1 auto;
 }
 .frame .history-list {
   list-style: none;
@@ -132,4 +155,12 @@
 }
 .checkbox-button input {
   display: none
+}
+
+pre {
+  max-width: 100%;
+  white-space: pre;
+  word-wrap: normal;
+  word-break: normal;
+  overflow: auto;
 }

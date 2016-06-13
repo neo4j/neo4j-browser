@@ -21,7 +21,7 @@ const StreamComponent = (props) => {
         <div className='frame' key={frame.id}>
           <FrameTitlebar
             handleCloseClick={() => onCloseClick(frame.id)}
-            handleTitlebarClick={() => onTitlebarClick(frame.id)} 
+            handleTitlebarClick={() => onTitlebarClick(frame.id)}
             frame={frame}
           />
           <div className='frame-contents'><pre>{frame.contents}</pre></div>
