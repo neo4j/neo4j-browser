@@ -6,10 +6,10 @@ import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUti
 import bolt from '../../services/bolt/bolt'
 import { UserException } from '../../services/exceptions'
 
-export function * handleServerCommand (cmd, cmdchar) {
-  const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(cmd.substr(cmdchar.length), ' ')[1], ' ')
+export function * handleServerCommand (action, cmdchar) {
+  const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   if (serverCmd === 'add') {
-    yield call(handleServerAddCommand, cmd, cmdchar)
+    yield call(handleServerAddCommand, action, cmdchar)
     return
   }
   if (serverCmd === 'use') {
@@ -19,7 +19,7 @@ export function * handleServerCommand (cmd, cmdchar) {
       if (!connection) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
       yield call(bolt.useConnection, connection.name)
     } catch (e) {
-      yield put(frames.actions.add({cmd: cmd, errors: e, type: 'cmd'}))
+      yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     }
     return
   }
@@ -31,17 +31,17 @@ export function * handleServerCommand (cmd, cmdchar) {
       if (!connectionCreds) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
       yield call(bolt.openConnection, connectionCreds[0])
     } catch (e) {
-      yield put(frames.actions.add({cmd: cmd, errors: e, type: 'cmd'}))
+      yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     }
     return
   }
-  yield put(frames.actions.add({cmd: cmd, type: 'unknown'}))
+  yield put(frames.actions.add({...action, type: 'unknown'}))
   return
 }
 
-export function * handleServerAddCommand (cmd, cmdchar) {
+export function * handleServerAddCommand (action, cmdchar) {
   // :server add name username:password@host:port
-  const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(cmd.substr(cmdchar.length), ' ')[1], ' ')
+  const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   const [name, creds] = splitStringOnFirst(props, ' ')
   const [userCreds, host] = splitStringOnLast(creds, '@')
   const [username, password] = splitStringOnFirst(userCreds, ':')
@@ -52,10 +52,10 @@ export function * handleServerAddCommand (cmd, cmdchar) {
     if (!userCreds || !host) throw new UserException(errorMessage)
     if (!username || !password) throw new UserException(errorMessage)
   } catch (e) {
-    yield put(frames.actions.add({cmd: cmd, errors: e, type: 'cmd'}))
+    yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     return
   }
   yield put(settings.actions.addServerBookmark({name, username, password, host}))
   const settingsState = yield select(getSettings)
-  yield put(frames.actions.add({cmd: cmd, type: 'pre', contents: JSON.stringify(settingsState.bookmarks, null, 2)}))
+  yield put(frames.actions.add({...action, type: 'pre', contents: JSON.stringify(settingsState.bookmarks, null, 2)}))
 }

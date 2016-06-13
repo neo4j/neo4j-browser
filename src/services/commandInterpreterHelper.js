@@ -15,45 +15,45 @@ const availableCommands = [{
 }, {
   name: 'config',
   match: (cmd) => /^config(\s|$)/.test(cmd),
-  exec: function * (cmd, cmdchar) {
-    yield call(handleConfigCommand, cmd, cmdchar)
+  exec: function * (action, cmdchar) {
+    yield call(handleConfigCommand, action, cmdchar)
   }
 }, {
   name: 'server',
   match: (cmd) => /^server(\s)/.test(cmd),
-  exec: function * (cmd, cmdchar) {
-    yield call(handleServerCommand, cmd, cmdchar)
+  exec: function * (action, cmdchar) {
+    yield call(handleServerCommand, action, cmdchar)
   }
 }, {
   name: 'play-remote',
   match: (cmd) => /^play(\s|$)https?/.test(cmd),
-  exec: function * (cmd, cmdchar) {
-    const url = cmd.substr(cmdchar.length + 'play '.length)
+  exec: function * (action, cmdchar) {
+    const url = action.cmd.substr(cmdchar.length + 'play '.length)
     try {
       const content = yield call(remote.get, url)
-      yield put(frames.actions.add({cmd: cmd, type: 'play-remote', contents: cleanHtml(content)}))
+      yield put(frames.actions.add({...action, type: 'play-remote', contents: cleanHtml(content)}))
     } catch (e) {
-      yield put(frames.actions.add({cmd: cmd, type: 'play-remote', contents: 'Can not fetch remote guide: ' + e}))
+      yield put(frames.actions.add({...action, type: 'play-remote', contents: 'Can not fetch remote guide: ' + e}))
     }
   }
 }, {
   name: 'play',
   match: (cmd) => /^play(\s|$)/.test(cmd),
-  exec: function * (cmd, cmdchar) {
-    yield put(frames.actions.add({cmd: cmd, type: 'play'}))
+  exec: function * (action, cmdchar) {
+    yield put(frames.actions.add({...action, type: 'play'}))
   }
 }, {
   name: 'history',
   match: (cmd) => cmd === 'history',
-  exec: function * (cmd, cmdchar) {
+  exec: function * (action, cmdchar) {
     const historyState = yield select(getHistory)
-    yield put(frames.actions.add({cmd: cmd, type: 'history', history: historyState}))
+    yield put(frames.actions.add({...action, type: 'history', history: historyState}))
   }
 }, {
   name: 'catch-all',
   match: () => true,
-  exec: function * (cmd, cmdchar) {
-    yield put(frames.actions.add({cmd: cmd, type: 'unknown'}))
+  exec: function * (action, cmdchar) {
+    yield put(frames.actions.add({...action, type: 'unknown'}))
   }
 }]
 

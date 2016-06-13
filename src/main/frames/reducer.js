@@ -40,7 +40,10 @@ export function getAvailableFrameTypes (state) {
 */
 function addFrame (state, newState) {
   const byId = Object.assign({}, state.byId, {[newState.id]: newState})
-  const allIds = state.allIds.concat([newState.id])
+  let allIds = state.allIds
+  if (allIds.indexOf(newState.id) < 0) {
+    allIds = state.allIds.concat([newState.id])
+  }
   return Object.assign(
     {},
     state,
