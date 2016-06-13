@@ -11,11 +11,11 @@ describe('serverCommandSagas', () => {
       // Given
       const payload = {cmd: ':unknown'}
       const storeSettings = {cmdchar: ':'}
-      const handleServerCommandSaga = handleServerCommand(payload.cmd, storeSettings.cmdchar)
+      const handleServerCommandSaga = handleServerCommand(payload, storeSettings.cmdchar)
 
       // When
       const actualPutAction = handleServerCommandSaga.next().value
-      const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, type: 'unknown'}))
+      const expectedPutAction = put(frames.actions.add({...payload, type: 'unknown'}))
 
       // Then
       // We cannot do deep equal here because of uuid
@@ -26,11 +26,11 @@ describe('serverCommandSagas', () => {
       // Given
       const payload = {cmd: ':server add user:pass@server:8585'} // missing name
       const storeSettings = {cmdchar: ':'}
-      const handleServerAddCommandSaga = handleServerAddCommand(payload.cmd, storeSettings.cmdchar)
+      const handleServerAddCommandSaga = handleServerAddCommand(payload, storeSettings.cmdchar)
 
       // When
       const actualPutAction = handleServerAddCommandSaga.next().value
-      const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, errors: {}, type: 'cmd'}))
+      const expectedPutAction = put(frames.actions.add({...payload, errors: {}, type: 'cmd'}))
 
       // Then
       // We cannot do deep equal here because of uuid
@@ -48,7 +48,7 @@ describe('serverCommandSagas', () => {
       }
       const payload = {cmd: `:server add ${conf.name} ${conf.username}:${conf.password}@${conf.host}`}
       const storeSettings = {cmdchar: ':'}
-      const handleServerAddCommandSaga = handleServerAddCommand(payload.cmd, storeSettings.cmdchar)
+      const handleServerAddCommandSaga = handleServerAddCommand(payload, storeSettings.cmdchar)
 
       // When
       const actualPutAction = handleServerAddCommandSaga.next().value
@@ -63,7 +63,7 @@ describe('serverCommandSagas', () => {
       const connection = {name: 'myname'}
       const payload = {cmd: ':server use myname'}
       const storeSettings = {cmdchar: ':'}
-      const handleServerCommandSaga = handleServerCommand(payload.cmd, storeSettings.cmdchar)
+      const handleServerCommandSaga = handleServerCommand(payload, storeSettings.cmdchar)
 
       // When
       const actualCallGetConnectionAction = handleServerCommandSaga.next().value

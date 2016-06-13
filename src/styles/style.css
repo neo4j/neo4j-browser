@@ -76,14 +76,13 @@
   flex: none;
   color: #ccc;
   border-bottom: 1px solid #ddd;
-  padding: 3px 3px 3px 5px;
   height: 30px;
   display: flex;
   flex-direction: row;
   align-items: stretch;
 }
 .frame .frame-titlebar .frame-command {
-  padding-right: 3px;
+  margin: 3px 5px 3px 5px;
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -96,16 +95,21 @@
   display: block;
 }
 .frame .frame-titlebar .frame-action-buttons {
-  flex: 0 0 30px;
+  flex: 0 0 auto;
   line-height: 30px;
 }
 .frame .frame-action-button {
+  display: inline;
+  padding: 5px;
   width: 30px;
   height: 30px;
   cursor: pointer;
-  border-left: 1px solid black;
+  border-left: 1px solid #ccc;
   text-align: center;
   line-height: 30px;
+}
+.frame .frame-action-button:hover {
+  color: #000
 }
 .frame .frame-contents {
   padding: 20px;

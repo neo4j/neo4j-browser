@@ -1,19 +1,40 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import editor from '../../editor'
+import { remove } from '../actions'
 
-const FrameTitlebar = ({frame, handleTitlebarClick, handleCloseClick}) => {
+const FrameTitlebarComponent = ({frame, onTitlebarClick, onCloseClick, onReRunClick}) => {
   return (
     <div className='frame-titlebar'>
       <div className='frame-command'>
-        <span onClick={handleTitlebarClick} className='frame-titlebar-cmd'>{frame.cmd}</span>
+        <span onClick={() => onTitlebarClick(frame.cmd)} className='frame-titlebar-cmd'>{frame.cmd}</span>
       </div>
       <div className='frame-action-buttons'>
-        <div onClick={handleCloseClick} className='frame-action-button'>X</div>
+        <div onClick={() => onReRunClick(frame.cmd, frame.id)} className='frame-action-button'>Re-run</div>
+        <div onClick={() => onCloseClick(frame.id)} className='frame-action-button'>X</div>
       </div>
       <div className='clear'></div>
     </div>
   )
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onTitlebarClick: (cmd) => {
+      dispatch(editor.actions.setContent(cmd))
+    },
+    onCloseClick: (id) => {
+      dispatch(remove(id))
+    },
+    onReRunClick: (cmd, id) => {
+      dispatch(editor.actions.executeCommand(cmd, id))
+    }
+  }
+}
+
+const FrameTitlebar = connect(null, mapDispatchToProps)(FrameTitlebarComponent)
+
 export {
-  FrameTitlebar
+  FrameTitlebar,
+  FrameTitlebarComponent
 }

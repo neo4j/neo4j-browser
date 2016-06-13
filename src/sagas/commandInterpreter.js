@@ -13,21 +13,21 @@ function * watchCommands () {
     const settingsState = yield select(getSettings)
     const cleanCmd = cleanCommand(action.cmd)
     if (cleanCmd[0] === settingsState.cmdchar) {
-      yield call(handleClientCommand, action.cmd, settingsState.cmdchar)
+      yield call(handleClientCommand, action, settingsState.cmdchar)
     } else {
       try {
         const res = yield call(bolt.transaction, action.cmd)
-        yield put(frames.actions.add({cmd: action.cmd, result: res, type: 'cypher'}))
+        yield put(frames.actions.add({...action, result: res, type: 'cypher'}))
       } catch (e) {
-        yield put(frames.actions.add({cmd: action.cmd, errors: e, type: 'cypher'}))
+        yield put(frames.actions.add({...action, errors: e, type: 'cypher'}))
       }
     }
   }
 }
 
-function * handleClientCommand (cmd, cmdchar) {
-  const interpreted = helper.interpret(cmd.substr(cmdchar.length))
-  yield call(interpreted.exec, cmd, cmdchar)
+function * handleClientCommand (action, cmdchar) {
+  const interpreted = helper.interpret(action.cmd.substr(cmdchar.length))
+  yield call(interpreted.exec, action, cmdchar)
 }
 
 export {
