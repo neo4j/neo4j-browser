@@ -51,7 +51,7 @@ describe('frames reducer handling frames', () => {
     }
     const action = {
       type: frames.actionTypes.REMOVE,
-      state: {id: 3}
+      id: 3
     }
     const nextState = frames.reducer(initialState, action)
     expect(nextState).to.deep.equal({

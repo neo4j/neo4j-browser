@@ -7,30 +7,34 @@ import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import editor from '../../editor'
 import { getAvailableFrameTypes, getVisibleFrames } from '../reducer'
-import { toggleVisibleFilter } from '../actions'
+import { toggleVisibleFilter, remove } from '../actions'
 import classNames from 'classnames'
 
 const StreamComponent = (props) => {
-  const {frames, onTitlebarClick} = props
+  const {frames, onTitlebarClick, onCloseClick} = props
   const framesList = frames.map((frame) => {
     if (frame.type === 'cypher') {
-      return <CypherFrame handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame} />
+      return <CypherFrame handleCloseClick={onCloseClick} handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame} />
     }
     if (frame.type === 'pre') {
       return (
         <div className='frame' key={frame.id}>
-          <FrameTitlebar handleTitlebarClick={onTitlebarClick} frame={frame} />
+          <FrameTitlebar
+            handleCloseClick={() => onCloseClick(frame.id)}
+            handleTitlebarClick={() => onTitlebarClick(frame.id)}
+            frame={frame}
+          />
           <div className='frame-contents'><pre>{frame.contents}</pre></div>
         </div>
       )
     }
     if (frame.type === 'play' || frame.type === 'play-remote') {
-      return <PlayFrame handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame} />
+      return <PlayFrame handleCloseClick={onCloseClick} handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame} />
     }
     if (frame.type === 'history') {
-      return <HistoryFrame handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame}/>
+      return <HistoryFrame handleCloseClick={onCloseClick} handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame}/>
     }
-    return <Frame handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame} />
+    return <Frame handleCloseClick={onCloseClick} handleTitlebarClick={onTitlebarClick} key={frame.id} frame={frame} />
   })
   const frameTypes = props.frameTypes || []
   const types = frameTypes.map((type) => {
@@ -76,6 +80,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onTypeClick: (type) => {
       dispatch(toggleVisibleFilter(type))
+    },
+    onCloseClick: (id) => {
+      dispatch(remove(id))
     }
   }
 }

@@ -8,6 +8,13 @@ function add (payload) {
   }
 }
 
+function remove (id) {
+  return {
+    type: t.REMOVE,
+    id
+  }
+}
+
 function clear () {
   return {
     type: t.CLEAR_ALL
@@ -23,6 +30,7 @@ function toggleVisibleFilter (type) {
 
 export {
   add,
+  remove,
   clear,
   toggleVisibleFilter
 }
