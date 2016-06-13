@@ -7,7 +7,7 @@ const FrameTitlebarComponent = ({frame, onTitlebarClick, onCloseClick, onReRunCl
   return (
     <div className='frame-titlebar'>
       <div className='frame-command'>
-        <span onClick={() => onTitlebarClick(frame.id)} className='frame-titlebar-cmd'>{frame.cmd}</span>
+        <span onClick={() => onTitlebarClick(frame.cmd)} className='frame-titlebar-cmd'>{frame.cmd}</span>
       </div>
       <div className='frame-action-buttons'>
         <div onClick={() => onReRunClick(frame.cmd, frame.id)} className='frame-action-button'>Re-run</div>
@@ -35,5 +35,6 @@ const mapDispatchToProps = (dispatch) => {
 const FrameTitlebar = connect(null, mapDispatchToProps)(FrameTitlebarComponent)
 
 export {
-  FrameTitlebar
+  FrameTitlebar,
+  FrameTitlebarComponent
 }
