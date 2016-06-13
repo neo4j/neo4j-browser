@@ -51,6 +51,34 @@ describe('commandInterpreter Sagas', () => {
       // We cannot do deep equal here because of uuid
       expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)
     })
+
+    it('should add "id" to action object if in singleFrameMode', () => {
+      // Given
+      const singleWatchSaga = watchCommands()
+      const watchSaga = watchCommands()
+      const payload = {cmd: 'RETURN 1'}
+      const singleStoreSettings = {cmdchar: ':', singleFrameMode: true}
+      const stateFrames = [{id: 100}]
+      const storeSettings = {cmdchar: ':'}
+
+      // When
+      watchSaga.next()
+      watchSaga.next(payload)
+      watchSaga.next() // Settings read
+      watchSaga.next(storeSettings)
+      const putAction = watchSaga.next().value
+
+      singleWatchSaga.next()
+      singleWatchSaga.next(payload)
+      singleWatchSaga.next() // Settings read
+      singleWatchSaga.next(singleStoreSettings) // select read
+      singleWatchSaga.next(stateFrames)
+      const singlePutAction = singleWatchSaga.next().value
+
+      // Then
+      expect(putAction.PUT.action.state.id).to.not.be.defined
+      expect(singlePutAction.PUT.action.state.id).to.equal(100)
+    })
   })
 
   describe('handleClientCommand Saga', () => {
