@@ -1,7 +1,7 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
 
-const Frame = ({frame, handleTitlebarClick}) => {
+const Frame = ({frame, handleTitlebarClick, handleCloseClick}) => {
   const errors = frame.errors || false
   const contents = frame.contents || false
   let frameContents = contents
@@ -16,7 +16,7 @@ const Frame = ({frame, handleTitlebarClick}) => {
   }
   return (
     <div className='frame'>
-      <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
+      <FrameTitlebar handleCloseClick={() => handleCloseClick(frame.id)} handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
       <div className='frame-contents'>{frameContents}</div>
     </div>
   )

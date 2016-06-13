@@ -65,14 +65,24 @@
 #stream .frame {
   margin: 10px 10px 10px 10px;
   border: 1px solid grey;
+.frame .frame-action-button {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border-left: 1px solid black;
+  text-align: center;
+  line-height: 30px;
 }
 
 .frame .frame-titlebar {
   color: #ccc;
   border-bottom: 1px solid #ddd;
   padding: 3px 3px 3px 5px;
+  position: relative;
+  height: 30px;
 }
 .frame .frame-titlebar .frame-titlebar-cmd {
+  line-height: 30px;
   cursor: pointer;
 }
 .frame .frame-contents {
@@ -97,6 +107,18 @@
 
 .hidden {
   display: none;
+}
+
+.left {
+  float:left;
+}
+
+.right {
+  float: right;
+}
+
+.clear {
+  clear: both;
 }
 
 .checkbox-button {

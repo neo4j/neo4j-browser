@@ -17,6 +17,7 @@ class CypherFrame extends React.Component {
   }
   render () {
     const handleTitlebarClick = this.props.handleTitlebarClick
+    const handleCloseClick = this.props.handleCloseClick
     const frame = this.props.frame
     const errors = frame.errors && frame.errors.fields || false
     const result = frame.result || false
@@ -44,7 +45,11 @@ class CypherFrame extends React.Component {
     }
     return (
       <div className='frame'>
-        <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
+        <FrameTitlebar
+          handleCloseClick={() => handleCloseClick(frame.id)} 
+          handleTitlebarClick={() => handleTitlebarClick(frame.cmd)}
+          frame={frame}
+        />
         <div className='frame-contents'>{frameContents}</div>
       </div>
     )
