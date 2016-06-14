@@ -3,16 +3,19 @@ import { connect } from 'react-redux'
 import editor from '../'
 import favorites from '../../../sidebar/favorites'
 import { getHistory, getEditorContent } from '../../../selectors'
+import classNames from 'classnames'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
+import styles from './style.css'
+import ActionButton from '../../../lib/components/ActionButton'
 
 export class EditorComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      code: props.content,
+      code: props.content || '',
       historyIndex: -1,
       buffer: null
     }
@@ -31,9 +34,9 @@ export class EditorComponent extends React.Component {
   newlineAndIndent (cm) {
     this.codeMirrorInstance.commands.newlineAndIndent(cm)
   }
-  execCurrent (cm) {
-    this.props.onExecute(cm.getValue())
-    this.setEditorValue(cm, '')
+  execCurrent () {
+    this.props.onExecute(this.codeMirror.getValue())
+    this.setEditorValue(this.codeMirror, '')
     this.setState({historyIndex: -1, buffer: null})
   }
   historyPrev (cm) {
@@ -95,14 +98,29 @@ export class EditorComponent extends React.Component {
       autofocus: true
     }
     return (
-      <div id='editor'>
-        <Codemirror
-          ref='editor'
-          value={this.state.code}
-          onChange={this.updateCode.bind(this)}
-          options={options}
-        />
-        <input type='button' value='+' onClick={() => this.props.onFavortieClick(this.props.content)}/>
+      <div id='editor' className={styles.editorContainer}>
+        <div className={styles['editor-wrapper']}>
+          <Codemirror
+            ref='editor'
+            value={this.state.code}
+            onChange={this.updateCode.bind(this)}
+            options={options}
+          />
+        </div>
+        <div className={styles.actionButtons}>
+          <ActionButton
+            onClick={() => this.props.onFavortieClick(this.state.code)}
+            label='+'
+            disabled={this.state.code.length < 1}
+          />
+          <ActionButton
+            onClick={() => this.execCurrent()}
+            kind='secondary'
+            label='-&gt;'
+            disabled={this.state.code.length < 1}
+            noFill={true}
+          />
+        </div>
       </div>
     )
   }

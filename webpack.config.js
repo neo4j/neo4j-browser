@@ -15,6 +15,12 @@ module.exports = {
       loader: 'react-hot!babel'
     }, {
       test: /\.css$/,
+      include: path.resolve('./src'),
+      exclude: path.resolve('./src/styles'),
+      loader: 'style!css-loader?modules&camelCase&localIdentName=[name]__[local]___[hash:base64:5]'
+    }, {
+      test: /\.css$/,
+      exclude: [path.resolve('./src/lib'), path.resolve('./src/main')],
       loader: 'style!css'
     }, {
       test: /\.html?$/,
