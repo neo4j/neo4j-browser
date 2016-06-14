@@ -56,5 +56,8 @@ export default {
     const intConverter = (val) => val.toString()
     return mappings.recordsToTableArray(records, intChecker, intConverter)
   },
+  extractNodesAndRelationshipsFromRecords: (records) => {
+    return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.v1.types)
+  },
   neo4j: neo4j.v1
 }

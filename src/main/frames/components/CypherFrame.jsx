@@ -31,9 +31,10 @@ class CypherFrame extends React.Component {
         return <div className='frame'><pre>{JSON.stringify(result, null, 2)}</pre></div>
       }
       const Graph = () => {
+        const nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(result.records)
         return (
           <div className='frame'>
-            <GraphComponent records={result.records}/>
+            <GraphComponent nodes={nodesAndRelationships.nodes} relationships={nodesAndRelationships.relationships}/>
           </div>
         )
       }

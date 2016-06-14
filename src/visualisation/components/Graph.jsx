@@ -2,14 +2,14 @@ import React from 'react'
 import '../visualisation.css'
 import '../external/neod3.js'
 import '../external/graphStyle.js'
-import {mapBoltRecordsToGraph} from '../mapper'
+import {createGraph} from '../mapper'
 
 export default class GraphComponent extends React.Component {
 
   constructor (props) {
     super(props)
     this.state = {
-      graph: mapBoltRecordsToGraph(props.records)
+      graph: createGraph(props.nodes, props.relationships)
     }
   }
 
