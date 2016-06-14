@@ -1,0 +1,34 @@
+.node .ring {
+  fill: none;
+  opacity: 0;
+  stroke: #6ac6ff;
+}
+.node.selected .ring {
+  stroke: #fdcc59;
+}
+.node.selected:hover .ring {
+  stroke: #6ac6ff;
+}
+.node:hover .ring,
+.node.selected .ring {
+  opacity: 0.3;
+}
+.relationship .overlay {
+  opacity: 0;
+  fill: #6ac6ff;
+}
+.relationship.selected .overlay {
+  fill: #fdcc59;
+}
+.relationship.selected:hover .overlay {
+  fill: #6ac6ff;
+}
+.relationship:hover .overlay,
+.relationship.selected .overlay {
+  opacity: 0.3;
+}
+.outline,
+.ring,
+.context-menu-item {
+  cursor: pointer;
+}

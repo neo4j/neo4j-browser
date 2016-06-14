@@ -1,0 +1,29 @@
+.neod3viz .node .ring {
+  fill: none;
+  opacity: 0;
+  stroke: #6ac6ff;
+}
+.neod3viz .node.selected .ring {
+  stroke: #fdcc59;
+}
+.neod3viz .node.selected:hover .ring {
+  stroke: #6ac6ff;
+}
+.neod3viz .node:hover .ring,
+.neod3viz .node.selected .ring {
+  opacity: 0.3;
+}
+.neod3viz .relationship .overlay {
+  opacity: 0;
+  fill: #6ac6ff;
+}
+.neod3viz .relationship.selected .overlay {
+  fill: #fdcc59;
+}
+.neod3viz .relationship.selected:hover .overlay {
+  fill: #6ac6ff;
+}
+.neod3viz .relationship:hover .overlay,
+.neod3viz .relationship.selected .overlay {
+  opacity: 0.3;
+}

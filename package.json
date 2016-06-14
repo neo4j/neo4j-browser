@@ -11,13 +11,15 @@
   },
   "standard": {
     "ignore": [
-      "dist"
+      "dist",
+      "src/visualisation/external"
     ],
     "globals": [
       "it",
       "describe",
       "beforeEach",
-      "afterEach"
+      "afterEach",
+      "neo"
     ]
   },
   "repository": {},
@@ -81,6 +83,7 @@
     "react-router-redux": "^4.0.4",
     "redux": "^3.5.2",
     "redux-saga": "^0.10.2",
-    "uuid": "^2.0.2"
+    "uuid": "^2.0.2",
+    "d3": "3.5.0"
   }
 }

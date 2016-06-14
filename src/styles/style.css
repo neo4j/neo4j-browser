@@ -42,6 +42,10 @@
   background-color: #666
 }
 
+.frame-contents .tab {
+  width: 100%;
+}
+
 #main {
   flex: 1;
   display: flex;
@@ -65,6 +69,11 @@
 #stream .frame {
   margin: 10px 10px 10px 10px;
   border: 1px solid grey;
+}
+
+.frame-contents .tab .frame svg {
+  height: 432px;
+  width: 100%;
 }
 
 .frame .frame-titlebar {

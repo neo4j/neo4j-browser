@@ -3,6 +3,7 @@ import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../services/bolt/bolt'
 import tabNavigation from '../../../tabNavigation'
+import GraphComponent from '../../../visualisation/components/Graph'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -29,9 +30,17 @@ class CypherFrame extends React.Component {
       const Code = () => {
         return <div className='frame'><pre>{JSON.stringify(result, null, 2)}</pre></div>
       }
+      const Graph = () => {
+        return (
+          <div className='frame'>
+            <GraphComponent records={result.records}/>
+          </div>
+        )
+      }
       const navItemsList = [
         {name: 'CODE', icon: '', content: Code},
-        {name: 'TEXT', icon: '', content: Text}
+        {name: 'TEXT', icon: '', content: Text},
+        {name: 'GRAPH', icon: '', content: Graph}
       ]
       frameContents = <tabNavigation.components.Navigation openDrawer={this.state.openView} navItems={navItemsList} onNavClick={this.onNavClick.bind(this)} styleId='cypherTabs'/>
     } else if (errors) {
