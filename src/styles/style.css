@@ -50,7 +50,6 @@
   min-width: 0;
 }
 #main #editor {
-  flex: 1 0 70px;
   background-color: white;
   border-bottom: 1px solid black;
 }
@@ -167,4 +166,12 @@ pre {
   word-wrap: normal;
   word-break: normal;
   overflow: auto;
+}
+
+.top-padded-icon {
+  padding-top: 8px !important;
+}
+
+.left-padded-icon {
+  padding-left: 9px !important;
 }

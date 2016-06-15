@@ -7,12 +7,14 @@ import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
+import styles from './style.css'
+import ActionButton from '../../../lib/components/ActionButton'
 
 export class EditorComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      code: props.content,
+      code: props.content || '',
       historyIndex: -1,
       buffer: null
     }
@@ -21,6 +23,9 @@ export class EditorComponent extends React.Component {
     const cm = this.codeMirror
     cm.focus()
     cm.setCursor(cm.lineCount(), 0)
+  }
+  clearEditor () {
+    this.setEditorValue(this.codeMirror, '')
   }
   handleEnter (cm) {
     if (cm.lineCount() === 1) {
@@ -31,9 +36,9 @@ export class EditorComponent extends React.Component {
   newlineAndIndent (cm) {
     this.codeMirrorInstance.commands.newlineAndIndent(cm)
   }
-  execCurrent (cm) {
-    this.props.onExecute(cm.getValue())
-    this.setEditorValue(cm, '')
+  execCurrent () {
+    this.props.onExecute(this.codeMirror.getValue())
+    this.clearEditor()
     this.setState({historyIndex: -1, buffer: null})
   }
   historyPrev (cm) {
@@ -95,14 +100,42 @@ export class EditorComponent extends React.Component {
       autofocus: true
     }
     return (
-      <div id='editor'>
-        <Codemirror
-          ref='editor'
-          value={this.state.code}
-          onChange={this.updateCode.bind(this)}
-          options={options}
-        />
-        <input type='button' value='+' onClick={() => this.props.onFavortieClick(this.props.content)}/>
+      <div id='editor' className={styles.editorContainer}>
+        <div className={styles['editor-wrapper']}>
+          <Codemirror
+            ref='editor'
+            value={this.state.code}
+            onChange={this.updateCode.bind(this)}
+            options={options}
+          />
+        </div>
+        <div className={styles.actionButtons}>
+          <ActionButton
+            kind='secondary'
+            noFill
+            onClick={() => this.props.onFavortieClick(this.state.code)}
+            label='&#9734;'
+            disabled={this.state.code.length < 1}
+            tooltip='Add as favorite'
+          />
+          <ActionButton
+            kind='secondary'
+            noFill
+            onClick={() => this.clearEditor()}
+            label='&times;'
+            disabled={this.state.code.length < 1}
+            tooltip='Clear editor contents'
+          />
+          <ActionButton
+            onClick={() => this.execCurrent()}
+            kind='primary'
+            label='&#9654;'
+            disabled={this.state.code.length < 1}
+            noFill
+            classNames={['top-padded-icon', 'left-padded-icon']}
+            tooltip='Execute command'
+          />
+        </div>
       </div>
     )
   }
