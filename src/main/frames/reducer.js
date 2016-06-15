@@ -40,7 +40,10 @@ export function getAvailableFrameTypes (state) {
 */
 function addFrame (state, newState) {
   const byId = Object.assign({}, state.byId, {[newState.id]: newState})
-  const allIds = state.allIds.concat([newState.id])
+  let allIds = state.allIds
+  if (allIds.indexOf(newState.id) < 0) {
+    allIds = state.allIds.concat([newState.id])
+  }
   return Object.assign(
     {},
     state,
@@ -49,10 +52,10 @@ function addFrame (state, newState) {
   )
 }
 
-function removeFrame (state, newState) {
+function removeFrame (state, id) {
   const byId = Object.assign({}, state.byId)
-  delete byId[newState.id]
-  const allIds = state.allIds.filter((id) => id !== newState.id)
+  delete byId[id]
+  const allIds = state.allIds.filter((fid) => fid !== id)
   return Object.assign({}, state, {allIds, byId})
 }
 
@@ -73,7 +76,7 @@ export default function frames (state = initialState, action) {
       return addFrame(state, action.state)
     case t.REMOVE:
       cached = null
-      return removeFrame(state, action.state)
+      return removeFrame(state, action.id)
     case t.CLEAR_ALL:
       cached = null
       return initialState

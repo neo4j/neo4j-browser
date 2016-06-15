@@ -39,7 +39,29 @@ describe('frames reducer handling frames', () => {
       }
     })
   })
-
+  it('handles frames.actionTypes.ADD with existing id to replace', () => {
+    const initialState = {
+      allIds: [1, 2, 3],
+      byId: {
+        '1': {id: 1, data: 'React'},
+        '2': {id: 2, data: 'Redux'},
+        '3': {id: 3, data: 'Immutable'}
+      }
+    }
+    const action = {
+      type: frames.actionTypes.ADD,
+      state: {id: 2, data: 'New Frame'}
+    }
+    const nextState = frames.reducer(initialState, action)
+    expect(nextState).to.deep.equal({
+      allIds: [1, 2, 3],
+      byId: {
+        '1': {id: 1, data: 'React'},
+        '2': {id: 2, data: 'New Frame'},
+        '3': {id: 3, data: 'Immutable'}
+      }
+    })
+  })
   it('handles frames.actionTypes.REMOVE', () => {
     const initialState = {
       allIds: [1, 2, 3],
@@ -51,7 +73,7 @@ describe('frames reducer handling frames', () => {
     }
     const action = {
       type: frames.actionTypes.REMOVE,
-      state: {id: 3}
+      id: 3
     }
     const nextState = frames.reducer(initialState, action)
     expect(nextState).to.deep.equal({

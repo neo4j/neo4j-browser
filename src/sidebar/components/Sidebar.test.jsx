@@ -7,12 +7,14 @@ import { Provider } from 'react-redux'
 import dbInfo from '../dbInfo'
 import favorites from '../favorites'
 import documents from '../documents'
+import settings from '../../settings'
 
 describe('Sidebar', () => {
   const reducer = combineReducers({
     meta: dbInfo.reducer,
     favorites: favorites.reducer,
-    documents: documents.reducer
+    documents: documents.reducer,
+    settings: settings.reducer
   })
   const store = createStore(reducer)
 
@@ -32,5 +34,11 @@ describe('Sidebar', () => {
     const drawer = 'documents'
     const wrapper = mount(<Provider store={store}><sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/></Provider>)
     expect(wrapper.find('#db-documents')).has.length(1)
+  })
+
+  it('should show settings drawer when it is open', () => {
+    const drawer = 'settings'
+    const wrapper = mount(<Provider store={store}><sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/></Provider>)
+    expect(wrapper.find('#db-settings')).has.length(1)
   })
 })

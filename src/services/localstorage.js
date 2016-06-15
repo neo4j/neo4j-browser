@@ -1,5 +1,3 @@
-import { deepEquals } from './utils'
-
 const keyPrefix = 'neo4j.'
 
 function getItem (key, storage = window.localStorage) {
@@ -35,15 +33,10 @@ function getStorageForKeys (keys, storage = window.localStorage) {
 }
 
 function createPersistingStoreListener (store, keys, storage = window.localStorage) {
-  let cache = {}
   return function () {
-    const prev = {...cache}
     const currentState = store.getState()
-    keys.forEach((key) => {
-      if (!deepEquals(currentState[key], prev[key])) {
-        cache[key] = currentState[key]
-        setItem(key, currentState[key], storage)
-      }
+    return keys.forEach((key) => {
+      setItem(key, currentState[key], storage)
     })
   }
 }

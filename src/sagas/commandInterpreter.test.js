@@ -20,7 +20,7 @@ describe('commandInterpreter Sagas', () => {
       const expectedHistoryPut = put(editor.actions.addHistory(payload))
       watchSaga.next() // Settings read
       const actualCallAction = watchSaga.next(storeSettings).value
-      const expectedCallAction = call(handleClientCommand, payload.cmd, storeSettings.cmdchar)
+      const expectedCallAction = call(handleClientCommand, payload, storeSettings.cmdchar)
 
       // Then
       expect(rec).to.deep.equal(take(editor.actionTypes.USER_COMMAND_QUEUED))
@@ -51,6 +51,34 @@ describe('commandInterpreter Sagas', () => {
       // We cannot do deep equal here because of uuid
       expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)
     })
+
+    it('should add "id" to action object if in singleFrameMode', () => {
+      // Given
+      const singleWatchSaga = watchCommands()
+      const watchSaga = watchCommands()
+      const payload = {cmd: 'RETURN 1'}
+      const singleStoreSettings = {cmdchar: ':', singleFrameMode: true}
+      const stateFrames = [{id: 100}]
+      const storeSettings = {cmdchar: ':'}
+
+      // When
+      watchSaga.next()
+      watchSaga.next(payload)
+      watchSaga.next() // Settings read
+      watchSaga.next(storeSettings)
+      const putAction = watchSaga.next().value
+
+      singleWatchSaga.next()
+      singleWatchSaga.next(payload)
+      singleWatchSaga.next() // Settings read
+      singleWatchSaga.next(singleStoreSettings) // select read
+      singleWatchSaga.next(stateFrames)
+      const singlePutAction = singleWatchSaga.next().value
+
+      // Then
+      expect(putAction.PUT.action.state.id).to.not.be.defined
+      expect(singlePutAction.PUT.action.state.id).to.equal(100)
+    })
   })
 
   describe('handleClientCommand Saga', () => {
@@ -58,11 +86,11 @@ describe('commandInterpreter Sagas', () => {
       // Given
       const payload = {cmd: ':unknown'}
       const storeSettings = {cmdchar: ':'}
-      const handleClientCommandSaga = handleClientCommand(payload.cmd, storeSettings.cmdchar)
+      const handleClientCommandSaga = handleClientCommand(payload, storeSettings.cmdchar)
 
       // When
       const actualCallAction = handleClientCommandSaga.next().value
-      const expectedCallAction = call(helper.interpret('catch-all').exec, payload.cmd, storeSettings.cmdchar)
+      const expectedCallAction = call(helper.interpret('catch-all').exec, payload, storeSettings.cmdchar)
 
       // Then
       expect(actualCallAction).to.deep.equal(expectedCallAction)
@@ -72,11 +100,11 @@ describe('commandInterpreter Sagas', () => {
       // Given
       const payload = {cmd: ':clear'}
       const storeSettings = {cmdchar: ':'}
-      const handleClientCommandSaga = handleClientCommand(payload.cmd, storeSettings.cmdchar)
+      const handleClientCommandSaga = handleClientCommand(payload, storeSettings.cmdchar)
 
       // When
       const actualCallAction = handleClientCommandSaga.next().value
-      const expectedCallAction = call(helper.interpret('clear').exec, payload.cmd, storeSettings.cmdchar)
+      const expectedCallAction = call(helper.interpret('clear').exec, payload, storeSettings.cmdchar)
 
       // Then
       expect(actualCallAction).to.deep.equal(expectedCallAction)

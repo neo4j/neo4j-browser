@@ -4,7 +4,14 @@ import * as t from './actionTypes'
 function add (payload) {
   return {
     type: t.ADD,
-    state: Object.assign(payload, {id: (payload.id || uuid.v1())})
+    state: Object.assign({}, payload, {id: (payload.id || uuid.v1())})
+  }
+}
+
+function remove (id) {
+  return {
+    type: t.REMOVE,
+    id
   }
 }
 
@@ -23,6 +30,7 @@ function toggleVisibleFilter (type) {
 
 export {
   add,
+  remove,
   clear,
   toggleVisibleFilter
 }

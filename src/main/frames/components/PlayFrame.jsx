@@ -2,7 +2,7 @@ import React from 'react'
 import guides from '../../../guides'
 import { FrameTitlebar } from './FrameTitlebar'
 
-export const PlayFrame = ({frame, handleTitlebarClick}) => {
+export const PlayFrame = ({frame}) => {
   let guide = 'Play guide not specified'
   if (frame.contents) {
     guide = <guides.components.Slide html={frame.contents}/>
@@ -19,7 +19,7 @@ export const PlayFrame = ({frame, handleTitlebarClick}) => {
   }
   return (
     <div className='playFrame frame'>
-      <FrameTitlebar handleTitlebarClick={() => handleTitlebarClick(frame.cmd)} frame={frame} />
+      <FrameTitlebar frame={frame} />
       <div className='frame-contents'>{guide}</div>
     </div>
     )

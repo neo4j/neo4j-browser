@@ -8,26 +8,33 @@ import bolt from '../services/bolt/bolt'
 
 function * watchCommands () {
   while (true) {
-    const action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
+    let action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
     yield put(editor.actions.addHistory({cmd: action.cmd}))
     const settingsState = yield select(getSettings)
     const cleanCmd = cleanCommand(action.cmd)
+    if (settingsState.singleFrameMode) {
+      const currentFrames = yield select((state) => frames.selectors.getFrames(state))
+      action.id = null
+      if (currentFrames.length) {
+        action.id = currentFrames[currentFrames.length - 1].id
+      }
+    }
     if (cleanCmd[0] === settingsState.cmdchar) {
-      yield call(handleClientCommand, action.cmd, settingsState.cmdchar)
+      yield call(handleClientCommand, action, settingsState.cmdchar)
     } else {
       try {
         const res = yield call(bolt.transaction, action.cmd)
-        yield put(frames.actions.add({cmd: action.cmd, result: res, type: 'cypher'}))
+        yield put(frames.actions.add({...action, result: res, type: 'cypher'}))
       } catch (e) {
-        yield put(frames.actions.add({cmd: action.cmd, errors: e, type: 'cypher'}))
+        yield put(frames.actions.add({...action, errors: e, type: 'cypher'}))
       }
     }
   }
 }
 
-function * handleClientCommand (cmd, cmdchar) {
-  const interpreted = helper.interpret(cmd.substr(cmdchar.length))
-  yield call(interpreted.exec, cmd, cmdchar)
+function * handleClientCommand (action, cmdchar) {
+  const interpreted = helper.interpret(action.cmd.substr(cmdchar.length))
+  yield call(interpreted.exec, action, cmdchar)
 }
 
 export {

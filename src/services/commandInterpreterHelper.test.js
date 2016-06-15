@@ -73,7 +73,7 @@ describe('commandInterpreterHelper', () => {
       const payload = {cmd: ':clear'}
       const storeSettings = {cmdchar: ':'}
       const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
-      const handleClientCommandSaga = interpreted.exec(payload.cmd, storeSettings.cmdchar)
+      const handleClientCommandSaga = interpreted.exec(payload, storeSettings.cmdchar)
 
       // When
       const actualPutAction = handleClientCommandSaga.next().value
@@ -88,7 +88,7 @@ describe('commandInterpreterHelper', () => {
       const payload = {cmd: ':play a', type: 'play'}
       const storeSettings = {cmdchar: ':'}
       const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
-      const handleClientCommandSaga = interpreted.exec(payload.cmd, storeSettings.cmdchar)
+      const handleClientCommandSaga = interpreted.exec(payload, storeSettings.cmdchar)
 
       // When
       const actualPutAction = handleClientCommandSaga.next().value
@@ -104,7 +104,7 @@ describe('commandInterpreterHelper', () => {
       const payload = {cmd: ':play ' + url, type: 'play-remote'}
       const storeSettings = {cmdchar: ':'}
       const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
-      const handleClientCommandSaga = interpreted.exec(payload.cmd, storeSettings.cmdchar)
+      const handleClientCommandSaga = interpreted.exec(payload, storeSettings.cmdchar)
 
       // When
       const actualRemoteGetAction = handleClientCommandSaga.next('http://test.test').value
