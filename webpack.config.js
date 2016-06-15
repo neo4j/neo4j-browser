@@ -1,5 +1,6 @@
 var webpack = require('webpack')
 var path = require('path')
+var precss = require('precss')
 
 module.exports = {
   entry: [
@@ -17,7 +18,7 @@ module.exports = {
       test: /\.css$/,
       include: path.resolve('./src'),
       exclude: path.resolve('./src/styles'),
-      loader: 'style!css-loader?modules&camelCase&localIdentName=[name]__[local]___[hash:base64:5]'
+      loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
     }, {
       test: /\.css$/,
       exclude: [path.resolve('./src/lib'), path.resolve('./src/main')],
@@ -31,6 +32,18 @@ module.exports = {
         'file?hash=sha512&digest=hex&name=[hash].[ext]'
       ]
     }]
+  },
+  postcss: function (webpack) {
+    return [
+      require("postcss-cssnext")({
+        features: {
+          customProperties: {
+            variables: require('./src/lib/styles/colors.json')
+          }
+        }
+      }),
+      precss
+    ]
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
