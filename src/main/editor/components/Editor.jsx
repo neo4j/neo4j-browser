@@ -24,6 +24,9 @@ export class EditorComponent extends React.Component {
     cm.focus()
     cm.setCursor(cm.lineCount(), 0)
   }
+  clearEditor () {
+    this.setEditorValue(this.codeMirror, '')
+  }
   handleEnter (cm) {
     if (cm.lineCount() === 1) {
       return this.execCurrent(cm)
@@ -35,7 +38,7 @@ export class EditorComponent extends React.Component {
   }
   execCurrent () {
     this.props.onExecute(this.codeMirror.getValue())
-    this.setEditorValue(this.codeMirror, '')
+    this.clearEditor()
     this.setState({historyIndex: -1, buffer: null})
   }
   historyPrev (cm) {
@@ -108,14 +111,24 @@ export class EditorComponent extends React.Component {
         </div>
         <div className={styles.actionButtons}>
           <ActionButton
+            kind='secondary'
+            noFill
             onClick={() => this.props.onFavortieClick(this.state.code)}
             label='+'
             disabled={this.state.code.length < 1}
             tooltip='Add as favorite'
           />
           <ActionButton
-            onClick={() => this.execCurrent()}
             kind='secondary'
+            noFill
+            onClick={() => this.clearEditor()}
+            label='&times;'
+            disabled={this.state.code.length < 1}
+            tooltip='Clear editor contents'
+          />
+          <ActionButton
+            onClick={() => this.execCurrent()}
+            kind='primary'
             label='-&gt;'
             disabled={this.state.code.length < 1}
             noFill
