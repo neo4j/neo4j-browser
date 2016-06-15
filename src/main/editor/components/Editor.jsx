@@ -114,7 +114,7 @@ export class EditorComponent extends React.Component {
             kind='secondary'
             noFill
             onClick={() => this.props.onFavortieClick(this.state.code)}
-            label='+'
+            label='&#9734;'
             disabled={this.state.code.length < 1}
             tooltip='Add as favorite'
           />
@@ -129,10 +129,10 @@ export class EditorComponent extends React.Component {
           <ActionButton
             onClick={() => this.execCurrent()}
             kind='primary'
-            label='-&gt;'
+            label='&#9654;'
             disabled={this.state.code.length < 1}
             noFill
-            classNames={['yes']}
+            classNames={['top-padded-icon', 'left-padded-icon']}
             tooltip='Execute command'
           />
         </div>

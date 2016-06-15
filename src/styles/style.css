@@ -167,3 +167,11 @@ pre {
   word-break: normal;
   overflow: auto;
 }
+
+.top-padded-icon {
+  padding-top: 8px !important;
+}
+
+.left-padded-icon {
+  padding-left: 9px !important;
+}
