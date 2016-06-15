@@ -4,7 +4,7 @@ import editor from '../../../main/editor'
 import favorite from '../'
 
 function extractNameFromCommand (input) {
-  if (input === '' || input === undefined) {
+  if (!input) {
     return ''
   }
 
