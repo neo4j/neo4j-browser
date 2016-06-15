@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import editor from '../'
 import favorites from '../../../sidebar/favorites'
 import { getHistory, getEditorContent } from '../../../selectors'
-import classNames from 'classnames'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
@@ -112,13 +111,16 @@ export class EditorComponent extends React.Component {
             onClick={() => this.props.onFavortieClick(this.state.code)}
             label='+'
             disabled={this.state.code.length < 1}
+            tooltip='Add as favorite'
           />
           <ActionButton
             onClick={() => this.execCurrent()}
             kind='secondary'
             label='-&gt;'
             disabled={this.state.code.length < 1}
-            noFill={true}
+            noFill
+            classNames={['yes']}
+            tooltip='Execute command'
           />
         </div>
       </div>

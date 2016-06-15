@@ -2,19 +2,28 @@ import React from 'react'
 import styles from './style.css'
 import classNames from 'classnames'
 
+/**
+ * Button to be used for simple action tasks
+*/
+
 const ActionButton = (props) => {
   const mergedProps = Object.assign({kind: 'primary'}, props)
-  const classes = classNames({
+  let classObj = {
     [styles.actionButton]: true,
     [styles[mergedProps.kind]]: true,
     [styles.disabled]: mergedProps.disabled,
     [styles['no-fill']]: mergedProps.noFill
-  })
+  }
+  if (mergedProps['classNames'] !== undefined) {
+    mergedProps.classNames.forEach((cn) => { classObj[cn] = true })
+  }
+
   return (
     <button
-      className={classes}
+      className={classNames(classObj)}
       onClick={mergedProps.onClick}
-      disabled={mergedProps.disabled ? 'disabled': ''}
+      disabled={mergedProps.disabled ? 'disabled' : ''}
+      title={mergedProps.tooltip}
     >
       {props.label}
     </button>
@@ -27,7 +36,7 @@ ActionButton.propTypes = {
   kind: React.PropTypes.string, // primary, secondary, danger
   tooltip: React.PropTypes.string,
   disabled: React.PropTypes.bool,
-  className: React.PropTypes.object,
+  classNames: React.PropTypes.array,
   noFill: React.PropTypes.bool
 }
 

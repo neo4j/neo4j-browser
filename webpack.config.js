@@ -35,7 +35,7 @@ module.exports = {
   },
   postcss: function (webpack) {
     return [
-      require("postcss-cssnext")({
+      require('postcss-cssnext')({
         features: {
           customProperties: {
             variables: require('./src/lib/styles/colors.json')
