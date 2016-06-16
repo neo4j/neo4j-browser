@@ -15,9 +15,10 @@ function remove (id) {
   }
 }
 
-function clear () {
+function clear (context) {
   return {
-    type: t.CLEAR_ALL
+    type: t.CLEAR_ALL,
+    context
   }
 }
 

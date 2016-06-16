@@ -29,7 +29,7 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
-const persistedStateKeys = ['drawer', 'settings', 'editor', 'favorites']
+const persistedStateKeys = ['settings', 'editor', 'favorites']
 const persistedStateStorage = window.localStorage
 
 const store = createStore(

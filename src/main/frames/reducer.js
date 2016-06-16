@@ -70,6 +70,15 @@ function updateTypeFilter (state, newState) {
   return state.visibleFilter.concat(newState.frameType)
 }
 
+function clear (state, context) {
+  const toBeRemoved = getFramesInContext(state, context)
+  const byId = Object.assign({}, state.byId)
+  toBeRemoved.forEach((f) => delete byId[f.id])
+  const idsToBeRemoved = toBeRemoved.map((f) => f.id)
+  const allIds = state.allIds.filter((fid) => idsToBeRemoved.indexOf(fid) < 0)
+  return Object.assign({}, state, {byId, allIds})
+}
+
 /**
  * Reducer
 */
@@ -83,7 +92,7 @@ export default function frames (state = initialState, action) {
       return removeFrame(state, action.id)
     case t.CLEAR_ALL:
       cached = null
-      return initialState
+      return clear(state, action.context)
     case t.FRAME_TYPE_FILTER_UPDATED:
       return Object.assign({}, state, {visibleFilter: updateTypeFilter(state, action)})
     default:
