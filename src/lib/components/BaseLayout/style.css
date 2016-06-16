@@ -40,6 +40,9 @@
           padding: 10px;
           cursor: pointer;
           line-height: 45px;
+          &.active-left-nav {
+            background-color: #30333A;
+          }
           &:hover {
             color: #fff;
           }

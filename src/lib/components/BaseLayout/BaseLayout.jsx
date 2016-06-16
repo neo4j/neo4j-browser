@@ -16,6 +16,7 @@ const BaseLayout = () => {
         <div className={styles.body}>
           <LeftNavOnline
             className={styles.leftNav}
+            activeClassName={styles.activeLeftNav}
             separatorClassName={styles.menuSeparator}
           />
           <div className={styles.mainContent}>

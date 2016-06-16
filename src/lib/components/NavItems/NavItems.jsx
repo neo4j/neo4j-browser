@@ -1,23 +1,23 @@
 import React from 'react'
 
-export const Query = ({onClick}) => {
-  return <li onClick={onClick}>Query</li>
+export const Query = ({className, onClick}) => {
+  return <li className={className} onClick={onClick}>Query</li>
 }
 
-export const DatabaseInfo = ({onClick}) => {
-  return <li onClick={onClick}>Database Info</li>
+export const DatabaseInfo = ({className, onClick}) => {
+  return <li className={className} onClick={onClick}>Database Info</li>
 }
 
-export const Settings = ({onClick}) => {
-  return <li onClick={onClick}>Settings</li>
+export const Settings = ({className, onClick}) => {
+  return <li className={className} onClick={onClick}>Settings</li>
 }
 
-export const Favorites = ({onClick}) => {
-  return <li onClick={onClick}>Favorites</li>
+export const Favorites = ({className, onClick}) => {
+  return <li className={className} onClick={onClick}>Favorites</li>
 }
 
-export const Styling = ({onClick}) => {
-  return <li onClick={onClick}>Styling</li>
+export const Styling = ({className, onClick}) => {
+  return <li className={className} onClick={onClick}>Styling</li>
 }
 
 export const Separator = ({className}) => {
