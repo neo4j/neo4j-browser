@@ -1,6 +1,6 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
-// import asciitable from 'ascii-data-table'
+import asciitable from 'ascii-data-table'
 import bolt from '../../../services/bolt/bolt'
 // import tabNavigation from '../../../tabNavigation'
 import GraphComponent from '../../../visualisation/components/Graph'
@@ -23,14 +23,16 @@ class CypherFrame extends React.Component {
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result) {
       const nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(result.records)
-      frameContents = (
-        <div className='frame'>
-          <GraphComponent nodes={nodesAndRelationships.nodes} relationships={nodesAndRelationships.relationships}/>
-        </div>
-      )
-
-      // const rows = bolt.recordsToTableArray(result.records)
-      // frameContents = <pre>{asciitable.run(rows)}</pre>
+      if (nodesAndRelationships.nodes.length > 0) {
+        frameContents = (
+          <div className='frame'>
+            <GraphComponent nodes={nodesAndRelationships.nodes} relationships={nodesAndRelationships.relationships}/>
+          </div>
+        )
+      } else {
+        const rows = bolt.recordsToTableArray(result.records)
+        frameContents = <pre>{asciitable.run(rows)}</pre>
+      }
     } else if (errors) {
       frameContents = (
         <div>

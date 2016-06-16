@@ -28,31 +28,33 @@ export function objIntToString (obj, intChecker, intConverter) {
 }
 
 export function extractNodesAndRelationshipsFromRecords (records, types) {
-  let relationships = []
-  let nodes = []
   let keys = records[0].keys
+  let rawNodes = []
+  let rawRels = []
   records.forEach((record) => {
     let graphItems = keys.map((key) => record.get(key))
-    graphItems.forEach((item) => extractNodesAndRelationships(item, nodes, relationships, types))
+    rawNodes = [...rawNodes, ...graphItems.filter((item) => item instanceof types.Node)]
+    rawRels = [...rawRels, ...graphItems.filter((item) => item instanceof types.Relationship)]
+    let paths = graphItems.filter((item) => item instanceof types.Path)
+    paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
+  })
+  const nodes = rawNodes.map((item) => {
+    return {id: item.identity.toString(), labels: item.labels, properties: item.properties}
+  })
+  const relationships = rawRels.filter((item) => nodes.filter((node) => node.id === item.start.toString()).length > 0 && nodes.filter((node) => node.id === item.end.toString()).length > 0)
+  .map((item) => {
+    return {id: item.identity.toString(), startNodeId: item.start, endNodeId: item.end, type: item.type, properties: item.properties}
   })
   return { nodes: nodes, relationships: relationships }
 }
 
-const extractNodesAndRelationships = (item, nodes, relationships, types) => {
-  if (item instanceof types.Node) {
-    nodes.push({id: item.identity, labels: item.labels, properties: item.properties})
-  }
-  if (item instanceof types.Relationship) {
-    relationships.push({id: item.identity, startNodeId: item.start, endNodeId: item.end, type: item.type, properties: item.properties})
-  }
-  if (item instanceof types.Path) {
-    let paths = Array.isArray(item) ? item : [item]
-    paths.forEach((path) => {
-      path.segments.forEach((segment) => {
-        extractNodesAndRelationships(segment.start, nodes, relationships, types)
-        extractNodesAndRelationships(segment.end, nodes, relationships, types)
-        extractNodesAndRelationships(segment.relationship, nodes, relationships, types)
-      })
+const extractNodesAndRelationshipsFromPath = (item, rawNodes, rawRels) => {
+  let paths = Array.isArray(item) ? item : [item]
+  paths.forEach((path) => {
+    path.segments.forEach((segment) => {
+      rawNodes.push(segment.start)
+      rawNodes.push(segment.end)
+      rawRels.push(segment.relationship)
     })
-  }
+  })
 }
