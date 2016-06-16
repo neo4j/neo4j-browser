@@ -31,7 +31,6 @@ neo.graphstyle = (function() {
         'border-width': '2px',
         'text-color-internal': '#FFFFFF',
         'font-size': '10px',
-        'caption' : '<id>'
       },
       'relationship': {
         'color': '#A5ABB6',
@@ -314,7 +313,9 @@ neo.graphstyle = (function() {
           rule = new StyleRule(selector, props);
           this.rules.push(rule);
         }
-        // $.extend(rule.props, props);
+        Object.keys(props).forEach(function(propKey) {
+          rule.props[propKey] = props[propKey]
+        })
         this.persist();
         return rule;
       };

@@ -17,11 +17,11 @@ module.exports = {
     }, {
       test: /\.css$/,
       include: path.resolve('./src'),
-      exclude: path.resolve('./src/styles'),
+      exclude: [path.resolve('./src/styles'), path.resolve('./src/visualisation')],
       loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
     }, {
       test: /\.css$/,
-      exclude: [path.resolve('./src/lib'), path.resolve('./src/main'), path.resolve('./src/visualisation')],
+      exclude: [path.resolve('./src/lib'), path.resolve('./src/main')],
       loader: 'style!css'
     }, {
       test: /\.html?$/,
