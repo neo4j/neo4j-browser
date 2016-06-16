@@ -14,6 +14,10 @@ export function getFrames (state) {
   return state[NAME].allIds.map((id) => state[NAME].byId[id])
 }
 
+export function getFramesInContext (state, context) {
+  return getFrames(state).filter((f) => f.context === context)
+}
+
 export function getVisibleFrames (state) {
   if (!state[NAME].visibleFilter.length) return getFrames(state)
   return getFrames(state).filter((frame) => {

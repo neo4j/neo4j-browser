@@ -5,9 +5,10 @@ import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
-import { getAvailableFrameTypes, getVisibleFrames } from '../reducer'
+import { getAvailableFrameTypes, getVisibleFrames, getFramesInContext } from '../reducer'
 import { toggleVisibleFilter } from '../actions'
 import classNames from 'classnames'
+import settings from '../../../settings'
 
 const StreamComponent = (props) => {
   const {frames} = props
@@ -46,28 +47,8 @@ const StreamComponent = (props) => {
       />
     )
   })
-  const frameTypes = props.frameTypes || []
-  const types = frameTypes.map((type) => {
-    const buttonClassNames = classNames({
-      'checkbox-button': true,
-      checked: props.visibleFilter.indexOf(type) > -1
-    })
-    return (
-      <label className={buttonClassNames} key={type}>
-        <input type='checkbox' name={type} value={type} onClick={() => props.onTypeClick(type)} />
-        {type.toUpperCase()}
-      </label>
-    )
-  })
-  const typeListStyle = classNames({
-    hidden: !frameTypes.length,
-    'stream-filter': true
-  })
   return (
     <div id='stream'>
-      <div className={typeListStyle}>
-        Stream frame filter: {types}
-      </div>
       <div>
         {framesList}
       </div>
@@ -77,21 +58,11 @@ const StreamComponent = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    frames: getVisibleFrames(state).reverse(),
-    frameTypes: getAvailableFrameTypes(state),
-    visibleFilter: state.frames.visibleFilter
+    frames: getFramesInContext(state, settings.selectors.getActiveBookmark(state)).reverse(),
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onTypeClick: (type) => {
-      dispatch(toggleVisibleFilter(type))
-    }
-  }
-}
-
-const Stream = connect(mapStateToProps, mapDispatchToProps)(StreamComponent)
+const Stream = connect(mapStateToProps)(StreamComponent)
 
 export {
   Stream,

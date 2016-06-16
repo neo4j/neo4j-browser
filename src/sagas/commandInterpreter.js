@@ -11,6 +11,7 @@ function * watchCommands () {
     let action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
     yield put(editor.actions.addHistory({cmd: action.cmd}))
     const settingsState = yield select(getSettings)
+    action.context = settingsState.activeBookmark
     const cleanCmd = cleanCommand(action.cmd)
     if (settingsState.singleFrameMode) {
       const currentFrames = yield select((state) => frames.selectors.getFrames(state))
@@ -20,21 +21,21 @@ function * watchCommands () {
       }
     }
     if (cleanCmd[0] === settingsState.cmdchar) {
-      yield call(handleClientCommand, action, settingsState.cmdchar, settingsState.activeBookmark)
+      yield call(handleClientCommand, action, settingsState.cmdchar)
     } else {
       try {
         const res = yield call(bolt.transaction, action.cmd)
-        yield put(frames.actions.add({...action, result: res, type: 'cypher', context: settingsState.activeBookmark}))
+        yield put(frames.actions.add({...action, result: res, type: 'cypher'}))
       } catch (e) {
-        yield put(frames.actions.add({...action, errors: e, type: 'cypher', context: settingsState.activeBookmark}))
+        yield put(frames.actions.add({...action, errors: e, type: 'cypher'}))
       }
     }
   }
 }
 
-function * handleClientCommand (action, cmdchar, context) {
+function * handleClientCommand (action, cmdchar) {
   const interpreted = helper.interpret(action.cmd.substr(cmdchar.length))
-  yield call(interpreted.exec, action, cmdchar, context)
+  yield call(interpreted.exec, action, cmdchar)
 }
 
 export {
