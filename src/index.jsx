@@ -9,7 +9,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 import reducers from './rootReducer'
-import app from './app'
+import BaseLayout from './lib/components/BaseLayout'
 import frames from './main/frames'
 import main from './main'
 
@@ -45,9 +45,7 @@ ReactDOM.render(
   <Provider store={store}>
     <div>
       <Router history={history}>
-        <Route path='/' component={app.components.App}>
-          <IndexRoute component={main.components.Main}/>
-          <Route path='stream/:frameId' component={frames.components.SingleFrame}/>
+        <Route path='/' component={BaseLayout}>
         </Route>
       </Router>
     </div>
