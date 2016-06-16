@@ -20,21 +20,21 @@ function * watchCommands () {
       }
     }
     if (cleanCmd[0] === settingsState.cmdchar) {
-      yield call(handleClientCommand, action, settingsState.cmdchar)
+      yield call(handleClientCommand, action, settingsState.cmdchar, settingsState.activeBookmark)
     } else {
       try {
         const res = yield call(bolt.transaction, action.cmd)
-        yield put(frames.actions.add({...action, result: res, type: 'cypher'}))
+        yield put(frames.actions.add({...action, result: res, type: 'cypher', context: settingsState.activeBookmark}))
       } catch (e) {
-        yield put(frames.actions.add({...action, errors: e, type: 'cypher'}))
+        yield put(frames.actions.add({...action, errors: e, type: 'cypher', context: settingsState.activeBookmark}))
       }
     }
   }
 }
 
-function * handleClientCommand (action, cmdchar) {
+function * handleClientCommand (action, cmdchar, context) {
   const interpreted = helper.interpret(action.cmd.substr(cmdchar.length))
-  yield call(interpreted.exec, action, cmdchar)
+  yield call(interpreted.exec, action, cmdchar, context)
 }
 
 export {
