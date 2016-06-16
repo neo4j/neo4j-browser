@@ -1,4 +1,5 @@
 import * as t from './actionTypes'
+import { v4 } from 'uuid'
 
 export const update = (settings) => {
   return {
@@ -7,9 +8,16 @@ export const update = (settings) => {
   }
 }
 
+export const setActiveBookmark = (id) => {
+  return {
+    type: t.SET_ACTIVE_BOOKMARK,
+    bookmarkId: id
+  }
+}
+
 export const addServerBookmark = ({name, username, password, host}) => {
   return {
     type: t.ADD_SERVER_BOOKMARK,
-    bookmark: {name, username, password, host}
+    bookmark: {id: v4(), name, username, password, host}
   }
 }

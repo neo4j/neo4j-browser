@@ -17,6 +17,7 @@ export function * handleServerCommand (action, cmdchar) {
     try {
       const connection = yield call(bolt.getConnection, connectionName)
       if (!connection) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
+      yield put(settings.actions.setActiveBookmark(connection.id))
       yield call(bolt.useConnection, connection.name)
     } catch (e) {
       yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
@@ -25,11 +26,14 @@ export function * handleServerCommand (action, cmdchar) {
   }
   if (serverCmd === 'connect') {
     const connectionName = props
-    const settingsState = yield select(getSettings)
+    const state = yield select((s) => s)
     try {
-      const connectionCreds = settingsState.bookmarks.filter((c) => c.name === connectionName)
-      if (!connectionCreds) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
+      const connectionCreds = settings.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
+      if (!connectionCreds.length) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
       yield call(bolt.openConnection, connectionCreds[0])
+      if (!settings.selectors.getActiveBookmark(state)) {
+        yield put(settings.actions.setActiveBookmark(connectionCreds[0].id))
+      }
     } catch (e) {
       yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     }

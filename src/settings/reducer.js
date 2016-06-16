@@ -1,15 +1,38 @@
+import { NAME } from './constants'
 import * as t from './actionTypes'
 
 const initialState = {
   cmdchar: ':',
   maxHistory: 10,
-  bookmarks: [],
+  allBookmarkIds: [],
+  bookmarksById: {},
+  activeBookmark: null,
   singleFrameMode: false
 }
 
-const addBookmark = (bookmarks, obj) => {
-  const noDuplicateName = bookmarks.filter((bm) => bm.name !== obj.name)
-  return [].concat(noDuplicateName, [obj])
+/**
+ * Selectors
+*/
+export function getBookmarks (state) {
+  return state[NAME].allBookmarkIds.map((id) => state[NAME].bookmarksById[id])
+}
+
+export function getActiveBookmark (state) {
+  return state[NAME].activeBookmark
+}
+
+const addBookmark = (state, obj) => {
+  const bookmarksById = {...state.bookmarksById, [obj.id]: obj}
+  let allBookmarkIds = state.allBookmarkIds
+  if (state.allBookmarkIds.indexOf(obj.id) < 0) {
+    allBookmarkIds = state.allBookmarkIds.concat([obj.id])
+  }
+  return Object.assign(
+    {},
+    state,
+    {allBookmarkIds: allBookmarkIds},
+    {bookmarksById: bookmarksById}
+  )
 }
 
 export default function settings (state = initialState, action) {
@@ -17,7 +40,10 @@ export default function settings (state = initialState, action) {
     case t.UPDATE:
       return Object.assign({}, state, action.state)
     case t.ADD_SERVER_BOOKMARK:
-      return Object.assign({}, state, {bookmarks: addBookmark(state.bookmarks, action.bookmark)})
+      return addBookmark(state, action.bookmark)
+    case t.SET_ACTIVE_BOOKMARK:
+      return {...state, activeBookmark: action.bookmarkId}
+    default:
+      return state
   }
-  return state
 }
