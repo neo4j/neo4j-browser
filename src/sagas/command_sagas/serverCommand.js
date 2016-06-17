@@ -1,7 +1,6 @@
 import { put, select, call } from 'redux-saga/effects'
 import frames from '../../main/frames'
-import settings from '../../settings'
-import { getSettings } from '../../selectors'
+import bookmarks from '../../lib/components/Bookmarks'
 import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
 import bolt from '../../services/bolt/bolt'
 import { UserException } from '../../services/exceptions'
@@ -17,7 +16,7 @@ export function * handleServerCommand (action, cmdchar) {
     try {
       const connection = yield call(bolt.getConnection, connectionName)
       if (!connection) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
-      yield put(settings.actions.setActiveBookmark(connection.id))
+      yield put(bookmarks.actions.setActiveBookmark(connection.id))
       yield call(bolt.useConnection, connection.name)
     } catch (e) {
       yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
@@ -28,11 +27,11 @@ export function * handleServerCommand (action, cmdchar) {
     const connectionName = props
     const state = yield select((s) => s)
     try {
-      const connectionCreds = settings.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
+      const connectionCreds = bookmarks.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
       if (!connectionCreds.length) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
       yield call(bolt.openConnection, connectionCreds[0])
-      if (!settings.selectors.getActiveBookmark(state)) {
-        yield put(settings.actions.setActiveBookmark(connectionCreds[0].id))
+      if (!bookmarks.selectors.getActiveBookmark(state)) {
+        yield put(bookmarks.actions.setActiveBookmark(connectionCreds[0].id))
       }
     } catch (e) {
       yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
@@ -59,7 +58,7 @@ export function * handleServerAddCommand (action, cmdchar) {
     yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     return
   }
-  yield put(settings.actions.addServerBookmark({name, username, password, host}))
-  const settingsState = yield select(getSettings)
-  yield put(frames.actions.add({...action, type: 'pre', contents: JSON.stringify(settingsState.bookmarks, null, 2)}))
+  yield put(bookmarks.actions.addServerBookmark({name, username, password, host}))
+  const state = yield select((s) => s)
+  yield put(frames.actions.add({...action, type: 'pre', contents: JSON.stringify(bookmarks.selectors.getBookmarks(state), null, 2)}))
 }

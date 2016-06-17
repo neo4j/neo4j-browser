@@ -8,7 +8,7 @@ import { PreFrame } from './PreFrame'
 import { getAvailableFrameTypes, getVisibleFrames, getFramesInContext } from '../reducer'
 import { toggleVisibleFilter } from '../actions'
 import classNames from 'classnames'
-import settings from '../../../settings'
+import bookmarks from '../../../lib/components/Bookmarks'
 
 const StreamComponent = (props) => {
   const {frames} = props
@@ -58,7 +58,7 @@ const StreamComponent = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    frames: getFramesInContext(state, settings.selectors.getActiveBookmark(state)).reverse(),
+    frames: getFramesInContext(state, bookmarks.selectors.getActiveBookmark(state)).reverse(),
   }
 }
 
