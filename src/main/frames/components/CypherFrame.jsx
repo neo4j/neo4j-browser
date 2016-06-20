@@ -3,7 +3,7 @@ import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../services/bolt/bolt'
 // import tabNavigation from '../../../tabNavigation'
-import GraphComponent from '../../../visualisation/components/Graph'
+import neo4jVisualization from 'neo4j-visualization'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -26,7 +26,7 @@ class CypherFrame extends React.Component {
       if (nodesAndRelationships.nodes.length > 0) {
         frameContents = (
           <div className='frame'>
-            <GraphComponent nodes={nodesAndRelationships.nodes} relationships={nodesAndRelationships.relationships}/>
+            <neo4jVisualization.GraphComponent useContextMenu={true} nodes={nodesAndRelationships.nodes} relationships={nodesAndRelationships.relationships}/>
           </div>
         )
       } else {
