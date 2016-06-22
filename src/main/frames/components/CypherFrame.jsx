@@ -17,12 +17,23 @@ class CypherFrame extends React.Component {
     this.setState({openView: viewName})
   }
 
-  componentWillReceiveProps(nextProps) {
-   if(nextProps.frame.result != this.props.frame.result) {
+  getNodeNeighbours (node, callback) {
+    const neighbourCypher = `MATCH path = (a)--(o)
+            WHERE id(a)= ${node.id}
+            RETURN path, size((a)--()) as c
+            ORDER BY id(o)
+            LIMIT 100`
+    bolt.transaction(neighbourCypher).then((result) => {
+      callback(bolt.extractNodesAndRelationshipsFromRecords(result.records))
+    })
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.frame.result !== this.props.frame.result) {
       this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.frame.result.records)
       this.state.rows = bolt.recordsToTableArray(nextProps.frame.result.records)
-   }
-}
+    }
+  }
 
   render () {
     const frame = this.props.frame
@@ -34,7 +45,7 @@ class CypherFrame extends React.Component {
       if (this.state.nodesAndRelationships.nodes.length > 0) {
         frameContents = (
           <div className='frame'>
-            <neo4jVisualization.GraphComponent useContextMenu={true} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships}/>
+            <neo4jVisualization.GraphComponent useContextMenu getNodeNeighbours={this.getNodeNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships}/>
           </div>
         )
       } else {
