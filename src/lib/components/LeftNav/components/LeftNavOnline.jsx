@@ -3,13 +3,12 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 
 import LeftNav from './LeftNav'
+import { getActiveLeftNav } from '../reducer'
 import * as navItems from '../../NavItems'
+import { setActive } from '../actions'
+import bookmarks from '../../Bookmarks'
 
-const getLeftNavigationState = (bm) => {
-  return 'dbinfo1'
-}
-
-export const LeftNavOnline = ({activeNav, className, activeClassName, separatorClassName, handleNavClick}) => {
+export const LeftNavOnline = ({activeNav, context, className, activeClassName, separatorClassName, handleNavClick}) => {
   const items = [
     {component: navItems.Query, key: 'query', className: classNames({[activeClassName]: (activeNav === 'query')})},
     {component: navItems.Separator, key: 'separator1', className: classNames({[activeClassName]: (activeNav === 'separator1'), [separatorClassName]: true})},
@@ -21,19 +20,21 @@ export const LeftNavOnline = ({activeNav, className, activeClassName, separatorC
     {component: navItems.Styling, key: 'styling', className: classNames({[activeClassName]: (activeNav === 'styling')})},
     {component: navItems.Settings, key: 'settings', className: classNames({[activeClassName]: (activeNav === 'settings')})}
   ]
-  return LeftNav(items.map((i) => <i.component {...i} onClick={() => handleNavClick(i.key)} />), className)
+  return LeftNav(items.map((i) => <i.component {...i} onClick={() => handleNavClick(i.key, context)} />), className)
 }
 
 const mapStateToProps = (state) => {
+  const context = bookmarks.selectors.getActiveBookmark(state)
   return {
-    activeNav: getLeftNavigationState(state.activeBookmark)
+    activeNav: getActiveLeftNav(state, context) || 'query',
+    context
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleNavClick: (id) => {
-
+    handleNavClick: (id, context) => {
+      dispatch(setActive(id, context))
     }
   }
 }
