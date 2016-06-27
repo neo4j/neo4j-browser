@@ -1,7 +1,7 @@
 import React from 'react'
 
-const LeftNav = (items, className) => {
+const LeftNavList = (items, className) => {
   return <ul className={className}>{items}</ul>
 }
 
-export default LeftNav
+export default LeftNavList

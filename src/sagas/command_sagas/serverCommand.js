@@ -1,6 +1,6 @@
 import { take, put, select, call } from 'redux-saga/effects'
 import frames from '../../main/frames'
-import bookmarks from '../../lib/components/Bookmarks'
+import bookmarks from '../../lib/containers/bookmarks'
 import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
 import bolt from '../../services/bolt/bolt'
 import { UserException } from '../../services/exceptions'

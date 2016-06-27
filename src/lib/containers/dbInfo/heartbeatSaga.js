@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import bolt from '../../../services/bolt/bolt'
 import { updateMeta } from './actions'
-import bookmarks from '../../components/Bookmarks'
+import bookmarks from '../../containers/bookmarks'
 
 const delay = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))

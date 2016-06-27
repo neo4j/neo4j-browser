@@ -3,8 +3,8 @@ import frames from './main/frames'
 import editor from './main/editor'
 import dbInfo from './lib/containers/dbInfo'
 import favorites from './sidebar/favorites'
-import bookmarks from './lib/components/Bookmarks'
-import leftnav from './lib/components/LeftNav'
+import bookmarks from './lib/containers/bookmarks'
+import leftnav from './lib/containers/leftnav'
 
 export default {
   [bookmarks.constants.NAME]: bookmarks.reducer,
@@ -13,5 +13,5 @@ export default {
   [editor.constants.NAME]: editor.reducer,
   [dbInfo.constants.NAME]: dbInfo.reducer,
   [favorites.constants.NAME]: favorites.reducer,
-  [leftnav.constants.NAME]: leftnav.reducer,
+  [leftnav.constants.NAME]: leftnav.reducer
 }

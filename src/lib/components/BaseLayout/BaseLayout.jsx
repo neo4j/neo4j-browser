@@ -2,8 +2,8 @@ import React from 'react'
 import styles from './style.css'
 
 import main from '../../../main'
-import bookmarks from '../Bookmarks'
-import leftnav from '../LeftNav'
+import bookmarks from '../../containers/bookmarks'
+import leftnav from '../../containers/leftnav'
 
 const BaseLayout = () => {
   return (
@@ -15,7 +15,7 @@ const BaseLayout = () => {
           </div>
         </div>
         <div className={styles.body}>
-          <leftnav.components.LeftNavOnline
+          <leftnav.components.LeftNav
             className={styles.leftNav}
             activeClassName={styles.activeLeftNav}
             separatorClassName={styles.menuSeparator}

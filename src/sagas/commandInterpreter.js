@@ -1,7 +1,7 @@
 import { put, take, select, call } from 'redux-saga/effects'
 import helper from '../services/commandInterpreterHelper'
 import frames from '../main/frames'
-import bookmarks from '../lib/components/Bookmarks'
+import bookmarks from '../lib/containers/bookmarks'
 import { getSettings } from '../selectors'
 import { cleanCommand } from '../services/commandUtils'
 import editor from '../main/editor'

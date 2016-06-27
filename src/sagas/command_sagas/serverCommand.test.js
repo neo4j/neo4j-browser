@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { put, call } from 'redux-saga/effects'
 import frames from '../../main/frames'
 import { handleServerCommand, handleServerAddCommand, handleUseConnectionCommand } from './serverCommand'
-import bookmarks from '../../lib/components/Bookmarks'
+import bookmarks from '../../lib/containers/bookmarks'
 import bolt from '../../services/bolt/bolt'
 
 describe('serverCommandSagas', () => {

@@ -14,7 +14,7 @@ import BaseLayout from './lib/components/BaseLayout'
 import sagas from './sagas'
 import './styles/style.css'
 import './styles/codemirror.css'
-import bookmarks from './lib/components/Bookmarks'
+import bookmarks from './lib/containers/bookmarks'
 import { getStorageForKeys, createPersistingStoreListener } from './services/localstorage'
 
 const sagaMiddleware = createSagaMiddleware()
