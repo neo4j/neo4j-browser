@@ -40,27 +40,14 @@
   width: 100%;
 }
 
-#main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #fdfdfd;
-  min-width: 0;
-}
 #main #editor {
   background-color: white;
   border-bottom: 1px solid black;
 }
 #main #stream {
   overflow: auto;
-  flex: 0 1 100vh;
   display: flex;
   flex-direction: column;
-}
-
-#stream .stream-filter {
-  margin: 10px 0 10px 10px;
-  flex: none;
 }
 
 #stream .frame {
