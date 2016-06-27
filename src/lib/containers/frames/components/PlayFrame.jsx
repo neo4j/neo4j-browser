@@ -1,5 +1,5 @@
 import React from 'react'
-import guides from '../../../guides'
+import guides from '../../../../guides'
 import { FrameTitlebar } from './FrameTitlebar'
 
 export const PlayFrame = ({frame}) => {

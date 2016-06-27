@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../../../../main/editor'
+import editor from '../../../../lib/containers/editor'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 
 const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties = [], onItemClick }) => {

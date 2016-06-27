@@ -6,7 +6,7 @@ import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
 import { getFramesInContext } from '../reducer'
-import bookmarks from '../../../lib/containers/bookmarks'
+import bookmarks from '../../bookmarks'
 
 const StreamComponent = (props) => {
   const {frames} = props

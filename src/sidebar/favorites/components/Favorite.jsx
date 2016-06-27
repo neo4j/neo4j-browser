@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../../../main/editor'
+import editor from '../../../lib/containers/editor'
 import favorite from '../'
 
 function extractNameFromCommand (input) {

@@ -1,14 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import editor from '../'
-import favorites from '../../../sidebar/favorites'
-import { getHistory, getEditorContent } from '../../../selectors'
+import favorites from '../../../../sidebar/favorites'
+import { getHistory, getEditorContent } from '../../../../selectors'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import styles from './style.css'
-import ActionButton from '../../../lib/components/ActionButton'
+import ActionButton from '../../../components/ActionButton'
 
 export class EditorComponent extends React.Component {
   constructor (props) {

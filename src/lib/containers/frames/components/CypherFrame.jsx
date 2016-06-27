@@ -1,7 +1,7 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
-import bolt from '../../../services/bolt/bolt'
+import bolt from '../../../../services/bolt/bolt'
 // import tabNavigation from '../../../tabNavigation'
 import GraphComponent from '../../../visualisation/components/Graph'
 

@@ -1,5 +1,5 @@
 import { select, call, put } from 'redux-saga/effects'
-import frames from '../main/frames'
+import frames from '../lib/containers/frames'
 import { getHistory } from '../selectors'
 import { cleanHtml } from '../services/remoteUtils'
 import remote from '../services/remote'
