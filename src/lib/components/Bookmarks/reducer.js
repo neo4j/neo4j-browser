@@ -2,9 +2,13 @@ import { NAME } from './constants'
 import * as t from './actionTypes'
 
 const initialState = {
-  allBookmarkIds: [],
-  bookmarksById: {},
-  activeBookmark: null
+  allBookmarkIds: ['offline'],
+  bookmarksById: {'offline': {
+    name: 'Offline',
+    id: 'offline',
+    type: 'offline'
+  }},
+  activeBookmark: 'offline'
 }
 
 /**

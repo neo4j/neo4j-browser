@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './style.css'
 
 import main from '../../../main'
+import bookmarks from '../Bookmarks'
 import { LeftNavOnline } from '../LeftNav'
 
 const BaseLayout = () => {
@@ -10,7 +11,7 @@ const BaseLayout = () => {
       <div className={styles.app}>
         <div className={styles.topBanner}>
           <div className={styles.bookmarkChooser}>
-            My Bookmark v
+            <bookmarks.components.Dropdown />
           </div>
         </div>
         <div className={styles.body}>
