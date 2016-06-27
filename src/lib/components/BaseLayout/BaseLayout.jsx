@@ -3,7 +3,7 @@ import styles from './style.css'
 
 import main from '../../../main'
 import bookmarks from '../Bookmarks'
-import { LeftNavOnline } from '../LeftNav'
+import leftnav from '../LeftNav'
 
 const BaseLayout = () => {
   return (
@@ -15,7 +15,7 @@ const BaseLayout = () => {
           </div>
         </div>
         <div className={styles.body}>
-          <LeftNavOnline
+          <leftnav.components.LeftNavOnline
             className={styles.leftNav}
             activeClassName={styles.activeLeftNav}
             separatorClassName={styles.menuSeparator}

@@ -1,4 +1,3 @@
-import { NAME } from './constants'
 import * as t from './actionTypes'
 
 const initialState = {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 
 import LeftNav from './LeftNav'
-import * as navItems from '../NavItems'
+import * as navItems from '../../NavItems'
 
 const getLeftNavigationState = (bm) => {
   return 'dbinfo1'
@@ -38,5 +38,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const LeftNavOnlineContainer = connect(mapStateToProps, mapDispatchToProps)(LeftNavOnline)
-export default LeftNavOnlineContainer
+export default connect(mapStateToProps, mapDispatchToProps)(LeftNavOnline)

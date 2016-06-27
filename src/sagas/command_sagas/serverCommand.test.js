@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { put, call } from 'redux-saga/effects'
 import frames from '../../main/frames'
-import { handleServerCommand, handleServerAddCommand } from './serverCommand'
-import settings from '../../settings'
+import { handleServerCommand, handleServerAddCommand, handleUseConnectionCommand } from './serverCommand'
+import bookmarks from '../../lib/components/Bookmarks'
 import bolt from '../../services/bolt/bolt'
 
 describe('serverCommandSagas', () => {
@@ -52,23 +52,35 @@ describe('serverCommandSagas', () => {
 
       // When
       const actualPutAction = handleServerAddCommandSaga.next().value
-      const expectedPutAction = put(settings.actions.addServerBookmark(conf))
+      const expectedPutAction = put(bookmarks.actions.addServerBookmark(conf))
 
       // Then
-      expect(actualPutAction).to.deep.equal(expectedPutAction)
+      // Cannot deep equal because of uuid
+      expect(actualPutAction.PUT.action.name).to.equal(expectedPutAction.PUT.action.name)
     })
 
     it('should handle :server use command for switching connection', () => {
       // Given
+      const bookmarksState = {
+        bookmarks: {
+          allBookmarkIds: ['x'],
+          bookmarksById: {
+            'x': {
+              name: 'myname',
+              type: 'bolt'
+            }
+          }
+        }
+      }
       const connection = {name: 'myname'}
       const payload = {cmd: ':server use myname'}
-      const storeSettings = {cmdchar: ':'}
-      const handleServerCommandSaga = handleServerCommand(payload, storeSettings.cmdchar)
+      const handleUseConnectionSaga = handleUseConnectionCommand(payload, connection.name)
 
       // When
-      const actualCallGetConnectionAction = handleServerCommandSaga.next().value
+      handleUseConnectionSaga.next() // Get state
+      const actualCallGetConnectionAction = handleUseConnectionSaga.next(bookmarksState).value
       const expectedCallGetConnectionAction = call(bolt.getConnection, connection.name)
-      const actualCallUseConnectionAction = handleServerCommandSaga.next(connection).value
+      const actualCallUseConnectionAction = handleUseConnectionSaga.next(connection).value
       const expectedCallUseConnectionAction = call(bolt.useConnection, connection.name)
 
       // Then

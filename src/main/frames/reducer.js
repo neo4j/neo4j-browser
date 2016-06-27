@@ -3,8 +3,7 @@ import * as t from './actionTypes'
 
 const initialState = {
   allIds: [],
-  byId: {},
-  visibleFilter: []
+  byId: {}
 }
 
 /**
@@ -16,27 +15,6 @@ export function getFrames (state) {
 
 export function getFramesInContext (state, context) {
   return getFrames(state).filter((f) => f.context === context)
-}
-
-export function getVisibleFrames (state) {
-  if (!state[NAME].visibleFilter.length) return getFrames(state)
-  return getFrames(state).filter((frame) => {
-    if (state[NAME].visibleFilter.length && state[NAME].visibleFilter.indexOf(frame.type) < 0) {
-      return false
-    }
-    return true
-  })
-}
-
-let cached = null
-export function getAvailableFrameTypes (state) {
-  if (cached) return cached
-  cached = state[NAME].allIds.reduce((types, id) => {
-    const type = state[NAME].byId[id].type
-    if (types.indexOf(type) > -1) return types
-    return types.concat([type])
-  }, [])
-  return cached
 }
 
 /**
@@ -63,20 +41,17 @@ function removeFrame (state, id) {
   return Object.assign({}, state, {allIds, byId})
 }
 
-function updateTypeFilter (state, newState) {
-  if (state.visibleFilter.indexOf(newState.frameType) > -1) {
-    return state.visibleFilter.filter((t) => t !== newState.frameType)
-  }
-  return state.visibleFilter.concat(newState.frameType)
-}
-
-function clear (state, context) {
-  const toBeRemoved = getFramesInContext(state, context)
+function clearInContext (state, context) {
+  const toBeRemoved = getFramesInContext({[NAME]: state}, context)
   const byId = Object.assign({}, state.byId)
   toBeRemoved.forEach((f) => delete byId[f.id])
   const idsToBeRemoved = toBeRemoved.map((f) => f.id)
   const allIds = state.allIds.filter((fid) => idsToBeRemoved.indexOf(fid) < 0)
   return Object.assign({}, state, {byId, allIds})
+}
+
+function clear () {
+  return {...initialState}
 }
 
 /**
@@ -85,16 +60,13 @@ function clear (state, context) {
 export default function frames (state = initialState, action) {
   switch (action.type) {
     case t.ADD:
-      cached = null
       return addFrame(state, action.state)
     case t.REMOVE:
-      cached = null
       return removeFrame(state, action.id)
+    case t.CLEAR_IN_CONTEXT:
+      return clearInContext(state, action.context)
     case t.CLEAR_ALL:
-      cached = null
-      return clear(state, action.context)
-    case t.FRAME_TYPE_FILTER_UPDATED:
-      return Object.assign({}, state, {visibleFilter: updateTypeFilter(state, action)})
+      return clear()
     default:
       return state
   }

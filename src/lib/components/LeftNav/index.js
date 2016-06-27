@@ -1,2 +1,3 @@
-export LeftNav from './LeftNav'
-export LeftNavOnline from './LeftNavOnline'
+import components from './components'
+
+export default { components }

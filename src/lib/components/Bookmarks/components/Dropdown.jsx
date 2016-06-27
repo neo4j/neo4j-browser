@@ -17,8 +17,7 @@ export class Dropdown extends React.Component {
     this.setState({selected: newProps.activeBookmark})
   }
   render () {
-    const { bookmarks, activeBookmark } = this.props
-    let bms = bookmarks.map((bm) => {
+    let bms = this.props.bookmarks.map((bm) => {
       return <option value={bm.id} key={bm.id}>{bm.name}</option>
     })
     return (

@@ -5,9 +5,7 @@ import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
-import { getAvailableFrameTypes, getVisibleFrames, getFramesInContext } from '../reducer'
-import { toggleVisibleFilter } from '../actions'
-import classNames from 'classnames'
+import { getFramesInContext } from '../reducer'
 import bookmarks from '../../../lib/components/Bookmarks'
 
 const StreamComponent = (props) => {
@@ -58,7 +56,7 @@ const StreamComponent = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    frames: getFramesInContext(state, bookmarks.selectors.getActiveBookmark(state)).reverse(),
+    frames: getFramesInContext(state, bookmarks.selectors.getActiveBookmark(state)).reverse()
   }
 }
 

@@ -15,23 +15,22 @@ function remove (id) {
   }
 }
 
-function clear (context) {
+function clearInContext (context) {
   return {
-    type: t.CLEAR_ALL,
+    type: t.CLEAR_IN_CONTEXT,
     context
   }
 }
 
-function toggleVisibleFilter (type) {
+function clear () {
   return {
-    type: t.FRAME_TYPE_FILTER_UPDATED,
-    frameType: type
+    type: t.CLEAR_ALL
   }
 }
 
 export {
   add,
   remove,
-  clear,
-  toggleVisibleFilter
+  clearInContext,
+  clear
 }

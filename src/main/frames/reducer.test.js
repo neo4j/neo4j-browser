@@ -101,4 +101,22 @@ describe('frames reducer handling frames', () => {
     expect(nextState.allIds).to.deep.equal([])
     expect(nextState.byId).to.deep.equal({})
   })
+
+  it('handles frames.actionTypes.CLEAR_IN_CONTEXT', () => {
+    const initialState = {
+      allIds: [1, 2, 3],
+      byId: {
+        '1': {id: 1, data: 'React', context: 'myframes'},
+        '2': {id: 2, data: 'Redux'},
+        '3': {id: 3, data: 'Immutable', context: 'myframes'}
+      }
+    }
+    const action = {
+      type: frames.actionTypes.CLEAR_IN_CONTEXT,
+      context: 'myframes'
+    }
+    const nextState = frames.reducer(initialState, action)
+    expect(nextState.allIds).to.deep.equal([2])
+    expect(nextState.byId).to.deep.equal({'2': {id: 2, data: 'Redux'}})
+  })
 })

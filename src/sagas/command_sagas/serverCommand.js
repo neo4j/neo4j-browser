@@ -21,7 +21,7 @@ export function * handleServerCommand (action, cmdchar) {
     return
   }
   if (serverCmd === 'use') {
-    yield call(useConnection, action, props)
+    yield call(handleUseConnectionCommand, action, props)
     return
   }
   if (serverCmd === 'connect') {
@@ -36,14 +36,13 @@ export function * connectToBookmark (action, connectionName) {
   const state = yield select((s) => s)
   try {
     const connection = yield call(bolt.getConnection, connectionName)
-    if (connection) return yield useConnection(action, connectionName)
+    if (connection) return yield handleUseConnectionCommand(action, connectionName)
     const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
     if (!foundBookmarks.length) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
     const bookmarkData = foundBookmarks[0]
     if (bookmarkData.type === 'bolt') {
       yield call(bolt.openConnection, bookmarkData)
-    }
-    else {
+    } else {
       yield call(bolt.useConnection, 'offline')
     }
     yield put(bookmarks.actions.setActiveBookmark(bookmarkData.id))
@@ -52,7 +51,7 @@ export function * connectToBookmark (action, connectionName) {
   }
 }
 
-export function * useConnection (action, connectionName) {
+export function * handleUseConnectionCommand (action, connectionName) {
   const state = yield select((s) => s)
   try {
     const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
@@ -61,8 +60,7 @@ export function * useConnection (action, connectionName) {
       const connection = yield call(bolt.getConnection, connectionName)
       if (!connection) throw new UserException('No open connection with the name ' + connectionName + ' found. You have to connect to a bookmark before you can use it.')
       yield call(bolt.useConnection, connection.name)
-    }
-    else {
+    } else {
       yield call(bolt.useConnection, 'offline')
     }
     yield put(bookmarks.actions.setActiveBookmark(foundBookmarks[0].id))

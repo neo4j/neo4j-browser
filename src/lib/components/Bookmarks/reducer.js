@@ -2,13 +2,9 @@ import { NAME } from './constants'
 import * as t from './actionTypes'
 
 const initialState = {
-  allBookmarkIds: ['offline'],
-  bookmarksById: {'offline': {
-    name: 'Offline',
-    id: 'offline',
-    type: 'offline'
-  }},
-  activeBookmark: 'offline'
+  allBookmarkIds: [],
+  bookmarksById: {},
+  activeBookmark: null
 }
 
 /**
@@ -36,7 +32,7 @@ const addBookmark = (state, obj) => {
   )
 }
 
-export default function settings (state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case t.ADD:
       return addBookmark(state, action.bookmark)
