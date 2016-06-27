@@ -1,6 +1,7 @@
 import { put, take, select, call } from 'redux-saga/effects'
 import helper from '../services/commandInterpreterHelper'
 import frames from '../main/frames'
+import bookmarks from '../lib/components/Bookmarks'
 import { getSettings } from '../selectors'
 import { cleanCommand } from '../services/commandUtils'
 import editor from '../main/editor'
@@ -11,7 +12,7 @@ function * watchCommands () {
     let action = yield take(editor.actionTypes.USER_COMMAND_QUEUED)
     yield put(editor.actions.addHistory({cmd: action.cmd}))
     const settingsState = yield select(getSettings)
-    action.context = settingsState.activeBookmark
+    action.context = yield select(bookmarks.selectors.getActiveBookmark)
     const cleanCmd = cleanCommand(action.cmd)
     if (settingsState.singleFrameMode) {
       const currentFrames = yield select((state) => frames.selectors.getFrames(state))
