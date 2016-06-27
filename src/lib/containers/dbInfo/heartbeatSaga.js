@@ -1,6 +1,7 @@
-import { call, put } from 'redux-saga/effects'
-import bolt from '../services/bolt/bolt'
-import dbInfo from '../sidebar/dbInfo'
+import { call, put, select } from 'redux-saga/effects'
+import bolt from '../../../services/bolt/bolt'
+import { updateMeta } from './actions'
+import bookmarks from '../../components/Bookmarks'
 
 const delay = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -21,8 +22,9 @@ const metaQuery = `CALL db.labels() YIELD label
 function * startHeartbeat () {
   while (true) {
     try {
+      const context = yield select(bookmarks.selectors.getActiveBookmark)
       const res = yield call(bolt.transaction, metaQuery)
-      yield put(dbInfo.actions.updateMeta(res))
+      yield put(updateMeta(res, context))
     } catch (e) {
       console.log(e)
     }

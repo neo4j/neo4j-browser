@@ -1,7 +1,7 @@
 import settings from './settings'
 import frames from './main/frames'
 import editor from './main/editor'
-import dbInfo from './sidebar/dbInfo'
+import dbInfo from './lib/containers/dbInfo'
 import favorites from './sidebar/favorites'
 import bookmarks from './lib/components/Bookmarks'
 

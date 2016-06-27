@@ -1,9 +1,10 @@
 import * as t from './actionTypes'
 
-function updateMeta (meta) {
+function updateMeta (meta, context) {
   return {
     type: t.UPDATE_META,
-    state: {meta: meta}
+    meta,
+    context
   }
 }
 
