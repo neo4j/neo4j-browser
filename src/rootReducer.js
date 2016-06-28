@@ -1,17 +1,17 @@
-import app from './app'
 import settings from './settings'
-import frames from './main/frames'
-import editor from './main/editor'
-import sidebar from './sidebar'
-import dbInfo from './sidebar/dbInfo'
+import frames from './lib/containers/frames'
+import editor from './lib/containers/editor'
+import dbInfo from './lib/containers/dbInfo'
 import favorites from './sidebar/favorites'
+import bookmarks from './lib/containers/bookmarks'
+import leftnav from './lib/containers/leftnav'
 
 export default {
-  [app.constants.NAME]: app.reducer,
+  [bookmarks.constants.NAME]: bookmarks.reducer,
   [frames.constants.NAME]: frames.reducer,
   [settings.constants.NAME]: settings.reducer,
-  [sidebar.constants.NAME]: sidebar.reducer,
   [editor.constants.NAME]: editor.reducer,
   [dbInfo.constants.NAME]: dbInfo.reducer,
-  [favorites.constants.NAME]: favorites.reducer
+  [favorites.constants.NAME]: favorites.reducer,
+  [leftnav.constants.NAME]: leftnav.reducer
 }

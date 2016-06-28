@@ -1,10 +1,18 @@
-import { put, select, call } from 'redux-saga/effects'
-import frames from '../../main/frames'
-import settings from '../../settings'
-import { getSettings } from '../../selectors'
+import { take, put, select, call } from 'redux-saga/effects'
+import frames from '../../lib/containers/frames'
+import bookmarks from '../../lib/containers/bookmarks'
 import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
 import bolt from '../../services/bolt/bolt'
 import { UserException } from '../../services/exceptions'
+
+export function * watchBookmarkSelection () {
+  while (true) {
+    const selectAction = yield take(bookmarks.actionTypes.SELECT)
+    const state = yield select((s) => s)
+    const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.id === selectAction.bookmarkId)
+    yield call(connectToBookmark, null, foundBookmarks[0].name)
+  }
+}
 
 export function * handleServerCommand (action, cmdchar) {
   const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
@@ -13,30 +21,52 @@ export function * handleServerCommand (action, cmdchar) {
     return
   }
   if (serverCmd === 'use') {
-    const connectionName = props
-    try {
-      const connection = yield call(bolt.getConnection, connectionName)
-      if (!connection) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
-      yield call(bolt.useConnection, connection.name)
-    } catch (e) {
-      yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
-    }
+    yield call(handleUseConnectionCommand, action, props)
     return
   }
   if (serverCmd === 'connect') {
-    const connectionName = props
-    const settingsState = yield select(getSettings)
-    try {
-      const connectionCreds = settingsState.bookmarks.filter((c) => c.name === connectionName)
-      if (!connectionCreds) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
-      yield call(bolt.openConnection, connectionCreds[0])
-    } catch (e) {
-      yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
-    }
+    yield call(connectToBookmark, action, props)
     return
   }
   yield put(frames.actions.add({...action, type: 'unknown'}))
   return
+}
+
+export function * connectToBookmark (action, connectionName) {
+  const state = yield select((s) => s)
+  try {
+    const connection = yield call(bolt.getConnection, connectionName)
+    if (connection) return yield handleUseConnectionCommand(action, connectionName)
+    const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
+    if (!foundBookmarks.length) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
+    const bookmarkData = foundBookmarks[0]
+    if (bookmarkData.type === 'bolt') {
+      yield call(bolt.openConnection, bookmarkData)
+    } else {
+      yield call(bolt.useConnection, 'offline')
+    }
+    yield put(bookmarks.actions.setActiveBookmark(bookmarkData.id))
+  } catch (e) {
+    yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
+  }
+}
+
+export function * handleUseConnectionCommand (action, connectionName) {
+  const state = yield select((s) => s)
+  try {
+    const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
+    if (!foundBookmarks.length) throw new UserException('No connection with the name ' + connectionName + ' found. Add a bookmark before trying to connect.')
+    if (foundBookmarks[0].type === 'bolt') {
+      const connection = yield call(bolt.getConnection, connectionName)
+      if (!connection) throw new UserException('No open connection with the name ' + connectionName + ' found. You have to connect to a bookmark before you can use it.')
+      yield call(bolt.useConnection, connection.name)
+    } else {
+      yield call(bolt.useConnection, 'offline')
+    }
+    yield put(bookmarks.actions.setActiveBookmark(foundBookmarks[0].id))
+  } catch (e) {
+    yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
+  }
 }
 
 export function * handleServerAddCommand (action, cmdchar) {
@@ -55,7 +85,7 @@ export function * handleServerAddCommand (action, cmdchar) {
     yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     return
   }
-  yield put(settings.actions.addServerBookmark({name, username, password, host}))
-  const settingsState = yield select(getSettings)
-  yield put(frames.actions.add({...action, type: 'pre', contents: JSON.stringify(settingsState.bookmarks, null, 2)}))
+  yield put(bookmarks.actions.addServerBookmark({name, username, password, host}))
+  const state = yield select((s) => s)
+  yield put(frames.actions.add({...action, type: 'pre', contents: JSON.stringify(bookmarks.selectors.getBookmarks(state), null, 2)}))
 }

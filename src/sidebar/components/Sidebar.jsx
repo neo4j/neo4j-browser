@@ -1,5 +1,5 @@
 import React from 'react'
-import dbInfo from '../dbInfo'
+import dbInfo from '../../lib/containers/dbInfo'
 import favorites from '../favorites'
 import documents from '../documents'
 import tabNavigation from '../../tabNavigation'

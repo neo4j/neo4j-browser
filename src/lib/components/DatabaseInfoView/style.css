@@ -1,0 +1,14 @@
+.dbinfo-view {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #D2D5DA;
+  min-width: 0;
+}
+
+.dbinfo-card {
+  margin: 10px;
+  background-color: #fff;
+  border: 1px solid black;
+  padding: 10px;
+}
