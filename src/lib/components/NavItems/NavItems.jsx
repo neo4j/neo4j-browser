@@ -4,8 +4,16 @@ export const Query = ({className, onClick}) => {
   return <li className={className} onClick={onClick}>Query</li>
 }
 
+export const Dashboard = ({className, onClick}) => {
+  return <li className={className} onClick={onClick}>Dashboard</li>
+}
+
 export const DatabaseInfo = ({className, onClick}) => {
   return <li className={className} onClick={onClick}>Database Info</li>
+}
+
+export const Users = ({className, onClick}) => {
+  return <li className={className} onClick={onClick}>Users</li>
 }
 
 export const Settings = ({className, onClick}) => {
