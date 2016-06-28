@@ -1,5 +1,5 @@
 import { put, select } from 'redux-saga/effects'
-import frames from '../../main/frames'
+import frames from '../../lib/containers/frames'
 import settings from '../../settings'
 import { getSettings } from '../../selectors'
 import { parseConfigInput } from '../../services/commandUtils'

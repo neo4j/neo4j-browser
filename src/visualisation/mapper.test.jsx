@@ -13,7 +13,6 @@ describe('mapper', () => {
     let graphRels = graph.relationships()
     expect(graphNodes).to.have.lengthOf(2)
     expect(graphRels).to.have.lengthOf(1)
-    console.log(graphRels[0])
     expect(graphRels[0].source).to.equal(graphNodes[0])
     expect(graphRels[0].target).to.equal(graphNodes[1])
   })

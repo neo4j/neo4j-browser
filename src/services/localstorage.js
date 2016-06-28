@@ -21,10 +21,11 @@ function setItem (key, val, storage = window.localStorage) {
   }
 }
 
-function getStorageForKeys (keys, storage = window.localStorage) {
+function getStorageForKeys (keys, storage = window.localStorage, customMap = null) {
   let out = {}
   keys.forEach((key) => {
-    const current = getItem(key, storage)
+    let current = getItem(key, storage)
+    if (customMap) current = customMap(key, current)
     if (current !== undefined) {
       out[key] = current
     }

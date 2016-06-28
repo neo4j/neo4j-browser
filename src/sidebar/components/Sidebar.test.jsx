@@ -4,14 +4,12 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-import dbInfo from '../dbInfo'
 import favorites from '../favorites'
 import documents from '../documents'
 import settings from '../../settings'
 
 describe('Sidebar', () => {
   const reducer = combineReducers({
-    meta: dbInfo.reducer,
     favorites: favorites.reducer,
     documents: documents.reducer,
     settings: settings.reducer
