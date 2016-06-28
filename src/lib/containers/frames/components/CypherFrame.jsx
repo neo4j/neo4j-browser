@@ -2,8 +2,7 @@ import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../../services/bolt/bolt'
-// import tabNavigation from '../../../tabNavigation'
-import GraphComponent from '../../../visualisation/components/Graph'
+import GraphComponent from '../../../../visualisation/components/Graph'
 
 class CypherFrame extends React.Component {
   constructor (props) {
