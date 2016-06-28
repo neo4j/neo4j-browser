@@ -80,7 +80,7 @@
     "d3": "3.5.0",
     "file-loader": "^0.8.5",
     "html-loader": "^0.4.3",
-    "neo4j-visualization": "file:///Users/evebright/development/neo4j-visualization-react/neo4j-visualization-0.0.1.tgz",
+    "neo4j-visualization": "git+ssh://git@github.com/neo-technology/neo4j-browser-visualization.git#v0.0.1",
     "react": "^15.0.2",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-codemirror": "^0.2.6",
