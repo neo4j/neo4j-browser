@@ -7,9 +7,9 @@ const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties
   return (
     <div id='db-drawer'>
       <h4> Database Information</h4>
-      <LabelItems labels={labels} onItemClick={onItemClick}/>
-      <RelationshipItems relationshipTypes={relationshipTypes} onItemClick={onItemClick}/>
-      <PropertyItems properties={properties} onItemClick={onItemClick}/>
+      <LabelItems labels={labels.map((l) => l.val)} onItemClick={onItemClick}/>
+      <RelationshipItems relationshipTypes={relationshipTypes.map((l) => l.val)} onItemClick={onItemClick}/>
+      <PropertyItems properties={properties.map((l) => l.val)} onItemClick={onItemClick}/>
     </div>
   )
 }

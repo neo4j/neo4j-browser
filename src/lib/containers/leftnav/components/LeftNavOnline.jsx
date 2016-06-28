@@ -7,7 +7,7 @@ const LeftNavOnline = ({activeNav, context, className, activeClassName, separato
   const items = [
     {component: navItems.Query, key: 'query', className: classNames({[activeClassName]: (activeNav === 'query')})},
     {component: navItems.Separator, key: 'separator1', className: classNames({[activeClassName]: (activeNav === 'separator1'), [separatorClassName]: true})},
-    {component: navItems.DatabaseInfo, key: 'dbinfo1', className: classNames({[activeClassName]: (activeNav === 'dbinfo1')})},
+    {component: navItems.DatabaseInfo, key: 'dbinfo', className: classNames({[activeClassName]: (activeNav === 'dbinfo')})},
     {component: navItems.DatabaseInfo, key: 'dbinfo2', className: classNames({[activeClassName]: (activeNav === 'dbinfo2')})},
     {component: navItems.DatabaseInfo, key: 'dbinfo3', className: classNames({[activeClassName]: (activeNav === 'dbinfo3')})},
     {component: navItems.Separator, key: 'separator2', className: classNames({[activeClassName]: (activeNav === 'separator2'), [separatorClassName]: true})},

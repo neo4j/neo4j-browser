@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './style.css'
 
-import Main from '../Main'
+import main from '../../containers/main'
 import bookmarks from '../../containers/bookmarks'
 import leftnav from '../../containers/leftnav'
 
@@ -21,7 +21,7 @@ const BaseLayout = () => {
             separatorClassName={styles.menuSeparator}
           />
           <div className={styles.mainContent}>
-            <Main />
+            <main.components.Main />
           </div>
         </div>
       </div>
