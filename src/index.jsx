@@ -15,7 +15,8 @@ import sagas from './sagas'
 import './styles/style.css'
 import './styles/codemirror.css'
 import bookmarks from './lib/containers/bookmarks'
-import { getStorageForKeys, createPersistingStoreListener } from './services/localstorage'
+import lStorage from './services/localstorage'
+import { makeBookmarksInitialState, makeBookmarksPersistedState } from './services/localstorageMiddleware'
 
 const sagaMiddleware = createSagaMiddleware()
 const reducer = combineReducers({
@@ -30,31 +31,31 @@ const enhancer = compose(
 
 const persistedStateKeys = ['bookmarks', 'settings', 'editor', 'favorites']
 const persistedStateStorage = window.localStorage
-const initalStateManipulation = (key, val) => {
-  if (key !== 'bookmarks') return val
-  if (!val) {
-    val = bookmarks.reducer(undefined, '')
-  }
-  const out = {}
-  out.allBookmarkIds = [].concat(val.allBookmarkIds)
-  out.bookmarksById = Object.assign({}, val.bookmarksById)
-  out.activeBookmark = 'offline' // Always start in offline mode
 
-  // If offline exists, return
-  if (val.allBookmarkIds.indexOf('offline') > -1) return out
+const localStorageInitialStateMiddleware = lStorage.applyMiddleware(
+  makeBookmarksInitialState(bookmarks)
+)
 
-  // If not, add it
-  out.allBookmarkIds = ['offline'].concat(out.allBookmarkIds)
-  out.bookmarksById = Object.assign(out.bookmarksById, {'offline': {name: 'Offline', type: 'offline', id: 'offline'}})
-  return out
-}
+const localStoragePersistStateMiddleware = lStorage.applyMiddleware(
+  makeBookmarksPersistedState()
+)
 
 const store = createStore(
   reducer,
-  getStorageForKeys(persistedStateKeys, persistedStateStorage, initalStateManipulation),
+  lStorage.getStorageForKeys(
+    persistedStateKeys,
+    persistedStateStorage,
+    localStorageInitialStateMiddleware
+  ),
   enhancer
 )
-store.subscribe(createPersistingStoreListener(store, persistedStateKeys, persistedStateStorage))
+store.subscribe(lStorage.createPersistingStoreListener(
+  store,
+  persistedStateKeys,
+  persistedStateStorage,
+  localStoragePersistStateMiddleware
+))
+
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)
 

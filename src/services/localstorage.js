@@ -21,11 +21,11 @@ function setItem (key, val, storage = window.localStorage) {
   }
 }
 
-function getStorageForKeys (keys, storage = window.localStorage, customMap = null) {
+function getStorageForKeys (keys, storage = window.localStorage, middleware = null) {
   let out = {}
   keys.forEach((key) => {
     let current = getItem(key, storage)
-    if (customMap) current = customMap(key, current)
+    if (middleware) current = middleware(key, current)
     if (current !== undefined) {
       out[key] = current
     }
@@ -33,19 +33,37 @@ function getStorageForKeys (keys, storage = window.localStorage, customMap = nul
   return out
 }
 
-function createPersistingStoreListener (store, keys, storage = window.localStorage) {
+function createPersistingStoreListener (store, keys, storage = window.localStorage, middleware = null) {
   return function () {
     const currentState = store.getState()
     return keys.forEach((key) => {
-      setItem(key, currentState[key], storage)
+      let current = currentState[key]
+      if (middleware) current = middleware(key, current)
+      setItem(key, current, storage)
     })
   }
 }
 
-export {
+function applyMiddleware () {
+  if (!arguments.length) return null
+  return sequence(...arguments)
+}
+
+function sequence () {
+  const composeArgs = [...arguments]
+  return (key, out) => {
+    composeArgs.forEach((a) => {
+      out = a(key, out)
+    })
+    return out
+  }
+}
+
+export default {
   keyPrefix,
   getItem,
   setItem,
   getStorageForKeys,
-  createPersistingStoreListener
+  createPersistingStoreListener,
+  applyMiddleware
 }
