@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import * as ls from './localstorage'
+import ls from './localstorage'
 
 describe('localstorage', () => {
   it('getItem return items', () => {
@@ -108,5 +108,57 @@ describe('localstorage', () => {
     expect(storageAtTime1).to.deep.equal(stateInTime[1])
     expect(storageAtTime2).to.deep.equal(stateInTime[2])
     expect(storageAtTime3).to.deep.equal(stateInTime[3])
+  })
+
+  it('applyMiddleware should chain middlewares', () => {
+    // Given
+    const val = 'myVal'
+    const split = (_, val) => val.split('').join(' ')
+    const lower = (_, val) => val.toLowerCase()
+    const ucFirst = (_, val) => val[0].toUpperCase() + val.slice(1)
+
+    // When
+    const res = ls.applyMiddleware(split, lower, ucFirst)(null, val)
+
+    // Then
+    expect(res).to.equal('M y v a l')
+  })
+
+  it('createPersistingStoreListener should use middlewares', () => {
+    // Given
+    const keys = ['x', 'y']
+    const store = {
+      getState: () => {
+        return {'x': 'myVal', 'y': 'original'}
+      }
+    }
+    const expected = {'x': 'M y v a l', 'y': store.getState().y}
+    let storage = {state: {}}
+    storage.setItem = (key, val) => {
+      const localKey = key.substring(ls.keyPrefix.length)
+      storage.state[localKey] = JSON.parse(val)
+    }
+    const split = (key, val) => {
+      if (key !== 'x') return val
+      return val.split('').join(' ')
+    }
+    const lower = (key, val) => {
+      if (key !== 'x') return val
+      return val.toLowerCase()
+    }
+    const ucFirst = (key, val) => {
+      if (key !== 'x') return val
+      return val[0].toUpperCase() + val.slice(1)
+    }
+
+    // When
+    const mw = ls.applyMiddleware(split, lower, ucFirst)
+    const listener = ls.createPersistingStoreListener(store, keys, storage, mw)
+    listener()
+
+    // Then
+    keys.forEach((k) => {
+      expect(storage.state[k]).to.equal(expected[k])
+    })
   })
 })
