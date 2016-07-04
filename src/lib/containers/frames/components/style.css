@@ -144,3 +144,27 @@
   line-height: 36px;
   margin: 0;
 }
+
+.legend {
+  display: table-row;
+}
+
+.legend .token .count {
+  font-weight: normal;
+}
+
+.legend ul {
+  padding: 7px 9px 0px 10px;
+}
+.legend ul > li {
+  display: inline-block;
+  margin-bottom: 3px;
+}
+
+.legend ul > li .contents {
+  float: left;
+  line-height: 1em;
+  position: relative;
+  top: 3px;
+  top: -1px;
+}
