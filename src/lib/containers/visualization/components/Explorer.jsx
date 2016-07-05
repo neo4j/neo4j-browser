@@ -3,6 +3,8 @@ import neo4jVisualization from 'neo4j-visualization'
 import {InspectorComponent} from './Inspector'
 import {LegendComponent} from './Legend'
 import bolt from '../../../../services/bolt/bolt'
+import { connect } from 'react-redux'
+import { getGraphStyleData } from '../reducer'
 
 export class ExplorerComponent extends React.Component {
   constructor (props) {
@@ -10,6 +12,7 @@ export class ExplorerComponent extends React.Component {
     this.state = {}
     this.state.stats = {labels: {}, relTypes: {}}
     this.graphStyle = neo4jVisualization.neoGraphStyle()
+    this.graphStyle.loadRules(props.graphStyleData)
   }
 
   getNodeNeighbours (node, callback) {
@@ -41,3 +44,11 @@ export class ExplorerComponent extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    graphStyleData: getGraphStyleData(state)
+  }
+}
+
+export const Explorer = connect(mapStateToProps, null)(ExplorerComponent)

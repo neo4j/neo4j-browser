@@ -168,3 +168,53 @@
   top: 3px;
   top: -1px;
 }
+
+.grass-editor {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #D2D5DA;
+  min-width: 0;
+}
+
+.grass-editor-card {
+  margin: 10px;
+  background-color: #fff;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.grass-editor-card svg {
+	float: left;
+  height: 432px;
+  width: 30%;
+  background-color: #eaeaea;
+	display: inline-block;
+}
+
+.grass-editor-card .style-picker {
+  height: 432px;
+  width: 50%;
+	display: inline-block;
+}
+
+.grass-editor-card .style-picker ul {
+	list-style: none;
+}
+
+.grass-editor-card .size-picker li {
+	list-style: none;
+	display: inline;
+	padding-left: 1px;
+}
+
+.grass-editor-card .size-picker li a {
+	border-radius: 50%;
+	background-color: #aaa;
+	display: inline-block;
+	height: 24px;
+	width: 24px;
+	margin-top: 1px;
+	line-height: 0;
+	opacity: 0.4;
+}

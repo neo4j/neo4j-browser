@@ -5,6 +5,7 @@ import dbInfo from './lib/containers/dbInfo'
 import favorites from './sidebar/favorites'
 import bookmarks from './lib/containers/bookmarks'
 import leftnav from './lib/containers/leftnav'
+import visualization from './lib/containers/visualization'
 
 export default {
   [bookmarks.constants.NAME]: bookmarks.reducer,
@@ -13,5 +14,6 @@ export default {
   [editor.constants.NAME]: editor.reducer,
   [dbInfo.constants.NAME]: dbInfo.reducer,
   [favorites.constants.NAME]: favorites.reducer,
-  [leftnav.constants.NAME]: leftnav.reducer
+  [leftnav.constants.NAME]: leftnav.reducer,
+  [visualization.constants.NAME]: visualization.reducer
 }

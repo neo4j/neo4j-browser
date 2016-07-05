@@ -18,11 +18,15 @@ describe('Legend', () => {
   let graphStyle
   let stats
   let wrapper
+  let labelClickHandler
+  let relTypeClickHandler
 
   beforeEach(() => {
+    labelClickHandler = chai.spy()
+    relTypeClickHandler = chai.spy()
     graphStyle = neo4jVisualization.neoGraphStyle()
     stats = {nodeCount: 3, relCount: 3, labels: {[label1]: 2, [label2]: 1}, relTypes: {[type1]: 10, [type2]: 15}}
-    wrapper = shallow(<LegendComponent stats={stats} graphStyle={graphStyle} />)
+    wrapper = shallow(<LegendComponent stats={stats} graphStyle={graphStyle} labelClickHandler={labelClickHandler} relTypeClickHandler={relTypeClickHandler} />)
   })
 
   it('should show node labels and counts', () => {
@@ -33,7 +37,6 @@ describe('Legend', () => {
     expect(labelStats.at(0).text()).to.equal(`${label1}(2)`)
     expect(labelStats.at(1).text()).to.equal(`${label2}(1)`)
   })
-
   it('should show relationship types and counts', () => {
     const rows = wrapper.find('ul')
     expect(rows).to.have.length(2)

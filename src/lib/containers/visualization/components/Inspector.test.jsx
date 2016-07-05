@@ -18,7 +18,6 @@ describe('Inspector', () => {
     const wrapper = shallow(<InspectorComponent hoveredItem={hoveredItem} graphStyle={graphStyle} />)
     const listItems = wrapper.find('li')
     expect(listItems).to.have.length(3)
-    console.log(listItems)
     expect(listItems.at(0).text()).to.equal('Movie')
     expect(listItems.at(1).text()).to.equal('<id>:1')
     expect(listItems.at(2).text()).to.equal('name: val')
@@ -30,7 +29,6 @@ describe('Inspector', () => {
     const wrapper = shallow(<InspectorComponent hoveredItem={hoveredItem} graphStyle={graphStyle} />)
     const listItems = wrapper.find('li')
     expect(listItems).to.have.length(3)
-    console.log(listItems)
     expect(listItems.at(0).text()).to.equal('ACTED_IN')
     expect(listItems.at(1).text()).to.equal('<id>:1')
     expect(listItems.at(2).text()).to.equal('name: val')
@@ -54,4 +52,13 @@ describe('Inspector', () => {
     expect(listItems).to.have.length(1)
     expect(listItems.at(0).text()).to.equal('Displaying 10 nodes, 15 relationships.')
   })
+  // it('should render legend item if item type is legend', () => {
+  //   const graphStyle = neo4jVisualization.neoGraphStyle()
+  //   const item = {type: 'legend', relationshipCount: 15}
+  //   const hoveredItem = {type: 'legend', item: item}
+  //   const wrapper = shallow(<InspectorComponent hoveredItem={hoveredItem} graphStyle={graphStyle} />)
+  //   const listItems = wrapper.find('li')
+  //   expect(listItems).to.have.length(1)
+  //   expect(listItems.at(0).text()).to.equal('Displaying 10 nodes, 15 relationships.')
+  // })
 })

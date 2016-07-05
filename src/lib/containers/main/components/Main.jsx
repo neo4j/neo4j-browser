@@ -5,10 +5,12 @@ import bookmarks from '../../bookmarks'
 
 import QueryView from '../../../components/QueryView'
 import DatabaseInfoView from '../../../components/DatabaseInfoView'
+import visualization from '../../visualization'
 
 const viewMap = {
   'query': QueryView,
-  'dbinfo': DatabaseInfoView
+  'dbinfo': DatabaseInfoView,
+  'styling': visualization.components.GrassEditor
 }
 
 export const Main = (props) => {

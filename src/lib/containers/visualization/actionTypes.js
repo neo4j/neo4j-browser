@@ -1,0 +1,1 @@
+export const UPDATE_GRAPH_STYLE_DATA = 'visualization/UPDATE_GRAPH_STYLE_DATA'
