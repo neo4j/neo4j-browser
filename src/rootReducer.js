@@ -1,6 +1,7 @@
 import settings from './settings'
 import frames from './lib/containers/frames'
 import editor from './lib/containers/editor'
+import user from './lib/containers/user'
 import dbInfo from './lib/containers/dbInfo'
 import favorites from './sidebar/favorites'
 import bookmarks from './lib/containers/bookmarks'
@@ -12,6 +13,7 @@ export default {
   [frames.constants.NAME]: frames.reducer,
   [settings.constants.NAME]: settings.reducer,
   [editor.constants.NAME]: editor.reducer,
+  [user.constants.NAME]: user.reducer,
   [dbInfo.constants.NAME]: dbInfo.reducer,
   [favorites.constants.NAME]: favorites.reducer,
   [leftnav.constants.NAME]: leftnav.reducer,
