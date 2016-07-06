@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { CypherFrame } from './CypherFrame'
+import { WidgetFrame } from './WidgetFrame'
 import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
@@ -13,6 +14,13 @@ const StreamComponent = (props) => {
     if (frame.type === 'cypher') {
       return (
         <CypherFrame
+          key={frame.id} frame={frame}
+        />
+      )
+    }
+    if (frame.type === 'widget') {
+      return (
+        <WidgetFrame
           key={frame.id} frame={frame}
         />
       )

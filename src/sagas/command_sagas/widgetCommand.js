@@ -1,4 +1,5 @@
 import { take, put, select, call } from 'redux-saga/effects'
+import uuid from 'uuid'
 import frames from '../../lib/containers/frames'
 import widgets from '../../lib/containers/widgets'
 import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
@@ -10,9 +11,12 @@ export function * handleWidgetCommand (action, cmdchar) {
     yield call(handleWidgetAddCommand, action, cmdchar)
     return
   }
+  if (serverCmd === 'call') {
+    yield call(handleWidgetCallCommand, action, cmdchar)
+    return
+  }
   return
 }
-
 
 export function * handleWidgetAddCommand (action, cmdchar) {
   // :widget add {"name": "myName", "command": "RETURN rand()", "outputFormat": "ascii", "refreshInterval": 10, "place": "dashboard", "pos": 5, "classNames": ""}
@@ -28,9 +32,14 @@ export function * handleWidgetAddCommand (action, cmdchar) {
         !props.place ||
         props.pos < 0
       ) throw new UserException(errorMessage)
-      yield put(widgets.actions.add({...props}))
+      yield put(widgets.actions.add({...action, ...props}))
   } catch (e) {
     yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     return
   }
+}
+
+export function * handleWidgetCallCommand (action, cmdchar) {
+  const [serverCmd, name] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
+  yield put(frames.actions.add({...action, content: name, type: 'widget'}))
 }

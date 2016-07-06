@@ -1,1 +1,1 @@
-export const NAME = 'widget'
+export const NAME = 'widgets'

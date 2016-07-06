@@ -1,4 +1,5 @@
 import * as t from './actionTypes'
+import { NAME } from './constants'
 
 const initialState = {
   allIds: [],
@@ -8,8 +9,12 @@ const initialState = {
 /**
  * Selectors
 */
-export function getBookmarks (state) {
-  return state[NAME].allBookmarkIds.map((id) => state[NAME].bookmarksById[id])
+export function getWidgets (state) {
+  return state[NAME].allIds.map((id) => state[NAME].byId[id])
+}
+
+export function getWidgetByName (state, name) {
+  return getWidgets(state).filter((w) => w.name === name)[0] || false
 }
 
 /**
@@ -25,7 +30,6 @@ const add = (state, obj) => {
     {byId: byId}
   )
 }
-
 
 export default function (state = initialState, action) {
   switch (action.type) {
