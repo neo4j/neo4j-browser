@@ -5,6 +5,7 @@ import { cleanHtml } from '../services/remoteUtils'
 import remote from '../services/remote'
 import { handleServerCommand } from '../sagas/command_sagas/serverCommand'
 import { handleConfigCommand } from '../sagas/command_sagas/configCommand'
+import { handleWidgetCommand } from '../sagas/command_sagas/widgetCommand'
 
 const availableCommands = [{
   name: 'clear',
@@ -48,6 +49,12 @@ const availableCommands = [{
   exec: function * (action, cmdchar) {
     const historyState = yield select(getHistory)
     yield put(frames.actions.add({...action, type: 'history', history: historyState}))
+  }
+}, {
+  name: 'widget',
+  match: (cmd) => /^widget(\s)/.test(cmd),
+  exec: function * (action, cmdchar) {
+    yield call(handleWidgetCommand, action, cmdchar)
   }
 }, {
   name: 'catch-all',
