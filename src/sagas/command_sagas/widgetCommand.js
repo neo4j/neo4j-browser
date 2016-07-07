@@ -1,9 +1,65 @@
 import { take, put, select, call } from 'redux-saga/effects'
+import bolt from '../../services/bolt/bolt'
 import uuid from 'uuid'
 import frames from '../../lib/containers/frames'
 import widgets from '../../lib/containers/widgets'
 import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
 import { UserException } from '../../services/exceptions'
+
+function * ensureWidgetStatus (widgetsFromState = [], refs = {}) {
+  const done = []
+  const widgetIds = Object.keys(widgetsFromState)
+  widgetIds.forEach((widgetId) => {
+    const widget = widgetsFromState[widgetId]
+    done.push(widget.id)
+    if (widget.refreshInterval < 1) {
+      refs = stopAndRemoveWidget(widget.id, refs)
+      return
+    }
+    if (widget.isActive < 1) {
+      refs = stopAndRemoveWidget(widget.id, refs)
+      return
+    }
+    if (refs[widget.id] !== undefined) return // Already running
+    const ref = setInterval(() => {
+      console.log('executing', widget.id)
+      try {
+        const res = yield call(bolt.transaction, widget.command)
+        yield put(widgets.actions.didRun(widget.id, res))
+      } catch (e) {
+        console.log(e)
+      }
+    }, widget.refreshInterval*1000)
+    refs[widget.id] = ref
+  })
+  if (done.length !== refs.length) { // Removed widget(s) that needs to be stopped
+    const keys = Object.keys(refs)
+    keys.forEach((key) => {
+      if (done.indexOf(key) >= 0) return
+      refs = stopAndRemoveWidget(key, refs)
+    })
+  }
+  return refs
+}
+
+const stopAndRemoveWidget = (widgetId, refs) => {
+  const localRefs = {...refs}
+  if (localRefs[widgetId] !== undefined) {
+    clearInterval(widgetId)
+    delete localRefs[widgetId]
+    return
+  }
+  return localRefs
+}
+
+export function * startBackgroundWidgets () {
+  let refs = {}
+  while (true) {
+    yield take(widgets.actionTypes.WIDGETS_UPDATE)
+    const widgetsFromState = select(widgets.selectors.getWidgets)
+    refs = yield call(ensureWidgetStatus, widgetsFromState, refs)
+  }
+}
 
 export function * handleWidgetCommand (action, cmdchar) {
   const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
@@ -19,11 +75,11 @@ export function * handleWidgetCommand (action, cmdchar) {
 }
 
 export function * handleWidgetAddCommand (action, cmdchar) {
-  // :widget add {"name": "myName", "command": "RETURN rand()", "outputFormat": "ascii", "refreshInterval": 10, "place": "dashboard", "pos": 5, "classNames": ""}
+  // :widget add {"name": "myName", "command": "RETURN rand()", "outputFormat": "ascii", "refreshInterval": 10, "place": "dashboard", "pos": 5, "classNames": "", "arg": {}}
   const [serverCmd, propsStr] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   try {
     const props = JSON.parse(propsStr)
-    const errorMessage = 'Wrong format. It should be ":widget add {"name": "myName", "command": "RETURN rand()", "outputFormat": "ascii", "refreshInterval": 10, "place": "dashboard", "pos": 5, "classNames": ""}"'
+    const errorMessage = 'Wrong format. It should be ":widget add {"name": "myName", "command": "RETURN rand()", "outputFormat": "ascii", "refreshInterval": 10, "place": "dashboard", "pos": 5, "classNames": "", "arg":{}}"'
     if (!props ||
         !props.name ||
         !props.command ||

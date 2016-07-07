@@ -57,6 +57,9 @@ store.subscribe(lStorage.createPersistingStoreListener(
   persistedStateStorage,
   localStoragePersistStateMiddleware
 ))
+store.subscribe(() => {
+  store.dispatch({type: widgets.actions.WIDGETS_UPDATE})
+})
 
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)

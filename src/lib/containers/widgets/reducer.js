@@ -31,10 +31,23 @@ const add = (state, obj) => {
   )
 }
 
+const didRun = (state, widgetId, result) => {
+  const widget = {...state.byId[widgetId]}
+  widget.history.push(result)
+  const byId = Object.assign({}, state.byId, {widgetId: widget})
+  return Object.assign(
+    {},
+    state,
+    {byId: byId}
+  )
+}
+
 export default function (state = initialState, action) {
   switch (action.type) {
     case t.ADD:
       return add(state, action.widget)
+    case t.DID_RUN:
+      return didRun(state, action.widgetId, action.result)
     default:
       return state
   }
