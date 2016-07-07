@@ -17,6 +17,7 @@ import sagas from './sagas'
 import './styles/style.css'
 import './styles/codemirror.css'
 import bookmarks from './lib/containers/bookmarks'
+import widgets from './lib/containers/widgets'
 import lStorage from './services/localstorage'
 import { makeBookmarksInitialState, makeBookmarksPersistedState } from './services/localstorageMiddleware'
 
@@ -57,9 +58,8 @@ store.subscribe(lStorage.createPersistingStoreListener(
   persistedStateStorage,
   localStoragePersistStateMiddleware
 ))
-store.subscribe(() => {
-  store.dispatch({type: widgets.actions.WIDGETS_UPDATE})
-})
+
+setInterval(() => store.dispatch({type: widgets.actionTypes.WIDGETS_UPDATE}), 15000)
 
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)

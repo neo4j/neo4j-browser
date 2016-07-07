@@ -1,4 +1,5 @@
-import { take, put, select, call } from 'redux-saga/effects'
+import { take, put, select, call, fork } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import bolt from '../../services/bolt/bolt'
 import uuid from 'uuid'
 import frames from '../../lib/containers/frames'
@@ -6,48 +7,50 @@ import widgets from '../../lib/containers/widgets'
 import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
 import { UserException } from '../../services/exceptions'
 
+function * runWidget (widget) {
+  while (true) {
+    try {
+      const res = yield call(bolt.transaction, widget.command)
+      yield put(widgets.actions.didRun(widget.id, res))
+    } catch (e) {
+    }
+    yield call(delay, widget.refreshInterval*1000)
+  }
+}
+
 function * ensureWidgetStatus (widgetsFromState = [], refs = {}) {
   const done = []
-  const widgetIds = Object.keys(widgetsFromState)
-  widgetIds.forEach((widgetId) => {
-    const widget = widgetsFromState[widgetId]
+  for(let i = 0; i < widgetsFromState.length; i++) {
+    const widget = widgetsFromState[i]
     done.push(widget.id)
     if (widget.refreshInterval < 1) {
-      refs = stopAndRemoveWidget(widget.id, refs)
+      refs = yield stopAndRemoveWidget(widget.id, refs)
       return
     }
     if (widget.isActive < 1) {
-      refs = stopAndRemoveWidget(widget.id, refs)
+      refs = yield stopAndRemoveWidget(widget.id, refs)
       return
     }
     if (refs[widget.id] !== undefined) return // Already running
-    const ref = setInterval(() => {
-      console.log('executing', widget.id)
-      try {
-        const res = yield call(bolt.transaction, widget.command)
-        yield put(widgets.actions.didRun(widget.id, res))
-      } catch (e) {
-        console.log(e)
-      }
-    }, widget.refreshInterval*1000)
+    const ref = yield fork(runWidget, widget)
     refs[widget.id] = ref
-  })
+  }
   if (done.length !== refs.length) { // Removed widget(s) that needs to be stopped
     const keys = Object.keys(refs)
-    keys.forEach((key) => {
+    for(let i = 0; i < keys.length; i++) {
+      const key = keys[i]
       if (done.indexOf(key) >= 0) return
-      refs = stopAndRemoveWidget(key, refs)
-    })
+      refs = yield stopAndRemoveWidget(key, refs)
+    }
   }
   return refs
 }
 
-const stopAndRemoveWidget = (widgetId, refs) => {
+function * stopAndRemoveWidget (widgetId, refs) {
   const localRefs = {...refs}
   if (localRefs[widgetId] !== undefined) {
-    clearInterval(widgetId)
+    yield cancel(localRefs[widgetId])
     delete localRefs[widgetId]
-    return
   }
   return localRefs
 }
@@ -56,8 +59,9 @@ export function * startBackgroundWidgets () {
   let refs = {}
   while (true) {
     yield take(widgets.actionTypes.WIDGETS_UPDATE)
-    const widgetsFromState = select(widgets.selectors.getWidgets)
+    const widgetsFromState = yield select(widgets.selectors.getWidgets)
     refs = yield call(ensureWidgetStatus, widgetsFromState, refs)
+    yield call(delay, 5000)
   }
 }
 

@@ -23,23 +23,17 @@ export function getWidgetByName (state, name) {
 const add = (state, obj) => {
   const byId = {...state.byId, [obj.id]: obj}
   const allIds = state.allIds.concat([obj.id])
-  return Object.assign(
-    {},
-    state,
-    {allIds: allIds},
-    {byId: byId}
-  )
+  return {...state,
+    allIds: allIds,
+    byId: byId
+  }
 }
 
 const didRun = (state, widgetId, result) => {
   const widget = {...state.byId[widgetId]}
-  widget.history.push(result)
-  const byId = Object.assign({}, state.byId, {widgetId: widget})
-  return Object.assign(
-    {},
-    state,
-    {byId: byId}
-  )
+  widget.history.push({...result})
+  const byId = {...state.byId, [widgetId]: widget}
+  return {...state, byId: byId}
 }
 
 export default function (state = initialState, action) {
