@@ -160,8 +160,17 @@ export class GrassEditorComponent extends React.Component {
         <div className={styles['grass-editor-card']}>
           {labelItems(this.props.meta.labels.map((l) => l.val), this.onLabelItemClick.bind(this))}
           {relTypeItems(this.props.meta.relationshipTypes.map((l) => l.val), this.onRelTypeItemClick.bind(this))}
-          <neo4jVisualization.GraphComponent nodes={this.state.nodes} relationships={this.state.relationships} graphStyle={this.graphStyle} onItemMouseOver={() => {}} onGraphModelChange={() => {}}/>
-          {this.stylePicker()}
+          <div className={styles.exampleVisualization}>
+            <neo4jVisualization.GraphComponent nodes={this.state.nodes} relationships={this.state.relationships} graphStyle={this.graphStyle} onItemMouseOver={() => {}} onGraphModelChange={() => {}}/>
+          </div>
+          <div className={styles.editor}>
+            {this.stylePicker()}
+            <div className={styles.graphStyleTextView}>
+              <pre>
+                {JSON.stringify(this.props.graphStyleData, null, '\t')}
+              </pre>
+            </div>
+          </div>
         </div>
       </div>
     )
