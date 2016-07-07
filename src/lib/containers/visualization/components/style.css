@@ -202,14 +202,13 @@
 	list-style: none;
 }
 
-.grass-editor-card .size-picker li {
+.grass-editor-card .picker li {
 	list-style: none;
 	display: inline;
 	padding-left: 1px;
 }
 
-.grass-editor-card .size-picker li a {
-	border-radius: 50%;
+.grass-editor-card .picker li a {
 	background-color: #aaa;
 	display: inline-block;
 	height: 24px;
@@ -217,4 +216,24 @@
 	margin-top: 1px;
 	line-height: 0;
 	opacity: 0.4;
+}
+
+.color-picker li {
+	padding-right: 5px;
+}
+
+.color-picker li a {
+border-radius: 50%;
+}
+
+.size-picker li {
+	border-radius: 5px;
+}
+
+.size-picker li a {
+	border-radius: 50%;
+}
+
+.width-picker li {
+	padding-right: 5px;
 }
