@@ -1,33 +1,28 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import uuid from 'uuid'
+import { connect } from 'react-redux'
+import { UserDetailsComponent } from './UserDetails'
 import bolt from '../../../../services/bolt/bolt'
 
 export class ListUsersComponent extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {user: {listUsers: null}}
+    this.state = {user: {listUsers: this.props.users}}
   }
   extractUserNameAndRolesFromBolt (result) {
-    return bolt.recordsToTableArray(result.records)
+    let tableArray = bolt.recordsToTableArray(result.records)
+    tableArray.shift()
+    return tableArray
   }
-  makeTable (rawData) {
-    let copyOfData = rawData
-    const headings = copyOfData.slice()[0]
-    copyOfData.shift()
-    const everythingElse = copyOfData
-    const items = everythingElse.map((row) => {
+  makeTable (data) {
+    const items = data.map((row) => {
       return (
-        <tr key={uuid.v4()} className='user-info'>
-          <td className='username'>{row[0]}</td>
-          <td className='roles'>{row[1]}</td>
-          <button>Remove</button>
-        </tr>
+        <UserDetailsComponent key={uuid.v4()} username={row[0]} roles={row[1]} />
       )
     })
     return (
       <table>
-        <thead><tr><th>{headings[0]}</th><th>{headings[1]}</th></tr></thead>
+        <thead><tr><th>Username</th><th>Role(s)</th></tr></thead>
         <tbody>{items}</tbody>
       </table>
     )

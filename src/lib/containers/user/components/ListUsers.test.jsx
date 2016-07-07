@@ -1,14 +1,13 @@
 import React from 'react'
 import { ListUsersComponent } from './ListUsers'
+import { UserDetailsComponent } from './UserDetails'
 import { expect } from 'chai'
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
 
 describe('ListUsers', () => {
-  it('should show username and role of logged in user', () => {
+  it('should show list of database users', () => {
     const users = [{username: 'Admin', role: ['admin']}, {username: 'User', role: ['reader']}]
-    const wrapper = shallow(<ListUsersComponent users={users} />)
-    expect(wrapper.find('#db-list-users')).to.have.length(1)
-    expect(wrapper.find('#db-list-users').text()).to.contain('Admin')
-    expect(wrapper.find('#db-list-users').text()).to.contain('User')
+    const wrapper = mount(<ListUsersComponent users={users} />)
+    expect(wrapper.find(UserDetailsComponent)).to.have.length(2)
   })
 })

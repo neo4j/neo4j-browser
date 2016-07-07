@@ -26,7 +26,7 @@ export class UserInfoComponent extends React.Component {
       })
   }
   render () {
-    const currentUser = this.state.user.info
+    const currentUser = this.state.user
     const result = (currentUser == null) ? null : JSON.stringify(currentUser)
     return (
       <div id='db-user'>
