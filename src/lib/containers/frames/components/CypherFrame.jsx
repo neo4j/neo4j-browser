@@ -28,7 +28,7 @@ class CypherFrame extends React.Component {
     const errors = frame.errors && frame.errors.fields || false
     const result = frame.result || false
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
-    if (result) {
+    if (result.records && result.records.length > 0) {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (this.state.nodesAndRelationships.nodes.length > 0) {
         frameContents = (
@@ -45,6 +45,13 @@ class CypherFrame extends React.Component {
         <div>
           {errors[0].code}
           <pre>{errors[0].message}</pre>
+        </div>
+      )
+    }
+    else if (result) {
+      frameContents = (
+        <div>
+          <pre>{JSON.stringify(result, null, '\t')}</pre>
         </div>
       )
     }
