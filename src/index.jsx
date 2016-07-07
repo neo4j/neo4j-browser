@@ -29,7 +29,7 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
-const persistedStateKeys = ['bookmarks', 'settings', 'editor', 'favorites']
+const persistedStateKeys = ['bookmarks', 'settings', 'editor', 'favorites', 'visualization']
 const persistedStateStorage = window.localStorage
 
 const localStorageInitialStateMiddleware = lStorage.applyMiddleware(
