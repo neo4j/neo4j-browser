@@ -47,11 +47,10 @@ class CypherFrame extends React.Component {
           <pre>{errors[0].message}</pre>
         </div>
       )
-    }
-    else if (result) {
+    } else {
       frameContents = (
         <div>
-          <pre>{JSON.stringify(result, null, '\t')}</pre>
+          <pre>{JSON.stringify(frame, null, '\t')}</pre>
         </div>
       )
     }
