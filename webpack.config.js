@@ -1,6 +1,8 @@
 var webpack = require('webpack')
 var path = require('path')
 var precss = require('precss')
+var TransferWebpackPlugin = require('copy-webpack-plugin');
+
 
 module.exports = {
   entry: [
@@ -61,7 +63,10 @@ module.exports = {
     hot: true
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new TransferWebpackPlugin([
+    { from: 'node_modules/neo4j-visualization/dist/assets', to: 'assets' }
+    ])
   ],
   node: {
     net: 'empty',

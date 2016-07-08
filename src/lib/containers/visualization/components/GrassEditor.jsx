@@ -39,7 +39,7 @@ const relTypeItems = (relTypes, onItemClick) => {
 }
 
 const getLabelCypher = (label) => {
-  return `MATCH (n:${label}) RETURN n LIMIT 5`
+  return `MATCH (n:${label}) RETURN n LIMIT 1`
 }
 
 const getRelTypeCypher = (relType) => {
@@ -81,7 +81,7 @@ export class GrassEditorComponent extends React.Component {
     }
   }
 
-  picker (styleProps, styleProvider, className, selector) {
+  picker (styleProps, styleProvider, className, selector, textProvider=() => {return ""}) {
     return styleProps.map((styleProp) => {
       const onClick = () => {
         this.graphStyle.changeForSelector(selector, styleProp)
@@ -89,9 +89,10 @@ export class GrassEditorComponent extends React.Component {
         this.props.update(this.graphStyle.toSheet())
       }
       const style = styleProvider(styleProp)
+      const text = textProvider(styleProp)
       return (
         <li onClick={onClick} className={className}>
-          <a style={style}/>
+          <a style={style}>{text}</a>
         </li>
       )
     })
@@ -128,13 +129,24 @@ export class GrassEditorComponent extends React.Component {
     )
   }
 
+  iconPicker (selector) {
+    return (
+      <li>
+        Icon:
+        <ul className={`${styles['icon-picker']} ${styles['picker']}`}>
+          {this.picker(this.graphStyle.defaultIconCodes(), (iconCode) => { return { "font-family": "streamline"} }, 'icon-picker-item', selector, (iconCode) => {return iconCode['icon-code']} )}
+        </ul>
+      </li>
+    )
+  }
+
   stylePicker () {
     let pickers
     let title
     if (this.state.selectedLabel) {
       const styleForLabel = this.graphStyle.forNode({ labels: [this.state.selectedLabel] })
       const inlineStyle = {'backgroundColor': styleForLabel.get('color'), 'color': styleForLabel.get('text-color-internal')}
-      pickers = [this.sizePicker(styleForLabel.selector), this.colorPicker(styleForLabel.selector)]
+      pickers = [this.sizePicker(styleForLabel.selector), this.colorPicker(styleForLabel.selector), this.iconPicker(styleForLabel.selector)]
       title = (<h1 className={`${styles.token} ${styles['token-label']}`} style={inlineStyle}>{this.state.selectedLabel}</h1>)
     } else if (this.state.selectedRelType) {
       const styleForRelType = this.graphStyle.forRelationship({type: this.state.selectedRelType})
