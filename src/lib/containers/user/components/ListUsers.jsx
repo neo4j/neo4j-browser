@@ -36,7 +36,7 @@ export class ListUsersComponent extends React.Component {
   makeTable (data) {
     const items = data.map((row) => {
       return (
-        <UserDetailsComponent key={uuid.v4()} username={row[0]} roles={row[1]} callBack={() => this.listUsers()} />
+        <UserDetailsComponent key={uuid.v4()} username={row[0]} roles={row[1]} callback={() => this.listUsers()} />
       )
     })
     return (
@@ -67,15 +67,12 @@ export class ListUsersComponent extends React.Component {
     const listRoles = this.state.listRoles
     const renderedListOfUsers = (listUsers == null) ? 'No users' : this.makeTable(listUsers)
     const renderedListOfRoles = (listRoles == null) ? 'No roles' : JSON.stringify(listRoles)
+    const listOfAvailableRoles = (listRoles == null) ? '-' : listRoles.map((i)=>{ return i[0]}).join(', ')
     return (
       <div className='db-list-users'>
         <div>
-          <h3>List by username</h3>
+          <h3>List by username ({listOfAvailableRoles})</h3>
           {renderedListOfUsers}
-        </div>
-        <div className='roles'>
-          <h3>List by roles</h3>
-          {renderedListOfRoles}
         </div>
         <div>
           <h3>Add new users</h3>

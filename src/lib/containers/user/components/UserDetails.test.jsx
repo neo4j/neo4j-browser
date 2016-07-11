@@ -11,7 +11,7 @@ describe('UserDetails', () => {
     const wrapper = shallow(<UserDetailsComponent username={user.username} roles={user.roles} />)
     expect(wrapper.find('.user-info')).to.have.length(1)
     expect(wrapper.find('.user-info .username').text()).to.contain(user.username)
-    expect(wrapper.find('.roles').text()).to.contain(user.roles)
+    expect(wrapper.find('.roles').first().html()).to.contain(user.roles[0])
   })
 
   chai.use(spies)
