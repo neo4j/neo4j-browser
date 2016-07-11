@@ -13,9 +13,9 @@ describe('ListUsers', () => {
   })
 
   it('should show list of database users by role', () => {
-    const roles = ['somerole', ['user1', 'user2']]
+    const roles = ['user1', 'user2']
     const props = {roles: roles}
     const wrapper = shallow(<ListUsersComponent {...props} />)
-    expect(wrapper.find('.roles')).to.contain(JSON.stringify(roles))
+    expect(wrapper.find('.roles').text()).to.equal('user1, user2')
   })
 })

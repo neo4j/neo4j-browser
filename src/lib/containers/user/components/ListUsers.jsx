@@ -66,8 +66,8 @@ export class ListUsersComponent extends React.Component {
     const listUsers = this.state.listUsers
     const listRoles = this.state.listRoles
     const renderedListOfUsers = (listUsers == null) ? 'No users' : this.makeTable(listUsers)
-    const renderedListOfRoles = (listRoles == null) ? 'No roles' : JSON.stringify(listRoles)
-    const listOfAvailableRoles = (listRoles == null) ? '-' : listRoles.map((i)=>{ return i[0]}).join(', ')
+    const listOfAvailableRoles = (listRoles == null) ? '-'
+      : <span className='roles'>{listRoles.join(', ')}</span>
     return (
       <div className='db-list-users'>
         <div>

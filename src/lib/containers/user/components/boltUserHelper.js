@@ -10,7 +10,7 @@ export function getListOfUsersWithRole (callBack) {
   return callProcedure('CALL dbms.listUsers', callBack)
 }
 export function getListOfRolesWithUsers (callBack) {
-  return callProcedure('CALL dbms.listRoles', callBack)
+  return callProcedure('CALL dbms.listRoles YIELD role', callBack)
 }
 export function createDatabaseUser ({username, password, forcePasswordChange}, callBack) {
   return callProcedure(`CALL dbms.createUser("${username}", "${password}", ${forcePasswordChange})`, callBack)
