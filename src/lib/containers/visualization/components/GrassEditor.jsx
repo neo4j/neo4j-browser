@@ -81,7 +81,7 @@ export class GrassEditorComponent extends React.Component {
     }
   }
 
-  picker (styleProps, styleProvider, className, selector, textProvider=() => {return ""}) {
+  picker (styleProps, styleProvider, className, selector, textProvider = () => { return '' }) {
     return styleProps.map((styleProp) => {
       const onClick = () => {
         this.graphStyle.changeForSelector(selector, styleProp)
@@ -134,7 +134,7 @@ export class GrassEditorComponent extends React.Component {
       <li>
         Icon:
         <ul className={`${styles['icon-picker']} ${styles['picker']}`}>
-          {this.picker(this.graphStyle.defaultIconCodes(), (iconCode) => { return { "font-family": "streamline"} }, 'icon-picker-item', selector, (iconCode) => {return iconCode['icon-code']} )}
+          {this.picker(this.graphStyle.defaultIconCodes(), (iconCode) => { return { 'fontFamily': 'streamline' } }, 'icon-picker-item', selector, (iconCode) => { return iconCode['icon-code'] })}
         </ul>
       </li>
     )

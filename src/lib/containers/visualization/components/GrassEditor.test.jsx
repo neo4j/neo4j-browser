@@ -33,19 +33,26 @@ describe('grass editor', () => {
       wrapper.find('.token-label').at(0).simulate('click')
       expect(wrapper.find('.color-picker-item')).to.have.length(graphStyle.defaultColors().length)
       expect(wrapper.find('.size-picker-item')).to.have.length(graphStyle.defaultSizes().length)
+      expect(wrapper.find('.icon-picker-item')).to.have.length(graphStyle.defaultIconCodes().length)
     })
-    it('should change update graphstyle data with color change for label', () => {
+    it('should update graphstyle data with color change for label', () => {
       expect(graphStyle.forNode({labels: ['label1']}).get('color')).to.not.equal(graphStyle.defaultColors()[2].color)
       wrapper.find('.token-label').at(0).simulate('click')
       wrapper.find('.color-picker-item').at(2).simulate('click')
       expect(graphStyle.forNode({labels: ['label1']}).get('color')).to.equal(graphStyle.defaultColors()[2].color)
     })
-    it('should change update graphstyle data with size change for label', () => {
+    it('should update graphstyle data with size change for label', () => {
       expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.not.equal(graphStyle.defaultSizes()[1].diameter)
       wrapper.find('.token-label').at(0).simulate('click')
       wrapper.find('.size-picker-item').at(1).simulate('click')
       expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.equal(graphStyle.defaultSizes()[1].diameter)
     })
+    // it('should change update graphstyle data with size change for label', () => {
+    //   expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.not.equal(graphStyle.defaultSizes()[1].diameter)
+    //   wrapper.find('.token-label').at(0).simulate('click')
+    //   wrapper.find('.size-picker-item').at(1).simulate('click')
+    //   expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.equal(graphStyle.defaultSizes()[1].diameter)
+    // })
   })
   describe('relationship type style editing', () => {
     it('should display styling pickers when relationship selector is picked', () => {

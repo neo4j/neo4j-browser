@@ -1,8 +1,7 @@
 var webpack = require('webpack')
 var path = require('path')
 var precss = require('precss')
-var TransferWebpackPlugin = require('copy-webpack-plugin');
-
+var TransferWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: [
