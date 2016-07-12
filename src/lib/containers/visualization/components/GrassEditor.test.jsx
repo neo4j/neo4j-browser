@@ -47,12 +47,12 @@ describe('grass editor', () => {
       wrapper.find('.size-picker-item').at(1).simulate('click')
       expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.equal(graphStyle.defaultSizes()[1].diameter)
     })
-    // it('should change update graphstyle data with size change for label', () => {
-    //   expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.not.equal(graphStyle.defaultSizes()[1].diameter)
-    //   wrapper.find('.token-label').at(0).simulate('click')
-    //   wrapper.find('.size-picker-item').at(1).simulate('click')
-    //   expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.equal(graphStyle.defaultSizes()[1].diameter)
-    // })
+    it('should change update graphstyle data with size change for label', () => {
+      expect(graphStyle.forNode({labels: ['label1']}).get('diameter')).to.not.equal(graphStyle.defaultSizes()[1].diameter)
+      wrapper.find('.token-label').at(0).simulate('click')
+      wrapper.find('.icon-picker-item').at(1).simulate('click')
+      expect(graphStyle.forNode({labels: ['label1']}).get('icon-code')).to.equal(graphStyle.defaultIconCodes()[1]['icon-code'])
+    })
   })
   describe('relationship type style editing', () => {
     it('should display styling pickers when relationship selector is picked', () => {
