@@ -23,9 +23,9 @@ if global? then global.neo = global.neo || {};
 if window? then window.neo = window.neo || {};
 
 neo = global?.neo || window?.neo
-bolt = window.neo4j.v1
 
 class neo.boltIntHelpers
+  bolt = window.neo4j.v1
   stringify = (val) ->
     return val.toString() if bolt.isInt val
     return "[" + val.map((item) -> stringify(item)).join() + "]" if Array.isArray(val)

@@ -84,6 +84,7 @@ angular.module('neo4jApp.services')
           q.promise
 
         internalRelationships: (graph, existingNodes, newNodes) ->
+          bolt = window.neo4j.v1
           q = $q.defer()
           if newNodes.length is 0
             q.resolve()

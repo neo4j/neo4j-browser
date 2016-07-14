@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 describe 'BoltIntHelpers', () ->
   # load the service's module
   beforeEach module 'neo.boltint'
-
+  bolt = window.neo4j.v1
 
 # instantiate service
   BoltIntHelpers = {}
