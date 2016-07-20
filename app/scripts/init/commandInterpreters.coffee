@@ -117,7 +117,7 @@ angular.module('neo4jApp')
       matches: "#{cmdchar}schema"
       exec: ['ProtocolFactory', (ProtocolFactory) ->
         (input, q) ->
-          ProtocolFactory.getSchemaService().getSchema(input)
+          ProtocolFactory.getStoredProcedureService().getSchema(input)
           .then(
             (res) ->
               q.resolve(res)

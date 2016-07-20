@@ -37,7 +37,7 @@ angular.module('neo4jApp.services')
             "RETURN 'indexes' AS name, indexes AS items " +
             "UNION " +
             "CALL db.constraints() YIELD description " +
-            "WITH COLLECT({description: description}) AS constraints " + 
+            "WITH COLLECT({description: description}) AS constraints " +
             "RETURN 'constraints' AS name, constraints AS items"
           ).promise.then((result) ->
             return q.resolve(Bolt.constructSchemaResult([], [])) unless result.records.length
