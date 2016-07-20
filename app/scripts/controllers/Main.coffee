@@ -61,6 +61,10 @@ angular.module('neo4jApp.controllers')
             )
           ).then( ->
             fetchJMX()
+          ).then( ->
+            ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
+              $scope.user = res
+            )
           )
 
         fetchJMX = ->

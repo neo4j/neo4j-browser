@@ -31,6 +31,15 @@ angular.module('neo4jApp.services')
         getJmx: (whatToGet = []) ->
           Server.jmx(whatToGet)
 
+        getUser: ->
+          q = $q.defer()
+          Server.cypher('', { query: 'CALL dbms.showCurrentUser()'}).then(
+            (res) ->
+              data = res.data
+              user = data.data[0]
+              q.resolve {username: user[0], roles: user[1]}
+          )
+          q.promise
         getVersion: (version) ->
           q = $q.defer()
           q.resolve Server.version(version)
