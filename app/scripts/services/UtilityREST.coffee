@@ -55,6 +55,23 @@ angular.module('neo4jApp.services')
               q.resolve users
           )
           q.promise
+
+        suspendUser: (username) ->
+          q = $q.defer()
+          Server.cypher('', { query: "CALL dbms.suspendUser('#{username}')"}).then(
+            (res) ->
+              q.resolve res
+          )
+          q.promise
+
+        activateUser: (username) ->
+          q = $q.defer()
+          Server.cypher('', { query: "CALL dbms.activateUser('#{username}')"}).then(
+            (res) ->
+              q.resolve true
+          )
+          q.promise
+
         getVersion: (version) ->
           q = $q.defer()
           q.resolve Server.version(version)

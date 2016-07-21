@@ -83,6 +83,20 @@ angular.module('neo4jApp.services')
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        activateUser: (username) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.activateUser('#{username}')").promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        suspendUser: (username) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.suspendUser('#{username}')").promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
         getVersion: ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.components()").promise

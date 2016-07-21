@@ -9,8 +9,14 @@ article.help(ng-controller="UserAdminController")
             tr
               th Username
               th Role(s)
-              th Activated
+              th Status
               tr(ng-repeat="user in users")
                 td {{user.username}}
                 td {{user.roles.join(', ')}}
-                td {{user.flags.indexOf('is_suspended') < 0}}
+                td {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
+                td
+                  button(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)')
+                    | Suspend user
+                  button(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)')
+                    | Activate user
+

@@ -28,9 +28,17 @@ angular.module('neo4jApp.controllers')
 
     $scope.refresh = () ->
       ProtocolFactory.getStoredProcedureService().getUserList().then((response) ->
-        $scope.users = response
+        $scope.users = response.filter((user) -> $scope.user.username isnt user.username)
         ).catch((r) -> )
 
+    $scope.activate = (username) ->
+      ProtocolFactory.getStoredProcedureService().activateUser(username).then(() ->
+        $scope.refresh()
+      ).catch((r) -> )
+    $scope.suspend = (username) ->
+      ProtocolFactory.getStoredProcedureService().suspendUser(username).then(() ->
+        $scope.refresh()
+      ).catch((r) -> )
 
     $scope.refresh()
 ]
