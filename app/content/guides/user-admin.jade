@@ -1,0 +1,16 @@
+article.help(ng-controller="UserAdminController")
+  .container-fluid
+    section.row
+      .col-md-12.col-sm-12
+        .panel.panel-default
+          .panel-heading
+            h4 Users
+          table.table.table-condensed
+            tr
+              th Username
+              th Role(s)
+              th Activated
+              tr(ng-repeat="user in users")
+                td {{user.username}}
+                td {{user.roles.join(', ')}}
+                td {{user.flags.indexOf('is_suspended') < 0}}

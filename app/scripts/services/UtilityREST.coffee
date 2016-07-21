@@ -40,6 +40,21 @@ angular.module('neo4jApp.services')
               q.resolve {username: user[0], roles: user[1]}
           )
           q.promise
+        getUserList: ->
+          q = $q.defer()
+          Server.cypher('', { query: 'CALL dbms.listUsers()'}).then(
+            (res) ->
+              data = res.data
+              users = data.data.map((user) ->
+                {
+                  username: user[0],
+                  roles: user[1],
+                  flags: user[2]
+                }
+              )
+              q.resolve users
+          )
+          q.promise
         getVersion: (version) ->
           q = $q.defer()
           q.resolve Server.version(version)
