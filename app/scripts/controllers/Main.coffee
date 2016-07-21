@@ -50,21 +50,25 @@ angular.module('neo4jApp.controllers')
           $scope.host = $window.location.host
           $q.when()
           .then( ->
-            ProtocolFactory.getMetaService().getMeta().then((res) ->
+            ProtocolFactory.getStoredProcedureService().getMeta().then((res) ->
               $scope.labels = res.labels
               $scope.relationships = res.relationships
               $scope.propertyKeys = res.propertyKeys
             )
           ).then( ->
-            ProtocolFactory.getVersionService().getVersion($scope.version).then((res) ->
+            ProtocolFactory.getStoredProcedureService().getVersion($scope.version).then((res) ->
               $scope.version = res
             )
           ).then( ->
             fetchJMX()
+          ).then( ->
+            ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
+              $scope.user = res
+            )
           )
 
         fetchJMX = ->
-          ProtocolFactory.getJmxService().getJmx([
+          ProtocolFactory.getStoredProcedureService().getJmx([
             "org.neo4j:instance=kernel#0,name=Configuration"
             "org.neo4j:instance=kernel#0,name=Kernel"
             "org.neo4j:instance=kernel#0,name=Store file sizes"

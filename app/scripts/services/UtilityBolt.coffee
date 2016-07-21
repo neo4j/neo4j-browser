@@ -37,7 +37,7 @@ angular.module('neo4jApp.services')
             "RETURN 'indexes' AS name, indexes AS items " +
             "UNION " +
             "CALL db.constraints() YIELD description " +
-            "WITH COLLECT({description: description}) AS constraints " + 
+            "WITH COLLECT({description: description}) AS constraints " +
             "RETURN 'constraints' AS name, constraints AS items"
           ).promise.then((result) ->
             return q.resolve(Bolt.constructSchemaResult([], [])) unless result.records.length
@@ -66,6 +66,21 @@ angular.module('neo4jApp.services')
             res3 = result.records[2]
             q.resolve(Bolt.constructMetaResult res, res2, res3)
           )
+          q.promise
+
+        getUser: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.showCurrentUser()').promise
+            .then((r) -> q.resolve Bolt.constructUserResult r)
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+
+        getUserList: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.listUsers()').promise
+          .then((r) -> q.resolve Bolt.constructUserListResult r)
+          .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         getVersion: ->

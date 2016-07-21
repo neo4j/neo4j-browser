@@ -173,6 +173,17 @@ angular.module('neo4jApp.services')
         return null unless r.records
         {version: r.records[0].get('versions')[0], edition: r.records[0].get('edition')}
 
+      constructUserResult = (r) ->
+        return null unless r.records
+        variable = {username: r.records[0].get('username'), roles:r.records[0].get('roles') }
+        return variable
+
+      constructUserListResult = (r) ->
+        return null unless r.records
+        r.records.map((user) ->
+          {username: user.get('username'), roles:user.get('roles'), flags: user.get('flags') }
+        )
+
       jmxResultToRESTResult = (r, whatToGet = []) ->
         return {data: []} unless r.records
         filtered = r.records.filter((record) -> whatToGet.indexOf(record.get('name')) > -1)
@@ -377,6 +388,8 @@ angular.module('neo4jApp.services')
         transaction: transaction,
         boltTransaction: boltTransaction,
         callProcedure: callProcedure,
+        constructUserResult: constructUserResult,
+        constructUserListResult: constructUserListResult,
         constructResult: (res) ->
           boltResultToRESTResult res
         constructMetaResult: (labels, relationshipTypes, propertyKeys) ->

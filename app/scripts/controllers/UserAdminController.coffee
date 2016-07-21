@@ -18,24 +18,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-'use strict';
+'use strict'
 
-angular.module('neo4jApp.services')
-  .factory 'ProtocolFactory', [
-    'Settings'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    'UtilityREST'
-    'UtilityBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, UtilityREST, UtilityBolt) ->
-      {
-        getCypherTransaction: (useBolt = Settings.useBolt) ->
-          return new CypherTransactionBolt() if useBolt
-          return new CypherTransactionREST()
+angular.module('neo4jApp.controllers')
+  .controller 'UserAdminController', [
+    '$scope', 'Settings', 'ProtocolFactory', '$timeout'
+  ($scope, Settings, ProtocolFactory, $timeout) ->
+    $scope.autoRefresh = false
 
-        getStoredProcedureService: (useBolt = Settings.useBolt) ->
-          return UtilityBolt if useBolt
-          return UtilityREST
-      }
+    $scope.refresh = () ->
+      ProtocolFactory.getStoredProcedureService().getUserList().then((response) ->
+        $scope.users = response
+        ).catch((r) -> )
 
+
+    $scope.refresh()
 ]
