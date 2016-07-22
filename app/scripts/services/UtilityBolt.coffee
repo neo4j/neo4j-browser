@@ -97,6 +97,13 @@ angular.module('neo4jApp.services')
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        deleteUser: (username) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.deleteUser('#{username}')").promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
         getVersion: ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.components()").promise

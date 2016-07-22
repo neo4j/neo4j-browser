@@ -24,3 +24,6 @@ div(fullscreen)
                             | Suspend user
                           button(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)')
                             | Activate user
+                        td
+                          button(ng-click='delete(user.username)')
+                            | Delete user

@@ -64,6 +64,14 @@ angular.module('neo4jApp.services')
           )
           q.promise
 
+        deleteUser: (username) ->
+          q = $q.defer()
+          Server.cypher('', { query: "CALL dbms.deleteUser('#{username}')"}).then(
+            (res) ->
+              q.resolve res
+          )
+          q.promise
+
         activateUser: (username) ->
           q = $q.defer()
           Server.cypher('', { query: "CALL dbms.activateUser('#{username}')"}).then(
