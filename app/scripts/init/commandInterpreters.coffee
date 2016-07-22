@@ -301,6 +301,17 @@ angular.module('neo4jApp')
       ]
 
     FrameProvider.interpreters.push
+      type: 'admin'
+      fullscreenable: true
+      templateUrl: 'views/frame-user-admin.html'
+      matches: (input) ->
+        pattern = new RegExp("^#{cmdchar}admin")
+        input.match(pattern)
+      exec: ['Frame', 'Settings', (Frame, Settings) ->
+        (input, q) -> q.resolve()
+      ]
+
+    FrameProvider.interpreters.push
       type: 'auth'
       fullscreenable: false
       templateUrl: 'views/frame-disconnect.html'

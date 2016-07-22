@@ -1,0 +1,26 @@
+div(fullscreen)
+  .outer
+    include partials/frame-common-actions
+    .inner
+      .view-result.help(ng-hide='frame.hasErrors')
+        article.help(ng-controller="UserAdminController")
+          .container-fluid
+            section.row
+              .col-md-12.col-sm-12
+                .panel.panel-default
+                  .panel-heading
+                    h4 Users
+                  table.table.table-condensed
+                    tr
+                      th Username
+                      th Role(s)
+                      th Status
+                      tr(ng-repeat="user in users")
+                        td {{user.username}}
+                        td {{user.roles.join(', ')}}
+                        td {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
+                        td
+                          button(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)')
+                            | Suspend user
+                          button(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)')
+                            | Activate user
