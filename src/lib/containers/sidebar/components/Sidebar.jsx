@@ -3,7 +3,7 @@ import dbInfo from '../../dbInfo'
 import favorites from '../favorites'
 import documents from '../documents'
 import tabNavigation from '../../tabNavigation'
-import settings from '../../../../settings'
+import settings from '../../settings'
 
 import styles from './style.css'
 

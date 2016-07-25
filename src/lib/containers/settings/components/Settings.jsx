@@ -2,6 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
 import * as actions from '../actions'
+import {List, ListItem} from 'material-ui/List'
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
+import styles from './style.css'
 
 const visualSettings =
   [
@@ -26,29 +30,27 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
     const tooltip = visualSetting[setting].tooltip
 
     return (
-      <li className='setting' key={uuid.v4()}>
+      <ListItem className={styles.setting} key={uuid.v4()}>
         <label title={tooltip}>{visual}</label>
-        <input
+        <TextField
+          id={uuid.v4()}
           defaultValue={settings[setting]}
           onChange={(event) => {
             settings[setting] = event.target.value
-          }
-        }/>
-      </li>
+          }}
+          fullWidth={true}
+        />
+      </ListItem>
     )
   })
 
   return (
     <div id='db-settings'>
       <h4>Settings</h4>
-      <div>
-        <ul>
-          {mappedSettings}
-        </ul>
-        <button onClick={() => onSettingsSave(settings)}>
-          Save
-        </button>
-      </div>
+      <List>
+        {mappedSettings}
+      </List>
+      <RaisedButton label='Save' onClick={() => onSettingsSave(settings)}/>
     </div>
   )
 }

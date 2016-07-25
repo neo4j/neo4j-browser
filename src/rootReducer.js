@@ -1,4 +1,4 @@
-import settings from './settings'
+import settings from './lib/containers/settings'
 import frames from './lib/containers/frames'
 import editor from './lib/containers/editor'
 import user from './lib/containers/user'
