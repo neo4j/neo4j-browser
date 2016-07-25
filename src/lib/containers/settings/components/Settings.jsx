@@ -38,7 +38,7 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
           onChange={(event) => {
             settings[setting] = event.target.value
           }}
-          fullWidth={true}
+          fullWidth
         />
       </ListItem>
     )

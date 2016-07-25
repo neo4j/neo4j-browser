@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card'
+import { Card, CardHeader } from 'material-ui/Card'
 
 import styles from './style_frame.css'
 

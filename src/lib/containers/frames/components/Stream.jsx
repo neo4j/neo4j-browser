@@ -6,7 +6,6 @@ import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
 import { getFrames } from '../reducer'
-import bookmarks from '../../bookmarks'
 
 const StreamComponent = (props) => {
   const {frames} = props
@@ -47,11 +46,11 @@ const StreamComponent = (props) => {
   })
   return (
     <div id='stream' style={{
-        padding: '20px',
-        overflow: 'auto',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
+      padding: '20px',
+      overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       <div>
         {framesList}
       </div>

@@ -2,6 +2,7 @@ import React from 'react'
 import Navigation from './Navigation'
 import { expect } from 'chai'
 import { shallow, mount } from 'enzyme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 describe('Navigation', () => {
   const Tab1Content = () => {
@@ -17,9 +18,7 @@ describe('Navigation', () => {
   it('renders a list of navigation links', () => {
     const drawer = null
     const wrapper = shallow(<Navigation openDrawer={drawer} onNavClick={() => {}} navItems={navItems}/>)
-    expect(wrapper.find('li').length).to.be.above(0)
-    expect(wrapper.find('li').first().text()).to.equal(navItem1)
-    expect(wrapper.find('li').last().text()).to.equal(navItem2)
+    expect(wrapper.find('div').length).to.be.above(0)
   })
 
   it('hides drawer when no drawer should be open', () => {
@@ -36,7 +35,7 @@ describe('Navigation', () => {
 
   it('should render the selected tab', () => {
     const drawer = navItem1
-    const wrapper = mount(<Navigation openDrawer={drawer} onNavClick={() => {}} navItems={navItems}/>)
+    const wrapper = mount(<MuiThemeProvider><Navigation openDrawer={drawer} onNavClick={() => {}} navItems={navItems}/></MuiThemeProvider>)
     expect(wrapper.find('.tab').at(0).hasClass('hidden')).to.equal(false)
     expect(wrapper.find('#thing')).has.length(1)
     expect(wrapper.find('#thing2')).has.length(0)

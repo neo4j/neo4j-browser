@@ -19,8 +19,7 @@ describe('commandInterpreter Sagas', () => {
       const actualHistoryPut = watchSaga.next(payload).value
       const expectedHistoryPut = put(editor.actions.addHistory(payload))
       watchSaga.next() // Settings read
-      watchSaga.next(storeSettings) // Check for context
-      const actualCallAction = watchSaga.next().value
+      const actualCallAction = watchSaga.next(storeSettings).value
       const expectedCallAction = call(handleClientCommand, payload, storeSettings.cmdchar)
 
       // Then
@@ -40,8 +39,7 @@ describe('commandInterpreter Sagas', () => {
       const actualHistoryPut = watchSaga.next(payload).value
       const expectedHistoryPut = put(editor.actions.addHistory(payload))
       watchSaga.next() // Settings read
-      watchSaga.next(storeSettings) // Check for context
-      const actualBoltAction = watchSaga.next().value
+      const actualBoltAction = watchSaga.next(storeSettings).value
       const expectedBoltAction = call(bolt.transaction, payload.cmd)
       const actualPutAction = watchSaga.next().value
       const expectedPutAction = put(frames.actions.add({cmd: payload.cmd}))

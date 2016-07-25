@@ -36,7 +36,7 @@ class Navigation extends React.Component {
     return (
       <div className={this.props.sidebarClassName}>
         <List className={this.props.listClassName}>{navItems}</List>
-        <div className={tabClass}>
+        <div className={tabClass + ' tab'}>
           {getContentToShow(openDrawer)}
         </div>
       </div>

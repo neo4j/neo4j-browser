@@ -14,7 +14,10 @@ const createItems = (originalList, onItemClick, className, editorCommandTemplate
       <Chip
         key={index}
         onTouchTap={() => onItemClick(getNodesCypher)}
-        className={styles.chip}>
+        className={classNames({
+          [styles.chip]: true,
+          [className]: true
+        })}>
         {text}
       </Chip>
     )
@@ -35,10 +38,9 @@ const LabelItems = ({labels, onItemClick}) => {
     <div>
       <h5> Node Labels </h5>
       <div className={classNames({
-          [styles['wrapper']]: true,
-          [styles['label-wrapper']]: true
-        })
-      }>
+        [styles['wrapper']]: true,
+        [styles['label-wrapper']]: true
+      })}>
         {labelItems}
       </div>
     </div>
@@ -59,10 +61,9 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
     <div>
       <h5>Relationship Types </h5>
       <div className={classNames({
-          [styles['wrapper']]: true,
-          [styles['relationship-wrapper']]: true
-        })
-      }>
+        [styles['wrapper']]: true,
+        [styles['relationship-wrapper']]: true
+      })}>
         {relationshipItems}
       </div>
     </div>
@@ -80,10 +81,9 @@ const PropertyItems = ({properties, onItemClick}) => {
     <div>
       <h5> Property Keys </h5>
       <div className={classNames({
-          [styles['wrapper']]: true,
-          [styles['property-key-wrapper']]: true
-        })
-      }>
+        [styles['wrapper']]: true,
+        [styles['property-key-wrapper']]: true
+      })}>
         {propertyItems}
       </div>
     </div>
