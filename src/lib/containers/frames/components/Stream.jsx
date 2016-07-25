@@ -5,7 +5,7 @@ import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
-import { getFramesInContext } from '../reducer'
+import { getFrames } from '../reducer'
 import bookmarks from '../../bookmarks'
 
 const StreamComponent = (props) => {
@@ -61,7 +61,7 @@ const StreamComponent = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    frames: getFramesInContext(state, bookmarks.selectors.getActiveBookmark(state)).reverse()
+    frames: getFrames(state).reverse()
   }
 }
 
