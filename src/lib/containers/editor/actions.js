@@ -1,10 +1,9 @@
 import * as t from './actionTypes'
 
-export const executeCommand = (cmd, contextId) => {
+export const executeCommand = (cmd) => {
   return {
     type: t.USER_COMMAND_QUEUED,
-    cmd,
-    id: contextId
+    cmd
   }
 }
 
