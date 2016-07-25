@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import editor from '../'
-import favorites from '../../../../sidebar/favorites'
+import favorites from '../../sidebar/favorites'
 import { getHistory, getEditorContent } from '../../../../selectors'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'

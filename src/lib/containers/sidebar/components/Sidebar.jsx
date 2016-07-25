@@ -1,9 +1,11 @@
 import React from 'react'
-import dbInfo from '../../lib/containers/dbInfo'
+import dbInfo from '../../dbInfo'
 import favorites from '../favorites'
 import documents from '../documents'
 import tabNavigation from '../../tabNavigation'
-import settings from '../../settings'
+import settings from '../../../../settings'
+
+import styles from './style.css'
 
 class Sidebar extends React.Component {
   render () {
@@ -20,7 +22,15 @@ class Sidebar extends React.Component {
       {name: 'Settings', icon: '', content: SettingsDrawer}
     ]
 
-    return <tabNavigation.components.Navigation openDrawer={openDrawer} onNavClick={onNavClick} navItems={navItemsList} styleId='sidebar'/>
+    return (<tabNavigation.components.Navigation
+      openDrawer={openDrawer}
+      onNavClick={onNavClick}
+      navItems={navItemsList}
+      sidebarClassName={styles.sidebar}
+      listClassName={styles.list}
+      selectedItemClassName={styles['selected-item']}
+      tabClassName={styles.tab}
+    />)
   }
 }
 

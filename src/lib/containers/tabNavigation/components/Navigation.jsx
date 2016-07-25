@@ -1,4 +1,5 @@
 import React from 'react'
+import { List, ListItem } from 'material-ui/List'
 import classNames from 'classnames'
 
 class Navigation extends React.Component {
@@ -6,6 +7,7 @@ class Navigation extends React.Component {
     const openDrawer = this.props.openDrawer
     const onNavClick = this.props.onNavClick
     const navItemsList = this.props.navItems
+    const selectedItemClassName = this.props.selectedItemClassName
     const getContentToShow = (openDrawer) => {
       if (openDrawer) {
         let filteredList = navItemsList.filter((item) => {
@@ -18,23 +20,22 @@ class Navigation extends React.Component {
     }
     const navItems = navItemsList.map((item, index) => {
       const itemClass = classNames({
-        open: item.name.toLowerCase() === openDrawer
+        [selectedItemClassName]: item.name.toLowerCase() === openDrawer
       })
-      return <li
-        onClick={() => onNavClick(item.name.toLowerCase())}
+      return <ListItem
+        onTouchTap={() => onNavClick(item.name.toLowerCase())}
         key={index}
         className={itemClass}
-        >{item.name}</li>
+        primaryText={item.name}
+      />
     })
     const tabClass = classNames({
       hidden: !openDrawer,
-      tab: true
+      [this.props.tabClassName]: true
     })
     return (
-      <div id={this.props.styleId}>
-        <div className='nav'>
-          <ul>{navItems}</ul>
-        </div>
+      <div className={this.props.sidebarClassName}>
+        <List className={this.props.listClassName}>{navItems}</List>
         <div className={tabClass}>
           {getContentToShow(openDrawer)}
         </div>

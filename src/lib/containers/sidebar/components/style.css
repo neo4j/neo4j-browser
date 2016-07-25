@@ -1,0 +1,22 @@
+.sidebar {
+  flex: 0;
+  background-color: #4C4957;
+  display: flex;
+  flex-direction: row;
+  border-right: 1px solid black;
+  color: #fff;
+}
+
+.list {
+  color: #fff;
+}
+
+.selected-item {
+  background-color: #30333A !important
+}
+.tab {
+  flex: 0 0 200px;
+  width: 200px;
+  background-color: #30333A;
+  padding: 5px;
+}

@@ -3,9 +3,9 @@ import frames from './lib/containers/frames'
 import editor from './lib/containers/editor'
 import user from './lib/containers/user'
 import dbInfo from './lib/containers/dbInfo'
-import favorites from './sidebar/favorites'
+import favorites from './lib/containers/sidebar/favorites'
 import bookmarks from './lib/containers/bookmarks'
-import leftnav from './lib/containers/leftnav'
+import sidebar from './lib/containers/sidebar'
 import visualization from './lib/containers/visualization'
 
 export default {
@@ -16,6 +16,6 @@ export default {
   [user.constants.NAME]: user.reducer,
   [dbInfo.constants.NAME]: dbInfo.reducer,
   [favorites.constants.NAME]: favorites.reducer,
-  [leftnav.constants.NAME]: leftnav.reducer,
+  [sidebar.constants.NAME]: sidebar.reducer,
   [visualization.constants.NAME]: visualization.reducer
 }
