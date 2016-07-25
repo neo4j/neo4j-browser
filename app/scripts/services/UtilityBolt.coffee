@@ -83,6 +83,13 @@ angular.module('neo4jApp.services')
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        getRolesList: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.listRoles() YIELD role').promise
+          .then((r) -> q.resolve Bolt.constructRolesListResult r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
         activateUser: (username) ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.activateUser('#{username}')").promise
@@ -100,6 +107,20 @@ angular.module('neo4jApp.services')
         deleteUser: (username) ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.deleteUser('#{username}')").promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        addUserToRole: (username, role) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.addUserToRole('#{username}', '#{role}')").promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        removeRoleFromUser: (username, role) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.removeUserFromRole('#{username}', '#{role}')").promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise

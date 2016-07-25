@@ -15,15 +15,28 @@ div(fullscreen)
                       th Username
                       th Role(s)
                       th Status
-                      tr(ng-repeat="user in users")
+                      tr(ng-repeat="user in users", ng-form, name='form_{{user}}')
                         td {{user.username}}
-                        td {{user.roles.join(', ')}}
-                        td {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
                         td
+                          div(ng-repeat="role in user.roles") {{ role }}
+                            button(ng-click="removeRoleFromUser(user, role)") -
+                          select(ng-show="editingRole(user)", ng-model="user.selectedItem")
+                            option(ng-repeat="role in listOfKnownRoles(user.roles)", value="{{role}}" ) {{role}}
+                          button(ng-click="appendRole(user, user.selectedItem)")
+                            | +
+                          button(ng-show="editingRole(user)", ng-click="hideRole(user)")
+                            | Cancel
+                        td {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
+
+                        td
+                          button(ng-show="notCurrentUser(user.username)")
+                            | Edit user
+                        td(ng-show="notCurrentUser(user.username)")
                           button(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)')
                             | Suspend user
-                          button(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)')
+                          button(ng-hide ="(user.flags.indexOf('is_suspended') < 0)", ng-click='activate(user.username)')
                             | Activate user
+                        td(ng-hide="notCurrentUser(user.username)")
                         td
-                          button(ng-click='delete(user.username)')
+                          button(ng-show="notCurrentUser(user.username)", ng-click='delete(user.username)')
                             | Delete user

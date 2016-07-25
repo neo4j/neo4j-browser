@@ -56,6 +56,16 @@ angular.module('neo4jApp.services')
           )
           q.promise
 
+        getRolesList: ->
+          q = $q.defer()
+          Server.cypher('', { query: 'CALL dbms.listRoles() YIELD role'}).then(
+            (res) ->
+              data = res.data
+              users = data.data.map((v) -> v[0])
+              q.resolve users
+          )
+          q.promise
+
         suspendUser: (username) ->
           q = $q.defer()
           Server.cypher('', { query: "CALL dbms.suspendUser('#{username}')"}).then(
@@ -75,6 +85,22 @@ angular.module('neo4jApp.services')
         activateUser: (username) ->
           q = $q.defer()
           Server.cypher('', { query: "CALL dbms.activateUser('#{username}')"}).then(
+            (res) ->
+              q.resolve true
+          )
+          q.promise
+
+        addUserToRole: (username, role) ->
+          q = $q.defer()
+          Server.cypher('', { query: "CALL dbms.addUserToRole('#{username}', '#{role}')"}).then(
+            (res) ->
+              q.resolve true
+          )
+          q.promise
+
+        removeRoleFromUser: (username, role) ->
+          q = $q.defer()
+          Server.cypher('', { query: "CALL dbms.removeUserFromRole('#{username}', '#{role}')"}).then(
             (res) ->
               q.resolve true
           )
