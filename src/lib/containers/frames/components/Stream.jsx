@@ -46,7 +46,12 @@ const StreamComponent = (props) => {
     )
   })
   return (
-    <div id='stream'>
+    <div id='stream' style={{
+        padding: '20px',
+        overflow: 'auto',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
       <div>
         {framesList}
       </div>

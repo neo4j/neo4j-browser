@@ -1,8 +1,11 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
+import FrameTemplate from './FrameTemplate'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../../services/bolt/bolt'
 import visualization from '../../visualization'
+
+import styles from './style_cypher.css'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -32,7 +35,7 @@ class CypherFrame extends React.Component {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (this.state.nodesAndRelationships.nodes.length > 0) {
         frameContents = (
-          <div className='frame'>
+          <div className={styles.svg}>
             <visualization.components.Explorer useContextMenu nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships}/>
           </div>
         )
@@ -55,10 +58,10 @@ class CypherFrame extends React.Component {
       )
     }
     return (
-      <div className='frame'>
-        <FrameTitlebar frame={frame} />
-        <div className='frame-contents'>{frameContents}</div>
-      </div>
+      <FrameTemplate
+        header={<FrameTitlebar frame={frame} />}
+        contents={frameContents}
+      />
     )
   }
 }
