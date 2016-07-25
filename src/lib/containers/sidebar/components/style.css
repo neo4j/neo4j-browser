@@ -8,7 +8,9 @@
 }
 
 .list {
-  color: #fff;
+  span {
+    color: #fff !important;
+  }
 }
 
 .selected-item {
