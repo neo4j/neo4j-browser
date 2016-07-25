@@ -18,3 +18,8 @@
   display: flex;
   justify-content: space-around;
 }
+
+.button {
+  margin-left: 5px;
+  margin-right: 5px;
+}
