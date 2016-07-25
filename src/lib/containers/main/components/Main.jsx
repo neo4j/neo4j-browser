@@ -1,21 +1,15 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import editor from '../../editor'
+import frames from '../../frames'
+import styles from './style.css'
 
-import QueryView from '../../../components/QueryView'
-
-export const Main = (props) => {
+const Main = (props) => {
   return (
-    <div id='main'>
-      <QueryView {...props} />
+    <div className={styles.main}>
+      <editor.components.Editor />
+      <frames.components.Stream />
     </div>
   )
 }
 
-const mapStateToProps = (state) => {
-  const context = 'default'
-  return {
-    context
-  }
-}
-
-export default connect(mapStateToProps)(Main)
+export default Main
