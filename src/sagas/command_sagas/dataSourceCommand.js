@@ -1,4 +1,4 @@
-import { take, put, select, call, fork } from 'redux-saga/effects'
+import { take, put, select, call, spawn, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import bolt from '../../services/bolt/bolt'
 import uuid from 'uuid'
@@ -23,37 +23,38 @@ function * runCommand (ds) {
 
 function * ensureDataSourceStatus (dataSourcesFromState = [], refs = {}) {
   const done = []
+  let localRefs = {...refs}
   for(let i = 0; i < dataSourcesFromState.length; i++) {
     const datasource = dataSourcesFromState[i]
     done.push(datasource.id)
     if (datasource.refreshInterval < 1) {
-      refs = yield stopAndRemoveDataSource(datasource.id, refs)
-      return
+      localRefs = yield stopAndRemoveDataSource(datasource.id, localRefs)
+      continue
     }
     if (datasource.isActive < 1) {
-      refs = yield stopAndRemoveDataSource(datasource.id, refs)
-      return
+      localRefs = yield stopAndRemoveDataSource(datasource.id, localRefs)
+      continue
     }
-    if (refs[datasource.id] !== undefined) return // Already running
-    const ref = yield fork(runCommand, datasource)
-    refs[datasource.id] = ref
+    if (localRefs[datasource.id] !== undefined) continue // Already running
+    const ref = yield spawn(runCommand, datasource)
+    localRefs[datasource.id] = ref
   }
-  if (done.length !== refs.length) { // Removed datasource(s) that needs to be stopped
-    const keys = Object.keys(refs)
-    for(let i = 0; i < keys.length; i++) {
-      const key = keys[i]
-      if (done.indexOf(key) >= 0) return
-      refs = yield stopAndRemoveDataSource(key, refs)
+  const refKeys = Object.keys(localRefs)
+  if (done.length !== refKeys.length) { // Removed datasource(s) that needs to be stopped
+    for(let i = 0; i < refKeys.length; i++) {
+      const key = refKeys[i]
+      if (done.indexOf(key) >= 0) continue
+      localRefs = yield stopAndRemoveDataSource(key, localRefs)
     }
   }
-  return refs
+  return localRefs
 }
 
-function * stopAndRemoveDataSource (widgetId, refs) {
+function * stopAndRemoveDataSource (dataSourceId, refs) {
   const localRefs = {...refs}
-  if (localRefs[widgetId] !== undefined) {
-    yield cancel(localRefs[widgetId])
-    delete localRefs[widgetId]
+  if (localRefs[dataSourceId] !== undefined) {
+    yield cancel(localRefs[dataSourceId])
+    delete localRefs[dataSourceId]
   }
   return localRefs
 }
@@ -61,10 +62,9 @@ function * stopAndRemoveDataSource (widgetId, refs) {
 export function * startBackgroundDataSources () {
   let refs = {}
   while (true) {
-    yield take(dataSource.actionTypes.UPDATE)
     const dataSourcesFromState = yield select(dataSource.selectors.getDataSources)
     refs = yield call(ensureDataSourceStatus, dataSourcesFromState, refs)
-    yield call(delay, 5000)
+    yield call(delay, 10000)
   }
 }
 

@@ -17,6 +17,10 @@ export function getDataSourceByName (state, name) {
   return getDataSources(state).filter((w) => w.name === name)[0] || false
 }
 
+export function getDataSourceById (state, id) {
+  return getDataSources(state).filter((w) => w.id === id)[0] || false
+}
+
 /**
  * Reducer helpers
  */
