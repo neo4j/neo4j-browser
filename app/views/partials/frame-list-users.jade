@@ -1,27 +1,31 @@
 table.table.table-condensed
   tr
-    th Username
-    th Role(s)
-    th Status
-    th Actions
+    th.col-lg-2.col-md-2.col-sm-12 Username
+    th.col-lg-6.col-md-6.col-sm-12 Role(s)
+    th.col-lg-2.col-md-2.col-sm-12 Status
+    th.col-lg-2.col-md-2.col-sm-12 Actions
     tr(ng-repeat="user in users")
       td {{user.username}}
       td
-        div(ng-repeat="role in user.roles")
+        .token.token-label(ng-repeat="role in user.roles")
           | {{ role }}
-          a.btn.sl.sl-minus-circle(ng-click="removeRoleFromUser(user, role)", tooltip="Remove role")
-        select(ng-show="editingRole(user)", ng-model="user.selectedItem")
-          option(ng-repeat="role in listOfKnownRoles(user.roles)", value="{{role}}" ) {{role}}
-        div
-          a.btn.sl.sl-add-circle(ng-click="appendRole(user, user.selectedItem)")
-          a.btn.sl.sl-minus-circle(ng-show="editingRole(user)", ng-click="hideRole(user)")
+          a.sl.sl-minus-circle(ng-click="removeRoleFromUser(user, role)", tooltip="Remove")
+        .select
+          select(ng-show="editingRole(user)", ng-model="user.selectedItem")
+            option(ng-repeat="role in listOfKnownRoles(user.roles)", value="{{role}}" ) {{role}}
+          .select-actions
+            a.btn.sl.sl-arrow-circle-right(ng-show="user.isAddingRole", ng-click="appendRole(user, user.selectedItem)", tooltip="Assign")
+            a.btn.sl.sl-delete-circle(ng-show="editingRole(user)", ng-click="hideRole(user)", tooltip="Cancel")
+        span
+          a.btn.sl.sl-add-circle(ng-hide="user.isAddingRole", ng-click="appendRole(user, user.selectedItem)", tooltip="Add")
+
       td
         | {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
       td
-        span
-          a.btn.sl.sl-pencil-circle(ng-show="notCurrentUser(user.username)")
         span(ng-show="notCurrentUser(user.username)")
-          a.btn.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)')
-          a.btn.sl.sl-show(ng-hide ="(user.flags.indexOf('is_suspended') < 0)", ng-click='activate(user.username)')
-        span
-          a.btn.sl.sl-delete-circle(ng-show="notCurrentUser(user.username)", ng-click='delete(user.username)')
+          a.btn.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)', tooltip="Suspend")
+          a.btn.sl.sl-show(ng-hide ="(user.flags.indexOf('is_suspended') < 0)", ng-click='activate(user.username)', tooltip="Activate")
+          a.btn.sl.sl-delete-circle(ng-click='delete(user.username)', tooltip="Delete")
+    tr
+      td(colspan="4")
+        include ../partials/frame-add-new-user

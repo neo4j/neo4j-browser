@@ -64,9 +64,16 @@ angular.module('neo4jApp.controllers')
 
     $scope.hideRole = (user) ->
       $scope.users[$scope.users.indexOf(user)].editRole = false
+      $scope.users[$scope.users.indexOf(user)].isAddingRole = false
 
     $scope.appendRole = (user, role) ->
-      if role? then $scope.addRole(user.username, role) else $scope.showRole(user)
+
+      if role?
+        $scope.addRole(user.username, role)
+        user.isAddingRole = false
+      else
+        $scope.showRole(user)
+        user.isAddingRole = true
 
     $scope.fileredUsernames = []
 
