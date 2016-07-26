@@ -1,7 +1,8 @@
 let _connections = []
 
-function createConnectionObject (name, connection, transactionFn = () => {}) {
+function createConnectionObject (id, name, connection, transactionFn = () => {}) {
   return {
+    id,
     name: name,
     isDefault: false,
     connection: connection,
@@ -9,7 +10,7 @@ function createConnectionObject (name, connection, transactionFn = () => {}) {
   }
 }
 
-export const open = ({name, username, password, host}, connectFn, validateFn, transactionFn) => {
+export const open = ({id, name, username, password, host}, connectFn, validateFn, transactionFn) => {
   const p = new Promise((resolve, reject) => {
     const exists = _connections.filter((c) => c.name === name)
     if (exists.length) {
@@ -18,7 +19,7 @@ export const open = ({name, username, password, host}, connectFn, validateFn, tr
     connectFn({username, password, host})
       .then((c) => {
         validateFn(c).then((_) => {
-          _connections.push(createConnectionObject(name, c, transactionFn))
+          _connections.push(createConnectionObject(id, name, c, transactionFn))
           if (_connections.length === 1) setDefault(name)
           resolve(c)
         }).catch((e) => reject(e))
@@ -37,7 +38,7 @@ export function close (name, closeFn) {
 
 export function get (name = null) {
   const lookFor = (c) => {
-    if (name) return c.name === name
+    if (name) return c.name === name || c.id === name
     return c.isDefault
   }
   const match = _connections.filter(lookFor)

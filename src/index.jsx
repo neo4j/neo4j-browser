@@ -17,7 +17,7 @@ import sagas from './sagas'
 import './styles/style.css'
 import './styles/codemirror.css'
 import bookmarks from './lib/containers/bookmarks'
-import widgets from './lib/containers/widgets'
+import dataSource from './lib/containers/dataSource'
 import lStorage from './services/localstorage'
 import { makeBookmarksInitialState, makeBookmarksPersistedState } from './services/localstorageMiddleware'
 
@@ -32,7 +32,7 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
-const persistedStateKeys = ['bookmarks', 'settings', 'editor', 'favorites', 'visualization', 'widgets']
+const persistedStateKeys = ['bookmarks', 'settings', 'editor', 'favorites', 'visualization', 'datasource']
 const persistedStateStorage = window.localStorage
 
 const localStorageInitialStateMiddleware = lStorage.applyMiddleware(
@@ -59,7 +59,7 @@ store.subscribe(lStorage.createPersistingStoreListener(
   localStoragePersistStateMiddleware
 ))
 
-setInterval(() => store.dispatch({type: widgets.actionTypes.WIDGETS_UPDATE}), 15000)
+setInterval(() => store.dispatch({type: dataSource.actionTypes.UPDATE}), 15000)
 
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)

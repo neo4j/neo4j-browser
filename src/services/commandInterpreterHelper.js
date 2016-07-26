@@ -6,6 +6,7 @@ import remote from '../services/remote'
 import { handleServerCommand } from '../sagas/command_sagas/serverCommand'
 import { handleConfigCommand } from '../sagas/command_sagas/configCommand'
 import { handleWidgetCommand } from '../sagas/command_sagas/widgetCommand'
+import { handleDataSourceCommand } from '../sagas/command_sagas/dataSourceCommand'
 
 const availableCommands = [{
   name: 'clear',
@@ -55,6 +56,12 @@ const availableCommands = [{
   match: (cmd) => /^widget(\s)/.test(cmd),
   exec: function * (action, cmdchar) {
     yield call(handleWidgetCommand, action, cmdchar)
+  }
+}, {
+  name: 'datasource',
+  match: (cmd) => /^data\s?\-?source(\s)/.test(cmd),
+  exec: function * (action, cmdchar) {
+    yield call(handleDataSourceCommand, action, cmdchar)
   }
 }, {
   name: 'catch-all',

@@ -3,13 +3,13 @@ import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
 import { ConnectionException } from '../exceptions'
 
-function openConnection ({name, username, password, host}) {
+function openConnection ({id, name, username, password, host}) {
   const transactionFn = (connection) => {
     return (input, parameters) => {
       return transaction(connection, input, parameters)
     }
   }
-  return connectionHandler.open({name, username, password, host}, connect, validateConnection, transactionFn)
+  return connectionHandler.open({id, name, username, password, host}, connect, validateConnection, transactionFn)
 }
 
 function connect (props) {
