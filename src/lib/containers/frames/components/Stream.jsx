@@ -5,8 +5,7 @@ import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
-import { getFramesInContext } from '../reducer'
-import bookmarks from '../../bookmarks'
+import { getFrames } from '../reducer'
 
 const StreamComponent = (props) => {
   const {frames} = props
@@ -46,7 +45,12 @@ const StreamComponent = (props) => {
     )
   })
   return (
-    <div id='stream'>
+    <div id='stream' style={{
+      padding: '20px',
+      overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       <div>
         {framesList}
       </div>
@@ -56,7 +60,7 @@ const StreamComponent = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    frames: getFramesInContext(state, bookmarks.selectors.getActiveBookmark(state)).reverse()
+    frames: getFrames(state).reverse()
   }
 }
 

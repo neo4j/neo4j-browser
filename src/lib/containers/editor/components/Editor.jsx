@@ -1,14 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import editor from '../'
-import favorites from '../../../../sidebar/favorites'
+import favorites from '../../sidebar/favorites'
 import { getHistory, getEditorContent } from '../../../../selectors'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import styles from './style.css'
-import ActionButton from '../../../components/ActionButton'
+import RaisedButton from 'material-ui/RaisedButton'
 
 export class EditorComponent extends React.Component {
   constructor (props) {
@@ -110,29 +110,28 @@ export class EditorComponent extends React.Component {
           />
         </div>
         <div className={styles.actionButtons}>
-          <ActionButton
-            kind='secondary'
-            noFill
+          <RaisedButton
+            secondary
             onClick={() => this.props.onFavortieClick(this.state.code)}
             label='&#9734;'
+            className={styles.button}
             disabled={this.state.code.length < 1}
             tooltip='Add as favorite'
           />
-          <ActionButton
-            kind='secondary'
-            noFill
+          <RaisedButton
+            secondary
             onClick={() => this.clearEditor()}
             label='&times;'
             disabled={this.state.code.length < 1}
+            className={styles.button}
             tooltip='Clear editor contents'
           />
-          <ActionButton
+          <RaisedButton
             onClick={() => this.execCurrent()}
-            kind='primary'
+            primary
             label='&#9654;'
             disabled={this.state.code.length < 1}
-            noFill
-            classNames={['top-padded-icon', 'left-padded-icon']}
+            className={styles.button}
             tooltip='Execute command'
           />
         </div>

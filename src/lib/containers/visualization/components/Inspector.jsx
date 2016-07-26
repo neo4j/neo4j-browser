@@ -5,9 +5,9 @@ export const InspectorComponent = ({hoveredItem, graphStyle}) => {
   let inspectorContent
 
   const mapItemProperties = (itemProperties) => {
-    return itemProperties.map((prop) => {
+    return itemProperties.map((prop, i) => {
       return (
-        <li className={styles.pair}>
+        <li className={styles.pair} key={i}>
           <div className={styles.key}>{prop.key + ': '}</div>
           <div className={styles.value}>{prop.value.toString()}</div>
         </li>
@@ -19,8 +19,8 @@ export const InspectorComponent = ({hoveredItem, graphStyle}) => {
     if (hoveredItem.type === 'context-menu-item') {
       inspectorContent = (
         <ul className={styles['list-inline']}>
-          <li className={styles.token + ' ' + styles['token-context-menu-key'] + ' ' + styles['token-label']}>{item.label}</li>
-          <li className={styles.pair}>
+          <li key='token' className={styles.token + ' ' + styles['token-context-menu-key'] + ' ' + styles['token-label']}>{item.label}</li>
+          <li key='pair' className={styles.pair}>
             <div className={styles.value}>{item.content}</div>
           </li>
         </ul>
@@ -29,17 +29,17 @@ export const InspectorComponent = ({hoveredItem, graphStyle}) => {
       const description = `Displaying ${item.nodeCount} nodes, ${item.relationshipCount} relationships.`
       inspectorContent = (
         <ul className={styles['list-inline']}>
-          <li className={styles.pair}>
+          <li className={styles.pair} key='pair'>
             <div className={styles.value}>{description}</div>
           </li>
         </ul>
       )
     } else if (hoveredItem.type === 'node') {
-      const style = {'background-color': graphStyle.forNode(item).get('color'), 'color': graphStyle.forNode(item).get('text-color-internal')}
+      const style = {'backgroundColor': graphStyle.forNode(item).get('color'), 'color': graphStyle.forNode(item).get('text-color-internal')}
       inspectorContent = (
         <ul className={styles['list-inline']}>
-          <li style={style} className={styles.token + ' ' + styles['token-label']}>{item.labels[0]}</li>
-          <li className={styles.pair}>
+          <li key='token' style={style} className={styles.token + ' ' + styles['token-label']}>{item.labels[0]}</li>
+          <li key='pair' className={styles.pair}>
             <div className={styles.key}>{'<id>:'}</div>
             <div className={styles.value}>{item.id}</div>
           </li>
@@ -47,11 +47,11 @@ export const InspectorComponent = ({hoveredItem, graphStyle}) => {
         </ul>
       )
     } else if (hoveredItem.type === 'relationship') {
-      const style = {'background-color': graphStyle.forRelationship(item).get('color'), 'color': graphStyle.forRelationship(item).get('text-color-internal')}
+      const style = {'backgroundColor': graphStyle.forRelationship(item).get('color'), 'color': graphStyle.forRelationship(item).get('text-color-internal')}
       inspectorContent = (
         <ul className={styles['list-inline']}>
-          <li style={style} className={styles.token + ' ' + styles['token-relationship-type']}>{item.type}</li>
-          <li className={styles.pair}>
+          <li key='token' style={style} className={styles.token + ' ' + styles['token-relationship-type']}>{item.type}</li>
+          <li key='pair' className={styles.pair}>
             <div className={styles.key}>{'<id>:'}</div>
             <div className={styles.value}>{item.id}</div>
           </li>

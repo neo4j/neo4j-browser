@@ -1,90 +1,6 @@
-#cypherTabs {
-  flex: 0;
-  display: flex;
-  flex-direction: row;
-}
-
-.frame-contents .tab {
-  width: 100%;
-}
-
-#main #editor {
+#editor {
   background-color: white;
   border-bottom: 1px solid black;
-}
-#main #stream {
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-#stream .frame {
-  margin: 10px 10px 10px 10px;
-  border: 1px solid grey;
-  flex: 1;
-  background-color: #fff;
-}
-
-.frame-contents .frame svg {
-  height: 432px;
-  width: 100%;
-  background-color: #eaeaea;
-}
-
-.frame .frame-titlebar {
-  flex: none;
-  color: #ccc;
-  border-bottom: 1px solid #ddd;
-  height: 30px;
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-}
-.frame .frame-titlebar .frame-command {
-  margin: 3px 5px 3px 5px;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.frame .frame-titlebar .frame-titlebar-cmd {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  line-height: 30px;
-  cursor: pointer;
-  display: block;
-}
-.frame .frame-titlebar .frame-action-buttons {
-  flex: 0 0 auto;
-  line-height: 30px;
-}
-.frame .frame-action-button {
-  display: inline;
-  padding: 5px;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  border-left: 1px solid #ccc;
-  text-align: center;
-  line-height: 30px;
-}
-.frame .frame-action-button:hover {
-  color: #000
-}
-.frame .frame-contents {
-  padding: 20px;
-  flex: 0 1 auto;
-}
-.frame .history-list {
-  list-style: none;
-}
-.frame .history-list  li {
-  border: 1px solid black;
-  margin: 10px;
-  padding: 10px;
-  cursor: pointer;
-}
-.frame .history-list  li:hover {
-  background-color: #ddd
 }
 
 /*
@@ -126,12 +42,4 @@ pre {
   word-wrap: normal;
   word-break: normal;
   overflow: auto;
-}
-
-.top-padded-icon {
-  padding-top: 8px !important;
-}
-
-.left-padded-icon {
-  padding-left: 9px !important;
 }

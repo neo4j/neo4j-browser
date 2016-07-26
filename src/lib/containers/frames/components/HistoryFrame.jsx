@@ -1,18 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FrameTitlebar } from './FrameTitlebar'
+import FrameTemplate from './FrameTemplate'
 import editor from '../../editor'
 import { HistoryRowComponent } from './HistoryRow'
+
+import styles from './style_history.css'
 
 const HistoryFrameComponent = ({frame, onHistoryClick}) => {
   const historyRows = frame.history.map((entry, index) => {
     return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry}/>
   })
   return (
-    <div className='frame'>
-      <FrameTitlebar frame={frame} />
-      <div className='frame-contents'><ul className='history-list'>{historyRows}</ul></div>
-    </div>
+    <FrameTemplate
+      header={<FrameTitlebar frame={frame} />}
+      contents={<ul className={styles['history-list']}>{historyRows}</ul>}
+    />
   )
 }
 

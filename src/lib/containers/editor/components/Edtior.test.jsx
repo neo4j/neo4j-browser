@@ -1,4 +1,5 @@
 import { EditorComponent } from './Editor'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { mount } from 'enzyme'
 import React from 'react'
 import Codemirror from 'react-codemirror'
@@ -13,9 +14,9 @@ describe('Editor', () => {
   const onExecute = chai.spy()
   it('should render Codemirror component with correct properties', () => {
     let content = 'content-' + Math.random()
-    let wrapper = mount(
+    let wrapper = mount(<MuiThemeProvider>
       <EditorComponent onExecute={onExecute} content={content} history='' />
-    )
+    </MuiThemeProvider>)
     const codeMirror = wrapper.find(Codemirror)
     expect(codeMirror.props().value).to.equal(content)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
@@ -24,9 +25,9 @@ describe('Editor', () => {
 
   it('should execute current command on Cmd-Enter', () => {
     let content = 'content-' + Math.random()
-    let wrapper = mount(
+    let wrapper = mount(<MuiThemeProvider>
       <EditorComponent onExecute={onExecute} content={content} history='' />
-    )
+    </MuiThemeProvider>)
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).have.been.called.with(content)
@@ -35,9 +36,9 @@ describe('Editor', () => {
 
   it('should execute current command on Ctrl-Enter', () => {
     let content = 'content-' + Math.random()
-    let wrapper = mount(
+    let wrapper = mount(<MuiThemeProvider>
       <EditorComponent onExecute={onExecute} content={content} history='' />
-    )
+    </MuiThemeProvider>)
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Ctrl-Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).have.been.called.with(content)
@@ -47,9 +48,9 @@ describe('Editor', () => {
   it('should replace content as with history as user arrows up and down', () => {
     let content = 'content-' + Math.random()
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
-    let wrapper = mount(
+    let wrapper = mount(<MuiThemeProvider>
       <EditorComponent onExecute={onExecute} content={content} history={history}/>
-    )
+    </MuiThemeProvider>)
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
     expect(codeMirror.get(0).getCodeMirror().getValue()).to.equal('latest')
@@ -65,9 +66,9 @@ describe('Editor', () => {
 
   it('should resest history after execution', () => {
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
-    let wrapper = mount(
+    let wrapper = mount(<MuiThemeProvider>
       <EditorComponent onExecute={onExecute} content='' history={history}/>
-    )
+    </MuiThemeProvider>)
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
@@ -81,9 +82,9 @@ describe('Editor', () => {
     const updateContent = chai.spy()
     let content = 'content-' + Math.random()
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
-    let wrapper = mount(
+    let wrapper = mount(<MuiThemeProvider>
       <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history={history}/>
-    )
+    </MuiThemeProvider>)
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).have.been.called.with(content)
@@ -93,9 +94,9 @@ describe('Editor', () => {
     const updateContent = chai.spy()
     let content = 'content-' + Math.random() + '\n hello'
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
-    let wrapper = mount(
+    let wrapper = mount(<MuiThemeProvider>
       <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history={history}/>
-    )
+    </MuiThemeProvider>)
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).not.have.been.called

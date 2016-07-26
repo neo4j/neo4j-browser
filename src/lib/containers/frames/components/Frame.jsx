@@ -1,5 +1,6 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
+import FrameTemplate from './FrameTemplate'
 
 const Frame = ({frame}) => {
   const errors = frame.errors || false
@@ -15,10 +16,10 @@ const Frame = ({frame}) => {
     frameContents = 'Unknown command'
   }
   return (
-    <div className='frame'>
-      <FrameTitlebar frame={frame} />
-      <div className='frame-contents'>{frameContents}</div>
-    </div>
+    <FrameTemplate
+      header={<FrameTitlebar frame={frame} />}
+      contents={frameContents}
+    />
   )
 }
 

@@ -1,4 +1,7 @@
 import React from 'react'
+import Chip from 'material-ui/Chip'
+import classNames from 'classnames'
+import styles from './style_meta.css'
 
 const createItems = (originalList, onItemClick, className, editorCommandTemplate, showStar = true) => {
   let items = [...originalList]
@@ -7,7 +10,17 @@ const createItems = (originalList, onItemClick, className, editorCommandTemplate
   }
   return items.map((text, index) => {
     const getNodesCypher = editorCommandTemplate(text)
-    return <button onClick={() => onItemClick(getNodesCypher)} className={className} key={index}>{text}</button>
+    return (
+      <Chip
+        key={index}
+        onTouchTap={() => onItemClick(getNodesCypher)}
+        className={classNames({
+          [styles.chip]: true,
+          [className]: true
+        })}>
+        {text}
+      </Chip>
+    )
   })
 }
 const LabelItems = ({labels, onItemClick}) => {
@@ -24,7 +37,12 @@ const LabelItems = ({labels, onItemClick}) => {
   return (
     <div>
       <h5> Node Labels </h5>
-      {labelItems}
+      <div className={classNames({
+        [styles['wrapper']]: true,
+        [styles['label-wrapper']]: true
+      })}>
+        {labelItems}
+      </div>
     </div>
   )
 }
@@ -42,7 +60,12 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
   return (
     <div>
       <h5>Relationship Types </h5>
-      {relationshipItems}
+      <div className={classNames({
+        [styles['wrapper']]: true,
+        [styles['relationship-wrapper']]: true
+      })}>
+        {relationshipItems}
+      </div>
     </div>
   )
 }
@@ -57,7 +80,12 @@ const PropertyItems = ({properties, onItemClick}) => {
   return (
     <div>
       <h5> Property Keys </h5>
-      {propertyItems}
+      <div className={classNames({
+        [styles['wrapper']]: true,
+        [styles['property-key-wrapper']]: true
+      })}>
+        {propertyItems}
+      </div>
     </div>
   )
 }

@@ -7,9 +7,11 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import reducers from './rootReducer'
-import BaseLayout from './lib/components/BaseLayout'
+import layout from './lib/containers/origLayout'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import sagas from './sagas'
 import './styles/style.css'
@@ -58,14 +60,15 @@ store.subscribe(lStorage.createPersistingStoreListener(
 
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)
+injectTapEventPlugin()
 
 ReactDOM.render(
   <Provider store={store}>
-    <div>
+    <MuiThemeProvider>
       <Router history={history}>
-        <Route path='/' component={BaseLayout} />
+        <Route path='/' component={layout.components.OrigLayout} />
       </Router>
-    </div>
+    </MuiThemeProvider>
   </Provider>,
   document.getElementById('mount')
 )

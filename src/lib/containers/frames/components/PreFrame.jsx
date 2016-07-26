@@ -1,12 +1,13 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
+import FrameTemplate from './FrameTemplate'
 
 const PreFrame = ({frame}) => {
   return (
-    <div className='frame'>
-      <FrameTitlebar frame={frame} />
-      <div className='frame-contents'><pre>{frame.contents}</pre></div>
-    </div>
+    <FrameTemplate
+      header={<FrameTitlebar frame={frame} />}
+      contents={<pre>{frame.contents}</pre>}
+    />
   )
 }
 

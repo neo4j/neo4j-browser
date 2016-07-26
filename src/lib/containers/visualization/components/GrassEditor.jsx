@@ -58,7 +58,7 @@ export class GrassEditorComponent extends React.Component {
     bolt.transaction(cypher).then((result) => {
       const {nodes, relationships} = bolt.extractNodesAndRelationshipsFromRecords(result.records)
       this.setState({nodes: nodes, relationships: relationships})
-    })
+    }).catch((_) => { })
   }
 
   onLabelItemClick (label) {
@@ -82,7 +82,7 @@ export class GrassEditorComponent extends React.Component {
   }
 
   picker (styleProps, styleProvider, className, selector, textProvider = () => { return '' }) {
-    return styleProps.map((styleProp) => {
+    return styleProps.map((styleProp, i) => {
       const onClick = () => {
         this.graphStyle.changeForSelector(selector, styleProp)
         this.refreshVisualization()
@@ -91,7 +91,7 @@ export class GrassEditorComponent extends React.Component {
       const style = styleProvider(styleProp)
       const text = textProvider(styleProp)
       return (
-        <li onClick={onClick} className={className}>
+        <li onClick={onClick} className={className} key={i}>
           <a style={style}>{text}</a>
         </li>
       )
@@ -100,7 +100,7 @@ export class GrassEditorComponent extends React.Component {
 
   colorPicker (selector) {
     return (
-      <li>
+      <li key='color-picker'>
         Color:
         <ul className={`${styles['color-picker']} ${styles['picker']}`}>
           {this.picker(this.graphStyle.defaultColors(), (color) => { return {'backgroundColor': color.color} }, 'color-picker-item', selector)}
@@ -110,7 +110,7 @@ export class GrassEditorComponent extends React.Component {
   }
   sizePicker (selector) {
     return (
-      <li>
+      <li key='size-picker'>
         Size:
         <ul className={`${styles['size-picker']} ${styles['picker']}`}>
           {this.picker(this.graphStyle.defaultSizes(), (size) => { return { width: size.diameter, height: size.diameter } }, 'size-picker-item', selector)}
@@ -120,7 +120,7 @@ export class GrassEditorComponent extends React.Component {
   }
   widthPicker (selector) {
     return (
-      <li>
+      <li key='width-picker'>
         Line width:
         <ul className={`${styles['width-picker']} ${styles['picker']}`}>
           {this.picker(this.graphStyle.defaultArrayWidths(), (width) => { return { width: width['shaft-width'], height: '24px' } }, 'width-picker-item', selector)}
@@ -131,7 +131,7 @@ export class GrassEditorComponent extends React.Component {
 
   iconPicker (selector) {
     return (
-      <li>
+      <li key='icon-picker'>
         Icon:
         <ul className={`${styles['icon-picker']} ${styles['picker']}`}>
           {this.picker(this.graphStyle.defaultIconCodes(), (iconCode) => { return { 'fontFamily': 'streamline' } }, 'icon-picker-item', selector, (iconCode) => { return iconCode['icon-code'] })}

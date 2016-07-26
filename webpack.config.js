@@ -39,7 +39,7 @@ module.exports = {
       require('postcss-cssnext')({
         features: {
           customProperties: {
-            variables: require('./src/lib/styles/colors.json')
+            // variables: require('./src/lib/styles/colors.json')
           }
         }
       }),
