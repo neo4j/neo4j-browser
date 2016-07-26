@@ -86,11 +86,11 @@ export function * handleDataSourceCommand (action, cmdchar) {
 }
 
 export function * handleDataSourceCreateCommand (action, cmdchar) {
-  // :datasource add {"name": "myName", "command": "RETURN rand()", "bookmarkId":"uuid-of-existing-bookmark", "refreshInterval": 10, "parameters": {}}
+  // :datasource create {"name": "myName", "command": "RETURN rand()", "bookmarkId":"uuid-of-existing-bookmark", "refreshInterval": 10, "parameters": {}}
   const [serverCmd, propsStr] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   try {
     const props = JSON.parse(propsStr)
-    const errorMessage = 'Wrong format. It should be ":datasource add {"name": "myName", "command": "RETURN rand()", "bookmarkId":"uuid-of-existing-bookmark", "refreshInterval": 10, "parameters": {}}"'
+    const errorMessage = 'Wrong format. It should be ":datasource create {"name": "myName", "command": "RETURN rand()", "bookmarkId":"uuid-of-existing-bookmark", "refreshInterval": 10, "parameters": {}}"'
     if (!props ||
         !props.name ||
         !props.command ||
