@@ -1,9 +1,10 @@
 table.table.table-condensed
   tr
     th.col-lg-2.col-md-2.col-sm-12 Username
-    th.col-lg-6.col-md-6.col-sm-12 Role(s)
+    th.col-lg-4.col-md-4.col-sm-12 Role(s)
     th.col-lg-2.col-md-2.col-sm-12 Status
-    th.col-lg-2.col-md-2.col-sm-12 Actions
+    th.col-lg-2.col-md-2.col-sm-12 Password Change
+    th.col-lg-2.col-md-2.col-sm-12 Delete
     tr(ng-repeat="user in users")
       td {{user.username}}
       td
@@ -18,14 +19,18 @@ table.table.table-condensed
             a.btn.sl.sl-delete-circle(ng-show="editingRole(user)", ng-click="hideRole(user)", tooltip="Cancel")
         span
           a.btn.sl.sl-add-circle(ng-hide="user.isAddingRole", ng-click="appendRole(user, user.selectedItem)", tooltip="Add")
-
       td
         | {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
+        a.btn.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)', tooltip="Suspend")
+        a.btn.sl.sl-show(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)', tooltip="Activate")
+
       td
         span(ng-show="notCurrentUser(user.username)")
-          a.btn.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)', tooltip="Suspend")
-          a.btn.sl.sl-show(ng-hide ="(user.flags.indexOf('is_suspended') < 0)", ng-click='activate(user.username)', tooltip="Activate")
+          a.btn.fa.fa-key(ng-hide="user.shouldShowResetPassword", ng-click='showResetPassword(user, true)', tooltip="Reset Password")
+          .reset-password.col-lg-12(ng-show="user.shouldShowResetPassword")
+            input.col-lg-8(ng-model="user.resetPasswordValue", type="password")
+            a.col-lg-2.btn.sl.sl-arrow-circle-right(ng-click="resetPassword(user.username, user.resetPasswordValue)")
+            a.col-lg-2.btn.sl.sl-delete-circle(ng-click="user.shouldShowResetPassword = false")
+      td
+        span(ng-show="notCurrentUser(user.username)")
           a.btn.sl.sl-delete-circle(ng-click='delete(user.username)', tooltip="Delete")
-    tr
-      td(colspan="4")
-        include ../partials/frame-add-new-user

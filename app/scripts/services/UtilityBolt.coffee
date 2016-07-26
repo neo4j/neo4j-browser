@@ -97,6 +97,13 @@ angular.module('neo4jApp.services')
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        changeUserPassword: (username, password) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.changeUserPassword('#{username}', '#{password}')").promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
         activateUser: (username) ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.activateUser('#{username}')").promise

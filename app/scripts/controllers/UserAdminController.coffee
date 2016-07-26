@@ -28,12 +28,22 @@ angular.module('neo4jApp.controllers')
     $scope.autoRefresh = false
     $scope.defaultSelection = ''
     $scope.isAddingNewUser = false
+    $scope.isAddingNewUser = false
+    $scope.resetPasswordValue = null
 
     $scope.newUser = {
       username: null,
       password: null,
       requirePasswordChange: false
     }
+
+    $scope.showResetPassword = (user, value) ->
+      user.shouldShowResetPassword = value
+
+    $scope.resetPassword = (username, resetPasswordValue) ->
+      ProtocolFactory.getStoredProcedureService().changeUserPassword(username, resetPasswordValue).then(() ->
+        $scope.refresh()
+      )
 
     $scope.showNewUser = () -> $scope.isAddingNewUser = true
     $scope.hideNewUser = () -> $scope.isAddingNewUser = false

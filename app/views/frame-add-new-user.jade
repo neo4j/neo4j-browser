@@ -1,0 +1,42 @@
+div(fullscreen)
+  .outer
+    include partials/frame-common-actions
+    .inner
+      .view-result.help.admin(ng-hide='frame.hasErrors')
+        article(ng-controller="UserAdminCreateUserController")
+          .container-fluid
+            section.row
+              .col-md-12.col-sm-12
+                .panel.panel-default
+                  .panel-heading
+                    h4 Add user
+                    a(exec-topic="admin list") See user list
+                    .panel-heading-info-icon
+                  table.table.table-condensed
+                    tr
+                      th.col-lg-3 Username
+                      th.col-lg-3 Role(s)
+                      th.col-lg-3 Password
+                      th.col-lg-2 Force password change
+                      th.col-lg-1
+                    tr
+                      td
+                        input(ng-model="user.fields.username", type="text")
+                      td
+                        .token.token-label(ng-repeat="role in user.fields.roles")
+                          | {{ role }}
+                          a.sl.sl-minus-circle(ng-click="removeRoleFromUser(role)", tooltip="Remove")
+                        .select
+                          select(ng-show="editingRole", ng-model="selectedItem")
+                            option(ng-repeat="role in listOfKnownRoles(user.fields.roles)", value="{{role}}" ) {{role}}
+                          .select-actions
+                            a.btn.sl.sl-arrow-circle-right(ng-show="user.isAddingRole", ng-click="appendRole()", tooltip="Assign")
+                            a.btn.sl.sl-delete-circle(ng-show="editingRole", ng-click="hideRole()", tooltip="Cancel")
+                        span
+                          a.btn.sl.sl-add-circle(ng-hide="user.isAddingRole", ng-click="appendRole()", tooltip="Add")
+                      td
+                        input(ng-model="user.fields.password", type="password")
+                      td
+                        input(ng-model="user.fields.requirePasswordChange", type="checkbox")
+                      td
+                        a.btn.sl.sl-add-circle(ng-disabled="!enableSubmit()", ng-click="addNewUser()", tooltip="Save")

@@ -305,9 +305,19 @@ angular.module('neo4jApp')
       fullscreenable: true
       templateUrl: 'views/frame-user-admin.html'
       matches: (input) ->
-        pattern = new RegExp("^#{cmdchar}admin")
+        pattern = new RegExp("^#{cmdchar}admin list")
         input.match(pattern)
-      exec: ['Frame', 'Settings', (Frame, Settings) ->
+      exec: [() ->
+        (input, q) -> q.resolve()
+      ]
+    FrameProvider.interpreters.push
+      type: 'admin'
+      fullscreenable: true
+      templateUrl: 'views/frame-add-new-user.html'
+      matches: (input) ->
+        pattern = new RegExp("^#{cmdchar}admin add user")
+        input.match(pattern)
+      exec: [() ->
         (input, q) -> q.resolve()
       ]
 

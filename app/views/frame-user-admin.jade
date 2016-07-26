@@ -2,7 +2,7 @@ div(fullscreen)
   .outer
     include partials/frame-common-actions
     .inner
-      .view-result.admin(ng-hide='frame.hasErrors')
+      .view-result.help.admin(ng-hide='frame.hasErrors')
         article(ng-controller="UserAdminController")
           .container-fluid
             section.row
@@ -10,4 +10,5 @@ div(fullscreen)
                 .panel.panel-default
                   .panel-heading
                     h4 Users
+                    a(exec-topic="admin add user") Add new user
                   include partials/frame-list-users

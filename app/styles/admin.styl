@@ -1,4 +1,17 @@
+@import 'variables'
+
 .admin
+  [exec-topic]
+    background-color: #F8F8F8
+    border-radius: 3px
+    border: 1px solid #DADADA
+    display: inline-block
+    font-family: mono-font-family
+    font-size: 12px
+    line-height: 18px
+    margin-bottom: 5px
+    margin-right: 5px
+    padding: 0 4px
   a
     font-size: 26px
     line-height: 1em
@@ -7,9 +20,11 @@
       colspan: 100%
     tr, td
       height: 30px
-      border: 1px solid #ddd
       border-top: 0
-
+      vertical-align: middle
+    .reset-password
+      input
+        margin: 8px 0 4px
   .select
     display: inline-block
 
@@ -33,6 +48,5 @@
       a
         vertical-align: text-top
         margin-left: 12px
-
     .table
       margin-bottom: 0
