@@ -15,7 +15,7 @@ const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties
 }
 
 const mapStateToProps = (state) => {
-  return state.meta
+  return state.meta || {}
 }
 
 const mapDispatchToProps = (dispatch) => {

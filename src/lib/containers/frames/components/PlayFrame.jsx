@@ -20,6 +20,7 @@ export const PlayFrame = ({frame}) => {
   }
   return (
     <FrameTemplate
+      className='playFrame'
       header={<FrameTitlebar frame={frame} />}
       contents={guide}
     />

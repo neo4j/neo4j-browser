@@ -19,8 +19,8 @@ describe('Settings', () => {
         <SettingsComponent settings={{ cmdchar: '-', maxHistory: 0 }}/>
       </MuiThemeProvider>
     )
-    expect(wrapper.find('li.setting').at(0).find('input')).to.have.value('-')
-    expect(wrapper.find('li.setting').at(1).find('input')).to.have.value('0')
+    expect(wrapper.find('.setting').at(0).find('input')).to.have.value('-')
+    expect(wrapper.find('.setting').at(1).find('input')).to.have.value('0')
   })
   it('should show default settings', () => {
     const wrapper = mount(
@@ -32,8 +32,8 @@ describe('Settings', () => {
     )
     expect(wrapper.find('#db-settings')).has.length(1)
     expect(wrapper.find('input')).has.length(2)
-    expect(wrapper.find('li.setting').at(0).find('input')).to.have.value(':')
-    expect(wrapper.find('li.setting').at(1).find('input')).to.have.value('10')
+    expect(wrapper.find('.setting').at(0).find('input')).to.have.value(':')
+    expect(wrapper.find('.setting').at(1).find('input')).to.have.value('10')
   })
   it('should not show unknown settings', () => {
     const wrapper = mount(
@@ -43,7 +43,7 @@ describe('Settings', () => {
         </MuiThemeProvider>
       </Provider>
     )
-    expect(wrapper.find('li.setting').at(0).find('input')).to.have.value(':')
-    expect(wrapper.find('li.setting').at(1).find('input')).to.have.value('10')
+    expect(wrapper.find('.setting').at(0).find('input')).to.have.value(':')
+    expect(wrapper.find('.setting').at(1).find('input')).to.have.value('10')
   })
 })

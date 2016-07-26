@@ -1,10 +1,29 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
+import ReactTestUtils from 'react-addons-test-utils'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {DatabaseInfoComponent} from './DatabaseInfo'
 import chai from 'chai'
 import { mount } from 'enzyme'
 import chaiEnzyme from 'chai-enzyme'
 import spies from 'chai-spies'
+
+injectTapEventPlugin()
+
+// Helper for mounted touchTap events
+// https://github.com/airbnb/enzyme/issues/99
+
+function simulateEvent (wrappedTarget, eventType) {
+  if (wrappedTarget.node) {
+    // wrappedTarget was obtained using enzyme's mount()
+    const domNode = ReactDOM.findDOMNode(wrappedTarget.node)
+    ReactTestUtils.Simulate[eventType](domNode)
+  } else {
+    // wrappedTarget was obtained using enzyme's shallow()
+    wrappedTarget.simulate(eventType)
+  }
+}
 
 describe('DatabaseInfo', () => {
   const expect = chai.expect
@@ -26,14 +45,13 @@ describe('DatabaseInfo', () => {
     it('should call on click callback with correct cypher * label is clicked', () => {
       const labels = [{val: 'Person'}]
       const wrapper = mount(<MuiThemeProvider><DatabaseInfoComponent labels={labels} onItemClick={onItemClick}/></MuiThemeProvider>)
-      console.log(wrapper.find('.token-label').length)
-      wrapper.find('.token-label').first().simulate('click')
+      simulateEvent(wrapper.find('.token-label').first(), 'touchTap')
       expect(onItemClick).have.been.called.with('MATCH (n) RETURN n LIMIT 25')
     })
     it('should call on click callback with correct cypher when a non * label is clicked', () => {
       const labels = [{val: 'Person'}]
       const wrapper = mount(<MuiThemeProvider><DatabaseInfoComponent labels={labels} onItemClick={onItemClick}/></MuiThemeProvider>)
-      wrapper.find('.token-label').last().simulate('click')
+      simulateEvent(wrapper.find('.token-label').last(), 'touchTap')
       expect(onItemClick).have.been.called.with('MATCH (n:Person) RETURN n LIMIT 25')
     })
   })
@@ -53,13 +71,13 @@ describe('DatabaseInfo', () => {
     it('should call on click callback with correct cypher when * relationship is clicked', () => {
       const relationshipTypes = [{val: 'DIRECTED'}]
       const wrapper = mount(<MuiThemeProvider><DatabaseInfoComponent relationshipTypes={relationshipTypes} onItemClick={onItemClick}/></MuiThemeProvider>)
-      wrapper.find('.token-relationship').first().simulate('click')
+      simulateEvent(wrapper.find('.token-relationship').first(), 'touchTap')
       expect(onItemClick).have.been.called.with('MATCH ()-[r]->() RETURN r LIMIT 25')
     })
     it('should call on click callback with correct cypher when a non * relationship is clicked', () => {
       const relationshipTypes = [{val: 'DIRECTED'}]
       const wrapper = mount(<MuiThemeProvider><DatabaseInfoComponent relationshipTypes={relationshipTypes} onItemClick={onItemClick}/></MuiThemeProvider>)
-      wrapper.find('.token-relationship').last().simulate('click')
+      simulateEvent(wrapper.find('.token-relationship').last(), 'touchTap')
       expect(onItemClick).have.been.called.with('MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 25')
     })
   })
@@ -79,7 +97,7 @@ describe('DatabaseInfo', () => {
     it('should call on click callback with correct cypher when property is clicked', () => {
       const properties = [{val: 'born'}]
       const wrapper = mount(<MuiThemeProvider><DatabaseInfoComponent properties={properties} onItemClick={onItemClick}/></MuiThemeProvider>)
-      wrapper.find('.token-property').first().simulate('click')
+      simulateEvent(wrapper.find('.token-property').first(), 'touchTap')
       expect(onItemClick).have.been.called.with('MATCH (n) WHERE EXISTS(n.born) RETURN DISTINCT "node" as element, n.born AS born LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.born) RETURN DISTINCT "relationship" AS element, r.born AS born LIMIT 25')
     })
   })

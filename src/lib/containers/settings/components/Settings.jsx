@@ -30,7 +30,7 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
     const tooltip = visualSetting[setting].tooltip
 
     return (
-      <ListItem className={styles.setting} key={uuid.v4()}>
+      <ListItem className={styles.setting + ' setting'} key={uuid.v4()}>
         <label title={tooltip}>{visual}</label>
         <TextField
           id={uuid.v4()}
