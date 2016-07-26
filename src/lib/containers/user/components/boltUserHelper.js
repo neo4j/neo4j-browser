@@ -1,9 +1,9 @@
 import bolt from '../../../../services/bolt/bolt'
 
 function callProcedure (query, callback) {
-  bolt.transaction(query).then((r) => {
+  return bolt.transaction(query).then((r) => {
     return callback(r)
-  })
+  }).catch((_) => { })
 }
 
 export function getListOfUsersWithRole (callBack) {

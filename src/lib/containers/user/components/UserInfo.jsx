@@ -19,11 +19,11 @@ export class UserInfoComponent extends React.Component {
     this.setState({user: newProps.info})
   }
   componentWillMount () {
-    Promise.resolve(bolt.transaction('CALL dbms.showCurrentUser'))
+    bolt.transaction('CALL dbms.showCurrentUser')
       .then((r) => {
         const user = this.extractUserNameAndRolesFromBolt(r)
         this.props.updateCurrentUser(user.username, user.roles)
-      })
+      }).catch(() => {})
   }
   render () {
     const currentUser = this.state.user
