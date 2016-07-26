@@ -2,41 +2,16 @@ div(fullscreen)
   .outer
     include partials/frame-common-actions
     .inner
-      .view-result.help(ng-hide='frame.hasErrors')
+      .view-result.admin(ng-hide='frame.hasErrors')
         article.help(ng-controller="UserAdminController")
           .container-fluid
             section.row
               .col-md-12.col-sm-12
                 .panel.panel-default
                   .panel-heading
+                    h4 Add new user
+                    include partials/frame-add-new-user
+                .panel.panel-default
+                  .panel-heading
                     h4 Users
-                  table.table.table-condensed
-                    tr
-                      th Username
-                      th Role(s)
-                      th Status
-                      tr(ng-repeat="user in users", ng-form, name='form_{{user}}')
-                        td {{user.username}}
-                        td
-                          div(ng-repeat="role in user.roles") {{ role }}
-                            button(ng-click="removeRoleFromUser(user, role)") -
-                          select(ng-show="editingRole(user)", ng-model="user.selectedItem")
-                            option(ng-repeat="role in listOfKnownRoles(user.roles)", value="{{role}}" ) {{role}}
-                          button(ng-click="appendRole(user, user.selectedItem)")
-                            | +
-                          button(ng-show="editingRole(user)", ng-click="hideRole(user)")
-                            | Cancel
-                        td {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
-
-                        td
-                          button(ng-show="notCurrentUser(user.username)")
-                            | Edit user
-                        td(ng-show="notCurrentUser(user.username)")
-                          button(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)')
-                            | Suspend user
-                          button(ng-hide ="(user.flags.indexOf('is_suspended') < 0)", ng-click='activate(user.username)')
-                            | Activate user
-                        td(ng-hide="notCurrentUser(user.username)")
-                        td
-                          button(ng-show="notCurrentUser(user.username)", ng-click='delete(user.username)')
-                            | Delete user
+                  include partials/frame-list-users

@@ -66,6 +66,14 @@ angular.module('neo4jApp.services')
           )
           q.promise
 
+        addNewUser: (username, password, requirePasswordChange) ->
+          q = $q.defer()
+          Server.cypher('', { query: "CALL dbms.createUser('#{username}', '#{password}', #{requirePasswordChange})"}).then(
+            (res) ->
+              q.resolve res
+          )
+          q.promise
+
         suspendUser: (username) ->
           q = $q.defer()
           Server.cypher('', { query: "CALL dbms.suspendUser('#{username}')"}).then(

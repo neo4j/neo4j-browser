@@ -1,0 +1,20 @@
+a.sl.sl-add-circle(ng-hide="isAddingNewUser", ng-click="showNewUser()")
+a.sl.sl-minus-circle(ng-show="isAddingNewUser", ng-click="hideNewUser()")
+table.table.table-condensed(ng-show="isAddingNewUser")
+  tr
+    th Username
+    th Password
+    th Require password change on first login
+    tr
+      td
+        input(ng-model="newUser.username", type="text")
+      td
+        input(ng-model="newUser.password", type="password")
+      td
+        input(ng-model="newUser.requirePasswordChange", type="checkbox")
+  tr
+    td
+      button(ng-click="addNewUser()")
+        | Save
+      button(ng-click="hideNewUser()")
+        | Cancel
