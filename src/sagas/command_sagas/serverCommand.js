@@ -20,6 +20,10 @@ export function * handleServerCommand (action, cmdchar) {
     yield call(handleServerAddCommand, action, cmdchar)
     return
   }
+  if (serverCmd === 'list') {
+    yield call(handleServerListCommand, action, cmdchar)
+    return
+  }
   if (serverCmd === 'use') {
     yield call(handleUseConnectionCommand, action, props)
     return
@@ -30,6 +34,11 @@ export function * handleServerCommand (action, cmdchar) {
   }
   yield put(frames.actions.add({...action, type: 'unknown'}))
   return
+}
+
+export function * handleServerListCommand (action, cmdchar) {
+  const state = yield select(bookmarks.selectors.getBookmarks)
+  yield put(frames.actions.add({...action, contents: JSON.stringify(state, null, 2), type: 'pre'}))
 }
 
 export function * connectToBookmark (action, connectionName) {
