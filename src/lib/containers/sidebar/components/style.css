@@ -17,8 +17,8 @@
   background-color: #30333A !important
 }
 .tab {
-  flex: 0 0 200px;
-  width: 200px;
+  flex: 0 0 280px;
+  width: 280px;
   background-color: #30333A;
-  padding: 5px;
+  padding: 15px;
 }
