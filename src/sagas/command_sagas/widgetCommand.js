@@ -1,12 +1,9 @@
-import { take, put, select, call, fork } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
-import bolt from '../../services/bolt/bolt'
+import { put, call } from 'redux-saga/effects'
 import frames from '../../lib/containers/frames'
-import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
-import { UserException } from '../../services/exceptions'
+import { splitStringOnFirst } from '../../services/commandUtils'
 
 export function * handleWidgetCommand (action, cmdchar) {
-  const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
+  const [serverCmd] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   if (serverCmd === 'render') {
     yield call(handleWidgetRenderCommand, action, cmdchar)
     return
@@ -15,6 +12,6 @@ export function * handleWidgetCommand (action, cmdchar) {
 }
 
 export function * handleWidgetRenderCommand (action, cmdchar) {
-  const [serverCmd, uuid] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
+  const uuid = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')[1]
   yield put(frames.actions.add({...action, contents: uuid, type: 'widget'}))
 }

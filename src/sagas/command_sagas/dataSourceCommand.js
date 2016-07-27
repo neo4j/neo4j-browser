@@ -1,13 +1,12 @@
-import { take, put, select, call, spawn, cancel } from 'redux-saga/effects'
+import { put, select, call, spawn, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import bolt from '../../services/bolt/bolt'
-import uuid from 'uuid'
 import frames from '../../lib/containers/frames'
 import dataSource from '../../lib/containers/dataSource'
-import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
+import { splitStringOnFirst } from '../../services/commandUtils'
 import { UserException } from '../../services/exceptions'
 
-function * runCommand (ds) {
+export function * runCommand (ds) {
   while (true) {
     try {
       const connection = yield call(bolt.getConnection, ds.bookmarkId)
@@ -17,14 +16,14 @@ function * runCommand (ds) {
     } catch (e) {
       console.log(e)
     }
-    yield call(delay, ds.refreshInterval*1000)
+    yield call(delay, ds.refreshInterval * 1000)
   }
 }
 
-function * ensureDataSourceStatus (dataSourcesFromState = [], refs = {}) {
+export function * ensureDataSourceStatus (dataSourcesFromState = [], refs = {}) {
   const done = []
   let localRefs = {...refs}
-  for(let i = 0; i < dataSourcesFromState.length; i++) {
+  for (let i = 0; i < dataSourcesFromState.length; i++) {
     const datasource = dataSourcesFromState[i]
     done.push(datasource.id)
     if (datasource.refreshInterval < 1) {
@@ -41,7 +40,7 @@ function * ensureDataSourceStatus (dataSourcesFromState = [], refs = {}) {
   }
   const refKeys = Object.keys(localRefs)
   if (done.length !== refKeys.length) { // Removed datasource(s) that needs to be stopped
-    for(let i = 0; i < refKeys.length; i++) {
+    for (let i = 0; i < refKeys.length; i++) {
       const key = refKeys[i]
       if (done.indexOf(key) >= 0) continue
       localRefs = yield stopAndRemoveDataSource(key, localRefs)
@@ -50,7 +49,7 @@ function * ensureDataSourceStatus (dataSourcesFromState = [], refs = {}) {
   return localRefs
 }
 
-function * stopAndRemoveDataSource (dataSourceId, refs) {
+export function * stopAndRemoveDataSource (dataSourceId, refs) {
   const localRefs = {...refs}
   if (localRefs[dataSourceId] !== undefined) {
     yield cancel(localRefs[dataSourceId])
@@ -69,7 +68,7 @@ export function * startBackgroundDataSources () {
 }
 
 export function * handleDataSourceCommand (action, cmdchar) {
-  const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
+  const [serverCmd] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   if (serverCmd === 'create') {
     yield call(handleDataSourceCreateCommand, action, cmdchar)
     return
@@ -87,7 +86,7 @@ export function * handleDataSourceCommand (action, cmdchar) {
 
 export function * handleDataSourceCreateCommand (action, cmdchar) {
   // :datasource create {"name": "myName", "command": "RETURN rand()", "bookmarkId":"uuid-of-existing-bookmark", "refreshInterval": 10, "parameters": {}}
-  const [serverCmd, propsStr] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
+  const propsStr = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')[1]
   try {
     const props = JSON.parse(propsStr)
     const errorMessage = 'Wrong format. It should be ":datasource create {"name": "myName", "command": "RETURN rand()", "bookmarkId":"uuid-of-existing-bookmark", "refreshInterval": 10, "parameters": {}}"'
@@ -97,7 +96,7 @@ export function * handleDataSourceCreateCommand (action, cmdchar) {
         !props.refreshInterval ||
         !props.bookmarkId
       ) throw new UserException(errorMessage)
-      yield put(dataSource.actions.add({...action, ...props}))
+    yield put(dataSource.actions.add({...action, ...props}))
   } catch (e) {
     yield put(frames.actions.add({...action, errors: e, type: 'cmd'}))
     return
@@ -106,7 +105,7 @@ export function * handleDataSourceCreateCommand (action, cmdchar) {
 
 export function * handleDataSourceRemoveCommand (action, cmdchar) {
   // :datasource remove uuid-of-existing-datasource
-  const [serverCmd, dsuuid] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
+  const dsuuid = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')[1]
   try {
     if (!dsuuid) {
       const errorMessage = 'Wrong format. It should be ":datasource remove uuid-of-existing-datasource"'
