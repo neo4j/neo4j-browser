@@ -9,3 +9,15 @@ export function ConnectionException (message, code = 'Connection Error') {
     message
   }]}
 }
+
+export function CreateDataSourceValidationError () {
+  return {
+    type: 'CreateDataSourceValidationError'
+  }
+}
+
+export function RemoveDataSourceValidationError () {
+  return {
+    type: 'RemoveDataSourceValidationError'
+  }
+}

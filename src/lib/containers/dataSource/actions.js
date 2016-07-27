@@ -4,7 +4,7 @@ import uuid from 'uuid'
 export const add = (dataSource) => {
   return {
     type: t.ADD,
-    dataSource: Object.assign({}, dataSource, {id: uuid.v4(), isActive: 1})
+    dataSource: Object.assign({}, dataSource, {id: (dataSource.id || uuid.v4()), isActive: 1})
   }
 }
 
