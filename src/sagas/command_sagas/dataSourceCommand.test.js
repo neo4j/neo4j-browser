@@ -3,9 +3,8 @@ import { select, call, spawn, cancel, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { createMockTask } from 'redux-saga/utils'
 import ds from '../../lib/containers/dataSource'
-import frames from '../../lib/containers/frames'
 import * as saga from './dataSourceCommand'
-import { CreateDataSourceValidationError, RemoveDataSourceValidationError } from '../../services/exceptions'
+import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from '../../services/exceptions'
 
 function createDataSource (id, refreshInterval, isActive) {
   return { id, refreshInterval, isActive }
@@ -157,15 +156,17 @@ describe('dataSourceCommandSagas', () => {
     })
   })
   describe('handleDataSourceCommand saga', () => {
-    it('should put unknown frame for unknown command', () => {
+    it('should call onError for unknown command', () => {
       // Given
       const action = {cmd: ':x unknown', id: 'x-x-x'}
       const cmdchar = ':'
-      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar)
+      const onSuccess = () => {}
+      const onError = () => {}
+      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar, onSuccess, onError)
 
       // When
       const actual = handleDataSourceCommandSaga.next().value
-      const expected = put(frames.actions.add({...action, type: 'unknown'}))
+      const expected = call(onError, {...action, type: 'unknown'}, UnknownCommandError(action.cmd))
 
       // Then
       expect(actual).to.deep.equal(expected)
@@ -232,7 +233,7 @@ describe('dataSourceCommandSagas', () => {
         // Then
         expect(actual).to.deep.equal(expected)
       })
-      it('should put a error frame on validation error', () => {
+      it('should call onError on validation error', () => {
         // Given
         const props = { // No name
           command: 'RETURN rand()',
@@ -243,21 +244,22 @@ describe('dataSourceCommandSagas', () => {
           cmd: ':x create ' + JSON.stringify(props),
           id: 'x-x-x'
         }
+        const onError = () => {}
         const cmdchar = ':'
-        const createSaga = saga.handleDataSourceCreateCommand(action, cmdchar)
+        const createSaga = saga.handleDataSourceCreateCommand(action, cmdchar, null, onError)
 
         // When
         const actual = createSaga.next().value
-        const expected = put(frames.actions.add({
+        const expected = call(onError, {
           ...action,
-          error: (new CreateDataSourceValidationError()),
           type: 'error'
-        }))
+        }, CreateDataSourceValidationError())
 
         // Then
         // Cannot deep equal complete object because of stack trace etc when thrown
-        expect(actual.PUT.action.state.error.type).to.equal('CreateDataSourceValidationError')
-        expect(actual.PUT.action.state.error.type).to.deep.equal(expected.PUT.action.state.error.type)
+        expect(actual.CALL.args[0]).to.deep.equal(expected.CALL.args[0])
+        expect(actual.CALL.args[1].type).to.deep.equal(expected.CALL.args[1].type)
+        expect(actual.CALL.args[1].type).to.equal('CreateDataSourceValidationError')
       })
     })
     describe('handleDataSourceRemoveCommand saga', () => {
@@ -277,40 +279,42 @@ describe('dataSourceCommandSagas', () => {
         // Then
         expect(actual).to.deep.equal(expected)
       })
-      it('should put a error frame on validation error', () => {
+      it('should call onError on validation error', () => {
         // Given
         const action = {
           cmd: ':x remove',
           id: 'x-x-x'
         }
         const cmdchar = ':'
-        const removeSaga = saga.handleDataSourceRemoveCommand(action, cmdchar)
+        const onError = () => {}
+        const removeSaga = saga.handleDataSourceRemoveCommand(action, cmdchar, null, onError)
 
         // When
         const actual = removeSaga.next().value
-        const expected = put(frames.actions.add({
+        const expected = call(onError, {
           ...action,
-          error: (new RemoveDataSourceValidationError()),
           type: 'error'
-        }))
+        }, RemoveDataSourceValidationError())
 
         // Then
         // Cannot deep equal complete object because of stack trace etc when thrown
-        expect(actual.PUT.action.state.error.type).to.equal('RemoveDataSourceValidationError')
-        expect(actual.PUT.action.state.error.type).to.deep.equal(expected.PUT.action.state.error.type)
+        expect(actual.CALL.args[0]).to.deep.equal(expected.CALL.args[0])
+        expect(actual.CALL.args[1].type).to.deep.equal(expected.CALL.args[1].type)
+        expect(actual.CALL.args[1].type).to.equal('RemoveDataSourceValidationError')
       })
     })
-    it('handleDataSourceListCommand should put a frame with existing datasources', () => {
+    it('handleDataSourceListCommand call onSuccess with existing datasources', () => {
       // Given
       const action = {cmd: ':x', id: 'x-x-x'}
       const cmdchar = ':'
-      const listSaga = saga.handleDataSourceListCommand(action, cmdchar)
+      const onSuccess = () => {}
+      const listSaga = saga.handleDataSourceListCommand(action, cmdchar, onSuccess)
       const dataSources = [{name: 'myDS'}]
 
       // When
       listSaga.next() // state read
       const actual = listSaga.next(dataSources).value // pass dataSources to state read
-      const expected = put(frames.actions.add({...action, contents: JSON.stringify(dataSources, null, 2), type: 'pre'}))
+      const expected = call(onSuccess, {...action, type: 'pre'}, JSON.stringify(dataSources, null, 2))
 
       // Then
       expect(actual).to.deep.equal(expected)

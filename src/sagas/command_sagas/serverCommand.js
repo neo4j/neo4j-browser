@@ -31,7 +31,7 @@ export function * handleServerCommand (action, cmdchar, onSuccess, onError) {
     yield call(connectToBookmark, action, props, onSuccess, onError)
     return
   }
-  yield call(onError, {...action, type: 'unknown'}, new UnknownCommandError(action.cmd))
+  yield call(onError, {...action, type: 'unknown'}, UnknownCommandError(action.cmd))
   return
 }
 

@@ -43,15 +43,15 @@ function * watchCommands () {
 }
 
 function * handleCommand (action) {
-  let onSuccess = action.onSuccess || (() => {})
-  let onError = action.onError || (() => {})
+  let onSuccess
+  let onError
   if (action.type === editor.actionTypes.USER_COMMAND_QUEUED) {
     yield put(editor.actions.addHistory({cmd: action.cmd}))
-    onSuccess = createSucessFrame
-    onError = createErrorFrame
+    onSuccess = action.onSuccess || createSucessFrame
+    onError = action.onError || createErrorFrame
   } else {
-    onSuccess = dataSourceDidRun
-    onError = dataSourceDidFail
+    onSuccess = action.onSuccess || dataSourceDidRun
+    onError = action.onError || dataSourceDidFail
   }
   const settingsState = yield select(getSettings)
   const cleanCmd = cleanCommand(action.cmd)
@@ -76,5 +76,6 @@ function * handleClientCommand (action, cmdchar, onSuccess, onError) {
 
 export {
   watchCommands,
+  handleCommand,
   handleClientCommand
 }
