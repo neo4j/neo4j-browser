@@ -1,5 +1,4 @@
-import { put, call } from 'redux-saga/effects'
-import frames from '../../lib/containers/frames'
+import { call } from 'redux-saga/effects'
 import { splitStringOnFirst } from '../../services/commandUtils'
 
 export function * handleWidgetCommand (action, cmdchar, onSuccess, onError) {

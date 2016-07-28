@@ -15,7 +15,7 @@ function * createSucessFrame (meta, result) {
 }
 
 function * createErrorFrame (meta, error) {
-  if(meta.type === 'cypher' && error && error.fields) { // Cypher error from Bolt
+  if (meta.type === 'cypher' && error && error.fields) { // Cypher error from Bolt
     meta.originalError = {...error} // Keep original
     error = BoltError(error)
   }

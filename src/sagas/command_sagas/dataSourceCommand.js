@@ -1,11 +1,9 @@
 import { put, select, call, spawn, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import uuid from 'uuid'
-import bolt from '../../services/bolt/bolt'
-import frames from '../../lib/containers/frames'
 import dataSource from '../../lib/containers/dataSource'
 import { splitStringOnFirst } from '../../services/commandUtils'
-import { CreateDataSourceValidationError, RemoveDataSourceValidationError } from '../../services/exceptions'
+import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from '../../services/exceptions'
 
 export function * runCommand (ds) {
   const resultId = ds.resultId || uuid.v4()
@@ -64,7 +62,7 @@ export function * startBackgroundDataSources (checkInterval = 10) {
   }
 }
 
-export function * handleDataSourceCommand (action, cmdchar) {
+export function * handleDataSourceCommand (action, cmdchar, onSuccess, onError) {
   const [subCmd] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   if (subCmd === 'create') {
     yield call(handleDataSourceCreateCommand, action, cmdchar)
@@ -78,11 +76,11 @@ export function * handleDataSourceCommand (action, cmdchar) {
     yield call(handleDataSourceListCommand, action, cmdchar)
     return
   }
-  yield put(frames.actions.add({...action, type: 'unknown'}))
+  yield call(onError, {...action, type: 'unknown'}, UnknownCommandError(action.cmd))
   return
 }
 
-export function * handleDataSourceCreateCommand (action, cmdchar) {
+export function * handleDataSourceCreateCommand (action, cmdchar, onSuccess, onError) {
   // :datasource create {"name": "myName", "command": "RETURN rand()", "bookmarkId":"uuid-of-existing-bookmark", "refreshInterval": 10, "parameters": {}}
   const propsStr = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')[1]
   try {
@@ -95,12 +93,12 @@ export function * handleDataSourceCreateCommand (action, cmdchar) {
       ) throw new CreateDataSourceValidationError()
     yield put(dataSource.actions.add({...action, ...props}))
   } catch (e) {
-    yield put(frames.actions.add({...action, error: e, type: 'error'}))
+    yield call(onError, {...action, type: 'error'}, e)
     return
   }
 }
 
-export function * handleDataSourceRemoveCommand (action, cmdchar) {
+export function * handleDataSourceRemoveCommand (action, cmdchar, onSuccess, onError) {
   // :datasource remove uuid-of-existing-datasource
   const dsuuid = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')[1]
   try {
@@ -110,12 +108,12 @@ export function * handleDataSourceRemoveCommand (action, cmdchar) {
       yield put(dataSource.actions.remove(dsuuid))
     }
   } catch (e) {
-    yield put(frames.actions.add({...action, error: e, type: 'error'}))
+    yield call(onError, {...action, type: 'error'}, e)
     return
   }
 }
 
-export function * handleDataSourceListCommand (action, cmdchar) {
+export function * handleDataSourceListCommand (action, cmdchar, onSuccess, onError) {
   const state = yield select(dataSource.selectors.getDataSources)
-  yield put(frames.actions.add({...action, contents: JSON.stringify(state, null, 2), type: 'pre'}))
+  yield call(onSuccess, {...action, type: 'pre'}, JSON.stringify(state, null, 2))
 }
