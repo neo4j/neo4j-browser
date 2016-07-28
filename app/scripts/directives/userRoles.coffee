@@ -26,7 +26,7 @@ angular.module('neo4jApp.directives')
     scope:
       user:'=ngModel'
 
-    link: (scope, element, attrs) ->
+    link: (scope) ->
 
       scope.selectedItem = null
       scope.isAddingRole = false
