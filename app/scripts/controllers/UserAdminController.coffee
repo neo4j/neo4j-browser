@@ -24,10 +24,11 @@ angular.module('neo4jApp.controllers')
   .controller 'UserAdminController', [
     '$scope', 'Settings', 'ProtocolFactory'
   ($scope, Settings, ProtocolFactory) ->
-    $scope.selectedItem = null
+
     $scope.autoRefresh = false
     $scope.defaultSelection = ''
     $scope.resetPasswordValue = null
+    $scope.fileredUsernames = []
 
     $scope.showResetPassword = (user, value) ->
       user.shouldShowResetPassword = value
@@ -36,35 +37,6 @@ angular.module('neo4jApp.controllers')
       ProtocolFactory.getStoredProcedureService().changeUserPassword(username, resetPasswordValue).then(() ->
         $scope.refresh()
       )
-
-    ProtocolFactory.getStoredProcedureService().getRolesList().then((response) ->
-      $scope.listOfAllKnownRoles = response
-    ).catch((r) -> )
-
-    $scope.listOfKnownRoles = (roles) ->
-      $scope.listOfAllKnownRoles.filter((role) -> !roles.includes(role))
-
-    $scope.editingRole = (user) ->
-      $scope.users[$scope.users.indexOf(user)].editRole
-
-    $scope.showRole = (user) ->
-      $scope.users[$scope.users.indexOf(user)].editRole = true
-
-    $scope.hideRole = (user) ->
-      refUser = $scope.users[$scope.users.indexOf(user)]
-      refUser.editRole = false
-      refUser.isAddingRole = false
-      refUser.selectedItem = null
-
-    $scope.appendRole = (user, role) ->
-      if role?
-        $scope.addRole(user.username, role)
-        user.isAddingRole = false
-      else
-        $scope.showRole(user)
-        user.isAddingRole = true
-
-    $scope.fileredUsernames = []
 
     $scope.refresh = () ->
       ProtocolFactory.getStoredProcedureService().getUserList().then((response) ->
@@ -87,17 +59,17 @@ angular.module('neo4jApp.controllers')
         $scope.refresh()
       ).catch((r) -> )
 
-    $scope.addRole = (username, role) ->
-      ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(() ->
-        $scope.refresh()
-      )
-
     $scope.removeRoleFromUser = (user, role) ->
       ProtocolFactory.getStoredProcedureService().removeRoleFromUser(user.username, role).then(() ->
         $scope.refresh()
       )
     $scope.notCurrentUser = (username) ->
       username in $scope.filteredUsernames
+
+    $scope.$on 'addRoleFor', (event, username, role) ->
+      ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(() ->
+        $scope.refresh()
+      )
 
     $scope.refresh()
 ]

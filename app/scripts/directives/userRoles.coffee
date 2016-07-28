@@ -19,17 +19,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
 'use strict';
-
 angular.module('neo4jApp.directives')
-  .directive('execTopic', ['$rootScope', 'Frame', 'Settings', ($rootScope, Frame, Settings) ->
-    restrict: 'A'
-    link: (scope, element, attrs) ->
-      topic = attrs.execTopic
-      return unless topic
-      element.on 'click', (e) ->
-        e.preventDefault()
-        topic = topic.toLowerCase().trim().replace('-', ' ')
-        Frame.create(input: "#{Settings.cmdchar}#{topic}")
-        $rootScope.$apply() unless $rootScope.$$phase
-  ])
+  .directive('userRoles', ['$rootScope', 'ProtocolFactory', ($rootScope, ProtocolFactory) ->
+    restrict: 'A',
+    templateUrl: 'views/partials/user-roles.html',
+    scope:
+      user:'=ngModel'
 
+    link: (scope, element, attrs) ->
+
+      scope.selectedItem = null
+      scope.isAddingRole = false
+      scope.listOfKnownRoles = []
+
+      ProtocolFactory.getStoredProcedureService().getRolesList().then((response) ->
+        scope.listOfKnownRoles = response.filter((role) -> !scope.user.roles.includes(role))
+      ).catch((r) -> )
+
+      scope.hideRole = () ->
+        scope.isAddingRole = false
+        scope.selectedItem = null
+
+      scope.showRole = () ->
+        scope.isAddingRole = true
+
+      scope.appendRole = () ->
+        if scope.selectedItem?
+          scope.$emit 'addRoleFor', scope.user.username, scope.selectedItem
+          scope.isAddingRole = false
+
+  ])

@@ -11,14 +11,7 @@ table.table.table-condensed
         .token.token-label(ng-repeat="role in user.roles")
           | {{ role }}
           a.sl.sl-minus-circle(ng-click="removeRoleFromUser(user, role)", tooltip="Remove")
-        .select
-          select(ng-show="editingRole(user)", ng-model="user.selectedItem")
-            option(ng-repeat="role in listOfKnownRoles(user.roles)", value="{{role}}" ) {{role}}
-          .select-actions
-            a.btn.sl.sl-arrow-circle-right(ng-show="user.isAddingRole", ng-disabled="user.selectedItem == null", ng-click="appendRole(user, user.selectedItem)", tooltip="Assign")
-            a.btn.sl.sl-delete-circle(ng-show="editingRole(user)", ng-click="hideRole(user)", tooltip="Cancel")
-        span
-          a.btn.sl.sl-add-circle(ng-hide="user.isAddingRole", ng-click="appendRole(user, user.selectedItem)", tooltip="Add")
+        div(user-roles ng-model="user")
       td
         | {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
         a.btn.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)', tooltip="Suspend")

@@ -30,7 +30,6 @@ angular.module('neo4jApp.controllers')
     $scope.editingRole = true
     $scope.listOfAllKnownRoles = []
 
-
     getNewUserObject = () ->
       {
         fields: {
@@ -50,7 +49,6 @@ angular.module('neo4jApp.controllers')
         $scope.user.fields.roles.forEach((role) -> $scope.addRole($scope.user.fields.username, role)) if $scope.user.fields.roles.length isnt 0
       ).then(() ->
         $scope.user = getNewUserObject()
-
       )
 
     ProtocolFactory.getStoredProcedureService().getRolesList().then((response) ->
