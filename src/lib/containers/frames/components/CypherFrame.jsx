@@ -28,7 +28,7 @@ class CypherFrame extends React.Component {
 
   render () {
     const frame = this.props.frame
-    const errors = frame.errors && frame.errors.fields || false
+    const errors = frame.error && frame.error.fields || false
     const result = frame.result || false
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {

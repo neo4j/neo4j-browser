@@ -15,6 +15,16 @@ export const remove = (dsuuid) => {
   }
 }
 
+export const executeCommand = (cmd, dataSourceId, bookmarkId, resultId) => {
+  return {
+    type: t.COMMAND_QUEUED,
+    cmd,
+    dataSourceId,
+    bookmarkId,
+    resultId
+  }
+}
+
 export const didRun = (dataSourceId, result) => {
   return {
     type: t.DID_RUN,

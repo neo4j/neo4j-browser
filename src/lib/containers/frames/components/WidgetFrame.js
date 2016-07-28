@@ -6,8 +6,8 @@ import FrameTemplate from './FrameTemplate'
 import dataSource from '../../dataSource'
 
 export const WidgetFrame = (props) => {
-  const ds = props.getDataSource(props.frame.contents)
-  const latest = ds.result
+  const ds = props.getDataSource(props.frame.result)
+  const latest = ds.result.result
   const res = !latest || typeof latest === 'string' ? latest : latest.records[0].get(0)
   const frameContents = (
     <pre>{

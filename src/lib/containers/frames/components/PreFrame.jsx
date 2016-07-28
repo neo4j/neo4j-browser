@@ -6,7 +6,7 @@ const PreFrame = ({frame}) => {
   return (
     <FrameTemplate
       header={<FrameTitlebar frame={frame} />}
-      contents={<pre>{frame.contents}</pre>}
+      contents={<pre>{frame.result || frame.contents}</pre>}
     />
   )
 }

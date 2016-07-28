@@ -1,5 +1,6 @@
 import { put, select, call, spawn, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
+import uuid from 'uuid'
 import bolt from '../../services/bolt/bolt'
 import frames from '../../lib/containers/frames'
 import dataSource from '../../lib/containers/dataSource'
@@ -7,14 +8,8 @@ import { splitStringOnFirst } from '../../services/commandUtils'
 import { CreateDataSourceValidationError, RemoveDataSourceValidationError } from '../../services/exceptions'
 
 export function * runCommand (ds) {
-  try {
-    const connection = yield call(bolt.getConnection, ds.bookmarkId)
-    if (!connection) throw new Error('Could not get result from datasource "' + ds.name + '" on connection ' + ds.bookmarkId)
-    const res = yield call(connection.transaction, ds.command)
-    yield put(dataSource.actions.didRun(ds.id, res))
-  } catch (e) {
-    yield put({type: dataSource.actionTypes.DID_FAIL, error: e})
-  }
+  const resultId = ds.resultId || uuid.v4()
+  yield put(dataSource.actions.executeCommand(ds.command, ds.id, ds.bookmarkId, resultId))
 }
 
 export function * intervalRunComamnd (ds) {
@@ -36,11 +31,9 @@ export function * ensureDataSourceStatus (dataSourcesFromState = [], refs = {}) 
       continue
     }
     if (datasource.isActive < 1) continue
-    if (datasource.refreshInterval < 1) {
-      localRefs[datasource.id] = yield spawn(runCommand, datasource)
-    } else {
-      localRefs[datasource.id] = yield spawn(intervalRunComamnd, datasource)
-    }
+    let runFn = intervalRunComamnd
+    if (datasource.refreshInterval < 1) runFn = runCommand
+    localRefs[datasource.id] = yield spawn(runFn, datasource)
   }
   const refKeys = Object.keys(localRefs)
   if (done.length !== refKeys.length) { // Removed datasource(s) that needs to be stopped

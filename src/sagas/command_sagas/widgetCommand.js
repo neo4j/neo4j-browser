@@ -2,16 +2,16 @@ import { put, call } from 'redux-saga/effects'
 import frames from '../../lib/containers/frames'
 import { splitStringOnFirst } from '../../services/commandUtils'
 
-export function * handleWidgetCommand (action, cmdchar) {
+export function * handleWidgetCommand (action, cmdchar, onSuccess, onError) {
   const [serverCmd] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   if (serverCmd === 'render') {
-    yield call(handleWidgetRenderCommand, action, cmdchar)
+    yield call(handleWidgetRenderCommand, action, cmdchar, onSuccess, onError)
     return
   }
   return
 }
 
-export function * handleWidgetRenderCommand (action, cmdchar) {
+export function * handleWidgetRenderCommand (action, cmdchar, onSuccess) {
   const uuid = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')[1]
-  yield put(frames.actions.add({...action, contents: uuid, type: 'widget'}))
+  yield call(onSuccess, {...action, type: 'widget'}, uuid)
 }
