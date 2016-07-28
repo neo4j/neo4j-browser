@@ -51,23 +51,6 @@ angular.module('neo4jApp.controllers')
         $scope.user = getNewUserObject()
       )
 
-    ProtocolFactory.getStoredProcedureService().getRolesList().then((response) ->
-      $scope.listOfAllKnownRoles = response
-    ).catch((r) -> )
-
-    $scope.listOfKnownRoles = (roles) ->
-      $scope.listOfAllKnownRoles.filter((role) -> !roles.includes(role))
-
-    $scope.showRole = (user) ->
-      $scope.user[$scope.users.indexOf(user)].editRole = true
-
-    $scope.hideRole = () ->
-      $scope.editingRole = false
-      $scope.selectedItem = null
-
-    $scope.appendRole = () ->
-      $scope.user.fields.roles.push($scope.selectedItem)
-      $scope.user.isAddingRole = false
 
     $scope.fileredUsernames = []
 
@@ -76,12 +59,15 @@ angular.module('neo4jApp.controllers')
         $scope.refresh()
       )
 
-    $scope.removeRoleFromUser = (role) ->
-      $scope.user.fields.roles.splice($scope.user.fields.roles.indexOf(role), 1)
-
     $scope.notCurrentUser = (username) ->
       username in $scope.filteredUsernames
 
     $scope.enableSubmit = () ->
       $scope.user.fields.username isnt '' and $scope.user.fields.password isnt ''
+
+    $scope.$on 'addRoleFor', (event, username, role) ->
+      $scope.user.fields.roles.push(role)
+
+    $scope.$on 'removeRoleFor', (event, username, role) ->
+      $scope.user.fields.roles.splice($scope.user.fields.roles.indexOf(role), 1)
 ]

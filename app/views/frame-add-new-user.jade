@@ -23,17 +23,7 @@ div(fullscreen)
                       td
                         input(ng-model="user.fields.username", type="text")
                       td
-                        .token.token-label(ng-repeat="role in user.fields.roles")
-                          | {{ role }}
-                          a.sl.sl-minus-circle(ng-click="removeRoleFromUser(role)", tooltip="Remove")
-                        .select
-                          select(ng-show="editingRole", ng-model="selectedItem")
-                            option(ng-repeat="role in listOfKnownRoles(user.fields.roles)", value="{{role}}" ) {{role}}
-                          .select-actions
-                            a.btn.sl.sl-arrow-circle-right(ng-show="user.isAddingRole", ng-click="appendRole()", tooltip="Assign")
-                            a.btn.sl.sl-delete-circle(ng-show="editingRole", ng-click="hideRole()", tooltip="Cancel")
-                        span
-                          a.btn.sl.sl-add-circle(ng-hide="user.isAddingRole", ng-click="appendRole()", tooltip="Add")
+                        div(user-roles ng-model="user.fields")
                       td
                         input(ng-model="user.fields.password", type="password")
                       td
