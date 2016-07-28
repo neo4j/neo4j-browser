@@ -63,7 +63,9 @@ angular.module('neo4jApp.controllers')
     $scope.showRole = (user) ->
       $scope.user[$scope.users.indexOf(user)].editRole = true
 
-    $scope.hideRole = () -> $scope.editingRole = false
+    $scope.hideRole = () ->
+      $scope.editingRole = false
+      $scope.selectedItem = null
 
     $scope.appendRole = () ->
       $scope.user.fields.roles.push($scope.selectedItem)

@@ -27,35 +27,13 @@ angular.module('neo4jApp.controllers')
     $scope.selectedItem = null
     $scope.autoRefresh = false
     $scope.defaultSelection = ''
-    $scope.isAddingNewUser = false
-    $scope.isAddingNewUser = false
     $scope.resetPasswordValue = null
-
-    $scope.newUser = {
-      username: null,
-      password: null,
-      requirePasswordChange: false
-    }
 
     $scope.showResetPassword = (user, value) ->
       user.shouldShowResetPassword = value
 
     $scope.resetPassword = (username, resetPasswordValue) ->
       ProtocolFactory.getStoredProcedureService().changeUserPassword(username, resetPasswordValue).then(() ->
-        $scope.refresh()
-      )
-
-    $scope.showNewUser = () -> $scope.isAddingNewUser = true
-    $scope.hideNewUser = () -> $scope.isAddingNewUser = false
-    $scope.addNewUser = () ->
-      ProtocolFactory.getStoredProcedureService().addNewUser(
-        $scope.newUser.username, $scope.newUser.password, $scope.newUser.requirePasswordChange
-      ).then(() ->
-        $scope.newUser = {
-          username: null,
-          password: null,
-          requirePasswordChange: false
-        }
         $scope.refresh()
       )
 
@@ -73,11 +51,12 @@ angular.module('neo4jApp.controllers')
       $scope.users[$scope.users.indexOf(user)].editRole = true
 
     $scope.hideRole = (user) ->
-      $scope.users[$scope.users.indexOf(user)].editRole = false
-      $scope.users[$scope.users.indexOf(user)].isAddingRole = false
+      refUser = $scope.users[$scope.users.indexOf(user)]
+      refUser.editRole = false
+      refUser.isAddingRole = false
+      refUser.selectedItem = null
 
     $scope.appendRole = (user, role) ->
-
       if role?
         $scope.addRole(user.username, role)
         user.isAddingRole = false
