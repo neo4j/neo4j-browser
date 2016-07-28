@@ -1,3 +1,6 @@
+.token.token-label(ng-repeat="role in listOfAssignedRoles")
+  | {{ role }}
+  a.sl.sl-minus-circle(ng-click="removeRole(role)", tooltip="Remove")
 .select
   select(ng-show="isAddingRole", ng-model="selectedItem")
     option(ng-repeat="role in listOfKnownRoles", value="{{role}}" ) {{role}}

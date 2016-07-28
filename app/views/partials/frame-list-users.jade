@@ -8,9 +8,6 @@ table.table.table-condensed
     tr(ng-repeat="user in users")
       td {{user.username}}
       td
-        .token.token-label(ng-repeat="role in user.roles")
-          | {{ role }}
-          a.sl.sl-minus-circle(ng-click="removeRoleFromUser(user, role)", tooltip="Remove")
         div(user-roles ng-model="user")
       td
         | {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
