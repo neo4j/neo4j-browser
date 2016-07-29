@@ -31,8 +31,9 @@ angular.module('neo4jApp.services')
       '$q'
       'Collection'
       'Settings'
+      'Features'
       'Utils'
-      ($injector, $q, Collection, Settings, Utils) ->
+      ($injector, $q, Collection, Settings, Features, Utils) ->
         class Frame
           constructor: (data = {})->
             @templateUrl = null
@@ -179,11 +180,15 @@ angular.module('neo4jApp.services')
             return if last?.input == data.input
             @create data
 
+          getFilteredInterpreters = () ->
+            debugger;
+            if Features.showAdmin then self.interpreters else self.interpreters.filter((i) -> i.type != 'admin')
+
           interpreterFor: (input = '') ->
             intr = null
             input = Utils.stripComments(input.trim())
             firstWord = Utils.firstWord(input).toLowerCase()
-            for i in self.interpreters
+            for i in getFilteredInterpreters()
               if angular.isFunction(i.matches)
                 if i.matches(input)
                   return i

@@ -38,7 +38,9 @@ angular.module('neo4jApp.controllers')
       'Utils'
       'CurrentUser'
       'ProtocolFactory'
-      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory) ->
+      'Features'
+      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory, Features) ->
+        $scope.features = Features
         $scope.CurrentUser = CurrentUser
         $scope.ConnectionStatusService = ConnectionStatusService
         initailConnect = yes
@@ -49,6 +51,11 @@ angular.module('neo4jApp.controllers')
           $scope.server = Server.info $scope.server
           $scope.host = $window.location.host
           $q.when()
+          .then( ->
+            ProtocolFactory.getStoredProcedureService().getProceduresList().then((records) ->
+              $scope.procedures = records.map((r)->r.get('name'))
+            )
+          )
           .then( ->
             ProtocolFactory.getStoredProcedureService().getMeta().then((res) ->
               $scope.labels = res.labels
@@ -62,10 +69,13 @@ angular.module('neo4jApp.controllers')
           ).then( ->
             fetchJMX()
           ).then( ->
-            ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
-              $scope.user = res
-              $scope.user.isAdmin = 'admin' in res.roles
-            )
+            if 'dbms.listUsers' in $scope.procedures
+              ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
+                $scope.user = res
+                Features.showAdmin = 'admin' in res.roles
+              )
+            else
+              $scope.user = $scope.static_user
           )
 
         fetchJMX = ->

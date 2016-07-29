@@ -146,6 +146,13 @@ angular.module('neo4jApp.services')
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        getProceduresList: ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.procedures()").promise
+            .then((r) -> q.resolve(r.records))
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
         getJmx: (whatToGet = []) ->
           q = $q.defer()
           name = if whatToGet.length is 1 then whatToGet[0] else "*:*"
