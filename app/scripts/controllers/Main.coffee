@@ -64,6 +64,7 @@ angular.module('neo4jApp.controllers')
           ).then( ->
             ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
               $scope.user = res
+              $scope.user.isAdmin = 'admin' in res.roles
             )
           )
 

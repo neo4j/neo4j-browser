@@ -32,6 +32,9 @@
       li.pair
         .key {{(user.roles.length === 1)? 'Role:' : 'Roles:'}}
         .value {{user.roles.join(', ')}}
+      li.pair(ng-show="user.isAdmin && neo4j.enterpriseEdition")
+        .key Admin
+        a.value(exec-topic='admin list') admin list
   h5 Database
   ul
     li.pair
