@@ -22,13 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'UserAdminCreateUserController', [
-    '$scope', 'Settings', 'ProtocolFactory'
-  ($scope, Settings, ProtocolFactory) ->
+    '$scope', 'Settings', 'ProtocolFactory', '$timeout'
+  ($scope, Settings, ProtocolFactory, $timeout) ->
     $scope.defaultSelection = ''
     $scope.selectedItem = null
     $scope.resetPasswordValue = null
     $scope.editingRole = true
     $scope.listOfAllKnownRoles = []
+
+    $scope.addingUser = no
 
     getNewUserObject = () ->
       {
@@ -48,7 +50,12 @@ angular.module('neo4jApp.controllers')
       ).then(()->
         $scope.user.fields.roles.forEach((role) -> $scope.addRole($scope.user.fields.username, role)) if $scope.user.fields.roles.length isnt 0
       ).then(() ->
-        $scope.user = getNewUserObject()
+        $scope.addingUser = yes
+        $timeout(->
+          $scope.$broadcast 'admin.resetRoles'
+          $scope.addingUser = no
+          $scope.user = getNewUserObject()
+        , 1000)
       )
 
 
@@ -65,9 +72,9 @@ angular.module('neo4jApp.controllers')
     $scope.enableSubmit = () ->
       $scope.user.fields.username isnt '' and $scope.user.fields.password isnt ''
 
-    $scope.$on 'addRoleFor', (event, username, role) ->
+    $scope.$on 'admin.addRoleFor', (event, username, role) ->
       $scope.user.fields.roles.push(role)
 
-    $scope.$on 'removeRoleFor', (event, username, role) ->
+    $scope.$on 'admin.removeRoleFor', (event, username, role) ->
       $scope.user.fields.roles.splice($scope.user.fields.roles.indexOf(role), 1)
 ]

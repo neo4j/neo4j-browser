@@ -31,7 +31,8 @@ angular.module('neo4jApp.directives')
       scope.selectedItem = null
       scope.isAddingRole = false
       scope.listOfAllKnownRoles = []
-      scope.listOfAssignedRoles = scope.user.roles
+      scope.listOfAssignedRoles = () ->
+        scope.user.roles
 
       scope.listOfKnownRoles = () ->
         scope.listOfAllKnownRoles.filter((role) -> !scope.user.roles.includes(role))
@@ -39,6 +40,9 @@ angular.module('neo4jApp.directives')
       ProtocolFactory.getStoredProcedureService().getRolesList().then((response) ->
         scope.listOfAllKnownRoles = response
       ).catch((r) -> )
+
+      scope.$on 'admin.resetRoles', (event) ->
+        scope.hideRole()
 
       scope.hideRole = () ->
         scope.isAddingRole = false
@@ -49,10 +53,10 @@ angular.module('neo4jApp.directives')
 
       scope.appendRole = () ->
         if scope.selectedItem?
-          scope.$emit 'addRoleFor', scope.user.username, scope.selectedItem
+          scope.$emit 'admin.addRoleFor', scope.user.username, scope.selectedItem
           scope.hideRole()
 
       scope.removeRole = (role) ->
-        scope.$emit 'removeRoleFor', scope.user.username, role
+        scope.$emit 'admin.removeRoleFor', scope.user.username, role
 
   ])

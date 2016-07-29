@@ -21,12 +21,13 @@ div(fullscreen)
                       th.col-lg-1
                     tr
                       td
-                        input(ng-model="user.fields.username", type="text")
+                        input(ng-disabled="addingUser", ng-model="user.fields.username", type="text")
                       td
                         div(user-roles ng-model="user.fields")
                       td
-                        input(ng-model="user.fields.password", type="password")
+                        input(ng-disabled="addingUser", ng-model="user.fields.password", type="password")
                       td
-                        input(ng-model="user.fields.requirePasswordChange", type="checkbox")
+                        input(ng-disabled="addingUser", ng-model="user.fields.requirePasswordChange", type="checkbox")
                       td
-                        a.btn.sl.sl-add-circle(ng-disabled="!enableSubmit()", ng-click="addNewUser()", tooltip="Save")
+                        a.btn.sl.sl-add-circle(ng-hide="addingUser", ng-disabled="!enableSubmit()", ng-click="addNewUser()", tooltip="Save")
+                        a.btn.sl.sl-upload-arrow(ng-show="addingUser")

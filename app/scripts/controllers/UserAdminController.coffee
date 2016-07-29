@@ -62,11 +62,11 @@ angular.module('neo4jApp.controllers')
     $scope.notCurrentUser = (username) ->
       username in $scope.filteredUsernames
 
-    $scope.$on 'addRoleFor', (event, username, role) ->
+    $scope.$on 'admin.addRoleFor', (event, username, role) ->
       ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(() ->
         $scope.refresh()
       )
-    $scope.$on 'removeRoleFor', (event, username, role) ->
+    $scope.$on 'admin.removeRoleFor', (event, username, role) ->
       ProtocolFactory.getStoredProcedureService().removeRoleFromUser(username, role).then(() ->
         $scope.refresh()
       )
