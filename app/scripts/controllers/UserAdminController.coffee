@@ -33,9 +33,18 @@ angular.module('neo4jApp.controllers')
     $scope.showResetPassword = (user, value) ->
       user.shouldShowResetPassword = value
 
+    setSuccessMessage = (message) ->
+      $scope.frame.successMessage = message
+      $scope.frame.resetError()
+
+    setError = (response) ->
+      $scope.frame.successMessage = no
+      $scope.frame.setError(response)
+
     $scope.resetPassword = (username, resetPasswordValue) ->
       ProtocolFactory.getStoredProcedureService().changeUserPassword(username, resetPasswordValue).then(() ->
         $scope.refresh()
+        setSuccessMessage("Changed password for  #{username}")
       )
 
     $scope.refresh = () ->
@@ -47,17 +56,26 @@ angular.module('neo4jApp.controllers')
     $scope.activate = (username) ->
       ProtocolFactory.getStoredProcedureService().activateUser(username).then(() ->
         $scope.refresh()
-      ).catch((r) -> )
+        setSuccessMessage("Activated #{username}")
+      ).catch((r) ->
+        setError(r)
+      )
 
     $scope.suspend = (username) ->
       ProtocolFactory.getStoredProcedureService().suspendUser(username).then(() ->
         $scope.refresh()
-      ).catch((r) -> )
+        setSuccessMessage("Suspended #{username}")
+      ).catch((r) ->
+        setError(r)
+      )
 
     $scope.delete = (username) ->
       ProtocolFactory.getStoredProcedureService().deleteUser(username).then(() ->
         $scope.refresh()
-      ).catch((r) -> )
+        setSuccessMessage("Deleted #{username}")
+      ).catch((r) ->
+        setError(r)
+      )
 
     $scope.notCurrentUser = (username) ->
       username in $scope.filteredUsernames
@@ -65,10 +83,16 @@ angular.module('neo4jApp.controllers')
     $scope.$on 'admin.addRoleFor', (event, username, role) ->
       ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(() ->
         $scope.refresh()
+        setSuccessMessage("Assigned role of #{role} to #{username}")
+      ).catch((r) ->
+        setError(r)
       )
     $scope.$on 'admin.removeRoleFor', (event, username, role) ->
       ProtocolFactory.getStoredProcedureService().removeRoleFromUser(username, role).then(() ->
         $scope.refresh()
+        setSuccessMessage("Removed role of #{role} from #{username}")
+      ).catch((r) ->
+        setError(r)
       )
 
     $scope.refresh()

@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'UserAdminCreateUserController', [
-    '$scope', 'Settings', 'ProtocolFactory', '$timeout'
-  ($scope, Settings, ProtocolFactory, $timeout) ->
+    '$scope', 'Settings', 'ProtocolFactory'
+  ($scope, Settings, ProtocolFactory) ->
     $scope.defaultSelection = ''
     $scope.selectedItem = null
     $scope.resetPasswordValue = null
@@ -31,6 +31,14 @@ angular.module('neo4jApp.controllers')
     $scope.listOfAllKnownRoles = []
 
     $scope.addingUser = no
+
+    setSuccessMessage = (message) ->
+      $scope.frame.successMessage = message
+      $scope.frame.resetError()
+
+    setError = (response) ->
+      $scope.frame.successMessage = no
+      $scope.frame.setError(response)
 
     getNewUserObject = () ->
       {
@@ -50,14 +58,12 @@ angular.module('neo4jApp.controllers')
       ).then(()->
         $scope.user.fields.roles.forEach((role) -> $scope.addRole($scope.user.fields.username, role)) if $scope.user.fields.roles.length isnt 0
       ).then(() ->
-        $scope.addingUser = yes
-        $timeout(->
-          $scope.$broadcast 'admin.resetRoles'
-          $scope.addingUser = no
-          $scope.user = getNewUserObject()
-        , 1000)
+        $scope.$broadcast 'admin.resetRoles'
+        setSuccessMessage("User #{$scope.user.fields.username} created")
+        $scope.user = getNewUserObject()
+      ).catch((r) ->
+        setError(r)
       )
-
 
     $scope.fileredUsernames = []
 

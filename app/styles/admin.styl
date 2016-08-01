@@ -1,6 +1,8 @@
 @import 'variables'
 
 .admin
+  .no-min-height
+    min-height: initial !important
   [exec-topic]
     background-color: #F8F8F8
     border-radius: 3px
@@ -13,18 +15,19 @@
     margin-right: 5px
     padding: 0 4px
   a
-    font-size: 26px
+    display: inline-block
+    font-size: 17px
     line-height: 1em
+    vertical-align: middle
+    padding: 3px 6px 0 6px
   table
+    margin-bottom: auto
     .span-all
       colspan: 100%
-    tr, td
+    th, tr, td
       height: 30px
-      border-top: 0
+      border: none
       vertical-align: middle
-    .reset-password
-      input
-        margin: 8px 0 4px
   .select
     display: inline-block
 
