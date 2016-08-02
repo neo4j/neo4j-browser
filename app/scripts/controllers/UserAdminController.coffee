@@ -45,6 +45,8 @@ angular.module('neo4jApp.controllers')
       ProtocolFactory.getStoredProcedureService().changeUserPassword(username, resetPasswordValue).then(() ->
         $scope.refresh()
         setSuccessMessage("Changed password for  #{username}")
+      ).catch((r) ->
+        setError(r)
       )
 
     $scope.refresh = () ->
