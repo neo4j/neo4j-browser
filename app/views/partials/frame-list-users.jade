@@ -11,8 +11,9 @@ table.table.table-condensed
         div(user-roles ng-model="user")
       td
         | {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
-        a.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)', tooltip="Suspend")
-        a.sl.sl-show(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)', tooltip="Activate")
+        span(ng-show="notCurrentUser(user.username)")
+          a.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)', tooltip="Suspend")
+          a.sl.sl-show(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)', tooltip="Activate")
       td
         span(ng-show="notCurrentUser(user.username)")
           a.fa.fa-key(ng-hide="user.shouldShowResetPassword", ng-click='showResetPassword(user, true)', tooltip="Reset Password")
