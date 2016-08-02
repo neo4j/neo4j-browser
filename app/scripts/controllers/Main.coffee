@@ -76,6 +76,8 @@ angular.module('neo4jApp.controllers')
               )
             else
               $scope.user = $scope.static_user
+
+            Features.usingCoreEdge = 'dbms.cluster.overview' in $scope.procedures
           )
 
         fetchJMX = ->
