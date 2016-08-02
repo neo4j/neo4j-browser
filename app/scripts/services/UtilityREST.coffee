@@ -66,53 +66,45 @@ angular.module('neo4jApp.services')
           )
           q.promise
 
-        addNewUser: (username, password, requirePasswordChange) ->
+        callUserAdminProcedure: (statement, parameters) ->
           q = $q.defer()
-          Server.cypher('', { query: "CALL dbms.createUser('#{username}', '#{password}', #{requirePasswordChange})"}).then(
+          statements = [{statement: statement, parameters: parameters}]
+          p = Server.transaction(
+            path: "/commit"
+            statements: statements
+          )
+          q = $q.defer()
+          p.then(
             (res) ->
-              q.resolve res
+              q.reject res.data if (res.data.errors.length > 0)
+              q.resolve true if (res.data.errors.length is 0)
+          ,
+            (res) ->
+              q.reject res
           )
           q.promise
+
+        changeUserPassword: (username, password) ->
+          @callUserAdminProcedure("CALL dbms.changeUserPassword({username}, {password})", {username: username, password: password})
+
+        addNewUser: (username, password, requirePasswordChange) ->
+          @callUserAdminProcedure("CALL dbms.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange})
 
         suspendUser: (username) ->
-          q = $q.defer()
-          Server.cypher('', { query: "CALL dbms.suspendUser('#{username}')"}).then(
-            (res) ->
-              q.resolve res
-          )
-          q.promise
+          @callUserAdminProcedure("CALL dbms.suspendUser({username})", {username: username})
+
 
         deleteUser: (username) ->
-          q = $q.defer()
-          Server.cypher('', { query: "CALL dbms.deleteUser('#{username}')"}).then(
-            (res) ->
-              q.resolve res
-          )
-          q.promise
+          @callUserAdminProcedure("CALL dbms.deleteUser({username})", {username: username})
 
         activateUser: (username) ->
-          q = $q.defer()
-          Server.cypher('', { query: "CALL dbms.activateUser('#{username}')"}).then(
-            (res) ->
-              q.resolve true
-          )
-          q.promise
+          @callUserAdminProcedure("CALL dbms.activateUser({username})", {username: username})
 
         addUserToRole: (username, role) ->
-          q = $q.defer()
-          Server.cypher('', { query: "CALL dbms.addUserToRole('#{username}', '#{role}')"}).then(
-            (res) ->
-              q.resolve true
-          )
-          q.promise
+          @callUserAdminProcedure("CALL dbms.addUserToRole({username}, {role})", {username: username, role:role})
 
         removeRoleFromUser: (username, role) ->
-          q = $q.defer()
-          Server.cypher('', { query: "CALL dbms.removeUserFromRole('#{username}', '#{role}')"}).then(
-            (res) ->
-              q.resolve true
-          )
-          q.promise
+          @callUserAdminProcedure("CALL dbms.removeUserFromRole({username}, {role})", {username: username, role:role})
 
         getProceduresList: ->
           q = $q.defer()

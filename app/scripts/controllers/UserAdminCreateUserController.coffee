@@ -87,7 +87,7 @@ angular.module('neo4jApp.controllers')
           $scope.refresh()
         ,
         (r) ->
-          errorMessage = r.data.errors[0].code + ":" + r.data.errors[0].message
+          errorMessage = r.errors[0].code + ":" + r.errors[0].message
           $scope.roleErrors[errorMessage] = $scope.roleErrors[errorMessage]  || []
           $scope.roleErrors[errorMessage].push(role)
      )
