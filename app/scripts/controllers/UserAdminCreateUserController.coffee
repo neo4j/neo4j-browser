@@ -34,11 +34,18 @@ angular.module('neo4jApp.controllers')
 
     setSuccessMessage = (message) ->
       $scope.frame.successMessage = message
+      $scope.frame.warningText = no
       $scope.frame.resetError()
 
     setError = (response) ->
       $scope.frame.successMessage = no
+      $scope.frame.warningText =no
       $scope.frame.setError(response)
+
+    setWarning = (warningMessage) ->
+      $scope.frame.resetError()
+      $scope.frame.successMessage = no
+      $scope.frame.warningText = warningMessage
 
     getNewUserObject = () ->
       {
@@ -56,21 +63,34 @@ angular.module('neo4jApp.controllers')
       ProtocolFactory.getStoredProcedureService().addNewUser(
         $scope.user.fields.username, $scope.user.fields.password, $scope.user.fields.requirePasswordChange
       ).then(()->
-        $scope.user.fields.roles.forEach((role) -> $scope.addRole($scope.user.fields.username, role)) if $scope.user.fields.roles.length isnt 0
+        $scope.roleErrors = {}
+        return Promise.all($scope.user.fields.roles.map((role) -> $scope.addRole($scope.user.fields.username, role)))
       ).then(() ->
         $scope.$broadcast 'admin.resetRoles'
-        setSuccessMessage("User #{$scope.user.fields.username} created")
         $scope.user = getNewUserObject()
+        if Object.keys($scope.roleErrors).length > 0
+          errors = Object.keys($scope.roleErrors).map((key) ->
+            "Could not add role(s): #{$scope.roleErrors[key].join(', ')} due to #{key}"
+          )
+          setWarning("User #{$scope.user.fields.username} created but not all roles could be added. #{errors.join('. ')}")
+        else
+          setSuccessMessage("User #{$scope.user.fields.username} created")
       ).catch((r) ->
-        setError(r)
+          setError(r)
       )
 
     $scope.fileredUsernames = []
 
     $scope.addRole = (username, role) ->
-      ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(() ->
-        $scope.refresh()
-      )
+      ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(
+        () ->
+          $scope.refresh()
+        ,
+        (r) ->
+          errorMessage = r.data.errors[0].code + ":" + r.data.errors[0].message
+          $scope.roleErrors[errorMessage] = $scope.roleErrors[errorMessage]  || []
+          $scope.roleErrors[errorMessage].push(role)
+     )
 
     $scope.notCurrentUser = (username) ->
       username in $scope.filteredUsernames
