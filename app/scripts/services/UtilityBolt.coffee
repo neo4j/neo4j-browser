@@ -149,7 +149,7 @@ angular.module('neo4jApp.services')
         getProceduresList: ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.procedures()").promise
-            .then((r) -> q.resolve(r.records))
+            .then((r) -> q.resolve(r.records.map((r)->r.get('name'))))
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 

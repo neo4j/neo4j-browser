@@ -114,6 +114,14 @@ angular.module('neo4jApp.services')
           )
           q.promise
 
+        getProceduresList: ->
+          q = $q.defer()
+          Server.cypher('', { query: "CALL dbms.procedures()"}).then(
+            (res) ->
+              q.resolve res.data.data.map((record) -> record[0])
+          )
+          q.promise
+
         getVersion: (version) ->
           q = $q.defer()
           q.resolve Server.version(version)

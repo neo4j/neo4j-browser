@@ -52,8 +52,8 @@ angular.module('neo4jApp.controllers')
           $scope.host = $window.location.host
           $q.when()
           .then( ->
-            ProtocolFactory.getStoredProcedureService().getProceduresList().then((records) ->
-              $scope.procedures = records.map((r)->r.get('name'))
+            ProtocolFactory.getStoredProcedureService().getProceduresList().then((procedures) ->
+              $scope.procedures = procedures
             )
           )
           .then( ->
