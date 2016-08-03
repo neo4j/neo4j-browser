@@ -66,6 +66,8 @@ angular.module('neo4jApp.services')
             @templateUrl = intr.templateUrl
             @startTime = (new Date).getTime() unless @startTime
             @pinTime = 0
+            @procedureNotFound = (error) ->
+              return yes if error && error.search('ProcedureNotFound') isnt -1
             intrPromise = intrFn(query, $q.defer())
             @terminate = =>
               @resetError()
