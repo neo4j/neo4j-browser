@@ -82,6 +82,13 @@ angular.module('neo4jApp.services')
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        getCoreEdgeCurrent: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.cluster.role()').promise
+            .then((r) ->
+              q.resolve Bolt.constructCoreEdgeCurrent r)
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
 
         getUserList: ->
           q = $q.defer()

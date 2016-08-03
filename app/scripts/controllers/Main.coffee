@@ -78,6 +78,11 @@ angular.module('neo4jApp.controllers')
               $scope.user = $scope.static_user
 
             Features.usingCoreEdge = 'dbms.cluster.overview' in $scope.procedures
+            if Features.usingCoreEdge
+              ProtocolFactory.getStoredProcedureService().getCoreEdgeCurrent()
+              .then((res) ->
+                $scope.ce = { role: res }
+              )
           )
 
         fetchJMX = ->

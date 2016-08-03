@@ -49,3 +49,6 @@
     li.pair
       .key Information
       a.value(play-topic='sysinfo') sysinfo
+    li.pair(ng-show="ce.role")
+      .key Cluster Role
+      .value {{ ce.role }}
