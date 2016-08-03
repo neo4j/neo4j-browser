@@ -305,7 +305,7 @@ angular.module('neo4jApp')
       fullscreenable: true
       templateUrl: 'views/frame-user-admin.html'
       matches: (input) ->
-        pattern = new RegExp("^#{cmdchar}admin list")
+        pattern = new RegExp("^#{cmdchar}server user list")
         input.match(pattern)
       exec: [() ->
         (input, q) -> q.resolve()
@@ -315,7 +315,7 @@ angular.module('neo4jApp')
       fullscreenable: true
       templateUrl: 'views/frame-add-new-user.html'
       matches: (input) ->
-        pattern = new RegExp("^#{cmdchar}admin add user")
+        pattern = new RegExp("^#{cmdchar}server user add")
         input.match(pattern)
       exec: [() ->
         (input, q) -> q.resolve()
