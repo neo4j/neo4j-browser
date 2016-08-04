@@ -65,15 +65,15 @@ export function * startBackgroundDataSources (checkInterval = 10) {
 export function * handleDataSourceCommand (action, cmdchar, onSuccess, onError) {
   const [subCmd] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
   if (subCmd === 'create') {
-    yield call(handleDataSourceCreateCommand, action, cmdchar)
+    yield call(handleDataSourceCreateCommand, action, cmdchar, onSuccess, onError)
     return
   }
   if (subCmd === 'remove') {
-    yield call(handleDataSourceRemoveCommand, action, cmdchar)
+    yield call(handleDataSourceRemoveCommand, action, cmdchar, onSuccess, onError)
     return
   }
   if (subCmd === 'list') {
-    yield call(handleDataSourceListCommand, action, cmdchar)
+    yield call(handleDataSourceListCommand, action, cmdchar, onSuccess, onError)
     return
   }
   yield call(onError, {...action, type: 'unknown'}, UnknownCommandError(action.cmd))
