@@ -83,19 +83,20 @@ describe('commandInterpreterHelper', () => {
       expect(actualPutAction).to.deep.equal(expectedPutAction)
     })
 
-    it('should put action frames.action.add on :play command', () => {
+    it('should call onSuccess callback on :play command', () => {
       // Given
       const payload = {cmd: ':play a', type: 'play'}
       const storeSettings = {cmdchar: ':'}
+      const onSuccess = () => {}
       const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
-      const handleClientCommandSaga = interpreted.exec(payload, storeSettings.cmdchar)
+      const handleClientCommandSaga = interpreted.exec(payload, storeSettings.cmdchar, onSuccess)
 
       // When
-      const actualPutAction = handleClientCommandSaga.next().value
-      const expectedPutAction = put(frames.actions.add({cmd: payload.cmd, type: payload.type}))
+      const actualCallAction = handleClientCommandSaga.next().value
+      const expectedCallAction = call(onSuccess, {cmd: payload.cmd, type: payload.type})
+
       // Then
-      expect(actualPutAction.PUT.action.state.cmd).to.equal(expectedPutAction.PUT.action.state.cmd)
-      expect(actualPutAction.PUT.action.state.type).to.equal(expectedPutAction.PUT.action.state.type)
+      expect(actualCallAction).to.deep.equal(expectedCallAction)
     })
 
     it('should put action frames.action.add on :play `url` command', () => {

@@ -1,41 +1,26 @@
 import { expect } from 'chai'
 import { put, call } from 'redux-saga/effects'
-import frames from '../../lib/containers/frames'
 import { handleServerCommand, handleServerAddCommand, handleUseConnectionCommand } from './serverCommand'
+import { UnknownCommandError } from '../../services/exceptions'
 import bookmarks from '../../lib/containers/bookmarks'
 import bolt from '../../services/bolt/bolt'
 
 describe('serverCommandSagas', () => {
   describe('handleServerCommand Saga', () => {
-    it('should create unknown frame for unknown commands', () => {
+    it('should call onError unknown commands', () => {
       // Given
       const payload = {cmd: ':unknown'}
       const storeSettings = {cmdchar: ':'}
-      const handleServerCommandSaga = handleServerCommand(payload, storeSettings.cmdchar)
+      const onSuccess = () => {}
+      const onError = () => {}
+      const handleServerCommandSaga = handleServerCommand(payload, storeSettings.cmdchar, onSuccess, onError)
 
       // When
-      const actualPutAction = handleServerCommandSaga.next().value
-      const expectedPutAction = put(frames.actions.add({...payload, type: 'unknown'}))
+      const actualCallAction = handleServerCommandSaga.next().value
+      const expectedCallAction = call(onError, {...payload, type: 'unknown'}, UnknownCommandError(payload.cmd))
 
       // Then
-      // We cannot do deep equal here because of uuid
-      expect(actualPutAction.PUT.action.state.type).to.equal(expectedPutAction.PUT.action.state.type)
-    })
-
-    it('should include errors on wrong :server add command format', () => {
-      // Given
-      const payload = {cmd: ':server add user:pass@server:8585'} // missing name
-      const storeSettings = {cmdchar: ':'}
-      const handleServerAddCommandSaga = handleServerAddCommand(payload, storeSettings.cmdchar)
-
-      // When
-      const actualPutAction = handleServerAddCommandSaga.next().value
-      const expectedPutAction = put(frames.actions.add({...payload, errors: {}, type: 'cmd'}))
-
-      // Then
-      // We cannot do deep equal here because of uuid
-      expect(actualPutAction.PUT.action.state.cmd).to.deep.equal(expectedPutAction.PUT.action.state.cmd)
-      expect(actualPutAction.PUT.action.state.errors).to.not.be.undefined
+      expect(actualCallAction).to.deep.equal(expectedCallAction)
     })
 
     it('should handle :server add command for adding server bookmarks', () => {

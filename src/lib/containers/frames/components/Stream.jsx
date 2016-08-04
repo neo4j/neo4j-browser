@@ -1,18 +1,34 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { CypherFrame } from './CypherFrame'
+import WidgetFrame from './WidgetFrame'
 import { HistoryFrame } from './HistoryFrame'
 import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
+import { ErrorFrame } from './ErrorFrame'
 import { getFrames } from '../reducer'
 
 const StreamComponent = (props) => {
   const {frames} = props
   const framesList = frames.map((frame) => {
+    if (frame.type === 'error') {
+      return (
+        <ErrorFrame
+          key={frame.id} frame={frame}
+        />
+      )
+    }
     if (frame.type === 'cypher') {
       return (
         <CypherFrame
+          key={frame.id} frame={frame}
+        />
+      )
+    }
+    if (frame.type === 'widget') {
+      return (
+        <WidgetFrame
           key={frame.id} frame={frame}
         />
       )

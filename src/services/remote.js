@@ -5,8 +5,6 @@ function get (url) {
     method: 'get'
   }).then(function (response) {
     return response.text()
-  }).catch(function (err) {
-    return err
   })
 }
 

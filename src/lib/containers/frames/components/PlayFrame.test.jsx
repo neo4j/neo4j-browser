@@ -24,14 +24,14 @@ describe('PlayFrame', () => {
     expect(card.find('.frame-contents').text()).to.match(/not\sfound/)
   })
   it('should render contents when contents is passed to PlayFrame', () => {
-    const wrapper = shallow(<PlayFrame frame={{contents: 'Hello'}} />)
+    const wrapper = shallow(<PlayFrame frame={{result: 'Hello'}} />)
     expect(wrapper.find('.playFrame')).to.have.length(1)
     const card = shallow(wrapper.find('.playFrame').node)
     const slide = card.find('.frame-contents').find(guides.components.Slide).shallow({html: 'Hello'})
     expect(slide.html()).to.match(/Hello/)
   })
   it('should render contents when contents and command are passed to PlayFrame', () => {
-    const wrapper = shallow(<PlayFrame frame={{cmd: ':play movies', contents: 'Hello'}} />)
+    const wrapper = shallow(<PlayFrame frame={{cmd: ':play movies', result: 'Hello'}} />)
     expect(wrapper.find('.playFrame')).to.have.length(1)
     const card = shallow(wrapper.find('.playFrame').node)
     const slide = card.find('.frame-contents').find(guides.components.Slide).shallow({html: 'Hello'})

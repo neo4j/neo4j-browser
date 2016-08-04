@@ -7,6 +7,7 @@ import favorites from './lib/containers/sidebar/favorites'
 import bookmarks from './lib/containers/bookmarks'
 import sidebar from './lib/containers/sidebar'
 import visualization from './lib/containers/visualization'
+import dataSource from './lib/containers/dataSource'
 
 export default {
   [bookmarks.constants.NAME]: bookmarks.reducer,
@@ -17,5 +18,6 @@ export default {
   [dbInfo.constants.NAME]: dbInfo.reducer,
   [favorites.constants.NAME]: favorites.reducer,
   [sidebar.constants.NAME]: sidebar.reducer,
-  [visualization.constants.NAME]: visualization.reducer
+  [visualization.constants.NAME]: visualization.reducer,
+  [dataSource.constants.NAME]: dataSource.reducer
 }

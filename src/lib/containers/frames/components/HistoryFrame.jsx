@@ -8,7 +8,7 @@ import { HistoryRowComponent } from './HistoryRow'
 import styles from './style_history.css'
 
 const HistoryFrameComponent = ({frame, onHistoryClick}) => {
-  const historyRows = frame.history.map((entry, index) => {
+  const historyRows = frame.result.map((entry, index) => {
     return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry}/>
   })
   return (

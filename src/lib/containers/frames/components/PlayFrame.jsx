@@ -5,8 +5,8 @@ import FrameTemplate from './FrameTemplate'
 
 export const PlayFrame = ({frame}) => {
   let guide = 'Play guide not specified'
-  if (frame.contents) {
-    guide = <guides.components.Slide html={frame.contents}/>
+  if (frame.result) {
+    guide = <guides.components.Slide html={frame.result}/>
   } else {
     const guideName = frame.cmd.replace(':play', '').trim()
     if (guideName !== '') {

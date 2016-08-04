@@ -5,6 +5,9 @@ import { cleanHtml } from '../services/remoteUtils'
 import remote from '../services/remote'
 import { handleServerCommand } from '../sagas/command_sagas/serverCommand'
 import { handleConfigCommand } from '../sagas/command_sagas/configCommand'
+import { handleWidgetCommand } from '../sagas/command_sagas/widgetCommand'
+import { handleDataSourceCommand } from '../sagas/command_sagas/dataSourceCommand'
+import { CouldNotFetchRemoteGuideError } from '../services/exceptions'
 
 const availableCommands = [{
   name: 'clear',
@@ -15,45 +18,57 @@ const availableCommands = [{
 }, {
   name: 'config',
   match: (cmd) => /^config(\s|$)/.test(cmd),
-  exec: function * (action, cmdchar) {
-    yield call(handleConfigCommand, action, cmdchar)
+  exec: function * (action, cmdchar, onSuccess, onError) {
+    yield call(handleConfigCommand, action, cmdchar, onSuccess, onError)
   }
 }, {
   name: 'server',
   match: (cmd) => /^server(\s)/.test(cmd),
-  exec: function * (action, cmdchar) {
-    yield call(handleServerCommand, action, cmdchar)
+  exec: function * (action, cmdchar, onSuccess, onError) {
+    yield call(handleServerCommand, action, cmdchar, onSuccess, onError)
   }
 }, {
   name: 'play-remote',
   match: (cmd) => /^play(\s|$)https?/.test(cmd),
-  exec: function * (action, cmdchar) {
+  exec: function * (action, cmdchar, onSuccess, onError) {
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
     try {
       const content = yield call(remote.get, url)
-      yield put(frames.actions.add({...action, type: 'play-remote', contents: cleanHtml(content)}))
+      yield call(onSuccess, {...action, type: 'play-remote'}, cleanHtml(content))
     } catch (e) {
-      yield put(frames.actions.add({...action, type: 'play-remote', contents: 'Can not fetch remote guide: ' + e}))
+      yield call(onError, {...action, type: 'play-remote'}, CouldNotFetchRemoteGuideError(e))
     }
   }
 }, {
   name: 'play',
   match: (cmd) => /^play(\s|$)/.test(cmd),
-  exec: function * (action, cmdchar) {
-    yield put(frames.actions.add({...action, type: 'play'}))
+  exec: function * (action, cmdchar, onSuccess, onError) {
+    yield call(onSuccess, {...action, type: 'play'})
   }
 }, {
   name: 'history',
   match: (cmd) => cmd === 'history',
-  exec: function * (action, cmdchar) {
+  exec: function * (action, cmdchar, onSuccess, onError) {
     const historyState = yield select(getHistory)
-    yield put(frames.actions.add({...action, type: 'history', history: historyState}))
+    yield call(onSuccess, {...action, type: 'history'}, historyState)
+  }
+}, {
+  name: 'widget',
+  match: (cmd) => /^widget(\s)/.test(cmd),
+  exec: function * (action, cmdchar, onSuccess, onError) {
+    yield call(handleWidgetCommand, action, cmdchar, onSuccess, onError)
+  }
+}, {
+  name: 'datasource',
+  match: (cmd) => /^data\s?\-?source(\s)/.test(cmd),
+  exec: function * (action, cmdchar, onSuccess, onError) {
+    yield call(handleDataSourceCommand, action, cmdchar, onSuccess, onError)
   }
 }, {
   name: 'catch-all',
   match: () => true,
-  exec: function * (action, cmdchar) {
-    yield put(frames.actions.add({...action, type: 'unknown'}))
+  exec: function * (action, cmdchar, onSuccess, onError) {
+    yield call(onError, {...action, type: 'unknown'})
   }
 }]
 

@@ -1,9 +1,14 @@
-export function recordsToTableArray (records, intChecker, intConverter) {
+export function toObjects (records, intChecker, intConverter) {
   const recordValues = records.map((record) => {
     let out = []
     record.forEach((val, key) => out.push(itemIntToString(val, intChecker, intConverter)))
     return out
   })
+  return recordValues
+}
+
+export function recordsToTableArray (records, intChecker, intConverter) {
+  const recordValues = toObjects(records, intChecker, intConverter)
   const keys = records[0].keys
   return [[...keys], ...recordValues]
 }

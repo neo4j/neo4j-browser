@@ -1,6 +1,20 @@
+import * as messages from './exceptionMessages'
+
+export function getErrorMessage (errorObject) {
+  let str = messages[errorObject.type]
+  const keys = Object.keys(errorObject)
+  keys.forEach((prop) => {
+    const re = new RegExp('(#' + prop + '#)', 'g')
+    str = str.replace(re, errorObject[prop])
+  })
+  return str
+}
+
 export function UserException (message) {
-  this.message = message
-  this.name = 'UserException'
+  return {
+    type: 'UserException',
+    message
+  }
 }
 
 export function ConnectionException (message, code = 'Connection Error') {
@@ -8,4 +22,65 @@ export function ConnectionException (message, code = 'Connection Error') {
     code,
     message
   }]}
+}
+
+export function AddServerValidationError () {
+  return {
+    type: 'AddServerValidationError'
+  }
+}
+
+export function CreateDataSourceValidationError () {
+  return {
+    type: 'CreateDataSourceValidationError'
+  }
+}
+
+export function RemoveDataSourceValidationError () {
+  return {
+    type: 'RemoveDataSourceValidationError'
+  }
+}
+
+export function BoltConnectionError (id) {
+  return {
+    type: 'BoltConnectionError',
+    id
+  }
+}
+
+export function BoltError (obj) {
+  return {
+    type: 'BoltError',
+    code: obj.fields[0].code,
+    message: obj.fields[0].message
+  }
+}
+
+export function BookmarkNotFoundError (name) {
+  return {
+    type: 'BookmarkNotFoundError',
+    name
+  }
+}
+
+export function OpenConnectionNotFoundError (name) {
+  return {
+    type: 'OpenConnectionNotFoundError',
+    name
+  }
+}
+
+export function UnknownCommandError (cmd) {
+  return {
+    type: 'UnknownCommandError',
+    cmd
+  }
+}
+
+export function CouldNotFetchRemoteGuideError (error) {
+  return {
+    type: 'CouldNotFetchRemoteGuideError',
+    error
+  }
 }
