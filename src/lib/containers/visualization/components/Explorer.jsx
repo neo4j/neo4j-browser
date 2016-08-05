@@ -5,6 +5,7 @@ import {LegendComponent} from './Legend'
 import bolt from '../../../../services/bolt/bolt'
 import { connect } from 'react-redux'
 import { getGraphStyleData } from '../reducer'
+import {Card} from 'material-ui/Card'
 
 export class ExplorerComponent extends React.Component {
   constructor (props) {
@@ -38,7 +39,9 @@ export class ExplorerComponent extends React.Component {
     return (
       <div>
         <LegendComponent stats={this.state.stats} graphStyle={this.graphStyle}/>
-        <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} graphStyle={this.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)}/>
+        <Card>
+          <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} graphStyle={this.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)}/>
+        </Card>
         <InspectorComponent hoveredItem={this.state.hoveredItem} graphStyle={this.graphStyle} />
       </div>
     )

@@ -5,6 +5,9 @@ import asciitable from 'ascii-data-table'
 import bolt from '../../../../services/bolt/bolt'
 import visualization from '../../visualization'
 import neo4jVisualization from 'neo4j-visualization'
+import Divider from 'material-ui/Divider'
+import {Card, CardHeader} from 'material-ui/Card'
+import Subheader from 'material-ui/Subheader'
 
 import styles from './style_cypher.css'
 
@@ -21,7 +24,6 @@ class CypherFrame extends React.Component {
   }
 
   renderPlan (plan) {
-    if (plan) {
       return (
         <div className={styles.plan}>
           <div className={styles.planSvg}>
@@ -29,7 +31,6 @@ class CypherFrame extends React.Component {
           </div>
         </div>
       )
-    } else return null
   }
 
   componentWillReceiveProps (nextProps) {
@@ -49,14 +50,26 @@ class CypherFrame extends React.Component {
     if (result.records && result.records.length > 0) {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (this.state.nodesAndRelationships.nodes.length > 0) {
-        frameContents = (
-          <div>
-            <div className={styles.svg}>
+        if (plan) {
+          const style = {'margin-bottom': '20px'}
+          frameContents = (
+            <div>
+              <Card className={styles.svg} containerStyle={style}>
+                <visualization.components.Explorer useContextMenu nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships}/>
+              </Card>
+              <Card>
+                {this.renderPlan(plan)}
+              </Card>
+          </div>
+          )
+        } else {
+          frameContents = (
+            <Card className={styles.svg}>
               <visualization.components.Explorer useContextMenu nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships}/>
-            </div>
-            {this.renderPlan(plan)}
-        </div>
-        )
+            </Card>
+          )
+        }
+
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
         frameContents = <pre>{asciitable.run(this.state.rows)}</pre>
