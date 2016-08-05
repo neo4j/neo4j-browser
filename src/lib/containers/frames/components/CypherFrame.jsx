@@ -20,6 +20,18 @@ class CypherFrame extends React.Component {
     this.setState({openView: viewName})
   }
 
+  renderPlan (plan) {
+    if (plan) {
+      return (
+        <div className={styles.plan}>
+          <div className={styles.planSvg}>
+            <neo4jVisualization.QueryPlanComponent plan={plan}/>
+          </div>
+        </div>
+      )
+    } else return null
+  }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.frame.result !== this.props.frame.result) {
       this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.frame.result.records)
@@ -38,9 +50,12 @@ class CypherFrame extends React.Component {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (this.state.nodesAndRelationships.nodes.length > 0) {
         frameContents = (
-          <div className={styles.svg}>
-            <visualization.components.Explorer useContextMenu nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships}/>
-          </div>
+          <div>
+            <div className={styles.svg}>
+              <visualization.components.Explorer useContextMenu nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships}/>
+            </div>
+            {this.renderPlan(plan)}
+        </div>
         )
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
@@ -54,13 +69,7 @@ class CypherFrame extends React.Component {
         </div>
       )
     } else if (plan) {
-      frameContents = (
-        <div className={styles.plan}>
-          <div className={styles.planSvg}>
-            <neo4jVisualization.QueryPlanComponent plan={plan}/>
-          </div>
-        </div>
-      )
+      frameContents = this.renderPlan(plan)
     } else if (result) {
       frameContents = (
         <div>
