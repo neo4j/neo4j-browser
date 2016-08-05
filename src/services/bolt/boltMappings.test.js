@@ -1,6 +1,6 @@
 /* global neo4j */
 import { expect } from 'chai'
-import { itemIntToString, arrayIntToString, objIntToString, extractNodesAndRelationshipsFromRecords } from './boltMappings'
+import { itemIntToString, arrayIntToString, objIntToString, extractNodesAndRelationshipsFromRecords, extractPlan } from './boltMappings'
 
 describe('boltMappings', () => {
   describe('itemIntToString', () => {
@@ -177,6 +177,58 @@ describe('boltMappings', () => {
       }
       let relationships = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types).relationships
       expect(relationships).to.have.length(0)
+    })
+  })
+  describe('extractPlan', () => {
+    it('should extract plan from result summary', () => {
+      // Given
+      const result = {
+        summary: {
+          plan: {
+            operatorType: 'operatorType',
+            arguments: {
+              LegacyExpression: 'legacy',
+              ExpandExpression: 'expand',
+              EstimatedRows: 10,
+              Index: 1,
+              version: 'version',
+              KeyNames: ['keyname'],
+              planner: 'planner',
+              runtime: 'runtime',
+              'planner-impl': 'planner-impl',
+              'runtime-impl': 'runtime-impl'
+            },
+            dbHits: 20,
+            rows: 14,
+            identifiers: [],
+            children: []
+          }
+        }
+      }
+      const extractedPlan = extractPlan(result).root
+      expect(extractedPlan).to.not.be.null
+      expect(extractedPlan.operatorType).to.equal('operatorType')
+      expect(extractedPlan.DbHits).to.equal(20)
+      expect(extractedPlan.Rows).to.equal(14)
+      expect(extractedPlan.identifiers).to.deep.equal([])
+      expect(extractedPlan.operatorType).to.equal('operatorType')
+      expect(extractedPlan.LegacyExpression).to.equal('legacy')
+      expect(extractedPlan.ExpandExpression).to.equal('expand')
+      expect(extractedPlan.EstimatedRows).to.equal(10)
+      expect(extractedPlan.Index).to.equal(1)
+      expect(extractedPlan.version).to.equal('version')
+      expect(extractedPlan.KeyNames).to.deep.equal(['keyname'])
+      expect(extractedPlan.planner).to.equal('planner')
+      expect(extractedPlan.runtime).to.equal('runtime')
+      expect(extractedPlan['planner-impl']).to.equal('planner-impl')
+      expect(extractedPlan['runtime-impl']).to.equal('runtime-impl')
+    })
+
+    it('should return null if no plan is available', () => {
+      const result = {
+        summary: {}
+      }
+      expect(extractPlan(result)).to.be.null
     })
   })
 })

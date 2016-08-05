@@ -32,6 +32,34 @@ export function objIntToString (obj, intChecker, intConverter) {
   return obj
 }
 
+export function extractPlan (result) {
+  if (result.summary && result.summary.plan) {
+    const rawPlan = result.summary.plan
+    const boltPlanToRESTPlanShared = (plan) => {
+      return {
+        operatorType: plan.operatorType,
+        LegacyExpression: plan.arguments.LegacyExpression,
+        ExpandExpression: plan.arguments.ExpandExpression,
+        DbHits: plan.dbHits,
+        Rows: plan.rows,
+        EstimatedRows: plan.arguments.EstimatedRows,
+        identifiers: plan.identifiers,
+        Index: plan.arguments.Index,
+        children: plan.children.map(boltPlanToRESTPlanShared)
+      }
+    }
+    let obj = boltPlanToRESTPlanShared(rawPlan)
+    obj['runtime-impl'] = rawPlan.arguments['runtime-impl']
+    obj['planner-impl'] = rawPlan.arguments['planner-impl']
+    obj['version'] = rawPlan.arguments['version']
+    obj['KeyNames'] = rawPlan.arguments['KeyNames']
+    obj['planner'] = rawPlan.arguments['planner']
+    obj['runtime'] = rawPlan.arguments['runtime']
+    return {root: obj}
+  }
+  return null
+}
+
 export function extractNodesAndRelationshipsFromRecords (records, types) {
   let keys = records[0].keys
   let rawNodes = []

@@ -59,5 +59,8 @@ export default {
   extractNodesAndRelationshipsFromRecords: (records) => {
     return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.v1.types)
   },
+  extractPlan: (result) => {
+    return mappings.extractPlan(result)
+  },
   neo4j: neo4j.v1
 }

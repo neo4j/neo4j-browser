@@ -4,6 +4,7 @@ import FrameTemplate from './FrameTemplate'
 import asciitable from 'ascii-data-table'
 import bolt from '../../../../services/bolt/bolt'
 import visualization from '../../visualization'
+import neo4jVisualization from 'neo4j-visualization'
 
 import styles from './style_cypher.css'
 
@@ -23,6 +24,7 @@ class CypherFrame extends React.Component {
     if (nextProps.frame.result !== this.props.frame.result) {
       this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.frame.result.records)
       this.state.rows = bolt.recordsToTableArray(nextProps.frame.result.records)
+      this.state.plan = bolt.extractPlan(nextProps.frame.result)
     }
   }
 
@@ -30,6 +32,7 @@ class CypherFrame extends React.Component {
     const frame = this.props.frame
     const errors = frame.error && frame.error.fields || false
     const result = frame.result || false
+    const plan = this.state.plan || bolt.extractPlan(result)
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
@@ -48,6 +51,14 @@ class CypherFrame extends React.Component {
         <div>
           {errors[0].code}
           <pre>{errors[0].message}</pre>
+        </div>
+      )
+    } else if (plan) {
+      frameContents = (
+        <div className={styles.plan}>
+          <div className={styles.planSvg}>
+            <neo4jVisualization.QueryPlanComponent plan={plan}/>
+          </div>
         </div>
       )
     } else if (result) {

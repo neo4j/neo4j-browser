@@ -31,7 +31,7 @@ module.exports = function (config) {
       devtool: 'inline-source-map',
       module: {
         loaders: [
-          { test: /\.jsx?$/, loader: 'babel', exclude: /node_modules|dist|visualisation\/external/ },
+          { test: /\.jsx?$/, loader: 'babel', exclude: /node_modules|dist/ },
           { test: /\.css$/, loader: 'style!css' },
           { test: /\.html?$/, loader: 'html' },
           { test: /\.(jpe?g|png|gif|svg)$/i, loader: 'file?hash=sha512&digest=hex&name=[hash].[ext]' }

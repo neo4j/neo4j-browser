@@ -5,3 +5,12 @@
     background-color: #eaeaea;
   }
 }
+.planSvg {
+  svg {
+    width: 100%;
+  }
+}
+.plan {
+  overflow: auto;
+  height: 432px;
+}
