@@ -2,6 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import editor from '../../../editor'
 import favorite from '../'
+import RaisedButton from 'material-ui/RaisedButton'
+import {ListItem} from 'material-ui/List'
+
+import styles from './style.css'
 
 function extractNameFromCommand (input) {
   if (!input) {
@@ -19,12 +23,13 @@ function extractNameFromCommand (input) {
 const FavoriteComponent = ({id, content, onItemClick = () => {}, removeClick = () => {}}) => {
   const name = extractNameFromCommand(content)
   return (
-    <div>
-      <div className='favorite' onClick={() => onItemClick(content)}>{name}</div>
-      <button className='remove' onClick={() => removeClick(id)}>
-        {'x'}
-      </button>
-    </div>
+    <ListItem
+      style={{color: 'white'}}
+      primaryText={name}
+      className='favorite'
+      onClick={() => onItemClick(content)}
+      rightIcon={<RaisedButton className='remove' onClick={() => removeClick(id)}>×</RaisedButton>}
+    />
   )
 }
 
