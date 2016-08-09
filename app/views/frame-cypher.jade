@@ -175,6 +175,9 @@ div(ng-controller="CypherResultCtrl", fullscreen)
             .error-holder
               article.help.no-data.has-status-bar
                 pre.frame-error(ng-bind="frame.detailedErrorText")
+                .proc-not-found(ng-if="frame.procedureNotFound(frame.errorText)")
+                  a(ng-click="editor.execScript('call dbms.procedures')", play-icon)
+                    | List available procedures
             include partials/error-status-bar
 
           .view-result-messages.result.with-frame-menu(ng-show='isActive("messages")')
