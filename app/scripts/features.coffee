@@ -18,24 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-'use strict';
+angular.module('neo4jApp.features', [])
+  .constant('Features', {
+    showAdmin: yes
+    usingCoreEdge: no
+  })
 
-angular.module('neo4jApp.services')
-  .factory 'ProtocolFactory', [
-    'Settings'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    'UtilityREST'
-    'UtilityBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, UtilityREST, UtilityBolt) ->
-      {
-        getCypherTransaction: (useBolt = Settings.useBolt) ->
-          return new CypherTransactionBolt() if useBolt
-          return new CypherTransactionREST()
-
-        getStoredProcedureService: (useBolt = Settings.useBolt) ->
-          return UtilityBolt if useBolt
-          return UtilityREST
-      }
-
-]

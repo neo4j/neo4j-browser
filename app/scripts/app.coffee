@@ -26,6 +26,7 @@ angular.module('neo4jApp.filters', [])
 angular.module('neo4jApp.services', [
   'LocalStorageModule',
   'neo4jApp.settings',
+  'neo4jApp.features',
   'neo4jApp.utils',
   'base64',
   'AsciiTableModule',

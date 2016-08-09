@@ -1,0 +1,28 @@
+table.table.table-condensed
+  tr
+    th.col-sm-2 Username
+    th.col-sm-4 Role(s)
+    th.col-sm-2 Status
+    th.col-sm-3 Password Change
+    th.col-sm-1 Delete
+    tr(ng-repeat="user in users")
+      td {{user.username}}
+      td
+        div(user-roles ng-model="user")
+      td
+        | {{user.flags.indexOf('is_suspended') < 0 ? 'Activated' : 'Suspended'}}
+        a.sl.sl-hide(ng-show="user.flags.indexOf('is_suspended') < 0", ng-click='suspend(user.username)', tooltip="Suspend")
+        a.sl.sl-show(ng-hide ="user.flags.indexOf('is_suspended') < 0", ng-click='activate(user.username)', tooltip="Activate")
+      td
+        span(ng-show="notCurrentUser(user.username)")
+          a.fa.fa-key(ng-hide="user.shouldShowResetPassword", ng-click='showResetPassword(user, true)', tooltip="Reset Password")
+          .reset-password(ng-show="user.shouldShowResetPassword")
+            input(ng-model="user.resetPasswordValue", type="password")
+            a.sl.sl-arrow-circle-right(ng-click="resetPassword(user.username, user.resetPasswordValue)")
+            a.sl.sl-delete-circle(ng-click="user.shouldShowResetPassword = false")
+      td
+        span(ng-show="notCurrentUser(user.username)")
+          a.sl.sl-delete-circle(ng-click='delete(user.username)', tooltip="Delete")
+    tr
+      td(colspan="5")
+        a(exec-topic="admin add user") Add new user

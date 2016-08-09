@@ -38,7 +38,9 @@ angular.module('neo4jApp.controllers')
       'Utils'
       'CurrentUser'
       'ProtocolFactory'
-      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory) ->
+      'Features'
+      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory, Features) ->
+        $scope.features = Features
         $scope.CurrentUser = CurrentUser
         $scope.ConnectionStatusService = ConnectionStatusService
         initailConnect = yes
@@ -50,21 +52,41 @@ angular.module('neo4jApp.controllers')
           $scope.host = $window.location.host
           $q.when()
           .then( ->
-            ProtocolFactory.getMetaService().getMeta().then((res) ->
+            ProtocolFactory.getStoredProcedureService().getProceduresList().then((procedures) ->
+              $scope.procedures = procedures
+            )
+          )
+          .then( ->
+            ProtocolFactory.getStoredProcedureService().getMeta().then((res) ->
               $scope.labels = res.labels
               $scope.relationships = res.relationships
               $scope.propertyKeys = res.propertyKeys
             )
           ).then( ->
-            ProtocolFactory.getVersionService().getVersion($scope.version).then((res) ->
+            ProtocolFactory.getStoredProcedureService().getVersion($scope.version).then((res) ->
               $scope.version = res
             )
           ).then( ->
             fetchJMX()
+          ).then( ->
+            if 'dbms.listUsers' in $scope.procedures
+              ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
+                $scope.user = res
+                Features.showAdmin = 'admin' in res.roles
+              )
+            else
+              $scope.user = $scope.static_user
+
+            Features.usingCoreEdge = 'dbms.cluster.overview' in $scope.procedures
+            if Features.usingCoreEdge
+              ProtocolFactory.getStoredProcedureService().getCoreEdgeCurrent()
+              .then((res) ->
+                $scope.ce = { role: res }
+              )
           )
 
         fetchJMX = ->
-          ProtocolFactory.getJmxService().getJmx([
+          ProtocolFactory.getStoredProcedureService().getJmx([
             "org.neo4j:instance=kernel#0,name=Configuration"
             "org.neo4j:instance=kernel#0,name=Kernel"
             "org.neo4j:instance=kernel#0,name=Store file sizes"

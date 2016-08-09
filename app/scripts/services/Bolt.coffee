@@ -173,6 +173,29 @@ angular.module('neo4jApp.services')
         return null unless r.records
         {version: r.records[0].get('versions')[0], edition: r.records[0].get('edition')}
 
+      constructUserResult = (r) ->
+        return null unless r.records
+        return {username: r.records[0].get('username'), roles:r.records[0].get('roles') }
+
+      constructCoreEdgeOverview = (r) ->
+        return null unless r.records
+        return r.records.map((entry)-> {id: entry.get('id'), address: entry.get('address'), role: entry.get('role')})
+
+      constructCoreEdgeCurrent = (r) ->
+        return null unless r.records
+        return r.records[0].get('role')
+
+      constructUserListResult = (r) ->
+        return null unless r.records
+        r.records.map((user) ->
+          {username: user.get('username'), roles: user.get('roles'), flags: user.get('flags') }
+        )
+      constructRolesListResult = (r) ->
+        return null unless r.records
+        r.records.map((user) ->
+          user.get('role')
+        )
+
       jmxResultToRESTResult = (r, whatToGet = []) ->
         return {data: []} unless r.records
         filtered = r.records.filter((record) -> whatToGet.indexOf(record.get('name')) > -1)
@@ -377,6 +400,11 @@ angular.module('neo4jApp.services')
         transaction: transaction,
         boltTransaction: boltTransaction,
         callProcedure: callProcedure,
+        constructUserResult: constructUserResult,
+        constructCoreEdgeOverview: constructCoreEdgeOverview,
+        constructCoreEdgeCurrent: constructCoreEdgeCurrent,
+        constructUserListResult: constructUserListResult,
+        constructRolesListResult: constructRolesListResult,
         constructResult: (res) ->
           boltResultToRESTResult res
         constructMetaResult: (labels, relationshipTypes, propertyKeys) ->

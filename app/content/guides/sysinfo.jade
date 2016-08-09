@@ -106,7 +106,7 @@ article.help(ng-controller="SysinfoController")
             tr
               th Committed
               td {{sysinfo.tx.NumberOfCommittedTransactions}}
-      .col-md-3.col-sm-4
+      .col-md-2.col-sm-4
         .panel.panel-default
           .panel-heading
             h4 High Availability
@@ -133,7 +133,7 @@ article.help(ng-controller="SysinfoController")
             tr
               th Last Update Time
               td {{sysinfo.ha.LastUpdateTime}}
-      .col-md-3.col-sm-4
+      .col-md-2.col-sm-4
         .panel.panel-default
           .panel-heading
             h4 Cluster
@@ -160,6 +160,23 @@ article.help(ng-controller="SysinfoController")
               td
                 i.ha-master.fa(ng-class="{'fa-gavel': isMaster(member) }")
 
+      .col-md-5.col-sm-4
+        .panel.panel-default
+          .panel-heading
+            h4 Core-Edge
+            .panel-heading-info-icon
+              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#_neo4j_cluster_install")
+          .panel-body(ng-hide='sysinfo.ce')
+            p No core-edge cluster.
+          table.table.table-condensed(ng-show='sysinfo.ce')
+            tr
+              th Id
+              th Address
+              th Role
+            tr(ng-repeat="member in sysinfo.ce")
+              td {{ member.id }}
+              td {{ member.address }}
+              td {{ member.role }}
 
   footer.tight
     small Note: some metrics only available in Neo4j Enterprise.

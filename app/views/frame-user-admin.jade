@@ -1,0 +1,11 @@
+div(fullscreen)
+  .outer
+    include partials/frame-common-actions
+    .inner
+      .view-result.help.admin()
+        article(ng-controller="UserAdminController")
+          .view-result-table.result.no-min-height
+            .table-holder
+              include partials/frame-list-users
+        include partials/error-status-bar-detailed
+        include partials/success-status-bar

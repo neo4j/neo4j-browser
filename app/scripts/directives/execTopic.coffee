@@ -32,3 +32,4 @@ angular.module('neo4jApp.directives')
         Frame.create(input: "#{Settings.cmdchar}#{topic}")
         $rootScope.$apply() unless $rootScope.$$phase
   ])
+
