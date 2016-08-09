@@ -175,11 +175,13 @@ describe('dataSourceCommandSagas', () => {
       // Given
       const action = {cmd: ':x create', id: 'x-x-x'}
       const cmdchar = ':'
-      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar)
+      const onSuccess = () => {}
+      const onError = () => {}
+      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar, onSuccess, onError)
 
       // When
       const actual = handleDataSourceCommandSaga.next().value
-      const expected = call(saga.handleDataSourceCreateCommand, action, cmdchar)
+      const expected = call(saga.handleDataSourceCreateCommand, action, cmdchar, onSuccess, onError)
 
       // Then
       expect(actual).to.deep.equal(expected)
@@ -188,11 +190,13 @@ describe('dataSourceCommandSagas', () => {
       // Given
       const action = {cmd: ':x remove', id: 'x-x-x'}
       const cmdchar = ':'
-      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar)
+      const onSuccess = () => {}
+      const onError = () => {}
+      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar, onSuccess, onError)
 
       // When
       const actual = handleDataSourceCommandSaga.next().value
-      const expected = call(saga.handleDataSourceRemoveCommand, action, cmdchar)
+      const expected = call(saga.handleDataSourceRemoveCommand, action, cmdchar, onSuccess, onError)
 
       // Then
       expect(actual).to.deep.equal(expected)
@@ -201,11 +205,13 @@ describe('dataSourceCommandSagas', () => {
       // Given
       const action = {cmd: ':x list', id: 'x-x-x'}
       const cmdchar = ':'
-      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar)
+      const onSuccess = () => {}
+      const onError = () => {}
+      const handleDataSourceCommandSaga = saga.handleDataSourceCommand(action, cmdchar, onSuccess, onError)
 
       // When
       const actual = handleDataSourceCommandSaga.next().value
-      const expected = call(saga.handleDataSourceListCommand, action, cmdchar)
+      const expected = call(saga.handleDataSourceListCommand, action, cmdchar, onSuccess, onError)
 
       // Then
       expect(actual).to.deep.equal(expected)

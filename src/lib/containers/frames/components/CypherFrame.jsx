@@ -5,9 +5,7 @@ import asciitable from 'ascii-data-table'
 import bolt from '../../../../services/bolt/bolt'
 import visualization from '../../visualization'
 import neo4jVisualization from 'neo4j-visualization'
-import Divider from 'material-ui/Divider'
-import {Card, CardHeader} from 'material-ui/Card'
-import Subheader from 'material-ui/Subheader'
+import { Card } from 'material-ui/Card'
 
 import styles from './style_cypher.css'
 
@@ -24,13 +22,13 @@ class CypherFrame extends React.Component {
   }
 
   renderPlan (plan) {
-      return (
-        <div className={styles.plan}>
-          <div className={styles.planSvg}>
-            <neo4jVisualization.QueryPlanComponent plan={plan}/>
-          </div>
+    return (
+      <div className={styles.plan}>
+        <div className={styles.planSvg}>
+          <neo4jVisualization.QueryPlanComponent plan={plan}/>
         </div>
-      )
+      </div>
+    )
   }
 
   componentWillReceiveProps (nextProps) {
@@ -60,7 +58,7 @@ class CypherFrame extends React.Component {
               <Card>
                 {this.renderPlan(plan)}
               </Card>
-          </div>
+            </div>
           )
         } else {
           frameContents = (
@@ -69,7 +67,6 @@ class CypherFrame extends React.Component {
             </Card>
           )
         }
-
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
         frameContents = <pre>{asciitable.run(this.state.rows)}</pre>
