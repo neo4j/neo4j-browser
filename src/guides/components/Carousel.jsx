@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import uuid from 'uuid'
 import ReactSwipe from 'react-swipe'
+import Slide from './Slide'
 import FlatButton from 'material-ui/FlatButton'
 
 export class Carousel extends React.Component {
@@ -36,12 +37,13 @@ export class Carousel extends React.Component {
         const ListOfSlides = this.state.slides.map((slide) => {
           return (
             <div className='slide' key={uuid.v4()}>
-              <div dangerouslySetInnerHTML={{__html: slide.html.innerHTML}} />
+              <Slide html={slide.html.innerHTML}/>
             </div>
           )
         })
         return (
           <div className='carousel'>
+            <Slide html={''}/>
             <FlatButton className='left-button' label='<' primary onClick={this.prev.bind(this)}/>
             <ReactSwipe ref='reactSwipe' swipeOptions={{continuous: false}}>
               {ListOfSlides}
@@ -52,7 +54,7 @@ export class Carousel extends React.Component {
       }
     }
     return (
-      <div dangerouslySetInnerHTML={{__html: this.props.html}} />
+      <Slide html={this.props.html}/>
     )
   }
 }
