@@ -1,0 +1,15 @@
+.carousel-container {
+  display: flex;
+}
+.carousel {
+  display: flex;
+  flex-direction: column;
+}
+
+.left-button, .right-button, .carousel {
+  order: 1;
+}
+.left-button, .right-button {
+  order: 1;
+  top: 30px
+}

@@ -5,10 +5,20 @@ import ReactSwipe from 'react-swipe'
 import Slide from './Slide'
 import FlatButton from 'material-ui/FlatButton'
 
+import styles from './style.css'
+
 export class Carousel extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {slides: null}
+    this.state = {slides: null, firstRender: false}
+  }
+  shouldComponentUpdate () {
+    if (this.state.firstRender) {
+      return false
+    } else {
+      this.setState({firstRender: true})
+      return true
+    }
   }
   componentDidMount () {
     const slides = ReactDOM.findDOMNode(this).getElementsByTagName('slide')
@@ -20,7 +30,7 @@ export class Carousel extends React.Component {
         }
       })
     }
-    this.setState(Object.assign(this.state, { slides: reactSlides }))
+    this.setState({ slides: reactSlides })
   }
   next () {
     this.refs.reactSwipe.next()
@@ -38,12 +48,12 @@ export class Carousel extends React.Component {
         )
       })
       return (
-        <div key={uuid.v4()}className='carousel-container'>
-          <FlatButton className='left-button' label='<' primary onClick={this.prev.bind(this)}/>
-          <ReactSwipe className='carousel' ref='reactSwipe' swipeOptions={{continuous: false}}>
+        <div key={uuid.v4()} className={styles.carouselContainer}>
+          <FlatButton className={styles.leftButton} label='<' primary onClick={this.prev.bind(this)}/>
+          <ReactSwipe className={styles.carousel} ref='reactSwipe' swipeOptions={{continuous: false}}>
             {ListOfSlides}
           </ReactSwipe>
-          <FlatButton className='right-button' label='>' primary onClick={this.next.bind(this)}/>
+          <FlatButton className={styles.rightButton} label='>' primary onClick={this.next.bind(this)}/>
         </div>
       )
     }
