@@ -180,36 +180,29 @@ describe('boltMappings', () => {
     })
   })
   describe('extractPlan', () => {
-    it('should extract plan from result summary', () => {
-      // Given
-      const result = {
-        summary: {
-          plan: {
-            operatorType: 'operatorType',
-            arguments: {
-              LegacyExpression: 'legacy',
-              ExpandExpression: 'expand',
-              EstimatedRows: 10,
-              Index: 1,
-              version: 'version',
-              KeyNames: ['keyname'],
-              planner: 'planner',
-              runtime: 'runtime',
-              'planner-impl': 'planner-impl',
-              'runtime-impl': 'runtime-impl'
-            },
-            dbHits: 20,
-            rows: 14,
-            identifiers: [],
-            children: []
-          }
-        }
+    const createPlan = () => {
+      return {
+        operatorType: 'operatorType',
+        arguments: {
+          LegacyExpression: 'legacy',
+          ExpandExpression: 'expand',
+          EstimatedRows: 10,
+          Index: 1,
+          version: 'version',
+          KeyNames: ['keyname'],
+          planner: 'planner',
+          runtime: 'runtime',
+          'planner-impl': 'planner-impl',
+          'runtime-impl': 'runtime-impl'
+        },
+        identifiers: [],
+        children: []
       }
-      const extractedPlan = extractPlan(result).root
+    }
+
+    const checkExtractedPlan = (extractedPlan) => {
       expect(extractedPlan).to.not.be.null
       expect(extractedPlan.operatorType).to.equal('operatorType')
-      expect(extractedPlan.DbHits).to.equal(20)
-      expect(extractedPlan.Rows).to.equal(14)
       expect(extractedPlan.identifiers).to.deep.equal([])
       expect(extractedPlan.operatorType).to.equal('operatorType')
       expect(extractedPlan.LegacyExpression).to.equal('legacy')
@@ -222,9 +215,36 @@ describe('boltMappings', () => {
       expect(extractedPlan.runtime).to.equal('runtime')
       expect(extractedPlan['planner-impl']).to.equal('planner-impl')
       expect(extractedPlan['runtime-impl']).to.equal('runtime-impl')
+    }
+
+    it('should extract plan from result summary', () => {
+      // Given
+      const result = {
+        summary: {
+          plan: createPlan()
+        }
+      }
+      const extractedPlan = extractPlan(result).root
+      checkExtractedPlan(extractedPlan)
     })
 
-    it('should return null if no plan is available', () => {
+    it('should extract profile from result summary', () => {
+      // Given
+      const profile = createPlan()
+      profile.dbHits = 20
+      profile.rows = 14
+      const result = {
+        summary: {
+          profile: profile
+        }
+      }
+      const extractedPlan = extractPlan(result).root
+      checkExtractedPlan(extractedPlan)
+      expect(extractedPlan.DbHits).to.equal(20)
+      expect(extractedPlan.Rows).to.equal(14)
+    })
+
+    it('should return null if no plan or profile is available', () => {
       const result = {
         summary: {}
       }

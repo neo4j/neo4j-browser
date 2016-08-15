@@ -33,8 +33,8 @@ export function objIntToString (obj, intChecker, intConverter) {
 }
 
 export function extractPlan (result) {
-  if (result.summary && result.summary.plan) {
-    const rawPlan = result.summary.plan
+  if (result.summary && (result.summary.plan || result.summary.profile)) {
+    const rawPlan = result.summary.profile || result.summary.plan
     const boltPlanToRESTPlanShared = (plan) => {
       return {
         operatorType: plan.operatorType,
