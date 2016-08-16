@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import uuid from 'uuid'
 import ReactSwipe from 'react-swipe'
 import Slide from './Slide'
+import Directives from './Directives'
 import FlatButton from 'material-ui/FlatButton'
 
 import styles from './style.css'
@@ -41,11 +42,20 @@ export class Carousel extends React.Component {
   render () {
     if (this.state.slides && Array.isArray(this.state.slides)) {
       const ListOfSlides = this.state.slides.map((slide) => {
-        return (
-          <div key={uuid.v4()}>
-            <Slide key={uuid.v4()} html={slide.html.innerHTML}/>
-          </div>
-        )
+        const slideComponent = <Slide key={uuid.v4()} html={slide.html.innerHTML}/>
+        if (this.props.withDirectives) {
+          return (
+            <div key={uuid.v4()}>
+              <Directives content={slideComponent} />
+            </div>
+          )
+        } else {
+          return (
+            <div key={uuid.v4()}>
+              {slideComponent}
+            </div>
+          )
+        }
       })
       return (
         <div key={uuid.v4()} className={styles.carouselContainer}>
