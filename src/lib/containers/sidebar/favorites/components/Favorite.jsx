@@ -5,8 +5,6 @@ import favorite from '../'
 import RaisedButton from 'material-ui/RaisedButton'
 import {ListItem} from 'material-ui/List'
 
-import styles from './style.css'
-
 function extractNameFromCommand (input) {
   if (!input) {
     return ''
