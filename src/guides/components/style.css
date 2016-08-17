@@ -13,3 +13,7 @@
   order: 1;
   top: 30px
 }
+.slide {
+  max-height: 500px;
+  overflow-y: auto;
+}

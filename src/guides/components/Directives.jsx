@@ -3,21 +3,30 @@ import { connect } from 'react-redux'
 import editor from '../../lib/containers/editor'
 
 const directives = [{
-  attributeName: 'play-topic',
-  command: 'play'
+  selector: '[play-topic]',
+  valueExtractor: (elem) => {
+    return `:play ${elem.getAttribute('play-topic')}`
+  }
 }, {
-  attributeName: 'help-topic',
-  command: 'help'
+  selector: '[help-topic]',
+  valueExtractor: (elem) => {
+    return `:help ${elem.getAttribute('help-topic')}`
+  }
+}, {
+  selector: '.runnable',
+  valueExtractor: (elem) => {
+    return elem.textContent
+  }
 }]
 
 const DirectivesComponent = (props) => {
   const callback = (elem) => {
     if (elem) {
       directives.forEach((directive) => {
-        const elems = elem.querySelectorAll(`[${directive.attributeName}]`)
+        const elems = elem.querySelectorAll(directive.selector)
         Array.from(elems).forEach((e) => {
           e.onclick = () => {
-            return props.onItemClick(`:${directive.command} ${e.getAttribute(directive.attributeName)}`)
+            return props.onItemClick(directive.valueExtractor(e))
           }
         })
       })

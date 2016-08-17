@@ -28,6 +28,15 @@ describe('Directives', () => {
     expect(clickEvent).to.have.been.called()
     expect(clickEvent).have.been.called.with(':help hello')
   })
+  it('should attach runnable directive when element has a class name of `runnable`', () => {
+    const clickEvent = chai.spy()
+    const html = (<div className='runnable'>foobar</div>)
+    const wrapper = mount(<DirectivesComponent content={html} onItemClick={clickEvent}/>)
+    const actual = wrapper.find('.runnable').get(0)
+    actual.click()
+    expect(clickEvent).to.have.been.called()
+    expect(clickEvent).have.been.called.with('foobar')
+  })
   it('should not attach any directives when contents does not have any directive attributes', () => {
     const clickEvent = chai.spy()
     const html = (<a is>foobar</a>)

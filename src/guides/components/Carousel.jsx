@@ -67,8 +67,14 @@ export class Carousel extends React.Component {
         </div>
       )
     }
-    return (
-      <Slide html={this.props.html}/>
-    )
+    if (this.props.withDirectives) {
+      return (
+        <Directives content={<Slide html={this.props.html}/>} />
+      )
+    } else {
+      return (
+        <Slide html={this.props.html}/>
+      )
+    }
   }
 }
