@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Favorite } from './Favorite'
+import {List} from 'material-ui/List'
 
 export class FavoritesComponent extends React.Component {
   render () {
@@ -11,8 +12,10 @@ export class FavoritesComponent extends React.Component {
     })
     return (
       <div id='db-favorites'>
-        <h4>Favorite</h4>
-        {ListOfFavorites}
+        <h3>Favorite</h3>
+        <List>
+          {ListOfFavorites}
+        </List>
       </div>
     )
   }
