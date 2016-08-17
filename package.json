@@ -81,6 +81,7 @@
     "d3": "3.5.0",
     "file-loader": "^0.8.5",
     "html-loader": "^0.4.3",
+    "jquery": "^3.1.0",
     "material-ui": "^0.15.2",
     "neo4j-visualization": "git+ssh://git@github.com/neo-technology/neo4j-browser-visualization.git#v0.0.3",
     "react": "^15.0.2",
@@ -90,9 +91,11 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.4.0",
     "react-router-redux": "^4.0.4",
+    "react-swipe": "^5.0.3",
     "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.5.2",
     "redux-saga": "^0.10.2",
+    "swipe-js-iso": "^2.0.3",
     "uuid": "^2.0.2"
   }
 }

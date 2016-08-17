@@ -22,7 +22,7 @@ module.exports = {
       loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
     }, {
       test: /\.css$/,
-      exclude: [path.resolve('./src/lib'), path.resolve('./src/main')],
+      exclude: [path.resolve('./src/lib'), path.resolve('./src/main'), path.resolve('./src/guides')],
       loader: 'style!css'
     }, {
       test: /\.html?$/,

@@ -1,3 +1,3 @@
-import { Slide } from './Slide'
+import { Carousel } from './Carousel'
 
-export default { Slide }
+export default { Carousel }

@@ -20,7 +20,6 @@ class CypherFrame extends React.Component {
   onNavClick (viewName) {
     this.setState({openView: viewName})
   }
-
   renderPlan (plan) {
     return (
       <div className={styles.plan}>
