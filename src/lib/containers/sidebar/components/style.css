@@ -6,13 +6,25 @@
   border-right: 1px solid black;
   color: #fff;
 }
-
 .list {
+  padding: 0 !important;
   span {
     color: #fff !important;
   }
 }
 
+.list:last-child {
+  position: absolute;
+  bottom: 0;
+  > * {
+    border-top: #fff 1px solid;
+  }
+}
+.list:first-child {
+  > * {
+    border-bottom: #fff 1px solid;
+  }
+}
 .selected-item {
   background-color: #30333A !important
 }
