@@ -1,7 +1,7 @@
 import React from 'react'
 import Navigation from './Navigation'
 import { expect } from 'chai'
-import { shallow, mount } from 'enzyme'
+import { mount } from 'enzyme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 describe('Navigation', () => {
@@ -16,26 +16,25 @@ describe('Navigation', () => {
   const navItems = [{name: navItem1, icon: '', content: Tab1Content}, {name: navItem2, icon: '', content: Tab2Content}]
 
   it('renders a list of navigation links', () => {
-    const drawer = null
-    const wrapper = shallow(<Navigation openDrawer={drawer} onNavClick={() => {}} navItems={navItems}/>)
+    const wrapper = mount(<MuiThemeProvider><Navigation onNavClick={() => {}} topNavItems={navItems}/></MuiThemeProvider>)
     expect(wrapper.find('div').length).to.be.above(0)
   })
 
   it('hides drawer when no drawer should be open', () => {
     const drawer = null
-    const wrapper = shallow(<Navigation openDrawer={drawer} onNavClick={() => {}} navItems={navItems}/>)
+    const wrapper = mount(<MuiThemeProvider><Navigation openDrawer={drawer} onNavClick={() => {}} topNavItems={navItems}/></MuiThemeProvider>)
     expect(wrapper.find('.tab').at(0).hasClass('hidden')).to.equal(true)
   })
 
   it('shows drawer when drawer should be open', () => {
     const drawer = navItem1
-    const wrapper = shallow(<Navigation openDrawer={drawer} onNavClick={() => {}} navItems={navItems}/>)
+    const wrapper = mount(<MuiThemeProvider><Navigation openDrawer={drawer} onNavClick={() => {}} topNavItems={navItems}/></MuiThemeProvider>)
     expect(wrapper.find('.tab').at(0).hasClass('hidden')).to.equal(false)
   })
 
   it('should render the selected tab', () => {
     const drawer = navItem1
-    const wrapper = mount(<MuiThemeProvider><Navigation openDrawer={drawer} onNavClick={() => {}} navItems={navItems}/></MuiThemeProvider>)
+    const wrapper = mount(<MuiThemeProvider><Navigation openDrawer={drawer} onNavClick={() => {}} topNavItems={navItems}/></MuiThemeProvider>)
     expect(wrapper.find('.tab').at(0).hasClass('hidden')).to.equal(false)
     expect(wrapper.find('#thing')).has.length(1)
     expect(wrapper.find('#thing2')).has.length(0)

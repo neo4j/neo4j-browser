@@ -33,4 +33,5 @@
   width: 280px;
   background-color: #30333A;
   padding: 15px;
+  overflow: auto
 }

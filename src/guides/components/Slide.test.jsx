@@ -7,6 +7,6 @@ describe('Slide', () => {
   it('should render html', () => {
     const html = '<h1>foobar</h1>'
     const wrapper = mount(<Slide html={html}/>)
-    expect(wrapper.find('.slide').html()).to.contain(html)
+    expect(wrapper.find(Slide).html()).to.contain(html)
   })
 })

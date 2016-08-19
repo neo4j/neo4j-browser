@@ -36,7 +36,7 @@ const LabelItems = ({labels, onItemClick}) => {
   }
   return (
     <div>
-      <h5> Node Labels </h5>
+      <h4> Node Labels </h4>
       <div className={classNames({
         [styles['wrapper']]: true,
         [styles['label-wrapper']]: true
@@ -59,7 +59,7 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
   }
   return (
     <div>
-      <h5>Relationship Types </h5>
+      <h4>Relationship Types </h4>
       <div className={classNames({
         [styles['wrapper']]: true,
         [styles['relationship-wrapper']]: true
@@ -79,7 +79,7 @@ const PropertyItems = ({properties, onItemClick}) => {
   }
   return (
     <div>
-      <h5> Property Keys </h5>
+      <h4> Property Keys </h4>
       <div className={classNames({
         [styles['wrapper']]: true,
         [styles['property-key-wrapper']]: true

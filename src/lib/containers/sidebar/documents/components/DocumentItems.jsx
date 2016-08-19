@@ -1,31 +1,42 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import uuid from 'uuid'
+import {List, ListItem} from 'material-ui/List'
+import editor from '../../../editor'
 
-export const DocumentItems = ({header, items}) => {
+export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
   const listOfItems = items.map((item) => {
     switch (item.type) {
       case 'link':
         return (
-          <li className='link' key={uuid.v4()}>
+          <ListItem className='link' key={uuid.v4()}>
             <a href={item.command} target='_blank'>{item.name}</a>
-          </li>
+          </ListItem>
         )
-      default :
+      default:
         return (
-          <li className='command' key={uuid.v4()} onClick={() => { return item.command }}>
+          <ListItem className='command' key={uuid.v4()} onClick={() => onItemClick(item.command)}>
             {item.name}
-          </li>
+          </ListItem>
         )
     }
   })
   return (
     <div>
-      <h5>
-        {header}
-      </h5>
-      <ul className='document'>
+      <h3>{header}</h3>
+      <List className='document'>
         {listOfItems}
-      </ul>
+      </List>
     </div>
   )
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onItemClick: (cmd) => {
+      dispatch(editor.actions.setContent(cmd))
+    }
+  }
+}
+
+export const DocumentItems = connect(null, mapDispatchToProps)(DocumentItemsComponent)
