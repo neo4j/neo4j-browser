@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../../editor'
+import editor from 'containers/editor'
 import { remove } from '../actions'
 
 import styles from './style_titlebar.css'

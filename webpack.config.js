@@ -47,6 +47,13 @@ module.exports = {
     ]
   },
   resolve: {
+    root: path.resolve(__dirname),
+    alias: {
+      services: 'src/services',
+      sagas: 'src/sagas',
+      guides: 'src/guides'
+    },
+    modulesDirectories: ['src/lib', 'node_modules'],
     extensions: ['', '.js', '.jsx']
   },
   output: {

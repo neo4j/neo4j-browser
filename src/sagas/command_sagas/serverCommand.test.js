@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { put, call } from 'redux-saga/effects'
 import { handleServerCommand, handleServerAddCommand, handleUseConnectionCommand } from './serverCommand'
-import { UnknownCommandError } from '../../services/exceptions'
-import bookmarks from '../../lib/containers/bookmarks'
-import bolt from '../../services/bolt/bolt'
+import { UnknownCommandError } from 'services/exceptions'
+import bookmarks from 'containers/bookmarks'
+import bolt from 'services/bolt/bolt'
 
 describe('serverCommandSagas', () => {
   describe('handleServerCommand Saga', () => {

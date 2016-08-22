@@ -1,5 +1,5 @@
 import { call } from 'redux-saga/effects'
-import { splitStringOnFirst } from '../../services/commandUtils'
+import { splitStringOnFirst } from 'services/commandUtils'
 
 export function * handleWidgetCommand (action, cmdchar, onSuccess, onError) {
   const [serverCmd] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')

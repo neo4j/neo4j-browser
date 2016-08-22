@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
 import {List, ListItem} from 'material-ui/List'
-import editor from '../../../editor'
+import editor from 'containers/editor'
 
 export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
   const listOfItems = items.map((item) => {

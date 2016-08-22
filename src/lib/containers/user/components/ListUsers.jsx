@@ -3,7 +3,7 @@ import uuid from 'uuid'
 import { connect } from 'react-redux'
 import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser } from './boltUserHelper'
 import { UserDetailsComponent } from './UserDetails'
-import bolt from '../../../../services/bolt/bolt'
+import bolt from 'services/bolt/bolt'
 
 export class ListUsersComponent extends React.Component {
   constructor (props) {

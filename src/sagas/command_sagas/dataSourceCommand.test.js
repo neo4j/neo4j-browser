@@ -2,9 +2,9 @@ import { expect } from 'chai'
 import { select, call, spawn, cancel, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { createMockTask } from 'redux-saga/utils'
-import ds from '../../lib/containers/dataSource'
+import ds from 'containers/dataSource'
 import * as saga from './dataSourceCommand'
-import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from '../../services/exceptions'
+import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from 'services/exceptions'
 
 function createDataSource (id, refreshInterval, isActive) {
   return { id, refreshInterval, isActive }

@@ -1,6 +1,6 @@
 import React from 'react'
-import editor from '../../editor'
-import frames from '../../frames'
+import editor from 'containers/editor'
+import frames from 'containers/frames'
 import styles from './style.css'
 
 const Main = (props) => {

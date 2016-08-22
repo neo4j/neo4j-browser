@@ -1,13 +1,13 @@
 import { put, select, call } from 'redux-saga/effects'
 import { takeEvery } from 'redux-saga'
-import helper from '../services/commandInterpreterHelper'
-import dataSource from '../lib/containers/dataSource'
-import frames from '../lib/containers/frames'
+import helper from 'services/commandInterpreterHelper'
+import dataSource from 'containers/dataSource'
+import frames from 'containers/frames'
 import { getSettings } from '../selectors'
-import { cleanCommand } from '../services/commandUtils'
-import editor from '../lib/containers/editor'
-import bolt from '../services/bolt/bolt'
-import { BoltConnectionError, BoltError, getErrorMessage } from '../services/exceptions'
+import { cleanCommand } from 'services/commandUtils'
+import editor from 'containers/editor'
+import bolt from 'services/bolt/bolt'
+import { BoltConnectionError, BoltError, getErrorMessage } from 'services/exceptions'
 
 function * createSucessFrame (meta, result) {
   meta.result = result

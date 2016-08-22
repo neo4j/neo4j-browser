@@ -7,7 +7,7 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import favorites from '../favorites'
 import documents from '../documents'
-import settings from '../../settings'
+import settings from 'containers/settings'
 
 describe('Sidebar', () => {
   const reducer = combineReducers({

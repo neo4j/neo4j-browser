@@ -1,8 +1,8 @@
 import { take, put, select, call } from 'redux-saga/effects'
-import bookmarks from '../../lib/containers/bookmarks'
-import { splitStringOnFirst, splitStringOnLast } from '../../services/commandUtils'
-import bolt from '../../services/bolt/bolt'
-import { AddServerValidationError, BookmarkNotFoundError, OpenConnectionNotFoundError, UnknownCommandError } from '../../services/exceptions'
+import bookmarks from 'containers/bookmarks'
+import { splitStringOnFirst, splitStringOnLast } from 'services/commandUtils'
+import bolt from 'services/bolt/bolt'
+import { AddServerValidationError, BookmarkNotFoundError, OpenConnectionNotFoundError, UnknownCommandError } from 'services/exceptions'
 
 export function * watchBookmarkSelection () {
   while (true) {

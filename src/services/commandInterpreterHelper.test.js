@@ -1,7 +1,7 @@
 import { expect } from 'chai'
-import remote from '../services/remote'
+import remote from 'services/remote'
 import { put, call } from 'redux-saga/effects'
-import frames from '../lib/containers/frames'
+import frames from 'containers/frames'
 import helper from './commandInterpreterHelper'
 
 describe('commandInterpreterHelper', () => {

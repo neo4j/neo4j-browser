@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
-import settings from '../../lib/containers/settings'
+import settings from 'containers/settings'
 import { getSettings } from '../../selectors'
-import { parseConfigInput } from '../../services/commandUtils'
+import { parseConfigInput } from 'services/commandUtils'
 
 export function * handleConfigCommand (action, cmdchar, onSuccess, onError) {
   const strippedCmd = action.cmd.substr(cmdchar.length)

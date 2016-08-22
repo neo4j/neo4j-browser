@@ -1,4 +1,4 @@
-import bolt from '../../../../services/bolt/bolt'
+import bolt from 'services/bolt/bolt'
 
 function callProcedure (query, callback) {
   return bolt.transaction(query).then((r) => {

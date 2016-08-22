@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../../lib/containers/editor'
+import editor from 'containers/editor'
 
 const directives = [{
   selector: '[play-topic]',

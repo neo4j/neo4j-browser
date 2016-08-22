@@ -2,7 +2,7 @@ import React from 'react'
 import neo4jVisualization from 'neo4j-visualization'
 import { connect } from 'react-redux'
 import { getGraphStyleData } from '../reducer'
-import bolt from '../../../../services/bolt/bolt'
+import bolt from 'services/bolt/bolt'
 import styles from './style.css'
 import { updateGraphStyleData } from '../actions'
 

@@ -1,4 +1,5 @@
 var webpack = require('webpack') // eslint-disable-line
+var path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -20,6 +21,13 @@ module.exports = function (config) {
     reporters: [ 'mocha', 'coverage' ],
     webpack: {
       resolve: {
+        root: path.resolve(__dirname),
+        alias: {
+          services: 'src/services',
+          sagas: 'src/sagas',
+          guides: 'src/guides'
+        },
+        modulesDirectories: ['src/lib', 'node_modules'],
         extensions: ['', '.js', '.jsx']
       },
       externals: {

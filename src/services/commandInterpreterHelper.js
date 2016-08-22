@@ -1,13 +1,13 @@
 import { select, call, put } from 'redux-saga/effects'
-import frames from '../lib/containers/frames'
+import frames from 'containers/frames'
 import { getHistory } from '../selectors'
-import { cleanHtml } from '../services/remoteUtils'
-import remote from '../services/remote'
-import { handleServerCommand } from '../sagas/command_sagas/serverCommand'
-import { handleConfigCommand } from '../sagas/command_sagas/configCommand'
-import { handleWidgetCommand } from '../sagas/command_sagas/widgetCommand'
-import { handleDataSourceCommand } from '../sagas/command_sagas/dataSourceCommand'
-import { CouldNotFetchRemoteGuideError } from '../services/exceptions'
+import { cleanHtml } from 'services/remoteUtils'
+import remote from 'services/remote'
+import { handleServerCommand } from 'sagas/command_sagas/serverCommand'
+import { handleConfigCommand } from 'sagas/command_sagas/configCommand'
+import { handleWidgetCommand } from 'sagas/command_sagas/widgetCommand'
+import { handleDataSourceCommand } from 'sagas/command_sagas/dataSourceCommand'
+import { CouldNotFetchRemoteGuideError } from 'services/exceptions'
 
 const availableCommands = [{
   name: 'clear',

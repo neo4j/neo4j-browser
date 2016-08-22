@@ -1,7 +1,7 @@
 import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import * as e from '../../../../services/exceptionMessages'
+import * as e from 'services/exceptionMessages'
 
 const ErrorFrame = ({frame}) => {
   const error = frame.error || false

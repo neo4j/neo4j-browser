@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { updateCurrentUser } from '../actions'
 import { getCurrentUser } from '../reducer'
-import bolt from '../../../../services/bolt/bolt'
+import bolt from 'services/bolt/bolt'
 
 export class UserInfoComponent extends React.Component {
   constructor (props) {

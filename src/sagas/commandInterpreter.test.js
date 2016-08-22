@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { put, call } from 'redux-saga/effects'
-import editor from '../lib/containers/editor'
+import editor from 'containers/editor'
 import { handleCommand, handleClientCommand } from './commandInterpreter'
-import helper from '../services/commandInterpreterHelper'
-import bolt from '../services/bolt/bolt'
+import helper from 'services/commandInterpreterHelper'
+import bolt from 'services/bolt/bolt'
 
 describe('commandInterpreter Sagas', () => {
   describe('handleCommand Saga', () => {

@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 
 import styles from './style.css'
 
-import main from '../../main'
-import sidebar from '../../sidebar'
+import main from 'containers/main'
+import sidebar from 'containers/sidebar'
 
 export const BaseLayout = ({drawer, handleNavClick}) => {
   return (

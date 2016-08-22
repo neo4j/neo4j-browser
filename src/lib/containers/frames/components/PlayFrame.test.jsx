@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import {PlayFrame} from './PlayFrame'
 import chai from 'chai'
-import guides from '../../../../guides'
+import guides from 'guides'
 
 const expect = chai.expect
 

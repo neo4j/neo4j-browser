@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FrameTitlebar } from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import editor from '../../editor'
+import editor from 'containers/editor'
 import { HistoryRowComponent } from './HistoryRow'
 
 import styles from './style_history.css'

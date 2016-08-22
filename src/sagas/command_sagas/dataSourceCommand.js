@@ -1,9 +1,9 @@
 import { put, select, call, spawn, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import uuid from 'uuid'
-import dataSource from '../../lib/containers/dataSource'
-import { splitStringOnFirst } from '../../services/commandUtils'
-import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from '../../services/exceptions'
+import dataSource from 'containers/dataSource'
+import { splitStringOnFirst } from 'services/commandUtils'
+import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from 'services/exceptions'
 
 export function * runCommand (ds) {
   const resultId = ds.resultId || uuid.v4()

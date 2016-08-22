@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../../../editor'
+import editor from 'containers/editor'
 import favorite from '../'
 import RaisedButton from 'material-ui/RaisedButton'
 import {ListItem} from 'material-ui/List'
