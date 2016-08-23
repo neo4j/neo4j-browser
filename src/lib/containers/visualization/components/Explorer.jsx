@@ -6,6 +6,7 @@ import bolt from 'services/bolt/bolt'
 import { connect } from 'react-redux'
 import { getGraphStyleData } from '../reducer'
 import {Card} from 'material-ui/Card'
+import { updateGraphStyleData } from '../actions'
 
 export class ExplorerComponent extends React.Component {
   constructor (props) {
@@ -13,7 +14,7 @@ export class ExplorerComponent extends React.Component {
     this.state = {}
     this.state.stats = {labels: {}, relTypes: {}}
     this.graphStyle = neo4jVisualization.neoGraphStyle()
-    this.graphStyle.loadRules(props.graphStyleData)
+    this.graphStyle.importGrass(props.graphStyleData)
   }
 
   getNodeNeighbours (node, callback) {
@@ -32,6 +33,7 @@ export class ExplorerComponent extends React.Component {
   }
 
   onGraphModelChange (stats) {
+    this.props.updateGraphStyleData(this.graphStyle.toString())
     this.setState({stats: stats})
   }
 
@@ -54,4 +56,12 @@ const mapStateToProps = (state) => {
   }
 }
 
-export const Explorer = connect(mapStateToProps, null)(ExplorerComponent)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateGraphStyleData: (data) => {
+      dispatch(updateGraphStyleData(data))
+    }
+  }
+}
+
+export const Explorer = connect(mapStateToProps, mapDispatchToProps)(ExplorerComponent)

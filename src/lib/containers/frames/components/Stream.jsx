@@ -7,6 +7,7 @@ import { PlayFrame } from './PlayFrame'
 import { Frame } from './Frame'
 import { PreFrame } from './PreFrame'
 import { ErrorFrame } from './ErrorFrame'
+import { StyleFrame } from './StyleFrame'
 import { getFrames } from '../reducer'
 
 const StreamComponent = (props) => {
@@ -50,6 +51,13 @@ const StreamComponent = (props) => {
     if (frame.type === 'history') {
       return (
         <HistoryFrame
+          key={frame.id} frame={frame}
+        />
+      )
+    }
+    if (frame.type === 'style') {
+      return (
+        <StyleFrame
           key={frame.id} frame={frame}
         />
       )

@@ -6,3 +6,9 @@ export const updateGraphStyleData = (data) => {
     data: data
   }
 }
+
+export const resetGraphStyleData = () => {
+  return {
+    type: t.RESET_GRAPH_STYLE_DATA
+  }
+}

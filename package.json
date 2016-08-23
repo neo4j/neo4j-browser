@@ -19,7 +19,9 @@
       "describe",
       "beforeEach",
       "afterEach",
-      "neo"
+      "neo",
+      "FileReader",
+      "Blob"
     ]
   },
   "repository": {},
@@ -87,6 +89,8 @@
     "react": "^15.0.2",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-codemirror": "^0.2.6",
+    "react-dnd": "^2.1.4",
+    "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^15.0.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.0",
@@ -96,6 +100,7 @@
     "redux": "^3.5.2",
     "redux-saga": "^0.10.2",
     "swipe-js-iso": "^2.0.3",
+    "save-as": "^0.1.7",
     "uuid": "^2.0.2"
   }
 }

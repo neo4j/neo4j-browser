@@ -65,6 +65,12 @@ const availableCommands = [{
     yield call(handleDataSourceCommand, action, cmdchar, onSuccess, onError)
   }
 }, {
+  name: 'style',
+  match: (cmd) => /^style/.test(cmd),
+  exec: function * (action, cmdchar, onSuccess, onError) {
+    yield call(onSuccess, {...action, type: 'style'})
+  }
+}, {
   name: 'catch-all',
   match: () => true,
   exec: function * (action, cmdchar, onSuccess, onError) {
