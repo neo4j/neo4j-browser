@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser } from './boltUserHelper'
 import { UserDetailsComponent } from './UserDetails'
 import bolt from 'services/bolt/bolt'
+import {H3} from 'nbnmui/headers'
 
 export class ListUsersComponent extends React.Component {
   constructor (props) {
@@ -71,11 +72,15 @@ export class ListUsersComponent extends React.Component {
     return (
       <div className='db-list-users'>
         <div>
-          <h3>List by username ({listOfAvailableRoles})</h3>
+          <H3>
+            List by username {listOfAvailableRoles}
+          </H3>
           {renderedListOfUsers}
         </div>
         <div>
-          <h3>Add new users</h3>
+          <H3>
+            Add new users
+          </H3>
           Username: <input onChange={this.updateUsername.bind(this)} />
           Password: <input onChange={this.updatePassword.bind(this)} type='password' />
           Force password change: <input onChange={this.updateForcePasswordChange.bind(this)} type='checkbox' />

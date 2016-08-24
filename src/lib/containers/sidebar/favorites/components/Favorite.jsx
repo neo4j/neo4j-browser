@@ -2,8 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import editor from 'containers/editor'
 import favorite from '../'
-import RaisedButton from 'material-ui/RaisedButton'
-import {ListItem} from 'material-ui/List'
+import {FavoriteItem} from 'nbnmui/buttons'
 
 function extractNameFromCommand (input) {
   if (!input) {
@@ -21,12 +20,12 @@ function extractNameFromCommand (input) {
 const FavoriteComponent = ({id, content, onItemClick = () => {}, removeClick = () => {}}) => {
   const name = extractNameFromCommand(content)
   return (
-    <ListItem
+    <FavoriteItem
       style={{color: 'white'}}
-      primaryText={name}
       className='favorite'
+      primaryText={name}
       onClick={() => onItemClick(content)}
-      rightIcon={<RaisedButton className='remove' onClick={() => removeClick(id)}>×</RaisedButton>}
+      removeClick={() => removeClick(id)}
     />
   )
 }

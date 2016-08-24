@@ -8,8 +8,8 @@
 
 .editor-wrapper {
   flex: auto;
-  padding-top: 15px;
-  padding-bottom: 10px;
+  padding: 19px 12px 15px 12px;
+  background-color: #efeff4;
 }
 
 .action-buttons {
@@ -17,9 +17,14 @@
   align-items: center;
   display: flex;
   justify-content: space-around;
+  background-color: #efeff4 !important;
 }
 
 .button {
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.editor {
+  font-family: Monaco,"Courier New",Terminal,monospace;
 }

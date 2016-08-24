@@ -1,8 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import {List, ListItem} from 'material-ui/List'
+import {ListItem} from 'material-ui/List'
 import editor from 'containers/editor'
+import {H4} from 'nbnmui/headers'
+import {FavoriteItem} from 'nbnmui/buttons'
 
 export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
   const listOfItems = items.map((item) => {
@@ -15,18 +17,18 @@ export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
         )
       default:
         return (
-          <ListItem className='command' key={uuid.v4()} onClick={() => onItemClick(item.command)}>
-            {item.name}
-          </ListItem>
+          <FavoriteItem delete={false} className='command' key={uuid.v4()} onClick={() => onItemClick(item.command)}
+            primaryText={item.name}
+          />
         )
     }
   })
   return (
     <div>
-      <h3>{header}</h3>
-      <List className='document'>
+      <H4 content={header}/>
+      <div className='document'>
         {listOfItems}
-      </List>
+      </div>
     </div>
   )
 }

@@ -61,6 +61,7 @@
         flex: auto;
         background-color: #D2D5DA;
         overflow: auto;
+        padding: 0 24px;
       }
     }
   }

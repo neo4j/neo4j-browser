@@ -2,9 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
 import * as actions from '../actions'
-import {List, ListItem} from 'material-ui/List'
+import {ListItem} from 'material-ui/List'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
+import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
+
 import styles from './style.css'
 
 const visualSettings =
@@ -45,13 +47,13 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
   })
 
   return (
-    <div id='db-settings'>
-      <h4>Settings</h4>
-      <List>
+    <Drawer id='db-settings'>
+      <DrawerHeader title='Settings'/>
+      <DrawerBody>
         {mappedSettings}
-      </List>
-      <RaisedButton label='Save' onClick={() => onSettingsSave(settings)}/>
-    </div>
+        <RaisedButton label='Save' onClick={() => onSettingsSave(settings)}/>
+      </DrawerBody>
+    </Drawer>
   )
 }
 

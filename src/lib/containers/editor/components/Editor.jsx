@@ -7,8 +7,9 @@ import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
+import {EditorButton} from 'nbnmui/buttons'
+
 import styles from './style.css'
-import RaisedButton from 'material-ui/RaisedButton'
 
 export class EditorComponent extends React.Component {
   constructor (props) {
@@ -107,10 +108,11 @@ export class EditorComponent extends React.Component {
             value={this.state.code}
             onChange={this.updateCode.bind(this)}
             options={options}
+            className={styles.editor}
           />
         </div>
         <div className={styles.actionButtons}>
-          <RaisedButton
+          <EditorButton
             secondary
             onClick={() => this.props.onFavortieClick(this.state.code)}
             label='&#9734;'
@@ -118,7 +120,7 @@ export class EditorComponent extends React.Component {
             disabled={this.state.code.length < 1}
             tooltip='Add as favorite'
           />
-          <RaisedButton
+          <EditorButton
             secondary
             onClick={() => this.clearEditor()}
             label='&times;'
@@ -126,7 +128,7 @@ export class EditorComponent extends React.Component {
             className={styles.button}
             tooltip='Clear editor contents'
           />
-          <RaisedButton
+          <EditorButton
             onClick={() => this.execCurrent()}
             primary
             label='&#9654;'

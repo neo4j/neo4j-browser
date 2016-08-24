@@ -2,15 +2,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import editor from 'containers/editor'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
-import {List, ListItem} from 'material-ui/List'
+import {ListItem} from 'material-ui/List'
+import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 import styles from './style_meta.css'
 
 const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties = [], onItemClick }) => {
   return (
-    <div id='db-drawer'>
-      <h3> Database Information</h3>
-      <List>
+    <Drawer id='db-drawer'>
+      <DrawerHeader title='Database Information'/>
+      <DrawerBody>
         <ListItem className={styles.section} disabled>
           <LabelItems labels={labels.map((l) => l.val)} onItemClick={onItemClick}/>
         </ListItem>
@@ -20,8 +21,8 @@ const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties
         <ListItem className={styles.section} disabled>
           <PropertyItems properties={properties.map((l) => l.val)} onItemClick={onItemClick}/>
         </ListItem>
-      </List>
-    </div>
+      </DrawerBody>
+    </Drawer>
   )
 }
 

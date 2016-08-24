@@ -1,0 +1,14 @@
+.drawer {
+
+}
+.drawerBody {
+  padding: 15px !important;
+}
+.bar {
+  height: 81px !important;
+  background-color: transparent !important;
+  border-bottom: 1px white solid;
+}
+.title {
+  line-height: 80px !important;
+}

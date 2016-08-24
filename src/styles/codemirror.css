@@ -1,6 +1,6 @@
 .code-style,
 #editor .CodeMirror {
-  font-family: mono-font-family;
+  font-family: Monaco,"Courier New",Terminal,monospace;
   font-size: 16px;
   line-height: 23px;
   -webkit-font-smoothing: initial;
