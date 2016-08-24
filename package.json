@@ -81,6 +81,7 @@
     "classnames": "^2.2.5",
     "codemirror": "^5.14.2",
     "d3": "3.5.0",
+    "dnd-core": "^2.0.2",
     "file-loader": "^0.8.5",
     "html-loader": "^0.4.3",
     "jquery": "^3.1.0",
@@ -99,8 +100,8 @@
     "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.5.2",
     "redux-saga": "^0.10.2",
-    "swipe-js-iso": "^2.0.3",
     "save-as": "^0.1.7",
+    "swipe-js-iso": "^2.0.3",
     "uuid": "^2.0.2"
   }
 }

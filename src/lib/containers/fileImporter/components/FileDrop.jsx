@@ -1,17 +1,22 @@
 import React from 'react'
-import HTML5Backend, {NativeTypes} from 'react-dnd-html5-backend'
-import { DragDropContext } from 'react-dnd'
+import {NativeTypes} from 'react-dnd-html5-backend'
 import { DropTarget } from 'react-dnd'
+import { wrapWithDndContext } from '../dndGlobalContext'
 
 const fileTarget = {
   drop (props, monitor) {
+    console.log('Hello in drop')
     const file = monitor.getItem().files[0]
-    const fileReader = new FileReader()
-    fileReader.onloadend = (evt) => {
-      props.onImportSuccess(evt.target.result)
+    if (file.name.endsWith(`.${props.expectedExtension}`)) {
+      const fileReader = new FileReader()
+      fileReader.onloadend = (evt) => {
+        props.onImportSuccess(evt.target.result)
+      }
+      fileReader.readAsText(file)
+      return {message: `Imported file: ${file.name}`}
+    } else {
+      return {message: `File not imported. Expected File to have an extension of '${props.expectedExtension}'`}
     }
-    fileReader.readAsText(file)
-    return {filename: file.name}
   }
 }
 
@@ -25,13 +30,13 @@ class FileDropZone extends React.Component {
 
   componentWillUpdate () {
     const result = this.props.getDropResult
-    if (result) {
-      this.setState({text: `Imported file: ${result.filename}`})
+    if (result && result.message) {
+      this.setState({text: result.message})
     }
   }
   render () {
     return this.props.connectDropTarget(
-      <div>
+      <div className='stuff'>
         <this.props.Component text={this.state.text}/>
       </div>
     )
@@ -47,7 +52,5 @@ export const FileDrop = (Component, applyContext) => {
     canDrop: monitor.canDrop(),
     getDropResult: monitor.getDropResult()
   }))(WrappedComponent)
-  if (applyContext) {
-    return DragDropContext(HTML5Backend)(Target)
-  } else return Target
+  return wrapWithDndContext(Target)
 }

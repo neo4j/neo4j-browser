@@ -29,7 +29,7 @@ class StyleEditorComponent extends React.Component {
         <CardText expandable={false}>
           <pre>{this.props.graphStyleData}</pre>
         </CardText>
-        <fileImporter.components.FileDropBar initialMessage={'Drop a grass-file here to import'} onImportSuccess={this.props.update}/>
+        <fileImporter.components.FileDropBar expectedExtension={'grass'} initialMessage={'Drop a grass-file here to import'} onImportSuccess={this.props.update}/>
       </Card>
     )
   }

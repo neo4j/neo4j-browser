@@ -29,7 +29,7 @@ describe('StyleFrame', () => {
     const updateFunction = chai.spy()
     const wrapper = mount(<MuiThemeProvider><StyleEditorComponent update={updateFunction}/></MuiThemeProvider>)
     expect(wrapper.find(fileImporter.components.FileDropBar)).to.have.length(1)
-    console.log('props', wrapper.find(fileImporter.components.FileDropBar).props().onImportSuccess('hello'))
+    wrapper.find(fileImporter.components.FileDropBar).props().onImportSuccess('hello')
     expect(updateFunction).to.have.been.called.with('hello')
   })
 })
