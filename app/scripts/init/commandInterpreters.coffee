@@ -117,7 +117,7 @@ angular.module('neo4jApp')
       matches: "#{cmdchar}schema"
       exec: ['ProtocolFactory', (ProtocolFactory) ->
         (input, q) ->
-          ProtocolFactory.getSchemaService().getSchema(input)
+          ProtocolFactory.getStoredProcedureService().getSchema(input)
           .then(
             (res) ->
               q.resolve(res)
@@ -297,6 +297,27 @@ angular.module('neo4jApp')
         pattern = new RegExp("^#{cmdchar}server connect")
         input.match(pattern)
       exec: ['AuthService', (AuthService) ->
+        (input, q) -> q.resolve()
+      ]
+
+    FrameProvider.interpreters.push
+      type: 'admin'
+      fullscreenable: true
+      templateUrl: 'views/frame-user-admin.html'
+      matches: (input) ->
+        pattern = new RegExp("^#{cmdchar}server user list")
+        input.match(pattern)
+      exec: [() ->
+        (input, q) -> q.resolve()
+      ]
+    FrameProvider.interpreters.push
+      type: 'admin'
+      fullscreenable: true
+      templateUrl: 'views/frame-add-new-user.html'
+      matches: (input) ->
+        pattern = new RegExp("^#{cmdchar}server user add")
+        input.match(pattern)
+      exec: [() ->
         (input, q) -> q.resolve()
       ]
 

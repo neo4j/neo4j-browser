@@ -1,0 +1,37 @@
+div(fullscreen)
+  .outer
+    include partials/frame-common-actions
+    .inner
+      .view-result.admin
+        article.help(ng-controller="UserAdminCreateUserController")
+          .container-fluid
+            .col-sm-2.summary
+              h3 Add user
+              p.lead Add a new user to the database
+              p.lead
+                a(exec-topic="server user list") See user list
+              .panel-heading-info-icon
+            .col-sm-10
+              table.table.table-condensed
+                tr
+                  th.col-lg-3 Username
+                  th.col-lg-3 Role(s)
+                  th.col-lg-3 Password
+                  th.col-lg-3 On first login
+                  th.col-lg-1
+                tr
+                  td
+                    input(ng-disabled="addingUser", ng-model="user.fields.username", type="text")
+                  td
+                    div(user-roles ng-model="user.fields")
+                  td
+                    input(ng-disabled="addingUser", ng-model="user.fields.password", type="password")
+                  td
+                    label Require password change:
+                    input(ng-disabled="addingUser", ng-model="user.fields.requirePasswordChange", type="checkbox")
+                  td
+                    a.sl.sl-arrow-circle-right(ng-hide="addingUser", ng-disabled="!enableSubmit()", ng-click="addNewUser()", tooltip="Save")
+
+        include partials/error-status-bar-detailed
+        include partials/success-status-bar
+        include partials/warning-status-bar

@@ -33,7 +33,7 @@ angular.module('neo4jApp.controllers')
     $scope.refresh = () ->
       # kernel info from JMX
       $scope.sysinfo.kernel ?= {}
-      ProtocolFactory.getJmxService().getJmx(
+      ProtocolFactory.getStoredProcedureService().getJmx(
         [
           "org.neo4j:instance=kernel#0,name=Configuration"
           "org.neo4j:instance=kernel#0,name=Kernel"
