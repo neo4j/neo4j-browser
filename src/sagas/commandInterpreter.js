@@ -7,7 +7,7 @@ import { getSettings } from '../selectors'
 import { cleanCommand } from 'services/commandUtils'
 import editor from 'containers/editor'
 import bolt from 'services/bolt/bolt'
-import { BoltConnectionError, BoltError, getErrorMessage } from 'services/exceptions'
+import { BoltConnectionError, BoltError, Neo4jError, getErrorMessage } from 'services/exceptions'
 
 function * createSucessFrame (meta, result) {
   meta.result = result
@@ -18,6 +18,9 @@ function * createErrorFrame (meta, error) {
   if (meta.type === 'cypher' && error && error.fields) { // Cypher error from Bolt
     meta.originalError = {...error} // Keep original
     error = BoltError(error)
+  } else if (error instanceof bolt.neo4j.Neo4jError) {
+    meta.originalError = {...error} // Keep original
+    error = Neo4jError(error)
   }
   meta.error = {message: getErrorMessage(error)}
   meta.originalType = meta.type

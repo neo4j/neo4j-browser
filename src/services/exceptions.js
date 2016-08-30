@@ -2,6 +2,7 @@ import * as messages from './exceptionMessages'
 
 export function getErrorMessage (errorObject) {
   let str = messages[errorObject.type]
+  if (!str) return
   const keys = Object.keys(errorObject)
   keys.forEach((prop) => {
     const re = new RegExp('(#' + prop + '#)', 'g')
@@ -54,6 +55,13 @@ export function BoltError (obj) {
     type: 'BoltError',
     code: obj.fields[0].code,
     message: obj.fields[0].message
+  }
+}
+
+export function Neo4jError (obj) {
+  return {
+    type: 'Neo4jError',
+    message: obj.message
   }
 }
 
