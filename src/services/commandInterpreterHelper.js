@@ -7,7 +7,7 @@ import { handleServerCommand } from 'sagas/command_sagas/serverCommand'
 import { handleConfigCommand } from 'sagas/command_sagas/configCommand'
 import { handleWidgetCommand } from 'sagas/command_sagas/widgetCommand'
 import { handleDataSourceCommand } from 'sagas/command_sagas/dataSourceCommand'
-import { CouldNotFetchRemoteGuideError } from 'services/exceptions'
+import { CouldNotFetchRemoteGuideError, UnknownCommandError } from 'services/exceptions'
 
 const availableCommands = [{
   name: 'clear',
@@ -74,7 +74,7 @@ const availableCommands = [{
   name: 'catch-all',
   match: () => true,
   exec: function * (action, cmdchar, onSuccess, onError) {
-    yield call(onError, {...action, type: 'unknown'})
+    yield call(onError, {...action, type: 'unknown'}, UnknownCommandError(action.cmd))
   }
 }]
 

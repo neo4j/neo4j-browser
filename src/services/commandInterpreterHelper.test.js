@@ -3,6 +3,7 @@ import remote from 'services/remote'
 import { put, call } from 'redux-saga/effects'
 import frames from 'containers/frames'
 import helper from './commandInterpreterHelper'
+import { UnknownCommandError } from 'services/exceptions'
 
 describe('commandInterpreterHelper', () => {
   describe('discover commands', () => {
@@ -81,6 +82,26 @@ describe('commandInterpreterHelper', () => {
 
       // Then
       expect(actualPutAction).to.deep.equal(expectedPutAction)
+    })
+
+    it('should call onError callback when hitting catch-all for unknown commands', () => {
+      // Given
+      const payload = {cmd: ':unknown', type: 'unknown'}
+      const storeSettings = {cmdchar: ':'}
+      const onError = () => {}
+      const interpreted = helper.interpret(payload.cmd.substr(storeSettings.cmdchar.length))
+      const handleClientCommandSaga = interpreted.exec(payload, storeSettings.cmdchar, null, onError)
+
+      // When
+      const actualCallAction = handleClientCommandSaga.next().value
+      const expectedCallAction = call(
+        onError,
+        {cmd: payload.cmd, type: payload.type},
+        UnknownCommandError(payload.cmd)
+      )
+
+      // Then
+      expect(actualCallAction).to.deep.equal(expectedCallAction)
     })
 
     it('should call onSuccess callback on :play command', () => {
