@@ -69,7 +69,7 @@ angular.module('neo4jApp.controllers')
           ).then( ->
             fetchJMX()
           ).then( ->
-            if 'dbms.listUsers' in $scope.procedures
+            if 'dbms.security.listUsers' in $scope.procedures
               ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
                 $scope.user = res
                 Features.showAdmin = 'admin' in res.roles

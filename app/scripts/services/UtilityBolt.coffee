@@ -70,7 +70,7 @@ angular.module('neo4jApp.services')
 
         getUser: ->
           q = $q.defer()
-          Bolt.boltTransaction('CALL dbms.showCurrentUser()').promise
+          Bolt.boltTransaction('CALL dbms.security.showCurrentUser()').promise
             .then((r) -> q.resolve Bolt.constructUserResult r)
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
@@ -78,63 +78,63 @@ angular.module('neo4jApp.services')
 
         getUserList: ->
           q = $q.defer()
-          Bolt.boltTransaction('CALL dbms.listUsers()').promise
+          Bolt.boltTransaction('CALL dbms.security.listUsers()').promise
           .then((r) -> q.resolve Bolt.constructUserListResult r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         getRolesList: ->
           q = $q.defer()
-          Bolt.boltTransaction('CALL dbms.listRoles() YIELD role').promise
+          Bolt.boltTransaction('CALL dbms.security.listRoles() YIELD role').promise
           .then((r) -> q.resolve Bolt.constructRolesListResult r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         addNewUser: (username, password, requirePasswordChange) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange}).promise
+          Bolt.boltTransaction("CALL dbms.security.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         changeUserPassword: (username, password) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.changeUserPassword({username}, {password})", {username: username, password: password}).promise
+          Bolt.boltTransaction("CALL dbms.security.changeUserPassword({username}, {password})", {username: username, password: password}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         activateUser: (username) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.activateUser({username})", {username: username}).promise
+          Bolt.boltTransaction("CALL dbms.security.activateUser({username})", {username: username}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         suspendUser: (username) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.suspendUser({username})", {username: username}).promise
+          Bolt.boltTransaction("CALL dbms.security.suspendUser({username})", {username: username}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         deleteUser: (username) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.deleteUser({username})", {username: username}).promise
+          Bolt.boltTransaction("CALL dbms.security.deleteUser({username})", {username: username}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         addUserToRole: (username, role) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.addUserToRole({username}, {role})", {username: username, role: role}).promise
+          Bolt.boltTransaction("CALL dbms.security.addRoleToUser({role}, {username})", {username: username, role: role}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         removeRoleFromUser: (username, role) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.removeUserFromRole({username}, {role})", {username: username, role: role}).promise
+          Bolt.boltTransaction("CALL dbms.security.removeRoleFromUser({role}, {username})", {username: username, role: role}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise

@@ -33,7 +33,7 @@ angular.module('neo4jApp.services')
 
         getUser: ->
           q = $q.defer()
-          Server.cypher('', { query: 'CALL dbms.showCurrentUser()'}).then(
+          Server.cypher('', { query: 'CALL dbms.security.showCurrentUser()'}).then(
             (res) ->
               data = res.data
               user = data.data[0]
@@ -42,7 +42,7 @@ angular.module('neo4jApp.services')
           q.promise
         getUserList: ->
           q = $q.defer()
-          Server.cypher('', { query: 'CALL dbms.listUsers()'}).then(
+          Server.cypher('', { query: 'CALL dbms.security.listUsers()'}).then(
             (res) ->
               data = res.data
               users = data.data.map((user) ->
@@ -58,7 +58,7 @@ angular.module('neo4jApp.services')
 
         getRolesList: ->
           q = $q.defer()
-          Server.cypher('', { query: 'CALL dbms.listRoles() YIELD role'}).then(
+          Server.cypher('', { query: 'CALL dbms.security.listRoles() YIELD role'}).then(
             (res) ->
               data = res.data
               users = data.data.map((v) -> v[0])
@@ -85,26 +85,26 @@ angular.module('neo4jApp.services')
           q.promise
 
         changeUserPassword: (username, password) ->
-          @callUserAdminProcedure("CALL dbms.changeUserPassword({username}, {password})", {username: username, password: password})
+          @callUserAdminProcedure("CALL dbms.security.changeUserPassword({username}, {password})", {username: username, password: password})
 
         addNewUser: (username, password, requirePasswordChange) ->
-          @callUserAdminProcedure("CALL dbms.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange})
+          @callUserAdminProcedure("CALL dbms.security.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange})
 
         suspendUser: (username) ->
-          @callUserAdminProcedure("CALL dbms.suspendUser({username})", {username: username})
+          @callUserAdminProcedure("CALL dbms.security.suspendUser({username})", {username: username})
 
 
         deleteUser: (username) ->
-          @callUserAdminProcedure("CALL dbms.deleteUser({username})", {username: username})
+          @callUserAdminProcedure("CALL dbms.security.deleteUser({username})", {username: username})
 
         activateUser: (username) ->
-          @callUserAdminProcedure("CALL dbms.activateUser({username})", {username: username})
+          @callUserAdminProcedure("CALL dbms.security.activateUser({username})", {username: username})
 
         addUserToRole: (username, role) ->
-          @callUserAdminProcedure("CALL dbms.addUserToRole({username}, {role})", {username: username, role:role})
+          @callUserAdminProcedure("CALL dbms.security.addRoleToUser({role}, {username})", {username: username, role:role})
 
         removeRoleFromUser: (username, role) ->
-          @callUserAdminProcedure("CALL dbms.removeUserFromRole({username}, {role})", {username: username, role:role})
+          @callUserAdminProcedure("CALL dbms.security.removeRoleFromUser({role}, {username})", {username: username, role:role})
 
         getProceduresList: ->
           q = $q.defer()
