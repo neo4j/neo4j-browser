@@ -46,47 +46,28 @@ angular.module('neo4jApp.services')
           driver = bolt.driver("bolt://" + host, bolt.auth.basic(username, password), {encrypted: encrypted})
         driver
 
-      testQuery = (driver) ->
+      testConnection = (withoutCredentials = no) ->
         q = $q.defer()
+        driver = getDriverObj withoutCredentials
         driver.onError = (e) ->
           if e instanceof Event and e.type is 'error'
             q.reject getSocketErrorObj()
           else if e.code and e.message # until Neo4jError is in drivers public API
             q.reject buildErrorObj(e.code, e.message)
-        session = driver.session()
-        p = session.run("CALL db.labels")
-        p.then((r) ->
-          session.close()
-          q.resolve r
-        ).catch((e)->
-          session.close()
-          q.reject e
-        )
-        q.promise
-
-      testConnection = (withoutCredentials = no) ->
-        q = $q.defer()
-        driver = getDriverObj withoutCredentials
-        testQuery(driver).then((r) ->
-          q.resolve r
-          _errorStatus = null
-          driver.close()
-        ).catch((e) ->
-          q.reject e
-          _errorStatus = e
-          driver.close()
-        )
+          else if e.fields && e.fields[0]
+            q.reject e
+        driver.onCompleted = (m) ->
+          q.resolve m
+        driver.session()
         q.promise
 
       connect = (withoutCredentials = no) ->
         q = $q.defer()
-        _driver = getDriverObj withoutCredentials
-        testQuery(_driver)
-          .then((r) -> q.resolve r)
-          .catch((e) ->
-            _driver = null unless e.fields[0].code is 'Neo.ClientError.Security.CredentialsExpired'
-            q.reject e
-          )
+        testConnection(withoutCredentials).then((r) ->
+          _driver = getDriverObj withoutCredentials
+          q.resolve r
+        ,(e) -> q.reject e
+        )
         q.promise
 
       clearConnection = ->
@@ -130,14 +111,12 @@ angular.module('neo4jApp.services')
                   session.close()
                   q.resolve r
                 ).catch((txe) ->
-                  session.close()
                   q.reject txe
                 )
               else
                 session.close()
                 q.resolve r
             ).catch((e) ->
-              session.close()
               q.reject e
             )
           else
@@ -146,7 +125,6 @@ angular.module('neo4jApp.services')
               session.close()
               q.resolve r
             ).catch((e) ->
-              session.close()
               q.reject e
             )
         {tx: tx, promise: q.promise, session: session}
