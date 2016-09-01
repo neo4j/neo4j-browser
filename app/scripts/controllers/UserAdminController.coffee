@@ -30,6 +30,9 @@ angular.module('neo4jApp.controllers')
     $scope.resetPasswordValue = null
     $scope.fileredUsernames = []
 
+    $scope.samePasswordCheck = (user) ->
+      user.samePassword = user.resetPasswordValue is user.resetPasswordConfirmationValue
+
     $scope.showResetPassword = (user, value) ->
       user.shouldShowResetPassword = value
 
@@ -41,10 +44,16 @@ angular.module('neo4jApp.controllers')
       $scope.frame.successMessage = no
       $scope.frame.setError(response)
 
-    $scope.resetPassword = (username, resetPasswordValue) ->
-      ProtocolFactory.getStoredProcedureService().changeUserPassword(username, resetPasswordValue).then(() ->
+    $scope.resetPassword = (user) ->
+      unless user.resetPasswordValue is user.resetPasswordConfirmationValue
+        user.resetPasswordValue = null
+        user.resetPasswordConfirmationValue = null
+        user.shouldShowResetPassword = no
+        user.shouldShowConfirmation = no
+        return setError 'Passwords do not match'
+      ProtocolFactory.getStoredProcedureService().changeUserPassword(user.username, user.resetPasswordConfirmationValue).then(() ->
         $scope.refresh()
-        setSuccessMessage("Changed password for  #{username}")
+        setSuccessMessage("Changed password for  #{user.username}")
       ).catch((r) ->
         setError(r)
       )
@@ -81,6 +90,12 @@ angular.module('neo4jApp.controllers')
 
     $scope.notCurrentUser = (username) ->
       username in $scope.filteredUsernames
+    $scope.showConfirmation = (user) ->
+      console.log('user', user)
+      user.resetPasswordValue
+      user.confirmationLabel = yes
+      user.shouldShowResetPassword = no
+      user.shouldShowConfirmation = yes
 
     $scope.$on 'admin.addRoleFor', (event, username, role) ->
       ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(() ->
