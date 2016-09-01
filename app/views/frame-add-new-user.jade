@@ -5,20 +5,21 @@ div(fullscreen)
       .view-result.admin
         article.help(ng-controller="UserAdminCreateUserController")
           .container-fluid
-            .col-sm-2.summary
+            .col-md-2.summary
               h3 Add user
               p.lead Add a new user to the database
               p.lead
                 a(exec-topic="server user list") See user list
               .panel-heading-info-icon
-            .col-sm-10
+            .col-md-10
               table.table.table-condensed
                 tr
-                  th.col-lg-3 Username
-                  th.col-lg-3 Role(s)
-                  th.col-lg-3 Password
-                  th.col-lg-3 On first login
-                  th.col-lg-1
+                  th.col-md-2 Username
+                  th.col-md-3 Role(s)
+                  th.col-md-2 Password
+                  th.col-md-2 Confirm password
+                  th.col-md-2 On first login
+                  th.col-md-1
                 tr
                   td
                     input(ng-disabled="addingUser", ng-model="user.fields.username", type="text")
@@ -26,6 +27,8 @@ div(fullscreen)
                     div(user-roles ng-model="user.fields")
                   td
                     input(ng-disabled="addingUser", ng-model="user.fields.password", type="password")
+                  td
+                    input(ng-disabled="addingUser", ng-model="user.fields.passwordConfirmation", type="password")
                   td
                     label Require password change:
                     input(ng-disabled="addingUser", ng-model="user.fields.requirePasswordChange", type="checkbox")

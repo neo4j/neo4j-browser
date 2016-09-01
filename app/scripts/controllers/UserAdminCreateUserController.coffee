@@ -52,6 +52,7 @@ angular.module('neo4jApp.controllers')
         fields: {
           username: '',
           password: '',
+          passwordConfirmation: '',
           requirePasswordChange: false,
           roles: []
         }
@@ -60,6 +61,11 @@ angular.module('neo4jApp.controllers')
     $scope.user = getNewUserObject()
 
     $scope.addNewUser = () ->
+      return setWarning "Username required" unless $scope.user.fields.username
+      return setWarning "Password required" unless $scope.user.fields.password
+      return setWarning "Password confirmation required" unless $scope.user.fields.passwordConfirmation
+      return setWarning "Password and password confirmation are different" unless $scope.user.fields.password is $scope.user.fields.passwordConfirmation
+
       ProtocolFactory.getStoredProcedureService().addNewUser(
         $scope.user.fields.username, $scope.user.fields.password, $scope.user.fields.requirePasswordChange
       ).then(()->
