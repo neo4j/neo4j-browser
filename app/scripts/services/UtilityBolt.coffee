@@ -87,20 +87,18 @@ angular.module('neo4jApp.services')
           q = $q.defer()
           r = Bolt.testConnection withoutCredentials
           r.then((r) ->
-            res = Bolt.constructResult r
             Bolt.connect() if retainConnection
-            if not res.data.errors.length
-              $rootScope.bolt_connection_failure = no
-              return q.resolve({})
-            else
-              return q.reject({status: 401, data: res})
-          ).catch((err) ->
-            errObj = Bolt.constructResult err
-            if errObj.data.errors[0].code is 'Neo.ClientError.Security.CredentialsExpired'
+            if (r.credentials_expired)
+              errObj = {data: {}}
               errObj.data.password_change = 'true'
               errObj.status = 403
-              Bolt.connect() if retainConnection
-            else if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
+              q.reject errObj
+            else
+              $rootScope.bolt_connection_failure = no
+              return q.resolve({})
+          ,(err) ->
+            errObj = Bolt.constructResult err
+            if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
               errObj.status = 0
               $rootScope.bolt_connection_failure = yes
             else
@@ -108,6 +106,7 @@ angular.module('neo4jApp.services')
             q.reject errObj
           )
           q.promise
+
         setNewPassword: (username, newPasswd) ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.changePassword({password})", {password: newPasswd}).promise
