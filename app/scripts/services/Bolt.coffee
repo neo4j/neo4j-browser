@@ -46,17 +46,6 @@ angular.module('neo4jApp.services')
           driver = bolt.driver("bolt://" + host, bolt.auth.basic(username, password), {encrypted: encrypted})
         driver
 
-      testQuery = (driver) ->
-        q = $q.defer()
-        p = session.run("call db.labels()")
-        p.then((r) ->
-          session.close()
-          q.resolve r
-        ).catch((e)->
-          q.reject e
-        )
-        q.promise
-
       testConnection = (withoutCredentials = no) ->
         q = $q.defer()
         driver = getDriverObj withoutCredentials
@@ -68,7 +57,6 @@ angular.module('neo4jApp.services')
           else if e.fields && e.fields[0]
             q.reject e
         driver.onCompleted = (m) ->
-          console.log('complete ', m)
           q.resolve m
         driver.session()
         q.promise
