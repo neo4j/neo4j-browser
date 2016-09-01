@@ -28,7 +28,9 @@ table.table.table-condensed
               a.sl.sl-delete-circle(ng-click="user.shouldShowConfirmation = false")
       td
         span(ng-show="notCurrentUser(user.username)")
-          a.sl.sl-delete-circle(ng-click='delete(user.username)', tooltip="Delete")
+          a.sl.sl-delete-circle(ng-hide="user.confirmDelete", ng-click='user.confirmDelete = true', tooltip="Delete")
+          a.sl.sl-arrow-circle-right(ng-show="user.confirmDelete", ng-click='delete(user.username)', tooltip="Confirm Delete")
+          a.sl.sl-delete-circle(ng-show="user.confirmDelete", ng-click="user.confirmDelete = false", tooltip="Cancel")
     tr
       td(colspan="5")
         a(exec-topic="server user add") Add new user
