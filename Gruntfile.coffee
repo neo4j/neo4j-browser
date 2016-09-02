@@ -35,6 +35,18 @@ standardProxies = [{
   port: 7474,
   https: false,
   changeOrigin: false
+},{
+  context: '/root',
+  host: 'localhost',
+  headers: {
+    "Content-Type":"application/json"
+  },
+  port: 7474,
+  https: false,
+  changeOrigin: false
+  rewrite: {
+    "^/root" : ""
+  }
 }]
 
 module.exports = (grunt) ->

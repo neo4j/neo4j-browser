@@ -26,6 +26,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
   .constant('Settings', {
     cmdchar: ':'
     endpoint:
+      discover: "#{baseURL}/root"
       console: "#{baseURL}/db/manage/server/console"
       version: "#{baseURL}/db/manage/server/version"
       jmx: "#{baseURL}/db/manage/server/jmx/query"

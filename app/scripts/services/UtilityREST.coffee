@@ -119,6 +119,11 @@ angular.module('neo4jApp.services')
           q.resolve Server.version(version)
           q.promise
 
+        getAddresses: ->
+          q = $q.defer()
+          q.resolve Server.addresses()
+          q.promise
+
         getSchema: (input) ->
           q = $q.defer()
           Server.console(input.substr(1))
