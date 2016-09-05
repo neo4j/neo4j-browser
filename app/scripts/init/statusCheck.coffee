@@ -27,18 +27,6 @@ angular.module('neo4jApp').run([
   (AuthService, $scope, $timeout, Server, Settings) ->
     timer = null
     $scope.check = ->
-#      Server.addresses()
-#      .then(
-#        (r) ->
-#          r = r.data
-#          if r.bolt? and Settings.boltHost is ""
-#            $scope.boltHost = r.bolt.replace('bolt://', '')
-#          else
-#            $scope.boltHost = $location.host())
-#      .catch(
-#        (r)->
-#          $scope.boltHost = $location.host())
-
       $timeout.cancel(timer)
       # There is something wrong with the XHR implementation in IE10:
       # It will return 304 (not modified) even if the server goes down as long as
