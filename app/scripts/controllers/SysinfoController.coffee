@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'SysinfoController', [
-    '$scope', 'Settings', 'ProtocolFactory', '$timeout'
-  ($scope, Settings, ProtocolFactory, $timeout) ->
+    '$scope', 'Settings', 'ProtocolFactory', 'Features', '$timeout'
+  ($scope, Settings, ProtocolFactory, Features, $timeout) ->
     $scope.autoRefresh = false
     $scope.sysinfo = {}
     $scope.sysinfo.primitives ?= {}
@@ -80,6 +80,13 @@ angular.module('neo4jApp.controllers')
           $scope.sysinfo.cache = { available: false }
           $scope.sysinfo.tx = {available: false}
           $scope.sysinfo.ha = { clustered: false })
+
+
+      if Features.usingCoreEdge
+        ProtocolFactory.getStoredProcedureService().getCoreEdgeOverview()
+        .then((response) ->
+          $scope.sysinfo.ce = response
+        )
 
     timer = null
     refreshLater = () =>

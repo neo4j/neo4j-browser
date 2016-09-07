@@ -21,5 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.features', [])
   .constant('Features', {
     showAdmin: yes
+    usingCoreEdge: no
   })
 

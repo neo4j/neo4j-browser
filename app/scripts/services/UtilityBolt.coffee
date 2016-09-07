@@ -75,6 +75,13 @@ angular.module('neo4jApp.services')
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        getCoreEdgeOverview: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.cluster.overview()').promise
+            .then((r) -> q.resolve Bolt.constructCoreEdgeOverview r)
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
 
         getUserList: ->
           q = $q.defer()

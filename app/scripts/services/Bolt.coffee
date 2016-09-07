@@ -156,6 +156,11 @@ angular.module('neo4jApp.services')
         variable = {username: r.records[0].get('username'), roles:r.records[0].get('roles') }
         return variable
 
+      constructCoreEdgeOverview = (r) ->
+        return null unless r.records
+        entries = r.records.map((entry)-> {id: entry.get('id'), address: entry.get('address'), role: entry.get('role')})
+        return entries
+
       constructUserListResult = (r) ->
         return null unless r.records
         r.records.map((user) ->
@@ -372,6 +377,7 @@ angular.module('neo4jApp.services')
         boltTransaction: boltTransaction,
         callProcedure: callProcedure,
         constructUserResult: constructUserResult,
+        constructCoreEdgeOverview: constructCoreEdgeOverview,
         constructUserListResult: constructUserListResult,
         constructRolesListResult: constructRolesListResult,
         constructResult: (res) ->
