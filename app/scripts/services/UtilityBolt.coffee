@@ -185,7 +185,7 @@ angular.module('neo4jApp.services')
             errObj = Bolt.constructResult err
             if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
               errObj.status = 0
-              $rootScope.bolt_connection_failure = yes
+              $rootScope.bolt_connection_failure = yes  && ! $rootScope.unauthorized
             else
               errObj.status = 401
             q.reject errObj
