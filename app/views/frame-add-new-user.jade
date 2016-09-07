@@ -4,7 +4,7 @@ div(fullscreen)
     .inner
       .view-result.admin
         article.help(ng-controller="UserAdminCreateUserController")
-          .container-fluid
+          .container-fluid(ng-if="!unauthorized")
             .col-md-2.summary
               h3 Add user
               p.lead Add a new user to the database
@@ -34,6 +34,9 @@ div(fullscreen)
                     input(ng-disabled="addingUser", ng-model="user.fields.requirePasswordChange", type="checkbox")
                   td
                     a.sl.sl-arrow-circle-right(ng-hide="addingUser", ng-disabled="!enableSubmit()", ng-click="addNewUser()", tooltip="Save")
+          .container-fluid(ng-if="unauthorized")
+            .col-md-12
+              p Please connect to the server to see this frame
 
         include partials/error-status-bar-detailed
         include partials/success-status-bar
