@@ -22,11 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'DisconnectCtrl', [
+    "$rootScope"
     '$scope'
     'AuthService'
     'ConnectionStatusService'
-    ($scope, AuthService, ConnectionStatusService) ->
+    ($rootScope, $scope, AuthService, ConnectionStatusService) ->
       AuthService.forget()
+      $rootScope.user = no
       $scope.static_user = ConnectionStatusService.connectedAsUser()
       $scope.static_is_authenticated = ConnectionStatusService.isConnected()
 
