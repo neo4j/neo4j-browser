@@ -6,36 +6,20 @@ article.help
         p.lead Database schema indexes
       .details.col-sm-9
         p
-          | Shows information about database schema indexes.
+          | Shows information about database schema indexes and constraints.
         table.table-condensed.table-help
           tr
-            th Usage:
+            th Reference:
             td
-              code :schema &lt;action&gt; &lt;options...&gt;
-          tr
-            th Actions:
-            td
-              ul.list-unstyled
-                li ls - list indexes
-                li await - wait for an index to come online
-          tr
-            th Options:
-            td
-              ul.list-unstyled
-                li -l   Specifies which label selected operation is about.
-                li -p   Specifies which property selected operation is about.
-                li -v   Verbose output of failure descriptions etc.
-          tr
-            th Examples:
-            td
-              code.code :schema ls -l :Person
-              br
-              code.code :schema await -l Person -p name
+              a(href="{{ neo4j.version | neo4jDeveloperDoc }}/cypher/#cypher-schema") Cypher Schema
           tr
             th Related:
             td
               a(help-topic="create-index-on") :help CREATE INDEX ON
-          tr
-            th Reference:
-            td
-              a(href="{{ neo4j.version | neo4jDeveloperDoc }}/#query-schema-index") Neo4j Schema Indexes
+              | &nbsp;
+              a(help-topic='drop-index-on') :help DROP INDEX ON
+    section.row-fluid.example
+      .col-sm-9.col-sm-offset-3
+        figure
+          pre.
+            :schema
