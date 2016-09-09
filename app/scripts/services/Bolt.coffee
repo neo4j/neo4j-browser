@@ -172,10 +172,9 @@ angular.module('neo4jApp.services')
           user.get('role')
         )
 
-      jmxResultToRESTResult = (r, whatToGet = []) ->
+      jmxResultToRESTResult = (r) ->
         return {data: []} unless r.records
-        filtered = r.records.filter((record) -> whatToGet.indexOf(record.get('name')) > -1)
-          .map((record) ->
+        mapped = r.records.map((record) ->
             origAttributes = record.get('attributes')
             return {
               name: record.get('name'),
@@ -187,7 +186,7 @@ angular.module('neo4jApp.services')
               })
             }
           )
-        {data: BoltIntHelpers.mapBoltIntsToStrings filtered}
+        {data: BoltIntHelpers.mapBoltIntsToStrings mapped}
 
       schemaResultToRESTResult = (indexes, constraints) ->
         indexString = ""
