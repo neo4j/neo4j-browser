@@ -29,11 +29,11 @@
       li.pair
         .key Username:
         .value {{user.username}}
-      li.pair
+      li.pair(ng-show="neo4j.enterpriseEdition")
         .key {{(user.roles.length === 1)? 'Role:' : 'Roles:'}}
         .value {{user.roles.join(', ')}}
       li.pair(ng-show="features.showAdmin")
-        .key Admin
+        .key Admin:
         a.value(exec-topic='server user list') server user list
   h5 Database
   ul
