@@ -29,7 +29,6 @@ describe 'Service: GraphStyle', () ->
     'node':
       'color': '#aaa'
       'border-width': '2px'
-      'caption': 'Node'
     'node.Person':
       'caption': '{name}'
     'node.Actor':
@@ -115,6 +114,14 @@ node {
       expect(GraphStyle.forNode(labels: ['Movie']).get('color')).toBe('#A5ABB6')
       expect(GraphStyle.forNode(labels: ['Animal']).get('color')).toBe('#A5ABB6')
 
+    it 'should return default caption for a node without any labels', ->
+      property_list = []
+      property_list.push({key: 'username', val: 'x'})
+      property_list.push({key: 'Title', val: 'x'})
+      expect(GraphStyle.forNode({propertyList: property_list}).get('caption')).toBe('{Title}')
+      expect(GraphStyle.forNode({propertyList: []}).get('caption')).toBe('<id>')
+      expect(GraphStyle.forNode({propertyList: [{key: 'city', val: 'x'}, {key: 'email', val: 'x'}]}).get('caption')).toBe('{city}')
+
     it 'should return "{name}" as default caption because of higher priority', ->
       property_list = []
       property_list.push({key: 'name', val: 'x'})
@@ -138,7 +145,7 @@ node {
       property_list.push({key: 'city', val: 'x'})
       property_list.push({key: 'email', val: 'x'})
       item = {propertyList: property_list}
-      expect(GraphStyle.getDefaultNodeCaption(item).caption).toBe('{city}')  
+      expect(GraphStyle.getDefaultNodeCaption(item).caption).toBe('{city}')
 
     it 'should return "<id>" as default caption when there are no properties', ->
       # To make sure the property list ordering is ignored

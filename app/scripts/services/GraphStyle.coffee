@@ -142,7 +142,9 @@ angular.module('neo4jApp.services')
         selector = @nodeSelector(node)
         if node.labels?.length > 0
           @setDefaultNodeStyling(selector, node)
-        @calculateStyle(selector)
+        style = @calculateStyle(selector)
+        style.props.caption = @getDefaultNodeCaption(node).caption unless style.props.caption
+        style
 
       forRelationship: (rel) ->
         selector = @relationshipSelector(rel)
