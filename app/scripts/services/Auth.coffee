@@ -62,6 +62,7 @@ angular.module('neo4jApp.services')
             ##Success, no auth required
             clearConnectionAuthData()
             ConnectionStatusService.setAuthorizationRequired no
+            ConnectionStatusService.setConnected yes
             q.resolve r
           ,
           (r) ->

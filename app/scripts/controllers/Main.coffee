@@ -82,9 +82,9 @@ angular.module('neo4jApp.controllers')
 
         fetchJMX = ->
           ProtocolFactory.getStoredProcedureService().getJmx([
-            "org.neo4j:instance=kernel#0,name=Configuration"
-            "org.neo4j:instance=kernel#0,name=Kernel"
-            "org.neo4j:instance=kernel#0,name=Store file sizes"
+            "*:*,name=Configuration"
+            "*:*,name=Kernel"
+            "*:*,name=Store file sizes"
           ]).then((response) ->
             for r in response.data
               for a in r.attributes
