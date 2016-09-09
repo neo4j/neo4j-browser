@@ -6,7 +6,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 Store Sizes
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
           table.table.table-condensed
             tr
               th Array Store
@@ -34,7 +33,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 ID Allocation
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
           table.table.table-condensed
             tr
               th Node ID
@@ -53,7 +51,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 Page Cache
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
           .panel-body(ng-hide="sysinfo.cache.available")
             p No statistics available.
           table.table.table-condensed(ng-show="sysinfo.cache.available")
@@ -87,7 +84,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 Transactions
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
           .panel-body(ng-hide="sysinfo.tx.available")
             p Not available.
           table.table.table-condensed(ng-show="sysinfo.tx.available")
@@ -111,7 +107,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 High Availability
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
           .panel-body(ng-hide='sysinfo.ha.clustered')
             p Not enabled.
           table.table.table-condensed(ng-show='sysinfo.ha.clustered')
@@ -138,7 +133,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 Cluster
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
           .panel-body(ng-hide='sysinfo.ha.clustered')
             p No cluster.
           table.table.table-condensed(ng-show='sysinfo.ha.clustered')
@@ -178,6 +172,7 @@ article.help(ng-controller="SysinfoController")
               td {{ member.role }}
 
   footer.tight
+    a.help-footer-icon.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
     small Note: some metrics only available in Neo4j Enterprise.
     .actions
       .toggle.toggle-footer-margin(ng-click='toggleAutoRefresh()')
