@@ -30,14 +30,22 @@ angular.module('neo4jApp.services')
         clearConnection: -> angular.noop
         getJmx: (whatToGet = []) ->
           Server.jmx(whatToGet)
-
+        mapResult: (columns, data) ->
+          returnObject = {}
+          columns.forEach((c, i) ->
+            returnObject[c] = data[i]
+          )
+          returnObject
         getUser: ->
           q = $q.defer()
+          that = @
           Server.cypher('', { query: 'CALL dbms.security.showCurrentUser()'}).then(
             (res) ->
-              data = res.data
-              user = data.data[0]
-              q.resolve {username: user[0], roles: user[1]}
+              mappedResult = that.mapResult res.data.columns, res.data.data[0]
+              if mappedResult.roles?
+                q.resolve {username: mappedResult.username, roles: mappedResult.roles}
+              else
+                q.resolve {username: mappedResult.username, roles: ['admin']}
           )
           q.promise
 
@@ -60,15 +68,12 @@ angular.module('neo4jApp.services')
           q.promise
         getUserList: ->
           q = $q.defer()
+          that = @
           Server.cypher('', { query: 'CALL dbms.security.listUsers()'}).then(
             (res) ->
               data = res.data
               users = data.data.map((user) ->
-                {
-                  username: user[0],
-                  roles: user[1],
-                  flags: user[2]
-                }
+                that.mapResult res.data.columns, user
               )
               q.resolve users
           )

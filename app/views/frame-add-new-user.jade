@@ -24,7 +24,8 @@ div(fullscreen)
                   td
                     input(ng-disabled="addingUser", ng-model="user.fields.username", type="text")
                   td
-                    div(user-roles ng-model="user.fields")
+                    div(ng-if="Features.canGetRoles", user-roles ng-model="user.fields")
+                    div(ng-if="!Features.canGetRoles") N/A
                   td
                     input(ng-disabled="addingUser", ng-model="user.fields.password", type="password")
                   td

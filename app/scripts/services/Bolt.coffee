@@ -153,8 +153,9 @@ angular.module('neo4jApp.services')
 
       constructUserResult = (r) ->
         return null unless r.records
-        variable = {username: r.records[0].get('username'), roles:r.records[0].get('roles') }
-        return variable
+        record = r.records[0]
+        getRoles = if 'roles' in record.keys then record.get('roles') else ['admin']
+        return {username: record.get('username'), roles: getRoles }
 
       constructCoreEdgeOverview = (r) ->
         return null unless r.records
@@ -163,8 +164,10 @@ angular.module('neo4jApp.services')
 
       constructUserListResult = (r) ->
         return null unless r.records
+        record = r.records[0]
+        getRoles = if 'roles' in record.keys then record.get('roles') else 'N/A'
         r.records.map((user) ->
-          {username: user.get('username'), roles: user.get('roles'), flags: user.get('flags') }
+          {username: user.get('username'), roles: getRoles , flags: user.get('flags') }
         )
       constructRolesListResult = (r) ->
         return null unless r.records

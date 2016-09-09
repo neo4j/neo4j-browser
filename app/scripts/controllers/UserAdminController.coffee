@@ -22,13 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'UserAdminController', [
-    '$scope', 'Settings', 'ProtocolFactory'
-  ($scope, Settings, ProtocolFactory) ->
+    '$scope', 'Settings', 'ProtocolFactory', 'Features'
+  ($scope, Settings, ProtocolFactory, Features) ->
 
     $scope.autoRefresh = false
     $scope.defaultSelection = ''
     $scope.resetPasswordValue = null
     $scope.fileredUsernames = []
+    $scope.Features = Features
 
     $scope.samePasswordCheck = (user) ->
       user.samePassword = user.resetPasswordValue is user.resetPasswordConfirmationValue

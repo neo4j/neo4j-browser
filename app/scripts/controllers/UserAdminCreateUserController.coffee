@@ -22,13 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'UserAdminCreateUserController', [
-    '$scope', 'Settings', 'ProtocolFactory'
-  ($scope, Settings, ProtocolFactory) ->
+    '$scope', 'Settings', 'ProtocolFactory', 'Features'
+  ($scope, Settings, ProtocolFactory, Features) ->
     $scope.defaultSelection = ''
     $scope.selectedItem = null
     $scope.resetPasswordValue = null
     $scope.editingRole = true
     $scope.listOfAllKnownRoles = []
+    $scope.Features = Features
 
     $scope.addingUser = no
 
