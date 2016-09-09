@@ -34,53 +34,46 @@ angular.module('neo4jApp.controllers')
       # kernel info from JMX
       $scope.sysinfo.kernel ?= {}
       ProtocolFactory.getStoredProcedureService().getJmx(
-        [
-          "org.neo4j:instance=kernel#0,name=Configuration"
-          "org.neo4j:instance=kernel#0,name=Kernel"
-          "org.neo4j:instance=kernel#0,name=Store file sizes"
-          "org.neo4j:instance=kernel#0,name=Primitive count"
-          "org.neo4j:instance=kernel#0,name=Page cache"
-          "org.neo4j:instance=kernel#0,name=Transactions"
-          "org.neo4j:instance=kernel#0,name=High Availability"
-        ]).then((response) ->
-          for r in response.data
-            if r.name in ["org.neo4j:instance=kernel#0,name=Configuration","org.neo4j:instance=kernel#0,name=Kernel","org.neo4j:instance=kernel#0,name=Store file sizes" ]
-              for a in r.attributes
-                $scope.sysinfo.kernel[a.name] = a.value
-            else if r.name ==  "org.neo4j:instance=kernel#0,name=Primitive count"
-              for a in r.attributes
-                $scope.sysinfo.primitives[a.name] = a.value
-            else if r.name == "org.neo4j:instance=kernel#0,name=Page cache"
-              $scope.sysinfo.cache.available = true
-              for a in r.attributes
-                $scope.sysinfo.cache[a.name] = a.value
-            else if r.name == "org.neo4j:instance=kernel#0,name=Transactions"
-              $scope.sysinfo.tx.available = true
-              for a in r.attributes
-                $scope.sysinfo.tx[a.name] = a.value
-            else if r.name == "org.neo4j:instance=kernel#0,name=High Availability"
-              $scope.sysinfo.ha.clustered = true
-              for a in r.attributes
-                if a.name is "InstancesInCluster"
-                  $scope.sysinfo.ha.ClusterMembers = {}
-                  for member in a.value
-                    clusterMember = {}
-                    for ma in member.value
-                      clusterMember[ma.name] = ma.value
-                    clusterMember.connected = false
-                    $scope.sysinfo.ha.ClusterMembers[clusterMember.instanceId] = clusterMember
-                else
-                  if a.name is "InstanceId"
-                    connectedMemberId = a.value
-                  $scope.sysinfo.ha[a.name] = a.value
-              $scope.sysinfo.ha.ClusterMembers[connectedMemberId].connected = true
-        ).catch((r) ->
-          $scope.sysinfo.kernel = {}
-          $scope.sysinfo.primitives = {}
-          $scope.sysinfo.cache = { available: false }
-          $scope.sysinfo.tx = {available: false}
-          $scope.sysinfo.ha = { clustered: false })
-
+          ["*:*"]).then((response) ->
+            intialResponse = response.data[0]
+            jmxQueryPrefix = intialResponse.name.split(',')[0]
+            for r in response.data
+              if r.name in ["#{jmxQueryPrefix},name=Configuration","#{jmxQueryPrefix},name=Kernel","#{jmxQueryPrefix},name=Store file sizes" ]
+                for a in r.attributes
+                  $scope.sysinfo.kernel[a.name] = a.value
+              else if r.name ==  "#{jmxQueryPrefix},name=Primitive count"
+                for a in r.attributes
+                  $scope.sysinfo.primitives[a.name] = a.value
+              else if r.name == "#{jmxQueryPrefix},name=Page cache"
+                $scope.sysinfo.cache.available = true
+                for a in r.attributes
+                  $scope.sysinfo.cache[a.name] = a.value
+              else if r.name == "#{jmxQueryPrefix},name=Transactions"
+                $scope.sysinfo.tx.available = true
+                for a in r.attributes
+                  $scope.sysinfo.tx[a.name] = a.value
+              else if r.name == "#{jmxQueryPrefix},name=High Availability"
+                $scope.sysinfo.ha.clustered = true
+                for a in r.attributes
+                  if a.name is "InstancesInCluster"
+                    $scope.sysinfo.ha.ClusterMembers = {}
+                    for member in a.value
+                      clusterMember = {}
+                      for ma in member.value
+                        clusterMember[ma.name] = ma.value
+                      clusterMember.connected = false
+                      $scope.sysinfo.ha.ClusterMembers[clusterMember.instanceId] = clusterMember
+                  else
+                    if a.name is "InstanceId"
+                      connectedMemberId = a.value
+                    $scope.sysinfo.ha[a.name] = a.value
+                $scope.sysinfo.ha.ClusterMembers[connectedMemberId].connected = true
+          ).catch((r) ->
+            $scope.sysinfo.kernel = {}
+            $scope.sysinfo.primitives = {}
+            $scope.sysinfo.cache = { available: false }
+            $scope.sysinfo.tx = {available: false}
+            $scope.sysinfo.ha = { clustered: false })
 
       if Features.usingCoreEdge
         ProtocolFactory.getStoredProcedureService().getCoreEdgeOverview()
