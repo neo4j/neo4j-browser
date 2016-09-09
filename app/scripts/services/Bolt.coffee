@@ -373,6 +373,7 @@ angular.module('neo4jApp.services')
         connect()
 
       return {
+        bolt: bolt,
         testConnection: testConnection,
         connect: connect,
         beginTransaction: beginTransaction,

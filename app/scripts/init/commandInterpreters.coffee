@@ -225,6 +225,47 @@ angular.module('neo4jApp')
 
       ]
 
+    FrameProvider.interpreters.push
+      type: 'params'
+      templateUrl: 'views/frame-parameters.html'
+      matches: ["#{cmdchar}param"]
+      exec: ['Parameters', (Parameters) ->
+        (input, q) ->
+          matches = /^[^\w]*param\s+([^:\s]+)\s*(?:(?::\s?([^$]*))?)$/.exec(input)
+          if (matches?)
+            [key, value] = [matches[1], matches[2]]
+            if (value isnt undefined and value isnt null)
+              value = try eval(value)
+              Parameters[key] = value
+              toResolve = angular.copy Parameters
+            else
+              toResolve = (_obj = {}; _obj[key] = Parameters[key]; _obj)
+              if typeof Parameters[key] is 'undefined'
+                toResolve = null
+
+            q.resolve toResolve
+          else
+            q.resolve angular.copy Parameters
+          q.promise
+      ]
+
+    FrameProvider.interpreters.push
+      type: 'params'
+      templateUrl: 'views/frame-parameters.html'
+      matches: ["#{cmdchar}params"]
+      exec: ['Parameters', (Parameters) ->
+        (input, q) ->
+          matches = /^[^\w]*params\s*(\{.*\})$/.exec(input)
+          if (matches and matches[1])
+            value = matches[1]
+            obj = try eval('(' + value + ')')
+            # Reset current params. Just resetting it to {} does not work
+            Object.keys(Parameters).forEach((key) -> delete Parameters[key])
+            Object.keys(obj).forEach((key) -> Parameters[key] = obj[key])
+          q.resolve(angular.copy Parameters)
+          q.promise
+      ]
+
     # about handler
     # FrameProvider.interpreters.push
     #   type: 'info'

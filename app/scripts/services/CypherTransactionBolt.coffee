@@ -27,8 +27,10 @@ angular.module('neo4jApp.services')
     'Bolt'
     'UsageDataCollectionService'
     'Timer'
+    'Parameters'
+    'Utils'
     '$rootScope'
-    ($q, CypherResult, Bolt, UDC, Timer, $rootScope) ->
+    ($q, CypherResult, Bolt, UDC, Timer, Parameters, Utils, $rootScope) ->
       parseId = (resource = "") ->
         id = resource.split('/').slice(-2, -1)
         return parseInt(id, 10)
@@ -95,6 +97,12 @@ angular.module('neo4jApp.services')
 
         commit: (query, params = null) ->
           that = @
+          params = angular.extend({}, Parameters, params)
+          transformFn = (n) ->
+            if parseInt(n) is Number(n)
+              return Bolt.bolt.int(n)
+            Number(n)
+          params = Utils.findNumberInVal params, [transformFn]
           statements = if query then [{statement:query, parameters: params}] else []
           UDC.increment('cypher_attempts')
           q = $q.defer()
