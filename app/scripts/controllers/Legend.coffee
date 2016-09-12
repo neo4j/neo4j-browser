@@ -32,6 +32,11 @@ angular.module('neo4jApp')
     $scope.labelsContracted = yes
     $scope.typesContracted = yes
 
+    combineAttrs = (originalAttrs, newAttrs) ->
+      attrs = originalAttrs
+      newAttrs.forEach((newAttr) ->
+          attrs.push(newAttr) if originalAttrs.indexOf(newAttr) < 0)
+      return attrs
 
     graphStats = (graph) ->
       resultLabels = {}
@@ -49,9 +54,11 @@ angular.module('neo4jApp')
         stats.labels[''].count++
 
         for label, ignored in node.labels
+          nodeAttrs = Object.keys(node.propertyMap)
+          attrs = if stats.labels[label] then combineAttrs(stats.labels[label].attrs, nodeAttrs) else nodeAttrs
           stats.labels[label] ?=
             label: label
-            attrs: Object.keys(node.propertyMap)
+            attrs: attrs
             count: 0
             style: graphStyle.calculateStyle(graphStyle.newSelector('node', [label]))
 
