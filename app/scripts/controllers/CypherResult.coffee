@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict'
 
 angular.module('neo4jApp.controllers')
-  .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTableFactory', 'BoltIntHelpers',  ($rootScope, $scope, AsciiTableFactory, BoltIntHelpers) ->
-    $scope.displayInternalRelationships = $rootScope.stickyDisplayInternalRelationships ? true
+  .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTableFactory', 'BoltIntHelpers', 'Settings', ($rootScope, $scope, AsciiTableFactory, BoltIntHelpers, Settings) ->
+    $scope.displayInternalRelationships = Settings.autoComplete
     $scope.availableModes = []
     $scope.slider = {min: 4, max: 20}
     asciiTable = AsciiTableFactory.getInstance()

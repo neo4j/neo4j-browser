@@ -34,7 +34,8 @@ angular.module('neo4jApp.controllers')
     'GraphExplorer'
     'GraphStyle'
     'Editor'
-    ($attrs, $element, $parse, $window, $rootScope, $scope, $interval, $timeout, CircularLayout, GraphExplorer, GraphStyle, Editor) ->
+    'Settings'
+    ($attrs, $element, $parse, $window, $rootScope, $scope, $interval, $timeout, CircularLayout, GraphExplorer, GraphStyle, Editor, Settings) ->
       graphView = null
       @getGraphView = -> return graphView
 
@@ -87,7 +88,6 @@ angular.module('neo4jApp.controllers')
       )
 
       $scope.$watch 'displayInternalRelationships', (displayInternalRelationships) ->
-        $rootScope.stickyDisplayInternalRelationships = displayInternalRelationships
         return unless graphView
         if displayInternalRelationships
           GraphExplorer.internalRelationships(graphView.graph, [], graphView.graph.nodes())
