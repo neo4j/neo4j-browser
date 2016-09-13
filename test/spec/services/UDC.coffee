@@ -313,7 +313,7 @@ describe 'Service: UDC', () ->
       UsageDataCollectionService.reset()
       Settings.shouldReportUdc = yes
       qq = q.defer()
-      qq.resolve({records: [], summary: {counters: {_stats: [], containsUpdates: ->}}})
+      qq.resolve({records: [], summary: {updateStatistics: {_stats: [], containsUpdates: ->}}})
       spyOn(Bolt, "transaction").and.returnValue({tx: null, promise: qq.promise})
       current_transaction = Cypher.transaction(yes)
       p = current_transaction.commit("MATCH n RETURN n")
