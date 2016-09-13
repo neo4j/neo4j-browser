@@ -337,6 +337,7 @@ angular.module('neo4jApp.services')
           operatorType: plan.operatorType,
           LegacyExpression: plan.arguments.LegacyExpression,
           ExpandExpression: plan.arguments.ExpandExpression,
+          Signature: plan.arguments.Signature,
           DbHits: plan.dbHits,
           Rows: plan.rows,
           EstimatedRows: plan.arguments.EstimatedRows,

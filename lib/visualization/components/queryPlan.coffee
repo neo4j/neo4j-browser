@@ -108,7 +108,7 @@ neo.queryPlan = (element)->
       wordWrap(index, 'index')
       details.push { className: 'padding' }
 
-    if expression = operator.LegacyExpression ? operator.ExpandExpression ? operator.LabelName
+    if expression = operator.LegacyExpression ? operator.ExpandExpression ? operator.LabelName ? operator.Signature
       wordWrap(expression, 'expression')
       details.push { className: 'padding' }
 
