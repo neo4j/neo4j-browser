@@ -68,6 +68,10 @@ angular.module('neo4jApp.services')
               'u':'http://neo4j.com/' + trackingData
             },
             {
+              'd': 'Join our Neo4j Slack community.',
+              'u': 'http://neo4j.com/slack/' + trackingData
+            },
+            {
               'd': 'Start coding your application with a driver for your language of choice.',
               'u': 'http://neo4j.com/developer/language-guides/' + trackingData
             },
