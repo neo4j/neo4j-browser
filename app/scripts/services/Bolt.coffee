@@ -346,14 +346,14 @@ angular.module('neo4jApp.services')
         }
 
       boltStatsToRESTStats = (summary) ->
-        return {} unless summary and summary.updateStatistics
-        stats = summary.updateStatistics._stats
+        return {} unless summary and summary.counters
+        stats = summary.counters._stats
         newStats = {}
         Object.keys(stats).forEach((key) ->
           newKey = key.replace(/([A-Z]+)/, (m) -> '_' + m.toLowerCase())
           newStats[newKey] = stats[key]
         )
-        newStats['contains_updates'] = summary.updateStatistics.containsUpdates()
+        newStats['contains_updates'] = summary.counters.containsUpdates()
         newStats
 
       getSocketErrorObj = ->
