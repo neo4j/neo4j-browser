@@ -43,7 +43,7 @@ angular.module('neo4jApp.services')
         {
           folder: 'basics'
           content: """
-  // Create an index index
+  // Create an index
   // Replace:
   //   'LabelName' with label to index
   //   'propertyKey' with property to be indexed
@@ -174,8 +174,87 @@ RETURN labels(n) as from,
   :GET /db/data/ext
           """
         }
-
       ]
+      procedure_scripts = [
+        {
+          folder: 'procedures'
+          content: """
+  // List procedures
+  CALL dbms.procedures()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List labels
+  CALL db.labels()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List relationship types
+  CALL db.relationshipTypes()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List properties keys
+  CALL db.propertyKeys()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List indexes
+  CALL db.indexes()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List constraints
+  CALL db.constraints()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List components
+  CALL dbms.components()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // Show current user
+  CALL dbms.security.showCurrentUser()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List users
+  CALL dbms.security.listUsers()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List connectionss
+  CALL dbms.security.listConnections()
+          """
+        }
+        {
+          folder: 'procedures'
+          content: """
+  // List transactions
+  CALL dbms.security.listTransactions()
+          """
+        }
+      ]
+
 
       class DefaultContent
         constructor: ->
@@ -208,6 +287,12 @@ RETURN labels(n) as from,
               name: "System"
               expanded: no
               documents: system_scripts
+            }
+            {
+              id: "procedures"
+              name: "Common Procedures"
+              expanded: no
+              documents: procedure_scripts
             }
           ]
       new DefaultContent
