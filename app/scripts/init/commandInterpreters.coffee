@@ -231,7 +231,7 @@ angular.module('neo4jApp')
       matches: ["#{cmdchar}param"]
       exec: ['Parameters', (Parameters) ->
         (input, q) ->
-          matches = /^[^\w]*param\s+([^:\s]+)\s*(?:(?::\s?([^$]*))?)$/.exec(input)
+          matches = /^[^\w]*param\s+([^:]+)\s*(?:(?::\s?([^$]*))?)$/.exec(input)
           if (matches?)
             [key, value] = [matches[1], matches[2]]
             if (value isnt undefined and value isnt null)
@@ -259,7 +259,8 @@ angular.module('neo4jApp')
           if (matches and matches[1])
             value = matches[1]
             obj = try eval('(' + value + ')')
-            # Reset current params. Just resetting it to {} does not work
+            # Reset current params. Just resetting it to {} does not work because
+            # Parameters is a constant.
             Object.keys(Parameters).forEach((key) -> delete Parameters[key])
             Object.keys(obj).forEach((key) -> Parameters[key] = obj[key])
           q.resolve(angular.copy Parameters)
