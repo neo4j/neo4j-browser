@@ -236,7 +236,7 @@ angular.module('neo4jApp')
             [key, value] = [matches[1], matches[2]]
             if (value isnt undefined and value isnt null)
               value = try eval(value)
-              Parameters[key] = value
+              Parameters[key] = value if typeof value isnt 'undefined'
               toResolve = angular.copy Parameters
             else
               toResolve = (_obj = {}; _obj[key] = Parameters[key]; _obj)
@@ -259,10 +259,11 @@ angular.module('neo4jApp')
           if (matches and matches[1])
             value = matches[1]
             obj = try eval('(' + value + ')')
-            # Reset current params. Just resetting it to {} does not work because
-            # Parameters is a constant.
-            Object.keys(Parameters).forEach((key) -> delete Parameters[key])
-            Object.keys(obj).forEach((key) -> Parameters[key] = obj[key])
+            if typeof obj isnt 'undefined'
+              # Reset current params. Just resetting it to {} does not work because
+              # Parameters is a constant.
+              Object.keys(Parameters).forEach((key) -> delete Parameters[key])
+              Object.keys(obj).forEach((key) -> Parameters[key] = obj[key])
           q.resolve(angular.copy Parameters)
           q.promise
       ]
