@@ -176,3 +176,26 @@ describe 'Utils', () ->
     multi = 'http://neo4j.com/?cmd=play&arg=cypher&arg=hello'
     expect(Utils.getUrlParam('arg', multi)[0]).toBe('cypher')
     expect(Utils.getUrlParam('arg', multi)[1]).toBe('hello')
+
+  it 'should identify numbers and apply operations of choice on them', ->
+    # Given
+    input = [
+      ['hello', 144, 12.3],
+      [[12, {int: 13, text: 'hi'}], no],
+      null,
+      {int: 1, bool: no, text: 'yo', arr: ['1', Math.pi]}
+    ]
+    transformFn = (n) -> # + 1 on all integers
+      return parseInt(n) + 1 if parseInt(n) is Number(n)
+      return Number(n)
+    expected = [
+      ['hello', 145, 12.3],
+      [[13, {int: 14, text: 'hi'}], no],
+      null,
+      {int: 2, bool: no, text: 'yo', arr: [2, Math.pi]}
+    ]
+
+    # When & Then
+    input.forEach((v, i) ->
+      expect(Utils.findNumberInVal(v, [transformFn])).toEqual(expected[i])
+    )

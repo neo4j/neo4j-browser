@@ -181,3 +181,29 @@ class neo.helpers
         out.push(results[1]) if results and results[1]
       return undefined if not out.length
       out
+
+    @isNumber = (n) ->
+      !isNaN(parseFloat(n)) && isFinite(n)
+
+    @applyOperationsTo = (n, operations = []) ->
+      val = n
+      operations.forEach((o) -> val = o(val))
+      val
+
+    @findNumberInVal = (val, operations = []) ->
+      if Array.isArray(val) then return @findNumbersInArray val, operations
+      if typeof val is 'number' then return @applyOperationsTo val, operations
+      if typeof val is 'string' then return (if @isNumber val then @applyOperationsTo val, operations else val)
+      if typeof val is 'boolean' then return val
+      if val is null then return null
+      if typeof val == 'object' then return @findNumbersInObject val, operations
+
+    @findNumbersInObject = (obj, operations = []) ->
+      out = {}
+      Object.keys(obj).forEach((p) =>
+        out[p] = @findNumberInVal obj[p], operations
+      )
+      out
+
+    @findNumbersInArray = (arr, operations = []) ->
+      arr.map((n) => @findNumberInVal n, operations)

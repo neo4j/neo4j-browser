@@ -84,12 +84,11 @@ angular.module('neo4jApp.services')
           q.promise
 
         internalRelationships: (graph, existingNodes, newNodes) ->
-          bolt = window.neo4j.v1
           q = $q.defer()
           if newNodes.length is 0
             q.resolve()
             return q.promise
-          mapIds = (node) -> if bolt.isInt node.id then node.id else parseInt(node.id)
+          mapIds = (node) -> parseInt node.id
           newNodeIds = newNodes.map(mapIds)
           existingNodeIds = existingNodes.map(mapIds).concat(newNodeIds)
           Cypher.transaction()
