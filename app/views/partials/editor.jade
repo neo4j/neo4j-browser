@@ -53,10 +53,14 @@
       |  Type <code click-to-code="':help commands'">:help commands</code> for a list of available commands.
       .actions
         a.fa.fa-times-circle(ng-click='editor.showMessage = null')
-    .message-bar.info(ng-if='unauthorized && !bolt_connection_failure', ng-class="editor.errorCode")
+    .message-bar.info(ng-if='unauthorized && !bolt_connection_failure && !server_auth_changed', ng-class="editor.errorCode")
       span
         | Database access not available. Please use <code click-to-code="':server connect'">:server connect</code>
         | to establish connection. There's a graph waiting for you.
+    .message-bar.info(ng-if='unauthorized && !bolt_connection_failure && server_auth_changed', ng-class="editor.errorCode")
+      span
+        | Database access has been terminated. Please use <code click-to-code="':server connect'">:server connect</code>
+        | to enter new connection credentials. Please contact your administrator if you did not make a change.
     .message-bar.error.slide-down(ng-if='bolt_connection_failure', ng-class="editor.errorCode")
       span
         | Can not connect to Neo4j. Please check your Network Connection

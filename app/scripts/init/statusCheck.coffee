@@ -24,7 +24,8 @@ angular.module('neo4jApp').run([
   '$timeout'
   'Server'
   'Settings'
-  (AuthService, $scope, $timeout, Server, Settings) ->
+  'Frame'
+  (AuthService, $scope, $timeout, Server, Settings, Frame) ->
     timer = null
     $scope.check = ->
       $timeout.cancel(timer)
@@ -52,6 +53,8 @@ angular.module('neo4jApp').run([
           ,
             (response) ->
               if response.status in [401, 403, 429]
+                Frame.create({input:"#{Settings.cmdchar}server connect"}) unless $scope.unauthorized
+                $scope.server_auth_changed = yes unless $scope.unauthorized
                 $scope.offline = no
                 $scope.unauthorized = yes
               else
