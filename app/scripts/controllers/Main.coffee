@@ -77,7 +77,7 @@ angular.module('neo4jApp.controllers')
               )
             else
               $scope.neo4j.clusterRole = no
-        )
+          )
 
         featureCheck = ->
           if 'dbms.security.listUsers' in $scope.procedures

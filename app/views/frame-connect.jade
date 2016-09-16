@@ -41,6 +41,7 @@ div(ng-controller="AuthCtrl")
                   | Connected.
               .details.col-sm-9
                 p Connected to Neo4j (no auth required).
+                p(ng-if="neo4j.clusterRole") Connected to cluster member with role {{clusterRole}}
             .section.row-fluid.summary(ng-show="static_is_authenticated && !password_change_required && static_user")
               .summary.col-sm-3
                 h3 Connected to Neo4j
@@ -57,7 +58,7 @@ div(ng-controller="AuthCtrl")
                     br
                     span.center-tbl-left-col.inline
                       | to the server&nbsp;
-                    code {{static_host}}    
+                    code {{static_host}}
                   li
                     p.lead {{policy_message}}
       .view-result.fade(ng-show="password_change_required")
