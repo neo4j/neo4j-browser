@@ -16,6 +16,18 @@
   .frame
     overflow: hidden
 
+    .frame-main
+      transition-property: all
+      transition-duration: .3s
+      transition-timing-function: cubic-bezier(0, 1, 0.5, 1)
+      max-height: 503px
+      opacity: 1
+
+    .frame-main.closed
+      opacity: 0
+      max-height: 0px
+      margin-bottom: 31px
+
     .btn.btn-small
       background: #FFF
 
