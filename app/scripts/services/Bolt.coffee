@@ -162,6 +162,10 @@ angular.module('neo4jApp.services')
         entries = r.records.map((entry)-> {id: entry.get('id'), address: entry.get('address'), role: entry.get('role')})
         return entries
 
+      getClusterRole = (r) ->
+        return null unless r.records && r.records.length > 0
+        return r.records[0].get('role')
+
       constructUserListResult = (r) ->
         return null unless r.records
         record = r.records[0]
@@ -382,6 +386,7 @@ angular.module('neo4jApp.services')
         callProcedure: callProcedure,
         constructUserResult: constructUserResult,
         constructCoreEdgeOverview: constructCoreEdgeOverview,
+        getClusterRole: getClusterRole,
         constructUserListResult: constructUserListResult,
         constructRolesListResult: constructRolesListResult,
         constructResult: (res) ->

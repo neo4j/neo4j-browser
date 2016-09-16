@@ -53,7 +53,6 @@ angular.module('neo4jApp.services')
           q = $q.defer()
           Server.cypher('', { query: 'CALL dbms.cluster.overview()'}).then(
             (res) ->
-              debugger
               data = res.data
               overview = data.data.map((member) ->
                 {
@@ -64,6 +63,16 @@ angular.module('neo4jApp.services')
               )
 
               q.resolve overview
+          )
+          q.promise
+        getCoreEdgeRole: ->
+          q = $q.defer()
+          Server.cypher('', { query: 'CALL dbms.cluster.role()'}).then(
+            (res) ->
+              if res.data.data && res.data.data.length > 0 && res.data.data[0].length > 0
+                q.resolve res.data.data[0][0]
+              else
+                q.resolve null
           )
           q.promise
         getUserList: ->
