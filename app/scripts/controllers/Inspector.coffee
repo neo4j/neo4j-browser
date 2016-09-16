@@ -25,8 +25,9 @@ angular.module('neo4jApp.controllers')
     '$scope',
     'GraphStyle'
     'Collection'
+    'Settings'
     '$timeout'
-    ($scope, graphStyle, Collection, $timeout) ->
+    ($scope, graphStyle, Collection, Settings, $timeout) ->
       $scope.sizes = graphStyle.defaultSizes()
       $scope.arrowWidths = graphStyle.defaultArrayWidths()
       $scope.iconCodes = graphStyle.defaultIconCodes()
@@ -136,5 +137,7 @@ angular.module('neo4jApp.controllers')
         unless oldValue is newValue or newValue is not null
           $scope.$emit 'close.contextMenu'
       )
+
+      $scope.showIcons = Settings.experimentalFeatures
 
   ]

@@ -37,7 +37,7 @@ script(id="inspector/label.html", type="text/ng-template")
           a(ng-class='{active: sizeLessThan(size.diameter, item.style.props.diameter)}'
             ng-style='nodeDisplaySize($index)'
             ng-click='selectSize(item, size)')
-    li.icon-codes
+    li.icon-codes(ng-if="showIcons")
       ul.list-inline
         li Icon:
         li(ng-repeat='iconCode in iconCodes')
