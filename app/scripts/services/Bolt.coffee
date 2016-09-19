@@ -37,7 +37,7 @@ angular.module('neo4jApp.services')
 
       getDriverObj = (withoutCredentials = no) ->
         authData = AuthDataService.getPlainAuthData()
-        host = Settings.boltHost || $location.host()
+        host = Settings.boltHost || $rootScope.boltHost
         encrypted = if $location.protocol() is 'https' then yes else no
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
         if withoutCredentials

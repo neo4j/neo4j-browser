@@ -39,7 +39,7 @@ angular.module('neo4jApp.controllers')
       'CurrentUser'
       'ProtocolFactory'
       'Features'
-      ($scope, $window,$q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory, Features) ->
+      ($scope, $window, $q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory, Features) ->
         $scope.features = Features
         $scope.CurrentUser = CurrentUser
         $scope.ConnectionStatusService = ConnectionStatusService
@@ -171,16 +171,32 @@ angular.module('neo4jApp.controllers')
           setAndSaveSetting('onboarding', false)
 
         pickFirstFrame = ->
-          CurrentUser.init()
-          AuthService.hasValidAuthorization(retainConnection = yes).then(
-            ->
-              Frame.closeWhere "#{Settings.cmdchar}server connect"
-              Frame.create({input:"#{Settings.initCmd}"})
-              onboardingSequence() if Settings.onboarding
-            ,
-            (r) ->
-              if Settings.onboarding then onboardingSequence()
-              else Frame.create({input:"#{Settings.cmdchar}server connect"})
+          $q.when()
+          .then(->
+            Server.addresses()
+            .then(
+              (r) ->
+                r = r.data
+                if r.bolt? and Settings.boltHost is ""
+                  $scope.boltHost = r.bolt.replace('bolt://', '')
+                else
+                  $scope.boltHost = $window.location.host)
+            .catch(
+              (r)->
+                $scope.boltHost = $window.location.host)
+          )
+          .then(->
+            CurrentUser.init()
+            AuthService.hasValidAuthorization(retainConnection = yes).then(
+              ->
+                Frame.closeWhere "#{Settings.cmdchar}server connect"
+                Frame.create({input:"#{Settings.initCmd}"})
+                onboardingSequence() if Settings.onboarding
+              ,
+              (r) ->
+                if Settings.onboarding then onboardingSequence()
+                else Frame.create({input:"#{Settings.cmdchar}server connect"})
+            )
           )
 
         pickFirstFrame()
