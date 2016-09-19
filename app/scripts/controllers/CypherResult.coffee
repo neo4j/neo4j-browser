@@ -81,7 +81,9 @@ angular.module('neo4jApp.controllers')
       $rootScope.stickyTab = $scope.tab = tab
 
     $scope.isActive = (tab) ->
-      tab is $scope.tab
+      active = tab is $scope.tab
+      if initializing and active and $scope.tab is 'text' then $scope.loadAscii()
+      active
 
     $scope.isAvailable = (tab) ->
       tab in $scope.availableModes
