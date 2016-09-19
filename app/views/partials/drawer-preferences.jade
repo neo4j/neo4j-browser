@@ -107,3 +107,8 @@
       label(for="refreshInterval", tooltip="Refresh auto-refreshing frames on this interval (in seconds)", tooltip-placement="top")
         | Refresh Interval
         input.form-control.input#refreshInterval(type='number', min="1", ng-model="settings.refreshInterval", ng-change="save()")
+    .checkbox
+      label(for="autoComplete")
+        input#autoComplete(type='checkbox', ng-model="settings.autoComplete", ng-change="save()")
+        span(tooltip="Automatically complete missing relationships.", tooltip-placement="top")
+          | &nbsp; Auto Complete

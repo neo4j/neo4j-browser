@@ -61,6 +61,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     acceptedTermsAndPrivacy: no
     onboarding: no
     showSampleScripts: yes
+    autoComplete: yes
   })
 
 angular.module('neo4jApp.settings')
