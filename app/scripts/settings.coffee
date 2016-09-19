@@ -55,7 +55,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     retainConnectionCredentials: yes
     shouldReportUdc: no
     experimentalFeatures: no
-    useBolt: no
+    useBolt: yes
     boltHost: "" # $location.host() is default
     shownTermsAndPrivacy: no
     acceptedTermsAndPrivacy: no
