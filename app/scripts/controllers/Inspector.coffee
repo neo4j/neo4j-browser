@@ -101,7 +101,6 @@ angular.module('neo4jApp.controllers')
         Inspector.visible = !Inspector.visible
 
       $scope.selectArrowWidth = (item, size) ->
-        $scope.$emit 'close.contextMenu'
         item.style = graphStyle.changeForSelector(item.style.selector, size)
 
       $scope.selectIcon = (item, iconCode) ->
@@ -109,7 +108,6 @@ angular.module('neo4jApp.controllers')
         item.style = graphStyle.changeForSelector(item.style.selector, iconCode)
 
       $scope.selectCaption = (item, caption) ->
-        $scope.$emit 'close.contextMenu'
         item.style = graphStyle.changeForSelector(item.style.selector, { caption: caption})
 
       $scope.isSelectedCaption = (item, caption) ->
@@ -117,7 +115,6 @@ angular.module('neo4jApp.controllers')
         grassProps.caption is "#{caption}" or (!grassProps.caption and caption in ["<id>", "<type>"])
 
       $scope.selectScheme = (item, scheme) ->
-        $scope.$emit 'close.contextMenu'
         item.style = graphStyle.changeForSelector(item.style.selector, angular.copy(scheme))
 
       $scope.selectSize = (item, size) ->

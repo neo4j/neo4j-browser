@@ -35,6 +35,18 @@ standardProxies = [{
   port: 7474,
   https: false,
   changeOrigin: false
+},{
+  context: '/root',
+  host: 'localhost',
+  headers: {
+    "Content-Type":"application/json"
+  },
+  port: 7474,
+  https: false,
+  changeOrigin: false
+  rewrite: {
+    "^/root" : ""
+  }
 }]
 
 module.exports = (grunt) ->
@@ -75,6 +87,16 @@ module.exports = (grunt) ->
 
     yeoman: yeomanConfig
 
+    'string-replace':
+      inline:
+        files: [
+          './.tmp/scripts/settings.js': './.tmp/scripts/settings.js'
+        ]
+        options:
+          replacements: [
+            pattern: /discover:[^,]+,/g,
+            replacement: 'discover: baseURL + "/root",'
+          ]
     append:
       coffee:
         header: "copyright/copyright.coffee"
@@ -94,6 +116,7 @@ module.exports = (grunt) ->
         tasks: ["stylus"]
       livereload:
         files: ["<%= yeoman.app %>/{,*/}*.html", "{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css", "{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js", "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}"]
+        tasks: ["string-replace"]
         options:
           livereload: true
       jade:
@@ -308,8 +331,8 @@ module.exports = (grunt) ->
   # load all grunt tasks
   require("matchdep").filterDev("grunt-*").forEach grunt.loadNpmTasks
 
-  grunt.registerTask "server", ["clean:server", "coffee", "configureProxies:livereload", "stylus", "jade", "connect:livereload", "watch"]
-  grunt.registerTask "server:tls", ["clean:server", "coffee", "configureProxies:livereloadhttps", "stylus", "jade", "connect:livereloadhttps", "watch"]
+  grunt.registerTask "server", ["clean:server", "coffee", "configureProxies:livereload", "stylus", "jade", "string-replace", "connect:livereload", "watch"]
+  grunt.registerTask "server:tls", ["clean:server", "coffee", "configureProxies:livereloadhttps", "stylus", "jade", "string-replace", "connect:livereloadhttps", "watch"]
   grunt.registerTask "test", ["clean:server", "coffee", "connect:test", "karma", "exec:csv_test_prep"]
   grunt.registerTask "build", ["clean:dist", "coffee", "test", "jade", "stylus", "useminPrepare", "concat", "copy", "imagemin", "cssmin", "htmlmin", "uglify", "rev", "usemin", "replace"]
   grunt.registerTask "server:dist", ["build", "configureProxies:dist", "connect:dist:keepalive"]

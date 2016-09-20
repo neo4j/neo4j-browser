@@ -45,7 +45,7 @@ svg
   width: 100%
   overflow: hidden
 
-[play-topic], [help-topic], [server-topic], [exec-topic], a[target], .warn
+[play-topic], [help-topic], [server-topic], [exec-topic], a[target], .warn, a[play-icon]
   vertical-align: baseline
   &:before
     font-family: "streamline"
@@ -56,7 +56,7 @@ svg
       padding-right: 0
       content: '' !important
 
-[play-topic], [server-topic], [exec-topic]
+[play-topic], [server-topic], [exec-topic], a[play-icon]
   &:before
     content: "w"
 
@@ -157,6 +157,8 @@ table.json-object
     line-height: 12px
     height: auto
     padding-top: 9px
+    &.client-success
+      color: color-success
     &.client-warning
       color: color-warning-on-white
   i[class*="fa-"]

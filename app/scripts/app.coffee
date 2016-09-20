@@ -24,14 +24,17 @@ angular.module('neo4jApp.controllers', ['neo4jApp.utils'])
 angular.module('neo4jApp.directives', ['ui.bootstrap.modal', 'neo4jApp.utils'])
 angular.module('neo4jApp.filters', [])
 angular.module('neo4jApp.services', [
+  'neo4jApp.parameters',
   'LocalStorageModule',
   'neo4jApp.settings',
+  'neo4jApp.features',
   'neo4jApp.utils',
   'base64',
   'AsciiTableModule',
   'auth0',
   'firebase',
-  'angular-jwt'
+  'angular-jwt',
+  'neo.boltint'
 ])
 
 app = angular.module('neo4jApp', [

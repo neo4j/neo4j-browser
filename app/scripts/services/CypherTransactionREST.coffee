@@ -27,7 +27,8 @@ angular.module('neo4jApp.services')
     'Server'
     'UsageDataCollectionService'
     'Timer'
-    ($q, CypherResult, Server, UDC, Timer) ->
+    'Parameters'
+    ($q, CypherResult, Server, UDC, Timer, Parameters) ->
       parseId = (resource = "") ->
         id = resource.split('/').slice(-2, -1)
         return parseInt(id, 10)
@@ -108,8 +109,9 @@ angular.module('neo4jApp.services')
           @_requestDone parsed_result
           parsed_result
 
-        commit: (query) ->
-          statements = if query then [{statement:query}] else []
+        commit: (query, params = null) ->
+          params = angular.extend({}, Parameters, params)
+          statements = if query then [{statement:query, parameters: params}] else []
           UDC.increment('cypher_attempts')
           timer = Timer.start()
           if @id
@@ -138,10 +140,11 @@ angular.module('neo4jApp.services')
               path: "/commit"
               statements: statements
             )
-            p.then((r) ->
+            p.success((r) ->
               r.responseTime = timer.stop().time()
-              return r
-            ).catch((r) -> r.responseTime = timer.stop().time())
+            ).error((r) ->
+              r.responseTime = timer.stop().time()
+            )
             res = promiseResult p
             res.then(
               -> UDC.increment('cypher_wins')

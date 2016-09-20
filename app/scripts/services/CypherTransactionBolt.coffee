@@ -27,8 +27,10 @@ angular.module('neo4jApp.services')
     'Bolt'
     'UsageDataCollectionService'
     'Timer'
+    'Parameters'
+    'Utils'
     '$rootScope'
-    ($q, CypherResult, Bolt, UDC, Timer, $rootScope) ->
+    ($q, CypherResult, Bolt, UDC, Timer, Parameters, Utils, $rootScope) ->
       parseId = (resource = "") ->
         id = resource.split('/').slice(-2, -1)
         return parseInt(id, 10)
@@ -93,9 +95,15 @@ angular.module('neo4jApp.services')
           q.resolve()
           q.promise
 
-        commit: (query) ->
+        commit: (query, params = null) ->
           that = @
-          statements = if query then [{statement:query}] else []
+          params = angular.extend({}, Parameters, params)
+          transformFn = (n) ->
+            if parseInt(n) is Number(n)
+              return Bolt.bolt.int(n)
+            Number(n)
+          params = Utils.findNumberInVal params, [transformFn]
+          statements = if query then [{statement:query, parameters: params}] else []
           UDC.increment('cypher_attempts')
           q = $q.defer()
           {tx, promise, session} = Bolt.transaction(statements, @session, @tx)
@@ -110,7 +118,7 @@ angular.module('neo4jApp.services')
           ).catch((r) ->
             errObj = Bolt.constructResult(r)
             if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
-              $rootScope.bolt_connection_failure = yes
+              $rootScope.bolt_connection_failure = yes && ! $rootScope.unauthorized
             r.responseTime = timer.stop().time()
             q.reject({original: r, remapped: errObj})
             that._reset()

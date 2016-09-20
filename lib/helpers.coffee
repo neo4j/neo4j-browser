@@ -52,7 +52,7 @@ class neo.helpers
 
     @mergeDocumentArrays = (arr1, arr2) ->
       [].concat(arr1, arr2)
-        .reduce((tot, curr) -> 
+        .reduce((tot, curr) ->
           return tot if tot.done.indexOf(curr.content) > -1
           tot.done.push(curr.content)
           tot.out.push(curr)
@@ -142,10 +142,15 @@ class neo.helpers
     @stripNGAttributes = (string = '') ->
       string.replace(/(\s+(ng|data|x)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/ig, '')
 
-    @hostIsAllowed = (hostname, whitelist, is_enterprise) ->
-      return true if is_enterprise and (not whitelist or whitelist is '*')
-      whitelisted_hosts = if is_enterprise then whitelist.split(",") else ['http://guides.neo4j.com', 'https://guides.neo4j.com', 'http://localhost', 'https://localhost']
-      hostname in whitelisted_hosts     
+    @hostIsAllowed = (uri, whitelist) ->
+      return true if whitelist is '*'
+      host_without_port = document.createElement('a')
+      host_without_port.setAttribute('href', uri)
+      hostnamePlusProtocol = host_without_port.protocol + '//' + host_without_port.hostname
+      hostname = host_without_port.hostname
+
+      whitelisted_hosts = if whitelist? and whitelist isnt '' then whitelist.split(",") else ['guides.neo4j.com', 'localhost']
+      hostname in whitelisted_hosts ||  hostnamePlusProtocol in whitelisted_hosts
 
     @getBrowserName = ->
       return 'Opera' if !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
@@ -155,7 +160,7 @@ class neo.helpers
       return 'Internet Explorer' if !!document.documentMode
       return 'Edge' if !!window.StyleMedia
       'Unknown'
-      
+
     @getServerHostname = (Settings) ->
       if Settings.host then Settings.host else location.href
 
@@ -167,4 +172,38 @@ class neo.helpers
         flat = [].concat.apply(flat, [].concat.apply(that.flattenArray(item))) if Array.isArray item
         flat
       , [])
-        
+
+    @getUrlParam = (name, theLocation) ->
+      return no unless theLocation
+      out = []
+      re = new RegExp('[\\?&]' + name + '=([^&#]*)', 'g')
+      while (results = re.exec(theLocation)) isnt null
+        out.push(results[1]) if results and results[1]
+      return undefined if not out.length
+      out
+
+    @isNumber = (n) ->
+      !isNaN(parseFloat(n)) && isFinite(n)
+
+    @applyOperationsTo = (n, operations = []) ->
+      val = n
+      operations.forEach((o) -> val = o(val))
+      val
+
+    @findNumberInVal = (val, operations = []) ->
+      if Array.isArray(val) then return @findNumbersInArray val, operations
+      if typeof val is 'number' then return @applyOperationsTo val, operations
+      if typeof val is 'string' then return (if @isNumber val then @applyOperationsTo val, operations else val)
+      if typeof val is 'boolean' then return val
+      if val is null then return null
+      if typeof val == 'object' then return @findNumbersInObject val, operations
+
+    @findNumbersInObject = (obj, operations = []) ->
+      out = {}
+      Object.keys(obj).forEach((p) =>
+        out[p] = @findNumberInVal obj[p], operations
+      )
+      out
+
+    @findNumbersInArray = (arr, operations = []) ->
+      arr.map((n) => @findNumberInVal n, operations)

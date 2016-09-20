@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 describe 'Controller: CypherResultCtrl', () ->
 
-  # load the controller's module
+# load the controller's module
   beforeEach module 'neo4jApp.controllers'
 
   CypherResultCtrl = {}

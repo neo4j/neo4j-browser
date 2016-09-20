@@ -33,24 +33,9 @@ angular.module('neo4jApp.services')
           return new CypherTransactionBolt() if useBolt
           return new CypherTransactionREST()
 
-        getAuthService: (useBolt = Settings.useBolt) ->
-          return UtilityBolt if useBolt
-          return UtilityREST
-
-        getMetaService: (useBolt = Settings.useBolt) ->
-          return UtilityBolt if useBolt
-          return UtilityREST
-
-        getSchemaService: (useBolt = Settings.useBolt) ->
-          return UtilityBolt if useBolt
-          return UtilityREST
-
-        getJmxService: (useBolt = Settings.useBolt) ->
-          return UtilityBolt if useBolt
-          return UtilityREST
-
-        getVersionService: (useBolt = Settings.useBolt) ->
+        getStoredProcedureService: (useBolt = Settings.useBolt) ->
           return UtilityBolt if useBolt
           return UtilityREST
       }
+
 ]

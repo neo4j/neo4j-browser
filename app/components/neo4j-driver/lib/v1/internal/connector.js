@@ -193,6 +193,7 @@ var _mappers = {
  */
 
 var Connection = (function () {
+
   /**
    * @constructor
    * @param channel - channel with a 'write' function and a 'onmessage'
@@ -241,6 +242,9 @@ var Connection = (function () {
         if (buf.hasRemaining()) {
           self._dechunker.write(buf.readSlice(buf.remaining()));
         }
+      } else if (proposed == 1213486160) {
+        //server responded 1213486160 == 0x48545450 == "HTTP"
+        self._handleFatalError((0, _error.newError)("Server responded HTTP. Make sure you are not trying to connect to the http endpoint " + "(HTTP defaults to port 7474 whereas BOLT defaults to port 7687)"));
       } else {
         self._handleFatalError((0, _error.newError)("Unknown Bolt protocol version: " + proposed));
       }
@@ -367,17 +371,26 @@ var Connection = (function () {
   }, {
     key: "initialize",
     value: function initialize(clientName, token, observer) {
+      var _this2 = this;
+
       this._queueObserver(observer);
-      this._packer.packStruct(INIT, [clientName, token]);
+      this._packer.packStruct(INIT, [this._packable(clientName), this._packable(token)], function (err) {
+        return _this2._handleFatalError(err);
+      });
       this._chunker.messageBoundary();
+      this.sync();
     }
 
     /** Queue a RUN-message to be sent to the database */
   }, {
     key: "run",
     value: function run(statement, params, observer) {
+      var _this3 = this;
+
       this._queueObserver(observer);
-      this._packer.packStruct(RUN, [statement, params]);
+      this._packer.packStruct(RUN, [this._packable(statement), this._packable(params)], function (err) {
+        return _this3._handleFatalError(err);
+      });
       this._chunker.messageBoundary();
     }
 
@@ -385,8 +398,12 @@ var Connection = (function () {
   }, {
     key: "pullAll",
     value: function pullAll(observer) {
+      var _this4 = this;
+
       this._queueObserver(observer);
-      this._packer.packStruct(PULL_ALL);
+      this._packer.packStruct(PULL_ALL, [], function (err) {
+        return _this4._handleFatalError(err);
+      });
       this._chunker.messageBoundary();
     }
 
@@ -394,8 +411,12 @@ var Connection = (function () {
   }, {
     key: "discardAll",
     value: function discardAll(observer) {
+      var _this5 = this;
+
       this._queueObserver(observer);
-      this._packer.packStruct(DISCARD_ALL);
+      this._packer.packStruct(DISCARD_ALL, [], function (err) {
+        return _this5._handleFatalError(err);
+      });
       this._chunker.messageBoundary();
     }
 
@@ -403,8 +424,24 @@ var Connection = (function () {
   }, {
     key: "reset",
     value: function reset(observer) {
-      this._queueObserver(observer);
-      this._packer.packStruct(RESET);
+      var _this6 = this;
+
+      this._isHandlingFailure = true;
+      var self = this;
+      var wrappedObs = {
+        onNext: observer ? observer.onNext : NO_OP,
+        onError: observer ? observer.onError : NO_OP,
+        onCompleted: function onCompleted() {
+          self._isHandlingFailure = false;
+          if (observer) {
+            observer.onCompleted();
+          }
+        }
+      };
+      this._queueObserver(wrappedObs);
+      this._packer.packStruct(RESET, [], function (err) {
+        return _this6._handleFatalError(err);
+      });
       this._chunker.messageBoundary();
     }
 
@@ -412,8 +449,12 @@ var Connection = (function () {
   }, {
     key: "_ackFailure",
     value: function _ackFailure(observer) {
+      var _this7 = this;
+
       this._queueObserver(observer);
-      this._packer.packStruct(ACK_FAILURE);
+      this._packer.packStruct(ACK_FAILURE, [], function (err) {
+        return _this7._handleFatalError(err);
+      });
       this._chunker.messageBoundary();
     }
   }, {
@@ -462,6 +503,15 @@ var Connection = (function () {
     value: function close(cb) {
       this._ch.close(cb);
     }
+  }, {
+    key: "_packable",
+    value: function _packable(value) {
+      var _this8 = this;
+
+      return this._packer.packable(value, function (err) {
+        return _this8._handleFatalError(err);
+      });
+    }
   }]);
 
   return Connection;
@@ -475,7 +525,7 @@ function connect(url) {
     host: host(url),
     port: port(url) || 7687,
     // Default to using encryption if trust-on-first-use is available
-    encrypted: config.encrypted || (0, _features2["default"])("trust_on_first_use"),
+    encrypted: config.encrypted == null ? (0, _features2["default"])("trust_on_first_use") : config.encrypted,
     // Default to using trust-on-first-use if it is available
     trust: config.trust || ((0, _features2["default"])("trust_on_first_use") ? "TRUST_ON_FIRST_USE" : "TRUST_SIGNED_CERTIFICATES"),
     trustedCertificates: config.trustedCertificates || [],

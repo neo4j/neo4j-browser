@@ -63,8 +63,8 @@ angular.module('neo4jApp')
       type: 'style'
       matches: "#{cmdchar}style"
       exec: [
-        '$rootScope', 'exportService', 'GraphStyle',
-        ($rootScope, exportService, GraphStyle) ->
+        '$rootScope', 'exportService', 'GraphStyle', '$http'
+        ($rootScope, exportService, GraphStyle, $http) ->
           (input, q) ->
             switch argv(input)[1]
               when 'reset'
@@ -72,7 +72,20 @@ angular.module('neo4jApp')
               when 'export'
                 exportService.download('graphstyle.grass', 'text/plain;charset=utf-8', GraphStyle.toString())
               else
-                $rootScope.togglePopup('styling')
+                clean_input = input[('style'.length+1)..].trim()
+                if /^https?:\/\//i.test(clean_input)
+                  $http.get(clean_input)
+                  .then(
+                    (res) ->
+                      GraphStyle.importGrass(res.data)
+                  ,
+                    (r)->
+                      console.log("failed to load grass, because ", r)
+                  )
+                else if clean_input.length > 0
+                  GraphStyle.importGrass(clean_input)
+                else
+                  $rootScope.togglePopup('styling')
             true
       ]
 
@@ -104,7 +117,7 @@ angular.module('neo4jApp')
       matches: "#{cmdchar}schema"
       exec: ['ProtocolFactory', (ProtocolFactory) ->
         (input, q) ->
-          ProtocolFactory.getSchemaService().getSchema(input)
+          ProtocolFactory.getStoredProcedureService().getSchema(input)
           .then(
             (res) ->
               q.resolve(res)
@@ -129,7 +142,7 @@ angular.module('neo4jApp')
             is_remote = yes
             url = input[('play'.length+2)..]
             host = url.match(/^(https?:\/\/[^\/]+)/)[1]
-            host_ok = Utils.hostIsAllowed host, $rootScope.kernel['browser.remote_content_hostname_whitelist'], $rootScope.neo4j.enterpriseEdition
+            host_ok = Utils.hostIsAllowed host, $rootScope.kernel['browser.remote_content_hostname_whitelist']
           else
             topic = topicalize(clean_url) or 'start'
             url = "content/guides/#{topic}.html"
@@ -212,6 +225,49 @@ angular.module('neo4jApp')
 
       ]
 
+    FrameProvider.interpreters.push
+      type: 'params'
+      templateUrl: 'views/frame-parameters.html'
+      matches: ["#{cmdchar}param"]
+      exec: ['Parameters', (Parameters) ->
+        (input, q) ->
+          matches = /^[^\w]*param\s+([^:]+)\s*(?:(?::\s?([^$]*))?)$/.exec(input)
+          if (matches?)
+            [key, value] = [matches[1], matches[2]]
+            if (value isnt undefined and value isnt null)
+              value = try eval(value)
+              Parameters[key] = value if typeof value isnt 'undefined'
+              toResolve = angular.copy Parameters
+            else
+              toResolve = (_obj = {}; _obj[key] = Parameters[key]; _obj)
+              if typeof Parameters[key] is 'undefined'
+                toResolve = null
+
+            q.resolve toResolve
+          else
+            q.resolve angular.copy Parameters
+          q.promise
+      ]
+
+    FrameProvider.interpreters.push
+      type: 'params'
+      templateUrl: 'views/frame-parameters.html'
+      matches: ["#{cmdchar}params"]
+      exec: ['Parameters', (Parameters) ->
+        (input, q) ->
+          matches = /^[^\w]*params\s*(\{.*\})$/.exec(input)
+          if (matches and matches[1])
+            value = matches[1]
+            obj = try eval('(' + value + ')')
+            if typeof obj isnt 'undefined'
+              # Reset current params. Just resetting it to {} does not work because
+              # Parameters is a constant.
+              Object.keys(Parameters).forEach((key) -> delete Parameters[key])
+              Object.keys(obj).forEach((key) -> Parameters[key] = obj[key])
+          q.resolve(angular.copy Parameters)
+          q.promise
+      ]
+
     # about handler
     # FrameProvider.interpreters.push
     #   type: 'info'
@@ -284,6 +340,27 @@ angular.module('neo4jApp')
         pattern = new RegExp("^#{cmdchar}server connect")
         input.match(pattern)
       exec: ['AuthService', (AuthService) ->
+        (input, q) -> q.resolve()
+      ]
+
+    FrameProvider.interpreters.push
+      type: 'admin'
+      fullscreenable: true
+      templateUrl: 'views/frame-user-admin.html'
+      matches: (input) ->
+        pattern = new RegExp("^#{cmdchar}server user list")
+        input.match(pattern)
+      exec: [() ->
+        (input, q) -> q.resolve()
+      ]
+    FrameProvider.interpreters.push
+      type: 'admin'
+      fullscreenable: true
+      templateUrl: 'views/frame-add-new-user.html'
+      matches: (input) ->
+        pattern = new RegExp("^#{cmdchar}server user add")
+        input.match(pattern)
+      exec: [() ->
         (input, q) -> q.resolve()
       ]
 

@@ -29,14 +29,15 @@ angular.module('neo4jApp.services')
     '$location'
     '$q'
     'Utils'
-    (Settings, AuthDataService, localStorageService, $rootScope, $location, $q, Utils) ->
+    'BoltIntHelpers'
+    (Settings, AuthDataService, localStorageService, $rootScope, $location, $q, Utils, BoltIntHelpers) ->
       bolt = window.neo4j.v1
       _driver = null
       _errorStatus = null
 
       getDriverObj = (withoutCredentials = no) ->
         authData = AuthDataService.getPlainAuthData()
-        host = Settings.boltHost || $location.host()
+        host = Settings.boltHost || $rootScope.boltHost
         encrypted = if $location.protocol() is 'https' then yes else no
         [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
         if withoutCredentials
@@ -45,47 +46,28 @@ angular.module('neo4jApp.services')
           driver = bolt.driver("bolt://" + host, bolt.auth.basic(username, password), {encrypted: encrypted})
         driver
 
-      testQuery = (driver) ->
+      testConnection = (withoutCredentials = no) ->
         q = $q.defer()
-        driver.onError = (e) -> 
+        driver = getDriverObj withoutCredentials
+        driver.onError = (e) ->
           if e instanceof Event and e.type is 'error'
             q.reject getSocketErrorObj()
           else if e.code and e.message # until Neo4jError is in drivers public API
             q.reject buildErrorObj(e.code, e.message)
-        session = driver.session()
-        p = session.run("CALL db.labels")
-        p.then((r) ->
-          session.close()
-          q.resolve r
-        ).catch((e)->
-          session.close()
-          q.reject e
-        )
-        q.promise
-
-      testConnection = (withoutCredentials = no) ->
-        q = $q.defer()
-        driver = getDriverObj withoutCredentials
-        testQuery(driver).then((r) -> 
-          q.resolve r
-          _errorStatus = null
-          driver.close()
-        ).catch((e) -> 
-          q.reject e
-          _errorStatus = e
-          driver.close()
-        )
+          else if e.fields && e.fields[0]
+            q.reject e
+        driver.onCompleted = (m) ->
+          q.resolve m
+        driver.session()
         q.promise
 
       connect = (withoutCredentials = no) ->
         q = $q.defer()
-        _driver = getDriverObj withoutCredentials
-        testQuery(_driver)
-          .then((r) -> q.resolve r)
-          .catch((e) -> 
-            _driver = null unless e.fields[0].code is 'Neo.ClientError.Security.CredentialsExpired'
-            q.reject e
-          )
+        testConnection(withoutCredentials).then((r) ->
+          _driver = getDriverObj withoutCredentials
+          q.resolve r
+        ,(e) -> q.reject e
+        )
         q.promise
 
       clearConnection = ->
@@ -120,23 +102,21 @@ angular.module('neo4jApp.services')
         else
           if tx
             # We need to look for error messages from
-            # the commit() call even though run() 
+            # the commit() call even though run()
             # reported a successful operation
             p = tx.run statement, parameters
-            p.then((r) -> 
+            p.then((r) ->
               if tx # The tx might have been terminated
-                tx.commit().then((txr) -> 
+                tx.commit().then((txr) ->
                   session.close()
                   q.resolve r
                 ).catch((txe) ->
-                  session.close()
                   q.reject txe
                 )
               else
                 session.close()
                 q.resolve r
             ).catch((e) ->
-              session.close()
               q.reject e
             )
           else
@@ -145,7 +125,6 @@ angular.module('neo4jApp.services')
               session.close()
               q.resolve r
             ).catch((e) ->
-              session.close()
               q.reject e
             )
         {tx: tx, promise: q.promise, session: session}
@@ -172,15 +151,37 @@ angular.module('neo4jApp.services')
         return null unless r.records
         {version: r.records[0].get('versions')[0], edition: r.records[0].get('edition')}
 
-      jmxResultToRESTResult = (r, whatToGet = []) ->
+      constructUserResult = (r) ->
+        return null unless r.records
+        record = r.records[0]
+        getRoles = if 'roles' in record.keys then record.get('roles') else ['admin']
+        return {username: record.get('username'), roles: getRoles }
+
+      constructCoreEdgeOverview = (r) ->
+        return null unless r.records
+        entries = r.records.map((entry)-> {id: entry.get('id'), address: entry.get('address'), role: entry.get('role')})
+        return entries
+
+      constructUserListResult = (r) ->
+        return null unless r.records
+        record = r.records[0]
+        getRoles = if 'roles' in record.keys then record.get('roles') else 'N/A'
+        r.records.map((user) ->
+          {username: user.get('username'), roles: getRoles , flags: user.get('flags') }
+        )
+      constructRolesListResult = (r) ->
+        return null unless r.records
+        r.records.map((user) ->
+          user.get('role')
+        )
+
+      jmxResultToRESTResult = (r) ->
         return {data: []} unless r.records
-        r.records = itemIntToString r.records
-        filtered = r.records.filter((record) -> whatToGet.indexOf(record.get('name')) > -1)
-          .map((record) -> 
+        mapped = r.records.map((record) ->
             origAttributes = record.get('attributes')
             return {
-              name: record.get('name'), 
-              description: record.get('description'), 
+              name: record.get('name'),
+              description: record.get('description'),
               attributes: Object.keys(record.get('attributes')).map((attributeName) -> {
                 name: attributeName,
                 description: origAttributes[attributeName].description,
@@ -188,7 +189,7 @@ angular.module('neo4jApp.services')
               })
             }
           )
-        {data: filtered}
+        {data: BoltIntHelpers.mapBoltIntsToStrings mapped}
 
       schemaResultToRESTResult = (indexes, constraints) ->
         indexString = ""
@@ -234,7 +235,7 @@ angular.module('neo4jApp.services')
         obj.data.results[0].plan = boltPlanToRESTPlan result.summary.plan if result.summary and result.summary.plan
         obj.data.results[0].plan = boltPlanToRESTPlan result.summary.profile if result.summary and result.summary.profile
         obj.data.results[0].stats = boltStatsToRESTStats result.summary
-        res = itemIntToString res
+#        res = itemIntToString res
         rows = res.map((record) ->
           return {
             row: getRESTRowsFromBolt record, keys
@@ -265,14 +266,14 @@ angular.module('neo4jApp.services')
         items = keys.map((key) -> record.get(key))
         graphItems = Utils.flattenArray [extractDataForGraphFormat items]
         graphItems.map((item) ->
-          item.id = item.identity
+          item.id = item.identity.toString()
           item
         )
         nodes = graphItems.filter((item) -> item instanceof bolt.types.Node)
         rels = graphItems.filter((item) -> item instanceof bolt.types.Relationship)
           .map((item) ->
-            item.startNode = item.start
-            item.endNode = item.end
+            item.startNode = item.start.toString()
+            item.endNode = item.end.toString()
             item
           )
         {nodes: nodes, relationships: rels}
@@ -282,6 +283,7 @@ angular.module('neo4jApp.services')
         return item.properties if item instanceof bolt.types.Relationship
         return [].concat.apply([], extractPathForRowsFormat(item)) if item instanceof bolt.types.Path
         return item if item is null
+        return item if bolt.isInt item
         return item.map((subitem) -> extractDataForRowsFormat subitem) if Array.isArray item
         if typeof item is 'object'
           out = {}
@@ -312,28 +314,13 @@ angular.module('neo4jApp.services')
         return item if item instanceof bolt.types.Relationship
         return [].concat.apply([], extractPathsForGraphFormat(item)) if item instanceof bolt.types.Path
         return no if item is null
+        return item if bolt.isInt item
         return item.map((subitem) -> extractDataForGraphFormat subitem).filter((i) -> i) if Array.isArray item
         if typeof item is 'object'
           out = Object.keys(item).map((key) -> extractDataForGraphFormat(item[key])).filter((i) -> i)
           return no if not out.length
           return out
         no
-
-      itemIntToString = (item) ->
-        return arrayIntToString item if Array.isArray(item)
-        return item if typeof item in ['number', 'string', 'boolean']
-        return item if item is null
-        return item.toString() if bolt.isInt item
-        return objIntToString item if typeof item is 'object'
-
-      arrayIntToString = (arr) ->
-       arr.map((item) -> itemIntToString item)
-
-      objIntToString = (obj) ->
-        Object.keys(obj).forEach((key) ->
-          obj[key] = itemIntToString obj[key]
-        )
-        obj
 
       boltPlanToRESTPlan = (plan) ->
         obj = boltPlanToRESTPlanShared plan
@@ -350,10 +337,12 @@ angular.module('neo4jApp.services')
           operatorType: plan.operatorType,
           LegacyExpression: plan.arguments.LegacyExpression,
           ExpandExpression: plan.arguments.ExpandExpression,
+          Signature: plan.arguments.Signature,
           DbHits: plan.dbHits,
           Rows: plan.rows,
           EstimatedRows: plan.arguments.EstimatedRows,
           identifiers: plan.identifiers,
+          Index: plan.arguments.Index,
           children: plan.children.map boltPlanToRESTPlanShared
         }
 
@@ -384,12 +373,17 @@ angular.module('neo4jApp.services')
         connect()
 
       return {
+        bolt: bolt,
         testConnection: testConnection,
         connect: connect,
         beginTransaction: beginTransaction,
         transaction: transaction,
         boltTransaction: boltTransaction,
         callProcedure: callProcedure,
+        constructUserResult: constructUserResult,
+        constructCoreEdgeOverview: constructCoreEdgeOverview,
+        constructUserListResult: constructUserListResult,
+        constructRolesListResult: constructRolesListResult,
         constructResult: (res) ->
           boltResultToRESTResult res
         constructMetaResult: (labels, relationshipTypes, propertyKeys) ->

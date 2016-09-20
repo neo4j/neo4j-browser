@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 angular.module('neo4jApp.directives')
   .directive('neoTable', ['Utils', (Utils) ->
+      bolt = window.neo4j.v1
       replace: yes
       restrict: 'E'
       link: (scope, elm, attr) ->
@@ -35,12 +36,14 @@ angular.module('neo4jApp.directives')
         json2html = (obj) ->
           return emptyMarker() unless Object.keys(obj).length
           html  = "<table class='json-object'><tbody>"
-          html += "<tr><th>#{k}</th><td>#{cell2html(v)}</td></tr>" for own k, v of obj
+          html += "<tr><th>#{Utils.escapeHTML(k)}</th><td>#{cell2html(v)}</td></tr>" for own k, v of obj
           html += "</tbody></table>"
           html
 
         cell2html = (cell) ->
-          if angular.isString(cell)
+          if bolt.isInt cell
+            return cell.toString()
+          else if angular.isString(cell)
             return emptyMarker() unless cell.length
             Utils.escapeHTML(cell)
           else if angular.isArray(cell)
@@ -59,7 +62,7 @@ angular.module('neo4jApp.directives')
           html  = "<table class='table data'>"
           html += "<thead><tr>"
           for col in cols
-            html += "<th>#{col}</th>"
+            html += "<th>#{Utils.escapeHTML(col)}</th>"
           html += "</tr></thead>"
           html += "<tbody>"
           if result.displayedSize

@@ -41,6 +41,12 @@ angular.module('neo4jApp.controllers')
       $scope.policy_message = ''
       $scope.CurrentUser = CurrentUser
 
+      connectIfNoAuthorizationRequired = ->
+        AuthService.authorizationRequired().then(->
+          $scope.static_user = ConnectionStatusService.connectedAsUser()
+          $scope.static_is_authenticated = ConnectionStatusService.isConnected()
+        )
+
       setPolicyMessage = ->
         return unless $scope.static_is_authenticated
         _connection_summary = ConnectionStatusService.getConnectionStatusSummary()
@@ -97,4 +103,6 @@ angular.module('neo4jApp.controllers')
         )
 
       setPolicyMessage()
+      connectIfNoAuthorizationRequired()
+
   ]

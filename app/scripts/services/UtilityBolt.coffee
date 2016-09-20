@@ -37,7 +37,7 @@ angular.module('neo4jApp.services')
             "RETURN 'indexes' AS name, indexes AS items " +
             "UNION " +
             "CALL db.constraints() YIELD description " +
-            "WITH COLLECT({description: description}) AS constraints " + 
+            "WITH COLLECT({description: description}) AS constraints " +
             "RETURN 'constraints' AS name, constraints AS items"
           ).promise.then((result) ->
             return q.resolve(Bolt.constructSchemaResult([], [])) unless result.records.length
@@ -68,6 +68,84 @@ angular.module('neo4jApp.services')
           )
           q.promise
 
+        getUser: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.security.showCurrentUser()').promise
+            .then((r) -> q.resolve Bolt.constructUserResult r)
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        getCoreEdgeOverview: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.cluster.overview()').promise
+            .then((r) -> q.resolve Bolt.constructCoreEdgeOverview r)
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+
+        getUserList: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.security.listUsers()').promise
+          .then((r) -> q.resolve Bolt.constructUserListResult r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        getRolesList: ->
+          q = $q.defer()
+          Bolt.boltTransaction('CALL dbms.security.listRoles() YIELD role').promise
+          .then((r) -> q.resolve Bolt.constructRolesListResult r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        addNewUser: (username, password, requirePasswordChange) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.security.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange}).promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        changeUserPassword: (username, password) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.security.changeUserPassword({username}, {password})", {username: username, password: password}).promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        activateUser: (username) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.security.activateUser({username})", {username: username}).promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject (Bolt.constructResult e).data)
+          q.promise
+
+        suspendUser: (username) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.security.suspendUser({username})", {username: username}).promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject (Bolt.constructResult e).data)
+          q.promise
+
+        deleteUser: (username) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.security.deleteUser({username})", {username: username}).promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject (Bolt.constructResult e).data)
+          q.promise
+
+        addUserToRole: (username, role) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.security.addRoleToUser({role}, {username})", {username: username, role: role}).promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject (Bolt.constructResult e).data)
+          q.promise
+
+        removeRoleFromUser: (username, role) ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.security.removeRoleFromUser({role}, {username})", {username: username, role: role}).promise
+          .then((r) -> q.resolve r)
+          .catch((e) -> q.reject (Bolt.constructResult e).data)
+          q.promise
+
         getVersion: ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.components()").promise
@@ -75,11 +153,21 @@ angular.module('neo4jApp.services')
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
+        getProceduresList: ->
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.procedures()").promise
+            .then((r) -> q.resolve(r.records.map((r)->r.get('name'))))
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
         getJmx: (whatToGet = []) ->
           q = $q.defer()
-          name = if whatToGet.length is 1 then whatToGet[0] else "*:*"
+          if whatToGet.length is 1
+            name = whatToGet[0]
+          else
+            name = "*:*"
           Bolt.boltTransaction("CALL dbms.queryJmx('#{name}')").promise
-            .then((r) -> q.resolve(Bolt.constructJmxResult(r, whatToGet)))
+            .then((r) -> q.resolve(Bolt.constructJmxResult(r)))
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
@@ -87,27 +175,26 @@ angular.module('neo4jApp.services')
           q = $q.defer()
           r = Bolt.testConnection withoutCredentials
           r.then((r) ->
-            res = Bolt.constructResult r
             Bolt.connect() if retainConnection
-            if not res.data.errors.length
-              $rootScope.bolt_connection_failure = no
-              return q.resolve({})
-            else
-              return q.reject({status: 401, data: res})
-          ).catch((err) ->
-            errObj = Bolt.constructResult err
-            if errObj.data.errors[0].code is 'Neo.ClientError.Security.CredentialsExpired'
+            if (r.credentials_expired)
+              errObj = {data: {}}
               errObj.data.password_change = 'true'
               errObj.status = 403
-              Bolt.connect() if retainConnection
-            else if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
+              q.reject errObj
+            else
+              $rootScope.bolt_connection_failure = no
+              return q.resolve({})
+          ,(err) ->
+            errObj = Bolt.constructResult err
+            if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
               errObj.status = 0
-              $rootScope.bolt_connection_failure = yes
+              $rootScope.bolt_connection_failure = yes  && ! $rootScope.unauthorized
             else
               errObj.status = 401
             q.reject errObj
           )
           q.promise
+
         setNewPassword: (username, newPasswd) ->
           q = $q.defer()
           Bolt.boltTransaction("CALL dbms.changePassword({password})", {password: newPasswd}).promise

@@ -6,7 +6,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 Store Sizes
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-store-file-sizes")
           table.table.table-condensed
             tr
               th Array Store
@@ -34,7 +33,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 ID Allocation
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-primitive-count")
           table.table.table-condensed
             tr
               th Node ID
@@ -53,7 +51,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 Page Cache
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-page-cache")
           .panel-body(ng-hide="sysinfo.cache.available")
             p No statistics available.
           table.table.table-condensed(ng-show="sysinfo.cache.available")
@@ -87,7 +84,6 @@ article.help(ng-controller="SysinfoController")
           .panel-heading
             h4 Transactions
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-transactions")
           .panel-body(ng-hide="sysinfo.tx.available")
             p Not available.
           table.table.table-condensed(ng-show="sysinfo.tx.available")
@@ -106,15 +102,12 @@ article.help(ng-controller="SysinfoController")
             tr
               th Committed
               td {{sysinfo.tx.NumberOfCommittedTransactions}}
-      .col-md-3.col-sm-4
+      .col-md-3.col-sm-4(ng-show='sysinfo.ha.clustered')
         .panel.panel-default
           .panel-heading
             h4 High Availability
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#jmx-high-availability")
-          .panel-body(ng-hide='sysinfo.ha.clustered')
-            p Not enabled.
-          table.table.table-condensed(ng-show='sysinfo.ha.clustered')
+          table.table.table-condensed
             tr
               th InstanceId
               td {{sysinfo.ha.InstanceId}}
@@ -133,15 +126,12 @@ article.help(ng-controller="SysinfoController")
             tr
               th Last Update Time
               td {{sysinfo.ha.LastUpdateTime}}
-      .col-md-3.col-sm-4
+      .col-md-3.col-sm-4(ng-show='sysinfo.ha.clustered')
         .panel.panel-default
           .panel-heading
             h4 Cluster
             .panel-heading-info-icon
-              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#_neo4j_cluster_install")
-          .panel-body(ng-hide='sysinfo.ha.clustered')
-            p No cluster.
-          table.table.table-condensed(ng-show='sysinfo.ha.clustered')
+          table.table.table-condensed
             tr
               th Id
               th(colspan='5') Status
@@ -159,9 +149,24 @@ article.help(ng-controller="SysinfoController")
                   i.fa.fa-exclamation-circle &nbsp;
               td
                 i.ha-master.fa(ng-class="{'fa-gavel': isMaster(member) }")
-
+      .col-md-5.col-sm-4(ng-show='sysinfo.ce')
+        .panel.panel-default
+          .panel-heading
+            h4 Core-Edge
+            .panel-heading-info-icon
+              a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#_neo4j_cluster_install")
+          table.table.table-condensed
+            tr
+              th Id
+              th Address
+              th Role
+            tr(ng-repeat="member in sysinfo.ce")
+              td {{ member.id }}
+              td {{ member.address }}
+              td {{ member.role }}
 
   footer.tight
+    a.help-footer-icon.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")
     small Note: some metrics only available in Neo4j Enterprise.
     .actions
       .toggle.toggle-footer-margin(ng-click='toggleAutoRefresh()')

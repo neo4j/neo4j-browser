@@ -26,6 +26,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
   .constant('Settings', {
     cmdchar: ':'
     endpoint:
+      discover: "#{baseURL}"
       console: "#{baseURL}/db/manage/server/console"
       version: "#{baseURL}/db/manage/server/version"
       jmx: "#{baseURL}/db/manage/server/jmx/query"
@@ -54,12 +55,13 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     retainConnectionCredentials: yes
     shouldReportUdc: no
     experimentalFeatures: no
-    useBolt: no
+    useBolt: yes
     boltHost: "" # $location.host() is default
     shownTermsAndPrivacy: no
     acceptedTermsAndPrivacy: no
-    onboarding: yes
+    onboarding: no
     showSampleScripts: yes
+    autoComplete: yes
   })
 
 angular.module('neo4jApp.settings')

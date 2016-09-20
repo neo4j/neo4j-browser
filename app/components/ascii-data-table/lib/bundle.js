@@ -122,20 +122,23 @@ var AsciiTable =
 	  });
 	};
 	
-	var getLineFromRow = function getLineFromRow(prev, col, colIndex) {
-	  var colLines = getLinesFromString(col).reduce(function (final, curr) {
-	    return final.concat(('' + curr).match(new RegExp('.{1,' + prev.colWidths[colIndex] + '}', 'g')) || ['']);
-	  }, []);
-	  colLines = colLines.concat(getArray(prev.rowHeight - colLines.length).map(function (a) {
-	    return ' ';
-	  }));
-	  var linesStr = colLines.filter(function (_, lineIndex) {
+	var getLineFromCol = function getLineFromCol(prev, _, colIndex) {
+	  var linesStr = prev.colsLines[prev.rowIndex][colIndex].filter(function (_, lineIndex) {
 	    return lineIndex === prev.lineIndex;
 	  }).map(function (line) {
 	    return line + padString(' ', prev.colWidths[colIndex] - line.length);
 	  });
 	  prev.lines.push(linesStr);
 	  return prev;
+	};
+	
+	var getColLines = function getColLines(col, colWidth, rowHeight) {
+	  var colLines = getLinesFromString(col).reduce(function (final, curr) {
+	    return final.concat(('' + curr).match(new RegExp('.{1,' + colWidth + '}', 'g')) || ['']);
+	  }, []);
+	  return colLines.concat(getArray(rowHeight - colLines.length).map(function (a) {
+	    return ' ';
+	  }));
 	};
 	
 	var getLinesFromString = function getLinesFromString(str) {
@@ -174,13 +177,20 @@ var AsciiTable =
 	  var totalLines = rowHeights.reduce(function (tot, curr) {
 	    return tot + curr;
 	  }, 0);
+	  var colsLines = rows.reduce(function (colLines, row, rowIndex) {
+	    var cols = row.map(function (col, colIndex) {
+	      return getColLines(col, colWidths[colIndex], rowHeights[rowIndex]);
+	    });
+	    return colLines.concat([cols]);
+	  }, []);
 	  var output = getArray(totalLines).reduce(function (out, _, i) {
 	    var lineMeta = getRowIndexForLine(rowHeights, i);
-	    var rowLines = rows[lineMeta.rowIndex].reduce(getLineFromRow, {
+	    var rowLines = rows[lineMeta.rowIndex].reduce(getLineFromCol, {
 	      lines: [],
 	      lineIndex: lineMeta.lineIndex,
-	      rowHeight: rowHeights[lineMeta.rowIndex],
-	      colWidths: colWidths
+	      colWidths: colWidths,
+	      colsLines: colsLines,
+	      rowIndex: lineMeta.rowIndex
 	    }).lines.join('│');
 	    out.push('│' + rowLines + '│');
 	    return out;

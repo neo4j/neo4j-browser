@@ -126,6 +126,9 @@ angular.module('neo4jApp.services')
         version: (initial = {})->
           returnAndUpdateObject initial, @get Settings.endpoint.version + '/'
 
+        addresses: () ->
+          @get Settings.endpoint.discover + '/'
+
         status: (params = '')->
           # User a smaller timeout for status requests so IE10 detects when the
           # server goes down faster.

@@ -33,3 +33,36 @@ describe 'Directive: neoTable', () ->
       columns: -> ['col']
     scope.$apply()
     expect(element.html()).toContain('&lt;script&gt;')
+
+  it 'should escape HTML characters in column name', inject ($rootScope, $compile) ->
+    scope = $rootScope.$new()
+    element = angular.element '<neo-table table-data="val"></neo-table>'
+    element = $compile(element)(scope)
+    scope.val =
+      rows: -> [[]]
+      displayedSize: 1
+      columns: -> ['<p>']
+    scope.$apply()
+    expect(element.html()).toContain('&lt;p&gt;')
+
+  it 'should escape HTML characters in property name', inject ($rootScope, $compile) ->
+    scope = $rootScope.$new()
+    element = angular.element '<neo-table table-data="val"></neo-table>'
+    element = $compile(element)(scope)
+    scope.val =
+      rows: -> [[{'<p>':'value'}]]
+      displayedSize: 1
+      columns: -> ['col']
+    scope.$apply()
+    expect(element.html()).toContain('&lt;p&gt;')
+
+  it 'should escape HTML characters in property value', inject ($rootScope, $compile) ->
+    scope = $rootScope.$new()
+    element = angular.element '<neo-table table-data="val"></neo-table>'
+    element = $compile(element)(scope)
+    scope.val =
+      rows: -> [[{'key':'<p>'}]]
+      displayedSize: 1
+      columns: -> ['col']
+    scope.$apply()
+    expect(element.html()).toContain('&lt;p&gt;')
