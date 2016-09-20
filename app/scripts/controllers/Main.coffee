@@ -24,7 +24,7 @@ angular.module('neo4jApp.controllers')
   .config ($provide, $compileProvider, $filterProvider, $controllerProvider) ->
     $controllerProvider.register 'MainCtrl', [
       '$rootScope',
-      '$window'
+      '$location'
       '$q'
       'Server'
       'Frame'
@@ -39,7 +39,7 @@ angular.module('neo4jApp.controllers')
       'CurrentUser'
       'ProtocolFactory'
       'Features'
-      ($scope, $window, $q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory, Features) ->
+      ($scope, $location, $q, Server, Frame, AuthService, AuthDataService, ConnectionStatusService, Settings, SettingsStore, motdService, UDC, Utils, CurrentUser, ProtocolFactory, Features) ->
         $scope.features = Features
         $scope.CurrentUser = CurrentUser
         $scope.ConnectionStatusService = ConnectionStatusService
@@ -49,7 +49,7 @@ angular.module('neo4jApp.controllers')
         $scope.refresh = ->
           return '' if $scope.unauthorized || $scope.offline
           $scope.server = Server.info $scope.server
-          $scope.host = $window.location.host
+          $scope.host = $location.host()
           $q.when()
           .then( ->
             ProtocolFactory.getStoredProcedureService().getProceduresList().then((procedures) ->
@@ -180,10 +180,10 @@ angular.module('neo4jApp.controllers')
                 if r.bolt? and Settings.boltHost is ""
                   $scope.boltHost = r.bolt.replace('bolt://', '')
                 else
-                  $scope.boltHost = $window.location.host)
+                  $scope.boltHost = $location.host())
             .catch(
               (r)->
-                $scope.boltHost = $window.location.host)
+                $scope.boltHost = $location.host())
           )
           .then(->
             CurrentUser.init()

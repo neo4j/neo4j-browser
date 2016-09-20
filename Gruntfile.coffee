@@ -94,7 +94,7 @@ module.exports = (grunt) ->
         ]
         options:
           replacements: [
-            pattern: /discover:\sbaseURL\s\+\s\"\/"\,/g,
+            pattern: /discover:[^,]+,/g,
             replacement: 'discover: baseURL + "/root",'
           ]
     append:
@@ -116,6 +116,7 @@ module.exports = (grunt) ->
         tasks: ["stylus"]
       livereload:
         files: ["<%= yeoman.app %>/{,*/}*.html", "{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css", "{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js", "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}"]
+        tasks: ["string-replace"]
         options:
           livereload: true
       jade:
