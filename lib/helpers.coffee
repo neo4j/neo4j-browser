@@ -229,3 +229,18 @@ class neo.helpers
         cluster.push tmp
       )
       cluster
+
+    @buildTimingObject = (result = {}) ->
+      obj = {
+        resultAvailableAfter: undefined,
+        resultConsumedAfter: undefined,
+        responseTime: result.raw?.responseTime || undefined,
+        type: 'client'
+      }
+      if result and result.summary and typeof result.summary.resultAvailableAfter isnt 'undefined'
+        obj.resultAvailableAfter = result.summary.resultAvailableAfter
+        obj.resultConsumedAfter = result.summary.resultConsumedAfter
+        obj.totalTime = obj.resultAvailableAfter + obj.resultConsumedAfter
+        obj.responseTime = undefined
+        obj.type = 'bolt'
+      obj
