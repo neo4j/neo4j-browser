@@ -102,14 +102,12 @@ article.help(ng-controller="SysinfoController")
             tr
               th Committed
               td {{sysinfo.tx.NumberOfCommittedTransactions}}
-      .col-md-2.col-sm-4
+      .col-md-3.col-sm-4(ng-show='sysinfo.ha.clustered')
         .panel.panel-default
           .panel-heading
             h4 High Availability
             .panel-heading-info-icon
-          .panel-body(ng-hide='sysinfo.ha.clustered')
-            p Not enabled.
-          table.table.table-condensed(ng-show='sysinfo.ha.clustered')
+          table.table.table-condensed
             tr
               th InstanceId
               td {{sysinfo.ha.InstanceId}}
@@ -128,14 +126,12 @@ article.help(ng-controller="SysinfoController")
             tr
               th Last Update Time
               td {{sysinfo.ha.LastUpdateTime}}
-      .col-md-2.col-sm-4
+      .col-md-3.col-sm-4(ng-show='sysinfo.ha.clustered')
         .panel.panel-default
           .panel-heading
             h4 Cluster
             .panel-heading-info-icon
-          .panel-body(ng-hide='sysinfo.ha.clustered')
-            p No cluster.
-          table.table.table-condensed(ng-show='sysinfo.ha.clustered')
+          table.table.table-condensed
             tr
               th Id
               th(colspan='5') Status
@@ -153,15 +149,13 @@ article.help(ng-controller="SysinfoController")
                   i.fa.fa-exclamation-circle &nbsp;
               td
                 i.ha-master.fa(ng-class="{'fa-gavel': isMaster(member) }")
-      .col-md-5.col-sm-4
+      .col-md-5.col-sm-4(ng-show='sysinfo.ce')
         .panel.panel-default
           .panel-heading
             h4 Core-Edge
             .panel-heading-info-icon
               a.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/#_neo4j_cluster_install")
-          .panel-body(ng-hide='sysinfo.ce')
-            p No core-edge cluster.
-          table.table.table-condensed(ng-show='sysinfo.ce')
+          table.table.table-condensed
             tr
               th Id
               th Address
