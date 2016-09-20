@@ -50,6 +50,7 @@ angular.module('neo4jApp.controllers')
           return '' if $scope.unauthorized || $scope.offline
           $scope.server = Server.info $scope.server
           $scope.host = $location.host()
+          $scope.titlebarString = "- #{ConnectionStatusService.connectedAsUser()}@#{$location.host()}:#{$location.port()}"
           $q.when()
           .then( ->
             ProtocolFactory.getStoredProcedureService().getProceduresList().then((procedures) ->
