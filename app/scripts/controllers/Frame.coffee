@@ -24,6 +24,9 @@ angular.module('neo4jApp.controllers')
 .controller 'FrameCtrl', [
   '$scope'
   ($scope) ->
+    $scope.expanded = yes
+    $scope.toggleVisibleContent = ->
+      $scope.expanded = !$scope.expanded
     $scope.pinned = no
     $scope.pin = (frame) ->
       $scope.pinned = !$scope.pinned
