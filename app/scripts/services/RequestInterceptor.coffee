@@ -30,7 +30,7 @@ angular.module('neo4jApp.services')
           isLocalRequest = yes
           if /^https?:/.test config.url
             url = document.location.origin || window.location.protocol + "//" + window.location.host
-            if config.url.indexOf url < 0
+            if config.url.indexOf(url) < 0
               isLocalRequest = no
 
           return config if config.skipAuthHeader or not isLocalRequest

@@ -24,8 +24,10 @@ angular.module('neo4jApp.services')
   .factory 'UtilityREST', [
     'Server'
     'Settings'
+    'Utils'
     '$q'
-    (Server, Settings, $q) ->
+    '$location'
+    (Server, Settings, Utils, $q, $location) ->
       {
         clearConnection: -> angular.noop
         getJmx: (whatToGet = []) ->
@@ -183,5 +185,40 @@ angular.module('neo4jApp.services')
           p = Server.get("#{Settings.endpoint.rest}/", opts)
         setNewPassword: (username, newPasswd) ->
           Server.post("#{Settings.endpoint.authUser}/#{username}/password", {password: newPasswd})
+
+        getClusterOverview: ->
+          that = @
+          q = $q.defer()
+          Server.transaction(Server.buildStatement("CALL dbms.cluster.overview()"))
+            .then((r) ->
+              cluster = Utils.fakeSingleInstanceCluster r, that.getHost, $location.protocol()
+              return q.reject r unless cluster
+              q.resolve cluster
+            ).catch((e) ->
+              cluster = Utils.fakeSingleInstanceCluster e, that.getHost, $location.protocol()
+              return q.reject e unless cluster
+              q.resolve cluster
+            )
+          q.promise
+
+        getRunningQueries: (cluster = []) ->
+          q = $q.defer()
+          Server.runQueryOnCluster(cluster, 'CALL dbms.listQueries()')
+            .then((r) -> q.resolve(r.map((result) ->
+              return no if result.state isnt 'fulfilled'
+              return result.value
+            )))
+            .catch((e) -> q.reject e)
+          q.promise
+
+        killQuery: (instance, queryId) ->
+          Server.runQueryOnCluster([instance], 'CALL dbms.killQuery($id)', {id: queryId})
+
+        getProtocol: -> $location.protocol()
+
+        getHost: ->
+          Settings.host || $location.protocol() + '://' + $location.host() + ':' + $location.port()
+
+        getServerAddress: Utils.getServerAddressByProtocol.bind(null, $location.protocol())
       }
 ]

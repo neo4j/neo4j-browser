@@ -198,6 +198,7 @@
               height: 100%
 
         .view-result-table
+          background-color: #fff
           position: relative
           max-height: frame-result-height
           min-height: frame-min-height
@@ -298,6 +299,7 @@
             text-align: center
 
     footer
+      background-color: #fff
       position: relative
       padding: 0
       .toggle-footer-margin
@@ -312,6 +314,21 @@
         border-top: 1px solid #c8cbd2
         height: 39px
         line-height: 39px
+        &.error
+          color: #e74c3c
+          font-size: 13px
+          .status
+            text-align: left
+            position: absolute
+            left: 10px
+            right: 200px
+            overflow: hidden
+            line-height: 39px
+            max-height: 39px
+        .actions
+          position: absolute
+          top: 0
+          right: 0
       .help-footer-icon
         float: left
         padding-left 10px

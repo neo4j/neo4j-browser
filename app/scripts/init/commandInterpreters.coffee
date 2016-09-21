@@ -409,6 +409,15 @@ angular.module('neo4jApp')
           q.promise
       ]
 
+    FrameProvider.interpreters.push
+      type: 'tools'
+      templateUrl: 'views/frame-qs.html'
+      matches: "#{cmdchar}qs"
+      exec: [ ->
+        (input, q) ->
+          q.resolve()
+          q.promise
+      ]
 
     FrameProvider.interpreters.push
       type: 'account'
