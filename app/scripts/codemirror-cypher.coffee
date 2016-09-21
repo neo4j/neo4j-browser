@@ -30,7 +30,7 @@ CodeMirror.defineMode "cypher", (config) ->
     if ch is "'"
       stream.match /.+?[']/
       return "string"
-    if /[{}\(\),\.;\[\]]/.test(ch)
+    if /[{}\(\),;\[\]]/.test(ch)
       curPunc = ch
       "node"
     else if ch is "/" and stream.eat("/")
