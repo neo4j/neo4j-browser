@@ -89,16 +89,9 @@ angular.module('neo4jApp.controllers')
           else
             $scope.user = $scope.static_user
 
-          if 'dbms.security.listRoles' in $scope.procedures
-            Features.canGetRoles = yes
-          else
-            Features.canGetRoles = no
-
-          if 'dbms.security.activateUser' in $scope.procedures
-            Features.canActivateUser = yes
-          else
-            Features.canActivateUser = no
-
+          Features.canGetRoles = 'dbms.security.listRoles' in $scope.procedures
+          Features.canActivateUser = 'dbms.security.activateUser' in $scope.procedures
+          Features.canChangePassword = 'dbms.security.changeUserPassword' in $scope.procedures
           Features.usingCoreEdge = 'dbms.cluster.overview' in $scope.procedures
 
         fetchJMX = ->
