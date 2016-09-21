@@ -25,10 +25,12 @@ angular.module('neo4jApp.controllers')
     '$scope',
     'GraphStyle'
     'Collection'
+    'Settings'
     '$timeout'
-    ($scope, graphStyle, Collection, $timeout) ->
+    ($scope, graphStyle, Collection, Settings, $timeout) ->
       $scope.sizes = graphStyle.defaultSizes()
       $scope.arrowWidths = graphStyle.defaultArrayWidths()
+      $scope.iconCodes = graphStyle.defaultIconCodes()
       $scope.colors = graphStyle.defaultColors()
       $scope.currentItem = null
       $scope.inspectorContracted = yes
@@ -101,6 +103,10 @@ angular.module('neo4jApp.controllers')
       $scope.selectArrowWidth = (item, size) ->
         item.style = graphStyle.changeForSelector(item.style.selector, size)
 
+      $scope.selectIcon = (item, iconCode) ->
+        $scope.$emit 'close.contextMenu'
+        item.style = graphStyle.changeForSelector(item.style.selector, iconCode)
+
       $scope.selectCaption = (item, caption) ->
         item.style = graphStyle.changeForSelector(item.style.selector, { caption: caption})
 
@@ -123,5 +129,12 @@ angular.module('neo4jApp.controllers')
       $scope.nodeDisplaySize = (idx) ->
         width: nodeDisplaySizes[idx]
         height: nodeDisplaySizes[idx]
+
+      $scope.$watch('style', (oldValue, newValue) ->
+        unless oldValue is newValue or newValue is not null
+          $scope.$emit 'close.contextMenu'
+      )
+
+      $scope.showIcons = Settings.experimentalFeatures
 
   ]
