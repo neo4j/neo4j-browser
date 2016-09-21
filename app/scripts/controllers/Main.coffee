@@ -53,18 +53,18 @@ angular.module('neo4jApp.controllers')
           $scope.titlebarString = "- #{ConnectionStatusService.connectedAsUser()}@#{$location.host()}:#{$location.port()}"
           $q.when()
           .then( ->
-            ProtocolFactory.getStoredProcedureService().getProceduresList().then((procedures) ->
+            ProtocolFactory.utils().getProceduresList().then((procedures) ->
               $scope.procedures = procedures
             )
           )
           .then( ->
-            ProtocolFactory.getStoredProcedureService().getMeta().then((res) ->
+            ProtocolFactory.utils().getMeta().then((res) ->
               $scope.labels = res.labels
               $scope.relationships = res.relationships
               $scope.propertyKeys = res.propertyKeys
             )
           ).then( ->
-            ProtocolFactory.getStoredProcedureService().getVersion($scope.version).then((res) ->
+            ProtocolFactory.utils().getVersion($scope.version).then((res) ->
               $scope.version = res
             )
           ).then( ->
@@ -73,7 +73,7 @@ angular.module('neo4jApp.controllers')
             featureCheck()
           ).then( ->
             if Features.usingCoreEdge
-              ProtocolFactory.getStoredProcedureService().getCoreEdgeRole().then((res) ->
+              ProtocolFactory.utils().getCoreEdgeRole().then((res) ->
                 $scope.neo4j.clusterRole = res
               )
             else
@@ -82,7 +82,7 @@ angular.module('neo4jApp.controllers')
 
         featureCheck = ->
           if 'dbms.security.listUsers' in $scope.procedures
-            ProtocolFactory.getStoredProcedureService().getUser().then((res) ->
+            ProtocolFactory.utils().getUser().then((res) ->
               $scope.user = res
               Features.showAdmin = 'admin' in res.roles
             )
@@ -95,7 +95,7 @@ angular.module('neo4jApp.controllers')
           Features.usingCoreEdge = 'dbms.cluster.overview' in $scope.procedures
 
         fetchJMX = ->
-          ProtocolFactory.getStoredProcedureService().getJmx([
+          ProtocolFactory.utils().getJmx([
             "*:*,name=Configuration"
             "*:*,name=Kernel"
             "*:*,name=Store file sizes"

@@ -33,7 +33,7 @@ angular.module('neo4jApp.controllers')
     $scope.refresh = () ->
       # kernel info from JMX
       $scope.sysinfo.kernel ?= {}
-      ProtocolFactory.getStoredProcedureService().getJmx(
+      ProtocolFactory.utils().getJmx(
         ["*:*"]).then((response) ->
           intialResponse = response.data[0]
           jmxQueryPrefix = intialResponse.name.split(',')[0]
@@ -79,7 +79,7 @@ angular.module('neo4jApp.controllers')
             $scope.sysinfo.ha = { clustered: false })
 
       if Features.usingCoreEdge
-        ProtocolFactory.getStoredProcedureService().getCoreEdgeOverview()
+        ProtocolFactory.utils().getCoreEdgeOverview()
         .then((response) ->
           $scope.sysinfo.ce = response
         )

@@ -33,7 +33,7 @@ angular.module('neo4jApp.services')
           return new CypherTransactionBolt() if useBolt
           return new CypherTransactionREST()
 
-        getStoredProcedureService: (useBolt = Settings.useBolt) ->
+        utils: (useBolt = Settings.useBolt) ->
           return UtilityBolt if useBolt
           return UtilityREST
       }
