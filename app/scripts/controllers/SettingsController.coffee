@@ -38,8 +38,12 @@ angular.module('neo4jApp.controllers')
       $scope.toggleBoltUsage = () ->
         $rootScope.bolt_connection_failure = no
         if Settings.useBolt
-          Bolt.connect()
+          Bolt.connect().then( ->
+            $rootScope.refresh()
+          )
       $scope.updateBoltConnection = () ->
-        Bolt.connect()
+        Bolt.connect().then( ->
+          $rootScope.refresh()
+        )
       $scope.defaultBoltHost = $location.host()
   ]

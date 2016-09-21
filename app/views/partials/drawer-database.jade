@@ -37,6 +37,9 @@
         a.value(exec-topic='server user list') server user list
   h5 Database
   ul
+    li.pair(ng-if="neo4j.clusterRole")
+      .key Cluster role:
+      .value {{ neo4j.clusterRole }}
     li.pair
       .key Version:
       .value {{ neo4j.version }}

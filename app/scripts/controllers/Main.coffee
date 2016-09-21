@@ -71,6 +71,13 @@ angular.module('neo4jApp.controllers')
             fetchJMX()
           ).then( ->
             featureCheck()
+          ).then( ->
+            if Features.usingCoreEdge
+              ProtocolFactory.getStoredProcedureService().getCoreEdgeRole().then((res) ->
+                $scope.neo4j.clusterRole = res
+              )
+            else
+              $scope.neo4j.clusterRole = no
           )
 
         featureCheck = ->

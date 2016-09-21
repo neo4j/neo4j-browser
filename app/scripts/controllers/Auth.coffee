@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'AuthCtrl', [
+    '$rootScope'
     '$scope'
     'AuthService'
     'ConnectionStatusService'
@@ -30,7 +31,7 @@ angular.module('neo4jApp.controllers')
     'Settings'
     'Utils'
     '$timeout'
-    ($scope, AuthService, ConnectionStatusService, Frame, CurrentUser, Settings, Utils, $timeout) ->
+    ($rootScope, $scope, AuthService, ConnectionStatusService, Frame, CurrentUser, Settings, Utils, $timeout) ->
       $scope.username = 'neo4j'
       $scope.password = ''
       $scope.current_password = ''
@@ -104,5 +105,5 @@ angular.module('neo4jApp.controllers')
 
       setPolicyMessage()
       connectIfNoAuthorizationRequired()
-
+      $scope.clusterRole = $rootScope.neo4j.clusterRole
   ]
