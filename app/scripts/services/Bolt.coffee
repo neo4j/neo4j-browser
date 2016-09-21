@@ -163,11 +163,12 @@ angular.module('neo4jApp.services')
         return entries
 
       constructUserListResult = (r) ->
-        return null unless r.records
-        record = r.records[0]
-        getRoles = if 'roles' in record.keys then record.get('roles') else 'N/A'
-        r.records.map((user) ->
-          {username: user.get('username'), roles: getRoles , flags: user.get('flags') }
+        records = r.records
+        return null unless records
+        hasRoles = if 'roles' in records[0].keys then yes else no
+        records.map((user) ->
+          roles = if hasRoles then user.get('roles') else 'N/A'
+          {username: user.get('username'), roles: roles , flags: user.get('flags') }
         )
       constructRolesListResult = (r) ->
         return null unless r.records
