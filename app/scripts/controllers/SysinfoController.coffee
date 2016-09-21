@@ -34,40 +34,43 @@ angular.module('neo4jApp.controllers')
       # kernel info from JMX
       $scope.sysinfo.kernel ?= {}
       ProtocolFactory.getStoredProcedureService().getJmx(
-          ["*:*"]).then((response) ->
-            intialResponse = response.data[0]
-            jmxQueryPrefix = intialResponse.name.split(',')[0]
-            for r in response.data
-              if r.name in ["#{jmxQueryPrefix},name=Configuration","#{jmxQueryPrefix},name=Kernel","#{jmxQueryPrefix},name=Store file sizes" ]
-                for a in r.attributes
-                  $scope.sysinfo.kernel[a.name] = a.value
-              else if r.name ==  "#{jmxQueryPrefix},name=Primitive count"
-                for a in r.attributes
-                  $scope.sysinfo.primitives[a.name] = a.value
-              else if r.name == "#{jmxQueryPrefix},name=Page cache"
-                $scope.sysinfo.cache.available = true
-                for a in r.attributes
-                  $scope.sysinfo.cache[a.name] = a.value
-              else if r.name == "#{jmxQueryPrefix},name=Transactions"
-                $scope.sysinfo.tx.available = true
-                for a in r.attributes
-                  $scope.sysinfo.tx[a.name] = a.value
-              else if r.name == "#{jmxQueryPrefix},name=High Availability"
-                $scope.sysinfo.ha.clustered = true
-                for a in r.attributes
-                  if a.name is "InstancesInCluster"
-                    $scope.sysinfo.ha.ClusterMembers = {}
-                    for member in a.value
-                      clusterMember = {}
+        ["*:*"]).then((response) ->
+          intialResponse = response.data[0]
+          jmxQueryPrefix = intialResponse.name.split(',')[0]
+          for r in response.data
+            if r.name in ["#{jmxQueryPrefix},name=Configuration","#{jmxQueryPrefix},name=Kernel","#{jmxQueryPrefix},name=Store file sizes" ]
+              for a in r.attributes
+                $scope.sysinfo.kernel[a.name] = a.value
+            else if r.name ==  "#{jmxQueryPrefix},name=Primitive count"
+              for a in r.attributes
+                $scope.sysinfo.primitives[a.name] = a.value
+            else if r.name == "#{jmxQueryPrefix},name=Page cache"
+              $scope.sysinfo.cache.available = true
+              for a in r.attributes
+                $scope.sysinfo.cache[a.name] = a.value
+            else if r.name == "#{jmxQueryPrefix},name=Transactions"
+              $scope.sysinfo.tx.available = true
+              for a in r.attributes
+                $scope.sysinfo.tx[a.name] = a.value
+            else if r.name == "#{jmxQueryPrefix},name=High Availability"
+              $scope.sysinfo.ha.clustered = true
+              for a in r.attributes
+                if a.name is "InstancesInCluster"
+                  $scope.sysinfo.ha.ClusterMembers = {}
+                  for member in a.value
+                    clusterMember = {}
+                    if member.properties?
+                      clusterMember = member.properties
+                    else
                       for ma in member.value
                         clusterMember[ma.name] = ma.value
-                      clusterMember.connected = false
-                      $scope.sysinfo.ha.ClusterMembers[clusterMember.instanceId] = clusterMember
-                  else
-                    if a.name is "InstanceId"
-                      connectedMemberId = a.value
-                    $scope.sysinfo.ha[a.name] = a.value
-                $scope.sysinfo.ha.ClusterMembers[connectedMemberId].connected = true
+                    clusterMember.connected = false
+                    $scope.sysinfo.ha.ClusterMembers[clusterMember.instanceId] = clusterMember
+                else
+                  if a.name is "InstanceId"
+                    connectedMemberId = a.value
+                  $scope.sysinfo.ha[a.name] = a.value
+              $scope.sysinfo.ha.ClusterMembers[connectedMemberId].connected = true
           ).catch((r) ->
             $scope.sysinfo.kernel = {}
             $scope.sysinfo.primitives = {}
