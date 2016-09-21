@@ -271,7 +271,7 @@ angular.module('neo4jApp.services')
         items = keys.map((key) -> record.get(key))
         graphItems = Utils.flattenArray [extractDataForGraphFormat items]
         graphItems.map((item) ->
-          item.id = item.identity.toString()
+          item.id = item.identity.toString() if item.identity
           item
         )
         nodes = graphItems.filter((item) -> item instanceof bolt.types.Node)
