@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 angular.module('neo4jApp.controllers')
   .controller 'CypherResultCtrl', ['$rootScope', '$scope', 'AsciiTableFactory', 'BoltIntHelpers',  ($rootScope, $scope, AsciiTableFactory, BoltIntHelpers) ->
     $scope.displayInternalRelationships = $rootScope.stickyDisplayInternalRelationships ? true
+    initializing = yes
     $scope.availableModes = []
     $scope.slider = {min: 4, max: 20}
     asciiTable = AsciiTableFactory.getInstance()
@@ -42,7 +43,6 @@ angular.module('neo4jApp.controllers')
       $scope.availableModes.push('messages') if resp.notifications?.length
       $scope.availableModes.push('text') if resp.table?.size
       tableData = resp.table._response if resp.table?._response.data.length
-      $scope.loadAscii()
 
       # Initialise tab state from user selected if any
       $scope.tab = $rootScope.stickyTab
@@ -69,17 +69,21 @@ angular.module('neo4jApp.controllers')
       res = asciiTable.get(rows, {maxColumnWidth: $scope.ascii_col_width})
       $scope.slider.max = asciiTable.maxWidth
       $scope.ascii = res
+      initializing = no
 
     $scope.$watch('ascii_col_width', (n, o) ->
-      $scope.loadAscii()
+      unless initializing then $scope.loadAscii()
     )
 
     $scope.setActive = (tab) ->
       tab ?= if $scope.tab is 'graph' then 'table' else 'graph'
+      if tab is 'text' and tab isnt $scope.tab then $scope.loadAscii()
       $rootScope.stickyTab = $scope.tab = tab
 
     $scope.isActive = (tab) ->
-      tab is $scope.tab
+      active = tab is $scope.tab
+      if initializing and active and $scope.tab is 'text' then $scope.loadAscii()
+      active
 
     $scope.isAvailable = (tab) ->
       tab in $scope.availableModes
