@@ -20,22 +20,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-angular.module('neo4jApp.services')
-  .factory 'ProtocolFactory', [
-    'Settings'
-    'CypherTransactionREST'
-    'CypherTransactionBolt'
-    'UtilityREST'
-    'UtilityBolt'
-    (Settings, CypherTransactionREST, CypherTransactionBolt, UtilityREST, UtilityBolt) ->
-      {
-        getCypherTransaction: (useBolt = Settings.useBolt) ->
-          return new CypherTransactionBolt() if useBolt
-          return new CypherTransactionREST()
-
-        utils: (useBolt = Settings.useBolt) ->
-          return UtilityBolt if useBolt
-          return UtilityREST
-      }
-
-]
+angular.module('neo4jApp.directives')
+  .directive('checkOverflowingChildren', ['$timeout', ($timeout) ->
+    restrict: 'A'
+    scope: {
+      overflowModel: '='
+    }
+    link: (scope, element, attrs) ->
+      $timeout( ->
+        return if scope.overflowModel.overflows is yes  # If calculated as overflowing once, no need to do it again
+        return if scope.overflowModel.overflows is no # If calculated as non-overflowing once, no need to do it again
+        checks = $(element).find('.check-overflow')
+        overflows = no
+        checks.each((i, e) -> overflows = yes if e.scrollWidth > e.offsetWidth)
+        scope.overflowModel.overflows = overflows
+      , 0)
+  ])

@@ -52,7 +52,7 @@ angular.module('neo4jApp.controllers')
         user.shouldShowResetPassword = no
         user.shouldShowConfirmation = no
         return setError 'Passwords do not match'
-      ProtocolFactory.getStoredProcedureService().changeUserPassword(user.username, user.resetPasswordConfirmationValue).then(() ->
+      ProtocolFactory.utils().changeUserPassword(user.username, user.resetPasswordConfirmationValue).then(() ->
         $scope.refresh()
         setSuccessMessage("Changed password for  #{user.username}")
       ).catch((r) ->
@@ -60,13 +60,13 @@ angular.module('neo4jApp.controllers')
       )
 
     $scope.refresh = () ->
-      ProtocolFactory.getStoredProcedureService().getUserList().then((response) ->
+      ProtocolFactory.utils().getUserList().then((response) ->
         $scope.users = response
         $scope.filteredUsernames = response.filter((user) -> $scope.user.username isnt user.username).map((u) -> u.username)
       ).catch((r) -> )
 
     $scope.activate = (username) ->
-      ProtocolFactory.getStoredProcedureService().activateUser(username).then(() ->
+      ProtocolFactory.utils().activateUser(username).then(() ->
         $scope.refresh()
         setSuccessMessage("Activated #{username}")
       ).catch((r) ->
@@ -74,7 +74,7 @@ angular.module('neo4jApp.controllers')
       )
 
     $scope.suspend = (username) ->
-      ProtocolFactory.getStoredProcedureService().suspendUser(username).then(() ->
+      ProtocolFactory.utils().suspendUser(username).then(() ->
         $scope.refresh()
         setSuccessMessage("Suspended #{username}")
       ).catch((r) ->
@@ -82,7 +82,7 @@ angular.module('neo4jApp.controllers')
       )
 
     $scope.delete = (username) ->
-      ProtocolFactory.getStoredProcedureService().deleteUser(username).then(() ->
+      ProtocolFactory.utils().deleteUser(username).then(() ->
         $scope.refresh()
         setSuccessMessage("Deleted #{username}")
       ).catch((r) ->
@@ -99,14 +99,14 @@ angular.module('neo4jApp.controllers')
       user.shouldShowConfirmation = yes
 
     $scope.$on 'admin.addRoleFor', (event, username, role) ->
-      ProtocolFactory.getStoredProcedureService().addUserToRole(username, role).then(() ->
+      ProtocolFactory.utils().addUserToRole(username, role).then(() ->
         $scope.refresh()
         setSuccessMessage("Assigned role of #{role} to #{username}")
       ).catch((r) ->
         setError(r)
       )
     $scope.$on 'admin.removeRoleFor', (event, username, role) ->
-      ProtocolFactory.getStoredProcedureService().removeRoleFromUser(username, role).then(() ->
+      ProtocolFactory.utils().removeRoleFromUser(username, role).then(() ->
         $scope.refresh()
         setSuccessMessage("Removed role of #{role} from #{username}")
       ).catch((r) ->

@@ -191,19 +191,41 @@ class neo.helpers
       val
 
     @findNumberInVal = (val, operations = []) ->
-      if Array.isArray(val) then return @findNumbersInArray val, operations
-      if typeof val is 'number' then return @applyOperationsTo val, operations
-      if typeof val is 'string' then return (if @isNumber val then @applyOperationsTo val, operations else val)
-      if typeof val is 'boolean' then return val
-      if val is null then return null
-      if typeof val == 'object' then return @findNumbersInObject val, operations
+      that = @
+      test = (n) -> typeof n is 'number' || (typeof n is 'string' and that.isNumber n)
+      @transformWhatInVal val, test, operations
 
-    @findNumbersInObject = (obj, operations = []) ->
+    @transformWhatInVal = (val, test, operations = []) ->
+      if test val then return @applyOperationsTo val, operations
+      if Array.isArray(val) then return @transformWhatInArray val, test, operations
+      if typeof val is 'object' and val isnt null then return @transformWhatInObject val, test, operations
+      return val
+
+    @transformWhatInArray = (arr, test, operations = []) ->
+      arr.map((n) => @transformWhatInVal n, test, operations)
+
+    @transformWhatInObject = (obj, test, operations = []) ->
       out = {}
       Object.keys(obj).forEach((p) =>
-        out[p] = @findNumberInVal obj[p], operations
+        out[p] = @transformWhatInVal obj[p], test, operations
       )
       out
 
-    @findNumbersInArray = (arr, operations = []) ->
-      arr.map((n) => @findNumberInVal n, operations)
+    @getServerAddressByProtocol = (protocol, addresses = []) ->
+      f = addresses.filter((a) -> a.indexOf(protocol + ':') is 0)
+      f || undefined
+
+    @fakeSingleInstanceCluster = (r, getHost, protocol) ->
+      if r?.data?.errors?.length and r.data.errors[0].code isnt 'Neo.ClientError.Procedure.ProcedureNotFound'
+        return no
+      if not r or r.data.errors.length
+        return [{addresses: [getHost()]}]
+      cluster = []
+      r.data.results[0].data.forEach((member) ->
+        tmp = {}
+        member.row.forEach((col, i) -> tmp[r.data.results[0].columns[i]] = col)
+        if not tmp.addresses and tmp.address
+          tmp.addresses = ["#{protocol}://#{tmp.address}"]
+        cluster.push tmp
+      )
+      cluster

@@ -55,49 +55,81 @@ angular.module('neo4jApp.services')
         #
         # Basic HTTP methods
         #
-        options: (path = '', options = {}) ->
-          path = Settings.host + path unless path.indexOf(Settings.host) is 0
+        options: (path = '', options = {}, host = Settings.host) ->
+          path = host + path unless path.indexOf(host) is 0
           options.method = 'OPTIONS'
           options.url = path
           $http(options)
 
-        head: (path = '', options) ->
-          path = Settings.host + path unless path.indexOf(Settings.host) is 0
+        head: (path = '', options, host = Settings.host) ->
+          path = host + path unless path.indexOf(host) is 0
           $http.head(path, options or httpOptions)
 
-        delete: (path = '', data = null) ->
-          path = Settings.host + path unless path.indexOf(Settings.host) is 0
+        delete: (path = '', data = null, host = Settings.host) ->
+          path = host + path unless path.indexOf(host) is 0
           $http.delete(path, httpOptions)
 
-        get: (path = '', options) ->
-          path = Settings.host + path unless path.indexOf(Settings.host) is 0
+        get: (path = '', options, host = Settings.host) ->
+          path = host + path unless path.indexOf(host) is 0
           $http.get(path, options or httpOptions)
 
-        post: (path = '', data) ->
-          path = Settings.host + path unless path.indexOf(Settings.host) is 0
+        post: (path = '', data, host = Settings.host) ->
+          path = host + path unless path.indexOf(host) is 0
           $http.post(path, data, httpOptions)
 
-        put: (path = '', data) ->
-          path = Settings.host + path unless path.indexOf(Settings.host) is 0
+        put: (path = '', data, host = Settings.host) ->
+          path = host + path unless path.indexOf(host) is 0
           $http.put(path, data, httpOptions)
 
         transaction: (opts) ->
           opts = angular.extend(
             path: '',
             statements: [],
-            method: 'post'
+            method: 'post',
+            host: Settings.host
           , opts)
-          {path, statements, method} = opts
+          {path, statements, method, host} = opts
           path = Settings.endpoint.transaction + path
           method = method.toLowerCase()
           for s in statements
             s.resultDataContents = ['row','graph']
             s.includeStats = true
-          @[method]?(path, {statements: statements})
+          @[method]?(path, {statements: statements}, host)
 
         #
         # Convenience methods
         #
+
+        buildStatement: (query, params) ->
+          return {
+            statements: [{
+              statement: query,
+              parameters: params
+            }]
+          }
+
+        runQueryOnCluster: (cluster, query, params) ->
+          q = $q.defer()
+          qs = []
+          that = @
+          cluster.forEach((member) ->
+            s = that.transaction({
+              host: member.address,
+              statements: [{
+                statement: query,
+                parameters: params
+              }]
+            })
+            qs.push(s)
+          )
+          $q.all(qs.map((p) ->
+            return p
+              .then((r) -> {state: 'fulfilled', value: r})
+              .catch((e) -> {state: 'rejected', value: e})
+          )).then((r) ->
+            q.resolve(r)
+          ).catch((e) -> q.reject(e))
+          q.promise
 
         # WARNING: avoid using this, as the raw shell is to be deprecated
         console: (command, engine = "shell") ->

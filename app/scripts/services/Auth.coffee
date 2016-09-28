@@ -113,19 +113,19 @@ angular.module('neo4jApp.services')
         q.promise
 
       makeRequest: (withoutCredentials = no, retainConnection = no) ->
-        ProtocolFactory.getStoredProcedureService().makeRequest(withoutCredentials, retainConnection)
+        ProtocolFactory.utils().makeRequest(withoutCredentials, retainConnection)
 
       forget: ->
         if @getCurrentUser()
           clearConnectionAuthData()
         ConnectionStatusService.setConnected no
-        ProtocolFactory.getStoredProcedureService().clearConnection()
+        ProtocolFactory.utils().clearConnection()
 
       setNewPassword: (old_passwd, new_passwd) ->
         that = @
         q = $q.defer()
         setConnectionAuthData ConnectionStatusService.connectedAsUser(), old_passwd
-        ProtocolFactory.getStoredProcedureService().setNewPassword(ConnectionStatusService.connectedAsUser(), new_passwd)
+        ProtocolFactory.utils().setNewPassword(ConnectionStatusService.connectedAsUser(), new_passwd)
           .then(
             (r) ->
               setConnectionAuthData ConnectionStatusService.connectedAsUser(), new_passwd, emitChange = yes

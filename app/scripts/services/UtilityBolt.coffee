@@ -24,9 +24,10 @@ angular.module('neo4jApp.services')
   .factory 'UtilityBolt', [
     'Bolt'
     'Settings'
+    'Utils'
     '$q'
     '$rootScope'
-    (Bolt, Settings, $q, $rootScope) ->
+    (Bolt, Settings, Utils, $q, $rootScope) ->
       {
         clearConnection: -> Bolt.clearConnection()
         getSchema: ->
@@ -208,5 +209,44 @@ angular.module('neo4jApp.services')
             .then((r) -> q.resolve Bolt.constructResult r)
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
+
+        getClusterOverview: () ->
+          that = @
+          q = $q.defer()
+          Bolt.boltTransaction("CALL dbms.cluster.overview()").promise
+            .then((res) ->
+              r = Bolt.constructResult res
+              cluster = Utils.fakeSingleInstanceCluster r, that.getHost, 'bolt'
+              return q.reject r unless cluster
+              q.resolve cluster
+            )
+            .catch((err) ->
+              e = Bolt.constructResult err
+              cluster = Utils.fakeSingleInstanceCluster e, that.getHost, 'bolt'
+              return q.reject e unless cluster
+              q.resolve cluster
+            )
+          q.promise
+
+        getRunningQueries: (cluster = []) ->
+          q = $q.defer()
+          Bolt.runQueryOnCluster(cluster, 'CALL dbms.listQueries()')
+            .then((r) -> q.resolve(r.map((result) ->
+              return no if result.state isnt 'fulfilled'
+              return Bolt.recursivelyBoltIntToJsNumber Bolt.constructResult result.value
+            )))
+            .catch((e) -> q.reject Bolt.constructResult e)
+          q.promise
+
+        killQuery: (instance, queryId) ->
+          Bolt.runQueryOnCluster([instance], 'CALL dbms.killQuery($id)', {id: queryId})
+
+        getProtocol: -> 'bolt'
+
+        getHost: ->
+          'bolt://' + Bolt.getBoltHost()
+
+        getServerAddress: Utils.getServerAddressByProtocol.bind(null, 'bolt')
+
       }
 ]
