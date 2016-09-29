@@ -22,14 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'SysinfoController', [
-    '$scope', 'Settings', 'ProtocolFactory', 'Features', '$timeout'
-  ($scope, Settings, ProtocolFactory, Features, $timeout) ->
+    '$rootScope', '$scope', '$location', 'Utils', 'Settings', 'ProtocolFactory', 'Features', '$timeout'
+  ($rootScope, $scope, $location, Utils, Settings, ProtocolFactory, Features, $timeout) ->
     $scope.autoRefresh = false
     $scope.sysinfo = {}
     $scope.sysinfo.primitives ?= {}
     $scope.sysinfo.cache ?= { available: false }
     $scope.sysinfo.tx ?= { available: false }
     $scope.sysinfo.ha ?= { }
+    $scope.showConnectOption = no
     $scope.refresh = () ->
       # kernel info from JMX
       $scope.sysinfo.kernel ?= {}
@@ -82,6 +83,7 @@ angular.module('neo4jApp.controllers')
         ProtocolFactory.getStoredProcedureService().getCoreEdgeOverview()
         .then((response) ->
           $scope.sysinfo.ce = response
+          $scope.showConnectOption = response.length > 1
         )
 
     timer = null
@@ -103,5 +105,16 @@ angular.module('neo4jApp.controllers')
       $scope.autoRefresh = !$scope.autoRefresh
       refreshLater()
 
+    $scope.isCurrentConnection = (addresses) ->
+      if Settings.useBolt
+        boltHost = Settings.boltHost || $rootScope.boltHost
+        boltAddressForMember = Utils.getServerAddressByProtocol('bolt', addresses)[0]
+        return boltAddressForMember && boltAddressForMember.includes(boltHost)
+      else
+        Utils.getServerAddressByProtocol($location.protocol(), addresses).includes($location.host)
+
     $scope.refresh()
+
+    $scope.getHttpAddress = (addresses) ->
+      Utils.getServerAddressByProtocol($location.protocol(), addresses)[0]
 ]

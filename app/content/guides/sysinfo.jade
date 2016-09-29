@@ -158,12 +158,15 @@ article.help(ng-controller="SysinfoController")
           table.table.table-condensed
             tr
               th Id
-              th Address
+              th Addresses
               th Role
+              th(ng-if="showConnectOption") Actions
             tr(ng-repeat="member in sysinfo.ce")
               td {{ member.id }}
-              td {{ member.address }}
+              td {{ member.addresses.join(', ')}}
               td {{ member.role }}
+              td(ng-if="showConnectOption")
+                a(ng-if="!isCurrentConnection(member.addresses)", href="{{ getHttpAddress(member.addresses) }}", target='_blank') Connect to this server
 
   footer.tight
     a.help-footer-icon.sl.sl-question-mark.no-out-symbol(target="_blank", href="{{ neo4j.version | neo4jOperationsDoc }}/monitoring/#_available_metrics")

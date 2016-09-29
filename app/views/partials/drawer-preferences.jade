@@ -62,7 +62,7 @@
           a.sl.sl-question-mark(ng-click='openBoltHelp()')
     .form-group
       label(for="boltHost", tooltip="Set host:port for server Bolt interface.", tooltip-placement="top") Bolt host
-        input.form-control.input#initCmd(placeholder="{{defaultBoltHost}}:7687", type='string', ng-model="settings.boltHost", ng-change="save(); updateBoltConnection()")
+        input.form-control.input#initCmd(placeholder="{{ boltHost }}", type='string', ng-model="settings.boltHost", ng-change="save(); updateBoltConnection()")
     .form-group
       label(for="maxExecutionTime", tooltip="Query timeout in seconds.", tooltip-placement="top")
         | Max Execution Time
