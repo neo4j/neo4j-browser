@@ -103,8 +103,8 @@ public class CannedCypherExecutionTest
                                     List<Status.Statement> ignorableStatusCodes = new ArrayList<>();
                                     if ( hasWarningInHtml( cypherElement ) )
                                     {
-                                        ignorableStatusCodes.add( Status.Statement.CartesianProduct );
-                                        ignorableStatusCodes.add( Status.Statement.UnboundedPatternWarning );
+                                        ignorableStatusCodes.add( Status.Statement.CartesianProductWarning );
+                                        ignorableStatusCodes.add( Status.Statement.UnboundedVariableLengthPatternWarning );
                                     }
 
                                     List<Notification> filteredNotifications = new ArrayList<>();
