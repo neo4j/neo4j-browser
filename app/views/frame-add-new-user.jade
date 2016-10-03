@@ -42,3 +42,5 @@ div(fullscreen)
         include partials/error-status-bar-detailed
         include partials/success-status-bar
         include partials/warning-status-bar
+        footer.tight.relative(ng-show="neo4j.clusterRole")
+          small Note: User management events do not propagate across a cluster
