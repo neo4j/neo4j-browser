@@ -237,10 +237,11 @@ var USER_AGENT = "neo4j-javascript/" + _version.VERSION;
  * options are as follows:
  *
  *     {
- *       // Enable TLS encryption. This is on by default in modern NodeJS installs,
+ *       // Encryption level: one of ENCRYPTION_ON, ENCRYPTION_OFF or ENCRYPTION_NON_LOCAL.
+ *       // ENCRYPTION_NON_LOCAL is on by default in modern NodeJS installs,
  *       // but off by default in the Web Bundle and old (<=1.0.0) NodeJS installs
  *       // due to technical limitations on those platforms.
- *       encrypted: true|false,
+ *       encrypted: ENCRYPTION_ON|ENCRYPTION_OFF|ENCRYPTION_NON_LOCAL
  *
  *       // Trust strategy to use if encryption is enabled. There is no mode to disable
  *       // trust other than disabling encryption altogether. The reason for
@@ -254,15 +255,18 @@ var USER_AGENT = "neo4j-javascript/" + _version.VERSION;
  *       // This means that by default, connections "just work" while still giving you
  *       // good encrypted protection.
  *       //
- *       // TRUST_SIGNED_CERTIFICATES is the classic approach to trust verification -
+ *       // TRUST_CUSTOM_CA_SIGNED_CERTIFICATES is the classic approach to trust verification -
  *       // whenever we establish an encrypted connection, we ensure the host is using
  *       // an encryption certificate that is in, or is signed by, a certificate listed
  *       // as trusted. In the web bundle, this list of trusted certificates is maintained
  *       // by the web browser. In NodeJS, you configure the list with the next config option.
- *       trust: "TRUST_ON_FIRST_USE" | "TRUST_SIGNED_CERTIFICATES",
+ *       //
+ *       // TRUST_SYSTEM_CA_SIGNED_CERTIFICATES meand that you trust whatever certificates
+ *       // are in the default certificate chain of th
+ *       trust: "TRUST_ON_FIRST_USE" | "TRUST_SIGNED_CERTIFICATES" | TRUST_CUSTOM_CA_SIGNED_CERTIFICATES | TRUST_SYSTEM_CA_SIGNED_CERTIFICATES,
  *
  *       // List of one or more paths to trusted encryption certificates. This only
- *       // works in the NodeJS bundle, and only matters if you use "TRUST_SIGNED_CERTIFICATES".
+ *       // works in the NodeJS bundle, and only matters if you use "TRUST_CUSTOM_CA_SIGNED_CERTIFICATES".
  *       // The certificate files should be in regular X.509 PEM format.
  *       // For instance, ['./trusted.pem']
  *       trustedCertificates: [],
