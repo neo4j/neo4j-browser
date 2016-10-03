@@ -96,6 +96,7 @@ angular.module('neo4jApp.services')
         q.promise
 
       isConnected: (retainConnection = no) ->
+        that = @
         q = $q.defer()
         p = @makeRequest(withoutCredentials = no, retainConnection)
         p.then(
@@ -105,7 +106,7 @@ angular.module('neo4jApp.services')
         ,
           (rr) ->
             if rr.status is 401
-              clearConnectionAuthData()
+              that.forget()
             q.reject rr
         )
         q.promise
