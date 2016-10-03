@@ -45,7 +45,9 @@ angular.module('neo4jApp.controllers')
 
         $scope.kernel = {}
         $scope.refresh = ->
-          return '' if $scope.unauthorized || $scope.offline
+          if $scope.unauthorized || $scope.offline
+            clearDbInfo()
+            return ''
           $scope.server = Server.info $scope.server
           $scope.host = $window.location.host
           $q.when()
@@ -62,6 +64,18 @@ angular.module('neo4jApp.controllers')
           ).then( ->
             fetchJMX()
           )
+
+        clearDbInfo = ->
+          $scope.procedures = []
+          $scope.labels = []
+          $scope.relationships =[]
+          $scope.propertyKeys = []
+          $scope.kernel = {}
+          $scope.version = null
+          $scope.neo4j.clusterRole = null
+          $scope.user = null
+          $scope.server = null
+          $scope.neo4j.version = null
 
         fetchJMX = ->
           ProtocolFactory.getJmxService().getJmx([
