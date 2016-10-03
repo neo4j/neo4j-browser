@@ -47,7 +47,9 @@ angular.module('neo4jApp.controllers')
 
         $scope.kernel = {}
         $scope.refresh = ->
-          return '' if $scope.unauthorized || $scope.offline
+          if $scope.unauthorized || $scope.offline
+            clearDbInfo()
+            return ''
           $scope.server = Server.info $scope.server
           $scope.host = $location.host()
           $scope.titlebarString = "- #{ConnectionStatusService.connectedAsUser()}@#{$location.host()}:#{$location.port()}"
@@ -79,6 +81,18 @@ angular.module('neo4jApp.controllers')
             else
               $scope.neo4j.clusterRole = no
           )
+
+        clearDbInfo = ->
+          $scope.procedures = []
+          $scope.labels = []
+          $scope.relationships =[]
+          $scope.propertyKeys = []
+          $scope.kernel = {}
+          $scope.version = null
+          $scope.neo4j.clusterRole = null
+          $scope.user = null
+          $scope.server = null
+          $scope.neo4j.version = null
 
         featureCheck = ->
           if 'dbms.security.listUsers' in $scope.procedures
