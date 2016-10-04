@@ -80,7 +80,7 @@ angular.module('neo4jApp.controllers')
             $scope.sysinfo.ha = { clustered: false })
 
       if Features.usingCoreEdge
-        ProtocolFactory.utils().getCoreEdgeOverview()
+        ProtocolFactory.utils().getClusterOverview()
         .then((response) ->
           $scope.sysinfo.ce = response
           $scope.showConnectOption = response.length > 1
@@ -111,7 +111,8 @@ angular.module('neo4jApp.controllers')
         boltAddressForMember = Utils.getServerAddressByProtocol('bolt', addresses)[0]
         return boltAddressForMember && boltAddressForMember is boltHost
       else
-        Utils.getServerAddressByProtocol($location.protocol(), addresses).includes(UtilityREST.getHost())
+        restAddressForMember = Utils.getServerAddressByProtocol($location.protocol(), addresses)[0]
+        return restAddressForMember && restAddressForMember is UtilityREST.getHost()
 
     $scope.refresh()
 
