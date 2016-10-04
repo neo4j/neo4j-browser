@@ -21,9 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 'use strict'
 
 angular.module('neo4jApp.services')
-  .factory('RequestInterceptor', [
+  .factory('HttpInterceptor', [
     'AuthDataService'
-    (AuthDataService) ->
+    '$q'
+    'ConnectionStatusService'
+    (AuthDataService, $q, ConnectionStatusService) ->
       interceptor =
         request: (config) ->
           config.headers['X-Ajax-Browser-Auth'] = true
@@ -35,9 +37,15 @@ angular.module('neo4jApp.services')
           header = AuthDataService.getAuthData()
           if header then config.headers['Authorization'] = "Basic #{header}"
           config
+
+        responseError: (response) ->
+          if response.status is 401
+            ConnectionStatusService.setConnected(no)
+            ConnectionStatusService.clearConnectionAuthData()
+          return $q.reject(response);
       interceptor
 ])
 
 angular.module('neo4jApp.services').config(['$httpProvider', ($httpProvider) ->
-  $httpProvider.interceptors.push 'RequestInterceptor'
+  $httpProvider.interceptors.push 'HttpInterceptor'
 ])

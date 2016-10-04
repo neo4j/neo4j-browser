@@ -50,6 +50,7 @@ angular.module('neo4jApp').run([
           AuthService.isConnected().then(
             ->
               $scope.unauthorized = no
+              $scope.bolt_connection_failure = no
           ,
             (response) ->
               if response.status in [401, 403, 429]
@@ -57,9 +58,11 @@ angular.module('neo4jApp').run([
                 $scope.server_auth_changed = yes unless $scope.unauthorized
                 $scope.offline = no
                 $scope.unauthorized = yes
+                $scope.bolt_connection_failure = no
               else
                 $scope.offline = yes
                 $scope.unauthorized = no
+                $scope.bolt_connection_failure = yes
           ).then(-> $scope.refresh() )
           r
       )
