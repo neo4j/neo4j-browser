@@ -491,7 +491,7 @@ angular.module('neo4jApp')
         pattern = new RegExp("^[^#{cmdchar}]")
         input.match(pattern)
       templateUrl: 'views/frame-cypher.html'
-      exec: ['Cypher', 'CypherGraphModel', 'CypherParser', (Cypher, CypherGraphModel, CypherParser) ->
+      exec: ['Cypher', 'CypherGraphModel', 'CypherParser', 'Utils', (Cypher, CypherGraphModel, CypherParser, Utils) ->
         # Return the function that handles the input
         (input, q) ->
           current_transaction = Cypher.transaction()
@@ -502,7 +502,7 @@ angular.module('neo4jApp')
                   response.displayedSize = Settings.maxRows
                 q.resolve(
                   raw: response.raw
-                  responseTime: response.raw.responseTime
+                  timings: response.raw.timings || Utils.buildTimingObject(response)
                   table: response
                   graph: extractGraphModel(response, CypherGraphModel)
                   notifications: response.notifications || [],

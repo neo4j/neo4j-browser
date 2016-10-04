@@ -88,10 +88,10 @@ div(ng-controller="CypherResultCtrl", fullscreen)
                   p(ng-show="getNonZeroStatisticsFields(frame).length")
                     {{formatStatisticsOutput(updatesStatistics(frame))}}
                   p(ng-show="!getNonZeroStatisticsFields(frame).length")
-                    | (no changes, no rows)
+                    | (no changes, no records)
                 article.help.no-data.has-status-bar(ng-show='!frame.response.table._response.data.length && frame.response.table._response.columns.length')
                   p
-                    | (no rows)
+                    | (no records)
                 neo-table(table-data='frame.response.table', ng-show='frame.response.table._response.data.length')
               .status-bar
                 .status

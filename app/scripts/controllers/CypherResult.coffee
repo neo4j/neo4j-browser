@@ -91,7 +91,7 @@ angular.module('neo4jApp.controllers')
     $scope.resultStatistics = (frame) ->
       if frame?.response
         updatesMessages = []
-        if frame.response.table?._response?.columns?.length
+        if frame.response and expectRecords frame
           updatesMessages = $scope.updatesStatistics frame
         rowsStatistics = $scope.returnedRowsStatistics frame
         messages = [].concat(updatesMessages, rowsStatistics)
@@ -119,8 +119,9 @@ angular.module('neo4jApp.controllers')
           hits
 
         message = "Cypher version: #{root.version}, planner: #{root.planner}, runtime: #{root.runtime}."
-        if collectHits(root)
-          message += " #{collectHits(root)} total db hits in #{frame.response.responseTime} ms."
+        numHits = collectHits(root)
+        if numHits
+          message += " #{numHits} total db #{getHitsString numHits} in #{frame.response.timings.resultAvailableAfter || frame.response.timings.responseTime || 0} ms."
         message
 
     $scope.formatStatisticsOutput = (messages) ->
@@ -130,19 +131,20 @@ angular.module('neo4jApp.controllers')
     $scope.returnedRowsStatistics = (frame) ->
       messages = []
       if frame?.response?.table?
-        messages.push "returned #{frame.response.table.size} #{if frame.response.table.size is 1 then 'row' else 'rows'}"
-        messages = getTimeString frame, messages, 'returnedRows'
+        messages = getTimeString frame, 'returnedRows'
         if (frame.response.table.size > frame.response.table.displayedSize)
           messages.push "displaying first #{frame.response.table.displayedSize} rows"
       messages
 
     $scope.updatesStatistics = (frame) ->
+      return [] unless haveUpdates frame
       messages = []
       if frame?.response?.table?
         stats = frame.response.table.stats
         nonZeroFields = $scope.getNonZeroStatisticsFields frame
         messages = ("#{field.verb} #{stats[field.field]} #{if stats[field.field] is 1 then field.singular else field.plural}" for field in nonZeroFields)
-        messages = getTimeString frame, messages, 'updates'
+        timeString = getTimeString frame, 'updates'
+        messages = if messages.length then [].concat(messages, timeString) else timeString
       messages
 
     $scope.getNonZeroStatisticsFields = (frame) ->
@@ -166,8 +168,10 @@ angular.module('neo4jApp.controllers')
       nonZeroFields
 
     $scope.rawStatistics = (frame) ->
-      return unless frame.response?.responseTime
-      "Request finished in #{frame.response.responseTime} ms."
+      return unless frame.response?.timings
+      if frame.response.timings.type is 'client'
+        return "Request completed in #{frame.response.timings.responseTime} ms."
+      $scope.formatStatisticsOutput getTimeString frame, 'raw'
 
     $scope.getRequestTitle = (num_requests, index) ->
       titles = [
@@ -176,17 +180,51 @@ angular.module('neo4jApp.controllers')
       ]
       titles[num_requests-1][index]
 
-    getTimeString = (frame, messages, context) ->
-      timeMessage = " in #{frame.response.responseTime} ms"
-      if context is 'updates'
-        if messages.length and !frame.response.table._response.columns?.length
-          messages.push "statement executed"
-          messages[messages.length - 1] += timeMessage
+    getRecordString = (num) -> if num is 1 then 'record' else 'records'
+    getHitsString = (num) -> if num is 1 then 'hit' else 'hits'
+    getReturnString = (num) -> "returned #{num} #{getRecordString(num)}"
 
+    getTimeString = (frame, context) ->
+      messages = []
+      return getBoltStatusMessage(frame, context) if frame.response.timings.type is 'bolt'
+      timeMessage = " in #{frame.response.timings.responseTime} ms"
+      if context is 'updates'
+        messages.push(getReturnString(frame.response.table.size))
+        if not expectRecords(frame)
+          messages[messages.length - 1] = "statement completed"
+        messages[messages.length - 1] += timeMessage
       if context is 'returnedRows'
-        if frame.response.table._response.columns?.length or (!frame.response.table._response.columns?.length and !$scope.getNonZeroStatisticsFields(frame).length)
+        if expectRecords(frame) and not haveUpdates(frame)
+          messages.push(getReturnString(frame.response.table.size))
           messages[messages.length - 1] += timeMessage
       messages
+
+    getBoltStatusMessage = (frame, context) ->
+      if context is 'updates' and haveUpdates frame
+        messages = []
+        if not expectRecords frame
+          messages.push "statement completed"
+        messages[messages.length - 1] += " in #{frame.response.timings.resultAvailableAfter} ms"
+        return messages
+      else if ['returnedRows', 'raw'].indexOf(context) > -1
+        if expectRecords(frame) and haveRecords(frame) # records returned
+          statusMessage = "started streaming #{frame.response.table.size} #{getRecordString(frame.response.table.size)} " +
+                          "after #{frame.response.timings.resultAvailableAfter} ms " +
+                          "and completed after #{frame.response.timings.totalTime} ms"
+        else if expectRecords frame # No hits
+          statusMessage = "returned #{frame.response.table.size} #{getRecordString(frame.response.table.size)}, " +
+                        "completed after #{frame.response.timings.resultAvailableAfter} ms"
+        else # No return statement
+          statusMessage = "completed after #{frame.response.timings.resultAvailableAfter} ms"
+        return [statusMessage]
+      return []
+
+    expectRecords = (frame) -> # Did we return something
+      frame.response?.table?._response.columns?.length
+    haveRecords = (frame) ->
+      frame.response.table.size > 0
+    haveUpdates = (frame) ->
+      $scope.getNonZeroStatisticsFields(frame).length
 
     # Listen for export events bubbling up the controller hierarchy
     # and forward them down to the child controller that has access to
