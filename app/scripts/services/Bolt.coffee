@@ -37,7 +37,7 @@ angular.module('neo4jApp.services')
 
       checkConnectionError = (error) ->
         message = error.message || (error.fields && error.fields[0].message)
-        if message.indexOf('WebSocket connection failure') == 0
+        if message.indexOf('WebSocket connection failure') == 0 || message.indexOf('No operations allowed until you send an INIT message successfully') == 0
           $rootScope.check()
 
       getDriverObj = (withoutCredentials = no) ->
