@@ -35,6 +35,11 @@ angular.module('neo4jApp.services')
       _driver = null
       _errorStatus = null
 
+      checkConnectionError = (error) ->
+        message = error.message || (error.fields && error.fields[0].message)
+        if message.indexOf('WebSocket connection failure') == 0 || message.indexOf('No operations allowed until you send an INIT message successfully') == 0
+          $rootScope.check()
+
       _connectDriver = (host, auth, opts) ->
         bolt.driver "bolt://" + host.split("bolt://").join(''), auth, opts
 
@@ -134,6 +139,7 @@ angular.module('neo4jApp.services')
         q = $q.defer()
         session = session || createSession()
         if not session
+          $rootScope.check()
           q.reject getSocketErrorObj()
         else
           if tx
@@ -147,12 +153,14 @@ angular.module('neo4jApp.services')
                   session.close()
                   q.resolve r
                 ).catch((txe) ->
+                  checkConnectionError(txe)
                   q.reject txe
                 )
               else
                 session.close()
                 q.resolve r
             ).catch((e) ->
+              checkConnectionError(txe)
               q.reject e
             )
           else
@@ -161,7 +169,7 @@ angular.module('neo4jApp.services')
               session.close()
               q.resolve r
             ).catch((e) ->
-              console.log e
+              checkConnectionError(e)
               q.reject e
             )
         {tx: tx, promise: q.promise, session: session}

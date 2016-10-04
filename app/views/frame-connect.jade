@@ -10,6 +10,8 @@ div(ng-controller="AuthCtrl")
                 h3 Connect to Neo4j
                 p.lead
                   | Database access requires an authenticated connection.
+                p.warn.warning-message(ng-show="failed_connection_attempts > 2")
+                  | Does your user exist here? Note that user management events do not propagate across a cluster.
               .details.col-sm-9(ng-hide="static_is_authenticated")
                 .form
                   .row
