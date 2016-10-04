@@ -37,7 +37,7 @@ angular.module('neo4jApp.directives')
       scope.listOfKnownRoles = () ->
         scope.listOfAllKnownRoles.filter((role) -> !scope.user.roles.includes(role))
 
-      ProtocolFactory.getStoredProcedureService().getRolesList().then((response) ->
+      ProtocolFactory.utils().getRolesList().then((response) ->
         scope.listOfAllKnownRoles = response
       ).catch((r) -> )
 

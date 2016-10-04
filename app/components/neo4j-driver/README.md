@@ -1,5 +1,6 @@
 # Neo4j Driver for Javascript
 
+
 A database driver for Neo4j 3.0.0+.
 
 Find detailed docs [here](http://neo4j.com/docs/api/javascript-driver/current/).
@@ -13,7 +14,7 @@ bower install neo4j-driver
 ```
 
 ```javascript
-var neo4j = require('neo4j-driver');
+var neo4j = require('neo4j-driver').v1;
 ```
 
 ## Include in web browser
@@ -27,7 +28,7 @@ We build a special browser version of the driver, which supports connecting to N
 This will make a global `neo4j` object available, where you can access the `v1` API at `neo4j.v1`:
 
 ```javascript
-var driver = neo4j.v1.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
+var driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
 ```
 
 ## Usage examples
@@ -43,10 +44,10 @@ var session = driver.session();
 
 // Run a Cypher statement, reading the result in a streaming manner as records arrive:
 session
-  .run("MATCH (alice {name : {nameParam} }) RETURN alice.age", { nameParam:'Alice' })
+  .run("MERGE (alice:Person {name : {nameParam} }) RETURN alice.name", { nameParam:'Alice' })
   .subscribe({
     onNext: function(record) {
-      console.log(record);
+     console.log(record._fields);
     },
     onCompleted: function() {
       // Completed!
@@ -60,12 +61,11 @@ session
 // or
 // the Promise way, where the complete result is collected before we act on it:
 session
-  .run("MATCH (alice {name : {nameParam} }) RETURN alice.age", { nameParam:'Alice' })
+  .run("MERGE (james:Person {name : {nameParam} }) RETURN james.name", { nameParam:'James' })
   .then(function(result){
     result.records.forEach(function(record) {
-      console.log(record);
+      console.log(record._fields);
     });
-
     // Completed!
     session.close();
   })
@@ -73,30 +73,40 @@ session
     console.log(error);
   });
 
-  //run statement in a transaction
-  var tx = session.beginTransaction();
-  tx.run("CREATE (alice {name : {nameParam} })", { nameParam:'Alice' });
-  tx.run("MATCH (alice {name : {nameParam} }) RETURN alice.age", { nameParam:'Alice' });
-  //decide if the transaction should be committed or rolled back
-  var success = ...
-  ...
-  if (success) {
-    tx.commit()
-      .subscribe({
-        onCompleted: function() {
-          // Completed!
-          session.close();
-         },
-         onError: function(error) {
-           console.log(error);
-          }
-        });
-   } else {
-     //transaction is rolled black nothing is created in the database
-     tx.rollback();
-   }
+//run statement in a transaction
+var tx = session.beginTransaction();
+tx.run("MERGE (bob:Person {name : {nameParam} }) RETURN bob.name", { nameParam:'Bob' })
+  .subscribe({
+    onNext: function(record) {
+      console.log(record._fields);
+      },
+    onCompleted: function() {
+      // Completed!
+      session.close();
+    },
+    onError: function(error) {
+      console.log(error);
+    }
+  });
+  
+//decide if the transaction should be committed or rolled back
+var success = false;
 
-
+if (success) {
+  tx.commit()
+    .subscribe({
+      onCompleted: function() {
+        // Completed!
+      },
+      onError: function(error) {
+        console.log(error);
+        }
+      });
+  } else {
+  //transaction is rolled black and nothing is created in the database
+  console.log('rolled back');
+  tx.rollback();
+}
 ```
 
 ## Building
@@ -163,4 +173,4 @@ var integerAsString = aLargerInteger.toString();
 ```
 
 To help you work with Integers, the Integer class exposes a large set of arithmetic methods.
-Refer to the Integer API docs for details.
+Refer to the [Integer API docs](http://neo4j.com/docs/api/javascript-driver/current/class/src/v1/integer.js~Integer.html) for details.

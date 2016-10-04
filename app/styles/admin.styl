@@ -3,6 +3,8 @@
 .admin
   .no-min-height
     min-height: initial !important
+  &.right-padded
+    padding-right: 40px
   [exec-topic]
     background-color: #F8F8F8
     border-radius: 3px
@@ -22,6 +24,11 @@
     padding: 3px 6px 0 6px
   table
     margin-bottom: auto
+    &.table-margin
+      margin: 20px 10px
+      overflow: hidden
+    &.table-fixed
+      table-layout: fixed
     .span-all
       colspan: 100%
     th, tr, td
@@ -30,6 +37,9 @@
       vertical-align: middle
       label
         font-weight: normal
+      &.truncate
+        overflow: hidden
+        text-overflow: ellipsis
   .select
     display: inline-block
 

@@ -44,6 +44,11 @@ script(id="inspector/label.html", type="text/ng-template")
           a(ng-bind="iconCode['icon-code']"
           ng-class='{active: iconCode["icon-code"] == item.style.props["icon-code"]}'
           ng-click='selectIcon(item, iconCode)')
+        li
+          a(ng-bind="'No icon'"
+          ng-class='{active: "" == item.style.props["icon-code"]}'
+          ng-click='selectIcon(item, {"icon-code":""})'
+          class='no-icon')
     li.attributes
       ul.list-inline
         li Caption:

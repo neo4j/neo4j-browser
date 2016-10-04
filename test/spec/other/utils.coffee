@@ -199,3 +199,12 @@ describe 'Utils', () ->
     input.forEach((v, i) ->
       expect(Utils.findNumberInVal(v, [transformFn])).toEqual(expected[i])
     )
+
+  it 'should fake a single instance cluster if not a cluster', ->
+    r = null
+    getHost = -> 'hello'
+    expect(Utils.fakeSingleInstanceCluster r, getHost, null).toEqual([{addresses: [getHost()]}])
+
+    r = {data: {errors: [{code: 'Neo.ClientError.Procedure.ProcedureNotFound'}]}}
+    getHost = -> 'hello'
+    expect(Utils.fakeSingleInstanceCluster r, getHost, null).toEqual([{addresses: [getHost()]}])

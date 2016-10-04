@@ -206,6 +206,8 @@ table.json-object
     right: 0
     position: absolute
     overflow-y: auto
+    &.has-statusbar
+      padding-bottom: 39px
     .view-result-graph
       width: 100%
       height: 100%
@@ -238,6 +240,7 @@ table.json-object
           position: relative
           height: 100%
     .view-result-table
+      background-color: #fff
       .table-holder
         padding-bottom: (middlebar-height - 1)
         background: #fff
@@ -271,6 +274,10 @@ table.json-object
     max-height: none;
   .left-frame-toggle
     display: none
+
+.scrolling
+  overflow: auto
+  padding-bottom: 39px
 
 .toggle
   ball-size = 20px
@@ -336,6 +343,7 @@ table.json-object
           width: ball-size+4
           &.left-text
             text-align: left
+            color: #9b9da2
           &.right-text
             text-align: right
         .handle
@@ -668,3 +676,18 @@ span.error
 
 .clearfix
   clearfix()
+
+.oneline
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+.hover-pointer
+  cursor: pointer
+
+.relative
+  position: relative
+
+.frame-loading
+  text-align: center
+  padding-top: 60px

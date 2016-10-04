@@ -115,7 +115,13 @@ module.exports = (grunt) ->
         files: 'app/styles/**/*.styl',
         tasks: ["stylus"]
       livereload:
-        files: ["<%= yeoman.app %>/{,*/}*.html", "{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css", "{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js", "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}"]
+        files: [
+          "<%= yeoman.app %>/{,*/}*.html",
+          "{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css",
+          "{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js",
+          "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}",
+          "!.tmp/scripts/settings.js"
+        ]
         tasks: ["string-replace"]
         options:
           livereload: true

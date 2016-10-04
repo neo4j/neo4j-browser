@@ -35,20 +35,56 @@ angular.module('neo4jApp.services')
       _driver = null
       _errorStatus = null
 
-      getDriverObj = (withoutCredentials = no) ->
-        authData = AuthDataService.getPlainAuthData()
-        host = Settings.boltHost || $rootScope.boltHost
+      _connectDriver = (host, auth, opts) ->
+        bolt.driver "bolt://" + host.split("bolt://").join(''), auth, opts
+
+      _shouldEncryptConnection = ->
         encrypted = if $location.protocol() is 'https' then yes else no
-        [_m, username, password] = if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
+
+      _getAuthData = ->
+        authData = AuthDataService.getPlainAuthData()
+        if authData then authData.match(/^([^:]+):(.*)$/) else ['','','']
+
+      runQueryOnCluster = (cluster, query, params = {}) ->
+        q = $q.defer()
+        qs = []
+        [_m, username, password] = _getAuthData()
+        cluster.forEach((member) ->
+          d = _connectDriver(
+            member.address,
+            bolt.auth.basic(username, password),
+            {encrypted: _shouldEncryptConnection()}
+          )
+          s = d.session()
+          qs.push(s.run(query, params).then((r) ->
+            d.close()
+            return r
+          ))
+        )
+        $q.all(qs.map((p) ->
+          return p
+            .then((r) -> {state: 'fulfilled', value: r})
+            .catch((e) -> {state: 'rejected', value: e})
+        )).then((r) ->
+          q.resolve(r)
+        ).catch((e) -> q.reject(e))
+        q.promise
+
+      getBoltHost = ->
+        Settings.boltHost || $rootScope.boltHost
+
+      getDriverObj = (withoutCredentials = no) ->
+        host = getBoltHost()
+        [_m, username, password] = _getAuthData()
         if withoutCredentials
-          driver = bolt.driver("bolt://" + host, bolt.auth.basic('', ''), {encrypted: encrypted})
+          driver = _connectDriver host, bolt.auth.basic('', ''), {encrypted: _shouldEncryptConnection()}
         else
-          driver = bolt.driver("bolt://" + host, bolt.auth.basic(username, password), {encrypted: encrypted})
+          driver = _connectDriver host, bolt.auth.basic(username, password), {encrypted: _shouldEncryptConnection()}
         driver
 
-      testConnection = (withoutCredentials = no) ->
+      testConnection = (withoutCredentials = no, driver = null) ->
         q = $q.defer()
-        driver = getDriverObj withoutCredentials
+        driver = driver || getDriverObj withoutCredentials
         driver.onError = (e) ->
           if e instanceof Event and e.type is 'error'
             q.reject getSocketErrorObj()
@@ -125,6 +161,7 @@ angular.module('neo4jApp.services')
               session.close()
               q.resolve r
             ).catch((e) ->
+              console.log e
               q.reject e
             )
         {tx: tx, promise: q.promise, session: session}
@@ -352,14 +389,15 @@ angular.module('neo4jApp.services')
         }
 
       boltStatsToRESTStats = (summary) ->
-        return {} unless summary and summary.updateStatistics
-        stats = summary.updateStatistics._stats
+        counters = summary.counters
+        return {} unless summary and counters
+        stats = counters._stats
         newStats = {}
         Object.keys(stats).forEach((key) ->
           newKey = key.replace(/([A-Z]+)/, (m) -> '_' + m.toLowerCase())
           newStats[newKey] = stats[key]
         )
-        newStats['contains_updates'] = summary.updateStatistics.containsUpdates()
+        newStats['contains_updates'] = counters.containsUpdates()
         newStats
 
       getSocketErrorObj = ->
@@ -374,11 +412,18 @@ angular.module('neo4jApp.services')
           }]
         }
 
+      recursivelyBoltIntToJsNumber = (any) ->
+        test = (n) -> bolt.isInt n
+        operation = (n) -> n.toNumber()
+        Utils.transformWhatInVal any, test, [operation]
+
       $rootScope.$on 'connection:authdata_updated', () ->
         connect()
 
       return {
+        getBoltHost: getBoltHost,
         bolt: bolt,
+        runQueryOnCluster: runQueryOnCluster,
         testConnection: testConnection,
         connect: connect,
         beginTransaction: beginTransaction,
@@ -399,5 +444,6 @@ angular.module('neo4jApp.services')
         constructJmxResult: jmxResultToRESTResult
         constructVersionResult: versionResultToRESTResult
         clearConnection: clearConnection
+        recursivelyBoltIntToJsNumber: recursivelyBoltIntToJsNumber
       }
   ]
