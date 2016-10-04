@@ -32,8 +32,9 @@ angular.module('neo4jApp.directives')
       if topic
         element.on 'click', (e) ->
           e.preventDefault()
-
-          topic = topic.toLowerCase().trim().replace('-', ' ')
+          topic = topic.trim()
+          if not /^https?:\/\//i.test(topic) # Lowercase and remove '-' from all local links
+            topic = topic.toLowerCase().replace('-', ' ')
           Frame.create(input: "#{Settings.cmdchar}#{command} #{topic}")
 
           $rootScope.$apply() unless $rootScope.$$phase
