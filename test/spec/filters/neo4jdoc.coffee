@@ -47,22 +47,13 @@ describe 'Filter: neo4jdoc', () ->
     text = '3.0.0'
     expect(neo4jdoc text).toBe '3.0'
 
-  it 'should return "X.Y-MX" version on milestones', () ->
-    text = '3.0.1-M01'
-    expect(neo4jdoc text).toBe '3.0-M01'
-
-  it 'should return "X.Y-SNAPSHOT" for snapshot versions', () ->
-    text = '3.0.0-SNAPSHOT'
-    expect(neo4jdoc text).toBe '3.0-SNAPSHOT'
-
-  it 'should return "X.Y-RCZ" for RC releases', () ->
-    text = '3.1.0-RC2'
-    expect(neo4jdoc text).toBe '3.1-RC2'
+  it 'should return `beta` if version has a `-`', () ->
+    text = '3.1.0-M10'
+    expect(neo4jdoc text).toBe 'beta'
 
   it 'should return full URL to developer docs', () ->
-    text = '3.1.0-RC2'
-    expect(neo4jdev text).toBe 'http://neo4j.com/docs/developer-manual/3.1-RC2'
-
+    text = '3.1.0'
+    expect(neo4jdev text).toBe 'http://neo4j.com/docs/developer-manual/3.1'
   it 'should return full URL to operations docs', () ->
-    text = '3.1.0-RC2'
-    expect(neo4jops text).toBe 'http://neo4j.com/docs/operations-manual/3.1-RC2'
+    text = '3.1.0'
+    expect(neo4jops text).toBe 'http://neo4j.com/docs/operations-manual/3.1'
