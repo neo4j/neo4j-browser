@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('neo4jApp.controllers')
   .controller 'SysinfoController', [
-    '$rootScope', '$scope', '$location', 'Utils', 'Settings', 'ProtocolFactory', 'Features', '$timeout'
-  ($rootScope, $scope, $location, Utils, Settings, ProtocolFactory, Features, $timeout) ->
+    '$rootScope', '$scope', '$location', 'Utils', 'Settings', 'ProtocolFactory', 'Features', '$timeout', 'UtilityREST', 'UtilityBolt'
+  ($rootScope, $scope, $location, Utils, Settings, ProtocolFactory, Features, $timeout, UtilityREST, UtilityBolt) ->
     $scope.autoRefresh = false
     $scope.sysinfo = {}
     $scope.sysinfo.primitives ?= {}
@@ -107,11 +107,11 @@ angular.module('neo4jApp.controllers')
 
     $scope.isCurrentConnection = (addresses) ->
       if Settings.useBolt
-        boltHost = Settings.boltHost || $rootScope.boltHost
+        boltHost = Utils.ensureFullBoltAddress(UtilityBolt.getHost())
         boltAddressForMember = Utils.getServerAddressByProtocol('bolt', addresses)[0]
-        return boltAddressForMember && boltAddressForMember.includes(boltHost)
+        return boltAddressForMember && boltAddressForMember is boltHost
       else
-        Utils.getServerAddressByProtocol($location.protocol(), addresses).includes($location.host)
+        Utils.getServerAddressByProtocol($location.protocol(), addresses).includes(UtilityREST.getHost())
 
     $scope.refresh()
 

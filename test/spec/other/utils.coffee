@@ -208,3 +208,9 @@ describe 'Utils', () ->
     r = {data: {errors: [{code: 'Neo.ClientError.Procedure.ProcedureNotFound'}]}}
     getHost = -> 'hello'
     expect(Utils.fakeSingleInstanceCluster r, getHost, null).toEqual([{addresses: [getHost()]}])
+
+
+  it 'should extend address with default bolt port', ->
+      host = UUID.generate()
+      expect(Utils.ensureFullBoltAddress("bolt://" + host)).toBe("bolt://" + host + ":7687")
+      expect(Utils.ensureFullBoltAddress("bolt://" + host + ":1234")).toBe("bolt://" + host + ":1234")
