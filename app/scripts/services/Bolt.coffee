@@ -196,7 +196,7 @@ angular.module('neo4jApp.services')
 
       constructCoreEdgeOverview = (r) ->
         return null unless r.records
-        entries = r.records.map((entry)-> {id: entry.get('id'), address: entry.get('address'), role: entry.get('role')})
+        entries = r.records.map((entry)-> {id: entry.get('id'), addresses: entry.get('addresses'), role: entry.get('role')})
         return entries
 
       getClusterRole = (r) ->
