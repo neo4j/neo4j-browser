@@ -73,9 +73,9 @@ angular.module('neo4jApp.services')
           path = host + path unless path.indexOf(host) is 0
           $http.get(path, options or httpOptions)
 
-        post: (path = '', data, host = Settings.host) ->
+        post: (path = '', data, opts, host = Settings.host) ->
           path = host + path unless path.indexOf(host) is 0
-          $http.post(path, data, httpOptions)
+          $http.post(path, data, angular.extend(httpOptions, opts))
 
         put: (path = '', data, host = Settings.host) ->
           path = host + path unless path.indexOf(host) is 0
@@ -94,7 +94,7 @@ angular.module('neo4jApp.services')
           for s in statements
             s.resultDataContents = ['row','graph']
             s.includeStats = true
-          @[method]?(path, {statements: statements}, host)
+          @[method]?(path, {statements: statements}, {addAuthHeader: opts.addAuthHeader}, host)
 
         #
         # Convenience methods
@@ -114,6 +114,7 @@ angular.module('neo4jApp.services')
           that = @
           cluster.forEach((member) ->
             s = that.transaction({
+              addAuthHeader: yes,
               host: member.address,
               statements: [{
                 statement: query,
