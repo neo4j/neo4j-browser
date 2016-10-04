@@ -211,6 +211,21 @@ class neo.helpers
       )
       out
 
+    @ensureFullBoltAddress = (address) ->
+      URLREGEX = new RegExp(["([^/]+//)",
+        "([^:/?#]*)",
+        "(?::([0-9]+))?",
+        ".*"].join(""))
+      scheme = address.match(URLREGEX)[1]
+      return address unless scheme is "bolt://"
+      port = address.match(URLREGEX)[3] || 7687
+      host = address.match(URLREGEX)[2]
+      everythingElse = address.match(URLREGEX)[4]
+      everythingElse = if everythingElse then everythingElse + "/"  else ''
+      return scheme + host + ":" + port  + everythingElse
+
+
+
     @getServerAddressByProtocol = (protocol, addresses = []) ->
       f = addresses.filter((a) -> a.indexOf(protocol + ':') is 0)
       f || undefined
