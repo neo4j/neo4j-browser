@@ -35,6 +35,7 @@ angular.module('neo4jApp.controllers')
       $scope.username = 'neo4j'
       $scope.password = ''
       $scope.current_password = ''
+      $scope.failed_connection_attempts = 0
       $scope.connection_summary = ConnectionStatusService.getConnectionStatusSummary()
       $scope.static_user = $scope.connection_summary.user
       $scope.static_host = Utils.getServerHostname(Settings)
@@ -93,6 +94,7 @@ angular.module('neo4jApp.controllers')
             if r.status is 403 and r.data.password_change?.length
               $scope.current_password = $scope.password
               return $scope.password_change_required = true
+            $scope.failed_connection_attempts = $scope.failed_connection_attempts + 1
             $scope.frame.setError r
         )
 
