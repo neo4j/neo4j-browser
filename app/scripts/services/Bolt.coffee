@@ -397,8 +397,8 @@ angular.module('neo4jApp.services')
         }
 
       boltStatsToRESTStats = (summary) ->
+        return {} unless summary and summary.counters
         counters = summary.counters
-        return {} unless summary and counters
         stats = counters._stats
         newStats = {}
         Object.keys(stats).forEach((key) ->
