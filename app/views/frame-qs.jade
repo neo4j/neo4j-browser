@@ -36,7 +36,7 @@ div(ng-controller="QueryStatusCtrl")
                     td.relative 
                       span 
                         a.sl.sl-minus-circle(ng-hide="query.confirmKill", ng-click='query.confirmKill = true', tooltip="Kill query")
-                        a.sl.sl-arrow-circle-right(ng-show="query.confirmKill", ng-click='killQuery(query.clusterMember, query.queryId)', tooltip="Confirm Kill query")
+                        a.sl.sl-arrow-circle-right(ng-show="query.confirmKill", ng-click='killQuery(query.clusterMember, query.queryId)', tooltip="Confirm")
                         a.sl.sl-delete-circle(ng-show="query.confirmKill", ng-click="query.confirmKill = false", tooltip="Cancel")
                       .fa.overflow-indicator.hover-pointer(
                         style="position: absolute; right: 2px", 

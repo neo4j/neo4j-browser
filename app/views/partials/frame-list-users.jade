@@ -33,7 +33,7 @@ table.table.table-condensed
       td
         span(ng-show="notCurrentUser(user.username)")
           a.sl.sl-minus-circle(ng-hide="user.confirmDelete", ng-click='user.confirmDelete = true', tooltip="Delete")
-          a.sl.sl-arrow-circle-right(ng-show="user.confirmDelete", ng-click='delete(user.username)', tooltip="Confirm Delete")
+          a.sl.sl-arrow-circle-right(ng-show="user.confirmDelete", ng-click='delete(user.username)', tooltip="Confirm")
           a.sl.sl-delete-circle(ng-show="user.confirmDelete", ng-click="user.confirmDelete = false", tooltip="Cancel")
     tr
       td(colspan="5")
