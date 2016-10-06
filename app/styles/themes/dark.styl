@@ -33,18 +33,28 @@ body.theme-dark
     &:hover
       color: color-link-hover
       text-decoration: none
-
+    &[play-topic], &[help-topic], &[server-topic], &[exec-topic], &[target], &.warn, &[play-icon]
+      background-color: transparent !important
 
   #incompatible
     background-color: #fff
 
-  table.json-object
-    background-color: #eee;
-    tbody
-      tr
-        background-color: transparent;
-        td, th
-          color: #666;
+  table
+    &.data
+      tbody
+        tr
+          background-color: transparent !important
+    &.table-striped
+      tbody
+        tr:nth-of-type(odd)
+          background-color: transparent !important
+    &.json-object
+      background-color: #eee
+      tbody
+        tr
+          background-color: transparent !important
+          td, th
+            color: #666
 
   .status-bar-wrapper
     display: none
@@ -104,11 +114,18 @@ body.theme-dark
   .connection-error
     #error
       display: block
-
   #stream
     .frame
-      .view-result .view-result-graph
+      .inner
         background-color: tertiary-background-color
+      footer.tight
+        background-color: transparent !important
+      .view-result
+        background-color: secondary-background-color !important
+        .panel
+          background-color: inherit
+        .view-result-graph, .view-result-table, .request-card, .table-holder
+          background-color: secondary-background-color !important
 
       .code-bar
         .code
