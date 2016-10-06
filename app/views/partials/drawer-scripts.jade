@@ -29,8 +29,8 @@
       ul(ng-show='folder.expanded', ng-class="{'indented': folder.id != 'root'}")
         li(ng-repeat="document in folder.documents")
           .list-item(ng-click='run(document)')
-            a.fa.icon.fa-circle-thin(ng-click='playDocument(document.content);$event.stopPropagation()')
-            a.fa.fa-play-circle.icon-inactive(ng-click='playDocument(document.content);$event.stopPropagation()')
+            a.fa.icon.fa-circle-thin(ng-if="!document.not_executable",ng-click='playDocument(document.content);$event.stopPropagation()')
+            a.fa.fa-play-circle.icon-inactive(ng-if="!document.not_executable", ng-click='playDocument(document.content);$event.stopPropagation()')
             .contents
               a {{document.content | autotitle}}
 

@@ -149,71 +149,40 @@ RETURN labels(n) as from,
         {
           folder: 'procedures'
           content: """
-  // List labels
-  CALL db.labels()
+  // List functions
+  CALL dbms.functions()
           """
         }
         {
           folder: 'procedures'
           content: """
-  // List relationship types
-  CALL db.relationshipTypes()
+  // Show meta-graph
+  CALL db.schema()
           """
         }
         {
           folder: 'procedures'
           content: """
-  // List properties keys
-  CALL db.propertyKeys()
+  // List running queries
+  CALL dbms.listQueries()
           """
         }
         {
-          folder: 'procedures'
+          folder: 'procedures',
+          not_executable: true,
           content: """
-  // List indexes
-  CALL db.indexes()
+  // Wait for index to come online
+  // E.g. db.awaitIndex(":Person(name)"))
+  CALL db.awaitIndex(<param>)
           """
         }
         {
-          folder: 'procedures'
+          folder: 'procedures',
+          not_executable: true,
           content: """
-  // List constraints
-  CALL db.constraints()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List components
-  CALL dbms.components()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // Show current user
-  CALL dbms.security.showCurrentUser()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List users
-  CALL dbms.security.listUsers()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List connectionss
-  CALL dbms.security.listConnections()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List transactions
-  CALL dbms.security.listTransactions()
+  // Schedule resampling of an index
+  // E.g. db.resampleIndex(":Person(name)"))
+  CALL db.resampleIndex(<param>)
           """
         }
       ]
