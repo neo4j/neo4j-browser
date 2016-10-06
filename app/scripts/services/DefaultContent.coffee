@@ -186,64 +186,15 @@ RETURN labels(n) as from,
         {
           folder: 'procedures'
           content: """
-  // List labels
-  CALL db.labels()
+  // List functions
+  CALL dbms.functions()
           """
         }
         {
           folder: 'procedures'
           content: """
-  // List relationship types
-  CALL db.relationshipTypes()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List properties keys
-  CALL db.propertyKeys()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List indexes
-  CALL db.indexes()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List constraints
-  CALL db.constraints()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List components
-  CALL dbms.components()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // Show current user
-  CALL dbms.security.showCurrentUser()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List users
-  CALL dbms.security.listUsers()
-          """
-        }
-        {
-          folder: 'procedures'
-          content: """
-  // List connections
-  CALL dbms.security.listConnections()
+  // Show meta-graph
+  CALL db.schema()
           """
         }
         {
@@ -251,6 +202,24 @@ RETURN labels(n) as from,
           content: """
   // List running queries
   CALL dbms.listQueries()
+          """
+        }
+        {
+          folder: 'procedures',
+          not_executable: true,
+          content: """
+  // Wait for index to come online
+  // E.g. db.awaitIndex(":Person(name)"))
+  CALL db.awaitIndex(<param>)
+          """
+        }
+        {
+          folder: 'procedures',
+          not_executable: true,
+          content: """
+  // Schedule resampling of an index
+  // E.g. db.resampleIndex(":Person(name)"))
+  CALL db.resampleIndex(<param>)
           """
         }
       ]
