@@ -37,14 +37,14 @@ angular.module('neo4jApp.services')
           folder: 'basics'
           content: """
   // Hello World!
-  CREATE (n {name:"World"}) RETURN "hello", n.name
+  CREATE (database:Database {name:"Neo4j"})-[r:SAYS]->(message:Message {name:"Hello World!"}) RETURN database, message, r
           """
         }
         {
           folder: 'basics'
           content: """
   // Get some data
-  MATCH (n) OPTIONAL MATCH (n)-[r]-() RETURN n,r LIMIT 100
+  MATCH (n1)-[r]->(n2) RETURN r, n1, n2 LIMIT 25
           """
         }
         {
@@ -55,7 +55,7 @@ angular.module('neo4jApp.services')
   // Replace:
   //   'LabelName' with label to index
   //   'propertyKey' with property to be indexed
-  CREATE INDEX ON :LabelName(propertyKey)
+  CREATE INDEX ON :<LabelName>(<propertyKey>)
           """
         }
         {
@@ -66,7 +66,7 @@ angular.module('neo4jApp.services')
   // Replace:
   //   'LabelName' with node label
   //   'propertyKey' with property that should be unique
-  CREATE CONSTRAINT ON (n:LabelName) ASSERT n.propertyKey IS UNIQUE
+  CREATE CONSTRAINT ON (n:<LabelName>) ASSERT n.<propertyKey> IS UNIQUE
           """
         }
       ]
@@ -108,17 +108,28 @@ max(size( (n)-[]-() ) ) as Max_RelationshipCount
           folder: 'profile'
           content: """
 // What is related, and how
-// Sample the graph, reporting the patterns of connected labels,
-// with min, max, avg degrees and associated node and relationship properties.
-MATCH (n) where rand() <= 0.1
-MATCH (n)-[r]->(m)
-WITH n, type(r) as via, m
-RETURN labels(n) as from,
-   reduce(keys = [], keys_n in collect(keys(n)) | keys + filter(k in keys_n WHERE NOT k IN keys)) as props_from,
-   via,
-   labels(m) as to,
-   reduce(keys = [], keys_m in collect(keys(m)) | keys + filter(k in keys_m WHERE NOT k IN keys)) as props_to,
-   count(*) as freq
+CALL db.schema()
+          """
+        }
+        {
+          folder: 'profile'
+          content: """
+  // List node labels
+  CALL db.labels()
+          """
+        }
+        {
+          folder: 'profile'
+          content: """
+  // List relationship types
+  CALL db.relationshipTypes()
+          """
+        }
+        {
+          folder: 'profile'
+          content: """
+  // Display contraints and indexes
+  :schema
           """
         }
       ]
