@@ -138,43 +138,6 @@ RETURN labels(n) as from,
         }
       ]
 
-      system_scripts = [
-        {
-          folder: 'system'
-          content: """
-  // Server configuration
-  :GET /db/manage/server/jmx/domain/org.neo4j/instance%3Dkernel%230%2Cname%3DConfiguration
-          """
-        }
-        {
-          folder: 'system'
-          content: """
-  // Kernel information
-  :GET /db/manage/server/jmx/domain/org.neo4j/instance%3Dkernel%230%2Cname%3DKernel
-          """
-        }
-        {
-          folder: 'system'
-          content: """
-  // ID Allocation
-  :GET /db/manage/server/jmx/domain/org.neo4j/instance%3Dkernel%230%2Cname%3DPrimitive%20count
-          """
-        }
-        {
-          folder: 'system'
-          content: """
-  // Store file sizes
-  :GET /db/manage/server/jmx/domain/org.neo4j/instance%3Dkernel%230%2Cname%3DStore%20file%20sizes
-          """
-        }
-        {
-          folder: 'system'
-          content: """
-  // Extensions
-  :GET /db/data/ext
-          """
-        }
-      ]
       procedure_scripts = [
         {
           folder: 'procedures'
@@ -259,7 +222,7 @@ RETURN labels(n) as from,
       class DefaultContent
         constructor: ->
         getDefaultDocuments: ->
-          basic_scripts.concat example_graphs.concat profile_scripts.concat system_scripts
+          basic_scripts.concat example_graphs.concat profile_scripts
         resetToDefault: ->
           Document.reset()
         loadDefaultIfEmpty: ->
@@ -281,12 +244,6 @@ RETURN labels(n) as from,
               name: "Data Profiling"
               expanded: no
               documents: profile_scripts
-            }
-            {
-              id: "system"
-              name: "System"
-              expanded: no
-              documents: system_scripts
             }
             {
               id: "procedures"
