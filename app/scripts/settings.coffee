@@ -51,7 +51,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     initCmd: ":play start"
     refreshInterval: 10 # in seconds
     userName: "Graph Friend"
-    theme: "normal"
+    theme: "colorful"
     retainConnectionCredentials: yes
     shouldReportUdc: no
     experimentalFeatures: no

@@ -80,7 +80,19 @@ module.exports = (grunt) ->
   try
     yeomanConfig.app = require("./component.json").appPath or yeomanConfig.app
 
+  customSettings = require("./custom/settings.json") or {}
 
+  customSettingsReplacements = []
+
+  for k,v of customSettings
+    if typeof v is 'string'
+      replacedValue = "\"#{v}\""
+    else
+      replacedValue = v
+    customSettingsReplacements.push({
+      pattern: ///#{k}:[^,]+,///g,
+      replacement: "#{k}: #{replacedValue},"
+    })
 
   #Start grunt config
   grunt.initConfig
@@ -88,7 +100,7 @@ module.exports = (grunt) ->
     yeoman: yeomanConfig
 
     'string-replace':
-      inline:
+      server:
         files: [
           './.tmp/scripts/settings.js': './.tmp/scripts/settings.js'
         ]
@@ -97,6 +109,12 @@ module.exports = (grunt) ->
             pattern: /discover:[^,]+,/g,
             replacement: 'discover: baseURL + "/root",'
           ]
+      custom:
+        files: [
+          './.tmp/scripts/settings.js': './.tmp/scripts/settings.js'
+        ]
+        options:
+          replacements: customSettingsReplacements
     append:
       coffee:
         header: "copyright/copyright.coffee"
@@ -112,7 +130,7 @@ module.exports = (grunt) ->
         files: ["test/spec/{,*/}*.coffee"]
         tasks: ["coffee:test"]
       stylus:
-        files: 'app/styles/**/*.styl',
+        files: ['app/styles/**/*.styl', 'custom/styles/**/*.styl']
         tasks: ["stylus"]
       livereload:
         files: [
@@ -122,11 +140,11 @@ module.exports = (grunt) ->
           "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}",
           "!.tmp/scripts/settings.js"
         ]
-        tasks: ["string-replace"]
+        tasks: ["string-replace:inline"]
         options:
           livereload: true
       jade:
-        files: ['app/index.jade', 'app/views/**/*.jade', 'app/content/**/*.jade']
+        files: ['app/index.jade', 'app/views/**/*.jade', 'app/content/**/*.jade', 'custom/content/**/*.jade']
         tasks: ['jade']
 
     connect:
@@ -144,7 +162,11 @@ module.exports = (grunt) ->
           port: 9000
           hostname: "0.0.0.0"
           middleware: (connect) ->
-            [proxySnippet, require('connect-livereload')(), mountFolder(connect, ".tmp"), mountFolder(connect, yeomanConfig.app)]
+            [ proxySnippet, require('connect-livereload')(),
+              mountFolder(connect, ".tmp"),
+              mountFolder(connect, "custom"),
+              mountFolder(connect, yeomanConfig.app)
+            ]
         proxies: standardProxies
       livereloadhttps:
         options:
@@ -231,6 +253,7 @@ module.exports = (grunt) ->
           '<%= yeoman.app %>/styles/main.css': [
             '<%= yeoman.app %>/styles/*.styl',
             '<%= yeoman.app %>/styles/themes/*.styl'
+            'custom/styles/**/*.styl'
           ]
       options:
         paths: ["<%= yeoman.app %>/vendor/foundation", "<%= yeoman.app %>/images"]
@@ -250,13 +273,12 @@ module.exports = (grunt) ->
           pretty: true
           basePath: "<%= yeoman.app %>/views/"
       content:
-        src: ["<%= yeoman.app %>/content/**/*.jade"]
+        src: ["<%= yeoman.app %>/content/**/*.jade", "custom/content/**/*.jade"]
         dest: "<%= yeoman.app %>/content"
         options:
           client: false
           pretty: true
           basePath: "<%= yeoman.app %>/content/"
-
     concat:
       dist:
         files: {}
@@ -287,6 +309,14 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: "<%= yeoman.app %>"
+          src: ["*.html", "views/**/*.html", "content/**/*.html"]
+          dest: "<%= yeoman.dist %>"
+        ]
+      custom:
+        options: {}
+        files: [
+          expand: true
+          cwd: "./custom"
           src: ["*.html", "views/**/*.html", "content/**/*.html"]
           dest: "<%= yeoman.dist %>"
         ]
@@ -340,7 +370,7 @@ module.exports = (grunt) ->
   grunt.registerTask "server", ["clean:server", "coffee", "configureProxies:livereload", "stylus", "jade", "string-replace", "connect:livereload", "watch"]
   grunt.registerTask "server:tls", ["clean:server", "coffee", "configureProxies:livereloadhttps", "stylus", "jade", "string-replace", "connect:livereloadhttps", "watch"]
   grunt.registerTask "test", ["clean:server", "coffee", "connect:test", "karma", "exec:csv_test_prep"]
-  grunt.registerTask "build", ["clean:dist", "coffee", "test", "jade", "stylus", "useminPrepare", "concat", "copy", "imagemin", "cssmin", "htmlmin", "uglify", "rev", "usemin", "replace"]
+  grunt.registerTask "build", ["clean:dist", "coffee", "test", "jade", "stylus", "string-replace:custom", "useminPrepare", "concat", "copy", "imagemin", "cssmin", "htmlmin", "uglify", "rev", "usemin", "replace"]
   grunt.registerTask "server:dist", ["build", "configureProxies:dist", "connect:dist:keepalive"]
   grunt.registerTask "default", ["build"]
 
