@@ -249,8 +249,8 @@ RETURN labels(n) as from,
         {
           folder: 'procedures'
           content: """
-  // List transactions
-  CALL dbms.security.listTransactions()
+  // List running queries
+  CALL dbms.listQueries()
           """
         }
       ]
