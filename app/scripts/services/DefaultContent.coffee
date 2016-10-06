@@ -43,6 +43,14 @@ angular.module('neo4jApp.services')
         {
           folder: 'basics'
           content: """
+  // Get some data
+  MATCH (n) OPTIONAL MATCH (n)-[r]-() RETURN n,r LIMIT 100
+          """
+        }
+        {
+          folder: 'basics'
+          not_executable: true,
+          content: """
   // Create an index
   // Replace:
   //   'LabelName' with label to index
@@ -52,19 +60,13 @@ angular.module('neo4jApp.services')
         }
         {
           folder: 'basics'
+          not_executable: true,
           content: """
   // Create unique property constraint
   // Replace:
   //   'LabelName' with node label
   //   'propertyKey' with property that should be unique
   CREATE CONSTRAINT ON (n:LabelName) ASSERT n.propertyKey IS UNIQUE
-          """
-        }
-        {
-          folder: 'basics'
-          content: """
-  // Get some data
-  MATCH (n) OPTIONAL MATCH (n)-[r]-() RETURN n,r LIMIT 100
           """
         }
       ]
