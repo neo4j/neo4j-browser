@@ -242,7 +242,7 @@ RETURN labels(n) as from,
         {
           folder: 'procedures'
           content: """
-  // List connectionss
+  // List connections
   CALL dbms.security.listConnections()
           """
         }
