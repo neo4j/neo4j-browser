@@ -246,6 +246,8 @@ angular.module('neo4jApp.services')
 
       loadRules: (data) ->
         data = provider.defaultStyle unless angular.isObject(data)
+        data.node = provider.defaultStyle.node unless data.node
+        data.relationship = provider.defaultStyle.relationship unless data.relationship
         @rules.length = 0
         for key, props of data
           @rules.push(new StyleRule(parseSelector(key), angular.copy(props)))
