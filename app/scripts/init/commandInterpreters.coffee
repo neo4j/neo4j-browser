@@ -411,8 +411,8 @@ angular.module('neo4jApp')
 
     FrameProvider.interpreters.push
       type: 'tools'
-      templateUrl: 'views/frame-qs.html'
-      matches: "#{cmdchar}qs"
+      templateUrl: 'views/frame-queries.html'
+      matches: "#{cmdchar}queries"
       exec: [ ->
         (input, q) ->
           q.resolve()
