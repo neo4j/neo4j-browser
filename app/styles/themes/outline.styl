@@ -25,7 +25,22 @@ body.theme-outline
   font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif
   background: primary-background-color
   color: primary-text
-
+  .view-result .token
+    &.token-label, &.token-relationship-type
+      border: 1px secondary-border-color solid
+  .outline
+    stroke: primary-text
+    stroke-width: 1px
+  .relationship > .outline
+    stroke: primary-text
+    stroke-width: 1px
+  text.context-menu-item
+    fill: tertiary-text-color
+  .context-menu-item
+    stroke: primary-text
+    stroke-width: 1px
+    text
+      color: yellow
   a
     color: color-link
     &:hover
