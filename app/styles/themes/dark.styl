@@ -21,30 +21,47 @@ tertiary-background-hover = #292e3a
 tertiary-text-hover = #ffffff
 color-link = #f4f4f4
 color-link-hover = #ffffff
-
-
 body.theme-dark
   font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif
   background: primary-background-color
   color: primary-text
-
+  .outline
+    stroke: primary-background-color
+    stroke-width: 1px
+  .relationship > .outline
+    stroke: primary-background-color
+    stroke-width: 1px
+  .context-menu-item
+    stroke: secondary-background-color
+  .relationship
+    text
+      fill: primary-text-color
   a
     color: color-link
     &:hover
       color: color-link-hover
       text-decoration: none
-
-
+    &[play-topic], &[help-topic], &[server-topic], &[exec-topic], &[target], &.warn, &[play-icon]
+      background-color: transparent !important
   #incompatible
     background-color: #fff
 
-  table.json-object
-    background-color: #eee;
-    tbody
-      tr
-        background-color: transparent;
-        td, th
-          color: #666;
+  table
+    &.data
+      tbody
+        tr
+          background-color: transparent !important
+    &.table-striped
+      tbody
+        tr:nth-of-type(odd)
+          background-color: transparent !important
+    &.json-object
+      background-color: #eee
+      tbody
+        tr
+          background-color: transparent !important
+          td, th
+            color: #666
 
   .status-bar-wrapper
     display: none
@@ -104,18 +121,87 @@ body.theme-dark
   .connection-error
     #error
       display: block
-
   #stream
     .frame
-      .view-result .view-result-graph
+      .outer
+        .left-frame-toggle
+          background-color: secondary-background-color !important
+          .btn
+            background-color: secondary-background-color
+            color: secondary-text-color
+            &.active
+              background-color: primary-background-color
+            &:hover
+              background-color: tertiary-background-color !important
+      .inner
         background-color: tertiary-background-color
-
+        .legend
+          background-color: secondary-background-color
+        .status-bar
+          background-color: secondary-background-color !important
+          color: primary-text-color !important
+          .inspector-footer .inspector-footer-row > ul .key
+            color: primary-text-color
+      footer.tight
+        background-color: transparent !important
+      .view-result
+        background-color: secondary-background-color !important
+        .panel
+          background-color: inherit
+        .view-result-graph, .view-result-table, .request-card, .table-holder
+          background-color: secondary-background-color !important
+          .graph-holder
+            background-color: secondary-background-color
+          .token
+            &.token-label, &.token-relationship-type
+              border: 1px primary-background-color solid
       .code-bar
+        background-color: secondary-background-color
         .code
           color: secondary-text-color
+        .dropdown-menu
+          background-color: tertiary-background-color
+  .fullscreen-container
+    .outer
+      .left-frame-toggle
+        background-color: secondary-background-color !important
+        .btn
+          background-color: secondary-background-color
+          color: secondary-text-color
+          &.active
+            background-color: primary-background-color
+          &:hover
+            background-color: tertiary-background-color !important
+    .inner
+      background-color: tertiary-background-color
+      .legend
         background-color: secondary-background-color
-
-
+      .status-bar
+        background-color: secondary-background-color !important
+        color: primary-text-color !important
+        .inspector-footer .inspector-footer-row > ul .key
+          color: primary-text-color
+    footer.tight
+      background-color: transparent !important
+    .view-result
+      background-color: secondary-background-color !important
+      .panel
+        background-color: inherit
+      .view-result-graph, .view-result-table, .request-card, .table-holder
+        background-color: secondary-background-color !important
+        .graph-holder
+          background-color: secondary-background-color
+          .zoom-holder
+            background-color: secondary-background-color
+        .token
+          &.token-label, &.token-relationship-type
+            border: 1px primary-background-color solid
+    .code-bar
+      background-color: secondary-background-color
+      .code
+        color: secondary-text-color
+      .dropdown-menu
+        background-color: tertiary-background-color
   #main
     background-color: primary-background-color
 
