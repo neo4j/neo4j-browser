@@ -28,9 +28,14 @@ body.theme-dark
   .outline
     stroke: primary-background-color
     stroke-width: 1px
+  .relationship > .outline
+    stroke: primary-text-color
+    stroke-width: 1px
   .context-menu-item
     stroke: secondary-background-color
-
+  .relationship
+    text
+      fill: primary-text-color
   a
     color: color-link
     &:hover
@@ -156,6 +161,47 @@ body.theme-dark
           color: secondary-text-color
         .dropdown-menu
           background-color: tertiary-background-color
+  .fullscreen-container
+    .outer
+      .left-frame-toggle
+        background-color: secondary-background-color !important
+        .btn
+          background-color: secondary-background-color
+          color: secondary-text-color
+          &.active
+            background-color: primary-background-color
+          &:hover
+            background-color: tertiary-background-color !important
+    .inner
+      background-color: tertiary-background-color
+      .legend
+        background-color: secondary-background-color
+      .status-bar
+        background-color: secondary-background-color !important
+        color: primary-text-color !important
+        .inspector-footer .inspector-footer-row > ul .key
+          color: primary-text-color
+    footer.tight
+      background-color: transparent !important
+    .view-result
+      background-color: secondary-background-color !important
+      .panel
+        background-color: inherit
+      .view-result-graph, .view-result-table, .request-card, .table-holder
+        background-color: secondary-background-color !important
+        .graph-holder
+          background-color: secondary-background-color
+          .zoom-holder
+            background-color: secondary-background-color
+        .token
+          &.token-label, &.token-relationship-type
+            border: 1px primary-background-color solid
+    .code-bar
+      background-color: secondary-background-color
+      .code
+        color: secondary-text-color
+      .dropdown-menu
+        background-color: tertiary-background-color
   #main
     background-color: primary-background-color
 
