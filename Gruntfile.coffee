@@ -80,11 +80,19 @@ module.exports = (grunt) ->
   try
     yeomanConfig.app = require("./component.json").appPath or yeomanConfig.app
 
-  customSettings = require("./custom/settings.json") or {}
+  customizationName = grunt.option("custom") || 'nothing'
+  customizationBaseDir = "./custom/#{customizationName}/"
+  customization = require("#{customizationBaseDir}/custom.json") or { }
+  customization.basedir = customizationBaseDir
 
+  console.log("customizationName", customizationName)
+  console.log("customization.basedir", customization.basedir)
+  console.log("customization", customization)
+
+  # Prepare string-replace replacement instructions,
+  # based on settings in customization file
   customSettingsReplacements = []
-
-  for k,v of customSettings
+  for k,v of customization.settings
     if typeof v is 'string'
       replacedValue = "\"#{v}\""
     else
@@ -98,6 +106,8 @@ module.exports = (grunt) ->
   grunt.initConfig
 
     yeoman: yeomanConfig
+
+    customization: customization
 
     'string-replace':
       server:
@@ -130,7 +140,7 @@ module.exports = (grunt) ->
         files: ["test/spec/{,*/}*.coffee"]
         tasks: ["coffee:test"]
       stylus:
-        files: ['app/styles/**/*.styl', 'custom/styles/**/*.styl']
+        files: ['app/styles/**/*.styl', '<%= customization.basedir %>/styles/**/*.styl']
         tasks: ["stylus"]
       livereload:
         files: [
@@ -140,11 +150,11 @@ module.exports = (grunt) ->
           "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}",
           "!.tmp/scripts/settings.js"
         ]
-        tasks: ["string-replace:inline"]
+        tasks: ["string-replace:server"]
         options:
           livereload: true
       jade:
-        files: ['app/index.jade', 'app/views/**/*.jade', 'app/content/**/*.jade', 'custom/content/**/*.jade']
+        files: ['app/index.jade', 'app/views/**/*.jade', 'app/content/**/*.jade', '<%= customization.basedir %>/content/**/*.jade']
         tasks: ['jade']
 
     connect:
@@ -164,7 +174,7 @@ module.exports = (grunt) ->
           middleware: (connect) ->
             [ proxySnippet, require('connect-livereload')(),
               mountFolder(connect, ".tmp"),
-              mountFolder(connect, "custom"),
+              mountFolder(connect, "<%= customization.basedir %>"),
               mountFolder(connect, yeomanConfig.app)
             ]
         proxies: standardProxies
@@ -253,7 +263,7 @@ module.exports = (grunt) ->
           '<%= yeoman.app %>/styles/main.css': [
             '<%= yeoman.app %>/styles/*.styl',
             '<%= yeoman.app %>/styles/themes/*.styl'
-            'custom/styles/**/*.styl'
+            '<%= customization.basedir %>/styles/**/*.styl'
           ]
       options:
         paths: ["<%= yeoman.app %>/vendor/foundation", "<%= yeoman.app %>/images"]
@@ -273,7 +283,7 @@ module.exports = (grunt) ->
           pretty: true
           basePath: "<%= yeoman.app %>/views/"
       content:
-        src: ["<%= yeoman.app %>/content/**/*.jade", "custom/content/**/*.jade"]
+        src: ["<%= yeoman.app %>/content/**/*.jade", "<%= customization.basedir %>/content/**/*.jade"]
         dest: "<%= yeoman.app %>/content"
         options:
           client: false
@@ -316,7 +326,7 @@ module.exports = (grunt) ->
         options: {}
         files: [
           expand: true
-          cwd: "./custom"
+          cwd: "<%= customization.basedir %>"
           src: ["*.html", "views/**/*.html", "content/**/*.html"]
           dest: "<%= yeoman.dist %>"
         ]
