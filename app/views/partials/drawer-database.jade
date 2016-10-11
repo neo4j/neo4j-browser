@@ -50,5 +50,9 @@
       .key Size:
       .value {{kernel.TotalStoreSize | humanReadableBytes}}
     li.pair
-      .key Information
+      .key Information:
       a.value(play-topic='sysinfo') sysinfo
+    li.pair
+      .key Query List:
+      a.value(exec-topic='queries') queries
+  
