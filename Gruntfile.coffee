@@ -49,6 +49,7 @@ standardProxies = [{
   }
 }]
 
+
 module.exports = (grunt) ->
 
   grunt.registerMultiTask "append", "Append specified header to source files if it doesn't exists", ->
@@ -82,8 +83,14 @@ module.exports = (grunt) ->
 
   customizationName = grunt.option("custom") || 'nothing'
   customizationBaseDir = "./custom/#{customizationName}/"
-  customization = require("#{customizationBaseDir}/custom.json") or { }
-  customization.basedir = customizationBaseDir
+
+  fs = require('fs')
+  try
+    fs.statSync(customizationBaseDir)
+    customization = require("#{customizationBaseDir}/custom.json")
+    customization.basedir = customizationBaseDir
+  catch error
+    customization = {}
 
   console.log("customizationName", customizationName)
   console.log("customization.basedir", customization.basedir)

@@ -14,9 +14,10 @@ palette-b = #f4f4f4
 palette-c = #6A1D18
 palette-d = #230305
 palette-e = #292e3a
-palette-f = #DEDCB8
+palette-f = #DED6B6
 palette-g = #F4E2B5
-palette-h = #FFFFFF
+palette-h = #D2D2D2
+palette-i = #000000
 
 swatch-a-background-color = palette-a
 swatch-a-text-color = palette-b
@@ -25,12 +26,18 @@ swatch-b-text-color = palette-b
 swatch-c-background-color = palette-d
 swatch-c-text-color = palette-b
 swatch-c-background-hover = palette-e
-swatch-c-text-hover = palette-h
+swatch-c-text-hover = palette-b
 swatch-d-background-color = palette-g
 swatch-d-text-color = palette-d
+swatch-d-border-color = palette-c
+swatch-e-background-color = palette-f
+swatch-e-text-color = palette-i
+swatch-e-border-color = palette-h
 
 color-link = swatch-a-text-color
 color-link-hover = swatch-c-text-hover
+code-text-color = swatch-e-text-color
+code-background-color = swatch-e-background-color
 drawer-color-fg = palette-f
 drawer-color-bg = swatch-b-background-color
 navbar-color-bg = swatch-c-background-color
@@ -53,6 +60,13 @@ body.theme-autumnal
   #incompatible
     background-color: #fff
 
+  .table > tbody
+    background-color: swatch-d-background-color
+    color: swatch-d-text-color
+    tr
+      th, td
+        border-color: swatch-d-border-color
+
   table.json-object
     background-color: #eee;
     tbody
@@ -64,8 +78,10 @@ body.theme-autumnal
   .status-bar-wrapper
     display: none
   .status-bar
-    color: rgb(120, 129, 133)
-    background-color: #FFF
+    color: swatch-d-text-color
+    background-color: swatch-d-background-color
+    border-color: swatch-d-border-color
+
     .status
 
     .popover.bottom
@@ -138,10 +154,19 @@ body.theme-autumnal
   #main
     background-color: swatch-a-background-color
 
+    code
+      color: code-text-color
+      background-color: code-background-color
+
+    .admin, .view-result
+      [exec-topic], [help-topic], [play-topic]
+        color: code-text-color
+        background-color: code-background-color
+
     .hero-unit
       background-color: swatch-c-background-color
 
-    article.guide, article.help, article.guide, pre
+    article.guide, article.help, article.guide, pre, article.admin
       color: frame-text-color
       background-color: frame-background-color
       // p
