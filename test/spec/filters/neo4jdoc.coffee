@@ -49,11 +49,20 @@ describe 'Filter: neo4jdoc', () ->
 
   it 'should return `beta` if version has a `-`', () ->
     text = '3.1.0-M10'
-    expect(neo4jdoc text).toBe 'beta'
+    expect(neo4jdoc text).toBe '3.1-beta'
 
   it 'should return full URL to developer docs', () ->
     text = '3.1.0'
     expect(neo4jdev text).toBe 'http://neo4j.com/docs/developer-manual/3.1'
+
   it 'should return full URL to operations docs', () ->
     text = '3.1.0'
     expect(neo4jops text).toBe 'http://neo4j.com/docs/operations-manual/3.1'
+
+  it 'should return full URL to developer docs', () ->
+    text = '3.1.0-RC2'
+    expect(neo4jdev text).toBe 'http://neo4j.com/docs/developer-manual/3.1-beta'
+
+  it 'should return full URL to operations docs', () ->
+    text = '3.1.0-RC2'
+    expect(neo4jops text).toBe 'http://neo4j.com/docs/operations-manual/3.1-beta'
