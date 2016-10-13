@@ -43,8 +43,8 @@ article.guide
             CREATE (n:Product)
             SET n = row,
               n.unitPrice = toFloat(row.unitPrice),
-              n.unitsInStock = toInt(row.unitsInStock), n.unitsOnOrder = toInt(row.unitsOnOrder),
-              n.reorderLevel = toInt(row.reorderLevel), n.discontinued = (row.discontinued &lt;&gt; "0")
+              n.unitsInStock = toInteger(row.unitsInStock), n.unitsOnOrder = toInteger(row.unitsOnOrder),
+              n.reorderLevel = toInteger(row.reorderLevel), n.discontinued = (row.discontinued &lt;&gt; "0")
         figure
           pre.pre-scrollable.code.runnable.
             LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/categories.csv" AS row
@@ -185,7 +185,7 @@ article.guide
             WHERE p.productID = row.productID AND o.orderID = row.orderID
             CREATE (o)-[details:ORDERS]-&gt;(p)
             SET details = row,
-              details.quantity = toInt(row.quantity)
+              details.quantity = toInteger(row.quantity)
           include ../../views/partials/inefficient-cypher-query
         h4 Query using patterns
         figure
