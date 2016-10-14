@@ -12,18 +12,22 @@ article.help
 
         table.table-condensed.table-help
           tr
-            th Usage:
-            td
-              code.code.runnable DROP INDEX ON :Person(name)
-          tr
             th Reference:
             td
               code
-                a(href='{{ neo4j.version | neo4jDeveloperDoc }}/#query-schema-index') schema indexes
+                a(href='{{ neo4j.version | neo4jDeveloperDoc }}/cypher/#query-schema-index') schema indexes
               |  manual page
           tr
             th Related:
             td
               a(help-topic='create-index-on') :help CREATE INDEX ON
               | &nbsp;
+              a(help-topic='schema') :help Schema
+              | &nbsp;
               a(help-topic='cypher') :help Cypher
+    section.row-fluid.example
+      .col-sm-9.col-sm-offset-3
+        figure
+          pre.code.runnable.standalone-example.
+            DROP INDEX ON :Person(name)
+          figcaption Drop the index on the label Person and property name.
