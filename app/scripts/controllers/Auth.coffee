@@ -32,7 +32,7 @@ angular.module('neo4jApp.controllers')
     'Utils'
     '$timeout'
     ($rootScope, $scope, AuthService, ConnectionStatusService, Frame, CurrentUser, Settings, Utils, $timeout) ->
-      $scope.username = 'neo4j'
+      $scope.username = ConnectionStatusService.lastConnectedAsUser() ||  ConnectionStatusService.connectedAsUser()|| 'neo4j'
       $scope.password = ''
       $scope.current_password = ''
       $scope.failed_connection_attempts = 0

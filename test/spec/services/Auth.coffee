@@ -68,6 +68,45 @@ describe 'Service: AuthService', () ->
       expect(ConnectionStatusService.connectedAsUser()).toBe('test')
       expect(localStorageService.get('authorization_data')).toBe('dGVzdDp0ZXN0')
 
+    it ' - Persist last connected user in localstorage', ->
+      httpBackend.when('GET', "#{Settings.endpoint.rest}/")
+        .respond(->
+          return [200, JSON.stringify({})]
+        )
+
+      data = {}
+      AuthService.authenticate('test', 'test')
+        .then( (response) ->
+          data = response.data
+        )
+      $scope.$apply() if not $scope.$$phase
+      httpBackend.flush()
+
+      expect(AuthDataService.getPlainLastUser()).toBe('test')
+      expect(ConnectionStatusService.lastConnectedAsUser()).toBe('test')
+      expect(localStorageService.get('last_user')).toBe('dGVzdA==')
+
+    it ' - Remember last connected user even when disconnected', ->
+      httpBackend.when('GET', "#{Settings.endpoint.rest}/")
+        .respond(->
+          return [200, JSON.stringify({})]
+        )
+
+      data = {}
+      AuthService.authenticate('test', 'test')
+        .then( (response) ->
+          data = response.data
+        )
+      $scope.$apply() if not $scope.$$phase
+      httpBackend.flush()
+
+      AuthService.forget()
+      $scope.$apply() if not $scope.$$phase
+
+      expect(AuthDataService.getPlainLastUser()).toBe('test')
+      expect(ConnectionStatusService.lastConnectedAsUser()).toBe('test')
+      expect(localStorageService.get('last_user')).toBe('dGVzdA==')
+
     it ' - Empty auth token in persistent storage on unsuccessful authentication', ->
       ConnectionStatusService.setConnectionAuthData('sample', 'error')
       httpBackend.when('GET', "#{Settings.endpoint.rest}/").respond(401, JSON.stringify({}))

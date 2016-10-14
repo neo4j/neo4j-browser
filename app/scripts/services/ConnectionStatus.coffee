@@ -32,6 +32,11 @@ angular.module('neo4jApp.services')
       return AuthDataService.clearAuthData() unless data
       AuthDataService.setAuthData data
 
+
+    @updatePersistentLastUser = (lastUser) ->
+      return AuthDataService.clearLastUser() unless lastUser
+      AuthDataService.setLastUser lastUser
+
     @unpersistCredentials = ->
       AuthDataService.clearPersistentAuthData()
 
@@ -49,6 +54,7 @@ angular.module('neo4jApp.services')
       AuthDataService.setCredentialTimeout credentialTimeout
 
     @connected_user = ''
+    @last_connected_user = ''
     @authorization_required = yes
     @is_connected = no
     @session_start_time = new Date()
@@ -58,6 +64,7 @@ angular.module('neo4jApp.services')
     @setConnectionAuthData = (username, password, emitChange = no) ->
       @setConnectedUser username
       @updatePersistentAuthData "#{username}:#{password}"
+      @setLastConnectedUser username
       $rootScope.$emit 'connection:authdata_updated' if emitChange
     @connectionAuthData = ->
       AuthDataService.getAuthData()
@@ -71,9 +78,16 @@ angular.module('neo4jApp.services')
 
     @setConnectedUser = (username) ->
       @connected_user = username
+
+    @setLastConnectedUser = (username) ->
+      @last_connected_user = username
+      @updatePersistentLastUser username
+
     @connectedAsUser = ->
       @connected_user
 
+    @lastConnectedAsUser = ->
+      @last_connected_user || AuthDataService.getPlainLastUser() || ''
     @setAuthorizationRequired = (authorization_required) ->
       @authorization_required = authorization_required
     @authorizationRequired = ->

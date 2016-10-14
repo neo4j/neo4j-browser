@@ -26,6 +26,7 @@ angular.module('neo4jApp.services')
   '$base64'
   (localStorageService, $base64) ->
     cached_authorization_data = localStorageService.get('authorization_data') || ''
+    cached_last_user = localStorageService.get('last_user') || ''
     cached_retain_connection_credentials = null
     cached_credential_timeout = null
     @setAuthData = (authdata) ->
@@ -49,6 +50,28 @@ angular.module('neo4jApp.services')
       return cached_authorization_data || localStorageService.get('authorization_data') || ''
     @getPlainAuthData = ->
       data = @getAuthData()
+      if data then $base64.decode(data) else ''
+    @setLastUser = (lastUser) ->
+      return unless lastUser
+      @setEncodedLastUser $base64.encode(lastUser)
+    @setEncodedLastUser = (encoded) ->
+      return unless encoded
+      cached_last_user = encoded
+      if @getPolicies().retainConnectionCredentials isnt no
+        localStorageService.set('last_user', encoded)
+    @persistCachedLastUser = ->
+      if @getPolicies().retainConnectionCredentials isnt no
+        return unless cached_last_user isnt localStorageService.get('last_user')
+        localStorageService.set('last_user', cached_last_user)
+    @clearLastUser = ->
+      localStorageService.remove('last_user')
+      cached_last_user = null
+    @clearPersistentLastUser = ->
+      localStorageService.remove('last_user')
+    @getLastUser= ->
+      return cached_last_user || localStorageService.get('last_user') || ''
+    @getPlainLastUser = ->
+      data = @getLastUser()
       if data then $base64.decode(data) else ''
     @setStoreCredentials = (retainConnectionCredentials) ->
       cached_retain_connection_credentials = retainConnectionCredentials
