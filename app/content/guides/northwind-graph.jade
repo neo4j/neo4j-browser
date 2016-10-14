@@ -43,8 +43,8 @@ article.guide
             CREATE (n:Product)
             SET n = row,
               n.unitPrice = toFloat(row.unitPrice),
-              n.unitsInStock = toInt(row.unitsInStock), n.unitsOnOrder = toInt(row.unitsOnOrder),
-              n.reorderLevel = toInt(row.reorderLevel), n.discontinued = (row.discontinued &lt;&gt; "0")
+              n.unitsInStock = toInteger(row.unitsInStock), n.unitsOnOrder = toInteger(row.unitsOnOrder),
+              n.reorderLevel = toInteger(row.reorderLevel), n.discontinued = (row.discontinued &lt;&gt; "0")
         figure
           pre.pre-scrollable.code.runnable.
             LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/categories.csv" AS row
@@ -185,7 +185,7 @@ article.guide
             WHERE p.productID = row.productID AND o.orderID = row.orderID
             CREATE (o)-[details:ORDERS]-&gt;(p)
             SET details = row,
-              details.quantity = toInt(row.quantity)
+              details.quantity = toInteger(row.quantity)
           include ../../views/partials/inefficient-cypher-query
         h4 Query using patterns
         figure
@@ -193,7 +193,28 @@ article.guide
             MATCH (cust:Customer)-[:PURCHASED]-&gt;(:Order)-[o:ORDERS]-&gt;(p:Product),
                   (p)-[:PART_OF]-&gt;(c:Category {categoryName:"Produce"})
             RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased
+    slide.row-fluid
+      .col-sm-3
+        h3 Schema view
+        p The schema view shows how parts of the graph relate to each other.
+        p For example, in the Northwind graph we can see that&nbsp;
+          code :Customer
+          | &nbsp;is connected to&nbsp;
+          code :Order
+          | &nbsp;via the&nbsp;
+          code PURCHASED
+          | &nbsp;relationship
+        p
+          i
+          | Note: Neo4j is mostly schema-less and what is shown here is descriptive rather than prescriptive
 
+      .col-sm-9
+        h4 Schema view of the graph data
+        img.img-responsive(src='images/northwind/schema.png')
+        figure
+          pre.pre-scrollable.code.runnable.
+            CALL db.schema()
+          figcaption See the latest schema view
     slide.row-fluid.header
       .col-sm-4
         h4 Northwind Graph
