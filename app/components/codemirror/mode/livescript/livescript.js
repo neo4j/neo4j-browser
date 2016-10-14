@@ -24,8 +24,8 @@
         var nr = Rules[next_rule];
         if (nr.splice) {
           for (var i$ = 0; i$ < nr.length; ++i$) {
-            var r = nr[i$], m;
-            if (r.regex && (m = stream.match(r.regex))) {
+            var r = nr[i$];
+            if (r.regex && stream.match(r.regex)) {
               state.next = r.next || state.next;
               return r.token;
             }
@@ -50,7 +50,7 @@
       startState: function(){
         return {
           next: 'start',
-          lastToken: null
+          lastToken: {style: null, indent: 0, content: ""}
         };
       },
       token: function(stream, state){
