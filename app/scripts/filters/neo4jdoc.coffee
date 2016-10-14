@@ -24,8 +24,8 @@ angular.module('neo4jApp.filters')
   .filter('neo4jdoc', () ->
     (input) ->
       return '' unless typeof input is 'string'
-      input = 'beta' if (input.indexOf('-')  != -1)
-      input.replace /^(\d\.\d)\.\d((-.+)?)$/, '$1$3'
+      input.replace /^(\d\.\d)\.\d(-.+)?$/, (match, majorMinor, nonGaSuffix) ->
+        if nonGaSuffix then majorMinor + '-beta' else majorMinor
   ).filter('neo4jDeveloperDoc', ['neo4jdocFilter', (neo4jdocFilter) ->
     (input) ->
       return '' unless typeof input is 'string'
