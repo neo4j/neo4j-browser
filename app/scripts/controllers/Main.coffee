@@ -205,8 +205,6 @@ angular.module('neo4jApp.controllers')
             AuthService.hasValidAuthorization(retainConnection = yes).then(
               ->
                 Frame.closeWhere "#{Settings.cmdchar}server connect"
-                Frame.create({input:"#{Settings.initCmd}"})
-                onboardingSequence() if Settings.onboarding
               ,
               (r) ->
                 if Settings.onboarding then onboardingSequence()
@@ -233,6 +231,12 @@ angular.module('neo4jApp.controllers')
           $scope.neo4j.edition = val.edition
           $scope.neo4j.enterpriseEdition = val.edition is 'enterprise'
           $scope.$emit 'db:updated:edition', val.edition
+
+          val = $scope.neo4j.version
+          if val.search /-/
+            Frame.create({input:"#{Settings.cmdchar}play beta"})
+          else
+            Frame.create({input:"#{Settings.initCmd}"})
           if val.version then $scope.motd.setCallToActionVersion(val.version)
         , true
     ]

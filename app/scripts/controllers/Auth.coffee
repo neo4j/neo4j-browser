@@ -87,7 +87,6 @@ angular.module('neo4jApp.controllers')
             $scope.static_is_authenticated = $scope.connection_summary.is_connected
             $scope.static_host = Utils.getServerHostname(Settings)
             setPolicyMessage()
-            Frame.create({input:"#{Settings.initCmd}"})
             $scope.focusEditor()
           ,
           (r) ->
