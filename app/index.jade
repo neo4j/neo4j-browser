@@ -63,6 +63,7 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     script(src='components/moment/moment.js')
     script(src='components/angular-moment/angular-moment.js')
     script(src='components/codemirror/lib/codemirror.js')
+    script(src='components/codemirror/mode/cypher/cypher.js')
     script(src='components/codemirror/mode/css/css.js')
     script(src='components/codemirror/addon/display/placeholder.js')
     script(src='components/css/index.js')
@@ -86,7 +87,6 @@ html(class="no-js", lang="en", ng-app="neo4jApp", ng-controller="MainCtrl")
     //endbuild
 
     //build:js(.tmp) scripts/scripts.js
-    script(src='scripts/codemirror-cypher.js')
     script(src='scripts/polyfill.js')
     script(src='scripts/settings.js')
     script(src='scripts/parameters.js')
