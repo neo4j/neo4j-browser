@@ -106,6 +106,6 @@ angular.module('neo4jApp.controllers')
         )
 
       setPolicyMessage()
-      connectIfNoAuthorizationRequired()
+      connectIfNoAuthorizationRequired() unless  ConnectionStatusService.isConnected()
       $scope.clusterRole = $rootScope.neo4j.clusterRole
   ]
