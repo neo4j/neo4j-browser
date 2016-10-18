@@ -74,26 +74,31 @@ angular.module('neo4jApp.services')
       hasValidAuthorization: (retainConnection = no) ->
         that = @
         q = $q.defer()
-        req = @authorizationRequired()
-        req.then(
-          (r) ->
-            ConnectionStatusService.setConnected yes
-            q.resolve r
-          ,
-          (r) ->
-            if ConnectionStatusService.connectionAuthData().length > 0
-              that.isConnected(retainConnection).then(
+        if ConnectionStatusService.connectionAuthData().length > 0
+          that.isConnected(retainConnection).then(
+            (r) ->
+              ConnectionStatusService.setAuthorizationRequired no
+              q.resolve r
+            ,
+            (r) ->
+              that.authorizationRequired().then(
                 (r) ->
+                  ConnectionStatusService.setConnected yes
                   q.resolve r
-                ,
-                (r) ->
+              , (r) ->
                   ConnectionStatusService.setConnected no
                   q.reject r
               )
-            else
-              ConnectionStatusService.setConnected no
-              q.reject r
-        )
+          )
+        else
+          that.authorizationRequired().then(
+            (r) ->
+              ConnectionStatusService.setConnected yes
+              q.resolve r
+          , (r) ->
+            ConnectionStatusService.setConnected no
+            q.reject r
+          )
         q.promise
 
       isConnected: (retainConnection = no) ->
