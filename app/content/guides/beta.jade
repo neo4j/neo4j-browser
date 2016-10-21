@@ -33,7 +33,7 @@ article.guide
                 |  frames
               li
                 | Take a look your data with the&nbsp;
-                a(exec-topic='CALL db.schema()') schema viewer
+                a(ng-click="editor.execScript('CALL db.schema()')") schema viewer
 
             button.btn.btn-cta-beta(ng-click="editor.execScript(settings.initCmd)") Continue
             .clearfix
