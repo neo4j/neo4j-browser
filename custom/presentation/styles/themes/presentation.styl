@@ -2,33 +2,26 @@
 @import 'nib'
 @import 'mixins'
 
-// swatch-a-background-color = #262626
-// primary-text = #ebebeb
-// swatch-b-background-color = #595959
-// swatch-b-text-color = palette-b
-// swatch-c-background-color = #383838
-// swatch-c-text-color = palette-b
-
-palette-a = #E17818
-palette-b = #f4f4f4
-palette-c = #6A1D18
-palette-d = #230305
-palette-e = #292e3a
-palette-f = #DED6B6
-palette-g = #F4E2B5
-palette-h = #D2D2D2
+palette-a = #212E32
+palette-b = #555C57
+palette-c = #8C9387
+palette-d = #ACAF9D
+palette-e = #DEDDC8
+palette-f = #FFFFFF
+palette-g = #D2D2D2
+palette-h = #333333
 palette-i = #000000
 
 swatch-a-background-color = palette-a
-swatch-a-text-color = palette-b
-swatch-b-background-color = palette-c
-swatch-b-text-color = palette-b
-swatch-c-background-color = palette-d
+swatch-a-text-color = palette-e
+swatch-b-background-color = palette-b
+swatch-b-text-color = palette-f
+swatch-c-background-color = palette-c
 swatch-c-text-color = palette-b
-swatch-c-background-hover = palette-e
+swatch-c-background-hover = palette-d
 swatch-c-text-hover = palette-b
-swatch-d-background-color = palette-g
-swatch-d-text-color = palette-d
+swatch-d-background-color = palette-e
+swatch-d-text-color = palette-f
 swatch-d-border-color = palette-c
 swatch-e-background-color = palette-f
 swatch-e-text-color = palette-i
@@ -38,16 +31,20 @@ color-link = swatch-a-text-color
 color-link-hover = swatch-c-text-hover
 code-text-color = swatch-e-text-color
 code-background-color = swatch-e-background-color
-drawer-color-fg = palette-f
+drawer-color-fg = swatch-b-text-color
 drawer-color-bg = swatch-b-background-color
-navbar-color-bg = swatch-c-background-color
-navbar-color-bg-active = swatch-b-background-color
-frame-background-color = swatch-d-background-color
-frame-text-color = swatch-d-text-color
+navbar-color-bg = swatch-a-background-color
+navbar-color-fg = swatch-a-text-color
+navbar-color-bg-active = drawer-color-bg
+frame-background-color = swatch-e-background-color
+frame-text-color = swatch-e-text-color
+editor-background-color = swatch-e-background-color
+editor-text-color = swatch-e-text-color
+editor-border-color = swatch-e-border-color
 
-body.theme-autumnal
+body.theme-presentation
   font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif
-  background: swatch-a-background-color
+  background: swatch-e-background-color
   color: swatch-a-text-color
 
   a
@@ -79,7 +76,7 @@ body.theme-autumnal
     display: none
   .status-bar
     color: swatch-d-text-color
-    background-color: swatch-d-background-color
+    background-color: frame-background-color
     border-color: swatch-d-border-color
 
     .status
@@ -139,9 +136,10 @@ body.theme-autumnal
   #stream
     .frame
       .view-result
-        .view-result-graph, .view-result-table
+        .view-result-graph, .view-result-table, article.help p, article.guide p
           background-color: frame-background-color
           color: frame-text-color
+
 
       .code-bar
         .code
@@ -152,7 +150,7 @@ body.theme-autumnal
         background-color: inherit
 
   #main
-    background-color: swatch-a-background-color
+    background-color: swatch-d-background-color
 
     code
       color: code-text-color
@@ -182,7 +180,7 @@ body.theme-autumnal
       background: url(../images/intro.png) 50% 48% no-repeat
 
     .view-editor
-      background-color: swatch-b-background-color
+      background-color: editor-border-color
       z-index: -1
 
     footer
@@ -191,21 +189,27 @@ body.theme-autumnal
 
   #nav
     background: navbar-color-bg
+    color: navbar-color-fg
     li.active, li.active > a
       background: navbar-color-bg-active
 
-  #drawer
+  #drawer, #drawer footer
     color: drawer-color-fg
     background-color: drawer-color-bg
+    .btn-popup
+      color: drawer-color-fg
+      border-color: drawer-color-fg
     ul, ul li
       background-color: drawer-color-bg
     .token
+      font-weight: normal
       &.token-label, &.token-relationship-type
-        background-color: swatch-a-background-color
-        color: swatch-a-text-color
+        background-color: swatch-b-background-color
+        color: swatch-b-text-color
       &.token-property-key
         background-color: inherit
-        border-color: swatch-a-background-color
+        color: swatch-b-text-color
+        border-color: swatch-b-background-color
 
   // CodeMirror overrides
   .CodeMirror
@@ -244,26 +248,26 @@ body.theme-autumnal
             &:hover
               color: #cecece
     .CodeMirror
-      background-color: swatch-c-background-color
+      background-color: editor-background-color
       pre
-        background-color: swatch-c-background-color
+        background-color: editor-background-color
         z-index: -1
       .CodeMirror-placeholder
         color: #E0E2E6
       .CodeMirror-lines
       .CodeMirror-gutters
       .CodeMirror-linenumber
-        color: swatch-a-text-color
+        color: editor-text-color
       .CodeMirror-code
-        color: swatch-a-text-color
+        color: editor-text-color
       div.CodeMirror-cursor
         border-left: 11px solid yellow
         opacity: 0.5
     .prompt
-      color: swatch-a-text-color
+      color: editor-text-color
     .disable-highlighting
       .CodeMirror .CodeMirror-code *
-        color: swatch-a-text-color
+        color: editor-text-color
   div.CodeMirror-selected
-    background-color: swatch-a-text-color
+    background-color: editor-text-color
     opacity: 0.5
