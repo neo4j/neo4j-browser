@@ -18,8 +18,10 @@ article.guide
             .icon.sl.sl-star.green.icon
             ul.topic-bullets
               li
-                | Running a Causal Cluster? Connect to different server members&nbsp;
-                a(exec-topic='sysinfo') here
+                span(ng-show="features.usingCoreEdge") You are running a Causal Cluster. Connect to different server member&nbsp;
+                  a(exec-topic='sysinfo') here
+                span(ng-hide="features.usingCoreEdge") You are not running a Causal Cluster. Find out more&nbsp;
+                  a(href='{{ neo4j.version | neo4jOperationsDoc }}/monitoring/causal-cluster/') here
               li
                 | View running&nbsp;
                 a(ng-show="features.canListQueries", exec-topic='queries') queries
@@ -29,9 +31,9 @@ article.guide
                 a(help-topic='param') param
                 |  support
               li
-                | Explore the new security features via the &nbsp;
-                a(exec-topic='server user list') user administration
-                |  frames
+                | Explore the new&nbsp;
+                a(ng-show="features.canGetRoles", exec-topic='server user list') user administration
+                span(ng-hide="features.canGetRoles") user administration frames (when procedures are available)
               li
                 | Take a look your data with the&nbsp;
                 a(ng-click="editor.execScript('CALL db.schema()')") schema viewer
