@@ -37,17 +37,18 @@ Sync server::
 To setup a local sync login server go to project root and invoke `node sync-server/server.js`.  
 An express server now started on https://localhost:9001 with self signed TLS certificates.  
 
+== Packaging ==
+
+To package Neo4j Browser in to a jar:
+
+ * Compile the project with `grunt build`
+ * Build a jar using `mvn package`
+
+The resulting artifact can be loaded by replacing the existing Neo4j Browser jar in the Neo4j `lib` directory and restarting the server to remount the new assets.
+
 == Feedback ==
 
 * Questions or comments? - Join the http://neo4j.com/blog/public-neo4j-users-slack-group/[Neo4j users Slack community]
-
-== Adding a new Cypher keyword ==
-
-Look at:
-
-* Detecting Cypher: app/scripts/init/commandInterpreters.coffee
-* app/components/cypher/index.js
-* app/scripts/codemirror-cypher.coffee
 
 == Contributing ==
 All bug reports, feature requests and pull requests are very welcome.
