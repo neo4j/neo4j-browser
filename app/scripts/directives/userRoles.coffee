@@ -38,7 +38,7 @@ angular.module('neo4jApp.directives')
         scope.listOfAllKnownRoles.filter((role) -> !scope.user.roles.includes(role))
 
       ProtocolFactory.utils().getRolesList().then((response) ->
-        scope.listOfAllKnownRoles = response
+        scope.listOfAllKnownRoles = response.sort()
       ).catch((r) -> )
 
       scope.$on 'admin.resetRoles', (event) ->
