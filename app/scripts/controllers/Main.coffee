@@ -103,6 +103,7 @@ angular.module('neo4jApp.controllers')
           else
             $scope.user = $scope.static_user
 
+          Features.canListQueries = 'dbms.listQueries' in $scope.procedures
           Features.canGetRoles = 'dbms.security.listRoles' in $scope.procedures
           Features.canActivateUser = 'dbms.security.activateUser' in $scope.procedures
           Features.canChangePassword = 'dbms.security.changeUserPassword' in $scope.procedures

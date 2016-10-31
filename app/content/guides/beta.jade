@@ -22,7 +22,8 @@ article.guide
                 a(exec-topic='sysinfo') here
               li
                 | View running&nbsp;
-                a(exec-topic='queries') queries
+                a(ng-show="features.canListQueries", exec-topic='queries') queries
+                span(ng-hide="features.canListQueries") queries (where procedures are available)
               li
                 | Execute queries even faster with&nbsp;
                 a(help-topic='param') param
