@@ -65,7 +65,7 @@ angular.module('neo4jApp.services')
           path = host + path unless path.indexOf(host) is 0
           $http.head(path, options or httpOptions)
 
-        delete: (path = '', data = null, host = Settings.host) ->
+        delete: (path = '', host = Settings.host) ->
           path = host + path unless path.indexOf(host) is 0
           $http.delete(path, httpOptions)
 
@@ -85,16 +85,14 @@ angular.module('neo4jApp.services')
           opts = angular.extend(
             path: '',
             statements: [],
-            method: 'post',
             host: Settings.host
           , opts)
-          {path, statements, method, host} = opts
+          {path, statements, host} = opts
           path = Settings.endpoint.transaction + path
-          method = method.toLowerCase()
           for s in statements
             s.resultDataContents = ['row','graph']
             s.includeStats = true
-          @[method]?(path, {statements: statements}, {addAuthHeader: opts.addAuthHeader}, host)
+          @post(path, {statements: statements}, {addAuthHeader: opts.addAuthHeader}, host)
 
         #
         # Convenience methods

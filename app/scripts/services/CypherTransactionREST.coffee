@@ -28,7 +28,8 @@ angular.module('neo4jApp.services')
     'UsageDataCollectionService'
     'Timer'
     'Parameters'
-    ($q, CypherResult, Server, UDC, Timer, Parameters) ->
+    'Settings'
+    ($q, CypherResult, Server, UDC, Timer, Parameters, Settings) ->
       parseId = (resource = "") ->
         id = resource.split('/').slice(-2, -1)
         return parseInt(id, 10)
@@ -158,11 +159,7 @@ angular.module('neo4jApp.services')
           if not @id
             q.resolve({})
             return q.promise
-          server_promise = Server.transaction(
-            method: 'DELETE'
-            path: '/' + @id
-            statements: []
-          )
+          server_promise = Server.delete(Settings.endpoint.transaction + '/' + @id)
           server_promise.then(
             (r) =>
               @_reset()
