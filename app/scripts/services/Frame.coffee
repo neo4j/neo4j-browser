@@ -183,7 +183,10 @@ angular.module('neo4jApp.services')
             @create data
 
           getFilteredInterpreters = () ->
-            if Features.showAdmin then self.interpreters else self.interpreters.filter((i) -> i.type != 'admin')
+            interpreters = self.interpreters.slice(0)
+            interpreters = if Features.canListQueries then interpreters else interpreters.filter((i) -> i.type != 'tools')
+            interpreters = if Features.showAdmin then interpreters else interpreters.filter((i) -> i.type != 'admin')
+            interpreters
 
           interpreterFor: (input = '') ->
             intr = null

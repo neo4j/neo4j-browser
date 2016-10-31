@@ -52,7 +52,7 @@
     li.pair
       .key Information:
       a.value(play-topic='sysinfo') sysinfo
-    li.pair
+    li.pair(ng-show="features.canListQueries")
       .key Query List:
       a.value(exec-topic='queries') queries
   
