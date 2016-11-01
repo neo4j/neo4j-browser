@@ -195,7 +195,7 @@ angular.module('neo4jApp')
       type: 'config'
       templateUrl: 'views/frame-config.html'
       matches: ["#{cmdchar}config"]
-      exec: ['Settings', 'SettingsStore', (Settings, SettingsStore) ->
+      exec: ['Settings', 'SettingsStore', 'Utils', (Settings, SettingsStore, Utils) ->
         (input, q) ->
           # special command for reset
           if argv(input)[1] is "reset"
@@ -203,9 +203,9 @@ angular.module('neo4jApp')
             q.resolve(Settings)
             return q.promise
 
-          matches = /^[^\w]*config\s+([^:]+):?([\S\s]+)?$/.exec(input)
+          matches = Utils.extractCommandParameters 'config', input
           if (matches?)
-            [key, value] = [matches[1], matches[2]]
+            [key, value] = matches
             if (value?)
               value = try eval(value)
 
