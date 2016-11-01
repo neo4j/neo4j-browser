@@ -259,3 +259,17 @@ class neo.helpers
         obj.responseTime = undefined
         obj.type = 'bolt'
       obj
+
+    @extractCommandParameters = (cmd, input) ->
+      # Allows these
+      # :cmd my name: "val"
+      # :cmd `my name`: "val" 
+      # The last one must be used in the case of a : in the name
+      return null unless cmd
+      return null unless input
+      re = new RegExp("^[^\\w]*" + cmd + "\\s+(?:(?:`([^`]+)`)|([^:]+))\\s*(?:(?::\\s?([^$]*))?)$")
+      matches = re.exec(input)
+      return null unless matches
+      name = matches[1] || matches[2]
+      val = matches[3]
+      return [name, val]
