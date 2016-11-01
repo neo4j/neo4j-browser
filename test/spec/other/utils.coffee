@@ -214,3 +214,11 @@ describe 'Utils', () ->
       host = UUID.generate()
       expect(Utils.ensureFullBoltAddress("bolt://" + host)).toBe("bolt://" + host + ":7687")
       expect(Utils.ensureFullBoltAddress("bolt://" + host + ":1234")).toBe("bolt://" + host + ":1234")
+
+  it 'should extract parameters from input', ->
+    cmds = ['mycmd x: 1', 'mycmd my name: 1', 'mycmd `my name`: 1', 'mycmd `my: name`: "oskar"', 'invalid', null]
+    expected = [['x', '1'], ['my name', '1'], ['my name', '1'], ['my: name', '"oskar"'], null, null]
+
+    cmds.forEach((cmd, i) ->
+      expect(Utils.extractCommandParameters('mycmd', cmd)).toEqual(expected[i])
+    )
