@@ -227,7 +227,7 @@ angular.module('neo4jApp.controllers')
           return Frame.create({input:"#{Settings.cmdchar}server connect"}) if !newUser
 
         $scope.$watch 'version', (val) ->
-          return '' if not val
+          return '' if not val or Object.keys(val).length is 0
           $scope.neo4j.version = val.version
           $scope.neo4j.edition = val.edition
           $scope.neo4j.enterpriseEdition = val.edition is 'enterprise'
