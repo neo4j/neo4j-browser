@@ -18,6 +18,7 @@
     "bootstrap": "~3.3.1",
     "blob": "latest",
     "codemirror": "~5.19",
+    "codemirror-cypher": "https://raw.github.com/marijnh/CodeMirror/master/mode/cypher/cypher.js",
     "colorbrewer": "1.0.0",
     "css": "https://raw.github.com/marijnh/CodeMirror/master/mode/css/css.js",
     "d3": "~3.5.0",
