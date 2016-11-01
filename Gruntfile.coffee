@@ -92,10 +92,6 @@ module.exports = (grunt) ->
   catch error
     customization = {}
 
-  console.log("customizationName", customizationName)
-  console.log("customization.basedir", customization.basedir)
-  console.log("customization", customization)
-
   # Prepare string-replace replacement instructions,
   # based on settings in customization file
   customSettingsReplacements = []
