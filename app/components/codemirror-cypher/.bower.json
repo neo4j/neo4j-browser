@@ -1,0 +1,13 @@
+{
+  "name": "codemirror",
+  "_cacheHeaders": {
+    "ETag": "\"1d9ca4334ab6ff9c8d92e0778f113098b25660fa\"",
+    "Content-Length": "2140",
+    "Content-Type": "text/plain; charset=utf-8"
+  },
+  "_release": "e-tag:1d9ca4334",
+  "main": "index.js",
+  "_source": "https://raw.github.com/marijnh/CodeMirror/master/mode/cypher/cypher.js",
+  "_target": "*",
+  "_originalSource": "https://raw.github.com/marijnh/CodeMirror/master/mode/cypher/cypher.js"
+}

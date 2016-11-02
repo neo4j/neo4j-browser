@@ -1,3 +1,17 @@
+<a name="0.3.0"></a>
+## 0.3.0 (2015-05-04)
+
+* **bower:** bump to CodeMirror ^5
+
+<a name="0.2.3"></a>
+### 0.2.3 (2015-01-27)
+
+
+#### Bug Fixes
+
+* error calling scope.$applyAsync ([15b84f04](https://github.com/angular-ui/ui-codemirror/commit/15b84f04b322958c6f00e476d0ef8e872ea98770), closes [#89](https://github.com/angular-ui/ui-codemirror/issues/89))
+
+
 <a name="0.2.2"></a>
 ### 0.2.2 (2015-01-07)
 
