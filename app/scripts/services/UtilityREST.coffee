@@ -173,7 +173,7 @@ angular.module('neo4jApp.services')
         getClusterOverview: ->
           that = @
           q = $q.defer()
-          Server.transaction(Server.buildStatement("CALL dbms.cluster.overview()"))
+          Server.cypher('',  { query: 'CALL dbms.cluster.overview()' })
             .then((r) ->
               cluster = Utils.fakeSingleInstanceCluster r, that.getHost, $location.protocol()
               return q.reject r unless cluster
