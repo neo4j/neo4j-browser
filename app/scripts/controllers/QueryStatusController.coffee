@@ -25,8 +25,10 @@ angular.module('neo4jApp.controllers')
     '$scope'
     'ProtocolFactory'
     'Settings'
+    'Features'
+    'Utils'
     '$timeout'
-    ($scope, ProtocolFactory, Settings, $timeout) ->
+    ($scope, ProtocolFactory, Settings, Features, Utils, $timeout) ->
       $scope.queries = []
       $scope.isFetching = no
       $scope.autoRefresh = no
@@ -82,19 +84,25 @@ angular.module('neo4jApp.controllers')
           )
 
       checkCluster = () ->
+        mapAddressesFromResponse = (result) -> result.map((_c) ->
+            _protocolAddress = ProtocolFactory.utils().getServerAddress(_c.addresses)
+            _c.address = _protocolAddress?[0]
+            return _c
+          ).filter((_c) -> _c.address)
         $scope.isFetching = yes
-        ProtocolFactory.utils().getClusterOverview()
-          .then((r) ->
-            cluster = r.map((_c) ->
-              _protocolAddress = ProtocolFactory.utils().getServerAddress(_c.addresses)
-              _c.address = _protocolAddress?[0]
-              return _c
-            ).filter((_c) -> _c.address)
-            checkRunningQueriesInCluster cluster
-          ).catch((_e) ->
-            console.log _e
-            $scope.isFetching = no
-          )
+
+        if Features.usingCoreEdge
+          ProtocolFactory.utils().getClusterOverview()
+            .then((r) ->
+              cluster = mapAddressesFromResponse r
+              checkRunningQueriesInCluster cluster
+            ).catch((_e) ->
+              console.log _e
+              $scope.isFetching = no
+            )
+        else
+          cluster = mapAddressesFromResponse Utils.fakeSingleInstanceCluster null, ProtocolFactory.utils().getHost, 'bolt'
+          checkRunningQueriesInCluster cluster
 
       checkRunningQueriesInCluster = (cluster) ->
         $scope.hasErrors = no
