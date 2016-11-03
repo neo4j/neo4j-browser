@@ -81,6 +81,8 @@ angular.module('neo4jApp.controllers')
             (refreshInterval * 1000)
           )
 
+      $scope.$on '$destroy', () => $timeout.cancel(timer)
+
       checkCluster = () ->
         $scope.isFetching = yes
         ProtocolFactory.utils().getClusterOverview()
