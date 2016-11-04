@@ -112,6 +112,7 @@ angular.module('neo4jApp.services')
           that = @
           cluster.forEach((member) ->
             s = that.transaction({
+              path: '/commit'
               addAuthHeader: yes,
               host: member.address,
               statements: [{
