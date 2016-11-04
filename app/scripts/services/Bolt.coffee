@@ -91,6 +91,7 @@ angular.module('neo4jApp.services')
         q = $q.defer()
         driver = driver || getDriverObj withoutCredentials
         driver.onError = (e) ->
+          driver.close()
           if e instanceof Event and e.type is 'error'
             q.reject getSocketErrorObj()
           else if e.code and e.message # until Neo4jError is in drivers public API
@@ -98,6 +99,7 @@ angular.module('neo4jApp.services')
           else if e.fields && e.fields[0]
             q.reject e
         driver.onCompleted = (m) ->
+          driver.close()
           q.resolve m
         driver.session()
         q.promise
