@@ -22,5 +22,10 @@ angular.module('neo4jApp.features', [])
   .constant('Features', {
     showAdmin: no
     usingCoreEdge: no
+    canListQueries: no
+    canGetRoles: no
+    canActivateUser: no
+    canChangePassword: no
+    usingCoreEdge: no
   })
 
