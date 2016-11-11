@@ -32,7 +32,7 @@ angular.module('neo4jApp.services')
         clearConnection: -> Bolt.clearConnection()
         getSchema: ->
           q = $q.defer()
-          Bolt.boltTransaction(
+          Bolt.routedReadTransaction(
             "CALL db.indexes() YIELD description, state, type " +
             "WITH COLLECT({description: description, state: state, type: type}) AS indexes " +
             "RETURN 'indexes' AS name, indexes AS items " +
@@ -48,7 +48,7 @@ angular.module('neo4jApp.services')
 
         getMeta: ->
           q = $q.defer()
-          Bolt.boltTransaction(
+          Bolt.routedReadTransaction(
             """CALL db.labels() YIELD label
             WITH COLLECT(label) AS labels
             RETURN 'labels' as a, labels as result
@@ -71,14 +71,14 @@ angular.module('neo4jApp.services')
 
         getUser: ->
           q = $q.defer()
-          Bolt.boltTransaction('CALL dbms.security.showCurrentUser()').promise
+          Bolt.directTransaction('CALL dbms.security.showCurrentUser()').promise
             .then((r) -> q.resolve Bolt.constructUserResult r)
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         getCoreEdgeRole: ->
           q = $q.defer()
-          Bolt.boltTransaction('CALL dbms.cluster.role()').promise
+          Bolt.directTransaction('CALL dbms.cluster.role()').promise
             .then((r) -> q.resolve Bolt.getClusterRole r)
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
@@ -86,77 +86,77 @@ angular.module('neo4jApp.services')
 
         getUserList: ->
           q = $q.defer()
-          Bolt.boltTransaction('CALL dbms.security.listUsers()').promise
+          Bolt.directTransaction('CALL dbms.security.listUsers()').promise
           .then((r) -> q.resolve Bolt.constructUserListResult r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         getRolesList: ->
           q = $q.defer()
-          Bolt.boltTransaction('CALL dbms.security.listRoles() YIELD role').promise
+          Bolt.directTransaction('CALL dbms.security.listRoles() YIELD role').promise
           .then((r) -> q.resolve Bolt.constructRolesListResult r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         addNewUser: (username, password, requirePasswordChange) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.security.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange}).promise
+          Bolt.directTransaction("CALL dbms.security.createUser({username}, {password}, {requirePasswordChange})", {username: username, password: password, requirePasswordChange: requirePasswordChange}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         changeUserPassword: (username, password) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.security.changeUserPassword({username}, {password})", {username: username, password: password}).promise
+          Bolt.directTransaction("CALL dbms.security.changeUserPassword({username}, {password})", {username: username, password: password}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         activateUser: (username) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.security.activateUser({username})", {username: username}).promise
+          Bolt.directTransaction("CALL dbms.security.activateUser({username})", {username: username}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         suspendUser: (username) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.security.suspendUser({username})", {username: username}).promise
+          Bolt.directTransaction("CALL dbms.security.suspendUser({username})", {username: username}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         deleteUser: (username) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.security.deleteUser({username})", {username: username}).promise
+          Bolt.directTransaction("CALL dbms.security.deleteUser({username})", {username: username}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         addUserToRole: (username, role) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.security.addRoleToUser({role}, {username})", {username: username, role: role}).promise
+          Bolt.directTransaction("CALL dbms.security.addRoleToUser({role}, {username})", {username: username, role: role}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         removeRoleFromUser: (username, role) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.security.removeRoleFromUser({role}, {username})", {username: username, role: role}).promise
+          Bolt.directTransaction("CALL dbms.security.removeRoleFromUser({role}, {username})", {username: username, role: role}).promise
           .then((r) -> q.resolve r)
           .catch((e) -> q.reject (Bolt.constructResult e).data)
           q.promise
 
         getVersion: ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.components()").promise
+          Bolt.directTransaction("CALL dbms.components()").promise
             .then((r) -> q.resolve(Bolt.constructVersionResult(r)))
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
         getProceduresList: ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.procedures()").promise
+          Bolt.directTransaction("CALL dbms.procedures()").promise
             .then((r) -> q.resolve(r.records.map((r)->r.get('name'))))
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
@@ -167,7 +167,7 @@ angular.module('neo4jApp.services')
             name = whatToGet[0]
           else
             name = "*:*"
-          Bolt.boltTransaction("CALL dbms.queryJmx('#{name}')").promise
+          Bolt.directTransaction("CALL dbms.queryJmx('#{name}')").promise
             .then((r) -> q.resolve(Bolt.constructJmxResult(r)))
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
@@ -198,7 +198,7 @@ angular.module('neo4jApp.services')
 
         setNewPassword: (username, newPasswd) ->
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.changePassword({password})", {password: newPasswd}).promise
+          Bolt.directTransaction("CALL dbms.changePassword({password})", {password: newPasswd}).promise
             .then((r) -> q.resolve Bolt.constructResult r)
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
@@ -206,7 +206,7 @@ angular.module('neo4jApp.services')
         getClusterOverview: () ->
           that = @
           q = $q.defer()
-          Bolt.boltTransaction("CALL dbms.cluster.overview()").promise
+          Bolt.directTransaction("CALL dbms.cluster.overview()").promise
             .then((res) ->
               r = Bolt.constructResult res
               cluster = Utils.fakeSingleInstanceCluster r, that.getHost, 'bolt'

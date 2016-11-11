@@ -202,7 +202,7 @@ angular.module('neo4jApp.services')
 
       directTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
-        session = _driversObj.getDirectDriver.session()
+        session = _driversObj.getDirectDriver().session()
         transaction(statements, session)
 
       callProcedure = (query, parameters = {}) ->
