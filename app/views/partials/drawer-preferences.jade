@@ -55,10 +55,17 @@
 
     h5 Network Connection
     .checkbox
-      label(for="useBolt")
-        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-change="save(); toggleBoltUsage()")
+      label(for="useBoltRouting")
+        input#useBoltRouting(type='checkbox', ng-model="settings.useBoltRouting", ng-change="save(); updateBoltConnection()")
         span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
-          | &nbsp; Use Bolt protocol when available&nbsp;
+          | &nbsp;Bolt  + routing &nbsp;
+          | if unavailable Bolt will be used
+          a.sl.sl-question-mark(ng-click='openBoltHelp()')
+    .checkbox
+      label(for="useBolt")
+        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-true-value="false", ng-false-value="true", ng-change="save(); toggleBoltUsage()")
+        span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
+          | &nbsp; Do not Use Bolt &nbsp;
           a.sl.sl-question-mark(ng-click='openBoltHelp()')
     .form-group
       label(for="boltHost", tooltip="Set host:port for server Bolt interface.", tooltip-placement="top") Bolt host

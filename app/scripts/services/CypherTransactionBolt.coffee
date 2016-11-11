@@ -102,10 +102,9 @@ angular.module('neo4jApp.services')
               return Bolt.bolt.int(n)
             Number(n)
           params = Utils.findNumberInVal params, [transformFn]
-          statements = if query then [{statement:query, parameters: params}] else []
           UDC.increment('cypher_attempts')
           q = $q.defer()
-          {tx, promise, session} = Bolt.transaction(statements, @session, @tx)
+          {tx, promise, session} = Bolt.routedWriteTransaction(query, params)
           @tx = tx
           @session = session
           promise.then((r) ->
