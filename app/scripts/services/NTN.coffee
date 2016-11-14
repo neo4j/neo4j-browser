@@ -114,7 +114,7 @@ angular.module('neo4jApp.services')
       logout: ->
         auth.signout()
         _unbind()
-        _sync_object.$destroy()
+        _sync_object.$destroy() if _sync_object
       authenticate: (profile, token) ->
         auth.authenticate(profile, token).then(-> _unbind())
       isAuthenticated: -> auth.isAuthenticated
