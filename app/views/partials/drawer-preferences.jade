@@ -54,26 +54,26 @@
           | &nbsp; Show sample scripts
 
     h5 Network Connection
-    .checkbox(ng-show="settings.useBolt")
+    .form-group
+      .toggle(ng-click='toggleBoltRouting()')
+          a Bolt  + routing
+          .switch
+              label
+                .switch-inner(ng-class="{right: settings.useBoltRouting}")
+                  span.right-text
+                    | ON
+                  .handle
+                  span.left-text
+                    | OFF
+      label(tooltip="Use the bolt+routing protocol where appropriate.", tooltip-placement="top") if unavailable Bolt will be used &nbsp;
+        a.sl.sl-question-mark(ng-click='openBoltRoutingHelp()')
+    .checkbox
       label(for="useBolt")
         input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-true-value="false", ng-false-value="true", ng-change="save(); toggleBoltUsage()")
         span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
           | &nbsp; Do not use Bolt &nbsp;
           a.sl.sl-question-mark(ng-click='openBoltHelp()')
-    .checkbox(ng-hide="settings.useBolt")
-      label(for="useBolt")
-        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-change="save(); toggleBoltUsage()")
-        span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
-          | &nbsp; Use Bolt &nbsp;
-          a.sl.sl-question-mark(ng-click='openBoltHelp()')
-    .checkbox(ng-show="settings.useBolt")
-      label(for="useBoltRouting")
-        input#useBoltRouting(type='checkbox', ng-model="settings.useBoltRouting", ng-change="save(); updateBoltConnection()")
-        span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
-          p &nbsp;Bolt  + routing
-          p if unavailable Bolt will be used &nbsp;
-            a.sl.sl-question-mark(ng-click='openBoltHelp()')
-    .form-group(ng-show="settings.useBolt")
+    .form-group()
       label(for="boltHost", tooltip="Set host:port for server Bolt interface.", tooltip-placement="top")
         p URI
         p(ng-show="settings.useBoltRouting") bolt+routing://
