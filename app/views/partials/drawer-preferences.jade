@@ -65,16 +65,17 @@
                   .handle
                   span.left-text
                     | OFF
-      label(tooltip="Use the bolt+routing protocol where appropriate.", tooltip-placement="top") if unavailable Bolt will be used &nbsp;
+      label.caption-label If unavailable Bolt will be used &nbsp;
         a.sl.sl-question-mark(ng-click='openBoltRoutingHelp()')
     .checkbox
       label(for="useBolt")
         input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-true-value="false", ng-false-value="true", ng-change="save(); toggleBoltUsage()")
         span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
-          | &nbsp; Do not use Bolt &nbsp;
+          |Do not use Bolt &nbsp;
           a.sl.sl-question-mark(ng-click='openBoltHelp()')
     .form-group()
       label(for="boltHost", tooltip="Set host:port for server Bolt interface.", tooltip-placement="top")
+        p
         p URI
         p(ng-show="settings.useBoltRouting") bolt+routing://
         p(ng-hide="settings.useBoltRouting") bolt://
