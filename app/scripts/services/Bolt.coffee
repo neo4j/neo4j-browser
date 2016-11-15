@@ -192,7 +192,7 @@ angular.module('neo4jApp.services')
 
       routedWriteTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
-        session = if _driversObj then _drivers_obj.getRoutedDriver().session(bolt.session.WRITE) else no
+        session = if _driversObj then _driversObj.getRoutedDriver().session(bolt.session.WRITE) else no
         transaction(statements, session)
 
       routedReadTransaction = (query, parameters = {}) ->

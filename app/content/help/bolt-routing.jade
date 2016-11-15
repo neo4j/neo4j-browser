@@ -6,10 +6,15 @@ article.help
         p.lead What drivers are used when
       .details.col-sm-9
         p
-          | There are two kinds of Bolt drivers specified by URI scheme: the 'bolt://' scheme is used to create a direct driver and the 'bolt+routing://' scheme is used to create a routing driver.
-          | In Neo4j Browser, the bolt+routing setting is used to control which driver should be used. However it is not always appropriate for Neo4j Browser to use a routing driver even when bolt+routing is on.
+          | There are two kinds of Bolt drivers specified by URI scheme: the 'bolt://' scheme is used to create a&nbsp;
+          b direct&nbsp;
+          | driver and the 'bolt+routing://' scheme is used to create a&nbsp;
+          b routing&nbsp;
+          | driver. In Neo4j Browser, the bolt+routing setting is used to control which driver should be used. However it is not always appropriate for Neo4j Browser to use a&nbsp;
+          b routing&nbsp;
+          | driver even when bolt+routing is on.
         p
-          | Neo4J Browser will always:
+          | Neo4j Browser will always:
           ul.topic-bullets
             li
               | use a&nbsp;
@@ -20,7 +25,7 @@ article.help
               b direct&nbsp;
               | driver to populate sysinfo and the member specific items in the information panel e.g. version, cluster role etc
         p
-          | If bolt+routing is on and the provided URI points to a Causal Cluster member Neo4J Browser will:
+          | If bolt+routing is on and the provided URI points to a Causal Cluster member Neo4j Browser will:
         p
           ul.topic-bullets
             li
@@ -30,9 +35,9 @@ article.help
             li
               | use a&nbsp;
               b routing&nbsp;
-              | driver to populate the metadata (labels, relationship types, properties) in the information panel.
+              | driver to populate the metadata (labels, relationship types, properties) in the information panel
         p
-          | If bolt+routing is off or the provided URI does not point to a Causal Cluster member Neo4J Browser will:
+          | If bolt+routing is off or the provided URI does not point to a Causal Cluster member Neo4j Browser will:
         p
           ul.topic-bullets
             li
@@ -42,7 +47,7 @@ article.help
             li
               | use a&nbsp;
               b direct&nbsp;
-              | driver to populate the metadata (labels, relationship types, properties) in the information panel.
+              | driver to populate the metadata (labels, relationship types, properties) in the information panel
         table.table-condensed.table-help
           tr
             th Reference:
@@ -54,4 +59,7 @@ article.help
             th Related:
             td
               a(help-topic='bolt') :help bolt
+              | &nbsp;
+              a(help-topic='bolt-encryption') :help bolt encryption
+
 
