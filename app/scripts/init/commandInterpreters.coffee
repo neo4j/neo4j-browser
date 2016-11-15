@@ -133,7 +133,7 @@ angular.module('neo4jApp')
       type: 'play'
       templateUrl: 'views/frame-guide.html'
       matches: "#{cmdchar}play"
-      exec: ['$http', '$rootScope', 'Utils', ($http, $rootScope, Utils) ->
+      exec: ['$http', '$rootScope', 'Utils', 'UsageDataCollectionService', ($http, $rootScope, Utils, UDC) ->
         step_number = 1
         (input, q) ->
           clean_url = input[('play'.length+1)..].trim()
@@ -152,6 +152,7 @@ angular.module('neo4jApp')
           $http.get(url)
           .then(
             (res) ->
+              UDC.trackEvent 'guide loaded', {topic: clean_url}
               q.resolve({contents:res.data, page: url, is_remote: is_remote})
           ,
             (r)->
