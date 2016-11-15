@@ -56,3 +56,7 @@ if not Function.prototype.bind
       fNOP.prototype = this.prototype;
     fBound.prototype = new fNOP()
     return fBound
+
+unless String.prototype.includes
+  String.prototype.includes = () ->
+    String.prototype.indexOf.apply(this, arguments) isnt -1
