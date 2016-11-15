@@ -100,7 +100,7 @@ angular.module('neo4jApp.services')
         drivers.getDirectDriver =  -> _getDirectDriver host, auth, {encrypted: _shouldEncryptConnection()}, driversObj
         drivers.getRoutedDriver =  -> _getRoutedDriver host, auth, {encrypted: _shouldEncryptConnection()}, driversObj
         drivers.close = () ->
-          driversObj.direct.close()
+          driversObj.direct.close() if driversObj.direct
           driversObj.routed.close() if driversObj.routed
         drivers
 
@@ -192,17 +192,17 @@ angular.module('neo4jApp.services')
 
       routedWriteTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
-        session = _driversObj.getRoutedDriver().session(bolt.session.WRITE)
+        session = if _driversObj then _drivers_obj.getRoutedDriver().session(bolt.session.WRITE) else no
         transaction(statements, session)
 
       routedReadTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
-        session = _driversObj.getRoutedDriver().session(bolt.session.READ)
+        session = if _driversObj then _driversObj.getRoutedDriver().session(bolt.session.READ) else no
         transaction(statements, session)
 
       directTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
-        session = _driversObj.getDirectDriver().session()
+        session = if _driversObj then _driversObj.getDirectDriver().session() else no
         transaction(statements, session)
 
       callProcedure = (query, parameters = {}) ->
