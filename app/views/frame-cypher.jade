@@ -179,6 +179,9 @@ div(ng-controller="CypherResultCtrl", fullscreen)
                   .proc-not-found(ng-if="frame.procedureNotFound(frame.errorText)")
                     a(ng-click="editor.execScript('call dbms.procedures')", play-icon)
                       | List available procedures
+                  .proc-not-found(ng-if="frame.writeToReadOnlyError(frame.errorText)")
+                    a(help-topic="bolt-routing", play-icon)
+                      | Unexpected? See help for bolt+routing
               include partials/error-status-bar
 
             .view-result-messages.result.with-frame-menu(ng-show='isActive("messages")')
