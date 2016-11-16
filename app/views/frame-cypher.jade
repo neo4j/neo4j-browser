@@ -180,8 +180,9 @@ div(ng-controller="CypherResultCtrl", fullscreen)
                     a(ng-click="editor.execScript('call dbms.procedures')", play-icon)
                       | List available procedures
                   .proc-not-found(ng-if="frame.writeToReadOnlyError(frame.errorText)")
+                    | Note that you are on a {{ neo4j.clusterRole }} cluster member. &nbsp;
                     a(help-topic="bolt-routing", play-icon)
-                      | Unexpected? See help for bolt+routing
+                      | See help for bolt+routing.
               include partials/error-status-bar
 
             .view-result-messages.result.with-frame-menu(ng-show='isActive("messages")')

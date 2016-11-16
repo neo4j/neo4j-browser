@@ -74,7 +74,7 @@ angular.module('neo4jApp.controllers')
           ).then( ->
             featureCheck()
           ).then( ->
-            if Features.usingCoreEdge
+            if Features.canGetClusterRole
               ProtocolFactory.utils().getCoreEdgeRole().then((res) ->
                 $scope.neo4j.clusterRole = res
               )
@@ -108,6 +108,7 @@ angular.module('neo4jApp.controllers')
           Features.canActivateUser = 'dbms.security.activateUser' in $scope.procedures
           Features.canChangePassword = 'dbms.security.changeUserPassword' in $scope.procedures
           Features.usingCoreEdge = 'dbms.cluster.overview' in $scope.procedures
+          Features.canGetClusterRole = 'dbms.cluster.role' in $scope.procedures
 
         fetchJMX = ->
           ProtocolFactory.utils().getJmx([
