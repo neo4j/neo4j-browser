@@ -314,7 +314,7 @@ describe 'Service: UDC', () ->
       Settings.shouldReportUdc = yes
       qq = q.defer()
       qq.resolve({records: [], summary: {counters: {_stats: [], containsUpdates: ->}}})
-      spyOn(Bolt, "transaction").and.returnValue({tx: null, promise: qq.promise})
+      spyOn(Bolt, "routedWriteTransaction").and.returnValue({tx: null, promise: qq.promise})
       current_transaction = Cypher.transaction(yes)
       p = current_transaction.commit("MATCH n RETURN n")
       p.then(
@@ -331,7 +331,7 @@ describe 'Service: UDC', () ->
       Settings.shouldReportUdc = yes
       qq = q.defer()
       qq.reject({fields: [{code: 'TestFail', message:'This is a wanted failure.'}]})
-      spyOn(Bolt, "transaction").and.returnValue({tx: null, promise: qq.promise})
+      spyOn(Bolt, "routedWriteTransaction").and.returnValue({tx: null, promise: qq.promise})
       current_transaction = Cypher.transaction(yes)
       p = current_transaction.commit("MATCH n RETURN n")
       p.then(

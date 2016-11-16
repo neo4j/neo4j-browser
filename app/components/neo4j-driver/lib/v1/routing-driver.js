@@ -3,11 +3,30 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Dechunker = exports.Chunker = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _buf = require('./buf');
+var _session = require('./session');
+
+var _session2 = _interopRequireDefault(_session);
+
+var _driver = require('./driver');
+
+var _error = require('./error');
+
+var _roundRobinArray = require('./internal/round-robin-array');
+
+var _roundRobinArray2 = _interopRequireDefault(_roundRobinArray);
+
+var _integer = require('./integer');
+
+var _integer2 = _interopRequireDefault(_integer);
+
+require('babel-polyfill');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -32,221 +51,276 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * limitations under the License.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
-var _CHUNK_HEADER_SIZE = 2,
-    _MESSAGE_BOUNDARY = 0x00,
-    _DEFAULT_BUFFER_SIZE = 1400; // http://stackoverflow.com/questions/2613734/maximum-packet-size-for-a-tcp-connection
-
 /**
- * Looks like a writable buffer, chunks output transparently into a channel below.
- * @access private
+ * A driver that supports routing in a core-edge cluster.
  */
+var RoutingDriver = function (_Driver) {
+  _inherits(RoutingDriver, _Driver);
 
-var Chunker = function (_BaseBuffer) {
-  _inherits(Chunker, _BaseBuffer);
+  function RoutingDriver(url) {
+    var userAgent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'neo4j-javascript/0.0';
+    var token = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var config = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
-  function Chunker(channel, bufferSize) {
-    _classCallCheck(this, Chunker);
+    _classCallCheck(this, RoutingDriver);
 
-    var _this = _possibleConstructorReturn(this, (Chunker.__proto__ || Object.getPrototypeOf(Chunker)).call(this, 0));
+    var _this = _possibleConstructorReturn(this, (RoutingDriver.__proto__ || Object.getPrototypeOf(RoutingDriver)).call(this, url, userAgent, token, config));
 
-    _this._bufferSize = bufferSize || _DEFAULT_BUFFER_SIZE;
-    _this._ch = channel;
-    _this._buffer = (0, _buf.alloc)(_this._bufferSize);
-    _this._currentChunkStart = 0;
-    _this._chunkOpen = false;
+    _this._clusterView = new ClusterView(new _roundRobinArray2.default([url]));
     return _this;
   }
 
-  _createClass(Chunker, [{
-    key: 'putUInt8',
-    value: function putUInt8(position, val) {
-      this._ensure(1);
-      this._buffer.writeUInt8(val);
-    }
-  }, {
-    key: 'putInt8',
-    value: function putInt8(position, val) {
-      this._ensure(1);
-      this._buffer.writeInt8(val);
-    }
-  }, {
-    key: 'putFloat64',
-    value: function putFloat64(position, val) {
-      this._ensure(8);
-      this._buffer.writeFloat64(val);
-    }
-  }, {
-    key: 'putBytes',
-    value: function putBytes(position, data) {
-      // TODO: If data is larger than our chunk size or so, we're very likely better off just passing this buffer on
-      // rather than doing the copy here TODO: *however* note that we need some way to find out when the data has been
-      // written (and thus the buffer can be re-used) if we take that approach
-      while (data.remaining() > 0) {
-        // Ensure there is an open chunk, and that it has at least one byte of space left
-        this._ensure(1);
-        if (this._buffer.remaining() > data.remaining()) {
-          this._buffer.writeBytes(data);
-        } else {
-          this._buffer.writeBytes(data.readSlice(this._buffer.remaining()));
+  _createClass(RoutingDriver, [{
+    key: '_createSession',
+    value: function _createSession(connectionPromise, cb) {
+      var _this2 = this;
+
+      return new RoutingSession(connectionPromise, cb, function (err, conn) {
+        var code = err.code;
+        var msg = err.message;
+        if (!code) {
+          try {
+            code = err.fields[0].code;
+          } catch (e) {
+            code = 'UNKNOWN';
+          }
         }
-      }
-      return this;
+        if (!msg) {
+          try {
+            msg = err.fields[0].message;
+          } catch (e) {
+            msg = 'Unknown failure occurred';
+          }
+        }
+        //just to simplify later error handling
+        err.code = code;
+        err.message = msg;
+
+        if (code === _error.SERVICE_UNAVAILABLE || code === _error.SESSION_EXPIRED) {
+          if (conn) {
+            _this2._forget(conn.url);
+          } else {
+            connectionPromise.then(function (conn) {
+              _this2._forget(conn.url);
+            }).catch(function () {/*ignore*/});
+          }
+          return err;
+        } else if (code === 'Neo.ClientError.Cluster.NotALeader') {
+          var url = 'UNKNOWN';
+          if (conn) {
+            url = conn.url;
+            _this2._clusterView.writers.remove(conn.url);
+          } else {
+            connectionPromise.then(function (conn) {
+              _this2._clusterView.writers.remove(conn.url);
+            }).catch(function () {/*ignore*/});
+          }
+          return (0, _error.newError)("No longer possible to write to server at " + url, _error.SESSION_EXPIRED);
+        } else {
+          return err;
+        }
+      });
     }
   }, {
-    key: 'flush',
-    value: function flush() {
-      if (this._buffer.position > 0) {
-        this._closeChunkIfOpen();
+    key: '_updatedClusterView',
+    value: function _updatedClusterView() {
+      var _this3 = this;
 
-        // Local copy and clear the buffer field. This ensures that the buffer is not re-released if the flush call fails
-        var out = this._buffer;
-        this._buffer = null;
+      if (!this._clusterView.needsUpdate()) {
+        return Promise.resolve(this._clusterView);
+      } else {
+        var _ret = function () {
+          var call = function call() {
+            var conn = _this3._pool.acquire(routers.next());
+            var session = _this3._createSession(Promise.resolve(conn));
+            return newClusterView(session).catch(function (err) {
+              _this3._forget(conn);
+              return Promise.reject(err);
+            });
+          };
+          var routers = _this3._clusterView.routers;
+          //Build a promise chain that ends on the first successful call
+          //i.e. call().catch(call).catch(call).catch(call)...
+          //each call will try a different router
+          var acc = Promise.reject();
+          for (var i = 0; i < routers.size(); i++) {
+            acc = acc.catch(call);
+          }
+          return {
+            v: acc
+          };
+        }();
 
-        this._ch.write(out.getSlice(0, out.position));
-
-        // Alloc a new output buffer. We assume we're using NodeJS's buffer pooling under the hood here!
-        this._buffer = (0, _buf.alloc)(this._bufferSize);
-        this._chunkOpen = false;
-      }
-      return this;
-    }
-
-    /**
-     * Bolt messages are encoded in one or more chunks, and the boundary between two messages
-     * is encoded as a 0-length chunk, `00 00`. This inserts such a message boundary, closing
-     * any currently open chunk as needed
-     */
-
-  }, {
-    key: 'messageBoundary',
-    value: function messageBoundary() {
-
-      this._closeChunkIfOpen();
-
-      if (this._buffer.remaining() < _CHUNK_HEADER_SIZE) {
-        this.flush();
-      }
-
-      // Write message boundary
-      this._buffer.writeInt16(_MESSAGE_BOUNDARY);
-    }
-
-    /** Ensure at least the given size is available for writing */
-
-  }, {
-    key: '_ensure',
-    value: function _ensure(size) {
-      var toWriteSize = this._chunkOpen ? size : size + _CHUNK_HEADER_SIZE;
-      if (this._buffer.remaining() < toWriteSize) {
-        this.flush();
-      }
-
-      if (!this._chunkOpen) {
-        this._currentChunkStart = this._buffer.position;
-        this._buffer.position = this._buffer.position + _CHUNK_HEADER_SIZE;
-        this._chunkOpen = true;
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
       }
     }
   }, {
-    key: '_closeChunkIfOpen',
-    value: function _closeChunkIfOpen() {
-      if (this._chunkOpen) {
-        var chunkSize = this._buffer.position - (this._currentChunkStart + _CHUNK_HEADER_SIZE);
-        this._buffer.putUInt16(this._currentChunkStart, chunkSize);
-        this._chunkOpen = false;
-      }
+    key: '_diff',
+    value: function _diff(oldView, updatedView) {
+      var oldSet = oldView.all();
+      var newSet = updatedView.all();
+      newSet.forEach(function (item) {
+        oldSet.delete(item);
+      });
+      return oldSet;
+    }
+  }, {
+    key: '_acquireConnection',
+    value: function _acquireConnection(mode) {
+      var _this4 = this;
+
+      var m = mode || _driver.WRITE;
+      //make sure we have enough servers
+      return this._updatedClusterView().then(function (view) {
+        var toRemove = _this4._diff(_this4._clusterView, view);
+        var self = _this4;
+        toRemove.forEach(function (url) {
+          self._pool.purge(url);
+        });
+        //update our cached view
+        _this4._clusterView = view;
+        if (m === _driver.READ) {
+          var key = view.readers.next();
+          if (!key) {
+            return Promise.reject((0, _error.newError)('No read servers available', _error.SESSION_EXPIRED));
+          }
+          return _this4._pool.acquire(key);
+        } else if (m === _driver.WRITE) {
+          var _key = view.writers.next();
+          if (!_key) {
+            return Promise.reject((0, _error.newError)('No write servers available', _error.SESSION_EXPIRED));
+          }
+          return _this4._pool.acquire(_key);
+        } else {
+          return Promise.reject(m + " is not a valid option");
+        }
+      }).catch(function (err) {
+        return Promise.reject(err);
+      });
+    }
+  }, {
+    key: '_forget',
+    value: function _forget(url) {
+      this._pool.purge(url);
+      this._clusterView.remove(url);
     }
   }]);
 
-  return Chunker;
-}(_buf.BaseBuffer);
+  return RoutingDriver;
+}(_driver.Driver);
 
-/**
- * Combines chunks until a complete message is gathered up, and then forwards that
- * message to an 'onmessage' listener.
- * @access private
- */
+var ClusterView = function () {
+  function ClusterView(routers, readers, writers, expires) {
+    _classCallCheck(this, ClusterView);
 
-
-var Dechunker = function () {
-  function Dechunker() {
-    _classCallCheck(this, Dechunker);
-
-    this._currentMessage = [];
-    this._partialChunkHeader = 0;
-    this._state = this.AWAITING_CHUNK;
+    this.routers = routers || new _roundRobinArray2.default();
+    this.readers = readers || new _roundRobinArray2.default();
+    this.writers = writers || new _roundRobinArray2.default();
+    this._expires = expires || (0, _integer.int)(-1);
   }
 
-  _createClass(Dechunker, [{
-    key: 'AWAITING_CHUNK',
-    value: function AWAITING_CHUNK(buf) {
-      if (buf.remaining() >= 2) {
-        // Whole header available, read that
-        return this._onHeader(buf.readUInt16());
-      } else {
-        // Only one byte available, read that and wait for the second byte
-        this._partialChunkHeader = buf.readUInt8() << 8;
-        return this.IN_HEADER;
-      }
+  _createClass(ClusterView, [{
+    key: 'needsUpdate',
+    value: function needsUpdate() {
+      return this._expires.lessThan(Date.now()) || this.routers.size() <= 1 || this.readers.empty() || this.writers.empty();
     }
   }, {
-    key: 'IN_HEADER',
-    value: function IN_HEADER(buf) {
-      // First header byte read, now we read the next one
-      return this._onHeader((this._partialChunkHeader | buf.readUInt8()) & 0xFFFF);
+    key: 'all',
+    value: function all() {
+      var seen = new Set(this.routers.toArray());
+      var writers = this.writers.toArray();
+      var readers = this.readers.toArray();
+      for (var i = 0; i < writers.length; i++) {
+        seen.add(writers[i]);
+      }
+      for (var _i = 0; _i < readers.length; _i++) {
+        seen.add(readers[_i]);
+      }
+      return seen;
     }
   }, {
-    key: 'IN_CHUNK',
-    value: function IN_CHUNK(buf) {
-      if (this._chunkSize <= buf.remaining()) {
-        // Current packet is larger than current chunk, or same size:
-        this._currentMessage.push(buf.readSlice(this._chunkSize));
-        return this.AWAITING_CHUNK;
-      } else {
-        // Current packet is smaller than the chunk we're reading, split the current chunk itself up
-        this._chunkSize -= buf.remaining();
-        this._currentMessage.push(buf.readSlice(buf.remaining()));
-        return this.IN_CHUNK;
-      }
-    }
-  }, {
-    key: 'CLOSED',
-    value: function CLOSED(buf) {}
-    // no-op
-
-
-    /** Called when a complete chunk header has been recieved */
-
-  }, {
-    key: '_onHeader',
-    value: function _onHeader(header) {
-      if (header == 0) {
-        // Message boundary
-        var message = void 0;
-        if (this._currentMessage.length == 1) {
-          message = this._currentMessage[0];
-        } else {
-          message = new _buf.CombinedBuffer(this._currentMessage);
-        }
-        this._currentMessage = [];
-        this.onmessage(message);
-        return this.AWAITING_CHUNK;
-      } else {
-        this._chunkSize = header;
-        return this.IN_CHUNK;
-      }
-    }
-  }, {
-    key: 'write',
-    value: function write(buf) {
-      while (buf.hasRemaining()) {
-        this._state = this._state(buf);
-      }
+    key: 'remove',
+    value: function remove(item) {
+      this.routers.remove(item);
+      this.readers.remove(item);
+      this.writers.remove(item);
     }
   }]);
 
-  return Dechunker;
+  return ClusterView;
 }();
 
-exports.Chunker = Chunker;
-exports.Dechunker = Dechunker;
+var RoutingSession = function (_Session) {
+  _inherits(RoutingSession, _Session);
+
+  function RoutingSession(connectionPromise, onClose, onFailedConnection) {
+    _classCallCheck(this, RoutingSession);
+
+    var _this5 = _possibleConstructorReturn(this, (RoutingSession.__proto__ || Object.getPrototypeOf(RoutingSession)).call(this, connectionPromise, onClose));
+
+    _this5._onFailedConnection = onFailedConnection;
+    return _this5;
+  }
+
+  _createClass(RoutingSession, [{
+    key: '_onRunFailure',
+    value: function _onRunFailure() {
+      return this._onFailedConnection;
+    }
+  }]);
+
+  return RoutingSession;
+}(_session2.default);
+
+var GET_SERVERS = "CALL dbms.cluster.routing.getServers";
+
+/**
+ * Calls `getServers` and retrieves a new promise of a ClusterView.
+ * @param session
+ * @returns {Promise.<ClusterView>}
+ */
+function newClusterView(session) {
+  return session.run(GET_SERVERS).then(function (res) {
+    session.close();
+    if (res.records.length != 1) {
+      return Promise.reject((0, _error.newError)("Invalid routing response from server", _error.SERVICE_UNAVAILABLE));
+    }
+    var record = res.records[0];
+    var now = (0, _integer.int)(Date.now());
+    var expires = record.get('ttl').multiply(1000).add(now);
+    //if the server uses a really big expire time like Long.MAX_VALUE
+    //this may have overflowed
+    if (expires.lessThan(now)) {
+      expires = _integer2.default.MAX_VALUE;
+    }
+    var servers = record.get('servers');
+    var routers = new _roundRobinArray2.default();
+    var readers = new _roundRobinArray2.default();
+    var writers = new _roundRobinArray2.default();
+    for (var i = 0; i < servers.length; i++) {
+      var server = servers[i];
+
+      var role = server['role'];
+      var addresses = server['addresses'];
+      if (role === 'ROUTE') {
+        routers.pushAll(addresses);
+      } else if (role === 'WRITE') {
+        writers.pushAll(addresses);
+      } else if (role === 'READ') {
+        readers.pushAll(addresses);
+      }
+    }
+    if (routers.empty() || writers.empty()) {
+      return Promise.reject((0, _error.newError)("Invalid routing response from server", _error.SERVICE_UNAVAILABLE));
+    }
+    return new ClusterView(routers, readers, writers, expires);
+  }).catch(function (e) {
+    if (e.code === 'Neo.ClientError.Procedure.ProcedureNotFound') {
+      return Promise.reject((0, _error.newError)("Server could not perform routing, make sure you are connecting to a causal cluster", _error.SERVICE_UNAVAILABLE));
+    } else {
+      return Promise.reject((0, _error.newError)("No servers could be found at this instant.", _error.SERVICE_UNAVAILABLE));
+    }
+  });
+}
+
+exports.default = RoutingDriver;

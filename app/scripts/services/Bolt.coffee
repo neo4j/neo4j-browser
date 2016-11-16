@@ -30,9 +30,10 @@ angular.module('neo4jApp.services')
     '$q'
     'Utils'
     'BoltIntHelpers'
-    (Settings, AuthDataService, localStorageService, $rootScope, $location, $q, Utils, BoltIntHelpers) ->
+    'Features'
+    (Settings, AuthDataService, localStorageService, $rootScope, $location, $q, Utils, BoltIntHelpers, Features) ->
       bolt = window.neo4j.v1
-      _driver = null
+      _driversObj = null
       _errorStatus = null
 
       checkConnectionError = (error) ->
@@ -40,8 +41,17 @@ angular.module('neo4jApp.services')
         if message.indexOf('WebSocket connection failure') == 0 || message.indexOf('No operations allowed until you send an INIT message successfully') == 0
           $rootScope.check()
 
-      _connectDriver = (host, auth, opts) ->
-        bolt.driver "bolt://" + host.split("bolt://").join(''), auth, opts
+      _getRoutedDriver = (host, auth, opts, driversObj) ->
+        return _getDirectDriver host, auth, opts, driversObj unless Settings.useBoltRouting
+        return _getDirectDriver host, auth, opts, driversObj unless Features.usingCoreEdge
+        return driversObj.routed if driversObj.routed
+        uri = "bolt+routing://" + host.split("bolt://").join('')
+        driversObj.routed = bolt.driver uri, auth, opts
+
+      _getDirectDriver = (host, auth, opts, driversObj) ->
+        return driversObj.direct if driversObj.direct
+        uri = "bolt://" + host.split("bolt://").join('')
+        driversObj.direct = bolt.driver uri, auth, opts
 
       _shouldEncryptConnection = ->
         encrypted = if $location.protocol() is 'https' then yes else no
@@ -55,10 +65,10 @@ angular.module('neo4jApp.services')
         qs = []
         [_m, username, password] = _getAuthData()
         cluster.forEach((member) ->
-          d = _connectDriver(
-            member.address,
-            bolt.auth.basic(username, password),
-            {encrypted: _shouldEncryptConnection()}
+          d = bolt.driver(
+              "bolt://" + member.address.split("bolt://").join('')
+              bolt.auth.basic(username, password),
+              {encrypted: _shouldEncryptConnection()}
           )
           s = d.session()
           qs.push(s.run(query, params).then((r) ->
@@ -79,17 +89,25 @@ angular.module('neo4jApp.services')
         Settings.boltHost || $rootScope.boltHost
 
       getDriverObj = (withoutCredentials = no) ->
+        driversObj = {}
+        drivers = {}
         host = getBoltHost()
         [_m, username, password] = _getAuthData()
         if withoutCredentials
-          driver = _connectDriver host, bolt.auth.basic('', ''), {encrypted: _shouldEncryptConnection()}
+          auth = bolt.auth.basic('', '')
         else
-          driver = _connectDriver host, bolt.auth.basic(username, password), {encrypted: _shouldEncryptConnection()}
-        driver
+          auth = bolt.auth.basic(username, password)
+        drivers.getDirectDriver =  -> _getDirectDriver host, auth, {encrypted: _shouldEncryptConnection()}, driversObj
+        drivers.getRoutedDriver =  -> _getRoutedDriver host, auth, {encrypted: _shouldEncryptConnection()}, driversObj
+        drivers.close = () ->
+          driversObj.direct.close() if driversObj.direct
+          driversObj.routed.close() if driversObj.routed
+        drivers
+
 
       testConnection = (withoutCredentials = no, driver = null) ->
         q = $q.defer()
-        driver = driver || getDriverObj withoutCredentials
+        driver = driver || getDriverObj(withoutCredentials).getDirectDriver()
         driver.onError = (e) ->
           driver.close()
           if e instanceof Event and e.type is 'error'
@@ -105,27 +123,24 @@ angular.module('neo4jApp.services')
         q.promise
 
       connect = (withoutCredentials = no) ->
+        clearConnection()
         q = $q.defer()
         testConnection(withoutCredentials).then((r) ->
-          _driver = getDriverObj withoutCredentials
+          _driversObj = getDriverObj withoutCredentials
           q.resolve r
         ,(e) -> q.reject e
         )
         q.promise
 
       clearConnection = ->
-        _driver.close() if _driver?
-        _driver = null
-
-      createSession = () ->
-        return _driver.session() if _driver
-        return no
+        _driversObj.close() if _driversObj?
+        _driversObj = null
 
       beginTransaction = (opts) ->
         q = $q.defer()
         statement = opts[0]?.statement || ''
         parameters = opts[0]?.parameters || {}
-        session = createSession()
+        session = _driversObj.getRoutedDriver.session(bolt.session.WRITE)
         if not session
           tx = null
           q.reject getSocketErrorObj()
@@ -139,7 +154,6 @@ angular.module('neo4jApp.services')
         statement = opts[0]?.statement || ''
         parameters = opts[0]?.parameters || {}
         q = $q.defer()
-        session = session || createSession()
         if not session
           $rootScope.check()
           q.reject getSocketErrorObj()
@@ -176,9 +190,20 @@ angular.module('neo4jApp.services')
             )
         {tx: tx, promise: q.promise, session: session}
 
-      boltTransaction = (query, parameters = {}) ->
+      routedWriteTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
-        transaction(statements)
+        session = if _driversObj then _driversObj.getRoutedDriver().session(bolt.session.WRITE) else no
+        transaction(statements, session)
+
+      routedReadTransaction = (query, parameters = {}) ->
+        statements = if query then [{statement: query, parameters: parameters}] else []
+        session = if _driversObj then _driversObj.getRoutedDriver().session(bolt.session.READ) else no
+        transaction(statements, session)
+
+      directTransaction = (query, parameters = {}) ->
+        statements = if query then [{statement: query, parameters: parameters}] else []
+        session = if _driversObj then _driversObj.getDirectDriver().session() else no
+        transaction(statements, session)
 
       callProcedure = (query, parameters = {}) ->
         statements = if query then [{statement: "CALL " + query, parameters: parameters}] else []
@@ -438,7 +463,10 @@ angular.module('neo4jApp.services')
         connect: connect,
         beginTransaction: beginTransaction,
         transaction: transaction,
-        boltTransaction: boltTransaction,
+        boltTransaction: routedWriteTransaction,
+        routedWriteTransaction: routedWriteTransaction,
+        routedReadTransaction: routedReadTransaction,
+        directTransaction: directTransaction,
         callProcedure: callProcedure,
         constructUserResult: constructUserResult,
         constructCoreEdgeOverview: constructCoreEdgeOverview,

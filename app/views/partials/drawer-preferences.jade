@@ -54,14 +54,31 @@
           | &nbsp; Show sample scripts
 
     h5 Network Connection
+    .form-group
+      .toggle(ng-click='toggleBoltRouting()')
+          a Bolt  + routing
+          .switch
+              label
+                .switch-inner(ng-class="{right: settings.useBoltRouting}")
+                  span.right-text
+                    | ON
+                  .handle
+                  span.left-text
+                    | OFF
+      label.caption-label If unavailable Bolt will be used &nbsp;
+        a.sl.sl-question-mark(ng-click='openBoltRoutingHelp()')
     .checkbox
       label(for="useBolt")
-        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-change="save(); toggleBoltUsage()")
+        input#useBolt(type='checkbox', ng-model="settings.useBolt", ng-true-value="false", ng-false-value="true", ng-change="save(); toggleBoltUsage()")
         span(tooltip="Use the Bolt protocol for transport when available.", tooltip-placement="top")
-          | &nbsp; Use Bolt protocol when available&nbsp;
+          |Do not use Bolt &nbsp;
           a.sl.sl-question-mark(ng-click='openBoltHelp()')
-    .form-group
-      label(for="boltHost", tooltip="Set host:port for server Bolt interface.", tooltip-placement="top") Bolt host
+    .form-group()
+      label(for="boltHost", tooltip="Set host:port for server Bolt interface.", tooltip-placement="top")
+        p
+        p URI
+        p(ng-show="settings.useBoltRouting") bolt+routing://
+        p(ng-hide="settings.useBoltRouting") bolt://
         input.form-control.input#initCmd(placeholder="{{ boltHost }}", type='string', ng-model="settings.boltHost", ng-change="save(); updateBoltConnection()")
     .form-group
       label(for="maxExecutionTime", tooltip="Query timeout in seconds.", tooltip-placement="top")
