@@ -43,6 +43,22 @@ To package Neo4j Browser in to a jar:
 
  * Compile the project with `grunt build`
  * Build a jar using `mvn package`
+== Custom Builds ==
+
+You can customize Neo4j Browser with your own content and styles. The build process accepts a `--custom`
+switch that specifies a subdirectory of the `./custom` to be layered onto the standard build. By layering,
+your fork of neo4j-browser can continue to get updates without interfering with your work.
+
+Customize::
+
+* Fork this repository
+* Duplicate one of the included customization examples (either `custom/autumn` or `custom/presentation`)
+  `cp -r custom/presentation custom/mybrowser`
+* Develop the customization
+  `grunt server --custom=mybrowser`
+* See your changes at `http://localhost:9000`
+
+== Adding a new Cypher keyword ==
 
 The resulting artifact can be loaded by replacing the existing Neo4j Browser jar in the Neo4j `lib` directory and restarting the server to remount the new assets.
 
