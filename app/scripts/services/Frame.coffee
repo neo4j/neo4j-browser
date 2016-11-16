@@ -70,7 +70,7 @@ angular.module('neo4jApp.services')
             @procedureNotFound = (error) ->
               return yes if error && error.search('ProcedureNotFound') isnt -1
             @writeToReadOnlyError = (error) ->
-              return yes if Settings.useBoltRouting && error && error.search('ForbiddenOnReadOnlyDatabase') isnt -1
+              return yes if Features.canGetClusterRole && Settings.useBoltRouting && error && error.search('ForbiddenOnReadOnlyDatabase') isnt -1
             intrPromise = intrFn(query, $q.defer())
             @terminate = =>
               @resetError()
