@@ -54,7 +54,7 @@
           | &nbsp; Show sample scripts
 
     h5 Network Connection
-    .form-group
+    .form-group(ng-show="goodBrowser")
       .toggle(ng-click='toggleBoltRouting()')
           a Bolt  + routing
           .switch
