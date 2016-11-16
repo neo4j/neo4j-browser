@@ -56,7 +56,7 @@ angular.module('neo4jApp.settings', ['neo4jApp.utils'])
     shouldReportUdc: no
     experimentalFeatures: no
     useBolt: yes
-    useBoltRouting: yes
+    useBoltRouting: no
     boltHost: "" # $location.host() is default
     shownTermsAndPrivacy: no
     acceptedTermsAndPrivacy: no
