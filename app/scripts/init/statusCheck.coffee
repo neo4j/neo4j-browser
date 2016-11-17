@@ -34,7 +34,7 @@ angular.module('neo4jApp').run([
       # the URL is the same. So we need a unique URL every time in order for it
       # to detect request error
       ts = (new Date()).getTime()
-      Server.status('?t='+ts).success(
+      Server.addresses('?t='+ts).success(
         (r) ->
           $scope.offline = no
           timer = $timeout($scope.check, Settings.heartbeat * 1000)

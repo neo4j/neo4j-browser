@@ -50,7 +50,7 @@ angular.module('neo4jApp.controllers')
           if $scope.unauthorized || $scope.offline
             clearDbInfo()
             return ''
-          $scope.server = Server.info $scope.server
+
           $scope.host = $location.host()
           $scope.titlebarString = "- #{ConnectionStatusService.connectedAsUser()}@#{$location.host()}:#{$location.port()}"
           $q.when()
@@ -91,7 +91,6 @@ angular.module('neo4jApp.controllers')
           $scope.version = null
           $scope.neo4j.clusterRole = null
           $scope.user = null
-          $scope.server = null
           $scope.neo4j.version = null
 
         featureCheck = ->
@@ -120,7 +119,7 @@ angular.module('neo4jApp.controllers')
               for a in r.attributes
                 $scope.kernel[a.name] = a.value
             $scope.neo4j.store_id = $scope.kernel['StoreId']
-            UDC.updateStoreAndServerVersion($scope.server.neo4j_version, $scope.kernel['StoreId'])
+            UDC.updateStoreAndServerVersion($scope.version.version, $scope.kernel['StoreId'])
             refreshPolicies $scope.kernel['browser.retain_connection_credentials'], $scope.kernel['browser.credential_timeout']
             allow_connections = [no, 'false', 'no'].indexOf($scope.kernel['browser.allow_outgoing_browser_connections']) < 0 ? yes : no
             refreshAllowOutgoingConnections allow_connections
