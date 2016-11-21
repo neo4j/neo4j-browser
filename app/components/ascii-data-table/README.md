@@ -6,10 +6,22 @@ so it can be pasted into the medium of choice.
 The configuration is very limited by design, all that's configurable in the 
 current version is the maximun width of the columns.
 
-The API exposes only two methods: `run(rows, [options])` where `rows` is expected to be 
+The API exposes only two methods to render a table: `table(rows, [maxColWidth])` where `rows` is expected to be 
 an array with an index for every row, and each row is also expected to be an array 
-with one index for every column, and `getMaxColumnWidth(rows)` to get the width of the 
-widest column.  
+with one index for every column. The data in the columns can be of any Javascript type 
+since it will be serialized before printed.
+
+The second method to generate a table is: `tableFromSerializedData(serializedRows, [maxColWidth])` 
+where `serializedRows` is expected to be in the same format as the previously described method, 
+but all data must already be serialized. This method should be used when the data stays the same 
+but are generated with multiple maxColWidths. 
+
+To serialize the data, the method `serializeData(rows)` is exposed. For the moment, all it does is to 
+table `JSON.stringify` on the data.
+
+To get the width of the widest column (can be used to set the max value on a slider), `maxColumnWidth(rows)` 
+is exposed. The rows should not already be serialized when calling this method.
+
 All rows should have the same number of columns, and the first row is expected to 
 be the header column with titles for each column.
 
@@ -17,20 +29,20 @@ be the header column with titles for each column.
 [
   ['first column', 'second column'], // title row
   ['my data row 1 col 1', 'my data row 1 col 2'], // first data row
-  ['my data row 2 col 1', 'my data row 2 col 2'], // second data row
+  ['my data row 2 col 1', 'my data row 2 col 2'] // second data row
 ]
 ```
 
 With default max width, the above would produce:
 
 ```
-+===================+===================+
-|first column       |second column      |
-+===================+===================+
-|my data row 1 col 1|my data row 1 col 2|
-+-------------------+-------------------+
-|my data row 2 col 1|my data row 2 col 2|
-+-------------------+-------------------+
+╒═════════════════════╤═════════════════════╕
+│"first column"       │"second column"      │
+╞═════════════════════╪═════════════════════╡
+│"my data row 1 col 1"│"my data row 1 col 2"│
+├─────────────────────┼─────────────────────┤
+│"my data row 2 col 1"│"my data row 2 col 2"│
+└─────────────────────┴─────────────────────┘
 ```
 
 ## Installation
@@ -65,10 +77,10 @@ import AsciiTable from 'ascii-data-table'
 const items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
 
 // Not required, default is 30
-const options = {maxColumnWidth: 15}
+const maxColumnWidth = 15
 
 // Render and save in 'res'
-const res = AsciiTable.run(items, options)
+const res = AsciiTable.table(items, maxColumnWidth)
 ```
 
 **In ES 5.5**
@@ -81,20 +93,29 @@ var AsciiTable = require('ascii-data-table').default
 //var AsciiTable = require('lib/ascii-data-table').default
 
 var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
-var res = AsciiTable.run(items)
+var res = AsciiTable.table(items)
 ```
 
 ### In web browsers
 A bundle for web browsers is created and can be found in `lib`.
 
 ```html
-<script type="text/javascript" src="/components/lib/bundle.js"></script>
-<script type="text/javascript">
-  var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
-  var output = AsciiTable.run(items)
-  document.getElementById('my-table').innerHTML = output
-  console.log(output)
-</script>
+<html>
+  <head>
+    <script type="text/javascript" src="/components/lib/bundle.js"></script>
+    <script type="text/javascript">
+      function load() {
+        var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
+        var output = AsciiTable.table(items)
+        document.getElementById('my-table').innerHTML = output
+        console.log(output)
+      }
+    </script>
+  </head>
+  <body onload="load()">
+    <pre id="my-table">loading...</pre>
+  </body>
+</html>
 ```
 
 ### For React >= 0.14
@@ -137,7 +158,7 @@ assumes there's a global variable named `angular` available.
         .module('myApp', ['AsciiTableModule'])
         .controller('TableController', ['$scope', 'AsciiTable', function($scope, AsciiTable){
           var items = [['x', 'y'], ['a', 'b'], ['c', 'd']]
-          $scope.data = AsciiTable.run(items)
+          $scope.data = AsciiTable.table(items)
         }])
     </script>
   </head>
@@ -152,11 +173,11 @@ You can try online here: [Online demo](https://oskarhane-dropshare-eu.s3-eu-cent
 In the `examples` folder there are examples for node and web browser environments.  
 One cool thing in the browser demo is that you can hook up a range slider to the maximun 
 width of the columns, giving this effect:  
-![slider-gif-demo](https://oskarhane-dropshare-eu.s3-eu-central-1.amazonaws.com/ascii-data-table-slider-lfbBzm2sql/ascii-data-table-slider.gif)
+![slider-gif-demo](https://oskarhane-dropshare-eu.s3-eu-central-1.amazonaws.com/adt-2-Q2Qhvevx2E/adt-2.gif)
 
 ## Testing
-Run `npm test` to execute test in both Node.js and browser environments.  
-Run `npm run test:watch` to have tests run on file changes.
+table `npm test` to execute test in both Node.js and browser environments.  
+table `npm table test:watch` to have tests table on file changes.
 
 ## Contributing
-All bug reports, feature requests and pull requests are welcome. This project uses the [Javascript Standard Style](http://standardjs.com) and a lint check will run before all tests and builds.
+All bug reports, feature requests and pull requests are welcome. This project uses the [Javascript Standard Style](http://standardjs.com) and a lint check will table before all tests and builds.

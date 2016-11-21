@@ -4,151 +4,33 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _ramda = require('ramda');
 
-var getArray = function getArray(len) {
-  return Array.apply(null, Array(len)).map(function (_, i) {
-    return i;
-  });
+var _ramda2 = _interopRequireDefault(_ramda);
+
+var _repeat = require('core-js/library/fn/string/repeat');
+
+var _repeat2 = _interopRequireDefault(_repeat);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var len = function len(val) {
+  return typeof val === 'undefined' ? 0 : ('' + val).length;
 };
-
-var stringifyVal = function stringifyVal(val) {
-  if (Array.isArray(val)) return stringifyArray(val);
-  if (typeof val === 'number') return val;
-  if (typeof val === 'string') return val;
-  if (typeof val === 'boolean') return val;
-  if (val === null) return '(null)';
-  if ((typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object') return stringifyObject(val);
+var padString = function padString(character, width) {
+  return !width ? '' : (0, _repeat2.default)(character, width);
 };
-
-var stringifyArray = function stringifyArray(arr) {
-  return '[' + arr.map(stringifyVal).join(', ') + ']';
-};
-
-var stringifyObject = function stringifyObject(obj) {
-  if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') return obj;
-  return '{' + Object.keys(obj).map(function (key) {
-    return key + ': ' + stringifyVal(obj[key]);
-  }).join(', ') + '}';
-};
-
-var stringifyLines = function stringifyLines(rows) {
+var stringifyRows = function stringifyRows(rows) {
   if (!Array.isArray(rows) || !rows.length) return [];
   return rows.map(function (row) {
-    return row.map(stringifyVal);
+    return row.map(JSON.stringify);
   });
 };
-
-var getRowIndexForLine = function getRowIndexForLine(rowHeights, lineNumber) {
-  return rowHeights.reduce(function (meta, height, rowIndex) {
-    if (meta.remainingLines < 0) return meta;
-    meta.rowIndex = rowIndex;
-    if (meta.remainingLines < height) {
-      meta.lineIndex = meta.remainingLines;
-    }
-    meta.remainingLines = meta.remainingLines - height;
-    return meta;
-  }, {
-    rowIndex: 0,
-    lineIndex: 0,
-    remainingLines: lineNumber
-  });
+var insertColSeparators = function insertColSeparators(arr) {
+  return '│' + arr.join('│') + '│';
 };
-
-var getLineFromCol = function getLineFromCol(prev, _, colIndex) {
-  var linesStr = prev.colsLines[prev.rowIndex][colIndex].filter(function (_, lineIndex) {
-    return lineIndex === prev.lineIndex;
-  }).map(function (line) {
-    return line + padString(' ', prev.colWidths[colIndex] - line.length);
-  });
-  prev.lines.push(linesStr);
-  return prev;
-};
-
-var getColLines = function getColLines(col, colWidth, rowHeight) {
-  var colLines = getLinesFromString(col).reduce(function (final, curr) {
-    return final.concat(('' + curr).match(new RegExp('.{1,' + colWidth + '}', 'g')) || ['']);
-  }, []);
-  return colLines.concat(getArray(rowHeight - colLines.length).map(function (a) {
-    return ' ';
-  }));
-};
-
-var getLinesFromString = function getLinesFromString(str) {
-  if (typeof str !== 'string') return [str];
-  return str.indexOf('\n') > -1 ? str.split('\n') : [str];
-};
-
-var getColWidths = function getColWidths(rows) {
-  return getArray(rows[0].length).map(function (i) {
-    return rows.reduce(function (prev, curr) {
-      var lines = getLinesFromString(curr[i]);
-      var currMax = lines.reduce(function (max, line) {
-        return Math.max(max, ('' + line).length);
-      }, 0);
-      return Math.max(prev, currMax);
-    }, 0);
-  });
-};
-
-var renderForWidth = function renderForWidth(rows) {
-  var maxColWidth = arguments.length <= 1 || arguments[1] === undefined ? 30 : arguments[1];
-  var minColWidth = arguments.length <= 2 || arguments[2] === undefined ? 3 : arguments[2];
-
-  if (!Array.isArray(rows) || !rows.length) return '';
-  var colWidths = getColWidths(rows).map(function (colWidth) {
-    return Math.max(Math.min(colWidth, maxColWidth), minColWidth);
-  });
-  var rowHeights = rows.map(function (row) {
-    return row.reduce(function (prev, curr, colIndex) {
-      var lines = getLinesFromString(curr);
-      return lines.reduce(function (tot, line) {
-        return tot + Math.max(1, Math.max(prev, Math.ceil(('' + line).length / colWidths[colIndex])));
-      }, 0);
-    }, 0);
-  });
-  var totalLines = rowHeights.reduce(function (tot, curr) {
-    return tot + curr;
-  }, 0);
-  var colsLines = rows.reduce(function (colLines, row, rowIndex) {
-    var cols = row.map(function (col, colIndex) {
-      return getColLines(col, colWidths[colIndex], rowHeights[rowIndex]);
-    });
-    return colLines.concat([cols]);
-  }, []);
-  var output = getArray(totalLines).reduce(function (out, _, i) {
-    var lineMeta = getRowIndexForLine(rowHeights, i);
-    var rowLines = rows[lineMeta.rowIndex].reduce(getLineFromCol, {
-      lines: [],
-      lineIndex: lineMeta.lineIndex,
-      colWidths: colWidths,
-      colsLines: colsLines,
-      rowIndex: lineMeta.rowIndex
-    }).lines.join('│');
-    out.push('│' + rowLines + '│');
-    return out;
-  }, []);
-  output = insertRowSeparators(output, rowHeights, colWidths);
-  return output.join('\n');
-};
-
-var insertRowSeparators = function insertRowSeparators(lines, rowHeights, colWidths) {
-  return rowHeights.reduce(function (out, rowHeight, rowIndex) {
-    out.curr.push.apply(out.curr, out.feeder.splice(0, rowHeight));
-    if (rowIndex === 0) {
-      out.curr.push(getThickSeparatorLine(colWidths));
-    } else if (rowIndex === rowHeights.length - 1) {
-      out.curr.push(getBottomSeparatorLine(colWidths));
-    } else {
-      out.curr.push(getThinSeparatorLine(colWidths));
-    }
-    return out;
-  }, {
-    feeder: lines,
-    curr: [getTopSeparatorLine(colWidths)]
-  }).curr;
-};
-
 var getTopSeparatorLine = function getTopSeparatorLine(colWidths) {
   return getSeparatorLine('═', '╒', '╤', '╕', colWidths);
 };
@@ -167,22 +49,88 @@ var getSeparatorLine = function getSeparatorLine(horChar, leftChar, crossChar, r
   }).join(crossChar) + rightChar;
 };
 
-var padString = function padString(character, width) {
-  if (width < 1) return '';
-  return getArray(width).map(function () {
-    return character;
-  }).join('');
+var colWidths = function colWidths(maxWidth, minWidth, input) {
+  if (!Array.isArray(input)) {
+    return 0;
+  }
+  return input[0].map(function (_, i) {
+    var tCol = _ramda2.default.pluck(i, input).map(function (col) {
+      return len(col);
+    });
+    var measuredMax = Math.max(_ramda2.default.apply(Math.max, tCol), minWidth);
+    return measuredMax > maxWidth && maxWidth > 0 ? maxWidth : measuredMax;
+  });
+};
+
+var rowHeights = function rowHeights(maxWidth, input) {
+  return input.map(function (row) {
+    var maxLen = _ramda2.default.apply(Math.max, row.map(function (col) {
+      return len(col);
+    }));
+    var numLines = Math.ceil(maxLen / maxWidth);
+    return numLines;
+  });
+};
+
+var splitRowsToLines = function splitRowsToLines(maxWidth, heights, widths, input) {
+  return input.map(function (row, i) {
+    return row.map(function (col, colIndex) {
+      var lines = _ramda2.default.splitEvery(maxWidth, col);
+      var lastLinesLen = len(_ramda2.default.last(lines));
+      if (lastLinesLen < widths[colIndex]) {
+        lines[lines.length - 1] = lines[lines.length - 1] + padString(' ', widths[colIndex] - lastLinesLen);
+      }
+      while (lines.length < heights[i]) {
+        var _ref;
+
+        lines = (_ref = []).concat.apply(_ref, _toConsumableArray(lines).concat([[padString(' ', widths[colIndex])]]));
+      }
+      return lines;
+    });
+  });
+};
+
+var createLines = function createLines(rows) {
+  return rows.reduce(function (lines, row) {
+    if (!Array.isArray(row)) {
+      return [].concat(lines, row);
+    }
+    var tRow = _ramda2.default.transpose(row).map(insertColSeparators);
+    return [].concat(lines, tRow);
+  }, []);
+};
+
+var renderForWidth = function renderForWidth(rows) {
+  var maxColWidth = arguments.length <= 1 || arguments[1] === undefined ? 30 : arguments[1];
+  var minColWidth = arguments.length <= 2 || arguments[2] === undefined ? 3 : arguments[2];
+
+  if (!Array.isArray(rows) || !rows.length) {
+    return '';
+  }
+  maxColWidth = parseInt(maxColWidth);
+  var widths = colWidths(maxColWidth, minColWidth, rows);
+  var heights = rowHeights(maxColWidth, rows);
+  var norm = splitRowsToLines(maxColWidth, heights, widths, rows);
+  var header = createLines([_ramda2.default.head(norm)]);
+  var separated = _ramda2.default.intersperse(getThinSeparatorLine(widths), _ramda2.default.tail(norm));
+  var lines = createLines(separated);
+  return [getTopSeparatorLine(widths)].concat(_toConsumableArray(header), [getThickSeparatorLine(widths)], _toConsumableArray(lines), [getBottomSeparatorLine(widths)]).join('\n');
 };
 
 exports.default = {
-  run: function run(rows) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? { maxColumnWidth: 30 } : arguments[1];
-    return renderForWidth(stringifyLines(rows), options.maxColumnWidth);
+  serializeData: function serializeData(rows) {
+    return stringifyRows(rows);
   },
-  getMaxColumnWidth: function getMaxColumnWidth(rows) {
-    return getColWidths(stringifyLines(rows)).reduce(function (max, colWidth) {
-      return Math.max(max, colWidth);
-    }, 0);
+  tableFromSerializedData: function tableFromSerializedData(serializedRows) {
+    var maxColumnWidth = arguments.length <= 1 || arguments[1] === undefined ? 30 : arguments[1];
+    return renderForWidth(serializedRows, maxColumnWidth);
+  },
+  table: function table(rows) {
+    var maxColumnWidth = arguments.length <= 1 || arguments[1] === undefined ? 30 : arguments[1];
+    return renderForWidth(stringifyRows(rows), maxColumnWidth);
+  },
+  maxColumnWidth: function maxColumnWidth(rows) {
+    return _ramda2.default.apply(Math.max, colWidths(0, 0, stringifyRows(rows)));
   }
 };
 

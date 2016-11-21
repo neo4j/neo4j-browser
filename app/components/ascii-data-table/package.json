@@ -1,6 +1,6 @@
 {
   "name": "ascii-data-table",
-  "version": "1.3.3",
+  "version": "2.0.0",
   "description": "Render data in a width adjustable ascii table.",
   "main": "lib/ascii-data-table",
   "standard": {
@@ -58,5 +58,9 @@
     "copy data",
     "table data",
     "draw ascii"
-  ]
+  ],
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "ramda": "^0.22.1"
+  }
 }

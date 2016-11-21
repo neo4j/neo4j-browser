@@ -13,7 +13,7 @@
         ['Sleepless in Seattle', 'What if someone you never met, someone you never saw, someone you never knew was the only someone for you?']
       ]
       function renderTable(id, data, maxWidth) {
-        var output = AsciiTable.run(data, {maxColumnWidth: maxWidth})
+        var output = AsciiTable.table(data, maxWidth)
         document.getElementById(id).innerHTML = output
         //console.log(output) <- Cool, but spams the console
       }
@@ -22,7 +22,7 @@
         document.getElementById('currentWidth').innerHTML = w
       }
       function setSliderMax() {
-        var maxWidth = AsciiTable.getMaxColumnWidth(data)
+        var maxWidth = AsciiTable.maxColumnWidth(data)
         document.getElementById('width-slider').max = maxWidth
       }
     </script>
