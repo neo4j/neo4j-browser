@@ -105,28 +105,32 @@ angular.module('neo4jApp.services')
         drivers
 
 
-      testConnection = (withoutCredentials = no, driver = null) ->
+      testConnection = (withoutCredentials = no) ->
         q = $q.defer()
-        driver = driver || getDriverObj(withoutCredentials).getDirectDriver()
-        driver.onError = (e) ->
-          driver.close()
-          if e instanceof Event and e.type is 'error'
-            q.reject getSocketErrorObj()
-          else if e.code and e.message # until Neo4jError is in drivers public API
-            q.reject buildErrorObj(e.code, e.message)
-          else if e.fields && e.fields[0]
-            q.reject e
-        driver.onCompleted = (m) ->
-          driver.close()
-          q.resolve m
-        driver.session()
+        unless _driversObj
+          driversObj = getDriverObj(withoutCredentials)
+          driver = driversObj.getDirectDriver()
+          driver.onError = (e) ->
+            driversObj.close()
+            if e instanceof Event and e.type is 'error'
+              q.reject getSocketErrorObj()
+            else if e.code and e.message # until Neo4jError is in drivers public API
+              q.reject buildErrorObj(e.code, e.message)
+            else if e.fields && e.fields[0]
+              q.reject e
+          driver.onCompleted = (m) ->
+            _driversObj = driversObj
+            session.close()
+            q.resolve m
+          session = driver.session()
+        else
+          q.resolve {}
         q.promise
 
       connect = (withoutCredentials = no) ->
         clearConnection()
         q = $q.defer()
         testConnection(withoutCredentials).then((r) ->
-          _driversObj = getDriverObj withoutCredentials
           q.resolve r
         ,(e) -> q.reject e
         )
