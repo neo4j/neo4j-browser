@@ -70,7 +70,6 @@ angular.module('neo4jApp.services')
           @requests = []
           delegate = null
           @session = null
-          @tx = null
 
         _requestDone: (promise) ->
           that = @
@@ -86,7 +85,6 @@ angular.module('neo4jApp.services')
         _onError: () ->
 
         _reset: ->
-          @tx = null
           @session = null
 
         begin: () ->
@@ -104,8 +102,7 @@ angular.module('neo4jApp.services')
           params = Utils.findNumberInVal params, [transformFn]
           UDC.increment('cypher_attempts')
           q = $q.defer()
-          {tx, promise, session} = Bolt.routedWriteTransaction(query, params)
-          @tx = tx
+          { promise, session } = Bolt.routedWriteTransaction(query, params)
           @session = session
           promise.then((r) ->
             $rootScope.bolt_connection_failure = no

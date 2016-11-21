@@ -140,20 +140,6 @@ angular.module('neo4jApp.services')
         _driversObj.close() if _driversObj?
         _driversObj = null
 
-      beginTransaction = (opts) ->
-        q = $q.defer()
-        statement = opts[0]?.statement || ''
-        parameters = opts[0]?.parameters || {}
-        session = _driversObj.getRoutedDriver.session(bolt.session.WRITE)
-        if not session
-          tx = null
-          q.reject getSocketErrorObj()
-        else
-          tx = session.beginTransaction()
-          q.resolve() unless statement
-          tx.run(statement, parameters).then((r)-> q.resolve(r)).catch((e)-> q.reject(e)) if statement
-        return {tx: tx, session: session, promise: q.promise}
-
       transaction = (opts, session, tx) ->
         statement = opts[0]?.statement || ''
         parameters = opts[0]?.parameters || {}
@@ -162,37 +148,16 @@ angular.module('neo4jApp.services')
           $rootScope.check()
           q.reject getSocketErrorObj()
         else
-          if tx
-            # We need to look for error messages from
-            # the commit() call even though run()
-            # reported a successful operation
-            p = tx.run statement, parameters
-            p.then((r) ->
-              if tx # The tx might have been terminated
-                tx.commit().then((txr) ->
-                  session.close()
-                  q.resolve r
-                ).catch((txe) ->
-                  checkConnectionError(txe)
-                  q.reject txe
-                )
-              else
-                session.close()
-                q.resolve r
-            ).catch((e) ->
-              checkConnectionError(txe)
-              q.reject e
-            )
-          else
-            p = session.run statement, parameters
-            p.then((r) ->
-              session.close()
-              q.resolve r
-            ).catch((e) ->
-              checkConnectionError(e)
-              q.reject e
-            )
-        {tx: tx, promise: q.promise, session: session}
+          p = session.run statement, parameters
+          p.then((r) ->
+            session.close()
+            q.resolve r
+          ).catch((e) ->
+            session.close()
+            checkConnectionError(e)
+            q.reject e
+          )
+        { promise: q.promise, session: session}
 
       routedWriteTransaction = (query, parameters = {}) ->
         statements = if query then [{statement: query, parameters: parameters}] else []
@@ -465,7 +430,6 @@ angular.module('neo4jApp.services')
         runQueryOnCluster: runQueryOnCluster,
         testConnection: testConnection,
         connect: connect,
-        beginTransaction: beginTransaction,
         transaction: transaction,
         boltTransaction: routedWriteTransaction,
         routedWriteTransaction: routedWriteTransaction,

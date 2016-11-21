@@ -172,11 +172,10 @@ angular.module('neo4jApp.services')
             .catch((e) -> q.reject Bolt.constructResult e)
           q.promise
 
-        makeRequest: (withoutCredentials, retainConnection) ->
+        makeRequest: (withoutCredentials) ->
           q = $q.defer()
           r = Bolt.testConnection withoutCredentials
           r.then((r) ->
-            Bolt.connect() if retainConnection
             if (r.credentials_expired)
               errObj = {data: {}}
               errObj.data.password_change = 'true'
@@ -184,7 +183,7 @@ angular.module('neo4jApp.services')
               q.reject errObj
             else
               $rootScope.bolt_connection_failure = no
-              return q.resolve({})
+              q.resolve({})
           ,(err) ->
             errObj = Bolt.constructResult err
             if errObj.data.errors[0].code is 'Socket.Error' || errObj.data.errors[0].message.indexOf('WebSocket connection failure') == 0
