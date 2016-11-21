@@ -177,7 +177,7 @@ module.exports = (grunt) ->
           middleware: (connect) ->
             [ proxySnippet, require('connect-livereload')(),
               mountFolder(connect, ".tmp"),
-              mountFolder(connect, customization.basedir),
+              mountFolder(connect, customization.basedir || 'nonexisting'),
               mountFolder(connect, yeomanConfig.app)
             ]
         proxies: standardProxies
