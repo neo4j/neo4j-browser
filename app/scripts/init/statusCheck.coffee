@@ -29,12 +29,7 @@ angular.module('neo4jApp').run([
     timer = null
     $scope.check = ->
       $timeout.cancel(timer)
-      # There is something wrong with the XHR implementation in IE10:
-      # It will return 304 (not modified) even if the server goes down as long as
-      # the URL is the same. So we need a unique URL every time in order for it
-      # to detect request error
-      ts = (new Date()).getTime()
-      Server.addresses('?t='+ts).success(
+      Server.addresses().success(
         (r) ->
           $scope.offline = no
           timer = $timeout($scope.check, Settings.heartbeat * 1000)
