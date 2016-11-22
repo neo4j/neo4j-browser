@@ -39,8 +39,8 @@ describe 'Service: AsciiTableFactory', () ->
     res = AsciiTableFactory.getInstance().get([['x'], ['y']])
     expect(res).toBe([
       '╒═══╕',
-      '│x  │',
+      '│"x"│',
       '╞═══╡',
-      '│y  │',
+      '│"y"│',
       '└───┘'].join('\n')
     )

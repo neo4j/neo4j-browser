@@ -64,9 +64,11 @@ angular.module('neo4jApp.controllers')
 
     $scope.loadAscii = () ->
       return if not tableData or not tableData.data
-      rows = tableData.data.map((data_obj) -> return BoltIntHelpers.mapBoltIntsToStrings(data_obj.row))
-      rows.splice(0, 0, tableData.columns)
-      res = asciiTable.get(rows, {maxColumnWidth: $scope.ascii_col_width})
+      if not asciiTable.serializedItems
+        rows = tableData.data.map((data_obj) -> return BoltIntHelpers.mapBoltIntsToStrings(data_obj.row))
+        rows.splice(0, 0, tableData.columns)
+        asciiTable.setData rows
+      res = asciiTable.getFromSerializedData($scope.ascii_col_width)
       $scope.slider.max = asciiTable.maxWidth
       $scope.ascii = res
       initializing = no

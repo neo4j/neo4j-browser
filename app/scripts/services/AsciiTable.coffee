@@ -26,9 +26,14 @@ angular.module('neo4jApp.services')
   class AsciiTableClass
     constructor: () ->
       @maxWidth = 0
-    get: (items, options = {}) ->
-      @maxWidth = at.getMaxColumnWidth items unless @maxWidth
-      at.run items, options
+      @serializedItems = null
+    get: (items, maxColumnWidth) ->
+      @maxWidth = at.maxColumnWidth items unless @maxWidth
+      at.table items, maxColumnWidth
+    setData: (items) -> 
+      @serializedItems = at.serializeData items
+    getFromSerializedData: (maxColumnWidth) ->
+      at.tableFromSerializedData @serializedItems, maxColumnWidth
   return {
     getInstance: -> return new AsciiTableClass()
   }
