@@ -112,6 +112,7 @@ angular.module('neo4jApp.services')
           driver = driversObj.getDirectDriver()
           driver.onError = (e) ->
             driversObj.close()
+            _driversObj = null
             if e instanceof Event and e.type is 'error'
               q.reject getSocketErrorObj()
             else if e.code and e.message # until Neo4jError is in drivers public API
