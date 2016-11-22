@@ -24,10 +24,15 @@
       max-height: 503px
       opacity: 1
 
-    .frame-main.closed
-      opacity: 0
-      max-height: 0px
-      margin-bottom: 31px
+      &.open
+        display: initial
+      &.closed
+        display: block
+        opacity: 0
+        max-height: 0px
+        margin-bottom: 31px
+      &.closed-remove
+        display: block
 
     .btn.btn-small
       background: #FFF
