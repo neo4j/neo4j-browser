@@ -89,9 +89,11 @@ angular.module('neo4jApp.controllers')
           $scope.propertyKeys = []
           $scope.kernel = {}
           $scope.version = null
-          $scope.neo4j.clusterRole = null
           $scope.user = null
-          $scope.neo4j.version = null
+          $scope.neo4j.clusterRole = null if $scope.neo4j
+          $scope.neo4j.version = null if $scope.neo4j
+
+        clearDbInfo()
 
         featureCheck = ->
           if 'dbms.security.listUsers' in $scope.procedures
@@ -214,7 +216,6 @@ angular.module('neo4jApp.controllers')
           )
 
         pickFirstFrame()
-
         executePostConnectCmd = (cmd) ->
           return unless cmd
           return unless initailConnect
