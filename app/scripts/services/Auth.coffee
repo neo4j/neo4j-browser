@@ -41,7 +41,7 @@ angular.module('neo4jApp.services')
         that = @
         @current_password = password
         setConnectionAuthData username, password
-        promise = @makeRequest(withoutCredentials = no, retainConnection = yes)
+        promise = @makeRequest(withoutCredentials = no)
         promise.then(
           (r) ->
             ConnectionStatusService.setConnected yes
@@ -56,7 +56,7 @@ angular.module('neo4jApp.services')
       authorizationRequired: ->
         #Make call without auth headers
         q = $q.defer()
-        p = @makeRequest(withoutCredentials = yes, retainConnection = yes)
+        p = @makeRequest(withoutCredentials = yes)
         p.then(
           (r) ->
             ##Success, no auth required
@@ -104,7 +104,7 @@ angular.module('neo4jApp.services')
       isConnected: (retainConnection = no) ->
         that = @
         q = $q.defer()
-        p = @makeRequest(withoutCredentials = no, retainConnection)
+        p = @makeRequest(withoutCredentials = no)
         p.then(
           (rr) ->
             ConnectionStatusService.setConnected yes
@@ -117,8 +117,8 @@ angular.module('neo4jApp.services')
         )
         q.promise
 
-      makeRequest: (withoutCredentials = no, retainConnection = no) ->
-        ProtocolFactory.utils().makeRequest(withoutCredentials, retainConnection)
+      makeRequest: (withoutCredentials = no) ->
+        ProtocolFactory.utils().makeRequest(withoutCredentials)
 
       forget: ->
         if @getCurrentUser()
