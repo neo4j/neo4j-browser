@@ -92,7 +92,6 @@ angular.module('neo4jApp.controllers')
     $scope.notCurrentUser = (username) ->
       username in $scope.filteredUsernames
     $scope.showConfirmation = (user) ->
-      console.log('user', user)
       user.resetPasswordValue
       user.confirmationLabel = yes
       user.shouldShowResetPassword = no
