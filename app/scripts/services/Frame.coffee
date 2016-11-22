@@ -143,6 +143,10 @@ angular.module('neo4jApp.services')
           setError: (response) =>
             @setErrorMessages response
             @hasErrors = yes
+          setCustomError: (code, details) =>
+            @errorText = "#{code}"
+            @detailedErrorText = details
+            @hasErrors = yes
           getDetailedErrorText: =>
             @detailedErrorText
 
