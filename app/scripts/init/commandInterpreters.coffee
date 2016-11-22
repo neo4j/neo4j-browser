@@ -228,25 +228,11 @@ angular.module('neo4jApp')
 
     FrameProvider.interpreters.push
       type: 'params'
-      templateUrl: 'views/frame-parameters.html'
+      templateUrl: 'views/frame-parameter.html'
       matches: ["#{cmdchar}param"]
-      exec: ['Parameters', 'Utils', (Parameters, Utils) ->
+      exec: [() ->
         (input, q) ->
-          matches = Utils.extractCommandParameters 'param', input
-          if (matches?)
-            [key, value] = matches
-            if (value isnt undefined and value isnt null)
-              value = try eval(value)
-              Parameters[key] = value if typeof value isnt 'undefined'
-              toResolve = angular.copy Parameters
-            else
-              toResolve = (_obj = {}; _obj[key] = Parameters[key]; _obj)
-              if typeof Parameters[key] is 'undefined'
-                toResolve = null
-
-            q.resolve toResolve
-          else
-            q.resolve angular.copy Parameters
+          q.resolve(input)
           q.promise
       ]
 
