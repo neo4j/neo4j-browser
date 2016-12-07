@@ -118,7 +118,18 @@
         return style;
       },
       indent: function(state, textAfter) {
-        return 0;
+        var firstChar = textAfter && textAfter.charAt(0);
+        var context = state.context;
+        if (/[\]\}]/.test(firstChar)) {
+          while (context && context.type === "pattern") {
+            context = context.prev;
+          }
+        }
+        var closing = context && firstChar === context.type;
+        if (!context) return 0;
+        if (context.type === "keywords") return CodeMirror.commands.newlineAndIndent;
+        if (context.align) return context.col + (closing ? 0 : 1);
+        return context.indent + (closing ? 0 : indentUnit);
       }
     };
   });

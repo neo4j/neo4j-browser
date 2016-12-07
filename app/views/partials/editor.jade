@@ -21,7 +21,7 @@
   .view-editor
     span(ng-class="{'one-line': editorOneLine, 'disable-highlighting': disableHighlighting}")
       .prompt.code-style $
-      ui-codemirror('ui-codemirror-opts'="{gutters:['cypher-hints'], theme: 'neo', mode: 'cypher', autofocus: true, lineNumbers: true, lineWrapping: true, onLoad: codemirrorLoaded}",
+      ui-codemirror('ui-codemirror-opts'="{gutters:['cypher-hints'], theme: 'neo', mode: 'cypher', autofocus: true, lineNumbers: true, lineWrapping: true, onLoad: codemirrorLoaded, smartIndent: false}",
         ng-model='editor.content',
         placeholder='{{motd.tip}}'
         )
