@@ -164,6 +164,7 @@ angular.module('neo4jApp.controllers')
           {plural: 'nodes', singular: 'node', verb: 'deleted', field: 'nodes_deleted' }
           {plural: 'properties', singular: 'property', verb: 'set', field: 'properties_set' }
           {plural: 'relationships', singular: 'relationship', verb: 'deleted', field: 'relationship_deleted' }
+          {plural: 'relationships', singular: 'relationship', verb: 'deleted', field: 'relationships_deleted' }
           {plural: 'relationships', singular: 'relationship', verb: 'created', field: 'relationships_created' }
         ]
         nonZeroFields.push(field) for field in fields when stats[field.field] > 0
