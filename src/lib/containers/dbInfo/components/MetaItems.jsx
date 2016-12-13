@@ -13,7 +13,7 @@ const createItems = (originalList, onItemClick, className, editorCommandTemplate
     return (
       <Chip
         key={index}
-        onTouchTap={() => onItemClick(getNodesCypher)}
+        onClick={() => onItemClick(getNodesCypher)}
         className={classNames({
           [styles.chip]: true,
           [className]: true

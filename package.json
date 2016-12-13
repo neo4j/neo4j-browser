@@ -73,7 +73,8 @@
   "babel": {
     "presets": [
       "es2015",
-      "react"
+      "react",
+      "stage-2"
     ]
   },
   "dependencies": {
@@ -87,17 +88,19 @@
     "jquery": "^3.1.0",
     "material-ui": "^0.15.2",
     "neo4j-visualization": "git+ssh://git@github.com/neo-technology/neo4j-browser-visualization.git#v0.0.3",
-    "react": "^15.0.2",
+    "preact": "^7.1.0",
+    "preact-compat": "^3.9.4",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-codemirror": "^0.2.6",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^15.0.2",
+    "react-icons": "^2.2.1",
+    "react-mdl": "^1.9.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.0",
     "react-router-redux": "^4.0.4",
     "react-swipe": "^5.0.3",
-    "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.5.2",
     "redux-saga": "^0.10.2",
     "save-as": "^0.1.7",

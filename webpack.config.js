@@ -51,7 +51,9 @@ module.exports = {
     alias: {
       services: 'src/services',
       sagas: 'src/sagas',
-      guides: 'src/guides'
+      guides: 'src/guides',
+      react: 'preact-compat',
+      'react-dom': 'preact-compat'
     },
     modulesDirectories: ['src/lib', 'node_modules'],
     extensions: ['', '.js', '.jsx']

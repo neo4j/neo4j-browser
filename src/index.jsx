@@ -61,15 +61,12 @@ store.subscribe(lStorage.createPersistingStoreListener(
 
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)
-injectTapEventPlugin()
 
 ReactDOM.render(
   <Provider store={store}>
-    <MuiThemeProvider>
-      <Router history={history}>
-        <Route path='/' component={layout.components.OrigLayout} />
-      </Router>
-    </MuiThemeProvider>
+    <Router history={history}>
+      <Route path='/' component={layout.components.OrigLayout} />
+    </Router>
   </Provider>,
   document.getElementById('mount')
 )
