@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import createSagaMiddleware from 'redux-saga'
-
+import 'preact/devtools'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'

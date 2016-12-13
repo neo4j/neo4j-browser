@@ -68,7 +68,7 @@ class CypherFrame extends React.Component {
         }
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
-        frameContents = <pre>{asciitable.run(this.state.rows)}</pre>
+        frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
       }
     } else if (errors) {
       frameContents = (
