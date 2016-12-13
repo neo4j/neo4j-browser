@@ -86,7 +86,6 @@
     "html-loader": "^0.4.3",
     "jquery": "^3.1.0",
     "material-ui": "^0.15.2",
-    "neo4j-visualization": "git+ssh://git@github.com/neo-technology/neo4j-browser-visualization.git#v0.0.3",
     "preact": "^7.1.0",
     "preact-compat": "^3.9.4",
     "react-addons-pure-render-mixin": "^15.0.2",

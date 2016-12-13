@@ -1,6 +1,7 @@
 import React from 'react'
 import {ListItem} from 'material-ui/List'
 import RaisedButton from 'material-ui/RaisedButton'
+
 import styles from './style.css'
 
 export const CloseButton = (props) => {
@@ -17,9 +18,15 @@ export const FavoriteItem = (props) => {
   const primaryText = (<p>{props.primaryText}</p>)
   const rightIcon = (props.removeClick) ? (<CloseButton onClick={props.removeClick} />) : null
   return (
-    <ListItem className='remove' {...props}
-      primaryText={primaryText}
+    <ListItem className='remove'
       rightIconButton={rightIcon}
-    />
+    >
+      <ListItemContent {...props}>
+        {primaryText}
+      </ListItemContent>
+      <ListItemAction>
+        {rightIcon}
+      </ListItemAction>
+    </ListItem>
   )
 }
