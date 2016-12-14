@@ -9,7 +9,7 @@ import styles from './style_history.css'
 
 const HistoryFrameComponent = ({frame, onHistoryClick}) => {
   const historyRows = frame.result.map((entry, index) => {
-    return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry}/>
+    return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry} />
   })
   return (
     <FrameTemplate

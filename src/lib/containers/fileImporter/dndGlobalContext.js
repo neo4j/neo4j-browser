@@ -31,7 +31,7 @@ class DndContextWrapping extends React.Component {
     let childProps = {...this.props}
     delete childProps.Component
     return (
-      <this.props.Component {...childProps}/>
+      <this.props.Component {...childProps} />
     )
   }
 }
@@ -41,6 +41,6 @@ DndContextWrapping.childContextTypes = {
 
 export const wrapWithDndContext = (Component) => {
   return (props) => {
-    return (<DndContextWrapping {...props} Component={Component}/>)
+    return (<DndContextWrapping {...props} Component={Component} />)
   }
 }

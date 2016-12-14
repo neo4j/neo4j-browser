@@ -6,7 +6,7 @@ const DropBar = (props) => {
   return (<div>
     <Toolbar>
       <ToolbarGroup>
-        <ToolbarTitle text={props.text}/>
+        <ToolbarTitle text={props.text} />
       </ToolbarGroup>
     </Toolbar>
   </div>)

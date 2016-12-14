@@ -3,9 +3,6 @@ import { FrameTitlebar } from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import asciitable from 'ascii-data-table'
 import bolt from 'services/bolt/bolt'
-import { Card } from 'grommet/components/Card'
-
-import styles from './style_cypher.css'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -31,7 +28,6 @@ class CypherFrame extends React.Component {
     const frame = this.props.frame
     const errors = frame.error && frame.error.fields || false
     const result = frame.result || false
-    const plan = this.state.plan || bolt.extractPlan(result)
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)

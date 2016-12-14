@@ -10,16 +10,9 @@ module.exports = {
     './src/index.jsx'
   ],
   module: {
-    // preLoaders: [
-    //   {
-    //     test: /\.json$/,
-    //     exclude: /node_modules/,
-    //     loader: 'json'
-    //   }
-    // ],
     loaders: [{
       test: /\.json$/,
-      loader: "json-loader"
+      loader: 'json-loader'
     }, {
       test: /\.jsx?$/,
       exclude: /node_modules|dist/,
@@ -27,7 +20,7 @@ module.exports = {
     }, {
       test: /\.css$/,
       include: path.resolve('./src'),
-      exclude: [path.resolve('./src/styles'), path.resolve('./src/visualisation')],
+      exclude: [path.resolve('./src/styles')],
       loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
     }, {
       test: /\.css$/,

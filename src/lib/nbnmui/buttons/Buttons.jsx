@@ -1,5 +1,5 @@
 import React from 'react'
-import {ListItem} from 'grommet/components/List'
+import ListItem from 'grommet/components/List'
 import Button from 'grommet/components/Button'
 
 import styles from './style.css'
@@ -11,7 +11,7 @@ export const CloseButton = (props) => {
 }
 export const EditorButton = (props) => {
   return (
-    <Button {...props}/>
+    <Button {...props} />
   )
 }
 export const FavoriteItem = (props) => {
@@ -21,12 +21,12 @@ export const FavoriteItem = (props) => {
     <ListItem className='remove'
       rightIconButton={rightIcon}
     >
-      <ListItemContent {...props}>
+      <span {...props}>
         {primaryText}
-      </ListItemContent>
-      <ListItemAction>
+      </span>
+      <span>
         {rightIcon}
-      </ListItemAction>
+      </span>
     </ListItem>
   )
 }

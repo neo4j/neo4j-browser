@@ -24,14 +24,14 @@ class Sidebar extends React.Component {
     const DocumentsDrawer = documents.components.DocumentsComponent
     const SettingsDrawer = settings.components.Settings
     const topNavItemsList = [
-      {name: 'DB', icon: <MdViewHeadline/>, content: DatabaseDrawer},
-      {name: 'Favorites', icon: <MdGrade/>, content: FavoritesDrawer},
-      {name: 'Documents', icon: <MdDescription/>, content: DocumentsDrawer}
+      {name: 'DB', icon: <MdViewHeadline />, content: DatabaseDrawer},
+      {name: 'Favorites', icon: <MdGrade />, content: FavoritesDrawer},
+      {name: 'Documents', icon: <MdDescription />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: <MdCloud/>, content: SettingsDrawer},
-      {name: 'Settings', icon: <MdSettingsApplications/>, content: SettingsDrawer},
-      {name: 'About', icon: <MdInfo/>, content: SettingsDrawer}
+      {name: 'Sync', icon: <MdCloud />, content: SettingsDrawer},
+      {name: 'Settings', icon: <MdSettingsApplications />, content: SettingsDrawer},
+      {name: 'About', icon: <MdInfo />, content: SettingsDrawer}
     ]
 
     return (<tabNavigation.components.Navigation

@@ -10,10 +10,15 @@ describe('boltMappings', () => {
         {val: 'hello', checker: (_) => false, converter: (_) => false, expected: 'hello'},
         {val: ['hello'], checker: (_) => false, converter: (val) => false, expected: ['hello']},
         {val: null, checker: (_) => false, converter: (_) => false, expected: null},
-        {val: {str: 'hello'}, checker: (_) => true, converter: (val) => {
-          val.str = val.str.toUpperCase()
-          return val
-        }, expected: {str: 'HELLO'}}
+        {
+          val: {str: 'hello'},
+          checker: (_) => true,
+          converter: (val) => {
+            val.str = val.str.toUpperCase()
+            return val
+          },
+          expected: {str: 'HELLO'}
+        }
       ]
 
       // When and Then
@@ -42,24 +47,41 @@ describe('boltMappings', () => {
       // Given
       const tests = [
         {val: {arr: ['hello']}, checker: (_) => false, converter: (val) => false, expected: {arr: ['hello']}},
-        {val: {
-          arr: ['hello', ['ola', 'hi']],
-          str: 'hello',
-          num: 2,
-          obj: {
-            num: 3,
-            str: 'inner hello'
-          }
-        }, checker: (val) => typeof val === 'string', converter: (val) => val.toUpperCase(), expected: {
-          arr: ['HELLO', ['OLA', 'HI']],
-          str: 'HELLO',
-          num: 2,
-          obj: {
-            num: 3,
-            str: 'INNER HELLO'
+        {
+          val: {
+            arr: [
+              'hello',
+              [
+                'ola',
+                'hi'
+              ]
+            ],
+            str: 'hello',
+            num: 2,
+            obj: {
+              num: 3,
+              str: 'inner hello'
+            }
+          },
+          checker: (val) => typeof val === 'string',
+          converter: (val) => val.toUpperCase(),
+          expected: {
+            arr: [
+              'HELLO',
+              [
+                'OLA',
+                'HI'
+              ]
+            ],
+            str: 'HELLO',
+            num: 2,
+            obj: {
+              num: 3,
+              str: 'INNER HELLO'
+            }
           }
         }
-      }]
+      ]
 
       // When and Then
       tests.forEach((test) => {

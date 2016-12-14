@@ -5,7 +5,7 @@ import Title from 'grommet/components/Title'
 import styles from './style.css'
 
 export const Drawer = (props) => {
-  return <div className={styles.drawer} {...props}/>
+  return <div className={styles.drawer} {...props} />
 }
 export const DrawerHeader = ({title}) => {
   return (
@@ -17,6 +17,6 @@ export const DrawerHeader = ({title}) => {
 
 export const DrawerBody = (props) => {
   return (
-    <List {...props} className={styles.drawerBody}/>
+    <List {...props} className={styles.drawerBody} />
   )
 }

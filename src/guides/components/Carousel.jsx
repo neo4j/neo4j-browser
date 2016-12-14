@@ -42,7 +42,7 @@ export class Carousel extends React.Component {
   render () {
     if (this.state.slides && Array.isArray(this.state.slides)) {
       const ListOfSlides = this.state.slides.map((slide) => {
-        const slideComponent = <Slide key={uuid.v4()} html={slide.html.innerHTML}/>
+        const slideComponent = <Slide key={uuid.v4()} html={slide.html.innerHTML} />
         if (this.props.withDirectives) {
           return (
             <div key={uuid.v4()}>
@@ -59,21 +59,21 @@ export class Carousel extends React.Component {
       })
       return (
         <div key={uuid.v4()} className={styles.carouselContainer}>
-          <Button fill className={styles.leftButton} label='<' primary onClick={this.prev.bind(this)}/>
+          <Button fill className={styles.leftButton} label='<' primary onClick={this.prev.bind(this)} />
           <ReactSwipe className={styles.carousel} ref='reactSwipe' swipeOptions={{continuous: false}}>
             {ListOfSlides}
           </ReactSwipe>
-          <Button className={styles.rightButton} label='>' primary onClick={this.next.bind(this)}/>
+          <Button className={styles.rightButton} label='>' primary onClick={this.next.bind(this)} />
         </div>
       )
     }
     if (this.props.withDirectives) {
       return (
-        <Directives content={<Slide html={this.props.html}/>} />
+        <Directives content={<Slide html={this.props.html} />} />
       )
     } else {
       return (
-        <Slide html={this.props.html}/>
+        <Slide html={this.props.html} />
       )
     }
   }

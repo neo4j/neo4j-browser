@@ -35,7 +35,7 @@ const Navigation = ({
         return item.name.toLowerCase() === openDrawer
       })
       let TabContent = filteredList[0].content
-      return <TabContent/>
+      return <TabContent />
     }
     return null
   }

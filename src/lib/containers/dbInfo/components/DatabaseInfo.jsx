@@ -10,16 +10,16 @@ import styles from './style_meta.css'
 const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties = [], onItemClick }) => {
   return (
     <Drawer id='db-drawer'>
-      <DrawerHeader title='Database Information'/>
+      <DrawerHeader title='Database Information' />
       <DrawerBody>
         <ListItem className={styles.section} disabled>
-          <LabelItems labels={labels.map((l) => l.val)} onItemClick={onItemClick}/>
+          <LabelItems labels={labels.map((l) => l.val)} onItemClick={onItemClick} />
         </ListItem>
         <ListItem className={styles.section} disabled>
-          <RelationshipItems relationshipTypes={relationshipTypes.map((l) => l.val)} onItemClick={onItemClick}/>
+          <RelationshipItems relationshipTypes={relationshipTypes.map((l) => l.val)} onItemClick={onItemClick} />
         </ListItem>
         <ListItem className={styles.section} disabled>
-          <PropertyItems properties={properties.map((l) => l.val)} onItemClick={onItemClick}/>
+          <PropertyItems properties={properties.map((l) => l.val)} onItemClick={onItemClick} />
         </ListItem>
       </DrawerBody>
     </Drawer>

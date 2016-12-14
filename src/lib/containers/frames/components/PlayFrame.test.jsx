@@ -8,7 +8,7 @@ const expect = chai.expect
 
 describe('PlayFrame', () => {
   it('should render PlayFrame', () => {
-    const wrapper = shallow(<PlayFrame frame={{cmd: ':play movies'}}/>)
+    const wrapper = shallow(<PlayFrame frame={{cmd: ':play movies'}} />)
     expect(wrapper.find('.playFrame')).to.have.length(1)
   })
   it('should render play guide when not guide name is provided', () => {

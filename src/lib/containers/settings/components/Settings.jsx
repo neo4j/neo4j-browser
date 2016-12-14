@@ -48,10 +48,10 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
 
   return (
     <Drawer id='db-settings'>
-      <DrawerHeader title='Settings'/>
+      <DrawerHeader title='Settings' />
       <DrawerBody>
         {mappedSettings}
-        <Button label='Save' onClick={() => onSettingsSave(settings)}/>
+        <Button label='Save' onClick={() => onSettingsSave(settings)} />
       </DrawerBody>
     </Drawer>
   )

@@ -49,7 +49,7 @@ describe('Editor', () => {
     let content = 'content-' + Math.random()
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} content={content} history={history}/>
+      <EditorComponent onExecute={onExecute} content={content} history={history} />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
@@ -67,7 +67,7 @@ describe('Editor', () => {
   it('should resest history after execution', () => {
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} content='' history={history}/>
+      <EditorComponent onExecute={onExecute} content='' history={history} />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
@@ -83,7 +83,7 @@ describe('Editor', () => {
     let content = 'content-' + Math.random()
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history={history}/>
+      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history={history} />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Enter'](codeMirror.get(0).getCodeMirror())
@@ -95,7 +95,7 @@ describe('Editor', () => {
     let content = 'content-' + Math.random() + '\n hello'
     let history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     let wrapper = mount(
-      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history={history}/>
+      <EditorComponent onExecute={onExecute} updateContent={updateContent} content={content} history={history} />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Enter'](codeMirror.get(0).getCodeMirror())

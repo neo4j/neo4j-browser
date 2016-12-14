@@ -33,7 +33,7 @@ describe('FavoriteComponent', () => {
     ]
     testCases.forEach((testCase, i) => {
       it(`should extract name of script from case ${i}`, () => {
-        const wrapper = shallow(<FavoriteComponent content={testCase.command}/>)
+        const wrapper = shallow(<FavoriteComponent content={testCase.command} />)
         const item = wrapper.find('.favorite')
         expect(item).to.have.length(1)
         expect(item.props().primaryText).to.equal(testCase.expected)
@@ -46,7 +46,7 @@ describe('FavoriteComponent', () => {
     chai.use(spies)
     chai.use(chaiEnzyme())
     const onItemClick = chai.spy()
-    const wrapper = shallow(<FavoriteComponent content={'Cypher'} onItemClick={onItemClick}/>)
+    const wrapper = shallow(<FavoriteComponent content={'Cypher'} onItemClick={onItemClick} />)
     const favoriteElement = wrapper.find('.favorite')
     expect(favoriteElement).to.have.length(1)
     favoriteElement.first().simulate('click')
@@ -59,7 +59,7 @@ describe('FavoriteComponent', () => {
     chai.use(spies)
     chai.use(chaiEnzyme())
     const onRemoveClick = chai.spy()
-    const wrapper = shallow(<FavoriteComponent id={id} removeClick={onRemoveClick}/>)
+    const wrapper = shallow(<FavoriteComponent id={id} removeClick={onRemoveClick} />)
     const favoriteElement = wrapper.find('.favorite')
     expect(favoriteElement).to.have.length(1)
     // wrapper.find(favoriteElement).find('.remove').simulate('click')
