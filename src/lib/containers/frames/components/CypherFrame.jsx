@@ -3,7 +3,7 @@ import { FrameTitlebar } from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import asciitable from 'ascii-data-table'
 import bolt from 'services/bolt/bolt'
-import { Card } from 'material-ui/Card'
+import { Card } from 'grommet/components/Card'
 
 import styles from './style_cypher.css'
 

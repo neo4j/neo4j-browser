@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import editor from 'containers/editor'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
-import {ListItem} from 'material-ui/List'
+import ListItem from 'grommet/components/ListItem'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 import styles from './style_meta.css'

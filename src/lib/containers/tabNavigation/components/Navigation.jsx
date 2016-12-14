@@ -1,6 +1,6 @@
 import React from 'react'
-import { List, ListItem } from 'material-ui/List'
-import IconButton from 'material-ui/IconButton'
+import { List, ListItem } from 'grommet/components/List'
+import Button from 'grommet/components/Button'
 import classNames from 'classnames'
 
 const Navigation = ({
@@ -22,9 +22,9 @@ const Navigation = ({
         <ListItem key={index}
           className={itemClass}
           onTouchTap={() => onNavClick(item.name.toLowerCase())}>
-          <IconButton tooltip={item.name}>
+          <Button tooltip={item.name}>
             {item.icon}
-          </IconButton>
+          </Button>
         </ListItem>
       )
     })

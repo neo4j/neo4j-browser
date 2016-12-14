@@ -7,11 +7,9 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import reducers from './rootReducer'
 import layout from './lib/containers/origLayout'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import sagas from './sagas'
 import './styles/style.css'

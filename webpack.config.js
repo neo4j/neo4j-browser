@@ -10,7 +10,17 @@ module.exports = {
     './src/index.jsx'
   ],
   module: {
+    // preLoaders: [
+    //   {
+    //     test: /\.json$/,
+    //     exclude: /node_modules/,
+    //     loader: 'json'
+    //   }
+    // ],
     loaders: [{
+      test: /\.json$/,
+      loader: "json-loader"
+    }, {
       test: /\.jsx?$/,
       exclude: /node_modules|dist/,
       loader: 'react-hot!babel'
@@ -55,7 +65,7 @@ module.exports = {
       'react-dom': 'preact-compat'
     },
     modulesDirectories: ['src/lib', 'node_modules'],
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx', '.json']
   },
   output: {
     path: path.join(__dirname, 'dist'),

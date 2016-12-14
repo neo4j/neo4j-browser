@@ -1,6 +1,7 @@
 import React from 'react'
-import {List} from 'material-ui/List'
-import {Toolbar, ToolbarTitle} from 'material-ui/Toolbar'
+import List from 'grommet/components/List'
+import Header from 'grommet/components/Header'
+import Title from 'grommet/components/Title'
 import styles from './style.css'
 
 export const Drawer = (props) => {
@@ -8,9 +9,9 @@ export const Drawer = (props) => {
 }
 export const DrawerHeader = ({title}) => {
   return (
-    <Toolbar className={styles.bar}>
-      <ToolbarTitle className={styles.title} text={title} />
-    </Toolbar>
+    <Header className={styles.bar}>
+      <Title className={styles.title} text={title} />
+    </Header>
   )
 }
 

@@ -5,7 +5,7 @@ import {LegendComponent} from './Legend'
 import bolt from 'services/bolt/bolt'
 import { connect } from 'react-redux'
 import { getGraphStyleData } from '../reducer'
-import {Card} from 'material-ui/Card'
+import {Card} from 'grommet/components/Card'
 import { updateGraphStyleData } from '../actions'
 
 export class ExplorerComponent extends React.Component {

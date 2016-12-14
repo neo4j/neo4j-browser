@@ -1,17 +1,17 @@
 import React from 'react'
-import {ListItem} from 'material-ui/List'
-import RaisedButton from 'material-ui/RaisedButton'
+import {ListItem} from 'grommet/components/List'
+import Button from 'grommet/components/Button'
 
 import styles from './style.css'
 
 export const CloseButton = (props) => {
   return (
-    <RaisedButton {...props} className={styles.icon}>×</RaisedButton>
+    <Button {...props} className={styles.icon}>×</Button>
   )
 }
 export const EditorButton = (props) => {
   return (
-    <RaisedButton {...props}/>
+    <Button {...props}/>
   )
 }
 export const FavoriteItem = (props) => {

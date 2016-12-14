@@ -4,7 +4,7 @@ import uuid from 'uuid'
 import ReactSwipe from 'react-swipe'
 import Slide from './Slide'
 import Directives from './Directives'
-import FlatButton from 'material-ui/FlatButton'
+import Button from 'grommet/components/Button'
 
 import styles from './style.css'
 
@@ -59,11 +59,11 @@ export class Carousel extends React.Component {
       })
       return (
         <div key={uuid.v4()} className={styles.carouselContainer}>
-          <FlatButton className={styles.leftButton} label='<' primary onClick={this.prev.bind(this)}/>
+          <Button fill className={styles.leftButton} label='<' primary onClick={this.prev.bind(this)}/>
           <ReactSwipe className={styles.carousel} ref='reactSwipe' swipeOptions={{continuous: false}}>
             {ListOfSlides}
           </ReactSwipe>
-          <FlatButton className={styles.rightButton} label='>' primary onClick={this.next.bind(this)}/>
+          <Button className={styles.rightButton} label='>' primary onClick={this.next.bind(this)}/>
         </div>
       )
     }
