@@ -21,7 +21,7 @@ const Navigation = ({
       return (
         <ListItem key={index}
           className={itemClass}
-          onTouchTap={() => onNavClick(item.name.toLowerCase())}>
+          onClick={() => onNavClick(item.name.toLowerCase())}>
           <Button tooltip={item.name}>
             {item.icon}
           </Button>
