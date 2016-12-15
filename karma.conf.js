@@ -18,7 +18,7 @@ module.exports = function (config) {
     preprocessors: {
       'tests.webpack.js': [ 'webpack', 'sourcemap' ]
     },
-    reporters: [ 'mocha', 'coverage' ],
+    reporters: [ 'mocha' ],
     webpack: {
       resolve: {
         root: path.resolve(__dirname),

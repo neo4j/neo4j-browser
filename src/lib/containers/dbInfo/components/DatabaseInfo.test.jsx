@@ -8,9 +8,6 @@ import { mount } from 'enzyme'
 import chaiEnzyme from 'chai-enzyme'
 import spies from 'chai-spies'
 
-// Helper for mounted touchTap events
-// https://github.com/airbnb/enzyme/issues/99
-
 function simulateEvent (wrappedTarget, eventType) {
   if (wrappedTarget.node) {
     // wrappedTarget was obtained using enzyme's mount()
@@ -42,13 +39,13 @@ describe('DatabaseInfo', () => {
     it('should call on click callback with correct cypher * label is clicked', () => {
       const labels = [{val: 'Person'}]
       const wrapper = mount(<DatabaseInfoComponent labels={labels} onItemClick={onItemClick} />)
-      simulateEvent(wrapper.find('.token-label').first(), 'touchTap')
+      simulateEvent(wrapper.find('.token-label').first(), 'click')
       expect(onItemClick).have.been.called.with('MATCH (n) RETURN n LIMIT 25')
     })
     it('should call on click callback with correct cypher when a non * label is clicked', () => {
       const labels = [{val: 'Person'}]
       const wrapper = mount(<DatabaseInfoComponent labels={labels} onItemClick={onItemClick} />)
-      simulateEvent(wrapper.find('.token-label').last(), 'touchTap')
+      simulateEvent(wrapper.find('.token-label').last(), 'click')
       expect(onItemClick).have.been.called.with('MATCH (n:Person) RETURN n LIMIT 25')
     })
   })
@@ -68,13 +65,13 @@ describe('DatabaseInfo', () => {
     it('should call on click callback with correct cypher when * relationship is clicked', () => {
       const relationshipTypes = [{val: 'DIRECTED'}]
       const wrapper = mount(<DatabaseInfoComponent relationshipTypes={relationshipTypes} onItemClick={onItemClick} />)
-      simulateEvent(wrapper.find('.token-relationship').first(), 'touchTap')
+      simulateEvent(wrapper.find('.token-relationship').first(), 'click')
       expect(onItemClick).have.been.called.with('MATCH ()-[r]->() RETURN r LIMIT 25')
     })
     it('should call on click callback with correct cypher when a non * relationship is clicked', () => {
       const relationshipTypes = [{val: 'DIRECTED'}]
       const wrapper = mount(<DatabaseInfoComponent relationshipTypes={relationshipTypes} onItemClick={onItemClick} />)
-      simulateEvent(wrapper.find('.token-relationship').last(), 'touchTap')
+      simulateEvent(wrapper.find('.token-relationship').last(), 'click')
       expect(onItemClick).have.been.called.with('MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 25')
     })
   })
@@ -94,7 +91,7 @@ describe('DatabaseInfo', () => {
     it('should call on click callback with correct cypher when property is clicked', () => {
       const properties = [{val: 'born'}]
       const wrapper = mount(<DatabaseInfoComponent properties={properties} onItemClick={onItemClick} />)
-      simulateEvent(wrapper.find('.token-property').first(), 'touchTap')
+      simulateEvent(wrapper.find('.token-property').first(), 'click')
       expect(onItemClick).have.been.called.with('MATCH (n) WHERE EXISTS(n.born) RETURN DISTINCT "node" as element, n.born AS born LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.born) RETURN DISTINCT "relationship" AS element, r.born AS born LIMIT 25')
     })
   })

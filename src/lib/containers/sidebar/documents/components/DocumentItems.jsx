@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import {ListItem} from 'grommet/components/List'
+import ListItem from 'grommet/components/ListItem'
 import editor from 'containers/editor'
 import {H4} from 'nbnmui/headers'
 import {FavoriteItem} from 'nbnmui/buttons'

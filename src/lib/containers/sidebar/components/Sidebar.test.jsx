@@ -21,9 +21,7 @@ describe('Sidebar', () => {
     const drawer = 'db'
     const wrapper = mount(
       <Provider store={store}>
-
-        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
-
+        <sidebar.components.Sidebar openDrawer={drawer} />
       </Provider>
     )
     expect(wrapper.find('#db-drawer')).has.length(1)
@@ -33,9 +31,7 @@ describe('Sidebar', () => {
     const drawer = 'favorites'
     const wrapper = mount(
       <Provider store={store}>
-
-        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
-
+        <sidebar.components.Sidebar openDrawer={drawer} />
       </Provider>
     )
     expect(wrapper.find('#db-favorites')).has.length(1)
@@ -45,9 +41,7 @@ describe('Sidebar', () => {
     const drawer = 'documents'
     const wrapper = mount(
       <Provider store={store}>
-
-        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
-
+        <sidebar.components.Sidebar openDrawer={drawer} />
       </Provider>
     )
     expect(wrapper.find('#db-documents')).has.length(1)
@@ -57,9 +51,7 @@ describe('Sidebar', () => {
     const drawer = 'settings'
     const wrapper = mount(
       <Provider store={store}>
-
-        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
-
+        <sidebar.components.Sidebar openDrawer={drawer} />
       </Provider>
     )
     expect(wrapper.find('#db-settings')).has.length(1)

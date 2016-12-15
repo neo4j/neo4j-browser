@@ -1,11 +1,12 @@
 import React from 'react'
-import { List, ListItem } from 'grommet/components/List'
+import List from 'grommet/components/List'
+import ListItem from 'grommet/components/ListItem'
 import Button from 'grommet/components/Button'
 import classNames from 'classnames'
 
 const Navigation = ({
   openDrawer,
-  onNavClick = null,
+  onNavClick,
   topNavItems,
   bottomNavItems = [],
   selectedItemClassName,
