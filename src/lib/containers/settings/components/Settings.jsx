@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
 import * as actions from '../actions'
-import {ListItem} from 'material-ui/List'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField'
+import ListItem from 'grommet/components/List'
+import Button from 'grommet/components/Button'
+import TextInput from 'grommet/components/TextInput'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 import styles from './style.css'
@@ -34,7 +34,7 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
     return (
       <ListItem className={styles.setting + ' setting'} key={uuid.v4()}>
         <label title={tooltip}>{visual}</label>
-        <TextField
+        <TextInput
           id={uuid.v4()}
           defaultValue={settings[setting]}
           onChange={(event) => {
@@ -48,10 +48,10 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
 
   return (
     <Drawer id='db-settings'>
-      <DrawerHeader title='Settings'/>
+      <DrawerHeader title='Settings' />
       <DrawerBody>
         {mappedSettings}
-        <RaisedButton label='Save' onClick={() => onSettingsSave(settings)}/>
+        <Button label='Save' onClick={() => onSettingsSave(settings)} />
       </DrawerBody>
     </Drawer>
   )

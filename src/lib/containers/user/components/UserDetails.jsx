@@ -24,7 +24,7 @@ export class UserDetailsComponent extends React.Component {
           }}>Remove</button>
         </td>
         <td>
-          Role: <input className='roles' defaultValue={this.state.roles} onChange={(event) => { this.setState(Object.assign(this.state, { roles: event.target.value })) }}/>
+          Role: <input className='roles' defaultValue={this.state.roles} onChange={(event) => { this.setState(Object.assign(this.state, { roles: event.target.value })) }} />
           <button onClick={() => {
             addUserToRole(this.state.username, this.state.roles, (r) => { this.props.callback() })
           }}>Save</button>

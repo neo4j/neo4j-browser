@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import {ListItem} from 'material-ui/List'
+import {ListItem} from 'grommet/components/List'
 import editor from 'containers/editor'
 import {H4} from 'nbnmui/headers'
 import {FavoriteItem} from 'nbnmui/buttons'
@@ -25,7 +25,7 @@ export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
   })
   return (
     <div>
-      <H4 content={header}/>
+      <H4 content={header} />
       <div className='document'>
         {listOfItems}
       </div>

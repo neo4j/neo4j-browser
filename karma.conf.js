@@ -28,7 +28,7 @@ module.exports = function (config) {
           guides: 'src/guides'
         },
         modulesDirectories: ['src/lib', 'node_modules'],
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js', '.jsx', '.json']
       },
       externals: {
         'react/addons': true,
@@ -39,6 +39,7 @@ module.exports = function (config) {
       devtool: 'inline-source-map',
       module: {
         loaders: [
+          { test: /\.json$/, loader: 'json-loader' },
           { test: /\.jsx?$/, loader: 'babel', exclude: /node_modules|dist/ },
           { test: /\.css$/, loader: 'style!css' },
           { test: /\.html?$/, loader: 'html' },

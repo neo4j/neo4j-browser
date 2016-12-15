@@ -145,6 +145,7 @@ export class EditorComponent extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     onFavortieClick: (cmd) => {
+      console.log('click fav')
       dispatch(favorites.actions.addFavorite(cmd))
     },
     onExecute: (cmd) => {

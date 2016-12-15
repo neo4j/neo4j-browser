@@ -1,5 +1,5 @@
 import React from 'react'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
 import sidebar from '../'
 import { expect } from 'chai'
 import { mount } from 'enzyme'
@@ -21,9 +21,9 @@ describe('Sidebar', () => {
     const drawer = 'db'
     const wrapper = mount(
       <Provider store={store}>
-        <MuiThemeProvider>
-          <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/>
-        </MuiThemeProvider>
+
+        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
+
       </Provider>
     )
     expect(wrapper.find('#db-drawer')).has.length(1)
@@ -33,9 +33,9 @@ describe('Sidebar', () => {
     const drawer = 'favorites'
     const wrapper = mount(
       <Provider store={store}>
-        <MuiThemeProvider>
-          <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/>
-        </MuiThemeProvider>
+
+        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
+
       </Provider>
     )
     expect(wrapper.find('#db-favorites')).has.length(1)
@@ -45,9 +45,9 @@ describe('Sidebar', () => {
     const drawer = 'documents'
     const wrapper = mount(
       <Provider store={store}>
-        <MuiThemeProvider>
-          <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/>
-        </MuiThemeProvider>
+
+        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
+
       </Provider>
     )
     expect(wrapper.find('#db-documents')).has.length(1)
@@ -57,9 +57,9 @@ describe('Sidebar', () => {
     const drawer = 'settings'
     const wrapper = mount(
       <Provider store={store}>
-        <MuiThemeProvider>
-          <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}}/>
-        </MuiThemeProvider>
+
+        <sidebar.components.Sidebar openDrawer={drawer} onNavClick={() => {}} />
+
       </Provider>
     )
     expect(wrapper.find('#db-settings')).has.length(1)

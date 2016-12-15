@@ -6,13 +6,13 @@ import FrameTemplate from './FrameTemplate'
 export const PlayFrame = ({frame}) => {
   let guide = 'Play guide not specified'
   if (frame.result) {
-    guide = <guides.components.Carousel withDirectives html={frame.result}/>
+    guide = <guides.components.Carousel withDirectives html={frame.result} />
   } else {
     const guideName = frame.cmd.replace(':play', '').trim()
     if (guideName !== '') {
       const content = guides.html[guideName]
       if (content !== undefined) {
-        guide = <guides.components.Carousel withDirectives html={guides.html[guideName]}/>
+        guide = <guides.components.Carousel withDirectives html={guides.html[guideName]} />
       } else {
         guide = 'Guide not found'
       }
@@ -24,5 +24,5 @@ export const PlayFrame = ({frame}) => {
       header={<FrameTitlebar frame={frame} />}
       contents={guide}
     />
-    )
+  )
 }

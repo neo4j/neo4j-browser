@@ -60,7 +60,7 @@ const availableCommands = [{
   }
 }, {
   name: 'datasource',
-  match: (cmd) => /^data\s?\-?source(\s)/.test(cmd),
+  match: (cmd) => /^data\s?-?source(\s)/.test(cmd),
   exec: function * (action, cmdchar, onSuccess, onError) {
     yield call(handleDataSourceCommand, action, cmdchar, onSuccess, onError)
   }

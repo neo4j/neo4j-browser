@@ -1,17 +1,15 @@
 import 'babel-polyfill'
 import createSagaMiddleware from 'redux-saga'
-
+import 'preact/devtools'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import reducers from './rootReducer'
 import layout from './lib/containers/origLayout'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import sagas from './sagas'
 import './styles/style.css'
@@ -61,15 +59,12 @@ store.subscribe(lStorage.createPersistingStoreListener(
 
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)
-injectTapEventPlugin()
 
 ReactDOM.render(
   <Provider store={store}>
-    <MuiThemeProvider>
-      <Router history={history}>
-        <Route path='/' component={layout.components.OrigLayout} />
-      </Router>
-    </MuiThemeProvider>
+    <Router history={history}>
+      <Route path='/' component={layout.components.OrigLayout} />
+    </Router>
   </Provider>,
   document.getElementById('mount')
 )

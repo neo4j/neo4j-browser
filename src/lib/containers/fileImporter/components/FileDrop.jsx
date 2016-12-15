@@ -37,7 +37,7 @@ class FileDropZone extends React.Component {
   render () {
     return this.props.connectDropTarget(
       <div className='stuff'>
-        <this.props.Component text={this.state.text}/>
+        <this.props.Component text={this.state.text} />
       </div>
     )
   }
@@ -45,7 +45,7 @@ class FileDropZone extends React.Component {
 
 export const FileDrop = (Component, applyContext) => {
   let WrappedComponent = (props) => {
-    return (<FileDropZone {...props} Component={Component}/>)
+    return (<FileDropZone {...props} Component={Component} />)
   }
   const Target = DropTarget(NativeTypes.FILE, fileTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),

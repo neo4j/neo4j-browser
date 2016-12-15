@@ -1,5 +1,5 @@
 import React from 'react'
-import Chip from 'material-ui/Chip'
+import Button from 'grommet/components/Button'
 import classNames from 'classnames'
 import styles from './style_meta.css'
 
@@ -11,15 +11,15 @@ const createItems = (originalList, onItemClick, className, editorCommandTemplate
   return items.map((text, index) => {
     const getNodesCypher = editorCommandTemplate(text)
     return (
-      <Chip
+      <Button
         key={index}
-        onTouchTap={() => onItemClick(getNodesCypher)}
+        onClick={() => onItemClick(getNodesCypher)}
         className={classNames({
           [styles.chip]: true,
           [className]: true
         })}>
         {text}
-      </Chip>
+      </Button>
     )
   })
 }

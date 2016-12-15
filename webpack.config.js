@@ -1,7 +1,6 @@
 var webpack = require('webpack')
 var path = require('path')
 var precss = require('precss')
-var TransferWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: [
@@ -12,13 +11,16 @@ module.exports = {
   ],
   module: {
     loaders: [{
+      test: /\.json$/,
+      loader: 'json-loader'
+    }, {
       test: /\.jsx?$/,
       exclude: /node_modules|dist/,
       loader: 'react-hot!babel'
     }, {
       test: /\.css$/,
       include: path.resolve('./src'),
-      exclude: [path.resolve('./src/styles'), path.resolve('./src/visualisation')],
+      exclude: [path.resolve('./src/styles')],
       loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
     }, {
       test: /\.css$/,
@@ -51,10 +53,12 @@ module.exports = {
     alias: {
       services: 'src/services',
       sagas: 'src/sagas',
-      guides: 'src/guides'
+      guides: 'src/guides',
+      react: 'preact-compat',
+      'react-dom': 'preact-compat'
     },
     modulesDirectories: ['src/lib', 'node_modules'],
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx', '.json']
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -69,10 +73,7 @@ module.exports = {
     hot: true
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new TransferWebpackPlugin([
-    { from: 'node_modules/neo4j-visualization/dist/assets', to: 'assets' }
-    ])
+    new webpack.HotModuleReplacementPlugin()
   ],
   node: {
     net: 'empty',

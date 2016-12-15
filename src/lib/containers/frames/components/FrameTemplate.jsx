@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardHeader } from 'material-ui/Card'
+import { Card, CardHeader } from 'grommet/components/Card'
 
 import styles from './style_frame.css'
 

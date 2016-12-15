@@ -11,7 +11,7 @@ describe('FileDrop', () => {
   chai.use(chaiEnzyme())
   it('should render child component', () => {
     const ChildComponent = (props) => {
-      return (<div className='child'/>)
+      return (<div className='child' />)
     }
     const FileDropComp = FileDrop(ChildComponent, true)
     const wrapper = mount(<FileDropComp />)

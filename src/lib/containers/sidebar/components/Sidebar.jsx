@@ -4,14 +4,14 @@ import favorites from '../favorites'
 import documents from '../documents'
 import tabNavigation from 'containers/tabNavigation'
 import settings from 'containers/settings'
-import ActionGrade from 'material-ui/svg-icons/action/grade'
-import ActionViewHeadline from 'material-ui/svg-icons/action/view-headline'
-import ActionDescription from 'material-ui/svg-icons/action/description'
-import ActionSettings from 'material-ui/svg-icons/action/settings'
-import FileCloud from 'material-ui/svg-icons/file/cloud'
-import ActionInfo from 'material-ui/svg-icons/action/info'
+import MdGrade from 'react-icons/lib/md/grade'
+import MdViewHeadline from 'react-icons/lib/md/view-headline'
+import MdDescription from 'react-icons/lib/md/description'
+import MdSettingsApplications from 'react-icons/lib/md/settings-applications'
+import MdCloud from 'react-icons/lib/md/cloud'
+import MdInfo from 'react-icons/lib/md/info'
 
-import {white} from 'material-ui/styles/colors'
+// import {white} from 'grommet/components/styles/colors'
 
 import styles from './style.css'
 
@@ -24,14 +24,14 @@ class Sidebar extends React.Component {
     const DocumentsDrawer = documents.components.DocumentsComponent
     const SettingsDrawer = settings.components.Settings
     const topNavItemsList = [
-      {name: 'DB', icon: <ActionViewHeadline color={white}/>, content: DatabaseDrawer},
-      {name: 'Favorites', icon: <ActionGrade color={white}/>, content: FavoritesDrawer},
-      {name: 'Documents', icon: <ActionDescription color={white}/>, content: DocumentsDrawer}
+      {name: 'DB', icon: <MdViewHeadline />, content: DatabaseDrawer},
+      {name: 'Favorites', icon: <MdGrade />, content: FavoritesDrawer},
+      {name: 'Documents', icon: <MdDescription />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: <FileCloud color={white}/>, content: SettingsDrawer},
-      {name: 'Settings', icon: <ActionSettings color={white}/>, content: SettingsDrawer},
-      {name: 'About', icon: <ActionInfo color={white}/>, content: SettingsDrawer}
+      {name: 'Sync', icon: <MdCloud />, content: SettingsDrawer},
+      {name: 'Settings', icon: <MdSettingsApplications />, content: SettingsDrawer},
+      {name: 'About', icon: <MdInfo />, content: SettingsDrawer}
     ]
 
     return (<tabNavigation.components.Navigation

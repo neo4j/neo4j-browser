@@ -15,7 +15,7 @@ const FrameTitlebarComponent = ({frame, onTitlebarClick, onCloseClick, onReRunCl
         <div onClick={() => onReRunClick(frame.cmd, frame.id)} className={styles['frame-action-button']}>Re-run</div>
         <div onClick={() => onCloseClick(frame.id)} className={styles['frame-action-button']}>X</div>
       </div>
-      <div className='clear'></div>
+      <div className='clear' />
     </div>
   )
 }

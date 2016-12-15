@@ -25,11 +25,11 @@ const staticItems = {
 export const DocumentsComponent = ({ items = staticItems }) => {
   return (
     <Drawer id='db-documents'>
-      <DrawerHeader title='Documents'/>
+      <DrawerHeader title='Documents' />
       <DrawerBody>
-        <DocumentItems header={'Introduction'} items={items.intro}/>
-        <DocumentItems header={'Reference Library'} items={items.reference}/>
-        <DocumentItems header={'Help'} items={items.help}/>
+        <DocumentItems header={'Introduction'} items={items.intro} />
+        <DocumentItems header={'Reference Library'} items={items.reference} />
+        <DocumentItems header={'Help'} items={items.help} />
       </DrawerBody>
     </Drawer>
   )
