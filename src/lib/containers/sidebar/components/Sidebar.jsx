@@ -11,8 +11,6 @@ import MdSettingsApplications from 'react-icons/lib/md/settings-applications'
 import MdCloud from 'react-icons/lib/md/cloud'
 import MdInfo from 'react-icons/lib/md/info'
 
-// import {white} from 'grommet/components/styles/colors'
-
 import styles from './style.css'
 
 class Sidebar extends React.Component {
