@@ -13,8 +13,7 @@ export class QueryPlanComponent extends React.Component {
 
   render () {
     return (
-      <svg className='neod3plan' ref={this.planInit.bind(this)}>
-      </svg>
+      <svg className='neod3plan' ref={this.planInit.bind(this)} />
     )
   }
 }

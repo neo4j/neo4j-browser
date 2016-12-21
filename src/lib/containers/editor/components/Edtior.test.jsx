@@ -14,7 +14,7 @@ describe('Editor', () => {
   let onExecute
   let updateContent
 
-  beforeEach(()=> {
+  beforeEach(() => {
     onExecute = chai.spy()
     updateContent = chai.spy()
   })

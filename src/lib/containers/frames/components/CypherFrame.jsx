@@ -35,14 +35,7 @@ class CypherFrame extends React.Component {
     if (result.records && result.records.length > 0) {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (plan) {
-        const style = {'margin-bottom': '20px'}
-        
-        frameContents = (
-          <div>
-            <h1>Hello Planner</h1>
-            <QueryPlanComponent plan={plan}/>
-          </div>
-        )
+        frameContents = <QueryPlanComponent plan={plan} />
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
         frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
