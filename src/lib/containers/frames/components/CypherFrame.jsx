@@ -2,6 +2,7 @@ import React from 'react'
 import { FrameTitlebar } from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import asciitable from 'ascii-data-table'
+import { QueryPlanComponent } from './Planner/QueryPlanComponent'
 import bolt from 'services/bolt/bolt'
 
 class CypherFrame extends React.Component {
@@ -28,11 +29,24 @@ class CypherFrame extends React.Component {
     const frame = this.props.frame
     const errors = frame.error && frame.error.fields || false
     const result = frame.result || false
+    const plan = this.state.plan || bolt.extractPlan(result)
+
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
-      this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
-      frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
+      if (plan) {
+        const style = {'margin-bottom': '20px'}
+        
+        frameContents = (
+          <div>
+            <h1>Hello Planner</h1>
+            <QueryPlanComponent plan={plan}/>
+          </div>
+        )
+      } else {
+        this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
+        frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
+      }
     } else if (errors) {
       frameContents = (
         <div>
