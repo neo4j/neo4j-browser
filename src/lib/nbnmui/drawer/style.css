@@ -5,7 +5,11 @@
   padding: 15px !important;
 }
 .bar {
-  height: 81px !important;
+  font-size: 17px !important;
+  font-weight: bold;
+  padding-top: 28px;
+  padding-left: 15px !important;
+  height: 73px !important;
   background-color: transparent !important;
   border-bottom: 1px white solid;
 }

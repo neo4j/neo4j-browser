@@ -1,6 +1,6 @@
 import React from 'react'
 import List from 'grommet/components/List'
-import Header from 'grommet/components/Header'
+import Heading from 'grommet/components/Heading'
 import Title from 'grommet/components/Title'
 import styles from './style.css'
 
@@ -9,9 +9,9 @@ export const Drawer = (props) => {
 }
 export const DrawerHeader = ({title}) => {
   return (
-    <Header className={styles.bar}>
-      <Title className={styles.title} text={title} />
-    </Header>
+    <Heading className={styles.bar}>
+      {title}
+    </Heading>
   )
 }
 

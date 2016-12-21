@@ -13,6 +13,7 @@ const createItems = (originalList, onItemClick, className, editorCommandTemplate
     return (
       <Button
         key={index}
+        primary
         onClick={() => onItemClick(getNodesCypher)}
         className={classNames({
           [styles.chip]: true,
