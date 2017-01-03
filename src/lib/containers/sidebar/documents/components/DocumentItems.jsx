@@ -25,7 +25,7 @@ export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
   })
   return (
     <div>
-      <H4 content={header} />
+      <H4>{header}</H4>
       <div className='document'>
         {listOfItems}
       </div>
