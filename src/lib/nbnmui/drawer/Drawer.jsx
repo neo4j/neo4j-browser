@@ -1,7 +1,6 @@
 import React from 'react'
 import List from 'grommet/components/List'
 import Heading from 'grommet/components/Heading'
-import Title from 'grommet/components/Title'
 import styles from './style.css'
 
 export const Drawer = (props) => {
