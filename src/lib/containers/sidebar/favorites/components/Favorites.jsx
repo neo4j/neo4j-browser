@@ -9,7 +9,7 @@ export const FavoritesComponent = ({scripts = [], onItemClick}) => {
   })
   return (
     <Drawer id='db-favorites'>
-      <DrawerHeader title='Favorite' />
+      <DrawerHeader title='Favorites' />
       <DrawerBody>
         {ListOfFavorites}
       </DrawerBody>
