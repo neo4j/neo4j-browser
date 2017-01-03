@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
 import ListItem from 'grommet/components/ListItem'
+import List from 'grommet/components/List'
 import editor from 'containers/editor'
 import {H4} from 'nbnmui/headers'
 import {FavoriteItem} from 'nbnmui/buttons'
@@ -26,9 +27,9 @@ export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
   return (
     <div>
       <H4>{header}</H4>
-      <div className='document'>
+      <List className='document'>
         {listOfItems}
-      </div>
+      </List>
     </div>
   )
 }

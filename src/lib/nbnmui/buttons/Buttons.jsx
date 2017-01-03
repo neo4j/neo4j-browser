@@ -1,5 +1,5 @@
 import React from 'react'
-import ListItem from 'grommet/components/List'
+import ListItem from 'grommet/components/ListItem'
 import Button from 'grommet/components/Button'
 
 import styles from './style.css'
