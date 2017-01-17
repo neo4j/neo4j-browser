@@ -8,7 +8,7 @@ import Button from 'grommet/components/Button'
 
 import styles from './style.css'
 
-export class Carousel extends React.Component {
+export default class Guides extends React.Component {
   constructor (props) {
     super(props)
     this.state = {slides: null, firstRender: false}

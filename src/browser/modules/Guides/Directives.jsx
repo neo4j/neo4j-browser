@@ -19,7 +19,7 @@ const directives = [{
   }
 }]
 
-const DirectivesComponent = (props) => {
+export const Directives = (props) => {
   const callback = (elem) => {
     if (elem) {
       directives.forEach((directive) => {
@@ -47,9 +47,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const Directives = connect(null, mapDispatchToProps)(DirectivesComponent)
-
-export default Directives
-export {
-  DirectivesComponent
-}
+export default connect(null, mapDispatchToProps)(Directives)
