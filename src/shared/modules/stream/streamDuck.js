@@ -1,5 +1,11 @@
-import { NAME } from './constants'
-import * as t from './actionTypes'
+
+const NAME = 'frames'
+
+export const ADD = 'frames/ADD'
+export const REMOVE = 'frames/REMOVE'
+export const CLEAR_ALL = 'frames/CLEAR_ALL'
+export const CLEAR_IN_CONTEXT = 'frames/CLEAR_IN_CONTEXT'
+export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
 
 const initialState = {
   allIds: [],
@@ -57,17 +63,45 @@ function clear () {
 /**
  * Reducer
 */
-export default function frames (state = initialState, action) {
+export default function reducer (state = initialState, action) {
   switch (action.type) {
-    case t.ADD:
+    case ADD:
       return addFrame(state, action.state)
-    case t.REMOVE:
+    case REMOVE:
       return removeFrame(state, action.id)
-    case t.CLEAR_IN_CONTEXT:
+    case CLEAR_IN_CONTEXT:
       return clearInContext(state, action.context)
-    case t.CLEAR_ALL:
+    case CLEAR_ALL:
       return clear()
     default:
       return state
+  }
+}
+
+// Action creators
+export function add (payload) {
+  return {
+    type: ADD,
+    state: Object.assign({}, payload, {id: (payload.id || uuid.v1())})
+  }
+}
+
+export function remove (id) {
+  return {
+    type: REMOVE,
+    id
+  }
+}
+
+export function clearInContext (context) {
+  return {
+    type: CLEAR_IN_CONTEXT,
+    context
+  }
+}
+
+export function clear () {
+  return {
+    type: CLEAR_ALL
   }
 }

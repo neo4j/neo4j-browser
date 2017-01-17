@@ -1,5 +1,5 @@
 import React from 'react'
-import { FrameTitlebar } from './FrameTitlebar'
+import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 
 const Frame = ({frame}) => {
@@ -22,7 +22,4 @@ const Frame = ({frame}) => {
     />
   )
 }
-
-export {
-  Frame
-}
+export default Frame

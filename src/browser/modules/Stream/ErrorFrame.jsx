@@ -1,5 +1,5 @@
 import React from 'react'
-import { FrameTitlebar } from './FrameTitlebar'
+import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import * as e from 'services/exceptionMessages'
 
@@ -16,7 +16,4 @@ const ErrorFrame = ({frame}) => {
     />
   )
 }
-
-export {
-  ErrorFrame
-}
+export default ErrorFrame

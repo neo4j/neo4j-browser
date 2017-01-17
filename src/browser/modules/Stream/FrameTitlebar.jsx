@@ -5,7 +5,7 @@ import { remove } from '../actions'
 
 import styles from './style_titlebar.css'
 
-const FrameTitlebarComponent = ({frame, onTitlebarClick, onCloseClick, onReRunClick}) => {
+export const FrameTitlebar = ({frame, onTitlebarClick, onCloseClick, onReRunClick}) => {
   return (
     <div className={styles['frame-titlebar']}>
       <div className={styles['frame-command']}>
@@ -34,9 +34,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const FrameTitlebar = connect(null, mapDispatchToProps)(FrameTitlebarComponent)
-
-export {
-  FrameTitlebar,
-  FrameTitlebarComponent
-}
+export default connect(null, mapDispatchToProps)(FrameTitlebar)

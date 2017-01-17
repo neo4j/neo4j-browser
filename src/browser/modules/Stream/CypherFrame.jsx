@@ -1,8 +1,8 @@
 import React from 'react'
-import { FrameTitlebar } from './FrameTitlebar'
+import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import asciitable from 'ascii-data-table'
-import { QueryPlanComponent } from './Planner/QueryPlanComponent'
+import QueryPlan from './Planner/QueryPlan'
 import bolt from 'services/bolt/bolt'
 
 class CypherFrame extends React.Component {
@@ -35,7 +35,7 @@ class CypherFrame extends React.Component {
     if (result.records && result.records.length > 0) {
       this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (plan) {
-        frameContents = <QueryPlanComponent plan={plan} />
+        frameContents = <QueryPlan plan={plan} />
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
         frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
@@ -62,7 +62,4 @@ class CypherFrame extends React.Component {
     )
   }
 }
-
-export {
-  CypherFrame
-}
+export default CypherFrame

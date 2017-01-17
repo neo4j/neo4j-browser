@@ -1,16 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { CypherFrame } from './CypherFrame'
+import CypherFrame from './CypherFrame'
 import WidgetFrame from './WidgetFrame'
-import { HistoryFrame } from './HistoryFrame'
-import { PlayFrame } from './PlayFrame'
-import { Frame } from './Frame'
-import { PreFrame } from './PreFrame'
-import { ErrorFrame } from './ErrorFrame'
-import { StyleFrame } from './StyleFrame'
-import { getFrames } from '../reducer'
+import HistoryFrame from './HistoryFrame'
+import PlayFrame from './PlayFrame'
+import Frame from './Frame'
+import PreFrame from './PreFrame'
+import ErrorFrame from './ErrorFrame'
+import StyleFrame from './StyleFrame'
+import getFrames from '../reducer'
 
-const StreamComponent = (props) => {
+export const Stream = (props) => {
   const {frames} = props
   const framesList = frames.map((frame) => {
     if (frame.type === 'error') {
@@ -88,9 +88,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-const Stream = connect(mapStateToProps)(StreamComponent)
-
-export {
-  Stream,
-  StreamComponent
-}
+export default connect(mapStateToProps)(Stream)

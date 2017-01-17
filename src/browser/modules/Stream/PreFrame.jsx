@@ -1,17 +1,13 @@
 import React from 'react'
-import { FrameTitlebar } from './FrameTitlebar'
+import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 
-const StyleFrame = (props) => {
-  const frame = props.frame
+const PreFrame = ({frame}) => {
   return (
     <FrameTemplate
       header={<FrameTitlebar frame={frame} />}
-      contents={'NA'}
+      contents={<pre>{frame.result || frame.contents}</pre>}
     />
   )
 }
-
-export {
-  StyleFrame
-}
+export default PreFrame

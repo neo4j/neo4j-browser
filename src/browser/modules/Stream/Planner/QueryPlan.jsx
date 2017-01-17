@@ -1,7 +1,7 @@
 import React from 'react'
 import './visualization.css'
 
-export class QueryPlanComponent extends React.Component {
+class QueryPlan extends React.Component {
 
   planInit (el) {
     if (el != null && !this.plan) {
@@ -18,6 +18,7 @@ export class QueryPlanComponent extends React.Component {
   }
 }
 
-QueryPlanComponent.propTypes = {
+QueryPlan.propTypes = {
   plan: React.PropTypes.object.isRequired
 }
+export default QueryPlan

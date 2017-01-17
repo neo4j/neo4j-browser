@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { FrameTitlebar } from './FrameTitlebar'
+import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import editor from 'containers/editor'
-import { HistoryRowComponent } from './HistoryRow'
+import HistoryRow from './HistoryRow'
 
 import styles from './style_history.css'
 
-const HistoryFrameComponent = ({frame, onHistoryClick}) => {
+export const HistoryFrame = ({frame, onHistoryClick}) => {
   const historyRows = frame.result.map((entry, index) => {
     return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry} />
   })
@@ -27,9 +27,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const HistoryFrame = connect(null, mapDispatchToProps)(HistoryFrameComponent)
-
-export {
-  HistoryFrameComponent,
-  HistoryFrame
-}
+export default connect(null, mapDispatchToProps)(HistoryFrame)
