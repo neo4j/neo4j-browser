@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Favorite } from './Favorite'
+import Favorite from './Favorite'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
-export const FavoritesComponent = ({scripts = [], onItemClick}) => {
+export const Favorites = ({scripts = [], onItemClick}) => {
   const ListOfFavorites = scripts.map((entry) => {
     return <Favorite key={entry.id} name={entry.name} content={entry.content} onItemClick={onItemClick} id={entry.id} />
   })
@@ -23,4 +23,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export const Favorites = connect(mapStateToProps, null)(FavoritesComponent)
+export default connect(mapStateToProps, null)(Favorites)

@@ -1,5 +1,0 @@
-export const ADD_FAVORITE = 'favorites/ADD_FAVORITE'
-export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
-export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
-export const FAVORITES_UPDATED = 'favorites/FAVORITES_UPDATED'
-export const FAVORITES_READ = 'favorites/FAVORITES_READ'

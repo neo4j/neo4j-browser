@@ -1,4 +1,6 @@
-import * as t from './actionTypes'
+const NAME = 'drawer'
+
+export const TOGGLE = 'drawer/TOGGLE'
 
 function toggleDrawer (state, newState) {
   if (!newState.drawer) {
@@ -10,10 +12,17 @@ function toggleDrawer (state, newState) {
   return newState.drawer
 }
 
-export default function drawer (state = '', action) {
+export default function reducer (state = '', action) {
   switch (action.type) {
-    case t.TOGGLE:
+    case TOGGLE:
       return toggleDrawer(state, action.state)
   }
   return state
+}
+
+export function toggle (id) {
+  return {
+    type: TOGGLE,
+    state: {drawer: id}
+  }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
-import { DocumentItems } from './DocumentItems'
-import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
+import DocumentItems from './DocumentItems'
+import { Drawer, DrawerBody, DrawerHeader } from 'nbnmui/drawer'
 
 const staticItems = {
   intro: [
@@ -22,7 +22,7 @@ const staticItems = {
   ]
 }
 
-export const DocumentsComponent = ({ items = staticItems }) => {
+const Documents = ({ items = staticItems }) => {
   return (
     <Drawer id='db-documents'>
       <DrawerHeader title='Documents' />
@@ -34,3 +34,5 @@ export const DocumentsComponent = ({ items = staticItems }) => {
     </Drawer>
   )
 }
+
+export default Documents

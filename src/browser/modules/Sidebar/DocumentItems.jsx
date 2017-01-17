@@ -4,8 +4,8 @@ import uuid from 'uuid'
 import ListItem from 'grommet/components/ListItem'
 import List from 'grommet/components/List'
 import editor from 'containers/editor'
-import {H4} from 'nbnmui/headers'
-import {FavoriteItem} from 'nbnmui/buttons'
+import { H4 } from 'nbnmui/headers'
+import { FavoriteItem } from 'nbnmui/buttons'
 
 export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
   const listOfItems = items.map((item) => {
@@ -42,4 +42,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const DocumentItems = connect(null, mapDispatchToProps)(DocumentItemsComponent)
+export default connect(null, mapDispatchToProps)(DocumentItemsComponent)

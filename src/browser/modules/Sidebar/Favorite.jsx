@@ -17,7 +17,7 @@ function extractNameFromCommand (input) {
   }
 }
 
-const FavoriteComponent = ({id, content, onItemClick = () => {}, removeClick = () => {}}) => {
+export const Favorite = ({id, content, onItemClick = () => {}, removeClick = () => {}}) => {
   const name = extractNameFromCommand(content)
   return (
     <FavoriteItem
@@ -41,8 +41,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const Favorite = connect(null, mapDispatchToProps)(FavoriteComponent)
-export {
-  FavoriteComponent,
-  Favorite
-}
+export default connect(null, mapDispatchToProps)(Favorite)
