@@ -2,6 +2,7 @@ import React from 'react'
 import dbInfo from 'containers/dbInfo'
 import favorites from '../favorites'
 import documents from '../documents'
+import about from '../about'
 import tabNavigation from 'containers/tabNavigation'
 import settings from 'containers/settings'
 import MdGrade from 'react-icons/lib/md/grade'
@@ -21,6 +22,7 @@ class Sidebar extends React.Component {
     const FavoritesDrawer = favorites.components.Favorites
     const DocumentsDrawer = documents.components.DocumentsComponent
     const SettingsDrawer = settings.components.Settings
+    const AboutDrawer = about.components.AboutComponent
     const topNavItemsList = [
       {name: 'DB', icon: <MdViewHeadline type='control' />, content: DatabaseDrawer},
       {name: 'Favorites', icon: <MdGrade type='control' />, content: FavoritesDrawer},
@@ -29,7 +31,7 @@ class Sidebar extends React.Component {
     const bottomNavItemsList = [
       {name: 'Sync', icon: <MdCloud type='control' />, content: SettingsDrawer},
       {name: 'Settings', icon: <MdSettingsApplications type='control' />, content: SettingsDrawer},
-      {name: 'About', icon: <MdInfo type='control' />, content: SettingsDrawer}
+      {name: 'About', icon: <MdInfo type='control' />, content: AboutDrawer}
     ]
 
     return (<tabNavigation.components.Navigation
