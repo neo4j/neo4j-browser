@@ -6,7 +6,7 @@ import Heading from 'grommet/components/Heading'
 import Header from 'grommet/components/Footer'
 
 const P = (props) => {
-  return <Paragraph {...props} size='small'/>
+  return <Paragraph {...props} size='small' />
 }
 export const AboutComponent = () => {
   return (
