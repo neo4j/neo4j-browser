@@ -15,9 +15,7 @@ describe('Settings', () => {
 
   it('should show known setting values', () => {
     const wrapper = mount(
-
       <SettingsComponent settings={{ cmdchar: '-', maxHistory: 0 }} />
-
     )
     expect(wrapper.find('.setting').at(0).find('input')).to.have.value('-')
     expect(wrapper.find('.setting').at(1).find('input')).to.have.value('0')
@@ -25,9 +23,7 @@ describe('Settings', () => {
   it('should show default settings', () => {
     const wrapper = mount(
       <Provider store={store}>
-
         <Settings />
-
       </Provider>
     )
     expect(wrapper.find('#db-settings')).has.length(1)
@@ -38,9 +34,7 @@ describe('Settings', () => {
   it('should not show unknown settings', () => {
     const wrapper = mount(
       <Provider store={store}>
-
         <Settings settings={{ a: 'b' }} />
-
       </Provider>
     )
     expect(wrapper.find('.setting').at(0).find('input')).to.have.value(':')

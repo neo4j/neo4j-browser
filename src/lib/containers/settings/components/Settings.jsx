@@ -1,10 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import uuid from 'uuid'
 import * as actions from '../actions'
 import ListItem from 'grommet/components/List'
-import Button from 'grommet/components/Button'
-import TextInput from 'grommet/components/TextInput'
+import FormField from 'grommet/components/FormField'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 import styles from './style.css'
@@ -30,28 +28,23 @@ export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
     const setting = Object.keys(visualSetting)[0]
     const visual = visualSetting[setting].displayName
     const tooltip = visualSetting[setting].tooltip
-
     return (
-      <ListItem className={styles.setting + ' setting'} key={uuid.v4()}>
-        <label title={tooltip}>{visual}</label>
-        <TextInput
-          id={uuid.v4()}
-          defaultValue={settings[setting]}
-          onChange={(event) => {
+      <ListItem>
+        <FormField label={visual} className={'setting ' + styles.setting}>
+          <input onChange={(event) => {
             settings[setting] = event.target.value
-          }}
-          fullWidth
-        />
+            onSettingsSave(settings)
+          }} defaultValue={settings[setting]} suggestions={[tooltip]} />
+        </FormField>
       </ListItem>
     )
   })
 
   return (
     <Drawer id='db-settings'>
-      <DrawerHeader title='Settings' />
+      <DrawerHeader title='Browser Settings' />
       <DrawerBody>
         {mappedSettings}
-        <Button label='Save' onClick={() => onSettingsSave(settings)} />
       </DrawerBody>
     </Drawer>
   )

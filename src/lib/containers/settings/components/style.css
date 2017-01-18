@@ -1,5 +1,12 @@
 .setting {
-  label, input {
+  background: none !important;
+  label {
     color: #fff !important;
+    background: none;
+    border: #fff;
+  }
+  input {
+    border-radius: 4px;
+    padding: 6px 12px;
   }
 }
