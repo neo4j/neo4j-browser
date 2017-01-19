@@ -3,12 +3,13 @@ import { connect } from 'react-redux'
 import editor from 'containers/editor'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import { UserDetails } from './UserDetails'
+import { DatabaseKernelInfo } from './DatabaseKernelInfo'
 import ListItem from 'grommet/components/ListItem'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 import styles from './style_meta.css'
 
-const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties = [], userDetails, onItemClick }) => {
+const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties = [], userDetails, databaseKernelInfo, onItemClick }) => {
   return (
     <Drawer id='db-drawer'>
       <DrawerHeader title='Database Information' />
@@ -24,6 +25,7 @@ const DatabaseInfoComponent = ({ labels = [], relationshipTypes = [], properties
         </ListItem>
         <ListItem className={styles.section} disabled>
           <UserDetails userDetails={userDetails} onItemClick={onItemClick} />
+          <DatabaseKernelInfo databaseKernelInfo={databaseKernelInfo} onItemClick={onItemClick} />
         </ListItem>
       </DrawerBody>
     </Drawer>
