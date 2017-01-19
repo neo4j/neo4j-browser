@@ -1,3 +1,3 @@
-import {FavoriteItem, EditorButton} from './Buttons'
+import {FavoriteItem, EditorButton, NavigationButton} from './Buttons'
 
-export {FavoriteItem, EditorButton}
+export {FavoriteItem, EditorButton, NavigationButton}
