@@ -18,7 +18,7 @@ export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
         )
       default:
         return (
-          <FavoriteItem delete={false} className='command' key={uuid.v4()} onClick={() => onItemClick(item.command)}
+          <FavoriteItem className='command' key={uuid.v4()} onClick={() => onItemClick(item.command)}
             primaryText={item.name}
           />
         )
