@@ -1,5 +1,6 @@
-import { NAME } from './constants'
-import * as t from './actionTypes'
+const NAME = 'user'
+
+export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
 
 const initialState = {
   info: null
@@ -25,7 +26,7 @@ function updateCurrentUserInfo (state, info) {
 */
 export default function user (state = initialState, action) {
   switch (action.type) {
-    case t.UPDATE_CURRENT_USER:
+    case UPDATE_CURRENT_USER:
       const info = action.info
       if (info) {
         return updateCurrentUserInfo(state, action.info)
@@ -35,5 +36,16 @@ export default function user (state = initialState, action) {
 
     default:
       return state
+  }
+}
+
+// actions
+export function updateCurrentUser (username, roles) {
+  return {
+    type: UPDATE_CURRENT_USER,
+    info: {
+      username,
+      roles
+    }
   }
 }
