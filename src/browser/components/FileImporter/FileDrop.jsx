@@ -1,7 +1,7 @@
 import React from 'react'
 import {NativeTypes} from 'react-dnd-html5-backend'
 import { DropTarget } from 'react-dnd'
-import { wrapWithDndContext } from '../dndGlobalContext'
+import { wrapWithDndContext } from './dndGlobalContext'
 
 const fileTarget = {
   drop (props, monitor) {
