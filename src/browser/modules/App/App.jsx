@@ -3,17 +3,17 @@ import { connect } from 'react-redux'
 
 import styles from './style.css'
 
-import main from 'containers/main'
-import sidebar from 'containers/sidebar'
+import Main from '../Main'
+import Sidebar from '../Sidebar'
 
 export const BaseLayout = ({drawer, handleNavClick}) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.app}>
         <div className={styles.body}>
-          <sidebar.components.Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+          <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
           <div className={styles.mainContent}>
-            <main.components.Main />
+            <Main />
           </div>
         </div>
       </div>
