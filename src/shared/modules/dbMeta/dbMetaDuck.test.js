@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import dbInfo from '.'
+import reducer, * as meta from './dbMetaDuck'
 
 describe('updating metadata', () => {
   it('should update state when metadata is updated', () => {
@@ -16,11 +16,11 @@ describe('updating metadata', () => {
       get: (val) => { return ['prop1', 'prop2'] }
     }
     const action = {
-      type: dbInfo.actionTypes.UPDATE_META,
+      type: meta.UPDATE,
       meta: {records: [ returnedLabels, returnedRelationshipTypes, returnedProperies ]},
       context: 'mycontext'
     }
-    const nextState = dbInfo.reducer(undefined, action)
+    const nextState = reducer(undefined, action)
     expect(nextState.labels).to.deep.equal([{val: 'label1', context: 'mycontext'}, {val: 'label2', context: 'mycontext'}])
     expect(nextState.relationshipTypes).to.deep.equal([{val: 'rel1', context: 'mycontext'}, {val: 'rel2', context: 'mycontext'}])
     expect(nextState.properties).to.deep.equal([{val: 'prop1', context: 'mycontext'}, {val: 'prop2', context: 'mycontext'}])
@@ -47,7 +47,7 @@ describe('updating metadata', () => {
   //     type: dbInfo.actionTypes.UPDATE_META,
   //     state: {meta: {records: [ returnedLabels, returnedRelationshipTypes, returnedProperies ]}}
   //   }
-  //   const nextState = dbInfo.reducer(initialState, action)
+  //   const nextState = reducer(initialState, action)
   //   expect(nextState).to.equal(initialState)
   // })
 })

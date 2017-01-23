@@ -1,4 +1,6 @@
-import * as t from './actionTypes'
+const NAME = 'meta'
+
+export const UPDATE = 'meta/UPDATE'
 
 const initialState = {
   labels: [],
@@ -39,9 +41,18 @@ function updateMetaForContext (state, meta, context) {
 */
 export default function labels (state = initialState, action) {
   switch (action.type) {
-    case t.UPDATE_META:
+    case UPDATE:
       return updateMetaForContext(state, action.meta, action.context)
     default:
       return state
+  }
+}
+
+// Actions
+export function updateMeta (meta, context) {
+  return {
+    type: UPDATE,
+    meta,
+    context
   }
 }
