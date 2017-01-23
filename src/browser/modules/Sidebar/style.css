@@ -34,3 +34,10 @@
   background-color: #30333A;
   overflow: auto
 }
+
+.setting {
+  label, input {
+    color: #fff !important;
+  }
+}
+

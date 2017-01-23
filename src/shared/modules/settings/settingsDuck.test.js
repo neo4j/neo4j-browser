@@ -1,33 +1,33 @@
 import {expect} from 'chai'
-import settings from '.'
+import reducer, { UPDATE } from '.'
 
 describe('settings reducer', () => {
   it('handles initial value', () => {
-    const nextState = settings.reducer(undefined, {type: ''})
+    const nextState = reducer(undefined, {type: ''})
     expect(nextState.cmdchar).to.equal(':')
   })
 
-  it('handles settings.actionTypes.UPDATE without initial state', () => {
+  it('handles UPDATE without initial state', () => {
     const action = {
-      type: settings.actionTypes.UPDATE,
+      type: UPDATE,
       state: {
         greeting: 'hello'
       }
     }
-    const nextState = settings.reducer(undefined, action)
+    const nextState = reducer(undefined, action)
     expect(nextState.greeting).to.equal('hello')
   })
 
-  it('handles settings.actionTypes.UPDATE', () => {
+  it('handles UPDATE', () => {
     const initialState = { cmdchar: ':', greeting: 'hello', type: 'human' }
     const action = {
-      type: settings.actionTypes.UPDATE,
+      type: UPDATE,
       state: {
         greeting: 'woff',
         type: 'dog'
       }
     }
-    const nextState = settings.reducer(initialState, action)
+    const nextState = reducer(initialState, action)
     expect(nextState).to.deep.equal({
       cmdchar: ':',
       greeting: 'woff',
