@@ -1,5 +1,13 @@
-import * as t from './actionTypes'
-import { NAME } from './constants'
+import uuid from 'uuid'
+
+const NAME = 'datasource'
+
+export const ADD = 'datasource/ADD'
+export const REMOVE = 'datasource/REMOVE'
+export const DID_RUN = 'datasource/DID_RUN'
+export const DID_FAIL = 'datasource/DID_FAIL'
+export const UPDATE = 'datasource/UPDATE'
+export const COMMAND_QUEUED = 'datasource/COMMAND_QUEUED'
 
 const initialState = {
   allIds: [],
@@ -49,13 +57,47 @@ const didRun = (state, dataSourceId, result) => {
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case t.ADD:
+    case ADD:
       return add(state, action.dataSource)
-    case t.REMOVE:
+    case REMOVE:
       return remove(state, action.uuid)
-    case t.DID_RUN:
+    case DID_RUN:
       return didRun(state, action.dataSourceId, action.result)
     default:
       return state
+  }
+}
+
+
+// Actions
+export const add = (dataSource) => {
+  return {
+    type: ADD,
+    dataSource: Object.assign({}, dataSource, {id: (dataSource.id || uuid.v4()), isActive: 1})
+  }
+}
+
+export const remove = (dsuuid) => {
+  return {
+    type: REMOVE,
+    uuid: dsuuid
+  }
+}
+
+export const executeCommand = (cmd, dataSourceId, bookmarkId, resultId) => {
+  return {
+    type: COMMAND_QUEUED,
+    cmd,
+    dataSourceId,
+    bookmarkId,
+    resultId
+  }
+}
+
+export const didRun = (dataSourceId, result) => {
+  return {
+    type: DID_RUN,
+    dataSourceId,
+    result
   }
 }
