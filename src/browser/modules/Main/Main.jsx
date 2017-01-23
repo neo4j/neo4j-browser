@@ -1,13 +1,13 @@
 import React from 'react'
-import editor from 'containers/editor'
-import frames from 'containers/frames'
+import Editor from '../Editor'
+import Frames from '../Stream'
 import styles from './style.css'
 
 const Main = (props) => {
   return (
     <div className={styles.main}>
-      <editor.components.Editor />
-      <frames.components.Stream />
+      <Editor />
+      <Stream />
     </div>
   )
 }
