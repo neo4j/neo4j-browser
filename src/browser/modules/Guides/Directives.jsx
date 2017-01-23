@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from 'containers/editor'
+import * as editor from '../../../shared/modules/history/historyDuck'
 
 const directives = [{
   selector: '[play-topic]',
@@ -42,7 +42,7 @@ export const Directives = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onItemClick: (cmd) => {
-      dispatch(editor.actions.setContent(cmd))
+      dispatch(editor.setContent(cmd))
     }
   }
 }

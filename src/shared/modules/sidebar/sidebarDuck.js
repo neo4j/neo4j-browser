@@ -1,4 +1,4 @@
-const NAME = 'drawer'
+export const NAME = 'drawer'
 
 export const TOGGLE = 'drawer/TOGGLE'
 

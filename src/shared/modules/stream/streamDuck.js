@@ -1,6 +1,6 @@
+import uuid from 'uuid'
 
-const NAME = 'frames'
-
+export const NAME = 'frames'
 export const ADD = 'frames/ADD'
 export const REMOVE = 'frames/REMOVE'
 export const CLEAR_ALL = 'frames/CLEAR_ALL'
@@ -47,7 +47,7 @@ function removeFrame (state, id) {
   return Object.assign({}, state, {allIds, byId})
 }
 
-function clearInContext (state, context) {
+function clearInContextHelper (state, context) {
   const toBeRemoved = getFramesInContext({[NAME]: state}, context)
   const byId = Object.assign({}, state.byId)
   toBeRemoved.forEach((f) => delete byId[f.id])
@@ -56,7 +56,7 @@ function clearInContext (state, context) {
   return Object.assign({}, state, {byId, allIds})
 }
 
-function clear () {
+function clearHelper () {
   return {...initialState}
 }
 
@@ -70,9 +70,9 @@ export default function reducer (state = initialState, action) {
     case REMOVE:
       return removeFrame(state, action.id)
     case CLEAR_IN_CONTEXT:
-      return clearInContext(state, action.context)
+      return clearInContextHelper(state, action.context)
     case CLEAR_ALL:
-      return clear()
+      return clearHelper()
     default:
       return state
   }

@@ -1,14 +1,14 @@
 import { take, put, select, call } from 'redux-saga/effects'
-import bookmarks from 'containers/bookmarks'
+import * as connections from '../../shared/modules/connections/connectionsDuck'
 import { splitStringOnFirst, splitStringOnLast } from 'services/commandUtils'
 import bolt from 'services/bolt/bolt'
 import { AddServerValidationError, BookmarkNotFoundError, OpenConnectionNotFoundError, UnknownCommandError } from 'services/exceptions'
 
 export function * watchBookmarkSelection () {
   while (true) {
-    const selectAction = yield take(bookmarks.actionTypes.SELECT)
+    const selectAction = yield take(connections.SELECT)
     const state = yield select((s) => s)
-    const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.id === selectAction.bookmarkId)
+    const foundBookmarks = connections.getBookmarks(state).filter((c) => c.id === selectAction.bookmarkId)
     yield call(connectToBookmark, null, foundBookmarks[0].name)
   }
 }
@@ -36,7 +36,7 @@ export function * handleServerCommand (action, cmdchar, onSuccess, onError) {
 }
 
 export function * handleServerListCommand (action, cmdchar, onSuccess) {
-  const state = yield select(bookmarks.selectors.getBookmarks)
+  const state = yield select(connections.getBookmarks)
   yield call(onSuccess, {...action, type: 'pre'}, JSON.stringify(state, null, 2))
 }
 
@@ -45,7 +45,7 @@ export function * connectToBookmark (action, connectionName, onSuccess, onError)
   try {
     const connection = yield call(bolt.getConnection, connectionName)
     if (connection) return yield handleUseConnectionCommand(action, connectionName, onError)
-    const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
+    const foundBookmarks = connections.getBookmarks(state).filter((c) => c.name === connectionName)
     if (!foundBookmarks.length) throw new BookmarkNotFoundError(connectionName)
     const bookmarkData = foundBookmarks[0]
     if (bookmarkData.type === 'bolt') {
@@ -53,7 +53,7 @@ export function * connectToBookmark (action, connectionName, onSuccess, onError)
     } else {
       yield call(bolt.useConnection, 'offline')
     }
-    yield put(bookmarks.actions.setActiveBookmark(bookmarkData.id))
+    yield put(connections.setActiveBookmark(bookmarkData.id))
   } catch (e) {
     yield call(onError, {...action, type: 'cmd'}, e)
   }
@@ -62,7 +62,7 @@ export function * connectToBookmark (action, connectionName, onSuccess, onError)
 export function * handleUseConnectionCommand (action, connectionName, onError) {
   const state = yield select((s) => s)
   try {
-    const foundBookmarks = bookmarks.selectors.getBookmarks(state).filter((c) => c.name === connectionName)
+    const foundBookmarks = connections.getBookmarks(state).filter((c) => c.name === connectionName)
     if (!foundBookmarks.length) throw new BookmarkNotFoundError(connectionName)
     if (foundBookmarks[0].type === 'bolt') {
       const connection = yield call(bolt.getConnection, connectionName)
@@ -71,7 +71,7 @@ export function * handleUseConnectionCommand (action, connectionName, onError) {
     } else {
       yield call(bolt.useConnection, 'offline')
     }
-    yield put(bookmarks.actions.setActiveBookmark(foundBookmarks[0].id))
+    yield put(connections.setActiveBookmark(foundBookmarks[0].id))
   } catch (e) {
     yield call(onError, {...action, type: 'cmd'}, e)
   }
@@ -92,7 +92,7 @@ export function * handleServerAddCommand (action, cmdchar, onSuccess, onError) {
     yield call(onError, {...action, type: 'cmd'}, e)
     return
   }
-  yield put(bookmarks.actions.addServerBookmark({name, username, password, host}))
+  yield put(connections.addServerBookmark({name, username, password, host}))
   const state = yield select((s) => s)
-  yield call(onSuccess, {...action, type: 'pre'}, JSON.stringify(bookmarks.selectors.getBookmarks(state), null, 2))
+  yield call(onSuccess, {...action, type: 'pre'}, JSON.stringify(connections.getBookmarks(state), null, 2))
 }

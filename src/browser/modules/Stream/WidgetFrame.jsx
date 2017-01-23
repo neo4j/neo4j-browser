@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import asciitable from 'ascii-data-table'
 import { FrameTitlebar } from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import dataSource from '../../dataSource'
+import * as dataSource from '../../../shared/modules/dataSource/dataSourceDuck'
 
 export const WidgetFrame = (props) => {
   const ds = props.getDataSource(props.frame.result)
@@ -28,7 +28,7 @@ export const WidgetFrame = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    getDataSource: (id) => dataSource.selectors.getDataSourceById(state, id)
+    getDataSource: (id) => dataSource.getDataSourceById(state, id)
   }
 }
 

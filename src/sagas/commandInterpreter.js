@@ -1,17 +1,17 @@
 import { put, select, call } from 'redux-saga/effects'
 import { takeEvery } from 'redux-saga'
 import helper from 'services/commandInterpreterHelper'
-import dataSource from 'containers/dataSource'
-import frames from 'containers/frames'
+import * as dataSource from '../shared/modules/dataSource/dataSourceDuck'
+import * as stream from '../shared/modules/stream/streamDuck'
 import { getSettings } from '../selectors'
 import { cleanCommand } from 'services/commandUtils'
-import editor from 'containers/editor'
+import * as history from '../shared/modules/history/historyDuck'
 import bolt from 'services/bolt/bolt'
 import { BoltConnectionError, BoltError, Neo4jError, getErrorMessage } from 'services/exceptions'
 
 function * createSucessFrame (meta, result) {
   meta.result = result
-  yield put(frames.actions.add(meta))
+  yield put(stream.add(meta))
 }
 
 function * createErrorFrame (meta, error) {
@@ -25,22 +25,22 @@ function * createErrorFrame (meta, error) {
   meta.error = {message: getErrorMessage(error)}
   meta.originalType = meta.type
   meta.type = 'error'
-  yield put(frames.actions.add(meta))
+  yield put(stream.add(meta))
 }
 
 function * dataSourceDidRun (meta, result) {
-  yield put(dataSource.actions.didRun(meta.dataSourceId, {result}))
+  yield put(dataSource.didRun(meta.dataSourceId, {result}))
 }
 
 function * dataSourceDidFail (meta, error) {
-  yield put({type: dataSource.actionTypes.DID_FAIL, error: getErrorMessage(error)})
+  yield put({type: dataSource.DID_FAIL, error: getErrorMessage(error)})
 }
 
 function * watchCommands () {
   while (true) {
     yield * takeEvery([
-      editor.actionTypes.USER_COMMAND_QUEUED,
-      dataSource.actionTypes.COMMAND_QUEUED
+      history.USER_COMMAND_QUEUED,
+      dataSource.COMMAND_QUEUED
     ], handleCommand)
   }
 }
@@ -48,8 +48,8 @@ function * watchCommands () {
 function * handleCommand (action) {
   let onSuccess
   let onError
-  if (action.type === editor.actionTypes.USER_COMMAND_QUEUED) {
-    yield put(editor.actions.addHistory({cmd: action.cmd}))
+  if (action.type === history.USER_COMMAND_QUEUED) {
+    yield put(history.addHistory({cmd: action.cmd}))
     onSuccess = action.onSuccess || createSucessFrame
     onError = action.onError || createErrorFrame
   } else {

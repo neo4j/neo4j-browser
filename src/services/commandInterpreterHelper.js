@@ -1,5 +1,5 @@
 import { select, call, put } from 'redux-saga/effects'
-import frames from 'containers/frames'
+import * as frames from '../shared/modules/stream/streamDuck'
 import { getHistory } from '../selectors'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
@@ -13,7 +13,7 @@ const availableCommands = [{
   name: 'clear',
   match: (cmd) => cmd === 'clear',
   exec: function * () {
-    yield put(frames.actions.clear())
+    yield put(frames.clear())
   }
 }, {
   name: 'config',

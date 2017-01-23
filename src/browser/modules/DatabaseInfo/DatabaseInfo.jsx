@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from 'containers/editor'
+import * as editor from '../../../shared/modules/history/historyDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import { UserDetails } from './UserDetails'
 import { DatabaseKernelInfo } from './DatabaseKernelInfo'
@@ -39,7 +39,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onItemClick: (cmd) => {
-      dispatch(editor.actions.setContent(cmd))
+      dispatch(editor.setContent(cmd))
     }
   }
 }

@@ -2,14 +2,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import editor from 'containers/editor'
+import * as editor from '../../../shared/modules/history/historyDuck'
 import HistoryRow from './HistoryRow'
 
 import styles from './style_history.css'
 
 export const HistoryFrame = ({frame, onHistoryClick}) => {
   const historyRows = frame.result.map((entry, index) => {
-    return <HistoryRowComponent key={index} handleEntryClick={onHistoryClick} entry={entry} />
+    return <HistoryRow key={index} handleEntryClick={onHistoryClick} entry={entry} />
   })
   return (
     <FrameTemplate
@@ -22,7 +22,7 @@ export const HistoryFrame = ({frame, onHistoryClick}) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onHistoryClick: (cmd) => {
-      dispatch(editor.actions.setContent(cmd))
+      dispatch(editor.setContent(cmd))
     }
   }
 }

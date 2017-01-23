@@ -1,4 +1,4 @@
-const NAME = 'settings'
+export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
 
 const initialState = {

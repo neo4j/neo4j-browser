@@ -8,17 +8,16 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import reducers from './rootReducer'
-import layout from './lib/containers/origLayout'
+import reducers from '../rootReducer'
+import App from './modules/App/App'
 
-import sagas from './sagas'
-import './styles/style.css'
-import './styles/codemirror.css'
-import './styles/bootstrap.grid-only.min.css'
+import sagas from '../sagas'
+import '../styles/style.css'
+import '../styles/codemirror.css'
+import '../styles/bootstrap.grid-only.min.css'
 import 'grommet/grommet.min.css'
-import bookmarks from './lib/containers/bookmarks'
-import lStorage from './services/localstorage'
-import { makeBookmarksInitialState, makeBookmarksPersistedState } from './services/localstorageMiddleware'
+import lStorage from '../services/localstorage'
+import { makeBookmarksPersistedState } from '../services/localstorageMiddleware'
 
 const sagaMiddleware = createSagaMiddleware()
 const reducer = combineReducers({
@@ -31,12 +30,8 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
-const persistedStateKeys = ['bookmarks', 'settings', 'editor', 'favorites', 'visualization', 'datasource']
+const persistedStateKeys = ['connections', 'settings', 'editor', 'favorites', 'visualization', 'datasource']
 const persistedStateStorage = window.localStorage
-
-const localStorageInitialStateMiddleware = lStorage.applyMiddleware(
-  makeBookmarksInitialState(bookmarks)
-)
 
 const localStoragePersistStateMiddleware = lStorage.applyMiddleware(
   makeBookmarksPersistedState()
@@ -46,8 +41,7 @@ const store = createStore(
   reducer,
   lStorage.getStorageForKeys(
     persistedStateKeys,
-    persistedStateStorage,
-    localStorageInitialStateMiddleware
+    persistedStateStorage
   ),
   enhancer
 )
@@ -64,7 +58,7 @@ sagaMiddleware.run(sagas)
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
-      <Route path='/' component={layout.components.OrigLayout} />
+      <Route path='/' component={App} />
     </Router>
   </Provider>,
   document.getElementById('mount')

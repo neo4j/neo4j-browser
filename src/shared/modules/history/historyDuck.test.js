@@ -7,7 +7,7 @@ describe('editor reducer', () => {
     const nextState = reducer(undefined, helpAction)
     expect(nextState).to.deep.equal({
       history: [{ cmd: ':help' }],
-      maxHistory: 20,
+      maxHistory: 20
     })
 
     // One more time
@@ -15,7 +15,7 @@ describe('editor reducer', () => {
     const nextnextState = reducer(nextState, historyAction)
     expect(nextnextState).to.deep.equal({
       history: [{ cmd: ':history' }, { cmd: ':help' }],
-      maxHistory: 20,
+      maxHistory: 20
     })
   })
 

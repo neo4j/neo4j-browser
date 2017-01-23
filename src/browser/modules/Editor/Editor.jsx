@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../'
-import favorites from 'containers/sidebar/favorites'
-import { getHistory, getEditorContent } from '../../../../selectors'
+import editor from '../../../shared/modules/history/historyDuck'
+import favorites from '../../../shared/modules/favorites/favoritesDuck'
+import { getHistory, getEditorContent } from '../../../selectors'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
@@ -11,7 +11,7 @@ import {EditorButton} from 'nbnmui/buttons'
 
 import styles from './style.css'
 
-export class EditorComponent extends React.Component {
+export class Editor extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -146,7 +146,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onFavortieClick: (cmd) => {
       console.log('click fav')
-      dispatch(favorites.actions.addFavorite(cmd))
+      dispatch(favorites.addFavorite(cmd))
     },
     onExecute: (cmd) => {
       dispatch(editor.actions.executeCommand(cmd))
@@ -164,4 +164,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export const Editor = connect(mapStateToProps, mapDispatchToProps)(EditorComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(Editor)

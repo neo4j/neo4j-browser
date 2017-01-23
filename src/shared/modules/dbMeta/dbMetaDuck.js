@@ -1,5 +1,7 @@
-const NAME = 'meta'
+import { call, put } from 'redux-saga/effects'
+import bolt from '../../../services/bolt/bolt'
 
+export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
 
 const initialState = {
@@ -54,5 +56,35 @@ export function updateMeta (meta, context) {
     type: UPDATE,
     meta,
     context
+  }
+}
+
+// Sagas
+const delay = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
+
+export const metaQuery = `CALL db.labels() YIELD label
+            WITH COLLECT(label) AS labels
+            RETURN 'labels' as a, labels as result
+            UNION
+            CALL db.relationshipTypes() YIELD relationshipType
+            WITH COLLECT(relationshipType) AS relationshipTypes
+            RETURN 'relationshipTypes'as a, relationshipTypes as result
+            UNION
+            CALL db.propertyKeys() YIELD propertyKey
+            WITH COLLECT(propertyKey) AS propertyKeys
+            RETURN 'propertyKeys' as a, propertyKeys as result`
+
+export function * startHeartbeat () {
+  while (true) {
+    try {
+      const res = yield call(bolt.transaction, metaQuery)
+      yield put(updateMeta(res))
+    } catch (e) {
+      console.log(e)
+    }
+
+    yield call(delay, 10000)
   }
 }

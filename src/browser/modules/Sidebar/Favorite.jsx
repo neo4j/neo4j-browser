@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from 'containers/editor'
-import favorite from '../'
+import * as editor from '../../../shared/modules/history/historyDuck'
+import * as favorite from '../../../shared/modules/favorites/favoritesDuck'
 import {FavoriteItem} from 'nbnmui/buttons'
 
 function extractNameFromCommand (input) {
@@ -33,10 +33,10 @@ export const Favorite = ({id, content, onItemClick = () => {}, removeClick = () 
 const mapDispatchToProps = (dispatch) => {
   return {
     onItemClick: (cmd) => {
-      dispatch(editor.actions.setContent(cmd))
+      dispatch(editor.setContent(cmd))
     },
     removeClick: (id) => {
-      dispatch(favorite.actions.removeFavorite(id))
+      dispatch(favorite.removeFavorite(id))
     }
   }
 }

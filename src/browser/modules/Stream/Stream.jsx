@@ -8,7 +8,7 @@ import Frame from './Frame'
 import PreFrame from './PreFrame'
 import ErrorFrame from './ErrorFrame'
 import StyleFrame from './StyleFrame'
-import getFrames from '../reducer'
+import { getFrames } from '../../../shared/modules/stream/streamDuck'
 
 export const Stream = (props) => {
   const {frames} = props

@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 
 import styles from './style.css'
 
-import Main from '../Main'
-import Sidebar from '../Sidebar'
+import Main from '../Main/Main'
+import Sidebar from '../Sidebar/Sidebar'
+import { toggle } from '../../../shared/modules/sidebar/sidebarDuck'
 
 export const BaseLayout = ({drawer, handleNavClick}) => {
   return (
@@ -30,7 +31,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleNavClick: (id) => {
-      dispatch(sidebar.actions.toggle(id))
+      dispatch(toggle(id))
     }
   }
 }

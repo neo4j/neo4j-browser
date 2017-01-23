@@ -1,10 +1,10 @@
 import React from 'react'
-import dbInfo from 'containers/dbInfo'
-import favorites from '../favorites'
-import documents from '../documents'
-import about from '../about'
-import tabNavigation from 'containers/tabNavigation'
-import settings from 'containers/settings'
+import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
+import Favorites from './Favorites'
+import Documents from './Documents'
+import About from './About'
+import TabNavigation from '../../components/TabNavigation/Navigation'
+import Settings from './Settings'
 import MdGrade from 'react-icons/lib/md/grade'
 import MdViewHeadline from 'react-icons/lib/md/view-headline'
 import MdDescription from 'react-icons/lib/md/description'
@@ -18,10 +18,10 @@ class Sidebar extends React.Component {
   render () {
     const openDrawer = this.props.openDrawer
     const onNavClick = this.props.onNavClick
-    const DatabaseDrawer = dbInfo.components.DatabaseInfo
-    const FavoritesDrawer = favorites.components.Favorites
-    const DocumentsDrawer = documents.components.DocumentsComponent
-    const SettingsDrawer = settings.components.Settings
+    const DatabaseDrawer = DatabaseInfo
+    const FavoritesDrawer = Favorites
+    const DocumentsDrawer = Documents
+    const SettingsDrawer = Settings
     const AboutDrawer = about.components.AboutComponent
     const topNavItemsList = [
       {name: 'DB', icon: <MdViewHeadline type='control' />, content: DatabaseDrawer},
@@ -34,7 +34,7 @@ class Sidebar extends React.Component {
       {name: 'About', icon: <MdInfo type='control' />, content: AboutDrawer}
     ]
 
-    return (<tabNavigation.components.Navigation
+    return (<TabNavigation
       openDrawer={openDrawer}
       onNavClick={onNavClick}
       topNavItems={topNavItemsList}

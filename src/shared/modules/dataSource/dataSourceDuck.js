@@ -1,6 +1,6 @@
 import uuid from 'uuid'
 
-const NAME = 'datasource'
+export const NAME = 'datasource'
 
 export const ADD = 'datasource/ADD'
 export const REMOVE = 'datasource/REMOVE'
@@ -32,7 +32,7 @@ export function getDataSourceById (state, id) {
 /**
  * Reducer helpers
  */
-const add = (state, obj) => {
+const addHelper = (state, obj) => {
   const byId = {...state.byId, [obj.id]: obj}
   const allIds = state.allIds.concat([obj.id])
   return {...state,
@@ -41,14 +41,14 @@ const add = (state, obj) => {
   }
 }
 
-const remove = (state, uuid) => {
+const removeHelper = (state, uuid) => {
   const byId = Object.assign({}, state.byId)
   delete byId[uuid]
   const allIds = state.allIds.filter((fid) => fid !== uuid)
   return Object.assign({}, state, {allIds, byId})
 }
 
-const didRun = (state, dataSourceId, result) => {
+const didRunHelper = (state, dataSourceId, result) => {
   let dataSource = {...state.byId[dataSourceId]}
   dataSource.result = {...result}
   const byId = {...state.byId, [dataSourceId]: dataSource}
@@ -58,16 +58,15 @@ const didRun = (state, dataSourceId, result) => {
 export default function (state = initialState, action) {
   switch (action.type) {
     case ADD:
-      return add(state, action.dataSource)
+      return addHelper(state, action.dataSource)
     case REMOVE:
-      return remove(state, action.uuid)
+      return removeHelper(state, action.uuid)
     case DID_RUN:
-      return didRun(state, action.dataSourceId, action.result)
+      return didRunHelper(state, action.dataSourceId, action.result)
     default:
       return state
   }
 }
-
 
 // Actions
 export const add = (dataSource) => {

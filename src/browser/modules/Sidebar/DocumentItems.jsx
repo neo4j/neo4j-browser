@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import uuid from 'uuid'
 import ListItem from 'grommet/components/ListItem'
 import List from 'grommet/components/List'
-import editor from 'containers/editor'
+import * as editor from '../../../shared/modules/history/historyDuck'
 import { H4 } from 'nbnmui/headers'
 import { FavoriteItem } from 'nbnmui/buttons'
 
@@ -37,7 +37,7 @@ export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onItemClick: (cmd) => {
-      dispatch(editor.actions.setContent(cmd))
+      dispatch(editor.setContent(cmd))
     }
   }
 }

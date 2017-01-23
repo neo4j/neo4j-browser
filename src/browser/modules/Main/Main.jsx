@@ -1,6 +1,6 @@
 import React from 'react'
-import Editor from '../Editor'
-import Frames from '../Stream'
+import Editor from '../Editor/Editor'
+import Stream from '../Stream/Stream'
 import styles from './style.css'
 
 const Main = (props) => {

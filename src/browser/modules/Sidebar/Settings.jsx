@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../actions'
+import * as actions from '../../../shared/modules/settings/settingsDuck'
 import ListItem from 'grommet/components/List'
 import FormField from 'grommet/components/FormField'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'

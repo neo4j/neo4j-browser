@@ -1,5 +1,6 @@
-const NAME = 'connections'
+import { v4 } from 'uuid'
 
+export const NAME = 'connections'
 export const ADD = 'connections/ADD'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
 export const SELECT = 'connections/SELECT'
@@ -21,7 +22,7 @@ export function getActiveConnection (state) {
   return state[NAME].activeConnection
 }
 
-const addConnection = (state, obj) => {
+const addConnectionHelper = (state, obj) => {
   const connectionsById = {...state.connectionsById, [obj.id]: obj}
   let allConnectionIds = state.allConnectionIds
   if (state.allConnectionIds.indexOf(obj.id) < 0) {
@@ -38,7 +39,7 @@ const addConnection = (state, obj) => {
 export default function (state = initialState, action) {
   switch (action.type) {
     case ADD:
-      return addConnection(state, action.connection)
+      return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:
       return {...state, activeConnection: action.connectionId}
     default:
