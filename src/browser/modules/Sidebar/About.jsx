@@ -8,7 +8,7 @@ import Header from 'grommet/components/Footer'
 const P = (props) => {
   return <Paragraph {...props} size='small' />
 }
-export const AboutComponent = () => {
+const About = () => {
   return (
     <Drawer id='db-about'>
       <DrawerHeader title='About Neo4j' />
@@ -66,3 +66,4 @@ export const AboutComponent = () => {
     </Drawer>
   )
 }
+export default About

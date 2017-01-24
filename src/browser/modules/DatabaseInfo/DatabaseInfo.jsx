@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import * as editor from '../../../shared/modules/history/historyDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import { UserDetails } from './UserDetails'
-import { DatabaseKernelInfo } from './DatabaseKernelInfo'
+import DatabaseKernelInfo from './DatabaseKernelInfo'
 import ListItem from 'grommet/components/ListItem'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 

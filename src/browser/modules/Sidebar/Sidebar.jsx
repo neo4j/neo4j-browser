@@ -22,7 +22,7 @@ class Sidebar extends React.Component {
     const FavoritesDrawer = Favorites
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
-    const AboutDrawer = about.components.AboutComponent
+    const AboutDrawer = About
     const topNavItemsList = [
       {name: 'DB', icon: <MdViewHeadline type='control' />, content: DatabaseDrawer},
       {name: 'Favorites', icon: <MdGrade type='control' />, content: FavoritesDrawer},

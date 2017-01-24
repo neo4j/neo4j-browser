@@ -1,5 +1,5 @@
 import React from 'react'
-import { DatabaseKernelInfo } from './DatabaseKernelInfo'
+import DatabaseKernelInfo from './DatabaseKernelInfo'
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
 
