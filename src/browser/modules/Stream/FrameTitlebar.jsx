@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../../../shared/modules/history/historyDuck'
+import * as commands from '../../../shared/modules/commands/commandsDuck'
 import { remove } from '../../../shared/modules/stream/streamDuck'
 
 import styles from './style_titlebar.css'
@@ -23,13 +23,13 @@ export const FrameTitlebar = ({frame, onTitlebarClick, onCloseClick, onReRunClic
 const mapDispatchToProps = (dispatch) => {
   return {
     onTitlebarClick: (cmd) => {
-      dispatch(editor.setContent(cmd))
+      // dispatch(editor.setContent(cmd)) disable until Suber
     },
     onCloseClick: (id) => {
       dispatch(remove(id))
     },
     onReRunClick: (cmd, id) => {
-      dispatch(editor.executeCommand(cmd, id))
+      dispatch(commands.executeCommand(cmd, id))
     }
   }
 }

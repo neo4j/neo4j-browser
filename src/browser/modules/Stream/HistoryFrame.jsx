@@ -22,7 +22,7 @@ export const HistoryFrame = ({frame, onHistoryClick}) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onHistoryClick: (cmd) => {
-      dispatch(editor.setContent(cmd))
+      // dispatch(editor.setContent(cmd)) // disable until Suber
     }
   }
 }

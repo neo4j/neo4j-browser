@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import editor from '../../../shared/modules/history/historyDuck'
-import favorites from '../../../shared/modules/favorites/favoritesDuck'
+import * as commands from '../../../shared/modules/commands/commandsDuck'
+import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
 import { getHistory, getEditorContent } from '../../../selectors'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
-import {EditorButton} from 'nbnmui/buttons'
+import { EditorButton } from 'nbnmui/buttons'
 
 import styles from './style.css'
 
@@ -149,10 +149,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(favorites.addFavorite(cmd))
     },
     onExecute: (cmd) => {
-      dispatch(editor.actions.executeCommand(cmd))
+      dispatch(commands.executeCommand(cmd))
     },
     updateContent: (cmd) => {
-      dispatch(editor.actions.setContent(cmd))
+      // dispatch(editor.actions.setContent(cmd)) // disable until Suber is in
     }
   }
 }

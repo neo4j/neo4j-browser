@@ -6,6 +6,7 @@ import * as stream from '../shared/modules/stream/streamDuck'
 import { getSettings } from '../selectors'
 import { cleanCommand } from 'services/commandUtils'
 import * as history from '../shared/modules/history/historyDuck'
+import * as commands from '../shared/modules/commands/commandsDuck'
 import bolt from 'services/bolt/bolt'
 import { BoltConnectionError, BoltError, Neo4jError, getErrorMessage } from 'services/exceptions'
 
@@ -39,7 +40,7 @@ function * dataSourceDidFail (meta, error) {
 function * watchCommands () {
   while (true) {
     yield * takeEvery([
-      history.USER_COMMAND_QUEUED,
+      commands.USER_COMMAND_QUEUED,
       dataSource.COMMAND_QUEUED
     ], handleCommand)
   }
@@ -48,7 +49,7 @@ function * watchCommands () {
 function * handleCommand (action) {
   let onSuccess
   let onError
-  if (action.type === history.USER_COMMAND_QUEUED) {
+  if (action.type === commands.USER_COMMAND_QUEUED) {
     yield put(history.addHistory({cmd: action.cmd}))
     onSuccess = action.onSuccess || createSucessFrame
     onError = action.onError || createErrorFrame
