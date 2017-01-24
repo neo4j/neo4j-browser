@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import reducers from './rootReducer'
+import reducers from 'shared/rootReducer'
 import App from './modules/App/App'
 
 import sagas from '../sagas'
