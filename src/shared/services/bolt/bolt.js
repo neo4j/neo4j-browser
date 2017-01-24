@@ -13,7 +13,7 @@ function openConnection ({id, name, username, password, host}) {
 
 function connect (props) {
   const p = new Promise((resolve, reject) => {
-    const driver = neo4j.driver('bolt://' + props.host, neo4j.auth.basic(props.username, props.password))
+    const driver = neo4j.driver(props.host, neo4j.auth.basic(props.username, props.password))
     const tmp = driver.session()
     tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject(e))
   })

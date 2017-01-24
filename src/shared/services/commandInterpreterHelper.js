@@ -49,7 +49,6 @@ const availableCommands = [{
       remote.get(url).then((r) => {
         put(frames.add({...action, type: 'play-remote', result: cleanHtml(r)}))
       })
-
     } catch (e) {
       put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e)}))
     }
