@@ -5253,6 +5253,10 @@ react-router-redux@^4.0.4:
     loose-envify "^1.2.0"
     warning "^3.0.0"
 
+react-suber@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-suber/-/react-suber-0.1.0.tgz#eaec4e18b1f72c2ac188b1c3a5205e161aa48794"
+
 react-swipe@^5.0.3:
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/react-swipe/-/react-swipe-5.0.6.tgz#0ac5889b18e5aade8ed5c5f1ba1c491a4acec912"
@@ -5998,6 +6002,10 @@ style-loader@^0.13.0:
   dependencies:
     loader-utils "^0.2.7"
 
+suber@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/suber/-/suber-2.0.0.tgz#22c1be4adc1ff53cc35524d28caea885ba59bb16"
+
 superagent@^3.3.1:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/superagent/-/superagent-3.3.2.tgz#23b4ed895911215a1f90b44d16638b6492f9c114"
@@ -6013,7 +6021,7 @@ superagent@^3.3.1:
     qs "^6.1.0"
     readable-stream "^2.0.5"
 
-supports-color@3.1.2:
+supports-color@3.1.2, supports-color@^3.1.0, supports-color@^3.1.1, supports-color@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.1.2.tgz#72a262894d9d408b956ca05ff37b2ed8a6e2a2d5"
   dependencies:
@@ -6026,12 +6034,6 @@ supports-color@^0.2.0:
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
-
-supports-color@^3.1.0, supports-color@^3.1.1, supports-color@^3.1.2:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.2.3.tgz#65ac0504b3954171d8a64946b2ae3cbb8a5f54f6"
-  dependencies:
-    has-flag "^1.0.0"
 
 svgo@^0.7.0:
   version "0.7.1"

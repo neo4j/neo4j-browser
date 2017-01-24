@@ -1,12 +1,17 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
+import * as editor from 'shared/modules/editor/editorDuck'
 import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import HistoryRow from './HistoryRow'
 
 import styles from './style_history.css'
 
-export const HistoryFrame = ({frame, onHistoryClick}) => {
+export const HistoryFrame = (props) => {
+  const {frame, bus} = props
+  const onHistoryClick = (cmd) => {
+    bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+  }
   const historyRows = frame.result.map((entry, index) => {
     return <HistoryRow key={index} handleEntryClick={onHistoryClick} entry={entry} />
   })
@@ -18,12 +23,4 @@ export const HistoryFrame = ({frame, onHistoryClick}) => {
   )
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onHistoryClick: (cmd) => {
-      // dispatch(editor.setContent(cmd)) // disable until Suber
-    }
-  }
-}
-
-export default connect(null, mapDispatchToProps)(HistoryFrame)
+export default withBus(HistoryFrame)

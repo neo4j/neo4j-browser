@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as commands from '../../../shared/modules/commands/commandsDuck'
-import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
+import { withBus } from 'react-suber'
+import * as commands from 'shared/modules/commands/commandsDuck'
+import * as favorites from 'shared/modules/favorites/favoritesDuck'
+import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
@@ -66,9 +68,6 @@ export class Editor extends React.Component {
     if (nextProps.content !== null && nextProps.content !== this.state.code) {
       this.setEditorValue(this.codeMirror, nextProps.content)
     }
-    if (nextProps.content !== null) {
-      this.props.updateContent(null)
-    }
   }
   componentDidMount () {
     this.codeMirror = this.refs.editor.getCodeMirror()
@@ -81,6 +80,9 @@ export class Editor extends React.Component {
     this.codeMirrorInstance.keyMap['default']['Ctrl-Up'] = this.historyPrev.bind(this)
     this.codeMirrorInstance.keyMap['default']['Cmd-Down'] = this.historyNext.bind(this)
     this.codeMirrorInstance.keyMap['default']['Ctrl-Down'] = this.historyNext.bind(this)
+    this.props.bus.take(SET_CONTENT, (msg) => {
+      this.setEditorValue(this.codeMirror, msg.message)
+    })
   }
   setEditorValue (cm, cmd) {
     this.codeMirror.setValue(cmd)
@@ -150,9 +152,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     onExecute: (cmd) => {
       dispatch(commands.executeCommand(cmd))
-    },
-    updateContent: (cmd) => {
-      // dispatch(editor.actions.setContent(cmd)) // disable until Suber is in
     }
   }
 }
@@ -164,4 +163,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Editor)
+export default connect(mapStateToProps, mapDispatchToProps)(withBus(Editor))

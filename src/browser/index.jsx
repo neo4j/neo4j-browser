@@ -7,6 +7,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
 
 import reducers from 'shared/rootReducer'
 import connectionsReducer from 'shared/modules/connections/connectionsDuck'
@@ -21,13 +22,15 @@ import lStorage from 'browser-services/localstorage'
 import { makeConnectionsPersistedState, makeConnectionsInitialState } from 'browser-services/localstorageMiddleware'
 
 const sagaMiddleware = createSagaMiddleware()
+const suberMiddleware = createSuberReduxMiddleware()
+
 const reducer = combineReducers({
   ...reducers,
   routing: routerReducer
 })
 
 const enhancer = compose(
-  applyMiddleware(sagaMiddleware),
+  applyMiddleware(sagaMiddleware, suberMiddleware),
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
@@ -59,6 +62,14 @@ store.subscribe(lStorage.createPersistingStoreListener(
 
 const history = syncHistoryWithStore(browserHistory, store)
 sagaMiddleware.run(sagas)
+
+// Send everything from suber into Redux
+applySuberMiddleware((_) => (channel, message, source) => {
+  // No loop-backs
+  if (source === 'redux') return
+  // Send to Redux with the channel as the action type
+  store.dispatch({...message, type: channel})
+})
 
 ReactDOM.render(
   <Provider store={store}>
