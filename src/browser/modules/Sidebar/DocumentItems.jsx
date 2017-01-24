@@ -7,7 +7,7 @@ import * as editor from '../../../shared/modules/history/historyDuck'
 import { H4 } from 'nbnmui/headers'
 import { FavoriteItem } from 'nbnmui/buttons'
 
-export const DocumentItemsComponent = ({header, items, onItemClick = null}) => {
+export const DocumentItems = ({header, items, onItemClick = null}) => {
   const listOfItems = items.map((item) => {
     switch (item.type) {
       case 'link':
@@ -42,4 +42,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(DocumentItemsComponent)
+export default connect(null, mapDispatchToProps)(DocumentItems)

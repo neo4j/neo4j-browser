@@ -1,4 +1,4 @@
-import {DirectivesComponent} from './Directives'
+import { Directives as DirectivesComponent } from './Directives'
 import React from 'react'
 import chai from 'chai'
 import {mount} from 'enzyme'

@@ -1,19 +1,22 @@
 import React from 'react'
-
-import sidebar from '../'
 import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-import favorites from '../favorites'
-import documents from '../documents'
-import settings from 'containers/settings'
+
+import Sidebar from './Sidebar'
+import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
+import Favorites from './Favorites'
+import Documents from './Documents'
+import Settings from './Settings'
+import favorites from '../../../shared/modules/favorites/favoritesDuck'
+import settings from '../../../shared/modules/settings/settingsDuck'
 
 describe('Sidebar', () => {
   const reducer = combineReducers({
-    favorites: favorites.reducer,
-    documents: documents.reducer,
-    settings: settings.reducer
+    favorites,
+    documents: (a) => a || null,
+    settings
   })
   const store = createStore(reducer)
 
@@ -21,39 +24,39 @@ describe('Sidebar', () => {
     const drawer = 'db'
     const wrapper = mount(
       <Provider store={store}>
-        <sidebar.components.Sidebar openDrawer={drawer} />
+        <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find('#db-drawer')).has.length(1)
+    expect(wrapper.find(DatabaseInfo)).to.have.length(1)
   })
 
   it('should show favorites drawer when it is open', () => {
     const drawer = 'favorites'
     const wrapper = mount(
       <Provider store={store}>
-        <sidebar.components.Sidebar openDrawer={drawer} />
+        <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find('#db-favorites')).has.length(1)
+    expect(wrapper.find(Favorites)).to.have.length(1)
   })
 
   it('should show documents drawer when it is open', () => {
     const drawer = 'documents'
     const wrapper = mount(
       <Provider store={store}>
-        <sidebar.components.Sidebar openDrawer={drawer} />
+        <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find('#db-documents')).has.length(1)
+    expect(wrapper.find(Documents)).to.have.length(1)
   })
 
   it('should show settings drawer when it is open', () => {
     const drawer = 'settings'
     const wrapper = mount(
       <Provider store={store}>
-        <sidebar.components.Sidebar openDrawer={drawer} />
+        <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find('#db-settings')).has.length(1)
+    expect(wrapper.find(Settings)).to.have.length(1)
   })
 })

@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactTestUtils from 'react-addons-test-utils'
 
-import {DatabaseInfoComponent} from './DatabaseInfo'
+import { DatabaseInfo as DatabaseInfoComponent } from './DatabaseInfo'
 import chai from 'chai'
 import { mount } from 'enzyme'
 import chaiEnzyme from 'chai-enzyme'

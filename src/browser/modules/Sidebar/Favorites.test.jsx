@@ -1,8 +1,8 @@
 import React from 'react'
-import { FavoritesComponent } from './Favorites'
+import { Favorites as FavoritesComponent } from './Favorites'
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
-import { Favorite } from './Favorite'
+import Favorite from './Favorite'
 
 describe('FavoritesComponent', () => {
   it('should show list of favorites', () => {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Guides} from './Guides'
+import Guides from './Guides'
 import Slide from './Slide'
 import {expect} from 'chai'
 import {mount} from 'enzyme'

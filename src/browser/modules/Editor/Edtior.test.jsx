@@ -1,4 +1,4 @@
-import { EditorComponent } from './Editor'
+import { Editor as EditorComponent } from './Editor'
 
 import { mount } from 'enzyme'
 import React from 'react'

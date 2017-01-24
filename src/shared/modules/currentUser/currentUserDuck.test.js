@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import reducer, * as currentUser from '.'
+import reducer, * as currentUser from './currentUserDuck'
 
 describe('user reducer current info', () => {
   it('handles unknown action type', () => {

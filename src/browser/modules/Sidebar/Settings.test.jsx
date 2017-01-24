@@ -2,8 +2,8 @@ import React from 'react'
 
 import { expect } from 'chai'
 import { mount } from 'enzyme'
-import Settings, {SettingsComponent} from './Settings'
-import reducer from './../reducer'
+import Settings, { Settings as SettingsComponent } from './Settings'
+import reducer from '../../../shared/modules/settings/settingsDuck'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 

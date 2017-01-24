@@ -23,7 +23,7 @@ const visualSettings =
     }
   ]
 
-export const SettingsComponent = ({settings, onSettingsSave = () => {}}) => {
+export const Settings = ({settings, onSettingsSave = () => {}}) => {
   const mappedSettings = visualSettings.map((visualSetting) => {
     const setting = Object.keys(visualSetting)[0]
     const visual = visualSetting[setting].displayName
@@ -64,5 +64,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const Settings = connect(mapStateToProps, mapDispatchToProps)(SettingsComponent)
-export default Settings
+export default connect(mapStateToProps, mapDispatchToProps)(Settings)

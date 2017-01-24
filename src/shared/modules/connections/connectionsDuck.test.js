@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import reducer, * as connections from '.'
+import reducer, * as connections from './connectionsDuck'
 
 describe('connections reducer', () => {
   it('handles connections.ADD', () => {

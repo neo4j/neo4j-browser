@@ -55,6 +55,7 @@ module.exports = {
     root: path.resolve(__dirname),
     alias: {
       services: 'src/services',
+      shared: 'src/shared',
       sagas: 'src/sagas',
       react: 'preact-compat',
       'react-dom': 'preact-compat',

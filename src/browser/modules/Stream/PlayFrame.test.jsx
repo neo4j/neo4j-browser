@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import {PlayFrame} from './PlayFrame'
+import PlayFrame from './PlayFrame'
 import chai from 'chai'
-import guides from 'guides'
+import Guides from '../Guides/Guides'
 
 const expect = chai.expect
 
@@ -27,6 +27,6 @@ describe('PlayFrame', () => {
     const wrapper = shallow(<PlayFrame frame={{result: 'Hello'}} />)
     expect(wrapper.find('.playFrame')).to.have.length(1)
     const card = shallow(wrapper.find('.playFrame').node)
-    expect(card.find(guides.components.Carousel).props().html).to.eql('Hello')
+    expect(card.find(Guides).props().html).to.eql('Hello')
   })
 })

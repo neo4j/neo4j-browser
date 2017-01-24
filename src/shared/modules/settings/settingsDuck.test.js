@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import reducer, { UPDATE } from '.'
+import reducer, { UPDATE } from './settingsDuck'
 
 describe('settings reducer', () => {
   it('handles initial value', () => {

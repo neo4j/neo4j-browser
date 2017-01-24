@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import reducer, * as actions from '.'
+import reducer, * as actions from './historyDuck'
 
 describe('editor reducer', () => {
   it('handles editor.actionTypes.ADD_HISTORY', () => {

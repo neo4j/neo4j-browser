@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import {StreamComponent} from './Stream'
+import { Stream as StreamComponent } from './Stream'
 import {expect} from 'chai'
 
 describe('Stream', () => {

@@ -1,6 +1,6 @@
 import React from 'react'
-import { DocumentsComponent } from './Documents'
-import { DocumentItems } from './DocumentItems'
+import DocumentsComponent from './Documents'
+import DocumentItems from './DocumentItems'
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
 

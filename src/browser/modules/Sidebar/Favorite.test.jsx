@@ -3,7 +3,7 @@ import chai from 'chai'
 import { shallow } from 'enzyme'
 import chaiEnzyme from 'chai-enzyme'
 import spies from 'chai-spies'
-import { FavoriteComponent } from './Favorite'
+import { Favorite as FavoriteComponent } from './Favorite'
 
 describe('FavoriteComponent', () => {
   const expect = chai.expect

@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { updateCurrentUser } from '../actions'
-import { getCurrentUser } from '../reducer'
+import { getCurrentUser, updateCurrentUser } from '../../../shared/modules/currentUser/currentUserDuck'
 import bolt from 'services/bolt/bolt'
 
 export class UserInfoComponent extends React.Component {

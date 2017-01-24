@@ -1,7 +1,7 @@
 import React from 'react'
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
-import { DocumentItemsComponent } from './DocumentItems'
+import { DocumentItems as DocumentItemsComponent } from './DocumentItems'
 
 describe('DocumentItemsComponent', () => {
   const link = {name: 'Link', command: 'url.com', type: 'link'}
