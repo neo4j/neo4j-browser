@@ -1,43 +1,43 @@
 import { expect } from 'chai'
-import { makeBookmarksInitialState, makeBookmarksPersistedState } from './localstorageMiddleware'
+import { makeConnectionsInitialState, makeConnectionsPersistedState } from './localstorageMiddleware'
 
-const bookmarks = {
+const connection = {
   reducer: (initialState, action) => {
     return {}
   }
 }
 
 describe('localstorageMiddleware', () => {
-  it('makeBookmarksPersistedState should set activeBookmark to offline', () => {
+  it('makeConnectionsPersistedState should set activeConnection to offline', () => {
     // Given
     const before = {
-      activeBookmark: 'anything'
+      activeConnection: 'anything'
     }
-    const key = 'bookmarks'
+    const key = 'connections'
 
     // When
-    const after = makeBookmarksPersistedState()(key, before)
+    const after = makeConnectionsPersistedState()(key, before)
 
     // Then
-    expect(after.activeBookmark).to.equal('offline')
+    expect(after.activeConnection).to.equal('offline')
   })
 
-  it('makeBookmarksInitialState should add offline bookmark', () => {
+  it('makeConnectionsInitialState should add offline connection', () => {
     // Given
     const before = {
-      activeBookmark: 'anything',
-      allBookmarkIds: ['x'],
-      bookmarksById: {'x': {name: 'x'}}
+      activeConnection: 'anything',
+      allConnectionIds: ['x'],
+      connectionsById: {'x': {name: 'x'}}
     }
-    const key = 'bookmarks'
+    const key = 'connections'
 
     // When
-    const after = makeBookmarksInitialState(bookmarks)(key, before)
+    const after = makeConnectionsInitialState(connection.reducer)(key, before)
 
     // Then
-    expect(after.activeBookmark).to.equal('offline')
-    expect(after.bookmarksById['offline']).not.to.be.undefined
-    expect(after.bookmarksById['offline'].name).to.equal('Offline')
-    expect(after.bookmarksById['x']).not.to.be.undefined
+    expect(after.activeConnection).to.equal('offline')
+    expect(after.connectionsById['offline']).not.to.be.undefined
+    expect(after.connectionsById['offline'].name).to.equal('Offline')
+    expect(after.connectionsById['x']).not.to.be.undefined
   })
 })
