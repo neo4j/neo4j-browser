@@ -65,9 +65,9 @@ export function Neo4jError (obj) {
   }
 }
 
-export function BookmarkNotFoundError (name) {
+export function ConnectionNotFoundError (name) {
   return {
-    type: 'BookmarkNotFoundError',
+    type: 'ConnectionNotFoundError',
     name
   }
 }
