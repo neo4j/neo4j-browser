@@ -9,6 +9,7 @@ import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 import reducers from 'shared/rootReducer'
+import connectionsReducer from 'shared/modules/connections/connectionsDuck'
 import App from './modules/App/App'
 
 import sagas from '../sagas'
@@ -17,7 +18,7 @@ import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
 import 'grommet/grommet.min.css'
 import lStorage from 'browser-services/localstorage'
-import { makeBookmarksPersistedState } from 'browser-services/localstorageMiddleware'
+import { makeConnectionsPersistedState, makeConnectionsInitialState } from 'browser-services/localstorageMiddleware'
 
 const sagaMiddleware = createSagaMiddleware()
 const reducer = combineReducers({
@@ -34,14 +35,18 @@ const persistedStateKeys = ['connections', 'settings', 'editor', 'favorites', 'v
 const persistedStateStorage = window.localStorage
 
 const localStoragePersistStateMiddleware = lStorage.applyMiddleware(
-  makeBookmarksPersistedState()
+  makeConnectionsPersistedState()
+)
+const localStorageInitialStateMiddleware = lStorage.applyMiddleware(
+  makeConnectionsInitialState(connectionsReducer)
 )
 
 const store = createStore(
   reducer,
   lStorage.getStorageForKeys(
     persistedStateKeys,
-    persistedStateStorage
+    persistedStateStorage,
+    localStorageInitialStateMiddleware
   ),
   enhancer
 )
