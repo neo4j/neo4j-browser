@@ -1,13 +1,13 @@
 import { put, select, call, spawn, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import uuid from 'uuid'
-import dataSource from 'containers/dataSource'
+import * as dataSource from 'shared/modules/dataSource/dataSourceDuck'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from 'services/exceptions'
 
 export function * runCommand (ds) {
   const resultId = ds.resultId || uuid.v4()
-  yield put(dataSource.actions.executeCommand(ds.command, ds.id, ds.bookmarkId, resultId))
+  yield put(dataSource.executeCommand(ds.command, ds.id, ds.bookmarkId, resultId))
 }
 
 export function * intervalRunComamnd (ds) {
@@ -56,7 +56,7 @@ export function * stopAndRemoveDataSource (dataSourceId, refs) {
 export function * startBackgroundDataSources (checkInterval = 10) {
   let refs = {}
   while (true) {
-    const dataSourcesFromState = yield select(dataSource.selectors.getDataSources)
+    const dataSourcesFromState = yield select(dataSource.getDataSources)
     refs = yield call(ensureDataSourceStatus, dataSourcesFromState, refs)
     yield call(delay, checkInterval * 1000)
   }
@@ -91,7 +91,7 @@ export function * handleDataSourceCreateCommand (action, cmdchar, onSuccess, onE
         !props.refreshInterval ||
         !props.bookmarkId
       ) throw new CreateDataSourceValidationError()
-    yield put(dataSource.actions.add({...action, ...props}))
+    yield put(dataSource.add({...action, ...props}))
   } catch (e) {
     yield call(onError, {...action, type: 'error'}, e)
     return
@@ -105,7 +105,7 @@ export function * handleDataSourceRemoveCommand (action, cmdchar, onSuccess, onE
     if (!dsuuid) {
       throw new RemoveDataSourceValidationError()
     } else {
-      yield put(dataSource.actions.remove(dsuuid))
+      yield put(dataSource.remove(dsuuid))
     }
   } catch (e) {
     yield call(onError, {...action, type: 'error'}, e)
@@ -114,6 +114,6 @@ export function * handleDataSourceRemoveCommand (action, cmdchar, onSuccess, onE
 }
 
 export function * handleDataSourceListCommand (action, cmdchar, onSuccess, onError) {
-  const state = yield select(dataSource.selectors.getDataSources)
+  const state = yield select(dataSource.getDataSources)
   yield call(onSuccess, {...action, type: 'pre'}, JSON.stringify(state, null, 2))
 }

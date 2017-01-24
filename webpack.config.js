@@ -7,7 +7,7 @@ module.exports = {
     'babel-polyfill',
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
-    './src/index.jsx'
+    './src/browser/index.jsx'
   ],
   module: {
     loaders: [{
@@ -20,11 +20,11 @@ module.exports = {
     }, {
       test: /\.css$/,
       include: path.resolve('./src'),
-      exclude: [path.resolve('./src/styles')],
+      exclude: [path.resolve('./src/browser/styles')],
       loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
     }, {
       test: /\.css$/,
-      exclude: [path.resolve('./src/lib'), path.resolve('./src/main'), path.resolve('./src/guides')],
+      exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/modules'), path.resolve('./src/browser/guides')],
       loader: 'style!css'
     }, {
       test: /\.html?$/,
@@ -54,13 +54,16 @@ module.exports = {
   resolve: {
     root: path.resolve(__dirname),
     alias: {
-      services: 'src/services',
+      'src-root': 'src',
+      services: 'src/shared/services',
+      'browser-services': 'src/browser/services',
+      shared: 'src/shared',
       sagas: 'src/sagas',
-      guides: 'src/guides',
       react: 'preact-compat',
-      'react-dom': 'preact-compat'
+      'react-dom': 'preact-compat',
+      nbnmui: 'src/browser/components/nbnmui'
     },
-    modulesDirectories: ['src/lib', 'node_modules'],
+    modulesDirectories: ['src/shared/modules', 'src/browser/modules', 'node_modules'],
     extensions: ['', '.js', '.jsx', '.json']
   },
   output: {

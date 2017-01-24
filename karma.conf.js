@@ -23,9 +23,12 @@ module.exports = function (config) {
       resolve: {
         root: path.resolve(__dirname),
         alias: {
-          services: 'src/services',
+          'src-root': 'src',
+          services: 'src/shared/services',
+          'browser-services': 'src/browser/services',
+          shared: 'src/shared',
           sagas: 'src/sagas',
-          guides: 'src/guides'
+          nbnmui: 'src/browser/components/nbnmui'
         },
         modulesDirectories: ['src/lib', 'node_modules'],
         extensions: ['', '.js', '.jsx', '.json']
