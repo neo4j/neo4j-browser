@@ -8,16 +8,16 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import reducers from '../rootReducer'
+import reducers from './rootReducer'
 import App from './modules/App/App'
 
 import sagas from '../sagas'
-import '../styles/style.css'
-import '../styles/codemirror.css'
-import '../styles/bootstrap.grid-only.min.css'
+import './styles/style.css'
+import './styles/codemirror.css'
+import './styles/bootstrap.grid-only.min.css'
 import 'grommet/grommet.min.css'
-import lStorage from '../services/localstorage'
-import { makeBookmarksPersistedState } from '../services/localstorageMiddleware'
+import lStorage from 'browser-services/localstorage'
+import { makeBookmarksPersistedState } from 'browser-services/localstorageMiddleware'
 
 const sagaMiddleware = createSagaMiddleware()
 const reducer = combineReducers({

@@ -2,7 +2,7 @@ import React from 'react'
 import { deleteUser, addUserToRole } from './boltUserHelper'
 
 let removeClick = null
-export class UserDetailsComponent extends React.Component {
+export class UserDetails extends React.Component {
   constructor (props) {
     super(props)
     this.state = {edit: false, roles: this.props.roles, username: this.props.username}
@@ -33,3 +33,5 @@ export class UserDetailsComponent extends React.Component {
     )
   }
 }
+
+export default UserDetails

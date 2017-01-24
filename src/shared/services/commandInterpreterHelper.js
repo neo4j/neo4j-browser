@@ -1,6 +1,6 @@
 import { select, call, put } from 'redux-saga/effects'
-import * as frames from '../shared/modules/stream/streamDuck'
-import { getHistory } from '../selectors'
+import * as frames from 'shared/modules/stream/streamDuck'
+import { getHistory } from 'shared/modules/history/historyDuck'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 import { handleServerCommand } from 'sagas/command_sagas/serverCommand'

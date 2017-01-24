@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserDetails } from './UserDetails'
+import UserDetails from './UserDetails'
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
 

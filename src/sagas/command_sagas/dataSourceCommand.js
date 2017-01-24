@@ -1,7 +1,7 @@
 import { put, select, call, spawn, cancel } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import uuid from 'uuid'
-import * as dataSource from '../../shared/modules/dataSource/dataSourceDuck'
+import * as dataSource from 'shared/modules/dataSource/dataSourceDuck'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { UnknownCommandError, CreateDataSourceValidationError, RemoveDataSourceValidationError } from 'services/exceptions'
 

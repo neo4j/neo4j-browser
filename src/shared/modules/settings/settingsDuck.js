@@ -1,6 +1,8 @@
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
 
+export const getSettings = (state) => state[NAME]
+
 const initialState = {
   cmdchar: ':',
   maxHistory: 10,

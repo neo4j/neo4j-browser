@@ -3,7 +3,7 @@ import List from 'grommet/components/List'
 import ListItem from 'grommet/components/ListItem'
 import classNames from 'classnames'
 import uuid from 'uuid'
-import {NavigationButton} from 'nbnmui/buttons'
+import { NavigationButton } from 'nbnmui/buttons'
 
 const Navigation = ({
   openDrawer,

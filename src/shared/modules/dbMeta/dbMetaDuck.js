@@ -1,5 +1,5 @@
 import { call, put } from 'redux-saga/effects'
-import bolt from '../../../services/bolt/bolt'
+import bolt from 'services/bolt/bolt'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'

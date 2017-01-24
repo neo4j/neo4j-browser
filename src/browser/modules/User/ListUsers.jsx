@@ -2,11 +2,11 @@ import React from 'react'
 import uuid from 'uuid'
 import { connect } from 'react-redux'
 import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser } from './boltUserHelper'
-import { UserDetailsComponent } from './UserDetails'
+import UserDetails from './UserDetails'
 import bolt from 'services/bolt/bolt'
 import {H3} from 'nbnmui/headers'
 
-export class ListUsersComponent extends React.Component {
+export class ListUsers extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -37,7 +37,7 @@ export class ListUsersComponent extends React.Component {
   makeTable (data) {
     const items = data.map((row) => {
       return (
-        <UserDetailsComponent key={uuid.v4()} username={row[0]} roles={row[1]} callback={() => this.listUsers()} />
+        <UserDetails key={uuid.v4()} username={row[0]} roles={row[1]} callback={() => this.listUsers()} />
       )
     })
     return (
@@ -91,5 +91,4 @@ export class ListUsersComponent extends React.Component {
   }
 }
 
-const ListUsers = connect(null, null)(ListUsersComponent)
-export default ListUsers
+export default connect(null, null)(ListUsers)

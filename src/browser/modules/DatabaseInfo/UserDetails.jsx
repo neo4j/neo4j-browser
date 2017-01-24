@@ -1,7 +1,7 @@
 import React from 'react'
 import bolt from 'services/bolt/bolt'
 
-export class UserDetails extends React.Component {
+export default class UserDetails extends React.Component {
   constructor (props) {
     super(props)
     this.state = {

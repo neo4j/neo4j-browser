@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as commands from '../../../shared/modules/commands/commandsDuck'
 import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
-import { getHistory, getEditorContent } from '../../../selectors'
+import { getHistory } from 'shared/modules/history/historyDuck'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
-    content: getEditorContent(state),
+    content: '',
     history: getHistory(state)
   }
 }
