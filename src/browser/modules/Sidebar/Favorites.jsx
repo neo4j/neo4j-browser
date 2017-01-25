@@ -5,7 +5,7 @@ import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 export const Favorites = ({scripts = [], onItemClick}) => {
   const ListOfFavorites = scripts.map((entry) => {
-    return <Favorite key={entry.id} name={entry.name} content={entry.content} onItemClick={onItemClick} id={entry.id} />
+    return <Favorite key={entry.id} name={entry.name} content={entry.content} onItemClick={onItemClick} />
   })
   return (
     <Drawer id='db-favorites'>

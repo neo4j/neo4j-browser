@@ -23,7 +23,7 @@ export class ToolTip extends React.Component {
     this.setState({mouseover: false})
   }
   render () {
-    const tooltip = (this.state.mouseover) ? <Tip className={this.state.hidden} onClose={() => {}} target={this.state.id}>{this.state.name}</Tip> : null
+    const tooltip = (this.state.mouseover) ? <span className={styles.tooltip}>{this.state.name}</span> : null
     return (
       <div onMouseLeave={this.onMouseLeaveHandler.bind(this)} onMouseEnter={this.onMouseEnterHandler.bind(this)}>
         {this.props.children}
@@ -40,7 +40,7 @@ export const CloseButton = (props) => {
 }
 export const EditorButton = (props) => {
   const {tooltip, ...rest} = props
-  const id = uuid.v4()
+  const id = 'a' + uuid.v4()
   const button = <Button id={id} {...rest} />
   return (
     <ToolTip id={id} tooltip={tooltip}>
@@ -64,9 +64,10 @@ export const FavoriteItem = (props) => {
 }
 
 export const NavigationButton = (props) => {
+  const id = 'a' + uuid.v4()
   return (
-    <ToolTip id={props.id} tooltip={props.name}>
-      <Button {...props} id={props.id} icon={props.icon} />
+    <ToolTip id={id} tooltip={props.name}>
+      <Button {...props} id={id} icon={props.icon} />
     </ToolTip>
   )
 }

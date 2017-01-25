@@ -2,3 +2,7 @@
   min-width: 40px !important;
   top: 4px !important;
 }
+.tooltip {
+  position: absolute;
+  background-color: grey;
+}

@@ -87,6 +87,7 @@
     "html-loader": "^0.4.3",
     "jquery": "^3.1.0",
     "json-loader": "^0.5.4",
+    "n": "^2.1.4",
     "preact": "^7.1.0",
     "preact-compat": "^3.10.0",
     "react-addons-pure-render-mixin": "^15.0.2",

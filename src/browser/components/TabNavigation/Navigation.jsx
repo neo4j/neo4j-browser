@@ -2,7 +2,6 @@ import React from 'react'
 import List from 'grommet/components/List'
 import ListItem from 'grommet/components/ListItem'
 import classNames from 'classnames'
-import uuid from 'uuid'
 import { NavigationButton } from 'nbnmui/buttons'
 
 const Navigation = ({
@@ -20,12 +19,11 @@ const Navigation = ({
       const itemClass = classNames({
         [selectedItemClassName]: item.name.toLowerCase() === openDrawer
       })
-      const id = uuid.v4()
       return (
         <ListItem key={index}
           className={itemClass}
           onClick={() => onNavClick(item.name.toLowerCase())}>
-          <NavigationButton id={id} name={item.name} icon={item.icon} />
+          <NavigationButton name={item.name} icon={item.icon} />
         </ListItem>
       )
     })
