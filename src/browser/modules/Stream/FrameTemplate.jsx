@@ -1,12 +1,11 @@
 import React from 'react'
-import { Card, CardHeader } from 'grommet/components/Card'
+import Card from 'grommet/components/Card'
 
 import styles from './style_frame.css'
 
 const FrameTemplate = ({header, contents}) => {
   return (
-    <Card className={styles.frame}>
-      <CardHeader children={header} />
+    <Card className={styles.frame} heading={header}>
       <div className={styles.contents + ' frame-contents'}>
         {contents}
       </div>
