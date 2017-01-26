@@ -31,7 +31,7 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
-const persistedStateKeys = ['connections', 'settings', 'editor', 'favorites', 'visualization', 'datasource']
+const persistedStateKeys = ['connections', 'settings', 'history', 'favorites', 'visualization', 'datasource']
 const persistedStateStorage = window.localStorage
 
 const localStoragePersistStateMiddleware = lStorage.applyMiddleware(
