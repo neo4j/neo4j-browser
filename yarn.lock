@@ -3947,6 +3947,10 @@ mute-stream@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.5.tgz#8fbfabb0a98a253d3184331f9e8deb7372fac6c0"
 
+n@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/n/-/n-2.1.4.tgz#7546bc467a120cc96718f2716cd86c43290f94c5"
+
 nan@^2.3.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.5.0.tgz#aa8f1e34531d807e9e27755b234b4a6ec0c152a8"
