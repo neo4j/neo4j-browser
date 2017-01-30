@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as commands from '../../../shared/modules/commands/commandsDuck'
-import { remove } from '../../../shared/modules/stream/streamDuck'
+import { withBus } from 'react-suber'
+import * as editor from 'shared/modules/editor/editorDuck'
+import * as commands from 'shared/modules/commands/commandsDuck'
+import { remove } from 'shared/modules/stream/streamDuck'
 
 import styles from './style_titlebar.css'
 
@@ -20,10 +22,10 @@ export const FrameTitlebar = ({frame, onTitlebarClick, onCloseClick, onReRunClic
   )
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps = {}) => {
   return {
     onTitlebarClick: (cmd) => {
-      // dispatch(editor.setContent(cmd)) disable until Suber
+      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     },
     onCloseClick: (id) => {
       dispatch(remove(id))
@@ -34,4 +36,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(FrameTitlebar)
+export default connect(null, mapDispatchToProps)(withBus(FrameTitlebar))
