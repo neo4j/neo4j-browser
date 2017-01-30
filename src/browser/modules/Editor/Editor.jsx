@@ -80,9 +80,11 @@ export class Editor extends React.Component {
     this.codeMirrorInstance.keyMap['default']['Ctrl-Up'] = this.historyPrev.bind(this)
     this.codeMirrorInstance.keyMap['default']['Cmd-Down'] = this.historyNext.bind(this)
     this.codeMirrorInstance.keyMap['default']['Ctrl-Down'] = this.historyNext.bind(this)
-    this.props.bus.take(SET_CONTENT, (msg) => {
-      this.setEditorValue(this.codeMirror, msg.message)
-    })
+    if (this.props.bus) {
+      this.props.bus.take(SET_CONTENT, (msg) => {
+        this.setEditorValue(this.codeMirror, msg.message)
+      })
+    }
   }
   setEditorValue (cm, cmd) {
     this.codeMirror.setValue(cmd)
