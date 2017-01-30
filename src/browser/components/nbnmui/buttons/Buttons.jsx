@@ -1,7 +1,6 @@
 import React from 'react'
 import ListItem from 'grommet/components/ListItem'
 import Button from 'grommet/components/Button'
-import Tip from 'grommet/components/Tip'
 import uuid from 'uuid'
 import styles from './style.css'
 
