@@ -102,13 +102,14 @@ export class Editor extends React.Component {
       lineWrapping: true,
       autofocus: true
     }
+    const updateCode = (val) => this.updateCode(val)
     return (
       <div id='editor' className={styles.editorContainer}>
         <div className={styles['editor-wrapper']}>
           <Codemirror
             ref='editor'
             value={this.state.code}
-            onChange={this.updateCode.bind(this)}
+            onChange={updateCode}
             options={options}
             className={styles.editor}
           />
