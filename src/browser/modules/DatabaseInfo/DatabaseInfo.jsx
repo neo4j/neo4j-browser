@@ -10,10 +10,7 @@ import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 import styles from './style_meta.css'
 
-export const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties = [], userDetails, databaseKernelInfo, bus }) => {
-  const onItemClick = (cmd) => {
-    bus.send(editor.SET_CONTENT, editor.setContent(cmd))
-  }
+export const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties = [], userDetails, databaseKernelInfo, onItemClick }) => {
   return (
     <Drawer id='db-drawer'>
       <DrawerHeader title='Database Information' />
@@ -39,5 +36,12 @@ export const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties =
 const mapStateToProps = (state) => {
   return state.meta || {}
 }
+const mapDispatchToProps = (_, ownProps) => {
+  return {
+    onItemClick: (cmd) => {
+      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+    }
+  }
+}
 
-export default connect(mapStateToProps)(withBus(DatabaseInfo))
+export default connect(mapStateToProps, mapDispatchToProps)(withBus(DatabaseInfo))
