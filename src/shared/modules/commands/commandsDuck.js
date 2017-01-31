@@ -1,4 +1,5 @@
 import Rx from 'rxjs'
+import { put } from 'services/utils'
 import { cleanCommand } from 'services/commandUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -15,23 +16,16 @@ export const executeCommand = (cmd, contextId) => {
   }
 }
 
-const put = (dispatch) => (action) => dispatch(action)
-
+// Epics
 export const handleCommandsEpic = (action$, store) =>
   action$.ofType(USER_COMMAND_QUEUED)
-    .mergeMap((action) => {
+    .do((action) => store.dispatch(addHistory({cmd: action.cmd})))
+    .do((action) => {
       const cleanCmd = cleanCommand(action.cmd)
       const settingsState = getSettings(store.getState())
-      let out = null
       if (cleanCmd[0] === settingsState.cmdchar) {
         const interpreted = helper.interpret(action.cmd.substr(settingsState.cmdchar.length))
         interpreted.exec(action, settingsState.cmdchar, put(store.dispatch), store)
       }
-      out = Rx.Observable.of({ type: 'GOT_IT', cmd: action.cmd })
-      return Rx.Observable.concat(
-        out,
-        Rx.Observable.of(addHistory({cmd: action.cmd}))
-      )
-    }
-    )
-
+    })
+    .mapTo({ type: 'NOOP' })
