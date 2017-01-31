@@ -40,7 +40,6 @@ function * dataSourceDidFail (meta, error) {
 function * watchCommands () {
   while (true) {
     yield * takeEvery([
-      commands.USER_COMMAND_QUEUED,
       dataSource.COMMAND_QUEUED
     ], handleCommand)
   }

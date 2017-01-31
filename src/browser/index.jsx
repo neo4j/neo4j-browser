@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import createSagaMiddleware from 'redux-saga'
+import { createEpicMiddleware } from 'redux-observable'
 import 'preact/devtools'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -14,6 +15,7 @@ import connectionsReducer from 'shared/modules/connections/connectionsDuck'
 import App from './modules/App/App'
 
 import sagas from '../sagas'
+import epics from 'shared/rootEpic'
 import './styles/style.css'
 import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
@@ -23,6 +25,7 @@ import { makeConnectionsPersistedState, makeConnectionsInitialState } from 'brow
 
 const sagaMiddleware = createSagaMiddleware()
 const suberMiddleware = createSuberReduxMiddleware()
+const epicMiddleware = createEpicMiddleware(epics)
 
 const reducer = combineReducers({
   ...reducers,
@@ -30,7 +33,7 @@ const reducer = combineReducers({
 })
 
 const enhancer = compose(
-  applyMiddleware(sagaMiddleware, suberMiddleware),
+  applyMiddleware(sagaMiddleware, suberMiddleware, epicMiddleware),
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 

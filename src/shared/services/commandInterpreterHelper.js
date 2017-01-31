@@ -12,8 +12,8 @@ import { CouldNotFetchRemoteGuideError, UnknownCommandError } from 'services/exc
 const availableCommands = [{
   name: 'clear',
   match: (cmd) => cmd === 'clear',
-  exec: function * () {
-    yield put(frames.clear())
+  exec: function (action, cmdchar, put) {
+    put(frames.clear())
   }
 }, {
   name: 'config',
@@ -48,21 +48,9 @@ const availableCommands = [{
 }, {
   name: 'history',
   match: (cmd) => cmd === 'history',
-  exec: function * (action, cmdchar, onSuccess, onError) {
-    const historyState = yield select(getHistory)
-    yield call(onSuccess, {...action, type: 'history'}, historyState)
-  }
-}, {
-  name: 'widget',
-  match: (cmd) => /^widget(\s)/.test(cmd),
-  exec: function * (action, cmdchar, onSuccess, onError) {
-    yield call(handleWidgetCommand, action, cmdchar, onSuccess, onError)
-  }
-}, {
-  name: 'datasource',
-  match: (cmd) => /^data\s?-?source(\s)/.test(cmd),
-  exec: function * (action, cmdchar, onSuccess, onError) {
-    yield call(handleDataSourceCommand, action, cmdchar, onSuccess, onError)
+  exec: function (action, cmdchar, put, store) {
+    const historyState = getHistory(store.getState())
+    put(frames.add({ result: historyState, type: 'history' }))
   }
 }, {
   name: 'catch-all',
