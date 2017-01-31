@@ -19,7 +19,7 @@ const availableCommands = [{
   match: (cmd) => /^config(\s|$)/.test(cmd),
   exec: function (action, cmdchar, put, store) {
     handleUpdateConfigCommand(action, cmdchar, put, store)
-    put(frames.add(handleGetConfigCommand(action, cmdchar, store)))
+    put(frames.add({...action, ...handleGetConfigCommand(action, cmdchar, store)}))
   }
 }, {
   name: 'cypher',
@@ -32,7 +32,7 @@ const availableCommands = [{
   match: (cmd) => /^server(\s)/.test(cmd),
   exec: (action, cmdchar, put, store) => {
     const response = handleServerCommand(action, cmdchar, put, store)
-    if (response) put(frames.add(response))
+    if (response) put(frames.add({...action, ...response}))
   }
 }, {
   name: 'play-remote',
@@ -57,7 +57,7 @@ const availableCommands = [{
   match: (cmd) => cmd === 'history',
   exec: function (action, cmdchar, put, store) {
     const historyState = getHistory(store.getState())
-    put(frames.add({ result: historyState, type: 'history' }))
+    put(frames.add({ ...action, result: historyState, type: 'history' }))
   }
 }, {
   name: 'catch-all',
