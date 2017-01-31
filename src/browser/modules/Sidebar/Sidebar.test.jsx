@@ -1,9 +1,8 @@
+/* global test, expect */
 import React from 'react'
-import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-
 import Sidebar from './Sidebar'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
 import Favorites from './Favorites'
@@ -20,43 +19,43 @@ describe('Sidebar', () => {
   })
   const store = createStore(reducer)
 
-  it('should show db drawer when it is open', () => {
+  test('should show db drawer when it is open', () => {
     const drawer = 'db'
     const wrapper = mount(
       <Provider store={store}>
         <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find(DatabaseInfo)).to.have.length(1)
+    expect(wrapper.find(DatabaseInfo).length).toBe(1)
   })
 
-  it('should show favorites drawer when it is open', () => {
+  test('should show favorites drawer when it is open', () => {
     const drawer = 'favorites'
     const wrapper = mount(
       <Provider store={store}>
         <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find(Favorites)).to.have.length(1)
+    expect(wrapper.find(Favorites).length).toBe(1)
   })
 
-  it('should show documents drawer when it is open', () => {
+  test('should show documents drawer when it is open', () => {
     const drawer = 'documents'
     const wrapper = mount(
       <Provider store={store}>
         <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find(Documents)).to.have.length(1)
+    expect(wrapper.find(Documents).length).toBe(1)
   })
 
-  it('should show settings drawer when it is open', () => {
+  test('should show settings drawer when it is open', () => {
     const drawer = 'settings'
     const wrapper = mount(
       <Provider store={store}>
         <Sidebar openDrawer={drawer} />
       </Provider>
     )
-    expect(wrapper.find(Settings)).to.have.length(1)
+    expect(wrapper.find(Settings).length).toBe(1)
   })
 })

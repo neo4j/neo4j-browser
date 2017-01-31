@@ -24,17 +24,17 @@ const visualSettings =
   ]
 
 export const Settings = ({settings, onSettingsSave = () => {}}) => {
-  const mappedSettings = visualSettings.map((visualSetting) => {
+  const mappedSettings = visualSettings.map((visualSetting, i) => {
     const setting = Object.keys(visualSetting)[0]
     const visual = visualSetting[setting].displayName
     const tooltip = visualSetting[setting].tooltip
     return (
-      <ListItem>
+      <ListItem key={i}>
         <FormField label={visual} className={'setting ' + styles.setting}>
           <input onChange={(event) => {
             settings[setting] = event.target.value
             onSettingsSave(settings)
-          }} defaultValue={settings[setting]} suggestions={[tooltip]} />
+          }} defaultValue={settings[setting]} title={[tooltip]} />
         </FormField>
       </ListItem>
     )

@@ -1,14 +1,14 @@
-import { expect } from 'chai'
+/* global test, expect */
 import ls from './localstorage'
 
 describe('localstorage', () => {
-  it('getItem return items', () => {
+  test('getItem return items', () => {
     // Given
     const givenKey = 'myKey'
     const givenVal = 'myVal'
     const storage = {
       getItem: (key) => {
-        expect(key).to.equal(ls.keyPrefix + givenKey)
+        expect(key).toEqual(ls.keyPrefix + givenKey)
         return JSON.stringify(givenVal)
       }
     }
@@ -17,17 +17,17 @@ describe('localstorage', () => {
     const response = ls.getItem(givenKey, storage)
 
     // Then
-    expect(response).to.equal(givenVal)
+    expect(response).toEqual(givenVal)
   })
 
-  it('setItem sets items', () => {
+  test('setItem sets items', () => {
     // Given
     const givenKey = 'myKey'
     const givenVal = 'myVal'
     const storage = {
       setItem: (key, val) => {
-        expect(key).to.equal(ls.keyPrefix + givenKey)
-        expect(val).to.equal(JSON.stringify(givenVal))
+        expect(key).toEqual(ls.keyPrefix + givenKey)
+        expect(val).toEqual(JSON.stringify(givenVal))
       }
     }
 
@@ -35,10 +35,10 @@ describe('localstorage', () => {
     const response = ls.setItem(givenKey, givenVal, storage)
 
     // Then
-    expect(response).to.be.true
+    expect(response).toBeTruthy()
   })
 
-  it('should fetch items from storage based on key input', () => {
+  test('should fetch items from storage based on key input', () => {
     // Given
     const keys = ['key1', 'key2', 'key3']
     const vals = {
@@ -55,10 +55,10 @@ describe('localstorage', () => {
     const response = ls.getStorageForKeys(keys, storage)
 
     // Then
-    expect(response).to.deep.equal(vals)
+    expect(response).toEqual(vals)
   })
 
-  it('should persist items when they change', () => {
+  test('should persist items when they change', () => {
     // Given
     let time = 0
     const keys = ['key1', 'key2', 'key3']
@@ -104,13 +104,13 @@ describe('localstorage', () => {
     const storageAtTime3 = {...storage.state}
 
     // Then
-    expect(storageAtTime0).to.deep.equal(stateInTime[0])
-    expect(storageAtTime1).to.deep.equal(stateInTime[1])
-    expect(storageAtTime2).to.deep.equal(stateInTime[2])
-    expect(storageAtTime3).to.deep.equal(stateInTime[3])
+    expect(storageAtTime0).toEqual(stateInTime[0])
+    expect(storageAtTime1).toEqual(stateInTime[1])
+    expect(storageAtTime2).toEqual(stateInTime[2])
+    expect(storageAtTime3).toEqual(stateInTime[3])
   })
 
-  it('applyMiddleware should chain middlewares', () => {
+  test('applyMiddleware should chain middlewares', () => {
     // Given
     const val = 'myVal'
     const split = (_, val) => val.split('').join(' ')
@@ -121,10 +121,10 @@ describe('localstorage', () => {
     const res = ls.applyMiddleware(split, lower, ucFirst)(null, val)
 
     // Then
-    expect(res).to.equal('M y v a l')
+    expect(res).toEqual('M y v a l')
   })
 
-  it('createPersistingStoreListener should use middlewares', () => {
+  test('createPersistingStoreListener should use middlewares', () => {
     // Given
     const keys = ['x', 'y']
     const store = {
@@ -158,7 +158,7 @@ describe('localstorage', () => {
 
     // Then
     keys.forEach((k) => {
-      expect(storage.state[k]).to.equal(expected[k])
+      expect(storage.state[k]).toEqual(expected[k])
     })
   })
 })

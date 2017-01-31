@@ -1,48 +1,48 @@
+/* global test, expect */
 import React from 'react'
 import UserDetails from './UserDetails'
-import { expect } from 'chai'
 import { shallow } from 'enzyme'
 
 describe('connected as', () => {
-  it('should not show user details if not connected', () => {
+  test('should not show user details if not connected', () => {
     const userDetails = null
     const wrapper = shallow(<UserDetails userDetails={userDetails} />)
-    expect(wrapper.find('.user-details')).to.have.length(0)
+    expect(wrapper.find('.user-details').length).toBe(0)
   })
-  it('should show username when connected', () => {
+  test('should show username when connected', () => {
     const userDetails = {
       username: 'test',
       roles: []
     }
     const wrapper = shallow(<UserDetails userDetails={userDetails} />)
-    expect(wrapper.find('.user-details')).to.not.have.length(0)
-    expect(wrapper.find('.username').text()).to.equal('test')
-    expect(wrapper.find('.roles').text()).to.equal('-')
+    expect(wrapper.find('.user-details').length).toBeGreaterThan(0)
+    expect(wrapper.find('.username').text()).toEqual('test')
+    expect(wrapper.find('.roles').text()).toEqual('-')
   })
-  it('should show user role when connected', () => {
+  test('should show user role when connected', () => {
     const userDetails = {
       username: 'any',
       roles: ['ADMIN', 'READER']
     }
     const wrapper = shallow(<UserDetails userDetails={userDetails} />)
-    expect(wrapper.find('.roles').text()).to.equal('ADMIN, READER')
+    expect(wrapper.find('.roles').text()).toEqual('ADMIN, READER')
   })
-  it('not should display admin functions when user is not assigned the "admin" role', () => {
+  test('not should display admin functions when user is not assigned the "admin" role', () => {
     const userDetails = {
       username: 'any',
       roles: ['READER']
     }
     const wrapper = shallow(<UserDetails userDetails={userDetails} />)
-    expect(wrapper.find('.roles').text()).to.equal('READER')
-    expect(wrapper.find('.user-list-button')).to.have.length(0)
+    expect(wrapper.find('.roles').text()).toEqual('READER')
+    expect(wrapper.find('.user-list-button').length).toBe(0)
   })
-  it('should display admin functions when user is assigned the "admin" role', () => {
+  test('should display admin functions when user is assigned the "admin" role', () => {
     const userDetails = {
       username: 'any',
       roles: ['ADMIN']
     }
     const wrapper = shallow(<UserDetails userDetails={userDetails} />)
-    expect(wrapper.find('.roles').text()).to.equal('ADMIN')
-    expect(wrapper.find('.user-list-button')).to.have.length(1)
+    expect(wrapper.find('.roles').text()).toEqual('ADMIN')
+    expect(wrapper.find('.user-list-button').length).toBe(1)
   })
 })
