@@ -44,4 +44,4 @@ const mapDispatchToProps = (_, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withBus(DatabaseInfo))
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(DatabaseInfo))

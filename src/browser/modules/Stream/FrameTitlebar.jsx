@@ -36,4 +36,4 @@ const mapDispatchToProps = (dispatch, ownProps = {}) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(withBus(FrameTitlebar))
+export default withBus(connect(null, mapDispatchToProps)(FrameTitlebar))
