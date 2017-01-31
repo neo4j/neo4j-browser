@@ -1,4 +1,4 @@
-import { select, call } from 'redux-saga/effects'
+import { call } from 'redux-saga/effects'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { cleanHtml } from 'services/remoteUtils'
@@ -6,8 +6,6 @@ import remote from 'services/remote'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
-import { handleWidgetCommand } from 'sagas/command_sagas/widgetCommand'
-import { handleDataSourceCommand } from 'sagas/command_sagas/dataSourceCommand'
 import { CouldNotFetchRemoteGuideError, UnknownCommandError } from 'services/exceptions'
 
 const availableCommands = [{

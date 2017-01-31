@@ -55,7 +55,6 @@ function handleServerAddCommand (action, cmdchar, put, store) {
     if (!username || !password) throw new AddServerValidationError()
   } catch (e) {
     return {...action, type: 'error', error: {message: getErrorMessage(e)}}
-    return
   }
   put(connections.addConnection({name, username, password, host}))
   const state = store.getState()

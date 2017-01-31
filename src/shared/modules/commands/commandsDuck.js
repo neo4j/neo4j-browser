@@ -1,4 +1,4 @@
-import Rx from 'rxjs'
+import 'rxjs/Rx'
 import { put } from 'services/utils'
 import { cleanCommand } from 'services/commandUtils'
 import helper from 'services/commandInterpreterHelper'
