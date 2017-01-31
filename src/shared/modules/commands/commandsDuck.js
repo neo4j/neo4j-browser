@@ -23,9 +23,10 @@ export const handleCommandsEpic = (action$, store) =>
     .do((action) => {
       const cleanCmd = cleanCommand(action.cmd)
       const settingsState = getSettings(store.getState())
-      if (cleanCmd[0] === settingsState.cmdchar) {
-        const interpreted = helper.interpret(action.cmd.substr(settingsState.cmdchar.length))
-        interpreted.exec(action, settingsState.cmdchar, put(store.dispatch), store)
+      let interpreted = helper.interpret('cypher')// assume cypher
+      if (cleanCmd[0] === settingsState.cmdchar) { // :command
+        interpreted = helper.interpret(action.cmd.substr(settingsState.cmdchar.length))
       }
+      interpreted.exec(action, settingsState.cmdchar, put(store.dispatch), store)
     })
     .mapTo({ type: 'NOOP' })

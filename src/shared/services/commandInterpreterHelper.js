@@ -4,6 +4,7 @@ import { getHistory } from 'shared/modules/history/historyDuck'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
+import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { handleConfigCommand } from 'sagas/command_sagas/configCommand'
 import { handleWidgetCommand } from 'sagas/command_sagas/widgetCommand'
 import { handleDataSourceCommand } from 'sagas/command_sagas/dataSourceCommand'
@@ -20,6 +21,12 @@ const availableCommands = [{
   match: (cmd) => /^config(\s|$)/.test(cmd),
   exec: function * (action, cmdchar, onSuccess, onError) {
     yield call(handleConfigCommand, action, cmdchar, onSuccess, onError)
+  }
+}, {
+  name: 'cypher',
+  match: (cmd) => /^cypher$/.test(cmd),
+  exec: (action, cmdchar, put, store) => {
+    handleCypherCommand(action, cmdchar, put, store)
   }
 }, {
   name: 'server',
@@ -55,8 +62,8 @@ const availableCommands = [{
 }, {
   name: 'catch-all',
   match: () => true,
-  exec: function * (action, cmdchar, onSuccess, onError) {
-    yield call(onError, {...action, type: 'unknown'}, UnknownCommandError(action.cmd))
+  exec: (action, cmdchar, put) => {
+    put(frames.add({...action, type: 'unknown', error: UnknownCommandError(action.cmd)}))
   }
 }]
 
