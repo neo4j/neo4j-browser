@@ -33,7 +33,8 @@ const availableCommands = [{
   name: 'server',
   match: (cmd) => /^server(\s)/.test(cmd),
   exec: (action, cmdchar, put, store) => {
-    handleServerCommand(action, cmdchar, put, store)
+    const response = handleServerCommand(action, cmdchar, put, store)
+    if (response) put(frames.add(response))
   }
 }, {
   name: 'play-remote',
