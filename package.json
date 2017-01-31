@@ -5,9 +5,31 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --content-base ./dist --history-api-fallback",
-    "lint": "./node_modules/.bin/standard",
-    "test": "npm run lint && karma start",
-    "test:watch": "npm run test -- --watch --watch-extensions jsx"
+    "lint": "standard --fix",
+    "test": "npm run lint && jest",
+    "dev": "jest --watch"
+  },
+  "jest": {
+    "globals": {
+      "neo4j": true
+    },
+    "moduleFileExtensions": [
+      "",
+      "js",
+      "jsx",
+      "json"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src",
+      "src/browser/components",
+      "src/shared"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
+      "neo4j": "<rootDir>/__mocks__/neo4j.js"
+    }
   },
   "standard": {
     "ignore": [
@@ -41,7 +63,6 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
     "enzyme": "^2.3.0",
-    "istanbul-instrumenter-loader": "^1.1.0",
     "jest-cli": "^18.1.0",
     "postcss": "^5.0.21",
     "postcss-cssnext": "^2.6.0",

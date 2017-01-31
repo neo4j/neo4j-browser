@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import asciitable from 'ascii-data-table'
 import { FrameTitlebar } from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import * as dataSource from '../../../shared/modules/dataSource/dataSourceDuck'
+import * as dataSource from 'shared/modules/dataSource/dataSourceDuck'
 
 export const WidgetFrame = (props) => {
   const ds = props.getDataSource(props.frame.result)

@@ -1,8 +1,8 @@
-import {expect} from 'chai'
+/* global test, expect */
 import reducer, * as meta from './dbMetaDuck'
 
 describe('updating metadata', () => {
-  it('should update state when metadata is updated', () => {
+  test('should update state when metadata is updated', () => {
     const returnedLabels = {
       a: 'labels',
       get: (val) => { return ['label1', 'label2'] }
@@ -21,12 +21,12 @@ describe('updating metadata', () => {
       context: 'mycontext'
     }
     const nextState = reducer(undefined, action)
-    expect(nextState.labels).to.deep.equal([{val: 'label1', context: 'mycontext'}, {val: 'label2', context: 'mycontext'}])
-    expect(nextState.relationshipTypes).to.deep.equal([{val: 'rel1', context: 'mycontext'}, {val: 'rel2', context: 'mycontext'}])
-    expect(nextState.properties).to.deep.equal([{val: 'prop1', context: 'mycontext'}, {val: 'prop2', context: 'mycontext'}])
+    expect(nextState.labels).toEqual([{val: 'label1', context: 'mycontext'}, {val: 'label2', context: 'mycontext'}])
+    expect(nextState.relationshipTypes).toEqual([{val: 'rel1', context: 'mycontext'}, {val: 'rel2', context: 'mycontext'}])
+    expect(nextState.properties).toEqual([{val: 'prop1', context: 'mycontext'}, {val: 'prop2', context: 'mycontext'}])
   })
 
-  // it('should not update state when metadata has not changed', () => {
+  // test('should not update state when metadata has not changed', () => {
   //   const returnedLabels = {
   //     a: 'labels',
   //     get: (val) => { return ['label1', 'label2'] }
@@ -48,6 +48,6 @@ describe('updating metadata', () => {
   //     state: {meta: {records: [ returnedLabels, returnedRelationshipTypes, returnedProperies ]}}
   //   }
   //   const nextState = reducer(initialState, action)
-  //   expect(nextState).to.equal(initialState)
+  //   expect(nextState).toEqual(initialState)
   // })
 })

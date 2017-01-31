@@ -1,8 +1,9 @@
-import {expect} from 'chai'
+/* global test, expect */
+
 import reducer, * as connections from './connectionsDuck'
 
 describe('connections reducer', () => {
-  it('handles connections.ADD', () => {
+  test('handles connections.ADD', () => {
     const action = {
       type: connections.ADD,
       connection: {
@@ -11,14 +12,14 @@ describe('connections reducer', () => {
       }
     }
     const nextState = reducer(undefined, action)
-    expect(nextState.allConnectionIds).to.deep.equal(['x'])
-    expect(nextState.connectionsById).to.deep.equal({'x': {
+    expect(nextState.allConnectionIds).toEqual(['x'])
+    expect(nextState.connectionsById).toEqual({'x': {
       id: 'x',
       name: 'bm'
     }})
   })
 
-  it('handles connections.SET_ACTIVE', () => {
+  test('handles connections.SET_ACTIVE', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
@@ -32,6 +33,6 @@ describe('connections reducer', () => {
       connectionId: 2
     }
     const nextState = reducer(initialState, action)
-    expect(nextState.activeConnection).to.equal(2)
+    expect(nextState.activeConnection).toEqual(2)
   })
 })

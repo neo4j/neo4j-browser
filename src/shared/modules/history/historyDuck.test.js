@@ -1,11 +1,11 @@
-import {expect} from 'chai'
+/* global test, expect */
 import reducer, * as actions from './historyDuck'
 
 describe('editor reducer', () => {
-  it('handles editor.actionTypes.ADD_HISTORY', () => {
+  test('handles editor.actionTypes.ADD_HISTORY', () => {
     const helpAction = actions.addHistory({cmd: ':help'})
     const nextState = reducer(undefined, helpAction)
-    expect(nextState).to.deep.equal({
+    expect(nextState).toEqual({
       history: [{ cmd: ':help' }],
       maxHistory: 20
     })
@@ -13,13 +13,13 @@ describe('editor reducer', () => {
     // One more time
     const historyAction = actions.addHistory({cmd: ':history'})
     const nextnextState = reducer(nextState, historyAction)
-    expect(nextnextState).to.deep.equal({
+    expect(nextnextState).toEqual({
       history: [{ cmd: ':history' }, { cmd: ':help' }],
       maxHistory: 20
     })
   })
 
-  it('takes editor.actionTypes.SET_MAX_HISTORY into account', () => {
+  test('takes editor.actionTypes.SET_MAX_HISTORY into account', () => {
     const initalState = {
       history: [
         { cmd: ':help' },
@@ -30,7 +30,7 @@ describe('editor reducer', () => {
     }
     const helpAction = actions.addHistory({cmd: ':history'})
     const nextState = reducer(initalState, helpAction)
-    expect(nextState).to.deep.equal({
+    expect(nextState).toEqual({
       history: [
         { cmd: ':history' },
         { cmd: ':help' },

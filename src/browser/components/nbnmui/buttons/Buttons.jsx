@@ -34,7 +34,7 @@ export class ToolTip extends React.Component {
 
 export const CloseButton = (props) => {
   return (
-    <Button {...props} className={styles.icon}>×</Button>
+    <Button {...props}>×</Button>
   )
 }
 export const EditorButton = (props) => {
@@ -49,9 +49,9 @@ export const EditorButton = (props) => {
 }
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
-  const rightIcon = (removeClick) ? (<CloseButton onClick={props.removeClick} />) : null
+  const rightIcon = (removeClick) ? (<CloseButton className='remove' onClick={props.removeClick} />) : null
   return (
-    <ListItem className='remove'>
+    <ListItem>
       <span {...rest}>
         <p>{primaryText}</p>
       </span>
@@ -66,7 +66,7 @@ export const NavigationButton = (props) => {
   const id = 'a' + uuid.v4()
   return (
     <ToolTip id={id} tooltip={props.name}>
-      <Button {...props} id={id} icon={props.icon} />
+      <Button {...props} id={id} />
     </ToolTip>
   )
 }

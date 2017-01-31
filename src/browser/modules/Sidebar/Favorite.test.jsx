@@ -1,13 +1,9 @@
+/* global test, expect, jest */
 import React from 'react'
-import chai from 'chai'
-import { shallow } from 'enzyme'
-import chaiEnzyme from 'chai-enzyme'
-import spies from 'chai-spies'
+import { shallow, mount } from 'enzyme'
 import { Favorite as FavoriteComponent } from './Favorite'
 
 describe('FavoriteComponent', () => {
-  const expect = chai.expect
-
   describe('should show name of script', () => {
     const testCases = [
       {
@@ -32,37 +28,31 @@ describe('FavoriteComponent', () => {
       }
     ]
     testCases.forEach((testCase, i) => {
-      it(`should extract name of script from case ${i}`, () => {
+      test(`should extract name of script from case ${i}`, () => {
         const wrapper = shallow(<FavoriteComponent content={testCase.command} />)
         const item = wrapper.find('.favorite')
-        expect(item).to.have.length(1)
-        expect(item.props().primaryText).to.equal(testCase.expected)
+        expect(item.length).toBe(1)
+        expect(item.props().primaryText).toEqual(testCase.expected)
       })
     })
   })
 
-  it('should show tigger event with content of script', () => {
-    const expect = chai.expect
-    chai.use(spies)
-    chai.use(chaiEnzyme())
-    const onItemClick = chai.spy()
+  test('should show tigger event with content of script', () => {
+    const onItemClick = jest.fn()
     const wrapper = shallow(<FavoriteComponent content={'Cypher'} onItemClick={onItemClick} />)
     const favoriteElement = wrapper.find('.favorite')
-    expect(favoriteElement).to.have.length(1)
+    expect(favoriteElement.length).toBe(1)
     favoriteElement.first().simulate('click')
-    expect(onItemClick).have.been.called.with('Cypher')
+    expect(onItemClick).toHaveBeenCalledWith('Cypher')
   })
 
-  it('should remove favorite that has been clicked', () => {
+  test('should remove favorite that has been clicked', () => {
     const id = 'SomeId'
-    const expect = chai.expect
-    chai.use(spies)
-    chai.use(chaiEnzyme())
-    const onRemoveClick = chai.spy()
-    const wrapper = shallow(<FavoriteComponent id={id} removeClick={onRemoveClick} />)
+    const onRemoveClick = jest.fn()
+    const wrapper = mount(<FavoriteComponent id={id} content='hej' removeClick={onRemoveClick} />)
     const favoriteElement = wrapper.find('.favorite')
-    expect(favoriteElement).to.have.length(1)
-    // wrapper.find(favoriteElement).find('.remove').simulate('click')
-    // expect(onRemoveClick).have.been.called.with('SomeId')
+    expect(favoriteElement.length).toBe(1)
+    wrapper.find('.remove').simulate('click')
+    expect(onRemoveClick).toHaveBeenCalledWith('SomeId')
   })
 })

@@ -1,13 +1,13 @@
-import {expect} from 'chai'
+/* global test, expect */
 import reducer, { UPDATE } from './settingsDuck'
 
 describe('settings reducer', () => {
-  it('handles initial value', () => {
+  test('handles initial value', () => {
     const nextState = reducer(undefined, {type: ''})
-    expect(nextState.cmdchar).to.equal(':')
+    expect(nextState.cmdchar).toEqual(':')
   })
 
-  it('handles UPDATE without initial state', () => {
+  test('handles UPDATE without initial state', () => {
     const action = {
       type: UPDATE,
       state: {
@@ -15,10 +15,10 @@ describe('settings reducer', () => {
       }
     }
     const nextState = reducer(undefined, action)
-    expect(nextState.greeting).to.equal('hello')
+    expect(nextState.greeting).toEqual('hello')
   })
 
-  it('handles UPDATE', () => {
+  test('handles UPDATE', () => {
     const initialState = { cmdchar: ':', greeting: 'hello', type: 'human' }
     const action = {
       type: UPDATE,
@@ -28,7 +28,7 @@ describe('settings reducer', () => {
       }
     }
     const nextState = reducer(initialState, action)
-    expect(nextState).to.deep.equal({
+    expect(nextState).toEqual({
       cmdchar: ':',
       greeting: 'woff',
       type: 'dog'
