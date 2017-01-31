@@ -1,5 +1,4 @@
 import 'babel-polyfill'
-import createSagaMiddleware from 'redux-saga'
 import { createEpicMiddleware } from 'redux-observable'
 import 'preact/devtools'
 import React from 'react'
@@ -14,7 +13,6 @@ import reducers from 'shared/rootReducer'
 import connectionsReducer from 'shared/modules/connections/connectionsDuck'
 import App from './modules/App/App'
 
-import sagas from '../sagas'
 import epics from 'shared/rootEpic'
 import './styles/style.css'
 import './styles/codemirror.css'
@@ -23,7 +21,6 @@ import 'grommet/grommet.min.css'
 import lStorage from 'browser-services/localstorage'
 import { makeConnectionsPersistedState, makeConnectionsInitialState } from 'browser-services/localstorageMiddleware'
 
-const sagaMiddleware = createSagaMiddleware()
 const suberMiddleware = createSuberReduxMiddleware()
 const epicMiddleware = createEpicMiddleware(epics)
 
@@ -33,7 +30,7 @@ const reducer = combineReducers({
 })
 
 const enhancer = compose(
-  applyMiddleware(sagaMiddleware, suberMiddleware, epicMiddleware),
+  applyMiddleware(suberMiddleware, epicMiddleware),
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
@@ -64,7 +61,6 @@ store.subscribe(lStorage.createPersistingStoreListener(
 ))
 
 const history = syncHistoryWithStore(browserHistory, store)
-sagaMiddleware.run(sagas)
 
 // Send everything from suber into Redux
 applySuberMiddleware((_) => (channel, message, source) => {
@@ -73,7 +69,7 @@ applySuberMiddleware((_) => (channel, message, source) => {
   // Send to Redux with the channel as the action type
   store.dispatch({...message, type: channel})
 })
-
+store.dispatch({ type: 'APP_START' })
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>

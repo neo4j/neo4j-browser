@@ -100,7 +100,6 @@
     "react-swipe": "^5.0.3",
     "redux": "^3.5.2",
     "redux-observable": "^0.13.0",
-    "redux-saga": "^0.13.0",
     "rxjs": "^5.0.3",
     "save-as": "^0.1.7",
     "suber": "^2.0.0",

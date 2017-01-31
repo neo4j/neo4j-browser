@@ -1,4 +1,3 @@
-import { call } from 'redux-saga/effects'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { cleanHtml } from 'services/remoteUtils'
@@ -44,20 +43,20 @@ const availableCommands = [{
 }, {
   name: 'play-remote',
   match: (cmd) => /^play(\s|$)https?/.test(cmd),
-  exec: function * (action, cmdchar, onSuccess, onError) {
+  exec: function (action, cmdchar, put, store) {
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
     try {
-      const content = yield call(remote.get, url)
-      yield call(onSuccess, {...action, type: 'play-remote'}, cleanHtml(content))
+      const content = remote.get(url)
+      put({...action, type: 'play-remote', result: cleanHtml(content)})
     } catch (e) {
-      yield call(onError, {...action, type: 'play-remote'}, CouldNotFetchRemoteGuideError(e))
+      put({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e)})
     }
   }
 }, {
   name: 'play',
   match: (cmd) => /^play(\s|$)/.test(cmd),
-  exec: function * (action, cmdchar, onSuccess, onError) {
-    yield call(onSuccess, {...action, type: 'play'})
+  exec: function (action, cmdchar, put, store) {
+    put({...action, type: 'play'})
   }
 }, {
   name: 'history',

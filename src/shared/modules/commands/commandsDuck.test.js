@@ -1,4 +1,4 @@
-/* global test, expect, jest, beforeEach */
+/* global test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import * as commands from './commandsDuck'
@@ -39,7 +39,7 @@ describe('commandsEpic', () => {
       action,
       addHistory({ cmd }),
       helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
-      { type: 'NOOP'}
+      { type: 'NOOP' }
     ])
   })
 
@@ -57,7 +57,7 @@ describe('commandsEpic', () => {
       action,
       addHistory({ cmd }),
       helper.interpret('cypher').exec(action, null, (a) => a, store),
-      { type: 'NOOP'}
+      { type: 'NOOP' }
     ])
   })
 })

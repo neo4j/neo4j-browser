@@ -6,7 +6,6 @@ import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/dbMetaDuck'
 import favoritesReducer, { NAME as favorites } from 'shared/modules/favorites/favoritesDuck'
 import connectionsReducer, { NAME as connections } from 'shared/modules/connections/connectionsDuck'
 import sidebarReducer, { NAME as sidebar } from 'shared/modules/sidebar/sidebarDuck'
-import dataSourceReducer, { NAME as dataSource } from 'shared/modules/dataSource/dataSourceDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -16,6 +15,5 @@ export default {
   [currentUser]: userReducer,
   [dbMeta]: dbMetaReducer,
   [favorites]: favoritesReducer,
-  [sidebar]: sidebarReducer,
-  [dataSource]: dataSourceReducer
+  [sidebar]: sidebarReducer
 }

@@ -1,5 +1,5 @@
 import bolt from 'services/bolt/bolt'
-import { BoltConnectionError, BoltError } from 'services/exceptions'
+import { BoltConnectionError } from 'services/exceptions'
 
 export const handleCypherCommand = (action) => {
   const connection = bolt.getConnection()
