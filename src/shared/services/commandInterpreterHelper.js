@@ -25,11 +25,13 @@ const availableCommands = [{
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
-    const response = handleCypherCommand(action, cmdchar, put, store)
+    const response = handleCypherCommand(action)
     if (response.then) {
       response.then((res) => put(frames.add({...action, ...res})))
     } else {
-      put(frames.add({...action, ...response}))
+      const newAction = frames.add({...action, ...response})
+      put(newAction)
+      return newAction
     }
   }
 }, {
@@ -62,7 +64,9 @@ const availableCommands = [{
   match: (cmd) => cmd === 'history',
   exec: function (action, cmdchar, put, store) {
     const historyState = getHistory(store.getState())
-    put(frames.add({ ...action, result: historyState, type: 'history' }))
+    const newAction = frames.add({ ...action, result: historyState, type: 'history' })
+    put(newAction)
+    return newAction
   }
 }, {
   name: 'catch-all',

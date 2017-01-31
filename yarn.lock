@@ -5367,6 +5367,10 @@ redux-devtools@^3.2.0:
     lodash "^4.2.0"
     redux-devtools-instrument "^1.0.1"
 
+redux-mock-store@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.2.2.tgz#38007dc38f12ca8d965c7521afee5ccacc234d03"
+
 redux-observable@^0.13.0:
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/redux-observable/-/redux-observable-0.13.0.tgz#35b26c2cdbb71e499b31ca9961da0581c2973909"
