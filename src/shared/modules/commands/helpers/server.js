@@ -30,13 +30,14 @@ function handleServerListCommand (action, cmdchar, put, store) {
 function connectToConnection (action, connectionName, put, store) {
   const state = store.getState()
   try {
+    let load = (data) => bolt.openConnection(data)
     const connection = bolt.getConnection(connectionName)
-    // if (connection) return yield handleUseConnectionCommand(action, connectionName, onError)
+    if (connection) load = (data) => bolt.useConnection(data.name)
     const foundConnections = connections.getConnections(state).filter((c) => c.name === connectionName)
     if (!foundConnections.length) throw new ConnectionNotFoundError(connectionName)
     const connectionData = foundConnections[0]
     if (connectionData.type === 'bolt') {
-      bolt.openConnection(connectionData)
+      load(connectionData)
     } else {
       bolt.useConnection('offline')
     }
