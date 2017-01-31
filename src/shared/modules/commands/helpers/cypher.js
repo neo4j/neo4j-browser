@@ -1,16 +1,17 @@
 import bolt from 'services/bolt/bolt'
-import { BoltConnectionError } from 'services/exceptions'
-import { add as addFrame } from 'shared/modules/stream/streamDuck'
+import { BoltConnectionError, BoltError } from 'services/exceptions'
 
 export const handleCypherCommand = (action, cmdchar, put, store) => {
   try {
     const connection = bolt.getConnection()
     if (!connection) throw new BoltConnectionError()
-    connection.transaction(action.cmd)
+    return connection.transaction(action.cmd)
         .then((res) => {
-          put(addFrame({...action, type: 'cypher', result: res}))
+          return {...action, type: 'cypher', result: res}
+        }).catch((e) => {
+          return {...action, type: 'cypher', error: {...e}}
         })
   } catch (e) {
-    put(addFrame({...action, type: 'cypher', error: {...e}}))
+    return {...action, type: 'cypher', error: {...e}}
   }
 }

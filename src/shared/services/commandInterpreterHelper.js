@@ -25,7 +25,12 @@ const availableCommands = [{
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
-    handleCypherCommand(action, cmdchar, put, store)
+    const response = handleCypherCommand(action, cmdchar, put, store)
+    if (response.then) {
+      response.then((res) => put(frames.add({...action, ...res})))
+    } else {
+      put(frames.add({...action, ...response}))
+    }
   }
 }, {
   name: 'server',
