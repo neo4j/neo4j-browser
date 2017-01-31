@@ -3,7 +3,7 @@ import * as frames from 'shared/modules/stream/streamDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
-import { handleServerCommand } from 'sagas/command_sagas/serverCommand'
+import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleConfigCommand } from 'sagas/command_sagas/configCommand'
 import { handleWidgetCommand } from 'sagas/command_sagas/widgetCommand'
 import { handleDataSourceCommand } from 'sagas/command_sagas/dataSourceCommand'
@@ -24,8 +24,8 @@ const availableCommands = [{
 }, {
   name: 'server',
   match: (cmd) => /^server(\s)/.test(cmd),
-  exec: function * (action, cmdchar, onSuccess, onError) {
-    yield call(handleServerCommand, action, cmdchar, onSuccess, onError)
+  exec: (action, cmdchar, put, store) => {
+    handleServerCommand(action, cmdchar, put, store)
   }
 }, {
   name: 'play-remote',
