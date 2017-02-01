@@ -7,7 +7,6 @@ import PlayFrame from './PlayFrame'
 import Frame from './Frame'
 import PreFrame from './PreFrame'
 import ErrorFrame from './ErrorFrame'
-import StyleFrame from './StyleFrame'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 
 export const Stream = (props) => {
@@ -51,13 +50,6 @@ export const Stream = (props) => {
     if (frame.type === 'history') {
       return (
         <HistoryFrame
-          key={frame.id} frame={frame}
-        />
-      )
-    }
-    if (frame.type === 'style') {
-      return (
-        <StyleFrame
           key={frame.id} frame={frame}
         />
       )
