@@ -11,9 +11,9 @@ const PlayFrame = ({frame}) => {
   } else {
     const guideName = frame.cmd.replace(':play', '').trim()
     if (guideName !== '') {
-      const content = html[guideName]
+      const content = html.default[guideName]
       if (content !== undefined) {
-        guide = <Guides withDirectives html={html[guideName]} />
+        guide = <Guides withDirectives html={content} />
       } else {
         guide = 'Guide not found'
       }

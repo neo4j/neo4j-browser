@@ -2,12 +2,11 @@ import React from 'react'
 import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 
-const StyleFrame = (props) => {
-  const frame = props.frame
+const StyleFrame = ({frame}) => {
   return (
     <FrameTemplate
       header={<FrameTitlebar frame={frame} />}
-      contents={'NA'}
+      contents={<pre>{frame.result || frame.contents}</pre>}
     />
   )
 }

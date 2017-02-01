@@ -10,16 +10,12 @@ import styles from './style.css'
 
 export default class Guides extends React.Component {
   constructor (props) {
+    console.log('new guides')
     super(props)
-    this.state = {slides: null, firstRender: false}
+    this.state = {slides: null, firstRender: true}
   }
   shouldComponentUpdate () {
-    if (this.state.firstRender) {
-      return false
-    } else {
-      this.setState({firstRender: true})
-      return true
-    }
+    return this.state.firstRender
   }
   componentDidMount () {
     const slides = ReactDOM.findDOMNode(this).getElementsByTagName('slide')
@@ -31,7 +27,7 @@ export default class Guides extends React.Component {
         }
       })
     }
-    this.setState({ slides: reactSlides })
+    this.setState({ slides: reactSlides, firstRender: false })
   }
   next () {
     this.refs.reactSwipe.next()
