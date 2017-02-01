@@ -47,16 +47,16 @@ const availableCommands = [{
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
     try {
       const content = remote.get(url)
-      put({...action, type: 'play-remote', result: cleanHtml(content)})
+      put(frames.add({...action, type: 'play-remote', result: cleanHtml(content)}))
     } catch (e) {
-      put({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e)})
+      put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e)}))
     }
   }
 }, {
   name: 'play',
   match: (cmd) => /^play(\s|$)/.test(cmd),
   exec: function (action, cmdchar, put, store) {
-    put({...action, type: 'play'})
+    put(frames.add({...action, type: 'play'}))
   }
 }, {
   name: 'history',
