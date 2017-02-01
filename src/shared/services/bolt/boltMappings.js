@@ -26,10 +26,11 @@ export function arrayIntToString (arr, intChecker, intConverter) {
 }
 
 export function objIntToString (obj, intChecker, intConverter) {
+  let newObj = {}
   Object.keys(obj).forEach((key) => {
-    obj[key] = itemIntToString(obj[key], intChecker, intConverter)
+    newObj[key] = itemIntToString(obj[key], intChecker, intConverter)
   })
-  return obj
+  return newObj
 }
 
 export function extractPlan (result) {
@@ -60,7 +61,7 @@ export function extractPlan (result) {
   return null
 }
 
-export function extractNodesAndRelationshipsFromRecords (records, types) {
+export function extractNodesAndRelationshipsFromRecords (records, types, intChecker, intConverter) {
   let keys = records[0].keys
   let rawNodes = []
   let rawRels = []
@@ -71,14 +72,10 @@ export function extractNodesAndRelationshipsFromRecords (records, types) {
     let paths = graphItems.filter((item) => item instanceof types.Path)
     paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
   })
-  const nodes = rawNodes.map((item) => {
-    return {id: item.identity.toString(), labels: item.labels, properties: item.properties}
-  })
-  const relationships = rawRels.filter((item) => nodes.filter((node) => node.id === item.start.toString()).length > 0 && nodes.filter((node) => node.id === item.end.toString()).length > 0)
-  .map((item) => {
-    return {id: item.identity.toString(), startNodeId: item.start, endNodeId: item.end, type: item.type, properties: item.properties}
-  })
-  return { nodes: nodes, relationships: relationships }
+  rawNodes = arrayIntToString(rawNodes, intChecker, intConverter)
+  rawRels = arrayIntToString(rawRels, intChecker, intConverter)
+  // const relationships = rawRels.filter((item) => rawNodes.filter((node) => node.identity.toString() === item.start.toString()).length > 0 && rawNodes.filter((node) => node.identity.toString() === item.end.toString()).length > 0)
+  return { nodes: rawNodes, relationships: rawRels }
 }
 
 const extractNodesAndRelationshipsFromPath = (item, rawNodes, rawRels) => {

@@ -115,6 +115,7 @@
     "save-as": "^0.1.7",
     "suber": "^2.0.0",
     "swipe-js-iso": "^2.0.3",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "neo4j-visualization": "../neo4j-visualization/neo4j-visualization-1.0.0.tgz"
   }
 }

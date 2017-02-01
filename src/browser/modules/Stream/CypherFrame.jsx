@@ -4,6 +4,7 @@ import FrameTemplate from './FrameTemplate'
 import asciitable from 'ascii-data-table'
 import QueryPlan from './Planner/QueryPlan'
 import bolt from 'services/bolt/bolt'
+import Visualization from './Visualization'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -17,9 +18,12 @@ class CypherFrame extends React.Component {
     this.setState({openView: viewName})
   }
 
+  shouldComponentUpdate (nextProps) {
+    return nextProps.frame.result !== this.props.frame.result
+  }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.frame.result !== this.props.frame.result) {
-      this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.frame.result.records)
       this.state.rows = bolt.recordsToTableArray(nextProps.frame.result.records)
       this.state.plan = bolt.extractPlan(nextProps.frame.result)
     }
@@ -33,12 +37,14 @@ class CypherFrame extends React.Component {
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {
-      this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (plan) {
         frameContents = <QueryPlan plan={plan} />
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
-        frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
+        frameContents = (<div>
+          <Visualization records={result.records} />
+          <pre>{asciitable.table(this.state.rows)}</pre>
+        </div>)
       }
     } else if (errors) {
       frameContents = (
