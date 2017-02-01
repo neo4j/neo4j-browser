@@ -147,14 +147,15 @@ export class Editor extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onFavortieClick: (cmd) => {
       console.log('click fav')
       dispatch(favorites.addFavorite(cmd))
     },
     onExecute: (cmd) => {
-      dispatch(commands.executeCommand(cmd))
+      const action = commands.executeCommand(cmd)
+      ownProps.bus.send(action.type, action)
     }
   }
 }
@@ -166,4 +167,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withBus(Editor))
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
