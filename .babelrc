@@ -1,3 +1,20 @@
 {
-  "presets": ["es2015", "stage-0", "react"]
+  "presets": ["es2015", "stage-0", "react"],
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./src", "./node_modules", "src/shared", "src/browser"],
+      "extensions": ["", ".js", ".jsx", ".es", ".es6", ".json"],
+      "alias": {
+        "neo4j-driver-alias": "neo4j-driver/lib/browser/neo4j-web.js",
+        "src-root": "./src",
+        "services": "./src/shared/services",
+        "browser-services": "./src/browser/services",
+        "shared": "./src/shared",
+        "sagas": "./src/sagas",
+        "react": "preact-compat",
+        "react-dom": "preact-compat",
+        "nbnmui": "./src/browser/components/nbnmui"
+      }
+    }]
+  ]
 }

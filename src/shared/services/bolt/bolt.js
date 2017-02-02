@@ -1,8 +1,7 @@
-/* global neo4j */
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
 import { ConnectionException } from '../exceptions'
-
 function openConnection ({id, name, username, password, host}) {
   const transactionFn = (connection) => {
     return (input, parameters) => {
@@ -14,7 +13,7 @@ function openConnection ({id, name, username, password, host}) {
 
 function connect (props) {
   const p = new Promise((resolve, reject) => {
-    const driver = neo4j.v1.driver('bolt://' + props.host, neo4j.v1.auth.basic(props.username, props.password))
+    const driver = neo4j.driver('bolt://' + props.host, neo4j.auth.basic(props.username, props.password))
     const tmp = driver.session()
     tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject(e))
   })
@@ -52,15 +51,15 @@ export default {
     return Promise.reject(new ConnectionException('No connection'))
   },
   recordsToTableArray: (records) => {
-    const intChecker = neo4j.v1.isInt
+    const intChecker = neo4j.isInt
     const intConverter = (val) => val.toString()
     return mappings.recordsToTableArray(records, intChecker, intConverter)
   },
   extractNodesAndRelationshipsFromRecords: (records) => {
-    return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.v1.types)
+    return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.types)
   },
   extractPlan: (result) => {
     return mappings.extractPlan(result)
   },
-  neo4j: neo4j.v1
+  neo4j: neo4j
 }
