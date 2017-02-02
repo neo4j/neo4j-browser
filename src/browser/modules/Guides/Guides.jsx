@@ -10,7 +10,6 @@ import styles from './style.css'
 
 export default class Guides extends React.Component {
   constructor (props) {
-    console.log('new guides')
     super(props)
     this.state = {slides: null, firstRender: true}
   }
