@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import uuid from 'uuid'
 import ListItem from 'grommet/components/ListItem'
 import List from 'grommet/components/List'
-import * as editor from '../../../shared/modules/history/historyDuck'
+import { withBus } from 'react-suber'
+import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { H4 } from 'nbnmui/headers'
 import { FavoriteItem } from 'nbnmui/buttons'
 
@@ -34,12 +35,12 @@ export const DocumentItems = ({header, items, onItemClick = null}) => {
   )
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps = {}) => {
   return {
     onItemClick: (cmd) => {
-      dispatch(editor.setContent(cmd))
+      ownProps.bus.send(SET_CONTENT, setContent(cmd))
     }
   }
 }
 
-export default connect(null, mapDispatchToProps)(DocumentItems)
+export default withBus(connect(null, mapDispatchToProps)(DocumentItems))
