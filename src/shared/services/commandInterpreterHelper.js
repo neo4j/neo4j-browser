@@ -46,8 +46,10 @@ const availableCommands = [{
   exec: function (action, cmdchar, put, store) {
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
     try {
-      const content = remote.get(url)
-      put(frames.add({...action, type: 'play-remote', result: cleanHtml(content)}))
+      remote.get(url).then((r) => {
+        put(frames.add({...action, type: 'play-remote', result: cleanHtml(r)}))
+      })
+
     } catch (e) {
       put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e)}))
     }
