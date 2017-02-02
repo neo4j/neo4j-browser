@@ -5,3 +5,5 @@ export const deepEquals = (x, y) => {
   }
   return (x === y)
 }
+
+export const put = (dispatch) => (action) => dispatch(action)

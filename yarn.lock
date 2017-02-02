@@ -5367,9 +5367,13 @@ redux-devtools@^3.2.0:
     lodash "^4.2.0"
     redux-devtools-instrument "^1.0.1"
 
-redux-saga@^0.13.0:
+redux-mock-store@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.2.2.tgz#38007dc38f12ca8d965c7521afee5ccacc234d03"
+
+redux-observable@^0.13.0:
   version "0.13.0"
-  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.13.0.tgz#9294386550deb0d56bc9a1b3c90a613e7ddb6593"
+  resolved "https://registry.yarnpkg.com/redux-observable/-/redux-observable-0.13.0.tgz#35b26c2cdbb71e499b31ca9961da0581c2973909"
 
 redux@^3.2.0, redux@^3.5.2:
   version "3.6.0"
@@ -5576,6 +5580,12 @@ run-parallel@^1.1.2:
 rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
+
+rxjs@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.3.tgz#fc8bdf464ebf938812748e4196788f392fef9754"
+  dependencies:
+    symbol-observable "^1.0.1"
 
 sane@~1.4.1:
   version "1.4.1"
@@ -5940,7 +5950,7 @@ swipe-js-iso@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/swipe-js-iso/-/swipe-js-iso-2.0.3.tgz#76892ca4fc2928f384ac042739a25f7afe6fcf74"
 
-symbol-observable@^1.0.2:
+symbol-observable@^1.0.1, symbol-observable@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
 
