@@ -65,6 +65,6 @@ export const setActiveConnection = (id) => {
 export const addConnection = ({name, username, password, host}) => {
   return {
     type: ADD,
-    connection: {id: v4(), name, username, password, host, type: 'bolt'}
+    connection: {id: name, name, username, password, host, type: 'bolt'}
   }
 }

@@ -1,5 +1,7 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
+import { callDiscovery } from 'shared/modules/discovery/discoveryDuck'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -74,6 +76,10 @@ export const metaQuery = `CALL db.labels() YIELD label
 
 export const dbMetaEpic = (some$, store) =>
   some$.ofType('APP_START')
+    .do((action) => {
+      store.dispatch(callDiscovery())
+      store.dispatch(executeCommand(':server connect discovery'))
+    })
     .mergeMap(() => {
       return Rx.Observable.interval(20000)
       .mergeMap(() =>
