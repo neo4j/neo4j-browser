@@ -1,9 +1,8 @@
-import { v4 } from 'uuid'
-
 export const NAME = 'connections'
 export const ADD = 'connections/ADD'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
 export const SELECT = 'connections/SELECT'
+export const REMOVE = 'connections/REMOVE'
 
 const initialState = {
   allConnectionIds: [],
@@ -36,12 +35,32 @@ const addConnectionHelper = (state, obj) => {
   )
 }
 
+const removeConnectionHelper = (state, connectionId) => {
+  const connectionsById = {...state.connectionsById}
+  let allConnectionIds = state.allConnectionIds
+  const index = allConnectionIds.indexOf(connectionId)
+  if (index > 0) {
+    allConnectionIds.splice(index, 1)
+    console.log('abababab', connectionsById)
+    delete connectionsById[connectionId]
+    console.log('abababab', connectionsById)
+  }
+  return Object.assign(
+    {},
+    state,
+    {allConnectionIds: allConnectionIds},
+    {connectionsById: connectionsById}
+  )
+}
+
 export default function (state = initialState, action) {
   switch (action.type) {
     case ADD:
       return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:
       return {...state, activeConnection: action.connectionId}
+    case REMOVE:
+      return removeConnectionHelper(state, action.connectionId)
     default:
       return state
   }

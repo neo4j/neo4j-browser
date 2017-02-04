@@ -37,6 +37,7 @@ function connectToConnection (action, connectionName, put, store) {
       bolt.useConnection('offline')
     }
     put(connections.setActiveConnection(connectionData.id))
+    return {...action, type: 'connection', connectionData}
   } catch (e) {
     return {...action, type: 'error', error: {message: getErrorMessage(e)}}
   }

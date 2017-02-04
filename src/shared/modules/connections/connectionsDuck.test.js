@@ -35,4 +35,23 @@ describe('connections reducer', () => {
     const nextState = reducer(initialState, action)
     expect(nextState.activeConnection).toEqual(2)
   })
+
+  test('handles connections.REMOVE', () => {
+    const initialState = {
+      allConnectionIds: [1, 2, 3],
+      connectionsById: {
+        '1': {id: 1, name: 'bm1'},
+        '2': {id: 2, name: 'bm2'},
+        '3': {id: 3, name: 'bm3'}
+      }
+    }
+    const action = {
+      type: connections.REMOVE,
+      connectionId: 2
+    }
+    const nextState = reducer(initialState, action)
+    console.log('nextSTATATDSFSDFSADF', nextState)
+    expect(nextState.allConnectionIds).toEqual([1, 3])
+    expect(Object.keys(nextState.connectionsById)).toEqual(['1', '3'])
+  })
 })

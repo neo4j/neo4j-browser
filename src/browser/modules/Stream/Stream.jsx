@@ -6,51 +6,58 @@ import PlayFrame from './PlayFrame'
 import Frame from './Frame'
 import PreFrame from './PreFrame'
 import ErrorFrame from './ErrorFrame'
+import ConnectionFrame from './ConnectionFrame'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 
 export const Stream = (props) => {
   const {frames} = props
+  console.log('props', props)
   const framesList = frames.map((frame) => {
-    if (frame.type === 'error') {
-      return (
-        <ErrorFrame
-          key={frame.id} frame={frame}
-        />
-      )
+    switch (frame.type) {
+      case 'error':
+        return (
+          <ErrorFrame
+            key={frame.id} frame={frame}
+          />
+        )
+      case 'cypher':
+        return (
+          <CypherFrame
+            key={frame.id} frame={frame}
+          />
+        )
+      case 'pre':
+        return (
+          <PreFrame
+            key={frame.id} frame={frame}
+          />
+        )
+      case 'play':
+      case 'play-remote':
+        return (
+          <PlayFrame
+            key={frame.id} frame={frame}
+          />
+        )
+      case 'history':
+        return (
+          <HistoryFrame
+            key={frame.id} frame={frame}
+          />
+        )
+      case 'connection':
+        return (
+          <ConnectionFrame
+            key={frame.id} frame={frame}
+          />
+        )
+      default:
+        return (
+          <Frame
+            key={frame.id} frame={frame}
+          />
+        )
     }
-    if (frame.type === 'cypher') {
-      return (
-        <CypherFrame
-          key={frame.id} frame={frame}
-        />
-      )
-    }
-    if (frame.type === 'pre') {
-      return (
-        <PreFrame
-          key={frame.id} frame={frame}
-        />
-      )
-    }
-    if (frame.type === 'play' || frame.type === 'play-remote') {
-      return (
-        <PlayFrame
-          key={frame.id} frame={frame}
-        />
-      )
-    }
-    if (frame.type === 'history') {
-      return (
-        <HistoryFrame
-          key={frame.id} frame={frame}
-        />
-      )
-    }
-    return (
-      <Frame
-        key={frame.id} frame={frame}
-      />
-    )
   })
   return (
     <div id='stream' style={{
