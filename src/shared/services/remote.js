@@ -18,6 +18,9 @@ function getJSON (url) {
     return response.json()
   }).then((json) => {
     return json
+  }).catch((error) => {
+    console.error(error)
+    return null
   })
 }
 

@@ -40,13 +40,15 @@ export const discoveryEpic = (some$, store) => {
   return some$.ofType(FETCH)
     .do((action) => {
       remote.getJSON(action.discoveryEndpoint).then((result) => {
-        const connection = {
-          name: 'discovery',
-          username: 'neo4j',
-          password: 'neo4j',
-          host: result.bolt
+        if (result) {
+          const connection = {
+            name: 'discovery',
+            username: 'neo4j',
+            password: 'a',
+            host: result.bolt
+          }
+          store.dispatch(addConnection(connection))
         }
-        store.dispatch(addConnection(connection))
       }).catch((e) => null)
     })
     .mapTo({ type: 'NOOP' })

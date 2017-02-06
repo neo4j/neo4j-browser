@@ -6,12 +6,11 @@ import PlayFrame from './PlayFrame'
 import Frame from './Frame'
 import PreFrame from './PreFrame'
 import ErrorFrame from './ErrorFrame'
-import ConnectionFrame from './ConnectionFrame'
+import ConnectedConnectionFrame from './ConnectionFrame'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 
 export const Stream = (props) => {
   const {frames} = props
-  console.log('props', props)
   const framesList = frames.map((frame) => {
     switch (frame.type) {
       case 'error':
@@ -47,7 +46,7 @@ export const Stream = (props) => {
         )
       case 'connection':
         return (
-          <ConnectionFrame
+          <ConnectedConnectionFrame
             key={frame.id} frame={frame}
           />
         )

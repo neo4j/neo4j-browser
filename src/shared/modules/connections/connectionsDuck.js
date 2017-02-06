@@ -3,6 +3,7 @@ export const ADD = 'connections/ADD'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
 export const SELECT = 'connections/SELECT'
 export const REMOVE = 'connections/REMOVE'
+export const UPDATE = 'connections/UPDATE'
 
 const initialState = {
   allConnectionIds: [],
@@ -41,9 +42,26 @@ const removeConnectionHelper = (state, connectionId) => {
   const index = allConnectionIds.indexOf(connectionId)
   if (index > 0) {
     allConnectionIds.splice(index, 1)
-    console.log('abababab', connectionsById)
     delete connectionsById[connectionId]
-    console.log('abababab', connectionsById)
+  }
+  return Object.assign(
+    {},
+    state,
+    {allConnectionIds: allConnectionIds},
+    {connectionsById: connectionsById}
+  )
+}
+
+const updateConnectionHelper = (state, connection) => {
+  const connectionId = connection.id
+  const connectionsById = {...state.connectionsById}
+  let allConnectionIds = state.allConnectionIds
+  const index = allConnectionIds.indexOf(connectionId)
+  if (index > 0) {
+    connectionsById[connectionId] = Object.assign(
+      connectionsById[connectionId],
+      connection
+    )
   }
   return Object.assign(
     {},
@@ -61,6 +79,8 @@ export default function (state = initialState, action) {
       return {...state, activeConnection: action.connectionId}
     case REMOVE:
       return removeConnectionHelper(state, action.connectionId)
+    case UPDATE:
+      return updateConnectionHelper(state, action.connection)
     default:
       return state
   }
@@ -85,5 +105,12 @@ export const addConnection = ({name, username, password, host}) => {
   return {
     type: ADD,
     connection: {id: name, name, username, password, host, type: 'bolt'}
+  }
+}
+
+export const updateConnection = ({id, name, username, password}) => {
+  return {
+    type: UPDATE,
+    connection: { id: id, name, username, password }
   }
 }
