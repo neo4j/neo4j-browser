@@ -5,6 +5,7 @@ import * as commands from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
+import { getSettings } from 'shared/modules/settings/settingsDuck'
 import Codemirror from 'react-codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
@@ -19,7 +20,8 @@ export class Editor extends React.Component {
     this.state = {
       code: props.content || '',
       historyIndex: -1,
-      buffer: null
+      buffer: null,
+      mode: 'cypher'
     }
   }
   focusEditor () {
@@ -91,14 +93,18 @@ export class Editor extends React.Component {
     this.updateCode(cmd, () => this.focusEditor())
   }
   updateCode (newCode, cb = () => {}) {
+    const mode = this.props.cmdchar && newCode.indexOf(this.props.cmdchar) === 0
+      ? 'text'
+      : 'cypher'
     this.setState({
-      code: newCode
+      code: newCode,
+      mode
     }, cb)
   }
   render () {
     const options = {
       lineNumbers: true,
-      mode: 'cypher',
+      mode: this.state.mode,
       theme: 'neo',
       gutters: ['cypher-hints'],
       lineWrapping: true,
@@ -163,7 +169,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = (state) => {
   return {
     content: '',
-    history: getHistory(state)
+    history: getHistory(state),
+    cmdchar: getSettings(state).cmdchar
   }
 }
 
