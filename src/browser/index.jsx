@@ -5,8 +5,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
-import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
 
 import reducers from 'shared/rootReducer'
@@ -24,10 +22,7 @@ import { makeConnectionsPersistedState, makeConnectionsInitialState } from 'brow
 const suberMiddleware = createSuberReduxMiddleware()
 const epicMiddleware = createEpicMiddleware(epics)
 
-const reducer = combineReducers({
-  ...reducers,
-  routing: routerReducer
-})
+const reducer = combineReducers({ ...reducers })
 
 const enhancer = compose(
   applyMiddleware(suberMiddleware, epicMiddleware),
@@ -60,8 +55,6 @@ store.subscribe(lStorage.createPersistingStoreListener(
   localStoragePersistStateMiddleware
 ))
 
-const history = syncHistoryWithStore(browserHistory, store)
-
 // Send everything from suber into Redux
 applySuberMiddleware((_) => (channel, message, source) => {
   // No loop-backs
@@ -69,12 +62,13 @@ applySuberMiddleware((_) => (channel, message, source) => {
   // Send to Redux with the channel as the action type
   store.dispatch({...message, type: channel})
 })
+
+// Signal app upstart (for epics)
 store.dispatch({ type: 'APP_START' })
+
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
-      <Route path='/' component={App} />
-    </Router>
+    <App />
   </Provider>,
   document.getElementById('mount')
 )
