@@ -68,7 +68,7 @@ export const Stream = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    frames: getFrames(state).reverse()
+    frames: getFrames(state)
   }
 }
 

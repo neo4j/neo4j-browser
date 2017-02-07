@@ -28,9 +28,9 @@ export function getFramesInContext (state, context) {
 */
 function addFrame (state, newState) {
   const byId = Object.assign({}, state.byId, {[newState.id]: newState})
-  let allIds = state.allIds
+  let allIds = [].concat(state.allIds)
   if (allIds.indexOf(newState.id) < 0) {
-    allIds = state.allIds.concat([newState.id])
+    allIds.unshift(newState.id)
   }
   return Object.assign(
     {},
