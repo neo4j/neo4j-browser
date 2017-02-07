@@ -54,7 +54,7 @@ describe('connections reducer', () => {
     expect(Object.keys(nextState.connectionsById)).toEqual(['1', '3'])
   })
 
-  test('handles connections.UPDATE', () => {
+  test('handles connections.MERGE (update connection)', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
@@ -64,9 +64,9 @@ describe('connections reducer', () => {
       }
     }
     const action = {
-      type: connections.UPDATE,
+      type: connections.MERGE,
       connection: {
-        id: '1',
+        id: 1,
         name: 'bm1',
         username: 'new user',
         password: 'different password'
@@ -74,6 +74,22 @@ describe('connections reducer', () => {
     }
     const nextState = reducer(initialState, action)
     expect(nextState.allConnectionIds).toEqual([1, 2, 3])
-    expect(nextState.connectionsById['1']).toEqual({id: '1', name: 'bm1', username: 'new user', password: 'different password'})
+    expect(nextState.connectionsById['1']).toEqual({id: 1, name: 'bm1', username: 'new user', password: 'different password'})
+  })
+
+  test('handles connections.MERGE (add connection)', () => {
+    const action = {
+      type: connections.MERGE,
+      connection: {
+        id: 'x',
+        name: 'bm'
+      }
+    }
+    const nextState = reducer(undefined, action)
+    expect(nextState.allConnectionIds).toEqual(['x'])
+    expect(nextState.connectionsById).toEqual({'x': {
+      id: 'x',
+      name: 'bm'
+    }})
   })
 })

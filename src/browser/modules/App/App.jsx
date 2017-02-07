@@ -5,8 +5,7 @@ import styles from './style.css'
 
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
-
-import { toggle } from '../../../shared/modules/sidebar/sidebarDuck'
+import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 
 const BaseLayout = ({drawer, handleNavClick}) => {
   return (

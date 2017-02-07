@@ -1,7 +1,9 @@
 import remote from 'services/remote'
-import { addConnection } from 'shared/modules/connections/connectionsDuck'
+import bolt from 'services/bolt/bolt'
+import { updateConnection, getConnection } from 'shared/modules/connections/connectionsDuck'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
-export const NAME = 'discovery'
+export const NAME = 'discover-bolt-host'
 
 // Actions
 const SET = `${NAME}/SET`
@@ -36,20 +38,35 @@ export const getBoltHost = (state) => {
   return state.discovery.boltHost
 }
 
-export const discoveryEpic = (some$, store) => {
+export const addDiscoveryEpic = (some$, store) => {
   return some$.ofType(FETCH)
     .do((action) => {
       remote.getJSON(action.discoveryEndpoint).then((result) => {
         if (result) {
-          const connection = {
+          const defaultNeoConnection = {
+            id: 'discovery',
             name: 'discovery',
-            username: 'neo4j',
-            password: 'a',
             host: result.bolt
           }
-          store.dispatch(addConnection(connection))
+          store.dispatch(updateConnection(defaultNeoConnection))
+          bolt.connectToConnection(
+            getConnection(store.getState(),
+            defaultNeoConnection.id)
+          ).then((res) => {
+            store.dispatch(executeCommand(':play start'))
+          }).catch((e) => {
+            store.dispatch(executeCommand(':server connect'))
+          })
         }
-      }).catch((e) => null)
+      }).catch((e) => {
+        return store.dispatch(executeCommand(':server connect'))
+      })
     })
     .mapTo({ type: 'NOOP' })
 }
+export const startDiscoveryEpic = (some$, store) =>
+  some$.ofType('APP_START')
+    .do((action) => {
+      store.dispatch(callDiscovery())
+    })
+    .mapTo({type: 'NOOP'})

@@ -16,11 +16,8 @@ function getJSON (url) {
     }
   }).then((response) => {
     return response.json()
-  }).then((json) => {
-    return json
-  }).catch((error) => {
-    console.error(error)
-    return null
+  }).catch((e) => {
+    return Promise.reject(e)
   })
 }
 

@@ -3,7 +3,7 @@ export const ADD = 'connections/ADD'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
 export const SELECT = 'connections/SELECT'
 export const REMOVE = 'connections/REMOVE'
-export const UPDATE = 'connections/UPDATE'
+export const MERGE = 'connections/MERGE'
 
 const initialState = {
   allConnectionIds: [],
@@ -14,6 +14,10 @@ const initialState = {
 /**
  * Selectors
 */
+export function getConnection (state, id) {
+  return getConnections(state).filter((connection) => connection.id === id)[0]
+}
+
 export function getConnections (state) {
   return state[NAME].allConnectionIds.map((id) => state[NAME].connectionsById[id])
 }
@@ -52,16 +56,20 @@ const removeConnectionHelper = (state, connectionId) => {
   )
 }
 
-const updateConnectionHelper = (state, connection) => {
+const mergeConnectionHelper = (state, connection) => {
   const connectionId = connection.id
   const connectionsById = {...state.connectionsById}
   let allConnectionIds = state.allConnectionIds
   const index = allConnectionIds.indexOf(connectionId)
-  if (index > 0) {
+  if (index >= 0) {
     connectionsById[connectionId] = Object.assign(
+      {},
       connectionsById[connectionId],
       connection
     )
+  } else {
+    connectionsById[connectionId] = Object.assign({}, connection)
+    allConnectionIds.push(connectionId)
   }
   return Object.assign(
     {},
@@ -79,8 +87,8 @@ export default function (state = initialState, action) {
       return {...state, activeConnection: action.connectionId}
     case REMOVE:
       return removeConnectionHelper(state, action.connectionId)
-    case UPDATE:
-      return updateConnectionHelper(state, action.connection)
+    case MERGE:
+      return mergeConnectionHelper(state, action.connection)
     default:
       return state
   }
@@ -108,9 +116,9 @@ export const addConnection = ({name, username, password, host}) => {
   }
 }
 
-export const updateConnection = ({id, name, username, password}) => {
+export const updateConnection = (connection) => {
   return {
-    type: UPDATE,
-    connection: { id: id, name, username, password }
+    type: MERGE,
+    connection
   }
 }

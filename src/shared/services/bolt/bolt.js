@@ -2,6 +2,7 @@ import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
 import { ConnectionException } from '../exceptions'
+
 function openConnection ({id, name, username, password, host}) {
   const transactionFn = (connection) => {
     return (input, parameters) => {
@@ -39,7 +40,28 @@ function transaction (connection, input, parameters) {
   })
 }
 
+function connectToConnection (connectionData) {
+  const openCon = (connection, res, rej) => {
+    openConnection(connection)
+    .then(res).catch(rej)
+  }
+  const p = new Promise((resolve, reject) => {
+    const connection = connectionHandler.get(connectionData.name)
+    if (connection) {
+      validateConnection(connection).then((result) => {
+        resolve(result)
+      }).catch((e) => {
+        openCon(connectionData, resolve, reject)
+      })
+    } else {
+      openCon(connectionData, resolve, reject)
+    }
+  })
+  return p
+}
+
 export default {
+  connectToConnection,
   openConnection,
   useConnection: (name) => {
     connectionHandler.setDefault(name)

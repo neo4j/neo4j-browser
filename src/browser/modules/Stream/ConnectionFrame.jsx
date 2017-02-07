@@ -34,7 +34,7 @@ export class ConnectionFrame extends React.Component {
   frameContents () {
     const notification =
       (this.state.updated)
-      ? <Notification message='Connection details updated' closer onClose={() => {
+      ? <Notification message='Connection details updated' status='ok' closer onClose={() => {
         this.setState({updated: false})
       }} />
       : null
