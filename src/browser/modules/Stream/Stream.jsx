@@ -8,6 +8,7 @@ import PreFrame from './PreFrame'
 import ErrorFrame from './ErrorFrame'
 import ConnectedConnectionFrame from './ConnectionFrame'
 import { getFrames } from 'shared/modules/stream/streamDuck'
+import { getRequests } from 'shared/modules/requests/requestsDuck'
 
 export const Stream = (props) => {
   const {frames} = props
@@ -22,7 +23,9 @@ export const Stream = (props) => {
       case 'cypher':
         return (
           <CypherFrame
-            key={frame.id} frame={frame}
+            key={frame.id} 
+            frame={frame}
+            request={props.requests[frame.requestId]}
           />
         )
       case 'pre':
@@ -73,7 +76,8 @@ export const Stream = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    frames: getFrames(state)
+    frames: getFrames(state),
+    requests: getRequests(state)
   }
 }
 

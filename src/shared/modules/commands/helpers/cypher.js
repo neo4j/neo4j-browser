@@ -1,13 +1,8 @@
 import bolt from 'services/bolt/bolt'
-import { BoltConnectionError } from 'services/exceptions'
+import { send } from 'shared/modules/requests/requestsDuck'
 
-export const handleCypherCommand = (action) => {
-  const connection = bolt.getConnection()
-  if (!connection) return {...action, type: 'cypher', error: {...BoltConnectionError()}}
-  return connection.transaction(action.cmd)
-      .then((res) => {
-        return {...action, type: 'cypher', result: res}
-      }).catch((e) => {
-        return {...action, type: 'cypher', error: {...e}}
-      })
+export const handleCypherCommand = (action, put) => {
+  const [id, request] = bolt.trackedTransaction(action.cmd, undefined, undefined, action.requestId)
+  put(send('cypher', id))
+  return [id, request]
 }

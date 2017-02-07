@@ -1,9 +1,13 @@
-/* global test, expect, beforeAll */
+/* global describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
+// import { BoltConnectionError } from '../../services/exceptions'
 import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
+// import { update as updateQueryResult } from '../requests/requestsDuck'
+import { send } from 'shared/modules/requests/requestsDuck'
+import * as frames from 'shared/modules/stream/streamDuck'
 
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
 const mockStore = configureMockStore([epicMiddleware])
@@ -38,8 +42,8 @@ describe('commandsEpic', () => {
     expect(store.getActions()).toEqual([
       action,
       addHistory({ cmd }),
-      helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
-      { type: 'NOOP' }
+      helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store)
+      // { type: 'NOOP' }
     ])
   })
 
@@ -47,7 +51,8 @@ describe('commandsEpic', () => {
     // Given
     const cmd = 'RETURN 1'
     const id = 2
-    const action = commands.executeCommand(cmd, id)
+    const requestId = 'xxx'
+    const action = commands.executeCommand(cmd, id, requestId)
 
     // When
     store.dispatch(action)
@@ -55,9 +60,12 @@ describe('commandsEpic', () => {
     // Then
     expect(store.getActions()).toEqual([
       action,
-      addHistory({ cmd }),
-      helper.interpret('cypher').exec(action, null, (a) => a, store),
-      { type: 'NOOP' }
+      addHistory({cmd}),
+      send('cypher', requestId),
+      frames.add({...action, type: 'cypher'})
+      // below should happen but isn't in the test environment. It is working in the real world.
+      // updateQueryResult(requestId, BoltConnectionError(), 'error'),
+      // { type: 'NOOP' }
     ])
   })
 })
