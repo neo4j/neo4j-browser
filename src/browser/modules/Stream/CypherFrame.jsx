@@ -1,15 +1,16 @@
 import React from 'react'
 import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import asciitable from 'ascii-data-table'
 import QueryPlan from './Planner/QueryPlan'
+import TableView from './Views/TableView'
+import AsciiView from './Views/AsciiView'
 import bolt from 'services/bolt/bolt'
 
 class CypherFrame extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      openView: 'text'
+      openView: 'table'
     }
   }
 
@@ -38,7 +39,16 @@ class CypherFrame extends React.Component {
         frameContents = <QueryPlan plan={plan} />
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
-        frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
+        switch (this.state.openView) {
+          case 'text':
+            frameContents = <AsciiView rows={this.state.rows} />
+            break
+          case 'table':
+            frameContents = <TableView data={this.state.rows} />
+            break
+          default:
+            frameContents = <TableView data={this.state.rows} />
+        }
       }
     } else if (errors) {
       frameContents = (
