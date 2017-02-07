@@ -22,7 +22,7 @@ export class ToolTip extends React.Component {
     this.setState({mouseover: false})
   }
   render () {
-    const tooltip = (this.state.mouseover) ? <span className={styles.tooltip}>{this.state.name}</span> : null
+    const tooltip = null
     return (
       <div onMouseLeave={this.onMouseLeaveHandler.bind(this)} onMouseEnter={this.onMouseEnterHandler.bind(this)}>
         {this.props.children}
