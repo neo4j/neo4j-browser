@@ -15,15 +15,10 @@ class TableView extends React.Component {
     }
   }
   render () {
-    const onSortFunc = (index, ascending) => {
-    }
     const tableHeader = (
       <TableHeader
         className='.table-header'
         labels={this.state.columns}
-        sortIndex={0}
-        sortAscending={false}
-        onSort={onSortFunc.bind(this)}
       />
     )
     const buildData = (entries) => {
