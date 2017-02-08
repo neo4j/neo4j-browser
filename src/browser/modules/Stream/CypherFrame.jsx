@@ -1,10 +1,14 @@
 import React from 'react'
 import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
+import Button from 'grommet/components/Button'
+import Sidebar from 'grommet/components/Sidebar'
+import TableIcon from 'grommet/components/icons/base/Table'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
 import bolt from 'services/bolt/bolt'
+import styles from './style_sidebar.css'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -24,6 +28,19 @@ class CypherFrame extends React.Component {
       this.state.rows = bolt.recordsToTableArray(nextProps.frame.result.records)
       this.state.plan = bolt.extractPlan(nextProps.frame.result)
     }
+  }
+
+  sidebar () {
+    return (
+      <Sidebar className={styles.sidebar} colorIndex='neutral-1' full={false}>
+        <Button primary={this.state.openView === 'table'} icon={<TableIcon />} onClick={() => {
+          this.setState({openView: 'table'})
+        }} />
+        <Button primary={this.state.openView === 'text'} label={'A'} plain onClick={() => {
+          this.setState({openView: 'text'})
+        }} />
+      </Sidebar>
+    )
   }
 
   render () {
@@ -66,6 +83,7 @@ class CypherFrame extends React.Component {
     }
     return (
       <FrameTemplate
+        sidebar={this.sidebar.bind(this)}
         header={<FrameTitlebar frame={frame} />}
         contents={frameContents}
       />

@@ -5,20 +5,29 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { remove } from 'shared/modules/stream/streamDuck'
 
+import Button from 'grommet/components/Button'
+import Box from 'grommet/components/Box'
+import RefreshIcon from 'grommet/components/icons/base/Refresh'
+import CloseIcon from 'grommet/components/icons/base/Close'
+import Header from 'grommet/components/Header'
+import Label from 'grommet/components/Label'
+
 import styles from './style_titlebar.css'
 
 export const FrameTitlebar = ({frame, onTitlebarClick, onCloseClick, onReRunClick}) => {
   return (
-    <div className={styles['frame-titlebar']}>
-      <div className={styles['frame-command']}>
-        <span onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-titlebar-cmd']}>{frame.cmd}</span>
-      </div>
-      <div className='frame-action-buttons'>
-        <div onClick={() => onReRunClick(frame.cmd, frame.id)} className={styles['frame-action-button']}>Re-run</div>
-        <div onClick={() => onCloseClick(frame.id)} className={styles['frame-action-button']}>X</div>
-      </div>
-      <div className='clear' />
-    </div>
+    <Header>
+      <Label size='small' onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
+        {frame.cmd}
+      </Label>
+      <Box flex
+        justify='end'
+        direction='row'
+        responsive={false}>
+        <Button icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id)} />
+        <Button icon={<CloseIcon />} onClick={() => onCloseClick(frame.id)} />
+      </Box>
+    </Header>
   )
 }
 
