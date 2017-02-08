@@ -4,10 +4,10 @@
   width: auto !important;
   background-color: #fff;
   height: 400px;
-  overflow: auto;
 }
 
 .contents {
   padding: 0 20px 20px 20px;
   flex: 0 1 auto;
+  overflow: auto;
 }
