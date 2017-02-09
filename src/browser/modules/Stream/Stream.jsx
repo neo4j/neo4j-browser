@@ -61,7 +61,6 @@ export const Stream = (props) => {
   return (
     <div id='stream' style={{
       padding: '20px',
-      overflow: 'auto',
       display: 'flex',
       flexDirection: 'column'
     }}>
