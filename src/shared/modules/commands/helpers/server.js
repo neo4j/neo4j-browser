@@ -22,21 +22,20 @@ function handleServerListCommand (action, cmdchar, put, store) {
   return {...action, type: 'pre', result: JSON.stringify(state, null, 2)}
 }
 
-function connectToConnection (action, connectionName, put, store) {
+export function connectToConnection (action, connectionName, put, store) {
   const state = store.getState()
   try {
-    let load = (data) => bolt.openConnection(data)
-    const connection = bolt.getConnection(connectionName)
-    if (connection) load = (data) => bolt.useConnection(data.name)
+    connectionName = connectionName || 'discovery'
     const foundConnections = connections.getConnections(state).filter((c) => c.name === connectionName)
     if (!foundConnections.length) throw new ConnectionNotFoundError(connectionName)
     const connectionData = foundConnections[0]
     if (connectionData.type === 'bolt') {
-      load(connectionData)
+      bolt.connectToConnection(connectionData, state)
     } else {
       bolt.useConnection('offline')
     }
     put(connections.setActiveConnection(connectionData.id))
+    return {...action, type: 'connection', connectionData}
   } catch (e) {
     return {...action, type: 'error', error: {message: getErrorMessage(e)}}
   }

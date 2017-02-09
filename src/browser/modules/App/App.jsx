@@ -5,9 +5,9 @@ import styles from './style.css'
 
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
-import { toggle } from '../../../shared/modules/sidebar/sidebarDuck'
+import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 
-export const BaseLayout = ({drawer, handleNavClick}) => {
+const BaseLayout = ({drawer, handleNavClick}) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.app}>

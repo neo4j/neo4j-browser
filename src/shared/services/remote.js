@@ -8,6 +8,20 @@ function get (url) {
   })
 }
 
+function getJSON (url) {
+  return fetch(url, { // eslint-disable-line
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    return response.json()
+  }).catch((e) => {
+    return Promise.reject(e)
+  })
+}
+
 export default {
-  get
+  get,
+  getJSON
 }
