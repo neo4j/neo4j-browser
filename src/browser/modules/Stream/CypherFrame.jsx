@@ -1,15 +1,20 @@
 import React from 'react'
 import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import asciitable from 'ascii-data-table'
+import Button from 'grommet/components/Button'
+import Sidebar from 'grommet/components/Sidebar'
+import TableIcon from 'grommet/components/icons/base/Table'
 import QueryPlan from './Planner/QueryPlan'
+import TableView from './Views/TableView'
+import AsciiView from './Views/AsciiView'
 import bolt from 'services/bolt/bolt'
+import styles from './style_sidebar.css'
 
 class CypherFrame extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      openView: 'text'
+      openView: 'table'
     }
   }
 
@@ -25,6 +30,19 @@ class CypherFrame extends React.Component {
     }
   }
 
+  sidebar () {
+    return (
+      <Sidebar className={styles.sidebar} colorIndex='neutral-1' full={false}>
+        <Button primary={this.state.openView === 'table'} icon={<TableIcon />} onClick={() => {
+          this.setState({openView: 'table'})
+        }} />
+        <Button primary={this.state.openView === 'text'} label={'A'} plain onClick={() => {
+          this.setState({openView: 'text'})
+        }} />
+      </Sidebar>
+    )
+  }
+
   render () {
     const frame = this.props.frame
     const errors = frame.error && frame.error.fields || false
@@ -38,7 +56,16 @@ class CypherFrame extends React.Component {
         frameContents = <QueryPlan plan={plan} />
       } else {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
-        frameContents = <pre>{asciitable.table(this.state.rows)}</pre>
+        switch (this.state.openView) {
+          case 'text':
+            frameContents = <AsciiView rows={this.state.rows} />
+            break
+          case 'table':
+            frameContents = <TableView data={this.state.rows} />
+            break
+          default:
+            frameContents = <TableView data={this.state.rows} />
+        }
       }
     } else if (errors) {
       frameContents = (
@@ -56,6 +83,7 @@ class CypherFrame extends React.Component {
     }
     return (
       <FrameTemplate
+        sidebar={this.sidebar.bind(this)}
         header={<FrameTitlebar frame={frame} />}
         contents={frameContents}
       />

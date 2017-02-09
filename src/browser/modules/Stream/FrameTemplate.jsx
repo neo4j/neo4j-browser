@@ -1,15 +1,21 @@
 import React from 'react'
-import Card from 'grommet/components/Card'
+import Article from 'grommet/components/Article'
+import Section from 'grommet/components/Section'
+import Split from 'grommet/components/Split'
 
 import styles from './style_frame.css'
 
-const FrameTemplate = ({header, contents}) => {
+const FrameTemplate = ({header, contents, sidebar}) => {
   return (
-    <Card className={styles.frame} heading={header}>
-      <div className={styles.contents + ' frame-contents'}>
-        {contents}
-      </div>
-    </Card>
+    <Article className={styles.frame}>
+      {header}
+      <Split flex='right' className={styles.framebody}>
+        {(sidebar) ? sidebar() : null}
+        <Section className={styles.contents + ' frame-contents'}>
+          {contents}
+        </Section>
+      </Split>
+    </Article>
   )
 }
 
