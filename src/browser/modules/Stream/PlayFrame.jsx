@@ -1,7 +1,6 @@
 import React from 'react'
 import Guides from '../Guides/Guides'
 import * as html from '../Guides/html'
-import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 
 const PlayFrame = ({frame}) => {
@@ -22,7 +21,7 @@ const PlayFrame = ({frame}) => {
   return (
     <FrameTemplate
       className='playFrame'
-      header={<FrameTitlebar frame={frame} />}
+      header={frame}
       contents={guide}
     />
   )

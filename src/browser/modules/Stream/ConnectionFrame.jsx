@@ -70,7 +70,7 @@ export class ConnectionFrame extends React.Component {
   render () {
     return (
       <FrameTemplate
-        header={<FrameTitlebar frame={this.frameInfo} />}
+        header={this.frameInfo}
         contents={this.frameContents()}
       />
     )
