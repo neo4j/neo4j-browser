@@ -16,7 +16,7 @@ describe('UserDetails', () => {
   test('should delete user when remove is clicked', () => {
     const user = {username: 'Admin', roles: ['admin']}
     const wrapper = shallow(<UserDetails username={user.username} roles={user.roles} onRemoveClick={onRemoveClick} />)
-    wrapper.find('button').first().simulate('click')
+    wrapper.find('.delete button').first().simulate('click')
     expect(onRemoveClick).toHaveBeenCalledWith(user.username)
   })
 })

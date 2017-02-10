@@ -7,7 +7,8 @@ import Frame from './Frame'
 import PreFrame from './PreFrame'
 import ErrorFrame from './ErrorFrame'
 import ConnectedConnectionFrame from './ConnectionFrame'
-import ListUsers from '../User/ListUsers'
+import UserList from '../User/UserList'
+import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 
@@ -31,13 +32,13 @@ export const Stream = (props) => {
         )
       case 'user-list':
         return (
-          <ListUsers
+          <UserList
             key={frame.id} frame={frame}
           />
         )
       case 'user-add':
         return (
-          <ListUsers
+          <UserAdd
             key={frame.id} frame={frame}
           />
         )
