@@ -6,6 +6,9 @@ import UserDetails from './UserDetails'
 import bolt from 'services/bolt/bolt'
 import {H3} from 'nbnmui/headers'
 
+import FrameTitlebar from '../Stream/FrameTitlebar'
+import FrameTemplate from '../Stream/FrameTemplate'
+
 export class ListUsers extends React.Component {
   constructor (props) {
     super(props)
@@ -24,14 +27,12 @@ export class ListUsers extends React.Component {
   }
   listUsers () {
     return getListOfUsersWithRole((r) => {
-      const result = this.extractUserNameAndRolesFromBolt(r)
-      return this.setState({listUsers: result})
+      return this.setState({listUsers: this.extractUserNameAndRolesFromBolt(r)})
     })
   }
   listRoles () {
     getListOfRolesWithUsers((r) => {
-      const result = this.extractUserNameAndRolesFromBolt(r)
-      return this.setState({listRoles: result})
+      return this.setState({listRoles: this.extractUserNameAndRolesFromBolt(r)})
     })
   }
   makeTable (data) {
@@ -69,7 +70,7 @@ export class ListUsers extends React.Component {
     const renderedListOfUsers = (listUsers == null) ? 'No users' : this.makeTable(listUsers)
     const listOfAvailableRoles = (listRoles == null) ? '-'
       : <span className='roles'>{listRoles.join(', ')}</span>
-    return (
+    const frameContents = (
       <div className='db-list-users'>
         <div>
           <H3>
@@ -87,6 +88,12 @@ export class ListUsers extends React.Component {
           <button onClick={() => { this.createUser() }}>Add User</button>
         </div>
       </div>
+    )
+    return (
+      <FrameTemplate
+        header={<FrameTitlebar frame={this.props.frame} />}
+        contents={frameContents}
+      />
     )
   }
 }
