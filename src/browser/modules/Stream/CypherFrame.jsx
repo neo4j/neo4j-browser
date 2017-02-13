@@ -1,5 +1,4 @@
 import React from 'react'
-import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import Button from 'grommet/components/Button'
 import Sidebar from 'grommet/components/Sidebar'
@@ -84,7 +83,7 @@ class CypherFrame extends React.Component {
     return (
       <FrameTemplate
         sidebar={this.sidebar.bind(this)}
-        header={<FrameTitlebar frame={frame} />}
+        header={frame}
         contents={frameContents}
       />
     )

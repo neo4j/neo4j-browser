@@ -7,6 +7,8 @@ import { remove } from 'shared/modules/stream/streamDuck'
 
 import Button from 'grommet/components/Button'
 import Box from 'grommet/components/Box'
+import ExpandIcon from 'grommet/components/icons/base/Expand'
+import ContractIcon from 'grommet/components/icons/base/Contract'
 import RefreshIcon from 'grommet/components/icons/base/Refresh'
 import CloseIcon from 'grommet/components/icons/base/Close'
 import Header from 'grommet/components/Header'
@@ -14,7 +16,8 @@ import Label from 'grommet/components/Label'
 
 import styles from './style_titlebar.css'
 
-export const FrameTitlebar = ({frame, onTitlebarClick, onCloseClick, onReRunClick}) => {
+export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
+  const fullscreenIcon = (fullscreen) ? <ContractIcon /> : <ExpandIcon />
   return (
     <Header>
       <Label size='small' onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
@@ -24,6 +27,7 @@ export const FrameTitlebar = ({frame, onTitlebarClick, onCloseClick, onReRunClic
         justify='end'
         direction='row'
         responsive={false}>
+        <Button icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
         <Button icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id)} />
         <Button icon={<CloseIcon />} onClick={() => onCloseClick(frame.id)} />
       </Box>

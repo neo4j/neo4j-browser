@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 
-import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import Form from 'grommet/components/Form'
 import FormField from 'grommet/components/FormField'
@@ -70,7 +69,7 @@ export class ConnectionFrame extends React.Component {
   render () {
     return (
       <FrameTemplate
-        header={<FrameTitlebar frame={this.frameInfo} />}
+        header={this.frameInfo}
         contents={this.frameContents()}
       />
     )
