@@ -8,7 +8,6 @@ import { Provider } from 'react-redux'
 import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
 
 import reducers from 'shared/rootReducer'
-import connectionsReducer from 'shared/modules/connections/connectionsDuck'
 import App from './modules/App/App'
 
 import epics from 'shared/rootEpic'
@@ -17,7 +16,6 @@ import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
 import 'grommet/grommet.min.css'
 import lStorage from 'browser-services/localstorage'
-import { makeConnectionsPersistedState, makeConnectionsInitialState } from 'browser-services/localstorageMiddleware'
 
 const suberMiddleware = createSuberReduxMiddleware()
 const epicMiddleware = createEpicMiddleware(epics)
@@ -29,30 +27,21 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
-const persistedStateKeys = ['connections', 'settings', 'history', 'favorites', 'visualization', 'datasource']
+const persistedStateKeys = ['connections', 'settings', 'history', 'favorites']
 const persistedStateStorage = window.localStorage
-
-const localStoragePersistStateMiddleware = lStorage.applyMiddleware(
-  makeConnectionsPersistedState()
-)
-const localStorageInitialStateMiddleware = lStorage.applyMiddleware(
-  makeConnectionsInitialState(connectionsReducer)
-)
 
 const store = createStore(
   reducer,
   lStorage.getStorageForKeys(
     persistedStateKeys,
-    persistedStateStorage,
-    localStorageInitialStateMiddleware
+    persistedStateStorage
   ),
   enhancer
 )
 store.subscribe(lStorage.createPersistingStoreListener(
   store,
   persistedStateKeys,
-  persistedStateStorage,
-  localStoragePersistStateMiddleware
+  persistedStateStorage
 ))
 
 // Send everything from suber into Redux

@@ -6,4 +6,5 @@ export const deepEquals = (x, y) => {
   return (x === y)
 }
 
+// Epic helpers
 export const put = (dispatch) => (action) => dispatch(action)

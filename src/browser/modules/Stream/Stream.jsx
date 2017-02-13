@@ -6,7 +6,7 @@ import PlayFrame from './PlayFrame'
 import Frame from './Frame'
 import PreFrame from './PreFrame'
 import ErrorFrame from './ErrorFrame'
-import ConnectedConnectionFrame from './ConnectionFrame'
+import ConnectedConnectionFrame from './Auth/ConnectionFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
@@ -64,7 +64,8 @@ export const Stream = (props) => {
       case 'connection':
         return (
           <ConnectedConnectionFrame
-            key={frame.id} frame={frame}
+            key={frame.id}
+            frame={frame}
           />
         )
       default:

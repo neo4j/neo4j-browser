@@ -1,4 +1,4 @@
-import 'whatwg-fetch'
+import fetch from 'isomorphic-fetch'
 
 function get (url) {
   return fetch(url, { // eslint-disable-line

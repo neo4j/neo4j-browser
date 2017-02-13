@@ -6,20 +6,24 @@ import { ConnectionException, BoltConnectionError } from '../exceptions'
 
 const runningQueryRegister = {}
 
-function openConnection ({id, name, username, password, host}) {
+function openConnection ({id, name, username, password, host}, opts = {}) {
   const transactionFn = (connection) => {
     return (input, parameters) => {
       return transaction(connection, input, parameters)
     }
   }
-  return connectionHandler.open({id, name, username, password, host}, connect, validateConnection, transactionFn)
+  return connectionHandler.open({id, name, username, password, host}, opts, connect, validateConnection, transactionFn)
 }
 
-function connect (props) {
+function connect (props, opts = {}) {
   const p = new Promise((resolve, reject) => {
-    const driver = neo4j.driver(props.host, neo4j.auth.basic(props.username, props.password))
+    const creds = opts.withotCredentials || (props.username && !props.username)
+      ? undefined
+      : neo4j.auth.basic(props.username, props.password)
+    const driver = neo4j.driver(props.host, creds)
+    driver.onError = (e) => reject([e, driver])
     const tmp = driver.session()
-    tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject(e))
+    tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject([e, driver]))
   })
   return p
 }
@@ -67,15 +71,15 @@ function transaction (connection, input, parameters) {
   })
 }
 
-function connectToConnection (connectionData) {
+function connectToConnection (connectionData, opts = {}) {
   const openCon = (connection, res, rej) => {
-    openConnection(connection)
+    openConnection(connection, opts)
     .then(res).catch(rej)
   }
   const p = new Promise((resolve, reject) => {
     const connection = connectionHandler.get(connectionData.name)
     if (connection) {
-      validateConnection(connection).then((result) => {
+      validateConnection(connection.connection).then((result) => {
         resolve(result)
       }).catch((e) => {
         openCon(connectionData, resolve, reject)
@@ -93,6 +97,13 @@ function cancelTransaction (id, cb) {
 
 export default {
   trackedTransaction,
+  directConnect: connect,
+  testConnect: (creds) => {
+    return connect(creds).then((driver) => {
+      driver.close()
+      return true
+    })
+  },
   cancelTransaction,
   connectToConnection,
   openConnection,

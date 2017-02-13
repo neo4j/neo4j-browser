@@ -1,4 +1,4 @@
-/* global test, expect */
+/* global describe, beforeEach, test, expect */
 import * as connectionHandler from './connectionHandler'
 
 const createResolvePromise = (props) => {
@@ -33,7 +33,7 @@ describe('connectionHandler', () => {
       delete expectedVal.name
 
       // When
-      const p = connectionHandler.open(props, createResolvePromise, createResolvePromise)
+      const p = connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
 
       // Then
       // Hack to wait until resolved and then compare with obj from connectionHandler.get(name)
@@ -48,7 +48,7 @@ describe('connectionHandler', () => {
       const props = createCredentialObject(name)
 
       // When
-      const p = connectionHandler.open(props, createRejectPromise, createResolvePromise)
+      const p = connectionHandler.open(props, null, createRejectPromise, createResolvePromise)
 
       // Then
       return Promise.all([expect(p).to.be.rejected]).then((_) => {
@@ -62,7 +62,7 @@ describe('connectionHandler', () => {
       const props = createCredentialObject(name)
 
       // When
-      const p = connectionHandler.open(props, createResolvePromise, createRejectPromise)
+      const p = connectionHandler.open(props, null, createResolvePromise, createRejectPromise)
 
       // Then
       return Promise.all([expect(p).to.be.rejected]).then((_) => {
@@ -78,9 +78,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
       })
     })
 
@@ -124,9 +124,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
       })
     })
 
@@ -152,9 +152,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
       })
     })
 
@@ -187,9 +187,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
       })
     })
 

@@ -42,7 +42,13 @@ const availableCommands = [{
   match: (cmd) => /^server(\s)/.test(cmd),
   exec: (action, cmdchar, put, store) => {
     const response = handleServerCommand(action, cmdchar, put, store)
-    if (response) put(frames.add({...action, ...response}))
+    if (response && response.then) {
+      response.then((res) => {
+        put(frames.add({...action, ...res}))
+      })
+    } else if (response) {
+      put(frames.add({...action, ...response}))
+    }
     return response
   }
 }, {
