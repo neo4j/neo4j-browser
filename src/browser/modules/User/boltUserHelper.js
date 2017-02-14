@@ -18,6 +18,9 @@ export function createDatabaseUser ({username, password, forcePasswordChange}, c
 export function deleteUser (username, callBack) {
   return callProcedure(`CALL dbms.security.deleteUser("${username}")`, callBack)
 }
-export function addUserToRole (username, roles, callBack) {
-  return callProcedure(`CALL dbms.security.addUserToRole("${username}", "${roles}")`, callBack)
+export function addRoleToUser (username, role, callBack) {
+  return callProcedure(`CALL dbms.security.addRoleToUser("${role}", "${username}")`, callBack)
+}
+export function removeRoleFromUser (role, username, callBack) {
+  return callProcedure(`CALL dbms.security.removeRoleFromUser("${role}", "${username}")`, callBack)
 }

@@ -1,23 +1,20 @@
 import React from 'react'
 import uuid from 'uuid'
-import { connect } from 'react-redux'
-import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser } from './boltUserHelper'
-import UserDetails from './UserDetails'
+import { getListOfUsersWithRole, getListOfRolesWithUsers } from './boltUserHelper'
+import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
-import {H3} from 'nbnmui/headers'
 
-import FrameTitlebar from '../Stream/FrameTitlebar'
+import Table from 'grommet/components/Table'
+import TableHeader from 'grommet/components/TableHeader'
+
 import FrameTemplate from '../Stream/FrameTemplate'
 
 export class UserList extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      userList: this.props.users,
-      listRoles: this.props.roles,
-      username: '',
-      password: '',
-      forcePasswordChange: false
+      userList: this.props.users || [],
+      listRoles: this.props.roles || []
     }
   }
   extractUserNameAndRolesFromBolt (result) {
@@ -25,68 +22,48 @@ export class UserList extends React.Component {
     tableArray.shift()
     return tableArray
   }
-  userList () {
+  getUserList () {
     return getListOfUsersWithRole((r) => {
       return this.setState({userList: this.extractUserNameAndRolesFromBolt(r)})
     })
   }
-  listRoles () {
+  getRoles () {
     getListOfRolesWithUsers((r) => {
-      return this.setState({listRoles: this.extractUserNameAndRolesFromBolt(r)})
+      const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+      return this.setState({listRoles: flatten(this.extractUserNameAndRolesFromBolt(r))})
     })
   }
   makeTable (data) {
     const items = data.map((row) => {
       return (
-        <UserDetails key={uuid.v4()} username={row[0]} roles={row[1]} callback={this.userList.bind(this)} />
+        <UserInformation key={uuid.v4()} username={row[0]} roles={row[1]} status={row[2]} callback={this.getUserList.bind(this)} listOfAvailableRoles={this.state.listRoles} />
       )
     })
     return (
-      <table>
-        <thead><tr><th>Username</th><th>Role(s)</th></tr></thead>
+      <Table>
+        <TableHeader labels={['Username', 'Roles(s)', 'Status', 'Password Change', 'Delete']} />
         <tbody>{items}</tbody>
-      </table>
+      </Table>
     )
   }
   componentWillMount () {
-    this.userList()
-    this.listRoles()
-  }
-  createUser () {
-    createDatabaseUser(this.state, (r) => { this.userList() })
-  }
-  updateUsername (event) {
-    return this.setState({username: event.target.value})
-  }
-  updatePassword (event) {
-    return this.setState({password: event.target.value})
-  }
-  updateForcePasswordChange (event) {
-    return this.setState({forcePasswordChange: !this.state.forcePasswordChange})
+    this.getUserList()
+    this.getRoles()
   }
   render () {
-    const userList = this.state.userList
-    const listRoles = this.state.listRoles
-    const renderedListOfUsers = (userList == null) ? 'No users' : this.makeTable(userList)
-    const listOfAvailableRoles = (listRoles == null) ? '-'
-      : <span className='roles'>{listRoles.join(', ')}</span>
+    const renderedListOfUsers = (this.state.userList) ? this.makeTable(this.state.userList) : 'No users'
     const frameContents = (
       <div className='db-list-users'>
-        <div>
-          <H3>
-            List by username {listOfAvailableRoles}
-          </H3>
-          {renderedListOfUsers}
-        </div>
+        {renderedListOfUsers}
       </div>
     )
     return (
       <FrameTemplate
-        header={<FrameTitlebar frame={this.props.frame} />}
+        header={this.props.frame}
         contents={frameContents}
       />
     )
   }
 }
 
-export default connect(null, null)(UserList)
+export default UserList

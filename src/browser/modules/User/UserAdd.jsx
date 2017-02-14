@@ -2,19 +2,20 @@ import React from 'react'
 import uuid from 'uuid'
 import { connect } from 'react-redux'
 import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser } from './boltUserHelper'
-import UserDetails from './UserDetails'
+import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
 import {H3} from 'nbnmui/headers'
 
-import FrameTitlebar from '../Stream/FrameTitlebar'
+import RolesSelector from './RolesSelector'
 import FrameTemplate from '../Stream/FrameTemplate'
 
 export class UserAdd extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      UserAdd: this.props.users,
-      listRoles: this.props.roles,
+      userAdd: this.props.users,
+      availableRoles: this.props.availableRoles,
+      roles: this.props.roles || [],
       username: '',
       password: '',
       forcePasswordChange: false
@@ -25,20 +26,22 @@ export class UserAdd extends React.Component {
     tableArray.shift()
     return tableArray
   }
-  UserAdd () {
+  userAdd () {
     return getListOfUsersWithRole((r) => {
-      return this.setState({UserAdd: this.extractUserNameAndRolesFromBolt(r)})
+      return this.setState({userAdd: this.extractUserNameAndRolesFromBolt(r)})
     })
   }
   listRoles () {
     getListOfRolesWithUsers((r) => {
-      return this.setState({listRoles: this.extractUserNameAndRolesFromBolt(r)})
+      console.log('r', this.extractUserNameAndRolesFromBolt(r))
+      const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+      return this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(r))})
     })
   }
   makeTable (data) {
     const items = data.map((row) => {
       return (
-        <UserDetails key={uuid.v4()} username={row[0]} roles={row[1]} callback={() => this.UserAdd()} />
+        <UserInformation key={uuid.v4()} username={row[0]} roles={row[1]} callback={() => this.userAdd()} />
       )
     })
     return (
@@ -49,11 +52,11 @@ export class UserAdd extends React.Component {
     )
   }
   componentWillMount () {
-    this.UserAdd()
+    this.userAdd()
     this.listRoles()
   }
   createUser () {
-    createDatabaseUser(this.state, (r) => { this.UserAdd() })
+    createDatabaseUser(this.state, (r) => { this.userAdd() })
   }
   updateUsername (event) {
     return this.setState({username: event.target.value})
@@ -65,15 +68,18 @@ export class UserAdd extends React.Component {
     return this.setState({forcePasswordChange: !this.state.forcePasswordChange})
   }
   render () {
-    const listRoles = this.state.listRoles
-    const listOfAvailableRoles = (listRoles == null) ? '-'
-      : <span className='roles'>{listRoles.join(', ')}</span>
+    const listRoles = this.state.availableRoles
+    const listOfAvailableRoles = (listRoles)
+      ? (<RolesSelector roles={listRoles} onChange={({option}) => {
+        this.setState({roles: this.state.roles.concat([option])})
+      }} />)
+      : '-'
     const frameContents = (
       <div>
         <H3>
           Add new users
         </H3>
-        {listOfAvailableRoles}
+        Roles: {this.state.roles.join(',')} {listOfAvailableRoles}
         Username: <input onChange={this.updateUsername.bind(this)} />
         Password: <input onChange={this.updatePassword.bind(this)} type='password' />
         Force password change: <input onChange={this.updateForcePasswordChange.bind(this)} type='checkbox' />
@@ -82,7 +88,7 @@ export class UserAdd extends React.Component {
     )
     return (
       <FrameTemplate
-        header={<FrameTitlebar frame={this.props.frame} />}
+        header={this.props.frame}
         contents={frameContents}
       />
     )
