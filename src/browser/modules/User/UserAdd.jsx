@@ -13,7 +13,7 @@ import CloseIcon from 'grommet/components/icons/base/Close'
 import RolesSelector from './RolesSelector'
 import FrameTemplate from '../Stream/FrameTemplate'
 
-export class UserAdd extends React.Component {
+class UserAdd extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -32,12 +32,16 @@ export class UserAdd extends React.Component {
     tableArray.shift()
     return tableArray
   }
+  removeRole (role) {
+    const a = this.state.roles.slice()
+    a.splice(this.state.roles.indexOf(role), 1)
+    return a
+  }
   listRoles () {
     return this.state.roles.map((role) => {
       return (
-        <Button key={v4()} label={role} icon={<CloseIcon />} onClick={(t) => {
-          const thingy = this.state.roles.slice().splice(1, this.state.roles.indexOf(role))
-          this.setState({roles: thingy})
+        <Button key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
+          this.setState({roles: this.removeRole(role)})
         }} />
       )
     })
@@ -107,7 +111,8 @@ export class UserAdd extends React.Component {
                 <TextInput className='username' onDOMChange={this.updateUsername.bind(this)} />
               </td>
               <td>
-                {this.listRoles()}{listOfAvailableRoles}
+                {listOfAvailableRoles}
+                {this.listRoles()}
               </td>
               <td>
                 <TextInput onDOMChange={this.updatePassword.bind(this)} type='password' />

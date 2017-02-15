@@ -49,12 +49,12 @@ export class UserInformation extends React.Component {
       <TableRow className='user-info'>
         <td className='username'>{this.props.username}</td>
         <td className='roles'>
-          <span>
-            {this.listRoles()}
-          </span>
           <RolesSelector roles={this.availableRoles()} onChange={({option}) => {
             addRoleToUser(this.state.username, option, (r) => { this.props.callback() })
           }} />
+          <span>
+            {this.listRoles()}
+          </span>
         </td>
         <td className='status'>
           {this.statusButton(this.props.status)}
