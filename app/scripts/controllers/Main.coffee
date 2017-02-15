@@ -235,10 +235,7 @@ angular.module('neo4jApp.controllers')
           $scope.$emit 'db:updated:edition', val.edition
 
           val = $scope.neo4j.version
-          if val.includes('-') and not val.includes('-RC')
-            Frame.create({input:"#{Settings.cmdchar}play beta"})
-          else
-            Frame.create({input:"#{Settings.initCmd}"})
+          Frame.create({input:"#{Settings.initCmd}"})
           if val.version then $scope.motd.setCallToActionVersion(val.version)
         , true
     ]
