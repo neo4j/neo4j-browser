@@ -13,7 +13,7 @@ export class UserInformation extends React.Component {
     super(props)
     this.state = {
       edit: false,
-      availableRoles: this.props.availableRoles,
+      availableRoles: this.props.availableRoles || [],
       roles: this.props.roles || [],
       username: this.props.username,
       forcePasswordChange: false
@@ -41,6 +41,9 @@ export class UserInformation extends React.Component {
       )
     })
   }
+  availableRoles () {
+    return this.state.availableRoles.filter((role) => this.props.roles.indexOf(role) < 0)
+  }
   render () {
     return (
       <TableRow className='user-info'>
@@ -49,7 +52,7 @@ export class UserInformation extends React.Component {
           <span>
             {this.listRoles()}
           </span>
-          <RolesSelector roles={this.props.listOfAvailableRoles} onChange={({option}) => {
+          <RolesSelector roles={this.availableRoles()} onChange={({option}) => {
             addRoleToUser(this.state.username, option, (r) => { this.props.callback() })
           }} />
         </td>
@@ -59,8 +62,8 @@ export class UserInformation extends React.Component {
         <td className='password-change'>
           {this.passwordChange()}
         </td>
-        <td className='delete'>
-          <Button label='Remove' onClick={() => {
+        <td>
+          <Button className='delete' label='Remove' onClick={() => {
             this.removeClick(this.props.username)
           }} />
         </td>

@@ -1,10 +1,14 @@
 import React from 'react'
-import uuid from 'uuid'
-import { connect } from 'react-redux'
-import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser } from './boltUserHelper'
-import UserInformation from './UserInformation'
+import {v4} from 'uuid'
+
+import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser, addRoleToUser } from './boltUserHelper'
 import bolt from 'services/bolt/bolt'
-import {H3} from 'nbnmui/headers'
+import Table from 'grommet/components/Table'
+import TableHeader from 'grommet/components/TableHeader'
+import Button from 'grommet/components/Button'
+import TextInput from 'grommet/components/TextInput'
+import Notification from 'grommet/components/Notification'
+import CloseIcon from 'grommet/components/icons/base/Close'
 
 import RolesSelector from './RolesSelector'
 import FrameTemplate from '../Stream/FrameTemplate'
@@ -14,11 +18,13 @@ export class UserAdd extends React.Component {
     super(props)
     this.state = {
       userAdd: this.props.users,
-      availableRoles: this.props.availableRoles,
+      availableRoles: this.props.availableRoles || [],
       roles: this.props.roles || [],
       username: '',
       password: '',
-      forcePasswordChange: false
+      confirmPassword: '',
+      forcePasswordChange: false,
+      errors: null
     }
   }
   extractUserNameAndRolesFromBolt (result) {
@@ -26,37 +32,53 @@ export class UserAdd extends React.Component {
     tableArray.shift()
     return tableArray
   }
-  userAdd () {
-    return getListOfUsersWithRole((r) => {
-      return this.setState({userAdd: this.extractUserNameAndRolesFromBolt(r)})
-    })
-  }
   listRoles () {
-    getListOfRolesWithUsers((r) => {
-      console.log('r', this.extractUserNameAndRolesFromBolt(r))
-      const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
-      return this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(r))})
-    })
-  }
-  makeTable (data) {
-    const items = data.map((row) => {
+    return this.state.roles.map((role) => {
       return (
-        <UserInformation key={uuid.v4()} username={row[0]} roles={row[1]} callback={() => this.userAdd()} />
+        <Button key={v4()} label={role} icon={<CloseIcon />} onClick={(t) => {
+          const thingy = this.state.roles.slice().splice(1, this.state.roles.indexOf(role))
+          this.setState({roles: thingy})
+        }} />
       )
     })
-    return (
-      <table>
-        <thead><tr><th>Username</th><th>Role(s)</th></tr></thead>
-        <tbody>{items}</tbody>
-      </table>
-    )
+  }
+  userAdd () {
+    return getListOfUsersWithRole((r) => {
+      const createdUser = this.extractUserNameAndRolesFromBolt(r).filter((user) => {
+        return user[0] === this.state.username
+      })
+      this.setState({userAdd: createdUser})
+      return this.addRoles()
+    })
+  }
+  addRoles () {
+    this.state.roles.forEach((role) => {
+      addRoleToUser(this.state.username, role, (r) => { this.props.callback() })
+    })
+  }
+  getRoles () {
+    getListOfRolesWithUsers((r) => {
+      const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+      this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(r))})
+    })
   }
   componentWillMount () {
-    this.userAdd()
-    this.listRoles()
+    this.getRoles()
   }
   createUser () {
-    createDatabaseUser(this.state, (r) => { this.userAdd() })
+    let errors = []
+    if (!this.state.username) errors.push('Missing username')
+    if (!this.state.password) errors.push('Missing password')
+    if (!(this.state.password === this.state.confirmPassword)) errors.push('Passwords are not the same')
+    if (errors.length !== 0) {
+      return this.setState({errors: errors})
+    } else {
+      this.setState({errors: null})
+      return this.createNewUser()
+    }
+  }
+  createNewUser () {
+    createDatabaseUser(this.state, this.userAdd.bind(this))
   }
   updateUsername (event) {
     return this.setState({username: event.target.value})
@@ -64,26 +86,48 @@ export class UserAdd extends React.Component {
   updatePassword (event) {
     return this.setState({password: event.target.value})
   }
+  confirmUpdatePassword (event) {
+    return this.setState({confirmPassword: event.target.value})
+  }
   updateForcePasswordChange (event) {
     return this.setState({forcePasswordChange: !this.state.forcePasswordChange})
   }
+  availableRoles () {
+    return this.state.availableRoles.filter(role => this.state.roles.indexOf(role) < 0)
+  }
   render () {
-    const listRoles = this.state.availableRoles
-    const listOfAvailableRoles = (listRoles)
-      ? (<RolesSelector roles={listRoles} onChange={({option}) => {
-        this.setState({roles: this.state.roles.concat([option])})
-      }} />)
-      : '-'
+    const listOfAvailableRoles = (this.state.availableRoles) ? (<RolesSelector roles={this.availableRoles()} onChange={({option}) => { this.setState({roles: this.state.roles.concat([option])}) }} />) : '-'
     const frameContents = (
       <div>
-        <H3>
-          Add new users
-        </H3>
-        Roles: {this.state.roles.join(',')} {listOfAvailableRoles}
-        Username: <input onChange={this.updateUsername.bind(this)} />
-        Password: <input onChange={this.updatePassword.bind(this)} type='password' />
-        Force password change: <input onChange={this.updateForcePasswordChange.bind(this)} type='checkbox' />
-        <button onClick={this.createUser.bind(this)}>Add User</button>
+        <Table>
+          <TableHeader labels={['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change']} />
+          <tbody>
+            <tr>
+              <td>
+                <TextInput className='username' onDOMChange={this.updateUsername.bind(this)} />
+              </td>
+              <td>
+                {this.listRoles()}{listOfAvailableRoles}
+              </td>
+              <td>
+                <TextInput onDOMChange={this.updatePassword.bind(this)} type='password' />
+              </td>
+              <td>
+                <TextInput onDOMChange={this.confirmUpdatePassword.bind(this)} type='password' />
+              </td>
+              <td>
+                <TextInput onDOMChange={this.updateForcePasswordChange.bind(this)} type='checkbox' />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Button onClick={this.createUser.bind(this)} label='Add User' />
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+        {this.state.errors == null ? null : <Notification status='warning' state={this.state.errors.join(', ')} message='Form not complete' />}
+        {this.state.success ? <Notification status='ok' state={this.state.userAdd.username} message='User created' /> : null}
       </div>
     )
     return (
@@ -95,4 +139,4 @@ export class UserAdd extends React.Component {
   }
 }
 
-export default connect(null, null)(UserAdd)
+export default UserAdd

@@ -36,7 +36,7 @@ export class UserList extends React.Component {
   makeTable (data) {
     const items = data.map((row) => {
       return (
-        <UserInformation key={uuid.v4()} username={row[0]} roles={row[1]} status={row[2]} callback={this.getUserList.bind(this)} listOfAvailableRoles={this.state.listRoles} />
+        <UserInformation key={uuid.v4()} username={row[0]} roles={row[1]} status={row[2]} callback={this.getUserList.bind(this)} availableRoles={this.state.listRoles} />
       )
     })
     return (
