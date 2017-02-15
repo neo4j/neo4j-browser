@@ -1,16 +1,20 @@
 import React from 'react'
-import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
-import asciitable from 'ascii-data-table'
+import Button from 'grommet/components/Button'
+import Sidebar from 'grommet/components/Sidebar'
+import TableIcon from 'grommet/components/icons/base/Table'
 import QueryPlan from './Planner/QueryPlan'
+import TableView from './Views/TableView'
+import AsciiView from './Views/AsciiView'
 import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
+import styles from './style_sidebar.css'
 
 class CypherFrame extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      openView: 'text'
+      openView: 'table'
     }
   }
 
@@ -29,6 +33,22 @@ class CypherFrame extends React.Component {
     }
   }
 
+  sidebar () {
+    return (
+      <Sidebar className={styles.sidebar} colorIndex='neutral-1' full={false}>
+        <Button primary={this.state.openView === 'table'} icon={<TableIcon />} onClick={() => {
+          this.setState({openView: 'table'})
+        }} />
+        <Button primary={this.state.openView === 'text'} label={'A'} plain onClick={() => {
+          this.setState({openView: 'text'})
+        }} />
+      <Button primary={this.state.openView === 'visualization'} label={'hmm'} plain onClick={() => {
+          this.setState({openView: 'visualization'})
+        }} />
+      </Sidebar>
+    )
+  }
+
   render () {
     const frame = this.props.frame
     const errors = frame.error && frame.error.fields || false
@@ -45,6 +65,20 @@ class CypherFrame extends React.Component {
           <Visualization records={result.records} />
           <pre>{asciitable.table(this.state.rows)}</pre>
         </div>)
+        switch (this.state.openView) {
+          case 'text':
+            frameContents = <AsciiView rows={this.state.rows} />
+            break
+          case 'table':
+            frameContents = <TableView data={this.state.rows} />
+            break
+          case 'visualization':
+            frameContents = (<div>
+              <Visualization records={result.records} />
+            </div>)
+          default:
+            frameContents = <TableView data={this.state.rows} />
+        }
       }
     } else if (errors) {
       frameContents = (
@@ -62,7 +96,8 @@ class CypherFrame extends React.Component {
     }
     return (
       <FrameTemplate
-        header={<FrameTitlebar frame={frame} />}
+        sidebar={this.sidebar.bind(this)}
+        header={frame}
         contents={frameContents}
       />
     )

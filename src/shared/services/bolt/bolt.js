@@ -1,4 +1,4 @@
-/* global neo4j */
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
 import { ConnectionException } from '../exceptions'
@@ -14,7 +14,7 @@ function openConnection ({id, name, username, password, host}) {
 
 function connect (props) {
   const p = new Promise((resolve, reject) => {
-    const driver = neo4j.v1.driver('bolt://' + props.host, neo4j.v1.auth.basic(props.username, props.password))
+    const driver = neo4j.driver(props.host, neo4j.auth.basic(props.username, props.password))
     const tmp = driver.session()
     tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject(e))
   })
@@ -40,7 +40,28 @@ function transaction (connection, input, parameters) {
   })
 }
 
+function connectToConnection (connectionData) {
+  const openCon = (connection, res, rej) => {
+    openConnection(connection)
+    .then(res).catch(rej)
+  }
+  const p = new Promise((resolve, reject) => {
+    const connection = connectionHandler.get(connectionData.name)
+    if (connection) {
+      validateConnection(connection).then((result) => {
+        resolve(result)
+      }).catch((e) => {
+        openCon(connectionData, resolve, reject)
+      })
+    } else {
+      openCon(connectionData, resolve, reject)
+    }
+  })
+  return p
+}
+
 export default {
+  connectToConnection,
   openConnection,
   useConnection: (name) => {
     connectionHandler.setDefault(name)
@@ -52,7 +73,7 @@ export default {
     return Promise.reject(new ConnectionException('No connection'))
   },
   recordsToTableArray: (records) => {
-    const intChecker = neo4j.v1.isInt
+    const intChecker = neo4j.isInt
     const intConverter = (val) => val.toString()
     return mappings.recordsToTableArray(records, intChecker, intConverter)
   },
@@ -64,5 +85,5 @@ export default {
   extractPlan: (result) => {
     return mappings.extractPlan(result)
   },
-  neo4j: neo4j.v1
+  neo4j: neo4j
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import * as e from 'services/exceptionMessages'
 
@@ -11,7 +10,7 @@ const ErrorFrame = ({frame}) => {
   }
   return (
     <FrameTemplate
-      header={<FrameTitlebar frame={frame} />}
+      header={frame}
       contents={<pre>{errorContents}</pre>}
     />
   )

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as editor from '../../../shared/modules/history/historyDuck'
+import { withBus } from 'react-suber'
+import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 
 const directives = [{
   selector: '[play-topic]',
@@ -39,12 +40,12 @@ export const Directives = (props) => {
   )
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps = {}) => {
   return {
     onItemClick: (cmd) => {
-      dispatch(editor.setContent(cmd))
+      ownProps.bus.send(SET_CONTENT, setContent(cmd))
     }
   }
 }
 
-export default connect(null, mapDispatchToProps)(Directives)
+export default withBus(connect(null, mapDispatchToProps)(Directives))

@@ -1,7 +1,6 @@
 import React from 'react'
 import Guides from '../Guides/Guides'
 import * as html from '../Guides/html'
-import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 
 const PlayFrame = ({frame}) => {
@@ -11,9 +10,9 @@ const PlayFrame = ({frame}) => {
   } else {
     const guideName = frame.cmd.replace(':play', '').trim()
     if (guideName !== '') {
-      const content = html[guideName]
+      const content = html.default[guideName]
       if (content !== undefined) {
-        guide = <Guides withDirectives html={html[guideName]} />
+        guide = <Guides withDirectives html={content} />
       } else {
         guide = 'Guide not found'
       }
@@ -22,7 +21,7 @@ const PlayFrame = ({frame}) => {
   return (
     <FrameTemplate
       className='playFrame'
-      header={<FrameTitlebar frame={frame} />}
+      header={frame}
       contents={guide}
     />
   )

@@ -1,9 +1,10 @@
-/* global test, expect, neo4j */
+/* global test, expect */
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import { itemIntToString, arrayIntToString, objIntToString, extractNodesAndRelationshipsFromRecords, extractPlan } from './boltMappings'
 
 describe('boltMappings', () => {
   describe('itemIntToString', () => {
-    test.skip('should convert matching values with provided function', () => {
+    test('should convert matching values with provided function', () => {
       // Given
       const tests = [
         {val: 'hello', checker: (_) => false, converter: (_) => false, expected: 'hello'},
@@ -27,7 +28,7 @@ describe('boltMappings', () => {
     })
   })
   describe('arrayIntToString', () => {
-    test.skip('should convert matching values with provided function', () => {
+    test('should convert matching values with provided function', () => {
       // Given
       const tests = [
         {val: ['hello', 1], checker: (_) => false, converter: (val) => false, expected: ['hello', 1]},
@@ -42,7 +43,7 @@ describe('boltMappings', () => {
     })
   })
   describe('objIntToString', () => {
-    test.skip('should convert matching values with provided function', () => {
+    test('should convert matching values with provided function', () => {
       // Given
       const tests = [
         {val: {arr: ['hello']}, checker: (_) => false, converter: (val) => false, expected: {arr: ['hello']}},

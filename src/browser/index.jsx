@@ -1,19 +1,17 @@
 import 'babel-polyfill'
-import createSagaMiddleware from 'redux-saga'
+import { createEpicMiddleware } from 'redux-observable'
 import 'preact/devtools'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
-import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
 
 import reducers from 'shared/rootReducer'
 import connectionsReducer from 'shared/modules/connections/connectionsDuck'
 import App from './modules/App/App'
 
-import sagas from '../sagas'
+import epics from 'shared/rootEpic'
 import './styles/style.css'
 import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
@@ -21,16 +19,13 @@ import 'grommet/grommet.min.css'
 import lStorage from 'browser-services/localstorage'
 import { makeConnectionsPersistedState, makeConnectionsInitialState } from 'browser-services/localstorageMiddleware'
 
-const sagaMiddleware = createSagaMiddleware()
 const suberMiddleware = createSuberReduxMiddleware()
+const epicMiddleware = createEpicMiddleware(epics)
 
-const reducer = combineReducers({
-  ...reducers,
-  routing: routerReducer
-})
+const reducer = combineReducers({ ...reducers })
 
 const enhancer = compose(
-  applyMiddleware(sagaMiddleware, suberMiddleware),
+  applyMiddleware(suberMiddleware, epicMiddleware),
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
@@ -60,9 +55,6 @@ store.subscribe(lStorage.createPersistingStoreListener(
   localStoragePersistStateMiddleware
 ))
 
-const history = syncHistoryWithStore(browserHistory, store)
-sagaMiddleware.run(sagas)
-
 // Send everything from suber into Redux
 applySuberMiddleware((_) => (channel, message, source) => {
   // No loop-backs
@@ -71,11 +63,12 @@ applySuberMiddleware((_) => (channel, message, source) => {
   store.dispatch({...message, type: channel})
 })
 
+// Signal app upstart (for epics)
+store.dispatch({ type: 'APP_START' })
+
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
-      <Route path='/' component={App} />
-    </Router>
+    <App />
   </Provider>,
   document.getElementById('mount')
 )

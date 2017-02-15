@@ -53,16 +53,6 @@ module.exports = {
   },
   resolve: {
     root: path.resolve(__dirname),
-    alias: {
-      'src-root': 'src',
-      services: 'src/shared/services',
-      'browser-services': 'src/browser/services',
-      shared: 'src/shared',
-      sagas: 'src/sagas',
-      react: 'preact-compat',
-      'react-dom': 'preact-compat',
-      nbnmui: 'src/browser/components/nbnmui'
-    },
     modulesDirectories: ['src/shared/modules', 'src/browser/modules', 'node_modules'],
     extensions: ['', '.js', '.jsx', '.json']
   },
@@ -70,9 +60,6 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
     filename: 'bundle.js'
-  },
-  externals: {
-    'neo4j': 'neo4j'
   },
   devServer: {
     contentBase: './dist',

@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects'
+import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 
 export const NAME = 'meta'
@@ -59,11 +59,7 @@ export function updateMeta (meta, context) {
   }
 }
 
-// Sagas
-const delay = (milliseconds) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds))
-}
-
+// Epics
 export const metaQuery = `CALL db.labels() YIELD label
             WITH COLLECT(label) AS labels
             RETURN 'labels' as a, labels as result
@@ -76,15 +72,15 @@ export const metaQuery = `CALL db.labels() YIELD label
             WITH COLLECT(propertyKey) AS propertyKeys
             RETURN 'propertyKeys' as a, propertyKeys as result`
 
-export function * startHeartbeat () {
-  while (true) {
-    try {
-      const res = yield call(bolt.transaction, metaQuery)
-      yield put(updateMeta(res))
-    } catch (e) {
-      console.log(e)
-    }
-
-    yield call(delay, 10000)
-  }
-}
+export const dbMetaEpic = (some$, store) =>
+  some$.ofType('APP_START')
+    .mergeMap(() => {
+      return Rx.Observable.interval(20000)
+      .mergeMap(() =>
+        Rx.Observable
+        .fromPromise(bolt.transaction(metaQuery))
+        .catch((e) => Rx.Observable.of(null))
+      )
+      .filter((r) => r)
+      .map((res) => updateMeta(res))
+    })

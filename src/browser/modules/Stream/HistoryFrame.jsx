@@ -1,7 +1,6 @@
 import React from 'react'
 import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
-import FrameTitlebar from './FrameTitlebar'
 import FrameTemplate from './FrameTemplate'
 import HistoryRow from './HistoryRow'
 
@@ -17,7 +16,7 @@ export const HistoryFrame = (props) => {
   })
   return (
     <FrameTemplate
-      header={<FrameTitlebar frame={frame} />}
+      header={frame}
       contents={<ul className={styles['history-list']}>{historyRows}</ul>}
     />
   )

@@ -2,7 +2,6 @@ import React from 'react'
 import ListItem from 'grommet/components/ListItem'
 import Button from 'grommet/components/Button'
 import uuid from 'uuid'
-import styles from './style.css'
 
 export class ToolTip extends React.Component {
   constructor (props) {
@@ -22,7 +21,7 @@ export class ToolTip extends React.Component {
     this.setState({mouseover: false})
   }
   render () {
-    const tooltip = (this.state.mouseover) ? <span className={styles.tooltip}>{this.state.name}</span> : null
+    const tooltip = null
     return (
       <div onMouseLeave={this.onMouseLeaveHandler.bind(this)} onMouseEnter={this.onMouseEnterHandler.bind(this)}>
         {this.props.children}
