@@ -78,9 +78,9 @@ export default {
     return mappings.recordsToTableArray(records, intChecker, intConverter)
   },
   extractNodesAndRelationshipsFromRecords: (records) => {
-    const intChecker = neo4j.v1.isInt
+    const intChecker = neo4j.isInt
     const intConverter = (val) => val.toString()
-    return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.v1.types, intChecker,intConverter )
+    return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.types, intChecker,intConverter )
   },
   extractPlan: (result) => {
     return mappings.extractPlan(result)
