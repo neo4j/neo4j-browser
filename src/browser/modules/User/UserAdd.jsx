@@ -33,9 +33,9 @@ class UserAdd extends React.Component {
     return tableArray
   }
   removeRole (role) {
-    const a = this.state.roles.slice()
-    a.splice(this.state.roles.indexOf(role), 1)
-    return a
+    const roles = this.state.roles.slice()
+    roles.splice(this.state.roles.indexOf(role), 1)
+    return roles
   }
   listRoles () {
     return this.state.roles.map((role) => {

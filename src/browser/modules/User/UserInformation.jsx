@@ -15,8 +15,7 @@ export class UserInformation extends React.Component {
       edit: false,
       availableRoles: this.props.availableRoles || [],
       roles: this.props.roles || [],
-      username: this.props.username,
-      forcePasswordChange: false
+      username: this.props.username
     }
     this.removeClick = this.props.onRemoveClick || function (username) {
       deleteUser(username, (r) => { return this.props.callback() })

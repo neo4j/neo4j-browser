@@ -1,8 +1,8 @@
-import bolt from 'services/bolt/bolt'
+import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 
 function callProcedure (query, callback) {
-  return bolt.transaction(query).then((r) => {
-    return callback(r)
+  return handleCypherCommand({cmd: query}).then((r) => {
+    return callback(r.result)
   }).catch((_) => { })
 }
 
