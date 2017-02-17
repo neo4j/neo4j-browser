@@ -29,7 +29,7 @@ acorn-jsx@^3.0.0, acorn-jsx@^3.0.1:
   dependencies:
     acorn "^3.0.4"
 
-acorn@4.0.4, acorn@^4.0.1:
+acorn@4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-4.0.4.tgz#17a8d6a7a6c4ef538b814ec9abac2779293bf30a"
 
@@ -2108,14 +2108,7 @@ eslint@~3.10.2:
     text-table "~0.2.0"
     user-home "^2.0.0"
 
-espree@^3.3.1:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-3.3.2.tgz#dbf3fadeb4ecb4d4778303e50103b3d36c88b89c"
-  dependencies:
-    acorn "^4.0.1"
-    acorn-jsx "^3.0.0"
-
-espree@^3.4.0:
+espree@^3.3.1, espree@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/espree/-/espree-3.4.0.tgz#41656fa5628e042878025ef467e78f125cb86e1d"
   dependencies:
@@ -5960,9 +5953,9 @@ style-loader@^0.13.0:
   dependencies:
     loader-utils "^0.2.7"
 
-suber@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/suber/-/suber-2.0.0.tgz#22c1be4adc1ff53cc35524d28caea885ba59bb16"
+suber@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/suber/-/suber-2.1.0.tgz#a2f0c4e30e1d1ddeb46dce11c73b85116353c7c2"
 
 superagent@^3.3.1:
   version "3.3.2"
