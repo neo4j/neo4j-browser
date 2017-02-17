@@ -1,5 +1,6 @@
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
+import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
@@ -24,14 +25,17 @@ const availableCommands = [{
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
-    const response = handleCypherCommand(action)
-    if (response.then) {
-      response.then((res) => put(frames.add({...action, ...res})))
-    } else {
-      const newAction = frames.add({...action, ...response})
-      put(newAction)
-      return newAction
-    }
+    const [id, request] = handleCypherCommand(action, put)
+    put(frames.add({...action, type: 'cypher', requestId: id}))
+    return request
+      .then((res) => {
+        put(updateQueryResult(id, res, 'success'))
+        return res
+      })
+      .catch(function (e) {
+        put(updateQueryResult(id, e, 'error'))
+        throw e
+      })
   }
 }, {
   name: 'server',
@@ -39,6 +43,7 @@ const availableCommands = [{
   exec: (action, cmdchar, put, store) => {
     const response = handleServerCommand(action, cmdchar, put, store)
     if (response) put(frames.add({...action, ...response}))
+    return response
   }
 }, {
   name: 'play-remote',
