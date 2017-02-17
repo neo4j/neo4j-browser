@@ -1,8 +1,11 @@
 import React from 'react'
 import uuid from 'uuid'
-import { getListOfUsersWithRole, getListOfRolesWithUsers } from './boltUserHelper'
+import { listUsersQuery, listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
 import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
+
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { withBus } from 'react-suber'
 
 import Table from 'grommet/components/Table'
 import TableHeader from 'grommet/components/TableHeader'
@@ -23,20 +26,26 @@ export class UserList extends React.Component {
     return tableArray
   }
   getUserList () {
-    return getListOfUsersWithRole((r) => {
-      return this.setState({userList: this.extractUserNameAndRolesFromBolt(r)})
-    })
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: listUsersQuery()},
+      (response) => {
+        if (response.success) this.setState({userList: this.extractUserNameAndRolesFromBolt(response.result)})
+      })
   }
   getRoles () {
-    getListOfRolesWithUsers((r) => {
-      const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
-      return this.setState({listRoles: flatten(this.extractUserNameAndRolesFromBolt(r))})
-    })
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: listRolesQuery()},
+      (response) => {
+        const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+        if (response.success) this.setState({listRoles: flatten(this.extractUserNameAndRolesFromBolt(response.result))})
+      })
   }
   makeTable (data) {
     const items = data.map((row) => {
       return (
-        <UserInformation key={uuid.v4()} username={row[0]} roles={row[1]} status={row[2]} callback={this.getUserList.bind(this)} availableRoles={this.state.listRoles} />
+        <UserInformation className='user-information' key={uuid.v4()} username={row[0]} roles={row[1]} status={row[2]} callback={this.getUserList.bind(this)} availableRoles={this.state.listRoles} />
       )
     })
     return (
@@ -66,4 +75,4 @@ export class UserList extends React.Component {
   }
 }
 
-export default UserList
+export default withBus(UserList)

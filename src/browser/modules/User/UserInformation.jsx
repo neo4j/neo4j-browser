@@ -1,7 +1,9 @@
 import React from 'react'
 import {v4} from 'uuid'
 
-import { deleteUser, addRoleToUser, removeRoleFromUser } from './boltUserHelper'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { withBus } from 'react-suber'
+import { deleteUser, addRoleToUser, removeRoleFromUser } from 'shared/modules/cypher/boltUserHelper'
 
 import TableRow from 'grommet/components/TableRow'
 import Button from 'grommet/components/Button'
@@ -35,10 +37,19 @@ export class UserInformation extends React.Component {
     return this.state.roles.map((role) => {
       return (
         <Button key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
-          removeRoleFromUser(role, this.state.username, () => this.props.callback())
+          this.props.bus.self(
+            CYPHER_REQUEST,
+            {query: removeRoleFromUser(role, this.state.username)},
+            (r) => this.props.callback())
         }} />
       )
     })
+  }
+  onRoleSelect ({option}) {
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: addRoleToUser(this.state.username, option)},
+      (r) => this.props.callback())
   }
   availableRoles () {
     return this.state.availableRoles.filter((role) => this.props.roles.indexOf(role) < 0)
@@ -48,9 +59,7 @@ export class UserInformation extends React.Component {
       <TableRow className='user-info'>
         <td className='username'>{this.props.username}</td>
         <td className='roles'>
-          <RolesSelector roles={this.availableRoles()} onChange={({option}) => {
-            addRoleToUser(this.state.username, option, (r) => { this.props.callback() })
-          }} />
+          <RolesSelector roles={this.availableRoles()} onChange={this.onRoleSelect.bind(this)} />
           <span>
             {this.listRoles()}
           </span>
@@ -71,4 +80,4 @@ export class UserInformation extends React.Component {
   }
 }
 
-export default UserInformation
+export default withBus(UserInformation)

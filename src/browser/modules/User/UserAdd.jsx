@@ -1,8 +1,10 @@
 import React from 'react'
 import {v4} from 'uuid'
 
-import { getListOfUsersWithRole, getListOfRolesWithUsers, createDatabaseUser, addRoleToUser } from './boltUserHelper'
+import { listUsersQuery, listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
 import bolt from 'services/bolt/bolt'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { withBus } from 'react-suber'
 import Table from 'grommet/components/Table'
 import TableHeader from 'grommet/components/TableHeader'
 import Button from 'grommet/components/Button'
@@ -13,7 +15,7 @@ import CloseIcon from 'grommet/components/icons/base/Close'
 import RolesSelector from './RolesSelector'
 import FrameTemplate from '../Stream/FrameTemplate'
 
-class UserAdd extends React.Component {
+export class UserAdd extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -47,24 +49,33 @@ class UserAdd extends React.Component {
     })
   }
   userAdd () {
-    return getListOfUsersWithRole((r) => {
-      const createdUser = this.extractUserNameAndRolesFromBolt(r).filter((user) => {
-        return user[0] === this.state.username
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: listUsersQuery()},
+      (response) => {
+        const createdUser = this.extractUserNameAndRolesFromBolt(response).filter((user) => {
+          return user[0] === this.state.username
+        })
+        this.setState({userAdd: createdUser})
+        return this.addRoles()
       })
-      this.setState({userAdd: createdUser})
-      return this.addRoles()
-    })
   }
   addRoles () {
     this.state.roles.forEach((role) => {
-      addRoleToUser(this.state.username, role, (r) => { this.props.callback() })
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {query: addRoleToUser(this.state.username, role)},
+        (r) => this.props.callback())
     })
   }
   getRoles () {
-    getListOfRolesWithUsers((r) => {
-      const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
-      this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(r))})
-    })
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: listRolesQuery()},
+      (response) => {
+        const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+        this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(response.result))})
+      })
   }
   componentWillMount () {
     this.getRoles()
@@ -82,7 +93,10 @@ class UserAdd extends React.Component {
     }
   }
   createNewUser () {
-    createDatabaseUser(this.state, this.userAdd.bind(this))
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: createDatabaseUser(this.state)},
+      (r) => this.userAdd.bind(this))
   }
   updateUsername (event) {
     return this.setState({username: event.target.value})
@@ -144,4 +158,4 @@ class UserAdd extends React.Component {
   }
 }
 
-export default UserAdd
+export default withBus(UserAdd)
