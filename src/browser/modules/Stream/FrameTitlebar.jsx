@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
+import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove } from 'shared/modules/stream/streamDuck'
 
 import Button from 'grommet/components/Button'
@@ -28,8 +29,8 @@ export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, onTitlebarCl
         direction='row'
         responsive={false}>
         <Button icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
-        <Button icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id)} />
-        <Button icon={<CloseIcon />} onClick={() => onCloseClick(frame.id)} />
+        <Button icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
+        <Button icon={<CloseIcon />} onClick={() => onCloseClick(frame.id, frame.requestId)} />
       </Box>
     </Header>
   )
@@ -40,10 +41,12 @@ const mapDispatchToProps = (dispatch, ownProps = {}) => {
     onTitlebarClick: (cmd) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     },
-    onCloseClick: (id) => {
+    onCloseClick: (id, requestId) => {
+      if (requestId) dispatch(cancelRequest(requestId))
       dispatch(remove(id))
     },
-    onReRunClick: (cmd, id) => {
+    onReRunClick: (cmd, id, requestId) => {
+      if (requestId) dispatch(cancelRequest(requestId))
       dispatch(commands.executeCommand(cmd, id))
     }
   }

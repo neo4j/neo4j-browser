@@ -1,7 +1,10 @@
+import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
-import { ConnectionException } from '../exceptions'
+import { ConnectionException, BoltConnectionError } from '../exceptions'
+
+const runningQueryRegister = {}
 
 function openConnection ({id, name, username, password, host}) {
   const transactionFn = (connection) => {
@@ -32,6 +35,30 @@ function validateConnection (connection) {
   return p
 }
 
+function trackedTransaction (input, parameters = {}, connection = null, requestId = null) {
+  connection = connection || connectionHandler.get()
+  const id = requestId || v4()
+  if (!connection) {
+    return [id, Promise.reject(new BoltConnectionError())]
+  }
+  const session = connection.connection.session()
+  const closeFn = (cb = () => {}) => {
+    session.close(cb)
+    if (runningQueryRegister[id]) delete runningQueryRegister[id]
+  }
+  runningQueryRegister[id] = closeFn
+  const queryPromise = session.run(input, parameters)
+    .then((r) => {
+      closeFn()
+      return r
+    })
+    .catch((e) => {
+      closeFn()
+      throw e
+    })
+  return [id, queryPromise]
+}
+
 function transaction (connection, input, parameters) {
   const session = connection.session()
   return session.run(input, parameters).then((r) => {
@@ -60,7 +87,13 @@ function connectToConnection (connectionData) {
   return p
 }
 
+function cancelTransaction (id, cb) {
+  if (runningQueryRegister[id]) runningQueryRegister[id](cb)
+}
+
 export default {
+  trackedTransaction,
+  cancelTransaction,
   connectToConnection,
   openConnection,
   useConnection: (name) => {

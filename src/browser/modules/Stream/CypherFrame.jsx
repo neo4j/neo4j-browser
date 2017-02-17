@@ -23,10 +23,15 @@ class CypherFrame extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.frame.result !== this.props.frame.result) {
-      this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.frame.result.records)
-      this.state.rows = bolt.recordsToTableArray(nextProps.frame.result.records)
-      this.state.plan = bolt.extractPlan(nextProps.frame.result)
+    let nodesAndRelationships
+    let rows
+    let plan
+    if (nextProps.request.status === 'success' && nextProps.request.result !== this.props.request.result) {
+      nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.request.result.records)
+      rows = bolt.recordsToTableArray(nextProps.request.result.records)
+      plan = bolt.extractPlan(nextProps.request.result)
+    } else {
+      this.setState({nodesAndRelationships, rows, plan})
     }
   }
 
@@ -48,9 +53,10 @@ class CypherFrame extends React.Component {
 
   render () {
     const frame = this.props.frame
-    const errors = frame.error && frame.error.fields || false
-    const result = frame.result || false
+    const errors = this.props.request.status === 'error' ? this.props.request.result.fields : false
+    const result = this.props.request.result || false
     const plan = this.state.plan || bolt.extractPlan(result)
+    const requestStatus = this.props.request.status
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {
@@ -83,7 +89,13 @@ class CypherFrame extends React.Component {
     } else if (result) {
       frameContents = (
         <div>
-          <pre>{JSON.stringify(frame, null, '\t')}</pre>
+          <pre>{JSON.stringify(result, null, '\t')}</pre>
+        </div>
+      )
+    } else if (requestStatus === 'pending') {
+      frameContents = (
+        <div>
+          Running query...
         </div>
       )
     }
