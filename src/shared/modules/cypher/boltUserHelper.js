@@ -16,3 +16,9 @@ export function addRoleToUser (username, role) {
 export function removeRoleFromUser (role, username) {
   return `CALL dbms.security.removeRoleFromUser("${role}", "${username}")`
 }
+export function activateUser (username) {
+  return `CALL dbms.security.activateUser("${username}", false)`
+}
+export function suspendUser (username) {
+  return `CALL dbms.security.suspendUser("${username}")`
+}

@@ -3,7 +3,7 @@ import {v4} from 'uuid'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'react-suber'
-import { deleteUser, addRoleToUser, removeRoleFromUser } from 'shared/modules/cypher/boltUserHelper'
+import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUser } from 'shared/modules/cypher/boltUserHelper'
 
 import TableRow from 'grommet/components/TableRow'
 import Button from 'grommet/components/Button'
@@ -23,11 +23,25 @@ export class UserInformation extends React.Component {
       deleteUser(username, (r) => { return this.props.callback() })
     }
   }
+  suspendUser () {
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: suspendUser(this.state.username)},
+      (r) => this.props.callback()
+    )
+  }
+  activateUser () {
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: activateUser(this.state.username)},
+      (r) => this.props.callback()
+    )
+  }
   statusButton (statusList) {
     if (statusList.indexOf('is_suspended') !== -1) {
-      return (<div>Activated<Button label='Suspend user' onClick={() => {}} /></div>)
+      return (<Button label='Suspend user' onClick={this.activateUser.bind(this)} />)
     } else {
-      return (<div>Suspended<Button label='Active user' onClick={() => {}} /></div>)
+      return (<Button label='Active user' onClick={this.suspendUser.bind(this)} />)
     }
   }
   passwordChange () {
