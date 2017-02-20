@@ -1,5 +1,5 @@
 import React from 'react'
-import { initialise } from '../../../../node_modules/neo4j-visualization/dist/neo4j-visualization.js'
+import { initialise } from 'neo4j-visualization'
 import bolt from 'services/bolt/bolt'
 import styles from './style_cypher.css'
 
