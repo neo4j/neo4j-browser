@@ -1,19 +1,21 @@
 import React from 'react'
 import {v4} from 'uuid'
-
-import { listUsersQuery, listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
-import bolt from 'services/bolt/bolt'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'react-suber'
+
+import bolt from 'services/bolt/bolt'
+import { listUsersQuery, listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+
+import RolesSelector from './RolesSelector'
+import FrameTemplate from '../Stream/FrameTemplate'
+
 import Table from 'grommet/components/Table'
 import TableHeader from 'grommet/components/TableHeader'
 import Button from 'grommet/components/Button'
 import TextInput from 'grommet/components/TextInput'
+import CheckBox from 'grommet/components/CheckBox'
 import Notification from 'grommet/components/Notification'
 import CloseIcon from 'grommet/components/icons/base/Close'
-
-import RolesSelector from './RolesSelector'
-import FrameTemplate from '../Stream/FrameTemplate'
 
 export class UserAdd extends React.Component {
   constructor (props) {
@@ -26,7 +28,8 @@ export class UserAdd extends React.Component {
       password: '',
       confirmPassword: '',
       forcePasswordChange: false,
-      errors: null
+      errors: null,
+      success: null
     }
   }
   extractUserNameAndRolesFromBolt (result) {
@@ -53,7 +56,7 @@ export class UserAdd extends React.Component {
       CYPHER_REQUEST,
       {query: listUsersQuery()},
       (response) => {
-        const createdUser = this.extractUserNameAndRolesFromBolt(response).filter((user) => {
+        const createdUser = this.extractUserNameAndRolesFromBolt(response.result).filter((user) => {
           return user[0] === this.state.username
         })
         this.setState({userAdd: createdUser})
@@ -65,7 +68,8 @@ export class UserAdd extends React.Component {
       this.props.bus.self(
         CYPHER_REQUEST,
         {query: addRoleToUser(this.state.username, role)},
-        (r) => this.props.callback())
+        (r) => this.setState({success: `${this.state.username} created`})
+      )
     })
   }
   getRoles () {
@@ -135,7 +139,7 @@ export class UserAdd extends React.Component {
                 <TextInput onDOMChange={this.confirmUpdatePassword.bind(this)} type='password' />
               </td>
               <td>
-                <TextInput onDOMChange={this.updateForcePasswordChange.bind(this)} type='checkbox' />
+                <CheckBox onClick={this.updateForcePasswordChange.bind(this)} />
               </td>
             </tr>
             <tr>
@@ -146,7 +150,7 @@ export class UserAdd extends React.Component {
           </tbody>
         </Table>
         {this.state.errors == null ? null : <Notification status='warning' state={this.state.errors.join(', ')} message='Form not complete' />}
-        {this.state.success ? <Notification status='ok' state={this.state.userAdd.username} message='User created' /> : null}
+        {this.state.success ? <Notification status='ok' message={this.state.success} /> : null}
       </div>
     )
     return (
