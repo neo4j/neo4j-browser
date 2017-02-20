@@ -3,6 +3,8 @@ import FrameTemplate from './FrameTemplate'
 import Button from 'grommet/components/Button'
 import Sidebar from 'grommet/components/Sidebar'
 import TableIcon from 'grommet/components/icons/base/Table'
+import NodesIcon from 'grommet/components/icons/base/Nodes'
+import SchedulesIcon from 'grommet/components/icons/base/Schedules'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
@@ -41,10 +43,10 @@ class CypherFrame extends React.Component {
         <Button primary={this.state.openView === 'table'} icon={<TableIcon />} onClick={() => {
           this.setState({openView: 'table'})
         }} />
-        <Button primary={this.state.openView === 'text'} label={'A'} plain onClick={() => {
+        <Button primary={this.state.openView === 'text'} icon={<SchedulesIcon />} onClick={() => {
           this.setState({openView: 'text'})
         }} />
-        <Button primary={this.state.openView === 'visualization'} label={'Pretty Picture'} plain onClick={() => {
+        <Button primary={this.state.openView === 'visualization'} icon={<NodesIcon />} onClick={() => {
           this.setState({openView: 'visualization'})
         }} />
       </Sidebar>
