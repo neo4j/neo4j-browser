@@ -12,7 +12,7 @@ describe('Navigation', () => {
   }
   const navItem1 = 'item1' + Math.random()
   const navItem2 = 'item2' + Math.random()
-  const navItems = [{name: navItem1, icon: '', content: Tab1Content}, {name: navItem2, icon: '', content: Tab2Content}]
+  const navItems = [{name: navItem1, icon: null, content: Tab1Content}, {name: navItem2, icon: null, content: Tab2Content}]
 
   test('renders a list of navigation links', () => {
     const wrapper = mount(<Navigation topNavItems={navItems} />)
