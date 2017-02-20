@@ -23,15 +23,13 @@ class CypherFrame extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    let nodesAndRelationships
     let rows
     let plan
     if (nextProps.request.status === 'success' && nextProps.request.result !== this.props.request.result) {
-      nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.request.result.records)
       rows = bolt.recordsToTableArray(nextProps.request.result.records)
       plan = bolt.extractPlan(nextProps.request.result)
     } else {
-      this.setState({nodesAndRelationships, rows, plan})
+      this.setState({rows, plan})
     }
   }
 
@@ -44,7 +42,7 @@ class CypherFrame extends React.Component {
         <Button primary={this.state.openView === 'text'} label={'A'} plain onClick={() => {
           this.setState({openView: 'text'})
         }} />
-      <Button primary={this.state.openView === 'visualization'} label={'Pretty Picture'} plain onClick={() => {
+        <Button primary={this.state.openView === 'visualization'} label={'Pretty Picture'} plain onClick={() => {
           this.setState({openView: 'visualization'})
         }} />
       </Sidebar>
@@ -60,7 +58,6 @@ class CypherFrame extends React.Component {
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {
-      this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (plan) {
         frameContents = <QueryPlan plan={plan} />
       } else {

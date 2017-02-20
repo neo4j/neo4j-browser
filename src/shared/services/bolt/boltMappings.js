@@ -61,7 +61,7 @@ export function extractPlan (result) {
   return null
 }
 
-export function extractNodesAndRelationshipsFromRecords (records, types, intChecker, intConverter) {
+export function extractNodesAndRelationshipsFromRecords (records, types) {
   let keys = records[0].keys
   let rawNodes = []
   let rawRels = []
@@ -72,9 +72,6 @@ export function extractNodesAndRelationshipsFromRecords (records, types, intChec
     let paths = graphItems.filter((item) => item instanceof types.Path)
     paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
   })
-  rawNodes = arrayIntToString(rawNodes, intChecker, intConverter)
-  rawRels = arrayIntToString(rawRels, intChecker, intConverter)
-  // const relationships = rawRels.filter((item) => rawNodes.filter((node) => node.identity.toString() === item.start.toString()).length > 0 && rawNodes.filter((node) => node.identity.toString() === item.end.toString()).length > 0)
   return { nodes: rawNodes, relationships: rawRels }
 }
 
