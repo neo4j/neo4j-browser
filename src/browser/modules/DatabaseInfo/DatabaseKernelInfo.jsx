@@ -1,7 +1,9 @@
 import React from 'react'
-import bolt from 'services/bolt/bolt'
+import { withBus } from 'react-suber'
 
-export default class DatabaseKernelInfo extends React.Component {
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+
+export class DatabaseKernelInfo extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -9,14 +11,21 @@ export default class DatabaseKernelInfo extends React.Component {
     }
   }
   componentWillReceiveProps (props) {
-    bolt.transaction('CALL dbms.components()').then(r => {
-      this.setState({
-        databaseKernelInfo: {
-          version: r.records[0].get('versions'),
-          edition: r.records[0].get('edition')
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: 'CALL dbms.components()'},
+      (response) => {
+        if (response.success) {
+          const result = response.result
+          this.setState({
+            databaseKernelInfo: {
+              version: result.records[0].get('versions'),
+              edition: result.records[0].get('edition')
+            }
+          })
         }
-      })
-    }).catch(_ => console.log('CALL dbms.components() failed', _))
+      }
+    )
   }
   render () {
     const databaseKernelInfo = this.state.databaseKernelInfo
@@ -33,3 +42,4 @@ export default class DatabaseKernelInfo extends React.Component {
     }
   }
 }
+export default withBus(DatabaseKernelInfo)

@@ -1,6 +1,6 @@
 /* global test, expect */
 import React from 'react'
-import DatabaseKernelInfo from './DatabaseKernelInfo'
+import { DatabaseKernelInfo } from './DatabaseKernelInfo'
 import { shallow } from 'enzyme'
 
 describe('connected as', () => {
