@@ -23,7 +23,7 @@ export const Stream = (props) => {
       case 'cypher':
         return (
           <CypherFrame
-            key={frame.id} 
+            key={frame.id}
             frame={frame}
             request={props.requests[frame.requestId]}
           />

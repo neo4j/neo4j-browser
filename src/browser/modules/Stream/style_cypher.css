@@ -1,8 +1,7 @@
-.svg {
-  svg {
+.nevada-canvas {
+    position: relative;
     height: 432px;
     width: 100%;
-  }
 }
 .planSvg {
   svg {

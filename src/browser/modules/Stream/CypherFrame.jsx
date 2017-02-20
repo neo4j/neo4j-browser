@@ -8,6 +8,7 @@ import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
 import bolt from 'services/bolt/bolt'
 import styles from './style_sidebar.css'
+import Visualization from './Visualization'
 
 class CypherFrame extends React.Component {
   constructor (props) {
@@ -22,7 +23,6 @@ class CypherFrame extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    let nodesAndRelationships
     let rows
     let plan
     if (nextProps.request.status === 'success' && nextProps.request.result !== this.props.request.result) {
@@ -43,6 +43,9 @@ class CypherFrame extends React.Component {
         <Button primary={this.state.openView === 'text'} label={'A'} plain onClick={() => {
           this.setState({openView: 'text'})
         }} />
+        <Button primary={this.state.openView === 'visualization'} label={'Pretty Picture'} plain onClick={() => {
+          this.setState({openView: 'visualization'})
+        }} />
       </Sidebar>
     )
   }
@@ -56,7 +59,6 @@ class CypherFrame extends React.Component {
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     if (result.records && result.records.length > 0) {
-      this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(result.records)
       if (plan) {
         frameContents = <QueryPlan plan={plan} />
       } else {
@@ -67,6 +69,9 @@ class CypherFrame extends React.Component {
             break
           case 'table':
             frameContents = <TableView data={this.state.rows} />
+            break
+          case 'visualization':
+            frameContents = <Visualization records={result.records} />
             break
           default:
             frameContents = <TableView data={this.state.rows} />
