@@ -251,7 +251,7 @@ babel-code-frame@^6.11.0, babel-code-frame@^6.16.0, babel-code-frame@^6.22.0:
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-babel-core@^6.0.0, babel-core@^6.23.0, babel-core@^6.7.7:
+babel-core@^6.0.0, babel-core@^6.21.0, babel-core@^6.23.0, babel-core@^6.7.7:
   version "6.23.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-core/-/babel-core-6.23.1.tgz#c143cb621bb2f621710c220c5d579d15b8a442df"
   dependencies:
@@ -423,7 +423,7 @@ babel-jest@^18.0.0:
     babel-plugin-istanbul "^3.0.0"
     babel-preset-jest "^18.0.0"
 
-babel-loader@^6.2.4:
+babel-loader@^6.2.10, babel-loader@^6.2.4:
   version "6.3.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-loader/-/babel-loader-6.3.2.tgz#18de4566385578c1b4f8ffe6cbc668f5e2a5ef03"
   dependencies:
@@ -739,6 +739,18 @@ babel-plugin-transform-es2015-unicode-regex@^6.22.0:
     babel-runtime "^6.22.0"
     regexpu-core "^2.0.0"
 
+babel-plugin-transform-es3-member-expression-literals@^6.8.0:
+  version "6.22.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-plugin-transform-es3-member-expression-literals/-/babel-plugin-transform-es3-member-expression-literals-6.22.0.tgz#733d3444f3ecc41bef8ed1a6a4e09657b8969ebb"
+  dependencies:
+    babel-runtime "^6.22.0"
+
+babel-plugin-transform-es3-property-literals@^6.8.0:
+  version "6.22.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-plugin-transform-es3-property-literals/-/babel-plugin-transform-es3-property-literals-6.22.0.tgz#b2078d5842e22abf40f73e8cde9cd3711abd5758"
+  dependencies:
+    babel-runtime "^6.22.0"
+
 babel-plugin-transform-exponentiation-operator@^6.22.0:
   version "6.22.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-plugin-transform-exponentiation-operator/-/babel-plugin-transform-exponentiation-operator-6.22.0.tgz#d57c8335281918e54ef053118ce6eb108468084d"
@@ -809,6 +821,12 @@ babel-plugin-transform-regenerator@^6.22.0:
   dependencies:
     regenerator-transform "0.9.8"
 
+babel-plugin-transform-runtime@^6.15.0:
+  version "6.23.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-plugin-transform-runtime/-/babel-plugin-transform-runtime-6.23.0.tgz#88490d446502ea9b8e7efb0fe09ec4d99479b1ee"
+  dependencies:
+    babel-runtime "^6.22.0"
+
 babel-plugin-transform-strict-mode@^6.22.0:
   version "6.22.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-plugin-transform-strict-mode/-/babel-plugin-transform-strict-mode-6.22.0.tgz#e008df01340fdc87e959da65991b7e05970c8c7c"
@@ -824,7 +842,7 @@ babel-polyfill@^6.20.0, babel-polyfill@^6.8.0:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-preset-es2015@^6.6.0:
+babel-preset-es2015@^6.18.0, babel-preset-es2015@^6.6.0:
   version "6.22.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babel-preset-es2015/-/babel-preset-es2015-6.22.0.tgz#af5a98ecb35eb8af764ad8a5a05eb36dc4386835"
   dependencies:
@@ -3999,18 +4017,24 @@ neo4j-driver@^1.1.0:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.5:
-  version "0.0.5"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.5.tgz#ef604d00d083d139d4b9bb699df24f9d81f387cb"
+neo4j-visualization@0.0.6:
+  version "0.0.6"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.6.tgz#c17042c9ca139d454ccee1f81297e28adfc477f2"
   dependencies:
     neo4j-driver "^1.1.0"
-    nevada-visjs "4.18.28"
+    nevada-visjs "0.1.0"
 
-nevada-visjs@4.18.28:
-  version "4.18.28"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/nevada-visjs/-/nevada-visjs-4.18.28.tgz#3b6f0ecac82c7c0f4556ad465faaf0723d78128b"
+nevada-visjs@0.1.0:
+  version "0.1.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.0.tgz#44f46b054e40fecafd4e8e12e2e18cd3a4ff6c6f"
   dependencies:
+    babel-core "^6.21.0"
+    babel-loader "^6.2.10"
+    babel-plugin-transform-es3-member-expression-literals "^6.8.0"
+    babel-plugin-transform-es3-property-literals "^6.8.0"
+    babel-plugin-transform-runtime "^6.15.0"
     babel-polyfill "^6.20.0"
+    babel-preset-es2015 "^6.18.0"
     babel-runtime "^6.20.0"
     emitter-component "^1.1.1"
     hammerjs "^2.0.6"
