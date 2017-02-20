@@ -25,6 +25,7 @@ class CypherFrame extends React.Component {
   componentWillReceiveProps (nextProps) {
     let rows
     let plan
+    let nodesAndRelationships
     if (nextProps.request.status === 'success' && nextProps.request.result !== this.props.request.result) {
       nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.request.result.records)
       rows = bolt.recordsToTableArray(nextProps.request.result.records)
