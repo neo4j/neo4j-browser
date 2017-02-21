@@ -195,6 +195,7 @@ export const detectNewConnectionEpic = (action$, store) => {
   return action$.ofType(SET_ACTIVE)
     .mergeMap((action) => {
       if (lastActiveConnectionId === action.connectionId || !action.connectionId) return Rx.Observable.never()
+      lastActiveConnectionId = action.connectionId
       return Rx.Observable.of({ type: CONNECTION_SUCCESS })
     })
 }
