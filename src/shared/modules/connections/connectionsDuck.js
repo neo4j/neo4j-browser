@@ -14,6 +14,7 @@ export const VERIFY_CREDS = 'connections/VERIFY_CREDS'
 export const CONNECT = 'connections/CONNECT'
 export const STARTUP_CONNECTION_SUCCESS = 'connections/STARTUP_CONNECTION_SUCCESS'
 export const STARTUP_CONNECTION_FAILED = 'connections/STARTUP_CONNECTION_FAILED'
+export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 
 const initialState = {
   allConnectionIds: [],
@@ -207,4 +208,13 @@ export const startupConnectionFailEpic = (action$, store) => {
         getSettings(store.getState()).cmdchar + 'server connect'
       )
     )
+}
+
+let lastActiveConnectionId = null
+export const detectNewConnectionEpic = (action$, store) => {
+  return action$.ofType(SET_ACTIVE)
+    .mergeMap((action) => {
+      if (lastActiveConnectionId === action.connectionId || !action.connectionId) return Rx.Observable.never()
+      return Rx.Observable.of({ type: CONNECTION_SUCCESS })
+    })
 }
