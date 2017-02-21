@@ -19,9 +19,13 @@ export class UserInformation extends React.Component {
       roles: this.props.roles || [],
       username: this.props.username
     }
-    this.removeClick = this.props.onRemoveClick || function (username) {
-      deleteUser(username, (r) => { return this.props.refresh() })
-    }
+  }
+  removeClick (thing) {
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: deleteUser(this.state.username)},
+      this.handleResponse.bind(this)
+    )
   }
   suspendUser () {
     this.props.bus.self(
@@ -91,9 +95,7 @@ export class UserInformation extends React.Component {
           {this.passwordChange()}
         </td>
         <td>
-          <Button className='delete' label='Remove' onClick={() => {
-            this.removeClick(this.props.username)
-          }} />
+          <Button className='delete' label='Remove' onClick={this.removeClick.bind(this)} />
         </td>
       </TableRow>
     )
