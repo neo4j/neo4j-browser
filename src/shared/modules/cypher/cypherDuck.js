@@ -10,14 +10,14 @@ export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
 const changePassword = (driver, resolve, action) => {
   const session = driver.session()
   session.run(action.query, action.parameters)
-      .then((r) => {
-        driver.close()
-        resolve({type: action._responseChannel, success: true, result: r})
-      })
-      .catch((e) => {
-        driver.close()
-        resolve(({type: action._responseChannel, success: false, error: e}))
-      })
+    .then((r) => {
+      driver.close()
+      resolve({type: action._responseChannel, success: true, result: r})
+    })
+    .catch((e) => {
+      driver.close()
+      resolve(({type: action._responseChannel, success: false, error: e}))
+    })
 }
 
 // Epics
