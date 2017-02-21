@@ -30,6 +30,7 @@ export class ConnectionFrame extends React.Component {
       CONNECT,
       this.state,
       (res) => {
+        this.setState({ error: {} })
         if (res.success) {
           this.saveAndStart()
         } else {
