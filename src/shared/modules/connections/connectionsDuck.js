@@ -10,7 +10,6 @@ export const SET_ACTIVE = 'connections/SET_ACTIVE'
 export const SELECT = 'connections/SELECT'
 export const REMOVE = 'connections/REMOVE'
 export const MERGE = 'connections/MERGE'
-export const VERIFY_CREDS = 'connections/VERIFY_CREDS'
 export const CONNECT = 'connections/CONNECT'
 export const STARTUP_CONNECTION_SUCCESS = 'connections/STARTUP_CONNECTION_SUCCESS'
 export const STARTUP_CONNECTION_FAILED = 'connections/STARTUP_CONNECTION_FAILED'
@@ -138,26 +137,7 @@ export const updateConnection = (connection) => {
   }
 }
 
-export const verifyCommectionCreds = (host, username, password, encrypted) => {
-  return {
-    type: VERIFY_CREDS,
-    host,
-    username,
-    password,
-    encrypted
-  }
-}
-
 // Epics
-export const tryConnectEpic = (action$, store) => {
-  return action$.ofType(VERIFY_CREDS)
-    .mergeMap((action) => {
-      if (!action._responseChannel) return Rx.Observable.of(null)
-      return bolt.testConnect(action)
-        .then((res) => ({ type: action._responseChannel, success: true }))
-        .catch(([e]) => ({ type: action._responseChannel, success: false, error: e }))
-    })
-}
 export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT)
     .mergeMap((action) => {

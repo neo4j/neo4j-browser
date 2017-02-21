@@ -98,12 +98,6 @@ function cancelTransaction (id, cb) {
 export default {
   trackedTransaction,
   directConnect: connect,
-  testConnect: (creds) => {
-    return connect(creds).then((driver) => {
-      driver.close()
-      return true
-    })
-  },
   cancelTransaction,
   connectToConnection,
   openConnection,
