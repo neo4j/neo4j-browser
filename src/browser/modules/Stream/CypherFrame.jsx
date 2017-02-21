@@ -4,10 +4,12 @@ import Button from 'grommet/components/Button'
 import Sidebar from 'grommet/components/Sidebar'
 import TableIcon from 'grommet/components/icons/base/Table'
 import NodesIcon from 'grommet/components/icons/base/Nodes'
+import CodeIcon from 'grommet/components/icons/base/Code'
 import SchedulesIcon from 'grommet/components/icons/base/Schedules'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
+import CodeView from './Views/CodeView'
 import bolt from 'services/bolt/bolt'
 import styles from './style_sidebar.css'
 import Visualization from './Visualization'
@@ -49,6 +51,9 @@ class CypherFrame extends React.Component {
         <Button primary={this.state.openView === 'visualization'} icon={<NodesIcon />} onClick={() => {
           this.setState({openView: 'visualization'})
         }} />
+        <Button primary={this.state.openView === 'code'} icon={<CodeIcon />} onClick={() => {
+          this.setState({openView: 'code'})
+        }} />
       </Sidebar>
     )
   }
@@ -75,6 +80,9 @@ class CypherFrame extends React.Component {
             break
           case 'visualization':
             frameContents = <Visualization records={result.records} />
+            break
+          case 'code':
+            frameContents = <CodeView query={this.props.frame.cmd} request={this.props.request} />
             break
           default:
             frameContents = <TableView data={this.state.rows} />
