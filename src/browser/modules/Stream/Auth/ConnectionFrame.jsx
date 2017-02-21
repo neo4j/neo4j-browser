@@ -5,7 +5,7 @@ import { getActiveConnectionData, setActiveConnection, updateConnection, CONNECT
 import { getSettings } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
-import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/authProcedures'
+import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
 
 import FrameTemplate from '../FrameTemplate'
 import ConnectForm from './ConnectForm'
