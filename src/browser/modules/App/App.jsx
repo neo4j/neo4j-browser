@@ -6,13 +6,14 @@ import styles from './style.css'
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
+import { getActiveConnection } from 'shared/modules/connections/connectionsDuck'
 
-const BaseLayout = ({drawer, handleNavClick}) => {
+const BaseLayout = ({drawer, handleNavClick, activeConnection}) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.app}>
         <div className={styles.body}>
-          <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+          <Sidebar activeConnection={activeConnection} openDrawer={drawer} onNavClick={handleNavClick} />
           <div className={styles.mainContent}>
             <Main />
           </div>
@@ -24,7 +25,8 @@ const BaseLayout = ({drawer, handleNavClick}) => {
 
 const mapStateToProps = (state) => {
   return {
-    drawer: state.drawer
+    drawer: state.drawer,
+    activeConnection: getActiveConnection(state)
   }
 }
 
