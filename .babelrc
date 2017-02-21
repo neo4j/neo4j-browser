@@ -13,7 +13,8 @@
         "sagas": "./src/sagas",
         "react": "preact-compat",
         "react-dom": "preact-compat",
-        "nbnmui": "./src/browser/components/nbnmui"
+        "nbnmui": "./src/browser/components/nbnmui",
+        "browser-components": "./src/browser/components"
       }
     }]
   ]

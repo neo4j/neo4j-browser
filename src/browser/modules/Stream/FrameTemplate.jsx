@@ -31,6 +31,7 @@ class FrameTemplate extends React.Component {
             {this.props.contents}
           </Section>
         </Split>
+        {this.props.children}
       </Article>
     )
   }

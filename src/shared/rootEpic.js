@@ -1,16 +1,22 @@
 
 import { combineEpics } from 'redux-observable'
 import { handleCommandsEpic } from './modules/commands/commandsDuck'
+import { connectEpic, startupConnectEpic, startupConnectionSuccessEpic, startupConnectionFailEpic, detectNewConnectionEpic } from './modules/connections/connectionsDuck'
 import { dbMetaEpic } from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
-import { addDiscoveryEpic, startDiscoveryEpic } from './modules/discovery/discoveryDuck'
-import { cypherRequestEpic } from './modules/cypher/cypherDuck'
+import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
+import { cypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
 
 export default combineEpics(
   handleCommandsEpic,
+  connectEpic,
+  startupConnectEpic,
+  startupConnectionSuccessEpic,
+  startupConnectionFailEpic,
+  detectNewConnectionEpic,
   dbMetaEpic,
   cancelRequestEpic,
-  addDiscoveryEpic,
-  startDiscoveryEpic,
-  cypherRequestEpic
+  discoveryOnStartupEpic,
+  cypherRequestEpic,
+  handleForcePasswordChangeEpic
 )

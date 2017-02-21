@@ -10,13 +10,13 @@ function createConnectionObject (id, name, connection, transactionFn = () => {})
   }
 }
 
-export const open = ({id, name, username, password, host}, connectFn, validateFn, transactionFn) => {
+export const open = ({id, name, username, password, host}, opts = {}, connectFn, validateFn, transactionFn) => {
   const p = new Promise((resolve, reject) => {
     const exists = _connections.filter((c) => c.name === name)
     if (exists.length) {
       return validateFn(exists[0]).then((c) => resolve(c)).catch((e) => reject(e))
     }
-    connectFn({username, password, host})
+    connectFn({username, password, host}, opts)
       .then((c) => {
         validateFn(c).then((_) => {
           _connections.push(createConnectionObject(id, name, c, transactionFn))

@@ -6,10 +6,21 @@ import { getSettings } from '../settings/settingsDuck'
 
 const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
+export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 
+// Action creators
 export const executeCommand = (cmd, contextId, requestId = null) => {
   return {
     type: USER_COMMAND_QUEUED,
+    cmd,
+    id: contextId,
+    requestId
+  }
+}
+
+export const executeSystemCommand = (cmd, contextId, requestId = null) => {
+  return {
+    type: SYSTEM_COMMAND_QUEUED,
     cmd,
     id: contextId,
     requestId
@@ -20,6 +31,7 @@ export const executeCommand = (cmd, contextId, requestId = null) => {
 export const handleCommandsEpic = (action$, store) =>
   action$.ofType(USER_COMMAND_QUEUED)
     .do((action) => store.dispatch(addHistory({cmd: action.cmd})))
+    .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
     .mergeMap((action) => {
       const cleanCmd = cleanCommand(action.cmd)
       const settingsState = getSettings(store.getState())

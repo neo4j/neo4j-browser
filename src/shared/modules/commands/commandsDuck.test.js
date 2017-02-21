@@ -1,6 +1,8 @@
 /* global describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
+import { getBus, createReduxMiddleware } from 'suber'
+
 import { BoltConnectionError } from '../../services/exceptions'
 import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
@@ -9,22 +11,12 @@ import { update as updateQueryResult } from '../requests/requestsDuck'
 import { send } from 'shared/modules/requests/requestsDuck'
 import * as frames from 'shared/modules/stream/streamDuck'
 
-// Setup a middleware that calls all fn:s in the
-// following array on every action. Very primitive and
-// more a poc at this stage.
-// If Suber gets a "resetMiddlewares" feature, it can be used instead.
-let snoopOnActions = []
-const snoopMiddleware = (store) => (next) => (action) => {
-  const state = next(action)
-  snoopOnActions.forEach((fn) => fn(action))
-  return state
-}
-
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
-const mockStore = configureMockStore([epicMiddleware, snoopMiddleware])
+const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
 
 describe('commandsEpic', () => {
   let store
+  const bus = getBus()
   beforeAll(() => {
     store = mockStore({
       settings: {
@@ -37,6 +29,7 @@ describe('commandsEpic', () => {
   })
   afterEach(() => {
     store.clearActions()
+    bus.reset()
   })
 
   test('listens on USER_COMMAND_QUEUED for ":" commands and does a series of things', (done) => {
@@ -45,18 +38,16 @@ describe('commandsEpic', () => {
     const cmd = store.getState().settings.cmdchar + cmdString
     const id = 1
     const action = commands.executeCommand(cmd, id)
-    snoopOnActions = [(currentAction) => {
-      if (currentAction.type === 'NOOP') {
-        // Then
-        expect(store.getActions()).toEqual([
-          action,
-          addHistory({ cmd }),
-          helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
-          { type: 'NOOP' }
-        ])
-        done()
-      }
-    }]
+    bus.take('NOOP', (currentAction) => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        addHistory({ cmd }),
+        helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
+        { type: 'NOOP' }
+      ])
+      done()
+    })
 
     // When
     store.dispatch(action)
@@ -71,20 +62,18 @@ describe('commandsEpic', () => {
     const id = 2
     const requestId = 'xxx'
     const action = commands.executeCommand(cmd, id, requestId)
-    snoopOnActions = [(currentAction) => {
-      if (currentAction.type === 'NOOP') {
-        // Then
-        expect(store.getActions()).toEqual([
-          action,
-          addHistory({cmd}),
-          send('cypher', requestId),
-          frames.add({...action, type: 'cypher'}),
-          updateQueryResult(requestId, BoltConnectionError(), 'error'),
-          { type: 'NOOP' }
-        ])
-        done()
-      }
-    }]
+    bus.take('NOOP', (currentAction) => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        addHistory({cmd}),
+        send('cypher', requestId),
+        frames.add({...action, type: 'cypher'}),
+        updateQueryResult(requestId, BoltConnectionError(), 'error'),
+        { type: 'NOOP' }
+      ])
+      done()
+    })
     // When
     store.dispatch(action)
 

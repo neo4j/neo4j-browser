@@ -1,13 +1,15 @@
+import Rx from 'rxjs/Rx'
 import remote from 'services/remote'
-import bolt from 'services/bolt/bolt'
-import { updateConnection, getConnection } from 'shared/modules/connections/connectionsDuck'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'discover-bolt-host'
+export const CONNECTION_ID = '$$discovery'
+export const DEFAULT_BOLT_HOST = 'bolt://localhost:7687'
+export const DISCOVERY_ENDPOINT = 'http://localhost:7474/'
 
 // Actions
 const SET = `${NAME}/SET`
-const FETCH = `${NAME}/FETCH`
+export const DONE = `${NAME}/DONE`
 
 // Reducer
 export default function reducer (state = {}, action = {}) {
@@ -27,46 +29,32 @@ export const setBoltHost = (bolt) => {
   }
 }
 
-export const callDiscovery = () => {
-  return {
-    type: FETCH,
-    discoveryEndpoint: 'http://localhost:7474/'
-  }
+export const updateDiscoveryConnection = (props) => {
+  return updateConnection({ ...props, id: CONNECTION_ID, name: CONNECTION_ID, type: 'bolt' })
 }
 
 export const getBoltHost = (state) => {
   return state.discovery.boltHost
 }
 
-export const addDiscoveryEpic = (some$, store) => {
-  return some$.ofType(FETCH)
-    .do((action) => {
-      remote.getJSON(action.discoveryEndpoint).then((result) => {
-        if (result) {
-          const defaultNeoConnection = {
-            id: 'discovery',
-            name: 'discovery',
-            host: result.bolt
+export const discoveryOnStartupEpic = (some$, store) => {
+  return some$.ofType('APP_START')
+    .mergeMap((action) => {
+      return Rx.Observable.fromPromise(
+        remote.getJSON(DISCOVERY_ENDPOINT).then((result) => { // Try to get info from server
+          if (!result || !result.bolt) {
+            throw new Error('No bolt address found') // No bolt info from server, throw
           }
-          store.dispatch(updateConnection(defaultNeoConnection))
-          bolt.connectToConnection(
-            getConnection(store.getState(),
-            defaultNeoConnection.id)
-          ).then((res) => {
-            store.dispatch(executeCommand(':play start'))
-          }).catch((e) => {
-            store.dispatch(executeCommand(':server connect'))
-          })
-        }
-      }).catch((e) => {
-        return store.dispatch(executeCommand(':server connect'))
+          store.dispatch(updateDiscoveryConnection({ host: result.bolt })) // Update discovery host in redux
+          return result
+        }).catch((e) => {
+          throw new Error('No bolt address found') // No info from server, throw
+        })
+      )
+      .catch((e) => {
+        store.dispatch(updateDiscoveryConnection({ host: DEFAULT_BOLT_HOST })) // Update discovery host in redux
+        return new Promise((resolve, reject) => resolve(e))
       })
     })
-    .mapTo({ type: 'NOOP' })
+    .mapTo({ type: DONE })
 }
-export const startDiscoveryEpic = (some$, store) =>
-  some$.ofType('APP_START')
-    .do((action) => {
-      store.dispatch(callDiscovery())
-    })
-    .mapTo({type: 'NOOP'})

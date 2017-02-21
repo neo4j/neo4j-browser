@@ -1,9 +1,19 @@
+import Rx from 'rxjs/Rx'
+import bolt from 'services/bolt/bolt'
+import * as discovery from 'shared/modules/discovery/discoveryDuck'
+import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import { getInitCmd, getSettings } from 'shared/modules/settings/settingsDuck'
+
 export const NAME = 'connections'
 export const ADD = 'connections/ADD'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
 export const SELECT = 'connections/SELECT'
 export const REMOVE = 'connections/REMOVE'
 export const MERGE = 'connections/MERGE'
+export const CONNECT = 'connections/CONNECT'
+export const STARTUP_CONNECTION_SUCCESS = 'connections/STARTUP_CONNECTION_SUCCESS'
+export const STARTUP_CONNECTION_FAILED = 'connections/STARTUP_CONNECTION_FAILED'
+export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 
 const initialState = {
   allConnectionIds: [],
@@ -24,6 +34,10 @@ export function getConnections (state) {
 
 export function getActiveConnection (state) {
   return state[NAME].activeConnection
+}
+
+export function getActiveConnectionData (state) {
+  return state[NAME].activeConnection ? state[NAME].connectionsById[state[NAME].activeConnection] : null
 }
 
 const addConnectionHelper = (state, obj) => {
@@ -121,4 +135,67 @@ export const updateConnection = (connection) => {
     type: MERGE,
     connection
   }
+}
+
+// Epics
+export const connectEpic = (action$, store) => {
+  return action$.ofType(CONNECT)
+    .mergeMap((action) => {
+      if (!action._responseChannel) return Rx.Observable.of(null)
+      return bolt.connectToConnection(action)
+        .then((res) => ({ type: action._responseChannel, success: true }))
+        .catch(([e]) => ({ type: action._responseChannel, success: false, error: e }))
+    })
+}
+export const startupConnectEpic = (action$, store) => {
+  return action$.ofType(discovery.DONE)
+    .mergeMap((action) => {
+      const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
+      return new Promise((resolve, reject) => {
+        bolt.connectToConnection(connection, { withotCredentials: true }) // Try without creds
+          .then((r) => {
+            store.dispatch(discovery.updateDiscoveryConnection({ username: undefined, password: undefined }))
+            store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+            resolve({ type: STARTUP_CONNECTION_SUCCESS })
+          })
+          .catch(() => {
+            if (!connection.username && !connection.password) { // No creds stored
+              store.dispatch(setActiveConnection(null))
+              store.dispatch(discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' }))
+              return resolve({ type: STARTUP_CONNECTION_FAILED })
+            }
+            bolt.connectToConnection(connection) // Try with stored creds
+              .then((connection) => {
+                store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+                resolve({ type: STARTUP_CONNECTION_SUCCESS })
+              }).catch((e) => {
+                store.dispatch(setActiveConnection(null))
+                store.dispatch(discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' }))
+                resolve({ type: STARTUP_CONNECTION_FAILED })
+              })
+          })
+      })
+    })
+}
+export const startupConnectionSuccessEpic = (action$, store) => {
+  return action$.ofType(STARTUP_CONNECTION_SUCCESS)
+    .mapTo(executeSystemCommand(getInitCmd(store.getState()))) // execute initCmd from settings
+}
+export const startupConnectionFailEpic = (action$, store) => {
+  return action$.ofType(STARTUP_CONNECTION_FAILED)
+    .mapTo(
+      executeSystemCommand(
+        getSettings(store.getState()).cmdchar + 'server connect'
+      )
+    )
+}
+
+let lastActiveConnectionId = null
+export const detectNewConnectionEpic = (action$, store) => {
+  return action$.ofType(SET_ACTIVE)
+    .mergeMap((action) => {
+      if (lastActiveConnectionId === action.connectionId || !action.connectionId) return Rx.Observable.never()
+      lastActiveConnectionId = action.connectionId
+      return Rx.Observable.of({ type: CONNECTION_SUCCESS })
+    })
 }

@@ -1177,7 +1177,7 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
-chai@*:
+chai@*, "chai@>=1.9.2 <4.0.0":
   version "3.5.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/chai/-/chai-3.5.0.tgz#4d02637b067fe958bdbfdd3a40ec56fef7373247"
   dependencies:
@@ -1709,6 +1709,10 @@ deep-eql@^0.1.3:
   dependencies:
     type-detect "0.1.1"
 
+deep-equal@^1.0.0:
+  version "1.0.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
+
 deep-extend@~0.4.0:
   version "0.4.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/deep-extend/-/deep-extend-0.4.1.tgz#efe4113d08085f4e6f9687759810f807469e2253"
@@ -2047,8 +2051,8 @@ eslint-plugin-standard@^2.0.1, eslint-plugin-standard@~2.0.1:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint-plugin-standard/-/eslint-plugin-standard-2.0.1.tgz#3589699ff9c917f2c25f76a916687f641c369ff3"
 
 eslint@^3.15.0:
-  version "3.15.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint/-/eslint-3.15.0.tgz#bdcc6a6c5ffe08160e7b93c066695362a91e30f2"
+  version "3.16.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint/-/eslint-3.16.0.tgz#4a468ab93618a9eb6e3f1499038b38851f828630"
   dependencies:
     babel-code-frame "^6.16.0"
     chalk "^1.1.3"
@@ -2809,9 +2813,13 @@ husl@^5.0.0:
   version "5.0.3"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/husl/-/husl-5.0.3.tgz#ee272aaff1bebe40df3588ed007b70de7e679788"
 
-iconv-lite@0.4.13, iconv-lite@~0.4.13:
+iconv-lite@0.4.13:
   version "0.4.13"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
+
+iconv-lite@~0.4.13:
+  version "0.4.15"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
 icss-replace-symbols@^1.0.2:
   version "1.0.2"
@@ -3218,7 +3226,7 @@ isobject@^2.0.0:
   dependencies:
     isarray "1.0.0"
 
-isomorphic-fetch@^2.1.1:
+isomorphic-fetch@^2.1.1, isomorphic-fetch@^2.2.1:
   version "2.2.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
   dependencies:
@@ -3551,7 +3559,7 @@ json-stable-stringify@^1.0.0, json-stable-stringify@^1.0.1:
   dependencies:
     jsonify "~0.0.0"
 
-json-stringify-safe@~5.0.1:
+json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
@@ -3823,7 +3831,7 @@ lodash.zip@^4.2.0:
   version "4.2.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash.zip/-/lodash.zip-4.2.0.tgz#ec6662e4896408ed4ab6c542a3990b72cc080020"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
+lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.2:
   version "4.17.4"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -4011,7 +4019,7 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-neo4j-driver@^1.1.0:
+neo4j-driver@^1.1.0, neo4j-driver@^1.1.1:
   version "1.1.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/neo4j-driver/-/neo4j-driver-1.1.1.tgz#18a7ca46cbd32e245a5da1af078de56cd797847e"
   dependencies:
@@ -4047,6 +4055,19 @@ no-case@^2.2.0:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/no-case/-/no-case-2.3.1.tgz#7aeba1c73a52184265554b7dc03baf720df80081"
   dependencies:
     lower-case "^1.1.1"
+
+nock@^9.0.6:
+  version "9.0.6"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/nock/-/nock-9.0.6.tgz#4ab39dcae285360d117109442b1c34663303ff33"
+  dependencies:
+    chai ">=1.9.2 <4.0.0"
+    debug "^2.2.0"
+    deep-equal "^1.0.0"
+    json-stringify-safe "^5.0.1"
+    lodash "~4.17.2"
+    mkdirp "^0.5.0"
+    propagate "0.4.0"
+    qs "^6.0.2"
 
 node-dir@^0.1.10:
   version "0.1.16"
@@ -5071,6 +5092,10 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
+propagate@0.4.0:
+  version "0.4.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/propagate/-/propagate-0.4.0.tgz#f3fcca0a6fe06736a7ba572966069617c130b481"
+
 propagating-hammerjs@^1.4.6:
   version "1.4.6"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/propagating-hammerjs/-/propagating-hammerjs-1.4.6.tgz#fed00e9b00767ffd42d14f5b531bc493eb672e37"
@@ -5112,7 +5137,7 @@ qs@6.2.0:
   version "6.2.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/qs/-/qs-6.2.0.tgz#3b7848c03c2dece69a9522b0fae8c4126d745f3b"
 
-qs@^6.1.0, qs@~6.3.0:
+qs@^6.0.2, qs@^6.1.0, qs@~6.3.0:
   version "6.3.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/qs/-/qs-6.3.1.tgz#918c0b3bcd36679772baf135b1acb4c1651ed79d"
 
@@ -5523,8 +5548,8 @@ relateurl@0.2.x:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
 
 remark-parse@^2.0.1:
-  version "2.2.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/remark-parse/-/remark-parse-2.2.0.tgz#92a8e7750d4fbfd53cd460adad686014f2a7f43b"
+  version "2.3.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/remark-parse/-/remark-parse-2.3.0.tgz#ced58bfbef9999374f9ff33fbc2e63fe2b0c5c37"
   dependencies:
     collapse-white-space "^1.0.2"
     has "^1.0.1"
@@ -5996,9 +6021,9 @@ style-loader@^0.13.0:
   dependencies:
     loader-utils "^0.2.7"
 
-suber@^2.0.0:
-  version "2.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/suber/-/suber-2.1.0.tgz#a2f0c4e30e1d1ddeb46dce11c73b85116353c7c2"
+suber@^2.1.1:
+  version "2.1.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/suber/-/suber-2.1.1.tgz#6ae966336ad01c29f8787fe7fc221f94d55093c8"
 
 superagent@^3.3.1:
   version "3.4.4"
@@ -6478,7 +6503,7 @@ whatwg-encoding@^1.0.1:
   dependencies:
     iconv-lite "0.4.13"
 
-whatwg-fetch@2.0.2, whatwg-fetch@>=0.10.0:
+whatwg-fetch@>=0.10.0:
   version "2.0.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/whatwg-fetch/-/whatwg-fetch-2.0.2.tgz#fe294d1d89e36c5be8b3195057f2e4bc74fc980e"
 

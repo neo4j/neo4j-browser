@@ -57,6 +57,7 @@
     "eslint-plugin-react": "^6.9.0",
     "eslint-plugin-standard": "^2.0.1",
     "jest-cli": "^18.1.0",
+    "nock": "^9.0.6",
     "postcss": "^5.0.21",
     "postcss-cssnext": "^2.6.0",
     "postcss-loader": "^1.2.1",
@@ -87,10 +88,11 @@
     "file-loader": "^0.9.0",
     "grommet": "^1.1.0",
     "html-loader": "^0.4.3",
+    "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.1.0",
     "json-loader": "^0.5.4",
     "n": "^2.1.4",
-    "neo4j-driver": "^1.1.0",
+    "neo4j-driver": "^1.1.1",
     "neo4j-visualization": "0.0.6",
     "preact": "^7.1.0",
     "preact-compat": "^3.10.0",
@@ -108,9 +110,8 @@
     "redux-observable": "^0.13.0",
     "rxjs": "^5.0.3",
     "save-as": "^0.1.7",
-    "suber": "^2.0.0",
+    "suber": "^2.1.1",
     "swipe-js-iso": "^2.0.3",
-    "uuid": "^3.0.1",
-    "whatwg-fetch": "2.0.2"
+    "uuid": "^3.0.1"
   }
 }
