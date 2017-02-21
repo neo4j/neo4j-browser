@@ -1,9 +1,10 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
+import { CONNECTION_SUCCESS, DISCONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
+export const CLEAR = 'meta/CLEAR'
 
 const initialState = {
   labels: [],
@@ -46,6 +47,8 @@ export default function labels (state = initialState, action) {
   switch (action.type) {
     case UPDATE:
       return updateMetaForContext(state, action.meta, action.context)
+    case CLEAR:
+      return {...initialState}
     default:
       return state
   }
@@ -86,3 +89,7 @@ export const dbMetaEpic = (some$, store) =>
       .filter((r) => r)
       .map((res) => updateMeta(res))
     })
+
+export const clearMetaOnDisconnectEpic = (some$, store) =>
+  some$.ofType(DISCONNECTION_SUCCESS)
+    .mapTo({ type: CLEAR })

@@ -44,7 +44,7 @@ const availableCommands = [{
     const response = handleServerCommand(action, cmdchar, put, store)
     if (response && response.then) {
       response.then((res) => {
-        put(frames.add({...action, ...res}))
+        if (res) put(frames.add({...action, ...res}))
       })
     } else if (response) {
       put(frames.add({...action, ...response}))

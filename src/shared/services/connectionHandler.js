@@ -33,7 +33,6 @@ export function close (name, closeFn) {
   if (!connection) return
   if (closeFn) closeFn(connection.connection)
   _connections = _connections.filter((c) => c.name !== name)
-  if (connection.isDefault && _connections.length) setDefault(_connections[0].name)
 }
 
 export function get (name = null) {

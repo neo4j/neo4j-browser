@@ -1,6 +1,18 @@
-/* global test, expect */
+/* global jest, describe, beforeAll, afterEach, test, expect */
+import configureMockStore from 'redux-mock-store'
+import { createEpicMiddleware } from 'redux-observable'
+import { getBus, createReduxMiddleware } from 'suber'
 
+import bolt from 'services/bolt/bolt'
+jest.mock('services/bolt/bolt', () => {
+  return {
+    closeActiveConnection: jest.fn()
+  }
+})
 import reducer, * as connections from './connectionsDuck'
+
+const epicMiddleware = createEpicMiddleware(connections.disconnectEpic)
+const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
 
 describe('connections reducer', () => {
   test('handles connections.ADD', () => {
@@ -91,5 +103,61 @@ describe('connections reducer', () => {
       id: 'x',
       name: 'bm'
     }})
+  })
+})
+
+describe('connectionsDucks Epics', () => {
+  let store
+  const bus = getBus()
+  beforeAll(() => {
+    store = mockStore({
+      connections: {
+        activeConnection: null
+      }
+    })
+  })
+  afterEach(() => {
+    store.clearActions()
+    bus.reset()
+  })
+  test('disconnectEpic', (done) => {
+    // Given
+    const id = 'xxx'
+    const action = connections.disconnectAction(id)
+
+    // When
+    epicMiddleware.replaceEpic(connections.disconnectEpic)
+    store.dispatch(connections.setActiveConnection(id)) // set an active connection
+    store.clearActions()
+    bus.take(connections.SET_ACTIVE, (currentAction) => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        connections.updateConnection({ id, password: '' }),
+        connections.setActiveConnection(null)
+      ])
+      done()
+    })
+    store.dispatch(action)
+  })
+  test('detectActiveConnectionChangeEpic', (done) => {
+    // Given
+    const action = connections.setActiveConnection(null)
+    bus.take(connections.DISCONNECTION_SUCCESS, (currentAction) => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        currentAction
+      ])
+      expect(bolt.closeActiveConnection).toHaveBeenCalledTimes(1)
+      done()
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.detectActiveConnectionChangeEpic)
+    store.dispatch(connections.setActiveConnection('xxx')) // set an active connection
+    store.clearActions()
+
+    store.dispatch(action)
   })
 })

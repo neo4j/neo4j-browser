@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { getActiveConnectionData, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
+import { getActiveConnectionData, getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
 import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
@@ -96,14 +96,16 @@ export class ConnectionFrame extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.activeConnection) {
       this.setState({ isConnected: true })
+    } else {
+      this.setState({ isConnected: false })
     }
   }
   render () {
     let view
     if (this.state.isConnected) {
       view = <ConnectedView
-        host={this.props.activeConnection.host}
-        username={this.props.activeConnection.username}
+        host={this.props.activeConnectionData.host}
+        username={this.props.activeConnectionData.username}
       />
     } else if (!this.state.isConnected && !this.state.passwordChangeNeeded) {
       view = (<ConnectForm
@@ -135,7 +137,8 @@ export class ConnectionFrame extends React.Component {
 const mapStateToProps = (state) => {
   return {
     initCmd: getInitCmd(state),
-    activeConnection: getActiveConnectionData(state)
+    activeConnection: getActiveConnection(state),
+    activeConnectionData: getActiveConnectionData(state)
   }
 }
 
@@ -152,6 +155,7 @@ const mapDispatchToProps = (dispatch) => {
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     activeConnection: stateProps.activeConnection,
+    activeConnectionData: stateProps.activeConnectionData,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {
