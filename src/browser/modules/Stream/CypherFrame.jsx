@@ -42,14 +42,14 @@ class CypherFrame extends React.Component {
   sidebar () {
     return (
       <Sidebar className={styles.sidebar} colorIndex='neutral-1' full={false}>
+        <Button primary={this.state.openView === 'visualization'} icon={<NodesIcon />} onClick={() => {
+          this.setState({openView: 'visualization'})
+        }} />
         <Button primary={this.state.openView === 'table'} icon={<TableIcon />} onClick={() => {
           this.setState({openView: 'table'})
         }} />
         <Button primary={this.state.openView === 'text'} icon={<SchedulesIcon />} onClick={() => {
           this.setState({openView: 'text'})
-        }} />
-        <Button primary={this.state.openView === 'visualization'} icon={<NodesIcon />} onClick={() => {
-          this.setState({openView: 'visualization'})
         }} />
         <Button primary={this.state.openView === 'code'} icon={<CodeIcon />} onClick={() => {
           this.setState({openView: 'code'})
