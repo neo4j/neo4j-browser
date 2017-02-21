@@ -14,12 +14,24 @@ export function handleServerCommand (action, cmdchar, put, store) {
   if (serverCmd === 'add') {
     return handleServerAddCommand(action, cmdchar, put, store)
   }
+  if (serverCmd === 'user') {
+    return handleUserCommand(action, props, cmdchar)
+  }
   return {...action, type: 'error', error: {message: getErrorMessage(UnknownCommandError(action.cmd))}}
 }
 
 function handleServerListCommand (action, cmdchar, put, store) {
   const state = connections.getConnections(store.getState())
   return {...action, type: 'pre', result: JSON.stringify(state, null, 2)}
+}
+
+function handleUserCommand (action, props, cmdchar) {
+  switch (props) {
+    case 'list':
+      return {...action, type: 'user-list'}
+    case 'add':
+      return {...action, type: 'user-add'}
+  }
 }
 
 export function connectToConnection (action, connectionName, put, store) {
