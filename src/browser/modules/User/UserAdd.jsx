@@ -3,7 +3,7 @@ import {v4} from 'uuid'
 import { withBus } from 'react-suber'
 
 import bolt from 'services/bolt/bolt'
-import { listUsersQuery, listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
+import { listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
@@ -21,7 +21,6 @@ export class UserAdd extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      userAdd: this.props.users,
       availableRoles: this.props.availableRoles || [],
       roles: this.props.roles || [],
       username: '',
@@ -31,6 +30,9 @@ export class UserAdd extends React.Component {
       errors: null,
       success: null
     }
+  }
+  componentWillMount () {
+    this.getRoles()
   }
   extractUserNameAndRolesFromBolt (result) {
     let tableArray = bolt.recordsToTableArray(result.records)
@@ -51,40 +53,38 @@ export class UserAdd extends React.Component {
       )
     })
   }
-  userAdd () {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {query: listUsersQuery()},
-      (response) => {
-        const createdUser = this.extractUserNameAndRolesFromBolt(response.result).filter((user) => {
-          return user[0] === this.state.username
-        })
-        this.setState({userAdd: createdUser})
-        return this.addRoles()
-      })
-  }
   addRoles () {
+    let errors = []
     this.state.roles.forEach((role) => {
       this.props.bus.self(
         CYPHER_REQUEST,
         {query: addRoleToUser(this.state.username, role)},
-        (r) => this.setState({success: `${this.state.username} created`})
+        (response) => {
+          if (!response.success) {
+            return errors.add(response.error)
+          }
+        }
       )
     })
+    if (errors.length > 0) {
+      return this.setState({errors: errors})
+    }
+    return this.setState({success: `${this.state.username} created`})
   }
   getRoles () {
     this.props.bus.self(
       CYPHER_REQUEST,
       {query: listRolesQuery()},
       (response) => {
+        if (!response.success) {
+          return this.setState({errors: ['Unable to create user', response.error]})
+        }
         const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
-        this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(response.result))})
+        return this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(response.result))})
       })
   }
-  componentWillMount () {
-    this.getRoles()
-  }
-  createUser () {
+  submit () {
+    this.setState({success: null, errors: null})
     let errors = []
     if (!this.state.username) errors.push('Missing username')
     if (!this.state.password) errors.push('Missing password')
@@ -93,14 +93,19 @@ export class UserAdd extends React.Component {
       return this.setState({errors: errors})
     } else {
       this.setState({errors: null})
-      return this.createNewUser()
+      return this.createUser()
     }
   }
-  createNewUser () {
+  createUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
       {query: createDatabaseUser(this.state)},
-      (r) => this.userAdd.bind(this))
+      (response) => {
+        if (!response.success) {
+          return this.setState({errors: ['Unable to create user', response.error]})
+        }
+        return this.addRoles.bind(this)
+      })
   }
   updateUsername (event) {
     return this.setState({username: event.target.value})
@@ -144,7 +149,7 @@ export class UserAdd extends React.Component {
             </tr>
             <tr>
               <td>
-                <Button onClick={this.createUser.bind(this)} label='Add User' />
+                <Button onClick={this.submit.bind(this)} label='Add User' />
               </td>
             </tr>
           </tbody>

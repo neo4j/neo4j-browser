@@ -20,21 +20,21 @@ export class UserInformation extends React.Component {
       username: this.props.username
     }
     this.removeClick = this.props.onRemoveClick || function (username) {
-      deleteUser(username, (r) => { return this.props.callback() })
+      deleteUser(username, (r) => { return this.props.refresh() })
     }
   }
   suspendUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
       {query: suspendUser(this.state.username)},
-      (r) => this.props.callback()
+      this.handleResponse.bind(this)
     )
   }
   activateUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
       {query: activateUser(this.state.username)},
-      (r) => this.props.callback()
+      this.handleResponse.bind(this)
     )
   }
   statusButton (statusList) {
@@ -54,7 +54,8 @@ export class UserInformation extends React.Component {
           this.props.bus.self(
             CYPHER_REQUEST,
             {query: removeRoleFromUser(role, this.state.username)},
-            (r) => this.props.callback())
+            this.handleResponse.bind(this)
+          )
         }} />
       )
     })
@@ -63,7 +64,12 @@ export class UserInformation extends React.Component {
     this.props.bus.self(
       CYPHER_REQUEST,
       {query: addRoleToUser(this.state.username, option)},
-      (r) => this.props.callback())
+      this.handleResponse.bind(this)
+    )
+  }
+  handleResponse (response) {
+    if (!response.success) return this.setState({errors: [response.error]})
+    return this.props.refresh()
   }
   availableRoles () {
     return this.state.availableRoles.filter((role) => this.props.roles.indexOf(role) < 0)
