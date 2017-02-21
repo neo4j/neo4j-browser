@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
+import { getActiveConnectionData, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
@@ -9,10 +9,9 @@ import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/authPr
 
 import FrameTemplate from '../FrameTemplate'
 import ConnectForm from './ConnectForm'
+import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
 import FrameError from '../FrameError'
-
-const ConnectedView = () => <div>Connected!</div>
 
 export class ConnectionFrame extends React.Component {
   constructor (props) {
@@ -22,8 +21,6 @@ export class ConnectionFrame extends React.Component {
       ...connection,
       isConnected: (!!props.activeConnection),
       passwordChangeNeeded: false,
-      currentStatus: null,
-      currentError: null,
       error: {}
     }
   }
@@ -103,8 +100,12 @@ export class ConnectionFrame extends React.Component {
   }
   render () {
     let view
-    if (this.state.isConnected) view = <ConnectedView />
-    if (!this.state.isConnected && !this.state.passwordChangeNeeded) {
+    if (this.state.isConnected) {
+      view = <ConnectedView
+        host={this.props.activeConnection.host}
+        username={this.props.activeConnection.username}
+      />
+    } else if (!this.state.isConnected && !this.state.passwordChangeNeeded) {
       view = (<ConnectForm
         onConnectClick={this.connect.bind(this)}
         onHostChange={this.onHostChange.bind(this)}
@@ -114,15 +115,11 @@ export class ConnectionFrame extends React.Component {
         username={this.state.username}
         password={this.state.password}
       />)
-    }
-    if (!this.state.isConnected && this.state.passwordChangeNeeded) {
+    } else if (!this.state.isConnected && this.state.passwordChangeNeeded) {
       view = (<ChangePasswordForm
         onChangePasswordClick={this.onChangePassword.bind(this)}
         onChange={this.onChangePasswordChange.bind(this)}
       />)
-    }
-    if (this.state.currentError) {
-      view = <div>{view} <br />Error: {this.state.currentError.code}</div>
     }
     return (
       <FrameTemplate
@@ -138,7 +135,7 @@ export class ConnectionFrame extends React.Component {
 const mapStateToProps = (state) => {
   return {
     settings: getSettings(state),
-    activeConnection: getActiveConnection(state)
+    activeConnection: getActiveConnectionData(state)
   }
 }
 

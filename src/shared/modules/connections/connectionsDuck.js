@@ -36,6 +36,10 @@ export function getActiveConnection (state) {
   return state[NAME].activeConnection
 }
 
+export function getActiveConnectionData (state) {
+  return state[NAME].activeConnection ? state[NAME].connectionsById[state[NAME].activeConnection] : null
+}
+
 const addConnectionHelper = (state, obj) => {
   const connectionsById = {...state.connectionsById, [obj.id]: obj}
   let allConnectionIds = state.allConnectionIds
