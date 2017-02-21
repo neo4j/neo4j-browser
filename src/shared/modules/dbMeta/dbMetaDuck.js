@@ -1,5 +1,6 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
+import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -76,6 +77,7 @@ export const dbMetaEpic = (some$, store) =>
   some$.ofType('APP_START')
     .mergeMap(() => {
       return Rx.Observable.interval(20000)
+      .merge(some$.ofType(CONNECTION_SUCCESS))
       .mergeMap(() =>
         Rx.Observable
         .fromPromise(bolt.transaction(metaQuery))
