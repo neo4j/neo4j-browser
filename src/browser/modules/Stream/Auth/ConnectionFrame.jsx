@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { getActiveConnectionData, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
-import { getSettings } from 'shared/modules/settings/settingsDuck'
+import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
@@ -134,7 +134,7 @@ export class ConnectionFrame extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    settings: getSettings(state),
+    initCmd: getInitCmd(state),
     activeConnection: getActiveConnectionData(state)
   }
 }
@@ -150,13 +150,12 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const initCmd = stateProps.settings.initCmd || stateProps.settings.cmdchar + 'play start'
   return {
-    ...stateProps,
+    activeConnection: stateProps.activeConnection,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {
-      dispatchProps.dispatchInitCmd(initCmd)
+      dispatchProps.dispatchInitCmd(stateProps.initCmd)
     }
   }
 }
