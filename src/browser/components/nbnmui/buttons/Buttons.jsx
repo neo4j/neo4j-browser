@@ -3,6 +3,8 @@ import ListItem from 'grommet/components/ListItem'
 import Button from 'grommet/components/Button'
 import uuid from 'uuid'
 
+import styles from './style.css'
+
 export class ToolTip extends React.Component {
   constructor (props) {
     super(props)
@@ -68,4 +70,9 @@ export const NavigationButton = (props) => {
       <Button {...props} id={id} />
     </ToolTip>
   )
+}
+
+export const ActionButton = (props) => {
+  const {className, ...rest} = props
+  return (<Button className={className + ' ' + styles.action} {...rest} />)
 }
