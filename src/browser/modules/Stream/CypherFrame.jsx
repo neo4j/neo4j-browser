@@ -85,7 +85,7 @@ class CypherFrame extends React.Component {
             frameContents = <CodeView query={this.props.frame.cmd} request={this.props.request} />
             break
           default:
-            frameContents = <TableView data={this.state.rows} />
+            frameContents = <Visualization records={result.records} />
         }
       }
     } else if (errors) {
