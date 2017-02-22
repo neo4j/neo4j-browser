@@ -63,7 +63,7 @@ export const NavigationButton = (props) => {
   const id = 'a' + uuid.v4()
   return (
     <ToolTip id={id} tooltip={props.name}>
-      <Button {...props} id={id} />
+      <Button {...props} href='#' id={id} />
     </ToolTip>
   )
 }
