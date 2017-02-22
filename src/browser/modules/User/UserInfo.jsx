@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getCurrentUser, updateCurrentUser } from '../../../shared/modules/currentUser/currentUserDuck'
-import bolt from 'services/bolt/bolt'
+import { withBus } from 'react-suber'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getCurrentUser, updateCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
 
 export class UserInfoComponent extends React.Component {
   constructor (props) {
@@ -18,11 +19,15 @@ export class UserInfoComponent extends React.Component {
     this.setState({user: newProps.info})
   }
   componentWillMount () {
-    bolt.transaction('CALL dbms.showCurrentUser')
-      .then((r) => {
-        const user = this.extractUserNameAndRolesFromBolt(r)
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      'CALL dbms.showCurrentUser',
+      (response) => {
+        if (!response.success) return
+        const user = this.extractUserNameAndRolesFromBolt(response)
         this.props.updateCurrentUser(user.username, user.roles)
-      }).catch(() => {})
+      }
+    )
   }
   render () {
     const currentUser = this.state.user
@@ -50,5 +55,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const UserInfo = connect(mapStateToProps, mapDispatchToProps)(UserInfoComponent)
+const UserInfo = withBus(connect(mapStateToProps, mapDispatchToProps)(UserInfoComponent))
 export default UserInfo
