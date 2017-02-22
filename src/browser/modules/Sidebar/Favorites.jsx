@@ -4,18 +4,25 @@ import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import Favorite from './Favorite'
+import FileDrop from './FileDrop'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 export const Favorites = (props) => {
   const ListOfFavorites = props.scripts.map((entry) => {
     return <Favorite key={entry.id} id={entry.id} name={entry.name} content={entry.content} onItemClick={props.onItemClick} />
   })
+
   return (
     <Drawer id='db-favorites'>
       <DrawerHeader title='Favorites' />
       <DrawerBody>
         {ListOfFavorites}
       </DrawerBody>
+      <DrawerHeader title='Import' />
+      <DrawerBody>
+        <FileDrop />
+      </DrawerBody>
+
     </Drawer>
   )
 }

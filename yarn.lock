@@ -224,6 +224,10 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
+attr-accept@^1.0.3:
+  version "1.1.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/attr-accept/-/attr-accept-1.1.0.tgz#b5cd35227f163935a8f1de10ed3eba16941f6be6"
+
 autoprefixer@^6.0.2, autoprefixer@^6.3.1, autoprefixer@^6.3.6:
   version "6.7.4"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/autoprefixer/-/autoprefixer-6.7.4.tgz#b4405a263325c04a7c2b1c86fc603ad7bbfe01c6"
@@ -5259,6 +5263,12 @@ react-dom@^15.0.2, react-dom@^15.3.0:
     fbjs "^0.8.1"
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
+
+react-dropzone@^3.10.0:
+  version "3.10.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-dropzone/-/react-dropzone-3.10.0.tgz#d17193f816c038a1c29f1e92411db4a12210f19b"
+  dependencies:
+    attr-accept "^1.0.3"
 
 react-hot-api@^0.4.5:
   version "0.4.7"
