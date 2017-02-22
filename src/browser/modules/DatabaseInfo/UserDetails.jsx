@@ -1,7 +1,8 @@
 import React from 'react'
-import bolt from 'services/bolt/bolt'
+import { withBus } from 'react-suber'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
-export default class UserDetails extends React.Component {
+export class UserDetails extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -9,14 +10,20 @@ export default class UserDetails extends React.Component {
     }
   }
   componentWillReceiveProps (props) {
-    bolt.transaction('CALL dbms.security.showCurrentUser()').then(r => {
-      this.setState({
-        userDetails: {
-          username: r.records[0].get('username'),
-          roles: r.records[0].get('roles')
-        }
-      })
-    }).catch(_ => console.log('CALL dbms.security.showCurrentUser() failed', _))
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      { query: 'CALL dbms.security.showCurrentUser()' },
+      (response) => {
+        if (!response.success) return
+        const result = response.result
+        this.setState({
+          userDetails: {
+            username: result.records[0].get('username'),
+            roles: result.records[0].get('roles')
+          }
+        })
+      }
+    )
   }
   render () {
     const userDetails = this.state.userDetails
@@ -36,3 +43,4 @@ export default class UserDetails extends React.Component {
     }
   }
 }
+export default withBus(UserDetails)
