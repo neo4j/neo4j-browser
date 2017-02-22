@@ -18,7 +18,7 @@ class CypherFrame extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      openView: 'table'
+      openView: 'visualization'
     }
   }
 
