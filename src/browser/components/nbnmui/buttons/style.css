@@ -6,3 +6,6 @@
   position: absolute;
   background-color: grey;
 }
+.remove {
+  color: #bcc0c9 !important;
+}

@@ -3,6 +3,8 @@ import ListItem from 'grommet/components/ListItem'
 import Button from 'grommet/components/Button'
 import uuid from 'uuid'
 
+import styles from './style.css'
+
 export class ToolTip extends React.Component {
   constructor (props) {
     super(props)
@@ -48,15 +50,11 @@ export const EditorButton = (props) => {
 }
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
-  const rightIcon = (removeClick) ? (<CloseButton className='remove' onClick={props.removeClick} />) : null
+  const rightIcon = (removeClick) ? (<CloseButton className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
   return (
     <ListItem>
-      <span {...rest}>
-        <p>{primaryText}</p>
-      </span>
-      <span>
-        {rightIcon}
-      </span>
+      <span {...rest}>{primaryText}</span>
+      <span>{rightIcon}</span>
     </ListItem>
   )
 }
