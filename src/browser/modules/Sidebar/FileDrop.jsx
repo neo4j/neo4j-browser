@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
-import * as favorites from 'shared/modules/favorites/favoritesDuck'
+import {addFavorite} from 'shared/modules/favorites/favoritesDuck'
 
 export class FileDrop extends React.Component {
   constructor (props) {
@@ -12,6 +12,7 @@ export class FileDrop extends React.Component {
       success: null
     }
     this.validExtensions = ['cyp', 'cypher', 'cql', 'txt']
+    this.fileReader = this.props.fileReader || new FileReader()
   }
   onDrop (files) {
     this.setState({error: null, success: null})
@@ -23,12 +24,11 @@ export class FileDrop extends React.Component {
       return this.setState({'error': `'.${fileExtension}' is not a valid file extension`})
     }
 
-    const fileReader = new FileReader()
-    fileReader.onload = () => {
-      this.props.onFileDropped(fileReader.result)
+    this.fileReader.onload = () => {
+      this.props.onFileDropped(this.fileReader.result)
       this.setState({'success': `'${file.name}' has been added`})
     }
-    fileReader.readAsText(file)
+    this.fileReader.readAsText(file)
   }
   render () {
     return (
@@ -43,7 +43,7 @@ export class FileDrop extends React.Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onFileDropped: (fileContent) => {
-      dispatch(favorites.addFavorite(fileContent))
+      dispatch(addFavorite(fileContent))
     }
   }
 }
