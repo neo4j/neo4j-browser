@@ -10,12 +10,6 @@ import styles from './style.css'
 const visualSettings =
   [
     {
-      cmdchar: {
-        displayName: 'Command char',
-        tooltip: 'Something'
-      }
-    },
-    {
       maxHistory: {
         displayName: 'Max stream history',
         tooltip: 'Max number of history entries. When reached, old entries gets retired.'

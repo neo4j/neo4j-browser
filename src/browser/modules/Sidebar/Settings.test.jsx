@@ -16,8 +16,7 @@ describe('Settings', () => {
     const wrapper = mount(
       <SettingsComponent settings={{ cmdchar: '-', maxHistory: 0 }} />
     )
-    expect(wrapper.find('.setting').at(0).find('input').prop('defaultValue')).toBe('-')
-    expect(wrapper.find('.setting').at(1).find('input').prop('defaultValue')).toBe(0)
+    expect(wrapper.find('.setting').first().find('input').prop('defaultValue')).toBe(0)
   })
   test('should show default settings', () => {
     const wrapper = mount(
@@ -26,9 +25,8 @@ describe('Settings', () => {
       </Provider>
     )
     expect(wrapper.find('#db-settings').length).toBe(1)
-    expect(wrapper.find('input').length).toBe(2)
-    expect(wrapper.find('.setting').at(0).find('input').prop('defaultValue')).toBe(':')
-    expect(wrapper.find('.setting').at(1).find('input').prop('defaultValue')).toBe(10)
+    expect(wrapper.find('input').length).toBe(1)
+    expect(wrapper.find('.setting').first().find('input').prop('defaultValue')).toBe(10)
   })
   test('should not show unknown settings', () => {
     const wrapper = mount(
@@ -36,7 +34,6 @@ describe('Settings', () => {
         <Settings settings={{ a: 'b' }} />
       </Provider>
     )
-    expect(wrapper.find('.setting').at(0).find('input').prop('defaultValue')).toBe(':')
-    expect(wrapper.find('.setting').at(1).find('input').prop('defaultValue')).toBe(10)
+    expect(wrapper.find('.setting').first().find('input').prop('defaultValue')).toBe(10)
   })
 })
