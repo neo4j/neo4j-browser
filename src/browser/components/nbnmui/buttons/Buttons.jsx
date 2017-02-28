@@ -1,7 +1,5 @@
 import React from 'react'
 import ListItem from 'grommet/components/ListItem'
-import Button from 'grommet/components/Button'
-import uuid from 'uuid'
 
 import styles from './style.css'
 
@@ -35,7 +33,7 @@ export class ToolTip extends React.Component {
 
 export const CloseButton = (props) => {
   return (
-    <Button {...props}>×</Button>
+    <button {...props}>×</button>
   )
 }
 export const EditorButton = (props) => {
