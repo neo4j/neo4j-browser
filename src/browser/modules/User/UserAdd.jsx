@@ -9,7 +9,7 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import RolesSelector from './RolesSelector'
 import FrameTemplate from '../Stream/FrameTemplate'
 
-import Button from 'grommet/components/Button'
+import { FormButton } from 'nbnmui/buttons'
 import TextInput from 'grommet/components/TextInput'
 import CheckBox from 'grommet/components/CheckBox'
 import Notification from 'grommet/components/Notification'
@@ -45,7 +45,7 @@ export class UserAdd extends React.Component {
   listRoles () {
     return this.state.roles.map((role) => {
       return (
-        <Button key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
+        <FormButton key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
           this.setState({roles: this.removeRole(role)})
         }} />
       )
@@ -154,7 +154,7 @@ export class UserAdd extends React.Component {
             </tr>
             <tr>
               <td>
-                <Button onClick={this.submit.bind(this)} label='Add User' />
+                <FormButton onClick={this.submit.bind(this)} label='Add User' />
               </td>
             </tr>
           </tbody>

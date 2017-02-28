@@ -5,7 +5,7 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'react-suber'
 import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUser } from 'shared/modules/cypher/boltUserHelper'
 
-import Button from 'grommet/components/Button'
+import { FormButton } from 'nbnmui/buttons'
 import CloseIcon from 'grommet/components/icons/base/Close'
 import RolesSelector from './RolesSelector'
 
@@ -42,9 +42,9 @@ export class UserInformation extends React.Component {
   }
   statusButton (statusList) {
     if (statusList.indexOf('is_suspended') !== -1) {
-      return (<Button label='Suspend user' onClick={this.activateUser.bind(this)} />)
+      return (<FormButton label='Suspend user' onClick={this.activateUser.bind(this)} />)
     } else {
-      return (<Button label='Active user' onClick={this.suspendUser.bind(this)} />)
+      return (<FormButton label='Active user' onClick={this.suspendUser.bind(this)} />)
     }
   }
   passwordChange () {
@@ -53,7 +53,7 @@ export class UserInformation extends React.Component {
   listRoles () {
     return this.state.roles.map((role) => {
       return (
-        <Button key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
+        <FormButton key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
           this.props.bus.self(
             CYPHER_REQUEST,
             {query: removeRoleFromUser(role, this.state.username)},
@@ -94,7 +94,7 @@ export class UserInformation extends React.Component {
           {this.passwordChange()}
         </td>
         <td>
-          <Button className='delete' label='Remove' onClick={this.removeClick.bind(this)} />
+          <FormButton className='delete' label='Remove' onClick={this.removeClick.bind(this)} />
         </td>
       </tr>
     )

@@ -51,3 +51,20 @@ export const FavoriteItem = (props) => {
 export const NavigationButton = (props) => {
   return (<button className={styles.navigation}>{props.children}</button>)
 }
+export const FormButton = (props) => {
+  const {icon, label, children, ...rest} = props
+
+  if (icon && label) return (<button {...rest} type='submit'>{label} {icon}</button>)
+  if (icon) return (<button {...rest} type='submit'>{icon}</button>)
+  if (label) return (<button {...rest} type='submit'>{label}</button>)
+  return (<button {...props} type='submit'>{children}</button>)
+}
+export const CypherFrameButton = (props) => {
+  const {selected, icon, ...rest} = props
+  const isSelected = (selected) ? 'selected' : 'unselected'
+  return (<button className={isSelected} {...rest}>{icon}</button>)
+}
+export const FrameButton = (props) => {
+  const {icon, ...rest} = props
+  return (<button {...rest}>{icon}</button>)
+}

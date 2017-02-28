@@ -4,7 +4,7 @@ import Form from 'grommet/components/Form'
 import FormField from 'grommet/components/FormField'
 import FormFields from 'grommet/components/FormFields'
 import Footer from 'grommet/components/Footer'
-import Button from 'grommet/components/Button'
+import {FormButton} from 'nbnmui/buttons'
 import TextInput from 'grommet/components/TextInput'
 
 export default class ChangePasswordForm extends React.Component {
@@ -46,12 +46,7 @@ export default class ChangePasswordForm extends React.Component {
           </FormFields>
         </Form>
         <Footer>
-          <Button
-            label='Change password'
-            type='submit'
-            primary
-            onClick={this.validateSame.bind(this)}
-          />
+          <FormButton onClick={this.validateSame.bind(this)}>Change password</FormButton>
         </Footer>
       </div>
     )

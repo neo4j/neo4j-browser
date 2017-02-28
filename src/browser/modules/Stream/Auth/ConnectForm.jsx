@@ -4,7 +4,7 @@ import Form from 'grommet/components/Form'
 import FormField from 'grommet/components/FormField'
 import FormFields from 'grommet/components/FormFields'
 import Footer from 'grommet/components/Footer'
-import Button from 'grommet/components/Button'
+import {FormButton} from 'nbnmui/buttons'
 import TextInput from 'grommet/components/TextInput'
 
 const ConnectForm = (props) => (
@@ -23,7 +23,7 @@ const ConnectForm = (props) => (
       </FormFields>
     </Form>
     <Footer>
-      <Button label='Connect' type='submit' primary onClick={props.onConnectClick} />
+      <FormButton onClick={props.onConnectClick}>Connect</FormButton>
     </Footer>
   </div>
 )
