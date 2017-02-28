@@ -1,6 +1,4 @@
 import React from 'react'
-import ListItem from 'grommet/components/ListItem'
-
 import styles from './style.css'
 
 export class ToolTip extends React.Component {
@@ -43,10 +41,10 @@ export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
   const rightIcon = (removeClick) ? (<CloseButton className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
   return (
-    <ListItem>
+    <li>
       <span {...rest}>{primaryText}</span>
       <span>{rightIcon}</span>
-    </ListItem>
+    </li>
   )
 }
 
