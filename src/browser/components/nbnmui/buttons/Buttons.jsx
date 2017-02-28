@@ -39,14 +39,7 @@ export const CloseButton = (props) => {
   )
 }
 export const EditorButton = (props) => {
-  const {tooltip, ...rest} = props
-  const id = 'a' + uuid.v4()
-  const button = <Button id={id} {...rest} />
-  return (
-    <ToolTip id={id} tooltip={tooltip}>
-      {button}
-    </ToolTip>
-  )
+  return (<button className={styles.editor}>{props.children}</button>)
 }
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
