@@ -1,5 +1,6 @@
 import React from 'react'
-import Heading from 'grommet/components/Heading'
+
+import { H4 } from 'nbnmui/headers'
 import styles from './style.css'
 
 export const Drawer = (props) => {
@@ -7,9 +8,9 @@ export const Drawer = (props) => {
 }
 export const DrawerHeader = ({title}) => {
   return (
-    <Heading className={styles.bar}>
+    <H4 className={styles.bar}>
       {title}
-    </Heading>
+    </H4>
   )
 }
 

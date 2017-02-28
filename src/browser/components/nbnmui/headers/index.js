@@ -1,3 +1,3 @@
-import {H1, H2, H3, H4} from './Headers'
+import {H1, H2, H3, H4, H5} from './Headers'
 
-export {H1, H2, H3, H4}
+export {H1, H2, H3, H4, H5}

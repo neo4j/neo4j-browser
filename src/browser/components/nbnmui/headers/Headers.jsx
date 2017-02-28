@@ -13,3 +13,6 @@ export const H3 = (props) => {
 export const H4 = (props) => {
   return (<h4 {...props} className={styles.h4} />)
 }
+export const H5 = (props) => {
+  return (<h5 {...props} className={styles.h5} />)
+}

@@ -2,7 +2,7 @@ import React from 'react'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 import Section from 'grommet/components/Section'
 import Paragraph from 'grommet/components/Paragraph'
-import Heading from 'grommet/components/Heading'
+import {H5} from 'nbnmui/headers'
 import Header from 'grommet/components/Footer'
 
 const P = (props) => {
@@ -14,33 +14,33 @@ const About = () => {
       <DrawerHeader title='About Neo4j' />
       <DrawerBody>
         <Section>
-          <Heading tag='h5'>
+          <H5>
             Made by Neo Technology
-          </Heading>
+          </H5>
           <P>
             Copyright &#169; 2002-2017
           </P>
         </Section>
         <Section>
-          <Heading tag='h5'>
+          <H5>
             Neo4j Browser
-          </Heading>
+          </H5>
           <P>
             You are running version PRE-RELEASE
           </P>
         </Section>
         <Section>
-          <Heading tag='h5'>
+          <H5>
             License
-          </Heading>
+          </H5>
           <P>
             GPLv3 or AGPL for Open Source, and NTCL Commercial.
           </P>
         </Section>
         <Section>
-          <Heading tag='h5'>
+          <H5>
             Participate
-          </Heading>
+          </H5>
           <P>
             Ask questions at Stack Overflow
             Discuss Neo4j on Slack or Google Groups
@@ -50,9 +50,9 @@ const About = () => {
           </P>
         </Section>
         <Section>
-          <Heading tag='h5'>
+          <H5>
             Thanks
-          </Heading>
+          </H5>
           <P>
             Neo4j wouldn't be possible without a fantastic community. Thanks for all the feedback, discussions and contributions.
           </P>
