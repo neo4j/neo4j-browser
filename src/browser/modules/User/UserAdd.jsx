@@ -9,8 +9,6 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import RolesSelector from './RolesSelector'
 import FrameTemplate from '../Stream/FrameTemplate'
 
-import Table from 'grommet/components/Table'
-import TableHeader from 'grommet/components/TableHeader'
 import Button from 'grommet/components/Button'
 import TextInput from 'grommet/components/TextInput'
 import CheckBox from 'grommet/components/CheckBox'
@@ -124,10 +122,17 @@ export class UserAdd extends React.Component {
   }
   render () {
     const listOfAvailableRoles = (this.state.availableRoles) ? (<RolesSelector roles={this.availableRoles()} onChange={({option}) => { this.setState({roles: this.state.roles.concat([option])}) }} />) : '-'
+    const tableHeaders = ['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change'].map((heading, i) => {
+      return (<th key={i}>{heading}</th>)
+    })
     const frameContents = (
       <div>
-        <Table>
-          <TableHeader labels={['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change']} />
+        <table>
+          <thead>
+            <tr>
+              {tableHeaders}
+            </tr>
+          </thead>
           <tbody>
             <tr>
               <td>
@@ -153,7 +158,7 @@ export class UserAdd extends React.Component {
               </td>
             </tr>
           </tbody>
-        </Table>
+        </table>
         {this.state.errors == null ? null : <Notification status='warning' state={this.state.errors.join(', ')} message='Form not complete' />}
         {this.state.success ? <Notification status='ok' message={this.state.success} /> : null}
       </div>

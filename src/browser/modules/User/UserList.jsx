@@ -1,14 +1,10 @@
 import React from 'react'
 import uuid from 'uuid'
+import { withBus } from 'react-suber'
 import { listUsersQuery, listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
 import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
-
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { withBus } from 'react-suber'
-
-import Table from 'grommet/components/Table'
-import TableHeader from 'grommet/components/TableHeader'
 
 import FrameTemplate from '../Stream/FrameTemplate'
 
@@ -48,11 +44,18 @@ export class UserList extends React.Component {
         <UserInformation className='user-information' key={uuid.v4()} username={row[0]} roles={row[1]} status={row[2]} refresh={this.getUserList.bind(this)} availableRoles={this.state.listRoles} />
       )
     })
+    const tableHeaders = ['Username', 'Roles(s)', 'Status', 'Password Change', 'Delete'].map((heading, i) => {
+      return <th key={i}>{heading}</th>
+    })
     return (
-      <Table>
-        <TableHeader labels={['Username', 'Roles(s)', 'Status', 'Password Change', 'Delete']} />
+      <table>
+        <thead>
+          <tr>
+            {tableHeaders}
+          </tr>
+        </thead>
         <tbody>{items}</tbody>
-      </Table>
+      </table>
     )
   }
   componentWillMount () {

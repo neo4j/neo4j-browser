@@ -5,7 +5,6 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'react-suber'
 import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUser } from 'shared/modules/cypher/boltUserHelper'
 
-import TableRow from 'grommet/components/TableRow'
 import Button from 'grommet/components/Button'
 import CloseIcon from 'grommet/components/icons/base/Close'
 import RolesSelector from './RolesSelector'
@@ -80,7 +79,7 @@ export class UserInformation extends React.Component {
   }
   render () {
     return (
-      <TableRow className='user-info'>
+      <tr className='user-info'>
         <td className='username'>{this.props.username}</td>
         <td className='roles'>
           <RolesSelector roles={this.availableRoles()} onChange={this.onRoleSelect.bind(this)} />
@@ -97,7 +96,7 @@ export class UserInformation extends React.Component {
         <td>
           <Button className='delete' label='Remove' onClick={this.removeClick.bind(this)} />
         </td>
-      </TableRow>
+      </tr>
     )
   }
 }
