@@ -1,5 +1,4 @@
 import React from 'react'
-import List from 'grommet/components/List'
 import Heading from 'grommet/components/Heading'
 import styles from './style.css'
 
@@ -16,6 +15,6 @@ export const DrawerHeader = ({title}) => {
 
 export const DrawerBody = (props) => {
   return (
-    <List {...props} className={styles.drawerBody} />
+    <ul className={styles.drawerBody}>{props.children}</ul>
   )
 }
