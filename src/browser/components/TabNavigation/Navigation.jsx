@@ -23,7 +23,7 @@ const Navigation = ({
         <ListItem key={index}
           className={itemClass}
           onClick={() => onNavClick(item.name.toLowerCase())}>
-          <NavigationButton name={item.name} icon={item.icon} />
+          <NavigationButton name={item.name}>{item.icon}</NavigationButton>
         </ListItem>
       )
     })

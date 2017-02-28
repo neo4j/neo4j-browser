@@ -60,10 +60,5 @@ export const FavoriteItem = (props) => {
 }
 
 export const NavigationButton = (props) => {
-  const id = 'a' + uuid.v4()
-  return (
-    <ToolTip id={id} tooltip={props.name}>
-      <Button {...props} href='#' id={id} />
-    </ToolTip>
-  )
+  return (<button className={styles.navigation}>{props.children}</button>)
 }

@@ -9,3 +9,7 @@
 .remove {
   color: #bcc0c9 !important;
 }
+.navigation {
+  background: transparent;
+  border: 0
+}
