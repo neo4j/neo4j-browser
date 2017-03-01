@@ -6,32 +6,26 @@ import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove } from 'shared/modules/stream/streamDuck'
 import { FrameButton } from 'nbnmui/buttons'
-import Box from 'grommet/components/Box'
 import ExpandIcon from 'grommet/components/icons/base/Expand'
 import ContractIcon from 'grommet/components/icons/base/Contract'
 import RefreshIcon from 'grommet/components/icons/base/Refresh'
 import CloseIcon from 'grommet/components/icons/base/Close'
-import Header from 'grommet/components/Header'
-import Label from 'grommet/components/Label'
 
 import styles from './style_titlebar.css'
 
 export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
   const fullscreenIcon = (fullscreen) ? <ContractIcon /> : <ExpandIcon />
   return (
-    <Header>
-      <Label size='small' onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
+    <div>
+      <label onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
         {frame.cmd}
-      </Label>
-      <Box flex
-        justify='end'
-        direction='row'
-        responsive={false}>
+      </label>
+      <span>
         <FrameButton icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
         <FrameButton icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
         <FrameButton icon={<CloseIcon />} onClick={() => onCloseClick(frame.id, frame.requestId)} />
-      </Box>
-    </Header>
+      </span>
+    </div>
   )
 }
 
