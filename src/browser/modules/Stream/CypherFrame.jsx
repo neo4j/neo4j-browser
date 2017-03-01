@@ -1,7 +1,7 @@
 import React from 'react'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'nbnmui/buttons'
-import Sidebar from 'grommet/components/Sidebar'
+import FrameSidebar from './FrameSidebar'
 import TableIcon from 'grommet/components/icons/base/Table'
 import NodesIcon from 'grommet/components/icons/base/Nodes'
 import CodeIcon from 'grommet/components/icons/base/Code'
@@ -11,7 +11,6 @@ import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
 import CodeView from './Views/CodeView'
 import bolt from 'services/bolt/bolt'
-import styles from './style_sidebar.css'
 import Visualization from './Visualization'
 
 class CypherFrame extends React.Component {
@@ -41,7 +40,7 @@ class CypherFrame extends React.Component {
 
   sidebar () {
     return (
-      <Sidebar className={styles.sidebar} colorIndex='neutral-1' full={false}>
+      <FrameSidebar>
         <CypherFrameButton selected={this.state.openView === 'visualization'} icon={<NodesIcon />} onClick={() => {
           this.setState({openView: 'visualization'})
         }} />
@@ -54,7 +53,7 @@ class CypherFrame extends React.Component {
         <CypherFrameButton selected={this.state.openView === 'code'} icon={<CodeIcon />} onClick={() => {
           this.setState({openView: 'code'})
         }} />
-      </Sidebar>
+      </FrameSidebar>
     )
   }
 
