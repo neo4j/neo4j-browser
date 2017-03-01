@@ -1,5 +1,4 @@
 import React from 'react'
-import {v4} from 'uuid'
 import { withBus } from 'react-suber'
 
 import bolt from 'services/bolt/bolt'
@@ -42,9 +41,9 @@ export class UserAdd extends React.Component {
     return roles
   }
   listRoles () {
-    return this.state.roles.map((role) => {
+    return this.state.roles.map((role, i) => {
       return (
-        <FormButton key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
+        <FormButton key={i} label={role} icon={<CloseIcon />} onClick={() => {
           this.setState({roles: this.removeRole(role)})
         }} />
       )
@@ -120,7 +119,11 @@ export class UserAdd extends React.Component {
     return this.state.availableRoles.filter(role => this.state.roles.indexOf(role) < 0)
   }
   render () {
-    const listOfAvailableRoles = (this.state.availableRoles) ? (<RolesSelector roles={this.availableRoles()} onChange={({option}) => { this.setState({roles: this.state.roles.concat([option])}) }} />) : '-'
+    const listOfAvailableRoles = (this.state.availableRoles)
+      ? (<RolesSelector roles={this.availableRoles()} onChange={(event) => {
+        this.setState({roles: this.state.roles.concat([event.target.value])})
+      }} />)
+      : '-'
     const tableHeaders = ['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change'].map((heading, i) => {
       return (<th key={i}>{heading}</th>)
     })
