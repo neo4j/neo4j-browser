@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../../../shared/modules/settings/settingsDuck'
-import FormField from 'grommet/components/FormField'
+import * as actions from 'shared/modules/settings/settingsDuck'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 
 import styles from './style.css'
@@ -23,12 +22,11 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
     const tooltip = visualSetting[setting].tooltip
     return (
       <li key={i}>
-        <FormField label={visual} className={'setting ' + styles.setting}>
-          <input onChange={(event) => {
-            settings[setting] = event.target.value
-            onSettingsSave(settings)
-          }} defaultValue={settings[setting]} title={[tooltip]} />
-        </FormField>
+        <label className={'setting ' + styles.setting}>{visual}</label>
+        <input onChange={(event) => {
+          settings[setting] = event.target.value
+          onSettingsSave(settings)
+        }} defaultValue={settings[setting]} title={[tooltip]} />
       </li>
     )
   })
