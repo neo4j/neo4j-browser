@@ -2,7 +2,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import Settings, { Settings as SettingsComponent } from './Settings'
-import reducer from '../../../shared/modules/settings/settingsDuck'
+import reducer from 'shared/modules/settings/settingsDuck'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 

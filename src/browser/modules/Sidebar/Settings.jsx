@@ -21,8 +21,8 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
     const visual = visualSetting[setting].displayName
     const tooltip = visualSetting[setting].tooltip
     return (
-      <li key={i}>
-        <label className={'setting ' + styles.setting}>{visual}</label>
+      <li className={'setting ' + styles.setting} key={i}>
+        <label>{visual}</label>
         <input onChange={(event) => {
           settings[setting] = event.target.value
           onSettingsSave(settings)
