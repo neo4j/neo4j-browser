@@ -8,11 +8,10 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
 import FrameTemplate from '../Stream/FrameTemplate'
+import FrameError from '../Stream/FrameError'
+import FrameSuccess from '../Stream/FrameSuccess'
 
 import { FormButton } from 'nbnmui/buttons'
-import TextInput from 'grommet/components/TextInput'
-import CheckBox from 'grommet/components/CheckBox'
-import Notification from 'grommet/components/Notification'
 import CloseIcon from 'grommet/components/icons/base/Close'
 
 export class UserAdd extends React.Component {
@@ -125,49 +124,50 @@ export class UserAdd extends React.Component {
     const tableHeaders = ['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change'].map((heading, i) => {
       return (<th key={i}>{heading}</th>)
     })
+    const errors = (this.state.errors) ? this.state.errors.join(', ') : null
     const frameContents = (
-      <div>
-        <table>
-          <thead>
-            <tr>
-              {tableHeaders}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <TextInput className='username' onDOMChange={this.updateUsername.bind(this)} />
-              </td>
-              <td>
-                {listOfAvailableRoles}
-                {this.listRoles()}
-              </td>
-              <td>
-                <TextInput onDOMChange={this.updatePassword.bind(this)} type='password' />
-              </td>
-              <td>
-                <TextInput onDOMChange={this.confirmUpdatePassword.bind(this)} type='password' />
-              </td>
-              <td>
-                <CheckBox onClick={this.updateForcePasswordChange.bind(this)} />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <FormButton onClick={this.submit.bind(this)} label='Add User' />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {this.state.errors == null ? null : <Notification status='warning' state={this.state.errors.join(', ')} message='Form not complete' />}
-        {this.state.success ? <Notification status='ok' message={this.state.success} /> : null}
-      </div>
+      <table>
+        <thead>
+          <tr>
+            {tableHeaders}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input className='username' onChange={this.updateUsername.bind(this)} />
+            </td>
+            <td>
+              {listOfAvailableRoles}
+              {this.listRoles()}
+            </td>
+            <td>
+              <input onChange={this.updatePassword.bind(this)} type='password' />
+            </td>
+            <td>
+              <input onChange={this.confirmUpdatePassword.bind(this)} type='password' />
+            </td>
+            <td>
+              <input onClick={this.updateForcePasswordChange.bind(this)} type='checkbox' />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <FormButton onClick={this.submit.bind(this)} label='Add User' />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     )
     return (
       <FrameTemplate
         header={this.props.frame}
         contents={frameContents}
-      />
+      >
+        <FrameError message={errors} />
+        <FrameSuccess message={this.state.success} />
+      </FrameTemplate>
+
     )
   }
 }
