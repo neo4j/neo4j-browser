@@ -1,4 +1,4 @@
-/* global test, expect, jest */
+/* global describe, test, expect, jest */
 import React from 'react'
 import { FileDrop } from './FileDrop'
 import { shallow } from 'enzyme'
@@ -9,7 +9,6 @@ describe('FileDrop', () => {
   const unknownFile = new window.File([expectedFileContent], 'invalid.file')
   const readAsText = jest.fn()
   const stubFileReader = { readAsText, result: expectedFileContent }
-  const onFileDropped = jest.fn()
 
   test('should read file', (done) => {
     const onFileDropped = jest.fn()
