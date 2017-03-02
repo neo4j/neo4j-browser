@@ -1,4 +1,4 @@
-/* global describe, beforeEach, test, expect */
+/* global describe, beforeEach, afterEach, test, expect */
 import * as connectionHandler from './connectionHandler'
 
 const createResolvePromise = (props) => {
@@ -98,22 +98,6 @@ describe('connectionHandler', () => {
 
       // Then
       expect(connectionHandler.get(name)).toBeFalsy()
-    })
-
-    test('should set an existing connection to default when current default is closed', () => {
-      // Given
-      const first = 'first'
-      const second = 'second'
-
-      // When
-      const firstIsDefault = connectionHandler.get(first).isDefault
-      connectionHandler.close(first)
-      const secondIsDefault = connectionHandler.get(second).isDefault
-
-      // Then
-      expect(firstIsDefault).toBeTruthy()
-      expect(secondIsDefault).toBeTruthy()
-      expect(connectionHandler.get(first)).toBeFalsy()
     })
   })
 
