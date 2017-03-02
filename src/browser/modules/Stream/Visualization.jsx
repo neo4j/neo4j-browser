@@ -1,9 +1,12 @@
 import React from 'react'
 import { initialise } from 'neo4j-visualization'
 import bolt from 'services/bolt/bolt'
+import { withBus } from 'react-suber'
+
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import styles from './style_cypher.css'
 
-class Visualization extends React.Component {
+export class Visualization extends React.Component {
   constructor (props) {
     super(props)
     this.state = {}
@@ -19,28 +22,24 @@ class Visualization extends React.Component {
 
   getNeighbours (id) {
     return new Promise((resolve, reject) => {
-      var p = bolt.transaction(`MATCH path = (a)-[r]-(o) WHERE id(a)= ${id} RETURN r, o`)
-      p.then((r) => {
-        bolt.recordsToTableArray(r.records)
-        const nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(r.records)
-        resolve({nodes: nodesAndRelationships.nodes, rels: nodesAndRelationships.relationships})
-      })
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {query: `MATCH path = (a)-[r]-(o) WHERE id(a)= ${id} RETURN r, o`},
+        (response) => {
+          if (!response.success) return reject({nodes: [], rels: []})
+
+          const result = response.result
+          bolt.recordsToTableArray(result.records)
+          const nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(result.records)
+          resolve({nodes: nodesAndRelationships.nodes, rels: nodesAndRelationships.relationships})
+        }
+      )
     })
   }
 
   initialiseVis (el) {
-    const getNeighbours = (id) => {
-      return new Promise((resolve, reject) => {
-        var p = bolt.transaction(`MATCH path = (a)-[r]-(o) WHERE id(a)= ${id} RETURN r, o`)
-        p.then((r) => {
-          bolt.recordsToTableArray(r.records)
-          const nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(r.records)
-          resolve({nodes: nodesAndRelationships.nodes, rels: nodesAndRelationships.relationships})
-        })
-      })
-    }
     if (el) {
-      initialise(el, this.state.nodesAndRelationships.nodes, this.state.nodesAndRelationships.relationships, {}, { getNeighbours: getNeighbours })
+      initialise(el, this.state.nodesAndRelationships.nodes, this.state.nodesAndRelationships.relationships, {}, { getNeighbours: this.getNeighbours.bind(this) })
     }
   }
   render () {
@@ -48,4 +47,4 @@ class Visualization extends React.Component {
     return (<div className={styles.nevadaCanvas} ref={this.initialiseVis.bind(this)} />)
   }
 }
-export default Visualization
+export default withBus(Visualization)
