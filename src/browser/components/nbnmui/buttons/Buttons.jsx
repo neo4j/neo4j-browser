@@ -67,3 +67,8 @@ export const NavigationButton = (props) => {
     </ToolTip>
   )
 }
+
+export const ActionButton = (props) => {
+  const {className, ...rest} = props
+  return (<Button className={className + ' ' + styles.action} {...rest} />)
+}

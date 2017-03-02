@@ -11,7 +11,7 @@ import FrameTemplate from '../Stream/FrameTemplate'
 
 import Table from 'grommet/components/Table'
 import TableHeader from 'grommet/components/TableHeader'
-import Button from 'grommet/components/Button'
+import { ActionButton } from 'nbnmui/buttons'
 import TextInput from 'grommet/components/TextInput'
 import CheckBox from 'grommet/components/CheckBox'
 import Notification from 'grommet/components/Notification'
@@ -47,7 +47,7 @@ export class UserAdd extends React.Component {
   listRoles () {
     return this.state.roles.map((role) => {
       return (
-        <Button key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
+        <ActionButton key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
           this.setState({roles: this.removeRole(role)})
         }} />
       )
@@ -149,7 +149,7 @@ export class UserAdd extends React.Component {
             </tr>
             <tr>
               <td>
-                <Button onClick={this.submit.bind(this)} label='Add User' />
+                <ActionButton onClick={this.submit.bind(this)} label='Add User' />
               </td>
             </tr>
           </tbody>
