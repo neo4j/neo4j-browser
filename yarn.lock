@@ -5340,14 +5340,6 @@ react-swipe@^5.0.3:
     object-assign "^4.1.0"
     swipe-js-iso "^2.0.3"
 
-react@^15.3.0, react@^15.3.2:
-  version "15.4.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react/-/react-15.4.2.tgz#41f7991b26185392ba9bae96c8889e7e018397ef"
-  dependencies:
-    fbjs "^0.8.4"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-
 read-pkg-up@^1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/read-pkg-up/-/read-pkg-up-1.0.1.tgz#9d63c13276c065918d57f002a57f40a1b643fb02"

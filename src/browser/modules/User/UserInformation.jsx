@@ -6,7 +6,7 @@ import { withBus } from 'react-suber'
 import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUser } from 'shared/modules/cypher/boltUserHelper'
 
 import { FormButton } from 'nbnmui/buttons'
-import CloseIcon from 'grommet/components/icons/base/Close'
+import { CloseIcon } from 'nbnmui/icons/Icons'
 import RolesSelector from './RolesSelector'
 
 export class UserInformation extends React.Component {

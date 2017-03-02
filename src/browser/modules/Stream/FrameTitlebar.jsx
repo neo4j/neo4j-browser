@@ -6,10 +6,7 @@ import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove } from 'shared/modules/stream/streamDuck'
 import { FrameButton } from 'nbnmui/buttons'
-import ExpandIcon from 'grommet/components/icons/base/Expand'
-import ContractIcon from 'grommet/components/icons/base/Contract'
-import RefreshIcon from 'grommet/components/icons/base/Refresh'
-import CloseIcon from 'grommet/components/icons/base/Close'
+import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon } from 'nbnmui/icons/Icons'
 
 import styles from './style_titlebar.css'
 

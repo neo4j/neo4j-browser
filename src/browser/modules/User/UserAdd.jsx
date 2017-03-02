@@ -11,7 +11,7 @@ import FrameError from '../Stream/FrameError'
 import FrameSuccess from '../Stream/FrameSuccess'
 
 import { FormButton } from 'nbnmui/buttons'
-import CloseIcon from 'grommet/components/icons/base/Close'
+import { CloseIcon } from 'nbnmui/icons/Icons'
 
 export class UserAdd extends React.Component {
   constructor (props) {
