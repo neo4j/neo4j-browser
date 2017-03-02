@@ -2,10 +2,10 @@ import React from 'react'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'nbnmui/buttons'
 import FrameSidebar from './FrameSidebar'
-import TableIcon from 'grommet/components/icons/base/Table'
-import NodesIcon from 'grommet/components/icons/base/Nodes'
-import CodeIcon from 'grommet/components/icons/base/Code'
-import SchedulesIcon from 'grommet/components/icons/base/Schedules'
+import { VisualizationIcon } from 'nbnmui/icons/Icons'
+import { TableIcon } from 'nbnmui/icons/Icons'
+import { AsciiIcon } from 'nbnmui/icons/Icons'
+import { CodeIcon } from 'nbnmui/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
@@ -41,13 +41,13 @@ class CypherFrame extends React.Component {
   sidebar () {
     return (
       <FrameSidebar>
-        <CypherFrameButton selected={this.state.openView === 'visualization'} icon={<NodesIcon />} onClick={() => {
+        <CypherFrameButton selected={this.state.openView === 'visualization'} icon={<VisualizationIcon />} onClick={() => {
           this.setState({openView: 'visualization'})
         }} />
         <CypherFrameButton selected={this.state.openView === 'table'} icon={<TableIcon />} onClick={() => {
           this.setState({openView: 'table'})
         }} />
-        <CypherFrameButton selected={this.state.openView === 'text'} icon={<SchedulesIcon />} onClick={() => {
+        <CypherFrameButton selected={this.state.openView === 'text'} icon={<AsciiIcon />} onClick={() => {
           this.setState({openView: 'text'})
         }} />
         <CypherFrameButton selected={this.state.openView === 'code'} icon={<CodeIcon />} onClick={() => {
