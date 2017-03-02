@@ -1,5 +1,5 @@
 import React from 'react'
-import { initialise } from 'neo4j-visualization'
+import Nevada from 'neo4j-visualization'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'react-suber'
 
@@ -15,7 +15,11 @@ export class Visualization extends React.Component {
   shouldComponentUpdate (nextProps) {
     return nextProps.records !== this.props.records
   }
-
+  componentWillUnmount () {
+    if (this.state.nevada) {
+      this.state.nevada.destroy()
+    }
+  }
   componentWillReceiveProps (nextProps) {
     this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.records)
   }
@@ -39,7 +43,7 @@ export class Visualization extends React.Component {
 
   initialiseVis (el) {
     if (el) {
-      initialise(el, this.state.nodesAndRelationships.nodes, this.state.nodesAndRelationships.relationships, {}, { getNeighbours: this.getNeighbours.bind(this) })
+      this.state.nevada = new Nevada(el, this.state.nodesAndRelationships.nodes, this.state.nodesAndRelationships.relationships, {}, { getNeighbours: this.getNeighbours.bind(this) })
     }
   }
   render () {

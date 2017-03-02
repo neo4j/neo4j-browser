@@ -4029,16 +4029,16 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.1.1:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.6:
-  version "0.0.6"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.6.tgz#c17042c9ca139d454ccee1f81297e28adfc477f2"
+neo4j-visualization@0.0.20:
+  version "0.0.20"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.20.tgz#71baedc0fd56854c8abcae6bd69835aa9bcbcf82"
   dependencies:
     neo4j-driver "^1.1.0"
-    nevada-visjs "0.1.0"
+    nevada-visjs "0.1.11"
 
-nevada-visjs@0.1.0:
-  version "0.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.0.tgz#44f46b054e40fecafd4e8e12e2e18cd3a4ff6c6f"
+nevada-visjs@0.1.11:
+  version "0.1.11"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.11.tgz#6859e6d6c426d3a204f0c2d9201ec7d19f749dbc"
   dependencies:
     babel-core "^6.21.0"
     babel-loader "^6.2.10"
