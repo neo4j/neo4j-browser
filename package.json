@@ -101,6 +101,7 @@
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^15.0.2",
+    "react-dropzone": "^3.10.0",
     "react-icons": "^2.2.1",
     "react-mdl": "^1.9.0",
     "react-redux": "^4.4.5",
