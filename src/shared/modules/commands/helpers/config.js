@@ -1,5 +1,5 @@
 import { getSettings, update } from 'shared/modules/settings/settingsDuck'
-import { parseConfigInput } from 'services/commandUtils'
+import { extractCommandParameters } from 'services/commandUtils'
 
 export function handleGetConfigCommand (action, cmdchar, store) {
   const settingsState = getSettings(store.getState())
@@ -9,6 +9,6 @@ export function handleGetConfigCommand (action, cmdchar, store) {
 
 export function handleUpdateConfigCommand (action, cmdchar, put, store) {
   const strippedCmd = action.cmd.substr(cmdchar.length)
-  const toBeSet = parseConfigInput(strippedCmd)
+  const toBeSet = extractCommandParameters(`${cmdchar}config`, strippedCmd)
   put(update(toBeSet))
 }

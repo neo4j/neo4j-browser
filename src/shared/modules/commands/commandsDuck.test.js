@@ -11,6 +11,7 @@ import { update as updateQueryResult } from '../requests/requestsDuck'
 import { send } from 'shared/modules/requests/requestsDuck'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
+import { merge, set } from 'shared/modules/params/paramsDuck'
 
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
 const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
@@ -26,7 +27,8 @@ describe('commandsDuck', () => {
       history: {
         history: [':xxx']
       },
-      connections: {}
+      connections: {},
+      params: {}
     })
   })
   afterEach(() => {
@@ -78,6 +80,77 @@ describe('commandsDuck', () => {
 
       // Then
       // See snoopOnActions above
+    })
+
+    test('does the right thing for :param x: 2', (done) => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'param'
+      const cmdString = cmd + ' x: 2'
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory({ cmd: cmdString }),
+          merge({x: 2}),
+          frames.add({...action, success: true, type: 'param', params: {x: 2}}),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+    test('does the right thing for :params {x: 2, y: 3}', (done) => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'params'
+      const cmdString = cmd + ' {x: 2, y: 3}'
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory({ cmd: cmdString }),
+          set({x: 2, y: 3}),
+          frames.add({...action, success: true, type: 'params', params: {}}),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+    test('does the right thing for :params', (done) => {
+      // Given
+      const cmdString = store.getState().settings.cmdchar + 'params'
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory({ cmd: cmdString }),
+          frames.add({...action, type: 'params', params: {}}),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
     })
   })
   describe(':server disconnect', () => {

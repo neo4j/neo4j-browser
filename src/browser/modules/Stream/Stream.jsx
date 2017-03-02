@@ -5,6 +5,8 @@ import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
 import Frame from './Frame'
 import PreFrame from './PreFrame'
+import ParamsFrame from './ParamsFrame'
+import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
@@ -61,6 +63,20 @@ export const Stream = (props) => {
         return (
           <HistoryFrame
             key={frame.id} frame={frame}
+          />
+        )
+      case 'param':
+        return (
+          <ParamFrame
+            key={frame.id}
+            frame={frame}
+          />
+        )
+      case 'params':
+        return (
+          <ParamsFrame
+            key={frame.id}
+            frame={frame}
           />
         )
       case 'connection':
