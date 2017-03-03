@@ -225,14 +225,14 @@ asynckit@^0.4.0:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
 autoprefixer@^6.0.2, autoprefixer@^6.3.1, autoprefixer@^6.3.6:
-  version "6.7.4"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/autoprefixer/-/autoprefixer-6.7.4.tgz#b4405a263325c04a7c2b1c86fc603ad7bbfe01c6"
+  version "6.7.6"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/autoprefixer/-/autoprefixer-6.7.6.tgz#00f05656c7ef73de9d2fd9b4668f6ef6905a855a"
   dependencies:
-    browserslist "^1.7.4"
-    caniuse-db "^1.0.30000624"
+    browserslist "^1.7.5"
+    caniuse-db "^1.0.30000628"
     normalize-range "^0.1.2"
     num2fraction "^1.2.2"
-    postcss "^5.2.14"
+    postcss "^5.2.15"
     postcss-value-parser "^3.2.3"
 
 aws-sign2@~0.6.0:
@@ -982,12 +982,8 @@ babel-types@^6.18.0, babel-types@^6.19.0, babel-types@^6.22.0, babel-types@^6.23
     to-fast-properties "^1.0.1"
 
 babylon@^6.11.0, babylon@^6.13.0, babylon@^6.15.0:
-  version "6.15.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babylon/-/babylon-6.15.0.tgz#ba65cfa1a80e1759b0e89fb562e27dccae70348e"
-
-bail@^1.0.0:
-  version "1.0.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/bail/-/bail-1.0.1.tgz#912579de8b391aadf3c5fdf4cd2a0fc225df3bc2"
+  version "6.16.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/babylon/-/babylon-6.16.1.tgz#30c5a22f481978a9e7f8cdfdf496b11d94b404d3"
 
 balanced-match@0.1.0:
   version "0.1.0"
@@ -1080,12 +1076,12 @@ browserify-zlib@^0.1.4:
   dependencies:
     pako "~0.2.0"
 
-browserslist@^1.0.0, browserslist@^1.0.1, browserslist@^1.5.2, browserslist@^1.7.4:
-  version "1.7.4"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/browserslist/-/browserslist-1.7.4.tgz#56a12da876f787223743a866224ccd8f97014628"
+browserslist@^1.0.0, browserslist@^1.0.1, browserslist@^1.5.2, browserslist@^1.7.5:
+  version "1.7.6"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/browserslist/-/browserslist-1.7.6.tgz#af98589ce6e7ab09618d29451faacb81220bd3ba"
   dependencies:
-    caniuse-db "^1.0.30000624"
-    electron-to-chromium "^1.2.2"
+    caniuse-db "^1.0.30000631"
+    electron-to-chromium "^1.2.5"
 
 bser@1.0.2:
   version "1.0.2"
@@ -1155,9 +1151,9 @@ caniuse-api@^1.3.2, caniuse-api@^1.5.2:
     lodash.memoize "^4.1.0"
     lodash.uniq "^4.3.0"
 
-caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000624:
-  version "1.0.30000624"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/caniuse-db/-/caniuse-db-1.0.30000624.tgz#554b87547895e36f5fe128f4b7448a2ea5bf2213"
+caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000628, caniuse-db@^1.0.30000631:
+  version "1.0.30000631"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/caniuse-db/-/caniuse-db-1.0.30000631.tgz#8aa6f65cff452c4aba1c2aaa1e724102fbb9114f"
 
 cardinal@^1.0.0:
   version "1.0.0"
@@ -1194,18 +1190,6 @@ chalk@^1.0.0, chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
     has-ansi "^2.0.0"
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
-
-character-entities-legacy@^1.0.0:
-  version "1.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/character-entities-legacy/-/character-entities-legacy-1.1.0.tgz#b18aad98f6b7bcc646c1e4c81f9f1956376a561a"
-
-character-entities@^1.0.0:
-  version "1.2.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/character-entities/-/character-entities-1.2.0.tgz#a683e2cf75dbe8b171963531364e58e18a1b155f"
-
-character-reference-invalid@^1.0.0:
-  version "1.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/character-reference-invalid/-/character-reference-invalid-1.1.0.tgz#dec9ad1dfb9f8d06b4fcdaa2adc3c4fd97af1e68"
 
 cheerio@^0.22.0:
   version "0.22.0"
@@ -1266,8 +1250,8 @@ classnames@^2.2.3, classnames@^2.2.5:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
 clean-css@4.0.x:
-  version "4.0.7"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/clean-css/-/clean-css-4.0.7.tgz#d8fa8b4d87a125f38fa3d64afc59abfc68ba7790"
+  version "4.0.8"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/clean-css/-/clean-css-4.0.8.tgz#063dfd593404d3a3d1db494d4b6d0f378b0781b6"
   dependencies:
     source-map "0.5.x"
 
@@ -1329,12 +1313,8 @@ code-point-at@^1.0.0:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
 codemirror@^5.14.2, codemirror@^5.18.2:
-  version "5.24.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/codemirror/-/codemirror-5.24.0.tgz#6de108da4db9ab368f8ef7a9b822528a74513830"
-
-collapse-white-space@^1.0.2:
-  version "1.0.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/collapse-white-space/-/collapse-white-space-1.0.2.tgz#9c463fb9c6d190d2dcae21a356a01bcae9eeef6d"
+  version "5.24.2"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/codemirror/-/codemirror-5.24.2.tgz#b55ca950fa009709c37df68eb133310ed89cf2fe"
 
 color-convert@^0.5.3:
   version "0.5.3"
@@ -1410,10 +1390,6 @@ commondir@^1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
 
-component-emitter@^1.2.0:
-  version "1.2.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
-
 compressible@~2.0.8:
   version "2.0.9"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/compressible/-/compressible-2.0.9.tgz#6daab4e2b599c2770dd9e21e7a891b1c5a755425"
@@ -1485,10 +1461,6 @@ cookie@0.3.1:
   version "0.3.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
-cookiejar@^2.0.6:
-  version "2.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/cookiejar/-/cookiejar-2.1.0.tgz#86549689539b6d0e269b6637a304be508194d898"
-
 copy-webpack-plugin@^4.0.1:
   version "4.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/copy-webpack-plugin/-/copy-webpack-plugin-4.0.1.tgz#9728e383b94316050d0c7463958f2b85c0aa8200"
@@ -1554,13 +1526,13 @@ css-color-names@0.0.4:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
 css-loader@^0.26.1:
-  version "0.26.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/css-loader/-/css-loader-0.26.1.tgz#2ba7f20131b93597496b3e9bb500785a49cd29ea"
+  version "0.26.2"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/css-loader/-/css-loader-0.26.2.tgz#a9cd4c2b1a559b45d8efc04fc311ab5d2aaccb9d"
   dependencies:
     babel-code-frame "^6.11.0"
     css-selector-tokenizer "^0.7.0"
     cssnano ">=2.6.1 <4"
-    loader-utils "~0.2.2"
+    loader-utils "^1.0.2"
     lodash.camelcase "^4.3.0"
     object-assign "^4.0.1"
     postcss "^5.0.6"
@@ -1568,7 +1540,7 @@ css-loader@^0.26.1:
     postcss-modules-local-by-default "^1.0.1"
     postcss-modules-scope "^1.0.0"
     postcss-modules-values "^1.1.0"
-    source-list-map "^0.1.4"
+    source-list-map "^0.1.7"
 
 css-select@~1.2.0:
   version "1.2.0"
@@ -1677,7 +1649,7 @@ debug-log@^1.0.0:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
 
-debug@^2.1.1, debug@^2.2.0:
+debug@2.6.1, debug@^2.1.1, debug@^2.2.0:
   version "2.6.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
   dependencies:
@@ -1696,12 +1668,6 @@ debug@~2.2.0:
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
-
-deep-assign@^2.0.0:
-  version "2.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/deep-assign/-/deep-assign-2.0.0.tgz#ebe06b1f07f08dae597620e3dd1622f371a1c572"
-  dependencies:
-    is-obj "^1.0.0"
 
 deep-eql@^0.1.3:
   version "0.1.3"
@@ -1769,7 +1735,7 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
 
-depd@~1.1.0:
+depd@1.1.0, depd@~1.1.0:
   version "1.1.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/depd/-/depd-1.1.0.tgz#e1bd82c6aab6ced965b97b88b17ed3e528ca18c3"
 
@@ -1791,9 +1757,9 @@ disposables@^1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/disposables/-/disposables-1.0.1.tgz#064727a25b54f502bd82b89aa2dfb8df9f1b39e3"
 
-dnd-core@^2.0.2, dnd-core@^2.2.3:
-  version "2.2.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/dnd-core/-/dnd-core-2.2.3.tgz#91acba9e1a377be1e9a02e890dcd9907ac9eb829"
+dnd-core@^2.0.2, dnd-core@^2.2.4:
+  version "2.2.4"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/dnd-core/-/dnd-core-2.2.4.tgz#a05d49220fb2b05d08b99a00177c01c9a1c445ad"
   dependencies:
     asap "^2.0.3"
     invariant "^2.0.0"
@@ -1849,9 +1815,9 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
-electron-to-chromium@^1.2.2:
-  version "1.2.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.2.2.tgz#e41bc9488c88e3cfa1e94bde28e8420d7d47c47c"
+electron-to-chromium@^1.2.5:
+  version "1.2.5"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.2.5.tgz#d373727228843dfd8466c276089f13b40927a952"
 
 emitter-component@^1.1.1:
   version "1.1.1"
@@ -2025,7 +1991,11 @@ eslint-config-standard@6.2.1, eslint-config-standard@^6.2.1:
   version "6.2.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint-config-standard/-/eslint-config-standard-6.2.1.tgz#d3a68aafc7191639e7ee441e7348739026354292"
 
-eslint-plugin-promise@^3.4.0, eslint-plugin-promise@~3.4.0:
+eslint-plugin-promise@^3.4.0:
+  version "3.5.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint-plugin-promise/-/eslint-plugin-promise-3.5.0.tgz#78fbb6ffe047201627569e85a6c5373af2a68fca"
+
+eslint-plugin-promise@~3.4.0:
   version "3.4.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint-plugin-promise/-/eslint-plugin-promise-3.4.2.tgz#1be2793eafe2d18b5b123b8136c269f804fe7122"
 
@@ -2046,13 +2016,17 @@ eslint-plugin-react@~6.7.1:
     doctrine "^1.2.2"
     jsx-ast-utils "^1.3.3"
 
-eslint-plugin-standard@^2.0.1, eslint-plugin-standard@~2.0.1:
+eslint-plugin-standard@^2.0.1:
+  version "2.1.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint-plugin-standard/-/eslint-plugin-standard-2.1.1.tgz#97960b1537e1718bb633877d0a650050effff3b0"
+
+eslint-plugin-standard@~2.0.1:
   version "2.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint-plugin-standard/-/eslint-plugin-standard-2.0.1.tgz#3589699ff9c917f2c25f76a916687f641c369ff3"
 
 eslint@^3.15.0:
-  version "3.16.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint/-/eslint-3.16.0.tgz#4a468ab93618a9eb6e3f1499038b38851f828630"
+  version "3.16.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/eslint/-/eslint-3.16.1.tgz#9bc31fc7341692cf772e80607508f67d711c5609"
   dependencies:
     babel-code-frame "^6.16.0"
     chalk "^1.1.3"
@@ -2170,9 +2144,9 @@ esutils@^2.0.0, esutils@^2.0.2:
   version "2.0.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
-etag@~1.7.0:
-  version "1.7.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/etag/-/etag-1.7.0.tgz#03d30b5f67dd6e632d2945d30d6652731a34d5d8"
+etag@~1.8.0:
+  version "1.8.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/etag/-/etag-1.8.0.tgz#6f631aef336d6c46362b51764044ce216be3c051"
 
 event-emitter@~0.3.4:
   version "0.3.4"
@@ -2218,8 +2192,8 @@ expand-range@^1.8.1:
     fill-range "^2.1.0"
 
 express@^4.13.3:
-  version "4.14.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/express/-/express-4.14.1.tgz#646c237f766f148c2120aff073817b9e4d7e0d33"
+  version "4.15.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/express/-/express-4.15.0.tgz#8fb125829f70a04a59e1c40ceb8dea19cf5c879c"
   dependencies:
     accepts "~1.3.3"
     array-flatten "1.1.1"
@@ -2227,28 +2201,30 @@ express@^4.13.3:
     content-type "~1.0.2"
     cookie "0.3.1"
     cookie-signature "1.0.6"
-    debug "~2.2.0"
+    debug "2.6.1"
     depd "~1.1.0"
     encodeurl "~1.0.1"
     escape-html "~1.0.3"
-    etag "~1.7.0"
-    finalhandler "0.5.1"
-    fresh "0.3.0"
+    etag "~1.8.0"
+    finalhandler "~1.0.0"
+    fresh "0.5.0"
     merge-descriptors "1.0.1"
     methods "~1.1.2"
     on-finished "~2.3.0"
     parseurl "~1.3.1"
     path-to-regexp "0.1.7"
     proxy-addr "~1.1.3"
-    qs "6.2.0"
+    qs "6.3.1"
     range-parser "~1.2.0"
-    send "0.14.2"
-    serve-static "~1.11.2"
+    send "0.15.0"
+    serve-static "1.12.0"
+    setprototypeof "1.0.3"
+    statuses "~1.3.1"
     type-is "~1.6.14"
     utils-merge "1.0.0"
     vary "~1.1.0"
 
-extend@^3.0.0, extend@~3.0.0:
+extend@~3.0.0:
   version "3.0.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/extend/-/extend-3.0.0.tgz#5a474353b9f3353ddd8176dfd37b91c83a46f1d4"
 
@@ -2288,7 +2264,7 @@ fb-watchman@^1.8.0, fb-watchman@^1.9.0:
   dependencies:
     bser "1.0.2"
 
-fbjs@^0.8.1, fbjs@^0.8.4:
+fbjs@^0.8.4:
   version "0.8.9"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/fbjs/-/fbjs-0.8.9.tgz#180247fbd347dcc9004517b904f865400a0c8f14"
   dependencies:
@@ -2341,13 +2317,15 @@ fill-range@^2.1.0:
     repeat-element "^1.1.2"
     repeat-string "^1.5.2"
 
-finalhandler@0.5.1:
-  version "0.5.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/finalhandler/-/finalhandler-0.5.1.tgz#2c400d8d4530935bc232549c5fa385ec07de6fcd"
+finalhandler@~1.0.0:
+  version "1.0.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/finalhandler/-/finalhandler-1.0.0.tgz#b5691c2c0912092f18ac23e9416bde5cd7dc6755"
   dependencies:
-    debug "~2.2.0"
+    debug "2.6.1"
+    encodeurl "~1.0.1"
     escape-html "~1.0.3"
     on-finished "~2.3.0"
+    parseurl "~1.3.1"
     statuses "~1.3.1"
     unpipe "~1.0.0"
 
@@ -2390,15 +2368,15 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-for-in@^0.1.5:
-  version "0.1.6"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/for-in/-/for-in-0.1.6.tgz#c9f96e89bfad18a545af5ec3ed352a1d9e5b4dc8"
+for-in@^1.0.1:
+  version "1.0.2"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
 
 for-own@^0.1.4:
-  version "0.1.4"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/for-own/-/for-own-0.1.4.tgz#0149b41a39088c7515f51ebe1c1386d45f935072"
+  version "0.1.5"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/for-own/-/for-own-0.1.5.tgz#5265c681a4f294dabbf17c9509b6763aa84510ce"
   dependencies:
-    for-in "^0.1.5"
+    for-in "^1.0.1"
 
 foreach@^2.0.5:
   version "2.0.5"
@@ -2408,7 +2386,7 @@ forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
 
-form-data@^2.1.1, form-data@~2.1.1:
+form-data@~2.1.1:
   version "2.1.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/form-data/-/form-data-2.1.2.tgz#89c3534008b97eada4cbb157d58f6f5df025eae4"
   dependencies:
@@ -2416,17 +2394,13 @@ form-data@^2.1.1, form-data@~2.1.1:
     combined-stream "^1.0.5"
     mime-types "^2.1.12"
 
-formidable@^1.1.1:
-  version "1.1.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/formidable/-/formidable-1.1.1.tgz#96b8886f7c3c3508b932d6bd70c4d3a88f35f1a9"
-
 forwarded@~0.1.0:
   version "0.1.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/forwarded/-/forwarded-0.1.0.tgz#19ef9874c4ae1c297bcf078fde63a09b66a84363"
 
-fresh@0.3.0:
-  version "0.3.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/fresh/-/fresh-0.3.0.tgz#651f838e22424e7566de161d8358caa199f83d4f"
+fresh@0.5.0:
+  version "0.5.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/fresh/-/fresh-0.5.0.tgz#f474ca5e6a9246d6fd8e0953cfa9b9c805afa78e"
 
 fs-extra@^0.24.0:
   version "0.24.0"
@@ -2608,44 +2582,11 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grommet@^1.1.0:
-  version "1.2.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/grommet/-/grommet-1.2.1.tgz#554f3e47b95496b923a0fa7c4354d535cda0fa2e"
-  dependencies:
-    classnames "^2.2.3"
-    deep-assign "^2.0.0"
-    hammerjs "^2.0.1"
-    intl "^1.0.0"
-    inuit-clearfix "^0.2.1"
-    inuit-defaults "~0.2.1"
-    inuit-functions "~0.2.0"
-    inuit-headings "~0.3.0"
-    inuit-images "~0.3.3"
-    inuit-list-bare "~0.3.0"
-    inuit-lists "~0.1.0"
-    inuit-mixins "~0.2.3"
-    inuit-normalize "~4.1.1"
-    inuit-page "~0.2.1"
-    inuit-reset "~0.1.1"
-    inuit-responsive-settings "~0.1.2"
-    inuit-responsive-tools "~0.1.1"
-    inuit-shared "~0.1.5"
-    lodash.zip "^4.2.0"
-    markdown-to-jsx "^4.0.3"
-    moment "^2.13.0"
-    react "^15.3.0"
-    react-addons-transition-group "^15.3.0"
-    react-desc "^1.0.0"
-    react-dom "^15.3.0"
-    react-intl "^2.1.2"
-    react-router "2 - 3"
-    superagent "^3.3.1"
-
 growly@^1.2.0:
   version "1.3.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
 
-hammerjs@^2.0.1, hammerjs@^2.0.6:
+hammerjs@^2.0.6:
   version "2.0.8"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
 
@@ -2701,15 +2642,6 @@ he@1.1.x:
   version "1.1.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
-history@^3.0.0:
-  version "3.2.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/history/-/history-3.2.1.tgz#71c7497f4e6090363d19a6713bb52a1bfcdd99aa"
-  dependencies:
-    invariant "^2.2.1"
-    loose-envify "^1.2.0"
-    query-string "^4.2.2"
-    warning "^3.0.0"
-
 hoek@2.x.x:
   version "2.16.3"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
@@ -2740,18 +2672,18 @@ html-encoding-sniffer@^1.0.1:
     whatwg-encoding "^1.0.1"
 
 html-loader@^0.4.3:
-  version "0.4.4"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/html-loader/-/html-loader-0.4.4.tgz#f2b5b9acd5e035ff3ab5fd369c13c97a7bb014da"
+  version "0.4.5"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/html-loader/-/html-loader-0.4.5.tgz#5fbcd87cd63a5c49a7fce2fe56f425e05729c68c"
   dependencies:
     es6-templates "^0.2.2"
     fastparse "^1.1.1"
     html-minifier "^3.0.1"
-    loader-utils "^0.2.15"
+    loader-utils "^1.0.2"
     object-assign "^4.1.0"
 
 html-minifier@^3.0.1:
-  version "3.3.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/html-minifier/-/html-minifier-3.3.3.tgz#5e85516b2aff3c3fb9bda351879375868386d6f6"
+  version "3.4.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/html-minifier/-/html-minifier-3.4.0.tgz#80f236b7374d70f017fecaac42d37bb1170d2975"
   dependencies:
     camel-case "3.0.x"
     clean-css "4.0.x"
@@ -2760,7 +2692,7 @@ html-minifier@^3.0.1:
     ncname "1.0.x"
     param-case "2.1.x"
     relateurl "0.2.x"
-    uglify-js "2.7.x"
+    uglify-js "2.8.x"
 
 htmlparser2@^3.9.1:
   version "3.9.2"
@@ -2773,7 +2705,7 @@ htmlparser2@^3.9.1:
     inherits "^2.0.1"
     readable-stream "^2.0.2"
 
-http-errors@~1.5.0, http-errors@~1.5.1:
+http-errors@~1.5.0:
   version "1.5.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/http-errors/-/http-errors-1.5.1.tgz#788c0d2c1de2c81b9e6e8c01843b6b97eb920750"
   dependencies:
@@ -2781,9 +2713,18 @@ http-errors@~1.5.0, http-errors@~1.5.1:
     setprototypeof "1.0.2"
     statuses ">= 1.3.1 < 2"
 
+http-errors@~1.6.1:
+  version "1.6.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/http-errors/-/http-errors-1.6.1.tgz#5f8b8ed98aca545656bf572997387f904a722257"
+  dependencies:
+    depd "1.1.0"
+    inherits "2.0.3"
+    setprototypeof "1.0.3"
+    statuses ">= 1.3.1 < 2"
+
 http-proxy-middleware@~0.17.1:
-  version "0.17.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/http-proxy-middleware/-/http-proxy-middleware-0.17.3.tgz#940382147149b856084f5534752d5b5a8168cd1d"
+  version "0.17.4"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/http-proxy-middleware/-/http-proxy-middleware-0.17.4.tgz#642e8848851d66f09d4f124912846dbaeb41b833"
   dependencies:
     http-proxy "^1.16.2"
     is-glob "^3.1.0"
@@ -2890,107 +2831,7 @@ interpret@^1.0.0:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/interpret/-/interpret-1.0.1.tgz#d579fb7f693b858004947af39fa0db49f795602c"
 
-intl-format-cache@^2.0.5:
-  version "2.0.5"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/intl-format-cache/-/intl-format-cache-2.0.5.tgz#b484cefcb9353f374f25de389a3ceea1af18d7c9"
-
-intl-messageformat-parser@1.2.0:
-  version "1.2.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/intl-messageformat-parser/-/intl-messageformat-parser-1.2.0.tgz#5906b7f953ab7470e0dc8549097b648b991892ff"
-
-intl-messageformat@1.3.0, intl-messageformat@^1.3.0:
-  version "1.3.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/intl-messageformat/-/intl-messageformat-1.3.0.tgz#f7d926aded7a3ab19b2dc601efd54e99a4bd4eae"
-  dependencies:
-    intl-messageformat-parser "1.2.0"
-
-intl-relativeformat@^1.3.0:
-  version "1.3.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/intl-relativeformat/-/intl-relativeformat-1.3.0.tgz#893dc7076fccd380cf091a2300c380fa57ace45b"
-  dependencies:
-    intl-messageformat "1.3.0"
-
-intl@^1.0.0:
-  version "1.2.5"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/intl/-/intl-1.2.5.tgz#82244a2190c4e419f8371f5aa34daa3420e2abde"
-
-inuit-clearfix@^0.2.1:
-  version "0.2.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-clearfix/-/inuit-clearfix-0.2.2.tgz#84292183867c443e0f4b26bb7809a6ad2996e6ee"
-
-inuit-defaults@~0.2.0, inuit-defaults@~0.2.1:
-  version "0.2.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-defaults/-/inuit-defaults-0.2.3.tgz#ca94c87763baded4d0c46f678852f82a574f5d00"
-
-inuit-functions@~0.2.0:
-  version "0.2.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-functions/-/inuit-functions-0.2.0.tgz#99fcdca08f094c216172081cb3eadb228c0b7c66"
-
-inuit-headings@~0.3.0:
-  version "0.3.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-headings/-/inuit-headings-0.3.1.tgz#11efacc052dcf3810875ba00dbca695fd8b083db"
-  dependencies:
-    inuit-defaults "~0.2.0"
-    inuit-mixins "~0.2.2"
-
-inuit-images@~0.3.3:
-  version "0.3.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-images/-/inuit-images-0.3.3.tgz#707e7a52d4e764343352ca04d3f5ee18adb25ccb"
-  dependencies:
-    inuit-defaults "~0.2.0"
-    inuit-mixins "~0.2.2"
-
-inuit-list-bare@~0.3.0:
-  version "0.3.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-list-bare/-/inuit-list-bare-0.3.0.tgz#b68e6a6f1f44a637727e241bfff8d0050bc96af3"
-  dependencies:
-    inuit-defaults "~0.2.0"
-
-inuit-lists@~0.1.0:
-  version "0.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-lists/-/inuit-lists-0.1.0.tgz#f64a7460022cdd54b4910bcc7946291a1cc1123f"
-  dependencies:
-    inuit-defaults "~0.2.0"
-    inuit-mixins "~0.2.2"
-
-inuit-mixins@~0.2.2, inuit-mixins@~0.2.3:
-  version "0.2.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-mixins/-/inuit-mixins-0.2.3.tgz#2ad19276bb2bfa228c62079b8f5baa7debf4a99f"
-  dependencies:
-    inuit-defaults "~0.2.0"
-
-inuit-normalize@~4.1.1:
-  version "4.1.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-normalize/-/inuit-normalize-4.1.1.tgz#f4391a9661c483732f78b33a3937fe8aab277de7"
-
-inuit-page@~0.2.1:
-  version "0.2.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-page/-/inuit-page-0.2.1.tgz#69064cbea189037f640b0183a22f7edae83d0c5d"
-  dependencies:
-    inuit-defaults "~0.2.0"
-    inuit-mixins "~0.2.2"
-
-inuit-reset@~0.1.1:
-  version "0.1.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-reset/-/inuit-reset-0.1.1.tgz#8024317c34ee1779f92c814ac31e8754b60d4346"
-
-inuit-responsive-settings@~0.1.0, inuit-responsive-settings@~0.1.2:
-  version "0.1.5"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-responsive-settings/-/inuit-responsive-settings-0.1.5.tgz#794570778ef93338e438637084197780f73a5666"
-
-inuit-responsive-tools@~0.1.1:
-  version "0.1.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-responsive-tools/-/inuit-responsive-tools-0.1.3.tgz#a09954053fe55907db691033713cdec254627520"
-  dependencies:
-    inuit-responsive-settings "~0.1.0"
-
-inuit-shared@~0.1.5:
-  version "0.1.5"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/inuit-shared/-/inuit-shared-0.1.5.tgz#4a39174fe9633d855cf18ed1ee84a2da7ec39eba"
-  dependencies:
-    inuit-defaults "~0.2.0"
-
-invariant@^2.0.0, invariant@^2.1.0, invariant@^2.1.1, invariant@^2.2.0, invariant@^2.2.1:
+invariant@^2.0.0, invariant@^2.1.0, invariant@^2.2.0:
   version "2.2.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
   dependencies:
@@ -3008,17 +2849,6 @@ is-absolute-url@^2.0.0:
   version "2.1.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-absolute-url/-/is-absolute-url-2.1.0.tgz#50530dfb84fcc9aa7dbe7852e83a37b93b9f2aa6"
 
-is-alphabetical@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-alphabetical/-/is-alphabetical-1.0.0.tgz#e2544c13058255f2144cb757066cd3342a1c8c46"
-
-is-alphanumerical@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-alphanumerical/-/is-alphanumerical-1.0.0.tgz#e06492e719c1bf15dec239e4f1af5f67b4d6e7bf"
-  dependencies:
-    is-alphabetical "^1.0.0"
-    is-decimal "^1.0.0"
-
 is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
@@ -3029,7 +2859,7 @@ is-binary-path@^1.0.0:
   dependencies:
     binary-extensions "^1.0.0"
 
-is-buffer@^1.0.2, is-buffer@^1.1.4:
+is-buffer@^1.0.2:
   version "1.1.4"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-buffer/-/is-buffer-1.1.4.tgz#cfc86ccd5dc5a52fa80489111c6920c457e2d98b"
 
@@ -3052,10 +2882,6 @@ is-ci@^1.0.9:
 is-date-object@^1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-date-object/-/is-date-object-1.0.1.tgz#9aa20eb6aeebbff77fbd33e74ca01b33581d3a16"
-
-is-decimal@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-decimal/-/is-decimal-1.0.0.tgz#940579b6ea63c628080a69e62bda88c8470b4fe0"
 
 is-dotfile@^1.0.0:
   version "1.0.2"
@@ -3107,13 +2933,9 @@ is-glob@^3.1.0:
   dependencies:
     is-extglob "^2.1.0"
 
-is-hexadecimal@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-hexadecimal/-/is-hexadecimal-1.0.0.tgz#5c459771d2af9a2e3952781fd54fcb1bcfe4113c"
-
 is-my-json-valid@^2.10.0, is-my-json-valid@^2.12.4:
-  version "2.15.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-my-json-valid/-/is-my-json-valid-2.15.0.tgz#936edda3ca3c211fd98f3b2d3e08da43f7b2915b"
+  version "2.16.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-my-json-valid/-/is-my-json-valid-2.16.0.tgz#f079dd9bfdae65ee2038aae8acbc86ab109e3693"
   dependencies:
     generate-function "^2.0.0"
     generate-object-property "^1.1.0"
@@ -3125,10 +2947,6 @@ is-number@^2.0.2, is-number@^2.1.0:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-number/-/is-number-2.1.0.tgz#01fcbbb393463a548f2f466cce16dece49db908f"
   dependencies:
     kind-of "^3.0.2"
-
-is-obj@^1.0.0:
-  version "1.0.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-obj/-/is-obj-1.0.1.tgz#3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
 
 is-path-cwd@^1.0.0:
   version "1.0.0"
@@ -3199,14 +3017,6 @@ is-typedarray@~1.0.0:
 is-utf8@^0.2.0:
   version "0.2.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
-
-is-whitespace-character@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-whitespace-character/-/is-whitespace-character-1.0.0.tgz#bbf4a83764ead0d451bec2a55218e91961adc275"
-
-is-word-character@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/is-word-character/-/is-word-character-1.0.0.tgz#a3a9e5ddad70c5c2ee36f4a9cfc9a53f44535247"
 
 isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
@@ -3496,8 +3306,8 @@ js-tokens@^3.0.0:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/js-tokens/-/js-tokens-3.0.1.tgz#08e9f132484a2c45a30907e9dc4d5567b7f114d7"
 
 js-yaml@^3.4.3, js-yaml@^3.5.1, js-yaml@^3.7.0:
-  version "3.8.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/js-yaml/-/js-yaml-3.8.1.tgz#782ba50200be7b9e5a8537001b7804db3ad02628"
+  version "3.8.2"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/js-yaml/-/js-yaml-3.8.2.tgz#02d3e2c0f6beab20248d412c352203827d786721"
   dependencies:
     argparse "^1.0.7"
     esprima "^3.1.1"
@@ -3642,14 +3452,22 @@ load-json-file@^1.0.0:
     pinkie-promise "^2.0.0"
     strip-bom "^2.0.0"
 
-loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.2.16, loader-utils@^0.2.7, loader-utils@~0.2.2, loader-utils@~0.2.5:
-  version "0.2.16"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/loader-utils/-/loader-utils-0.2.16.tgz#f08632066ed8282835dff88dfb52704765adee6d"
+loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.2.16, loader-utils@~0.2.5:
+  version "0.2.17"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/loader-utils/-/loader-utils-0.2.17.tgz#f86e6374d43205a6e6c60e9196f17c0299bfb348"
   dependencies:
     big.js "^3.1.3"
     emojis-list "^2.0.0"
     json5 "^0.5.0"
     object-assign "^4.0.1"
+
+loader-utils@^1.0.2:
+  version "1.0.2"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/loader-utils/-/loader-utils-1.0.2.tgz#a9f923c865a974623391a8602d031137fad74830"
+  dependencies:
+    big.js "^3.1.3"
+    emojis-list "^2.0.0"
+    json5 "^0.5.0"
 
 lodash-es@^4.2.1:
   version "4.17.4"
@@ -3758,10 +3576,6 @@ lodash.foreach@^4.3.0:
   version "4.5.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash.foreach/-/lodash.foreach-4.5.0.tgz#1a6a35eace401280c7f06dddec35165ab27e3e53"
 
-lodash.get@^4.4.2:
-  version "4.4.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
-
 lodash.isarguments@^3.0.0:
   version "3.1.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash.isarguments/-/lodash.isarguments-3.1.0.tgz#2f573d85c6a24289ff00663b491c1d338ff3458a"
@@ -3827,10 +3641,6 @@ lodash.uniq@^4.3.0:
   version "4.5.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash.zip@^4.2.0:
-  version "4.2.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash.zip/-/lodash.zip-4.2.0.tgz#ec6662e4896408ed4ab6c542a3990b72cc080020"
-
 lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.2:
   version "4.17.4"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
@@ -3839,15 +3649,15 @@ longest@^1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
 
-loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0:
+loose-envify@^1.0.0, loose-envify@^1.1.0:
   version "1.3.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
   dependencies:
     js-tokens "^3.0.0"
 
 lower-case@^1.1.1:
-  version "1.1.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lower-case/-/lower-case-1.1.3.tgz#c92393d976793eee5ba4edb583cf8eae35bd9bfb"
+  version "1.1.4"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
 
 macaddress@^0.2.8:
   version "0.2.8"
@@ -3858,18 +3668,6 @@ makeerror@1.0.x:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/makeerror/-/makeerror-1.0.11.tgz#e01a5c9109f2af79660e4e8b9587790184f5a96c"
   dependencies:
     tmpl "1.0.x"
-
-markdown-escapes@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/markdown-escapes/-/markdown-escapes-1.0.0.tgz#c8ca19f1d94d682459e0a93c86db27a7ef716b23"
-
-markdown-to-jsx@^4.0.3:
-  version "4.0.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/markdown-to-jsx/-/markdown-to-jsx-4.0.3.tgz#3b422a374a3aa5e7f560cbedb35e6de431d4b878"
-  dependencies:
-    lodash.get "^4.4.2"
-    remark-parse "^2.0.1"
-    unified "^5.0.0"
 
 marked-terminal@^1.6.2:
   version "1.7.0"
@@ -3919,7 +3717,7 @@ merge@^1.1.3:
   version "1.2.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
 
-methods@^1.1.1, methods@~1.1.2:
+methods@~1.1.2:
   version "1.1.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
@@ -3975,7 +3773,7 @@ minimist@^1.1.0, minimist@^1.1.1, minimist@^1.2.0:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.12.0, moment@^2.13.0:
+moment@^2.12.0:
   version "2.17.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
 
@@ -4057,8 +3855,8 @@ no-case@^2.2.0:
     lower-case "^1.1.1"
 
 nock@^9.0.6:
-  version "9.0.6"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/nock/-/nock-9.0.6.tgz#4ab39dcae285360d117109442b1c34663303ff33"
+  version "9.0.9"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/nock/-/nock-9.0.9.tgz#ca4cd923352e206ae3c7d6595cfd7fb223299ec0"
   dependencies:
     chai ">=1.9.2 <4.0.0"
     debug "^2.2.0"
@@ -4264,7 +4062,7 @@ on-headers@~1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/on-headers/-/on-headers-1.0.1.tgz#928f5d0f470d49342651ea6794b0857c100693f7"
 
-once@^1.3.0, once@^1.3.3, once@^1.4.0:
+once@^1.3.0, once@^1.4.0:
   version "1.4.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   dependencies:
@@ -4339,18 +4137,6 @@ param-case@2.1.x:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/param-case/-/param-case-2.1.0.tgz#2619f90fd6c829ed0b958f1c84ed03a745a6d70a"
   dependencies:
     no-case "^2.2.0"
-
-parse-entities@^1.0.2:
-  version "1.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/parse-entities/-/parse-entities-1.1.0.tgz#4bc58f35fdc8e65dded35a12f2e40223ca24a3f7"
-  dependencies:
-    character-entities "^1.0.0"
-    character-entities-legacy "^1.0.0"
-    character-reference-invalid "^1.0.0"
-    has "^1.0.1"
-    is-alphanumerical "^1.0.0"
-    is-decimal "^1.0.0"
-    is-hexadecimal "^1.0.0"
 
 parse-glob@^3.0.4:
   version "3.0.4"
@@ -4654,8 +4440,8 @@ postcss-discard-comments@^2.0.4:
     postcss "^5.0.14"
 
 postcss-discard-duplicates@^2.0.1:
-  version "2.0.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss-discard-duplicates/-/postcss-discard-duplicates-2.0.2.tgz#02be520e91571ffb10738766a981d5770989bb32"
+  version "2.1.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss-discard-duplicates/-/postcss-discard-duplicates-2.1.0.tgz#b9abf27b88ac188158a5eb12abcae20263b91932"
   dependencies:
     postcss "^5.0.4"
 
@@ -4728,12 +4514,12 @@ postcss-load-plugins@^2.3.0:
     object-assign "^4.1.0"
 
 postcss-loader@^1.2.1:
-  version "1.3.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss-loader/-/postcss-loader-1.3.1.tgz#7907bdfe5e953cf4b6d97cbd8edcd17956369030"
+  version "1.3.3"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss-loader/-/postcss-loader-1.3.3.tgz#a621ea1fa29062a83972a46f54486771301916eb"
   dependencies:
-    loader-utils "^0.2.16"
+    loader-utils "^1.0.2"
     object-assign "^4.1.1"
-    postcss "^5.2.14"
+    postcss "^5.2.15"
     postcss-load-config "^1.2.0"
 
 postcss-media-minmax@^2.1.0:
@@ -4953,8 +4739,8 @@ postcss-selector-parser@^1.1.4:
     uniq "^1.0.1"
 
 postcss-selector-parser@^2.0.0, postcss-selector-parser@^2.2.0, postcss-selector-parser@^2.2.2:
-  version "2.2.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss-selector-parser/-/postcss-selector-parser-2.2.2.tgz#3d70f5adda130da51c7c0c2fc023f56b1374fe08"
+  version "2.2.3"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss-selector-parser/-/postcss-selector-parser-2.2.3.tgz#f9437788606c3c9acee16ffe8d8b16297f27bb90"
   dependencies:
     flatten "^1.0.2"
     indexes-of "^1.0.1"
@@ -4995,9 +4781,9 @@ postcss-zindex@^2.0.1:
     postcss "^5.0.4"
     uniqs "^2.0.0"
 
-postcss@^5.0.0, postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.13, postcss@^5.0.14, postcss@^5.0.16, postcss@^5.0.19, postcss@^5.0.2, postcss@^5.0.21, postcss@^5.0.3, postcss@^5.0.4, postcss@^5.0.5, postcss@^5.0.6, postcss@^5.0.8, postcss@^5.1.1, postcss@^5.2.0, postcss@^5.2.14:
-  version "5.2.14"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss/-/postcss-5.2.14.tgz#47b4fbde363fd4f81e547f7e0e43d6d300267330"
+postcss@^5.0.0, postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.13, postcss@^5.0.14, postcss@^5.0.16, postcss@^5.0.19, postcss@^5.0.2, postcss@^5.0.21, postcss@^5.0.3, postcss@^5.0.4, postcss@^5.0.5, postcss@^5.0.6, postcss@^5.0.8, postcss@^5.1.1, postcss@^5.2.0, postcss@^5.2.15:
+  version "5.2.15"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/postcss/-/postcss-5.2.15.tgz#a9e8685e50e06cc5b3fdea5297273246c26f5b30"
   dependencies:
     chalk "^1.1.3"
     js-base64 "^2.1.9"
@@ -5133,15 +4919,11 @@ q@^1.1.2:
   version "1.4.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/q/-/q-1.4.1.tgz#55705bcd93c5f3673530c2c2cbc0c2b3addc286e"
 
-qs@6.2.0:
-  version "6.2.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/qs/-/qs-6.2.0.tgz#3b7848c03c2dece69a9522b0fae8c4126d745f3b"
-
-qs@^6.0.2, qs@^6.1.0, qs@~6.3.0:
+qs@6.3.1, qs@^6.0.2, qs@~6.3.0:
   version "6.3.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/qs/-/qs-6.3.1.tgz#918c0b3bcd36679772baf135b1acb4c1651ed79d"
 
-query-string@^4.1.0, query-string@^4.2.2:
+query-string@^4.1.0:
   version "4.3.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/query-string/-/query-string-4.3.2.tgz#ec0fd765f58a50031a3968c2431386f8947a5cdd"
   dependencies:
@@ -5198,13 +4980,6 @@ react-addons-test-utils@^15.0.2:
     fbjs "^0.8.4"
     object-assign "^4.1.0"
 
-react-addons-transition-group@^15.3.0:
-  version "15.4.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-addons-transition-group/-/react-addons-transition-group-15.4.2.tgz#4c42fa1c2ce024acab2924316c0f11268ded1af3"
-  dependencies:
-    fbjs "^0.8.4"
-    object-assign "^4.1.0"
-
 react-base16-styling@^0.4.1:
   version "0.4.7"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-base16-styling/-/react-base16-styling-0.4.7.tgz#a3eaf884a0adfc1896455f6302ff75de72e51a2e"
@@ -5223,24 +4998,18 @@ react-codemirror@^0.3.0:
     codemirror "^5.18.2"
     lodash.debounce "^4.0.8"
 
-react-desc@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-desc/-/react-desc-1.0.0.tgz#e7d17e5f3a09ef503bb1328500cf20667717ddfd"
-  dependencies:
-    react "^15.3.2"
-
 react-dnd-html5-backend@^2.1.2:
-  version "2.2.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-dnd-html5-backend/-/react-dnd-html5-backend-2.2.3.tgz#96cb65a0df5968b8ef5cf5afb4da02daaefe5681"
+  version "2.2.4"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-dnd-html5-backend/-/react-dnd-html5-backend-2.2.4.tgz#6c4a704efaa35cf568f40376ed82b8a3eb3c26df"
   dependencies:
     lodash "^4.2.0"
 
 react-dnd@^2.1.4:
-  version "2.2.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-dnd/-/react-dnd-2.2.3.tgz#75f6a66081fb32a41afa500755b4252fe5dd7a42"
+  version "2.2.4"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-dnd/-/react-dnd-2.2.4.tgz#8982d557cc620b1f201a8b6ebda894b622af903f"
   dependencies:
     disposables "^1.0.1"
-    dnd-core "^2.2.3"
+    dnd-core "^2.2.4"
     hoist-non-react-statics "^1.2.0"
     invariant "^2.1.0"
     lodash "^4.2.0"
@@ -5251,14 +5020,6 @@ react-dock@^0.2.1:
   dependencies:
     lodash.debounce "^3.1.1"
     object-assign "^4.0.1"
-
-react-dom@^15.0.2, react-dom@^15.3.0:
-  version "15.4.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-dom/-/react-dom-15.4.2.tgz#015363f05b0a1fd52ae9efdd3a0060d90695208f"
-  dependencies:
-    fbjs "^0.8.1"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
 
 react-hot-api@^0.4.5:
   version "0.4.7"
@@ -5280,15 +5041,6 @@ react-icons@^2.2.1:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-icons/-/react-icons-2.2.3.tgz#3b4847923065ecb09f8ba7f7e422112de0195196"
   dependencies:
     react-icon-base "2.0.4"
-
-react-intl@^2.1.2:
-  version "2.2.3"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-intl/-/react-intl-2.2.3.tgz#8eebb03cddc38b337ed22fab78037ab53a594270"
-  dependencies:
-    intl-format-cache "^2.0.5"
-    intl-messageformat "^1.3.0"
-    intl-relativeformat "^1.3.0"
-    invariant "^2.1.1"
 
 react-json-tree@^0.10.0:
   version "0.10.3"
@@ -5319,16 +5071,6 @@ react-redux@^4.4.5:
     lodash "^4.2.0"
     loose-envify "^1.1.0"
 
-"react-router@2 - 3":
-  version "3.0.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-router/-/react-router-3.0.2.tgz#5a19156678810e01d81901f9c0fef63284b8a514"
-  dependencies:
-    history "^3.0.0"
-    hoist-non-react-statics "^1.2.0"
-    invariant "^2.2.1"
-    loose-envify "^1.2.0"
-    warning "^3.0.0"
-
 react-suber@^0.1.0:
   version "0.1.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/react-suber/-/react-suber-0.1.0.tgz#eaec4e18b1f72c2ac188b1c3a5205e161aa48794"
@@ -5356,8 +5098,8 @@ read-pkg@^1.0.0:
     path-type "^1.0.0"
 
 "readable-stream@^2.0.0 || ^1.1.13", readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.0.5, readable-stream@^2.1.0, readable-stream@^2.2.2:
-  version "2.2.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/readable-stream/-/readable-stream-2.2.2.tgz#a9e6fec3c7dda85f8bb1b3ba7028604556fc825e"
+  version "2.2.3"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/readable-stream/-/readable-stream-2.2.3.tgz#9cf49463985df016c8ae8813097a9293a9b33729"
   dependencies:
     buffer-shims "^1.0.0"
     core-util-is "~1.0.0"
@@ -5539,32 +5281,11 @@ relateurl@0.2.x:
   version "0.2.7"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
 
-remark-parse@^2.0.1:
-  version "2.3.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/remark-parse/-/remark-parse-2.3.0.tgz#ced58bfbef9999374f9ff33fbc2e63fe2b0c5c37"
-  dependencies:
-    collapse-white-space "^1.0.2"
-    has "^1.0.1"
-    is-alphabetical "^1.0.0"
-    is-decimal "^1.0.0"
-    is-whitespace-character "^1.0.0"
-    is-word-character "^1.0.0"
-    markdown-escapes "^1.0.0"
-    parse-entities "^1.0.2"
-    repeat-string "^1.5.4"
-    state-toggle "^1.0.0"
-    trim "0.0.1"
-    trim-trailing-lines "^1.0.0"
-    unherit "^1.0.4"
-    unist-util-remove-position "^1.0.0"
-    vfile-location "^2.0.0"
-    xtend "^4.0.1"
-
 repeat-element@^1.1.2:
   version "1.1.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/repeat-element/-/repeat-element-1.1.2.tgz#ef089a178d1483baae4d93eb98b4f9e4e11d990a"
 
-repeat-string@^1.5.2, repeat-string@^1.5.4:
+repeat-string@^1.5.2:
   version "1.6.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
 
@@ -5573,10 +5294,6 @@ repeating@^2.0.0:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/repeating/-/repeating-2.0.1.tgz#5214c53a926d3552707527fbab415dbc08d06dda"
   dependencies:
     is-finite "^1.0.0"
-
-replace-ext@1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/replace-ext/-/replace-ext-1.0.0.tgz#de63128373fcbf7c3ccfa4de5a480c45a67958eb"
 
 request@^2.79.0:
   version "2.79.0"
@@ -5635,8 +5352,10 @@ resolve@1.1.7:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
 resolve@^1.1.6, resolve@^1.2.0:
-  version "1.2.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/resolve/-/resolve-1.2.0.tgz#9589c3f2f6149d1417a40becc1663db6ec6bc26c"
+  version "1.3.2"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/resolve/-/resolve-1.3.2.tgz#1f0442c9e0cbb8136e87b9305f932f46c7f28235"
+  dependencies:
+    path-parse "^1.0.5"
 
 restore-cursor@^1.0.1:
   version "1.0.1"
@@ -5660,8 +5379,8 @@ right-align@^0.1.1:
     align-text "^0.1.1"
 
 rimraf@2, rimraf@^2.2.8, rimraf@^2.4.3, rimraf@^2.4.4:
-  version "2.6.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/rimraf/-/rimraf-2.6.0.tgz#89b8a0fe432b9ff9ec9a925a00b6cdb3a91bbada"
+  version "2.6.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/rimraf/-/rimraf-2.6.1.tgz#c2338ec643df7a1b7fe5c54fa86f57428a55f33d"
   dependencies:
     glob "^7.0.5"
 
@@ -5690,8 +5409,8 @@ rx-lite@^3.1.2:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
 rxjs@^5.0.3:
-  version "5.1.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/rxjs/-/rxjs-5.1.1.tgz#fc48922965bc6c5efbcc0fe46e90a3af64137a7b"
+  version "5.2.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/rxjs/-/rxjs-5.2.0.tgz#db537de8767c05fa73721587a29e0085307d318b"
   dependencies:
     symbol-observable "^1.0.1"
 
@@ -5720,18 +5439,18 @@ sax@^1.2.1, sax@~1.2.1:
   version "5.3.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
-send@0.14.2:
-  version "0.14.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/send/-/send-0.14.2.tgz#39b0438b3f510be5dc6f667a11f71689368cdeef"
+send@0.15.0:
+  version "0.15.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/send/-/send-0.15.0.tgz#f0185d6466fa76424b866f3d533e2d19dd0aaa39"
   dependencies:
-    debug "~2.2.0"
+    debug "2.6.1"
     depd "~1.1.0"
     destroy "~1.0.4"
     encodeurl "~1.0.1"
     escape-html "~1.0.3"
-    etag "~1.7.0"
-    fresh "0.3.0"
-    http-errors "~1.5.1"
+    etag "~1.8.0"
+    fresh "0.5.0"
+    http-errors "~1.6.1"
     mime "1.3.4"
     ms "0.7.2"
     on-finished "~2.3.0"
@@ -5750,14 +5469,14 @@ serve-index@^1.7.2:
     mime-types "~2.1.11"
     parseurl "~1.3.1"
 
-serve-static@~1.11.2:
-  version "1.11.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/serve-static/-/serve-static-1.11.2.tgz#2cf9889bd4435a320cc36895c9aa57bd662e6ac7"
+serve-static@1.12.0:
+  version "1.12.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/serve-static/-/serve-static-1.12.0.tgz#150eb8aa262c2dd1924e960373145446c069dad6"
   dependencies:
     encodeurl "~1.0.1"
     escape-html "~1.0.3"
     parseurl "~1.3.1"
-    send "0.14.2"
+    send "0.15.0"
 
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
@@ -5774,6 +5493,10 @@ setimmediate@^1.0.4, setimmediate@^1.0.5:
 setprototypeof@1.0.2:
   version "1.0.2"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/setprototypeof/-/setprototypeof-1.0.2.tgz#81a552141ec104b88e89ce383103ad5c66564d08"
+
+setprototypeof@1.0.3:
+  version "1.0.3"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/setprototypeof/-/setprototypeof-1.0.3.tgz#66567e37043eeb4f04d91bd658c0cbefb55b8e04"
 
 sha.js@2.2.6:
   version "2.2.6"
@@ -5833,7 +5556,7 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
-source-list-map@^0.1.4, source-list-map@~0.1.7:
+source-list-map@^0.1.7, source-list-map@~0.1.7:
   version "0.1.8"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/source-list-map/-/source-list-map-0.1.8.tgz#c550b2ab5427f6b3f21f5afead88c4f5587b2106"
 
@@ -5878,8 +5601,8 @@ sprintf-js@~1.0.2:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
 sshpk@^1.7.0:
-  version "1.10.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/sshpk/-/sshpk-1.10.2.tgz#d5a804ce22695515638e798dbe23273de070a5fa"
+  version "1.11.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/sshpk/-/sshpk-1.11.0.tgz#2d8d5ebb4a6fab28ffba37fa62a90f4a3ea59d77"
   dependencies:
     asn1 "~0.2.3"
     assert-plus "^1.0.0"
@@ -5918,10 +5641,6 @@ standard@^8.6.0:
     eslint-plugin-react "~6.7.1"
     eslint-plugin-standard "~2.0.1"
     standard-engine "~5.2.0"
-
-state-toggle@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/state-toggle/-/state-toggle-1.0.0.tgz#d20f9a616bb4f0c3b98b91922d25b640aa2bc425"
 
 "statuses@>= 1.3.1 < 2", statuses@~1.3.1:
   version "1.3.1"
@@ -6008,29 +5727,14 @@ strip-json-comments@~2.0.1:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
 style-loader@^0.13.0:
-  version "0.13.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/style-loader/-/style-loader-0.13.1.tgz#468280efbc0473023cd3a6cd56e33b5a1d7fc3a9"
+  version "0.13.2"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/style-loader/-/style-loader-0.13.2.tgz#74533384cf698c7104c7951150b49717adc2f3bb"
   dependencies:
-    loader-utils "^0.2.7"
+    loader-utils "^1.0.2"
 
 suber@^2.1.1:
   version "2.1.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/suber/-/suber-2.1.1.tgz#6ae966336ad01c29f8787fe7fc221f94d55093c8"
-
-superagent@^3.3.1:
-  version "3.4.4"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/superagent/-/superagent-3.4.4.tgz#85d1d9a8f439ed0fb5c00accf4e029417a117195"
-  dependencies:
-    component-emitter "^1.2.0"
-    cookiejar "^2.0.6"
-    debug "^2.2.0"
-    extend "^3.0.0"
-    form-data "^2.1.1"
-    formidable "^1.1.1"
-    methods "^1.1.1"
-    mime "^1.3.4"
-    qs "^6.1.0"
-    readable-stream "^2.0.5"
 
 supports-color@^2.0.0:
   version "2.0.0"
@@ -6160,18 +5864,6 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-trim-trailing-lines@^1.0.0:
-  version "1.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/trim-trailing-lines/-/trim-trailing-lines-1.1.0.tgz#7aefbb7808df9d669f6da2e438cac8c46ada7684"
-
-trim@0.0.1:
-  version "0.0.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/trim/-/trim-0.0.1.tgz#5858547f6b290757ee95cccc666fb50084c460dd"
-
-trough@^1.0.0:
-  version "1.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/trough/-/trough-1.0.0.tgz#6bdedfe7f2aa49a6f3c432257687555957f342fd"
-
 tryit@^1.0.1:
   version "1.0.3"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/tryit/-/tryit-1.0.3.tgz#393be730a9446fd1ead6da59a014308f36c289cb"
@@ -6217,7 +5909,16 @@ ua-parser-js@^0.7.9:
   version "0.7.12"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
 
-uglify-js@2.7.x, uglify-js@^2.6, uglify-js@~2.7.3:
+uglify-js@2.8.x, uglify-js@^2.6:
+  version "2.8.5"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/uglify-js/-/uglify-js-2.8.5.tgz#ae9f5b143f4183d99a1dabb350e243fdc06641ed"
+  dependencies:
+    async "~0.2.6"
+    source-map "~0.5.1"
+    uglify-to-browserify "~1.0.0"
+    yargs "~3.10.0"
+
+uglify-js@~2.7.3:
   version "2.7.5"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/uglify-js/-/uglify-js-2.7.5.tgz#4612c0c7baaee2ba7c487de4904ae122079f2ca8"
   dependencies:
@@ -6234,26 +5935,6 @@ uid-number@~0.0.6:
   version "0.0.6"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/uid-number/-/uid-number-0.0.6.tgz#0ea10e8035e8eb5b8e4449f06da1c730663baa81"
 
-unherit@^1.0.4:
-  version "1.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/unherit/-/unherit-1.1.0.tgz#6b9aaedfbf73df1756ad9e316dd981885840cd7d"
-  dependencies:
-    inherits "^2.0.1"
-    xtend "^4.0.1"
-
-unified@^5.0.0:
-  version "5.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/unified/-/unified-5.1.0.tgz#61268da9b91ce925be1f3d198c0278b0e9716094"
-  dependencies:
-    bail "^1.0.0"
-    extend "^3.0.0"
-    has "^1.0.1"
-    is-buffer "^1.1.4"
-    once "^1.3.3"
-    trough "^1.0.0"
-    vfile "^2.0.0"
-    x-is-string "^0.1.0"
-
 uniq@^1.0.1:
   version "1.0.1"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/uniq/-/uniq-1.0.1.tgz#b31c5ae8254844a3a8281541ce2b04b865a734ff"
@@ -6267,22 +5948,6 @@ uniqid@^4.0.0:
 uniqs@^2.0.0:
   version "2.0.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/uniqs/-/uniqs-2.0.0.tgz#ffede4b36b25290696e6e165d4a59edb998e6b02"
-
-unist-util-remove-position@^1.0.0:
-  version "1.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/unist-util-remove-position/-/unist-util-remove-position-1.1.0.tgz#2444fedc344bc5f540dab6353e013b6d78101dc2"
-  dependencies:
-    unist-util-visit "^1.1.0"
-
-unist-util-stringify-position@^1.0.0:
-  version "1.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/unist-util-stringify-position/-/unist-util-stringify-position-1.1.0.tgz#e8ba9d6b6af891b5f8336b3a31c63a9dc85c2af0"
-  dependencies:
-    has "^1.0.1"
-
-unist-util-visit@^1.1.0:
-  version "1.1.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/unist-util-visit/-/unist-util-visit-1.1.1.tgz#e917a3b137658b335cb4420c7da2e74d928e4e94"
 
 units-css@^0.4.0:
   version "0.4.0"
@@ -6369,20 +6034,6 @@ verror@1.3.6:
   dependencies:
     extsprintf "1.0.2"
 
-vfile-location@^2.0.0:
-  version "2.0.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/vfile-location/-/vfile-location-2.0.1.tgz#0bf8816f732b0f8bd902a56fda4c62c8e935dc52"
-
-vfile@^2.0.0:
-  version "2.0.1"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/vfile/-/vfile-2.0.1.tgz#bd48e68e8a2322dff0d162a37f45e70d9bb30466"
-  dependencies:
-    has "^1.0.1"
-    is-buffer "^1.1.4"
-    replace-ext "1.0.0"
-    unist-util-stringify-position "^1.0.0"
-    x-is-string "^0.1.0"
-
 viewport-dimensions@^0.2.0:
   version "0.2.0"
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/viewport-dimensions/-/viewport-dimensions-0.2.0.tgz#de740747db5387fd1725f5175e91bac76afdf36c"
@@ -6398,12 +6049,6 @@ walker@~1.0.5:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
   dependencies:
     makeerror "1.0.x"
-
-warning@^3.0.0:
-  version "3.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
-  dependencies:
-    loose-envify "^1.0.0"
 
 watch@~0.10.0:
   version "0.10.0"
@@ -6422,8 +6067,8 @@ webidl-conversions@^3.0.0:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
 
 webidl-conversions@^4.0.0:
-  version "4.0.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/webidl-conversions/-/webidl-conversions-4.0.0.tgz#0a8c727ae4e5649687b7742368dcfbf13ed40118"
+  version "4.0.1"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/webidl-conversions/-/webidl-conversions-4.0.1.tgz#8015a17ab83e7e1b311638486ace81da6ce206a0"
 
 webpack-core@~0.6.9:
   version "0.6.9"
@@ -6496,12 +6141,12 @@ whatwg-encoding@^1.0.1:
     iconv-lite "0.4.13"
 
 whatwg-fetch@>=0.10.0:
-  version "2.0.2"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/whatwg-fetch/-/whatwg-fetch-2.0.2.tgz#fe294d1d89e36c5be8b3195057f2e4bc74fc980e"
+  version "2.0.3"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
 
 whatwg-url@^4.3.0:
-  version "4.4.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/whatwg-url/-/whatwg-url-4.4.0.tgz#594f95781545c13934a62db40897c818cafa2e04"
+  version "4.5.0"
+  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/whatwg-url/-/whatwg-url-4.5.0.tgz#79bb6f0e370a4dda1cbc8f3062a490cf8bbb09ea"
   dependencies:
     tr46 "~0.0.3"
     webidl-conversions "^3.0.0"
@@ -6565,10 +6210,6 @@ write@^0.2.1:
   resolved "https://nevada.jfrog.io/nevada/api/npm/npm/write/-/write-0.2.1.tgz#5fc03828e264cea3fe91455476f7a3c566cb0757"
   dependencies:
     mkdirp "^0.5.1"
-
-x-is-string@^0.1.0:
-  version "0.1.0"
-  resolved "https://nevada.jfrog.io/nevada/api/npm/npm/x-is-string/-/x-is-string-0.1.0.tgz#474b50865af3a49a9c4657f05acd145458f77d82"
 
 xml-char-classes@^1.0.0:
   version "1.0.0"
