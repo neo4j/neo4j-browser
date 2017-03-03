@@ -7,6 +7,7 @@ import favoritesReducer, { NAME as favorites } from 'shared/modules/favorites/fa
 import connectionsReducer, { NAME as connections } from 'shared/modules/connections/connectionsDuck'
 import sidebarReducer, { NAME as sidebar } from 'shared/modules/sidebar/sidebarDuck'
 import requestsReducer, { NAME as requests } from 'shared/modules/requests/requestsDuck'
+import paramsReducer, { NAME as params } from 'shared/modules/params/paramsDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -17,5 +18,6 @@ export default {
   [dbMeta]: dbMetaReducer,
   [favorites]: favoritesReducer,
   [sidebar]: sidebarReducer,
+  [params]: paramsReducer,
   [requests]: requestsReducer
 }
