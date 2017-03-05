@@ -14,5 +14,6 @@ export {
   NavigationButton,
   FormButton,
   FrameButton,
-  CypherFrameButton
+  CypherFrameButton,
+  ActionButton
 }
