@@ -1,11 +1,6 @@
 import React from 'react'
 
-import Form from 'grommet/components/Form'
-import FormField from 'grommet/components/FormField'
-import FormFields from 'grommet/components/FormFields'
-import Footer from 'grommet/components/Footer'
-import Button from 'grommet/components/Button'
-import TextInput from 'grommet/components/TextInput'
+import {FormButton} from 'nbnmui/buttons'
 
 export default class ChangePasswordForm extends React.Component {
   constructor (props) {
@@ -34,26 +29,19 @@ export default class ChangePasswordForm extends React.Component {
   }
   render () {
     return (
-      <div>
-        <Form>
-          <FormFields>
-            <FormField label='New password'>
-              <TextInput type='password' onDOMChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
-            </FormField>
-            <FormField label='Repeat new password'>
-              <TextInput type='password' onDOMChange={this.onNewPasswordChange2.bind(this)} value={this.state.newPassword2} />
-            </FormField>
-          </FormFields>
-        </Form>
-        <Footer>
-          <Button
-            label='Change password'
-            type='submit'
-            primary
-            onClick={this.validateSame.bind(this)}
-          />
-        </Footer>
-      </div>
+      <form>
+        <ul>
+          <li>
+            <label>New password</label>
+            <input type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
+          </li>
+          <li>
+            <label>Repeat new password</label>
+            <input type='password' onChange={this.onNewPasswordChange2.bind(this)} value={this.state.newPassword2} />
+          </li>
+        </ul>
+        <FormButton onClick={this.validateSame.bind(this)} label='Change password' />
+      </form>
     )
   }
 }

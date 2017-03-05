@@ -1,8 +1,4 @@
 import React from 'react'
-import ListItem from 'grommet/components/ListItem'
-import Button from 'grommet/components/Button'
-import uuid from 'uuid'
-
 import styles from './style.css'
 
 export class ToolTip extends React.Component {
@@ -35,40 +31,45 @@ export class ToolTip extends React.Component {
 
 export const CloseButton = (props) => {
   return (
-    <Button {...props}>×</Button>
+    <button {...props}>×</button>
   )
 }
 export const EditorButton = (props) => {
-  const {tooltip, ...rest} = props
-  const id = 'a' + uuid.v4()
-  const button = <Button id={id} {...rest} />
-  return (
-    <ToolTip id={id} tooltip={tooltip}>
-      {button}
-    </ToolTip>
-  )
+  return (<button className={styles.editor}>{props.children}</button>)
 }
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
   const rightIcon = (removeClick) ? (<CloseButton className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
   return (
-    <ListItem>
+    <li>
       <span {...rest}>{primaryText}</span>
       <span>{rightIcon}</span>
-    </ListItem>
+    </li>
   )
 }
 
 export const NavigationButton = (props) => {
-  const id = 'a' + uuid.v4()
-  return (
-    <ToolTip id={id} tooltip={props.name}>
-      <Button {...props} href='#' id={id} />
-    </ToolTip>
-  )
+  return (<button className={styles.navigation}>{props.children}</button>)
+}
+export const FormButton = (props) => {
+  const {icon, label, children, ...rest} = props
+
+  if (icon && label) return (<button {...rest} type='submit'>{label} {icon}</button>)
+  if (icon) return (<button {...rest} type='submit'>{icon}</button>)
+  if (label) return (<button {...rest} type='submit'>{label}</button>)
+  return (<button {...props} type='submit'>{children}</button>)
+}
+export const CypherFrameButton = (props) => {
+  const {selected, icon, ...rest} = props
+  const isSelected = (selected) ? 'selected' : 'unselected'
+  return (<button className={isSelected} {...rest}>{icon}</button>)
+}
+export const FrameButton = (props) => {
+  const {icon, ...rest} = props
+  return (<button {...rest}>{icon}</button>)
 }
 
 export const ActionButton = (props) => {
   const {className, ...rest} = props
-  return (<Button className={className + ' ' + styles.action} {...rest} />)
+  return (<button className={className + ' ' + styles.action} {...rest} />)
 }

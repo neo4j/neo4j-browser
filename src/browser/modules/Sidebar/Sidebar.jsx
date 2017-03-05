@@ -5,12 +5,16 @@ import Documents from './Documents'
 import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
-import MdGrade from 'react-icons/lib/md/grade'
-import MdViewHeadline from 'react-icons/lib/md/view-headline'
-import MdDescription from 'react-icons/lib/md/description'
-import MdSettingsApplications from 'react-icons/lib/md/settings-applications'
-import MdCloud from 'react-icons/lib/md/cloud'
-import MdInfo from 'react-icons/lib/md/info'
+
+import {
+  DatabaseIcon,
+  FavoritesIcon,
+  DocumentsIcon,
+  CloudIcon,
+  SettingsIcon,
+  AboutIcon
+} from 'nbnmui/icons/Icons'
+
 import MdFlashOn from 'react-icons/lib/md/flash-on'
 import MdFlashOff from 'react-icons/lib/md/flash-off'
 import Badge from 'browser-components/badge'
@@ -28,7 +32,7 @@ class Sidebar extends React.Component {
     const AboutDrawer = About
     const dbIcon = (
       <div style={{position: 'relative'}}>
-        <MdViewHeadline type='control' />
+        <DatabaseIcon />
         { this.props.activeConnection
           ? <Badge status='ok'><MdFlashOn /></Badge>
           : <Badge status='error'><MdFlashOff /></Badge>
@@ -37,13 +41,13 @@ class Sidebar extends React.Component {
     )
     const topNavItemsList = [
       {name: 'DB', icon: dbIcon, content: DatabaseDrawer},
-      {name: 'Favorites', icon: <MdGrade type='control' />, content: FavoritesDrawer},
-      {name: 'Documents', icon: <MdDescription type='control' />, content: DocumentsDrawer}
+      {name: 'Favorites', icon: <FavoritesIcon />, content: FavoritesDrawer},
+      {name: 'Documents', icon: <DocumentsIcon />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: <MdCloud type='control' />, content: SettingsDrawer},
-      {name: 'Settings', icon: <MdSettingsApplications type='control' />, content: SettingsDrawer},
-      {name: 'About', icon: <MdInfo type='control' />, content: AboutDrawer}
+      {name: 'Sync', icon: <CloudIcon />, content: SettingsDrawer},
+      {name: 'Settings', icon: <SettingsIcon />, content: SettingsDrawer},
+      {name: 'About', icon: <AboutIcon />, content: AboutDrawer}
     ]
 
     return (<TabNavigation

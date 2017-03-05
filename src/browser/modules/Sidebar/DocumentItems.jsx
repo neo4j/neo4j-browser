@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import ListItem from 'grommet/components/ListItem'
-import List from 'grommet/components/List'
 import { withBus } from 'react-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { H4 } from 'nbnmui/headers'
@@ -13,9 +11,9 @@ export const DocumentItems = ({header, items, onItemClick = null}) => {
     switch (item.type) {
       case 'link':
         return (
-          <ListItem className='link' key={uuid.v4()}>
+          <li className='link' key={uuid.v4()}>
             <a href={item.command} target='_blank'>{item.name}</a>
-          </ListItem>
+          </li>
         )
       default:
         return (
@@ -28,9 +26,9 @@ export const DocumentItems = ({header, items, onItemClick = null}) => {
   return (
     <div>
       <H4>{header}</H4>
-      <List className='document'>
+      <ul className='document'>
         {listOfItems}
-      </List>
+      </ul>
     </div>
   )
 }

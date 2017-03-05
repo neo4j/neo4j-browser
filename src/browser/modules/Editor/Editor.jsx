@@ -124,29 +124,23 @@ export class Editor extends React.Component {
         </div>
         <div className={styles.actionButtons}>
           <EditorButton
-            secondary
             onClick={() => this.props.onFavortieClick(this.state.code)}
-            label='&#9734;'
             className={styles.button}
             disabled={this.state.code.length < 1}
             tooltip='Add as favorite'
-          />
+          >&#9734;</EditorButton>
           <EditorButton
-            secondary
             onClick={() => this.clearEditor()}
-            label='&times;'
             disabled={this.state.code.length < 1}
             className={styles.button}
             tooltip='Clear editor contents'
-          />
+          >&times;</EditorButton>
           <EditorButton
             onClick={() => this.execCurrent()}
-            primary
-            label='&#9654;'
             disabled={this.state.code.length < 1}
             className={styles.button}
             tooltip='Execute command'
-          />
+          >&#9654;</EditorButton>
         </div>
       </div>
     )

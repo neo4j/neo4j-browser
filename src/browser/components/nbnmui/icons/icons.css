@@ -1,0 +1,32 @@
+.inactive {
+  color: #797979;
+}
+.green {
+  color: #1bf621;
+}
+.orange {
+  color: #ffaf00;
+}
+.blue {
+  color: #00a3ff;
+}
+.purple {
+  color: #f0f;
+}
+.red {
+  color: #ff5641;
+}
+.white {
+  color: #ffa;
+}
+.credits
+  @keyframes neo4j-pulse {
+    0%, 100% {
+      color: #1bf621;
+    }
+    50% {
+      color: #00a3ff;
+    }
+  }
+  animation: neo4j-pulse 2s infinite;
+  animation-timing-function: ease-in-out;

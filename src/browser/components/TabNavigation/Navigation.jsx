@@ -1,6 +1,4 @@
 import React from 'react'
-import List from 'grommet/components/List'
-import ListItem from 'grommet/components/ListItem'
 import classNames from 'classnames'
 import { NavigationButton } from 'nbnmui/buttons'
 
@@ -20,11 +18,11 @@ const Navigation = ({
         [selectedItemClassName]: item.name.toLowerCase() === openDrawer
       })
       return (
-        <ListItem key={index}
+        <li key={index}
           className={itemClass}
           onClick={() => onNavClick(item.name.toLowerCase())}>
-          <NavigationButton name={item.name} icon={item.icon} />
-        </ListItem>
+          <NavigationButton name={item.name}>{item.icon}</NavigationButton>
+        </li>
       )
     })
   }
@@ -46,10 +44,10 @@ const Navigation = ({
   })
   return (
     <div className={sidebarClassName}>
-      <List className={listClassName}>
-        <List className={listClassName}>{topNavItemsList}</List>
-        <List className={listClassName}>{bottomNavItemsList}</List>
-      </List>
+      <ul className={listClassName}>
+        <ul className={listClassName}>{topNavItemsList}</ul>
+        <ul className={listClassName}>{bottomNavItemsList}</ul>
+      </ul>
       <div className={tabClass + ' tab'}>
         {getContentToShow(openDrawer)}
       </div>

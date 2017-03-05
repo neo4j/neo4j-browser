@@ -2,7 +2,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import TableView from './TableView'
-import TableHeader from 'grommet/components/TableHeader'
 
 const testData =
   [
@@ -59,8 +58,8 @@ const testData =
 describe('TableView', () => {
   test('should render headings', () => {
     const wrapper = shallow(<TableView data={testData} />)
-    const tableHeaderElement = wrapper.find(TableHeader)
-    expect(tableHeaderElement.props().labels).toBe(testData[0])
+    const tableHeaderElement = wrapper.find('th')
+    expect(tableHeaderElement.first().text()).toBe(testData[0][0])
   })
   test('should render correct number of rows', () => {
     const wrapper = shallow(<TableView data={testData} />)

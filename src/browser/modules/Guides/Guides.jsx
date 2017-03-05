@@ -4,7 +4,6 @@ import uuid from 'uuid'
 import ReactSwipe from 'react-swipe'
 import Slide from './Slide'
 import Directives from './Directives'
-import Button from 'grommet/components/Button'
 
 import styles from './style.css'
 
@@ -54,11 +53,11 @@ export default class Guides extends React.Component {
       })
       return (
         <div key={uuid.v4()} className={styles.carouselContainer}>
-          <Button fill className={styles.leftButton} label='<' primary onClick={this.prev.bind(this)} />
+          <button className={styles.leftButton} onClick={this.prev.bind(this)}>{'<'}</button>
           <ReactSwipe className={styles.carousel} ref='reactSwipe' swipeOptions={{continuous: false}}>
             {ListOfSlides}
           </ReactSwipe>
-          <Button className={styles.rightButton} label='>' primary onClick={this.next.bind(this)} />
+          <button className={styles.rightButton} onClick={this.next.bind(this)}>{'>'}</button>
         </div>
       )
     }

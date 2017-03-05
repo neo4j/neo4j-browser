@@ -14,7 +14,6 @@ import epics from 'shared/rootEpic'
 import './styles/style.css'
 import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
-import 'grommet/grommet.min.css'
 import lStorage from 'browser-services/localstorage'
 
 const suberMiddleware = createSuberReduxMiddleware()

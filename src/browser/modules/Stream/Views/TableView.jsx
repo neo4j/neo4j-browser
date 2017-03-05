@@ -1,8 +1,5 @@
 import React from 'react'
 import { v4 } from 'uuid'
-import Table from 'grommet/components/Table'
-import TableRow from 'grommet/components/TableRow'
-import TableHeader from 'grommet/components/TableHeader'
 
 class TableView extends React.Component {
   constructor (props) {
@@ -15,11 +12,8 @@ class TableView extends React.Component {
     }
   }
   render () {
-    const tableHeader = (
-      <TableHeader
-        className='.table-header'
-        labels={this.state.columns}
-      />
+    const tableHeader = this.state.columns.map((column, i) => (
+      <th className='table-header' key={i}>{column}</th>)
     )
     const buildData = (entries) => {
       return entries.map((entry) => {
@@ -34,9 +28,9 @@ class TableView extends React.Component {
     }
     const buildRow = (item) => {
       return (
-        <TableRow className='table-row' key={v4()}>
+        <tr className='table-row' key={v4()}>
           {buildData(item)}
-        </TableRow>
+        </tr>
       )
     }
     const tableBody = (
@@ -49,10 +43,14 @@ class TableView extends React.Component {
       </tbody>
     )
     return (
-      <Table>
-        {tableHeader}
+      <table>
+        <thead>
+          <tr>
+            {tableHeader}
+          </tr>
+        </thead>
         {tableBody}
-      </Table>
+      </table>
     )
   }
 }

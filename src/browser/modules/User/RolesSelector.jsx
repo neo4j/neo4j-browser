@@ -1,16 +1,19 @@
 import React from 'react'
-import Select from 'grommet/components/Select'
 
 const RolesSelector = ({roles = [], onChange = null, selectedValue = undefined}) => {
   if (roles.length > 0) {
+    const options = roles.map((role, i) => {
+      return (<option key={i} value={role}>{role}</option>)
+    })
     return (
-      <Select
+      <select
         className='roles-selector'
-        placeHolder='Select role'
-        options={roles}
+        placeholder='Select role'
         value={selectedValue}
         onChange={onChange}
-      />
+      >
+        {options}
+      </select>
     )
   } else { return null }
 }

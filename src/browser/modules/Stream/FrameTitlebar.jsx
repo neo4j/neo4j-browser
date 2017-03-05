@@ -5,17 +5,8 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove } from 'shared/modules/stream/streamDuck'
-
-import Button from 'grommet/components/Button'
-import Box from 'grommet/components/Box'
-import UpIcon from 'grommet/components/icons/base/Up'
-import DownIcon from 'grommet/components/icons/base/Down'
-import ExpandIcon from 'grommet/components/icons/base/Expand'
-import ContractIcon from 'grommet/components/icons/base/Contract'
-import RefreshIcon from 'grommet/components/icons/base/Refresh'
-import CloseIcon from 'grommet/components/icons/base/Close'
-import Header from 'grommet/components/Header'
-import Label from 'grommet/components/Label'
+import { FrameButton } from 'nbnmui/buttons'
+import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon } from 'nbnmui/icons/Icons'
 
 import styles from './style_titlebar.css'
 
@@ -23,20 +14,17 @@ export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, collapse, co
   const fullscreenIcon = (fullscreen) ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = (collapse) ? <DownIcon /> : <UpIcon />
   return (
-    <Header>
-      <Label size='small' onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
+    <div>
+      <label onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
         {frame.cmd}
-      </Label>
-      <Box flex
-        justify='end'
-        direction='row'
-        responsive={false}>
-        <Button icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
-        <Button icon={expandCollapseIcon} onClick={() => collapseToggle()} />
-        <Button icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
-        <Button icon={<CloseIcon />} onClick={() => onCloseClick(frame.id, frame.requestId)} />
-      </Box>
-    </Header>
+      </label>
+      <span>
+        <FrameButton icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
+        <FrameButton icon={expandCollapseIcon} onClick={() => collapseToggle()} />
+        <FrameButton icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
+        <FrameButton icon={<CloseIcon />} onClick={() => onCloseClick(frame.id, frame.requestId)} />
+      </span>
+    </div>
   )
 }
 

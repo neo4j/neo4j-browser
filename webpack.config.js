@@ -54,7 +54,11 @@ module.exports = {
   resolve: {
     root: path.resolve(__dirname),
     modulesDirectories: ['src/shared/modules', 'src/browser/modules', 'node_modules'],
-    extensions: ['', '.js', '.jsx', '.json']
+    extensions: ['', '.js', '.jsx', '.json'],
+    alias: {
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat'
+    }
   },
   output: {
     path: path.join(__dirname, 'dist'),

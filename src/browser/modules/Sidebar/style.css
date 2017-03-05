@@ -7,6 +7,7 @@
   color: #fff;
 }
 .list {
+  margin: 0;
   padding: 0 !important;
   span {
     color: #fff !important;
@@ -40,4 +41,3 @@
     color: #fff !important;
   }
 }
-
