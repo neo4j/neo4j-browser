@@ -101,6 +101,11 @@ export default {
   cancelTransaction,
   connectToConnection,
   openConnection,
+  closeActiveConnection: () => {
+    const c = connectionHandler.get()
+    if (!c) return
+    connectionHandler.close(c.name, (driver) => driver.close())
+  },
   useConnection: (name) => {
     connectionHandler.setDefault(name)
   },

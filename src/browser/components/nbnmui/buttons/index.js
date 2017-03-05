@@ -4,7 +4,8 @@ import {
   NavigationButton,
   FormButton,
   FrameButton,
-  CypherFrameButton
+  CypherFrameButton,
+  ActionButton
 } from './Buttons'
 
 export {

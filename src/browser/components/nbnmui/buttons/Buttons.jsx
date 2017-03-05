@@ -68,3 +68,8 @@ export const FrameButton = (props) => {
   const {icon, ...rest} = props
   return (<button {...rest}>{icon}</button>)
 }
+
+export const ActionButton = (props) => {
+  const {className, ...rest} = props
+  return (<Button className={className + ' ' + styles.action} {...rest} />)
+}

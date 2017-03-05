@@ -1,6 +1,6 @@
 /* global test, expect */
 import React from 'react'
-import UserDetails from './UserDetails'
+import { UserDetails } from './UserDetails'
 import { shallow } from 'enzyme'
 
 describe('connected as', () => {

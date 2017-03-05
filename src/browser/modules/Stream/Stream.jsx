@@ -5,12 +5,16 @@ import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
 import Frame from './Frame'
 import PreFrame from './PreFrame'
+import ParamsFrame from './ParamsFrame'
+import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
-import ConnectedConnectionFrame from './Auth/ConnectionFrame'
+import ConnectionFrame from './Auth/ConnectionFrame'
+import DisconnectFrame from './Auth/DisconnectFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
+import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 
 export const Stream = (props) => {
   const {frames} = props
@@ -61,11 +65,33 @@ export const Stream = (props) => {
             key={frame.id} frame={frame}
           />
         )
-      case 'connection':
+      case 'param':
         return (
-          <ConnectedConnectionFrame
+          <ParamFrame
             key={frame.id}
             frame={frame}
+          />
+        )
+      case 'params':
+        return (
+          <ParamsFrame
+            key={frame.id}
+            frame={frame}
+          />
+        )
+      case 'connection':
+        return (
+          <ConnectionFrame
+            key={frame.id}
+            frame={frame}
+          />
+        )
+      case 'disconnect':
+        return (
+          <DisconnectFrame
+            key={frame.id}
+            frame={frame}
+            activeConnectionData={props.activeConnectionData}
           />
         )
       default:
@@ -92,7 +118,8 @@ export const Stream = (props) => {
 const mapStateToProps = (state) => {
   return {
     frames: getFrames(state),
-    requests: getRequests(state)
+    requests: getRequests(state),
+    activeConnectionData: getActiveConnectionData(state)
   }
 }
 

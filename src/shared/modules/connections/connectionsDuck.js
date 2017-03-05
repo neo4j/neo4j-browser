@@ -11,9 +11,11 @@ export const SELECT = 'connections/SELECT'
 export const REMOVE = 'connections/REMOVE'
 export const MERGE = 'connections/MERGE'
 export const CONNECT = 'connections/CONNECT'
+export const DISCONNECT = 'connections/DISCONNECT'
 export const STARTUP_CONNECTION_SUCCESS = 'connections/STARTUP_CONNECTION_SUCCESS'
 export const STARTUP_CONNECTION_FAILED = 'connections/STARTUP_CONNECTION_FAILED'
 export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
+export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
 
 const initialState = {
   allConnectionIds: [],
@@ -33,7 +35,7 @@ export function getConnections (state) {
 }
 
 export function getActiveConnection (state) {
-  return state[NAME].activeConnection
+  return state[NAME].activeConnection || initialState.activeConnection
 }
 
 export function getActiveConnectionData (state) {
@@ -137,6 +139,13 @@ export const updateConnection = (connection) => {
   }
 }
 
+export const disconnectAction = (id) => {
+  return {
+    type: DISCONNECT,
+    id
+  }
+}
+
 // Epics
 export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT)
@@ -191,11 +200,25 @@ export const startupConnectionFailEpic = (action$, store) => {
 }
 
 let lastActiveConnectionId = null
-export const detectNewConnectionEpic = (action$, store) => {
+export const detectActiveConnectionChangeEpic = (action$, store) => {
   return action$.ofType(SET_ACTIVE)
     .mergeMap((action) => {
-      if (lastActiveConnectionId === action.connectionId || !action.connectionId) return Rx.Observable.never()
+      if (lastActiveConnectionId === action.connectionId) return Rx.Observable.never() // no change
       lastActiveConnectionId = action.connectionId
-      return Rx.Observable.of({ type: CONNECTION_SUCCESS })
+      if (!action.connectionId) return Rx.Observable.of({ type: DISCONNECTION_SUCCESS }) // disconnect
+      return Rx.Observable.of({ type: CONNECTION_SUCCESS }) // connect
     })
 }
+export const disconnectEpic = (action$, store) => {
+  return action$.ofType(DISCONNECT)
+    .do(() => bolt.closeActiveConnection())
+    .do((action) => store.dispatch(updateConnection({ id: action.id, password: '' })))
+    .mapTo(setActiveConnection(null))
+}
+export const disconnectSuccessEpic = (action$, store) => {
+  return action$.ofType(DISCONNECTION_SUCCESS)
+    .mapTo(
+      executeSystemCommand(getSettings(store.getState()).cmdchar + 'server connect')
+    )
+}
+

@@ -7,20 +7,27 @@ class FrameTemplate extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      fullscreen: false
+      fullscreen: false,
+      collapse: false
     }
   }
   toggleFullScreen () {
     this.setState({fullscreen: !this.state.fullscreen})
   }
+  toggleCollapse () {
+    this.setState({collapse: !this.state.collapse})
+  }
   render () {
     const fullscreenClass = (this.state.fullscreen) ? styles.fullscreen : ''
+    const collapseClass = (this.state.collapse) ? styles.collapse : ''
     return (
       <article className={styles.frame + ' ' + fullscreenClass}>
         <FrameTitlebar
           frame={this.props.header}
           fullscreen={this.state.fullscreen}
           fullscreenToggle={this.toggleFullScreen.bind(this)}
+          collapse={this.state.collapse}
+          collapseToggle={this.toggleCollapse.bind(this)}
           />
         <div className={styles.framebody}>
           {(this.props.sidebar) ? this.props.sidebar() : null}

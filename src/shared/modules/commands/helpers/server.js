@@ -1,8 +1,8 @@
 import { splitStringOnFirst, splitStringOnLast } from 'services/commandUtils'
-import bolt from 'services/bolt/bolt'
 import * as connections from 'shared/modules/connections/connectionsDuck'
+import { add as addFrameAction } from 'shared/modules/stream/streamDuck'
 import { CONNECTION_ID as DISCOVERY_CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
-import { BoltConnectionError, UnknownCommandError, getErrorMessage, ConnectionNotFoundError, AddServerValidationError } from 'services/exceptions'
+import { UnknownCommandError, getErrorMessage, AddServerValidationError } from 'services/exceptions'
 
 export function handleServerCommand (action, cmdchar, put, store) {
   const [serverCmd, props] = splitStringOnFirst(splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1], ' ')
@@ -12,6 +12,9 @@ export function handleServerCommand (action, cmdchar, put, store) {
   if (serverCmd === 'connect') {
     return connectToConnection(action, props, put, store)
   }
+  if (serverCmd === 'disconnect') {
+    return handleDisconnectCommand(action, props, put, store)
+  }
   if (serverCmd === 'add') {
     return handleServerAddCommand(action, cmdchar, put, store)
   }
@@ -19,6 +22,14 @@ export function handleServerCommand (action, cmdchar, put, store) {
     return handleUserCommand(action, props, cmdchar)
   }
   return {...action, type: 'error', error: {message: getErrorMessage(UnknownCommandError(action.cmd))}}
+}
+
+function handleDisconnectCommand (action, cmdchar, put, store) {
+  put(addFrameAction({...action, type: 'disconnect'}))
+  const activeConnection = connections.getActiveConnection(store.getState())
+  const disconnectAction = connections.disconnectAction(activeConnection)
+  put(disconnectAction)
+  return null
 }
 
 function handleServerListCommand (action, cmdchar, put, store) {
@@ -37,26 +48,10 @@ function handleUserCommand (action, props, cmdchar) {
 
 export function connectToConnection (action, connectionName, put, store) {
   const state = store.getState()
-  try {
-    connectionName = connectionName || DISCOVERY_CONNECTION_ID
-    const foundConnections = connections.getConnections(state).filter((c) => c.name === connectionName)
-    if (!foundConnections.length) throw new ConnectionNotFoundError(connectionName)
-    const connectionData = foundConnections[0]
-    let p
-    if (connectionData.type === 'bolt') {
-      p = bolt.connectToConnection(connectionData).then(() => {
-        put(connections.setActiveConnection(connectionData.id))
-        return {...action, type: 'connection', connectionData}
-      }).catch((e) => {
-        return {...action, type: 'connection', error: {message: getErrorMessage(e)}, connectionData}
-      })
-    } else {
-      throw new BoltConnectionError(connectionData.id)
-    }
-    return p
-  } catch (e) {
-    return {...action, type: 'connection', error: {message: getErrorMessage(e)}}
-  }
+  connectionName = connectionName || DISCOVERY_CONNECTION_ID
+  const foundConnections = connections.getConnections(state).filter((c) => c.name === connectionName)
+  const connectionData = foundConnections[0] || {}
+  return {...action, type: 'connection', connectionData}
 }
 
 function handleServerAddCommand (action, cmdchar, put, store) {

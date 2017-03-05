@@ -10,8 +10,9 @@ import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon } from 'nbnmui/icons/I
 
 import styles from './style_titlebar.css'
 
-export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
+export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, collapse, collapseToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
   const fullscreenIcon = (fullscreen) ? <ContractIcon /> : <ExpandIcon />
+  const expandCollapseIcon = (collapse) ? <DownIcon /> : <UpIcon />
   return (
     <div>
       <label onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
@@ -19,6 +20,7 @@ export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, onTitlebarCl
       </label>
       <span>
         <FrameButton icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
+        <FrameButton icon={fullscreenIcon} onClick={() => collapseToggle()} />
         <FrameButton icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
         <FrameButton icon={<CloseIcon />} onClick={() => onCloseClick(frame.id, frame.requestId)} />
       </span>

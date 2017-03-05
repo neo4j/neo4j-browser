@@ -1,10 +1,12 @@
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
+import { getParams } from 'shared/modules/params/paramsDuck'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
+import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
 import { CouldNotFetchRemoteGuideError, UnknownCommandError } from 'services/exceptions'
 
@@ -22,10 +24,30 @@ const availableCommands = [{
     put(frames.add({...action, ...handleGetConfigCommand(action, cmdchar, store)}))
   }
 }, {
+  name: 'set-param',
+  match: (cmd) => /^param\s/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    const res = handleParamCommand(action, cmdchar, put, store)
+    put(frames.add({...action, ...res, type: 'param'}))
+  }
+}, {
+  name: 'set-params',
+  match: (cmd) => /^params\s/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    const res = handleParamsCommand(action, cmdchar, put, store)
+    put(frames.add({...action, ...res, type: 'params', params: getParams(store.getState())}))
+  }
+}, {
+  name: 'params',
+  match: (cmd) => /^params$/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'params', params: getParams(store.getState())}))
+  }
+}, {
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
-    const [id, request] = handleCypherCommand(action, put)
+    const [id, request] = handleCypherCommand(action, put, getParams(store.getState()))
     put(frames.add({...action, type: 'cypher', requestId: id}))
     return request
       .then((res) => {
@@ -44,7 +66,7 @@ const availableCommands = [{
     const response = handleServerCommand(action, cmdchar, put, store)
     if (response && response.then) {
       response.then((res) => {
-        put(frames.add({...action, ...res}))
+        if (res) put(frames.add({...action, ...res}))
       })
     } else if (response) {
       put(frames.add({...action, ...response}))

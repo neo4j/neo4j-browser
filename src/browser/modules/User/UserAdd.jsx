@@ -10,8 +10,8 @@ import FrameTemplate from '../Stream/FrameTemplate'
 import FrameError from '../Stream/FrameError'
 import FrameSuccess from '../Stream/FrameSuccess'
 
-import { FormButton } from 'nbnmui/buttons'
 import { CloseIcon } from 'nbnmui/icons/Icons'
+import { ActionButto, FormButtonn } from 'nbnmui/buttons'
 
 export class UserAdd extends React.Component {
   constructor (props) {
