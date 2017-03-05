@@ -29,7 +29,7 @@ class FrameTemplate extends React.Component {
           collapse={this.state.collapse}
           collapseToggle={this.toggleCollapse.bind(this)}
           />
-        <div className={styles.framebody}>
+        <div className={styles.framebody + ' ' + collapseClass}>
           {(this.props.sidebar) ? this.props.sidebar() : null}
           <div className={styles.contents + ' frame-contents'}>
             {this.props.contents}

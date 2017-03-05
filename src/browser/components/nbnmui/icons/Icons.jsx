@@ -38,3 +38,5 @@ export const ExpandIcon = () => (<IconContainer activeStyle={styles.inactive} in
 export const ContractIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-reduce' />)
 export const RefreshIcon = () => (<IconContainer>Refresh</IconContainer>)
 export const CloseIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-delete' />)
+export const UpIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-chevron-up' />)
+export const DownIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-chevron-down' />)
