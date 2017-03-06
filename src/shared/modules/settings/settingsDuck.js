@@ -1,3 +1,5 @@
+import { USER_CLEAR } from 'shared/modules/app/appDuck'
+
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
 
@@ -15,6 +17,8 @@ export default function settings (state = initialState, action) {
   switch (action.type) {
     case UPDATE:
       return Object.assign({}, state, action.state)
+    case USER_CLEAR:
+      return initialState
     default:
       return state
   }

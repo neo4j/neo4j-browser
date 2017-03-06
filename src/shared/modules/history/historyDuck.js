@@ -1,3 +1,5 @@
+import { USER_CLEAR } from 'shared/modules/app/appDuck'
+
 export const NAME = 'history'
 
 export const ADD = 'history/ADD'
@@ -13,12 +15,15 @@ function addHistoryHelper (state, newState) {
 }
 
 // Reducer
-export default function (state = {history: [], maxHistory: 20}, action) {
+const initialState = {history: [], maxHistory: 20}
+export default function (state = initialState, action) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state)
     case MAX_ENTRIES:
       return Object.assign({}, state, { maxHistory: action.maxHistory })
+    case USER_CLEAR:
+      return initialState
     default:
       return state
   }
