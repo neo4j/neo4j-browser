@@ -3,13 +3,13 @@ import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
-import { remove } from 'shared/modules/stream/streamDuck'
+import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
 import { FrameButton } from 'nbnmui/buttons'
 import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon } from 'nbnmui/icons/Icons'
 
 import styles from './style_titlebar.css'
 
-export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, collapse, collapseToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
+export const FrameTitlebar = ({frame, fullscreen, togglePinning, fullscreenToggle, collapse, collapseToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
   const fullscreenIcon = (fullscreen) ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = (collapse) ? <DownIcon /> : <UpIcon />
   return (
@@ -18,6 +18,7 @@ export const FrameTitlebar = ({frame, fullscreen, fullscreenToggle, collapse, co
         {frame.cmd}
       </label>
       <span>
+        <FrameButton icon={<RefreshIcon />} onClick={onClick={() => togglePinning(frame.id, frame.isPinned)} />
         <FrameButton icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
         <FrameButton icon={expandCollapseIcon} onClick={() => collapseToggle()} />
         <FrameButton icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
@@ -39,6 +40,11 @@ const mapDispatchToProps = (dispatch, ownProps = {}) => {
     onReRunClick: (cmd, id, requestId) => {
       if (requestId) dispatch(cancelRequest(requestId))
       dispatch(commands.executeCommand(cmd, id))
+    },
+    togglePinning: (id, isPinned) => {
+      isPinned
+        ? dispatch(unpin(id))
+        : dispatch(pin(id))
     }
   }
 }
