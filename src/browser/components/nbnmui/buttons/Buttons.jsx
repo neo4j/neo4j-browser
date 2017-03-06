@@ -35,7 +35,7 @@ export const CloseButton = (props) => {
   )
 }
 export const EditorButton = (props) => {
-  return (<button className={styles.editor}>{props.children}</button>)
+  return (<button {...props} className={styles.editor}>{props.children}</button>)
 }
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
