@@ -14,6 +14,7 @@ import './styles/style.css'
 import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
+import { APP_START } from 'shared/modules/app/appDuck'
 
 // Configure localstorage sync
 applyKeys('connections', 'settings', 'history', 'favorites')
@@ -45,7 +46,7 @@ applySuberMiddleware((_) => (channel, message, source) => {
 })
 
 // Signal app upstart (for epics)
-store.dispatch({ type: 'APP_START' })
+store.dispatch({ type: APP_START })
 
 render(
   <Provider store={store}>
