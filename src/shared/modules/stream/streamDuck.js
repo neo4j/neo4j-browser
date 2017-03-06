@@ -1,4 +1,5 @@
 import uuid from 'uuid'
+import { moveInArray } from 'services/utils'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
@@ -6,6 +7,8 @@ export const REMOVE = 'frames/REMOVE'
 export const CLEAR_ALL = 'frames/CLEAR_ALL'
 export const CLEAR_IN_CONTEXT = 'frames/CLEAR_IN_CONTEXT'
 export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
+export const PIN = `${NAME}/PIN`
+export const UNPIN = `${NAME}/UNPIN`
 
 const initialState = {
   allIds: [],
@@ -29,8 +32,9 @@ export function getFramesInContext (state, context) {
 function addFrame (state, newState) {
   const byId = Object.assign({}, state.byId, {[newState.id]: newState})
   let allIds = [].concat(state.allIds)
-  if (allIds.indexOf(newState.id) < 0) {
-    allIds.unshift(newState.id)
+  if (allIds.indexOf(newState.id) < 0) { // new frame
+    const pos = findFirstFreePos(state)
+    allIds.splice(pos, 0, newState.id)
   }
   return Object.assign(
     {},
@@ -60,6 +64,40 @@ function clearHelper () {
   return {...initialState}
 }
 
+function pinFrame (state, id) {
+  const pos = state.allIds.indexOf(id)
+  const allIds = moveInArray(pos, 0, state.allIds) // immutable operation
+  const byId = Object.assign({}, state.byId)
+  byId[id].isPinned = true
+  return {
+    ...state,
+    allIds,
+    byId
+  }
+}
+
+function unpinFrame (state, id) {
+  const currentPos = state.allIds.indexOf(id)
+  const pos = findFirstFreePos(state)
+  const allIds = moveInArray(currentPos, pos - 1, state.allIds) // immutable operation
+  const byId = Object.assign({}, state.byId)
+  byId[id].isPinned = false
+  return {
+    ...state,
+    allIds,
+    byId
+  }
+}
+
+function findFirstFreePos ({ byId, allIds }) {
+  let freePos = -1
+  allIds.forEach((id, index) => {
+    if (freePos > -1 || byId[id].isPinned) return
+    freePos = index
+  })
+  return freePos === -1 ? allIds.length : freePos
+}
+
 /**
  * Reducer
 */
@@ -73,6 +111,10 @@ export default function reducer (state = initialState, action) {
       return clearInContextHelper(state, action.context)
     case CLEAR_ALL:
       return clearHelper()
+    case PIN:
+      return pinFrame(state, action.id)
+    case UNPIN:
+      return unpinFrame(state, action.id)
     default:
       return state
   }
@@ -103,5 +145,19 @@ export function clearInContext (context) {
 export function clear () {
   return {
     type: CLEAR_ALL
+  }
+}
+
+export function pin (id) {
+  return {
+    type: PIN,
+    id
+  }
+}
+
+export function unpin (id) {
+  return {
+    type: UNPIN,
+    id
   }
 }
