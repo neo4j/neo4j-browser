@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './style.css'
 const Slide = ({html}) => {
   return (<div className={styles.slide} dangerouslySetInnerHTML={{__html: html}} />)

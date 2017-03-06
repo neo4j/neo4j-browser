@@ -1,5 +1,3 @@
-import React from 'react'
-
 import asciitable from 'ascii-data-table'
 
 const AsciiView = ({rows}) => {

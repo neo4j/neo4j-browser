@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'

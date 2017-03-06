@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'

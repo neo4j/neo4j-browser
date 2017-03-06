@@ -1,5 +1,3 @@
-import React from 'react'
-
 const RolesSelector = ({roles = [], onChange = null, selectedValue = undefined}) => {
   if (roles.length > 0) {
     const options = roles.map((role, i) => {

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {FormButton} from 'nbnmui/buttons'
 
 const ConnectForm = (props) => (

@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import Nevada from 'neo4j-visualization'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'react-suber'
@@ -6,7 +6,7 @@ import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import styles from './style_cypher.css'
 
-export class Visualization extends React.Component {
+export class Visualization extends Component {
   constructor (props) {
     super(props)
     this.state = {}

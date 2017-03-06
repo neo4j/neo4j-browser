@@ -1,4 +1,3 @@
-import React from 'react'
 import FrameTemplate from './FrameTemplate'
 import * as e from 'services/exceptionMessages'
 

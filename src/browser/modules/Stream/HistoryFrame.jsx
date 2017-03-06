@@ -1,4 +1,3 @@
-import React from 'react'
 import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import FrameTemplate from './FrameTemplate'

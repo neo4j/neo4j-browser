@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import {FavoriteItem} from 'nbnmui/buttons'

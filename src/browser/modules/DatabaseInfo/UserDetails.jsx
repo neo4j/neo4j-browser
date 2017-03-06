@@ -1,8 +1,8 @@
-import React from 'react'
+import { Component } from 'preact'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
-export class UserDetails extends React.Component {
+export class UserDetails extends Component {
   constructor (props) {
     super(props)
     this.state = {

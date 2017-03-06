@@ -1,4 +1,3 @@
-import React from 'react'
 import {FileDrop} from './FileDrop'
 
 const DropBar = (props) => {

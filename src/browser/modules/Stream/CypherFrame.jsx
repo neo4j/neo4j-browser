@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'nbnmui/buttons'
 import FrameSidebar from './FrameSidebar'
@@ -10,7 +10,7 @@ import CodeView from './Views/CodeView'
 import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 
-class CypherFrame extends React.Component {
+class CypherFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {

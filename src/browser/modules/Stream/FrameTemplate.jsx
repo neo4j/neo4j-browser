@@ -1,9 +1,9 @@
-import React from 'react'
+import { Component } from 'preact'
 import FrameTitlebar from './FrameTitlebar'
 
 import styles from './style_frame.css'
 
-class FrameTemplate extends React.Component {
+class FrameTemplate extends Component {
   constructor (props) {
     super(props)
     this.state = {

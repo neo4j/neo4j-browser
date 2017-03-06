@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { getActiveConnectionData, getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
@@ -13,7 +13,7 @@ import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
 import FrameError from '../FrameError'
 
-export class ConnectionFrame extends React.Component {
+export class ConnectionFrame extends Component {
   constructor (props) {
     super(props)
     const connection = this.props.frame.connectionData

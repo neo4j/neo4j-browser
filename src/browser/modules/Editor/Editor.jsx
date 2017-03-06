@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import * as commands from 'shared/modules/commands/commandsDuck'
@@ -14,7 +14,7 @@ import { EditorButton } from 'nbnmui/buttons'
 
 import styles from './style.css'
 
-export class Editor extends React.Component {
+export class Editor extends Component {
   constructor (props) {
     super(props)
     this.state = {

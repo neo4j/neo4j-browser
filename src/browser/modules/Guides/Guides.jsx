@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import ReactDOM from 'react-dom'
 import uuid from 'uuid'
 import ReactSwipe from 'react-swipe'
@@ -7,7 +7,7 @@ import Directives from './Directives'
 
 import styles from './style.css'
 
-export default class Guides extends React.Component {
+export default class Guides extends Component {
   constructor (props) {
     super(props)
     this.state = {slides: null, firstRender: true}

@@ -1,7 +1,7 @@
-import React from 'react'
+import { Component } from 'preact'
 import './visualization.css'
 
-class QueryPlan extends React.Component {
+class QueryPlan extends Component {
 
   planInit (el) {
     if (el != null && !this.plan) {

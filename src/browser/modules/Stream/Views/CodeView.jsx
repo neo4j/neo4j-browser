@@ -1,4 +1,3 @@
-import React from 'react'
 import style from './code_style.css'
 
 const CodeView = ({request, query}) => {
