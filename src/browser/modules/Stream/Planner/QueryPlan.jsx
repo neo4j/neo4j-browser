@@ -18,7 +18,4 @@ class QueryPlan extends Component {
   }
 }
 
-QueryPlan.propTypes = {
-  plan: React.PropTypes.object.isRequired
-}
 export default QueryPlan
