@@ -6,7 +6,7 @@ import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
-import Codemirror from 'react-codemirror'
+import Codemirror from './Codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
@@ -72,8 +72,8 @@ export class Editor extends Component {
     }
   }
   componentDidMount () {
-    this.codeMirror = this.refs.editor.getCodeMirror()
-    this.codeMirrorInstance = this.refs.editor.getCodeMirrorInstance()
+    this.codeMirror = this.editor.getCodeMirror()
+    this.codeMirrorInstance = this.editor.getCodeMirrorInstance()
     this.codeMirrorInstance.keyMap['default']['Enter'] = this.handleEnter.bind(this)
     this.codeMirrorInstance.keyMap['default']['Shift-Enter'] = this.newlineAndIndent.bind(this)
     this.codeMirrorInstance.keyMap['default']['Cmd-Enter'] = this.execCurrent.bind(this)
@@ -115,7 +115,7 @@ export class Editor extends Component {
       <div id='editor' className={styles.editorContainer}>
         <div className={styles['editor-wrapper']}>
           <Codemirror
-            ref='editor'
+            ref={(ref) => { this.editor = ref }}
             value={this.state.code}
             onChange={updateCode}
             options={options}

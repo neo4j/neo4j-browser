@@ -1316,7 +1316,7 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codemirror@^5.14.2, codemirror@^5.18.2:
+codemirror@^5.24.2:
   version "5.24.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.24.2.tgz#b55ca950fa009709c37df68eb133310ed89cf2fe"
 
@@ -1757,11 +1757,7 @@ diff@^3.0.0:
   version "3.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/diff/-/diff-3.2.0.tgz#c9ce393a4b7cbd0b058a725c93df299027868ff9"
 
-disposables@^1.0.1:
-  version "1.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/disposables/-/disposables-1.0.1.tgz#064727a25b54f502bd82b89aa2dfb8df9f1b39e3"
-
-dnd-core@^2.0.2, dnd-core@^2.2.4:
+dnd-core@^2.2.4:
   version "2.2.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/dnd-core/-/dnd-core-2.2.4.tgz#a05d49220fb2b05d08b99a00177c01c9a1c445ad"
   dependencies:
@@ -2652,7 +2648,7 @@ hoek@2.x.x:
   version "2.16.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
-hoist-non-react-statics@^1.0.3, hoist-non-react-statics@^1.2.0:
+hoist-non-react-statics@^1.0.3:
   version "1.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
 
@@ -2837,7 +2833,7 @@ interpret@^1.0.0:
   version "1.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/interpret/-/interpret-1.0.1.tgz#d579fb7f693b858004947af39fa0db49f795602c"
 
-invariant@^2.0.0, invariant@^2.1.0, invariant@^2.2.0:
+invariant@^2.0.0, invariant@^2.2.0:
   version "2.2.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
   dependencies:
@@ -4999,30 +4995,6 @@ react-base16-styling@^0.4.1:
     lodash.curry "^4.0.1"
     lodash.flow "^3.3.0"
     pure-color "^1.2.0"
-
-react-codemirror@^0.3.0:
-  version "0.3.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-codemirror/-/react-codemirror-0.3.0.tgz#cd6bd6ef458ec1e035cfd8b3fe7b30c8c7883c6c"
-  dependencies:
-    classnames "^2.2.5"
-    codemirror "^5.18.2"
-    lodash.debounce "^4.0.8"
-
-react-dnd-html5-backend@^2.1.2:
-  version "2.2.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd-html5-backend/-/react-dnd-html5-backend-2.2.4.tgz#6c4a704efaa35cf568f40376ed82b8a3eb3c26df"
-  dependencies:
-    lodash "^4.2.0"
-
-react-dnd@^2.1.4:
-  version "2.2.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd/-/react-dnd-2.2.4.tgz#8982d557cc620b1f201a8b6ebda894b622af903f"
-  dependencies:
-    disposables "^1.0.1"
-    dnd-core "^2.2.4"
-    hoist-non-react-statics "^1.2.0"
-    invariant "^2.1.0"
-    lodash "^4.2.0"
 
 react-dock@^0.2.1:
   version "0.2.3"
