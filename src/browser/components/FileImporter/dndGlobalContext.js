@@ -35,9 +35,6 @@ class DndContextWrapping extends Component {
     )
   }
 }
-DndContextWrapping.childContextTypes = {
-  dragDropManager: React.PropTypes.object.isRequired
-}
 
 export const wrapWithDndContext = (Component) => {
   return (props) => {
