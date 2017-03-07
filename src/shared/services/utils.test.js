@@ -29,4 +29,82 @@ describe('utils', () => {
       expect(utils.moveInArray(t.from, t.to, t.test)).toEqual(t.expect)
     })
   })
+  test('getUrlInfo', () => {
+    // When && Then
+    expect(utils.getUrlInfo('http://anything.com')).toEqual({
+      protocol: 'http:',
+      host: 'anything.com',
+      hostname: 'anything.com',
+      port: undefined,
+      pathname: '',
+      search: '',
+      hash: ''
+    })
+    expect(utils.getUrlInfo('https://anything.com')).toEqual({
+      protocol: 'https:',
+      host: 'anything.com',
+      hostname: 'anything.com',
+      port: undefined,
+      pathname: '',
+      search: '',
+      hash: ''
+    })
+    expect(utils.getUrlInfo('http://anything.com:8080/index.html')).toEqual({
+      protocol: 'http:',
+      host: 'anything.com:8080',
+      hostname: 'anything.com',
+      port: '8080',
+      pathname: '/index.html',
+      search: '',
+      hash: ''
+    })
+    expect(utils.getUrlInfo('guides.neo4j.com')).toEqual({
+      protocol: undefined,
+      host: 'guides.neo4j.com',
+      hostname: 'guides.neo4j.com',
+      port: undefined,
+      pathname: '',
+      search: '',
+      hash: ''
+    })
+    expect(utils.getUrlInfo('localhost')).toEqual({
+      protocol: undefined,
+      host: 'localhost',
+      hostname: 'localhost',
+      port: undefined,
+      pathname: '',
+      search: '',
+      hash: ''
+    })
+  })
+  describe('hostIsAllowed', () => {
+    test('should respect host whitelist', () => {
+      // Given
+      const whitelist = 'https://second.com,fourth.com'
+
+      // When && Then
+      expect(utils.hostIsAllowed('http://first.com', whitelist)).toEqual(false)
+      expect(utils.hostIsAllowed('http://second.com', whitelist)).toEqual(false)
+      expect(utils.hostIsAllowed('https://second.com', whitelist)).toEqual(true)
+      expect(utils.hostIsAllowed('http://fourth.com', whitelist)).toEqual(true)
+      expect(utils.hostIsAllowed('https://fourth.com', whitelist)).toEqual(true)
+    })
+    test('should pass everything when whitelist is *', () => {
+      // Given
+      const whitelist = '*'
+
+      // When && Then
+      expect(utils.hostIsAllowed('anything', whitelist)).toEqual(true)
+    })
+    test('should use defaults if no whitelist specified', () => {
+      // When && Then
+      expect(utils.hostIsAllowed('http://anything.com', null)).toEqual(false)
+      expect(utils.hostIsAllowed('http://anything.com', '')).toEqual(false)
+      expect(utils.hostIsAllowed('guides.neo4j.com', undefined)).toEqual(true)
+      expect(utils.hostIsAllowed('guides.neo4j.com', null)).toEqual(true)
+      expect(utils.hostIsAllowed('guides.neo4j.com', '')).toEqual(true)
+      expect(utils.hostIsAllowed('localhost', null)).toEqual(true)
+      expect(utils.hostIsAllowed('localhost', '')).toEqual(true)
+    })
+  })
 })
