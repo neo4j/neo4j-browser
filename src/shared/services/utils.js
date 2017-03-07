@@ -16,6 +16,17 @@ export const moveInArray = (fromIndex, toIndex, arr) => {
   newArr.splice(fromIndex, 1)
   newArr.splice(toIndex, 0, el)
   return newArr
+
+export const getUrlParamValue = (name, url) => {
+  if (!url) return false
+  let out = []
+  const re = new RegExp('[\\?&]' + name + '=([^&#]*)', 'g')
+  let results
+  while ((results = re.exec(url)) !== null) {
+    if (results && results[1]) out.push(results[1])
+  }
+  if (!out.length) return undefined
+  return out
 }
 
 // Epic helpers
