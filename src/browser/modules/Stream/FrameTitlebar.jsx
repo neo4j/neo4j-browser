@@ -5,7 +5,7 @@ import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
 import { FrameButton } from 'nbnmui/buttons'
-import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon } from 'nbnmui/icons/Icons'
+import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon } from 'nbnmui/icons/Icons'
 
 import styles from './style_titlebar.css'
 
@@ -18,7 +18,7 @@ export const FrameTitlebar = ({frame, fullscreen, togglePinning, fullscreenToggl
         {frame.cmd}
       </label>
       <span>
-        <FrameButton icon={<RefreshIcon />} onClick={() => togglePinning(frame.id, frame.isPinned)} />
+        <FrameButton icon={<PinIcon />} onClick={() => togglePinning(frame.id, frame.isPinned)} />
         <FrameButton icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
         <FrameButton icon={expandCollapseIcon} onClick={() => collapseToggle()} />
         <FrameButton icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
