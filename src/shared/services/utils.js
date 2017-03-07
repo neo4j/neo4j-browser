@@ -16,6 +16,7 @@ export const moveInArray = (fromIndex, toIndex, arr) => {
   newArr.splice(fromIndex, 1)
   newArr.splice(toIndex, 0, el)
   return newArr
+}
 
 export const getUrlParamValue = (name, url) => {
   if (!url) return false
