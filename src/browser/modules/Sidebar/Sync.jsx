@@ -2,7 +2,7 @@
 import React from 'react'
 import { withBus } from 'react-suber'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
-import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
+import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
 
 export const Sync = ({bus}) => {
   return (
