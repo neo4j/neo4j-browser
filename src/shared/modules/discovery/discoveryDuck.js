@@ -2,11 +2,10 @@ import Rx from 'rxjs/Rx'
 import remote from 'services/remote'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
-export const DEFAULT_BOLT_HOST = 'bolt://localhost:7687'
-export const DISCOVERY_ENDPOINT = 'http://localhost:7474/'
 
 // Actions
 const SET = `${NAME}/SET`
@@ -42,7 +41,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
   return some$.ofType(APP_START)
     .mergeMap((action) => {
       return Rx.Observable.fromPromise(
-        remote.getJSON(DISCOVERY_ENDPOINT).then((result) => { // Try to get info from server
+        remote.getJSON(getDiscoveryEndpoint()).then((result) => { // Try to get info from server
           if (!result || !result.bolt) {
             throw new Error('No bolt address found') // No bolt info from server, throw
           }
@@ -53,7 +52,6 @@ export const discoveryOnStartupEpic = (some$, store) => {
         })
       )
       .catch((e) => {
-        store.dispatch(updateDiscoveryConnection({ host: DEFAULT_BOLT_HOST })) // Update discovery host in redux
         return new Promise((resolve, reject) => resolve(e))
       })
     })
