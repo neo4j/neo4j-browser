@@ -1,6 +1,6 @@
 import { Component } from 'preact'
 
-import {FormButton} from 'nbnmui/buttons'
+import {FormButton} from 'browser-components/buttons'
 
 export default class ChangePasswordForm extends Component {
   constructor (props) {

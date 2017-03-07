@@ -4,7 +4,7 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import UserDetails from './UserDetails'
 import DatabaseKernelInfo from './DatabaseKernelInfo'
-import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
+import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
 
 import styles from './style_meta.css'
 

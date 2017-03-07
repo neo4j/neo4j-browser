@@ -1,4 +1,4 @@
-import {FormButton} from 'nbnmui/buttons'
+import {FormButton} from 'browser-components/buttons'
 
 const ConnectForm = (props) => (
   <div>

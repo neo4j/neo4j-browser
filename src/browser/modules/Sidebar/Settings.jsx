@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
-import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
+import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
 
 import styles from './style.css'
 

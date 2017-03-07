@@ -13,7 +13,7 @@ import {
   CloudIcon,
   SettingsIcon,
   AboutIcon
-} from 'nbnmui/icons/Icons'
+} from 'browser-components/icons/Icons'
 
 import MdFlashOn from 'react-icons/lib/md/flash-on'
 import MdFlashOff from 'react-icons/lib/md/flash-off'

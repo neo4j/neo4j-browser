@@ -4,8 +4,8 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
-import { FrameButton } from 'nbnmui/buttons'
-import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon } from 'nbnmui/icons/Icons'
+import { FrameButton } from 'browser-components/buttons'
+import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon } from 'browser-components/icons/Icons'
 
 import styles from './style_titlebar.css'
 

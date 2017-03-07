@@ -1,5 +1,5 @@
 import DocumentItems from './DocumentItems'
-import { Drawer, DrawerBody, DrawerHeader } from 'nbnmui/drawer'
+import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 
 const staticItems = {
   intro: [

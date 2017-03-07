@@ -2,8 +2,8 @@ import { connect } from 'react-redux'
 import uuid from 'uuid'
 import { withBus } from 'react-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
-import { H4 } from 'nbnmui/headers'
-import { FavoriteItem } from 'nbnmui/buttons'
+import { H4 } from 'browser-components/headers'
+import { FavoriteItem } from 'browser-components/buttons'
 
 export const DocumentItems = ({header, items, onItemClick = null}) => {
   const listOfItems = items.map((item) => {

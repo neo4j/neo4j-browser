@@ -1,5 +1,5 @@
-import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
-import {H5} from 'nbnmui/headers'
+import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
+import {H5} from 'browser-components/headers'
 
 const About = () => {
   return (

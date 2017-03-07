@@ -4,7 +4,7 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import Favorite from './Favorite'
 import FileDrop from './FileDrop'
-import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
+import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
 
 export const Favorites = (props) => {
   const ListOfFavorites = props.scripts.map((entry) => {

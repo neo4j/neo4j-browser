@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
-import {FavoriteItem} from 'nbnmui/buttons'
+import {FavoriteItem} from 'browser-components/buttons'
 
 function extractNameFromCommand (input) {
   if (!input) {

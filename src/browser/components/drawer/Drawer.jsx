@@ -1,4 +1,4 @@
-import { H4 } from 'nbnmui/headers'
+import { H4 } from 'browser-components/headers'
 import styles from './style.css'
 
 export const Drawer = (props) => {

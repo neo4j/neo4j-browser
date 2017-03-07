@@ -5,8 +5,8 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'react-suber'
 import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUser } from 'shared/modules/cypher/boltUserHelper'
 
-import { FormButton } from 'nbnmui/buttons'
-import { CloseIcon } from 'nbnmui/icons/Icons'
+import { FormButton } from 'browser-components/buttons'
+import { CloseIcon } from 'browser-components/icons/Icons'
 
 import RolesSelector from './RolesSelector'
 

@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { NavigationButton } from 'nbnmui/buttons'
+import { NavigationButton } from 'browser-components/buttons'
 
 const Navigation = ({
   openDrawer,

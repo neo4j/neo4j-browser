@@ -10,8 +10,8 @@ import FrameTemplate from '../Stream/FrameTemplate'
 import FrameError from '../Stream/FrameError'
 import FrameSuccess from '../Stream/FrameSuccess'
 
-import { CloseIcon } from 'nbnmui/icons/Icons'
-import { FormButton } from 'nbnmui/buttons'
+import { CloseIcon } from 'browser-components/icons/Icons'
+import { FormButton } from 'browser-components/buttons'
 
 export class UserAdd extends Component {
   constructor (props) {

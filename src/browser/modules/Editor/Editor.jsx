@@ -10,7 +10,7 @@ import Codemirror from './Codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
-import { EditorButton } from 'nbnmui/buttons'
+import { EditorButton } from 'browser-components/buttons'
 
 import styles from './style.css'
 
