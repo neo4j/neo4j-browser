@@ -5,7 +5,7 @@ import Documents from './Documents'
 import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
-
+import Sync from './Sync'
 import {
   DatabaseIcon,
   FavoritesIcon,
@@ -45,7 +45,7 @@ class Sidebar extends Component {
       {name: 'Documents', icon: <DocumentsIcon />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: <CloudIcon />, content: SettingsDrawer},
+      {name: 'Sync', icon: <CloudIcon />, content: Sync},
       {name: 'Settings', icon: <SettingsIcon />, content: SettingsDrawer},
       {name: 'About', icon: <AboutIcon />, content: AboutDrawer}
     ]

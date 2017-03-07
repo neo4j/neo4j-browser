@@ -1,6 +1,7 @@
 import Rx from 'rxjs/Rx'
 import remote from 'services/remote'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
+import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -38,7 +39,7 @@ export const getBoltHost = (state) => {
 }
 
 export const discoveryOnStartupEpic = (some$, store) => {
-  return some$.ofType('APP_START')
+  return some$.ofType(APP_START)
     .mergeMap((action) => {
       return Rx.Observable.fromPromise(
         remote.getJSON(DISCOVERY_ENDPOINT).then((result) => { // Try to get info from server

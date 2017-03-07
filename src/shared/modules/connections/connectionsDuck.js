@@ -3,6 +3,7 @@ import bolt from 'services/bolt/bolt'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { getInitCmd, getSettings } from 'shared/modules/settings/settingsDuck'
+import { USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'connections'
 export const ADD = 'connections/ADD'
@@ -105,6 +106,8 @@ export default function (state = initialState, action) {
       return removeConnectionHelper(state, action.connectionId)
     case MERGE:
       return mergeConnectionHelper(state, action.connection)
+    case USER_CLEAR:
+      return initialState
     default:
       return state
   }

@@ -1,4 +1,5 @@
 import uuid from 'uuid'
+import { USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'favorites'
 
@@ -21,12 +22,16 @@ const staticScriptsList = [
   }
 ]
 
-export default function reducer (state = {scripts: staticScriptsList}, action) {
+// reducer
+const initialState = { scripts: staticScriptsList }
+export default function reducer (state = initialState, action) {
   switch (action.type) {
     case REMOVE_FAVORITE:
       return Object.assign({}, state, {scripts: state.scripts.filter((favorite) => favorite.id !== action.id)})
     case ADD_FAVORITE:
       return Object.assign({}, state, {scripts: state.scripts.concat([{id: uuid.v4(), content: action.cmd}])})
+    case USER_CLEAR:
+      return initialState
     default:
       return state
   }

@@ -13,34 +13,29 @@ import epics from 'shared/rootEpic'
 import './styles/style.css'
 import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
-import lStorage from 'browser-services/localstorage'
+import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
+import { APP_START } from 'shared/modules/app/appDuck'
 
+// Configure localstorage sync
+applyKeys('connections', 'settings', 'history', 'favorites')
+
+// Define Redux middlewares
 const suberMiddleware = createSuberReduxMiddleware()
 const epicMiddleware = createEpicMiddleware(epics)
+const localStorageMiddleware = createReduxMiddleware()
 
 const reducer = combineReducers({ ...reducers })
 
 const enhancer = compose(
-  applyMiddleware(suberMiddleware, epicMiddleware),
+  applyMiddleware(suberMiddleware, epicMiddleware, localStorageMiddleware),
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 
-const persistedStateKeys = ['connections', 'settings', 'history', 'favorites']
-const persistedStateStorage = window.localStorage
-
 const store = createStore(
   reducer,
-  lStorage.getStorageForKeys(
-    persistedStateKeys,
-    persistedStateStorage
-  ),
+  getAll(), // rehydrate from local storage on app start
   enhancer
 )
-store.subscribe(lStorage.createPersistingStoreListener(
-  store,
-  persistedStateKeys,
-  persistedStateStorage
-))
 
 // Send everything from suber into Redux
 applySuberMiddleware((_) => (channel, message, source) => {
@@ -51,7 +46,7 @@ applySuberMiddleware((_) => (channel, message, source) => {
 })
 
 // Signal app upstart (for epics)
-store.dispatch({ type: 'APP_START' })
+store.dispatch({ type: APP_START })
 
 render(
   <Provider store={store}>

@@ -5,6 +5,7 @@ import { getBus, createReduxMiddleware } from 'suber'
 import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
+import { APP_START } from 'shared/modules/app/appDuck'
 
 const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
 const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
@@ -25,7 +26,7 @@ describe('discoveryOnStartupEpic', () => {
 
   test('listens on APP_START and tries to find a bolt host and sets it to default when bolt discovery not found', (done) => {
     // Given
-    const action = { type: 'APP_START' }
+    const action = { type: APP_START }
     const expectedHost = discovery.DEFAULT_BOLT_HOST
     nock(discovery.DISCOVERY_ENDPOINT).get('/').reply(200, { http: 'http://localhost:7474' })
 
@@ -45,7 +46,7 @@ describe('discoveryOnStartupEpic', () => {
 
   test('listens on APP_START and tries to find a bolt host and sets it to default when fail on server error', (done) => {
     // Given
-    const action = { type: 'APP_START' }
+    const action = { type: APP_START }
     const expectedHost = discovery.DEFAULT_BOLT_HOST
     nock(discovery.DISCOVERY_ENDPOINT).get('/').reply(500)
 
@@ -65,7 +66,7 @@ describe('discoveryOnStartupEpic', () => {
 
   test('listens on APP_START and finds a bolt host and dispatches an action with the found host', (done) => {
     // Given
-    const action = { type: 'APP_START' }
+    const action = { type: APP_START }
     const expectedHost = 'bolt://myhost:7777'
     nock(discovery.DISCOVERY_ENDPOINT).get('/').reply(200, { bolt: expectedHost })
 
