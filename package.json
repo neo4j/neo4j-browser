@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --content-base ./dist --history-api-fallback",
+    "starts": "webpack-dev-server --https --inline --content-base ./dist --history-api-fallback",
     "lint": "standard --fix",
     "test": "npm run lint && jest",
     "dev": "jest --watch"

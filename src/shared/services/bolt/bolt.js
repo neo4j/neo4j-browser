@@ -20,7 +20,7 @@ function connect (props, opts = {}) {
     const creds = opts.withoutCredentials || (props.username && !props.username)
       ? undefined
       : neo4j.auth.basic(props.username, props.password)
-    const driver = neo4j.driver(props.host, creds)
+    const driver = neo4j.driver(props.host, creds, opts)
     driver.onError = (e) => reject([e, driver])
     const tmp = driver.session()
     tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject([e, driver]))
