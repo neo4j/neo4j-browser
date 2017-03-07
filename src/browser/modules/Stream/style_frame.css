@@ -10,7 +10,7 @@
 
 .contents {
   overflow: auto !important;
-  height: 370px !important;
+  height: 338px;
   padding: 0 20px 20px 20px;
   padding-top: 0 !important;
   flex: 0 1 auto;
