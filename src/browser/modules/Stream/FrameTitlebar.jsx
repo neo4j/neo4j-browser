@@ -18,7 +18,7 @@ export const FrameTitlebar = ({frame, fullscreen, togglePinning, fullscreenToggl
         {frame.cmd}
       </label>
       <span>
-        <FrameButton icon={<RefreshIcon />} onClick={onClick={() => togglePinning(frame.id, frame.isPinned)} />
+        <FrameButton icon={<RefreshIcon />} onClick={() => togglePinning(frame.id, frame.isPinned)} />
         <FrameButton icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
         <FrameButton icon={expandCollapseIcon} onClick={() => collapseToggle()} />
         <FrameButton icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
