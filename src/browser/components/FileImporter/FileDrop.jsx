@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import {NativeTypes} from 'react-dnd-html5-backend'
 import { DropTarget } from 'react-dnd'
 import { wrapWithDndContext } from './dndGlobalContext'
@@ -20,7 +20,7 @@ const fileTarget = {
   }
 }
 
-class FileDropZone extends React.Component {
+class FileDropZone extends Component {
   constructor (props) {
     super(props)
     this.state = {

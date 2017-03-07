@@ -1,6 +1,7 @@
 {
   "presets": ["es2015", "stage-0", "react"],
   "plugins": [
+    "preact-require",
     ["module-resolver", {
       "root": ["./src", "./node_modules", "src/shared", "src/browser"],
       "extensions": ["", ".js", ".jsx", ".es", ".es6", ".json"],
@@ -16,6 +17,9 @@
         "nbnmui": "./src/browser/components/nbnmui",
         "browser-components": "./src/browser/components"
       }
+    }],
+    ["transform-react-jsx", {
+      "pragma": "h"
     }]
   ]
 }

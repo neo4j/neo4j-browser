@@ -1,5 +1,3 @@
-import React from 'react'
-
 import styles from './style_sidebar.css'
 
 const FrameSidebar = (props) => {

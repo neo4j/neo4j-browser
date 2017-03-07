@@ -1,9 +1,9 @@
-import React from 'react'
+import { Component } from 'preact'
 import { connect } from 'react-redux'
 import { selectBookmark } from '../actions'
 import { getBookmarks, getActiveBookmark } from '../reducer'
 
-export class Dropdown extends React.Component {
+export class Dropdown extends Component {
   constructor (props) {
     super(props)
     this.state = {selected: this.props.activeBookmark}

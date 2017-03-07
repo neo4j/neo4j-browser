@@ -1,6 +1,6 @@
 import { DragDropManager } from 'dnd-core'
 import HTML5Backend from 'react-dnd-html5-backend'
-import React from 'react'
+import { Component } from 'preact'
 
 let defaultManager
 
@@ -20,7 +20,7 @@ const getDndContext = () => {
   return defaultManager
 }
 
-class DndContextWrapping extends React.Component {
+class DndContextWrapping extends Component {
 
   getChildContext () {
     return {
@@ -34,9 +34,6 @@ class DndContextWrapping extends React.Component {
       <this.props.Component {...childProps} />
     )
   }
-}
-DndContextWrapping.childContextTypes = {
-  dragDropManager: React.PropTypes.object.isRequired
 }
 
 export const wrapWithDndContext = (Component) => {

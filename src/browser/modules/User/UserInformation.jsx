@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import {v4} from 'uuid'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
@@ -10,7 +10,7 @@ import { CloseIcon } from 'nbnmui/icons/Icons'
 
 import RolesSelector from './RolesSelector'
 
-export class UserInformation extends React.Component {
+export class UserInformation extends Component {
   constructor (props) {
     super(props)
     this.state = {

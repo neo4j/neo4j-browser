@@ -1,10 +1,10 @@
-import React from 'react'
+import { Component } from 'preact'
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
 import {addFavorite} from 'shared/modules/favorites/favoritesDuck'
 
-export class FileDrop extends React.Component {
+export class FileDrop extends Component {
   constructor (props) {
     super(props)
     this.state = {

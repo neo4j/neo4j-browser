@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import * as commands from 'shared/modules/commands/commandsDuck'
@@ -6,7 +6,7 @@ import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
-import Codemirror from 'react-codemirror'
+import Codemirror from './Codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
@@ -14,7 +14,7 @@ import { EditorButton } from 'nbnmui/buttons'
 
 import styles from './style.css'
 
-export class Editor extends React.Component {
+export class Editor extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -72,8 +72,8 @@ export class Editor extends React.Component {
     }
   }
   componentDidMount () {
-    this.codeMirror = this.refs.editor.getCodeMirror()
-    this.codeMirrorInstance = this.refs.editor.getCodeMirrorInstance()
+    this.codeMirror = this.editor.getCodeMirror()
+    this.codeMirrorInstance = this.editor.getCodeMirrorInstance()
     this.codeMirrorInstance.keyMap['default']['Enter'] = this.handleEnter.bind(this)
     this.codeMirrorInstance.keyMap['default']['Shift-Enter'] = this.newlineAndIndent.bind(this)
     this.codeMirrorInstance.keyMap['default']['Cmd-Enter'] = this.execCurrent.bind(this)
@@ -115,7 +115,7 @@ export class Editor extends React.Component {
       <div id='editor' className={styles.editorContainer}>
         <div className={styles['editor-wrapper']}>
           <Codemirror
-            ref='editor'
+            ref={(ref) => { this.editor = ref }}
             value={this.state.code}
             onChange={updateCode}
             options={options}

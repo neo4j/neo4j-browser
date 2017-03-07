@@ -1,7 +1,7 @@
-import React from 'react'
+import { Component } from 'preact'
 import styles from './style.css'
 
-export class ToolTip extends React.Component {
+export class ToolTip extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -35,7 +35,7 @@ export const CloseButton = (props) => {
   )
 }
 export const EditorButton = (props) => {
-  return (<button className={styles.editor}>{props.children}</button>)
+  return (<button {...props} className={styles.editor}>{props.children}</button>)
 }
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
@@ -54,10 +54,10 @@ export const NavigationButton = (props) => {
 export const FormButton = (props) => {
   const {icon, label, children, ...rest} = props
 
-  if (icon && label) return (<button {...rest} type='submit'>{label} {icon}</button>)
-  if (icon) return (<button {...rest} type='submit'>{icon}</button>)
-  if (label) return (<button {...rest} type='submit'>{label}</button>)
-  return (<button {...props} type='submit'>{children}</button>)
+  if (icon && label) return (<button {...rest} type='button'>{label} {icon}</button>)
+  if (icon) return (<button {...rest} type='button'>{icon}</button>)
+  if (label) return (<button {...rest} type='button'>{label}</button>)
+  return (<button {...props} type='button'>{children}</button>)
 }
 export const CypherFrameButton = (props) => {
   const {selected, icon, ...rest} = props

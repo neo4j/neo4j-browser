@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
 import Favorites from './Favorites'
 import Documents from './Documents'
@@ -21,7 +21,7 @@ import Badge from 'browser-components/badge'
 
 import styles from './style.css'
 
-class Sidebar extends React.Component {
+class Sidebar extends Component {
   render () {
     const openDrawer = this.props.openDrawer
     const onNavClick = this.props.onNavClick

@@ -1,4 +1,3 @@
-import React from 'react'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'nbnmui/drawer'
 

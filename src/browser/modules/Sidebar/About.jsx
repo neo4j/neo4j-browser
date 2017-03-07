@@ -1,4 +1,3 @@
-import React from 'react'
 import {Drawer, DrawerBody, DrawerHeader} from 'nbnmui/drawer'
 import {H5} from 'nbnmui/headers'
 

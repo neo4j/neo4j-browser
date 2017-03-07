@@ -1,7 +1,7 @@
-import React from 'react'
+import { Component } from 'preact'
 import { v4 } from 'uuid'
 
-class TableView extends React.Component {
+class TableView extends Component {
   constructor (props) {
     super(props)
     const dataCopy = props.data.slice()

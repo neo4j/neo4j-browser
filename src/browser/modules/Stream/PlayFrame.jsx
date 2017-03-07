@@ -1,4 +1,3 @@
-import React from 'react'
 import Guides from '../Guides/Guides'
 import * as html from '../Guides/html'
 import FrameTemplate from './FrameTemplate'

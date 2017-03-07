@@ -1,8 +1,7 @@
 import 'babel-polyfill'
 import { createEpicMiddleware } from 'redux-observable'
 import 'preact/devtools'
-import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
@@ -54,7 +53,7 @@ applySuberMiddleware((_) => (channel, message, source) => {
 // Signal app upstart (for epics)
 store.dispatch({ type: 'APP_START' })
 
-ReactDOM.render(
+render(
   <Provider store={store}>
     <App />
   </Provider>,

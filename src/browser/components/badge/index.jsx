@@ -1,4 +1,3 @@
-import React from 'react'
 import style from './style.css'
 
 const Badge = ({children = null, status = 'ok', size = 'medium'}) => {

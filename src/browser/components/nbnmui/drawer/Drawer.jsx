@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { H4 } from 'nbnmui/headers'
 import styles from './style.css'
 

@@ -1,8 +1,8 @@
-import React from 'react'
+import { Component } from 'preact'
 
 import {FormButton} from 'nbnmui/buttons'
 
-export default class ChangePasswordForm extends React.Component {
+export default class ChangePasswordForm extends Component {
   constructor (props) {
     super(props)
     this.state = {

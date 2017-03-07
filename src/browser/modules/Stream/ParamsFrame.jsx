@@ -1,4 +1,3 @@
-import React from 'react'
 import Visible from 'components/Visible'
 import FrameTemplate from './FrameTemplate'
 

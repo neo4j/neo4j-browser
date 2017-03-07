@@ -1,10 +1,10 @@
-import React from 'react'
+import { Component } from 'preact'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { getCurrentUser, updateCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
 
-export class UserInfoComponent extends React.Component {
+export class UserInfoComponent extends Component {
   constructor (props) {
     super(props)
     this.state = {user: this.props.info}

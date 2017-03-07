@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import uuid from 'uuid'
 import { withBus } from 'react-suber'
 import { listUsersQuery, listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
@@ -8,7 +8,7 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import FrameTemplate from '../Stream/FrameTemplate'
 
-export class UserList extends React.Component {
+export class UserList extends Component {
   constructor (props) {
     super(props)
     this.state = {

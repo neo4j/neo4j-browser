@@ -1,7 +1,7 @@
-import React from 'react'
+import { Component } from 'preact'
 import styles from './icons.css'
 
-class IconContainer extends React.Component {
+class IconContainer extends Component {
   constructor (props) {
     super(props)
     this.state = {

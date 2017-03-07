@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'preact'
 import { withBus } from 'react-suber'
 
 import bolt from 'services/bolt/bolt'
@@ -13,7 +13,7 @@ import FrameSuccess from '../Stream/FrameSuccess'
 import { CloseIcon } from 'nbnmui/icons/Icons'
 import { FormButton } from 'nbnmui/buttons'
 
-export class UserAdd extends React.Component {
+export class UserAdd extends Component {
   constructor (props) {
     super(props)
     this.state = {
