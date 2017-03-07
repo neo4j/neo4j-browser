@@ -5,5 +5,6 @@ export const getEncryptionMode = () => {
 }
 
 export const getDiscoveryEndpoint = () => {
-  return `//${location.host}/`
+  const host = location.host ? `//${location.host}/` : 'http://localhost:7474/'
+  return host
 }
