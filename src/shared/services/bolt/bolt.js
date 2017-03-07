@@ -17,7 +17,7 @@ function openConnection ({id, name, username, password, host}, opts = {}) {
 
 function connect (props, opts = {}) {
   const p = new Promise((resolve, reject) => {
-    const creds = opts.withotCredentials || (props.username && !props.username)
+    const creds = opts.withoutCredentials || (props.username && !props.username)
       ? undefined
       : neo4j.auth.basic(props.username, props.password)
     const driver = neo4j.driver(props.host, creds)
