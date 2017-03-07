@@ -1,8 +1,9 @@
-import 'rxjs'
+import bolt from 'services/bolt/bolt'
 import { cleanCommand } from 'services/commandUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getSettings } from '../settings/settingsDuck'
+import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 
 const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
@@ -51,3 +52,24 @@ export const handleCommandsEpic = (action$, store) =>
         }
       })
     })
+
+export const postConnectCmdEpic = (some$, store) =>
+  some$.ofType(CONNECTION_SUCCESS)
+    .mergeMap(() => {
+      return bolt.transaction('CALL dbms.queryJmx("org.neo4j:*")')
+        .then((res) => {
+          // Find kernel conf
+          let conf
+          res.records.forEach((record) => {
+            if (record.get('name').match(/Configuration$/)) conf = record.get('attributes')
+          })
+          if (conf && conf['browser.post_connect_cmd'] && conf['browser.post_connect_cmd'].value) {
+            const cmdchar = getSettings(store.getState()).cmdchar
+            store.dispatch(executeSystemCommand(`${cmdchar}${conf['browser.post_connect_cmd'].value}`))
+          }
+          return null
+        }).catch((e) => {
+          return null
+        })
+    })
+    .mapTo({ type: 'NOOP' })
