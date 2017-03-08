@@ -44,6 +44,12 @@ const availableCommands = [{
     put(frames.add({...action, type: 'params', params: getParams(store.getState())}))
   }
 }, {
+  name: 'schema',
+  match: (cmd) => /^schema$/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'schema'}))
+  }
+}, {
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
