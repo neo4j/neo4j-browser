@@ -4,11 +4,13 @@ import Directives from 'browser-components/Directives'
 import FrameTemplate from './FrameTemplate'
 
 const HelpFrame = ({frame}) => {
+  const snakeToCamel = (string) => string.replace(/(\-\w)/g, (match) => { return match[1].toUpperCase() })
+
   let help = 'Help topic not specified'
   if (frame.result) {
     help = <Slide html={frame.result} />
   } else {
-    const helpTopic = '_' + frame.cmd.replace(':help', '').trim()
+    const helpTopic = snakeToCamel('_' + frame.cmd.replace(':help', '').trim())
     if (helpTopic !== '') {
       const content = html.default[helpTopic]
       if (content !== undefined) {
