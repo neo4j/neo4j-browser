@@ -28,10 +28,10 @@ export default class Guides extends Component {
     this.setState({ slides: reactSlides, firstRender: false })
   }
   next () {
-    this.refs.reactSwipe.next()
+    this.carousel.next()
   }
   prev () {
-    this.refs.reactSwipe.prev()
+    this.carousel.prev()
   }
   render () {
     if (this.state.slides && Array.isArray(this.state.slides)) {
@@ -54,7 +54,7 @@ export default class Guides extends Component {
       return (
         <div key={uuid.v4()} className={styles.carouselContainer}>
           <button className={styles.leftButton} onClick={this.prev.bind(this)}>{'<'}</button>
-          <ReactSwipe className={styles.carousel} ref='reactSwipe' swipeOptions={{continuous: false}}>
+          <ReactSwipe className={styles.carousel} ref={(ref) => { this.carousel = ref }} swipeOptions={{continuous: false}}>
             {ListOfSlides}
           </ReactSwipe>
           <button className={styles.rightButton} onClick={this.next.bind(this)}>{'>'}</button>
