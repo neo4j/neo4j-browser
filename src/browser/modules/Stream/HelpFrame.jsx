@@ -1,5 +1,6 @@
 import Slide from '../Guides/Slide'
 import * as html from '../Help/html'
+import Directives from 'browser-components/Directives'
 import FrameTemplate from './FrameTemplate'
 
 const HelpFrame = ({frame}) => {
@@ -21,7 +22,7 @@ const HelpFrame = ({frame}) => {
     <FrameTemplate
       className='helpFrame'
       header={frame}
-      contents={help}
+      contents={<Directives content={help} />}
     />
   )
 }
