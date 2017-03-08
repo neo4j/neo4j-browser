@@ -4806,6 +4806,10 @@ preact-render-to-string@^3.2.1:
   dependencies:
     pretty-format "^3.5.1"
 
+preact-suber@^0.1.0:
+  version "0.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-suber/-/preact-suber-0.1.0.tgz#53e158563bce3874cb414e10b3f4b785857e6eb7"
+
 preact-transition-group@^1.1.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-transition-group/-/preact-transition-group-1.1.0.tgz#97d0beff0790d721faecd2560c02cd30d5426f23"
@@ -5050,10 +5054,6 @@ react-redux@^4.4.5:
     invariant "^2.0.0"
     lodash "^4.2.0"
     loose-envify "^1.1.0"
-
-react-suber@^0.1.0:
-  version "0.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-suber/-/react-suber-0.1.0.tgz#eaec4e18b1f72c2ac188b1c3a5205e161aa48794"
 
 react-swipe@^5.0.3:
   version "5.0.6"

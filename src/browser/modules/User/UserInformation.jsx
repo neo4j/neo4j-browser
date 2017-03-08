@@ -2,7 +2,7 @@ import { Component } from 'preact'
 import {v4} from 'uuid'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUser } from 'shared/modules/cypher/boltUserHelper'
 
 import { FormButton } from 'browser-components/buttons'

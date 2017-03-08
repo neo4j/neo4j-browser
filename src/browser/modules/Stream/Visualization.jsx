@@ -1,7 +1,7 @@
 import { Component } from 'preact'
 import Nevada from 'neo4j-visualization'
 import bolt from 'services/bolt/bolt'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import styles from './style_cypher.css'

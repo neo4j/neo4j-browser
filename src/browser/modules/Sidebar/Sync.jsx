@@ -1,6 +1,6 @@
 /* global confirm */
 import React from 'react'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
 import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
 
