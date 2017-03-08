@@ -14,6 +14,7 @@ import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import QueriesFrame from './Queries/QueriesFrame'
 
 export const Stream = (props) => {
   const {frames} = props
@@ -91,6 +92,12 @@ export const Stream = (props) => {
             key={frame.id}
             frame={frame}
             activeConnectionData={props.activeConnectionData}
+          />
+        )
+      case 'queries':
+        return (
+          <QueriesFrame
+            key={frame.id} frame={frame}
           />
         )
       default:

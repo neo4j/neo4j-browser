@@ -9,6 +9,7 @@ import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
 import { CouldNotFetchRemoteGuideError, UnknownCommandError } from 'services/exceptions'
+import { handleQueriesCommand } from 'shared/modules/commands/helpers/queries';
 
 const availableCommands = [{
   name: 'clear',
@@ -102,6 +103,23 @@ const availableCommands = [{
     return newAction
   }
 }, {
+  name: 'queries',
+  match: (cmd) => cmd === 'queries' || cmd === 'qs',
+  exec: (action, cmdchar, put, store) => {
+      const response = handleQueriesCommand(action, cmdchar, put, store)
+      if (response && response.then) {
+          response.then((res) => {
+              if (res) put(frames.add({ ...action, ...res
+              }))
+          })
+      } else if (response) {
+          put(frames.add({ ...action,
+              ...response
+          }))
+      }
+      return response;
+  }
+},{
   name: 'catch-all',
   match: () => true,
   exec: (action, cmdchar, put) => {
