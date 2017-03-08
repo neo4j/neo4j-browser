@@ -7,6 +7,7 @@ import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
 import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
+import HelpFrame from './HelpFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import UserList from '../User/UserList'
@@ -88,6 +89,14 @@ export const Stream = (props) => {
       case 'disconnect':
         return (
           <DisconnectFrame
+            key={frame.id}
+            frame={frame}
+            activeConnectionData={props.activeConnectionData}
+          />
+        )
+      case 'help':
+        return (
+          <HelpFrame
             key={frame.id}
             frame={frame}
             activeConnectionData={props.activeConnectionData}

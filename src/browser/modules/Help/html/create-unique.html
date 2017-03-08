@@ -1,0 +1,36 @@
+<article class="help">
+  <section class="main">
+    <div class="headings">
+      <p class="title">CREATE UNIQUE</p>
+      <p class="subtitle">Match meets Create</p>
+    </div>
+    <div class="content">
+      <p>The&nbsp;<code>CREATE UNIQUE</code> clause is a mix of <code>MATCH</code> and <code>CREATE</code> it will match what it can, and create what is missing.</p>
+      <div class="links">
+        <div class="link">
+          <p class="title">Reference</p>
+          <p class="content">
+            <code><a href="https://neo4j.com/docs/developer-manual/3.0/#query-create-unique">CREATE UNIQUE</code> manual page</a>
+          </p>
+        </div>
+        <div class="link">
+          <p class="title">Related</p>
+          <p class="content">
+            <a help-topic="match">:help MATCH</a>&nbsp;<a help-topic="create">:help CREATE</a>&nbsp;<a help-topic="merge">:help MERGE</a>&nbsp;<a help-topic="cypher">:help Cypher</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="example">
+    <figure>
+      <pre class="code runnable standalone-example">
+        MATCH (us:Country)
+        WHERE us.name = 'United States'
+        CREATE UNIQUE (us)-[:STATE]-&gt;(ca {name:'California'})
+        RETURN ca
+      </pre>
+      <figcaption>Finds the country named "United States". If found, will then create a new state named California, but only if it doesn't already exist.</figcaption>
+    </figure>
+  </section>
+</article>

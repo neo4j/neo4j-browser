@@ -102,6 +102,12 @@ const availableCommands = [{
     return newAction
   }
 }, {
+  name: 'help',
+  match: (cmd) => /^help(\s|$)/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'help'}))
+  }
+}, {
   name: 'catch-all',
   match: () => true,
   exec: (action, cmdchar, put) => {
