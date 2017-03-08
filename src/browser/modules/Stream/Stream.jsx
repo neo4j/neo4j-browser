@@ -8,6 +8,7 @@ import ParamsFrame from './ParamsFrame'
 import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
 import SchemaFrame from './SchemaFrame'
+import SysInfoFrame from './SysInfoFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import UserList from '../User/UserList'
@@ -97,6 +98,13 @@ export const Stream = (props) => {
       case 'schema':
         return (
           <SchemaFrame
+            key={frame.id}
+            frame={frame}
+          />
+        )
+      case 'sysinfo':
+        return (
+          <SysInfoFrame
             key={frame.id}
             frame={frame}
           />
