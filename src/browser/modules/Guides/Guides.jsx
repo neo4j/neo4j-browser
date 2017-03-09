@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import uuid from 'uuid'
 import ReactSwipe from 'react-swipe'
 import Slide from './Slide'
-import Directives from './Directives'
+import Directives from 'browser-components/Directives'
 
 import styles from './style.css'
 
