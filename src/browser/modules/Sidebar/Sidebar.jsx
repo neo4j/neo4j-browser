@@ -1,9 +1,11 @@
 import { Component } from 'preact'
+import { DISCONNECTED_STATE, CONNECTED_STATE, PENDING_STATE } from 'shared/modules/connections/connectionsDuck'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
 import Favorites from './Favorites'
 import Documents from './Documents'
 import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
+import Visible from 'browser-components/Visible'
 import Settings from './Settings'
 import Sync from './Sync'
 import {
@@ -33,10 +35,15 @@ class Sidebar extends Component {
     const dbIcon = (
       <div style={{position: 'relative'}}>
         <DatabaseIcon />
-        { this.props.activeConnection
-          ? <Badge status='ok'><MdFlashOn /></Badge>
-          : <Badge status='error'><MdFlashOff /></Badge>
-        }
+        <Visible if={this.props.connectionState === DISCONNECTED_STATE}>
+          <Badge status='error'><MdFlashOff /></Badge>
+        </Visible>
+        <Visible if={this.props.connectionState === CONNECTED_STATE}>
+          <Badge status='ok'><MdFlashOn /></Badge>
+        </Visible>
+        <Visible if={this.props.connectionState === PENDING_STATE}>
+          <Badge status='warning'><MdFlashOff /></Badge>
+        </Visible>
       </div>
     )
     const topNavItemsList = [

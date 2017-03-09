@@ -8,16 +8,16 @@ import styles from './style.css'
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import { getActiveConnection } from 'shared/modules/connections/connectionsDuck'
+import { getConnectionState } from 'shared/modules/connections/connectionsDuck'
 
-const BaseLayout = ({drawer, handleNavClick, activeConnection, theme}) => {
+const BaseLayout = ({drawer, handleNavClick, activeConnection, connectionState, theme}) => {
   const themeData = themes[theme] || themes['normal']
   return (
     <ThemeProvider theme={themeData}>
       <div className={styles.wrapper}>
         <div className={styles.app}>
           <div className={styles.body}>
-            <Sidebar activeConnection={activeConnection} openDrawer={drawer} onNavClick={handleNavClick} />
+            <Sidebar activeConnection={activeConnection} openDrawer={drawer} onNavClick={handleNavClick} connectionState={connectionState} />
             <div className={styles.mainContent}>
               <Main />
             </div>
@@ -32,7 +32,8 @@ const mapStateToProps = (state) => {
   return {
     drawer: state.drawer,
     activeConnection: getActiveConnection(state),
-    theme: getTheme(state)
+    theme: getTheme(state),
+    connectionState: getConnectionState(state)
   }
 }
 
