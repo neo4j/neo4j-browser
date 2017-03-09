@@ -101,6 +101,7 @@ export const Stream = (props) => {
             key={frame.id}
             frame={frame}
           />
+        )
       case 'schema':
         return (
           <SchemaFrame
