@@ -30,5 +30,24 @@ export const getUrlParamValue = (name, url) => {
   return out
 }
 
+export const toHumanReadableBytes = (input) => {
+  let number = +input
+  if (!isFinite(number)) { return '-' }
+
+  if (number < 1024) {
+    return `${number} B`
+  }
+
+  number /= 1024
+  let units = ['KiB', 'MiB', 'GiB', 'TiB']
+
+  for (let unit of Array.from(units)) {
+    if (number < 1024) { return `${number.toFixed(2)} ${unit}` }
+    number /= 1024
+  }
+
+  return `${number.toFixed(2)} PiB`
+}
+
 // Epic helpers
 export const put = (dispatch) => (action) => dispatch(action)

@@ -14,6 +14,7 @@ export const SysInfoTable = ({header, children}) => {
 }
 
 export const SysInfoTableEntry = ({label, value}) => {
+  console.log('v', value)
   return (
     <tr>
       <td>{label}</td>
