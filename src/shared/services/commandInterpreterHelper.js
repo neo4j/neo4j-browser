@@ -44,6 +44,12 @@ const availableCommands = [{
     put(frames.add({...action, type: 'params', params: getParams(store.getState())}))
   }
 }, {
+  name: 'schema',
+  match: (cmd) => /^schema$/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'schema'}))
+  }
+}, {
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
@@ -106,6 +112,12 @@ const availableCommands = [{
   match: (cmd) => cmd === 'queries',
   exec: (action, cmdchar, put, store) => {
     put(frames.add({ ...action, type: 'queries', result: "{res : 'QUERIES RESULT'}" }))
+  }
+}, {
+  name: 'help',
+  match: (cmd) => /^help(\s|$)/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'help'}))
   }
 }, {
   name: 'catch-all',
