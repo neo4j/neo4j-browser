@@ -94,7 +94,7 @@ export class ConnectionFrame extends Component {
     this.props.executeInitCmd()
   }
   componentWillReceiveProps (nextProps) {
-    if (nextProps.activeConnection) {
+    if (nextProps.activeConnection && nextProps.activeConnectionData) {
       this.setState({ isConnected: true })
     } else {
       this.setState({ isConnected: false })
