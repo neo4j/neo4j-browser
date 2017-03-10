@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import Favorite from './Favorite'

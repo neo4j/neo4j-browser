@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
 import Visible from 'browser-components/Visible'

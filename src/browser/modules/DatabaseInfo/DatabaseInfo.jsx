@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import UserDetails from './UserDetails'

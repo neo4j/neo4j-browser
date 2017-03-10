@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 
 import bolt from 'services/bolt/bolt'
 import { listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
