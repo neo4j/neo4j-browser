@@ -106,7 +106,7 @@ describe('utils', () => {
       expect(utils.hostIsAllowed('guides.neo4j.com', '')).toEqual(true)
       expect(utils.hostIsAllowed('localhost', null)).toEqual(true)
       expect(utils.hostIsAllowed('localhost', '')).toEqual(true)
-    }
+    })
     test('can parse url params correctly', () => {
     // Given
       const urls = [
@@ -121,6 +121,7 @@ describe('utils', () => {
       urls.forEach((tCase) => {
         const res = utils.getUrlParamValue(tCase.paramName, tCase.location)
         expect(res).toEqual(tCase.expect)
+      })
     })
   })
 })
