@@ -46,6 +46,12 @@ const availableCommands = [{
     put(frames.add({...action, type: 'params', params: getParams(store.getState())}))
   }
 }, {
+  name: 'schema',
+  match: (cmd) => /^schema$/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'schema'}))
+  }
+}, {
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
@@ -109,6 +115,12 @@ const availableCommands = [{
     const newAction = frames.add({ ...action, result: historyState, type: 'history' })
     put(newAction)
     return newAction
+  }
+}, {
+  name: 'help',
+  match: (cmd) => /^help(\s|$)/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'help'}))
   }
 }, {
   name: 'catch-all',

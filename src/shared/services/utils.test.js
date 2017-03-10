@@ -29,6 +29,7 @@ describe('utils', () => {
       expect(utils.moveInArray(t.from, t.to, t.test)).toEqual(t.expect)
     })
   })
+
   test('getUrlInfo', () => {
     // When && Then
     expect(utils.getUrlInfo('http://anything.com')).toEqual({
@@ -105,6 +106,21 @@ describe('utils', () => {
       expect(utils.hostIsAllowed('guides.neo4j.com', '')).toEqual(true)
       expect(utils.hostIsAllowed('localhost', null)).toEqual(true)
       expect(utils.hostIsAllowed('localhost', '')).toEqual(true)
+    }
+    test('can parse url params correctly', () => {
+    // Given
+      const urls = [
+        {location: 'http://neo4j.com/?param=1', paramName: 'param', expect: ['1']},
+        {location: 'http://neo4j.com/?param=1&param=2', paramName: 'param', expect: ['1', '2']},
+        {location: 'http://neo4j.com/?param2=2&param=1', paramName: 'param', expect: ['1']},
+        {location: 'http://neo4j.com/?param=', paramName: 'param', expect: undefined},
+        {location: 'http://neo4j.com/', paramName: 'param', expect: undefined}
+      ]
+
+      // When & Then
+      urls.forEach((tCase) => {
+        const res = utils.getUrlParamValue(tCase.paramName, tCase.location)
+        expect(res).toEqual(tCase.expect)
     })
   })
 })

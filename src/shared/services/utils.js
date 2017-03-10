@@ -52,5 +52,17 @@ export const getUrlInfo = (url) => {
   }
 }
 
+export const getUrlParamValue = (name, url) => {
+  if (!url) return false
+  let out = []
+  const re = new RegExp('[\\?&]' + name + '=([^&#]*)', 'g')
+  let results
+  while ((results = re.exec(url)) !== null) {
+    if (results && results[1]) out.push(results[1])
+  }
+  if (!out.length) return undefined
+  return out
+}
+
 // Epic helpers
 export const put = (dispatch) => (action) => dispatch(action)

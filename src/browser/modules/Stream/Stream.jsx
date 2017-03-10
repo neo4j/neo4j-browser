@@ -7,6 +7,8 @@ import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
 import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
+import HelpFrame from './HelpFrame'
+import SchemaFrame from './SchemaFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import UserList from '../User/UserList'
@@ -91,6 +93,20 @@ export const Stream = (props) => {
             key={frame.id}
             frame={frame}
             activeConnectionData={props.activeConnectionData}
+          />
+        )
+      case 'help':
+        return (
+          <HelpFrame
+            key={frame.id}
+            frame={frame}
+          />
+        )
+      case 'schema':
+        return (
+          <SchemaFrame
+            key={frame.id}
+            frame={frame}
           />
         )
       default:
