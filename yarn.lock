@@ -165,12 +165,11 @@ asap@^2.0.3, asap@~2.0.3:
   version "2.0.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/asap/-/asap-2.0.5.tgz#522765b50c3510490e52d7dcfe085ef9ba96958f"
 
-ascii-data-table@^2.0.0:
-  version "2.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/ascii-data-table/-/ascii-data-table-2.0.0.tgz#d1537aa37472efa42b923602d070e862c14dbeed"
+ascii-data-table@^2.1.1:
+  version "2.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ascii-data-table/-/ascii-data-table-2.1.1.tgz#8f62f67c0f2625339a7e0b568c2aeed875a410fe"
   dependencies:
     core-js "^2.4.1"
-    ramda "^0.22.1"
 
 asn1@~0.2.3:
   version "0.2.3"
@@ -4807,6 +4806,10 @@ preact-render-to-string@^3.2.1:
   dependencies:
     pretty-format "^3.5.1"
 
+preact-suber@^0.1.0:
+  version "0.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-suber/-/preact-suber-0.1.0.tgz#53e158563bce3874cb414e10b3f4b785857e6eb7"
+
 preact-transition-group@^1.1.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-transition-group/-/preact-transition-group-1.1.0.tgz#97d0beff0790d721faecd2560c02cd30d5426f23"
@@ -4948,10 +4951,6 @@ querystringify@0.0.x:
   version "0.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/querystringify/-/querystringify-0.0.4.tgz#0cf7f84f9463ff0ae51c4c4b142d95be37724d9c"
 
-ramda@^0.22.1:
-  version "0.22.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/ramda/-/ramda-0.22.1.tgz#031da0c3df417c5b33c96234757eb37033f36a0e"
-
 randomatic@^1.1.3:
   version "1.1.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/randomatic/-/randomatic-1.1.6.tgz#110dcabff397e9dcff7c0789ccc0a49adf1ec5bb"
@@ -5055,10 +5054,6 @@ react-redux@^4.4.5:
     invariant "^2.0.0"
     lodash "^4.2.0"
     loose-envify "^1.1.0"
-
-react-suber@^0.1.0:
-  version "0.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-suber/-/react-suber-0.1.0.tgz#eaec4e18b1f72c2ac188b1c3a5205e161aa48794"
 
 react-swipe@^5.0.3:
   version "5.0.6"

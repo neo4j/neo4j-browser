@@ -7,6 +7,8 @@ import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
 import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
+import HelpFrame from './HelpFrame'
+import SchemaFrame from './SchemaFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import UserList from '../User/UserList'
@@ -15,92 +17,39 @@ import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 
+const getFrame = (type, id, props) => {
+  const trans = {
+    error: ErrorFrame,
+    cypher: CypherFrame,
+    'user-list': UserList,
+    'user-add': UserAdd,
+    pre: PreFrame,
+    play: PlayFrame,
+    'play-remote': PlayFrame,
+    history: HistoryFrame,
+    param: ParamFrame,
+    params: ParamsFrame,
+    connection: ConnectionFrame,
+    disconnect: DisconnectFrame,
+    schema: SchemaFrame,
+    help: HelpFrame,
+    default: Frame
+  }
+  const MyFrame = trans[type] || trans['default']
+  return <MyFrame {...props} key={id} />
+}
+
 export const Stream = (props) => {
   const {frames} = props
   const framesList = frames.map((frame) => {
-    switch (frame.type) {
-      case 'error':
-        return (
-          <ErrorFrame
-            key={frame.id} frame={frame}
-          />
-        )
-      case 'cypher':
-        return (
-          <CypherFrame
-            key={frame.id}
-            frame={frame}
-            request={props.requests[frame.requestId]}
-          />
-        )
-      case 'user-list':
-        return (
-          <UserList
-            key={frame.id} frame={frame}
-          />
-        )
-      case 'user-add':
-        return (
-          <UserAdd
-            key={frame.id} frame={frame}
-          />
-        )
-      case 'pre':
-        return (
-          <PreFrame
-            key={frame.id} frame={frame}
-          />
-        )
-      case 'play':
-      case 'play-remote':
-        return (
-          <PlayFrame
-            key={frame.id} frame={frame}
-          />
-        )
-      case 'history':
-        return (
-          <HistoryFrame
-            key={frame.id} frame={frame}
-          />
-        )
-      case 'param':
-        return (
-          <ParamFrame
-            key={frame.id}
-            frame={frame}
-          />
-        )
-      case 'params':
-        return (
-          <ParamsFrame
-            key={frame.id}
-            frame={frame}
-          />
-        )
-      case 'connection':
-        return (
-          <ConnectionFrame
-            key={frame.id}
-            frame={frame}
-          />
-        )
-      case 'disconnect':
-        return (
-          <DisconnectFrame
-            key={frame.id}
-            frame={frame}
-            activeConnectionData={props.activeConnectionData}
-          />
-        )
-      default:
-        return (
-          <Frame
-            key={frame.id} frame={frame}
-          />
-        )
+    const frameProps = {
+      frame,
+      activeConnectionData: props.activeConnectionData,
+      request: props.requests[frame.requestId]
     }
+    return getFrame(frame.type, frame.id, frameProps)
   })
+
   return (
     <div id='stream' style={{
       padding: '20px',

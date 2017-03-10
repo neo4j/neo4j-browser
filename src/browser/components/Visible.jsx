@@ -1,4 +1,4 @@
 const Visible = ({if: cond, children}) => {
-  return cond ? children : null
+  return cond ? children[0] : null
 }
 export default Visible

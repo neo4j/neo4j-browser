@@ -3,7 +3,9 @@ import { getHistory } from 'shared/modules/history/historyDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { cleanHtml } from 'services/remoteUtils'
+import { hostIsAllowed } from 'services/utils'
 import remote from 'services/remote'
+import { getServerConfig } from 'services/bolt/boltHelpers'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
@@ -44,6 +46,12 @@ const availableCommands = [{
     put(frames.add({...action, type: 'params', params: getParams(store.getState())}))
   }
 }, {
+  name: 'schema',
+  match: (cmd) => /^schema$/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'schema'}))
+  }
+}, {
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
@@ -78,13 +86,20 @@ const availableCommands = [{
   match: (cmd) => /^play(\s|$)https?/.test(cmd),
   exec: function (action, cmdchar, put, store) {
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
-    try {
-      remote.get(url).then((r) => {
-        put(frames.add({...action, type: 'play-remote', result: cleanHtml(r)}))
-      })
-    } catch (e) {
-      put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e)}))
-    }
+    getServerConfig().then((conf) => {
+      const whitelist = conf && conf['browser.remote_content_hostname_whitelist']
+      if (!hostIsAllowed(url, whitelist.value)) {
+        throw new Error('Hostname is not allowed according to server whitelist')
+      }
+      remote.get(url)
+        .then((r) => {
+          put(frames.add({...action, type: 'play-remote', result: cleanHtml(r)}))
+        }).catch((e) => {
+          put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e.name + ': ' + e.message)}))
+        })
+    }).catch((e) => {
+      put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e.name + ': ' + e.message)}))
+    })
   }
 }, {
   name: 'play',
@@ -100,6 +115,12 @@ const availableCommands = [{
     const newAction = frames.add({ ...action, result: historyState, type: 'history' })
     put(newAction)
     return newAction
+  }
+}, {
+  name: 'help',
+  match: (cmd) => /^help(\s|$)/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'help'}))
   }
 }, {
   name: 'catch-all',

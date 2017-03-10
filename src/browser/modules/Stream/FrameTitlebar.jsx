@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'

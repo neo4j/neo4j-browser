@@ -1,6 +1,6 @@
 import { Component } from 'preact'
 import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { getCurrentUser, updateCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
 

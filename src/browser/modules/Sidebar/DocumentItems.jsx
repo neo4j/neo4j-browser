@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { H4 } from 'browser-components/headers'
 import { FavoriteItem } from 'browser-components/buttons'
