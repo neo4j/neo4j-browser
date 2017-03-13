@@ -22,7 +22,7 @@ export default class ChangePasswordForm extends Component {
     this.props.onChange(this.state.newPassword, this.state.newPassword2)
   }
   validateSame () {
-    if (this.state.newPassword && this.state.newPassword !== this.state.newPassword2) {
+    if (this.state.newPassword && this.state.newPassword !== '' && this.state.newPassword !== this.state.newPassword2) {
       return this.props.onChangePasswordClick({error: {code: 'Mismatch', message: 'The two entered passwords must be the same.'}})
     }
     this.props.onChangePasswordClick({ newPassword: this.state.newPassword })
