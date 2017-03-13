@@ -1,6 +1,6 @@
 import { Component } from 'preact'
 import uuid from 'uuid'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { listUsersQuery, listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
 import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'

@@ -1,4 +1,4 @@
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import FrameTemplate from './FrameTemplate'
 import HistoryRow from './HistoryRow'

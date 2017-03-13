@@ -7,10 +7,13 @@
     "start": "webpack-dev-server --inline --content-base ./dist --history-api-fallback",
     "lint": "standard --fix",
     "test": "npm run lint && jest",
-    "dev": "jest --watch"
+    "dev": "jest --watch",
+    "build": "webpack"
   },
   "jest": {
-    "testPathIgnorePatterns": [".jsx$"],
+    "testPathIgnorePatterns": [
+      ".jsx$"
+    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
@@ -84,7 +87,7 @@
     ]
   },
   "dependencies": {
-    "ascii-data-table": "^2.0.0",
+    "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.24.2",
     "dnd-core": "^2.2.4",
@@ -99,11 +102,11 @@
     "neo4j-visualization": "0.0.20",
     "preact": "^7.2.0",
     "preact-compat": "^3.13.1",
+    "preact-suber": "^0.1.0",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dropzone": "^3.10.0",
     "react-icons": "^2.2.1",
     "react-redux": "^4.4.5",
-    "react-suber": "^0.1.0",
     "react-swipe": "^5.0.3",
     "redux": "^3.5.2",
     "redux-observable": "^0.13.0",
@@ -111,6 +114,7 @@
     "save-as": "^0.1.7",
     "suber": "^2.1.1",
     "swipe-js-iso": "^2.0.3",
+    "url-loader": "^0.5.8",
     "uuid": "^3.0.1"
   }
 }
