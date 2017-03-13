@@ -1,6 +1,6 @@
 import { Component } from 'preact'
 import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { getActiveConnectionData, getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
 import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
@@ -94,7 +94,7 @@ export class ConnectionFrame extends Component {
     this.props.executeInitCmd()
   }
   componentWillReceiveProps (nextProps) {
-    if (nextProps.activeConnection) {
+    if (nextProps.activeConnection && nextProps.activeConnectionData) {
       this.setState({ isConnected: true })
     } else {
       this.setState({ isConnected: false })

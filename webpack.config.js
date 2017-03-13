@@ -32,11 +32,11 @@ module.exports = {
     }, {
       test: /\.(jpe?g|png|gif|svg)$/i,
       loaders: [
-        'file?hash=sha512&digest=hex&name=[hash].[ext]'
+        'url-loader?hash=sha512&digest=hex&name=[hash].[ext]'
       ]
     }, {
       test: /\.(woff|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'file-loader?name=assets/[name].[ext]'
+      loader: 'url-loader?name=assets/[name].[ext]'
     }]
   },
   postcss: function (webpack) {

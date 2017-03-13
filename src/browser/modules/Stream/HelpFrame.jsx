@@ -4,7 +4,7 @@ import Directives from 'browser-components/Directives'
 import FrameTemplate from './FrameTemplate'
 
 const HelpFrame = ({frame}) => {
-  const snakeToCamel = (string) => string.replace(/(\-\w)/g, (match) => { return match[1].toUpperCase() })
+  const snakeToCamel = (string) => string.replace(/(-\w)/g, (match) => { return match[1].toUpperCase() })
 
   let help = 'Help topic not specified'
   if (frame.result) {
