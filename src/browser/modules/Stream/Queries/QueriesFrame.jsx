@@ -1,6 +1,6 @@
 import { Component } from 'preact'
 import FrameTemplate from '../FrameTemplate'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { listQueriesProcedure, killQueriesProcedure } from 'shared/modules/cypher/queriesProcedureHelper'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
