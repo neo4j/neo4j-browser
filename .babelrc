@@ -14,7 +14,9 @@
         "sagas": "./src/sagas",
         "react": "preact-compat",
         "react-dom": "preact-compat",
-        "browser-components": "./src/browser/components"
+        "browser-components": "./src/browser/components",
+        "browser": "./src/browser",
+        "browser-styles": "./src/browser/styles"
       }
     }],
     ["transform-react-jsx", {

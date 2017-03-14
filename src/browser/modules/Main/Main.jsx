@@ -1,13 +1,13 @@
 import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
-import styles from './style.css'
+import { StyledMain } from './styled'
 
 const Main = (props) => {
   return (
-    <div className={styles.main}>
+    <StyledMain>
       <Editor />
       <Stream />
-    </div>
+    </StyledMain>
   )
 }
 

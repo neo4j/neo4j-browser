@@ -1,4 +1,6 @@
 import { connect } from 'react-redux'
+import { StyledStream } from './styled'
+
 import CypherFrame from './CypherFrame'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
@@ -55,15 +57,11 @@ export const Stream = (props) => {
   })
 
   return (
-    <div id='stream' style={{
-      padding: '20px',
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
+    <StyledStream>
       <div>
         {framesList}
       </div>
-    </div>
+    </StyledStream>
   )
 }
 
