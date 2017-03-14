@@ -4,8 +4,8 @@ import { v4 } from 'uuid'
 class TableView extends Component {
   constructor (props) {
     super(props)
-    const dataCopy = props.data.slice()
-    const headerData = dataCopy.shift()
+    const dataCopy = props.data ? props.data.slice() : []
+    const headerData = dataCopy.length > 0 ? dataCopy.shift() : []
     this.state = {
       columns: headerData,
       data: dataCopy

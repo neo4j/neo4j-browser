@@ -62,6 +62,10 @@ export function extractPlan (result) {
 }
 
 export function extractNodesAndRelationshipsFromRecords (records, types) {
+  if (records.length === 0) {
+    return { nodes: [], relationships: [] }
+  }
+
   let keys = records[0].keys
   let rawNodes = []
   let rawRels = []

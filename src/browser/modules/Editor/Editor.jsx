@@ -11,6 +11,7 @@ import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import { EditorButton } from 'browser-components/buttons'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import styles from './style.css'
 
@@ -21,7 +22,8 @@ export class Editor extends Component {
       code: props.content || '',
       historyIndex: -1,
       buffer: null,
-      mode: 'cypher'
+      mode: 'cypher',
+      notifications: []
     }
   }
   focusEditor () {
@@ -44,6 +46,7 @@ export class Editor extends Component {
   execCurrent () {
     this.props.onExecute(this.codeMirror.getValue())
     this.clearEditor()
+    this.clearHints()
     this.setState({historyIndex: -1, buffer: null})
   }
   historyPrev (cm) {
@@ -96,11 +99,49 @@ export class Editor extends Component {
     const mode = this.props.cmdchar && newCode.indexOf(this.props.cmdchar) === 0
       ? 'text'
       : 'cypher'
+
+    if (mode === 'cypher' && !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') && !newCode.trimLeft().toUpperCase().startsWith('PROFILE')) {
+      this.checkForHints(newCode)
+    } else {
+      this.clearHints()
+    }
+
     this.setState({
       code: newCode,
       mode
     }, cb)
   }
+  checkForHints (code) {
+    this.props.bus.self(
+      CYPHER_REQUEST,
+      {query: 'EXPLAIN ' + code},
+      (response) => {
+        if (response.success === true && response.result.summary.notifications.length > 0) {
+          this.setState({ notifications: response.result.summary.notifications })
+        } else {
+          this.clearHints()
+        }
+      }
+    )
+  }
+  clearHints () {
+    this.setState({ notifications: [] })
+  }
+  setGutterMarkers () {
+    if (this.codeMirror) {
+      this.codeMirror.clearGutter('cypher-hints')
+      this.state.notifications.forEach(notification => {
+        this.codeMirror.setGutterMarker(notification.position.line - 1, 'cypher-hints', (() => {
+          let gutter = document.createElement('div')
+          gutter.style.color = '#822'
+          gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning ' + styles['gutter-warning'] + '" aria-hidden="true"></i>'
+          gutter.title = `${notification.title}\n${notification.description}`
+          return gutter
+        })())
+      })
+    }
+  }
+
   render () {
     const options = {
       lineNumbers: true,
@@ -110,10 +151,13 @@ export class Editor extends Component {
       lineWrapping: true,
       autofocus: true
     }
+
     const updateCode = (val) => this.updateCode(val)
+    this.setGutterMarkers()
     return (
       <div id='editor' className={styles.editorContainer}>
         <div className={styles['editor-wrapper']}>
+
           <Codemirror
             ref={(ref) => { this.editor = ref }}
             value={this.state.code}

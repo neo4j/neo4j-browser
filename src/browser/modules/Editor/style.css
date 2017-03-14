@@ -28,3 +28,12 @@
 .editor {
   font-family: Monaco,"Courier New",Terminal,monospace;
 }
+
+.gutter-warning {
+  color: #FFA500 !important;
+  opacity: .6;
+  font-size: 14px;
+  line-height: 23px;
+  display: inherit;
+  cursor: pointer
+}
