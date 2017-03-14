@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import { withBus } from 'react-suber'
+import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
 import FrameError from '../Stream/FrameError'
@@ -61,27 +61,30 @@ export class SysInfoFrame extends Component {
         <SysInfoTableEntry label='Relationship Store' value={toHumanReadableBytes(kernel.RelationshipStoreSize)} />,
         <SysInfoTableEntry label='String Store Size' value={toHumanReadableBytes(kernel.StringStoreSize)} />,
         <SysInfoTableEntry label='Total Store Size' value={toHumanReadableBytes(kernel.TotalStoreSize)} />
-      ], 'idAllocation': [
-        <SysInfoTableEntry label='Node ID' value={primitive.NumberOfNodeIdsInUse} />,
-        <SysInfoTableEntry label='Propery ID' value={primitive.NumberOfPropertyIdsInUse} />,
-        <SysInfoTableEntry label='Relationship ID' value={primitive.NumberOfRelationshipIdsInUse} />,
-        <SysInfoTableEntry label='Relationship Type ID' value={primitive.NumberOfRelationshipTypeIdsInUse} />
-      ], 'pageCache': [
-        <SysInfoTableEntry label='Faults' value={cache.Faults} />,
-        <SysInfoTableEntry label='Evictions' value={cache.Evictions} />,
-        <SysInfoTableEntry label='File Mappings' value={cache.FileMappings} />,
-        <SysInfoTableEntry label='Bytes Read' value={cache.BytesRead} />,
-        <SysInfoTableEntry label='Flushes' value={cache.Flushes} />,
-        <SysInfoTableEntry label='Eviction Exceptions' value={cache.EvictionExceptions} />,
-        <SysInfoTableEntry label='File Unmappings' value={cache.FileUnmappings} />,
-        <SysInfoTableEntry label='Bytes Written' value={cache.BytesWritten} />
-      ], 'transactions': [
-        <SysInfoTableEntry label='Last Tx Id' value={tx.LastCommittedTxId} />,
-        <SysInfoTableEntry label='Current' value={tx.NumberOfOpenTransactions} />,
-        <SysInfoTableEntry label='Peak' value={tx.PeakNumberOfConcurrentTransactions} />,
-        <SysInfoTableEntry label='Opened' value={tx.NumberOfOpenedTransactions} />,
-        <SysInfoTableEntry label='Committed' value={tx.NumberOfCommittedTransactions} />
-      ]})
+      ],
+        'idAllocation': [
+          <SysInfoTableEntry label='Node ID' value={primitive.NumberOfNodeIdsInUse} />,
+          <SysInfoTableEntry label='Propery ID' value={primitive.NumberOfPropertyIdsInUse} />,
+          <SysInfoTableEntry label='Relationship ID' value={primitive.NumberOfRelationshipIdsInUse} />,
+          <SysInfoTableEntry label='Relationship Type ID' value={primitive.NumberOfRelationshipTypeIdsInUse} />
+        ],
+        'pageCache': [
+          <SysInfoTableEntry label='Faults' value={cache.Faults} />,
+          <SysInfoTableEntry label='Evictions' value={cache.Evictions} />,
+          <SysInfoTableEntry label='File Mappings' value={cache.FileMappings} />,
+          <SysInfoTableEntry label='Bytes Read' value={cache.BytesRead} />,
+          <SysInfoTableEntry label='Flushes' value={cache.Flushes} />,
+          <SysInfoTableEntry label='Eviction Exceptions' value={cache.EvictionExceptions} />,
+          <SysInfoTableEntry label='File Unmappings' value={cache.FileUnmappings} />,
+          <SysInfoTableEntry label='Bytes Written' value={cache.BytesWritten} />
+        ],
+        'transactions': [
+          <SysInfoTableEntry label='Last Tx Id' value={tx.LastCommittedTxId} />,
+          <SysInfoTableEntry label='Current' value={tx.NumberOfOpenTransactions} />,
+          <SysInfoTableEntry label='Peak' value={tx.PeakNumberOfConcurrentTransactions} />,
+          <SysInfoTableEntry label='Opened' value={tx.NumberOfOpenedTransactions} />,
+          <SysInfoTableEntry label='Committed' value={tx.NumberOfCommittedTransactions} />
+        ]})
     }
   }
   componentDidMount () {
