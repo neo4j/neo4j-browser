@@ -2,7 +2,7 @@ import { Component } from 'preact'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import FrameSidebar from './FrameSidebar'
-import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon } from 'browser-components/icons/Icons'
+import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon } from 'browser-components/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
@@ -33,6 +33,8 @@ class CypherFrame extends Component {
       }
 
       plan = bolt.extractPlan(nextProps.request.result)
+
+      if (plan) { this.setState({openView: 'plan'}) }
     } else {
       this.setState({nodesAndRelationships, rows, plan})
     }
@@ -53,6 +55,13 @@ class CypherFrame extends Component {
         <CypherFrameButton selected={this.state.openView === 'code'} icon={<CodeIcon />} onClick={() => {
           this.setState({openView: 'code'})
         }} />
+        {
+          (this.state.plan || bolt.extractPlan(this.props.request.result || false)
+            ? <CypherFrameButton selected={this.state.openView === 'plan'} icon={<PlanIcon />} onClick={() =>
+            this.setState({openView: 'plan'})
+              } />
+            : null)
+        }
       </FrameSidebar>
     )
   }
@@ -66,10 +75,11 @@ class CypherFrame extends Component {
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
 
-    if (plan) {
-      frameContents = <QueryPlan plan={plan} />
-    } else if (result.records && result.records.length > 0) {
-      this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
+    if ((result.records) || plan) {
+      if (result.records && result.records.length > 0) {
+        this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
+      }
+
       switch (this.state.openView) {
         case 'text':
           frameContents = <AsciiView rows={this.state.rows} />
@@ -82,6 +92,9 @@ class CypherFrame extends Component {
           break
         case 'code':
           frameContents = <CodeView query={this.props.frame.cmd} request={this.props.request} />
+          break
+        case 'plan':
+          frameContents = <QueryPlan plan={plan} />
           break
         default:
           frameContents = <Visualization records={result.records} />

@@ -46,6 +46,7 @@ export class Editor extends Component {
   execCurrent () {
     this.props.onExecute(this.codeMirror.getValue())
     this.clearEditor()
+    this.clearHints()
     this.setState({historyIndex: -1, buffer: null})
   }
   historyPrev (cm) {
@@ -99,8 +100,10 @@ export class Editor extends Component {
       ? 'text'
       : 'cypher'
 
-    if (mode === 'cypher') {
+    if (mode === 'cypher' && !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') && !newCode.trimLeft().toUpperCase().startsWith('PROFILE')) {
       this.checkForHints(newCode)
+    } else {
+      this.clearHints()
     }
 
     this.setState({
@@ -110,17 +113,19 @@ export class Editor extends Component {
   }
   checkForHints (code) {
     this.props.bus.self(
-        CYPHER_REQUEST,
-        {query: 'EXPLAIN ' + code},
-        (response) => {
-          if (response.success) {
-            if (response.result.summary.notifications.length > 0) {
-              this.setState({ notifications: response.result.summary.notifications })
-            } else {
-              this.setState({ notifications: [] })
-            }
-          }
-        })
+      CYPHER_REQUEST,
+      {query: 'EXPLAIN ' + code},
+      (response) => {
+        if (response.success === true && response.result.summary.notifications.length > 0) {
+          this.setState({ notifications: response.result.summary.notifications })
+        } else {
+          this.clearHints()
+        }
+      }
+    )
+  }
+  clearHints () {
+    this.setState({ notifications: [] })
   }
   setGutterMarkers () {
     if (this.codeMirror) {
@@ -130,7 +135,7 @@ export class Editor extends Component {
           let gutter = document.createElement('div')
           gutter.style.color = '#822'
           gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning ' + styles['gutter-warning'] + '" aria-hidden="true"></i>'
-          gutter.title = notification.title + '\n' + notification.description
+          gutter.title = `${notification.title}\n${notification.description}`
           return gutter
         })())
       })

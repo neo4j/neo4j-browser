@@ -33,6 +33,7 @@ export const TableIcon = () => (<IconContainer>Table</IconContainer>)
 export const VisualizationIcon = () => (<IconContainer>Viz</IconContainer>)
 export const AsciiIcon = () => (<IconContainer>Ascii</IconContainer>)
 export const CodeIcon = () => (<IconContainer>Code</IconContainer>)
+export const PlanIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-hierarchy' />)
 
 export const ExpandIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-spread' />)
 export const ContractIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-reduce' />)
