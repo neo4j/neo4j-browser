@@ -127,9 +127,8 @@ export class ConnectionFrame extends Component {
       <FrameTemplate
         header={this.props.frame}
         contents={view}
-      >
-        <FrameError code={this.state.error.code} message={this.state.error.message} />
-      </FrameTemplate>
+        statusbar={<FrameError code={this.state.error.code} message={this.state.error.message} />}
+      />
     )
   }
 }

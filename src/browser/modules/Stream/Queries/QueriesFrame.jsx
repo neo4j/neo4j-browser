@@ -5,6 +5,7 @@ import { listQueriesProcedure, killQueriesProcedure } from 'shared/modules/cyphe
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import { RefreshIcon } from 'browser-components/icons/Icons'
+import Visible from 'browser-components/Visible'
 import FrameError from '../FrameError'
 import FrameSuccess from '../FrameSuccess'
 
@@ -136,15 +137,22 @@ export class QueriesFrame extends Component {
   }
   render () {
     const frameContents = this.constructViewFromQueryList(this.state.queries)
-    const errors = this.state.errors ? this.state.errors.join(', ') : null
-
+    const statusbar = (
+      <div>
+        <Visible if={this.state.errors}>
+          <FrameError message={(this.state.errors || []).join(', ')} />
+        </Visible>
+        <Visible if={this.state.success}>
+          <FrameSuccess message={this.state.success} />
+        </Visible>
+      </div>
+    )
     return (
       <FrameTemplate
         header={this.props.frame}
-        contents={frameContents}>
-        <FrameError message={errors} />
-        <FrameSuccess message={this.state.success} />
-      </FrameTemplate>
+        contents={frameContents}
+        statusbar={statusbar}
+      />
     )
   }
 }
