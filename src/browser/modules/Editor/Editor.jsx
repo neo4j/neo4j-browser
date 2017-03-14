@@ -133,7 +133,7 @@ export class Editor extends Component {
         this.codeMirror.setGutterMarker(notification.position.line - 1, 'cypher-hints', (() => {
           let gutter = document.createElement('div')
           gutter.style.color = '#822'
-          gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning ' + styles['gutter-warning'] + '" aria-hidden="true"></i>'
+          gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
           gutter.title = `${notification.title}\n${notification.description}`
           return gutter
         })())

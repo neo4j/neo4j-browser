@@ -147,12 +147,12 @@ injectGlobal`
   }
 
   .gutter-warning {
-    color: color-warning-on-white;
-    opacity: 0.6;
+    color: #FFA500 !important;
+    opacity: .6;
     font-size: 14px;
     line-height: 23px;
     display: inherit;
-    cursor: pointer;
+    cursor: pointer
   }
 
 `

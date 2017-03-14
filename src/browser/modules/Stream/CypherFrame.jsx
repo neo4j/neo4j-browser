@@ -53,16 +53,16 @@ class CypherFrame extends Component {
         <CypherFrameButton selected={this.state.openView === 'text'} onClick={() => {
           this.setState({openView: 'text'})
         }}><AsciiIcon /></CypherFrameButton>
+        {
+          (this.state.plan || bolt.extractPlan(this.props.request.result || false)
+            ? <CypherFrameButton selected={this.state.openView === 'plan'} onClick={() =>
+            this.setState({openView: 'plan'})
+              }><PlanIcon /></CypherFrameButton>
+            : null)
+        }
         <CypherFrameButton selected={this.state.openView === 'code'} onClick={() => {
           this.setState({openView: 'code'})
         }}><CodeIcon /></CypherFrameButton>
-        {
-          (this.state.plan || bolt.extractPlan(this.props.request.result || false)
-            ? <CypherFrameButton selected={this.state.openView === 'plan'} icon={<PlanIcon />} onClick={() =>
-            this.setState({openView: 'plan'})
-              } />
-            : null)
-        }
       </FrameSidebar>
     )
   }
