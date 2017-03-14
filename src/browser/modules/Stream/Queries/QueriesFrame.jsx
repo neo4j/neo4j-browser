@@ -15,7 +15,9 @@ export class QueriesFrame extends Component {
     this.state = {
       queries: [],
       autoRefresh: false,
-      autoRefreshInterval: 20 // seconds
+      autoRefreshInterval: 20, // seconds
+      success: null,
+      errors: null
     }
   }
   componentDidMount () {
@@ -32,17 +34,19 @@ export class QueriesFrame extends Component {
     }
   }
 
-  getRunningQueries () {
+  getRunningQueries (clearSuccess = true) {
     this.props.bus.self(
       CYPHER_REQUEST,
       {query: listQueriesProcedure()},
       (response) => {
         if (response.success) {
           let queries = this.extractQueriesFromBoltResult(response.result)
-          this.setState({queries: queries})
+          this.setState((prevState, props) => {
+            return { queries: queries, errors: null, success: clearSuccess ? null : prevState.success }
+          })
         } else {
           let errors = this.state.errors || []
-          this.setState({ errors: errors.concat([response.error]) })
+          this.setState({ errors: errors.concat([response.error]), success: false })
         }
       }
     )
@@ -53,12 +57,11 @@ export class QueriesFrame extends Component {
       {query: killQueriesProcedure(queryIdList)},
       (response) => {
         if (response.success) {
-          // TODO Get Query Id and user name from response
-          this.setState({success: 'Query succefully cancelled'})
-          this.getRunningQueries()
+          this.setState({success: 'Query successfully cancelled', errors: null})
+          this.getRunningQueries(false)
         } else {
           let errors = this.state.errors || []
-          this.setState({ errors: errors.concat([response.error]) })
+          this.setState({ errors: errors.concat([response.error]), success: false })
         }
       }
     )
@@ -133,7 +136,7 @@ export class QueriesFrame extends Component {
   }
   render () {
     const frameContents = this.constructViewFromQueryList(this.state.queries)
-    const errors = (this.state.errors) ? this.state.errors.join(', ') : null
+    const errors = this.state.errors ? this.state.errors.join(', ') : null
 
     return (
       <FrameTemplate
