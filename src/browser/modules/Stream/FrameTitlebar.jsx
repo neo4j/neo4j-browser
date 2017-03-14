@@ -6,25 +6,24 @@ import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
 import { FrameButton } from 'browser-components/buttons'
 import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon } from 'browser-components/icons/Icons'
-
-import styles from './style_titlebar.css'
+import { StyledFrameTitleBar, StyledFrameCommand, FrameTitlebarButtonSection } from './styled'
 
 export const FrameTitlebar = ({frame, fullscreen, togglePinning, fullscreenToggle, collapse, collapseToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
   const fullscreenIcon = (fullscreen) ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = (collapse) ? <DownIcon /> : <UpIcon />
   return (
-    <div>
-      <label onClick={() => onTitlebarClick(frame.cmd)} className={styles['frame-command']}>
+    <StyledFrameTitleBar>
+      <StyledFrameCommand onClick={() => onTitlebarClick(frame.cmd)}>
         {frame.cmd}
-      </label>
-      <span>
-        <FrameButton icon={<PinIcon />} onClick={() => togglePinning(frame.id, frame.isPinned)} />
-        <FrameButton icon={fullscreenIcon} onClick={() => fullscreenToggle()} />
-        <FrameButton icon={expandCollapseIcon} onClick={() => collapseToggle()} />
-        <FrameButton icon={<RefreshIcon />} onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)} />
-        <FrameButton icon={<CloseIcon />} onClick={() => onCloseClick(frame.id, frame.requestId)} />
-      </span>
-    </div>
+      </StyledFrameCommand>
+      <FrameTitlebarButtonSection>
+        <FrameButton onClick={() => togglePinning(frame.id, frame.isPinned)}><PinIcon /></FrameButton>
+        <FrameButton onClick={() => fullscreenToggle()}>{fullscreenIcon}</FrameButton>
+        <FrameButton onClick={() => collapseToggle()}>{expandCollapseIcon}</FrameButton>
+        <FrameButton onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
+        <FrameButton onClick={() => onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
+      </FrameTitlebarButtonSection>
+    </StyledFrameTitleBar>
   )
 }
 

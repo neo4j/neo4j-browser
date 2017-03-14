@@ -1,8 +1,8 @@
-import styles from './style_sidebar.css'
+import { StyledFrameSidebar } from './styled'
 
 const FrameSidebar = (props) => {
   if (!props || !props.children) return null
-  return <div className={styles.sidebar}>{props.children}</div>
+  return <StyledFrameSidebar>{props.children}</StyledFrameSidebar>
 }
 
 export default FrameSidebar

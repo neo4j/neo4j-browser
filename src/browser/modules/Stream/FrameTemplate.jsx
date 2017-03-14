@@ -1,7 +1,7 @@
 import { Component } from 'preact'
 import FrameTitlebar from './FrameTitlebar'
-
-import styles from './style_frame.css'
+import Visible from 'browser-components/Visible'
+import { StyledFrame, StyledFullscreenFrame, StyledFrameBody, StyledFrameContents, StyledFrameStatusbar, StyledFrameMainSection } from './styled'
 
 class FrameTemplate extends Component {
   constructor (props) {
@@ -18,10 +18,9 @@ class FrameTemplate extends Component {
     this.setState({collapse: !this.state.collapse})
   }
   render () {
-    const fullscreenClass = (this.state.fullscreen) ? styles.fullscreen : ''
-    const collapseClass = (this.state.collapse) ? styles.collapse : ''
+    const FrameComponent = this.state.fullscreen ? StyledFullscreenFrame : StyledFrame
     return (
-      <article className={styles.frame + ' ' + fullscreenClass}>
+      <FrameComponent>
         <FrameTitlebar
           frame={this.props.header}
           fullscreen={this.state.fullscreen}
@@ -29,14 +28,18 @@ class FrameTemplate extends Component {
           collapse={this.state.collapse}
           collapseToggle={this.toggleCollapse.bind(this)}
           />
-        <div className={styles.framebody + ' ' + collapseClass}>
+        <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
           {(this.props.sidebar) ? this.props.sidebar() : null}
-          <div className={styles.contents + ' frame-contents'}>
-            {this.props.contents}
-          </div>
-        </div>
-        {this.props.children}
-      </article>
+          <StyledFrameMainSection>
+            <StyledFrameContents fullscreen={this.state.fullscreen}>
+              {this.props.contents}
+            </StyledFrameContents>
+            <Visible if={this.props.statusbar}>
+              <StyledFrameStatusbar>{this.props.statusbar}</StyledFrameStatusbar>
+            </Visible>
+          </StyledFrameMainSection>
+        </StyledFrameBody>
+      </FrameComponent>
     )
   }
 }

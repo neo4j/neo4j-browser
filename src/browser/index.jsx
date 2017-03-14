@@ -5,14 +5,16 @@ import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
+import { ThemeProvider } from 'styled-components'
+import { normal as normalTheme } from './styles/themes'
 
 import reducers from 'shared/rootReducer'
 import App from './modules/App/App'
 
 import epics from 'shared/rootEpic'
-import './styles/style.css'
-import './styles/codemirror.css'
 import './styles/bootstrap.grid-only.min.css'
+import './styles/global-styles'
+
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 
@@ -50,7 +52,9 @@ store.dispatch({ type: APP_START })
 
 render(
   <Provider store={store}>
-    <App />
+    <ThemeProvider theme={normalTheme}>
+      <App />
+    </ThemeProvider>
   </Provider>,
   document.getElementById('mount')
 )

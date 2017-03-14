@@ -9,6 +9,7 @@ import AsciiView from './Views/AsciiView'
 import CodeView from './Views/CodeView'
 import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
+import FrameError from './FrameError'
 
 class CypherFrame extends Component {
   constructor (props) {
@@ -43,37 +44,38 @@ class CypherFrame extends Component {
   sidebar () {
     return (
       <FrameSidebar>
-        <CypherFrameButton selected={this.state.openView === 'visualization'} icon={<VisualizationIcon />} onClick={() => {
+        <CypherFrameButton selected={this.state.openView === 'visualization'} onClick={() => {
           this.setState({openView: 'visualization'})
-        }} />
-        <CypherFrameButton selected={this.state.openView === 'table'} icon={<TableIcon />} onClick={() => {
+        }}><VisualizationIcon /></CypherFrameButton>
+        <CypherFrameButton selected={this.state.openView === 'table'} onClick={() => {
           this.setState({openView: 'table'})
-        }} />
-        <CypherFrameButton selected={this.state.openView === 'text'} icon={<AsciiIcon />} onClick={() => {
+        }}><TableIcon /></CypherFrameButton>
+        <CypherFrameButton selected={this.state.openView === 'text'} onClick={() => {
           this.setState({openView: 'text'})
-        }} />
-        <CypherFrameButton selected={this.state.openView === 'code'} icon={<CodeIcon />} onClick={() => {
-          this.setState({openView: 'code'})
-        }} />
+        }}><AsciiIcon /></CypherFrameButton>
         {
           (this.state.plan || bolt.extractPlan(this.props.request.result || false)
-            ? <CypherFrameButton selected={this.state.openView === 'plan'} icon={<PlanIcon />} onClick={() =>
+            ? <CypherFrameButton selected={this.state.openView === 'plan'} onClick={() =>
             this.setState({openView: 'plan'})
-              } />
+              }><PlanIcon /></CypherFrameButton>
             : null)
         }
+        <CypherFrameButton selected={this.state.openView === 'code'} onClick={() => {
+          this.setState({openView: 'code'})
+        }}><CodeIcon /></CypherFrameButton>
       </FrameSidebar>
     )
   }
 
   render () {
     const frame = this.props.frame
-    const errors = this.props.request.status === 'error' ? this.props.request.result.fields : false
+    const errors = this.props.request.status === 'error' ? this.props.request.result : false
     const result = this.props.request.result || false
     const plan = this.state.plan || bolt.extractPlan(result)
     const requestStatus = this.props.request.status
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
+    let statusBar = null
 
     if ((result.records) || plan) {
       if (result.records && result.records.length > 0) {
@@ -102,10 +104,11 @@ class CypherFrame extends Component {
     } else if (errors) {
       frameContents = (
         <div>
-          {errors[0].code}
-          <pre>{errors[0].message}</pre>
+          {errors.code}
+          <pre>{errors.message}</pre>
         </div>
       )
+      statusBar = <FrameError code={errors.code} />
     } else if (result) {
       frameContents = (
         <div>
@@ -124,6 +127,7 @@ class CypherFrame extends Component {
         sidebar={this.sidebar.bind(this)}
         header={frame}
         contents={frameContents}
+        statusbar={statusBar}
       />
     )
   }

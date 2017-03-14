@@ -10,10 +10,9 @@ import Codemirror from './Codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
+import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-
-import styles from './style.css'
 
 export class Editor extends Component {
   constructor (props) {
@@ -134,7 +133,7 @@ export class Editor extends Component {
         this.codeMirror.setGutterMarker(notification.position.line - 1, 'cypher-hints', (() => {
           let gutter = document.createElement('div')
           gutter.style.color = '#822'
-          gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning ' + styles['gutter-warning'] + '" aria-hidden="true"></i>'
+          gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
           gutter.title = `${notification.title}\n${notification.description}`
           return gutter
         })())
@@ -155,38 +154,34 @@ export class Editor extends Component {
     const updateCode = (val) => this.updateCode(val)
     this.setGutterMarkers()
     return (
-      <div id='editor' className={styles.editorContainer}>
-        <div className={styles['editor-wrapper']}>
+      <Bar>
+        <EditorWrapper>
 
           <Codemirror
             ref={(ref) => { this.editor = ref }}
             value={this.state.code}
             onChange={updateCode}
             options={options}
-            className={styles.editor}
           />
-        </div>
-        <div className={styles.actionButtons}>
+        </EditorWrapper>
+        <ActionButtonSection>
           <EditorButton
             onClick={() => this.props.onFavortieClick(this.state.code)}
-            className={styles.button}
             disabled={this.state.code.length < 1}
             tooltip='Add as favorite'
           >&#9734;</EditorButton>
           <EditorButton
             onClick={() => this.clearEditor()}
             disabled={this.state.code.length < 1}
-            className={styles.button}
             tooltip='Clear editor contents'
           >&times;</EditorButton>
           <EditorButton
             onClick={() => this.execCurrent()}
             disabled={this.state.code.length < 1}
-            className={styles.button}
             tooltip='Execute command'
           >&#9654;</EditorButton>
-        </div>
-      </div>
+        </ActionButtonSection>
+      </Bar>
     )
   }
 }
