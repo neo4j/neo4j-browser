@@ -1,4 +1,6 @@
 import { Component } from 'preact'
+import { connect } from 'react-redux'
+import * as actions from 'shared/modules/visualization/visualizationDuck'
 import Nevada from 'neo4j-visualization'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
@@ -41,9 +43,23 @@ export class Visualization extends Component {
     })
   }
 
+  fetchLabels () {
+    return this.props.labels
+  }
+
+  labelsUpdated (labels) {
+    return this.props.onLabelsSave(labels)
+  }
+
+
   initialiseVis (el) {
     if (el) {
-      this.state.nevada = new Nevada(el, this.state.nodesAndRelationships.nodes, this.state.nodesAndRelationships.relationships, {}, { getNeighbours: this.getNeighbours.bind(this) })
+      const callbacks = {
+        getNeighbours: this.getNeighbours.bind(this),
+        labelsUpdated: this.labelsUpdated.bind(this),
+        fetchLabels: this.fetchLabels.bind(this)
+      }
+      this.state.nevada = new Nevada(el, this.state.nodesAndRelationships.nodes, this.state.nodesAndRelationships.relationships, {}, callbacks)
     }
   }
   render () {
@@ -51,4 +67,19 @@ export class Visualization extends Component {
     return (<div className={styles.nevadaCanvas} ref={this.initialiseVis.bind(this)} />)
   }
 }
-export default withBus(Visualization)
+
+const mapStateToProps = (state) => {
+  return {
+    labels: actions.getLabels(state)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLabelsSave: (labels) => {
+      dispatch(actions.update(labels))
+    }
+  }
+}
+
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(Visualization))
