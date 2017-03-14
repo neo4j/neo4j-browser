@@ -17,6 +17,7 @@ import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import QueriesFrame from './Queries/QueriesFrame'
 
 const getFrame = (type, id, props) => {
   const trans = {
@@ -34,6 +35,7 @@ const getFrame = (type, id, props) => {
     disconnect: DisconnectFrame,
     schema: SchemaFrame,
     help: HelpFrame,
+    queries: QueriesFrame,
     sysinfo: SysInfoFrame,
     default: Frame
   }

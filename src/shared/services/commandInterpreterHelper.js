@@ -123,6 +123,12 @@ const availableCommands = [{
     return newAction
   }
 }, {
+  name: 'queries',
+  match: (cmd) => cmd === 'queries',
+  exec: (action, cmdchar, put, store) => {
+    put(frames.add({ ...action, type: 'queries', result: "{res : 'QUERIES RESULT'}" }))
+  }
+}, {
   name: 'help',
   match: (cmd) => /^help(\s|$)/.test(cmd),
   exec: function (action, cmdchar, put, store) {

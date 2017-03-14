@@ -152,6 +152,23 @@ describe('commandsDuck', () => {
       // Then
       // See above
     })
+    test('does the right thing for list queries', (done) => {
+      const cmd = store.getState().settings.cmdchar + 'queries'
+      const id = 1
+      const action = commands.executeCommand(cmd, id)
+
+      bus.take('NOOP', (currentAction) => {
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory({ cmd }),
+          frames.add({ ...action, type: 'queries', result: "{res : 'QUERIES RESULT'}" }),
+            {type: 'NOOP'}
+        ])
+        done()
+      })
+
+      store.dispatch(action)
+    })
   })
   describe(':server disconnect', () => {
     test(':server disconnect produces a DISCONNECT action and a action for a "disconnect" frame', (done) => {
