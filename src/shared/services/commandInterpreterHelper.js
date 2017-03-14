@@ -52,6 +52,12 @@ const availableCommands = [{
     put(frames.add({...action, type: 'schema'}))
   }
 }, {
+  name: 'sysinfo',
+  match: (cmd) => /^sysinfo$/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    put(frames.add({...action, type: 'sysinfo'}))
+  }
+}, {
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
