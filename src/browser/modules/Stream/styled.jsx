@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
 export const StyledStream = styled.div`
@@ -8,12 +8,28 @@ export const StyledStream = styled.div`
   margin-top: ${dim.editorbarHeight + 14}px;
 `
 
+const rollDownAnimation = keyframes`
+  from {
+    transform: translate(0, -${dim.frameBodyHeight * 0.3}px);
+    opacity: 0;
+    height: 0px;
+  }
+  70% {
+    opacity: 0;
+    height: 300px;
+  }
+  to {
+    opacity: 1;
+  }
+`
+
 // Frames
 export const StyledFrame = styled.article`
   margin: 10px 0px 10px 0px;
   width: auto;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
+  animation: ${rollDownAnimation} .2s linear;
 `
 
 export const StyledFullscreenFrame = styled(StyledFrame)`

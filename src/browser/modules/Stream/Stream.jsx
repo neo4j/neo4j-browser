@@ -21,7 +21,7 @@ import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import QueriesFrame from './Queries/QueriesFrame'
 
-const getFrame = (type, id, props) => {
+const getFrame = (type) => {
   const trans = {
     error: ErrorFrame,
     cypher: CypherFrame,
@@ -41,26 +41,21 @@ const getFrame = (type, id, props) => {
     sysinfo: SysInfoFrame,
     default: Frame
   }
-  const MyFrame = trans[type] || trans['default']
-  return <MyFrame {...props} key={id} />
+  return trans[type] || trans['default']
 }
 
 export const Stream = (props) => {
-  const {frames} = props
-  const framesList = frames.map((frame) => {
-    const frameProps = {
-      frame,
-      activeConnectionData: props.activeConnectionData,
-      request: props.requests[frame.requestId]
-    }
-    return getFrame(frame.type, frame.id, frameProps)
-  })
-
   return (
     <StyledStream>
-      <div>
-        {framesList}
-      </div>
+      {props.frames.map((frame) => {
+        const frameProps = {
+          frame,
+          activeConnectionData: props.activeConnectionData,
+          request: props.requests[frame.requestId]
+        }
+        const MyFrame = getFrame(frame.type)
+        return <MyFrame {...frameProps} key={frame.id} />
+      })}
     </StyledStream>
   )
 }
