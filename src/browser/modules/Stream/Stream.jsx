@@ -9,6 +9,7 @@ import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
 import HelpFrame from './HelpFrame'
 import SchemaFrame from './SchemaFrame'
+import SysInfoFrame from './SysInfoFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import UserList from '../User/UserList'
@@ -33,6 +34,7 @@ const getFrame = (type, id, props) => {
     disconnect: DisconnectFrame,
     schema: SchemaFrame,
     help: HelpFrame,
+    sysinfo: SysInfoFrame,
     default: Frame
   }
   const MyFrame = trans[type] || trans['default']
