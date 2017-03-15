@@ -5,7 +5,9 @@ import {
   FormButton,
   FrameButton,
   CypherFrameButton,
-  ActionButton
+  ActionButton,
+  CarouselLeftButton,
+  CarouselRightButton
 } from './Buttons'
 
 export {
@@ -15,5 +17,7 @@ export {
   FormButton,
   FrameButton,
   CypherFrameButton,
-  ActionButton
+  ActionButton,
+  CarouselLeftButton,
+  CarouselRightButton
 }

@@ -55,7 +55,7 @@ export const StyledFrameMainSection = styled.div`
 `
 
 export const StyledFrameContents = styled.div`
-  overflow: auto;
+  overflow: visible;
   height: 100%;
   padding: 0 20px 20px 20px;
   padding-top: 0;
