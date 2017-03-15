@@ -1,28 +1,44 @@
-const WarningsView = ({notifications, cypher}) => {
-  console.log(notifications)
-  let cypherLines = cypher.split('\n')
-  console.log(cypherLines)
+import { StyledCypherMessage, StyledCypherWarningMessage, StyledCypherErrorMessage, StyledHelpContent,
+  StyledH4, StyledPreformattedArea, StyledHelpDescription, StyledDiv, StyledBr, StyledHelpFrame} from '../styled'
 
-  /* TODO WAS IS DAS??
-   <pre cypher-hint="message" cypher-input="EXPLAIN MATCH (m:Movie)
-   MATCH (p:Perso)--(m) return p"
-   */
+const WarningsView = ({notifications, cypher}) => {
+  let cypherLines = cypher.split('\n')
+  cypherLines[0] = cypherLines[0].replace(/^EXPLAIN /, '')
   let notificationsList = notifications.map((notification) => {
     return (
-      <div>
-        <div className='cypher-message cypher-message-warning'>{notification.severity}</div>
-        <h4>{notification.title}</h4>
-        <p>{notification.description}</p>
-        <pre>{cypherLines[notification.position.line - 1]}
-          <br />{Array(notification.position.column).join(' ')}^</pre>
-      </div>
+      <StyledHelpContent>
+        <StyledHelpDescription>
+          {
+            notification.severity === 'WARNING'
+            ? (<StyledCypherWarningMessage>
+              {notification.severity}
+            </StyledCypherWarningMessage>)
+            : (notification.severity === 'ERROR'
+              ? (<StyledCypherErrorMessage>
+                {notification.severity}
+              </StyledCypherErrorMessage>)
+                : (<StyledCypherMessage>
+                  {notification.severity}
+                </StyledCypherMessage>)
+              )
+          }
+          <StyledH4>{notification.title}</StyledH4>
+        </StyledHelpDescription>
+        <StyledDiv>
+          <StyledHelpDescription>{notification.description}</StyledHelpDescription>
+          <StyledDiv>
+            <StyledPreformattedArea>{cypherLines[notification.position.line - 1]}
+              <StyledBr />{Array(notification.position.column).join(' ')}^
+            </StyledPreformattedArea>
+          </StyledDiv>
+        </StyledDiv>
+      </StyledHelpContent>
     )
-  }
-  )
+  })
   return (
-    <div className='cypher-messages'>
+    <StyledHelpFrame>
       {notificationsList}
-    </div>)
+    </StyledHelpFrame>)
 }
 
 export default WarningsView

@@ -35,7 +35,6 @@ class CypherFrame extends Component {
         rows = bolt.recordsToTableArray(nextProps.request.result.records)
       }
 
-      console.log(nextProps.request)
       plan = bolt.extractPlan(nextProps.request.result)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
 

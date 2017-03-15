@@ -139,6 +139,9 @@ export class Editor extends Component {
           gutter.style.color = '#822'
           gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
           gutter.title = `${notification.title}\n${notification.description}`
+          gutter.onclick = () => {
+            this.props.onExecute(`EXPLAIN ${this.state.code}`)
+          }
           return gutter
         })())
       })
