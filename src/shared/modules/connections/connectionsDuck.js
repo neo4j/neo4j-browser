@@ -1,5 +1,6 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
+import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { getInitCmd, getSettings } from 'shared/modules/settings/settingsDuck'
@@ -154,7 +155,7 @@ export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT)
     .mergeMap((action) => {
       if (!action._responseChannel) return Rx.Observable.of(null)
-      return bolt.connectToConnection(action)
+      return bolt.connectToConnection(action, { encrypted: getEncryptionMode() })
         .then((res) => ({ type: action._responseChannel, success: true }))
         .catch(([e]) => ({ type: action._responseChannel, success: false, error: e }))
     })
@@ -164,7 +165,7 @@ export const startupConnectEpic = (action$, store) => {
     .mergeMap((action) => {
       const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
       return new Promise((resolve, reject) => {
-        bolt.connectToConnection(connection, { withotCredentials: true }) // Try without creds
+        bolt.connectToConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }) // Try without creds
           .then((r) => {
             store.dispatch(discovery.updateDiscoveryConnection({ username: undefined, password: undefined }))
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
@@ -176,7 +177,7 @@ export const startupConnectEpic = (action$, store) => {
               store.dispatch(discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' }))
               return resolve({ type: STARTUP_CONNECTION_FAILED })
             }
-            bolt.connectToConnection(connection) // Try with stored creds
+            bolt.connectToConnection(connection, { encrypted: getEncryptionMode() }) // Try with stored creds
               .then((connection) => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })

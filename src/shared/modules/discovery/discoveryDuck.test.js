@@ -6,6 +6,7 @@ import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
 const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
 const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
@@ -27,14 +28,12 @@ describe('discoveryOnStartupEpic', () => {
   test('listens on APP_START and tries to find a bolt host and sets it to default when bolt discovery not found', (done) => {
     // Given
     const action = { type: APP_START }
-    const expectedHost = discovery.DEFAULT_BOLT_HOST
-    nock(discovery.DISCOVERY_ENDPOINT).get('/').reply(200, { http: 'http://localhost:7474' })
+    nock(getDiscoveryEndpoint()).get('/').reply(200, { http: 'http://localhost:7474' })
 
     bus.take(discovery.DONE, (currentAction) => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedHost }),
         { type: discovery.DONE }
       ])
       done()
@@ -47,14 +46,12 @@ describe('discoveryOnStartupEpic', () => {
   test('listens on APP_START and tries to find a bolt host and sets it to default when fail on server error', (done) => {
     // Given
     const action = { type: APP_START }
-    const expectedHost = discovery.DEFAULT_BOLT_HOST
-    nock(discovery.DISCOVERY_ENDPOINT).get('/').reply(500)
+    nock(getDiscoveryEndpoint()).get('/').reply(500)
 
     bus.take(discovery.DONE, (currentAction) => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedHost }),
         { type: discovery.DONE }
       ])
       done()
@@ -68,8 +65,7 @@ describe('discoveryOnStartupEpic', () => {
     // Given
     const action = { type: APP_START }
     const expectedHost = 'bolt://myhost:7777'
-    nock(discovery.DISCOVERY_ENDPOINT).get('/').reply(200, { bolt: expectedHost })
-
+    nock(getDiscoveryEndpoint()).get('/').reply(200, { bolt: expectedHost })
     bus.take(discovery.DONE, (currentAction) => {
       // Then
       expect(store.getActions()).toEqual([
