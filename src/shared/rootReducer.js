@@ -8,6 +8,7 @@ import connectionsReducer, { NAME as connections } from 'shared/modules/connecti
 import sidebarReducer, { NAME as sidebar } from 'shared/modules/sidebar/sidebarDuck'
 import requestsReducer, { NAME as requests } from 'shared/modules/requests/requestsDuck'
 import paramsReducer, { NAME as params } from 'shared/modules/params/paramsDuck'
+import visualizationReducer, { NAME as visualization } from 'shared/modules/visualization/visualizationDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -19,5 +20,6 @@ export default {
   [favorites]: favoritesReducer,
   [sidebar]: sidebarReducer,
   [params]: paramsReducer,
-  [requests]: requestsReducer
+  [requests]: requestsReducer,
+  [visualization]: visualizationReducer
 }

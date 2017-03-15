@@ -100,7 +100,7 @@
     "lodash.debounce": "^4.0.8",
     "n": "^2.1.4",
     "neo4j-driver": "^1.1.1",
-    "neo4j-visualization": "0.0.20",
+    "neo4j-visualization": "0.0.54",
     "preact": "^7.2.0",
     "preact-compat": "^3.13.1",
     "preact-suber": "^0.1.0",
