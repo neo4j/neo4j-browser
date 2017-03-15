@@ -16,4 +16,7 @@
 .slide {
   max-height: 500px;
   overflow-y: auto;
+  & h3 {
+    color: yellow
+  }
 }
