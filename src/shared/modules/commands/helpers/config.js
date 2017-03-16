@@ -9,6 +9,6 @@ export function handleGetConfigCommand (action, cmdchar, store) {
 
 export function handleUpdateConfigCommand (action, cmdchar, put, store) {
   const strippedCmd = action.cmd.substr(cmdchar.length)
-  const toBeSet = extractCommandParameters(`${cmdchar}config`, strippedCmd)
+  const toBeSet = extractCommandParameters(`config`, strippedCmd)
   put(update(toBeSet))
 }

@@ -12,6 +12,7 @@ import { send } from 'shared/modules/requests/requestsDuck'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
 import { merge, set } from 'shared/modules/params/paramsDuck'
+import { update as updateSettings } from 'shared/modules/settings/settingsDuck'
 
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
 const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
@@ -141,6 +142,30 @@ describe('commandsDuck', () => {
           action,
           addHistory({ cmd: cmdString }),
           frames.add({...action, type: 'params', params: {}}),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+    test('does the right thing for :config x: 2', (done) => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'config'
+      const cmdString = cmd + ' x: 2'
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory({ cmd: cmdString }),
+          updateSettings({x: 2}),
+          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':'}, null, 2)}),
           { type: 'NOOP' }
         ])
         done()
