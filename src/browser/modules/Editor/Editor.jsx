@@ -20,7 +20,7 @@ export class Editor extends Component {
     this.state = {
       code: props.content || '',
       historyIndex: -1,
-      buffer: null,
+      buffer: '',
       mode: 'cypher',
       notifications: []
     }
