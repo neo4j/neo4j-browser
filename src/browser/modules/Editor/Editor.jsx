@@ -103,7 +103,8 @@ export class Editor extends Component {
     this.clearHints()
     if (mode === 'cypher' &&
         newCode.trim().length > 0 &&
-        !['EXPLAIN', 'PROFILE'].includes(newCode.trimLeft().toUpperCase())
+        !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
+        !newCode.trimLeft().toUpperCase().startsWith('PROFILE')
     ) {
       this.checkForHints(newCode)
     }
