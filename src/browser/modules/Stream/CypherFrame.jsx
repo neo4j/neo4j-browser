@@ -38,10 +38,14 @@ class CypherFrame extends Component {
       plan = bolt.extractPlan(nextProps.request.result)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
 
-      if (warnings && warnings.length > 0) {
-        this.setState({openView: 'warnings', notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
+      if (this.props.frame.forceFrame) {
+        this.setState({openView: this.props.frame.forceFrame})
       } else if (plan) {
         this.setState({openView: 'plan'})
+      }
+
+      if (warnings && warnings.length > 0) {
+        this.setState({notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
       }
     } else {
       this.setState({nodesAndRelationships, rows, plan})
@@ -76,9 +80,15 @@ class CypherFrame extends Component {
         }
         {
           this.state.notifications // props.request.result && this.props.request.result.summary.notifications.length > 0)
-           ? <CypherFrameButton selected={this.state.openView === 'warnings'} icon={<AlertIcon />} onClick={() => {
-             this.setState({openView: 'warnings'})
-           }} />
+            ? <CypherFrameButton selected={this.state.openView === 'warnings'} icon={<AlertIcon />} onClick={() => {
+              this.setState({openView: 'warnings'})
+            }}/> : null
+        }
+        {
+          this.state.notifications
+            ? <CypherFrameButton selected={this.state.openView === 'warnings'} onClick={() => {
+              this.setState({openView: 'warnings'})
+            }}><AlertIcon /></CypherFrameButton>
             : null
         }
         <CypherFrameButton selected={this.state.openView === 'code'} onClick={() => {

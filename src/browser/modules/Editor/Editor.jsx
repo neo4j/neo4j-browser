@@ -140,7 +140,9 @@ export class Editor extends Component {
           gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
           gutter.title = `${notification.title}\n${notification.description}`
           gutter.onclick = () => {
-            this.props.onExecute(`EXPLAIN ${this.state.code}`)
+            const action = commands.executeCommand(`EXPLAIN ${this.state.code}`)
+            action.forceFrame = 'warnings'
+            this.props.bus.send(action.type, action)
           }
           return gutter
         })())
@@ -208,7 +210,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const mapStateToProps = (state) => {
   return {
-    content: '',
+    content: null,
     history: getHistory(state),
     cmdchar: getSettings(state).cmdchar
   }
