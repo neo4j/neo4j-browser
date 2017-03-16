@@ -148,7 +148,8 @@ export class Editor extends Component {
       theme: 'neo',
       gutters: ['cypher-hints'],
       lineWrapping: true,
-      autofocus: true
+      autofocus: true,
+      smartIndent: false
     }
 
     const updateCode = (val) => this.updateCode(val)
