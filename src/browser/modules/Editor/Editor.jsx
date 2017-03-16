@@ -43,7 +43,9 @@ export class Editor extends Component {
     this.codeMirrorInstance.commands.newlineAndIndent(cm)
   }
   execCurrent () {
-    this.props.onExecute(this.codeMirror.getValue())
+    const value = this.codeMirror.getValue().trim()
+    if (!value) return
+    this.props.onExecute(value)
     this.clearEditor()
     this.clearHints()
     this.setState({historyIndex: -1, buffer: null})
@@ -95,14 +97,15 @@ export class Editor extends Component {
     this.updateCode(cmd, () => this.focusEditor())
   }
   updateCode (newCode, cb = () => {}) {
-    const mode = this.props.cmdchar && newCode.indexOf(this.props.cmdchar) === 0
+    const mode = this.props.cmdchar && newCode.trim().indexOf(this.props.cmdchar) === 0
       ? 'text'
       : 'cypher'
-
-    if (mode === 'cypher' && !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') && !newCode.trimLeft().toUpperCase().startsWith('PROFILE')) {
+    this.clearHints()
+    if (mode === 'cypher' &&
+        newCode.trim().length > 0 &&
+        !['EXPLAIN', 'PROFILE'].includes(newCode.trimLeft().toUpperCase())
+    ) {
       this.checkForHints(newCode)
-    } else {
-      this.clearHints()
     }
 
     this.setState({
