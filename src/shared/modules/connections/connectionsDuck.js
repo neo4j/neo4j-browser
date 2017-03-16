@@ -165,7 +165,6 @@ export const startupConnectEpic = (action$, store) => {
     .mergeMap((action) => {
       const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
       return new Promise((resolve, reject) => {
-        if (!connection) return resolve({ type: STARTUP_CONNECTION_FAILED })
         bolt.connectToConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }) // Try without creds
           .then((r) => {
             store.dispatch(discovery.updateDiscoveryConnection({ username: undefined, password: undefined }))
@@ -173,7 +172,7 @@ export const startupConnectEpic = (action$, store) => {
             resolve({ type: STARTUP_CONNECTION_SUCCESS })
           })
           .catch(() => {
-            if (!connection.username && !connection.password) { // No creds stored
+            if (!connection || (!connection.username && !connection.password)) { // No creds stored
               store.dispatch(setActiveConnection(null))
               store.dispatch(discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' }))
               return resolve({ type: STARTUP_CONNECTION_FAILED })
