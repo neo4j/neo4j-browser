@@ -19,8 +19,6 @@ export const Favorite = ({id, content, onItemClick = () => {}, removeClick = () 
   const name = extractNameFromCommand(content)
   return (
     <FavoriteItem
-      style={{color: 'white'}}
-      className='favorite'
       primaryText={name}
       onClick={() => onItemClick(content)}
       removeClick={() => removeClick(id)}

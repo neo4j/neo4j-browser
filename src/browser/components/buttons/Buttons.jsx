@@ -2,6 +2,8 @@ import { Component } from 'preact'
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
+import { BinIcon } from 'browser-components/icons/Icons'
+
 import styles from './style.css'
 
 export class ToolTip extends Component {
@@ -58,14 +60,27 @@ export const EditorButton = styled.a`
     }
   `
 
+const StyledFavoriteText = styled.span`
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+  width: 182px;
+  color: #bcc0c9;
+  font-size: 13px;
+  display: inline-block;
+  max-height: 54px;
+  overflow: hidden;
+`
+const StyledList = styled.li`
+  list-style-type: none;
+`
+
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
-  const rightIcon = (removeClick) ? (<CloseButton className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
+  const rightIcon = (removeClick) ? (<BinIcon className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
   return (
-    <li>
-      <span {...rest}>{primaryText}</span>
+    <StyledList>
+      <StyledFavoriteText {...rest}>{primaryText}</StyledFavoriteText>
       <span>{rightIcon}</span>
-    </li>
+    </StyledList>
   )
 }
 
