@@ -1,7 +1,9 @@
 import classNames from 'classnames'
 import styles from './style_meta.css'
+import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+import {StyledLabel, StyledRelationship, StyledProperty} from './styled'
 
-const createItems = (originalList, onItemClick, className, editorCommandTemplate, showStar = true) => {
+const createItems = (originalList, onItemClick, RenderType, editorCommandTemplate, showStar = true) => {
   let items = [...originalList]
   if (showStar) {
     items.unshift('*')
@@ -9,15 +11,11 @@ const createItems = (originalList, onItemClick, className, editorCommandTemplate
   return items.map((text, index) => {
     const getNodesCypher = editorCommandTemplate(text)
     return (
-      <button
+      <RenderType.component
         key={index}
-        onClick={() => onItemClick(getNodesCypher)}
-        className={classNames({
-          [styles.chip]: true,
-          [className]: true
-        })}>
+        onClick={() => onItemClick(getNodesCypher)}>
         {text}
-      </button>
+      </RenderType.component>
     )
   })
 }
@@ -30,18 +28,17 @@ const LabelItems = ({labels, onItemClick}) => {
       }
       return `MATCH (n:${text}) RETURN n LIMIT 25`
     }
-    labelItems = createItems(labels, onItemClick, 'token-label', editorCommandTemplate)
+    labelItems = createItems(labels, onItemClick, {component: StyledLabel}, editorCommandTemplate)
   }
   return (
-    <div>
-      <h4> Node Labels </h4>
-      <div className={classNames({
-        [styles['wrapper']]: true,
-        [styles['label-wrapper']]: true
+    <DrawerSection>
+      <DrawerSubHeader>Node Labels</DrawerSubHeader>
+      <DrawerSectionBody className={classNames({
+        [styles['wrapper']]: true
       })}>
         {labelItems}
-      </div>
-    </div>
+      </DrawerSectionBody>
+    </DrawerSection>
   )
 }
 const RelationshipItems = ({relationshipTypes, onItemClick}) => {
@@ -53,18 +50,17 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
       }
       return `MATCH p=()-[r:${text}]->() RETURN p LIMIT 25`
     }
-    relationshipItems = createItems(relationshipTypes, onItemClick, 'token-relationship', editorCommandTemplate)
+    relationshipItems = createItems(relationshipTypes, onItemClick, {component: StyledRelationship}, editorCommandTemplate)
   }
   return (
-    <div>
-      <h4>Relationship Types </h4>
-      <div className={classNames({
-        [styles['wrapper']]: true,
-        [styles['relationship-wrapper']]: true
+    <DrawerSection>
+      <DrawerSubHeader>Relationship Types</DrawerSubHeader>
+      <DrawerSectionBody className={classNames({
+        [styles['wrapper']]: true
       })}>
         {relationshipItems}
-      </div>
-    </div>
+      </DrawerSectionBody>
+    </DrawerSection>
   )
 }
 const PropertyItems = ({properties, onItemClick}) => {
@@ -73,18 +69,17 @@ const PropertyItems = ({properties, onItemClick}) => {
     const editorCommandTemplate = (text) => {
       return `MATCH (n) WHERE EXISTS(n.${text}) RETURN DISTINCT "node" as element, n.${text} AS ${text} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${text}) RETURN DISTINCT "relationship" AS element, r.${text} AS ${text} LIMIT 25`
     }
-    propertyItems = createItems(properties, onItemClick, 'token-property', editorCommandTemplate, false)
+    propertyItems = createItems(properties, onItemClick, {component: StyledProperty}, editorCommandTemplate, false)
   }
   return (
-    <div>
-      <h4> Property Keys </h4>
-      <div className={classNames({
-        [styles['wrapper']]: true,
-        [styles['property-key-wrapper']]: true
+    <DrawerSection>
+      <DrawerSubHeader> Property Keys </DrawerSubHeader>
+      <DrawerSectionBody className={classNames({
+        [styles['wrapper']]: true
       })}>
         {propertyItems}
-      </div>
-    </div>
+      </DrawerSectionBody>
+    </DrawerSection>
   )
 }
 

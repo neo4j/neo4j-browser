@@ -13,6 +13,7 @@ export const base = {
 
   // Fonts
   drawerHeaderFontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+
   // Headers
   primaryHeaderText: '#fff',
 

@@ -13,19 +13,19 @@ export const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties =
     <Drawer id='db-drawer'>
       <DrawerHeader>Database Information</DrawerHeader>
       <DrawerBody>
-        <li className={styles.section}>
+        <div className={styles.section}>
           <LabelItems labels={labels.map((l) => l.val)} onItemClick={onItemClick} />
-        </li>
-        <li className={styles.section}>
+        </div>
+        <div className={styles.section}>
           <RelationshipItems relationshipTypes={relationshipTypes.map((l) => l.val)} onItemClick={onItemClick} />
-        </li>
-        <li className={styles.section}>
+        </div>
+        <div className={styles.section}>
           <PropertyItems properties={properties.map((l) => l.val)} onItemClick={onItemClick} />
-        </li>
-        <li className={styles.section}>
+        </div>
+        <div className={styles.section}>
           <UserDetails userDetails={userDetails} onItemClick={onItemClick} />
           <DatabaseKernelInfo databaseKernelInfo={databaseKernelInfo} onItemClick={onItemClick} />
-        </li>
+        </div>
       </DrawerBody>
     </Drawer>
   )
