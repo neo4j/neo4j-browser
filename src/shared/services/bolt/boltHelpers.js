@@ -1,13 +1,14 @@
 /* global location */
 import bolt from './bolt'
+import { getUrlInfo } from 'services/utils'
 
 export const getEncryptionMode = () => {
   return location.protocol === 'https:'
 }
 
 export const getDiscoveryEndpoint = () => {
-  const host = location.host ? `//${location.host}/` : 'http://localhost:7474/'
-  return host
+  const info = getUrlInfo(location.href || 'http://localhost:7474/')
+  return `${info.protocol}//${info.host}/`
 }
 
 export const getServerConfig = () => {
