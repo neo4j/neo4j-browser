@@ -8,10 +8,6 @@ export const Bar = styled.div`
   min-height: ${dim.editorbarHeight}px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   `
 export const ActionButtonSection = styled.div`
   flex: 0 0 130px;

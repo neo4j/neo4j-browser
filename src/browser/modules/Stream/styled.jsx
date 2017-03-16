@@ -5,7 +5,7 @@ export const StyledStream = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  margin-top: ${dim.editorbarHeight + 14}px;
+  margin-top: 17px;
 `
 
 const rollDownAnimation = keyframes`
