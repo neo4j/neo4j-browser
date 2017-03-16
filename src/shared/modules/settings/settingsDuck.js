@@ -5,11 +5,12 @@ export const UPDATE = 'settings/UPDATE'
 
 export const getSettings = (state) => state[NAME]
 export const getInitCmd = (state) => state[NAME].initCmd || initialState.initCmd
+export const getTheme = (state) => state[NAME].theme || initialState.theme
 
 const initialState = {
   cmdchar: ':',
-  maxHistory: 10,
-  singleFrameMode: false,
+  maxHistory: 30,
+  theme: 'normal',
   initCmd: ':play start'
 }
 

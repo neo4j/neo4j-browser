@@ -32,6 +32,7 @@ export const base = {
   secondaryButtonBackgroundHover: '#717172',
 
   // Frame
+  frameBorder: 'none',
   inFrameBorder: '1px solid #e6e9ef',
   frameSidebarBackground: '#F8F9FB',
   frameTitlebarText: '#717172'
@@ -39,4 +40,12 @@ export const base = {
 
 export const normal = {
   ...base
+}
+
+export const outline = {
+  ...base,
+  primaryText: '#000',
+  secondaryText: '#000',
+  frameBorder: '1px solid #000',
+  inFrameBorder: '1px solid #000'
 }

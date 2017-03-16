@@ -5,8 +5,6 @@ import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
-import { ThemeProvider } from 'styled-components'
-import { normal as normalTheme } from './styles/themes'
 
 import reducers from 'shared/rootReducer'
 import App from './modules/App/App'
@@ -52,9 +50,7 @@ store.dispatch({ type: APP_START })
 
 render(
   <Provider store={store}>
-    <ThemeProvider theme={normalTheme}>
-      <App />
-    </ThemeProvider>
+    <App />
   </Provider>,
   document.getElementById('mount')
 )
