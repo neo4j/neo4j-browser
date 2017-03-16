@@ -73,7 +73,7 @@ const PropertyItems = ({properties, onItemClick}) => {
   }
   return (
     <DrawerSection>
-      <DrawerSubHeader> Property Keys </DrawerSubHeader>
+      <DrawerSubHeader>Property Keys</DrawerSubHeader>
       <DrawerSectionBody className={classNames({
         [styles['wrapper']]: true
       })}>

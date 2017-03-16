@@ -28,3 +28,18 @@ export const StyledProperty = styled(chip)`
     color: #ccc;
   }
 `
+export const StyledTable = styled.table`
+`
+export const StyledKey = styled.td`
+  text-align: right;
+  padding-right: 13px;
+  width: 100px;
+  color: #bcc0c9;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  outline-color: rgb(188, 192, 201);
+  text-shadow: rgba(0,0,0,.4)0 1px 0;
+
+`
+export const StyledValue = styled.td`
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+`

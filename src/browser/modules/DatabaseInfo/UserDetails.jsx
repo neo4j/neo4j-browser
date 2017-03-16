@@ -1,12 +1,15 @@
 import { Component } from 'preact'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+import {StyledTable, StyledKey, StyledValue} from './styled'
 
 export class UserDetails extends Component {
   constructor (props) {
     super(props)
+    console.log('props', props)
     this.state = {
-      userDetails: props.userDetails
+      userDetails: props.userDetails || {}
     }
   }
   componentWillReceiveProps (props) {
@@ -27,16 +30,27 @@ export class UserDetails extends Component {
   }
   render () {
     const userDetails = this.state.userDetails
-    if (userDetails) {
+    console.log('usD', userDetails)
+    if (userDetails.username) {
       const mappedRoles = (userDetails.roles.length > 0) ? userDetails.roles.join(', ') : '-'
       const showAdminFunctionality = (userDetails.roles.includes('ADMIN')) ? <div className='user-list-button'>:server user add</div> : null
       return (
-        <div className='user-details'>
-          <h4>Connected as</h4>
-          <div>Username: <span className='username'>{userDetails.username}</span></div>
-          <div>Roles: <span className='roles'>{mappedRoles}</span></div>
-          {showAdminFunctionality}
-        </div>
+        <DrawerSection className='user-details'>
+          <DrawerSubHeader>Connected as</DrawerSubHeader>
+          <DrawerSectionBody>
+            <StyledTable>
+              <tbody>
+                <tr>
+                  <StyledKey>Username:</StyledKey><StyledValue>{userDetails.username}</StyledValue>
+                </tr>
+                <tr>
+                  <StyledKey>Roles:</StyledKey><StyledValue>{mappedRoles}</StyledValue>
+                </tr>
+              </tbody>
+            </StyledTable>
+            {showAdminFunctionality}
+          </DrawerSectionBody>
+        </DrawerSection>
       )
     } else {
       return null

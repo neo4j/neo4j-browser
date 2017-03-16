@@ -1,7 +1,9 @@
 import { Component } from 'preact'
 import { withBus } from 'preact-suber'
-
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+
+import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
+import {StyledTable, StyledKey, StyledValue} from './styled'
 
 export class DatabaseKernelInfo extends Component {
   constructor (props) {
@@ -31,11 +33,21 @@ export class DatabaseKernelInfo extends Component {
     const databaseKernelInfo = this.state.databaseKernelInfo
     if (databaseKernelInfo) {
       return (
-        <div className='database-kernel-info'>
-          <h4>Database</h4>
-          <div>Version: <span className='version'>{databaseKernelInfo.version}</span></div>
-          <div>Edition: <span className='edition'>{databaseKernelInfo.edition}</span></div>
-        </div>
+        <DrawerSection className='database-kernel-info'>
+          <DrawerSubHeader>Database</DrawerSubHeader>
+          <DrawerSectionBody>
+            <StyledTable>
+              <tbody>
+                <tr>
+                  <StyledKey>Version: </StyledKey><StyledValue>{databaseKernelInfo.version}</StyledValue>
+                </tr>
+                <tr>
+                  <StyledKey>Edition: </StyledKey><StyledValue>{databaseKernelInfo.edition}</StyledValue>
+                </tr>
+              </tbody>
+            </StyledTable>
+          </DrawerSectionBody>
+        </DrawerSection>
       )
     } else {
       return null
