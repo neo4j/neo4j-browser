@@ -70,7 +70,8 @@ module.exports = {
     hot: true
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, 'node-noop')
   ],
   node: {
     net: 'empty',

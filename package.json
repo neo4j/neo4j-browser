@@ -101,6 +101,7 @@
     "n": "^2.1.4",
     "neo4j-driver": "^1.1.1",
     "neo4j-visualization": "0.0.54",
+    "node-noop": "^1.0.0",
     "preact": "^7.2.0",
     "preact-compat": "^3.13.1",
     "preact-suber": "^0.1.0",
