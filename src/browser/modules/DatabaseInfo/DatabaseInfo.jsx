@@ -11,7 +11,7 @@ import styles from './style_meta.css'
 export const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties = [], userDetails, databaseKernelInfo, onItemClick }) => {
   return (
     <Drawer id='db-drawer'>
-      <DrawerHeader title='Database Information' />
+      <DrawerHeader>Database Information</DrawerHeader>
       <DrawerBody>
         <li className={styles.section}>
           <LabelItems labels={labels.map((l) => l.val)} onItemClick={onItemClick} />

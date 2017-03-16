@@ -9,6 +9,12 @@ export const base = {
   primaryBackground: '#eee',
   secondaryBackground: '#fff',
   editorBarBackground: '#EFEFF4',
+  drawerBackground: '#292b31',
+
+  // Fonts
+  drawerHeaderFontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+  // Headers
+  primaryHeaderText: '#fff',
 
   // User feedback colors
   success: '#70E9B1',

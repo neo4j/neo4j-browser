@@ -4,7 +4,7 @@ import {H5} from 'browser-components/headers'
 const About = () => {
   return (
     <Drawer id='db-about'>
-      <DrawerHeader title='About Neo4j' />
+      <DrawerHeader>About Neo4j</DrawerHeader>
       <DrawerBody>
         <H5>
           Made by Neo Technology

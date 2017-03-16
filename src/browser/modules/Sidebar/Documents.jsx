@@ -24,7 +24,7 @@ const staticItems = {
 const Documents = ({ items = staticItems }) => {
   return (
     <Drawer id='db-documents'>
-      <DrawerHeader title='Documents' />
+      <DrawerHeader>Documents</DrawerHeader>
       <DrawerBody>
         <DocumentItems header={'Introduction'} items={items.intro} />
         <DocumentItems header={'Reference Library'} items={items.reference} />

@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { NavigationButton } from 'browser-components/buttons'
-
+import { StyledDrawer } from './styled'
 const Navigation = ({
   openDrawer,
   onNavClick,
@@ -47,9 +47,11 @@ const Navigation = ({
         <ul className={listClassName}>{topNavItemsList}</ul>
         <ul className={listClassName}>{bottomNavItemsList}</ul>
       </ul>
-      <div className={tabClass + ' tab'}>
-        {getContentToShow(openDrawer)}
-      </div>
+      <StyledDrawer className={tabClass}>
+        <div className='tab'>
+          {getContentToShow(openDrawer)}
+        </div>
+      </StyledDrawer>
     </div>
   )
 }

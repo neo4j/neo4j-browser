@@ -32,7 +32,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
 
   return (
     <Drawer id='db-settings'>
-      <DrawerHeader title='Browser Settings' />
+      <DrawerHeader>Browser Settings</DrawerHeader>
       <DrawerBody>
         {mappedSettings}
       </DrawerBody>

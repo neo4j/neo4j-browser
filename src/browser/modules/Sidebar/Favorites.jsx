@@ -13,11 +13,11 @@ export const Favorites = (props) => {
 
   return (
     <Drawer id='db-favorites'>
-      <DrawerHeader title='Favorites' />
+      <DrawerHeader>Favorites</DrawerHeader>
       <DrawerBody>
         {ListOfFavorites}
       </DrawerBody>
-      <DrawerHeader title='Import' />
+      <DrawerHeader>Import</DrawerHeader>
       <DrawerBody>
         <FileDrop />
       </DrawerBody>

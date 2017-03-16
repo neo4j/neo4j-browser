@@ -29,12 +29,6 @@
 .selected-item {
   background-color: #30333A !important
 }
-.tab {
-  flex: 0 0 280px;
-  width: 280px;
-  background-color: #30333A;
-  overflow: auto
-}
 
 .setting {
   label, input {
