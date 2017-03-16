@@ -7,7 +7,8 @@ export const getEncryptionMode = () => {
 }
 
 export const getDiscoveryEndpoint = () => {
-  const info = getUrlInfo(location.href || 'http://localhost:7474/')
+  const url = location.host ? location.href : 'http://localhost:7474/'
+  const info = getUrlInfo(url)
   return `${info.protocol}//${info.host}/`
 }
 
