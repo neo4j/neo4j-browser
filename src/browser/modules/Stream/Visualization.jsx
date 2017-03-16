@@ -51,7 +51,6 @@ export class Visualization extends Component {
     return this.props.onLabelsSave(labels)
   }
 
-
   initialiseVis (el) {
     if (el) {
       const callbacks = {

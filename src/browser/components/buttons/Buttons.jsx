@@ -123,26 +123,26 @@ export const ActionButton = (props) => {
 
 const CarouselButton = styled.button`
   order: 1;
-	background-color: rgb(34, 34, 34);
-	border: 3px solid rgb(255, 255, 255);
-	color: rgb(255, 255, 255);
-	cursor: pointer;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 60px;
-	font-weight: 100;
-	height: 40px;
-	min-height: 40px;
+  background-color: rgb(34, 34, 34);
+  border: 3px solid rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 60px;
+  font-weight: 100;
+  height: 40px;
+  min-height: 40px;
   border-radius: 50%;
   line-height: 0;
-	opacity: 0.5;
-	position: relative;
-	text-align: center;
-	text-decoration: none;
-	text-shadow: rgba(0, 0, 0, 0.6) 0px 1px 2px;
-	top: 30px;
-	width: 40px;
-	min-width: 40px;
-	-webkit-font-smoothing: antialiased;
+  opacity: 0.5;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: rgba(0, 0, 0, 0.6) 0px 1px 2px;
+  top: 30px;
+  width: 40px;
+  min-width: 40px;
+  -webkit-font-smoothing: antialiased;
   &:hover {
     color: #fff;
     text-decoration: none;
