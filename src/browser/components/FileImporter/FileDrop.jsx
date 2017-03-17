@@ -5,7 +5,6 @@ import { wrapWithDndContext } from './dndGlobalContext'
 
 const fileTarget = {
   drop (props, monitor) {
-    console.log('Hello in drop')
     const file = monitor.getItem().files[0]
     if (file.name.endsWith(`.${props.expectedExtension}`)) {
       const fileReader = new FileReader()

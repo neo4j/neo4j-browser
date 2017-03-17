@@ -22,7 +22,6 @@ export const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties =
 }
 
 const mapStateToProps = (state) => {
-  console.log('state, meta', state.meta)
   return state.meta || {}
 }
 const mapDispatchToProps = (_, ownProps) => {

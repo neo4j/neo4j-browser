@@ -7,7 +7,6 @@ import {StyledTable, StyledKey, StyledValue} from './styled'
 export class UserDetails extends Component {
   constructor (props) {
     super(props)
-    console.log('props', props)
     this.state = {
       userDetails: props.userDetails || {}
     }
@@ -30,7 +29,6 @@ export class UserDetails extends Component {
   }
   render () {
     const userDetails = this.state.userDetails
-    console.log('usD', userDetails)
     if (userDetails.username) {
       const mappedRoles = (userDetails.roles.length > 0) ? userDetails.roles.join(', ') : '-'
       const showAdminFunctionality = (userDetails.roles.includes('ADMIN')) ? <div className='user-list-button'>:server user add</div> : null
