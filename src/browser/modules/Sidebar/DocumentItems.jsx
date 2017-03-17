@@ -2,7 +2,8 @@ import { connect } from 'react-redux'
 import uuid from 'uuid'
 import { withBus } from 'preact-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
-import { H4 } from 'browser-components/headers'
+import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+
 import { FavoriteItem } from 'browser-components/buttons'
 
 export const DocumentItems = ({header, items, onItemClick = null}) => {
@@ -23,12 +24,14 @@ export const DocumentItems = ({header, items, onItemClick = null}) => {
     }
   })
   return (
-    <div>
-      <H4>{header}</H4>
-      <ul className='document'>
-        {listOfItems}
-      </ul>
-    </div>
+    <DrawerSection>
+      <DrawerSubHeader>{header}</DrawerSubHeader>
+      <DrawerSectionBody>
+        <ul className='document'>
+          {listOfItems}
+        </ul>
+      </DrawerSectionBody>
+    </DrawerSection>
   )
 }
 

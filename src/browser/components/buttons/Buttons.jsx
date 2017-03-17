@@ -71,6 +71,7 @@ const StyledFavoriteText = styled.span`
 `
 const StyledList = styled.li`
   list-style-type: none;
+  margin: 14px 0;
 `
 
 export const FavoriteItem = (props) => {

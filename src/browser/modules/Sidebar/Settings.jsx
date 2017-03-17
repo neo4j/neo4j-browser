@@ -1,7 +1,8 @@
 import { connect } from 'react-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
 import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
-
+import { DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+import { StyledSettingLabel, StyledSettingTextInput } from './styled'
 import styles from './style.css'
 
 const visualSettings =
@@ -20,13 +21,13 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
     const visual = visualSetting[setting].displayName
     const tooltip = visualSetting[setting].tooltip
     return (
-      <li className={'setting ' + styles.setting} key={i}>
-        <label>{visual}</label>
-        <input onChange={(event) => {
+      <div key={i}>
+        <StyledSettingLabel>{visual}</StyledSettingLabel>
+        <StyledSettingTextInput onChange={(event) => {
           settings[setting] = event.target.value
           onSettingsSave(settings)
         }} defaultValue={settings[setting]} title={[tooltip]} />
-      </li>
+      </div>
     )
   })
 
@@ -34,7 +35,11 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
     <Drawer id='db-settings'>
       <DrawerHeader>Browser Settings</DrawerHeader>
       <DrawerBody>
-        {mappedSettings}
+        <DrawerSection>
+          <DrawerSectionBody>
+            {mappedSettings}
+          </DrawerSectionBody>
+        </DrawerSection>
       </DrawerBody>
     </Drawer>
   )

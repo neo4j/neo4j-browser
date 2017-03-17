@@ -28,9 +28,15 @@ export const DrawerSubHeader = styled.h5`
   font-family: ${props => props.theme.drawerHeaderFontFamily}
 `
 
-export const DrawerSection = styled.div``
+export const DrawerSection = styled.div`
+  margin-bottom: 12px;
+`
 
-export const DrawerSectionBody = styled.div``
+export const DrawerSectionBody = styled.div`
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  color: #bcc0c9;
+`
 
 export const DrawerBody = styled.div`
   padding: 0 24px;
