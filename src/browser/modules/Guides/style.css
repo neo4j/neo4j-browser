@@ -16,7 +16,90 @@
 .slide {
   max-height: 500px;
   overflow-y: auto;
-  & h3 {
-    color: yellow
+  font-weight: 200;
+  & article.help {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    color: #666;
+    display: block;
+    width: 100%;
+    padding: 30px;
+    & .main {
+      display: flex;
+      flex: 0 0 25%;
+    }
+  }
+  & .headings {
+    flex: 0 0 25%;
+    & .title {
+      font-size: 24px;
+      font-weight: 400;
+      color: #333;
+    }
+  }
+  & .content {
+    p {
+      margin-bottom: 10px;
+    }
+  }
+  & .example {
+    padding-left: 25%;
+  }
+  & .links {
+    display: table;
+  }
+  & .runnable {
+    & pre {
+      cursor: pointer;
+      border: 2px dashed #e1e1e8;
+    }
+  }
+  & .links {
+    display:table;
+    & .link {
+      display: table-row;
+      & .title, & .content {
+        display: table-cell;
+        padding: 5px;
+        font-size: 13px;
+      }
+      & .title {
+        text-align: right;
+        font-weight: bold;
+      }
+    }
+  }
+
+  & a[help-topic] {
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    border: 1px solid #dadada;
+    display: inline-block;
+    font-family: Monaco,"Courier New",Terminal,monospace;
+    font-size: 12px;
+    line-height: 18px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding: 0 4px;
+    color: #428bca;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  & pre {
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    padding: 10px;
+  }
+  & code {
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+  }
+  & figcaption {
+    font-style: italic;
+    font-size: 13px;
+    text-align: center;
   }
 }
