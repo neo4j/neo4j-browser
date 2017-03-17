@@ -1,5 +1,4 @@
-import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
-import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
 
 const About = () => {
   return (

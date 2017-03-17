@@ -1,9 +1,7 @@
 import { connect } from 'react-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
-import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
-import { DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
 import { StyledSettingLabel, StyledSettingTextInput } from './styled'
-import styles from './style.css'
 
 const visualSettings =
   [
