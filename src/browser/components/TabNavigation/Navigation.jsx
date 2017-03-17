@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { NavigationButton } from 'browser-components/buttons'
+import { NavigationButton, NavigationButtonContainer } from 'browser-components/buttons'
 import { StyledDrawer } from './styled'
 const Navigation = ({
   openDrawer,
@@ -13,15 +13,11 @@ const Navigation = ({
 }) => {
   const buildNavList = (list) => {
     return list.map((item, index) => {
-      const itemClass = classNames({
-        [selectedItemClassName]: item.name.toLowerCase() === openDrawer
-      })
       return (
-        <li key={index}
-          className={itemClass}
+        <NavigationButtonContainer key={index}
           onClick={() => onNavClick(item.name.toLowerCase())}>
           <NavigationButton name={item.name}>{item.icon}</NavigationButton>
-        </li>
+        </NavigationButtonContainer>
       )
     })
   }

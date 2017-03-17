@@ -73,7 +73,24 @@ const StyledList = styled.li`
   list-style-type: none;
   margin: 14px 0;
 `
-
+const StyledNavigationButton = styled.button`
+  background: transparent;
+  border: 0;
+  width: 80px;
+  line-height: 67px;
+  padding-top: 3px;
+  font-size: 28px;
+  &:focus {
+    outline: none;
+  }
+`
+export const NavigationButtonContainer = styled.li`
+  min-height: 70px;
+  height: 70px;
+  &:focus {
+    outline: none;
+  }
+`
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
   const rightIcon = (removeClick) ? (<BinIcon className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
@@ -86,7 +103,7 @@ export const FavoriteItem = (props) => {
 }
 
 export const NavigationButton = (props) => {
-  return (<button className={styles.navigation}>{props.children}</button>)
+  return (<StyledNavigationButton>{props.children}</StyledNavigationButton>)
 }
 export const FormButton = (props) => {
   const {icon, label, children, ...rest} = props

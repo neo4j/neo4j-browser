@@ -16,11 +16,3 @@
 .remove {
   color: #bcc0c9 !important;
 }
-.navigation {
-  background: transparent;
-  border: 0;
-  width: 80px;
-  line-height: 67px;
-  padding-top: 3px;
-  font-size: 28px;
-}

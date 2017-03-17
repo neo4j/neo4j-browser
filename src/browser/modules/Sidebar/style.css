@@ -12,22 +12,31 @@
   span {
     color: #fff !important;
   }
+  & :focus {
+    
+  }
 }
 
 .list:last-child {
   position: absolute;
   bottom: 0;
   > * {
-    border-top: #fff 1px solid;
+    border-top: 1px solid #5d6370
   }
 }
 .list:first-child {
   > * {
-    border-bottom: #fff 1px solid;
+    border-bottom: 1px solid #5d6370;
   }
 }
 .selected-item {
-  background-color: #30333A !important
+  &:focus {
+    outline-color: transparent;
+    outline-style: none;
+  }
+
+  outline: none;
+  background-color: #30333A;
 }
 
 .setting {
