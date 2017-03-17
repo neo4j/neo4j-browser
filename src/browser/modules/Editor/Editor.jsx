@@ -14,6 +14,7 @@ import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { debounce } from 'services/utils'
+import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 
 export class Editor extends Component {
   constructor (props) {
@@ -143,7 +144,7 @@ export class Editor extends Component {
           gutter.title = `${notification.title}\n${notification.description}`
           gutter.onclick = () => {
             const action = executeSystemCommand(`EXPLAIN ${this.state.code}`)
-            action.forceFrame = 'warnings'
+            action.forceView = viewTypes.WARNINGS
             this.props.bus.send(action.type, action)
           }
           return gutter

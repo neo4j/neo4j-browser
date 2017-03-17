@@ -9,10 +9,12 @@ export const CLEAR_IN_CONTEXT = 'frames/CLEAR_IN_CONTEXT'
 export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
 export const PIN = `${NAME}/PIN`
 export const UNPIN = `${NAME}/UNPIN`
+export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
 
 const initialState = {
   allIds: [],
-  byId: {}
+  byId: {},
+  recentView: null
 }
 
 /**
@@ -24,6 +26,10 @@ export function getFrames (state) {
 
 export function getFramesInContext (state, context) {
   return getFrames(state).filter((f) => f.context === context)
+}
+
+export function getRecentView (state) {
+  return state[NAME].recentView
 }
 
 /**
@@ -98,6 +104,10 @@ function findFirstFreePos ({ byId, allIds }) {
   return freePos === -1 ? allIds.length : freePos
 }
 
+function setRecentViewHelper (state, recentView) {
+  return Object.assign({}, state, {recentView})
+}
+
 /**
  * Reducer
 */
@@ -115,6 +125,8 @@ export default function reducer (state = initialState, action) {
       return pinFrame(state, action.id)
     case UNPIN:
       return unpinFrame(state, action.id)
+    case SET_RECENT_VIEW:
+      return setRecentViewHelper(state, action.view)
     default:
       return state
   }
@@ -159,5 +171,12 @@ export function unpin (id) {
   return {
     type: UNPIN,
     id
+  }
+}
+
+export function setRecentView (view) {
+  return {
+    type: SET_RECENT_VIEW,
+    view
   }
 }

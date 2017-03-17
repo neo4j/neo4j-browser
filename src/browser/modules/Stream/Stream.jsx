@@ -16,7 +16,7 @@ import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
-import { getFrames } from 'shared/modules/stream/streamDuck'
+import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import QueriesFrame from './Queries/QueriesFrame'
@@ -51,7 +51,11 @@ export const Stream = (props) => {
         const frameProps = {
           frame,
           activeConnectionData: props.activeConnectionData,
-          request: props.requests[frame.requestId]
+          request: props.requests[frame.requestId],
+          recentView: props.recentView,
+          onRecentViewChanged: (view) => {
+            props.onRecentViewChanged(view)
+          }
         }
         const MyFrame = getFrame(frame.type)
         return <MyFrame {...frameProps} key={frame.id} />
@@ -64,8 +68,17 @@ const mapStateToProps = (state) => {
   return {
     frames: getFrames(state),
     requests: getRequests(state),
-    activeConnectionData: getActiveConnectionData(state)
+    activeConnectionData: getActiveConnectionData(state),
+    recentView: getRecentView(state)
   }
 }
 
-export default connect(mapStateToProps)(Stream)
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onRecentViewChanged: (view) => {
+      dispatch(setRecentView(view))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Stream)
