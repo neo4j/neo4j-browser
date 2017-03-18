@@ -1,10 +1,10 @@
 @font-face {
   font-family: "streamline";
-  src:url("./fonts/streamline.eot");
-  src:url("./fonts/streamline.eot?#iefix") format("embedded-opentype"),
-    url("./fonts/streamline.woff") format("woff"),
-    url("./fonts/streamline.ttf") format("truetype"),
-    url("./fonts/streamline.svg#streamline") format("svg");
+  src:url("/external/fonts/streamline.eot");
+  src:url("/external/fonts/streamline.eot?#iefix") format("embedded-opentype"),
+    url("/external/fonts/streamline.woff") format("woff"),
+    url("/external/fonts/streamline.ttf") format("truetype"),
+    url("/external/fonts/streamline.svg#streamline") format("svg");
   font-weight: normal;
   font-style: normal;
 

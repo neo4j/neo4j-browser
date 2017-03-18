@@ -13,6 +13,7 @@ import App from './modules/App/App'
 
 import epics from 'shared/rootEpic'
 import './styles/bootstrap.grid-only.min.css'
+import './styles/streamline.css'
 import './styles/global-styles'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
