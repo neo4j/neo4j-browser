@@ -30,6 +30,7 @@ export const StyledFrame = styled.article`
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
   animation: ${rollDownAnimation} .2s linear;
+  border: ${props => props.theme.frameBorder};
 `
 
 export const StyledFullscreenFrame = styled(StyledFrame)`
