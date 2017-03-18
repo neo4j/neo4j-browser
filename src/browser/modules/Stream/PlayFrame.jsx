@@ -9,7 +9,7 @@ const PlayFrame = ({frame}) => {
   } else {
     const guideName = frame.cmd.replace(':play', '').replace(/\s|-/g, '').trim()
     if (guideName !== '') {
-      const content = html.default[guideName]
+      const content = html[guideName]
       if (content !== undefined) {
         guide = <Guides withDirectives html={content} />
       } else {
