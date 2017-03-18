@@ -191,7 +191,7 @@ export const startupConnectEpic = (action$, store) => {
     .mergeMap((action) => {
       const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
       return new Promise((resolve, reject) => {
-        bolt.connectToConnection(connection, { withotCredentials: true, encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try without creds
+        bolt.connectToConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try without creds
           .then((r) => {
             store.dispatch(discovery.updateDiscoveryConnection({ username: undefined, password: undefined }))
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))

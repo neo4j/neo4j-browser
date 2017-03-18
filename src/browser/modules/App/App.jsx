@@ -8,7 +8,7 @@ import styles from './style.css'
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import { getConnectionState } from 'shared/modules/connections/connectionsDuck'
+import { getActiveConnection, getConnectionState } from 'shared/modules/connections/connectionsDuck'
 
 const BaseLayout = ({drawer, handleNavClick, activeConnection, connectionState, theme}) => {
   const themeData = themes[theme] || themes['normal']
