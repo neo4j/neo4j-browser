@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { getActiveConnectionData, getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
 import { getInitCmd } from 'shared/modules/settings/settingsDuck'

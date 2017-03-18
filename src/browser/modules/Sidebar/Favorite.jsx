@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import {FavoriteItem} from 'browser-components/buttons'
 

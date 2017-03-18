@@ -3,7 +3,7 @@ import { createEpicMiddleware } from 'redux-observable'
 import 'preact/devtools'
 import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { Provider } from 'react-redux'
+import { Provider } from 'preact-redux'
 import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
 
 import reducers from 'shared/rootReducer'

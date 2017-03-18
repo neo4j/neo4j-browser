@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import Dropzone from 'react-dropzone'
 
 import {addFavorite} from 'shared/modules/favorites/favoritesDuck'

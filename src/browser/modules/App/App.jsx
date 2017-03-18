@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
 import { getTheme } from 'shared/modules/settings/settingsDuck'
