@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import * as actions from 'shared/modules/visualization/visualizationDuck'
 import Nevada from 'neo4j-visualization'
 import bolt from 'services/bolt/bolt'

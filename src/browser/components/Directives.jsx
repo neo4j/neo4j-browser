@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 

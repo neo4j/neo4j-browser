@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'

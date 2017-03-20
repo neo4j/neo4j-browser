@@ -4,7 +4,7 @@ import { mount } from 'enzyme'
 import Settings, { Settings as SettingsComponent } from './Settings'
 import reducer from 'shared/modules/settings/settingsDuck'
 import { createStore, combineReducers } from 'redux'
-import { Provider } from 'react-redux'
+import { Provider } from 'preact-redux'
 
 describe('Settings', () => {
   const r = combineReducers({

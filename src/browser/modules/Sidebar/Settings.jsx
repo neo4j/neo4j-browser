@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
 import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
 import { StyledSettingLabel, StyledSettingTextInput } from './styled'

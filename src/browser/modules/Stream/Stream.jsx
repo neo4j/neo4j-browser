@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import { connect } from 'preact-redux'
 import { StyledStream } from './styled'
 
 import CypherFrame from './CypherFrame'
