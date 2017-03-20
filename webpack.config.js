@@ -20,8 +20,13 @@ module.exports = {
     }, {
       test: /\.css$/,
       include: path.resolve('./src'),
-      exclude: [path.resolve('./src/browser/styles')],
+      exclude: [path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides')],
       loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
+    }, {
+      test: /\.css$/,
+      exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/guides')],
+      include: path.resolve('./src/browser/modules/Guides'),
+      loader: 'style!css-loader?modules&importLoaders=1&camelCase&localIdentName=[local]!postcss-loader'
     }, {
       test: /\.css$/,
       exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/modules'), path.resolve('./src/browser/guides')],
