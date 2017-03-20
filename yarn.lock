@@ -3898,13 +3898,14 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.1.1:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.54:
-  version "0.0.54"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.54.tgz#22b7f049230ec2b71ef8068f58c1fc31ff08cf2e"
+neo4j-visualization@0.0.76:
+  version "0.0.76"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.76.tgz#b8f9208d57af00f0b5b679bbd0f1db8407ff4821"
   dependencies:
     neo4j-driver "^1.1.0"
     nevada-visjs "0.1.21"
     sortablejs "^1.5.1"
+    vector2d "^2.1.0"
 
 nevada-visjs@0.1.21:
   version "0.1.21"
@@ -6136,6 +6137,10 @@ validate-npm-package-license@^3.0.1:
 vary@~1.1.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/vary/-/vary-1.1.0.tgz#e1e5affbbd16ae768dd2674394b9ad3022653140"
+
+vector2d@^2.1.0:
+  version "2.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/vector2d/-/vector2d-2.1.0.tgz#6fefdc4f58cfb4d262767a8e0da204a65b20355e"
 
 vendors@^1.0.0:
   version "1.0.1"
