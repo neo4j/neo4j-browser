@@ -34,6 +34,7 @@ export const VisualizationIcon = () => (<IconContainer>Viz</IconContainer>)
 export const AsciiIcon = () => (<IconContainer>Ascii</IconContainer>)
 export const CodeIcon = () => (<IconContainer>Code</IconContainer>)
 export const PlanIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-hierarchy' />)
+export const AlertIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-alert' />)
 
 export const BinIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-bin' />)
 

@@ -2,11 +2,12 @@ import { Component } from 'preact'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import FrameSidebar from './FrameSidebar'
-import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon } from 'browser-components/icons/Icons'
+import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon } from 'browser-components/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
 import CodeView from './Views/CodeView'
+import WarningsView from './Views/WarningsView'
 import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
@@ -27,6 +28,7 @@ class CypherFrame extends Component {
     let rows
     let plan
     let nodesAndRelationships
+    let warnings
     if (nextProps.request.status === 'success' && nextProps.request.result !== this.props.request.result) {
       if (nextProps.request.result.records && nextProps.request.result.records.length > 0) {
         nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.request.result.records)
@@ -34,8 +36,17 @@ class CypherFrame extends Component {
       }
 
       plan = bolt.extractPlan(nextProps.request.result)
+      warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
 
-      if (plan) { this.setState({openView: 'plan'}) }
+      if (this.props.frame.forceFrame) {
+        this.setState({openView: this.props.frame.forceFrame})
+      } else if (plan) {
+        this.setState({openView: 'plan'})
+      }
+
+      if (warnings && warnings.length > 0) {
+        this.setState({notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
+      }
     } else {
       this.setState({nodesAndRelationships, rows, plan})
     }
@@ -56,9 +67,16 @@ class CypherFrame extends Component {
         {
           (this.state.plan || bolt.extractPlan(this.props.request.result || false)
             ? <CypherFrameButton selected={this.state.openView === 'plan'} onClick={() =>
-            this.setState({openView: 'plan'})
-              }><PlanIcon /></CypherFrameButton>
+              this.setState({openView: 'plan'})
+            }><PlanIcon /></CypherFrameButton>
             : null)
+        }
+        {
+          this.state.notifications
+            ? <CypherFrameButton selected={this.state.openView === 'warnings'} onClick={() => {
+              this.setState({openView: 'warnings'})
+            }}><AlertIcon /></CypherFrameButton>
+            : null
         }
         <CypherFrameButton selected={this.state.openView === 'code'} onClick={() => {
           this.setState({openView: 'code'})
@@ -97,6 +115,9 @@ class CypherFrame extends Component {
           break
         case 'plan':
           frameContents = <QueryPlan plan={plan} />
+          break
+        case 'warnings':
+          frameContents = <WarningsView notifications={this.state.notifications} cypher={this.state.cypher} />
           break
         default:
           frameContents = <Visualization records={result.records} />

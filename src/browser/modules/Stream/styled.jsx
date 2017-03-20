@@ -107,3 +107,56 @@ export const StyledFrameCommand = styled.label`
   overflow: hidden;
   display: block;
 `
+
+export const StyledHelpFrame = styled.div`
+  padding: 30px
+`
+export const StyledHelpContent = styled.div`
+  padding-top: 10px
+  padding-bottom: 10px
+`
+export const StyledHelpDescription = styled.div`
+  margin-bottom: 10px
+  font-size: 15px
+`
+
+export const StyledDiv = styled.div`
+`
+
+export const StyledCypherMessage = styled.div`
+  font-weight: bold
+  line-height: 1em
+  text-align: center
+  white-space: nowrap
+  vertical-align: baseline
+  user-select: none
+  font-size: 12px
+  margin-right: 5px
+  padding: 4px 7px 4px 5px
+  border-radius: 3px
+  float: left
+`
+export const StyledCypherWarningMessage = styled(StyledCypherMessage)`
+  background-color: #FFA500
+  color: #FFFFFF
+`
+
+export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
+  background-color: #E74C3C
+  color: #FFFFFF
+`
+export const StyledH4 = styled.h4`
+`
+
+export const StyledBr = styled.br`
+`
+
+export const StyledPreformattedArea = styled.pre`
+  font-family: Monaco, "Courier New", Terminal, monospace
+  font-size: 14px
+  padding: 12px 16px
+  margin: 0
+  background: none
+  border: none
+  background-color: #f5f5f5
+`
