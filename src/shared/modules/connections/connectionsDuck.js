@@ -18,11 +18,18 @@ export const STARTUP_CONNECTION_SUCCESS = 'connections/STARTUP_CONNECTION_SUCCES
 export const STARTUP_CONNECTION_FAILED = 'connections/STARTUP_CONNECTION_FAILED'
 export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
+export const LOST_CONNECTION = 'connections/LOST_CONNECTION'
+export const UPDATE_CONNECTION_STATE = 'connections/UPDATE_CONNECTION_STATE'
+
+export const DISCONNECTED_STATE = 0
+export const CONNECTED_STATE = 1
+export const PENDING_STATE = 2
 
 const initialState = {
   allConnectionIds: [],
   connectionsById: {},
-  activeConnection: null
+  activeConnection: null,
+  connectionState: DISCONNECTED_STATE
 }
 
 /**
@@ -34,6 +41,10 @@ export function getConnection (state, id) {
 
 export function getConnections (state) {
   return state[NAME].allConnectionIds.map((id) => state[NAME].connectionsById[id])
+}
+
+export function getConnectionState (state) {
+  return state[NAME].connectionState || initialState.connectionState
 }
 
 export function getActiveConnection (state) {
@@ -102,11 +113,15 @@ export default function (state = initialState, action) {
     case ADD:
       return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:
-      return {...state, activeConnection: action.connectionId}
+      let cState = CONNECTED_STATE
+      if (!action.connectionId) cState = DISCONNECTED_STATE
+      return {...state, activeConnection: action.connectionId, connectionState: cState}
     case REMOVE:
       return removeConnectionHelper(state, action.connectionId)
     case MERGE:
       return mergeConnectionHelper(state, action.connection)
+    case UPDATE_CONNECTION_STATE:
+      return {...state, connectionState: action.state}
     case USER_CLEAR:
       return initialState
     default:
@@ -150,12 +165,23 @@ export const disconnectAction = (id) => {
   }
 }
 
+export const updateConnectionState = (state) => ({
+  state,
+  type: UPDATE_CONNECTION_STATE
+})
+
+const onLostConnection = (dispatch) => (e) => {
+  dispatch({ type: LOST_CONNECTION, error: e })
+}
+
+export const connectionLossFilter = (action) => action.error.code !== 'Neo.ClientError.Security.Unauthorized'
+
 // Epics
 export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT)
     .mergeMap((action) => {
       if (!action._responseChannel) return Rx.Observable.of(null)
-      return bolt.connectToConnection(action, { encrypted: getEncryptionMode() })
+      return bolt.connectToConnection(action, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch))
         .then((res) => ({ type: action._responseChannel, success: true }))
         .catch(([e]) => ({ type: action._responseChannel, success: false, error: e }))
     })
@@ -165,7 +191,7 @@ export const startupConnectEpic = (action$, store) => {
     .mergeMap((action) => {
       const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
       return new Promise((resolve, reject) => {
-        bolt.connectToConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }) // Try without creds
+        bolt.connectToConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try without creds
           .then((r) => {
             store.dispatch(discovery.updateDiscoveryConnection({ username: undefined, password: undefined }))
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
@@ -177,7 +203,7 @@ export const startupConnectEpic = (action$, store) => {
               store.dispatch(discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' }))
               return resolve({ type: STARTUP_CONNECTION_FAILED })
             }
-            bolt.connectToConnection(connection, { encrypted: getEncryptionMode() }) // Try with stored creds
+            bolt.connectToConnection(connection, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try with stored creds
               .then((connection) => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
@@ -225,4 +251,34 @@ export const disconnectSuccessEpic = (action$, store) => {
       executeSystemCommand(getSettings(store.getState()).cmdchar + 'server connect')
     )
 }
-
+export const connectionLostEpic = (action$, store) =>
+  action$.ofType(LOST_CONNECTION)
+    .filter(connectionLossFilter)
+    .throttleTime(5000)
+    .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
+    .mergeMap((action) => {
+      const connection = getActiveConnectionData(store.getState())
+      if (!connection) return Rx.Observable.of(1)
+      return Rx.Observable.of(1).mergeMap(() => {
+        return new Promise((resolve, reject) => {
+          bolt.directConnect(connection, {}, (e) => setTimeout(() => reject('Couldnt reconnect. Lost.'), 4000))
+            .then((s) => {
+              bolt.closeActiveConnection()
+              bolt.connectToConnection(connection, {}, onLostConnection(store.dispatch))
+              .then(() => {
+                store.dispatch(updateConnectionState(CONNECTED_STATE))
+                resolve()
+              }).catch((e) => reject('Error on connect'))
+            })
+            .catch((e) => setTimeout(() => reject('Couldnt reconnect.'), 4000))
+        })
+      })
+      .retry(5)
+      .catch((e) => {
+        bolt.closeActiveConnection()
+        store.dispatch(setActiveConnection(null))
+        return Rx.Observable.of(1)
+      })
+      .map(() => Rx.Observable.of(1))
+    })
+    .mapTo({ type: 'NOOP' })

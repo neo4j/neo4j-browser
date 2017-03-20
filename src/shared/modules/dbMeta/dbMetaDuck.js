@@ -1,6 +1,6 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { CONNECTION_SUCCESS, DISCONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
+import { CONNECTION_SUCCESS, DISCONNECTION_SUCCESS, LOST_CONNECTION, UPDATE_CONNECTION_STATE, CONNECTED_STATE, connectionLossFilter } from 'shared/modules/connections/connectionsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'meta'
@@ -79,9 +79,10 @@ export const metaQuery = `CALL db.labels() YIELD label
 
 export const dbMetaEpic = (some$, store) =>
   some$.ofType(APP_START)
+    .merge(some$.ofType(UPDATE_CONNECTION_STATE).filter((s) => s.state === CONNECTED_STATE))
+    .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() => {
-      return Rx.Observable.interval(20000)
-      .merge(some$.ofType(CONNECTION_SUCCESS))
+      return Rx.Observable.timer(0, 20000)
       .mergeMap(() =>
         Rx.Observable
         .fromPromise(bolt.transaction(metaQuery))
@@ -89,6 +90,7 @@ export const dbMetaEpic = (some$, store) =>
       )
       .filter((r) => r)
       .map((res) => updateMeta(res))
+      .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))
     })
 
 export const clearMetaOnDisconnectEpic = (some$, store) =>

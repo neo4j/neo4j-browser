@@ -6,22 +6,25 @@ import { ConnectionException, BoltConnectionError } from '../exceptions'
 
 const runningQueryRegister = {}
 
-function openConnection ({id, name, username, password, host}, opts = {}) {
+function openConnection ({id, name, username, password, host}, opts = {}, onLostConnection = () => {}) {
   const transactionFn = (connection) => {
     return (input, parameters) => {
       return transaction(connection, input, parameters)
     }
   }
-  return connectionHandler.open({id, name, username, password, host}, opts, connect, validateConnection, transactionFn)
+  return connectionHandler.open({id, name, username, password, host}, opts, onLostConnection, connect, validateConnection, transactionFn)
 }
 
-function connect (props, opts = {}) {
+function connect (props, opts = {}, onLostConnection) {
   const p = new Promise((resolve, reject) => {
     const creds = opts.withoutCredentials || (props.username && !props.username)
       ? undefined
       : neo4j.auth.basic(props.username, props.password)
-    const driver = neo4j.driver(props.host, creds, opts)
-    driver.onError = (e) => reject([e, driver])
+    const driver = neo4j.driver(props.host, creds)
+    driver.onError = (e) => {
+      onLostConnection(e)
+      reject([e, driver])
+    }
     const tmp = driver.session()
     tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject([e, driver]))
   })
@@ -30,6 +33,7 @@ function connect (props, opts = {}) {
 
 function validateConnection (connection) {
   const p = new Promise((resolve, reject) => {
+    if (!connection || !connection.session) return reject('No connection')
     const tmp = connection.session()
     tmp.run('CALL db.labels()').then(() => {
       resolve(connection)
@@ -71,9 +75,9 @@ function transaction (connection, input, parameters) {
   })
 }
 
-function connectToConnection (connectionData, opts = {}) {
-  const openCon = (connection, res, rej) => {
-    openConnection(connection, opts)
+function connectToConnection (connectionData, opts = {}, onLostConnection) {
+  const openCon = (connection, res, rej, onLostConnection) => {
+    openConnection(connection, opts, onLostConnection)
     .then(res).catch(rej)
   }
   const p = new Promise((resolve, reject) => {
@@ -82,10 +86,10 @@ function connectToConnection (connectionData, opts = {}) {
       validateConnection(connection.connection).then((result) => {
         resolve(result)
       }).catch((e) => {
-        openCon(connectionData, resolve, reject)
+        openCon(connectionData, resolve, reject, onLostConnection)
       })
     } else {
-      openCon(connectionData, resolve, reject)
+      openCon(connectionData, resolve, reject, onLostConnection)
     }
   })
   return p

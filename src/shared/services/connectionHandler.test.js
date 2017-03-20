@@ -78,9 +78,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, undefined, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, undefined, createResolvePromise, createResolvePromise)
       })
     })
 
@@ -108,9 +108,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, undefined, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, undefined, createResolvePromise, createResolvePromise)
       })
     })
 
@@ -136,9 +136,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, undefined, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, undefined, createResolvePromise, createResolvePromise)
       })
     })
 
@@ -171,9 +171,9 @@ describe('connectionHandler', () => {
       const name2 = 'second'
       const props2 = createCredentialObject(name2)
       return Promise.resolve().then(() => {
-        return connectionHandler.open(props, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props, null, undefined, createResolvePromise, createResolvePromise)
       }).then(() => {
-        return connectionHandler.open(props2, null, createResolvePromise, createResolvePromise)
+        return connectionHandler.open(props2, null, undefined, createResolvePromise, createResolvePromise)
       })
     })
 

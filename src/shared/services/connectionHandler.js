@@ -10,13 +10,11 @@ function createConnectionObject (id, name, connection, transactionFn = () => {})
   }
 }
 
-export const open = ({id, name, username, password, host}, opts = {}, connectFn, validateFn, transactionFn) => {
+export const open = ({id, name, username, password, host}, opts = {}, onLostConnection = () => {}, connectFn, validateFn, transactionFn) => {
   const p = new Promise((resolve, reject) => {
     const exists = _connections.filter((c) => c.name === name)
-    if (exists.length) {
-      return validateFn(exists[0]).then((c) => resolve(c)).catch((e) => reject(e))
-    }
-    connectFn({username, password, host}, opts)
+    if (exists.length) close(name)
+    connectFn({username, password, host}, opts, onLostConnection)
       .then((c) => {
         validateFn(c).then((_) => {
           _connections.push(createConnectionObject(id, name, c, transactionFn))
@@ -28,7 +26,7 @@ export const open = ({id, name, username, password, host}, opts = {}, connectFn,
   return p
 }
 
-export function close (name, closeFn) {
+export function close (name, closeFn = () => {}) {
   const connection = get(name)
   if (!connection) return
   if (closeFn) closeFn(connection.connection)
