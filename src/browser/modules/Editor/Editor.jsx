@@ -1,7 +1,7 @@
 import { Component } from 'preact'
 import { connect } from 'react-redux'
 import { withBus } from 'preact-suber'
-import * as commands from 'shared/modules/commands/commandsDuck'
+import { executeCommand, executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
@@ -140,7 +140,7 @@ export class Editor extends Component {
           gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
           gutter.title = `${notification.title}\n${notification.description}`
           gutter.onclick = () => {
-            const action = commands.executeCommand(`EXPLAIN ${this.state.code}`)
+            const action = executeSystemCommand(`EXPLAIN ${this.state.code}`)
             action.forceFrame = 'warnings'
             this.props.bus.send(action.type, action)
           }
@@ -202,7 +202,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(favorites.addFavorite(cmd))
     },
     onExecute: (cmd) => {
-      const action = commands.executeCommand(cmd)
+      const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     }
   }
