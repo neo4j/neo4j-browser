@@ -1,0 +1,7 @@
+export const VISUALIZATION = 'VISUALIZATION'
+export const PLAN = 'PLAN'
+export const WARNINGS = 'WARNINGS'
+export const TABLE = 'TABLE'
+export const CODE = 'CODE'
+export const ERROR = 'ERROR'
+export const TEXT = 'TEXT'

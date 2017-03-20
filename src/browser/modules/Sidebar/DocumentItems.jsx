@@ -35,7 +35,7 @@ export const DocumentItems = ({header, items, onItemClick = null}) => {
   )
 }
 
-const mapDispatchToProps = (dispatch, ownProps = {}) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd) => {
       ownProps.bus.send(SET_CONTENT, setContent(cmd))

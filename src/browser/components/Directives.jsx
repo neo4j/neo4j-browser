@@ -39,7 +39,7 @@ export const Directives = (props) => {
   )
 }
 
-const mapDispatchToProps = (dispatch, ownProps = {}) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd) => {
       if (!cmd.endsWith(' null')) {

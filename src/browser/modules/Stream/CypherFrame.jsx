@@ -11,12 +11,15 @@ import WarningsView from './Views/WarningsView'
 import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
+import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 
 class CypherFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      openView: 'visualization'
+      openView: 'visualization',
+      plan: null,
+      notifications: null
     }
   }
 
@@ -38,48 +41,82 @@ class CypherFrame extends Component {
       plan = bolt.extractPlan(nextProps.request.result)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
 
-      if (this.props.frame.forceFrame) {
-        this.setState({openView: this.props.frame.forceFrame})
-      } else if (plan) {
-        this.setState({openView: 'plan'})
-      }
+      this.decideOpeningView({plan, nodesAndRelationships, warnings, props: nextProps})
 
       if (warnings && warnings.length > 0) {
         this.setState({notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
       }
+    }
+
+    this.setState({nodesAndRelationships, rows, plan})
+  }
+
+  decideOpeningView ({plan, nodesAndRelationships, warnings, props}) {
+    if (props.frame.forceView) {
+      this.setState({openView: props.frame.forceView})
+    } else if (plan) {
+      this.setState({openView: viewTypes.PLAN})
     } else {
-      this.setState({nodesAndRelationships, rows, plan})
+      let view = props.recentView || viewTypes.VISUALIZATION
+      this.setState({openView: this.returnRecentViewOrFallback({view, plan, nodesAndRelationships, warnings, props})})
+    }
+  }
+
+  returnRecentViewOrFallback ({view, plan, nodesAndRelationships, warnings, props}) {
+    switch (view) {
+      case viewTypes.PLAN :
+        return plan != null
+          ? viewTypes.PLAN
+          : this.returnRecentViewOrFallback({view: viewTypes.VISUALIZATION, plan, nodesAndRelationships, warnings, props})
+      case viewTypes.WARNINGS :
+        return (warnings != null && warnings.length > 0)
+          ? viewTypes.WARNINGS
+          : this.returnRecentViewOrFallback({view: viewTypes.VISUALIZATION, plan, nodesAndRelationships, warnings, props})
+      case viewTypes.VISUALIZATION :
+        return (nodesAndRelationships && nodesAndRelationships.nodes.length > 0)
+            ? viewTypes.VISUALIZATION
+            : viewTypes.TABLE
+      default:
+        return view
+    }
+  }
+
+  changeView (view) {
+    this.setState({openView: view})
+
+    if (this.props.onRecentViewChanged) {
+      this.props.onRecentViewChanged(view)
     }
   }
 
   sidebar () {
     return (
       <FrameSidebar>
-        <CypherFrameButton selected={this.state.openView === 'visualization'} onClick={() => {
-          this.setState({openView: 'visualization'})
+        <CypherFrameButton selected={this.state.openView === viewTypes.VISUALIZATION} onClick={() => {
+          this.changeView(viewTypes.VISUALIZATION)
         }}><VisualizationIcon /></CypherFrameButton>
-        <CypherFrameButton selected={this.state.openView === 'table'} onClick={() => {
-          this.setState({openView: 'table'})
+        <CypherFrameButton selected={this.state.openView === viewTypes.TABLE} onClick={() => {
+          this.changeView(viewTypes.TABLE)
         }}><TableIcon /></CypherFrameButton>
-        <CypherFrameButton selected={this.state.openView === 'text'} onClick={() => {
-          this.setState({openView: 'text'})
+        <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
+          this.changeView(viewTypes.TEXT)
         }}><AsciiIcon /></CypherFrameButton>
         {
-          (this.state.plan || bolt.extractPlan(this.props.request.result || false)
-            ? <CypherFrameButton selected={this.state.openView === 'plan'} onClick={() =>
-              this.setState({openView: 'plan'})
+          this.state.plan || bolt.extractPlan(this.props.request.result || false)
+            ? <CypherFrameButton selected={this.state.openView === viewTypes.PLAN} onClick={() =>
+              this.changeView(viewTypes.PLAN)
             }><PlanIcon /></CypherFrameButton>
-            : null)
+            : null
         }
         {
           this.state.notifications
-            ? <CypherFrameButton selected={this.state.openView === 'warnings'} onClick={() => {
-              this.setState({openView: 'warnings'})
+            ? <CypherFrameButton selected={this.state.openView === viewTypes.WARNINGS} onClick={() => {
+              this.changeView(viewTypes.WARNINGS)
             }}><AlertIcon /></CypherFrameButton>
             : null
         }
-        <CypherFrameButton selected={this.state.openView === 'code'} onClick={() => {
-          this.setState({openView: 'code'})
+        <CypherFrameButton selected={this.state.openView === viewTypes.CODE} onClick={() => {
+          this.changeView(viewTypes.CODE)
         }}><CodeIcon /></CypherFrameButton>
       </FrameSidebar>
     )
@@ -95,34 +132,7 @@ class CypherFrame extends Component {
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     let statusBar = null
 
-    if ((result.records) || plan) {
-      if (result.records && result.records.length > 0) {
-        this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
-      }
-
-      switch (this.state.openView) {
-        case 'text':
-          frameContents = <AsciiView rows={this.state.rows} />
-          break
-        case 'table':
-          frameContents = <TableView data={this.state.rows} />
-          break
-        case 'visualization':
-          frameContents = <Visualization records={result.records} />
-          break
-        case 'code':
-          frameContents = <CodeView query={this.props.frame.cmd} request={this.props.request} />
-          break
-        case 'plan':
-          frameContents = <QueryPlan plan={plan} />
-          break
-        case 'warnings':
-          frameContents = <WarningsView notifications={this.state.notifications} cypher={this.state.cypher} />
-          break
-        default:
-          frameContents = <Visualization records={result.records} />
-      }
-    } else if (errors) {
+    if (errors) {
       frameContents = (
         <div>
           {errors.code}
@@ -130,6 +140,33 @@ class CypherFrame extends Component {
         </div>
       )
       statusBar = <FrameError code={errors.code} />
+    } else if ((result.records) || plan) {
+      if (result.records && result.records.length > 0) {
+        this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
+      }
+
+      switch (this.state.openView) {
+        case viewTypes.TEXT:
+          frameContents = <AsciiView rows={this.state.rows} />
+          break
+        case viewTypes.TABLE:
+          frameContents = <TableView data={this.state.rows} />
+          break
+        case viewTypes.VISUALIZATION:
+          frameContents = <Visualization records={result.records} />
+          break
+        case viewTypes.CODE:
+          frameContents = <CodeView query={this.props.frame.cmd} request={this.props.request} />
+          break
+        case viewTypes.PLAN:
+          frameContents = <QueryPlan plan={plan} />
+          break
+        case viewTypes.WARNINGS:
+          frameContents = <WarningsView notifications={this.state.notifications} cypher={this.state.cypher} />
+          break
+        default:
+          frameContents = <Visualization records={result.records} />
+      }
     } else if (result) {
       frameContents = (
         <div>
@@ -153,4 +190,5 @@ class CypherFrame extends Component {
     )
   }
 }
+
 export default CypherFrame

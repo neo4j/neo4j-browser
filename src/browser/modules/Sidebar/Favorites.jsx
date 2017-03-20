@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
     scripts: state.favorites.scripts || []
   }
 }
-const mapDispatchToProps = (dispatch, ownProps = {}) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
