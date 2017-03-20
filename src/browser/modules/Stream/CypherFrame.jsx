@@ -72,19 +72,6 @@ class CypherFrame extends Component {
             : null)
         }
         {
-          this.state.plan || bolt.extractPlan(this.props.request.result || false)
-            ? <CypherFrameButton selected={this.state.openView === 'plan'} icon={<PlanIcon />} onClick={() =>
-            this.setState({openView: 'plan'})
-              } />
-            : null
-        }
-        {
-          this.state.notifications // props.request.result && this.props.request.result.summary.notifications.length > 0)
-            ? <CypherFrameButton selected={this.state.openView === 'warnings'} icon={<AlertIcon />} onClick={() => {
-              this.setState({openView: 'warnings'})
-            }}/> : null
-        }
-        {
           this.state.notifications
             ? <CypherFrameButton selected={this.state.openView === 'warnings'} onClick={() => {
               this.setState({openView: 'warnings'})
