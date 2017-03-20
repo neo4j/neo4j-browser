@@ -13,6 +13,7 @@ import 'codemirror/theme/monokai.css'
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { debounce } from 'services/utils'
 
 export class Editor extends Component {
   constructor (props) {
@@ -76,6 +77,7 @@ export class Editor extends Component {
     }
   }
   componentDidMount () {
+    this.debouncedCheckForHints = debounce(this.checkForHints, 350, this)
     this.codeMirror = this.editor.getCodeMirror()
     this.codeMirrorInstance = this.editor.getCodeMirrorInstance()
     this.codeMirrorInstance.keyMap['default']['Enter'] = this.handleEnter.bind(this)
@@ -106,7 +108,7 @@ export class Editor extends Component {
         !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
         !newCode.trimLeft().toUpperCase().startsWith('PROFILE')
     ) {
-      this.checkForHints(newCode)
+      this.debouncedCheckForHints(newCode)
     }
 
     this.setState({
