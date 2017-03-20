@@ -27,7 +27,7 @@ export const FrameTitlebar = ({frame, fullscreen, togglePinning, fullscreenToggl
   )
 }
 
-const mapDispatchToProps = (dispatch, ownProps = {}) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onTitlebarClick: (cmd) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
