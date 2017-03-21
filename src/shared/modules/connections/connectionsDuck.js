@@ -287,7 +287,7 @@ export const checkSettingsUpdates = (action$, store) => {
   return action$.ofType(SETTINGS_UPDATE)
     .map((action) => {
       if (typeof action.state['useBoltRouting'] !== 'undefined') {
-        bolt.useRouting(action.state['useBoltRouting'])
+        bolt.useRoutingConfig(action.state['useBoltRouting'])
       }
       return { type: 'NOOP' }
     })

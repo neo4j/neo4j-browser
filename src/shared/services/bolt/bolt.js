@@ -4,8 +4,11 @@ import * as mappings from './boltMappings'
 import { BoltConnectionError } from '../exceptions'
 
 let _drivers = null
+let _useRoutingConfig = false
+let _routingAvailable = false
 const runningQueryRegister = {}
-let _useRouting = false
+
+const _useRouting = () => _useRoutingConfig && _routingAvailable
 
 const _getDriver = (host, auth, opts, protocol) => {
   const boltHost = protocol + host.split('bolt://').join('')
@@ -15,10 +18,19 @@ const _getDriver = (host, auth, opts, protocol) => {
 const _validateConnection = (driver, res, rej) => {
   if (!driver || !driver.session) return rej('No connection')
   const tmp = driver.session()
-  tmp.run('CALL db.labels()').then(() => {
+  tmp.run('CALL dbms.procedures()').then(() => {
     tmp.close()
     res(driver)
-  }).catch((e) => rej([e, driver]))
+  }).catch((e) => {
+    rej([e, driver])
+  })
+}
+
+const _routingAvailability = () => {
+  return directTransaction('CALL dbms.procedures()').then((res) => {
+    const names = res.records.map((r) => r.get('name'))
+    return names.indexOf('dbms.cluster.overview') > -1
+  })
 }
 
 const _getDriversObj = (props, opts = {}) => {
@@ -32,7 +44,7 @@ const _getDriversObj = (props, opts = {}) => {
     return driversObj.direct
   }
   const getRoutedDriver = () => {
-    if (!_useRouting) return getDirectDriver()
+    if (!_useRouting()) return getDirectDriver()
     if (driversObj.routed) return driversObj.routed
     driversObj.routed = _getDriver(props.host, auth, opts, 'bolt+routing://')
     return driversObj.routed
@@ -74,6 +86,12 @@ function openConnection (props, opts = {}, onLostConnection) {
     }
     const myResolve = (driver) => {
       _drivers = driversObj
+      _routingAvailability()
+        .then((r) => {
+          if (r) _routingAvailable = true
+          if (!r) _routingAvailable = false
+        })
+        .catch((e) => (_routingAvailable = false))
       resolve(driver)
     }
     const myReject = (err) => {
@@ -153,7 +171,7 @@ export default {
   routedReadTransaction,
   routedWriteTransaction,
   cancelTransaction,
-  useRouting: (shouldWe) => (_useRouting = shouldWe),
+  useRoutingConfig: (shouldWe) => (_useRoutingConfig = shouldWe),
   recordsToTableArray: (records) => {
     const intChecker = neo4j.isInt
     const intConverter = (val) => val.toString()
