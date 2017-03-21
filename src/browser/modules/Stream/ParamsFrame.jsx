@@ -1,4 +1,4 @@
-import Visible from 'components/Visible'
+import Visible from 'browser-components/Visible'
 import FrameTemplate from './FrameTemplate'
 
 const ParamsFrame = ({frame, params}) => {
