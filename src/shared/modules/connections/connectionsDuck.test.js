@@ -149,7 +149,7 @@ describe('connectionsDucks Epics', () => {
         action,
         currentAction
       ])
-      expect(bolt.closeActiveConnection).toHaveBeenCalledTimes(1)
+      expect(bolt.closeConnection).toHaveBeenCalledTimes(1)
       done()
     })
 

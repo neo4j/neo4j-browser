@@ -241,7 +241,7 @@ export const detectActiveConnectionChangeEpic = (action$, store) => {
 }
 export const disconnectEpic = (action$, store) => {
   return action$.ofType(DISCONNECT)
-    .do(() => bolt.closeActiveConnection())
+    .do(() => bolt.closeConnection())
     .do((action) => store.dispatch(updateConnection({ id: action.id, password: '' })))
     .mapTo(setActiveConnection(null))
 }
@@ -263,7 +263,7 @@ export const connectionLostEpic = (action$, store) =>
         return new Promise((resolve, reject) => {
           bolt.directConnect(connection, {}, (e) => setTimeout(() => reject('Couldnt reconnect. Lost.'), 4000))
             .then((s) => {
-              bolt.closeActiveConnection()
+              bolt.closeConnection()
               bolt.openConnection(connection, {}, onLostConnection(store.dispatch))
               .then(() => {
                 store.dispatch(updateConnectionState(CONNECTED_STATE))
@@ -275,7 +275,7 @@ export const connectionLostEpic = (action$, store) =>
       })
       .retry(5)
       .catch((e) => {
-        bolt.closeActiveConnection()
+        bolt.closeConnection()
         store.dispatch(setActiveConnection(null))
         return Rx.Observable.of(1)
       })

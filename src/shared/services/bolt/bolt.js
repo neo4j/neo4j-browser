@@ -122,14 +122,12 @@ function directTransaction (input, parameters) {
 export default {
   directConnect: connect,
   openConnection,
-  trackedTransaction,
-  cancelTransaction,
-  closeActiveConnection: () => {
+  closeConnection: () => {
     if (_drivers) _drivers.close()
   },
-  transaction: (input, parameters) => {
-    return directTransaction(input, parameters)
-  },
+  directTransaction,
+  trackedTransaction,
+  cancelTransaction,
   recordsToTableArray: (records) => {
     const intChecker = neo4j.isInt
     const intConverter = (val) => val.toString()

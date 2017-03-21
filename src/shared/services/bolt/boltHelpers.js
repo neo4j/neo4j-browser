@@ -13,7 +13,7 @@ export const getDiscoveryEndpoint = () => {
 }
 
 export const getServerConfig = () => {
-  return bolt.transaction('CALL dbms.queryJmx("org.neo4j:*")')
+  return bolt.directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
     .then((res) => {
       // Find kernel conf
       let conf
