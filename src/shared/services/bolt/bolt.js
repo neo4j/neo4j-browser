@@ -59,7 +59,7 @@ const _getDriversObj = (props, opts = {}) => {
   }
 }
 
-function connect (props, opts = {}, onLostConnection = () => {}) {
+function directConnect (props, opts = {}, onLostConnection = () => {}) {
   const p = new Promise((resolve, reject) => {
     const creds = opts.withoutCredentials || !props.username
       ? undefined
@@ -162,7 +162,7 @@ function routedWriteTransaction (input, parameters, requestId = null, cancelable
 }
 
 export default {
-  directConnect: connect,
+  directConnect,
   openConnection,
   closeConnection: () => {
     if (_drivers) _drivers.close()

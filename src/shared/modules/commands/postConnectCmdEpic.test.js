@@ -9,7 +9,7 @@ import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
   return {
-    transaction: jest.fn()
+    directTransaction: jest.fn()
   }
 })
 
