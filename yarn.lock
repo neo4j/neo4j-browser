@@ -3894,18 +3894,18 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.1.1:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.76:
-  version "0.0.76"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.76.tgz#b8f9208d57af00f0b5b679bbd0f1db8407ff4821"
+neo4j-visualization@0.0.80:
+  version "0.0.80"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.80.tgz#43b2312cb09d0564a4f5ca3cafbeb178f0be399f"
   dependencies:
     neo4j-driver "^1.1.0"
-    nevada-visjs "0.1.21"
+    nevada-visjs "0.1.35"
     sortablejs "^1.5.1"
     vector2d "^2.1.0"
 
-nevada-visjs@0.1.21:
-  version "0.1.21"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.21.tgz#953c080ddff0114f9f79cf3a6072793faaafa5f4"
+nevada-visjs@0.1.35:
+  version "0.1.35"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.35.tgz#fe0667eca440d39057e5e133ac3a33f3122aa7cc"
   dependencies:
     babel-core "^6.21.0"
     babel-loader "^6.2.10"
@@ -3920,6 +3920,7 @@ nevada-visjs@0.1.21:
     keycharm "^0.2.0"
     moment "^2.12.0"
     propagating-hammerjs "^1.4.6"
+    pure "^2.85.0"
 
 no-case@^2.2.0:
   version "2.3.1"
@@ -5010,6 +5011,10 @@ punycode@^1.2.4, punycode@^1.4.1:
 pure-color@^1.2.0:
   version "1.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/pure-color/-/pure-color-1.2.0.tgz#702d2f2819dd545b1fde5116fca5f0c2dad2d18d"
+
+pure@^2.85.0:
+  version "2.85.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/pure/-/pure-2.85.0.tgz#bcabfbbd5ece1eaad3c10240489fdf753bc16f50"
 
 q@^1.1.2:
   version "1.4.1"
