@@ -2,6 +2,8 @@ var webpack = require('webpack')
 var path = require('path')
 var precss = require('precss')
 
+const ENV = process.env.NODE_ENV || 'development'
+
 module.exports = {
   entry: [
     'babel-polyfill',
@@ -70,6 +72,7 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
+  devtool: ENV === 'production' ? 'nosources-source-map' : 'cheap-module-eval-source-map',
   devServer: {
     contentBase: './dist',
     hot: true
