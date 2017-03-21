@@ -1,55 +1,94 @@
 import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
-import * as connectionHandler from '../connectionHandler'
 import * as mappings from './boltMappings'
-import { ConnectionException, BoltConnectionError } from '../exceptions'
+import { BoltConnectionError } from '../exceptions'
 
+let _drivers = null
 const runningQueryRegister = {}
 
-function openConnection ({id, name, username, password, host}, opts = {}, onLostConnection = () => {}) {
-  const transactionFn = (connection) => {
-    return (input, parameters) => {
-      return transaction(connection, input, parameters)
+const _getDriver = (host, auth, opts, protocol) => {
+  const boltHost = protocol + host.split('bolt://').join('')
+  return neo4j.driver(boltHost, auth, opts)
+}
+
+const _validateConnection = (driver, res, rej) => {
+  if (!driver || !driver.session) return rej('No connection')
+  const tmp = driver.session()
+  tmp.run('CALL db.labels()').then(() => {
+    tmp.close()
+    res(driver)
+  }).catch((e) => rej([e, driver]))
+}
+
+const getDriversObj = (props, opts = {}) => {
+  const driversObj = {}
+  const auth = opts.withoutCredentials || !props.username
+      ? undefined
+      : neo4j.auth.basic(props.username, props.password)
+  return {
+    getDirectDriver: () => {
+      if (driversObj.direct) return driversObj.direct
+      driversObj.direct = _getDriver(props.host, auth, opts, 'bolt://')
+      return driversObj.direct
+    },
+    getRoutedDriver: () => {
+      if (driversObj.routed) return driversObj.routed
+      driversObj.routed = _getDriver(props.host, auth, opts, 'bolt+routing://')
+      return driversObj.routed
+    },
+    close: () => {
+      if (driversObj.direct) driversObj.direct.close()
+      if (driversObj.routed) driversObj.routed.close()
     }
   }
-  return connectionHandler.open({id, name, username, password, host}, opts, onLostConnection, connect, validateConnection, transactionFn)
 }
 
 function connect (props, opts = {}, onLostConnection = () => {}) {
   const p = new Promise((resolve, reject) => {
-    const creds = opts.withoutCredentials || (props.username && !props.username)
+    const creds = opts.withoutCredentials || !props.username
       ? undefined
       : neo4j.auth.basic(props.username, props.password)
-    const driver = neo4j.driver(props.host, creds)
+    const driver = _getDriver(opts.host, creds, opts, 'bolt://')
     driver.onError = (e) => {
       onLostConnection(e)
       reject([e, driver])
     }
-    const tmp = driver.session()
-    tmp.run('CALL db.labels()').then(() => resolve(driver)).catch((e) => reject([e, driver]))
+    _validateConnection(driver, resolve, reject)
   })
   return p
 }
 
-function validateConnection (connection) {
+function openConnection (props, opts = {}, onLostConnection) {
   const p = new Promise((resolve, reject) => {
-    if (!connection || !connection.session) return reject('No connection')
-    const tmp = connection.session()
-    tmp.run('CALL db.labels()').then(() => {
-      resolve(connection)
-      tmp.close()
-    }).catch((e) => reject(e))
+    const driversObj = getDriversObj(props, opts)
+    const driver = driversObj.getDirectDriver()
+    driver.onError = (e) => {
+      onLostConnection(e)
+      _drivers = null
+      driversObj.close()
+      reject([e, driver])
+    }
+    const myResolve = (driver) => {
+      _drivers = driversObj
+      resolve(driver)
+    }
+    const myReject = (err) => {
+      _drivers = null
+      driversObj.close()
+      reject(err)
+    }
+    _validateConnection(driver, myResolve, myReject)
   })
   return p
 }
 
-function trackedTransaction (input, parameters = {}, connection = null, requestId = null) {
-  connection = connection || connectionHandler.get()
+function trackedTransaction (input, parameters = {}, requestId = null) {
+  const driver = _drivers.getDirectDriver()
   const id = requestId || v4()
-  if (!connection) {
+  if (!driver) {
     return [id, Promise.reject(new BoltConnectionError())]
   }
-  const session = connection.connection.session()
+  const session = driver.session()
   const closeFn = (cb = () => {}) => {
     session.close(cb)
     if (runningQueryRegister[id]) delete runningQueryRegister[id]
@@ -67,57 +106,29 @@ function trackedTransaction (input, parameters = {}, connection = null, requestI
   return [id, queryPromise]
 }
 
-function transaction (connection, input, parameters) {
-  const session = connection.session()
+function cancelTransaction (id, cb) {
+  if (runningQueryRegister[id]) runningQueryRegister[id](cb)
+}
+
+function directTransaction (input, parameters) {
+  const driver = _drivers.getDirectDriver()
+  const session = driver.session()
   return session.run(input, parameters).then((r) => {
     session.close()
     return r
   })
 }
 
-function connectToConnection (connectionData, opts = {}, onLostConnection) {
-  const openCon = (connection, res, rej, onLostConnection) => {
-    openConnection(connection, opts, onLostConnection)
-    .then(res).catch(rej)
-  }
-  const p = new Promise((resolve, reject) => {
-    const connection = connectionHandler.get(connectionData.name)
-    if (connection) {
-      validateConnection(connection.connection).then((result) => {
-        resolve(result)
-      }).catch((e) => {
-        openCon(connectionData, resolve, reject, onLostConnection)
-      })
-    } else {
-      openCon(connectionData, resolve, reject, onLostConnection)
-    }
-  })
-  return p
-}
-
-function cancelTransaction (id, cb) {
-  if (runningQueryRegister[id]) runningQueryRegister[id](cb)
-}
-
 export default {
-  trackedTransaction,
   directConnect: connect,
-  cancelTransaction,
-  connectToConnection,
   openConnection,
+  trackedTransaction,
+  cancelTransaction,
   closeActiveConnection: () => {
-    const c = connectionHandler.get()
-    if (!c) return
-    connectionHandler.close(c.name, (driver) => driver.close())
+    if (_drivers) _drivers.close()
   },
-  useConnection: (name) => {
-    connectionHandler.setDefault(name)
-  },
-  getConnection: connectionHandler.get,
   transaction: (input, parameters) => {
-    const c = connectionHandler.get()
-    if (c) return c.transaction(input, parameters)
-    return Promise.reject(new ConnectionException('No connection'))
+    return directTransaction(input, parameters)
   },
   recordsToTableArray: (records) => {
     const intChecker = neo4j.isInt

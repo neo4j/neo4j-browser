@@ -181,7 +181,7 @@ export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT)
     .mergeMap((action) => {
       if (!action._responseChannel) return Rx.Observable.of(null)
-      return bolt.connectToConnection(action, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch))
+      return bolt.openConnection(action, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch))
         .then((res) => ({ type: action._responseChannel, success: true }))
         .catch(([e]) => ({ type: action._responseChannel, success: false, error: e }))
     })
@@ -191,7 +191,7 @@ export const startupConnectEpic = (action$, store) => {
     .mergeMap((action) => {
       const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
       return new Promise((resolve, reject) => {
-        bolt.connectToConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try without creds
+        bolt.openConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try without creds
           .then((r) => {
             store.dispatch(discovery.updateDiscoveryConnection({ username: undefined, password: undefined }))
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
@@ -203,7 +203,7 @@ export const startupConnectEpic = (action$, store) => {
               store.dispatch(discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' }))
               return resolve({ type: STARTUP_CONNECTION_FAILED })
             }
-            bolt.connectToConnection(connection, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try with stored creds
+            bolt.openConnection(connection, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try with stored creds
               .then((connection) => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
@@ -264,7 +264,7 @@ export const connectionLostEpic = (action$, store) =>
           bolt.directConnect(connection, {}, (e) => setTimeout(() => reject('Couldnt reconnect. Lost.'), 4000))
             .then((s) => {
               bolt.closeActiveConnection()
-              bolt.connectToConnection(connection, {}, onLostConnection(store.dispatch))
+              bolt.openConnection(connection, {}, onLostConnection(store.dispatch))
               .then(() => {
                 store.dispatch(updateConnectionState(CONNECTED_STATE))
                 resolve()
