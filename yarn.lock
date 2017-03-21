@@ -3858,10 +3858,6 @@ mute-stream@0.0.5:
   version "0.0.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/mute-stream/-/mute-stream-0.0.5.tgz#8fbfabb0a98a253d3184331f9e8deb7372fac6c0"
 
-n@^2.1.4:
-  version "2.1.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/n/-/n-2.1.4.tgz#7546bc467a120cc96718f2716cd86c43290f94c5"
-
 nan@^2.3.0:
   version "2.5.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/nan/-/nan-2.5.1.tgz#d5b01691253326a97a2bbee9e61c55d8d60351e2"
