@@ -86,13 +86,11 @@ function openConnection (props, opts = {}, onLostConnection) {
   return p
 }
 
-function trackedTransaction (input, parameters = {}, requestId = null) {
-  const driver = _drivers.getDirectDriver()
+function _trackedTransaction (input, parameters = {}, session, requestId = null) {
   const id = requestId || v4()
-  if (!driver) {
+  if (!session) {
     return [id, Promise.reject(new BoltConnectionError())]
   }
-  const session = driver.session()
   const closeFn = (cb = () => {}) => {
     session.close(cb)
     if (runningQueryRegister[id]) delete runningQueryRegister[id]
@@ -115,25 +113,34 @@ function cancelTransaction (id, cb) {
 }
 
 function _transaction (input, parameters, session) {
-  return session.run(input, parameters).then((r) => {
-    session.close()
-    return r
-  })
+  if (!session) return Promise.reject(new BoltConnectionError())
+  return session.run(input, parameters)
+    .then((r) => {
+      session.close()
+      return r
+    })
+    .catch((e) => {
+      session.close()
+      throw e
+    })
 }
 
-function directTransaction (input, parameters) {
+function directTransaction (input, parameters, requestId = null, cancelable = false) {
   const session = _drivers ? _drivers.getDirectDriver().session() : false
-  return _transaction(input, parameters, session)
+  if (!cancelable) return _transaction(input, parameters, session)
+  return _trackedTransaction(input, parameters, session, requestId)
 }
 
-function routedReadTransaction (input, parameters) {
+function routedReadTransaction (input, parameters, requestId = null, cancelable = false) {
   const session = _drivers ? _drivers.getRoutedDriver().session(neo4j.session.READ) : false
-  return _transaction(input, parameters, session)
+  if (!cancelable) return _transaction(input, parameters, session)
+  return _trackedTransaction(input, parameters, session, requestId)
 }
 
-function routedWriteTransaction (input, parameters) {
+function routedWriteTransaction (input, parameters, requestId = null, cancelable = false) {
   const session = _drivers ? _drivers.getRoutedDriver().session(neo4j.session.WRITE) : false
-  return _transaction(input, parameters, session)
+  if (!cancelable) return _transaction(input, parameters, session)
+  return _trackedTransaction(input, parameters, session, requestId)
 }
 
 export default {
@@ -145,7 +152,6 @@ export default {
   directTransaction,
   routedReadTransaction,
   routedWriteTransaction,
-  trackedTransaction,
   cancelTransaction,
   useRouting: (shouldWe) => (_useRouting = shouldWe),
   recordsToTableArray: (records) => {
