@@ -11,6 +11,7 @@ const initialState = {
   cmdchar: ':',
   maxHistory: 30,
   theme: 'normal',
+  useBoltRouting: false,
   initCmd: ':play start'
 }
 

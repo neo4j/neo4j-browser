@@ -5,6 +5,7 @@ import { BoltConnectionError } from '../exceptions'
 
 let _drivers = null
 const runningQueryRegister = {}
+let _useRouting = false
 
 const _getDriver = (host, auth, opts, protocol) => {
   const boltHost = protocol + host.split('bolt://').join('')
@@ -20,22 +21,25 @@ const _validateConnection = (driver, res, rej) => {
   }).catch((e) => rej([e, driver]))
 }
 
-const getDriversObj = (props, opts = {}) => {
+const _getDriversObj = (props, opts = {}) => {
   const driversObj = {}
   const auth = opts.withoutCredentials || !props.username
       ? undefined
       : neo4j.auth.basic(props.username, props.password)
+  const getDirectDriver = () => {
+    if (driversObj.direct) return driversObj.direct
+    driversObj.direct = _getDriver(props.host, auth, opts, 'bolt://')
+    return driversObj.direct
+  }
+  const getRoutedDriver = () => {
+    if (!_useRouting) return getDirectDriver()
+    if (driversObj.routed) return driversObj.routed
+    driversObj.routed = _getDriver(props.host, auth, opts, 'bolt+routing://')
+    return driversObj.routed
+  }
   return {
-    getDirectDriver: () => {
-      if (driversObj.direct) return driversObj.direct
-      driversObj.direct = _getDriver(props.host, auth, opts, 'bolt://')
-      return driversObj.direct
-    },
-    getRoutedDriver: () => {
-      if (driversObj.routed) return driversObj.routed
-      driversObj.routed = _getDriver(props.host, auth, opts, 'bolt+routing://')
-      return driversObj.routed
-    },
+    getDirectDriver,
+    getRoutedDriver,
     close: () => {
       if (driversObj.direct) driversObj.direct.close()
       if (driversObj.routed) driversObj.routed.close()
@@ -60,7 +64,7 @@ function connect (props, opts = {}, onLostConnection = () => {}) {
 
 function openConnection (props, opts = {}, onLostConnection) {
   const p = new Promise((resolve, reject) => {
-    const driversObj = getDriversObj(props, opts)
+    const driversObj = _getDriversObj(props, opts)
     const driver = driversObj.getDirectDriver()
     driver.onError = (e) => {
       onLostConnection(e)
@@ -110,13 +114,26 @@ function cancelTransaction (id, cb) {
   if (runningQueryRegister[id]) runningQueryRegister[id](cb)
 }
 
-function directTransaction (input, parameters) {
-  const driver = _drivers.getDirectDriver()
-  const session = driver.session()
+function _transaction (input, parameters, session) {
   return session.run(input, parameters).then((r) => {
     session.close()
     return r
   })
+}
+
+function directTransaction (input, parameters) {
+  const session = _drivers ? _drivers.getDirectDriver().session() : false
+  return _transaction(input, parameters, session)
+}
+
+function routedReadTransaction (input, parameters) {
+  const session = _drivers ? _drivers.getRoutedDriver().session(neo4j.session.READ) : false
+  return _transaction(input, parameters, session)
+}
+
+function routedWriteTransaction (input, parameters) {
+  const session = _drivers ? _drivers.getRoutedDriver().session(neo4j.session.WRITE) : false
+  return _transaction(input, parameters, session)
 }
 
 export default {
@@ -126,8 +143,11 @@ export default {
     if (_drivers) _drivers.close()
   },
   directTransaction,
+  routedReadTransaction,
+  routedWriteTransaction,
   trackedTransaction,
   cancelTransaction,
+  useRouting: (shouldWe) => (_useRouting = shouldWe),
   recordsToTableArray: (records) => {
     const intChecker = neo4j.isInt
     const intConverter = (val) => val.toString()

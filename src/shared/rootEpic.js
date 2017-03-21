@@ -1,7 +1,7 @@
 
 import { combineEpics } from 'redux-observable'
 import { handleCommandsEpic, postConnectCmdEpic } from './modules/commands/commandsDuck'
-import { connectEpic, disconnectEpic, startupConnectEpic, disconnectSuccessEpic, startupConnectionSuccessEpic, startupConnectionFailEpic, detectActiveConnectionChangeEpic, connectionLostEpic } from './modules/connections/connectionsDuck'
+import { checkSettingsUpdates, connectEpic, disconnectEpic, startupConnectEpic, disconnectSuccessEpic, startupConnectionSuccessEpic, startupConnectionFailEpic, detectActiveConnectionChangeEpic, connectionLostEpic } from './modules/connections/connectionsDuck'
 import { dbMetaEpic, clearMetaOnDisconnectEpic } from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
 import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
@@ -13,6 +13,7 @@ export default combineEpics(
   handleCommandsEpic,
   postConnectCmdEpic,
   connectionLostEpic,
+  checkSettingsUpdates,
   connectEpic,
   disconnectEpic,
   startupConnectEpic,

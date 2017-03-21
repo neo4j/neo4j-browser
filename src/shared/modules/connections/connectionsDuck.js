@@ -3,7 +3,7 @@ import bolt from 'services/bolt/bolt'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import { getInitCmd, getSettings } from 'shared/modules/settings/settingsDuck'
+import { getInitCmd, getSettings, UPDATE as SETTINGS_UPDATE } from 'shared/modules/settings/settingsDuck'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'connections'
@@ -282,3 +282,13 @@ export const connectionLostEpic = (action$, store) =>
       .map(() => Rx.Observable.of(1))
     })
     .mapTo({ type: 'NOOP' })
+
+export const checkSettingsUpdates = (action$, store) => {
+  return action$.ofType(SETTINGS_UPDATE)
+    .map((action) => {
+      if (typeof action.state['useBoltRouting'] !== 'undefined') {
+        bolt.useRouting(action.state['useBoltRouting'])
+      }
+      return { type: 'NOOP' }
+    })
+}
