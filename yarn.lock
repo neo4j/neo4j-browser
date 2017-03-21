@@ -3894,9 +3894,9 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.1.1:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.82:
-  version "0.0.82"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.82.tgz#608e9b02723608f3ab46ed25557c8e2fe6e97212"
+neo4j-visualization@0.0.84:
+  version "0.0.84"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.84.tgz#35585622dee162e7c23786be35b923f55115ce83"
   dependencies:
     neo4j-driver "^1.1.0"
     nevada-visjs "0.1.35"
