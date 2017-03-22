@@ -29,7 +29,6 @@ export default function reducer (state = null, action) {
 
 // Action creators
 export function addToken (token) {
-  console.log('addToken', token)
   return {
     type: ADD_TOKEN,
     token

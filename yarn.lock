@@ -2417,8 +2417,8 @@ find-up@^1.0.0, find-up@^1.1.2:
     pinkie-promise "^2.0.0"
 
 firebase@^3.6.5:
-  version "3.7.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/firebase/-/firebase-3.7.2.tgz#fab14f7e31de007dd373f9295a81f6fba04d3c98"
+  version "3.7.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/firebase/-/firebase-3.7.3.tgz#5f143638a84874095a7faf411589e059ac419ccc"
   dependencies:
     dom-storage "2.0.2"
     faye-websocket "0.9.3"

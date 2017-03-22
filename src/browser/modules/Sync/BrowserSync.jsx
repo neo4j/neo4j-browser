@@ -8,7 +8,8 @@ export class BrowserSync extends Component {
     this.state = {
       loggedIn: false,
       authData: null,
-      speed: 10,
+      error: null,
+      authenticated: false,
       status: 'DOWN'
     }
 
@@ -21,19 +22,25 @@ export class BrowserSync extends Component {
   }
   authenticateWithFirebase () {
     firebase.auth().signInWithCustomToken(this.state.authData.data_token)
+    .then((a) => {
+      this.setState({authenticated: true})
+      this.bindValuesToFirebase()
+    })
+    .catch((e) => {
+      this.setState({authenticated: false, error: e})
+    })
   }
   componentWillMount () {
-    if (this.firebaseApp) {
-      this.firebaseApp.close()
-    } else {
+    if (!this.firebaseApp) {
       this.initializeFirebaseApp()
     }
   }
   componentDidMount () {
     this.checkFirebaseIsUp()
+    this.initializeFirebaseApp()
   }
   logIn () {
-    const domain = 'https://auth.neo4j.com/index.html'
+    const domain = 'https://localhost:9001'
     const win = window.open(domain, 'loginWindow', 'location=0,status=0,scrollbars=0, width=1080,height=720')
     try {
       win.moveTo(500, 300)
@@ -80,12 +87,9 @@ export class BrowserSync extends Component {
     this.setState({authData: null})
   }
   bindValuesToFirebase () {
-    const rootRef = firebase.database().ref('users/' + this.authData.profile.user_id).child('user')
-    const speedRef = rootRef.child('speed')
-    speedRef.on('value', snap => {
-      this.setState({
-        speed: snap.val()
-      })
+    const ref = firebase.database().ref('users/' + this.state.authData.profile.user_id)
+    ref.on('value', (v) => {
+      console.log('top level object', v.val())
     })
   }
 
