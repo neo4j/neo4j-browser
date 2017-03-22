@@ -10,6 +10,7 @@ import sidebarReducer, { NAME as sidebar } from 'shared/modules/sidebar/sidebarD
 import requestsReducer, { NAME as requests } from 'shared/modules/requests/requestsDuck'
 import paramsReducer, { NAME as params } from 'shared/modules/params/paramsDuck'
 import visualizationReducer, { NAME as visualization } from 'shared/modules/visualization/visualizationDuck'
+import syncReducer, { NAME as sync } from 'shared/modules/sync/syncDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -23,5 +24,6 @@ export default {
   [sidebar]: sidebarReducer,
   [params]: paramsReducer,
   [requests]: requestsReducer,
-  [visualization]: visualizationReducer
+  [visualization]: visualizationReducer,
+  [sync]: syncReducer
 }

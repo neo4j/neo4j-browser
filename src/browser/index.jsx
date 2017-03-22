@@ -14,7 +14,7 @@ import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 // Configure localstorage sync
-applyKeys('connections', 'settings', 'history', 'favorites', 'visualization')
+applyKeys('connections', 'settings', 'history', 'favorites', 'visualization', 'sync')
 
 // Create suber bus
 const bus = createBus()

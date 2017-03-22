@@ -1,6 +1,10 @@
 import { Component } from 'preact'
 import { authenticate, initialize, status, getResourceFor } from 'services/browserSyncService'
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
+
+import { addSync } from 'shared/modules/sync/syncDuck'
+import { connect } from 'preact-redux'
+
 export class BrowserSync extends Component {
   constructor (props) {
     super(props)
@@ -48,6 +52,7 @@ export class BrowserSync extends Component {
   bindToResource () {
     getResourceFor(this.state.authData.profile.user_id).on('value', (v) => {
       console.log('top level object', v.val())
+      this.props.onSync(v.val())
     })
   }
 
@@ -74,3 +79,11 @@ export class BrowserSync extends Component {
     }
   }
 }
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onSync: (obj) => {
+      dispatch(addSync(obj))
+    }
+  }
+}
+export default connect(null, mapDispatchToProps)(BrowserSync)

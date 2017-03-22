@@ -1,5 +1,5 @@
 export const NAME = 'sync'
-export const ADD_TOKEN = 'sync/ADD_TOKEN'
+export const ADD_SYNC = 'sync/ADD_SYNC'
 
 /**
  * Selectors
@@ -11,7 +11,7 @@ export function getToken (state) {
 /**
  * Reducer helpers
 */
-const token = (state, obj) => {
+const sync = (state, obj) => {
   return Object.assign({}, state, obj)
 }
 
@@ -20,17 +20,17 @@ const token = (state, obj) => {
 */
 export default function reducer (state = null, action) {
   switch (action.type) {
-    case ADD_TOKEN:
-      return token(state, action.token)
+    case ADD_SYNC:
+      return sync(state, action.obj)
     default:
       return state
   }
 }
 
 // Action creators
-export function addToken (token) {
+export function addSync (obj) {
   return {
-    type: ADD_TOKEN,
-    token
+    type: ADD_SYNC,
+    obj
   }
 }

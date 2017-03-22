@@ -7,7 +7,7 @@ import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Visible from 'browser-components/Visible'
 import Settings from './Settings'
-import { BrowserSync } from './../Sync/BrowserSync'
+import BrowserSync from './../Sync/BrowserSync'
 import {
   DatabaseIcon,
   FavoritesIcon,
