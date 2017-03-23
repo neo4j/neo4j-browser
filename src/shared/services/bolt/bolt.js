@@ -11,7 +11,7 @@ const runningQueryRegister = {}
 const _useRouting = () => _useRoutingConfig && _routingAvailable
 
 const _getDriver = (host, auth, opts, protocol) => {
-  const boltHost = protocol + host.split('bolt://').join('')
+  const boltHost = protocol + (host || '').split('bolt://').join('')
   return neo4j.driver(boltHost, auth, opts)
 }
 
@@ -64,7 +64,7 @@ function directConnect (props, opts = {}, onLostConnection = () => {}) {
     const creds = opts.withoutCredentials || !props.username
       ? undefined
       : neo4j.auth.basic(props.username, props.password)
-    const driver = _getDriver(opts.host, creds, opts, 'bolt://')
+    const driver = _getDriver(props.host, creds, opts, 'bolt://')
     driver.onError = (e) => {
       onLostConnection(e)
       reject([e, driver])
