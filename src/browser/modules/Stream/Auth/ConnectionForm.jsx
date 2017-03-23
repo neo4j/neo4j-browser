@@ -34,7 +34,6 @@ export class ConnectionForm extends Component {
         } else {
           if (res.error.code === 'Neo.ClientError.Security.CredentialsExpired') {
             this.setState({ passwordChangeNeeded: true })
-            this.props.error(res.error)
           } else {
             this.props.error(res.error)
           }
@@ -81,7 +80,7 @@ export class ConnectionForm extends Component {
       {
         host: this.state.host,
         username: this.state.username,
-        password: this.props.oldPassword,
+        password: this.props.oldPassword || this.state.password,
         ...changeCurrentUsersPasswordQueryObj(newPassword)
       },
       (response) => {
