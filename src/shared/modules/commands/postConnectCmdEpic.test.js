@@ -1,7 +1,7 @@
 /* global jest, describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
-import { getBus, createReduxMiddleware } from 'suber'
+import { createBus, createReduxMiddleware } from 'suber'
 
 import * as commands from './commandsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
@@ -13,12 +13,12 @@ jest.mock('services/bolt/bolt', () => {
   }
 })
 
+const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.postConnectCmdEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
+const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
 
 describe('postConnectCmdEpic', () => {
   let store
-  const bus = getBus()
   beforeAll(() => {
     store = mockStore({
       settings: {

@@ -1,7 +1,7 @@
 /* global describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
-import { getBus, createReduxMiddleware } from 'suber'
+import { createBus, createReduxMiddleware } from 'suber'
 
 import { BoltConnectionError } from '../../services/exceptions'
 import * as commands from './commandsDuck'
@@ -14,12 +14,12 @@ import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
 import { merge, set } from 'shared/modules/params/paramsDuck'
 import { update as updateSettings } from 'shared/modules/settings/settingsDuck'
 
+const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
+const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
 
 describe('commandsDuck', () => {
   let store
-  const bus = getBus()
   beforeAll(() => {
     store = mockStore({
       settings: {

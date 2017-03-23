@@ -1,6 +1,6 @@
-/* global test, expect, jest */
+/* global describe, test, beforeEach, expect, jest */
 import { Editor as EditorComponent } from './Editor'
-import { getBus } from 'suber'
+import { createBus } from 'suber'
 import { mount } from 'enzyme'
 import React from 'react'
 import Codemirror from 'react-codemirror'
@@ -15,7 +15,7 @@ describe('Editor', () => {
   test.skip('should render Codemirror component with correct properties', () => {
     const content = 'content-' + Math.random()
     const wrapper = mount(
-      <EditorComponent bus={getBus()} onExecute={onExecute} content={content} history='' />
+      <EditorComponent bus={createBus()} onExecute={onExecute} content={content} history='' />
     )
     const codeMirror = wrapper.find(Codemirror)
     expect(codeMirror.props().value).toEqual(content)
@@ -26,7 +26,7 @@ describe('Editor', () => {
   test.skip('should execute current command on Cmd-Enter', () => {
     const content = 'content-' + Math.random()
     const wrapper = mount(
-      <EditorComponent bus={getBus()} onExecute={onExecute} content={content} history='' />
+      <EditorComponent bus={createBus()} onExecute={onExecute} content={content} history='' />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
@@ -37,7 +37,7 @@ describe('Editor', () => {
   test.skip('should execute current command on Ctrl-Enter', () => {
     const content = 'content-' + Math.random()
     const wrapper = mount(
-      <EditorComponent bus={getBus()} onExecute={onExecute} content={content} history='' />
+      <EditorComponent bus={createBus()} onExecute={onExecute} content={content} history='' />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Ctrl-Enter'](codeMirror.get(0).getCodeMirror())
@@ -49,7 +49,7 @@ describe('Editor', () => {
     const content = 'content-' + Math.random()
     const history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     const wrapper = mount(
-      <EditorComponent bus={getBus()} onExecute={onExecute} content={content} history={history} />
+      <EditorComponent bus={createBus()} onExecute={onExecute} content={content} history={history} />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
@@ -67,7 +67,7 @@ describe('Editor', () => {
   test.skip('should resest history after execution', () => {
     const history = [{cmd: 'latest'}, {cmd: 'middle'}, {cmd: 'oldest'}]
     const wrapper = mount(
-      <EditorComponent bus={getBus()} onExecute={onExecute} content='' history={history} />
+      <EditorComponent bus={createBus()} onExecute={onExecute} content='' history={history} />
     )
     const codeMirror = wrapper.find(Codemirror)
     codeMirror.get(0).getCodeMirrorInstance().keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())

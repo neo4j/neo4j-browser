@@ -4,7 +4,8 @@ import 'preact/devtools'
 import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'preact-redux'
-import { applyMiddleware as applySuberMiddleware, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
+import { createBus, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
+import { BusProvider } from 'preact-suber'
 
 import reducers from 'shared/rootReducer'
 import App from './modules/App/App'
@@ -20,8 +21,10 @@ import { APP_START } from 'shared/modules/app/appDuck'
 // Configure localstorage sync
 applyKeys('connections', 'settings', 'history', 'favorites', 'visualization')
 
+// Create suber bus
+const bus = createBus()
 // Define Redux middlewares
-const suberMiddleware = createSuberReduxMiddleware()
+const suberMiddleware = createSuberReduxMiddleware(bus)
 const epicMiddleware = createEpicMiddleware(epics)
 const localStorageMiddleware = createReduxMiddleware()
 
@@ -39,7 +42,7 @@ const store = createStore(
 )
 
 // Send everything from suber into Redux
-applySuberMiddleware((_) => (channel, message, source) => {
+bus.applyMiddleware((_) => (channel, message, source) => {
   // No loop-backs
   if (source === 'redux') return
   // Send to Redux with the channel as the action type
@@ -51,7 +54,9 @@ store.dispatch({ type: APP_START })
 
 render(
   <Provider store={store}>
-    <App />
+    <BusProvider bus={bus}>
+      <App />
+    </BusProvider>
   </Provider>,
   document.getElementById('mount')
 )
