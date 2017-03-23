@@ -6,6 +6,7 @@ export const UPDATE = 'settings/UPDATE'
 export const getSettings = (state) => state[NAME]
 export const getInitCmd = (state) => state[NAME].initCmd || initialState.initCmd
 export const getTheme = (state) => state[NAME].theme || initialState.theme
+export const getUseBoltRouting = (state) => state[NAME].useBoltRouting || initialState.useBoltRouting
 
 const initialState = {
   cmdchar: ':',

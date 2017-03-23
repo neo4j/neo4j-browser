@@ -3,8 +3,8 @@ import bolt from 'services/bolt/bolt'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import { getInitCmd, getSettings, UPDATE as SETTINGS_UPDATE } from 'shared/modules/settings/settingsDuck'
-import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { getInitCmd, getSettings, getUseBoltRouting, UPDATE as SETTINGS_UPDATE } from 'shared/modules/settings/settingsDuck'
+import { USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'connections'
 export const ADD = 'connections/ADD'
@@ -283,12 +283,10 @@ export const connectionLostEpic = (action$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const checkSettingsUpdates = (action$, store) => {
-  return action$.ofType(SETTINGS_UPDATE)
+export const checkSettingsForRoutingDriver = (action$, store) => {
+  return action$.ofType(SETTINGS_UPDATE).merge(action$.ofType(APP_START))
     .map((action) => {
-      if (typeof action.state['useBoltRouting'] !== 'undefined') {
-        bolt.useRoutingConfig(action.state['useBoltRouting'])
-      }
+      bolt.useRoutingConfig(getUseBoltRouting(store.getState()))
       return { type: 'NOOP' }
     })
 }
