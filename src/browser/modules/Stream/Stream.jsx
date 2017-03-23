@@ -15,6 +15,7 @@ import SchemaFrame from './SchemaFrame'
 import SysInfoFrame from './SysInfoFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
+import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
@@ -28,6 +29,7 @@ const getFrame = (type) => {
     cypher: CypherFrame,
     'user-list': UserList,
     'user-add': UserAdd,
+    'change-password': ChangePasswordFrame,
     pre: PreFrame,
     play: PlayFrame,
     'play-remote': PlayFrame,

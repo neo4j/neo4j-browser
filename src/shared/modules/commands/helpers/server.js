@@ -21,6 +21,9 @@ export function handleServerCommand (action, cmdchar, put, store) {
   if (serverCmd === 'user') {
     return handleUserCommand(action, props, cmdchar)
   }
+  if (serverCmd === 'change-password') {
+    return handleChangePasswordCommand(action, props, cmdchar)
+  }
   return {...action, type: 'error', error: {message: getErrorMessage(UnknownCommandError(action.cmd))}}
 }
 
@@ -44,6 +47,10 @@ function handleUserCommand (action, props, cmdchar) {
     case 'add':
       return {...action, type: 'user-add'}
   }
+}
+
+function handleChangePasswordCommand (action, props, cmdchar) {
+  return {...action, type: 'change-password'}
 }
 
 export function connectToConnection (action, connectionName, put, store) {

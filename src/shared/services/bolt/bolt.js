@@ -15,7 +15,7 @@ function openConnection ({id, name, username, password, host}, opts = {}, onLost
   return connectionHandler.open({id, name, username, password, host}, opts, onLostConnection, connect, validateConnection, transactionFn)
 }
 
-function connect (props, opts = {}, onLostConnection) {
+function connect (props, opts = {}, onLostConnection = () => {}) {
   const p = new Promise((resolve, reject) => {
     const creds = opts.withoutCredentials || (props.username && !props.username)
       ? undefined
