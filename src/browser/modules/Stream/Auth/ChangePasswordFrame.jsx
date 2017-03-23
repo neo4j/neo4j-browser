@@ -18,6 +18,9 @@ export class ChangePasswordFrame extends Component {
     }
   }
   error (e) {
+    if (e.code === 'N/A') {
+      e.message = 'Existing password is incorrect'
+    }
     this.setState({error: e})
   }
   onPasswordChange (event) {
