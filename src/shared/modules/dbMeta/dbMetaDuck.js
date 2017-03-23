@@ -83,7 +83,7 @@ export const dbMetaEpic = (some$, store) =>
       return Rx.Observable.timer(0, 20000)
       .mergeMap(() =>
         Rx.Observable
-        .fromPromise(bolt.directTransaction(metaQuery))
+        .fromPromise(bolt.routedReadTransaction(metaQuery))
         .catch((e) => Rx.Observable.of(null))
       )
       .filter((r) => r)
