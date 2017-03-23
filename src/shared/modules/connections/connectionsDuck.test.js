@@ -1,7 +1,7 @@
 /* global jest, describe, beforeAll, afterEach, test, expect */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
-import { getBus, createReduxMiddleware } from 'suber'
+import { createBus, createReduxMiddleware } from 'suber'
 
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
@@ -11,8 +11,9 @@ jest.mock('services/bolt/bolt', () => {
 })
 import reducer, * as connections from './connectionsDuck'
 
+const bus = createBus()
 const epicMiddleware = createEpicMiddleware(connections.disconnectEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
+const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
 
 describe('connections reducer', () => {
   test('handles connections.ADD', () => {
@@ -108,7 +109,6 @@ describe('connections reducer', () => {
 
 describe('connectionsDucks Epics', () => {
   let store
-  const bus = getBus()
   beforeAll(() => {
     store = mockStore({
       connections: {

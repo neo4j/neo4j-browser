@@ -1,19 +1,19 @@
 /* global describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
-import { getBus, createReduxMiddleware } from 'suber'
+import { createBus, createReduxMiddleware } from 'suber'
 import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
+const bus = createBus()
 const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware()])
+const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
 
 describe('discoveryOnStartupEpic', () => {
   let store
-  let bus = getBus()
   beforeAll(() => {
     store = mockStore({
       connections: {}
