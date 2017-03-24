@@ -103,11 +103,11 @@ export const NavigationButtonContainer = styled.li`
 `
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
-  const rightIcon = (removeClick) ? (<BinIcon className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
+  const rightIcon = (removeClick) ? (<BinIcon className={styles.remove + ' remove'} />) : null
   return (
     <StyledList>
       <StyledFavoriteText {...rest}>{primaryText}</StyledFavoriteText>
-      <span>{rightIcon}</span>
+      <span onClick={removeClick}>{rightIcon}</span>
     </StyledList>
   )
 }
@@ -132,14 +132,33 @@ const StyledFormButton = styled.button`
     border: ${props => props.theme.formButtonBorderHover}
   }
 `
+
+const StyledSecondaryFormButton = styled(StyledFormButton)`
+  color: ${props => props.theme.secondaryButtonText};
+  border: ${props => props.theme.secondaryButtonBorder}; 
+  background-color: ${props => props.theme.secondaryButtonBackground};
+  &:hover {
+    color: ${props => props.theme.secondaryButtonTextHover};
+    border: ${props => props.theme.secondaryButtonBorderHover}
+    background-color: ${props => props.theme.secondaryButtonBackground};
+  }
+`
+
+const buttonTypes = {
+  primary: StyledFormButton,
+  secondary: StyledSecondaryFormButton
+}
+
 export const FormButton = (props) => {
   const {icon, label, children, ...rest} = props
+  const ButtonType = buttonTypes[props.buttonType] || buttonTypes.primary
 
-  if (icon && label) return (<StyledFormButton {...rest} type='button'>{label} {icon}</StyledFormButton>)
-  if (icon) return (<StyledFormButton {...rest} type='button'>{icon}</StyledFormButton>)
-  if (label) return (<StyledFormButton {...rest} type='button'>{label}</StyledFormButton>)
-  return (<StyledFormButton {...props} type='button'>{children}</StyledFormButton>)
+  if (icon && label) return (<ButtonType {...rest} type='button'>{label} {icon}</ButtonType>)
+  if (icon) return (<ButtonType {...rest} type='button'>{icon}</ButtonType>)
+  if (label) return (<ButtonType {...rest} type='button'>{label}</ButtonType>)
+  return (<ButtonType {...props} type='button'>{children}</ButtonType>)
 }
+
 export const CypherFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;

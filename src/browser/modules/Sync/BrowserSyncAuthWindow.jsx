@@ -6,7 +6,7 @@ const BrowserSyncAuthWindow = (url, callback) => {
   try {
     win.moveTo(500, 300)
   } catch (e) {
-    console.log('error')
+    callback(null, e)
   }
   window.addEventListener('message', (event) => {
     clearInterval(pollInterval)

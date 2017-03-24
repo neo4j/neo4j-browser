@@ -210,7 +210,8 @@ export class Editor extends Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onFavortieClick: (cmd) => {
-      dispatch(favorites.addFavorite(cmd))
+      const action = favorites.addFavorite(cmd)
+      ownProps.bus.send(action.type, action)
     },
     onExecute: (cmd) => {
       const action = executeCommand(cmd)

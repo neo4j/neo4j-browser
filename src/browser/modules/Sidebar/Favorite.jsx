@@ -1,6 +1,7 @@
 import { connect } from 'preact-redux'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import {FavoriteItem} from 'browser-components/buttons'
+import { withBus } from 'preact-suber'
 
 function extractNameFromCommand (input) {
   if (!input) {
@@ -15,7 +16,7 @@ function extractNameFromCommand (input) {
   }
 }
 
-export const Favorite = ({id, content, onItemClick = () => {}, removeClick = () => {}}) => {
+export const Favorite = ({id, content, onItemClick, removeClick}) => {
   const name = extractNameFromCommand(content)
   return (
     <FavoriteItem
@@ -26,12 +27,13 @@ export const Favorite = ({id, content, onItemClick = () => {}, removeClick = () 
   )
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     removeClick: (id) => {
-      dispatch(favorite.removeFavorite(id))
+      const action = favorite.removeFavorite(id)
+      ownProps.bus.send(action.type, action)
     }
   }
 }
 
-export default connect(null, mapDispatchToProps)(Favorite)
+export default withBus(connect(null, mapDispatchToProps)(Favorite))

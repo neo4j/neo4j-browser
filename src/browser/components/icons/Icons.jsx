@@ -17,7 +17,7 @@ class IconContainer extends Component {
   render () {
     const {activeStyle, inactiveStyle, isOpen, ...rest} = this.props
     const state = (this.state.mouseover || isOpen) ? activeStyle || '' : inactiveStyle || ''
-    const newClass = state + ' ' + this.props.className
+    const newClass = this.props.suppressIconStyles ? this.props.className : state + ' ' + this.props.className
     return <i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} />
   }
 }
@@ -36,7 +36,7 @@ export const CodeIcon = () => (<IconContainer>Code</IconContainer>)
 export const PlanIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-hierarchy' />)
 export const AlertIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-alert' />)
 
-export const BinIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-bin' />)
+export const BinIcon = (props) => (<IconContainer activeStyle={styles.white} inactiveStyle={styles.inactive} {...props} className='sl-bin' />)
 
 export const ExpandIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-spread' />)
 export const ContractIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-reduce' />)

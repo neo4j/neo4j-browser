@@ -7,8 +7,8 @@ import FileDrop from './FileDrop'
 import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSubHeader} from 'browser-components/drawer'
 
 export const Favorites = (props) => {
-  const ListOfFavorites = props.scripts.map((entry) => {
-    return <Favorite key={entry.id} id={entry.id} name={entry.name} content={entry.content} onItemClick={props.onItemClick} />
+  const ListOfFavorites = props.favorites.map((entry) => {
+    return <Favorite key={entry.id} id={entry.id} name={entry.name} content={entry.content} onItemClick={props.onItemClick} removeClick={props.removeClick} />
   })
 
   return (
@@ -29,7 +29,7 @@ export const Favorites = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    scripts: state.favorites.scripts || []
+    favorites: state.documents || []
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -38,7 +38,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     },
     removeClick: (id) => {
-      dispatch(favorite.removeFavorite(id))
+      const action = favorite.removeFavorite(id)
+      ownProps.bus.send(action.type, action)
     }
   }
 }

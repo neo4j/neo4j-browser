@@ -100,5 +100,27 @@ export const toHumanReadableBytes = (input) => {
   return `${number.toFixed(2)} PiB`
 }
 
+export const getBrowserName = function () {
+  if (!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0) {
+    return 'Opera'
+  }
+  if (typeof InstallTrigger !== 'undefined') {
+    return 'Firefox'
+  }
+  if (navigator.userAgent.match(/Version\/[\d.]+.*Safari/)) {
+    return 'Safari'
+  }
+  if (window.chrome) {
+    return 'Chrome'
+  }
+  if (document.documentMode) {
+    return 'Internet Explorer'
+  }
+  if (window.StyleMedia) {
+    return 'Edge'
+  }
+  return 'Unknown'
+}
+
 // Epic helpers
 export const put = (dispatch) => (action) => dispatch(action)

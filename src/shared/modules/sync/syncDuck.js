@@ -1,18 +1,17 @@
+import { syncResourceFor } from 'services/browserSyncService'
+import { setItem } from 'services/localstorage'
+import { USER_CLEAR } from 'shared/modules/app/appDuck'
+
 export const NAME = 'sync'
-export const ADD_SYNC = 'sync/ADD_SYNC'
+export const SET_SYNC = 'sync/SET_SYNC'
+export const SYNC_ITEMS = 'sync/SYNC_ITEMS'
+export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
 
 /**
  * Selectors
 */
-export function getToken (state) {
+export function getSync (state) {
   return state[NAME]
-}
-
-/**
- * Reducer helpers
-*/
-const sync = (state, obj) => {
-  return Object.assign({}, state, obj)
 }
 
 /**
@@ -20,17 +19,48 @@ const sync = (state, obj) => {
 */
 export default function reducer (state = null, action) {
   switch (action.type) {
-    case ADD_SYNC:
-      return sync(state, action.obj)
+    case SET_SYNC:
+      return Object.assign({}, state, action.obj)
+    case CLEAR_SYNC:
+      return null
     default:
       return state
   }
 }
 
 // Action creators
-export function addSync (obj) {
+export function setSync (obj) {
   return {
-    type: ADD_SYNC,
+    type: SET_SYNC,
     obj
   }
 }
+
+export function syncItems (itemKey, items) {
+  return {
+    type: SYNC_ITEMS,
+    itemKey,
+    items
+  }
+}
+
+export function clearSync () {
+  return {
+    type: CLEAR_SYNC
+  }
+}
+
+export const syncItemsEpic = (action$, store) =>
+  action$.ofType(SYNC_ITEMS)
+    .do((action) => {
+      const userId = store.getState().sync.key
+      syncResourceFor(userId, action.itemKey, action.items)
+    })
+    .mapTo({ type: 'NOOP' })
+
+export const clearSyncEpic = (action$, store) =>
+  action$.ofType(CLEAR_SYNC)
+    .do((action) => {
+      setItem('documents', null)
+    })
+    .mapTo({ type: USER_CLEAR })
