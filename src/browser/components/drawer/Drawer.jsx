@@ -12,7 +12,7 @@ export const DrawerHeader = styled.h4`
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
-  font-family: ${props => props.theme.drawerHeaderFontFamily}
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
 export const DrawerSubHeader = styled.h5`
@@ -25,7 +25,7 @@ export const DrawerSubHeader = styled.h5`
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
-  font-family: ${props => props.theme.drawerHeaderFontFamily}
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
 export const DrawerSection = styled.div`
@@ -33,7 +33,7 @@ export const DrawerSection = styled.div`
 `
 
 export const DrawerSectionBody = styled.div`
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: ${props => props.theme.primaryFontFamily};
   font-weight: normal;
   color: #bcc0c9;
 `

@@ -3,6 +3,7 @@
   flex-direction: row;
   height: 100vh;
   font: 13px  'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  -webkit-font-smoothing: antialiased;
 
   & .app {
     flex: 1;

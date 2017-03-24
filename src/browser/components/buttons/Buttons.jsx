@@ -61,7 +61,7 @@ export const EditorButton = styled.a`
   `
 
 const StyledFavoriteText = styled.span`
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+  font-family: ${props => props.theme.primaryFontFamily};
   width: 182px;
   color: #bcc0c9;
   font-size: 13px;
@@ -105,13 +105,33 @@ export const FavoriteItem = (props) => {
 export const NavigationButton = (props) => {
   return (<StyledNavigationButton>{props.children}</StyledNavigationButton>)
 }
+const StyledFormButton = styled.button`
+  color: ${props => props.theme.primaryText};
+  background-color: #fff;
+  padding: 6px 12px;
+  border-color: #ccc;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: ${props => props.theme.primaryFontFamily};
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: ${props => props.theme.formButtonBorder};
+  border-radius: 4px;
+  line-height: 20px;
+  &:hover {
+    background-color: ${props => props.theme.formButtonBackgroundHover};
+    border: ${props => props.theme.formButtonBorderHover}
+  }
+`
 export const FormButton = (props) => {
   const {icon, label, children, ...rest} = props
 
-  if (icon && label) return (<button {...rest} type='button'>{label} {icon}</button>)
-  if (icon) return (<button {...rest} type='button'>{icon}</button>)
-  if (label) return (<button {...rest} type='button'>{label}</button>)
-  return (<button {...props} type='button'>{children}</button>)
+  if (icon && label) return (<StyledFormButton {...rest} type='button'>{label} {icon}</StyledFormButton>)
+  if (icon) return (<StyledFormButton {...rest} type='button'>{icon}</StyledFormButton>)
+  if (label) return (<StyledFormButton {...rest} type='button'>{label}</StyledFormButton>)
+  return (<StyledFormButton {...props} type='button'>{children}</StyledFormButton>)
 }
 export const CypherFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
@@ -160,7 +180,7 @@ const CarouselButton = styled.button`
   border: 3px solid rgb(255, 255, 255);
   color: rgb(255, 255, 255);
   cursor: pointer;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: ${props => props.theme.primaryFontFamily};
   font-size: 60px;
   font-weight: 100;
   height: 40px;

@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 const chip = styled.div`
   cursor: pointer
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: ${props => props.theme.primaryFontFamily};
   font-weight: bold;
   font-size: 12px;
   background-color: #9195a0;
@@ -35,11 +35,11 @@ export const StyledKey = styled.td`
   padding-right: 13px;
   width: 100px;
   color: #bcc0c9;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: ${props => props.theme.primaryFontFamily};
   outline-color: rgb(188, 192, 201);
   text-shadow: rgba(0,0,0,.4)0 1px 0;
 
 `
 export const StyledValue = styled.td`
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: ${props => props.theme.primaryFontFamily};
 `

@@ -1,25 +1,36 @@
 import {FormButton} from 'browser-components/buttons'
+import {H3} from 'browser-components/headers'
+import {
+  StyledConnectionForm,
+  StyledConnectionFrame,
+  StyledConnectionAside,
+  StyledConnectionTextInput,
+  StyledConnectionLabel,
+  StyledConnectionFormEntry
+} from './styled'
 
 const ConnectForm = (props) => (
-  <div>
-    <form>
-      <ul>
-        <li>
-          <label>Host</label>
-          <input onChange={props.onHostChange} value={props.host} />
-        </li>
-        <li>
-          <label>Username</label>
-          <input onChange={props.onUsernameChange} value={props.username} />
-        </li>
-        <li>
-          <label>Password</label>
-          <input onChange={props.onPasswordChange} value={props.password} />
-        </li>
-      </ul>
+  <StyledConnectionFrame>
+    <StyledConnectionAside>
+      <H3>Connect to Neo4j</H3>
+      Database access requires an authenticated connection.
+    </StyledConnectionAside>
+    <StyledConnectionForm>
+      <StyledConnectionFormEntry>
+        <StyledConnectionLabel>Host</StyledConnectionLabel>
+        <StyledConnectionTextInput onChange={props.onHostChange} value={props.host} />
+      </StyledConnectionFormEntry>
+      <StyledConnectionFormEntry>
+        <StyledConnectionLabel>Username</StyledConnectionLabel>
+        <StyledConnectionTextInput onChange={props.onUsernameChange} value={props.username} />
+      </StyledConnectionFormEntry>
+      <StyledConnectionFormEntry>
+        <StyledConnectionLabel>Password</StyledConnectionLabel>
+        <StyledConnectionTextInput onChange={props.onPasswordChange} value={props.password} type='password' />
+      </StyledConnectionFormEntry>
       <FormButton onClick={props.onConnectClick}>Connect</FormButton>
-    </form>
-  </div>
+    </StyledConnectionForm>
+  </StyledConnectionFrame>
 )
 
 export default ConnectForm

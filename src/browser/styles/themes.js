@@ -2,6 +2,8 @@ export const base = {
   // Text colors
   primaryText: '#333',
   secondaryText: '#333',
+  headerText: '#333',
+  asideText: '#666',
   link: '#428BCA',
   linkHover: '#5dade2',
 
@@ -12,7 +14,8 @@ export const base = {
   drawerBackground: '#292b31',
 
   // Fonts
-  drawerHeaderFontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+  drawerHeaderFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+  primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
 
   // Headers
   primaryHeaderText: '#fff',
@@ -31,6 +34,9 @@ export const base = {
   secondaryButtonTextHover: 'transparent',
   secondaryButtonBorderHover: '1px solid #717172',
   secondaryButtonBackgroundHover: '#717172',
+  formButtonBorder: '1px solid #ccc',
+  formButtonBorderHover: '1px solid ##adadad',
+  formButtonBackgroundHover: '#e6e6e6',
 
   // Frame
   frameBorder: 'none',
