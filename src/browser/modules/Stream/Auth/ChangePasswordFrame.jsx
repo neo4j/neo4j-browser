@@ -6,7 +6,6 @@ import FrameError from '../FrameError'
 import Visible from 'browser-components/Visible'
 import {H3} from 'browser-components/headers'
 import {
-  StyledConnectionForm,
   StyledConnectionFrame,
   StyledConnectionAside,
   StyledConnectionTextInput,
