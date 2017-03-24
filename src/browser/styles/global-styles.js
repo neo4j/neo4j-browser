@@ -11,7 +11,7 @@ injectGlobal`
 
   .code-style,
   .CodeMirror {
-    font-family: Monaco,"Courier New",Terminal,monospace;
+    font-family: "Inconsolata", Monaco,"Courier New",Terminal,monospace;
     font-size: 16px;
     line-height: 23px;
     -webkit-font-smoothing: initial;
