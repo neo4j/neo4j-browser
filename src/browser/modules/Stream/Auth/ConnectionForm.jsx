@@ -116,7 +116,7 @@ export class ConnectionForm extends Component {
       view = (<ChangePasswordForm
         onChangePasswordClick={this.onChangePassword.bind(this)}
         onChange={this.onChangePasswordChange.bind(this)}
-      />)
+      >{this.props.children}</ChangePasswordForm>)
     } else if (this.state.isConnected) {
       view = <ConnectedView
         host={this.props.activeConnectionData.host}

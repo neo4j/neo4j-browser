@@ -3,7 +3,6 @@ import styled from 'styled-components'
 export const StyledConnectionForm = styled.form`
   display: table-cell;
   padding: 0 15px;
-  wdith: 75%;
 `
 export const StyledConnectionAside = styled.div`
   display: table-cell;

@@ -1,6 +1,12 @@
 import { Component } from 'preact'
 
 import {FormButton} from 'browser-components/buttons'
+import {
+  StyledConnectionForm,
+  StyledConnectionTextInput,
+  StyledConnectionLabel,
+  StyledConnectionFormEntry
+} from './styled'
 
 export default class ChangePasswordForm extends Component {
   constructor (props) {
@@ -29,19 +35,18 @@ export default class ChangePasswordForm extends Component {
   }
   render () {
     return (
-      <form>
-        <ul>
-          <li>
-            <label>New password</label>
-            <input type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
-          </li>
-          <li>
-            <label>Repeat new password</label>
-            <input type='password' onChange={this.onNewPasswordChange2.bind(this)} value={this.state.newPassword2} />
-          </li>
-        </ul>
+      <StyledConnectionForm>
+        {this.props.children}
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>New password</StyledConnectionLabel>
+          <StyledConnectionTextInput type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
+        </StyledConnectionFormEntry>
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>Repeat new password</StyledConnectionLabel>
+          <StyledConnectionTextInput type='password' onChange={this.onNewPasswordChange2.bind(this)} value={this.state.newPassword2} />
+        </StyledConnectionFormEntry>
         <FormButton onClick={this.validateSame.bind(this)} label='Change password' />
-      </form>
+      </StyledConnectionForm>
     )
   }
 }

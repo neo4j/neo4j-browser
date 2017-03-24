@@ -3,6 +3,11 @@ import { Component } from 'preact'
 import FrameTemplate from '../FrameTemplate'
 import ConnectionForm from './ConnectionForm'
 import FrameError from '../FrameError'
+import {H3} from 'browser-components/headers'
+import {
+  StyledConnectionFrame,
+  StyledConnectionAside
+} from './styled'
 
 export class ConnectionFrame extends Component {
   constructor (props) {
@@ -19,7 +24,15 @@ export class ConnectionFrame extends Component {
       <FrameTemplate
         header={this.props.frame}
         statusbar={<FrameError code={this.state.error.code} message={this.state.error.message} />}
-        contents={<ConnectionForm {...this.props} error={this.error.bind(this)} />}
+        contents={
+          <StyledConnectionFrame>
+            <StyledConnectionAside>
+              <H3>Connect to Neo4j</H3>
+                Database access requires an authenticated connection.
+            </StyledConnectionAside>
+            <ConnectionForm {...this.props} error={this.error.bind(this)} />
+          </StyledConnectionFrame>
+          }
       />
     )
   }

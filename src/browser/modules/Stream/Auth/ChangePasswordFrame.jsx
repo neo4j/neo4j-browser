@@ -4,6 +4,15 @@ import ConnectionForm from './ConnectionForm'
 import FrameTemplate from '../FrameTemplate'
 import FrameError from '../FrameError'
 import Visible from 'browser-components/Visible'
+import {H3} from 'browser-components/headers'
+import {
+  StyledConnectionForm,
+  StyledConnectionFrame,
+  StyledConnectionAside,
+  StyledConnectionTextInput,
+  StyledConnectionLabel,
+  StyledConnectionFormEntry
+} from './styled'
 
 export class ChangePasswordFrame extends Component {
   constructor (props) {
@@ -29,26 +38,31 @@ export class ChangePasswordFrame extends Component {
     this.error({})
   }
   onSuccess () {
+    this.setState({password: ''})
     this.setState({success: true})
   }
   render () {
     const content = (
-      <div>
-        <Visible if={!this.state.success}>
-          <form>
-            <ul>
-              <li>
-                <label>Existing password</label>
-                <input onChange={this.onPasswordChange.bind(this)} />
-              </li>
-            </ul>
-          </form>
-        </Visible>
-        <Visible if={this.state.success}>
-          Password change successful
-        </Visible>
-        <ConnectionForm {...this.props} error={this.error.bind(this)} oldPassword={this.state.password} onSuccess={this.onSuccess.bind(this)} forcePasswordChange />
-      </div>
+      <StyledConnectionFrame>
+        <StyledConnectionAside>
+          <H3>Password change</H3>
+          <Visible if={!this.state.success}>
+            Enter your current password and the new twice to change your password.
+          </Visible>
+          <Visible if={this.state.success}>
+            Password change successful
+          </Visible>
+        </StyledConnectionAside>
+
+        <ConnectionForm {...this.props} error={this.error.bind(this)} oldPassword={this.state.password} onSuccess={this.onSuccess.bind(this)} forcePasswordChange>
+          <Visible if={!this.state.success}>
+            <StyledConnectionFormEntry>
+              <StyledConnectionLabel>Existing password</StyledConnectionLabel>
+              <StyledConnectionTextInput type='password' value={this.state.password} onChange={this.onPasswordChange.bind(this)} />
+            </StyledConnectionFormEntry>
+          </Visible>
+        </ConnectionForm>
+      </StyledConnectionFrame>
     )
     return (
       <FrameTemplate
