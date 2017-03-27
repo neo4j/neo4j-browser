@@ -10,6 +10,13 @@ import _endsWith from './ends-with.html'
 import _foreach from './foreach.html'
 import _loadCsv from './load-csv.html'
 import _match from './match.html'
+import _merge from './merge.html'
+import _param from './param.html'
+import _params from './params.html'
+import _play from './play.html'
+import _profile from './profile.html'
+import _queries from './queries.html'
+import _queryPlan from './query-plan.html'
 import _remove from './remove.html'
 import _return from './return.html'
 import _set from './set.html'
@@ -33,6 +40,13 @@ export default {
   _foreach,
   _loadCsv,
   _match,
+  _merge,
+  _param,
+  _params,
+  _play,
+  _profile,
+  _queries,
+  _queryPlan,
   _remove,
   _return,
   _set,
