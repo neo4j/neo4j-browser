@@ -14,7 +14,6 @@ export const base = {
   drawerBackground: '#292b31',
 
   // Fonts
-  drawerHeaderFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
   drawerHeaderFontFamily: "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif",
 
