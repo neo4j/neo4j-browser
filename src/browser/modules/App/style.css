@@ -59,6 +59,7 @@
       }
 
       & .main-content {
+        z-index: 1;
         flex: auto;
         background-color: #D2D5DA;
         overflow: auto;
