@@ -27,6 +27,15 @@ export default function settings (state = initialState, action) {
   }
 }
 
+export const updateBoltRouting = (useRouting) => {
+  return {
+    type: UPDATE,
+    state: {
+      useBoltRouting: useRouting
+    }
+  }
+}
+
 export const update = (settings) => {
   return {
     type: UPDATE,

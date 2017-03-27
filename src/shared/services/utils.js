@@ -25,6 +25,16 @@ export const debounce = (fn, time, context = null) => {
   }
 }
 
+export const isRoutingHost = (host) => {
+  return /^bolt\+routing:\/\//.test(host)
+}
+
+export const toBoltHost = (host) => {
+  return 'bolt://' + (host || '') // prepend with bolt://
+    .split('bolt://').join('') // remove bolt://
+    .split('bolt+routing://').join('') // remove bolt+routing://
+}
+
 export const hostIsAllowed = (uri, whitelist = null) => {
   if (whitelist === '*') return true
   const urlInfo = getUrlInfo(uri)
