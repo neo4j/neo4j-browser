@@ -3,7 +3,7 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { executeCommand, executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
-import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
+import { SET_CONTENT, FOCUS } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
 import Codemirror from './Codemirror'
@@ -93,6 +93,7 @@ export class Editor extends Component {
       this.props.bus.take(SET_CONTENT, (msg) => {
         this.setEditorValue(this.codeMirror, msg.message)
       })
+      this.props.bus.take(FOCUS, () => this.focusEditor())
     }
   }
   setEditorValue (cm, cmd) {
