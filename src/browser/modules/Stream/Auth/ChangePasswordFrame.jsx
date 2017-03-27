@@ -25,6 +25,9 @@ export class ChangePasswordFrame extends Component {
       success: false
     }
   }
+  componentDidMount () {
+    this.firstInput.focus()
+  }
   error (e) {
     if (e.code === 'N/A') {
       e.message = 'Existing password is incorrect'
@@ -57,7 +60,7 @@ export class ChangePasswordFrame extends Component {
           <Visible if={!this.state.success}>
             <StyledConnectionFormEntry>
               <StyledConnectionLabel>Existing password</StyledConnectionLabel>
-              <StyledConnectionTextInput type='password' value={this.state.password} onChange={this.onPasswordChange.bind(this)} />
+              <StyledConnectionTextInput innerRef={(el) => (this.firstInput = el)} type='password' value={this.state.password} onChange={this.onPasswordChange.bind(this)} />
             </StyledConnectionFormEntry>
           </Visible>
         </ConnectionForm>
