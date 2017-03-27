@@ -18,7 +18,7 @@
   overflow-y: auto;
   font-weight: 200;
   & article.help {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
     color: #666;
     display: block;
