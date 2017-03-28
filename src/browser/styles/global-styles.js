@@ -2,11 +2,11 @@ import { injectGlobal } from 'styled-components'
 
 injectGlobal`
   pre {
-    max-width: 100% !important;
-    white-space: pre !important;
-    word-wrap: normal !important;
-    word-break: normal !important;
-    overflow: auto !important;
+    max-width: 100%;
+    white-space: pre;
+    word-wrap: normal;
+    word-break: normal;
+    overflow: auto;
   }
 
   .code-style,
