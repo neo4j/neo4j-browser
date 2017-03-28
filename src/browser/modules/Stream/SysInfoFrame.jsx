@@ -1,6 +1,8 @@
 import { Component } from 'preact'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getFeatures } from 'shared/modules/features/featuresDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
 import FrameError from '../Stream/FrameError'
 import { SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
@@ -99,6 +101,7 @@ export class SysInfoFrame extends Component {
     }
   }
   render () {
+    console.log('features', this.props.features)
     const content = (
       <div>
         <h3>Indexes</h3>
@@ -126,4 +129,11 @@ export class SysInfoFrame extends Component {
     )
   }
 }
-export default withBus(SysInfoFrame)
+
+const mapStateToProps = (state) => {
+  return {
+    features: getFeatures(state)
+  }
+}
+
+export default withBus(connect(mapStateToProps, null)(SysInfoFrame))

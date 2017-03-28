@@ -1,4 +1,5 @@
 import settingsReducer, { NAME as settings } from 'shared/modules/settings/settingsDuck'
+import featuresReducer, { NAME as features } from 'shared/modules/features/featuresDuck'
 import streamReducer, { NAME as stream } from 'shared/modules/stream/streamDuck'
 import historyReducer, { NAME as history } from 'shared/modules/history/historyDuck'
 import userReducer, { NAME as currentUser } from 'shared/modules/currentUser/currentUserDuck'
@@ -14,6 +15,7 @@ export default {
   [connections]: connectionsReducer,
   [stream]: streamReducer,
   [settings]: settingsReducer,
+  [features]: featuresReducer,
   [history]: historyReducer,
   [currentUser]: userReducer,
   [dbMeta]: dbMetaReducer,
