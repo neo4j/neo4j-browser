@@ -16,7 +16,7 @@ export const base = {
   // Fonts
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
   drawerHeaderFontFamily: "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-
+  streamlineFontFamily: 'streamline',
   // Headers
   primaryHeaderText: '#fff',
 
@@ -31,7 +31,7 @@ export const base = {
   secondaryButtonText: '#717172',
   secondaryButtonBorder: '1px solid #717172',
   secondaryButtonBackground: 'transparent',
-  secondaryButtonTextHover: 'transparent',
+  secondaryButtonTextHover: '#40454F',
   secondaryButtonBorderHover: '1px solid #717172',
   secondaryButtonBackgroundHover: '#717172',
   formButtonBorder: '1px solid #ccc',

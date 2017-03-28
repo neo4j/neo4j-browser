@@ -40,25 +40,34 @@ export const CloseButton = (props) => {
   )
 }
 
-export const EditorButton = styled.a`
-    color: ${props => props.theme.secondaryButtonText};
-    background-color: ${props => props.theme.secondaryButtonBackground};
-    border: ${props => props.theme.secondaryButtonBorder};
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    font-size: 20px;
-    line-height: 27px;
+export const EditorButton = styled.span`
+  font-family: ${props => props.theme.streamlineFontFamily};
+  font-style: normal!important;
+  font-weight: 400!important;
+  font-variant: normal!important;
+  text-transform: none!important;
+  speak: none;
+  -webkit-font-smoothing: antialiased;
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${props => props.theme.secondaryButtonBackground};
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 28px;
+  line-height: 28px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  vertical-align: middle;
+  display: inline-block;
+  &:before {
+    content: ${props => props.icon}
     text-decoration: none;
-    text-align: center;
-    cursor: pointer;
-    &:hover {
-      background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-      color: ${props => props.theme.editorBarBackground};
-      border: ${props => props.theme.secondaryButtonBorderHover};
-      text-decoration: none;
-    }
-  `
+  }
+  &:hover::before {
+    content: ${props => props.hoverIcon}
+  }
+`
 
 const StyledFavoriteText = styled.span`
   font-family: ${props => props.theme.primaryFontFamily};

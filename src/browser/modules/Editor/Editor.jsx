@@ -1,3 +1,4 @@
+/* eslint-disable no-octal-escape */
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
@@ -183,17 +184,23 @@ export class Editor extends Component {
             onClick={() => this.props.onFavortieClick(this.state.code)}
             disabled={this.state.code.length < 1}
             tooltip='Add as favorite'
-          >&#9734;</EditorButton>
+            hoverIcon='"\58"'
+            icon='"\73"'
+           />
           <EditorButton
             onClick={() => this.clearEditor()}
             disabled={this.state.code.length < 1}
             tooltip='Clear editor contents'
-          >&times;</EditorButton>
+            hoverIcon='"\e005"'
+            icon='"\5e"'
+           />
           <EditorButton
             onClick={() => this.execCurrent()}
             disabled={this.state.code.length < 1}
             tooltip='Execute command'
-          >&#9654;</EditorButton>
+            hoverIcon='"\e002"'
+            icon='"\77"'
+           />
         </ActionButtonSection>
       </Bar>
     )
