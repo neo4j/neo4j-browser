@@ -25,7 +25,7 @@ export const cypherRequestEpic = (some$, store) =>
   some$.ofType(CYPHER_REQUEST)
     .mergeMap((action) => {
       if (!action._responseChannel) return Rx.Observable.of(null)
-      return bolt.transaction(action.query, (action.params || undefined))
+      return bolt.directTransaction(action.query, (action.params || undefined))
         .then((r) => ({type: action._responseChannel, success: true, result: r}))
         .catch((e) => ({type: action._responseChannel, success: false, error: e}))
     })

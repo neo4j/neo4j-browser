@@ -9,7 +9,7 @@ import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
   return {
-    transaction: jest.fn()
+    directTransaction: jest.fn()
   }
 })
 
@@ -37,7 +37,7 @@ describe('postConnectCmdEpic', () => {
   })
   test('does nothing if server query fails', (done) => {
     // Setup
-    bolt.transaction.mockReturnValueOnce(Promise.reject())
+    bolt.directTransaction.mockReturnValueOnce(Promise.reject())
     // Given
     const action = { type: CONNECTION_SUCCESS }
     bus.take('NOOP', (currentAction) => {
@@ -54,7 +54,7 @@ describe('postConnectCmdEpic', () => {
   })
   test('does nothing if settings not found', (done) => {
     // Setup
-    bolt.transaction.mockReturnValueOnce(Promise.resolve({
+    bolt.directTransaction.mockReturnValueOnce(Promise.resolve({
       records: [{get: () => ''}]
     }))
     // Given
@@ -73,7 +73,7 @@ describe('postConnectCmdEpic', () => {
   })
   test('creates a SYSTEM_COMMAND_QUEUED if found', (done) => {
     // Setup
-    bolt.transaction.mockReturnValueOnce(Promise.resolve({
+    bolt.directTransaction.mockReturnValueOnce(Promise.resolve({
       records: [{get: (what) => {
         if (what === 'name') return 'XX,Configuration'
         if (what === 'attributes') {

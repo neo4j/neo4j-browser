@@ -1,7 +1,6 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { CONNECTION_SUCCESS, DISCONNECTION_SUCCESS, LOST_CONNECTION, UPDATE_CONNECTION_STATE, CONNECTED_STATE, connectionLossFilter } from 'shared/modules/connections/connectionsDuck'
-import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -78,14 +77,13 @@ export const metaQuery = `CALL db.labels() YIELD label
             RETURN 'propertyKeys' as a, propertyKeys as result`
 
 export const dbMetaEpic = (some$, store) =>
-  some$.ofType(APP_START)
-    .merge(some$.ofType(UPDATE_CONNECTION_STATE).filter((s) => s.state === CONNECTED_STATE))
+  some$.ofType(UPDATE_CONNECTION_STATE).filter((s) => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() => {
       return Rx.Observable.timer(0, 20000)
       .mergeMap(() =>
         Rx.Observable
-        .fromPromise(bolt.transaction(metaQuery))
+        .fromPromise(bolt.routedReadTransaction(metaQuery))
         .catch((e) => Rx.Observable.of(null))
       )
       .filter((r) => r)

@@ -6,7 +6,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
   return {
-    closeActiveConnection: jest.fn()
+    closeConnection: jest.fn()
   }
 })
 import reducer, * as connections from './connectionsDuck'
@@ -149,7 +149,7 @@ describe('connectionsDucks Epics', () => {
         action,
         currentAction
       ])
-      expect(bolt.closeActiveConnection).toHaveBeenCalledTimes(1)
+      expect(bolt.closeConnection).toHaveBeenCalledTimes(1)
       done()
     })
 

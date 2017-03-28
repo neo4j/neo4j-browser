@@ -56,7 +56,7 @@ export const handleCommandsEpic = (action$, store) =>
 export const postConnectCmdEpic = (some$, store) =>
   some$.ofType(CONNECTION_SUCCESS)
     .mergeMap(() => {
-      return bolt.transaction('CALL dbms.queryJmx("org.neo4j:*")')
+      return bolt.directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
         .then((res) => {
           // Find kernel conf
           let conf

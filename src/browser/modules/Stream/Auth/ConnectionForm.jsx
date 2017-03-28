@@ -2,10 +2,11 @@ import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { getActiveConnectionData, getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
-import { getInitCmd } from 'shared/modules/settings/settingsDuck'
+import { getInitCmd, updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
+import { toBoltHost, isRoutingHost } from 'services/utils'
 
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
@@ -53,16 +54,8 @@ export class ConnectionForm extends Component {
   }
   onHostChange (event) {
     const host = event.target.value
-    this.setState({host})
+    this.setState({ host: toBoltHost(host), hostInputVal: host, useBoltRouting: isRoutingHost(host) })
     this.props.error({})
-  }
-  saveCredentials () {
-    this.props.updateConnection({
-      id: this.state.id,
-      host: this.state.host,
-      username: this.state.username,
-      password: this.state.password
-    })
   }
   onChangePasswordChange ({ newPassword1, newPassword2 }) {
     this.props.error({})
@@ -96,9 +89,23 @@ export class ConnectionForm extends Component {
   saveAndStart () {
     this.setState({forcePasswordChange: false})
     this.state.successCallback()
+    this.updateRoutingSettings()
     this.saveCredentials()
     this.props.setActiveConnection(this.state.id)
     this.props.executeInitCmd()
+  }
+  saveCredentials () {
+    this.props.updateConnection({
+      id: this.state.id,
+      host: this.state.host,
+      username: this.state.username,
+      password: this.state.password
+    })
+  }
+  updateRoutingSettings () {
+    if (this.state.useBoltRouting) { // Just enable if user uses protocol. No disabling.
+      this.props.updateBoltRoutingSetting(this.state.useBoltRouting)
+    }
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.oldPassword) {
@@ -128,7 +135,7 @@ export class ConnectionForm extends Component {
         onHostChange={this.onHostChange.bind(this)}
         onUsernameChange={this.onUsernameChange.bind(this)}
         onPasswordChange={this.onPasswordChange.bind(this)}
-        host={this.state.host}
+        host={this.state.hostInputVal}
         username={this.state.username}
         password={this.state.password}
       />)
@@ -150,6 +157,7 @@ const mapDispatchToProps = (dispatch) => {
     updateConnection: (connection) => {
       dispatch(updateConnection(connection))
     },
+    updateBoltRoutingSetting: (useRouting) => dispatch(updateBoltRouting(useRouting)),
     setActiveConnection: (id) => dispatch(setActiveConnection(id)),
     dispatchInitCmd: (initCmd) => dispatch(executeSystemCommand(initCmd))
   }

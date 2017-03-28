@@ -6,11 +6,13 @@ export const UPDATE = 'settings/UPDATE'
 export const getSettings = (state) => state[NAME]
 export const getInitCmd = (state) => state[NAME].initCmd || initialState.initCmd
 export const getTheme = (state) => state[NAME].theme || initialState.theme
+export const getUseBoltRouting = (state) => state[NAME].useBoltRouting || initialState.useBoltRouting
 
 const initialState = {
   cmdchar: ':',
   maxHistory: 30,
   theme: 'normal',
+  useBoltRouting: false,
   initCmd: ':play start'
 }
 
@@ -22,6 +24,15 @@ export default function settings (state = initialState, action) {
       return initialState
     default:
       return state
+  }
+}
+
+export const updateBoltRouting = (useRouting) => {
+  return {
+    type: UPDATE,
+    state: {
+      useBoltRouting: useRouting
+    }
   }
 }
 
