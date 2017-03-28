@@ -99,6 +99,7 @@
     "json-loader": "^0.5.4",
     "lodash.debounce": "^4.0.8",
     "neo4j-driver": "^1.2.0",
+    "neo4j-visualization-d3": "git+ssh://git@github.com/neo-technology/neo4j-browser-visualization.git",
     "neo4j-visualization": "0.0.110",
     "node-noop": "^1.0.0",
     "preact": "^7.2.0",

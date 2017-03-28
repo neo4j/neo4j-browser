@@ -250,7 +250,7 @@ babel-code-frame@^6.11.0, babel-code-frame@^6.16.0, babel-code-frame@^6.22.0:
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-babel-core@^6.0.0, babel-core@^6.21.0, babel-core@^6.24.0, babel-core@^6.7.7:
+babel-core@^6.0.0, babel-core@^6.24.0, babel-core@^6.7.7:
   version "6.24.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-core/-/babel-core-6.24.0.tgz#8f36a0a77f5c155aed6f920b844d23ba56742a02"
   dependencies:
@@ -422,7 +422,7 @@ babel-jest@^18.0.0:
     babel-plugin-istanbul "^3.0.0"
     babel-preset-jest "^18.0.0"
 
-babel-loader@^6.2.10, babel-loader@^6.2.4:
+babel-loader@^6.2.4:
   version "6.4.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-loader/-/babel-loader-6.4.1.tgz#0b34112d5b0748a8dcdbf51acf6f9bd42d50b8ca"
   dependencies:
@@ -742,18 +742,6 @@ babel-plugin-transform-es2015-unicode-regex@^6.22.0:
     babel-runtime "^6.22.0"
     regexpu-core "^2.0.0"
 
-babel-plugin-transform-es3-member-expression-literals@^6.8.0:
-  version "6.22.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-transform-es3-member-expression-literals/-/babel-plugin-transform-es3-member-expression-literals-6.22.0.tgz#733d3444f3ecc41bef8ed1a6a4e09657b8969ebb"
-  dependencies:
-    babel-runtime "^6.22.0"
-
-babel-plugin-transform-es3-property-literals@^6.8.0:
-  version "6.22.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-transform-es3-property-literals/-/babel-plugin-transform-es3-property-literals-6.22.0.tgz#b2078d5842e22abf40f73e8cde9cd3711abd5758"
-  dependencies:
-    babel-runtime "^6.22.0"
-
 babel-plugin-transform-exponentiation-operator@^6.22.0:
   version "6.22.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-transform-exponentiation-operator/-/babel-plugin-transform-exponentiation-operator-6.22.0.tgz#d57c8335281918e54ef053118ce6eb108468084d"
@@ -824,12 +812,6 @@ babel-plugin-transform-regenerator@^6.22.0:
   dependencies:
     regenerator-transform "0.9.8"
 
-babel-plugin-transform-runtime@^6.15.0:
-  version "6.23.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-transform-runtime/-/babel-plugin-transform-runtime-6.23.0.tgz#88490d446502ea9b8e7efb0fe09ec4d99479b1ee"
-  dependencies:
-    babel-runtime "^6.22.0"
-
 babel-plugin-transform-strict-mode@^6.22.0:
   version "6.22.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-transform-strict-mode/-/babel-plugin-transform-strict-mode-6.22.0.tgz#e008df01340fdc87e959da65991b7e05970c8c7c"
@@ -837,7 +819,7 @@ babel-plugin-transform-strict-mode@^6.22.0:
     babel-runtime "^6.22.0"
     babel-types "^6.22.0"
 
-babel-polyfill@^6.20.0, babel-polyfill@^6.23.0, babel-polyfill@^6.8.0:
+babel-polyfill@^6.8.0:
   version "6.23.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-polyfill/-/babel-polyfill-6.23.0.tgz#8364ca62df8eafb830499f699177466c3b03499d"
   dependencies:
@@ -845,7 +827,7 @@ babel-polyfill@^6.20.0, babel-polyfill@^6.23.0, babel-polyfill@^6.8.0:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-preset-es2015@^6.18.0, babel-preset-es2015@^6.6.0:
+babel-preset-es2015@^6.6.0:
   version "6.24.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-preset-es2015/-/babel-preset-es2015-6.24.0.tgz#c162d68b1932696e036cd3110dc1ccd303d2673a"
   dependencies:
@@ -944,7 +926,7 @@ babel-register@^6.24.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.2"
 
-babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.20.0, babel-runtime@^6.22.0, babel-runtime@^6.23.0, babel-runtime@^6.6.1:
+babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.22.0, babel-runtime@^6.6.1:
   version "6.23.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-runtime/-/babel-runtime-6.23.0.tgz#0a9489f144de70efb3ce4300accdb329e2fc543b"
   dependencies:
@@ -1026,6 +1008,10 @@ binary-extensions@^1.0.0:
   version "1.8.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/binary-extensions/-/binary-extensions-1.8.0.tgz#48ec8d16df4377eae5fa5884682480af4d95c774"
 
+bindings@^1.2.1:
+  version "1.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/bindings/-/bindings-1.2.1.tgz#14ad6113812d2d37d72e67b4cacb4bb726505f11"
+
 block-stream@*:
   version "0.0.9"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"
@@ -1096,6 +1082,10 @@ bser@1.0.2:
   dependencies:
     node-int64 "^0.4.0"
 
+buffer-crc32@0.2.1:
+  version "0.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/buffer-crc32/-/buffer-crc32-0.2.1.tgz#be3e5382fc02b6d6324956ac1af98aa98b08534c"
+
 buffer-shims@^1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/buffer-shims/-/buffer-shims-1.0.0.tgz#9978ce317388c649ad8793028c3477ef044a8b51"
@@ -1122,6 +1112,10 @@ builtin-modules@^1.0.0:
 builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
+
+bytes@0.2.0:
+  version "0.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/bytes/-/bytes-0.2.0.tgz#aad33ec14e3dc2ca74e8e7d451f9ba053ad4f7a0"
 
 bytes@2.3.0:
   version "2.3.0"
@@ -1326,6 +1320,16 @@ codemirror@^5.24.2:
   version "5.25.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.25.0.tgz#78e06939c7bb41f65707b8aa9c5328111948b756"
 
+coffee-loader@^0.7.2:
+  version "0.7.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/coffee-loader/-/coffee-loader-0.7.3.tgz#fadbc6efd6fc7ecc88c5b3046a2c292066bcb54a"
+  dependencies:
+    loader-utils "^1.0.2"
+
+coffee-script@^1.9.3:
+  version "1.12.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/coffee-script/-/coffee-script-1.12.4.tgz#fe1bced97fe1fb3927b998f2b45616e0658be1ff"
+
 color-convert@^0.5.3:
   version "0.5.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/color-convert/-/color-convert-0.5.3.tgz#bdb6c69ce660fadffe0b0007cc447e1b9f7282bd"
@@ -1430,6 +1434,25 @@ connect-history-api-fallback@^1.3.0:
   version "1.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/connect-history-api-fallback/-/connect-history-api-fallback-1.3.0.tgz#e51d17f8f0ef0db90a64fdb47de3051556e9f169"
 
+connect@~2.10.0:
+  version "2.10.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/connect/-/connect-2.10.1.tgz#dbc69392527b36935229dc29e372249aebac6448"
+  dependencies:
+    buffer-crc32 "0.2.1"
+    bytes "0.2.0"
+    cookie "0.1.0"
+    cookie-signature "1.0.1"
+    debug "*"
+    fresh "0.2.0"
+    methods "0.0.1"
+    multiparty "2.2.0"
+    negotiator "0.2.8"
+    pause "0.0.1"
+    qs "0.6.5"
+    raw-body "0.0.3"
+    send "0.1.4"
+    uid2 "0.0.2"
+
 console-browserify@^1.1.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/console-browserify/-/console-browserify-1.1.0.tgz#f0241c45730a9fc6323b206dbf38edc741d0bb10"
@@ -1456,13 +1479,28 @@ content-type@~1.0.2:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/content-type/-/content-type-1.0.2.tgz#b7d113aee7a8dd27bd21133c4dc2529df1721eed"
 
+"contextify@>= 0.1.9 < 0.2.0":
+  version "0.1.15"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/contextify/-/contextify-0.1.15.tgz#3d34681d14a5ccbbe609c9ee11eda206b8cf266f"
+  dependencies:
+    bindings "^1.2.1"
+    nan "^2.1.0"
+
 convert-source-map@^1.1.0:
   version "1.4.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/convert-source-map/-/convert-source-map-1.4.0.tgz#e3dad195bf61bfe13a7a3c73e9876ec14a0268f3"
 
+cookie-signature@1.0.1:
+  version "1.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cookie-signature/-/cookie-signature-1.0.1.tgz#44e072148af01e6e8e24afbf12690d68ae698ecb"
+
 cookie-signature@1.0.6:
   version "1.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cookie-signature/-/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
+
+cookie@0.1.0:
+  version "0.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cookie/-/cookie-0.1.0.tgz#90eb469ddce905c866de687efc43131d8801f9d0"
 
 cookie@0.3.1:
   version "0.3.1"
@@ -1542,6 +1580,22 @@ css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
+css-loader@^0.23.1:
+  version "0.23.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/css-loader/-/css-loader-0.23.1.tgz#9fa23f2b5c0965235910ad5ecef3b8a36390fe50"
+  dependencies:
+    css-selector-tokenizer "^0.5.1"
+    cssnano ">=2.6.1 <4"
+    loader-utils "~0.2.2"
+    lodash.camelcase "^3.0.1"
+    object-assign "^4.0.1"
+    postcss "^5.0.6"
+    postcss-modules-extract-imports "^1.0.0"
+    postcss-modules-local-by-default "^1.0.1"
+    postcss-modules-scope "^1.0.0"
+    postcss-modules-values "^1.1.0"
+    source-list-map "^0.1.4"
+
 css-loader@^0.26.1:
   version "0.26.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/css-loader/-/css-loader-0.26.4.tgz#b61e9e30db94303e6ffc892f10ecd09ad025a1fd"
@@ -1567,6 +1621,13 @@ css-select@~1.2.0:
     css-what "2.1"
     domutils "1.5.1"
     nth-check "~1.0.1"
+
+css-selector-tokenizer@^0.5.1:
+  version "0.5.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/css-selector-tokenizer/-/css-selector-tokenizer-0.5.4.tgz#139bafd34a35fd0c1428487049e0699e6f6a2c21"
+  dependencies:
+    cssesc "^0.1.0"
+    fastparse "^1.1.1"
 
 css-selector-tokenizer@^0.6.0:
   version "0.6.0"
@@ -1644,15 +1705,21 @@ csso@~2.3.1:
     clap "^1.0.9"
     source-map "^0.5.3"
 
-cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
+cssom@0.3.x, "cssom@>= 0.3.0 < 0.4.0", "cssom@>= 0.3.2 < 0.4.0":
   version "0.3.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cssom/-/cssom-0.3.2.tgz#b8036170c79f07a90ff2f16e22284027a243848b"
 
-"cssstyle@>= 0.2.37 < 0.3.0":
+"cssstyle@>= 0.2.14 < 0.3.0", "cssstyle@>= 0.2.37 < 0.3.0":
   version "0.2.37"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cssstyle/-/cssstyle-0.2.37.tgz#541097234cb2513c83ceed3acddc27ff27987d54"
   dependencies:
     cssom "0.3.x"
+
+d3@3.5.0:
+  version "3.5.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3/-/d3-3.5.0.tgz#a3d004c3799766667a717f10f4eea90f989f0aea"
+  dependencies:
+    jsdom "1.0.0"
 
 d@1:
   version "1.0.0"
@@ -1674,15 +1741,15 @@ debug-log@^1.0.0:
   version "1.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
 
-debug@2.6.1:
-  version "2.6.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
+debug@*, debug@2.6.3, debug@^2.1.1, debug@^2.2.0:
+  version "2.6.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
   dependencies:
     ms "0.7.2"
 
-debug@2.6.3, debug@^2.1.1, debug@^2.2.0:
-  version "2.6.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
+debug@2.6.1:
+  version "2.6.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
   dependencies:
     ms "0.7.2"
 
@@ -1857,10 +1924,6 @@ electron-to-chromium@^1.2.7:
   version "1.2.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.2.8.tgz#22c2e6200d350da27d6050db7e3f6f85d18cf4ed"
 
-emitter-component@^1.1.1:
-  version "1.1.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/emitter-component/-/emitter-component-1.1.1.tgz#065e2dbed6959bf470679edabeaf7981d1003ab6"
-
 emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
@@ -1901,7 +1964,7 @@ enzyme@^2.3.0:
     object.values "^1.0.3"
     uuid "^2.0.3"
 
-"errno@>=0.1.1 <0.2.0-0", errno@^0.1.3:
+"errno@>=0.1.1 <0.2.0-0", errno@^0.1.1, errno@^0.1.3:
   version "0.1.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/errno/-/errno-0.1.4.tgz#b896e23a9e5e8ba33871fc996abd3635fc9a1c7d"
   dependencies:
@@ -2309,7 +2372,7 @@ fb-watchman@^1.8.0, fb-watchman@^1.9.0:
   dependencies:
     bser "1.0.2"
 
-fbjs@^0.8.4, fbjs@^0.8.5, fbjs@^0.8.7, fbjs@^0.8.8:
+fbjs@^0.8.1, fbjs@^0.8.4, fbjs@^0.8.5, fbjs@^0.8.7, fbjs@^0.8.8:
   version "0.8.11"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/fbjs/-/fbjs-0.8.11.tgz#340b590b8a2278a01ef7467c07a16da9b753db24"
   dependencies:
@@ -2334,6 +2397,12 @@ file-entry-cache@^2.0.0:
   dependencies:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
+
+file-loader@^0.8.5:
+  version "0.8.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/file-loader/-/file-loader-0.8.5.tgz#9275d031fe780f27d47f5f4af02bd43713cc151b"
+  dependencies:
+    loader-utils "~0.2.5"
 
 file-loader@^0.9.0:
   version "0.9.0"
@@ -2413,6 +2482,10 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
+font-awesome@^4.6.3:
+  version "4.7.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
+
 for-in@^1.0.1:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -2442,6 +2515,10 @@ form-data@~2.1.1:
 forwarded@~0.1.0:
   version "0.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/forwarded/-/forwarded-0.1.0.tgz#19ef9874c4ae1c297bcf078fde63a09b66a84363"
+
+fresh@0.2.0:
+  version "0.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/fresh/-/fresh-0.2.0.tgz#bfd9402cf3df12c4a4c310c79f99a3dde13d34a7"
 
 fresh@0.5.0:
   version "0.5.0"
@@ -2639,10 +2716,6 @@ growly@^1.2.0:
   version "1.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
 
-hammerjs@^2.0.6:
-  version "2.0.8"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
-
 handlebars@^4.0.3:
   version "4.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/handlebars/-/handlebars-4.0.6.tgz#2ce4484850537f9c97a8026d5399b935c4ed4ed7"
@@ -2745,7 +2818,7 @@ html-minifier@^3.0.1:
     relateurl "0.2.x"
     uglify-js "2.8.x"
 
-htmlparser2@^3.9.1:
+"htmlparser2@>= 3.7.3 < 4.0.0", htmlparser2@^3.9.1:
   version "3.9.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/htmlparser2/-/htmlparser2-3.9.2.tgz#1bdf87acca0f3f9e53fa4fcceb0f4b4cbb00b338"
   dependencies:
@@ -2824,6 +2897,10 @@ ieee754@^1.1.4:
 ignore@^3.0.9, ignore@^3.2.0:
   version "3.2.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ignore/-/ignore-3.2.6.tgz#26e8da0644be0bb4cb39516f6c79f0e0f4ffe48c"
+
+image-size@~0.5.0:
+  version "0.5.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/image-size/-/image-size-0.5.1.tgz#28eea8548a4b1443480ddddc1e083ae54652439f"
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -3085,6 +3162,10 @@ is-typedarray@~1.0.0:
 is-utf8@^0.2.0:
   version "0.2.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
+
+isarray@0.0.1:
+  version "0.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/isarray/-/isarray-0.0.1.tgz#8a18acfca9a8f4177e09abfc6038939b05d1eedf"
 
 isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
@@ -3395,6 +3476,19 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
 
+jsdom@1.0.0:
+  version "1.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jsdom/-/jsdom-1.0.0.tgz#25c4d081830bdd56ce5b0ee1a20afb2f93b2a64b"
+  dependencies:
+    contextify ">= 0.1.9 < 0.2.0"
+    cssom ">= 0.3.0 < 0.4.0"
+    cssstyle ">= 0.2.14 < 0.3.0"
+    htmlparser2 ">= 3.7.3 < 4.0.0"
+    nwmatcher ">= 1.3.3 < 2.0.0"
+    parse5 ">= 1.1.4 < 2.0.0"
+    request ">= 2.44.0 < 3.0.0"
+    xmlhttprequest ">= 1.6.0 < 2.0.0"
+
 jsdom@^9.9.1:
   version "9.12.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jsdom/-/jsdom-9.12.0.tgz#e8c546fffcb06c00d4833ca84410fed7f8a097d4"
@@ -3482,10 +3576,6 @@ jsx-ast-utils@^1.3.3, jsx-ast-utils@^1.3.4:
   dependencies:
     object-assign "^4.1.0"
 
-keycharm@^0.2.0:
-  version "0.2.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/keycharm/-/keycharm-0.2.0.tgz#fa6ea2e43b90a68028843d27f2075d35a8c3e6f9"
-
 kind-of@^3.0.2:
   version "3.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/kind-of/-/kind-of-3.1.0.tgz#475d698a5e49ff5e53d14e3e732429dc8bf4cf47"
@@ -3508,6 +3598,19 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
+less@^2.7.1:
+  version "2.7.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/less/-/less-2.7.2.tgz#368d6cc73e1fb03981183280918743c5dcf9b3df"
+  optionalDependencies:
+    errno "^0.1.1"
+    graceful-fs "^4.1.2"
+    image-size "~0.5.0"
+    mime "^1.2.11"
+    mkdirp "^0.5.0"
+    promise "^7.1.1"
+    request "^2.72.0"
+    source-map "^0.5.3"
+
 levn@^0.3.0, levn@~0.3.0:
   version "0.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/levn/-/levn-0.3.0.tgz#3b09924edf9f083c0490fdd4c0bc4421e04764ee"
@@ -3525,7 +3628,7 @@ load-json-file@^1.0.0:
     pinkie-promise "^2.0.0"
     strip-bom "^2.0.0"
 
-loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.2.16, loader-utils@~0.2.5:
+loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.2.16, loader-utils@~0.2.2, loader-utils@~0.2.5:
   version "0.2.17"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/loader-utils/-/loader-utils-0.2.17.tgz#f86e6374d43205a6e6c60e9196f17c0299bfb348"
   dependencies:
@@ -3584,6 +3687,13 @@ lodash._bindcallback@^3.0.0:
   version "3.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash._bindcallback/-/lodash._bindcallback-3.0.1.tgz#e531c27644cf8b57a99e17ed95b35c748789392e"
 
+lodash._createcompounder@^3.0.0:
+  version "3.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash._createcompounder/-/lodash._createcompounder-3.0.0.tgz#5dd2cb55372d6e70e0e2392fb2304d6631091075"
+  dependencies:
+    lodash.deburr "^3.0.0"
+    lodash.words "^3.0.0"
+
 lodash._getnative@^3.0.0:
   version "3.9.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash._getnative/-/lodash._getnative-3.9.1.tgz#570bc7dede46d61cdcde687d65d3eecbaa3aaff5"
@@ -3591,6 +3701,10 @@ lodash._getnative@^3.0.0:
 lodash._reinterpolate@~3.0.0:
   version "3.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
+
+lodash._root@^3.0.0:
+  version "3.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash._root/-/lodash._root-3.0.1.tgz#fba1c4524c19ee9a5f8136b4609f017cf4ded692"
 
 lodash.assign@^4.2.0:
   version "4.2.0"
@@ -3603,6 +3717,12 @@ lodash.assignin@^4.0.9:
 lodash.bind@^4.1.4:
   version "4.2.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.bind/-/lodash.bind-4.2.1.tgz#7ae3017e939622ac31b7d7d7dcb1b34db1690d35"
+
+lodash.camelcase@^3.0.1:
+  version "3.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.camelcase/-/lodash.camelcase-3.0.1.tgz#932c8b87f8a4377897c67197533282f97aeac298"
+  dependencies:
+    lodash._createcompounder "^3.0.0"
 
 lodash.camelcase@^4.3.0:
   version "4.3.0"
@@ -3628,6 +3748,12 @@ lodash.debounce@^3.1.1:
 lodash.debounce@^4.0.4, lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+
+lodash.deburr@^3.0.0:
+  version "3.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.deburr/-/lodash.deburr-3.2.0.tgz#6da8f54334a366a7cf4c4c76ef8d80aa1b365ed5"
+  dependencies:
+    lodash._root "^3.0.0"
 
 lodash.defaults@^4.0.1:
   version "4.2.0"
@@ -3710,6 +3836,12 @@ lodash.uniq@^4.3.0:
   version "4.5.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
+lodash.words@^3.0.0:
+  version "3.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.words/-/lodash.words-3.2.0.tgz#4e2a8649bc08745b17c695b1a3ce8fee596623b3"
+  dependencies:
+    lodash._root "^3.0.0"
+
 lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.2:
   version "4.17.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
@@ -3786,6 +3918,10 @@ merge@^1.1.3:
   version "1.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
 
+methods@0.0.1:
+  version "0.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/methods/-/methods-0.0.1.tgz#277c90f8bef39709645a8371c51c3b6c648e068c"
+
 methods@~1.1.2:
   version "1.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
@@ -3822,9 +3958,13 @@ mime-types@^2.1.12, mime-types@~2.1.11, mime-types@~2.1.13, mime-types@~2.1.7:
   dependencies:
     mime-db "~1.26.0"
 
-mime@1.3.4, mime@1.3.x, mime@^1.3.4:
+mime@1.3.4, mime@1.3.x, mime@^1.2.11, mime@^1.3.4:
   version "1.3.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/mime/-/mime-1.3.4.tgz#115f9e3b6b3daf2959983cb38f149a2d40eb5d53"
+
+mime@~1.2.9:
+  version "1.2.11"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/mime/-/mime-1.2.11.tgz#58203eed86e3a5ef17aed2b7d9ebd47f0a60dd10"
 
 "minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.3:
   version "3.0.3"
@@ -3846,10 +3986,6 @@ minimist@^1.1.0, minimist@^1.1.1, minimist@^1.2.0:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.12.0:
-  version "2.18.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
-
 ms@0.7.1:
   version "0.7.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
@@ -3858,11 +3994,18 @@ ms@0.7.2:
   version "0.7.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
+multiparty@2.2.0:
+  version "2.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/multiparty/-/multiparty-2.2.0.tgz#a567c2af000ad22dc8f2a653d91978ae1f5316f4"
+  dependencies:
+    readable-stream "~1.1.9"
+    stream-counter "~0.2.0"
+
 mute-stream@0.0.5:
   version "0.0.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/mute-stream/-/mute-stream-0.0.5.tgz#8fbfabb0a98a253d3184331f9e8deb7372fac6c0"
 
-nan@^2.3.0:
+nan@^2.1.0, nan@^2.3.0:
   version "2.5.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/nan/-/nan-2.5.1.tgz#d5b01691253326a97a2bbee9e61c55d8d60351e2"
 
@@ -3884,45 +4027,42 @@ nearley@^2.7.7:
     railroad-diagrams "^1.0.0"
     randexp "^0.4.2"
 
+negotiator@0.2.8:
+  version "0.2.8"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/negotiator/-/negotiator-0.2.8.tgz#adfd207a3875c4d37095729c2e7c283c5ba2ee72"
+
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-neo4j-driver@^1.1.0, neo4j-driver@^1.2.0:
+neo4j-driver@^1.2.0:
   version "1.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.2.0.tgz#e81ab4e8781d3839cb3b7c9bbde9b2d63a162356"
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.110:
-  version "0.0.110"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.110.tgz#4465012cc4363c3f3d63d5b86762749ff0ce29ba"
+neo4j-visualization@/Users/evebright/development/neo4j-visualization-react/neo4j-visualization-0.0.1.tgz:
+  version "0.0.1"
+  resolved "/Users/evebright/development/neo4j-visualization-react/neo4j-visualization-0.0.1.tgz#d79ba8040de7a07651dffcde5ff2a809bbef1941"
   dependencies:
-    babel-polyfill "^6.23.0"
-    babel-runtime "^6.23.0"
-    neo4j-driver "^1.1.0"
-    nevada-visjs "0.1.44"
-    sortablejs "^1.5.1"
-    vector2d "^2.1.0"
-
-nevada-visjs@0.1.44:
-  version "0.1.44"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.44.tgz#109abe76fbebdd1320ed3faf1cacb3f417c36191"
-  dependencies:
-    babel-core "^6.21.0"
-    babel-loader "^6.2.10"
-    babel-plugin-transform-es3-member-expression-literals "^6.8.0"
-    babel-plugin-transform-es3-property-literals "^6.8.0"
-    babel-plugin-transform-runtime "^6.15.0"
-    babel-polyfill "^6.20.0"
-    babel-preset-es2015 "^6.18.0"
-    babel-runtime "^6.20.0"
-    emitter-component "^1.1.1"
-    hammerjs "^2.0.6"
-    keycharm "^0.2.0"
-    moment "^2.12.0"
-    propagating-hammerjs "^1.4.6"
-    pure "^2.85.0"
+    classnames "^2.2.5"
+    coffee-loader "^0.7.2"
+    coffee-script "^1.9.3"
+    css-loader "^0.23.1"
+    d3 "3.5.0"
+    enzyme "^2.3.0"
+    file-loader "^0.8.5"
+    font-awesome "^4.6.3"
+    html-loader "^0.4.3"
+    less "^2.7.1"
+    preact "^7.2.0"
+    preact-compat "^3.13.1"
+    react-addons-pure-render-mixin "^15.0.2"
+    react-dom "^15.1.0"
+    react-hot-loader "^1.3.0"
+    simple-server "^1.0.1"
+    url-loader "^0.5.7"
+    uuid "^2.0.2"
 
 no-case@^2.2.0:
   version "2.3.1"
@@ -4087,7 +4227,7 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-"nwmatcher@>= 1.3.9 < 2.0.0":
+"nwmatcher@>= 1.3.3 < 2.0.0", "nwmatcher@>= 1.3.9 < 2.0.0":
   version "1.3.9"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/nwmatcher/-/nwmatcher-1.3.9.tgz#8bab486ff7fa3dfd086656bbe8b17116d3692d2a"
 
@@ -4246,7 +4386,7 @@ parse-key@^0.2.1:
   version "0.2.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/parse-key/-/parse-key-0.2.1.tgz#7bcf76595536e36075664be4d687e4bdd910208f"
 
-parse5@^1.5.1:
+"parse5@>= 1.1.4 < 2.0.0", parse5@^1.5.1:
   version "1.5.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/parse5/-/parse5-1.5.1.tgz#9b7f3b0de32be78dc2401b17573ccaf0f6f59d94"
 
@@ -4291,6 +4431,10 @@ path-type@^1.0.0:
     graceful-fs "^4.1.2"
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
+
+pause@0.0.1:
+  version "0.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
 
 pbkdf2-compat@2.0.1:
   version "2.0.1"
@@ -4992,12 +5136,6 @@ propagate@0.4.0:
   version "0.4.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/propagate/-/propagate-0.4.0.tgz#f3fcca0a6fe06736a7ba572966069617c130b481"
 
-propagating-hammerjs@^1.4.6:
-  version "1.4.6"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/propagating-hammerjs/-/propagating-hammerjs-1.4.6.tgz#fed00e9b00767ffd42d14f5b531bc493eb672e37"
-  dependencies:
-    hammerjs "^2.0.6"
-
 proptypes@^0.14.3:
   version "0.14.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/proptypes/-/proptypes-0.14.4.tgz#1ead7600d44472a614aa1cf0c4cccee7d867997d"
@@ -5025,13 +5163,13 @@ pure-color@^1.2.0:
   version "1.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/pure-color/-/pure-color-1.2.0.tgz#702d2f2819dd545b1fde5116fca5f0c2dad2d18d"
 
-pure@^2.85.0:
-  version "2.85.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/pure/-/pure-2.85.0.tgz#bcabfbbd5ece1eaad3c10240489fdf753bc16f50"
-
 q@^1.1.2:
   version "1.5.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/q/-/q-1.5.0.tgz#dd01bac9d06d30e6f219aecb8253ee9ebdc308f1"
+
+qs@0.6.5:
+  version "0.6.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/qs/-/qs-0.6.5.tgz#294b268e4b0d4250f6dde19b3b8b34935dff14ef"
 
 qs@6.4.0, qs@^6.0.2, qs@~6.4.0:
   version "6.4.0"
@@ -5074,9 +5212,17 @@ randomatic@^1.1.3:
     is-number "^2.0.2"
     kind-of "^3.0.2"
 
+range-parser@0.0.4:
+  version "0.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/range-parser/-/range-parser-0.0.4.tgz#c0427ffef51c10acba0782a46c9602e744ff620b"
+
 range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
+
+raw-body@0.0.3:
+  version "0.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/raw-body/-/raw-body-0.0.3.tgz#0cb3eb22ced1ca607d32dd8fd94a6eb383f3eb8a"
 
 rc@^1.1.7:
   version "1.1.7"
@@ -5116,6 +5262,14 @@ react-dock@^0.2.1:
   dependencies:
     lodash.debounce "^3.1.1"
     object-assign "^4.0.1"
+
+react-dom@^15.1.0:
+  version "15.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dom/-/react-dom-15.4.2.tgz#015363f05b0a1fd52ae9efdd3a0060d90695208f"
+  dependencies:
+    fbjs "^0.8.1"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
 
 react-dropzone@^3.10.0:
   version "3.12.2"
@@ -5188,6 +5342,15 @@ read-pkg@^1.0.0:
     process-nextick-args "~1.0.6"
     string_decoder "~0.10.x"
     util-deprecate "~1.0.1"
+
+readable-stream@~1.1.8, readable-stream@~1.1.9:
+  version "1.1.14"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/readable-stream/-/readable-stream-1.1.14.tgz#7cf4c54ef648e3813084c636dd2079e166c081d9"
+  dependencies:
+    core-util-is "~1.0.0"
+    inherits "~2.0.1"
+    isarray "0.0.1"
+    string_decoder "~0.10.x"
 
 readdirp@^2.0.0:
   version "2.1.0"
@@ -5363,7 +5526,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.79.0, request@^2.81.0:
+"request@>= 2.44.0 < 3.0.0", request@^2.72.0, request@^2.79.0, request@^2.81.0:
   version "2.81.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -5511,6 +5674,15 @@ sax@^1.2.1, sax@~1.2.1:
   version "5.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
+send@0.1.4:
+  version "0.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/send/-/send-0.1.4.tgz#be70d8d1be01de61821af13780b50345a4f71abd"
+  dependencies:
+    debug "*"
+    fresh "0.2.0"
+    mime "~1.2.9"
+    range-parser "0.0.4"
+
 send@0.15.1:
   version "0.15.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/send/-/send-0.15.1.tgz#8a02354c26e6f5cca700065f5f0cdeba90ec7b5f"
@@ -5590,6 +5762,12 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
+simple-server@^1.0.1:
+  version "1.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/simple-server/-/simple-server-1.0.1.tgz#2078ca55d002dfc1f5979f05ba50fda2f483ea6c"
+  dependencies:
+    connect "~2.10.0"
+
 slash@^1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
@@ -5628,11 +5806,7 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
-sortablejs@^1.5.1:
-  version "1.5.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/sortablejs/-/sortablejs-1.5.1.tgz#efae13b84c677f3b3d3f4f8e46c7e05fc6acb525"
-
-source-list-map@^0.1.7, source-list-map@~0.1.7:
+source-list-map@^0.1.4, source-list-map@^0.1.7, source-list-map@~0.1.7:
   version "0.1.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/source-list-map/-/source-list-map-0.1.8.tgz#c550b2ab5427f6b3f21f5afead88c4f5587b2106"
 
@@ -5732,6 +5906,12 @@ stream-browserify@^2.0.1:
 stream-cache@~0.0.1:
   version "0.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/stream-cache/-/stream-cache-0.0.2.tgz#1ac5ad6832428ca55667dbdee395dad4e6db118f"
+
+stream-counter@~0.2.0:
+  version "0.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/stream-counter/-/stream-counter-0.2.0.tgz#ded266556319c8b0e222812b9cf3b26fa7d947de"
+  dependencies:
+    readable-stream "~1.1.8"
 
 stream-http@^2.3.1:
   version "2.6.3"
@@ -6026,6 +6206,10 @@ uid-number@^0.0.6:
   version "0.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/uid-number/-/uid-number-0.0.6.tgz#0ea10e8035e8eb5b8e4449f06da1c730663baa81"
 
+uid2@0.0.2:
+  version "0.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/uid2/-/uid2-0.0.2.tgz#107fb155c82c1136620797ed4c88cf2b08f6aab8"
+
 underscore@~1.4.4:
   version "1.4.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/underscore/-/underscore-1.4.4.tgz#61a6a32010622afa07963bf325203cf12239d604"
@@ -6059,7 +6243,7 @@ upper-case@^1.1.1:
   version "1.1.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/upper-case/-/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
 
-url-loader@^0.5.8:
+url-loader@^0.5.7, url-loader@^0.5.8:
   version "0.5.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/url-loader/-/url-loader-0.5.8.tgz#b9183b1801e0f847718673673040bc9dc1c715c5"
   dependencies:
@@ -6125,10 +6309,6 @@ validate-npm-package-license@^3.0.1:
 vary@~1.1.0:
   version "1.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/vary/-/vary-1.1.1.tgz#67535ebb694c1d52257457984665323f587e8d37"
-
-vector2d@^2.1.0:
-  version "2.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/vector2d/-/vector2d-2.1.0.tgz#6fefdc4f58cfb4d262767a8e0da204a65b20355e"
 
 vendors@^1.0.0:
   version "1.0.1"
@@ -6324,6 +6504,10 @@ xml-char-classes@^1.0.0:
 xml-name-validator@^2.0.1:
   version "2.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
+
+"xmlhttprequest@>= 1.6.0 < 2.0.0":
+  version "1.8.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
 
 "xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0, xtend@^4.0.1:
   version "4.0.1"
