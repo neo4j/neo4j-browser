@@ -180,10 +180,10 @@ export const connectionLossFilter = (action) => action.error.code !== 'Neo.Clien
 export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT)
     .mergeMap((action) => {
-      if (!action._responseChannel) return Rx.Observable.of(null)
+      if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt.openConnection(action, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch))
-        .then((res) => ({ type: action._responseChannel, success: true }))
-        .catch(([e]) => ({ type: action._responseChannel, success: false, error: e }))
+        .then((res) => ({ type: action.$$responseChannel, success: true }))
+        .catch(([e]) => ({ type: action.$$responseChannel, success: false, error: e }))
     })
 }
 export const startupConnectEpic = (action$, store) => {

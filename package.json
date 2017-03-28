@@ -104,7 +104,7 @@
     "preact": "^7.2.0",
     "preact-compat": "^3.13.1",
     "preact-redux": "^2.0.0",
-    "preact-suber": "^1.0.1",
+    "preact-suber": "^1.0.2",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dropzone": "^3.10.0",
     "react-icons": "^2.2.1",
@@ -114,7 +114,7 @@
     "rxjs": "^5.0.3",
     "save-as": "^0.1.7",
     "styled-components": "^1.4.4",
-    "suber": "^4.0.1",
+    "suber": "^5.0.1",
     "swipe-js-iso": "^2.0.3",
     "url-loader": "^0.5.8",
     "uuid": "^3.0.1"
