@@ -5,15 +5,14 @@ import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
 import { getTheme } from 'shared/modules/settings/settingsDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
-
-import styles from './style.css'
+import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
 
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 import { getActiveConnection, getConnectionState } from 'shared/modules/connections/connectionsDuck'
 
-class BaseLayout extends Component {
+class App extends Component {
   componentDidMount () {
     document.addEventListener('keyup', this.focusEditorOnSlash.bind(this))
   }
@@ -30,16 +29,16 @@ class BaseLayout extends Component {
     const themeData = themes[theme] || themes['normal']
     return (
       <ThemeProvider theme={themeData}>
-        <div className={styles.wrapper}>
-          <div className={styles.app}>
-            <div className={styles.body}>
+        <StyledWrapper>
+          <StyledApp>
+            <StyledBody>
               <Sidebar activeConnection={activeConnection} openDrawer={drawer} onNavClick={handleNavClick} connectionState={connectionState} />
-              <div className={styles.mainContent}>
+              <StyledMainWrapper>
                 <Main />
-              </div>
-            </div>
-          </div>
-        </div>
+              </StyledMainWrapper>
+            </StyledBody>
+          </StyledApp>
+        </StyledWrapper>
       </ThemeProvider>
     )
   }
@@ -62,4 +61,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(BaseLayout))
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(App))
