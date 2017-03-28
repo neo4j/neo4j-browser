@@ -1,7 +1,7 @@
 import {
   FavoriteItem,
   EditorButton,
-  NavigationButton,
+  StyledNavigationButton,
   FormButton,
   FrameButton,
   CypherFrameButton,
@@ -14,7 +14,7 @@ import {
 export {
   FavoriteItem,
   EditorButton,
-  NavigationButton,
+  StyledNavigationButton,
   FormButton,
   FrameButton,
   CypherFrameButton,

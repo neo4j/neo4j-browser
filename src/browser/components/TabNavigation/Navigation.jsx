@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { NavigationButton, NavigationButtonContainer } from 'browser-components/buttons'
+import { StyledNavigationButton, NavigationButtonContainer } from 'browser-components/buttons'
 import { StyledDrawer } from './styled'
 const Navigation = ({
   openDrawer,
@@ -11,12 +11,16 @@ const Navigation = ({
   sidebarClassName,
   listClassName
 }) => {
-  const buildNavList = (list) => {
+  const buildNavList = (list, selected) => {
     return list.map((item, index) => {
+      const isOpen = item.name.toLowerCase() === selected
       return (
-        <NavigationButtonContainer key={index}
-          onClick={() => onNavClick(item.name.toLowerCase())}>
-          <NavigationButton name={item.name}>{item.icon}</NavigationButton>
+        <NavigationButtonContainer
+          key={index}
+          onClick={() => onNavClick(item.name.toLowerCase())}
+          isOpen={isOpen}
+        >
+          <StyledNavigationButton name={item.name}>{item.icon(isOpen)}</StyledNavigationButton>
         </NavigationButtonContainer>
       )
     })
@@ -31,8 +35,8 @@ const Navigation = ({
     }
     return null
   }
-  const topNavItemsList = buildNavList(topNavItems)
-  const bottomNavItemsList = buildNavList(bottomNavItems)
+  const topNavItemsList = buildNavList(topNavItems, openDrawer)
+  const bottomNavItemsList = buildNavList(bottomNavItems, openDrawer)
   const tabClass = classNames({
     hidden: !openDrawer,
     [tabClassName]: true

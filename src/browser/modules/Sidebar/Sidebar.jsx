@@ -32,9 +32,9 @@ class Sidebar extends Component {
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
     const AboutDrawer = About
-    const dbIcon = (
+    const dbIcon = (isOpen) => (
       <div style={{position: 'relative'}}>
-        <DatabaseIcon />
+        <DatabaseIcon isOpen={isOpen} />
         <Visible if={this.props.connectionState === DISCONNECTED_STATE}>
           <Badge status='error'><MdFlashOff /></Badge>
         </Visible>
@@ -47,14 +47,14 @@ class Sidebar extends Component {
       </div>
     )
     const topNavItemsList = [
-      {name: 'DB', icon: dbIcon, content: DatabaseDrawer},
-      {name: 'Favorites', icon: <FavoritesIcon />, content: FavoritesDrawer},
-      {name: 'Documents', icon: <DocumentsIcon />, content: DocumentsDrawer}
+      {name: 'DB', icon: (isOpen) => dbIcon(isOpen), content: DatabaseDrawer},
+      {name: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
+      {name: 'Documents', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: <CloudIcon />, content: Sync},
-      {name: 'Settings', icon: <SettingsIcon />, content: SettingsDrawer},
-      {name: 'About', icon: <AboutIcon />, content: AboutDrawer}
+      {name: 'Sync', icon: (isOpen) => <CloudIcon isOpen={isOpen} />, content: Sync},
+      {name: 'Settings', icon: (isOpen) => <SettingsIcon isOpen={isOpen} />, content: SettingsDrawer},
+      {name: 'About', icon: (isOpen) => <AboutIcon isOpen={isOpen} />, content: AboutDrawer}
     ]
 
     return (<TabNavigation

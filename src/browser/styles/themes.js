@@ -11,7 +11,7 @@ export const base = {
   primaryBackground: '#eee',
   secondaryBackground: '#fff',
   editorBarBackground: '#EFEFF4',
-  drawerBackground: '#292b31',
+  drawerBackground: '#30333a',
 
   // Fonts
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',

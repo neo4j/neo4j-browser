@@ -15,19 +15,19 @@ class IconContainer extends Component {
     this.setState({mouseover: false})
   }
   render () {
-    const {activeStyle, inactiveStyle, ...rest} = this.props
-    const state = (this.state.mouseover) ? activeStyle || '' : inactiveStyle || ''
+    const {activeStyle, inactiveStyle, isOpen, ...rest} = this.props
+    const state = (this.state.mouseover || isOpen) ? activeStyle || '' : inactiveStyle || ''
     const newClass = state + ' ' + this.props.className
     return <i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} />
   }
 }
 
-export const DatabaseIcon = () => (<IconContainer activeStyle={styles.green} inactiveStyle={styles.inactive} className='sl sl-database' />)
-export const FavoritesIcon = () => (<IconContainer activeStyle={styles.orange} inactiveStyle={styles.inactive} className='sl sl-star' />)
-export const DocumentsIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl sl-book' />)
-export const CloudIcon = () => (<IconContainer activeStyle={styles.purple} inactiveStyle={styles.inactive} className='sl sl-cloud' />)
-export const SettingsIcon = () => (<IconContainer activeStyle={styles.red} inactiveStyle={styles.inactive} className='sl sl-setting-gear' />)
-export const AboutIcon = () => (<IconContainer activeStyle={styles.credits} inactiveStyle={styles.inactive} className='nw nw-neo4j-outline-32px' />)
+export const DatabaseIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.green} inactiveStyle={styles.inactive} className='sl sl-database' />)
+export const FavoritesIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.orange} inactiveStyle={styles.inactive} className='sl sl-star' />)
+export const DocumentsIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl sl-book' />)
+export const CloudIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.purple} inactiveStyle={styles.inactive} className='sl sl-cloud' />)
+export const SettingsIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.red} inactiveStyle={styles.inactive} className='sl sl-setting-gear' />)
+export const AboutIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.credits} inactiveStyle={styles.inactive} className='nw nw-neo4j-outline-32px' />)
 
 export const TableIcon = () => (<IconContainer>Table</IconContainer>)
 export const VisualizationIcon = () => (<IconContainer>Viz</IconContainer>)

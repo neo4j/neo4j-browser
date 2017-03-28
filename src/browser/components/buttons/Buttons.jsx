@@ -82,7 +82,7 @@ const StyledList = styled.li`
   list-style-type: none;
   margin: 14px 0;
 `
-const StyledNavigationButton = styled.button`
+export const StyledNavigationButton = styled.button`
   background: transparent;
   border: 0;
   width: 80px;
@@ -96,6 +96,7 @@ const StyledNavigationButton = styled.button`
 export const NavigationButtonContainer = styled.li`
   min-height: 70px;
   height: 70px;
+  background-color: ${props => !props.isOpen ? 'transparent' : props.theme.drawerBackground};
   &:focus {
     outline: none;
   }
@@ -111,9 +112,6 @@ export const FavoriteItem = (props) => {
   )
 }
 
-export const NavigationButton = (props) => {
-  return (<StyledNavigationButton>{props.children}</StyledNavigationButton>)
-}
 const StyledFormButton = styled.button`
   color: ${props => props.theme.primaryText};
   background-color: #fff;
