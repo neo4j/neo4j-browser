@@ -75,6 +75,7 @@ export const StyledFrameBody = styled.div`
 export const StyledFrameMainSection = styled.div`
   min-width: 0;
   flex: 1 1 auto;
+  height: 100%;
 `
 
 export const StyledFrameContents = styled.div`

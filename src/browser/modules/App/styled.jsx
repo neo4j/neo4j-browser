@@ -52,4 +52,5 @@ export const StyledMainWrapper = styled.div`
   overflow: auto;
   padding: 0 24px;
   z-index: 1;
+  height: auto;
 `
