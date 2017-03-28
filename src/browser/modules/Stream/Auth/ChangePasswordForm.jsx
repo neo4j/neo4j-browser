@@ -16,6 +16,11 @@ export default class ChangePasswordForm extends Component {
       newPassword2: ''
     }
   }
+  componentDidMount () {
+    if (!this.props.children) { // Children means an 'existing password' field. That should take focus instead.
+      this.firstInput.focus()
+    }
+  }
   onNewPasswordChange (event) {
     const newPassword = event.target.value
     this.setState({ newPassword, error: {} }, () => this.onChange())
@@ -39,7 +44,7 @@ export default class ChangePasswordForm extends Component {
         {this.props.children}
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>New password</StyledConnectionLabel>
-          <StyledConnectionTextInput type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
+          <StyledConnectionTextInput innerRef={(el) => (this.firstInput = el)} type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
         </StyledConnectionFormEntry>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>Repeat new password</StyledConnectionLabel>

@@ -1,3 +1,4 @@
+import { Component } from 'preact'
 import {FormButton} from 'browser-components/buttons'
 import {
   StyledConnectionForm,
@@ -6,22 +7,27 @@ import {
   StyledConnectionFormEntry
 } from './styled'
 
-const ConnectForm = (props) => (
-  <StyledConnectionForm>
-    <StyledConnectionFormEntry>
-      <StyledConnectionLabel>Host</StyledConnectionLabel>
-      <StyledConnectionTextInput onChange={props.onHostChange} value={props.host} />
-    </StyledConnectionFormEntry>
-    <StyledConnectionFormEntry>
-      <StyledConnectionLabel>Username</StyledConnectionLabel>
-      <StyledConnectionTextInput onChange={props.onUsernameChange} value={props.username} />
-    </StyledConnectionFormEntry>
-    <StyledConnectionFormEntry>
-      <StyledConnectionLabel>Password</StyledConnectionLabel>
-      <StyledConnectionTextInput onChange={props.onPasswordChange} value={props.password} type='password' />
-    </StyledConnectionFormEntry>
-    <FormButton onClick={props.onConnectClick}>Connect</FormButton>
-  </StyledConnectionForm>
-)
-
-export default ConnectForm
+export default class ConnectForm extends Component {
+  componentDidMount () {
+    this.firstInput.focus()
+  }
+  render () {
+    return (
+      <StyledConnectionForm>
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>Host</StyledConnectionLabel>
+          <StyledConnectionTextInput innerRef={(el) => (this.firstInput = el)} onChange={this.props.onHostChange} value={this.props.host} />
+        </StyledConnectionFormEntry>
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>Username</StyledConnectionLabel>
+          <StyledConnectionTextInput onChange={this.props.onUsernameChange} value={this.props.username} />
+        </StyledConnectionFormEntry>
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>Password</StyledConnectionLabel>
+          <StyledConnectionTextInput onChange={this.props.onPasswordChange} value={this.props.password} type='password' />
+        </StyledConnectionFormEntry>
+        <FormButton onClick={this.props.onConnectClick}>Connect</FormButton>
+      </StyledConnectionForm>
+    )
+  }
+}
