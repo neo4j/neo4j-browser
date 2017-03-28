@@ -4911,9 +4911,9 @@ preact-render-to-string@^3.6.0:
   dependencies:
     pretty-format "^3.5.1"
 
-preact-suber@^1.0.1:
-  version "1.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-suber/-/preact-suber-1.0.1.tgz#38c7dd654d54e70de9783104767f5965a48bc020"
+preact-suber@^1.0.2:
+  version "1.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-suber/-/preact-suber-1.0.2.tgz#ed8b82555852d5bd65b2c861c87a32fb900d01e5"
 
 preact-transition-group@^1.1.0:
   version "1.1.0"
@@ -5821,9 +5821,9 @@ styled-components@^1.4.4:
     is-plain-object "^2.0.1"
     supports-color "^3.1.2"
 
-suber@^4.0.1:
-  version "4.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/suber/-/suber-4.0.1.tgz#1422dd2adcb58b1cf1fb9c2894b6bb7e0e76af27"
+suber@^5.0.1:
+  version "5.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/suber/-/suber-5.0.1.tgz#78fc93bfc7444d11a23e160c5f062dc7967d6a58"
 
 supports-color@^2.0.0:
   version "2.0.0"

@@ -12,11 +12,11 @@ const changePassword = (driver, resolve, action) => {
   session.run(action.query, action.parameters)
     .then((r) => {
       driver.close()
-      resolve({type: action._responseChannel, success: true, result: r})
+      resolve({type: action.$$responseChannel, success: true, result: r})
     })
     .catch((e) => {
       driver.close()
-      resolve(({type: action._responseChannel, success: false, error: e}))
+      resolve(({type: action.$$responseChannel, success: false, error: e}))
     })
 }
 
@@ -24,10 +24,10 @@ const changePassword = (driver, resolve, action) => {
 export const cypherRequestEpic = (some$, store) =>
   some$.ofType(CYPHER_REQUEST)
     .mergeMap((action) => {
-      if (!action._responseChannel) return Rx.Observable.of(null)
+      if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt.directTransaction(action.query, (action.params || undefined))
-        .then((r) => ({type: action._responseChannel, success: true, result: r}))
-        .catch((e) => ({type: action._responseChannel, success: false, error: e}))
+        .then((r) => ({type: action.$$responseChannel, success: true, result: r}))
+        .catch((e) => ({type: action.$$responseChannel, success: false, error: e}))
     })
 
 // We need this because this is the only case where we still
@@ -35,7 +35,7 @@ export const cypherRequestEpic = (some$, store) =>
 export const handleForcePasswordChangeEpic = (some$, store) =>
   some$.ofType(FORCE_CHANGE_PASSWORD)
     .mergeMap((action) => {
-      if (!action._responseChannel) return Rx.Observable.of(null)
+      if (!action.$$responseChannel) return Rx.Observable.of(null)
       return new Promise((resolve, reject) => {
         bolt.directConnect(action)
           .then((driver) => {

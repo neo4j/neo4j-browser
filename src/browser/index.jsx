@@ -42,11 +42,11 @@ const store = createStore(
 )
 
 // Send everything from suber into Redux
-bus.applyMiddleware((_) => (channel, message, source) => {
+bus.applyMiddleware((_, origin) => (channel, message, source) => {
   // No loop-backs
   if (source === 'redux') return
   // Send to Redux with the channel as the action type
-  store.dispatch({...message, type: channel})
+  store.dispatch({...message, type: channel, ...origin})
 })
 
 // Signal app upstart (for epics)
