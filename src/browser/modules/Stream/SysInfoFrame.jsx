@@ -16,7 +16,8 @@ export class SysInfoFrame extends Component {
     super(props)
     this.state = {
       error: '',
-      cc: []
+      cc: [],
+      haInstances: []
     }
   }
   flattenAttributes (a) {
@@ -85,6 +86,25 @@ export class SysInfoFrame extends Component {
         this.flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`].attributes),
         this.flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`].attributes),
         this.flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`].attributes))
+
+      if (result[`${jmxQueryPrefix},name=High Availability`]) {
+        const ha = this.flattenAttributes(result[`${jmxQueryPrefix},name=High Availability`].attributes)
+        const haInstancesHeader = <SysInfoTableEntry headers={['Id', 'Alive', 'Available', 'Is Master']} />
+        const haInstances = [haInstancesHeader].concat(ha.InstancesInCluster.map(({properties}) => {
+          const haInstancePropertyValues = [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
+          return <SysInfoTableEntry values={haInstancePropertyValues} />
+        }))
+        this.setState({ha: [
+          <SysInfoTableEntry label='InstanceId' value={ha.InstanceId} />,
+          <SysInfoTableEntry label='Role' value={ha.Role} />,
+          <SysInfoTableEntry label='Alive' value={ha.Alive.toString()} />,
+          <SysInfoTableEntry label='Available' value={ha.Available.toString()} />,
+          <SysInfoTableEntry label='Last Committed Tx Id' value={ha.LastCommittedTxId} />,
+          <SysInfoTableEntry label='Last Update Time' value={ha.LastUpdateTime} />
+        ],
+          'haInstances': haInstances
+        })
+      }
 
       this.setState({'storeSizes': [
         <SysInfoTableEntry label='Array Store' value={toHumanReadableBytes(kernel.ArrayStoreSize)} />,
@@ -161,6 +181,16 @@ export class SysInfoFrame extends Component {
         <Visible if={this.isCC()}>
           <SysInfoTable header='Causal Cluster Members' colspan={this.state.cc.length - 1}>
             {this.state.cc || null}
+          </SysInfoTable>
+        </Visible>
+        <Visible if={this.state.ha}>
+          <SysInfoTable header='High Availability'>
+            {this.state.ha || null}
+          </SysInfoTable>
+        </Visible>
+        <Visible if={this.state.haInstances}>
+          <SysInfoTable header='Cluster' colspan={this.state.haInstances.length}>
+            {this.state.haInstances || null}
           </SysInfoTable>
         </Visible>
       </SysInfoTableContainer>
