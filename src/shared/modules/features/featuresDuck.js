@@ -13,7 +13,7 @@ const initialState = {availableProcedures: []}
 export default function (state = initialState, action) {
   switch (action.type) {
     case UPDATE_ALL:
-      state.availableProcedures = state.availableProcedures.concat(action.features)
+      state.availableProcedures = state.availableProcedures.concat(action.availableProcedures)
       return Object.assign({}, state)
     case RESET:
       return initialState
@@ -23,10 +23,10 @@ export default function (state = initialState, action) {
 }
 
 // Actions
-export const updateFeatures = (features, context) => {
+export const updateFeatures = (availableProcedures, context) => {
   return {
     type: UPDATE_ALL,
-    features
+    availableProcedures
   }
 }
 export const featuresDicoveryEpic = (action$, store) => {

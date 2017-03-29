@@ -1,31 +1,28 @@
 /* global test, expect */
-import reducer, { UPDATE } from './featuresDuck'
+import reducer, { UPDATE_ALL } from './featuresDuck'
 
 describe('features reducer', () => {
   test('handles initial value', () => {
     const nextState = reducer(undefined, {type: ''})
-    expect(nextState.cmdchar).toEqual(':')
+    expect(nextState).toEqual({availableProcedures: []})
   })
 
-  test('handles UPDATE without initial state', () => {
+  test('handles UPDATE_ALL without initial state', () => {
     const action = {
-      type: UPDATE,
-      cc: true
+      type: UPDATE_ALL,
+      availableProcedures: ['proc']
     }
     const nextState = reducer(undefined, action)
-    expect(nextState.cc).toEqual(true)
+    expect(nextState.availableProcedures).toEqual(['proc'])
   })
 
-  test('handles UPDATE', () => {
-    const initialState = { cc: false, ha: false }
+  test('handles UPDATE_ALL', () => {
+    const initialState = { availableProcedures: ['a', 'b'] }
     const action = {
-      type: UPDATE,
-      ha: true
+      type: UPDATE_ALL,
+      availableProcedures: ['c']
     }
     const nextState = reducer(initialState, action)
-    expect(nextState).toEqual({
-      cc: false,
-      ha: true
-    })
+    expect(nextState.availableProcedures).toEqual(['a', 'b', 'c'])
   })
 })

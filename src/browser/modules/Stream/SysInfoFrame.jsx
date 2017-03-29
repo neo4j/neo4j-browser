@@ -2,23 +2,54 @@ import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { getFeatures } from 'shared/modules/features/featuresDuck'
+import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
 import FrameError from '../Stream/FrameError'
-import { SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
+import { SysInfoTableContainer, SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
 import bolt from 'services/bolt/bolt'
 import { itemIntToString } from 'services/bolt/boltMappings'
 import { toHumanReadableBytes } from 'services/utils'
+import Visible from 'browser-components/Visible'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      error: ''
+      error: '',
+      cc: []
     }
   }
   flattenAttributes (a) {
     return Object.assign({}, ...a.map(({name, value}) => ({ [name]: itemIntToString(value, bolt.neo4j.isInt, (val) => val.toString()) })))
+  }
+  clusterResponseHandler () {
+    return (res) => {
+      if (!res.success) {
+        this.setState({error: 'No causal cluster results'})
+        return
+      }
+      const mappedResult = res.result.records.map((record) => {
+        return {
+          id: record.get('id'),
+          addresses: record.get('addresses'),
+          role: record.get('role'),
+          tags: record.get('tags')
+        }
+      })
+      const mappedTableHeader = <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
+      const mappedTableComponents = mappedResult.map((ccRecord) => {
+        const httpUrlForMember = ccRecord.addresses.filter((address) => {
+          return address.startsWith('http://') && !address.includes(window.location.href)
+        })
+        const arrayOfValue = [
+          ccRecord.role,
+          ccRecord.addresses.join(', '),
+          <Visible if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Visible>
+        ]
+        return <SysInfoTableEntry values={arrayOfValue} />
+      })
+      this.setState({cc: [mappedTableHeader].concat(mappedTableComponents)})
+    }
   }
   responseHandler () {
     return (res) => {
@@ -89,6 +120,9 @@ export class SysInfoFrame extends Component {
         ]})
     }
   }
+  isCC () {
+    return this.props.availableProcedures.includes('dbms.cluster.overview')
+  }
   componentDidMount () {
     if (this.props.bus) {
       this.props.bus.self(
@@ -99,12 +133,19 @@ export class SysInfoFrame extends Component {
         this.responseHandler()
       )
     }
+    if (this.isCC()) {
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {
+          query: 'CALL dbms.cluster.overview'
+        },
+        this.clusterResponseHandler()
+      )
+    }
   }
   render () {
-    console.log('features', this.props.features)
     const content = (
-      <div>
-        <h3>Indexes</h3>
+      <SysInfoTableContainer>
         <SysInfoTable header='Store Sizes'>
           {this.state.storeSizes || null}
         </SysInfoTable>
@@ -117,7 +158,12 @@ export class SysInfoFrame extends Component {
         <SysInfoTable header='Transactions'>
           {this.state.transactions || null}
         </SysInfoTable>
-      </div>
+        <Visible if={this.isCC()}>
+          <SysInfoTable header='Causal Cluster Members' colspan={this.state.cc.length - 1}>
+            {this.state.cc || null}
+          </SysInfoTable>
+        </Visible>
+      </SysInfoTableContainer>
     )
     return (
       <FrameTemplate
@@ -132,7 +178,7 @@ export class SysInfoFrame extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    features: getFeatures(state)
+    availableProcedures: getAvailableProcedures(state) || []
   }
 }
 
