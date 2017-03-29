@@ -1,3 +1,4 @@
+/* eslint-disable */
 window.neo = window.neo || {}
 
 neo.queryPlan = function(element) {

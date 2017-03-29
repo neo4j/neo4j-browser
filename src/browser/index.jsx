@@ -1,6 +1,5 @@
-import 'babel-polyfill'
+import './init.js'
 import { createEpicMiddleware } from 'redux-observable'
-import 'preact/devtools'
 import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'preact-redux'
@@ -8,12 +7,8 @@ import { createBus, createReduxMiddleware as createSuberReduxMiddleware } from '
 import { BusProvider } from 'preact-suber'
 
 import reducers from 'shared/rootReducer'
-import App from './modules/App/App'
-
 import epics from 'shared/rootEpic'
-import './styles/bootstrap.grid-only.min.css'
-import './styles/streamline.css'
-import './styles/global-styles'
+import App from './modules/App/App'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
