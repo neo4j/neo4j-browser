@@ -96,7 +96,6 @@
     "classnames": "^2.2.5",
     "codemirror": "^5.24.2",
     "dnd-core": "^2.2.4",
-    "es6-promise": "^4.1.0",
     "file-loader": "^0.9.0",
     "html-loader": "^0.4.3",
     "isomorphic-fetch": "^2.2.1",

@@ -159,7 +159,6 @@ module.exports = {
       'codemirror',
       'rxjs',
       'babel-polyfill',
-      'es6-promise',
       'isomorphic-fetch',
       'preact',
       'preact-compat',
