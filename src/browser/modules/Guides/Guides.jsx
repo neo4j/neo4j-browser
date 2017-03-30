@@ -5,7 +5,7 @@ import ReactSwipe from 'react-swipe'
 import Slide from './Slide'
 import Directives from 'browser-components/Directives'
 
-import { CarouselButton } from 'browser-components/buttons'
+import { CarouselLeftButton, CarouselRightButton } from 'browser-components/buttons'
 
 import styles from './style.css'
 
@@ -54,12 +54,12 @@ export default class Guides extends Component {
         }
       })
       return (
-        <div key={uuid.v4()}>
-          <CarouselButton onClick={this.prev.bind(this)}>{'‹'}</CarouselButton>
-          <Slider {...settings}>
+        <div key={uuid.v4()} className={styles.carouselContainer}>
+          <CarouselLeftButton onClick={this.prev.bind(this)}>{'‹'}</CarouselLeftButton>
+          <ReactSwipe className={styles.carousel} ref={(ref) => { this.carousel = ref }} swipeOptions={{continuous: false}}>
             {ListOfSlides}
-          </Slider>
-          <CarouselButton onClick={this.next.bind(this)}>{'›'}</CarouselButton>
+          </ReactSwipe>
+          <CarouselRightButton onClick={this.next.bind(this)}>{'›'}</CarouselRightButton>
         </div>
       )
     }

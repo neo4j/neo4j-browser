@@ -6,7 +6,8 @@ import {
   FrameButton,
   CypherFrameButton,
   ActionButton,
-  CarouselButton,
+  CarouselLeftButton,
+  CarouselRightButton,
   NavigationButtonContainer
 } from './Buttons'
 
@@ -18,6 +19,7 @@ export {
   FrameButton,
   CypherFrameButton,
   ActionButton,
-  CarouselButton,
+  CarouselLeftButton,
+  CarouselRightButton,
   NavigationButtonContainer
 }
