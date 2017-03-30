@@ -188,7 +188,7 @@ export class SysInfoFrame extends Component {
             {this.state.ha || null}
           </SysInfoTable>
         </Visible>
-        <Visible if={this.state.haInstances}>
+        <Visible if={this.state.haInstances.length}>
           <SysInfoTable header='Cluster' colspan={this.state.haInstances.length}>
             {this.state.haInstances || null}
           </SysInfoTable>
