@@ -1,4 +1,4 @@
-
+/* global HTMLElement */
 const addClass = (node, className) => {
   if (!((node instanceof HTMLElement) && (typeof className === 'string'))) {
     return
