@@ -120,7 +120,7 @@ export class ConnectionForm extends Component {
   render () {
     let view
     if (this.state.forcePasswordChange || (!this.state.isConnected && this.state.passwordChangeNeeded)) {
-      view = (<ChangePasswordForm
+      view = (<ChangePasswordForm formKeyHandler={this.props.formKeyHandler}
         onChangePasswordClick={this.onChangePassword.bind(this)}
         onChange={this.onChangePasswordChange.bind(this)}
       >{this.props.children}</ChangePasswordForm>)
