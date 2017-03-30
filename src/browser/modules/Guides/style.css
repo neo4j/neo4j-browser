@@ -253,6 +253,14 @@
     font-size: 13px;
     text-align: center;
   }
+  .btn-cta {
+    padding: 1em;
+    background-color: #008cc1;
+    color: #fff;
+    border-radius: 3px;
+    border: 1px solid #dadada;
+    display: inline-block;
+  }
   .teaser {
     margin: 0.5em;
     padding: 10px;
