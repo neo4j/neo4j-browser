@@ -1,6 +1,7 @@
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
+import { addClass } from 'shared/services/dom-helpers'
 
 const directives = [{
   selector: '[play-topic]',
@@ -26,6 +27,7 @@ export const Directives = (props) => {
         const elems = elem.querySelectorAll(directive.selector)
         Array.from(elems).forEach((e) => {
           e.onclick = () => {
+            addClass(e, 'clicked')
             return props.onItemClick(directive.valueExtractor(e))
           }
         })

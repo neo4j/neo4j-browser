@@ -23,8 +23,9 @@
   },
   "standard": {
     "ignore": [
-      "dist",
-      "src/visualisation/external"
+      "node_modules",
+      "build",
+      "dist"
     ],
     "globals": [
       "it",
