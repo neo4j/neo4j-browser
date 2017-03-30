@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const autoprefixer = require('autoprefixer')
+const precss = require('precss')
 
 const nodeEnv = process.env.NODE_ENV || 'development'
 const isProduction = nodeEnv === 'production'
@@ -54,6 +55,7 @@ const plugins = [
   new webpack.LoaderOptionsPlugin({
     options: {
       postcss: [
+        precss(),
         autoprefixer({
           browsers: [
             'last 3 version',
@@ -80,19 +82,18 @@ const rules = [
     loader: 'json-loader'
   },
   {
-    test: /\.css$/,
-    exclude: [path.resolve('./src/browser/external'), path.resolve('./src/browser/components'), path.resolve('./src/browser/guides')],
+    test: /\.css$/, // Guides
     include: path.resolve('./src/browser/modules/Guides'),
     loader: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[local]', 'postcss-loader']
   },
   {
     test: /\.css$/,
-    include: path.resolve('./src'),
+    include: path.resolve('./src'), // css modules for component css files
     exclude: [path.resolve('./src/browser/external'), path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides')],
     use: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]', 'postcss-loader']
   },
   {
-    test: /\.css$/,
+    test: /\.css$/, // global css files that don't need any processing
     exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/modules'), path.resolve('./src/browser/guides')],
     use: ['style-loader', 'css-loader']
   },
