@@ -181,7 +181,7 @@ export const ActionButton = (props) => {
   return (<button className={className + ' ' + styles.action} {...rest} />)
 }
 
-const CarouselButton = styled.button`
+const BaseCarouselButton = styled.button`
   order: 1;
   background-color: rgb(34, 34, 34);
   border: 3px solid rgb(255, 255, 255);
@@ -211,10 +211,16 @@ const CarouselButton = styled.button`
     opacity: .9;
   }
 `
-
-export const CarouselLeftButton = styled(CarouselButton)`
-  left: -40px
+const CarouselButtonOverlay = styled.span`
+  position: absolute;
+  top: 13px;
+  left: 9px;
 `
-export const CarouselRightButton = styled(CarouselButton)`
-  left: 40px
-`
+export const CarouselButton = (props) => {
+  const {children, ...rest} = props
+  return (
+    <BaseCarouselButton {...rest}>
+      <CarouselButtonOverlay>{children}</CarouselButtonOverlay>
+    </BaseCarouselButton>
+  )
+}
