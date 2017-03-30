@@ -14,7 +14,6 @@
   top: 30px
 }
 .slide {
-  max-height: 500px;
   overflow-y: auto;
   font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;

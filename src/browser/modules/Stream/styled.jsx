@@ -48,6 +48,7 @@ export const StyledFrameBody = styled.div`
   visibility: ${props => props.collapsed ? 'hidden' : 'visible'};
   display: flex;
   flex-direction: row;
+  overflow: auto;
 `
 
 export const StyledFrameMainSection = styled.div`

@@ -35,9 +35,9 @@ export const Directives = (props) => {
     }
   }
   return (
-    <span ref={callback}>
+    <div ref={callback}>
       {props.content}
-    </span>
+    </div>
   )
 }
 
