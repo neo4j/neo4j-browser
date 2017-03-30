@@ -58,7 +58,7 @@ export const StyledFrameMainSection = styled.div`
 
 export const StyledFrameContents = styled.div`
   overflow: auto;
-  height: 100%;
+  height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - 20) + 'px')};
   padding: 0 20px 20px 20px;
   padding-top: 0;
 `
