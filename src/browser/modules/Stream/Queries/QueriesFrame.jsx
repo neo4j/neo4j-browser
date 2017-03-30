@@ -1,8 +1,10 @@
 import { Component } from 'preact'
 import FrameTemplate from '../FrameTemplate'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { listQueriesProcedure, killQueriesProcedure } from 'shared/modules/cypher/queriesProcedureHelper'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
+import { CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import { RefreshIcon } from 'browser-components/icons/Icons'
 import Visible from 'browser-components/Visible'
@@ -34,10 +36,12 @@ export class QueriesFrame extends Component {
       }
     }
   }
-
+  isCC () {
+    this.props.availableProcedures.includes('dbms.cluster.overview')
+  }
   getRunningQueries (clearSuccess = true) {
     this.props.bus.self(
-      CYPHER_REQUEST,
+      (this.isCC) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {query: listQueriesProcedure()},
       (response) => {
         if (response.success) {
@@ -52,10 +56,10 @@ export class QueriesFrame extends Component {
       }
     )
   }
-  killQueries (queryIdList) {
+  killQueries (host, queryIdList) {
     this.props.bus.self(
-      CYPHER_REQUEST,
-      {query: killQueriesProcedure(queryIdList)},
+      (this.isCC) ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
+      {host, query: killQueriesProcedure(queryIdList)},
       (response) => {
         if (response.success) {
           this.setState({success: 'Query successfully cancelled', errors: null})
@@ -73,13 +77,13 @@ export class QueriesFrame extends Component {
       queryRecord.keys.forEach((key, idx) => {
         queryInfo[key] = queryRecord._fields[idx]
       })
-
+      queryInfo.host = 'bolt://' + queryRecord.host
       return queryInfo
     })
   }
 
-  onCancelQuery (queryId) {
-    this.killQueries([ queryId ])
+  onCancelQuery (host, queryId) {
+    this.killQueries(host, [ queryId ])
   }
 
   constructViewFromQueryList (queries) {
@@ -88,25 +92,15 @@ export class QueriesFrame extends Component {
     }
 
     const tableRows = queries.map((query) => {
-      let databaseUri = query.connectionDetails
-      const connectionDetails = query.connectionDetails.split('\t')
-
-      if (connectionDetails.length > 2) {
-        const databaseUriDetails = connectionDetails[connectionDetails.length - 2].split('/')
-        if (databaseUriDetails.length > 1) {
-          databaseUri = connectionDetails[1] + '://' + databaseUriDetails[1].replace(/>$/, '')
-        }
-      }
-
       return (
         <tr>
-          <td>{databaseUri}</td>
+          <td>{query.host}</td>
           <td>{query.username}</td>
           <td>{query.query}</td>
           <td>{query.parameters}</td>
           <td>{query.metaData}</td>
           <td>{query.elapsedTime}</td>
-          <td><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.queryId)} /></td>
+          <td><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></td>
         </tr>)
     })
 
@@ -157,4 +151,10 @@ export class QueriesFrame extends Component {
   }
 }
 
-export default withBus(QueriesFrame)
+const mapStateToProps = (state) => {
+  return {
+    availableProcedures: getAvailableProcedures(state) || []
+  }
+}
+
+export default withBus(connect(mapStateToProps, null)(QueriesFrame))

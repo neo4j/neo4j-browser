@@ -1,3 +1,5 @@
+export const getCausalClusterAddresses = 'CALL dbms.cluster.overview YIELD addresses'
+
 export function listQueriesProcedure () {
   return 'CALL dbms.listQueries'
 }
