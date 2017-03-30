@@ -17,7 +17,7 @@
   overflow-y: auto;
   font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 300;
   padding-top: 2em;
 
@@ -252,5 +252,80 @@
     font-style: italic;
     font-size: 13px;
     text-align: center;
+  }
+  .teaser {
+    margin: 0.5em;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 270px;
+    float: left;
+    position: relative;
+
+    &.teaser-2 {
+      width: 45%;
+      min-width: 285px;
+      height: 320px;
+      overflow: hidden;
+      .icon-holder {
+        max-height: 160px;
+        overflow-y: auto;
+      }
+      .icon {
+        width: 12%;
+      }
+      .topic-bullets {
+        max-width: 80%;
+      }
+    }
+    &.teaser-3 {
+      width: 30%;
+      min-width: 190px;
+      overflow: hidden;
+    }
+    button {
+      position: absolute;
+      bottom: 5px;
+      width: 90%;
+      left: 5%;
+      outline: none;
+    }
+    .icon {
+      float: left;
+      max-width: 67px;
+      width: 25%;
+    }
+    .icon.sl {
+      font-size: 35px;
+    }
+    .icon.sl.green {
+      color: #65b144;
+    }
+    .icon.sl.yellow {
+      color: #fdcc59;
+    }
+    .icon.sl.red {
+      color: #ff5641;
+    }
+    .topic-bullets {
+      float: left;
+      word-wrap: break-word;
+      min-width: 100px;
+      max-width: 65%;
+      list-style: none;
+      padding-left: 10px;
+      margin-top: 0;
+    }
+    .topic-bullets :first-child {
+      margin-top: 0;
+    }
+    .topic-bullets li {
+      margin-top: 5px;
+    }
+    .icon-holder {
+      margin-top: 10px;
+      max-height: 120px;
+      overflow: hidden;
+    }
   }
 }
