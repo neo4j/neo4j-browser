@@ -155,6 +155,9 @@ module.exports = {
       'index.jsx'
     ],
     vendor: [
+      'neo4j-driver-alias',
+      'codemirror',
+      'rxjs',
       'babel-polyfill',
       'es6-promise',
       'isomorphic-fetch',
