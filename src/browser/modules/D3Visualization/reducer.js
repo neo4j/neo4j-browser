@@ -1,4 +1,4 @@
-import neo4jVisualization from 'neo4j-visualization-old'
+import neo4jVisualization from 'neo4j-visualization-d3'
 import { NAME } from './constants'
 import * as t from './actionTypes'
 

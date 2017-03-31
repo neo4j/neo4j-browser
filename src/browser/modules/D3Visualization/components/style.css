@@ -184,42 +184,11 @@
   padding: 10px;
 }
 
-.grass-editor-card svg {
-	width: 100%;
-  height: 432px;
-  background-color: #eaeaea;
-	display: inline-block;
-}
-
-.grass-editor-card .editor {
-  height: 432px;
-  width: 75%;
-	display: inline-block;
-}
-
-.grass-editor-card .style-picker {
-	float: left;
-}
-
-.grass-editor-card .style-picker ul {
-	list-style: none;
-}
-
-.grass-editor-card .picker li {
-	list-style: none;
-	display: inline;
-	padding-left: 1px;
-}
-
-.exampleVisualization {
-	float: left;
-  width: 25%;
-}
 .picker li a {
 	background-color: #aaa;
 	display: inline-block;
-	height: 24px;
-	width: 24px;
+	height: 12px;
+	width: 12px;
 	margin-top: 1px;
 	line-height: 0;
 	opacity: 0.4;

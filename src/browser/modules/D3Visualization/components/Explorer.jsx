@@ -12,8 +12,8 @@ export class ExplorerComponent extends Component {
     super(props)
     this.state = {}
     this.state.stats = {labels: {}, relTypes: {}}
-    this.graphStyle = neo4jVisualization.neoGraphStyle()
-    this.graphStyle.loadRules('node {diameter: 50px;color: #A5ABB6;border-color: #9AA1AC;border-width: 2px;text-color-internal: #FFFFFF;font-size: 10px;}relationship {color: #A5ABB6; shaft-width: 1px; font-size: 8px;padding: 3px;text-color-external: #000000;text-color-internal: #FFFFFF; caption: \'<type>\';}')
+    this.state.graphStyle = neo4jVisualization.neoGraphStyle()
+    this.state.graphStyle.loadRules(this.props.graphStyleData)
   }
 
   getNodeNeighbours (node, callback) {
@@ -28,16 +28,32 @@ export class ExplorerComponent extends Component {
 
   onGraphModelChange (stats) {
     this.setState({stats: stats})
+    this.props.updateStyle(this.state.graphStyle.toSheet())
+  }
+
+  onSelectedLabel (label, propertyKeys) {
+    this.setState({selectedItem: {type: 'legend-item', item: {selectedLabel: {label: label, propertyKeys: propertyKeys}, selectedRelType: null}}})
+  }
+
+  onSelectedRelType (relType, propertyKeys) {
+    this.setState({selectedItem: {type: 'legend-item', item: {selectedLabel: null, selectedRelType: {relType: relType, propertyKeys: propertyKeys}}}})
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.graphStyleData !== this.props.graphStyleData) {
+      this.state.graphStyle.loadRules(nextProps.graphStyleData)
+      this.setState({graphStyle: this.state.graphStyle})
+    }
   }
 
   render () {
     return (
       <div id='svg-vis'>
-        <LegendComponent stats={this.state.stats} graphStyle={this.graphStyle} />
+        <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
         <StyledSvgWrapper>
-          <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} graphStyle={this.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
+          <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
         </StyledSvgWrapper>
-        <InspectorComponent hoveredItem={this.state.hoveredItem} graphStyle={this.graphStyle} />
+        <InspectorComponent hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />
       </div>
     )
   }

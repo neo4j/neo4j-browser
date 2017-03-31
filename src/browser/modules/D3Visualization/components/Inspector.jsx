@@ -1,5 +1,6 @@
 import { Component } from 'preact'
 import {StyledTokenContextMenuKey, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
+import {GrassEditor} from './GrassEditor'
 
 export class InspectorComponent extends Component {
   constructor (props) {
@@ -31,7 +32,14 @@ export class InspectorComponent extends Component {
       })
     }
 
-    if (this.props.hoveredItem) {
+    if (this.props.selectedItem) {
+      const item = this.props.selectedItem.item
+      if (this.props.selectedItem.type === 'legend-item') {
+        inspectorContent = (
+          <GrassEditor selectedLabel={item.selectedLabel} selectedRelType={item.selectedRelType} />
+        )
+      }
+    } else if (this.props.hoveredItem) {
       const item = this.props.hoveredItem.item
       if (this.props.hoveredItem.type === 'context-menu-item') {
         inspectorContent = (

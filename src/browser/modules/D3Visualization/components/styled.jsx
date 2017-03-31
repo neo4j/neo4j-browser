@@ -158,113 +158,51 @@ export const StyledLegendInlineListItem = styled(StyledInlineListItem) `
   display: inline-block;
   margin-bottom: 3px;
 `
+export const StyledPickerListItem = styled(StyledInlineListItem)`
+  padding-right: 5px;
+  padding-left: 0;
+  vertical-align: middle;
+`
 
-// .status-bar .status,
-// .status-bar .status .inspector-footer-row {
-//   margin-top: 3px;
-// }
-// .status-bar .status .status-bar-actions {
-//   absolute: right 0px;
-//   top: -1px;
-// }
-// .status-bar .status p {
-//   line-height: 36px;
-//   margin: 0;
-// }
-//
-// .legend {
-//   display: table-row;
-// }
-//
-//
-//
-// .legend ul {
-//   padding: 7px 9px 0px 10px;
-// }
-// .legend ul > li {
-//   display: inline-block;
-//   margin-bottom: 3px;
-// }
-//
-
-//
-// .grass-editor {
-//   flex: 0 0 auto;
-//   display: flex;
-//   flex-direction: column;
-//   background-color: #D2D5DA;
-//   min-width: 0;
-// }
-//
-// .grass-editor-card {
-//   margin: 10px;
-//   background-color: #fff;
-//   border: 1px solid black;
-//   padding: 10px;
-// }
-//
-// .grass-editor-card svg {
-// 	width: 100%;
-//   height: 432px;
-//   background-color: #eaeaea;
-// 	display: inline-block;
-// }
-//
-// .grass-editor-card .editor {
-//   height: 432px;
-//   width: 75%;
-// 	display: inline-block;
-// }
-//
-// .grass-editor-card .style-picker {
-// 	float: left;
-// }
-//
-// .grass-editor-card .style-picker ul {
-// 	list-style: none;
-// }
-//
-// .grass-editor-card .picker li {
-// 	list-style: none;
-// 	display: inline;
-// 	padding-left: 1px;
-// }
-//
-// .exampleVisualization {
-// 	float: left;
-//   width: 25%;
-// }
-// .picker li a {
-// 	background-color: #aaa;
-// 	display: inline-block;
-// 	height: 24px;
-// 	width: 24px;
-// 	margin-top: 1px;
-// 	line-height: 0;
-// 	opacity: 0.4;
-// }
-//
-// .color-picker li {
-// 	padding-right: 5px;
-// }
-//
-// .color-picker li a {
-// border-radius: 50%;
-// }
-//
-// .icon-picker li a {
-// 	background: #fff;
-// 	font-size: 24px;
-// 	line-height: 24px;
-// }
-// .size-picker li {
-// 	border-radius: 5px;
-// }
-//
-// .size-picker li a {
-// 	border-radius: 50%;
-// }
-//
-// .width-picker li {
-// 	padding-right: 5px;
-// }
+export const StyledPickerSelector = styled.a`
+  background-color: #aaa;
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  margin-top: 1px;
+  line-height: 0;
+  cursor: pointer;
+  opacity: 0.4;
+  &:hover {
+   opacity: 1;
+  }
+  &.active {
+    opacity: 1;
+  }
+`
+export const StyledCircleSelector = styled(StyledPickerSelector)`
+   border-radius: 50%;
+`
+export const StyledCaptionSelector = styled.a`
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 12px;
+  line-height: 12px;
+  color: #9195A0;
+  border: 1px solid #9195A0;
+  overflow: hidden;
+  border-radius: .25em;
+  margin-right: 0;
+  font-weight: bold;
+  &:hover {
+    border-color: #aaa;
+    color: #aaa;
+    text-decoration: none;
+  }
+  &.active {
+    color: white;
+    background-color: #9195A0;
+  }
+`

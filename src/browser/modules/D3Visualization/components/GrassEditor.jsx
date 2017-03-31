@@ -1,131 +1,90 @@
 import { Component } from 'preact'
-import neo4jVisualization from 'neo4j-visualization'
-import { connect } from 'react-redux'
-import { getGraphStyleData } from '../reducer'
-import bolt from 'services/bolt/bolt'
-import styles from './style.css'
-import { updateGraphStyleData } from '../actions'
+import { connect } from 'preact-redux'
+import neo4jVisualization from 'neo4j-visualization-d3'
+import {StyledPickerSelector, StyledTokenRelationshipType, StyledInlineList, StyledInlineListItem, StyledLabelToken, StyledPickerListItem, StyledCircleSelector, StyledCaptionSelector} from './styled'
+import * as actions from 'shared/modules/visualization/visualizationDuck'
 
-const createItems = (originalList, onItemClick, className) => {
-  let items = [...originalList]
-  return items.map((text, index) => {
-    return <button onClick={() => onItemClick(text)} className={className} key={index}>{text}</button>
-  })
-}
-
-const labelItems = (labels, onItemClick) => {
-  let labelItems = <p>There are no labels in database</p>
-  if (labels.length > 0) {
-    labelItems = createItems(labels, onItemClick, 'token-label')
-  }
-  return (
-    <div>
-      <h5> Node Labels </h5>
-      {labelItems}
-    </div>
-  )
-}
-const relTypeItems = (relTypes, onItemClick) => {
-  let relTypeItems = <p>There are no labels in database</p>
-  if (relTypes.length > 0) {
-    relTypeItems = createItems(relTypes, onItemClick, 'token-relationship')
-  }
-  return (
-    <div>
-      <h5> Relationship Types Labels </h5>
-      {relTypeItems}
-    </div>
-  )
-}
-
-const getLabelCypher = (label) => {
-  return `MATCH (n:${label}) RETURN n LIMIT 1`
-}
-
-const getRelTypeCypher = (relType) => {
-  return `MATCH p=()-[r:${relType}]->() RETURN p LIMIT 1`
-}
-
-export class GrassEditorComponent extends React.Component {
+export class GrassEditorComponent extends Component {
   constructor (props) {
     super(props)
-    this.state = {nodes: [], relationships: []}
     this.graphStyle = neo4jVisualization.neoGraphStyle()
-    this.graphStyle.loadRules(props.graphStyleData)
-  }
-
-  getVisualizationData (cypher) {
-    bolt.transaction(cypher).then((result) => {
-      const {nodes, relationships} = bolt.extractNodesAndRelationshipsFromRecords(result.records)
-      this.setState({nodes: nodes, relationships: relationships})
-    }).catch((_) => { })
-  }
-
-  onLabelItemClick (label) {
-    this.setState({selectedRelType: false})
-    this.setState({selectedLabel: label})
-    this.getVisualizationData(getLabelCypher(label))
-  }
-
-  onRelTypeItemClick (relType) {
-    this.setState({selectedLabel: false})
-    this.setState({selectedRelType: relType})
-    this.getVisualizationData(getRelTypeCypher(relType))
-  }
-
-  refreshVisualization () {
-    if (this.state.selectedLabel) {
-      this.getVisualizationData(getLabelCypher(this.state.selectedLabel))
-    } else if (this.state.selectedRelType) {
-      this.getVisualizationData(getRelTypeCypher(this.state.selectedRelType))
+    this.graphStyle.loadRules(this.props.graphStyleData)
+    this.nodeDisplaySizes = []
+    this.widths = []
+    for (var index = 0; index < 10; index++) {
+      this.nodeDisplaySizes.push(`${12 + 2 * index}px`)
+      this.widths.push(`${5 + 3 * index}px`)
     }
   }
 
-  picker (styleProps, styleProvider, className, selector, textProvider = () => { return '' }) {
+  sizeLessThan (size1, size2) {
+    let size1Numerical = size1 ? size1.replace('px', '') + 0 : 0
+    let size2Numerical = size1 ? size2.replace('px', '') + 0 : 0
+    return size1Numerical <= size2Numerical
+  }
+
+  updateStyle (selector, styleProp) {
+    this.graphStyle.changeForSelector(selector, styleProp)
+    this.props.update(this.graphStyle.toSheet())
+  }
+
+  circleSelector (styleProps, styleProvider, activeProvider, className, selector, textProvider = () => { return '' }) {
     return styleProps.map((styleProp, i) => {
       const onClick = () => {
-        this.graphStyle.changeForSelector(selector, styleProp)
-        this.refreshVisualization()
-        this.props.update(this.graphStyle.toSheet())
+        this.updateStyle(selector, styleProp)
       }
-      const style = styleProvider(styleProp)
+      const style = styleProvider(styleProp, i)
       const text = textProvider(styleProp)
+      const active = activeProvider(styleProp)
       return (
-        <li onClick={onClick} className={className} key={i}>
-          <a style={style}>{text}</a>
-        </li>
+        <StyledPickerListItem className={className} key={i}>
+          <StyledCircleSelector className={active ? 'active' : ''} style={style} onClick={onClick}>{text}</StyledCircleSelector>
+        </StyledPickerListItem>
       )
     })
   }
 
-  colorPicker (selector) {
+  colorPicker (selector, styleForLabel) {
     return (
-      <li key='color-picker'>
-        Color:
-        <ul className={`${styles['color-picker']} ${styles['picker']}`}>
-          {this.picker(this.graphStyle.defaultColors(), (color) => { return {'backgroundColor': color.color} }, 'color-picker-item', selector)}
-        </ul>
-      </li>
+      <StyledInlineListItem key='color-picker'>
+        <StyledInlineList className='color-picker picker'>
+          <StyledInlineListItem>Color:</StyledInlineListItem>
+          {this.circleSelector(this.graphStyle.defaultColors(), (color) => { return {'backgroundColor': color.color} }, (color) => { return color.color === styleForLabel.get('color') }, 'color-picker-item', selector)}
+        </StyledInlineList>
+      </StyledInlineListItem>
     )
   }
-  sizePicker (selector) {
+
+  sizePicker (selector, styleForLabel) {
     return (
-      <li key='size-picker'>
-        Size:
-        <ul className={`${styles['size-picker']} ${styles['picker']}`}>
-          {this.picker(this.graphStyle.defaultSizes(), (size) => { return { width: size.diameter, height: size.diameter } }, 'size-picker-item', selector)}
-        </ul>
-      </li>
+      <StyledInlineListItem key='size-picker'>
+        <StyledInlineList className='size-picker picker'>
+          <StyledInlineListItem>Size:</StyledInlineListItem>
+          {this.circleSelector(this.graphStyle.defaultSizes(), (size, index) => { return { width: this.nodeDisplaySizes[index], height: this.nodeDisplaySizes[index] } }, (size) => { return this.sizeLessThan(size.diameter, styleForLabel.get('diameter')) }, 'size-picker-item', selector)}
+        </StyledInlineList>
+      </StyledInlineListItem>
     )
   }
-  widthPicker (selector) {
+  widthPicker (selector, styleForItem) {
+    let widthSelectors = this.graphStyle.defaultArrayWidths().map((widthValue, i) => {
+      const onClick = () => {
+        this.updateStyle(selector, widthValue)
+      }
+      const style = { width: this.widths[i] }
+      const active = styleForItem.get('shaft-width') === widthValue['shaft-width']
+      return (
+        <StyledPickerListItem className='width-picker-item' key={i}>
+          <StyledPickerSelector className={active ? 'active' : ''} style={style} onClick={onClick} />
+        </StyledPickerListItem>
+      )
+    })
     return (
-      <li key='width-picker'>
-        Line width:
-        <ul className={`${styles['width-picker']} ${styles['picker']}`}>
-          {this.picker(this.graphStyle.defaultArrayWidths(), (width) => { return { width: width['shaft-width'], height: '24px' } }, 'width-picker-item', selector)}
-        </ul>
-      </li>
+      <StyledInlineListItem key='width-picker'>
+        <StyledInlineList className='width-picker picker'>
+          <StyledInlineListItem>Line width:</StyledInlineListItem>
+          {widthSelectors}
+        </StyledInlineList>
+      </StyledInlineListItem>
     )
   }
 
@@ -133,64 +92,81 @@ export class GrassEditorComponent extends React.Component {
     return (
       <li key='icon-picker'>
         Icon:
-        <ul className={`${styles['icon-picker']} ${styles['picker']}`}>
+        <ul className='icon-picker picker'>
           {this.picker(this.graphStyle.defaultIconCodes(), (iconCode) => { return { 'fontFamily': 'streamline' } }, 'icon-picker-item', selector, (iconCode) => { return iconCode['icon-code'] })}
         </ul>
       </li>
     )
   }
 
+  captionPicker (selector, styleForItem, propertyKeys, showTypeSelector = false) {
+    let captionSelector = (displayCaption, captionToSave, key) => {
+      const onClick = () => {
+        this.updateStyle(selector, { caption: captionToSave })
+      }
+      let active = styleForItem.props.caption === captionToSave
+      return (
+        <StyledPickerListItem key={key}>
+          <StyledCaptionSelector className={active ? 'active' : ''} onClick={onClick}>{displayCaption}</StyledCaptionSelector>
+        </StyledPickerListItem>
+      )
+    }
+    let captionSelectors = propertyKeys.map((propKey, i) => {
+      return captionSelector(propKey, `{${propKey}}`)
+    })
+    let typeCaptionSelector = null
+    if (showTypeSelector) {
+      typeCaptionSelector = captionSelector('<type>', '<type>', 'typecaption')
+    }
+    return (
+      <StyledInlineListItem key='caption-picker'>
+        <StyledInlineList className='caption-picker picker'>
+          <StyledInlineListItem>Caption:</StyledInlineListItem>
+          {captionSelector('<id>', '<id>', 'idcaption')}
+          {typeCaptionSelector}
+          {captionSelectors}
+        </StyledInlineList>
+      </StyledInlineListItem>
+    )
+  }
+
   stylePicker () {
     let pickers
     let title
-    if (this.state.selectedLabel) {
-      const styleForLabel = this.graphStyle.forNode({ labels: [this.state.selectedLabel] })
+    if (this.props.selectedLabel) {
+      const styleForLabel = this.graphStyle.forNode({ labels: [this.props.selectedLabel.label] })
       const inlineStyle = {'backgroundColor': styleForLabel.get('color'), 'color': styleForLabel.get('text-color-internal')}
-      pickers = [this.sizePicker(styleForLabel.selector), this.colorPicker(styleForLabel.selector), this.iconPicker(styleForLabel.selector)]
-      title = (<h1 className={`${styles.token} ${styles['token-label']}`} style={inlineStyle}>{this.state.selectedLabel}</h1>)
-    } else if (this.state.selectedRelType) {
-      const styleForRelType = this.graphStyle.forRelationship({type: this.state.selectedRelType})
+      pickers = [this.colorPicker(styleForLabel.selector, styleForLabel), this.sizePicker(styleForLabel.selector, styleForLabel), this.captionPicker(styleForLabel.selector, styleForLabel, this.props.selectedLabel.propertyKeys)]
+      title = (<StyledLabelToken className='token token-label' style={inlineStyle}>{this.props.selectedLabel.label}</StyledLabelToken>)
+    } else if (this.props.selectedRelType) {
+      const styleForRelType = this.graphStyle.forRelationship({type: this.props.selectedRelType.relType})
       const inlineStyle = {'backgroundColor': styleForRelType.get('color'), 'color': styleForRelType.get('text-color-internal')}
-      pickers = [this.colorPicker(styleForRelType.selector), this.widthPicker(styleForRelType.selector)]
-      title = <h1 className={`${styles.token} ${styles['token-relationship']}`} style={inlineStyle}>{this.state.selectedRelType}</h1>
+      pickers = [this.colorPicker(styleForRelType.selector, styleForRelType), this.widthPicker(styleForRelType.selector, styleForRelType), this.captionPicker(styleForRelType.selector, styleForRelType, this.props.selectedRelType.propertyKeys, true)]
+      title = (<StyledTokenRelationshipType className='token token-relationship' style={inlineStyle}>{this.props.selectedRelType.relType}</StyledTokenRelationshipType>)
     } else {
       return null
     }
     return (
-      <div className={styles['style-picker']}>
-        {title}
-        <ul>
-          {pickers}
-        </ul>
-      </div>
+      <StyledInlineList className='style-picker'>
+        <StyledInlineListItem>{title}</StyledInlineListItem>
+        {pickers}
+      </StyledInlineList>
     )
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.graphStyleData !== this.props.graphStyleData) {
+      this.graphStyle.loadRules(nextProps.graphStyleData)
+    }
+  }
+
   render () {
-    return (
-      <div className={styles['grass-editor']}>
-        <div className={styles['grass-editor-card']}>
-          {labelItems(this.props.meta.labels.map((l) => l.val), this.onLabelItemClick.bind(this))}
-          {relTypeItems(this.props.meta.relationshipTypes.map((l) => l.val), this.onRelTypeItemClick.bind(this))}
-          <div className={styles.exampleVisualization}>
-            <neo4jVisualization.GraphComponent nodes={this.state.nodes} relationships={this.state.relationships} graphStyle={this.graphStyle} onItemMouseOver={() => {}} onGraphModelChange={() => {}} />
-          </div>
-          <div className={styles.editor}>
-            {this.stylePicker()}
-            <div className={styles.graphStyleTextView}>
-              <pre>
-                {JSON.stringify(this.props.graphStyleData, null, '\t')}
-              </pre>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return this.stylePicker()
   }
 }
 const mapStateToProps = (state) => {
   return {
-    graphStyleData: getGraphStyleData(state),
+    graphStyleData: actions.getGraphStyleData(state),
     meta: state.meta
   }
 }
@@ -198,7 +174,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     update: (data) => {
-      dispatch(updateGraphStyleData(data))
+      dispatch(actions.updateGraphStyleData(data))
     }
   }
 }

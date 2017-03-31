@@ -15,7 +15,7 @@ export class Visualization extends Component {
   }
 
   shouldComponentUpdate (nextProps) {
-    return nextProps.records !== this.props.records
+    return nextProps.records !== this.props.records || nextProps.graphStyleData !== this.props.graphStyleData
   }
   // componentWillUnmount () {
   //   if (this.state.nevada) {
@@ -23,7 +23,9 @@ export class Visualization extends Component {
   //   }
   // }
   componentWillReceiveProps (nextProps) {
-    this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.records)
+    if (nextProps.records !== this.props.records) {
+        this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.records)
+    }
   }
 
   getNeighbours (id) {
@@ -67,7 +69,7 @@ export class Visualization extends Component {
     // return (<div className={styles.nevadaCanvas} ref={this.initialiseVis.bind(this)} />)
     return (
       <div>
-        <ExplorerComponent useContextMenu getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
+        <ExplorerComponent useContextMenu graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
       </div>
     )
   }
@@ -75,14 +77,18 @@ export class Visualization extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    labels: actions.getLabels(state)
+    labels: actions.getLabels(state),
+    graphStyleData: actions.getGraphStyleData(state)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onLabelsSave: (labels) => {
-      dispatch(actions.update(labels))
+      dispatch(actions.updateLabels(labels))
+    },
+    updateStyle: (graphStyleData) => {
+      dispatch(actions.updateGraphStyleData(graphStyleData))
     }
   }
 }
