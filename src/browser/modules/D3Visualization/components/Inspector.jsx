@@ -34,9 +34,9 @@ export class InspectorComponent extends Component {
       })
     }
     if (this.props.hoveredItem && this.props.hoveredItem.type !== 'canvas') {
-     item = this.props.hoveredItem.item
-     type = this.props.hoveredItem.type
-   } else if (this.props.selectedItem) {
+      item = this.props.hoveredItem.item
+      type = this.props.hoveredItem.type
+    } else if (this.props.selectedItem) {
       item = this.props.selectedItem.item
       type = this.props.selectedItem.type
     } else if (this.props.hoveredItem) {

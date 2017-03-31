@@ -4,16 +4,16 @@ import {InspectorComponent} from './Inspector'
 import {LegendComponent} from './Legend'
 import {StyledSvgWrapper} from './styled'
 
-// import { connect } from 'react-redux'
-// import { getGraphStyleData } from '../reducer'
-
 export class ExplorerComponent extends Component {
   constructor (props) {
     super(props)
     this.state = {}
     this.state.stats = {labels: {}, relTypes: {}}
     this.state.graphStyle = neo4jVisualization.neoGraphStyle()
-    this.state.graphStyle.loadRules(this.props.graphStyleData)
+    console.log('graph style!', this.props.graphStyleData)
+    if (this.props.graphStyleData) {
+      this.state.graphStyle.loadRules(this.props.graphStyleData)
+    }
   }
 
   getNodeNeighbours (node, callback) {
@@ -44,7 +44,7 @@ export class ExplorerComponent extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.graphStyleData !== this.props.graphStyleData) {
+    if (nextProps.graphStyleData !== this.props.graphStyleData && nextProps.graphStyleData) {
       this.state.graphStyle.loadRules(nextProps.graphStyleData)
       this.setState({graphStyle: this.state.graphStyle})
     }

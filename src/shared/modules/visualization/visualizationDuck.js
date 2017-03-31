@@ -1,5 +1,3 @@
-import neo4jVisualization from 'neo4j-visualization-d3'
-
 export const NAME = 'visualization'
 export const UPDATE_LABELS = 'visualization/UPDATE_LABELS'
 export const UPDATE_GRAPH_STYLE_DATA = 'visualization/UPDATE_GRAPH_STYLE_DATA'
@@ -9,7 +7,7 @@ export const getGraphStyleData = state => state[NAME].styleData
 
 const initialState = {
   labels: [],
-  styleData: neo4jVisualization.neoGraphStyle().toSheet()
+  styleData: null
 }
 
 function updateLabelData (state, labels) {

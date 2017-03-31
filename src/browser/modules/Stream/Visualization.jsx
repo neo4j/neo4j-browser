@@ -24,7 +24,7 @@ export class Visualization extends Component {
   // }
   componentWillReceiveProps (nextProps) {
     if (nextProps.records !== this.props.records) {
-        this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.records)
+      this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.records)
     }
   }
 

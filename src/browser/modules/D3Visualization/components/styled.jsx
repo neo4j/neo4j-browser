@@ -1,5 +1,4 @@
-import styled, { keyframes } from 'styled-components'
-import { dim } from 'browser-styles/constants'
+import styled from 'styled-components'
 
 export const StyledSvgWrapper = styled.div`
   > svg {
@@ -17,44 +16,44 @@ export const StyledStream = styled.div`
 
 export const p = styled.div`
   margin-top: 6px;
-	font-size: 12px;
-	width: 100%;
-	white-space: normal;
+  font-size: 12px;
+  width: 100%;
+  white-space: normal;
 `
 
 export const styledRowToggle = styled.div`
-	float: right;
-	display: block;
-	width: 21px;
-	height: 21px;
-	line-height: 21px;
-	text-align: center;
-	cursor: pointer;
-	display: none;
+  float: right;
+  display: block;
+  width: 21px;
+  height: 21px;
+  line-height: 21px;
+  text-align: center;
+  cursor: pointer;
+  display: none;
 `
 
 export const StyledInspectorFooter = styled.div`
-	line-height: 21px;
+  line-height: 21px;
 `
 
 export const StyledInspectorFooterRow = styled.ul`
   list-style: none;
-	word-break: break-word;
-	margin-top: -3px;
-	line-height: 21px;
+  word-break: break-word;
+  margin-top: -3px;
+  line-height: 21px;
   margin-top: 3px;
 `
 
 export const StyledInspectorFooterRowListKey = styled.div`
-	float: left;
-	font-weight: 800;
+  float: left;
+  font-weight: 800;
 `
 
 export const StyledInspectorFooterRowListValue = styled.div`
-	padding-left: 3px;
-	overflow: hidden;
-	float: left;
-	white-space: pre-wrap;
+  padding-left: 3px;
+  overflow: hidden;
+  float: left;
+  white-space: pre-wrap;
 `
 
 export const StyledInlineList = styled.ul`
@@ -102,7 +101,7 @@ export const StyledStatus = styled.div`
 `
 
 export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
-	vertical-align: middle;
+  vertical-align: middle;
   font-size: 13px;
 `
 

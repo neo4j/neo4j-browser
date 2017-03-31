@@ -8,7 +8,9 @@ export class GrassEditorComponent extends Component {
   constructor (props) {
     super(props)
     this.graphStyle = neo4jVisualization.neoGraphStyle()
-    this.graphStyle.loadRules(this.props.graphStyleData)
+    if (this.props.graphStyleData) {
+      this.graphStyle.loadRules(this.props.graphStyleData)
+    }
     this.nodeDisplaySizes = []
     this.widths = []
     for (var index = 0; index < 10; index++) {
@@ -155,7 +157,7 @@ export class GrassEditorComponent extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.graphStyleData !== this.props.graphStyleData) {
+    if (nextProps.graphStyleData && nextProps.graphStyleData !== this.props.graphStyleData) {
       this.graphStyle.loadRules(nextProps.graphStyleData)
     }
   }

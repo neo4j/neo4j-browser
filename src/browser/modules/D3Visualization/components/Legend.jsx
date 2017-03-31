@@ -1,4 +1,4 @@
-import { Component } from 'preact'
+import 'preact'
 import {StyledTokenRelationshipType, StyledLegendInlineListItem, StyledLegend, StyledLegendContents, StyledLabelToken, StyledTokenCount, StyledLegendInlineList} from './styled'
 
 export const LegendComponent = ({stats, graphStyle, onSelectedLabel, onSelectedRelType}) => {
