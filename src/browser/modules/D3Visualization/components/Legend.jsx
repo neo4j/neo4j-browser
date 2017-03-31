@@ -1,5 +1,5 @@
 import 'preact'
-import {StyledTokenRelationshipType, StyledLegendInlineListItem, StyledLegend, StyledLegendContents, StyledLabelToken, StyledTokenCount, StyledLegendInlineList} from './styled'
+import {StyledLegendRow, StyledTokenRelationshipType, StyledLegendInlineListItem, StyledLegend, StyledLegendContents, StyledLabelToken, StyledTokenCount, StyledLegendInlineList} from './styled'
 
 export const LegendComponent = ({stats, graphStyle, onSelectedLabel, onSelectedRelType}) => {
   const mapLabels = (labels) => {
@@ -17,12 +17,17 @@ export const LegendComponent = ({stats, graphStyle, onSelectedLabel, onSelectedR
       )
     })
     return (
-      <StyledLegendInlineList className='list-inline'>
-        {labelList}
-      </StyledLegendInlineList>
+      <StyledLegendRow>
+        <StyledLegendInlineList className='list-inline'>
+          {labelList}
+        </StyledLegendInlineList>
+      </StyledLegendRow>
     )
   }
   const mapRelTypes = (legendItems) => {
+    if (!legendItems || !Object.keys(legendItems).length) {
+      return null
+    }
     const relTypeList = Object.keys(legendItems).map((legendItemKey, i) => {
       const styleForItem = graphStyle.forRelationship({type: legendItemKey})
       const onClick = () => { onSelectedRelType(legendItemKey, Object.keys(legendItems[legendItemKey].properties)) }
@@ -39,13 +44,15 @@ export const LegendComponent = ({stats, graphStyle, onSelectedLabel, onSelectedR
       )
     })
     return (
-      <StyledLegendInlineList className='list-inline'>
-        {relTypeList}
-      </StyledLegendInlineList>
+      <StyledLegendRow>
+        <StyledLegendInlineList className='list-inline'>
+          {relTypeList}
+        </StyledLegendInlineList>
+      </StyledLegendRow>
     )
   }
   return (
-    <StyledLegend className='legend'>
+    <StyledLegend>
       {mapLabels(stats.labels)}
       {mapRelTypes(stats.relTypes)}
     </StyledLegend>

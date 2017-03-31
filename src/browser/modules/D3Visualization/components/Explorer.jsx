@@ -10,7 +10,6 @@ export class ExplorerComponent extends Component {
     this.state = {}
     this.state.stats = {labels: {}, relTypes: {}}
     this.state.graphStyle = neo4jVisualization.neoGraphStyle()
-    console.log('graph style!', this.props.graphStyleData)
     if (this.props.graphStyleData) {
       this.state.graphStyle.loadRules(this.props.graphStyleData)
     }
@@ -54,7 +53,7 @@ export class ExplorerComponent extends Component {
     return (
       <div id='svg-vis'>
         <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
-        <StyledSvgWrapper>
+        <StyledSvgWrapper className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'}>
           <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
         </StyledSvgWrapper>
         <InspectorComponent hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />

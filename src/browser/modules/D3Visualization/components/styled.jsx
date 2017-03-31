@@ -1,10 +1,15 @@
 import styled from 'styled-components'
 
 export const StyledSvgWrapper = styled.div`
+  line-height: 0;
   > svg {
-  height: 240px;
+  height: 247px;
   width: 100%;
   background-color: #f9fbfd;
+  }
+  &.one-legend-row {
+    > svg {
+    height: 279px;
   }
 `
 export const StyledStream = styled.div`
@@ -147,8 +152,14 @@ export const StyledLegendContents = styled.div`
   top: -1px;
 `
 
+export const StyledLegendRow = styled.div`
+  border-bottom: 1px solid #e6e9ef;
+  max-height: 32px;
+  overflow: hidden;
+`
+
 export const StyledLegend = styled.div`
-  display: table-row;
+  background-color: #eef1f8;
 `
 export const StyledLegendInlineList = styled(StyledInlineList) `
   padding: 7px 9px 0px 10px;
