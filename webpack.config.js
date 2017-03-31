@@ -90,12 +90,12 @@ const rules = [
   },
   {
     test: /\.json$/,
-    loader: 'json-loader'
+    use: 'json-loader'
   },
   {
     test: /\.css$/, // Guides
     include: path.resolve('./src/browser/modules/Guides'),
-    loader: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[local]', 'postcss-loader']
+    use: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[local]', 'postcss-loader']
   },
   {
     test: /\.css$/,
