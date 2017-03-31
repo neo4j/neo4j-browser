@@ -7,4 +7,5 @@ coverage/
 /yarn-error.log
 .idea/
 /build
+/bundle-report.html
 /target

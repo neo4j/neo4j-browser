@@ -5,6 +5,7 @@ const DashboardPlugin = require('webpack-dashboard/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const autoprefixer = require('autoprefixer')
 const precss = require('precss')
 
@@ -158,7 +159,12 @@ if (isProduction) {
   // Development plugins
   plugins.push(
     new webpack.HotModuleReplacementPlugin(),
-    new DashboardPlugin()
+    new DashboardPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: '../bundle-report.html'
+    })
   )
 }
 
@@ -180,7 +186,11 @@ module.exports = {
       'redux-observable',
       'suber',
       'preact-suber',
-      'redux'
+      'redux',
+      'styled-components',
+      'iconv-lite',
+      'pako',
+      'preact-redux'
     ]
   },
   output: {
