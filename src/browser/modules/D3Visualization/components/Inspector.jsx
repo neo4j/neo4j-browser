@@ -9,6 +9,8 @@ export class InspectorComponent extends Component {
     this.state.graphStyle = this.props.graphStyle
   }
   render () {
+    let item
+    let type
     let inspectorContent
 
     const mapItemProperties = (itemProperties) => {
@@ -31,17 +33,23 @@ export class InspectorComponent extends Component {
         )
       })
     }
-
-    if (this.props.selectedItem) {
-      const item = this.props.selectedItem.item
-      if (this.props.selectedItem.type === 'legend-item') {
+    if (this.props.hoveredItem && this.props.hoveredItem.type !== 'canvas') {
+     item = this.props.hoveredItem.item
+     type = this.props.hoveredItem.type
+   } else if (this.props.selectedItem) {
+      item = this.props.selectedItem.item
+      type = this.props.selectedItem.type
+    } else if (this.props.hoveredItem) {
+      item = this.props.hoveredItem.item
+      type = this.props.hoveredItem.type
+    }
+    if (item && type) {
+      if (type === 'legend-item') {
         inspectorContent = (
           <GrassEditor selectedLabel={item.selectedLabel} selectedRelType={item.selectedRelType} />
         )
       }
-    } else if (this.props.hoveredItem) {
-      const item = this.props.hoveredItem.item
-      if (this.props.hoveredItem.type === 'context-menu-item') {
+      if (type === 'context-menu-item') {
         inspectorContent = (
           <StyledInlineList className='list-inline'>
             <StyledTokenContextMenuKey key='token' className={'token' + ' ' + 'token-context-menu-key' + ' ' + 'token-label'}>{item.label}</StyledTokenContextMenuKey>
@@ -50,7 +58,7 @@ export class InspectorComponent extends Component {
             </StyledInspectorFooterRowListPair>
           </StyledInlineList>
         )
-      } else if (this.props.hoveredItem.type === 'canvas') {
+      } else if (type === 'canvas') {
         const description = `Displaying ${item.nodeCount} nodes, ${item.relationshipCount} relationships.`
         inspectorContent = (
           <StyledInlineList className='list-inline'>
@@ -59,7 +67,7 @@ export class InspectorComponent extends Component {
             </StyledInspectorFooterRowListPair>
           </StyledInlineList>
         )
-      } else if (this.props.hoveredItem.type === 'node') {
+      } else if (type === 'node') {
         inspectorContent = (
           <StyledInlineList className='list-inline'>
             {mapLabels(item.labels)}
@@ -70,7 +78,7 @@ export class InspectorComponent extends Component {
             {mapItemProperties(item.properties)}
           </StyledInlineList>
         )
-      } else if (this.props.hoveredItem.type === 'relationship') {
+      } else if (type === 'relationship') {
         const style = {'backgroundColor': this.state.graphStyle.forRelationship(item).get('color'), 'color': this.state.graphStyle.forRelationship(item).get('text-color-internal')}
         inspectorContent = (
           <StyledInlineList className='list-inline'>

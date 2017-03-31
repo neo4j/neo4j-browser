@@ -26,6 +26,10 @@ export class ExplorerComponent extends Component {
     this.setState({hoveredItem: item})
   }
 
+  onItemSelect (item) {
+    this.setState({selectedItem: item})
+  }
+
   onGraphModelChange (stats) {
     this.setState({stats: stats})
     this.props.updateStyle(this.state.graphStyle.toSheet())
@@ -51,18 +55,11 @@ export class ExplorerComponent extends Component {
       <div id='svg-vis'>
         <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
         <StyledSvgWrapper>
-          <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
+          <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
         </StyledSvgWrapper>
         <InspectorComponent hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />
       </div>
     )
   }
 }
-
-// const mapStateToProps = (state) => {
-//   return {
-//     graphStyleData: getGraphStyleData(state)
-//   }
-// }
-
 export const Explorer = ExplorerComponent

@@ -69,7 +69,7 @@ export class Visualization extends Component {
     // return (<div className={styles.nevadaCanvas} ref={this.initialiseVis.bind(this)} />)
     return (
       <div>
-        <ExplorerComponent useContextMenu graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
+        <ExplorerComponent graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
       </div>
     )
   }
