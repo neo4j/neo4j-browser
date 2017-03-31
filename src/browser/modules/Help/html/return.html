@@ -25,8 +25,8 @@
   <section class="example">
     <figure class="runnable">
       <pre>
-        MATCH (director:Person)-[:DIRECTED]-&gt;(movie)
-        RETURN director.name AS Director, collect(movie.title) AS Movies
+MATCH (director:Person)-[:DIRECTED]-&gt;(movie)
+RETURN director.name AS Director, collect(movie.title) AS Movies
       </pre>
       <figcaption>Return all directors, each paired with a collection of the movies they've directed.</figcaption>
     </figure>

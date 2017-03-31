@@ -14,9 +14,14 @@ const directives = [{
     return `:help ${elem.getAttribute('help-topic')}`
   }
 }, {
-  selector: '.runnable',
+  selector: '.runnable pre',
   valueExtractor: (elem) => {
-    return elem.textContent
+    return elem.textContent.trim()
+  }
+}, {
+  selector: 'pre.runnable',
+  valueExtractor: (elem) => {
+    return elem.textContent.trim()
   }
 }]
 

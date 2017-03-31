@@ -25,9 +25,9 @@
   <section class="example">
     <figure class="runnable">
       <pre>
-        MATCH (fan:Person)-[w:WATCHED]-&gt;(movie)
-        WHERE fan.name = "Mikey"
-        SET w.rating = 5
+MATCH (fan:Person)-[w:WATCHED]-&gt;(movie)
+WHERE fan.name = "Mikey"
+SET w.rating = 5
       </pre>
       <figcaption>Mikey likes everything, so give any movie he has watched 5 stars.</figcaption>
     </figure>

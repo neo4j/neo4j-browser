@@ -203,6 +203,8 @@
     & pre {
       cursor: pointer;
       border: 2px dashed #e1e1e8;
+      padding-left: 1em;
+      padding-right: 1em;
     }
   }
   & .links {

@@ -25,12 +25,12 @@
   <section class="example">
     <figure class="runnable">
       <pre>
-        MATCH (director:Person)-[:DIRECTED]-&gt;(movie)
-        WITH director, count(movie) as directed ORDER BY directed DESC LIMIT 1
-        MATCH (hopeful:Person)-[:ACTED_IN]-&gt;(movie)
-        WITH director, hopeful, count(movie) as appearances ORDER BY appearances LIMIT 1
-          MATCH p=(director)-[*..4]-(hopeful)
-        RETURN p
+MATCH (director:Person)-[:DIRECTED]-&gt;(movie)
+WITH director, count(movie) as directed ORDER BY directed DESC LIMIT 1
+MATCH (hopeful:Person)-[:ACTED_IN]-&gt;(movie)
+WITH director, hopeful, count(movie) as appearances ORDER BY appearances LIMIT 1
+  MATCH p=(director)-[*..4]-(hopeful)
+RETURN p
       </pre>
       <figcaption>Find a path from a hopeful actor to Hollywood's most prolific director.</figcaption>
     </figure>

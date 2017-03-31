@@ -29,17 +29,17 @@
   <section class="example">
     <figure class="runnable">
       <pre>
-        MATCH (soren {name: 'Soren'})
-        REMOVE soren.age
-        RETURN soren
+MATCH (soren {name: 'Soren'})
+REMOVE soren.age
+RETURN soren
       </pre>
       <figcaption>Remove Soren's age.</figcaption>
     </figure>
     <figure class="runnable">
       <pre>
-        MATCH (soren {name: 'Soren'})
-        REMOVE soren:Intern
-        RETURN soren
+MATCH (soren {name: 'Soren'})
+REMOVE soren:Intern
+RETURN soren
       </pre>
       <figcaption>Soren is no longer an intern.</figcaption>
     </figure>
