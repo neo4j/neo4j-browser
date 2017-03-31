@@ -6,3 +6,4 @@ coverage/
 .vscode
 /yarn-error.log
 .idea/
+/build

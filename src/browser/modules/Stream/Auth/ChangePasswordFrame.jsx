@@ -12,6 +12,7 @@ import {
   StyledConnectionLabel,
   StyledConnectionFormEntry
 } from './styled'
+import FormKeyHandler from 'browser-components/form/formKeyHandler'
 
 export class ChangePasswordFrame extends Component {
   constructor (props) {
@@ -24,6 +25,12 @@ export class ChangePasswordFrame extends Component {
       password: '',
       success: false
     }
+  }
+  componentWillMount () {
+    this.formKeyHandler = new FormKeyHandler()
+  }
+  componentDidMount () {
+    this.formKeyHandler.initialize()
   }
   error (e) {
     if (e.code === 'N/A') {
@@ -53,11 +60,11 @@ export class ChangePasswordFrame extends Component {
           </Visible>
         </StyledConnectionAside>
 
-        <ConnectionForm {...this.props} error={this.error.bind(this)} oldPassword={this.state.password} onSuccess={this.onSuccess.bind(this)} forcePasswordChange>
+        <ConnectionForm {...this.props} formKeyHandler={this.formKeyHandler} error={this.error.bind(this)} oldPassword={this.state.password} onSuccess={this.onSuccess.bind(this)} forcePasswordChange>
           <Visible if={!this.state.success}>
             <StyledConnectionFormEntry>
               <StyledConnectionLabel>Existing password</StyledConnectionLabel>
-              <StyledConnectionTextInput type='password' value={this.state.password} onChange={this.onPasswordChange.bind(this)} />
+              <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 1)} type='password' value={this.state.password} onChange={this.onPasswordChange.bind(this)} />
             </StyledConnectionFormEntry>
           </Visible>
         </ConnectionForm>

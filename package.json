@@ -4,12 +4,12 @@
   "description": "Enjoy your data",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --content-base ./dist --history-api-fallback",
-    "starts": "webpack-dev-server --https --inline --content-base ./dist --history-api-fallback",
+    "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
+    "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
     "lint": "standard --fix",
     "test": "npm run lint && jest",
     "dev": "jest --watch",
-    "build": "webpack"
+    "build": "rm -rf ./build && NODE_ENV=\"production\" webpack"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -23,8 +23,9 @@
   },
   "standard": {
     "ignore": [
-      "dist",
-      "src/visualisation/external"
+      "node_modules",
+      "build",
+      "dist"
     ],
     "globals": [
       "it",
@@ -42,7 +43,7 @@
   "license": "GPL",
   "homepage": "https://neo4j.com",
   "devDependencies": {
-    "autoprefixer": "^6.3.6",
+    "autoprefixer": "^6.7.7",
     "babel-core": "^6.7.7",
     "babel-jest": "^18.0.0",
     "babel-loader": "^6.2.4",
@@ -63,6 +64,8 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-react": "^6.9.0",
     "eslint-plugin-standard": "^2.0.1",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "html-webpack-plugin": "^2.28.0",
     "jest-cli": "^18.1.0",
     "nock": "^9.0.6",
     "postcss": "^5.0.21",
@@ -77,8 +80,9 @@
     "redux-mock-store": "^1.2.2",
     "standard": "^8.6.0",
     "style-loader": "^0.13.0",
-    "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "^2.3.2",
+    "webpack-dashboard": "^0.3.0",
+    "webpack-dev-server": "^2.4.2"
   },
   "babel": {
     "presets": [
@@ -105,7 +109,7 @@
     "preact": "^7.2.0",
     "preact-compat": "^3.13.1",
     "preact-redux": "^2.0.0",
-    "preact-suber": "^1.0.1",
+    "preact-suber": "^1.0.2",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dropzone": "^3.10.0",
     "react-icons": "^2.2.1",
@@ -115,7 +119,7 @@
     "rxjs": "^5.0.3",
     "save-as": "^0.1.7",
     "styled-components": "^1.4.4",
-    "suber": "^4.0.1",
+    "suber": "^5.0.1",
     "swipe-js-iso": "^2.0.3",
     "url-loader": "^0.5.8",
     "uuid": "^3.0.1"

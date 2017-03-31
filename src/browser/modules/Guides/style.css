@@ -14,11 +14,162 @@
   top: 30px
 }
 .slide {
-  max-height: 500px;
   overflow-y: auto;
+  font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;
+  font-size: 16px;
+  font-weight: 300;
+  padding-top: 2em;
+
+  & code,
+  & .code,
+  & kbd,
+  & pre,
+  & samp,
+  & figure pre {
+    font-family: "Inconsolata", "Monaco", "Lucida Console", Courier, monospace;
+    background: #f3f3f3;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+  }
+
+  & pre.code {
+    padding: 0.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    &.runnable {
+      cursor: pointer;
+      border: 2px dashed #e1e1e8;
+    }
+    &.clicked {
+      border: 2px solid #8DD465;
+      opacity: .5;
+    }
+  }
+
+  & .nobreak {
+    word-break: keep-all;
+    white-space: nowrap;
+  }
+
+  & .italic {
+    font-style: italic;
+  }
+
+  & .light {
+    font-weight: 300; }
+
+  & .semi-bold {
+    font-weight: 600; }
+
+  & .bold {
+    font-weight: 700; }
+
+  & .extra-bold {
+    font-weight: 800; }
+
+  & small,
+  & .small,
+  & .btn--s {
+    font-size: 0.8em;
+  }
+
+  & .caps {
+    font-variant: small-caps; }
+
+  & .muted {
+    opacity: .7; }
+
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    line-height: 0.9em;
+    margin: 0 0 0.25em;
+    font-weight: 400;
+  }
+
+  & h1,
+  & .h1 {
+    font-size: 2.441em; }
+  & h2,
+  & .h2 {
+    font-size: 1.953em;
+    &.vtop {
+      margin-top: 0.2em;
+      margin-bottom: 0.35em;
+    }
+  }
+  & h3,
+  & .h3 {
+    font-size: 1.563em;
+    &.vtop {
+      margin-top: 0.48em;
+      margin-bottom: 0.4em;
+    }
+  }
+  & h4,
+  & .h4 {
+    font-size: 1.25em;
+    &.vtop {
+      margin-top: 0.8em;
+      margin-bottom: 0.55em;
+    }
+  }
+  & h5,
+  & .h5 {
+    font-size: 1em;
+    &.vtop {
+      margin-top: 1.2em;
+      margin-bottom: 0.7em;
+    }
+  }
+  & h6,
+  & .h6 {
+    font-size: 0.8em;
+    &.vtop {
+      margin-top: 1.75em;
+      margin-bottom: 0.9em;
+    }
+  }
+
+  & p {
+    margin-bottom: 1em;
+    &.lead {
+      color: #666;
+    }
+  }
+
+  & ul, & ol {
+    list-style-position: outside;
+    padding-left: 1em;
+    margin-top: 0.5em;
+  }
+
+  & ul.big {
+    /*font-size: 1.25em;*/
+    line-height: 2em;
+  }
+
+  & ul.vtop {
+      margin-top: 0;
+  }
+  & .icon.icon-sm {
+    font-size: 0.5em;
+  }
+  & .icon.icon-2x {
+    font-size: 2em;
+  }
+  & .icon.icon-3x {
+    font-size: 3em;
+  }
+  & .icon.icon-4x {
+    font-size: 4em;
+  }
+
   & article.help {
-    font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
     color: #666;
     display: block;
@@ -101,5 +252,88 @@
     font-style: italic;
     font-size: 13px;
     text-align: center;
+  }
+  .btn-cta {
+    padding: 1em;
+    background-color: #008cc1;
+    color: #fff;
+    border-radius: 3px;
+    border: 1px solid #dadada;
+    display: inline-block;
+  }
+  .teaser {
+    margin: 0.5em;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 270px;
+    float: left;
+    position: relative;
+
+    &.teaser-2 {
+      width: 45%;
+      min-width: 285px;
+      height: 320px;
+      overflow: hidden;
+      .icon-holder {
+        max-height: 160px;
+        overflow-y: auto;
+      }
+      .icon {
+        width: 12%;
+      }
+      .topic-bullets {
+        max-width: 80%;
+      }
+    }
+    &.teaser-3 {
+      width: 30%;
+      min-width: 190px;
+      overflow: hidden;
+    }
+    button {
+      position: absolute;
+      bottom: 5px;
+      width: 90%;
+      left: 5%;
+      outline: none;
+    }
+    .icon {
+      float: left;
+      max-width: 67px;
+      width: 25%;
+    }
+    .icon.sl {
+      font-size: 35px;
+    }
+    .icon.sl.green {
+      color: #65b144;
+    }
+    .icon.sl.yellow {
+      color: #fdcc59;
+    }
+    .icon.sl.red {
+      color: #ff5641;
+    }
+    .topic-bullets {
+      float: left;
+      word-wrap: break-word;
+      min-width: 100px;
+      max-width: 65%;
+      list-style: none;
+      padding-left: 10px;
+      margin-top: 0;
+    }
+    .topic-bullets :first-child {
+      margin-top: 0;
+    }
+    .topic-bullets li {
+      margin-top: 5px;
+    }
+    .icon-holder {
+      margin-top: 10px;
+      max-height: 120px;
+      overflow: hidden;
+    }
   }
 }

@@ -6,7 +6,7 @@
       "root": ["./src", "./node_modules", "src/shared", "src/browser"],
       "extensions": ["", ".js", ".jsx", ".es", ".es6", ".json"],
       "alias": {
-        "neo4j-driver-alias": "neo4j-driver/lib/browser/neo4j-web.js",
+        "neo4j-driver-alias": "neo4j-driver/lib/browser/neo4j-web.min.js",
         "src-root": "./src",
         "services": "./src/shared/services",
         "browser-services": "./src/browser/services",

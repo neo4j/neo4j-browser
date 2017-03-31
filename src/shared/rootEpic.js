@@ -8,6 +8,7 @@ import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import { cypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
+import { featuresDicoveryEpic } from './modules/features/featuresDuck'
 
 export default combineEpics(
   handleCommandsEpic,
@@ -28,5 +29,6 @@ export default combineEpics(
   populateEditorFromUrlEpic,
   cypherRequestEpic,
   clearLocalstorageEpic,
-  handleForcePasswordChangeEpic
+  handleForcePasswordChangeEpic,
+  featuresDicoveryEpic
 )
