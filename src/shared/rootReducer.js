@@ -11,6 +11,7 @@ import requestsReducer, { NAME as requests } from 'shared/modules/requests/reque
 import paramsReducer, { NAME as params } from 'shared/modules/params/paramsDuck'
 import visualizationReducer, { NAME as visualization } from 'shared/modules/visualization/visualizationDuck'
 import syncReducer, { NAME as sync } from 'shared/modules/sync/syncDuck'
+import foldersReducer, { NAME as folders } from 'shared/modules/favorites/foldersDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -21,6 +22,7 @@ export default {
   [currentUser]: userReducer,
   [dbMeta]: dbMetaReducer,
   [documents]: favoritesReducer,
+  [folders]: foldersReducer,
   [sidebar]: sidebarReducer,
   [params]: paramsReducer,
   [requests]: requestsReducer,

@@ -1,5 +1,5 @@
 import uuid from 'uuid'
-import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { SET_SYNC, syncItems, getSync } from 'shared/modules/sync/syncDuck'
 import { getBrowserName } from 'services/utils'
 
@@ -12,25 +12,12 @@ export const FAVORITES_UPDATED = 'favorites/FAVORITES_UPDATED'
 export const FAVORITES_READ = 'favorites/FAVORITES_READ'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
 
-const staticScriptsList = [
-  {
-    id: uuid.v4(),
-    isStatic: true,
-    name: 'Movie Graph',
-    content: ':play movie-graph'
-  },
-  {
-    id: uuid.v4(),
-    isStatic: true,
-    name: 'Northwind Graph',
-    content: ':play northwind-graph'
-  }
-]
+import {scripts as staticScriptsList} from './staticScripts'
 
 export const getFavorites = (state) => state[NAME]
 
 // reducer
-const initialState = staticScriptsList
+const initialState = staticScriptsList.map(script => Object.assign({}, script, {isStatic: true}))
 
 export default function reducer (state = initialState, action) {
   switch (action.type) {
@@ -39,9 +26,11 @@ export default function reducer (state = initialState, action) {
     case ADD_FAVORITE:
       return state.concat([{id: uuid.v4(), content: action.cmd}])
     case LOAD_FAVORITES:
-      return action.favorites
+      return mergeFavorites(initialState, action.favorites)
     case USER_CLEAR:
       return initialState
+    case APP_START:
+      return mergeFavorites(initialState, state)
     default:
       return state
   }
@@ -90,11 +79,13 @@ const mergeFavorites = (list1, list2) => {
 }
 
 const favoritesToLoad = (action, store) => {
-  const favoritesFromSync = action.obj.syncObj && action.obj.syncObj.documents ? action.obj.syncObj.documents[0].data : []
+  let favoritesFromSync = (action.obj.syncObj && action.obj.syncObj.documents.length > 0)
+    ? (action.obj.syncObj.documents[0].data || [])
+    : null
 
-  if (favoritesFromSync && favoritesFromSync.length > 0) {
+  if (favoritesFromSync) {
     const existingFavs = getFavorites(store.getState())
-    const allFavorites = mergeFavorites(existingFavs, favoritesFromSync)
+    const allFavorites = mergeFavorites(favoritesFromSync, existingFavs)
 
     if (existingFavs.every(exFav => exFav.isStatic || favoritesFromSync.findIndex(syncFav => syncFav.id === exFav.id) >= 0)) {
       return { favorites: allFavorites, syncFavorites: false, loadFavorites: true }

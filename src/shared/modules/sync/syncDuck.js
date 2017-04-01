@@ -6,6 +6,7 @@ export const NAME = 'sync'
 export const SET_SYNC = 'sync/SET_SYNC'
 export const SYNC_ITEMS = 'sync/SYNC_ITEMS'
 export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
+export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 
 /**
  * Selectors
@@ -22,6 +23,7 @@ export default function reducer (state = null, action) {
     case SET_SYNC:
       return Object.assign({}, state, action.obj)
     case CLEAR_SYNC:
+    case CLEAR_SYNC_AND_LOCAL:
       return null
     default:
       return state
@@ -50,6 +52,12 @@ export function clearSync () {
   }
 }
 
+export function clearSyncAndLocal () {
+  return {
+    type: CLEAR_SYNC_AND_LOCAL
+  }
+}
+
 export const syncItemsEpic = (action$, store) =>
   action$.ofType(SYNC_ITEMS)
     .do((action) => {
@@ -59,8 +67,9 @@ export const syncItemsEpic = (action$, store) =>
     .mapTo({ type: 'NOOP' })
 
 export const clearSyncEpic = (action$, store) =>
-  action$.ofType(CLEAR_SYNC)
+  action$.ofType(CLEAR_SYNC_AND_LOCAL)
     .do((action) => {
       setItem('documents', null)
+      setItem('folders', null)
     })
     .mapTo({ type: USER_CLEAR })

@@ -3,9 +3,11 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import TimeAgo from 'react-timeago'
 
-import { setSync, clearSync } from 'shared/modules/sync/syncDuck'
-import { authenticate, initialize, status, getResourceFor, signOut } from 'services/browserSyncService'
+import { setSync, clearSync, clearSyncAndLocal } from 'shared/modules/sync/syncDuck'
+import { authenticate, initialize, status, getResourceFor, signOut, setupUser } from 'services/browserSyncService'
 import { setContent as setEditorContent } from 'shared/modules/editor/editorDuck'
+import { getBrowserName } from 'services/utils'
+import { getSettings } from 'shared/modules/settings/settingsDuck'
 
 import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSubHeader, DrawerSectionBody, DrawerToppedHeader} from 'browser-components/drawer'
 import { FormButton } from 'browser-components/buttons'
@@ -44,13 +46,13 @@ export class BrowserSync extends Component {
   }
 
   componentWillMount () {
-    initialize()
+    initialize(this.props.browserSyncConfig.firebaseConfig)
     this.serviceIsUp()
   }
 
   logIn () {
     if (this.state.userConsented === true) {
-      BrowserSyncAuthWindow('https://localhost:9001', this.authCallBack.bind(this))
+      BrowserSyncAuthWindow(this.props.browserSyncConfig.authWindowUrl, this.authCallBack.bind(this))
     } else {
       this.setState({showConsentAlert: true})
     }
@@ -73,17 +75,35 @@ export class BrowserSync extends Component {
   bindToResource () {
     this.syncRef = getResourceFor(this.state.authData.profile.user_id)
     this.syncRef.on('value', (v) => {
-      this.props.onSync({key: this.state.authData.profile.user_id, syncObj: v.val(), lastSyncedAt: new Date(), authData: this.state.authData})
+      if (v.val() == null) {
+        setupUser(this.state.authData.profile.user_id, {
+          documents: [{
+            'client': getBrowserName(),
+            'syncedAt': Date.now()
+          }]
+        })
+      } else {
+        this.setSynCData(v.val())
+        this.setSynCData(v.val())
+      }
     })
   }
 
-  clearLocalStorage () {
+  setSynCData (value) {
+    this.props.onSync({key: this.state.authData.profile.user_id, syncObj: value, lastSyncedAt: new Date(), authData: this.state.authData})
+  }
+
+  signOutAndClearLocalStorage () {
     if (this.state.clearLocalRequested) {
       this.setState({clearLocalRequested: false, authData: null, serviceAuthenticated: false})
-      this.props.onSignOut()
+      this.props.onSignOutAndClear()
     } else {
       this.setState({clearLocalRequested: true})
     }
+  }
+  signOutFromSync () {
+    this.setState({authData: null, serviceAuthenticated: false})
+    this.props.onSignOut()
   }
 
   render () {
@@ -127,7 +147,10 @@ export class BrowserSync extends Component {
             <DrawerSubHeader>Manage local data</DrawerSubHeader>
             <DrawerSectionBody>
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
-              <FormButton label={this.state.clearLocalRequested ? 'Sign out + clear' : 'Sign out'} onClick={() => this.clearLocalStorage()}
+              <FormButton label={this.state.clearLocalRequested ? 'Sign out + clear' : 'Clear local data'} onClick={() => this.signOutAndClearLocalStorage()}
+                icon={<BinIcon suppressIconStyles='true' />} buttonType='secondary' />
+              <p>&nbsp;</p>
+              <FormButton label='Sign Out' onClick={() => this.signOutFromSync()}
                 icon={<BinIcon suppressIconStyles='true' />} buttonType='secondary' />
             </DrawerSectionBody>
           </DrawerSection>
@@ -185,7 +208,8 @@ export class BrowserSync extends Component {
 const mapStateToProps = (state) => {
   return {
     lastSyncedAt: state.sync ? state.sync.lastSyncedAt : null,
-    authData: state.sync ? state.sync.authData : null
+    authData: state.sync ? state.sync.authData : null,
+    browserSyncConfig: getSettings(state).browserSyncConfig
   }
 }
 
@@ -197,6 +221,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onSyncHelpClick: (play) => {
       const action = setEditorContent(':play neo4j sync')
+      ownProps.bus.send(action.type, action)
+    },
+    onSignOutAndClear: () => {
+      signOut()
+      const action = clearSyncAndLocal()
       ownProps.bus.send(action.type, action)
     },
     onSignOut: () => {

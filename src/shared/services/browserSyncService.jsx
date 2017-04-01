@@ -4,15 +4,9 @@ export const authenticate = (dataToken) => {
   return firebase.auth().signInWithCustomToken(dataToken)
 }
 
-export const initialize = () => {
+export const initialize = (config) => {
   if (firebase.apps.length && firebase.apps.length > 0) {
     return
-  }
-
-  const config = {
-    apiKey: 'AIzaSyB-zOxTpnQQjryMWzGbtN9aIHvjzv5mwR8',
-    databaseURL: 'https://my-first-app-v2-4dbd3.firebaseio.com',
-    messagingSenderId: '2586483860'
   }
 
   return firebase.initializeApp(config)
@@ -29,6 +23,10 @@ export const getResourceFor = (userId) => {
 export const syncResourceFor = (userId, key, value) => {
   const userRef = firebase.database().ref('users/' + userId)
   userRef.child(key).set(value)
+}
+
+export const setupUser = (userId, initialData) => {
+  firebase.database().ref('users/' + userId).set(initialData)
 }
 
 export const signOut = () => {

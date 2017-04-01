@@ -1,7 +1,8 @@
 import { connect } from 'preact-redux'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
-import {FavoriteItem} from 'browser-components/buttons'
+import {FavoriteItem, FavoriteList} from 'browser-components/buttons'
 import { withBus } from 'preact-suber'
+import { Component } from 'preact'
 
 function extractNameFromCommand (input) {
   if (!input) {
@@ -16,13 +17,22 @@ function extractNameFromCommand (input) {
   }
 }
 
-export const Favorite = ({id, content, onItemClick, removeClick}) => {
+export class Folder extends Component {
+  render () {
+    return <FavoriteList {...this.props} active={this.state.active}
+      onClick={() => this.setState({active: !this.state.active})} />
+  }
+}
+
+export const Favorite = ({id, content, onItemClick, removeClick, isChild, isStatic}) => {
   const name = extractNameFromCommand(content)
   return (
     <FavoriteItem
       primaryText={name}
       onClick={() => onItemClick(content)}
       removeClick={() => removeClick(id)}
+      isChild={isChild}
+      isStatic={isStatic}
     />
   )
 }

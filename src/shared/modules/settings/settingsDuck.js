@@ -14,10 +14,18 @@ const initialState = {
   maxHistory: 30,
   theme: 'normal',
   useBoltRouting: false,
-  initCmd: ':play start',
+  initCmd: ':play start'
   initialNodeDisplay: 300,
   maxNeighbours: 100,
-  showSampleScripts: true
+  showSampleScripts: true,
+  browserSyncConfig: {
+    authWindowUrl: 'https://localhost:9001',
+    firebaseConfig: {
+      apiKey: 'AIzaSyB-zOxTpnQQjryMWzGbtN9aIHvjzv5mwR8',
+      databaseURL: 'https://my-first-app-v2-4dbd3.firebaseio.com',
+      messagingSenderId: '2586483860'
+    }
+  }
 }
 
 export default function settings (state = initialState, action) {

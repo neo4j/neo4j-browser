@@ -11,6 +11,7 @@ import { cypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cyph
 import { featuresDicoveryEpic } from './modules/features/featuresDuck'
 import { syncFavoritesEpic, loadFavoritesFromSyncEpic } from './modules/favorites/favoritesDuck'
 import { syncItemsEpic, clearSyncEpic } from './modules/sync/syncDuck'
+import { loadFoldersFromSyncEpic } from './modules/favorites/foldersDuck'
 
 export default combineEpics(
   handleCommandsEpic,
@@ -36,5 +37,6 @@ export default combineEpics(
   syncFavoritesEpic,
   loadFavoritesFromSyncEpic,
   syncItemsEpic,
-  clearSyncEpic
+  clearSyncEpic,
+  loadFoldersFromSyncEpic
 )
