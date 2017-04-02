@@ -8,11 +8,12 @@ class FrameTemplate extends Component {
     super(props)
     this.state = {
       fullscreen: false,
-      collapse: false
+      collapse: false,
+      wasToggledToOrFromFullScreen: false
     }
   }
   toggleFullScreen () {
-    this.setState({fullscreen: !this.state.fullscreen})
+    this.setState({fullscreen: !this.state.fullscreen, wasToggledToOrFromFullScreen: true})
   }
   toggleCollapse () {
     this.setState({collapse: !this.state.collapse})
@@ -20,7 +21,7 @@ class FrameTemplate extends Component {
   render () {
     const FrameComponent = this.state.fullscreen ? StyledFullscreenFrame : StyledFrame
     return (
-      <FrameComponent>
+      <FrameComponent playIntroAnimation={!this.state.wasToggledToOrFromFullScreen}>
         <FrameTitlebar
           frame={this.props.header}
           fullscreen={this.state.fullscreen}
