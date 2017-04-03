@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+export const StyledSetting = styled.div`
+  padding-bottom: 15px;
+`
+
 export const StyledSettingLabel = styled.div`
   word-wrap: break-wrap;
 `
