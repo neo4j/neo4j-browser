@@ -29,7 +29,6 @@ export class Visualization extends Component {
   }
 
   getNeighbours (id) {
-    console.log(id)
     return new Promise((resolve, reject) => {
       this.props.bus.self(
         CYPHER_REQUEST,
@@ -38,7 +37,6 @@ export class Visualization extends Component {
           if (!response.success) return reject({nodes: [], rels: []})
 
           const result = response.result
-          bolt.recordsToTableArray(result.records)
           const nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(result.records, false)
           resolve({nodes: nodesAndRelationships.nodes, rels: nodesAndRelationships.relationships})
         }

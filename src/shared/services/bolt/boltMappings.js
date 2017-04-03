@@ -80,6 +80,9 @@ export function extractNodesAndRelationshipsFromRecords (records, types) {
 }
 
 export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types, filterRels) {
+  if (records.length === 0) {
+    return { nodes: [], relationships: [] }
+  }
   let keys = records[0].keys
   let rawNodes = []
   let rawRels = []
