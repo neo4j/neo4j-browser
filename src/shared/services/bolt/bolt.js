@@ -180,6 +180,9 @@ export default {
   extractNodesAndRelationshipsFromRecords: (records) => {
     return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.types)
   },
+  extractNodesAndRelationshipsFromRecordsForOldVis: (records, filterRels = true) => {
+    return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(records, neo4j.types, filterRels)
+  },
   extractPlan: (result) => {
     return mappings.extractPlan(result)
   },
