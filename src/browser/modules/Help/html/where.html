@@ -26,9 +26,9 @@
   <section class="example">
     <figure class="runnable">
       <pre>
-        MATCH (director:Person)-[:DIRECTED]-&gt;(movie)
-        WHERE director.name = "Steven Spielberg"
-        RETURN movie.title
+MATCH (director:Person)-[:DIRECTED]-&gt;(movie)
+WHERE director.name = "Steven Spielberg"
+RETURN movie.title
       </pre>
       <figcaption>Find all the many fine films directed by Steven Spielberg.</figcaption>
     </figure>

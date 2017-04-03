@@ -27,10 +27,8 @@
   </section>
   <section class="example">
     <figure class="runnable">
-      <pre>
-        MATCH p = (ups)&lt;-[DEPENDS_ON]-(device) WHERE ups.id='EPS-7001'
-        FOREACH (n IN nodes(p) | SET n.available = FALSE )
-      </pre>
+      <pre>MATCH p = (ups)&lt;-[DEPENDS_ON]-(device) WHERE ups.id='EPS-7001'
+FOREACH (n IN nodes(p) | SET n.available = FALSE )</pre>
       <figcaption>Mark all devices plugged into a failed UPS as unavailable.</figcaption>
     </figure>
   </section>

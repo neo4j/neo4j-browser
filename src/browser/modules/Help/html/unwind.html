@@ -25,9 +25,9 @@
   <section class="example">
     <figure class="runnable">
       <pre>
-        MATCH p = shortestPath( (lucy:Person {name:"Lucy Liu"})-[:ACTED_IN*]-(bacon:Person {name:"Kevin Bacon"}) )
-        UNWIND nodes(p) as n
-        RETURN n.name
+MATCH p = shortestPath( (lucy:Person {name:"Lucy Liu"})-[:ACTED_IN*]-(bacon:Person {name:"Kevin Bacon"}) )
+UNWIND nodes(p) as n
+RETURN n.name
       </pre>
       <figcaption>Return a set of actors that form the shortest acquaintance links between Lucy Liu and Kevin Bacon.</figcaption>
     </figure>

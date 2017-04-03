@@ -28,10 +28,10 @@
   <section class="example">
     <figure class="runnable">
       <pre>
-        LOAD CSV FROM "http://data.neo4j.com/examples/person.csv" AS line
-        MERGE (n:Person {id: toInt(line[0])})
-        SET n.name = line[1]
-        RETURN n
+LOAD CSV FROM "http://data.neo4j.com/examples/person.csv" AS line
+MERGE (n:Person {id: toInt(line[0])})
+SET n.name = line[1]
+RETURN n
       </pre>
       <figcaption>Import Person nodes from a CSV file into the graph</figcaption>
     </figure>
