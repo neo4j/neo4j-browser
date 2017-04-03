@@ -9,7 +9,8 @@
     "lint": "standard --fix",
     "test": "npm run lint && jest",
     "dev": "jest --watch",
-    "build": "rm -rf ./build && NODE_ENV=\"production\" webpack"
+    "build": "rm -rf ./build && NODE_ENV=\"production\" webpack",
+    "jar": "yarn build && mvn package"
   },
   "jest": {
     "testPathIgnorePatterns": [
