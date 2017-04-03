@@ -1,13 +1,13 @@
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
-import neo4jVisualization from 'neo4j-visualization-d3'
+import neoGraphStyle from '../graphStyle'
 import {StyledPickerSelector, StyledTokenRelationshipType, StyledInlineList, StyledInlineListItem, StyledLabelToken, StyledPickerListItem, StyledCircleSelector, StyledCaptionSelector} from './styled'
 import * as actions from 'shared/modules/visualization/visualizationDuck'
 
 export class GrassEditorComponent extends Component {
   constructor (props) {
     super(props)
-    this.graphStyle = neo4jVisualization.neoGraphStyle()
+    this.graphStyle = neoGraphStyle()
     if (this.props.graphStyleData) {
       this.graphStyle.loadRules(this.props.graphStyleData)
     }

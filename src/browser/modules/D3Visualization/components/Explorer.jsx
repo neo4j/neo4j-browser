@@ -1,5 +1,6 @@
 import { Component } from 'preact'
-import neo4jVisualization from 'neo4j-visualization-d3'
+import {GraphComponent} from './Graph'
+import neoGraphStyle from '../graphStyle'
 import {InspectorComponent} from './Inspector'
 import {LegendComponent} from './Legend'
 import {StyledSvgWrapper} from './styled'
@@ -9,7 +10,7 @@ export class ExplorerComponent extends Component {
     super(props)
     this.state = {}
     this.state.stats = {labels: {}, relTypes: {}}
-    this.state.graphStyle = neo4jVisualization.neoGraphStyle()
+    this.state.graphStyle = neoGraphStyle()
     if (this.props.graphStyleData) {
       this.state.graphStyle.loadRules(this.props.graphStyleData)
     }
@@ -54,7 +55,7 @@ export class ExplorerComponent extends Component {
       <div id='svg-vis'>
         <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
         <StyledSvgWrapper className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'}>
-          <neo4jVisualization.GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
+          <GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
         </StyledSvgWrapper>
         <InspectorComponent hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />
       </div>
