@@ -72,11 +72,13 @@ export const clusterCypherRequestEpic = (some$, store) =>
           return Rx.Observable.of({action, error})
         })
     })
-    .flatMap(({action, observables}) => {
+    .flatMap(({action, observables, value}) => {
+      if (value) return Rx.Observable.of(value)
       observables.push(Rx.Observable.of(action))
       return Rx.Observable.forkJoin(...observables)
     })
     .map((value) => {
+      if (value && value.error) return {type: value.action.$$responseChannel, success: false, error: value.error}
       let action = value.pop()
       const records = value.reduce((acc, {result}) => {
         return acc.concat(result.records.map((record) => Object.assign({}, record, {host: result.summary.server.address})))

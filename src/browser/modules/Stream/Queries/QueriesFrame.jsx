@@ -5,6 +5,7 @@ import { withBus } from 'preact-suber'
 import { listQueriesProcedure, killQueriesProcedure } from 'shared/modules/cypher/queriesProcedureHelper'
 import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
 import { CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getConnectionState, CONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import { RefreshIcon } from 'browser-components/icons/Icons'
 import Visible from 'browser-components/Visible'
@@ -24,7 +25,11 @@ export class QueriesFrame extends Component {
     }
   }
   componentDidMount () {
-    this.getRunningQueries()
+    if (this.props.connectionState === CONNECTED_STATE) {
+      this.getRunningQueries()
+    } else {
+      this.setState({errors: ['Unable to connect to bolt server']})
+    }
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -153,7 +158,8 @@ export class QueriesFrame extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    availableProcedures: getAvailableProcedures(state) || []
+    availableProcedures: getAvailableProcedures(state) || [],
+    connectionState: getConnectionState(state)
   }
 }
 
