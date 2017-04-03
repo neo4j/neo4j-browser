@@ -1,6 +1,7 @@
 import { connect } from 'preact-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
 import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
+import {RadioForm} from 'browser-components/Form'
 import { StyledSetting, StyledSettingLabel, StyledSettingTextInput } from './styled'
 
 const visualSettings =
@@ -58,9 +59,14 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
       let value
       if (!settingObj[setting].type || settingObj[setting].type === 'input') {
         value = (<StyledSettingTextInput onChange={(event) => {
-          visualSetting.settings[setting] = event.target.value
+          settings[setting] = event.target.value
           onSettingsSave(settings)
         }} defaultValue={settings[setting]} title={[tooltip]} />)
+      } else if (settingObj[setting].type === 'radio') {
+        value = (<RadioForm options={settingObj[setting].options} onChange={(event) => {
+          settings[setting] = event.target.value
+          onSettingsSave(settings)
+        }} />)
       }
       return (
         <StyledSetting key={i}>
