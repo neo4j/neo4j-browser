@@ -9,8 +9,7 @@ import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import { cypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
 import { featuresDicoveryEpic } from './modules/features/featuresDuck'
-import { syncFavoritesEpic, loadFavoritesFromSyncEpic } from './modules/favorites/favoritesDuck'
-import { syncItemsEpic, clearSyncEpic } from './modules/sync/syncDuck'
+import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic } from './modules/sync/syncDuck'
 import { loadFoldersFromSyncEpic } from './modules/favorites/foldersDuck'
 
 export default combineEpics(

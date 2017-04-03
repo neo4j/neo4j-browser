@@ -1,6 +1,7 @@
 import { syncResourceFor } from 'services/browserSyncService'
 import { setItem } from 'services/localstorage'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
 
 export const NAME = 'sync'
 export const SET_SYNC = 'sync/SET_SYNC'
@@ -73,3 +74,30 @@ export const clearSyncEpic = (action$, store) =>
       setItem('folders', null)
     })
     .mapTo({ type: USER_CLEAR })
+
+export const syncFavoritesEpic = (action$, store) =>
+  action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES].includes(action.type))
+    .map((action) => {
+      const syncValue = getSync(store.getState())
+
+      if (syncValue && syncValue.syncObj) {
+        const documents = composeDocumentsToSync(store, syncValue)
+        return syncItems('documents', documents)
+      }
+      return { type: 'NOOP' }
+    })
+
+export const loadFavoritesFromSyncEpic = (action$, store) =>
+  action$.ofType(SET_SYNC)
+    .do((action) => {
+      const favoritesStatus = favoritesToLoad(action, store)
+
+      if (favoritesStatus.loadFavorites) {
+        store.dispatch(loadFavorites(favoritesStatus.favorites))
+      }
+
+      if (favoritesStatus.syncFavorites) {
+        store.dispatch(syncFavorites(favoritesStatus.favorites))
+      }
+    })
+    .mapTo({ type: 'NOOP' })

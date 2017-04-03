@@ -7,6 +7,20 @@ export const getSettings = (state) => state[NAME]
 export const getInitCmd = (state) => state[NAME].initCmd || initialState.initCmd
 export const getTheme = (state) => state[NAME].theme || initialState.theme
 export const getUseBoltRouting = (state) => state[NAME].useBoltRouting || initialState.useBoltRouting
+export const getBrowserSyncConfig = (state) => {
+  return getSettings(state).browserSyncDebugServer
+    ? {...browserSyncConfig, authWindowUrl: getSettings(state).browserSyncDebugServer}
+    : browserSyncConfig
+}
+
+const browserSyncConfig = {
+  authWindowUrl: 'https://localhost:9001/',
+  firebaseConfig: {
+    apiKey: 'AIzaSyB-zOxTpnQQjryMWzGbtN9aIHvjzv5mwR8',
+    databaseURL: 'https://my-first-app-v2-4dbd3.firebaseio.com',
+    messagingSenderId: '2586483860'
+  }
+}
 export const getUseNewVisualization = (state) => state[NAME].useNewVis
 
 const initialState = {
@@ -14,18 +28,11 @@ const initialState = {
   maxHistory: 30,
   theme: 'normal',
   useBoltRouting: false,
-  initCmd: ':play start'
-  initialNodeDisplay: 300,
+  initCmd: ':play start',
+ initialNodeDisplay: 300,
   maxNeighbours: 100,
   showSampleScripts: true,
-  browserSyncConfig: {
-    authWindowUrl: 'https://localhost:9001',
-    firebaseConfig: {
-      apiKey: 'AIzaSyB-zOxTpnQQjryMWzGbtN9aIHvjzv5mwR8',
-      databaseURL: 'https://my-first-app-v2-4dbd3.firebaseio.com',
-      messagingSenderId: '2586483860'
-    }
-  }
+  browserSyncDebugServer: null
 }
 
 export default function settings (state = initialState, action) {

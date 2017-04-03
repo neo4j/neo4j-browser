@@ -7,7 +7,7 @@ import { setSync, clearSync, clearSyncAndLocal } from 'shared/modules/sync/syncD
 import { authenticate, initialize, status, getResourceFor, signOut, setupUser } from 'services/browserSyncService'
 import { setContent as setEditorContent } from 'shared/modules/editor/editorDuck'
 import { getBrowserName } from 'services/utils'
-import { getSettings } from 'shared/modules/settings/settingsDuck'
+import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 
 import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSubHeader, DrawerSectionBody, DrawerToppedHeader} from 'browser-components/drawer'
 import { FormButton } from 'browser-components/buttons'
@@ -209,15 +209,14 @@ const mapStateToProps = (state) => {
   return {
     lastSyncedAt: state.sync ? state.sync.lastSyncedAt : null,
     authData: state.sync ? state.sync.authData : null,
-    browserSyncConfig: getSettings(state).browserSyncConfig
+    browserSyncConfig: getBrowserSyncConfig(state)
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSync: (syncObject) => {
-      const action = setSync(syncObject)
-      ownProps.bus.send(action.type, action)
+      dispatch(setSync(syncObject))
     },
     onSyncHelpClick: (play) => {
       const action = setEditorContent(':play neo4j sync')

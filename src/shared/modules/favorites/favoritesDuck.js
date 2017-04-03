@@ -1,6 +1,5 @@
 import uuid from 'uuid'
 import { USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
-import { SET_SYNC, syncItems, getSync } from 'shared/modules/sync/syncDuck'
 import { getBrowserName } from 'services/utils'
 
 export const NAME = 'documents'
@@ -8,8 +7,6 @@ export const NAME = 'documents'
 export const ADD_FAVORITE = 'favorites/ADD_FAVORITE'
 export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
 export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
-export const FAVORITES_UPDATED = 'favorites/FAVORITES_UPDATED'
-export const FAVORITES_READ = 'favorites/FAVORITES_READ'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
 
 import {scripts as staticScriptsList} from './staticScripts'
@@ -48,37 +45,36 @@ export function addFavorite (cmd) {
     cmd
   }
 }
-export function hydrate (favorites) {
+export function loadFavorites (favorites) {
   return {
     type: LOAD_FAVORITES,
     favorites
   }
 }
+export function syncFavorites (favorites) {
+  return {
+    type: SYNC_FAVORITES,
+    favorites
+  }
+}
 
-export const syncFavoritesEpic = (action$, store) =>
-  action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES].includes(action.type))
-    .map((action) => {
-      const syncValue = getSync(store.getState())
+export const composeDocumentsToSync = (store, syncValue) => {
+  const documents = syncValue.syncObj.documents
+  const favorites = getFavorites(store.getState()).filter(fav => !fav.isStatic)
 
-      if (syncValue && syncValue.syncObj) {
-        const documents = syncValue.syncObj.documents
-        const favorites = getFavorites(store.getState()).filter(fav => !fav.isStatic)
+  documents.unshift({
+    'client': getBrowserName(),
+    'data': favorites,
+    'syncedAt': Date.now()
+  })
+  return documents
+}
 
-        documents.unshift({
-          'client': getBrowserName(),
-          'data': favorites,
-          'syncedAt': Date.now()
-        })
-
-        return syncItems('documents', documents)
-      } else { return { type: 'NOOP' } }
-    })
-
-const mergeFavorites = (list1, list2) => {
+export const mergeFavorites = (list1, list2) => {
   return list1.concat(list2.filter(favInList2 => list1.findIndex(favInList1 => favInList1.id === favInList2.id) < 0))
 }
 
-const favoritesToLoad = (action, store) => {
+export const favoritesToLoad = (action, store) => {
   let favoritesFromSync = (action.obj.syncObj && action.obj.syncObj.documents.length > 0)
     ? (action.obj.syncObj.documents[0].data || [])
     : null
@@ -96,19 +92,4 @@ const favoritesToLoad = (action, store) => {
     return { favorites: null, syncFavorites: false, loadFavorites: false }
   }
 }
-
-export const loadFavoritesFromSyncEpic = (action$, store) =>
-  action$.ofType(SET_SYNC)
-    .do((action) => {
-      const favoritesStatus = favoritesToLoad(action, store)
-
-      if (favoritesStatus.loadFavorites) {
-        store.dispatch({type: LOAD_FAVORITES, favorites: favoritesStatus.favorites})
-      }
-
-      if (favoritesStatus.syncFavorites) {
-        store.dispatch({type: SYNC_FAVORITES, payload: favoritesStatus.favorites})
-      }
-    })
-    .mapTo({ type: 'NOOP' })
 

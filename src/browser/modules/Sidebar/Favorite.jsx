@@ -40,8 +40,7 @@ export const Favorite = ({id, content, onItemClick, removeClick, isChild, isStat
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     removeClick: (id) => {
-      const action = favorite.removeFavorite(id)
-      ownProps.bus.send(action.type, action)
+      dispatch(favorite.removeFavorite(id))
     }
   }
 }

@@ -39,7 +39,7 @@ describe('favorites actions', () => {
       type: favorites.LOAD_FAVORITES,
       favorites: favs
     }
-    expect(favorites.hydrate(favs)).toEqual(expected)
+    expect(favorites.loadFavorites(favs)).toEqual(expected)
   })
   test('should handle removing favorite', () => {
     const id = uuid.v4()
