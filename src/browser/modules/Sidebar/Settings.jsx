@@ -1,7 +1,7 @@
 import { connect } from 'preact-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
-import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
-import {RadioForm} from 'browser-components/Form'
+import { Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSectionBody, DrawerSubHeader } from 'browser-components/drawer'
+import { RadioSelector, CheckboxSelector } from 'browser-components/Form'
 import { StyledSetting, StyledSettingLabel, StyledSettingTextInput } from './styled'
 
 const visualSettings =
@@ -19,11 +19,23 @@ const visualSettings =
       ]
     },
     {
+      title: 'Preferences',
+      settings: [
+        {
+          showSampleScripts: {
+            displayName: 'Show sample scripts',
+            tooltip: 'Show sample scripts in favorites drawer.',
+            type: 'checkbox'
+          }
+        }
+      ]
+    },
+    {
       title: 'Result Frames',
       settings: [
         {
           maxHistory: {
-            displayName: 'Max Neighbors',
+            displayName: 'Max History',
             tooltip: 'Max number of history entries. When reached, old entries gets retired.'
           }
         }
@@ -56,24 +68,31 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
       const visual = settingObj[setting].displayName
       const tooltip = settingObj[setting].tooltip || ''
 
-      let value
       if (!settingObj[setting].type || settingObj[setting].type === 'input') {
-        value = (<StyledSettingTextInput onChange={(event) => {
-          settings[setting] = event.target.value
-          onSettingsSave(settings)
-        }} defaultValue={settings[setting]} title={[tooltip]} />)
-      } else if (settingObj[setting].type === 'radio') {
-        value = (<RadioForm options={settingObj[setting].options} onChange={(event) => {
-          settings[setting] = event.target.value
-          onSettingsSave(settings)
-        }} />)
-      }
-      return (
-        <StyledSetting key={i}>
+        return (<StyledSetting key={i}>
           <StyledSettingLabel>{visual}</StyledSettingLabel>
-          {value}
-        </StyledSetting>
-      )
+          <StyledSettingTextInput onChange={(event) => {
+            settings[setting] = event.target.value
+            onSettingsSave(settings)
+          }} defaultValue={settings[setting]} title={[tooltip]} />
+        </StyledSetting>)
+      } else if (settingObj[setting].type === 'radio') {
+        return (<StyledSetting key={i}>
+          <StyledSettingLabel>{visual}</StyledSettingLabel>
+          <RadioSelector options={settingObj[setting].options} onChange={(event) => {
+            settings[setting] = event.target.value
+            onSettingsSave(settings)
+          }} selectedValue={settings[setting]} />
+        </StyledSetting>)
+      } else if (settingObj[setting].type === 'checkbox') {
+        return (<StyledSetting key={i}>
+          <CheckboxSelector onChange={(event) => {
+            settings[setting] = event.target.checked
+            onSettingsSave(settings)
+          }} checked={settings[setting]} />
+          <StyledSettingLabel>{visual}</StyledSettingLabel>
+        </StyledSetting>)
+      }
     })
     return (
       <div>

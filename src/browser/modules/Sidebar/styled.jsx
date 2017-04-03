@@ -6,6 +6,7 @@ export const StyledSetting = styled.div`
 
 export const StyledSettingLabel = styled.div`
   word-wrap: break-wrap;
+  display: inline-block;
 `
 
 export const StyledSettingTextInput = styled.input`

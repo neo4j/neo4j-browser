@@ -12,6 +12,9 @@ const StyledSettingTextInput = styled.input`
   width: 192px;
 `
 
+const StyledCheckbox = styled.input`
+  margin-right: 10px;
+`
 const StyledLabel = styled.label`
   margin-left: 10px;
 `
@@ -24,7 +27,11 @@ export const TextInput = (props) => {
   return <StyledSettingTextInput {...rest}>{children}</StyledSettingTextInput>
 }
 
-export class RadioForm extends Component {
+export const CheckboxSelector = (props) => {
+  return (props.checked) ? <StyledCheckbox type='checkbox' {...props} /> : <StyledCheckbox type='checkbox' {...props} />
+}
+
+export class RadioSelector extends Component {
   constructor (props) {
     super(props)
     this.state.selectedValue = this.props.selectedValue || null
