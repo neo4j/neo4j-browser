@@ -29,7 +29,7 @@ export const StyledFrame = styled.article`
   width: auto;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
-  animation: ${rollDownAnimation} .2s linear;
+  animation: ${props => props.playIntroAnimation ? rollDownAnimation + '.2s linear' : 'none'};
   border: ${props => props.theme.frameBorder};
 `
 
