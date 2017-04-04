@@ -89,13 +89,23 @@ const rules = [
   {
     test: /\.css$/,
     include: path.resolve('./src'), // css modules for component css files
-    exclude: [path.resolve('./src/browser/external'), path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides')],
+    exclude: [path.resolve('./src/browser/external'), path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides'), path.resolve('./src/browser/modules/D3Visualization/src')],
     use: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]', 'postcss-loader']
   },
   {
     test: /\.css$/, // global css files that don't need any processing
     exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/modules'), path.resolve('./src/browser/guides')],
     use: ['style-loader', 'css-loader']
+  },
+  {
+    test: /\.css$/, // global css files that don't need any processing
+    include: path.resolve('./src/browser/modules/D3Visualization/src'), // css modules for component css files
+    use: ['css-loader']
+  },
+  {
+    test: /\.coffee$/,
+    exclude: /node_modules/,
+    loader: 'coffee-loader'
   },
   {
     test: /\.(png|gif|jpg|svg)$/,
@@ -177,7 +187,7 @@ module.exports = {
     rules
   },
   resolve: {
-    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx', '.css'],
+    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx', '.css', '.coffee'],
     modules: [
       path.resolve(__dirname, 'node_modules'),
       jsSourcePath

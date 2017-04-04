@@ -6,6 +6,75 @@ export const StyledSvgWrapper = styled.div`
   height: 247px;
   width: 100%;
   background-color: #f9fbfd;
+    .node {
+      cursor: pointer;
+      > .ring {
+        fill: none;
+        opacity: 0;
+        stroke: #6ac6ff;
+      }
+      &.selected {
+        > .ring {
+          stroke: #fdcc59;
+          opacity: 0.3;
+        }
+      }
+      &:hover {
+        > .ring {
+          stroke: #6ac6ff;
+          opacity: 0.3;
+        }
+      }
+    }
+    .relationship {
+      > .overlay {
+        opacity: 0;
+        fill: #6ac6ff;
+      }
+      &.selected {
+        > .overlay {
+          fill: #fdcc59;
+          opacity: 0.3;
+        }
+      }
+      &:hover {
+        > .overlay {
+          fill: #6ac6ff;
+          opacity: 0.3;
+        }
+      }
+    }
+    .remove_node {
+      .expand_node {
+        &:hover {
+          border: 2px #000 solid;
+        }
+      }
+    }
+    .outline {
+      cursor: pointer
+    }
+    path {
+      &.context-menu-item {
+        stroke-width: 2px;
+        fill: #d2d5da;
+      }
+    }
+    text {
+      &.context-menu-item {
+        fill: #fff;
+        text-anchor: middle;
+        pointer-events: none;
+        font-size: 14px;
+      }
+    }
+    .context-menu-item {
+      cursor: pointer;
+      &:hover {
+        fill: #b9b9b9;
+        font-size: 14px;
+      }
+    }
   }
   &.one-legend-row {
     > svg {
