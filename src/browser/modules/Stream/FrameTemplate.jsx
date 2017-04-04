@@ -28,6 +28,7 @@ class FrameTemplate extends Component {
           fullscreenToggle={this.toggleFullScreen.bind(this)}
           collapse={this.state.collapse}
           collapseToggle={this.toggleCollapse.bind(this)}
+          exportData={this.props.exportData}
           />
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
           {(this.props.sidebar) ? this.props.sidebar() : null}

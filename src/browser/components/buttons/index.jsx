@@ -223,6 +223,15 @@ export const FrameButton = styled.li`
   }
 `
 
+export const FrameButtonAChild = styled.a`
+  display: block;
+  text-decoration: none;
+  &:focus, &:active, &:hover {
+    outline:0;
+    text-decoration: none;
+  }
+`
+
 export const ActionButton = (props) => {
   const {className, ...rest} = props
   return (<button className={className + ' ' + styles.action} {...rest} />)
