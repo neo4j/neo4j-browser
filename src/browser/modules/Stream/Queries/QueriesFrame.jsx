@@ -7,6 +7,7 @@ import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
 import { CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { getConnectionState, CONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+import { StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code } from './styled'
 import { RefreshIcon } from 'browser-components/icons/Icons'
 import Visible from 'browser-components/Visible'
 import FrameError from '../FrameError'
@@ -103,25 +104,25 @@ export class QueriesFrame extends Component {
     const tableRows = queries.map((query) => {
       return (
         <tr>
-          <td>{query.host}</td>
-          <td>{query.username}</td>
-          <td>{query.query}</td>
-          <td>{query.parameters}</td>
-          <td>{query.metaData}</td>
-          <td>{query.elapsedTime}</td>
-          <td><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></td>
+          <StyledTd><Code>{query.host}</Code></StyledTd>
+          <StyledTd>{query.username}</StyledTd>
+          <StyledTd><Code>{query.query}</Code></StyledTd>
+          <StyledTd><Code>{query.parameters}</Code></StyledTd>
+          <StyledTd><Code>{query.metaData}</Code></StyledTd>
+          <StyledTd>{query.elapsedTime}</StyledTd>
+          <StyledTd><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></StyledTd>
         </tr>)
     })
 
     const tableHeaders = ['Database URI', 'User', 'Query', 'Params', 'Meta', 'Elapsed time', 'Kill'].map((heading, i) => {
-      return <th key={i}>{heading}</th>
+      return <StyledTh key={i}>{heading}</StyledTh>
     })
     return (
-      <table>
+      <StyledTable>
         <thead>
-          <tr>
+          <StyledHeaderRow>
             {tableHeaders}
-          </tr>
+          </StyledHeaderRow>
         </thead>
         <tbody>
           {tableRows}
@@ -135,7 +136,7 @@ export class QueriesFrame extends Component {
             </td>
           </tr>
         </tbody>
-      </table>
+      </StyledTable>
     )
   }
   render () {
