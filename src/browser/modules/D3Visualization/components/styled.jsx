@@ -1,15 +1,83 @@
 import styled from 'styled-components'
 
+const legendRowHeight = 32
+
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
+  height: 100%;
   > svg {
-  height: 247px;
+  height: 100%;
   width: 100%;
   background-color: #f9fbfd;
-  }
-  &.one-legend-row {
-    > svg {
-    height: 279px;
+    .node {
+      cursor: pointer;
+      > .ring {
+        fill: none;
+        opacity: 0;
+        stroke: #6ac6ff;
+      }
+      &.selected {
+        > .ring {
+          stroke: #fdcc59;
+          opacity: 0.3;
+        }
+      }
+      &:hover {
+        > .ring {
+          stroke: #6ac6ff;
+          opacity: 0.3;
+        }
+      }
+    }
+    .relationship {
+      > .overlay {
+        opacity: 0;
+        fill: #6ac6ff;
+      }
+      &.selected {
+        > .overlay {
+          fill: #fdcc59;
+          opacity: 0.3;
+        }
+      }
+      &:hover {
+        > .overlay {
+          fill: #6ac6ff;
+          opacity: 0.3;
+        }
+      }
+    }
+    .remove_node {
+      .expand_node {
+        &:hover {
+          border: 2px #000 solid;
+        }
+      }
+    }
+    .outline {
+      cursor: pointer
+    }
+    path {
+      &.context-menu-item {
+        stroke-width: 2px;
+        fill: #d2d5da;
+      }
+    }
+    text {
+      &.context-menu-item {
+        fill: #fff;
+        text-anchor: middle;
+        pointer-events: none;
+        font-size: 14px;
+      }
+    }
+    .context-menu-item {
+      cursor: pointer;
+      &:hover {
+        fill: #b9b9b9;
+        font-size: 14px;
+      }
+    }
   }
 `
 export const StyledStream = styled.div`
@@ -87,6 +155,7 @@ export const StyledStatusBar = styled.div`
   white-space: nowrap;
   overflow: hidden;
   border-top: 1px solid #e6e9ef;
+  margin-bottom: -39px;
 `
 
 // .status-bar .btn-group {
@@ -154,12 +223,16 @@ export const StyledLegendContents = styled.div`
 
 export const StyledLegendRow = styled.div`
   border-bottom: 1px solid #e6e9ef;
-  max-height: 32px;
+  max-height: ${legendRowHeight}px
   overflow: hidden;
 `
 
 export const StyledLegend = styled.div`
   background-color: #eef1f8;
+  margin-top: -${(legendRowHeight * 2) + 1}px;
+  &.one-row {
+    margin-top: -${legendRowHeight}px;
+  }
 `
 export const StyledLegendInlineList = styled(StyledInlineList) `
   padding: 7px 9px 0px 10px;
@@ -214,5 +287,14 @@ export const StyledCaptionSelector = styled.a`
   &.active {
     color: white;
     background-color: #9195A0;
+  }
+`
+
+export const StyledFullSizeContainer = styled.div`
+  height: 100%;
+  padding-top: ${(legendRowHeight * 2) + 1}px;
+  padding-bottom: 39px;
+  &.one-legend-row {
+    padding-top: ${legendRowHeight}px;
   }
 `

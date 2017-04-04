@@ -51,10 +51,11 @@ export const LegendComponent = ({stats, graphStyle, onSelectedLabel, onSelectedR
       </StyledLegendRow>
     )
   }
+  let relTypes = mapRelTypes(stats.relTypes)
   return (
-    <StyledLegend>
+    <StyledLegend className={relTypes ? '' : 'one-row'}>
       {mapLabels(stats.labels)}
-      {mapRelTypes(stats.relTypes)}
+      {relTypes}
     </StyledLegend>
 
   )
