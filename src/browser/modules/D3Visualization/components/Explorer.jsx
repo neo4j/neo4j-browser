@@ -3,7 +3,7 @@ import {GraphComponent} from './Graph'
 import neoGraphStyle from '../graphStyle'
 import {InspectorComponent} from './Inspector'
 import {LegendComponent} from './Legend'
-import {StyledSvgWrapper} from './styled'
+import {StyledSvgWrapper, StyledFullSizeContainer} from './styled'
 
 export class ExplorerComponent extends Component {
   constructor (props) {
@@ -52,13 +52,13 @@ export class ExplorerComponent extends Component {
 
   render () {
     return (
-      <div id='svg-vis'>
+      <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'}>
         <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
-        <StyledSvgWrapper className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'}>
+        <StyledSvgWrapper>
           <GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
         </StyledSvgWrapper>
         <InspectorComponent hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />
-      </div>
+      </StyledFullSizeContainer>
     )
   }
 }

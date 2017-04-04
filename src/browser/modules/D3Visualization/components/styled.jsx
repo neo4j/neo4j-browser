@@ -1,9 +1,12 @@
 import styled from 'styled-components'
 
+const legendRowHeight = 32
+
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
+  height: 100%;
   > svg {
-  height: 247px;
+  height: 100%;
   width: 100%;
   background-color: #f9fbfd;
     .node {
@@ -75,10 +78,6 @@ export const StyledSvgWrapper = styled.div`
         font-size: 14px;
       }
     }
-  }
-  &.one-legend-row {
-    > svg {
-    height: 279px;
   }
 `
 export const StyledStream = styled.div`
@@ -156,6 +155,7 @@ export const StyledStatusBar = styled.div`
   white-space: nowrap;
   overflow: hidden;
   border-top: 1px solid #e6e9ef;
+  margin-bottom: -39px;
 `
 
 // .status-bar .btn-group {
@@ -223,12 +223,16 @@ export const StyledLegendContents = styled.div`
 
 export const StyledLegendRow = styled.div`
   border-bottom: 1px solid #e6e9ef;
-  max-height: 32px;
+  max-height: ${legendRowHeight}px
   overflow: hidden;
 `
 
 export const StyledLegend = styled.div`
   background-color: #eef1f8;
+  margin-top: -${(legendRowHeight * 2) + 1}px;
+  &.one-row {
+    margin-top: -${legendRowHeight}px;
+  }
 `
 export const StyledLegendInlineList = styled(StyledInlineList) `
   padding: 7px 9px 0px 10px;
@@ -283,5 +287,14 @@ export const StyledCaptionSelector = styled.a`
   &.active {
     color: white;
     background-color: #9195A0;
+  }
+`
+
+export const StyledFullSizeContainer = styled.div`
+  height: 100%;
+  padding-top: ${(legendRowHeight * 2) + 1}px;
+  padding-bottom: 39px;
+  &.one-legend-row {
+    padding-top: ${legendRowHeight}px;
   }
 `

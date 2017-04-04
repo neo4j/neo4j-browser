@@ -66,9 +66,7 @@ export class Visualization extends Component {
     this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecordsForOldVis(this.props.records)
     // return (<div className={styles.nevadaCanvas} ref={this.initialiseVis.bind(this)} />)
     return (
-      <div>
-        <ExplorerComponent graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
-      </div>
+      <ExplorerComponent graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
     )
   }
 }
