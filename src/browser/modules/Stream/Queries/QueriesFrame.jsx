@@ -42,11 +42,11 @@ export class QueriesFrame extends Component {
     }
   }
   isCC () {
-    this.props.availableProcedures.includes('dbms.cluster.overview')
+    return this.props.availableProcedures.includes('dbms.cluster.overview')
   }
   getRunningQueries (clearSuccess = true) {
     this.props.bus.self(
-      (this.isCC) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
+      (this.isCC()) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {query: listQueriesProcedure()},
       (response) => {
         if (response.success) {
@@ -63,7 +63,7 @@ export class QueriesFrame extends Component {
   }
   killQueries (host, queryIdList) {
     this.props.bus.self(
-      (this.isCC) ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
+      (this.isCC()) ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
       {host, query: killQueriesProcedure(queryIdList)},
       (response) => {
         if (response.success) {
@@ -82,7 +82,11 @@ export class QueriesFrame extends Component {
       queryRecord.keys.forEach((key, idx) => {
         queryInfo[key] = queryRecord._fields[idx]
       })
-      queryInfo.host = 'bolt://' + queryRecord.host
+      if (queryInfo.host) {
+        queryInfo.host = 'bolt://' + queryInfo.host
+      } else {
+        queryInfo.host = 'bolt://' + result.summary.server.address
+      }
       return queryInfo
     })
   }
