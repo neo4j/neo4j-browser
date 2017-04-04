@@ -5,6 +5,7 @@ const DashboardPlugin = require('webpack-dashboard/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const autoprefixer = require('autoprefixer')
 const precss = require('precss')
 
@@ -73,18 +74,28 @@ const rules = [
   {
     test: /\.(js|jsx)$/,
     exclude: /node_modules/,
-    use: [
-      'babel-loader'
-    ]
+    use: [{
+      loader: 'babel-loader',
+      options: {
+        presets: [['es2015', {modules: false}], 'react'],
+        plugins: [
+          'transform-object-rest-spread',
+          'preact-require',
+          ['transform-react-jsx', {
+            'pragma': 'h'
+          }]
+        ]
+      }
+    }]
   },
   {
     test: /\.json$/,
-    loader: 'json-loader'
+    use: 'json-loader'
   },
   {
     test: /\.css$/, // Guides
     include: path.resolve('./src/browser/modules/Guides'),
-    loader: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[local]', 'postcss-loader']
+    use: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[local]', 'postcss-loader']
   },
   {
     test: /\.css$/,
@@ -148,7 +159,12 @@ if (isProduction) {
   // Development plugins
   plugins.push(
     new webpack.HotModuleReplacementPlugin(),
-    new DashboardPlugin()
+    new DashboardPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: '../bundle-report.html'
+    })
   )
 }
 
@@ -160,6 +176,7 @@ module.exports = {
       'index.jsx'
     ],
     vendor: [
+      'firebase',
       'neo4j-driver-alias',
       'codemirror',
       'rxjs',
@@ -170,7 +187,11 @@ module.exports = {
       'redux-observable',
       'suber',
       'preact-suber',
-      'redux'
+      'redux',
+      'styled-components',
+      'iconv-lite',
+      'pako',
+      'preact-redux'
     ]
   },
   output: {
@@ -188,7 +209,7 @@ module.exports = {
       jsSourcePath
     ],
     alias: {
-      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.js',
+      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
       'src-root': path.resolve(__dirname, 'src'),
       'services': path.resolve(__dirname, 'src/shared/services'),
       'browser-services': path.resolve(__dirname, 'src/browser/services'),
