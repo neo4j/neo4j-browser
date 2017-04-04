@@ -38,7 +38,6 @@ export class NevadaWrapper extends Component {
         labelsUpdated: this.labelsUpdated.bind(this),
         fetchLabels: this.fetchLabels.bind(this)
       }
-      console.log('parentContainer', this.state.parentContainer)
       this.state.nevada = new Nevada(this.state.parentContainer, this.props.nodes, this.props.relationships, {}, callbacks)
     }
   }
