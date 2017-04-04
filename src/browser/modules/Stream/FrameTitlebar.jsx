@@ -4,24 +4,41 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
-import { FrameButton } from 'browser-components/buttons'
-import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon } from 'browser-components/icons/Icons'
+import { FrameButton, FrameButtonAChild } from 'browser-components/buttons'
+import Visible from 'browser-components/Visible'
+import { CSVSerializer } from 'services/serializer'
+import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon, DownloadIcon } from 'browser-components/icons/Icons'
 import { StyledFrameTitleBar, StyledFrameCommand, FrameTitlebarButtonSection } from './styled'
 
-export const FrameTitlebar = ({frame, fullscreen, togglePinning, fullscreenToggle, collapse, collapseToggle, onTitlebarClick, onCloseClick, onReRunClick, onExpandClick}) => {
-  const fullscreenIcon = (fullscreen) ? <ContractIcon /> : <ExpandIcon />
-  const expandCollapseIcon = (collapse) ? <DownIcon /> : <UpIcon />
+export const FrameTitlebar = (props) => {
+  const { frame } = props
+  let csvData = null
+  if (props.exportData) {
+    let data = props.exportData
+    const csv = CSVSerializer(data.shift())
+    csv.appendRows(data)
+    csvData = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv.output())
+  }
+  const fullscreenIcon = (props.fullscreen) ? <ContractIcon /> : <ExpandIcon />
+  const expandCollapseIcon = (props.collapse) ? <DownIcon /> : <UpIcon />
   return (
     <StyledFrameTitleBar>
-      <StyledFrameCommand onClick={() => onTitlebarClick(frame.cmd)}>
+      <StyledFrameCommand onClick={() => props.onTitlebarClick(frame.cmd)}>
         {frame.cmd}
       </StyledFrameCommand>
       <FrameTitlebarButtonSection>
-        <FrameButton onClick={() => togglePinning(frame.id, frame.isPinned)}><PinIcon /></FrameButton>
-        <FrameButton onClick={() => fullscreenToggle()}>{fullscreenIcon}</FrameButton>
-        <FrameButton onClick={() => collapseToggle()}>{expandCollapseIcon}</FrameButton>
-        <FrameButton onClick={() => onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
-        <FrameButton onClick={() => onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
+        <Visible if={frame.type === 'cypher' && csvData}>
+          <FrameButton><FrameButtonAChild download='export.csv' href={csvData}><DownloadIcon /></FrameButtonAChild></FrameButton>
+        </Visible>
+        <FrameButton onClick={() => props.togglePinning(frame.id, frame.isPinned)}><PinIcon /></FrameButton>
+        <Visible if={frame.type === 'cypher'}>
+          <FrameButton onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
+        </Visible>
+        <FrameButton onClick={() => props.collapseToggle()}>{expandCollapseIcon}</FrameButton>
+        <Visible if={frame.type === 'cypher'}>
+          <FrameButton onClick={() => props.onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
+        </Visible>
+        <FrameButton onClick={() => props.onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
       </FrameTitlebarButtonSection>
     </StyledFrameTitleBar>
   )

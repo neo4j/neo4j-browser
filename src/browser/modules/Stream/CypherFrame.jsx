@@ -185,6 +185,7 @@ class CypherFrame extends Component {
         sidebar={this.sidebar.bind(this)}
         header={frame}
         contents={frameContents}
+        exportData={this.state.rows}
         statusbar={statusBar}
       />
     )

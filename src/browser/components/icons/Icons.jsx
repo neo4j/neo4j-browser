@@ -48,7 +48,7 @@ export const PinIcon = () => (<IconContainer activeStyle={styles.inactive} inact
 export const MinusIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl-minus-circle' />)
 export const RightArrowIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl-arrow-circle-right' />)
 export const CancelIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl-delete-circle' />)
-
+export const DownloadIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-download-drive' />)
 export const ExpandMenuIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='fa fa-caret-right' />)
 export const CollapseMenuIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='fa fa-caret-down' />)
 

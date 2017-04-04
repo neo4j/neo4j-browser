@@ -91,7 +91,7 @@ export const StyledFrameTitleBar = styled.div`
 `
 
 export const FrameTitlebarButtonSection = styled.ul`
-  flex: 0 0 205px;
+  flex: 0 0 auto;
   margin-left: -5px;
   list-style: none;
   padding-left: 0;
