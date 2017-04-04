@@ -43,6 +43,7 @@ To package Neo4j Browser in to a jar:
 
  * Compile the project with `grunt build`
  * Build a jar using `mvn package`
+ 
 == Custom Builds ==
 
 You can customize Neo4j Browser with your own content and styles. The build process accepts a `--custom`
