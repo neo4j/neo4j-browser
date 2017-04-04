@@ -89,18 +89,13 @@ const rules = [
   {
     test: /\.css$/,
     include: path.resolve('./src'), // css modules for component css files
-    exclude: [path.resolve('./src/browser/external'), path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides'), path.resolve('./src/browser/modules/D3Visualization/src')],
+    exclude: [path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides')],
     use: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]', 'postcss-loader']
   },
   {
     test: /\.css$/, // global css files that don't need any processing
-    exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/modules'), path.resolve('./src/browser/guides')],
+    exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/modules')],
     use: ['style-loader', 'css-loader']
-  },
-  {
-    test: /\.css$/, // global css files that don't need any processing
-    include: path.resolve('./src/browser/modules/D3Visualization/src'), // css modules for component css files
-    use: ['css-loader']
   },
   {
     test: /\.coffee$/,
