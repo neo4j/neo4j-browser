@@ -7,6 +7,20 @@ export const getSettings = (state) => state[NAME]
 export const getInitCmd = (state) => state[NAME].initCmd || initialState.initCmd
 export const getTheme = (state) => state[NAME].theme || initialState.theme
 export const getUseBoltRouting = (state) => state[NAME].useBoltRouting || initialState.useBoltRouting
+export const getBrowserSyncConfig = (state) => {
+  return getSettings(state).browserSyncDebugServer
+    ? {...browserSyncConfig, authWindowUrl: getSettings(state).browserSyncDebugServer}
+    : browserSyncConfig
+}
+
+const browserSyncConfig = {
+  authWindowUrl: 'https://auth.neo4j.com/indexNewBrowser.html',
+  firebaseConfig: {
+    apiKey: 'AIzaSyA1RwZMBWHxqRGyY3CK60leRkr56H6GHV4',
+    databaseURL: 'https://fiery-heat-7952.firebaseio.com',
+    messagingSenderId: '352959348981'
+  }
+}
 export const getUseNewVisualization = (state) => state[NAME].useNewVis
 
 const initialState = {
@@ -17,7 +31,8 @@ const initialState = {
   initCmd: ':play start',
   initialNodeDisplay: 300,
   maxNeighbours: 100,
-  showSampleScripts: true
+  showSampleScripts: true,
+  browserSyncDebugServer: null
 }
 
 export default function settings (state = initialState, action) {

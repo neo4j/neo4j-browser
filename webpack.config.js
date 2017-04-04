@@ -188,16 +188,16 @@ module.exports = {
       jsSourcePath
     ],
     alias: {
-      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
-      'src-root': './src',
-      'services': './src/shared/services',
-      'browser-services': './src/browser/services',
-      'shared': './src/shared',
+      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.js',
+      'src-root': path.resolve(__dirname, 'src'),
+      'services': path.resolve(__dirname, 'src/shared/services'),
+      'browser-services': path.resolve(__dirname, 'src/browser/services'),
+      'shared': path.resolve(__dirname, 'src/shared'),
       'react': 'preact-compat',
       'react-dom': 'preact-compat',
-      'browser-components': './src/browser/components',
-      'browser': './src/browser',
-      'browser-styles': './src/browser/styles'
+      'browser-components': path.resolve(__dirname, 'src/browser/components'),
+      'browser': path.resolve(__dirname, 'src/browser'),
+      'browser-styles': path.resolve(__dirname, 'src/browser/styles')
     }
   },
   plugins,

@@ -2,7 +2,7 @@ import { Component } from 'preact'
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-import { BinIcon } from 'browser-components/icons/Icons'
+import { BinIcon, ExpandMenuIcon, CollapseMenuIcon } from 'browser-components/icons/Icons'
 
 import styles from './style.css'
 
@@ -78,10 +78,21 @@ const StyledFavoriteText = styled.span`
   max-height: 54px;
   overflow: hidden;
 `
-const StyledList = styled.li`
+
+const StyledList = styled.ul`
   list-style-type: none;
-  margin: 14px 0;
+  margin: 16px 0;
 `
+const StyledListItem = styled.li`
+  list-style-type: none;
+  margin: 8px ${props => props.isChild ? '16px' : '8px'};
+  cursor: pointer;  
+`
+const StyledListHeaderItem = styled.li`
+  list-style-type: none;
+  cursor: pointer;  
+`
+
 export const StyledNavigationButton = styled.button`
   background: transparent;
   border: 0;
@@ -101,16 +112,33 @@ export const NavigationButtonContainer = styled.li`
     outline: none;
   }
 `
+
+export const FavoriteList = (props) => {
+  let icon = props.active ? <CollapseMenuIcon /> : <ExpandMenuIcon />
+  return <StyledList>
+    <StyledListHeaderItem onClick={props.onClick}>
+      <FoldersButton>{icon}</FoldersButton>&nbsp;&nbsp;
+      {props.folder.name}
+    </StyledListHeaderItem>
+    {props.active ? props.children : null}
+  </StyledList>
+}
+
 export const FavoriteItem = (props) => {
   const {primaryText, removeClick, ...rest} = props
-  const rightIcon = (removeClick) ? (<BinIcon className={styles.remove + ' remove'} onClick={props.removeClick} />) : null
+  const rightIcon = (removeClick && !props.isStatic) ? (<BinIcon className={styles.remove + ' remove'} />) : null
   return (
-    <StyledList>
+    <StyledListItem isChild={props.isChild}>
       <StyledFavoriteText {...rest}>{primaryText}</StyledFavoriteText>
-      <span>{rightIcon}</span>
-    </StyledList>
+      <span onClick={removeClick}>{rightIcon}</span>
+    </StyledListItem>
   )
 }
+
+const FoldersButton = styled.button`
+  background: transparent;
+  border: none
+`
 
 const StyledFormButton = styled.button`
   color: ${props => props.theme.primaryText};
@@ -132,14 +160,33 @@ const StyledFormButton = styled.button`
     border: ${props => props.theme.formButtonBorderHover}
   }
 `
+
+const StyledSecondaryFormButton = styled(StyledFormButton)`
+  color: ${props => props.theme.secondaryButtonText};
+  border: ${props => props.theme.secondaryButtonBorder}; 
+  background-color: ${props => props.theme.secondaryButtonBackground};
+  &:hover {
+    color: ${props => props.theme.secondaryButtonTextHover};
+    border: ${props => props.theme.secondaryButtonBorderHover}
+    background-color: ${props => props.theme.secondaryButtonBackground};
+  }
+`
+
+const buttonTypes = {
+  primary: StyledFormButton,
+  secondary: StyledSecondaryFormButton
+}
+
 export const FormButton = (props) => {
   const {icon, label, children, ...rest} = props
+  const ButtonType = buttonTypes[props.buttonType] || buttonTypes.primary
 
-  if (icon && label) return (<StyledFormButton {...rest} type='button'>{label} {icon}</StyledFormButton>)
-  if (icon) return (<StyledFormButton {...rest} type='button'>{icon}</StyledFormButton>)
-  if (label) return (<StyledFormButton {...rest} type='button'>{label}</StyledFormButton>)
-  return (<StyledFormButton {...props} type='button'>{children}</StyledFormButton>)
+  if (icon && label) return (<ButtonType {...rest} type='button'>{label} {icon}</ButtonType>)
+  if (icon) return (<ButtonType {...rest} type='button'>{icon}</ButtonType>)
+  if (label) return (<ButtonType {...rest} type='button'>{label}</ButtonType>)
+  return (<ButtonType {...props} type='button'>{children}</ButtonType>)
 }
+
 export const CypherFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;

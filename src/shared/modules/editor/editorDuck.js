@@ -7,7 +7,7 @@ const NAME = 'editor'
 export const SET_CONTENT = NAME + '/SET_CONTENT'
 export const FOCUS = `${NAME}/FOCUS`
 
-export const setContent = (newContent) => ({ message: newContent })
+export const setContent = (newContent) => ({ type: SET_CONTENT, message: newContent })
 
 export const populateEditorFromUrlEpic = (some$, store) => {
   return some$.ofType(APP_START)

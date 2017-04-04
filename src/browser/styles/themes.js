@@ -1,7 +1,7 @@
 export const base = {
   // Text colors
   primaryText: '#333',
-  secondaryText: '#333',
+  secondaryText: '#fff',
   headerText: '#333',
   asideText: '#666',
   link: '#428BCA',
