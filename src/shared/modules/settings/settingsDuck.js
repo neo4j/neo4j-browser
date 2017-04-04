@@ -13,7 +13,10 @@ const initialState = {
   maxHistory: 30,
   theme: 'normal',
   useBoltRouting: false,
-  initCmd: ':play start'
+  initCmd: ':play start',
+  initialNodeDisplay: 300,
+  maxNeighbours: 100,
+  showSampleScripts: true
 }
 
 export default function settings (state = initialState, action) {
