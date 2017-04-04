@@ -176,6 +176,7 @@ module.exports = {
       'index.jsx'
     ],
     vendor: [
+      'firebase',
       'neo4j-driver-alias',
       'codemirror',
       'rxjs',
