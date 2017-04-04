@@ -49,7 +49,8 @@ export const cypherRequestEpic = (some$, store) =>
 export const adHocCypherRequestEpic = (some$, store) =>
   some$.ofType(AD_HOC_CYPHER_REQUEST)
     .mergeMap((action) => {
-      const tempConnection = Object.assign({}, ...getActiveConnectionData(store.getState()), {host: action.host})
+      const connection = getActiveConnectionData(store.getState())
+      const tempConnection = Object.assign({}, connection, {host: action.host})
       return callClusterMember(tempConnection, action, store)
     })
 
@@ -63,7 +64,8 @@ export const clusterCypherRequestEpic = (some$, store) =>
           return {
             action,
             observables: addresses.map((host) => {
-              const tempConnection = Object.assign({}, ...getActiveConnectionData(store.getState()), {host})
+              const connection = getActiveConnectionData(store.getState())
+              const tempConnection = Object.assign({}, connection, {host})
               return Rx.Observable.fromPromise(callClusterMember(tempConnection, action, store))
             })
           }
