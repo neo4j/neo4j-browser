@@ -9,10 +9,12 @@ export const LegendComponent = ({stats, graphStyle, onSelectedLabel, onSelectedR
       const style = {'backgroundColor': styleForItem.get('color'), 'color': styleForItem.get('text-color-internal')}
       return (
         <StyledLegendInlineListItem key={i}>
-          <StyledLabelToken onClick={onClick} style={style} className='token token-label'>
-            {legendItemKey}
-            <StyledTokenCount className='count'>{`(${labels[legendItemKey].count})`}</StyledTokenCount>
-          </StyledLabelToken>
+          <StyledLegendContents className='contents'>
+            <StyledLabelToken onClick={onClick} style={style} className='token token-label'>
+              {legendItemKey}
+              <StyledTokenCount className='count'>{`(${labels[legendItemKey].count})`}</StyledTokenCount>
+            </StyledLabelToken>
+          </StyledLegendContents>
         </StyledLegendInlineListItem>
       )
     })

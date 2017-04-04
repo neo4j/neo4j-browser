@@ -106,15 +106,18 @@ export const styledRowToggle = styled.div`
 `
 
 export const StyledInspectorFooter = styled.div`
-  line-height: 21px;
+  margin-top: 6px;
+  font-size: 12px;
+  width: 100%;
+  white-space: normal;
+  max-height: 21px;
+  overflow: hidden;
 `
 
 export const StyledInspectorFooterRow = styled.ul`
   list-style: none;
   word-break: break-word;
-  margin-top: -3px;
   line-height: 21px;
-  margin-top: 3px;
 `
 
 export const StyledInspectorFooterRowListKey = styled.div`
@@ -131,8 +134,8 @@ export const StyledInspectorFooterRowListValue = styled.div`
 
 export const StyledInlineList = styled.ul`
   padding-left: 0;
-  margin-left: -5px;
   list-style: none;
+  word-break: break-word
 `
 
 export const StyledInlineListItem = styled.li`
