@@ -1,5 +1,4 @@
 import { Component } from 'preact'
-import Nevada from 'neo4j-visualization'
 
 export class NevadaWrapper extends Component {
   constructor (props) {
@@ -38,7 +37,10 @@ export class NevadaWrapper extends Component {
         labelsUpdated: this.labelsUpdated.bind(this),
         fetchLabels: this.fetchLabels.bind(this)
       }
-      this.state.nevada = new Nevada(this.state.parentContainer, this.props.nodes, this.props.relationships, {}, callbacks)
+      require.ensure([], (require) => {
+        const Nevada = require('neo4j-visualization').default
+        this.state.nevada = new Nevada(this.state.parentContainer, this.props.nodes, this.props.relationships, {}, callbacks)
+      }, 'nevada')
     }
   }
 
