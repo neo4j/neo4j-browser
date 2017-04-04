@@ -17,7 +17,7 @@ export class ExplorerComponent extends Component {
 
   getNodeNeighbours (node, callback) {
     this.props.getNeighbours(node.id).then((result) => {
-      callback({nodes: result.nodes, relationships: result.rels})
+      callback({nodes: result.nodes, relationships: result.relationships})
     })
   }
 
