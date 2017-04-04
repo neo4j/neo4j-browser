@@ -209,7 +209,7 @@ module.exports = {
       jsSourcePath
     ],
     alias: {
-      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.js',
+      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
       'src-root': path.resolve(__dirname, 'src'),
       'services': path.resolve(__dirname, 'src/shared/services'),
       'browser-services': path.resolve(__dirname, 'src/browser/services'),
