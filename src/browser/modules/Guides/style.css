@@ -46,7 +46,9 @@
       opacity: .5;
     }
   }
-
+  & .text-right {
+    text-align: right;
+  }
   & .nobreak {
     word-break: keep-all;
     white-space: nowrap;
