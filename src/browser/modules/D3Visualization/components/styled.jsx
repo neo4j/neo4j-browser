@@ -94,7 +94,7 @@ export const p = styled.div`
   white-space: normal;
 `
 
-export const styledRowToggle = styled.div`
+export const StyledRowToggle = styled.div`
   float: right;
   display: block;
   width: 21px;
@@ -102,7 +102,10 @@ export const styledRowToggle = styled.div`
   line-height: 21px;
   text-align: center;
   cursor: pointer;
-  display: none;
+`
+export const StyledCaret = styled.div`
+  font-size: 17px;
+  vertical-align: middle;
 `
 
 export const StyledInspectorFooter = styled.div`
@@ -110,8 +113,11 @@ export const StyledInspectorFooter = styled.div`
   font-size: 12px;
   width: 100%;
   white-space: normal;
-  max-height: 21px;
-  overflow: hidden;
+  overflow: scroll;
+  &.contracted {
+    max-height: 21px;
+    overflow: hidden;
+  }
 `
 
 export const StyledInspectorFooterRow = styled.ul`

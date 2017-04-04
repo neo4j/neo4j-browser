@@ -1,11 +1,12 @@
 import { Component } from 'preact'
-import {StyledTokenContextMenuKey, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
+import {StyledTokenContextMenuKey, StyledRowToggle, StyledCaret, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
 import {GrassEditor} from './GrassEditor'
 
 export class InspectorComponent extends Component {
   constructor (props) {
     super(props)
     this.state = {}
+    this.state.contracted = true
     this.state.graphStyle = this.props.graphStyle
   }
   render () {
@@ -95,8 +96,11 @@ export class InspectorComponent extends Component {
     return (
       <StyledStatusBar className='status-bar'>
         <StyledStatus className='status'>
-          <StyledInspectorFooter className='inspector-footer'>
+          <StyledInspectorFooter className={this.state.contracted ? 'contracted inspector-footer' : 'inspector-footer'}>
             <StyledInspectorFooterRow className='inspector-footer-row'>
+              <StyledRowToggle onClick={() => { this.setState({ contracted: !this.state.contracted }) }}>
+                <StyledCaret className={this.state.contracted ? 'fa fa-caret-left' : 'fa fa-caret-down'} />
+              </StyledRowToggle>
               {inspectorContent}
             </StyledInspectorFooterRow>
           </StyledInspectorFooter>
