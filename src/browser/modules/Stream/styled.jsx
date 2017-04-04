@@ -147,6 +147,7 @@ export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
   background-color: #E74C3C
   color: #FFFFFF
 `
+
 export const StyledH4 = styled.h4`
 `
 
@@ -161,4 +162,14 @@ export const StyledPreformattedArea = styled.pre`
   background: none
   border: none
   background-color: #f5f5f5
+`
+
+export const StyledNevadaCanvas = styled.div`
+  height: 100%;
+  width: 100%;
+  > .nevada-canvas {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
 `

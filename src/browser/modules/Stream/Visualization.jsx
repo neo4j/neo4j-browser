@@ -1,10 +1,12 @@
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import * as actions from 'shared/modules/visualization/visualizationDuck'
-// import Nevada from 'neo4j-visualization'
+import { NevadaWrapper } from '../NevadaVisualization/NevadaWrapper'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
 import { ExplorerComponent } from '../D3Visualization/components/Explorer'
+import { StyledNevadaCanvas } from './styled'
+import { getUseNewVisualization } from 'shared/modules/settings/settingsDuck'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
@@ -12,19 +14,20 @@ export class Visualization extends Component {
   constructor (props) {
     super(props)
     this.state = {}
+    this.state.useNewVis = this.props.useNewVis
   }
 
   shouldComponentUpdate (nextProps) {
     return nextProps.records !== this.props.records || nextProps.graphStyleData !== this.props.graphStyleData
   }
-  // componentWillUnmount () {
-  //   if (this.state.nevada) {
-  //     this.state.nevada.destroy()
-  //   }
-  // }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.records !== this.props.records) {
-      this.state.nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.records)
+      if (this.state.useNewVis) {
+        this.setState({nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecords(this.props.records)})
+      } else {
+        this.setState({nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.records)})
+      }
     }
   }
 
@@ -34,47 +37,42 @@ export class Visualization extends Component {
         CYPHER_REQUEST,
         {query: `MATCH path = (a)-[r]-(o) WHERE id(a)= ${id} RETURN r, o`},
         (response) => {
-          if (!response.success) return reject({nodes: [], rels: []})
-
-          const result = response.result
-          const nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(result.records, false)
-          resolve({nodes: nodesAndRelationships.nodes, rels: nodesAndRelationships.relationships})
+          if (!response.success) {
+            reject({nodes: [], rels: []})
+          } else {
+            if (this.state.useNewVis) {
+              resolve(bolt.extractNodesAndRelationshipsFromRecords(response.result.records))
+            } else {
+              resolve(bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false))
+            }
+          }
         }
       )
     })
   }
-  //
-  // fetchLabels () {
-  //   return this.props.labels
-  // }
-  //
-  // labelsUpdated (labels) {
-  //   return this.props.onLabelsSave(labels)
-  // }
-  //
-  // initialiseVis (el) {
-  //   if (el) {
-  //     const callbacks = {
-  //       getNeighbours: this.getNeighbours.bind(this),
-  //       labelsUpdated: this.labelsUpdated.bind(this),
-  //       fetchLabels: this.fetchLabels.bind(this)
-  //     }
-  //     this.state.nevada = new Nevada(el, this.state.nodesAndRelationships.nodes, this.state.nodesAndRelationships.relationships, {}, callbacks)
-  //   }
-  // }
+
   render () {
-    this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecordsForOldVis(this.props.records)
-    // return (<div className={styles.nevadaCanvas} ref={this.initialiseVis.bind(this)} />)
-    return (
-      <ExplorerComponent graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
-    )
+    if (this.state.useNewVis) {
+      this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(this.props.records)
+      return (
+        <StyledNevadaCanvas>
+          <NevadaWrapper onLabelsSave={this.props.onLabelsSave} labels={this.props.labels} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
+        </StyledNevadaCanvas>
+      )
+    } else {
+      this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecordsForOldVis(this.props.records)
+      return (
+        <ExplorerComponent graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
+      )
+    }
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     labels: actions.getLabels(state),
-    graphStyleData: actions.getGraphStyleData(state)
+    graphStyleData: actions.getGraphStyleData(state),
+    useNewVis: getUseNewVisualization(state)
   }
 }
 
