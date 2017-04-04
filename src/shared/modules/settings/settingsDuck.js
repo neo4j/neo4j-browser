@@ -14,11 +14,11 @@ export const getBrowserSyncConfig = (state) => {
 }
 
 const browserSyncConfig = {
-  authWindowUrl: 'https://localhost:9001/',
+  authWindowUrl: 'https://auth.neo4j.com/indexNewBrowser.html',
   firebaseConfig: {
-    apiKey: 'AIzaSyB-zOxTpnQQjryMWzGbtN9aIHvjzv5mwR8',
-    databaseURL: 'https://my-first-app-v2-4dbd3.firebaseio.com',
-    messagingSenderId: '2586483860'
+    apiKey: 'AIzaSyA1RwZMBWHxqRGyY3CK60leRkr56H6GHV4',
+    databaseURL: 'https://fiery-heat-7952.firebaseio.com',
+    messagingSenderId: '352959348981'
   }
 }
 export const getUseNewVisualization = (state) => state[NAME].useNewVis
@@ -29,7 +29,7 @@ const initialState = {
   theme: 'normal',
   useBoltRouting: false,
   initCmd: ':play start',
- initialNodeDisplay: 300,
+  initialNodeDisplay: 300,
   maxNeighbours: 100,
   showSampleScripts: true,
   browserSyncDebugServer: null

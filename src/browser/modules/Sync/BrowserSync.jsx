@@ -163,7 +163,7 @@ export class BrowserSync extends Component {
             <DrawerSubHeader>Manage local data</DrawerSubHeader>
             <DrawerSectionBody>
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
-              <FormButton label='Clear local data' onClick={() => this.clearLocalStorage()}
+              <FormButton label='Clear local data' onClick={this.signOutAndClearLocalStorage.bind(this)}
                 icon={<BinIcon suppressIconStyles='true' />} buttonType='secondary' />
             </DrawerSectionBody>
           </DrawerSection>
