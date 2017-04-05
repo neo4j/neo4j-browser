@@ -65,7 +65,8 @@ export const StyledFrameContents = styled.div`
 `
 
 export const StyledFrameSidebar = styled.ul`
-  width: 76px;
+  line-height: 33px;
+  width: 45px;
   margin-left: -5px;
   list-style: none;
   padding-left: 0;

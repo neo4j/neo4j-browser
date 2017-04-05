@@ -191,12 +191,14 @@ export const CypherFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   border-bottom: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameTitlebarHeight}px;
-  width: 74px;
+  height: 58px;
+  font-size: 21px !important;
+  line-height: 21px;
+  padding-top: 12px;
+  vertical-align: bottom;
   cursor: pointer;
   overflow: hidden;
   text-align: center;
-  line-height: 40px;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
     color: ${props => props.theme.editorBarBackground};
