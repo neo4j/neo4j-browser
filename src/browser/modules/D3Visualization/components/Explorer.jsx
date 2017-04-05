@@ -14,11 +14,24 @@ export class ExplorerComponent extends Component {
     if (this.props.graphStyleData) {
       this.state.graphStyle.loadRules(this.props.graphStyleData)
     }
+    this.state.nodes = this.props.nodes
+    if (this.props.nodes.length > parseInt(this.props.initialNodeDisplay)) {
+      this.state.nodes = this.props.nodes.slice(0, this.props.initialNodeDisplay)
+      this.state.selectedItem = {type: 'status-item', item: `Not all returnenodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${this.props.nodes.length} nodes are being displayed`}
+    }
   }
 
-  getNodeNeighbours (node, callback) {
-    this.props.getNeighbours(node.id).then((result) => {
-      callback({nodes: result.nodes, relationships: result.relationships})
+  getNodeNeighbours (node, currentNeighbours, callback) {
+    if (currentNeighbours.length > this.props.maxNeighbours) {
+      callback({nodes: [], relationships: []})
+    }
+    this.props.getNeighbours(node.id, currentNeighbours).then((result) => {
+      let nodes = result.nodes
+      if (result.count > (this.props.maxNeighbours - currentNeighbours.length)) {
+        nodes = result.nodes.slice(0, this.props.initialNodeDisplay)
+        this.state.selectedItem = {type: 'status-item', item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${result.count + currentNeighbours.length} neighbours due to browser config maxNeighbours.`}
+      }
+      callback({nodes: nodes, relationships: result.relationships})
     })
   }
 
@@ -55,7 +68,7 @@ export class ExplorerComponent extends Component {
       <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'}>
         <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
         <StyledSvgWrapper>
-          <GraphComponent {...this.props} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
+          <GraphComponent relationships={this.props.relationships} nodes={this.state.nodes} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
         </StyledSvgWrapper>
         <InspectorComponent hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />
       </StyledFullSizeContainer>

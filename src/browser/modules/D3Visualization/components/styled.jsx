@@ -298,3 +298,7 @@ export const StyledFullSizeContainer = styled.div`
     padding-top: ${legendRowHeight}px;
   }
 `
+
+export const StyledInspectorFooterStatusMessage = styled.div`
+  font-weight: bold;
+`
