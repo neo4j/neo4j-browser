@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
-const legendRowHeight = 32
+export const legendRowHeight = 32
+export const inspectorFooterContractedHeight = 21
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -94,7 +95,7 @@ export const p = styled.div`
   white-space: normal;
 `
 
-export const styledRowToggle = styled.div`
+export const StyledRowToggle = styled.div`
   float: right;
   display: block;
   width: 21px;
@@ -102,19 +103,28 @@ export const styledRowToggle = styled.div`
   line-height: 21px;
   text-align: center;
   cursor: pointer;
-  display: none;
+`
+export const StyledCaret = styled.div`
+  font-size: 17px;
+  vertical-align: middle;
 `
 
 export const StyledInspectorFooter = styled.div`
-  line-height: 21px;
+  margin-top: 6px;
+  font-size: 12px;
+  width: 100%;
+  white-space: normal;
+  overflow: scroll;
+  &.contracted {
+    max-height: ${inspectorFooterContractedHeight}px;
+    overflow: hidden;
+  }
 `
 
 export const StyledInspectorFooterRow = styled.ul`
   list-style: none;
   word-break: break-word;
-  margin-top: -3px;
   line-height: 21px;
-  margin-top: 3px;
 `
 
 export const StyledInspectorFooterRowListKey = styled.div`
@@ -131,8 +141,8 @@ export const StyledInspectorFooterRowListValue = styled.div`
 
 export const StyledInlineList = styled.ul`
   padding-left: 0;
-  margin-left: -5px;
   list-style: none;
+  word-break: break-word
 `
 
 export const StyledInlineListItem = styled.li`
@@ -223,10 +233,11 @@ export const StyledLegendContents = styled.div`
 
 export const StyledLegendRow = styled.div`
   border-bottom: 1px solid #e6e9ef;
-  max-height: ${legendRowHeight}px
-  overflow: hidden;
+  &.contracted {
+    max-height: ${legendRowHeight}px
+    overflow: hidden;
+  }
 `
-
 export const StyledLegend = styled.div`
   background-color: #eef1f8;
   margin-top: -${(legendRowHeight * 2) + 1}px;
