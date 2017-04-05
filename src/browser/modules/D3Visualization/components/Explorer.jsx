@@ -17,7 +17,7 @@ export class ExplorerComponent extends Component {
     this.state.nodes = this.props.nodes
     if (this.props.nodes.length > parseInt(this.props.initialNodeDisplay)) {
       this.state.nodes = this.props.nodes.slice(0, this.props.initialNodeDisplay)
-      this.state.selectedItem = {type: 'status-item', item: `Not all returnenodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${this.props.nodes.length} nodes are being displayed`}
+      this.state.selectedItem = {type: 'status-item', item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${this.props.nodes.length} nodes are being displayed`}
     }
   }
 
