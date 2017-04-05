@@ -1,7 +1,9 @@
 import asciitable from 'ascii-data-table'
 
-const AsciiView = ({rows}) => {
-  if (!rows) return (<em style={style}>No results found</em>)
+const AsciiView = ({rows, style}) => {
+  if (!rows) {
+    return (<div style={style}><em>No results found</em></div>)
+  }
 
   return <pre style={style}>{asciitable.table(rows, 70)}</pre>
 }

@@ -12,7 +12,7 @@ class TableView extends Component {
     }
   }
   render () {
-    if (!this.props.data) return (<em>No results found</em>)
+    if (!this.props.data) return (<div style={this.props.style}><em>No results found</em></div>)
     const tableHeader = this.state.columns.map((column, i) => (
       <th className='table-header' key={i}>{column}</th>)
     )
