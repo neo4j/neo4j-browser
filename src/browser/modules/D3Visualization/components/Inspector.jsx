@@ -1,5 +1,5 @@
 import { Component } from 'preact'
-import {inspectorFooterContractedHeight, StyledTokenContextMenuKey, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
+import {inspectorFooterContractedHeight, StyledInspectorFooterStatusMessage, StyledTokenContextMenuKey, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
 import {GrassEditor} from './GrassEditor'
 import {RowExpandToggleComponent} from './RowExpandToggle'
 
@@ -56,6 +56,11 @@ export class InspectorComponent extends Component {
       if (type === 'legend-item') {
         inspectorContent = (
           <GrassEditor selectedLabel={item.selectedLabel} selectedRelType={item.selectedRelType} />
+        )
+      }
+      if (type === 'status-item') {
+        inspectorContent = (
+          <StyledInspectorFooterStatusMessage className='value'>{item}</StyledInspectorFooterStatusMessage>
         )
       }
       if (type === 'context-menu-item') {
