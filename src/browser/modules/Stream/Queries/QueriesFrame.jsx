@@ -100,22 +100,30 @@ export class QueriesFrame extends Component {
     if (queries.length === 0) {
       return null
     }
-
+    const tableHeaderSizes = [
+      ['Database URI', '20%'],
+      ['User', '8%'],
+      ['Query', 'auto'],
+      ['Params', '7%'],
+      ['Meta', '8%'],
+      ['Elapsed time', '95px'],
+      ['Kill', '95px']
+    ]
     const tableRows = queries.map((query) => {
       return (
         <tr>
-          <StyledTd><Code>{query.host}</Code></StyledTd>
-          <StyledTd>{query.username}</StyledTd>
-          <StyledTd><Code>{query.query}</Code></StyledTd>
-          <StyledTd><Code>{query.parameters}</Code></StyledTd>
-          <StyledTd><Code>{query.metaData}</Code></StyledTd>
-          <StyledTd>{query.elapsedTime}</StyledTd>
-          <StyledTd><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></StyledTd>
+          <StyledTd title={query.host} width={tableHeaderSizes[0][1]}><Code>{query.host}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[1][1]}>{query.username}</StyledTd>
+          <StyledTd title={query.query} width={tableHeaderSizes[2][1]}><Code>{query.query}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[3][1]}><Code>{query.parameters}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[4][1]}><Code>{query.metaData}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[5][1]}>{query.elapsedTime}</StyledTd>
+          <StyledTd width={tableHeaderSizes[6][1]}><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></StyledTd>
         </tr>)
     })
 
-    const tableHeaders = ['Database URI', 'User', 'Query', 'Params', 'Meta', 'Elapsed time', 'Kill'].map((heading, i) => {
-      return <StyledTh key={i}>{heading}</StyledTh>
+    const tableHeaders = tableHeaderSizes.map((heading, i) => {
+      return <StyledTh width={heading[1]} key={i}>{heading[0]}</StyledTh>
     })
     return (
       <StyledTable>
