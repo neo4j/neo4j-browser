@@ -37,6 +37,9 @@
     padding: 0.5em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+    &.pre-scrollable {
+      max-height: 230px;
+    }
     &.runnable {
       cursor: pointer;
       border: 2px dashed #e1e1e8;
