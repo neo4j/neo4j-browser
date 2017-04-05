@@ -46,3 +46,9 @@ export const DrawerBody = styled.div`
   padding: 0 24px;
 `
 
+export const DrawerFooter = styled.div`
+  position: absolute;
+  bottom: 12px;
+  text-align: center;
+  width: 250px
+`

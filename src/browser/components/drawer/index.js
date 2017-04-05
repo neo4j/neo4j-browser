@@ -1,3 +1,3 @@
-import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerToppedHeader} from './Drawer'
+import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerToppedHeader, DrawerFooter} from './Drawer'
 
-export {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerToppedHeader}
+export {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerToppedHeader, DrawerFooter}

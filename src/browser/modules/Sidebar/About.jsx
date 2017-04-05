@@ -1,4 +1,4 @@
-import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerFooter} from 'browser-components/drawer'
 
 const About = () => {
   return (
@@ -7,7 +7,7 @@ const About = () => {
       <DrawerBody>
         <DrawerSection>
           <DrawerSubHeader>
-            Made by Neo Technology
+            Made by <a target='_blank' href='http://neotechnology.com/'>Neo Technology</a>
           </DrawerSubHeader>
         </DrawerSection>
         <DrawerSection>
@@ -28,7 +28,7 @@ const About = () => {
             License
           </DrawerSubHeader>
           <DrawerSectionBody>
-            GPLv3 or AGPL for Open Source, and NTCL Commercial.
+            <a target='_blank' href='http://www.gnu.org/licenses/gpl.html'>GPLv3</a> or <a target='_blank' href='http://www.gnu.org/licenses/agpl-3.0.html'>AGPL</a> for Open Source, and <a target='_blank' href='https://neo4j.com/licensing/'>NTCL</a> Commercial.
           </DrawerSectionBody>
         </DrawerSection>
         <DrawerSection>
@@ -36,11 +36,11 @@ const About = () => {
             Participate
           </DrawerSubHeader>
           <DrawerSectionBody>
-            Ask questions at Stack Overflow
-            Discuss Neo4j on Slack or Google Groups
-            Visit a local Meetup Group
-            Contribute code to Neo4j or Neo4j Browser
-            Send us your Browser feedback via email
+            Ask questions at <a target='_blank' href='http://stackoverflow.com/questions/tagged/neo4j'>Stack Overflow</a><br />
+            Discuss Neo4j on <a target='_blank' href='http://neo4j.com/slack'>Slack</a> or <a target='_blank' href='http://groups.google.com/group/neo4j'>Google Groups</a><br />
+            Visit a local <a target='_blank' href='http://neo4j.meetup.com/'>Meetup Group</a><br />
+            Contribute code to <a target='_blank' href='http://github.com/neo4j'>Neo4j</a> or <a target='_blank' href='http://github.com/neo4j/neo4j-browser'>Neo4j Browser</a><br />
+            Send us your Browser feedback via <a href='mailto:browser@neotechnology.com'>email</a>
           </DrawerSectionBody>
         </DrawerSection>
         <DrawerSection>
@@ -50,9 +50,11 @@ const About = () => {
           <DrawerSectionBody>
             Neo4j wouldn't be possible without a fantastic community. Thanks for all the feedback, discussions and contributions.
           </DrawerSectionBody>
-          <DrawerSectionBody>
-           With &#9829; from Sweden.
-          </DrawerSectionBody>
+          <DrawerFooter>
+            <DrawerSectionBody>
+             With &#9829; from Sweden.
+            </DrawerSectionBody>
+          </DrawerFooter>
         </DrawerSection>
       </DrawerBody>
     </Drawer>
