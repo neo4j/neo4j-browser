@@ -6,6 +6,8 @@ export const deepEquals = (x, y) => {
   return (x === y)
 }
 
+export const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+
 export const moveInArray = (fromIndex, toIndex, arr) => {
   if (!Array.isArray(arr)) return false
   if (fromIndex < 0 || fromIndex >= arr.length) return false

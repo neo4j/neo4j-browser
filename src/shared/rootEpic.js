@@ -7,7 +7,7 @@ import { cancelRequestEpic } from './modules/requests/requestsDuck'
 import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
-import { cypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
+import { adHocCypherRequestEpic, cypherRequestEpic, clusterCypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
 import { featuresDicoveryEpic } from './modules/features/featuresDuck'
 import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic } from './modules/sync/syncDuck'
 import { loadFoldersFromSyncEpic } from './modules/favorites/foldersDuck'
@@ -29,7 +29,9 @@ export default combineEpics(
   cancelRequestEpic,
   discoveryOnStartupEpic,
   populateEditorFromUrlEpic,
+  adHocCypherRequestEpic,
   cypherRequestEpic,
+  clusterCypherRequestEpic,
   clearLocalstorageEpic,
   handleForcePasswordChangeEpic,
   featuresDicoveryEpic,

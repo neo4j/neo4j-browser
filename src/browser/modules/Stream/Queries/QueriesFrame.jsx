@@ -1,9 +1,13 @@
 import { Component } from 'preact'
 import FrameTemplate from '../FrameTemplate'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { listQueriesProcedure, killQueriesProcedure } from 'shared/modules/cypher/queriesProcedureHelper'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
+import { CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getConnectionState, CONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+import { StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code } from './styled'
 import { RefreshIcon } from 'browser-components/icons/Icons'
 import Visible from 'browser-components/Visible'
 import FrameError from '../FrameError'
@@ -22,7 +26,11 @@ export class QueriesFrame extends Component {
     }
   }
   componentDidMount () {
-    this.getRunningQueries()
+    if (this.props.connectionState === CONNECTED_STATE) {
+      this.getRunningQueries()
+    } else {
+      this.setState({errors: ['Unable to connect to bolt server']})
+    }
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -34,10 +42,12 @@ export class QueriesFrame extends Component {
       }
     }
   }
-
+  isCC () {
+    return this.props.availableProcedures.includes('dbms.cluster.overview')
+  }
   getRunningQueries (clearSuccess = true) {
     this.props.bus.self(
-      CYPHER_REQUEST,
+      (this.isCC()) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {query: listQueriesProcedure()},
       (response) => {
         if (response.success) {
@@ -52,10 +62,10 @@ export class QueriesFrame extends Component {
       }
     )
   }
-  killQueries (queryIdList) {
+  killQueries (host, queryIdList) {
     this.props.bus.self(
-      CYPHER_REQUEST,
-      {query: killQueriesProcedure(queryIdList)},
+      (this.isCC()) ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
+      {host, query: killQueriesProcedure(queryIdList)},
       (response) => {
         if (response.success) {
           this.setState({success: 'Query successfully cancelled', errors: null})
@@ -73,52 +83,54 @@ export class QueriesFrame extends Component {
       queryRecord.keys.forEach((key, idx) => {
         queryInfo[key] = queryRecord._fields[idx]
       })
-
+      if (queryInfo.host) {
+        queryInfo.host = 'bolt://' + queryInfo.host
+      } else {
+        queryInfo.host = 'bolt://' + result.summary.server.address
+      }
       return queryInfo
     })
   }
 
-  onCancelQuery (queryId) {
-    this.killQueries([ queryId ])
+  onCancelQuery (host, queryId) {
+    this.killQueries(host, [ queryId ])
   }
 
   constructViewFromQueryList (queries) {
     if (queries.length === 0) {
       return null
     }
-
+    const tableHeaderSizes = [
+      ['Database URI', '20%'],
+      ['User', '8%'],
+      ['Query', 'auto'],
+      ['Params', '7%'],
+      ['Meta', '8%'],
+      ['Elapsed time', '95px'],
+      ['Kill', '95px']
+    ]
     const tableRows = queries.map((query) => {
-      let databaseUri = query.connectionDetails
-      const connectionDetails = query.connectionDetails.split('\t')
-
-      if (connectionDetails.length > 2) {
-        const databaseUriDetails = connectionDetails[connectionDetails.length - 2].split('/')
-        if (databaseUriDetails.length > 1) {
-          databaseUri = connectionDetails[1] + '://' + databaseUriDetails[1].replace(/>$/, '')
-        }
-      }
-
       return (
         <tr>
-          <td>{databaseUri}</td>
-          <td>{query.username}</td>
-          <td>{query.query}</td>
-          <td>{query.parameters}</td>
-          <td>{query.metaData}</td>
-          <td>{query.elapsedTime}</td>
-          <td><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.queryId)} /></td>
+          <StyledTd title={query.host} width={tableHeaderSizes[0][1]}><Code>{query.host}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[1][1]}>{query.username}</StyledTd>
+          <StyledTd title={query.query} width={tableHeaderSizes[2][1]}><Code>{query.query}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[3][1]}><Code>{query.parameters}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[4][1]}><Code>{query.metaData}</Code></StyledTd>
+          <StyledTd width={tableHeaderSizes[5][1]}>{query.elapsedTime}</StyledTd>
+          <StyledTd width={tableHeaderSizes[6][1]}><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></StyledTd>
         </tr>)
     })
 
-    const tableHeaders = ['Database URI', 'User', 'Query', 'Params', 'Meta', 'Elapsed time', 'Kill'].map((heading, i) => {
-      return <th key={i}>{heading}</th>
+    const tableHeaders = tableHeaderSizes.map((heading, i) => {
+      return <StyledTh width={heading[1]} key={i}>{heading[0]}</StyledTh>
     })
     return (
-      <table>
+      <StyledTable>
         <thead>
-          <tr>
+          <StyledHeaderRow>
             {tableHeaders}
-          </tr>
+          </StyledHeaderRow>
         </thead>
         <tbody>
           {tableRows}
@@ -132,7 +144,7 @@ export class QueriesFrame extends Component {
             </td>
           </tr>
         </tbody>
-      </table>
+      </StyledTable>
     )
   }
   render () {
@@ -157,4 +169,11 @@ export class QueriesFrame extends Component {
   }
 }
 
-export default withBus(QueriesFrame)
+const mapStateToProps = (state) => {
+  return {
+    availableProcedures: getAvailableProcedures(state) || [],
+    connectionState: getConnectionState(state)
+  }
+}
+
+export default withBus(connect(mapStateToProps, null)(QueriesFrame))
