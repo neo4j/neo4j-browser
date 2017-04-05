@@ -2,6 +2,9 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
+import { getSettings } from 'shared/modules/settings/settingsDuck'
+
+import Visible from 'browser-components/Visible'
 import {Favorite, Folder} from './Favorite'
 import FileDrop from './FileDrop'
 import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSubHeader} from 'browser-components/drawer'
@@ -32,10 +35,12 @@ export const Favorites = (props) => {
           {ListOfFavorites}
           {ListOfFolders}
         </DrawerSection>
-        <DrawerSection>
-          <DrawerSubHeader>Sample Scripts</DrawerSubHeader>
-          {ListOfSampleFolders}
-        </DrawerSection>
+        <Visible if={props.showSampleScripts}>
+          <DrawerSection>
+            <DrawerSubHeader>Sample Scripts</DrawerSubHeader>
+            {ListOfSampleFolders}
+          </DrawerSection>
+        </Visible>
         <DrawerSection>
           <DrawerSubHeader>Import</DrawerSubHeader>
           <FileDrop />
@@ -48,7 +53,8 @@ export const Favorites = (props) => {
 const mapStateToProps = (state) => {
   return {
     favorites: state.documents || [],
-    folders: state.folders || []
+    folders: state.folders || [],
+    showSampleScripts: getSettings(state).showSampleScripts
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
