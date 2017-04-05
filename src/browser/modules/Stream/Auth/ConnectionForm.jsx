@@ -135,7 +135,7 @@ export class ConnectionForm extends Component {
         onHostChange={this.onHostChange.bind(this)}
         onUsernameChange={this.onUsernameChange.bind(this)}
         onPasswordChange={this.onPasswordChange.bind(this)}
-        host={this.state.hostInputVal}
+        host={this.state.hostInputVal || this.state.host}
         username={this.state.username}
         password={this.state.password}
       />)

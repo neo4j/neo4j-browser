@@ -17,7 +17,7 @@ function getJSON (url) {
   }).then((response) => {
     return response.json()
   }).catch((e) => {
-    return Promise.reject(e)
+    return e
   })
 }
 
