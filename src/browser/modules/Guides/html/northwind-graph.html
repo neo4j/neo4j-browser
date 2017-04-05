@@ -84,7 +84,7 @@ SET n = row</pre>
 WHERE p.categoryID = c.categoryID
 CREATE (p)-[:PART_OF]-&gt;(c)</pre>
           <aside class="warn">Note you only need to compare property values like this when first creating relationships</aside>
-          <figcaption>Calculate join, materialize relationship. (See&nbsp;<a href="http://neo4j.com/developer/guide-importing-data-and-etl">&nbsp; importing guide</a> for more details)</figcaption>
+          <figcaption>Calculate join, materialize relationship. (See&nbsp;<a target="_blank" href="http://neo4j.com/developer/guide-importing-data-and-etl">&nbsp; importing guide</a> for more details)</figcaption>
         </figure>
         <figure>
           <pre class="pre-scrollable code runnable">MATCH (p:Product),(s:Supplier)
@@ -193,16 +193,15 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
         <h3>More code</h3>
         <ul class="undecorated">
           <li><a play-topic="movie-graph">Movie Graph</a> - actors &amp; movies</li>
-          <li><a play-topic="query-template">Query Templates</a> - common ad-hoc queries</li>
           <li><a play-topic="cypher">Cypher</a> - query language fundamentals</li>
         </ul>
       </div>
       <div class="col-sm-4">
         <h3>Reference</h3>
         <ul class="undecorated">
-          <li><a href="http://neo4j.com/developer/guide-importing-data-and-etl/">Full Northwind import example</a></li>
-          <li><a href="http://neo4j.com/developer">Developer resources</a></li>
-          <li><a href="{{ neo4j.version | neo4jDeveloperDoc }}/">Neo4j Developer Manual</a></li>
+          <li><a target="_blank" href="http://neo4j.com/developer/guide-importing-data-and-etl/">Full Northwind import example</a></li>
+          <li><a target="_blank" href="http://neo4j.com/developer">Developer resources</a></li>
+          <li><a target="_blank" href="http://neo4j.com/docs/developer-manual/">Neo4j Developer Manual</a></li>
         </ul>
       </div>
     </slide>

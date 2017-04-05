@@ -14,14 +14,14 @@
             sign-in to elevate your graph experience.
           </p>
           <alert ng-hide="goodBrowser" class="top-padded">
-             
+
             Sync is currently only available for some versions of Internet Explorer.
-            If you have any trouble, we'd love to hear from you at&nbsp;<a href="mailto:feedback@neotechnology.com">feedback@neotechnology.com</a>
+            If you have any trouble, we'd love to hear from you at&nbsp;<a target="_blank" href="mailto:feedback@neotechnology.com">feedback@neotechnology.com</a>
           </alert>
           <div ng-show="!settings.shownTermsAndPrivacy || !settings.acceptedTermsAndPrivacy" class="box-max">
             <div class="checkbox">
               <label for="acceptedTermsAndPrivacyCheckBox" class="muted">
-                <input id="acceptedTermsAndPrivacyCheckBox" type="checkbox" ng-model="settings.acceptedTermsAndPrivacy" ng-change="save()">By checking this box you are agreeing to the&nbsp;<a href="http://neo4j.com/terms/neo4j-browser-sync/">Neo4j Browser Sync Terms of Use</a>&nbsp;and our&nbsp;<a href="http://neo4j.com/privacy-policy/">Privacy Policy</a>.
+                <input id="acceptedTermsAndPrivacyCheckBox" type="checkbox" ng-model="settings.acceptedTermsAndPrivacy" ng-change="save()">By checking this box you are agreeing to the&nbsp;<a target="_blank" href="http://neo4j.com/terms/neo4j-browser-sync/">Neo4j Browser Sync Terms of Use</a>&nbsp;and our&nbsp;<a target="_blank" href="http://neo4j.com/privacy-policy/">Privacy Policy</a>.
               </label>
             </div>
           </div>
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div ng-if="currentUser" class="box-max">
-          <h3>Hello {{currentUser.name}}!</h3>
+          <h3>Hello!</h3>
           <p>&nbsp;</p>
           <p class="lead">Your Neo4j Browser Sync account is active.</p>
           <p>&nbsp;</p>
@@ -45,7 +45,7 @@
           <li><i class="sl sl-cloud-sync fa-lg"></i>&nbsp; Sync queries &amp; graph style sheets</li>
           <li><i class="sl sl-hierarchy fa-lg"></i>&nbsp; Restore previous versions of scripts</li>
           <li><i class="sl sl-bubble-comment fa-lg"></i>&nbsp; Get update notices, suggestions and help</li>
-          <li><i class="sl sl-question-mark fa-lg"> </i><a href="http://neo4j.com/neo4j-browser-sync">&nbsp;Learn More</a></li>
+          <li><i class="sl sl-question-mark fa-lg"> </i><a target="_blank" href="http://neo4j.com/neo4j-browser-sync">&nbsp;Learn More</a></li>
         </ul>
       </div>
     </div>
