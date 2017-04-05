@@ -12,12 +12,13 @@ import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
+import { StyledFrameBody } from './styled'
 
 class CypherFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      openView: 'visualization',
+      openView: viewTypes.VISUALIZATION,
       plan: null,
       notifications: null
     }
@@ -122,6 +123,18 @@ class CypherFrame extends Component {
     )
   }
 
+  getDisplayStyle (viewType) {
+    return this.state.openView === viewType ? {display: 'block'} : {display: 'none'}
+  }
+
+  onResize (fullscreen, collapse, frameHeight) {
+    if (frameHeight) {
+      this.setState({fullscreen, collapse, frameHeight})
+    } else {
+      this.setState({fullscreen, collapse})
+    }
+  }
+
   render () {
     const frame = this.props.frame
     const errors = this.props.request.status === 'error' ? this.props.request.result : false
@@ -144,29 +157,15 @@ class CypherFrame extends Component {
       if (result.records && result.records.length > 0) {
         this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
       }
-
-      switch (this.state.openView) {
-        case viewTypes.TEXT:
-          frameContents = <AsciiView rows={this.state.rows} />
-          break
-        case viewTypes.TABLE:
-          frameContents = <TableView data={this.state.rows} />
-          break
-        case viewTypes.VISUALIZATION:
-          frameContents = <Visualization records={result.records} />
-          break
-        case viewTypes.CODE:
-          frameContents = <CodeView query={this.props.frame.cmd} request={this.props.request} />
-          break
-        case viewTypes.PLAN:
-          frameContents = <QueryPlan plan={plan} />
-          break
-        case viewTypes.WARNINGS:
-          frameContents = <WarningsView notifications={this.state.notifications} cypher={this.state.cypher} />
-          break
-        default:
-          frameContents = <Visualization records={result.records} />
-      }
+      frameContents =
+        <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
+          <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.rows} />
+          <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.rows} />
+          <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
+          <CodeView style={this.getDisplayStyle(viewTypes.CODE)} query={this.props.frame.cmd} request={this.props.request} />
+          <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
+          <WarningsView style={this.getDisplayStyle(viewTypes.WARNINGS)} notifications={this.state.notifications} cypher={this.state.cypher} />
+        </StyledFrameBody>
     } else if (result) {
       frameContents = (
         <div>
@@ -187,6 +186,7 @@ class CypherFrame extends Component {
         contents={frameContents}
         exportData={this.state.rows}
         statusbar={statusBar}
+        onResize={this.onResize.bind(this)}
       />
     )
   }

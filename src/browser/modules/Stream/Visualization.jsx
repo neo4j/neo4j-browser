@@ -5,7 +5,7 @@ import { NevadaWrapper } from '../NevadaVisualization/NevadaWrapper'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
 import { ExplorerComponent } from '../D3Visualization/components/Explorer'
-import { StyledNevadaCanvas } from './styled'
+import { StyledNevadaCanvas, StyledVisContainer } from './styled'
 import { getUseNewVisualization, getSettings } from 'shared/modules/settings/settingsDuck'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
@@ -13,22 +13,42 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 export class Visualization extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
-    this.state.useNewVis = this.props.useNewVis
+
+    this.state = {
+      nodesAndRelationships: {
+        nodes: [],
+        relationships: []
+      },
+      justInitiated: true,
+      useNewVis: props.useNewVis
+    }
+  }
+
+  componentWillMount () {
+    if (this.props.records && this.props.records.length > 0) {
+      this.populateDataToStateFromProps(this.props)
+    }
   }
 
   shouldComponentUpdate (nextProps) {
-    return nextProps.records !== this.props.records || nextProps.graphStyleData !== this.props.graphStyleData
+    return nextProps.records !== this.props.records || nextProps.graphStyleData !== this.props.graphStyleData || nextProps.style !== this.props.style
   }
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.records !== this.props.records) {
-      if (this.state.useNewVis) {
-        this.setState({nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecords(this.props.records)})
-      } else {
-        this.setState({nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.records)})
-      }
+      this.populateDataToStateFromProps(nextProps)
     }
+
+    if (nextProps.style.display !== this.props.style.display) {
+      this.setState({justInitiated: false})
+    }
+  }
+
+  populateDataToStateFromProps (props) {
+    this.setState({nodesAndRelationships: this.state.useNewVis
+      ? bolt.extractNodesAndRelationshipsFromRecords(props.records)
+      : bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.records)
+    })
   }
 
   getNeighbours (id, currentNeighbourIds = []) {
@@ -60,18 +80,27 @@ export class Visualization extends Component {
 
   render () {
     if (this.state.useNewVis) {
-      this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecords(this.props.records)
       return (
         <StyledNevadaCanvas>
-          <NevadaWrapper onLabelsSave={this.props.onLabelsSave} labels={this.props.labels} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
+          <NevadaWrapper onLabelsSave={this.props.onLabelsSave} labels={this.props.labels}
+            getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes}
+            relationships={this.state.nodesAndRelationships.relationships} />
         </StyledNevadaCanvas>
       )
-    } else {
-      this.state.nodesAndRelationships = this.state.nodesAndRelationships || bolt.extractNodesAndRelationshipsFromRecordsForOldVis(this.props.records)
-      return (
-        <ExplorerComponent maxNeighbours={this.props.maxNeighbours} initialNodeDisplay={this.props.initialNodeDisplay} graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle} getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes} relationships={this.state.nodesAndRelationships.relationships} />
-      )
     }
+
+    // This workaround is to overcome the issue that if the svg is initiated with in a style.display = none component, it does not become visible even display changed to block or so
+    if (this.state.justInitiated && this.props.style.display === 'none') {
+      return null
+    }
+
+    return (
+      <StyledVisContainer style={this.props.style} >
+        <ExplorerComponent maxNeighbours={this.props.maxNeighbours} initialNodeDisplay={this.props.initialNodeDisplay} graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle}
+          getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes}
+          relationships={this.state.nodesAndRelationships.relationships} fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} />
+      </StyledVisContainer>
+    )
   }
 }
 

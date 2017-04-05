@@ -1,8 +1,8 @@
 import style from './code_style.css'
 
-const CodeView = ({request, query}) => {
+const CodeView = ({request, query, style: displayStyle}) => {
   return (
-    <table>
+    <table style={displayStyle}>
       <tbody className={style.altRows}>
         <tr>
           <td className={style.bold}>Server version</td>

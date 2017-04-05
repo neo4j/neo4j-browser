@@ -12,8 +12,12 @@ class QueryPlan extends Component {
   }
 
   render () {
+    if (!this.props.plan) {
+      return
+    }
+
     return (
-      <svg className='neod3plan' ref={this.planInit.bind(this)} />
+      <svg display={this.props.style.display} className='neod3plan' ref={this.planInit.bind(this)} />
     )
   }
 }
