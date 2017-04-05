@@ -50,7 +50,7 @@ export const BinIcon = (props) => (<IconContainer activeStyle={styles.white} ina
 
 export const ExpandIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-spread' />)
 export const ContractIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-reduce' />)
-export const RefreshIcon = () => (<IconContainer>Refresh</IconContainer>)
+export const RefreshIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='fa fa-repeat' />)
 export const CloseIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-delete' />)
 export const UpIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-chevron-up' />)
 export const DownIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl-chevron-down' />)
@@ -61,3 +61,5 @@ export const CancelIcon = () => (<IconContainer activeStyle={styles.blue} inacti
 export const DownloadIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-download-drive' />)
 export const ExpandMenuIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='fa fa-caret-right' />)
 export const CollapseMenuIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='fa fa-caret-down' />)
+export const PlayIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-play-circle-o' />)
+export const QuestionIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-question-circle' />)

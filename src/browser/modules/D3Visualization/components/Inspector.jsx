@@ -1,13 +1,22 @@
 import { Component } from 'preact'
-import {StyledInspectorFooterStatusMessage, StyledTokenContextMenuKey, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
+import {inspectorFooterContractedHeight, StyledInspectorFooterStatusMessage, StyledTokenContextMenuKey, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
 import {GrassEditor} from './GrassEditor'
+import {RowExpandToggleComponent} from './RowExpandToggle'
 
 export class InspectorComponent extends Component {
   constructor (props) {
     super(props)
     this.state = {}
+    this.state.contracted = true
     this.state.graphStyle = this.props.graphStyle
   }
+
+  setFooterRowELem (elem) {
+    if (elem) {
+      this.state.footerRowElem = elem
+    }
+  }
+
   render () {
     let item
     let type
@@ -97,17 +106,18 @@ export class InspectorComponent extends Component {
         )
       }
     }
+
     return (
       <StyledStatusBar className='status-bar'>
         <StyledStatus className='status'>
-          <StyledInspectorFooter className='inspector-footer'>
-            <StyledInspectorFooterRow className='inspector-footer-row'>
+          <StyledInspectorFooter className={this.state.contracted ? 'contracted inspector-footer' : 'inspector-footer'}>
+            <StyledInspectorFooterRow className='inspector-footer-row' ref={this.setFooterRowELem.bind(this)}>
+              <RowExpandToggleComponent contracted={this.state.contracted} rowElem={this.state.footerRowElem} containerHeight={inspectorFooterContractedHeight} onClick={() => { this.setState({ contracted: !this.state.contracted }) }} />
               {inspectorContent}
             </StyledInspectorFooterRow>
           </StyledInspectorFooter>
         </StyledStatus>
       </StyledStatusBar>
-
     )
   }
 }
