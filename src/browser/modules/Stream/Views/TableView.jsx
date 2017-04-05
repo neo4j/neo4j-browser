@@ -44,7 +44,7 @@ class TableView extends Component {
       </tbody>
     )
     return (
-      <table>
+      <table style={this.props.style}>
         <thead>
           <tr>
             {tableHeader}

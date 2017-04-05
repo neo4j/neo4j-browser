@@ -25,22 +25,23 @@ const rollDownAnimation = keyframes`
 
 // Frames
 export const StyledFrame = styled.article`
-  margin: 10px 0px 10px 0px;
   width: auto;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
-  animation: ${props => props.playIntroAnimation ? rollDownAnimation + '.2s linear' : 'none'};
+  animation: ${rollDownAnimation} + .2s linear;
   border: ${props => props.theme.frameBorder};
+  margin: ${props => props.fullscreen ? '0' : '10px 0px 10px 0px'};
+  ${props => props.fullscreen ? 'position: fixed' : null};
+  ${props => props.fullscreen ? 'left: 0' : null};
+  ${props => props.fullscreen ? 'top: 0' : null};
+  ${props => props.fullscreen ? 'bottom: 0' : null};
+  ${props => props.fullscreen ? 'right: 0' : null};
+  ${props => props.fullscreen ? 'z-index: 1030' : null};
 `
 
-export const StyledFullscreenFrame = styled(StyledFrame)`
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  margin: 0;
-  z-index: 1030;
+export const StyledVisContainer = styled.div`
+  width: 100%;
+  display : ${props => props.style.display}
 `
 
 export const StyledFrameBody = styled.div`

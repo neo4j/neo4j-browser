@@ -11,7 +11,11 @@ const getWarningComponent = (severity) => {
   }
 }
 
-const WarningsView = ({notifications, cypher}) => {
+const WarningsView = ({notifications, cypher, style}) => {
+  if (!notifications || !cypher) {
+    return null
+  }
+
   let cypherLines = cypher.split('\n')
   cypherLines[0] = cypherLines[0].replace(/^EXPLAIN /, '')
 
@@ -34,7 +38,7 @@ const WarningsView = ({notifications, cypher}) => {
     )
   })
   return (
-    <StyledHelpFrame>
+    <StyledHelpFrame style={style}>
       {notificationsList}
     </StyledHelpFrame>)
 }

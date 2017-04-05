@@ -1,27 +1,24 @@
 import { Component } from 'preact'
 import FrameTitlebar from './FrameTitlebar'
 import Visible from 'browser-components/Visible'
-import { StyledFrame, StyledFullscreenFrame, StyledFrameBody, StyledFrameContents, StyledFrameStatusbar, StyledFrameMainSection } from './styled'
+import { StyledFrame, StyledFrameBody, StyledFrameContents, StyledFrameStatusbar, StyledFrameMainSection } from './styled'
 
 class FrameTemplate extends Component {
   constructor (props) {
     super(props)
     this.state = {
       fullscreen: false,
-      collapse: false,
-      wasToggledToOrFromFullScreen: false
-    }
+      collapse: false}
   }
   toggleFullScreen () {
-    this.setState({fullscreen: !this.state.fullscreen, wasToggledToOrFromFullScreen: true})
+    this.setState({fullscreen: !this.state.fullscreen}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse))
   }
   toggleCollapse () {
-    this.setState({collapse: !this.state.collapse})
+    this.setState({collapse: !this.state.collapse}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse))
   }
   render () {
-    const FrameComponent = this.state.fullscreen ? StyledFullscreenFrame : StyledFrame
     return (
-      <FrameComponent playIntroAnimation={!this.state.wasToggledToOrFromFullScreen}>
+      <StyledFrame fullscreen={this.state.fullscreen}>
         <FrameTitlebar
           frame={this.props.header}
           fullscreen={this.state.fullscreen}
@@ -41,7 +38,7 @@ class FrameTemplate extends Component {
             </Visible>
           </StyledFrameMainSection>
         </StyledFrameBody>
-      </FrameComponent>
+      </StyledFrame>
     )
   }
 }
