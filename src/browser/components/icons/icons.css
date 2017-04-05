@@ -8,7 +8,7 @@
   color: #ffaf00;
 }
 .blue {
-  color: #00a3ff;
+  color: #337ab7;
 }
 .purple {
   color: #f0f;
@@ -18,6 +18,9 @@
 }
 .white {
   color: #ffa;
+}
+.lightBlue {
+  color: #5dade2
 }
 .credits
   @keyframes neo4j-pulse {

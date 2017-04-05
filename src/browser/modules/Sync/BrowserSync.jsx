@@ -12,7 +12,7 @@ import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import {Drawer, DrawerBody, DrawerHeader, DrawerSection, DrawerSubHeader, DrawerSectionBody, DrawerToppedHeader} from 'browser-components/drawer'
 import { FormButton } from 'browser-components/buttons'
 import { BinIcon } from 'browser-components/icons/Icons'
-import {ConsentCheckBox, AlertBox, ClearLocalConfirmationBox, SyncLink, SmallHeaderText} from './styled'
+import {ConsentCheckBox, AlertBox, ClearLocalConfirmationBox, StyledSyncLink, SmallHeaderText} from './styled'
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
 
 export class BrowserSync extends Component {
@@ -176,7 +176,7 @@ export class BrowserSync extends Component {
                 to get started.
               </DrawerSection>
               <DrawerSection>
-                <SyncLink onClick={() => this.props.onSyncHelpClick()}>About Neo4j Browser Sync</SyncLink>
+                <StyledSyncLink onClick={() => this.props.onSyncHelpClick()}>About Neo4j Browser Sync</StyledSyncLink>
               </DrawerSection>
               <DrawerSection>
                 <FormButton label='Sign In / Register' onClick={this.logIn.bind(this)}

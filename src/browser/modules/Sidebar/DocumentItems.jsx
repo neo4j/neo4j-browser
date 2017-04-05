@@ -1,25 +1,23 @@
 import { connect } from 'preact-redux'
-import uuid from 'uuid'
 import { withBus } from 'preact-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
-
-import { FavoriteItem } from 'browser-components/buttons'
+import { StyledHelpLink, StyledHelpItem, StyledDocumentActionLink } from './styled'
 
 export const DocumentItems = ({header, items, onItemClick = null}) => {
   const listOfItems = items.map((item) => {
     switch (item.type) {
       case 'link':
         return (
-          <li className='link' key={uuid.v4()}>
-            <a href={item.command} target='_blank'>{item.name}</a>
-          </li>
+          <StyledHelpItem>
+            <StyledHelpLink href={item.command} target='_blank'>{item.name}</StyledHelpLink>
+          </StyledHelpItem>
         )
       default:
         return (
-          <FavoriteItem className='command' key={uuid.v4()} onClick={() => onItemClick(item.command)}
-            primaryText={item.name}
-          />
+          <StyledHelpItem>
+            <StyledDocumentActionLink onClick={() => onItemClick(item.command)} name={item.name} type={item.type} />
+          </StyledHelpItem>
         )
     }
   })
