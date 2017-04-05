@@ -167,5 +167,12 @@ describe('utils', () => {
         expect(res).toEqual(tCase.expect)
       })
     })
+    test('can remove commented lines from a string', () => {
+    // Given
+      const stringWithComments = '//Hello is is a comment\nSome string'
+
+      // When & Then
+      expect(utils.removeComments(stringWithComments)).toEqual('Some string')
+    })
   })
 })
