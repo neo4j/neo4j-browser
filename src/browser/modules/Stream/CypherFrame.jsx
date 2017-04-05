@@ -127,8 +127,12 @@ class CypherFrame extends Component {
     return this.state.openView === viewType ? {display: 'block'} : {display: 'none'}
   }
 
-  onResize (fullscreen, collapse) {
-    this.setState({fullscreen, collapse})
+  onResize (fullscreen, collapse, frameHeight) {
+    if (frameHeight) {
+      this.setState({fullscreen, collapse, frameHeight})
+    } else {
+      this.setState({fullscreen, collapse})
+    }
   }
 
   render () {
@@ -157,7 +161,7 @@ class CypherFrame extends Component {
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
           <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.rows} />
           <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.rows} />
-          <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} />
+          <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
           <CodeView style={this.getDisplayStyle(viewTypes.CODE)} query={this.props.frame.cmd} request={this.props.request} />
           <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
           <WarningsView style={this.getDisplayStyle(viewTypes.WARNINGS)} notifications={this.state.notifications} cypher={this.state.cypher} />

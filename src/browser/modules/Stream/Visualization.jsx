@@ -98,7 +98,7 @@ export class Visualization extends Component {
       <StyledVisContainer style={this.props.style} >
         <ExplorerComponent maxNeighbours={this.props.maxNeighbours} initialNodeDisplay={this.props.initialNodeDisplay} graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle}
           getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes}
-          relationships={this.state.nodesAndRelationships.relationships} />
+          relationships={this.state.nodesAndRelationships.relationships} fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} />
       </StyledVisContainer>
     )
   }
