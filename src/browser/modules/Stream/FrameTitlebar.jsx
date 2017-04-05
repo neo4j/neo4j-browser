@@ -4,6 +4,7 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
+import { removeComments } from 'shared/services/utils'
 import { FrameButton, FrameButtonAChild } from 'browser-components/buttons'
 import Visible from 'browser-components/Visible'
 import { CSVSerializer } from 'services/serializer'
@@ -21,10 +22,11 @@ export const FrameTitlebar = (props) => {
   }
   const fullscreenIcon = (props.fullscreen) ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = (props.collapse) ? <DownIcon /> : <UpIcon />
+  const cmd = removeComments(frame.cmd)
   return (
     <StyledFrameTitleBar>
-      <StyledFrameCommand onClick={() => props.onTitlebarClick(frame.cmd)}>
-        {frame.cmd}
+      <StyledFrameCommand onClick={() => props.onTitlebarClick(cmd)}>
+        {cmd}
       </StyledFrameCommand>
       <FrameTitlebarButtonSection>
         <Visible if={frame.type === 'cypher' && csvData}>
