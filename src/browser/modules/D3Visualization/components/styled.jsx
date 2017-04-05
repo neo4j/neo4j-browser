@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
-const legendRowHeight = 32
+export const legendRowHeight = 32
+export const inspectorFooterContractedHeight = 21
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -115,7 +116,7 @@ export const StyledInspectorFooter = styled.div`
   white-space: normal;
   overflow: scroll;
   &.contracted {
-    max-height: 21px;
+    max-height: ${inspectorFooterContractedHeight}px;
     overflow: hidden;
   }
 `
@@ -232,10 +233,11 @@ export const StyledLegendContents = styled.div`
 
 export const StyledLegendRow = styled.div`
   border-bottom: 1px solid #e6e9ef;
-  max-height: ${legendRowHeight}px
-  overflow: hidden;
+  &.contracted {
+    max-height: ${legendRowHeight}px
+    overflow: hidden;
+  }
 `
-
 export const StyledLegend = styled.div`
   background-color: #eef1f8;
   margin-top: -${(legendRowHeight * 2) + 1}px;

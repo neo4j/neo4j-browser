@@ -1,6 +1,7 @@
 import { Component } from 'preact'
-import {StyledTokenContextMenuKey, StyledRowToggle, StyledCaret, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
+import {inspectorFooterContractedHeight, StyledTokenContextMenuKey, StyledTokenRelationshipType, StyledLabelToken, StyledStatusBar, StyledStatus, StyledInspectorFooter, StyledInspectorFooterRow, StyledInspectorFooterRowListPair, StyledInspectorFooterRowListKey, StyledInspectorFooterRowListValue, StyledInlineList} from './styled'
 import {GrassEditor} from './GrassEditor'
+import {RowExpandToggleComponent} from './RowExpandToggle'
 
 export class InspectorComponent extends Component {
   constructor (props) {
@@ -14,22 +15,6 @@ export class InspectorComponent extends Component {
     if (elem) {
       this.state.footerRowElem = elem
     }
-  }
-
-  updateDimensions () {
-    let rowHeight = this.state.footerRowElem ? this.state.footerRowElem.base.clientHeight : 0
-    this.setState({rowHeight: rowHeight})
-  }
-
-  componentWillMount () {
-    this.updateDimensions()
-  }
-  componentDidMount () {
-    this.updateDimensions()
-    window.addEventListener('resize', this.updateDimensions.bind(this))
-  }
-  componentWillUnmount () {
-    window.removeEventListener('resize', this.updateDimensions.bind(this))
   }
 
   render () {
@@ -116,25 +101,13 @@ export class InspectorComponent extends Component {
         )
       }
     }
-    const rowToggle = () => {
-      const oneline = 22
-      if (oneline * 1.1 < this.state.rowHeight) {
-        return (
-          <StyledRowToggle onClick={() => { this.setState({ contracted: !this.state.contracted }) }}>
-            <StyledCaret className={this.state.contracted ? 'fa fa-caret-left' : 'fa fa-caret-down'} />
-          </StyledRowToggle>
-        )
-      } else {
-        return null
-      }
-    }
 
     return (
       <StyledStatusBar className='status-bar'>
         <StyledStatus className='status'>
           <StyledInspectorFooter className={this.state.contracted ? 'contracted inspector-footer' : 'inspector-footer'}>
             <StyledInspectorFooterRow className='inspector-footer-row' ref={this.setFooterRowELem.bind(this)}>
-              {rowToggle()}
+              <RowExpandToggleComponent contracted={this.state.contracted} rowElem={this.state.footerRowElem} containerHeight={inspectorFooterContractedHeight} onClick={() => { this.setState({ contracted: !this.state.contracted }) }} />
               {inspectorContent}
             </StyledInspectorFooterRow>
           </StyledInspectorFooter>
