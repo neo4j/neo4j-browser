@@ -21,6 +21,7 @@
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import * as actions from 'shared/modules/visualization/visualizationDuck'
+import * as grassActions from 'shared/modules/grass/grassDuck'
 import { NevadaWrapper } from '../NevadaVisualization/NevadaWrapper'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
@@ -127,7 +128,7 @@ export class Visualization extends Component {
 const mapStateToProps = (state) => {
   return {
     labels: actions.getLabels(state),
-    graphStyleData: actions.getGraphStyleData(state),
+    graphStyleData: grassActions.getGraphStyleData(state),
     useNewVis: getUseNewVisualization(state),
     initialNodeDisplay: getSettings(state).initialNodeDisplay,
     maxNeighbours: getSettings(state).maxNeighbours
@@ -140,7 +141,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.updateLabels(labels))
     },
     updateStyle: (graphStyleData) => {
-      dispatch(actions.updateGraphStyleData(graphStyleData))
+      dispatch(grassActions.updateGraphStyleData(graphStyleData))
     }
   }
 }
