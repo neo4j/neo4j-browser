@@ -104,10 +104,9 @@ export class GraphComponent extends Component {
     }
   }
 
-  render () {
-    return (
-      <StyledSvgWrapper>
-        <svg className='neod3viz' ref={this.graphInit.bind(this)} />
+  zoomButtons () {
+    if (this.props.fullscreen) {
+      return (
         <StyledZoomHolder>
           <StyledZoomButton className={this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'} onClick={this.zoomInClicked.bind(this)}>
             <ZoomInIcon />
@@ -116,6 +115,16 @@ export class GraphComponent extends Component {
             <ZoomOutIcon />
           </StyledZoomButton>
         </StyledZoomHolder>
+      )
+    }
+    return null
+  }
+
+  render () {
+    return (
+      <StyledSvgWrapper>
+        <svg className='neod3viz' ref={this.graphInit.bind(this)} />
+        {this.zoomButtons()}
       </StyledSvgWrapper>
     )
   }
