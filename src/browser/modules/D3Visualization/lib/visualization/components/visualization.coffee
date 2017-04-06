@@ -89,23 +89,22 @@ neo.viz = (el, measureSize, graph, layout, style) ->
 
   isZoomingIn = true
 
-  zoomInClick = ->
+  viz.zoomInClick = ->
     isZoomingIn = true
     zoomClick this
 
-  zoomOutClick = ->
+  viz.zoomOutClick = ->
     isZoomingIn = false
     zoomClick this
 
   zoomClick = (element) ->
     draw = yes
-    d3.event.preventDefault
-    d3.select(element.parentNode).selectAll("button").classed('faded', false)
+    limitsReached = {zoomInLimit: false, zoomOutLimit: false}
 
     if isZoomingIn
       zoomLevel = Number (zoomBehavior.scale() * (1 + 0.2 * 1)).toFixed(2)
       if zoomLevel >= zoomBehavior.scaleExtent()[1]
-        d3.select(element).classed("faded", true)
+        limitsReached.zoomInLimit = true
         interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[1])
       else
         interpolateZoom(zoomBehavior.translate(), zoomLevel)
@@ -113,11 +112,11 @@ neo.viz = (el, measureSize, graph, layout, style) ->
     else
       zoomLevel = Number (zoomBehavior.scale() * (1 + 0.2 * -1)).toFixed(2)
       if zoomLevel <= zoomBehavior.scaleExtent()[0]
-        d3.select(element).classed("faded", true)
+        limitsReached.zoomOutLimit = true
         interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[0])
       else
         interpolateZoom(zoomBehavior.translate(), zoomLevel)
-
+    limitsReached
   # Background click event
   # Check if panning is ongoing
   rect.on('click', ->
@@ -282,8 +281,5 @@ neo.viz = (el, measureSize, graph, layout, style) ->
   clickHandler = neo.utils.clickHandler()
   clickHandler.on 'click', onNodeClick
   clickHandler.on 'dblclick', onNodeDblClick
-
-  d3.select(root.node().parentNode).select('button.zoom_in').on('click', zoomInClick)
-  d3.select(root.node().parentNode).select('button.zoom_out').on('click', zoomOutClick)
 
   viz

@@ -66,6 +66,9 @@ export const CodeIcon = () => (<IconContainer className='fa fa-code' text='Code'
 export const PlanIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-hierarchy' text='Plan' />)
 export const AlertIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-alert' />)
 
+export const ZoomInIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-zoom-in' />)
+export const ZoomOutIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-zoom-out' />)
+
 export const BinIcon = (props) => (<IconContainer activeStyle={styles.white} inactiveStyle={styles.inactive} {...props} className='sl-bin' />)
 
 export const ExpandIcon = () => (<IconContainer activeStyle={styles.inactive} inactiveStyle={styles.inactive} className='sl-scale-spread' />)
