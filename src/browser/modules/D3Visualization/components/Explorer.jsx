@@ -23,7 +23,7 @@ import {GraphComponent} from './Graph'
 import neoGraphStyle from '../graphStyle'
 import {InspectorComponent} from './Inspector'
 import {LegendComponent} from './Legend'
-import {StyledSvgWrapper, StyledFullSizeContainer} from './styled'
+import {StyledFullSizeContainer} from './styled'
 
 export class ExplorerComponent extends Component {
   constructor (props) {
