@@ -61,6 +61,7 @@ export const StyledFrame = styled.article`
 
 export const StyledVisContainer = styled.div`
   width: 100%;
+  height: 100%;
   display : ${props => props.style.display}
 `
 
