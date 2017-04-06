@@ -92,13 +92,6 @@
     "webpack-dashboard": "^0.3.0",
     "webpack-dev-server": "^2.4.2"
   },
-  "babel": {
-    "presets": [
-      "es2015",
-      "react",
-      "stage-2"
-    ]
-  },
   "dependencies": {
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
