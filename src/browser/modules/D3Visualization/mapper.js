@@ -43,6 +43,14 @@ export function getGraphStats (graph) {
   let relTypeStats = {}
   graph.nodes().forEach((node) => {
     node.labels.forEach((label) => {
+      if (labelStats['*']) {
+        labelStats['*'].count = labelStats['*'].count + 1
+      } else {
+        labelStats['*'] = {
+          count: 1,
+          properties: []
+        }
+      }
       if (labelStats[label]) {
         labelStats[label].count = labelStats[label].count + 1
         labelStats[label].properties = Object.assign({}, labelStats[label].properties, node.propertyMap)
@@ -55,6 +63,14 @@ export function getGraphStats (graph) {
     })
   })
   graph.relationships().forEach((rel) => {
+    if (relTypeStats['*']) {
+      relTypeStats['*'].count = relTypeStats['*'].count + 1
+    } else {
+      relTypeStats['*'] = {
+        count: 1,
+        properties: []
+      }
+    }
     if (relTypeStats[rel.type]) {
       relTypeStats[rel.type].count = relTypeStats[rel.type].count + 1
       relTypeStats[rel.type].properties = Object.assign({}, relTypeStats[rel.type].properties, rel.propertyMap)
