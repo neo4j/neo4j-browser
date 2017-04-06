@@ -45,7 +45,7 @@
   "repository": {},
   "keywords": [],
   "author": "",
-  "license": "GPL",
+  "license": "GPL-3.0",
   "homepage": "https://neo4j.com",
   "devDependencies": {
     "autoprefixer": "^6.7.7",
