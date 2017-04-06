@@ -16,7 +16,7 @@ const isObject = (str) => typeof str === 'object' && str !== null
 const isEmpty = (str) => typeof str === 'undefined' || str === null
 const isEmptyString = (str) => str === ''
 
-const csvChain = (input) => input
+const csvChain = (input) => (Array.isArray(input) ? input : [])
   .map(serializeObject)
   .map(csvEscape)
   .join(csvDelimiter)
