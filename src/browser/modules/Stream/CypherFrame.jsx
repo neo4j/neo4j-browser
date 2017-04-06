@@ -164,6 +164,7 @@ class CypherFrame extends Component {
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     let statusBar = null
+    let rows
 
     if (errors) {
       frameContents = (
@@ -175,12 +176,12 @@ class CypherFrame extends Component {
       statusBar = <FrameError code={errors.code} />
     } else if ((result.records) || plan) {
       if (result.records && result.records.length > 0) {
-        this.state.rows = this.state.rows || bolt.recordsToTableArray(result.records)
+        rows = bolt.recordsToTableArray(result.records)
       }
       frameContents =
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
-          <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.rows} />
-          <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.rows} />
+          <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} />
+          <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={rows} />
           <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
           <CodeView style={this.getDisplayStyle(viewTypes.CODE)} query={this.props.frame.cmd} request={this.props.request} />
           <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
