@@ -44,8 +44,6 @@ export default function neoGraphStyle () {
     }, {
       diameter: '20px'
     }, {
-      diameter: '35px'
-    }, {
       diameter: '50px'
     }, {
       diameter: '65px'

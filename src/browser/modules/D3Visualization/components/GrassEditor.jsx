@@ -156,21 +156,23 @@ export class GrassEditorComponent extends Component {
     let pickers
     let title
     if (this.props.selectedLabel) {
-      const styleForLabel = this.graphStyle.forNode({ labels: [this.props.selectedLabel.label] })
+      const labelList = this.props.selectedLabel.label !== '*' ? [this.props.selectedLabel.label] : []
+      const styleForLabel = this.graphStyle.forNode({ labels: labelList })
       const inlineStyle = {'backgroundColor': styleForLabel.get('color'), 'color': styleForLabel.get('text-color-internal')}
       pickers = [this.colorPicker(styleForLabel.selector, styleForLabel), this.sizePicker(styleForLabel.selector, styleForLabel), this.captionPicker(styleForLabel.selector, styleForLabel, this.props.selectedLabel.propertyKeys)]
-      title = (<StyledLabelToken className='token token-label' style={inlineStyle}>{this.props.selectedLabel.label}</StyledLabelToken>)
+      title = (<StyledLabelToken className='token token-label' style={inlineStyle}>{this.props.selectedLabel.label || '*'}</StyledLabelToken>)
     } else if (this.props.selectedRelType) {
-      const styleForRelType = this.graphStyle.forRelationship({type: this.props.selectedRelType.relType})
+      const relTypeSelector = this.props.selectedRelType.relType !== '*' ? {type: this.props.selectedRelType.relType} : {}
+      const styleForRelType = this.graphStyle.forRelationship(relTypeSelector)
       const inlineStyle = {'backgroundColor': styleForRelType.get('color'), 'color': styleForRelType.get('text-color-internal')}
       pickers = [this.colorPicker(styleForRelType.selector, styleForRelType), this.widthPicker(styleForRelType.selector, styleForRelType), this.captionPicker(styleForRelType.selector, styleForRelType, this.props.selectedRelType.propertyKeys, true)]
-      title = (<StyledTokenRelationshipType className='token token-relationship' style={inlineStyle}>{this.props.selectedRelType.relType}</StyledTokenRelationshipType>)
+      title = (<StyledTokenRelationshipType className='token token-relationship' style={inlineStyle}>{this.props.selectedRelType.relType || '*'}</StyledTokenRelationshipType>)
     } else {
       return null
     }
     return (
       <StyledInlineList className='style-picker'>
-        <StyledInlineListItem>{title}</StyledInlineListItem>
+        {title}
         {pickers}
       </StyledInlineList>
     )

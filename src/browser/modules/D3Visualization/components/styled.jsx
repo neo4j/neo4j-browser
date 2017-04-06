@@ -21,7 +21,7 @@
 import styled from 'styled-components'
 
 export const legendRowHeight = 32
-export const inspectorFooterContractedHeight = 21
+export const inspectorFooterContractedHeight = 22
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -188,12 +188,6 @@ export const StyledStatusBar = styled.div`
   margin-bottom: -39px;
 `
 
-// .status-bar .btn-group {
-//   absolute: top 3px right 12px;
-// }
-// .status-bar .icon-warning-sign {
-//   font-size: 18px;
-// }
 export const StyledStatus = styled.div`
   position: relative;
   float: left;
@@ -276,6 +270,7 @@ export const StyledPickerListItem = styled(StyledInlineListItem)`
   padding-right: 5px;
   padding-left: 0;
   vertical-align: middle;
+  line-height: 0;
 `
 
 export const StyledPickerSelector = styled.a`
@@ -303,7 +298,7 @@ export const StyledCaptionSelector = styled.a`
   display: inline-block;
   padding: 1px 6px;
   font-size: 12px;
-  line-height: 12px;
+  line-height: 1em;
   color: #9195A0;
   border: 1px solid #9195A0;
   overflow: hidden;
