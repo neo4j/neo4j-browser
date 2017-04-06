@@ -1,0 +1,12 @@
+.altRows tr:nth-child(even) {
+  background-color: #ddd
+}
+
+.altRows td:first-child {
+  vertical-align: top;
+  width: 170px;
+}
+
+.bold {
+  font-weight: bold;
+}

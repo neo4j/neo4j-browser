@@ -1,0 +1,40 @@
+.section {
+  padding: 10px 0 !important;
+  color: white !important;
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.label-wrapper {
+  .chip {
+    border-radius: 20px !important;
+  }
+}
+
+.relationship-wrapper {
+  .chip {
+    border-radius: 3px !important;
+  }
+}
+
+.property-key-wrapper {
+  .chip {
+    border-radius: 2px !important;
+    background-color: transparent !important;
+    border: 1px solid #ccc !important;
+    span {
+      color: #ccc !important;
+    }
+  }
+}
+
+.chip {
+  margin: 4px !important;
+  padding: 0 !important;
+  span {
+    line-height: normal !important;
+  }
+}

@@ -1,0 +1,18 @@
+.icon {
+  min-width: 40px !important;
+  top: 4px !important;
+  border: 0;
+  background: transparent;
+}
+.tooltip {
+  position: absolute;
+  background-color: grey;
+}
+.action {
+  padding: 0px !important;
+  font-size: 0.8em !important;
+  min-width: 50px !important;
+}
+.remove {
+  color: #bcc0c9 !important;
+}

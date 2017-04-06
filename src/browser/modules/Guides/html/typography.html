@@ -1,0 +1,144 @@
+<!--  -->
+<article class="guide">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-4">
+        <h1>Typography</h1>
+        <p>
+          The typography is pleasantly minimal. Just enough to make for easy reading
+          of brief content.
+        </p>
+      </div>
+      <div class="col-lg-4">
+        <h3 class="hbaseline">Fonts</h3>
+        <p>All regular text is in <a target="_blank" href="https://fonts.google.com/specimen/Open+Sans">Open Sans</a>,
+          a &#8220;humanist sans serif typeface designed by Steve Matteson&#8220; for Google Fonts.
+        </p>
+        <p>Code appears in <a target="_blank" href="https://fonts.google.com/specimen/Inconsolata">Inconsolata</a>,
+          a &#8220;monospace font, designed for printed code listings and the like.&#8220;
+        </p>
+      </div>
+      <div class="col-lg-4">
+        <h3>Font Variants</h3>
+        <p>
+          For expressive text treatment there are classes for
+          <span class="italic">.italic</span>,
+          <span class="caps">.caps</span>,
+          <span class="small">.small</span>,
+          <span class="muted">.muted</span> and
+          <span class="code">.code</span>, plus weights like
+          <span class="light">.light</span>,
+          <span class="semi-bold">.semi-bold</span>,
+          <span class="bold">.bold</span>, and
+          <span class="extra-bold">.extra-bold</span>.
+        </p>
+        <p>With caution you can use <code>.nobreak</code> to <span class="nobreak">write-hyphen-cased-words-that-wont-break</span>.
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-lg-4">
+        <h2>Headings</h2>
+        <p>
+          There are also heading classes available the represent heading styles. This results in semantic HTML that still has the styling that you are looking for.
+        </p>
+        <p>
+          <span class="h1">.h1</span> <span class="h2">.h2</span> <span class="h3">.h3</span> <span class="h4">.h4</span> <span class="h5">.h5</span> <span class="h6">.h6</span>
+        </p>
+      </div>
+      <div class="col-lg-8">
+        <h1>Does Size Change the Meaning of Words?</h1>
+        <h2>Does Size Change the Meaning of Words?</h2>
+        <h3>Does Size Change the Meaning of Words?</h3>
+        <h4>Does Size Change the Meaning of Words?</h4>
+        <h5>Does Size Change the Meaning of Words?</h5>
+        <h6>Does Size Change the Meaning of Words?</h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-2">
+        <h1 class="vtop">H1 Top</h1>
+        <p>Add <code>.vtop</code> to align heading baselines.</p>
+      </div>
+      <div class="col-lg-2">
+        <h2 class="vtop">H2 Top</h2>
+        <p>Add <code>.vtop</code> to align heading baselines.</p>
+      </div>
+      <div class="col-lg-2">
+        <h3 class="vtop">H3 Top</h3>
+        <p>Add <code>.vtop</code> to align heading baselines.</p>
+      </div>
+      <div class="col-lg-2">
+        <h4 class="vtop">H4 Top</h4>
+        <p>Add <code>.vtop</code> to align heading baselines.</p>
+      </div>
+      <div class="col-lg-2">
+        <h5 class="vtop">H5 Top</h5>
+        <p>Add <code>.vtop</code> to align heading baselines.</p>
+      </div>
+      <div class="col-lg-2">
+        <h6 class="vtop">H6 Top</h6>
+        <p>Add <code>.vtop</code> to align heading baselines.</p>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-lg-4">
+        <h2 class="vtop">Lists</h2>
+      </div>
+      <div class="col-lg-4">
+        <h5 class="vtop">Ordered</h5>
+        <ol>
+          <li>Nodes</li>
+          <li>Relationships</li>
+          <li>Properties</li>
+          <li>Labels, Types, etc.</li>
+        </ol>
+      </div>
+      <div class="col-lg-4">
+        <h5 class="vtop">Unordered</h5>
+        <ul>
+          <li>Nodes</li>
+          <li>Relationships</li>
+          <li>Properties</li>
+          <li>Labels, Types, etc.</li>
+        </ul>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-lg-4">
+        <h2 class="vtop">Code</h2>
+        <p>Within body text, use <code>&lt;code&gt;</code> for citing
+          Cypher keywords like <code>MERGE</code> or indicating key-combinations.
+          Avoid code-snippets within a paragraph, preferring a code block.
+        </p>
+        <ul>
+          <li>Within a list</li>
+          <li><code>MATCH</code> might appear</li>
+          <li>mixed with other points</li>
+        </ul>
+      </div>
+      <div class="col-lg-8">
+        <h5 class="vtop">Code Block</h5>
+        <p>Create a static block of Cypher using...
+        <pre>&lt;figure&gt;&lt;pre mode=&quot;cypher&quot; class=&quot;code&quot;&gt;&gt;MATCH ... RETURN ... &lt;/pre&gt;&lt;/figure&gt;</pre>
+        </p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code">
+MATCH (tom:Person) WHERE tom.name = &quot;Tom Hanks&quot; RETURN tom</pre>
+        </figure>
+        <p>
+          Make it clickable by adding the class <code>runnable</code>...
+           <pre>&lt;figure&gt;&lt;pre mode=&quot;cypher&quot; class=&quot;code runnable&quot;&gt;MATCH ... RETURN ... &lt;/pre&gt;&lt;/figure&gt;</pre>
+        </p>
+        <figure>
+          <pre mode="cypher" class="pre-scrollable code runnable">
+MATCH (tom:Person)-[r]-&gt;(movies) WHERE tom.name = &quot;Tom Hanks&quot; RETURN tom, r, movies</pre>
+        </figure>
+
+      </div>
+    </div>
+
+  </div>
+</article>
