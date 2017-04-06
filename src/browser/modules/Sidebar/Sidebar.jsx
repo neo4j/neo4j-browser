@@ -21,8 +21,6 @@ import MdFlashOn from 'react-icons/lib/md/flash-on'
 import MdFlashOff from 'react-icons/lib/md/flash-off'
 import Badge from 'browser-components/badge'
 
-import styles from './style.css'
-
 class Sidebar extends Component {
   render () {
     const openDrawer = this.props.openDrawer
@@ -62,10 +60,6 @@ class Sidebar extends Component {
       onNavClick={onNavClick}
       topNavItems={topNavItemsList}
       bottomNavItems={bottomNavItemsList}
-      sidebarClassName={styles.sidebar}
-      listClassName={styles.list}
-      selectedItemClassName={styles['selected-item']}
-      tabClassName={styles.tab}
     />)
   }
 }

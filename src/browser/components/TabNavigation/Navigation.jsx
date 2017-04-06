@@ -1,15 +1,11 @@
-import classNames from 'classnames'
 import { StyledNavigationButton, NavigationButtonContainer } from 'browser-components/buttons'
-import { StyledDrawer } from './styled'
+import { StyledSidebar, StyledDrawer, HiddenDrawer, StyledTabsWrapper, StyledTopNav, StyledBottomNav } from './styled'
 const Navigation = ({
   openDrawer,
   onNavClick,
   topNavItems,
   bottomNavItems = [],
-  selectedItemClassName,
-  tabClassName,
-  sidebarClassName,
-  listClassName
+  sidebarClassName
 }) => {
   const buildNavList = (list, selected) => {
     return list.map((item, index) => {
@@ -37,22 +33,17 @@ const Navigation = ({
   }
   const topNavItemsList = buildNavList(topNavItems, openDrawer)
   const bottomNavItemsList = buildNavList(bottomNavItems, openDrawer)
-  const tabClass = classNames({
-    hidden: !openDrawer,
-    [tabClassName]: true
-  })
+  const DrawerComponent = openDrawer ? StyledDrawer : HiddenDrawer
   return (
-    <div className={sidebarClassName}>
-      <ul className={listClassName}>
-        <ul className={listClassName}>{topNavItemsList}</ul>
-        <ul className={listClassName}>{bottomNavItemsList}</ul>
-      </ul>
-      <StyledDrawer className={tabClass}>
-        <div className='tab'>
-          {getContentToShow(openDrawer)}
-        </div>
-      </StyledDrawer>
-    </div>
+    <StyledSidebar>
+      <StyledTabsWrapper>
+        <StyledTopNav>{topNavItemsList}</StyledTopNav>
+        <StyledBottomNav>{bottomNavItemsList}</StyledBottomNav>
+      </StyledTabsWrapper>
+      <DrawerComponent>
+        {getContentToShow(openDrawer)}
+      </DrawerComponent>
+    </StyledSidebar>
   )
 }
 
