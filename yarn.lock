@@ -405,16 +405,7 @@ babel-jest@^18.0.0:
     babel-plugin-istanbul "^3.0.0"
     babel-preset-jest "^18.0.0"
 
-babel-loader@^6.2.10:
-  version "6.4.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-loader/-/babel-loader-6.4.0.tgz#e98c239662a22533b9e7a49594ef216d7635ea28"
-  dependencies:
-    find-cache-dir "^0.1.1"
-    loader-utils "^0.2.16"
-    mkdirp "^0.5.1"
-    object-assign "^4.0.1"
-
-babel-loader@^6.4.1:
+babel-loader@^6.2.10, babel-loader@^6.4.1:
   version "6.4.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-loader/-/babel-loader-6.4.1.tgz#0b34112d5b0748a8dcdbf51acf6f9bd42d50b8ca"
   dependencies:
@@ -1174,6 +1165,10 @@ chokidar@^1.4.3, chokidar@^1.6.0:
     readdirp "^2.0.0"
   optionalDependencies:
     fsevents "^1.0.0"
+
+chroma-js@^1.2.2:
+  version "1.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/chroma-js/-/chroma-js-1.3.2.tgz#6a04fe7beed78ad0c77da974d2bf1c8de38c85af"
 
 ci-info@^1.0.0:
   version "1.0.0"
@@ -4163,20 +4158,21 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.2.0:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.110:
-  version "0.0.110"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.110.tgz#4465012cc4363c3f3d63d5b86762749ff0ce29ba"
+neo4j-visualization@0.0.133:
+  version "0.0.133"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.133.tgz#17e000a5c3d1a892c43a9cb056b56660c82d2937"
   dependencies:
     babel-polyfill "^6.23.0"
     babel-runtime "^6.23.0"
+    chroma-js "^1.2.2"
     neo4j-driver "^1.1.0"
-    nevada-visjs "0.1.44"
+    nevada-visjs "0.1.64"
     sortablejs "^1.5.1"
     vector2d "^2.1.0"
 
-nevada-visjs@0.1.44:
-  version "0.1.44"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.44.tgz#109abe76fbebdd1320ed3faf1cacb3f417c36191"
+nevada-visjs@0.1.64:
+  version "0.1.64"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.64.tgz#d9f82a4c840eb3d58f2f86fcc34dbb029053f353"
   dependencies:
     babel-core "^6.21.0"
     babel-loader "^6.2.10"
