@@ -5235,9 +5235,9 @@ preact-render-to-string@^3.2.1:
   dependencies:
     pretty-format "^3.5.1"
 
-preact-suber@^1.0.2:
-  version "1.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-suber/-/preact-suber-1.0.2.tgz#ed8b82555852d5bd65b2c861c87a32fb900d01e5"
+preact-suber@^1.0.3:
+  version "1.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-suber/-/preact-suber-1.0.3.tgz#e27f8add175c908f7c483e7930fe5a685866c009"
 
 preact-transition-group@^1.1.0:
   version "1.1.0"
