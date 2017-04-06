@@ -26,6 +26,7 @@ export const inspectorFooterContractedHeight = 22
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
   height: 100%;
+  position: relative;
   > svg {
   height: 100%;
   width: 100%;
@@ -327,4 +328,39 @@ export const StyledFullSizeContainer = styled.div`
 
 export const StyledInspectorFooterStatusMessage = styled.div`
   font-weight: bold;
+`
+
+export const StyledZoomHolder = styled.div`
+  position: absolute;
+  bottom: 0px;
+  right: 0;
+  padding: 6px 6px 0 6px;
+  border-left: #e6e9ef solid 1px;
+  border-top: #e6e9ef solid 1px;
+  background: #fff;
+`
+
+export const StyledZoomButton = styled.button`
+  display: list-item;
+  list-style-type: none;
+  font-size: 2em;
+  margin-bottom: 10px;
+  border: none;
+  color: #9b9da2;
+  background: transparent;
+  border-color: black;
+  padding: 2px 6px 3px;
+  &:hover {
+   color:black;
+  }
+  &:focus {
+    outline: none
+  }
+  &.faded {
+   opacity: .3;
+   cursor: auto;
+   &:hover {
+     color: #9b9da2;
+   }
+  }
 `

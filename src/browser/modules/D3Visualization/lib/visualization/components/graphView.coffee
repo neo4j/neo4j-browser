@@ -57,3 +57,9 @@ class neo.graphView
 
   collectStats: ->
     @viz.collectStats()
+
+  zoomIn: (elem) ->
+    @viz.zoomInClick(elem)
+
+  zoomOut: (elem) ->
+    @viz.zoomOutClick(elem)
