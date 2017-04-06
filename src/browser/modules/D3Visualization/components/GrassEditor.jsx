@@ -22,7 +22,7 @@ import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import neoGraphStyle from '../graphStyle'
 import {StyledPickerSelector, StyledTokenRelationshipType, StyledInlineList, StyledInlineListItem, StyledLabelToken, StyledPickerListItem, StyledCircleSelector, StyledCaptionSelector} from './styled'
-import * as actions from 'shared/modules/visualization/visualizationDuck'
+import * as actions from 'shared/modules/grass/grassDuck'
 
 export class GrassEditorComponent extends Component {
   constructor (props) {

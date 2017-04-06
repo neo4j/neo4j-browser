@@ -19,7 +19,7 @@
  */
 
 /* global test, expect */
-import reducer, { UPDATE_LABELS, UPDATE_GRAPH_STYLE_DATA } from './visualizationDuck'
+import reducer, { UPDATE_LABELS, UPDATE_STYLE_DATA } from './visualizationDuck'
 
 describe('visualization reducer', () => {
   test('handles initial value', () => {
@@ -50,9 +50,9 @@ describe('visualization reducer', () => {
     expect(nextState.styleData).toEqual('style')
   })
 
-  test('handles UPDATE_GRAPH_STYLE_DATA without initial state', () => {
+  test('handles UPDATE_STYLE_DATA without initial state', () => {
     const action = {
-      type: UPDATE_GRAPH_STYLE_DATA,
+      type: UPDATE_STYLE_DATA,
       styleData: 'style updated'
     }
     const nextState = reducer(undefined, action)
@@ -60,10 +60,10 @@ describe('visualization reducer', () => {
     expect(nextState.styleData).toEqual('style updated')
   })
 
-  test('handles UPDATE_GRAPH_STYLE_DATA', () => {
+  test('handles UPDATE_STYLE_DATA', () => {
     const initialState = { labels: ['Person'], styleData: 'style' }
     const action = {
-      type: UPDATE_GRAPH_STYLE_DATA,
+      type: UPDATE_STYLE_DATA,
       styleData: 'style updated again'
     }
     const nextState = reducer(initialState, action)
