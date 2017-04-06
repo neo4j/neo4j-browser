@@ -1,9 +1,0 @@
-span(ng-show='frame.hasErrors')
-  | Execution error
-p(ng-hide='frame.hasErrors')
-  span
-    | {{resultStatistics(frame)}}
-  div.frame-slider-wrapper(ng-show='isActive("text")')
-    span Max column width: 
-    div.frame-slider
-      range-slider.text-table-slider(ng-range-min="slider.min", ng-range-max="slider.max", ng-model="ascii_col_width")

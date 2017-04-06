@@ -1,8 +1,0 @@
-{
-  "settings":
-  {
-    "heartbeat": 123,
-    "initCmd": ":play intro",
-    "theme": "autumnal"
-  }
-}
