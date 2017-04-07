@@ -30,13 +30,14 @@ export class GraphComponent extends Component {
 
   constructor (props) {
     super(props)
-    this.state = {}
-    this.state.zoomInLimitReached = true
-    this.state.zoomOutLimitReached = false
+    this.state = {
+      zoomInLimitReached: true,
+      zoomOutLimitReached: false
+    }
   }
 
   graphInit (el) {
-    this.state.el = el
+    this.svgElement = el
   }
 
   zoomInClicked (el) {
@@ -53,19 +54,19 @@ export class GraphComponent extends Component {
     if (this.props.frameHeight && this.props.fullscreen) {
       return this.props.frameHeight - (dim.frameStatusbarHeight + dim.frameTitlebarHeight * 2)
     } else {
-      return this.state.el.parentNode.offsetHeight
+      return this.svgElement.parentNode.offsetHeight
     }
   }
 
   componentDidMount () {
-    if (this.state.el != null) {
+    if (this.svgElement != null) {
       if (!this.graphView) {
         let NeoConstructor = neo.graphView
         let measureSize = () => {
-          return {width: this.state.el.offsetWidth, height: this.getVisualAreaHeight()}
+          return {width: this.svgElement.offsetWidth, height: this.getVisualAreaHeight()}
         }
         this.graph = createGraph(this.props.nodes, this.props.relationships)
-        this.graphView = new NeoConstructor(this.state.el, measureSize, this.graph, this.props.graphStyle)
+        this.graphView = new NeoConstructor(this.svgElement, measureSize, this.graph, this.props.graphStyle)
         new GraphEventHandler(this.graph,
           this.graphView,
           this.props.getNodeNeighbours,
