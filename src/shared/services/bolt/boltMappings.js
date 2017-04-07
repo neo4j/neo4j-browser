@@ -99,7 +99,7 @@ export function extractNodesAndRelationshipsFromRecords (records, types) {
   return { nodes: rawNodes, relationships: rawRels }
 }
 
-export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types, filterRels) {
+export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types, filterRels, intChecker, intConverter) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
@@ -114,14 +114,14 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types
     paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
   })
   const nodes = rawNodes.map((item) => {
-    return {id: item.identity.toString(), labels: item.labels, properties: item.properties}
+    return {id: item.identity.toString(), labels: item.labels, properties: itemIntToString(item.properties, intChecker, intConverter)}
   })
   let relationships = rawRels
   if (filterRels) {
     relationships = rawRels.filter((item) => nodes.filter((node) => node.id === item.start.toString()).length > 0 && nodes.filter((node) => node.id === item.end.toString()).length > 0)
   }
   relationships = relationships.map((item) => {
-    return {id: item.identity.toString(), startNodeId: item.start, endNodeId: item.end, type: item.type, properties: item.properties}
+    return {id: item.identity.toString(), startNodeId: item.start, endNodeId: item.end, type: item.type, properties: itemIntToString(item.properties, intChecker, intConverter)}
   })
   return { nodes: nodes, relationships: relationships }
 }
