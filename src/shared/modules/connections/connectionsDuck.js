@@ -56,7 +56,12 @@ const initialState = {
  * Selectors
 */
 export function getConnection (state, id) {
-  return getConnections(state).filter((connection) => connection.id === id)[0]
+  let connections = getConnections(state).filter((connection) => connection && connection.id === id)
+  if (connections && connections.length > 0) {
+    return connections[0]
+  } else {
+    return null
+  }
 }
 
 export function getConnections (state) {
@@ -260,7 +265,7 @@ export const detectActiveConnectionChangeEpic = (action$, store) => {
     })
 }
 export const disconnectEpic = (action$, store) => {
-  return action$.ofType(DISCONNECT)
+  return action$.ofType(DISCONNECT).merge(action$.ofType(USER_CLEAR))
     .do(() => bolt.closeConnection())
     .do((action) => store.dispatch(updateConnection({ id: action.id, password: '' })))
     .mapTo(setActiveConnection(null))
