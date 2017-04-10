@@ -44,12 +44,13 @@ export class ConnectionForm extends Component {
       successCallback: props.onSuccess || (() => {})
     }
   }
-  connect () {
+  connect (doneFn = () => {}) {
     this.props.error({})
     this.props.bus.self(
       CONNECT,
       this.state,
       (res) => {
+        doneFn()
         if (res.success) {
           this.saveAndStart()
         } else {
