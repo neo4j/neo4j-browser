@@ -201,7 +201,9 @@ export default {
     return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.types)
   },
   extractNodesAndRelationshipsFromRecordsForOldVis: (records, filterRels = true) => {
-    return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(records, neo4j.types, filterRels)
+    const intChecker = neo4j.isInt
+    const intConverter = (val) => val.toString()
+    return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(records, neo4j.types, filterRels, intChecker, intConverter)
   },
   extractPlan: (result) => {
     return mappings.extractPlan(result)
