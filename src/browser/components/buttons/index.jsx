@@ -207,7 +207,12 @@ export const FormButton = (props) => {
   return (<ButtonType {...props} type='button'>{children}</ButtonType>)
 }
 
-export const CypherFrameButton = styled.li`
+export const CypherFrameButton = (props) => {
+  const {selected, ...rest} = props
+  return (selected) ? <StyledSelectedCypherFrameButton {...rest} /> : <StyledCypherFrameButton {...rest} />
+}
+
+const StyledCypherFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   border-bottom: ${props => props.theme.inFrameBorder};
@@ -224,6 +229,10 @@ export const CypherFrameButton = styled.li`
     color: ${props => props.theme.editorBarBackground};
     text-decoration: none;
   }
+`
+const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
+  background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+  color: ${props => props.theme.editorBarBackground};
 `
 
 export const FrameButton = styled.li`
