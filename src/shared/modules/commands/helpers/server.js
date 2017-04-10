@@ -76,8 +76,8 @@ function handleChangePasswordCommand (action, props, cmdchar) {
 export function connectToConnection (action, connectionName, put, store) {
   const state = store.getState()
   connectionName = connectionName || DISCOVERY_CONNECTION_ID
-  const foundConnections = connections.getConnections(state).filter((c) => c.name === connectionName)
-  const connectionData = foundConnections[0] || {}
+  const foundConnections = connections.getConnections(state).filter((c) => c && c.name === connectionName)
+  const connectionData = (foundConnections && foundConnections[0]) || {}
   return {...action, type: 'connection', connectionData}
 }
 

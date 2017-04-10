@@ -185,7 +185,10 @@ export default {
   directConnect,
   openConnection,
   closeConnection: () => {
-    if (_drivers) _drivers.close()
+    if (_drivers) {
+      _drivers.close()
+      _drivers = null
+    }
   },
   directTransaction,
   routedReadTransaction,

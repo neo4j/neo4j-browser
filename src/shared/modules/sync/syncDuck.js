@@ -20,8 +20,8 @@
 
 import { syncResourceFor } from 'services/browserSyncService'
 import { setItem } from 'services/localstorage'
-import { USER_CLEAR } from 'shared/modules/app/appDuck'
 import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
+import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
 
 export const NAME = 'sync'
 export const SET_SYNC = 'sync/SET_SYNC'
@@ -93,7 +93,7 @@ export const clearSyncEpic = (action$, store) =>
       setItem('documents', null)
       setItem('folders', null)
     })
-    .mapTo({ type: USER_CLEAR })
+    .mapTo({ type: CLEAR_LOCALSTORAGE })
 
 export const syncFavoritesEpic = (action$, store) =>
   action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES].includes(action.type))
