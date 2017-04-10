@@ -25,6 +25,7 @@ import { CONNECTION_SUCCESS, DISCONNECTION_SUCCESS, LOST_CONNECTION, UPDATE_CONN
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
 export const CLEAR = 'meta/CLEAR'
+export const FORCE_FETCH = 'meta/FORCE_FETCH'
 
 const initialState = {
   labels: [],
@@ -82,6 +83,11 @@ export function updateMeta (meta, context) {
     context
   }
 }
+export function fetchMetaData () {
+  return {
+    type: FORCE_FETCH
+  }
+}
 
 // Epics
 export const metaQuery = `CALL db.labels() YIELD label
@@ -101,6 +107,7 @@ export const dbMetaEpic = (some$, store) =>
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() => {
       return Rx.Observable.timer(0, 20000)
+      .merge(some$.ofType(FORCE_FETCH))
       .mergeMap(() =>
         Rx.Observable
         .fromPromise(bolt.routedReadTransaction(metaQuery))

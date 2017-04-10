@@ -24,6 +24,7 @@ import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getSettings } from '../settings/settingsDuck'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
+import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 
 const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
@@ -67,7 +68,10 @@ export const handleCommandsEpic = (action$, store) =>
           resolve(noop)
         } else {
           res
-            .then((r) => resolve(noop))
+            .then((r) => {
+              store.dispatch(fetchMetaData())
+              resolve(noop)
+            })
             .catch((e) => resolve(noop))
         }
       })
