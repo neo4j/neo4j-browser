@@ -18,22 +18,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FrameTemplate from './FrameTemplate'
-import * as e from 'services/exceptionMessages'
-import { getErrorMessage } from 'services/exceptions'
-import { PaddedDiv } from './styled'
-
-const ErrorFrame = ({frame}) => {
-  const error = frame.error || false
-  let errorContents = error.message || 'No error message found'
-  if (error.type && typeof e[error.type] !== 'undefined') {
-    errorContents = getErrorMessage(error)
-  }
-  return (
-    <FrameTemplate
-      header={frame}
-      contents={<PaddedDiv><pre>{errorContents}</pre></PaddedDiv>}
-    />
-  )
+export const parseHttpVerbCommand = (input) => {
+  const p = new Promise((resolve, reject) => {
+    const re = /^[^\w]*(get|post|put|delete|head)\s+(\S+)?\s*([\S\s]+)?$/i
+    const result = re.exec(input)
+    let method, url, data
+    try {
+      [method, url, data] = [result[1], (result[2] || null), (result[3] || null)]
+    } catch (e) {
+      reject('Unparseable http request')
+      return
+    }
+    if (!url) {
+      reject('Missing path')
+      return
+    }
+    method = method.toLowerCase()
+    if (['post', 'put'].indexOf(method) > -1 && data) {
+      // Assume JSON
+      try {
+        JSON.parse(data.replace(/\n/g, ''))
+      } catch (e) {
+        reject('Payload does not seem to be valid (JSON) data')
+        return
+      }
+    }
+    resolve({ method, url, data })
+  })
+  return p
 }
-export default ErrorFrame
