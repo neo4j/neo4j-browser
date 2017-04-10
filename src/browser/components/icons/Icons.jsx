@@ -64,7 +64,7 @@ export const VisualizationIcon = () => (<IconContainer className='nw nw-neo4j-ou
 export const AsciiIcon = () => (<IconContainer className='fa fa-font' text='Text' />)
 export const CodeIcon = () => (<IconContainer className='fa fa-code' text='Code' />)
 export const PlanIcon = () => (<IconContainer className='sl-hierarchy' text='Plan' />)
-export const AlertIcon = () => (<IconContainer className='sl-alert' />)
+export const AlertIcon = () => (<IconContainer className='sl-alert' text='Warn' />)
 
 export const ZoomInIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-zoom-in' />)
 export const ZoomOutIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-zoom-out' />)
