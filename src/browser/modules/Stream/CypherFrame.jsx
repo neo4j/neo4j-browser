@@ -31,6 +31,7 @@ import WarningsView from './Views/WarningsView'
 import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
+import Visible from 'browser-components/Visible'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import { StyledFrameBody } from './styled'
 
@@ -110,32 +111,34 @@ class CypherFrame extends Component {
     }
   }
 
+  resultHasNodes () {
+    return (this.state.nodesAndRelationships) ? (this.state.nodesAndRelationships.nodes && this.state.nodesAndRelationships.nodes.length > 0) : false
+  }
+
   sidebar () {
     return (
       <FrameSidebar>
-        <CypherFrameButton selected={this.state.openView === viewTypes.VISUALIZATION} onClick={() => {
-          this.changeView(viewTypes.VISUALIZATION)
-        }}><VisualizationIcon /></CypherFrameButton>
+        <Visible if={this.resultHasNodes()}>
+          <CypherFrameButton selected={this.state.openView === viewTypes.VISUALIZATION} onClick={() => {
+            this.changeView(viewTypes.VISUALIZATION)
+          }}><VisualizationIcon /></CypherFrameButton>
+        </Visible>
         <CypherFrameButton selected={this.state.openView === viewTypes.TABLE} onClick={() => {
           this.changeView(viewTypes.TABLE)
         }}><TableIcon /></CypherFrameButton>
         <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
           this.changeView(viewTypes.TEXT)
         }}><AsciiIcon /></CypherFrameButton>
-        {
-          this.state.plan || bolt.extractPlan(this.props.request.result || false)
-            ? <CypherFrameButton selected={this.state.openView === viewTypes.PLAN} onClick={() =>
-              this.changeView(viewTypes.PLAN)
-            }><PlanIcon /></CypherFrameButton>
-            : null
-        }
-        {
-          this.state.notifications
-            ? <CypherFrameButton selected={this.state.openView === viewTypes.WARNINGS} onClick={() => {
-              this.changeView(viewTypes.WARNINGS)
-            }}><AlertIcon /></CypherFrameButton>
-            : null
-        }
+        <Visible if={this.state.plan || bolt.extractPlan(this.props.request.result || false)}>
+          <CypherFrameButton selected={this.state.openView === viewTypes.PLAN} onClick={() =>
+            this.changeView(viewTypes.PLAN)
+          }><PlanIcon /></CypherFrameButton>
+        </Visible>
+        <Visible if={this.state.notifications}>
+          <CypherFrameButton selected={this.state.openView === viewTypes.WARNINGS} onClick={() => {
+            this.changeView(viewTypes.WARNINGS)
+          }}><AlertIcon /></CypherFrameButton>
+        </Visible>
         <CypherFrameButton selected={this.state.openView === viewTypes.CODE} onClick={() => {
           this.changeView(viewTypes.CODE)
         }}><CodeIcon /></CypherFrameButton>
