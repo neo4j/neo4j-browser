@@ -199,7 +199,13 @@ const onLostConnection = (dispatch) => (e) => {
   dispatch({ type: LOST_CONNECTION, error: e })
 }
 
-export const connectionLossFilter = (action) => action.error.code !== 'Neo.ClientError.Security.Unauthorized'
+export const connectionLossFilter = (action) => {
+  const notLostCodes = [
+    'Neo.ClientError.Security.Unauthorized',
+    'Neo.ClientError.Security.AuthenticationRateLimit'
+  ]
+  return notLostCodes.indexOf(action.error.code) < 0
+}
 
 // Epics
 export const connectEpic = (action$, store) => {
