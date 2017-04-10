@@ -18,14 +18,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DISCONNECTED_STATE, PENDING_STATE } from 'shared/modules/connections/connectionsDuck'
 import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
-import { StyledMain } from './styled'
+import Visible from 'browser-components/Visible'
+import ClickToCode from '../ClickToCode'
+import { StyledMain, WarningBanner, NotAuthedBanner, StyledCodeBlockAuthBar } from './styled'
 
 const Main = (props) => {
   return (
     <StyledMain>
       <Editor />
+      <Visible if={props.connectionState === DISCONNECTED_STATE}>
+        <NotAuthedBanner>
+          Database access not available. Please use&nbsp;
+          <ClickToCode CodeComponent={StyledCodeBlockAuthBar}>
+            {props.cmdchar}server connect
+          </ClickToCode>&nbsp;
+          to establish connection. There's a graph waiting for you.
+        </NotAuthedBanner>
+      </Visible>
+      <Visible if={props.connectionState === PENDING_STATE}>
+        <WarningBanner>
+          Connection to server lost. Reconnecting...
+        </WarningBanner>
+      </Visible>
       <Stream />
     </StyledMain>
   )

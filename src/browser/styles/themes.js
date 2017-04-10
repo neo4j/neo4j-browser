@@ -43,7 +43,8 @@ export const base = {
   // User feedback colors
   success: '#70E9B1',
   error: '#E74C3C',
-  warning: '#ebf094',
+  warning: '#FD952C',
+  auth: '#428BCA',
 
   // Buttons
   primaryButtonText: '',

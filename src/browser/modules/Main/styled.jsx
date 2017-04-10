@@ -19,6 +19,7 @@
  */
 
 import styled from 'styled-components'
+import { StyledCodeBlock } from '../ClickToCode/styled'
 
 export const StyledMain = styled.div`
   flex: 0 0 auto;
@@ -27,4 +28,27 @@ export const StyledMain = styled.div`
   background-color: #D2D5DA;
   min-width: 0;
   position: relative;
+`
+
+export const Banner = styled.div`
+  height: 49px;
+  line-height: 49px;
+  width: 100%;
+  color: white;
+  padding: 0 24px;
+`
+
+export const ErrorBanner = styled(Banner)`
+  background-color: ${props => props.theme.error}
+`
+export const WarningBanner = styled(Banner)`
+  background-color: ${props => props.theme.warning}
+`
+export const NotAuthedBanner = styled(Banner)`
+  background-color: ${props => props.theme.auth}
+`
+
+export const StyledCodeBlockAuthBar = styled(StyledCodeBlock)`
+  background-color: white;
+  color: ${props => props.theme.auth};
 `
