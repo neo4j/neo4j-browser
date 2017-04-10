@@ -52,6 +52,8 @@ export class ExplorerComponent extends Component {
         this.state.selectedItem = {type: 'status-item', item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${result.count + currentNeighbours.length} neighbours due to browser config maxNeighbours.`}
       }
       callback({nodes: nodes, relationships: result.relationships})
+    }, () => {
+      callback({nodes: [], relationships: []})
     })
   }
 

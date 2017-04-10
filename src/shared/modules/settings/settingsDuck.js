@@ -32,6 +32,7 @@ export const getBrowserSyncConfig = (state) => {
     ? {...browserSyncConfig, authWindowUrl: getSettings(state).browserSyncDebugServer}
     : browserSyncConfig
 }
+export const getMaxNeighbours = (state) => state[NAME].maxNeighbours || initialState.maxNeighbours
 
 const browserSyncConfig = {
   authWindowUrl: 'https://auth.neo4j.com/indexNewBrowser.html',
