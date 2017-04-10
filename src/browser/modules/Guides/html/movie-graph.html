@@ -695,7 +695,7 @@ RETURN tom, m, coActors, m2, cruise</pre>
       <div class="col-sm-9">
         <p class="lead">Delete all Movie and Person nodes, and their relationships</p>
         <figure>
-          <pre class="pre-scrollable code runnable">MATCH (a:Person),(m:Movie) OPTIONAL MATCH (a)-[r1]-(), (m)-[r2]-() DELETE a,r1,m,r2</pre>
+          <pre class="pre-scrollable code runnable">MATCH (n) DETACH DELETE n</pre>
           <aside class="warn">Note you only need to compare property values like this when first creating relationships</aside>
         </figure>
         <p class="lead">Prove that the Movie Graph is gone</p>
