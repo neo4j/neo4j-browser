@@ -27,6 +27,7 @@ export const StyledWrapper = styled.div`
   font-family: ${props => props.theme.primaryFontFamily};
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 `
 
 export const StyledApp = styled.div`
