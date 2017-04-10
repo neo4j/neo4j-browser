@@ -19,13 +19,13 @@
  */
 
 import asciitable from 'ascii-data-table'
+import { PaddedDiv } from '../styled'
 
 const AsciiView = ({rows, style}) => {
-  if (!rows) {
-    return (<div style={style}><em>No results found</em></div>)
-  }
-
-  return <pre style={style}>{asciitable.table(rows, 70)}</pre>
+  const contents = rows
+    ? <pre>{asciitable.table(rows, 70)}</pre>
+    : <div><em>No results found</em></div>
+  return <PaddedDiv style={style}>{contents}</PaddedDiv>
 }
 
 export default AsciiView

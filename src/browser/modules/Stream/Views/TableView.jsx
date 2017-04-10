@@ -20,6 +20,7 @@
 
 import { Component } from 'preact'
 import { v4 } from 'uuid'
+import { PaddedDiv } from '../styled'
 
 class TableView extends Component {
   constructor (props) {
@@ -64,14 +65,16 @@ class TableView extends Component {
       </tbody>
     )
     return (
-      <table style={this.props.style}>
-        <thead>
-          <tr>
-            {tableHeader}
-          </tr>
-        </thead>
-        {tableBody}
-      </table>
+      <PaddedDiv style={this.props.style}>
+        <table>
+          <thead>
+            <tr>
+              {tableHeader}
+            </tr>
+          </thead>
+          {tableBody}
+        </table>
+      </PaddedDiv>
     )
   }
 }

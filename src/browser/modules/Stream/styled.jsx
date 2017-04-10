@@ -83,6 +83,11 @@ export const StyledFrameContents = styled.div`
   height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight) + 'px')};
 `
 
+export const PaddedDiv = styled.div`
+  padding: 0 20px 20px 20px;
+  padding-bottom: ${props => (props.fullscreen ? (dim.frameTitlebarHeight + 20) + 'px' : '20px')};
+`
+
 export const StyledFrameSidebar = styled.ul`
   line-height: 33px;
   width: 45px;
