@@ -27,7 +27,7 @@ import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
 import { ExplorerComponent } from '../D3Visualization/components/Explorer'
 import { StyledNevadaCanvas, StyledVisContainer } from './styled'
-import { getUseNewVisualization, getSettings } from 'shared/modules/settings/settingsDuck'
+import { getUseNewVisualization, getMaxNeighbours, getSettings } from 'shared/modules/settings/settingsDuck'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
@@ -73,8 +73,8 @@ export class Visualization extends Component {
   }
 
   getNeighbours (id, currentNeighbourIds = []) {
-    let query = `MATCH path = (a)--(o)
-                   WHERE id(a)= ${id}
+    const query = `MATCH path = (a)--(o)
+                   WHERE id(a) = ${id}
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
                    RETURN path, size((a)--()) as c
                    ORDER BY id(o)
@@ -117,9 +117,16 @@ export class Visualization extends Component {
 
     return (
       <StyledVisContainer style={this.props.style} >
-        <ExplorerComponent maxNeighbours={this.props.maxNeighbours} initialNodeDisplay={this.props.initialNodeDisplay} graphStyleData={this.props.graphStyleData} updateStyle={this.props.updateStyle}
-          getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes}
-          relationships={this.state.nodesAndRelationships.relationships} fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} />
+        <ExplorerComponent
+          maxNeighbours={this.props.maxNeighbours}
+          initialNodeDisplay={this.props.initialNodeDisplay}
+          graphStyleData={this.props.graphStyleData}
+          updateStyle={this.props.updateStyle}
+          getNeighbours={this.getNeighbours.bind(this)}
+          nodes={this.state.nodesAndRelationships.nodes}
+          relationships={this.state.nodesAndRelationships.relationships}
+          fullscreen={this.props.fullscreen}
+          frameHeight={this.props.frameHeight} />
       </StyledVisContainer>
     )
   }
@@ -131,7 +138,7 @@ const mapStateToProps = (state) => {
     graphStyleData: grassActions.getGraphStyleData(state),
     useNewVis: getUseNewVisualization(state),
     initialNodeDisplay: getSettings(state).initialNodeDisplay,
-    maxNeighbours: getSettings(state).maxNeighbours
+    maxNeighbours: getMaxNeighbours(state)
   }
 }
 
