@@ -28,9 +28,9 @@ export const StyledSvgWrapper = styled.div`
   height: 100%;
   position: relative;
   > svg {
-  height: 100%;
-  width: 100%;
-  background-color: #f9fbfd;
+    height: 100%;
+    width: 100%;
+    background-color: #f9fbfd;
     .node {
       cursor: pointer;
       > .ring {

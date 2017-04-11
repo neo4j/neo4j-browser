@@ -26,7 +26,8 @@ export const dim = {
   // Editor bar
   editorbarHeight: 70,
   // Frame
-  frameBodyHeight: 370,
+  frameBodyHeight: 500,
   frameTitlebarHeight: 39,
-  frameStatusbarHeight: 39
+  frameStatusbarHeight: 39,
+  frameBodyPadding: 20
 }

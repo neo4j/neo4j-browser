@@ -124,7 +124,7 @@ export class Visualization extends Component {
     }
 
     return (
-      <StyledVisContainer style={this.props.style} >
+      <StyledVisContainer fullscreen={this.props.fullscreen} style={this.props.style} >
         <ExplorerComponent
           maxNeighbours={this.props.maxNeighbours}
           initialNodeDisplay={this.props.initialNodeDisplay}
