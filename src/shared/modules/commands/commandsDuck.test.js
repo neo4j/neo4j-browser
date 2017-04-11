@@ -23,7 +23,7 @@ import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 
-import { BoltConnectionError } from '../../services/exceptions'
+import { BoltConnectionError, createErrorObject } from '../../services/exceptions'
 import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -91,7 +91,7 @@ describe('commandsDuck', () => {
           addHistory({cmd}),
           send('cypher', requestId),
           frames.add({...action, type: 'cypher'}),
-          updateQueryResult(requestId, BoltConnectionError(), 'error'),
+          updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
           { type: 'NOOP' }
         ])
         done()

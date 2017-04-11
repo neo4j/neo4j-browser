@@ -22,12 +22,13 @@ import { Component } from 'preact'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import FrameSidebar from './FrameSidebar'
-import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon } from 'browser-components/icons/Icons'
+import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon } from 'browser-components/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
 import CodeView from './Views/CodeView'
 import WarningsView from './Views/WarningsView'
+import ErrorsView from './Views/ErrorsView'
 import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
@@ -41,7 +42,8 @@ class CypherFrame extends Component {
     this.state = {
       openView: viewTypes.VISUALIZATION,
       plan: null,
-      notifications: null
+      notifications: null,
+      errors: null
     }
   }
 
@@ -54,25 +56,30 @@ class CypherFrame extends Component {
     let plan
     let nodesAndRelationships
     let warnings
-    if (nextProps.request.status === 'success' && nextProps.request.result !== this.props.request.result) {
+    let errors
+    if (nextProps.request.status === 'success') {
       if (nextProps.request.result.records && nextProps.request.result.records.length > 0) {
         nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.request.result.records)
         rows = bolt.recordsToTableArray(nextProps.request.result.records)
       }
-
       plan = bolt.extractPlan(nextProps.request.result)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
 
       this.decideOpeningView({plan, nodesAndRelationships, warnings, props: nextProps})
-
       if (warnings && warnings.length > 0) {
         this.setState({notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
       }
+      this.setState({nodesAndRelationships, rows, plan, errors})
+    } else if (nextProps.request.status !== 'success') { // Failed query
+      errors = nextProps.request.result
+      this.setState({ errors: errors, openView: viewTypes.ERRORS })
     }
-
-    this.setState({nodesAndRelationships, rows, plan})
   }
-
+  shouldComponentUpdate (nextProps, state) {
+    return state.openView !== this.state.openView ||
+      state.fullscreen !== this.state.fullscreen ||
+      nextProps.request.result !== this.props.request.result
+  }
   decideOpeningView ({plan, nodesAndRelationships, warnings, props}) {
     if (props.frame.forceView) {
       this.setState({openView: props.frame.forceView})
@@ -118,30 +125,41 @@ class CypherFrame extends Component {
   sidebar () {
     return (
       <FrameSidebar>
-        <Visible if={this.resultHasNodes()}>
+        <Visible if={this.resultHasNodes() && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.VISUALIZATION} onClick={() => {
             this.changeView(viewTypes.VISUALIZATION)
           }}><VisualizationIcon /></CypherFrameButton>
         </Visible>
-        <CypherFrameButton selected={this.state.openView === viewTypes.TABLE} onClick={() => {
-          this.changeView(viewTypes.TABLE)
-        }}><TableIcon /></CypherFrameButton>
-        <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
-          this.changeView(viewTypes.TEXT)
-        }}><AsciiIcon /></CypherFrameButton>
-        <Visible if={this.state.plan || bolt.extractPlan(this.props.request.result || false)}>
+        <Visible if={!this.state.errors}>
+          <CypherFrameButton selected={this.state.openView === viewTypes.TABLE} onClick={() => {
+            this.changeView(viewTypes.TABLE)
+          }}><TableIcon /></CypherFrameButton>
+        </Visible>
+        <Visible if={!this.state.errors}>
+          <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
+            this.changeView(viewTypes.TEXT)
+          }}><AsciiIcon /></CypherFrameButton>
+        </Visible>
+        <Visible if={(this.state.plan || bolt.extractPlan(this.props.request.result || false)) && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.PLAN} onClick={() =>
             this.changeView(viewTypes.PLAN)
           }><PlanIcon /></CypherFrameButton>
         </Visible>
-        <Visible if={this.state.notifications}>
+        <Visible if={this.state.notifications && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.WARNINGS} onClick={() => {
             this.changeView(viewTypes.WARNINGS)
           }}><AlertIcon /></CypherFrameButton>
         </Visible>
-        <CypherFrameButton selected={this.state.openView === viewTypes.CODE} onClick={() => {
-          this.changeView(viewTypes.CODE)
-        }}><CodeIcon /></CypherFrameButton>
+        <Visible if={this.state.errors}>
+          <CypherFrameButton selected={this.state.openView === viewTypes.ERRORS} onClick={() => {
+            this.changeView(viewTypes.ERRORS)
+          }}><ErrorIcon /></CypherFrameButton>
+        </Visible>
+        <Visible if={!this.state.errors}>
+          <CypherFrameButton selected={this.state.openView === viewTypes.CODE} onClick={() => {
+            this.changeView(viewTypes.CODE)
+          }}><CodeIcon /></CypherFrameButton>
+        </Visible>
       </FrameSidebar>
     )
   }
@@ -160,7 +178,6 @@ class CypherFrame extends Component {
 
   render () {
     const frame = this.props.frame
-    const errors = this.props.request.status === 'error' ? this.props.request.result : false
     const result = this.props.request.result || false
     const plan = this.state.plan || bolt.extractPlan(result)
     const requestStatus = this.props.request.status
@@ -169,33 +186,37 @@ class CypherFrame extends Component {
     let statusBar = null
     let rows
 
-    if (errors) {
-      frameContents = (
-        <div>
-          {errors.code}
-          <pre>{errors.message}</pre>
-        </div>
-      )
-      statusBar = <FrameError code={errors.code} />
-    } else if ((result.records) || plan) {
+    if (this.state.errors) {
+      statusBar = <FrameError code={this.state.errors.code} message={this.state.errors.message} />
+    }
+    if (requestStatus !== 'pending') {
       if (result.records && result.records.length > 0) {
         rows = bolt.recordsToTableArray(result.records)
       }
       frameContents =
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
-          <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} />
-          <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={rows} />
-          <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
-          <CodeView style={this.getDisplayStyle(viewTypes.CODE)} query={this.props.frame.cmd} request={this.props.request} />
-          <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
-          <WarningsView style={this.getDisplayStyle(viewTypes.WARNINGS)} notifications={this.state.notifications} cypher={this.state.cypher} />
+          <Visible if={!this.state.errors}>
+            <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
+          </Visible>
+          <Visible if={!this.state.errors}>
+            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={rows} />
+          </Visible>
+          <Visible if={!this.state.errors}>
+            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} />
+          </Visible>
+          <Visible if={!this.state.errors}>
+            <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
+          </Visible>
+          <Visible if={!this.state.errors}>
+            <WarningsView style={this.getDisplayStyle(viewTypes.WARNINGS)} notifications={this.state.notifications} cypher={this.state.cypher} />
+          </Visible>
+          <Visible if={!this.state.errors}>
+            <CodeView style={this.getDisplayStyle(viewTypes.CODE)} query={this.props.frame.cmd} request={this.props.request} />
+          </Visible>
+          <Visible if={this.state.errors}>
+            <ErrorsView style={this.getDisplayStyle(viewTypes.ERRORS)} error={this.state.errors} />
+          </Visible>
         </StyledFrameBody>
-    } else if (result) {
-      frameContents = (
-        <div>
-          <pre>{JSON.stringify(result, null, '\t')}</pre>
-        </div>
-      )
     } else if (requestStatus === 'pending') {
       frameContents = (
         <div>

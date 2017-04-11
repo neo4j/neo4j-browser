@@ -18,11 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const VISUALIZATION = 'VISUALIZATION'
-export const PLAN = 'PLAN'
-export const WARNINGS = 'WARNINGS'
-export const ERRORS = 'ERRORS'
-export const TABLE = 'TABLE'
-export const CODE = 'CODE'
-export const ERROR = 'ERROR'
-export const TEXT = 'TEXT'
+import { StyledCypherErrorMessage, StyledHelpContent,
+  StyledH4, StyledPreformattedArea, StyledHelpDescription, StyledDiv, StyledHelpFrame} from '../styled'
+
+const WarningsView = ({error, style}) => {
+  if (!error) {
+    return null
+  }
+  return (
+    <StyledHelpFrame style={style}>
+      <StyledHelpContent>
+        <StyledHelpDescription>
+          <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+          <StyledH4>{error.code}</StyledH4>
+        </StyledHelpDescription>
+        <StyledDiv>
+          <StyledPreformattedArea>{error.message}</StyledPreformattedArea>
+        </StyledDiv>
+      </StyledHelpContent>
+    </StyledHelpFrame>)
+}
+
+export default WarningsView

@@ -20,7 +20,7 @@
 
 import { Component } from 'preact'
 import styled from 'styled-components'
-import styles from './icons.css'
+import styles from './style.css'
 
 class IconContainer extends Component {
   constructor (props) {
@@ -65,6 +65,7 @@ export const AsciiIcon = () => (<IconContainer className='fa fa-font' text='Text
 export const CodeIcon = () => (<IconContainer className='fa fa-code' text='Code' />)
 export const PlanIcon = () => (<IconContainer className='sl-hierarchy' text='Plan' />)
 export const AlertIcon = () => (<IconContainer className='sl-alert' text='Warn' />)
+export const ErrorIcon = () => (<IconContainer className='fa fa-file-text-o' text='Error' />)
 
 export const ZoomInIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-zoom-in' />)
 export const ZoomOutIcon = () => (<IconContainer activeStyle={styles.active} inactiveStyle={styles.inactive} className='sl-zoom-out' />)
@@ -86,3 +87,5 @@ export const ExpandMenuIcon = () => (<IconContainer activeStyle={styles.blue} in
 export const CollapseMenuIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='fa fa-caret-down' />)
 export const PlayIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-play-circle-o' />)
 export const QuestionIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-question-circle' />)
+
+export const ExclamationTriangleIcon = () => <IconContainer suppressIconStyles className='fa fa-exclamation-triangle' />
