@@ -31,8 +31,8 @@ export function getErrorMessage (errorObject) {
   return str
 }
 
-export function createErrorObject (ErrorType, [...rest] = []) {
-  const obj = new ErrorType(rest)
+export function createErrorObject (ErrorType, ...rest) {
+  const obj = new ErrorType(...rest)
   if (!obj.code) obj.code = obj.type
   obj.message = getErrorMessage(obj)
   return obj
