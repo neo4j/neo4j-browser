@@ -31,7 +31,7 @@ import requestsReducer, { NAME as requests } from 'shared/modules/requests/reque
 import paramsReducer, { NAME as params } from 'shared/modules/params/paramsDuck'
 import visualizationReducer, { NAME as visualization } from 'shared/modules/visualization/visualizationDuck'
 import grassReducer, { NAME as grass } from 'shared/modules/grass/grassDuck'
-import syncReducer, { NAME as sync } from 'shared/modules/sync/syncDuck'
+import { syncReducer, syncConsentReducer, NAME_CONSENT as syncConsent, NAME as sync } from 'shared/modules/sync/syncDuck'
 import foldersReducer, { NAME as folders } from 'shared/modules/favorites/foldersDuck'
 
 export default {
@@ -49,5 +49,6 @@ export default {
   [requests]: requestsReducer,
   [visualization]: visualizationReducer,
   [grass]: grassReducer,
-  [sync]: syncReducer
+  [sync]: syncReducer,
+  [syncConsent]: syncConsentReducer
 }

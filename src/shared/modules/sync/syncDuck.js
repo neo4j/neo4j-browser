@@ -24,10 +24,12 @@ import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, 
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
 
 export const NAME = 'sync'
+export const NAME_CONSENT = 'syncConsent'
 export const SET_SYNC = 'sync/SET_SYNC'
 export const SYNC_ITEMS = 'sync/SYNC_ITEMS'
 export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
 export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
+export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
 
 /**
  * Selectors
@@ -39,13 +41,24 @@ export function getSync (state) {
 /**
  * Reducer
 */
-export default function reducer (state = null, action) {
+export function syncReducer (state = null, action) {
   switch (action.type) {
     case SET_SYNC:
       return Object.assign({}, state, action.obj)
     case CLEAR_SYNC:
     case CLEAR_SYNC_AND_LOCAL:
       return null
+    default:
+      return state
+  }
+}
+
+export function syncConsentReducer (state = false, action) {
+  switch (action.type) {
+    case CONSENT_SYNC:
+      return action.consent
+    case CLEAR_SYNC_AND_LOCAL:
+      return false
     default:
       return state
   }
@@ -79,6 +92,13 @@ export function clearSyncAndLocal () {
   }
 }
 
+export function consentSync (consent) {
+  return {
+    type: CONSENT_SYNC,
+    consent
+  }
+}
+
 export const syncItemsEpic = (action$, store) =>
   action$.ofType(SYNC_ITEMS)
     .do((action) => {
@@ -92,6 +112,7 @@ export const clearSyncEpic = (action$, store) =>
     .do((action) => {
       setItem('documents', null)
       setItem('folders', null)
+      setItem('syncConsent', false)
     })
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
