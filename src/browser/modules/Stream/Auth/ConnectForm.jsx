@@ -37,7 +37,7 @@ export default class ConnectForm extends Component {
     }
   }
   componentWillMount () {
-    this.formKeyHandler = new FormKeyHandler(this.props.onConnectClick)
+    this.formKeyHandler = new FormKeyHandler(this.onConnectClick.bind(this))
   }
   componentDidMount () {
     this.formKeyHandler.initialize()
