@@ -23,7 +23,7 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import TimeAgo from 'react-timeago'
 
-import { setSync, clearSync, clearSyncAndLocal } from 'shared/modules/sync/syncDuck'
+import { setSync, clearSync, clearSyncAndLocal, consentSync } from 'shared/modules/sync/syncDuck'
 import { authenticate, initialize, status, getResourceFor, signOut, setupUser } from 'services/browserSyncService'
 import { setContent as setEditorContent } from 'shared/modules/editor/editorDuck'
 import { getBrowserName } from 'services/utils'
@@ -44,7 +44,7 @@ export class BrowserSync extends Component {
       error: null,
       serviceAuthenticated: props.authData !== null,
       status: props.authData ? 'UP' : 'DOWN',
-      userConsented: false,
+      userConsented: props.syncConsent,
       showConsentAlert: false,
       clearLocalRequested: false
     }
@@ -115,7 +115,7 @@ export class BrowserSync extends Component {
 
   signOutAndClearLocalStorage () {
     if (this.state.clearLocalRequested) {
-      this.setState({clearLocalRequested: false, authData: null, serviceAuthenticated: false})
+      this.setState({clearLocalRequested: false, authData: null, serviceAuthenticated: false, userConsented: false})
       this.props.onSignOutAndClear()
     } else {
       this.setState({clearLocalRequested: true})
@@ -203,10 +203,13 @@ export class BrowserSync extends Component {
                   icon={<BinIcon suppressIconStyles='true' id='browserSyncLogin' />} buttonType='secondary' />
               </DrawerSection>
               <DrawerSection>
-                <ConsentCheckBox checked={this.state.userConsented} onChange={(e) => this.setState({
-                  userConsented: e.target.checked,
-                  showConsentAlert: this.state.showConsentAlert && !e.target.checked
-                })} />
+                <ConsentCheckBox checked={this.state.userConsented} onChange={(e) => {
+                  this.setState({
+                    userConsented: e.target.checked,
+                    showConsentAlert: this.state.showConsentAlert && !e.target.checked
+                  })
+                  this.props.onConsentSyncChanged(e.target.checked)
+                }} />
                 {consentAlertContent}
               </DrawerSection>
             </DrawerSectionBody>
@@ -229,7 +232,8 @@ const mapStateToProps = (state) => {
   return {
     lastSyncedAt: state.sync ? state.sync.lastSyncedAt : null,
     authData: state.sync ? state.sync.authData : null,
-    browserSyncConfig: getBrowserSyncConfig(state)
+    browserSyncConfig: getBrowserSyncConfig(state),
+    syncConsent: state.syncConsent
   }
 }
 
@@ -251,6 +255,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       signOut()
       const action = clearSync()
       ownProps.bus.send(action.type, action)
+    },
+    onConsentSyncChanged: (consent) => {
+      dispatch(consentSync(consent))
     }
   }
 }
