@@ -187,7 +187,7 @@ class CypherFrame extends Component {
     let rows
 
     if (this.state.errors) {
-      statusBar = <FrameError code={this.state.errors.code} message={this.state.errors.message} />
+      statusBar = <FrameError code={this.state.errors.code} />
     }
     if (requestStatus !== 'pending') {
       if (result.records && result.records.length > 0) {
