@@ -132,7 +132,7 @@ export class SysInfoFrame extends Component {
         <SysInfoTableEntry label='Node Store' value={toHumanReadableBytes(kernel.NodeStoreSize)} />,
         <SysInfoTableEntry label='Property Store' value={toHumanReadableBytes(kernel.PropertyStoreSize)} />,
         <SysInfoTableEntry label='Relationship Store' value={toHumanReadableBytes(kernel.RelationshipStoreSize)} />,
-        <SysInfoTableEntry label='String Store Size' value={toHumanReadableBytes(kernel.StringStoreSize)} />,
+        <SysInfoTableEntry label='String Store' value={toHumanReadableBytes(kernel.StringStoreSize)} />,
         <SysInfoTableEntry label='Total Store Size' value={toHumanReadableBytes(kernel.TotalStoreSize)} />
       ],
         'idAllocation': [
