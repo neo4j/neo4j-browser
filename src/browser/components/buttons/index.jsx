@@ -290,12 +290,16 @@ const BaseCarouselButton = styled.button`
   width: 40px;
   min-width: 40px;
   -webkit-font-smoothing: antialiased;
+  user-select: none;
   &:hover {
     color: #fff;
     text-decoration: none;
     filter: alpha(opacity=90);
     outline: 0;
     opacity: .9;
+  }
+  &:focus {
+    outline: none;
   }
 `
 const CarouselButtonOverlay = styled.span`
