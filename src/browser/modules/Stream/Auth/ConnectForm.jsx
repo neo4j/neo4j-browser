@@ -19,6 +19,7 @@
  */
 
 import { Component } from 'preact'
+import Visible from 'browser-components/Visible'
 import {FormButton} from 'browser-components/buttons'
 import {
   StyledConnectionForm,
@@ -29,11 +30,22 @@ import {
 import FormKeyHandler from 'browser-components/form/formKeyHandler'
 
 export default class ConnectForm extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      connecting: false
+    }
+  }
   componentWillMount () {
-    this.formKeyHandler = new FormKeyHandler(this.props.onConnectClick)
+    this.formKeyHandler = new FormKeyHandler(this.onConnectClick.bind(this))
   }
   componentDidMount () {
     this.formKeyHandler.initialize()
+  }
+  onConnectClick () {
+    this.setState({connecting: true}, () => {
+      this.props.onConnectClick(() => this.setState({connecting: false}))
+    })
   }
   render () {
     return (
@@ -50,7 +62,12 @@ export default class ConnectForm extends Component {
           <StyledConnectionLabel>Password</StyledConnectionLabel>
           <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 3)} onChange={this.props.onPasswordChange} value={this.props.password} type='password' />
         </StyledConnectionFormEntry>
-        <FormButton onClick={this.props.onConnectClick}>Connect</FormButton>
+        <Visible if={!this.state.connecting}>
+          <FormButton onClick={this.onConnectClick.bind(this)}>Connect</FormButton>
+        </Visible>
+        <Visible if={this.state.connecting}>
+          Connecting...
+        </Visible>
       </StyledConnectionForm>
     )
   }
