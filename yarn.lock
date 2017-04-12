@@ -5938,9 +5938,9 @@ redux-mock-store@^1.2.2:
   version "1.2.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/redux-mock-store/-/redux-mock-store-1.2.3.tgz#1b3ad299da91cb41ba30d68e3b6f024475fb9e1b"
 
-redux-observable@^0.13.0:
-  version "0.13.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/redux-observable/-/redux-observable-0.13.0.tgz#35b26c2cdbb71e499b31ca9961da0581c2973909"
+redux-observable@^0.14.1:
+  version "0.14.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/redux-observable/-/redux-observable-0.14.1.tgz#9f3d870c69388fdc427ded6770a3e326f3b69693"
 
 redux@^3.2.0, redux@^3.5.2:
   version "3.6.0"
