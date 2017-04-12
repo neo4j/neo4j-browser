@@ -52,7 +52,12 @@ export class Visualization extends Component {
   }
 
   shouldComponentUpdate (nextProps) {
-    return nextProps.records !== this.props.records || nextProps.graphStyleData !== this.props.graphStyleData || nextProps.style !== this.props.style
+    return nextProps.style !== this.props.style ||
+      nextProps.records !== this.props.records ||
+      nextProps.graphStyleData !== this.props.graphStyleData ||
+      nextProps.nevadaStyleData !== this.props.nevadaStyleData ||
+      nextProps.nevadaRelData !== this.props.nevadaRelData ||
+      nextProps.labels !== this.props.labels
   }
 
   componentWillReceiveProps (nextProps) {
@@ -102,10 +107,13 @@ export class Visualization extends Component {
   render () {
     if (this.state.useNewVis) {
       return (
-        <StyledNevadaCanvas>
-          <NevadaWrapper onLabelsSave={this.props.onLabelsSave} labels={this.props.labels}
-            getNeighbours={this.getNeighbours.bind(this)} nodes={this.state.nodesAndRelationships.nodes}
-            relationships={this.state.nodesAndRelationships.relationships} />
+        <StyledNevadaCanvas style={this.props.style}>
+          <NevadaWrapper
+            {...this.props}
+            getNeighbours={this.getNeighbours.bind(this)}
+            nodes={this.state.nodesAndRelationships.nodes}
+            relationships={this.state.nodesAndRelationships.relationships}
+          />
         </StyledNevadaCanvas>
       )
     }
@@ -138,6 +146,8 @@ const mapStateToProps = (state) => {
     graphStyleData: grassActions.getGraphStyleData(state),
     useNewVis: getUseNewVisualization(state),
     initialNodeDisplay: getSettings(state).initialNodeDisplay,
+    nevadaStyleData: actions.getStyleData(state),
+    nevadaRelData: actions.getRelationshipStyle(state),
     maxNeighbours: getMaxNeighbours(state)
   }
 }
@@ -146,6 +156,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onLabelsSave: (labels) => {
       dispatch(actions.updateLabels(labels))
+    },
+    updateNevadaStyle: (nevadaStyleData) => {
+      dispatch(actions.updateGraphStyleData(nevadaStyleData))
+    },
+    updateNevadaRelationships: (nevadaRelData) => {
+      dispatch(actions.updateRelationshipStyleData(nevadaRelData))
     },
     updateStyle: (graphStyleData) => {
       dispatch(grassActions.updateGraphStyleData(graphStyleData))

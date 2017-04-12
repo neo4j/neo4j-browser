@@ -21,13 +21,16 @@
 export const NAME = 'visualization'
 export const UPDATE_LABELS = 'visualization/UPDATE_LABELS'
 export const UPDATE_STYLE_DATA = 'visualization/UPDATE_STYLE_DATA'
+export const UPDATE_RELATIONSHIP_STYLE = 'visualization/UPDATE_RELATIONSHIP_STYLE'
 
 export const getLabels = (state) => state[NAME].labels
 export const getStyleData = state => state[NAME].styleData
+export const getRelationshipStyle = state => state[NAME].relationshipStyle
 
 const initialState = {
   labels: [],
-  styleData: null
+  styleData: null,
+  relationshipStyle: null
 }
 
 function updateLabelData (state, labels) {
@@ -38,12 +41,18 @@ function updateStyleData (state, styleData) {
   return Object.assign({}, state, {styleData: styleData})
 }
 
+function updateRelationshipStyle (state, relationshipStyle) {
+  return Object.assign({}, state, {relationshipStyle: relationshipStyle})
+}
+
 export default function visualization (state = initialState, action) {
   switch (action.type) {
     case UPDATE_LABELS:
       return updateLabelData(state, action.labels)
     case UPDATE_STYLE_DATA:
       return updateStyleData(state, action.styleData)
+    case UPDATE_RELATIONSHIP_STYLE:
+      return updateRelationshipStyle(state, action.relationshipStyle)
     default:
       return state
   }
@@ -56,9 +65,16 @@ export const updateLabels = (labels) => {
   }
 }
 
-export const updateStyle = (graphStyleData) => {
+export const updateGraphStyleData = (graphStyleData) => {
   return {
     type: UPDATE_STYLE_DATA,
     styleData: graphStyleData
+  }
+}
+
+export const updateRelationshipStyleData = (relationshipStyleData) => {
+  return {
+    type: UPDATE_RELATIONSHIP_STYLE,
+    relationshipStyle: relationshipStyleData
   }
 }
