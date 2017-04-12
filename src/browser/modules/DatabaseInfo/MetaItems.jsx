@@ -66,7 +66,7 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
   if (relationshipTypes.length > 0) {
     const editorCommandTemplate = (text) => {
       if (text === '*') {
-        return 'MATCH ()-[r]->() RETURN r LIMIT 25'
+        return 'MATCH p=()-->() RETURN p LIMIT 25'
       }
       return `MATCH p=()-[r:${text}]->() RETURN p LIMIT 25`
     }

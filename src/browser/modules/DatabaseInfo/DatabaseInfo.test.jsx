@@ -80,7 +80,7 @@ describe('DatabaseInfo', () => {
       const relationshipTypes = [{val: 'DIRECTED'}]
       const wrapper = mount(<DatabaseInfoComponent relationshipTypes={relationshipTypes} onItemClick={onItemClick} />)
       simulateEvent(wrapper.find('.token-relationship').first(), 'click')
-      expect(onItemClick).toHaveBeenCalledWith('MATCH ()-[r]->() RETURN r LIMIT 25')
+      expect(onItemClick).toHaveBeenCalledWith('MATCH p=()-->() RETURN p LIMIT 25')
     })
     test('should call on click callback with correct cypher when a non * relationship is clicked', () => {
       const relationshipTypes = [{val: 'DIRECTED'}]
