@@ -108,7 +108,7 @@
     "neo4j-driver": "^1.2.0",
     "neo4j-visualization": "0.0.133",
     "node-noop": "^1.0.0",
-    "preact": "^7.2.0",
+    "preact": "^8.1.0",
     "preact-compat": "^3.13.1",
     "preact-redux": "^2.0.0",
     "preact-suber": "^1.0.3",
