@@ -24,6 +24,11 @@ import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { addClass } from 'shared/services/dom-helpers'
 
 const directives = [{
+  selector: '[exec-topic]',
+  valueExtractor: (elem) => {
+    return `:${elem.getAttribute('exec-topic')}`
+  }
+}, {
   selector: '[play-topic]',
   valueExtractor: (elem) => {
     return `:play ${elem.getAttribute('play-topic')}`
