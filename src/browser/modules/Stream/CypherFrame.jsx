@@ -189,15 +189,24 @@ class CypherFrame extends Component {
 
     if (this.state.errors) {
       statusBar = <FrameError code={this.state.errors.code} />
-    } else if ((result.records) || plan) {
+    } else if (result.records || plan) {
       const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
       const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
       const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
-      statusBar = (this.state.openView !== viewTypes.VISUALIZATION) ? (
-        <StyledStatsBar>
-          Started streaming {result.records.length} records {resultAvailableAfter} ms and completed after {totalTimeString} ms.
-        </StyledStatsBar>
-      ) : null
+      if (this.state.openView !== viewTypes.VISUALIZATION) {
+        statusBar = (
+          <StyledStatsBar>
+            Started streaming {result.records.length} records {resultAvailableAfter} ms and completed after {totalTimeString} ms.
+          </StyledStatsBar>
+        )
+      }
+      if (plan && this.state.openView === viewTypes.PLAN) {
+        statusBar = (
+          <StyledStatsBar>
+            Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
+          </StyledStatsBar>
+        )
+      }
     }
     if (requestStatus !== 'pending') {
       if (result.records && result.records.length > 0) {
