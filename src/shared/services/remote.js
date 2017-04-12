@@ -20,8 +20,18 @@
 
 import fetch from 'isomorphic-fetch'
 
+function request (method, url, data = null) {
+  return fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    },
+    body: data
+  })
+}
+
 function get (url) {
-  return fetch(url, { // eslint-disable-line
+  return fetch(url, {
     method: 'get'
   }).then(function (response) {
     return response.text()
@@ -29,7 +39,7 @@ function get (url) {
 }
 
 function getJSON (url) {
-  return fetch(url, { // eslint-disable-line
+  return fetch(url, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json'
@@ -43,5 +53,6 @@ function getJSON (url) {
 
 export default {
   get,
-  getJSON
+  getJSON,
+  request
 }

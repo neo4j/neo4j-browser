@@ -30,7 +30,8 @@ import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
-import { CouldNotFetchRemoteGuideError, UnknownCommandError } from 'services/exceptions'
+import { CouldNotFetchRemoteGuideError, UnknownCommandError, FetchURLError } from 'services/exceptions'
+import { parseHttpVerbCommand } from 'shared/modules/commands/helpers/http'
 
 const availableCommands = [{
   name: 'clear',
@@ -153,6 +154,27 @@ const availableCommands = [{
   match: (cmd) => /^help(\s|$)/.test(cmd),
   exec: function (action, cmdchar, put, store) {
     put(frames.add({...action, type: 'help'}))
+  }
+}, {
+  name: 'http',
+  match: (cmd) => /^(get|post|put|delete|head)/i.test(cmd),
+  exec: (action, cmdchar, put) => {
+    return parseHttpVerbCommand(action.cmd)
+      .then((r) => {
+        remote.request(r.method, r.url, r.data)
+          .then((res) => res.text())
+          .then((res) => {
+            put(frames.add({...action, result: res, type: 'pre'}))
+          })
+          .catch((e) => {
+            const error = new FetchURLError(e.message)
+            put(frames.add({...action, error, type: 'error'}))
+          })
+      })
+      .catch((e) => {
+        const error = new Error(e)
+        put(frames.add({...action, error, type: 'error'}))
+      })
   }
 }, {
   name: 'catch-all',

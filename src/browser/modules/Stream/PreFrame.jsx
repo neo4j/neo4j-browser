@@ -19,12 +19,13 @@
  */
 
 import FrameTemplate from './FrameTemplate'
+import { PaddedDiv } from './styled'
 
 const PreFrame = ({frame}) => {
   return (
     <FrameTemplate
       header={frame}
-      contents={<pre>{frame.result || frame.contents}</pre>}
+      contents={<PaddedDiv><pre>{frame.result || frame.contents}</pre></PaddedDiv>}
     />
   )
 }

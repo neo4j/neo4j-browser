@@ -118,3 +118,10 @@ export function CouldNotFetchRemoteGuideError (error) {
     error
   }
 }
+
+export function FetchURLError (error) {
+  return {
+    type: 'FetchURLError',
+    error
+  }
+}
