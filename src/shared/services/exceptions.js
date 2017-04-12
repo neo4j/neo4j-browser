@@ -31,6 +31,13 @@ export function getErrorMessage (errorObject) {
   return str
 }
 
+export function createErrorObject (ErrorType, ...rest) {
+  const obj = new ErrorType(...rest)
+  if (!obj.code) obj.code = obj.type
+  obj.message = getErrorMessage(obj)
+  return obj
+}
+
 export function UserException (message) {
   return {
     type: 'UserException',
@@ -63,10 +70,9 @@ export function RemoveDataSourceValidationError () {
   }
 }
 
-export function BoltConnectionError (id) {
+export function BoltConnectionError () {
   return {
-    type: 'BoltConnectionError',
-    id
+    type: 'BoltConnectionError'
   }
 }
 

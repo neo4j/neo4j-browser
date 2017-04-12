@@ -21,7 +21,7 @@
 import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as mappings from './boltMappings'
-import { BoltConnectionError } from '../exceptions'
+import { BoltConnectionError, createErrorObject } from '../exceptions'
 
 let _drivers = null
 let _useRoutingConfig = false
@@ -127,7 +127,7 @@ function openConnection (props, opts = {}, onLostConnection) {
 function _trackedTransaction (input, parameters = {}, session, requestId = null) {
   const id = requestId || v4()
   if (!session) {
-    return [id, Promise.reject(new BoltConnectionError())]
+    return [id, Promise.reject(createErrorObject(BoltConnectionError))]
   }
   const closeFn = (cb = () => {}) => {
     session.close(cb)
@@ -151,7 +151,7 @@ function cancelTransaction (id, cb) {
 }
 
 function _transaction (input, parameters, session) {
-  if (!session) return Promise.reject(new BoltConnectionError())
+  if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
   return session.run(input, parameters)
     .then((r) => {
       session.close()

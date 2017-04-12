@@ -22,6 +22,7 @@ import style from './code_style.css'
 import { PaddedDiv } from '../styled'
 
 const CodeView = ({request, query, style: displayStyle}) => {
+  if (request.status !== 'success') return null
   return (
     <PaddedDiv style={displayStyle}>
       <table>

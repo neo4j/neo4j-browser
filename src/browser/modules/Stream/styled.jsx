@@ -198,3 +198,15 @@ export const StyledNevadaCanvas = styled.div`
     width: 100%;
   }
 `
+
+export const ErrorText = styled.span`
+  color: ${props => props.theme.error};
+  padding-left: 5px;
+  line-height: 35px;
+`
+
+export const Ellipsis = styled.div`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`
