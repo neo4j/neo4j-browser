@@ -43,6 +43,7 @@ const browserSyncConfig = {
   }
 }
 export const getUseNewVisualization = (state) => state[NAME].useNewVis
+export const getCmdChar = (state) => state[NAME].cmdchar || initialState.cmdchar
 
 const initialState = {
   cmdchar: ':',

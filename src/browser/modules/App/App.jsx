@@ -23,7 +23,7 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
-import { getTheme } from 'shared/modules/settings/settingsDuck'
+import { getTheme, getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
 
@@ -45,16 +45,16 @@ class App extends Component {
     this.props.bus && this.props.bus.send(FOCUS)
   }
   render () {
-    const {drawer, handleNavClick, activeConnection, connectionState, theme} = this.props
+    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme} = this.props
     const themeData = themes[theme] || themes['normal']
     return (
       <ThemeProvider theme={themeData}>
         <StyledWrapper>
           <StyledApp>
             <StyledBody>
-              <Sidebar activeConnection={activeConnection} openDrawer={drawer} onNavClick={handleNavClick} connectionState={connectionState} />
+              <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
               <StyledMainWrapper>
-                <Main />
+                <Main cmdchar={cmdchar} activeConnection={activeConnection} connectionState={connectionState} />
               </StyledMainWrapper>
             </StyledBody>
           </StyledApp>
@@ -69,7 +69,8 @@ const mapStateToProps = (state) => {
     drawer: state.drawer,
     activeConnection: getActiveConnection(state),
     theme: getTheme(state),
-    connectionState: getConnectionState(state)
+    connectionState: getConnectionState(state),
+    cmdchar: getCmdChar(state)
   }
 }
 

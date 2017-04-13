@@ -19,13 +19,11 @@
  */
 
 import { Component } from 'preact'
-import { DISCONNECTED_STATE, CONNECTED_STATE, PENDING_STATE } from 'shared/modules/connections/connectionsDuck'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
 import Favorites from './Favorites'
 import Documents from './Documents'
 import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
-import Visible from 'browser-components/Visible'
 import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
 import {
@@ -37,10 +35,6 @@ import {
   AboutIcon
 } from 'browser-components/icons/Icons'
 
-import MdFlashOn from 'react-icons/lib/md/flash-on'
-import MdFlashOff from 'react-icons/lib/md/flash-off'
-import Badge from 'browser-components/badge'
-
 class Sidebar extends Component {
   render () {
     const openDrawer = this.props.openDrawer
@@ -50,22 +44,8 @@ class Sidebar extends Component {
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
     const AboutDrawer = About
-    const dbIcon = (isOpen) => (
-      <div style={{position: 'relative'}}>
-        <DatabaseIcon isOpen={isOpen} />
-        <Visible if={this.props.connectionState === DISCONNECTED_STATE}>
-          <Badge status='error'><MdFlashOff /></Badge>
-        </Visible>
-        <Visible if={this.props.connectionState === CONNECTED_STATE}>
-          <Badge status='ok'><MdFlashOn /></Badge>
-        </Visible>
-        <Visible if={this.props.connectionState === PENDING_STATE}>
-          <Badge status='warning'><MdFlashOff /></Badge>
-        </Visible>
-      </div>
-    )
     const topNavItemsList = [
-      {name: 'DB', icon: (isOpen) => dbIcon(isOpen), content: DatabaseDrawer},
+      {name: 'DB', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} />, content: DatabaseDrawer},
       {name: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
       {name: 'Documents', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
     ]
