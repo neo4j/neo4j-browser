@@ -52,7 +52,10 @@ export const FrameTitlebar = (props) => {
         <Visible if={frame.type === 'cypher' && csvData}>
           <FrameButton><FrameButtonAChild download='export.csv' href={csvData}><DownloadIcon /></FrameButtonAChild></FrameButton>
         </Visible>
-        <FrameButton onClick={() => props.togglePinning(frame.id, frame.isPinned)}><PinIcon /></FrameButton>
+        <FrameButton onClick={() => {
+          props.togglePin()
+          props.togglePinning(frame.id, frame.isPinned)
+        }} pressed={props.pinned}><PinIcon /></FrameButton>
         <Visible if={frame.type === 'cypher'}>
           <FrameButton onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
         </Visible>

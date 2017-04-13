@@ -106,11 +106,11 @@ const StyledList = styled.ul`
 const StyledListItem = styled.li`
   list-style-type: none;
   margin: 8px ${props => props.isChild ? '16px' : '8px'};
-  cursor: pointer;  
+  cursor: pointer;
 `
 const StyledListHeaderItem = styled.li`
   list-style-type: none;
-  cursor: pointer;  
+  cursor: pointer;
 `
 
 export const StyledNavigationButton = styled.button`
@@ -183,7 +183,7 @@ const StyledFormButton = styled.button`
 
 const StyledSecondaryFormButton = styled(StyledFormButton)`
   color: ${props => props.theme.secondaryButtonText};
-  border: ${props => props.theme.secondaryButtonBorder}; 
+  border: ${props => props.theme.secondaryButtonBorder};
   background-color: ${props => props.theme.secondaryButtonBackground};
   &:hover {
     color: ${props => props.theme.secondaryButtonTextHover};
@@ -234,8 +234,11 @@ const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
   background-color: ${props => props.theme.secondaryButtonBackgroundHover};
   color: ${props => props.theme.editorBarBackground};
 `
-
-export const FrameButton = styled.li`
+export const FrameButton = (props) => {
+  const {pressed, children, ...rest} = props
+  return (pressed) ? <StyledFrameButtonPressed {...rest}>{children}</StyledFrameButtonPressed> : <StyledFrameButton {...rest}>{children}</StyledFrameButton>
+}
+const StyledFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   border-left: ${props => props.theme.inFrameBorder};
@@ -249,9 +252,15 @@ export const FrameButton = styled.li`
   display: inline-block;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-    color: ${props => props.theme.editorBarBackground};
+    color: ${props => props.theme.secondaryBackground};
+    fill: ${props => props.theme.secondaryBackground};
     text-decoration: none;
   }
+`
+const StyledFrameButtonPressed = styled(StyledFrameButton)`
+  background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+  color: ${props => props.theme.secondaryBackground};
+  fill: ${props => props.theme.secondaryBackground};
 `
 
 export const FrameButtonAChild = styled.a`

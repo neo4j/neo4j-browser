@@ -28,13 +28,18 @@ class FrameTemplate extends Component {
     super(props)
     this.state = {
       fullscreen: false,
-      collapse: false}
+      collapse: false,
+      pinned: false
+    }
   }
   toggleFullScreen () {
     this.setState({fullscreen: !this.state.fullscreen}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.lastHeight))
   }
   toggleCollapse () {
     this.setState({collapse: !this.state.collapse}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.lastHeight))
+  }
+  togglePin () {
+    this.setState({pinned: !this.state.pinned}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.lastHeight))
   }
   componentDidUpdate () {
     if (this.frameContentElement && this.lastHeight !== this.frameContentElement.base.clientHeight) {
@@ -54,6 +59,8 @@ class FrameTemplate extends Component {
           fullscreenToggle={this.toggleFullScreen.bind(this)}
           collapse={this.state.collapse}
           collapseToggle={this.toggleCollapse.bind(this)}
+          pinned={this.state.pinned}
+          togglePin={this.togglePin.bind(this)}
           exportData={this.props.exportData}
           />
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
