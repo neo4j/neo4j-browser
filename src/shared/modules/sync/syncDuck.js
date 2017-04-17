@@ -20,7 +20,8 @@
 
 import { syncResourceFor } from 'services/browserSyncService'
 import { setItem } from 'services/localstorage'
-import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
+import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
+import { REMOVE_FOLDER, ADD_FOLDER, UPDATE_FOLDERS, SYNC_FOLDERS, composeFoldersToSync, foldersToLoad, loadFolders, syncFolders } from 'shared/modules/favorites/foldersDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
 
 export const NAME = 'sync'
@@ -102,6 +103,7 @@ export function consentSync (consent) {
 export const syncItemsEpic = (action$, store) =>
   action$.ofType(SYNC_ITEMS)
     .do((action) => {
+      console.log('SYNC for ' + action.itemKey)
       const userId = store.getState().sync.key
       syncResourceFor(userId, action.itemKey, action.items)
     })
@@ -117,7 +119,7 @@ export const clearSyncEpic = (action$, store) =>
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
 export const syncFavoritesEpic = (action$, store) =>
-  action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES].includes(action.type))
+  action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES].includes(action.type))
     .map((action) => {
       const syncValue = getSync(store.getState())
 
@@ -142,3 +144,31 @@ export const loadFavoritesFromSyncEpic = (action$, store) =>
       }
     })
     .mapTo({ type: 'NOOP' })
+
+export const syncFoldersEpic = (action$, store) =>
+  action$.filter((action) => [ADD_FOLDER, REMOVE_FOLDER, SYNC_FOLDERS, UPDATE_FOLDERS].includes(action.type))
+    .map((action) => {
+      const syncValue = getSync(store.getState())
+
+      if (syncValue && syncValue.syncObj) {
+        const folders = composeFoldersToSync(store, syncValue)
+        return syncItems('folders', folders)
+      }
+      return { type: 'NOOP' }
+    })
+
+export const loadFoldersFromSyncEpic = (action$, store) =>
+  action$.ofType(SET_SYNC)
+    .do((action) => {
+      const folderStatus = foldersToLoad(action, store)
+
+      if (folderStatus.loadFolders) {
+        store.dispatch(loadFolders(folderStatus.folders))
+      }
+
+      if (folderStatus.syncFolders) {
+        store.dispatch(syncFolders(folderStatus.folders))
+      }
+    })
+    .mapTo({type: 'NOOP'})
+

@@ -28,8 +28,7 @@ import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import { adHocCypherRequestEpic, cypherRequestEpic, clusterCypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
 import { featuresDicoveryEpic } from './modules/features/featuresDuck'
-import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic } from './modules/sync/syncDuck'
-import { loadFoldersFromSyncEpic } from './modules/favorites/foldersDuck'
+import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic, loadFoldersFromSyncEpic, syncFoldersEpic } from './modules/sync/syncDuck'
 
 export default combineEpics(
   handleCommandsEpic,
@@ -58,5 +57,6 @@ export default combineEpics(
   loadFavoritesFromSyncEpic,
   syncItemsEpic,
   clearSyncEpic,
-  loadFoldersFromSyncEpic
+  loadFoldersFromSyncEpic,
+  syncFoldersEpic
 )
