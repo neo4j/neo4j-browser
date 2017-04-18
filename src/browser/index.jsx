@@ -28,7 +28,6 @@ import { BusProvider } from 'preact-suber'
 
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
-import App from './modules/App/App'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -67,11 +66,24 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
 // Signal app upstart (for epics)
 store.dispatch({ type: APP_START })
 
-render(
-  <Provider store={store}>
-    <BusProvider bus={bus}>
-      <App />
-    </BusProvider>
-  </Provider>,
-  document.getElementById('mount')
-)
+const mountElement = document.getElementById('mount')
+let elem
+const renderApp = () => {
+  const App = require('./modules/App/App').default
+  elem = render(
+    <Provider store={store}>
+      <BusProvider bus={bus}>
+        <App />
+      </BusProvider>
+    </Provider>
+    , mountElement
+    , elem
+  )
+}
+renderApp()
+
+if (process.env.NODE_ENV !== 'production') {
+  if (module.hot) {
+    module.hot.accept('./modules/App/App', renderApp)
+  }
+}
