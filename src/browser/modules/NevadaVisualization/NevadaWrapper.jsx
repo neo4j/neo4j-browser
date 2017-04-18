@@ -106,7 +106,7 @@ export class NevadaWrapper extends Component {
         updateRelStyle: this.updateRelationshipStyle.bind(this),
         getNodes: this.getNodes.bind(this),
         getRels: this.getRels.bind(this)
-//        clientData: 
+//        clientData:
       }
       require.ensure([], (require) => {
         const Nevada = require('neo4j-visualization').default
