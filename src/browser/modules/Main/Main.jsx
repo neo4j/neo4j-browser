@@ -23,12 +23,21 @@ import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
 import Visible from 'browser-components/Visible'
 import ClickToCode from '../ClickToCode'
-import { StyledMain, WarningBanner, NotAuthedBanner, StyledCodeBlockAuthBar } from './styled'
+import { StyledMain, WarningBanner, ErrorBanner, NotAuthedBanner, StyledCodeBlockAuthBar, StyledCodeBlockErrorBar } from './styled'
 
 const Main = (props) => {
   return (
     <StyledMain>
       <Editor />
+      <Visible if={props.showUnknownCommandBanner}>
+        <ErrorBanner>
+          Type&nbsp;
+          <ClickToCode CodeComponent={StyledCodeBlockErrorBar}>
+            {props.cmdchar}help commands
+          </ClickToCode>&nbsp;
+          for a list of available commands.
+        </ErrorBanner>
+      </Visible>
       <Visible if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner>
           Database access not available. Please use&nbsp;

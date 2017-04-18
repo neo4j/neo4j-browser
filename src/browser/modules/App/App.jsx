@@ -25,6 +25,7 @@ import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
 import { getTheme, getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
+import { wasUnknownCommand } from 'shared/modules/commands/commandsDuck'
 import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
 
 import Main from '../Main/Main'
@@ -45,7 +46,7 @@ class App extends Component {
     this.props.bus && this.props.bus.send(FOCUS)
   }
   render () {
-    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme} = this.props
+    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner} = this.props
     const themeData = themes[theme] || themes['normal']
     return (
       <ThemeProvider theme={themeData}>
@@ -54,7 +55,12 @@ class App extends Component {
             <StyledBody>
               <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
               <StyledMainWrapper>
-                <Main cmdchar={cmdchar} activeConnection={activeConnection} connectionState={connectionState} />
+                <Main
+                  cmdchar={cmdchar}
+                  activeConnection={activeConnection}
+                  connectionState={connectionState}
+                  showUnknownCommandBanner={showUnknownCommandBanner}
+                />
               </StyledMainWrapper>
             </StyledBody>
           </StyledApp>
@@ -70,7 +76,8 @@ const mapStateToProps = (state) => {
     activeConnection: getActiveConnection(state),
     theme: getTheme(state),
     connectionState: getConnectionState(state),
-    cmdchar: getCmdChar(state)
+    cmdchar: getCmdChar(state),
+    showUnknownCommandBanner: wasUnknownCommand(state)
   }
 }
 
