@@ -71,21 +71,21 @@ export const SysInfoTableEntry = ({label, value, values, headers}) => {
   if (headers) {
     return (
       <StyledTr>
-        {headers.map((value) => <StyledTdKey>{value}</StyledTdKey>)}
+        {headers.map((value) => <StyledTdKey>{value || '-'}</StyledTdKey>)}
       </StyledTr>
     )
   }
   if (values) {
     return (
       <StyledTr>
-        {values.map((value) => <StyledTd>{value}</StyledTd>)}
+        {values.map((value) => <StyledTd>{value || '-'}</StyledTd>)}
       </StyledTr>
     )
   }
   return (
     <StyledTr>
       <StyledTdKey>{label}</StyledTdKey>
-      <StyledTd>{value}</StyledTd>
+      <StyledTd>{value || '-'}</StyledTd>
     </StyledTr>
   )
 }

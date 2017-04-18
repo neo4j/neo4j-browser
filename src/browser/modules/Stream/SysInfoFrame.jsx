@@ -41,7 +41,11 @@ export class SysInfoFrame extends Component {
     }
   }
   flattenAttributes (a) {
-    return Object.assign({}, ...a.map(({name, value}) => ({ [name]: itemIntToString(value, bolt.neo4j.isInt, (val) => val.toString()) })))
+    if (a && a.attributes) {
+      return Object.assign({}, ...a.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, bolt.neo4j.isInt, (val) => val.toString()) })))
+    } else {
+      return null
+    }
   }
   clusterResponseHandler () {
     return (res) => {
@@ -98,17 +102,16 @@ export class SysInfoFrame extends Component {
       const result = Object.assign({}, ...mappedJMXresult.map((item) => {
         return { [item.name]: item }
       }))
-
-      const cache = this.flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`].attributes)
-      const primitive = this.flattenAttributes(result[`${jmxQueryPrefix},name=Primitive count`].attributes)
-      const tx = this.flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`].attributes)
+      const cache = this.flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`]) || {}
+      const primitive = this.flattenAttributes(result[`${jmxQueryPrefix},name=Primitive count`])
+      const tx = this.flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) || {}
       const kernel = Object.assign({},
-        this.flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`].attributes),
-        this.flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`].attributes),
-        this.flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`].attributes))
+        this.flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`]),
+        this.flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`]),
+        this.flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`]))
 
       if (result[`${jmxQueryPrefix},name=High Availability`]) {
-        const ha = this.flattenAttributes(result[`${jmxQueryPrefix},name=High Availability`].attributes)
+        const ha = this.flattenAttributes(result[`${jmxQueryPrefix},name=High Availability`])
         const haInstancesHeader = <SysInfoTableEntry headers={['Id', 'Alive', 'Available', 'Is Master']} />
         const haInstances = [haInstancesHeader].concat(ha.InstancesInCluster.map(({properties}) => {
           const haInstancePropertyValues = [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
