@@ -18,18 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
-import Ellipsis from 'browser-components/Ellipsis'
-import { ErrorText } from './styled'
+import styled from 'styled-components'
 
-const FrameError = (props) => {
-  if (!props || (!props.code && !props.message)) return null
-  const fullError = `${props.code}${(props.message ? ':' : '')} ${(props.message || '')}`
-  return (
-    <Ellipsis>
-      <ErrorText title={fullError}><ExclamationTriangleIcon /> {fullError}</ErrorText>
-    </Ellipsis>
-  )
-}
-
-export default FrameError
+const Ellipsis = styled.div`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`
+export default Ellipsis

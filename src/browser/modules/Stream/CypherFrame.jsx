@@ -33,6 +33,7 @@ import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
 import Visible from 'browser-components/Visible'
+import Ellipsis from 'browser-components/Ellipsis'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import { StyledFrameBody, StyledStatsBar } from './styled'
 
@@ -195,15 +196,20 @@ class CypherFrame extends Component {
       const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
       if (this.state.openView !== viewTypes.VISUALIZATION) {
         statusBar = (
+
           <StyledStatsBar>
-            Started streaming {result.records.length} records {resultAvailableAfter} ms and completed after {totalTimeString} ms.
+            <Ellipsis>
+              Started streaming {result.records.length} records {resultAvailableAfter} ms and completed after {totalTimeString} ms.
+            </Ellipsis>
           </StyledStatsBar>
         )
       }
       if (plan && this.state.openView === viewTypes.PLAN) {
         statusBar = (
           <StyledStatsBar>
-            Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
+            <Ellipsis>
+              Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
+            </Ellipsis>
           </StyledStatsBar>
         )
       }

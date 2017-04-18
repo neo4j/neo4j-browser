@@ -205,12 +205,6 @@ export const ErrorText = styled.span`
   padding-left: 5px;
   line-height: 35px;
 `
-
-export const Ellipsis = styled.div`
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-`
 export const StyledStatsBar = styled.div`
   min-height: 39px;
   line-height: 39px;
