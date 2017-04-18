@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
+/* global describe, test, expect */
 import helper from './commandInterpreterHelper'
 
 describe('commandInterpreterHelper', () => {

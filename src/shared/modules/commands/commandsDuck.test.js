@@ -68,6 +68,7 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({ cmd }),
+          { type: commands.KNOWN_COMMAND },
           helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
           { type: 'NOOP' }
         ])
@@ -89,6 +90,7 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({cmd}),
+          { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
           frames.add({...action, type: 'cypher'}),
           updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
@@ -114,6 +116,7 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({ cmd: cmdString }),
+          { type: commands.KNOWN_COMMAND },
           merge({x: 2}),
           frames.add({...action, success: true, type: 'param', params: {x: 2}}),
           { type: 'NOOP' }
@@ -138,6 +141,7 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({ cmd: cmdString }),
+          { type: commands.KNOWN_COMMAND },
           set({x: 2, y: 3}),
           frames.add({...action, success: true, type: 'params', params: {}}),
           { type: 'NOOP' }
@@ -161,6 +165,7 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({ cmd: cmdString }),
+          { type: commands.KNOWN_COMMAND },
           frames.add({...action, type: 'params', params: {}}),
           { type: 'NOOP' }
         ])
@@ -184,6 +189,7 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({ cmd: cmdString }),
+          { type: commands.KNOWN_COMMAND },
           updateSettings({x: 2}),
           frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':'}, null, 2)}),
           { type: 'NOOP' }
@@ -206,12 +212,33 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({ cmd }),
+          { type: commands.KNOWN_COMMAND },
           frames.add({ ...action, type: 'queries', result: "{res : 'QUERIES RESULT'}" }),
-            {type: 'NOOP'}
+          {type: 'NOOP'}
         ])
         done()
       })
 
+      store.dispatch(action)
+    })
+  })
+  describe(':unknown', () => {
+    test('unkown commands send out an UNKNOWN_COMMAND acation and not added to history', (done) => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'unknown'
+      const id = 1
+      const action = commands.executeCommand(cmd, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          commands.unknownCommand(cmd),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
       store.dispatch(action)
     })
   })
@@ -227,6 +254,7 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           addHistory({cmd}),
+          { type: commands.KNOWN_COMMAND },
           frames.add({...action, type: 'disconnect'}),
           disconnectAction(null),
           { type: 'NOOP' }

@@ -28,9 +28,10 @@ import remote from 'services/remote'
 import { getServerConfig } from 'services/bolt/boltHelpers'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
+import { unknownCommand } from 'shared/modules/commands/commandsDuck'
 import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
-import { CouldNotFetchRemoteGuideError, UnknownCommandError, FetchURLError } from 'services/exceptions'
+import { CouldNotFetchRemoteGuideError, FetchURLError } from 'services/exceptions'
 import { parseHttpVerbCommand } from 'shared/modules/commands/helpers/http'
 
 const availableCommands = [{
@@ -180,7 +181,7 @@ const availableCommands = [{
   name: 'catch-all',
   match: () => true,
   exec: (action, cmdchar, put) => {
-    put(frames.add({...action, type: 'unknown', error: UnknownCommandError(action.cmd)}))
+    put(unknownCommand(action.cmd))
   }
 }]
 

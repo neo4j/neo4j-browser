@@ -69,3 +69,15 @@ export function parseCommandJSON (cmd, input) {
   }
   return val
 }
+
+export const isCypherCommand = (cmd, cmdchar) => {
+  const cleanCmd = cleanCommand(cmd)
+  return cleanCmd[0] !== cmdchar
+}
+
+export const getInterpreter = (interpret, cmd, cmdchar) => {
+  if (isCypherCommand(cmd, cmdchar)) return interpret('cypher')
+  return interpret(cmd.substr(cmdchar.length))
+}
+
+export const isNamedInterpreter = (interpreter) => interpreter && interpreter.name !== 'catch-all'
