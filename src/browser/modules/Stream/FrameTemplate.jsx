@@ -70,7 +70,7 @@ class FrameTemplate extends Component {
               {this.props.contents}
             </StyledFrameContents>
             <Visible if={this.props.statusbar}>
-              <StyledFrameStatusbar>{this.props.statusbar}</StyledFrameStatusbar>
+              <StyledFrameStatusbar fullscreen={this.state.fullscreen}>{this.props.statusbar}</StyledFrameStatusbar>
             </Visible>
           </StyledFrameMainSection>
         </StyledFrameBody>

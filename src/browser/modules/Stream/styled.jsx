@@ -67,7 +67,7 @@ export const StyledVisContainer = styled.div`
 
 export const StyledFrameBody = styled.div`
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : (dim.frameBodyHeight - dim.frameStatusbarHeight - 2) + 'px')};
+  max-height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : (dim.frameBodyHeight - dim.frameStatusbarHeight) + 1 + 'px')};
   display: ${props => props.collapsed ? 'none' : 'flex'};;
   flex-direction: row;
 `
@@ -81,6 +81,7 @@ export const StyledFrameContents = styled.div`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameStatusbarHeight * 2)) + 'px')};
+  ${props => props.fullscreen ? 'height: 100vh' : null}
 `
 
 export const PaddedDiv = styled.div`
@@ -103,6 +104,7 @@ export const StyledFrameSidebar = styled.ul`
 export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight + 3}px;
+  ${props => props.fullscreen ? 'margin-top: -78px;' : ''}
 `
 
 export const StyledFrameTitleBar = styled.div`

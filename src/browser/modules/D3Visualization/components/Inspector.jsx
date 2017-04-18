@@ -128,7 +128,7 @@ export class InspectorComponent extends Component {
     }
 
     return (
-      <StyledStatusBar className='status-bar'>
+      <StyledStatusBar fullscreen={this.props.fullscreen} className='status-bar'>
         <StyledStatus className='status'>
           <StyledInspectorFooter className={this.state.contracted ? 'contracted inspector-footer' : 'inspector-footer'}>
             <StyledInspectorFooterRow className='inspector-footer-row' ref={this.setFooterRowELem.bind(this)}>
