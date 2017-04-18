@@ -20,7 +20,7 @@
 
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import * as editor from 'shared/modules/editor/editorDuck'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import UserDetails from './UserDetails'
 import DatabaseKernelInfo from './DatabaseKernelInfo'
@@ -47,7 +47,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (_, ownProps) => {
   return {
     onItemClick: (cmd) => {
-      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+      const action = executeCommand(cmd)
+      ownProps.bus.send(action.type, action)
     }
   }
 }
