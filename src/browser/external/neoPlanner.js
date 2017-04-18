@@ -679,7 +679,7 @@ neo.measureText = (function() {
   })();
 
   return function(text, fontFamily, fontSize) {
-    let font = `normal normal normal ${fontSize}px/normal ${fontFamily}`;
-    return cache(text + font, () => measureUsingCanvas(text, font));
+    let font = 'normal normal normal' + fontSize + 'px/normal ' + fontFamily;
+    return cache(text + font, function() { measureUsingCanvas(text, font)});
   };
 })();
