@@ -260,6 +260,9 @@
     font-size: 13px;
     text-align: center;
   }
+  & footer {
+    text-align: center;
+  }
   .btn-cta {
     padding: 1em;
     background-color: #008cc1;
