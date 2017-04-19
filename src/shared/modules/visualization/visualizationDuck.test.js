@@ -53,22 +53,22 @@ describe('visualization reducer', () => {
   test('handles UPDATE_STYLE_DATA without initial state', () => {
     const action = {
       type: UPDATE_STYLE_DATA,
-      styleData: 'style updated'
+      styleData: {style: 'updated'}
     }
     const nextState = reducer(undefined, action)
     expect(nextState.labels).toHaveLength(0)
-    expect(nextState.styleData).toEqual('style updated')
+    expect(nextState.styleData.style).toEqual('updated')
   })
 
   test('handles UPDATE_STYLE_DATA', () => {
     const initialState = { labels: ['Person'], styleData: 'style' }
     const action = {
       type: UPDATE_STYLE_DATA,
-      styleData: 'style updated again'
+      styleData: {style: 'updated again'}
     }
     const nextState = reducer(initialState, action)
     expect(nextState.labels[0]).toEqual('Person')
     expect(nextState.labels).toHaveLength(1)
-    expect(nextState.styleData).toEqual('style updated again')
+    expect(nextState.styleData.style).toEqual('updated again')
   })
 })

@@ -4108,22 +4108,22 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.2.0:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.176:
-  version "0.0.176"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.176.tgz#2f02a4e6c63fc04bdd5eaf5f15d6a73acabda0d6"
+neo4j-visualization@0.0.183:
+  version "0.0.183"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.183.tgz#025cc47440e900e4c91682cb9d7f1112372be572"
   dependencies:
     babel-polyfill "^6.23.0"
     babel-runtime "^6.23.0"
     chroma-js "^1.2.2"
     deep-equal "^1.0.1"
     neo4j-driver "^1.1.0"
-    nevada-visjs "0.1.78"
+    nevada-visjs "0.1.86"
     sortablejs "^1.5.1"
     vector2d "^2.1.0"
 
-nevada-visjs@0.1.78:
-  version "0.1.78"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.78.tgz#f15e07b20b2feba8bf56c4423db9eb882feaa984"
+nevada-visjs@0.1.86:
+  version "0.1.86"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.86.tgz#86066ac0942c120bd2a64e687f94c469b18a5df1"
   dependencies:
     babel-core "^6.21.0"
     babel-loader "^6.2.10"

@@ -33,17 +33,11 @@ const initialState = {
   relationshipStyle: null
 }
 
-function updateLabelData (state, labels) {
-  return Object.assign({}, state, {labels: labels})
-}
+const updateLabelData = (state, labels) => ({...state, labels: labels.slice(0)})
 
-function updateStyleData (state, styleData) {
-  return Object.assign({}, state, {styleData: styleData})
-}
+const updateStyleData = (state, styleData) => ({...state, styleData: {...styleData}})
 
-function updateRelationshipStyle (state, relationshipStyle) {
-  return Object.assign({}, state, {relationshipStyle: relationshipStyle})
-}
+const updateRelationshipStyle = (state, relationshipStyle) => ({...state, relationshipStyle: {...relationshipStyle}})
 
 export default function visualization (state = initialState, action) {
   switch (action.type) {
