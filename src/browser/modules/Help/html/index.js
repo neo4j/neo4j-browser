@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import _commands from './commands.html'
 import _contains from './contains.html'
 import _createIndexOn from './create-index-on.html'
 import _createUnique from './create-unique.html'
@@ -39,6 +40,8 @@ import _queries from './queries.html'
 import _queryPlan from './query-plan.html'
 import _remove from './remove.html'
 import _return from './return.html'
+import _server from './server.html'
+import _serverUser from './server-user.html'
 import _set from './set.html'
 import _start from './start.html'
 import _startsWith from './starts-with.html'
@@ -48,6 +51,7 @@ import _where from './where.html'
 import _with from './with.html'
 
 export default {
+  _commands,
   _contains,
   _createIndexOn,
   _createUnique,
@@ -69,6 +73,8 @@ export default {
   _queryPlan,
   _remove,
   _return,
+  _server,
+  _serverUser,
   _set,
   _start,
   _startsWith,

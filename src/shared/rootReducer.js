@@ -33,6 +33,7 @@ import visualizationReducer, { NAME as visualization } from 'shared/modules/visu
 import grassReducer, { NAME as grass } from 'shared/modules/grass/grassDuck'
 import { syncReducer, syncConsentReducer, NAME_CONSENT as syncConsent, NAME as sync } from 'shared/modules/sync/syncDuck'
 import foldersReducer, { NAME as folders } from 'shared/modules/favorites/foldersDuck'
+import commandsReducer, { NAME as commands } from 'shared/modules/commands/commandsDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -50,5 +51,6 @@ export default {
   [visualization]: visualizationReducer,
   [grass]: grassReducer,
   [sync]: syncReducer,
-  [syncConsent]: syncConsentReducer
+  [syncConsent]: syncConsentReducer,
+  [commands]: commandsReducer
 }

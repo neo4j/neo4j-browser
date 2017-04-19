@@ -18,8 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
+
+const grow = (height) => {
+  return keyframes`
+    0% {
+      max-height: 0px;
+    }
+    100% {
+      max-height: ${height};
+    }
+  `
+}
 
 export const StyledMain = styled.div`
   flex: 0 0 auto;
@@ -31,15 +42,16 @@ export const StyledMain = styled.div`
 `
 
 export const Banner = styled.div`
-  height: 49px;
   line-height: 49px;
   width: 100%;
   color: white;
   padding: 0 24px;
+  overflow: hidden;
+  animation: ${grow('49px')} .3s ease-in;
 `
 
 export const ErrorBanner = styled(Banner)`
-  background-color: ${props => props.theme.error}
+  background-color: ${props => props.theme.error};
 `
 export const WarningBanner = styled(Banner)`
   background-color: ${props => props.theme.warning}
@@ -51,4 +63,8 @@ export const NotAuthedBanner = styled(Banner)`
 export const StyledCodeBlockAuthBar = styled(StyledCodeBlock)`
   background-color: white;
   color: ${props => props.theme.auth};
+`
+export const StyledCodeBlockErrorBar = styled(StyledCodeBlock)`
+  background-color: white;
+  color: ${props => props.theme.error};
 `

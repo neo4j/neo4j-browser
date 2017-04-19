@@ -96,4 +96,15 @@ describe('commandutils', () => {
       expect(utils.parseCommandJSON(':config', obj.str)).toEqual(obj.expect)
     })
   })
+  test('isCypherCommand should treat everything not starting with : as cypher', () => {
+    const testStrs = [
+      {str: ':config {test: 10}', expect: false},
+      {str: 'return 1', expect: true},
+      {str: '//:hello\nRETURN 1', expect: true},
+      {str: '   RETURN 1', expect: true}
+    ]
+    testStrs.forEach((obj) => {
+      expect(obj.str + ': ' + utils.isCypherCommand(obj.str, ':')).toEqual(obj.str + ': ' + obj.expect)
+    })
+  })
 })
