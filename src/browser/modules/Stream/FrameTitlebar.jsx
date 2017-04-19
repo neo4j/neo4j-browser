@@ -29,7 +29,7 @@ import { FrameButton, FrameButtonAChild } from 'browser-components/buttons'
 import Visible from 'browser-components/Visible'
 import { CSVSerializer } from 'services/serializer'
 import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon, DownloadIcon } from 'browser-components/icons/Icons'
-import { StyledFrameTitleBar, StyledFrameCommand, FrameTitlebarButtonSection } from './styled'
+import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection } from './styled'
 
 export const FrameTitlebar = (props) => {
   const { frame } = props
@@ -45,8 +45,10 @@ export const FrameTitlebar = (props) => {
   const cmd = removeComments(frame.cmd)
   return (
     <StyledFrameTitleBar>
-      <StyledFrameCommand onClick={() => props.onTitlebarClick(cmd)}>
-        {cmd}
+      <StyledFrameCommand>
+        <DottedLineHover onClick={() => props.onTitlebarClick(cmd)}>
+          {cmd}
+        </DottedLineHover>
       </StyledFrameCommand>
       <FrameTitlebarButtonSection>
         <Visible if={frame.type === 'cypher' && csvData}>
