@@ -92,20 +92,34 @@ export const StyledFavoriteText = styled.span`
 export const FoldersButton = styled.button`
   background: transparent;
   border: none;
+  outline: none;
 `
 
 const NewFolderStyledButton = styled.button`
   background: transparent;
   border: none;
   float: right;
-  font-size: 80%
+  font-size: 80%;
+  outline: none;
 `
+
 const SytledFavFolderButtonSpan = styled.span`
   float: right;
 `
 
 export const FolderButtonContainer = styled.span`
   float: right;
+`
+
+export const EditFolderInput = styled.input`
+  color: black;
+  border: none;
+  outline: none;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  line-height: 200%;
+  padding-left: 5px
 `
 
 export const NewFolderButton = (props) => {
@@ -128,7 +142,3 @@ export const EditFolderButton = (props) => {
     <FoldersButton onClick={props.editClick}><EditIcon /></FoldersButton>
   )
 }
-
-export const EditFolderInput = styled.input`
-  color: black;
-`

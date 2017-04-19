@@ -103,7 +103,6 @@ export function consentSync (consent) {
 export const syncItemsEpic = (action$, store) =>
   action$.ofType(SYNC_ITEMS)
     .do((action) => {
-      console.log('SYNC for ' + action.itemKey)
       const userId = store.getState().sync.key
       syncResourceFor(userId, action.itemKey, action.items)
     })
