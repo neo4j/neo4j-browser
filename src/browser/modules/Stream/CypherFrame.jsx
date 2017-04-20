@@ -33,8 +33,9 @@ import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
 import Visible from 'browser-components/Visible'
+import Ellipsis from 'browser-components/Ellipsis'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import { StyledFrameBody } from './styled'
+import { StyledFrameBody, StyledStatsBar } from './styled'
 
 class CypherFrame extends Component {
   constructor (props) {
@@ -78,6 +79,7 @@ class CypherFrame extends Component {
   shouldComponentUpdate (nextProps, state) {
     return state.openView !== this.state.openView ||
       state.fullscreen !== this.state.fullscreen ||
+      state.frameHeight !== this.state.frameHeight ||
       nextProps.request.result !== this.props.request.result
   }
   decideOpeningView ({plan, nodesAndRelationships, warnings, props}) {
@@ -188,6 +190,29 @@ class CypherFrame extends Component {
 
     if (this.state.errors) {
       statusBar = <FrameError code={this.state.errors.code} />
+    } else if (result.records || plan) {
+      const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
+      const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
+      const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
+      if (this.state.openView !== viewTypes.VISUALIZATION) {
+        statusBar = (
+
+          <StyledStatsBar>
+            <Ellipsis>
+              Started streaming {result.records.length} records {resultAvailableAfter} ms and completed after {totalTimeString} ms.
+            </Ellipsis>
+          </StyledStatsBar>
+        )
+      }
+      if (plan && this.state.openView === viewTypes.PLAN) {
+        statusBar = (
+          <StyledStatsBar>
+            <Ellipsis>
+              Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
+            </Ellipsis>
+          </StyledStatsBar>
+        )
+      }
     }
     if (requestStatus !== 'pending') {
       if (result.records && result.records.length > 0) {

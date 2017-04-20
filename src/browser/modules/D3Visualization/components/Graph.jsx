@@ -54,7 +54,7 @@ export class GraphComponent extends Component {
     if (this.props.frameHeight && this.props.fullscreen) {
       return this.props.frameHeight - (dim.frameStatusbarHeight + dim.frameTitlebarHeight * 2)
     } else {
-      return this.svgElement.parentNode.offsetHeight
+      return this.props.frameHeight - (dim.frameStatusbarHeight + dim.frameTitlebarHeight * 2) || this.svgElement.parentNode.offsetHeight
     }
   }
 

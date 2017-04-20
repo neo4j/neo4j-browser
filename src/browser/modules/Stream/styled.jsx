@@ -61,16 +61,15 @@ export const StyledFrame = styled.article`
 
 export const StyledVisContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameTitlebarHeight * 2)) + 'px')};
   display : ${props => props.style.display}
 `
 
 export const StyledFrameBody = styled.div`
-  height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : dim.frameBodyHeight + 'px')};
-  visibility: ${props => props.collapsed ? 'hidden' : 'visible'};
-  display: flex;
+  min-height: ${dim.frameBodyHeight / 2}px;
+  max-height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : (dim.frameBodyHeight - dim.frameStatusbarHeight) + 1 + 'px')};
+  display: ${props => props.collapsed ? 'none' : 'flex'};;
   flex-direction: row;
-  overflow: auto;
 `
 
 export const StyledFrameMainSection = styled.div`
@@ -80,7 +79,9 @@ export const StyledFrameMainSection = styled.div`
 
 export const StyledFrameContents = styled.div`
   overflow: auto;
-  height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight) + 'px')};
+  min-height: ${dim.frameBodyHeight / 2}px;
+  max-height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameStatusbarHeight * 2)) + 'px')};
+  ${props => props.fullscreen ? 'height: 100vh' : null}
 `
 
 export const PaddedDiv = styled.div`
@@ -102,8 +103,8 @@ export const StyledFrameSidebar = styled.ul`
 
 export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight}px;
-  margin-top: -${dim.frameStatusbarHeight}px;
+  height: ${dim.frameStatusbarHeight + 3}px;
+  ${props => props.fullscreen ? 'margin-top: -78px;' : ''}
 `
 
 export const StyledFrameTitleBar = styled.div`
@@ -204,9 +205,14 @@ export const ErrorText = styled.span`
   padding-left: 5px;
   line-height: 35px;
 `
-
-export const Ellipsis = styled.div`
-  text-overflow: ellipsis;
-  overflow: hidden;
+export const StyledStatsBar = styled.div`
+  min-height: 39px;
+  line-height: 39px;
+  color: #788185;
+  font-size: 13px;
+  position: relative;
+  background-color: #fff;
   white-space: nowrap;
+  overflow: hidden;
+  padding-left: 24px;
 `
