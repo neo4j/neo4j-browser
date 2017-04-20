@@ -23,6 +23,7 @@ import { setItem } from 'services/localstorage'
 import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
 import { REMOVE_FOLDER, ADD_FOLDER, UPDATE_FOLDERS, SYNC_FOLDERS, composeFoldersToSync, foldersToLoad, loadFolders, syncFolders } from 'shared/modules/favorites/foldersDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
+import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'sync'
 export const NAME_CONSENT = 'syncConsent'
@@ -31,6 +32,9 @@ export const SYNC_ITEMS = 'sync/SYNC_ITEMS'
 export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
 export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
+
+const initialState = null
+const initialConsentState = false
 
 /**
  * Selectors
@@ -42,7 +46,10 @@ export function getSync (state) {
 /**
  * Reducer
 */
-export function syncReducer (state = null, action) {
+
+export function syncReducer (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case SET_SYNC:
       return Object.assign({}, state, action.obj)
@@ -54,7 +61,9 @@ export function syncReducer (state = null, action) {
   }
 }
 
-export function syncConsentReducer (state = false, action) {
+export function syncConsentReducer (state = initialConsentState, action) {
+  state = hydrate(initialConsentState, state)
+
   switch (action.type) {
     case CONSENT_SYNC:
       return action.consent

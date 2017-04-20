@@ -20,6 +20,7 @@
 
 /* global test, expect */
 import reducer, * as currentUser from './currentUserDuck'
+import { dehydrate } from 'services/duckUtils'
 
 describe('user reducer current info', () => {
   test('handles unknown action type', () => {
@@ -28,7 +29,7 @@ describe('user reducer current info', () => {
       info: {}
     }
     const nextState = reducer(undefined, action)
-    expect(nextState).toEqual({info: null})
+    expect(dehydrate(nextState)).toEqual({info: null})
   })
   test('should have no info', () => {
     const action = {

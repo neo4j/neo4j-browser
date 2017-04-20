@@ -19,6 +19,7 @@
  */
 
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
@@ -58,6 +59,8 @@ const initialState = {
 }
 
 export default function settings (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case UPDATE:
       return Object.assign({}, state, action.state)

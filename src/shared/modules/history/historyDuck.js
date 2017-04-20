@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { hydrate } from 'services/duckUtils'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'history'
@@ -37,6 +38,8 @@ function addHistoryHelper (state, newState) {
 // Reducer
 const initialState = {history: [], maxHistory: 20}
 export default function (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state)

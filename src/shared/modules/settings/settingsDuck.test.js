@@ -20,10 +20,11 @@
 
 /* global test, expect */
 import reducer, { UPDATE } from './settingsDuck'
+import { dehydrate } from 'services/duckUtils'
 
 describe('settings reducer', () => {
   test('handles initial value', () => {
-    const nextState = reducer(undefined, {type: ''})
+    const nextState = dehydrate(reducer(undefined, {type: ''}))
     expect(nextState.cmdchar).toEqual(':')
   })
 
@@ -47,11 +48,9 @@ describe('settings reducer', () => {
         type: 'dog'
       }
     }
-    const nextState = reducer(initialState, action)
-    expect(nextState).toEqual({
-      cmdchar: ':',
-      greeting: 'woff',
-      type: 'dog'
-    })
+    const nextState = dehydrate(reducer(initialState, action))
+    expect(nextState.cmdchar).toEqual(':')
+    expect(nextState.greeting).toEqual('woff')
+    expect(nextState.type).toEqual('dog')
   })
 })

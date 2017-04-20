@@ -19,6 +19,7 @@
  */
 
 import bolt from 'services/bolt/bolt'
+import { hydrate } from 'services/duckUtils'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'features'
@@ -31,6 +32,8 @@ export const getAvailableProcedures = (state) => state[NAME].availableProcedures
 const initialState = {availableProcedures: []}
 
 export default function (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case UPDATE_ALL:
       state.availableProcedures = state.availableProcedures.concat(action.availableProcedures)
