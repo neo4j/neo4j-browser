@@ -74,11 +74,11 @@ export const StyledList = styled.ul`
 export const StyledListItem = styled.li`
   list-style-type: none;
   margin: 8px 0px 8px ${props => props.isChild ? '16px' : '8px'};
-  cursor: pointer;  
+  cursor: pointer;
 `
 export const StyledListHeaderItem = styled.li`
   list-style-type: none;
-  cursor: pointer;  
+  cursor: pointer;
 `
 export const StyledFavoriteText = styled.span`
   font-family: ${props => props.theme.primaryFontFamily};
@@ -116,8 +116,6 @@ export const EditFolderInput = styled.input`
   border: none;
   outline: none;
   border-radius:5px;
-  -moz-border-radius:5px;
-  -webkit-border-radius:5px;
   line-height: 200%;
   padding-left: 5px
 `
