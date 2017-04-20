@@ -19,7 +19,7 @@
  */
 
 import styled from 'styled-components'
-import { QuestionIcon, PlayIcon } from 'browser-components/icons/Icons'
+import {QuestionIcon, PlayIcon, PlusIcon, BinIcon, EditIcon} from 'browser-components/icons/Icons'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -61,7 +61,82 @@ export const StyledDocumentActionLink = (props) => {
   const {name, ...rest} = props
   return (
     <StyledHelpItem onClick={props.onClick}>
-      <StyledDocumentText {...rest}>{props.type === 'play' ? <PlayIcon /> : <QuestionIcon />}&nbsp;{name}</StyledDocumentText>
+      <StyledDocumentText {...rest}>{props.type === 'play' ? <PlayIcon />
+        : <QuestionIcon />}&nbsp;{name}</StyledDocumentText>
     </StyledHelpItem>
+  )
+}
+
+export const StyledList = styled.ul`
+  list-style-type: none;
+  margin: 16px 0;
+`
+export const StyledListItem = styled.li`
+  list-style-type: none;
+  margin: 8px 0px 8px ${props => props.isChild ? '16px' : '8px'};
+  cursor: pointer;
+`
+export const StyledListHeaderItem = styled.li`
+  list-style-type: none;
+  cursor: pointer;
+`
+export const StyledFavoriteText = styled.span`
+  font-family: ${props => props.theme.primaryFontFamily};
+  width: 182px;
+  color: #bcc0c9;
+  font-size: 13px;
+  display: inline-block;
+  max-height: 54px;
+  overflow: hidden;
+`
+export const FoldersButton = styled.button`
+  background: transparent;
+  border: none;
+  outline: none;
+`
+
+const NewFolderStyledButton = styled.button`
+  background: transparent;
+  border: none;
+  float: right;
+  font-size: 80%;
+  outline: none;
+`
+
+const SytledFavFolderButtonSpan = styled.span`
+  float: right;
+`
+
+export const FolderButtonContainer = styled.span`
+  float: right;
+`
+
+export const EditFolderInput = styled.input`
+  color: black;
+  border: none;
+  outline: none;
+  border-radius:5px;
+  line-height: 200%;
+  padding-left: 5px
+`
+
+export const NewFolderButton = (props) => {
+  return (
+    <NewFolderStyledButton onClick={props.onClick}>
+      <PlusIcon />New Folder
+    </NewFolderStyledButton>
+  )
+}
+
+export const DeleteFavButton = (props) => {
+  const rightIcon = (props.removeClick && !props.isStatic) ? (<BinIcon className={'remove'} />) : null
+  return (
+    <SytledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>{rightIcon}</SytledFavFolderButtonSpan>
+  )
+}
+
+export const EditFolderButton = (props) => {
+  return (
+    <FoldersButton onClick={props.editClick}><EditIcon /></FoldersButton>
   )
 }

@@ -74,7 +74,7 @@ export const Directives = (props) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd) => {
-      if (!cmd.endsWith(' null')) {
+      if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
         ownProps.bus.send(SET_CONTENT, setContent(cmd))
       }
     }
