@@ -18,20 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import {Component} from 'preact'
 import FrameTemplate from '../FrameTemplate'
-import { connect } from 'preact-redux'
-import { withBus } from 'preact-suber'
-import { listQueriesProcedure, killQueriesProcedure } from 'shared/modules/cypher/queriesProcedureHelper'
-import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
-import { CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { getConnectionState, CONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
-import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import { StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code } from './styled'
-import { RefreshIcon } from 'browser-components/icons/Icons'
+import {connect} from 'preact-redux'
+import {withBus} from 'preact-suber'
+import {listQueriesProcedure, killQueriesProcedure} from 'shared/modules/cypher/queriesProcedureHelper'
+import {getAvailableProcedures} from 'shared/modules/features/featuresDuck'
+import {CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST} from 'shared/modules/cypher/cypherDuck'
+import {getConnectionState, CONNECTED_STATE} from 'shared/modules/connections/connectionsDuck'
+import {ConfirmationButton} from 'browser-components/buttons/ConfirmationButton'
+import {StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code, StyledStatusBar, AutoRefreshToogle, RefreshQueriesButton, AutoRefreshSpan} from './styled'
+import {RefreshIcon} from 'browser-components/icons/Icons'
 import Visible from 'browser-components/Visible'
 import FrameError from '../FrameError'
-import FrameSuccess from '../FrameSuccess'
 
 export class QueriesFrame extends Component {
   constructor (props) {
@@ -45,6 +44,7 @@ export class QueriesFrame extends Component {
       errors: null
     }
   }
+
   componentDidMount () {
     if (this.props.connectionState === CONNECTED_STATE) {
       this.getRunningQueries()
@@ -62,26 +62,31 @@ export class QueriesFrame extends Component {
       }
     }
   }
+
   isCC () {
     return this.props.availableProcedures.includes('dbms.cluster.overview')
   }
-  getRunningQueries (clearSuccess = true) {
+
+  getRunningQueries (suppressQuerySuccessMessage = false) {
     this.props.bus.self(
       (this.isCC()) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {query: listQueriesProcedure()},
       (response) => {
         if (response.success) {
           let queries = this.extractQueriesFromBoltResult(response.result)
+          let resultMessage = this.constructSuccessMessage(queries)
+
           this.setState((prevState, props) => {
-            return { queries: queries, errors: null, success: clearSuccess ? null : prevState.success }
+            return {queries: queries, errors: null, success: suppressQuerySuccessMessage ? prevState.success : resultMessage}
           })
         } else {
           let errors = this.state.errors || []
-          this.setState({ errors: errors.concat([response.error]), success: false })
+          this.setState({errors: errors.concat([response.error]), success: false})
         }
       }
     )
   }
+
   killQueries (host, queryIdList) {
     this.props.bus.self(
       (this.isCC()) ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
@@ -89,22 +94,23 @@ export class QueriesFrame extends Component {
       (response) => {
         if (response.success) {
           this.setState({success: 'Query successfully cancelled', errors: null})
-          this.getRunningQueries(false)
+          this.getRunningQueries(true)
         } else {
           let errors = this.state.errors || []
-          this.setState({ errors: errors.concat([response.error]), success: false })
+          this.setState({errors: errors.concat([response.error]), success: false})
         }
       }
     )
   }
+
   extractQueriesFromBoltResult (result) {
     return result.records.map((queryRecord) => {
       let queryInfo = {}
       queryRecord.keys.forEach((key, idx) => {
         queryInfo[key] = queryRecord._fields[idx]
       })
-      if (queryInfo.host) {
-        queryInfo.host = 'bolt://' + queryInfo.host
+      if (queryRecord.host) {
+        queryInfo.host = 'bolt://' + queryRecord.host
       } else {
         queryInfo.host = 'bolt://' + result.summary.server.address
       }
@@ -113,7 +119,27 @@ export class QueriesFrame extends Component {
   }
 
   onCancelQuery (host, queryId) {
-    this.killQueries(host, [ queryId ])
+    this.killQueries(host, [queryId])
+  }
+
+  constructSuccessMessage (queries) {
+    let hosts = queries.map(query => query.host).reduce((acc, host) => {
+      if (acc.host) { return acc } else {
+        acc[host] = 1
+        return acc
+      }
+    }, {})
+
+    let clusterCount = Object.keys(hosts).map(key => hosts.hasOwnProperty(key)).length
+    let numMachinesMsg = 'running on one server'
+
+    if (clusterCount > 1) {
+      numMachinesMsg = `running on ${clusterCount} cluster servers`
+    }
+
+    let numQueriesMsg = queries.length > 1 ? 'queries' : 'query'
+
+    return `Found ${queries.length} ${numQueriesMsg} ${numMachinesMsg}`
   }
 
   constructViewFromQueryList (queries) {
@@ -138,7 +164,8 @@ export class QueriesFrame extends Component {
           <StyledTd width={tableHeaderSizes[3][1]}><Code>{query.parameters}</Code></StyledTd>
           <StyledTd width={tableHeaderSizes[4][1]}><Code>{query.metaData}</Code></StyledTd>
           <StyledTd width={tableHeaderSizes[5][1]}>{query.elapsedTime}</StyledTd>
-          <StyledTd width={tableHeaderSizes[6][1]}><ConfirmationButton onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></StyledTd>
+          <StyledTd width={tableHeaderSizes[6][1]}><ConfirmationButton
+            onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></StyledTd>
         </tr>)
     })
 
@@ -154,28 +181,35 @@ export class QueriesFrame extends Component {
         </thead>
         <tbody>
           {tableRows}
-          <tr>
-            <td>
-              <input type='checkbox' id='autoRefreshChk' onClick={(e) => this.setState({ autoRefresh: e.target.checked })} checked={this.state.autoRefresh} />
-              <label for='autoRefreshChk'>Auto Refresh</label>
-            </td>
-            <td>
-              <button onClick={() => this.getRunningQueries()}><RefreshIcon /></button>
-            </td>
-          </tr>
         </tbody>
       </StyledTable>
     )
   }
+
+  setAutoRefresh (autoRefresh) {
+    this.setState({autoRefresh: autoRefresh})
+
+    if (autoRefresh) {
+      this.getRunningQueries()
+    }
+  }
+
   render () {
     const frameContents = this.constructViewFromQueryList(this.state.queries)
+
     const statusbar = (
       <div>
         <Visible if={this.state.errors}>
           <FrameError message={(this.state.errors || []).join(', ')} />
         </Visible>
         <Visible if={this.state.success}>
-          <FrameSuccess message={this.state.success} />
+          <StyledStatusBar>
+            {this.state.success}
+            <RefreshQueriesButton onClick={() => this.getRunningQueries()}><RefreshIcon /></RefreshQueriesButton>
+            <AutoRefreshSpan>
+              <AutoRefreshToogle checked={this.state.autoRefresh} onClick={(e) => this.setAutoRefresh(e.target.checked)} />
+            </AutoRefreshSpan>
+          </StyledStatusBar>
         </Visible>
       </div>
     )
