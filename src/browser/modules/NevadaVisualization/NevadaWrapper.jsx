@@ -111,15 +111,32 @@ export class NevadaWrapper extends Component {
       require.ensure([], (require) => {
         const Nevada = require('neo4j-visualization').default
         this.state.nevada = new Nevada(this.state.parentContainer, this.props.nodes, this.props.relationships, {}, callbacks)
+        this.state.nevada.updateLabels(this.props.labels)
+        this.state.nevada.updateNodeStyle(this.props.nevadaStyleData)
+        this.state.nevada.updateRelStyle(this.props.nevadaRelData)
+        this.state.nevada.setGrassStyle(this.props.graphStyleData)
       }, 'nevada')
     }
   }
 
   componentWillReceiveProps (nextProps) {
     if (this.state.nevada) {
-      this.state.nevada.updateLabels(nextProps.labels)
-      this.state.nevada.updateNodeStyle(nextProps.nevadaStyleData)
-      this.state.nevada.updateRelStyle(nextProps.nevadaRelData)
+      if (this.props.labels !== nextProps.labels) {
+        this.state.nevada.updateLabels(nextProps.labels)
+      }
+      if (this.props.nevadaStyleData !== nextProps.nevadaStyleData) {
+        this.state.nevada.updateNodeStyle(nextProps.nevadaStyleData)
+      }
+      if (this.props.nevadaRelData !== nextProps.nevadaRelData) {
+        this.state.nevada.updateRelStyle(nextProps.nevadaRelData)
+      }
+      if (this.props.graphStyleData !== nextProps.graphStyleData) {
+        if (nextProps.graphStyleData === null) {
+          this.state.nevada.clearGrassStyle()
+        } else {
+          this.state.nevada.setGrassStyle(nextProps.graphStyleData)
+        }
+      }
     }
   }
 

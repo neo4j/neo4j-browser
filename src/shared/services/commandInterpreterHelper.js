@@ -22,6 +22,7 @@ import * as frames from 'shared/modules/stream/streamDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
+import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import { cleanHtml } from 'services/remoteUtils'
 import { hostIsAllowed } from 'services/utils'
 import remote from 'services/remote'
@@ -32,7 +33,8 @@ import { unknownCommand } from 'shared/modules/commands/commandsDuck'
 import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
 import { CouldNotFetchRemoteGuideError, FetchURLError } from 'services/exceptions'
-import { parseHttpVerbCommand } from 'shared/modules/commands/helpers/http'
+import { parseHttpVerbCommand, isValidURL } from 'shared/modules/commands/helpers/http'
+import { parseGrass } from 'shared/modules/commands/helpers/grass'
 
 const availableCommands = [{
   name: 'clear',
@@ -176,6 +178,42 @@ const availableCommands = [{
         const error = new Error(e)
         put(frames.add({...action, error, type: 'error'}))
       })
+  }
+}, {
+  name: 'style',
+  match: (cmd) => /^style(\s|$)/.test(cmd),
+  exec: function (action, cmdchar, put, store) {
+    const match = action.cmd.match(/:style\s*(\S.*)$/)
+    let param = match && match[1] ? match[1] : ''
+
+    if (param === '') {
+      // Todo: show popup
+    } else if (param === 'reset') {
+      put(updateGraphStyleData(null))
+    } else if (isValidURL(param)) {
+      if (!param.startsWith('http')) {
+        param = 'http://' + param
+      }
+      remote.get(param)
+      .then((response) => {
+        const parsedGrass = parseGrass(response)
+        if (parsedGrass) {
+          put(updateGraphStyleData(parsedGrass))
+        } else {
+          const error = new Error('Could not parse grass file')
+          put(frames.add({...action, error, type: 'error'}))
+        }
+      })
+      .catch((e) => {
+        const error = new Error(e)
+        put(frames.add({...action, error, type: 'error'}))
+      })
+    } else {
+      const parsedGrass = parseGrass(param)
+      if (parsedGrass) {
+        put(updateGraphStyleData(parsedGrass))
+      }
+    }
   }
 }, {
   name: 'catch-all',
