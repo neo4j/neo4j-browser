@@ -31,7 +31,7 @@ const pushRight = keyframes`
 `
 
 export const StyledSidebar = styled.div`
-  flex: 0;
+  flex: content;
   background-color: #4C4957;
   display: flex;
   flex-direction: row;
