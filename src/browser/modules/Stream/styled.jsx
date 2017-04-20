@@ -199,16 +199,6 @@ export const StyledPreformattedArea = styled.pre`
   background-color: #f5f5f5
 `
 
-export const StyledNevadaCanvas = styled.div`
-  height: 100%;
-  width: 100%;
-  > .nevada-canvas {
-    position: relative;
-    height: 100%;
-    width: 100%;
-  }
-`
-
 export const ErrorText = styled.span`
   color: ${props => props.theme.error};
   padding-left: 5px;
