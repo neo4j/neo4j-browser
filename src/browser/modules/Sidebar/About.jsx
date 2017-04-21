@@ -40,7 +40,7 @@ const About = () => {
             Neo4j Browser
           </DrawerSubHeader>
           <DrawerSectionBody>
-            You are running version 3.0.0-alpha01
+            You are running version 3.0.0-RC1
           </DrawerSectionBody>
         </DrawerSection>
         <DrawerSection>
