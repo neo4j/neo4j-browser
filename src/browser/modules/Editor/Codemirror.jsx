@@ -22,6 +22,12 @@ import { Component } from 'preact'
 import classNames from 'classnames'
 import debounce from 'lodash.debounce'
 import codemirror from 'codemirror'
+import 'codemirror/addon/lint/lint'
+import 'codemirror/addon/hint/show-hint'
+import { createCypherEditor } from 'cypher-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/addon/lint/lint.css'
+import 'cypher-codemirror/dist/cypher-codemirror-syntax.css'
 
 function normalizeLineEndings (str) {
   if (!str) return str
@@ -29,49 +35,60 @@ function normalizeLineEndings (str) {
 }
 
 export default class CodeMirror extends Component {
+
   constructor (props) {
     super(props)
     this.state = {
       isFocused: false
     }
   }
+
   getCodeMirrorInstance () {
     return codemirror
   }
+
   componentWillMount () {
     this.componentWillReceiveProps = debounce(this.componentWillReceiveProps, 0)
   }
+
   componentDidMount () {
-    const textareaNode = this.ta
-    const codeMirrorInstance = this.getCodeMirrorInstance()
-    this.codeMirror = codeMirrorInstance.fromTextArea(textareaNode, this.props.options)
+    const textareaNode = this.editorReference
+    const { editor, editorSupport } = createCypherEditor(textareaNode, this.props.options)
+    this.codeMirror = editor
     this.codeMirror.on('change', this.codemirrorValueChanged.bind(this))
     this.codeMirror.on('focus', this.focusChanged.bind(this, true))
     this.codeMirror.on('blur', this.focusChanged.bind(this, false))
     this.codeMirror.on('scroll', this.scrollChanged.bind(this))
     this.codeMirror.setValue(this.props.defaultValue || this.props.value || '')
+    this.editorSupport = editorSupport
+    this.editorSupport.setSchema(this.props.schema)
 
     if (this.props.initialPosition) {
-      this.goToPosition(codeMirrorInstance, this.props.initialPosition)
+      this.goToPosition(this.props.initialPosition)
     }
   }
-  goToPosition (codeMirrorInstance, position) {
+
+  goToPosition (position) {
     for (let i = 0; i < position.line; i++) {
-      codeMirrorInstance.commands.goLineDown(this.codeMirror)
+      this.codeMirror.execCommand('goLineDown')
     }
 
     for (let i = 0; i <= position.column; i++) {
-      codeMirrorInstance.commands.goCharRight(this.codeMirror)
+      this.codeMirror.execCommand('goCharRight')
     }
   }
+
   componentWillUnmount () {
-    // is there a lighter-weight way to remove the cm instance?
+    // TODO: is there a lighter-weight way to remove the cm instance?
     if (this.codeMirror) {
       this.codeMirror.toTextArea()
     }
   }
+
   componentWillReceiveProps (nextProps) {
-    if (this.codeMirror && nextProps.value !== undefined && normalizeLineEndings(this.codeMirror.getValue()) !== normalizeLineEndings(nextProps.value)) {
+    if (this.codeMirror &&
+      nextProps.value !== undefined &&
+      normalizeLineEndings(this.codeMirror.getValue()) !== normalizeLineEndings(nextProps.value)) {
       if (this.props.preserveScrollPosition) {
         const prevScrollPosition = this.codeMirror.getScrollInfo()
         this.codeMirror.setValue(nextProps.value)
@@ -87,39 +104,50 @@ export default class CodeMirror extends Component {
         }
       }
     }
+    if (nextProps.schema) {
+      this.editorSupport.setSchema(this.props.schema)
+    }
   }
+
   getCodeMirror () {
     return this.codeMirror
   }
+
   focus () {
     if (this.codeMirror) {
       this.codeMirror.focus()
     }
   }
+
   focusChanged (focused) {
     this.setState({
       isFocused: focused
     })
     this.props.onFocusChange && this.props.onFocusChange(focused)
   }
+
   scrollChanged (cm) {
     this.props.onScroll && this.props.onScroll(cm.getScrollInfo())
   }
+
   codemirrorValueChanged (doc, change) {
     if (this.props.onChange && change.origin !== 'setValue') {
       this.props.onChange(doc.getValue(), change)
     }
   }
+
   render () {
     const editorClassNames = classNames(
-        'ReactCodeMirror',
-        this.state.isFocused ? 'ReactCodeMirror--focused' : null,
-        this.props.classNames
-      )
+      'ReactCodeMirror',
+      { 'ReactCodeMirror--focused': this.state.isFocused },
+      this.props.classNames
+    )
+
+    const setEditorReference = (ref) => {
+      this.editorReference = ref
+    }
     return (
-      <div classNames={editorClassNames}>
-        <textarea ref={(ref) => { this.ta = ref }} name={this.props.path} defaultValue={this.props.value} autoComplete='off' />
-      </div>
+      <div className={editorClassNames} ref={setEditorReference} />
     )
   }
 }

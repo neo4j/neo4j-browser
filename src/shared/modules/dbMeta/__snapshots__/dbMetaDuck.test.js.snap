@@ -2,7 +2,9 @@
 
 exports[`updating metadata can CLEAR to reset state 1`] = `
 Object {
+  "functions": Array [],
   "labels": Array [],
+  "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
   "server": Object {
@@ -18,8 +20,10 @@ Object {
 
 exports[`updating metadata can update server info 1`] = `
 Object {
+  "functions": Array [],
   "hydrated": true,
   "labels": Array [],
+  "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
   "server": Object {
@@ -36,8 +40,10 @@ Object {
 
 exports[`updating metadata can update server settings 1`] = `
 Object {
+  "functions": Array [],
   "hydrated": true,
   "labels": Array [],
+  "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
   "server": Object {

@@ -235,5 +235,6 @@ const interpret = (cmd) => {
 }
 
 export default {
-  interpret
+  interpret,
+  commands: availableCommands.map((command) => command.name)
 }

@@ -38,49 +38,6 @@ injectGlobal`
     cursor: text !important;
   }
 
-  .CodeMirror.cm-s-neo,
-  .CodeMirror.cm-s-css {
-    color: #2e383c !important;
-  }
-
-  .CodeMirror.cm-s-neo .cm-comment,
-  .CodeMirror.cm-s-css .cm-comment {
-    color: #c0c4ca !important;
-  }
-
-  .CodeMirror.cm-s-neo .cm-keyword,
-  .CodeMirror.cm-s-css .cm-keyword,
-  .CodeMirror.cm-s-neo .cm-property,
-  .CodeMirror.cm-s-css .cm-property {
-    color: #3498db !important;
-  }
-
-  .CodeMirror.cm-s-neo .cm-atom,
-  .CodeMirror.cm-s-css .cm-atom,
-  .CodeMirror.cm-s-neo .cm-number,
-  .CodeMirror.cm-s-css .cm-number {
-    color: #9b59b6 !important;
-  }
-
-  .CodeMirror.cm-s-neo .cm-node,
-  .CodeMirror.cm-s-css .cm-node,
-  .CodeMirror.cm-s-neo .cm-tag,
-  .CodeMirror.cm-s-css .cm-tag {
-    color: #e74c3c !important;
-  }
-
-  .CodeMirror.cm-s-neo .cm-string,
-  .CodeMirror.cm-s-css .cm-string {
-    color: #e67e22 !important;
-  }
-
-  .CodeMirror.cm-s-neo .cm-variable,
-  .CodeMirror.cm-s-css .cm-variable,
-  .CodeMirror.cm-s-neo .cm-qualifier,
-  .CodeMirror.cm-s-css .cm-qualifier {
-    color: #1abc9c !important;
-  }
-
   #grass .CodeMirror {
     font-size: 14px !important;
     line-height: 18px !important;
