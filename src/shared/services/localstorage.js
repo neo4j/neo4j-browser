@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { dehydrate } from 'services/duckUtils'
+
 export let keyPrefix = 'neo4j.'
 let storage = window.localStorage
 let keys = []
@@ -60,7 +62,7 @@ export function createReduxMiddleware () {
   return (store) => (next) => (action) => {
     const result = next(action)
     const state = store.getState()
-    keys.forEach((key) => setItem(key, state[key]))
+    keys.forEach((key) => setItem(key, dehydrate(state[key])))
     return result
   }
 }
