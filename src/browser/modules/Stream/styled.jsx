@@ -26,6 +26,7 @@ export const StyledStream = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 17px;
+  overflow: auto;
 `
 
 const rollDownAnimation = keyframes`

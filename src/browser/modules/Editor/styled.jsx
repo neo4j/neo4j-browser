@@ -30,7 +30,7 @@ export const Bar = styled.div`
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
 `
 export const ExpandedBar = styled(Bar)`
-  position: fixed;
+  position: absolute;
   height: 100vh;
   z-index: 100;
   right: 0;

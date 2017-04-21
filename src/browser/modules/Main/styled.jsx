@@ -39,7 +39,7 @@ export const StyledMain = styled.div`
   background-color: #D2D5DA;
   min-width: 0;
   position: relative;
-  height: 100%;
+  height: 100vh;
 `
 
 export const Banner = styled.div`
