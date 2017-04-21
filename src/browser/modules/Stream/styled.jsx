@@ -48,7 +48,7 @@ export const StyledFrame = styled.article`
   width: auto;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
-  animation: ${rollDownAnimation} + .2s linear;
+  animation: ${rollDownAnimation} .2s linear;
   border: ${props => props.theme.frameBorder};
   margin: ${props => props.fullscreen ? '0' : '10px 0px 10px 0px'};
   ${props => props.fullscreen ? 'position: fixed' : null};
