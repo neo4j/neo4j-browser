@@ -37,12 +37,15 @@
     "globals": [
       "it",
       "describe",
+      "test",
+      "expect",
       "beforeEach",
       "afterEach",
       "neo",
       "FileReader",
       "Blob"
     ]
+    
   },
   "repository": {},
   "keywords": [],

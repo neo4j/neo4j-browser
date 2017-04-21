@@ -38,6 +38,11 @@ const Main = (props) => {
           for a list of available commands.
         </ErrorBanner>
       </Visible>
+      <Visible if={props.errorMessage}>
+        <ErrorBanner>
+          {props.errorMessage}
+        </ErrorBanner>
+      </Visible>
       <Visible if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner>
           Database access not available. Please use&nbsp;

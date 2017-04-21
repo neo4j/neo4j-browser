@@ -94,16 +94,37 @@ export class ExplorerComponent extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.graphStyleData !== this.props.graphStyleData && nextProps.graphStyleData) {
-      this.state.graphStyle.loadRules(nextProps.graphStyleData)
-      this.setState({graphStyle: this.state.graphStyle})
+    if (nextProps.graphStyleData !== this.props.graphStyleData) {
+      if (nextProps.graphStyleData) {
+        this.state.graphStyle.loadRules(nextProps.graphStyleData)
+        this.setState({graphStyle: this.state.graphStyle})
+      } else {
+        this.state.graphStyle.resetToDefault()
+        this.setState(
+          {graphStyle: this.state.graphStyle, freezeLegend: true},
+          () => {
+            this.setState({freezeLegend: false})
+            this.props.updateStyle(this.state.graphStyle.toSheet())
+          }
+        )
+      }
     }
   }
 
   render () {
+    // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
+    // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
+    // and also doing this in a different order from the graph. This leads to different default colors being asigned to different labels.
+    var legend
+    if (this.state.freezeLegend) {
+      legend = <LegendComponent stats={this.state.stats} graphStyle={neoGraphStyle()} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
+    } else {
+      legend = <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
+    }
+
     return (
       <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'}>
-        <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
+        {legend}
         <GraphComponent fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} relationships={this.state.relationships} nodes={this.state.nodes} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
         <InspectorComponent fullscreen={this.props.fullscreen} hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />
       </StyledFullSizeContainer>

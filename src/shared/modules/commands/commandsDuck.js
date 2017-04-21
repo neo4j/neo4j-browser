@@ -33,11 +33,13 @@ export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
 export const KNOWN_COMMAND = NAME + '/KNOWN_COMMAND'
+export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
 
 const initialState = {
   lastCommandWasUnknown: false
 }
 export const wasUnknownCommand = (state) => state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
+export const getErrorMessage = (state) => state[NAME].errorMessage
 
 export default function reducer (state = initialState, action) {
   state = hydrate(initialState, state)
@@ -47,6 +49,8 @@ export default function reducer (state = initialState, action) {
       return { lastCommandWasUnknown: true }
     case KNOWN_COMMAND:
       return { lastCommandWasUnknown: false }
+    case SHOW_ERROR_MESSAGE:
+      return { lastCommandWasUnknown: false, errorMessage: action.errorMessage }
     case USER_CLEAR:
       return initialState
     default:
@@ -76,6 +80,11 @@ export const executeSystemCommand = (cmd, contextId, requestId = null) => {
 export const unknownCommand = (cmd) => ({
   type: UNKNOWN_COMMAND,
   cmd
+})
+
+export const showErrorMessage = (errorMessage) => ({
+  type: SHOW_ERROR_MESSAGE,
+  errorMessage: errorMessage
 })
 
 // Epics
