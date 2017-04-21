@@ -18,5 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const ConnectedView = ({host, username}) => <div>You are connected to <em>{host}</em> as <em>{username}</em></div>
+import { StyledConnectionBody, StyledCode, StyledConnectionFooter } from './styled'
+
+const ConnectedView = ({host, username}) => {
+  return (
+    <StyledConnectionBody>
+      You are connected as user <StyledCode>{username}</StyledCode><br />
+      to the server <StyledCode>{host}</StyledCode><br />
+      <StyledConnectionFooter>
+        Connection credentials are stored in your web browser.
+      </StyledConnectionFooter>
+    </StyledConnectionBody>
+  )
+}
 export default ConnectedView

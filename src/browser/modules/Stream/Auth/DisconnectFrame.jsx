@@ -19,14 +19,32 @@
  */
 
 import FrameTemplate from '../FrameTemplate'
+import { StyledConnectionFrame, StyledConnectionAside } from './styled'
+import {H3} from 'browser-components/headers'
+import Visible from 'browser-components/Visible'
 
 const Disconnect = ({frame, activeConnectionData}) => {
-  let message = 'You\'re still connected'
-  if (!activeConnectionData) message = 'You are now disconnected from the server'
   return (
     <FrameTemplate
       header={frame}
-      contents={message}
+      contents={
+        <StyledConnectionFrame>
+          <StyledConnectionAside>
+            <Visible if={activeConnectionData}>
+              <span>
+                <H3>Connected</H3>
+                {'You\'re still connected'}
+              </span>
+            </Visible>
+            <Visible if={!activeConnectionData}>
+              <span>
+                <H3>Disconnected</H3>
+                You are disconnected from the server
+              </span>
+            </Visible>
+          </StyledConnectionAside>
+        </StyledConnectionFrame>
+      }
     />
   )
 }

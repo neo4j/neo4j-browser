@@ -21,7 +21,6 @@
 import styled from 'styled-components'
 
 export const StyledConnectionForm = styled.form`
-  display: table-cell;
   padding: 0 15px;
 `
 export const StyledConnectionAside = styled.div`
@@ -29,7 +28,7 @@ export const StyledConnectionAside = styled.div`
   padding: 0 15px;
   width: 25%;
   font-family: ${props => props.theme.primaryFontFamily};
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 300;
   color: ${props => props.theme.asideText};
 `
@@ -52,4 +51,24 @@ export const StyledConnectionTextInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 44%;
+`
+export const StyledConnectionBodyContainer = styled.div`
+  display: table-cell;
+`
+export const StyledConnectionBody = styled.div`
+  font-size: 1.3em;
+  line-height: 2.0em;
+  padding-left: 50px;
+`
+export const StyledConnectionFooter = styled.span`
+  font-size: 0.95em;
+  font-weight: 200;
+`
+export const StyledCode = styled.code`
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  padding: 2px 4px;
 `
