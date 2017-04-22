@@ -36,7 +36,7 @@ const directives = [{
 }, {
   selector: '[server-topic]',
   valueExtractor: (elem) => {
-    return `:play ${elem.getAttribute('server-topic')}`
+    return `:server ${elem.getAttribute('server-topic')}`
   }
 }, {
   selector: '[help-topic]',
