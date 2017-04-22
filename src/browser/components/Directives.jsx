@@ -20,8 +20,8 @@
 
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
-import { addClass } from 'shared/services/dom-helpers'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { addClass, prependIcon } from 'shared/services/dom-helpers'
 
 const directives = [{
   selector: '[exec-topic]',
@@ -32,6 +32,11 @@ const directives = [{
   selector: '[play-topic]',
   valueExtractor: (elem) => {
     return `:play ${elem.getAttribute('play-topic')}`
+  }
+}, {
+  selector: '[server-topic]',
+  valueExtractor: (elem) => {
+    return `:play ${elem.getAttribute('server-topic')}`
   }
 }, {
   selector: '[help-topic]',
@@ -50,12 +55,24 @@ const directives = [{
   }
 }]
 
+const prependHelpIcon = (element) => {
+  prependIcon(element, 'fa fa-question-circle-o')
+}
+
+const prependPlayIcon = (element) => {
+  prependIcon(element, 'fa fa-play-circle-o')
+}
+
 export const Directives = (props) => {
   const callback = (elem) => {
     if (elem) {
       directives.forEach((directive) => {
         const elems = elem.querySelectorAll(directive.selector)
         Array.from(elems).forEach((e) => {
+          if (e.firstChild.nodeName !== 'I') {
+            directive.selector === '[help-topic]' ? prependHelpIcon(e) : prependPlayIcon(e)
+          }
+
           e.onclick = () => {
             addClass(e, 'clicked')
             return props.onItemClick(directive.valueExtractor(e))
@@ -75,7 +92,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
-        ownProps.bus.send(SET_CONTENT, setContent(cmd))
+        const action = executeCommand(cmd)
+        ownProps.bus.send(action.type, action)
       }
     }
   }
