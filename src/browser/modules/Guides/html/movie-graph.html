@@ -667,7 +667,7 @@ RETURN p</pre>
         <figure>
           <pre class="pre-scrollable code runnable">MATCH (tom:Person {name:&quot;Tom Hanks&quot;})-[:ACTED_IN]-&gt;(m)&lt;-[:ACTED_IN]-(coActors),
       (coActors)-[:ACTED_IN]-&gt;(m2)&lt;-[:ACTED_IN]-(cocoActors)
-WHERE NOT (tom)-[:ACTED_IN]-&gt;(m2)
+WHERE NOT (tom)-[:ACTED_IN]-&gt;()&lt;-[:ACTED_IN]-(cocoActors) AND tom &lt;&gt; cocoActors
 RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC</pre>
         </figure>
         <p class="lead">Find someone to introduce Tom Hanks to Tom Cruise</p>
