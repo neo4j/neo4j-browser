@@ -20,6 +20,7 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
+import { hydrate } from 'services/duckUtils'
 import { CONNECTION_SUCCESS, DISCONNECTION_SUCCESS, LOST_CONNECTION, UPDATE_CONNECTION_STATE, CONNECTED_STATE, connectionLossFilter } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'meta'
@@ -65,6 +66,8 @@ function updateMetaForContext (state, meta, context) {
  * Reducer
 */
 export default function labels (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case UPDATE:
       return updateMetaForContext(state, action.meta, action.context)

@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { hydrate } from 'services/duckUtils'
+
 export const NAME = 'user'
 
 export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
@@ -45,6 +47,8 @@ function updateCurrentUserInfo (state, info) {
  * Reducer
 */
 export default function user (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case UPDATE_CURRENT_USER:
       const info = action.info

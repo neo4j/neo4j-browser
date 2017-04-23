@@ -20,6 +20,7 @@
 
 import uuid from 'uuid'
 import { moveInArray } from 'services/utils'
+import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
@@ -132,6 +133,8 @@ function setRecentViewHelper (state, recentView) {
  * Reducer
 */
 export default function reducer (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case ADD:
       return addFrame(state, action.state)

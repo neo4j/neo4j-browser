@@ -20,11 +20,12 @@
 
 /* global test, expect */
 import reducer, { UPDATE_ALL } from './featuresDuck'
+import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
   test('handles initial value', () => {
     const nextState = reducer(undefined, {type: ''})
-    expect(nextState).toEqual({availableProcedures: []})
+    expect(dehydrate(nextState)).toEqual({availableProcedures: []})
   })
 
   test('handles UPDATE_ALL without initial state', () => {

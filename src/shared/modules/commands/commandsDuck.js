@@ -20,6 +20,7 @@
 
 import bolt from 'services/bolt/bolt'
 import { getInterpreter, isNamedInterpreter } from 'services/commandUtils'
+import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getCmdChar } from '../settings/settingsDuck'
@@ -39,6 +40,8 @@ const initialState = {
 export const wasUnknownCommand = (state) => state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
 
 export default function reducer (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case UNKNOWN_COMMAND:
       return { lastCommandWasUnknown: true }
