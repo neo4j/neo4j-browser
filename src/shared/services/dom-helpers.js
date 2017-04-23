@@ -31,4 +31,11 @@ const addClass = (node, className) => {
   }
 }
 
-export { addClass }
+const prependIcon = (element, classname) => {
+  let icon = document.createElement('i')
+  addClass(icon, classname)
+  icon.setAttribute('style', 'padding-right:4px')
+  element.insertBefore(icon, element.firstChild)
+}
+
+export { addClass, prependIcon }
