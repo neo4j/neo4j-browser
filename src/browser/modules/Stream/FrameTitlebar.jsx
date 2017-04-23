@@ -19,6 +19,7 @@
  */
 
 import { connect } from 'preact-redux'
+import { Component } from 'preact'
 import { withBus } from 'preact-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
@@ -31,44 +32,64 @@ import { CSVSerializer } from 'services/serializer'
 import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon, DownloadIcon } from 'browser-components/icons/Icons'
 import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection } from './styled'
 
-export const FrameTitlebar = (props) => {
-  const { frame } = props
-  let csvData = null
-  if (props.exportData) {
-    let data = props.exportData
+const getCsvData = (exportData) => {
+  if (exportData && exportData.length > 0) {
+    let data = exportData.slice()
     const csv = CSVSerializer(data.shift())
     csv.appendRows(data)
-    csvData = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv.output())
+    return 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv.output())
+  } else {
+    return null
   }
-  const fullscreenIcon = (props.fullscreen) ? <ContractIcon /> : <ExpandIcon />
-  const expandCollapseIcon = (props.collapse) ? <DownIcon /> : <UpIcon />
-  const cmd = removeComments(frame.cmd)
-  return (
-    <StyledFrameTitleBar>
-      <StyledFrameCommand>
-        <DottedLineHover onClick={() => props.onTitlebarClick(cmd)}>
-          {cmd}
-        </DottedLineHover>
-      </StyledFrameCommand>
-      <FrameTitlebarButtonSection>
-        <Visible if={frame.type === 'cypher' && csvData}>
-          <FrameButton><FrameButtonAChild download='export.csv' href={csvData}><DownloadIcon /></FrameButtonAChild></FrameButton>
-        </Visible>
-        <FrameButton onClick={() => {
-          props.togglePin()
-          props.togglePinning(frame.id, frame.isPinned)
-        }} pressed={props.pinned}><PinIcon /></FrameButton>
-        <Visible if={frame.type === 'cypher'}>
-          <FrameButton onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
-        </Visible>
-        <FrameButton onClick={() => props.collapseToggle()}>{expandCollapseIcon}</FrameButton>
-        <Visible if={frame.type === 'cypher'}>
-          <FrameButton onClick={() => props.onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
-        </Visible>
-        <FrameButton onClick={() => props.onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
-      </FrameTitlebarButtonSection>
-    </StyledFrameTitleBar>
-  )
+}
+
+class FrameTitlebar extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      csvData: props.exportData && getCsvData(props.exportData)
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (this.props.exportData !== nextProps.exportData) {
+      this.setState({csvData: nextProps.exportData ? getCsvData(nextProps.exportData) : null})
+    }
+  }
+
+  render () {
+    let props = this.props
+    const { frame } = props
+    const fullscreenIcon = (props.fullscreen) ? <ContractIcon /> : <ExpandIcon />
+    const expandCollapseIcon = (props.collapse) ? <DownIcon /> : <UpIcon />
+    const cmd = removeComments(frame.cmd)
+    return (
+      <StyledFrameTitleBar>
+        <StyledFrameCommand>
+          <DottedLineHover onClick={() => props.onTitlebarClick(cmd)}>
+            {cmd}
+          </DottedLineHover>
+        </StyledFrameCommand>
+        <FrameTitlebarButtonSection>
+          <Visible if={frame.type === 'cypher' && props.exportData}>
+            <FrameButton><FrameButtonAChild download='export.csv' href={this.state.csvData}><DownloadIcon /></FrameButtonAChild></FrameButton>
+          </Visible>
+          <FrameButton onClick={() => {
+            props.togglePin()
+            props.togglePinning(frame.id, frame.isPinned)
+          }} pressed={props.pinned}><PinIcon /></FrameButton>
+          <Visible if={frame.type === 'cypher'}>
+            <FrameButton onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
+          </Visible>
+          <FrameButton onClick={() => props.collapseToggle()}>{expandCollapseIcon}</FrameButton>
+          <Visible if={frame.type === 'cypher'}>
+            <FrameButton onClick={() => props.onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
+          </Visible>
+          <FrameButton onClick={() => props.onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
+        </FrameTitlebarButtonSection>
+      </StyledFrameTitleBar>
+    )
+  }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
