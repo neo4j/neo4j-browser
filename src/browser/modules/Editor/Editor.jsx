@@ -174,6 +174,13 @@ export class Editor extends Component {
       })
     }
   }
+  lineNumberFormatter (line) {
+    if (!this.codeMirror || this.codeMirror.lineCount() === 1) {
+      return '$'
+    } else {
+      return line
+    }
+  }
 
   render () {
     const options = {
@@ -183,7 +190,8 @@ export class Editor extends Component {
       gutters: ['cypher-hints'],
       lineWrapping: true,
       autofocus: true,
-      smartIndent: false
+      smartIndent: false,
+      lineNumberFormatter: this.lineNumberFormatter.bind(this)
     }
 
     const updateCode = (val) => this.updateCode(val)
