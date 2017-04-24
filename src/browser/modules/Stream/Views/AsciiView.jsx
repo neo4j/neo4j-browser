@@ -19,12 +19,12 @@
  */
 
 import asciitable from 'ascii-data-table'
-import { PaddedDiv } from '../styled'
+import { PaddedDiv, StyledBodyMessage } from '../styled'
 
-const AsciiView = ({rows, style}) => {
+const AsciiView = ({rows, style, message}) => {
   const contents = rows
     ? <pre>{asciitable.table(rows, 70)}</pre>
-    : <div><em>No results found</em></div>
+    : <StyledBodyMessage>{message}</StyledBodyMessage>
   return <PaddedDiv style={style}>{contents}</PaddedDiv>
 }
 

@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import updateStatsFields from './updateStatisticsFields'
+
 export function toObjects (records, intChecker, intConverter) {
   const recordValues = records.map((record) => {
     let out = []
@@ -135,4 +137,12 @@ const extractNodesAndRelationshipsFromPath = (item, rawNodes, rawRels) => {
       rawRels.push(segment.relationship)
     })
   })
+}
+
+export const retrieveFormattedUpdateStatistics = (result) => {
+  if (result.summary.counters) {
+    const stats = result.summary.counters._stats
+    const statsMessages = updateStatsFields.filter(field => stats[field.field] > 0).map(field => `${field.verb} ${stats[field.field]} ${stats[field.field] === 1 ? field.singular : field.plural}`)
+    return statsMessages.join(', ')
+  } else return null
 }
