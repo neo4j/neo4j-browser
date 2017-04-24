@@ -1,6 +1,6 @@
 {
   "name": "neo4j-browser",
-  "version": "1.0.0",
+  "version": "3.0.0-RC1",
   "description": "Enjoy your data",
   "main": "index.js",
   "scripts": {
