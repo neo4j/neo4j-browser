@@ -137,7 +137,7 @@ class CypherFrame extends Component {
             this.changeView(viewTypes.TABLE)
           }}><TableIcon /></CypherFrameButton>
         </Visible>
-        <Visible if={!this.state.errors}>
+        <Visible if={this.resultHasNodes() && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
             this.changeView(viewTypes.TEXT)
           }}><AsciiIcon /></CypherFrameButton>
