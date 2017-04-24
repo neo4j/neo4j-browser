@@ -22,7 +22,7 @@ import { Component } from 'preact'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
-import { StyledPreformattedArea } from './styled'
+import { StyledSchemaBody } from './styled'
 
 export class SchemaFrame extends Component {
   constructor (props) {
@@ -92,7 +92,7 @@ export class SchemaFrame extends Component {
   }
 
   render () {
-    const contents = <StyledPreformattedArea>{this.formatIndexAndConstraints(this.state.indexes, this.state.constraints)}</StyledPreformattedArea>
+    const contents = <StyledSchemaBody>{this.formatIndexAndConstraints(this.state.indexes, this.state.constraints)}</StyledSchemaBody>
 
     return (
       <FrameTemplate
