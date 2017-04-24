@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { version } from '../../../../package.json'
 import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerFooter} from 'browser-components/drawer'
 
 const About = () => {
@@ -40,7 +41,7 @@ const About = () => {
             Neo4j Browser
           </DrawerSubHeader>
           <DrawerSectionBody>
-            You are running version 3.0.1
+            You are running version {version}
           </DrawerSectionBody>
         </DrawerSection>
         <DrawerSection>
