@@ -121,7 +121,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types
     relationships = rawRels.filter((item) => nodes.filter((node) => node.id === item.start.toString()).length > 0 && nodes.filter((node) => node.id === item.end.toString()).length > 0)
   }
   relationships = relationships.map((item) => {
-    return {id: item.identity.toString(), startNodeId: item.start, endNodeId: item.end, type: item.type, properties: itemIntToString(item.properties, intChecker, intConverter)}
+    return {id: item.identity.toString(), startNodeId: item.start.toString(), endNodeId: item.end.toString(), type: item.type, properties: itemIntToString(item.properties, intChecker, intConverter)}
   })
   return { nodes: nodes, relationships: relationships }
 }
