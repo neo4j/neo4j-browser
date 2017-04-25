@@ -161,6 +161,19 @@ export const StyledHelpDescription = styled.div`
 export const StyledDiv = styled.div`
 `
 
+export const StyledLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: #5dade2;
+    text-decoration: none;
+  }
+`
+
+export const StyledLinkContainer = styled.div`
+  margin: 16px 0;
+`
+
 export const StyledCypherMessage = styled.div`
   font-weight: bold
   line-height: 1em
