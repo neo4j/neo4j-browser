@@ -161,6 +161,19 @@ export const StyledHelpDescription = styled.div`
 export const StyledDiv = styled.div`
 `
 
+export const StyledLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: #5dade2;
+    text-decoration: none;
+  }
+`
+
+export const StyledLinkContainer = styled.div`
+  margin: 16px 0;
+`
+
 export const StyledCypherMessage = styled.div`
   font-weight: bold
   line-height: 1em
@@ -191,13 +204,14 @@ export const StyledBr = styled.br`
 `
 
 export const StyledPreformattedArea = styled.pre`
-  font-family: Monaco, "Courier New", Terminal, monospace
-  font-size: 14px
-  padding: 12px 16px
-  margin: 0
-  background: none
-  border: none
-  background-color: #f5f5f5
+  font-family: Monaco, "Courier New", Terminal, monospace;
+  font-size: 14px;
+  white-space: pre-line;
+  padding: 12px 16px;
+  margin: 0;
+  background: none;
+  border: none;
+  background-color: #f5f5f5;
 `
 
 export const ErrorText = styled.span`
