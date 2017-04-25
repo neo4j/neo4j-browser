@@ -124,6 +124,10 @@ class CypherFrame extends Component {
     return (this.state.nodesAndRelationships) ? (this.state.nodesAndRelationships.nodes && this.state.nodesAndRelationships.nodes.length > 0) : false
   }
 
+  resultHasRows () {
+    return this.state.rows && this.state.rows.length > 0
+  }
+
   sidebar () {
     return (
       <FrameSidebar>
@@ -137,7 +141,7 @@ class CypherFrame extends Component {
             this.changeView(viewTypes.TABLE)
           }}><TableIcon /></CypherFrameButton>
         </Visible>
-        <Visible if={this.resultHasNodes() && !this.state.errors}>
+        <Visible if={this.resultHasRows() && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
             this.changeView(viewTypes.TEXT)
           }}><AsciiIcon /></CypherFrameButton>
