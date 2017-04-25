@@ -50,6 +50,19 @@ export default class CodeMirror extends Component {
     this.codeMirror.on('blur', this.focusChanged.bind(this, false))
     this.codeMirror.on('scroll', this.scrollChanged.bind(this))
     this.codeMirror.setValue(this.props.defaultValue || this.props.value || '')
+
+    if (this.props.initialPosition) {
+      this.goToPosition(codeMirrorInstance, this.props.initialPosition)
+    }
+  }
+  goToPosition (codeMirrorInstance, position) {
+    for (let i = 0; i < position.line; i++) {
+      codeMirrorInstance.commands.goLineDown(this.codeMirror)
+    }
+
+    for (let i = 0; i <= position.column; i++) {
+      codeMirrorInstance.commands.goCharRight(this.codeMirror)
+    }
   }
   componentWillUnmount () {
     // is there a lighter-weight way to remove the cm instance?

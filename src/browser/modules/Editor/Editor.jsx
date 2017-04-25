@@ -46,7 +46,8 @@ export class Editor extends Component {
       buffer: '',
       mode: 'cypher',
       notifications: [],
-      expanded: false
+      expanded: false,
+      lastPosition: {line: 0, column: 0}
     }
   }
   focusEditor () {
@@ -70,7 +71,7 @@ export class Editor extends Component {
     this.codeMirrorInstance.commands.newlineAndIndent(cm)
   }
   execCurrent () {
-    const value = this.codeMirror.getValue().trim()
+    const value = this.codeMirror.getValue().trim() || this.state.code
     if (!value) return
     this.props.onExecute(value)
     this.clearEditor()
@@ -126,7 +127,7 @@ export class Editor extends Component {
     this.codeMirror.setValue(cmd)
     this.updateCode(cmd, () => this.focusEditor())
   }
-  updateCode (newCode, cb = () => {}) {
+  updateCode (newCode, change, cb = () => {}) {
     const mode = this.props.cmdchar && newCode.trim().indexOf(this.props.cmdchar) === 0
       ? 'text'
       : 'cypher'
@@ -139,9 +140,12 @@ export class Editor extends Component {
       this.debouncedCheckForHints(newCode)
     }
 
+    const lastPosition = change && change.to
+
     this.setState({
       code: newCode,
-      mode
+      mode,
+      lastPosition: lastPosition ? {line: lastPosition.line, column: lastPosition.ch} : this.state.lastPosition
     }, cb)
   }
   checkForHints (code) {
@@ -191,10 +195,11 @@ export class Editor extends Component {
       smartIndent: false
     }
 
-    const updateCode = (val) => this.updateCode(val)
+    const updateCode = (val, change) => this.updateCode(val, change)
     this.setGutterMarkers()
     const wrapper = (this.state.expanded) ? {Component: EditorExpandedWrapper} : {Component: EditorWrapper}
     const bar = (this.state.expanded) ? {Component: ExpandedBar} : {Component: Bar}
+
     return (
       <bar.Component>
         <wrapper.Component>
@@ -203,6 +208,7 @@ export class Editor extends Component {
             value={this.state.code}
             onChange={updateCode}
             options={options}
+            initialPosition={this.state.lastPosition}
           />
         </wrapper.Component>
         <ActionButtonSection>
