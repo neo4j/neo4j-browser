@@ -24,7 +24,7 @@ import { StyledRowToggle, StyledCaret } from './styled'
 export class RowExpandToggleComponent extends Component {
 
   updateDimensions () {
-    let rowHeight = this.props.rowElem ? this.props.rowElem.base.clientHeight : 0
+    let rowHeight = this.props.rowElem && this.props.rowElem.base ? this.props.rowElem.base.clientHeight : 0
     this.setState({rowHeight: rowHeight})
   }
 
