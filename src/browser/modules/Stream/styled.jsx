@@ -216,3 +216,7 @@ export const StyledStatsBar = styled.div`
   overflow: hidden;
   padding-left: 24px;
 `
+
+export const StyledSchemaBody = styled(StyledPreformattedArea)`
+  padding-top: 6px
+`
