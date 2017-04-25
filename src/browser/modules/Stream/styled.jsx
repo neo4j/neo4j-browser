@@ -234,3 +234,9 @@ export const StyledStatsBar = styled.div`
 export const StyledSchemaBody = styled(StyledPreformattedArea)`
   padding-top: 6px
 `
+export const StyledBodyMessage = styled.div`
+  padding-top: 20px;
+  line-height: 1.428;
+  font-size: 15px;
+  color: #666;
+`

@@ -211,5 +211,6 @@ export default {
   extractPlan: (result) => {
     return mappings.extractPlan(result)
   },
+  retrieveFormattedUpdateStatistics: mappings.retrieveFormattedUpdateStatistics,
   neo4j: neo4j
 }

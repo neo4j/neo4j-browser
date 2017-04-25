@@ -20,7 +20,7 @@
 
 import { Component } from 'preact'
 import { v4 } from 'uuid'
-import { PaddedDiv } from '../styled'
+import { PaddedDiv, StyledBodyMessage } from '../styled'
 
 class TableView extends Component {
   constructor (props) {
@@ -33,7 +33,7 @@ class TableView extends Component {
     }
   }
   render () {
-    if (!this.props.data) return (<div style={this.props.style}><em>No results found</em></div>)
+    if (!this.props.data) return (<PaddedDiv style={this.props.style}><StyledBodyMessage>{this.props.message}</StyledBodyMessage></PaddedDiv>)
     const tableHeader = this.state.columns.map((column, i) => (
       <th className='table-header' key={i}>{column}</th>)
     )

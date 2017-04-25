@@ -124,6 +124,10 @@ class CypherFrame extends Component {
     return (this.state.nodesAndRelationships) ? (this.state.nodesAndRelationships.nodes && this.state.nodesAndRelationships.nodes.length > 0) : false
   }
 
+  resultHasRows () {
+    return this.state.rows && this.state.rows.length > 0
+  }
+
   sidebar () {
     return (
       <FrameSidebar>
@@ -137,7 +141,7 @@ class CypherFrame extends Component {
             this.changeView(viewTypes.TABLE)
           }}><TableIcon /></CypherFrameButton>
         </Visible>
-        <Visible if={!this.state.errors}>
+        <Visible if={this.resultHasRows() && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
             this.changeView(viewTypes.TEXT)
           }}><AsciiIcon /></CypherFrameButton>
@@ -178,6 +182,28 @@ class CypherFrame extends Component {
     }
   }
 
+  getBodyAndStatusBarMessages (result) {
+    const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
+    const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
+    const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
+
+    let updateMessages = bolt.retrieveFormattedUpdateStatistics(result)
+    let streamMessage = result.records.length > 0
+      ? `started streaming ${result.records.length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ms.`
+      : `completed ${totalTimeString} ms.`
+
+    if (updateMessages && updateMessages.length > 0) {
+      updateMessages = updateMessages[0].toUpperCase() + updateMessages.slice(1) + ', '
+    } else {
+      streamMessage = streamMessage[0].toUpperCase() + streamMessage.slice(1)
+    }
+
+    const bodyMessage = (updateMessages.length === 0 && result.records.length === 0) ? '(no changes, no records)'
+      : updateMessages + `completed ${totalTimeString} ms.`
+
+    return { statusBarMessage: updateMessages + streamMessage, bodyMessage }
+  }
+
   render () {
     const frame = this.props.frame
     const result = this.props.request.result || false
@@ -187,19 +213,17 @@ class CypherFrame extends Component {
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     let statusBar = null
     let rows
+    let messages
 
     if (this.state.errors) {
       statusBar = <FrameError code={this.state.errors.code} />
     } else if (result.records || plan) {
-      const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
-      const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
-      const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
       if (this.state.openView !== viewTypes.VISUALIZATION) {
+        messages = this.getBodyAndStatusBarMessages(result)
         statusBar = (
-
           <StyledStatsBar>
             <Ellipsis>
-              Started streaming {result.records.length} records {resultAvailableAfter} ms and completed after {totalTimeString} ms.
+              { messages.statusBarMessage }
             </Ellipsis>
           </StyledStatsBar>
         )
@@ -224,10 +248,10 @@ class CypherFrame extends Component {
             <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={rows} />
+            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={rows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} />
+            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
             <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
