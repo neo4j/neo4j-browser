@@ -203,7 +203,7 @@ export class BrowserSync extends Component {
                   icon={<BinIcon suppressIconStyles='true' id='browserSyncLogin' />} buttonType='secondary' />
               </DrawerSection>
               <DrawerSection>
-                <ConsentCheckBox checked={this.state.userConsented} onChange={(e) => {
+                <ConsentCheckBox checked={this.state.userConsented === true} onChange={(e) => {
                   this.setState({
                     userConsented: e.target.checked,
                     showConsentAlert: this.state.showConsentAlert && !e.target.checked
@@ -233,7 +233,7 @@ const mapStateToProps = (state) => {
     lastSyncedAt: state.sync ? state.sync.lastSyncedAt : null,
     authData: state.sync ? state.sync.authData : null,
     browserSyncConfig: getBrowserSyncConfig(state),
-    syncConsent: state.syncConsent
+    syncConsent: state.syncConsent.consented
   }
 }
 
