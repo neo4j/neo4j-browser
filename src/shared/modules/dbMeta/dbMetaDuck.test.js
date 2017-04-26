@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
+/* global describe, test, expect */
 import reducer, * as meta from './dbMetaDuck'
 
 describe('updating metadata', () => {
@@ -36,7 +36,7 @@ describe('updating metadata', () => {
       get: (val) => { return ['prop1', 'prop2'] }
     }
     const action = {
-      type: meta.UPDATE,
+      type: meta.UPDATE_META,
       meta: {records: [ returnedLabels, returnedRelationshipTypes, returnedProperies ]},
       context: 'mycontext'
     }
