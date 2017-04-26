@@ -130,7 +130,7 @@ export class InspectorComponent extends Component {
     const toggleExpand = () => {
       this.setState({ contracted: !this.state.contracted }, () => {
         const inspectorHeight = this.footerRowElem.base.clientHeight
-        this.props.onExpandToggled && this.props.onExpandToggled(this.state.contracted ? 0 : inspectorHeight)
+        this.props.onExpandToggled && this.props.onExpandToggled(this.state.contracted, this.state.contracted ? 0 : inspectorHeight)
       })
     }
 
@@ -139,7 +139,7 @@ export class InspectorComponent extends Component {
         <StyledStatus className='status'>
           <StyledInspectorFooter className={this.state.contracted ? 'contracted inspector-footer' : 'inspector-footer'}>
             <StyledInspectorFooterRow className='inspector-footer-row' ref={this.setFooterRowELem.bind(this)}>
-              <RowExpandToggleComponent contracted={this.state.contracted} rowElem={this.footerRowElem} containerHeight={inspectorFooterContractedHeight} onClick={toggleExpand} />
+              { type === 'canvas' ? null : <RowExpandToggleComponent contracted={this.state.contracted} rowElem={this.footerRowElem} containerHeight={inspectorFooterContractedHeight} onClick={toggleExpand} /> }
               {inspectorContent}
             </StyledInspectorFooterRow>
           </StyledInspectorFooter>
@@ -147,4 +147,12 @@ export class InspectorComponent extends Component {
       </StyledStatusBar>
     )
   }
+
+  componentWillReceiveProps (nextProps) {
+    if (this.props.selectedItem !== nextProps.selectedItem) { // || this.props.hoveredItem !== nextProps.hoveredItem){
+      this.setState({ contracted: true })
+      this.props.onExpandToggled && this.props.onExpandToggled(true, 0)
+    }
+  }
+
 }
