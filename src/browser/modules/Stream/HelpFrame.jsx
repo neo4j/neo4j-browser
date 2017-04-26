@@ -36,7 +36,7 @@ const HelpFrame = ({frame}) => {
       if (content !== undefined) {
         help = <Slide html={content} />
       } else {
-        help = 'Guide not found'
+        help = <Slide html={html.default['_unfound']} />
       }
     }
   }
