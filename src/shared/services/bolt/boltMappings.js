@@ -146,3 +146,7 @@ export const retrieveFormattedUpdateStatistics = (result) => {
     return statsMessages.join(', ')
   } else return null
 }
+
+export const flattenProperties = (rows) => {
+  return rows.map((row) => row.map((entry) => (entry.properties) ? entry.properties : entry))
+}
