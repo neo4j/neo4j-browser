@@ -84,7 +84,7 @@ export class Editor extends Component {
     if (this.state.historyIndex === -1) { // Save what's currently in the editor
       this.setState({buffer: cm.getValue()})
     }
-    this.setState({historyIndex: this.state.historyIndex + 1})
+    this.setState({ historyIndex: this.state.historyIndex + 1, editorHeight: this.editor && this.editor.base.clientHeight })
     this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
   }
   historyNext (cm) {
@@ -95,7 +95,7 @@ export class Editor extends Component {
       this.setEditorValue(cm, this.state.buffer)
       return
     }
-    this.setState({historyIndex: this.state.historyIndex - 1})
+    this.setState({ historyIndex: this.state.historyIndex - 1, editorHeight: this.editor && this.editor.base.clientHeight })
     this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
   }
   componentWillReceiveProps (nextProps) {
@@ -145,7 +145,8 @@ export class Editor extends Component {
     this.setState({
       code: newCode,
       mode,
-      lastPosition: lastPosition ? {line: lastPosition.line, column: lastPosition.ch} : this.state.lastPosition
+      lastPosition: lastPosition ? {line: lastPosition.line, column: lastPosition.ch} : this.state.lastPosition,
+      editorHeight: this.editor && this.editor.base.clientHeight
     }, cb)
   }
   checkForHints (code) {
@@ -184,6 +185,15 @@ export class Editor extends Component {
     }
   }
 
+  componentDidUpdate () {
+    if (this.editor) {
+      const editorHeight = this.editor.base.clientHeight
+      if (editorHeight !== this.state.editorHeight) {
+        this.setState({ editorHeight })
+      }
+    }
+  }
+
   render () {
     const options = {
       lineNumbers: true,
@@ -201,8 +211,8 @@ export class Editor extends Component {
     const bar = (this.state.expanded) ? {Component: ExpandedBar} : {Component: Bar}
 
     return (
-      <bar.Component>
-        <wrapper.Component>
+      <bar.Component minHeight={this.state.editorHeight}>
+        <wrapper.Component minHeight={this.state.editorHeight}>
           <Codemirror
             ref={(ref) => { this.editor = ref }}
             value={this.state.code}

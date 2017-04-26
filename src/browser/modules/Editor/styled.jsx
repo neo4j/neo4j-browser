@@ -21,11 +21,13 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
+const editorPadding = 12
+
 export const Bar = styled.div`
   display: flex;
   flex-direction: row;
   align-items: middle;
-  min-height: ${dim.editorbarHeight}px;
+  min-height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
 `
@@ -48,9 +50,10 @@ export const ActionButtonSection = styled.div`
 
 export const EditorWrapper = styled.div`
   flex: auto;
-  padding: 12px 12px 12px 12px;
+  padding: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
   font-family: Monaco,"Courier New",Terminal,monospace;
+  min-Height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px
 `
 export const EditorExpandedWrapper = styled(EditorWrapper)`
   height: 100%;
