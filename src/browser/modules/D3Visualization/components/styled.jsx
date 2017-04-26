@@ -22,6 +22,7 @@ import styled from 'styled-components'
 
 export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
+const pMarginTop = 6
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -111,7 +112,7 @@ export const StyledStream = styled.div`
 `
 
 export const p = styled.div`
-  margin-top: 6px;
+  margin-top: ${pMarginTop}px;
   font-size: 12px;
   width: 100%;
   white-space: normal;
@@ -321,7 +322,7 @@ export const StyledCaptionSelector = styled.a`
 export const StyledFullSizeContainer = styled.div`
   height: 100%;
   padding-top: ${(legendRowHeight * 2) + 1}px;
-  padding-bottom: 39px;
+  padding-bottom: ${props => props.forcePaddingBottom ? (props.forcePaddingBottom + 2 * pMarginTop) + 'px' : '39px'};
   &.one-legend-row {
     padding-top: ${legendRowHeight}px;
   }
@@ -333,7 +334,7 @@ export const StyledInspectorFooterStatusMessage = styled.div`
 
 export const StyledZoomHolder = styled.div`
   position: absolute;
-  bottom: -39px;
+  bottom: 39px;
   right: 0;
   padding: 6px 6px 0 6px;
   border-left: #e6e9ef solid 1px;

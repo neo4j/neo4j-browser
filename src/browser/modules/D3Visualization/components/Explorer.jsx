@@ -111,6 +111,14 @@ export class ExplorerComponent extends Component {
     }
   }
 
+  onInspectorExpandToggled (inspectorHeight) {
+    if (inspectorHeight) {
+      this.setState({forcePaddingBottom: inspectorHeight})
+    } else {
+      this.setState({forcePaddingBottom: null})
+    }
+  }
+
   render () {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
@@ -123,10 +131,10 @@ export class ExplorerComponent extends Component {
     }
 
     return (
-      <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'}>
-        {legend}
+      <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'} forcePaddingBottom={this.state.forcePaddingBottom}>
+        <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
         <GraphComponent fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} relationships={this.state.relationships} nodes={this.state.nodes} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)} onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} />
-        <InspectorComponent fullscreen={this.props.fullscreen} hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} />
+        <InspectorComponent fullscreen={this.props.fullscreen} hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} onExpandToggled={this.onInspectorExpandToggled.bind(this)} />
       </StyledFullSizeContainer>
     )
   }

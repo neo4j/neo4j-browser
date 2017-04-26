@@ -33,7 +33,7 @@ export class InspectorComponent extends Component {
 
   setFooterRowELem (elem) {
     if (elem) {
-      this.state.footerRowElem = elem
+      this.footerRowElem = elem
     }
   }
 
@@ -127,12 +127,19 @@ export class InspectorComponent extends Component {
       }
     }
 
+    const toggleExpand = () => {
+      this.setState({ contracted: !this.state.contracted }, () => {
+        const inspectorHeight = this.footerRowElem.base.clientHeight
+        this.props.onExpandToggled && this.props.onExpandToggled(this.state.contracted ? 0 : inspectorHeight)
+      })
+    }
+
     return (
       <StyledStatusBar fullscreen={this.props.fullscreen} className='status-bar'>
         <StyledStatus className='status'>
           <StyledInspectorFooter className={this.state.contracted ? 'contracted inspector-footer' : 'inspector-footer'}>
             <StyledInspectorFooterRow className='inspector-footer-row' ref={this.setFooterRowELem.bind(this)}>
-              <RowExpandToggleComponent contracted={this.state.contracted} rowElem={this.state.footerRowElem} containerHeight={inspectorFooterContractedHeight} onClick={() => { this.setState({ contracted: !this.state.contracted }) }} />
+              <RowExpandToggleComponent contracted={this.state.contracted} rowElem={this.footerRowElem} containerHeight={inspectorFooterContractedHeight} onClick={toggleExpand} />
               {inspectorContent}
             </StyledInspectorFooterRow>
           </StyledInspectorFooter>
