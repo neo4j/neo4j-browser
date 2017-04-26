@@ -30,6 +30,7 @@ export const Bar = styled.div`
   min-height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
+  margin: 0 24px;
 `
 export const ExpandedBar = styled(Bar)`
   position: absolute;
