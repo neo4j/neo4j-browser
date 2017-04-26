@@ -37,6 +37,7 @@ export const getBrowserSyncConfig = (state) => {
 export const getMaxNeighbours = (state) => state[NAME].maxNeighbours || initialState.maxNeighbours
 export const getMaxRows = (state) => state[NAME].maxRows || initialState.maxRows
 export const getInitialNodeDisplay = (state) => state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
+export const shouldReportUdc = (state) => state[NAME].shouldReportUdc || initialState.shouldReportUdc
 
 const browserSyncConfig = {
   authWindowUrl: 'https://auth.neo4j.com/indexNewBrowser.html',
@@ -59,7 +60,8 @@ const initialState = {
   maxNeighbours: 100,
   showSampleScripts: true,
   browserSyncDebugServer: null,
-  maxRows: 1000
+  maxRows: 1000,
+  shouldReportUdc: true
 }
 
 export default function settings (state = initialState, action) {

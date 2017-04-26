@@ -23,7 +23,7 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import TimeAgo from 'react-timeago'
 
-import { setSync, clearSync, clearSyncAndLocal, consentSync } from 'shared/modules/sync/syncDuck'
+import { setSync, clearSync, clearSyncAndLocal, consentSync, authorizedAs } from 'shared/modules/sync/syncDuck'
 import { signOut } from 'services/browserSyncService'
 import { setContent as setEditorContent } from 'shared/modules/editor/editorDuck'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
@@ -187,6 +187,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    onSignIn: (data) => {
+      const action = authorizedAs(data)
+      ownProps.bus.send(action.type, action)
+    },
     onSync: (syncObject) => {
       dispatch(setSync(syncObject))
     },
