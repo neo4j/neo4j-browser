@@ -24,14 +24,14 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { executeCommand, executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
-import { SET_CONTENT, FOCUS } from 'shared/modules/editor/editorDuck'
+import { SET_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
 import Codemirror from './Codemirror'
 import 'codemirror/mode/cypher/cypher'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
-import { Bar, ActionButtonSection, EditorWrapper } from './styled'
+import { Bar, ExpandedBar, ActionButtonSection, EditorWrapper, EditorExpandedWrapper } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { debounce } from 'services/utils'
@@ -45,13 +45,18 @@ export class Editor extends Component {
       historyIndex: -1,
       buffer: '',
       mode: 'cypher',
-      notifications: []
+      notifications: [],
+      expanded: false,
+      lastPosition: {line: 0, column: 0}
     }
   }
   focusEditor () {
     const cm = this.codeMirror
     cm.focus()
     cm.setCursor(cm.lineCount(), 0)
+  }
+  expandEditorToggle () {
+    this.setState({expanded: !this.state.expanded})
   }
   clearEditor () {
     this.setEditorValue(this.codeMirror, '')
@@ -66,12 +71,12 @@ export class Editor extends Component {
     this.codeMirrorInstance.commands.newlineAndIndent(cm)
   }
   execCurrent () {
-    const value = this.codeMirror.getValue().trim()
+    const value = this.codeMirror.getValue().trim() || this.state.code
     if (!value) return
     this.props.onExecute(value)
     this.clearEditor()
     this.clearHints()
-    this.setState({historyIndex: -1, buffer: null})
+    this.setState({historyIndex: -1, buffer: null, expanded: false})
   }
   historyPrev (cm) {
     if (!this.props.history.length) return
@@ -79,7 +84,7 @@ export class Editor extends Component {
     if (this.state.historyIndex === -1) { // Save what's currently in the editor
       this.setState({buffer: cm.getValue()})
     }
-    this.setState({historyIndex: this.state.historyIndex + 1})
+    this.setState({ historyIndex: this.state.historyIndex + 1, editorHeight: this.editor && this.editor.base.clientHeight })
     this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
   }
   historyNext (cm) {
@@ -90,7 +95,7 @@ export class Editor extends Component {
       this.setEditorValue(cm, this.state.buffer)
       return
     }
-    this.setState({historyIndex: this.state.historyIndex - 1})
+    this.setState({ historyIndex: this.state.historyIndex - 1, editorHeight: this.editor && this.editor.base.clientHeight })
     this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
   }
   componentWillReceiveProps (nextProps) {
@@ -114,14 +119,15 @@ export class Editor extends Component {
       this.props.bus.take(SET_CONTENT, (msg) => {
         this.setEditorValue(this.codeMirror, msg.message)
       })
-      this.props.bus.take(FOCUS, () => this.focusEditor())
+      this.props.bus.take(FOCUS, this.focusEditor.bind(this))
+      this.props.bus.take(EXPAND, this.expandEditorToggle.bind(this))
     }
   }
   setEditorValue (cm, cmd) {
     this.codeMirror.setValue(cmd)
     this.updateCode(cmd, () => this.focusEditor())
   }
-  updateCode (newCode, cb = () => {}) {
+  updateCode (newCode, change, cb = () => {}) {
     const mode = this.props.cmdchar && newCode.trim().indexOf(this.props.cmdchar) === 0
       ? 'text'
       : 'cypher'
@@ -134,9 +140,13 @@ export class Editor extends Component {
       this.debouncedCheckForHints(newCode)
     }
 
+    const lastPosition = change && change.to
+
     this.setState({
       code: newCode,
-      mode
+      mode,
+      lastPosition: lastPosition ? {line: lastPosition.line, column: lastPosition.ch} : this.state.lastPosition,
+      editorHeight: this.editor && this.editor.base.clientHeight
     }, cb)
   }
   checkForHints (code) {
@@ -182,6 +192,15 @@ export class Editor extends Component {
     }
   }
 
+  componentDidUpdate () {
+    if (this.editor) {
+      const editorHeight = this.editor.base.clientHeight
+      if (editorHeight !== this.state.editorHeight) {
+        this.setState({ editorHeight })
+      }
+    }
+  }
+
   render () {
     const options = {
       lineNumbers: true,
@@ -194,19 +213,22 @@ export class Editor extends Component {
       lineNumberFormatter: this.lineNumberFormatter.bind(this)
     }
 
-    const updateCode = (val) => this.updateCode(val)
+    const updateCode = (val, change) => this.updateCode(val, change)
     this.setGutterMarkers()
-    return (
-      <Bar>
-        <EditorWrapper>
+    const wrapper = (this.state.expanded) ? {Component: EditorExpandedWrapper} : {Component: EditorWrapper}
+    const bar = (this.state.expanded) ? {Component: ExpandedBar} : {Component: Bar}
 
+    return (
+      <bar.Component minHeight={this.state.editorHeight}>
+        <wrapper.Component minHeight={this.state.editorHeight}>
           <Codemirror
             ref={(ref) => { this.editor = ref }}
             value={this.state.code}
             onChange={updateCode}
             options={options}
+            initialPosition={this.state.lastPosition}
           />
-        </EditorWrapper>
+        </wrapper.Component>
         <ActionButtonSection>
           <EditorButton
             onClick={() => this.props.onFavortieClick(this.state.code)}
@@ -230,7 +252,7 @@ export class Editor extends Component {
             icon='"\77"'
            />
         </ActionButtonSection>
-      </Bar>
+      </bar.Component>
     )
   }
 }
