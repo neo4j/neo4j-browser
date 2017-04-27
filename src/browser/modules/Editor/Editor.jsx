@@ -85,7 +85,7 @@ export class Editor extends Component {
       this.setState({buffer: cm.getValue()})
     }
     this.setState({ historyIndex: this.state.historyIndex + 1, editorHeight: this.editor && this.editor.base.clientHeight })
-    this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
+    this.setEditorValue(cm, this.props.history[this.state.historyIndex])
   }
   historyNext (cm) {
     if (!this.props.history.length) return
@@ -96,7 +96,7 @@ export class Editor extends Component {
       return
     }
     this.setState({ historyIndex: this.state.historyIndex - 1, editorHeight: this.editor && this.editor.base.clientHeight })
-    this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
+    this.setEditorValue(cm, this.props.history[this.state.historyIndex])
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.content !== null && nextProps.content !== this.state.code) {
