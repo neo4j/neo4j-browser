@@ -30,7 +30,7 @@ const HelpFrame = ({frame}) => {
   if (frame.result) {
     help = <Slide html={frame.result} />
   } else {
-    const helpTopic = snakeToCamel('_' + frame.cmd.replace(':help', '').trim())
+    const helpTopic = snakeToCamel('_' + frame.cmd.replace(':help', '').trim().toLowerCase())
     if (helpTopic !== '') {
       const content = html.default[helpTopic]
       if (content !== undefined) {
