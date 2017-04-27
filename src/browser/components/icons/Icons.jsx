@@ -74,7 +74,7 @@ export const BinIcon = (props) => (<IconContainer activeStyle={styles.white} ina
 
 export const ExpandIcon = () => (<IconContainer className='sl-scale-spread' />)
 export const ContractIcon = () => (<IconContainer className='sl-scale-reduce' />)
-export const RefreshIcon = () => (<IconContainer className='fa fa-repeat' />)
+export const RefreshIcon = () => (<IconContainer className='sl-loop' />)
 export const CloseIcon = () => (<IconContainer className='sl-delete' />)
 export const UpIcon = () => (<IconContainer className='sl-chevron-up' />)
 export const DownIcon = () => (<IconContainer className='sl-chevron-down' />)
