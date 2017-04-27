@@ -44,11 +44,12 @@ export const StyledMain = styled.div`
 
 export const Banner = styled.div`
   line-height: 49px;
-  width: 100%;
   color: white;
   padding: 0 24px;
+  margin: 0 24px;
   overflow: hidden;
   animation: ${grow('49px')} .3s ease-in;
+  flex: 0 0 49px;
 `
 
 export const ErrorBanner = styled(Banner)`
