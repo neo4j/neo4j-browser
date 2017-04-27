@@ -1,0 +1,27 @@
+<article class="help">
+    <section class="main">
+      <div class="headings">
+        <p class="title">REST DELETE</p>
+        <p class="subtitle"></p>
+      </div>
+      <div class="content">
+        <p>Use&nbsp;<code>:DELETE</code> to send HTTP DELETE to Neo4j's REST interface.</p>
+        <table class="table-condensed table-help">
+          <!-- <tr>
+            <th>Reference:</th>
+            <td><code><a href="{{ neo4j.version | neo4jDeveloperDoc }}/#http-api-index">REST</a></code></td>
+          </tr> -->
+          <tr>
+            <th>Related:</th>
+            <td><a help-topic="rest-get">:help REST GET</a><a help-topic="rest-post">:help REST POST</a><a help-topic="rest-put">:help REST PUT</a></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section class=" example">
+        <figure>
+          <pre mode="rest" class="code runnable">:DELETE /db/data/transaction/2</pre>
+          <figcaption>Rollback an open transaction.</figcaption>
+        </figure>
+    </section>
+</article>

@@ -1,0 +1,42 @@
+<article class="help">
+    <section class="main">
+      <div class="headings">
+        <p class="title">DROP CONSTRAINT ON</p>
+        <p class="lead">Drops a property constraint on a node label or relationship type</p>
+      </div>
+      <div class="content">
+        <p>The&nbsp;<code>DROP CONSTRAINT ON</code> clause will delete a property constraint</p>
+        <table class="table-condensed table-help">
+          <!-- <tr>
+            <th>Reference:</th>
+            <td><code><a href="{{ neo4j.version | neo4jDeveloperDoc }}/cypher/#query-constraints">schema constraints</a></code> manual page</td>
+          </tr> -->
+          <tr>
+            <th>Related:</th>
+            <td><a help-topic="drop-constraint-on">:help CREATE CONSTRAINT ON</a>&nbsp;<a help-topic="schema">:help Schema</a>&nbsp;<a help-topic="cypher">:help Cypher</a></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section class=" example">
+        <figure>
+          <pre class="code runnable standalone-example">DROP CONSTRAINT ON (p:Person)
+ASSERT p.name IS UNIQUE</pre>
+          <figcaption>Drop the unique constraint and index on the label Person and property name.</figcaption>
+        </figure>
+    </section>
+    <section class=" example">
+        <figure>
+          <pre class="code runnable standalone-example">DROP CONSTRAINT ON (p:Person)
+ASSERT exists(p.name)</pre>
+          <figcaption>Drop the node property existence constraint on the label Person and property name.</figcaption>
+        </figure>
+    </section>
+    <section class=" example">
+      <figure>
+        <pre class="code runnable standalone-example">DROP CONSTRAINT ON ()-[l:LIKED]-()
+ASSERT exists(l.when)</pre>
+        <figcaption>Drop the relationship property existence constraint on the type LIKED and property when.</figcaption>
+      </figure>
+    </section>
+</article>
