@@ -44,6 +44,7 @@ export const StyledMain = styled.div`
 
 export const Banner = styled.div`
   line-height: 49px;
+  min-height: 49px;
   color: white;
   padding: 0 24px;
   margin: 0 24px;
