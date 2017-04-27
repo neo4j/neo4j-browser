@@ -66,7 +66,6 @@ class Folder extends Component {
       <div>
         <StyledList>
           <StyledListHeaderItem>
-            <FoldersButton onClick={() => this.setState({active: !this.state.active})}>{icon}</FoldersButton>&nbsp;&nbsp;
             <Visible if={!this.state.editing}>
               <span onClick={() => this.setState({active: !this.state.active})}>{this.props.folder.name}</span>
             </Visible>
@@ -76,6 +75,7 @@ class Folder extends Component {
                 value={this.props.folder.name} innerRef={this.folderNameInputSet.bind(this)} />
             </Visible>
             <FolderButtonContainer>
+              <FoldersButton onClick={() => this.setState({active: !this.state.active})}>{icon}</FoldersButton>
               <Visible if={!this.props.folder.isStatic}>
                 <EditFolderButton editClick={() => {
                   this.setState({editing: true})

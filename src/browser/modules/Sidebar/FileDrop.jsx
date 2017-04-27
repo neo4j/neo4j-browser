@@ -23,6 +23,7 @@ import { connect } from 'preact-redux'
 import Dropzone from 'react-dropzone'
 
 import {addFavorite} from 'shared/modules/favorites/favoritesDuck'
+import { StyledDropzoneText } from './styled'
 
 export class FileDrop extends Component {
   constructor (props) {
@@ -56,7 +57,7 @@ export class FileDrop extends Component {
         disableClick
         multiple={false}
         onDrop={this.onDrop.bind(this)}>
-        <div>{this.state.error || this.state.success || 'Drop a file to import Cypher'}</div>
+        <StyledDropzoneText>{this.state.error || this.state.success || 'Drop a file to import Cypher'}</StyledDropzoneText>
       </Dropzone>)
   }
 }

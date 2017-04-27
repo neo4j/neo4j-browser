@@ -93,6 +93,8 @@ export const FoldersButton = styled.button`
   background: transparent;
   border: none;
   outline: none;
+  float: right;
+  margin-left: 10px;
 `
 
 const NewFolderStyledButton = styled.button`
@@ -118,6 +120,11 @@ export const EditFolderInput = styled.input`
   border-radius:5px;
   line-height: 200%;
   padding-left: 5px
+`
+
+export const StyledDropzoneText = styled.div`
+  padding: 85px 0 0 15px;
+  color: #666666
 `
 
 export const NewFolderButton = (props) => {
