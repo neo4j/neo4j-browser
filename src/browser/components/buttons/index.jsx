@@ -271,3 +271,12 @@ export const CarouselButton = (props) => {
     </BaseCarouselButton>
   )
 }
+
+export const StyledLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: #5dade2;
+    text-decoration: none;
+  }
+`

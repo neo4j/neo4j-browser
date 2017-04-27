@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { Component } from 'preact'
 import { withBus } from 'preact-suber'
 
@@ -31,7 +31,7 @@ import FrameError from '../Stream/FrameError'
 import FrameSuccess from '../Stream/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
-import { FormButton } from 'browser-components/buttons'
+import { FormButton, StyledLink } from 'browser-components/buttons'
 
 export class UserAdd extends Component {
   constructor (props) {
@@ -138,6 +138,12 @@ export class UserAdd extends Component {
   availableRoles () {
     return this.state.availableRoles.filter(role => this.state.roles.indexOf(role) < 0)
   }
+
+  openListUsersFrame () {
+    const action = executeCommand(':server user list')
+    this.props.bus.send(action.type, action)
+  }
+
   render () {
     const listOfAvailableRoles = (this.state.availableRoles)
       ? (<RolesSelector roles={this.availableRoles()} onChange={(event) => {
@@ -148,7 +154,7 @@ export class UserAdd extends Component {
       return (<th key={i}>{heading}</th>)
     })
     const errors = (this.state.errors) ? this.state.errors.join(', ') : null
-    const frameContents = (
+    const table = (
       <table>
         <thead>
           <tr>
@@ -181,6 +187,15 @@ export class UserAdd extends Component {
           </tr>
         </tbody>
       </table>
+    )
+
+    const frameContents = (
+      <div>
+        {table}
+        <StyledLink onClick={this.openListUsersFrame.bind(this)}>
+          See user list
+        </StyledLink>
+      </div>
     )
     return (
       <FrameTemplate
