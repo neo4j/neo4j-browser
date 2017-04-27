@@ -101,6 +101,10 @@ export function extractNodesAndRelationshipsFromRecords (records, types) {
   return { nodes: rawNodes, relationships: rawRels }
 }
 
+const resultContainsGraphKeys = (keys) => {
+  return (keys.includes('nodes') && keys.includes('relationships'))
+}
+
 export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types, filterRels, intChecker, intConverter) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
@@ -108,13 +112,18 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types
   let keys = records[0].keys
   let rawNodes = []
   let rawRels = []
-  records.forEach((record) => {
-    let graphItems = keys.map((key) => record.get(key))
-    rawNodes = [...rawNodes, ...graphItems.filter((item) => item instanceof types.Node)]
-    rawRels = [...rawRels, ...graphItems.filter((item) => item instanceof types.Relationship)]
-    let paths = graphItems.filter((item) => item instanceof types.Path)
-    paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
-  })
+  if (resultContainsGraphKeys(keys)) {
+    rawNodes = [...rawNodes, ...records[0].get(keys[0])]
+    rawRels = [...rawRels, ...records[0].get(keys[1])]
+  } else {
+    records.forEach((record) => {
+      let graphItems = keys.map((key) => record.get(key))
+      rawNodes = [...rawNodes, ...graphItems.filter((item) => item instanceof types.Node)]
+      rawRels = [...rawRels, ...graphItems.filter((item) => item instanceof types.Relationship)]
+      let paths = graphItems.filter((item) => item instanceof types.Path)
+      paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
+    })
+  }
   const nodes = rawNodes.map((item) => {
     return {id: item.identity.toString(), labels: item.labels, properties: itemIntToString(item.properties, intChecker, intConverter)}
   })

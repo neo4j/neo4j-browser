@@ -60,7 +60,7 @@ class CypherFrame extends Component {
     let errors
     if (nextProps.request.status === 'success') {
       if (nextProps.request.result.records && nextProps.request.result.records.length > 0) {
-        nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.request.result.records)
+        nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.request.result.records)
         rows = bolt.recordsToTableArray(nextProps.request.result.records)
       }
       plan = bolt.extractPlan(nextProps.request.result)
