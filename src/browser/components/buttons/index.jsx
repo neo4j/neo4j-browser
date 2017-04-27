@@ -138,10 +138,19 @@ const StyledSecondaryFormButton = styled(StyledFormButton)`
     background-color: ${props => props.theme.secondaryButtonBackground};
   }
 `
+const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
+  color: #bcc0c9;
+  border-color: #bcc0c9;
+  &:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+`
 
 const buttonTypes = {
   primary: StyledFormButton,
-  secondary: StyledSecondaryFormButton
+  secondary: StyledSecondaryFormButton,
+  drawer: StyledDrawerFormButton
 }
 
 export const FormButton = (props) => {
