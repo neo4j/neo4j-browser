@@ -32,6 +32,7 @@ import FrameSuccess from '../Stream/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { FormButton, StyledLink } from 'browser-components/buttons'
+import {StyledTable, StyledBodyTr, StyledTh, StyledTd} from 'browser-components/DataTables'
 
 export class UserAdd extends Component {
   constructor (props) {
@@ -151,42 +152,42 @@ export class UserAdd extends Component {
       }} />)
       : '-'
     const tableHeaders = ['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change'].map((heading, i) => {
-      return (<th key={i}>{heading}</th>)
+      return (<StyledTh key={i}>{heading}</StyledTh>)
     })
     const errors = (this.state.errors) ? this.state.errors.join(', ') : null
     const table = (
-      <table>
+      <StyledTable>
         <thead>
           <tr>
             {tableHeaders}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
+          <StyledBodyTr>
+            <StyledTd>
               <input className='username' onChange={this.updateUsername.bind(this)} />
-            </td>
-            <td>
+            </StyledTd>
+            <StyledTd>
               {listOfAvailableRoles}
               {this.listRoles()}
-            </td>
-            <td>
+            </StyledTd>
+            <StyledTd>
               <input onChange={this.updatePassword.bind(this)} type='password' />
-            </td>
-            <td>
+            </StyledTd>
+            <StyledTd>
               <input onChange={this.confirmUpdatePassword.bind(this)} type='password' />
-            </td>
-            <td>
+            </StyledTd>
+            <StyledTd>
               <input onClick={this.updateForcePasswordChange.bind(this)} type='checkbox' />
-            </td>
-          </tr>
-          <tr>
+            </StyledTd>
+          </StyledBodyTr>
+          <StyledBodyTr>
             <td>
               <FormButton onClick={this.submit.bind(this)} label='Add User' />
             </td>
-          </tr>
+          </StyledBodyTr>
         </tbody>
-      </table>
+      </StyledTable>
     )
 
     const frameContents = (

@@ -27,6 +27,7 @@ import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { StyledLink } from 'browser-components/buttons'
+import {StyledTable, StyledTh} from 'browser-components/DataTables'
 
 import FrameTemplate from '../Stream/FrameTemplate'
 
@@ -67,17 +68,17 @@ export class UserList extends Component {
       )
     })
     const tableHeaders = ['Username', 'Roles(s)', 'Status', 'Password Change', 'Delete'].map((heading, i) => {
-      return <th key={i}>{heading}</th>
+      return <StyledTh key={i}>{heading}</StyledTh>
     })
     return (
-      <table>
+      <StyledTable>
         <thead>
           <tr>
             {tableHeaders}
           </tr>
         </thead>
         <tbody>{items}</tbody>
-      </table>
+      </StyledTable>
     )
   }
 

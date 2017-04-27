@@ -33,10 +33,10 @@ export const StyledTh = styled.th`
   font-weight: bold
   padding: 0 16px
   line-height: 39px
-  border-bottom: 1px solid #EBECEC
+  border-bottom: ${props => props.theme.inFrameBorder}
 `
 export const StyledTd = styled.td`
-  border-bottom: 1px solid #EBECEC
+  border-bottom: ${props => props.theme.inFrameBorder}
   vertical-align: top
   line-height: 26px
   padding: 0 16px
