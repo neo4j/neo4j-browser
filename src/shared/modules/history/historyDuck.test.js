@@ -20,44 +20,32 @@
 
 /* global test, expect */
 import reducer, * as actions from './historyDuck'
-import { dehydrate } from 'services/duckUtils'
 
 describe('editor reducer', () => {
   test('handles editor.actionTypes.ADD_HISTORY', () => {
-    const helpAction = actions.addHistory({cmd: ':help'})
+    const helpAction = actions.addHistory(':help', 20)
     const nextState = reducer(undefined, helpAction)
-    expect(dehydrate(nextState)).toEqual({
-      history: [{ cmd: ':help' }],
-      maxHistory: 20
-    })
+    expect(nextState).toEqual([':help'])
 
     // One more time
-    const historyAction = actions.addHistory({cmd: ':history'})
+    const historyAction = actions.addHistory(':history', 20)
     const nextnextState = reducer(nextState, historyAction)
-    expect(dehydrate(nextnextState)).toEqual({
-      history: [{ cmd: ':history' }, { cmd: ':help' }],
-      maxHistory: 20
-    })
+    expect(nextnextState).toEqual([':history', ':help'])
   })
 
   test('takes editor.actionTypes.SET_MAX_HISTORY into account', () => {
-    const initalState = {
-      history: [
-        { cmd: ':help' },
-        { cmd: ':help' },
-        { cmd: ':help' }
-      ],
-      maxHistory: 3
-    }
-    const helpAction = actions.addHistory({cmd: ':history'})
+    const initalState = [
+      ':help',
+      ':help',
+      ':help']
+
+    const helpAction = actions.addHistory(':history', 3)
     const nextState = reducer(initalState, helpAction)
-    expect(dehydrate(nextState)).toEqual({
-      history: [
-        { cmd: ':history' },
-        { cmd: ':help' },
-        { cmd: ':help' }
-      ],
-      maxHistory: 3
-    })
+    expect(nextState).toEqual([
+      ':history',
+      ':help',
+      ':help'
+    ]
+    )
   })
 })

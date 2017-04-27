@@ -23,7 +23,7 @@ import { getInterpreter, isNamedInterpreter } from 'services/commandUtils'
 import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
-import { getCmdChar } from '../settings/settingsDuck'
+import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
 import { fetchMetaData } from '../dbMeta/dbMetaDuck'
@@ -99,7 +99,8 @@ export const handleCommandsEpic = (action$, store) =>
     .do(({action, interpreted}) => {
       if (action.type === SYSTEM_COMMAND_QUEUED) return
       if (isNamedInterpreter(interpreted)) {
-        store.dispatch(addHistory({cmd: action.cmd})) // Only save valid commands to history
+        const maxHistory = getMaxHistory(store.getState())
+        store.dispatch(addHistory(action.cmd, maxHistory)) // Only save valid commands to history
         store.dispatch({ type: KNOWN_COMMAND }) // Clear any eventual unknown command notifications
       }
     })

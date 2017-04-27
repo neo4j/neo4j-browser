@@ -40,14 +40,14 @@ const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)
 
 describe('commandsDuck', () => {
   let store
+  const maxHistory = 20
   beforeAll(() => {
     store = mockStore({
       settings: {
-        cmdchar: ':'
+        cmdchar: ':',
+        maxHistory: maxHistory
       },
-      history: {
-        history: [':xxx']
-      },
+      history: [':xxx'],
       connections: {},
       params: {}
     })
@@ -67,7 +67,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd }),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
           { type: 'NOOP' }
@@ -89,7 +89,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({cmd}),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
           frames.add({...action, type: 'cypher'}),
@@ -115,7 +115,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           merge({x: 2}),
           frames.add({...action, success: true, type: 'param', params: {x: 2}}),
@@ -140,7 +140,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           set({x: 2, y: 3}),
           frames.add({...action, success: true, type: 'params', params: {}}),
@@ -164,7 +164,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           frames.add({...action, type: 'params', params: {}}),
           { type: 'NOOP' }
@@ -188,10 +188,10 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           updateSettings({x: 2}),
-          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':'}, null, 2)}),
+          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
           { type: 'NOOP' }
         ])
         done()
@@ -211,7 +211,7 @@ describe('commandsDuck', () => {
       bus.take('NOOP', (currentAction) => {
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd }),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           frames.add({ ...action, type: 'queries', result: "{res : 'QUERIES RESULT'}" }),
           {type: 'NOOP'}
@@ -253,7 +253,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({cmd}),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           frames.add({...action, type: 'disconnect'}),
           disconnectAction(null),
