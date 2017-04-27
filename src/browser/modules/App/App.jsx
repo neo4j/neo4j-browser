@@ -25,7 +25,7 @@ import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
 import { getTheme, getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
-import { wasUnknownCommand } from 'shared/modules/commands/commandsDuck'
+import { wasUnknownCommand, getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
 
 import Main from '../Main/Main'
@@ -52,7 +52,7 @@ class App extends Component {
     this.props.bus && this.props.bus.send(EXPAND)
   }
   render () {
-    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner} = this.props
+    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner, errorMessage} = this.props
     const themeData = themes[theme] || themes['normal']
     return (
       <ThemeProvider theme={themeData}>
@@ -66,6 +66,7 @@ class App extends Component {
                   activeConnection={activeConnection}
                   connectionState={connectionState}
                   showUnknownCommandBanner={showUnknownCommandBanner}
+                  errorMessage={errorMessage}
                 />
               </StyledMainWrapper>
             </StyledBody>
@@ -83,7 +84,8 @@ const mapStateToProps = (state) => {
     theme: getTheme(state),
     connectionState: getConnectionState(state),
     cmdchar: getCmdChar(state),
-    showUnknownCommandBanner: wasUnknownCommand(state)
+    showUnknownCommandBanner: wasUnknownCommand(state),
+    errorMessage: getErrorMessage(state)
   }
 }
 
