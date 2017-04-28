@@ -39,7 +39,7 @@ const staticItems = {
     {name: 'Cypher Refcard', command: 'http://neo4j.com/docs/cypher-refcard/3.2-alpha/', type: 'link'},
     {name: 'GraphGists', command: 'http://graphgist.neo4j.com/', type: 'link'},
     {name: 'Developer Site', command: 'http://www.neo4j.com/developer', type: 'link'},
-    {name: 'Developer Site', command: 'https://neo4j.com/developer/kb/', type: 'link'}
+    {name: 'Knowledge Base', command: 'https://neo4j.com/developer/kb/', type: 'link'}
   ]
 }
 
