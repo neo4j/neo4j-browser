@@ -19,6 +19,7 @@
  */
 
 import { Component } from 'preact'
+import { connect } from 'preact-redux'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
 import Favorites from './Favorites'
 import Documents from './Documents'
@@ -31,6 +32,7 @@ import {
   FavoritesIcon,
   DocumentsIcon,
   CloudIcon,
+  CloudDisconnectedIcon,
   SettingsIcon,
   AboutIcon
 } from 'browser-components/icons/Icons'
@@ -44,13 +46,14 @@ class Sidebar extends Component {
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
     const AboutDrawer = About
+    const SyncCloudIcon = this.props.syncConnected ? CloudIcon : CloudDisconnectedIcon
     const topNavItemsList = [
       {name: 'DB', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} />, content: DatabaseDrawer},
       {name: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
       {name: 'Documents', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: (isOpen) => <CloudIcon isOpen={isOpen} />, content: BrowserSync},
+      {name: 'Sync', icon: (isOpen) => <SyncCloudIcon isOpen={isOpen} />, content: BrowserSync},
       {name: 'Settings', icon: (isOpen) => <SettingsIcon isOpen={isOpen} />, content: SettingsDrawer},
       {name: 'About', icon: (isOpen) => <AboutIcon isOpen={isOpen} />, content: AboutDrawer}
     ]
@@ -64,4 +67,11 @@ class Sidebar extends Component {
   }
 }
 
-export default Sidebar
+const mapStateToProps = (state) => {
+  return {
+    syncConnected: state.sync && state.sync.authData
+  }
+}
+
+export default connect(mapStateToProps, null)(Sidebar)
+
