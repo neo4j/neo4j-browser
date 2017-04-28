@@ -93,7 +93,7 @@ const plugins = [
 const rules = [
   {
     test: /\.(js|jsx)$/,
-    exclude: /node_modules/,
+    exclude: /(node_modules)|(cypher-codemirror)/,
     use: [{
       loader: 'babel-loader',
       options: {

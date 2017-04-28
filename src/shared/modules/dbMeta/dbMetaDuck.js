@@ -22,7 +22,14 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { hydrate } from 'services/duckUtils'
 import { getJmxValues, getServerConfig } from 'services/bolt/boltHelpers'
-import { CONNECTION_SUCCESS, DISCONNECTION_SUCCESS, LOST_CONNECTION, UPDATE_CONNECTION_STATE, CONNECTED_STATE, connectionLossFilter } from 'shared/modules/connections/connectionsDuck'
+import {
+  CONNECTED_STATE,
+  CONNECTION_SUCCESS,
+  connectionLossFilter,
+  DISCONNECTION_SUCCESS,
+  LOST_CONNECTION,
+  UPDATE_CONNECTION_STATE
+} from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'meta'
 export const UPDATE_META = 'meta/UPDATE_META'
@@ -35,6 +42,8 @@ const initialState = {
   labels: [],
   relationshipTypes: [],
   properties: [],
+  functions: [],
+  procedures: [],
   server: {
     version: null,
     edition: null,
@@ -47,15 +56,22 @@ const initialState = {
 
 /**
  * Selectors
-*/
+ */
 export function getMetaInContext (state, context) {
-  const fLabels = state.labels.filter((l) => l.context === context)
-  const fRelationshipTypes = state.relationshipTypes.filter((l) => l.context === context)
-  const fProperties = state.properties.filter((l) => l.context === context)
+  const inCurrentContext = (e) => e.context === context
+
+  const labels = state.labels.filter(inCurrentContext)
+  const relationshipTypes = state.relationshipTypes.filter(inCurrentContext)
+  const properties = state.properties.filter(inCurrentContext)
+  const functions = state.functions.filter(inCurrentContext)
+  const procedures = state.procedures.filter(inCurrentContext)
+
   return {
-    labels: fLabels,
-    relationshipTypes: fRelationshipTypes,
-    properties: fProperties
+    labels,
+    relationshipTypes,
+    properties,
+    functions,
+    procedures
   }
 }
 
@@ -69,22 +85,52 @@ export const allowOutgoingConnections = (state) => getAvailableSettings(state)['
 
 /**
  * Helpers
-*/
+ */
 function updateMetaForContext (state, meta, context) {
-  const fLabels = state.labels.filter((l) => l.context !== context)
-  const fRelationshipTypes = state.relationshipTypes.filter((l) => l.context !== context)
-  const fProperties = state.properties.filter((l) => l.context !== context)
+  const notInCurrentContext = (e) => e.context !== context
+  const mapResult = (metaIndex, mapFunction) => meta.records[metaIndex].get(1).map(mapFunction)
+  const mapSingleValue = (r) => ({ val: r, context })
+  const mapInvokableValue = (r) => {
+    const { name, signature, description } = r
+    return {
+      val: name, context, signature, description
+    }
+  }
+
+  const labels = state
+    .labels
+    .filter(notInCurrentContext)
+    .concat(mapResult(0, mapSingleValue))
+  const relationshipTypes = state
+    .relationshipTypes
+    .filter(notInCurrentContext)
+    .concat(mapResult(1, mapSingleValue))
+  const properties = state
+    .properties
+    .filter(notInCurrentContext)
+    .concat(mapResult(2, mapSingleValue))
+  const functions = state
+    .functions
+    .filter(notInCurrentContext)
+    .concat(mapResult(3, mapInvokableValue))
+  const procedures = state
+    .procedures
+    .filter(notInCurrentContext)
+    .concat(mapResult(4, mapInvokableValue))
+
   return {
-    labels: fLabels.concat(meta.records[0].get(1).map((r) => { return {val: r, context: context} })),
-    relationshipTypes: fRelationshipTypes.concat(meta.records[1].get(1).map((r) => { return {val: r, context: context} })),
-    properties: fProperties.concat(meta.records[2].get(1).map((r) => { return {val: r, context: context} }))
+    labels,
+    relationshipTypes,
+    properties,
+    functions,
+    procedures
   }
 }
 
 /**
  * Reducer
-*/
-export default function labels (state = initialState, action) {
+ */
+export default function meta (state = initialState, action) {
   state = hydrate(initialState, state)
 
   switch (action.type) {
@@ -95,7 +141,7 @@ export default function labels (state = initialState, action) {
     case UPDATE_SETTINGS:
       return {...state, settings: { ...action.settings }}
     case CLEAR:
-      return {...initialState}
+      return { ...initialState }
     default:
       return state
   }
@@ -123,17 +169,27 @@ export const updateSettings = (settings) => {
 }
 
 // Epics
-export const metaQuery = `CALL db.labels() YIELD label
-            WITH COLLECT(label) AS labels
-            RETURN 'labels' as a, labels as result
-            UNION
-            CALL db.relationshipTypes() YIELD relationshipType
-            WITH COLLECT(relationshipType) AS relationshipTypes
-            RETURN 'relationshipTypes'as a, relationshipTypes as result
-            UNION
-            CALL db.propertyKeys() YIELD propertyKey
-            WITH COLLECT(propertyKey) AS propertyKeys
-            RETURN 'propertyKeys' as a, propertyKeys as result`
+export const metaQuery = `
+CALL db.labels() YIELD label
+WITH COLLECT(label) AS labels
+RETURN 'labels' as a, labels as result
+UNION
+CALL db.relationshipTypes() YIELD relationshipType
+WITH COLLECT(relationshipType) AS relationshipTypes
+RETURN 'relationshipTypes' as a, relationshipTypes as result
+UNION
+CALL db.propertyKeys() YIELD propertyKey
+WITH COLLECT(propertyKey) AS propertyKeys
+RETURN 'propertyKeys' as a, propertyKeys as result
+UNION
+CALL dbms.functions() YIELD name, signature, description
+WITH collect({name: name, signature: signature, description: description}) as functions
+RETURN 'functions' as a, functions AS result
+UNION
+CALL dbms.procedures() YIELD name, signature, description
+WITH collect({name: name, signature: signature, description: description}) as procedures
+RETURN 'procedures' as a, procedures as result
+`
 
 export const dbMetaEpic = (some$, store) =>
   some$.ofType(UPDATE_CONNECTION_STATE).filter((s) => s.state === CONNECTED_STATE)
