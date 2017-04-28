@@ -4,6 +4,9 @@
 .green {
   color: #1bf621;
 }
+.successGreen {
+  color: #8DCC93;
+}
 .orange {
   color: #ffaf00;
 }
@@ -15,6 +18,9 @@
 }
 .red {
   color: #ff5641;
+}
+.warningRed {
+  color: #F16667;
 }
 .white {
   color: #ffffff;
