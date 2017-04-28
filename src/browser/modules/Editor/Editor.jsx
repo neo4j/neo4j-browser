@@ -35,6 +35,7 @@ import { debounce } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
+import cypherFunctions from './cypher/functions'
 
 export class Editor extends Component {
   constructor (props) {
@@ -46,7 +47,7 @@ export class Editor extends Component {
       mode: 'cypher',
       notifications: [],
       expanded: false,
-      lastPosition: {line: 0, column: 0}
+      lastPosition: { line: 0, column: 0 }
     }
   }
 
@@ -56,7 +57,7 @@ export class Editor extends Component {
   }
 
   expandEditorToggle () {
-    this.setState({expanded: !this.state.expanded})
+    this.setState({ expanded: !this.state.expanded })
   }
 
   clearEditor () {
@@ -80,7 +81,7 @@ export class Editor extends Component {
     this.props.onExecute(value)
     this.clearEditor()
     this.clearHints()
-    this.setState({historyIndex: -1, buffer: null, expanded: false})
+    this.setState({ historyIndex: -1, buffer: null, expanded: false })
   }
 
   historyPrev (cm) {
@@ -89,7 +90,10 @@ export class Editor extends Component {
     if (this.state.historyIndex === -1) { // Save what's currently in the editor
       this.setState({ buffer: cm.getValue() })
     }
-    this.setState({historyIndex: this.state.historyIndex + 1, editorHeight: this.editor && this.editor.base.clientHeight})
+    this.setState({
+      historyIndex: this.state.historyIndex + 1,
+      editorHeight: this.editor && this.editor.base.clientHeight
+    })
     this.setEditorValue(this.props.history[this.state.historyIndex])
   }
 
@@ -101,7 +105,10 @@ export class Editor extends Component {
       this.setEditorValue(this.state.buffer)
       return
     }
-    this.setState({historyIndex: this.state.historyIndex - 1, editorHeight: this.editor && this.editor.base.clientHeight})
+    this.setState({
+      historyIndex: this.state.historyIndex - 1,
+      editorHeight: this.editor && this.editor.base.clientHeight
+    })
     this.setEditorValue(this.props.history[this.state.historyIndex])
   }
 
@@ -146,7 +153,7 @@ export class Editor extends Component {
 
     this.setState({
       code: newCode,
-      lastPosition: lastPosition ? {line: lastPosition.line, column: lastPosition.ch} : this.state.lastPosition,
+      lastPosition: lastPosition ? { line: lastPosition.line, column: lastPosition.ch } : this.state.lastPosition,
       editorHeight: this.editor && this.editor.base.clientHeight
     }, cb)
   }
@@ -238,8 +245,8 @@ export class Editor extends Component {
 
     const updateCode = (val, change) => this.updateCode(val, change)
     this.setGutterMarkers()
-    const wrapper = (this.state.expanded) ? {Component: EditorExpandedWrapper} : {Component: EditorWrapper}
-    const bar = (this.state.expanded) ? {Component: ExpandedBar} : {Component: Bar}
+    const wrapper = (this.state.expanded) ? { Component: EditorExpandedWrapper } : { Component: EditorWrapper }
+    const bar = (this.state.expanded) ? { Component: ExpandedBar } : { Component: Bar }
 
     return (
       <bar.Component minHeight={this.state.editorHeight}>
@@ -306,7 +313,10 @@ const mapStateToProps = (state) => {
       labels: state.meta.labels.map(schemaConvert.toLabel),
       relationshipTypes: state.meta.relationshipTypes.map(schemaConvert.toRelationshipType),
       propertyKeys: state.meta.properties.map(schemaConvert.toPropertyKey),
-      functions: state.meta.functions.map(schemaConvert.toFunction),
+      functions: [
+        ...cypherFunctions,
+        ...state.meta.functions.map(schemaConvert.toFunction)
+      ],
       procedures: state.meta.procedures.map(schemaConvert.toProcedure)
     }
   }
