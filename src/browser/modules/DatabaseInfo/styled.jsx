@@ -35,9 +35,15 @@ const chip = styled.div`
 `
 export const StyledLabel = styled(chip)`
   border-radius: 20px;
+  &:hover {
+    background-color: #fff;
+  }
 `
 export const StyledRelationship = styled(chip)`
   border-radius: 3px;
+  &:hover, &:focus, &:visited {
+    background-color: #fff;
+  }
 `
 export const StyledProperty = styled(chip)`
   border-radius: 2px;
@@ -46,6 +52,10 @@ export const StyledProperty = styled(chip)`
   color: #9195a0;
   span {
     color: #ccc;
+  }
+  &:hover {
+    color: #fff;
+    border-color: #fff;
   }
 `
 export const StyledTable = styled.table`

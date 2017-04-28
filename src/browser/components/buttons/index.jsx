@@ -138,10 +138,19 @@ const StyledSecondaryFormButton = styled(StyledFormButton)`
     background-color: ${props => props.theme.secondaryButtonBackground};
   }
 `
+const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
+  color: #bcc0c9;
+  border-color: #bcc0c9;
+  &:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+`
 
 const buttonTypes = {
   primary: StyledFormButton,
-  secondary: StyledSecondaryFormButton
+  secondary: StyledSecondaryFormButton,
+  drawer: StyledDrawerFormButton
 }
 
 export const FormButton = (props) => {
@@ -230,6 +239,7 @@ const BaseCarouselButton = styled.button`
   border: 3px solid rgb(255, 255, 255);
   color: rgb(255, 255, 255);
   cursor: pointer;
+  margin: 0 20px;
   font-family: ${props => props.theme.primaryFontFamily};
   font-size: 60px;
   font-weight: 100;

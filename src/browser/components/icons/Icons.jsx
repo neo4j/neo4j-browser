@@ -36,12 +36,14 @@ class IconContainer extends Component {
     this.setState({mouseover: false})
   }
   render () {
-    const {activeStyle, inactiveStyle, isOpen, text, ...rest} = this.props
+    const {activeStyle, inactiveStyle, isOpen, text, regulateSize, ...rest} = this.props
     const state = (this.state.mouseover || isOpen) ? activeStyle || '' : inactiveStyle || ''
     const newClass = this.props.suppressIconStyles ? this.props.className : state + ' ' + this.props.className
+    const regulateSizeStyle = (regulateSize) ? {'font-size': regulateSize + 'em'} : null
+    const icon = <i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} style={regulateSizeStyle} />
     return text
-      ? <span><i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} /><StyledText>{text}</StyledText></span>
-      : <i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} />
+      ? <span>{icon}<StyledText>{text}</StyledText></span>
+      : icon
   }
 }
 
@@ -56,7 +58,7 @@ export const DatabaseIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} active
 export const FavoritesIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.orange} inactiveStyle={styles.inactive} className='sl sl-star' />)
 export const DocumentsIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl sl-book' />)
 export const CloudIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.purple} inactiveStyle={styles.inactive} className='sl sl-cloud' />)
-export const SettingsIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.red} inactiveStyle={styles.inactive} className='sl sl-setting-gear' />)
+export const SettingsIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.yellow} inactiveStyle={styles.inactive} className='sl sl-setting-gear' />)
 export const AboutIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.credits} inactiveStyle={styles.inactive} className='nw nw-neo4j-outline-32px' />)
 
 export const TableIcon = () => (<IconContainer className='fa fa-table' text='Table' />)
@@ -75,7 +77,7 @@ export const BinIcon = (props) => (<IconContainer activeStyle={styles.white} ina
 export const ExpandIcon = () => (<IconContainer className='sl-scale-spread' />)
 export const ContractIcon = () => (<IconContainer className='sl-scale-reduce' />)
 export const RefreshIcon = () => (<IconContainer className='sl-loop' />)
-export const CloseIcon = () => (<IconContainer className='sl-delete' />)
+export const CloseIcon = () => (<IconContainer className='sl-delete' regulateSize='0.85' />)
 export const UpIcon = () => (<IconContainer className='sl-chevron-up' />)
 export const DownIcon = () => (<IconContainer className='sl-chevron-down' />)
 export const PinIcon = () => (<IconContainer className='sl-pin' />)
@@ -83,8 +85,8 @@ export const MinusIcon = () => (<IconContainer activeStyle={styles.blue} inactiv
 export const RightArrowIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl-arrow-circle-right' />)
 export const CancelIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='sl-delete-circle' />)
 export const DownloadIcon = () => (<IconContainer className='sl-download-drive' />)
-export const ExpandMenuIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='fa fa-caret-right' />)
-export const CollapseMenuIcon = () => (<IconContainer activeStyle={styles.blue} inactiveStyle={styles.inactive} className='fa fa-caret-down' />)
+export const ExpandMenuIcon = () => (<IconContainer activeStyle={styles.blue} className='fa fa-caret-right' />)
+export const CollapseMenuIcon = () => (<IconContainer activeStyle={styles.blue} className='fa fa-caret-down' />)
 export const PlayIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-play-circle-o' />)
 export const QuestionIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-question-circle-o' />)
 export const PlusIcon = () => (<IconContainer activeStyle={styles.white} inactiveStyle={styles.white} className='fa fa-plus' />)
