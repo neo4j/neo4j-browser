@@ -4090,9 +4090,9 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.2.0:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.209:
-  version "0.0.209"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.209.tgz#ddf873274df91f2ee1b619f5d88db89c07a91965"
+neo4j-visualization@0.0.210:
+  version "0.0.210"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.210.tgz#d5d75823914f249630cdc4b8a5aed1dbe62c60dc"
   dependencies:
     babel-polyfill "^6.23.0"
     babel-runtime "^6.23.0"
