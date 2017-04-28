@@ -27,7 +27,7 @@ const About = () => {
       <DrawerBody>
         <DrawerSection>
           <DrawerSubHeader>
-            Made by <a target='_blank' href='http://neotechnology.com/'>Neo Technology</a>
+            Made by <a target='_blank' href='http://neo4j.com/'>Neo Technology</a>
           </DrawerSubHeader>
         </DrawerSection>
         <DrawerSection>
