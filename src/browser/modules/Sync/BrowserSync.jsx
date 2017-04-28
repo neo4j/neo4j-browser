@@ -43,7 +43,7 @@ export class BrowserSync extends Component {
       authData: props.authData,
       error: null,
       serviceAuthenticated: props.authData !== null,
-      status: props.authData ? 'UP' : 'DOWN',
+      status: props.authData ? 'UP' : 'PENDING',
       userConsented: props.syncConsent,
       showConsentAlert: false,
       clearLocalRequested: false
@@ -84,10 +84,18 @@ export class BrowserSync extends Component {
         this.setState({
           status: 'UP'
         })
+        if (this._downTimer) {
+          clearTimeout(this._downTimer)
+          delete this._downTimer
+        }
       } else {
-        this.setState({
-          status: 'DOWN'
-        })
+        // During connecting, the status is always down for a short time. So wait before setting state to be sure its really down
+        this._downTimer = setTimeout(
+          () => this.setState({
+            status: 'DOWN'
+          }),
+          1000
+        )
       }
     })
   }
@@ -127,7 +135,9 @@ export class BrowserSync extends Component {
   }
 
   render () {
-    if (this.state.status === 'DOWN') {
+    if (this.state.status === 'PENDING') {
+      return <Drawer id='sync-drawer' />
+    } else if (this.state.status === 'DOWN') {
       return <Drawer id='sync-drawer'><DrawerHeader>Sync service is down</DrawerHeader></Drawer>
     }
 

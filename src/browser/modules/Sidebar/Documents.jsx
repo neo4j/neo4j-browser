@@ -37,9 +37,9 @@ const staticItems = {
     {name: 'Developer Manual', command: 'http://neo4j.com/docs/developer-manual/3.2-alpha/', type: 'link'},
     {name: 'Operations Manual', command: 'http://neo4j.com/docs/operations-manual/3.2-alpha/', type: 'link'},
     {name: 'Cypher Refcard', command: 'http://neo4j.com/docs/cypher-refcard/3.2-alpha/', type: 'link'},
-    {name: 'GraphGists', command: 'http://graphgist.neo4j.com/', type: 'link'},
+    {name: 'GraphGists', command: 'http://neo4j.com/graphgists/', type: 'link'},
     {name: 'Developer Site', command: 'http://www.neo4j.com/developer', type: 'link'},
-    {name: 'Developer Site', command: 'https://neo4j.com/developer/kb/', type: 'link'}
+    {name: 'Knowledge Base', command: 'https://neo4j.com/developer/kb/', type: 'link'}
   ]
 }
 

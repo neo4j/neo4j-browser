@@ -45,7 +45,8 @@ export const ActionButtonSection = styled.div`
   align-items: top;
   display: flex;
   padding-top: 21px;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding-right: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
 `
 
