@@ -77,7 +77,7 @@ export const isCypherCommand = (cmd, cmdchar) => {
 
 export const getInterpreter = (interpret, cmd, cmdchar) => {
   if (isCypherCommand(cmd, cmdchar)) return interpret('cypher')
-  return interpret(cmd.substr(cmdchar.length))
+  return interpret(cleanCommand(cmd).substr(cmdchar.length))
 }
 
 export const isNamedInterpreter = (interpreter) => interpreter && interpreter.name !== 'catch-all'
