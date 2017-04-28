@@ -27,11 +27,13 @@ import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
+import { PENDING_STATE, CONNECTED_STATE, DISCONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
+
 import {
   DatabaseIcon,
   FavoritesIcon,
   DocumentsIcon,
-  CloudIcon,
+  CloudSyncIcon,
   CloudDisconnectedIcon,
   SettingsIcon,
   AboutIcon
@@ -46,14 +48,13 @@ class Sidebar extends Component {
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
     const AboutDrawer = About
-    const SyncCloudIcon = this.props.syncConnected ? CloudIcon : CloudDisconnectedIcon
     const topNavItemsList = [
-      {name: 'DB', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} />, content: DatabaseDrawer},
+      {name: 'DB', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} connectionState={this.props.neo4jConnectionState}/>, content: DatabaseDrawer},
       {name: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
       {name: 'Documents', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: (isOpen) => <SyncCloudIcon isOpen={isOpen} />, content: BrowserSync},
+      {name: 'Sync', icon: (isOpen) => <CloudSyncIcon isOpen={isOpen} connected={this.props.syncConnected} />, content: BrowserSync},
       {name: 'Settings', icon: (isOpen) => <SettingsIcon isOpen={isOpen} />, content: SettingsDrawer},
       {name: 'About', icon: (isOpen) => <AboutIcon isOpen={isOpen} />, content: AboutDrawer}
     ]
@@ -68,10 +69,24 @@ class Sidebar extends Component {
 }
 
 const mapStateToProps = (state) => {
+  let connectionState = 'disconnected'
+  if (state.connections) {
+    switch (state.connections.connectionState) {
+      case PENDING_STATE:
+        connectionState = 'pending'
+        break
+      case CONNECTED_STATE:
+        connectionState = 'connected'
+        break
+      case DISCONNECTED_STATE:
+        connectionState = 'disconnected'
+        break
+    }
+  }
   return {
-    syncConnected: state.sync && state.sync.authData
+    syncConnected: state.sync && state.sync.authData,
+    neo4jConnectionState: connectionState
   }
 }
 
 export default connect(mapStateToProps, null)(Sidebar)
-
