@@ -110,6 +110,7 @@
   & h3,
   & .h3 {
     font-size: 1.563em;
+    font-weight: 600;
     &.vtop {
       margin-top: 0.48em;
       margin-bottom: 0.4em;
@@ -302,8 +303,9 @@
       overflow: hidden;
     }
     button {
+      font-weight: 600;
       position: absolute;
-      bottom: 5px;
+      bottom: 10px;
       width: 90%;
       left: 5%;
       outline: none;
@@ -314,7 +316,8 @@
       width: 25%;
     }
     .icon.sl {
-      font-size: 35px;
+      padding-left: 10px;
+      font-size: 48px;
     }
     .icon.sl.green {
       color: #65b144;

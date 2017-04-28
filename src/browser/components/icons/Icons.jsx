@@ -36,12 +36,14 @@ class IconContainer extends Component {
     this.setState({mouseover: false})
   }
   render () {
-    const {activeStyle, inactiveStyle, isOpen, text, ...rest} = this.props
+    const {activeStyle, inactiveStyle, isOpen, text, regulateSize, ...rest} = this.props
     const state = (this.state.mouseover || isOpen) ? activeStyle || '' : inactiveStyle || ''
     const newClass = this.props.suppressIconStyles ? this.props.className : state + ' ' + this.props.className
+    const regulateSizeStyle = (regulateSize) ? {'font-size': regulateSize + 'em'} : null
+    const icon = <i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} style={regulateSizeStyle} />
     return text
-      ? <span><i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} /><StyledText>{text}</StyledText></span>
-      : <i {...rest} className={newClass} onMouseEnter={this.mouseover.bind(this)} onMouseLeave={this.mouseout.bind(this)} />
+      ? <span>{icon}<StyledText>{text}</StyledText></span>
+      : icon
   }
 }
 
@@ -75,7 +77,7 @@ export const BinIcon = (props) => (<IconContainer activeStyle={styles.white} ina
 export const ExpandIcon = () => (<IconContainer className='sl-scale-spread' />)
 export const ContractIcon = () => (<IconContainer className='sl-scale-reduce' />)
 export const RefreshIcon = () => (<IconContainer className='sl-loop' />)
-export const CloseIcon = () => (<IconContainer className='sl-delete' />)
+export const CloseIcon = () => (<IconContainer className='sl-delete' regulateSize='0.85' />)
 export const UpIcon = () => (<IconContainer className='sl-chevron-up' />)
 export const DownIcon = () => (<IconContainer className='sl-chevron-down' />)
 export const PinIcon = () => (<IconContainer className='sl-pin' />)

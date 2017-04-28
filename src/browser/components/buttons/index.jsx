@@ -239,6 +239,7 @@ const BaseCarouselButton = styled.button`
   border: 3px solid rgb(255, 255, 255);
   color: rgb(255, 255, 255);
   cursor: pointer;
+  margin: 0 20px;
   font-family: ${props => props.theme.primaryFontFamily};
   font-size: 60px;
   font-weight: 100;
