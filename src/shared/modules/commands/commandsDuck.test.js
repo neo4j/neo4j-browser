@@ -33,6 +33,7 @@ import * as frames from 'shared/modules/stream/streamDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
 import { merge, set } from 'shared/modules/params/paramsDuck'
 import { update as updateSettings } from 'shared/modules/settings/settingsDuck'
+import { cleanCommand, getInterpreter } from 'services/commandUtils'
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
@@ -219,6 +220,54 @@ describe('commandsDuck', () => {
         done()
       })
 
+      store.dispatch(action)
+    })
+    test('does the right thing for cypher with comments', (done) => {
+      // Given
+      const comment = '//COMMENT FOR RETURN'
+      const actualCommand = 'RETURN 1'
+      const cmd = comment + '\n' + actualCommand
+      const id = 2
+      const requestId = 'xxx'
+      const action = commands.executeCommand(cmd, id, requestId)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmd, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          send('cypher', requestId),
+          frames.add({...action, type: 'cypher'}),
+          updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+      // When
+      store.dispatch(action)
+    })
+    test('does the right thing for history command with comments', (done) => {
+      // Given
+      const comment = '//COMMENT FOR HISTORY'
+      const cmdString = 'history'
+      const cmd = comment + '\n' + store.getState().settings.cmdchar + cmdString
+      const id = 1
+      const action = commands.executeCommand(cmd, id)
+      const cmdChar = store.getState().settings.cmdchar
+
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmd, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          getInterpreter(helper.interpret, action.cmd, cmdChar).exec(Object.assign(action, {cmd: cleanCommand(action.cmd)}), cmdChar, (a) => a, store),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
       store.dispatch(action)
     })
   })

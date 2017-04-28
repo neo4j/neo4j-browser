@@ -19,7 +19,7 @@
  */
 
 import bolt from 'services/bolt/bolt'
-import { getInterpreter, isNamedInterpreter } from 'services/commandUtils'
+import { getInterpreter, isNamedInterpreter, cleanCommand } from 'services/commandUtils'
 import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -106,6 +106,7 @@ export const handleCommandsEpic = (action$, store) =>
     })
     .mergeMap(({action, interpreted, cmdchar}) => {
       return new Promise((resolve, reject) => {
+        action.cmd = cleanCommand(action.cmd)
         const res = interpreted.exec(action, cmdchar, store.dispatch, store)
         const noop = { type: 'NOOP' }
         if (!res || !res.then) {
