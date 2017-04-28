@@ -38,10 +38,11 @@ export class UserDetails extends Component {
       (response) => {
         if (!response.success) return
         const result = response.result
+        const keys = result.records[0].keys
         this.setState({
           userDetails: {
-            username: result.records[0].get('username'),
-            roles: result.records[0].get('roles')
+            username: (keys.includes('username')) ? result.records[0].get('username') : '-',
+            roles: (keys.includes('roles')) ? result.records[0].get('roles') : ['admin']
           }
         })
       }
