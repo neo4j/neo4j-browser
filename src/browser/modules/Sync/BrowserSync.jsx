@@ -168,10 +168,10 @@ export class BrowserSync extends Component {
             <DrawerSectionBody>
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
               <FormButton label={this.state.clearLocalRequested ? 'Sign out + clear' : 'Clear local data'} onClick={() => this.signOutAndClearLocalStorage()}
-                icon={<BinIcon suppressIconStyles='true' />} buttonType='secondary' />
+                icon={<BinIcon suppressIconStyles='true' />} buttonType='drawer' />
               <p>&nbsp;</p>
               <FormButton label='Sign Out' onClick={() => this.signOutFromSync()}
-                icon={<BinIcon suppressIconStyles='true' />} buttonType='secondary' />
+                icon={<BinIcon suppressIconStyles='true' />} buttonType='drawer' />
             </DrawerSectionBody>
           </DrawerSection>
         </DrawerBody>
@@ -184,7 +184,7 @@ export class BrowserSync extends Component {
             <DrawerSectionBody>
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
               <FormButton label='Clear local data' onClick={this.signOutAndClearLocalStorage.bind(this)}
-                icon={<BinIcon suppressIconStyles='true' />} buttonType='secondary' />
+                icon={<BinIcon suppressIconStyles='true' />} buttonType='drawer' />
             </DrawerSectionBody>
           </DrawerSection>
           <DrawerSection>
@@ -200,10 +200,10 @@ export class BrowserSync extends Component {
               </DrawerSection>
               <DrawerSection>
                 <FormButton label='Sign In / Register' onClick={this.logIn.bind(this)}
-                  icon={<BinIcon suppressIconStyles='true' id='browserSyncLogin' />} buttonType='secondary' />
+                  icon={<BinIcon suppressIconStyles='true' id='browserSyncLogin' />} buttonType='drawer' />
               </DrawerSection>
               <DrawerSection>
-                <ConsentCheckBox checked={this.state.userConsented} onChange={(e) => {
+                <ConsentCheckBox checked={this.state.userConsented === true} onChange={(e) => {
                   this.setState({
                     userConsented: e.target.checked,
                     showConsentAlert: this.state.showConsentAlert && !e.target.checked
@@ -233,7 +233,7 @@ const mapStateToProps = (state) => {
     lastSyncedAt: state.sync ? state.sync.lastSyncedAt : null,
     authData: state.sync ? state.sync.authData : null,
     browserSyncConfig: getBrowserSyncConfig(state),
-    syncConsent: state.syncConsent
+    syncConsent: state.syncConsent.consented
   }
 }
 

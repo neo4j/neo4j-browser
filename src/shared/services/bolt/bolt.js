@@ -212,5 +212,6 @@ export default {
     return mappings.extractPlan(result)
   },
   retrieveFormattedUpdateStatistics: mappings.retrieveFormattedUpdateStatistics,
+  itemIntToNumber: (item) => mappings.itemIntToString(item, neo4j.isInt, (val) => val.toNumber()),
   neo4j: neo4j
 }

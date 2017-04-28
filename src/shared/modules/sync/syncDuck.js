@@ -34,7 +34,7 @@ export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
 
 const initialState = null
-const initialConsentState = false
+const initialConsentState = { consented: false }
 
 /**
  * Selectors
@@ -66,9 +66,9 @@ export function syncConsentReducer (state = initialConsentState, action) {
 
   switch (action.type) {
     case CONSENT_SYNC:
-      return action.consent
+      return Object.assign({}, state, { consented: action.consent })
     case CLEAR_SYNC_AND_LOCAL:
-      return false
+      return { consented: false }
     default:
       return state
   }
