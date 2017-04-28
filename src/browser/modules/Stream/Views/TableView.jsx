@@ -21,6 +21,7 @@
 import { Component } from 'preact'
 import { v4 } from 'uuid'
 import { PaddedDiv, StyledBodyMessage } from '../styled'
+import {StyledTable, StyledBodyTr, StyledTh, StyledTd} from 'browser-components/DataTables'
 
 class TableView extends Component {
   constructor (props) {
@@ -35,24 +36,24 @@ class TableView extends Component {
   render () {
     if (!this.props.data) return (<PaddedDiv style={this.props.style}><StyledBodyMessage>{this.props.message}</StyledBodyMessage></PaddedDiv>)
     const tableHeader = this.state.columns.map((column, i) => (
-      <th className='table-header' key={i}>{column}</th>)
+      <StyledTh className='table-header' key={i}>{column}</StyledTh>)
     )
     const buildData = (entries) => {
       return entries.map((entry) => {
         if (entry) {
           if (entry.properties) {
-            return <td className='table-properties' key={v4()}>{JSON.stringify(entry.properties)}</td>
+            return <StyledTd className='table-properties' key={v4()}>{JSON.stringify(entry.properties)}</StyledTd>
           }
-          return <td className='table-properties' key={v4()}>{JSON.stringify(entry)}</td>
+          return <StyledTd className='table-properties' key={v4()}>{JSON.stringify(entry)}</StyledTd>
         }
-        return <td className='table-properties' key={v4()}>(empty)</td>
+        return <StyledTd className='table-properties' key={v4()}>(empty)</StyledTd>
       })
     }
     const buildRow = (item) => {
       return (
-        <tr className='table-row' key={v4()}>
+        <StyledBodyTr className='table-row' key={v4()}>
           {buildData(item)}
-        </tr>
+        </StyledBodyTr>
       )
     }
     const tableBody = (
@@ -66,14 +67,14 @@ class TableView extends Component {
     )
     return (
       <PaddedDiv style={this.props.style}>
-        <table>
+        <StyledTable>
           <thead>
             <tr>
               {tableHeader}
             </tr>
           </thead>
           {tableBody}
-        </table>
+        </StyledTable>
       </PaddedDiv>
     )
   }
