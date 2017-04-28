@@ -20,7 +20,7 @@
 
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import * as editor from 'shared/modules/editor/editorDuck'
 import { addClass, prependIcon } from 'shared/services/dom-helpers'
 
 const directives = [{
@@ -92,8 +92,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
-        const action = executeCommand(cmd)
-        ownProps.bus.send(action.type, action)
+        ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
       }
     }
   }
