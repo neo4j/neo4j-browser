@@ -24,6 +24,7 @@ import Stream from '../Stream/Stream'
 import Visible from 'browser-components/Visible'
 import ClickToCode from '../ClickToCode'
 import { StyledMain, WarningBanner, ErrorBanner, NotAuthedBanner, StyledCodeBlockAuthBar, StyledCodeBlockErrorBar } from './styled'
+import SyncReminderBar from './SyncReminderBar'
 
 const Main = (props) => {
   return (
@@ -57,6 +58,7 @@ const Main = (props) => {
           Connection to server lost. Reconnecting...
         </WarningBanner>
       </Visible>
+      <SyncReminderBar />
       <Stream />
     </StyledMain>
   )

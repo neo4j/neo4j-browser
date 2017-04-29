@@ -20,6 +20,7 @@
 
 import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
+import { SyncSignInButton } from 'browser-components/buttons'
 
 const grow = (height) => {
   return keyframes`
@@ -70,4 +71,14 @@ export const StyledCodeBlockAuthBar = styled(StyledCodeBlock)`
 export const StyledCodeBlockErrorBar = styled(StyledCodeBlock)`
   background-color: white;
   color: ${props => props.theme.error};
+`
+
+export const SyncDisconnectedBanner = styled(Banner)`
+  background-color: ${props => props.theme.auth}
+`
+
+export const SyncSignInBarButton = styled(SyncSignInButton)`
+  padding: 0 8px 0 8px;
+  margin: 0 12px 0 12px;
+  vertical-align: baseline;
 `

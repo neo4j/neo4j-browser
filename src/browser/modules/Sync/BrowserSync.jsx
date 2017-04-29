@@ -112,7 +112,6 @@ export class BrowserSync extends Component {
         })
       } else {
         this.setSynCData(v.val())
-        this.setSynCData(v.val())
       }
     })
   }

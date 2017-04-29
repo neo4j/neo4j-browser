@@ -297,3 +297,11 @@ export const StyledLink = styled.a`
     text-decoration: none;
   }
 `
+
+export const SyncSignInButton = styled(FormButton)`
+  background-color: #8DCC93;
+  color: #ffffff;
+  &:hover {
+    color: #797979
+  }
+`
