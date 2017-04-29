@@ -85,10 +85,10 @@ export class UserInformation extends Component {
       )
     })
   }
-  onRoleSelect ({option}) {
+  onRoleSelect (event) {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: addRoleToUser(this.state.username, option)},
+      {query: addRoleToUser(this.state.username, event.target.value)},
       this.handleResponse.bind(this)
     )
   }
