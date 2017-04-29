@@ -78,13 +78,6 @@ export default class CodeMirror extends Component {
     }
   }
 
-  componentWillUnmount () {
-    // TODO: is there a lighter-weight way to remove the cm instance?
-    if (this.codeMirror) {
-      this.codeMirror.toTextArea()
-    }
-  }
-
   componentWillReceiveProps (nextProps) {
     if (this.codeMirror &&
       nextProps.value !== undefined &&
