@@ -34,7 +34,6 @@ import {
   FavoritesIcon,
   DocumentsIcon,
   CloudSyncIcon,
-  CloudDisconnectedIcon,
   SettingsIcon,
   AboutIcon
 } from 'browser-components/icons/Icons'
@@ -49,7 +48,7 @@ class Sidebar extends Component {
     const SettingsDrawer = Settings
     const AboutDrawer = About
     const topNavItemsList = [
-      {name: 'DB', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} connectionState={this.props.neo4jConnectionState}/>, content: DatabaseDrawer},
+      {name: 'DB', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} connectionState={this.props.neo4jConnectionState} />, content: DatabaseDrawer},
       {name: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
       {name: 'Documents', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
     ]

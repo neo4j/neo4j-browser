@@ -54,8 +54,7 @@ const StyledText = styled.div`
   padding: 0;
 `
 
-const databaseConnectionStateStyles =
-{
+const databaseConnectionStateStyles = {
   connected: {
     active: styles.green,
     inactive: styles.inactive,
@@ -67,7 +66,7 @@ const databaseConnectionStateStyles =
     classModifier: 'delete'
   },
   pending: {
-    active: styles.alertYello,
+    active: styles.alertYellow,
     inactive: styles.inactive,
     classModifier: 'alert'
   }
@@ -83,7 +82,7 @@ export const DocumentsIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activ
 
 export const CloudIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.successGreen} inactiveStyle={styles.inactive} className='sl sl-cloud-checked' />)
 export const CloudDisconnectedIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.warningRed} inactiveStyle={styles.warningRed} className='sl sl-cloud-delete' />)
-export const CloudSyncIcon = ({isOpen, connected}) => (<IconContainer isOpen={isOpen} activeStyle={connected ? styles.successGreen:styles.warningRed} inactiveStyle={connected ? styles.inactive:styles.warningRed} className={'sl sl-cloud' + (connected ? '-checked':'-delete')} />)
+export const CloudSyncIcon = ({isOpen, connected}) => (<IconContainer isOpen={isOpen} activeStyle={connected ? styles.successGreen : styles.warningRed} inactiveStyle={connected ? styles.inactive : styles.warningRed} className={'sl sl-cloud' + (connected ? '-checked' : '-delete')} />)
 
 export const SettingsIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.white} inactiveStyle={styles.inactive} className='sl sl-setting-gear' />)
 export const AboutIcon = ({isOpen}) => (<IconContainer isOpen={isOpen} activeStyle={styles.credits} inactiveStyle={styles.inactive} className='nw nw-neo4j-outline-32px' />)
