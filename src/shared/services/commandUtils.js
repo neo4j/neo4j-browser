@@ -25,7 +25,11 @@ export function cleanCommand (cmd) {
 }
 
 export function stripEmptyCommandLines (str) {
-  return str.replace(/(^|\n)\s*/g, '')
+  const skipEmptyLines = (e) => !/^\s*$/.test(e)
+  return str
+    .split('\n')
+    .filter(skipEmptyLines)
+    .join('\n')
 }
 
 export function stripCommandComments (str) {
