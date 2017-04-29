@@ -22,10 +22,6 @@
 import * as convert from './editorSchemaConverter'
 
 describe('editor meta to schema conversion', () => {
-  test('convert console command', () => {
-    expect(convert.toConsoleCommand('play')).toEqual(':play')
-  })
-
   test('convert meta label', () => {
     expect(convert.toLabel({ val: 'label' })).toEqual(':label')
   })
