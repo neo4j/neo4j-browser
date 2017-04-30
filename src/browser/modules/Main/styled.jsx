@@ -82,3 +82,12 @@ export const SyncSignInBarButton = styled(SyncSignInButton)`
   margin: 0 12px 0 12px;
   vertical-align: baseline;
 `
+export const StyledCancelLink = styled.a`
+  cursor: pointer;
+  text-decoration: underline;
+  color: #D0D0D0;
+  &:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+  }
+`

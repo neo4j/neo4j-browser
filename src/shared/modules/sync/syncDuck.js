@@ -32,9 +32,10 @@ export const SYNC_ITEMS = 'sync/SYNC_ITEMS'
 export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
 export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
+export const OPT_OUT_SYNC = 'sync/OPT_OUT_SYNC'
 
 const initialState = null
-const initialConsentState = { consented: false }
+const initialConsentState = { consented: false, optedOut: false }
 
 /**
  * Selectors
@@ -68,7 +69,11 @@ export function syncConsentReducer (state = initialConsentState, action) {
     case CONSENT_SYNC:
       return Object.assign({}, state, { consented: action.consent })
     case CLEAR_SYNC_AND_LOCAL:
-      return { consented: false }
+      return { consented: false, optedOut: false }
+    case OPT_OUT_SYNC:
+      return Object.assign({}, state, { optedOut: true })
+    case SET_SYNC:
+      return Object.assign({}, state, { optedOut: false })
     default:
       return state
   }
@@ -106,6 +111,12 @@ export function consentSync (consent) {
   return {
     type: CONSENT_SYNC,
     consent
+  }
+}
+
+export function optOutSync () {
+  return {
+    type: OPT_OUT_SYNC
   }
 }
 
