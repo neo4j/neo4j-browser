@@ -24,9 +24,8 @@ import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
-import { UPDATE_ALL_SETTINGS, getAvailableSettings } from '../features/featuresDuck'
+import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData } from '../dbMeta/dbMetaDuck'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
-import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
@@ -130,7 +129,7 @@ export const handleCommandsEpic = (action$, store) =>
 
 export const postConnectCmdEpic = (some$, store) =>
   some$
-    .zip(some$.ofType(CONNECTION_SUCCESS), some$.ofType(UPDATE_ALL_SETTINGS))
+    .zip(some$.ofType(CONNECTION_SUCCESS), some$.ofType(UPDATE_SETTINGS))
     .do(() => {
       const serverSettings = getAvailableSettings(store.getState())
       if (serverSettings && serverSettings['browser.post_connect_cmd']) {

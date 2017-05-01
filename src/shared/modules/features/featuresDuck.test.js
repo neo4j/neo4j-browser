@@ -19,7 +19,7 @@
  */
 
 /* global describe, test, expect */
-import reducer, { UPDATE_ALL_FEATURES, UPDATE_ALL_SETTINGS } from './featuresDuck'
+import reducer, { UPDATE_ALL_FEATURES } from './featuresDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
