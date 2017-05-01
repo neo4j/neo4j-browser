@@ -23,7 +23,6 @@ import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { executeCommand, executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import commandHelper from 'services/commandInterpreterHelper'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import { SET_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
@@ -36,6 +35,7 @@ import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
+import consoleCommands from './language/consoleCommands'
 
 export class Editor extends Component {
   constructor (props) {
@@ -331,7 +331,7 @@ const mapStateToProps = (state) => {
     history: getHistory(state),
     cmdchar: getSettings(state).cmdchar,
     schema: {
-      consoleCommands: commandHelper.commands.map(schemaConvert.toConsoleCommand),
+      consoleCommands: consoleCommands,
       labels: state.meta.labels.map(schemaConvert.toLabel),
       relationshipTypes: state.meta.relationshipTypes.map(schemaConvert.toRelationshipType),
       propertyKeys: state.meta.properties.map(schemaConvert.toPropertyKey),
