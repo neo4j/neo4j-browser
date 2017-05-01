@@ -218,8 +218,14 @@ const StyledFrameButtonPressed = styled(StyledFrameButton)`
   color: ${props => props.theme.secondaryBackground};
   fill: ${props => props.theme.secondaryBackground};
 `
-
-export const FrameButtonAChild = styled.a`
+export const DefaultA = styled.a`
+  color: ${props => props.theme.secondaryButtonText};
+  &:hover {
+    color: ${props => props.theme.secondaryBackground};
+    text-decoration: none;
+  }
+`
+export const FrameButtonAChild = styled(DefaultA)`
   display: block;
   text-decoration: none;
   &:focus, &:active, &:hover {
