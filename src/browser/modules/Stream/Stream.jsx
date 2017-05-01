@@ -82,6 +82,7 @@ class Stream extends Component {
     ) {
       return false
     } else {
+      this.base.scrollTop = 0
       return true
     }
   }
