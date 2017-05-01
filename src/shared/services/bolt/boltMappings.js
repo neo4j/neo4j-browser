@@ -157,5 +157,5 @@ export const retrieveFormattedUpdateStatistics = (result) => {
 }
 
 export const flattenProperties = (rows) => {
-  return rows.map((row) => row.map((entry) => (entry.properties) ? entry.properties : entry))
+  return rows.map((row) => row.map((entry) => (entry && entry.properties) ? entry.properties : entry))
 }
