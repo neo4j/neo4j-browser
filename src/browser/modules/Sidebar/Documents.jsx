@@ -34,11 +34,11 @@ const staticItems = {
     {name: 'Keyboard shortcuts', command: ':help keys', type: 'help'}
   ],
   reference: [
-    {name: 'Developer Manual', command: 'http://neo4j.com/docs/developer-manual/3.2-alpha/', type: 'link'},
-    {name: 'Operations Manual', command: 'http://neo4j.com/docs/operations-manual/3.2-alpha/', type: 'link'},
-    {name: 'Cypher Refcard', command: 'http://neo4j.com/docs/cypher-refcard/3.2-alpha/', type: 'link'},
-    {name: 'GraphGists', command: 'http://neo4j.com/graphgists/', type: 'link'},
-    {name: 'Developer Site', command: 'http://www.neo4j.com/developer', type: 'link'},
+    {name: 'Developer Manual', command: 'https://neo4j.com/docs/developer-manual/3.2/', type: 'link'},
+    {name: 'Operations Manual', command: 'https://neo4j.com/docs/operations-manual/3.2/', type: 'link'},
+    {name: 'Cypher Refcard', command: 'https://neo4j.com/docs/cypher-refcard/3.2/', type: 'link'},
+    {name: 'GraphGists', command: 'https://neo4j.com/graphgists/', type: 'link'},
+    {name: 'Developer Site', command: 'https://www.neo4j.com/developer/', type: 'link'},
     {name: 'Knowledge Base', command: 'https://neo4j.com/developer/kb/', type: 'link'}
   ]
 }
