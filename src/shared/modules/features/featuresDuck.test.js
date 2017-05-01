@@ -46,23 +46,4 @@ describe('features reducer', () => {
     const nextState = reducer(initialState, action)
     expect(nextState.availableProcedures).toEqual(['c'])
   })
-
-  test('handles UPDATE_ALL_SETTINGS without initial state', () => {
-    const action = {
-      type: UPDATE_ALL_SETTINGS,
-      settings: {can_do: true}
-    }
-    const nextState = reducer(undefined, action)
-    expect(nextState.settings).toEqual({can_do: true})
-  })
-
-  test('handles UPDATE_ALL_SETTINGS', () => {
-    const initialState = { settings: {can_do: true} }
-    const action = {
-      type: UPDATE_ALL_SETTINGS,
-      settings: {can_do: false, can_as_well: true}
-    }
-    const nextState = reducer(initialState, action)
-    expect(nextState.settings).toEqual({can_do: false, can_as_well: true})
-  })
 })
