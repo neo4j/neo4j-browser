@@ -25,6 +25,7 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import * as folder from 'shared/modules/favorites/foldersDuck'
 import {getSettings} from 'shared/modules/settings/settingsDuck'
+import {executeCommand} from 'shared/modules/commands/commandsDuck'
 
 import Visible from 'browser-components/Visible'
 import Favorite from './Favorite'
@@ -38,7 +39,7 @@ import {NewFolderButton} from './styled'
 const mapFavorites = (favorites, props, isChild, moveAction) => {
   return favorites.map((entry, index) => {
     return <Favorite entry={entry} key={entry.id} id={entry.id} name={entry.name} content={entry.content}
-      onItemClick={props.onItemClick} removeClick={props.removeClick} isChild={isChild}
+      onItemClick={props.onItemClick} onExecClick={props.onExecClick} removeClick={props.removeClick} isChild={isChild}
       isStatic={entry.isStatic} index={index} moveFavorite={moveAction} />
   })
 }
@@ -160,6 +161,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+    },
+    onExecClick: (cmd) => {
+      const action = executeCommand(cmd)
+      ownProps.bus.send(action.type, action)
     },
     removeClick: (id) => {
       const action = favorite.removeFavorite(id)

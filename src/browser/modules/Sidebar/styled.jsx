@@ -19,7 +19,7 @@
  */
 
 import styled from 'styled-components'
-import {QuestionIcon, PlayIcon, PlusIcon, BinIcon, EditIcon} from 'browser-components/icons/Icons'
+import {QuestionIcon, PlayIcon, PlainPlayIcon, PlusIcon, BinIcon, EditIcon} from 'browser-components/icons/Icons'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -126,6 +126,23 @@ export const StyledDropzoneText = styled.div`
   padding: 85px 0 0 15px;
   color: #666666
 `
+const StyledExecFavoriteButton = styled.div`
+  display: inline-block;
+  opacity: 0.2;
+  position: relative;
+  vertical-align: top;
+  margin: 1px 6px 0 0;
+  &:hover {
+    opacity: 1;
+  }
+`
+export const ExecFavortieButton = (props) => {
+  return (
+    <StyledExecFavoriteButton {...props}>
+      <PlainPlayIcon />
+    </StyledExecFavoriteButton>
+    )
+}
 
 export const NewFolderButton = (props) => {
   return (
