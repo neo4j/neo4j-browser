@@ -114,6 +114,7 @@ export const DownloadIcon = () => (<IconContainer className='sl-download-drive' 
 export const ExpandMenuIcon = () => (<IconContainer activeStyle={styles.blue} className='fa fa-caret-right' />)
 export const CollapseMenuIcon = () => (<IconContainer activeStyle={styles.blue} className='fa fa-caret-down' />)
 export const PlayIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-play-circle-o' />)
+export const PlainPlayIcon = () => (<IconContainer className='fa fa-play-circle' />)
 export const QuestionIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-question-circle-o' />)
 export const PlusIcon = () => (<IconContainer activeStyle={styles.white} inactiveStyle={styles.white} className='fa fa-plus' />)
 export const EditIcon = () => (<IconContainer activeStyle={styles.white} inactiveStyle={styles.white} className='sl-pencil' />)
