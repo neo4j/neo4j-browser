@@ -35,6 +35,7 @@ export const StyledDrawer = styled.div`
   overflow: auto;
   width: ${props => props.open ? '300px' : '0px'};
   transition: .2s ease-out;
+  z-index: 1;
 `
 
 export const StyledTabsWrapper = styled.div`
