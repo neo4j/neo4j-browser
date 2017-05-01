@@ -112,6 +112,25 @@ export class Editor extends Component {
     this.setEditorValue(this.props.history[this.state.historyIndex])
   }
 
+  triggerAutocompletion (cm, changed) {
+    if (changed.text.length !== 1) {
+      return
+    }
+
+    const text = changed.text[0]
+    const triggerAutocompletion = text === '.' ||
+      text === ':' ||
+      text === '[]' ||
+      text === '()' ||
+      text === '{}' ||
+      text === '[' ||
+      text === '(' ||
+      text === '{'
+    if (triggerAutocompletion) {
+      cm.execCommand('autocomplete')
+    }
+  }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.content !== null && nextProps.content !== this.state.code) {
       this.setEditorValue(nextProps.content)
@@ -121,6 +140,7 @@ export class Editor extends Component {
   componentDidMount () {
     this.debouncedCheckForHints = debounce(this.checkForHints, 350, this)
     this.codeMirror = this.editor.getCodeMirror()
+    this.codeMirror.on('change', this.triggerAutocompletion.bind(this))
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, (msg) => {
         this.setEditorValue(msg.message)
@@ -240,6 +260,8 @@ export class Editor extends Component {
         closeOnUnfocus: false,
         alignWithWord: true,
         async: true
+      },
+      autoCloseBrackets: {
       }
     }
 

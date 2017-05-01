@@ -103,7 +103,7 @@
   "dependencies": {
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
-    "codemirror": "^5.24.2",
+    "codemirror": "^5.25.2",
     "dnd-core": "^2.2.4",
     "file-loader": "^0.11.1",
     "firebase": "^3.6.5",
@@ -135,6 +135,6 @@
     "swipe-js-iso": "^2.0.3",
     "url-loader": "^0.5.8",
     "uuid": "^3.0.1",
-    "cypher-codemirror": "1.0.1"
+    "cypher-codemirror": "1.0.3"
   }
 }
