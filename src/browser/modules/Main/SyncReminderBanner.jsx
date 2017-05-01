@@ -28,7 +28,7 @@ import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import SyncSignInManager from 'shared/modules/sync/SyncSignInManager'
 import { setSync, optOutSync } from 'shared/modules/sync/syncDuck'
 
-class SyncReminderBar extends Component {
+class SyncReminderBanner extends Component {
   componentWillMount () {
     this.syncManager = new SyncSignInManager({
       dbConfig: this.props.browserSyncConfig.firebaseConfig,
@@ -82,4 +82,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SyncReminderBar)
+export default connect(mapStateToProps, mapDispatchToProps)(SyncReminderBanner)
