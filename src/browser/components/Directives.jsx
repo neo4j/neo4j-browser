@@ -20,6 +20,7 @@
 
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { addClass, prependIcon } from 'shared/services/dom-helpers'
 
@@ -27,32 +28,38 @@ const directives = [{
   selector: '[exec-topic]',
   valueExtractor: (elem) => {
     return `:${elem.getAttribute('exec-topic')}`
-  }
+  },
+  autoExec: true
 }, {
   selector: '[play-topic]',
   valueExtractor: (elem) => {
     return `:play ${elem.getAttribute('play-topic')}`
-  }
+  },
+  autoExec: true
 }, {
   selector: '[server-topic]',
   valueExtractor: (elem) => {
     return `:server ${elem.getAttribute('server-topic')}`
-  }
+  },
+  autoExec: true
 }, {
   selector: '[help-topic]',
   valueExtractor: (elem) => {
     return `:help ${elem.getAttribute('help-topic')}`
-  }
+  },
+  autoExec: true
 }, {
   selector: '.runnable pre',
   valueExtractor: (elem) => {
     return elem.textContent.trim()
-  }
+  },
+  autoExec: false
 }, {
   selector: 'pre.runnable',
   valueExtractor: (elem) => {
     return elem.textContent.trim()
-  }
+  },
+  autoExec: false
 }]
 
 const prependHelpIcon = (element) => {
@@ -75,7 +82,7 @@ export const Directives = (props) => {
 
           e.onclick = () => {
             addClass(e, 'clicked')
-            return props.onItemClick(directive.valueExtractor(e))
+            return props.onItemClick(directive.valueExtractor(e), directive.autoExec)
           }
         })
       })
@@ -90,9 +97,14 @@ export const Directives = (props) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onItemClick: (cmd) => {
+    onItemClick: (cmd, autoExec) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
-        ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+        if (autoExec) {
+          const action = executeCommand(cmd)
+          ownProps.bus.send(action.type, action)
+        } else {
+          ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+        }
       }
     }
   }
