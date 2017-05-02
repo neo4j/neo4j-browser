@@ -118,5 +118,6 @@ export const PlainPlayIcon = () => (<IconContainer className='fa fa-play-circle'
 export const QuestionIcon = () => (<IconContainer activeStyle={styles.lightBlue} inactiveStyle={styles.blue} className='fa fa-question-circle-o' />)
 export const PlusIcon = () => (<IconContainer activeStyle={styles.white} inactiveStyle={styles.white} className='fa fa-plus' />)
 export const EditIcon = () => (<IconContainer activeStyle={styles.white} inactiveStyle={styles.white} className='sl-pencil' />)
+export const Spinner = () => (<IconContainer className='fa fa-spinner fa-spin fa-2x' />)
 
 export const ExclamationTriangleIcon = () => <IconContainer suppressIconStyles className='fa fa-exclamation-triangle' />

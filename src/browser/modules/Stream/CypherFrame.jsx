@@ -21,8 +21,9 @@
 import { Component } from 'preact'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
+import Centered from 'browser-components/Centered'
 import FrameSidebar from './FrameSidebar'
-import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon } from 'browser-components/icons/Icons'
+import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon, Spinner } from 'browser-components/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
@@ -35,7 +36,7 @@ import FrameError from './FrameError'
 import Visible from 'browser-components/Visible'
 import Ellipsis from 'browser-components/Ellipsis'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import { StyledFrameBody, StyledStatsBar } from './styled'
+import { StyledFrameBody, StyledStatsBar, SpinnerContainer } from './styled'
 
 class CypherFrame extends Component {
   constructor (props) {
@@ -268,9 +269,11 @@ class CypherFrame extends Component {
         </StyledFrameBody>
     } else if (requestStatus === 'pending') {
       frameContents = (
-        <div>
-          Running query...
-        </div>
+        <Centered>
+          <SpinnerContainer>
+            <Spinner />
+          </SpinnerContainer>
+        </Centered>
       )
     }
     return (
