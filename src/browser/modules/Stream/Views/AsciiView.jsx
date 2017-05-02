@@ -19,13 +19,12 @@
  */
 
 import asciitable from 'ascii-data-table'
-import { flattenProperties } from 'services/bolt/boltMappings'
 
 import { PaddedDiv, StyledBodyMessage } from '../styled'
 
 const AsciiView = ({rows, style, message}) => {
   const contents = rows
-    ? <pre>{asciitable.table(flattenProperties(rows), 70)}</pre>
+    ? <pre>{asciitable.tableFromSerializedData(rows, 70)}</pre>
     : <StyledBodyMessage>{message}</StyledBodyMessage>
   return <PaddedDiv style={style}>{contents}</PaddedDiv>
 }

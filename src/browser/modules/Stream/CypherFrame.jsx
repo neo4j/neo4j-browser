@@ -54,6 +54,7 @@ class CypherFrame extends Component {
 
   componentWillReceiveProps (nextProps) {
     let rows
+    let serializedPropertiesRows = []
     let plan
     let nodesAndRelationships
     let warnings
@@ -61,7 +62,8 @@ class CypherFrame extends Component {
     if (nextProps.request.status === 'success') {
       if (nextProps.request.result.records && nextProps.request.result.records.length > 0) {
         nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.request.result.records)
-        rows = bolt.recordsToTableArray(nextProps.request.result.records)
+        rows = bolt.recordsToTableArray(nextProps.request.result.records, false)
+        serializedPropertiesRows = bolt.stringifyRows(rows)
       }
       plan = bolt.extractPlan(nextProps.request.result)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
@@ -70,7 +72,7 @@ class CypherFrame extends Component {
       if (warnings && warnings.length > 0) {
         this.setState({notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
       }
-      this.setState({nodesAndRelationships, rows, plan, errors})
+      this.setState({nodesAndRelationships, serializedPropertiesRows, rows, plan, errors})
     } else if (nextProps.request.status !== 'success') { // Failed query
       errors = nextProps.request.result
       this.setState({ errors: errors, openView: viewTypes.ERRORS })
@@ -212,7 +214,6 @@ class CypherFrame extends Component {
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     let statusBar = null
-    let rows
     let messages
 
     if (this.state.errors) {
@@ -239,19 +240,16 @@ class CypherFrame extends Component {
       }
     }
     if (requestStatus !== 'pending') {
-      if (result.records && result.records.length > 0) {
-        rows = bolt.recordsToTableArray(result.records)
-      }
       frameContents =
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
           <Visible if={!this.state.errors}>
             <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={rows} message={messages && messages.bodyMessage} />
+            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} message={messages && messages.bodyMessage} />
+            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
             <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
