@@ -299,7 +299,7 @@ export const StyledLink = styled.a`
 `
 
 export const SyncSignInButton = styled(FormButton)`
-  background-color: #8DCC93;
+  background-color: #5FB434;
   color: #ffffff;
   &:hover {
     color: #797979
