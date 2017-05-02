@@ -73,3 +73,9 @@ export const StyledKey = styled.td`
 export const StyledValue = styled.td`
   font-family: ${props => props.theme.primaryFontFamily};
 `
+
+export const StyledValueUCFirst = styled(StyledValue)`
+  &:first-letter {
+    text-transform: uppercase;
+  }
+`
