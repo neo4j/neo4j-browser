@@ -34,10 +34,8 @@ import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './style
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import UserInteraction from '../UserInteraction'
-import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 import Intercom from '../Intercom'
 import Visible from 'browser-components/Visible'
-import { getActiveConnection, getConnectionState } from 'shared/modules/connections/connectionsDuck'
 
 class App extends Component {
   componentDidMount () {
