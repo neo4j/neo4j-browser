@@ -24,7 +24,9 @@ function request (method, url, data = null) {
   return fetch(url, {
     method,
     headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
+      'Content-Type': 'application/json',
+      'X-Ajax-Browser-Auth': 'true',
+      'X-stream': 'true'
     },
     body: data
   })
