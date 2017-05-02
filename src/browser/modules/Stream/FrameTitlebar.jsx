@@ -72,20 +72,20 @@ class FrameTitlebar extends Component {
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
           <Visible if={frame.type === 'cypher' && props.exportData}>
-            <FrameButton><FrameButtonAChild download='export.csv' href={this.state.csvData}><DownloadIcon /></FrameButtonAChild></FrameButton>
+            <FrameButton title='Download as CSV'><FrameButtonAChild download='export.csv' href={this.state.csvData}><DownloadIcon /></FrameButtonAChild></FrameButton>
           </Visible>
-          <FrameButton onClick={() => {
+          <FrameButton title='Pin at top' onClick={() => {
             props.togglePin()
             props.togglePinning(frame.id, frame.isPinned)
           }} pressed={props.pinned}><PinIcon /></FrameButton>
           <Visible if={frame.type === 'cypher'}>
-            <FrameButton onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
+            <FrameButton title={(props.fullscreen) ? 'Close fullscreen' : 'Fullscreen'} onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
           </Visible>
-          <FrameButton onClick={() => props.collapseToggle()}>{expandCollapseIcon}</FrameButton>
+          <FrameButton title={(props.collapse) ? 'Expand' : 'Collapse'}onClick={() => props.collapseToggle()}>{expandCollapseIcon}</FrameButton>
           <Visible if={frame.type === 'cypher'}>
-            <FrameButton onClick={() => props.onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
+            <FrameButton title='Rerun' onClick={() => props.onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
           </Visible>
-          <FrameButton onClick={() => props.onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
+          <FrameButton title='Close' onClick={() => props.onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
         </FrameTitlebarButtonSection>
       </StyledFrameTitleBar>
     )

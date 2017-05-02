@@ -80,6 +80,7 @@ class Navigation extends Component {
         const isOpen = item.name.toLowerCase() === selected
         return (
           <NavigationButtonContainer
+            title={item.title}
             key={index}
             onClick={() => onNavClick(item.name.toLowerCase())}
             isOpen={isOpen}

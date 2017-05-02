@@ -288,21 +288,21 @@ export class Editor extends Component {
           <EditorButton
             onClick={() => this.props.onFavortieClick(this.state.code)}
             disabled={this.state.code.length < 1}
-            tooltip='Add as favorite'
+            title='Favorite'
             hoverIcon='"\58"'
             icon='"\73"'
           />
           <EditorButton
             onClick={() => this.clearEditor()}
             disabled={this.state.code.length < 1}
-            tooltip='Clear editor contents'
+            title='Clear'
             hoverIcon='"\e005"'
             icon='"\5e"'
           />
           <EditorButton
             onClick={() => this.execCurrent()}
             disabled={this.state.code.length < 1}
-            tooltip='Execute command'
+            title='Play'
             hoverIcon='"\e002"'
             icon='"\77"'
           />

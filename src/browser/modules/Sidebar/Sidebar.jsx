@@ -48,14 +48,14 @@ class Sidebar extends Component {
     const SettingsDrawer = Settings
     const AboutDrawer = About
     const topNavItemsList = [
-      {name: 'DB', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} connectionState={this.props.neo4jConnectionState} />, content: DatabaseDrawer},
-      {name: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
-      {name: 'Documents', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
+      {name: 'DB', title: 'Database', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} connectionState={this.props.neo4jConnectionState} />, content: DatabaseDrawer},
+      {name: 'Favorites', title: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
+      {name: 'Documents', title: 'Documentation', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', icon: (isOpen) => <CloudSyncIcon isOpen={isOpen} connected={this.props.syncConnected} />, content: BrowserSync},
-      {name: 'Settings', icon: (isOpen) => <SettingsIcon isOpen={isOpen} />, content: SettingsDrawer},
-      {name: 'About', icon: (isOpen) => <AboutIcon isOpen={isOpen} />, content: AboutDrawer}
+      {name: 'Sync', title: 'Cloud Services', icon: (isOpen) => <CloudSyncIcon isOpen={isOpen} connected={this.props.syncConnected} />, content: BrowserSync},
+      {name: 'Settings', title: 'Browser Settings', icon: (isOpen) => <SettingsIcon isOpen={isOpen} />, content: SettingsDrawer},
+      {name: 'About', title: 'About Neo4j', icon: (isOpen) => <AboutIcon isOpen={isOpen} />, content: AboutDrawer}
     ]
 
     return (<TabNavigation
