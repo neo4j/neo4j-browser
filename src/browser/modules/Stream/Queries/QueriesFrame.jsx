@@ -28,6 +28,7 @@ import {CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST} from 'sha
 import {getConnectionState, CONNECTED_STATE} from 'shared/modules/connections/connectionsDuck'
 import {ConfirmationButton} from 'browser-components/buttons/ConfirmationButton'
 import {StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code, StyledStatusBar, AutoRefreshToogle, RefreshQueriesButton, AutoRefreshSpan} from './styled'
+import {EnterpriseOnlyFrame} from 'browser-components/EditionView'
 import {RefreshIcon} from 'browser-components/icons/Icons'
 import Visible from 'browser-components/Visible'
 import FrameError from '../FrameError'
@@ -65,6 +66,9 @@ export class QueriesFrame extends Component {
 
   isCC () {
     return this.props.availableProcedures.includes('dbms.cluster.overview')
+  }
+  canListQueries () {
+    return this.props.availableProcedures.includes('dbms.listQueries')
   }
 
   getRunningQueries (suppressQuerySuccessMessage = false) {
@@ -195,24 +199,30 @@ export class QueriesFrame extends Component {
   }
 
   render () {
-    const frameContents = this.constructViewFromQueryList(this.state.queries)
+    let frameContents
+    let statusbar
 
-    const statusbar = (
-      <div>
-        <Visible if={this.state.errors}>
-          <FrameError message={(this.state.errors || []).join(', ')} />
-        </Visible>
-        <Visible if={this.state.success}>
-          <StyledStatusBar>
-            {this.state.success}
-            <RefreshQueriesButton onClick={() => this.getRunningQueries()}><RefreshIcon /></RefreshQueriesButton>
-            <AutoRefreshSpan>
-              <AutoRefreshToogle checked={this.state.autoRefresh} onClick={(e) => this.setAutoRefresh(e.target.checked)} />
-            </AutoRefreshSpan>
-          </StyledStatusBar>
-        </Visible>
-      </div>
-    )
+    if (this.canListQueries()) {
+      frameContents = this.constructViewFromQueryList(this.state.queries)
+      statusbar = (
+        <div>
+          <Visible if={this.state.errors}>
+            <FrameError message={(this.state.errors || []).join(', ')} />
+          </Visible>
+          <Visible if={this.state.success}>
+            <StyledStatusBar>
+              {this.state.success}
+              <RefreshQueriesButton onClick={() => this.getRunningQueries()}><RefreshIcon /></RefreshQueriesButton>
+              <AutoRefreshSpan>
+                <AutoRefreshToogle checked={this.state.autoRefresh} onClick={(e) => this.setAutoRefresh(e.target.checked)} />
+              </AutoRefreshSpan>
+            </StyledStatusBar>
+          </Visible>
+        </div>
+      )
+    } else {
+      frameContents = (<EnterpriseOnlyFrame command={this.props.frame.cmd} />)
+    }
     return (
       <FrameTemplate
         header={this.props.frame}
