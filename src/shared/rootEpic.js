@@ -29,6 +29,7 @@ import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import { adHocCypherRequestEpic, cypherRequestEpic, clusterCypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
 import { featuresDicoveryEpic } from './modules/features/featuresDuck'
 import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic, loadFoldersFromSyncEpic, syncFoldersEpic } from './modules/sync/syncDuck'
+import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
 
 export default combineEpics(
   handleCommandsEpic,
@@ -58,5 +59,6 @@ export default combineEpics(
   syncItemsEpic,
   clearSyncEpic,
   loadFoldersFromSyncEpic,
-  syncFoldersEpic
+  syncFoldersEpic,
+  credentialsTimeoutEpic
 )

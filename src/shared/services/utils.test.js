@@ -94,6 +94,51 @@ describe('utils', () => {
     expect(callMe).toHaveBeenCalledTimes(1)
     expect(callMe).toHaveBeenCalledWith('hello', 'there')
   })
+  test('throttle limits the number of fn calls', () => {
+    // Given
+    jest.useFakeTimers()
+    const fn = jest.fn()
+    const fn2 = jest.fn()
+    const thFn = utils.throttle(fn, 500)
+    const thFn2 = utils.throttle(fn2, 500)
+
+    // When
+    thFn(4, 5, 6)
+    thFn(1, 2, 3)
+    jest.runAllTimers()
+    thFn2(1, 2, 3)
+    jest.runAllTimers()
+    thFn2(4, 5, 6)
+    jest.runAllTimers()
+
+    // Then
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(fn).toHaveBeenCalledWith(4, 5, 6)
+    expect(fn2).toHaveBeenCalledTimes(2)
+    expect(fn2).toHaveBeenCalledWith(1, 2, 3)
+    expect(fn2).toHaveBeenCalledWith(4, 5, 6)
+  })
+  test('throttle keeps context', () => {
+    // Given
+    jest.useFakeTimers()
+    const callMe = jest.fn()
+    function TestFn () {
+      this.val = 'hello'
+      this.fn = function (extVal) {
+        callMe(this.val, extVal)
+      }
+      this.thFn = utils.throttle(this.fn, 500, this)
+    }
+    const testFn = new TestFn()
+
+    // When
+    testFn.thFn('there')
+    jest.runAllTimers()
+
+    // Then
+    expect(callMe).toHaveBeenCalledTimes(1)
+    expect(callMe).toHaveBeenCalledWith('hello', 'there')
+  })
   test('getUrlInfo', () => {
     // When && Then
     expect(utils.getUrlInfo('http://anything.com')).toEqual({

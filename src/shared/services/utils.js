@@ -47,6 +47,16 @@ export const debounce = (fn, time, context = null) => {
   }
 }
 
+export const throttle = (fn, time, context = null) => {
+  let blocking
+  return (...args) => {
+    if (blocking) return
+    blocking = true
+    typeof fn === 'function' && fn.apply(context, args)
+    setTimeout(() => (blocking = false), parseInt(time))
+  }
+}
+
 export const isRoutingHost = (host) => {
   return /^bolt\+routing:\/\//.test(host)
 }
