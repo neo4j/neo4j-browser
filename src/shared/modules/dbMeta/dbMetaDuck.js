@@ -82,6 +82,7 @@ export const getStoreId = (state) => state[NAME].server.storeId
 
 export const getAvailableSettings = (state) => (state[NAME] || initialState).settings
 export const allowOutgoingConnections = (state) => getAvailableSettings(state)['browser.allow_outgoing_connections']
+export const credentialsTimeout = (state) => getAvailableSettings(state)['browser.credential_timeout'] || 0
 
 /**
  * Helpers
