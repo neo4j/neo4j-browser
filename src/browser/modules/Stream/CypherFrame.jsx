@@ -54,7 +54,7 @@ class CypherFrame extends Component {
 
   componentWillReceiveProps (nextProps) {
     let rows
-    let serializedPropertiesRows = []
+    let serializedPropertiesRows
     let plan
     let nodesAndRelationships
     let warnings
