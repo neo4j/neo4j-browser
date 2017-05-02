@@ -259,7 +259,7 @@ class CypherFrame extends Component {
             <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
+            <QueryPlan fullscreen={this.state.fullscreen} style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
           </Visible>
           <Visible if={!this.state.errors}>
             <WarningsView style={this.getDisplayStyle(viewTypes.WARNINGS)} notifications={this.state.notifications} cypher={this.state.cypher} />
