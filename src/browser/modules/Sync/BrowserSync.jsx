@@ -124,7 +124,7 @@ export class BrowserSync extends Component {
                 icon={<BinIcon suppressIconStyles='true' />} buttonType='drawer' />
               <p>&nbsp;</p>
               <FormButton label='Sign Out' onClick={() => this.signOutFromSync()}
-                icon={<BinIcon suppressIconStyles='true' />} buttonType='drawer' />
+                buttonType='drawer' />
             </DrawerSectionBody>
           </DrawerSection>
         </DrawerBody>
