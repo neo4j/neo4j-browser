@@ -84,6 +84,28 @@ export class Editor extends Component {
     this.setState({ historyIndex: -1, buffer: null, expanded: false })
   }
 
+  moveCursorToEndOfLine (cm) {
+    cm.setCursor(cm.lineCount(), 0)
+  }
+
+  handleUp (cm) {
+    if (cm.lineCount() === 1) {
+      this.historyPrev(cm)
+      this.moveCursorToEndOfLine(cm)
+    } else {
+      cm.execCommand('goLineUp')
+    }
+  }
+
+  handleDown (cm) {
+    if (cm.lineCount() === 1) {
+      this.historyNext(cm)
+      this.moveCursorToEndOfLine(cm)
+    } else {
+      cm.execCommand('goLineDown')
+    }
+  }
+
   historyPrev (cm) {
     if (!this.props.history.length) return
     if (this.state.historyIndex + 1 === this.props.history.length) return
@@ -252,8 +274,10 @@ export class Editor extends Component {
         'Ctrl-Enter': this.execCurrent.bind(this),
         'Cmd-Up': this.historyPrev.bind(this),
         'Ctrl-Up': this.historyPrev.bind(this),
+        'Up': this.handleUp.bind(this),
         'Cmd-Down': this.historyNext.bind(this),
-        'Ctrl-Down': this.historyNext.bind(this)
+        'Ctrl-Down': this.historyNext.bind(this),
+        'Down': this.handleDown.bind(this)
       },
       hintOptions: {
         completeSingle: false,
