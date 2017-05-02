@@ -60,7 +60,7 @@ const About = () => {
             Discuss Neo4j on <a target='_blank' href='http://neo4j.com/slack'>Slack</a> or <a target='_blank' href='http://groups.google.com/group/neo4j'>Google Groups</a><br />
             Visit a local <a target='_blank' href='http://neo4j.meetup.com/'>Meetup Group</a><br />
             Contribute code to <a target='_blank' href='http://github.com/neo4j'>Neo4j</a> or <a target='_blank' href='http://github.com/neo4j/neo4j-browser'>Neo4j Browser</a><br />
-            Send us your Browser feedback via <a href='mailto:browser@neotechnology.com'>email</a>
+            Send us your Browser feedback via <a href='mailto:browser@neotechnology.com?subject=Neo4j Browser feedback'>email</a>
           </DrawerSectionBody>
         </DrawerSection>
         <DrawerSection>
