@@ -262,7 +262,7 @@ export class Editor extends Component {
         async: true
       },
       autoCloseBrackets: {
-        explode: ""
+        explode: ''
       }
     }
 
