@@ -79,6 +79,8 @@ export class GraphComponent extends Component {
         this.state.currentStyleRules = this.props.graphStyle.toString()
         this.props.onGraphModelChange(getGraphStats(this.graph))
       }
+
+      this.props.assignVisElement && this.props.assignVisElement(this.svgElement, this.graphView)
     }
   }
 

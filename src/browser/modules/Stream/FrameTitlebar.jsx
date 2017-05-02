@@ -26,11 +26,12 @@ import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
 import { removeComments } from 'shared/services/utils'
-import { FrameButton, FrameButtonAChild } from 'browser-components/buttons'
+import { FrameButton } from 'browser-components/buttons'
 import Visible from 'browser-components/Visible'
 import { CSVSerializer } from 'services/serializer'
 import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon, DownloadIcon } from 'browser-components/icons/Icons'
-import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection } from './styled'
+import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection, DropdownContent, DropdownButton, DropdownItem } from './styled'
+import { downloadPNGFromSVG } from 'shared/services/exporting/pngUtils'
 
 const getCsvData = (exportData) => {
   if (exportData && exportData.length > 0) {
@@ -57,6 +58,12 @@ class FrameTitlebar extends Component {
     }
   }
 
+  exportPNG () {
+    const {svgElement, graphElement} = this.props.visElement
+    const fileName = 'graph'
+    downloadPNGFromSVG(svgElement, graphElement, fileName)
+  }
+
   render () {
     let props = this.props
     const { frame } = props
@@ -72,7 +79,13 @@ class FrameTitlebar extends Component {
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
           <Visible if={frame.type === 'cypher' && props.exportData}>
-            <FrameButton title='Download as CSV'><FrameButtonAChild download='export.csv' href={this.state.csvData}><DownloadIcon /></FrameButtonAChild></FrameButton>
+            <DropdownButton>
+              <DownloadIcon />
+              <DropdownContent class='dropdown-content'>
+                <DropdownItem onClick={() => this.exportPNG()}>Export PNG</DropdownItem>
+                <DropdownItem download='export.csv' href={this.state.csvData}>Export CSV</DropdownItem>
+              </DropdownContent>
+            </DropdownButton>
           </Visible>
           <FrameButton title='Pin at top' onClick={() => {
             props.togglePin()
