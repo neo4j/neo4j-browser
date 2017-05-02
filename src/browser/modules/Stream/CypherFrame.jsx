@@ -183,6 +183,10 @@ class CypherFrame extends Component {
   }
 
   getBodyAndStatusBarMessages (result) {
+    if (!result || !result.summary || !result.summary.resultAvailableAfter) {
+      return null
+    }
+
     const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
     const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
     const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
@@ -223,7 +227,7 @@ class CypherFrame extends Component {
         statusBar = (
           <StyledStatsBar>
             <Ellipsis>
-              { messages.statusBarMessage }
+              { messages && messages.statusBarMessage }
             </Ellipsis>
           </StyledStatsBar>
         )
