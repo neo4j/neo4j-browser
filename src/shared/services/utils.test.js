@@ -240,4 +240,46 @@ describe('utils', () => {
       expect(utils.removeComments(stringWithComments)).toEqual('Some string')
     })
   })
+  test('stringifyMod works just as JSON.stringify with no modFn', () => {
+    // Given
+    const tests = [
+      {x: 1, y: ['yy', true, undefined, null]},
+      null,
+      false,
+      [[], [0]],
+      4
+    ]
+
+    // When & Then
+    tests.forEach((t) => {
+      expect(utils.stringifyMod()(t)).toEqual(JSON.stringify(t))
+    })
+  })
+
+  test('stringifyMod works just as JSON.stringify with modFn', () => {
+    // Given
+    const modFn = (val) => {
+      if (Number.isInteger(val)) return val + 1
+      if (typeof val === 'string') return val.toString()
+    }
+    const tests = [
+      null,
+      false,
+      [[], [0]],
+      4,
+      ['string']
+    ]
+    const expects = [
+      'null',
+      'false',
+      JSON.stringify([[], [1]]),
+      5,
+      '[string]'
+    ]
+
+    // When & Then
+    tests.forEach((t, index) => {
+      expect(utils.stringifyMod()(t, modFn)).toEqual(expects[index])
+    })
+  })
 })

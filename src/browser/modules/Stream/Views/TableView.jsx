@@ -41,10 +41,7 @@ class TableView extends Component {
     const buildData = (entries) => {
       return entries.map((entry) => {
         if (entry !== null) {
-          if (entry.properties) {
-            return <StyledTd className='table-properties' key={v4()}>{JSON.stringify(entry.properties)}</StyledTd>
-          }
-          return <StyledTd className='table-properties' key={v4()}>{JSON.stringify(entry)}</StyledTd>
+          return <StyledTd className='table-properties' key={v4()}>{entry}</StyledTd>
         }
         return <StyledTd className='table-properties' key={v4()}>(empty)</StyledTd>
       })
