@@ -246,3 +246,7 @@ export const StyledBodyMessage = styled.div`
   font-size: 15px;
   color: #666;
 `
+
+export const SpinnerContainer = styled.div`
+  padding-top: 20px;
+`
