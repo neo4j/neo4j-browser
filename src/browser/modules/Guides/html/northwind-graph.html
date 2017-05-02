@@ -41,8 +41,8 @@
 CREATE (n:Product)
 SET n = row,
   n.unitPrice = toFloat(row.unitPrice),
-  n.unitsInStock = toInt(row.unitsInStock), n.unitsOnOrder = toInt(row.unitsOnOrder),
-  n.reorderLevel = toInt(row.reorderLevel), n.discontinued = (row.discontinued &lt;&gt; &quot;0&quot;)</pre>
+  n.unitsInStock = toInteger(row.unitsInStock), n.unitsOnOrder = toInteger(row.unitsOnOrder),
+  n.reorderLevel = toInteger(row.reorderLevel), n.discontinued = (row.discontinued &lt;&gt; &quot;0&quot;)</pre>
         </figure>
         <figure>
           <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/northwind/categories.csv&quot; AS row
@@ -172,7 +172,7 @@ MATCH (p:Product), (o:Order)
 WHERE p.productID = row.productID AND o.orderID = row.orderID
 CREATE (o)-[details:ORDERS]-&gt;(p)
 SET details = row,
-  details.quantity = toInt(row.quantity)</pre>
+  details.quantity = toInteger(row.quantity)</pre>
           <aside class="warn">Note you only need to compare property values like this when first creating relationships</aside>
         </figure>
         <h4>Query using patterns</h4>
