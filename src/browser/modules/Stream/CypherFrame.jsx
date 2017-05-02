@@ -63,8 +63,9 @@ class CypherFrame extends Component {
     if (nextProps.request.status === 'success') {
       if (nextProps.request.result.records && nextProps.request.result.records.length > 0) {
         nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.request.result.records)
-        rows = bolt.recordsToTableArray(nextProps.request.result.records, false)
-        serializedPropertiesRows = bolt.stringifyRows(rows)
+        rows = bolt.recordsToTableArray(nextProps.request.result.records)
+        const untransformedRows = bolt.recordsToTableArray(nextProps.request.result.records, false)
+        serializedPropertiesRows = bolt.stringifyRows(untransformedRows)
       }
       plan = bolt.extractPlan(nextProps.request.result)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
