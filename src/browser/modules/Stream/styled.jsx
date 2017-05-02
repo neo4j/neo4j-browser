@@ -130,15 +130,18 @@ export const FrameTitlebarButtonSection = styled.ul`
 
 export const StyledFrameCommand = styled.label`
   font-family: ${props => props.theme.editorFont};
-  font-size: 1.1em;
-  margin: 3px 5px 3px 5px;
+  font-size: 1.2em;
+  line-height: 2.2em;
+  margin: 3px 5px 3px 15px;
   flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   display: block;
-
+  &:before {
+    content: '$ '
+  }
 `
 export const DottedLineHover = styled.span`
   cursor: pointer;
