@@ -58,7 +58,11 @@ export class BrowserSync extends Component {
   }
   logIn () {
     if (this.state.userConsented === true) {
-      BrowserSyncAuthWindow(this.props.browserSyncConfig.authWindowUrl, this.syncManager.authCallBack.bind(this.syncManager))
+      const { onSignIn } = this.props
+      const signInCallback = (data) => onSignIn(data.profile)
+      BrowserSyncAuthWindow(this.props.browserSyncConfig.authWindowUrl, (data, error) => {
+        this.syncManager.authCallBack.bind(this.syncManager)(data, error, signInCallback)
+      })
     } else {
       this.setState({showConsentAlert: true})
     }
