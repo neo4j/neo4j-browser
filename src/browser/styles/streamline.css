@@ -290,9 +290,6 @@
 .sl-pulse-graph:before {
   content: "\e000";
 }
-.sl-heartpulse:before {
-  content: "\e001";
-}
 .sl-pencil-filled:before {
   content: "\74";
 }
@@ -337,4 +334,7 @@
 }
 .sl-loop:before {
   content: "\7c";
+}
+.sl-hierarchy:before {
+  content: "\e001";
 }
