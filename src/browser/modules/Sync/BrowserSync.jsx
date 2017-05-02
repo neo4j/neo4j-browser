@@ -210,7 +210,7 @@ export class BrowserSync extends Component {
               </DrawerSection>
               <DrawerSection>
                 <FormButton label='Sign In / Register' onClick={this.logIn.bind(this)}
-                  icon={<BinIcon suppressIconStyles='true' id='browserSyncLogin' />} buttonType='drawer' />
+                  buttonType='drawer' />
               </DrawerSection>
               <DrawerSection>
                 <ConsentCheckBox checked={this.state.userConsented === true} onChange={(e) => {

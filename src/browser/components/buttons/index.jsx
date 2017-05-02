@@ -141,6 +141,7 @@ const StyledSecondaryFormButton = styled(StyledFormButton)`
 const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
   color: #bcc0c9;
   border-color: #bcc0c9;
+  outline: none;
   &:hover {
     color: #ffffff;
     border-color: #ffffff;
