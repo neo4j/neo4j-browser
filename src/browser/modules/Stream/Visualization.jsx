@@ -108,7 +108,9 @@ export class Visualization extends Component {
           nodes={this.state.nodesAndRelationships.nodes}
           relationships={this.state.nodesAndRelationships.relationships}
           fullscreen={this.props.fullscreen}
-          frameHeight={this.props.frameHeight} />
+          frameHeight={this.props.frameHeight}
+          assignVisElement={this.props.assignVisElement}
+        />
       </StyledVisContainer>
     )
   }

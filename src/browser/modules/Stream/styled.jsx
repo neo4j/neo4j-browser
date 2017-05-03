@@ -250,3 +250,54 @@ export const StyledBodyMessage = styled.div`
 export const SpinnerContainer = styled.div`
   padding-top: 20px;
 `
+
+export const DropdownButton = styled.li`
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: transparent;
+  border-left: ${props => props.theme.inFrameBorder};
+  border-right: ${props => props.theme.inFrameBorder};
+  height: ${dim.frameTitlebarHeight}px;
+  width: 41px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 40px;
+  display: inline-block;
+  float: left;
+  &:hover {
+    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+    color: ${props => props.theme.secondaryBackground};
+    fill: ${props => props.theme.secondaryBackground};
+    text-decoration: none;
+  }
+  display: inline-block;
+  &:hover {
+    > .dropdown-content {
+    display: block;
+    }
+  };
+`
+
+export const DropdownContent = styled.li`
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  color: #262626;
+  width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  z-index: 1;
+  line-height: 30px;
+  padding: 5px 0 5px 0;
+`
+
+export const DropdownItem = styled.a`
+  background-color: #ffffff;
+  color: #262626;
+  width: 100%;
+  display: inline-block;
+  &:hover {
+    color: #262626;
+    text-decoration: none;
+    background-color: #f5f5f5;
+  }
+`
