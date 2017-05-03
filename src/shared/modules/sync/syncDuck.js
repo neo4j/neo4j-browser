@@ -33,6 +33,7 @@ export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
 export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
 export const OPT_OUT_SYNC = 'sync/OPT_OUT_SYNC'
+export const AUTHORIZED = 'sync/AUTHORIZED'
 
 const initialState = null
 const initialConsentState = { consented: false, optedOut: false }
@@ -120,6 +121,14 @@ export function optOutSync () {
   }
 }
 
+export const authorizedAs = (userData) => {
+  return {
+    type: AUTHORIZED,
+    userData
+  }
+}
+
+// Epics
 export const syncItemsEpic = (action$, store) =>
   action$.ofType(SYNC_ITEMS)
     .do((action) => {

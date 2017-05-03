@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
-import reducer, { UPDATE_ALL } from './featuresDuck'
+/* global describe, test, expect */
+import reducer, { UPDATE_ALL_FEATURES } from './featuresDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
@@ -28,22 +28,22 @@ describe('features reducer', () => {
     expect(dehydrate(nextState)).toEqual({availableProcedures: []})
   })
 
-  test('handles UPDATE_ALL without initial state', () => {
+  test('handles UPDATE_ALL_FEATURES without initial state', () => {
     const action = {
-      type: UPDATE_ALL,
+      type: UPDATE_ALL_FEATURES,
       availableProcedures: ['proc']
     }
     const nextState = reducer(undefined, action)
     expect(nextState.availableProcedures).toEqual(['proc'])
   })
 
-  test('handles UPDATE_ALL', () => {
+  test('handles UPDATE_ALL_FEATURES', () => {
     const initialState = { availableProcedures: ['a', 'b'] }
     const action = {
-      type: UPDATE_ALL,
+      type: UPDATE_ALL_FEATURES,
       availableProcedures: ['c']
     }
     const nextState = reducer(initialState, action)
-    expect(nextState.availableProcedures).toEqual(['a', 'b', 'c'])
+    expect(nextState.availableProcedures).toEqual(['c'])
   })
 })

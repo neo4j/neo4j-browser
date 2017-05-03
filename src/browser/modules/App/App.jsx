@@ -26,13 +26,16 @@ import * as themes from 'browser/styles/themes'
 import { getTheme, getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { wasUnknownCommand, getErrorMessage } from 'shared/modules/commands/commandsDuck'
-import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
+import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getActiveConnection, getConnectionState } from 'shared/modules/connections/connectionsDuck'
+import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 
+import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import UserInteraction from '../UserInteraction'
-import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import { getActiveConnection, getConnectionState } from 'shared/modules/connections/connectionsDuck'
+import Intercom from '../Intercom'
+import Visible from 'browser-components/Visible'
 
 class App extends Component {
   componentDidMount () {
@@ -53,12 +56,15 @@ class App extends Component {
     this.props.bus && this.props.bus.send(EXPAND)
   }
   render () {
-    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner, errorMessage} = this.props
+    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner, errorMessage, loadUdc} = this.props
     const themeData = themes[theme] || themes['normal']
     return (
       <ThemeProvider theme={themeData}>
         <StyledWrapper>
           <UserInteraction />
+          <Visible if={loadUdc}>
+            <Intercom appID='lq70afwx' />
+          </Visible>
           <StyledApp>
             <StyledBody>
               <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
@@ -87,7 +93,8 @@ const mapStateToProps = (state) => {
     connectionState: getConnectionState(state),
     cmdchar: getCmdChar(state),
     showUnknownCommandBanner: wasUnknownCommand(state),
-    errorMessage: getErrorMessage(state)
+    errorMessage: getErrorMessage(state),
+    loadUdc: allowOutgoingConnections(state)
   }
 }
 

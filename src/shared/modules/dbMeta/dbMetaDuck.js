@@ -78,6 +78,7 @@ export function getMetaInContext (state, context) {
 export const getVersion = (state) => state[NAME].server.version
 export const getEdition = (state) => state[NAME].server.edition
 export const isEnterprise = (state) => state[NAME].server.edition === 'enterprise'
+export const isBeta = (state) => /-/.test(state[NAME].server.version)
 export const getStoreId = (state) => state[NAME].server.storeId
 
 export const getAvailableSettings = (state) => (state[NAME] || initialState).settings

@@ -29,7 +29,7 @@ import remote from 'services/remote'
 import { getServerConfig } from 'services/bolt/boltHelpers'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
-import { unknownCommand, showErrorMessage } from 'shared/modules/commands/commandsDuck'
+import { unknownCommand, showErrorMessage, cypher, successfulCypher, unsuccessfulCypher } from 'shared/modules/commands/commandsDuck'
 import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
 import { CouldNotFetchRemoteGuideError, FetchURLError } from 'services/exceptions'
@@ -86,14 +86,17 @@ const availableCommands = [{
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
     const [id, request] = handleCypherCommand(action, put, getParams(store.getState()))
+    put(cypher(action.cmd))
     put(frames.add({...action, type: 'cypher', requestId: id}))
     return request
       .then((res) => {
         put(updateQueryResult(id, res, 'success'))
+        put(successfulCypher(action.cmd))
         return res
       })
       .catch(function (e) {
         put(updateQueryResult(id, e, 'error'))
+        put(unsuccessfulCypher(action.cmd))
         throw e
       })
   }
@@ -116,9 +119,11 @@ const availableCommands = [{
   match: (cmd) => /^play(\s|$)https?/.test(cmd),
   exec: function (action, cmdchar, put, store) {
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
-    getServerConfig().then((conf) => {
+
+    getServerConfig(['browser.']).then((conf) => {
       const getWhiteList = conf && conf['browser.remote_content_hostname_whitelist']
       const whitelist = (getWhiteList) ? getWhiteList.value : null
+
       if (!hostIsAllowed(url, whitelist)) {
         throw new Error('Hostname is not allowed according to server whitelist')
       }

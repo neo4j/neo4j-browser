@@ -158,6 +158,11 @@ export const removeComments = (string) => {
   return string.split(/\r?\n/).filter((line) => !line.startsWith('//')).join('\r\n')
 }
 
+export const canUseDOM = () => !!(
+  (typeof window !== 'undefined' &&
+  window.document && window.document.createElement)
+)
+
 export const stringifyMod = () => {
   const toString = Object.prototype.toString
   const isArray = Array.isArray || function (a) { return toString.call(a) === '[object Array]' }

@@ -47,7 +47,7 @@ class SyncSignInManager {
       }
     })
   }
-  authCallBack (data, error) {
+  authCallBack (data, error, successFn = null, errorFn = null) {
     if (error) {
       this.serviceAuthenticated = false
       this.error
@@ -57,10 +57,12 @@ class SyncSignInManager {
         this.serviceAuthenticated = true
         this.error = null
         this.bindToResource()
+        successFn && successFn(data)
       })
         .catch((e) => {
           this.serviceAuthenticated = false
           this.error = e
+          errorFn && errorFn(e)
         })
     }
   }

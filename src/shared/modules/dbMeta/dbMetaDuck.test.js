@@ -106,7 +106,7 @@ describe('updating metadata', () => {
   test('should update state with empty metadata', () => {
     const returnNothing = () => []
     const action = {
-      type: meta.UPDATE,
+      type: meta.UPDATE_META,
       meta: {
         records: [
           { a: 'labels', get: returnNothing },

@@ -18,15 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import bolt from 'services/bolt/bolt'
 import { getInterpreter, isNamedInterpreter, cleanCommand } from 'services/commandUtils'
 import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
+import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData } from '../dbMeta/dbMetaDuck'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
-import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
@@ -34,6 +33,9 @@ export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
 export const KNOWN_COMMAND = NAME + '/KNOWN_COMMAND'
 export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
+export const CYPHER = NAME + '/CYPHER'
+export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
+export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
 
 const initialState = {
   lastCommandWasUnknown: false
@@ -86,6 +88,9 @@ export const showErrorMessage = (errorMessage) => ({
   type: SHOW_ERROR_MESSAGE,
   errorMessage: errorMessage
 })
+export const cypher = (query) => ({ type: CYPHER, query })
+export const successfulCypher = (query) => ({ type: CYPHER_SUCCEEDED, query })
+export const unsuccessfulCypher = (query) => ({ type: CYPHER_FAILED, query })
 
 // Epics
 export const handleCommandsEpic = (action$, store) =>
@@ -123,22 +128,13 @@ export const handleCommandsEpic = (action$, store) =>
     })
 
 export const postConnectCmdEpic = (some$, store) =>
-  some$.ofType(CONNECTION_SUCCESS)
-    .mergeMap(() => {
-      return bolt.directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
-        .then((res) => {
-          // Find kernel conf
-          let conf
-          res.records.forEach((record) => {
-            if (record.get('name').match(/Configuration$/)) conf = record.get('attributes')
-          })
-          if (conf && conf['browser.post_connect_cmd'] && conf['browser.post_connect_cmd'].value) {
-            const cmdchar = getCmdChar(store.getState())
-            store.dispatch(executeSystemCommand(`${cmdchar}${conf['browser.post_connect_cmd'].value}`))
-          }
-          return null
-        }).catch((e) => {
-          return null
-        })
+  some$
+    .zip(some$.ofType(CONNECTION_SUCCESS), some$.ofType(UPDATE_SETTINGS))
+    .do(() => {
+      const serverSettings = getAvailableSettings(store.getState())
+      if (serverSettings && serverSettings['browser.post_connect_cmd']) {
+        const cmdchar = getCmdChar(store.getState())
+        store.dispatch(executeSystemCommand(`${cmdchar}${serverSettings['browser.post_connect_cmd']}`))
+      }
     })
     .mapTo({ type: 'NOOP' })

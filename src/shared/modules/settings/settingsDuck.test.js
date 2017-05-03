@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
-import reducer, { UPDATE } from './settingsDuck'
+/* global describe, test, expect */
+import reducer, { NAME, UPDATE, shouldReportUdc } from './settingsDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('settings reducer', () => {
@@ -52,5 +52,28 @@ describe('settings reducer', () => {
     expect(nextState.cmdchar).toEqual(':')
     expect(nextState.greeting).toEqual('woff')
     expect(nextState.type).toEqual('dog')
+  })
+})
+
+describe('Selectors', () => {
+  test('shouldReportUdc casts to true for anything not false', () => {
+    // Given
+    const tests = [
+      { test: true, expect: true },
+      { test: 1, expect: true },
+      { test: '1', expect: true },
+      { test: 'on', expect: true },
+      { test: null, expect: true },
+      { test: undefined, expect: true },
+      { test: false, expect: false }
+    ]
+
+    // When && Then
+    tests.forEach((t) => {
+      const state = {
+        [NAME]: { shouldReportUdc: t.test }
+      }
+      expect(shouldReportUdc(state)).toEqual(t.expect)
+    })
   })
 })
