@@ -42,6 +42,7 @@ import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/s
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import QueriesFrame from './Queries/QueriesFrame'
+import { getMaxRows, getInitialNodeDisplay } from 'shared/modules/settings/settingsDuck'
 
 const getFrame = (type) => {
   const trans = {
@@ -98,7 +99,9 @@ class Stream extends Component {
             recentView: this.props.recentView,
             onRecentViewChanged: (view) => {
               this.props.onRecentViewChanged(view)
-            }
+            },
+            maxRows: this.props.maxRows,
+            initialNodeDisplay: this.props.initialNodeDisplay
           }
           const MyFrame = getFrame(frame.type)
           return <MyFrame {...frameProps} key={frame.id} />
@@ -113,7 +116,9 @@ const mapStateToProps = (state) => {
     frames: getFrames(state),
     requests: getRequests(state),
     activeConnectionData: getActiveConnectionData(state),
-    recentView: getRecentView(state)
+    recentView: getRecentView(state),
+    maxRows: getMaxRows(state),
+    initialNodeDisplay: getInitialNodeDisplay(state)
   }
 }
 
