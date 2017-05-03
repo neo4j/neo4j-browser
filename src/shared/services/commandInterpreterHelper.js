@@ -117,8 +117,9 @@ const availableCommands = [{
   exec: function (action, cmdchar, put, store) {
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
     getServerConfig().then((conf) => {
-      const whitelist = conf && conf['browser.remote_content_hostname_whitelist']
-      if (!hostIsAllowed(url, whitelist.value)) {
+      const getWhiteList = conf && conf['browser.remote_content_hostname_whitelist']
+      const whitelist = (getWhiteList) ? getWhiteList.value : null
+      if (!hostIsAllowed(url, whitelist)) {
         throw new Error('Hostname is not allowed according to server whitelist')
       }
       remote.get(url)
