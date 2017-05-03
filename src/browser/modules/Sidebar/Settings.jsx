@@ -75,6 +75,12 @@ const visualSettings =
             displayName: 'Max Neighbours',
             tooltip: 'Limit exploratary queries to this limit.'
           }
+        },
+        {
+          maxRows: {
+            displayName: 'Max Rows',
+            tooltip: "Max number of rows to render in 'Rows' result view"
+          }
         }
       ]
     }

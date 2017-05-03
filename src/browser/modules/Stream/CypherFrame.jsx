@@ -52,7 +52,12 @@ class CypherFrame extends Component {
   onNavClick (viewName) {
     this.setState({openView: viewName})
   }
-
+  getRecordsToDisplay (records) {
+    return records.length > this.props.maxRows ? records.slice(0, this.props.maxRows) : records
+  }
+  getRecordsToVisualise (records) {
+    return records.length > this.props.initialNodeDisplay ? records.slice(0, this.props.initialNodeDisplay) : records
+  }
   componentWillReceiveProps (nextProps) {
     let rows
     let serializedPropertiesRows
@@ -62,9 +67,9 @@ class CypherFrame extends Component {
     let errors
     if (nextProps.request.status === 'success') {
       if (nextProps.request.result.records && nextProps.request.result.records.length > 0) {
-        nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(nextProps.request.result.records)
-        rows = bolt.recordsToTableArray(nextProps.request.result.records)
-        const untransformedRows = bolt.recordsToTableArray(nextProps.request.result.records, false)
+        nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(this.getRecordsToVisualise(nextProps.request.result.records))
+        rows = bolt.recordsToTableArray(this.getRecordsToDisplay(nextProps.request.result.records))
+        const untransformedRows = bolt.recordsToTableArray(this.getRecordsToDisplay(nextProps.request.result.records), false)
         serializedPropertiesRows = bolt.stringifyRows(untransformedRows)
       }
       plan = bolt.extractPlan(nextProps.request.result)
@@ -194,11 +199,12 @@ class CypherFrame extends Component {
     const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
     const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
     const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
+    const streamMessageTail = result.records.length > this.props.maxRows ? `ms, displaying first ${this.props.maxRows} rows.` : ' ms.'
 
     let updateMessages = bolt.retrieveFormattedUpdateStatistics(result)
     let streamMessage = result.records.length > 0
-      ? `started streaming ${result.records.length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ms.`
-      : `completed ${totalTimeString} ms.`
+      ? `started streaming ${result.records.length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
+      : `completed ${totalTimeString} ${streamMessageTail}`
 
     if (updateMessages && updateMessages.length > 0) {
       updateMessages = updateMessages[0].toUpperCase() + updateMessages.slice(1) + ', '
