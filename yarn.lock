@@ -1611,15 +1611,15 @@ cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   dependencies:
     cssom "0.3.x"
 
-cypher-codemirror@1.0.3:
-  version "1.0.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.0.3.tgz#7fa3126d85dd2376966b10e37f321210d2a826e7"
+cypher-codemirror@1.0.4:
+  version "1.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.0.4.tgz#b78643df281b3e9e1dbfa7cb1d299b3cee69d6d6"
   dependencies:
-    cypher-editor-support "1.0.3"
+    cypher-editor-support "1.0.4"
 
-cypher-editor-support@1.0.3:
-  version "1.0.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.0.3.tgz#224c3e73c585b95ff763810d38f5d9946eb8ad65"
+cypher-editor-support@1.0.4:
+  version "1.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.0.4.tgz#c9b9f3d77d06ad734a09d1c0e646a6701ef9075f"
   dependencies:
     antlr4 "4.6.0"
     fuzzaldrin "2.1.0"
@@ -2444,6 +2444,10 @@ file-loader@^0.11.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/file-loader/-/file-loader-0.11.1.tgz#6b328ee1234a729e4e47d36375dd6d35c0e1db84"
   dependencies:
     loader-utils "^1.0.2"
+
+file-saver@^1.3.3:
+  version "1.3.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/file-saver/-/file-saver-1.3.3.tgz#cdd4c44d3aa264eac2f68ec165bc791c34af1232"
 
 filename-regex@^2.0.0:
   version "2.0.0"
