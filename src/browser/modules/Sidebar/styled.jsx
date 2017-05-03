@@ -141,7 +141,7 @@ export const ExecFavortieButton = (props) => {
     <StyledExecFavoriteButton {...props}>
       <PlainPlayIcon />
     </StyledExecFavoriteButton>
-    )
+  )
 }
 
 export const NewFolderButton = (props) => {

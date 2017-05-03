@@ -63,7 +63,7 @@ export default [
       },
       {
         name: 'cypher',
-        description: " - graph query language introduction"
+        description: ' - graph query language introduction'
       },
       {
         name: 'movie graph',
