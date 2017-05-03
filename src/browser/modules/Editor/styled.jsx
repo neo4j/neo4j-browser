@@ -23,7 +23,7 @@ import { dim } from 'browser-styles/constants'
 
 const editorPadding = 12
 
-export const Bar = styled.div`
+export const BaseBar = styled.div`
   display: flex;
   flex-direction: row;
   align-items: middle;
@@ -32,13 +32,17 @@ export const Bar = styled.div`
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
   margin: 0 24px;
 `
-export const ExpandedBar = styled(Bar)`
-  position: absolute;
-  height: 100vh;
-  z-index: 100;
-  right: 0;
-  left: 0;
-  bottom: 0;
+export const Bar = styled(BaseBar)`
+  ${(props => {
+    if (props.expanded) {
+      return 'position: absolute;' +
+      'height: 100vh;' +
+      'z-index: 100;' +
+      'right: 0;' +
+      'left: 0;' +
+      'bottom: 0;'
+    }
+  })}
 `
 export const ActionButtonSection = styled.div`
   flex: 0 0 130px;
@@ -50,24 +54,29 @@ export const ActionButtonSection = styled.div`
   background-color: ${props => props.theme.editorBarBackground};
 `
 
-export const EditorWrapper = styled.div`
+const BaseEditorWrapper = styled.div`
   flex: auto;
   padding: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
   font-family: Monaco,"Courier New",Terminal,monospace;
   min-Height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px
 `
-export const EditorExpandedWrapper = styled(EditorWrapper)`
-  height: 100%;
-  z-index: 2;
-  .CodeMirror {
-    position: absolute;
-    left: 12px;
-    right: 142px;
-    top: 12px;
-    bottom: 12px;
-  }
-  .CodeMirror-scroll {
-    max-height: initial !important;
-  }
+
+export const EditorWrapper = styled(BaseEditorWrapper)`
+  ${(props => {
+    if (props.expanded) {
+      return 'height: 100%;' +
+      'z-index: 2;' +
+      '.CodeMirror {' +
+      '  position: absolute;' +
+      '  left: 12px;' +
+      '  right: 142px;' +
+      '  top: 12px;' +
+      '  bottom: 12px;' +
+      '}' +
+      '.CodeMirror-scroll {' +
+      '   max-height: initial !important;' +
+      '}'
+    }
+  })}
 `
