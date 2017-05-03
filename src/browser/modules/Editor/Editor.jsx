@@ -27,7 +27,7 @@ import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import { SET_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
-import { Bar, ExpandedBar, ActionButtonSection, EditorWrapper, EditorExpandedWrapper } from './styled'
+import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { debounce } from 'services/utils'
@@ -268,12 +268,10 @@ export class Editor extends Component {
 
     const updateCode = (val, change) => this.updateCode(val, change)
     this.setGutterMarkers()
-    const wrapper = (this.state.expanded) ? { Component: EditorExpandedWrapper } : { Component: EditorWrapper }
-    const bar = (this.state.expanded) ? { Component: ExpandedBar } : { Component: Bar }
 
     return (
-      <bar.Component minHeight={this.state.editorHeight}>
-        <wrapper.Component minHeight={this.state.editorHeight}>
+      <Bar expanded={this.state.expanded} minHeight={this.state.editorHeight}>
+        <EditorWrapper expanded={this.state.expanded} minHeight={this.state.editorHeight}>
           <Codemirror
             ref={(ref) => {
               this.editor = ref
@@ -284,7 +282,7 @@ export class Editor extends Component {
             schema={this.props.schema}
             initialPosition={this.state.lastPosition}
           />
-        </wrapper.Component>
+        </EditorWrapper>
         <ActionButtonSection>
           <EditorButton
             onClick={() => this.props.onFavortieClick(this.state.code)}
@@ -308,7 +306,7 @@ export class Editor extends Component {
             icon='"\77"'
           />
         </ActionButtonSection>
-      </bar.Component>
+      </Bar>
     )
   }
 }
