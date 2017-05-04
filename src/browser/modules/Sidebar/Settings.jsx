@@ -96,7 +96,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
 
       if (!settingObj[setting].type || settingObj[setting].type === 'input') {
         return (<StyledSetting key={i}>
-          <StyledSettingLabel>{visual}</StyledSettingLabel>
+          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
           <StyledSettingTextInput onChange={(event) => {
             settings[setting] = event.target.value
             onSettingsSave(settings)
@@ -104,7 +104,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
         </StyledSetting>)
       } else if (settingObj[setting].type === 'radio') {
         return (<StyledSetting key={i}>
-          <StyledSettingLabel>{visual}</StyledSettingLabel>
+          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
           <RadioSelector options={settingObj[setting].options} onChange={(event) => {
             settings[setting] = event.target.value
             onSettingsSave(settings)
@@ -116,7 +116,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
             settings[setting] = event.target.checked
             onSettingsSave(settings)
           }} checked={settings[setting]} />
-          <StyledSettingLabel>{visual}</StyledSettingLabel>
+          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
         </StyledSetting>)
       }
     })
