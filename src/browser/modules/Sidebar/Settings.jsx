@@ -81,6 +81,13 @@ const visualSettings =
             displayName: 'Max Rows',
             tooltip: "Max number of rows to render in 'Rows' result view"
           }
+        },
+        {
+          autoComplete: {
+            displayName: 'Auto Complete',
+            tooltip: 'Automatically fetch relationships between displayed nodes',
+            type: 'checkbox'
+          }
         }
       ]
     }
