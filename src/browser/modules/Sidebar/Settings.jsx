@@ -84,7 +84,7 @@ const visualSettings =
         },
         {
           autoComplete: {
-            displayName: 'Auto Complete',
+            displayName: 'Connect result nodes',
             tooltip: 'Automatically fetch relationships between displayed nodes',
             type: 'checkbox'
           }

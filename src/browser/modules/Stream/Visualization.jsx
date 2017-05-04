@@ -25,7 +25,7 @@ import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
 import { ExplorerComponent } from '../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './styled'
-import { getMaxNeighbours, getSettings, autoComplete } from 'shared/modules/settings/settingsDuck'
+import { getMaxNeighbours, getSettings, shouldAutoComplete } from 'shared/modules/settings/settingsDuck'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
@@ -160,7 +160,7 @@ const mapStateToProps = (state) => {
     graphStyleData: grassActions.getGraphStyleData(state),
     initialNodeDisplay: getSettings(state).initialNodeDisplay,
     maxNeighbours: getMaxNeighbours(state),
-    autoComplete: autoComplete(state)
+    autoComplete: shouldAutoComplete(state)
   }
 }
 
