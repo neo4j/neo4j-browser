@@ -195,6 +195,7 @@ export class Editor extends Component {
 
     this.setState({
       code: newCode,
+      mode,
       lastPosition: lastPosition ? { line: lastPosition.line, column: lastPosition.ch } : this.state.lastPosition,
       editorHeight: this.editor && this.editor.base.clientHeight
     }, cb)
