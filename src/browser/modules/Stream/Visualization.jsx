@@ -113,15 +113,11 @@ export class Visualization extends Component {
 
   getInternalRelationships (existingNodeIds, newNodeIds) {
     existingNodeIds = existingNodeIds.concat(newNodeIds)
-    const query = `
-            MATCH (a)-[r]-(b) WHERE id(a) IN {existingNodeIds}
-            AND id(b) IN {newNodeIds}
-            RETURN r;`
-    const params = {existingNodeIds, newNodeIds}
+    const query = `MATCH (a)-[r]-(b) WHERE id(a) IN [${existingNodeIds}] AND id(b) IN [${newNodeIds}] RETURN r;`
     return new Promise((resolve, reject) => {
       this.props.bus.self(
         CYPHER_REQUEST,
-        {query, params},
+        {query},
         (response) => {
           if (!response.success) {
             reject({nodes: [], rels: []})
