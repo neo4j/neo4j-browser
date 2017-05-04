@@ -57,6 +57,14 @@ export const throttle = (fn, time, context = null) => {
   }
 }
 
+export const firstSuccessPromise = (list, fn) => {
+  return list.reduce((promise, item) => {
+    return promise
+      .catch(() => fn(item))
+      .then((r) => Promise.resolve(r))
+  }, Promise.reject())
+}
+
 export const isRoutingHost = (host) => {
   return /^bolt\+routing:\/\//.test(host)
 }
@@ -72,13 +80,19 @@ export const hostIsAllowed = (uri, whitelist = null) => {
   const urlInfo = getUrlInfo(uri)
   const hostname = urlInfo.hostname
   const hostnamePlusProtocol = urlInfo.protocol + '//' + hostname
+  const whitelistedHosts = whitelist && whitelist !== '' ? extractWhitelistFromConfigString(whitelist) : []
+  return whitelistedHosts.indexOf(hostname) > -1 || whitelistedHosts.indexOf(hostnamePlusProtocol) > -1
+}
 
-  let whitelistedHosts = ['guides.neo4j.com', 'localhost']
-  if (whitelist && whitelist !== '') {
-    whitelistedHosts = whitelist.split(',')
-  }
-  return whitelistedHosts.indexOf(hostname) > -1 ||
-    whitelistedHosts.indexOf(hostnamePlusProtocol) > -1
+export const extractWhitelistFromConfigString = (str) => str.split(',').map((s) => s.trim().replace(/\/$/, ''))
+
+export const addProtocolsToUrlList = (list) => {
+  return list.reduce((all, uri) => {
+    if (!uri || uri === '*') return all
+    const urlInfo = getUrlInfo(uri)
+    if (urlInfo.protocol) return all.concat(uri)
+    return all.concat(['https://' + uri, 'http://' + uri])
+  }, [])
 }
 
 export const getUrlInfo = (url) => {

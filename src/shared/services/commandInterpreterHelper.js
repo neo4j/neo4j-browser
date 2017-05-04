@@ -23,10 +23,9 @@ import { getHistory } from 'shared/modules/history/historyDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
-import { cleanHtml } from 'services/remoteUtils'
-import { hostIsAllowed } from 'services/utils'
+import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
+import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
-import { getServerConfig } from 'services/bolt/boltHelpers'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { unknownCommand, showErrorMessage, cypher, successfulCypher, unsuccessfulCypher } from 'shared/modules/commands/commandsDuck'
@@ -119,23 +118,13 @@ const availableCommands = [{
   match: (cmd) => /^play(\s|$)https?/.test(cmd),
   exec: function (action, cmdchar, put, store) {
     const url = action.cmd.substr(cmdchar.length + 'play '.length)
-
-    getServerConfig(['browser.']).then((conf) => {
-      const serverWhitelist = conf && conf['browser.remote_content_hostname_whitelist']
-      const whitelist = serverWhitelist || null
-
-      if (!hostIsAllowed(url, whitelist)) {
-        throw new Error('Hostname is not allowed according to server whitelist')
-      }
-      remote.get(url)
-        .then((r) => {
-          put(frames.add({...action, type: 'play-remote', result: cleanHtml(r)}))
-        }).catch((e) => {
-          put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e.name + ': ' + e.message)}))
-        })
-    }).catch((e) => {
-      put(frames.add({...action, type: 'play-remote', error: CouldNotFetchRemoteGuideError(e.name + ': ' + e.message)}))
-    })
+    const whitelist = getRemoteContentHostnameWhitelist(store.getState())
+    fetchRemoteGuide(url, whitelist)
+      .then((r) => {
+        put(frames.add({...action, type: 'play-remote', result: r}))
+      }).catch((e) => {
+        put(frames.add({...action, type: 'play-remote', response: (e.response || null), error: CouldNotFetchRemoteGuideError(e.name + ': ' + e.message)}))
+      })
   }
 }, {
   name: 'play',

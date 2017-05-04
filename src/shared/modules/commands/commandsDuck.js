@@ -18,13 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Rx from 'rxjs'
 import { getInterpreter, isNamedInterpreter, cleanCommand, extractPostConnectCommandsFromServerConfig } from 'services/commandUtils'
+import { extractWhitelistFromConfigString, addProtocolsToUrlList, firstSuccessPromise } from 'services/utils'
 import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
+import { fetchRemoteGuide } from './helpers/play'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
-import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData } from '../dbMeta/dbMetaDuck'
+import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData, getRemoteContentHostnameWhitelist } from '../dbMeta/dbMetaDuck'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'commands'
@@ -36,6 +39,7 @@ export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
 export const CYPHER = NAME + '/CYPHER'
 export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
 export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
+export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 
 const initialState = {
   lastCommandWasUnknown: false
@@ -91,6 +95,7 @@ export const showErrorMessage = (errorMessage) => ({
 export const cypher = (query) => ({ type: CYPHER, query })
 export const successfulCypher = (query) => ({ type: CYPHER_SUCCEEDED, query })
 export const unsuccessfulCypher = (query) => ({ type: CYPHER_FAILED, query })
+export const fetchGuideFromWhitelistAction = (url) => ({ type: FETCH_GUIDE_FROM_WHITELIST, url })
 
 // Epics
 export const handleCommandsEpic = (action$, store) =>
@@ -143,3 +148,18 @@ export const postConnectCmdEpic = (some$, store) =>
       }
     })
     .mapTo({ type: 'NOOP' })
+
+export const fetchGuideFromWhitelistEpic = (some$, store) =>
+  some$.ofType(FETCH_GUIDE_FROM_WHITELIST)
+    .mergeMap((action) => {
+      if (!action.$$responseChannel || !action.url) return Rx.Observable.of({ type: 'NOOP' })
+      const whitelistStr = getRemoteContentHostnameWhitelist(store.getState())
+      const whitelist = extractWhitelistFromConfigString(whitelistStr)
+      const urlWhitelist = addProtocolsToUrlList(whitelist)
+      const guidesUrls = urlWhitelist.map((url) => url + '/' + action.url)
+      return firstSuccessPromise(guidesUrls, (url) => { // Get first successful fetch
+        return fetchRemoteGuide(url, whitelistStr)
+                .then((r) => ({type: action.$$responseChannel, success: true, result: r}))
+      })
+        .catch((e) => ({type: action.$$responseChannel, success: false, error: e})) // If all fails, report that
+    })

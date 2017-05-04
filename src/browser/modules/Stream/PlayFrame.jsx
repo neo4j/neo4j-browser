@@ -18,36 +18,74 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Component } from 'preact'
+import { withBus } from 'preact-suber'
+import { fetchGuideFromWhitelistAction } from 'shared/modules/commands/commandsDuck'
+
 import Guides from '../Guides/Guides'
 import * as html from '../Guides/html'
 import FrameTemplate from './FrameTemplate'
 import { splitStringOnFirst } from 'services/commandUtils'
+import ErrorsView from './Views/ErrorsView'
 
-const PlayFrame = ({frame}) => {
-  let guide = 'Play guide not specified'
-  if (frame.result) {
-    guide = <Guides withDirectives html={frame.result} />
-  } else {
-    const guideName = splitStringOnFirst(frame.cmd, ' ')[1].toLowerCase().replace(/\s|-/g, '').trim() || 'start'
-    if (guideName !== '') {
-      const content = html[guideName]
-      if (content !== undefined) {
-        guide = <Guides withDirectives html={content} />
-      } else {
-        if (frame.error && frame.error.error) {
-          guide = frame.error.error
-        } else {
-          guide = <Guides withDirectives html={html['unfound']} />
-        }
-      }
+export class PlayFrame extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      guide: null
     }
   }
-  return (
-    <FrameTemplate
-      className='playFrame'
-      header={frame}
-      contents={guide}
-    />
-  )
+  componentDidMount () {
+    if (this.props.frame.result) { // Found remote guide
+      this.setState({ guide: <Guides withDirectives html={this.props.frame.result} /> })
+      return
+    }
+    if (this.props.frame.response && this.props.frame.error && this.props.frame.error.error) { // Not found remotely (or other error)
+      if (this.props.frame.response.status === 404) return this.setState({ guide: <Guides withDirectives html={html['unfound']} /> })
+      return this.setState({
+        guide: (
+          <ErrorsView
+            error={{
+              message: 'Error: The remote server responded with the following error: ' + this.props.frame.response.status,
+              code: 'Remote guide error'
+            }}
+          />)
+      })
+    }
+    if (this.props.frame.error && this.props.frame.error.error) { // Some other error. Whitelist error etc.
+      return this.setState({ guide: <ErrorsView error={{
+        message: this.props.frame.error.error,
+        code: 'Remote guide error'
+      }} /> })
+    }
+    const guideName = splitStringOnFirst(this.props.frame.cmd, ' ')[1].toLowerCase().replace(/\s|-/g, '').trim() || 'start'
+    if (html[guideName] !== undefined) { // Found it locally
+      this.setState({ guide: <Guides withDirectives html={html[guideName]} /> })
+      return
+    }
+    // Not found remotely or locally
+    // Try to find it remotely by name
+    if (this.props.bus) {
+      const action = fetchGuideFromWhitelistAction(guideName)
+      this.props.bus.self(action.type, action, (res) => {
+        if (!res.success) { // No luck
+          return this.setState({ guide: <Guides withDirectives html={html['unfound']} /> })
+        }
+        this.setState({ guide: <Guides withDirectives html={res.result} /> })
+      })
+    } else { // No bus. Give up
+      return this.setState({ guide: <Guides withDirectives html={html['unfound']} /> })
+    }
+  }
+  render () {
+    return (
+      <FrameTemplate
+        className='playFrame'
+        header={this.props.frame}
+        contents={this.state.guide}
+      />
+    )
+  }
 }
-export default PlayFrame
+
+export default withBus(PlayFrame)

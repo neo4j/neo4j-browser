@@ -14,6 +14,7 @@ Object {
   },
   "settings": Object {
     "browser.allow_outgoing_connections": false,
+    "browser.remote_content_hostname_whitelist": "guides.neo4j.com, localhost",
   },
 }
 `;
@@ -33,6 +34,7 @@ Object {
   },
   "settings": Object {
     "browser.allow_outgoing_connections": false,
+    "browser.remote_content_hostname_whitelist": "guides.neo4j.com, localhost",
   },
   "shouldKeep": true,
 }
