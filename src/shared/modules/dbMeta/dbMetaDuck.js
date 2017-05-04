@@ -220,8 +220,8 @@ export const dbMetaEpic = (some$, store) =>
         .do((res) => {
           if (!res) return
           const [ kvObj, storeObj, edObj ] = res
-          const versionMatch = kvObj.KernelVersion.match(/version:\s([^,]+),/)
-          const version = versionMatch[1]
+          const versionMatch = kvObj.KernelVersion.match(/version:\s([^,$]+)/)
+          const version = (versionMatch !== null && versionMatch.length > 1) ? versionMatch[1] : null
           const edition = edObj['unsupported.dbms.edition']
           const storeId = storeObj['StoreId']
           store.dispatch({
