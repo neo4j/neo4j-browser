@@ -85,6 +85,11 @@ class CypherFrame extends Component {
       this.setState({ errors: errors, openView: viewTypes.ERRORS })
     }
   }
+  componentWillMount () {
+    if (this.props.request.status === 'error') {
+      this.setState({ errors: this.props.request.result, openView: viewTypes.ERRORS })
+    }
+  }
   shouldComponentUpdate (nextProps, state) {
     return state.openView !== this.state.openView ||
       state.fullscreen !== this.state.fullscreen ||
