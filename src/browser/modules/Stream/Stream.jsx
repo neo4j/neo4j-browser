@@ -70,6 +70,7 @@ const getFrame = (type) => {
 
 class Stream extends Component {
   shouldComponentUpdate (nextProps, nextState) {
+    const hasSameAmountOfFrames = this.props.frames.length === nextProps.frames.length
     if (this.props.activeConnectionData === nextProps.activeConnectionData &&
       this.props.requests === nextProps.requests &&
       (this.props.children.length === nextProps.children.length &&
@@ -83,7 +84,9 @@ class Stream extends Component {
     ) {
       return false
     } else {
-      this.base.scrollTop = 0
+      if (!hasSameAmountOfFrames) {
+        this.base.scrollTop = 0
+      }
       return true
     }
   }
