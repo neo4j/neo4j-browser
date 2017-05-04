@@ -21,7 +21,7 @@
 import styled from 'styled-components'
 
 export const StyledSidebar = styled.div`
-  flex: content;
+  flex: 0 0 auto;
   background-color: #4C4957;
   display: flex;
   flex-direction: row;
@@ -30,7 +30,7 @@ export const StyledSidebar = styled.div`
 `
 
 export const StyledDrawer = styled.div`
-  flex: 0 0 300px;
+  flex: 0 0 auto;
   background-color: #30333A;
   overflow: auto;
   width: ${props => props.open ? '300px' : '0px'};
