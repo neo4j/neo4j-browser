@@ -83,6 +83,7 @@ export class Visualization extends Component {
         .then((graph) => {
           this.autoCompleteCallback && this.autoCompleteCallback(graph.relationships)
         })
+        .catch((e) => {})
     }
   }
 
