@@ -32,7 +32,9 @@
     padding-left: 0.25em;
     padding-right: 0.25em;
   }
-
+  & th {
+    min-width: 50px;
+  }
   & pre.code {
     padding: 0.5em;
     margin-top: 0.5em;
