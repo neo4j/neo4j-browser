@@ -36,7 +36,7 @@ const PlayFrame = ({frame}) => {
         if (frame.error && frame.error.error) {
           guide = frame.error.error
         } else {
-          guide = 'Guide not found'
+          guide = <Guides withDirectives html={html['unfound']} />
         }
       }
     }
