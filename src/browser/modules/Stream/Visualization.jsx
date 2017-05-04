@@ -112,12 +112,14 @@ export class Visualization extends Component {
   }
 
   getInternalRelationships (existingNodeIds, newNodeIds) {
+    newNodeIds = newNodeIds.map(bolt.neo4j.int)
+    existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.concat(newNodeIds)
-    const query = `MATCH (a)-[r]-(b) WHERE id(a) IN [${existingNodeIds}] AND id(b) IN [${newNodeIds}] RETURN r;`
+    const query = 'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
     return new Promise((resolve, reject) => {
       this.props.bus.self(
         CYPHER_REQUEST,
-        {query},
+        {query, params: {existingNodeIds, newNodeIds}},
         (response) => {
           if (!response.success) {
             reject({nodes: [], rels: []})
