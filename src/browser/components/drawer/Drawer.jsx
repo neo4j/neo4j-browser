@@ -20,7 +20,9 @@
 
 import styled from 'styled-components'
 
-export const Drawer = styled.div``
+export const Drawer = styled.div`
+  width: 285px;
+`
 
 export const DrawerHeader = styled.h4`
   color: ${props => props.theme.primaryHeaderText}
