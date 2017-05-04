@@ -85,7 +85,7 @@ const visualSettings =
         {
           autoComplete: {
             displayName: 'Connect result nodes',
-            tooltip: 'Automatically fetch relationships between displayed nodes',
+            tooltip: 'If this is checked, after a cypher query result is retrieved, a second query is executed to fetch relationships between result nodes.',
             type: 'checkbox'
           }
         }
