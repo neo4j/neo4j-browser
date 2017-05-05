@@ -81,6 +81,13 @@ const visualSettings =
             displayName: 'Max Rows',
             tooltip: "Max number of rows to render in 'Rows' result view"
           }
+        },
+        {
+          autoComplete: {
+            displayName: 'Connect result nodes',
+            tooltip: 'If this is checked, after a cypher query result is retrieved, a second query is executed to fetch relationships between result nodes.',
+            type: 'checkbox'
+          }
         }
       ]
     }

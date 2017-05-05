@@ -109,6 +109,14 @@ export class ExplorerComponent extends Component {
         )
       }
     }
+
+    if (nextProps.nodes !== this.props.nodes) {
+      this.setState({nodes: nextProps.nodes})
+    }
+
+    if (nextProps.relationships !== this.props.relationships) {
+      this.setState({relationships: nextProps.relationships})
+    }
   }
 
   onInspectorExpandToggled (contracted, inspectorHeight) {
@@ -131,7 +139,7 @@ export class ExplorerComponent extends Component {
       <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'} forcePaddingBottom={inspectingItemType ? this.state.forcePaddingBottom : null}>
         {legend}
         <GraphComponent fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} relationships={this.state.relationships} nodes={this.state.nodes} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)}
-          onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} assignVisElement={this.props.assignVisElement} />
+          onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} assignVisElement={this.props.assignVisElement} getAutoCompleteCallback={this.props.getAutoCompleteCallback} />
         <InspectorComponent fullscreen={this.props.fullscreen} hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} onExpandToggled={this.onInspectorExpandToggled.bind(this)} />
       </StyledFullSizeContainer>
     )

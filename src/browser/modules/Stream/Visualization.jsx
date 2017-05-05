@@ -25,7 +25,7 @@ import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
 import { ExplorerComponent } from '../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './styled'
-import { getMaxNeighbours, getSettings } from 'shared/modules/settings/settingsDuck'
+import { getMaxNeighbours, getSettings, shouldAutoComplete } from 'shared/modules/settings/settingsDuck'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
@@ -65,7 +65,26 @@ export class Visualization extends Component {
   }
 
   populateDataToStateFromProps (props) {
-    this.setState({nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.records)})
+    this.setState({nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.records)}, () => {
+      this.autoCompleteRelationships([], this.state.nodesAndRelationships.nodes)
+    })
+  }
+
+  mergeToList (list1, list2) {
+    return list1.concat(list2.filter(itemInList2 => list1.findIndex(itemInList1 => itemInList1.id === itemInList2.id) < 0))
+  }
+
+  autoCompleteRelationships (existingNodes, newNodes) {
+    if (this.props.autoComplete) {
+      const existingNodeIds = existingNodes.map(node => parseInt(node.id))
+      const newNodeIds = newNodes.map(node => parseInt(node.id))
+
+      this.getInternalRelationships(existingNodeIds, newNodeIds)
+        .then((graph) => {
+          this.autoCompleteCallback && this.autoCompleteCallback(graph.relationships)
+        })
+        .catch((e) => {})
+    }
   }
 
   getNeighbours (id, currentNeighbourIds = []) {
@@ -84,7 +103,29 @@ export class Visualization extends Component {
             reject({nodes: [], rels: []})
           } else {
             let count = response.result.records.length > 0 ? parseInt(response.result.records[0].get('c').toString()) : 0
-            resolve({...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false), count: count})
+            const graph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)
+            this.autoCompleteRelationships(this.state.nodesAndRelationships.nodes, graph.nodes)
+            resolve({...graph, count: count})
+          }
+        }
+      )
+    })
+  }
+
+  getInternalRelationships (existingNodeIds, newNodeIds) {
+    newNodeIds = newNodeIds.map(bolt.neo4j.int)
+    existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
+    existingNodeIds = existingNodeIds.concat(newNodeIds)
+    const query = 'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
+    return new Promise((resolve, reject) => {
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {query, params: {existingNodeIds, newNodeIds}},
+        (response) => {
+          if (!response.success) {
+            reject({nodes: [], rels: []})
+          } else {
+            resolve({...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)})
           }
         }
       )
@@ -110,6 +151,7 @@ export class Visualization extends Component {
           fullscreen={this.props.fullscreen}
           frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
+          getAutoCompleteCallback={(callback) => { this.autoCompleteCallback = callback }}
         />
       </StyledVisContainer>
     )
@@ -120,7 +162,8 @@ const mapStateToProps = (state) => {
   return {
     graphStyleData: grassActions.getGraphStyleData(state),
     initialNodeDisplay: getSettings(state).initialNodeDisplay,
-    maxNeighbours: getMaxNeighbours(state)
+    maxNeighbours: getMaxNeighbours(state),
+    autoComplete: shouldAutoComplete(state)
   }
 }
 
