@@ -18,60 +18,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
+import Visible from 'browser-components/Visible'
 import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
-import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst} from './styled'
+import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst, StyledLink} from './styled'
 
-export class DatabaseKernelInfo extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      databaseKernelInfo: props.databaseKernelInfo
-    }
+export const DatabaseKernelInfo = ({version, edition, onItemClick}) => {
+  return (
+    <DrawerSection className='database-kernel-info'>
+      <DrawerSubHeader>Database</DrawerSubHeader>
+      <DrawerSectionBody>
+        <StyledTable>
+          <tbody>
+            <Visible if={version}>
+              <tr>
+                <StyledKey>Version: </StyledKey><StyledValue>{version}</StyledValue>
+              </tr>
+            </Visible>
+            <Visible if={edition}>
+              <tr>
+                <StyledKey>Edition: </StyledKey><StyledValueUCFirst>{edition}</StyledValueUCFirst>
+              </tr>
+            </Visible>
+            <tr>
+              <StyledKey>Information: </StyledKey><StyledValue><StyledLink onClick={() => onItemClick(':sysinfo')}>:sysinfo</StyledLink></StyledValue>
+            </tr>
+            <tr>
+              <StyledKey>Query List: </StyledKey><StyledValue><StyledLink onClick={() => onItemClick(':queries')}>:queries</StyledLink></StyledValue>
+            </tr>
+          </tbody>
+        </StyledTable>
+      </DrawerSectionBody>
+    </DrawerSection>
+  )
+}
+
+const mapStateToProps = (store) => {
+  return {
+    version: getVersion(store),
+    edition: getEdition(store)
   }
-  componentWillReceiveProps (props) {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {query: 'CALL dbms.components()'},
-      (response) => {
-        if (response.success) {
-          const result = response.result
-          this.setState({
-            databaseKernelInfo: {
-              version: result.records[0].get('versions'),
-              edition: result.records[0].get('edition')
-            }
-          })
-        }
-      }
-    )
-  }
-  render () {
-    const databaseKernelInfo = this.state.databaseKernelInfo
-    if (databaseKernelInfo) {
-      return (
-        <DrawerSection className='database-kernel-info'>
-          <DrawerSubHeader>Database</DrawerSubHeader>
-          <DrawerSectionBody>
-            <StyledTable>
-              <tbody>
-                <tr>
-                  <StyledKey>Version: </StyledKey><StyledValue>{databaseKernelInfo.version}</StyledValue>
-                </tr>
-                <tr>
-                  <StyledKey>Edition: </StyledKey><StyledValueUCFirst>{databaseKernelInfo.edition}</StyledValueUCFirst>
-                </tr>
-              </tbody>
-            </StyledTable>
-          </DrawerSectionBody>
-        </DrawerSection>
-      )
-    } else {
-      return null
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onItemClick: (cmd) => {
+      const action = executeCommand(cmd)
+      ownProps.bus.send(action.type, action)
     }
   }
 }
-export default withBus(DatabaseKernelInfo)
+
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(DatabaseKernelInfo))
