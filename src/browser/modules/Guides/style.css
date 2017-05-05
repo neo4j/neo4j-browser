@@ -31,6 +31,9 @@
     background: #f3f3f3;
     padding-left: 0.25em;
     padding-right: 0.25em;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
   }
   & th {
     min-width: 50px;
