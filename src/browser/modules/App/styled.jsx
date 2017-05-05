@@ -53,4 +53,5 @@ export const StyledMainWrapper = styled.div`
   padding: 0;
   z-index: 1;
   height: auto;
+  width: 0;
 `
