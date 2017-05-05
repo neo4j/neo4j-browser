@@ -58,6 +58,13 @@ const visualSettings =
             displayName: 'Max History',
             tooltip: 'Max number of history entries. When reached, old entries gets retired.'
           }
+        },
+        {
+          scrollToTop: {
+            displayName: 'Scroll To Top',
+            tooltip: 'Automatically scroll stream to top on new frames.',
+            type: 'checkbox'
+          }
         }
       ]
     },

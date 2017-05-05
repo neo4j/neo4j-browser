@@ -36,13 +36,13 @@ import SysInfoFrame from './SysInfoFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import ChangePasswordFrame from './Auth/ChangePasswordFrame'
+import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
-import QueriesFrame from './Queries/QueriesFrame'
-import { getMaxRows, getInitialNodeDisplay } from 'shared/modules/settings/settingsDuck'
+import { getMaxRows, getInitialNodeDisplay, getScrollToTop } from 'shared/modules/settings/settingsDuck'
 
 const getFrame = (type) => {
   const trans = {
@@ -70,7 +70,8 @@ const getFrame = (type) => {
 
 class Stream extends Component {
   shouldComponentUpdate (nextProps, nextState) {
-    const hasSameAmountOfFrames = this.props.frames.length === nextProps.frames.length
+    const frameHasBeenAdded = this.props.frames.length < nextProps.frames.length
+
     if (this.props.activeConnectionData === nextProps.activeConnectionData &&
       this.props.requests === nextProps.requests &&
       (this.props.children.length === nextProps.children.length &&
@@ -84,7 +85,7 @@ class Stream extends Component {
     ) {
       return false
     } else {
-      if (!hasSameAmountOfFrames) {
+      if (this.props.scrollToTop && frameHasBeenAdded) {
         this.base.scrollTop = 0
       }
       return true
@@ -121,7 +122,8 @@ const mapStateToProps = (state) => {
     activeConnectionData: getActiveConnectionData(state),
     recentView: getRecentView(state),
     maxRows: getMaxRows(state),
-    initialNodeDisplay: getInitialNodeDisplay(state)
+    initialNodeDisplay: getInitialNodeDisplay(state),
+    scrollToTop: getScrollToTop(state)
   }
 }
 
