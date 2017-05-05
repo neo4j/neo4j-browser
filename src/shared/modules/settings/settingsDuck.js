@@ -37,7 +37,7 @@ export const getBrowserSyncConfig = (state) => {
 export const getMaxNeighbours = (state) => state[NAME].maxNeighbours || initialState.maxNeighbours
 export const getMaxRows = (state) => state[NAME].maxRows || initialState.maxRows
 export const getInitialNodeDisplay = (state) => state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
-export const getScrollToTop = (state) => state[NAME].scrollToTop || initialState.scrollToTop
+export const getScrollToTop = (state) => state[NAME].scrollToTop
 export const shouldReportUdc = (state) => state[NAME].shouldReportUdc !== false
 export const shouldAutoComplete = (state) => state[NAME].autoComplete !== false
 
