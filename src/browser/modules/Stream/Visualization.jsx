@@ -65,9 +65,7 @@ export class Visualization extends Component {
   }
 
   populateDataToStateFromProps (props) {
-    this.setState({nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.records)}, () => {
-      this.autoCompleteRelationships([], this.state.nodesAndRelationships.nodes)
-    })
+    this.setState({ nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.records) })
   }
 
   mergeToList (list1, list2) {
@@ -103,9 +101,9 @@ export class Visualization extends Component {
             reject({nodes: [], rels: []})
           } else {
             let count = response.result.records.length > 0 ? parseInt(response.result.records[0].get('c').toString()) : 0
-            const graph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)
-            this.autoCompleteRelationships(this.state.nodesAndRelationships.nodes, graph.nodes)
-            resolve({...graph, count: count})
+            const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)
+            this.autoCompleteRelationships(this.graph._nodes, resultGraph.nodes)
+            resolve({...resultGraph, count: count})
           }
         }
       )
@@ -132,6 +130,11 @@ export class Visualization extends Component {
     })
   }
 
+  setGraph (graph) {
+    this.graph = graph
+    this.autoCompleteRelationships([], this.graph._nodes)
+  }
+
   render () {
     // This workaround is to overcome the issue that if the svg is initiated with in a style.display = none component, it does not become visible even display changed to block or so
     if (this.state.justInitiated && this.props.style.display === 'none') {
@@ -152,6 +155,7 @@ export class Visualization extends Component {
           frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={(callback) => { this.autoCompleteCallback = callback }}
+          setGraph={this.setGraph.bind(this)}
         />
       </StyledVisContainer>
     )
