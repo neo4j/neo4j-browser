@@ -46,6 +46,7 @@ class Navigation extends Component {
           newState.transitionState = Opening
         }
       } else {
+        newState.drawerContent = ''
         if (this.state.transitionState === Open || this.state.transitionState === Opening) {
           newState.transitionState = Closing
         }
