@@ -139,7 +139,7 @@ export class ExplorerComponent extends Component {
       <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'} forcePaddingBottom={inspectingItemType ? this.state.forcePaddingBottom : null}>
         {legend}
         <GraphComponent fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} relationships={this.state.relationships} nodes={this.state.nodes} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)}
-          onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} assignVisElement={this.props.assignVisElement} getAutoCompleteCallback={this.props.getAutoCompleteCallback} />
+          onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} assignVisElement={this.props.assignVisElement} getAutoCompleteCallback={this.props.getAutoCompleteCallback} setGraph={this.props.setGraph} />
         <InspectorComponent fullscreen={this.props.fullscreen} hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} onExpandToggled={this.onInspectorExpandToggled.bind(this)} />
       </StyledFullSizeContainer>
     )

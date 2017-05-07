@@ -80,6 +80,7 @@ export class GraphComponent extends Component {
         this.props.onGraphModelChange(getGraphStats(this.graph))
       }
 
+      this.graph && this.props.setGraph && this.props.setGraph(this.graph)
       this.props.getAutoCompleteCallback && this.props.getAutoCompleteCallback(this.addInternalRelationships.bind(this))
       this.props.assignVisElement && this.props.assignVisElement(this.svgElement, this.graphView)
     }
