@@ -103,14 +103,17 @@ function updateMetaForContext (state, meta, context) {
     .labels
     .filter(notInCurrentContext)
     .concat(mapResult(0, mapSingleValue))
+    .sort((a, b) => a.val > b.val)
   const relationshipTypes = state
     .relationshipTypes
     .filter(notInCurrentContext)
     .concat(mapResult(1, mapSingleValue))
+    .sort((a, b) => a.val > b.val)
   const properties = state
     .properties
     .filter(notInCurrentContext)
     .concat(mapResult(2, mapSingleValue))
+    .sort((a, b) => a.val > b.val)
   const functions = state
     .functions
     .filter(notInCurrentContext)
