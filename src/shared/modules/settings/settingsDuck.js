@@ -19,11 +19,13 @@
  */
 
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
 
 export const getSettings = (state) => state[NAME]
+export const getMaxHistory = (state) => state[NAME].maxHistory || initialState.maxHistory
 export const getInitCmd = (state) => state[NAME].initCmd || initialState.initCmd
 export const getTheme = (state) => state[NAME].theme || initialState.theme
 export const getUseBoltRouting = (state) => state[NAME].useBoltRouting || initialState.useBoltRouting
@@ -33,6 +35,11 @@ export const getBrowserSyncConfig = (state) => {
     : browserSyncConfig
 }
 export const getMaxNeighbours = (state) => state[NAME].maxNeighbours || initialState.maxNeighbours
+export const getMaxRows = (state) => state[NAME].maxRows || initialState.maxRows
+export const getInitialNodeDisplay = (state) => state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
+export const getScrollToTop = (state) => state[NAME].scrollToTop
+export const shouldReportUdc = (state) => state[NAME].shouldReportUdc !== false
+export const shouldAutoComplete = (state) => state[NAME].autoComplete !== false
 
 const browserSyncConfig = {
   authWindowUrl: 'https://auth.neo4j.com/indexNewBrowser.html',
@@ -54,10 +61,16 @@ const initialState = {
   initialNodeDisplay: 300,
   maxNeighbours: 100,
   showSampleScripts: true,
-  browserSyncDebugServer: null
+  browserSyncDebugServer: null,
+  maxRows: 1000,
+  shouldReportUdc: true,
+  autoComplete: true,
+  scrollToTop: true
 }
 
 export default function settings (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case UPDATE:
       return Object.assign({}, state, action.state)

@@ -20,11 +20,12 @@
 
 /* global test, expect */
 import reducer, { UPDATE_GRAPH_STYLE_DATA } from './grassDuck'
+import { dehydrate } from 'services/duckUtils'
 
 describe('grass reducer', () => {
   test('handles initial value', () => {
     const nextState = reducer(undefined, {type: ''})
-    expect(nextState).toBeNull()
+    expect(dehydrate(nextState)).toBeNull()
   })
   test('handles UPDATE_GRAPH_STYLE_DATA without initial state', () => {
     const action = {
@@ -32,7 +33,7 @@ describe('grass reducer', () => {
       styleData: 'style updated'
     }
     const nextState = reducer(undefined, action)
-    expect(nextState).toEqual('style updated')
+    expect(dehydrate(nextState)).toEqual('style updated')
   })
 
   test('handles UPDATE_GRAPH_STYLE_DATA', () => {

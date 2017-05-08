@@ -62,6 +62,7 @@ class FrameTemplate extends Component {
           pinned={this.state.pinned}
           togglePin={this.togglePin.bind(this)}
           exportData={this.props.exportData}
+          visElement={this.props.visElement}
           />
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
           {(this.props.sidebar) ? this.props.sidebar() : null}
@@ -70,7 +71,7 @@ class FrameTemplate extends Component {
               {this.props.contents}
             </StyledFrameContents>
             <Visible if={this.props.statusbar}>
-              <StyledFrameStatusbar>{this.props.statusbar}</StyledFrameStatusbar>
+              <StyledFrameStatusbar fullscreen={this.state.fullscreen}>{this.props.statusbar}</StyledFrameStatusbar>
             </Visible>
           </StyledFrameMainSection>
         </StyledFrameBody>

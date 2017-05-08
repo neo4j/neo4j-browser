@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import updateStatsFields from './updateStatisticsFields'
+
 export function toObjects (records, intChecker, intConverter) {
   const recordValues = records.map((record) => {
     let out = []
@@ -99,6 +101,10 @@ export function extractNodesAndRelationshipsFromRecords (records, types) {
   return { nodes: rawNodes, relationships: rawRels }
 }
 
+const resultContainsGraphKeys = (keys) => {
+  return (keys.includes('nodes') && keys.includes('relationships'))
+}
+
 export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types, filterRels, intChecker, intConverter) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
@@ -106,13 +112,18 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types
   let keys = records[0].keys
   let rawNodes = []
   let rawRels = []
-  records.forEach((record) => {
-    let graphItems = keys.map((key) => record.get(key))
-    rawNodes = [...rawNodes, ...graphItems.filter((item) => item instanceof types.Node)]
-    rawRels = [...rawRels, ...graphItems.filter((item) => item instanceof types.Relationship)]
-    let paths = graphItems.filter((item) => item instanceof types.Path)
-    paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
-  })
+  if (resultContainsGraphKeys(keys)) {
+    rawNodes = [...rawNodes, ...records[0].get(keys[0])]
+    rawRels = [...rawRels, ...records[0].get(keys[1])]
+  } else {
+    records.forEach((record) => {
+      let graphItems = keys.map((key) => record.get(key))
+      rawNodes = [...rawNodes, ...graphItems.filter((item) => item instanceof types.Node)]
+      rawRels = [...rawRels, ...graphItems.filter((item) => item instanceof types.Relationship)]
+      let paths = graphItems.filter((item) => item instanceof types.Path)
+      paths.forEach((item) => extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types))
+    })
+  }
   const nodes = rawNodes.map((item) => {
     return {id: item.identity.toString(), labels: item.labels, properties: itemIntToString(item.properties, intChecker, intConverter)}
   })
@@ -121,7 +132,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types
     relationships = rawRels.filter((item) => nodes.filter((node) => node.id === item.start.toString()).length > 0 && nodes.filter((node) => node.id === item.end.toString()).length > 0)
   }
   relationships = relationships.map((item) => {
-    return {id: item.identity.toString(), startNodeId: item.start, endNodeId: item.end, type: item.type, properties: itemIntToString(item.properties, intChecker, intConverter)}
+    return {id: item.identity.toString(), startNodeId: item.start.toString(), endNodeId: item.end.toString(), type: item.type, properties: itemIntToString(item.properties, intChecker, intConverter)}
   })
   return { nodes: nodes, relationships: relationships }
 }
@@ -135,4 +146,16 @@ const extractNodesAndRelationshipsFromPath = (item, rawNodes, rawRels) => {
       rawRels.push(segment.relationship)
     })
   })
+}
+
+export const retrieveFormattedUpdateStatistics = (result) => {
+  if (result.summary.counters) {
+    const stats = result.summary.counters._stats
+    const statsMessages = updateStatsFields.filter(field => stats[field.field] > 0).map(field => `${field.verb} ${stats[field.field]} ${stats[field.field] === 1 ? field.singular : field.plural}`)
+    return statsMessages.join(', ')
+  } else return null
+}
+
+export const flattenProperties = (rows) => {
+  return rows.map((row) => row.map((entry) => (entry && entry.properties) ? entry.properties : entry))
 }

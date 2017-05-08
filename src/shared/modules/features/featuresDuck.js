@@ -19,22 +19,25 @@
  */
 
 import bolt from 'services/bolt/bolt'
+import { hydrate } from 'services/duckUtils'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'features'
 export const RESET = 'features/RESET'
-export const UPDATE_ONE = 'features/UPDATE_ONE'
-export const UPDATE_ALL = 'features/UPDATE_ALL'
+export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
 
 export const getAvailableProcedures = (state) => state[NAME].availableProcedures
 
-const initialState = {availableProcedures: []}
+const initialState = {
+  availableProcedures: []
+}
 
 export default function (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
-    case UPDATE_ALL:
-      state.availableProcedures = state.availableProcedures.concat(action.availableProcedures)
-      return Object.assign({}, state)
+    case UPDATE_ALL_FEATURES:
+      return {...state, availableProcedures: [...action.availableProcedures]}
     case RESET:
       return initialState
     default:
@@ -42,24 +45,25 @@ export default function (state = initialState, action) {
   }
 }
 
-// Actions
-export const updateFeatures = (availableProcedures, context) => {
+// Action creators
+export const updateFeatures = (availableProcedures) => {
   return {
-    type: UPDATE_ALL,
+    type: UPDATE_ALL_FEATURES,
     availableProcedures
   }
 }
-export const featuresDicoveryEpic = (action$, store) => {
+
+export const featuresDiscoveryEpic = (action$, store) => {
   return action$.ofType(CONNECTION_SUCCESS)
     .mergeMap(() => {
       return bolt.routedReadTransaction('CALL dbms.procedures YIELD name')
-      .then((res) => {
-        store.dispatch(updateFeatures(res.records.map((record) => record.get('name'))))
-        return null
-      })
-      .catch((e) => {
-        return null
-      })
+        .then((res) => {
+          store.dispatch(updateFeatures(res.records.map((record) => record.get('name'))))
+          return null
+        })
+        .catch((e) => {
+          return null
+        })
     })
     .mapTo({ type: 'NOOP' })
 }

@@ -1,3 +1,6 @@
+svg {
+  width: 100%;
+}
 .neod3viz .node .ring {
   fill: none;
   opacity: 0;

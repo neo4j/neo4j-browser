@@ -36,12 +36,14 @@ export class ConnectionForm extends Component {
   constructor (props) {
     super(props)
     const connection = this.props.activeConnectionData || this.props.frame.connectionData
+    const isConnected = (!!props.activeConnection)
     this.state = {
       ...connection,
-      isConnected: (!!props.activeConnection),
+      isConnected: isConnected,
       passwordChangeNeeded: props.passwordChangeNeeded || false,
       forcePasswordChange: props.forcePasswordChange || false,
-      successCallback: props.onSuccess || (() => {})
+      successCallback: props.onSuccess || (() => {}),
+      used: isConnected
     }
   }
   connect (doneFn = () => {}) {
@@ -108,7 +110,7 @@ export class ConnectionForm extends Component {
     )
   }
   saveAndStart () {
-    this.setState({forcePasswordChange: false})
+    this.setState({forcePasswordChange: false, used: true})
     this.state.successCallback()
     this.updateRoutingSettings()
     this.saveCredentials()
@@ -159,6 +161,7 @@ export class ConnectionForm extends Component {
         host={this.state.hostInputVal || this.state.host}
         username={this.state.username}
         password={this.state.password}
+        used={this.state.used}
       />)
     }
     return view

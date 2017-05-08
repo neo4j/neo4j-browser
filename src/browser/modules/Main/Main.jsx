@@ -24,6 +24,7 @@ import Stream from '../Stream/Stream'
 import Visible from 'browser-components/Visible'
 import ClickToCode from '../ClickToCode'
 import { StyledMain, WarningBanner, ErrorBanner, NotAuthedBanner, StyledCodeBlockAuthBar, StyledCodeBlockErrorBar } from './styled'
+import SyncReminderBanner from './SyncReminderBanner'
 
 const Main = (props) => {
   return (
@@ -36,6 +37,11 @@ const Main = (props) => {
             {props.cmdchar}help commands
           </ClickToCode>&nbsp;
           for a list of available commands.
+        </ErrorBanner>
+      </Visible>
+      <Visible if={props.errorMessage}>
+        <ErrorBanner>
+          {props.errorMessage}
         </ErrorBanner>
       </Visible>
       <Visible if={props.connectionState === DISCONNECTED_STATE}>
@@ -52,6 +58,7 @@ const Main = (props) => {
           Connection to server lost. Reconnecting...
         </WarningBanner>
       </Visible>
+      <SyncReminderBanner />
       <Stream />
     </StyledMain>
   )

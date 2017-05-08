@@ -21,6 +21,7 @@
 /* global describe, test, expect */
 
 import reducer, * as params from './paramsDuck'
+import { dehydrate } from 'services/duckUtils'
 
 describe('paramsDuck', () => {
   test('Finds the reducer', () => {
@@ -37,7 +38,7 @@ describe('paramsDuck', () => {
     const next = reducer(state, action)
 
     // Then
-    expect(next).toEqual(param)
+    expect(dehydrate(next)).toEqual(param)
   })
 
   test('Can add a param to non-empty state', () => {
@@ -51,7 +52,7 @@ describe('paramsDuck', () => {
     const next = reducer(state, action)
 
     // Then
-    expect(next).toEqual(expected)
+    expect(dehydrate(next)).toEqual(expected)
   })
 
   test('Can overwrite a param to non-empty state', () => {
@@ -64,6 +65,6 @@ describe('paramsDuck', () => {
     const next = reducer(state, action)
 
     // Then
-    expect(next).toEqual(param)
+    expect(dehydrate(next)).toEqual(param)
   })
 })

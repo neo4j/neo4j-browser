@@ -27,6 +27,7 @@ import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUse
 
 import { FormButton } from 'browser-components/buttons'
 import { CloseIcon } from 'browser-components/icons/Icons'
+import {StyledBodyTr, StyledTd} from 'browser-components/DataTables'
 
 import RolesSelector from './RolesSelector'
 
@@ -84,10 +85,10 @@ export class UserInformation extends Component {
       )
     })
   }
-  onRoleSelect ({option}) {
+  onRoleSelect (event) {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: addRoleToUser(this.state.username, option)},
+      {query: addRoleToUser(this.state.username, event.target.value)},
       this.handleResponse.bind(this)
     )
   }
@@ -100,24 +101,24 @@ export class UserInformation extends Component {
   }
   render () {
     return (
-      <tr className='user-info'>
-        <td className='username'>{this.props.username}</td>
-        <td className='roles'>
+      <StyledBodyTr className='user-info'>
+        <StyledTd className='username'>{this.props.username}</StyledTd>
+        <StyledTd className='roles'>
           <RolesSelector roles={this.availableRoles()} onChange={this.onRoleSelect.bind(this)} />
           <span>
             {this.listRoles()}
           </span>
-        </td>
-        <td className='status'>
+        </StyledTd>
+        <StyledTd className='status'>
           {this.statusButton(this.props.status)}
-        </td>
-        <td className='password-change'>
+        </StyledTd>
+        <StyledTd className='password-change'>
           {this.passwordChange()}
-        </td>
-        <td>
+        </StyledTd>
+        <StyledTd>
           <FormButton className='delete' label='Remove' onClick={this.removeClick.bind(this)} />
-        </td>
-      </tr>
+        </StyledTd>
+      </StyledBodyTr>
     )
   }
 }

@@ -18,32 +18,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import bolt from 'services/bolt/bolt'
-import { getInterpreter, isNamedInterpreter } from 'services/commandUtils'
+import { getInterpreter, isNamedInterpreter, cleanCommand } from 'services/commandUtils'
+import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
-import { getCmdChar } from '../settings/settingsDuck'
+import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
+import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData } from '../dbMeta/dbMetaDuck'
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
-import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
 export const KNOWN_COMMAND = NAME + '/KNOWN_COMMAND'
+export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
+export const CYPHER = NAME + '/CYPHER'
+export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
+export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
 
 const initialState = {
   lastCommandWasUnknown: false
 }
 export const wasUnknownCommand = (state) => state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
+export const getErrorMessage = (state) => state[NAME].errorMessage
 
 export default function reducer (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case UNKNOWN_COMMAND:
       return { lastCommandWasUnknown: true }
     case KNOWN_COMMAND:
       return { lastCommandWasUnknown: false }
+    case SHOW_ERROR_MESSAGE:
+      return { lastCommandWasUnknown: false, errorMessage: action.errorMessage }
     case USER_CLEAR:
       return initialState
     default:
@@ -75,6 +84,14 @@ export const unknownCommand = (cmd) => ({
   cmd
 })
 
+export const showErrorMessage = (errorMessage) => ({
+  type: SHOW_ERROR_MESSAGE,
+  errorMessage: errorMessage
+})
+export const cypher = (query) => ({ type: CYPHER, query })
+export const successfulCypher = (query) => ({ type: CYPHER_SUCCEEDED, query })
+export const unsuccessfulCypher = (query) => ({ type: CYPHER_FAILED, query })
+
 // Epics
 export const handleCommandsEpic = (action$, store) =>
   action$.ofType(USER_COMMAND_QUEUED)
@@ -87,12 +104,14 @@ export const handleCommandsEpic = (action$, store) =>
     .do(({action, interpreted}) => {
       if (action.type === SYSTEM_COMMAND_QUEUED) return
       if (isNamedInterpreter(interpreted)) {
-        store.dispatch(addHistory({cmd: action.cmd})) // Only save valid commands to history
+        const maxHistory = getMaxHistory(store.getState())
+        store.dispatch(addHistory(action.cmd, maxHistory)) // Only save valid commands to history
         store.dispatch({ type: KNOWN_COMMAND }) // Clear any eventual unknown command notifications
       }
     })
     .mergeMap(({action, interpreted, cmdchar}) => {
       return new Promise((resolve, reject) => {
+        action.cmd = cleanCommand(action.cmd)
         const res = interpreted.exec(action, cmdchar, store.dispatch, store)
         const noop = { type: 'NOOP' }
         if (!res || !res.then) {
@@ -109,22 +128,13 @@ export const handleCommandsEpic = (action$, store) =>
     })
 
 export const postConnectCmdEpic = (some$, store) =>
-  some$.ofType(CONNECTION_SUCCESS)
-    .mergeMap(() => {
-      return bolt.directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
-        .then((res) => {
-          // Find kernel conf
-          let conf
-          res.records.forEach((record) => {
-            if (record.get('name').match(/Configuration$/)) conf = record.get('attributes')
-          })
-          if (conf && conf['browser.post_connect_cmd'] && conf['browser.post_connect_cmd'].value) {
-            const cmdchar = getCmdChar(store.getState())
-            store.dispatch(executeSystemCommand(`${cmdchar}${conf['browser.post_connect_cmd'].value}`))
-          }
-          return null
-        }).catch((e) => {
-          return null
-        })
+  some$
+    .zip(some$.ofType(CONNECTION_SUCCESS), some$.ofType(UPDATE_SETTINGS))
+    .do(() => {
+      const serverSettings = getAvailableSettings(store.getState())
+      if (serverSettings && serverSettings['browser.post_connect_cmd']) {
+        const cmdchar = getCmdChar(store.getState())
+        store.dispatch(executeSystemCommand(`${cmdchar}${serverSettings['browser.post_connect_cmd']}`))
+      }
     })
     .mapTo({ type: 'NOOP' })

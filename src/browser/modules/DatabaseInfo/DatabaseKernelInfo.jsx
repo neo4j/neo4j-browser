@@ -23,7 +23,7 @@ import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
-import {StyledTable, StyledKey, StyledValue} from './styled'
+import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst} from './styled'
 
 export class DatabaseKernelInfo extends Component {
   constructor (props) {
@@ -62,7 +62,7 @@ export class DatabaseKernelInfo extends Component {
                   <StyledKey>Version: </StyledKey><StyledValue>{databaseKernelInfo.version}</StyledValue>
                 </tr>
                 <tr>
-                  <StyledKey>Edition: </StyledKey><StyledValue>{databaseKernelInfo.edition}</StyledValue>
+                  <StyledKey>Edition: </StyledKey><StyledValueUCFirst>{databaseKernelInfo.edition}</StyledValueUCFirst>
                 </tr>
               </tbody>
             </StyledTable>

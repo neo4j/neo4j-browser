@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 @font-face {
   font-family: "streamline";
   src:url("fonts/streamline.eot");
@@ -34,7 +36,6 @@
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  vertical-align: baseline
 }
 
 .sl-star:before {
@@ -51,9 +52,6 @@
 }
 .sl-book:before {
   content: "\65";
-}
-.sl-network:before {
-  content: "\66";
 }
 .sl-scale-reduce:before {
   content: "\67";
@@ -129,9 +127,6 @@
 }
 .sl-window-code:before {
   content: "\72";
-}
-.sl-network-trio:before {
-  content: "\75";
 }
 .sl-arrow-circle-left:before {
   content: "\76";
@@ -253,9 +248,6 @@
 .sl-delete:before {
   content: "\49";
 }
-.sl-hierarchy:before {
-  content: "\3a";
-}
 .sl-double-down:before {
   content: "\3f";
 }
@@ -292,23 +284,11 @@
 .sl-arrange:before {
   content: "\7b";
 }
-.sl-transfer:before {
-  content: "\7c";
-}
-.sl-script:before {
-  content: "\7d";
-}
-.sl-receipt:before {
-  content: "\7e";
-}
 .sl-bubble-conversation:before {
   content: "\5c";
 }
 .sl-pulse-graph:before {
   content: "\e000";
-}
-.sl-heartpulse:before {
-  content: "\e001";
 }
 .sl-pencil-filled:before {
   content: "\74";
@@ -333,4 +313,28 @@
 }
 .sl-delete-filled:before {
   content: "\e005";
+}
+.sl-thumbnails:before {
+  content: "\3b";
+}
+.sl-arrow-undo:before {
+  content: "\66";
+}
+.sl-network:before {
+  content: "\75";
+}
+.sl-tag:before {
+  content: "\3a";
+}
+.sl-arrow-up-right:before {
+  content: "\7d";
+}
+.sl-network-trio:before {
+  content: "\7e";
+}
+.sl-loop:before {
+  content: "\7c";
+}
+.sl-hierarchy:before {
+  content: "\e001";
 }

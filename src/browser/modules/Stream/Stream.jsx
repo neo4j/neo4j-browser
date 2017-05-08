@@ -36,12 +36,13 @@ import SysInfoFrame from './SysInfoFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import ChangePasswordFrame from './Auth/ChangePasswordFrame'
+import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
-import QueriesFrame from './Queries/QueriesFrame'
+import { getMaxRows, getInitialNodeDisplay, getScrollToTop } from 'shared/modules/settings/settingsDuck'
 
 const getFrame = (type) => {
   const trans = {
@@ -69,6 +70,8 @@ const getFrame = (type) => {
 
 class Stream extends Component {
   shouldComponentUpdate (nextProps, nextState) {
+    const frameHasBeenAdded = this.props.frames.length < nextProps.frames.length
+
     if (this.props.activeConnectionData === nextProps.activeConnectionData &&
       this.props.requests === nextProps.requests &&
       (this.props.children.length === nextProps.children.length &&
@@ -82,6 +85,9 @@ class Stream extends Component {
     ) {
       return false
     } else {
+      if (this.props.scrollToTop && frameHasBeenAdded) {
+        this.base.scrollTop = 0
+      }
       return true
     }
   }
@@ -97,7 +103,9 @@ class Stream extends Component {
             recentView: this.props.recentView,
             onRecentViewChanged: (view) => {
               this.props.onRecentViewChanged(view)
-            }
+            },
+            maxRows: this.props.maxRows,
+            initialNodeDisplay: this.props.initialNodeDisplay
           }
           const MyFrame = getFrame(frame.type)
           return <MyFrame {...frameProps} key={frame.id} />
@@ -112,7 +120,10 @@ const mapStateToProps = (state) => {
     frames: getFrames(state),
     requests: getRequests(state),
     activeConnectionData: getActiveConnectionData(state),
-    recentView: getRecentView(state)
+    recentView: getRecentView(state),
+    maxRows: getMaxRows(state),
+    initialNodeDisplay: getInitialNodeDisplay(state),
+    scrollToTop: getScrollToTop(state)
   }
 }
 

@@ -47,6 +47,16 @@ export const debounce = (fn, time, context = null) => {
   }
 }
 
+export const throttle = (fn, time, context = null) => {
+  let blocking
+  return (...args) => {
+    if (blocking) return
+    blocking = true
+    typeof fn === 'function' && fn.apply(context, args)
+    setTimeout(() => (blocking = false), parseInt(time))
+  }
+}
+
 export const isRoutingHost = (host) => {
   return /^bolt\+routing:\/\//.test(host)
 }
@@ -146,6 +156,46 @@ export const getBrowserName = function () {
 
 export const removeComments = (string) => {
   return string.split(/\r?\n/).filter((line) => !line.startsWith('//')).join('\r\n')
+}
+
+export const canUseDOM = () => !!(
+  (typeof window !== 'undefined' &&
+  window.document && window.document.createElement)
+)
+
+export const stringifyMod = () => {
+  const toString = Object.prototype.toString
+  const isArray = Array.isArray || function (a) { return toString.call(a) === '[object Array]' }
+  const escMap = {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}
+  const escFunc = function (m) { return escMap[m] || '\\u' + (m.charCodeAt(0) + 0x10000).toString(16).substr(1) }
+  const escRE = /[\\"\u0000-\u001F\u2028\u2029]/g
+  return function stringify (value, modFn = null) {
+    if (modFn) {
+      const modVal = modFn && modFn(value)
+      if (typeof modVal !== 'undefined') return modVal
+    }
+    if (value == null) return 'null'
+    if (typeof value === 'number') return isFinite(value) ? value.toString() : 'null'
+    if (typeof value === 'boolean') return value.toString()
+    if (typeof value === 'object') {
+      if (typeof value.toJSON === 'function') {
+        return stringify(value.toJSON(), modFn)
+      } else if (isArray(value)) {
+        let res = '['
+        for (let i = 0; i < value.length; i++) {
+          res += (i ? ',' : '') + stringify(value[i], modFn)
+        }
+        return res + ']'
+      } else if (toString.call(value) === '[object Object]') {
+        let tmp = []
+        for (const k in value) {
+          if (value.hasOwnProperty(k)) tmp.push(stringify(k, modFn) + ':' + stringify(value[k], modFn))
+        }
+        return '{' + tmp.join(',') + '}'
+      }
+    }
+    return '"' + value.toString().replace(escRE, escFunc) + '"'
+  }
 }
 
 // Epic helpers

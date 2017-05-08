@@ -28,11 +28,12 @@ export const ADD_FAVORITE = 'favorites/ADD_FAVORITE'
 export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
 export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
+export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
 
 import {scripts as staticScriptsList} from './staticScripts'
 
 export const getFavorites = (state) => state[NAME]
-
+const versionSize = 20
 // reducer
 const initialState = staticScriptsList.map(script => Object.assign({}, script, {isStatic: true}))
 
@@ -43,6 +44,7 @@ export default function reducer (state = initialState, action) {
     case ADD_FAVORITE:
       return state.concat([{id: uuid.v4(), content: action.cmd}])
     case LOAD_FAVORITES:
+    case UPDATE_FAVORITES:
       return mergeFavorites(initialState, action.favorites)
     case USER_CLEAR:
       return initialState
@@ -77,17 +79,24 @@ export function syncFavorites (favorites) {
     favorites
   }
 }
+export function updateFavorites (favorites) {
+  return {
+    type: UPDATE_FAVORITES,
+    favorites
+  }
+}
 
 export const composeDocumentsToSync = (store, syncValue) => {
   const documents = syncValue.syncObj.documents
   const favorites = getFavorites(store.getState()).filter(fav => !fav.isStatic)
 
-  documents.unshift({
+  let newDocuments = [{
     'client': getBrowserName(),
     'data': favorites,
     'syncedAt': Date.now()
-  })
-  return documents
+  }].concat(documents.slice(0, versionSize))
+
+  return newDocuments
 }
 
 export const mergeFavorites = (list1, list2) => {
