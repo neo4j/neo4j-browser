@@ -100,6 +100,10 @@ ansi-styles@^3.0.0:
   dependencies:
     color-convert "^1.0.0"
 
+antlr4@4.6.0:
+  version "4.6.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.6.0.tgz#0d7e8b4b4692ebf1d9470ae59cf627428bcc6dec"
+
 any-promise@~0.1.0:
   version "0.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/any-promise/-/any-promise-0.1.0.tgz#830b680aa7e56f33451d4b049f3bd8044498ee27"
@@ -1221,9 +1225,9 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codemirror@^5.24.2:
-  version "5.25.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.25.0.tgz#78e06939c7bb41f65707b8aa9c5328111948b756"
+codemirror@^5.25.2:
+  version "5.25.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.25.2.tgz#8c77677ca9c9248d757d3a07ed1e89a8404850b7"
 
 coffee-loader@^0.7.3:
   version "0.7.3"
@@ -1611,6 +1615,20 @@ cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   dependencies:
     cssom "0.3.x"
 
+cypher-codemirror@1.0.4:
+  version "1.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.0.4.tgz#b78643df281b3e9e1dbfa7cb1d299b3cee69d6d6"
+  dependencies:
+    cypher-editor-support "1.0.4"
+
+cypher-editor-support@1.0.4:
+  version "1.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.0.4.tgz#c9b9f3d77d06ad734a09d1c0e646a6701ef9075f"
+  dependencies:
+    antlr4 "4.6.0"
+    fuzzaldrin "2.1.0"
+    lodash "4.17.4"
+
 d@1:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d/-/d-1.0.0.tgz#754bb5bfe55451da69a58b94d45f4c5b0462d58f"
@@ -1766,7 +1784,11 @@ discontinuous-range@1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/discontinuous-range/-/discontinuous-range-1.0.0.tgz#e38331f0844bba49b9a9cb71c771585aab1bc65a"
 
-dnd-core@^2.2.4:
+disposables@^1.0.1:
+  version "1.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/disposables/-/disposables-1.0.1.tgz#064727a25b54f502bd82b89aa2dfb8df9f1b39e3"
+
+dnd-core@^2.2.4, dnd-core@^2.3.0:
   version "2.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/dnd-core/-/dnd-core-2.3.0.tgz#f7b29ac37e2c78efe89e911ca5a534f280390450"
   dependencies:
@@ -2431,6 +2453,10 @@ file-loader@^0.11.1:
   dependencies:
     loader-utils "^1.0.2"
 
+file-saver@^1.3.3:
+  version "1.3.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/file-saver/-/file-saver-1.3.3.tgz#cdd4c44d3aa264eac2f68ec165bc791c34af1232"
+
 filename-regex@^2.0.0:
   version "2.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/filename-regex/-/filename-regex-2.0.0.tgz#996e3e80479b98b9897f15a8a58b3d084e926775"
@@ -2621,6 +2647,10 @@ function.prototype.name@^1.0.0:
     define-properties "^1.1.2"
     function-bind "^1.1.0"
     is-callable "^1.1.2"
+
+fuzzaldrin@2.1.0:
+  version "2.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/fuzzaldrin/-/fuzzaldrin-2.1.0.tgz#90204c3e2fdaa6941bb28d16645d418063a90e9b"
 
 gauge@~2.7.1:
   version "2.7.3"
@@ -2845,6 +2875,10 @@ hoek@2.x.x:
   version "2.16.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
+hoist-non-react-statics@^1.2.0:
+  version "1.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
+
 home-or-tmp@^2.0.0:
   version "2.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/home-or-tmp/-/home-or-tmp-2.0.0.tgz#e36c3f2d2cae7d746a857e38d18d5f32a7882db8"
@@ -3066,7 +3100,7 @@ interpret@^1.0.0:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/interpret/-/interpret-1.0.2.tgz#f4f623f0bb7122f15f5717c8e254b8161b5c5b2d"
 
-invariant@^2.0.0, invariant@^2.2.0:
+invariant@^2.0.0, invariant@^2.1.0, invariant@^2.2.0:
   version "2.2.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
   dependencies:
@@ -3909,7 +3943,7 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.2:
+lodash@4.17.4, lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.2:
   version "4.17.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -5383,6 +5417,22 @@ react-base16-styling@^0.5.1:
     lodash.curry "^4.0.1"
     lodash.flow "^3.3.0"
     pure-color "^1.2.0"
+
+react-dnd-html5-backend@^2.3.0:
+  version "2.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd-html5-backend/-/react-dnd-html5-backend-2.3.0.tgz#a45ce593f5c6944aa01114b368117c56c954804e"
+  dependencies:
+    lodash "^4.2.0"
+
+react-dnd@^2.3.0:
+  version "2.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd/-/react-dnd-2.3.0.tgz#aede61c06b968554dcf2a2445657cdbb3100be49"
+  dependencies:
+    disposables "^1.0.1"
+    dnd-core "^2.3.0"
+    hoist-non-react-statics "^1.2.0"
+    invariant "^2.1.0"
+    lodash "^4.2.0"
 
 react-dock@^0.2.1:
   version "0.2.3"

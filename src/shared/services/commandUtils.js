@@ -25,7 +25,11 @@ export function cleanCommand (cmd) {
 }
 
 export function stripEmptyCommandLines (str) {
-  return str.replace(/(^|\n)\s*/g, '')
+  const skipEmptyLines = (e) => !/^\s*$/.test(e)
+  return str
+    .split('\n')
+    .filter(skipEmptyLines)
+    .join('\n')
 }
 
 export function stripCommandComments (str) {
@@ -77,7 +81,7 @@ export const isCypherCommand = (cmd, cmdchar) => {
 
 export const getInterpreter = (interpret, cmd, cmdchar) => {
   if (isCypherCommand(cmd, cmdchar)) return interpret('cypher')
-  return interpret(cmd.substr(cmdchar.length))
+  return interpret(cleanCommand(cmd).substr(cmdchar.length))
 }
 
 export const isNamedInterpreter = (interpreter) => interpreter && interpreter.name !== 'catch-all'

@@ -27,7 +27,7 @@ const PlayFrame = ({frame}) => {
   if (frame.result) {
     guide = <Guides withDirectives html={frame.result} />
   } else {
-    const guideName = frame.cmd.replace(':play', '').replace(/\s|-/g, '').trim()
+    const guideName = frame.cmd.replace(':play', '').replace(/\s|-/g, '').trim() || 'start'
     if (guideName !== '') {
       const content = html[guideName]
       if (content !== undefined) {
@@ -36,7 +36,7 @@ const PlayFrame = ({frame}) => {
         if (frame.error && frame.error.error) {
           guide = frame.error.error
         } else {
-          guide = 'Guide not found'
+          guide = <Guides withDirectives html={html['unfound']} />
         }
       }
     }

@@ -20,8 +20,10 @@
 
 import { syncResourceFor } from 'services/browserSyncService'
 import { setItem } from 'services/localstorage'
-import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
+import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
+import { REMOVE_FOLDER, ADD_FOLDER, UPDATE_FOLDERS, SYNC_FOLDERS, composeFoldersToSync, foldersToLoad, loadFolders, syncFolders } from 'shared/modules/favorites/foldersDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
+import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'sync'
 export const NAME_CONSENT = 'syncConsent'
@@ -30,6 +32,11 @@ export const SYNC_ITEMS = 'sync/SYNC_ITEMS'
 export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
 export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
+export const OPT_OUT_SYNC = 'sync/OPT_OUT_SYNC'
+export const AUTHORIZED = 'sync/AUTHORIZED'
+
+const initialState = null
+const initialConsentState = { consented: false, optedOut: false }
 
 /**
  * Selectors
@@ -41,7 +48,10 @@ export function getSync (state) {
 /**
  * Reducer
 */
-export function syncReducer (state = null, action) {
+
+export function syncReducer (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case SET_SYNC:
       return Object.assign({}, state, action.obj)
@@ -53,12 +63,18 @@ export function syncReducer (state = null, action) {
   }
 }
 
-export function syncConsentReducer (state = false, action) {
+export function syncConsentReducer (state = initialConsentState, action) {
+  state = hydrate(initialConsentState, state)
+
   switch (action.type) {
     case CONSENT_SYNC:
-      return action.consent
+      return Object.assign({}, state, { consented: action.consent })
     case CLEAR_SYNC_AND_LOCAL:
-      return false
+      return { consented: false, optedOut: false }
+    case OPT_OUT_SYNC:
+      return Object.assign({}, state, { optedOut: true })
+    case SET_SYNC:
+      return Object.assign({}, state, { optedOut: false })
     default:
       return state
   }
@@ -99,6 +115,20 @@ export function consentSync (consent) {
   }
 }
 
+export function optOutSync () {
+  return {
+    type: OPT_OUT_SYNC
+  }
+}
+
+export const authorizedAs = (userData) => {
+  return {
+    type: AUTHORIZED,
+    userData
+  }
+}
+
+// Epics
 export const syncItemsEpic = (action$, store) =>
   action$.ofType(SYNC_ITEMS)
     .do((action) => {
@@ -117,7 +147,7 @@ export const clearSyncEpic = (action$, store) =>
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
 export const syncFavoritesEpic = (action$, store) =>
-  action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES].includes(action.type))
+  action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES].includes(action.type))
     .map((action) => {
       const syncValue = getSync(store.getState())
 
@@ -142,3 +172,31 @@ export const loadFavoritesFromSyncEpic = (action$, store) =>
       }
     })
     .mapTo({ type: 'NOOP' })
+
+export const syncFoldersEpic = (action$, store) =>
+  action$.filter((action) => [ADD_FOLDER, REMOVE_FOLDER, SYNC_FOLDERS, UPDATE_FOLDERS].includes(action.type))
+    .map((action) => {
+      const syncValue = getSync(store.getState())
+
+      if (syncValue && syncValue.syncObj) {
+        const folders = composeFoldersToSync(store, syncValue)
+        return syncItems('folders', folders)
+      }
+      return { type: 'NOOP' }
+    })
+
+export const loadFoldersFromSyncEpic = (action$, store) =>
+  action$.ofType(SET_SYNC)
+    .do((action) => {
+      const folderStatus = foldersToLoad(action, store)
+
+      if (folderStatus.loadFolders) {
+        store.dispatch(loadFolders(folderStatus.folders))
+      }
+
+      if (folderStatus.syncFolders) {
+        store.dispatch(syncFolders(folderStatus.folders))
+      }
+    })
+    .mapTo({type: 'NOOP'})
+

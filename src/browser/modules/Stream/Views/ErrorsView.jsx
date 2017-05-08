@@ -18,10 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { StyledCypherErrorMessage, StyledHelpContent,
-  StyledH4, StyledPreformattedArea, StyledHelpDescription, StyledDiv, StyledHelpFrame} from '../styled'
+import { withBus } from 'preact-suber'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
+import { isUnknownProcedureError } from 'services/cypherErrorsHelper'
+import Visible from 'browser-components/Visible'
+import { PlayIcon } from 'browser-components/icons/Icons'
+import {
+  StyledCypherErrorMessage,
+  StyledHelpContent,
+  StyledH4,
+  StyledPreformattedArea,
+  StyledHelpDescription,
+  StyledDiv,
+  StyledLink,
+  StyledLinkContainer,
+  StyledHelpFrame
+} from '../styled'
 
-const WarningsView = ({error, style}) => {
+const ErrorsView = ({error, style, bus}) => {
   if (!error) {
     return null
   }
@@ -35,8 +50,18 @@ const WarningsView = ({error, style}) => {
         <StyledDiv>
           <StyledPreformattedArea>{error.message}</StyledPreformattedArea>
         </StyledDiv>
+        <Visible if={isUnknownProcedureError(error)}>
+          <StyledLinkContainer>
+            <StyledLink onClick={() => onItemClick(bus)}><PlayIcon />&nbsp;List available procedures</StyledLink>
+          </StyledLinkContainer>
+        </Visible>
       </StyledHelpContent>
     </StyledHelpFrame>)
 }
 
-export default WarningsView
+const onItemClick = (bus) => {
+  const action = executeCommand(listAvailableProcedures)
+  bus.send(action.type, action)
+}
+
+export default withBus(ErrorsView)

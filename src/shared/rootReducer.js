@@ -34,6 +34,7 @@ import grassReducer, { NAME as grass } from 'shared/modules/grass/grassDuck'
 import { syncReducer, syncConsentReducer, NAME_CONSENT as syncConsent, NAME as sync } from 'shared/modules/sync/syncDuck'
 import foldersReducer, { NAME as folders } from 'shared/modules/favorites/foldersDuck'
 import commandsReducer, { NAME as commands } from 'shared/modules/commands/commandsDuck'
+import udcReducer, { NAME as udc } from 'shared/modules/udc/udcDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -52,5 +53,6 @@ export default {
   [grass]: grassReducer,
   [sync]: syncReducer,
   [syncConsent]: syncConsentReducer,
-  [commands]: commandsReducer
+  [commands]: commandsReducer,
+  [udc]: udcReducer
 }

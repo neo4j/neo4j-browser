@@ -20,6 +20,7 @@
 
 import { Component } from 'preact'
 import './visualization.css'
+import { dim } from 'browser-styles/constants'
 
 class QueryPlan extends Component {
 
@@ -37,7 +38,7 @@ class QueryPlan extends Component {
     }
 
     return (
-      <svg display={this.props.style.display} className='neod3plan' ref={this.planInit.bind(this)} />
+      <svg display={this.props.style.display} className='neod3plan' style={(this.props.fullscreen) ? {'padding-bottom': dim.frameStatusbarHeight + 'px'} : {}} ref={this.planInit.bind(this)} />
     )
   }
 }

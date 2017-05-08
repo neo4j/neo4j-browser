@@ -19,7 +19,9 @@
  */
 
 import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
-import { Ellipsis, ErrorText } from './styled'
+import Ellipsis from 'browser-components/Ellipsis'
+import { ErrorText } from './styled'
+
 const FrameError = (props) => {
   if (!props || (!props.code && !props.message)) return null
   const fullError = `${props.code}${(props.message ? ':' : '')} ${(props.message || '')}`

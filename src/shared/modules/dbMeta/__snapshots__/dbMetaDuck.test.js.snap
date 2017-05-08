@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updating metadata can CLEAR to reset state 1`] = `
+Object {
+  "functions": Array [],
+  "labels": Array [],
+  "procedures": Array [],
+  "properties": Array [],
+  "relationshipTypes": Array [],
+  "server": Object {
+    "edition": null,
+    "storeId": null,
+    "version": null,
+  },
+  "settings": Object {
+    "browser.allow_outgoing_connections": false,
+  },
+}
+`;
+
+exports[`updating metadata can update server info 1`] = `
+Object {
+  "functions": Array [],
+  "hydrated": true,
+  "labels": Array [],
+  "procedures": Array [],
+  "properties": Array [],
+  "relationshipTypes": Array [],
+  "server": Object {
+    "edition": "enterprise",
+    "storeId": "xxxx",
+    "version": "3.2.0-RC2",
+  },
+  "settings": Object {
+    "browser.allow_outgoing_connections": false,
+  },
+  "shouldKeep": true,
+}
+`;
+
+exports[`updating metadata can update server settings 1`] = `
+Object {
+  "functions": Array [],
+  "hydrated": true,
+  "labels": Array [],
+  "procedures": Array [],
+  "properties": Array [],
+  "relationshipTypes": Array [],
+  "server": Object {
+    "edition": null,
+    "storeId": null,
+    "version": null,
+  },
+  "settings": Object {
+    "browser.test": 1,
+  },
+  "shouldKeep": true,
+}
+`;

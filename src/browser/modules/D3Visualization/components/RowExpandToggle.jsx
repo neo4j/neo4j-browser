@@ -21,16 +21,14 @@
 import { Component } from 'preact'
 import { StyledRowToggle, StyledCaret } from './styled'
 
+const getHeightFromElem = (rowElem) => (rowElem && rowElem.base) ? rowElem.base.clientHeight : 0
+
 export class RowExpandToggleComponent extends Component {
 
   updateDimensions () {
-    let rowHeight = this.props.rowElem ? this.props.rowElem.base.clientHeight : 0
-    this.setState({rowHeight: rowHeight})
+    this.setState({rowHeight: getHeightFromElem(this.props.rowElem)})
   }
 
-  componentWillMount () {
-    this.updateDimensions()
-  }
   componentDidMount () {
     this.updateDimensions()
     window.addEventListener('resize', this.updateDimensions.bind(this))
@@ -39,8 +37,14 @@ export class RowExpandToggleComponent extends Component {
     window.removeEventListener('resize', this.updateDimensions.bind(this))
   }
 
+  componentDidUpdate (prevProps, prevState) {
+    const rowHeight = getHeightFromElem(this.props.rowElem)
+    if (this.state.rowHeight !== rowHeight) {
+      this.updateDimensions()
+    }
+  }
+
   render () {
-    this.state.rowHeight = this.props.rowElem ? this.props.rowElem.base.clientHeight : 0
     if (this.props.containerHeight * 1.1 < this.state.rowHeight) {
       return (
         <StyledRowToggle onClick={this.props.onClick}>

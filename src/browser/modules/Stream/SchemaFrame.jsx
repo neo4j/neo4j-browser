@@ -22,7 +22,7 @@ import { Component } from 'preact'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
-import Visible from 'browser-components/Visible'
+import { StyledSchemaBody } from './styled'
 
 export class SchemaFrame extends Component {
   constructor (props) {
@@ -38,7 +38,10 @@ export class SchemaFrame extends Component {
         this.setState({ [name]: [] })
         return
       }
-      const out = res.result.records.map((rec) => rec.get('description'))
+      const out = res.result.records.map((rec) => rec.keys.reduce((acc, key) => {
+        acc[key] = rec.get(key)
+        return acc
+      }, {}))
       this.setState({ [name]: out })
     }
   }
@@ -52,7 +55,7 @@ export class SchemaFrame extends Component {
         },
         this.responseHandler('indexes')
       )
-      // Contraints
+      // Constraints
       this.props.bus.self(
         CYPHER_REQUEST,
         {
@@ -62,32 +65,39 @@ export class SchemaFrame extends Component {
       )
     }
   }
+
+  formatIndexAndConstraints (indexes, constraints) {
+    let indexString
+    let constraintsString
+
+    if (indexes.length === 0) { indexString = 'No indexes' } else {
+      indexString = 'Indexes'
+      indexString += indexes.reduce((acc, index) => {
+        acc += `\n  ${index.description.replace('INDEX', '')} ${index.state.toUpperCase()} ${index.type === 'node_unique_property' ? ' (for uniqueness constraint)' : ''}`
+        return acc
+      }, '')
+    }
+
+    if (constraints.length === 0) {
+      constraintsString = 'No constraints'
+    } else {
+      constraintsString = 'Constraints'
+      constraintsString += constraints.reduce((acc, constraint) => {
+        acc += `\n  ${constraint.description.replace('CONSTRAINT', '')}`
+        return acc
+      }, '')
+    }
+
+    return `${indexString}\n\n${constraintsString}\n`
+  }
+
   render () {
-    const indexes = this.state.indexes.map((index, i) => {
-      return <div key={i}>{index}</div>
-    })
-    const constraints = this.state.constraints.map((con, i) => {
-      return <div key={i}>{con}</div>
-    })
-    const schema = (
-      <div>
-        <h3>Indexes</h3>
-        <Visible if={this.state.indexes.length}><div>{indexes}</div></Visible>
-        <Visible if={!this.state.indexes.length}>
-          <span>No indexes</span>
-        </Visible>
-        <br />
-        <h3>Constraints</h3>
-        <Visible if={this.state.constraints.length}><div>{constraints}</div></Visible>
-        <Visible if={!this.state.constraints.length}>
-          <span>No constraints</span>
-        </Visible>
-      </div>
-    )
+    const contents = <StyledSchemaBody>{this.formatIndexAndConstraints(this.state.indexes, this.state.constraints)}</StyledSchemaBody>
+
     return (
       <FrameTemplate
         header={this.props.frame}
-        contents={schema}
+        contents={contents}
       />
     )
   }

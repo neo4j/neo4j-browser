@@ -24,9 +24,11 @@ import FrameTemplate from '../FrameTemplate'
 import ConnectionForm from './ConnectionForm'
 import FrameError from '../FrameError'
 import {H3} from 'browser-components/headers'
+import Visible from 'browser-components/Visible'
 import {
   StyledConnectionFrame,
-  StyledConnectionAside
+  StyledConnectionAside,
+  StyledConnectionBodyContainer
 } from './styled'
 
 export class ConnectionFrame extends Component {
@@ -39,6 +41,9 @@ export class ConnectionFrame extends Component {
   error (e) {
     this.setState({error: e})
   }
+  success () {
+    this.setState({success: true})
+  }
   render () {
     return (
       <FrameTemplate
@@ -47,10 +52,22 @@ export class ConnectionFrame extends Component {
         contents={
           <StyledConnectionFrame>
             <StyledConnectionAside>
-              <H3>Connect to Neo4j</H3>
-                Database access requires an authenticated connection.
+              <Visible if={!this.state.success}>
+                <span>
+                  <H3>Connect to Neo4j</H3>
+                  Database access requires an authenticated connection.
+                </span>
+              </Visible>
+              <Visible if={this.state.success}>
+                <span>
+                  <H3>Connected to Neo4j</H3>
+                  Nice to meet you.
+                </span>
+              </Visible>
             </StyledConnectionAside>
-            <ConnectionForm {...this.props} error={this.error.bind(this)} />
+            <StyledConnectionBodyContainer>
+              <ConnectionForm {...this.props} onSuccess={this.success.bind(this)} error={this.error.bind(this)} />
+            </StyledConnectionBodyContainer>
           </StyledConnectionFrame>
           }
       />

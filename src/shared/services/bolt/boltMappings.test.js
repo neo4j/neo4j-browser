@@ -20,7 +20,14 @@
 
 /* global test, expect */
 import { v1 as neo4j } from 'neo4j-driver-alias'
-import { itemIntToString, arrayIntToString, objIntToString, extractNodesAndRelationshipsFromRecords, extractPlan } from './boltMappings'
+import {
+  itemIntToString,
+  arrayIntToString,
+  objIntToString,
+  extractNodesAndRelationshipsFromRecords,
+  extractPlan,
+  flattenProperties
+} from './boltMappings'
 
 describe('boltMappings', () => {
   describe('itemIntToString', () => {
@@ -291,6 +298,35 @@ describe('boltMappings', () => {
         summary: {}
       }
       expect(extractPlan(result)).to.be.null
+    })
+  })
+  describe('flattenProperties', () => {
+    test('should map properties to object when properties exist', () => {
+      // Given
+      const result = [
+        [{properties: {foo: 'bar'}}]
+      ]
+      const expectedResult = [
+        [{foo: 'bar'}]
+      ]
+
+      // When
+      const flattenedProperties = flattenProperties(result)
+
+      // Then
+      expect(flattenedProperties).toEqual(expectedResult)
+    })
+    test('should not map properties to object when properties do not exist', () => {
+      // Given
+      const result = [
+        [{x: {foo: 'bar'}}]
+      ]
+
+      // When
+      const flattenedProperties = flattenProperties(result)
+
+      // Then
+      expect(flattenedProperties).toEqual(result)
     })
   })
 })

@@ -10,8 +10,8 @@
         <div class="link">
           <p class="title">Reference</p>
           <p class="content">
-            <code><a target="_blank" href="https://neo4j.com/docs/developer-manual/3.2-alpha/cypher/#query-load-csv">LOAD CSV</a> manual page</code>
-            <code><a target="_blank" href="https://neo4j.com/docs/developer-manual/3.2-alpha/cypher/#query-periodic-commit">USING PERIODIC COMMIT</a> manual page</code>
+            <code><a target="_blank" href="https://neo4j.com/docs/developer-manual/3.2/cypher/clauses/load-csv/">LOAD CSV</a> manual page</code>
+            <code><a target="_blank" href="https://neo4j.com/docs/developer-manual/3.2/cypher/query-tuning/using/#query-using-periodic-commit-hint">USING PERIODIC COMMIT</a> manual page</code>
           </p>
         </div>
         <div class="link">
@@ -29,7 +29,7 @@
     <figure class="runnable">
       <pre>
 LOAD CSV FROM "http://data.neo4j.com/examples/person.csv" AS line
-MERGE (n:Person {id: toInt(line[0])})
+MERGE (n:Person {id: toInteger(line[0])})
 SET n.name = line[1]
 RETURN n
       </pre>

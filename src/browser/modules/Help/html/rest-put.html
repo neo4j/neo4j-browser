@@ -1,0 +1,28 @@
+
+<article class="help">
+    <section class="main">
+      <div class="headings">
+        <p class="title">REST PUT</p>
+        <p class="substitle"></p>
+      </div>
+      <div class="content">
+        <p>Use&nbsp;<code>:PUT</code> to send HTTP PUT to Neo4j's REST interface.</p>
+        <table class="table-condensed table-help">
+          <!-- <tr>
+            <th>Reference:</th>
+            <td><code><a href="{{ neo4j.version | neo4jDeveloperDoc }}/#http-api-index">REST</a></code></td>
+          </tr> -->
+          <tr>
+            <th>Related:</th>
+            <td><a help-topic="rest-get">:help REST GET</a>&nbsp;<a help-topic="rest-post">:help REST POST</a>&nbsp;<a help-topic="rest-delete">:help REST DELETE</a></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section class=" example">
+        <figure>
+          <pre class="code runnable">:PUT /db/data/node/198/properties/foo &quot;Delia&quot;</pre>
+          <figcaption>Update the name property of node 198.</figcaption>
+        </figure>
+    </section>
+</article>

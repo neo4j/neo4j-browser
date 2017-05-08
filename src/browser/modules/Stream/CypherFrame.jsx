@@ -21,8 +21,9 @@
 import { Component } from 'preact'
 import FrameTemplate from './FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
+import Centered from 'browser-components/Centered'
 import FrameSidebar from './FrameSidebar'
-import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon } from 'browser-components/icons/Icons'
+import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon, Spinner } from 'browser-components/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView from './Views/AsciiView'
@@ -33,8 +34,9 @@ import bolt from 'services/bolt/bolt'
 import Visualization from './Visualization'
 import FrameError from './FrameError'
 import Visible from 'browser-components/Visible'
+import Ellipsis from 'browser-components/Ellipsis'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import { StyledFrameBody } from './styled'
+import { StyledFrameBody, StyledStatsBar, SpinnerContainer } from './styled'
 
 class CypherFrame extends Component {
   constructor (props) {
@@ -50,17 +52,25 @@ class CypherFrame extends Component {
   onNavClick (viewName) {
     this.setState({openView: viewName})
   }
-
+  getRecordsToDisplay (records) {
+    return records.length > this.props.maxRows ? records.slice(0, this.props.maxRows) : records
+  }
+  getRecordsToVisualise (records) {
+    return records.length > this.props.initialNodeDisplay ? records.slice(0, this.props.initialNodeDisplay) : records
+  }
   componentWillReceiveProps (nextProps) {
     let rows
+    let serializedPropertiesRows
     let plan
     let nodesAndRelationships
     let warnings
     let errors
     if (nextProps.request.status === 'success') {
       if (nextProps.request.result.records && nextProps.request.result.records.length > 0) {
-        nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecords(nextProps.request.result.records)
-        rows = bolt.recordsToTableArray(nextProps.request.result.records)
+        nodesAndRelationships = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(this.getRecordsToVisualise(nextProps.request.result.records))
+        rows = bolt.recordsToTableArray(this.getRecordsToDisplay(nextProps.request.result.records))
+        const untransformedRows = bolt.recordsToTableArray(this.getRecordsToDisplay(nextProps.request.result.records), false)
+        serializedPropertiesRows = bolt.stringifyRows(untransformedRows)
       }
       plan = bolt.extractPlan(nextProps.request.result)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
@@ -69,15 +79,21 @@ class CypherFrame extends Component {
       if (warnings && warnings.length > 0) {
         this.setState({notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
       }
-      this.setState({nodesAndRelationships, rows, plan, errors})
+      this.setState({nodesAndRelationships, serializedPropertiesRows, rows, plan, errors})
     } else if (nextProps.request.status !== 'success') { // Failed query
       errors = nextProps.request.result
       this.setState({ errors: errors, openView: viewTypes.ERRORS })
     }
   }
+  componentWillMount () {
+    if (this.props.request.status === 'error') {
+      this.setState({ errors: this.props.request.result, openView: viewTypes.ERRORS })
+    }
+  }
   shouldComponentUpdate (nextProps, state) {
     return state.openView !== this.state.openView ||
       state.fullscreen !== this.state.fullscreen ||
+      state.frameHeight !== this.state.frameHeight ||
       nextProps.request.result !== this.props.request.result
   }
   decideOpeningView ({plan, nodesAndRelationships, warnings, props}) {
@@ -122,6 +138,10 @@ class CypherFrame extends Component {
     return (this.state.nodesAndRelationships) ? (this.state.nodesAndRelationships.nodes && this.state.nodesAndRelationships.nodes.length > 0) : false
   }
 
+  resultHasRows () {
+    return this.state.rows && this.state.rows.length > 0
+  }
+
   sidebar () {
     return (
       <FrameSidebar>
@@ -135,7 +155,7 @@ class CypherFrame extends Component {
             this.changeView(viewTypes.TABLE)
           }}><TableIcon /></CypherFrameButton>
         </Visible>
-        <Visible if={!this.state.errors}>
+        <Visible if={this.resultHasRows() && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.TEXT} onClick={() => {
             this.changeView(viewTypes.TEXT)
           }}><AsciiIcon /></CypherFrameButton>
@@ -176,6 +196,33 @@ class CypherFrame extends Component {
     }
   }
 
+  getBodyAndStatusBarMessages (result) {
+    if (!result || !result.summary || !result.summary.resultAvailableAfter) {
+      return null
+    }
+
+    const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
+    const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
+    const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
+    const streamMessageTail = result.records.length > this.props.maxRows ? `ms, displaying first ${this.props.maxRows} rows.` : ' ms.'
+
+    let updateMessages = bolt.retrieveFormattedUpdateStatistics(result)
+    let streamMessage = result.records.length > 0
+      ? `started streaming ${result.records.length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
+      : `completed ${totalTimeString} ${streamMessageTail}`
+
+    if (updateMessages && updateMessages.length > 0) {
+      updateMessages = updateMessages[0].toUpperCase() + updateMessages.slice(1) + ', '
+    } else {
+      streamMessage = streamMessage[0].toUpperCase() + streamMessage.slice(1)
+    }
+
+    const bodyMessage = (updateMessages.length === 0 && result.records.length === 0) ? '(no changes, no records)'
+      : updateMessages + `completed ${totalTimeString} ms.`
+
+    return { statusBarMessage: updateMessages + streamMessage, bodyMessage }
+  }
+
   render () {
     const frame = this.props.frame
     const result = this.props.request.result || false
@@ -184,28 +231,45 @@ class CypherFrame extends Component {
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
     let statusBar = null
-    let rows
+    let messages
 
     if (this.state.errors) {
       statusBar = <FrameError code={this.state.errors.code} />
+    } else if (result.records || plan) {
+      if (this.state.openView !== viewTypes.VISUALIZATION) {
+        messages = this.getBodyAndStatusBarMessages(result)
+        statusBar = (
+          <StyledStatsBar>
+            <Ellipsis>
+              { messages && messages.statusBarMessage }
+            </Ellipsis>
+          </StyledStatsBar>
+        )
+      }
+      if (plan && this.state.openView === viewTypes.PLAN) {
+        statusBar = (
+          <StyledStatsBar>
+            <Ellipsis>
+              Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
+            </Ellipsis>
+          </StyledStatsBar>
+        )
+      }
     }
     if (requestStatus !== 'pending') {
-      if (result.records && result.records.length > 0) {
-        rows = bolt.recordsToTableArray(result.records)
-      }
       frameContents =
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
           <Visible if={!this.state.errors}>
-            <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} />
+            <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} assignVisElement={(svgElement, graphElement) => { this.visElement = {svgElement, graphElement} }} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={rows} />
+            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={rows} />
+            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <QueryPlan style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
+            <QueryPlan fullscreen={this.state.fullscreen} style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
           </Visible>
           <Visible if={!this.state.errors}>
             <WarningsView style={this.getDisplayStyle(viewTypes.WARNINGS)} notifications={this.state.notifications} cypher={this.state.cypher} />
@@ -219,9 +283,11 @@ class CypherFrame extends Component {
         </StyledFrameBody>
     } else if (requestStatus === 'pending') {
       frameContents = (
-        <div>
-          Running query...
-        </div>
+        <Centered>
+          <SpinnerContainer>
+            <Spinner />
+          </SpinnerContainer>
+        </Centered>
       )
     }
     return (
@@ -232,6 +298,7 @@ class CypherFrame extends Component {
         exportData={this.state.rows}
         statusbar={statusBar}
         onResize={this.onResize.bind(this)}
+        visElement={this.visElement}
       />
     )
   }

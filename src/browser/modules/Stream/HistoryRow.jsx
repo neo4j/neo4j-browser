@@ -19,6 +19,6 @@
  */
 
 const HistoryRow = ({entry, handleEntryClick}) => {
-  return <li onClick={() => handleEntryClick(entry.cmd)}>{entry.cmd}</li>
+  return <li onClick={() => handleEntryClick(entry)}>{entry}</li>
 }
 export default HistoryRow

@@ -31,8 +31,13 @@
     background: #f3f3f3;
     padding-left: 0.25em;
     padding-right: 0.25em;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
   }
-
+  & th {
+    min-width: 50px;
+  }
   & pre.code {
     padding: 0.5em;
     margin-top: 0.5em;
@@ -110,6 +115,7 @@
   & h3,
   & .h3 {
     font-size: 1.563em;
+    font-weight: 600;
     &.vtop {
       margin-top: 0.48em;
       margin-bottom: 0.4em;
@@ -228,7 +234,7 @@
     }
   }
 
-  & a[help-topic] {
+  & a[help-topic], [play-topic], [server-topic], [exec-topic] {
     background-color: #f8f8f8;
     border-radius: 3px;
     border: 1px solid #dadada;
@@ -302,8 +308,9 @@
       overflow: hidden;
     }
     button {
+      font-weight: 600;
       position: absolute;
-      bottom: 5px;
+      bottom: 10px;
       width: 90%;
       left: 5%;
       outline: none;
@@ -314,7 +321,8 @@
       width: 25%;
     }
     .icon.sl {
-      font-size: 35px;
+      padding-left: 10px;
+      font-size: 48px;
     }
     .icon.sl.green {
       color: #65b144;

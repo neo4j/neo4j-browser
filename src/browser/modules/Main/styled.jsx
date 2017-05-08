@@ -20,6 +20,7 @@
 
 import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
+import { SyncSignInButton } from 'browser-components/buttons'
 
 const grow = (height) => {
   return keyframes`
@@ -39,15 +40,18 @@ export const StyledMain = styled.div`
   background-color: #D2D5DA;
   min-width: 0;
   position: relative;
+  height: 100vh;
 `
 
 export const Banner = styled.div`
   line-height: 49px;
-  width: 100%;
+  min-height: 49px;
   color: white;
   padding: 0 24px;
+  margin: 0 24px;
   overflow: hidden;
   animation: ${grow('49px')} .3s ease-in;
+  flex: 0 0 49px;
 `
 
 export const ErrorBanner = styled(Banner)`
@@ -67,4 +71,36 @@ export const StyledCodeBlockAuthBar = styled(StyledCodeBlock)`
 export const StyledCodeBlockErrorBar = styled(StyledCodeBlock)`
   background-color: white;
   color: ${props => props.theme.error};
+`
+
+export const SyncDisconnectedBanner = styled(Banner)`
+  background-color: ${props => props.theme.auth}
+  display: flex;
+  justify-content: space-between;
+`
+
+export const SyncSignInBarButton = styled(SyncSignInButton)`
+  padding: 0 8px 0 8px;
+  margin: 0 12px 0 12px;
+  vertical-align: baseline;
+  border:none;
+`
+export const StyledCancelLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  color: #D0D0D0;
+  &:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+  };
+`
+export const StyledSyncReminderSpan = styled.span`
+  text-overflow : ellipsis;
+  white-space : nowrap;
+  overflow: hidden;
+  float: left;
+`
+
+export const StyledSyncReminderButtonContainer = styled.div`
+  float: right;
 `

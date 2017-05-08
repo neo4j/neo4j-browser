@@ -24,33 +24,47 @@ import { withBus } from 'preact-suber'
 import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
 import { getTheme, getCmdChar } from 'shared/modules/settings/settingsDuck'
-import { FOCUS } from 'shared/modules/editor/editorDuck'
-import { wasUnknownCommand } from 'shared/modules/commands/commandsDuck'
-import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
+import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
+import { wasUnknownCommand, getErrorMessage } from 'shared/modules/commands/commandsDuck'
+import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getActiveConnection, getConnectionState } from 'shared/modules/connections/connectionsDuck'
+import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 
+import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
-import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import { getActiveConnection, getConnectionState } from 'shared/modules/connections/connectionsDuck'
+import UserInteraction from '../UserInteraction'
+import Intercom from '../Intercom'
+import Visible from 'browser-components/Visible'
 
 class App extends Component {
   componentDidMount () {
     document.addEventListener('keyup', this.focusEditorOnSlash.bind(this))
+    document.addEventListener('keyup', this.expandEditorOnEsc.bind(this))
   }
   componentWillUnmount () {
     document.removeEventListener('keyup', this.focusEditorOnSlash.bind(this))
+    document.removeEventListener('keyup', this.expandEditorOnEsc.bind(this))
   }
   focusEditorOnSlash (e) {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
     if (e.key !== '/') return
     this.props.bus && this.props.bus.send(FOCUS)
   }
+  expandEditorOnEsc (e) {
+    if (e.keyCode !== 27) return
+    this.props.bus && this.props.bus.send(EXPAND)
+  }
   render () {
-    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner} = this.props
+    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner, errorMessage, loadUdc} = this.props
     const themeData = themes[theme] || themes['normal']
     return (
       <ThemeProvider theme={themeData}>
         <StyledWrapper>
+          <UserInteraction />
+          <Visible if={loadUdc}>
+            <Intercom appID='lq70afwx' />
+          </Visible>
           <StyledApp>
             <StyledBody>
               <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
@@ -60,6 +74,7 @@ class App extends Component {
                   activeConnection={activeConnection}
                   connectionState={connectionState}
                   showUnknownCommandBanner={showUnknownCommandBanner}
+                  errorMessage={errorMessage}
                 />
               </StyledMainWrapper>
             </StyledBody>
@@ -77,7 +92,9 @@ const mapStateToProps = (state) => {
     theme: getTheme(state),
     connectionState: getConnectionState(state),
     cmdchar: getCmdChar(state),
-    showUnknownCommandBanner: wasUnknownCommand(state)
+    showUnknownCommandBanner: wasUnknownCommand(state),
+    errorMessage: getErrorMessage(state),
+    loadUdc: allowOutgoingConnections(state)
   }
 }
 

@@ -1,0 +1,43 @@
+<article class="help">
+    <section class="main">
+      <div class="headings">
+        <p class="title">CREATE CONSTRAINT ON</p>
+        <p class="subtitle">Create a property constraint on a node label or relationship type</p>
+      </div>
+      <div class="content">
+        <p>The&nbsp;<code>CREATE CONSTRAINT ON</code> clause will create a property constraint on all nodes/relationships that have the specified label/type.</p>
+        <p>The&nbsp;<code>IS UNIQUE</code> property constraint will create an accompanying index.</p>
+        <table class="table-condensed table-help">
+          <!-- <tr>
+            <th>Reference:</th>
+            <td><code><a href="{{ neo4j.version | neo4jDeveloperDoc }}/cypher/#query-constraints">schema constraints</a></code> manual page</td>
+          </tr> -->
+          <tr>
+            <th>Related:</th>
+            <td><a help-topic="drop-constraint-on">:help DROP CONSTRAINT ON</a>&nbsp;<a help-topic="schema">:help Schema</a>&nbsp;<a help-topic="cypher">:help Cypher</a></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section class="example">
+        <figure>
+          <pre class="code runnable standalone-example">CREATE CONSTRAINT ON (p:Person)
+ASSERT p.name IS UNIQUE</pre>
+          <figcaption>Create a unique property constraint on the label Person and property name.</figcaption>
+        </figure>
+    </section>
+    <section class="example">
+        <figure>
+          <pre class="code runnable standalone-example">CREATE CONSTRAINT ON (p:Person)
+ASSERT exists(p.name)</pre>
+          <figcaption>Create a node property existence constraint on the label Person and property name.</figcaption>
+        </figure>
+    </section>
+    <section class=" example">
+        <figure>
+          <pre class="code runnable standalone-example">CREATE CONSTRAINT ON ()-[l:LIKED]-()
+ASSERT exists(l.when)</pre>
+          <figcaption>Create a relationship property existence constraint on the type LIKED and property when.</figcaption>
+        </figure>
+    </section>
+</article>
