@@ -25,7 +25,7 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
 import Visible from 'browser-components/Visible'
 import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
-import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst, StyledLink} from './styled'
+import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst, Link} from './styled'
 
 export const DatabaseKernelInfo = ({version, edition, onItemClick}) => {
   return (
@@ -45,10 +45,10 @@ export const DatabaseKernelInfo = ({version, edition, onItemClick}) => {
               </tr>
             </Visible>
             <tr>
-              <StyledKey>Information: </StyledKey><StyledValue><StyledLink onClick={() => onItemClick(':sysinfo')}>:sysinfo</StyledLink></StyledValue>
+              <StyledKey>Information: </StyledKey><StyledValue><Link onClick={() => onItemClick(':sysinfo')}>:sysinfo</Link></StyledValue>
             </tr>
             <tr>
-              <StyledKey>Query List: </StyledKey><StyledValue><StyledLink onClick={() => onItemClick(':queries')}>:queries</StyledLink></StyledValue>
+              <StyledKey>Query List: </StyledKey><StyledValue><Link onClick={() => onItemClick(':queries')}>:queries</Link></StyledValue>
             </tr>
           </tbody>
         </StyledTable>

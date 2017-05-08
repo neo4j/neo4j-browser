@@ -84,6 +84,10 @@ export const StyledValueUCFirst = styled(StyledValue)`
 export const StyledLink = styled.a`
   cursor: pointer;
   color: #fff;
+  &:hover {
+    color: #bcc0c9;
+    text-decoration: none;
+  }
 `
 export const Link = (props) => {
   const {children, ...rest} = props

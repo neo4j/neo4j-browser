@@ -19,11 +19,14 @@
  */
 
 import { Component } from 'preact'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+
 import Visible from 'browser-components/Visible'
-import {StyledTable, StyledKey, StyledValue} from './styled'
+import { DrawerSubHeader, DrawerSection, DrawerSectionBody } from 'browser-components/drawer'
+import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
 export class UserDetails extends Component {
   constructor (props) {
@@ -74,7 +77,7 @@ export class UserDetails extends Component {
                 </tr>
                 <Visible if={hasAdminRole}>
                   <tr>
-                    <StyledKey className='user-list-button'>Admin:</StyledKey><StyledValue>:server user add</StyledValue>
+                    <StyledKey className='user-list-button'>Admin:</StyledKey><Link onClick={() => this.props.onItemClick(':server user add')}>:server user add</Link>
                   </tr>
                 </Visible>
               </tbody>
@@ -87,4 +90,14 @@ export class UserDetails extends Component {
     }
   }
 }
-export default withBus(UserDetails)
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onItemClick: (cmd) => {
+      const action = executeCommand(cmd)
+      ownProps.bus.send(action.type, action)
+    }
+  }
+}
+
+export default withBus(connect(null, mapDispatchToProps)(UserDetails))
