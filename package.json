@@ -96,7 +96,7 @@
     "redux-devtools": "^3.2.0",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
-    "redux-mock-store": "^1.2.2",
+    "redux-mock-store": "^1.2.3",
     "standard": "^8.6.0",
     "style-loader": "^0.16.1",
     "url-loader": "^0.5.8",

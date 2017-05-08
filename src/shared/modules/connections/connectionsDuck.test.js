@@ -183,9 +183,13 @@ describe('connectionsDucks Epics', () => {
 })
 
 describe('retainCredentialsSettingsEpic', () => {
+  // Given
+  const epicMiddleware = createEpicMiddleware(connections.retainCredentialsSettingsEpic)
+  const myMockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
   let store
   beforeAll(() => {
-    store = mockStore({
+    bus.reset()
+    store = myMockStore({
       connections: {
         activeConnection: 'xxx',
         connectionsById: {
@@ -210,15 +214,13 @@ describe('retainCredentialsSettingsEpic', () => {
           id: 'xxx',
           username: '',
           password: ''
-        })
+        }),
+        currentAction
       ])
       done()
     })
 
     // When
-    epicMiddleware.replaceEpic(connections.retainCredentialsSettingsEpic)
-    store.clearActions()
-
     store.dispatch(action)
   })
 })
