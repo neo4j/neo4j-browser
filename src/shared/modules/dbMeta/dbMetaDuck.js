@@ -99,18 +99,23 @@ function updateMetaForContext (state, meta, context) {
     }
   }
 
+  const compareMetaItems = (a, b) => a.val < b.val ? -1 : (a.val > b.val ? 1 : 0)
+
   const labels = state
     .labels
     .filter(notInCurrentContext)
     .concat(mapResult(0, mapSingleValue))
+    .sort(compareMetaItems)
   const relationshipTypes = state
     .relationshipTypes
     .filter(notInCurrentContext)
     .concat(mapResult(1, mapSingleValue))
+    .sort(compareMetaItems)
   const properties = state
     .properties
     .filter(notInCurrentContext)
     .concat(mapResult(2, mapSingleValue))
+    .sort(compareMetaItems)
   const functions = state
     .functions
     .filter(notInCurrentContext)
