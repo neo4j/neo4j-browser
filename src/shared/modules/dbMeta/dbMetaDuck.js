@@ -21,14 +21,15 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { hydrate } from 'services/duckUtils'
-import { getJmxValues, getServerConfig } from 'services/bolt/boltHelpers'
+import { getJmxValues, getServerConfig, isConfigValFalsy } from 'services/bolt/boltHelpers'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
   connectionLossFilter,
   DISCONNECTION_SUCCESS,
   LOST_CONNECTION,
-  UPDATE_CONNECTION_STATE
+  UPDATE_CONNECTION_STATE,
+  setRetainCredentials
 } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'meta'
@@ -84,6 +85,11 @@ export const getStoreId = (state) => state[NAME].server.storeId
 export const getAvailableSettings = (state) => (state[NAME] || initialState).settings
 export const allowOutgoingConnections = (state) => getAvailableSettings(state)['browser.allow_outgoing_connections']
 export const credentialsTimeout = (state) => getAvailableSettings(state)['browser.credential_timeout'] || 0
+export const shouldRetainConnectionCredentials = (state) => {
+  const conf = getAvailableSettings(state)['browser.retain_connection_credentials']
+  if (conf === null || typeof conf === 'undefined') return true
+  return !isConfigValFalsy(conf)
+}
 
 /**
  * Helpers
@@ -240,8 +246,16 @@ export const dbMetaEpic = (some$, store) =>
         .mergeMap(() => {
           return getServerConfig(['browser.'])
             .then((settings) => {
-              if (settings) store.dispatch(updateSettings(settings))
-              return null
+              if (!settings) return
+              let retainCredentials = true
+              if ( // Check if we should wipe user creds from localstorage
+                typeof settings['browser.retain_connection_credentials'] !== 'undefined' &&
+                isConfigValFalsy(settings['browser.retain_connection_credentials'])
+              ) {
+                retainCredentials = false
+              }
+              store.dispatch(setRetainCredentials(retainCredentials))
+              store.dispatch(updateSettings(settings))
             })
         })
         .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))

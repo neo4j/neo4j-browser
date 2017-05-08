@@ -68,3 +68,6 @@ export const getJmxValues = (nameAttributePairs = []) => {
       return null
     })
 }
+
+export const isConfigValTruthy = (val) => [true, 'true', 'yes', 1, '1'].indexOf(val) > -1
+export const isConfigValFalsy = (val) => [false, 'false', 'no', 0, '0'].indexOf(val) > -1
