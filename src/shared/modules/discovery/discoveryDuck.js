@@ -23,7 +23,9 @@ import remote from 'services/remote'
 import { hydrate } from 'services/duckUtils'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
+import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
+import { getUrlParamValue, toBoltHost, isRoutingHost } from 'services/utils'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -63,7 +65,23 @@ export const getBoltHost = (state) => {
 
 export const discoveryOnStartupEpic = (some$, store) => {
   return some$.ofType(APP_START).merge(some$.ofType(USER_CLEAR))
+    .map((action) => {
+      if (action.type !== APP_START) return action // Only read on app startup
+      if (!action.url) return action
+      const passedURL = getUrlParamValue('connectURL', action.url)
+      if (!passedURL || !passedURL.length) return action
+      const forceURL = decodeURIComponent(passedURL[0])
+      action.forceURL = toBoltHost(forceURL) // Remove any protocol and prepend with bolt://
+      if (isRoutingHost(forceURL)) { // Set config to use routing if bolt+routing:// protocol
+        store.dispatch(updateBoltRouting(true))
+      }
+      return action
+    })
     .mergeMap((action) => {
+      if (action.forceURL) {
+        store.dispatch(updateDiscoveryConnection({ host: action.forceURL }))
+        return Promise.resolve()
+      }
       return Rx.Observable.fromPromise(
         remote.getJSON(getDiscoveryEndpoint()).then((result) => { // Try to get info from server
           if (!result || !result.bolt) {

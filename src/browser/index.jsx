@@ -74,7 +74,7 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
 })
 
 // Signal app upstart (for epics)
-store.dispatch({ type: APP_START })
+store.dispatch({ type: APP_START, url: window.location.href })
 
 const mountElement = document.getElementById('mount')
 let elem
