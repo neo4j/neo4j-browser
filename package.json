@@ -116,7 +116,7 @@
     "json-loader": "^0.5.4",
     "lodash.debounce": "^4.0.8",
     "neo4j-driver": "^1.2.0",
-    "neo4j-visualization": "0.0.210",
+    "neo4j-visualization": "0.0.221",
     "node-noop": "^1.0.0",
     "preact": "^8.1.0",
     "preact-compat": "^3.13.1",
