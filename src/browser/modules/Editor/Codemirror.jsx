@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import classNames from 'classnames'
-import debounce from 'lodash.debounce'
-import codemirror from 'codemirror'
+ import { Component } from 'preact'
+ import classNames from 'classnames'
+ import debounce from 'lodash.debounce'
+ import codemirror from 'codemirror'
 
-function normalizeLineEndings (str) {
+ function normalizeLineEndings (str) {
   if (!str) return str
-  return str.replace(/\r\n|\r/g, '\n')
+    return str.replace(/\r\n|\r/g, '\n')
 }
 
 export default class CodeMirror extends Component {
@@ -99,13 +99,13 @@ export default class CodeMirror extends Component {
   }
   render () {
     const editorClassNames = classNames(
-        'ReactCodeMirror',
-        this.state.isFocused ? 'ReactCodeMirror--focused' : null,
-        this.props.classNames
-      )
+      'ReactCodeMirror',
+      this.state.isFocused ? 'ReactCodeMirror--focused' : null,
+      this.props.classNames
+    )
     return (
       <div classNames={editorClassNames}>
-        <textarea ref={(ref) => { this.ta = ref }} name={this.props.path} defaultValue={this.props.value} autoComplete='off' />
+      <textarea ref={(ref) => { this.ta = ref }} name={this.props.path} defaultValue={this.props.value} autoComplete='off' />
       </div>
     )
   }

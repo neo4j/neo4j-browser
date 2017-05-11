@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 do ->
   noop = ->
 
-  numberOfItemsInContextMenu = 3
+  numberOfItemsInContextMenu = 4
 
   arc = (radius, itemNumber, width = 30) ->
     itemNumber = itemNumber - 1
@@ -110,11 +110,18 @@ do ->
   )
 
   donutUnlockNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [4, 0], '\uf09c', 'Unlock the node to re-layout the graph')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [0, 0], '\uf09c', 'Unlock the node to re-layout the graph')
 
     onTick: noop
+  )
+
+  donutEditNode = new neo.Renderer(
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeEdit', 4, 'edit_node', [0, 4], '\uf002', 'Edit the selected node\'s name')
+
+    noTick: noop
   )
 
   neo.renderers.menu.push(donutExpandNode)
   neo.renderers.menu.push(donutRemoveNode)
   neo.renderers.menu.push(donutUnlockNode)
+  neo.renderers.menu.push(donutEditNode)

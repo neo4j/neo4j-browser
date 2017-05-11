@@ -65,6 +65,11 @@ neo.viz = (el, measureSize, graph, layout, style) ->
     updateViz = no
     viz.trigger('relationshipClicked', relationship)
 
+  onRelationshipDblClick = (relationship) =>
+    d3.event.stopPropagation()
+    updateViz = no
+    viz.trigger('relationshipDblClicked', relationship)
+
   onNodeMouseOver = (node) -> viz.trigger('nodeMouseOver', node)
   onNodeMouseOut = (node) -> viz.trigger('nodeMouseOut', node)
 
@@ -226,7 +231,8 @@ neo.viz = (el, measureSize, graph, layout, style) ->
 
     relationshipGroups.enter().append("g")
     .attr("class", "relationship")
-    .on("mousedown", onRelationshipClick)
+    .on("click", onRelationshipClick)
+    .on('dblclick', onRelationshipDblClick) #Double Click
     .on('mouseover', onRelMouseOver)
     .on('mouseout', onRelMouseOut)
 
