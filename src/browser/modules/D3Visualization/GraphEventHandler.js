@@ -112,7 +112,7 @@ export class GraphEventHandler {
         var flag = 0
         for (var i = 0; i < propertyList.length; i++) {
             if (propertyList[i].key == queryKey) {
-                var keyValue = prompt('Input the node\'s ' + queryKey + '.', queryKey)
+                var keyValue = prompt('Edit the node\'s ' + queryKey + '.', queryKey)
                 var cmd = 'match (n) where id(n) = ' + nodeId + ' set n.' + queryKey + ' = \'' + keyValue + '\' return n'
                 console.log(cmd)
                 bolt.directTransaction(cmd)
@@ -196,7 +196,7 @@ export class GraphEventHandler {
         } else {
             var targetId = relationship.target.id
             var sourceId = relationship.source.id
-            var str = prompt("Input the relationship's label", 'REL')
+            var str = prompt("Edit the relationship's label", 'REL')
             var cmd = 'match (n),(m) where id(n) = ' + sourceId + ' and id(m) = ' + targetId + ' match (n)-[r]->(m) CREATE (n)-[new :' + str + ']->(m) SET new += r DELETE r RETURN n, r, m, new'
             bolt.directTransaction(cmd)
             relationship.type = str
