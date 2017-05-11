@@ -398,6 +398,14 @@ babel-helpers@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
+babel-jest@^16.0.0:
+  version "16.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-jest/-/babel-jest-16.0.0.tgz#348729aea6d624a4774b8a934d07a40dd2cfd640"
+  dependencies:
+    babel-core "^6.0.0"
+    babel-plugin-istanbul "^2.0.0"
+    babel-preset-jest "^16.0.0"
+
 babel-jest@^19.0.0:
   version "19.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-jest/-/babel-jest-19.0.0.tgz#59323ced99a3a84d359da219ca881074ffc6ce3f"
@@ -427,6 +435,15 @@ babel-plugin-check-es2015-constants@^6.22.0:
   dependencies:
     babel-runtime "^6.22.0"
 
+babel-plugin-istanbul@^2.0.0:
+  version "2.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-istanbul/-/babel-plugin-istanbul-2.0.3.tgz#266b304b9109607d60748474394676982f660df4"
+  dependencies:
+    find-up "^1.1.2"
+    istanbul-lib-instrument "^1.1.4"
+    object-assign "^4.1.0"
+    test-exclude "^2.1.1"
+
 babel-plugin-istanbul@^4.0.0:
   version "4.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-istanbul/-/babel-plugin-istanbul-4.1.1.tgz#c12de0fc6fe42adfb16be56f1ad11e4a9782eca9"
@@ -434,6 +451,10 @@ babel-plugin-istanbul@^4.0.0:
     find-up "^2.1.0"
     istanbul-lib-instrument "^1.6.2"
     test-exclude "^4.0.3"
+
+babel-plugin-jest-hoist@^16.0.0:
+  version "16.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-16.0.0.tgz#b58ca3f770982a7e7c25b5614b2e57e9dafc6e76"
 
 babel-plugin-jest-hoist@^19.0.0:
   version "19.0.0"
@@ -728,6 +749,12 @@ babel-preset-flow@^6.23.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-preset-flow/-/babel-preset-flow-6.23.0.tgz#e71218887085ae9a24b5be4169affb599816c49d"
   dependencies:
     babel-plugin-transform-flow-strip-types "^6.22.0"
+
+babel-preset-jest@^16.0.0:
+  version "16.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-preset-jest/-/babel-preset-jest-16.0.0.tgz#417aabc2d7d93170f43c20ef1ea0145e8f7f2db5"
+  dependencies:
+    babel-plugin-jest-hoist "^16.0.0"
 
 babel-preset-jest@^19.0.0:
   version "19.0.0"
@@ -2513,7 +2540,7 @@ find-root@^1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/find-root/-/find-root-1.0.0.tgz#962ff211aab25c6520feeeb8d6287f8f6e95807a"
 
-find-up@^1.0.0:
+find-up@^1.0.0, find-up@^1.1.2:
   version "1.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
   dependencies:
@@ -3364,7 +3391,7 @@ istanbul-lib-hook@^1.0.5:
   dependencies:
     append-transform "^0.4.0"
 
-istanbul-lib-instrument@^1.1.1, istanbul-lib-instrument@^1.6.2, istanbul-lib-instrument@^1.7.0:
+istanbul-lib-instrument@^1.1.1, istanbul-lib-instrument@^1.1.4, istanbul-lib-instrument@^1.6.2, istanbul-lib-instrument@^1.7.0:
   version "1.7.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/istanbul-lib-instrument/-/istanbul-lib-instrument-1.7.0.tgz#b8e0dc25709bb44e17336ab47b7bb5c97c23f659"
   dependencies:
@@ -3448,6 +3475,12 @@ jest-config@^19.0.2:
     jest-resolve "^19.0.2"
     jest-validate "^19.0.2"
     pretty-format "^19.0.0"
+
+jest-css-modules@^1.1.0:
+  version "1.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-css-modules/-/jest-css-modules-1.1.0.tgz#19332cf767618e6052f0900de25e6b8859e65b95"
+  dependencies:
+    babel-jest "^16.0.0"
 
 jest-diff@^19.0.0:
   version "19.0.0"
@@ -4124,22 +4157,24 @@ neo4j-driver@^1.1.0, neo4j-driver@^1.2.0:
   dependencies:
     babel-runtime "^6.18.0"
 
-neo4j-visualization@0.0.210:
-  version "0.0.210"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.210.tgz#d5d75823914f249630cdc4b8a5aed1dbe62c60dc"
+neo4j-visualization@0.0.230:
+  version "0.0.230"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-visualization/-/neo4j-visualization-0.0.230.tgz#201e6f465812e362b4b280f21373b5ae7ed5392b"
   dependencies:
     babel-polyfill "^6.23.0"
     babel-runtime "^6.23.0"
     chroma-js "^1.2.2"
     deep-equal "^1.0.1"
+    jest-css-modules "^1.1.0"
     neo4j-driver "^1.1.0"
-    nevada-visjs "0.1.100"
+    nevada-visjs "0.1.116"
+    nouislider "^9.2.0"
     sortablejs "^1.5.1"
     vector2d "^2.1.0"
 
-nevada-visjs@0.1.100:
-  version "0.1.100"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.100.tgz#a9075a2b466b5f234ccec908eb126d0c30fb5b51"
+nevada-visjs@0.1.116:
+  version "0.1.116"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/nevada-visjs/-/nevada-visjs-0.1.116.tgz#939966d84eac4290f56b9c68bcf81c9de1268b48"
   dependencies:
     emitter-component "^1.1.1"
     hammerjs "^2.0.8"
@@ -4279,6 +4314,10 @@ normalize-url@^1.4.0:
     prepend-http "^1.0.0"
     query-string "^4.1.0"
     sort-keys "^1.0.0"
+
+nouislider@^9.2.0:
+  version "9.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/nouislider/-/nouislider-9.2.0.tgz#e87c507de2b0b4d075038b5a42547c7dbbebaf69"
 
 npmlog@^4.0.2:
   version "4.0.2"
@@ -6326,6 +6365,16 @@ tar@^2.2.1:
 tcomb@^2.5.1:
   version "2.7.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/tcomb/-/tcomb-2.7.0.tgz#10d62958041669a5d53567b9a4ee8cde22b1c2b0"
+
+test-exclude@^2.1.1:
+  version "2.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/test-exclude/-/test-exclude-2.1.3.tgz#a8d8968e1da83266f9864f2852c55e220f06434a"
+  dependencies:
+    arrify "^1.0.1"
+    micromatch "^2.3.11"
+    object-assign "^4.1.0"
+    read-pkg-up "^1.0.1"
+    require-main-filename "^1.0.1"
 
 test-exclude@^4.0.3:
   version "4.0.3"

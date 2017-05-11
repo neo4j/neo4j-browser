@@ -110,7 +110,7 @@ export class NevadaWrapper extends Component {
       }
       require.ensure([], (require) => {
         const Nevada = require('neo4j-visualization').default
-        this.state.nevada = new Nevada(this.state.parentContainer, this.props.nodes, this.props.relationships, {}, callbacks)
+        this.state.nevada = new Nevada(this.state.parentContainer, this.props.nodes, this.props.relationships, {fullscreen: this.props.fullscreen}, callbacks)
       }, 'nevada')
     }
   }
@@ -120,6 +120,7 @@ export class NevadaWrapper extends Component {
       this.state.nevada.updateLabels(nextProps.labels)
       this.state.nevada.updateNodeStyle(nextProps.nevadaStyleData)
       this.state.nevada.updateRelStyle(nextProps.nevadaRelData)
+      this.state.nevada.updateOptions({fullscreen: nextProps.fullscreen})
     }
   }
 
