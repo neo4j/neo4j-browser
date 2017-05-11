@@ -27,8 +27,6 @@ export function createGraph(nodes, relationships) {
 }
 
 export function mapNodes(nodes) {
-    console.log(typeof(nodes))
-    console.log(nodes)
     return nodes.map((node) => new neo.models.Node(node.id, node.labels, node.properties))
 }
 

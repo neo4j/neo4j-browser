@@ -19,7 +19,6 @@
  */
 
 import { mapNodes, mapRelationships, getGraphStats } from './mapper'
-//import {directTransaction} from '../../../shared/services/bolt/bolt'
 import bolt from 'services/bolt/bolt'
 
 
@@ -84,6 +83,7 @@ export class GraphEventHandler {
         var nodeId = d.id
         var propertyList = d.propertyList
         var keyList = ''
+        var defaultKey = ''
 
         //console.log(d)
 
@@ -105,10 +105,12 @@ export class GraphEventHandler {
                 keyList += propertyList[i].key
                 if (i != propertyList.length - 1)
                     keyList += '\n'
+                if (i == 0)
+                    defaultKey = propertyList[i].key
             }
-            console.log(keyList)
+            //console.log(keyList)
         }
-        var queryKey = prompt('Input the property to edit:\n' + keyList, '')
+        var queryKey = prompt('Input the property to edit:\n' + keyList, defaultKey)
         var flag = 0
         for (var i = 0; i < propertyList.length; i++) {
             if (propertyList[i].key == queryKey) {
