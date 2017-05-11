@@ -48,7 +48,7 @@ export class Editor extends Component {
       notifications: []
     }
   }
-  focusEditor () {//press '/' or click editor
+  focusEditor () {
     const cm = this.codeMirror
     cm.focus()
     cm.setCursor(cm.lineCount(), 0)
@@ -56,7 +56,7 @@ export class Editor extends Component {
   clearEditor () {
     this.setEditorValue(this.codeMirror, '')
   }
-  handleEnter (cm) {//1 line -> exec ; n lines -> next line
+  handleEnter (cm) {
     if (cm.lineCount() === 1) {
       return this.execCurrent(cm)
     }
@@ -68,7 +68,7 @@ export class Editor extends Component {
   execCurrent () {
     const value = this.codeMirror.getValue().trim()
     if (!value) return
-    this.props.onExecute(value)//exec
+    this.props.onExecute(value)
     this.clearEditor()
     this.clearHints()
     this.setState({historyIndex: -1, buffer: null})
