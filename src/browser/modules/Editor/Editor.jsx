@@ -24,18 +24,18 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { executeCommand, executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
-import { SET_CONTENT, FOCUS } from 'shared/modules/editor/editorDuck'
+import { SET_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
-import Codemirror from './Codemirror'
-import 'codemirror/mode/cypher/cypher'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/monokai.css'
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { debounce } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
+import Codemirror from './Codemirror'
+import * as schemaConvert from './editorSchemaConverter'
+import cypherFunctions from './cypher/functions'
+import consoleCommands from './language/consoleCommands'
 
 export class Editor extends Component {
   constructor (props) {
@@ -45,104 +45,164 @@ export class Editor extends Component {
       historyIndex: -1,
       buffer: '',
       mode: 'cypher',
-      notifications: []
+      notifications: [],
+      expanded: false,
+      lastPosition: { line: 0, column: 0 }
     }
   }
-  focusEditor () {//press '/' or click editor
-    const cm = this.codeMirror
-    cm.focus()
-    cm.setCursor(cm.lineCount(), 0)
+  focusEditor () {
+    this.codeMirror.focus()
+    this.codeMirror.setCursor(this.codeMirror.lineCount(), 0)
   }
+
+  expandEditorToggle () {
+    this.setState({ expanded: !this.state.expanded })
+  }
+
   clearEditor () {
-    this.setEditorValue(this.codeMirror, '')
+    this.setEditorValue('')
   }
-  handleEnter (cm) {//1 line -> exec ; n lines -> next line
+  handleEnter (cm) {
     if (cm.lineCount() === 1) {
       return this.execCurrent(cm)
     }
     this.newlineAndIndent(cm)
   }
+
   newlineAndIndent (cm) {
-    this.codeMirrorInstance.commands.newlineAndIndent(cm)
+    cm.execCommand('newlineAndIndent')
   }
+
   execCurrent () {
-    const value = this.codeMirror.getValue().trim()
+    const value = this.codeMirror.getValue().trim() || this.state.code
     if (!value) return
     this.props.onExecute(value)//exec
     this.clearEditor()
     this.clearHints()
-    this.setState({historyIndex: -1, buffer: null})
+    this.setState({ historyIndex: -1, buffer: null, expanded: false })
   }
+
+  moveCursorToEndOfLine (cm) {
+    cm.setCursor(cm.lineCount(), 0)
+  }
+
+  handleUp (cm) {
+    if (cm.lineCount() === 1) {
+      this.historyPrev(cm)
+      this.moveCursorToEndOfLine(cm)
+    } else {
+      cm.execCommand('goLineUp')
+    }
+  }
+
+  handleDown (cm) {
+    if (cm.lineCount() === 1) {
+      this.historyNext(cm)
+      this.moveCursorToEndOfLine(cm)
+    } else {
+      cm.execCommand('goLineDown')
+    }
+  }
+
   historyPrev (cm) {
     if (!this.props.history.length) return
     if (this.state.historyIndex + 1 === this.props.history.length) return
     if (this.state.historyIndex === -1) { // Save what's currently in the editor
-      this.setState({buffer: cm.getValue()})
+      this.setState({ buffer: cm.getValue() })
     }
-    this.setState({historyIndex: this.state.historyIndex + 1})
-    this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
+    this.setState({
+      historyIndex: this.state.historyIndex + 1,
+      editorHeight: this.editor && this.editor.base.clientHeight
+    })
+    this.setEditorValue(this.props.history[this.state.historyIndex])
   }
+
   historyNext (cm) {
     if (!this.props.history.length) return
     if (this.state.historyIndex <= -1) return
     if (this.state.historyIndex === 0) { // Should read from buffer
-      this.setState({historyIndex: -1})
-      this.setEditorValue(cm, this.state.buffer)
+      this.setState({ historyIndex: -1 })
+      this.setEditorValue(this.state.buffer)
       return
     }
-    this.setState({historyIndex: this.state.historyIndex - 1})
-    this.setEditorValue(cm, this.props.history[this.state.historyIndex].cmd)
+    this.setState({
+      historyIndex: this.state.historyIndex - 1,
+      editorHeight: this.editor && this.editor.base.clientHeight
+    })
+    this.setEditorValue(this.props.history[this.state.historyIndex])
   }
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.content !== null && nextProps.content !== this.state.code) {
-      this.setEditorValue(this.codeMirror, nextProps.content)
+
+  triggerAutocompletion (cm, changed) {
+    if (changed.text.length !== 1) {
+      return
+    }
+
+    const text = changed.text[0]
+    const triggerAutocompletion = text === '.' ||
+      text === ':' ||
+      text === '[]' ||
+      text === '()' ||
+      text === '{}' ||
+      text === '[' ||
+      text === '(' ||
+      text === '{'
+    if (triggerAutocompletion) {
+      cm.execCommand('autocomplete')
     }
   }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.content !== null && nextProps.content !== this.state.code) {
+      this.setEditorValue(nextProps.content)
+    }
+  }
+
   componentDidMount () {
     this.debouncedCheckForHints = debounce(this.checkForHints, 350, this)
     this.codeMirror = this.editor.getCodeMirror()
-    this.codeMirrorInstance = this.editor.getCodeMirrorInstance()
-    this.codeMirrorInstance.keyMap['default']['Enter'] = this.handleEnter.bind(this)
-    this.codeMirrorInstance.keyMap['default']['Shift-Enter'] = this.newlineAndIndent.bind(this)
-    this.codeMirrorInstance.keyMap['default']['Cmd-Enter'] = this.execCurrent.bind(this)
-    this.codeMirrorInstance.keyMap['default']['Ctrl-Enter'] = this.execCurrent.bind(this)
-    this.codeMirrorInstance.keyMap['default']['Cmd-Up'] = this.historyPrev.bind(this)
-    this.codeMirrorInstance.keyMap['default']['Ctrl-Up'] = this.historyPrev.bind(this)
-    this.codeMirrorInstance.keyMap['default']['Cmd-Down'] = this.historyNext.bind(this)
-    this.codeMirrorInstance.keyMap['default']['Ctrl-Down'] = this.historyNext.bind(this)
+    this.codeMirror.on('change', this.triggerAutocompletion.bind(this))
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, (msg) => {
-        this.setEditorValue(this.codeMirror, msg.message)
+        this.setEditorValue(msg.message)
       })
-      this.props.bus.take(FOCUS, () => this.focusEditor())
+      this.props.bus.take(FOCUS, this.focusEditor.bind(this))
+      this.props.bus.take(EXPAND, this.expandEditorToggle.bind(this))
     }
   }
-  setEditorValue (cm, cmd) {
+
+  setEditorValue (cmd) {
     this.codeMirror.setValue(cmd)
     this.updateCode(cmd, () => this.focusEditor())
   }
-  updateCode (newCode, cb = () => {}) {
+
+  updateCode (newCode, change, cb = () => {
+  }) {
     const mode = this.props.cmdchar && newCode.trim().indexOf(this.props.cmdchar) === 0
       ? 'text'
       : 'cypher'
     this.clearHints()
     if (mode === 'cypher' &&
-        newCode.trim().length > 0 &&
-        !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
-        !newCode.trimLeft().toUpperCase().startsWith('PROFILE')
+      newCode.trim().length > 0 &&
+      !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
+      !newCode.trimLeft().toUpperCase().startsWith('PROFILE')
     ) {
       this.debouncedCheckForHints(newCode)
     }
 
+    const lastPosition = change && change.to
+
     this.setState({
       code: newCode,
-      mode
+      mode,
+      lastPosition: lastPosition ? { line: lastPosition.line, column: lastPosition.ch } : this.state.lastPosition,
+      editorHeight: this.editor && this.editor.base.clientHeight
     }, cb)
   }
+
   checkForHints (code) {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: 'EXPLAIN ' + code},
+      { query: 'EXPLAIN ' + code },
       (response) => {
         if (response.success === true && response.result.summary.notifications.length > 0) {
           this.setState({ notifications: response.result.summary.notifications })
@@ -152,9 +212,11 @@ export class Editor extends Component {
       }
     )
   }
+
   clearHints () {
     this.setState({ notifications: [] })
   }
+
   setGutterMarkers () {
     if (this.codeMirror) {
       this.codeMirror.clearGutter('cypher-hints')
@@ -175,52 +237,97 @@ export class Editor extends Component {
     }
   }
 
+  lineNumberFormatter (line) {
+    if (!this.codeMirror || this.codeMirror.lineCount() === 1) {
+      return '$'
+    } else {
+      return line
+    }
+  }
+
+  componentDidUpdate () {
+    if (this.editor) {
+      const editorHeight = this.editor.base.clientHeight
+      if (editorHeight !== this.state.editorHeight) {
+        this.setState({ editorHeight })
+      }
+    }
+  }
+
   render () {
     const options = {
       lineNumbers: true,
       mode: this.state.mode,
-      theme: 'neo',
+      theme: 'cypher',
       gutters: ['cypher-hints'],
       lineWrapping: true,
       autofocus: true,
-      smartIndent: false
+      smartIndent: false,
+      lineNumberFormatter: this.lineNumberFormatter.bind(this),
+      lint: true,
+      extraKeys: {
+        'Ctrl-Space': 'autocomplete',
+        'Enter': this.handleEnter.bind(this),
+        'Shift-Enter': this.newlineAndIndent.bind(this),
+        'Cmd-Enter': this.execCurrent.bind(this),
+        'Ctrl-Enter': this.execCurrent.bind(this),
+        'Cmd-Up': this.historyPrev.bind(this),
+        'Ctrl-Up': this.historyPrev.bind(this),
+        'Up': this.handleUp.bind(this),
+        'Cmd-Down': this.historyNext.bind(this),
+        'Ctrl-Down': this.historyNext.bind(this),
+        'Down': this.handleDown.bind(this)
+      },
+      hintOptions: {
+        completeSingle: false,
+        closeOnUnfocus: false,
+        alignWithWord: true,
+        async: true
+      },
+      autoCloseBrackets: {
+        explode: ''
+      }
     }
 
-    const updateCode = (val) => this.updateCode(val)
+    const updateCode = (val, change) => this.updateCode(val, change)
     this.setGutterMarkers()
-    return (
-      <Bar>
-        <EditorWrapper>
 
+    return (
+      <Bar expanded={this.state.expanded} minHeight={this.state.editorHeight}>
+        <EditorWrapper expanded={this.state.expanded} minHeight={this.state.editorHeight}>
           <Codemirror
-            ref={(ref) => { this.editor = ref }}
+            ref={(ref) => {
+              this.editor = ref
+            }}
             value={this.state.code}
             onChange={updateCode}
             options={options}
+            schema={this.props.schema}
+            initialPosition={this.state.lastPosition}
           />
         </EditorWrapper>
         <ActionButtonSection>
           <EditorButton
             onClick={() => this.props.onFavortieClick(this.state.code)}
             disabled={this.state.code.length < 1}
-            tooltip='Add as favorite'
+            title='Favorite'
             hoverIcon='"\58"'
             icon='"\73"'
-           />
+          />
           <EditorButton
             onClick={() => this.clearEditor()}
             disabled={this.state.code.length < 1}
-            tooltip='Clear editor contents'
+            title='Clear'
             hoverIcon='"\e005"'
             icon='"\5e"'
-           />
+          />
           <EditorButton
             onClick={() => this.execCurrent()}
             disabled={this.state.code.length < 1}
-            tooltip='Execute command'
+            title='Play'
             hoverIcon='"\e002"'
             icon='"\77"'
-           />
+          />
         </ActionButtonSection>
       </Bar>
     )
@@ -244,7 +351,18 @@ const mapStateToProps = (state) => {
   return {
     content: null,
     history: getHistory(state),
-    cmdchar: getSettings(state).cmdchar
+    cmdchar: getSettings(state).cmdchar,
+    schema: {
+      consoleCommands: consoleCommands,
+      labels: state.meta.labels.map(schemaConvert.toLabel),
+      relationshipTypes: state.meta.relationshipTypes.map(schemaConvert.toRelationshipType),
+      propertyKeys: state.meta.properties.map(schemaConvert.toPropertyKey),
+      functions: [
+        ...cypherFunctions,
+        ...state.meta.functions.map(schemaConvert.toFunction)
+      ],
+      procedures: state.meta.procedures.map(schemaConvert.toProcedure)
+    }
   }
 }
 

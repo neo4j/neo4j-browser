@@ -37,6 +37,10 @@ const StyledCheckbox = styled.input`
 `
 const StyledLabel = styled.label`
   margin-left: 10px;
+  display: inline-block;
+  &:first-letter {
+    text-transform: uppercase;
+  }
 `
 const StyledRadioEntry = styled.div`
   margin: 10px 0;

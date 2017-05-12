@@ -36,11 +36,19 @@ describe('commandutils', () => {
   test('stripEmptyCommandLines should remove empty lines ', () => {
     const testStrs = [
       '\n\n     \nRETURN 1',
-      '   \n\nRETURN 1\n  \n\n',
-      'RETURN \n\n 1\n'
+      '   \n\nRETURN 1\n  \n\n'
     ]
     testStrs.forEach((str) => {
       expect(utils.stripEmptyCommandLines(str)).toEqual('RETURN 1')
+    })
+  })
+
+  test('stripEmptyCommandLines should preserve usual newlines ', () => {
+    const testStrs = [
+      'MATCH (n)\nRETURN n'
+    ]
+    testStrs.forEach((str) => {
+      expect(utils.stripEmptyCommandLines(str)).toEqual('MATCH (n)\nRETURN n')
     })
   })
 

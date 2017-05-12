@@ -33,7 +33,7 @@ const visualSettings =
           theme: {
             displayName: 'Theme',
             type: 'radio',
-            options: ['normal', 'dark', 'outline']
+            options: ['normal', 'outline']
           }
         }
       ]
@@ -58,6 +58,13 @@ const visualSettings =
             displayName: 'Max History',
             tooltip: 'Max number of history entries. When reached, old entries gets retired.'
           }
+        },
+        {
+          scrollToTop: {
+            displayName: 'Scroll To Top',
+            tooltip: 'Automatically scroll stream to top on new frames.',
+            type: 'checkbox'
+          }
         }
       ]
     },
@@ -75,6 +82,19 @@ const visualSettings =
             displayName: 'Max Neighbours',
             tooltip: 'Limit exploratary queries to this limit.'
           }
+        },
+        {
+          maxRows: {
+            displayName: 'Max Rows',
+            tooltip: "Max number of rows to render in 'Rows' result view"
+          }
+        },
+        {
+          autoComplete: {
+            displayName: 'Connect result nodes',
+            tooltip: 'If this is checked, after a cypher query result is retrieved, a second query is executed to fetch relationships between result nodes.',
+            type: 'checkbox'
+          }
         }
       ]
     }
@@ -90,7 +110,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
 
       if (!settingObj[setting].type || settingObj[setting].type === 'input') {
         return (<StyledSetting key={i}>
-          <StyledSettingLabel>{visual}</StyledSettingLabel>
+          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
           <StyledSettingTextInput onChange={(event) => {
             settings[setting] = event.target.value
             onSettingsSave(settings)
@@ -98,7 +118,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
         </StyledSetting>)
       } else if (settingObj[setting].type === 'radio') {
         return (<StyledSetting key={i}>
-          <StyledSettingLabel>{visual}</StyledSettingLabel>
+          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
           <RadioSelector options={settingObj[setting].options} onChange={(event) => {
             settings[setting] = event.target.value
             onSettingsSave(settings)
@@ -110,7 +130,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
             settings[setting] = event.target.checked
             onSettingsSave(settings)
           }} checked={settings[setting]} />
-          <StyledSettingLabel>{visual}</StyledSettingLabel>
+          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
         </StyledSetting>)
       }
     })

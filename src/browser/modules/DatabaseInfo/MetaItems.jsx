@@ -87,7 +87,7 @@ const PropertyItems = ({properties, onItemClick}) => {
   let propertyItems = <p>There are no properites in database</p>
   if (properties.length > 0) {
     const editorCommandTemplate = (text) => {
-      return `MATCH (n) WHERE EXISTS(n.${text}) RETURN DISTINCT "node" as element, n.${text} AS ${text} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${text}) RETURN DISTINCT "relationship" AS element, r.${text} AS ${text} LIMIT 25`
+      return `MATCH (n) WHERE EXISTS(n.${text}) RETURN DISTINCT "node" as entity, n.${text} AS ${text} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${text}) RETURN DISTINCT "relationship" AS entity, r.${text} AS ${text} LIMIT 25`
     }
     propertyItems = createItems(properties, onItemClick, {component: StyledProperty}, editorCommandTemplate, false)
   }

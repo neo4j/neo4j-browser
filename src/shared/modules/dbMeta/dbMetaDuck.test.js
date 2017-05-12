@@ -18,56 +18,172 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
+/* global describe, test, expect */
 import reducer, * as meta from './dbMetaDuck'
 
 describe('updating metadata', () => {
   test('should update state when metadata is updated', () => {
     const returnedLabels = {
       a: 'labels',
-      get: (val) => { return ['label1', 'label2'] }
+      get: () => {
+        return ['label1', 'label2']
+      }
     }
     const returnedRelationshipTypes = {
       a: 'relationshipTypes',
-      get: (val) => { return ['rel1', 'rel2'] }
+      get: () => {
+        return ['rel1', 'rel2']
+      }
     }
-    const returnedProperies = {
+    const returnedProperties = {
       a: 'properties',
-      get: (val) => { return ['prop1', 'prop2'] }
+      get: () => {
+        return ['prop1', 'prop2']
+      }
+    }
+    const returnedFunctions = {
+      a: 'functions',
+      get: () => {
+        return [
+          { name: 'ns.functionName', signature: 'functionSignature', description: 'functionDescription' }
+        ]
+      }
+    }
+    const returnedProcedures = {
+      a: 'procedures',
+      get: () => {
+        return [
+          { name: 'ns.procedureName', signature: 'procedureSignature', description: 'procedureDescription' }
+        ]
+      }
     }
     const action = {
-      type: meta.UPDATE,
-      meta: {records: [ returnedLabels, returnedRelationshipTypes, returnedProperies ]},
+      type: meta.UPDATE_META,
+      meta: {
+        records: [
+          returnedLabels,
+          returnedRelationshipTypes,
+          returnedProperties,
+          returnedFunctions,
+          returnedProcedures
+        ]
+      },
       context: 'mycontext'
     }
+
     const nextState = reducer(undefined, action)
-    expect(nextState.labels).toEqual([{val: 'label1', context: 'mycontext'}, {val: 'label2', context: 'mycontext'}])
-    expect(nextState.relationshipTypes).toEqual([{val: 'rel1', context: 'mycontext'}, {val: 'rel2', context: 'mycontext'}])
-    expect(nextState.properties).toEqual([{val: 'prop1', context: 'mycontext'}, {val: 'prop2', context: 'mycontext'}])
+
+    expect(nextState.labels).toEqual([
+      { val: 'label1', context: 'mycontext' },
+      { val: 'label2', context: 'mycontext' }
+    ])
+    expect(nextState.relationshipTypes).toEqual([
+      { val: 'rel1', context: 'mycontext' },
+      { val: 'rel2', context: 'mycontext' }
+    ])
+    expect(nextState.properties).toEqual([
+      { val: 'prop1', context: 'mycontext' },
+      { val: 'prop2', context: 'mycontext' }
+    ])
+    expect(nextState.functions).toEqual([
+      {
+        val: 'ns.functionName',
+        context: 'mycontext',
+        signature: 'functionSignature',
+        description: 'functionDescription'
+      }
+    ])
+    expect(nextState.procedures).toEqual([
+      {
+        val: 'ns.procedureName',
+        context: 'mycontext',
+        signature: 'procedureSignature',
+        description: 'procedureDescription'
+      }
+    ])
   })
 
-  // test('should not update state when metadata has not changed', () => {
-  //   const returnedLabels = {
-  //     a: 'labels',
-  //     get: (val) => { return ['label1', 'label2'] }
-  //
-  //   }
-  //   const returnedRelationshipTypes = {
-  //     a: 'relationshipTypes',
-  //     get: (val) => { return ['rel1', 'rel2'] }
-  //
-  //   }
-  //   const returnedProperies = {
-  //     a: 'properties',
-  //     get: (val) => { return ['prop1', 'prop2'] }
-  //
-  //   }
-  //   const initialState = { labels: ['label1', 'label2'], relationshipTypes: ['rel1', 'rel2'], properties: ['prop1', 'prop2'] }
-  //   const action = {
-  //     type: dbInfo.actionTypes.UPDATE_META,
-  //     state: {meta: {records: [ returnedLabels, returnedRelationshipTypes, returnedProperies ]}}
-  //   }
-  //   const nextState = reducer(initialState, action)
-  //   expect(nextState).toEqual(initialState)
-  // })
+  test('should update state with empty metadata', () => {
+    const returnNothing = () => []
+    const action = {
+      type: meta.UPDATE_META,
+      meta: {
+        records: [
+          { a: 'labels', get: returnNothing },
+          { a: 'relationshipTypes', get: returnNothing },
+          { a: 'properties', get: returnNothing },
+          { a: 'functions', get: returnNothing },
+          { a: 'procedures', get: returnNothing }
+        ]
+      },
+      context: 'mycontext'
+    }
+
+    const nextState = reducer(undefined, action)
+
+    expect(nextState.labels).toEqual([])
+    expect(nextState.relationshipTypes).toEqual([])
+    expect(nextState.properties).toEqual([])
+    expect(nextState.functions).toEqual([])
+    expect(nextState.procedures).toEqual([])
+  })
+
+  test('can update server settings', () => {
+    // Given
+    const initState = {
+      shouldKeep: true
+    }
+    const action = {
+      type: meta.UPDATE_SETTINGS,
+      settings: {
+        'browser.test': 1
+      }
+    }
+
+    // When
+    const nextState = reducer(initState, action)
+
+    // Then
+    expect(nextState).toMatchSnapshot()
+  })
+
+  test('can update server info', () => {
+    // Given
+    const initState = {
+      shouldKeep: true
+    }
+    const action = {
+      type: meta.UPDATE_SERVER,
+      version: '3.2.0-RC2',
+      edition: 'enterprise',
+      storeId: 'xxxx'
+    }
+
+    // When
+    const nextState = reducer(initState, action)
+
+    // Then
+    expect(nextState).toMatchSnapshot()
+  })
+
+  test('can CLEAR to reset state', () => {
+    // Given
+    const initState = {
+      shouldKeep: false,
+      'server': {
+        edition: 'enterprise',
+        storeId: 'xxxx',
+        version: '3.2.0-RC2'
+      }
+    }
+    const action = {
+      type: meta.CLEAR
+    }
+
+    // When
+    const nextState = reducer(initState, action)
+
+    // Then
+    expect(nextState).toMatchSnapshot()
+  })
 })

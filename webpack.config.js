@@ -54,6 +54,10 @@ const plugins = [
     {
       from: path.resolve('./src/browser/external/neoPlanner.js'),
       to: assetsPath + '/js'
+    },
+    {
+      from: path.resolve('./src/browser/external/canvg'),
+      to: assetsPath + '/js/canvg'
     }
   ]),
   new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, 'node-noop'),
@@ -93,7 +97,7 @@ const plugins = [
 const rules = [
   {
     test: /\.(js|jsx)$/,
-    exclude: /node_modules/,
+    exclude: /(node_modules)|(cypher-codemirror)/,
     use: [{
       loader: 'babel-loader',
       options: {

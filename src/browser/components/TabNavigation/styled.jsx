@@ -18,20 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import styled, { keyframes } from 'styled-components'
-
-const pushRight = keyframes`
-  from {
-    transform: translate(0, 0);
-    width: 0px;
-  }
-  to {
-    opacity: 1;
-  }
-`
+import styled from 'styled-components'
 
 export const StyledSidebar = styled.div`
-  flex: content;
+  flex: 0 0 auto;
   background-color: #4C4957;
   display: flex;
   flex-direction: row;
@@ -40,15 +30,13 @@ export const StyledSidebar = styled.div`
 `
 
 export const StyledDrawer = styled.div`
-  flex: 0 0 300px;
-  width: 300px;
+  flex: 0 0 auto;
   background-color: #30333A;
-  overflow: auto;
-  animation: ${pushRight} .2s linear;
-`
-
-export const HiddenDrawer = styled.div`
- display: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: ${props => props.open ? '300px' : '0px'};
+  transition: .2s ease-out;
+  z-index: 1;
 `
 
 export const StyledTabsWrapper = styled.div`

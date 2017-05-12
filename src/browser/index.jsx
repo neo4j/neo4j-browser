@@ -33,7 +33,17 @@ import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 // Configure localstorage sync
-applyKeys('connections', 'settings', 'history', 'documents', 'visualization', 'folders', 'grass', 'syncConsent')
+applyKeys(
+  'connections',
+  'settings',
+  'history',
+  'documents',
+  'visualization',
+  'folders',
+  'grass',
+  'syncConsent',
+  'udc'
+)
 
 // Create suber bus
 const bus = createBus()
@@ -64,7 +74,7 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
 })
 
 // Signal app upstart (for epics)
-store.dispatch({ type: APP_START })
+store.dispatch({ type: APP_START, url: window.location.href })
 
 const mountElement = document.getElementById('mount')
 let elem

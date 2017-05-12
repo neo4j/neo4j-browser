@@ -24,8 +24,8 @@ export default class FormKeyHandler {
     this.submitAction = submitAction
   }
 
-  initialize () {
-    this.elements[1] && this.elements[1].focus()
+  initialize (focus = true) {
+    focus && this.elements[1] && this.elements[1].focus()
   }
 
   registerInput (input, position) {

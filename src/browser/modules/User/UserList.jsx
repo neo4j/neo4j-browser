@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { Component } from 'preact'
 import uuid from 'uuid'
 import { withBus } from 'preact-suber'
@@ -25,6 +26,8 @@ import { listUsersQuery, listRolesQuery } from 'shared/modules/cypher/boltUserHe
 import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { StyledLink } from 'browser-components/buttons'
+import {StyledTable, StyledTh} from 'browser-components/DataTables'
 
 import FrameTemplate from '../Stream/FrameTemplate'
 
@@ -65,19 +68,25 @@ export class UserList extends Component {
       )
     })
     const tableHeaders = ['Username', 'Roles(s)', 'Status', 'Password Change', 'Delete'].map((heading, i) => {
-      return <th key={i}>{heading}</th>
+      return <StyledTh key={i}>{heading}</StyledTh>
     })
     return (
-      <table>
+      <StyledTable>
         <thead>
           <tr>
             {tableHeaders}
           </tr>
         </thead>
         <tbody>{items}</tbody>
-      </table>
+      </StyledTable>
     )
   }
+
+  openAddNewUserFrame () {
+    const action = executeCommand(':server user add')
+    this.props.bus.send(action.type, action)
+  }
+
   componentWillMount () {
     this.getUserList()
     this.getRoles()
@@ -87,6 +96,9 @@ export class UserList extends Component {
     const frameContents = (
       <div className='db-list-users'>
         {renderedListOfUsers}
+        <StyledLink onClick={this.openAddNewUserFrame.bind(this)}>
+          Add new user
+        </StyledLink>
       </div>
     )
     return (

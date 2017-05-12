@@ -26,17 +26,19 @@ import { APP_START } from 'shared/modules/app/appDuck'
 const NAME = 'editor'
 export const SET_CONTENT = NAME + '/SET_CONTENT'
 export const FOCUS = `${NAME}/FOCUS`
+export const EXPAND = `${NAME}/EXPAND`
 
 export const setContent = (newContent) => ({ type: SET_CONTENT, message: newContent })
 
 export const populateEditorFromUrlEpic = (some$, store) => {
   return some$.ofType(APP_START)
     .delay(1) // Timing issue. Needs to be detached like this
-    .mergeMap(() => {
-      const cmdParam = getUrlParamValue('cmd', window.location.href)
+    .mergeMap((action) => {
+      if (!action.url) return Rx.Observable.never()
+      const cmdParam = getUrlParamValue('cmd', action.url)
       if (!cmdParam || cmdParam[0] !== 'play') return Rx.Observable.never()
       const cmdCommand = getSettings(store.getState()).cmdchar + cmdParam[0]
-      const cmdArgs = getUrlParamValue('arg', decodeURIComponent(window.location.href)) || []
+      const cmdArgs = getUrlParamValue('arg', decodeURIComponent(action.url)) || []
       const fullCommand = `${cmdCommand} ${cmdArgs.join(' ')}`
       return Rx.Observable.of({ type: SET_CONTENT, ...setContent(fullCommand) })
     })

@@ -33,6 +33,7 @@ import * as frames from 'shared/modules/stream/streamDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
 import { merge, set } from 'shared/modules/params/paramsDuck'
 import { update as updateSettings } from 'shared/modules/settings/settingsDuck'
+import { cleanCommand, getInterpreter } from 'services/commandUtils'
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
@@ -40,14 +41,14 @@ const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)
 
 describe('commandsDuck', () => {
   let store
+  const maxHistory = 20
   beforeAll(() => {
     store = mockStore({
       settings: {
-        cmdchar: ':'
+        cmdchar: ':',
+        maxHistory: maxHistory
       },
-      history: {
-        history: [':xxx']
-      },
+      history: [':xxx'],
       connections: {},
       params: {}
     })
@@ -67,7 +68,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd }),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
           { type: 'NOOP' }
@@ -89,11 +90,13 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({cmd}),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
+          commands.cypher(cmd),
           frames.add({...action, type: 'cypher'}),
           updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
+          commands.unsuccessfulCypher(cmd),
           { type: 'NOOP' }
         ])
         done()
@@ -115,7 +118,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           merge({x: 2}),
           frames.add({...action, success: true, type: 'param', params: {x: 2}}),
@@ -140,7 +143,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           set({x: 2, y: 3}),
           frames.add({...action, success: true, type: 'params', params: {}}),
@@ -164,7 +167,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           frames.add({...action, type: 'params', params: {}}),
           { type: 'NOOP' }
@@ -188,10 +191,10 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd: cmdString }),
+          addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           updateSettings({x: 2}),
-          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':'}, null, 2)}),
+          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
           { type: 'NOOP' }
         ])
         done()
@@ -211,7 +214,7 @@ describe('commandsDuck', () => {
       bus.take('NOOP', (currentAction) => {
         expect(store.getActions()).toEqual([
           action,
-          addHistory({ cmd }),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           frames.add({ ...action, type: 'queries', result: "{res : 'QUERIES RESULT'}" }),
           {type: 'NOOP'}
@@ -219,6 +222,56 @@ describe('commandsDuck', () => {
         done()
       })
 
+      store.dispatch(action)
+    })
+    test('does the right thing for cypher with comments', (done) => {
+      // Given
+      const comment = '//COMMENT FOR RETURN'
+      const actualCommand = 'RETURN 1'
+      const cmd = comment + '\n' + actualCommand
+      const id = 2
+      const requestId = 'xxx'
+      const action = commands.executeCommand(cmd, id, requestId)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmd, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          send('cypher', requestId),
+          commands.cypher(actualCommand),
+          frames.add({...action, type: 'cypher'}),
+          updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
+          commands.unsuccessfulCypher(actualCommand),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+      // When
+      store.dispatch(action)
+    })
+    test('does the right thing for history command with comments', (done) => {
+      // Given
+      const comment = '//COMMENT FOR HISTORY'
+      const cmdString = 'history'
+      const cmd = comment + '\n' + store.getState().settings.cmdchar + cmdString
+      const id = 1
+      const action = commands.executeCommand(cmd, id)
+      const cmdChar = store.getState().settings.cmdchar
+
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmd, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          getInterpreter(helper.interpret, action.cmd, cmdChar).exec(Object.assign(action, {cmd: cleanCommand(action.cmd)}), cmdChar, (a) => a, store),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
       store.dispatch(action)
     })
   })
@@ -253,7 +306,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory({cmd}),
+          addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           frames.add({...action, type: 'disconnect'}),
           disconnectAction(null),

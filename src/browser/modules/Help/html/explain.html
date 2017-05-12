@@ -1,0 +1,35 @@
+<article class="help">
+    <section class="main">
+      <div class="headings">
+        <p class="title">EXPLAIN</p>
+        <p class="subtitle">Explain query execution</p>
+      </div>
+      <div class="content">
+        <p>Prefix any query with the&nbsp;<code>EXPLAIN</code> keyword to have Neo4j return the execution plan
+          it would use to execute the query.
+          However, the query is not executed, and Neo4j will make no changes to the database.
+        </p>
+        <p>See&nbsp;<a help-topic="query plan">:help QUERY PLAN</a> for a guide to understanding the query plan output.</p>
+        <table class="table-condensed table-help">
+          <!-- <tr>
+            <th>Reference:</th>
+            <td><code><a href="{{ neo4j.version | neo4jDeveloperDoc }}/#execution-plans">Execution Plans</a></code> manual page</td>
+          </tr> -->
+          <tr>
+            <th>Related:</th>
+            <td><a help-topic="profile">:help PROFILE</a>&nbsp;<a help-topic="query plan">:help QUERY PLAN</a>&nbsp;</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section class=" example">
+        <figure>
+          <pre class="code runnable standalone-example">EXPLAIN
+MATCH (n:Person) RETURN n LIMIT 25</pre>
+          <figcaption>
+            Show the query plan that would be used to find nodes with the Person label,
+             without actually executing the plan.
+          </figcaption>
+        </figure>
+    </section>
+</article>

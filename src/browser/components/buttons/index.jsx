@@ -138,10 +138,20 @@ const StyledSecondaryFormButton = styled(StyledFormButton)`
     background-color: ${props => props.theme.secondaryButtonBackground};
   }
 `
+const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
+  color: #bcc0c9;
+  border-color: #bcc0c9;
+  outline: none;
+  &:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+`
 
 const buttonTypes = {
   primary: StyledFormButton,
-  secondary: StyledSecondaryFormButton
+  secondary: StyledSecondaryFormButton,
+  drawer: StyledDrawerFormButton
 }
 
 export const FormButton = (props) => {
@@ -209,8 +219,14 @@ const StyledFrameButtonPressed = styled(StyledFrameButton)`
   color: ${props => props.theme.secondaryBackground};
   fill: ${props => props.theme.secondaryBackground};
 `
-
-export const FrameButtonAChild = styled.a`
+export const DefaultA = styled.a`
+  color: ${props => props.theme.secondaryButtonText};
+  &:hover {
+    color: ${props => props.theme.secondaryBackground};
+    text-decoration: none;
+  }
+`
+export const FrameButtonAChild = styled(DefaultA)`
   display: block;
   text-decoration: none;
   &:focus, &:active, &:hover {
@@ -230,6 +246,7 @@ const BaseCarouselButton = styled.button`
   border: 3px solid rgb(255, 255, 255);
   color: rgb(255, 255, 255);
   cursor: pointer;
+  margin: 0 20px;
   font-family: ${props => props.theme.primaryFontFamily};
   font-size: 60px;
   font-weight: 100;
@@ -271,3 +288,20 @@ export const CarouselButton = (props) => {
     </BaseCarouselButton>
   )
 }
+
+export const StyledLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: #5dade2;
+    text-decoration: none;
+  }
+`
+
+export const SyncSignInButton = styled(FormButton)`
+  background-color: #5FB434;
+  color: #ffffff;
+  &:hover {
+    color: #797979
+  }
+`

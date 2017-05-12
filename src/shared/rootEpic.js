@@ -27,8 +27,10 @@ import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import { adHocCypherRequestEpic, cypherRequestEpic, clusterCypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
-import { featuresDicoveryEpic } from './modules/features/featuresDuck'
+import { featuresDiscoveryEpic } from './modules/features/featuresDuck'
 import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic, loadFoldersFromSyncEpic, syncFoldersEpic } from './modules/sync/syncDuck'
+import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
+import { bootEpic, incrementEventEpic, udcStartupEpic, trackSyncLogoutEpic, trackConnectsEpic, eventFiredEpic } from './modules/udc/udcDuck'
 
 export default combineEpics(
   handleCommandsEpic,
@@ -52,11 +54,18 @@ export default combineEpics(
   clusterCypherRequestEpic,
   clearLocalstorageEpic,
   handleForcePasswordChangeEpic,
-  featuresDicoveryEpic,
+  featuresDiscoveryEpic,
   syncFavoritesEpic,
   loadFavoritesFromSyncEpic,
   syncItemsEpic,
   clearSyncEpic,
   loadFoldersFromSyncEpic,
-  syncFoldersEpic
+  syncFoldersEpic,
+  credentialsTimeoutEpic,
+  bootEpic,
+  udcStartupEpic,
+  incrementEventEpic,
+  trackSyncLogoutEpic,
+  trackConnectsEpic,
+  eventFiredEpic
 )

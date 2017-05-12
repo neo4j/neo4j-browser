@@ -20,6 +20,7 @@
 
 import 'rxjs'
 import bolt from 'services/bolt/bolt'
+import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'requests'
 export const REQUEST_SENT = NAME + '/SENT'
@@ -33,6 +34,8 @@ export const getRequest = (state, id) => state[NAME][id]
 export const getRequests = (state) => state[NAME]
 
 export default function reducer (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case REQUEST_SENT:
       return Object.assign({}, state, {[action.id]: {result: undefined, status: 'pending', type: action.requestType}})

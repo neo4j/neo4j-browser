@@ -58,7 +58,7 @@ export class SysInfoFrame extends Component {
           id: record.get('id'),
           addresses: record.get('addresses'),
           role: record.get('role'),
-          tags: record.get('tags')
+          groups: record.get('groups')
         }
       })
       const mappedTableHeader = <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />

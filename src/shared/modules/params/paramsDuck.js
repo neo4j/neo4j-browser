@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { hydrate } from 'services/duckUtils'
+
 export const NAME = 'params'
 const MERGE = `${NAME}/MERGE`
 const SET = `${NAME}/SET`
@@ -29,6 +31,8 @@ export const getParams = (state) => state[NAME]
 
 // Reducer
 export default function reducer (state = initialState, action) {
+  state = hydrate(initialState, state)
+
   switch (action.type) {
     case MERGE:
       return {...state, ...action.params}

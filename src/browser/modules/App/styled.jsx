@@ -50,6 +50,8 @@ export const StyledMainWrapper = styled.div`
   flex: auto;
   background-color: #D2D5DA;
   overflow: auto;
-  padding: 0 24px;
+  padding: 0;
   z-index: 1;
+  height: auto;
+  width: 0;
 `
