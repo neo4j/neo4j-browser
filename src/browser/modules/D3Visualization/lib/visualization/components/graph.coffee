@@ -58,8 +58,6 @@ class neo.models.Graph
     (pair for ignored, pair of groups)
 
   addNodes: (nodes) =>
-    console.log(@_relationships)
-    console.log(@_nodes)
     for node in nodes
       if !@findNode(node.id)?
         @nodeMap[node.id] = node
@@ -113,7 +111,8 @@ class neo.models.Graph
     @_relationships = []
     @addRelationships(relationships)
 
-  findNode: (id) => @nodeMap[id]
+  findNode: (id) =>
+    @nodeMap[id]
 
   findNodeNeighbourIds: (id) =>
     @_relationships

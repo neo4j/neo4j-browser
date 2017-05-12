@@ -34,6 +34,22 @@ export class GraphEventHandler {
         this.onItemSelected = onItemSelected
         this.onGraphModelChange = onGraphModelChange
     }
+    uniqueNodeId(id) {
+        var uniqueId = (Number(id) + 1).toString()
+        while (this.graph.findNode(uniqueId)) {
+            uniqueId = (Number(uniqueId) + 1).toString()
+        }
+        return uniqueId
+    }
+
+    uniqueRelationshipId(id) {
+        var uniqueId = (Number(id) + 1).toString()
+        while (this.graph.findRelationship(uniqueId)) {
+            uniqueId = (Number(uniqueId) + 1).toString()
+        }
+        return uniqueId
+    }
+
 
     graphModelChanged() {
         this.onGraphModelChange(getGraphStats(this.graph))
@@ -70,6 +86,18 @@ export class GraphEventHandler {
         if (!d.selected) {
             this.selectItem(d)
             this.onItemSelected({ type: 'node', item: { id: d.id, labels: d.labels, properties: d.propertyList } })
+
+            if (d.labels[0] === "PROPERTY") {
+                var nodeId = d.propertyMap.id
+                var key = d.propertyMap.key
+                var value = d.propertyMap.value
+                var keyValue = prompt('Edit the node\'s ' + key + '.', value)
+                var cmd = 'match (n) where id(n) = ' + nodeId + ' set n.' + key + ' = \'' + keyValue + '\' return n'
+                bolt.directTransaction(cmd)
+                d.propertyMap.value = keyValue
+                this.deselectItem()
+            }
+
         } else {
             this.deselectItem()
         }
@@ -82,37 +110,22 @@ export class GraphEventHandler {
 
         var nodeId = d.id
         var propertyList = d.propertyList
+
+        /*/node-text
         var keyList = ''
         var defaultKey = ''
-
-        //console.log(d)
-
-        // console.log(propertyList)
-        // console.log(propertyList.length)
-
-        // for (var i = 0; i < propertyList.length; i++) {
-        //     if (propertyList.hasOwnProperty(i)) {
-        //         var key = propertyList[i].key
-        //         var str = prompt('Please input the node\'s ' + key + '.', key);
-        //         var cmd = 'match (n) where id(n) = ' + nodeId + ' set n.' + key + ' = \'' + str + '\' return n'
-        //             //console.log(cmd)s
-        //         bolt.directTransaction(cmd);
-        //     }
-        // }
-
-        for (var i = 0; i < propertyList.length; i++) {
+        for (var i = propertyList.length - 1; i >= 0; i--) {
             if (propertyList.hasOwnProperty(i)) {
                 keyList += propertyList[i].key
-                if (i != propertyList.length - 1)
+                if (i != 0)
                     keyList += '\n'
-                if (i == 0)
+                if (i == propertyList.length - 1)
                     defaultKey = propertyList[i].key
             }
-            //console.log(keyList)
         }
         var queryKey = prompt('Input the property to edit:\n' + keyList, defaultKey)
         var flag = 0
-        for (var i = 0; i < propertyList.length; i++) {
+        for (var i = propertyList.length - 1; i >= 0; i--) {
             if (propertyList[i].key == queryKey) {
                 var keyValue = prompt('Edit the node\'s ' + queryKey + '.', queryKey)
                 var cmd = 'match (n) where id(n) = ' + nodeId + ' set n.' + queryKey + ' = \'' + keyValue + '\' return n'
@@ -125,28 +138,60 @@ export class GraphEventHandler {
         if (flag = 0) {
             throw new Error('Invalid property.')
         }
+        //*/
 
-        /*
-        var propertyNodes = new Array();
-        var propertyRelationships = new Array();
-
-        for (var i = 0; i < propertyList.length; i++) {
-            if (propertyList.hasOwnProperty(i)) {
-                propertyNodes.push(new neo.models.Node(node.id, node.labels, node.properties)) //id, array, boject
-                propertyRelationships.push(new neo.models.Relationship(rel.id, source, target, rel.type, rel.properties))
+        //node-explode
+        console.log(this.graph.nodes())
+        var hasProperty = false
+        var graphNodes = this.graph.nodes()
+        for (var i = graphNodes.length - 1; i >= 0; i--) {
+            if (graphNodes[i].propertyMap.id === nodeId) {
+                console.log(graphNodes[i].propertyMap.id)
+                hasProperty = true
+                this.nodeClose(graphNodes[i])
             }
-            console.log(keyList)
         }
 
-        property = new Object();
-        property.key = '';
-        property.value = '';
-        node = new neo.models.Node(12, ['property'], new Object())
+        if (hasProperty === false) {
+            var propertyNodes = new Array()
+            var propertyRelationships = new Array()
+            var nextNodeId = nodeId
+            var nextRelId = nodeId
 
-        graph.addNodes(mapNodes(nodes))
-        graph.addRelationships(mapRelationships(relationships, graph))
+            for (var i = propertyList.length - 1; i >= 0; i--) {
+                if (propertyList.hasOwnProperty(i)) {
 
-        */
+                    var property = new Object()
+                    nextNodeId = this.uniqueNodeId(nextNodeId)
+                    property.id = nextNodeId
+                    property.labels = new Array();
+                    property.labels.push('PROPERTY')
+                    property.properties = new Object();
+                    property.properties.id = nodeId
+                    property.properties.key = propertyList[i].key
+                    property.properties.value = propertyList[i].value
+
+                    propertyNodes.push(property)
+
+                    var rel = new Object()
+                    var nextRelId = this.uniqueRelationshipId(nextNodeId)
+                    rel.id = nextRelId
+                    rel.type = propertyList[i].key
+                    rel.startNodeId = nodeId
+                    rel.endNodeId = property.id
+                    rel.properties = new Object()
+
+                    propertyRelationships.push(rel)
+                }
+            }
+
+            graph.addNodes(mapNodes(propertyNodes))
+            graph.addRelationships(mapRelationships(propertyRelationships, graph))
+
+        }
+
+        //*/
+
         d.fixed = true
         graph.updateNode(d)
         this.deselectItem()
@@ -195,6 +240,14 @@ export class GraphEventHandler {
         if (!relationship.selected) {
             this.selectItem(relationship)
             this.onItemSelected({ type: 'relationship', item: { id: relationship.id, type: relationship.type, properties: relationship.propertyList } })
+
+            var targetId = relationship.target.id
+            var sourceId = relationship.source.id
+            var str = prompt("Edit the relationship's label", 'REL')
+            var cmd = 'match (n),(m) where id(n) = ' + sourceId + ' and id(m) = ' + targetId + ' match (n)-[r]->(m) CREATE (n)-[new :' + str + ']->(m) SET new += r DELETE r RETURN n, r, m, new'
+            bolt.directTransaction(cmd)
+            relationship.type = str
+
         } else {
             var targetId = relationship.target.id
             var sourceId = relationship.source.id
@@ -202,6 +255,7 @@ export class GraphEventHandler {
             var cmd = 'match (n),(m) where id(n) = ' + sourceId + ' and id(m) = ' + targetId + ' match (n)-[r]->(m) CREATE (n)-[new :' + str + ']->(m) SET new += r DELETE r RETURN n, r, m, new'
             bolt.directTransaction(cmd)
             relationship.type = str
+
             this.deselectItem()
         }
     }

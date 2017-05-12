@@ -116,7 +116,7 @@ do ->
   )
 
   donutEditNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeEdit', 4, 'edit_node', [0, 4], '\uf002', 'Edit the selected node\'s name')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeEdit', 4, 'edit_node', [0, 4], '\uf002', 'Edit the selected node\'s property')
 
     noTick: noop
   )
