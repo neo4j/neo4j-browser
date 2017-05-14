@@ -20,8 +20,8 @@
 
 import { Component } from 'preact'
 import { v4 } from 'uuid'
-import { PaddedDiv, StyledBodyMessage } from '../styled'
-import {StyledTable, StyledBodyTr, StyledTh, StyledTd} from 'browser-components/DataTables'
+import { PaddedTableViewDiv, StyledBodyMessage } from '../styled'
+import {StyledTable, StyledBodyTr, StyledTh, StyledTd, StyledJsonTableRow, StyledJsonTable, StyledJsonTableHeader, StyledJsonTableCell} from 'browser-components/DataTables'
 
 class TableView extends Component {
   constructor (props) {
@@ -33,15 +33,36 @@ class TableView extends Component {
       data: dataCopy
     }
   }
+  renderCell (entry) {
+    if (Array.isArray(entry)) {
+      const children = entry.map((item, index) => <span>{this.renderCell(item)}{index === entry.length - 1 ? null : ', '}</span>)
+      return <span>[{children}]</span>
+    } else if (typeof entry === 'object') {
+      return this.renderObject(entry)
+    } else {
+      return entry
+    }
+  }
+  renderObject (entry) {
+    const tableContent = Object.keys(entry).map((prop) => entry.hasOwnProperty(prop) &&
+    (<StyledJsonTableRow>
+      <StyledJsonTableHeader>{prop}</StyledJsonTableHeader>
+      <StyledJsonTableCell>{this.renderCell(entry[prop])}</StyledJsonTableCell>
+      </StyledJsonTableRow>))
+
+    return tableContent.length > 0 ? (
+      <StyledJsonTable>{tableContent}</StyledJsonTable>
+      ) : <em>(empty)</em>
+  }
   render () {
-    if (!this.props.data) return (<PaddedDiv style={this.props.style}><StyledBodyMessage>{this.props.message}</StyledBodyMessage></PaddedDiv>)
+    if (!this.props.data) return (<PaddedTableViewDiv style={this.props.style}><StyledBodyMessage>{this.props.message}</StyledBodyMessage></PaddedTableViewDiv>)
     const tableHeader = this.state.columns.map((column, i) => (
       <StyledTh className='table-header' key={i}>{column}</StyledTh>)
     )
     const buildData = (entries) => {
       return entries.map((entry) => {
         if (entry !== null) {
-          return <StyledTd className='table-properties' key={v4()}>{entry}</StyledTd>
+          return <StyledTd className='table-properties' key={v4()}>{this.renderCell(entry)}</StyledTd>
         }
         return <StyledTd className='table-properties' key={v4()}>(empty)</StyledTd>
       })
@@ -63,7 +84,7 @@ class TableView extends Component {
       </tbody>
     )
     return (
-      <PaddedDiv style={this.props.style}>
+      <PaddedTableViewDiv style={this.props.style}>
         <StyledTable>
           <thead>
             <tr>
@@ -72,7 +93,7 @@ class TableView extends Component {
           </thead>
           {tableBody}
         </StyledTable>
-      </PaddedDiv>
+      </PaddedTableViewDiv>
     )
   }
 }

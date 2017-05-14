@@ -41,3 +41,34 @@ export const StyledTd = styled.td`
   line-height: 26px
   padding: 0 16px
 `
+
+export const StyledJsonTable = styled.table`
+  background-color: #eee;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  margin: 20px 10px;
+`
+
+export const StyledJsonTableHeader = styled.th`
+  border-bottom: none;
+  color: #666;
+  line-height: 26px;
+  padding: 2px 10px;
+  max-width: 320px;
+`
+
+export const StyledJsonTableRow = styled.tr`
+  border-bottom: none;
+  color: #666;
+  line-height: 26px;
+  padding: 2px 10px;
+  max-width: 320px;
+`
+
+export const StyledJsonTableCell = styled.td`
+  border-bottom: none;
+  color: #666;
+  line-height: 26px;
+  padding: 2px 10px;
+  max-width: 320px;
+`

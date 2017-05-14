@@ -92,6 +92,10 @@ export const PaddedDiv = styled.div`
   padding-bottom: ${props => (props.fullscreen ? (dim.frameTitlebarHeight + 20) + 'px' : '20px')};
 `
 
+export const PaddedTableViewDiv = styled(PaddedDiv)`
+  width: 100%
+`
+
 export const StyledFrameSidebar = styled.ul`
   line-height: 33px;
   width: 45px;
