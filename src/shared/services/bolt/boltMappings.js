@@ -19,6 +19,7 @@
  */
 
 import updateStatsFields from './updateStatisticsFields'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 
 export function toObjects (records, intChecker, intConverter) {
   const recordValues = records.map((record) => {
@@ -48,11 +49,30 @@ export function arrayIntToString (arr, intChecker, intConverter) {
 }
 
 export function objIntToString (obj, intChecker, intConverter) {
+  let entry = obj
+  if (neo4j && (obj instanceof neo4j.types.Node || obj instanceof neo4j.types.Relationship)) {
+    entry = obj.properties
+  } else if (neo4j && obj instanceof neo4j.types.Path) {
+    entry = [].concat.apply([], extractPathForRows(obj, intChecker, intConverter))
+  }
+
   let newObj = {}
-  Object.keys(obj).forEach((key) => {
-    newObj[key] = itemIntToString(obj[key], intChecker, intConverter)
-  })
+  if (Array.isArray(entry)) {
+    newObj = entry.map(item => itemIntToString(item, intChecker, intConverter))
+  } else {
+    Object.keys(entry).forEach((key) => {
+      newObj[key] = itemIntToString(entry[key], intChecker, intConverter)
+    })
+  }
   return newObj
+}
+
+const extractPathForRows = (path, intChecker, intConverter) => {
+  return path.segments.map(function (segment) {
+    return [objIntToString(segment.start, intChecker, intConverter),
+      objIntToString(segment.relationship, intChecker, intConverter),
+      objIntToString(segment.end, intChecker, intConverter)]
+  })
 }
 
 export function extractPlan (result) {
