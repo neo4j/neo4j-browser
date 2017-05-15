@@ -199,7 +199,7 @@ export default {
   recordsToTableArray: (records, convertInts = true) => {
     const intChecker = convertInts ? neo4j.isInt : () => true
     const intConverter = convertInts ? (val) => val.toString() : (val) => val
-    return mappings.recordsToTableArray(records, intChecker, intConverter)
+    return mappings.recordsToTableArray(records, intChecker, intConverter, mappings.extractFromNeoObjects)
   },
   stringifyRows: (rows) => {
     if (!Array.isArray(rows)) return rows
@@ -220,7 +220,7 @@ export default {
   extractNodesAndRelationshipsFromRecordsForOldVis: (records, filterRels = true) => {
     const intChecker = neo4j.isInt
     const intConverter = (val) => val.toString()
-    return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(records, neo4j.types, filterRels, intChecker, intConverter)
+    return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(records, neo4j.types, filterRels, intChecker, intConverter, mappings.extractFromNeoObjects)
   },
   extractPlan: (result) => {
     return mappings.extractPlan(result)

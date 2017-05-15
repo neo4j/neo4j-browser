@@ -23,10 +23,10 @@ import { v1 as neo4j } from 'neo4j-driver-alias'
 import {
   itemIntToString,
   arrayIntToString,
-  objIntToString,
   extractNodesAndRelationshipsFromRecords,
   extractPlan,
-  flattenProperties
+  flattenProperties,
+  objIntToString
 } from './boltMappings'
 
 describe('boltMappings', () => {
@@ -112,7 +112,7 @@ describe('boltMappings', () => {
 
       // When and Then
       tests.forEach((test) => {
-        expect(objIntToString(test.val, test.checker, test.converter)).toEqual(test.expected)
+        expect(objIntToString(test.val, test.checker, test.converter, (obj) => obj)).toEqual(test.expected)
       })
     })
   })
