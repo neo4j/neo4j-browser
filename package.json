@@ -1,6 +1,6 @@
 {
   "name": "neo4j-browser",
-  "version": "1.0.0",
+  "version": "3.0.1",
   "description": "Enjoy your data",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,9 @@
     "test": "npm run lint && jest",
     "dev": "jest --watch",
     "build": "rm -rf ./build && NODE_ENV=\"production\" webpack",
-    "jar": "yarn build && mvn package"
+    "jar": "yarn build && mvn package",
+    "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
+    "version": "npm run version-pom && git add ./pom.xml"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -135,6 +137,7 @@
     "styled-components": "^1.4.4",
     "suber": "^5.0.1",
     "swipe-js-iso": "^2.0.3",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "xml2js": "^0.4.17"
   }
 }

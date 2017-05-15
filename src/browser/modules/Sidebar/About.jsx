@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { version } from '../../../../package.json'
+import { version } from 'project-root/package.json'
 import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerFooter} from 'browser-components/drawer'
 
 const About = () => {
