@@ -36,6 +36,7 @@ export class GraphEventHandler {
   uniqueNodeId (id) {
     let uniqueId = (Number(id) + 1).toString()
     while (this.graph.findNode(uniqueId)) {
+      // console.log('inNodeloop' + uniqueId)
       uniqueId = (Number(uniqueId) + 1).toString()
     }
     return uniqueId
@@ -44,6 +45,7 @@ export class GraphEventHandler {
   uniqueRelationshipId (id) {
     let uniqueId = (Number(id) + 1).toString()
     while (this.graph.findRelationship(uniqueId)) {
+      // console.log('inRelloop' + uniqueId)
       uniqueId = (Number(uniqueId) + 1).toString()
     }
     return uniqueId
@@ -130,14 +132,16 @@ export class GraphEventHandler {
     }
 
     if (hasProperty === false) {
-      let propertyNodes = []
-      let propertyRelationships = []
       let nextNodeId = nodeId
       let nextRelId = nodeId
 
       for (let i = propertyList.length - 1; i >= 0; i--) {
         if (propertyList.hasOwnProperty(i)) {
+          let propertyNodes = []
+          let propertyRelationships = []
           let property = []
+          let rel = []
+
           nextNodeId = this.uniqueNodeId(nextNodeId)
           property.id = nextNodeId
           property.labels = []
@@ -149,20 +153,20 @@ export class GraphEventHandler {
 
           propertyNodes.push(property)
 
-          let rel = []
           nextRelId = this.uniqueRelationshipId(nextNodeId)
           rel.id = nextRelId
+          // console.log(nextRelId)
           rel.type = propertyList[i].key
           rel.startNodeId = nodeId
           rel.endNodeId = property.id
           rel.properties = []
 
           propertyRelationships.push(rel)
+
+          graph.addNodes(mapNodes(propertyNodes))
+          graph.addRelationships(mapRelationships(propertyRelationships, graph))
         }
       }
-
-      graph.addNodes(mapNodes(propertyNodes))
-      graph.addRelationships(mapRelationships(propertyRelationships, graph))
     }
 
     d.fixed = true
