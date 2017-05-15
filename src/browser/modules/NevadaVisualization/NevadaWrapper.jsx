@@ -81,13 +81,11 @@ export class NevadaWrapper extends Component {
     })
   }
 
-  getRels () {
-    return (relIds) => {
-      return new Promise((resolve, reject) => {
-        let relsArray = this._getDataFromIds(relIds, this.props.relationships)
-        resolve(relsArray)
-      })
-    }
+  getRels (relIds) {
+    return new Promise((resolve, reject) => {
+      let relsArray = this._getDataFromIds(relIds, this.props.relationships)
+      resolve(relsArray)
+    })
   }
 
   componentWillUnmount () {
