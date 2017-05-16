@@ -250,6 +250,7 @@ module.exports = {
   devServer: {
     contentBase: isProduction ? './build' : './src/browser',
     historyApiFallback: true,
+    disableHostCheck: true,
     port: 8080,
     compress: isProduction,
     inline: !isProduction,
