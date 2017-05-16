@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.neo4j.client</groupId>
   <artifactId>neo4j-browser</artifactId>
@@ -8,7 +7,6 @@
   <name>Neo4j - Browser</name>
   <description>Graph database client.</description>
   <url>https://github.com/neo4j/neo4j</url>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <license-text.header>GPL-3-header.txt</license-text.header>
@@ -17,7 +15,6 @@
     <attach-docs-phase>none</attach-docs-phase>
     <neo4j.java.version>1.8</neo4j.java.version>
   </properties>
-
   <developers>
     <developer>
       <id>neo4j</id>
@@ -27,14 +24,11 @@
       <organizationUrl>http://www.neotechnology.com/</organizationUrl>
     </developer>
   </developers>
-
   <scm>
     <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
     <developerConnection>scm:git:git@github.com:neo4j/neo4j.git</developerConnection>
     <url>https://github.com/neo4j/neo4j</url>
   </scm>
-
-
   <licenses>
     <license>
       <name>GNU General Public License, Version 3</name>
@@ -54,7 +48,6 @@
       </comments>
     </license>
   </licenses>
-
   <build>
     <resources>
       <resource>
@@ -72,9 +65,7 @@
         </excludes>
       </resource>
     </resources>
-
     <plugins>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -147,29 +138,8 @@
           </execution>
         </executions>
       </plugin>
-      <!-- <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
-          <execution>
-            <phase>process-resources</phase>
-            <configuration>
-              <tasks>
-                <copy file="target/classes/browser/index.html"
-                      toFile="dist/browser/index.html" overwrite="true"/>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin> -->
-
     </plugins>
-
   </build>
-
   <distributionManagement>
     <repository>
       <id>releases@repo.neo4j.org</id>
@@ -179,5 +149,4 @@
       <layout>default</layout>
     </repository>
   </distributionManagement>
-
 </project>

@@ -235,6 +235,7 @@ module.exports = {
     alias: {
       'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
       'src-root': path.resolve(__dirname, 'src'),
+      'project-root': path.resolve(__dirname),
       'services': path.resolve(__dirname, 'src/shared/services'),
       'browser-services': path.resolve(__dirname, 'src/browser/services'),
       'shared': path.resolve(__dirname, 'src/shared'),
