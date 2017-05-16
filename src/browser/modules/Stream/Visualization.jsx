@@ -195,7 +195,9 @@ const mapStateToProps = (state) => {
     useNewVis: getUseNewVisualization(state),
     initialNodeDisplay: getSettings(state).initialNodeDisplay,
     maxNeighbours: getMaxNeighbours(state),
-    autoComplete: shouldAutoComplete(state)
+    autoComplete: shouldAutoComplete(state),
+    nevadaStyleData: actions.getStyleData(state),
+    nevadaRelData: actions.getRelationshipStyle(state),
   }
 }
 

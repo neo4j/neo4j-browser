@@ -84,7 +84,7 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
   )
 }
 const PropertyItems = ({properties, onItemClick}) => {
-  let propertyItems = <p>There are no properites in database</p>
+  let propertyItems = <p>There are no properties in database</p>
   if (properties.length > 0) {
     const editorCommandTemplate = (text) => {
       return `MATCH (n) WHERE EXISTS(n.${text}) RETURN DISTINCT "node" as entity, n.${text} AS ${text} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${text}) RETURN DISTINCT "relationship" AS entity, r.${text} AS ${text} LIMIT 25`

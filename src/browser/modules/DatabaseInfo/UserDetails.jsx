@@ -19,10 +19,14 @@
  */
 
 import { Component } from 'preact'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
-import {StyledTable, StyledKey, StyledValue} from './styled'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+
+import Visible from 'browser-components/Visible'
+import { DrawerSubHeader, DrawerSection, DrawerSectionBody } from 'browser-components/drawer'
+import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
 export class UserDetails extends Component {
   constructor (props) {
@@ -31,7 +35,7 @@ export class UserDetails extends Component {
       userDetails: props.userDetails || {}
     }
   }
-  componentWillReceiveProps (props) {
+  fetchUserData () {
     this.props.bus.self(
       CYPHER_REQUEST,
       { query: 'CALL dbms.security.showCurrentUser()' },
@@ -48,11 +52,17 @@ export class UserDetails extends Component {
       }
     )
   }
+  componentWillMount (props) {
+    this.fetchUserData()
+  }
+  componentWillReceiveProps (props) {
+    this.fetchUserData()
+  }
   render () {
     const userDetails = this.state.userDetails
     if (userDetails.username) {
       const mappedRoles = (userDetails.roles.length > 0) ? userDetails.roles.join(', ') : '-'
-      const showAdminFunctionality = (userDetails.roles.includes('ADMIN')) ? <div className='user-list-button'>:server user add</div> : null
+      const hasAdminRole = userDetails.roles.map((role) => role.toLowerCase()).includes('admin')
       return (
         <DrawerSection className='user-details'>
           <DrawerSubHeader>Connected as</DrawerSubHeader>
@@ -65,9 +75,13 @@ export class UserDetails extends Component {
                 <tr>
                   <StyledKey>Roles:</StyledKey><StyledValue>{mappedRoles}</StyledValue>
                 </tr>
+                <Visible if={hasAdminRole}>
+                  <tr>
+                    <StyledKey className='user-list-button'>Admin:</StyledKey><Link onClick={() => this.props.onItemClick(':server user add')}>:server user add</Link>
+                  </tr>
+                </Visible>
               </tbody>
             </StyledTable>
-            {showAdminFunctionality}
           </DrawerSectionBody>
         </DrawerSection>
       )
@@ -76,4 +90,14 @@ export class UserDetails extends Component {
     }
   }
 }
-export default withBus(UserDetails)
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onItemClick: (cmd) => {
+      const action = executeCommand(cmd)
+      ownProps.bus.send(action.type, action)
+    }
+  }
+}
+
+export default withBus(connect(null, mapDispatchToProps)(UserDetails))

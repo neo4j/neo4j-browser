@@ -26,6 +26,7 @@ import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
 const bus = createBus()
@@ -91,6 +92,41 @@ describe('discoveryOnStartupEpic', () => {
       expect(store.getActions()).toEqual([
         action,
         discovery.updateDiscoveryConnection({ host: expectedHost }),
+        { type: discovery.DONE }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host', (done) => {
+    // Given
+    const action = { type: APP_START, url: 'http://localhost/?connectURL=myhost:8888' }
+    const expectedURL = 'bolt://myhost:8888'
+    bus.take(discovery.DONE, (currentAction) => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        discovery.updateDiscoveryConnection({ host: expectedURL }),
+        { type: discovery.DONE }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host, incl protocol', (done) => {
+    // Given
+    const action = { type: APP_START, url: 'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fmyhost%3A8889' }
+    const expectedURL = 'bolt://myhost:8889'
+    bus.take(discovery.DONE, (currentAction) => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        updateBoltRouting(true),
+        discovery.updateDiscoveryConnection({ host: expectedURL }),
         { type: discovery.DONE }
       ])
       done()
