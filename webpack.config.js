@@ -76,20 +76,6 @@ const plugins = [
     template: path.join(sourcePath, 'index.html'),
     path: buildPath,
     filename: 'index.html'
-  }),
-  new webpack.LoaderOptionsPlugin({
-    options: {
-      postcss: [
-        precss(),
-        autoprefixer({
-          browsers: [
-            'last 3 version',
-            'ie >= 10'
-          ]
-        })
-      ],
-      context: sourcePath
-    }
   })
 ]
 
@@ -119,13 +105,37 @@ const rules = [
   {
     test: /\.css$/, // Guides
     include: path.resolve('./src/browser/modules/Guides'),
-    use: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[local]', 'postcss-loader']
+    use: [
+      'style-loader',
+      {
+        loader: 'css-loader',
+        options: {
+          modules: true,
+          importLoaders: 1,
+          camelCase: true,
+          localIdentName: '[local]'
+        }
+      },
+      'postcss-loader'
+    ]
   },
   {
     test: /\.css$/,
     include: path.resolve('./src'), // css modules for component css files
     exclude: [path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides')],
-    use: ['style-loader', 'css-loader?modules&importLoaders=1&camelCase&localIdentName=[name]__[local]___[hash:base64:5]', 'postcss-loader']
+    use: [
+      'style-loader',
+      {
+        loader: 'css-loader',
+        options: {
+          modules: true,
+          importLoaders: 1,
+          camelCase: 1,
+          localIdentName: '[name]__[local]___[hash:base64:5]'
+        }
+      },
+      'postcss-loader'
+    ]
   },
   {
     test: /\.css$/, // global css files that don't need any processing
