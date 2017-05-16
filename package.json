@@ -117,7 +117,7 @@
     "firebase": "^3.6.5",
     "isomorphic-fetch": "^2.2.1",
     "lodash.debounce": "^4.0.8",
-    "neo4j-driver": "^1.2.0",
+    "neo4j-driver": "~1.2.0",
     "node-noop": "^1.0.0",
     "preact": "^8.1.0",
     "preact-compat": "^3.13.1",
