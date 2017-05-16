@@ -235,7 +235,7 @@ const availableCommands = [{
 const interpret = (cmd) => {
   return availableCommands.reduce((match, candidate) => {
     if (match) return match
-    const isMatch = candidate.match(cmd)
+    const isMatch = candidate.match(cmd.toLowerCase())
     return isMatch ? candidate : null
   }, null)
 }

@@ -22,6 +22,7 @@ import Slide from '../Guides/Slide'
 import * as html from '../Help/html'
 import Directives from 'browser-components/Directives'
 import FrameTemplate from './FrameTemplate'
+import { splitStringOnFirst } from 'services/commandUtils'
 
 const HelpFrame = ({frame}) => {
   const snakeToCamel = (string) => string.replace(/(-\w)/g, (match) => { return match[1].toUpperCase() })
@@ -30,7 +31,7 @@ const HelpFrame = ({frame}) => {
   if (frame.result) {
     help = <Slide html={frame.result} />
   } else {
-    const helpTopic = snakeToCamel('_' + (frame.cmd.replace(':help', '').trim().toLowerCase() || 'help')) // Empty means ':help help'
+    const helpTopic = snakeToCamel('_' + (splitStringOnFirst(frame.cmd, ' ')[1].toLowerCase() || 'help')) // Empty means ':help help'
     if (helpTopic !== '') {
       const content = html.default[helpTopic]
       if (content !== undefined) {
