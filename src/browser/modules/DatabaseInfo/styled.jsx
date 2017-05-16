@@ -19,6 +19,7 @@
  */
 
 import styled from 'styled-components'
+import { PlainPlayIcon } from 'browser-components/icons/Icons'
 
 const chip = styled.div`
   cursor: pointer
@@ -79,3 +80,16 @@ export const StyledValueUCFirst = styled(StyledValue)`
     text-transform: uppercase;
   }
 `
+
+export const StyledLink = styled.a`
+  cursor: pointer;
+  color: #fff;
+  &:hover {
+    color: #bcc0c9;
+    text-decoration: none;
+  }
+`
+export const Link = (props) => {
+  const {children, ...rest} = props
+  return <StyledLink {...rest}><PlainPlayIcon />&nbsp;{children}</StyledLink>
+}
