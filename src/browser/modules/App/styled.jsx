@@ -44,6 +44,7 @@ export const StyledBody = styled.div`
   flex: auto;
   display: flex;
   flex-direction: row;
+  height: inherit;
 `
 
 export const StyledMainWrapper = styled.div`
