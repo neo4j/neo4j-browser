@@ -44,6 +44,9 @@ export function handleServerCommand (action, cmdchar, put, store) {
   if (serverCmd === 'change-password') {
     return handleChangePasswordCommand(action, props, cmdchar)
   }
+  if (serverCmd === 'status') {
+    return handleServerStatusCommand(action)
+  }
   return {...action, type: 'error', error: {message: getErrorMessage(UnknownCommandError(action.cmd))}}
 }
 
@@ -99,4 +102,8 @@ function handleServerAddCommand (action, cmdchar, put, store) {
   put(connections.addConnection({name, username, password, host}))
   const state = store.getState()
   return {...action, type: 'pre', result: JSON.stringify(connections.getConnections(state), null, 2)}
+}
+
+function handleServerStatusCommand (action) {
+  return {...action, type: 'status'}
 }

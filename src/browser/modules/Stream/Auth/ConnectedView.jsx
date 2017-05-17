@@ -19,12 +19,15 @@
  */
 
 import { StyledConnectionBody, StyledCode, StyledConnectionFooter } from './styled'
+import Visible from 'browser-components/Visible'
 
-const ConnectedView = ({host, username, storeCredentials}) => {
+const ConnectedView = ({host, username, storeCredentials, showHost = true}) => {
   return (
     <StyledConnectionBody>
       You are connected as user <StyledCode>{username}</StyledCode><br />
-      to the server <StyledCode>{host}</StyledCode><br />
+      <Visible if={showHost}>
+        <span>to the server <StyledCode>{host}</StyledCode><br /></span>
+      </Visible>
       <StyledConnectionFooter>
         Connection credentials are {(storeCredentials ? '' : 'not ')}stored in your web browser.
       </StyledConnectionFooter>
