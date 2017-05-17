@@ -21,7 +21,7 @@
 import { Component } from 'preact'
 import { v4 } from 'uuid'
 import { PaddedTableViewDiv, StyledBodyMessage } from '../styled'
-import {StyledTable, StyledBodyTr, StyledTh, StyledTd, StyledJsonTableRow, StyledJsonTable, StyledJsonTableHeader, StyledJsonTableCell} from 'browser-components/DataTables'
+import {StyledTable, StyledBodyTr, StyledTh, StyledTd, StyledJsonPre} from 'browser-components/DataTables'
 
 class TableView extends Component {
   constructor (props) {
@@ -44,15 +44,11 @@ class TableView extends Component {
     }
   }
   renderObject (entry) {
-    const tableContent = Object.keys(entry).map((prop) => entry.hasOwnProperty(prop) &&
-    (<StyledJsonTableRow>
-      <StyledJsonTableHeader>{prop}</StyledJsonTableHeader>
-      <StyledJsonTableCell>{this.renderCell(entry[prop])}</StyledJsonTableCell>
-      </StyledJsonTableRow>))
-
-    return tableContent.length > 0 ? (
-      <StyledJsonTable>{tableContent}</StyledJsonTable>
-      ) : <em>(empty)</em>
+    if (Object.keys(entry).length === 0 && entry.constructor === Object) {
+      return <em>(empty)</em>
+    } else {
+      return <StyledJsonPre>{JSON.stringify(entry, null, 2)}</StyledJsonPre>
+    }
   }
   render () {
     if (!this.props.data) return (<PaddedTableViewDiv style={this.props.style}><StyledBodyMessage>{this.props.message}</StyledBodyMessage></PaddedTableViewDiv>)

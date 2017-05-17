@@ -21,61 +21,61 @@
 import updateStatsFields from './updateStatisticsFields'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 
-export function toObjects (records, intChecker, intConverter, extractTypedObjects) {
+export function toObjects (records, convertors) {
   const recordValues = records.map((record) => {
     let out = []
-    record.forEach((val, key) => out.push(itemIntToString(val, intChecker, intConverter, extractTypedObjects)))
+    record.forEach((val, key) => out.push(itemIntToString(val, convertors)))
     return out
   })
   return recordValues
 }
 
-export function recordsToTableArray (records, intChecker, intConverter, extractTypedObjects) {
-  const recordValues = toObjects(records, intChecker, intConverter, extractTypedObjects)
+export function recordsToTableArray (records, converters) {
+  const recordValues = toObjects(records, converters)
   const keys = records[0].keys
   return [[...keys], ...recordValues]
 }
 
-export function itemIntToString (item, intChecker, intConverter, extractTypedObjects) {
-  if (intChecker(item)) return intConverter(item)
-  if (Array.isArray(item)) return arrayIntToString(item, intChecker, intConverter, extractTypedObjects)
+export function itemIntToString (item, converters) {
+  if (converters.intChecker(item)) return converters.intConverter(item)
+  if (Array.isArray(item)) return arrayIntToString(item, converters)
   if (['number', 'string', 'boolean'].indexOf(typeof item) !== -1) return item
   if (item === null) return item
-  if (typeof item === 'object') return objIntToString(item, intChecker, intConverter, extractTypedObjects)
+  if (typeof item === 'object') return objIntToString(item, converters)
 }
 
-export function arrayIntToString (arr, intChecker, intConverter, extractTypedObjects) {
-  return arr.map((item) => itemIntToString(item, intChecker, intConverter, extractTypedObjects))
+export function arrayIntToString (arr, converters) {
+  return arr.map((item) => itemIntToString(item, converters))
 }
 
-export function objIntToString (obj, intChecker, intConverter, extractTypedObjects) {
-  let entry = extractTypedObjects(obj, intChecker, intConverter)
+export function objIntToString (obj, converters) {
+  let entry = converters.objectConverter(obj, converters)
 
   let newObj = {}
   if (Array.isArray(entry)) {
-    newObj = entry.map(item => itemIntToString(item, intChecker, intConverter, extractTypedObjects))
+    newObj = entry.map(item => itemIntToString(item, converters))
   } else {
     Object.keys(entry).forEach((key) => {
-      newObj[key] = itemIntToString(entry[key], intChecker, intConverter, extractTypedObjects)
+      newObj[key] = itemIntToString(entry[key], converters)
     })
   }
   return newObj
 }
 
-export function extractFromNeoObjects (obj, intChecker, intConverter) {
+export function extractFromNeoObjects (obj, converters) {
   if (obj instanceof neo4j.types.Node || obj instanceof neo4j.types.Relationship) {
     return obj.properties
   } else if (obj instanceof neo4j.types.Path) {
-    return [].concat.apply([], extractPathForRows(obj, intChecker, intConverter, extractFromNeoObjects))
+    return [].concat.apply([], extractPathForRows(obj, converters))
   }
   return obj
 }
 
-const extractPathForRows = (path, intChecker, intConverter, extractTypedObjects) => {
+const extractPathForRows = (path, converters) => {
   return path.segments.map(function (segment) {
-    return [objIntToString(segment.start, intChecker, intConverter, extractTypedObjects),
-      objIntToString(segment.relationship, intChecker, intConverter, extractTypedObjects),
-      objIntToString(segment.end, intChecker, intConverter, extractTypedObjects)]
+    return [objIntToString(segment.start, converters),
+      objIntToString(segment.relationship, converters),
+      objIntToString(segment.end, converters)]
   })
 }
 
@@ -129,7 +129,7 @@ const resultContainsGraphKeys = (keys) => {
   return (keys.includes('nodes') && keys.includes('relationships'))
 }
 
-export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types, filterRels, intChecker, intConverter, extractTypedObjects) {
+export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types, filterRels, converters) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
@@ -149,14 +149,14 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types
     })
   }
   const nodes = rawNodes.map((item) => {
-    return {id: item.identity.toString(), labels: item.labels, properties: itemIntToString(item.properties, intChecker, intConverter, extractTypedObjects)}
+    return {id: item.identity.toString(), labels: item.labels, properties: itemIntToString(item.properties, converters)}
   })
   let relationships = rawRels
   if (filterRels) {
     relationships = rawRels.filter((item) => nodes.filter((node) => node.id === item.start.toString()).length > 0 && nodes.filter((node) => node.id === item.end.toString()).length > 0)
   }
   relationships = relationships.map((item) => {
-    return {id: item.identity.toString(), startNodeId: item.start.toString(), endNodeId: item.end.toString(), type: item.type, properties: itemIntToString(item.properties, intChecker, intConverter, extractTypedObjects)}
+    return {id: item.identity.toString(), startNodeId: item.start.toString(), endNodeId: item.end.toString(), type: item.type, properties: itemIntToString(item.properties, converters)}
   })
   return { nodes: nodes, relationships: relationships }
 }
