@@ -18,4 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports = {}
+var out = {
+  v1: {
+    types: {
+      Node: function Node (id) {
+        this.identity = id
+      },
+      Relationship: function Relationship (id) {
+        this.identity = id
+      },
+      Path: function Path () {}
+    }
+  }
+}
+
+out.v1.types.Node.prototype.toString = function () { return 'node' }
+out.v1.types.Relationship.prototype.toString = function () { return 'rel' }
+out.v1.types.Path.prototype.toString = function () { return 'path' }
+
+module.exports = out
