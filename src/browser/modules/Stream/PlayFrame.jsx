@@ -21,13 +21,14 @@
 import Guides from '../Guides/Guides'
 import * as html from '../Guides/html'
 import FrameTemplate from './FrameTemplate'
+import { splitStringOnFirst } from 'services/commandUtils'
 
 const PlayFrame = ({frame}) => {
   let guide = 'Play guide not specified'
   if (frame.result) {
     guide = <Guides withDirectives html={frame.result} />
   } else {
-    const guideName = frame.cmd.replace(':play', '').replace(/\s|-/g, '').trim() || 'start'
+    const guideName = splitStringOnFirst(frame.cmd, ' ')[1].toLowerCase() || 'start'
     if (guideName !== '') {
       const content = html[guideName]
       if (content !== undefined) {

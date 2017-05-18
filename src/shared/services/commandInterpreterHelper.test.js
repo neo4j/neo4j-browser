@@ -82,5 +82,17 @@ describe('commandInterpreterHelper', () => {
       // Then
       expect(actualCommandName).toEqual(expectedCommandName)
     })
+
+    test('should be case insensitive for browser commands', () => {
+      // Given
+      const cmd = 'PlaY anyThing'
+      const expectedCommandName = 'play'
+
+      // When
+      const actualCommandName = helper.interpret(cmd).name
+
+      // Then
+      expect(actualCommandName).toEqual(expectedCommandName)
+    })
   })
 })
