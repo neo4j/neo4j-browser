@@ -140,7 +140,7 @@ export class SysInfoFrame extends Component {
       ],
         'idAllocation': [
           <SysInfoTableEntry label='Node ID' value={primitive.NumberOfNodeIdsInUse} />,
-          <SysInfoTableEntry label='Propery ID' value={primitive.NumberOfPropertyIdsInUse} />,
+          <SysInfoTableEntry label='Property ID' value={primitive.NumberOfPropertyIdsInUse} />,
           <SysInfoTableEntry label='Relationship ID' value={primitive.NumberOfRelationshipIdsInUse} />,
           <SysInfoTableEntry label='Relationship Type ID' value={primitive.NumberOfRelationshipTypeIdsInUse} />
         ],
