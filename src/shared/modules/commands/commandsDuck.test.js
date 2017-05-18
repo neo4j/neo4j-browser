@@ -239,10 +239,10 @@ describe('commandsDuck', () => {
           addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
-          commands.cypher(actualCommand),
+          commands.cypher(cmd),
           frames.add({...action, type: 'cypher'}),
           updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
-          commands.unsuccessfulCypher(actualCommand),
+          commands.unsuccessfulCypher(cmd),
           { type: 'NOOP' }
         ])
         done()
