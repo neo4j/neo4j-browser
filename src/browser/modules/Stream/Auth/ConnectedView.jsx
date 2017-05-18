@@ -20,13 +20,13 @@
 
 import { StyledConnectionBody, StyledCode, StyledConnectionFooter } from './styled'
 
-const ConnectedView = ({host, username}) => {
+const ConnectedView = ({host, username, storeCredentials}) => {
   return (
     <StyledConnectionBody>
       You are connected as user <StyledCode>{username}</StyledCode><br />
       to the server <StyledCode>{host}</StyledCode><br />
       <StyledConnectionFooter>
-        Connection credentials are stored in your web browser.
+        Connection credentials are {(storeCredentials ? '' : 'not ')}stored in your web browser.
       </StyledConnectionFooter>
     </StyledConnectionBody>
   )

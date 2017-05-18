@@ -41,6 +41,7 @@ export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
 export const LOST_CONNECTION = 'connections/LOST_CONNECTION'
 export const UPDATE_CONNECTION_STATE = 'connections/UPDATE_CONNECTION_STATE'
+export const UPDATE_RETAIN_CREDENTIALS = NAME + '/UPDATE_RETAIN_CREDENTIALS'
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -78,7 +79,13 @@ export function getActiveConnection (state) {
 }
 
 export function getActiveConnectionData (state) {
-  return state[NAME].activeConnection ? state[NAME].connectionsById[state[NAME].activeConnection] : null
+  if (!state[NAME].activeConnection) return null
+  let data = state[NAME].connectionsById[state[NAME].activeConnection]
+  if (data.username && data.password) return data
+  if (!(data.username && data.password) && (memoryUsername && memoryPassword)) { // No retain state
+    return {...data, username: memoryUsername, password: memoryPassword}
+  }
+  return data
 }
 
 const addConnectionHelper = (state, obj) => {
@@ -134,6 +141,11 @@ const mergeConnectionHelper = (state, connection) => {
   )
 }
 
+// Local vars
+let memoryUsername = ''
+let memoryPassword = ''
+
+// Reducer
 export default function (state = initialState, action) {
   state = hydrate(initialState, state)
 
@@ -210,11 +222,20 @@ export const connectionLossFilter = (action) => {
   return notLostCodes.indexOf(action.error.code) < 0
 }
 
+export const setRetainCredentials = (shouldRetain) => {
+  return {
+    type: UPDATE_RETAIN_CREDENTIALS,
+    shouldRetain
+  }
+}
+
 // Epics
 export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT)
     .mergeMap((action) => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
+      memoryUsername = ''
+      memoryPassword = ''
       return bolt.openConnection(action, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch))
         .then((res) => ({ type: action.$$responseChannel, success: true }))
         .catch(([e]) => ({ type: action.$$responseChannel, success: false, error: e }))
@@ -323,4 +344,27 @@ export const checkSettingsForRoutingDriver = (action$, store) => {
       bolt.useRoutingConfig(getUseBoltRouting(store.getState()))
       return { type: 'NOOP' }
     })
+}
+
+export const retainCredentialsSettingsEpic = (action$, store) => {
+  return action$.ofType(UPDATE_RETAIN_CREDENTIALS)
+    .do((action) => {
+      const connection = getActiveConnectionData(store.getState())
+      if (!action.shouldRetain && (connection.username || connection.password)) {
+        memoryUsername = connection.username
+        memoryPassword = connection.password
+        connection.username = ''
+        connection.password = ''
+        return store.dispatch(updateConnection(connection))
+      }
+      if (action.shouldRetain && memoryUsername && memoryPassword) {
+        connection.username = memoryUsername
+        connection.password = memoryPassword
+        memoryUsername = ''
+        memoryPassword = ''
+        return store.dispatch(updateConnection(connection))
+      }
+      return
+    })
+    .mapTo({ type: 'NOOP' })
 }

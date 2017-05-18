@@ -24,6 +24,7 @@ import { withBus } from 'preact-suber'
 import { getActiveConnectionData, getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
 import { getInitCmd, updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
 import { toBoltHost, isRoutingHost } from 'services/utils'
@@ -151,6 +152,7 @@ export class ConnectionForm extends Component {
       view = <ConnectedView
         host={this.props.activeConnectionData.host}
         username={this.props.activeConnectionData.username}
+        storeCredentials={this.props.storeCredentials}
       />
     } else if (!this.state.isConnected && !this.state.passwordChangeNeeded) {
       view = (<ConnectForm
@@ -172,7 +174,8 @@ const mapStateToProps = (state) => {
   return {
     initCmd: getInitCmd(state),
     activeConnection: getActiveConnection(state),
-    activeConnectionData: getActiveConnectionData(state)
+    activeConnectionData: getActiveConnectionData(state),
+    storeCredentials: shouldRetainConnectionCredentials(state)
   }
 }
 
@@ -191,6 +194,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     activeConnection: stateProps.activeConnection,
     activeConnectionData: stateProps.activeConnectionData,
+    storeCredentials: stateProps.storeCredentials,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {

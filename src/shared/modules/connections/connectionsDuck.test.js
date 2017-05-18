@@ -181,3 +181,46 @@ describe('connectionsDucks Epics', () => {
     store.dispatch(action)
   })
 })
+
+describe('retainCredentialsSettingsEpic', () => {
+  // Given
+  const epicMiddleware = createEpicMiddleware(connections.retainCredentialsSettingsEpic)
+  const myMockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+  let store
+  beforeAll(() => {
+    bus.reset()
+    store = myMockStore({
+      connections: {
+        activeConnection: 'xxx',
+        connectionsById: {
+          xxx: {id: 'xxx', username: 'usr', password: 'pw'}
+        },
+        allConnectionIds: ['xxx']
+      }
+    })
+  })
+  afterEach(() => {
+    store.clearActions()
+    bus.reset()
+  })
+  test('Dispatches an action to remove credentials from localstorage', (done) => {
+    // Given
+    const action = connections.setRetainCredentials(false)
+    bus.take('NOOP', (currentAction) => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        connections.updateConnection({
+          id: 'xxx',
+          username: '',
+          password: ''
+        }),
+        currentAction
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+})
