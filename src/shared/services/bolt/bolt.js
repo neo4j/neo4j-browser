@@ -222,8 +222,8 @@ export default {
     const intConverter = (val) => val.toString()
     return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(records, neo4j.types, filterRels, { intChecker, intConverter, objectConverter: mappings.extractFromNeoObjects })
   },
-  extractPlan: (result) => {
-    return mappings.extractPlan(result)
+  extractPlan: (result, calculateTotalDbHits) => {
+    return mappings.extractPlan(result, calculateTotalDbHits)
   },
   retrieveFormattedUpdateStatistics: mappings.retrieveFormattedUpdateStatistics,
   itemIntToNumber: (item) => mappings.itemIntToString(item, { intChecker: neo4j.isInt, intConverter: (val) => val.toNumber() }),

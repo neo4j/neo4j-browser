@@ -72,7 +72,7 @@ class CypherFrame extends Component {
         const untransformedRows = bolt.recordsToTableArray(this.getRecordsToDisplay(nextProps.request.result.records), false)
         serializedPropertiesRows = bolt.stringifyRows(untransformedRows)
       }
-      plan = bolt.extractPlan(nextProps.request.result)
+      plan = bolt.extractPlan(nextProps.request.result, true)
       warnings = nextProps.request.result.summary ? nextProps.request.result.summary.notifications : null
 
       this.decideOpeningView({plan, nodesAndRelationships, warnings, props: nextProps})
@@ -160,7 +160,7 @@ class CypherFrame extends Component {
             this.changeView(viewTypes.TEXT)
           }}><AsciiIcon /></CypherFrameButton>
         </Visible>
-        <Visible if={(this.state.plan || bolt.extractPlan(this.props.request.result || false)) && !this.state.errors}>
+        <Visible if={(this.state.plan || bolt.extractPlan(this.props.request.result || false, true)) && !this.state.errors}>
           <CypherFrameButton selected={this.state.openView === viewTypes.PLAN} onClick={() =>
             this.changeView(viewTypes.PLAN)
           }><PlanIcon /></CypherFrameButton>
@@ -226,7 +226,7 @@ class CypherFrame extends Component {
   render () {
     const frame = this.props.frame
     const result = this.props.request.result || false
-    const plan = this.state.plan || bolt.extractPlan(result)
+    const plan = this.state.plan || bolt.extractPlan(result, true)
     const requestStatus = this.props.request.status
 
     let frameContents = <pre>{JSON.stringify(result, null, 2)}</pre>
@@ -251,6 +251,7 @@ class CypherFrame extends Component {
           <StyledStatsBar>
             <Ellipsis>
               Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
+              { plan.root.totalDbHits ? ` ${plan.root.totalDbHits} total db hits in ${result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter).toNumber() || 0} ms.` : ``}
             </Ellipsis>
           </StyledStatsBar>
         )
