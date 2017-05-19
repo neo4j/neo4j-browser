@@ -24,7 +24,10 @@ import Integer from '../../../../node_modules/neo4j-driver/lib/v1/integer'
 export class NevadaWrapper extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      nodes: this.props.nodes,
+      relationships: this.props.relationships
+    }
   }
 
   _getDataFromId (id, store) {
@@ -51,6 +54,25 @@ export class NevadaWrapper extends Component {
   getNeighbours (id) {
     let promise = this.props.getNeighbours(id)
     const mapRecords = (result) => {
+      let newNodes = [...this.state.nodes]
+      let existingNodeIdenties = this.state.nodes.map((n) => {
+        return n.identity.toString()
+      })
+      result.nodes.forEach((n) => {
+        if (existingNodeIdenties.indexOf(n.identity.toString()) < 0) {
+          newNodes.push(n)
+        }
+      })
+      let newRelationships = [...this.state.relationships]
+      let existingRelIdenties = this.state.relationships.map((r) => {
+        return r.identity.toString()
+      })
+      result.relationships.forEach((r) => {
+        if (existingRelIdenties.indexOf(r.identity.toString()) < 0) {
+          newRelationships.push(r)
+        }
+      })
+      this.setState({nodes: newNodes, relationships: newRelationships})
       return new Promise((resolve, reject) => {
         resolve({nodes: result.nodes, rels: result.relationships})
       })
@@ -76,14 +98,14 @@ export class NevadaWrapper extends Component {
 
   getNodes (nodeIds) {
     return new Promise((resolve, reject) => {
-      let nodesArray = this._getDataFromIds(nodeIds, this.props.nodes)
+      let nodesArray = this._getDataFromIds(nodeIds, this.state.nodes)
       resolve(nodesArray)
     })
   }
 
   getRels (relIds) {
     return new Promise((resolve, reject) => {
-      let relsArray = this._getDataFromIds(relIds, this.props.relationships)
+      let relsArray = this._getDataFromIds(relIds, this.state.relationships)
       resolve(relsArray)
     })
   }
@@ -104,7 +126,6 @@ export class NevadaWrapper extends Component {
         updateRelStyle: this.updateRelationshipStyle.bind(this),
         getNodes: this.getNodes.bind(this),
         getRels: this.getRels.bind(this)
-//        clientData:
       }
       require.ensure([], (require) => {
         const Nevada = require('neo4j-visualization').default

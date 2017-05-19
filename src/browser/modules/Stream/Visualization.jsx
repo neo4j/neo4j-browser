@@ -197,7 +197,7 @@ const mapStateToProps = (state) => {
     maxNeighbours: getMaxNeighbours(state),
     autoComplete: shouldAutoComplete(state),
     nevadaStyleData: actions.getStyleData(state),
-    nevadaRelData: actions.getRelationshipStyle(state),
+    nevadaRelData: actions.getRelationshipStyle(state)
   }
 }
 
