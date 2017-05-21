@@ -18,15 +18,66 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Component } from 'preact'
 import asciitable from 'ascii-data-table'
+import { debounce } from 'services/utils'
+import { StyledStatsBar, PaddedDiv, StyledBodyMessage, StyledRightPartial, StyledWidthSliderContainer, StyledWidthSlider } from '../styled'
 
-import { PaddedDiv, StyledBodyMessage } from '../styled'
-
-const AsciiView = ({rows, style, message}) => {
-  const contents = rows
-    ? <pre>{asciitable.tableFromSerializedData(rows, 70)}</pre>
-    : <StyledBodyMessage>{message}</StyledBodyMessage>
+const AsciiView = ({rows, style, message, maxColWidth = 70}) => {
+  let contents = <StyledBodyMessage>{message}</StyledBodyMessage>
+  if (rows !== undefined && rows.length) {
+    contents = <pre>{asciitable.tableFromSerializedData(rows, maxColWidth)}</pre>
+  }
   return <PaddedDiv style={style}>{contents}</PaddedDiv>
+}
+
+export class AsciiStatusbar extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      maxSliderWidth: 140,
+      maxColWidth: 70
+    }
+  }
+  componentWillReceiveProps (nextProps) {
+    this.ensureContentWidth(nextProps.rows)
+  }
+  ensureContentWidth (rows) {
+    if (rows.length !== this.props.rows.length) {
+      this.setMaxSliderWidth(asciitable.maxColumnWidth(rows))
+    }
+  }
+  componentWillMount () {
+    this.debouncedMaxColWidthChanged = debounce(this.maxColWidthChanged, 25, this)
+    this.setMaxSliderWidth(asciitable.maxColumnWidth(this.props.rows))
+  }
+  maxColWidthChanged (w) {
+    this.setState({ maxColWidth: w.target.value })
+    this.props.onInput(w.target.value)
+  }
+  setMaxSliderWidth (w) {
+    this.setState({ maxSliderWidth: w })
+  }
+  render () {
+    const { maxColWidth, maxSliderWidth } = this.state
+    const onInput = this.debouncedMaxColWidthChanged
+    return (
+      <StyledStatsBar>
+        <StyledRightPartial>
+          <StyledWidthSliderContainer>
+            Max column width:
+            <StyledWidthSlider
+              value={maxColWidth}
+              onChange={onInput}
+              type='range'
+              min='3'
+              max={maxSliderWidth}
+            />
+          </StyledWidthSliderContainer>
+        </StyledRightPartial>
+      </StyledStatsBar>
+    )
+  }
 }
 
 export default AsciiView

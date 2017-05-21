@@ -305,3 +305,70 @@ export const DropdownItem = styled.a`
     background-color: #f5f5f5;
   }
 `
+
+export const StyledRightPartial = styled.div`
+  float: right;
+`
+
+export const StyledWidthSliderContainer = styled.div`
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 11px;
+`
+
+export const StyledWidthSlider = styled.input`
+  width: 150px;
+  background: transparent;
+  margin-left: 10px;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  background: #ddd;
+  border-radius: 14px;
+  padding: 1px 2px;
+  &::-moz-range-track {
+    border: inherit;
+    background: transparent;
+  }
+  &::-ms-track {
+    border: inherit;
+    color: transparent;
+    background: transparent;
+  }
+  &::-ms-fill-lower, &::-ms-fill-upper {
+    background: transparent;
+  }
+  &::-ms-tooltip {
+    display: none;
+  }
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    border: none;
+    background-color: #008BC3;
+    outline: none;
+  }
+  &::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    border: none;
+    background-color: #008BC3;
+    outline: none;
+  }
+  &::-ms-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    border: none;
+    background-color: #008BC3;
+    outline: none;
+  }
+`
