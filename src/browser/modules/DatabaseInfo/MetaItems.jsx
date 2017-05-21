@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ecsapeCypherMetaItem } from 'services/utils'
 import classNames from 'classnames'
 import styles from './style_meta.css'
 import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
@@ -46,7 +47,7 @@ const LabelItems = ({labels, onItemClick}) => {
       if (text === '*') {
         return 'MATCH (n) RETURN n LIMIT 25'
       }
-      return `MATCH (n:${text}) RETURN n LIMIT 25`
+      return `MATCH (n:${ecsapeCypherMetaItem(text)}) RETURN n LIMIT 25`
     }
     labelItems = createItems(labels, onItemClick, {component: StyledLabel}, editorCommandTemplate)
   }
@@ -68,7 +69,7 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
       if (text === '*') {
         return 'MATCH p=()-->() RETURN p LIMIT 25'
       }
-      return `MATCH p=()-[r:${text}]->() RETURN p LIMIT 25`
+      return `MATCH p=()-[r:${ecsapeCypherMetaItem(text)}]->() RETURN p LIMIT 25`
     }
     relationshipItems = createItems(relationshipTypes, onItemClick, {component: StyledRelationship}, editorCommandTemplate)
   }
@@ -87,7 +88,7 @@ const PropertyItems = ({properties, onItemClick}) => {
   let propertyItems = <p>There are no properties in database</p>
   if (properties.length > 0) {
     const editorCommandTemplate = (text) => {
-      return `MATCH (n) WHERE EXISTS(n.${text}) RETURN DISTINCT "node" as entity, n.${text} AS ${text} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${text}) RETURN DISTINCT "relationship" AS entity, r.${text} AS ${text} LIMIT 25`
+      return `MATCH (n) WHERE EXISTS(n.${ecsapeCypherMetaItem(text)}) RETURN DISTINCT "node" as entity, n.${ecsapeCypherMetaItem(text)} AS ${ecsapeCypherMetaItem(text)} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${ecsapeCypherMetaItem(text)}) RETURN DISTINCT "relationship" AS entity, r.${ecsapeCypherMetaItem(text)} AS ${ecsapeCypherMetaItem(text)} LIMIT 25`
     }
     propertyItems = createItems(properties, onItemClick, {component: StyledProperty}, editorCommandTemplate, false)
   }

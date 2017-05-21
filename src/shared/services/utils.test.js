@@ -282,4 +282,18 @@ describe('utils', () => {
       expect(utils.stringifyMod()(t, modFn)).toEqual(expects[index])
     })
   })
+  describe('ecsapeCypherMetaItem', () => {
+    // Given
+    const items = [
+      { test: 'Label', expect: 'Label' },
+      { test: 'Label Space', expect: '`Label Space`' },
+      { test: 'Label1', expect: 'Label1' },
+      { test: 'Label-dash', expect: '`Label-dash`' }
+    ]
+
+    // When && Then
+    items.forEach((item) => {
+      expect(utils.ecsapeCypherMetaItem(item.test)).toEqual(item.expect)
+    })
+  })
 })
