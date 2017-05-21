@@ -28,7 +28,7 @@ const PlayFrame = ({frame}) => {
   if (frame.result) {
     guide = <Guides withDirectives html={frame.result} />
   } else {
-    const guideName = splitStringOnFirst(frame.cmd, ' ')[1].toLowerCase() || 'start'
+    const guideName = splitStringOnFirst(frame.cmd, ' ')[1].toLowerCase().replace(/\s|-/g, '').trim() || 'start'
     if (guideName !== '') {
       const content = html[guideName]
       if (content !== undefined) {
