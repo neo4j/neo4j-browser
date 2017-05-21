@@ -282,4 +282,66 @@ describe('utils', () => {
       expect(utils.stringifyMod()(t, modFn)).toEqual(expects[index])
     })
   })
+  describe('stripQuotes', () => {
+    test('does not modify strings that are not quoted', () => {
+      const inputs = [
+        'string',
+        'test string',
+        'test"string"',
+        'some-string!',
+        '12string with_number3=',
+        '\'some other\''
+      ]
+
+      inputs.forEach(input => expect(utils.stripQuotes(input)).toEqual(input))
+    })
+
+    test('does not modify strings that starts with quote but does not end so', () => {
+      const inputs = [
+        '"string',
+        '"test string',
+        '"test"string',
+        '"some-string!',
+        '"12string with_number3=',
+        '"\'some other\''
+      ]
+
+      inputs.forEach(input => expect(utils.stripQuotes(input)).toEqual(input))
+    })
+
+    test('does not modify strings that ends with quote but does not start so', () => {
+      const inputs = [
+        'string',
+        'test string"',
+        'test"string"',
+        'some-string!"',
+        '12string with_number3="',
+        '\'some other\'"'
+      ]
+
+      inputs.forEach(input => expect(utils.stripQuotes(input)).toEqual(input))
+    })
+
+    test('strips quotes from strings', () => {
+      const inputs = [
+        '"string"',
+        '"test string"',
+        '"test"string"',
+        '"some-string!"',
+        '"12string with_number3="',
+        '"\'some other\'"'
+      ]
+
+      const expects = [
+        'string',
+        'test string',
+        'test"string',
+        'some-string!',
+        '12string with_number3=',
+        '\'some other\''
+      ]
+
+      inputs.forEach((input, idx) => expect(utils.stripQuotes(input)).toEqual(expects[idx]))
+    })
+  })
 })

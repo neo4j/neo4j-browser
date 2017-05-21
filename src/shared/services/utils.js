@@ -200,3 +200,5 @@ export const stringifyMod = () => {
 
 // Epic helpers
 export const put = (dispatch) => (action) => dispatch(action)
+
+export const stripQuotes = (value) => value.replace(/^"(.+(?="$))"$/, '$1')

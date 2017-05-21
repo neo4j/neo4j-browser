@@ -22,6 +22,7 @@ import { Component } from 'preact'
 import { v4 } from 'uuid'
 import { PaddedDiv, StyledBodyMessage } from '../styled'
 import {StyledTable, StyledBodyTr, StyledTh, StyledTd} from 'browser-components/DataTables'
+import { stripQuotes } from 'shared/services/utils'
 
 class TableView extends Component {
   constructor (props) {
@@ -36,7 +37,7 @@ class TableView extends Component {
   render () {
     if (!this.props.data) return (<PaddedDiv style={this.props.style}><StyledBodyMessage>{this.props.message}</StyledBodyMessage></PaddedDiv>)
     const tableHeader = this.state.columns.map((column, i) => (
-      <StyledTh className='table-header' key={i}>{column}</StyledTh>)
+      <StyledTh className='table-header' key={i}>{stripQuotes(column)}</StyledTh>)
     )
     const buildData = (entries) => {
       return entries.map((entry) => {
