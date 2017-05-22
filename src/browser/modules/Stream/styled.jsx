@@ -216,7 +216,7 @@ export const StyledBr = styled.br`
 export const StyledPreformattedArea = styled.pre`
   font-family: Monaco, "Courier New", Terminal, monospace;
   font-size: 14px;
-  white-space: pre-line;
+  white-space: pre-wrap;
   padding: 12px 16px;
   margin: 0;
   background: none;
