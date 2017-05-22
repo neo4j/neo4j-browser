@@ -111,7 +111,7 @@ export const handleCommandsEpic = (action$, store) =>
     })
     .mergeMap(({action, interpreted, cmdchar}) => {
       return new Promise((resolve, reject) => {
-        action.cmd = cleanCommand(action.cmd)
+        if (interpreted.name !== 'cypher') action.cmd = cleanCommand(action.cmd)
         const res = interpreted.exec(action, cmdchar, store.dispatch, store)
         const noop = { type: 'NOOP' }
         if (!res || !res.then) {
