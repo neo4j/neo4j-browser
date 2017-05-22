@@ -39,7 +39,7 @@ const _getDriver = (host, auth, opts, protocol) => {
 const _validateConnection = (driver, res, rej) => {
   if (!driver || !driver.session) return rej('No connection')
   const tmp = driver.session()
-  tmp.run('CALL db.indexes()').then(() => {
+  tmp.run('CALL dbms.procedures()').then(() => {
     tmp.close()
     res(driver)
   }).catch((e) => {
