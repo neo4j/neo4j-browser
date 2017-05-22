@@ -79,7 +79,7 @@ const extractPathForRows = (path, converters) => {
   })
 }
 
-export function extractPlan (result) {
+export function extractPlan (result, calculateTotalDbHits = false) {
   if (result.summary && (result.summary.plan || result.summary.profile)) {
     const rawPlan = result.summary.profile || result.summary.plan
     const boltPlanToRESTPlanShared = (plan) => {
@@ -102,9 +102,24 @@ export function extractPlan (result) {
     obj['KeyNames'] = rawPlan.arguments['KeyNames']
     obj['planner'] = rawPlan.arguments['planner']
     obj['runtime'] = rawPlan.arguments['runtime']
+
+    if (calculateTotalDbHits === true) {
+      obj.totalDbHits = collectHits(obj)
+    }
+
     return {root: obj}
   }
   return null
+}
+
+const collectHits = function (operator) {
+  let hits = operator.DbHits || 0
+  if (operator.children) {
+    hits = operator.children.reduce((acc, subOperator) => {
+      return acc + collectHits(subOperator)
+    }, hits)
+  }
+  return hits
 }
 
 export function extractNodesAndRelationshipsFromRecords (records, types) {
