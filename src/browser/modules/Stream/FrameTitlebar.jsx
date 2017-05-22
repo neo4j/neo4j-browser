@@ -30,7 +30,7 @@ import { FrameButton } from 'browser-components/buttons'
 import Visible from 'browser-components/Visible'
 import { CSVSerializer } from 'services/serializer'
 import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon, DownloadIcon } from 'browser-components/icons/Icons'
-import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection, DropdownContent, DropdownButton, DropdownItem } from './styled'
+import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection, DropdownList, DropdownContent, DropdownButton, DropdownItem } from './styled'
 import { downloadPNGFromSVG } from 'shared/services/exporting/pngUtils'
 
 const getCsvData = (exportData) => {
@@ -81,10 +81,12 @@ class FrameTitlebar extends Component {
           <Visible if={frame.type === 'cypher' && props.exportData}>
             <DropdownButton>
               <DownloadIcon />
-              <DropdownContent class='dropdown-content'>
-                <DropdownItem onClick={() => this.exportPNG()}>Export PNG</DropdownItem>
-                <DropdownItem download='export.csv' href={this.state.csvData}>Export CSV</DropdownItem>
-              </DropdownContent>
+              <DropdownList>
+                <DropdownContent>
+                  <DropdownItem onClick={() => this.exportPNG()}>Export PNG</DropdownItem>
+                  <DropdownItem download='export.csv' href={this.state.csvData}>Export CSV</DropdownItem>
+                </DropdownContent>
+              </DropdownList>
             </DropdownButton>
           </Visible>
           <FrameButton title='Pin at top' onClick={() => {
