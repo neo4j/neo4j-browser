@@ -65,7 +65,8 @@ const initialState = {
   maxRows: 1000,
   shouldReportUdc: true,
   autoComplete: true,
-  scrollToTop: true
+  scrollToTop: true,
+  maxFrames: 30
 }
 
 export default function settings (state = initialState, action) {

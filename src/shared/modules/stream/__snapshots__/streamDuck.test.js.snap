@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`streamDuck cuts the number of frames when config is set 1`] = `
+Array [
+  1,
+]
+`;
+
+exports[`streamDuck cuts the number of frames when config is set 2`] = `
+Object {
+  "1": Object {
+    "id": 1,
+  },
+}
+`;
+
+exports[`streamDuck dont remove pinned frames when cutting frames 1`] = `
+Array [
+  1,
+  2,
+]
+`;
+
+exports[`streamDuck dont remove pinned frames when cutting frames 2`] = `
+Object {
+  "1": Object {
+    "isPinned": 1,
+  },
+  "2": Object {
+    "isPinned": 1,
+  },
+}
+`;
