@@ -263,7 +263,7 @@ class CypherFrame extends Component {
             <Visualization style={this.getDisplayStyle(viewTypes.VISUALIZATION)} records={result.records} fullscreen={this.state.fullscreen} frameHeight={this.state.frameHeight} assignVisElement={(svgElement, graphElement) => { this.visElement = {svgElement, graphElement} }} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
+            <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.rows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
             <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
