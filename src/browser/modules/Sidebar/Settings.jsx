@@ -51,6 +51,18 @@ const visualSettings =
       ]
     },
     {
+      title: 'Network Connection',
+      settings: [
+        {
+          'useBoltRouting': {
+            displayName: 'Use bolt+routing',
+            tooltip: 'Use bolt+routing protocol when in a causal cluster.',
+            type: 'checkbox'
+          }
+        }
+      ]
+    },
+    {
       title: 'Result Frames',
       settings: [
         {
