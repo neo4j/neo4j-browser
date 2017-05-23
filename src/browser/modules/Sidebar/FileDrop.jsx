@@ -18,11 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global FileReader */
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import Dropzone from 'react-dropzone'
 
-import {addFavorite} from 'shared/modules/favorites/favoritesDuck'
+import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+import { parseGrass } from 'shared/modules/commands/helpers/grass'
+import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
+import { showErrorMessage } from 'shared/modules/commands/commandsDuck'
+
 import { StyledDropzoneText } from './styled'
 
 export class FileDrop extends Component {
@@ -32,7 +37,8 @@ export class FileDrop extends Component {
       error: null,
       success: null
     }
-    this.validExtensions = ['cyp', 'cypher', 'cql', 'txt']
+    this.favoriteExtenstions = ['cyp', 'cypher', 'cql', 'txt']
+    this.grassExtenstions = ['grass']
     this.fileReader = this.props.fileReader || new FileReader()
   }
   onDrop (files) {
@@ -41,12 +47,17 @@ export class FileDrop extends Component {
     const file = files[0]
     const fileExtension = file.name.split('.').pop()
 
-    if (!this.validExtensions.includes(fileExtension)) {
+    let loader = () => {}
+    if (this.favoriteExtenstions.includes(fileExtension)) {
+      loader = this.props.onFavoriteFileDropped
+    } else if (this.grassExtenstions.includes(fileExtension)) {
+      loader = this.props.onGrassFileDropped
+    } else {
       return this.setState({'error': `'.${fileExtension}' is not a valid file extension`})
     }
 
     this.fileReader.onload = () => {
-      this.props.onFileDropped(this.fileReader.result)
+      loader(this.fileReader.result)
       this.setState({'success': `'${file.name}' has been added`})
     }
     this.fileReader.readAsText(file)
@@ -57,14 +68,22 @@ export class FileDrop extends Component {
         disableClick
         multiple={false}
         onDrop={this.onDrop.bind(this)}>
-        <StyledDropzoneText>{this.state.error || this.state.success || 'Drop a file to import Cypher'}</StyledDropzoneText>
+        <StyledDropzoneText>{this.state.error || this.state.success || 'Drop a file to import Cypher (*.cyp, *.cypher, *.cql, *.txt) or Grass (*.grass)'}</StyledDropzoneText>
       </Dropzone>)
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFileDropped: (fileContent) => {
+    onFavoriteFileDropped: (fileContent) => {
       dispatch(addFavorite(fileContent))
+    },
+    onGrassFileDropped: (fileContent) => {
+      const parsedGrass = parseGrass(fileContent)
+      if (parsedGrass) {
+        dispatch(updateGraphStyleData(parsedGrass))
+      } else {
+        dispatch(showErrorMessage('Could not parse grass data'))
+      }
     }
   }
 }
