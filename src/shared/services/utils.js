@@ -163,7 +163,7 @@ export const canUseDOM = () => !!(
   window.document && window.document.createElement)
 )
 
-export const ecsapeCypherMetaItem = (str) => /^[A-Za-z][A-Za-z0-9_]*$/.test(str) ? str : '`' + str + '`'
+export const ecsapeCypherMetaItem = (str) => /^[A-Za-z][A-Za-z0-9_]*$/.test(str) ? str : '`' + str.replace(/`/g, '``') + '`'
 
 export const stringifyMod = () => {
   const toString = Object.prototype.toString
