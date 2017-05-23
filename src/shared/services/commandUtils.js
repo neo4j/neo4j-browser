@@ -87,9 +87,19 @@ export const getInterpreter = (interpret, cmd, cmdchar) => {
 export const isNamedInterpreter = (interpreter) => interpreter && interpreter.name !== 'catch-all'
 
 export const extractPostConnectCommandsFromServerConfig = (str) => {
+  const substituteStr = '@@semicolon@@'
+  const substituteRe = new RegExp(substituteStr, 'g')
+  const replaceFn = (m) => m.replace(/;/g, substituteStr)
+  const qs = [
+    /(`[^`]*?`)/g,
+    /("[^"]*?")/g,
+    /('[^']*?')/g
+  ]
+  qs.forEach((q) => (str = str.replace(q, replaceFn)))
   const splitted = str
     .split(';')
     .map((item) => item.trim())
+    .map((item) => item.replace(substituteRe, ';'))
     .filter((item) => item && item.length)
   return splitted && splitted.length ? splitted : undefined
 }
