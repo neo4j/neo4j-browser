@@ -55,7 +55,7 @@ class ServerStatusFrame extends Component {
               </Visible>
               <Visible if={activeConnectionData && activeConnectionData.authEnabled}>
                 <ConnectedView username={activeConnectionData && activeConnectionData.username}
-                               showHost={false} storeCredentials={storeCredentials}/>
+                  showHost={false} storeCredentials={storeCredentials} />
               </Visible>
               <Visible if={activeConnectionData && !activeConnectionData.authEnabled}>
                 <StyledConnectionBody>You have a working connection with the Neo4j database and server auth is disabled.
