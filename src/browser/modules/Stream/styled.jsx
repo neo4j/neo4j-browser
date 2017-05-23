@@ -275,10 +275,14 @@ export const DropdownButton = styled.li`
   }
   display: inline-block;
   &:hover {
-    > .dropdown-content {
+    > ul li {
     display: block;
     }
   };
+`
+
+export const DropdownList = styled.ul`
+
 `
 
 export const DropdownContent = styled.li`
