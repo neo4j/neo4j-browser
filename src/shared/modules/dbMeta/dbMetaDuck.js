@@ -29,7 +29,8 @@ import {
   DISCONNECTION_SUCCESS,
   LOST_CONNECTION,
   UPDATE_CONNECTION_STATE,
-  setRetainCredentials
+  setRetainCredentials,
+  setAuthEnabled
 } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'meta'
@@ -256,6 +257,20 @@ export const dbMetaEpic = (some$, store) =>
               }
               store.dispatch(setRetainCredentials(retainCredentials))
               store.dispatch(updateSettings(settings))
+            })
+        })
+        .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))
+        // Server security settings
+        .mergeMap(() => {
+          return getServerConfig(['dbms.security'])
+            .then((settings) => {
+              if (!settings) return
+              const authEnabledSetting = 'dbms.security.auth_enabled'
+              let authEnabled = true
+              if (typeof settings[authEnabledSetting] !== 'undefined' && isConfigValFalsy(settings[authEnabledSetting])) {
+                authEnabled = false
+              }
+              store.dispatch(setAuthEnabled(authEnabled))
             })
         })
         .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))

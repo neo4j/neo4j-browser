@@ -42,6 +42,7 @@ export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
 export const LOST_CONNECTION = 'connections/LOST_CONNECTION'
 export const UPDATE_CONNECTION_STATE = 'connections/UPDATE_CONNECTION_STATE'
 export const UPDATE_RETAIN_CREDENTIALS = NAME + '/UPDATE_RETAIN_CREDENTIALS'
+export const UPDATE_AUTH_ENABLED = NAME + '/UPDATE_AUTH_ENABLED'
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -141,6 +142,23 @@ const mergeConnectionHelper = (state, connection) => {
   )
 }
 
+const updateAuthEnabledHelper = (state, authEnabled) => {
+  const connectionId = state.activeConnection
+  const updatedConnection = Object.assign(
+    {},
+    state.connectionsById[connectionId],
+    { authEnabled: authEnabled }
+  )
+  const updatedConnectionByIds = Object.assign({}, state.connectionsById)
+  updatedConnectionByIds[connectionId] = updatedConnection
+
+  return Object.assign(
+    {},
+    state,
+    {connectionsById: updatedConnectionByIds}
+  )
+}
+
 // Local vars
 let memoryUsername = ''
 let memoryPassword = ''
@@ -162,6 +180,8 @@ export default function (state = initialState, action) {
       return mergeConnectionHelper(state, action.connection)
     case UPDATE_CONNECTION_STATE:
       return {...state, connectionState: action.state}
+    case UPDATE_AUTH_ENABLED:
+      return updateAuthEnabledHelper(state, action.authEnabled)
     case USER_CLEAR:
       return initialState
     default:
@@ -226,6 +246,13 @@ export const setRetainCredentials = (shouldRetain) => {
   return {
     type: UPDATE_RETAIN_CREDENTIALS,
     shouldRetain
+  }
+}
+
+export const setAuthEnabled = (authEnabled) => {
+  return {
+    type: UPDATE_AUTH_ENABLED,
+    authEnabled
   }
 }
 

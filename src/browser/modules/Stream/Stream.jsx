@@ -35,6 +35,7 @@ import SchemaFrame from './SchemaFrame'
 import SysInfoFrame from './SysInfoFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
+import ServerStatusFrame from './Auth/ServerStatusFrame'
 import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
@@ -63,6 +64,7 @@ const getFrame = (type) => {
     help: HelpFrame,
     queries: QueriesFrame,
     sysinfo: SysInfoFrame,
+    status: ServerStatusFrame,
     default: Frame
   }
   return trans[type] || trans['default']
