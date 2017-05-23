@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
@@ -26,19 +27,62 @@ import UserDetails from './UserDetails'
 import DatabaseKernelInfo from './DatabaseKernelInfo'
 import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
 
-export const DatabaseInfo = ({ labels = [], relationshipTypes = [], properties = [], userDetails, databaseKernelInfo, onItemClick }) => {
-  return (
-    <Drawer id='db-drawer'>
-      <DrawerHeader>Database Information</DrawerHeader>
-      <DrawerBody>
-        <LabelItems labels={labels.map((l) => l.val)} onItemClick={onItemClick} />
-        <RelationshipItems relationshipTypes={relationshipTypes.map((l) => l.val)} onItemClick={onItemClick} />
-        <PropertyItems properties={properties.map((l) => l.val)} onItemClick={onItemClick} />
-        <UserDetails userDetails={userDetails} onItemClick={onItemClick} />
-        <DatabaseKernelInfo databaseKernelInfo={databaseKernelInfo} onItemClick={onItemClick} />
-      </DrawerBody>
-    </Drawer>
-  )
+export class DatabaseInfo extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      moreStep: 50,
+      labelsMax: 50,
+      relationshipsMax: 50,
+      propertiesMax: 50
+    }
+  }
+  onMoreClick (type) {
+    return (num) => {
+      this.setState({ [type + 'Max']: this.state[type + 'Max'] + num })
+    }
+  }
+  render () {
+    const {
+      labels = [],
+      relationshipTypes = [],
+      properties = [],
+      userDetails,
+      databaseKernelInfo,
+      onItemClick
+    } = this.props
+
+    return (
+      <Drawer id='db-drawer'>
+        <DrawerHeader>Database Information</DrawerHeader>
+        <DrawerBody>
+          <LabelItems
+            labels={labels.slice(0, this.state.labelsMax).map((l) => l.val)}
+            totalNumItems={labels.length}
+            onItemClick={onItemClick}
+            onMoreClick={this.onMoreClick.bind(this)('labels')}
+            moreStep={this.state.moreStep}
+          />
+          <RelationshipItems
+            relationshipTypes={relationshipTypes.slice(0, this.state.relationshipsMax).map((l) => l.val)}
+            onItemClick={onItemClick}
+            totalNumItems={relationshipTypes.length}
+            onMoreClick={this.onMoreClick.bind(this)('relationships')}
+            moreStep={this.state.moreStep}
+          />
+          <PropertyItems
+            properties={properties.slice(0, this.state.propertiesMax).map((l) => l.val)}
+            onItemClick={onItemClick}
+            totalNumItems={properties.length}
+            onMoreClick={this.onMoreClick.bind(this)('properties')}
+            moreStep={this.state.moreStep}
+          />
+          <UserDetails userDetails={userDetails} onItemClick={onItemClick} />
+          <DatabaseKernelInfo databaseKernelInfo={databaseKernelInfo} onItemClick={onItemClick} />
+        </DrawerBody>
+      </Drawer>
+    )
+  }
 }
 
 const mapStateToProps = (state) => {

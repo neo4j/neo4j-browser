@@ -22,7 +22,21 @@ import { ecsapeCypherMetaItem } from 'services/utils'
 import classNames from 'classnames'
 import styles from './style_meta.css'
 import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
-import {StyledLabel, StyledRelationship, StyledProperty} from './styled'
+import { StyledLabel, StyledRelationship, StyledProperty, StyledShowMoreContainer, StyledShowMoreLink } from './styled'
+import Visible from 'browser-components/Visible'
+
+const ShowMore = ({ total, shown, moreStep, onMore }) => {
+  const numMore = total - shown > moreStep ? moreStep : total - shown
+  return (
+    <Visible if={shown < total}>
+      <StyledShowMoreContainer>
+        <StyledShowMoreLink onClick={() => onMore(numMore)}>Show {numMore} more</StyledShowMoreLink>
+        &nbsp;|&nbsp;
+        <StyledShowMoreLink onClick={() => onMore(total)}>Show all</StyledShowMoreLink>
+      </StyledShowMoreContainer>
+    </Visible>
+  )
+}
 
 const createItems = (originalList, onItemClick, RenderType, editorCommandTemplate, showStar = true) => {
   let items = [...originalList]
@@ -40,9 +54,9 @@ const createItems = (originalList, onItemClick, RenderType, editorCommandTemplat
     )
   })
 }
-const LabelItems = ({labels, onItemClick}) => {
+const LabelItems = ({labels, totalNumItems, onItemClick, moreStep, onMoreClick}) => {
   let labelItems = <p>There are no labels in database</p>
-  if (labels.length > 0) {
+  if (labels.length) {
     const editorCommandTemplate = (text) => {
       if (text === '*') {
         return 'MATCH (n) RETURN n LIMIT 25'
@@ -59,10 +73,11 @@ const LabelItems = ({labels, onItemClick}) => {
       })}>
         {labelItems}
       </DrawerSectionBody>
+      <ShowMore total={totalNumItems} shown={labels.length} moreStep={moreStep} onMore={onMoreClick} />
     </DrawerSection>
   )
 }
-const RelationshipItems = ({relationshipTypes, onItemClick}) => {
+const RelationshipItems = ({relationshipTypes, totalNumItems, onItemClick, moreStep, onMoreClick}) => {
   let relationshipItems = <p>No relationships in database</p>
   if (relationshipTypes.length > 0) {
     const editorCommandTemplate = (text) => {
@@ -81,10 +96,11 @@ const RelationshipItems = ({relationshipTypes, onItemClick}) => {
       })}>
         {relationshipItems}
       </DrawerSectionBody>
+      <ShowMore total={totalNumItems} shown={relationshipTypes.length} moreStep={moreStep} onMore={onMoreClick} />
     </DrawerSection>
   )
 }
-const PropertyItems = ({properties, onItemClick}) => {
+const PropertyItems = ({properties, totalNumItems, onItemClick, moreStep, onMoreClick}) => {
   let propertyItems = <p>There are no properties in database</p>
   if (properties.length > 0) {
     const editorCommandTemplate = (text) => {
@@ -100,6 +116,7 @@ const PropertyItems = ({properties, onItemClick}) => {
       })}>
         {propertyItems}
       </DrawerSectionBody>
+      <ShowMore total={totalNumItems} shown={properties.length} moreStep={moreStep} onMore={onMoreClick} />
     </DrawerSection>
   )
 }
