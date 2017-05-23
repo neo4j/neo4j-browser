@@ -54,6 +54,12 @@ const visualSettings =
       title: 'Result Frames',
       settings: [
         {
+          maxFrames: {
+            displayName: 'Maximum number of result frames',
+            tooltip: 'Max number of result frames. When reached, old frames gets retired.'
+          }
+        },
+        {
           maxHistory: {
             displayName: 'Max History',
             tooltip: 'Max number of history entries. When reached, old entries gets retired.'
