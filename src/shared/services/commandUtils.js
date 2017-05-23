@@ -85,3 +85,11 @@ export const getInterpreter = (interpret, cmd, cmdchar) => {
 }
 
 export const isNamedInterpreter = (interpreter) => interpreter && interpreter.name !== 'catch-all'
+
+export const extractPostConnectCommandsFromServerConfig = (str) => {
+  const splitted = str
+    .split(';')
+    .map((item) => item.trim())
+    .filter((item) => item && item.length)
+  return splitted && splitted.length ? splitted : undefined
+}

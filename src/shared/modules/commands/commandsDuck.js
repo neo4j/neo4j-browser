@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getInterpreter, isNamedInterpreter, cleanCommand } from 'services/commandUtils'
+import { getInterpreter, isNamedInterpreter, cleanCommand, extractPostConnectCommandsFromServerConfig } from 'services/commandUtils'
 import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -134,7 +134,12 @@ export const postConnectCmdEpic = (some$, store) =>
       const serverSettings = getAvailableSettings(store.getState())
       if (serverSettings && serverSettings['browser.post_connect_cmd']) {
         const cmdchar = getCmdChar(store.getState())
-        store.dispatch(executeSystemCommand(`${cmdchar}${serverSettings['browser.post_connect_cmd']}`))
+        const cmds = extractPostConnectCommandsFromServerConfig(serverSettings['browser.post_connect_cmd'])
+        if (cmds !== undefined) {
+          cmds.forEach((cmd) => {
+            store.dispatch(executeSystemCommand(`${cmdchar}${cmd}`))
+          })
+        }
       }
     })
     .mapTo({ type: 'NOOP' })
