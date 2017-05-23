@@ -19,8 +19,11 @@
  */
 
 import uuid from 'uuid'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/mapTo'
 import { moveInArray } from 'services/utils'
 import { hydrate } from 'services/duckUtils'
+import { UPDATE as SETTINGS_UPDATE } from '../settings/settingsDuck'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
@@ -31,12 +34,7 @@ export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
 export const PIN = `${NAME}/PIN`
 export const UNPIN = `${NAME}/UNPIN`
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
-
-const initialState = {
-  allIds: [],
-  byId: {},
-  recentView: null
-}
+export const SET_MAX_FRAMES = NAME + '/SET_MAX_FRAMES'
 
 /**
  * Selectors
@@ -63,12 +61,11 @@ function addFrame (state, newState) {
     const pos = findFirstFreePos(state)
     allIds.splice(pos, 0, newState.id)
   }
-  return Object.assign(
-    {},
-    state,
-    {allIds: allIds},
-    {byId: byId}
-  )
+  return ensureFrameLimit({
+    ...state,
+    allIds,
+    byId
+  })
 }
 
 function removeFrame (state, id) {
@@ -129,6 +126,28 @@ function setRecentViewHelper (state, recentView) {
   return Object.assign({}, state, {recentView})
 }
 
+function ensureFrameLimit (state) {
+  const limit = state.maxFrames || 1
+  if (state.allIds.length <= limit) return state
+  let numToRemove = state.allIds.length - limit
+  let removeIds = state.allIds.slice(-1 * numToRemove).filter((id) => !state.byId[id].isPinned)
+  let byId = {...state.byId}
+  removeIds.forEach((id) => delete byId[id])
+  return {
+    ...state,
+    allIds: state.allIds.slice(0, state.allIds.length - removeIds.length),
+    byId
+  }
+}
+
+/** Inital state */
+export const initialState = {
+  allIds: [],
+  byId: {},
+  recentView: null,
+  maxFrames: 30
+}
+
 /**
  * Reducer
 */
@@ -150,6 +169,9 @@ export default function reducer (state = initialState, action) {
       return unpinFrame(state, action.id)
     case SET_RECENT_VIEW:
       return setRecentViewHelper(state, action.view)
+    case SET_MAX_FRAMES:
+      const newState = {...state, maxFrames: action.maxFrames}
+      return ensureFrameLimit(newState)
     default:
       return state
   }
@@ -203,3 +225,13 @@ export function setRecentView (view) {
     view
   }
 }
+
+// Epics
+export const maxFramesConfigEpic = (action$, store) =>
+  action$.ofType(SETTINGS_UPDATE)
+    .do((action) => {
+      const newMaxFrames = action.state.maxFrames
+      if (!newMaxFrames) return
+      store.dispatch({ type: SET_MAX_FRAMES, maxFrames: newMaxFrames })
+    })
+    .mapTo({ type: 'NOOP' })

@@ -31,6 +31,7 @@ import { featuresDiscoveryEpic } from './modules/features/featuresDuck'
 import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic, loadFoldersFromSyncEpic, syncFoldersEpic } from './modules/sync/syncDuck'
 import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
 import { bootEpic, incrementEventEpic, udcStartupEpic, trackSyncLogoutEpic, trackConnectsEpic, eventFiredEpic } from './modules/udc/udcDuck'
+import { maxFramesConfigEpic } from './modules/stream/streamDuck'
 
 export default combineEpics(
   handleCommandsEpic,
@@ -68,5 +69,6 @@ export default combineEpics(
   incrementEventEpic,
   trackSyncLogoutEpic,
   trackConnectsEpic,
-  eventFiredEpic
+  eventFiredEpic,
+  maxFramesConfigEpic
 )
