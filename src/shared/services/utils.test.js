@@ -288,7 +288,8 @@ describe('utils', () => {
       { test: 'Label', expect: 'Label' },
       { test: 'Label Space', expect: '`Label Space`' },
       { test: 'Label1', expect: 'Label1' },
-      { test: 'Label-dash', expect: '`Label-dash`' }
+      { test: 'Label-dash', expect: '`Label-dash`' },
+      { test: 'Label`Backtick', expect: '`Label``Backtick`' }
     ]
 
     // When && Then
