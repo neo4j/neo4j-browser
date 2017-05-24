@@ -46,7 +46,7 @@ function get (url) {
   })
 }
 
-function getJSON (url) {
+export function getJSON (url) {
   return fetch(url, {
     method: 'get',
     headers: {
@@ -55,7 +55,7 @@ function getJSON (url) {
   }).then((response) => {
     return response.json()
   }).catch((e) => {
-    return e
+    throw new Error(e)
   })
 }
 

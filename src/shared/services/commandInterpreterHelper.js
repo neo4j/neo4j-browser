@@ -49,7 +49,12 @@ const availableCommands = [{
   match: (cmd) => /^config(\s|$)/.test(cmd),
   exec: function (action, cmdchar, put, store) {
     handleUpdateConfigCommand(action, cmdchar, put, store)
-    put(frames.add({...action, ...handleGetConfigCommand(action, cmdchar, store)}))
+      .then((res) => {
+        put(frames.add({...action, ...handleGetConfigCommand(action, cmdchar, store)}))
+      })
+      .catch((e) => {
+        put(showErrorMessage(e.message))
+      })
   }
 }, {
   name: 'set-param',
