@@ -187,6 +187,51 @@ describe('utils', () => {
       hash: ''
     })
   })
+  describe('extractWhitelistFromConfigString', () => {
+    test('extracts comma separated string of hosts to array', () => {
+      // Given
+      const input = 'localhost,guides.neo4j.com'
+
+      // When
+      const res = utils.extractWhitelistFromConfigString(input)
+
+      // Then
+      expect(res).toEqual(['localhost', 'guides.neo4j.com'])
+    })
+    test('trims each host value and removes trailing slash', () => {
+      // Given
+      const input = 'localhost , guides.neo4j.com/ , neo4j.com'
+
+      // When
+      const res = utils.extractWhitelistFromConfigString(input)
+
+      // Then
+      expect(res).toEqual(['localhost', 'guides.neo4j.com', 'neo4j.com'])
+    })
+  })
+  describe('addProtocolsToUrlList', () => {
+    test('Add protocol where needed', () => {
+      // Given
+      const input = [
+        'http://test.com',
+        'oskarhane.com',
+        '*',
+        null,
+        'https://mysite.com/guides'
+      ]
+
+      // When
+      const res = utils.addProtocolsToUrlList(input)
+
+      // Then
+      expect(res).toEqual([
+        'http://test.com',
+        'https://oskarhane.com',
+        'http://oskarhane.com',
+        'https://mysite.com/guides'
+      ])
+    })
+  })
   describe('hostIsAllowed', () => {
     test('should respect host whitelist', () => {
       // Given
@@ -205,16 +250,6 @@ describe('utils', () => {
 
       // When && Then
       expect(utils.hostIsAllowed('anything', whitelist)).toEqual(true)
-    })
-    test('should use defaults if no whitelist specified', () => {
-      // When && Then
-      expect(utils.hostIsAllowed('http://anything.com', null)).toEqual(false)
-      expect(utils.hostIsAllowed('http://anything.com', '')).toEqual(false)
-      expect(utils.hostIsAllowed('guides.neo4j.com', undefined)).toEqual(true)
-      expect(utils.hostIsAllowed('guides.neo4j.com', null)).toEqual(true)
-      expect(utils.hostIsAllowed('guides.neo4j.com', '')).toEqual(true)
-      expect(utils.hostIsAllowed('localhost', null)).toEqual(true)
-      expect(utils.hostIsAllowed('localhost', '')).toEqual(true)
     })
     test('can parse url params correctly', () => {
     // Given

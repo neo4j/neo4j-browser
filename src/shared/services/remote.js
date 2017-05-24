@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fetch from 'isomorphic-fetch'
+/* global fetch */
+import 'isomorphic-fetch'
 
 function request (method, url, data = null) {
   return fetch(url, {
@@ -30,12 +31,15 @@ function request (method, url, data = null) {
     },
     body: data
   })
+  .then(checkStatus)
 }
 
 function get (url) {
   return fetch(url, {
     method: 'get'
-  }).then(function (response) {
+  })
+  .then(checkStatus)
+  .then(function (response) {
     return response.text()
   })
 }
@@ -51,6 +55,16 @@ function getJSON (url) {
   }).catch((e) => {
     return e
   })
+}
+
+function checkStatus (response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response
+  } else {
+    var error = new Error(response.status + ' ' + response.statusText)
+    error.response = response
+    throw error
+  }
 }
 
 export default {

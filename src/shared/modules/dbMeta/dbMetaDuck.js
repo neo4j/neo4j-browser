@@ -40,22 +40,6 @@ export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 
-const initialState = {
-  labels: [],
-  relationshipTypes: [],
-  properties: [],
-  functions: [],
-  procedures: [],
-  server: {
-    version: null,
-    edition: null,
-    storeId: null
-  },
-  settings: {
-    'browser.allow_outgoing_connections': false
-  }
-}
-
 /**
  * Selectors
  */
@@ -86,6 +70,7 @@ export const getStoreId = (state) => state[NAME].server.storeId
 export const getAvailableSettings = (state) => (state[NAME] || initialState).settings
 export const allowOutgoingConnections = (state) => getAvailableSettings(state)['browser.allow_outgoing_connections']
 export const credentialsTimeout = (state) => getAvailableSettings(state)['browser.credential_timeout'] || 0
+export const getRemoteContentHostnameWhitelist = (state) => getAvailableSettings(state)['browser.remote_content_hostname_whitelist'] || initialState.settings['browser.remote_content_hostname_whitelist']
 export const shouldRetainConnectionCredentials = (state) => {
   const conf = getAvailableSettings(state)['browser.retain_connection_credentials']
   if (conf === null || typeof conf === 'undefined') return true
@@ -138,6 +123,24 @@ function updateMetaForContext (state, meta, context) {
     properties,
     functions,
     procedures
+  }
+}
+
+// Initial state
+const initialState = {
+  labels: [],
+  relationshipTypes: [],
+  properties: [],
+  functions: [],
+  procedures: [],
+  server: {
+    version: null,
+    edition: null,
+    storeId: null
+  },
+  settings: {
+    'browser.allow_outgoing_connections': false,
+    'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost'
   }
 }
 

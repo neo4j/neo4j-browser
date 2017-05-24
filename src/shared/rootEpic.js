@@ -19,7 +19,7 @@
  */
 
 import { combineEpics } from 'redux-observable'
-import { handleCommandsEpic, postConnectCmdEpic } from './modules/commands/commandsDuck'
+import { handleCommandsEpic, postConnectCmdEpic, fetchGuideFromWhitelistEpic } from './modules/commands/commandsDuck'
 import { retainCredentialsSettingsEpic, checkSettingsForRoutingDriver, connectEpic, disconnectEpic, startupConnectEpic, disconnectSuccessEpic, startupConnectionSuccessEpic, startupConnectionFailEpic, detectActiveConnectionChangeEpic, connectionLostEpic } from './modules/connections/connectionsDuck'
 import { dbMetaEpic, clearMetaOnDisconnectEpic } from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
@@ -36,6 +36,7 @@ import { maxFramesConfigEpic } from './modules/stream/streamDuck'
 export default combineEpics(
   handleCommandsEpic,
   postConnectCmdEpic,
+  fetchGuideFromWhitelistEpic,
   connectionLostEpic,
   retainCredentialsSettingsEpic,
   checkSettingsForRoutingDriver,

@@ -48,7 +48,8 @@
       "afterEach",
       "neo",
       "FileReader",
-      "Blob"
+      "Blob",
+      "fetch"
     ]
   },
   "repository": {},
