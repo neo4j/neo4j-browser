@@ -26,7 +26,7 @@ import FrameSidebar from './FrameSidebar'
 import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon, Spinner } from 'browser-components/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
-import AsciiView from './Views/AsciiView'
+import AsciiView, { AsciiStatusbar } from './Views/AsciiView'
 import CodeView from './Views/CodeView'
 import WarningsView from './Views/WarningsView'
 import ErrorsView from './Views/ErrorsView'
@@ -45,7 +45,8 @@ class CypherFrame extends Component {
       openView: viewTypes.VISUALIZATION,
       plan: null,
       notifications: null,
-      errors: null
+      errors: null,
+      maxColWidth: 70
     }
   }
 
@@ -94,7 +95,11 @@ class CypherFrame extends Component {
     return state.openView !== this.state.openView ||
       state.fullscreen !== this.state.fullscreen ||
       state.frameHeight !== this.state.frameHeight ||
-      nextProps.request.result !== this.props.request.result
+      nextProps.request.result !== this.props.request.result ||
+      state.maxColWidth !== this.state.maxColWidth
+  }
+  setMaxColWidth (w) {
+    this.setState({ maxColWidth: w })
   }
   decideOpeningView ({plan, nodesAndRelationships, warnings, props}) {
     if (props.frame.forceView) {
@@ -222,7 +227,6 @@ class CypherFrame extends Component {
 
     return { statusBarMessage: updateMessages + streamMessage, bodyMessage }
   }
-
   render () {
     const frame = this.props.frame
     const result = this.props.request.result || false
@@ -257,6 +261,14 @@ class CypherFrame extends Component {
         )
       }
     }
+    if (this.state.openView === viewTypes.TEXT && this.state.serializedPropertiesRows && this.state.serializedPropertiesRows.length) {
+      statusBar = (
+        <AsciiStatusbar
+          rows={this.state.serializedPropertiesRows}
+          onInput={this.setMaxColWidth.bind(this)}
+        />
+      )
+    }
     if (requestStatus !== 'pending') {
       frameContents =
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
@@ -267,7 +279,7 @@ class CypherFrame extends Component {
             <TableView style={this.getDisplayStyle(viewTypes.TABLE)} data={this.state.rows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <AsciiView style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
+            <AsciiView maxColWidth={this.state.maxColWidth} style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
             <QueryPlan fullscreen={this.state.fullscreen} style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
