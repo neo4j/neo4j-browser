@@ -21,181 +21,93 @@
 import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as mappings from './boltMappings'
-import { BoltConnectionError, createErrorObject } from '../exceptions'
+import * as boltConnection from './boltConnection'
+import { runCypherMessage, cancelTransactionMessage, CYPHER_ERROR_MESSAGE, CYPHER_RESPONSE_MESSAGE, POST_CANCEL_TRANSACTION_MESSAGE } from './boltWorkerMessages'
 
-let _drivers = null
-let _useRoutingConfig = false
-let _routingAvailable = false
-const runningQueryRegister = {}
-
-const _useRouting = () => _useRoutingConfig && _routingAvailable
-
-const _getDriver = (host, auth, opts, protocol) => {
-  const boltHost = protocol + (host || '').split('bolt://').join('')
-  return neo4j.driver(boltHost, auth, opts)
-}
-
-const _validateConnection = (driver, res, rej) => {
-  if (!driver || !driver.session) return rej('No connection')
-  const tmp = driver.session()
-  tmp.run('CALL dbms.procedures()').then(() => {
-    tmp.close()
-    res(driver)
-  }).catch((e) => {
-    rej(e)
-  })
-}
-
-const _routingAvailability = () => {
-  return directTransaction('CALL dbms.procedures()').then((res) => {
-    const names = res.records.map((r) => r.get('name'))
-    return names.indexOf('dbms.cluster.overview') > -1
-  })
-}
-
-const _getDriversObj = (props, opts = {}) => {
-  const driversObj = {}
-  const auth = opts.withoutCredentials || !props.username
-      ? undefined
-      : neo4j.auth.basic(props.username, props.password)
-  const getDirectDriver = () => {
-    if (driversObj.direct) return driversObj.direct
-    driversObj.direct = _getDriver(props.host, auth, opts, 'bolt://')
-    return driversObj.direct
-  }
-  const getRoutedDriver = () => {
-    if (!_useRouting()) return getDirectDriver()
-    if (driversObj.routed) return driversObj.routed
-    driversObj.routed = _getDriver(props.host, auth, opts, 'bolt+routing://')
-    return driversObj.routed
-  }
-  return {
-    getDirectDriver,
-    getRoutedDriver,
-    close: () => {
-      if (driversObj.direct) driversObj.direct.close()
-      if (driversObj.routed) driversObj.routed.close()
-    }
-  }
-}
-
-function directConnect (props, opts = {}, onLostConnection = () => {}, validateConnection = true) {
-  const p = new Promise((resolve, reject) => {
-    const creds = opts.withoutCredentials || !props.username
-      ? undefined
-      : neo4j.auth.basic(props.username, props.password)
-    const driver = _getDriver(props.host, creds, opts, 'bolt://')
-    driver.onError = (e) => {
-      onLostConnection(e)
-      reject(e)
-    }
-    if (validateConnection === false) return resolve(driver)
-    _validateConnection(driver, resolve, reject)
-  })
-  return p
-}
+let connectionProperties = null
+let boltWorkerRegister = {}
+let cancellationRegister = {}
 
 function openConnection (props, opts = {}, onLostConnection) {
-  const p = new Promise((resolve, reject) => {
-    const driversObj = _getDriversObj(props, opts)
-    const driver = driversObj.getDirectDriver()
-    driver.onError = (e) => {
-      onLostConnection(e)
-      _drivers = null
-      driversObj.close()
-      reject(e)
-    }
-    const myResolve = (driver) => {
-      _drivers = driversObj
-      _routingAvailability()
-        .then((r) => {
-          if (r) _routingAvailable = true
-          if (!r) _routingAvailable = false
-        })
-        .catch((e) => (_routingAvailable = false))
-      resolve(driver)
-    }
-    const myReject = (err) => {
-      _drivers = null
-      driversObj.close()
-      reject(err)
-    }
-    _validateConnection(driver, myResolve, myReject)
+  return new Promise((resolve, reject) => {
+    boltConnection.openConnection(props, opts, onLostConnection)
+      .then((r) => {
+      // TODO : Encryption in opts, properties !! and check other props !!!!
+        connectionProperties = { username: props.username, password: props.password, host: props.host }
+        resolve(r)
+      })
+      .catch((e) => {
+        connectionProperties = null
+        reject(e)
+      })
   })
-  return p
-}
-
-function _trackedTransaction (input, parameters = {}, session, requestId = null) {
-  const id = requestId || v4()
-  if (!session) {
-    return [id, Promise.reject(createErrorObject(BoltConnectionError))]
-  }
-  const closeFn = (cb = () => {}) => {
-    session.close(cb)
-    if (runningQueryRegister[id]) delete runningQueryRegister[id]
-  }
-  runningQueryRegister[id] = closeFn
-  const queryPromise = session.run(input, parameters)
-    .then((r) => {
-      closeFn()
-      return r
-    })
-    .catch((e) => {
-      closeFn()
-      throw e
-    })
-  return [id, queryPromise]
 }
 
 function cancelTransaction (id, cb) {
-  if (runningQueryRegister[id]) runningQueryRegister[id](cb)
-}
-
-function _transaction (input, parameters, session) {
-  if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
-  return session.run(input, parameters)
-    .then((r) => {
-      session.close()
-      return r
-    })
-    .catch((e) => {
-      session.close()
-      throw e
-    })
-}
-
-function directTransaction (input, parameters, requestId = null, cancelable = false) {
-  const session = _drivers ? _drivers.getDirectDriver().session() : false
-  if (!cancelable) return _transaction(input, parameters, session)
-  return _trackedTransaction(input, parameters, session, requestId)
-}
-
-function routedReadTransaction (input, parameters, requestId = null, cancelable = false) {
-  const session = _drivers ? _drivers.getRoutedDriver().session(neo4j.session.READ) : false
-  if (!cancelable) return _transaction(input, parameters, session)
-  return _trackedTransaction(input, parameters, session, requestId)
+  if (boltWorkerRegister[id]) {
+    cancellationRegister[id] = cb
+    boltWorkerRegister[id].postMessage(cancelTransactionMessage(id))
+  } else {
+    boltConnection.cancelTransaction(id, cb)
+  }
 }
 
 function routedWriteTransaction (input, parameters, requestId = null, cancelable = false) {
-  const session = _drivers ? _drivers.getRoutedDriver().session(neo4j.session.WRITE) : false
-  if (!cancelable) return _transaction(input, parameters, session)
-  return _trackedTransaction(input, parameters, session, requestId)
+  // TODO check max number of web workers
+  if (window.Worker) {
+    const id = requestId || v4()
+    const BoltWorkerModule = require('worker-loader!./boltWorker.js')
+    const boltWorker = new BoltWorkerModule()
+    boltWorkerRegister[id] = boltWorker
+
+    const workerPromise = new Promise((resolve, reject) => {
+      boltWorker.postMessage(runCypherMessage(input, parameters, requestId, cancelable, {...connectionProperties, inheritedUseRouting: boltConnection.useRouting()}))
+      boltWorker.onmessage = (msg) => {
+        if (msg.data.type === CYPHER_ERROR_MESSAGE) {
+          reject(msg.data.error)
+        } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
+          let records = msg.data.result.records.map(record => {
+            const typedRecord = new neo4j.types.Record(record.keys, record._fields, record._fieldLookup)
+            if (typedRecord._fields) {
+              typedRecord._fields = typedRecord._fields.map(field => mappings.applyGraphTypes(field))
+            }
+            return typedRecord
+          })
+
+          let summary = mappings.applyGraphTypes(msg.data.result.summary)
+          resolve({summary, records})
+
+          if (boltWorkerRegister[id]) {
+            delete boltWorkerRegister[id]
+          }
+        } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
+          if (cancellationRegister[id]) {
+            cancellationRegister[id]()
+            delete cancellationRegister[id]
+          }
+
+          if (boltWorkerRegister[id]) {
+            delete boltWorkerRegister[id]
+          }
+        }
+      }
+    })
+
+    return [id, workerPromise]
+  } else {
+    return boltConnection.routedWriteTransaction(input, parameters, requestId, cancelable)
+  }
 }
 
 export default {
-  directConnect,
+  directConnect: boltConnection.directConnect,
   openConnection,
-  closeConnection: () => {
-    if (_drivers) {
-      _drivers.close()
-      _drivers = null
-    }
-  },
-  directTransaction,
-  routedReadTransaction,
+  closeConnection: boltConnection.closeConnection,
+  directTransaction: boltConnection.directTransaction,
+  routedReadTransaction: boltConnection.routedReadTransaction,
   routedWriteTransaction,
   cancelTransaction,
-  useRoutingConfig: (shouldWe) => (_useRoutingConfig = shouldWe),
+  useRoutingConfig: (shouldWe) => boltConnection.setUseRoutingConfig(shouldWe),
   recordsToTableArray: (records, convertInts = true) => {
     const intChecker = convertInts ? neo4j.isInt : () => true
     const intConverter = convertInts ? (item) => mappings.itemIntToString(item, { intChecker: neo4j.isInt, intConverter: (val) => val.toNumber() }) : (val) => val

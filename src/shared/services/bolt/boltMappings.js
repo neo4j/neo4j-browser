@@ -231,3 +231,32 @@ export const retrieveFormattedUpdateStatistics = (result) => {
 export const flattenProperties = (rows) => {
   return rows.map((row) => row.map((entry) => (entry && entry.properties) ? entry.properties : entry))
 }
+
+export const applyGraphTypes = (item) => {
+  if (Array.isArray(item)) {
+    return item.map(arrayItem => applyGraphTypes(arrayItem))
+  } else if (item.hasOwnProperty('labels') && item.hasOwnProperty('properties') && item.hasOwnProperty('identity')) {
+    return new neo4j.types.Node(neo4j.int(item.identity), item.labels, applyGraphTypes(item.properties))
+  } else if (item.hasOwnProperty('segments') && item.hasOwnProperty('start') && item.hasOwnProperty('end')) {
+    const start = applyGraphTypes(item.start)
+    const end = applyGraphTypes(item.end)
+    const segments = item.segments.map(segment => applyGraphTypes(segment))
+    return new neo4j.types.Path(start, end, segments)
+  } else if (item.hasOwnProperty('relationship') && item.hasOwnProperty('start') && item.hasOwnProperty('end')) {
+    const start = applyGraphTypes(item.start)
+    const end = applyGraphTypes(item.end)
+    const relationship = applyGraphTypes(item.relationship)
+    return new neo4j.types.PathSegment(start, relationship, end)
+  } else if (item.hasOwnProperty('start') && item.hasOwnProperty('end') && item.hasOwnProperty('type')) {
+    return new neo4j.types.Relationship(neo4j.int(item.identity), neo4j.int(item.start), neo4j.int(item.end), item.type, applyGraphTypes(item.properties))
+  } else if (item.hasOwnProperty('low') && item.hasOwnProperty('high')) {
+    // TODO Check types of low and high RETURN {low: 0, high: 5}
+    return neo4j.int(item)
+  } else if (typeof item === 'object') {
+    let typedObject = {}
+    Object.keys(item).forEach((key) => { typedObject[key] = applyGraphTypes(item[key]) })
+    return typedObject
+  } else {
+    return item
+  }
+}
