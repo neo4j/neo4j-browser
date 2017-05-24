@@ -20,10 +20,10 @@
 
 import { Component } from 'preact'
 import FrameTemplate from './FrameTemplate'
-import { CypherFrameButton } from 'browser-components/buttons'
+import { CypherFrameButton, FrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
 import FrameSidebar from './FrameSidebar'
-import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon, Spinner } from 'browser-components/icons/Icons'
+import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon, DoubleUpIcon, DoubleDownIcon, Spinner } from 'browser-components/icons/Icons'
 import QueryPlan from './Planner/QueryPlan'
 import TableView from './Views/TableView'
 import AsciiView, { AsciiStatusbar } from './Views/AsciiView'
@@ -36,7 +36,7 @@ import FrameError from './FrameError'
 import Visible from 'browser-components/Visible'
 import Ellipsis from 'browser-components/Ellipsis'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import { StyledFrameBody, StyledStatsBar, SpinnerContainer } from './styled'
+import { StyledFrameBody, StyledStatsBar, SpinnerContainer, FrameTitlebarButtonSection, StyledStatsBarContainer } from './styled'
 
 class CypherFrame extends Component {
   constructor (props) {
@@ -46,7 +46,8 @@ class CypherFrame extends Component {
       plan: null,
       notifications: null,
       errors: null,
-      maxColWidth: 70
+      maxColWidth: 70,
+      planAction: null
     }
   }
 
@@ -96,7 +97,8 @@ class CypherFrame extends Component {
       state.fullscreen !== this.state.fullscreen ||
       state.frameHeight !== this.state.frameHeight ||
       nextProps.request.result !== this.props.request.result ||
-      state.maxColWidth !== this.state.maxColWidth
+      state.maxColWidth !== this.state.maxColWidth ||
+      state.planAction !== this.state.planAction
   }
   setMaxColWidth (w) {
     this.setState({ maxColWidth: w })
@@ -252,12 +254,18 @@ class CypherFrame extends Component {
       }
       if (plan && this.state.openView === viewTypes.PLAN) {
         statusBar = (
-          <StyledStatsBar>
-            <Ellipsis>
-              Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
-              { plan.root.totalDbHits ? ` ${plan.root.totalDbHits} total db hits in ${result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter).toNumber() || 0} ms.` : ``}
-            </Ellipsis>
-          </StyledStatsBar>
+          <StyledStatsBarContainer>
+            <StyledStatsBar>
+              <Ellipsis>
+                Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
+                { plan.root.totalDbHits ? ` ${plan.root.totalDbHits} total db hits in ${result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter).toNumber() || 0} ms.` : ``}
+              </Ellipsis>
+            </StyledStatsBar>
+            <FrameTitlebarButtonSection>
+              <FrameButton onClick={() => this.setState({planAction: 'COLLAPSE'})}><DoubleUpIcon /></FrameButton>
+              <FrameButton onClick={() => this.setState({planAction: 'EXPAND'})}><DoubleDownIcon /></FrameButton>
+            </FrameTitlebarButtonSection>
+          </StyledStatsBarContainer>
         )
       }
     }
@@ -282,7 +290,7 @@ class CypherFrame extends Component {
             <AsciiView maxColWidth={this.state.maxColWidth} style={this.getDisplayStyle(viewTypes.TEXT)} rows={this.state.serializedPropertiesRows} message={messages && messages.bodyMessage} />
           </Visible>
           <Visible if={!this.state.errors}>
-            <QueryPlan fullscreen={this.state.fullscreen} style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} />
+            <QueryPlan fullscreen={this.state.fullscreen} style={this.getDisplayStyle(viewTypes.PLAN)} plan={plan} action={this.state.planAction} />
           </Visible>
           <Visible if={!this.state.errors}>
             <WarningsView style={this.getDisplayStyle(viewTypes.WARNINGS)} notifications={this.state.notifications} cypher={this.state.cypher} />

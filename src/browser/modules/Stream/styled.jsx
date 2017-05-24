@@ -110,8 +110,10 @@ export const StyledFrameSidebar = styled.ul`
 
 export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight + 3}px;
+  height: ${dim.frameStatusbarHeight + 1}px;
   ${props => props.fullscreen ? 'margin-top: -78px;' : ''}
+  display: flex;
+  flex-direction: row;
 `
 
 export const StyledFrameTitleBar = styled.div`
@@ -147,6 +149,11 @@ export const StyledFrameCommand = styled.label`
     content: '$ '
   }
 `
+
+export const StyledFrameStatusbarText = styled.label`
+  flex: 1 1 auto;
+`
+
 export const DottedLineHover = styled.span`
   cursor: pointer;
   &:hover {
@@ -228,6 +235,11 @@ export const ErrorText = styled.span`
   color: ${props => props.theme.error};
   padding-left: 5px;
   line-height: 35px;
+`
+export const StyledStatsBarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 `
 export const StyledStatsBar = styled.div`
   min-height: 39px;
