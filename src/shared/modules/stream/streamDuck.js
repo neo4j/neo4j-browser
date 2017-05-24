@@ -75,19 +75,6 @@ function removeFrame (state, id) {
   return Object.assign({}, state, {allIds, byId})
 }
 
-function clearInContextHelper (state, context) {
-  const toBeRemoved = getFramesInContext({[NAME]: state}, context)
-  const byId = Object.assign({}, state.byId)
-  toBeRemoved.forEach((f) => delete byId[f.id])
-  const idsToBeRemoved = toBeRemoved.map((f) => f.id)
-  const allIds = state.allIds.filter((fid) => idsToBeRemoved.indexOf(fid) < 0)
-  return Object.assign({}, state, {byId, allIds})
-}
-
-function clearHelper () {
-  return {...initialState}
-}
-
 function pinFrame (state, id) {
   const pos = state.allIds.indexOf(id)
   const allIds = moveInArray(pos, 0, state.allIds) // immutable operation
@@ -159,10 +146,8 @@ export default function reducer (state = initialState, action) {
       return addFrame(state, action.state)
     case REMOVE:
       return removeFrame(state, action.id)
-    case CLEAR_IN_CONTEXT:
-      return clearInContextHelper(state, action.context)
     case CLEAR_ALL:
-      return clearHelper()
+      return {...initialState}
     case PIN:
       return pinFrame(state, action.id)
     case UNPIN:
@@ -189,13 +174,6 @@ export function remove (id) {
   return {
     type: REMOVE,
     id
-  }
-}
-
-export function clearInContext (context) {
-  return {
-    type: CLEAR_IN_CONTEXT,
-    context
   }
 }
 
