@@ -103,3 +103,21 @@ export const extractPostConnectCommandsFromServerConfig = (str) => {
     .filter((item) => item && item.length)
   return splitted && splitted.length ? splitted : undefined
 }
+
+const getHelpTopic = (str) => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
+const lowerCase = (str) => str.toLowerCase()
+const trim = (str) => str.trim()
+const replaceSpaceWithDash = (str) => str.replace(/\s/g, '-')
+const snakeToCamel = (str) => str.replace(/(-\w)/g, (match) => match[1].toUpperCase())
+const prependUnderscore = (str) => '_' + str
+
+export const transformCommandToHelpTopic = (inputStr) => {
+  const res = [(inputStr || '')]
+    .map(getHelpTopic)
+    .map(lowerCase)
+    .map(trim)
+    .map(replaceSpaceWithDash)
+    .map(snakeToCamel)
+    .map(prependUnderscore)
+  return res[0]
+}

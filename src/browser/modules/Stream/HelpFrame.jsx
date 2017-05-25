@@ -22,16 +22,14 @@ import Slide from '../Guides/Slide'
 import * as html from '../Help/html'
 import Directives from 'browser-components/Directives'
 import FrameTemplate from './FrameTemplate'
-import { splitStringOnFirst } from 'services/commandUtils'
+import { transformCommandToHelpTopic } from 'services/commandUtils'
 
 const HelpFrame = ({frame}) => {
-  const snakeToCamel = (string) => string.replace(/(-\w)/g, (match) => { return match[1].toUpperCase() })
-
   let help = 'Help topic not specified'
   if (frame.result) {
     help = <Slide html={frame.result} />
   } else {
-    const helpTopic = snakeToCamel('_' + (splitStringOnFirst(frame.cmd, ' ')[1].toLowerCase() || 'help')) // Empty means ':help help'
+    const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
       const content = html.default[helpTopic]
       if (content !== undefined) {
