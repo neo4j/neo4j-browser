@@ -5538,14 +5538,6 @@ react-pure-render@^1.0.2:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-pure-render/-/react-pure-render-1.0.2.tgz#9d8a928c7f2c37513c2d064e57b3e3c356e9fabb"
 
-react-swipe@^5.0.3:
-  version "5.0.8"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-swipe/-/react-swipe-5.0.8.tgz#95cae31f2d74e1b4886f01ffcb72837b375b66eb"
-  dependencies:
-    object-assign "^4.1.0"
-    prop-types "^15.5.7"
-    swipe-js-iso "^2.0.3"
-
 react-timeago@^3.2.0:
   version "3.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-3.3.0.tgz#5aa2573c1b2df2bceda89dc25db4145939255fee"

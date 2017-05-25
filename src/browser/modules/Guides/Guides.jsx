@@ -19,26 +19,18 @@
  */
 
 import { Component } from 'preact'
-import ReactDOM from 'react-dom'
 import uuid from 'uuid'
-import ReactSwipe from 'react-swipe'
 import Slide from './Slide'
 import Directives from 'browser-components/Directives'
-
-import { CarouselButton } from 'browser-components/buttons'
-
-import styles from './style.css'
+import Carousel from './Carousel'
 
 export default class Guides extends Component {
   constructor (props) {
     super(props)
     this.state = {slides: null, firstRender: true}
   }
-  shouldComponentUpdate () {
-    return this.state.firstRender
-  }
   componentDidMount () {
-    const slides = ReactDOM.findDOMNode(this).getElementsByTagName('slide')
+    const slides = this.base.getElementsByTagName('slide')
     let reactSlides = this
     if (slides.length > 0) {
       reactSlides = Array.from(slides).map((slide) => {
@@ -48,12 +40,6 @@ export default class Guides extends Component {
       })
     }
     this.setState({ slides: reactSlides, firstRender: false })
-  }
-  next () {
-    this.carousel.next()
-  }
-  prev () {
-    this.carousel.prev()
   }
   render () {
     if (this.state.slides && Array.isArray(this.state.slides)) {
@@ -73,15 +59,7 @@ export default class Guides extends Component {
           )
         }
       })
-      return (
-        <div key={uuid.v4()} className={styles.carouselContainer}>
-          <CarouselButton onClick={this.prev.bind(this)}>{'‹'}</CarouselButton>
-          <ReactSwipe className={styles.carousel} ref={(ref) => { this.carousel = ref }} swipeOptions={{continuous: false}}>
-            {ListOfSlides}
-          </ReactSwipe>
-          <CarouselButton onClick={this.next.bind(this)}>{'›'}</CarouselButton>
-        </div>
-      )
+      return (<Carousel slides={ListOfSlides} withDirectives={this.props.withDirectives} />)
     }
     if (this.props.withDirectives) {
       return (
