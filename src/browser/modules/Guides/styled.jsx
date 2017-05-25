@@ -36,3 +36,29 @@ export const StyledCarouselRight = styled.div`
 export const StyledCarouselButtonContainer = styled.div`
   margin-top: -40px;
 `
+const CarouselIndicator = styled.li`
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 10px
+  cursor: pointer;
+  background-color: rgba(188,195,207,.64);
+`
+export const CarouselIndicatorInactive = styled(CarouselIndicator)`
+  &:hover {
+    background-color: rgba(188,195,207,1);
+  }
+`
+export const CarouselIndicatorActive = styled(CarouselIndicator)`
+  width: 12px;
+  height: 12px;
+  background-color: #428bca;
+`
+export const StyledUl = styled.ul`
+  margin: 15px;
+`
