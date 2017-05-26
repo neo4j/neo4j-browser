@@ -26,7 +26,7 @@ import { executeCommand, executeSystemCommand } from 'shared/modules/commands/co
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import { SET_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
-import { getSettings } from 'shared/modules/settings/settingsDuck'
+import { getCmdChar, shouldEditorAutocomplete } from 'shared/modules/settings/settingsDuck'
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
@@ -135,7 +135,7 @@ export class Editor extends Component {
   }
 
   triggerAutocompletion (cm, changed) {
-    if (changed.text.length !== 1) {
+    if (changed.text.length !== 1 || !this.props.enableEditorAutocomplete) {
       return
     }
 
@@ -351,9 +351,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const mapStateToProps = (state) => {
   return {
+    enableEditorAutocomplete: shouldEditorAutocomplete(state),
     content: null,
     history: getHistory(state),
-    cmdchar: getSettings(state).cmdchar,
+    cmdchar: getCmdChar(state),
     schema: {
       consoleCommands: consoleCommands,
       labels: state.meta.labels.map(schemaConvert.toLabel),

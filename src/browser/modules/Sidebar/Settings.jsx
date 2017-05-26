@@ -35,6 +35,13 @@ const visualSettings =
             type: 'radio',
             options: ['normal', 'outline']
           }
+        },
+        {
+          'editorAutocomplete': {
+            displayName: 'Autocomplete queries',
+            tooltip: 'Autocomplete written queries in editor',
+            type: 'checkbox'
+          }
         }
       ]
     },
