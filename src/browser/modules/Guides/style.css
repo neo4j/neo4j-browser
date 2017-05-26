@@ -203,6 +203,10 @@
     p {
       margin-bottom: 10px;
     }
+    img {
+      max-width: 900px;
+      max-height: 300px;
+    }
   }
   & .example {
     padding-left: 25%;
