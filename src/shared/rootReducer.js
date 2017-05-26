@@ -34,6 +34,7 @@ import { syncReducer, syncConsentReducer, NAME_CONSENT as syncConsent, NAME as s
 import foldersReducer, { NAME as folders } from 'shared/modules/favorites/foldersDuck'
 import commandsReducer, { NAME as commands } from 'shared/modules/commands/commandsDuck'
 import udcReducer, { NAME as udc } from 'shared/modules/udc/udcDuck'
+import appReducer, { NAME as app } from 'shared/modules/app/appDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -52,5 +53,6 @@ export default {
   [sync]: syncReducer,
   [syncConsent]: syncConsentReducer,
   [commands]: commandsReducer,
-  [udc]: udcReducer
+  [udc]: udcReducer,
+  [app]: appReducer
 }

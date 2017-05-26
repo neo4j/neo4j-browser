@@ -21,14 +21,16 @@
 /* global fetch */
 import 'isomorphic-fetch'
 
-function request (method, url, data = null) {
+function request (method, url, data = null, extraHeaders = {}) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Ajax-Browser-Auth': 'true',
+    'X-stream': 'true',
+    ...extraHeaders
+  }
   return fetch(url, {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Ajax-Browser-Auth': 'true',
-      'X-stream': 'true'
-    },
+    headers: headers,
     body: data
   })
   .then(checkStatus)
