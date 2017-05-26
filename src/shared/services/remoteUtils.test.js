@@ -18,12 +18,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
+/* global describe, test, expect */
 import * as utils from './remoteUtils'
 
-describe('commandutils', () => {
+describe('remoteUtils', () => {
   test('removes script tags', () => {
     const text = 'hello<script>alert(1)</script> <p onclick="alert(1)">test</p>'
     expect(utils.cleanHtml(text)).toEqual('hello <p>test</p>')
+  })
+  test('isLocalRequest figures out if a request is local or remote', () => {
+    // Given
+    const itemsStrict = [
+      { local: undefined, request: '/yo', expect: false },
+      { local: 'http://hej.com', request: '/yo', expect: true },
+      { local: 'http://hej.com', request: 'http://hej.com/yo', expect: true },
+      { local: 'http://hej.com:8080', request: 'http://hej.com:9000/mine', expect: false },
+      { local: 'http://hej.com', request: 'https://hej.com', expect: false },
+      { local: 'http://hej.com', request: 'http://bye.com', expect: false }
+    ]
+    const itemsHostnameOnly = [
+      { local: undefined, request: '/yo', expect: false },
+      { local: 'http://hej.com', request: '/yo', expect: true },
+      { local: 'http://hej.com', request: 'http://hej.com/yo', expect: true },
+      { local: 'http://hej.com:8080', request: 'http://hej.com:9000/mine', expect: true },
+      { local: 'http://hej.com', request: 'https://hej.com', expect: true },
+      { local: 'http://hej.com', request: 'http://bye.com', expect: false },
+      { local: 'bolt://hej.com:7687', request: 'http://hej.com:7474', expect: true }
+    ]
+
+    // When && Then
+    itemsStrict.forEach((item) => {
+      expect(utils.isLocalRequest(item.local, item.request)).toBe(item.expect)
+    })
+    itemsHostnameOnly.forEach((item) => {
+      expect(utils.isLocalRequest(item.local, item.request, { hostnameOnly: true })).toBe(item.expect)
+    })
   })
 })

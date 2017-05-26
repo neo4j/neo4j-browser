@@ -19,13 +19,16 @@
  */
 
 import * as frames from 'shared/modules/stream/streamDuck'
+import { getHostedUrl } from 'shared/modules/app/appDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
+import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
+import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { unknownCommand, showErrorMessage, cypher, successfulCypher, unsuccessfulCypher } from 'shared/modules/commands/commandsDuck'
@@ -156,10 +159,20 @@ const availableCommands = [{
 }, {
   name: 'http',
   match: (cmd) => /^(get|post|put|delete|head)/i.test(cmd),
-  exec: (action, cmdchar, put) => {
+  exec: (action, cmdchar, put, store) => {
     return parseHttpVerbCommand(action.cmd)
       .then((r) => {
-        remote.request(r.method, r.url, r.data)
+        const hostedUrl = getHostedUrl(store.getState())
+        const isLocal = isLocalRequest(hostedUrl, r.url, { hostnameOnly: false })
+        const connectionData = getActiveConnectionData(store.getState())
+        const isSameHostnameAsConnection = isLocalRequest(connectionData.host, r.url, { hostnameOnly: true })
+        let authHeaders = {}
+        if (isLocal || isSameHostnameAsConnection) {
+          if (connectionData.username) {
+            authHeaders = { 'Authorization': 'Basic ' + authHeaderFromCredentials(connectionData.username, connectionData.password) }
+          }
+        }
+        remote.request(r.method, r.url, r.data, authHeaders)
           .then((res) => res.text())
           .then((res) => {
             put(frames.add({...action, result: res, type: 'pre'}))

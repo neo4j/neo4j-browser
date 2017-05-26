@@ -18,20 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Action type constants
-export const NAME = 'app'
-export const APP_START = `${NAME}/APP_START`
-export const USER_CLEAR = `${NAME}/USER_CLEAR`
+/* global test, expect */
+import reducer, { NAME, APP_START, getHostedUrl } from './appDuck'
 
-// Selectors
-export const getHostedUrl = (state) => (state[NAME] || {}).hostedUrl || null
+test('reducer stores hostedUrl', () => {
+  // Given
+  const url = 'xxx'
+  const initState = {}
+  const action = { type: APP_START, url }
 
-// Reducer
-export default function reducer (state = { hostedUrl: null }, action) {
-  switch (action.type) {
-    case APP_START:
-      return {...state, hostedUrl: action.url}
-    default:
-      return state
-  }
-}
+  // When
+  const state = reducer(initState, action)
+
+  // Then
+  expect(state.hostedUrl).toEqual(url)
+})
+
+test('selector getHostedUrl returns whats in the store', () => {
+  // Given
+  const url = 'xxx'
+  const initState = {}
+  const action = { type: APP_START, url }
+
+  // Then
+  expect(getHostedUrl({[NAME]: initState})).toEqual(null)
+
+  // When
+  const state = reducer(initState, action)
+
+  // Then
+  expect(getHostedUrl({[NAME]: state})).toEqual(url)
+})
