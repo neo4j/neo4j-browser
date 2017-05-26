@@ -58,7 +58,8 @@ export class PlayFrame extends Component {
         code: 'Remote guide error'
       }} /> })
     }
-    const guideName = splitStringOnFirst(this.props.frame.cmd, ' ')[1].toLowerCase().replace(/\s|-/g, '').trim() || 'start'
+    const topicInput = (splitStringOnFirst(this.props.frame.cmd, ' ')[1] || 'start').trim()
+    const guideName = topicInput.toLowerCase().replace(/\s|-/g, '')
     if (html[guideName] !== undefined) { // Found it locally
       this.setState({ guide: <Guides withDirectives html={html[guideName]} /> })
       return
@@ -66,7 +67,7 @@ export class PlayFrame extends Component {
     // Not found remotely or locally
     // Try to find it remotely by name
     if (this.props.bus) {
-      const action = fetchGuideFromWhitelistAction(guideName)
+      const action = fetchGuideFromWhitelistAction(topicInput)
       this.props.bus.self(action.type, action, (res) => {
         if (!res.success) { // No luck
           return this.setState({ guide: <Guides withDirectives html={html['unfound']} /> })
