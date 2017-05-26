@@ -139,4 +139,22 @@ describe('commandutils', () => {
       expect(utils.extractPostConnectCommandsFromServerConfig(item.str)).toEqual(item.expect)
     })
   })
+  test('transformCommandToHelpTopic transforms input to help topics', () => {
+    // Given
+    const input = [
+      { test: '', expect: '_help' },
+      { test: 'help', expect: '_help' },
+      { test: 'help topic', expect: '_topic' },
+      { test: 'help  TOpic ', expect: '_topic' },
+      { test: 'help topic me', expect: '_topicMe' },
+      { test: 'help topic me now', expect: '_topicMeNow' },
+      { test: 'help topic-me', expect: '_topicMe' },
+      { test: 'help topic_me', expect: '_topic_me' }
+    ]
+
+    // When & Then
+    input.forEach((inp) => {
+      expect(utils.transformCommandToHelpTopic(inp.test)).toEqual(inp.expect)
+    })
+  })
 })
