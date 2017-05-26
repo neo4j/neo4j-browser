@@ -38,8 +38,8 @@ const visualSettings =
         },
         {
           'editorAutocomplete': {
-            displayName: 'Autocomplete queries',
-            tooltip: 'Autocomplete written queries in editor',
+            displayName: 'Trigger autocomplete when typing',
+            tooltip: 'Autocomplete written queries in editor (shortcut keys will still work)',
             type: 'checkbox'
           }
         }
