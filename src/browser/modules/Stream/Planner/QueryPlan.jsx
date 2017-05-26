@@ -31,7 +31,32 @@ class QueryPlan extends Component {
       this.plan.display(this.props.plan)
     }
   }
-
+  toggleExpanded (expanded) {
+    const visit = (operator) => {
+      operator.expanded = expanded
+      if (operator.children) {
+        operator.children.forEach((child) => {
+          visit(child)
+        })
+      }
+    }
+    visit(this.props.plan.root)
+    this.plan.display(this.props.plan)
+  }
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.action) {
+      switch (nextProps.action) {
+        case 'COLLAPSE': {
+          this.toggleExpanded(false)
+          break
+        }
+        case 'EXPAND': {
+          this.toggleExpanded(true)
+          break
+        }
+      }
+    }
+  }
   render () {
     if (!this.props.plan) {
       return
