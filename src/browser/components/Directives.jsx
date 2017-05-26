@@ -70,6 +70,24 @@ const prependPlayIcon = (element) => {
   prependIcon(element, 'fa fa-play-circle-o')
 }
 
+const bindDynamicInputToDom = (element) => {
+  const valueForElems = element.querySelectorAll('[value-for]')
+  const valueKeyElems = element.querySelectorAll('[value-key]')
+  if (valueForElems.length > 0 && valueKeyElems.length > 0) {
+    valueForElems.forEach((valueForElem) => {
+      const newArray = [...valueKeyElems]
+      const filteredValueKeyElems = newArray.filter((e) => {
+        return e.getAttribute('value-key') === valueForElem.getAttribute('value-for')
+      })
+      if (filteredValueKeyElems.length > 0) {
+        valueForElem.onkeyup = (event) => {
+          filteredValueKeyElems[0].innerText = event.target.value
+        }
+      }
+    })
+  }
+}
+
 export const Directives = (props) => {
   const callback = (elem) => {
     if (elem) {
@@ -86,6 +104,7 @@ export const Directives = (props) => {
           }
         })
       })
+      bindDynamicInputToDom(elem)
     }
   }
   return (
