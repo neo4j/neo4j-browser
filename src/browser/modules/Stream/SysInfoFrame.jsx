@@ -42,7 +42,7 @@ export class SysInfoFrame extends Component {
   }
   flattenAttributes (a) {
     if (a && a.attributes) {
-      return Object.assign({}, ...a.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, bolt.neo4j.isInt, (val) => val.toString()) })))
+      return Object.assign({}, ...a.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, {intChecker: bolt.neo4j.isInt, intConverter: (val) => val.toString()}) })))
     } else {
       return null
     }

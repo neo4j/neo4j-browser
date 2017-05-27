@@ -21,10 +21,10 @@
 import updateStatsFields from './updateStatisticsFields'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 
-export function toObjects (records, convertors) {
+export function toObjects (records, converters) {
   const recordValues = records.map((record) => {
     let out = []
-    record.forEach((val, key) => out.push(itemIntToString(val, convertors)))
+    record.forEach((val, key) => out.push(itemIntToString(val, converters)))
     return out
   })
   return recordValues
