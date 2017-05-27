@@ -251,6 +251,7 @@ export const StyledStatsBar = styled.div`
   white-space: nowrap;
   overflow: hidden;
   padding-left: 24px;
+  width: 100%;
 `
 
 export const StyledSchemaBody = styled(StyledPreformattedArea)`
