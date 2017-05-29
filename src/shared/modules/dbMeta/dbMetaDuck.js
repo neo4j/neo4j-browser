@@ -34,6 +34,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'meta'
+export const UPDATE = 'meta/UPDATE'
 export const UPDATE_META = 'meta/UPDATE_META'
 export const UPDATE_SERVER = 'meta/UPDATE_SERVER'
 export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
@@ -65,6 +66,7 @@ export const getVersion = (state) => state[NAME].server.version
 export const getEdition = (state) => state[NAME].server.edition
 export const getDbName = (state) => state[NAME].server.dbName
 export const getStoreSize = (state) => state[NAME].server.storeSize
+export const getClusterRole = (state) => state[NAME].role
 export const isEnterprise = (state) => state[NAME].server.edition === 'enterprise'
 export const isBeta = (state) => /-/.test(state[NAME].server.version)
 export const getStoreId = (state) => state[NAME].server.storeId
@@ -135,6 +137,7 @@ const initialState = {
   properties: [],
   functions: [],
   procedures: [],
+  role: null,
   server: {
     version: null,
     edition: null,
@@ -155,6 +158,9 @@ export default function meta (state = initialState, action) {
   state = hydrate(initialState, state)
 
   switch (action.type) {
+    case UPDATE:
+      const { type, ...rest } = action // eslint-disable-line
+      return { ...state, ...rest }
     case UPDATE_META:
       return {...state, ...updateMetaForContext(state, action.meta, action.context)}
     case UPDATE_SERVER:
@@ -180,6 +186,13 @@ export function updateMeta (meta, context) {
 export function fetchMetaData () {
   return {
     type: FORCE_FETCH
+  }
+}
+
+export const update = (obj) => {
+  return {
+    type: UPDATE,
+    ...obj
   }
 }
 
@@ -273,7 +286,6 @@ export const dbMetaEpic = (some$, store) =>
               store.dispatch(updateSettings(settings))
             })
         })
-        .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))
         // Server security settings
         .mergeMap(() => {
           return getServerConfig(['dbms.security'])
@@ -287,6 +299,19 @@ export const dbMetaEpic = (some$, store) =>
               store.dispatch(setAuthEnabled(authEnabled))
             })
         })
+        // Cluster role
+        .mergeMap(() =>
+          Rx.Observable
+            .fromPromise(bolt.directTransaction('CALL dbms.cluster.role() YIELD role'))
+            .catch((e) => Rx.Observable.of(null))
+            .do((res) => {
+              if (!res) return Rx.Observable.of(null)
+              const role = res.records[0].get(0)
+              store.dispatch(update({ role }))
+              return Rx.Observable.of(null)
+            })
+        )
+
         .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))
         .mapTo({ type: 'NOOP' })
     })

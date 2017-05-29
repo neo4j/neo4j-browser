@@ -186,4 +186,19 @@ describe('updating metadata', () => {
     // Then
     expect(nextState).toMatchSnapshot()
   })
+
+  test('can update meta values with UPDATE', () => {
+    // Given
+    const initState = {
+      myKey: 'val',
+      noKey: true
+    }
+    const action = { type: meta.UPDATE, myKey: 'yo', secondKey: true }
+
+    // When
+    const nextState = reducer(initState, action)
+
+    // Then
+    expect(nextState).toMatchSnapshot()
+  })
 })

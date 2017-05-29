@@ -20,7 +20,7 @@
 
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { getVersion, getEdition, getDbName, getStoreSize } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion, getEdition, getDbName, getStoreSize, getClusterRole } from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { toHumanReadableBytes } from 'services/utils'
 
@@ -28,13 +28,18 @@ import Render from 'browser-components/Render'
 import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
 import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst, Link} from './styled'
 
-export const DatabaseKernelInfo = ({version, edition, dbName, storeSize, onItemClick}) => {
+export const DatabaseKernelInfo = ({role, version, edition, dbName, storeSize, onItemClick}) => {
   return (
     <DrawerSection className='database-kernel-info'>
       <DrawerSubHeader>Database</DrawerSubHeader>
       <DrawerSectionBody>
         <StyledTable>
           <tbody>
+            <Render if={role}>
+              <tr>
+                <StyledKey>Cluster role: </StyledKey><StyledValue>{role}</StyledValue>
+              </tr>
+            </Render>
             <Render if={version}>
               <tr>
                 <StyledKey>Version: </StyledKey><StyledValue>{version}</StyledValue>
@@ -73,7 +78,8 @@ const mapStateToProps = (store) => {
     version: getVersion(store),
     edition: getEdition(store),
     dbName: getDbName(store),
-    storeSize: getStoreSize(store)
+    storeSize: getStoreSize(store),
+    role: getClusterRole(store)
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
