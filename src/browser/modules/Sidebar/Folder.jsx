@@ -30,7 +30,7 @@ import {
 import {Component} from 'preact'
 import {CollapseMenuIcon, ExpandMenuIcon} from 'browser-components/icons/Icons'
 import {DropTarget} from 'react-dnd'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import ItemTypes from './DragItemTypes'
 
 class Folder extends Component {
@@ -66,23 +66,23 @@ class Folder extends Component {
       <div>
         <StyledList>
           <StyledListHeaderItem>
-            <Visible if={!this.state.editing}>
+            <Render if={!this.state.editing}>
               <span onClick={() => this.setState({active: !this.state.active})}>{this.props.folder.name}</span>
-            </Visible>
-            <Visible if={this.state.editing}>
+            </Render>
+            <Render if={this.state.editing}>
               <EditFolderInput type='text' onChange={this.onFolderNameChanged.bind(this)}
                 onBlur={() => this.setState({editing: false})}
                 value={this.props.folder.name} innerRef={this.folderNameInputSet.bind(this)} />
-            </Visible>
+            </Render>
             <FolderButtonContainer>
               <FoldersButton onClick={() => this.setState({active: !this.state.active})}>{icon}</FoldersButton>
-              <Visible if={!this.props.folder.isStatic}>
+              <Render if={!this.props.folder.isStatic}>
                 <EditFolderButton editClick={() => {
                   this.setState({editing: true})
                   return false
                 }
                 } />
-              </Visible>&nbsp;
+              </Render>&nbsp;
               <DeleteFavButton id={this.props.folder.id} removeClick={this.props.removeClick}
                 isStatic={this.props.folder.isStatic} />
             </FolderButtonContainer>

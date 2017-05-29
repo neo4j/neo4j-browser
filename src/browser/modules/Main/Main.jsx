@@ -21,7 +21,7 @@
 import { DISCONNECTED_STATE, PENDING_STATE } from 'shared/modules/connections/connectionsDuck'
 import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import ClickToCode from '../ClickToCode'
 import { StyledMain, WarningBanner, ErrorBanner, NotAuthedBanner, StyledCodeBlockAuthBar, StyledCodeBlockErrorBar } from './styled'
 import SyncReminderBanner from './SyncReminderBanner'
@@ -30,7 +30,7 @@ const Main = (props) => {
   return (
     <StyledMain>
       <Editor />
-      <Visible if={props.showUnknownCommandBanner}>
+      <Render if={props.showUnknownCommandBanner}>
         <ErrorBanner>
           Type&nbsp;
           <ClickToCode CodeComponent={StyledCodeBlockErrorBar}>
@@ -38,13 +38,13 @@ const Main = (props) => {
           </ClickToCode>&nbsp;
           for a list of available commands.
         </ErrorBanner>
-      </Visible>
-      <Visible if={props.errorMessage}>
+      </Render>
+      <Render if={props.errorMessage}>
         <ErrorBanner>
           {props.errorMessage}
         </ErrorBanner>
-      </Visible>
-      <Visible if={props.connectionState === DISCONNECTED_STATE}>
+      </Render>
+      <Render if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner>
           Database access not available. Please use&nbsp;
           <ClickToCode CodeComponent={StyledCodeBlockAuthBar}>
@@ -52,12 +52,12 @@ const Main = (props) => {
           </ClickToCode>&nbsp;
           to establish connection. There's a graph waiting for you.
         </NotAuthedBanner>
-      </Visible>
-      <Visible if={props.connectionState === PENDING_STATE}>
+      </Render>
+      <Render if={props.connectionState === PENDING_STATE}>
         <WarningBanner>
           Connection to server lost. Reconnecting...
         </WarningBanner>
-      </Visible>
+      </Render>
       <SyncReminderBanner />
       <Stream />
     </StyledMain>

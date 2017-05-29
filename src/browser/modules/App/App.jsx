@@ -36,7 +36,7 @@ import Sidebar from '../Sidebar/Sidebar'
 import UserInteraction from '../UserInteraction'
 import DocTitle from '../DocTitle'
 import Intercom from '../Intercom'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 
 class App extends Component {
   componentDidMount () {
@@ -64,9 +64,9 @@ class App extends Component {
         <StyledWrapper>
           <DocTitle titleString={this.props.titleString} />
           <UserInteraction />
-          <Visible if={loadUdc}>
+          <Render if={loadUdc}>
             <Intercom appID='lq70afwx' />
-          </Visible>
+          </Render>
           <StyledApp>
             <StyledBody>
               <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />

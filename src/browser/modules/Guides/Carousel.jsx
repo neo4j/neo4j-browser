@@ -20,7 +20,7 @@
 
 import { Component } from 'preact'
 import { CarouselButton } from 'browser-components/buttons'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import CarouselSlidePicker from './CarouselSlidePicker'
 import {
   StyledCarousel,
@@ -57,12 +57,12 @@ export default class Carousel extends Component {
     return (
       <StyledCarousel>
         <StyledCarouselButtonContainer>
-          <Visible if={this.state.visibleSlide !== 0}>
+          <Render if={this.state.visibleSlide !== 0}>
             <StyledCarouselLeft><CarouselButton onClick={this.prev.bind(this)}>{'‹'}</CarouselButton></StyledCarouselLeft>
-          </Visible>
-          <Visible if={this.state.visibleSlide !== (this.slides.length - 1)}>
+          </Render>
+          <Render if={this.state.visibleSlide !== (this.slides.length - 1)}>
             <StyledCarouselRight><CarouselButton onClick={this.next.bind(this)}>{'›'}</CarouselButton></StyledCarouselRight>
-          </Visible>
+          </Render>
         </StyledCarouselButtonContainer>
         <SlideContainer>{this.getSlide(this.state.visibleSlide)}</SlideContainer>
         <SlideContainer>

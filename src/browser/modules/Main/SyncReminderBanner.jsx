@@ -22,7 +22,7 @@ import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { SyncDisconnectedBanner, SyncSignInBarButton, StyledCancelLink, StyledSyncReminderSpan, StyledSyncReminderButtonContainer } from './styled'
 import { CONNECTED_STATE, getConnectionState } from 'shared/modules/connections/connectionsDuck'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import BrowserSyncAuthWindow from '../Sync/BrowserSyncAuthWindow'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import SyncSignInManager from 'shared/modules/sync/SyncSignInManager'
@@ -51,7 +51,7 @@ class SyncReminderBanner extends Component {
     const visible = dbConnected && syncDisconnected && syncConsentGiven && this.state.status === 'UP'
 
     return (
-      <Visible if={visible}>
+      <Render if={visible}>
         <SyncDisconnectedBanner height='100px'>
           <StyledSyncReminderSpan>You are currently not signed into Neo4j Browser Sync. Connect through a simple social sign-in to get started.</StyledSyncReminderSpan>
           <StyledSyncReminderButtonContainer>
@@ -59,7 +59,7 @@ class SyncReminderBanner extends Component {
             <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
           </StyledSyncReminderButtonContainer>
         </SyncDisconnectedBanner>
-      </Visible>
+      </Render>
     )
   }
 }

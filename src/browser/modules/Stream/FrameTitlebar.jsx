@@ -27,7 +27,7 @@ import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
 import { removeComments } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
 import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon, DownloadIcon } from 'browser-components/icons/Icons'
 import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection, DropdownList, DropdownContent, DropdownButton, DropdownItem } from './styled'
@@ -78,7 +78,7 @@ class FrameTitlebar extends Component {
           </DottedLineHover>
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
-          <Visible if={frame.type === 'cypher' && props.exportData}>
+          <Render if={frame.type === 'cypher' && props.exportData}>
             <DropdownButton>
               <DownloadIcon />
               <DropdownList>
@@ -88,18 +88,18 @@ class FrameTitlebar extends Component {
                 </DropdownContent>
               </DropdownList>
             </DropdownButton>
-          </Visible>
+          </Render>
           <FrameButton title='Pin at top' onClick={() => {
             props.togglePin()
             props.togglePinning(frame.id, frame.isPinned)
           }} pressed={props.pinned}><PinIcon /></FrameButton>
-          <Visible if={['cypher', 'play', 'play-remote'].indexOf(frame.type) > -1}>
+          <Render if={['cypher', 'play', 'play-remote'].indexOf(frame.type) > -1}>
             <FrameButton title={(props.fullscreen) ? 'Close fullscreen' : 'Fullscreen'} onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
-          </Visible>
+          </Render>
           <FrameButton title={(props.collapse) ? 'Expand' : 'Collapse'}onClick={() => props.collapseToggle()}>{expandCollapseIcon}</FrameButton>
-          <Visible if={frame.type === 'cypher'}>
+          <Render if={frame.type === 'cypher'}>
             <FrameButton title='Rerun' onClick={() => props.onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
-          </Visible>
+          </Render>
           <FrameButton title='Close' onClick={() => props.onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
         </FrameTitlebarButtonSection>
       </StyledFrameTitleBar>

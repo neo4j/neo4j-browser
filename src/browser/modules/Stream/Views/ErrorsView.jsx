@@ -22,7 +22,7 @@ import { withBus } from 'preact-suber'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
 import { isUnknownProcedureError } from 'services/cypherErrorsHelper'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import { PlayIcon } from 'browser-components/icons/Icons'
 import {
   StyledCypherErrorMessage,
@@ -50,11 +50,11 @@ const ErrorsView = ({error, style, bus}) => {
         <StyledDiv>
           <StyledPreformattedArea>{error.message}</StyledPreformattedArea>
         </StyledDiv>
-        <Visible if={isUnknownProcedureError(error)}>
+        <Render if={isUnknownProcedureError(error)}>
           <StyledLinkContainer>
             <StyledLink onClick={() => onItemClick(bus)}><PlayIcon />&nbsp;List available procedures</StyledLink>
           </StyledLinkContainer>
-        </Visible>
+        </Render>
       </StyledHelpContent>
     </StyledHelpFrame>)
 }
