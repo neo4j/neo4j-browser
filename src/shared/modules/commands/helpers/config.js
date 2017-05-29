@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getSettings, update } from 'shared/modules/settings/settingsDuck'
+import { getSettings, update, replace } from 'shared/modules/settings/settingsDuck'
 import { extractCommandParameters, splitStringOnFirst } from 'services/commandUtils'
 import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
 import { hostIsAllowed } from 'services/utils'
