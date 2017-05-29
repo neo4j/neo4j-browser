@@ -317,6 +317,23 @@ describe('utils', () => {
       expect(utils.stringifyMod()(t, modFn)).toEqual(expects[index])
     })
   })
+  test('parseTimeMillis correctly parses human readable units correctly', () => {
+    // Given
+    const times = [
+      { test: '100', expect: 100 * 1000 },
+      { test: 100, expect: 100 * 1000 },
+      { test: '100ms', expect: 100 },
+      { test: '100s', expect: 100 * 1000 },
+      { test: '100m', expect: 100 * 60 * 1000 },
+      { test: '100x', expect: 0 },
+      { test: 'x', expect: 0 }
+    ]
+
+    // When & Then
+    times.forEach((time) => {
+      expect(utils.parseTimeMillis(time.test)).toEqual(time.expect)
+    })
+  })
   describe('ecsapeCypherMetaItem', () => {
     // Given
     const items = [

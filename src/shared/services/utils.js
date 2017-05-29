@@ -179,6 +179,25 @@ export const canUseDOM = () => !!(
 
 export const ecsapeCypherMetaItem = (str) => /^[A-Za-z][A-Za-z0-9_]*$/.test(str) ? str : '`' + str.replace(/`/g, '``') + '`'
 
+export const parseTimeMillis = (timeWithOrWithoutUnit) => {
+  timeWithOrWithoutUnit += '' // cast to string
+  const readUnit = timeWithOrWithoutUnit.match(/\D+/)
+  const value = parseInt(timeWithOrWithoutUnit)
+
+  const unit = (readUnit === undefined || readUnit === null) ? 's' : readUnit[0] // Assume seconds
+
+  switch (unit) {
+    case 'ms':
+      return value
+    case 's':
+      return value * 1000
+    case 'm':
+      return value * 60 * 1000
+    default:
+      return 0
+  }
+}
+
 export const stringifyMod = () => {
   const toString = Object.prototype.toString
   const isArray = Array.isArray || function (a) { return toString.call(a) === '[object Array]' }
