@@ -23,18 +23,18 @@ import classNames from 'classnames'
 import styles from './style_meta.css'
 import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
 import { StyledLabel, StyledRelationship, StyledProperty, StyledShowMoreContainer, StyledShowMoreLink } from './styled'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 
 const ShowMore = ({ total, shown, moreStep, onMore }) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown
   return (
-    <Visible if={shown < total}>
+    <Render if={shown < total}>
       <StyledShowMoreContainer>
         <StyledShowMoreLink onClick={() => onMore(numMore)}>Show {numMore} more</StyledShowMoreLink>
         &nbsp;|&nbsp;
         <StyledShowMoreLink onClick={() => onMore(total)}>Show all</StyledShowMoreLink>
       </StyledShowMoreContainer>
-    </Visible>
+    </Render>
   )
 }
 

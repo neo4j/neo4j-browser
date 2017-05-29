@@ -20,7 +20,7 @@
 
 import { Component } from 'preact'
 import FrameTitlebar from './FrameTitlebar'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import { StyledFrame, StyledFrameBody, StyledFrameContents, StyledFrameStatusbar, StyledFrameMainSection } from './styled'
 
 class FrameTemplate extends Component {
@@ -70,9 +70,9 @@ class FrameTemplate extends Component {
             <StyledFrameContents fullscreen={this.state.fullscreen} ref={this.setFrameContentElement.bind(this)}>
               {this.props.contents}
             </StyledFrameContents>
-            <Visible if={this.props.statusbar}>
+            <Render if={this.props.statusbar}>
               <StyledFrameStatusbar fullscreen={this.state.fullscreen}>{this.props.statusbar}</StyledFrameStatusbar>
-            </Visible>
+            </Render>
           </StyledFrameMainSection>
         </StyledFrameBody>
       </StyledFrame>

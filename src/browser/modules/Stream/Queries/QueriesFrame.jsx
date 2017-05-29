@@ -31,7 +31,7 @@ import {ConfirmationButton} from 'browser-components/buttons/ConfirmationButton'
 import {StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code, StyledStatusBar, AutoRefreshToogle, RefreshQueriesButton, AutoRefreshSpan} from './styled'
 import {EnterpriseOnlyFrame} from 'browser-components/EditionView'
 import {RefreshIcon} from 'browser-components/icons/Icons'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import FrameError from '../FrameError'
 
 export class QueriesFrame extends Component {
@@ -207,10 +207,10 @@ export class QueriesFrame extends Component {
       frameContents = this.constructViewFromQueryList(this.state.queries)
       statusbar = (
         <div>
-          <Visible if={this.state.errors}>
+          <Render if={this.state.errors}>
             <FrameError message={(this.state.errors || []).join(', ')} />
-          </Visible>
-          <Visible if={this.state.success}>
+          </Render>
+          <Render if={this.state.success}>
             <StyledStatusBar>
               {this.state.success}
               <RefreshQueriesButton onClick={() => this.getRunningQueries()}><RefreshIcon /></RefreshQueriesButton>
@@ -218,7 +218,7 @@ export class QueriesFrame extends Component {
                 <AutoRefreshToogle checked={this.state.autoRefresh} onClick={(e) => this.setAutoRefresh(e.target.checked)} />
               </AutoRefreshSpan>
             </StyledStatusBar>
-          </Visible>
+          </Render>
         </div>
       )
     } else {

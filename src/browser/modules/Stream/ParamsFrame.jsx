@@ -18,17 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import FrameTemplate from './FrameTemplate'
 
 const ParamsFrame = ({frame, params}) => {
   return (
     <FrameTemplate
       header={frame}
-      contents={<Visible if={frame.success !== false}><pre>{JSON.stringify(frame.params, null, 2)}</pre></Visible>}
+      contents={<Render if={frame.success !== false}><pre>{JSON.stringify(frame.params, null, 2)}</pre></Render>}
     >
-      <Visible if={frame.success}><span>Successfully set your parameters</span></Visible>
-      <Visible if={frame.success === false}><span>Something went wrong. Read help pages.</span></Visible>
+      <Render if={frame.success}><span>Successfully set your parameters</span></Render>
+      <Render if={frame.success === false}><span>Something went wrong. Read help pages.</span></Render>
     </FrameTemplate>
   )
 }

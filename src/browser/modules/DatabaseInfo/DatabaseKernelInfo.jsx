@@ -23,7 +23,7 @@ import { withBus } from 'preact-suber'
 import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
 import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst, Link} from './styled'
 
@@ -34,16 +34,16 @@ export const DatabaseKernelInfo = ({version, edition, onItemClick}) => {
       <DrawerSectionBody>
         <StyledTable>
           <tbody>
-            <Visible if={version}>
+            <Render if={version}>
               <tr>
                 <StyledKey>Version: </StyledKey><StyledValue>{version}</StyledValue>
               </tr>
-            </Visible>
-            <Visible if={edition}>
+            </Render>
+            <Render if={edition}>
               <tr>
                 <StyledKey>Edition: </StyledKey><StyledValueUCFirst>{edition}</StyledValueUCFirst>
               </tr>
-            </Visible>
+            </Render>
             <tr>
               <StyledKey>Information: </StyledKey><StyledValue><Link onClick={() => onItemClick(':sysinfo')}>:sysinfo</Link></StyledValue>
             </tr>

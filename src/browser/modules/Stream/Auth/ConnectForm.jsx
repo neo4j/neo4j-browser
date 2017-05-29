@@ -19,7 +19,7 @@
  */
 
 import { Component } from 'preact'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import {FormButton} from 'browser-components/buttons'
 import {
   StyledConnectionForm,
@@ -62,12 +62,12 @@ export default class ConnectForm extends Component {
           <StyledConnectionLabel>Password</StyledConnectionLabel>
           <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 3)} onChange={this.props.onPasswordChange} value={this.props.password} type='password' />
         </StyledConnectionFormEntry>
-        <Visible if={!this.state.connecting}>
+        <Render if={!this.state.connecting}>
           <FormButton onClick={this.onConnectClick.bind(this)}>Connect</FormButton>
-        </Visible>
-        <Visible if={this.state.connecting}>
+        </Render>
+        <Render if={this.state.connecting}>
           Connecting...
-        </Visible>
+        </Render>
       </StyledConnectionForm>
     )
   }

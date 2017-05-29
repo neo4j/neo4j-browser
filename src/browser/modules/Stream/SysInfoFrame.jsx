@@ -29,7 +29,7 @@ import { SysInfoTableContainer, SysInfoTable, SysInfoTableEntry } from 'browser-
 import bolt from 'services/bolt/bolt'
 import { itemIntToString } from 'services/bolt/boltMappings'
 import { toHumanReadableBytes } from 'services/utils'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
@@ -69,7 +69,7 @@ export class SysInfoFrame extends Component {
         const arrayOfValue = [
           ccRecord.role,
           ccRecord.addresses.join(', '),
-          <Visible if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Visible>
+          <Render if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Render>
         ]
         return <SysInfoTableEntry values={arrayOfValue} />
       })
@@ -201,21 +201,21 @@ export class SysInfoFrame extends Component {
         <SysInfoTable header='Transactions'>
           {this.state.transactions || null}
         </SysInfoTable>
-        <Visible if={this.isCC()}>
+        <Render if={this.isCC()}>
           <SysInfoTable header='Causal Cluster Members' colspan={this.state.cc.length - 1}>
             {this.state.cc || null}
           </SysInfoTable>
-        </Visible>
-        <Visible if={this.state.ha}>
+        </Render>
+        <Render if={this.state.ha}>
           <SysInfoTable header='High Availability'>
             {this.state.ha || null}
           </SysInfoTable>
-        </Visible>
-        <Visible if={this.state.haInstances.length}>
+        </Render>
+        <Render if={this.state.haInstances.length}>
           <SysInfoTable header='Cluster' colspan={this.state.haInstances.length}>
             {this.state.haInstances || null}
           </SysInfoTable>
-        </Visible>
+        </Render>
       </SysInfoTableContainer>
     )
     return (

@@ -24,7 +24,7 @@ import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import { DrawerSubHeader, DrawerSection, DrawerSectionBody } from 'browser-components/drawer'
 import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
@@ -75,11 +75,11 @@ export class UserDetails extends Component {
                 <tr>
                   <StyledKey>Roles:</StyledKey><StyledValue>{mappedRoles}</StyledValue>
                 </tr>
-                <Visible if={hasAdminRole}>
+                <Render if={hasAdminRole}>
                   <tr>
                     <StyledKey className='user-list-button'>Admin:</StyledKey><Link onClick={() => this.props.onItemClick(':server user add')}>:server user add</Link>
                   </tr>
-                </Visible>
+                </Render>
               </tbody>
             </StyledTable>
           </DrawerSectionBody>

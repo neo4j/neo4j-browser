@@ -29,7 +29,7 @@ import {
 } from './styled'
 import ConnectedView from './ConnectedView'
 import {H3} from 'browser-components/headers'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import { getActiveConnectionData, getActiveConnection } from 'shared/modules/connections/connectionsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
@@ -49,18 +49,18 @@ class ServerStatusFrame extends Component {
               </span>
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>
-              <Visible if={!activeConnectionData}>
+              <Render if={!activeConnectionData}>
                 <StyledConnectionBody>You are not connected to the server.
                 </StyledConnectionBody>
-              </Visible>
-              <Visible if={activeConnectionData && activeConnectionData.authEnabled}>
+              </Render>
+              <Render if={activeConnectionData && activeConnectionData.authEnabled}>
                 <ConnectedView username={activeConnectionData && activeConnectionData.username}
                   showHost={false} storeCredentials={storeCredentials} />
-              </Visible>
-              <Visible if={activeConnectionData && !activeConnectionData.authEnabled}>
+              </Render>
+              <Render if={activeConnectionData && !activeConnectionData.authEnabled}>
                 <StyledConnectionBody>You have a working connection with the Neo4j database and server auth is disabled.
                 </StyledConnectionBody>
-              </Visible>
+              </Render>
             </StyledConnectionBodyContainer>
           </StyledConnectionFrame>
         }

@@ -27,7 +27,7 @@ import * as folder from 'shared/modules/favorites/foldersDuck'
 import {getSettings} from 'shared/modules/settings/settingsDuck'
 import {executeCommand} from 'shared/modules/commands/commandsDuck'
 
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import Favorite from './Favorite'
 import Folder from './Folder'
 import FileDrop from './FileDrop'
@@ -134,12 +134,12 @@ class Favorites extends Component {
             {ListOfFavorites}
             {ListOfFolders}
           </DrawerSection>
-          <Visible if={this.props.showSampleScripts}>
+          <Render if={this.props.showSampleScripts}>
             <DrawerSection>
               <DrawerSubHeader>Sample Scripts</DrawerSubHeader>
               {ListOfSampleFolders}
             </DrawerSection>
-          </Visible>
+          </Render>
           <DrawerSection>
             <DrawerSubHeader>Import</DrawerSubHeader>
             <FileDrop />

@@ -23,7 +23,7 @@ import { Component } from 'preact'
 import ConnectionForm from './ConnectionForm'
 import FrameTemplate from '../FrameTemplate'
 import FrameError from '../FrameError'
-import Visible from 'browser-components/Visible'
+import Render from 'browser-components/Render'
 import {H3} from 'browser-components/headers'
 import {
   StyledConnectionFrame,
@@ -72,21 +72,21 @@ export class ChangePasswordFrame extends Component {
       <StyledConnectionFrame>
         <StyledConnectionAside>
           <H3>Password change</H3>
-          <Visible if={!this.state.success}>
+          <Render if={!this.state.success}>
             Enter your current password and the new twice to change your password.
-          </Visible>
-          <Visible if={this.state.success}>
+          </Render>
+          <Render if={this.state.success}>
             Password change successful
-          </Visible>
+          </Render>
         </StyledConnectionAside>
 
         <ConnectionForm {...this.props} formKeyHandler={this.formKeyHandler} error={this.error.bind(this)} oldPassword={this.state.password} onSuccess={this.onSuccess.bind(this)} forcePasswordChange>
-          <Visible if={!this.state.success}>
+          <Render if={!this.state.success}>
             <StyledConnectionFormEntry>
               <StyledConnectionLabel>Existing password</StyledConnectionLabel>
               <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 1)} type='password' value={this.state.password} onChange={this.onPasswordChange.bind(this)} />
             </StyledConnectionFormEntry>
-          </Visible>
+          </Render>
         </ConnectionForm>
       </StyledConnectionFrame>
     )
