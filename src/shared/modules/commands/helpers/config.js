@@ -35,7 +35,7 @@ export function handleUpdateConfigCommand (action, cmdchar, put, store) {
   const strippedCmd = action.cmd.substr(cmdchar.length)
   const parts = splitStringOnFirst(strippedCmd, ' ')
   const p = new Promise((resolve, reject) => {
-    if (parts[1] === undefined) return resolve(true) // Nothing to do
+    if (parts[1] === undefined || parts[1] === '') return resolve(true) // Nothing to do
     if (!isValidURL(parts[1].trim())) { // Not an URL. Parse as command line params
       const params = extractCommandParameters(`config`, strippedCmd)
       if (!params) return reject(new Error('Could not parse input. Usage: `:config x: 2`.'))
@@ -50,7 +50,7 @@ export function handleUpdateConfigCommand (action, cmdchar, put, store) {
     }
     getJSON(url)
       .then((res) => {
-        put(update(res))
+        put(replace(res))
         resolve(res)
       })
       .catch((e) => {

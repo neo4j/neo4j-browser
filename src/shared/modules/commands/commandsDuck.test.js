@@ -206,6 +206,32 @@ describe('commandsDuck', () => {
       // Then
       // See above
     })
+
+    test('does the right thing for :config', (done) => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'config'
+      const cmdString = cmd
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmdString, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+
     test('does the right thing for list queries', (done) => {
       const cmd = store.getState().settings.cmdchar + 'queries'
       const id = 1
