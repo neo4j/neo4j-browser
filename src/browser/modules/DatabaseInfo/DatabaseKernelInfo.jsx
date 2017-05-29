@@ -20,14 +20,15 @@
 
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion, getEdition, getDbName, getStoreSize } from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { toHumanReadableBytes } from 'services/utils'
 
 import Render from 'browser-components/Render'
 import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
 import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst, Link} from './styled'
 
-export const DatabaseKernelInfo = ({version, edition, onItemClick}) => {
+export const DatabaseKernelInfo = ({version, edition, dbName, storeSize, onItemClick}) => {
   return (
     <DrawerSection className='database-kernel-info'>
       <DrawerSubHeader>Database</DrawerSubHeader>
@@ -42,6 +43,16 @@ export const DatabaseKernelInfo = ({version, edition, onItemClick}) => {
             <Render if={edition}>
               <tr>
                 <StyledKey>Edition: </StyledKey><StyledValueUCFirst>{edition}</StyledValueUCFirst>
+              </tr>
+            </Render>
+            <Render if={dbName}>
+              <tr>
+                <StyledKey>Name: </StyledKey><StyledValue>{dbName}</StyledValue>
+              </tr>
+            </Render>
+            <Render if={storeSize}>
+              <tr>
+                <StyledKey>Size: </StyledKey><StyledValue>{toHumanReadableBytes(storeSize)}</StyledValue>
               </tr>
             </Render>
             <tr>
@@ -60,7 +71,9 @@ export const DatabaseKernelInfo = ({version, edition, onItemClick}) => {
 const mapStateToProps = (store) => {
   return {
     version: getVersion(store),
-    edition: getEdition(store)
+    edition: getEdition(store),
+    dbName: getDbName(store),
+    storeSize: getStoreSize(store)
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {

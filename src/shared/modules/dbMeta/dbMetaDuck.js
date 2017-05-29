@@ -63,6 +63,8 @@ export function getMetaInContext (state, context) {
 
 export const getVersion = (state) => state[NAME].server.version
 export const getEdition = (state) => state[NAME].server.edition
+export const getDbName = (state) => state[NAME].server.dbName
+export const getStoreSize = (state) => state[NAME].server.storeSize
 export const isEnterprise = (state) => state[NAME].server.edition === 'enterprise'
 export const isBeta = (state) => /-/.test(state[NAME].server.version)
 export const getStoreId = (state) => state[NAME].server.storeId
@@ -136,7 +138,9 @@ const initialState = {
   server: {
     version: null,
     edition: null,
-    storeId: null
+    storeId: null,
+    dbName: null,
+    storeSize: null
   },
   settings: {
     'browser.allow_outgoing_connections': false,
@@ -154,7 +158,8 @@ export default function meta (state = initialState, action) {
     case UPDATE_META:
       return {...state, ...updateMetaForContext(state, action.meta, action.context)}
     case UPDATE_SERVER:
-      return {...state, server: { version: action.version, edition: action.edition, storeId: action.storeId }}
+      const { version, edition, storeId, dbName, storeSize } = action
+      return {...state, server: { version, edition, storeId, dbName, storeSize }}
     case UPDATE_SETTINGS:
       return {...state, settings: { ...action.settings }}
     case CLEAR:
@@ -228,22 +233,28 @@ export const dbMetaEpic = (some$, store) =>
             .fromPromise(getJmxValues([
               ['Kernel', 'KernelVersion'],
               ['Kernel', 'StoreId'],
-              ['Configuration', 'unsupported.dbms.edition']
+              ['Kernel', 'DatabaseName'],
+              ['Configuration', 'unsupported.dbms.edition'],
+              ['Store file sizes', 'TotalStoreSize']
             ]))
             .catch((e) => Rx.Observable.of(null))
         })
         .do((res) => {
           if (!res) return
-          const [ kvObj, storeObj, edObj ] = res
+          const [ kvObj, storeObj, nameObj, edObj, sizeObj ] = res
           const versionMatch = kvObj.KernelVersion.match(/version:\s([^,$]+)/)
           const version = (versionMatch !== null && versionMatch.length > 1) ? versionMatch[1] : null
           const edition = edObj['unsupported.dbms.edition']
           const storeId = storeObj['StoreId']
+          const dbName = nameObj['DatabaseName']
+          const storeSize = sizeObj['TotalStoreSize']
           store.dispatch({
             type: UPDATE_SERVER,
             version,
             edition,
-            storeId
+            storeId,
+            dbName,
+            storeSize
           })
         })
         // Server config for browser
