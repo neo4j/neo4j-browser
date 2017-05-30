@@ -121,4 +121,3 @@ export const favoritesToLoad = (action, store) => {
     return { favorites: null, syncFavorites: false, loadFavorites: false }
   }
 }
-

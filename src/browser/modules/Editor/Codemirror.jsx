@@ -36,7 +36,6 @@ function normalizeLineEndings (str) {
 }
 
 export default class CodeMirror extends Component {
-
   constructor (props) {
     super(props)
     this.state = {

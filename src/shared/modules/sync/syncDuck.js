@@ -199,4 +199,3 @@ export const loadFoldersFromSyncEpic = (action$, store) =>
       }
     })
     .mapTo({type: 'NOOP'})
-

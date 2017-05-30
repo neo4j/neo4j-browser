@@ -58,4 +58,3 @@ export function isValidURL (str) {
   '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
   return pattern.test(str)
 }
-

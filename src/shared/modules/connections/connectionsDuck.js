@@ -391,7 +391,6 @@ export const retainCredentialsSettingsEpic = (action$, store) => {
         memoryPassword = ''
         return store.dispatch(updateConnection(connection))
       }
-      return
     })
     .mapTo({ type: 'NOOP' })
 }

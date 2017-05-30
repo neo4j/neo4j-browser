@@ -45,7 +45,6 @@ const mapFavorites = (favorites, props, isChild, moveAction) => {
 }
 
 class Favorites extends Component {
-
   constructor (props) {
     super(props)
     this.state = {...this.props}

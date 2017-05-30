@@ -49,5 +49,4 @@ export class ConfirmationButton extends Component {
       return (<button className={styles.icon} onClick={() => this.setState({ requested: true })}>{this.requestIcon}</button>)
     }
   }
-
 }
