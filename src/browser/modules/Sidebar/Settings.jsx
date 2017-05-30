@@ -33,7 +33,7 @@ const visualSettings =
           theme: {
             displayName: 'Theme',
             type: 'radio',
-            options: ['normal', 'outline']
+            options: ['normal', 'outline', 'dark']
           }
         },
         {

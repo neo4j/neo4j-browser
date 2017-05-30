@@ -59,7 +59,11 @@ const BaseEditorWrapper = styled.div`
   padding: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
   font-family: Monaco,"Courier New",Terminal,monospace;
-  min-Height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px
+  min-Height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
+  .CodeMirror {
+    background-color: ${props => props.theme.editorBackground} !important;
+    color: ${props => props.theme.editorCommandColor};
+  }
 `
 
 export const EditorWrapper = styled(BaseEditorWrapper)`

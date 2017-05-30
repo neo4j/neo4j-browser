@@ -49,10 +49,11 @@ export const StyledBody = styled.div`
 
 export const StyledMainWrapper = styled.div`
   flex: auto;
-  background-color: #D2D5DA;
   overflow: auto;
   padding: 0;
   z-index: 1;
   height: auto;
   width: 0;
+  background-color: ${props => props.theme.primaryBackground};
+  color: ${props => props.theme.primaryText};
 `

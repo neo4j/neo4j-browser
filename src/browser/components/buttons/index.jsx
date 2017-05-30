@@ -183,13 +183,15 @@ const StyledCypherFrameButton = styled.li`
   text-align: center;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-    color: ${props => props.theme.editorBarBackground};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
 `
 const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
   background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-  color: ${props => props.theme.editorBarBackground};
+  color: ${props => props.theme.secondaryButtonTextHover};
+  fill: ${props => props.theme.secondaryButtonTextHover};
 `
 export const FrameButton = (props) => {
   const {pressed, children, ...rest} = props
@@ -199,7 +201,6 @@ const StyledFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   border-left: ${props => props.theme.inFrameBorder};
-  border-right: ${props => props.theme.inFrameBorder};
   height: ${dim.frameTitlebarHeight}px;
   width: 41px;
   cursor: pointer;
@@ -209,15 +210,15 @@ const StyledFrameButton = styled.li`
   display: inline-block;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-    color: ${props => props.theme.secondaryBackground};
-    fill: ${props => props.theme.secondaryBackground};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
 `
 const StyledFrameButtonPressed = styled(StyledFrameButton)`
   background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-  color: ${props => props.theme.secondaryBackground};
-  fill: ${props => props.theme.secondaryBackground};
+  color: ${props => props.theme.secondaryButtonTextHover};
+  fill: ${props => props.theme.secondaryButtonTextHover};
 `
 export const DefaultA = styled.a`
   color: ${props => props.theme.secondaryButtonText};
