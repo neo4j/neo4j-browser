@@ -1,19 +1,20 @@
 {
-  "exclude": [
-    "node_modules"
+  "include": [
+    "src/**/*"
   ],
   "compilerOptions": {
     "target": "ES6",
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
+    "baseUrl": "src/",
+    "checkJs": false,
     "paths": {
-      "src-root/*": ["./src/*"],
-      "services/*": ["./src/shared/services/*"],
-      "browser-services/*": ["./src/browser/services/*"],
-      "shared/*": ["./src/shared/*"],
-      "browser-components/*": ["./src/browser/components/*"],
-      "browser/*": ["./src/browser/*"],
-      "browser-styles/*": ["./src/browser/styles/*"]
+      "src-root/*": ["*"],
+      "services/*": ["shared/services/*"],
+      "browser-services/*": ["browser/services/*"],
+      "shared/*": ["shared/*"],
+      "browser-components/*": ["browser/components/*"],
+      "browser/*": ["browser/*"],
+      "browser-styles/*": ["browser/styles/*"]
     }
   }
 }
