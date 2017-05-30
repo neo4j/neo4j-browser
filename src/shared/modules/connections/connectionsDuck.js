@@ -343,16 +343,16 @@ export const connectionLostEpic = (action$, store) =>
       if (!connection) return Rx.Observable.of(1)
       return Rx.Observable.of(1).mergeMap(() => {
         return new Promise((resolve, reject) => {
-          bolt.directConnect(connection, {}, (e) => setTimeout(() => reject('Couldnt reconnect. Lost.'), 4000))
+          bolt.directConnect(connection, {}, (e) => setTimeout(() => reject(new Error('Couldnt reconnect. Lost.')), 4000))
             .then((s) => {
               bolt.closeConnection()
               bolt.openConnection(connection, {}, onLostConnection(store.dispatch))
               .then(() => {
                 store.dispatch(updateConnectionState(CONNECTED_STATE))
                 resolve()
-              }).catch((e) => reject('Error on connect'))
+              }).catch((e) => reject(new Error('Error on connect')))
             })
-            .catch((e) => setTimeout(() => reject('Couldnt reconnect.'), 4000))
+            .catch((e) => setTimeout(() => reject(new Error('Couldnt reconnect.')), 4000))
         })
       })
       .retry(5)

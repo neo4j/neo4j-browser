@@ -26,11 +26,11 @@ export const parseHttpVerbCommand = (input) => {
     try {
       [method, url, data] = [result[1], (result[2] || null), (result[3] || null)]
     } catch (e) {
-      reject('Unparseable http request')
+      reject(new Error('Unparseable http request'))
       return
     }
     if (!url) {
-      reject('Missing path')
+      reject(new Error('Missing path'))
       return
     }
     method = method.toLowerCase()
@@ -39,7 +39,7 @@ export const parseHttpVerbCommand = (input) => {
       try {
         JSON.parse(data.replace(/\n/g, ''))
       } catch (e) {
-        reject('Payload does not seem to be valid (JSON) data')
+        reject(new Error('Payload does not seem to be valid (JSON) data'))
         return
       }
     }

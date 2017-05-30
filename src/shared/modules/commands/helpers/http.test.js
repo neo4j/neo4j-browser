@@ -35,7 +35,7 @@ describe('HTTP verbs command', () => {
       done()
     })
       .catch((e) => {
-        expect(e).toEqual('Unparseable http request')
+        expect(e.message).toEqual('Unparseable http request')
         done()
       })
   })
@@ -52,7 +52,7 @@ describe('HTTP verbs command', () => {
       done()
     })
       .catch((e) => {
-        expect(e).toEqual('Missing path')
+        expect(e.message).toEqual('Missing path')
         done()
       })
   })
@@ -69,7 +69,7 @@ describe('HTTP verbs command', () => {
       done()
     })
       .catch((e) => {
-        expect(e).toEqual('Payload does not seem to be valid (JSON) data')
+        expect(e.message).toEqual('Payload does not seem to be valid (JSON) data')
         done()
       })
   })
