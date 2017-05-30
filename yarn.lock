@@ -2148,9 +2148,9 @@ eslint-config-standard-jsx@3.2.0:
   version "3.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-config-standard-jsx/-/eslint-config-standard-jsx-3.2.0.tgz#c240e26ed919a11a42aa4de8059472b38268d620"
 
-eslint-config-standard-jsx@^3.2.0:
-  version "3.3.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-config-standard-jsx/-/eslint-config-standard-jsx-3.3.0.tgz#cab0801a15a360bf63facb97ab22fbdd88d8a5e0"
+eslint-config-standard-jsx@^4.0.1:
+  version "4.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-config-standard-jsx/-/eslint-config-standard-jsx-4.0.1.tgz#cd4e463d0268e2d9e707f61f42f73f5b3333c642"
 
 eslint-config-standard@6.2.1, eslint-config-standard@^6.2.1:
   version "6.2.1"
