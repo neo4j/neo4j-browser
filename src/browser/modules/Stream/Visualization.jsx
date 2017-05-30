@@ -98,7 +98,7 @@ export class Visualization extends Component {
         {query: query},
         (response) => {
           if (!response.success) {
-            reject(new Error({nodes: [], rels: []}))
+            reject(new Error('Non successful response'))
           } else {
             let count = response.result.records.length > 0 ? parseInt(response.result.records[0].get('c').toString()) : 0
             const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)
@@ -121,7 +121,7 @@ export class Visualization extends Component {
         {query, params: {existingNodeIds, newNodeIds}},
         (response) => {
           if (!response.success) {
-            reject(new Error({nodes: [], rels: []}))
+            reject(new Error('Non successful response'))
           } else {
             resolve({...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)})
           }
