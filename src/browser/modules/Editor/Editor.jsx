@@ -182,7 +182,9 @@ export class Editor extends Component {
 
   setEditorValue (cmd) {
     this.codeMirror.setValue(cmd)
-    this.updateCode(cmd, () => this.focusEditor())
+    this.updateCode(cmd, undefined, () => {
+      this.focusEditor()
+    })
   }
 
   updateCode (newCode, change, cb = () => {
