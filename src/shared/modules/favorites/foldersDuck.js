@@ -21,6 +21,7 @@ import uuid from 'uuid'
 
 import {APP_START, USER_CLEAR} from 'shared/modules/app/appDuck'
 import {getBrowserName} from 'services/utils'
+import { folders } from './staticScripts'
 
 export const NAME = 'folders'
 export const LOAD_FOLDERS = 'folders/LOAD_FOLDERS'
@@ -30,8 +31,6 @@ export const REMOVE_FOLDER = 'folders/REMOVE_FOLDER'
 export const UPDATE_FOLDERS = 'folders/UPDATE_FOLDERS'
 
 export const getFolders = (state) => state[NAME]
-
-import {folders} from './staticScripts'
 
 const versionSize = 20
 const initialState = folders
