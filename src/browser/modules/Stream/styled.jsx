@@ -64,13 +64,13 @@ export const StyledFrame = styled.article`
 export const StyledVisContainer = styled.div`
   width: 100%;
   height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameTitlebarHeight * 2)) + 'px')};
-  display : ${props => props.style.display}
+  display : ${props => props.style.display};
 `
 
 export const StyledFrameBody = styled.div`
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : (dim.frameBodyHeight - dim.frameStatusbarHeight) + 1 + 'px')};
-  display: ${props => props.collapsed ? 'none' : 'flex'};;
+  display: ${props => props.collapsed ? 'none' : 'flex'};
   flex-direction: row;
 `
 
@@ -84,7 +84,7 @@ export const StyledFrameContents = styled.div`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameStatusbarHeight * 2)) + 'px')};
-  ${props => props.fullscreen ? 'height: 100vh' : null}
+  ${props => props.fullscreen ? 'height: 100vh' : null};
 `
 
 export const PaddedDiv = styled.div`
@@ -111,7 +111,7 @@ export const StyledFrameSidebar = styled.ul`
 export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight + 1}px;
-  ${props => props.fullscreen ? 'margin-top: -78px;' : ''}
+  ${props => props.fullscreen ? 'margin-top: -78px;' : ''};
   display: flex;
   flex-direction: row;
 `
@@ -194,26 +194,26 @@ export const StyledLinkContainer = styled.div`
 `
 
 export const StyledCypherMessage = styled.div`
-  font-weight: bold
-  line-height: 1em
-  text-align: center
-  white-space: nowrap
-  vertical-align: baseline
-  user-select: none
-  font-size: 12px
-  margin-right: 5px
-  padding: 4px 7px 4px 5px
-  border-radius: 3px
-  float: left
+  font-weight: bold;
+  line-height: 1em;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  user-select: none;
+  font-size: 12px;
+  margin-right: 5px;
+  padding: 4px 7px 4px 5px;
+  border-radius: 3px;
+  float: left;
 `
 export const StyledCypherWarningMessage = styled(StyledCypherMessage)`
-  background-color: #FFA500
-  color: #FFFFFF
+  background-color: #FFA500;
+  color: #FFFFFF;
 `
 
 export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
-  background-color: #E74C3C
-  color: #FFFFFF
+  background-color: #E74C3C;
+  color: #FFFFFF;
 `
 
 export const StyledH4 = styled.h4`
@@ -258,7 +258,7 @@ export const StyledStatsBar = styled.div`
 `
 
 export const StyledSchemaBody = styled(StyledPreformattedArea)`
-  padding-top: 6px
+  padding-top: 6px;
 `
 export const StyledBodyMessage = styled.div`
   padding-top: 20px;

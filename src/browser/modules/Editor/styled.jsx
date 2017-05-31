@@ -27,7 +27,7 @@ export const BaseBar = styled.div`
   display: flex;
   flex-direction: row;
   align-items: middle;
-  min-height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px
+  min-height: ${props => Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
   margin: 0 24px;

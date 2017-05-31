@@ -57,10 +57,10 @@ export const ErrorBanner = styled(Banner)`
   background-color: ${props => props.theme.error};
 `
 export const WarningBanner = styled(Banner)`
-  background-color: ${props => props.theme.warning}
+  background-color: ${props => props.theme.warning};
 `
 export const NotAuthedBanner = styled(Banner)`
-  background-color: ${props => props.theme.auth}
+  background-color: ${props => props.theme.auth};
 `
 
 export const StyledCodeBlockAuthBar = styled(StyledCodeBlock)`
@@ -73,7 +73,7 @@ export const StyledCodeBlockErrorBar = styled(StyledCodeBlock)`
 `
 
 export const SyncDisconnectedBanner = styled(Banner)`
-  background-color: ${props => props.theme.auth}
+  background-color: ${props => props.theme.auth};
   display: flex;
   justify-content: space-between;
 `
