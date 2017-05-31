@@ -28,7 +28,7 @@ import {getAvailableProcedures} from 'shared/modules/features/featuresDuck'
 import {CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST} from 'shared/modules/cypher/cypherDuck'
 import {getConnectionState, CONNECTED_STATE} from 'shared/modules/connections/connectionsDuck'
 import {ConfirmationButton} from 'browser-components/buttons/ConfirmationButton'
-import {StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code, StyledStatusBar, AutoRefreshToogle, RefreshQueriesButton, AutoRefreshSpan} from './styled'
+import {StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code, StyledStatusBar, AutoRefreshToogle, RefreshQueriesButton, AutoRefreshSpan, StatusbarWrapper} from './styled'
 import {EnterpriseOnlyFrame} from 'browser-components/EditionView'
 import {RefreshIcon} from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
@@ -206,7 +206,7 @@ export class QueriesFrame extends Component {
     if (this.canListQueries()) {
       frameContents = this.constructViewFromQueryList(this.state.queries)
       statusbar = (
-        <div>
+        <StatusbarWrapper>
           <Render if={this.state.errors}>
             <FrameError message={(this.state.errors || []).join(', ')} />
           </Render>
@@ -219,7 +219,7 @@ export class QueriesFrame extends Component {
               </AutoRefreshSpan>
             </StyledStatusBar>
           </Render>
-        </div>
+        </StatusbarWrapper>
       )
     } else {
       frameContents = (<EnterpriseOnlyFrame command={this.props.frame.cmd} />)
