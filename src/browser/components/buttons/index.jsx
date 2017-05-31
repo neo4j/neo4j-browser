@@ -79,11 +79,11 @@ export const EditorButton = styled.span`
   vertical-align: middle;
   display: inline-block;
   &:before {
-    content: ${props => props.icon};
+    content: ${props => props.icon}
     text-decoration: none;
   }
   &:hover::before {
-    content: ${props => props.hoverIcon};
+    content: ${props => props.hoverIcon}
   }
 `
 
@@ -124,7 +124,7 @@ const StyledFormButton = styled.button`
   line-height: 20px;
   &:hover {
     background-color: ${props => props.theme.formButtonBackgroundHover};
-    border: ${props => props.theme.formButtonBorderHover};
+    border: ${props => props.theme.formButtonBorderHover}
   }
 `
 
