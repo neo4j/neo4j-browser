@@ -51,6 +51,11 @@ export const StyledHeaderRow = styled.tr`
   border-top: ${props => props.theme.inFrameBorder};
   border-bottom: ${props => props.theme.inFrameBorder};
 `
+
+export const StatusbarWrapper = styled.div`
+  width: 100%;
+`
+
 export const StyledStatusBar = styled.div`
   min-height: 39px;
   line-height:  39px;

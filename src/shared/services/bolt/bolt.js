@@ -226,6 +226,6 @@ export default {
     return mappings.extractPlan(result, calculateTotalDbHits)
   },
   retrieveFormattedUpdateStatistics: mappings.retrieveFormattedUpdateStatistics,
-  itemIntToNumber: (item) => mappings.itemIntToString(item, { intChecker: neo4j.isInt, intConverter: (val) => val.toNumber() }),
+  itemIntToNumber: (item) => mappings.itemIntToString(item, { intChecker: neo4j.isInt, intConverter: (val) => val.toNumber(), objectConverter: mappings.extractFromNeoObjects }),
   neo4j: neo4j
 }
