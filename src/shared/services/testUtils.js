@@ -18,22 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
-import { mount } from 'services/testUtils'
-import { Settings as SettingsComponent } from './Settings'
+import React from 'react'
+import { mount as enyzmeMount } from 'enzyme'
 
-describe('Settings', () => {
-  test('should show known setting values', () => {
-    // Given
-    const result = mount(SettingsComponent)
-      .withProps({ settings: { maxRows: 100 } })
-
-      // Then
-      .then((wrapper) => {
-        expect(wrapper.find('.maxRows').prop('value')).toBe(100)
+export const mount = (Component) => {
+  const wrapper = enyzmeMount(
+    <Component />
+  )
+  return {
+    withProps: (props) => {
+      wrapper.setProps(props)
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => resolve(wrapper), 10)
       })
-
-    // Return test result (promise)
-    return result
-  })
-})
+      return p
+    }
+  }
+}

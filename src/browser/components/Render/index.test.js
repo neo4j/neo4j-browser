@@ -21,36 +21,39 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import ReactDOM from 'react-dom' // eslint-disable-line
-import { mount } from 'enzyme'
+import { mount } from 'services/testUtils'
 
 import Render from './index'
 
 describe('<Render>', () => {
-  test('does not render if condition is false', (done) => {
+  test('does not render if condition is false', () => {
     // Given
     const val = false
     const children = [<span>Hello</span>]
-    const wrapper = mount(<Render />)
-    wrapper.setProps({if: val, children})
+    const result = mount(Render)
+      .withProps({if: val, children})
 
-    // Expect
-    setTimeout(() => {
-      expect(wrapper.text()).toEqual('')
-      done()
-    }, 10)
+      // Then
+      .then((wrapper) => {
+        expect(wrapper.text()).toEqual('')
+      })
+
+    // Return test result (promise
+    return result
   })
-  test('does render if condition is true', (done) => {
+  test('does render if condition is true', () => {
     // Given
     const val = true
     const children = [<span>Hello</span>]
-    const wrapper = mount(<Render />)
-    wrapper.setProps({if: val, children})
+    const result = mount(Render)
+      .withProps({if: val, children})
 
-    // Expect
-    setTimeout(() => {
-      expect(wrapper.text()).toEqual('Hello')
-      done()
-    }, 10)
+      // Then
+      .then((wrapper) => {
+        expect(wrapper.text()).toEqual('Hello')
+      })
+
+    // Return test result (promise
+    return result
   })
 })
