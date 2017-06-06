@@ -7,9 +7,38 @@ Object {
   "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
+  "role": null,
   "server": Object {
+    "dbName": null,
     "edition": null,
     "storeId": null,
+    "storeSize": null,
+    "version": null,
+  },
+  "settings": Object {
+    "browser.allow_outgoing_connections": false,
+    "browser.remote_content_hostname_whitelist": "guides.neo4j.com, localhost",
+  },
+}
+`;
+
+exports[`updating metadata can update meta values with UPDATE 1`] = `
+Object {
+  "functions": Array [],
+  "hydrated": true,
+  "labels": Array [],
+  "myKey": "yo",
+  "noKey": true,
+  "procedures": Array [],
+  "properties": Array [],
+  "relationshipTypes": Array [],
+  "role": null,
+  "secondKey": true,
+  "server": Object {
+    "dbName": null,
+    "edition": null,
+    "storeId": null,
+    "storeSize": null,
     "version": null,
   },
   "settings": Object {
@@ -27,9 +56,12 @@ Object {
   "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
+  "role": null,
   "server": Object {
+    "dbName": undefined,
     "edition": "enterprise",
     "storeId": "xxxx",
+    "storeSize": undefined,
     "version": "3.2.0-RC2",
   },
   "settings": Object {
@@ -48,9 +80,12 @@ Object {
   "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
+  "role": null,
   "server": Object {
+    "dbName": null,
     "edition": null,
     "storeId": null,
+    "storeSize": null,
     "version": null,
   },
   "settings": Object {
