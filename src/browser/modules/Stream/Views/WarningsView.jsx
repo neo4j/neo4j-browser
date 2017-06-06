@@ -49,7 +49,7 @@ const WarningsView = ({notifications, cypher, style}) => {
         <StyledDiv>
           <StyledHelpDescription>{notification.description}</StyledHelpDescription>
           <StyledDiv>
-            <StyledPreformattedArea>{cypherLines[notification.position.line - 1]}
+            <StyledPreformattedArea>{cypherLines[notification.position.line]}
               <StyledBr />{Array(notification.position.column).join(' ')}^
             </StyledPreformattedArea>
           </StyledDiv>
