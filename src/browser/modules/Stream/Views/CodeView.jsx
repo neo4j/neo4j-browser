@@ -18,35 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import style from './code_style.css'
-import { PaddedDiv } from '../styled'
+import { PaddedDiv, StyledTable, StyledTBody, StyledAlteringTr, StyledStrongTd, StyledTd } from '../styled'
 
 const CodeView = ({request, query, style: displayStyle}) => {
   if (request.status !== 'success') return null
   return (
     <PaddedDiv style={displayStyle}>
-      <table>
-        <tbody className={style.altRows}>
-          <tr>
-            <td className={style.bold}>Server version</td>
-            <td>{request.result.summary.server.version}</td>
-          </tr>
-          <tr>
-            <td className={style.bold}>Server address</td>
-            <td>{request.result.summary.server.address}</td>
-          </tr>
-          <tr>
-            <td className={style.bold}>Query</td>
-            <td>{query}</td>
-          </tr>
-          <tr>
-            <td className={style.bold}>Response</td>
-            <td>
+      <StyledTable>
+        <StyledTBody>
+          <StyledAlteringTr>
+            <StyledStrongTd>Server version</StyledStrongTd>
+            <StyledTd>{request.result.summary.server.version}</StyledTd>
+          </StyledAlteringTr>
+          <StyledAlteringTr>
+            <StyledStrongTd>Server address</StyledStrongTd>
+            <StyledTd>{request.result.summary.server.address}</StyledTd>
+          </StyledAlteringTr>
+          <StyledAlteringTr>
+            <StyledStrongTd>Query</StyledStrongTd>
+            <StyledTd>{query}</StyledTd>
+          </StyledAlteringTr>
+          <StyledAlteringTr>
+            <StyledStrongTd>Response</StyledStrongTd>
+            <StyledTd>
               <pre>{JSON.stringify(request.result.records, null, 2)}</pre>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </StyledTd>
+          </StyledAlteringTr>
+        </StyledTBody>
+      </StyledTable>
     </PaddedDiv>
   )
 }

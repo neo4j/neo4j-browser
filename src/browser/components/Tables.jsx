@@ -23,20 +23,21 @@ import styled from 'styled-components'
 const StyledTable = styled.table`
   border-radius: 4px;
   margin: 0 15px 20px 15px;
-  background-color: #fff;
   -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
   box-shadow: 0 1px 1px rgba(0,0,0,.05);
   `
 const StyledTr = styled.tr`
   padding: 10px 15px;
   border: 1px solid #ddd;
+  background-color: ${props => props.theme.secondaryBackground};
+  color: ${props => props.theme.secondaryText};
 `
 const StyledTh = styled.th`
   font-size: 18px;
   -webkit-column-span: all;
   column-span: all;
   text-align: left;
-  background-color: #f5f5f5;
+  background-color: ${props => props.theme.secondaryBackground};
   border-color: #ddd;
   padding: 10px 15px
 `

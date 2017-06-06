@@ -62,3 +62,41 @@ export const CarouselIndicatorActive = styled(CarouselIndicator)`
 export const StyledUl = styled.ul`
   margin: 15px;
 `
+
+export const StyledSlide = styled.div`
+  color: ${props => props.theme.primaryText};
+  & p.lead, .title, .subtitle, .content > p, .table-help {
+    color: ${props => props.theme.primaryText} !important;
+  }
+  & a {
+    color: ${props => props.theme.link};
+    text-decoration: ${props => props.theme.name === 'dark' ? 'underline' : 'none'};
+  }
+  & kbd {
+    color: ${props => props.theme.primaryBackground} !important; /* inverted */
+    background-color: ${props => props.theme.primaryText} !important;
+  }
+  & .content > pre {
+    background-color: ${props => props.theme.secondaryBackground};
+    color: ${props => props.theme.preText};
+  }
+  & pre.runnable {
+    background-color: ${props => props.theme.preBackground};
+    color: ${props => props.theme.preText};
+  }
+  & pre.content {
+    background-color: ${props => props.theme.secondaryBackground};
+    color: ${props => props.theme.preText};
+  }
+  & a[help-topic], a[play-topic], a[server-topic], a[exec-topic] {
+    background-color: ${props => props.theme.topicBackground} !important;
+    color: ${props => props.theme.topicText} !important;
+  }
+  & button [help-topic], button [play-topic], button [server-topic], button [exec-topic] {
+    background-color: ${props => props.theme.primaryButtonBackground};
+    color: ${props => props.theme.primaryButtonText};
+  }
+  .code {
+    background-color: transparent;
+  }
+`

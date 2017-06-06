@@ -48,7 +48,7 @@ const rollDownAnimation = keyframes`
 // Frames
 export const StyledFrame = styled.article`
   width: auto;
-  background-color: #fff;
+  background-color: ${props => props.theme.secondaryBackground};
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
   animation: ${rollDownAnimation} .2s linear;
   border: ${props => props.theme.frameBorder};
@@ -132,10 +132,12 @@ export const FrameTitlebarButtonSection = styled.ul`
   padding-left: 0;
   margin: 0;
   margin-left: auto;
+  color: ${props => props.theme.secondaryButtonText};
 `
 
 export const StyledFrameCommand = styled.label`
   font-family: ${props => props.theme.editorFont};
+  color: ${props => props.theme.secondaryButtonText};
   font-size: 1.2em;
   line-height: 2.2em;
   margin: 3px 5px 3px 15px;
@@ -228,7 +230,8 @@ export const StyledPreformattedArea = styled.pre`
   margin: 0;
   background: none;
   border: none;
-  background-color: #f5f5f5;
+  background-color: ${props => props.theme.primaryBackground};
+  color: ${props => props.theme.preText};
 `
 
 export const ErrorText = styled.span`
@@ -244,10 +247,10 @@ export const StyledStatsBarContainer = styled.div`
 export const StyledStatsBar = styled.div`
   min-height: 39px;
   line-height: 39px;
-  color: #788185;
+  color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: relative;
-  background-color: #fff;
+  background-color: ${props => props.theme.secondaryBackground};
   white-space: nowrap;
   overflow: hidden;
   padding-left: 24px;
@@ -272,7 +275,6 @@ export const DropdownButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   border-left: ${props => props.theme.inFrameBorder};
-  border-right: ${props => props.theme.inFrameBorder};
   height: ${dim.frameTitlebarHeight}px;
   width: 41px;
   cursor: pointer;
@@ -282,8 +284,8 @@ export const DropdownButton = styled.li`
   float: left;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-    color: ${props => props.theme.secondaryBackground};
-    fill: ${props => props.theme.secondaryBackground};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
   display: inline-block;
@@ -301,8 +303,8 @@ export const DropdownList = styled.ul`
 export const DropdownContent = styled.li`
   display: none;
   position: absolute;
-  background-color: #ffffff;
-  color: #262626;
+  background-color: ${props => props.theme.secondaryBackground};
+  color: ${props => props.theme.secondaryButtonText};
   width: 100px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   border-radius: 6px;
@@ -312,14 +314,14 @@ export const DropdownContent = styled.li`
 `
 
 export const DropdownItem = styled.a`
-  background-color: #ffffff;
-  color: #262626;
+  background-color: ${props => props.theme.secondaryBackground};
+  color: ${props => props.theme.secondaryButtonText};
   width: 100%;
   display: inline-block;
   &:hover {
-    color: #262626;
+    color: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
-    background-color: #f5f5f5;
+    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
   }
 `
 
@@ -387,5 +389,43 @@ export const StyledWidthSlider = styled.input`
     border: none;
     background-color: #008BC3;
     outline: none;
+  }
+`
+
+export const StyledTable = styled.table`
+  margin-top: 30px;
+`
+
+export const StyledTBody = styled.tbody`
+  & td:first-child {
+    vertical-align: top;
+    width: 170px;
+  }
+`
+
+export const StyledAlteringTr = styled.tr`
+  &:nth-child(even) {
+    background-color: ${props => props.theme.alteringTableRowBackground};
+  }
+`
+
+export const StyledStrongTd = styled.td`
+  font-weight: bold;
+`
+
+export const StyledTd = styled.td`
+`
+
+export const StyledHistoryList = styled.ul`
+  list-style: none;
+`
+
+export const StyledHistoryRow = styled.li`
+    border: 1px solid black;
+    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+  &:hover {
+    background-color: ${props => props.theme.primaryBackground};
   }
 `

@@ -24,6 +24,20 @@ export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
 const pMarginTop = 6
 
+// Themes is here because the colors are unique to this component
+const getColor = (theme, name) => {
+  const themes = {
+    normal: {
+      svgBackground: '#f9fbfd'
+    },
+    dark: {
+      svgBackground: '#5a6070'
+    }
+  }
+  if (themes[theme] === undefined) theme = 'normal'
+  return themes[theme][name] || ''
+}
+
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
   height: 100%;
@@ -31,7 +45,7 @@ export const StyledSvgWrapper = styled.div`
   > svg {
     height: 100%;
     width: 100%;
-    background-color: #f9fbfd;
+    background-color: ${props => getColor(props.theme.name, 'svgBackground')};
     .node {
       cursor: pointer;
       > .ring {
@@ -181,10 +195,10 @@ export const StyledStatusBarWrapper = styled.div`
 export const StyledStatusBar = styled.div`
   min-height: 39px;
   line-height:  39px;
-  color: #788185;
+  color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: relative;
-  background-color: #fff;
+  background-color: ${props => props.theme.secondaryBackground};
   white-space: nowrap;
   overflow: hidden;
   border-top: 1px solid #e6e9ef;
@@ -256,7 +270,7 @@ export const StyledLegendRow = styled.div`
   }
 `
 export const StyledLegend = styled.div`
-  background-color: #eef1f8;
+  background-color: ${props => props.theme.secondaryBackground};
   margin-top: -${(legendRowHeight * 2) + 1}px;
   &.one-row {
     margin-top: -${legendRowHeight}px;

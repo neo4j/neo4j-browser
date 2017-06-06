@@ -108,23 +108,23 @@ export const NavigationButtonContainer = styled.li`
 `
 
 const StyledFormButton = styled.button`
-  color: ${props => props.theme.primaryText};
-  background-color: #fff;
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${props => props.theme.secondaryButtonBackground};
+  border: ${props => props.theme.secondaryButtonBorder};
+  font-family: ${props => props.theme.primaryFontFamily};
   padding: 6px 12px;
-  border-color: #ccc;
   font-weight: 400;
   font-size: 14px;
-  font-family: ${props => props.theme.primaryFontFamily};
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;
-  border: ${props => props.theme.formButtonBorder};
   border-radius: 4px;
   line-height: 20px;
   &:hover {
-    background-color: ${props => props.theme.formButtonBackgroundHover};
-    border: ${props => props.theme.formButtonBorderHover}
+    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    border: ${props => props.theme.secondaryButtonBorderHover};
   }
 `
 
@@ -183,13 +183,15 @@ const StyledCypherFrameButton = styled.li`
   text-align: center;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-    color: ${props => props.theme.editorBarBackground};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
 `
 const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
   background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-  color: ${props => props.theme.editorBarBackground};
+  color: ${props => props.theme.secondaryButtonTextHover};
+  fill: ${props => props.theme.secondaryButtonTextHover};
 `
 export const FrameButton = (props) => {
   const {pressed, children, ...rest} = props
@@ -199,7 +201,6 @@ const StyledFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   border-left: ${props => props.theme.inFrameBorder};
-  border-right: ${props => props.theme.inFrameBorder};
   height: ${dim.frameTitlebarHeight}px;
   width: 41px;
   cursor: pointer;
@@ -209,15 +210,15 @@ const StyledFrameButton = styled.li`
   display: inline-block;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-    color: ${props => props.theme.secondaryBackground};
-    fill: ${props => props.theme.secondaryBackground};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
 `
 const StyledFrameButtonPressed = styled(StyledFrameButton)`
   background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-  color: ${props => props.theme.secondaryBackground};
-  fill: ${props => props.theme.secondaryBackground};
+  color: ${props => props.theme.secondaryButtonTextHover};
+  fill: ${props => props.theme.secondaryButtonTextHover};
 `
 export const DefaultA = styled.a`
   color: ${props => props.theme.secondaryButtonText};

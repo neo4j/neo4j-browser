@@ -21,9 +21,8 @@
 import { withBus } from 'preact-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import FrameTemplate from './FrameTemplate'
+import { StyledHistoryList } from './styled'
 import HistoryRow from './HistoryRow'
-
-import styles from './style_history.css'
 
 export const HistoryFrame = (props) => {
   const {frame, bus} = props
@@ -36,7 +35,7 @@ export const HistoryFrame = (props) => {
   return (
     <FrameTemplate
       header={frame}
-      contents={<ul className={styles['history-list']}>{historyRows}</ul>}
+      contents={<StyledHistoryList>{historyRows}</StyledHistoryList>}
     />
   )
 }

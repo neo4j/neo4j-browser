@@ -25,7 +25,8 @@ export const StyledTable = styled.table`
   margin-bottom: 0
 `
 export const StyledBodyTr = styled.tr`
-  background-color: #fff
+  background-color: ${props => props.theme.secondaryBackground};
+  color: ${props => props.theme.secondaryText};
 `
 export const StyledTh = styled.th`
   text-align: left
@@ -43,12 +44,12 @@ export const StyledTd = styled.td`
 `
 
 export const StyledJsonPre = styled.pre`
-  background-color: #eee;
+  background-color: ${props => props.theme.preBackground};
   -webkit-border-radius: 5px;
   border-radius: 5px;
   margin: 20px 10px;
   border-bottom: none;
-  color: #666;
+  color: ${props => props.theme.preText};
   line-height: 26px;
   padding: 2px 10px;
   max-width: 320px;

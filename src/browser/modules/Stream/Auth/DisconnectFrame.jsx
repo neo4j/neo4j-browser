@@ -20,7 +20,8 @@
 
 import FrameTemplate from '../FrameTemplate'
 import { StyledConnectionFrame, StyledConnectionAside } from './styled'
-import {H3} from 'browser-components/headers'
+import { H3 } from 'browser-components/headers'
+import { Lead } from 'browser-components/Text'
 import Render from 'browser-components/Render'
 
 const Disconnect = ({frame, activeConnectionData}) => {
@@ -31,16 +32,20 @@ const Disconnect = ({frame, activeConnectionData}) => {
         <StyledConnectionFrame>
           <StyledConnectionAside>
             <Render if={activeConnectionData}>
-              <span>
+              <div>
                 <H3>Connected</H3>
-                {'You\'re still connected'}
-              </span>
+                <Lead>
+                  You're still connected
+                </Lead>
+              </div>
             </Render>
             <Render if={!activeConnectionData}>
-              <span>
+              <div>
                 <H3>Disconnected</H3>
-                You are disconnected from the server
-              </span>
+                <Lead>
+                  You are disconnected from the server
+                </Lead>
+              </div>
             </Render>
           </StyledConnectionAside>
         </StyledConnectionFrame>

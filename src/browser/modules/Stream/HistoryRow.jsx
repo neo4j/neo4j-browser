@@ -18,7 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { StyledHistoryRow } from './styled'
+
 const HistoryRow = ({entry, handleEntryClick}) => {
-  return <li onClick={() => handleEntryClick(entry)}>{entry}</li>
+  return <StyledHistoryRow onClick={() => handleEntryClick(entry)}>{entry}</StyledHistoryRow>
 }
 export default HistoryRow
