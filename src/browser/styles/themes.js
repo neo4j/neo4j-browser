@@ -100,6 +100,7 @@ export const dark = {
 
   primaryText: '#f4f4f4',
   secondaryText: '#eee',
+  headerText: '#f4f4f4',
   primaryHeaderText: '#f4f4f4',
   editorCommandColor: '#1abc9c',
   link: '#f4f4f4',

@@ -24,7 +24,8 @@ import ConnectionForm from './ConnectionForm'
 import FrameTemplate from '../FrameTemplate'
 import FrameError from '../FrameError'
 import Render from 'browser-components/Render'
-import {H3} from 'browser-components/headers'
+import { H3 } from 'browser-components/headers'
+import { Lead } from 'browser-components/Text'
 import {
   StyledConnectionFrame,
   StyledConnectionAside,
@@ -73,10 +74,10 @@ export class ChangePasswordFrame extends Component {
         <StyledConnectionAside>
           <H3>Password change</H3>
           <Render if={!this.state.success}>
-            Enter your current password and the new twice to change your password.
+            <Lead>Enter your current password and the new twice to change your password.</Lead>
           </Render>
           <Render if={this.state.success}>
-            Password change successful
+            <Lead>Password change successful</Lead>
           </Render>
         </StyledConnectionAside>
 

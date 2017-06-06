@@ -24,6 +24,8 @@ import FrameTemplate from '../FrameTemplate'
 import ConnectionForm from './ConnectionForm'
 import FrameError from '../FrameError'
 import {H3} from 'browser-components/headers'
+import { Lead } from 'browser-components/Text'
+
 import Render from 'browser-components/Render'
 import {
   StyledConnectionFrame,
@@ -53,16 +55,16 @@ export class ConnectionFrame extends Component {
           <StyledConnectionFrame>
             <StyledConnectionAside>
               <Render if={!this.state.success}>
-                <span>
+                <div>
                   <H3>Connect to Neo4j</H3>
-                  Database access requires an authenticated connection.
-                </span>
+                  <Lead>Database access requires an authenticated connection.</Lead>
+                </div>
               </Render>
               <Render if={this.state.success}>
-                <span>
+                <div>
                   <H3>Connected to Neo4j</H3>
-                  Nice to meet you.
-                </span>
+                  <Lead>Nice to meet you.</Lead>
+                </div>
               </Render>
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>
