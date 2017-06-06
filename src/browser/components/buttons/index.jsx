@@ -108,23 +108,23 @@ export const NavigationButtonContainer = styled.li`
 `
 
 const StyledFormButton = styled.button`
-  color: ${props => props.theme.primaryText};
-  background-color: #fff;
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${props => props.theme.secondaryButtonBackground};
+  border: ${props => props.theme.secondaryButtonBorder};
+  font-family: ${props => props.theme.primaryFontFamily};
   padding: 6px 12px;
-  border-color: #ccc;
   font-weight: 400;
   font-size: 14px;
-  font-family: ${props => props.theme.primaryFontFamily};
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;
-  border: ${props => props.theme.formButtonBorder};
   border-radius: 4px;
   line-height: 20px;
   &:hover {
-    background-color: ${props => props.theme.formButtonBackgroundHover};
-    border: ${props => props.theme.formButtonBorderHover}
+    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    border: ${props => props.theme.secondaryButtonBorderHover};
   }
 `
 
