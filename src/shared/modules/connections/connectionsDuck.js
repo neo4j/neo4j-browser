@@ -265,7 +265,7 @@ export const connectEpic = (action$, store) => {
       memoryPassword = ''
       return bolt.openConnection(action, { encrypted: getEncryptionMode() }, onLostConnection(store.dispatch))
         .then((res) => ({ type: action.$$responseChannel, success: true }))
-        .catch(([e]) => ({ type: action.$$responseChannel, success: false, error: e }))
+        .catch((e) => ({ type: action.$$responseChannel, success: false, error: e }))
     })
 }
 export const startupConnectEpic = (action$, store) => {
