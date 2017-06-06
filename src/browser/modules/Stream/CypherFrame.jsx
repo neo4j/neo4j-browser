@@ -47,7 +47,8 @@ class CypherFrame extends Component {
       notifications: null,
       errors: null,
       maxColWidth: 70,
-      planAction: null
+      planAction: null,
+      recentViewApplied: false
     }
   }
 
@@ -82,7 +83,7 @@ class CypherFrame extends Component {
         this.setState({notifications: warnings, cypher: nextProps.request.result.summary.statement.text})
       }
       this.setState({nodesAndRelationships, serializedPropertiesRows, rows, plan, errors})
-    } else if (nextProps.request.status !== 'success') { // Failed query
+    } else if (nextProps.request.status !== 'success' && nextProps.request.status !== 'pending') { // Failed query
       errors = nextProps.request.result
       this.setState({ errors: errors, openView: viewTypes.ERRORS })
     }
@@ -104,13 +105,16 @@ class CypherFrame extends Component {
     this.setState({ maxColWidth: w })
   }
   decideOpeningView ({plan, nodesAndRelationships, warnings, props}) {
+    if (this.state.recentViewApplied) {
+      return
+    }
     if (props.frame.forceView) {
-      this.setState({openView: props.frame.forceView})
+      this.setState({openView: props.frame.forceView, recentViewApplied: true})
     } else if (plan) {
-      this.setState({openView: viewTypes.PLAN})
+      this.setState({openView: viewTypes.PLAN, recentViewApplied: true})
     } else {
       let view = props.recentView || viewTypes.VISUALIZATION
-      this.setState({openView: this.returnRecentViewOrFallback({view, plan, nodesAndRelationships, warnings, props})})
+      this.setState({openView: this.returnRecentViewOrFallback({view, plan, nodesAndRelationships, warnings, props}), recentViewApplied: true})
     }
   }
 
