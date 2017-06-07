@@ -177,7 +177,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (records, types
   return { nodes: nodes, relationships: relationships }
 }
 
-const recursivelyExtractGraphItems = (types, item) => {
+export const recursivelyExtractGraphItems = (types, item) => {
   if (item instanceof types.Node) return item
   if (item instanceof types.Relationship) return item
   if (item instanceof types.Path) return item
@@ -190,7 +190,7 @@ const recursivelyExtractGraphItems = (types, item) => {
   return item
 }
 
-const flattenArray = (arr) => {
+export const flattenArray = (arr) => {
   return arr.reduce((all, curr) => {
     if (Array.isArray(curr)) return all.concat(flattenArray(curr))
     return all.concat(curr)

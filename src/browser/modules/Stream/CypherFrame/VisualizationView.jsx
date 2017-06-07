@@ -20,58 +20,49 @@
 
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
+import { deepEquals } from 'services/utils'
 import * as grassActions from 'shared/modules/grass/grassDuck'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'preact-suber'
-import { ExplorerComponent } from '../D3Visualization/components/Explorer'
-import { StyledVisContainer } from './styled'
-import { getMaxNeighbours, getSettings, shouldAutoComplete } from 'shared/modules/settings/settingsDuck'
+import { ExplorerComponent } from '../../D3Visualization/components/Explorer'
+import { StyledVisContainer } from './VisualizationView.styled'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 export class Visualization extends Component {
   constructor (props) {
     super(props)
-
     this.state = {
       nodesAndRelationships: {
         nodes: [],
         relationships: []
-      },
-      justInitiated: true
+      }
     }
   }
-
-  componentWillMount () {
-    if (this.props.records && this.props.records.length > 0) {
+  componentDidMount () {
+    const { records = [] } = this.props.result
+    if (records && records.length > 0) {
       this.populateDataToStateFromProps(this.props)
     }
   }
-
-  shouldComponentUpdate (nextProps) {
-    return nextProps.style !== this.props.style ||
-      nextProps.records !== this.props.records ||
-      nextProps.graphStyleData !== this.props.graphStyleData
+  shouldComponentUpdate (props, state) {
+    return !(deepEquals(props.result.records, this.props.result.records) && deepEquals(props.graphStyleData, this.props.graphStyleData)) ||
+      !deepEquals(state, this.state) ||
+      !deepEquals(props.visElement, this.props.visElement) ||
+      this.props.frameHeight !== props.frameHeight ||
+      this.props.autoComplete !== props.autoComplete
   }
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.records !== this.props.records) {
-      this.populateDataToStateFromProps(nextProps)
-    }
-
-    if (nextProps.style.display !== this.props.style.display) {
-      this.setState({justInitiated: false})
+  componentWillReceiveProps (props) {
+    if (!deepEquals(props.result.records, this.props.result.records) || this.props.autoComplete !== props.autoComplete) {
+      this.populateDataToStateFromProps(props)
     }
   }
-
   populateDataToStateFromProps (props) {
-    this.setState({ nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.records) })
+    this.setState({ nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.result.records) })
   }
-
   mergeToList (list1, list2) {
     return list1.concat(list2.filter(itemInList2 => list1.findIndex(itemInList1 => itemInList1.id === itemInList2.id) < 0))
   }
-
   autoCompleteRelationships (existingNodes, newNodes) {
     if (this.props.autoComplete) {
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
@@ -82,9 +73,10 @@ export class Visualization extends Component {
           this.autoCompleteCallback && this.autoCompleteCallback(graph.relationships)
         })
         .catch((e) => {})
+    } else {
+      this.autoCompleteCallback && this.autoCompleteCallback([])
     }
   }
-
   getNeighbours (id, currentNeighbourIds = []) {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
@@ -98,7 +90,7 @@ export class Visualization extends Component {
         {query: query},
         (response) => {
           if (!response.success) {
-            reject(new Error('Non successful response'))
+            reject(new Error())
           } else {
             let count = response.result.records.length > 0 ? parseInt(response.result.records[0].get('c').toString()) : 0
             const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)
@@ -109,7 +101,6 @@ export class Visualization extends Component {
       )
     })
   }
-
   getInternalRelationships (existingNodeIds, newNodeIds) {
     newNodeIds = newNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
@@ -121,7 +112,7 @@ export class Visualization extends Component {
         {query, params: {existingNodeIds, newNodeIds}},
         (response) => {
           if (!response.success) {
-            reject(new Error('Non successful response'))
+            reject(new Error())
           } else {
             resolve({...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)})
           }
@@ -129,20 +120,15 @@ export class Visualization extends Component {
       )
     })
   }
-
   setGraph (graph) {
     this.graph = graph
     this.autoCompleteRelationships([], this.graph._nodes)
   }
-
   render () {
-    // This workaround is to overcome the issue that if the svg is initiated with in a style.display = none component, it does not become visible even display changed to block or so
-    if (this.state.justInitiated && this.props.style.display === 'none') {
-      return null
-    }
+    if (!this.state.nodesAndRelationships.nodes.length) return null
 
     return (
-      <StyledVisContainer fullscreen={this.props.fullscreen} style={this.props.style} >
+      <StyledVisContainer fullscreen={this.props.fullscreen}>
         <ExplorerComponent
           maxNeighbours={this.props.maxNeighbours}
           initialNodeDisplay={this.props.initialNodeDisplay}
@@ -164,10 +150,7 @@ export class Visualization extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    graphStyleData: grassActions.getGraphStyleData(state),
-    initialNodeDisplay: getSettings(state).initialNodeDisplay,
-    maxNeighbours: getMaxNeighbours(state),
-    autoComplete: shouldAutoComplete(state)
+    graphStyleData: grassActions.getGraphStyleData(state)
   }
 }
 
@@ -179,4 +162,13 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(Visualization))
+export const VisualizationConnectedBus = withBus(connect(mapStateToProps, mapDispatchToProps)(Visualization))
+
+export class VisualizationStatusbar extends Component {
+  shouldComponentUpdate (props, state) {
+    return false
+  }
+  render () {
+    return null
+  }
+}

@@ -19,6 +19,7 @@
  */
 
 import { Component } from 'preact'
+import { deepEquals } from 'services/utils'
 import {GraphComponent} from './Graph'
 import neoGraphStyle from '../graphStyle'
 import {InspectorComponent} from './Inspector'
@@ -40,20 +41,24 @@ const deduplicateNodes = (nodes) => {
 export class ExplorerComponent extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
-    this.state.stats = {labels: {}, relTypes: {}}
-    this.state.graphStyle = neoGraphStyle()
-    if (this.props.graphStyleData) {
-      this.state.graphStyle.loadRules(this.props.graphStyleData)
-    }
+    const graphStyle = neoGraphStyle()
+    let relationships = this.props.relationships
     let nodes = deduplicateNodes(this.props.nodes)
-    this.state.relationships = this.props.relationships
-    this.state.nodes = nodes
-    this.state.relationships = this.props.relationships
+    let selectedItem = ''
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
-      this.state.nodes = nodes.slice(0, this.props.initialNodeDisplay)
-      this.state.relationships = this.props.relationships.filter((item) => this.state.nodes.filter((node) => node.id === item.startNodeId).length > 0 && this.state.nodes.filter((node) => node.id === item.endNodeId).length > 0)
-      this.state.selectedItem = {type: 'status-item', item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`}
+      nodes = nodes.slice(0, this.props.initialNodeDisplay)
+      relationships = this.props.relationships.filter((item) => nodes.filter((node) => node.id === item.startNodeId).length > 0 && this.state.nodes.filter((node) => node.id === item.endNodeId).length > 0)
+      selectedItem = {type: 'status-item', item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`}
+    }
+    if (this.props.graphStyleData) {
+      graphStyle.loadRules(this.props.graphStyleData)
+    }
+    this.state = {
+      stats: {labels: {}, relTypes: {}},
+      graphStyle,
+      nodes,
+      relationships,
+      selectedItem
     }
   }
 
@@ -64,7 +69,7 @@ export class ExplorerComponent extends Component {
     this.props.getNeighbours(node.id, currentNeighbours).then((result) => {
       let nodes = result.nodes
       if (result.count > (this.props.maxNeighbours - currentNeighbours.length)) {
-        this.state.selectedItem = {type: 'status-item', item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${result.count + currentNeighbours.length} neighbours due to browser config maxNeighbours.`}
+        this.setState({selectedItem: {type: 'status-item', item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${result.count + currentNeighbours.length} neighbours due to browser config maxNeighbours.`}})
       }
       callback(null, {nodes: nodes, relationships: result.relationships})
     }, () => {
@@ -93,10 +98,10 @@ export class ExplorerComponent extends Component {
     this.setState({selectedItem: {type: 'legend-item', item: {selectedLabel: null, selectedRelType: {relType: relType, propertyKeys: propertyKeys}}}})
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.graphStyleData !== this.props.graphStyleData) {
-      if (nextProps.graphStyleData) {
-        this.state.graphStyle.loadRules(nextProps.graphStyleData)
+  componentWillReceiveProps (props) {
+    if (!deepEquals(props.graphStyleData, this.props.graphStyleData)) {
+      if (props.graphStyleData) {
+        this.state.graphStyle.loadRules(props.graphStyleData)
         this.setState({graphStyle: this.state.graphStyle})
       } else {
         this.state.graphStyle.resetToDefault()
@@ -110,12 +115,12 @@ export class ExplorerComponent extends Component {
       }
     }
 
-    if (nextProps.nodes !== this.props.nodes) {
-      this.setState({nodes: nextProps.nodes})
+    if (!deepEquals(props.nodes, this.props.nodes)) {
+      this.setState({nodes: props.nodes})
     }
 
-    if (nextProps.relationships !== this.props.relationships) {
-      this.setState({relationships: nextProps.relationships})
+    if (!deepEquals(props.relationships, this.props.relationships)) {
+      this.setState({relationships: props.relationships})
     }
   }
 
@@ -138,8 +143,19 @@ export class ExplorerComponent extends Component {
     return (
       <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'} forcePaddingBottom={inspectingItemType ? this.state.forcePaddingBottom : null}>
         {legend}
-        <GraphComponent fullscreen={this.props.fullscreen} frameHeight={this.props.frameHeight} relationships={this.state.relationships} nodes={this.state.nodes} getNodeNeighbours={this.getNodeNeighbours.bind(this)} onItemMouseOver={this.onItemMouseOver.bind(this)}
-          onItemSelect={this.onItemSelect.bind(this)} graphStyle={this.state.graphStyle} onGraphModelChange={this.onGraphModelChange.bind(this)} assignVisElement={this.props.assignVisElement} getAutoCompleteCallback={this.props.getAutoCompleteCallback} setGraph={this.props.setGraph} />
+        <GraphComponent
+          fullscreen={this.props.fullscreen}
+          frameHeight={this.props.frameHeight}
+          relationships={this.state.relationships}
+          nodes={this.state.nodes}
+          getNodeNeighbours={this.getNodeNeighbours.bind(this)}
+          onItemMouseOver={this.onItemMouseOver.bind(this)}
+          onItemSelect={this.onItemSelect.bind(this)}
+          graphStyle={this.state.graphStyle}
+          onGraphModelChange={this.onGraphModelChange.bind(this)}
+          assignVisElement={this.props.assignVisElement}
+          getAutoCompleteCallback={this.props.getAutoCompleteCallback}
+          setGraph={this.props.setGraph} />
         <InspectorComponent fullscreen={this.props.fullscreen} hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} onExpandToggled={this.onInspectorExpandToggled.bind(this)} />
       </StyledFullSizeContainer>
     )

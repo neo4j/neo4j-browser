@@ -22,7 +22,7 @@ import { connect } from 'preact-redux'
 import { Component } from 'preact'
 import { StyledStream } from './styled'
 
-import CypherFrame from './CypherFrame'
+import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
 import Frame from './Frame'
@@ -42,7 +42,7 @@ import UserAdd from '../User/UserAdd'
 import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
-import { getMaxRows, getInitialNodeDisplay, getScrollToTop } from 'shared/modules/settings/settingsDuck'
+import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 
 const getFrame = (type) => {
   const trans = {
@@ -122,8 +122,6 @@ const mapStateToProps = (state) => {
     requests: getRequests(state),
     activeConnectionData: getActiveConnectionData(state),
     recentView: getRecentView(state),
-    maxRows: getMaxRows(state),
-    initialNodeDisplay: getInitialNodeDisplay(state),
     scrollToTop: getScrollToTop(state)
   }
 }

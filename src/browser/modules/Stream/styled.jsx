@@ -61,23 +61,20 @@ export const StyledFrame = styled.article`
   ${props => props.fullscreen ? 'z-index: 1030' : null};
 `
 
-export const StyledVisContainer = styled.div`
-  width: 100%;
-  height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameTitlebarHeight * 2)) + 'px')};
-  display : ${props => props.style.display};
-`
-
 export const StyledFrameBody = styled.div`
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : (dim.frameBodyHeight - dim.frameStatusbarHeight) + 1 + 'px')};
   display: ${props => props.collapsed ? 'none' : 'flex'};
   flex-direction: row;
+  width: 100%;
 `
 
 export const StyledFrameMainSection = styled.div`
   min-width: 0;
   flex: 1 1 auto;
-  height: 100%;
+  height: inherit;
+  display: flex;
+  flex-direction: column;
 `
 
 export const StyledFrameContents = styled.div`
@@ -85,6 +82,16 @@ export const StyledFrameContents = styled.div`
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameStatusbarHeight * 2)) + 'px')};
   ${props => props.fullscreen ? 'height: 100vh' : null};
+  flex: auto;
+`
+
+export const StyledFrameStatusbar = styled.div`
+  border-top: ${props => props.theme.inFrameBorder};
+  height: ${dim.frameStatusbarHeight + 1}px;
+  ${props => props.fullscreen ? 'margin-top: -78px;' : ''};
+  display: flex;
+  flex-direction: row;
+  flex: none;
 `
 
 export const PaddedDiv = styled.div`
@@ -106,14 +113,6 @@ export const StyledFrameSidebar = styled.ul`
   flex: 0 0 auto;
   border-right: ${props => props.theme.inFrameBorder};
   background-color: ${props => props.theme.frameSidebarBackground};
-`
-
-export const StyledFrameStatusbar = styled.div`
-  border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight + 1}px;
-  ${props => props.fullscreen ? 'margin-top: -78px;' : ''};
-  display: flex;
-  flex-direction: row;
 `
 
 export const StyledFrameTitleBar = styled.div`
@@ -264,6 +263,10 @@ export const StyledStatsBar = styled.div`
   width: 100%;
 `
 
+export const StyledOneRowStatsBar = styled(StyledStatsBar)`
+  height: 39px;
+`
+
 export const StyledSchemaBody = styled(StyledPreformattedArea)`
   padding-top: 6px;
 `
@@ -334,6 +337,10 @@ export const DropdownItem = styled.a`
 
 export const StyledRightPartial = styled.div`
   float: right;
+`
+
+export const StyledLeftPartial = styled.div`
+  float: left;
 `
 
 export const StyledWidthSliderContainer = styled.div`

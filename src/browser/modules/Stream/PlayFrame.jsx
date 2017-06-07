@@ -26,7 +26,7 @@ import Guides from '../Guides/Guides'
 import * as html from '../Guides/html'
 import FrameTemplate from './FrameTemplate'
 import { splitStringOnFirst } from 'services/commandUtils'
-import ErrorsView from './Views/ErrorsView'
+import { ErrorsView } from './CypherFrame/ErrorsView'
 
 export class PlayFrame extends Component {
   constructor (props) {
@@ -45,7 +45,7 @@ export class PlayFrame extends Component {
       return this.setState({
         guide: (
           <ErrorsView
-            error={{
+            result={{
               message: 'Error: The remote server responded with the following error: ' + this.props.frame.response.status,
               code: 'Remote guide error'
             }}
@@ -53,7 +53,7 @@ export class PlayFrame extends Component {
       })
     }
     if (this.props.frame.error && this.props.frame.error.error) { // Some other error. Whitelist error etc.
-      return this.setState({ guide: <ErrorsView error={{
+      return this.setState({ guide: <ErrorsView result={{
         message: this.props.frame.error.error,
         code: 'Remote guide error'
       }} /> })
