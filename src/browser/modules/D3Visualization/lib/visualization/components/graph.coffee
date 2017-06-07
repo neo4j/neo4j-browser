@@ -111,7 +111,8 @@ class neo.models.Graph
     @_relationships = []
     @addRelationships(relationships)
 
-  findNode: (id) => @nodeMap[id]
+  findNode: (id) =>
+    @nodeMap[id]
 
   findNodeNeighbourIds: (id) =>
     @_relationships

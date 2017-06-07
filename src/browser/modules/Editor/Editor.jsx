@@ -49,7 +49,6 @@ export class Editor extends Component {
       lastPosition: { line: 0, column: 0 }
     }
   }
-
   focusEditor () {
     this.codeMirror.focus()
     this.codeMirror.setCursor(this.codeMirror.lineCount(), 0)
@@ -62,7 +61,6 @@ export class Editor extends Component {
   clearEditor () {
     this.setEditorValue('')
   }
-
   handleEnter (cm) {
     if (cm.lineCount() === 1) {
       return this.execCurrent(cm)
@@ -77,7 +75,7 @@ export class Editor extends Component {
   execCurrent () {
     const value = this.getEditorValue()
     if (!value) return
-    this.props.onExecute(value)
+    this.props.onExecute(value)//exec
     this.clearEditor()
     this.clearHints()
     this.setState({ historyIndex: -1, buffer: null, expanded: false })

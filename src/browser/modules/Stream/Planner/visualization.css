@@ -31,7 +31,7 @@ svg {
   opacity: 0.3;
 }
 
-.neod3viz .remove_node, .expand_node:hover {
+.neod3viz .remove_node, .expand_node , .edit_node:hover {
 	border: 2px #000 solid;
 }
 

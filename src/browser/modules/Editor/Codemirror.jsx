@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
 import { Component } from 'preact'
 import classNames from 'classnames'
 import debounce from 'lodash.debounce'
@@ -30,9 +32,9 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/lint/lint.css'
 import 'cypher-codemirror/dist/cypher-codemirror-syntax.css'
 
-function normalizeLineEndings (str) {
+ function normalizeLineEndings (str) {
   if (!str) return str
-  return str.replace(/\r\n|\r/g, '\n')
+    return str.replace(/\r\n|\r/g, '\n')
 }
 
 export default class CodeMirror extends Component {
@@ -133,6 +135,7 @@ export default class CodeMirror extends Component {
   render () {
     const editorClassNames = classNames(
       'ReactCodeMirror',
+
       { 'ReactCodeMirror--focused': this.state.isFocused },
       this.props.classNames
     )
