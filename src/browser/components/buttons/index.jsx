@@ -79,11 +79,11 @@ export const EditorButton = styled.span`
   vertical-align: middle;
   display: inline-block;
   &:before {
-    content: ${props => props.icon}
+    content: ${props => props.icon};
     text-decoration: none;
   }
   &:hover::before {
-    content: ${props => props.hoverIcon}
+    content: ${props => props.hoverIcon};
   }
 `
 
@@ -134,7 +134,7 @@ const StyledSecondaryFormButton = styled(StyledFormButton)`
   background-color: ${props => props.theme.secondaryButtonBackground};
   &:hover {
     color: ${props => props.theme.secondaryButtonTextHover};
-    border: ${props => props.theme.secondaryButtonBorderHover}
+    border: ${props => props.theme.secondaryButtonBorderHover};
     background-color: ${props => props.theme.secondaryButtonBackground};
   }
 `
@@ -303,6 +303,6 @@ export const SyncSignInButton = styled(FormButton)`
   background-color: #5FB434;
   color: #ffffff;
   &:hover {
-    color: #797979
+    color: #797979;
   }
 `

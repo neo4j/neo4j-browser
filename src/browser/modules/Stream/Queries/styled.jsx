@@ -27,7 +27,7 @@ export const Code = styled.code`
   overflow: hidden;
   color: #c7254e;
   background-color: #f9f2f4;
-  border-radius: 4px
+  border-radius: 4px;
 `
 export const StyledTable = styled.table`
   margin: 20px 10px;

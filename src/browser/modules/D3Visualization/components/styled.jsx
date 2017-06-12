@@ -92,7 +92,7 @@ export const StyledSvgWrapper = styled.div`
       }
     }
     .outline {
-      cursor: pointer
+      cursor: pointer;
     }
     path {
       &.context-menu-item {
@@ -179,7 +179,7 @@ export const StyledInspectorFooterRowListValue = styled.div`
 export const StyledInlineList = styled.ul`
   padding-left: 0;
   list-style: none;
-  word-break: break-word
+  word-break: break-word;
 `
 
 export const StyledInlineListItem = styled.li`
@@ -202,7 +202,7 @@ export const StyledStatusBar = styled.div`
   white-space: nowrap;
   overflow: hidden;
   border-top: 1px solid #e6e9ef;
-  ${props => props.fullscreen ? 'margin-top: -39px;' : 'margin-bottom: -39px;'}
+  ${props => props.fullscreen ? 'margin-top: -39px;' : 'margin-bottom: -39px;'};
 `
 
 export const StyledStatus = styled.div`
@@ -265,7 +265,7 @@ export const StyledLegendContents = styled.div`
 export const StyledLegendRow = styled.div`
   border-bottom: 1px solid #e6e9ef;
   &.contracted {
-    max-height: ${legendRowHeight}px
+    max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
 `
@@ -370,7 +370,7 @@ export const StyledZoomButton = styled.button`
    color:black;
   }
   &:focus {
-    outline: none
+    outline: none;
   }
   &.faded {
    opacity: .3;

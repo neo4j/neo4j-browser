@@ -25,8 +25,8 @@ export const Drawer = styled.div`
 `
 
 export const DrawerHeader = styled.h4`
-  color: ${props => props.theme.primaryHeaderText}
-  background-color: ${props => props.theme.drawerBackground}
+  color: ${props => props.theme.primaryHeaderText};
+  background-color: ${props => props.theme.drawerBackground};
   font-size: 18px;
   height: 73px;
   padding: 25px 0 0 25px;
@@ -42,7 +42,7 @@ export const DrawerToppedHeader = styled(DrawerHeader)`
 `
 
 export const DrawerSubHeader = styled.h5`
-  color: ${props => props.theme.primaryHeaderText}
+  color: ${props => props.theme.primaryHeaderText};
   border-bottom: 1px solid #424650;
   font-size: 14px;
   margin-bottom: 12px;
@@ -72,5 +72,5 @@ export const DrawerFooter = styled.div`
   position: absolute;
   bottom: 12px;
   text-align: center;
-  width: 250px
+  width: 250px;
 `

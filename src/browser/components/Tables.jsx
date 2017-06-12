@@ -39,7 +39,7 @@ const StyledTh = styled.th`
   text-align: left;
   background-color: ${props => props.theme.secondaryBackground};
   border-color: #ddd;
-  padding: 10px 15px
+  padding: 10px 15px;
 `
 const StyledTd = styled.td`
   padding: 5px;

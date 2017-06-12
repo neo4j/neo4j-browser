@@ -45,7 +45,7 @@ const CarouselIndicator = styled.li`
   cursor: pointer;
   background-color: transparent;
   border: 1px solid #fff;
-  border-radius: 10px
+  border-radius: 10px;
   cursor: pointer;
   background-color: rgba(188,195,207,.64);
 `
