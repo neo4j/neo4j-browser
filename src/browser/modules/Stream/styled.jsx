@@ -148,7 +148,7 @@ export const StyledFrameCommand = styled.label`
   overflow: hidden;
   display: block;
   &:before {
-    content: '$ '
+    content: '$ ';
   }
 `
 
@@ -166,15 +166,15 @@ export const DottedLineHover = styled.span`
 `
 
 export const StyledHelpFrame = styled.div`
-  padding: 30px
+  padding: 30px;
 `
 export const StyledHelpContent = styled.div`
-  padding-top: 10px
-  padding-bottom: 10px
+  padding-top: 10px;
+  padding-bottom: 10px;
 `
 export const StyledHelpDescription = styled.div`
-  margin-bottom: 10px
-  font-size: 15px
+  margin-bottom: 10px;
+  font-size: 15px;
 `
 
 export const StyledDiv = styled.div`

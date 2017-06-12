@@ -82,7 +82,7 @@ const CloseButton = styled.button`
   border: 0px;
   font-size : 21px;
   outline: 0;
-  line-height: 1
+  line-height: 1;
 `
 
 export const SmallText = styled.span`
@@ -94,7 +94,7 @@ export const SmallHeaderText = styled.span`
 `
 
 const AlertP = styled.p`
-  margin: 10px
+  margin: 10px;
 `
 
 export const StyledSyncLink = (props) => {

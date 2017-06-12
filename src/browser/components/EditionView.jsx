@@ -46,7 +46,7 @@ const Code = styled.code`
   overflow: hidden;
   color: #c7254e;
   background-color: #f9f2f4;
-  border-radius: 4px
+  border-radius: 4px;
 `
 const P = styled.p`
   margin: 20px 0;

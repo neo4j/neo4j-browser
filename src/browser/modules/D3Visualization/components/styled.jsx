@@ -92,7 +92,7 @@ export const StyledSvgWrapper = styled.div`
       }
     }
     .outline {
-      cursor: pointer
+      cursor: pointer;
     }
     path {
       &.context-menu-item {
@@ -370,7 +370,7 @@ export const StyledZoomButton = styled.button`
    color:black;
   }
   &:focus {
-    outline: none
+    outline: none;
   }
   &.faded {
    opacity: .3;
