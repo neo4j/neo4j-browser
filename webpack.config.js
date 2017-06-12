@@ -87,6 +87,7 @@ const rules = [
       options: {
         presets: [['es2015', {modules: false}], 'react'],
         plugins: [
+          'styled-components',
           'transform-object-rest-spread',
           'preact-require',
           ['transform-react-jsx', {

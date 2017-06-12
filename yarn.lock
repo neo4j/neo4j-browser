@@ -461,6 +461,12 @@ babel-plugin-preact-require@^1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-preact-require/-/babel-plugin-preact-require-1.0.0.tgz#951d1b3753a4ff3ebf6ab53503aacacf5f85326b"
 
+babel-plugin-styled-components@^1.1.4:
+  version "1.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-1.1.4.tgz#b0e6d5bb01059bc7ab9118d3d686f6472ee8e91f"
+  dependencies:
+    stylis "2.0.0"
+
 babel-plugin-syntax-flow@^6.18.0:
   version "6.18.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-syntax-flow/-/babel-plugin-syntax-flow-6.18.0.tgz#4c3ab20a2af26aa20cd25995c398c4eb70310c8d"
@@ -6262,6 +6268,10 @@ styled-components@^2.0.0:
     prop-types "^15.5.4"
     stylis "^2.0.0"
     supports-color "^3.2.3"
+
+stylis@2.0.0:
+  version "2.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-2.0.0.tgz#6785a6546bd73478799a67d49d67086953b50ad5"
 
 stylis@^2.0.0:
   version "2.0.12"
