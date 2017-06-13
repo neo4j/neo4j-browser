@@ -21,6 +21,7 @@
 import uuid from 'uuid'
 import { USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { getBrowserName } from 'services/utils'
+import { scripts as staticScriptsList } from './staticScripts'
 
 export const NAME = 'documents'
 
@@ -29,8 +30,6 @@ export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
 export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
 export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
-
-import {scripts as staticScriptsList} from './staticScripts'
 
 export const getFavorites = (state) => state[NAME]
 const versionSize = 20
@@ -121,4 +120,3 @@ export const favoritesToLoad = (action, store) => {
     return { favorites: null, syncFavorites: false, loadFavorites: false }
   }
 }
-

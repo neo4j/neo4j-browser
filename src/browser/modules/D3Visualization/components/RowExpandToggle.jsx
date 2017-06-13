@@ -24,7 +24,6 @@ import { StyledRowToggle, StyledCaret } from './styled'
 const getHeightFromElem = (rowElem) => (rowElem && rowElem.base) ? rowElem.base.clientHeight : 0
 
 export class RowExpandToggleComponent extends Component {
-
   updateDimensions () {
     this.setState({rowHeight: getHeightFromElem(this.props.rowElem)})
   }

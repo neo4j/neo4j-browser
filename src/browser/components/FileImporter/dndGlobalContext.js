@@ -41,7 +41,6 @@ const getDndContext = () => {
 }
 
 class DndContextWrapping extends Component {
-
   getChildContext () {
     return {
       dragDropManager: getDndContext()

@@ -43,7 +43,7 @@ const _validateConnection = (driver, res, rej) => {
     tmp.close()
     res(driver)
   }).catch((e) => {
-    rej([e, driver])
+    rej(e)
   })
 }
 
@@ -80,7 +80,7 @@ const _getDriversObj = (props, opts = {}) => {
   }
 }
 
-function directConnect (props, opts = {}, onLostConnection = () => {}) {
+function directConnect (props, opts = {}, onLostConnection = () => {}, validateConnection = true) {
   const p = new Promise((resolve, reject) => {
     const creds = opts.withoutCredentials || !props.username
       ? undefined
@@ -88,8 +88,9 @@ function directConnect (props, opts = {}, onLostConnection = () => {}) {
     const driver = _getDriver(props.host, creds, opts, 'bolt://')
     driver.onError = (e) => {
       onLostConnection(e)
-      reject([e, driver])
+      reject(e)
     }
+    if (validateConnection === false) return resolve(driver)
     _validateConnection(driver, resolve, reject)
   })
   return p
@@ -103,7 +104,7 @@ function openConnection (props, opts = {}, onLostConnection) {
       onLostConnection(e)
       _drivers = null
       driversObj.close()
-      reject([e, driver])
+      reject(e)
     }
     const myResolve = (driver) => {
       _drivers = driversObj

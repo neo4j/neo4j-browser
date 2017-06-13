@@ -276,10 +276,10 @@ export const StyledLegend = styled.div`
     margin-top: -${legendRowHeight}px;
   }
 `
-export const StyledLegendInlineList = styled(StyledInlineList) `
+export const StyledLegendInlineList = styled(StyledInlineList)`
   padding: 7px 9px 0px 10px;
 `
-export const StyledLegendInlineListItem = styled(StyledInlineListItem) `
+export const StyledLegendInlineListItem = styled(StyledInlineListItem)`
   display: inline-block;
   margin-bottom: 3px;
 `

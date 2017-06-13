@@ -62,7 +62,7 @@ export const firstSuccessPromise = (list, fn) => {
     return promise
       .catch(() => fn(item))
       .then((r) => Promise.resolve(r))
-  }, Promise.reject())
+  }, Promise.reject(new Error()))
 }
 
 export const isRoutingHost = (host) => {

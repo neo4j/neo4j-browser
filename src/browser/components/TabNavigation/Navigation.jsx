@@ -28,7 +28,6 @@ const Open = 'OPEN'
 const Opening = 'OPENING'
 
 class Navigation extends Component {
-
   constructor (props) {
     super(props)
     this._onTransitionEnd = this.onTransitionEnd.bind(this)

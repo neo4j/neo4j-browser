@@ -47,7 +47,7 @@ export const getServerConfig = (includePrefixes = []) => {
 }
 
 export const getJmxValues = (nameAttributePairs = []) => {
-  if (!nameAttributePairs.length) return Promise.reject(null)
+  if (!nameAttributePairs.length) return Promise.reject(new Error())
   return bolt.directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
     .then((res) => {
       let out = []

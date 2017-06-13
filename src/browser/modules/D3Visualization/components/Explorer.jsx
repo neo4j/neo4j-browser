@@ -59,16 +59,16 @@ export class ExplorerComponent extends Component {
 
   getNodeNeighbours (node, currentNeighbours, callback) {
     if (currentNeighbours.length > this.props.maxNeighbours) {
-      callback({nodes: [], relationships: []})
+      callback(null, {nodes: [], relationships: []})
     }
     this.props.getNeighbours(node.id, currentNeighbours).then((result) => {
       let nodes = result.nodes
       if (result.count > (this.props.maxNeighbours - currentNeighbours.length)) {
         this.state.selectedItem = {type: 'status-item', item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${result.count + currentNeighbours.length} neighbours due to browser config maxNeighbours.`}
       }
-      callback({nodes: nodes, relationships: result.relationships})
+      callback(null, {nodes: nodes, relationships: result.relationships})
     }, () => {
-      callback({nodes: [], relationships: []})
+      callback(null, {nodes: [], relationships: []})
     })
   }
 

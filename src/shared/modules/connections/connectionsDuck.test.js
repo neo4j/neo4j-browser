@@ -22,6 +22,7 @@
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
+import reducer, * as connections from './connectionsDuck'
 
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
@@ -29,7 +30,6 @@ jest.mock('services/bolt/bolt', () => {
     closeConnection: jest.fn()
   }
 })
-import reducer, * as connections from './connectionsDuck'
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(connections.disconnectEpic)

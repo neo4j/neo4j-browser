@@ -154,5 +154,4 @@ export class InspectorComponent extends Component {
       this.props.onExpandToggled && this.props.onExpandToggled(true, 0)
     }
   }
-
 }

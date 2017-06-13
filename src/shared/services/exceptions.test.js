@@ -65,4 +65,3 @@ describe('createErrorObject', () => {
     expect(fn).toHaveBeenCalledWith(1, 2, 3)
   })
 })
-

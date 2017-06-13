@@ -50,7 +50,8 @@ class SyncSignInManager {
   authCallBack (data, error, successFn = null, errorFn = null) {
     if (error) {
       this.serviceAuthenticated = false
-      this.error
+      this.error = error
+      errorFn && errorFn(error)
     } else {
       this.authData = data
       authenticate(this.authData.data_token).then((a) => {

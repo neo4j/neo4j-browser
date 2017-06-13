@@ -23,7 +23,6 @@ import './visualization.css'
 import { dim } from 'browser-styles/constants'
 
 class QueryPlan extends Component {
-
   planInit (el) {
     if (el != null && !this.plan) {
       const NeoConstructor = neo.queryPlan

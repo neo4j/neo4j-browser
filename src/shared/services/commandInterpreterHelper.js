@@ -182,8 +182,7 @@ const availableCommands = [{
             put(frames.add({...action, error, type: 'error'}))
           })
       })
-      .catch((e) => {
-        const error = new Error(e)
+      .catch((error) => {
         put(frames.add({...action, error, type: 'error'}))
       })
   }

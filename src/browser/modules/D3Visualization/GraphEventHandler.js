@@ -80,7 +80,8 @@ export class GraphEventHandler {
     const graph = this.graph
     const graphView = this.graphView
     const graphModelChanged = this.graphModelChanged.bind(this)
-    this.getNodeNeighbours(d, this.graph.findNodeNeighbourIds(d.id), function ({nodes, relationships}) {
+    this.getNodeNeighbours(d, this.graph.findNodeNeighbourIds(d.id), function (err, {nodes, relationships}) {
+      if (err) return
       graph.addNodes(mapNodes(nodes))
       graph.addRelationships(mapRelationships(relationships, graph))
       graphView.update()

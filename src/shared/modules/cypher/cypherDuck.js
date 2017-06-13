@@ -46,12 +46,12 @@ const adHocSession = (driver, resolve, action) => {
 }
 const callClusterMember = (connection, action, store) => {
   return new Promise((resolve, reject) => {
-    bolt.directConnect(connection)
+    bolt.directConnect(connection, undefined, undefined, false) // Ignore validation errors
       .then((driver) => {
         adHocSession(driver, resolve, action)
       })
-      .catch(([e, driver]) => {
-        adHocSession(driver, resolve, action)
+      .catch((e) => {
+        resolve(({type: action.$$responseChannel, success: false, error: e}))
       })
   })
 }
@@ -115,10 +115,10 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
     .mergeMap((action) => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
       return new Promise((resolve, reject) => {
-        bolt.directConnect(action)
+        bolt.directConnect(action, undefined, undefined, false) // Ignore validation errors
           .then((driver) => {
             adHocSession(driver, resolve, action)
           })
-          .catch(([e, driver]) => adHocSession(driver, resolve, action))
+          .catch((e) => resolve(({type: action.$$responseChannel, success: false, error: e})))
       })
     })

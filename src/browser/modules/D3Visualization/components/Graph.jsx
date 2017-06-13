@@ -27,7 +27,6 @@ import {StyledZoomHolder, StyledSvgWrapper, StyledZoomButton} from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
 
 export class GraphComponent extends Component {
-
   constructor (props) {
     super(props)
     this.state = {

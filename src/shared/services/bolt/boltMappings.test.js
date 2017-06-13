@@ -133,11 +133,11 @@ describe('boltMappings', () => {
       let {nodes, relationships} = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types)
       expect(nodes).to.have.lengthOf(2)
       let graphNodeStart = nodes.filter((node) => node.id === '1')[0]
-      expect(graphNodeStart).to.exist
+      expect(graphNodeStart).toBeDefined()
       expect(graphNodeStart.labels).toEqual(['Person'])
       expect(graphNodeStart.properties).toEqual({prop1: 'prop1'})
       let graphNodeEnd = nodes.filter((node) => node.id === '2')[0]
-      expect(graphNodeEnd).to.exist
+      expect(graphNodeEnd).toBeDefined()
       expect(graphNodeEnd.labels).toEqual(['Movie'])
       expect(graphNodeEnd.properties).toEqual({prop2: 'prop2'})
       expect(relationships).to.have.lengthOf(1)
@@ -170,11 +170,11 @@ describe('boltMappings', () => {
       let {nodes, relationships} = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types)
       expect(nodes).to.have.lengthOf(2)
       let graphNodeStart = nodes.filter((node) => node.id === '1')[0]
-      expect(graphNodeStart).to.exist
+      expect(graphNodeStart).toBeDefined()
       expect(graphNodeStart.labels).toEqual(['Person'])
       expect(graphNodeStart.properties).toEqual({prop1: 'prop1'})
       let graphNodeEnd = nodes.filter((node) => node.id === '2')[0]
-      expect(graphNodeEnd).to.exist
+      expect(graphNodeEnd).toBeDefined()
       expect(graphNodeEnd.labels).toEqual(['Movie'])
       expect(graphNodeEnd.properties).toEqual({prop2: 'prop2'})
       expect(relationships).to.have.lengthOf(1)
@@ -251,7 +251,7 @@ describe('boltMappings', () => {
     }
 
     const checkExtractedPlan = (extractedPlan) => {
-      expect(extractedPlan).to.not.be.null
+      expect(extractedPlan).not.toBeNull()
       expect(extractedPlan.operatorType).toEqual('operatorType')
       expect(extractedPlan.identifiers).toEqual([])
       expect(extractedPlan.operatorType).toEqual('operatorType')
@@ -298,7 +298,7 @@ describe('boltMappings', () => {
       const result = {
         summary: {}
       }
-      expect(extractPlan(result)).to.be.null
+      expect(extractPlan(result)).toBeNull()
     })
   })
   describe('flattenProperties', () => {
