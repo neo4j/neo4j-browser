@@ -18,29 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, beforeEach, afterEach, test, expect */
+ /* global describe, beforeEach, afterEach, test, expect */
 import { mount } from 'services/testUtils'
-import ChangePasswordForm from './ChangePasswordForm'
+import DocTitle from './index'
 
-describe('ChangePasswordForm', () => {
-  test('should render when no props are passed', () => {
-    // Given
-    const result = mount(ChangePasswordForm)
+describe('DocTitle', () => {
+  test('should set document title', () => {
+   // Given
+    const titleString = 'foo'
+    const result = mount(DocTitle)
       // When
-      .withProps({})
+      .withProps({titleString})
       .then((wrapper) => {
-        expect(wrapper.length).toBe(1)
-      })
-    return result
-  })
-  test('should render children when passed as props', () => {
-    // Given
-    const children = <span className='child'>foo</span>
-    const result = mount(ChangePasswordForm)
-      // When
-      .withProps({children})
-      .then((wrapper) => {
-        expect(wrapper.html()).toContain('<span class="child">foo</span>')
+        expect(document.title).toBe(titleString)
       })
     return result
   })
