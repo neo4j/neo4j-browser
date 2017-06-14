@@ -38,11 +38,11 @@ describe('formKeyHandler', () => {
   })
   test('should register input element with submit action', () => {
     const submitAction = 'foo'
-    const input = 'bar'
+    const input = <span>bar</span>
     const position = 0
     const formKeyHandler = new FormKeyHandler(submitAction)
 
     formKeyHandler.registerInput(input, position)
-    expect(formKeyHandler.elements).toEqual([input])
+    expect(formKeyHandler.elements[0]).toEqual(input)
   })
 })
