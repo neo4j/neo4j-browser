@@ -35,6 +35,7 @@ import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import UserInteraction from '../UserInteraction'
 import DocTitle from '../DocTitle'
+import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
 import Render from 'browser-components/Render'
 
@@ -98,7 +99,7 @@ const mapStateToProps = (state) => {
     showUnknownCommandBanner: wasUnknownCommand(state),
     errorMessage: getErrorMessage(state),
     loadUdc: allowOutgoingConnections(state),
-    titleString: (connectionData ? connectionData.username + '@' + connectionData.host + ' - ' : '') + 'Neo4j Browser'
+    titleString: asTitleString(connectionData)
   }
 }
 
