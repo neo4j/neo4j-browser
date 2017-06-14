@@ -35,7 +35,7 @@ export default class FormKeyHandler {
     }
   }
 
-  regsiterSubmit (submitAction) {
+  registerSubmit (submitAction) {
     this.submitAction = submitAction
   }
 
