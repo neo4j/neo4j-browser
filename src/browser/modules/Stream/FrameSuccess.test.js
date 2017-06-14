@@ -18,20 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  CarouselIndicatorInactive,
-  CarouselIndicatorActive,
-  StyledUl
-} from './styled'
+/* global describe, beforeEach, afterEach, test, expect */
+import { mount } from 'services/testUtils'
+import FrameSuccess from './FrameSuccess'
 
-const CarouselSlidePicker = ({slides, visibleSlide, onClickEvent}) => {
-  if (!slides || slides.length === 0) return null
-  const Indicators = slides.map((_, i) =>
-    (i !== visibleSlide)
-      ? <CarouselIndicatorInactive onClick={() => onClickEvent(i)} />
-      : <CarouselIndicatorActive onClick={() => onClickEvent(i)} />
-    )
-  return <StyledUl>{Indicators}</StyledUl>
-}
-
-export default CarouselSlidePicker
+describe('FrameSuccess', () => {
+  test('should not render text when no props are passed', () => {
+    // Given
+    const result = mount(FrameSuccess)
+      // When
+      .withProps({})
+      .then((wrapper) => {
+        expect(wrapper.text()).toBe('')
+      })
+    return result
+  })
+  test('should render message value and `undefined` text when message prop is passed', () => {
+    // Given
+    const message = 'bar'
+    const result = mount(FrameSuccess)
+      // When
+      .withProps({message})
+      .then((wrapper) => {
+        expect(wrapper.text().trim()).toBe(message)
+      })
+    return result
+  })
+})

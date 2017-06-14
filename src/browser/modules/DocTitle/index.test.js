@@ -18,20 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  CarouselIndicatorInactive,
-  CarouselIndicatorActive,
-  StyledUl
-} from './styled'
+ /* global describe, beforeEach, afterEach, test, expect */
+import { mount } from 'services/testUtils'
+import DocTitle from './index'
 
-const CarouselSlidePicker = ({slides, visibleSlide, onClickEvent}) => {
-  if (!slides || slides.length === 0) return null
-  const Indicators = slides.map((_, i) =>
-    (i !== visibleSlide)
-      ? <CarouselIndicatorInactive onClick={() => onClickEvent(i)} />
-      : <CarouselIndicatorActive onClick={() => onClickEvent(i)} />
-    )
-  return <StyledUl>{Indicators}</StyledUl>
-}
-
-export default CarouselSlidePicker
+describe('DocTitle', () => {
+  test('should set document title', () => {
+   // Given
+    const titleString = 'foo'
+    const result = mount(DocTitle)
+      // When
+      .withProps({titleString})
+      .then((wrapper) => {
+        expect(document.title).toBe(titleString)
+      })
+    return result
+  })
+})

@@ -18,24 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect, jest */
-import React from 'react'
-import { shallow } from 'enzyme'
+/* global describe, beforeEach, afterEach, test, expect, jest */
+import { mount } from 'services/testUtils'
 import HistoryRow from './HistoryRow'
 
 describe('HistoryRow', () => {
-  test('should render an entry', () => {
-    const entry = {id: 1, cmd: ':first', type: 'x'}
-    const wrapper = shallow(<HistoryRow entry={entry} handleEntryClick={() => null} />)
-    expect(wrapper.find('li').length).toBe(1)
-    expect(wrapper.find('li').text()).toMatch(':first')
-  })
+  test('triggers function on click', () => {
+    // Given
+    const myFn = jest.fn()
+    const entry = 'foobar'
 
-  test('should handle clicks', () => {
-    const handleEntryClick = jest.fn()
-    const entry = {id: 1, cmd: ':first', type: 'x'}
-    const wrapper = shallow(<HistoryRow entry={entry} handleEntryClick={handleEntryClick} />)
-    wrapper.find('li').simulate('click')
-    expect(handleEntryClick).toHaveBeenCalledWith(entry.cmd)
+    // When
+    const result = mount(HistoryRow)
+      .withProps({handleEntryClick: myFn, entry: entry})
+      .then((wrapper) => {
+        wrapper.simulate('click')
+        expect(wrapper.text()).toBe(entry)
+        expect(myFn).toHaveBeenCalledWith(entry)
+      })
+    return result
   })
 })

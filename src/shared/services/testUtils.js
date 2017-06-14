@@ -18,20 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  CarouselIndicatorInactive,
-  CarouselIndicatorActive,
-  StyledUl
-} from './styled'
+import { mount as enyzmeMount } from 'enzyme'
 
-const CarouselSlidePicker = ({slides, visibleSlide, onClickEvent}) => {
-  if (!slides || slides.length === 0) return null
-  const Indicators = slides.map((_, i) =>
-    (i !== visibleSlide)
-      ? <CarouselIndicatorInactive onClick={() => onClickEvent(i)} />
-      : <CarouselIndicatorActive onClick={() => onClickEvent(i)} />
-    )
-  return <StyledUl>{Indicators}</StyledUl>
+export const mount = (Component) => {
+  const wrapper = enyzmeMount(
+    <Component />
+  )
+  return {
+    withProps: (props) => {
+      wrapper.setProps(props)
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => resolve(wrapper), 10)
+      })
+      return p
+    }
+  }
 }
-
-export default CarouselSlidePicker

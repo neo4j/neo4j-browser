@@ -126,10 +126,12 @@ const visualSettings =
   ]
 
 export const Settings = ({settings, onSettingsSave = () => {}}) => {
+  if (!settings) return null
   const mappedSettings = visualSettings.map((visualSetting, i) => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
     const mapSettings = visualSetting.settings.map((settingObj, i) => {
       const setting = Object.keys(settingObj)[0]
+      if (typeof settings[setting] === 'undefined') return false
       const visual = settingObj[setting].displayName
       const tooltip = settingObj[setting].tooltip || ''
 
@@ -139,7 +141,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
           <StyledSettingTextInput onChange={(event) => {
             settings[setting] = event.target.value
             onSettingsSave(settings)
-          }} defaultValue={settings[setting]} title={[tooltip]} />
+          }} defaultValue={settings[setting]} title={[tooltip]} className={setting} />
         </StyledSetting>)
       } else if (settingObj[setting].type === 'radio') {
         return (<StyledSetting key={i}>
@@ -158,7 +160,7 @@ export const Settings = ({settings, onSettingsSave = () => {}}) => {
           <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
         </StyledSetting>)
       }
-    })
+    }).filter((setting) => setting !== false)
     return (
       <div>
         {title}

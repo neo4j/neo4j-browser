@@ -18,20 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  CarouselIndicatorInactive,
-  CarouselIndicatorActive,
-  StyledUl
-} from './styled'
+/* global describe, test, expect */
+import { mount } from 'services/testUtils'
+import { Settings as SettingsComponent } from './Settings'
 
-const CarouselSlidePicker = ({slides, visibleSlide, onClickEvent}) => {
-  if (!slides || slides.length === 0) return null
-  const Indicators = slides.map((_, i) =>
-    (i !== visibleSlide)
-      ? <CarouselIndicatorInactive onClick={() => onClickEvent(i)} />
-      : <CarouselIndicatorActive onClick={() => onClickEvent(i)} />
-    )
-  return <StyledUl>{Indicators}</StyledUl>
-}
+describe('Settings', () => {
+  test('should show known setting values', () => {
+    // Given
+    const result = mount(SettingsComponent)
+      .withProps({ settings: { maxRows: 100 } })
 
-export default CarouselSlidePicker
+      // Then
+      .then((wrapper) => {
+        expect(wrapper.find('.maxRows').prop('value')).toBe(100)
+      })
+
+    // Return test result (promise)
+    return result
+  })
+})
