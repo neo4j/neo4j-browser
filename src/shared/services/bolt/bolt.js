@@ -27,13 +27,14 @@ import { runCypherMessage, cancelTransactionMessage, CYPHER_ERROR_MESSAGE, CYPHE
 let connectionProperties = null
 let boltWorkerRegister = {}
 let cancellationRegister = {}
+let enableWebWorkers = true
 
 function openConnection (props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
     boltConnection.openConnection(props, opts, onLostConnection)
       .then((r) => {
       // TODO : Encryption in opts, properties !! and check other props !!!!
-        connectionProperties = { username: props.username, password: props.password, host: props.host }
+        connectionProperties = { username: props.username, password: props.password, host: props.host, opts }
         resolve(r)
       })
       .catch((e) => {
@@ -53,17 +54,21 @@ function cancelTransaction (id, cb) {
 }
 
 function routedWriteTransaction (input, parameters, requestId = null, cancelable = false) {
-  // TODO check max number of web workers
-  if (window.Worker) {
+  // TODO check max number of web workersnpm
+  // TODO test on cluster connections
+  if (enableWebWorkers && window.Worker) {
     const id = requestId || v4()
     const BoltWorkerModule = require('worker-loader!./boltWorker.js')
     const boltWorker = new BoltWorkerModule()
     boltWorkerRegister[id] = boltWorker
 
+    const workerFinalizer = getWorkerFinalizer(boltWorkerRegister, id)
+
     const workerPromise = new Promise((resolve, reject) => {
       boltWorker.postMessage(runCypherMessage(input, parameters, requestId, cancelable, {...connectionProperties, inheritedUseRouting: boltConnection.useRouting()}))
       boltWorker.onmessage = (msg) => {
         if (msg.data.type === CYPHER_ERROR_MESSAGE) {
+          workerFinalizer(boltWorker)
           reject(msg.data.error)
         } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
           let records = msg.data.result.records.map(record => {
@@ -75,20 +80,10 @@ function routedWriteTransaction (input, parameters, requestId = null, cancelable
           })
 
           let summary = mappings.applyGraphTypes(msg.data.result.summary)
+          workerFinalizer(boltWorker)
           resolve({summary, records})
-
-          if (boltWorkerRegister[id]) {
-            delete boltWorkerRegister[id]
-          }
         } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
-          if (cancellationRegister[id]) {
-            cancellationRegister[id]()
-            delete cancellationRegister[id]
-          }
-
-          if (boltWorkerRegister[id]) {
-            delete boltWorkerRegister[id]
-          }
+          workerFinalizer(boltWorker)
         }
       }
     })
@@ -96,6 +91,21 @@ function routedWriteTransaction (input, parameters, requestId = null, cancelable
     return [id, workerPromise]
   } else {
     return boltConnection.routedWriteTransaction(input, parameters, requestId, cancelable)
+  }
+}
+
+function getWorkerFinalizer (workerRegister, cancellationRegister, workerId) {
+  return (worker) => {
+    if (cancellationRegister[workerId]) {
+      cancellationRegister[workerId]()
+      delete cancellationRegister[workerId]
+    }
+    if (workerRegister[workerId]) {
+      delete workerRegister[workerId]
+    }
+    if (worker) {
+      worker.terminate()
+    }
   }
 }
 

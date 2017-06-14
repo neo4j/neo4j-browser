@@ -28,7 +28,7 @@ const onmessage = function (message) {
   if (messageType === RUN_CYPHER_MESSAGE) {
     const { input, parameters, requestId, cancelable, connectionProperties } = message.data
 
-    ensureConnection(connectionProperties, { }, (e) => {
+    ensureConnection(connectionProperties, connectionProperties.opts, (e) => {
       self.postMessage(cypherErrorMessage(createErrorObject(BoltConnectionError)))
     }).then(() => {
       const [, request] = routedWriteTransaction(input, parameters, requestId, cancelable)
