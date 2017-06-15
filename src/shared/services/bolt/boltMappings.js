@@ -249,8 +249,7 @@ export const applyGraphTypes = (item) => {
     return new neo4j.types.PathSegment(start, relationship, end)
   } else if (item.hasOwnProperty('start') && item.hasOwnProperty('end') && item.hasOwnProperty('type')) {
     return new neo4j.types.Relationship(neo4j.int(item.identity), neo4j.int(item.start), neo4j.int(item.end), item.type, applyGraphTypes(item.properties))
-  } else if (item.hasOwnProperty('low') && item.hasOwnProperty('high')) {
-    // TODO Check types of low and high RETURN {low: 0, high: 5}
+  } else if (item.hasOwnProperty('low') && item.hasOwnProperty('high') && typeof item.low === 'number' && typeof item.high === 'number') {
     return neo4j.int(item)
   } else if (typeof item === 'object') {
     let typedObject = {}

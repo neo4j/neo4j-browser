@@ -24,7 +24,6 @@ import { BoltConnectionError, createErrorObject } from '../exceptions'
 
 const runningQueryRegister = {}
 
-// TODO Check to do it more managed (Construct with a function)
 let _drivers = null
 
 let _useRoutingConfig = false

@@ -8,4 +8,4 @@ exports[`ClickToCode renders children as code if no code is provided 1`] = `"<co
 
 exports[`ClickToCode renders code as the code when code is available 1`] = `"<code>yo</code>"`;
 
-exports[`ClickToCode renders if no CodeComponent is provided 1`] = `"<code class=\\"sc-bdVaJa biJQaZ\\">my code</code>"`;
+exports[`ClickToCode renders if no CodeComponent is provided 1`] = `"<code class=\\"kOlXwI\\">my code</code>"`;

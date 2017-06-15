@@ -33,7 +33,6 @@ function openConnection (props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
     boltConnection.openConnection(props, opts, onLostConnection)
       .then((r) => {
-      // TODO : Encryption in opts, properties !! and check other props !!!!
         connectionProperties = { username: props.username, password: props.password, host: props.host, opts }
         resolve(r)
       })
@@ -54,8 +53,6 @@ function cancelTransaction (id, cb) {
 }
 
 function routedWriteTransaction (input, parameters, requestId = null, cancelable = false) {
-  // TODO check max number of web workersnpm
-  // TODO test on cluster connections
   if (enableWebWorkers && window.Worker) {
     const id = requestId || v4()
     const BoltWorkerModule = require('worker-loader!./boltWorker.js')
