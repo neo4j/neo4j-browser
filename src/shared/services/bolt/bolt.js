@@ -55,7 +55,9 @@ function cancelTransaction (id, cb) {
 function routedWriteTransaction (input, parameters, requestId = null, cancelable = false) {
   if (enableWebWorkers && window.Worker) {
     const id = requestId || v4()
+    /* eslint-disable import/no-webpack-loader-syntax */
     const BoltWorkerModule = require('worker-loader!./boltWorker.js')
+    /* eslint-enable import/no-webpack-loader-syntax */
     const boltWorker = new BoltWorkerModule()
     boltWorkerRegister[id] = boltWorker
 
