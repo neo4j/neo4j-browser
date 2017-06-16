@@ -19,7 +19,7 @@
  */
 
 /* global describe, test, expect */
-import reducer, { NAME, UPDATE, shouldReportUdc } from './settingsDuck'
+import reducer, { NAME, UPDATE, REPLACE, shouldReportUdc } from './settingsDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('settings reducer', () => {
@@ -52,6 +52,19 @@ describe('settings reducer', () => {
     expect(nextState.cmdchar).toEqual(':')
     expect(nextState.greeting).toEqual('woff')
     expect(nextState.type).toEqual('dog')
+  })
+  test('handles REPLACE', () => {
+    const initialState = { greeting: 'hello', type: 'human' }
+    const action = {
+      type: REPLACE,
+      state: {
+        'new': 'conf'
+      }
+    }
+    const nextState = dehydrate(reducer(initialState, action))
+    expect(nextState.greeting).toBeUndefined()
+    expect(nextState.type).toBeUndefined()
+    expect(nextState).toMatchSnapshot()
   })
 })
 

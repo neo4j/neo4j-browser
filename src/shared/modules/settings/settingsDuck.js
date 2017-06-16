@@ -23,6 +23,7 @@ import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
+export const REPLACE = 'settings/REPLACE'
 
 export const getSettings = (state) => state[NAME]
 export const getMaxHistory = (state) => state[NAME].maxHistory || initialState.maxHistory
@@ -77,6 +78,8 @@ export default function settings (state = initialState, action) {
   switch (action.type) {
     case UPDATE:
       return Object.assign({}, state, action.state)
+    case REPLACE:
+      return Object.assign({}, {...initialState}, action.state)
     case USER_CLEAR:
       return initialState
     default:
@@ -96,6 +99,13 @@ export const updateBoltRouting = (useRouting) => {
 export const update = (settings) => {
   return {
     type: UPDATE,
+    state: settings
+  }
+}
+
+export const replace = (settings) => {
+  return {
+    type: REPLACE,
     state: settings
   }
 }
