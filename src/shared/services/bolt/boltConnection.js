@@ -169,7 +169,9 @@ function _transaction (input, parameters, session) {
 }
 
 export function cancelTransaction (id, cb) {
-  if (runningQueryRegister[id]) runningQueryRegister[id](cb)
+  if (runningQueryRegister[id]) {
+    runningQueryRegister[id](cb)
+  }
 }
 
 export function directTransaction (input, parameters, requestId = null, cancelable = false) {

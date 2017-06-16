@@ -61,10 +61,10 @@ function routedWriteTransaction (input, parameters, requestId = null, cancelable
     const boltWorker = new BoltWorkerModule()
     boltWorkerRegister[id] = boltWorker
 
-    const workerFinalizer = getWorkerFinalizer(boltWorkerRegister, id)
+    const workerFinalizer = getWorkerFinalizer(boltWorkerRegister, cancellationRegister, id)
 
     const workerPromise = new Promise((resolve, reject) => {
-      boltWorker.postMessage(runCypherMessage(input, parameters, requestId, cancelable, {...connectionProperties, inheritedUseRouting: boltConnection.useRouting()}))
+      boltWorker.postMessage(runCypherMessage(input, parameters, id, cancelable, {...connectionProperties, inheritedUseRouting: boltConnection.useRouting()}))
       boltWorker.onmessage = (msg) => {
         if (msg.data.type === CYPHER_ERROR_MESSAGE) {
           workerFinalizer(boltWorker)
