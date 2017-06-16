@@ -68,6 +68,7 @@ export const base = {
   formButtonBorder: '1px solid #ccc',
   formButtonBorderHover: '1px solid ##adadad',
   formButtonBackgroundHover: '#e6e6e6',
+  editModeButtonText: '#ffaf00',
 
   // Borders
   frameBorder: 'none',

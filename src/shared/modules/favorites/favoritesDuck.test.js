@@ -50,6 +50,35 @@ describe('favorites reducer', () => {
     const nextState = reducer(initialState, action)
     expect(nextState).toEqual([favoriteScript1, favoriteScript3])
   })
+  test('should return favorite by id', () => {
+    const favoriteScript1 = { id: uuid.v4(), name: 'Test1', content: 'match (n) return n limit 1' }
+    const favoriteScript2 = { id: uuid.v4(), name: 'Test2', content: 'match (a) return a' }
+    const initialState = [
+      favoriteScript1,
+      favoriteScript2
+    ]
+
+    const nextState = reducer(initialState, {})
+    expect(favorites.getFavorite(nextState, favoriteScript1.id)).toEqual(favoriteScript1)
+    expect(favorites.getFavorite(nextState, favoriteScript2.id)).toEqual(favoriteScript2)
+  })
+  test('should update favorite by id', () => {
+    const favoriteScript1 = { id: uuid.v4(), name: 'Test1', content: 'match (n) return n limit 1' }
+    const favoriteScript2 = { id: uuid.v4(), name: 'Test2', content: 'match (a) return a' }
+    const initialState = [
+      favoriteScript1,
+      favoriteScript2
+    ]
+    const newContent = '//Foobar'
+    const action = {
+      type: favorites.UPDATE_FAVORITE,
+      id: favoriteScript1.id,
+      cmd: newContent
+    }
+    const nextState = reducer(initialState, action)
+    expect(favorites.getFavorite(nextState, favoriteScript1.id)).toEqual({...favoriteScript1, content: newContent})
+    expect(favorites.getFavorite(nextState, favoriteScript2.id)).toEqual(favoriteScript2)
+  })
 })
 
 describe('favorites actions', () => {

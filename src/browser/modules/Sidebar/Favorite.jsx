@@ -99,7 +99,9 @@ class FavoriteDp extends Component {
       <StyledListItem isChild={this.props.isChild}>
         <ExecFavortieButton onClick={() => this.props.onExecClick(this.props.content)} />
         <StyledFavoriteText {...this.props}
-          onClick={() => this.props.onItemClick(this.props.content)}>{name}</StyledFavoriteText>
+          onClick={() => this.props.onItemClick(this.props.id, this.props.content)}>
+          {name}
+        </StyledFavoriteText>
         <DeleteFavButton id={this.props.id} removeClick={() => this.props.removeClick(this.props.id)}
           isStatic={this.props.isStatic} />
       </StyledListItem>

@@ -29,19 +29,27 @@ export const ADD_FAVORITE = 'favorites/ADD_FAVORITE'
 export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
 export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
+export const UPDATE_FAVORITE = 'favorites/UPDATE_FAVORITE'
 export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
 
 export const getFavorites = (state) => state[NAME]
+export const getFavorite = (state, id) => state.filter((favorite) => favorite.id === id)[0]
+export const removeFavoriteById = (state, id) => state.filter((favorite) => favorite.id !== id)
 const versionSize = 20
+
 // reducer
 const initialState = staticScriptsList.map(script => Object.assign({}, script, {isStatic: true}))
 
 export default function reducer (state = initialState, action) {
   switch (action.type) {
     case REMOVE_FAVORITE:
-      return state.filter((favorite) => favorite.id !== action.id)
+      return removeFavoriteById(state, action.id)
     case ADD_FAVORITE:
       return state.concat([{id: uuid.v4(), content: action.cmd}])
+    case UPDATE_FAVORITE:
+      const mergedFavorite = Object.assign({}, getFavorite(state, action.id), {content: action.cmd})
+      const updatedFavorites = state.map((_) => _.id === action.id ? mergedFavorite : _)
+      return mergeFavorites(initialState, updatedFavorites)
     case LOAD_FAVORITES:
     case UPDATE_FAVORITES:
       return mergeFavorites(initialState, action.favorites)
@@ -76,6 +84,13 @@ export function syncFavorites (favorites) {
   return {
     type: SYNC_FAVORITES,
     favorites
+  }
+}
+export function updateFavorite (id, cmd) {
+  return {
+    type: UPDATE_FAVORITE,
+    id,
+    cmd
   }
 }
 export function updateFavorites (favorites) {

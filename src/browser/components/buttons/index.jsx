@@ -87,6 +87,10 @@ export const EditorButton = styled.span`
   }
 `
 
+export const EditModeEditorButton = styled(EditorButton)`
+  color: ${props => props.theme.editModeButtonText};
+`
+
 export const StyledNavigationButton = styled.button`
   background: transparent;
   border: 0;
