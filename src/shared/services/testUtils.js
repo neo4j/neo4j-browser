@@ -27,10 +27,8 @@ export const mount = (Component) => {
   return {
     withProps: (props) => {
       wrapper.setProps(props)
-      const p = new Promise((resolve, reject) => {
-        setTimeout(() => resolve(wrapper), 10)
-      })
-      return p
+      wrapper.update()
+      return Promise.resolve(wrapper)
     }
   }
 }
