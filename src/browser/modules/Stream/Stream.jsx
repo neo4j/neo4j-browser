@@ -43,6 +43,7 @@ import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/s
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
+import { deepEquals } from 'services/utils'
 
 const getFrame = (type) => {
   const trans = {
@@ -70,29 +71,14 @@ const getFrame = (type) => {
 }
 
 class Stream extends Component {
-  shouldComponentUpdate (nextProps, nextState) {
-    const frameHasBeenAdded = this.props.frames.length < nextProps.frames.length
-
-    if (this.props.activeConnectionData === nextProps.activeConnectionData &&
-      this.props.requests === nextProps.requests &&
-      (this.props.children.length === nextProps.children.length &&
-        this.props.children.every((child, idx) => {
-          return child === nextProps.children[idx]
-        })) &&
-      (this.props.frames.length === nextProps.frames.length &&
-        this.props.frames.every((crFrame, idx) => {
-          return crFrame.id === nextProps.frames[idx].id
-        }))
-    ) {
-      return false
-    } else {
-      if (this.props.scrollToTop && frameHasBeenAdded) {
-        this.base.scrollTop = 0
-      }
+  shouldComponentUpdate (props) {
+    const frameHasBeenAdded = this.props.frames.length < props.frames.length
+    if (frameHasBeenAdded && this.props.scrollToTop) {
+      this.base.scrollTop = 0
       return true
     }
+    return !deepEquals(props, this.props)
   }
-
   render () {
     return (
       <StyledStream>
@@ -102,11 +88,7 @@ class Stream extends Component {
             activeConnectionData: this.props.activeConnectionData,
             request: this.props.requests[frame.requestId],
             recentView: this.props.recentView,
-            onRecentViewChanged: (view) => {
-              this.props.onRecentViewChanged(view)
-            },
-            maxRows: this.props.maxRows,
-            initialNodeDisplay: this.props.initialNodeDisplay
+            onRecentViewChanged: this.props.onRecentViewChanged.bind(this)
           }
           const MyFrame = getFrame(frame.type)
           return <MyFrame {...frameProps} key={frame.id} />
