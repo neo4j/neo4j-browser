@@ -200,7 +200,7 @@ describe('helpers', () => {
       const view = initialView(props, state)
 
       // Then
-      expect(view).toEqual(viewTypes.ERROR)
+      expect(view).toEqual(viewTypes.ERRORS)
     })
     test('should return the forced view if existent', () => {
       // Given

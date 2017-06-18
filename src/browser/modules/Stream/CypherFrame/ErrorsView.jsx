@@ -46,7 +46,6 @@ export class ErrorsView extends Component {
   }
   render () {
     const { result: error, bus } = this.props
-    console.log(error)
     if (!error) {
       return null
     }

@@ -104,7 +104,7 @@ export const initialView = (props, state = {}) => {
   if (props.request.status === 'pending') return undefined
   if (state.openView !== undefined) return state.openView // If openView exists, this is not initial render
   if (props.frame && props.frame.forceView) return props.frame.forceView
-  if (props.request.status === 'error') return viewTypes.ERROR
+  if (props.request.status === 'error') return viewTypes.ERRORS
   if (resultHasPlan(props.request)) return viewTypes.PLAN
   if (!resultHasRows(props.request)) return viewTypes.TABLE
   // Non forced views
