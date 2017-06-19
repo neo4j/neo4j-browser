@@ -68,7 +68,7 @@ export default class ChangePasswordForm extends Component {
   }
 
   render () {
-    const inputTabOffset = this.props.children ? 1 : 0
+    const inputTabOffset = this.props.children.length
     return (
       <StyledConnectionForm>
         {this.props.children}
