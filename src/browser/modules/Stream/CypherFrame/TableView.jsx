@@ -75,8 +75,11 @@ export class TableView extends Component {
     this.makeState(this.props)
   }
   componentWillReceiveProps (props) {
-    if (!deepEquals(props.result.records, this.props.result.records)) {
-      this.makeState(this.props)
+    if (this.props === undefined ||
+      this.props.result === undefined ||
+      !deepEquals(props.result.records, this.props.result.records)
+    ) {
+      this.makeState(props)
     }
   }
   shouldComponentUpdate (props, state) {
@@ -130,7 +133,7 @@ export class TableStatusbar extends Component {
   }
   makeState (props) {
     const { statusBarMessage } = getBodyAndStatusBarMessages(props.result, props.maxRows)
-    this.setState({ statusBarMessage })
+    if (statusBarMessage !== undefined) this.setState({ statusBarMessage })
   }
   render () {
     return (

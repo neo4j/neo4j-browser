@@ -48,6 +48,8 @@ export class AsciiView extends Component {
   }
   equalProps (props) {
     if (
+      this.props !== undefined &&
+      this.props.result !== undefined &&
       deepEquals(props.result.records, this.props.result.records) &&
       props.maxRows === this.props.maxRows &&
       props._asciiMaxColWidth === this.props._asciiMaxColWidth
@@ -68,7 +70,7 @@ export class AsciiView extends Component {
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
     const serializedRows = stringify(toTable(records))
     this.setState({ serializedRows })
-    this.props.setParentState({ _asciiSerializedRows: serializedRows })
+    this.props.setParentState && this.props.setParentState({ _asciiSerializedRows: serializedRows })
   }
   render () {
     const { _asciiMaxColWidth: maxColWidth = 70 } = this.props

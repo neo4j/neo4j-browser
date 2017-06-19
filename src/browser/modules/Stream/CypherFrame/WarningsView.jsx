@@ -34,9 +34,11 @@ const getWarningComponent = (severity) => {
 
 export class WarningsView extends Component {
   shouldComponentUpdate (props, state) {
+    if (!this.props.result) return true
     return !deepEquals(props.result.summary, this.props.result.summary)
   }
   render () {
+    if (this.props.result === undefined) return null
     const { summary = {} } = this.props.result
     const { notifications = [], statement = {} } = summary
     const { text: cypher = '' } = statement
