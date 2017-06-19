@@ -333,7 +333,7 @@
 .slide-content .border--off-white { border: thin solid #fafafa; }
 .slide-content .border--light-gray { border: thin solid #d8d8d8; }
 .slide-content .border--mid-gray { border: thin solid #909090; }
-.slide-content .border--dark-gray { border: thin solid # 484848 ; }
+.slide-content .border--dark-gray { border: thin solid #484848 ; }
 .slide-content .border--black { border: thin solid #111111; }
 /* Fills for SVG */
 .slide-content .fill-navy { fill: #001F3F; }
