@@ -25,10 +25,10 @@ import { TableStatusbar } from './TableView'
 
 export class CodeView extends Component {
   shouldComponentUpdate (props) {
-    return !deepEquals(props.result, this.props.result)
+    return !this.props.result || !deepEquals(props.result, this.props.result)
   }
   render () {
-    const { request, query } = this.props
+    const { request = {}, query } = this.props
     if (request.status !== 'success') return null
     return (
       <PaddedDiv>
