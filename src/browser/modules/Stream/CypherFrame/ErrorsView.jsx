@@ -46,7 +46,7 @@ export class ErrorsView extends Component {
   }
   render () {
     const { result: error, bus } = this.props
-    if (!error) {
+    if (!error || !error.code) {
       return null
     }
     return (
