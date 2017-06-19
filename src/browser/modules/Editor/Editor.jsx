@@ -330,7 +330,7 @@ export class Editor extends Component {
         <ActionButtonSection>
           <Render if={this.state.contentId}>
             <EditModeEditorButton
-              onClick={() => this.props.onFavortieUpdateClick(this.state.contentId, this.getEditorValue())}
+              onClick={() => this.props.onFavoriteUpdateClick(this.state.contentId, this.getEditorValue())}
               disabled={this.getEditorValue().length < 1}
               color='#ffaf00'
               title='Favorite'
@@ -340,7 +340,7 @@ export class Editor extends Component {
           </Render>
           <Render if={!this.state.contentId}>
             <EditorButton
-              onClick={() => this.props.onFavortieClick(this.getEditorValue())}
+              onClick={() => this.props.onFavoriteClick(this.getEditorValue())}
               disabled={this.getEditorValue().length < 1}
               title='Update favorite'
               hoverIcon='"\58"'
@@ -369,11 +369,11 @@ export class Editor extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFavortieClick: (cmd) => {
+    onFavoriteClick: (cmd) => {
       const action = favorites.addFavorite(cmd)
       ownProps.bus.send(action.type, action)
     },
-    onFavortieUpdateClick: (id, cmd) => {
+    onFavoriteUpdateClick: (id, cmd) => {
       const action = favorites.updateFavorite(id, cmd)
       ownProps.bus.send(action.type, action)
     },

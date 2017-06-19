@@ -136,7 +136,7 @@ const StyledExecFavoriteButton = styled.div`
     opacity: 1;
   }
 `
-export const ExecFavortieButton = (props) => {
+export const ExecFavoriteButton = (props) => {
   return (
     <StyledExecFavoriteButton {...props}>
       <PlainPlayIcon />

@@ -20,7 +20,7 @@
 
 import {connect} from 'preact-redux'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
-import {StyledListItem, StyledFavoriteText, DeleteFavButton, ExecFavortieButton} from './styled'
+import {StyledListItem, StyledFavoriteText, DeleteFavButton, ExecFavoriteButton} from './styled'
 import {withBus} from 'preact-suber'
 import {Component} from 'preact'
 import {DragSource, DropTarget} from 'react-dnd'
@@ -97,7 +97,7 @@ class FavoriteDp extends Component {
     const name = extractNameFromCommand(this.props.content)
     let favoriteContent = (
       <StyledListItem isChild={this.props.isChild}>
-        <ExecFavortieButton onClick={() => this.props.onExecClick(this.props.content)} />
+        <ExecFavoriteButton onClick={() => this.props.onExecClick(this.props.content)} />
         <StyledFavoriteText {...this.props}
           onClick={() => this.props.onItemClick(this.props.id, this.props.content)}>
           {name}
