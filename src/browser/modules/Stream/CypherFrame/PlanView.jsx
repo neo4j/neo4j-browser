@@ -36,14 +36,26 @@ export class PlanView extends Component {
     }
   }
   componentDidMount () {
-    this.extractPlan(this.props.result)
+    this.extractPlan(this.props.result).catch((e) => {})
+  }
+  componentWillReceiveProps (props) {
+    if (!deepEquals((props.result || {}).summary, (this.props.result || {}).summary)) {
+      return this.extractPlan((props.result || {}))
+        .then(() => {
+          this.ensureToggleExpand(props)
+        })
+        .catch((e) => { console.log(e) })
+    }
+    this.ensureToggleExpand(props)
   }
   shouldComponentUpdate (props, state) {
+    if (this.props.result === undefined) return true
     return !deepEquals(props.result.summary, this.props.result.summary) ||
       !shallowEquals(state, this.state) ||
       props._planExpand !== this.props._planExpand
   }
   extractPlan (result) {
+    if (result === undefined) return Promise.reject(new Error('No result'))
     return new Promise((resolve, reject) => {
       const extractedPlan = bolt.extractPlan(result)
       if (extractedPlan) return this.setState({ extractedPlan }, resolve())
@@ -84,14 +96,6 @@ export class PlanView extends Component {
     visit(tmpPlan.root)
     this.plan.display(tmpPlan)
   }
-  componentWillReceiveProps (props) {
-    if (!deepEquals(props.result.summary, this.props.result.summary)) {
-      return this.extractPlan(props.result).then(() => {
-        this.ensureToggleExpand(props)
-      })
-    }
-    this.ensureToggleExpand(props)
-  }
   render () {
     if (!this.state.extractedPlan) return null
     return (
@@ -111,16 +115,19 @@ export class PlanStatusbar extends Component {
     }
   }
   componentDidMount () {
+    if (this.props === undefined || this.props.result === undefined) return
     const extractedPlan = bolt.extractPlan(this.props.result, true)
     if (extractedPlan) this.setState({ extractedPlan })
   }
   componentWillReceiveProps (props) {
-    if (!deepEquals(props.result.summary, this.props.result.summary)) {
+    if (props.result === undefined) return
+    if (this.props.result === undefined || !deepEquals(props.result.summary, this.props.result.summary)) {
       const extractedPlan = bolt.extractPlan(props.result, true)
       this.setState({ extractedPlan })
     }
   }
   shouldComponentUpdate (props, state) {
+    if (this.props.result === undefined) return true
     return !deepEquals(state, this.state)
   }
   render () {
