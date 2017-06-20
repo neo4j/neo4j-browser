@@ -206,15 +206,15 @@ export const updateSettings = (settings) => {
 // Epics
 export const metaQuery = `
 CALL db.labels() YIELD label
-WITH COLLECT(label) AS labels
+WITH COLLECT(label)[..1000] AS labels
 RETURN 'labels' as a, labels as result
 UNION
 CALL db.relationshipTypes() YIELD relationshipType
-WITH COLLECT(relationshipType) AS relationshipTypes
+WITH COLLECT(relationshipType)[..1000] AS relationshipTypes
 RETURN 'relationshipTypes' as a, relationshipTypes as result
 UNION
 CALL db.propertyKeys() YIELD propertyKey
-WITH COLLECT(propertyKey) AS propertyKeys
+WITH COLLECT(propertyKey)[..1000] AS propertyKeys
 RETURN 'propertyKeys' as a, propertyKeys as result
 UNION
 CALL dbms.functions() YIELD name, signature, description
