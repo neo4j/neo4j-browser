@@ -128,12 +128,53 @@ export class CypherFrame extends Component {
       </FrameSidebar>
     )
   }
-  render () {
-    const { frame = {}, request = {} } = this.props
-    const { cmd: query = '' } = frame
-    const { result = {}, status: requestStatus } = request
-    let frameContents = ''
-    const statusBar = this.state.openView !== viewTypes.VISUALIZATION ? ( // Because <StyledStatsBarContainer> adds height
+  getSpinner () {
+    return (
+      <Centered>
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+      </Centered>
+    )
+  }
+  getFrameContents (request, result, query) {
+    return (
+      <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
+        <Display if={this.state.openView === viewTypes.TEXT} lazy>
+          <AsciiView {...this.state} maxRows={this.props.maxRows} result={result} setParentState={this.setState.bind(this)} />
+        </Display>
+        <Display if={this.state.openView === viewTypes.TABLE} lazy>
+          <TableView {...this.state} maxRows={this.props.maxRows} result={result} setParentState={this.setState.bind(this)} />
+        </Display>
+        <Display if={this.state.openView === viewTypes.CODE} lazy>
+          <CodeView {...this.state} result={result} request={request} query={query} setParentState={this.setState.bind(this)} />
+        </Display>
+        <Display if={this.state.openView === viewTypes.ERRORS} lazy>
+          <ErrorsView {...this.state} result={result} setParentState={this.setState.bind(this)} />
+        </Display>
+        <Display if={this.state.openView === viewTypes.WARNINGS} lazy>
+          <WarningsView {...this.state} result={result} setParentState={this.setState.bind(this)} />
+        </Display>
+        <Display if={this.state.openView === viewTypes.PLAN} lazy>
+          <PlanView {...this.state} result={result} setParentState={this.setState.bind(this)} />
+        </Display>
+        <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
+          <VisualizationConnectedBus
+            {...this.state}
+            result={result}
+            setParentState={this.setState.bind(this)}
+            frameHeight={this.state.frameHeight}
+            assignVisElement={(svgElement, graphElement) => { this.visElement = {svgElement, graphElement} }}
+            initialNodeDisplay={this.props.initialNodeDisplay}
+            autoComplete={this.props.autoComplete}
+            maxNeighbours={this.props.maxNeighbours}
+          />
+        </Display>
+      </StyledFrameBody>
+    )
+  }
+  getStatusbar (result) {
+    return (
       <StyledStatsBarContainer>
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiStatusbar {...this.state} maxRows={this.props.maxRows} result={result} setParentState={this.setState.bind(this)} />
@@ -154,58 +195,23 @@ export class CypherFrame extends Component {
           <PlanStatusbar {...this.state} result={result} setParentState={this.setState.bind(this)} />
         </Display>
       </StyledStatsBarContainer>
-    ) : null
+    )
+  }
+  render () {
+    const { frame = {}, request = {} } = this.props
+    const { cmd: query = '' } = frame
+    const { result = {}, status: requestStatus } = request
 
-    if (requestStatus !== 'pending') {
-      frameContents =
-        <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
-          <Display if={this.state.openView === viewTypes.TEXT} lazy>
-            <AsciiView {...this.state} maxRows={this.props.maxRows} result={result} setParentState={this.setState.bind(this)} />
-          </Display>
-          <Display if={this.state.openView === viewTypes.TABLE} lazy>
-            <TableView {...this.state} maxRows={this.props.maxRows} result={result} setParentState={this.setState.bind(this)} />
-          </Display>
-          <Display if={this.state.openView === viewTypes.CODE} lazy>
-            <CodeView {...this.state} result={result} request={request} query={query} setParentState={this.setState.bind(this)} />
-          </Display>
-          <Display if={this.state.openView === viewTypes.ERRORS} lazy>
-            <ErrorsView {...this.state} result={result} setParentState={this.setState.bind(this)} />
-          </Display>
-          <Display if={this.state.openView === viewTypes.WARNINGS} lazy>
-            <WarningsView {...this.state} result={result} setParentState={this.setState.bind(this)} />
-          </Display>
-          <Display if={this.state.openView === viewTypes.PLAN} lazy>
-            <PlanView {...this.state} result={result} setParentState={this.setState.bind(this)} />
-          </Display>
-          <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
-            <VisualizationConnectedBus
-              {...this.state}
-              result={result}
-              setParentState={this.setState.bind(this)}
-              frameHeight={this.state.frameHeight}
-              assignVisElement={(svgElement, graphElement) => { this.visElement = {svgElement, graphElement} }}
-              initialNodeDisplay={this.props.initialNodeDisplay}
-              autoComplete={this.props.autoComplete}
-              maxNeighbours={this.props.maxNeighbours}
-            />
-          </Display>
-        </StyledFrameBody>
-    } else if (requestStatus === 'pending') {
-      frameContents = (
-        <Centered>
-          <SpinnerContainer>
-            <Spinner />
-          </SpinnerContainer>
-        </Centered>
-      )
-    }
+    const frameContents = requestStatus !== 'pending' ? this.getFrameContents(request, result, query) : this.getSpinner()
+    const statusBar = this.state.openView !== viewTypes.VISUALIZATION ? this.getStatusbar(result) : null
+
     return (
       <FrameTemplate
         sidebar={this.sidebar.bind(this)}
         header={frame}
         contents={frameContents}
-        exportData={this.state.exportData}
         statusbar={statusBar}
+        exportData={this.state.exportData}
         onResize={this.onResize.bind(this)}
         visElement={this.visElement}
       />
