@@ -19,7 +19,11 @@
  */
 
 const BrowserSyncAuthWindow = (url, callback) => {
-  const win = window.open(url, 'loginWindow', 'location=0,status=0,scrollbars=0, width=1080,height=720')
+  const win = window.open(
+    url,
+    'loginWindow',
+    'location=0,status=0,scrollbars=0, width=1080,height=720'
+  )
   const pollInterval = setInterval(() => {
     win.postMessage('Polling for results', url)
   }, 6000)
@@ -28,11 +32,15 @@ const BrowserSyncAuthWindow = (url, callback) => {
   } catch (e) {
     callback(null, e)
   }
-  window.addEventListener('message', (event) => {
-    clearInterval(pollInterval)
-    callback(event.data)
-    win.close()
-  }, false)
+  window.addEventListener(
+    'message',
+    event => {
+      clearInterval(pollInterval)
+      callback(event.data)
+      win.close()
+    },
+    false
+  )
 }
 
 export default BrowserSyncAuthWindow

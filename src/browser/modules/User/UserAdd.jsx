@@ -22,7 +22,11 @@ import { Component } from 'preact'
 import { withBus } from 'preact-suber'
 
 import bolt from 'services/bolt/bolt'
-import { listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
+import {
+  listRolesQuery,
+  createDatabaseUser,
+  addRoleToUser
+} from 'shared/modules/cypher/boltUserHelper'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
@@ -32,7 +36,12 @@ import FrameSuccess from '../Stream/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { FormButton, StyledLink } from 'browser-components/buttons'
-import {StyledTable, StyledBodyTr, StyledTh, StyledTd} from 'browser-components/DataTables'
+import {
+  StyledTable,
+  StyledBodyTr,
+  StyledTh,
+  StyledTd
+} from 'browser-components/DataTables'
 
 export class UserAdd extends Component {
   constructor (props) {
@@ -64,19 +73,24 @@ export class UserAdd extends Component {
   listRoles () {
     return this.state.roles.map((role, i) => {
       return (
-        <FormButton key={i} label={role} icon={<CloseIcon />} onClick={() => {
-          this.setState({roles: this.removeRole(role)})
-        }} />
+        <FormButton
+          key={i}
+          label={role}
+          icon={<CloseIcon />}
+          onClick={() => {
+            this.setState({ roles: this.removeRole(role) })
+          }}
+        />
       )
     })
   }
   addRoles () {
     let errors = []
-    this.state.roles.forEach((role) => {
+    this.state.roles.forEach(role => {
       this.props.bus.self(
         CYPHER_REQUEST,
-        {query: addRoleToUser(this.state.username, role)},
-        (response) => {
+        { query: addRoleToUser(this.state.username, role) },
+        response => {
           if (!response.success) {
             return errors.add(response.error)
           }
@@ -84,60 +98,77 @@ export class UserAdd extends Component {
       )
     })
     if (errors.length > 0) {
-      return this.setState({errors: errors})
+      return this.setState({ errors: errors })
     }
-    return this.setState({success: `${this.state.username} created`})
+    return this.setState({ success: `${this.state.username} created` })
   }
   getRoles () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: listRolesQuery()},
-      (response) => {
+      { query: listRolesQuery() },
+      response => {
         if (!response.success) {
-          return this.setState({errors: ['Unable to create user', response.error]})
+          return this.setState({
+            errors: ['Unable to create user', response.error]
+          })
         }
-        const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
-        return this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(response.result))})
-      })
+        const flatten = arr =>
+          arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+        return this.setState({
+          availableRoles: flatten(
+            this.extractUserNameAndRolesFromBolt(response.result)
+          )
+        })
+      }
+    )
   }
   submit () {
-    this.setState({success: null, errors: null})
+    this.setState({ success: null, errors: null })
     let errors = []
     if (!this.state.username) errors.push('Missing username')
     if (!this.state.password) errors.push('Missing password')
-    if (!(this.state.password === this.state.confirmPassword)) errors.push('Passwords are not the same')
+    if (!(this.state.password === this.state.confirmPassword)) {
+      errors.push('Passwords are not the same')
+    }
     if (errors.length !== 0) {
-      return this.setState({errors: errors})
+      return this.setState({ errors: errors })
     } else {
-      this.setState({errors: null})
+      this.setState({ errors: null })
       return this.createUser()
     }
   }
   createUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: createDatabaseUser(this.state)},
-      (response) => {
+      { query: createDatabaseUser(this.state) },
+      response => {
         if (!response.success) {
-          return this.setState({errors: ['Unable to create user', response.error]})
+          return this.setState({
+            errors: ['Unable to create user', response.error]
+          })
         }
         return this.addRoles.bind(this)
-      })
+      }
+    )
   }
   updateUsername (event) {
-    return this.setState({username: event.target.value})
+    return this.setState({ username: event.target.value })
   }
   updatePassword (event) {
-    return this.setState({password: event.target.value})
+    return this.setState({ password: event.target.value })
   }
   confirmUpdatePassword (event) {
-    return this.setState({confirmPassword: event.target.value})
+    return this.setState({ confirmPassword: event.target.value })
   }
   updateForcePasswordChange (event) {
-    return this.setState({forcePasswordChange: !this.state.forcePasswordChange})
+    return this.setState({
+      forcePasswordChange: !this.state.forcePasswordChange
+    })
   }
   availableRoles () {
-    return this.state.availableRoles.filter(role => this.state.roles.indexOf(role) < 0)
+    return this.state.availableRoles.filter(
+      role => this.state.roles.indexOf(role) < 0
+    )
   }
 
   openListUsersFrame () {
@@ -146,15 +177,26 @@ export class UserAdd extends Component {
   }
 
   render () {
-    const listOfAvailableRoles = (this.state.availableRoles)
-      ? (<RolesSelector roles={this.availableRoles()} onChange={(event) => {
-        this.setState({roles: this.state.roles.concat([event.target.value])})
-      }} />)
+    const listOfAvailableRoles = this.state.availableRoles
+      ? <RolesSelector
+        roles={this.availableRoles()}
+        onChange={event => {
+          this.setState({
+            roles: this.state.roles.concat([event.target.value])
+          })
+        }}
+        />
       : '-'
-    const tableHeaders = ['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change'].map((heading, i) => {
-      return (<StyledTh key={i}>{heading}</StyledTh>)
+    const tableHeaders = [
+      'Username',
+      'Roles(s)',
+      'Set Password',
+      'Confirm Password',
+      'Force Password Change'
+    ].map((heading, i) => {
+      return <StyledTh key={i}>{heading}</StyledTh>
     })
-    const errors = (this.state.errors) ? this.state.errors.join(', ') : null
+    const errors = this.state.errors ? this.state.errors.join(', ') : null
     const table = (
       <StyledTable>
         <thead>
@@ -165,20 +207,32 @@ export class UserAdd extends Component {
         <tbody>
           <StyledBodyTr>
             <StyledTd>
-              <input className='username' onChange={this.updateUsername.bind(this)} />
+              <input
+                className='username'
+                onChange={this.updateUsername.bind(this)}
+              />
             </StyledTd>
             <StyledTd>
               {listOfAvailableRoles}
               {this.listRoles()}
             </StyledTd>
             <StyledTd>
-              <input onChange={this.updatePassword.bind(this)} type='password' />
+              <input
+                onChange={this.updatePassword.bind(this)}
+                type='password'
+              />
             </StyledTd>
             <StyledTd>
-              <input onChange={this.confirmUpdatePassword.bind(this)} type='password' />
+              <input
+                onChange={this.confirmUpdatePassword.bind(this)}
+                type='password'
+              />
             </StyledTd>
             <StyledTd>
-              <input onClick={this.updateForcePasswordChange.bind(this)} type='checkbox' />
+              <input
+                onClick={this.updateForcePasswordChange.bind(this)}
+                type='checkbox'
+              />
             </StyledTd>
           </StyledBodyTr>
           <StyledBodyTr>
@@ -199,14 +253,10 @@ export class UserAdd extends Component {
       </div>
     )
     return (
-      <FrameTemplate
-        header={this.props.frame}
-        contents={frameContents}
-      >
+      <FrameTemplate header={this.props.frame} contents={frameContents}>
         <FrameError message={errors} />
         <FrameSuccess message={this.state.success} />
       </FrameTemplate>
-
     )
   }
 }

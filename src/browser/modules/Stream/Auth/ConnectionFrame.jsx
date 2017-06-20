@@ -23,7 +23,7 @@ import { Component } from 'preact'
 import FrameTemplate from '../FrameTemplate'
 import ConnectionForm from './ConnectionForm'
 import FrameError from '../FrameError'
-import {H3} from 'browser-components/headers'
+import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 
 import Render from 'browser-components/Render'
@@ -41,23 +41,30 @@ export class ConnectionFrame extends Component {
     }
   }
   error (e) {
-    this.setState({error: e})
+    this.setState({ error: e })
   }
   success () {
-    this.setState({success: true})
+    this.setState({ success: true })
   }
   render () {
     return (
       <FrameTemplate
         header={this.props.frame}
-        statusbar={<FrameError code={this.state.error.code} message={this.state.error.message} />}
+        statusbar={
+          <FrameError
+            code={this.state.error.code}
+            message={this.state.error.message}
+          />
+        }
         contents={
           <StyledConnectionFrame>
             <StyledConnectionAside>
               <Render if={!this.state.success}>
                 <div>
                   <H3>Connect to Neo4j</H3>
-                  <Lead>Database access requires an authenticated connection.</Lead>
+                  <Lead>
+                    Database access requires an authenticated connection.
+                  </Lead>
                 </div>
               </Render>
               <Render if={this.state.success}>
@@ -68,10 +75,14 @@ export class ConnectionFrame extends Component {
               </Render>
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>
-              <ConnectionForm {...this.props} onSuccess={this.success.bind(this)} error={this.error.bind(this)} />
+              <ConnectionForm
+                {...this.props}
+                onSuccess={this.success.bind(this)}
+                error={this.error.bind(this)}
+              />
             </StyledConnectionBodyContainer>
           </StyledConnectionFrame>
-          }
+        }
       />
     )
   }

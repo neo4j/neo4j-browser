@@ -52,25 +52,33 @@ export const StyledFrame = styled.article`
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
   animation: ${rollDownAnimation} .2s linear;
   border: ${props => props.theme.frameBorder};
-  margin: ${props => props.fullscreen ? '0' : '10px 0px 10px 0px'};
-  ${props => props.fullscreen ? 'position: fixed' : null};
-  ${props => props.fullscreen ? 'left: 0' : null};
-  ${props => props.fullscreen ? 'top: 0' : null};
-  ${props => props.fullscreen ? 'bottom: 0' : null};
-  ${props => props.fullscreen ? 'right: 0' : null};
-  ${props => props.fullscreen ? 'z-index: 1030' : null};
+  margin: ${props => (props.fullscreen ? '0' : '10px 0px 10px 0px')};
+  ${props => (props.fullscreen ? 'position: fixed' : null)};
+  ${props => (props.fullscreen ? 'left: 0' : null)};
+  ${props => (props.fullscreen ? 'top: 0' : null)};
+  ${props => (props.fullscreen ? 'bottom: 0' : null)};
+  ${props => (props.fullscreen ? 'right: 0' : null)};
+  ${props => (props.fullscreen ? 'z-index: 1030' : null)};
 `
 
 export const StyledVisContainer = styled.div`
   width: 100%;
-  height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameTitlebarHeight * 2)) + 'px')};
+  height: ${props =>
+    props.fullscreen
+      ? '100vh'
+      : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};
   display : ${props => props.style.display};
 `
 
 export const StyledFrameBody = styled.div`
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : (dim.frameBodyHeight - dim.frameStatusbarHeight) + 1 + 'px')};
-  display: ${props => props.collapsed ? 'none' : 'flex'};
+  max-height: ${props =>
+    props.collapsed
+      ? 0
+      : props.fullscreen
+        ? '100%'
+        : dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'};
+  display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
 `
 
@@ -83,13 +91,17 @@ export const StyledFrameMainSection = styled.div`
 export const StyledFrameContents = styled.div`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameStatusbarHeight * 2)) + 'px')};
-  ${props => props.fullscreen ? 'height: 100vh' : null};
+  max-height: ${props =>
+    props.fullscreen
+      ? '100vh'
+      : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
+  ${props => (props.fullscreen ? 'height: 100vh' : null)};
 `
 
 export const PaddedDiv = styled.div`
   padding: 0 20px 20px 20px;
-  padding-bottom: ${props => (props.fullscreen ? (dim.frameTitlebarHeight + 20) + 'px' : '20px')};
+  padding-bottom: ${props =>
+    props.fullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
 `
 
 export const PaddedTableViewDiv = styled(PaddedDiv)`
@@ -111,7 +123,7 @@ export const StyledFrameSidebar = styled.ul`
 export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight + 1}px;
-  ${props => props.fullscreen ? 'margin-top: -78px;' : ''};
+  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
   display: flex;
   flex-direction: row;
 `

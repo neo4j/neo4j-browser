@@ -34,7 +34,7 @@ import settings from '../../../shared/modules/settings/settingsDuck'
 describe('Sidebar', () => {
   const reducer = combineReducers({
     favorites,
-    documents: (a) => a || null,
+    documents: a => a || null,
     settings
   })
   const store = createStore(reducer)

@@ -18,10 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { StyledConnectionBody, StyledCode, StyledConnectionFooter } from './styled'
+import {
+  StyledConnectionBody,
+  StyledCode,
+  StyledConnectionFooter
+} from './styled'
 import Render from 'browser-components/Render'
 
-const ConnectedView = ({host, username, storeCredentials, showHost = true}) => {
+const ConnectedView = ({
+  host,
+  username,
+  storeCredentials,
+  showHost = true
+}) => {
   return (
     <StyledConnectionBody>
       You are connected as user <StyledCode>{username}</StyledCode><br />
@@ -29,7 +38,8 @@ const ConnectedView = ({host, username, storeCredentials, showHost = true}) => {
         <span>to the server <StyledCode>{host}</StyledCode><br /></span>
       </Render>
       <StyledConnectionFooter>
-        Connection credentials are {(storeCredentials ? '' : 'not ')}stored in your web browser.
+        Connection credentials are {storeCredentials ? '' : 'not '}stored in
+        your web browser.
       </StyledConnectionFooter>
     </StyledConnectionBody>
   )

@@ -34,7 +34,7 @@ export const StyledDrawer = styled.div`
   background-color: #30333A;
   overflow-x: hidden;
   overflow-y: auto;
-  width: ${props => props.open ? '300px' : '0px'};
+  width: ${props => (props.open ? '300px' : '0px')};
   transition: .2s ease-out;
   z-index: 1;
 `

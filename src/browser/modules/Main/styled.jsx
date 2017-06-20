@@ -22,7 +22,7 @@ import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
 import { SyncSignInButton } from 'browser-components/buttons'
 
-const grow = (height) => {
+const grow = height => {
   return keyframes`
     0% {
       max-height: 0px;

@@ -202,7 +202,8 @@ export const StyledStatusBar = styled.div`
   white-space: nowrap;
   overflow: hidden;
   border-top: 1px solid #e6e9ef;
-  ${props => props.fullscreen ? 'margin-top: -39px;' : 'margin-bottom: -39px;'};
+  ${props =>
+    props.fullscreen ? 'margin-top: -39px;' : 'margin-bottom: -39px;'};
 `
 
 export const StyledStatus = styled.div`
@@ -271,7 +272,7 @@ export const StyledLegendRow = styled.div`
 `
 export const StyledLegend = styled.div`
   background-color: ${props => props.theme.secondaryBackground};
-  margin-top: -${(legendRowHeight * 2) + 1}px;
+  margin-top: -${legendRowHeight * 2 + 1}px;
   &.one-row {
     margin-top: -${legendRowHeight}px;
   }
@@ -335,8 +336,11 @@ export const StyledCaptionSelector = styled.a`
 
 export const StyledFullSizeContainer = styled.div`
   height: 100%;
-  padding-top: ${(legendRowHeight * 2) + 1}px;
-  padding-bottom: ${props => props.forcePaddingBottom ? (props.forcePaddingBottom + 2 * pMarginTop) + 'px' : '39px'};
+  padding-top: ${legendRowHeight * 2 + 1}px;
+  padding-bottom: ${props =>
+    props.forcePaddingBottom
+      ? props.forcePaddingBottom + 2 * pMarginTop + 'px'
+      : '39px'};
   &.one-legend-row {
     padding-top: ${legendRowHeight}px;
   }

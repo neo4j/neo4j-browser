@@ -19,7 +19,7 @@
  */
 
 import { Component } from 'preact'
-import {NativeTypes} from 'react-dnd-html5-backend'
+import { NativeTypes } from 'react-dnd-html5-backend'
 import { DropTarget } from 'react-dnd'
 import { wrapWithDndContext } from './dndGlobalContext'
 
@@ -28,13 +28,15 @@ const fileTarget = {
     const file = monitor.getItem().files[0]
     if (file.name.endsWith(`.${props.expectedExtension}`)) {
       const fileReader = new FileReader()
-      fileReader.onloadend = (evt) => {
+      fileReader.onloadend = evt => {
         props.onImportSuccess(evt.target.result)
       }
       fileReader.readAsText(file)
-      return {message: `Imported file: ${file.name}`}
+      return { message: `Imported file: ${file.name}` }
     } else {
-      return {message: `File not imported. Expected File to have an extension of '${props.expectedExtension}'`}
+      return {
+        message: `File not imported. Expected File to have an extension of '${props.expectedExtension}'`
+      }
     }
   }
 }
@@ -50,7 +52,7 @@ class FileDropZone extends Component {
   componentWillUpdate () {
     const result = this.props.getDropResult
     if (result && result.message) {
-      this.setState({text: result.message})
+      this.setState({ text: result.message })
     }
   }
   render () {
@@ -63,13 +65,17 @@ class FileDropZone extends Component {
 }
 
 export const FileDrop = (Component, applyContext) => {
-  let WrappedComponent = (props) => {
-    return (<FileDropZone {...props} Component={Component} />)
+  let WrappedComponent = props => {
+    return <FileDropZone {...props} Component={Component} />
   }
-  const Target = DropTarget(NativeTypes.FILE, fileTarget, (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    canDrop: monitor.canDrop(),
-    getDropResult: monitor.getDropResult()
-  }))(WrappedComponent)
+  const Target = DropTarget(
+    NativeTypes.FILE,
+    fileTarget,
+    (connect, monitor) => ({
+      connectDropTarget: connect.dropTarget(),
+      canDrop: monitor.canDrop(),
+      getDropResult: monitor.getDropResult()
+    })
+  )(WrappedComponent)
   return wrapWithDndContext(Target)
 }

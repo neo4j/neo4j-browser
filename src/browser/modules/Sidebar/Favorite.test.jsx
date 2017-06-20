@@ -49,7 +49,9 @@ describe('FavoriteComponent', () => {
     ]
     testCases.forEach((testCase, i) => {
       test(`should extract name of script from case ${i}`, () => {
-        const wrapper = shallow(<FavoriteComponent content={testCase.command} />)
+        const wrapper = shallow(
+          <FavoriteComponent content={testCase.command} />
+        )
         const item = wrapper.find('.favorite')
         expect(item.length).toBe(1)
         expect(item.props().primaryText).toEqual(testCase.expected)
@@ -59,7 +61,9 @@ describe('FavoriteComponent', () => {
 
   test('should show tigger event with content of script', () => {
     const onItemClick = jest.fn()
-    const wrapper = shallow(<FavoriteComponent content={'Cypher'} onItemClick={onItemClick} />)
+    const wrapper = shallow(
+      <FavoriteComponent content={'Cypher'} onItemClick={onItemClick} />
+    )
     const favoriteElement = wrapper.find('.favorite')
     expect(favoriteElement.length).toBe(1)
     favoriteElement.first().simulate('click')
@@ -69,7 +73,9 @@ describe('FavoriteComponent', () => {
   test('should remove favorite that has been clicked', () => {
     const id = 'SomeId'
     const onRemoveClick = jest.fn()
-    const wrapper = mount(<FavoriteComponent id={id} content='hej' removeClick={onRemoveClick} />)
+    const wrapper = mount(
+      <FavoriteComponent id={id} content='hej' removeClick={onRemoveClick} />
+    )
     const favoriteElement = wrapper.find('.favorite')
     expect(favoriteElement.length).toBe(1)
     wrapper.find('.remove').simulate('click')

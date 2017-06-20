@@ -21,8 +21,18 @@
 import { ecsapeCypherMetaItem } from 'services/utils'
 import classNames from 'classnames'
 import styles from './style_meta.css'
-import {DrawerSubHeader, DrawerSection, DrawerSectionBody} from 'browser-components/drawer'
-import { StyledLabel, StyledRelationship, StyledProperty, StyledShowMoreContainer, StyledShowMoreLink } from './styled'
+import {
+  DrawerSubHeader,
+  DrawerSection,
+  DrawerSectionBody
+} from 'browser-components/drawer'
+import {
+  StyledLabel,
+  StyledRelationship,
+  StyledProperty,
+  StyledShowMoreContainer,
+  StyledShowMoreLink
+} from './styled'
 import Render from 'browser-components/Render'
 
 const ShowMore = ({ total, shown, moreStep, onMore }) => {
@@ -30,15 +40,25 @@ const ShowMore = ({ total, shown, moreStep, onMore }) => {
   return (
     <Render if={shown < total}>
       <StyledShowMoreContainer>
-        <StyledShowMoreLink onClick={() => onMore(numMore)}>Show {numMore} more</StyledShowMoreLink>
+        <StyledShowMoreLink onClick={() => onMore(numMore)}>
+          Show {numMore} more
+        </StyledShowMoreLink>
         &nbsp;|&nbsp;
-        <StyledShowMoreLink onClick={() => onMore(total)}>Show all</StyledShowMoreLink>
+        <StyledShowMoreLink onClick={() => onMore(total)}>
+          Show all
+        </StyledShowMoreLink>
       </StyledShowMoreContainer>
     </Render>
   )
 }
 
-const createItems = (originalList, onItemClick, RenderType, editorCommandTemplate, showStar = true) => {
+const createItems = (
+  originalList,
+  onItemClick,
+  RenderType,
+  editorCommandTemplate,
+  showStar = true
+) => {
   let items = [...originalList]
   if (showStar) {
     items.unshift('*')
@@ -48,81 +68,145 @@ const createItems = (originalList, onItemClick, RenderType, editorCommandTemplat
     return (
       <RenderType.component
         key={index}
-        onClick={() => onItemClick(getNodesCypher)}>
+        onClick={() => onItemClick(getNodesCypher)}
+      >
         {text}
       </RenderType.component>
     )
   })
 }
-const LabelItems = ({labels, totalNumItems, onItemClick, moreStep, onMoreClick}) => {
+const LabelItems = ({
+  labels,
+  totalNumItems,
+  onItemClick,
+  moreStep,
+  onMoreClick
+}) => {
   let labelItems = <p>There are no labels in database</p>
   if (labels.length) {
-    const editorCommandTemplate = (text) => {
+    const editorCommandTemplate = text => {
       if (text === '*') {
         return 'MATCH (n) RETURN n LIMIT 25'
       }
       return `MATCH (n:${ecsapeCypherMetaItem(text)}) RETURN n LIMIT 25`
     }
-    labelItems = createItems(labels, onItemClick, {component: StyledLabel}, editorCommandTemplate)
+    labelItems = createItems(
+      labels,
+      onItemClick,
+      { component: StyledLabel },
+      editorCommandTemplate
+    )
   }
   return (
     <DrawerSection>
       <DrawerSubHeader>Node Labels</DrawerSubHeader>
-      <DrawerSectionBody className={classNames({
-        [styles['wrapper']]: true
-      })}>
+      <DrawerSectionBody
+        className={classNames({
+          [styles['wrapper']]: true
+        })}
+      >
         {labelItems}
       </DrawerSectionBody>
-      <ShowMore total={totalNumItems} shown={labels.length} moreStep={moreStep} onMore={onMoreClick} />
+      <ShowMore
+        total={totalNumItems}
+        shown={labels.length}
+        moreStep={moreStep}
+        onMore={onMoreClick}
+      />
     </DrawerSection>
   )
 }
-const RelationshipItems = ({relationshipTypes, totalNumItems, onItemClick, moreStep, onMoreClick}) => {
+const RelationshipItems = ({
+  relationshipTypes,
+  totalNumItems,
+  onItemClick,
+  moreStep,
+  onMoreClick
+}) => {
   let relationshipItems = <p>No relationships in database</p>
   if (relationshipTypes.length > 0) {
-    const editorCommandTemplate = (text) => {
+    const editorCommandTemplate = text => {
       if (text === '*') {
         return 'MATCH p=()-->() RETURN p LIMIT 25'
       }
-      return `MATCH p=()-[r:${ecsapeCypherMetaItem(text)}]->() RETURN p LIMIT 25`
+      return `MATCH p=()-[r:${ecsapeCypherMetaItem(
+        text
+      )}]->() RETURN p LIMIT 25`
     }
-    relationshipItems = createItems(relationshipTypes, onItemClick, {component: StyledRelationship}, editorCommandTemplate)
+    relationshipItems = createItems(
+      relationshipTypes,
+      onItemClick,
+      { component: StyledRelationship },
+      editorCommandTemplate
+    )
   }
   return (
     <DrawerSection>
       <DrawerSubHeader>Relationship Types</DrawerSubHeader>
-      <DrawerSectionBody className={classNames({
-        [styles['wrapper']]: true
-      })}>
+      <DrawerSectionBody
+        className={classNames({
+          [styles['wrapper']]: true
+        })}
+      >
         {relationshipItems}
       </DrawerSectionBody>
-      <ShowMore total={totalNumItems} shown={relationshipTypes.length} moreStep={moreStep} onMore={onMoreClick} />
+      <ShowMore
+        total={totalNumItems}
+        shown={relationshipTypes.length}
+        moreStep={moreStep}
+        onMore={onMoreClick}
+      />
     </DrawerSection>
   )
 }
-const PropertyItems = ({properties, totalNumItems, onItemClick, moreStep, onMoreClick}) => {
+const PropertyItems = ({
+  properties,
+  totalNumItems,
+  onItemClick,
+  moreStep,
+  onMoreClick
+}) => {
   let propertyItems = <p>There are no properties in database</p>
   if (properties.length > 0) {
-    const editorCommandTemplate = (text) => {
-      return `MATCH (n) WHERE EXISTS(n.${ecsapeCypherMetaItem(text)}) RETURN DISTINCT "node" as entity, n.${ecsapeCypherMetaItem(text)} AS ${ecsapeCypherMetaItem(text)} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${ecsapeCypherMetaItem(text)}) RETURN DISTINCT "relationship" AS entity, r.${ecsapeCypherMetaItem(text)} AS ${ecsapeCypherMetaItem(text)} LIMIT 25`
+    const editorCommandTemplate = text => {
+      return `MATCH (n) WHERE EXISTS(n.${ecsapeCypherMetaItem(
+        text
+      )}) RETURN DISTINCT "node" as entity, n.${ecsapeCypherMetaItem(
+        text
+      )} AS ${ecsapeCypherMetaItem(
+        text
+      )} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${ecsapeCypherMetaItem(
+        text
+      )}) RETURN DISTINCT "relationship" AS entity, r.${ecsapeCypherMetaItem(
+        text
+      )} AS ${ecsapeCypherMetaItem(text)} LIMIT 25`
     }
-    propertyItems = createItems(properties, onItemClick, {component: StyledProperty}, editorCommandTemplate, false)
+    propertyItems = createItems(
+      properties,
+      onItemClick,
+      { component: StyledProperty },
+      editorCommandTemplate,
+      false
+    )
   }
   return (
     <DrawerSection>
       <DrawerSubHeader>Property Keys</DrawerSubHeader>
-      <DrawerSectionBody className={classNames({
-        [styles['wrapper']]: true
-      })}>
+      <DrawerSectionBody
+        className={classNames({
+          [styles['wrapper']]: true
+        })}
+      >
         {propertyItems}
       </DrawerSectionBody>
-      <ShowMore total={totalNumItems} shown={properties.length} moreStep={moreStep} onMore={onMoreClick} />
+      <ShowMore
+        total={totalNumItems}
+        shown={properties.length}
+        moreStep={moreStep}
+        onMore={onMoreClick}
+      />
     </DrawerSection>
   )
 }
 
-export {
-  LabelItems,
-  RelationshipItems,
-  PropertyItems
-}
+export { LabelItems, RelationshipItems, PropertyItems }

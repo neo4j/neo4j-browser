@@ -20,15 +20,38 @@
 
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { getVersion, getEdition, getDbName, getStoreSize, getClusterRole } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getVersion,
+  getEdition,
+  getDbName,
+  getStoreSize,
+  getClusterRole
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { toHumanReadableBytes } from 'services/utils'
 
 import Render from 'browser-components/Render'
-import {DrawerSection, DrawerSectionBody, DrawerSubHeader} from 'browser-components/drawer'
-import {StyledTable, StyledKey, StyledValue, StyledValueUCFirst, Link} from './styled'
+import {
+  DrawerSection,
+  DrawerSectionBody,
+  DrawerSubHeader
+} from 'browser-components/drawer'
+import {
+  StyledTable,
+  StyledKey,
+  StyledValue,
+  StyledValueUCFirst,
+  Link
+} from './styled'
 
-export const DatabaseKernelInfo = ({role, version, edition, dbName, storeSize, onItemClick}) => {
+export const DatabaseKernelInfo = ({
+  role,
+  version,
+  edition,
+  dbName,
+  storeSize,
+  onItemClick
+}) => {
   return (
     <DrawerSection className='database-kernel-info'>
       <DrawerSubHeader>Database</DrawerSubHeader>
@@ -37,17 +60,20 @@ export const DatabaseKernelInfo = ({role, version, edition, dbName, storeSize, o
           <tbody>
             <Render if={role}>
               <tr>
-                <StyledKey>Cluster role: </StyledKey><StyledValue>{role}</StyledValue>
+                <StyledKey>Cluster role: </StyledKey>
+                <StyledValue>{role}</StyledValue>
               </tr>
             </Render>
             <Render if={version}>
               <tr>
-                <StyledKey>Version: </StyledKey><StyledValue>{version}</StyledValue>
+                <StyledKey>Version: </StyledKey>
+                <StyledValue>{version}</StyledValue>
               </tr>
             </Render>
             <Render if={edition}>
               <tr>
-                <StyledKey>Edition: </StyledKey><StyledValueUCFirst>{edition}</StyledValueUCFirst>
+                <StyledKey>Edition: </StyledKey>
+                <StyledValueUCFirst>{edition}</StyledValueUCFirst>
               </tr>
             </Render>
             <Render if={dbName}>
@@ -57,14 +83,21 @@ export const DatabaseKernelInfo = ({role, version, edition, dbName, storeSize, o
             </Render>
             <Render if={storeSize}>
               <tr>
-                <StyledKey>Size: </StyledKey><StyledValue>{toHumanReadableBytes(storeSize)}</StyledValue>
+                <StyledKey>Size: </StyledKey>
+                <StyledValue>{toHumanReadableBytes(storeSize)}</StyledValue>
               </tr>
             </Render>
             <tr>
-              <StyledKey>Information: </StyledKey><StyledValue><Link onClick={() => onItemClick(':sysinfo')}>:sysinfo</Link></StyledValue>
+              <StyledKey>Information: </StyledKey>
+              <StyledValue>
+                <Link onClick={() => onItemClick(':sysinfo')}>:sysinfo</Link>
+              </StyledValue>
             </tr>
             <tr>
-              <StyledKey>Query List: </StyledKey><StyledValue><Link onClick={() => onItemClick(':queries')}>:queries</Link></StyledValue>
+              <StyledKey>Query List: </StyledKey>
+              <StyledValue>
+                <Link onClick={() => onItemClick(':queries')}>:queries</Link>
+              </StyledValue>
             </tr>
           </tbody>
         </StyledTable>
@@ -73,7 +106,7 @@ export const DatabaseKernelInfo = ({role, version, edition, dbName, storeSize, o
   )
 }
 
-const mapStateToProps = (store) => {
+const mapStateToProps = store => {
   return {
     version: getVersion(store),
     edition: getEdition(store),
@@ -84,11 +117,13 @@ const mapStateToProps = (store) => {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onItemClick: (cmd) => {
+    onItemClick: cmd => {
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     }
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(DatabaseKernelInfo))
+export default withBus(
+  connect(mapStateToProps, mapDispatchToProps)(DatabaseKernelInfo)
+)

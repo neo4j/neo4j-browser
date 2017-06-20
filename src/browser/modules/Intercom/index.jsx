@@ -36,7 +36,7 @@ export class Intercom extends Component {
       return
     }
     if (!window.Intercom) {
-      (function (w, d, id, s, x) {
+      ;(function (w, d, id, s, x) {
         function i () {
           i.c(arguments)
         }
@@ -81,9 +81,9 @@ export class Intercom extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    updateData: (data) => dispatch(updateData(data))
+    updateData: data => dispatch(updateData(data))
   }
 }
 export default connect(null, mapDispatchToProps)(Intercom)

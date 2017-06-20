@@ -27,13 +27,13 @@ import Carousel from './Carousel'
 export default class Guides extends Component {
   constructor (props) {
     super(props)
-    this.state = {slides: null, firstRender: true}
+    this.state = { slides: null, firstRender: true }
   }
   componentDidMount () {
     const slides = this.base.getElementsByTagName('slide')
     let reactSlides = this
     if (slides.length > 0) {
-      reactSlides = Array.from(slides).map((slide) => {
+      reactSlides = Array.from(slides).map(slide => {
         return {
           html: slide
         }
@@ -43,8 +43,10 @@ export default class Guides extends Component {
   }
   render () {
     if (this.state.slides && Array.isArray(this.state.slides)) {
-      const ListOfSlides = this.state.slides.map((slide) => {
-        const slideComponent = <Slide key={uuid.v4()} html={slide.html.innerHTML} />
+      const ListOfSlides = this.state.slides.map(slide => {
+        const slideComponent = (
+          <Slide key={uuid.v4()} html={slide.html.innerHTML} />
+        )
         if (this.props.withDirectives) {
           return (
             <div key={uuid.v4()}>
@@ -59,16 +61,17 @@ export default class Guides extends Component {
           )
         }
       })
-      return (<Carousel slides={ListOfSlides} withDirectives={this.props.withDirectives} />)
+      return (
+        <Carousel
+          slides={ListOfSlides}
+          withDirectives={this.props.withDirectives}
+        />
+      )
     }
     if (this.props.withDirectives) {
-      return (
-        <Directives content={<Slide html={this.props.html} />} />
-      )
+      return <Directives content={<Slide html={this.props.html} />} />
     } else {
-      return (
-        <Slide html={this.props.html} />
-      )
+      return <Slide html={this.props.html} />
     }
   }
 }

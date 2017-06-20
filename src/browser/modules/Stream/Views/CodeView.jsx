@@ -18,9 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PaddedDiv, StyledTable, StyledTBody, StyledAlteringTr, StyledStrongTd, StyledTd } from '../styled'
+import {
+  PaddedDiv,
+  StyledTable,
+  StyledTBody,
+  StyledAlteringTr,
+  StyledStrongTd,
+  StyledTd
+} from '../styled'
 
-const CodeView = ({request, query, style: displayStyle}) => {
+const CodeView = ({ request, query, style: displayStyle }) => {
   if (request.status !== 'success') return null
   return (
     <PaddedDiv style={displayStyle}>

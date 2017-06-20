@@ -19,15 +19,21 @@
  */
 
 import { Component } from 'preact'
-import {v4} from 'uuid'
+import { v4 } from 'uuid'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'preact-suber'
-import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUser } from 'shared/modules/cypher/boltUserHelper'
+import {
+  deleteUser,
+  addRoleToUser,
+  removeRoleFromUser,
+  activateUser,
+  suspendUser
+} from 'shared/modules/cypher/boltUserHelper'
 
 import { FormButton } from 'browser-components/buttons'
 import { CloseIcon } from 'browser-components/icons/Icons'
-import {StyledBodyTr, StyledTd} from 'browser-components/DataTables'
+import { StyledBodyTr, StyledTd } from 'browser-components/DataTables'
 
 import RolesSelector from './RolesSelector'
 
@@ -44,67 +50,84 @@ export class UserInformation extends Component {
   removeClick (thing) {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: deleteUser(this.state.username)},
+      { query: deleteUser(this.state.username) },
       this.handleResponse.bind(this)
     )
   }
   suspendUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: suspendUser(this.state.username)},
+      { query: suspendUser(this.state.username) },
       this.handleResponse.bind(this)
     )
   }
   activateUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: activateUser(this.state.username)},
+      { query: activateUser(this.state.username) },
       this.handleResponse.bind(this)
     )
   }
   statusButton (statusList) {
     if (statusList.indexOf('is_suspended') !== -1) {
-      return (<FormButton label='Suspend user' onClick={this.activateUser.bind(this)} />)
+      return (
+        <FormButton
+          label='Suspend user'
+          onClick={this.activateUser.bind(this)}
+        />
+      )
     } else {
-      return (<FormButton label='Active user' onClick={this.suspendUser.bind(this)} />)
+      return (
+        <FormButton label='Active user' onClick={this.suspendUser.bind(this)} />
+      )
     }
   }
   passwordChange () {
     return '-'
   }
   listRoles () {
-    return this.state.roles.map((role) => {
+    return this.state.roles.map(role => {
       return (
-        <FormButton key={v4()} label={role} icon={<CloseIcon />} onClick={() => {
-          this.props.bus.self(
-            CYPHER_REQUEST,
-            {query: removeRoleFromUser(role, this.state.username)},
-            this.handleResponse.bind(this)
-          )
-        }} />
+        <FormButton
+          key={v4()}
+          label={role}
+          icon={<CloseIcon />}
+          onClick={() => {
+            this.props.bus.self(
+              CYPHER_REQUEST,
+              { query: removeRoleFromUser(role, this.state.username) },
+              this.handleResponse.bind(this)
+            )
+          }}
+        />
       )
     })
   }
   onRoleSelect (event) {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: addRoleToUser(this.state.username, event.target.value)},
+      { query: addRoleToUser(this.state.username, event.target.value) },
       this.handleResponse.bind(this)
     )
   }
   handleResponse (response) {
-    if (!response.success) return this.setState({errors: [response.error]})
+    if (!response.success) return this.setState({ errors: [response.error] })
     return this.props.refresh()
   }
   availableRoles () {
-    return this.state.availableRoles.filter((role) => this.props.roles.indexOf(role) < 0)
+    return this.state.availableRoles.filter(
+      role => this.props.roles.indexOf(role) < 0
+    )
   }
   render () {
     return (
       <StyledBodyTr className='user-info'>
         <StyledTd className='username'>{this.props.username}</StyledTd>
         <StyledTd className='roles'>
-          <RolesSelector roles={this.availableRoles()} onChange={this.onRoleSelect.bind(this)} />
+          <RolesSelector
+            roles={this.availableRoles()}
+            onChange={this.onRoleSelect.bind(this)}
+          />
           <span>
             {this.listRoles()}
           </span>
@@ -116,7 +139,11 @@ export class UserInformation extends Component {
           {this.passwordChange()}
         </StyledTd>
         <StyledTd>
-          <FormButton className='delete' label='Remove' onClick={this.removeClick.bind(this)} />
+          <FormButton
+            className='delete'
+            label='Remove'
+            onClick={this.removeClick.bind(this)}
+          />
         </StyledTd>
       </StyledBodyTr>
     )

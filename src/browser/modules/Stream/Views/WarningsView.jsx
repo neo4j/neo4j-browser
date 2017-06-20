@@ -18,20 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { StyledCypherMessage, StyledCypherWarningMessage, StyledCypherErrorMessage, StyledHelpContent,
-  StyledH4, StyledPreformattedArea, StyledHelpDescription, StyledDiv, StyledBr, StyledHelpFrame} from '../styled'
+import {
+  StyledCypherMessage,
+  StyledCypherWarningMessage,
+  StyledCypherErrorMessage,
+  StyledHelpContent,
+  StyledH4,
+  StyledPreformattedArea,
+  StyledHelpDescription,
+  StyledDiv,
+  StyledBr,
+  StyledHelpFrame
+} from '../styled'
 
-const getWarningComponent = (severity) => {
+const getWarningComponent = severity => {
   if (severity === 'ERROR') {
-    return (<StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>)
+    return <StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>
   } else if (severity === 'WARNING') {
-    return (<StyledCypherWarningMessage>{severity}</StyledCypherWarningMessage>)
+    return <StyledCypherWarningMessage>{severity}</StyledCypherWarningMessage>
   } else {
-    return (<StyledCypherMessage>{severity}</StyledCypherMessage>)
+    return <StyledCypherMessage>{severity}</StyledCypherMessage>
   }
 }
 
-const WarningsView = ({notifications, cypher, style}) => {
+const WarningsView = ({ notifications, cypher, style }) => {
   if (!notifications || !cypher) {
     return null
   }
@@ -39,7 +49,7 @@ const WarningsView = ({notifications, cypher, style}) => {
   let cypherLines = cypher.split('\n')
   cypherLines[0] = cypherLines[0].replace(/^EXPLAIN /, '')
 
-  let notificationsList = notifications.map((notification) => {
+  let notificationsList = notifications.map(notification => {
     return (
       <StyledHelpContent>
         <StyledHelpDescription>
@@ -47,9 +57,12 @@ const WarningsView = ({notifications, cypher, style}) => {
           <StyledH4>{notification.title}</StyledH4>
         </StyledHelpDescription>
         <StyledDiv>
-          <StyledHelpDescription>{notification.description}</StyledHelpDescription>
+          <StyledHelpDescription>
+            {notification.description}
+          </StyledHelpDescription>
           <StyledDiv>
-            <StyledPreformattedArea>{cypherLines[notification.position.line - 1]}
+            <StyledPreformattedArea>
+              {cypherLines[notification.position.line - 1]}
               <StyledBr />{Array(notification.position.column).join(' ')}^
             </StyledPreformattedArea>
           </StyledDiv>
@@ -60,7 +73,8 @@ const WarningsView = ({notifications, cypher, style}) => {
   return (
     <StyledHelpFrame style={style}>
       {notificationsList}
-    </StyledHelpFrame>)
+    </StyledHelpFrame>
+  )
 }
 
 export default WarningsView

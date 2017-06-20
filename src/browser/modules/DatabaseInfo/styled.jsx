@@ -89,8 +89,8 @@ export const StyledLink = styled.a`
     text-decoration: none;
   }
 `
-export const Link = (props) => {
-  const {children, ...rest} = props
+export const Link = props => {
+  const { children, ...rest } = props
   return <StyledLink {...rest}><PlainPlayIcon />&nbsp;{children}</StyledLink>
 }
 

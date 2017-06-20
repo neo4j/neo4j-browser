@@ -19,7 +19,7 @@
  */
 
 import styled from 'styled-components'
-import {H3} from 'browser-components/headers'
+import { H3 } from 'browser-components/headers'
 
 const Aside = styled.div`
   display: table-cell;
@@ -52,8 +52,8 @@ const P = styled.p`
   margin: 20px 0;
 `
 
-export const EnterpriseOnlyFrame = (props) => {
-  const {command, ...rest} = props
+export const EnterpriseOnlyFrame = props => {
+  const { command, ...rest } = props
   return (
     <PaddedDiv {...rest}>
       <Aside>
@@ -62,8 +62,17 @@ export const EnterpriseOnlyFrame = (props) => {
       </Aside>
       <BodyContainer>
         <StyledConnectionBody>
-          <P>Unable to display <Code>{command}</Code> because the procedures required to run this frame are missing. These procedures are usually found in Neo4j Enterprise edition.</P>
-          <P>Find out more over at <a href='https://neo4j.com/editions/' target='_blank'>neo4j.com/editions</a></P>
+          <P>
+            Unable to display <Code>{command}</Code> because the procedures
+            required to run this frame are missing. These procedures are usually
+            found in Neo4j Enterprise edition.
+          </P>
+          <P>
+            Find out more over at{' '}
+            <a href='https://neo4j.com/editions/' target='_blank'>
+              neo4j.com/editions
+            </a>
+          </P>
         </StyledConnectionBody>
       </BodyContainer>
     </PaddedDiv>

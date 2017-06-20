@@ -23,23 +23,47 @@ import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 
 const staticItems = {
   intro: [
-    {name: 'Getting started', command: ':play intro', type: 'play'},
-    {name: 'Basic graph concepts', command: ':play graphs', type: 'play'},
-    {name: 'Writing Cypher queries', command: ':play cypher', type: 'play'}
+    { name: 'Getting started', command: ':play intro', type: 'play' },
+    { name: 'Basic graph concepts', command: ':play graphs', type: 'play' },
+    { name: 'Writing Cypher queries', command: ':play cypher', type: 'play' }
   ],
   help: [
-    {name: 'Help', command: ':help help', type: 'help'},
-    {name: 'Cypher syntax', command: ':help cypher', type: 'help'},
-    {name: 'Available commands', command: ':help commands', type: 'help'},
-    {name: 'Keyboard shortcuts', command: ':help keys', type: 'help'}
+    { name: 'Help', command: ':help help', type: 'help' },
+    { name: 'Cypher syntax', command: ':help cypher', type: 'help' },
+    { name: 'Available commands', command: ':help commands', type: 'help' },
+    { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
   ],
   reference: [
-    {name: 'Developer Manual', command: 'https://neo4j.com/docs/developer-manual/3.2/', type: 'link'},
-    {name: 'Operations Manual', command: 'https://neo4j.com/docs/operations-manual/3.2/', type: 'link'},
-    {name: 'Cypher Refcard', command: 'https://neo4j.com/docs/cypher-refcard/3.2/', type: 'link'},
-    {name: 'GraphGists', command: 'https://neo4j.com/graphgists/', type: 'link'},
-    {name: 'Developer Site', command: 'https://www.neo4j.com/developer/', type: 'link'},
-    {name: 'Knowledge Base', command: 'https://neo4j.com/developer/kb/', type: 'link'}
+    {
+      name: 'Developer Manual',
+      command: 'https://neo4j.com/docs/developer-manual/3.2/',
+      type: 'link'
+    },
+    {
+      name: 'Operations Manual',
+      command: 'https://neo4j.com/docs/operations-manual/3.2/',
+      type: 'link'
+    },
+    {
+      name: 'Cypher Refcard',
+      command: 'https://neo4j.com/docs/cypher-refcard/3.2/',
+      type: 'link'
+    },
+    {
+      name: 'GraphGists',
+      command: 'https://neo4j.com/graphgists/',
+      type: 'link'
+    },
+    {
+      name: 'Developer Site',
+      command: 'https://www.neo4j.com/developer/',
+      type: 'link'
+    },
+    {
+      name: 'Knowledge Base',
+      command: 'https://neo4j.com/developer/kb/',
+      type: 'link'
+    }
   ]
 }
 

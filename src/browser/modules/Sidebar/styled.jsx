@@ -19,7 +19,14 @@
  */
 
 import styled from 'styled-components'
-import {QuestionIcon, PlayIcon, PlainPlayIcon, PlusIcon, BinIcon, EditIcon} from 'browser-components/icons/Icons'
+import {
+  QuestionIcon,
+  PlayIcon,
+  PlainPlayIcon,
+  PlusIcon,
+  BinIcon,
+  EditIcon
+} from 'browser-components/icons/Icons'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -57,12 +64,13 @@ const StyledDocumentText = styled.a`
   }
 `
 
-export const StyledDocumentActionLink = (props) => {
-  const {name, ...rest} = props
+export const StyledDocumentActionLink = props => {
+  const { name, ...rest } = props
   return (
     <StyledHelpItem onClick={props.onClick}>
-      <StyledDocumentText {...rest}>{props.type === 'play' ? <PlayIcon />
-        : <QuestionIcon />}&nbsp;{name}</StyledDocumentText>
+      <StyledDocumentText {...rest}>
+        {props.type === 'play' ? <PlayIcon /> : <QuestionIcon />}&nbsp;{name}
+      </StyledDocumentText>
     </StyledHelpItem>
   )
 }
@@ -73,7 +81,7 @@ export const StyledList = styled.ul`
 `
 export const StyledListItem = styled.li`
   list-style-type: none;
-  margin: 8px 0px 8px ${props => props.isChild ? '16px' : '8px'};
+  margin: 8px 0px 8px ${props => (props.isChild ? '16px' : '8px')};
   cursor: pointer;
 `
 export const StyledListHeaderItem = styled.li`
@@ -136,7 +144,7 @@ const StyledExecFavoriteButton = styled.div`
     opacity: 1;
   }
 `
-export const ExecFavortieButton = (props) => {
+export const ExecFavortieButton = props => {
   return (
     <StyledExecFavoriteButton {...props}>
       <PlainPlayIcon />
@@ -144,7 +152,7 @@ export const ExecFavortieButton = (props) => {
   )
 }
 
-export const NewFolderButton = (props) => {
+export const NewFolderButton = props => {
   return (
     <NewFolderStyledButton onClick={props.onClick}>
       <PlusIcon />New Folder
@@ -152,15 +160,17 @@ export const NewFolderButton = (props) => {
   )
 }
 
-export const DeleteFavButton = (props) => {
-  const rightIcon = (props.removeClick && !props.isStatic) ? (<BinIcon className={'remove'} />) : null
+export const DeleteFavButton = props => {
+  const rightIcon = props.removeClick && !props.isStatic
+    ? <BinIcon className={'remove'} />
+    : null
   return (
-    <SytledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>{rightIcon}</SytledFavFolderButtonSpan>
+    <SytledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>
+      {rightIcon}
+    </SytledFavFolderButtonSpan>
   )
 }
 
-export const EditFolderButton = (props) => {
-  return (
-    <FoldersButton onClick={props.editClick}><EditIcon /></FoldersButton>
-  )
+export const EditFolderButton = props => {
+  return <FoldersButton onClick={props.editClick}><EditIcon /></FoldersButton>
 }
