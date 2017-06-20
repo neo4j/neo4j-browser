@@ -32,7 +32,7 @@ import { send } from 'shared/modules/requests/requestsDuck'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
 import { merge, set } from 'shared/modules/params/paramsDuck'
-import { update as updateSettings } from 'shared/modules/settings/settingsDuck'
+import { update as updateSettings, replace as replaceSettings } from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
 
 const bus = createBus()
@@ -184,7 +184,7 @@ describe('commandsDuck', () => {
     test('does the right thing for :config x: 2', (done) => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'config'
-      const cmdString = cmd + ' x: 2'
+      const cmdString = cmd + ' "x": 2'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
       bus.take('NOOP', (currentAction) => {
@@ -194,6 +194,31 @@ describe('commandsDuck', () => {
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           updateSettings({x: 2}),
+          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+    test('does the right thing for :config {"x": 2, "y":3}', (done) => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'config'
+      const cmdString = cmd + ' {"x": 2, "y":3}'
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmdString, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          replaceSettings({x: 2, y: 3}),
           frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
           { type: 'NOOP' }
         ])
