@@ -82,7 +82,7 @@ export default function reducer (state = initialState, action) {
     case INCREMENT:
       return {...state, [action.what]: (state[action.what] || 0) + 1}
     case EVENT_QUEUE:
-      return {...state, events: state.events.concat(action.event)}
+      return {...state, events: (state.events || []).concat(action.event)}
     case CLEAR_EVENTS:
       return {...state, events: []}
     case USER_CLEAR:
@@ -102,11 +102,13 @@ const increment = (what) => {
     what
   }
 }
-const addToEventQueue = (name, data) => {
+export const addToEventQueue = (name, data) => {
   return {
     type: EVENT_QUEUE,
-    name,
-    data
+    event: {
+      name,
+      data
+    }
   }
 }
 const eventFired = (name, data = null) => {
