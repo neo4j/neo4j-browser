@@ -101,7 +101,7 @@ export const resultIsError = (request) => {
 
 export const initialView = (props, state = {}) => {
   // Views that should override and always show if they exist
-  if (props.request.status === 'pending') return undefined
+  if (props === undefined || props.request === undefined || props.request.status === 'pending') return undefined
   if (state.openView !== undefined) return state.openView // If openView exists, this is not initial render
   if (props.frame && props.frame.forceView) return props.frame.forceView
   if (props.request.status === 'error') return viewTypes.ERRORS

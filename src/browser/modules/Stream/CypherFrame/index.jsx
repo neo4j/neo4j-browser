@@ -41,7 +41,7 @@ import { resultHasRows, resultHasWarnings, resultHasPlan, resultIsError, resultH
 import { StyledFrameBody, SpinnerContainer, StyledStatsBarContainer } from '../styled'
 import { getMaxRows, getInitialNodeDisplay, getMaxNeighbours, shouldAutoComplete } from 'shared/modules/settings/settingsDuck'
 
-class CypherFrame extends Component {
+export class CypherFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -62,25 +62,28 @@ class CypherFrame extends Component {
       this.setState({fullscreen, collapse})
     }
   }
+  shouldComponentUpdate (props, state) {
+    return !(deepEquals(state, this.state) && deepEquals(props, this.props))
+  }
   componentWillReceiveProps (props) {
     const newState = {}
     if (props.request.status !== 'pending' && this.state.openView === undefined) {
-      const view = initialView(this.props, this.state)
+      const view = initialView(props, this.state)
       if (view) newState['openView'] = view
     }
-    if (!deepEquals(props.request.result, this.props.request.result)) {
+    if (this.props.request === undefined || !deepEquals(props.request.result, this.props.request.result)) {
       if (props.request.result && props.request.result.records && props.request.result.records.length) {
         newState['exportData'] = bolt.recordsToTableArray(props.request.result.records)
       } else {
         newState['exportData'] = null
       }
     }
-    if (newState) this.setState(newState)
+    if (Object.keys(newState).length) this.setState(newState)
   }
   componentDidMount () {
     const view = initialView(this.props, this.state)
     if (view) this.setState({ openView: view })
-    if (this.props.request.result && this.props.request.result.records && this.props.request.result.records.length) {
+    if (this.props.request && this.props.request.result && this.props.request.result.records && this.props.request.result.records.length) {
       this.setState({ exportData: bolt.recordsToTableArray(this.props.request.result.records) })
     }
   }
@@ -126,7 +129,7 @@ class CypherFrame extends Component {
     )
   }
   render () {
-    const { frame, request } = this.props
+    const { frame = {}, request = {} } = this.props
     const { cmd: query = '' } = frame
     const { result = {}, status: requestStatus } = request
     let frameContents = ''

@@ -174,7 +174,7 @@ export const getBrowserName = function () {
   return 'Unknown'
 }
 
-export const removeComments = (string) => {
+export const removeComments = (string = '') => {
   return string.split(/\r?\n/).filter((line) => !line.startsWith('//')).join('\r\n')
 }
 
