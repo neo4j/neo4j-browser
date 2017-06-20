@@ -244,7 +244,7 @@ export const StyledTokenRelationshipType = styled(StyledToken)`
 export const tokenPropertyKey = styled(StyledToken)`
   padding: 3px 5px 3px 5px;
 `
-export const StyledTokenContextMenuKey = styled(StyledLabelToken)` {
+export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
   color: #f9fbfd;
   background-color: #d2d5da;
   font-family: FontAwesome;
