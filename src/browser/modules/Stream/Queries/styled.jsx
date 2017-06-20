@@ -19,7 +19,7 @@
  */
 
 import styled from 'styled-components'
-import {FrameButton} from 'browser-components/buttons'
+import { FrameButton } from 'browser-components/buttons'
 import styles from './toggleStyles.css'
 
 export const Code = styled.code`
@@ -86,11 +86,16 @@ const ToggleLabel = styled.label`
   cursor: pointer;
 `
 
-export const AutoRefreshToogle = (props) => {
+export const AutoRefreshToogle = props => {
   return (
     <ToggleLabel>
       AUTO-REFRESH &nbsp;
-      <input type='checkbox' checked={props.checked} onClick={props.onClick} className={styles['toggle-check-input']} />
+      <input
+        type='checkbox'
+        checked={props.checked}
+        onClick={props.onClick}
+        className={styles['toggle-check-input']}
+      />
       <span className={styles['toggle-check-text']} />
     </ToggleLabel>
   )

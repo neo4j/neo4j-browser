@@ -21,12 +21,21 @@
 import { Component } from 'preact'
 import asciitable from 'ascii-data-table'
 import { debounce } from 'services/utils'
-import { StyledStatsBar, PaddedDiv, StyledBodyMessage, StyledRightPartial, StyledWidthSliderContainer, StyledWidthSlider } from '../styled'
+import {
+  StyledStatsBar,
+  PaddedDiv,
+  StyledBodyMessage,
+  StyledRightPartial,
+  StyledWidthSliderContainer,
+  StyledWidthSlider
+} from '../styled'
 
-const AsciiView = ({rows, style, message, maxColWidth = 70}) => {
+const AsciiView = ({ rows, style, message, maxColWidth = 70 }) => {
   let contents = <StyledBodyMessage>{message}</StyledBodyMessage>
   if (rows !== undefined && rows.length) {
-    contents = <pre>{asciitable.tableFromSerializedData(rows, maxColWidth)}</pre>
+    contents = (
+      <pre>{asciitable.tableFromSerializedData(rows, maxColWidth)}</pre>
+    )
   }
   return <PaddedDiv style={style}>{contents}</PaddedDiv>
 }
@@ -48,7 +57,11 @@ export class AsciiStatusbar extends Component {
     }
   }
   componentWillMount () {
-    this.debouncedMaxColWidthChanged = debounce(this.maxColWidthChanged, 25, this)
+    this.debouncedMaxColWidthChanged = debounce(
+      this.maxColWidthChanged,
+      25,
+      this
+    )
     this.setMaxSliderWidth(asciitable.maxColumnWidth(this.props.rows))
   }
   maxColWidthChanged (w) {

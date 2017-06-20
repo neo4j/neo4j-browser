@@ -40,12 +40,20 @@ import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
-import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
+import {
+  getFrames,
+  setRecentView,
+  getRecentView
+} from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
-import { getMaxRows, getInitialNodeDisplay, getScrollToTop } from 'shared/modules/settings/settingsDuck'
+import {
+  getMaxRows,
+  getInitialNodeDisplay,
+  getScrollToTop
+} from 'shared/modules/settings/settingsDuck'
 
-const getFrame = (type) => {
+const getFrame = type => {
   const trans = {
     error: ErrorFrame,
     cypher: CypherFrame,
@@ -74,7 +82,8 @@ class Stream extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     const frameHasBeenAdded = this.props.frames.length < nextProps.frames.length
 
-    if (this.props.activeConnectionData === nextProps.activeConnectionData &&
+    if (
+      this.props.activeConnectionData === nextProps.activeConnectionData &&
       this.props.requests === nextProps.requests &&
       (this.props.children.length === nextProps.children.length &&
         this.props.children.every((child, idx) => {
@@ -97,13 +106,13 @@ class Stream extends Component {
   render () {
     return (
       <StyledStream>
-        {this.props.frames.map((frame) => {
+        {this.props.frames.map(frame => {
           const frameProps = {
             frame,
             activeConnectionData: this.props.activeConnectionData,
             request: this.props.requests[frame.requestId],
             recentView: this.props.recentView,
-            onRecentViewChanged: (view) => {
+            onRecentViewChanged: view => {
               this.props.onRecentViewChanged(view)
             },
             maxRows: this.props.maxRows,
@@ -117,7 +126,7 @@ class Stream extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     frames: getFrames(state),
     requests: getRequests(state),
@@ -131,7 +140,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onRecentViewChanged: (view) => {
+    onRecentViewChanged: view => {
       dispatch(setRecentView(view))
     }
   }

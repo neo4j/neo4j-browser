@@ -25,12 +25,24 @@ import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
 import { getTheme, getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
-import { wasUnknownCommand, getErrorMessage } from 'shared/modules/commands/commandsDuck'
+import {
+  wasUnknownCommand,
+  getErrorMessage
+} from 'shared/modules/commands/commandsDuck'
 import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
-import { getActiveConnection, getConnectionState, getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import {
+  getActiveConnection,
+  getConnectionState,
+  getActiveConnectionData
+} from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 
-import { StyledWrapper, StyledApp, StyledBody, StyledMainWrapper } from './styled'
+import {
+  StyledWrapper,
+  StyledApp,
+  StyledBody,
+  StyledMainWrapper
+} from './styled'
 import Main from '../Main/Main'
 import Sidebar from '../Sidebar/Sidebar'
 import UserInteraction from '../UserInteraction'
@@ -58,7 +70,17 @@ class App extends Component {
     this.props.bus && this.props.bus.send(EXPAND)
   }
   render () {
-    const {drawer, cmdchar, handleNavClick, activeConnection, connectionState, theme, showUnknownCommandBanner, errorMessage, loadUdc} = this.props
+    const {
+      drawer,
+      cmdchar,
+      handleNavClick,
+      activeConnection,
+      connectionState,
+      theme,
+      showUnknownCommandBanner,
+      errorMessage,
+      loadUdc
+    } = this.props
     const themeData = themes[theme] || themes['normal']
     return (
       <ThemeProvider theme={themeData}>
@@ -88,7 +110,7 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const connectionData = getActiveConnectionData(state)
   return {
     drawer: state.drawer,
@@ -103,9 +125,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    handleNavClick: (id) => {
+    handleNavClick: id => {
       dispatch(toggle(id))
     }
   }

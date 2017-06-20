@@ -22,12 +22,15 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { Component } from 'preact'
 import uuid from 'uuid'
 import { withBus } from 'preact-suber'
-import { listUsersQuery, listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
+import {
+  listUsersQuery,
+  listRolesQuery
+} from 'shared/modules/cypher/boltUserHelper'
 import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { StyledLink } from 'browser-components/buttons'
-import {StyledTable, StyledTh} from 'browser-components/DataTables'
+import { StyledTable, StyledTh } from 'browser-components/DataTables'
 
 import FrameTemplate from '../Stream/FrameTemplate'
 
@@ -47,27 +50,54 @@ export class UserList extends Component {
   getUserList () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: listUsersQuery()},
-      (response) => {
-        if (response.success) this.setState({userList: this.extractUserNameAndRolesFromBolt(response.result)})
-      })
+      { query: listUsersQuery() },
+      response => {
+        if (response.success) {
+          this.setState({
+            userList: this.extractUserNameAndRolesFromBolt(response.result)
+          })
+        }
+      }
+    )
   }
   getRoles () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      {query: listRolesQuery()},
-      (response) => {
-        const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
-        if (response.success) this.setState({listRoles: flatten(this.extractUserNameAndRolesFromBolt(response.result))})
-      })
+      { query: listRolesQuery() },
+      response => {
+        const flatten = arr =>
+          arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+        if (response.success) {
+          this.setState({
+            listRoles: flatten(
+              this.extractUserNameAndRolesFromBolt(response.result)
+            )
+          })
+        }
+      }
+    )
   }
   makeTable (data) {
-    const items = data.map((row) => {
+    const items = data.map(row => {
       return (
-        <UserInformation className='user-information' key={uuid.v4()} username={row[0]} roles={row[1]} status={row[2]} refresh={this.getUserList.bind(this)} availableRoles={this.state.listRoles} />
+        <UserInformation
+          className='user-information'
+          key={uuid.v4()}
+          username={row[0]}
+          roles={row[1]}
+          status={row[2]}
+          refresh={this.getUserList.bind(this)}
+          availableRoles={this.state.listRoles}
+        />
       )
     })
-    const tableHeaders = ['Username', 'Roles(s)', 'Status', 'Password Change', 'Delete'].map((heading, i) => {
+    const tableHeaders = [
+      'Username',
+      'Roles(s)',
+      'Status',
+      'Password Change',
+      'Delete'
+    ].map((heading, i) => {
       return <StyledTh key={i}>{heading}</StyledTh>
     })
     return (
@@ -92,7 +122,9 @@ export class UserList extends Component {
     this.getRoles()
   }
   render () {
-    const renderedListOfUsers = (this.state.userList) ? this.makeTable(this.state.userList) : 'No users'
+    const renderedListOfUsers = this.state.userList
+      ? this.makeTable(this.state.userList)
+      : 'No users'
     const frameContents = (
       <div className='db-list-users'>
         {renderedListOfUsers}
@@ -101,12 +133,7 @@ export class UserList extends Component {
         </StyledLink>
       </div>
     )
-    return (
-      <FrameTemplate
-        header={this.props.frame}
-        contents={frameContents}
-      />
-    )
+    return <FrameTemplate header={this.props.frame} contents={frameContents} />
   }
 }
 

@@ -18,15 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DISCONNECTED_STATE, PENDING_STATE } from 'shared/modules/connections/connectionsDuck'
+import {
+  DISCONNECTED_STATE,
+  PENDING_STATE
+} from 'shared/modules/connections/connectionsDuck'
 import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
 import Render from 'browser-components/Render'
 import ClickToCode from '../ClickToCode'
-import { StyledMain, WarningBanner, ErrorBanner, NotAuthedBanner, StyledCodeBlockAuthBar, StyledCodeBlockErrorBar } from './styled'
+import {
+  StyledMain,
+  WarningBanner,
+  ErrorBanner,
+  NotAuthedBanner,
+  StyledCodeBlockAuthBar,
+  StyledCodeBlockErrorBar
+} from './styled'
 import SyncReminderBanner from './SyncReminderBanner'
 
-const Main = (props) => {
+const Main = props => {
   return (
     <StyledMain>
       <Editor />

@@ -53,7 +53,7 @@ export const SysInfoTableContainer = styled.div`
   padding: 30px;
   width: 100%;
 `
-export const SysInfoTable = ({header, colspan, children}) => {
+export const SysInfoTable = ({ header, colspan, children }) => {
   return (
     <StyledTable>
       <thead>
@@ -68,18 +68,18 @@ export const SysInfoTable = ({header, colspan, children}) => {
   )
 }
 
-export const SysInfoTableEntry = ({label, value, values, headers}) => {
+export const SysInfoTableEntry = ({ label, value, values, headers }) => {
   if (headers) {
     return (
       <StyledTr>
-        {headers.map((value) => <StyledTdKey>{value || '-'}</StyledTdKey>)}
+        {headers.map(value => <StyledTdKey>{value || '-'}</StyledTdKey>)}
       </StyledTr>
     )
   }
   if (values) {
     return (
       <StyledTr>
-        {values.map((value) => <StyledTd>{value || '-'}</StyledTd>)}
+        {values.map(value => <StyledTd>{value || '-'}</StyledTd>)}
       </StyledTr>
     )
   }

@@ -21,14 +21,22 @@
 import Render from 'browser-components/Render'
 import FrameTemplate from './FrameTemplate'
 
-const ParamsFrame = ({frame, params}) => {
+const ParamsFrame = ({ frame, params }) => {
   return (
     <FrameTemplate
       header={frame}
-      contents={<Render if={frame.success !== false}><pre>{JSON.stringify(frame.params, null, 2)}</pre></Render>}
+      contents={
+        <Render if={frame.success !== false}>
+          <pre>{JSON.stringify(frame.params, null, 2)}</pre>
+        </Render>
+      }
     >
-      <Render if={frame.success}><span>Successfully set your parameters</span></Render>
-      <Render if={frame.success === false}><span>Something went wrong. Read help pages.</span></Render>
+      <Render if={frame.success}>
+        <span>Successfully set your parameters</span>
+      </Render>
+      <Render if={frame.success === false}>
+        <span>Something went wrong. Read help pages.</span>
+      </Render>
     </FrameTemplate>
   )
 }

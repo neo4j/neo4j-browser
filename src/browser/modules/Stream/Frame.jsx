@@ -20,7 +20,7 @@
 
 import FrameTemplate from './FrameTemplate'
 
-const Frame = ({frame}) => {
+const Frame = ({ frame }) => {
   const errors = frame.errors || false
   const contents = frame.contents || false
   let frameContents = contents
@@ -33,11 +33,6 @@ const Frame = ({frame}) => {
   } else if (frame.type === 'unknown') {
     frameContents = 'Unknown command'
   }
-  return (
-    <FrameTemplate
-      header={frame}
-      contents={frameContents}
-    />
-  )
+  return <FrameTemplate header={frame} contents={frameContents} />
 }
 export default Frame

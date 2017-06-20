@@ -21,36 +21,60 @@
 import styled from 'styled-components'
 import { PlayIcon } from 'browser-components/icons/Icons'
 
-export const ConsentCheckBox = (props) => {
+export const ConsentCheckBox = props => {
   return (
     <StyledP>
       <CheckBoxLabel for='syncConsentCheckbox'>
-        <StyledCheckBox {...props} type='checkbox' id='syncConsentCheckbox' value='first_checkbox' />
+        <StyledCheckBox
+          {...props}
+          type='checkbox'
+          id='syncConsentCheckbox'
+          value='first_checkbox'
+        />
         &nbsp; By checking this box you are agreeing to the &nbsp;
-        <StyledSimpleLink href='http://neo4j.com/terms/neo4j-browser-sync/' target='blank'>Neo4j Browser Sync Terms of Use</StyledSimpleLink>
+        <StyledSimpleLink
+          href='http://neo4j.com/terms/neo4j-browser-sync/'
+          target='blank'
+        >
+          Neo4j Browser Sync Terms of Use
+        </StyledSimpleLink>
         &nbsp; and our &nbsp;
-        <StyledSimpleLink href='http://neo4j.com/privacy-policy/' target='blank'>Privacy Policy</StyledSimpleLink>.
+        <StyledSimpleLink
+          href='http://neo4j.com/privacy-policy/'
+          target='blank'
+        >
+          Privacy Policy
+        </StyledSimpleLink>.
       </CheckBoxLabel>
     </StyledP>
   )
 }
 
-export const AlertBox = (props) => {
+export const AlertBox = props => {
   return (
     <AlertDiv>
       <CloseButton {...props}>×</CloseButton>
-      <span>Before you can sign in, please check the box above to agree to the terms of use and privacy policy.</span>
+      <span>
+        Before you can sign in, please check the box above to agree to the terms
+        of use and privacy policy.
+      </span>
     </AlertDiv>
   )
 }
 
-export const ClearLocalConfirmationBox = (props) => {
+export const ClearLocalConfirmationBox = props => {
   return (
     <div>
-      <AlertP><strong>WARNING</strong>: This WILL erase your data stored in this web browsers local storage</AlertP>
+      <AlertP>
+        <strong>WARNING</strong>: This WILL erase your data stored in this web
+        browsers local storage
+      </AlertP>
       <AlertP>
         What do you want to do?<br />
-        <SmallText>(nothing, <StyledSimpleLink onClick={props.onClick}>cancel</StyledSimpleLink>)</SmallText>
+        <SmallText>
+          (nothing,{' '}
+          <StyledSimpleLink onClick={props.onClick}>cancel</StyledSimpleLink>)
+        </SmallText>
       </AlertP>
     </div>
   )
@@ -97,7 +121,7 @@ const AlertP = styled.p`
   margin: 10px;
 `
 
-export const StyledSyncLink = (props) => {
+export const StyledSyncLink = props => {
   return (
     <StyledSimpleLink onClick={props.onClick}>
       <PlayIcon />&nbsp;{props.children}

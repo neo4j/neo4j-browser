@@ -30,9 +30,11 @@ describe('FileDrop', () => {
   const readAsText = jest.fn()
   const stubFileReader = { readAsText, result: expectedFileContent }
 
-  test('should read file', (done) => {
+  test('should read file', done => {
     const onFileDropped = jest.fn()
-    const wrapper = shallow(<FileDrop fileReader={stubFileReader} onFileDropped={onFileDropped} />)
+    const wrapper = shallow(
+      <FileDrop fileReader={stubFileReader} onFileDropped={onFileDropped} />
+    )
     wrapper.instance().onDrop([file])
 
     try {
@@ -42,9 +44,11 @@ describe('FileDrop', () => {
       done.fail(error)
     }
   })
-  test('should not read file', (done) => {
+  test('should not read file', done => {
     const onFileDropped = jest.fn()
-    const wrapper = shallow(<FileDrop fileReader={stubFileReader} onFileDropped={onFileDropped} />)
+    const wrapper = shallow(
+      <FileDrop fileReader={stubFileReader} onFileDropped={onFileDropped} />
+    )
     wrapper.instance().onDrop([unknownFile])
 
     try {

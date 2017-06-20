@@ -25,7 +25,11 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
 import FrameError from '../Stream/FrameError'
-import { SysInfoTableContainer, SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
+import {
+  SysInfoTableContainer,
+  SysInfoTable,
+  SysInfoTableEntry
+} from 'browser-components/Tables'
 import bolt from 'services/bolt/bolt'
 import { itemIntToString } from 'services/bolt/boltMappings'
 import { toHumanReadableBytes } from 'services/utils'
@@ -42,18 +46,26 @@ export class SysInfoFrame extends Component {
   }
   flattenAttributes (a) {
     if (a && a.attributes) {
-      return Object.assign({}, ...a.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, {intChecker: bolt.neo4j.isInt, intConverter: (val) => val.toString()}) })))
+      return Object.assign(
+        {},
+        ...a.attributes.map(({ name, value }) => ({
+          [name]: itemIntToString(value, {
+            intChecker: bolt.neo4j.isInt,
+            intConverter: val => val.toString()
+          })
+        }))
+      )
     } else {
       return null
     }
   }
   clusterResponseHandler () {
-    return (res) => {
+    return res => {
       if (!res.success) {
-        this.setState({error: 'No causal cluster results'})
+        this.setState({ error: 'No causal cluster results' })
         return
       }
-      const mappedResult = res.result.records.map((record) => {
+      const mappedResult = res.result.records.map(record => {
         return {
           id: record.get('id'),
           addresses: record.get('addresses'),
@@ -61,34 +73,43 @@ export class SysInfoFrame extends Component {
           groups: record.get('groups')
         }
       })
-      const mappedTableHeader = <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
-      const mappedTableComponents = mappedResult.map((ccRecord) => {
-        const httpUrlForMember = ccRecord.addresses.filter((address) => {
-          return address.startsWith('http://') && !address.includes(window.location.href)
+      const mappedTableHeader = (
+        <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
+      )
+      const mappedTableComponents = mappedResult.map(ccRecord => {
+        const httpUrlForMember = ccRecord.addresses.filter(address => {
+          return (
+            address.startsWith('http://') &&
+            !address.includes(window.location.href)
+          )
         })
         const arrayOfValue = [
           ccRecord.role,
           ccRecord.addresses.join(', '),
-          <Render if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Render>
+          <Render if={httpUrlForMember.length !== 0}>
+            <a taget='_blank' href={httpUrlForMember[0]}>Open</a>
+          </Render>
         ]
         return <SysInfoTableEntry values={arrayOfValue} />
       })
-      this.setState({cc: [mappedTableHeader].concat(mappedTableComponents)})
+      this.setState({ cc: [mappedTableHeader].concat(mappedTableComponents) })
     }
   }
   responseHandler () {
-    return (res) => {
+    return res => {
       if (!res.success) {
-        this.setState({error: 'No results'})
+        this.setState({ error: 'No results' })
         return
       }
 
-      const mappedJMXresult = res.result.records.map((record) => {
+      const mappedJMXresult = res.result.records.map(record => {
         const origAttributes = record.get('attributes')
         return {
           name: record.get('name'),
           description: record.get('description'),
-          attributes: Object.keys(record.get('attributes')).map((attributeName) => {
+          attributes: Object.keys(
+            record.get('attributes')
+          ).map(attributeName => {
             return {
               name: attributeName,
               description: origAttributes[attributeName].description,
@@ -99,68 +120,160 @@ export class SysInfoFrame extends Component {
       })
 
       const jmxQueryPrefix = mappedJMXresult[0].name.split(',')[0]
-      const result = Object.assign({}, ...mappedJMXresult.map((item) => {
-        return { [item.name]: item }
-      }))
-      const cache = this.flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`]) || {}
-      const primitive = this.flattenAttributes(result[`${jmxQueryPrefix},name=Primitive count`])
-      const tx = this.flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) || {}
-      const kernel = Object.assign({},
+      const result = Object.assign(
+        {},
+        ...mappedJMXresult.map(item => {
+          return { [item.name]: item }
+        })
+      )
+      const cache =
+        this.flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`]) ||
+        {}
+      const primitive = this.flattenAttributes(
+        result[`${jmxQueryPrefix},name=Primitive count`]
+      )
+      const tx =
+        this.flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) ||
+        {}
+      const kernel = Object.assign(
+        {},
         this.flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`]),
         this.flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`]),
-        this.flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`]))
+        this.flattenAttributes(
+          result[`${jmxQueryPrefix},name=Store file sizes`]
+        )
+      )
 
       if (result[`${jmxQueryPrefix},name=High Availability`]) {
-        const ha = this.flattenAttributes(result[`${jmxQueryPrefix},name=High Availability`])
-        const haInstancesHeader = <SysInfoTableEntry headers={['Id', 'Alive', 'Available', 'Is Master']} />
-        const haInstances = [haInstancesHeader].concat(ha.InstancesInCluster.map(({properties}) => {
-          const haInstancePropertyValues = [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
-          return <SysInfoTableEntry values={haInstancePropertyValues} />
-        }))
-        this.setState({ha: [
-          <SysInfoTableEntry label='InstanceId' value={ha.InstanceId} />,
-          <SysInfoTableEntry label='Role' value={ha.Role} />,
-          <SysInfoTableEntry label='Alive' value={ha.Alive.toString()} />,
-          <SysInfoTableEntry label='Available' value={ha.Available.toString()} />,
-          <SysInfoTableEntry label='Last Committed Tx Id' value={ha.LastCommittedTxId} />,
-          <SysInfoTableEntry label='Last Update Time' value={ha.LastUpdateTime} />
-        ],
-          'haInstances': haInstances
+        const ha = this.flattenAttributes(
+          result[`${jmxQueryPrefix},name=High Availability`]
+        )
+        const haInstancesHeader = (
+          <SysInfoTableEntry
+            headers={['Id', 'Alive', 'Available', 'Is Master']}
+          />
+        )
+        const haInstances = [haInstancesHeader].concat(
+          ha.InstancesInCluster.map(({ properties }) => {
+            const haInstancePropertyValues = [
+              properties.instanceId,
+              properties.alive.toString(),
+              properties.available.toString(),
+              properties.haRole === 'master' ? 'yes' : '-'
+            ]
+            return <SysInfoTableEntry values={haInstancePropertyValues} />
+          })
+        )
+        this.setState({
+          ha: [
+            <SysInfoTableEntry label='InstanceId' value={ha.InstanceId} />,
+            <SysInfoTableEntry label='Role' value={ha.Role} />,
+            <SysInfoTableEntry label='Alive' value={ha.Alive.toString()} />,
+            <SysInfoTableEntry
+              label='Available'
+              value={ha.Available.toString()}
+            />,
+            <SysInfoTableEntry
+              label='Last Committed Tx Id'
+              value={ha.LastCommittedTxId}
+            />,
+            <SysInfoTableEntry
+              label='Last Update Time'
+              value={ha.LastUpdateTime}
+            />
+          ],
+          haInstances: haInstances
         })
       }
 
-      this.setState({'storeSizes': [
-        <SysInfoTableEntry label='Array Store' value={toHumanReadableBytes(kernel.ArrayStoreSize)} />,
-        <SysInfoTableEntry label='Logical Log' value={toHumanReadableBytes(kernel.LogicalLogSize)} />,
-        <SysInfoTableEntry label='Node Store' value={toHumanReadableBytes(kernel.NodeStoreSize)} />,
-        <SysInfoTableEntry label='Property Store' value={toHumanReadableBytes(kernel.PropertyStoreSize)} />,
-        <SysInfoTableEntry label='Relationship Store' value={toHumanReadableBytes(kernel.RelationshipStoreSize)} />,
-        <SysInfoTableEntry label='String Store' value={toHumanReadableBytes(kernel.StringStoreSize)} />,
-        <SysInfoTableEntry label='Total Store Size' value={toHumanReadableBytes(kernel.TotalStoreSize)} />
-      ],
-        'idAllocation': [
-          <SysInfoTableEntry label='Node ID' value={primitive.NumberOfNodeIdsInUse} />,
-          <SysInfoTableEntry label='Property ID' value={primitive.NumberOfPropertyIdsInUse} />,
-          <SysInfoTableEntry label='Relationship ID' value={primitive.NumberOfRelationshipIdsInUse} />,
-          <SysInfoTableEntry label='Relationship Type ID' value={primitive.NumberOfRelationshipTypeIdsInUse} />
+      this.setState({
+        storeSizes: [
+          <SysInfoTableEntry
+            label='Array Store'
+            value={toHumanReadableBytes(kernel.ArrayStoreSize)}
+          />,
+          <SysInfoTableEntry
+            label='Logical Log'
+            value={toHumanReadableBytes(kernel.LogicalLogSize)}
+          />,
+          <SysInfoTableEntry
+            label='Node Store'
+            value={toHumanReadableBytes(kernel.NodeStoreSize)}
+          />,
+          <SysInfoTableEntry
+            label='Property Store'
+            value={toHumanReadableBytes(kernel.PropertyStoreSize)}
+          />,
+          <SysInfoTableEntry
+            label='Relationship Store'
+            value={toHumanReadableBytes(kernel.RelationshipStoreSize)}
+          />,
+          <SysInfoTableEntry
+            label='String Store'
+            value={toHumanReadableBytes(kernel.StringStoreSize)}
+          />,
+          <SysInfoTableEntry
+            label='Total Store Size'
+            value={toHumanReadableBytes(kernel.TotalStoreSize)}
+          />
         ],
-        'pageCache': [
+        idAllocation: [
+          <SysInfoTableEntry
+            label='Node ID'
+            value={primitive.NumberOfNodeIdsInUse}
+          />,
+          <SysInfoTableEntry
+            label='Property ID'
+            value={primitive.NumberOfPropertyIdsInUse}
+          />,
+          <SysInfoTableEntry
+            label='Relationship ID'
+            value={primitive.NumberOfRelationshipIdsInUse}
+          />,
+          <SysInfoTableEntry
+            label='Relationship Type ID'
+            value={primitive.NumberOfRelationshipTypeIdsInUse}
+          />
+        ],
+        pageCache: [
           <SysInfoTableEntry label='Faults' value={cache.Faults} />,
           <SysInfoTableEntry label='Evictions' value={cache.Evictions} />,
-          <SysInfoTableEntry label='File Mappings' value={cache.FileMappings} />,
+          <SysInfoTableEntry
+            label='File Mappings'
+            value={cache.FileMappings}
+          />,
           <SysInfoTableEntry label='Bytes Read' value={cache.BytesRead} />,
           <SysInfoTableEntry label='Flushes' value={cache.Flushes} />,
-          <SysInfoTableEntry label='Eviction Exceptions' value={cache.EvictionExceptions} />,
-          <SysInfoTableEntry label='File Unmappings' value={cache.FileUnmappings} />,
+          <SysInfoTableEntry
+            label='Eviction Exceptions'
+            value={cache.EvictionExceptions}
+          />,
+          <SysInfoTableEntry
+            label='File Unmappings'
+            value={cache.FileUnmappings}
+          />,
           <SysInfoTableEntry label='Bytes Written' value={cache.BytesWritten} />
         ],
-        'transactions': [
+        transactions: [
           <SysInfoTableEntry label='Last Tx Id' value={tx.LastCommittedTxId} />,
-          <SysInfoTableEntry label='Current' value={tx.NumberOfOpenTransactions} />,
-          <SysInfoTableEntry label='Peak' value={tx.PeakNumberOfConcurrentTransactions} />,
-          <SysInfoTableEntry label='Opened' value={tx.NumberOfOpenedTransactions} />,
-          <SysInfoTableEntry label='Committed' value={tx.NumberOfCommittedTransactions} />
-        ]})
+          <SysInfoTableEntry
+            label='Current'
+            value={tx.NumberOfOpenTransactions}
+          />,
+          <SysInfoTableEntry
+            label='Peak'
+            value={tx.PeakNumberOfConcurrentTransactions}
+          />,
+          <SysInfoTableEntry
+            label='Opened'
+            value={tx.NumberOfOpenedTransactions}
+          />,
+          <SysInfoTableEntry
+            label='Committed'
+            value={tx.NumberOfCommittedTransactions}
+          />
+        ]
+      })
     }
   }
   isCC () {
@@ -202,7 +315,10 @@ export class SysInfoFrame extends Component {
           {this.state.transactions || null}
         </SysInfoTable>
         <Render if={this.isCC()}>
-          <SysInfoTable header='Causal Cluster Members' colspan={this.state.cc.length - 1}>
+          <SysInfoTable
+            header='Causal Cluster Members'
+            colspan={this.state.cc.length - 1}
+          >
             {this.state.cc || null}
           </SysInfoTable>
         </Render>
@@ -212,24 +328,24 @@ export class SysInfoFrame extends Component {
           </SysInfoTable>
         </Render>
         <Render if={this.state.haInstances.length}>
-          <SysInfoTable header='Cluster' colspan={this.state.haInstances.length}>
+          <SysInfoTable
+            header='Cluster'
+            colspan={this.state.haInstances.length}
+          >
             {this.state.haInstances || null}
           </SysInfoTable>
         </Render>
       </SysInfoTableContainer>
     )
     return (
-      <FrameTemplate
-        header={this.props.frame}
-        contents={content}
-      >
+      <FrameTemplate header={this.props.frame} contents={content}>
         <FrameError message={this.state.error} />
       </FrameTemplate>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     availableProcedures: getAvailableProcedures(state) || []
   }

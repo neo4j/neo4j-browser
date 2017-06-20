@@ -21,10 +21,19 @@ import { withBus } from 'preact-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { StyledCodeBlock } from './styled'
 
-export const ClickToCode = ({CodeComponent = StyledCodeBlock, bus, code, children}) => {
+export const ClickToCode = ({
+  CodeComponent = StyledCodeBlock,
+  bus,
+  code,
+  children
+}) => {
   if (!children || children.length === 0) return null
   code = code || children.join('')
-  return <CodeComponent onClick={() => bus.send(SET_CONTENT, setContent(code))}>{children}</CodeComponent>
+  return (
+    <CodeComponent onClick={() => bus.send(SET_CONTENT, setContent(code))}>
+      {children}
+    </CodeComponent>
+  )
 }
 
 export default withBus(ClickToCode)

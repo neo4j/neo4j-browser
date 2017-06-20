@@ -70,7 +70,8 @@ export const StyledSlide = styled.div`
   }
   & a {
     color: ${props => props.theme.link};
-    text-decoration: ${props => props.theme.name === 'dark' ? 'underline' : 'none'};
+    text-decoration: ${props =>
+      props.theme.name === 'dark' ? 'underline' : 'none'};
   }
   & kbd {
     color: ${props => props.theme.primaryBackground} !important; /* inverted */

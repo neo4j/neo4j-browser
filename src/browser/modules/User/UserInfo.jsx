@@ -22,12 +22,15 @@ import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { getCurrentUser, updateCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
+import {
+  getCurrentUser,
+  updateCurrentUser
+} from 'shared/modules/currentUser/currentUserDuck'
 
 export class UserInfoComponent extends Component {
   constructor (props) {
     super(props)
-    this.state = {user: this.props.info}
+    this.state = { user: this.props.info }
   }
   extractUserNameAndRolesFromBolt (r) {
     return {
@@ -36,13 +39,13 @@ export class UserInfoComponent extends Component {
     }
   }
   componentWillReceiveProps (newProps) {
-    this.setState({user: newProps.info})
+    this.setState({ user: newProps.info })
   }
   componentWillMount () {
     this.props.bus.self(
       CYPHER_REQUEST,
       'CALL dbms.showCurrentUser',
-      (response) => {
+      response => {
         if (!response.success) return
         const user = this.extractUserNameAndRolesFromBolt(response)
         this.props.updateCurrentUser(user.username, user.roles)
@@ -51,7 +54,7 @@ export class UserInfoComponent extends Component {
   }
   render () {
     const currentUser = this.state.user
-    const result = (currentUser == null) ? null : JSON.stringify(currentUser)
+    const result = currentUser == null ? null : JSON.stringify(currentUser)
     return (
       <div id='db-user'>
         <h4>User Information</h4>
@@ -61,13 +64,13 @@ export class UserInfoComponent extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     info: getCurrentUser(state)
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     updateCurrentUser: (username, roles) => {
       dispatch(updateCurrentUser(username, roles))
@@ -75,5 +78,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const UserInfo = withBus(connect(mapStateToProps, mapDispatchToProps)(UserInfoComponent))
+const UserInfo = withBus(
+  connect(mapStateToProps, mapDispatchToProps)(UserInfoComponent)
+)
 export default UserInfo

@@ -57,16 +57,16 @@ export class ChangePasswordFrame extends Component {
     if (e.code === 'N/A') {
       e.message = 'Existing password is incorrect'
     }
-    this.setState({error: e})
+    this.setState({ error: e })
   }
   onPasswordChange (event) {
     const password = event.target.value
-    this.setState({password})
+    this.setState({ password })
     this.error({})
   }
   onSuccess () {
-    this.setState({password: ''})
-    this.setState({success: true})
+    this.setState({ password: '' })
+    this.setState({ success: true })
   }
   render () {
     const content = (
@@ -74,18 +74,33 @@ export class ChangePasswordFrame extends Component {
         <StyledConnectionAside>
           <H3>Password change</H3>
           <Render if={!this.state.success}>
-            <Lead>Enter your current password and the new twice to change your password.</Lead>
+            <Lead>
+              Enter your current password and the new twice to change your
+              password.
+            </Lead>
           </Render>
           <Render if={this.state.success}>
             <Lead>Password change successful</Lead>
           </Render>
         </StyledConnectionAside>
 
-        <ConnectionForm {...this.props} formKeyHandler={this.formKeyHandler} error={this.error.bind(this)} oldPassword={this.state.password} onSuccess={this.onSuccess.bind(this)} forcePasswordChange>
+        <ConnectionForm
+          {...this.props}
+          formKeyHandler={this.formKeyHandler}
+          error={this.error.bind(this)}
+          oldPassword={this.state.password}
+          onSuccess={this.onSuccess.bind(this)}
+          forcePasswordChange
+        >
           <Render if={!this.state.success}>
             <StyledConnectionFormEntry>
               <StyledConnectionLabel>Existing password</StyledConnectionLabel>
-              <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 1)} type='password' value={this.state.password} onChange={this.onPasswordChange.bind(this)} />
+              <StyledConnectionTextInput
+                innerRef={el => this.formKeyHandler.registerInput(el, 1)}
+                type='password'
+                value={this.state.password}
+                onChange={this.onPasswordChange.bind(this)}
+              />
             </StyledConnectionFormEntry>
           </Render>
         </ConnectionForm>
@@ -94,7 +109,12 @@ export class ChangePasswordFrame extends Component {
     return (
       <FrameTemplate
         header={this.props.frame}
-        statusbar={<FrameError code={this.state.error.code} message={this.state.error.message} />}
+        statusbar={
+          <FrameError
+            code={this.state.error.code}
+            message={this.state.error.message}
+          />
+        }
         contents={content}
       />
     )

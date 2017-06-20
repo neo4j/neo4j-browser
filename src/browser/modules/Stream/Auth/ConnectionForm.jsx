@@ -21,8 +21,17 @@
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { getActiveConnectionData, getActiveConnection, setActiveConnection, updateConnection, CONNECT } from 'shared/modules/connections/connectionsDuck'
-import { getInitCmd, updateBoltRouting } from 'shared/modules/settings/settingsDuck'
+import {
+  getActiveConnectionData,
+  getActiveConnection,
+  setActiveConnection,
+  updateConnection,
+  CONNECT
+} from 'shared/modules/connections/connectionsDuck'
+import {
+  getInitCmd,
+  updateBoltRouting
+} from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
@@ -36,8 +45,9 @@ import ChangePasswordForm from './ChangePasswordForm'
 export class ConnectionForm extends Component {
   constructor (props) {
     super(props)
-    const connection = this.props.activeConnectionData || this.props.frame.connectionData
-    const isConnected = (!!props.activeConnection)
+    const connection =
+      this.props.activeConnectionData || this.props.frame.connectionData
+    const isConnected = !!props.activeConnection
     this.state = {
       ...connection,
       isConnected: isConnected,
@@ -49,36 +59,36 @@ export class ConnectionForm extends Component {
   }
   connect (doneFn = () => {}) {
     this.props.error({})
-    this.props.bus.self(
-      CONNECT,
-      this.state,
-      (res) => {
-        doneFn()
-        if (res.success) {
-          this.saveAndStart()
+    this.props.bus.self(CONNECT, this.state, res => {
+      doneFn()
+      if (res.success) {
+        this.saveAndStart()
+      } else {
+        if (res.error.code === 'Neo.ClientError.Security.CredentialsExpired') {
+          this.setState({ passwordChangeNeeded: true })
         } else {
-          if (res.error.code === 'Neo.ClientError.Security.CredentialsExpired') {
-            this.setState({ passwordChangeNeeded: true })
-          } else {
-            this.props.error(res.error)
-          }
+          this.props.error(res.error)
         }
       }
-    )
+    })
   }
   onUsernameChange (event) {
     const username = event.target.value
-    this.setState({username})
+    this.setState({ username })
     this.props.error({})
   }
   onPasswordChange (event) {
     const password = event.target.value
-    this.setState({password})
+    this.setState({ password })
     this.props.error({})
   }
   onHostChange (event) {
     const host = event.target.value
-    this.setState({ host: toBoltHost(host), hostInputVal: host, useBoltRouting: isRoutingHost(host) })
+    this.setState({
+      host: toBoltHost(host),
+      hostInputVal: host,
+      useBoltRouting: isRoutingHost(host)
+    })
     this.props.error({})
   }
   onChangePasswordChange ({ newPassword1, newPassword2 }) {
@@ -89,7 +99,7 @@ export class ConnectionForm extends Component {
       return this.props.error(error)
     }
     if (this.state.password === null) {
-      return this.props.error({message: 'Please set existing password'})
+      return this.props.error({ message: 'Please set existing password' })
     }
     this.props.error({})
     this.props.bus.self(
@@ -100,7 +110,7 @@ export class ConnectionForm extends Component {
         password: this.props.oldPassword || this.state.password,
         ...changeCurrentUsersPasswordQueryObj(newPassword)
       },
-      (response) => {
+      response => {
         if (response.success) {
           return this.setState({ password: newPassword }, () => {
             this.connect()
@@ -111,7 +121,7 @@ export class ConnectionForm extends Component {
     )
   }
   saveAndStart () {
-    this.setState({forcePasswordChange: false, used: true})
+    this.setState({ forcePasswordChange: false, used: true })
     this.state.successCallback()
     this.updateRoutingSettings()
     this.saveCredentials()
@@ -127,13 +137,14 @@ export class ConnectionForm extends Component {
     })
   }
   updateRoutingSettings () {
-    if (this.state.useBoltRouting) { // Just enable if user uses protocol. No disabling.
+    if (this.state.useBoltRouting) {
+      // Just enable if user uses protocol. No disabling.
       this.props.updateBoltRoutingSetting(this.state.useBoltRouting)
     }
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.oldPassword) {
-      this.setState({oldPassword: nextProps.oldPassword})
+      this.setState({ oldPassword: nextProps.oldPassword })
     }
     if (nextProps.activeConnection && nextProps.activeConnectionData) {
       this.setState({ isConnected: true })
@@ -143,34 +154,46 @@ export class ConnectionForm extends Component {
   }
   render () {
     let view
-    if (this.state.forcePasswordChange || (!this.state.isConnected && this.state.passwordChangeNeeded)) {
-      view = (<ChangePasswordForm formKeyHandler={this.props.formKeyHandler}
-        onChangePasswordClick={this.onChangePassword.bind(this)}
-        onChange={this.onChangePasswordChange.bind(this)}
-      >{this.props.children}</ChangePasswordForm>)
+    if (
+      this.state.forcePasswordChange ||
+      (!this.state.isConnected && this.state.passwordChangeNeeded)
+    ) {
+      view = (
+        <ChangePasswordForm
+          formKeyHandler={this.props.formKeyHandler}
+          onChangePasswordClick={this.onChangePassword.bind(this)}
+          onChange={this.onChangePasswordChange.bind(this)}
+        >
+          {this.props.children}
+        </ChangePasswordForm>
+      )
     } else if (this.state.isConnected) {
-      view = <ConnectedView
-        host={this.props.activeConnectionData.host}
-        username={this.props.activeConnectionData.username}
-        storeCredentials={this.props.storeCredentials}
-      />
+      view = (
+        <ConnectedView
+          host={this.props.activeConnectionData.host}
+          username={this.props.activeConnectionData.username}
+          storeCredentials={this.props.storeCredentials}
+        />
+      )
     } else if (!this.state.isConnected && !this.state.passwordChangeNeeded) {
-      view = (<ConnectForm
-        onConnectClick={this.connect.bind(this)}
-        onHostChange={this.onHostChange.bind(this)}
-        onUsernameChange={this.onUsernameChange.bind(this)}
-        onPasswordChange={this.onPasswordChange.bind(this)}
-        host={this.state.hostInputVal || this.state.host}
-        username={this.state.username}
-        password={this.state.password}
-        used={this.state.used}
-      />)
+      view = (
+        <ConnectForm
+          onConnectClick={this.connect.bind(this)}
+          onHostChange={this.onHostChange.bind(this)}
+          onUsernameChange={this.onUsernameChange.bind(this)}
+          onPasswordChange={this.onPasswordChange.bind(this)}
+          host={this.state.hostInputVal || this.state.host}
+          username={this.state.username}
+          password={this.state.password}
+          used={this.state.used}
+        />
+      )
     }
     return view
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     initCmd: getInitCmd(state),
     activeConnection: getActiveConnection(state),
@@ -179,14 +202,15 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    updateConnection: (connection) => {
+    updateConnection: connection => {
       dispatch(updateConnection(connection))
     },
-    updateBoltRoutingSetting: (useRouting) => dispatch(updateBoltRouting(useRouting)),
-    setActiveConnection: (id) => dispatch(setActiveConnection(id)),
-    dispatchInitCmd: (initCmd) => dispatch(executeSystemCommand(initCmd))
+    updateBoltRoutingSetting: useRouting =>
+      dispatch(updateBoltRouting(useRouting)),
+    setActiveConnection: id => dispatch(setActiveConnection(id)),
+    dispatchInitCmd: initCmd => dispatch(executeSystemCommand(initCmd))
   }
 }
 
@@ -203,4 +227,6 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm))
+export default withBus(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm)
+)

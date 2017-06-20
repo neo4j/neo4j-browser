@@ -31,10 +31,10 @@ class QueryPlan extends Component {
     }
   }
   toggleExpanded (expanded) {
-    const visit = (operator) => {
+    const visit = operator => {
       operator.expanded = expanded
       if (operator.children) {
-        operator.children.forEach((child) => {
+        operator.children.forEach(child => {
           visit(child)
         })
       }
@@ -62,7 +62,16 @@ class QueryPlan extends Component {
     }
 
     return (
-      <svg display={this.props.style.display} className='neod3plan' style={(this.props.fullscreen) ? {'padding-bottom': dim.frameStatusbarHeight + 'px'} : {}} ref={this.planInit.bind(this)} />
+      <svg
+        display={this.props.style.display}
+        className='neod3plan'
+        style={
+          this.props.fullscreen
+            ? { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
+            : {}
+        }
+        ref={this.planInit.bind(this)}
+      />
     )
   }
 }

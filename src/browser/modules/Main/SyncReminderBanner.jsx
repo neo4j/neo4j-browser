@@ -20,8 +20,17 @@
 
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
-import { SyncDisconnectedBanner, SyncSignInBarButton, StyledCancelLink, StyledSyncReminderSpan, StyledSyncReminderButtonContainer } from './styled'
-import { CONNECTED_STATE, getConnectionState } from 'shared/modules/connections/connectionsDuck'
+import {
+  SyncDisconnectedBanner,
+  SyncSignInBarButton,
+  StyledCancelLink,
+  StyledSyncReminderSpan,
+  StyledSyncReminderButtonContainer
+} from './styled'
+import {
+  CONNECTED_STATE,
+  getConnectionState
+} from 'shared/modules/connections/connectionsDuck'
 import Render from 'browser-components/Render'
 import BrowserSyncAuthWindow from '../Sync/BrowserSyncAuthWindow'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
@@ -37,25 +46,38 @@ class SyncReminderBanner extends Component {
     })
   }
   serviceReady (status) {
-    this.setState({status})
+    this.setState({ status })
   }
   logIn () {
-    BrowserSyncAuthWindow(this.props.browserSyncConfig.authWindowUrl, this.syncManager.authCallBack.bind(this.syncManager))
+    BrowserSyncAuthWindow(
+      this.props.browserSyncConfig.authWindowUrl,
+      this.syncManager.authCallBack.bind(this.syncManager)
+    )
   }
   render () {
     const { dbConnectionState, syncConsent, sync, optOutSync } = this.props
     const dbConnected = dbConnectionState === CONNECTED_STATE
     const syncDisconnected = !sync || !sync.authData
-    const syncConsentGiven = syncConsent && syncConsent.consented === true && !syncConsent.optedOut
+    const syncConsentGiven =
+      syncConsent && syncConsent.consented === true && !syncConsent.optedOut
 
-    const visible = dbConnected && syncDisconnected && syncConsentGiven && this.state.status === 'UP'
+    const visible =
+      dbConnected &&
+      syncDisconnected &&
+      syncConsentGiven &&
+      this.state.status === 'UP'
 
     return (
       <Render if={visible}>
         <SyncDisconnectedBanner height='100px'>
-          <StyledSyncReminderSpan>You are currently not signed into Neo4j Browser Sync. Connect through a simple social sign-in to get started.</StyledSyncReminderSpan>
+          <StyledSyncReminderSpan>
+            You are currently not signed into Neo4j Browser Sync. Connect
+            through a simple social sign-in to get started.
+          </StyledSyncReminderSpan>
           <StyledSyncReminderButtonContainer>
-            <SyncSignInBarButton onClick={this.logIn.bind(this)}>Sign In</SyncSignInBarButton>
+            <SyncSignInBarButton onClick={this.logIn.bind(this)}>
+              Sign In
+            </SyncSignInBarButton>
             <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
           </StyledSyncReminderButtonContainer>
         </SyncDisconnectedBanner>
@@ -64,7 +86,7 @@ class SyncReminderBanner extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     syncConsent: state.syncConsent,
     sync: state.sync,
@@ -75,7 +97,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onSync: (syncObject) => {
+    onSync: syncObject => {
       dispatch(setSync(syncObject))
     },
     optOutSync: () => {

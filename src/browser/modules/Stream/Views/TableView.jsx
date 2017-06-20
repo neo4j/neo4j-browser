@@ -21,7 +21,13 @@
 import { Component } from 'preact'
 import { v4 } from 'uuid'
 import { PaddedTableViewDiv, StyledBodyMessage } from '../styled'
-import {StyledTable, StyledBodyTr, StyledTh, StyledTd, StyledJsonPre} from 'browser-components/DataTables'
+import {
+  StyledTable,
+  StyledBodyTr,
+  StyledTh,
+  StyledTd,
+  StyledJsonPre
+} from 'browser-components/DataTables'
 
 class TableView extends Component {
   constructor (props) {
@@ -35,7 +41,11 @@ class TableView extends Component {
   }
   renderCell (entry) {
     if (Array.isArray(entry)) {
-      const children = entry.map((item, index) => <span>{this.renderCell(item)}{index === entry.length - 1 ? null : ', '}</span>)
+      const children = entry.map((item, index) =>
+        <span>
+          {this.renderCell(item)}{index === entry.length - 1 ? null : ', '}
+        </span>
+      )
       return <span>[{children}]</span>
     } else if (typeof entry === 'object') {
       return this.renderObject(entry)
@@ -51,19 +61,31 @@ class TableView extends Component {
     }
   }
   render () {
-    if (!this.props.data) return (<PaddedTableViewDiv style={this.props.style}><StyledBodyMessage>{this.props.message}</StyledBodyMessage></PaddedTableViewDiv>)
-    const tableHeader = this.state.columns.map((column, i) => (
-      <StyledTh className='table-header' key={i}>{column}</StyledTh>)
+    if (!this.props.data) {
+      return (
+        <PaddedTableViewDiv style={this.props.style}>
+          <StyledBodyMessage>{this.props.message}</StyledBodyMessage>
+        </PaddedTableViewDiv>
+      )
+    }
+    const tableHeader = this.state.columns.map((column, i) =>
+      <StyledTh className='table-header' key={i}>{column}</StyledTh>
     )
-    const buildData = (entries) => {
-      return entries.map((entry) => {
+    const buildData = entries => {
+      return entries.map(entry => {
         if (entry !== null) {
-          return <StyledTd className='table-properties' key={v4()}>{this.renderCell(entry)}</StyledTd>
+          return (
+            <StyledTd className='table-properties' key={v4()}>
+              {this.renderCell(entry)}
+            </StyledTd>
+          )
         }
-        return <StyledTd className='table-properties' key={v4()}>(empty)</StyledTd>
+        return (
+          <StyledTd className='table-properties' key={v4()}>(empty)</StyledTd>
+        )
       })
     }
-    const buildRow = (item) => {
+    const buildRow = item => {
       return (
         <StyledBodyTr className='table-row' key={v4()}>
           {buildData(item)}
@@ -72,11 +94,7 @@ class TableView extends Component {
     }
     const tableBody = (
       <tbody>
-        {
-          this.state.data.map((item) => (
-            buildRow(item)
-          ))
-        }
+        {this.state.data.map(item => buildRow(item))}
       </tbody>
     )
     return (

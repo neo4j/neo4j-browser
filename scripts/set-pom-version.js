@@ -53,13 +53,16 @@ function main (args) {
 
 function parseArgv (argv) {
   let out = {}
-  for (let i = 0; i < argv.length; i += 2) { // Pairs
+  for (let i = 0; i < argv.length; i += 2) {
+    // Pairs
     out[argv[i]] = argv[i + 1]
   }
   return out
 }
 
 function failExit () {
-  console.log('Error. Usage: "node set-pom-version.js -f filepath/from/project/root/pom.xml -v new-version-semver"')
+  console.log(
+    'Error. Usage: "node set-pom-version.js -f filepath/from/project/root/pom.xml -v new-version-semver"'
+  )
   process.exit(1)
 }

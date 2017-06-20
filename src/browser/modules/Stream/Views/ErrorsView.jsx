@@ -36,7 +36,7 @@ import {
   StyledHelpFrame
 } from '../styled'
 
-const ErrorsView = ({error, style, bus}) => {
+const ErrorsView = ({ error, style, bus }) => {
   if (!error) {
     return null
   }
@@ -52,14 +52,17 @@ const ErrorsView = ({error, style, bus}) => {
         </StyledDiv>
         <Render if={isUnknownProcedureError(error)}>
           <StyledLinkContainer>
-            <StyledLink onClick={() => onItemClick(bus)}><PlayIcon />&nbsp;List available procedures</StyledLink>
+            <StyledLink onClick={() => onItemClick(bus)}>
+              <PlayIcon />&nbsp;List available procedures
+            </StyledLink>
           </StyledLinkContainer>
         </Render>
       </StyledHelpContent>
-    </StyledHelpFrame>)
+    </StyledHelpFrame>
+  )
 }
 
-const onItemClick = (bus) => {
+const onItemClick = bus => {
   const action = executeCommand(listAvailableProcedures)
   bus.send(action.type, action)
 }

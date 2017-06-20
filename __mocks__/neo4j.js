@@ -32,8 +32,14 @@ var out = {
   }
 }
 
-out.v1.types.Node.prototype.toString = function () { return 'node' }
-out.v1.types.Relationship.prototype.toString = function () { return 'rel' }
-out.v1.types.Path.prototype.toString = function () { return 'path' }
+out.v1.types.Node.prototype.toString = function () {
+  return 'node'
+}
+out.v1.types.Relationship.prototype.toString = function () {
+  return 'rel'
+}
+out.v1.types.Path.prototype.toString = function () {
+  return 'path'
+}
 
 module.exports = out

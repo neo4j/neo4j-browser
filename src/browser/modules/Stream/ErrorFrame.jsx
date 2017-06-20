@@ -23,7 +23,7 @@ import * as e from 'services/exceptionMessages'
 import { getErrorMessage } from 'services/exceptions'
 import { PaddedDiv } from './styled'
 
-const ErrorFrame = ({frame}) => {
+const ErrorFrame = ({ frame }) => {
   const error = frame.error || false
   let errorContents = error.message || 'No error message found'
   if (error.type && typeof e[error.type] !== 'undefined') {

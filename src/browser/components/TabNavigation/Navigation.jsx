@@ -19,8 +19,17 @@
  */
 
 import { Component } from 'preact'
-import { StyledNavigationButton, NavigationButtonContainer } from 'browser-components/buttons'
-import { StyledSidebar, StyledDrawer, StyledTabsWrapper, StyledTopNav, StyledBottomNav } from './styled'
+import {
+  StyledNavigationButton,
+  NavigationButtonContainer
+} from 'browser-components/buttons'
+import {
+  StyledSidebar,
+  StyledDrawer,
+  StyledTabsWrapper,
+  StyledTopNav,
+  StyledBottomNav
+} from './styled'
 
 const Closing = 'CLOSING'
 const Closed = 'CLOSED'
@@ -41,12 +50,18 @@ class Navigation extends Component {
       var newState = {}
       if (nextProps.openDrawer) {
         newState.drawerContent = nextProps.openDrawer
-        if (this.state.transitionState === Closed || this.state.transitionState === Closing) {
+        if (
+          this.state.transitionState === Closed ||
+          this.state.transitionState === Closing
+        ) {
           newState.transitionState = Opening
         }
       } else {
         newState.drawerContent = ''
-        if (this.state.transitionState === Open || this.state.transitionState === Opening) {
+        if (
+          this.state.transitionState === Open ||
+          this.state.transitionState === Opening
+        ) {
           newState.transitionState = Closing
         }
       }
@@ -69,11 +84,7 @@ class Navigation extends Component {
   }
 
   render () {
-    let {
-      onNavClick,
-      topNavItems,
-      bottomNavItems = []
-    } = this.props
+    let { onNavClick, topNavItems, bottomNavItems = [] } = this.props
 
     const buildNavList = (list, selected) => {
       return list.map((item, index) => {
@@ -85,14 +96,16 @@ class Navigation extends Component {
             onClick={() => onNavClick(item.name.toLowerCase())}
             isOpen={isOpen}
           >
-            <StyledNavigationButton name={item.name}>{item.icon(isOpen)}</StyledNavigationButton>
+            <StyledNavigationButton name={item.name}>
+              {item.icon(isOpen)}
+            </StyledNavigationButton>
           </NavigationButtonContainer>
         )
       })
     }
-    const getContentToShow = (openDrawer) => {
+    const getContentToShow = openDrawer => {
       if (openDrawer) {
-        let filteredList = topNavItems.concat(bottomNavItems).filter((item) => {
+        let filteredList = topNavItems.concat(bottomNavItems).filter(item => {
           return item.name.toLowerCase() === openDrawer
         })
         let TabContent = filteredList[0].content
@@ -101,7 +114,10 @@ class Navigation extends Component {
       return null
     }
     const topNavItemsList = buildNavList(topNavItems, this.state.drawerContent)
-    const bottomNavItemsList = buildNavList(bottomNavItems, this.state.drawerContent)
+    const bottomNavItemsList = buildNavList(
+      bottomNavItems,
+      this.state.drawerContent
+    )
 
     return (
       <StyledSidebar>
@@ -110,8 +126,11 @@ class Navigation extends Component {
           <StyledBottomNav>{bottomNavItemsList}</StyledBottomNav>
         </StyledTabsWrapper>
         <StyledDrawer
-          open={this.state.transitionState === Open || this.state.transitionState === Opening}
-          innerRef={(ref) => {
+          open={
+            this.state.transitionState === Open ||
+            this.state.transitionState === Opening
+          }
+          innerRef={ref => {
             if (ref) {
               // Remove old listeners so we don't get multiple callbacks.
               // This function is called more than once with same html element

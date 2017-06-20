@@ -18,10 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const RolesSelector = ({roles = [], onChange = null, selectedValue = undefined}) => {
+const RolesSelector = ({
+  roles = [],
+  onChange = null,
+  selectedValue = undefined
+}) => {
   if (roles.length > 0) {
     const options = roles.map((role, i) => {
-      return (<option key={i} value={role}>{role}</option>)
+      return <option key={i} value={role}>{role}</option>
     })
     return (
       <select
@@ -33,6 +37,8 @@ const RolesSelector = ({roles = [], onChange = null, selectedValue = undefined})
         {options}
       </select>
     )
-  } else { return null }
+  } else {
+    return null
+  }
 }
 export default RolesSelector
