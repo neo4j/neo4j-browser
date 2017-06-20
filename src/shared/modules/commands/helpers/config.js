@@ -24,6 +24,7 @@ import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaD
 import { hostIsAllowed } from 'services/utils'
 import { getJSON } from 'services/remote'
 import { isValidURL } from 'shared/modules/commands/helpers/http'
+import jsonic from 'jsonic'
 
 export function handleGetConfigCommand (action, cmdchar, store) {
   const settingsState = getSettings(store.getState())
@@ -40,7 +41,7 @@ export function handleUpdateConfigCommand (action, cmdchar, put, store) {
     if (!isValidURL(param)) { // Not an URL. Parse as command line params
       if (/^"?\{[^}]*\}"?$/.test(param)) { // JSON object string {"x": 2, "y":"string"}
         try {
-          const res = JSON.parse(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes
+          const res = jsonic(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes
           put(replace(res))
           return resolve(res)
         } catch (e) {
@@ -49,7 +50,7 @@ export function handleUpdateConfigCommand (action, cmdchar, put, store) {
       } else { // Single param
         try {
           const json = '{' + param + '}'
-          const res = JSON.parse(json)
+          const res = jsonic(json)
           put(update(res))
           return resolve(res)
         } catch (e) {

@@ -46,9 +46,38 @@ describe('commandsDuck config helper', () => {
   afterEach(() => {
     nock.cleanAll()
   })
+  test('fails on :config x x x and shows error hint', () => {
+    // Given
+    const action = { cmd: ':config x x x: 2' }
+    const cmdchar = ':'
+    const put = jest.fn()
+
+    // When
+    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+
+    // Then
+    return expect(p)
+      .rejects.toEqual(new Error('Could not parse input. Usage: `:config "x": 2`. SyntaxError: Expected ":" but "x" found.'))
+      .then(() => expect(put).not.toHaveBeenCalled())
+  })
   test('handles :config "x": 2 and calls the update action creator', () => {
     // Given
     const action = { cmd: ':config "x": 2' }
+    const cmdchar = ':'
+    const put = jest.fn()
+
+    // When
+    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+
+    // Then
+    return p.then((res) => {
+      expect(res).toEqual({x: 2})
+      expect(put).toHaveBeenCalledWith(update({x: 2}))
+    })
+  })
+  test('handles :config x: 2 and calls the update action creator', () => {
+    // Given
+    const action = { cmd: ':config x: 2' }
     const cmdchar = ':'
     const put = jest.fn()
 
@@ -76,20 +105,6 @@ describe('commandsDuck config helper', () => {
       expect(put).toHaveBeenCalledWith(update({'x y': 2}))
     })
   })
-  test('hints that :config x: 2 is the wrong format', () => {
-    // Given
-    const action = { cmd: ':config x: 2' }
-    const cmdchar = ':'
-    const put = jest.fn()
-
-    // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
-
-    // Then
-    return expect(p)
-      .rejects.toEqual(new Error('Could not parse input. Usage: `:config "x": 2`. ' + 'SyntaxError: Unexpected token x in JSON at position 1'))
-      .then(() => expect(put).not.toHaveBeenCalled())
-  })
   test('handles :config {"hej": "ho", "let\'s": "go"} and calls the replace action creator', () => {
     // Given
     const action = { cmd: ':config {"hej": "ho", "let\'s": "go"}' }
@@ -105,7 +120,7 @@ describe('commandsDuck config helper', () => {
       expect(put).toHaveBeenCalledWith(replace({hej: 'ho', "let's": 'go'}))
     })
   })
-  test('hints that :config {x: 1, y: 2} is the wrong format', () => {
+  test('handles :config {x: 1, y: 2} and calls the replace action creator', () => {
     // Given
     const action = { cmd: ':config {x: 1, y: 2}' }
     const cmdchar = ':'
@@ -115,9 +130,10 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return expect(p)
-      .rejects.toEqual(new Error('Could not parse input. Usage: `:config {"x":1,"y":"string"}`. ' + 'SyntaxError: Unexpected token x in JSON at position 1'))
-      .then(() => expect(put).not.toHaveBeenCalled())
+    return p.then((res) => {
+      expect(res).toEqual({x: 1, y: 2})
+      expect(put).toHaveBeenCalledWith(replace({x: 1, y: 2}))
+    })
   })
   test('rejects hostnames not in whitelist', () => {
     // Given
