@@ -27,7 +27,7 @@ import FrameTemplate from '../Stream/FrameTemplate'
 import FrameError from '../Stream/FrameError'
 import { SysInfoTableContainer, SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
 import bolt from 'services/bolt/bolt'
-import { itemIntToString } from 'services/bolt/boltMappings'
+import { itemIntToString, extractFromNeoObjects } from 'services/bolt/boltMappings'
 import { toHumanReadableBytes } from 'services/utils'
 import Render from 'browser-components/Render'
 
@@ -42,7 +42,7 @@ export class SysInfoFrame extends Component {
   }
   flattenAttributes (a) {
     if (a && a.attributes) {
-      return Object.assign({}, ...a.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, {intChecker: bolt.neo4j.isInt, intConverter: (val) => val.toString()}) })))
+      return Object.assign({}, ...a.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, {intChecker: bolt.neo4j.isInt, intConverter: (val) => val.toString(), objectConverter: extractFromNeoObjects}) })))
     } else {
       return null
     }
