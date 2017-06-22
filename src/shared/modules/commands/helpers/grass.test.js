@@ -53,24 +53,24 @@ describe('Grass remote fetch', () => {
 
 describe('Grass parser', () => {
   test('Can parse simple grass data', () => {
-    var data = 'node {color: red;} relationship {shaft-width: 10px;}'
-    var parsed = parseGrass(data)
+    const data = 'node {color: red;} relationship {shaft-width: 10px;}'
+    const parsed = parseGrass(data)
     expect(parsed.node.color).toEqual('red')
     expect(parsed.relationship['shaft-width']).toEqual('10px')
   })
 
   test('Returns empty object on strange data', () => {
-    var data = 'this is not grass data! : { . / , > <'
-    var parsed = parseGrass(data)
+    const data = 'this is not grass data! : { . / , > <'
+    const parsed = parseGrass(data)
     expect(parsed).toEqual({})
   })
 
   test('Handles id and type captions correctly', () => {
-    var data = `node {caption: {title};}
+    const data = `node {caption: {title};}
                 node.PERSON {caption: <id>;}
                 relationship {caption: <type>;}
                 relationship.KNOWS {caption: {how};}`
-    var parsed = parseGrass(data)
+    const parsed = parseGrass(data)
     expect(parsed.node.caption).toEqual('title')
     expect(parsed['node.PERSON'].caption).toEqual('<id>')
     expect(parsed.relationship.caption).toEqual('<type>')
@@ -78,24 +78,24 @@ describe('Grass parser', () => {
   })
 
   test('Parsing does not generate any junk', () => {
-    var data = `node {caption: {title};}
+    const data = `node {caption: {title};}
                 relationship {caption: <type>;}`
-    var parsed = parseGrass(data)
+    const parsed = parseGrass(data)
     expect(Object.keys(parsed).length).toEqual(2)
     expect(Object.keys(parsed.node).length).toEqual(1)
     expect(Object.keys(parsed.relationship).length).toEqual(1)
   })
 
   test('Parsing grass with odd whitespace', () => {
-    var data = 'node {border-color : #9AA1AC ; \n\r\t  diameter:50px;color:#A5ABB6; border-width : 2px ; } relationship{ color : #A5ABB6 ; shaft-width : 1px ; font-size : 8px ; padding : 3px ; text-color-external : #000000 ; text-color-internal : #FFFFFF ; caption : <type>; }'
-    var parsed = parseGrass(data)
+    const data = 'node {border-color : #9AA1AC ; \n\r\t  diameter:50px;color:#A5ABB6; border-width : 2px ; } relationship{ color : #A5ABB6 ; shaft-width : 1px ; font-size : 8px ; padding : 3px ; text-color-external : #000000 ; text-color-internal : #FFFFFF ; caption : <type>; }'
+    const parsed = parseGrass(data)
     expect(parsed.node.diameter).toEqual('50px')
     expect(parsed.relationship.color).toEqual('#A5ABB6')
   })
 
   test('Handles JSON data', () => {
-    var data = '{"node": {"diameter":"50px", "color":"#A5ABB6"}, "relationship":{"color":"#A5ABB6","shaft-width":"1px"}}'
-    var parsed = parseGrass(data)
+    const data = '{"node": {"diameter":"50px", "color":"#A5ABB6"}, "relationship":{"color":"#A5ABB6","shaft-width":"1px"}}'
+    const parsed = parseGrass(data)
     expect(parsed.node.diameter).toEqual('50px')
     expect(parsed.relationship.color).toEqual('#A5ABB6')
   })

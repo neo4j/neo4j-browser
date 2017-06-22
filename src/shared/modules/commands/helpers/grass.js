@@ -28,7 +28,6 @@ export const fetchRemoteGrass = (url, whitelist = null) => {
     }
     resolve()
   }).then(() => {
-    console.log(remote.get(url))
     return remote.get(url).then((r) => {
       return r
     })
@@ -36,7 +35,7 @@ export const fetchRemoteGrass = (url, whitelist = null) => {
 }
 
 export function parseGrass (string) {
-  var result
+  let result
   try {
     result = JSON.parse(string)
   } catch (e) {
@@ -46,17 +45,17 @@ export function parseGrass (string) {
 }
 
 function parseGrassCSS (string) {
-  var chars = string.split('')
-  var insideString = false
-  var insideProps = false
-  var insideBinding = false
-  var keyword = ''
-  var props = ''
-  var rules = {}
-  var i, j
+  let chars = string.split('')
+  let insideString = false
+  let insideProps = false
+  let insideBinding = false
+  let keyword = ''
+  let props = ''
+  let rules = {}
+  let i, j
 
   for (i = 0; i < chars.length; i++) {
-    let c = chars[i]
+    const c = chars[i]
     let skipThis = true
     switch (c) {
       case '{':
@@ -102,14 +101,14 @@ function parseGrassCSS (string) {
 
   const keys = Object.keys(rules)
   for (i = 0; i < keys.length; i++) {
-    let val = rules[keys[i]]
+    const val = rules[keys[i]]
     rules[keys[i]] = {}
-    let props = val.split(';')
+    const props = val.split(';')
     for (j = 0; j < props.length; j++) {
-      let propKeyVal = props[j].split(':')
+      const propKeyVal = props[j].split(':')
       if (propKeyVal && propKeyVal.length === 2) {
-        let prop = propKeyVal[0].trim()
-        let value = propKeyVal[1].trim()
+        const prop = propKeyVal[0].trim()
+        const value = propKeyVal[1].trim()
         rules[keys[i]][prop] = value
       }
     }
