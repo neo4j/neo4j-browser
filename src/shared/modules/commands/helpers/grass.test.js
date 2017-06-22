@@ -18,25 +18,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { parseGrass } from './grass'
+ /* global jest */
+
+import { fetchRemoteGrass, parseGrass } from './grass'
+
+jest.mock('services/remote', () => {
+  return {
+    get: (url) => {
+      return new Promise((resolve, reject) => {
+        resolve(url)
+      })
+    }
+  }
+})
+
+describe('Grass remote fetch', () => {
+  test('should not fetch from url not in the whitelist', () => {
+    const whitelist = 'foo'
+    const urlNotInWhitelist = 'bar'
+    return fetchRemoteGrass(urlNotInWhitelist, whitelist)
+    .catch((error) => {
+      expect(error).not.toBe(null)
+    })
+  })
+  test('should fetch from url in the whitelist', () => {
+    const whitelist = 'foo'
+    const urlInWhitelist = 'foo'
+    return fetchRemoteGrass(urlInWhitelist, whitelist)
+    .then((res) => {
+      expect(res).toBe(urlInWhitelist)
+    })
+  })
+})
 
 describe('Grass parser', () => {
-  test('Can parse simple grass data', (done) => {
+  test('Can parse simple grass data', () => {
     var data = 'node {color: red;} relationship {shaft-width: 10px;}'
     var parsed = parseGrass(data)
     expect(parsed.node.color).toEqual('red')
     expect(parsed.relationship['shaft-width']).toEqual('10px')
-    done()
   })
 
-  test('Returns empty object on strange data', (done) => {
+  test('Returns empty object on strange data', () => {
     var data = 'this is not grass data! : { . / , > <'
     var parsed = parseGrass(data)
     expect(parsed).toEqual({})
-    done()
   })
 
-  test('Handles id and type captions correctly', (done) => {
+  test('Handles id and type captions correctly', () => {
     var data = `node {caption: {title};}
                 node.PERSON {caption: <id>;}
                 relationship {caption: <type>;}
@@ -46,32 +75,28 @@ describe('Grass parser', () => {
     expect(parsed['node.PERSON'].caption).toEqual('<id>')
     expect(parsed.relationship.caption).toEqual('<type>')
     expect(parsed['relationship.KNOWS'].caption).toEqual('how')
-    done()
   })
 
-  test('Parsing does not generate any junk', (done) => {
+  test('Parsing does not generate any junk', () => {
     var data = `node {caption: {title};}
                 relationship {caption: <type>;}`
     var parsed = parseGrass(data)
     expect(Object.keys(parsed).length).toEqual(2)
     expect(Object.keys(parsed.node).length).toEqual(1)
     expect(Object.keys(parsed.relationship).length).toEqual(1)
-    done()
   })
 
-  test('Parsing grass with odd whitespace', (done) => {
+  test('Parsing grass with odd whitespace', () => {
     var data = 'node {border-color : #9AA1AC ; \n\r\t  diameter:50px;color:#A5ABB6; border-width : 2px ; } relationship{ color : #A5ABB6 ; shaft-width : 1px ; font-size : 8px ; padding : 3px ; text-color-external : #000000 ; text-color-internal : #FFFFFF ; caption : <type>; }'
     var parsed = parseGrass(data)
     expect(parsed.node.diameter).toEqual('50px')
     expect(parsed.relationship.color).toEqual('#A5ABB6')
-    done()
   })
 
-  test('Handles JSON data', (done) => {
+  test('Handles JSON data', () => {
     var data = '{"node": {"diameter":"50px", "color":"#A5ABB6"}, "relationship":{"color":"#A5ABB6","shaft-width":"1px"}}'
     var parsed = parseGrass(data)
     expect(parsed.node.diameter).toEqual('50px')
     expect(parsed.relationship.color).toEqual('#A5ABB6')
-    done()
   })
 })

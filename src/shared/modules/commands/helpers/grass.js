@@ -18,6 +18,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { hostIsAllowed } from 'services/utils'
+import remote from 'services/remote'
+
+export const fetchRemoteGrass = (url, whitelist = null) => {
+  return new Promise((resolve, reject) => {
+    if (!hostIsAllowed(url, whitelist)) {
+      return reject(new Error('Hostname is not allowed according to server whitelist'))
+    }
+    resolve()
+  }).then(() => {
+    console.log(remote.get(url))
+    return remote.get(url).then((r) => {
+      return r
+    })
+  })
+}
+
 export function parseGrass (string) {
   var result
   try {
