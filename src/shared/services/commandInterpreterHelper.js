@@ -32,7 +32,7 @@ import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import { unknownCommand, showErrorMessage, cypher, successfulCypher, unsuccessfulCypher } from 'shared/modules/commands/commandsDuck'
-import { handleParamCommand, handleParamsCommand } from 'shared/modules/commands/helpers/params'
+import { handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
 import { CouldNotFetchRemoteGuideError, FetchURLError } from 'services/exceptions'
 import { parseHttpVerbCommand, isValidURL } from 'shared/modules/commands/helpers/http'
@@ -57,18 +57,17 @@ const availableCommands = [{
       })
   }
 }, {
-  name: 'set-param',
-  match: (cmd) => /^param\s/.test(cmd),
-  exec: function (action, cmdchar, put, store) {
-    const res = handleParamCommand(action, cmdchar, put, store)
-    put(frames.add({...action, ...res, type: 'param'}))
-  }
-}, {
   name: 'set-params',
-  match: (cmd) => /^params\s/.test(cmd),
+  match: (cmd) => /^params?\s/.test(cmd),
   exec: function (action, cmdchar, put, store) {
-    const res = handleParamsCommand(action, cmdchar, put, store)
-    put(frames.add({...action, ...res, type: 'params', params: getParams(store.getState())}))
+    handleParamsCommand(action, cmdchar, put)
+      .then((res) => {
+        const params = res.type === 'param' ? res.result : getParams(store.getState())
+        put(frames.add({...action, type: res.type, success: true, params}))
+      })
+      .catch((e) => {
+        put(showErrorMessage(e.message))
+      })
   }
 }, {
   name: 'params',

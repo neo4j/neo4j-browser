@@ -51,7 +51,7 @@ export const base = {
   primaryHeaderText: '#fff',
 
   // User feedback colors
-  success: '#70E9B1',
+  success: '#65B144',
   error: '#E74C3C',
   warning: '#FD952C',
   auth: '#428BCA',

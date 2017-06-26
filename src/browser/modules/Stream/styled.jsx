@@ -239,6 +239,13 @@ export const ErrorText = styled.span`
   padding-left: 5px;
   line-height: 35px;
 `
+
+export const SuccessText = styled.span`
+  color: ${props => props.theme.success};
+  padding-left: 5px;
+  line-height: 35px;
+`
+
 export const StyledStatsBarContainer = styled.div`
   display: flex;
   flex-direction: row;

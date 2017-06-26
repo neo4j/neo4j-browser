@@ -28,7 +28,6 @@ import PlayFrame from './PlayFrame'
 import Frame from './Frame'
 import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
-import ParamFrame from './ParamFrame'
 import ErrorFrame from './ErrorFrame'
 import HelpFrame from './HelpFrame'
 import SchemaFrame from './SchemaFrame'
@@ -56,7 +55,7 @@ const getFrame = (type) => {
     play: PlayFrame,
     'play-remote': PlayFrame,
     history: HistoryFrame,
-    param: ParamFrame,
+    param: ParamsFrame,
     params: ParamsFrame,
     connection: ConnectionFrame,
     disconnect: DisconnectFrame,

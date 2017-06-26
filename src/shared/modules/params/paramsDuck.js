@@ -21,8 +21,8 @@
 import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'params'
-const MERGE = `${NAME}/MERGE`
-const SET = `${NAME}/SET`
+const UPDATE = `${NAME}/UPDATE`
+const REPLACE = `${NAME}/REPLACE`
 
 const initialState = {}
 
@@ -32,11 +32,10 @@ export const getParams = (state) => state[NAME]
 // Reducer
 export default function reducer (state = initialState, action) {
   state = hydrate(initialState, state)
-
   switch (action.type) {
-    case MERGE:
+    case UPDATE:
       return {...state, ...action.params}
-    case SET:
+    case REPLACE:
       return action.params
     default:
       return state
@@ -44,15 +43,15 @@ export default function reducer (state = initialState, action) {
 }
 
 // Action creators
-export const merge = (obj) => {
+export const update = (obj) => {
   return {
-    type: MERGE,
+    type: UPDATE,
     params: obj
   }
 }
-export const set = (obj) => {
+export const replace = (obj) => {
   return {
-    type: SET,
+    type: REPLACE,
     params: obj
   }
 }
