@@ -156,7 +156,10 @@ const initialState = {
  * Reducer
  */
 export default function meta (state = initialState, action) {
-  state = (hydrated) ? state : { ...initialState, ...state }
+  if (!hydrated) {
+    state = { ...initialState, ...state }
+    hydrated = true
+  }
 
   switch (action.type) {
     case UPDATE:
