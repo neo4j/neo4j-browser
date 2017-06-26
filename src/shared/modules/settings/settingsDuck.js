@@ -19,7 +19,6 @@
  */
 
 import { USER_CLEAR } from 'shared/modules/app/appDuck'
-import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
@@ -54,6 +53,7 @@ export const getUseNewVisualization = (state) => state[NAME].useNewVis
 export const getCmdChar = (state) => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = (state) => state[NAME].editorAutocomplete !== false
 
+let hydrated = false
 const initialState = {
   cmdchar: ':',
   maxHistory: 30,
@@ -73,7 +73,10 @@ const initialState = {
 }
 
 export default function settings (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (!hydrated) {
+    state = { ...initialState, ...state }
+    hydrated = true
+  }
 
   switch (action.type) {
     case UPDATE:

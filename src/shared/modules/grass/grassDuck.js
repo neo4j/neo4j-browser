@@ -18,13 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { hydrate } from 'services/duckUtils'
-
 export const NAME = 'grass'
 export const UPDATE_GRAPH_STYLE_DATA = 'grass/UPDATE_GRAPH_STYLE_DATA'
 
 export const getGraphStyleData = state => state[NAME]
 
+let hydrated = false
 const initialState = null
 
 function updateStyleData (state, styleData) {
@@ -32,7 +31,10 @@ function updateStyleData (state, styleData) {
 }
 
 export default function visualization (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (!hydrated) {
+    state = (!state) ? state : { ...initialState, ...state }
+    hydrated = true
+  }
 
   switch (action.type) {
     case UPDATE_GRAPH_STYLE_DATA:

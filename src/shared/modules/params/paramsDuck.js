@@ -18,12 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { hydrate } from 'services/duckUtils'
-
 export const NAME = 'params'
 const UPDATE = `${NAME}/UPDATE`
 const REPLACE = `${NAME}/REPLACE`
 
+let hydrated = false
 const initialState = {}
 
 // Selectors
@@ -31,7 +30,11 @@ export const getParams = (state) => state[NAME]
 
 // Reducer
 export default function reducer (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (!hydrated) {
+    state = { ...initialState, ...state }
+    hydrated = true
+  }
+
   switch (action.type) {
     case UPDATE:
       return {...state, ...action.params}

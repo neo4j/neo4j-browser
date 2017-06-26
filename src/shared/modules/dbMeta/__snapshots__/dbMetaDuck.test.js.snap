@@ -25,7 +25,6 @@ Object {
 exports[`updating metadata can update meta values with UPDATE 1`] = `
 Object {
   "functions": Array [],
-  "hydrated": true,
   "labels": Array [],
   "myKey": "yo",
   "noKey": true,
@@ -51,7 +50,6 @@ Object {
 exports[`updating metadata can update server info 1`] = `
 Object {
   "functions": Array [],
-  "hydrated": true,
   "labels": Array [],
   "procedures": Array [],
   "properties": Array [],
@@ -75,7 +73,6 @@ Object {
 exports[`updating metadata can update server settings 1`] = `
 Object {
   "functions": Array [],
-  "hydrated": true,
   "labels": Array [],
   "procedures": Array [],
   "properties": Array [],

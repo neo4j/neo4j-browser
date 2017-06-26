@@ -19,7 +19,6 @@
  */
 
 import bolt from 'services/bolt/bolt'
-import { hydrate } from 'services/duckUtils'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'features'
@@ -32,8 +31,13 @@ const initialState = {
   availableProcedures: []
 }
 
+let hydrated = false
+
 export default function (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (!hydrated) {
+    state = { ...initialState, ...state }
+    hydrated = true
+  }
 
   switch (action.type) {
     case UPDATE_ALL_FEATURES:

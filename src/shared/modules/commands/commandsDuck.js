@@ -21,7 +21,6 @@
 import Rx from 'rxjs'
 import { getInterpreter, isNamedInterpreter, cleanCommand, extractPostConnectCommandsFromServerConfig } from 'services/commandUtils'
 import { extractWhitelistFromConfigString, addProtocolsToUrlList, firstSuccessPromise } from 'services/utils'
-import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
@@ -47,8 +46,13 @@ const initialState = {
 export const wasUnknownCommand = (state) => state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
 export const getErrorMessage = (state) => state[NAME].errorMessage
 
+let hydrated = false
+
 export default function reducer (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (!hydrated) {
+    state = { ...initialState, ...state }
+    hydrated = true
+  }
 
   switch (action.type) {
     case UNKNOWN_COMMAND:

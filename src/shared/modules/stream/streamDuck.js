@@ -22,7 +22,6 @@ import uuid from 'uuid'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import { moveInArray } from 'services/utils'
-import { hydrate } from 'services/duckUtils'
 import { UPDATE as SETTINGS_UPDATE } from '../settings/settingsDuck'
 
 export const NAME = 'frames'
@@ -126,6 +125,8 @@ function ensureFrameLimit (state) {
   }
 }
 
+let hydrated = false
+
 /** Inital state */
 export const initialState = {
   allIds: [],
@@ -138,7 +139,10 @@ export const initialState = {
  * Reducer
 */
 export default function reducer (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (!hydrated) {
+    state = { ...initialState, ...state }
+    hydrated = true
+  }
 
   switch (action.type) {
     case ADD:
