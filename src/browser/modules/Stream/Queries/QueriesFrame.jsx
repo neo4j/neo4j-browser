@@ -65,16 +65,13 @@ export class QueriesFrame extends Component {
     }
   }
 
-  isCC () {
-    return this.props.availableProcedures.includes('dbms.cluster.overview')
-  }
   canListQueries () {
     return this.props.availableProcedures.includes('dbms.listQueries')
   }
 
   getRunningQueries (suppressQuerySuccessMessage = false) {
     this.props.bus.self(
-      (this.isCC()) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
+      (this.props.isACausalCluster) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {query: listQueriesProcedure()},
       (response) => {
         if (response.success) {

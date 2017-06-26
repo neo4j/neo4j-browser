@@ -19,7 +19,7 @@
  */
 
 /* global describe, test, expect */
-import reducer, { UPDATE_ALL_FEATURES } from './featuresDuck'
+import reducer, * as features from './featuresDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
@@ -30,7 +30,7 @@ describe('features reducer', () => {
 
   test('handles UPDATE_ALL_FEATURES without initial state', () => {
     const action = {
-      type: UPDATE_ALL_FEATURES,
+      type: features.UPDATE_ALL_FEATURES,
       availableProcedures: ['proc']
     }
     const nextState = reducer(undefined, action)
@@ -40,10 +40,21 @@ describe('features reducer', () => {
   test('handles UPDATE_ALL_FEATURES', () => {
     const initialState = { availableProcedures: ['a', 'b'] }
     const action = {
-      type: UPDATE_ALL_FEATURES,
+      type: features.UPDATE_ALL_FEATURES,
       availableProcedures: ['c']
     }
     const nextState = reducer(initialState, action)
     expect(nextState.availableProcedures).toEqual(['c'])
+  })
+})
+
+describe('feature getters', () => {
+  test('should not be a causal cluster', () => {
+    const nextState = reducer(undefined, {type: ''})
+    expect(features.isACausalCluster(nextState)).toBe(false)
+  })
+  test('should be in a causal cluster', () => {
+    const nextState = reducer({availableProcedures: ['dbms.cluster.overview']}, {type: ''})
+    expect(features.isACausalCluster(nextState)).toBe(true)
   })
 })
