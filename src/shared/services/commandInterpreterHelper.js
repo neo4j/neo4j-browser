@@ -24,7 +24,7 @@ import { getHistory } from 'shared/modules/history/historyDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
-import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
+import { updateGraphStyleData, getGraphStyleData } from 'shared/modules/grass/grassDuck'
 import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
@@ -199,8 +199,8 @@ const availableCommands = [{
     let param = match && match[1] ? match[1] : ''
 
     if (param === '') {
-      // Todo: show popup
-      put(showErrorMessage(':style command missing a parameter - grass url, grass style data or reset'))
+      const grassData = JSON.stringify(getGraphStyleData(store.getState()), null, 2)
+      put(frames.add({...action, type: 'pre', result: grassData}))
     } else if (param === 'reset') {
       put(updateGraphStyleData(null))
     } else if (isValidURL(param)) {
