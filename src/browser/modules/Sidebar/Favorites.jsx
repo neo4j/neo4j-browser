@@ -158,8 +158,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onItemClick: (cmd) => {
-      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+    onItemClick: (id, cmd) => {
+      ownProps.bus.send(editor.EDIT_CONTENT, editor.editContent(id, cmd))
     },
     onExecClick: (cmd) => {
       const action = executeCommand(cmd)

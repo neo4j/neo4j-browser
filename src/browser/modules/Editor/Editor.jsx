@@ -24,11 +24,11 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { executeCommand, executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
-import { SET_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
+import { SET_CONTENT, EDIT_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { getCmdChar, shouldEditorAutocomplete } from 'shared/modules/settings/settingsDuck'
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
-import { EditorButton } from 'browser-components/buttons'
+import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { debounce } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
@@ -36,6 +36,7 @@ import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
 import consoleCommands from './language/consoleCommands'
+import Render from 'browser-components/Render'
 
 export class Editor extends Component {
   constructor (props) {
@@ -61,6 +62,7 @@ export class Editor extends Component {
 
   clearEditor () {
     this.setEditorValue('')
+    this.setContentId(null)
   }
 
   handleEnter (cm) {
@@ -169,6 +171,11 @@ export class Editor extends Component {
 
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, (msg) => {
+        this.setContentId(null)
+        this.setEditorValue(msg.message)
+      })
+      this.props.bus.take(EDIT_CONTENT, (msg) => {
+        this.setContentId(msg.id)
         this.setEditorValue(msg.message)
       })
       this.props.bus.take(FOCUS, this.focusEditor.bind(this))
@@ -185,6 +192,10 @@ export class Editor extends Component {
     this.updateCode(cmd, undefined, () => {
       this.focusEditor()
     })
+  }
+
+  setContentId (id) {
+    this.setState({contentId: id})
   }
 
   updateCode (newCode, change, cb = () => {
@@ -317,13 +328,25 @@ export class Editor extends Component {
           />
         </EditorWrapper>
         <ActionButtonSection>
-          <EditorButton
-            onClick={() => this.props.onFavortieClick(this.getEditorValue())}
-            disabled={this.getEditorValue().length < 1}
-            title='Favorite'
-            hoverIcon='"\58"'
-            icon='"\73"'
-          />
+          <Render if={this.state.contentId}>
+            <EditModeEditorButton
+              onClick={() => this.props.onFavoriteUpdateClick(this.state.contentId, this.getEditorValue())}
+              disabled={this.getEditorValue().length < 1}
+              color='#ffaf00'
+              title='Favorite'
+              hoverIcon='"\74"'
+              icon='"\25"'
+            />
+          </Render>
+          <Render if={!this.state.contentId}>
+            <EditorButton
+              onClick={() => this.props.onFavoriteClick(this.getEditorValue())}
+              disabled={this.getEditorValue().length < 1}
+              title='Update favorite'
+              hoverIcon='"\58"'
+              icon='"\73"'
+            />
+          </Render>
           <EditorButton
             onClick={() => this.clearEditor()}
             disabled={this.getEditorValue().length < 1}
@@ -346,8 +369,12 @@ export class Editor extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFavortieClick: (cmd) => {
+    onFavoriteClick: (cmd) => {
       const action = favorites.addFavorite(cmd)
+      ownProps.bus.send(action.type, action)
+    },
+    onFavoriteUpdateClick: (id, cmd) => {
+      const action = favorites.updateFavorite(id, cmd)
       ownProps.bus.send(action.type, action)
     },
     onExecute: (cmd) => {
