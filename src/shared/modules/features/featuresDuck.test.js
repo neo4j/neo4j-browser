@@ -49,12 +49,20 @@ describe('features reducer', () => {
 })
 
 describe('feature getters', () => {
+  test('should return empty list of availableProcedures by default', () => {
+    const nextState = reducer(undefined, {type: ''})
+    expect(features.getAvailableProcedures({features: nextState})).toEqual([])
+  })
+  test('should return list of availableProcedures', () => {
+    const nextState = reducer({availableProcedures: ['foo.bar']}, {type: ''})
+    expect(features.getAvailableProcedures({features: nextState})).toContain('foo.bar')
+  })
   test('should not be a causal cluster', () => {
     const nextState = reducer(undefined, {type: ''})
-    expect(features.isACausalCluster(nextState)).toBe(false)
+    expect(features.isACausalCluster({features: nextState})).toBe(false)
   })
   test('should be in a causal cluster', () => {
     const nextState = reducer({availableProcedures: ['dbms.cluster.overview']}, {type: ''})
-    expect(features.isACausalCluster(nextState)).toBe(true)
+    expect(features.isACausalCluster({features: nextState})).toBe(true)
   })
 })

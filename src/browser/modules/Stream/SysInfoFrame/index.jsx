@@ -23,11 +23,11 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
-import FrameTemplate from '../Stream/FrameTemplate'
-import FrameError from '../Stream/FrameError'
+import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
+import FrameError from 'browser/modules/Stream/FrameError'
 import { SysInfoTableContainer, SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
 import { toHumanReadableBytes } from 'services/utils'
-import { mapSysInfoRecords, getTableDataFromRecords } from 'shared/modules/commands/helpers/sysinfo'
+import { mapSysInfoRecords, getTableDataFromRecords } from './sysinfo'
 import Render from 'browser-components/Render'
 
 export class SysInfoFrame extends Component {
@@ -76,49 +76,46 @@ export class SysInfoFrame extends Component {
           const haInstancePropertyValues = [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
           return <SysInfoTableEntry values={haInstancePropertyValues} />
         }))
-        this.ha = [
-          <SysInfoTableEntry label='InstanceId' value={ha.InstanceId} />,
-          <SysInfoTableEntry label='Role' value={ha.Role} />,
-          <SysInfoTableEntry label='Alive' value={ha.Alive.toString()} />,
-          <SysInfoTableEntry label='Available' value={ha.Available.toString()} />,
-          <SysInfoTableEntry label='Last Committed Tx Id' value={ha.LastCommittedTxId} />,
-          <SysInfoTableEntry label='Last Update Time' value={ha.LastUpdateTime} />
-        ]
+
+        this.setState({ha: [
+          {label: 'InstanceId', value: ha.InstanceId},
+          {label: 'Role', value: ha.Role},
+          {label: 'Alive', value: ha.Alive.toString()},
+          {label: 'Available', value: ha.Available.toString()},
+          {label: 'Last Committed Tx Id', value: ha.LastCommittedTxId},
+          {label: 'Last Update Time', value: ha.LastUpdateTime}
+        ]})
       }
 
-      this.storeSizes = [
-        <SysInfoTableEntry label='Array Store' value={toHumanReadableBytes(kernel.ArrayStoreSize)} />,
-        <SysInfoTableEntry label='Logical Log' value={toHumanReadableBytes(kernel.LogicalLogSize)} />,
-        <SysInfoTableEntry label='Node Store' value={toHumanReadableBytes(kernel.NodeStoreSize)} />,
-        <SysInfoTableEntry label='Property Store' value={toHumanReadableBytes(kernel.PropertyStoreSize)} />,
-        <SysInfoTableEntry label='Relationship Store' value={toHumanReadableBytes(kernel.RelationshipStoreSize)} />,
-        <SysInfoTableEntry label='String Store' value={toHumanReadableBytes(kernel.StringStoreSize)} />,
-        <SysInfoTableEntry label='Total Store Size' value={toHumanReadableBytes(kernel.TotalStoreSize)} />
-      ]
-      this.idAllocation = [
-        <SysInfoTableEntry label='Node ID' value={primitive.NumberOfNodeIdsInUse} />,
-        <SysInfoTableEntry label='Property ID' value={primitive.NumberOfPropertyIdsInUse} />,
-        <SysInfoTableEntry label='Relationship ID' value={primitive.NumberOfRelationshipIdsInUse} />,
-        <SysInfoTableEntry label='Relationship Type ID' value={primitive.NumberOfRelationshipTypeIdsInUse} />
-      ]
-      this.pageCache = [
-        <SysInfoTableEntry label='Faults' value={cache.Faults} />,
-        <SysInfoTableEntry label='Evictions' value={cache.Evictions} />,
-        <SysInfoTableEntry label='File Mappings' value={cache.FileMappings} />,
-        <SysInfoTableEntry label='Bytes Read' value={cache.BytesRead} />,
-        <SysInfoTableEntry label='Flushes' value={cache.Flushes} />,
-        <SysInfoTableEntry label='Eviction Exceptions' value={cache.EvictionExceptions} />,
-        <SysInfoTableEntry label='File Unmappings' value={cache.FileUnmappings} />,
-        <SysInfoTableEntry label='Bytes Written' value={cache.BytesWritten} />
-      ]
-      this.transactions = [
-        <SysInfoTableEntry label='Last Tx Id' value={tx.LastCommittedTxId} />,
-        <SysInfoTableEntry label='Current' value={tx.NumberOfOpenTransactions} />,
-        <SysInfoTableEntry label='Peak' value={tx.PeakNumberOfConcurrentTransactions} />,
-        <SysInfoTableEntry label='Opened' value={tx.NumberOfOpenedTransactions} />,
-        <SysInfoTableEntry label='Committed' value={tx.NumberOfCommittedTransactions} />
-      ]
-      this.setState({results: true})
+      this.setState({storeSizes: [
+        {label: 'Array Store', value: toHumanReadableBytes(kernel.ArrayStoreSize)},
+        {label: 'Logical Log', value: toHumanReadableBytes(kernel.LogicalLogSize)},
+        {label: 'Node Store', value: toHumanReadableBytes(kernel.NodeStoreSize)},
+        {label: 'Property Store', value: toHumanReadableBytes(kernel.PropertyStoreSize)},
+        {label: 'Relationship Store', value: toHumanReadableBytes(kernel.RelationshipStoreSize)},
+        {label: 'String Store', value: toHumanReadableBytes(kernel.StringStoreSize)},
+        {label: 'Total Store Size', value: toHumanReadableBytes(kernel.TotalStoreSize)}
+      ], idAllocation: [
+        {label: 'Node ID', value: primitive.NumberOfNodeIdsInUse},
+        {label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse},
+        {label: 'Relationship ID', value: primitive.NumberOfRelationshipIdsInUse},
+        {label: 'Relationship Type ID', value: primitive.NumberOfRelationshipTypeIdsInUse}
+      ], pageCache: [
+        {label: 'Faults', value: cache.Faults},
+        {label: 'Evictions', value: cache.Evictions},
+        {label: 'File Mappings', value: cache.FileMappings},
+        {label: 'Bytes Read', value: cache.BytesRead},
+        {label: 'Flushes', value: cache.Flushes},
+        {label: 'Eviction Exceptions', value: cache.EvictionExceptions},
+        {label: 'File Unmappings', value: cache.FileUnmappings},
+        {label: 'Bytes Written', value: cache.BytesWritten}
+      ], transactions: [
+        {label: 'Last Tx Id', value: tx.LastCommittedTxId},
+        {label: 'Current', value: tx.NumberOfOpenTransactions},
+        {label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions},
+        {label: 'Opened', value: tx.NumberOfOpenedTransactions},
+        {label: 'Committed', value: tx.NumberOfCommittedTransactions}
+      ]})
     }
   }
   componentDidMount () {
@@ -141,38 +138,44 @@ export class SysInfoFrame extends Component {
       }
     }
   }
+  buildTableData (data) {
+    if (!data) return null
+    return data.map(({label, value}) => {
+      return <SysInfoTableEntry label={label} value={value} />
+    })
+  }
   render () {
-    const content = (this.state.results)
-      ? (<SysInfoTableContainer>
+    const content = (
+      <SysInfoTableContainer>
         <SysInfoTable header='Store Sizes'>
-          {this.storeSizes || null}
+          {this.buildTableData(this.state.storeSizes)}
         </SysInfoTable>
         <SysInfoTable header='ID Allocation'>
-          {this.idAllocation || null}
+          {this.buildTableData(this.state.idAllocation)}
         </SysInfoTable>
         <SysInfoTable header='Page Cache'>
-          {this.pageCache || null}
+          {this.buildTableData(this.state.pageCache)}
         </SysInfoTable>
         <SysInfoTable header='Transactions'>
-          {this.transactions || null}
+          {this.buildTableData(this.state.transactions)}
         </SysInfoTable>
         <Render if={this.props.isACausalCluster}>
-          <SysInfoTable header='Causal Cluster Members' colspan={(this.cc) ? this.cc.length - 1 : 0}>
-            {this.cc || null}
+          <SysInfoTable header='Causal Cluster Members' colspan={(this.state.cc) ? this.state.cc.length - 1 : 0}>
+            {this.buildTableData(this.state.cc)}
           </SysInfoTable>
         </Render>
-        <Render if={this.ha}>
+        <Render if={this.state.ha}>
           <SysInfoTable header='High Availability'>
-            {this.ha || null}
+            {this.buildTableData(this.state.ha)}
           </SysInfoTable>
         </Render>
-        <Render if={this.haInstances}>
-          <SysInfoTable header='Cluster' colspan={(this.haInstances) ? this.haInstances.length : 0}>
-            {this.haInstances || null}
+        <Render if={this.state.haInstances}>
+          <SysInfoTable header='Cluster' colspan={(this.state.haInstances) ? this.state.haInstances.length : 0}>
+            {this.state.haInstances}
           </SysInfoTable>
         </Render>
-      </SysInfoTableContainer>)
-    : null
+      </SysInfoTableContainer>
+    )
     return (
       <FrameTemplate
         header={this.props.frame}

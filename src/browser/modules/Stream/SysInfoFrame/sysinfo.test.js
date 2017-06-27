@@ -18,17 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
-import { mount } from 'services/testUtils'
-import { SysInfoFrame } from './SysInfoFrame'
+/* global, describe, test, expect, afterEach */
 
-describe('SysInfoFrame', () => {
-  // const SysInfoFrameFn = (props) => {
-  //   return <SysInfoFrame {...props} availableProcedures={['something']} />
-  // }
-  test('should render', () => {
-    mount(SysInfoFrame).withProps({availableProcedures: []}).then(wrapper => {
-      expect(wrapper.html()).not.toBe(null)
-    })
+import { flattenAttributes } from './sysinfo'
+
+describe('sysinfo attribute types', () => {
+  test('should handle string value', () => {
+    const attributeData = {attributes: [{ name: 'foo', value: 'bar' }]}
+    expect(flattenAttributes(attributeData)).toEqual({foo: 'bar'})
+  })
+  test('should handle int value', () => {
+    const attributeData = {attributes: [{ name: 'foo', value: 0 }]}
+    expect(flattenAttributes(attributeData)).toEqual({foo: 0})
+  })
+  test('should handle object value', () => {
+    const attributeData = {attributes: [{ name: 'foo', value: {bar: 'baz'} }]}
+    expect(flattenAttributes(attributeData)).toEqual({foo: {bar: 'baz'}})
   })
 })

@@ -14,7 +14,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received data copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -46,6 +46,7 @@ export const getTableDataFromRecords = (records) => {
     ha
   }
 }
+
 const mappedJMXresult = (records) => {
   return records.map((record) => {
     const origAttributes = record.get('attributes')
@@ -73,9 +74,10 @@ export const mapSysInfoRecords = (records) => {
     }
   })
 }
-const flattenAttributes = (a) => {
-  if (a && a.attributes) {
-    return Object.assign({}, ...a.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, {intChecker: bolt.neo4j.isInt, intConverter: (val) => val.toString(), objectConverter: extractFromNeoObjects}) })))
+
+export const flattenAttributes = (data) => {
+  if (data && data.attributes) {
+    return Object.assign({}, ...data.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, {intChecker: bolt.neo4j.isInt, intConverter: (val) => val.toString(), objectConverter: extractFromNeoObjects}) })))
   } else {
     return null
   }

@@ -28,7 +28,8 @@ var out = {
         this.identity = id
       },
       Path: function Path () {}
-    }
+    },
+    isInt: () => {}
   }
 }
 
