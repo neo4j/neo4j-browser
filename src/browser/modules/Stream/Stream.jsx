@@ -39,7 +39,7 @@ import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
-import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
+import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
@@ -86,9 +86,7 @@ class Stream extends Component {
           const frameProps = {
             frame,
             activeConnectionData: this.props.activeConnectionData,
-            request: this.props.requests[frame.requestId],
-            recentView: this.props.recentView,
-            onRecentViewChanged: this.props.onRecentViewChanged.bind(this)
+            request: this.props.requests[frame.requestId]
           }
           const MyFrame = getFrame(frame.type)
           return <MyFrame {...frameProps} key={frame.id} />
@@ -103,17 +101,8 @@ const mapStateToProps = (state) => {
     frames: getFrames(state),
     requests: getRequests(state),
     activeConnectionData: getActiveConnectionData(state),
-    recentView: getRecentView(state),
     scrollToTop: getScrollToTop(state)
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onRecentViewChanged: (view) => {
-      dispatch(setRecentView(view))
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Stream)
+export default connect(mapStateToProps)(Stream)

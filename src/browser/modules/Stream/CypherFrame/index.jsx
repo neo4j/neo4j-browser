@@ -40,6 +40,7 @@ import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import { resultHasRows, resultHasWarnings, resultHasPlan, resultIsError, resultHasNodes, initialView } from './helpers'
 import { StyledFrameBody, SpinnerContainer, StyledStatsBarContainer } from '../styled'
 import { getMaxRows, getInitialNodeDisplay, getMaxNeighbours, shouldAutoComplete } from 'shared/modules/settings/settingsDuck'
+import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 
 export class CypherFrame extends Component {
   constructor (props) {
@@ -224,8 +225,17 @@ const mapStateToProps = (state) => {
     maxRows: getMaxRows(state),
     initialNodeDisplay: getInitialNodeDisplay(state),
     maxNeighbours: getMaxNeighbours(state),
-    autoComplete: shouldAutoComplete(state)
+    autoComplete: shouldAutoComplete(state),
+    recentView: getRecentView(state)
   }
 }
 
-export default connect(mapStateToProps)(CypherFrame)
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onRecentViewChanged: (view) => {
+      dispatch(setRecentView(view))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CypherFrame)
