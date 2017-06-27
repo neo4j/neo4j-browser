@@ -46,19 +46,17 @@ export class SysInfoFrame extends Component {
         return
       }
       const mappedResult = mapSysInfoRecords(res.result.records)
-      const mappedTableHeader = <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
       const mappedTableComponents = mappedResult.map((ccRecord) => {
         const httpUrlForMember = ccRecord.addresses.filter((address) => {
           return address.startsWith('http://') && !address.includes(window.location.href)
         })
-        const arrayOfValue = [
+        return [
           ccRecord.role,
           ccRecord.addresses.join(', '),
           <Render if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Render>
         ]
-        return <SysInfoTableEntry values={arrayOfValue} />
       })
-      this.setState({cc: [mappedTableHeader].concat(mappedTableComponents)})
+      this.setState({cc: [{ value: mappedTableComponents }]})
     }
   }
   responseHandler () {
@@ -71,11 +69,9 @@ export class SysInfoFrame extends Component {
       const {ha, kernel, cache, tx, primitive} = tableData
 
       if (ha) {
-        const haInstancesHeader = <SysInfoTableEntry headers={['Id', 'Alive', 'Available', 'Is Master']} />
-        this.haInstances = [haInstancesHeader].concat(ha.InstancesInCluster.map(({properties}) => {
-          const haInstancePropertyValues = [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
-          return <SysInfoTableEntry values={haInstancePropertyValues} />
-        }))
+        const instancesInCluster = ha.InstancesInCluster.map(({properties}) => {
+          return [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
+        })
 
         this.setState({ha: [
           {label: 'InstanceId', value: ha.InstanceId},
@@ -84,6 +80,8 @@ export class SysInfoFrame extends Component {
           {label: 'Available', value: ha.Available.toString()},
           {label: 'Last Committed Tx Id', value: ha.LastCommittedTxId},
           {label: 'Last Update Time', value: ha.LastUpdateTime}
+        ], haInstances: [
+          { value: instancesInCluster }
         ]})
       }
 
@@ -141,6 +139,9 @@ export class SysInfoFrame extends Component {
   buildTableData (data) {
     if (!data) return null
     return data.map(({label, value}) => {
+      if (value instanceof Array) {
+        return value.map(v => <SysInfoTableEntry values={v} />)
+      }
       return <SysInfoTableEntry label={label} value={value} />
     })
   }
@@ -160,7 +161,8 @@ export class SysInfoFrame extends Component {
           {this.buildTableData(this.state.transactions)}
         </SysInfoTable>
         <Render if={this.props.isACausalCluster}>
-          <SysInfoTable header='Causal Cluster Members' colspan={(this.state.cc) ? this.state.cc.length - 1 : 0}>
+          <SysInfoTable header='Causal Cluster Members' colspan='3'>
+            <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
             {this.buildTableData(this.state.cc)}
           </SysInfoTable>
         </Render>
@@ -170,8 +172,9 @@ export class SysInfoFrame extends Component {
           </SysInfoTable>
         </Render>
         <Render if={this.state.haInstances}>
-          <SysInfoTable header='Cluster' colspan={(this.state.haInstances) ? this.state.haInstances.length : 0}>
-            {this.state.haInstances}
+          <SysInfoTable header='Cluster' colspan='4'>
+            <SysInfoTableEntry headers={['Id', 'Alive', 'Available', 'Is Master']} />
+            {this.buildTableData(this.state.haInstances)}
           </SysInfoTable>
         </Render>
       </SysInfoTableContainer>
