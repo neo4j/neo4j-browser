@@ -5720,9 +5720,9 @@ react-dock@^0.2.4:
     lodash.debounce "^3.1.1"
     prop-types "^15.5.8"
 
-react-dropzone@^3.10.0:
-  version "3.13.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dropzone/-/react-dropzone-3.13.2.tgz#318745c03007ca6b948cdd4431abc009b16a6588"
+react-dropzone@^3.13.3:
+  version "3.13.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dropzone/-/react-dropzone-3.13.3.tgz#b8bde4b5a12842f85196b45e8cc2959834b81962"
   dependencies:
     attr-accept "^1.0.3"
     prop-types "^15.5.7"
