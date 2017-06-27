@@ -145,6 +145,7 @@
     "rxjs": "^5.0.3",
     "save-as": "^0.1.7",
     "styled-components": "^2.0.0",
+    "stylis": "^3.1.9",
     "suber": "^5.0.1",
     "swipe-js-iso": "^2.0.3",
     "uuid": "^3.0.1",
