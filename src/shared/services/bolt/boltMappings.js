@@ -50,11 +50,11 @@ export function arrayIntToString (arr, converters) {
 
 export function objIntToString (obj, converters) {
   let entry = converters.objectConverter(obj, converters)
-
-  let newObj = {}
+  let newObj = null
   if (Array.isArray(entry)) {
     newObj = entry.map(item => itemIntToString(item, converters))
-  } else {
+  } else if (entry !== null && typeof entry === 'object') {
+    newObj = {}
     Object.keys(entry).forEach((key) => {
       newObj[key] = itemIntToString(entry[key], converters)
     })
@@ -72,10 +72,17 @@ export function extractFromNeoObjects (obj, converters) {
 }
 
 const extractPathForRows = (path, converters) => {
-  return path.segments.map(function (segment) {
-    return [objIntToString(segment.start, converters),
+  let segments = path.segments
+  // Zero length path. No relationship, end === start
+  if (!Array.isArray(path.segments) || path.segments.length < 1) {
+    segments = [{...path, end: null}]
+  }
+  return segments.map(function (segment) {
+    return [
+      objIntToString(segment.start, converters),
       objIntToString(segment.relationship, converters),
-      objIntToString(segment.end, converters)]
+      objIntToString(segment.end, converters)
+    ].filter((part) => part !== null)
   })
 }
 

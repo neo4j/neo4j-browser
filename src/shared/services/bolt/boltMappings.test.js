@@ -27,7 +27,8 @@ import {
   extractNodesAndRelationshipsFromRecordsForOldVis,
   extractPlan,
   flattenProperties,
-  objIntToString
+  objIntToString,
+  extractFromNeoObjects
 } from './boltMappings'
 
 describe('boltMappings', () => {
@@ -365,6 +366,78 @@ describe('boltMappings', () => {
 
       // Then
       expect(out.nodes.length).toEqual(4)
+    })
+  })
+  describe('extractFromNeoObjects', () => {
+    test('should extract objects from paths with zero segments', () => {
+      // Given
+      const converters = {
+        intChecker: () => false,
+        intConverter: (a) => a,
+        objectConverter: extractFromNeoObjects
+      }
+      const start = new neo4j.types.Node(1, ['X'], {x: 1})
+      const end = start
+      const segments = []
+      const path = new neo4j.types.Path(start, end, segments)
+
+      // When
+      const result = extractFromNeoObjects(path, converters)
+      // Then
+      expect(result.length).toBe(1)
+      expect(result[0].x).toBe(1)
+    })
+    test('should extract objects from paths with one segment', () => {
+      // Given
+      const converters = {
+        intChecker: () => false,
+        intConverter: (a) => a,
+        objectConverter: extractFromNeoObjects
+      }
+      const start = new neo4j.types.Node(1, ['X'], {x: 1})
+      const end = new neo4j.types.Node(2, ['Y'], {y: 1})
+      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
+      const segments = [new neo4j.types.PathSegment(start, rel, end)]
+      const path = new neo4j.types.Path(start, end, segments)
+
+      // When
+      const result = extractFromNeoObjects(path, converters)
+
+      // Then
+      expect(result.length).toBe(3)
+      expect(result[0].x).toBe(1)
+      expect(result[1].rel).toBe(1)
+      expect(result[2].y).toBe(1)
+    })
+    test('should extract objects from paths with multiple segments', () => {
+      // Given
+      const converters = {
+        intChecker: () => false,
+        intConverter: (a) => a,
+        objectConverter: extractFromNeoObjects
+      }
+      const start = new neo4j.types.Node(1, ['X'], {x: 1})
+      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
+      const end1 = new neo4j.types.Node(2, ['Y'], {y: 1})
+      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', {rel: 2})
+      const end = new neo4j.types.Node(5, ['Y'], {y: 2})
+      const segments = [
+        new neo4j.types.PathSegment(start, rel1, end1),
+        new neo4j.types.PathSegment(end1, rel2, end)
+      ]
+      const path = new neo4j.types.Path(start, end, segments)
+
+      // When
+      const result = extractFromNeoObjects(path, converters)
+
+      // Then
+      expect(result.length).toBe(6)
+      expect(result[0].x).toBe(1)
+      expect(result[1].rel).toBe(1)
+      expect(result[2].y).toBe(1)
+      expect(result[3].y).toBe(1) // Same as above line
+      expect(result[4].rel).toBe(2)
+      expect(result[5].y).toBe(2)
     })
   })
 })
