@@ -43,7 +43,7 @@ CREATE (Keanu:Person {name:'Keanu Reeves', born:1964})
 CREATE (Carrie:Person {name:'Carrie-Anne Moss', born:1967})
 CREATE (Laurence:Person {name:'Laurence Fishburne', born:1961})
 CREATE (Hugo:Person {name:'Hugo Weaving', born:1960})
-CREATE (AndyW:Person {name:'Andy Wachowski', born:1967})
+CREATE (LillyW:Person {name:'Lilly Wachowski', born:1967})
 CREATE (LanaW:Person {name:'Lana Wachowski', born:1965})
 CREATE (JoelS:Person {name:'Joel Silver', born:1952})
 CREATE
@@ -51,7 +51,7 @@ CREATE
   (Carrie)-[:ACTED_IN {roles:['Trinity']}]-&gt;(TheMatrix),
   (Laurence)-[:ACTED_IN {roles:['Morpheus']}]-&gt;(TheMatrix),
   (Hugo)-[:ACTED_IN {roles:['Agent Smith']}]-&gt;(TheMatrix),
-  (AndyW)-[:DIRECTED]-&gt;(TheMatrix),
+  (LillyW)-[:DIRECTED]-&gt;(TheMatrix),
   (LanaW)-[:DIRECTED]-&gt;(TheMatrix),
   (JoelS)-[:PRODUCED]-&gt;(TheMatrix)
 
@@ -64,7 +64,7 @@ CREATE
   (Carrie)-[:ACTED_IN {roles:['Trinity']}]-&gt;(TheMatrixReloaded),
   (Laurence)-[:ACTED_IN {roles:['Morpheus']}]-&gt;(TheMatrixReloaded),
   (Hugo)-[:ACTED_IN {roles:['Agent Smith']}]-&gt;(TheMatrixReloaded),
-  (AndyW)-[:DIRECTED]-&gt;(TheMatrixReloaded),
+  (LillyW)-[:DIRECTED]-&gt;(TheMatrixReloaded),
   (LanaW)-[:DIRECTED]-&gt;(TheMatrixReloaded),
   (JoelS)-[:PRODUCED]-&gt;(TheMatrixReloaded)
 
@@ -74,7 +74,7 @@ CREATE
   (Carrie)-[:ACTED_IN {roles:['Trinity']}]-&gt;(TheMatrixRevolutions),
   (Laurence)-[:ACTED_IN {roles:['Morpheus']}]-&gt;(TheMatrixRevolutions),
   (Hugo)-[:ACTED_IN {roles:['Agent Smith']}]-&gt;(TheMatrixRevolutions),
-  (AndyW)-[:DIRECTED]-&gt;(TheMatrixRevolutions),
+  (LillyW)-[:DIRECTED]-&gt;(TheMatrixRevolutions),
   (LanaW)-[:DIRECTED]-&gt;(TheMatrixRevolutions),
   (JoelS)-[:PRODUCED]-&gt;(TheMatrixRevolutions)
 
@@ -335,7 +335,7 @@ CREATE
   (HalleB)-[:ACTED_IN {roles:['Luisa Rey', 'Jocasta Ayrs', 'Ovid', 'Meronym']}]-&gt;(CloudAtlas),
   (JimB)-[:ACTED_IN {roles:['Vyvyan Ayrs', 'Captain Molyneux', 'Timothy Cavendish']}]-&gt;(CloudAtlas),
   (TomT)-[:DIRECTED]-&gt;(CloudAtlas),
-  (AndyW)-[:DIRECTED]-&gt;(CloudAtlas),
+  (LillyW)-[:DIRECTED]-&gt;(CloudAtlas),
   (LanaW)-[:DIRECTED]-&gt;(CloudAtlas),
   (DavidMitchell)-[:WROTE]-&gt;(CloudAtlas),
   (StefanArndt)-[:PRODUCED]-&gt;(CloudAtlas)
@@ -364,10 +364,10 @@ CREATE
   (JohnH)-[:ACTED_IN {roles:['High Chancellor Adam Sutler']}]-&gt;(VforVendetta),
   (BenM)-[:ACTED_IN {roles:['Dascomb']}]-&gt;(VforVendetta),
   (JamesM)-[:DIRECTED]-&gt;(VforVendetta),
-  (AndyW)-[:PRODUCED]-&gt;(VforVendetta),
+  (LillyW)-[:PRODUCED]-&gt;(VforVendetta),
   (LanaW)-[:PRODUCED]-&gt;(VforVendetta),
   (JoelS)-[:PRODUCED]-&gt;(VforVendetta),
-  (AndyW)-[:WROTE]-&gt;(VforVendetta),
+  (LillyW)-[:WROTE]-&gt;(VforVendetta),
   (LanaW)-[:WROTE]-&gt;(VforVendetta)
 
 CREATE (SpeedRacer:Movie {title:'Speed Racer', released:2008, tagline:'Speed has no limits'})
@@ -385,9 +385,9 @@ CREATE
   (ChristinaR)-[:ACTED_IN {roles:['Trixie']}]-&gt;(SpeedRacer),
   (Rain)-[:ACTED_IN {roles:['Taejo Togokahn']}]-&gt;(SpeedRacer),
   (BenM)-[:ACTED_IN {roles:['Cass Jones']}]-&gt;(SpeedRacer),
-  (AndyW)-[:DIRECTED]-&gt;(SpeedRacer),
+  (LillyW)-[:DIRECTED]-&gt;(SpeedRacer),
   (LanaW)-[:DIRECTED]-&gt;(SpeedRacer),
-  (AndyW)-[:WROTE]-&gt;(SpeedRacer),
+  (LillyW)-[:WROTE]-&gt;(SpeedRacer),
   (LanaW)-[:WROTE]-&gt;(SpeedRacer),
   (JoelS)-[:PRODUCED]-&gt;(SpeedRacer)
 
@@ -399,7 +399,7 @@ CREATE
   (RickY)-[:ACTED_IN {roles:['Takeshi']}]-&gt;(NinjaAssassin),
   (BenM)-[:ACTED_IN {roles:['Ryan Maslow']}]-&gt;(NinjaAssassin),
   (JamesM)-[:DIRECTED]-&gt;(NinjaAssassin),
-  (AndyW)-[:PRODUCED]-&gt;(NinjaAssassin),
+  (LillyW)-[:PRODUCED]-&gt;(NinjaAssassin),
   (LanaW)-[:PRODUCED]-&gt;(NinjaAssassin),
   (JoelS)-[:PRODUCED]-&gt;(NinjaAssassin)
 
