@@ -234,13 +234,13 @@ export const flattenProperties = (rows) => {
 
 export const applyGraphTypes = (item) => {
   if (Array.isArray(item)) {
-    return item.map(arrayItem => applyGraphTypes(arrayItem))
+    return item.map(applyGraphTypes)
   } else if (item.hasOwnProperty('labels') && item.hasOwnProperty('properties') && item.hasOwnProperty('identity')) {
     return new neo4j.types.Node(neo4j.int(item.identity), item.labels, applyGraphTypes(item.properties))
   } else if (item.hasOwnProperty('segments') && item.hasOwnProperty('start') && item.hasOwnProperty('end')) {
     const start = applyGraphTypes(item.start)
     const end = applyGraphTypes(item.end)
-    const segments = item.segments.map(segment => applyGraphTypes(segment))
+    const segments = item.segments.map(applyGraphTypes)
     return new neo4j.types.Path(start, end, segments)
   } else if (item.hasOwnProperty('relationship') && item.hasOwnProperty('start') && item.hasOwnProperty('end')) {
     const start = applyGraphTypes(item.start)
