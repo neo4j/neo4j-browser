@@ -37,6 +37,7 @@ import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/module
 import { CouldNotFetchRemoteGuideError, FetchURLError } from 'services/exceptions'
 import { parseHttpVerbCommand, isValidURL } from 'shared/modules/commands/helpers/http'
 import { fetchRemoteGrass, parseGrass } from 'shared/modules/commands/helpers/grass'
+import { shouldEnableWebWorkers } from 'shared/modules/settings/settingsDuck'
 
 const availableCommands = [{
   name: 'clear',
@@ -91,7 +92,8 @@ const availableCommands = [{
   name: 'cypher',
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
-    const [id, request] = handleCypherCommand(action, put, getParams(store.getState()))
+    const state = store.getState()
+    const [id, request] = handleCypherCommand(action, put, getParams(state), shouldEnableWebWorkers(state))
     put(cypher(action.cmd))
     put(frames.add({...action, type: 'cypher', requestId: id}))
     return request

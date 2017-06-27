@@ -27,7 +27,6 @@ import { runCypherMessage, cancelTransactionMessage, CYPHER_ERROR_MESSAGE, CYPHE
 let connectionProperties = null
 let boltWorkerRegister = {}
 let cancellationRegister = {}
-let enableWebWorkers = true
 
 function openConnection (props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
@@ -52,7 +51,7 @@ function cancelTransaction (id, cb) {
   }
 }
 
-function routedWriteTransaction (input, parameters, requestId = null, cancelable = false) {
+function routedWriteTransaction (input, parameters, requestId = null, cancelable = false, enableWebWorkers) {
   if (enableWebWorkers && window.Worker) {
     const id = requestId || v4()
     /* eslint-disable import/no-webpack-loader-syntax */

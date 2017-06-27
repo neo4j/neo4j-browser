@@ -58,12 +58,19 @@ const visualSettings =
       ]
     },
     {
-      title: 'Network Connection',
+      title: 'Connections & Query Execution',
       settings: [
         {
           'useBoltRouting': {
             displayName: 'Use bolt+routing',
             tooltip: 'Use bolt+routing protocol when in a causal cluster.',
+            type: 'checkbox'
+          }
+        },
+        {
+          'enableWebWorkers': {
+            displayName: 'Enable Web Workers',
+            tooltip: 'Use a separate web worker for each cypher execution if available',
             type: 'checkbox'
           }
         }

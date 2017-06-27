@@ -52,6 +52,7 @@ const browserSyncConfig = {
 export const getUseNewVisualization = (state) => state[NAME].useNewVis
 export const getCmdChar = (state) => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = (state) => state[NAME].editorAutocomplete !== false
+export const shouldEnableWebWorkers = (state) => state[NAME].enableWebWorkers
 
 const initialState = {
   cmdchar: ':',
@@ -68,7 +69,8 @@ const initialState = {
   autoComplete: true,
   scrollToTop: true,
   maxFrames: 30,
-  editorAutocomplete: true
+  editorAutocomplete: true,
+  enableWebWorkers: false
 }
 
 export default function settings (state = initialState, action) {
