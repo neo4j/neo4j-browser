@@ -36,7 +36,7 @@ const renderCell = (entry) => {
   } else if (typeof entry === 'object') {
     return renderObject(entry)
   } else {
-    return entry
+    return JSON.stringify(entry)
   }
 }
 const renderObject = (entry) => {
