@@ -5919,9 +5919,9 @@ redux-observable@^0.14.1:
   version "0.14.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/redux-observable/-/redux-observable-0.14.1.tgz#9f3d870c69388fdc427ded6770a3e326f3b69693"
 
-redux@^3.2.0, redux@^3.5.2:
-  version "3.7.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/redux/-/redux-3.7.0.tgz#07a623cafd92eee8abe309d13d16538f6707926f"
+redux@^3.2.0, redux@^3.7.1:
+  version "3.7.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/redux/-/redux-3.7.1.tgz#bfc535c757d3849562ead0af18ac52122cd7268e"
   dependencies:
     lodash "^4.2.1"
     lodash-es "^4.2.1"
