@@ -163,12 +163,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export const VisualizationConnectedBus = withBus(connect(mapStateToProps, mapDispatchToProps)(Visualization))
-
-export class VisualizationStatusbar extends Component {
-  shouldComponentUpdate (props, state) {
-    return false
-  }
-  render () {
-    return null
-  }
-}
