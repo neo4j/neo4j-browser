@@ -367,6 +367,73 @@ describe('boltMappings', () => {
       // Then
       expect(out.nodes.length).toEqual(4)
     })
+    test('should find items in paths with segments', () => {
+      // Given
+      const converters = {
+        intChecker: () => false,
+        intConverter: (a) => a,
+        objectConverter: extractFromNeoObjects
+      }
+      const start = new neo4j.types.Node(1, ['X'], {x: 1})
+      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
+      const end1 = new neo4j.types.Node(2, ['Y'], {y: 1})
+      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', {rel: 2})
+      const end = new neo4j.types.Node(5, ['Y'], {y: 2})
+      const segments = [
+        new neo4j.types.PathSegment(start, rel1, end1),
+        new neo4j.types.PathSegment(end1, rel2, end)
+      ]
+      const path = new neo4j.types.Path(start, end, segments)
+      const boltRecord = {
+        keys: ['p'],
+        get: (key) => {
+          if (key === 'p') return path
+        }
+      }
+      const records = [boltRecord]
+
+      // When
+      const out = extractNodesAndRelationshipsFromRecordsForOldVis(
+        records,
+        neo4j.types,
+        false,
+        converters
+      )
+
+      // Then
+      expect(out.nodes.length).toEqual(4)
+    })
+    test('should find items in paths zero segments', () => {
+      // Given
+      const converters = {
+        intChecker: () => false,
+        intConverter: (a) => a,
+        objectConverter: extractFromNeoObjects
+      }
+      const start = new neo4j.types.Node(1, ['X'], {x: 2})
+      const end = start
+      const segments = []
+      const path = new neo4j.types.Path(start, end, segments)
+      const boltRecord = {
+        keys: ['p'],
+        get: (key) => {
+          if (key === 'p') return path
+        }
+      }
+      const records = [boltRecord]
+
+      // When
+      const out = extractNodesAndRelationshipsFromRecordsForOldVis(
+        records,
+        neo4j.types,
+        false,
+        converters
+      )
+
+      // Then
+      expect(out.nodes.length).toEqual(1)
+      expect(out.nodes[0].properties.x).toEqual(2)
+    })
   })
   describe('extractFromNeoObjects', () => {
     test('should extract objects from paths with zero segments', () => {

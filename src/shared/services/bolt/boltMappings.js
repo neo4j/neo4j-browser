@@ -207,10 +207,15 @@ const flattenArray = (arr) => {
 const extractNodesAndRelationshipsFromPath = (item, rawNodes, rawRels) => {
   let paths = Array.isArray(item) ? item : [item]
   paths.forEach((path) => {
-    path.segments.forEach((segment) => {
-      rawNodes.push(segment.start)
-      rawNodes.push(segment.end)
-      rawRels.push(segment.relationship)
+    let segments = path.segments
+    // Zero length path. No relationship, end === start
+    if (!Array.isArray(path.segments) || path.segments.length < 1) {
+      segments = [{...path, end: null}]
+    }
+    segments.forEach((segment) => {
+      if (segment.start) rawNodes.push(segment.start)
+      if (segment.end) rawNodes.push(segment.end)
+      if (segment.relationship) rawRels.push(segment.relationship)
     })
   })
 }
