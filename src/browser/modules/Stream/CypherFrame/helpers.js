@@ -102,14 +102,21 @@ export const resultIsError = (request) => {
 export const initialView = (props, state = {}) => {
   // Views that should override and always show if they exist
   if (props === undefined || props.request === undefined || props.request.status === 'pending') return undefined
-  if (state.openView !== undefined) return state.openView // If openView exists, this is not initial render
+  // If openView exists, this is not initial render
+  if (state.openView !== undefined) return state.openView
   if (props.frame && props.frame.forceView) return props.frame.forceView
   if (props.request.status === 'error') return viewTypes.ERRORS
   if (resultHasPlan(props.request)) return viewTypes.PLAN
   if (!resultHasRows(props.request)) return viewTypes.TABLE
+
   // Non forced views
-  let { recentView = undefined } = props // This get set when the user changes view in _any_ frame
-  if (recentView && recentView !== viewTypes.VISUALIZATION) return recentView
+  // This get set when the user changes view in _any_ frame
+  let { recentView = undefined } = props
+  // We can only have three views here: TABLE, TEXT or VISUALIZATION
+  // If TABLE or TEXT are recentView, fast return
+  if ([viewTypes.TABLE, viewTypes.TEXT].indexOf(recentView) > -1) return recentView
+  // No we don't care about the recentView
+  // If the response have viz elements, we show the viz
   if (resultHasNodes(props.request)) return viewTypes.VISUALIZATION
   return viewTypes.TABLE
 }

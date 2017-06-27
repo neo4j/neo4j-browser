@@ -420,5 +420,58 @@ describe('helpers', () => {
       // Then
       expect(view).toEqual(viewTypes.TEXT)
     })
+    test('should return viz if the last view was plan but no plan exists and viz elements exists', () => {
+      // Given
+      let node = new neo4j.types.Node('2', ['Movie'], {prop2: 'prop2'})
+      const mappedGet = (map) => (key) => map[key]
+      const request = {
+        result: {
+          records: [
+            {
+              keys: ['name', 'maybeNode'],
+              get: mappedGet({name: 'Oskar', maybeNode: false})
+            },
+            {
+              keys: ['name', 'maybeNode'],
+              get: mappedGet({name: 'Stella', maybeNode: { deeper: [1, node] }})
+            }
+          ]
+        }
+      }
+      const props = { request, recentView: viewTypes.PLAN }
+      const state = {}
+
+      // When
+      const view = initialView(props, state)
+
+      // Then
+      expect(view).toEqual(viewTypes.VISUALIZATION)
+    })
+    test('should return table if the last view was plan but no plan exists and no viz elements exists', () => {
+      // Given
+      const mappedGet = (map) => (key) => map[key]
+      const request = {
+        result: {
+          records: [
+            {
+              keys: ['name', 'maybeNode'],
+              get: mappedGet({name: 'Oskar', maybeNode: false})
+            },
+            {
+              keys: ['name', 'maybeNode'],
+              get: mappedGet({name: 'Stella', maybeNode: { deeper: [1, 2] }})
+            }
+          ]
+        }
+      }
+      const props = { request, recentView: viewTypes.PLAN }
+      const state = {}
+
+      // When
+      const view = initialView(props, state)
+
+      // Then
+      expect(view).toEqual(viewTypes.TABLE)
+    })
   })
 })
