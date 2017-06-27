@@ -65,8 +65,7 @@ export class SysInfoFrame extends Component {
         this.setState({error: 'No results'})
         return
       }
-      const tableData = getTableDataFromRecords(res.result.records)
-      const {ha, kernel, cache, tx, primitive} = tableData
+      const {ha, kernel, cache, tx, primitive} = getTableDataFromRecords(res.result.records)
 
       if (ha) {
         const instancesInCluster = ha.InstancesInCluster.map(({properties}) => {
@@ -80,9 +79,10 @@ export class SysInfoFrame extends Component {
           {label: 'Available', value: ha.Available.toString()},
           {label: 'Last Committed Tx Id', value: ha.LastCommittedTxId},
           {label: 'Last Update Time', value: ha.LastUpdateTime}
-        ], haInstances: [
+        ],
+          haInstances: [
           { value: instancesInCluster }
-        ]})
+          ]})
       }
 
       this.setState({storeSizes: [
@@ -93,12 +93,14 @@ export class SysInfoFrame extends Component {
         {label: 'Relationship Store', value: toHumanReadableBytes(kernel.RelationshipStoreSize)},
         {label: 'String Store', value: toHumanReadableBytes(kernel.StringStoreSize)},
         {label: 'Total Store Size', value: toHumanReadableBytes(kernel.TotalStoreSize)}
-      ], idAllocation: [
+      ],
+        idAllocation: [
         {label: 'Node ID', value: primitive.NumberOfNodeIdsInUse},
         {label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse},
         {label: 'Relationship ID', value: primitive.NumberOfRelationshipIdsInUse},
         {label: 'Relationship Type ID', value: primitive.NumberOfRelationshipTypeIdsInUse}
-      ], pageCache: [
+        ],
+        pageCache: [
         {label: 'Faults', value: cache.Faults},
         {label: 'Evictions', value: cache.Evictions},
         {label: 'File Mappings', value: cache.FileMappings},
@@ -107,13 +109,14 @@ export class SysInfoFrame extends Component {
         {label: 'Eviction Exceptions', value: cache.EvictionExceptions},
         {label: 'File Unmappings', value: cache.FileUnmappings},
         {label: 'Bytes Written', value: cache.BytesWritten}
-      ], transactions: [
+        ],
+        transactions: [
         {label: 'Last Tx Id', value: tx.LastCommittedTxId},
         {label: 'Current', value: tx.NumberOfOpenTransactions},
         {label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions},
         {label: 'Opened', value: tx.NumberOfOpenedTransactions},
         {label: 'Committed', value: tx.NumberOfCommittedTransactions}
-      ]})
+        ]})
     }
   }
   componentDidMount () {
@@ -179,6 +182,7 @@ export class SysInfoFrame extends Component {
         </Render>
       </SysInfoTableContainer>
     )
+
     return (
       <FrameTemplate
         header={this.props.frame}
