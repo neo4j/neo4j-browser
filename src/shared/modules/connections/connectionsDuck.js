@@ -272,6 +272,11 @@ export const startupConnectEpic = (action$, store) => {
   return action$.ofType(discovery.DONE)
     .mergeMap((action) => {
       const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
+      if (!connection || !connection.host) {
+        store.dispatch(setActiveConnection(null))
+        store.dispatch(discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' }))
+        return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
+      }
       return new Promise((resolve, reject) => {
         bolt.openConnection(connection, { withoutCredentials: true, encrypted: getEncryptionMode() }, onLostConnection(store.dispatch)) // Try without creds
           .then((r) => {
