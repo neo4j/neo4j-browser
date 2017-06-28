@@ -24,6 +24,10 @@ import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
 import { runCypherMessage, cancelTransactionMessage, CYPHER_ERROR_MESSAGE, CYPHER_RESPONSE_MESSAGE, POST_CANCEL_TRANSACTION_MESSAGE } from './boltWorkerMessages'
 
+/* eslint-disable import/no-webpack-loader-syntax */
+import BoltWorkerModule from 'worker-loader!./boltWorker.js'
+/* eslint-enable import/no-webpack-loader-syntax */
+
 let connectionProperties = null
 let boltWorkerRegister = {}
 let cancellationRegister = {}
@@ -54,9 +58,6 @@ function cancelTransaction (id, cb) {
 function routedWriteTransaction (input, parameters, requestId = null, cancelable = false, enableWebWorkers) {
   if (enableWebWorkers && window.Worker) {
     const id = requestId || v4()
-    /* eslint-disable import/no-webpack-loader-syntax */
-    const BoltWorkerModule = require('worker-loader!./boltWorker.js')
-    /* eslint-enable import/no-webpack-loader-syntax */
     const boltWorker = new BoltWorkerModule()
     boltWorkerRegister[id] = boltWorker
 

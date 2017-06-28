@@ -30,7 +30,8 @@
       "^react$": "preact-compat-enzyme",
       "^react-dom$": "preact-compat-enzyme",
       "^browser-styles(.*)$": "<rootDir>/src/browser/styles$1",
-      "^browser-components(.*)$": "<rootDir>/src/browser/components$1"
+      "^browser-components(.*)$": "<rootDir>/src/browser/components$1",
+      "worker-loader" : "<rootDir>/__mocks__/workerLoaderMock.js"
     },
     "modulePaths": [
       "<rootDir>/src",
