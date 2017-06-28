@@ -50,7 +50,12 @@ describe('commandsDuck', () => {
       },
       history: [':xxx'],
       connections: {},
-      params: {}
+      params: {},
+      grass: {
+        node: {
+          color: '#000'
+        }
+      }
     })
   })
   afterEach(() => {
@@ -245,6 +250,31 @@ describe('commandsDuck', () => {
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+
+    test('does the right thing for :style', (done) => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'style'
+      const cmdString = cmd
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bus.take('NOOP', (currentAction) => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmdString, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          frames.add({...action, type: 'pre', result: JSON.stringify({ node: { color: '#000' } }, null, 2)}),
           { type: 'NOOP' }
         ])
         done()
