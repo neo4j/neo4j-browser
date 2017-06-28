@@ -207,7 +207,9 @@ const availableCommands = [{
       if (!param.startsWith('http')) {
         param = 'http://' + param
       }
-      fetchRemoteGrass(param)
+
+      const whitelist = getRemoteContentHostnameWhitelist(store.getState())
+      fetchRemoteGrass(param, whitelist)
       .then((response) => {
         const parsedGrass = parseGrass(response)
         if (parsedGrass) {

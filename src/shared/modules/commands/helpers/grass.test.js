@@ -36,18 +36,14 @@ describe('Grass remote fetch', () => {
   test('should not fetch from url not in the whitelist', () => {
     const whitelist = 'foo'
     const urlNotInWhitelist = 'bar'
-    return fetchRemoteGrass(urlNotInWhitelist, whitelist)
-    .catch((error) => {
-      expect(error).not.toBe(null)
+    return expect(fetchRemoteGrass(urlNotInWhitelist, whitelist)).rejects.toMatchObject({
+      message: 'Hostname is not allowed according to server whitelist'
     })
   })
   test('should fetch from url in the whitelist', () => {
     const whitelist = 'foo'
     const urlInWhitelist = 'foo'
-    return fetchRemoteGrass(urlInWhitelist, whitelist)
-    .then((res) => {
-      expect(res).toBe(urlInWhitelist)
-    })
+    return expect(fetchRemoteGrass(urlInWhitelist, whitelist)).resolves.toBe(urlInWhitelist)
   })
 })
 
