@@ -31,7 +31,7 @@ import { update as updateQueryResult } from '../requests/requestsDuck'
 import { send } from 'shared/modules/requests/requestsDuck'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
-import { merge, set } from 'shared/modules/params/paramsDuck'
+import { update as updateParams, replace as replaceParams } from 'shared/modules/params/paramsDuck'
 import { update as updateSettings, replace as replaceSettings } from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
 
@@ -125,7 +125,7 @@ describe('commandsDuck', () => {
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          merge({x: 2}),
+          updateParams({x: 2}),
           frames.add({...action, success: true, type: 'param', params: {x: 2}}),
           { type: 'NOOP' }
         ])
@@ -150,7 +150,7 @@ describe('commandsDuck', () => {
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          set({x: 2, y: 3}),
+          replaceParams({x: 2, y: 3}),
           frames.add({...action, success: true, type: 'params', params: {}}),
           { type: 'NOOP' }
         ])

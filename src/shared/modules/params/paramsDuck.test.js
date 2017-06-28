@@ -32,7 +32,7 @@ describe('paramsDuck', () => {
     // Given
     const state = {}
     const param = {x: 1}
-    const action = params.merge(param)
+    const action = params.update(param)
 
     // When
     const next = reducer(state, action)
@@ -46,7 +46,7 @@ describe('paramsDuck', () => {
     const state = {y: 2}
     const param = {x: 1}
     const expected = {...state, ...param}
-    const action = params.merge(param)
+    const action = params.update(param)
 
     // When
     const next = reducer(state, action)
@@ -59,7 +59,7 @@ describe('paramsDuck', () => {
     // Given
     const state = {y: 2}
     const param = {y: 1}
-    const action = params.merge(param)
+    const action = params.update(param)
 
     // When
     const next = reducer(state, action)

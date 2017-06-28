@@ -20,16 +20,44 @@
 
 import Render from 'browser-components/Render'
 import FrameTemplate from './FrameTemplate'
+import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
+import Ellipsis from 'browser-components/Ellipsis'
+import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
 
 const ParamsFrame = ({frame, params}) => {
+  const contents = (
+    <PaddedDiv>
+      <Render if={frame.success !== false}>
+        <pre>{JSON.stringify(frame.params, null, 2)}</pre>
+      </Render>
+    </PaddedDiv>
+  )
+  const statusbar = (
+    typeof frame['success'] === 'undefined'
+    ? null
+    : (
+      <StyledStatsBar>
+        <Ellipsis>
+          <Render if={frame.success === true}>
+            <SuccessText>
+              Successfully set your parameters.
+            </SuccessText>
+          </Render>
+          <Render if={frame.success === false}>
+            <ErrorText>
+              <ExclamationTriangleIcon /> Something went wrong. Read help pages.
+            </ErrorText>
+          </Render>
+        </Ellipsis>
+      </StyledStatsBar>
+    )
+  )
   return (
     <FrameTemplate
       header={frame}
-      contents={<Render if={frame.success !== false}><pre>{JSON.stringify(frame.params, null, 2)}</pre></Render>}
-    >
-      <Render if={frame.success}><span>Successfully set your parameters</span></Render>
-      <Render if={frame.success === false}><span>Something went wrong. Read help pages.</span></Render>
-    </FrameTemplate>
+      contents={contents}
+      statusbar={statusbar}
+    />
   )
 }
 export default ParamsFrame
