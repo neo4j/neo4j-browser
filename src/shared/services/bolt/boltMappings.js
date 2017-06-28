@@ -233,7 +233,9 @@ export const flattenProperties = (rows) => {
 }
 
 export const applyGraphTypes = (item) => {
-  if (Array.isArray(item)) {
+  if (item === null || item === undefined) {
+    return item
+  } else if (Array.isArray(item)) {
     return item.map(applyGraphTypes)
   } else if (item.hasOwnProperty('labels') && item.hasOwnProperty('properties') && item.hasOwnProperty('identity')) {
     return new neo4j.types.Node(neo4j.int(item.identity), item.labels, applyGraphTypes(item.properties))
