@@ -18,23 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var out = {
-  v1: {
-    types: {
-      Node: function Node (id) {
-        this.identity = id
-      },
-      Relationship: function Relationship (id) {
-        this.identity = id
-      },
-      Path: function Path () {}
-    },
-    isInt: () => {}
-  }
-}
+/* global, describe, test, expect, afterEach */
 
-out.v1.types.Node.prototype.toString = function () { return 'node' }
-out.v1.types.Relationship.prototype.toString = function () { return 'rel' }
-out.v1.types.Path.prototype.toString = function () { return 'path' }
+import { flattenAttributes } from './sysinfo'
 
-module.exports = out
+describe('sysinfo attribute types', () => {
+  test('should handle string value', () => {
+    const attributeData = {attributes: [{ name: 'foo', value: 'bar' }]}
+    expect(flattenAttributes(attributeData)).toEqual({foo: 'bar'})
+  })
+  test('should handle int value', () => {
+    const attributeData = {attributes: [{ name: 'foo', value: 0 }]}
+    expect(flattenAttributes(attributeData)).toEqual({foo: 0})
+  })
+  test('should handle object value', () => {
+    const attributeData = {attributes: [{ name: 'foo', value: {bar: 'baz'} }]}
+    expect(flattenAttributes(attributeData)).toEqual({foo: {bar: 'baz'}})
+  })
+})
