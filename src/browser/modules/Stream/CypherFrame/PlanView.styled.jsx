@@ -18,17 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mount as enyzmeMount } from 'enzyme'
+import styled from 'styled-components'
 
-export const mount = (Component) => {
-  const wrapper = enyzmeMount(
-    <Component />
-  )
-  return {
-    withProps: (props) => {
-      wrapper.setProps(props)
-      wrapper.update()
-      return Promise.resolve(wrapper)
-    }
-  }
-}
+export const PlanSVG = styled.svg`
+  width: 100%;
+`

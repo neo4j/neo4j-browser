@@ -26,6 +26,12 @@ export const deepEquals = (x, y) => {
   return (x === y)
 }
 
+export const shallowEquals = (a, b) => {
+  for (let key in a) if (a[key] !== b[key]) return false
+  for (let key in b) if (!(key in a)) return false
+  return true
+}
+
 export const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
 
 export const moveInArray = (fromIndex, toIndex, arr) => {
@@ -168,7 +174,7 @@ export const getBrowserName = function () {
   return 'Unknown'
 }
 
-export const removeComments = (string) => {
+export const removeComments = (string = '') => {
   return string.split(/\r?\n/).filter((line) => !line.startsWith('//')).join('\r\n')
 }
 

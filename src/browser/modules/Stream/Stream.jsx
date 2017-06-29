@@ -22,7 +22,7 @@ import { connect } from 'preact-redux'
 import { Component } from 'preact'
 import { StyledStream } from './styled'
 
-import CypherFrame from './CypherFrame'
+import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
 import Frame from './Frame'
@@ -39,10 +39,11 @@ import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
-import { getFrames, setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
+import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
-import { getMaxRows, getInitialNodeDisplay, getScrollToTop } from 'shared/modules/settings/settingsDuck'
+import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
+import { deepEquals } from 'services/utils'
 
 const getFrame = (type) => {
   const trans = {
@@ -70,29 +71,14 @@ const getFrame = (type) => {
 }
 
 class Stream extends Component {
-  shouldComponentUpdate (nextProps, nextState) {
-    const frameHasBeenAdded = this.props.frames.length < nextProps.frames.length
-
-    if (this.props.activeConnectionData === nextProps.activeConnectionData &&
-      this.props.requests === nextProps.requests &&
-      (this.props.children.length === nextProps.children.length &&
-        this.props.children.every((child, idx) => {
-          return child === nextProps.children[idx]
-        })) &&
-      (this.props.frames.length === nextProps.frames.length &&
-        this.props.frames.every((crFrame, idx) => {
-          return crFrame.id === nextProps.frames[idx].id
-        }))
-    ) {
-      return false
-    } else {
-      if (this.props.scrollToTop && frameHasBeenAdded) {
-        this.base.scrollTop = 0
-      }
+  shouldComponentUpdate (props) {
+    const frameHasBeenAdded = this.props.frames.length < props.frames.length
+    if (frameHasBeenAdded && this.props.scrollToTop) {
+      this.base.scrollTop = 0
       return true
     }
+    return !deepEquals(props, this.props)
   }
-
   render () {
     return (
       <StyledStream>
@@ -100,13 +86,7 @@ class Stream extends Component {
           const frameProps = {
             frame,
             activeConnectionData: this.props.activeConnectionData,
-            request: this.props.requests[frame.requestId],
-            recentView: this.props.recentView,
-            onRecentViewChanged: (view) => {
-              this.props.onRecentViewChanged(view)
-            },
-            maxRows: this.props.maxRows,
-            initialNodeDisplay: this.props.initialNodeDisplay
+            request: this.props.requests[frame.requestId]
           }
           const MyFrame = getFrame(frame.type)
           return <MyFrame {...frameProps} key={frame.id} />
@@ -121,19 +101,8 @@ const mapStateToProps = (state) => {
     frames: getFrames(state),
     requests: getRequests(state),
     activeConnectionData: getActiveConnectionData(state),
-    recentView: getRecentView(state),
-    maxRows: getMaxRows(state),
-    initialNodeDisplay: getInitialNodeDisplay(state),
     scrollToTop: getScrollToTop(state)
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onRecentViewChanged: (view) => {
-      dispatch(setRecentView(view))
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Stream)
+export default connect(mapStateToProps)(Stream)

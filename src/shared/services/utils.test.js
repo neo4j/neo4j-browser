@@ -27,10 +27,26 @@ describe('utils', () => {
     const o1 = {a: 'a', b: 'b', c: {c: 'c'}}
     const o2 = {...o1}
     const o3 = {...o1, c: {c: 'd'}}
+    const o4 = { ...o1, d: { e: { f: 'g' } } }
+    const o5 = { ...o1, d: { e: { f: 'g' } } }
 
     // When & Then
     expect(utils.deepEquals(o1, o2)).toBeTruthy()
     expect(utils.deepEquals(o1, o3)).toBeFalsy()
+    expect(utils.deepEquals(o4, o5)).toBeTruthy()
+  })
+  test('can shallowEquals compare objects', () => {
+    // Given
+    const o1 = {a: 1, b: 2, c: 'hello'}
+    const o2 = {...o1}
+    const o3 = {...o1, c: {c: 'd'}}
+    const o4 = { ...o1, d: { e: { f: 'g' } } }
+    const o5 = { ...o4, d: { e: { f: 'g' } } }
+
+    // When & Then
+    expect(utils.shallowEquals(o1, o2)).toBeTruthy()
+    expect(utils.shallowEquals(o1, o3)).toBeFalsy()
+    expect(utils.shallowEquals(o4, o5)).toBeFalsy()
   })
   test('can move items in an array', () => {
     // Given

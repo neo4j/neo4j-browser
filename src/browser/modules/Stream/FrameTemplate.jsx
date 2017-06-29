@@ -29,22 +29,24 @@ class FrameTemplate extends Component {
     this.state = {
       fullscreen: false,
       collapse: false,
-      pinned: false
+      pinned: false,
+      lastHeight: 10
     }
   }
   toggleFullScreen () {
-    this.setState({fullscreen: !this.state.fullscreen}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.lastHeight))
+    this.setState({fullscreen: !this.state.fullscreen}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.state.lastHeight))
   }
   toggleCollapse () {
-    this.setState({collapse: !this.state.collapse}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.lastHeight))
+    this.setState({collapse: !this.state.collapse}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.state.lastHeight))
   }
   togglePin () {
-    this.setState({pinned: !this.state.pinned}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.lastHeight))
+    this.setState({pinned: !this.state.pinned}, () => this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.state.lastHeight))
   }
   componentDidUpdate () {
-    if (this.frameContentElement && this.lastHeight !== this.frameContentElement.base.clientHeight) {
-      this.lastHeight = this.frameContentElement.base.clientHeight
-      this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.lastHeight)
+    if (this.frameContentElement.clientHeight < 300) return // No need to report a transition
+    if (this.frameContentElement && this.state.lastHeight !== this.frameContentElement.clientHeight) {
+      this.props.onResize && this.props.onResize(this.state.fullscreen, this.state.collapse, this.frameContentElement.clientHeight)
+      this.setState({ lastHeight: this.frameContentElement.clientHeight })
     }
   }
   setFrameContentElement (el) {
@@ -67,7 +69,7 @@ class FrameTemplate extends Component {
         <StyledFrameBody fullscreen={this.state.fullscreen} collapsed={this.state.collapse}>
           {(this.props.sidebar) ? this.props.sidebar() : null}
           <StyledFrameMainSection>
-            <StyledFrameContents fullscreen={this.state.fullscreen} ref={this.setFrameContentElement.bind(this)}>
+            <StyledFrameContents fullscreen={this.state.fullscreen} innerRef={this.setFrameContentElement.bind(this)}>
               {this.props.contents}
             </StyledFrameContents>
             <Render if={this.props.statusbar}>

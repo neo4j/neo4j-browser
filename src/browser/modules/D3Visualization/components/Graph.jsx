@@ -19,6 +19,7 @@
  */
 
 import { Component } from 'preact'
+import { deepEquals } from 'services/utils'
 import {createGraph, mapNodes, mapRelationships, getGraphStats} from '../mapper'
 import {GraphEventHandler} from '../GraphEventHandler'
 import '../lib/visualization/index'
@@ -59,29 +60,33 @@ export class GraphComponent extends Component {
 
   componentDidMount () {
     if (this.svgElement != null) {
-      if (!this.graphView) {
-        let NeoConstructor = neo.graphView
-        let measureSize = () => {
-          return {width: this.svgElement.offsetWidth, height: this.getVisualAreaHeight()}
-        }
-        this.graph = createGraph(this.props.nodes, this.props.relationships)
-        this.graphView = new NeoConstructor(this.svgElement, measureSize, this.graph, this.props.graphStyle)
-        new GraphEventHandler(this.graph,
-          this.graphView,
-          this.props.getNodeNeighbours,
-          this.props.onItemMouseOver,
-          this.props.onItemSelect,
-          this.props.onGraphModelChange
-        ).bindEventHandlers()
-        this.graphView.resize()
-        this.graphView.update()
-        this.state.currentStyleRules = this.props.graphStyle.toString()
-        this.props.onGraphModelChange(getGraphStats(this.graph))
-      }
-
+      this.initGraphView()
       this.graph && this.props.setGraph && this.props.setGraph(this.graph)
       this.props.getAutoCompleteCallback && this.props.getAutoCompleteCallback(this.addInternalRelationships.bind(this))
       this.props.assignVisElement && this.props.assignVisElement(this.svgElement, this.graphView)
+    }
+  }
+
+  initGraphView () {
+    if (!this.graphView) {
+      let NeoConstructor = neo.graphView
+      let measureSize = () => {
+        return {width: this.svgElement.offsetWidth, height: this.getVisualAreaHeight()}
+      }
+      this.graph = createGraph(this.props.nodes, this.props.relationships)
+      this.graphView = new NeoConstructor(this.svgElement, measureSize, this.graph, this.props.graphStyle)
+      this.graphEH = new GraphEventHandler(this.graph,
+        this.graphView,
+        this.props.getNodeNeighbours,
+        this.props.onItemMouseOver,
+        this.props.onItemSelect,
+        this.props.onGraphModelChange
+      )
+      this.graphEH.bindEventHandlers()
+      this.state.currentStyleRules = this.props.graphStyle.toString()
+      this.props.onGraphModelChange(getGraphStats(this.graph))
+      this.graphView.resize()
+      this.graphView.update()
     }
   }
 
@@ -89,20 +94,22 @@ export class GraphComponent extends Component {
     if (this.graph) {
       this.graph.addInternalRelationships(mapRelationships(internalRelationships, this.graph))
       this.graphView.update()
+      this.graphEH.onItemMouseOut()
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    if ((nextProps.relationships !== this.props.relationships || nextProps.nodes !== this.props.nodes) && this.graphView !== undefined) {
+  componentWillReceiveProps (props) {
+    if ((!deepEquals(props.relationships, this.props.relationships) || !deepEquals(props.nodes, this.props.nodes)) && this.graphView) {
       this.graph.resetGraph()
-      this.graph.addNodes(mapNodes(nextProps.nodes))
-      this.graph.addRelationships(mapRelationships(nextProps.relationships, this.graph))
-    } else if (this.state.currentStyleRules !== nextProps.graphStyle.toString()) {
+      this.graph.addNodes(mapNodes(props.nodes))
+      this.graph.addRelationships(mapRelationships(props.relationships, this.graph))
+      this.props.onGraphModelChange(getGraphStats(this.graph))
+    } else if (!deepEquals(this.state.currentStyleRules, props.graphStyle.toString())) {
+      this.state.currentStyleRules = props.graphStyle.toString()
       this.graphView.update()
-      this.state.currentStyleRules = nextProps.graphStyle.toString()
     }
 
-    if (this.props.fullscreen !== nextProps.fullscreen || this.props.frameHeight !== nextProps.frameHeight) {
+    if (this.props.fullscreen !== props.fullscreen || this.props.frameHeight !== props.frameHeight) {
       this.setState({shouldResize: true})
     } else {
       this.setState({shouldResize: false})
