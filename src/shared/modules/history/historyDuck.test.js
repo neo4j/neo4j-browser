@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
+/* global describe, test, expect */
 import reducer, * as actions from './historyDuck'
 
 describe('editor reducer', () => {
@@ -31,6 +31,24 @@ describe('editor reducer', () => {
     const historyAction = actions.addHistory(':history', 20)
     const nextnextState = reducer(nextState, historyAction)
     expect(nextnextState).toEqual([':history', ':help'])
+  })
+  test('editor.actionTypes.ADD_HISTORY does not repeat two entries in a row', () => {
+    // Given
+    const helpAction = actions.addHistory(':help', 20)
+    const historyAction = actions.addHistory(':history', 20)
+    const initalState = [':help']
+
+    // When
+    const nextState = reducer(initalState, helpAction)
+
+    // Then
+    expect(nextState).toEqual([':help'])
+
+    // When
+    const nextState1 = reducer(nextState, historyAction)
+
+    // Then
+    expect(nextState1).toEqual([':history', ':help'])
   })
 
   test('takes editor.actionTypes.SET_MAX_HISTORY into account', () => {
