@@ -36,7 +36,7 @@ import { handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/modules/commands/helpers/config'
 import { CouldNotFetchRemoteGuideError, FetchURLError } from 'services/exceptions'
 import { parseHttpVerbCommand, isValidURL } from 'shared/modules/commands/helpers/http'
-import { parseGrass } from 'shared/modules/commands/helpers/grass'
+import { fetchRemoteGrass, parseGrass } from 'shared/modules/commands/helpers/grass'
 
 const availableCommands = [{
   name: 'clear',
@@ -206,7 +206,9 @@ const availableCommands = [{
       if (!param.startsWith('http')) {
         param = 'http://' + param
       }
-      remote.get(param)
+
+      const whitelist = getRemoteContentHostnameWhitelist(store.getState())
+      fetchRemoteGrass(param, whitelist)
       .then((response) => {
         const parsedGrass = parseGrass(response)
         if (parsedGrass) {
