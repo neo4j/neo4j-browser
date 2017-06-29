@@ -20,6 +20,9 @@
 
 var out = {
   v1: {
+    isInt: function () {
+      return false
+    },
     types: {
       Node: function Node (id) {
         this.identity = id
@@ -28,8 +31,7 @@ var out = {
         this.identity = id
       },
       Path: function Path () {}
-    },
-    isInt: () => {}
+    }
   }
 }
 
