@@ -38,86 +38,81 @@ export class SysInfoFrame extends Component {
       results: false
     }
   }
-
-  clusterResponseHandler () {
-    return (res) => {
-      if (!res.success) {
-        this.setState({error: 'No causal cluster results'})
-        return
-      }
-      const mappedResult = mapSysInfoRecords(res.result.records)
-      const mappedTableComponents = mappedResult.map((ccRecord) => {
-        const httpUrlForMember = ccRecord.addresses.filter((address) => {
-          return address.startsWith('http://') && !address.includes(window.location.href)
-        })
-        return [
-          ccRecord.role,
-          ccRecord.addresses.join(', '),
-          <Render if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Render>
-        ]
-      })
-      this.setState({cc: [{ value: mappedTableComponents }]})
+  clusterResponseHandler (res) {
+    if (!res.success) {
+      this.setState({error: 'No causal cluster results'})
+      return
     }
+    const mappedResult = mapSysInfoRecords(res.result.records)
+    const mappedTableComponents = mappedResult.map((ccRecord) => {
+      const httpUrlForMember = ccRecord.addresses.filter((address) => {
+        return address.startsWith('http://') && !address.includes(window.location.href)
+      })
+      return [
+        ccRecord.role,
+        ccRecord.addresses.join(', '),
+        <Render if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Render>
+      ]
+    })
+    this.setState({cc: [{ value: mappedTableComponents }]})
   }
-  responseHandler () {
-    return (res) => {
-      if (!res.success) {
-        this.setState({error: 'No results'})
-        return
-      }
-      const {ha, kernel, cache, tx, primitive} = getTableDataFromRecords(res.result.records)
+  responseHandler (res) {
+    if (!res.success) {
+      this.setState({error: 'No results'})
+      return
+    }
+    const {ha, kernel, cache, tx, primitive} = getTableDataFromRecords(res.result.records)
 
-      if (ha) {
-        const instancesInCluster = ha.InstancesInCluster.map(({properties}) => {
-          return [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
-        })
+    if (ha) {
+      const instancesInCluster = ha.InstancesInCluster.map(({properties}) => {
+        return [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
+      })
 
-        this.setState({ha: [
-          {label: 'InstanceId', value: ha.InstanceId},
-          {label: 'Role', value: ha.Role},
-          {label: 'Alive', value: ha.Alive.toString()},
-          {label: 'Available', value: ha.Available.toString()},
-          {label: 'Last Committed Tx Id', value: ha.LastCommittedTxId},
-          {label: 'Last Update Time', value: ha.LastUpdateTime}
-        ],
-          haInstances: [
-          { value: instancesInCluster }
-          ]})
-      }
-
-      this.setState({storeSizes: [
-        {label: 'Array Store', value: toHumanReadableBytes(kernel.ArrayStoreSize)},
-        {label: 'Logical Log', value: toHumanReadableBytes(kernel.LogicalLogSize)},
-        {label: 'Node Store', value: toHumanReadableBytes(kernel.NodeStoreSize)},
-        {label: 'Property Store', value: toHumanReadableBytes(kernel.PropertyStoreSize)},
-        {label: 'Relationship Store', value: toHumanReadableBytes(kernel.RelationshipStoreSize)},
-        {label: 'String Store', value: toHumanReadableBytes(kernel.StringStoreSize)},
-        {label: 'Total Store Size', value: toHumanReadableBytes(kernel.TotalStoreSize)}
+      this.setState({ha: [
+        {label: 'InstanceId', value: ha.InstanceId},
+        {label: 'Role', value: ha.Role},
+        {label: 'Alive', value: ha.Alive.toString()},
+        {label: 'Available', value: ha.Available.toString()},
+        {label: 'Last Committed Tx Id', value: ha.LastCommittedTxId},
+        {label: 'Last Update Time', value: ha.LastUpdateTime}
       ],
-        idAllocation: [
-        {label: 'Node ID', value: primitive.NumberOfNodeIdsInUse},
-        {label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse},
-        {label: 'Relationship ID', value: primitive.NumberOfRelationshipIdsInUse},
-        {label: 'Relationship Type ID', value: primitive.NumberOfRelationshipTypeIdsInUse}
-        ],
-        pageCache: [
-        {label: 'Faults', value: cache.Faults},
-        {label: 'Evictions', value: cache.Evictions},
-        {label: 'File Mappings', value: cache.FileMappings},
-        {label: 'Bytes Read', value: cache.BytesRead},
-        {label: 'Flushes', value: cache.Flushes},
-        {label: 'Eviction Exceptions', value: cache.EvictionExceptions},
-        {label: 'File Unmappings', value: cache.FileUnmappings},
-        {label: 'Bytes Written', value: cache.BytesWritten}
-        ],
-        transactions: [
-        {label: 'Last Tx Id', value: tx.LastCommittedTxId},
-        {label: 'Current', value: tx.NumberOfOpenTransactions},
-        {label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions},
-        {label: 'Opened', value: tx.NumberOfOpenedTransactions},
-        {label: 'Committed', value: tx.NumberOfCommittedTransactions}
+        haInstances: [
+        { value: instancesInCluster }
         ]})
     }
+
+    this.setState({storeSizes: [
+      {label: 'Array Store', value: toHumanReadableBytes(kernel.ArrayStoreSize)},
+      {label: 'Logical Log', value: toHumanReadableBytes(kernel.LogicalLogSize)},
+      {label: 'Node Store', value: toHumanReadableBytes(kernel.NodeStoreSize)},
+      {label: 'Property Store', value: toHumanReadableBytes(kernel.PropertyStoreSize)},
+      {label: 'Relationship Store', value: toHumanReadableBytes(kernel.RelationshipStoreSize)},
+      {label: 'String Store', value: toHumanReadableBytes(kernel.StringStoreSize)},
+      {label: 'Total Store Size', value: toHumanReadableBytes(kernel.TotalStoreSize)}
+    ],
+      idAllocation: [
+      {label: 'Node ID', value: primitive.NumberOfNodeIdsInUse},
+      {label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse},
+      {label: 'Relationship ID', value: primitive.NumberOfRelationshipIdsInUse},
+      {label: 'Relationship Type ID', value: primitive.NumberOfRelationshipTypeIdsInUse}
+      ],
+      pageCache: [
+      {label: 'Faults', value: cache.Faults},
+      {label: 'Evictions', value: cache.Evictions},
+      {label: 'File Mappings', value: cache.FileMappings},
+      {label: 'Bytes Read', value: cache.BytesRead},
+      {label: 'Flushes', value: cache.Flushes},
+      {label: 'Eviction Exceptions', value: cache.EvictionExceptions},
+      {label: 'File Unmappings', value: cache.FileUnmappings},
+      {label: 'Bytes Written', value: cache.BytesWritten}
+      ],
+      transactions: [
+      {label: 'Last Tx Id', value: tx.LastCommittedTxId},
+      {label: 'Current', value: tx.NumberOfOpenTransactions},
+      {label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions},
+      {label: 'Opened', value: tx.NumberOfOpenedTransactions},
+      {label: 'Committed', value: tx.NumberOfCommittedTransactions}
+      ]})
   }
   componentDidMount () {
     if (this.props.bus) {
@@ -126,7 +121,7 @@ export class SysInfoFrame extends Component {
         {
           query: 'CALL dbms.queryJmx("org.neo4j:*")'
         },
-        this.responseHandler()
+        this.responseHandler.bind(this)
       )
       if (this.props.isACausalCluster) {
         this.props.bus.self(
@@ -134,7 +129,7 @@ export class SysInfoFrame extends Component {
           {
             query: 'CALL dbms.cluster.overview'
           },
-          this.clusterResponseHandler()
+          this.clusterResponseHandler.bind(this)
         )
       }
     }
