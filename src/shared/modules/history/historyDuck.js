@@ -27,7 +27,11 @@ export const ADD = 'history/ADD'
 export const getHistory = (state) => state[NAME]
 
 function addHistoryHelper (state, newState, maxHistory) {
-  let newHistory = [].concat(state)
+  // If it's the same as the last entry, don't add it
+  if (state && state.length && state[0] === newState) {
+    return state
+  }
+  let newHistory = [...state]
   newHistory.unshift(newState)
   return newHistory.slice(0, maxHistory)
 }
