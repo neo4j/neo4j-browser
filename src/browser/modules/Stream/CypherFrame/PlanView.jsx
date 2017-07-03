@@ -65,7 +65,7 @@ export class PlanView extends Component {
   planInit (el) {
     if (el != null && !this.plan) {
       const NeoConstructor = neo.queryPlan
-      this.plan = NeoConstructor(el)
+      this.plan = new NeoConstructor(el)
       this.plan.display(this.state.extractedPlan)
     }
   }
