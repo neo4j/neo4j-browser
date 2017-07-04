@@ -2845,9 +2845,9 @@ find-up@^2.0.0, find-up@^2.1.0:
   dependencies:
     locate-path "^2.0.0"
 
-firebase@^3.6.5:
-  version "3.9.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/firebase/-/firebase-3.9.0.tgz#c4237f50f58eeb25081b1839d6cbf175f8f7ed9b"
+firebase@^4.1.3:
+  version "4.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/firebase/-/firebase-4.1.3.tgz#e5d7327366c854dc12461633ba8bfeea2f5c7358"
   dependencies:
     dom-storage "^2.0.2"
     faye-websocket "0.9.3"
