@@ -24,13 +24,29 @@ var out = {
       return false
     },
     types: {
-      Node: function Node (id) {
+      Node: function Node (id, labels, properties) {
         this.identity = id
+        this.labels = labels
+        this.properties = properties
       },
-      Relationship: function Relationship (id) {
+      Relationship: function Relationship (id, start, end, type, properties) {
         this.identity = id
+        this.start = start
+        this.end = end
+        this.type = type
+        this.properties = properties
       },
-      Path: function Path () {}
+      Path: function Path (start, end, segments) {
+        this.start = start
+        this.end = end
+        this.segments = segments
+        this.length = segments.length
+      },
+      PathSegment: function PathSegment (start, relationship, end) {
+        this.start = start
+        this.relationship = relationship
+        this.end = end
+      }
     }
   }
 }
@@ -38,5 +54,6 @@ var out = {
 out.v1.types.Node.prototype.toString = function () { return 'node' }
 out.v1.types.Relationship.prototype.toString = function () { return 'rel' }
 out.v1.types.Path.prototype.toString = function () { return 'path' }
+out.v1.types.PathSegment.prototype.toString = function () { return 'pathsegment' }
 
 module.exports = out
