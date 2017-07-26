@@ -17,22 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { Component } from 'preact'
+import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
+
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { canAssignRolesToUser } from 'shared/modules/features/featuresDuck'
 
 import bolt from 'services/bolt/bolt'
 import { listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
-import FrameTemplate from '../Stream/FrameTemplate'
-import FrameError from '../Stream/FrameError'
-import FrameSuccess from '../Stream/FrameSuccess'
+import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
+import FrameError from 'browser/modules/Stream/FrameError'
+import FrameSuccess from 'browser/modules/Stream/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { FormButton, StyledLink } from 'browser-components/buttons'
-import {StyledTable, StyledBodyTr, StyledTh, StyledTd} from 'browser-components/DataTables'
+import { StyledTable, StyledBodyTr, StyledTh } from 'browser-components/DataTables'
+import { StyledUserTd, StyledInput, StyledButtonContainer } from './styled'
 
 export class UserAdd extends Component {
   constructor (props) {
@@ -73,7 +77,7 @@ export class UserAdd extends Component {
   addRoles () {
     let errors = []
     this.state.roles.forEach((role) => {
-      this.props.bus.self(
+      this.props.bus && this.props.bus.self(
         CYPHER_REQUEST,
         {query: addRoleToUser(this.state.username, role)},
         (response) => {
@@ -86,10 +90,10 @@ export class UserAdd extends Component {
     if (errors.length > 0) {
       return this.setState({errors: errors})
     }
-    return this.setState({success: `${this.state.username} created`})
+    return this.setState({success: `User '${this.state.username}' created`})
   }
   getRoles () {
-    this.props.bus.self(
+    this.props.bus && this.props.bus.self(
       CYPHER_REQUEST,
       {query: listRolesQuery()},
       (response) => {
@@ -114,14 +118,14 @@ export class UserAdd extends Component {
     }
   }
   createUser () {
-    this.props.bus.self(
+    this.props.bus && this.props.bus.self(
       CYPHER_REQUEST,
       {query: createDatabaseUser(this.state)},
       (response) => {
         if (!response.success) {
           return this.setState({errors: ['Unable to create user', response.error]})
         }
-        return this.addRoles.bind(this)
+        return this.addRoles()
       })
   }
   updateUsername (event) {
@@ -155,7 +159,8 @@ export class UserAdd extends Component {
       return (<StyledTh key={i}>{heading}</StyledTh>)
     })
     const errors = (this.state.errors) ? this.state.errors.join(', ') : null
-    const table = (
+
+    const frameContents = (
       <StyledTable>
         <thead>
           <tr>
@@ -164,51 +169,65 @@ export class UserAdd extends Component {
         </thead>
         <tbody>
           <StyledBodyTr>
-            <StyledTd>
-              <input className='username' onChange={this.updateUsername.bind(this)} />
-            </StyledTd>
-            <StyledTd>
+            <StyledUserTd>
+              <StyledInput className='username' onChange={this.updateUsername.bind(this)} />
+            </StyledUserTd>
+            <StyledUserTd>
               {listOfAvailableRoles}
               {this.listRoles()}
-            </StyledTd>
-            <StyledTd>
-              <input onChange={this.updatePassword.bind(this)} type='password' />
-            </StyledTd>
-            <StyledTd>
-              <input onChange={this.confirmUpdatePassword.bind(this)} type='password' />
-            </StyledTd>
-            <StyledTd>
-              <input onClick={this.updateForcePasswordChange.bind(this)} type='checkbox' />
-            </StyledTd>
+            </StyledUserTd>
+            <StyledUserTd>
+              <StyledInput onChange={this.updatePassword.bind(this)} type='password' />
+            </StyledUserTd>
+            <StyledUserTd>
+              <StyledInput onChange={this.confirmUpdatePassword.bind(this)} type='password' />
+            </StyledUserTd>
+            <StyledUserTd>
+              <StyledInput onClick={this.updateForcePasswordChange.bind(this)} type='checkbox' />
+            </StyledUserTd>
           </StyledBodyTr>
-          <StyledBodyTr>
+          <tr>
             <td>
-              <FormButton onClick={this.submit.bind(this)} label='Add User' />
+              <StyledButtonContainer>
+                <FormButton onClick={this.submit.bind(this)} label='Add User' />
+              </StyledButtonContainer>
             </td>
-          </StyledBodyTr>
+          </tr>
+          <tr>
+            <td>
+              <StyledButtonContainer>
+                <StyledLink onClick={this.openListUsersFrame.bind(this)}>
+                  See user list
+                </StyledLink>
+              </StyledButtonContainer>
+            </td>
+          </tr>
         </tbody>
       </StyledTable>
     )
 
-    const frameContents = (
-      <div>
-        {table}
-        <StyledLink onClick={this.openListUsersFrame.bind(this)}>
-          See user list
-        </StyledLink>
-      </div>
-    )
+    const getStatusBar = () => {
+      if (errors) return <FrameError message={errors} code='Error' />
+      if (this.state.success) {
+        return <FrameSuccess message={this.state.success} />
+      }
+      return null
+    }
+
     return (
       <FrameTemplate
         header={this.props.frame}
         contents={frameContents}
-      >
-        <FrameError message={errors} />
-        <FrameSuccess message={this.state.success} />
-      </FrameTemplate>
-
+        statusbar={getStatusBar()}
+      />
     )
   }
 }
 
-export default withBus(UserAdd)
+const mapStateToProps = (state) => {
+  return {
+    canAssignRolesToUser: canAssignRolesToUser(state)
+  }
+}
+
+export default withBus(connect(mapStateToProps, null)(UserAdd))
