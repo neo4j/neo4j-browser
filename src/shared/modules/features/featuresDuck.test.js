@@ -65,4 +65,12 @@ describe('feature getters', () => {
     const nextState = reducer({availableProcedures: ['dbms.cluster.overview']}, {type: ''})
     expect(features.isACausalCluster({features: nextState})).toBe(true)
   })
+  test('should not be able to assign roles to user', () => {
+    const nextState = reducer(undefined, {type: ''})
+    expect(features.canAssignRolesToUser({features: nextState})).toBe(false)
+  })
+  test('should be able to assign roles to user', () => {
+    const nextState = reducer({availableProcedures: ['dbms.security.addRoleToUser']}, {type: ''})
+    expect(features.canAssignRolesToUser({features: nextState})).toBe(true)
+  })
 })
