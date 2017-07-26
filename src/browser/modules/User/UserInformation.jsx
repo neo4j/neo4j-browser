@@ -27,7 +27,8 @@ import { deleteUser, addRoleToUser, removeRoleFromUser, activateUser, suspendUse
 
 import { FormButton } from 'browser-components/buttons'
 import { CloseIcon } from 'browser-components/icons/Icons'
-import {StyledBodyTr, StyledTd} from 'browser-components/DataTables'
+import {StyledBodyTr} from 'browser-components/DataTables'
+import {StyledUserTd, StyledButtonContainer} from './styled'
 
 import RolesSelector from './RolesSelector'
 
@@ -102,22 +103,26 @@ export class UserInformation extends Component {
   render () {
     return (
       <StyledBodyTr className='user-info'>
-        <StyledTd className='username'>{this.props.username}</StyledTd>
-        <StyledTd className='roles'>
+        <StyledUserTd className='username'>
+          <StyledButtonContainer>
+            {this.props.username}
+          </StyledButtonContainer>
+        </StyledUserTd>
+        <StyledUserTd className='roles'>
           <RolesSelector roles={this.availableRoles()} onChange={this.onRoleSelect.bind(this)} />
           <span>
             {this.listRoles()}
           </span>
-        </StyledTd>
-        <StyledTd className='status'>
+        </StyledUserTd>
+        <StyledUserTd className='status'>
           {this.statusButton(this.props.status)}
-        </StyledTd>
-        <StyledTd className='password-change'>
+        </StyledUserTd>
+        <StyledUserTd className='password-change'>
           {this.passwordChange()}
-        </StyledTd>
-        <StyledTd>
+        </StyledUserTd>
+        <StyledUserTd>
           <FormButton className='delete' label='Remove' onClick={this.removeClick.bind(this)} />
-        </StyledTd>
+        </StyledUserTd>
       </StyledBodyTr>
     )
   }
