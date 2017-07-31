@@ -9,3 +9,4 @@ coverage/
 /build
 /bundle-report.html
 /target
+/cypress/videos/
