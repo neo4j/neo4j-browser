@@ -23,11 +23,19 @@ import { v4 } from 'uuid'
 import { StyledStatsBar, PaddedTableViewDiv, StyledBodyMessage } from '../styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import {StyledTable, StyledBodyTr, StyledTh, StyledTd, StyledJsonPre} from 'browser-components/DataTables'
-import bolt from 'services/bolt/bolt'
-import { deepEquals, shallowEquals } from 'services/utils'
-import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable } from './helpers'
+import { deepEquals, shallowEquals, stringifyMod } from 'services/utils'
+import { v1 as neo4j } from 'neo4j-driver-alias'
+import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable, extractRecordsToResultArray, flattenGraphItemsInResultArray } from './helpers'
 
-const toTable = (records) => records && records.length ? bolt.recordsToTableArray(records) : undefined
+const toTable = (records) => records && records.length
+? [records]
+    .map(extractRecordsToResultArray)
+    .map(flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt))[0]
+: undefined
+
+const intToString = (val) => {
+  if (neo4j.isInt(val)) return val.toString()
+}
 
 const renderCell = (entry) => {
   if (Array.isArray(entry)) {
@@ -36,14 +44,15 @@ const renderCell = (entry) => {
   } else if (typeof entry === 'object') {
     return renderObject(entry)
   } else {
-    return JSON.stringify(entry)
+    return stringifyMod(entry, intToString, true)
   }
 }
 const renderObject = (entry) => {
+  if (neo4j.isInt(entry)) return entry.toString()
   if (Object.keys(entry).length === 0 && entry.constructor === Object) {
     return <em>(empty)</em>
   } else {
-    return <StyledJsonPre>{JSON.stringify(entry, null, 2)}</StyledJsonPre>
+    return <StyledJsonPre>{stringifyMod(entry, intToString, true)}</StyledJsonPre>
   }
 }
 const buildData = (entries) => {
