@@ -6902,9 +6902,9 @@ style-loader@^0.18.1:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
 
-styled-components@^2.0.0:
-  version "2.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-2.1.0.tgz#425805fca7efa5880aad2171f986bfd8a2f0808f"
+styled-components@^2.1.1:
+  version "2.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-2.1.1.tgz#7e9b5bc319ee3963b47aebb74f4658119ea9d484"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
@@ -6913,14 +6913,10 @@ styled-components@^2.0.0:
     is-function "^1.0.1"
     is-plain-object "^2.0.1"
     prop-types "^15.5.4"
-    stylis "^3.0.19"
+    stylis "^3.2.1"
     supports-color "^3.2.3"
 
-stylis@^3.0.19, stylis@^3.1.9:
-  version "3.1.9"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.1.9.tgz#638370451f980437f57c59e58d2e296be29fafb7"
-
-stylis@^3.2.1:
+stylis@^3.2.1, stylis@^3.2.8:
   version "3.2.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.8.tgz#9b23a3e06597f7944a3d9ae880d5796248b8784f"
 
