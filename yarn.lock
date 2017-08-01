@@ -494,11 +494,11 @@ babel-plugin-preact-require@^1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-preact-require/-/babel-plugin-preact-require-1.0.0.tgz#951d1b3753a4ff3ebf6ab53503aacacf5f85326b"
 
-babel-plugin-styled-components@^1.1.5:
-  version "1.1.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-1.1.5.tgz#ff2c8e0e2f3a0d3279e7454a7aaa2973749e714d"
+babel-plugin-styled-components@^1.1.7:
+  version "1.1.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-1.1.7.tgz#a92c239779cc80e7838b645c12865c61c4ca71ce"
   dependencies:
-    stylis "^3.0.19"
+    stylis "^3.2.1"
 
 babel-plugin-syntax-flow@^6.18.0:
   version "6.18.0"
@@ -807,14 +807,14 @@ babel-register@^6.24.1:
     mkdirp "^0.5.1"
     source-map-support "^0.4.2"
 
-babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.22.0, babel-runtime@^6.6.1:
+babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.22.0, babel-runtime@^6.6.1:
   version "6.23.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-runtime/-/babel-runtime-6.23.0.tgz#0a9489f144de70efb3ce4300accdb329e2fc543b"
   dependencies:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-runtime@^6.23.0:
+babel-runtime@^6.23.0, babel-runtime@^6.25.0:
   version "6.25.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-runtime/-/babel-runtime-6.25.0.tgz#33b98eaa5d482bb01a8d1aa6b437ad2b01aec41c"
   dependencies:
@@ -6704,6 +6704,10 @@ styled-components@^2.0.0:
 stylis@^3.0.19, stylis@^3.1.9:
   version "3.1.9"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.1.9.tgz#638370451f980437f57c59e58d2e296be29fafb7"
+
+stylis@^3.2.1:
+  version "3.2.8"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.8.tgz#9b23a3e06597f7944a3d9ae880d5796248b8784f"
 
 suber@^5.0.1:
   version "5.0.1"
