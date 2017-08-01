@@ -25,13 +25,7 @@ import Ellipsis from 'browser-components/Ellipsis'
 import {StyledTable, StyledBodyTr, StyledTh, StyledTd, StyledJsonPre} from 'browser-components/DataTables'
 import { deepEquals, shallowEquals, stringifyMod } from 'services/utils'
 import { v1 as neo4j } from 'neo4j-driver-alias'
-import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable, extractRecordsToResultArray, flattenGraphItemsInResultArray } from './helpers'
-
-const toTable = (records) => records && records.length
-? [records]
-    .map(extractRecordsToResultArray)
-    .map(flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt))[0]
-: undefined
+import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable, transformResultRecordsToResultArray } from './helpers'
 
 const intToString = (val) => {
   if (neo4j.isInt(val)) return val.toString()
@@ -96,7 +90,7 @@ export class TableView extends Component {
   }
   makeState (props) {
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
-    const table = toTable(records) || []
+    const table = transformResultRecordsToResultArray(records) || []
     const data = table ? table.slice() : []
     const columns = data.length > 0 ? data.shift() : []
     const { bodyMessage } = getBodyAndStatusBarMessages(props.result, props.maxRows)

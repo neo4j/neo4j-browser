@@ -134,6 +134,14 @@ export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
   })
 }
 
+export const transformResultRecordsToResultArray = (records) => {
+  return records && records.length
+  ? [records]
+      .map(extractRecordsToResultArray)
+      .map(flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt))[0]
+  : undefined
+}
+
 export const extractRecordsToResultArray = (records = []) => {
   records = Array.isArray(records) ? records : []
   const keys = records[0] ? [records[0].keys] : undefined
