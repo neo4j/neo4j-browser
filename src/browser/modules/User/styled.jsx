@@ -18,23 +18,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { StyledSelect } from './styled'
+import styled from 'styled-components'
+import { StyledTd } from 'browser-components/DataTables'
 
-const RolesSelector = ({roles = [], onChange = null, selectedValue = undefined}) => {
-  if (roles.length > 0) {
-    const options = roles.map((role, i) => {
-      return (<option key={i} value={role}>{role}</option>)
-    })
-    return (
-      <StyledSelect
-        className='roles-selector'
-        placeholder='Select role'
-        value={selectedValue}
-        onChange={onChange}
-      >
-        {options}
-      </StyledSelect>
-    )
-  } else { return null }
-}
-export default RolesSelector
+export const StyledUserTd = styled(StyledTd)`
+  padding: 10px 0;
+`
+export const StyledSelect = styled.select`
+  border: ${props => props.theme.secondaryButtonBorder};
+  color: #555;
+  height: 28px;
+  font-size: 16px;
+  overflow: hidden;
+  margin-right: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 150px;
+  vertical-align: top;
+`
+export const StyledInput = styled.input`
+  margin: 0 10px;
+  padding: 0 5px;
+  border: ${props => props.theme.secondaryButtonBorder};
+  border-radius: 4px;
+`
+export const StyledButtonContainer = styled.div`
+  margin: 0 10px;
+  padding: 10px 0;
+`

@@ -28,6 +28,7 @@ import bolt from 'services/bolt/bolt'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { StyledLink } from 'browser-components/buttons'
 import {StyledTable, StyledTh} from 'browser-components/DataTables'
+import { StyledButtonContainer } from './styled'
 
 import FrameTemplate from '../Stream/FrameTemplate'
 
@@ -77,7 +78,18 @@ export class UserList extends Component {
             {tableHeaders}
           </tr>
         </thead>
-        <tbody>{items}</tbody>
+        <tbody>
+          {items}
+          <tr>
+            <td>
+              <StyledButtonContainer>
+                <StyledLink onClick={this.openAddNewUserFrame.bind(this)}>
+                  Add new user
+                </StyledLink>
+              </StyledButtonContainer>
+            </td>
+          </tr>
+        </tbody>
       </StyledTable>
     )
   }
@@ -96,9 +108,7 @@ export class UserList extends Component {
     const frameContents = (
       <div className='db-list-users'>
         {renderedListOfUsers}
-        <StyledLink onClick={this.openAddNewUserFrame.bind(this)}>
-          Add new user
-        </StyledLink>
+
       </div>
     )
     return (
