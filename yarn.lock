@@ -5735,9 +5735,9 @@ preact-compat@3.x, preact-compat@^3.11.0, preact-compat@^3.13.1:
     prop-types "^15.5.8"
     standalone-react-addons-pure-render-mixin "^0.1.1"
 
-preact-redux@^2.0.0:
-  version "2.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-redux/-/preact-redux-2.0.1.tgz#e60df461b1a287f92ad7988fce1fdaffa5e3842e"
+preact-redux@^2.0.2:
+  version "2.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-redux/-/preact-redux-2.0.2.tgz#72142906f73565addf5d0b5fd7c6fe1cc5a026a5"
 
 preact-render-to-string@^3.6.0:
   version "3.6.3"
@@ -6212,9 +6212,18 @@ redux-observable@^0.14.1:
   version "0.14.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/redux-observable/-/redux-observable-0.14.1.tgz#9f3d870c69388fdc427ded6770a3e326f3b69693"
 
-redux@^3.2.0, redux@^3.7.1:
+redux@^3.2.0:
   version "3.7.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/redux/-/redux-3.7.1.tgz#bfc535c757d3849562ead0af18ac52122cd7268e"
+  dependencies:
+    lodash "^4.2.1"
+    lodash-es "^4.2.1"
+    loose-envify "^1.1.0"
+    symbol-observable "^1.0.3"
+
+redux@^3.7.2:
+  version "3.7.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:
     lodash "^4.2.1"
     lodash-es "^4.2.1"
