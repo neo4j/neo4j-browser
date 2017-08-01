@@ -20,7 +20,6 @@
 
 import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
-import { stringifyMod } from 'services/utils'
 import * as mappings from './boltMappings'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 
