@@ -73,7 +73,7 @@ class FrameTitlebar extends Component {
     return (
       <StyledFrameTitleBar>
         <StyledFrameCommand>
-          <DottedLineHover onClick={() => props.onTitlebarClick(frame.cmd)}>
+          <DottedLineHover data-test-id='frameCommand' onClick={() => props.onTitlebarClick(frame.cmd)}>
             {cmd}
           </DottedLineHover>
         </StyledFrameCommand>

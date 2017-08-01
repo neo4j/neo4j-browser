@@ -355,6 +355,7 @@ export class Editor extends Component {
             icon='"\5e"'
           />
           <EditorButton
+            data-test-id='submitQuery'
             onClick={() => this.execCurrent()}
             disabled={this.getEditorValue().length < 1}
             title='Play'

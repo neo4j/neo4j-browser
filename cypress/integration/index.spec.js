@@ -24,4 +24,41 @@ describe('Neo4j Browser', () => {
     cy.visit('http://localhost:8080')
     cy.title().should('include', 'Neo4j Browser')
   })
+  it('sets new login credentials', () => {
+    cy.title().should('include', 'Neo4j Browser')
+
+    cy.get('input[data-test-id="boltaddress"]').type('bolt://localhost:7687')
+
+    cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
+    cy.get('input[data-test-id="password"]').should('have.value', '')
+
+    cy.get('input[data-test-id="password"]').type('neo4j')
+
+    cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
+
+    cy.get('button[data-test-id="connect"]').click()
+
+    // update password
+    cy.get('input[data-test-id="newPassword"]')
+    cy.get('input[data-test-id="newPassword"]').should('have.value', '')
+    cy.get('input[data-test-id="newPasswordConfirmation"]').should('have.value', '')
+
+    cy.get('input[data-test-id="newPassword"]').type('newpassword')
+    cy.get('input[data-test-id="newPasswordConfirmation"]').type('newpassword')
+    cy.get('button[data-test-id="changePassword"]').click()
+
+    cy.get('input[data-test-id="changePassword"]').should('not.be.visible')
+
+    cy.get('input[data-test-id="connect"]').should('not.be.visible')
+    cy.wait(500)
+    cy.get('[data-test-id="frameCommand"]').first().should('contain', ':play start')
+  })
+  it('can run cypher statement', () => {
+    const cypher = 'return 1'
+    cy.get('.ReactCodeMirror textarea').type(cypher, {force: true})
+    cy.get('.ReactCodeMirror textarea').should('have.value', cypher)
+    cy.get('[data-test-id="submitQuery"]').click()
+    cy.get('[data-test-id="frameCommand"]').first().should('contain', cypher)
+
+  })
 })
