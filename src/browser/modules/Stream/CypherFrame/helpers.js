@@ -123,6 +123,12 @@ export const initialView = (props, state = {}) => {
   return viewTypes.TABLE
 }
 
+/**
+ * Takes an array of objects and stringifies it using a
+ * modified version of JSON.stringify.
+ * It takes a replacer without enforcing quoting rules to it.
+ * Used so we can have Neo4j integers as string without quotes.
+ */
 export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
   return arr.map((col) => {
     if (!col) return col
@@ -134,6 +140,11 @@ export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
   })
 }
 
+/**
+ * Transformes an array of neo4j driver records to an array of objects.
+ * Flattens graph items so only their props are left.
+ * Leaves Neo4j Integers as they were.
+ */
 export const transformResultRecordsToResultArray = (records) => {
   return records && records.length
   ? [records]
@@ -142,6 +153,10 @@ export const transformResultRecordsToResultArray = (records) => {
   : undefined
 }
 
+/**
+ * Transformes an array of neo4j driver records to an array of objects.
+ * Leaves all values as they were, just changing the data structure.
+ */
 export const extractRecordsToResultArray = (records = []) => {
   records = Array.isArray(records) ? records : []
   const keys = records[0] ? [records[0].keys] : undefined
@@ -156,6 +171,10 @@ export const flattenGraphItemsInResultArray = (types = neo4j.types, intChecker =
   return result.map(flattenGraphItems.bind(null, types, intChecker))
 }
 
+/**
+ * Recursively looks for graph items and elevates their properties if found.
+ * Leaves everything else (including neo4j integers) as is
+ */
 export const flattenGraphItems = (types = neo4j.types, intChecker = neo4j.isInt, item) => {
   if (Array.isArray(item)) return item.map(flattenGraphItems.bind(null, types, intChecker))
   if (typeof item === 'object' && item !== null && !isGraphItem(types, item) && !intChecker(item)) {
