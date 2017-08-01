@@ -6000,9 +6000,9 @@ react-dock@^0.2.4:
     lodash.debounce "^3.1.1"
     prop-types "^15.5.8"
 
-react-dropzone@^3.13.3:
-  version "3.13.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dropzone/-/react-dropzone-3.13.3.tgz#b8bde4b5a12842f85196b45e8cc2959834b81962"
+react-dropzone@^3.13.4:
+  version "3.13.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dropzone/-/react-dropzone-3.13.4.tgz#84da26815c40339691c49b4544c2ef7a16912ccc"
   dependencies:
     attr-accept "^1.0.3"
     prop-types "^15.5.7"
@@ -6042,9 +6042,9 @@ react-pure-render@^1.0.2:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-pure-render/-/react-pure-render-1.0.2.tgz#9d8a928c7f2c37513c2d064e57b3e3c356e9fabb"
 
-react-timeago@^3.2.0:
-  version "3.3.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-3.3.0.tgz#5aa2573c1b2df2bceda89dc25db4145939255fee"
+react-timeago@^3.4.3:
+  version "3.4.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-3.4.3.tgz#eb9061eefb044e4a2b09ce8c99d34645b2dbfa25"
 
 read-cache@^1.0.0:
   version "1.0.0"
