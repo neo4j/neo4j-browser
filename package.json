@@ -142,7 +142,7 @@
     "react-timeago": "^3.2.0",
     "redux": "^3.7.1",
     "redux-observable": "^0.14.1",
-    "rxjs": "^5.0.3",
+    "rxjs": "^5.4.2",
     "save-as": "^0.1.7",
     "styled-components": "^2.1.1",
     "stylis": "^3.2.8",

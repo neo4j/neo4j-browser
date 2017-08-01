@@ -6443,9 +6443,9 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-rxjs@^5.0.3:
-  version "5.4.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-5.4.1.tgz#b62f757f279445d265a18a58fb0a70dc90e91626"
+rxjs@^5.4.2:
+  version "5.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-5.4.2.tgz#2a3236fcbf03df57bae06fd6972fd99e5c08fcf7"
   dependencies:
     symbol-observable "^1.0.1"
 
