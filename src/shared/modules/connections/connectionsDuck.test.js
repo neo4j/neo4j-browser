@@ -23,17 +23,15 @@ import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 import reducer, * as connections from './connectionsDuck'
+import { DONE as DISCOVERY_DONE, CONNECTION_ID, updateDiscoveryConnection } from 'shared/modules/discovery/discoveryDuck'
 
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
   return {
-    closeConnection: jest.fn()
+    closeConnection: jest.fn(),
+    openConnection: jest.fn()
   }
 })
-
-const bus = createBus()
-const epicMiddleware = createEpicMiddleware(connections.disconnectEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
 
 describe('connections reducer', () => {
   test('handles connections.ADD', () => {
@@ -128,11 +126,23 @@ describe('connections reducer', () => {
 })
 
 describe('connectionsDucks Epics', () => {
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(connections.disconnectEpic)
+  const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
   let store
   beforeAll(() => {
     store = mockStore({
       connections: {
-        activeConnection: null
+        activeConnection: null,
+        connectionsById: {
+          [CONNECTION_ID]: {
+            id: CONNECTION_ID,
+            host: undefined,
+            username: 'neo4j',
+            password: 'neo4j'
+          }
+        },
+        allConnectionIds: [CONNECTION_ID]
       }
     })
   })
@@ -160,6 +170,40 @@ describe('connectionsDucks Epics', () => {
     })
     store.dispatch(action)
   })
+  test('startupConnectEpic does not try to connect if no connection host', () => {
+    // Given
+    const action = {
+      type: DISCOVERY_DONE
+    }
+    bolt.openConnection.mockReturnValueOnce(Promise.resolve())
+
+    const p = new Promise((resolve, reject) => {
+      bus.take(connections.STARTUP_CONNECTION_FAILED, (currentAction) => {
+        // Then
+        try {
+          expect(store.getActions()).toEqual([
+            action,
+            connections.setActiveConnection(null),
+            updateDiscoveryConnection({ username: 'neo4j', password: '' }),
+            currentAction
+          ])
+          expect(bolt.openConnection).toHaveBeenCalledTimes(0)
+          expect(bolt.closeConnection).toHaveBeenCalledTimes(1)
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.startupConnectEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
   test('detectActiveConnectionChangeEpic', (done) => {
     // Given
     const action = connections.setActiveConnection(null)
@@ -181,9 +225,71 @@ describe('connectionsDucks Epics', () => {
     store.dispatch(action)
   })
 })
+describe('startupConnectEpic', () => {
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(connections.startupConnectEpic)
+  const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+  let store
+  beforeAll(() => {
+    bolt.openConnection.mockReset()
+    store = mockStore({
+      connections: {
+        activeConnection: null,
+        connectionsById: {
+          [CONNECTION_ID]: {
+            id: CONNECTION_ID,
+            host: 'xxx',
+            username: 'neo4j',
+            password: 'neo4j'
+          }
+        },
+        allConnectionIds: [CONNECTION_ID]
+      }
+    })
+  })
+  afterEach(() => {
+    store.clearActions()
+    bus.reset()
+  })
+  test('startupConnectEpic does try to connect if connection host exists', () => {
+    // Given
+    const action = {
+      type: DISCOVERY_DONE
+    }
+    bolt.openConnection.mockReturnValue(Promise.reject()) // eslint-disable-line
 
+    const p = new Promise((resolve, reject) => {
+      bus.take(connections.STARTUP_CONNECTION_FAILED, (currentAction) => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([
+            action,
+            connections.setActiveConnection(null),
+            updateDiscoveryConnection({ username: 'neo4j', password: '' }),
+            currentAction
+          ])
+          expect(bolt.openConnection).toHaveBeenCalledTimes(2)
+          expect(bolt.closeConnection).toHaveBeenCalledTimes(1)
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.startupConnectEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+})
 describe('retainCredentialsSettingsEpic', () => {
   // Given
+  const bus = createBus()
   const epicMiddleware = createEpicMiddleware(connections.retainCredentialsSettingsEpic)
   const myMockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
   let store
