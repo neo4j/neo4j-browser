@@ -310,22 +310,23 @@ describe('utils', () => {
   test('stringifyMod works just as JSON.stringify with modFn', () => {
     // Given
     const modFn = (val) => {
-      if (Number.isInteger(val)) return val + 1
-      if (typeof val === 'string') return val.toString()
+      if (Number.isInteger(val)) return val.toString()
     }
     const tests = [
       null,
       false,
       [[], [0]],
+      '4',
       4,
       ['string']
     ]
     const expects = [
       'null',
       'false',
-      JSON.stringify([[], [1]]),
-      '5',
-      '[string]'
+      JSON.stringify([[], [0]]),
+      '"4"',
+      '4',
+      '["string"]'
     ]
 
     // When & Then
