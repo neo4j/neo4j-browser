@@ -348,6 +348,7 @@ export class Editor extends Component {
             />
           </Render>
           <EditorButton
+            data-test-id='clearEditorContent'
             onClick={() => this.clearEditor()}
             disabled={this.getEditorValue().length < 1}
             title='Clear'

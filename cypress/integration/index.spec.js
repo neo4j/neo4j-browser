@@ -19,6 +19,11 @@
  */
 
 /* global cy, test, expect */
+
+const Carousel = '[data-test-id="carousel"]'
+const SubmitQueryButton = '[data-test-id="submitQuery"]'
+const Editor = '.ReactCodeMirror textarea'
+
 describe('Neo4j Browser', () => {
   it('loads', () => {
     cy.visit('http://localhost:8080')
@@ -55,10 +60,27 @@ describe('Neo4j Browser', () => {
   })
   it('can run cypher statement', () => {
     const cypher = 'return 1'
-    cy.get('.ReactCodeMirror textarea').type(cypher, {force: true})
-    cy.get('.ReactCodeMirror textarea').should('have.value', cypher)
-    cy.get('[data-test-id="submitQuery"]').click()
+    cy.get(Editor).type(cypher, {force: true})
+    cy.get(Editor).should('have.value', cypher)
+    cy.get(SubmitQueryButton).click()
+    cy.get('[data-test-id="frameCommand"]').first().should('contain', cypher)
+  })
+  it('can exec cypher from `:play movies`', () => {
+    const cypher = ':play movies'
+    cy.get('[data-test-id="clearEditorContent"]').click()
+
+    cy.get(Editor).type(cypher, {force: true})
+    cy.get(Editor).should('have.value', cypher)
+
+    cy.get(SubmitQueryButton).click()
     cy.get('[data-test-id="frameCommand"]').first().should('contain', cypher)
 
+    cy.get(Carousel).find('[data-test-id="nextSlide"]').click()
+    cy.get(Carousel).find('[data-test-id="nextSlide"]').click()
+    cy.get(Carousel).find('[data-test-id="previousSlide"]').click()
+    cy.get(Carousel).find('.code').click()
+    cy.get(SubmitQueryButton).click()
+
+    cy.get('[data-test-id="frameCommand"]').first().should('contain', 'Emil Eifrem')
   })
 })
