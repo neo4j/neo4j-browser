@@ -1369,9 +1369,9 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codemirror@^5.25.2:
-  version "5.26.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.26.0.tgz#bcbee86816ed123870c260461c2b5c40b68746e5"
+codemirror@^5.28.0:
+  version "5.28.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.28.0.tgz#2978d9280d671351a4f5737d06bbd681a0fd6f83"
 
 coffee-loader@^0.7.3:
   version "0.7.3"
@@ -5735,11 +5735,11 @@ preact-compat@3.x, preact-compat@^3.11.0, preact-compat@^3.13.1:
     prop-types "^15.5.8"
     standalone-react-addons-pure-render-mixin "^0.1.1"
 
-preact-redux@^2.0.0:
-  version "2.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-redux/-/preact-redux-2.0.1.tgz#e60df461b1a287f92ad7988fce1fdaffa5e3842e"
+preact-redux@^2.0.2:
+  version "2.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-redux/-/preact-redux-2.0.2.tgz#72142906f73565addf5d0b5fd7c6fe1cc5a026a5"
 
-preact-render-to-string@^3.6.0:
+preact-render-to-string@^3.6.0, preact-render-to-string@^3.6.3:
   version "3.6.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-render-to-string/-/preact-render-to-string-3.6.3.tgz#481d0d5bdac9192d3347557437d5cd00aa312043"
   dependencies:
@@ -5760,9 +5760,13 @@ preact-transition-group@^1.1.0:
   version "1.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/preact-transition-group/-/preact-transition-group-1.1.1.tgz#f0a49327ea515ece34ea2be864c4a7d29e5d6e10"
 
-preact@8.x, preact@^8.1.0:
+preact@8.x:
   version "8.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/preact/-/preact-8.1.0.tgz#f035b808eebb74e46d56246b02ca0f190b6d6574"
+
+preact@^8.2.1:
+  version "8.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact/-/preact-8.2.1.tgz#674243df0c847884d019834044aa2fcd311e72ed"
 
 precss@^2.0.0:
   version "2.0.0"
@@ -6000,9 +6004,9 @@ react-dock@^0.2.4:
     lodash.debounce "^3.1.1"
     prop-types "^15.5.8"
 
-react-dropzone@^3.13.3:
-  version "3.13.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dropzone/-/react-dropzone-3.13.3.tgz#b8bde4b5a12842f85196b45e8cc2959834b81962"
+react-dropzone@^3.13.4:
+  version "3.13.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dropzone/-/react-dropzone-3.13.4.tgz#84da26815c40339691c49b4544c2ef7a16912ccc"
   dependencies:
     attr-accept "^1.0.3"
     prop-types "^15.5.7"
@@ -6042,9 +6046,9 @@ react-pure-render@^1.0.2:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-pure-render/-/react-pure-render-1.0.2.tgz#9d8a928c7f2c37513c2d064e57b3e3c356e9fabb"
 
-react-timeago@^3.2.0:
-  version "3.3.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-3.3.0.tgz#5aa2573c1b2df2bceda89dc25db4145939255fee"
+react-timeago@^3.4.3:
+  version "3.4.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-3.4.3.tgz#eb9061eefb044e4a2b09ce8c99d34645b2dbfa25"
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -6212,9 +6216,18 @@ redux-observable@^0.14.1:
   version "0.14.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/redux-observable/-/redux-observable-0.14.1.tgz#9f3d870c69388fdc427ded6770a3e326f3b69693"
 
-redux@^3.2.0, redux@^3.7.1:
+redux@^3.2.0:
   version "3.7.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/redux/-/redux-3.7.1.tgz#bfc535c757d3849562ead0af18ac52122cd7268e"
+  dependencies:
+    lodash "^4.2.1"
+    lodash-es "^4.2.1"
+    loose-envify "^1.1.0"
+    symbol-observable "^1.0.3"
+
+redux@^3.7.2:
+  version "3.7.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:
     lodash "^4.2.1"
     lodash-es "^4.2.1"
@@ -6443,9 +6456,9 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-rxjs@^5.0.3:
-  version "5.4.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-5.4.1.tgz#b62f757f279445d265a18a58fb0a70dc90e91626"
+rxjs@^5.4.2:
+  version "5.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-5.4.2.tgz#2a3236fcbf03df57bae06fd6972fd99e5c08fcf7"
   dependencies:
     symbol-observable "^1.0.1"
 
@@ -6902,9 +6915,9 @@ style-loader@^0.18.1:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
 
-styled-components@^2.0.0:
-  version "2.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-2.1.0.tgz#425805fca7efa5880aad2171f986bfd8a2f0808f"
+styled-components@^2.1.1:
+  version "2.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-2.1.1.tgz#7e9b5bc319ee3963b47aebb74f4658119ea9d484"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
@@ -6913,14 +6926,10 @@ styled-components@^2.0.0:
     is-function "^1.0.1"
     is-plain-object "^2.0.1"
     prop-types "^15.5.4"
-    stylis "^3.0.19"
+    stylis "^3.2.1"
     supports-color "^3.2.3"
 
-stylis@^3.0.19, stylis@^3.1.9:
-  version "3.1.9"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.1.9.tgz#638370451f980437f57c59e58d2e296be29fafb7"
-
-stylis@^3.2.1:
+stylis@^3.2.1, stylis@^3.2.8:
   version "3.2.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.8.tgz#9b23a3e06597f7944a3d9ae880d5796248b8784f"
 
