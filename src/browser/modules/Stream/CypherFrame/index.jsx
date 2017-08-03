@@ -215,9 +215,9 @@ export class CypherFrame extends Component {
         header={frame}
         contents={frameContents}
         statusbar={statusBar}
-        exportData={this.state.exportData}
+        exportData={(this.state.openView !== viewTypes.VISUALIZATION) ? this.state.exportData : null}
         onResize={this.onResize.bind(this)}
-        visElement={(this.state.hasVis) ? this.visElement : null}
+        visElement={(this.state.hasVis && (this.state.openView === viewTypes.VISUALIZATION)) ? this.visElement : null}
       />
     )
   }
