@@ -303,34 +303,65 @@ describe('utils', () => {
 
     // When & Then
     tests.forEach((t) => {
-      expect(utils.stringifyMod()(t)).toEqual(JSON.stringify(t))
+      expect(utils.stringifyMod(t)).toEqual(JSON.stringify(t))
     })
   })
 
   test('stringifyMod works just as JSON.stringify with modFn', () => {
     // Given
     const modFn = (val) => {
-      if (Number.isInteger(val)) return val + 1
-      if (typeof val === 'string') return val.toString()
+      if (Number.isInteger(val)) return val.toString()
     }
     const tests = [
       null,
       false,
       [[], [0]],
+      '4',
       4,
       ['string']
     ]
     const expects = [
       'null',
       'false',
-      JSON.stringify([[], [1]]),
-      5,
-      '[string]'
+      JSON.stringify([[], [0]]),
+      '"4"',
+      '4',
+      '["string"]'
     ]
 
     // When & Then
     tests.forEach((t, index) => {
-      expect(utils.stringifyMod()(t, modFn)).toEqual(expects[index])
+      expect(utils.stringifyMod(t, modFn)).toEqual(expects[index])
+    })
+  })
+  test('stringifyMod can add spaces on the output', () => {
+    // Given
+    const tests = [
+      false,
+      [[], [0]],
+      {
+        prop1: 1,
+        prop2: [
+          {innerProp: 'innerVal', innerProp2: [{innerInner: 'innerVal2', innerInner2: 'innerInnerVal2'}]}
+        ]
+      },
+      ['string']
+    ]
+    const expects = [
+      'false',
+      JSON.stringify([[], [0]], null, 2),
+      JSON.stringify({
+        prop1: 1,
+        prop2: [
+          {innerProp: 'innerVal', innerProp2: [{innerInner: 'innerVal2', innerInner2: 'innerInnerVal2'}]}
+        ]
+      }, null, 2),
+      JSON.stringify(['string'], null, 2)
+    ]
+
+    // When & Then
+    tests.forEach((t, index) => {
+      expect(utils.stringifyMod(t, null, true)).toEqual(expects[index])
     })
   })
   test('parseTimeMillis correctly parses human readable units correctly', () => {

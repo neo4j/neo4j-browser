@@ -23,7 +23,7 @@ import { Component } from 'preact'
 import FrameTemplate from '../FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
-import bolt from 'services/bolt/bolt'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import { deepEquals } from 'services/utils'
 import FrameSidebar from '../FrameSidebar'
 import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon, Spinner } from 'browser-components/icons/Icons'
@@ -37,7 +37,7 @@ import { VisualizationConnectedBus } from './VisualizationView'
 import Render from 'browser-components/Render'
 import Display from 'browser-components/Display'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import { resultHasRows, resultHasWarnings, resultHasPlan, resultIsError, resultHasNodes, initialView } from './helpers'
+import { resultHasRows, resultHasWarnings, resultHasPlan, resultIsError, resultHasNodes, initialView, transformResultRecordsToResultArray, stringifyResultArray } from './helpers'
 import { StyledFrameBody, SpinnerContainer, StyledStatsBarContainer } from '../styled'
 import { getMaxRows, getInitialNodeDisplay, getMaxNeighbours, shouldAutoComplete } from 'shared/modules/settings/settingsDuck'
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
@@ -49,6 +49,9 @@ export class CypherFrame extends Component {
       openView: undefined,
       exportData: null
     }
+  }
+  makeExportData (records) {
+    return stringifyResultArray(neo4j.isInt, transformResultRecordsToResultArray(records))
   }
   changeView (view) {
     this.setState({openView: view})
@@ -74,7 +77,7 @@ export class CypherFrame extends Component {
     }
     if (this.props.request === undefined || !deepEquals(props.request.result, this.props.request.result)) {
       if (props.request.result && props.request.result.records && props.request.result.records.length) {
-        newState['exportData'] = bolt.recordsToTableArray(props.request.result.records)
+        newState['exportData'] = this.makeExportData(props.request.result.records)
       } else {
         newState['exportData'] = null
       }
@@ -85,7 +88,7 @@ export class CypherFrame extends Component {
     const view = initialView(this.props, this.state)
     if (view) this.setState({ openView: view })
     if (this.props.request && this.props.request.result && this.props.request.result.records && this.props.request.result.records.length) {
-      this.setState({ exportData: bolt.recordsToTableArray(this.props.request.result.records) })
+      this.setState({ exportData: this.makeExportData(this.props.request.result.records) })
     }
   }
   sidebar () {

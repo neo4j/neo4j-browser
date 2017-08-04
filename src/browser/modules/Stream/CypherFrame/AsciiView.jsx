@@ -20,15 +20,12 @@
 
 import { Component } from 'preact'
 import asciitable from 'ascii-data-table'
-import bolt from 'services/bolt/bolt'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import Render from 'browser-components/Render'
 import Ellipsis from 'browser-components/Ellipsis'
 import { debounce, shallowEquals, deepEquals } from 'services/utils'
 import { StyledStatsBar, PaddedDiv, StyledBodyMessage, StyledRightPartial, StyledWidthSliderContainer, StyledWidthSlider } from '../styled'
-import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable } from './helpers'
-
-const toTable = (records) => records && records.length ? bolt.recordsToTableArray(records) : undefined
-const stringify = bolt.stringifyRows || undefined
+import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable, transformResultRecordsToResultArray, stringifyResultArray } from './helpers'
 
 export class AsciiView extends Component {
   constructor (props) {
@@ -68,7 +65,7 @@ export class AsciiView extends Component {
     this.setState({ bodyMessage })
     if (!result || !result.records) return
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
-    const serializedRows = stringify(toTable(records))
+    const serializedRows = stringifyResultArray(neo4j.isInt, transformResultRecordsToResultArray(records)) || []
     this.setState({ serializedRows })
     this.props.setParentState && this.props.setParentState({ _asciiSerializedRows: serializedRows })
   }

@@ -18,10 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+function integerFn (val) {
+  this.val = val
+}
+integerFn.prototype.toString = function () {
+  return this.val.toString()
+}
+
 var out = {
   v1: {
-    isInt: function () {
-      return false
+    Int: integerFn,
+    isInt: function (val) {
+      return val instanceof integerFn
     },
     types: {
       Node: function Node (id, labels, properties) {

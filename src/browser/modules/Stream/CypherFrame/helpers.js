@@ -19,8 +19,10 @@
  */
 
 import bolt from 'services/bolt/bolt'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import { recursivelyExtractGraphItems, flattenArray } from 'services/bolt/boltMappings'
+import { stringifyMod } from 'services/utils'
 
 export function getBodyAndStatusBarMessages (result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
@@ -119,4 +121,103 @@ export const initialView = (props, state = {}) => {
   // If the response have viz elements, we show the viz
   if (resultHasNodes(props.request)) return viewTypes.VISUALIZATION
   return viewTypes.TABLE
+}
+
+/**
+ * Takes an array of objects and stringifies it using a
+ * modified version of JSON.stringify.
+ * It takes a replacer without enforcing quoting rules to it.
+ * Used so we can have Neo4j integers as string without quotes.
+ */
+export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
+  return arr.map((col) => {
+    if (!col) return col
+    return col.map((fVal) => {
+      return stringifyMod(fVal, (val) => {
+        if (intChecker(val)) return val.toString()
+      })
+    })
+  })
+}
+
+/**
+ * Transformes an array of neo4j driver records to an array of objects.
+ * Flattens graph items so only their props are left.
+ * Leaves Neo4j Integers as they were.
+ */
+export const transformResultRecordsToResultArray = (records) => {
+  return records && records.length
+  ? [records]
+      .map(extractRecordsToResultArray)
+      .map(flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt))[0]
+  : undefined
+}
+
+/**
+ * Transformes an array of neo4j driver records to an array of objects.
+ * Leaves all values as they were, just changing the data structure.
+ */
+export const extractRecordsToResultArray = (records = []) => {
+  records = Array.isArray(records) ? records : []
+  const keys = records[0] ? [records[0].keys] : undefined
+  return (keys || []).concat(
+    records.map((record) => {
+      return record.keys.map((key, i) => record._fields[i])
+    })
+  )
+}
+
+export const flattenGraphItemsInResultArray = (types = neo4j.types, intChecker = neo4j.isInt, result = []) => {
+  return result.map(flattenGraphItems.bind(null, types, intChecker))
+}
+
+/**
+ * Recursively looks for graph items and elevates their properties if found.
+ * Leaves everything else (including neo4j integers) as is
+ */
+export const flattenGraphItems = (types = neo4j.types, intChecker = neo4j.isInt, item) => {
+  if (Array.isArray(item)) return item.map(flattenGraphItems.bind(null, types, intChecker))
+  if (typeof item === 'object' && item !== null && !isGraphItem(types, item) && !intChecker(item)) {
+    let out = {}
+    const keys = Object.keys(item)
+    for (let i = 0; i < keys.length; i++) {
+      out[keys[i]] = flattenGraphItems(types, intChecker, item[keys[i]])
+    }
+    return out
+  }
+  if (isGraphItem(types, item)) return extractPropertiesFromGraphItems(types, item)
+  return item
+}
+
+export const isGraphItem = (types = neo4j.types, item) => {
+  return (
+    item instanceof types.Node ||
+    item instanceof types.Relationship ||
+    item instanceof types.Path ||
+    item instanceof types.PathSegment
+  )
+}
+
+export function extractPropertiesFromGraphItems (types = neo4j.types, obj) {
+  if (obj instanceof types.Node || obj instanceof types.Relationship) {
+    return obj.properties
+  } else if (obj instanceof types.Path) {
+    return [].concat.apply([], arrayifyPath(types, obj))
+  }
+  return obj
+}
+
+const arrayifyPath = (types = neo4j.types, path) => {
+  let segments = path.segments
+  // Zero length path. No relationship, end === start
+  if (!Array.isArray(path.segments) || path.segments.length < 1) {
+    segments = [{...path, end: null}]
+  }
+  return segments.map(function (segment) {
+    return [
+      extractPropertiesFromGraphItems(types, segment.start),
+      extractPropertiesFromGraphItems(types, segment.relationship),
+      extractPropertiesFromGraphItems(types, segment.end)
+    ].filter((part) => part !== null)
+  })
 }

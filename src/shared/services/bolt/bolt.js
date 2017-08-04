@@ -20,7 +20,6 @@
 
 import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
-import { stringifyMod } from 'services/utils'
 import * as mappings from './boltMappings'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 
@@ -201,19 +200,6 @@ export default {
     const intChecker = convertInts ? neo4j.isInt : () => true
     const intConverter = convertInts ? (item) => mappings.itemIntToString(item, { intChecker: neo4j.isInt, intConverter: (val) => val.toNumber() }) : (val) => val
     return mappings.recordsToTableArray(records, { intChecker, intConverter, objectConverter: mappings.extractFromNeoObjects })
-  },
-  stringifyRows: (rows) => {
-    if (!Array.isArray(rows)) return rows
-    const flat = mappings.flattenProperties(rows)
-    if (!Array.isArray(flat)) return rows
-    return flat.map((col) => {
-      if (!col) return col
-      return col.map((fVal) => {
-        return stringifyMod()(fVal, (val) => {
-          if (neo4j.isInt(val)) return val.toString()
-        })
-      })
-    })
   },
   extractNodesAndRelationshipsFromRecords: (records) => {
     return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.types)
