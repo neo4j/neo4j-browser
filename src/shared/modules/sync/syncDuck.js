@@ -20,6 +20,7 @@
 
 import { syncResourceFor } from 'services/browserSyncService'
 import { setItem } from 'services/localstorage'
+import { APP_START } from 'shared/modules/app/appDuck'
 import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
 import { REMOVE_FOLDER, ADD_FOLDER, UPDATE_FOLDERS, SYNC_FOLDERS, composeFoldersToSync, foldersToLoad, loadFolders, syncFolders } from 'shared/modules/favorites/foldersDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
@@ -34,8 +35,6 @@ export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
 export const OPT_OUT_SYNC = 'sync/OPT_OUT_SYNC'
 export const AUTHORIZED = 'sync/AUTHORIZED'
 
-let hydrated = false
-let hydratedSyncConsent = false
 const initialState = null
 const initialConsentState = { consented: false, optedOut: false }
 
@@ -51,9 +50,8 @@ export function getSync (state) {
 */
 
 export function syncReducer (state = initialState, action) {
-  if (!hydrated) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydrated = true
   }
 
   switch (action.type) {
@@ -68,9 +66,8 @@ export function syncReducer (state = initialState, action) {
 }
 
 export function syncConsentReducer (state = initialConsentState, action) {
-  if (!hydratedSyncConsent) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydratedSyncConsent = true
   }
 
   switch (action.type) {

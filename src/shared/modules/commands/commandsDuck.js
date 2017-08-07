@@ -27,7 +27,7 @@ import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
 import { fetchRemoteGuide } from './helpers/play'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData, getRemoteContentHostnameWhitelist } from '../dbMeta/dbMetaDuck'
-import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
@@ -46,12 +46,9 @@ const initialState = {
 export const wasUnknownCommand = (state) => state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
 export const getErrorMessage = (state) => state[NAME].errorMessage
 
-let hydrated = false
-
 export default function reducer (state = initialState, action) {
-  if (!hydrated) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydrated = true
   }
 
   switch (action.type) {

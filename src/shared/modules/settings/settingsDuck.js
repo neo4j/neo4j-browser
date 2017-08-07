@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
@@ -53,7 +53,6 @@ export const getUseNewVisualization = (state) => state[NAME].useNewVis
 export const getCmdChar = (state) => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = (state) => state[NAME].editorAutocomplete !== false
 
-let hydrated = false
 const initialState = {
   cmdchar: ':',
   maxHistory: 30,
@@ -73,9 +72,8 @@ const initialState = {
 }
 
 export default function settings (state = initialState, action) {
-  if (!hydrated) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydrated = true
   }
 
   switch (action.type) {

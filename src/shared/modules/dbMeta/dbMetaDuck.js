@@ -21,6 +21,7 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { getJmxValues, getServerConfig, isConfigValFalsy } from 'services/bolt/boltHelpers'
+import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
@@ -129,8 +130,6 @@ function updateMetaForContext (state, meta, context) {
   }
 }
 
-let hydrated = false
-
 // Initial state
 const initialState = {
   labels: [],
@@ -156,9 +155,8 @@ const initialState = {
  * Reducer
  */
 export default function meta (state = initialState, action) {
-  if (!hydrated) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydrated = true
   }
 
   switch (action.type) {

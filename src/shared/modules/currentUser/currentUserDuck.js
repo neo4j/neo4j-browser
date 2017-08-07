@@ -18,15 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const NAME = 'user'
+import { APP_START } from 'shared/modules/app/appDuck'
 
+export const NAME = 'user'
 export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
 
 const initialState = {
   info: null
 }
-
-let hydrated = false
 
 /**
  * Selectors
@@ -47,9 +46,8 @@ function updateCurrentUserInfo (state, info) {
  * Reducer
 */
 export default function user (state = initialState, action) {
-  if (!hydrated) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydrated = true
   }
 
   switch (action.type) {

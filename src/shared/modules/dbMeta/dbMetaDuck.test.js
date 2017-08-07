@@ -20,11 +20,12 @@
 
 /* global describe, test, expect */
 import reducer, * as meta from './dbMetaDuck'
+import { APP_START } from 'shared/modules/app/appDuck'
 
 describe('hydrating state', () => {
   test('should merge inital state and state on load', () => {
     // Given
-    const action = {type: 'default'}
+    const action = {type: APP_START}
 
     // When
     const hydratedState = reducer({'foo': 'bar'}, action)

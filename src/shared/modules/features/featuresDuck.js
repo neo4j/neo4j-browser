@@ -19,6 +19,7 @@
  */
 
 import bolt from 'services/bolt/bolt'
+import { APP_START } from 'shared/modules/app/appDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'features'
@@ -31,12 +32,9 @@ const initialState = {
   availableProcedures: []
 }
 
-let hydrated = false
-
 export default function (state = initialState, action) {
-  if (!hydrated) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydrated = true
   }
 
   switch (action.type) {

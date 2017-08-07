@@ -161,13 +161,11 @@ const updateAuthEnabledHelper = (state, authEnabled) => {
 // Local vars
 let memoryUsername = ''
 let memoryPassword = ''
-let hydrated = false
 
 // Reducer
 export default function (state = initialState, action) {
-  if (!hydrated) {
+  if (action.type === APP_START) {
     state = { ...initialState, ...state }
-    hydrated = true
   }
 
   switch (action.type) {
