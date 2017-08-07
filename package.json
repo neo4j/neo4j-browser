@@ -131,7 +131,7 @@
     "neo4j-driver": "~1.2.0",
     "node-noop": "^1.0.0",
     "preact": "^8.2.1",
-    "preact-compat": "^3.13.1",
+    "preact-compat": "^3.17.0",
     "preact-redux": "^2.0.2",
     "preact-suber": "^1.0.3",
     "react-addons-pure-render-mixin": "^15.0.2",
