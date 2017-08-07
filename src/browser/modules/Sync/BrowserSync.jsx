@@ -41,7 +41,7 @@ export class BrowserSync extends Component {
     this.state = {
       authData: props.authData,
       error: null,
-      serviceAuthenticated: props.authData || false,
+      serviceAuthenticated: !!props.authData,
       status: props.authData ? 'UP' : 'PENDING',
       userConsented: props.syncConsent,
       showConsentAlert: false,
@@ -92,8 +92,7 @@ export class BrowserSync extends Component {
     let clearLocalDataContent = null
     let headerContent = null
 
-    const serviceAuthenticated = this.props.authData !== null
-
+    const serviceAuthenticated = !!this.props.authData
     if (serviceAuthenticated) {
       headerContent =
         <DrawerToppedHeader>
