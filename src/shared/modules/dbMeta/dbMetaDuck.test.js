@@ -20,7 +20,20 @@
 
 /* global describe, test, expect */
 import reducer, * as meta from './dbMetaDuck'
+import { APP_START } from 'shared/modules/app/appDuck'
 
+describe('hydrating state', () => {
+  test('should merge inital state and state on load', () => {
+    // Given
+    const action = {type: APP_START}
+
+    // When
+    const hydratedState = reducer({'foo': 'bar'}, action)
+
+    // Then
+    expect(hydratedState).toMatchSnapshot()
+  })
+})
 describe('updating metadata', () => {
   test('should update state when metadata is updated', () => {
     const returnedLabels = {
@@ -127,7 +140,6 @@ describe('updating metadata', () => {
     expect(nextState.functions).toEqual([])
     expect(nextState.procedures).toEqual([])
   })
-
   test('can update server settings', () => {
     // Given
     const initState = {

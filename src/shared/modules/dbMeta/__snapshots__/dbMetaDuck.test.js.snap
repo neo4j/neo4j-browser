@@ -1,5 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`hydrating state should merge inital state and state on load 1`] = `
+Object {
+  "foo": "bar",
+  "functions": Array [],
+  "labels": Array [],
+  "procedures": Array [],
+  "properties": Array [],
+  "relationshipTypes": Array [],
+  "role": null,
+  "server": Object {
+    "dbName": null,
+    "edition": null,
+    "storeId": null,
+    "storeSize": null,
+    "version": null,
+  },
+  "settings": Object {
+    "browser.allow_outgoing_connections": false,
+    "browser.remote_content_hostname_whitelist": "guides.neo4j.com, localhost",
+  },
+}
+`;
+
 exports[`updating metadata can CLEAR to reset state 1`] = `
 Object {
   "functions": Array [],
@@ -24,39 +47,14 @@ Object {
 
 exports[`updating metadata can update meta values with UPDATE 1`] = `
 Object {
-  "functions": Array [],
-  "hydrated": true,
-  "labels": Array [],
   "myKey": "yo",
   "noKey": true,
-  "procedures": Array [],
-  "properties": Array [],
-  "relationshipTypes": Array [],
-  "role": null,
   "secondKey": true,
-  "server": Object {
-    "dbName": null,
-    "edition": null,
-    "storeId": null,
-    "storeSize": null,
-    "version": null,
-  },
-  "settings": Object {
-    "browser.allow_outgoing_connections": false,
-    "browser.remote_content_hostname_whitelist": "guides.neo4j.com, localhost",
-  },
 }
 `;
 
 exports[`updating metadata can update server info 1`] = `
 Object {
-  "functions": Array [],
-  "hydrated": true,
-  "labels": Array [],
-  "procedures": Array [],
-  "properties": Array [],
-  "relationshipTypes": Array [],
-  "role": null,
   "server": Object {
     "dbName": undefined,
     "edition": "enterprise",
@@ -64,30 +62,12 @@ Object {
     "storeSize": undefined,
     "version": "3.2.0-RC2",
   },
-  "settings": Object {
-    "browser.allow_outgoing_connections": false,
-    "browser.remote_content_hostname_whitelist": "guides.neo4j.com, localhost",
-  },
   "shouldKeep": true,
 }
 `;
 
 exports[`updating metadata can update server settings 1`] = `
 Object {
-  "functions": Array [],
-  "hydrated": true,
-  "labels": Array [],
-  "procedures": Array [],
-  "properties": Array [],
-  "relationshipTypes": Array [],
-  "role": null,
-  "server": Object {
-    "dbName": null,
-    "edition": null,
-    "storeId": null,
-    "storeSize": null,
-    "version": null,
-  },
   "settings": Object {
     "browser.test": 1,
   },

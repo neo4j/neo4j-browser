@@ -20,7 +20,6 @@
 
 import Rx from 'rxjs/Rx'
 import remote from 'services/remote'
-import { hydrate } from 'services/duckUtils'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
@@ -37,7 +36,9 @@ export const DONE = `${NAME}/DONE`
 
 // Reducer
 export default function reducer (state = initialState, action = {}) {
-  state = hydrate(initialState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case SET:

@@ -21,7 +21,6 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
-import { hydrate } from 'services/duckUtils'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { getInitCmd, getSettings, getUseBoltRouting, UPDATE as SETTINGS_UPDATE } from 'shared/modules/settings/settingsDuck'
@@ -165,7 +164,9 @@ let memoryPassword = ''
 
 // Reducer
 export default function (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case ADD:

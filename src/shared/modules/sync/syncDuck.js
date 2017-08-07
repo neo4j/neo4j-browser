@@ -20,10 +20,10 @@
 
 import { syncResourceFor } from 'services/browserSyncService'
 import { setItem } from 'services/localstorage'
+import { APP_START } from 'shared/modules/app/appDuck'
 import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
 import { REMOVE_FOLDER, ADD_FOLDER, UPDATE_FOLDERS, SYNC_FOLDERS, composeFoldersToSync, foldersToLoad, loadFolders, syncFolders } from 'shared/modules/favorites/foldersDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
-import { hydrate } from 'services/duckUtils'
 
 export const NAME = 'sync'
 export const NAME_CONSENT = 'syncConsent'
@@ -50,7 +50,9 @@ export function getSync (state) {
 */
 
 export function syncReducer (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case SET_SYNC:
@@ -64,7 +66,9 @@ export function syncReducer (state = initialState, action) {
 }
 
 export function syncConsentReducer (state = initialConsentState, action) {
-  state = hydrate(initialConsentState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case CONSENT_SYNC:

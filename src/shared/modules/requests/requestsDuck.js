@@ -20,7 +20,7 @@
 
 import 'rxjs'
 import bolt from 'services/bolt/bolt'
-import { hydrate } from 'services/duckUtils'
+import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'requests'
 export const REQUEST_SENT = NAME + '/SENT'
@@ -34,7 +34,9 @@ export const getRequest = (state, id) => state[NAME][id]
 export const getRequests = (state) => state[NAME]
 
 export default function reducer (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case REQUEST_SENT:

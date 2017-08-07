@@ -20,8 +20,8 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { hydrate } from 'services/duckUtils'
 import { getJmxValues, getServerConfig, isConfigValFalsy } from 'services/bolt/boltHelpers'
+import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
@@ -155,7 +155,9 @@ const initialState = {
  * Reducer
  */
 export default function meta (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case UPDATE:

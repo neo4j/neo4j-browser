@@ -21,14 +21,13 @@
 import Rx from 'rxjs'
 import { getInterpreter, isNamedInterpreter, cleanCommand, extractPostConnectCommandsFromServerConfig } from 'services/commandUtils'
 import { extractWhitelistFromConfigString, addProtocolsToUrlList, firstSuccessPromise } from 'services/utils'
-import { hydrate } from 'services/duckUtils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
 import { fetchRemoteGuide } from './helpers/play'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData, getRemoteContentHostnameWhitelist } from '../dbMeta/dbMetaDuck'
-import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
@@ -48,7 +47,9 @@ export const wasUnknownCommand = (state) => state[NAME].lastCommandWasUnknown ||
 export const getErrorMessage = (state) => state[NAME].errorMessage
 
 export default function reducer (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case UNKNOWN_COMMAND:

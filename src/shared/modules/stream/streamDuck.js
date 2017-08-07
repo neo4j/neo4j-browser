@@ -22,7 +22,7 @@ import uuid from 'uuid'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import { moveInArray } from 'services/utils'
-import { hydrate } from 'services/duckUtils'
+import { APP_START } from 'shared/modules/app/appDuck'
 import { UPDATE as SETTINGS_UPDATE } from '../settings/settingsDuck'
 
 export const NAME = 'frames'
@@ -138,7 +138,9 @@ export const initialState = {
  * Reducer
 */
 export default function reducer (state = initialState, action) {
-  state = hydrate(initialState, state)
+  if (action.type === APP_START) {
+    state = { ...initialState, ...state }
+  }
 
   switch (action.type) {
     case ADD:
