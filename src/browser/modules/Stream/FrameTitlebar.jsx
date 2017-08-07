@@ -78,13 +78,17 @@ class FrameTitlebar extends Component {
           </DottedLineHover>
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
-          <Render if={frame.type === 'cypher' && props.exportData}>
+          <Render if={frame.type === 'cypher' && (props.exportData || props.visElement)}>
             <DropdownButton>
               <DownloadIcon />
               <DropdownList>
                 <DropdownContent>
-                  <DropdownItem onClick={() => this.exportPNG()}>Export PNG</DropdownItem>
-                  <DropdownItem download='export.csv' href={this.state.csvData}>Export CSV</DropdownItem>
+                  <Render if={props.visElement}>
+                    <DropdownItem onClick={() => this.exportPNG()}>Export PNG</DropdownItem>
+                  </Render>
+                  <Render if={props.exportData}>
+                    <DropdownItem download='export.csv' href={this.state.csvData}>Export CSV</DropdownItem>
+                  </Render>
                 </DropdownContent>
               </DropdownList>
             </DropdownButton>
