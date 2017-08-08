@@ -52,7 +52,7 @@ const browserSyncConfig = {
 export const getUseNewVisualization = (state) => state[NAME].useNewVis
 export const getCmdChar = (state) => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = (state) => state[NAME].editorAutocomplete !== false
-export const shouldEnableWebWorkers = (state) => state[NAME].enableWebWorkers
+export const shouldUseCypherThread = (state) => state[NAME].useCypherThread
 
 const initialState = {
   cmdchar: ':',
@@ -70,7 +70,7 @@ const initialState = {
   scrollToTop: true,
   maxFrames: 30,
   editorAutocomplete: true,
-  enableWebWorkers: false
+  useCypherThread: true
 }
 
 export default function settings (state = initialState, action) {

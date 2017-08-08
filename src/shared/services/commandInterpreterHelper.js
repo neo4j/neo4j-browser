@@ -37,7 +37,7 @@ import { handleGetConfigCommand, handleUpdateConfigCommand } from 'shared/module
 import { CouldNotFetchRemoteGuideError, FetchURLError } from 'services/exceptions'
 import { parseHttpVerbCommand, isValidURL } from 'shared/modules/commands/helpers/http'
 import { fetchRemoteGrass, parseGrass } from 'shared/modules/commands/helpers/grass'
-import { shouldEnableWebWorkers } from 'shared/modules/settings/settingsDuck'
+import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
 const availableCommands = [{
   name: 'clear',
@@ -93,7 +93,7 @@ const availableCommands = [{
   match: (cmd) => /^cypher$/.test(cmd),
   exec: (action, cmdchar, put, store) => {
     const state = store.getState()
-    const [id, request] = handleCypherCommand(action, put, getParams(state), shouldEnableWebWorkers(state))
+    const [id, request] = handleCypherCommand(action, put, getParams(state), shouldUseCypherThread(state))
     put(cypher(action.cmd))
     put(frames.add({...action, type: 'cypher', requestId: id}))
     return request
@@ -211,18 +211,18 @@ const availableCommands = [{
 
       const whitelist = getRemoteContentHostnameWhitelist(store.getState())
       fetchRemoteGrass(param, whitelist)
-      .then((response) => {
-        const parsedGrass = parseGrass(response)
-        if (parsedGrass) {
-          put(updateGraphStyleData(parsedGrass))
-        } else {
-          put(showErrorMessage('Could not parse grass file'))
-        }
-      })
-      .catch((e) => {
-        const error = new Error(e)
-        put(frames.add({...action, error, type: 'error'}))
-      })
+        .then((response) => {
+          const parsedGrass = parseGrass(response)
+          if (parsedGrass) {
+            put(updateGraphStyleData(parsedGrass))
+          } else {
+            put(showErrorMessage('Could not parse grass file'))
+          }
+        })
+        .catch((e) => {
+          const error = new Error(e)
+          put(frames.add({...action, error, type: 'error'}))
+        })
     } else {
       const parsedGrass = parseGrass(param)
       if (parsedGrass) {

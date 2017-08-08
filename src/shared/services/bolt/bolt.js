@@ -55,8 +55,8 @@ function cancelTransaction (id, cb) {
   }
 }
 
-function routedWriteTransaction (input, parameters, requestId = null, cancelable = false, enableWebWorkers) {
-  if (enableWebWorkers && window.Worker) {
+function routedWriteTransaction (input, parameters, requestId = null, cancelable = false, useCypherThread) {
+  if (useCypherThread && window.Worker) {
     const id = requestId || v4()
     const boltWorker = new BoltWorkerModule()
     boltWorkerRegister[id] = boltWorker

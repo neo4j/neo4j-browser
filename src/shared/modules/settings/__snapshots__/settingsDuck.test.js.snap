@@ -6,7 +6,6 @@ Object {
   "browserSyncDebugServer": null,
   "cmdchar": ":",
   "editorAutocomplete": true,
-  "enableWebWorkers": false,
   "initCmd": ":play start",
   "initialNodeDisplay": 300,
   "maxFrames": 30,
@@ -19,5 +18,6 @@ Object {
   "showSampleScripts": true,
   "theme": "normal",
   "useBoltRouting": false,
+  "useCypherThread": true,
 }
 `;
