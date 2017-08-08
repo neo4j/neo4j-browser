@@ -6,5 +6,12 @@
     ["transform-react-jsx", {
       "pragma": "h"
     }]
-  ]
+  ],
+  "env": {
+    "production": {
+      "plugins": [
+        "babel-plugin-jsx-remove-data-test-id"
+      ]
+    }
+  }
 }

@@ -55,13 +55,13 @@ export default class Carousel extends Component {
   }
   render () {
     return (
-      <StyledCarousel>
+      <StyledCarousel data-test-id='carousel'>
         <StyledCarouselButtonContainer>
           <Render if={this.state.visibleSlide !== 0}>
-            <StyledCarouselLeft><CarouselButton onClick={this.prev.bind(this)}>{'‹'}</CarouselButton></StyledCarouselLeft>
+            <StyledCarouselLeft><CarouselButton data-test-id='previousSlide' onClick={this.prev.bind(this)}>{'‹'}</CarouselButton></StyledCarouselLeft>
           </Render>
           <Render if={this.state.visibleSlide !== (this.slides.length - 1)}>
-            <StyledCarouselRight><CarouselButton onClick={this.next.bind(this)}>{'›'}</CarouselButton></StyledCarouselRight>
+            <StyledCarouselRight><CarouselButton data-test-id='nextSlide' onClick={this.next.bind(this)}>{'›'}</CarouselButton></StyledCarouselRight>
           </Render>
         </StyledCarouselButtonContainer>
         <SlideContainer>{this.getSlide(this.state.visibleSlide)}</SlideContainer>

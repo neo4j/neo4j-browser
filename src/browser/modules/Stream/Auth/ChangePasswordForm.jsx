@@ -74,13 +74,13 @@ export default class ChangePasswordForm extends Component {
         {this.props.children}
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>New password</StyledConnectionLabel>
-          <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 1 + inputTabOffset)} type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
+          <StyledConnectionTextInput data-test-id='newPassword' innerRef={(el) => this.formKeyHandler.registerInput(el, 1 + inputTabOffset)} type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
         </StyledConnectionFormEntry>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>Repeat new password</StyledConnectionLabel>
-          <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 2 + inputTabOffset)} type='password' onChange={this.onNewPasswordChange2.bind(this)} value={this.state.newPassword2} />
+          <StyledConnectionTextInput data-test-id='newPasswordConfirmation' innerRef={(el) => this.formKeyHandler.registerInput(el, 2 + inputTabOffset)} type='password' onChange={this.onNewPasswordChange2.bind(this)} value={this.state.newPassword2} />
         </StyledConnectionFormEntry>
-        <FormButton onClick={this.validateSame.bind(this)} label='Change password' />
+        <FormButton data-test-id='changePassword' onClick={this.validateSame.bind(this)} label='Change password' />
       </StyledConnectionForm>
     )
   }

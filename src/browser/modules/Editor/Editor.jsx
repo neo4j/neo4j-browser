@@ -348,6 +348,7 @@ export class Editor extends Component {
             />
           </Render>
           <EditorButton
+            data-test-id='clearEditorContent'
             onClick={() => this.clearEditor()}
             disabled={this.getEditorValue().length < 1}
             title='Clear'
@@ -355,6 +356,7 @@ export class Editor extends Component {
             icon='"\5e"'
           />
           <EditorButton
+            data-test-id='submitQuery'
             onClick={() => this.execCurrent()}
             disabled={this.getEditorValue().length < 1}
             title='Play'

@@ -9,3 +9,5 @@ coverage/
 /build
 /bundle-report.html
 /target
+/e2e_tests/screenshots/
+/e2e_tests/videos/

@@ -52,18 +52,18 @@ export default class ConnectForm extends Component {
       <StyledConnectionForm>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>Host</StyledConnectionLabel>
-          <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 1)} onChange={this.props.onHostChange} value={this.props.host} />
+          <StyledConnectionTextInput data-test-id='boltaddress' innerRef={(el) => this.formKeyHandler.registerInput(el, 1)} onChange={this.props.onHostChange} value={this.props.host} />
         </StyledConnectionFormEntry>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>Username</StyledConnectionLabel>
-          <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 2)} onChange={this.props.onUsernameChange} value={this.props.username} />
+          <StyledConnectionTextInput data-test-id='username' innerRef={(el) => this.formKeyHandler.registerInput(el, 2)} onChange={this.props.onUsernameChange} value={this.props.username} />
         </StyledConnectionFormEntry>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>Password</StyledConnectionLabel>
-          <StyledConnectionTextInput innerRef={(el) => this.formKeyHandler.registerInput(el, 3)} onChange={this.props.onPasswordChange} value={this.props.password} type='password' />
+          <StyledConnectionTextInput data-test-id='password' innerRef={(el) => this.formKeyHandler.registerInput(el, 3)} onChange={this.props.onPasswordChange} value={this.props.password} type='password' />
         </StyledConnectionFormEntry>
         <Render if={!this.state.connecting}>
-          <FormButton onClick={this.onConnectClick.bind(this)}>Connect</FormButton>
+          <FormButton data-test-id='connect' onClick={this.onConnectClick.bind(this)}>Connect</FormButton>
         </Render>
         <Render if={this.state.connecting}>
           Connecting...
