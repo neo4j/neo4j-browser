@@ -9,4 +9,5 @@ coverage/
 /build
 /bundle-report.html
 /target
-/cypress/videos/
+/e2e_tests/screenshots/
+/e2e_tests/videos/
