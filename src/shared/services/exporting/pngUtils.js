@@ -21,17 +21,18 @@
 import { prepareForExport } from './svgUtils'
 import FileSaver from 'file-saver'
 
-export const downloadPNGFromSVG = (svg, graph, filename) => {
-  let canvas, png, svgData
-  const svgObj = prepareForExport(svg, graph)
-  svgData = new window.XMLSerializer().serializeToString(svgObj.node())
-  svgData = svgData.replace(/&nbsp;/g, '&#160;')
+export const downloadPNGFromSVG = (svg, graph, type) => {
+  const svgObj = prepareForExport(svg, graph, type)
+  const filename = type
+  const svgData = new window.XMLSerializer().serializeToString(svgObj.node()).replace(/&nbsp;/g, '&#160;')
+
+  let canvas
   canvas = document.createElement('canvas')
   canvas.width = svgObj.attr('width')
   canvas.height = svgObj.attr('height')
+
   window.canvg(canvas, svgData)
-  png = canvas.toDataURL('image/png')
-  return downloadWithDataURI(filename + '.png', png)
+  return downloadWithDataURI(filename + '.png', canvas.toDataURL('image/png'))
 }
 
 const download = (filename, mime, data) => {

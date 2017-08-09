@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const prepareForExport = (svgElement, graphElement) => {
+export const prepareForExport = (svgElement, graphElement, type) => {
   const dimensions = getSvgDimensions(graphElement)
   let svg = window.d3.select(
     document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -27,9 +27,16 @@ export const prepareForExport = (svgElement, graphElement) => {
   svg.append('title').text('Neo4j Graph Visualization')
   svg.append('desc').text('Created using Neo4j (http://www.neo4j.com/)')
 
-  window.d3.select(svgElement).selectAll('g.layer').each(node => {
-    svg.node().appendChild(window.d3.select('.' + node).node().cloneNode(true))
-  })
+  switch (type) {
+    case 'plan': {
+      svg = appendPlanLayers(svgElement, svg)
+      break
+    }
+    case 'graph':
+    default:
+      svg = appendGraphLayers(svgElement, svg)
+  }
+
   svg.selectAll('.overlay, .ring').remove()
   svg.selectAll('.context-menu-item').remove()
   svg.selectAll('text').attr('font-family', 'sans-serif')
@@ -55,4 +62,18 @@ export const getSvgDimensions = view => {
     ].join(' ')
   }
   return dimensions
+}
+
+const appendGraphLayers = (svgElement, svg) => {
+  window.d3.select(svgElement).selectAll('g.layer').each((node) => {
+    svg.node().appendChild(window.d3.select('.' + node).node().cloneNode(true))
+  })
+  return svg
+}
+const appendPlanLayers = (svgElement, svg) => {
+  window.d3.select(svgElement).selectAll('g.layer').each((node) => {
+    svg.node().appendChild(window.d3.select('.links').node().cloneNode(true))
+    svg.node().appendChild(window.d3.select('.operators').node().cloneNode(true))
+  })
+  return svg
 }
