@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'babel-polyfill'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { ensureConnection, routedWriteTransaction, cancelTransaction, closeConnection } from './boltConnection'
 import { cypherErrorMessage, cypherResponseMessage, postCancelTransactionMessage, RUN_CYPHER_MESSAGE, CANCEL_TRANSACTION_MESSAGE } from './boltWorkerMessages'
