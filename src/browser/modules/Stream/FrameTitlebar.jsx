@@ -66,7 +66,7 @@ class FrameTitlebar extends Component {
 
   render () {
     let props = this.props
-    const { frame } = props
+    const { frame = {} } = props
     const fullscreenIcon = (props.fullscreen) ? <ContractIcon /> : <ExpandIcon />
     const expandCollapseIcon = (props.collapse) ? <DownIcon /> : <UpIcon />
     const cmd = removeComments(frame.cmd)
