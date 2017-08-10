@@ -32,16 +32,12 @@ export const StyledStream = styled.div`
 
 const rollDownAnimation = keyframes`
   from {
-    transform: translate(0, -${dim.frameBodyHeight * 0.3}px);
-    opacity: 0;
-    height: 0px;
-  }
-  70% {
-    opacity: 0;
-    height: 300px;
+    transform: translate(0, -${dim.frameBodyHeight}px);
+    max-height: 0;
   }
   to {
-    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px; /* Greater than a frame can be */
   }
 `
 
@@ -50,7 +46,7 @@ export const StyledFrame = styled.article`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
   box-shadow: 0 1px 4px rgba(0,0,0,.1);
-  animation: ${rollDownAnimation} .2s linear;
+  animation: ${rollDownAnimation} .4s ease-in;
   border: ${props => props.theme.frameBorder};
   margin: ${props => props.fullscreen ? '0' : '10px 0px 10px 0px'};
   ${props => props.fullscreen ? 'position: fixed' : null};
