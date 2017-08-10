@@ -25,7 +25,7 @@ import * as boltConnection from './boltConnection'
 import { runCypherMessage, cancelTransactionMessage, CYPHER_ERROR_MESSAGE, CYPHER_RESPONSE_MESSAGE, POST_CANCEL_TRANSACTION_MESSAGE } from './boltWorkerMessages'
 
 /* eslint-disable import/no-webpack-loader-syntax */
-import BoltWorkerModule from 'worker-loader!./boltWorker.js'
+import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
 
 let connectionProperties = null
