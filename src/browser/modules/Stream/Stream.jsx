@@ -40,7 +40,6 @@ import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
-import { getRequests } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import { deepEquals } from 'services/utils'
@@ -85,8 +84,7 @@ class Stream extends Component {
         {this.props.frames.map((frame) => {
           const frameProps = {
             frame,
-            activeConnectionData: this.props.activeConnectionData,
-            request: this.props.requests[frame.requestId]
+            activeConnectionData: this.props.activeConnectionData
           }
           const MyFrame = getFrame(frame.type)
           return <MyFrame {...frameProps} key={frame.id} />
@@ -99,7 +97,6 @@ class Stream extends Component {
 const mapStateToProps = (state) => {
   return {
     frames: getFrames(state),
-    requests: getRequests(state),
     activeConnectionData: getActiveConnectionData(state),
     scrollToTop: getScrollToTop(state)
   }

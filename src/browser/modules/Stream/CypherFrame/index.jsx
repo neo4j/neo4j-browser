@@ -25,6 +25,7 @@ import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import { deepEquals } from 'services/utils'
+import { getRequest } from 'shared/modules/requests/requestsDuck'
 import FrameSidebar from '../FrameSidebar'
 import { VisualizationIcon, TableIcon, AsciiIcon, CodeIcon, PlanIcon, AlertIcon, ErrorIcon, Spinner } from 'browser-components/icons/Icons'
 import { AsciiView, AsciiStatusbar } from './AsciiView'
@@ -47,7 +48,8 @@ export class CypherFrame extends Component {
     super(props)
     this.state = {
       openView: undefined,
-      exportData: null
+      exportData: null,
+      fullscreen: false
     }
   }
   makeExportData (records) {
@@ -226,13 +228,14 @@ export class CypherFrame extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     maxRows: getMaxRows(state),
     initialNodeDisplay: getInitialNodeDisplay(state),
     maxNeighbours: getMaxNeighbours(state),
     autoComplete: shouldAutoComplete(state),
-    recentView: getRecentView(state)
+    recentView: getRecentView(state),
+    request: getRequest(state, ownProps.frame.requestId)
   }
 }
 
