@@ -87,7 +87,7 @@ class Stream extends Component {
             activeConnectionData: this.props.activeConnectionData
           }
           const MyFrame = getFrame(frame.type)
-          return <MyFrame {...frameProps} key={frame.id} />
+          return <div key={frame.id}><MyFrame {...frameProps} /></div>
         })}
       </StyledStream>
     )
