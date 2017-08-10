@@ -76,6 +76,7 @@ export const StyledFrameMainSection = styled.div`
   height: inherit;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `
 
 export const StyledFrameContents = styled.div`
