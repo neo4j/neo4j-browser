@@ -67,8 +67,14 @@ export const aggregation = [
   func('count', '(expression :: ANY) :: (INTEGER)'),
   func('max', '(expression :: NUMBER) :: (NUMBER)'),
   func('min', '(expression :: NUMBER) :: (NUMBER)'),
-  func('percentileCont', '(expression :: NUMBER, percentile :: FLOAT) :: (FLOAT)'),
-  func('percentileDisc', '(expression :: NUMBER, percentile :: FLOAT) :: (NUMBER)'),
+  func(
+    'percentileCont',
+    '(expression :: NUMBER, percentile :: FLOAT) :: (FLOAT)'
+  ),
+  func(
+    'percentileDisc',
+    '(expression :: NUMBER, percentile :: FLOAT) :: (NUMBER)'
+  ),
   func('stDev', '(expression :: NUMBER) :: (FLOAT)'),
   func('stDevP', '(expression :: NUMBER) :: (FLOAT)'),
   func('sum', '(expression :: NUMBER) :: (NUMBER)')
@@ -81,8 +87,14 @@ export const list = [
   func('keys', '(relationship :: RELATIONSHIP) :: (LIST OF STRING)'),
   func('labels', '(node :: NODE) :: (LIST OF STRING)'),
   func('nodes', '(path :: PATH) :: (LIST OF NODE)'),
-  func('range', '(start :: INTEGER, end :: INTEGER, step = 1 :: INTEGER) :: (LIST OF INTEGER)'),
-  func('reduce', '(accumulator = initial :: ANY, variable IN list | expression :: ANY) :: (ANY)'),
+  func(
+    'range',
+    '(start :: INTEGER, end :: INTEGER, step = 1 :: INTEGER) :: (LIST OF INTEGER)'
+  ),
+  func(
+    'reduce',
+    '(accumulator = initial :: ANY, variable IN list | expression :: ANY) :: (ANY)'
+  ),
   func('relationships', '(path :: PATH) :: (LIST OF RELATIONSHIP)'),
   func('rels', '(path :: PATH) :: (LIST OF RELATIONSHIP)'),
   func('tail', '(expression :: LIST OF ANY) :: (LIST OF ANY)')
@@ -123,12 +135,21 @@ export const mathematicTrigonometric = [
 export const string = [
   func('left', '(original :: STRING, length :: INTEGER) :: (STRING)'),
   func('lTrim', '(original :: STRING) :: (STRING)'),
-  func('replace', '(original :: STRING, search :: STRING, replace :: STRING) :: (STRING)'),
+  func(
+    'replace',
+    '(original :: STRING, search :: STRING, replace :: STRING) :: (STRING)'
+  ),
   func('reverse', '(original :: STRING) :: (STRING)'),
   func('right', '(original :: STRING, length :: INTEGER) :: (STRING)'),
   func('rTrim', '(original :: STRING) :: (STRING)'),
-  func('split', '(original :: STRING, splitPattern :: STRING) :: (LIST OF STRING)'),
-  func('substring', '(original :: STRING, start :: INTEGER, length = length(original) :: INTEGER) :: (STRING)'),
+  func(
+    'split',
+    '(original :: STRING, splitPattern :: STRING) :: (LIST OF STRING)'
+  ),
+  func(
+    'substring',
+    '(original :: STRING, start :: INTEGER, length = length(original) :: INTEGER) :: (STRING)'
+  ),
   func('toLower', '(original :: STRING) :: (STRING)'),
   func('toString', '(expression :: ANY) :: (STRING)'),
   func('toUpper', '(original :: STRING) :: (STRING)'),

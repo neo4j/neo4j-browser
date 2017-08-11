@@ -37,23 +37,43 @@ describe('boltMappings', () => {
     test('should convert matching values with provided function', () => {
       // Given
       const tests = [
-        {val: 'hello', checker: (_) => false, converter: (_) => false, expected: 'hello'},
-        {val: ['hello'], checker: (_) => false, converter: (val) => false, expected: ['hello']},
-        {val: null, checker: (_) => false, converter: (_) => false, expected: null},
         {
-          val: {str: 'hello'},
-          checker: (_) => true,
-          converter: (val) => {
+          val: 'hello',
+          checker: _ => false,
+          converter: _ => false,
+          expected: 'hello'
+        },
+        {
+          val: ['hello'],
+          checker: _ => false,
+          converter: val => false,
+          expected: ['hello']
+        },
+        {
+          val: null,
+          checker: _ => false,
+          converter: _ => false,
+          expected: null
+        },
+        {
+          val: { str: 'hello' },
+          checker: _ => true,
+          converter: val => {
             val.str = val.str.toUpperCase()
             return val
           },
-          expected: {str: 'HELLO'}
+          expected: { str: 'HELLO' }
         }
       ]
 
       // When and Then
-      tests.forEach((test) => {
-        expect(itemIntToString(test.val, {intChecker: test.checker, intConverter: test.converter})).toEqual(test.expected)
+      tests.forEach(test => {
+        expect(
+          itemIntToString(test.val, {
+            intChecker: test.checker,
+            intConverter: test.converter
+          })
+        ).toEqual(test.expected)
       })
     })
   })
@@ -61,14 +81,34 @@ describe('boltMappings', () => {
     test('should convert matching values with provided function', () => {
       // Given
       const tests = [
-        {val: ['hello', 1], checker: (_) => false, converter: (val) => false, expected: ['hello', 1]},
-        {val: ['hello', ['ola', 'hi']], checker: (val) => typeof val === 'string', converter: (val) => val.toUpperCase(), expected: ['HELLO', ['OLA', 'HI']]},
-        {val: ['hello', 1], checker: (val) => typeof val === 'string', converter: (val) => val.toUpperCase(), expected: ['HELLO', 1]}
+        {
+          val: ['hello', 1],
+          checker: _ => false,
+          converter: val => false,
+          expected: ['hello', 1]
+        },
+        {
+          val: ['hello', ['ola', 'hi']],
+          checker: val => typeof val === 'string',
+          converter: val => val.toUpperCase(),
+          expected: ['HELLO', ['OLA', 'HI']]
+        },
+        {
+          val: ['hello', 1],
+          checker: val => typeof val === 'string',
+          converter: val => val.toUpperCase(),
+          expected: ['HELLO', 1]
+        }
       ]
 
       // When and Then
-      tests.forEach((test) => {
-        expect(arrayIntToString(test.val, {intChecker: test.checker, intConverter: test.converter})).toEqual(test.expected)
+      tests.forEach(test => {
+        expect(
+          arrayIntToString(test.val, {
+            intChecker: test.checker,
+            intConverter: test.converter
+          })
+        ).toEqual(test.expected)
       })
     })
   })
@@ -76,16 +116,15 @@ describe('boltMappings', () => {
     test('should convert matching values with provided function', () => {
       // Given
       const tests = [
-        {val: {arr: ['hello']}, checker: (_) => false, converter: (val) => false, expected: {arr: ['hello']}},
+        {
+          val: { arr: ['hello'] },
+          checker: _ => false,
+          converter: val => false,
+          expected: { arr: ['hello'] }
+        },
         {
           val: {
-            arr: [
-              'hello',
-              [
-                'ola',
-                'hi'
-              ]
-            ],
+            arr: ['hello', ['ola', 'hi']],
             str: 'hello',
             num: 2,
             obj: {
@@ -93,16 +132,10 @@ describe('boltMappings', () => {
               str: 'inner hello'
             }
           },
-          checker: (val) => typeof val === 'string',
-          converter: (val) => val.toUpperCase(),
+          checker: val => typeof val === 'string',
+          converter: val => val.toUpperCase(),
           expected: {
-            arr: [
-              'HELLO',
-              [
-                'OLA',
-                'HI'
-              ]
-            ],
+            arr: ['HELLO', ['OLA', 'HI']],
             str: 'HELLO',
             num: 2,
             obj: {
@@ -114,122 +147,204 @@ describe('boltMappings', () => {
       ]
 
       // When and Then
-      tests.forEach((test) => {
-        expect(objIntToString(test.val, {intChecker: test.checker, intConverter: test.converter, objectConverter: (obj) => obj})).toEqual(test.expected)
+      tests.forEach(test => {
+        expect(
+          objIntToString(test.val, {
+            intChecker: test.checker,
+            intConverter: test.converter,
+            objectConverter: obj => obj
+          })
+        ).toEqual(test.expected)
       })
     })
   })
 
   describe('extractNodesAndRelationshipsFromRecords', () => {
-    test.skip('should map bolt records with a path to nodes and relationships', () => {
-      let startNode = new neo4j.v1.types.Node('1', ['Person'], {prop1: 'prop1'})
-      let endNode = new neo4j.v1.types.Node('2', ['Movie'], {prop2: 'prop2'})
-      let relationship = new neo4j.v1.types.Relationship('3', startNode.identity, endNode.identity, 'ACTED_IN', {})
-      let pathSegment = new neo4j.v1.types.PathSegment(startNode, relationship, endNode)
-      let path = new neo4j.v1.types.Path(startNode, endNode, [pathSegment])
-      let boltRecord = {
-        keys: ['p'],
-        get: (key) => path
+    test.skip(
+      'should map bolt records with a path to nodes and relationships',
+      () => {
+        let startNode = new neo4j.v1.types.Node('1', ['Person'], {
+          prop1: 'prop1'
+        })
+        let endNode = new neo4j.v1.types.Node('2', ['Movie'], {
+          prop2: 'prop2'
+        })
+        let relationship = new neo4j.v1.types.Relationship(
+          '3',
+          startNode.identity,
+          endNode.identity,
+          'ACTED_IN',
+          {}
+        )
+        let pathSegment = new neo4j.v1.types.PathSegment(
+          startNode,
+          relationship,
+          endNode
+        )
+        let path = new neo4j.v1.types.Path(startNode, endNode, [pathSegment])
+        let boltRecord = {
+          keys: ['p'],
+          get: key => path
+        }
+
+        let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
+          [boltRecord],
+          neo4j.v1.types
+        )
+        expect(nodes).to.have.lengthOf(2)
+        let graphNodeStart = nodes.filter(node => node.id === '1')[0]
+        expect(graphNodeStart).toBeDefined()
+        expect(graphNodeStart.labels).toEqual(['Person'])
+        expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
+        let graphNodeEnd = nodes.filter(node => node.id === '2')[0]
+        expect(graphNodeEnd).toBeDefined()
+        expect(graphNodeEnd.labels).toEqual(['Movie'])
+        expect(graphNodeEnd.properties).toEqual({ prop2: 'prop2' })
+        expect(relationships).to.have.lengthOf(1)
+        expect(relationships[0].id).toEqual('3')
+        expect(relationships[0].startNodeId).toEqual('1')
+        expect(relationships[0].endNodeId).toEqual('2')
+        expect(relationships[0].type).toEqual('ACTED_IN')
+        expect(relationships[0].properties).toEqual({})
       }
+    )
 
-      let {nodes, relationships} = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types)
-      expect(nodes).to.have.lengthOf(2)
-      let graphNodeStart = nodes.filter((node) => node.id === '1')[0]
-      expect(graphNodeStart).toBeDefined()
-      expect(graphNodeStart.labels).toEqual(['Person'])
-      expect(graphNodeStart.properties).toEqual({prop1: 'prop1'})
-      let graphNodeEnd = nodes.filter((node) => node.id === '2')[0]
-      expect(graphNodeEnd).toBeDefined()
-      expect(graphNodeEnd.labels).toEqual(['Movie'])
-      expect(graphNodeEnd.properties).toEqual({prop2: 'prop2'})
-      expect(relationships).to.have.lengthOf(1)
-      expect(relationships[0].id).toEqual('3')
-      expect(relationships[0].startNodeId).toEqual('1')
-      expect(relationships[0].endNodeId).toEqual('2')
-      expect(relationships[0].type).toEqual('ACTED_IN')
-      expect(relationships[0].properties).toEqual({})
-    })
-
-    test.skip('should map bolt nodes and relationships to graph nodes and relationships', () => {
-      let startNode = new neo4j.v1.types.Node('1', ['Person'], {prop1: 'prop1'})
-      let endNode = new neo4j.v1.types.Node('2', ['Movie'], {prop2: 'prop2'})
-      let relationship = new neo4j.v1.types.Relationship('3', startNode.identity, endNode.identity, 'ACTED_IN', {})
-      let boltRecord = {
-        keys: ['r', 'n1', 'n2'],
-        get: (key) => {
-          if (key === 'r') {
-            return relationship
-          }
-          if (key === 'n1') {
-            return startNode
-          }
-          if (key === 'n2') {
-            return endNode
+    test.skip(
+      'should map bolt nodes and relationships to graph nodes and relationships',
+      () => {
+        let startNode = new neo4j.v1.types.Node('1', ['Person'], {
+          prop1: 'prop1'
+        })
+        let endNode = new neo4j.v1.types.Node('2', ['Movie'], {
+          prop2: 'prop2'
+        })
+        let relationship = new neo4j.v1.types.Relationship(
+          '3',
+          startNode.identity,
+          endNode.identity,
+          'ACTED_IN',
+          {}
+        )
+        let boltRecord = {
+          keys: ['r', 'n1', 'n2'],
+          get: key => {
+            if (key === 'r') {
+              return relationship
+            }
+            if (key === 'n1') {
+              return startNode
+            }
+            if (key === 'n2') {
+              return endNode
+            }
           }
         }
-      }
 
-      let {nodes, relationships} = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types)
-      expect(nodes).to.have.lengthOf(2)
-      let graphNodeStart = nodes.filter((node) => node.id === '1')[0]
-      expect(graphNodeStart).toBeDefined()
-      expect(graphNodeStart.labels).toEqual(['Person'])
-      expect(graphNodeStart.properties).toEqual({prop1: 'prop1'})
-      let graphNodeEnd = nodes.filter((node) => node.id === '2')[0]
-      expect(graphNodeEnd).toBeDefined()
-      expect(graphNodeEnd.labels).toEqual(['Movie'])
-      expect(graphNodeEnd.properties).toEqual({prop2: 'prop2'})
-      expect(relationships).to.have.lengthOf(1)
-      expect(relationships[0].id).toEqual('3')
-      expect(relationships[0].startNodeId).toEqual('1')
-      expect(relationships[0].endNodeId).toEqual('2')
-      expect(relationships[0].type).toEqual('ACTED_IN')
-      expect(relationships[0].properties).toEqual({})
-    })
-
-    test.skip('should not include relationships where neither start or end node is not in nodes list', () => {
-      let relationship = new neo4j.v1.types.Relationship('3', 1, 2, 'ACTED_IN', {})
-      let boltRecord = {
-        keys: ['r'],
-        get: (key) => relationship
+        let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
+          [boltRecord],
+          neo4j.v1.types
+        )
+        expect(nodes).to.have.lengthOf(2)
+        let graphNodeStart = nodes.filter(node => node.id === '1')[0]
+        expect(graphNodeStart).toBeDefined()
+        expect(graphNodeStart.labels).toEqual(['Person'])
+        expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
+        let graphNodeEnd = nodes.filter(node => node.id === '2')[0]
+        expect(graphNodeEnd).toBeDefined()
+        expect(graphNodeEnd.labels).toEqual(['Movie'])
+        expect(graphNodeEnd.properties).toEqual({ prop2: 'prop2' })
+        expect(relationships).to.have.lengthOf(1)
+        expect(relationships[0].id).toEqual('3')
+        expect(relationships[0].startNodeId).toEqual('1')
+        expect(relationships[0].endNodeId).toEqual('2')
+        expect(relationships[0].type).toEqual('ACTED_IN')
+        expect(relationships[0].properties).toEqual({})
       }
-      let relationships = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types).relationships
-      expect(relationships.length).toBe(0)
-    })
-    test.skip('should not include relationships where end node is not in nodes list', () => {
-      let startNode = new neo4j.v1.types.Node('1', ['Person'], {prop1: 'prop1'})
-      let relationship = new neo4j.v1.types.Relationship('3', startNode.identity, 2, 'ACTED_IN', {})
-      let boltRecord = {
-        keys: ['r', 'n1'],
-        get: (key) => {
-          if (key === 'r') {
-            return relationship
-          }
-          if (key === 'n1') {
-            return startNode
+    )
+
+    test.skip(
+      'should not include relationships where neither start or end node is not in nodes list',
+      () => {
+        let relationship = new neo4j.v1.types.Relationship(
+          '3',
+          1,
+          2,
+          'ACTED_IN',
+          {}
+        )
+        let boltRecord = {
+          keys: ['r'],
+          get: key => relationship
+        }
+        let relationships = extractNodesAndRelationshipsFromRecords(
+          [boltRecord],
+          neo4j.v1.types
+        ).relationships
+        expect(relationships.length).toBe(0)
+      }
+    )
+    test.skip(
+      'should not include relationships where end node is not in nodes list',
+      () => {
+        let startNode = new neo4j.v1.types.Node('1', ['Person'], {
+          prop1: 'prop1'
+        })
+        let relationship = new neo4j.v1.types.Relationship(
+          '3',
+          startNode.identity,
+          2,
+          'ACTED_IN',
+          {}
+        )
+        let boltRecord = {
+          keys: ['r', 'n1'],
+          get: key => {
+            if (key === 'r') {
+              return relationship
+            }
+            if (key === 'n1') {
+              return startNode
+            }
           }
         }
+        let relationships = extractNodesAndRelationshipsFromRecords(
+          [boltRecord],
+          neo4j.v1.types
+        ).relationships
+        expect(relationships.length).toBe(0)
       }
-      let relationships = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types).relationships
-      expect(relationships.length).toBe(0)
-    })
-    test.skip('should not include relationships where start node is not in nodes list', () => {
-      let endNode = new neo4j.v1.types.Node('2', ['Movie'], {prop2: 'prop2'})
-      let relationship = new neo4j.v1.types.Relationship('3', '1', endNode.identity, 'ACTED_IN', {})
-      let boltRecord = {
-        keys: ['r', 'n1'],
-        get: (key) => {
-          if (key === 'r') {
-            return relationship
-          }
-          if (key === 'n1') {
-            return endNode
+    )
+    test.skip(
+      'should not include relationships where start node is not in nodes list',
+      () => {
+        let endNode = new neo4j.v1.types.Node('2', ['Movie'], {
+          prop2: 'prop2'
+        })
+        let relationship = new neo4j.v1.types.Relationship(
+          '3',
+          '1',
+          endNode.identity,
+          'ACTED_IN',
+          {}
+        )
+        let boltRecord = {
+          keys: ['r', 'n1'],
+          get: key => {
+            if (key === 'r') {
+              return relationship
+            }
+            if (key === 'n1') {
+              return endNode
+            }
           }
         }
+        let relationships = extractNodesAndRelationshipsFromRecords(
+          [boltRecord],
+          neo4j.v1.types
+        ).relationships
+        expect(relationships.length).toBe(0)
       }
-      let relationships = extractNodesAndRelationshipsFromRecords([boltRecord], neo4j.v1.types).relationships
-      expect(relationships.length).toBe(0)
-    })
+    )
   })
   describe('extractPlan', () => {
     const createPlan = () => {
@@ -252,7 +367,7 @@ describe('boltMappings', () => {
       }
     }
 
-    const checkExtractedPlan = (extractedPlan) => {
+    const checkExtractedPlan = extractedPlan => {
       expect(extractedPlan).not.toBeNull()
       expect(extractedPlan.operatorType).toEqual('operatorType')
       expect(extractedPlan.identifiers).toEqual([])
@@ -306,12 +421,8 @@ describe('boltMappings', () => {
   describe('flattenProperties', () => {
     test('should map properties to object when properties exist', () => {
       // Given
-      const result = [
-        [{properties: {foo: 'bar'}}]
-      ]
-      const expectedResult = [
-        [{foo: 'bar'}]
-      ]
+      const result = [[{ properties: { foo: 'bar' } }]]
+      const expectedResult = [[{ foo: 'bar' }]]
 
       // When
       const flattenedProperties = flattenProperties(result)
@@ -321,9 +432,7 @@ describe('boltMappings', () => {
     })
     test('should not map properties to object when properties do not exist', () => {
       // Given
-      const result = [
-        [{x: {foo: 'bar'}}]
-      ]
+      const result = [[{ x: { foo: 'bar' } }]]
 
       // When
       const flattenedProperties = flattenProperties(result)
@@ -335,15 +444,17 @@ describe('boltMappings', () => {
   describe('extractNodesAndRelationshipsFromRecordsForOldVis', () => {
     test('should recursively look for graph items', () => {
       // Given
-      const firstNode = new neo4j.types.Node('1', ['Person'], {prop1: 'prop1'})
+      const firstNode = new neo4j.types.Node('1', ['Person'], {
+        prop1: 'prop1'
+      })
       const nodeCollection = [
-        new neo4j.types.Node('2', ['Person'], {prop1: 'prop1'}),
-        new neo4j.types.Node('3', ['Person'], {prop1: 'prop1'}),
-        new neo4j.types.Node('4', ['Person'], {prop1: 'prop1'})
+        new neo4j.types.Node('2', ['Person'], { prop1: 'prop1' }),
+        new neo4j.types.Node('3', ['Person'], { prop1: 'prop1' }),
+        new neo4j.types.Node('4', ['Person'], { prop1: 'prop1' })
       ]
       const boltRecord = {
         keys: ['n', 'c'],
-        get: (key) => {
+        get: key => {
           if (key === 'n') {
             return firstNode
           }
@@ -361,7 +472,7 @@ describe('boltMappings', () => {
         false,
         {
           intChecker: () => true,
-          intConverter: (a) => a
+          intConverter: a => a
         }
       )
 
@@ -372,14 +483,14 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: (a) => a,
+        intConverter: a => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], {x: 1})
-      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
-      const end1 = new neo4j.types.Node(2, ['Y'], {y: 1})
-      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', {rel: 2})
-      const end = new neo4j.types.Node(5, ['Y'], {y: 2})
+      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
+      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
+      const end1 = new neo4j.types.Node(2, ['Y'], { y: 1 })
+      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', { rel: 2 })
+      const end = new neo4j.types.Node(5, ['Y'], { y: 2 })
       const segments = [
         new neo4j.types.PathSegment(start, rel1, end1),
         new neo4j.types.PathSegment(end1, rel2, end)
@@ -387,7 +498,7 @@ describe('boltMappings', () => {
       const path = new neo4j.types.Path(start, end, segments)
       const boltRecord = {
         keys: ['p'],
-        get: (key) => {
+        get: key => {
           if (key === 'p') return path
         }
       }
@@ -408,16 +519,16 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: (a) => a,
+        intConverter: a => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], {x: 2})
+      const start = new neo4j.types.Node(1, ['X'], { x: 2 })
       const end = start
       const segments = []
       const path = new neo4j.types.Path(start, end, segments)
       const boltRecord = {
         keys: ['p'],
-        get: (key) => {
+        get: key => {
           if (key === 'p') return path
         }
       }
@@ -441,10 +552,10 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: (a) => a,
+        intConverter: a => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], {x: 1})
+      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
       const end = start
       const segments = []
       const path = new neo4j.types.Path(start, end, segments)
@@ -459,12 +570,12 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: (a) => a,
+        intConverter: a => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], {x: 1})
-      const end = new neo4j.types.Node(2, ['Y'], {y: 1})
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
+      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
+      const end = new neo4j.types.Node(2, ['Y'], { y: 1 })
+      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
       const segments = [new neo4j.types.PathSegment(start, rel, end)]
       const path = new neo4j.types.Path(start, end, segments)
 
@@ -481,14 +592,14 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: (a) => a,
+        intConverter: a => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], {x: 1})
-      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
-      const end1 = new neo4j.types.Node(2, ['Y'], {y: 1})
-      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', {rel: 2})
-      const end = new neo4j.types.Node(5, ['Y'], {y: 2})
+      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
+      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
+      const end1 = new neo4j.types.Node(2, ['Y'], { y: 1 })
+      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', { rel: 2 })
+      const end = new neo4j.types.Node(5, ['Y'], { y: 2 })
       const segments = [
         new neo4j.types.PathSegment(start, rel1, end1),
         new neo4j.types.PathSegment(end1, rel2, end)
@@ -528,15 +639,18 @@ describe('boltMappings', () => {
     })
 
     test('should apply node type to array of data', () => {
-      const rawNodes = [{
-        labels: ['Test'],
-        properties: [],
-        identity: { low: 5, high: 0 }
-      }, {
-        labels: ['Test2'],
-        properties: [],
-        identity: { low: 15, high: 0 }
-      }]
+      const rawNodes = [
+        {
+          labels: ['Test'],
+          properties: [],
+          identity: { low: 5, high: 0 }
+        },
+        {
+          labels: ['Test2'],
+          properties: [],
+          identity: { low: 15, high: 0 }
+        }
+      ]
 
       const typedNodes = applyGraphTypes(rawNodes)
       expect(typedNodes.length).toEqual(2)
@@ -556,33 +670,46 @@ describe('boltMappings', () => {
       }
 
       const typedRelationship = applyGraphTypes(rawRelationship)
-      expect(typedRelationship instanceof neo4j.types.Relationship).toEqual(true)
+      expect(typedRelationship instanceof neo4j.types.Relationship).toEqual(
+        true
+      )
       expect(typedRelationship.identity instanceof neo4j.Integer).toEqual(true)
     })
 
     test('should apply relationship type to array of data', () => {
-      const rawRelationships = [{
-        type: 'TestType',
-        properties: [],
-        identity: { low: 1, high: 0 },
-        start: { low: 5, high: 0 },
-        end: { low: 10, high: 0 }
-      }, {
-        type: 'TestType_2',
-        properties: [],
-        identity: { low: 2, high: 0 },
-        start: { low: 15, high: 0 },
-        end: { low: 20, high: 0 }
-      }]
+      const rawRelationships = [
+        {
+          type: 'TestType',
+          properties: [],
+          identity: { low: 1, high: 0 },
+          start: { low: 5, high: 0 },
+          end: { low: 10, high: 0 }
+        },
+        {
+          type: 'TestType_2',
+          properties: [],
+          identity: { low: 2, high: 0 },
+          start: { low: 15, high: 0 },
+          end: { low: 20, high: 0 }
+        }
+      ]
 
       const typedRelationships = applyGraphTypes(rawRelationships)
       expect(typedRelationships.length).toEqual(2)
-      expect(typedRelationships[0] instanceof neo4j.types.Relationship).toEqual(true)
-      expect(typedRelationships[0].identity instanceof neo4j.Integer).toEqual(true)
+      expect(typedRelationships[0] instanceof neo4j.types.Relationship).toEqual(
+        true
+      )
+      expect(typedRelationships[0].identity instanceof neo4j.Integer).toEqual(
+        true
+      )
       expect(typedRelationships[0].start instanceof neo4j.Integer).toEqual(true)
       expect(typedRelationships[0].end instanceof neo4j.Integer).toEqual(true)
-      expect(typedRelationships[1] instanceof neo4j.types.Relationship).toEqual(true)
-      expect(typedRelationships[1].identity instanceof neo4j.Integer).toEqual(true)
+      expect(typedRelationships[1] instanceof neo4j.types.Relationship).toEqual(
+        true
+      )
+      expect(typedRelationships[1].identity instanceof neo4j.Integer).toEqual(
+        true
+      )
       expect(typedRelationships[1].start instanceof neo4j.Integer).toEqual(true)
       expect(typedRelationships[1].end instanceof neo4j.Integer).toEqual(true)
     })
@@ -618,7 +745,10 @@ describe('boltMappings', () => {
         identity: { low: 10, high: 0 }
       }
 
-      const typedObjects = applyGraphTypes([{ num: rawNumber1, node: rawNode1 }, { num: rawNumber2, node: rawNode2 }])
+      const typedObjects = applyGraphTypes([
+        { num: rawNumber1, node: rawNode1 },
+        { num: rawNumber2, node: rawNode2 }
+      ])
       expect(typedObjects.length).toEqual(2)
       expect(typedObjects[0].node instanceof neo4j.types.Node).toEqual(true)
       expect(typedObjects[0].num instanceof neo4j.Integer).toEqual(true)
@@ -632,7 +762,9 @@ describe('boltMappings', () => {
       expect(typedPathSegment instanceof neo4j.types.PathSegment)
       expect(typedPathSegment.start instanceof neo4j.types.Node).toEqual(true)
       expect(typedPathSegment.end instanceof neo4j.types.Node).toEqual(true)
-      expect(typedPathSegment.relationship instanceof neo4j.types.Relationship).toEqual(true)
+      expect(
+        typedPathSegment.relationship instanceof neo4j.types.Relationship
+      ).toEqual(true)
     })
 
     test('should apply to array of PathSegment type', () => {
@@ -642,23 +774,40 @@ describe('boltMappings', () => {
       const typedPathSegments = applyGraphTypes([segment1, segment2])
       expect(typedPathSegments.length).toEqual(2)
 
-      expect(typedPathSegments[0] instanceof neo4j.types.PathSegment).toEqual(true)
-      expect(typedPathSegments[0].start instanceof neo4j.types.Node).toEqual(true)
+      expect(typedPathSegments[0] instanceof neo4j.types.PathSegment).toEqual(
+        true
+      )
+      expect(typedPathSegments[0].start instanceof neo4j.types.Node).toEqual(
+        true
+      )
       expect(typedPathSegments[0].end instanceof neo4j.types.Node).toEqual(true)
-      expect(typedPathSegments[0].relationship instanceof neo4j.types.Relationship).toEqual(true)
+      expect(
+        typedPathSegments[0].relationship instanceof neo4j.types.Relationship
+      ).toEqual(true)
 
-      expect(typedPathSegments[1] instanceof neo4j.types.PathSegment).toEqual(true)
-      expect(typedPathSegments[1].start instanceof neo4j.types.Node).toEqual(true)
+      expect(typedPathSegments[1] instanceof neo4j.types.PathSegment).toEqual(
+        true
+      )
+      expect(typedPathSegments[1].start instanceof neo4j.types.Node).toEqual(
+        true
+      )
       expect(typedPathSegments[1].end instanceof neo4j.types.Node).toEqual(true)
-      expect(typedPathSegments[1].relationship instanceof neo4j.types.Relationship).toEqual(true)
+      expect(
+        typedPathSegments[1].relationship instanceof neo4j.types.Relationship
+      ).toEqual(true)
     })
 
     test('should apply Path type', () => {
-      const typedPath = applyGraphTypes(getAPath([{ start: 5, end: 10, relationship: 1 }, {
-        start: 10,
-        end: 15,
-        relationship: 2
-      }]))
+      const typedPath = applyGraphTypes(
+        getAPath([
+          { start: 5, end: 10, relationship: 1 },
+          {
+            start: 10,
+            end: 15,
+            relationship: 2
+          }
+        ])
+      )
       expect(typedPath).toBeTruthy()
       expect(typedPath instanceof neo4j.types.Path)
       expect(typedPath.start instanceof neo4j.types.Node).toEqual(true)
@@ -676,7 +825,10 @@ describe('boltMappings', () => {
         identity: { low: 5, high: 0 }
       }
       const rawNum = { low: 100, high: 0 }
-      const rawPath = getAPath([{ start: 5, end: 10, relationship: 1 }, { start: 10, end: 15, relationship: 2 }])
+      const rawPath = getAPath([
+        { start: 5, end: 10, relationship: 1 },
+        { start: 10, end: 15, relationship: 2 }
+      ])
       const rawRelationship = {
         type: 'TestType',
         properties: [],
@@ -685,11 +837,18 @@ describe('boltMappings', () => {
         end: { low: 10, high: 0 }
       }
 
-      const typedObject = applyGraphTypes({ rawNum, rawNode, rawRelationship, rawPath })
+      const typedObject = applyGraphTypes({
+        rawNum,
+        rawNode,
+        rawRelationship,
+        rawPath
+      })
       expect(typedObject).toBeTruthy()
       expect(typedObject.rawNum instanceof neo4j.Integer)
       expect(typedObject.rawNode instanceof neo4j.types.Node).toEqual(true)
-      expect(typedObject.rawRelationship instanceof neo4j.types.Relationship).toEqual(true)
+      expect(
+        typedObject.rawRelationship instanceof neo4j.types.Relationship
+      ).toEqual(true)
       expect(typedObject.rawPath instanceof neo4j.types.Path).toEqual(true)
       expect(typedObject.rawPath.segments.length).toEqual(2)
       expect(typedObject.rawPath.segments[0] instanceof neo4j.types.PathSegment)
@@ -722,7 +881,13 @@ const getAPathSegment = (startId, relId, endId) => {
   return { start: rawStartNode, end: rawEndNode, relationship: rawRelationship }
 }
 
-const getAPath = (segmentList) => {
-  const segments = segmentList.map(segment => getAPathSegment(segment.start, segment.relationship, segment.end))
-  return { start: segments[0].start, end: segments[segments.length - 1].end, segments }
+const getAPath = segmentList => {
+  const segments = segmentList.map(segment =>
+    getAPathSegment(segment.start, segment.relationship, segment.end)
+  )
+  return {
+    start: segments[0].start,
+    end: segments[segments.length - 1].end,
+    segments
+  }
 }

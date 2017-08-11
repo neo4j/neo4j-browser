@@ -18,20 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { authenticate, initialize, status, getResourceFor, setupUser } from 'services/browserSyncService'
+import {
+  authenticate,
+  initialize,
+  status,
+  getResourceFor,
+  setupUser
+} from 'services/browserSyncService'
 import { getBrowserName } from 'services/utils'
 
 export const UP = 'UP'
 export const DOWN = 'DOWN'
 
 class SyncSignInManager {
-  constructor ({dbConfig, serviceReadyCallback, onSyncCallback}) {
+  constructor ({ dbConfig, serviceReadyCallback, onSyncCallback }) {
     initialize(dbConfig)
     this.isServiceUp(serviceReadyCallback)
     this.onSync = onSyncCallback
   }
   isServiceUp (serviceReadyCallback) {
-    status().on('value', (v) => {
+    status().on('value', v => {
       if (v.val()) {
         if (this._downTimer) {
           clearTimeout(this._downTimer)
@@ -40,10 +46,7 @@ class SyncSignInManager {
         serviceReadyCallback(UP)
       } else {
         // During connecting, the status is always down for a short time. So wait before setting state to be sure its really down
-        this._downTimer = setTimeout(
-          () => serviceReadyCallback(DOWN),
-          10000
-        )
+        this._downTimer = setTimeout(() => serviceReadyCallback(DOWN), 10000)
       }
     })
   }
@@ -54,13 +57,14 @@ class SyncSignInManager {
       errorFn && errorFn(error)
     } else {
       this.authData = data
-      authenticate(this.authData.data_token).then((a) => {
-        this.serviceAuthenticated = true
-        this.error = null
-        this.bindToResource()
-        successFn && successFn(data)
-      })
-        .catch((e) => {
+      authenticate(this.authData.data_token)
+        .then(a => {
+          this.serviceAuthenticated = true
+          this.error = null
+          this.bindToResource()
+          successFn && successFn(data)
+        })
+        .catch(e => {
           this.serviceAuthenticated = false
           this.error = e
           errorFn && errorFn(e)
@@ -69,13 +73,15 @@ class SyncSignInManager {
   }
   bindToResource () {
     this.syncRef = getResourceFor(this.authData.profile.user_id)
-    this.syncRef.on('value', (v) => {
+    this.syncRef.on('value', v => {
       if (v.val() == null) {
         setupUser(this.authData.profile.user_id, {
-          documents: [{
-            'client': getBrowserName(),
-            'syncedAt': Date.now()
-          }]
+          documents: [
+            {
+              client: getBrowserName(),
+              syncedAt: Date.now()
+            }
+          ]
         })
       } else {
         this.setSynCData(v.val())
@@ -83,7 +89,12 @@ class SyncSignInManager {
     })
   }
   setSynCData (value) {
-    this.onSync({key: this.authData.profile.user_id, syncObj: value, lastSyncedAt: new Date(), authData: this.authData})
+    this.onSync({
+      key: this.authData.profile.user_id,
+      syncObj: value,
+      lastSyncedAt: new Date(),
+      authData: this.authData
+    })
   }
 }
 

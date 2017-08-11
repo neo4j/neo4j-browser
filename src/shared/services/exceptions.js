@@ -24,7 +24,7 @@ export function getErrorMessage (errorObject) {
   let str = messages[errorObject.type]
   if (!str) return
   const keys = Object.keys(errorObject)
-  keys.forEach((prop) => {
+  keys.forEach(prop => {
     const re = new RegExp('(#' + prop + '#)', 'g')
     str = str.replace(re, errorObject[prop])
   })
@@ -46,10 +46,14 @@ export function UserException (message) {
 }
 
 export function ConnectionException (message, code = 'Connection Error') {
-  return {fields: [{
-    code,
-    message
-  }]}
+  return {
+    fields: [
+      {
+        code,
+        message
+      }
+    ]
+  }
 }
 
 export function AddServerValidationError () {

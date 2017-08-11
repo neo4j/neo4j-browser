@@ -42,7 +42,7 @@ export class FileDrop extends Component {
     this.fileReader = this.props.fileReader || new FileReader()
   }
   onDrop (files) {
-    this.setState({error: null, success: null})
+    this.setState({ error: null, success: null })
 
     const file = files[0]
     const fileExtension = file.name.split('.').pop()
@@ -53,31 +53,35 @@ export class FileDrop extends Component {
     } else if (this.grassExtenstions.includes(fileExtension)) {
       loader = this.props.onGrassFileDropped
     } else {
-      return this.setState({'error': `'.${fileExtension}' is not a valid file extension`})
+      return this.setState({
+        error: `'.${fileExtension}' is not a valid file extension`
+      })
     }
 
     this.fileReader.onload = () => {
       loader(this.fileReader.result)
-      this.setState({'success': `'${file.name}' has been added`})
+      this.setState({ success: `'${file.name}' has been added` })
     }
     this.fileReader.readAsText(file)
   }
   render () {
     return (
-      <Dropzone
-        disableClick
-        multiple={false}
-        onDrop={this.onDrop.bind(this)}>
-        <StyledDropzoneText>{this.state.error || this.state.success || 'Drop a file to import Cypher (*.cyp, *.cypher, *.cql, *.txt) or Grass (*.grass)'}</StyledDropzoneText>
-      </Dropzone>)
+      <Dropzone disableClick multiple={false} onDrop={this.onDrop.bind(this)}>
+        <StyledDropzoneText>
+          {this.state.error ||
+            this.state.success ||
+            'Drop a file to import Cypher (*.cyp, *.cypher, *.cql, *.txt) or Grass (*.grass)'}
+        </StyledDropzoneText>
+      </Dropzone>
+    )
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFavoriteFileDropped: (fileContent) => {
+    onFavoriteFileDropped: fileContent => {
       dispatch(addFavorite(fileContent))
     },
-    onGrassFileDropped: (fileContent) => {
+    onGrassFileDropped: fileContent => {
       const parsedGrass = parseGrass(fileContent)
       if (parsedGrass) {
         dispatch(updateGraphStyleData(parsedGrass))

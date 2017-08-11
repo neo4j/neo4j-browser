@@ -194,7 +194,7 @@ export const StyledStatusBarWrapper = styled.div`
 `
 export const StyledStatusBar = styled.div`
   min-height: 39px;
-  line-height:  39px;
+  line-height: 39px;
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: relative;
@@ -202,7 +202,8 @@ export const StyledStatusBar = styled.div`
   white-space: nowrap;
   overflow: hidden;
   border-top: 1px solid #e6e9ef;
-  ${props => props.fullscreen ? 'margin-top: -39px;' : 'margin-bottom: -39px;'};
+  ${props =>
+    props.fullscreen ? 'margin-top: -39px;' : 'margin-bottom: -39px;'};
 `
 
 export const StyledStatus = styled.div`
@@ -251,9 +252,7 @@ export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
   padding: 4px 9px;
 `
 
-export const StyledTokenCount = styled.span`
-  font-weight: normal;
-`
+export const StyledTokenCount = styled.span`font-weight: normal;`
 export const StyledLegendContents = styled.div`
   float: left;
   line-height: 1em;
@@ -271,7 +270,7 @@ export const StyledLegendRow = styled.div`
 `
 export const StyledLegend = styled.div`
   background-color: ${props => props.theme.secondaryBackground};
-  margin-top: -${(legendRowHeight * 2) + 1}px;
+  margin-top: -${legendRowHeight * 2 + 1}px;
   &.one-row {
     margin-top: -${legendRowHeight}px;
   }
@@ -300,7 +299,7 @@ export const StyledPickerSelector = styled.a`
   cursor: pointer;
   opacity: 0.4;
   &:hover {
-   opacity: 1;
+    opacity: 1;
   }
   &.active {
     opacity: 1;
@@ -316,8 +315,8 @@ export const StyledCaptionSelector = styled.a`
   padding: 1px 6px;
   font-size: 12px;
   line-height: 1em;
-  color: #9195A0;
-  border: 1px solid #9195A0;
+  color: #9195a0;
+  border: 1px solid #9195a0;
   overflow: hidden;
   border-radius: .25em;
   margin-right: 0;
@@ -329,22 +328,23 @@ export const StyledCaptionSelector = styled.a`
   }
   &.active {
     color: white;
-    background-color: #9195A0;
+    background-color: #9195a0;
   }
 `
 
 export const StyledFullSizeContainer = styled.div`
   height: 100%;
-  padding-top: ${(legendRowHeight * 2) + 1}px;
-  padding-bottom: ${props => props.forcePaddingBottom ? (props.forcePaddingBottom + 2 * pMarginTop) + 'px' : '39px'};
+  padding-top: ${legendRowHeight * 2 + 1}px;
+  padding-bottom: ${props =>
+    props.forcePaddingBottom
+      ? props.forcePaddingBottom + 2 * pMarginTop + 'px'
+      : '39px'};
   &.one-legend-row {
     padding-top: ${legendRowHeight}px;
   }
 `
 
-export const StyledInspectorFooterStatusMessage = styled.div`
-  font-weight: bold;
-`
+export const StyledInspectorFooterStatusMessage = styled.div`font-weight: bold;`
 
 export const StyledZoomHolder = styled.div`
   position: absolute;
@@ -367,16 +367,16 @@ export const StyledZoomButton = styled.button`
   border-color: black;
   padding: 2px 6px 3px;
   &:hover {
-   color:black;
+    color: black;
   }
   &:focus {
     outline: none;
   }
   &.faded {
-   opacity: .3;
-   cursor: auto;
-   &:hover {
-     color: #9b9da2;
-   }
+    opacity: .3;
+    cursor: auto;
+    &:hover {
+      color: #9b9da2;
+    }
   }
 `

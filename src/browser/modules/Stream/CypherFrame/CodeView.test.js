@@ -25,13 +25,13 @@ import { CodeView, CodeStatusbar } from './CodeView'
 
 describe('CodeViews', () => {
   describe('CodeView', () => {
-    test('displays nothing if not successful query', () => { // we get no info from driver
+    test('displays nothing if not successful query', () => {
+      // we get no info from driver
       // Given
       const result = mount(CodeView)
         .withProps({ request: { status: 'error' } })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           expect(wrapper.text()).toEqual('')
         })
 
@@ -51,19 +51,14 @@ describe('CodeViews', () => {
                 address: 'xx2'
               }
             },
-            records: [
-              { res: 'xx3' },
-              { res: 'xx4' },
-              { res: 'xx5' }
-            ]
+            records: [{ res: 'xx3' }, { res: 'xx4' }, { res: 'xx5' }]
           }
         }
       }
       const result = mount(CodeView)
         .withProps(data)
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           const text = wrapper.text()
           expect(text).toContain('xx0')
           expect(text).toContain('xx1')
@@ -83,9 +78,8 @@ describe('CodeViews', () => {
       const statusBarMessage = 'My message'
       const result = mount(CodeStatusbar)
         .withProps({ result: {}, maxRows: 0 })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ statusBarMessage })
           wrapper.update()
           expect(wrapper.text()).toContain('My message')

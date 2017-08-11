@@ -22,11 +22,22 @@
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
-import { executeCommand, executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeCommand,
+  executeSystemCommand
+} from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
-import { SET_CONTENT, EDIT_CONTENT, FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
+import {
+  SET_CONTENT,
+  EDIT_CONTENT,
+  FOCUS,
+  EXPAND
+} from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
-import { getCmdChar, shouldEditorAutocomplete } from 'shared/modules/settings/settingsDuck'
+import {
+  getCmdChar,
+  shouldEditorAutocomplete
+} from 'shared/modules/settings/settingsDuck'
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
@@ -110,7 +121,8 @@ export class Editor extends Component {
   historyPrev (cm) {
     if (!this.props.history.length) return
     if (this.state.historyIndex + 1 === this.props.history.length) return
-    if (this.state.historyIndex === -1) { // Save what's currently in the editor
+    if (this.state.historyIndex === -1) {
+      // Save what's currently in the editor
       this.setState({ buffer: cm.getValue() })
     }
     this.setState({
@@ -123,7 +135,8 @@ export class Editor extends Component {
   historyNext (cm) {
     if (!this.props.history.length) return
     if (this.state.historyIndex <= -1) return
-    if (this.state.historyIndex === 0) { // Should read from buffer
+    if (this.state.historyIndex === 0) {
+      // Should read from buffer
       this.setState({ historyIndex: -1 })
       this.setEditorValue(this.state.buffer)
       return
@@ -141,7 +154,8 @@ export class Editor extends Component {
     }
 
     const text = changed.text[0]
-    const triggerAutocompletion = text === '.' ||
+    const triggerAutocompletion =
+      text === '.' ||
       text === ':' ||
       text === '[]' ||
       text === '()' ||
@@ -155,7 +169,10 @@ export class Editor extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.content !== null && nextProps.content !== this.getEditorValue()) {
+    if (
+      nextProps.content !== null &&
+      nextProps.content !== this.getEditorValue()
+    ) {
       this.setEditorValue(nextProps.content)
     }
   }
@@ -170,11 +187,11 @@ export class Editor extends Component {
     }
 
     if (this.props.bus) {
-      this.props.bus.take(SET_CONTENT, (msg) => {
+      this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
         this.setEditorValue(msg.message)
       })
-      this.props.bus.take(EDIT_CONTENT, (msg) => {
+      this.props.bus.take(EDIT_CONTENT, msg => {
         this.setContentId(msg.id)
         this.setEditorValue(msg.message)
       })
@@ -195,16 +212,17 @@ export class Editor extends Component {
   }
 
   setContentId (id) {
-    this.setState({contentId: id})
+    this.setState({ contentId: id })
   }
 
-  updateCode (newCode, change, cb = () => {
-  }) {
-    const mode = this.props.cmdchar && newCode.trim().indexOf(this.props.cmdchar) === 0
-      ? 'text'
-      : 'cypher'
+  updateCode (newCode, change, cb = () => {}) {
+    const mode =
+      this.props.cmdchar && newCode.trim().indexOf(this.props.cmdchar) === 0
+        ? 'text'
+        : 'cypher'
     this.clearHints()
-    if (mode === 'cypher' &&
+    if (
+      mode === 'cypher' &&
       newCode.trim().length > 0 &&
       !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
       !newCode.trimLeft().toUpperCase().startsWith('PROFILE')
@@ -214,20 +232,30 @@ export class Editor extends Component {
 
     const lastPosition = change && change.to
 
-    this.setState({
-      mode,
-      lastPosition: lastPosition ? { line: lastPosition.line, column: lastPosition.ch } : this.state.lastPosition,
-      editorHeight: this.editor && this.editor.base.clientHeight
-    }, cb)
+    this.setState(
+      {
+        mode,
+        lastPosition: lastPosition
+          ? { line: lastPosition.line, column: lastPosition.ch }
+          : this.state.lastPosition,
+        editorHeight: this.editor && this.editor.base.clientHeight
+      },
+      cb
+    )
   }
 
   checkForHints (code) {
     this.props.bus.self(
       CYPHER_REQUEST,
       { query: 'EXPLAIN ' + code },
-      (response) => {
-        if (response.success === true && response.result.summary.notifications.length > 0) {
-          this.setState({ notifications: response.result.summary.notifications })
+      response => {
+        if (
+          response.success === true &&
+          response.result.summary.notifications.length > 0
+        ) {
+          this.setState({
+            notifications: response.result.summary.notifications
+          })
         } else {
           this.clearHints()
         }
@@ -243,18 +271,25 @@ export class Editor extends Component {
     if (this.codeMirror) {
       this.codeMirror.clearGutter('cypher-hints')
       this.state.notifications.forEach(notification => {
-        this.codeMirror.setGutterMarker((notification.position.line || 1) - 1, 'cypher-hints', (() => {
-          let gutter = document.createElement('div')
-          gutter.style.color = '#822'
-          gutter.innerHTML = '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
-          gutter.title = `${notification.title}\n${notification.description}`
-          gutter.onclick = () => {
-            const action = executeSystemCommand(`EXPLAIN ${this.getEditorValue()}`)
-            action.forceView = viewTypes.WARNINGS
-            this.props.bus.send(action.type, action)
-          }
-          return gutter
-        })())
+        this.codeMirror.setGutterMarker(
+          (notification.position.line || 1) - 1,
+          'cypher-hints',
+          (() => {
+            let gutter = document.createElement('div')
+            gutter.style.color = '#822'
+            gutter.innerHTML =
+              '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
+            gutter.title = `${notification.title}\n${notification.description}`
+            gutter.onclick = () => {
+              const action = executeSystemCommand(
+                `EXPLAIN ${this.getEditorValue()}`
+              )
+              action.forceView = viewTypes.WARNINGS
+              this.props.bus.send(action.type, action)
+            }
+            return gutter
+          })()
+        )
       })
     }
   }
@@ -289,16 +324,16 @@ export class Editor extends Component {
       lint: true,
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
-        'Enter': this.handleEnter.bind(this),
+        Enter: this.handleEnter.bind(this),
         'Shift-Enter': this.newlineAndIndent.bind(this),
         'Cmd-Enter': this.execCurrent.bind(this),
         'Ctrl-Enter': this.execCurrent.bind(this),
         'Cmd-Up': this.historyPrev.bind(this),
         'Ctrl-Up': this.historyPrev.bind(this),
-        'Up': this.handleUp.bind(this),
+        Up: this.handleUp.bind(this),
         'Cmd-Down': this.historyNext.bind(this),
         'Ctrl-Down': this.historyNext.bind(this),
-        'Down': this.handleDown.bind(this)
+        Down: this.handleDown.bind(this)
       },
       hintOptions: {
         completeSingle: false,
@@ -316,9 +351,12 @@ export class Editor extends Component {
 
     return (
       <Bar expanded={this.state.expanded} minHeight={this.state.editorHeight}>
-        <EditorWrapper expanded={this.state.expanded} minHeight={this.state.editorHeight}>
+        <EditorWrapper
+          expanded={this.state.expanded}
+          minHeight={this.state.editorHeight}
+        >
           <Codemirror
-            ref={(ref) => {
+            ref={ref => {
               this.editor = ref
             }}
             onChange={updateCode}
@@ -330,12 +368,16 @@ export class Editor extends Component {
         <ActionButtonSection>
           <Render if={this.state.contentId}>
             <EditModeEditorButton
-              onClick={() => this.props.onFavoriteUpdateClick(this.state.contentId, this.getEditorValue())}
+              onClick={() =>
+                this.props.onFavoriteUpdateClick(
+                  this.state.contentId,
+                  this.getEditorValue()
+                )}
               disabled={this.getEditorValue().length < 1}
               color='#ffaf00'
               title='Favorite'
-              hoverIcon='"\74"'
-              icon='"\25"'
+              hoverIcon='&quot;\74&quot;'
+              icon='&quot;\25&quot;'
             />
           </Render>
           <Render if={!this.state.contentId}>
@@ -343,8 +385,8 @@ export class Editor extends Component {
               onClick={() => this.props.onFavoriteClick(this.getEditorValue())}
               disabled={this.getEditorValue().length < 1}
               title='Update favorite'
-              hoverIcon='"\58"'
-              icon='"\73"'
+              hoverIcon='&quot;\58&quot;'
+              icon='&quot;\73&quot;'
             />
           </Render>
           <EditorButton
@@ -352,16 +394,16 @@ export class Editor extends Component {
             onClick={() => this.clearEditor()}
             disabled={this.getEditorValue().length < 1}
             title='Clear'
-            hoverIcon='"\e005"'
-            icon='"\5e"'
+            hoverIcon='&quot;\e005&quot;'
+            icon='&quot;\5e&quot;'
           />
           <EditorButton
             data-test-id='submitQuery'
             onClick={() => this.execCurrent()}
             disabled={this.getEditorValue().length < 1}
             title='Play'
-            hoverIcon='"\e002"'
-            icon='"\77"'
+            hoverIcon='&quot;\e002&quot;'
+            icon='&quot;\77&quot;'
           />
         </ActionButtonSection>
       </Bar>
@@ -371,7 +413,7 @@ export class Editor extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFavoriteClick: (cmd) => {
+    onFavoriteClick: cmd => {
       const action = favorites.addFavorite(cmd)
       ownProps.bus.send(action.type, action)
     },
@@ -379,14 +421,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const action = favorites.updateFavorite(id, cmd)
       ownProps.bus.send(action.type, action)
     },
-    onExecute: (cmd) => {
+    onExecute: cmd => {
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     }
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     enableEditorAutocomplete: shouldEditorAutocomplete(state),
     content: null,
@@ -395,7 +437,9 @@ const mapStateToProps = (state) => {
     schema: {
       consoleCommands: consoleCommands,
       labels: state.meta.labels.map(schemaConvert.toLabel),
-      relationshipTypes: state.meta.relationshipTypes.map(schemaConvert.toRelationshipType),
+      relationshipTypes: state.meta.relationshipTypes.map(
+        schemaConvert.toRelationshipType
+      ),
       propertyKeys: state.meta.properties.map(schemaConvert.toPropertyKey),
       functions: [
         ...cypherFunctions,

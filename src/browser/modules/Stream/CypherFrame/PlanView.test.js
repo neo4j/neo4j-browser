@@ -28,7 +28,7 @@ describe('PlanViews', () => {
       // Given
       const display = jest.fn()
       global.neo = {
-        queryPlan: (el) => {
+        queryPlan: el => {
           return {
             display
           }
@@ -48,9 +48,8 @@ describe('PlanViews', () => {
       }
       const result = mount(PlanView)
         .withProps(data)
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           const calls = display.mock.calls
           const callObj = calls[0][0]
           expect(callObj.root).toBeDefined()
@@ -64,10 +63,10 @@ describe('PlanViews', () => {
   describe('PlanStatusbar', () => {
     test('displays statusBarMessage', () => {
       // Given
-      const intMock = (num) => {
+      const intMock = num => {
         return {
           toNumber: () => num,
-          add: (intMockInput) => intMock(num + intMockInput.toNumber())
+          add: intMockInput => intMock(num + intMockInput.toNumber())
         }
       }
       const results = {
@@ -86,9 +85,8 @@ describe('PlanViews', () => {
       }
       const result = mount(PlanStatusbar)
         .withProps({ result: results })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ extractedPlan })
           wrapper.update()
           const text = wrapper.text()

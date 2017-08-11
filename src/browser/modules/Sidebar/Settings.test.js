@@ -27,9 +27,8 @@ describe('Settings', () => {
     // Given
     const result = mount(SettingsComponent)
       .withProps({ settings: { maxRows: 100 } })
-
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.find('.maxRows').prop('value')).toBe(100)
       })
 

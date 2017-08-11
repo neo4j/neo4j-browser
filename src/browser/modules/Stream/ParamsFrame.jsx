@@ -24,40 +24,34 @@ import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import Ellipsis from 'browser-components/Ellipsis'
 import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
 
-const ParamsFrame = ({frame, params}) => {
+const ParamsFrame = ({ frame, params }) => {
   const contents = (
     <PaddedDiv>
       <Render if={frame.success !== false}>
-        <pre>{JSON.stringify(frame.params, null, 2)}</pre>
+        <pre>
+          {JSON.stringify(frame.params, null, 2)}
+        </pre>
       </Render>
     </PaddedDiv>
   )
-  const statusbar = (
+  const statusbar =
     typeof frame['success'] === 'undefined'
-    ? null
-    : (
-      <StyledStatsBar>
+      ? null
+      : <StyledStatsBar>
         <Ellipsis>
           <Render if={frame.success === true}>
-            <SuccessText>
-              Successfully set your parameters.
-            </SuccessText>
+            <SuccessText>Successfully set your parameters.</SuccessText>
           </Render>
           <Render if={frame.success === false}>
             <ErrorText>
-              <ExclamationTriangleIcon /> Something went wrong. Read help pages.
+              <ExclamationTriangleIcon /> Something went wrong. Read help
+                pages.
             </ErrorText>
           </Render>
         </Ellipsis>
       </StyledStatsBar>
-    )
-  )
   return (
-    <FrameTemplate
-      header={frame}
-      contents={contents}
-      statusbar={statusbar}
-    />
+    <FrameTemplate header={frame} contents={contents} statusbar={statusbar} />
   )
 }
 export default ParamsFrame

@@ -20,22 +20,25 @@
 
 import { Component } from 'preact'
 import { deepEquals } from 'services/utils'
-import {GraphComponent} from './Graph'
+import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
-import {InspectorComponent} from './Inspector'
-import {LegendComponent} from './Legend'
-import {StyledFullSizeContainer} from './styled'
+import { InspectorComponent } from './Inspector'
+import { LegendComponent } from './Legend'
+import { StyledFullSizeContainer } from './styled'
 
-const deduplicateNodes = (nodes) => {
-  return nodes.reduce((all, curr) => {
-    if (all.taken.indexOf(curr.id) > -1) {
-      return all
-    } else {
-      all.nodes.push(curr)
-      all.taken.push(curr.id)
-      return all
-    }
-  }, {nodes: [], taken: []}).nodes
+const deduplicateNodes = nodes => {
+  return nodes.reduce(
+    (all, curr) => {
+      if (all.taken.indexOf(curr.id) > -1) {
+        return all
+      } else {
+        all.nodes.push(curr)
+        all.taken.push(curr.id)
+        return all
+      }
+    },
+    { nodes: [], taken: [] }
+  ).nodes
 }
 
 export class ExplorerComponent extends Component {
@@ -47,14 +50,23 @@ export class ExplorerComponent extends Component {
     let selectedItem = ''
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
-      relationships = this.props.relationships.filter((item) => nodes.filter((node) => node.id === item.startNodeId).length > 0 && this.state.nodes.filter((node) => node.id === item.endNodeId).length > 0)
-      selectedItem = {type: 'status-item', item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`}
+      relationships = this.props.relationships.filter(
+        item =>
+          nodes.filter(node => node.id === item.startNodeId).length > 0 &&
+          this.state.nodes.filter(node => node.id === item.endNodeId).length > 0
+      )
+      selectedItem = {
+        type: 'status-item',
+        item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this
+          .props
+          .initialNodeDisplay} of ${nodes.length} nodes are being displayed`
+      }
     }
     if (this.props.graphStyleData) {
       graphStyle.loadRules(this.props.graphStyleData)
     }
     this.state = {
-      stats: {labels: {}, relTypes: {}},
+      stats: { labels: {}, relTypes: {} },
       graphStyle,
       nodes,
       relationships,
@@ -64,51 +76,80 @@ export class ExplorerComponent extends Component {
 
   getNodeNeighbours (node, currentNeighbours, callback) {
     if (currentNeighbours.length > this.props.maxNeighbours) {
-      callback(null, {nodes: [], relationships: []})
+      callback(null, { nodes: [], relationships: [] })
     }
-    this.props.getNeighbours(node.id, currentNeighbours).then((result) => {
-      let nodes = result.nodes
-      if (result.count > (this.props.maxNeighbours - currentNeighbours.length)) {
-        this.setState({selectedItem: {type: 'status-item', item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${result.count + currentNeighbours.length} neighbours due to browser config maxNeighbours.`}})
+    this.props.getNeighbours(node.id, currentNeighbours).then(
+      result => {
+        let nodes = result.nodes
+        if (
+          result.count >
+          this.props.maxNeighbours - currentNeighbours.length
+        ) {
+          this.setState({
+            selectedItem: {
+              type: 'status-item',
+              item: `Rendering was limited to ${this.props
+                .maxNeighbours} of the node's total ${result.count +
+                currentNeighbours.length} neighbours due to browser config maxNeighbours.`
+            }
+          })
+        }
+        callback(null, { nodes: nodes, relationships: result.relationships })
+      },
+      () => {
+        callback(null, { nodes: [], relationships: [] })
       }
-      callback(null, {nodes: nodes, relationships: result.relationships})
-    }, () => {
-      callback(null, {nodes: [], relationships: []})
-    })
+    )
   }
 
   onItemMouseOver (item) {
-    this.setState({hoveredItem: item})
+    this.setState({ hoveredItem: item })
   }
 
   onItemSelect (item) {
-    this.setState({selectedItem: item})
+    this.setState({ selectedItem: item })
   }
 
   onGraphModelChange (stats) {
-    this.setState({stats: stats})
+    this.setState({ stats: stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
   onSelectedLabel (label, propertyKeys) {
-    this.setState({selectedItem: {type: 'legend-item', item: {selectedLabel: {label: label, propertyKeys: propertyKeys}, selectedRelType: null}}})
+    this.setState({
+      selectedItem: {
+        type: 'legend-item',
+        item: {
+          selectedLabel: { label: label, propertyKeys: propertyKeys },
+          selectedRelType: null
+        }
+      }
+    })
   }
 
   onSelectedRelType (relType, propertyKeys) {
-    this.setState({selectedItem: {type: 'legend-item', item: {selectedLabel: null, selectedRelType: {relType: relType, propertyKeys: propertyKeys}}}})
+    this.setState({
+      selectedItem: {
+        type: 'legend-item',
+        item: {
+          selectedLabel: null,
+          selectedRelType: { relType: relType, propertyKeys: propertyKeys }
+        }
+      }
+    })
   }
 
   componentWillReceiveProps (props) {
     if (!deepEquals(props.graphStyleData, this.props.graphStyleData)) {
       if (props.graphStyleData) {
         this.state.graphStyle.loadRules(props.graphStyleData)
-        this.setState({graphStyle: this.state.graphStyle})
+        this.setState({ graphStyle: this.state.graphStyle })
       } else {
         this.state.graphStyle.resetToDefault()
         this.setState(
-          {graphStyle: this.state.graphStyle, freezeLegend: true},
+          { graphStyle: this.state.graphStyle, freezeLegend: true },
           () => {
-            this.setState({freezeLegend: false})
+            this.setState({ freezeLegend: false })
             this.props.updateStyle(this.state.graphStyle.toSheet())
           }
         )
@@ -116,16 +157,19 @@ export class ExplorerComponent extends Component {
     }
 
     if (!deepEquals(props.nodes, this.props.nodes)) {
-      this.setState({nodes: props.nodes})
+      this.setState({ nodes: props.nodes })
     }
 
     if (!deepEquals(props.relationships, this.props.relationships)) {
-      this.setState({relationships: props.relationships})
+      this.setState({ relationships: props.relationships })
     }
   }
 
   onInspectorExpandToggled (contracted, inspectorHeight) {
-    this.setState({ inspectorContracted: contracted, forcePaddingBottom: inspectorHeight })
+    this.setState({
+      inspectorContracted: contracted,
+      forcePaddingBottom: inspectorHeight
+    })
   }
 
   render () {
@@ -134,14 +178,39 @@ export class ExplorerComponent extends Component {
     // and also doing this in a different order from the graph. This leads to different default colors being asigned to different labels.
     var legend
     if (this.state.freezeLegend) {
-      legend = <LegendComponent stats={this.state.stats} graphStyle={neoGraphStyle()} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
+      legend = (
+        <LegendComponent
+          stats={this.state.stats}
+          graphStyle={neoGraphStyle()}
+          onSelectedLabel={this.onSelectedLabel.bind(this)}
+          onSelectedRelType={this.onSelectedRelType.bind(this)}
+        />
+      )
     } else {
-      legend = <LegendComponent stats={this.state.stats} graphStyle={this.state.graphStyle} onSelectedLabel={this.onSelectedLabel.bind(this)} onSelectedRelType={this.onSelectedRelType.bind(this)} />
+      legend = (
+        <LegendComponent
+          stats={this.state.stats}
+          graphStyle={this.state.graphStyle}
+          onSelectedLabel={this.onSelectedLabel.bind(this)}
+          onSelectedRelType={this.onSelectedRelType.bind(this)}
+        />
+      )
     }
-    const inspectingItemType = !this.state.inspectorContracted && ((this.state.hoveredItem && this.state.hoveredItem.type !== 'canvas') || (this.state.selectedItem && this.state.selectedItem.type !== 'canvas'))
+    const inspectingItemType =
+      !this.state.inspectorContracted &&
+      ((this.state.hoveredItem && this.state.hoveredItem.type !== 'canvas') ||
+        (this.state.selectedItem && this.state.selectedItem.type !== 'canvas'))
 
     return (
-      <StyledFullSizeContainer id='svg-vis' className={Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'} forcePaddingBottom={inspectingItemType ? this.state.forcePaddingBottom : null}>
+      <StyledFullSizeContainer
+        id='svg-vis'
+        className={
+          Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
+        }
+        forcePaddingBottom={
+          inspectingItemType ? this.state.forcePaddingBottom : null
+        }
+      >
         {legend}
         <GraphComponent
           fullscreen={this.props.fullscreen}
@@ -155,8 +224,15 @@ export class ExplorerComponent extends Component {
           onGraphModelChange={this.onGraphModelChange.bind(this)}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}
-          setGraph={this.props.setGraph} />
-        <InspectorComponent fullscreen={this.props.fullscreen} hoveredItem={this.state.hoveredItem} selectedItem={this.state.selectedItem} graphStyle={this.state.graphStyle} onExpandToggled={this.onInspectorExpandToggled.bind(this)} />
+          setGraph={this.props.setGraph}
+        />
+        <InspectorComponent
+          fullscreen={this.props.fullscreen}
+          hoveredItem={this.state.hoveredItem}
+          selectedItem={this.state.selectedItem}
+          graphStyle={this.state.graphStyle}
+          onExpandToggled={this.onInspectorExpandToggled.bind(this)}
+        />
       </StyledFullSizeContainer>
     )
   }

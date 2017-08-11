@@ -26,22 +26,30 @@ export const handleParamsCommand = (action, cmdchar, put, store) => {
   const parts = splitStringOnFirst(strippedCmd, ' ')
   const param = parts[1].trim()
   const p = new Promise((resolve, reject) => {
-    if (/^"?\{[^}]*\}"?$/.test(param)) { // JSON object string {"x": 2, "y":"string"}
+    if (/^"?\{[^}]*\}"?$/.test(param)) {
+      // JSON object string {"x": 2, "y":"string"}
       try {
         const res = jsonic(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes
         put(replace(res))
         return resolve({ result: res, type: 'params' })
       } catch (e) {
-        return reject(new Error('Could not parse input. Usage: `:params {"x":1,"y":"string"}`. ' + e))
+        return reject(
+          new Error(
+            'Could not parse input. Usage: `:params {"x":1,"y":"string"}`. ' + e
+          )
+        )
       }
-    } else { // Single param
+    } else {
+      // Single param
       try {
         const json = '{' + param + '}'
         const res = jsonic(json)
         put(update(res))
         return resolve({ result: res, type: 'param' })
       } catch (e) {
-        return reject(new Error('Could not parse input. Usage: `:param "x": 2`. ' + e))
+        return reject(
+          new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
+        )
       }
     }
   })

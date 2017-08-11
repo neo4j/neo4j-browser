@@ -32,9 +32,8 @@ describe('TableViews', () => {
       const bodyMessage = 'My message'
       const result = mount(TableView)
         .withProps({ setParentState: sps, result: {} })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ bodyMessage })
           wrapper.update()
           expect(wrapper.text()).toContain('My message')
@@ -51,9 +50,8 @@ describe('TableViews', () => {
       const data = [['z'], ['å']]
       const result = mount(TableView)
         .withProps({ setParentState: sps, result: {} })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ bodyMessage, columns, data })
           wrapper.update()
           expect(wrapper.text()).not.toContain('My message')
@@ -70,9 +68,8 @@ describe('TableViews', () => {
       const statusBarMessage = 'My message'
       const result = mount(TableStatusbar)
         .withProps({ result: {}, maxRows: 0 })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ statusBarMessage })
           wrapper.update()
           expect(wrapper.text()).toContain('My message')

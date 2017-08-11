@@ -24,7 +24,7 @@ export const NAME = 'history'
 export const ADD = 'history/ADD'
 
 // Selectors
-export const getHistory = (state) => state[NAME]
+export const getHistory = state => state[NAME]
 
 function addHistoryHelper (state, newState, maxHistory) {
   // If it's the same as the last entry, don't add it

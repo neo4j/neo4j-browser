@@ -20,10 +20,18 @@
 
 import { StyledSelect } from './styled'
 
-const RolesSelector = ({roles = [], onChange = null, selectedValue = undefined}) => {
+const RolesSelector = ({
+  roles = [],
+  onChange = null,
+  selectedValue = undefined
+}) => {
   if (roles.length > 0) {
     const options = roles.map((role, i) => {
-      return (<option key={i} value={role}>{role}</option>)
+      return (
+        <option key={i} value={role}>
+          {role}
+        </option>
+      )
     })
     return (
       <StyledSelect
@@ -35,6 +43,8 @@ const RolesSelector = ({roles = [], onChange = null, selectedValue = undefined})
         {options}
       </StyledSelect>
     )
-  } else { return null }
+  } else {
+    return null
+  }
 }
 export default RolesSelector

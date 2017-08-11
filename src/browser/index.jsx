@@ -23,7 +23,10 @@ import { createEpicMiddleware } from 'redux-observable'
 import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'preact-redux'
-import { createBus, createReduxMiddleware as createSuberReduxMiddleware } from 'suber'
+import {
+  createBus,
+  createReduxMiddleware as createSuberReduxMiddleware
+} from 'suber'
 import { BusProvider } from 'preact-suber'
 
 import reducers from 'shared/rootReducer'
@@ -56,7 +59,7 @@ const reducer = combineReducers({ ...reducers })
 
 const enhancer = compose(
   applyMiddleware(suberMiddleware, epicMiddleware, localStorageMiddleware),
-  window.devToolsExtension ? window.devToolsExtension() : (f) => f
+  window.devToolsExtension ? window.devToolsExtension() : f => f
 )
 
 const store = createStore(
@@ -70,7 +73,7 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
   // No loop-backs
   if (source === 'redux') return
   // Send to Redux with the channel as the action type
-  store.dispatch({...message, type: channel, ...origin})
+  store.dispatch({ ...message, type: channel, ...origin })
 })
 
 // Signal app upstart (for epics)
@@ -85,9 +88,9 @@ const renderApp = () => {
       <BusProvider bus={bus}>
         <App />
       </BusProvider>
-    </Provider>
-    , mountElement
-    , elem
+    </Provider>,
+    mountElement,
+    elem
   )
 }
 renderApp()

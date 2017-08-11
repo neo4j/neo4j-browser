@@ -42,31 +42,51 @@ export default class Carousel extends Component {
     return this.state.firstRender
   }
   next () {
-    this.setState({visibleSlide: this.state.visibleSlide + 1})
+    this.setState({ visibleSlide: this.state.visibleSlide + 1 })
   }
   prev () {
-    this.setState({visibleSlide: this.state.visibleSlide - 1})
+    this.setState({ visibleSlide: this.state.visibleSlide - 1 })
   }
   getSlide (slideNumber) {
     return this.slides[slideNumber]
   }
   goToSlide (slideNumber) {
-    this.setState({visibleSlide: slideNumber})
+    this.setState({ visibleSlide: slideNumber })
   }
   render () {
     return (
       <StyledCarousel data-test-id='carousel'>
         <StyledCarouselButtonContainer>
           <Render if={this.state.visibleSlide !== 0}>
-            <StyledCarouselLeft><CarouselButton data-test-id='previousSlide' onClick={this.prev.bind(this)}>{'‹'}</CarouselButton></StyledCarouselLeft>
+            <StyledCarouselLeft>
+              <CarouselButton
+                data-test-id='previousSlide'
+                onClick={this.prev.bind(this)}
+              >
+                {'‹'}
+              </CarouselButton>
+            </StyledCarouselLeft>
           </Render>
-          <Render if={this.state.visibleSlide !== (this.slides.length - 1)}>
-            <StyledCarouselRight><CarouselButton data-test-id='nextSlide' onClick={this.next.bind(this)}>{'›'}</CarouselButton></StyledCarouselRight>
+          <Render if={this.state.visibleSlide !== this.slides.length - 1}>
+            <StyledCarouselRight>
+              <CarouselButton
+                data-test-id='nextSlide'
+                onClick={this.next.bind(this)}
+              >
+                {'›'}
+              </CarouselButton>
+            </StyledCarouselRight>
           </Render>
         </StyledCarouselButtonContainer>
-        <SlideContainer>{this.getSlide(this.state.visibleSlide)}</SlideContainer>
         <SlideContainer>
-          <CarouselSlidePicker slides={this.slides} visibleSlide={this.state.visibleSlide} onClickEvent={(slideNumber) => this.goToSlide(slideNumber)} />
+          {this.getSlide(this.state.visibleSlide)}
+        </SlideContainer>
+        <SlideContainer>
+          <CarouselSlidePicker
+            slides={this.slides}
+            visibleSlide={this.state.visibleSlide}
+            onClickEvent={slideNumber => this.goToSlide(slideNumber)}
+          />
         </SlideContainer>
       </StyledCarousel>
     )

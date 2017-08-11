@@ -24,9 +24,9 @@ import reducer, { add, SET_MAX_FRAMES, initialState } from './streamDuck'
 describe('streamDuck', () => {
   test('limits the number of frames in the reducer', () => {
     // Given
-    const init = {...initialState, maxFrames: 1}
-    const action = add({cmd: 'xxx', id: 1})
-    const action2 = add({cmd: 'yyy', id: 2})
+    const init = { ...initialState, maxFrames: 1 }
+    const action = add({ cmd: 'xxx', id: 1 })
+    const action2 = add({ cmd: 'yyy', id: 2 })
 
     // When
     const newState = reducer(init, action)
@@ -42,7 +42,12 @@ describe('streamDuck', () => {
   })
   test('cuts the number of frames when config is set', () => {
     // Given
-    const init = {...initialState, maxFrames: 2, allIds: [1, 2], byId: {'1': {id: 1}, '2': {id: 2}}}
+    const init = {
+      ...initialState,
+      maxFrames: 2,
+      allIds: [1, 2],
+      byId: { '1': { id: 1 }, '2': { id: 2 } }
+    }
     const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
 
     // When
@@ -55,8 +60,8 @@ describe('streamDuck', () => {
   })
   test('dont remove pinned frames when cutting frames', () => {
     // Given
-    const byId = {'1': {isPinned: 1}, '2': {isPinned: 1}}
-    const init = {...initialState, maxFrames: 2, allIds: [1, 2], byId}
+    const byId = { '1': { isPinned: 1 }, '2': { isPinned: 1 } }
+    const init = { ...initialState, maxFrames: 2, allIds: [1, 2], byId }
     const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
 
     // When

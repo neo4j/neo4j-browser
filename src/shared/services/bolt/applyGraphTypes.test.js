@@ -145,7 +145,11 @@ describe('applyGraphTypes', () => {
       prop6: { prop1: 1, prop2: 'test' },
       prop7: { prop1: { low: 3, high: 0 }, prop2: 'test' },
       prop8: { prop1: { low: 3, high: 0 }, prop2: { str: 'Some string' } },
-      prop9: { prop1: ['array str', 'me too'], prop2: [12, 32, 44], prop3: [ { p1: true, p2: 'tenant' }, { p1: null } ] },
+      prop9: {
+        prop1: ['array str', 'me too'],
+        prop2: [12, 32, 44],
+        prop3: [{ p1: true, p2: 'tenant' }, { p1: null }]
+      },
       prop10: undefined
     }
 
@@ -187,15 +191,18 @@ describe('applyGraphTypes', () => {
   })
 
   test('should apply node type to array of data', () => {
-    const rawNodes = [{
-      labels: ['Test'],
-      properties: [],
-      identity: { low: 5, high: 0 }
-    }, {
-      labels: ['Test2'],
-      properties: [],
-      identity: { low: 15, high: 0 }
-    }]
+    const rawNodes = [
+      {
+        labels: ['Test'],
+        properties: [],
+        identity: { low: 5, high: 0 }
+      },
+      {
+        labels: ['Test2'],
+        properties: [],
+        identity: { low: 15, high: 0 }
+      }
+    ]
 
     const typedNodes = applyGraphTypes(rawNodes)
     expect(typedNodes.length).toEqual(2)
@@ -220,19 +227,22 @@ describe('applyGraphTypes', () => {
   })
 
   test('should apply relationship type to array of data', () => {
-    const rawRelationships = [{
-      type: 'TestType',
-      properties: [],
-      identity: { low: 1, high: 0 },
-      start: { low: 5, high: 0 },
-      end: { low: 10, high: 0 }
-    }, {
-      type: 'TestType_2',
-      properties: [],
-      identity: { low: 2, high: 0 },
-      start: { low: 15, high: 0 },
-      end: { low: 20, high: 0 }
-    }]
+    const rawRelationships = [
+      {
+        type: 'TestType',
+        properties: [],
+        identity: { low: 1, high: 0 },
+        start: { low: 5, high: 0 },
+        end: { low: 10, high: 0 }
+      },
+      {
+        type: 'TestType_2',
+        properties: [],
+        identity: { low: 2, high: 0 },
+        start: { low: 15, high: 0 },
+        end: { low: 20, high: 0 }
+      }
+    ]
 
     const typedRelationships = applyGraphTypes(rawRelationships)
     expect(typedRelationships.length).toEqual(2)
@@ -277,7 +287,10 @@ describe('applyGraphTypes', () => {
       identity: { low: 10, high: 0 }
     }
 
-    const typedObjects = applyGraphTypes([{ num: rawNumber1, node: rawNode1 }, { num: rawNumber2, node: rawNode2 }])
+    const typedObjects = applyGraphTypes([
+      { num: rawNumber1, node: rawNode1 },
+      { num: rawNumber2, node: rawNode2 }
+    ])
     expect(typedObjects.length).toEqual(2)
     expect(typedObjects[0].node).toBeInstanceOf(neo4j.types.Node)
     expect(typedObjects[0].num).toBeInstanceOf(neo4j.Integer)
@@ -291,7 +304,9 @@ describe('applyGraphTypes', () => {
     expect(typedPathSegment).toBeInstanceOf(neo4j.types.PathSegment)
     expect(typedPathSegment.start).toBeInstanceOf(neo4j.types.Node)
     expect(typedPathSegment.end).toBeInstanceOf(neo4j.types.Node)
-    expect(typedPathSegment.relationship).toBeInstanceOf(neo4j.types.Relationship)
+    expect(typedPathSegment.relationship).toBeInstanceOf(
+      neo4j.types.Relationship
+    )
   })
 
   test('should apply to array of PathSegment type', () => {
@@ -304,20 +319,29 @@ describe('applyGraphTypes', () => {
     expect(typedPathSegments[0]).toBeInstanceOf(neo4j.types.PathSegment)
     expect(typedPathSegments[0].start).toBeInstanceOf(neo4j.types.Node)
     expect(typedPathSegments[0].end).toBeInstanceOf(neo4j.types.Node)
-    expect(typedPathSegments[0].relationship).toBeInstanceOf(neo4j.types.Relationship)
+    expect(typedPathSegments[0].relationship).toBeInstanceOf(
+      neo4j.types.Relationship
+    )
 
     expect(typedPathSegments[1]).toBeInstanceOf(neo4j.types.PathSegment)
     expect(typedPathSegments[1].start).toBeInstanceOf(neo4j.types.Node)
     expect(typedPathSegments[1].end).toBeInstanceOf(neo4j.types.Node)
-    expect(typedPathSegments[1].relationship).toBeInstanceOf(neo4j.types.Relationship)
+    expect(typedPathSegments[1].relationship).toBeInstanceOf(
+      neo4j.types.Relationship
+    )
   })
 
   test('should apply Path type', () => {
-    const typedPath = applyGraphTypes(getAPath([{ start: 5, end: 10, relationship: 1 }, {
-      start: 10,
-      end: 15,
-      relationship: 2
-    }]))
+    const typedPath = applyGraphTypes(
+      getAPath([
+        { start: 5, end: 10, relationship: 1 },
+        {
+          start: 10,
+          end: 15,
+          relationship: 2
+        }
+      ])
+    )
     expect(typedPath).toBeTruthy()
     expect(typedPath).toBeInstanceOf(neo4j.types.Path)
     expect(typedPath.start).toBeInstanceOf(neo4j.types.Node)
@@ -335,7 +359,10 @@ describe('applyGraphTypes', () => {
       identity: { low: 5, high: 0 }
     }
     const rawNum = { low: 100, high: 0 }
-    const rawPath = getAPath([{ start: 5, end: 10, relationship: 1 }, { start: 10, end: 15, relationship: 2 }])
+    const rawPath = getAPath([
+      { start: 5, end: 10, relationship: 1 },
+      { start: 10, end: 15, relationship: 2 }
+    ])
     const rawRelationship = {
       type: 'TestType',
       properties: [],
@@ -344,15 +371,24 @@ describe('applyGraphTypes', () => {
       end: { low: 10, high: 0 }
     }
 
-    const typedObject = applyGraphTypes({ rawNum, rawNode, rawRelationship, rawPath })
+    const typedObject = applyGraphTypes({
+      rawNum,
+      rawNode,
+      rawRelationship,
+      rawPath
+    })
     expect(typedObject).toBeTruthy()
     expect(typedObject.rawNum).toBeInstanceOf(neo4j.Integer)
     expect(typedObject.rawNode).toBeInstanceOf(neo4j.types.Node)
     expect(typedObject.rawRelationship).toBeInstanceOf(neo4j.types.Relationship)
     expect(typedObject.rawPath).toBeInstanceOf(neo4j.types.Path)
     expect(typedObject.rawPath.segments.length).toEqual(2)
-    expect(typedObject.rawPath.segments[0]).toBeInstanceOf(neo4j.types.PathSegment)
-    expect(typedObject.rawPath.segments[1]).toBeInstanceOf(neo4j.types.PathSegment)
+    expect(typedObject.rawPath.segments[0]).toBeInstanceOf(
+      neo4j.types.PathSegment
+    )
+    expect(typedObject.rawPath.segments[1]).toBeInstanceOf(
+      neo4j.types.PathSegment
+    )
   })
 })
 
@@ -380,7 +416,13 @@ const getAPathSegment = (startId, relId, endId) => {
   return { start: rawStartNode, end: rawEndNode, relationship: rawRelationship }
 }
 
-const getAPath = (segmentList) => {
-  const segments = segmentList.map(segment => getAPathSegment(segment.start, segment.relationship, segment.end))
-  return { start: segments[0].start, end: segments[segments.length - 1].end, segments }
+const getAPath = segmentList => {
+  const segments = segmentList.map(segment =>
+    getAPathSegment(segment.start, segment.relationship, segment.end)
+  )
+  return {
+    start: segments[0].start,
+    end: segments[segments.length - 1].end,
+    segments
+  }
 }

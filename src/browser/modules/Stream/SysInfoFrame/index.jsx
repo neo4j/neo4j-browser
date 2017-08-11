@@ -25,7 +25,11 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
 import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
 import FrameError from 'browser/modules/Stream/FrameError'
-import { SysInfoTableContainer, SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
+import {
+  SysInfoTableContainer,
+  SysInfoTable,
+  SysInfoTableEntry
+} from 'browser-components/Tables'
 import { toHumanReadableBytes } from 'services/utils'
 import { mapSysInfoRecords, getTableDataFromRecords } from './sysinfo'
 import Render from 'browser-components/Render'
@@ -40,79 +44,122 @@ export class SysInfoFrame extends Component {
   }
   clusterResponseHandler (res) {
     if (!res.success) {
-      this.setState({error: 'No causal cluster results'})
+      this.setState({ error: 'No causal cluster results' })
       return
     }
     const mappedResult = mapSysInfoRecords(res.result.records)
-    const mappedTableComponents = mappedResult.map((ccRecord) => {
-      const httpUrlForMember = ccRecord.addresses.filter((address) => {
-        return address.startsWith('http://') && !address.includes(window.location.href)
+    const mappedTableComponents = mappedResult.map(ccRecord => {
+      const httpUrlForMember = ccRecord.addresses.filter(address => {
+        return (
+          address.startsWith('http://') &&
+          !address.includes(window.location.href)
+        )
       })
       return [
         ccRecord.role,
         ccRecord.addresses.join(', '),
-        <Render if={httpUrlForMember.length !== 0}><a taget='_blank' href={httpUrlForMember[0]}>Open</a></Render>
+        <Render if={httpUrlForMember.length !== 0}>
+          <a taget='_blank' href={httpUrlForMember[0]}>
+            Open
+          </a>
+        </Render>
       ]
     })
-    this.setState({cc: [{ value: mappedTableComponents }]})
+    this.setState({ cc: [{ value: mappedTableComponents }] })
   }
   responseHandler (res) {
     if (!res.success) {
-      this.setState({error: 'No results'})
+      this.setState({ error: 'No results' })
       return
     }
-    const {ha, kernel, cache, tx, primitive} = getTableDataFromRecords(res.result.records)
+    const { ha, kernel, cache, tx, primitive } = getTableDataFromRecords(
+      res.result.records
+    )
 
     if (ha) {
-      const instancesInCluster = ha.InstancesInCluster.map(({properties}) => {
-        return [properties.instanceId, properties.alive.toString(), properties.available.toString(), (properties.haRole === 'master') ? 'yes' : '-']
+      const instancesInCluster = ha.InstancesInCluster.map(({ properties }) => {
+        return [
+          properties.instanceId,
+          properties.alive.toString(),
+          properties.available.toString(),
+          properties.haRole === 'master' ? 'yes' : '-'
+        ]
       })
 
-      this.setState({ha: [
-        {label: 'InstanceId', value: ha.InstanceId},
-        {label: 'Role', value: ha.Role},
-        {label: 'Alive', value: ha.Alive.toString()},
-        {label: 'Available', value: ha.Available.toString()},
-        {label: 'Last Committed Tx Id', value: ha.LastCommittedTxId},
-        {label: 'Last Update Time', value: ha.LastUpdateTime}
-      ],
-        haInstances: [
-        { value: instancesInCluster }
-        ]})
+      this.setState({
+        ha: [
+          { label: 'InstanceId', value: ha.InstanceId },
+          { label: 'Role', value: ha.Role },
+          { label: 'Alive', value: ha.Alive.toString() },
+          { label: 'Available', value: ha.Available.toString() },
+          { label: 'Last Committed Tx Id', value: ha.LastCommittedTxId },
+          { label: 'Last Update Time', value: ha.LastUpdateTime }
+        ],
+        haInstances: [{ value: instancesInCluster }]
+      })
     }
 
-    this.setState({storeSizes: [
-      {label: 'Array Store', value: toHumanReadableBytes(kernel.ArrayStoreSize)},
-      {label: 'Logical Log', value: toHumanReadableBytes(kernel.LogicalLogSize)},
-      {label: 'Node Store', value: toHumanReadableBytes(kernel.NodeStoreSize)},
-      {label: 'Property Store', value: toHumanReadableBytes(kernel.PropertyStoreSize)},
-      {label: 'Relationship Store', value: toHumanReadableBytes(kernel.RelationshipStoreSize)},
-      {label: 'String Store', value: toHumanReadableBytes(kernel.StringStoreSize)},
-      {label: 'Total Store Size', value: toHumanReadableBytes(kernel.TotalStoreSize)}
-    ],
+    this.setState({
+      storeSizes: [
+        {
+          label: 'Array Store',
+          value: toHumanReadableBytes(kernel.ArrayStoreSize)
+        },
+        {
+          label: 'Logical Log',
+          value: toHumanReadableBytes(kernel.LogicalLogSize)
+        },
+        {
+          label: 'Node Store',
+          value: toHumanReadableBytes(kernel.NodeStoreSize)
+        },
+        {
+          label: 'Property Store',
+          value: toHumanReadableBytes(kernel.PropertyStoreSize)
+        },
+        {
+          label: 'Relationship Store',
+          value: toHumanReadableBytes(kernel.RelationshipStoreSize)
+        },
+        {
+          label: 'String Store',
+          value: toHumanReadableBytes(kernel.StringStoreSize)
+        },
+        {
+          label: 'Total Store Size',
+          value: toHumanReadableBytes(kernel.TotalStoreSize)
+        }
+      ],
       idAllocation: [
-      {label: 'Node ID', value: primitive.NumberOfNodeIdsInUse},
-      {label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse},
-      {label: 'Relationship ID', value: primitive.NumberOfRelationshipIdsInUse},
-      {label: 'Relationship Type ID', value: primitive.NumberOfRelationshipTypeIdsInUse}
+        { label: 'Node ID', value: primitive.NumberOfNodeIdsInUse },
+        { label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse },
+        {
+          label: 'Relationship ID',
+          value: primitive.NumberOfRelationshipIdsInUse
+        },
+        {
+          label: 'Relationship Type ID',
+          value: primitive.NumberOfRelationshipTypeIdsInUse
+        }
       ],
       pageCache: [
-      {label: 'Faults', value: cache.Faults},
-      {label: 'Evictions', value: cache.Evictions},
-      {label: 'File Mappings', value: cache.FileMappings},
-      {label: 'Bytes Read', value: cache.BytesRead},
-      {label: 'Flushes', value: cache.Flushes},
-      {label: 'Eviction Exceptions', value: cache.EvictionExceptions},
-      {label: 'File Unmappings', value: cache.FileUnmappings},
-      {label: 'Bytes Written', value: cache.BytesWritten}
+        { label: 'Faults', value: cache.Faults },
+        { label: 'Evictions', value: cache.Evictions },
+        { label: 'File Mappings', value: cache.FileMappings },
+        { label: 'Bytes Read', value: cache.BytesRead },
+        { label: 'Flushes', value: cache.Flushes },
+        { label: 'Eviction Exceptions', value: cache.EvictionExceptions },
+        { label: 'File Unmappings', value: cache.FileUnmappings },
+        { label: 'Bytes Written', value: cache.BytesWritten }
       ],
       transactions: [
-      {label: 'Last Tx Id', value: tx.LastCommittedTxId},
-      {label: 'Current', value: tx.NumberOfOpenTransactions},
-      {label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions},
-      {label: 'Opened', value: tx.NumberOfOpenedTransactions},
-      {label: 'Committed', value: tx.NumberOfCommittedTransactions}
-      ]})
+        { label: 'Last Tx Id', value: tx.LastCommittedTxId },
+        { label: 'Current', value: tx.NumberOfOpenTransactions },
+        { label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions },
+        { label: 'Opened', value: tx.NumberOfOpenedTransactions },
+        { label: 'Committed', value: tx.NumberOfCommittedTransactions }
+      ]
+    })
   }
   componentDidMount () {
     if (this.props.bus) {
@@ -136,7 +183,7 @@ export class SysInfoFrame extends Component {
   }
   buildTableData (data) {
     if (!data) return null
-    return data.map(({label, value}) => {
+    return data.map(({ label, value }) => {
       if (value instanceof Array) {
         return value.map(v => <SysInfoTableEntry values={v} />)
       }
@@ -171,7 +218,9 @@ export class SysInfoFrame extends Component {
         </Render>
         <Render if={this.state.haInstances}>
           <SysInfoTable header='Cluster' colspan='4'>
-            <SysInfoTableEntry headers={['Id', 'Alive', 'Available', 'Is Master']} />
+            <SysInfoTableEntry
+              headers={['Id', 'Alive', 'Available', 'Is Master']}
+            />
             {this.buildTableData(this.state.haInstances)}
           </SysInfoTable>
         </Render>
@@ -179,17 +228,14 @@ export class SysInfoFrame extends Component {
     )
 
     return (
-      <FrameTemplate
-        header={this.props.frame}
-        contents={content}
-      >
+      <FrameTemplate header={this.props.frame} contents={content}>
         <FrameError message={this.state.error} />
       </FrameTemplate>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     isACausalCluster: isACausalCluster(state)
   }

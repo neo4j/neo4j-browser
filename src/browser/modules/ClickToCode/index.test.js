@@ -29,9 +29,13 @@ describe('ClickToCode', () => {
   let MyComp
   let bus
   beforeEach(() => {
-    MyComp = ({onClick, children}) => {
+    MyComp = ({ onClick, children }) => {
       onClick()
-      return <code>{children}</code>
+      return (
+        <code>
+          {children}
+        </code>
+      )
     }
     bus = createBus()
   })
@@ -65,12 +69,16 @@ describe('ClickToCode', () => {
 
     // When
     bus.take(SET_CONTENT, myFn)
-    const component = render(<ClickToCode CodeComponent={MyComp} code={code} bus={bus}>yo</ClickToCode>)
+    const component = render(
+      <ClickToCode CodeComponent={MyComp} code={code} bus={bus}>
+        yo
+      </ClickToCode>
+    )
 
     // Then
     expect(component).toMatchSnapshot()
     expect(myFn).toHaveBeenCalledTimes(1)
-    expect(myFn).toHaveBeenCalledWith({message: code, type: SET_CONTENT})
+    expect(myFn).toHaveBeenCalledWith({ message: code, type: SET_CONTENT })
   })
   test('renders children as code if no code is provided', () => {
     // Given
@@ -80,26 +88,41 @@ describe('ClickToCode', () => {
 
     // When
     bus.take(SET_CONTENT, myFn)
-    const component = render(<ClickToCode CodeComponent={MyComp} bus={bus}>{hello}hi!</ClickToCode>)
+    const component = render(
+      <ClickToCode CodeComponent={MyComp} bus={bus}>
+        {hello}hi!
+      </ClickToCode>
+    )
 
     // Then
     expect(component).toMatchSnapshot()
     expect(myFn).toHaveBeenCalledTimes(1)
-    expect(myFn).toHaveBeenCalledWith({message: childrenString, type: SET_CONTENT})
+    expect(myFn).toHaveBeenCalledWith({
+      message: childrenString,
+      type: SET_CONTENT
+    })
   })
   test('renders all children', () => {
     // Given
     const myFn = jest.fn()
     const code = 'my code'
-    const children = <div><span>hello</span>hi!</div>
+    const children = (
+      <div>
+        <span>hello</span>hi!
+      </div>
+    )
 
     // When
     bus.take(SET_CONTENT, myFn)
-    const component = render(<ClickToCode CodeComponent={MyComp} code={code} bus={bus}>{children}</ClickToCode>)
+    const component = render(
+      <ClickToCode CodeComponent={MyComp} code={code} bus={bus}>
+        {children}
+      </ClickToCode>
+    )
 
     // Then
     expect(component).toMatchSnapshot()
     expect(myFn).toHaveBeenCalledTimes(1)
-    expect(myFn).toHaveBeenCalledWith({message: code, type: SET_CONTENT})
+    expect(myFn).toHaveBeenCalledWith({ message: code, type: SET_CONTENT })
   })
 })

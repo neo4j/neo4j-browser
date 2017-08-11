@@ -33,28 +33,40 @@ export const getDiscoveryEndpoint = () => {
 }
 
 export const getServerConfig = (includePrefixes = []) => {
-  return getJmxValues([['Configuration']])
-    .then((confs) => {
-      const conf = confs[0]
-      let filtered
-      if (conf) {
-        Object.keys(conf)
-          .filter((key) => includePrefixes.length < 1 || includePrefixes.some((pfx) => key.startsWith(pfx)))
-          .forEach((key) => (filtered = {...filtered, [key]: bolt.itemIntToNumber(conf[key].value)}))
-      }
-      return filtered || conf
-    })
+  return getJmxValues([['Configuration']]).then(confs => {
+    const conf = confs[0]
+    let filtered
+    if (conf) {
+      Object.keys(conf)
+        .filter(
+          key =>
+            includePrefixes.length < 1 ||
+            includePrefixes.some(pfx => key.startsWith(pfx))
+        )
+        .forEach(
+          key =>
+            (filtered = {
+              ...filtered,
+              [key]: bolt.itemIntToNumber(conf[key].value)
+            })
+        )
+    }
+    return filtered || conf
+  })
 }
 
 export const getJmxValues = (nameAttributePairs = []) => {
   if (!nameAttributePairs.length) return Promise.reject(new Error())
-  return bolt.directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
-    .then((res) => {
+  return bolt
+    .directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
+    .then(res => {
       let out = []
-      nameAttributePairs.forEach((pair) => {
+      nameAttributePairs.forEach(pair => {
         const [name, attribute = null] = pair
         if (!name) return out.push(null)
-        const part = res.records.filter((record) => record.get('name').match(new RegExp(name + '$')))
+        const part = res.records.filter(record =>
+          record.get('name').match(new RegExp(name + '$'))
+        )
         if (!part.length) return out.push(null)
         const attributes = part[0].get('attributes')
         if (!attribute) return out.push(attributes)
@@ -64,10 +76,13 @@ export const getJmxValues = (nameAttributePairs = []) => {
         out.push({ [key]: val })
       })
       return out
-    }).catch((e) => {
+    })
+    .catch(e => {
       return null
     })
 }
 
-export const isConfigValTruthy = (val) => [true, 'true', 'yes', 1, '1'].indexOf(val) > -1
-export const isConfigValFalsy = (val) => [false, 'false', 'no', 0, '0'].indexOf(val) > -1
+export const isConfigValTruthy = val =>
+  [true, 'true', 'yes', 1, '1'].indexOf(val) > -1
+export const isConfigValFalsy = val =>
+  [false, 'false', 'no', 0, '0'].indexOf(val) > -1

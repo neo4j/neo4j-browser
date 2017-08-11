@@ -18,10 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {mapNodes, mapRelationships, getGraphStats} from './mapper'
+import { mapNodes, mapRelationships, getGraphStats } from './mapper'
 
 export class GraphEventHandler {
-  constructor (graph, graphView, getNodeNeighbours, onItemMouseOver, onItemSelected, onGraphModelChange) {
+  constructor (
+    graph,
+    graphView,
+    getNodeNeighbours,
+    onItemMouseOver,
+    onItemSelected,
+    onGraphModelChange
+  ) {
     this.graph = graph
     this.graphView = graphView
     this.getNodeNeighbours = getNodeNeighbours
@@ -49,7 +56,13 @@ export class GraphEventHandler {
       this.selectedItem.selected = false
       this.selectedItem = null
     }
-    this.onItemSelected({type: 'canvas', item: {nodeCount: this.graph.nodes().length, relationshipCount: this.graph.relationships().length}})
+    this.onItemSelected({
+      type: 'canvas',
+      item: {
+        nodeCount: this.graph.nodes().length,
+        relationshipCount: this.graph.relationships().length
+      }
+    })
     this.graphView.update()
   }
 
@@ -65,7 +78,10 @@ export class GraphEventHandler {
     d.fixed = true
     if (!d.selected) {
       this.selectItem(d)
-      this.onItemSelected({type: 'node', item: {id: d.id, labels: d.labels, properties: d.propertyList}})
+      this.onItemSelected({
+        type: 'node',
+        item: { id: d.id, labels: d.labels, properties: d.propertyList }
+      })
     } else {
       this.deselectItem()
     }
@@ -80,7 +96,10 @@ export class GraphEventHandler {
     const graph = this.graph
     const graphView = this.graphView
     const graphModelChanged = this.graphModelChanged.bind(this)
-    this.getNodeNeighbours(d, this.graph.findNodeNeighbourIds(d.id), function (err, {nodes, relationships}) {
+    this.getNodeNeighbours(d, this.graph.findNodeNeighbourIds(d.id), function (
+      err,
+      { nodes, relationships }
+    ) {
       if (err) return
       graph.addNodes(mapNodes(nodes))
       graph.addRelationships(mapRelationships(relationships, graph))
@@ -91,20 +110,48 @@ export class GraphEventHandler {
 
   onNodeMouseOver (node) {
     if (!node.contextMenu) {
-      this.onItemMouseOver({type: 'node', item: {id: node.id, labels: node.labels, properties: node.propertyList}})
+      this.onItemMouseOver({
+        type: 'node',
+        item: {
+          id: node.id,
+          labels: node.labels,
+          properties: node.propertyList
+        }
+      })
     }
   }
   onMenuMouseOver (itemWithMenu) {
-    this.onItemMouseOver({type: 'context-menu-item', item: {label: itemWithMenu.contextMenu.label, content: itemWithMenu.contextMenu.menuContent, selection: itemWithMenu.contextMenu.menuSelection}})
+    this.onItemMouseOver({
+      type: 'context-menu-item',
+      item: {
+        label: itemWithMenu.contextMenu.label,
+        content: itemWithMenu.contextMenu.menuContent,
+        selection: itemWithMenu.contextMenu.menuSelection
+      }
+    })
   }
   onRelationshipMouseOver (relationship) {
-    this.onItemMouseOver({type: 'relationship', item: {id: relationship.id, type: relationship.type, properties: relationship.propertyList}})
+    this.onItemMouseOver({
+      type: 'relationship',
+      item: {
+        id: relationship.id,
+        type: relationship.type,
+        properties: relationship.propertyList
+      }
+    })
   }
 
   onRelationshipClicked (relationship) {
     if (!relationship.selected) {
       this.selectItem(relationship)
-      this.onItemSelected({type: 'relationship', item: {id: relationship.id, type: relationship.type, properties: relationship.propertyList}})
+      this.onItemSelected({
+        type: 'relationship',
+        item: {
+          id: relationship.id,
+          type: relationship.type,
+          properties: relationship.propertyList
+        }
+      })
     } else {
       this.deselectItem()
     }
@@ -115,23 +162,29 @@ export class GraphEventHandler {
   }
 
   onItemMouseOut (item) {
-    this.onItemMouseOver({type: 'canvas', item: {nodeCount: this.graph.nodes().length, relationshipCount: this.graph.relationships().length}})
+    this.onItemMouseOver({
+      type: 'canvas',
+      item: {
+        nodeCount: this.graph.nodes().length,
+        relationshipCount: this.graph.relationships().length
+      }
+    })
   }
 
   bindEventHandlers () {
     this.graphView
-     .on('nodeMouseOver', this.onNodeMouseOver.bind(this))
-     .on('nodeMouseOut', this.onItemMouseOut.bind(this))
-     .on('menuMouseOver', this.onMenuMouseOver.bind(this))
-     .on('menuMouseOut', this.onItemMouseOut.bind(this))
-     .on('relMouseOver', this.onRelationshipMouseOver.bind(this))
-     .on('relMouseOut', this.onItemMouseOut.bind(this))
-     .on('relationshipClicked', this.onRelationshipClicked.bind(this))
-     .on('canvasClicked', this.onCanvasClicked.bind(this))
-     .on('nodeClose', this.nodeClose.bind(this))
-     .on('nodeClicked', this.nodeClicked.bind(this))
-     .on('nodeDblClicked', this.nodeDblClicked.bind(this))
-     .on('nodeUnlock', this.nodeUnlock.bind(this))
+      .on('nodeMouseOver', this.onNodeMouseOver.bind(this))
+      .on('nodeMouseOut', this.onItemMouseOut.bind(this))
+      .on('menuMouseOver', this.onMenuMouseOver.bind(this))
+      .on('menuMouseOut', this.onItemMouseOut.bind(this))
+      .on('relMouseOver', this.onRelationshipMouseOver.bind(this))
+      .on('relMouseOut', this.onItemMouseOut.bind(this))
+      .on('relationshipClicked', this.onRelationshipClicked.bind(this))
+      .on('canvasClicked', this.onCanvasClicked.bind(this))
+      .on('nodeClose', this.nodeClose.bind(this))
+      .on('nodeClicked', this.nodeClicked.bind(this))
+      .on('nodeDblClicked', this.nodeDblClicked.bind(this))
+      .on('nodeUnlock', this.nodeUnlock.bind(this))
     this.onItemMouseOut()
   }
 }

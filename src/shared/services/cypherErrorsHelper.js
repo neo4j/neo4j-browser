@@ -1,2 +1,2 @@
-export const isUnknownProcedureError = ({code}) =>
+export const isUnknownProcedureError = ({ code }) =>
   code === 'Neo.ClientError.Procedure.ProcedureNotFound'

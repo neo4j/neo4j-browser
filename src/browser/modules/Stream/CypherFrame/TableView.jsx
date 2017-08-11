@@ -20,44 +20,79 @@
 
 import { Component } from 'preact'
 import { v4 } from 'uuid'
-import { StyledStatsBar, PaddedTableViewDiv, StyledBodyMessage } from '../styled'
+import {
+  StyledStatsBar,
+  PaddedTableViewDiv,
+  StyledBodyMessage
+} from '../styled'
 import Ellipsis from 'browser-components/Ellipsis'
-import {StyledTable, StyledBodyTr, StyledTh, StyledTd, StyledJsonPre} from 'browser-components/DataTables'
+import {
+  StyledTable,
+  StyledBodyTr,
+  StyledTh,
+  StyledTd,
+  StyledJsonPre
+} from 'browser-components/DataTables'
 import { deepEquals, shallowEquals, stringifyMod } from 'services/utils'
 import { v1 as neo4j } from 'neo4j-driver-alias'
-import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable, transformResultRecordsToResultArray } from './helpers'
+import {
+  getBodyAndStatusBarMessages,
+  getRecordsToDisplayInTable,
+  transformResultRecordsToResultArray
+} from './helpers'
 
-const intToString = (val) => {
+const intToString = val => {
   if (neo4j.isInt(val)) return val.toString()
 }
 
-const renderCell = (entry) => {
+const renderCell = entry => {
   if (Array.isArray(entry)) {
-    const children = entry.map((item, index) => <span>{renderCell(item)}{index === entry.length - 1 ? null : ', '}</span>)
-    return <span>[{children}]</span>
+    const children = entry.map((item, index) =>
+      <span>
+        {renderCell(item)}
+        {index === entry.length - 1 ? null : ', '}
+      </span>
+    )
+    return (
+      <span>
+        [{children}]
+      </span>
+    )
   } else if (typeof entry === 'object') {
     return renderObject(entry)
   } else {
     return stringifyMod(entry, intToString, true)
   }
 }
-const renderObject = (entry) => {
+const renderObject = entry => {
   if (neo4j.isInt(entry)) return entry.toString()
   if (Object.keys(entry).length === 0 && entry.constructor === Object) {
     return <em>(empty)</em>
   } else {
-    return <StyledJsonPre>{stringifyMod(entry, intToString, true)}</StyledJsonPre>
+    return (
+      <StyledJsonPre>
+        {stringifyMod(entry, intToString, true)}
+      </StyledJsonPre>
+    )
   }
 }
-const buildData = (entries) => {
-  return entries.map((entry) => {
+const buildData = entries => {
+  return entries.map(entry => {
     if (entry !== null) {
-      return <StyledTd className='table-properties' key={v4()}>{renderCell(entry)}</StyledTd>
+      return (
+        <StyledTd className='table-properties' key={v4()}>
+          {renderCell(entry)}
+        </StyledTd>
+      )
     }
-    return <StyledTd className='table-properties' key={v4()}>(empty)</StyledTd>
+    return (
+      <StyledTd className='table-properties' key={v4()}>
+        (empty)
+      </StyledTd>
+    )
   })
 }
-const buildRow = (item) => {
+const buildRow = item => {
   return (
     <StyledBodyTr className='table-row' key={v4()}>
       {buildData(item)}
@@ -78,7 +113,8 @@ export class TableView extends Component {
     this.makeState(this.props)
   }
   componentWillReceiveProps (props) {
-    if (this.props === undefined ||
+    if (
+      this.props === undefined ||
       this.props.result === undefined ||
       !deepEquals(props.result.records, this.props.result.records)
     ) {
@@ -93,15 +129,32 @@ export class TableView extends Component {
     const table = transformResultRecordsToResultArray(records) || []
     const data = table ? table.slice() : []
     const columns = data.length > 0 ? data.shift() : []
-    const { bodyMessage } = getBodyAndStatusBarMessages(props.result, props.maxRows)
+    const { bodyMessage } = getBodyAndStatusBarMessages(
+      props.result,
+      props.maxRows
+    )
     this.setState({ data, columns, bodyMessage })
   }
   render () {
-    if (!this.state.columns.length) return (<PaddedTableViewDiv><StyledBodyMessage>{this.state.bodyMessage}</StyledBodyMessage></PaddedTableViewDiv>)
-    const tableHeader = this.state.columns.map((column, i) => (
-      <StyledTh className='table-header' key={i}>{column}</StyledTh>)
+    if (!this.state.columns.length) {
+      return (
+        <PaddedTableViewDiv>
+          <StyledBodyMessage>
+            {this.state.bodyMessage}
+          </StyledBodyMessage>
+        </PaddedTableViewDiv>
+      )
+    }
+    const tableHeader = this.state.columns.map((column, i) =>
+      <StyledTh className='table-header' key={i}>
+        {column}
+      </StyledTh>
     )
-    const tableBody = <tbody>{this.state.data.map((item) => buildRow(item))}</tbody>
+    const tableBody = (
+      <tbody>
+        {this.state.data.map(item => buildRow(item))}
+      </tbody>
+    )
     return (
       <PaddedTableViewDiv>
         <StyledTable>
@@ -135,14 +188,17 @@ export class TableStatusbar extends Component {
     return false
   }
   makeState (props) {
-    const { statusBarMessage } = getBodyAndStatusBarMessages(props.result, props.maxRows)
+    const { statusBarMessage } = getBodyAndStatusBarMessages(
+      props.result,
+      props.maxRows
+    )
     if (statusBarMessage !== undefined) this.setState({ statusBarMessage })
   }
   render () {
     return (
       <StyledStatsBar>
         <Ellipsis>
-          {this.state.statusBarMessage }
+          {this.state.statusBarMessage}
         </Ellipsis>
       </StyledStatsBar>
     )

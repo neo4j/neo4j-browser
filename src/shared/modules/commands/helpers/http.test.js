@@ -22,7 +22,7 @@
 import { parseHttpVerbCommand } from './http'
 
 describe('HTTP verbs command', () => {
-  test('Fails with error on wrong command', (done) => {
+  test('Fails with error on wrong command', done => {
     // Given
     const input = 'xxx '
 
@@ -30,16 +30,17 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then((r) => {
-      expect(1).toBe(2)
-      done()
-    })
-      .catch((e) => {
+    p
+      .then(r => {
+        expect(1).toBe(2)
+        done()
+      })
+      .catch(e => {
         expect(e.message).toEqual('Unparseable http request')
         done()
       })
   })
-  test('Fails without url', (done) => {
+  test('Fails without url', done => {
     // Given
     const input = 'get '
 
@@ -47,16 +48,17 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then((r) => {
-      expect(1).toBe(2)
-      done()
-    })
-      .catch((e) => {
+    p
+      .then(r => {
+        expect(1).toBe(2)
+        done()
+      })
+      .catch(e => {
         expect(e.message).toEqual('Missing path')
         done()
       })
   })
-  test('Fails with non JSON data for post/put', (done) => {
+  test('Fails with non JSON data for post/put', done => {
     // Given
     const input = 'post /test my-data'
 
@@ -64,16 +66,19 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then((r) => {
-      expect(1).toBe(2)
-      done()
-    })
-      .catch((e) => {
-        expect(e.message).toEqual('Payload does not seem to be valid (JSON) data')
+    p
+      .then(r => {
+        expect(1).toBe(2)
+        done()
+      })
+      .catch(e => {
+        expect(e.message).toEqual(
+          'Payload does not seem to be valid (JSON) data'
+        )
         done()
       })
   })
-  test('Passes post/put without data', (done) => {
+  test('Passes post/put without data', done => {
     // Given
     const input = 'post /test'
 
@@ -81,16 +86,17 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then((r) => {
-      expect(r.method).toBe('post')
-      done()
-    })
-      .catch((e) => {
+    p
+      .then(r => {
+        expect(r.method).toBe('post')
+        done()
+      })
+      .catch(e => {
         expect(1).toEqual(2)
         done()
       })
   })
-  test('Passes post/put with JSON data', (done) => {
+  test('Passes post/put with JSON data', done => {
     // Given
     const data = '{"x": 1}'
     const input = 'post /test ' + data
@@ -99,12 +105,13 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then((r) => {
-      expect(r.method).toBe('post')
-      expect(r.data).toEqual(data)
-      done()
-    })
-      .catch((e) => {
+    p
+      .then(r => {
+        expect(r.method).toBe('post')
+        expect(r.data).toEqual(data)
+        done()
+      })
+      .catch(e => {
         expect(1).toEqual(2)
         done()
       })

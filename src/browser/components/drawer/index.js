@@ -18,6 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerToppedHeader, DrawerFooter} from './Drawer'
+import {
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerSubHeader,
+  DrawerSection,
+  DrawerSectionBody,
+  DrawerToppedHeader,
+  DrawerFooter
+} from './Drawer'
 
-export {Drawer, DrawerBody, DrawerHeader, DrawerSubHeader, DrawerSection, DrawerSectionBody, DrawerToppedHeader, DrawerFooter}
+export {
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerSubHeader,
+  DrawerSection,
+  DrawerSectionBody,
+  DrawerToppedHeader,
+  DrawerFooter
+}

@@ -24,63 +24,72 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { addClass, prependIcon } from 'shared/services/dom-helpers'
 
-const directives = [{
-  selector: '[exec-topic]',
-  valueExtractor: (elem) => {
-    return `:${elem.getAttribute('exec-topic')}`
+const directives = [
+  {
+    selector: '[exec-topic]',
+    valueExtractor: elem => {
+      return `:${elem.getAttribute('exec-topic')}`
+    },
+    autoExec: true
   },
-  autoExec: true
-}, {
-  selector: '[play-topic]',
-  valueExtractor: (elem) => {
-    return `:play ${elem.getAttribute('play-topic')}`
+  {
+    selector: '[play-topic]',
+    valueExtractor: elem => {
+      return `:play ${elem.getAttribute('play-topic')}`
+    },
+    autoExec: true
   },
-  autoExec: true
-}, {
-  selector: '[server-topic]',
-  valueExtractor: (elem) => {
-    return `:server ${elem.getAttribute('server-topic')}`
+  {
+    selector: '[server-topic]',
+    valueExtractor: elem => {
+      return `:server ${elem.getAttribute('server-topic')}`
+    },
+    autoExec: true
   },
-  autoExec: true
-}, {
-  selector: '[help-topic]',
-  valueExtractor: (elem) => {
-    return `:help ${elem.getAttribute('help-topic')}`
+  {
+    selector: '[help-topic]',
+    valueExtractor: elem => {
+      return `:help ${elem.getAttribute('help-topic')}`
+    },
+    autoExec: true
   },
-  autoExec: true
-}, {
-  selector: '.runnable pre',
-  valueExtractor: (elem) => {
-    return elem.textContent.trim()
+  {
+    selector: '.runnable pre',
+    valueExtractor: elem => {
+      return elem.textContent.trim()
+    },
+    autoExec: false
   },
-  autoExec: false
-}, {
-  selector: 'pre.runnable',
-  valueExtractor: (elem) => {
-    return elem.textContent.trim()
-  },
-  autoExec: false
-}]
+  {
+    selector: 'pre.runnable',
+    valueExtractor: elem => {
+      return elem.textContent.trim()
+    },
+    autoExec: false
+  }
+]
 
-const prependHelpIcon = (element) => {
+const prependHelpIcon = element => {
   prependIcon(element, 'fa fa-question-circle-o')
 }
 
-const prependPlayIcon = (element) => {
+const prependPlayIcon = element => {
   prependIcon(element, 'fa fa-play-circle-o')
 }
 
-const bindDynamicInputToDom = (element) => {
+const bindDynamicInputToDom = element => {
   const valueForElems = element.querySelectorAll('[value-for]')
   const valueKeyElems = element.querySelectorAll('[value-key]')
   if (valueForElems.length > 0 && valueKeyElems.length > 0) {
-    valueForElems.forEach((valueForElem) => {
+    valueForElems.forEach(valueForElem => {
       const newArray = [...valueKeyElems]
-      const filteredValueKeyElems = newArray.filter((e) => {
-        return e.getAttribute('value-key') === valueForElem.getAttribute('value-for')
+      const filteredValueKeyElems = newArray.filter(e => {
+        return (
+          e.getAttribute('value-key') === valueForElem.getAttribute('value-for')
+        )
       })
       if (filteredValueKeyElems.length > 0) {
-        valueForElem.onkeyup = (event) => {
+        valueForElem.onkeyup = event => {
           filteredValueKeyElems[0].innerText = event.target.value
         }
       }
@@ -88,19 +97,24 @@ const bindDynamicInputToDom = (element) => {
   }
 }
 
-export const Directives = (props) => {
-  const callback = (elem) => {
+export const Directives = props => {
+  const callback = elem => {
     if (elem) {
-      directives.forEach((directive) => {
+      directives.forEach(directive => {
         const elems = elem.querySelectorAll(directive.selector)
-        Array.from(elems).forEach((e) => {
+        Array.from(elems).forEach(e => {
           if (e.firstChild.nodeName !== 'I') {
-            directive.selector === '[help-topic]' ? prependHelpIcon(e) : prependPlayIcon(e)
+            directive.selector === '[help-topic]'
+              ? prependHelpIcon(e)
+              : prependPlayIcon(e)
           }
 
           e.onclick = () => {
             addClass(e, 'clicked')
-            return props.onItemClick(directive.valueExtractor(e), directive.autoExec)
+            return props.onItemClick(
+              directive.valueExtractor(e),
+              directive.autoExec
+            )
           }
         })
       })

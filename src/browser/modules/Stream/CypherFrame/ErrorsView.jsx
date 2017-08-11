@@ -21,7 +21,10 @@
 import { Component } from 'preact'
 import { withBus } from 'preact-suber'
 import Ellipsis from 'browser-components/Ellipsis'
-import { ExclamationTriangleIcon, PlayIcon } from 'browser-components/icons/Icons'
+import {
+  ExclamationTriangleIcon,
+  PlayIcon
+} from 'browser-components/icons/Icons'
 import { deepEquals } from 'services/utils'
 import Render from 'browser-components/Render'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
@@ -54,22 +57,29 @@ export class ErrorsView extends Component {
         <StyledHelpContent>
           <StyledHelpDescription>
             <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            <StyledH4>{error.code}</StyledH4>
+            <StyledH4>
+              {error.code}
+            </StyledH4>
           </StyledHelpDescription>
           <StyledDiv>
-            <StyledPreformattedArea>{error.message}</StyledPreformattedArea>
+            <StyledPreformattedArea>
+              {error.message}
+            </StyledPreformattedArea>
           </StyledDiv>
           <Render if={isUnknownProcedureError(error)}>
             <StyledLinkContainer>
-              <StyledLink onClick={() => onItemClick(bus)}><PlayIcon />&nbsp;List available procedures</StyledLink>
+              <StyledLink onClick={() => onItemClick(bus)}>
+                <PlayIcon />&nbsp;List available procedures
+              </StyledLink>
             </StyledLinkContainer>
           </Render>
         </StyledHelpContent>
-      </StyledHelpFrame>)
+      </StyledHelpFrame>
+    )
   }
 }
 
-const onItemClick = (bus) => {
+const onItemClick = bus => {
   const action = executeCommand(listAvailableProcedures)
   bus.send(action.type, action)
 }
@@ -83,10 +93,14 @@ export class ErrorsStatusbar extends Component {
   render () {
     const error = this.props.result
     if (!error || (!error.code && !error.message)) return null
-    const fullError = `${error.code}${(error.message ? ':' : '')} ${(error.message || '')}`
+    const fullError = `${error.code}${error.message
+      ? ':'
+      : ''} ${error.message || ''}`
     return (
       <Ellipsis>
-        <ErrorText title={fullError}><ExclamationTriangleIcon /> {fullError}</ErrorText>
+        <ErrorText title={fullError}>
+          <ExclamationTriangleIcon /> {fullError}
+        </ErrorText>
       </Ellipsis>
     )
   }

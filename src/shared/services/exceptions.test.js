@@ -18,7 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* global describe, test, expect, jest */
-import { createErrorObject, getErrorMessage, BoltConnectionError } from './exceptions'
+import {
+  createErrorObject,
+  getErrorMessage,
+  BoltConnectionError
+} from './exceptions'
 import * as messages from './exceptionMessages'
 
 describe('getErrorMessage', () => {

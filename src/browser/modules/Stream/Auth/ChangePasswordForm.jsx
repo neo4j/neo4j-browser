@@ -20,7 +20,7 @@
 
 import { Component } from 'preact'
 
-import {FormButton} from 'browser-components/buttons'
+import { FormButton } from 'browser-components/buttons'
 import {
   StyledConnectionForm,
   StyledConnectionTextInput,
@@ -61,8 +61,17 @@ export default class ChangePasswordForm extends Component {
     this.props.onChange(this.state.newPassword, this.state.newPassword2)
   }
   validateSame () {
-    if (this.state.newPassword && this.state.newPassword !== '' && this.state.newPassword !== this.state.newPassword2) {
-      return this.props.onChangePasswordClick({error: {code: 'Mismatch', message: 'The two entered passwords must be the same.'}})
+    if (
+      this.state.newPassword &&
+      this.state.newPassword !== '' &&
+      this.state.newPassword !== this.state.newPassword2
+    ) {
+      return this.props.onChangePasswordClick({
+        error: {
+          code: 'Mismatch',
+          message: 'The two entered passwords must be the same.'
+        }
+      })
     }
     this.props.onChangePasswordClick({ newPassword: this.state.newPassword })
   }
@@ -74,13 +83,31 @@ export default class ChangePasswordForm extends Component {
         {this.props.children}
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>New password</StyledConnectionLabel>
-          <StyledConnectionTextInput data-test-id='newPassword' innerRef={(el) => this.formKeyHandler.registerInput(el, 1 + inputTabOffset)} type='password' onChange={this.onNewPasswordChange.bind(this)} value={this.state.newPassword} />
+          <StyledConnectionTextInput
+            data-test-id='newPassword'
+            innerRef={el =>
+              this.formKeyHandler.registerInput(el, 1 + inputTabOffset)}
+            type='password'
+            onChange={this.onNewPasswordChange.bind(this)}
+            value={this.state.newPassword}
+          />
         </StyledConnectionFormEntry>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>Repeat new password</StyledConnectionLabel>
-          <StyledConnectionTextInput data-test-id='newPasswordConfirmation' innerRef={(el) => this.formKeyHandler.registerInput(el, 2 + inputTabOffset)} type='password' onChange={this.onNewPasswordChange2.bind(this)} value={this.state.newPassword2} />
+          <StyledConnectionTextInput
+            data-test-id='newPasswordConfirmation'
+            innerRef={el =>
+              this.formKeyHandler.registerInput(el, 2 + inputTabOffset)}
+            type='password'
+            onChange={this.onNewPasswordChange2.bind(this)}
+            value={this.state.newPassword2}
+          />
         </StyledConnectionFormEntry>
-        <FormButton data-test-id='changePassword' onClick={this.validateSame.bind(this)} label='Change password' />
+        <FormButton
+          data-test-id='changePassword'
+          onClick={this.validateSame.bind(this)}
+          label='Change password'
+        />
       </StyledConnectionForm>
     )
   }

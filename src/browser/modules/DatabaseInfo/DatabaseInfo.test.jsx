@@ -45,48 +45,72 @@ describe('DatabaseInfo', () => {
       expect(wrapper.find('.token-label').length).toBe(0)
     })
     test('should show labels when there are labels', () => {
-      const labels = [{val: 'Person'}, {val: 'Movie'}]
+      const labels = [{ val: 'Person' }, { val: 'Movie' }]
       const wrapper = mount(<DatabaseInfoComponent labels={labels} />)
       expect(wrapper.find('.token-label').length).toBe(3)
       expect(wrapper.find('.token-label').first().text()).toEqual('*')
     })
     test('should call on click callback with correct cypher * label is clicked', () => {
-      const labels = [{val: 'Person'}]
-      const wrapper = mount(<DatabaseInfoComponent labels={labels} onItemClick={onItemClick} />)
+      const labels = [{ val: 'Person' }]
+      const wrapper = mount(
+        <DatabaseInfoComponent labels={labels} onItemClick={onItemClick} />
+      )
       simulateEvent(wrapper.find('.token-label').first(), 'click')
       expect(onItemClick).toHaveBeenCalledWith('MATCH (n) RETURN n LIMIT 25')
     })
     test('should call on click callback with correct cypher when a non * label is clicked', () => {
-      const labels = [{val: 'Person'}]
-      const wrapper = mount(<DatabaseInfoComponent labels={labels} onItemClick={onItemClick} />)
+      const labels = [{ val: 'Person' }]
+      const wrapper = mount(
+        <DatabaseInfoComponent labels={labels} onItemClick={onItemClick} />
+      )
       simulateEvent(wrapper.find('.token-label').last(), 'click')
-      expect(onItemClick).toHaveBeenCalledWith('MATCH (n:Person) RETURN n LIMIT 25')
+      expect(onItemClick).toHaveBeenCalledWith(
+        'MATCH (n:Person) RETURN n LIMIT 25'
+      )
     })
   })
 
   describe('relationshipTypes', () => {
     test('should not show relationshipTypes when there are no relationshipTypes', () => {
       const relationshipTypes = []
-      const wrapper = mount(<DatabaseInfoComponent relationshipTypes={relationshipTypes} />)
+      const wrapper = mount(
+        <DatabaseInfoComponent relationshipTypes={relationshipTypes} />
+      )
       expect(wrapper.find('.token-relationship').length).toBe(0)
     })
     test('should show relationshipTypes when there are relationshipTypes', () => {
-      const relationshipTypes = [{val: 'lives'}, {val: 'knows'}]
-      const wrapper = mount(<DatabaseInfoComponent relationshipTypes={relationshipTypes} />)
+      const relationshipTypes = [{ val: 'lives' }, { val: 'knows' }]
+      const wrapper = mount(
+        <DatabaseInfoComponent relationshipTypes={relationshipTypes} />
+      )
       expect(wrapper.find('.token-relationship').length).toBe(3)
       expect(wrapper.find('.token-relationship').first().text()).toEqual('*')
     })
     test('should call on click callback with correct cypher when * relationship is clicked', () => {
-      const relationshipTypes = [{val: 'DIRECTED'}]
-      const wrapper = mount(<DatabaseInfoComponent relationshipTypes={relationshipTypes} onItemClick={onItemClick} />)
+      const relationshipTypes = [{ val: 'DIRECTED' }]
+      const wrapper = mount(
+        <DatabaseInfoComponent
+          relationshipTypes={relationshipTypes}
+          onItemClick={onItemClick}
+        />
+      )
       simulateEvent(wrapper.find('.token-relationship').first(), 'click')
-      expect(onItemClick).toHaveBeenCalledWith('MATCH p=()-->() RETURN p LIMIT 25')
+      expect(onItemClick).toHaveBeenCalledWith(
+        'MATCH p=()-->() RETURN p LIMIT 25'
+      )
     })
     test('should call on click callback with correct cypher when a non * relationship is clicked', () => {
-      const relationshipTypes = [{val: 'DIRECTED'}]
-      const wrapper = mount(<DatabaseInfoComponent relationshipTypes={relationshipTypes} onItemClick={onItemClick} />)
+      const relationshipTypes = [{ val: 'DIRECTED' }]
+      const wrapper = mount(
+        <DatabaseInfoComponent
+          relationshipTypes={relationshipTypes}
+          onItemClick={onItemClick}
+        />
+      )
       simulateEvent(wrapper.find('.token-relationship').last(), 'click')
-      expect(onItemClick).toHaveBeenCalledWith('MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 25')
+      expect(onItemClick).toHaveBeenCalledWith(
+        'MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 25'
+      )
     })
   })
 
@@ -97,16 +121,23 @@ describe('DatabaseInfo', () => {
       expect(wrapper.find('.token-property').length).toBe(0)
     })
     test('should show properties when there are properties', () => {
-      const properties = [{val: 'born'}, {val: 'name'}]
+      const properties = [{ val: 'born' }, { val: 'name' }]
       const wrapper = mount(<DatabaseInfoComponent properties={properties} />)
       expect(wrapper.find('.token-property').length).toBe(2)
       expect(wrapper.find('.token-property').first().text()).toEqual('born')
     })
     test('should call on click callback with correct cypher when property is clicked', () => {
-      const properties = [{val: 'born'}]
-      const wrapper = mount(<DatabaseInfoComponent properties={properties} onItemClick={onItemClick} />)
+      const properties = [{ val: 'born' }]
+      const wrapper = mount(
+        <DatabaseInfoComponent
+          properties={properties}
+          onItemClick={onItemClick}
+        />
+      )
       simulateEvent(wrapper.find('.token-property').first(), 'click')
-      expect(onItemClick).toHaveBeenCalledWith('MATCH (n) WHERE EXISTS(n.born) RETURN DISTINCT "node" as element, n.born AS born LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.born) RETURN DISTINCT "relationship" AS element, r.born AS born LIMIT 25')
+      expect(onItemClick).toHaveBeenCalledWith(
+        'MATCH (n) WHERE EXISTS(n.born) RETURN DISTINCT "node" as element, n.born AS born LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.born) RETURN DISTINCT "relationship" AS element, r.born AS born LIMIT 25'
+      )
     })
   })
 })

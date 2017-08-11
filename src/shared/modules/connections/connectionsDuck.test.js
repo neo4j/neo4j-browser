@@ -23,7 +23,11 @@ import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 import reducer, * as connections from './connectionsDuck'
-import { DONE as DISCOVERY_DONE, CONNECTION_ID, updateDiscoveryConnection } from 'shared/modules/discovery/discoveryDuck'
+import {
+  DONE as DISCOVERY_DONE,
+  CONNECTION_ID,
+  updateDiscoveryConnection
+} from 'shared/modules/discovery/discoveryDuck'
 
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
@@ -44,19 +48,21 @@ describe('connections reducer', () => {
     }
     const nextState = reducer(undefined, action)
     expect(nextState.allConnectionIds).toEqual(['x'])
-    expect(nextState.connectionsById).toEqual({'x': {
-      id: 'x',
-      name: 'bm'
-    }})
+    expect(nextState.connectionsById).toEqual({
+      x: {
+        id: 'x',
+        name: 'bm'
+      }
+    })
   })
 
   test('handles connections.SET_ACTIVE', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
-        '1': {id: 1, name: 'bm1'},
-        '2': {id: 2, name: 'bm2'},
-        '3': {id: 3, name: 'bm3'}
+        '1': { id: 1, name: 'bm1' },
+        '2': { id: 2, name: 'bm2' },
+        '3': { id: 3, name: 'bm3' }
       }
     }
     const action = {
@@ -71,9 +77,9 @@ describe('connections reducer', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
-        '1': {id: 1, name: 'bm1'},
-        '2': {id: 2, name: 'bm2'},
-        '3': {id: 3, name: 'bm3'}
+        '1': { id: 1, name: 'bm1' },
+        '2': { id: 2, name: 'bm2' },
+        '3': { id: 3, name: 'bm3' }
       }
     }
     const action = {
@@ -89,9 +95,9 @@ describe('connections reducer', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
-        '1': {id: 1, name: 'bm1'},
-        '2': {id: 2, name: 'bm2'},
-        '3': {id: 3, name: 'bm3'}
+        '1': { id: 1, name: 'bm1' },
+        '2': { id: 2, name: 'bm2' },
+        '3': { id: 3, name: 'bm3' }
       }
     }
     const action = {
@@ -105,7 +111,12 @@ describe('connections reducer', () => {
     }
     const nextState = reducer(initialState, action)
     expect(nextState.allConnectionIds).toEqual([1, 2, 3])
-    expect(nextState.connectionsById['1']).toEqual({id: 1, name: 'bm1', username: 'new user', password: 'different password'})
+    expect(nextState.connectionsById['1']).toEqual({
+      id: 1,
+      name: 'bm1',
+      username: 'new user',
+      password: 'different password'
+    })
   })
 
   test('handles connections.MERGE (add connection)', () => {
@@ -118,17 +129,22 @@ describe('connections reducer', () => {
     }
     const nextState = reducer(undefined, action)
     expect(nextState.allConnectionIds).toEqual(['x'])
-    expect(nextState.connectionsById).toEqual({'x': {
-      id: 'x',
-      name: 'bm'
-    }})
+    expect(nextState.connectionsById).toEqual({
+      x: {
+        id: 'x',
+        name: 'bm'
+      }
+    })
   })
 })
 
 describe('connectionsDucks Epics', () => {
   const bus = createBus()
   const epicMiddleware = createEpicMiddleware(connections.disconnectEpic)
-  const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
   let store
   beforeAll(() => {
     store = mockStore({
@@ -150,7 +166,7 @@ describe('connectionsDucks Epics', () => {
     store.clearActions()
     bus.reset()
   })
-  test('disconnectEpic', (done) => {
+  test('disconnectEpic', done => {
     // Given
     const id = 'xxx'
     const action = connections.disconnectAction(id)
@@ -159,7 +175,7 @@ describe('connectionsDucks Epics', () => {
     epicMiddleware.replaceEpic(connections.disconnectEpic)
     store.dispatch(connections.setActiveConnection(id)) // set an active connection
     store.clearActions()
-    bus.take(connections.SET_ACTIVE, (currentAction) => {
+    bus.take(connections.SET_ACTIVE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -178,7 +194,7 @@ describe('connectionsDucks Epics', () => {
     bolt.openConnection.mockReturnValueOnce(Promise.resolve())
 
     const p = new Promise((resolve, reject) => {
-      bus.take(connections.STARTUP_CONNECTION_FAILED, (currentAction) => {
+      bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
         // Then
         try {
           expect(store.getActions()).toEqual([
@@ -204,15 +220,12 @@ describe('connectionsDucks Epics', () => {
     // Return
     return p
   })
-  test('detectActiveConnectionChangeEpic', (done) => {
+  test('detectActiveConnectionChangeEpic', done => {
     // Given
     const action = connections.setActiveConnection(null)
-    bus.take(connections.DISCONNECTION_SUCCESS, (currentAction) => {
+    bus.take(connections.DISCONNECTION_SUCCESS, currentAction => {
       // Then
-      expect(store.getActions()).toEqual([
-        action,
-        currentAction
-      ])
+      expect(store.getActions()).toEqual([action, currentAction])
       expect(bolt.closeConnection).toHaveBeenCalledTimes(1)
       done()
     })
@@ -228,7 +241,10 @@ describe('connectionsDucks Epics', () => {
 describe('startupConnectEpic', () => {
   const bus = createBus()
   const epicMiddleware = createEpicMiddleware(connections.startupConnectEpic)
-  const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
   let store
   beforeAll(() => {
     bolt.openConnection.mockReset()
@@ -259,7 +275,7 @@ describe('startupConnectEpic', () => {
     bolt.openConnection.mockReturnValue(Promise.reject()) // eslint-disable-line
 
     const p = new Promise((resolve, reject) => {
-      bus.take(connections.STARTUP_CONNECTION_FAILED, (currentAction) => {
+      bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
         // Then
         const actions = store.getActions()
         try {
@@ -290,8 +306,13 @@ describe('startupConnectEpic', () => {
 describe('retainCredentialsSettingsEpic', () => {
   // Given
   const bus = createBus()
-  const epicMiddleware = createEpicMiddleware(connections.retainCredentialsSettingsEpic)
-  const myMockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+  const epicMiddleware = createEpicMiddleware(
+    connections.retainCredentialsSettingsEpic
+  )
+  const myMockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
   let store
   beforeAll(() => {
     bus.reset()
@@ -299,7 +320,7 @@ describe('retainCredentialsSettingsEpic', () => {
       connections: {
         activeConnection: 'xxx',
         connectionsById: {
-          xxx: {id: 'xxx', username: 'usr', password: 'pw'}
+          xxx: { id: 'xxx', username: 'usr', password: 'pw' }
         },
         allConnectionIds: ['xxx']
       }
@@ -309,10 +330,10 @@ describe('retainCredentialsSettingsEpic', () => {
     store.clearActions()
     bus.reset()
   })
-  test('Dispatches an action to remove credentials from localstorage', (done) => {
+  test('Dispatches an action to remove credentials from localstorage', done => {
     // Given
     const action = connections.setRetainCredentials(false)
-    bus.take('NOOP', (currentAction) => {
+    bus.take('NOOP', currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,

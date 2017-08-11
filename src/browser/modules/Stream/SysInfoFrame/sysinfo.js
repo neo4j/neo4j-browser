@@ -19,22 +19,34 @@
  */
 
 import bolt from 'services/bolt/bolt'
-import { itemIntToString, extractFromNeoObjects } from 'services/bolt/boltMappings'
+import {
+  itemIntToString,
+  extractFromNeoObjects
+} from 'services/bolt/boltMappings'
 
-export const getTableDataFromRecords = (records) => {
+export const getTableDataFromRecords = records => {
   const mappedJMXresults = mappedJMXresult(records)
   const jmxQueryPrefix = mappedJMXresults[0].name.split(',')[0]
-  const result = Object.assign({}, ...mappedJMXresults.map((item) => {
-    return { [item.name]: item }
-  }))
-  const cache = flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`]) || {}
-  const primitive = flattenAttributes(result[`${jmxQueryPrefix},name=Primitive count`])
-  const tx = flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) || {}
-  const kernel = Object.assign({},
+  const result = Object.assign(
+    {},
+    ...mappedJMXresults.map(item => {
+      return { [item.name]: item }
+    })
+  )
+  const cache =
+    flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`]) || {}
+  const primitive = flattenAttributes(
+    result[`${jmxQueryPrefix},name=Primitive count`]
+  )
+  const tx =
+    flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) || {}
+  const kernel = Object.assign(
+    {},
     flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`]),
     flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`]),
-    flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`]))
-  const ha = (result[`${jmxQueryPrefix},name=High Availability`])
+    flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`])
+  )
+  const ha = result[`${jmxQueryPrefix},name=High Availability`]
     ? flattenAttributes(result[`${jmxQueryPrefix},name=High Availability`])
     : null
 
@@ -47,13 +59,13 @@ export const getTableDataFromRecords = (records) => {
   }
 }
 
-const mappedJMXresult = (records) => {
-  return records.map((record) => {
+const mappedJMXresult = records => {
+  return records.map(record => {
     const origAttributes = record.get('attributes')
     return {
       name: record.get('name'),
       description: record.get('description'),
-      attributes: Object.keys(record.get('attributes')).map((attributeName) => {
+      attributes: Object.keys(record.get('attributes')).map(attributeName => {
         return {
           name: attributeName,
           description: origAttributes[attributeName].description,
@@ -64,8 +76,8 @@ const mappedJMXresult = (records) => {
   })
 }
 
-export const mapSysInfoRecords = (records) => {
-  return records.map((record) => {
+export const mapSysInfoRecords = records => {
+  return records.map(record => {
     return {
       id: record.get('id'),
       addresses: record.get('addresses'),
@@ -75,9 +87,18 @@ export const mapSysInfoRecords = (records) => {
   })
 }
 
-export const flattenAttributes = (data) => {
+export const flattenAttributes = data => {
   if (data && data.attributes) {
-    return Object.assign({}, ...data.attributes.map(({name, value}) => ({ [name]: itemIntToString(value, {intChecker: bolt.neo4j.isInt, intConverter: (val) => val.toString(), objectConverter: extractFromNeoObjects}) })))
+    return Object.assign(
+      {},
+      ...data.attributes.map(({ name, value }) => ({
+        [name]: itemIntToString(value, {
+          intChecker: bolt.neo4j.isInt,
+          intConverter: val => val.toString(),
+          objectConverter: extractFromNeoObjects
+        })
+      }))
+    )
   } else {
     return null
   }

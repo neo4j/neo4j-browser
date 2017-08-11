@@ -30,8 +30,8 @@ describe('HistoryRow', () => {
 
     // When
     const result = mount(HistoryRow)
-      .withProps({handleEntryClick: myFn, entry: entry})
-      .then((wrapper) => {
+      .withProps({ handleEntryClick: myFn, entry: entry })
+      .then(wrapper => {
         wrapper.simulate('click')
         expect(wrapper.text()).toBe(entry)
         expect(myFn).toHaveBeenCalledWith(entry)

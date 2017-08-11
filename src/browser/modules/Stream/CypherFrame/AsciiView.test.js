@@ -32,9 +32,8 @@ describe('AsciiViews', () => {
       const bodyMessage = 'My message'
       const result = mount(AsciiView)
         .withProps({ setParentState: sps, result: {} })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ bodyMessage })
           wrapper.update()
           expect(wrapper.text()).toContain('My message')
@@ -50,9 +49,8 @@ describe('AsciiViews', () => {
       const serializedRows = [['x'], ['y']]
       const result = mount(AsciiView)
         .withProps({ setParentState: sps, result: {} })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ bodyMessage, serializedRows })
           wrapper.update()
           expect(wrapper.text()).not.toContain('My message')
@@ -70,9 +68,8 @@ describe('AsciiViews', () => {
       const statusBarMessage = 'My message'
       const result = mount(AsciiStatusbar)
         .withProps({ setParentState: sps, _asciiSerializedRows: undefined })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ statusBarMessage })
           wrapper.update()
           expect(wrapper.text()).toContain('My message')
@@ -88,10 +85,12 @@ describe('AsciiViews', () => {
       const statusBarMessage = 'My message'
       const serializedRows = [['x'], ['y']]
       const result = mount(AsciiStatusbar)
-        .withProps({ setParentState: sps, _asciiSerializedRows: serializedRows })
-
+        .withProps({
+          setParentState: sps,
+          _asciiSerializedRows: serializedRows
+        })
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           wrapper.setState({ statusBarMessage })
           wrapper.update()
           expect(wrapper.text()).not.toContain('My message')

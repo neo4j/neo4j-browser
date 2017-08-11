@@ -19,7 +19,7 @@
  */
 
 import styled from 'styled-components'
-import {H3} from 'browser-components/headers'
+import { H3 } from 'browser-components/headers'
 
 const Aside = styled.div`
   display: table-cell;
@@ -30,17 +30,13 @@ const Aside = styled.div`
   font-weight: 300;
   color: ${props => props.theme.asideText};
 `
-const PaddedDiv = styled.div`
-  padding: 30px 45px;
-`
+const PaddedDiv = styled.div`padding: 30px 45px;`
 const StyledConnectionBody = styled.div`
   font-size: 1.3em;
   line-height: 1.6em;
   padding-left: 50px;
 `
-const BodyContainer = styled.div`
-  display: table-cell;
-`
+const BodyContainer = styled.div`display: table-cell;`
 const Code = styled.code`
   white-space: nowrap;
   overflow: hidden;
@@ -48,12 +44,10 @@ const Code = styled.code`
   background-color: #f9f2f4;
   border-radius: 4px;
 `
-const P = styled.p`
-  margin: 20px 0;
-`
+const P = styled.p`margin: 20px 0;`
 
-export const EnterpriseOnlyFrame = (props) => {
-  const {command, ...rest} = props
+export const EnterpriseOnlyFrame = props => {
+  const { command, ...rest } = props
   return (
     <PaddedDiv {...rest}>
       <Aside>
@@ -62,8 +56,17 @@ export const EnterpriseOnlyFrame = (props) => {
       </Aside>
       <BodyContainer>
         <StyledConnectionBody>
-          <P>Unable to display <Code>{command}</Code> because the procedures required to run this frame are missing. These procedures are usually found in Neo4j Enterprise edition.</P>
-          <P>Find out more over at <a href='https://neo4j.com/editions/' target='_blank'>neo4j.com/editions</a></P>
+          <P>
+            Unable to display <Code>{command}</Code> because the procedures
+            required to run this frame are missing. These procedures are usually
+            found in Neo4j Enterprise edition.
+          </P>
+          <P>
+            Find out more over at{' '}
+            <a href='https://neo4j.com/editions/' target='_blank'>
+              neo4j.com/editions
+            </a>
+          </P>
         </StyledConnectionBody>
       </BodyContainer>
     </PaddedDiv>

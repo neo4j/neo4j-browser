@@ -30,7 +30,9 @@ export default class Display extends Component {
     }
   }
   componentDidMount () {
-    if (this.props.if === true) this.setState({ displayed: true, mounted: true })
+    if (this.props.if === true) {
+      this.setState({ displayed: true, mounted: true })
+    }
   }
   componentWillReceiveProps (props) {
     if (props.if && this.state.displayed === false) {
@@ -43,12 +45,26 @@ export default class Display extends Component {
   }
   shouldComponentUpdate (props, state) {
     if (props.if === false && this.props.if === false) return false // Never rerender non displayed components
-    return !(shallowEquals(props, this.props) && shallowEquals(state, this.state))
+    return !(
+      shallowEquals(props, this.props) && shallowEquals(state, this.state)
+    )
   }
   render () {
-    if (!this.state.displayed && !this.state.mounted && this.props.lazy) return null // Lazy load it
+    if (!this.state.displayed && !this.state.mounted && this.props.lazy) {
+      return null
+    } // Lazy load it
     const { style = {}, children = [] } = this.props
-    const modStyle = { ...style, width: 'inherit', display: (!this.state.displayed ? 'none' : (this.props.inline ? 'inline' : 'block')) }
-    return <div style={modStyle}>{children}</div>
+    const modStyle = {
+      ...style,
+      width: 'inherit',
+      display: !this.state.displayed
+        ? 'none'
+        : this.props.inline ? 'inline' : 'block'
+    }
+    return (
+      <div style={modStyle}>
+        {children}
+      </div>
+    )
   }
 }

@@ -24,8 +24,8 @@ import { shallow } from 'enzyme'
 import { DocumentItems as DocumentItemsComponent } from './DocumentItems'
 
 describe('DocumentItemsComponent', () => {
-  const link = {name: 'Link', command: 'url.com', type: 'link'}
-  const command = {name: 'Command', command: 'TEST'}
+  const link = { name: 'Link', command: 'url.com', type: 'link' }
+  const command = { name: 'Command', command: 'TEST' }
 
   test('should render href when link is provided', () => {
     const wrapper = shallow(<DocumentItemsComponent items={[link]} />)

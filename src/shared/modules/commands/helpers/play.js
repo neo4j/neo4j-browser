@@ -25,11 +25,13 @@ import remote from 'services/remote'
 export const fetchRemoteGuide = (url, whitelist = null) => {
   return new Promise((resolve, reject) => {
     if (!hostIsAllowed(url, whitelist)) {
-      return reject(new Error('Hostname is not allowed according to server whitelist'))
+      return reject(
+        new Error('Hostname is not allowed according to server whitelist')
+      )
     }
     resolve()
   }).then(() => {
-    return remote.get(url).then((r) => {
+    return remote.get(url).then(r => {
       return cleanHtml(r)
     })
   })

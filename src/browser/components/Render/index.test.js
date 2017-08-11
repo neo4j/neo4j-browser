@@ -31,10 +31,9 @@ describe('<Render>', () => {
     const val = false
     const children = [<span>Hello</span>]
     const result = mount(Render)
-      .withProps({if: val, children})
-
+      .withProps({ if: val, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('')
       })
 
@@ -46,10 +45,9 @@ describe('<Render>', () => {
     const val = true
     const children = [<span>Hello</span>]
     const result = mount(Render)
-      .withProps({if: val, children})
-
+      .withProps({ if: val, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('Hello')
       })
 

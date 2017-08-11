@@ -25,7 +25,7 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import UserDetails from './UserDetails'
 import DatabaseKernelInfo from './DatabaseKernelInfo'
-import {Drawer, DrawerBody, DrawerHeader} from 'browser-components/drawer'
+import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 
 export class DatabaseInfo extends Component {
   constructor (props) {
@@ -38,7 +38,7 @@ export class DatabaseInfo extends Component {
     }
   }
   onMoreClick (type) {
-    return (num) => {
+    return num => {
       this.setState({ [type + 'Max']: this.state[type + 'Max'] + num })
     }
   }
@@ -57,44 +57,53 @@ export class DatabaseInfo extends Component {
         <DrawerHeader>Database Information</DrawerHeader>
         <DrawerBody>
           <LabelItems
-            labels={labels.slice(0, this.state.labelsMax).map((l) => l.val)}
+            labels={labels.slice(0, this.state.labelsMax).map(l => l.val)}
             totalNumItems={labels.length}
             onItemClick={onItemClick}
             onMoreClick={this.onMoreClick.bind(this)('labels')}
             moreStep={this.state.moreStep}
           />
           <RelationshipItems
-            relationshipTypes={relationshipTypes.slice(0, this.state.relationshipsMax).map((l) => l.val)}
+            relationshipTypes={relationshipTypes
+              .slice(0, this.state.relationshipsMax)
+              .map(l => l.val)}
             onItemClick={onItemClick}
             totalNumItems={relationshipTypes.length}
             onMoreClick={this.onMoreClick.bind(this)('relationships')}
             moreStep={this.state.moreStep}
           />
           <PropertyItems
-            properties={properties.slice(0, this.state.propertiesMax).map((l) => l.val)}
+            properties={properties
+              .slice(0, this.state.propertiesMax)
+              .map(l => l.val)}
             onItemClick={onItemClick}
             totalNumItems={properties.length}
             onMoreClick={this.onMoreClick.bind(this)('properties')}
             moreStep={this.state.moreStep}
           />
           <UserDetails userDetails={userDetails} onItemClick={onItemClick} />
-          <DatabaseKernelInfo databaseKernelInfo={databaseKernelInfo} onItemClick={onItemClick} />
+          <DatabaseKernelInfo
+            databaseKernelInfo={databaseKernelInfo}
+            onItemClick={onItemClick}
+          />
         </DrawerBody>
       </Drawer>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return state.meta || {}
 }
 const mapDispatchToProps = (_, ownProps) => {
   return {
-    onItemClick: (cmd) => {
+    onItemClick: cmd => {
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     }
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(DatabaseInfo))
+export default withBus(
+  connect(mapStateToProps, mapDispatchToProps)(DatabaseInfo)
+)

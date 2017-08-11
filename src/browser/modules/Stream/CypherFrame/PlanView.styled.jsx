@@ -20,6 +20,4 @@
 
 import styled from 'styled-components'
 
-export const PlanSVG = styled.svg`
-  width: 100%;
-`
+export const PlanSVG = styled.svg`width: 100%;`

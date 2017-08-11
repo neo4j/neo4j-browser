@@ -24,22 +24,29 @@ export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
 export const REPLACE = 'settings/REPLACE'
 
-export const getSettings = (state) => state[NAME]
-export const getMaxHistory = (state) => state[NAME].maxHistory || initialState.maxHistory
-export const getInitCmd = (state) => state[NAME].initCmd || initialState.initCmd
-export const getTheme = (state) => state[NAME].theme || initialState.theme
-export const getUseBoltRouting = (state) => state[NAME].useBoltRouting || initialState.useBoltRouting
-export const getBrowserSyncConfig = (state) => {
+export const getSettings = state => state[NAME]
+export const getMaxHistory = state =>
+  state[NAME].maxHistory || initialState.maxHistory
+export const getInitCmd = state => state[NAME].initCmd || initialState.initCmd
+export const getTheme = state => state[NAME].theme || initialState.theme
+export const getUseBoltRouting = state =>
+  state[NAME].useBoltRouting || initialState.useBoltRouting
+export const getBrowserSyncConfig = state => {
   return getSettings(state).browserSyncDebugServer
-    ? {...browserSyncConfig, authWindowUrl: getSettings(state).browserSyncDebugServer}
+    ? {
+      ...browserSyncConfig,
+      authWindowUrl: getSettings(state).browserSyncDebugServer
+    }
     : browserSyncConfig
 }
-export const getMaxNeighbours = (state) => state[NAME].maxNeighbours || initialState.maxNeighbours
-export const getMaxRows = (state) => state[NAME].maxRows || initialState.maxRows
-export const getInitialNodeDisplay = (state) => state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
-export const getScrollToTop = (state) => state[NAME].scrollToTop
-export const shouldReportUdc = (state) => state[NAME].shouldReportUdc !== false
-export const shouldAutoComplete = (state) => state[NAME].autoComplete !== false
+export const getMaxNeighbours = state =>
+  state[NAME].maxNeighbours || initialState.maxNeighbours
+export const getMaxRows = state => state[NAME].maxRows || initialState.maxRows
+export const getInitialNodeDisplay = state =>
+  state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
+export const getScrollToTop = state => state[NAME].scrollToTop
+export const shouldReportUdc = state => state[NAME].shouldReportUdc !== false
+export const shouldAutoComplete = state => state[NAME].autoComplete !== false
 
 const browserSyncConfig = {
   authWindowUrl: 'https://auth.neo4j.com/indexNewBrowser.html',
@@ -49,10 +56,11 @@ const browserSyncConfig = {
     messagingSenderId: '352959348981'
   }
 }
-export const getUseNewVisualization = (state) => state[NAME].useNewVis
-export const getCmdChar = (state) => state[NAME].cmdchar || initialState.cmdchar
-export const shouldEditorAutocomplete = (state) => state[NAME].editorAutocomplete !== false
-export const shouldUseCypherThread = (state) => state[NAME].useCypherThread
+export const getUseNewVisualization = state => state[NAME].useNewVis
+export const getCmdChar = state => state[NAME].cmdchar || initialState.cmdchar
+export const shouldEditorAutocomplete = state =>
+  state[NAME].editorAutocomplete !== false
+export const shouldUseCypherThread = state => state[NAME].useCypherThread
 
 const initialState = {
   cmdchar: ':',
@@ -82,7 +90,7 @@ export default function settings (state = initialState, action) {
     case UPDATE:
       return Object.assign({}, state, action.state)
     case REPLACE:
-      return Object.assign({}, {...initialState}, action.state)
+      return Object.assign({}, { ...initialState }, action.state)
     case USER_CLEAR:
       return initialState
     default:
@@ -90,7 +98,7 @@ export default function settings (state = initialState, action) {
   }
 }
 
-export const updateBoltRouting = (useRouting) => {
+export const updateBoltRouting = useRouting => {
   return {
     type: UPDATE,
     state: {
@@ -99,14 +107,14 @@ export const updateBoltRouting = (useRouting) => {
   }
 }
 
-export const update = (settings) => {
+export const update = settings => {
   return {
     type: UPDATE,
     state: settings
   }
 }
 
-export const replace = (settings) => {
+export const replace = settings => {
   return {
     type: REPLACE,
     state: settings

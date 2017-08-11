@@ -51,7 +51,11 @@ const downloadWithDataURI = (filename, dataURI) => {
   }
   mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
   ia = new Uint8Array(byteString.length)
-  for (i = j = 0, ref = byteString.length; ref >= 0 ? j <= ref : j >= ref; i = ref >= 0 ? ++j : --j) {
+  for (
+    i = j = 0, ref = byteString.length;
+    ref >= 0 ? j <= ref : j >= ref;
+    i = ref >= 0 ? ++j : --j
+  ) {
     ia[i] = byteString.charCodeAt(i)
   }
   return download(filename, mimeString, ia)

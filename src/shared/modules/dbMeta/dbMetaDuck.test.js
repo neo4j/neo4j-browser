@@ -25,10 +25,10 @@ import { APP_START } from 'shared/modules/app/appDuck'
 describe('hydrating state', () => {
   test('should merge inital state and state on load', () => {
     // Given
-    const action = {type: APP_START}
+    const action = { type: APP_START }
 
     // When
-    const hydratedState = reducer({'foo': 'bar'}, action)
+    const hydratedState = reducer({ foo: 'bar' }, action)
 
     // Then
     expect(hydratedState).toMatchSnapshot()
@@ -58,7 +58,11 @@ describe('updating metadata', () => {
       a: 'functions',
       get: () => {
         return [
-          { name: 'ns.functionName', signature: 'functionSignature', description: 'functionDescription' }
+          {
+            name: 'ns.functionName',
+            signature: 'functionSignature',
+            description: 'functionDescription'
+          }
         ]
       }
     }
@@ -66,7 +70,11 @@ describe('updating metadata', () => {
       a: 'procedures',
       get: () => {
         return [
-          { name: 'ns.procedureName', signature: 'procedureSignature', description: 'procedureDescription' }
+          {
+            name: 'ns.procedureName',
+            signature: 'procedureSignature',
+            description: 'procedureDescription'
+          }
         ]
       }
     }
@@ -182,7 +190,7 @@ describe('updating metadata', () => {
     // Given
     const initState = {
       shouldKeep: false,
-      'server': {
+      server: {
         edition: 'enterprise',
         storeId: 'xxxx',
         version: '3.2.0-RC2'

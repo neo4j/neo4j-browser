@@ -46,8 +46,10 @@ describe('helpers', () => {
     ]
     // When
     // Then
-    items.forEach((item) => {
-      expect(getRecordsToDisplayInTable(item.request.result, maxRows).length).toEqual(item.expect)
+    items.forEach(item => {
+      expect(
+        getRecordsToDisplayInTable(item.request.result, maxRows).length
+      ).toEqual(item.expect)
     })
   })
   test('resultHasRows should report if there are rows or not in the result', () => {
@@ -62,7 +64,7 @@ describe('helpers', () => {
     ]
     // When
     // Then
-    items.forEach((item) => {
+    items.forEach(item => {
       expect(resultHasRows(item.request)).toEqual(item.expect)
     })
   })
@@ -74,14 +76,26 @@ describe('helpers', () => {
       { request: { result: true }, expect: false },
       { request: { result: { summary: true } }, expect: false },
       { request: { result: { summary: {} } }, expect: false },
-      { request: { result: { summary: { notifications: null } } }, expect: false },
-      { request: { result: { summary: { notifications: true } } }, expect: false },
-      { request: { result: { summary: { notifications: [] } } }, expect: false },
-      { request: { result: { summary: { notifications: ['yes!'] } } }, expect: true }
+      {
+        request: { result: { summary: { notifications: null } } },
+        expect: false
+      },
+      {
+        request: { result: { summary: { notifications: true } } },
+        expect: false
+      },
+      {
+        request: { result: { summary: { notifications: [] } } },
+        expect: false
+      },
+      {
+        request: { result: { summary: { notifications: ['yes!'] } } },
+        expect: true
+      }
     ]
     // When
     // Then
-    items.forEach((item) => {
+    items.forEach(item => {
       expect(resultHasWarnings(item.request)).toEqual(item.expect)
     })
   })
@@ -100,7 +114,7 @@ describe('helpers', () => {
     ]
     // When
     // Then
-    items.forEach((item) => {
+    items.forEach(item => {
       expect(resultHasPlan(item.request)).toEqual(item.expect)
     })
   })
@@ -114,7 +128,7 @@ describe('helpers', () => {
     ]
     // When
     // Then
-    items.forEach((item) => {
+    items.forEach(item => {
       expect(resultIsError(item.request)).toEqual(item.expect)
     })
   })
@@ -141,17 +155,17 @@ describe('helpers', () => {
     })
     test('should return false if no nodes are found', () => {
       // Given
-      const mappedGet = (map) => (key) => map[key]
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'city'],
-              get: mappedGet({name: 'Oskar', city: 'Borås'})
+              get: mappedGet({ name: 'Oskar', city: 'Borås' })
             },
             {
               keys: ['name', 'city'],
-              get: mappedGet({name: 'Stella', city: 'Borås'})
+              get: mappedGet({ name: 'Stella', city: 'Borås' })
             }
           ]
         }
@@ -165,18 +179,21 @@ describe('helpers', () => {
     })
     test('should return true if nodes are found, even nested', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], {prop2: 'prop2'})
-      const mappedGet = (map) => (key) => map[key]
+      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: { deeper: [1, node] }})
+              get: mappedGet({
+                name: 'Stella',
+                maybeNode: { deeper: [1, node] }
+              })
             }
           ]
         }
@@ -263,18 +280,21 @@ describe('helpers', () => {
     })
     test('should return the viz view if nodes are existent', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], {prop2: 'prop2'})
-      const mappedGet = (map) => (key) => map[key]
+      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: { deeper: [1, node] }})
+              get: mappedGet({
+                name: 'Stella',
+                maybeNode: { deeper: [1, node] }
+              })
             }
           ]
         }
@@ -290,17 +310,17 @@ describe('helpers', () => {
     })
     test('should return the table view if nodes are not existent', () => {
       // Given
-      const mappedGet = (map) => (key) => map[key]
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: false})
+              get: mappedGet({ name: 'Stella', maybeNode: false })
             }
           ]
         }
@@ -346,18 +366,21 @@ describe('helpers', () => {
     })
     test('should return the ascii if thats the last view', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], {prop2: 'prop2'})
-      const mappedGet = (map) => (key) => map[key]
+      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: { deeper: [1, node] }})
+              get: mappedGet({
+                name: 'Stella',
+                maybeNode: { deeper: [1, node] }
+              })
             }
           ]
         }
@@ -373,17 +396,17 @@ describe('helpers', () => {
     })
     test('should return the table if viz the last view but no viz elements exists', () => {
       // Given
-      const mappedGet = (map) => (key) => map[key]
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: false})
+              get: mappedGet({ name: 'Stella', maybeNode: false })
             }
           ]
         }
@@ -399,17 +422,17 @@ describe('helpers', () => {
     })
     test('should not change view if state.openView exists', () => {
       // Given
-      const mappedGet = (map) => (key) => map[key]
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: false})
+              get: mappedGet({ name: 'Stella', maybeNode: false })
             }
           ]
         }
@@ -425,18 +448,21 @@ describe('helpers', () => {
     })
     test('should return viz if the last view was plan but no plan exists and viz elements exists', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], {prop2: 'prop2'})
-      const mappedGet = (map) => (key) => map[key]
+      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: { deeper: [1, node] }})
+              get: mappedGet({
+                name: 'Stella',
+                maybeNode: { deeper: [1, node] }
+              })
             }
           ]
         }
@@ -452,17 +478,17 @@ describe('helpers', () => {
     })
     test('should return table if the last view was plan but no plan exists and no viz elements exists', () => {
       // Given
-      const mappedGet = (map) => (key) => map[key]
+      const mappedGet = map => key => map[key]
       const request = {
         result: {
           records: [
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Oskar', maybeNode: false})
+              get: mappedGet({ name: 'Oskar', maybeNode: false })
             },
             {
               keys: ['name', 'maybeNode'],
-              get: mappedGet({name: 'Stella', maybeNode: { deeper: [1, 2] }})
+              get: mappedGet({ name: 'Stella', maybeNode: { deeper: [1, 2] } })
             }
           ]
         }
@@ -490,16 +516,20 @@ describe('helpers', () => {
     })
     test('extractRecordsToResultArray handles regular records', () => {
       // Given
-      const start = new neo4j.types.Node(1, ['X'], {x: 1})
-      const end = new neo4j.types.Node(2, ['Y'], {y: new neo4j.Int(1)})
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
+      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
+      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.Int(1) })
+      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
       const segments = [new neo4j.types.PathSegment(start, rel, end)]
       const path = new neo4j.types.Path(start, end, segments)
 
       const records = [
         {
           keys: ['"x"', '"y"', '"n"'],
-          _fields: ['x', 'y', new neo4j.types.Node('1', ['Person'], {prop1: 'prop1'})]
+          _fields: [
+            'x',
+            'y',
+            new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })
+          ]
         },
         {
           keys: ['"x"', '"y"', '"n"'],
@@ -513,38 +543,46 @@ describe('helpers', () => {
       // Then
       expect(res).toEqual([
         ['"x"', '"y"', '"n"'],
-        ['x', 'y', new neo4j.types.Node('1', ['Person'], {prop1: 'prop1'})],
+        ['x', 'y', new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })],
         ['xx', 'yy', path]
       ])
     })
     test('flattenGraphItemsInResultArray extracts props from graph items', () => {
       // Given
-      const start = new neo4j.types.Node(1, ['X'], {x: 1})
-      const end = new neo4j.types.Node(2, ['Y'], {y: 1})
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
+      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
+      const end = new neo4j.types.Node(2, ['Y'], { y: 1 })
+      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
       const segments = [new neo4j.types.PathSegment(start, rel, end)]
       const path = new neo4j.types.Path(start, end, segments)
 
       const records = [
         {
           keys: ['"x"', '"y"', '"n"'],
-          _fields: ['x', 'y', new neo4j.types.Node('1', ['Person'], {prop1: 'prop1'})]
+          _fields: [
+            'x',
+            'y',
+            new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })
+          ]
         },
         {
           keys: ['"x"', '"y"', '"n"'],
-          _fields: ['xx', 'yy', {prop: path}]
+          _fields: ['xx', 'yy', { prop: path }]
         }
       ]
 
       // When
       const step1 = extractRecordsToResultArray(records)
-      const res = flattenGraphItemsInResultArray(neo4j.types, neo4j.isInt, step1)
+      const res = flattenGraphItemsInResultArray(
+        neo4j.types,
+        neo4j.isInt,
+        step1
+      )
 
       // Then
       expect(res).toEqual([
         ['"x"', '"y"', '"n"'],
-        ['x', 'y', {prop1: 'prop1'}],
-        ['xx', 'yy', {prop: [{x: 1}, {rel: 1}, {y: 1}]}]
+        ['x', 'y', { prop1: 'prop1' }],
+        ['xx', 'yy', { prop: [{ x: 1 }, { rel: 1 }, { y: 1 }] }]
       ])
     })
     test('stringifyResultArray uses stringifyMod to serialize', () => {
@@ -562,43 +600,63 @@ describe('helpers', () => {
 
       // When
       const step1 = extractRecordsToResultArray(records)
-      const step2 = flattenGraphItemsInResultArray(neo4j.types, neo4j.isInt, step1)
+      const step2 = flattenGraphItemsInResultArray(
+        neo4j.types,
+        neo4j.isInt,
+        step1
+      )
       const res = stringifyResultArray(neo4j.isInt, step2)
       // Then
       expect(res).toEqual([
-        [JSON.stringify('"neoInt"'), JSON.stringify('"int"'), JSON.stringify('"any"')],
+        [
+          JSON.stringify('"neoInt"'),
+          JSON.stringify('"int"'),
+          JSON.stringify('"any"')
+        ],
         ['882573709873217509', '100', '0.5'],
         ['300', '100', '"string"']
       ])
     })
     test('stringifyResultArray handles neo4j integers nested within graph items', () => {
       // Given
-      const start = new neo4j.types.Node(1, ['X'], {x: 1})
-      const end = new neo4j.types.Node(2, ['Y'], {y: new neo4j.Int(2)}) // <-- Neo4j integer
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', {rel: 1})
+      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
+      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.Int(2) }) // <-- Neo4j integer
+      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
       const segments = [new neo4j.types.PathSegment(start, rel, end)]
       const path = new neo4j.types.Path(start, end, segments)
 
       const records = [
         {
           keys: ['"x"', '"y"', '"n"'],
-          _fields: ['x', 'y', new neo4j.types.Node('1', ['Person'], {prop1: 'prop1'})]
+          _fields: [
+            'x',
+            'y',
+            new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })
+          ]
         },
         {
           keys: ['"x"', '"y"', '"n"'],
-          _fields: ['xx', 'yy', {prop: path}]
+          _fields: ['xx', 'yy', { prop: path }]
         }
       ]
 
       // When
       const step1 = extractRecordsToResultArray(records)
-      const step2 = flattenGraphItemsInResultArray(neo4j.types, neo4j.isInt, step1)
+      const step2 = flattenGraphItemsInResultArray(
+        neo4j.types,
+        neo4j.isInt,
+        step1
+      )
       const res = stringifyResultArray(neo4j.isInt, step2)
       // Then
       expect(res).toEqual([
         [JSON.stringify('"x"'), JSON.stringify('"y"'), JSON.stringify('"n"')],
-        ['"x"', '"y"', JSON.stringify({prop1: 'prop1'})],
-        ['"xx"', '"yy"', JSON.stringify({prop: [{x: 1}, {rel: 1}, {y: 2}]})] // <--
+        ['"x"', '"y"', JSON.stringify({ prop1: 'prop1' })],
+        [
+          '"xx"',
+          '"yy"',
+          JSON.stringify({ prop: [{ x: 1 }, { rel: 1 }, { y: 2 }] })
+        ] // <--
       ])
     })
   })

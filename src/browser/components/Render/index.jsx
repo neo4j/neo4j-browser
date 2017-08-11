@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Render = ({if: cond, children}) => {
+const Render = ({ if: cond, children }) => {
   return cond ? children[0] : null
 }
 export default Render

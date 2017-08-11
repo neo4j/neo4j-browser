@@ -43,6 +43,6 @@ export default function reducer (state = '', action) {
 export function toggle (id) {
   return {
     type: TOGGLE,
-    state: {drawer: id}
+    state: { drawer: id }
   }
 }

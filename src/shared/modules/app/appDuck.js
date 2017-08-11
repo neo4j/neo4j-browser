@@ -24,13 +24,13 @@ export const APP_START = `${NAME}/APP_START`
 export const USER_CLEAR = `${NAME}/USER_CLEAR`
 
 // Selectors
-export const getHostedUrl = (state) => (state[NAME] || {}).hostedUrl || null
+export const getHostedUrl = state => (state[NAME] || {}).hostedUrl || null
 
 // Reducer
 export default function reducer (state = { hostedUrl: null }, action) {
   switch (action.type) {
     case APP_START:
-      return {...state, hostedUrl: action.url}
+      return { ...state, hostedUrl: action.url }
     default:
       return state
   }

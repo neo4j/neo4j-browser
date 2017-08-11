@@ -44,15 +44,13 @@ export function toProcedure (procedure) {
   let returnItems = []
   const matches = signature.match(/\([^)]*\) :: \((.*)\)/i)
   if (matches) {
-    returnItems = matches[1]
-      .split(', ')
-      .map((returnItem) => {
-        const returnItemMatches = returnItem.match(/(.*) :: (.*)/)
-        return {
-          name: returnItemMatches[1],
-          signature: returnItemMatches[2]
-        }
-      })
+    returnItems = matches[1].split(', ').map(returnItem => {
+      const returnItemMatches = returnItem.match(/(.*) :: (.*)/)
+      return {
+        name: returnItemMatches[1],
+        signature: returnItemMatches[2]
+      }
+    })
   }
 
   return {

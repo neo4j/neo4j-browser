@@ -29,7 +29,7 @@ describe('user reducer current info', () => {
       info: {}
     }
     const nextState = reducer(undefined, action)
-    expect(dehydrate(nextState)).toEqual({info: null})
+    expect(dehydrate(nextState)).toEqual({ info: null })
   })
   test('should have no info', () => {
     const action = {
@@ -43,10 +43,10 @@ describe('user reducer current info', () => {
   test('should set info', () => {
     const action = {
       type: currentUser.UPDATE_CURRENT_USER,
-      info: {username: 'username', roles: ['king']}
+      info: { username: 'username', roles: ['king'] }
     }
-    const nextState = reducer({a: 'b'}, action)
-    expect(nextState.info).toEqual({username: 'username', roles: ['king']})
+    const nextState = reducer({ a: 'b' }, action)
+    expect(nextState.info).toEqual({ username: 'username', roles: ['king'] })
   })
 })
 
@@ -54,7 +54,7 @@ describe('User info actions', () => {
   test('should handle updating current user', () => {
     const username = 'username'
     const roles = 'roles'
-    const expectedUser = {username, roles}
+    const expectedUser = { username, roles }
     expect(currentUser.updateCurrentUser(username, roles)).toEqual({
       type: currentUser.UPDATE_CURRENT_USER,
       info: expectedUser

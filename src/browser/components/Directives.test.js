@@ -26,10 +26,10 @@ import { mount } from 'services/testUtils'
 describe('Directives', () => {
   test('should attach play topic directive when contents has a play-topic attribute', () => {
     const clickEvent = jest.fn()
-    const html = (<a play-topic='hello'>foobar</a>)
+    const html = <a play-topic='hello'>foobar</a>
     const result = mount(DirectivesComponent)
       .withProps({ content: html, onItemClick: clickEvent })
-      .then((wrapper) => {
+      .then(wrapper => {
         const actual = wrapper.find('a').get(0)
         actual.click()
         expect(clickEvent).toHaveBeenCalled()
@@ -39,10 +39,10 @@ describe('Directives', () => {
   })
   test('should attach help topic directive when contents has a help-topic attribute', () => {
     const clickEvent = jest.fn()
-    const html = (<a help-topic='hello'>foobar</a>)
+    const html = <a help-topic='hello'>foobar</a>
     const result = mount(DirectivesComponent)
       .withProps({ content: html, onItemClick: clickEvent })
-      .then((wrapper) => {
+      .then(wrapper => {
         const actual = wrapper.find('a').get(0)
         actual.click()
         expect(clickEvent).toHaveBeenCalled()
@@ -52,10 +52,10 @@ describe('Directives', () => {
   })
   test('should attach runnable directive when element has a tag of `pre.runnable`', () => {
     const clickEvent = jest.fn()
-    const html = (<pre className='runnable'>foobar</pre>)
+    const html = <pre className='runnable'>foobar</pre>
     const result = mount(DirectivesComponent)
       .withProps({ content: html, onItemClick: clickEvent })
-      .then((wrapper) => {
+      .then(wrapper => {
         const actual = wrapper.find('pre.runnable').get(0)
         actual.click()
         expect(clickEvent).toHaveBeenCalled()
@@ -65,10 +65,14 @@ describe('Directives', () => {
   })
   test('should attach runnable directive when element has a class name of `.runnable pre`', () => {
     const clickEvent = jest.fn()
-    const html = (<span className='runnable'><pre>foobar</pre></span>)
+    const html = (
+      <span className='runnable'>
+        <pre>foobar</pre>
+      </span>
+    )
     const result = mount(DirectivesComponent)
       .withProps({ content: html, onItemClick: clickEvent })
-      .then((wrapper) => {
+      .then(wrapper => {
         const actual = wrapper.find('.runnable pre').get(0)
         actual.click()
         expect(clickEvent).toHaveBeenCalled()
@@ -79,10 +83,10 @@ describe('Directives', () => {
 
   test('should not attach any directives when contents does not have any directive attributes', () => {
     const clickEvent = jest.fn()
-    const html = (<a>foobar</a>)
+    const html = <a>foobar</a>
     const result = mount(DirectivesComponent)
       .withProps({ content: html, onItemClick: clickEvent })
-      .then((wrapper) => {
+      .then(wrapper => {
         const actual = wrapper.find('a').get(0)
         actual.click()
         expect(clickEvent).not.toHaveBeenCalled()
@@ -94,13 +98,17 @@ describe('Directives', () => {
     const clickEvent = jest.fn()
     const html = (
       <div>
-        <a class='help' is help-topic='help'>foobar</a>
-        <a class='play' is play-topic='play'>foobar</a>
+        <a class='help' is help-topic='help'>
+          foobar
+        </a>
+        <a class='play' is play-topic='play'>
+          foobar
+        </a>
       </div>
     )
     const result = mount(DirectivesComponent)
       .withProps({ content: html, onItemClick: clickEvent })
-      .then((wrapper) => {
+      .then(wrapper => {
         const actualHelp = wrapper.find('a.help').get(0)
         const actualPlay = wrapper.find('a.play').get(0)
         actualPlay.click()

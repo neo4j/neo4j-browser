@@ -31,7 +31,7 @@ export const REQUEST_UPDATED = NAME + '/UPDATED'
 const initialState = {}
 
 export const getRequest = (state, id) => state[NAME][id]
-export const getRequests = (state) => state[NAME]
+export const getRequests = state => state[NAME]
 
 export default function reducer (state = initialState, action) {
   if (action.type === APP_START) {
@@ -40,11 +40,20 @@ export default function reducer (state = initialState, action) {
 
   switch (action.type) {
     case REQUEST_SENT:
-      return Object.assign({}, state, {[action.id]: {result: undefined, status: 'pending', type: action.requestType}})
+      return Object.assign({}, state, {
+        [action.id]: {
+          result: undefined,
+          status: 'pending',
+          type: action.requestType
+        }
+      })
     case REQUEST_CANCELED:
     case REQUEST_UPDATED:
-      const newRequest = Object.assign({}, state[action.id], {result: action.result, status: action.status})
-      return Object.assign({}, state, {[action.id]: newRequest})
+      const newRequest = Object.assign({}, state[action.id], {
+        result: action.result,
+        status: action.status
+      })
+      return Object.assign({}, state, { [action.id]: newRequest })
     default:
       return state
   }
@@ -67,14 +76,14 @@ export const update = (id, result, status) => {
   }
 }
 
-export const cancel = (id) => {
+export const cancel = id => {
   return {
     type: CANCEL_REQUEST,
     id
   }
 }
 
-const canceled = (id) => {
+const canceled = id => {
   return {
     type: REQUEST_CANCELED,
     status: 'canceled',
@@ -85,11 +94,10 @@ const canceled = (id) => {
 
 // Epics
 export const cancelRequestEpic = (action$, store) =>
-  action$.ofType(CANCEL_REQUEST)
-    .mergeMap((action) => {
-      return new Promise((resolve, reject) => {
-        bolt.cancelTransaction(action.id, () => {
-          resolve(canceled(action.id))
-        })
+  action$.ofType(CANCEL_REQUEST).mergeMap(action => {
+    return new Promise((resolve, reject) => {
+      bolt.cancelTransaction(action.id, () => {
+        resolve(canceled(action.id))
       })
     })
+  })

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- /* global describe, beforeEach, afterEach, test, expect */
+/* global describe, beforeEach, afterEach, test, expect */
 import asTitleString from './titleStringBuilder'
 
 describe('asTitleString', () => {
@@ -36,7 +36,7 @@ describe('asTitleString', () => {
     // Given
     const username = undefined
     const host = null
-    const connectionData = {username, host}
+    const connectionData = { username, host }
 
     // When
     const title = asTitleString(connectionData)
@@ -48,7 +48,7 @@ describe('asTitleString', () => {
     // Given
     const username = undefined
     const host = 'foo'
-    const connectionData = {username, host}
+    const connectionData = { username, host }
 
     // When
     const title = asTitleString(connectionData)
@@ -60,7 +60,7 @@ describe('asTitleString', () => {
     // Given
     const username = 'foo'
     const host = undefined
-    const connectionData = {username, host}
+    const connectionData = { username, host }
 
     // When
     const title = asTitleString(connectionData)
@@ -72,7 +72,7 @@ describe('asTitleString', () => {
     // Given
     const username = 'foo'
     const host = 'bar'
-    const connectionData = {username, host}
+    const connectionData = { username, host }
 
     // When
     const title = asTitleString(connectionData)

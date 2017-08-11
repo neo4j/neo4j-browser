@@ -21,8 +21,26 @@
 import { syncResourceFor } from 'services/browserSyncService'
 import { setItem } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { composeDocumentsToSync, favoritesToLoad, loadFavorites, syncFavorites, ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES } from 'shared/modules/favorites/favoritesDuck'
-import { REMOVE_FOLDER, ADD_FOLDER, UPDATE_FOLDERS, SYNC_FOLDERS, composeFoldersToSync, foldersToLoad, loadFolders, syncFolders } from 'shared/modules/favorites/foldersDuck'
+import {
+  composeDocumentsToSync,
+  favoritesToLoad,
+  loadFavorites,
+  syncFavorites,
+  ADD_FAVORITE,
+  REMOVE_FAVORITE,
+  SYNC_FAVORITES,
+  UPDATE_FAVORITES
+} from 'shared/modules/favorites/favoritesDuck'
+import {
+  REMOVE_FOLDER,
+  ADD_FOLDER,
+  UPDATE_FOLDERS,
+  SYNC_FOLDERS,
+  composeFoldersToSync,
+  foldersToLoad,
+  loadFolders,
+  syncFolders
+} from 'shared/modules/favorites/foldersDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
 
 export const NAME = 'sync'
@@ -125,7 +143,7 @@ export function optOutSync () {
   }
 }
 
-export const authorizedAs = (userData) => {
+export const authorizedAs = userData => {
   return {
     type: AUTHORIZED,
     userData
@@ -134,16 +152,18 @@ export const authorizedAs = (userData) => {
 
 // Epics
 export const syncItemsEpic = (action$, store) =>
-  action$.ofType(SYNC_ITEMS)
-    .do((action) => {
+  action$
+    .ofType(SYNC_ITEMS)
+    .do(action => {
       const userId = store.getState().sync.key
       syncResourceFor(userId, action.itemKey, action.items)
     })
     .mapTo({ type: 'NOOP' })
 
 export const clearSyncEpic = (action$, store) =>
-  action$.ofType(CLEAR_SYNC_AND_LOCAL)
-    .do((action) => {
+  action$
+    .ofType(CLEAR_SYNC_AND_LOCAL)
+    .do(action => {
       setItem('documents', null)
       setItem('folders', null)
       setItem('syncConsent', false)
@@ -151,8 +171,16 @@ export const clearSyncEpic = (action$, store) =>
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
 export const syncFavoritesEpic = (action$, store) =>
-  action$.filter((action) => [ADD_FAVORITE, REMOVE_FAVORITE, SYNC_FAVORITES, UPDATE_FAVORITES].includes(action.type))
-    .map((action) => {
+  action$
+    .filter(action =>
+      [
+        ADD_FAVORITE,
+        REMOVE_FAVORITE,
+        SYNC_FAVORITES,
+        UPDATE_FAVORITES
+      ].includes(action.type)
+    )
+    .map(action => {
       const syncValue = getSync(store.getState())
 
       if (syncValue && syncValue.syncObj) {
@@ -163,8 +191,9 @@ export const syncFavoritesEpic = (action$, store) =>
     })
 
 export const loadFavoritesFromSyncEpic = (action$, store) =>
-  action$.ofType(SET_SYNC)
-    .do((action) => {
+  action$
+    .ofType(SET_SYNC)
+    .do(action => {
       const favoritesStatus = favoritesToLoad(action, store)
 
       if (favoritesStatus.loadFavorites) {
@@ -178,8 +207,13 @@ export const loadFavoritesFromSyncEpic = (action$, store) =>
     .mapTo({ type: 'NOOP' })
 
 export const syncFoldersEpic = (action$, store) =>
-  action$.filter((action) => [ADD_FOLDER, REMOVE_FOLDER, SYNC_FOLDERS, UPDATE_FOLDERS].includes(action.type))
-    .map((action) => {
+  action$
+    .filter(action =>
+      [ADD_FOLDER, REMOVE_FOLDER, SYNC_FOLDERS, UPDATE_FOLDERS].includes(
+        action.type
+      )
+    )
+    .map(action => {
       const syncValue = getSync(store.getState())
 
       if (syncValue && syncValue.syncObj) {
@@ -190,8 +224,9 @@ export const syncFoldersEpic = (action$, store) =>
     })
 
 export const loadFoldersFromSyncEpic = (action$, store) =>
-  action$.ofType(SET_SYNC)
-    .do((action) => {
+  action$
+    .ofType(SET_SYNC)
+    .do(action => {
       const folderStatus = foldersToLoad(action, store)
 
       if (folderStatus.loadFolders) {
@@ -202,4 +237,4 @@ export const loadFoldersFromSyncEpic = (action$, store) =>
         store.dispatch(syncFolders(folderStatus.folders))
       }
     })
-    .mapTo({type: 'NOOP'})
+    .mapTo({ type: 'NOOP' })

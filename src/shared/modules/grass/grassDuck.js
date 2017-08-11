@@ -32,7 +32,7 @@ function updateStyleData (state, styleData) {
 
 export default function visualization (state = initialState, action) {
   if (action.type === APP_START) {
-    state = (!state) ? state : { ...initialState, ...state }
+    state = !state ? state : { ...initialState, ...state }
   }
 
   switch (action.type) {
@@ -43,7 +43,7 @@ export default function visualization (state = initialState, action) {
   }
 }
 
-export const updateGraphStyleData = (graphStyleData) => {
+export const updateGraphStyleData = graphStyleData => {
   return {
     type: UPDATE_GRAPH_STYLE_DATA,
     styleData: graphStyleData

@@ -25,7 +25,12 @@ import { deepEquals, shallowEquals } from 'services/utils'
 import bolt from 'services/bolt/bolt'
 import { FrameButton } from 'browser-components/buttons'
 import { DoubleUpIcon, DoubleDownIcon } from 'browser-components/icons/Icons'
-import { StyledOneRowStatsBar, StyledRightPartial, StyledLeftPartial, FrameTitlebarButtonSection } from '../styled'
+import {
+  StyledOneRowStatsBar,
+  StyledRightPartial,
+  StyledLeftPartial,
+  FrameTitlebarButtonSection
+} from '../styled'
 import Ellipsis from 'browser-components/Ellipsis'
 
 export class PlanView extends Component {
@@ -36,23 +41,32 @@ export class PlanView extends Component {
     }
   }
   componentDidMount () {
-    this.extractPlan(this.props.result).catch((e) => {})
+    this.extractPlan(this.props.result).catch(e => {})
   }
   componentWillReceiveProps (props) {
-    if (!deepEquals((props.result || {}).summary, (this.props.result || {}).summary)) {
-      return this.extractPlan((props.result || {}))
+    if (
+      !deepEquals(
+        (props.result || {}).summary,
+        (this.props.result || {}).summary
+      )
+    ) {
+      return this.extractPlan(props.result || {})
         .then(() => {
           this.ensureToggleExpand(props)
         })
-        .catch((e) => { console.log(e) })
+        .catch(e => {
+          console.log(e)
+        })
     }
     this.ensureToggleExpand(props)
   }
   shouldComponentUpdate (props, state) {
     if (this.props.result === undefined) return true
-    return !deepEquals(props.result.summary, this.props.result.summary) ||
+    return (
+      !deepEquals(props.result.summary, this.props.result.summary) ||
       !shallowEquals(state, this.state) ||
       props._planExpand !== this.props._planExpand
+    )
   }
   extractPlan (result) {
     if (result === undefined) return Promise.reject(new Error('No result'))
@@ -84,15 +98,15 @@ export class PlanView extends Component {
     }
   }
   toggleExpanded (expanded) {
-    const visit = (operator) => {
+    const visit = operator => {
       operator.expanded = expanded
       if (operator.children) {
-        operator.children.forEach((child) => {
+        operator.children.forEach(child => {
           visit(child)
         })
       }
     }
-    let tmpPlan = {...this.state.extractedPlan}
+    let tmpPlan = { ...this.state.extractedPlan }
     visit(tmpPlan.root)
     this.plan.display(tmpPlan)
   }
@@ -100,7 +114,11 @@ export class PlanView extends Component {
     if (!this.state.extractedPlan) return null
     return (
       <PlanSVG
-        style={(this.props.fullscreen) ? {'padding-bottom': dim.frameStatusbarHeight + 'px'} : {}}
+        style={
+          this.props.fullscreen
+            ? { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
+            : {}
+        }
         innerRef={this.planInit.bind(this)}
       />
     )
@@ -121,7 +139,10 @@ export class PlanStatusbar extends Component {
   }
   componentWillReceiveProps (props) {
     if (props.result === undefined) return
-    if (this.props.result === undefined || !deepEquals(props.result.summary, this.props.result.summary)) {
+    if (
+      this.props.result === undefined ||
+      !deepEquals(props.result.summary, this.props.result.summary)
+    ) {
       const extractedPlan = bolt.extractPlan(props.result, true)
       this.setState({ extractedPlan })
     }
@@ -138,14 +159,30 @@ export class PlanStatusbar extends Component {
       <StyledOneRowStatsBar>
         <StyledLeftPartial>
           <Ellipsis>
-            Cypher version: {plan.root.version}, planner: {plan.root.planner}, runtime: {plan.root.runtime}.
-            { plan.root.totalDbHits ? ` ${plan.root.totalDbHits} total db hits in ${result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter).toNumber() || 0} ms.` : ``}
+            Cypher version: {plan.root.version}, planner: {plan.root.planner},
+            runtime: {plan.root.runtime}.
+            {plan.root.totalDbHits
+              ? ` ${plan.root
+                .totalDbHits} total db hits in ${result.summary.resultAvailableAfter
+                .add(result.summary.resultConsumedAfter)
+                .toNumber() || 0} ms.`
+              : ``}
           </Ellipsis>
         </StyledLeftPartial>
         <StyledRightPartial>
           <FrameTitlebarButtonSection>
-            <FrameButton onClick={() => this.props.setParentState({_planExpand: 'COLLAPSE'})}><DoubleUpIcon /></FrameButton>
-            <FrameButton onClick={() => this.props.setParentState({_planExpand: 'EXPAND'})}><DoubleDownIcon /></FrameButton>
+            <FrameButton
+              onClick={() =>
+                this.props.setParentState({ _planExpand: 'COLLAPSE' })}
+            >
+              <DoubleUpIcon />
+            </FrameButton>
+            <FrameButton
+              onClick={() =>
+                this.props.setParentState({ _planExpand: 'EXPAND' })}
+            >
+              <DoubleDownIcon />
+            </FrameButton>
           </FrameTitlebarButtonSection>
         </StyledRightPartial>
       </StyledOneRowStatsBar>

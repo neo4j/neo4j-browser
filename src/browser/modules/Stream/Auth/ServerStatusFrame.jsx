@@ -28,9 +28,12 @@ import {
   StyledConnectionBody
 } from './styled'
 import ConnectedView from './ConnectedView'
-import {H3} from 'browser-components/headers'
+import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render'
-import { getActiveConnectionData, getActiveConnection } from 'shared/modules/connections/connectionsDuck'
+import {
+  getActiveConnectionData,
+  getActiveConnection
+} from 'shared/modules/connections/connectionsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
 class ServerStatusFrame extends Component {
@@ -50,15 +53,27 @@ class ServerStatusFrame extends Component {
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>
               <Render if={!activeConnectionData}>
-                <StyledConnectionBody>You are not connected to the server.
+                <StyledConnectionBody>
+                  You are not connected to the server.
                 </StyledConnectionBody>
               </Render>
-              <Render if={activeConnectionData && activeConnectionData.authEnabled}>
-                <ConnectedView username={activeConnectionData && activeConnectionData.username}
-                  showHost={false} storeCredentials={storeCredentials} />
+              <Render
+                if={activeConnectionData && activeConnectionData.authEnabled}
+              >
+                <ConnectedView
+                  username={
+                    activeConnectionData && activeConnectionData.username
+                  }
+                  showHost={false}
+                  storeCredentials={storeCredentials}
+                />
               </Render>
-              <Render if={activeConnectionData && !activeConnectionData.authEnabled}>
-                <StyledConnectionBody>You have a working connection with the Neo4j database and server auth is disabled.
+              <Render
+                if={activeConnectionData && !activeConnectionData.authEnabled}
+              >
+                <StyledConnectionBody>
+                  You have a working connection with the Neo4j database and
+                  server auth is disabled.
                 </StyledConnectionBody>
               </Render>
             </StyledConnectionBodyContainer>
@@ -69,7 +84,7 @@ class ServerStatusFrame extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     activeConnection: getActiveConnection(state),
     activeConnectionData: getActiveConnectionData(state),

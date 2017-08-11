@@ -23,7 +23,10 @@ import { dim } from 'browser-styles/constants'
 
 export const StyledVisContainer = styled.div`
   width: 100%;
-  height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameTitlebarHeight * 2)) + 'px')};
+  height: ${props =>
+    props.fullscreen
+      ? '100vh'
+      : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};
   > svg {
     width: 100%;
   }
@@ -57,14 +60,16 @@ export const StyledVisContainer = styled.div`
     opacity: 0.3;
   }
 
-  > .neod3viz .remove_node, .expand_node:hover {
+  > .neod3viz .remove_node,
+  .expand_node:hover {
     border: 2px #000 solid;
   }
 
-  > .neod3viz .outline, .neod3viz .ring, .neod3viz .context-menu-item {
-    cursor: pointer
+  > .neod3viz .outline,
+  .neod3viz .ring,
+  .neod3viz .context-menu-item {
+    cursor: pointer;
   }
-
 
   > .context-menu-item:hover {
     fill: #b9b9b9;

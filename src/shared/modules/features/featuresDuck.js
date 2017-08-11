@@ -26,9 +26,11 @@ export const NAME = 'features'
 export const RESET = 'features/RESET'
 export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
 
-export const getAvailableProcedures = (state) => state[NAME].availableProcedures
-export const isACausalCluster = (state) => getAvailableProcedures(state).includes('dbms.cluster.overview')
-export const canAssignRolesToUser = (state) => getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
+export const getAvailableProcedures = state => state[NAME].availableProcedures
+export const isACausalCluster = state =>
+  getAvailableProcedures(state).includes('dbms.cluster.overview')
+export const canAssignRolesToUser = state =>
+  getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
 
 const initialState = {
   availableProcedures: []
@@ -41,7 +43,7 @@ export default function (state = initialState, action) {
 
   switch (action.type) {
     case UPDATE_ALL_FEATURES:
-      return {...state, availableProcedures: [...action.availableProcedures]}
+      return { ...state, availableProcedures: [...action.availableProcedures] }
     case RESET:
       return initialState
     default:
@@ -50,7 +52,7 @@ export default function (state = initialState, action) {
 }
 
 // Action creators
-export const updateFeatures = (availableProcedures) => {
+export const updateFeatures = availableProcedures => {
   return {
     type: UPDATE_ALL_FEATURES,
     availableProcedures
@@ -58,14 +60,18 @@ export const updateFeatures = (availableProcedures) => {
 }
 
 export const featuresDiscoveryEpic = (action$, store) => {
-  return action$.ofType(CONNECTION_SUCCESS)
+  return action$
+    .ofType(CONNECTION_SUCCESS)
     .mergeMap(() => {
-      return bolt.routedReadTransaction('CALL dbms.procedures YIELD name')
-        .then((res) => {
-          store.dispatch(updateFeatures(res.records.map((record) => record.get('name'))))
+      return bolt
+        .routedReadTransaction('CALL dbms.procedures YIELD name')
+        .then(res => {
+          store.dispatch(
+            updateFeatures(res.records.map(record => record.get('name')))
+          )
           return null
         })
-        .catch((e) => {
+        .catch(e => {
           return null
         })
     })

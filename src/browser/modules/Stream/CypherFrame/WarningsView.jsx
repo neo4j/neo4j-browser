@@ -19,16 +19,38 @@
  */
 import { Component } from 'preact'
 import { deepEquals } from 'services/utils'
-import { StyledCypherMessage, StyledCypherWarningMessage, StyledCypherErrorMessage, StyledHelpContent,
-  StyledH4, StyledPreformattedArea, StyledHelpDescription, StyledDiv, StyledBr, StyledHelpFrame} from '../styled'
+import {
+  StyledCypherMessage,
+  StyledCypherWarningMessage,
+  StyledCypherErrorMessage,
+  StyledHelpContent,
+  StyledH4,
+  StyledPreformattedArea,
+  StyledHelpDescription,
+  StyledDiv,
+  StyledBr,
+  StyledHelpFrame
+} from '../styled'
 
-const getWarningComponent = (severity) => {
+const getWarningComponent = severity => {
   if (severity === 'ERROR') {
-    return (<StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>)
+    return (
+      <StyledCypherErrorMessage>
+        {severity}
+      </StyledCypherErrorMessage>
+    )
   } else if (severity === 'WARNING') {
-    return (<StyledCypherWarningMessage>{severity}</StyledCypherWarningMessage>)
+    return (
+      <StyledCypherWarningMessage>
+        {severity}
+      </StyledCypherWarningMessage>
+    )
   } else {
-    return (<StyledCypherMessage>{severity}</StyledCypherMessage>)
+    return (
+      <StyledCypherMessage>
+        {severity}
+      </StyledCypherMessage>
+    )
   }
 }
 
@@ -49,18 +71,24 @@ export class WarningsView extends Component {
     let cypherLines = cypher.split('\n')
     cypherLines[0] = cypherLines[0].replace(/^EXPLAIN /, '')
 
-    let notificationsList = notifications.map((notification) => {
+    let notificationsList = notifications.map(notification => {
       return (
         <StyledHelpContent>
           <StyledHelpDescription>
             {getWarningComponent(notification.severity)}
-            <StyledH4>{notification.title}</StyledH4>
+            <StyledH4>
+              {notification.title}
+            </StyledH4>
           </StyledHelpDescription>
           <StyledDiv>
-            <StyledHelpDescription>{notification.description}</StyledHelpDescription>
+            <StyledHelpDescription>
+              {notification.description}
+            </StyledHelpDescription>
             <StyledDiv>
-              <StyledPreformattedArea>{cypherLines[notification.position.line - 1]}
-                <StyledBr />{Array(notification.position.column).join(' ')}^
+              <StyledPreformattedArea>
+                {cypherLines[notification.position.line - 1]}
+                <StyledBr />
+                {Array(notification.position.column).join(' ')}^
               </StyledPreformattedArea>
             </StyledDiv>
           </StyledDiv>
@@ -70,7 +98,8 @@ export class WarningsView extends Component {
     return (
       <StyledHelpFrame>
         {notificationsList}
-      </StyledHelpFrame>)
+      </StyledHelpFrame>
+    )
   }
 }
 

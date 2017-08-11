@@ -20,10 +20,10 @@
 
 export const hydrate = (initialState, state) => {
   if (!state) return state
-  return (state.hydrated) ? state : { ...initialState, ...state, hydrated: true }
+  return state.hydrated ? state : { ...initialState, ...state, hydrated: true }
 }
 
-export const dehydrate = (state) => {
+export const dehydrate = state => {
   if (state) {
     delete state.hydrated
   }

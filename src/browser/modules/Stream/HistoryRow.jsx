@@ -20,7 +20,11 @@
 
 import { StyledHistoryRow } from './styled'
 
-const HistoryRow = ({entry, handleEntryClick}) => {
-  return <StyledHistoryRow onClick={() => handleEntryClick(entry)}>{entry}</StyledHistoryRow>
+const HistoryRow = ({ entry, handleEntryClick }) => {
+  return (
+    <StyledHistoryRow onClick={() => handleEntryClick(entry)}>
+      {entry}
+    </StyledHistoryRow>
+  )
 }
 export default HistoryRow

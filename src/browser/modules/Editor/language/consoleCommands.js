@@ -47,7 +47,8 @@ export default [
   },
   {
     name: ':play',
-    description: ' - loads a mini-deck with either guide material or sample data',
+    description:
+      ' - loads a mini-deck with either guide material or sample data',
     commands: [
       {
         name: 'start',
@@ -86,10 +87,7 @@ export default [
       {
         name: 'user',
         description: ' - user management for administrators',
-        commands: [
-          { name: 'add' },
-          { name: 'list' }
-        ]
+        commands: [{ name: 'add' }, { name: 'list' }]
       }
     ]
   },

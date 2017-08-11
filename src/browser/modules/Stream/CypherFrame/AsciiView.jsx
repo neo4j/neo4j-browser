@@ -24,8 +24,20 @@ import { v1 as neo4j } from 'neo4j-driver-alias'
 import Render from 'browser-components/Render'
 import Ellipsis from 'browser-components/Ellipsis'
 import { debounce, shallowEquals, deepEquals } from 'services/utils'
-import { StyledStatsBar, PaddedDiv, StyledBodyMessage, StyledRightPartial, StyledWidthSliderContainer, StyledWidthSlider } from '../styled'
-import { getBodyAndStatusBarMessages, getRecordsToDisplayInTable, transformResultRecordsToResultArray, stringifyResultArray } from './helpers'
+import {
+  StyledStatsBar,
+  PaddedDiv,
+  StyledBodyMessage,
+  StyledRightPartial,
+  StyledWidthSliderContainer,
+  StyledWidthSlider
+} from '../styled'
+import {
+  getBodyAndStatusBarMessages,
+  getRecordsToDisplayInTable,
+  transformResultRecordsToResultArray,
+  stringifyResultArray
+} from './helpers'
 
 export class AsciiView extends Component {
   constructor (props) {
@@ -61,22 +73,40 @@ export class AsciiView extends Component {
   }
   makeState (props) {
     const { result, maxRows } = props
-    const { bodyMessage = null } = getBodyAndStatusBarMessages(result, maxRows) || {}
+    const { bodyMessage = null } =
+      getBodyAndStatusBarMessages(result, maxRows) || {}
     this.setState({ bodyMessage })
     if (!result || !result.records) return
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
-    const serializedRows = stringifyResultArray(neo4j.isInt, transformResultRecordsToResultArray(records)) || []
+    const serializedRows =
+      stringifyResultArray(
+        neo4j.isInt,
+        transformResultRecordsToResultArray(records)
+      ) || []
     this.setState({ serializedRows })
-    this.props.setParentState && this.props.setParentState({ _asciiSerializedRows: serializedRows })
+    this.props.setParentState &&
+      this.props.setParentState({ _asciiSerializedRows: serializedRows })
   }
   render () {
     const { _asciiMaxColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
-    let contents = <StyledBodyMessage>{bodyMessage}</StyledBodyMessage>
+    let contents = (
+      <StyledBodyMessage>
+        {bodyMessage}
+      </StyledBodyMessage>
+    )
     if (serializedRows !== undefined && serializedRows.length) {
-      contents = <pre>{asciitable.tableFromSerializedData(serializedRows, maxColWidth)}</pre>
+      contents = (
+        <pre>
+          {asciitable.tableFromSerializedData(serializedRows, maxColWidth)}
+        </pre>
+      )
     }
-    return <PaddedDiv>{contents}</PaddedDiv>
+    return (
+      <PaddedDiv>
+        {contents}
+      </PaddedDiv>
+    )
   }
 }
 
@@ -90,17 +120,26 @@ export class AsciiStatusbar extends Component {
     }
   }
   componentWillReceiveProps (props) {
-    if (!deepEquals(props._asciiSerializedRows, this.props._asciiSerializedRows)) {
+    if (
+      !deepEquals(props._asciiSerializedRows, this.props._asciiSerializedRows)
+    ) {
       this.makeState(props)
     }
   }
   makeState (props) {
-    this.setMaxSliderWidth(asciitable.maxColumnWidth(props._asciiSerializedRows))
-    const { statusBarMessage = null } = getBodyAndStatusBarMessages(props.result, props.maxRows) || {}
+    this.setMaxSliderWidth(
+      asciitable.maxColumnWidth(props._asciiSerializedRows)
+    )
+    const { statusBarMessage = null } =
+      getBodyAndStatusBarMessages(props.result, props.maxRows) || {}
     this.setState({ statusBarMessage })
   }
   shouldComponentUpdate (props, state) {
-    if (!deepEquals(props._asciiSerializedRows, this.props._asciiSerializedRows)) return true
+    if (
+      !deepEquals(props._asciiSerializedRows, this.props._asciiSerializedRows)
+    ) {
+      return true
+    }
     if (!shallowEquals(state, this.state)) return true
     return false
   }
@@ -108,7 +147,11 @@ export class AsciiStatusbar extends Component {
     this.makeState(this.props)
   }
   componentWillMount () {
-    this.debouncedMaxColWidthChanged = debounce(this.maxColWidthChanged, 25, this)
+    this.debouncedMaxColWidthChanged = debounce(
+      this.maxColWidthChanged,
+      25,
+      this
+    )
   }
   maxColWidthChanged (w) {
     this.setState({ maxColWidth: w.target.value })
@@ -124,7 +167,7 @@ export class AsciiStatusbar extends Component {
       <StyledStatsBar>
         <Render if={!this.props._asciiSerializedRows}>
           <Ellipsis>
-            { this.state.statusBarMessage }
+            {this.state.statusBarMessage}
           </Ellipsis>
         </Render>
         <Render if={this.props._asciiSerializedRows}>

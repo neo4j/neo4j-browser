@@ -20,9 +20,21 @@
 
 import { v4 } from 'uuid'
 import { APP_START, USER_CLEAR } from '../app/appDuck'
-import { AUTHORIZED, CLEAR_SYNC, CLEAR_SYNC_AND_LOCAL } from 'shared/modules/sync/syncDuck'
-import { getVersion, getStoreId, isBeta } from 'shared/modules/dbMeta/dbMetaDuck'
-import { CYPHER, CYPHER_SUCCEEDED, CYPHER_FAILED } from 'shared/modules/commands/commandsDuck'
+import {
+  AUTHORIZED,
+  CLEAR_SYNC,
+  CLEAR_SYNC_AND_LOCAL
+} from 'shared/modules/sync/syncDuck'
+import {
+  getVersion,
+  getStoreId,
+  isBeta
+} from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  CYPHER,
+  CYPHER_SUCCEEDED,
+  CYPHER_FAILED
+} from 'shared/modules/commands/commandsDuck'
 import { shouldReportUdc } from 'shared/modules/settings/settingsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
@@ -48,22 +60,24 @@ const typeToEventName = {
 }
 
 // Selectors
-const getData = (state) => {
+const getData = state => {
   const { events, ...rest } = state[NAME] || initialState // eslint-disable-line
   return rest
 }
-const getName = (state) => state[NAME].name || 'Graph Friend'
-const getCompanies = (state) => {
+const getName = state => state[NAME].name || 'Graph Friend'
+const getCompanies = state => {
   if (getVersion(state) && getStoreId(state)) {
-    return [{
-      type: 'company',
-      name: 'Neo4j ' + getVersion(state) + ' ' + getStoreId(state),
-      company_id: getStoreId(state)
-    }]
+    return [
+      {
+        type: 'company',
+        name: 'Neo4j ' + getVersion(state) + ' ' + getStoreId(state),
+        company_id: getStoreId(state)
+      }
+    ]
   }
   return null
 }
-const getEvents = (state) => state[NAME].events || initialState.events
+const getEvents = state => state[NAME].events || initialState.events
 
 const initialState = {
   uuid: v4(),
@@ -80,23 +94,23 @@ const initialState = {
 export default function reducer (state = initialState, action) {
   switch (action.type) {
     case INCREMENT:
-      return {...state, [action.what]: (state[action.what] || 0) + 1}
+      return { ...state, [action.what]: (state[action.what] || 0) + 1 }
     case EVENT_QUEUE:
-      return {...state, events: (state.events || []).concat(action.event)}
+      return { ...state, events: (state.events || []).concat(action.event) }
     case CLEAR_EVENTS:
-      return {...state, events: []}
+      return { ...state, events: [] }
     case USER_CLEAR:
       return initialState
     case UPDATE_DATA:
       const { type, ...rest } = action // eslint-disable-line
-      return {...state, ...rest}
+      return { ...state, ...rest }
     default:
       return state
   }
 }
 
 // Action creators
-const increment = (what) => {
+const increment = what => {
   return {
     type: INCREMENT,
     what
@@ -118,7 +132,7 @@ const eventFired = (name, data = null) => {
     data
   }
 }
-export const updateData = (obj) => {
+export const updateData = obj => {
   return {
     type: UPDATE_DATA,
     ...obj
@@ -127,32 +141,36 @@ export const updateData = (obj) => {
 
 // Epics
 export const udcStartupEpic = (action$, store) =>
-  action$.ofType(APP_START)
-    .mapTo(increment('client_starts'))
+  action$.ofType(APP_START).mapTo(increment('client_starts'))
 
 export const incrementEventEpic = (action$, store) =>
-  action$.ofType(CYPHER)
+  action$
+    .ofType(CYPHER)
     .merge(action$.ofType(CYPHER_FAILED))
     .merge(action$.ofType(CYPHER_SUCCEEDED))
-    .map((action) => increment(typeToEventName[action.type]))
+    .map(action => increment(typeToEventName[action.type]))
 
 export const trackSyncLogoutEpic = (action$, store) =>
-  action$.ofType(CLEAR_SYNC)
+  action$
+    .ofType(CLEAR_SYNC)
     .merge(action$.ofType(CLEAR_SYNC_AND_LOCAL))
-    .map((action) => eventFired('syncLogout'))
+    .map(action => eventFired('syncLogout'))
 
 export const bootEpic = (action$, store) => {
-  return action$.ofType(AUTHORIZED) // Browser sync auth
-    .map((action) => { // Store name locally
+  return action$
+    .ofType(AUTHORIZED) // Browser sync auth
+    .map(action => {
+      // Store name locally
       if (!action.userData || !action.userData['name']) return
       store.dispatch(updateData({ name: action.userData['name'] }))
       return action
     })
-    .map((action) => {
+    .map(action => {
       if (booted) return false
       if (!action.userData || !action.userData['user_id']) return false // No info
-      if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) { // No opt out of pre releases
-        api('boot', {user_id: action.userData['user_id']})
+      if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) {
+        // No opt out of pre releases
+        api('boot', { user_id: action.userData['user_id'] })
       } else {
         api('boot', {
           ...getData(store.getState()),
@@ -160,26 +178,33 @@ export const bootEpic = (action$, store) => {
           neo4j_version: getVersion(store.getState()),
           user_id: action.userData['user_id']
         })
-        api('trackEvent', 'syncAuthenticated', { // Track that user connected to browser sync
+        api('trackEvent', 'syncAuthenticated', {
+          // Track that user connected to browser sync
           user_id: action.userData['user_id'],
           name: getName(store.getState())
         })
         const waitingEvents = getEvents(store.getState())
-        waitingEvents.forEach((event) => event && api('trackEvent', event.name, event.data))
+        waitingEvents.forEach(
+          event => event && api('trackEvent', event.name, event.data)
+        )
         store.dispatch({ type: CLEAR_EVENTS })
       }
       booted = true
       return true
     })
-    .map((didBoot) => {
+    .map(didBoot => {
       return didBoot ? { type: BOOTED } : { type: 'NOOP' }
     })
 }
 
-export const trackConnectsEpic = (action$, store) => // Decide what to do with events
-  action$.ofType(CONNECTION_SUCCESS)
+export const trackConnectsEpic = (
+  action$,
+  store // Decide what to do with events
+) =>
+  action$
+    .ofType(CONNECTION_SUCCESS)
     .merge(action$.ofType(BOOTED))
-    .map((action) => {
+    .map(action => {
       const state = store.getState()
       const data = {
         store_id: getStoreId(state),
@@ -192,13 +217,24 @@ export const trackConnectsEpic = (action$, store) => // Decide what to do with e
       return eventFired('connect', data)
     })
 
-export const eventFiredEpic = (action$, store) => // Decide what to do with events
-  action$.ofType(EVENT_FIRED)
-    .map((action) => {
-      if (action.name === 'connect' && !shouldTriggerConnectEvent(store.getState()[NAME])) return { type: 'NOOP' }
-      if (!booted) return addToEventQueue(action.name, action.data)
-      if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) return addToEventQueue(action.name, action.data)
-      api('trackEvent', action.name, action.data)
-      if (action.name === 'connect') return updateData({ pingTime: getTodayDate().getTime() })
+export const eventFiredEpic = (
+  action$,
+  store // Decide what to do with events
+) =>
+  action$.ofType(EVENT_FIRED).map(action => {
+    if (
+      action.name === 'connect' &&
+      !shouldTriggerConnectEvent(store.getState()[NAME])
+    ) {
       return { type: 'NOOP' }
-    })
+    }
+    if (!booted) return addToEventQueue(action.name, action.data)
+    if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) {
+      return addToEventQueue(action.name, action.data)
+    }
+    api('trackEvent', action.name, action.data)
+    if (action.name === 'connect') {
+      return updateData({ pingTime: getTodayDate().getTime() })
+    }
+    return { type: 'NOOP' }
+  })

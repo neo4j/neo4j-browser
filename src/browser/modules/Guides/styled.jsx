@@ -20,22 +20,15 @@
 
 import styled from 'styled-components'
 
-export const StyledCarousel = styled.div`
-`
+export const StyledCarousel = styled.div``
 export const SlideContainer = styled.div`
   padding: 0 60px;
   width: 100%;
   display: inline-block;
 `
-export const StyledCarouselLeft = styled.div`
-  float: left;
-`
-export const StyledCarouselRight = styled.div`
-  float: right;
-`
-export const StyledCarouselButtonContainer = styled.div`
-  margin-top: -40px;
-`
+export const StyledCarouselLeft = styled.div`float: left;`
+export const StyledCarouselRight = styled.div`float: right;`
+export const StyledCarouselButtonContainer = styled.div`margin-top: -40px;`
 const CarouselIndicator = styled.li`
   display: inline-block;
   width: 10px;
@@ -47,7 +40,7 @@ const CarouselIndicator = styled.li`
   border: 1px solid #fff;
   border-radius: 10px;
   cursor: pointer;
-  background-color: rgba(188,195,207,.64);
+  background-color: rgba(188, 195, 207, .64);
 `
 export const CarouselIndicatorInactive = styled(CarouselIndicator)`
   &:hover {
@@ -59,18 +52,21 @@ export const CarouselIndicatorActive = styled(CarouselIndicator)`
   height: 12px;
   background-color: #428bca;
 `
-export const StyledUl = styled.ul`
-  margin: 15px;
-`
+export const StyledUl = styled.ul`margin: 15px;`
 
 export const StyledSlide = styled.div`
   color: ${props => props.theme.primaryText};
-  & p.lead, .title, .subtitle, .content > p, .table-help {
+  & p.lead,
+  .title,
+  .subtitle,
+  .content > p,
+  .table-help {
     color: ${props => props.theme.primaryText} !important;
   }
   & a {
     color: ${props => props.theme.link};
-    text-decoration: ${props => props.theme.name === 'dark' ? 'underline' : 'none'};
+    text-decoration: ${props =>
+    props.theme.name === 'dark' ? 'underline' : 'none'};
   }
   & kbd {
     color: ${props => props.theme.primaryBackground} !important; /* inverted */
@@ -88,11 +84,17 @@ export const StyledSlide = styled.div`
     background-color: ${props => props.theme.secondaryBackground};
     color: ${props => props.theme.preText};
   }
-  & a[help-topic], a[play-topic], a[server-topic], a[exec-topic] {
+  & a[help-topic],
+  a[play-topic],
+  a[server-topic],
+  a[exec-topic] {
     background-color: ${props => props.theme.topicBackground} !important;
     color: ${props => props.theme.topicText} !important;
   }
-  & button [help-topic], button [play-topic], button [server-topic], button [exec-topic] {
+  & button [help-topic],
+  button [play-topic],
+  button [server-topic],
+  button [exec-topic] {
     background-color: ${props => props.theme.primaryButtonBackground};
     color: ${props => props.theme.primaryButtonText};
   }

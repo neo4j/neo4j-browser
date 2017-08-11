@@ -39,11 +39,11 @@ export const SET_MAX_FRAMES = NAME + '/SET_MAX_FRAMES'
  * Selectors
 */
 export function getFrames (state) {
-  return state[NAME].allIds.map((id) => state[NAME].byId[id])
+  return state[NAME].allIds.map(id => state[NAME].byId[id])
 }
 
 export function getFramesInContext (state, context) {
-  return getFrames(state).filter((f) => f.context === context)
+  return getFrames(state).filter(f => f.context === context)
 }
 
 export function getRecentView (state) {
@@ -54,9 +54,10 @@ export function getRecentView (state) {
  * Reducer helpers
 */
 function addFrame (state, newState) {
-  const byId = Object.assign({}, state.byId, {[newState.id]: newState})
+  const byId = Object.assign({}, state.byId, { [newState.id]: newState })
   let allIds = [].concat(state.allIds)
-  if (allIds.indexOf(newState.id) < 0) { // new frame
+  if (allIds.indexOf(newState.id) < 0) {
+    // new frame
     const pos = findFirstFreePos(state)
     allIds.splice(pos, 0, newState.id)
   }
@@ -70,8 +71,8 @@ function addFrame (state, newState) {
 function removeFrame (state, id) {
   const byId = Object.assign({}, state.byId)
   delete byId[id]
-  const allIds = state.allIds.filter((fid) => fid !== id)
-  return Object.assign({}, state, {allIds, byId})
+  const allIds = state.allIds.filter(fid => fid !== id)
+  return Object.assign({}, state, { allIds, byId })
 }
 
 function pinFrame (state, id) {
@@ -109,16 +110,18 @@ function findFirstFreePos ({ byId, allIds }) {
 }
 
 function setRecentViewHelper (state, recentView) {
-  return Object.assign({}, state, {recentView})
+  return Object.assign({}, state, { recentView })
 }
 
 function ensureFrameLimit (state) {
   const limit = state.maxFrames || 1
   if (state.allIds.length <= limit) return state
   let numToRemove = state.allIds.length - limit
-  let removeIds = state.allIds.slice(-1 * numToRemove).filter((id) => !state.byId[id].isPinned)
-  let byId = {...state.byId}
-  removeIds.forEach((id) => delete byId[id])
+  let removeIds = state.allIds
+    .slice(-1 * numToRemove)
+    .filter(id => !state.byId[id].isPinned)
+  let byId = { ...state.byId }
+  removeIds.forEach(id => delete byId[id])
   return {
     ...state,
     allIds: state.allIds.slice(0, state.allIds.length - removeIds.length),
@@ -148,7 +151,7 @@ export default function reducer (state = initialState, action) {
     case REMOVE:
       return removeFrame(state, action.id)
     case CLEAR_ALL:
-      return {...initialState}
+      return { ...initialState }
     case PIN:
       return pinFrame(state, action.id)
     case UNPIN:
@@ -156,7 +159,7 @@ export default function reducer (state = initialState, action) {
     case SET_RECENT_VIEW:
       return setRecentViewHelper(state, action.view)
     case SET_MAX_FRAMES:
-      const newState = {...state, maxFrames: action.maxFrames}
+      const newState = { ...state, maxFrames: action.maxFrames }
       return ensureFrameLimit(newState)
     default:
       return state
@@ -167,7 +170,7 @@ export default function reducer (state = initialState, action) {
 export function add (payload) {
   return {
     type: ADD,
-    state: Object.assign({}, payload, {id: (payload.id || uuid.v1())})
+    state: Object.assign({}, payload, { id: payload.id || uuid.v1() })
   }
 }
 
@@ -207,8 +210,9 @@ export function setRecentView (view) {
 
 // Epics
 export const maxFramesConfigEpic = (action$, store) =>
-  action$.ofType(SETTINGS_UPDATE)
-    .do((action) => {
+  action$
+    .ofType(SETTINGS_UPDATE)
+    .do(action => {
       const newMaxFrames = action.state.maxFrames
       if (!newMaxFrames) return
       store.dispatch({ type: SET_MAX_FRAMES, maxFrames: newMaxFrames })

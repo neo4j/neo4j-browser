@@ -27,16 +27,19 @@ import {
   FolderButtonContainer,
   EditFolderInput
 } from './styled'
-import {Component} from 'preact'
-import {CollapseMenuIcon, ExpandMenuIcon} from 'browser-components/icons/Icons'
-import {DropTarget} from 'react-dnd'
+import { Component } from 'preact'
+import {
+  CollapseMenuIcon,
+  ExpandMenuIcon
+} from 'browser-components/icons/Icons'
+import { DropTarget } from 'react-dnd'
 import Render from 'browser-components/Render'
 import ItemTypes from './DragItemTypes'
 
 class Folder extends Component {
   constructor (props) {
     super(props)
-    this.state = {...props}
+    this.state = { ...props }
   }
 
   onFolderNameChanged (e) {
@@ -52,7 +55,7 @@ class Folder extends Component {
 
   handleKeyPress (e) {
     if (e.keyCode === 13) {
-      this.setState({editing: false})
+      this.setState({ editing: false })
     }
   }
 
@@ -67,24 +70,40 @@ class Folder extends Component {
         <StyledList>
           <StyledListHeaderItem>
             <Render if={!this.state.editing}>
-              <span onClick={() => this.setState({active: !this.state.active})}>{this.props.folder.name}</span>
+              <span
+                onClick={() => this.setState({ active: !this.state.active })}
+              >
+                {this.props.folder.name}
+              </span>
             </Render>
             <Render if={this.state.editing}>
-              <EditFolderInput type='text' onChange={this.onFolderNameChanged.bind(this)}
-                onBlur={() => this.setState({editing: false})}
-                value={this.props.folder.name} innerRef={this.folderNameInputSet.bind(this)} />
+              <EditFolderInput
+                type='text'
+                onChange={this.onFolderNameChanged.bind(this)}
+                onBlur={() => this.setState({ editing: false })}
+                value={this.props.folder.name}
+                innerRef={this.folderNameInputSet.bind(this)}
+              />
             </Render>
             <FolderButtonContainer>
-              <FoldersButton onClick={() => this.setState({active: !this.state.active})}>{icon}</FoldersButton>
+              <FoldersButton
+                onClick={() => this.setState({ active: !this.state.active })}
+              >
+                {icon}
+              </FoldersButton>
               <Render if={!this.props.folder.isStatic}>
-                <EditFolderButton editClick={() => {
-                  this.setState({editing: true})
-                  return false
-                }
-                } />
+                <EditFolderButton
+                  editClick={() => {
+                    this.setState({ editing: true })
+                    return false
+                  }}
+                />
               </Render>&nbsp;
-              <DeleteFavButton id={this.props.folder.id} removeClick={this.props.removeClick}
-                isStatic={this.props.folder.isStatic} />
+              <DeleteFavButton
+                id={this.props.folder.id}
+                removeClick={this.props.removeClick}
+                isStatic={this.props.folder.isStatic}
+              />
             </FolderButtonContainer>
           </StyledListHeaderItem>
           {this.state.active ? this.props.children : null}

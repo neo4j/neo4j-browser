@@ -46,22 +46,39 @@ export class Visualization extends Component {
     }
   }
   shouldComponentUpdate (props, state) {
-    return !(deepEquals(props.result.records, this.props.result.records) && deepEquals(props.graphStyleData, this.props.graphStyleData)) ||
+    return (
+      !(
+        deepEquals(props.result.records, this.props.result.records) &&
+        deepEquals(props.graphStyleData, this.props.graphStyleData)
+      ) ||
       !deepEquals(state, this.state) ||
       !deepEquals(props.visElement, this.props.visElement) ||
       this.props.frameHeight !== props.frameHeight ||
       this.props.autoComplete !== props.autoComplete
+    )
   }
   componentWillReceiveProps (props) {
-    if (!deepEquals(props.result.records, this.props.result.records) || this.props.autoComplete !== props.autoComplete) {
+    if (
+      !deepEquals(props.result.records, this.props.result.records) ||
+      this.props.autoComplete !== props.autoComplete
+    ) {
       this.populateDataToStateFromProps(props)
     }
   }
   populateDataToStateFromProps (props) {
-    this.setState({ nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(props.result.records) })
+    this.setState({
+      nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+        props.result.records
+      )
+    })
   }
   mergeToList (list1, list2) {
-    return list1.concat(list2.filter(itemInList2 => list1.findIndex(itemInList1 => itemInList1.id === itemInList2.id) < 0))
+    return list1.concat(
+      list2.filter(
+        itemInList2 =>
+          list1.findIndex(itemInList1 => itemInList1.id === itemInList2.id) < 0
+      )
+    )
   }
   autoCompleteRelationships (existingNodes, newNodes) {
     if (this.props.autoComplete) {
@@ -69,10 +86,11 @@ export class Visualization extends Component {
       const newNodeIds = newNodes.map(node => parseInt(node.id))
 
       this.getInternalRelationships(existingNodeIds, newNodeIds)
-        .then((graph) => {
-          this.autoCompleteCallback && this.autoCompleteCallback(graph.relationships)
+        .then(graph => {
+          this.autoCompleteCallback &&
+            this.autoCompleteCallback(graph.relationships)
         })
-        .catch((e) => {})
+        .catch(e => {})
     } else {
       this.autoCompleteCallback && this.autoCompleteCallback([])
     }
@@ -83,41 +101,52 @@ export class Visualization extends Component {
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
                    RETURN path, size((a)--()) as c
                    ORDER BY id(o)
-                   LIMIT ${this.props.maxNeighbours - currentNeighbourIds.length}`
+                   LIMIT ${this.props.maxNeighbours -
+                     currentNeighbourIds.length}`
     return new Promise((resolve, reject) => {
-      this.props.bus && this.props.bus.self(
-        CYPHER_REQUEST,
-        {query: query},
-        (response) => {
+      this.props.bus &&
+        this.props.bus.self(CYPHER_REQUEST, { query: query }, response => {
           if (!response.success) {
             reject(new Error())
           } else {
-            let count = response.result.records.length > 0 ? parseInt(response.result.records[0].get('c').toString()) : 0
-            const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)
+            let count =
+              response.result.records.length > 0
+                ? parseInt(response.result.records[0].get('c').toString())
+                : 0
+            const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+              response.result.records,
+              false
+            )
             this.autoCompleteRelationships(this.graph._nodes, resultGraph.nodes)
-            resolve({...resultGraph, count: count})
+            resolve({ ...resultGraph, count: count })
           }
-        }
-      )
+        })
     })
   }
   getInternalRelationships (existingNodeIds, newNodeIds) {
     newNodeIds = newNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.concat(newNodeIds)
-    const query = 'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
+    const query =
+      'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
     return new Promise((resolve, reject) => {
-      this.props.bus && this.props.bus.self(
-        CYPHER_REQUEST,
-        {query, params: {existingNodeIds, newNodeIds}},
-        (response) => {
-          if (!response.success) {
-            reject(new Error())
-          } else {
-            resolve({...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(response.result.records, false)})
+      this.props.bus &&
+        this.props.bus.self(
+          CYPHER_REQUEST,
+          { query, params: { existingNodeIds, newNodeIds } },
+          response => {
+            if (!response.success) {
+              reject(new Error())
+            } else {
+              resolve({
+                ...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+                  response.result.records,
+                  false
+                )
+              })
+            }
           }
-        }
-      )
+        )
     })
   }
   setGraph (graph) {
@@ -140,7 +169,9 @@ export class Visualization extends Component {
           fullscreen={this.props.fullscreen}
           frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
-          getAutoCompleteCallback={(callback) => { this.autoCompleteCallback = callback }}
+          getAutoCompleteCallback={callback => {
+            this.autoCompleteCallback = callback
+          }}
           setGraph={this.setGraph.bind(this)}
         />
       </StyledVisContainer>
@@ -148,18 +179,20 @@ export class Visualization extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     graphStyleData: grassActions.getGraphStyleData(state)
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    updateStyle: (graphStyleData) => {
+    updateStyle: graphStyleData => {
       dispatch(grassActions.updateGraphStyleData(graphStyleData))
     }
   }
 }
 
-export const VisualizationConnectedBus = withBus(connect(mapStateToProps, mapDispatchToProps)(Visualization))
+export const VisualizationConnectedBus = withBus(
+  connect(mapStateToProps, mapDispatchToProps)(Visualization)
+)

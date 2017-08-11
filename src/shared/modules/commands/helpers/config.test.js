@@ -56,8 +56,12 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return expect(p)
-      .rejects.toEqual(new Error('Could not parse input. Usage: `:config "x": 2`. SyntaxError: Expected ":" but "x" found.'))
+    return expect(p).rejects
+      .toEqual(
+        new Error(
+          'Could not parse input. Usage: `:config "x": 2`. SyntaxError: Expected ":" but "x" found.'
+        )
+      )
       .then(() => expect(put).not.toHaveBeenCalled())
   })
   test('handles :config "x": 2 and calls the update action creator', () => {
@@ -70,9 +74,9 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return p.then((res) => {
-      expect(res).toEqual({x: 2})
-      expect(put).toHaveBeenCalledWith(update({x: 2}))
+    return p.then(res => {
+      expect(res).toEqual({ x: 2 })
+      expect(put).toHaveBeenCalledWith(update({ x: 2 }))
     })
   })
   test('handles :config x: 2 and calls the update action creator', () => {
@@ -85,9 +89,9 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return p.then((res) => {
-      expect(res).toEqual({x: 2})
-      expect(put).toHaveBeenCalledWith(update({x: 2}))
+    return p.then(res => {
+      expect(res).toEqual({ x: 2 })
+      expect(put).toHaveBeenCalledWith(update({ x: 2 }))
     })
   })
   test('handles :config "x y": 2 and calls the update action creator', () => {
@@ -100,9 +104,9 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return p.then((res) => {
-      expect(res).toEqual({'x y': 2})
-      expect(put).toHaveBeenCalledWith(update({'x y': 2}))
+    return p.then(res => {
+      expect(res).toEqual({ 'x y': 2 })
+      expect(put).toHaveBeenCalledWith(update({ 'x y': 2 }))
     })
   })
   test('handles :config {"hej": "ho", "let\'s": "go"} and calls the replace action creator', () => {
@@ -115,9 +119,9 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return p.then((res) => {
-      expect(res).toEqual({hej: 'ho', "let's": 'go'})
-      expect(put).toHaveBeenCalledWith(replace({hej: 'ho', "let's": 'go'}))
+    return p.then(res => {
+      expect(res).toEqual({ hej: 'ho', "let's": 'go' })
+      expect(put).toHaveBeenCalledWith(replace({ hej: 'ho', "let's": 'go' }))
     })
   })
   test('handles :config {x: 1, y: 2} and calls the replace action creator', () => {
@@ -130,9 +134,9 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return p.then((res) => {
-      expect(res).toEqual({x: 1, y: 2})
-      expect(put).toHaveBeenCalledWith(replace({x: 1, y: 2}))
+    return p.then(res => {
+      expect(res).toEqual({ x: 1, y: 2 })
+      expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2 }))
     })
   })
   test('rejects hostnames not in whitelist', () => {
@@ -145,13 +149,15 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return expect(p)
-      .rejects.toEqual(new Error('Hostname is not allowed according to server whitelist'))
+    return expect(p).rejects
+      .toEqual(
+        new Error('Hostname is not allowed according to server whitelist')
+      )
       .then(() => expect(put).not.toHaveBeenCalled())
   })
   test('handles :config https://okurl.com/cnf.json and calls the replace action creator', () => {
     // Given
-    const json = JSON.stringify({x: 1, y: 'hello'})
+    const json = JSON.stringify({ x: 1, y: 'hello' })
     nock('https://okurl.com').get('/cnf.json').reply(200, json)
     const action = { cmd: ':config https://okurl.com/cnf.json' }
     const cmdchar = ':'
@@ -161,7 +167,7 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return p.then((res) => {
+    return p.then(res => {
       expect(res).toEqual(JSON.parse(json))
       expect(put).toHaveBeenCalledWith(replace(JSON.parse(json)))
     })
@@ -178,8 +184,14 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return expect(p)
-      .rejects.toEqual(new Error(new FetchError('invalid json response body at https://okurl.com/cnf.json reason: Unexpected token o in JSON at position 1')))
+    return expect(p).rejects
+      .toEqual(
+        new Error(
+          new FetchError(
+            'invalid json response body at https://okurl.com/cnf.json reason: Unexpected token o in JSON at position 1'
+          )
+        )
+      )
       .then(() => expect(put).not.toHaveBeenCalled())
   })
 })

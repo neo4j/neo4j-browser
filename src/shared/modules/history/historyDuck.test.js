@@ -52,18 +52,10 @@ describe('editor reducer', () => {
   })
 
   test('takes editor.actionTypes.SET_MAX_HISTORY into account', () => {
-    const initalState = [
-      ':help',
-      ':help',
-      ':help']
+    const initalState = [':help', ':help', ':help']
 
     const helpAction = actions.addHistory(':history', 3)
     const nextState = reducer(initalState, helpAction)
-    expect(nextState).toEqual([
-      ':history',
-      ':help',
-      ':help'
-    ]
-    )
+    expect(nextState).toEqual([':history', ':help', ':help'])
   })
 })

@@ -30,9 +30,8 @@ describe('WarningsViews', () => {
       // Given
       const result = mount(WarningsView)
         .withProps({ result: {} })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           expect(wrapper.text()).toEqual('')
         })
 
@@ -40,29 +39,30 @@ describe('WarningsViews', () => {
       return result
     })
     test('does displays a warning', () => {
-     // Given
+      // Given
       const result = mount(WarningsView)
-        .withProps({result: {
-          summary: {
-            notifications: [
-              {
-                severity: 'WARNING xx0',
-                title: 'My xx1 warning',
-                description: 'This is xx2 warning',
-                position: {
-                  column: 7,
-                  line: 1
+        .withProps({
+          result: {
+            summary: {
+              notifications: [
+                {
+                  severity: 'WARNING xx0',
+                  title: 'My xx1 warning',
+                  description: 'This is xx2 warning',
+                  position: {
+                    column: 7,
+                    line: 1
+                  }
                 }
+              ],
+              statement: {
+                text: 'EXPLAIN MATCH xx3'
               }
-            ],
-            statement: {
-              text: 'EXPLAIN MATCH xx3'
             }
           }
-        }})
-
+        })
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           const text = wrapper.text()
           expect(text).toContain('xx0')
           expect(text).toContain('xx1')
@@ -76,37 +76,39 @@ describe('WarningsViews', () => {
       return result
     })
     test('does displays multiple warnings', () => {
-     // Given
+      // Given
       const result = mount(WarningsView)
-        .withProps({result: {
-          summary: {
-            notifications: [
-              {
-                severity: 'WARNING xx0',
-                title: 'My xx1 warning',
-                description: 'This is xx2 warning',
-                position: {
-                  column: 7,
-                  line: 1
+        .withProps({
+          result: {
+            summary: {
+              notifications: [
+                {
+                  severity: 'WARNING xx0',
+                  title: 'My xx1 warning',
+                  description: 'This is xx2 warning',
+                  position: {
+                    column: 7,
+                    line: 1
+                  }
+                },
+                {
+                  severity: 'WARNING yy0',
+                  title: 'My yy1 warning',
+                  description: 'This is yy2 warning',
+                  position: {
+                    column: 3,
+                    line: 1
+                  }
                 }
-              }, {
-                severity: 'WARNING yy0',
-                title: 'My yy1 warning',
-                description: 'This is yy2 warning',
-                position: {
-                  column: 3,
-                  line: 1
-                }
+              ],
+              statement: {
+                text: 'EXPLAIN MATCH zz3'
               }
-            ],
-            statement: {
-              text: 'EXPLAIN MATCH zz3'
             }
           }
-        }})
-
+        })
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           const text = wrapper.text()
           expect(text).toContain('xx0')
           expect(text).toContain('xx1')
@@ -125,10 +127,9 @@ describe('WarningsViews', () => {
     test('displays nothing', () => {
       // Given
       const result = mount(WarningsStatusbar)
-        .withProps({ })
-
+        .withProps({})
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           expect(wrapper.text()).toEqual('')
         })
 

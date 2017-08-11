@@ -28,7 +28,7 @@ describe('FrameSuccess', () => {
     const result = mount(FrameSuccess)
       // When
       .withProps({})
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toBe('')
       })
     return result
@@ -38,8 +38,8 @@ describe('FrameSuccess', () => {
     const message = 'bar'
     const result = mount(FrameSuccess)
       // When
-      .withProps({message})
-      .then((wrapper) => {
+      .withProps({ message })
+      .then(wrapper => {
         expect(wrapper.text().trim()).toBe(message)
       })
     return result

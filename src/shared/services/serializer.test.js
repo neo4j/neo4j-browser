@@ -33,7 +33,7 @@ describe('resultTransform', () => {
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('col1,"""col2"""')
     })
-    test('should throw exception when row doesn\'t match columns', () => {
+    test("should throw exception when row doesn't match columns", () => {
       const cols = ['col1', '"col2"']
       const s = CSVSerializer(cols)
       expect(() => s.append(['x'])).toThrowError('Column number mismatch')
@@ -93,7 +93,7 @@ describe('resultTransform', () => {
       expect(s.output()).toEqual('true,false')
     })
     test('should represent Object values as JSON', () => {
-      const cols = [{name: 'John'}]
+      const cols = [{ name: 'John' }]
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('"{""name"":""John""}"')
     })

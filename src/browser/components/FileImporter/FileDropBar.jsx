@@ -18,10 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FileDrop} from './FileDrop'
+import { FileDrop } from './FileDrop'
 
-const DropBar = (props) => {
-  return (<div>{props.text}</div>)
+const DropBar = props => {
+  return (
+    <div>
+      {props.text}
+    </div>
+  )
 }
 
 export const FileDropBar = FileDrop(DropBar, true)

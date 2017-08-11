@@ -18,9 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from 'preact'
+import { Component } from 'preact'
 import styles from './style.css'
-import { MinusIcon, RightArrowIcon, CancelIcon } from 'browser-components/icons/Icons'
+import {
+  MinusIcon,
+  RightArrowIcon,
+  CancelIcon
+} from 'browser-components/icons/Icons'
 
 export class ConfirmationButton extends Component {
   constructor (props) {
@@ -32,21 +36,41 @@ export class ConfirmationButton extends Component {
   }
 
   componentWillMount () {
-    this.confirmIcon = this.props.confirmIcon || (<RightArrowIcon />)
-    this.cancelIcon = this.props.cancelIcon || (<CancelIcon />)
-    this.requestIcon = this.props.requestIcon || (<MinusIcon />)
+    this.confirmIcon = this.props.confirmIcon || <RightArrowIcon />
+    this.cancelIcon = this.props.cancelIcon || <CancelIcon />
+    this.requestIcon = this.props.requestIcon || <MinusIcon />
   }
 
   render () {
     if (this.state.requested) {
       return (
         <div>
-          <button className={styles.icon} onClick={() => { this.setState({ requested: false }); this.props.onConfirmed() }}>{this.confirmIcon}</button>
-          <button className={styles.icon} onClick={() => this.setState({ requested: false })}>{this.cancelIcon}</button>
+          <button
+            className={styles.icon}
+            onClick={() => {
+              this.setState({ requested: false })
+              this.props.onConfirmed()
+            }}
+          >
+            {this.confirmIcon}
+          </button>
+          <button
+            className={styles.icon}
+            onClick={() => this.setState({ requested: false })}
+          >
+            {this.cancelIcon}
+          </button>
         </div>
       )
     } else {
-      return (<button className={styles.icon} onClick={() => this.setState({ requested: true })}>{this.requestIcon}</button>)
+      return (
+        <button
+          className={styles.icon}
+          onClick={() => this.setState({ requested: true })}
+        >
+          {this.requestIcon}
+        </button>
+      )
     }
   }
 }

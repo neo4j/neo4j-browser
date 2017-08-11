@@ -44,7 +44,7 @@ import { getActiveConnectionData } from 'shared/modules/connections/connectionsD
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import { deepEquals } from 'services/utils'
 
-const getFrame = (type) => {
+const getFrame = type => {
   const trans = {
     error: ErrorFrame,
     cypher: CypherFrame,
@@ -81,20 +81,24 @@ class Stream extends Component {
   render () {
     return (
       <StyledStream>
-        {this.props.frames.map((frame) => {
+        {this.props.frames.map(frame => {
           const frameProps = {
             frame,
             activeConnectionData: this.props.activeConnectionData
           }
           const MyFrame = getFrame(frame.type)
-          return <div key={frame.id}><MyFrame {...frameProps} /></div>
+          return (
+            <div key={frame.id}>
+              <MyFrame {...frameProps} />
+            </div>
+          )
         })}
       </StyledStream>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     frames: getFrames(state),
     activeConnectionData: getActiveConnectionData(state),

@@ -23,8 +23,14 @@ import { getUrlInfo } from 'services/utils'
 
 export function cleanHtml (string) {
   if (typeof string !== 'string') return string
-  string = string.replace(/(\s+(on[^\s=]+)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/ig, '')
-  return string.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi, '')
+  string = string.replace(
+    /(\s+(on[^\s=]+)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/gi,
+    ''
+  )
+  return string.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi,
+    ''
+  )
 }
 
 export const authHeaderFromCredentials = (username, password) => {
@@ -32,7 +38,11 @@ export const authHeaderFromCredentials = (username, password) => {
   return btoa(`${username}:${password}`)
 }
 
-export const isLocalRequest = (localUrl, requestUrl, opts = { hostnameOnly: false }) => {
+export const isLocalRequest = (
+  localUrl,
+  requestUrl,
+  opts = { hostnameOnly: false }
+) => {
   if (!localUrl) return false
 
   if (opts.hostnameOnly === true) {
@@ -42,8 +52,14 @@ export const isLocalRequest = (localUrl, requestUrl, opts = { hostnameOnly: fals
   const localUrlInfo = getUrlInfo(localUrl)
   const requestUrlInfo = getUrlInfo(requestUrl)
   if (!requestUrlInfo.host) return true // GET /path
-  if (opts.hostnameOnly === true) return requestUrlInfo.hostname === localUrlInfo.hostname // GET localhost:8080 from localhost:9000
-  if (requestUrlInfo.host === localUrlInfo.host && requestUrlInfo.protocol === localUrlInfo.protocol) { // Same host and protocol
+  if (opts.hostnameOnly === true) {
+    return requestUrlInfo.hostname === localUrlInfo.hostname
+  } // GET localhost:8080 from localhost:9000
+  if (
+    requestUrlInfo.host === localUrlInfo.host &&
+    requestUrlInfo.protocol === localUrlInfo.protocol
+  ) {
+    // Same host and protocol
     return true
   }
   return false
