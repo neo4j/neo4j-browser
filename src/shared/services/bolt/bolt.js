@@ -111,7 +111,10 @@ function getWorkerFinalizer (workerRegister, cancellationRegister, workerId) {
 export default {
   directConnect: boltConnection.directConnect,
   openConnection,
-  closeConnection: boltConnection.closeConnection,
+  closeConnection: () => {
+    connectionProperties = null
+    boltConnection.closeConnection()
+  },
   directTransaction: boltConnection.directTransaction,
   routedReadTransaction: boltConnection.routedReadTransaction,
   routedWriteTransaction,
