@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+/* eslint-env serviceworker */
 import 'babel-polyfill'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { ensureConnection, routedWriteTransaction, cancelTransaction, closeConnection } from './boltConnection'

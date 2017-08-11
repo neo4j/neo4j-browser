@@ -55,8 +55,7 @@
       "neo",
       "FileReader",
       "Blob",
-      "fetch",
-      "self"
+      "fetch"
     ]
   },
   "repository": {},
