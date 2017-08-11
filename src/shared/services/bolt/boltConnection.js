@@ -81,7 +81,7 @@ export const getDriversObj = (props, opts = {}) => {
   }
 }
 
-export function directConnect (props, opts = {}, onLostConnection = () => {}, validateConnection = true) {
+export function directConnect (props, opts = {}, onLostConnection = () => {}, shouldValidateConnection = true) {
   const p = new Promise((resolve, reject) => {
     const creds = opts.withoutCredentials || !props.username
       ? undefined
@@ -91,7 +91,11 @@ export function directConnect (props, opts = {}, onLostConnection = () => {}, va
       onLostConnection(e)
       reject(e)
     }
-    validateConnection(driver, resolve, reject)
+    if (shouldValidateConnection) {
+      validateConnection(driver, resolve, reject)
+    } else {
+      resolve(driver)
+    }
   })
   return p
 }
