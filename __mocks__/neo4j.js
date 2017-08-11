@@ -55,6 +55,10 @@ var out = {
         this.relationship = relationship
         this.end = end
       }
+    },
+    Integer: function Integer ({ low, high }) {
+      this.low = low
+      this.high = high
     }
   }
 }
@@ -63,5 +67,7 @@ out.v1.types.Node.prototype.toString = function () { return 'node' }
 out.v1.types.Relationship.prototype.toString = function () { return 'rel' }
 out.v1.types.Path.prototype.toString = function () { return 'path' }
 out.v1.types.PathSegment.prototype.toString = function () { return 'pathsegment' }
+out.v1.Integer.prototype.toInt = function () { return this.low }
+out.v1.int = (val) => new out.v1.Integer(val)
 
 module.exports = out

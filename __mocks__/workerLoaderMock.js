@@ -18,11 +18,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import bolt from 'services/bolt/bolt'
-import { send } from 'shared/modules/requests/requestsDuck'
-
-export const handleCypherCommand = (action, put, params = {}, shouldUseCypherThread = false) => {
-  const [id, request] = bolt.routedWriteTransaction(action.cmd, params, action.requestId, true, shouldUseCypherThread)
-  put(send('cypher', id))
-  return [id, request]
-}
+module.exports = {}

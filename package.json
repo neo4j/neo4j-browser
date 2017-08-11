@@ -30,7 +30,8 @@
       "^react$": "preact-compat-enzyme",
       "^react-dom$": "preact-compat-enzyme",
       "^browser-styles(.*)$": "<rootDir>/src/browser/styles$1",
-      "^browser-components(.*)$": "<rootDir>/src/browser/components$1"
+      "^browser-components(.*)$": "<rootDir>/src/browser/components$1",
+      "worker-loader": "<rootDir>/__mocks__/workerLoaderMock.js"
     },
     "modulePaths": [
       "<rootDir>/src",
@@ -119,7 +120,8 @@
     "webpack": "^3.4.1",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dashboard": "^0.4.0",
-    "webpack-dev-server": "^2.6.1"
+    "webpack-dev-server": "^2.6.1",
+    "worker-loader": "^0.8.0"
   },
   "dependencies": {
     "ascii-data-table": "^2.1.1",
