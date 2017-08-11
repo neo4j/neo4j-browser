@@ -580,7 +580,7 @@ MATCH (a)-[:ACTED_IN]-&gt;(m)&lt;-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
         </figure>
         <p class="lead">Find movies released in the 1990s...</p>
         <figure>
-          <pre class="pre-scrollable code runnable">MATCH (nineties:Movie) WHERE nineties.released &gt; 1990 AND nineties.released &lt; 2000 RETURN nineties.title
+          <pre class="pre-scrollable code runnable">MATCH (nineties:Movie) WHERE nineties.released &gt;= 1990 AND nineties.released &lt; 2000 RETURN nineties.title
 </pre>
         </figure>
       </div>
