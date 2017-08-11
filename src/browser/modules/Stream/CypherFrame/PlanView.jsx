@@ -59,10 +59,9 @@ export class PlanView extends Component {
         })
     }
     this.ensureToggleExpand(props)
+    props.assignVisElement && props.assignVisElement(this.el, this.plan)
   }
   shouldComponentUpdate (props, state) {
-    this.props.assignVisElement && this.props.assignVisElement(this.el, this.plan)
-
     if (this.props.result === undefined) return true
     return (
       !deepEquals(props.result.summary, this.props.result.summary) ||
