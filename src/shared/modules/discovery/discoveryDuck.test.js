@@ -31,7 +31,10 @@ import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+const mockStore = configureMockStore([
+  epicMiddleware,
+  createReduxMiddleware(bus)
+])
 
 describe('discoveryOnStartupEpic', () => {
   let store
@@ -46,17 +49,16 @@ describe('discoveryOnStartupEpic', () => {
     store.clearActions()
   })
 
-  test('listens on APP_START and tries to find a bolt host and sets it to default when bolt discovery not found', (done) => {
+  test('listens on APP_START and tries to find a bolt host and sets it to default when bolt discovery not found', done => {
     // Given
     const action = { type: APP_START }
-    nock(getDiscoveryEndpoint()).get('/').reply(200, { http: 'http://localhost:7474' })
+    nock(getDiscoveryEndpoint())
+      .get('/')
+      .reply(200, { http: 'http://localhost:7474' })
 
-    bus.take(discovery.DONE, (currentAction) => {
+    bus.take(discovery.DONE, currentAction => {
       // Then
-      expect(store.getActions()).toEqual([
-        action,
-        { type: discovery.DONE }
-      ])
+      expect(store.getActions()).toEqual([action, { type: discovery.DONE }])
       done()
     })
 
@@ -64,17 +66,14 @@ describe('discoveryOnStartupEpic', () => {
     store.dispatch(action)
   })
 
-  test('listens on APP_START and tries to find a bolt host and sets it to default when fail on server error', (done) => {
+  test('listens on APP_START and tries to find a bolt host and sets it to default when fail on server error', done => {
     // Given
     const action = { type: APP_START }
     nock(getDiscoveryEndpoint()).get('/').reply(500)
 
-    bus.take(discovery.DONE, (currentAction) => {
+    bus.take(discovery.DONE, currentAction => {
       // Then
-      expect(store.getActions()).toEqual([
-        action,
-        { type: discovery.DONE }
-      ])
+      expect(store.getActions()).toEqual([action, { type: discovery.DONE }])
       done()
     })
 
@@ -82,12 +81,12 @@ describe('discoveryOnStartupEpic', () => {
     store.dispatch(action)
   })
 
-  test('listens on APP_START and finds a bolt host and dispatches an action with the found host', (done) => {
+  test('listens on APP_START and finds a bolt host and dispatches an action with the found host', done => {
     // Given
     const action = { type: APP_START }
     const expectedHost = 'bolt://myhost:7777'
     nock(getDiscoveryEndpoint()).get('/').reply(200, { bolt: expectedHost })
-    bus.take(discovery.DONE, (currentAction) => {
+    bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -100,11 +99,14 @@ describe('discoveryOnStartupEpic', () => {
     // When
     store.dispatch(action)
   })
-  test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host', (done) => {
+  test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host', done => {
     // Given
-    const action = { type: APP_START, url: 'http://localhost/?connectURL=myhost:8888' }
+    const action = {
+      type: APP_START,
+      url: 'http://localhost/?connectURL=myhost:8888'
+    }
     const expectedURL = 'bolt://myhost:8888'
-    bus.take(discovery.DONE, (currentAction) => {
+    bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -117,11 +119,14 @@ describe('discoveryOnStartupEpic', () => {
     // When
     store.dispatch(action)
   })
-  test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host, incl protocol', (done) => {
+  test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host, incl protocol', done => {
     // Given
-    const action = { type: APP_START, url: 'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fmyhost%3A8889' }
+    const action = {
+      type: APP_START,
+      url: 'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fmyhost%3A8889'
+    }
     const expectedURL = 'bolt://myhost:8889'
-    bus.take(discovery.DONE, (currentAction) => {
+    bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,

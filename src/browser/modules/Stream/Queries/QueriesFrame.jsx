@@ -18,19 +18,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from 'preact'
-import {connect} from 'preact-redux'
-import {withBus} from 'preact-suber'
+import { Component } from 'preact'
+import { connect } from 'preact-redux'
+import { withBus } from 'preact-suber'
 import FrameTemplate from '../FrameTemplate'
 import bolt from 'services/bolt/bolt'
-import {listQueriesProcedure, killQueriesProcedure} from 'shared/modules/cypher/queriesProcedureHelper'
-import {getAvailableProcedures} from 'shared/modules/features/featuresDuck'
-import {CYPHER_REQUEST, CLUSTER_CYPHER_REQUEST, AD_HOC_CYPHER_REQUEST} from 'shared/modules/cypher/cypherDuck'
-import {getConnectionState, CONNECTED_STATE} from 'shared/modules/connections/connectionsDuck'
-import {ConfirmationButton} from 'browser-components/buttons/ConfirmationButton'
-import {StyledTh, StyledHeaderRow, StyledTable, StyledTd, Code, StyledStatusBar, AutoRefreshToogle, RefreshQueriesButton, AutoRefreshSpan, StatusbarWrapper} from './styled'
-import {EnterpriseOnlyFrame} from 'browser-components/EditionView'
-import {RefreshIcon} from 'browser-components/icons/Icons'
+import {
+  listQueriesProcedure,
+  killQueriesProcedure
+} from 'shared/modules/cypher/queriesProcedureHelper'
+import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
+import {
+  CYPHER_REQUEST,
+  CLUSTER_CYPHER_REQUEST,
+  AD_HOC_CYPHER_REQUEST
+} from 'shared/modules/cypher/cypherDuck'
+import {
+  getConnectionState,
+  CONNECTED_STATE
+} from 'shared/modules/connections/connectionsDuck'
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+import {
+  StyledTh,
+  StyledHeaderRow,
+  StyledTable,
+  StyledTd,
+  Code,
+  StyledStatusBar,
+  AutoRefreshToogle,
+  RefreshQueriesButton,
+  AutoRefreshSpan,
+  StatusbarWrapper
+} from './styled'
+import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
+import { RefreshIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
 import FrameError from '../FrameError'
 
@@ -51,14 +72,17 @@ export class QueriesFrame extends Component {
     if (this.props.connectionState === CONNECTED_STATE) {
       this.getRunningQueries()
     } else {
-      this.setState({errors: ['Unable to connect to bolt server']})
+      this.setState({ errors: ['Unable to connect to bolt server'] })
     }
   }
 
   componentDidUpdate (prevProps, prevState) {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
-        this.timer = setInterval(this.getRunningQueries.bind(this), this.state.autoRefreshInterval * 1000)
+        this.timer = setInterval(
+          this.getRunningQueries.bind(this),
+          this.state.autoRefreshInterval * 1000
+        )
       } else {
         clearInterval(this.timer)
       }
@@ -74,19 +98,28 @@ export class QueriesFrame extends Component {
 
   getRunningQueries (suppressQuerySuccessMessage = false) {
     this.props.bus.self(
-      (this.isCC()) ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
-      {query: listQueriesProcedure()},
-      (response) => {
+      this.isCC() ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
+      { query: listQueriesProcedure() },
+      response => {
         if (response.success) {
           let queries = this.extractQueriesFromBoltResult(response.result)
           let resultMessage = this.constructSuccessMessage(queries)
 
           this.setState((prevState, props) => {
-            return {queries: queries, errors: null, success: suppressQuerySuccessMessage ? prevState.success : resultMessage}
+            return {
+              queries: queries,
+              errors: null,
+              success: suppressQuerySuccessMessage
+                ? prevState.success
+                : resultMessage
+            }
           })
         } else {
           let errors = this.state.errors || []
-          this.setState({errors: errors.concat([response.error]), success: false})
+          this.setState({
+            errors: errors.concat([response.error]),
+            success: false
+          })
         }
       }
     )
@@ -94,22 +127,28 @@ export class QueriesFrame extends Component {
 
   killQueries (host, queryIdList) {
     this.props.bus.self(
-      (this.isCC()) ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
-      {host, query: killQueriesProcedure(queryIdList)},
-      (response) => {
+      this.isCC() ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
+      { host, query: killQueriesProcedure(queryIdList) },
+      response => {
         if (response.success) {
-          this.setState({success: 'Query successfully cancelled', errors: null})
+          this.setState({
+            success: 'Query successfully cancelled',
+            errors: null
+          })
           this.getRunningQueries(true)
         } else {
           let errors = this.state.errors || []
-          this.setState({errors: errors.concat([response.error]), success: false})
+          this.setState({
+            errors: errors.concat([response.error]),
+            success: false
+          })
         }
       }
     )
   }
 
   extractQueriesFromBoltResult (result) {
-    return result.records.map((queryRecord) => {
+    return result.records.map(queryRecord => {
       let queryInfo = {}
       queryRecord.keys.forEach((key, idx) => {
         queryInfo[key] = bolt.itemIntToNumber(queryRecord._fields[idx])
@@ -129,13 +168,16 @@ export class QueriesFrame extends Component {
 
   constructSuccessMessage (queries) {
     let hosts = queries.map(query => query.host).reduce((acc, host) => {
-      if (acc.host) { return acc } else {
+      if (acc.host) {
+        return acc
+      } else {
         acc[host] = 1
         return acc
       }
     }, {})
 
-    let clusterCount = Object.keys(hosts).map(key => hosts.hasOwnProperty(key)).length
+    let clusterCount = Object.keys(hosts).map(key => hosts.hasOwnProperty(key))
+      .length
     let numMachinesMsg = 'running on one server'
 
     if (clusterCount > 1) {
@@ -160,22 +202,54 @@ export class QueriesFrame extends Component {
       ['Elapsed time', '95px'],
       ['Kill', '95px']
     ]
-    const tableRows = queries.map((query) => {
+    const tableRows = queries.map(query => {
       return (
         <tr>
-          <StyledTd title={query.host} width={tableHeaderSizes[0][1]}><Code>{query.host}</Code></StyledTd>
-          <StyledTd width={tableHeaderSizes[1][1]}>{query.username}</StyledTd>
-          <StyledTd title={query.query} width={tableHeaderSizes[2][1]}><Code>{query.query}</Code></StyledTd>
-          <StyledTd width={tableHeaderSizes[3][1]}><Code>{query.parameters}</Code></StyledTd>
-          <StyledTd width={tableHeaderSizes[4][1]}><Code>{query.metaData}</Code></StyledTd>
-          <StyledTd width={tableHeaderSizes[5][1]}>{query.elapsedTimeMillis} ms</StyledTd>
-          <StyledTd width={tableHeaderSizes[6][1]}><ConfirmationButton
-            onConfirmed={this.onCancelQuery.bind(this, query.host, query.queryId)} /></StyledTd>
-        </tr>)
+          <StyledTd title={query.host} width={tableHeaderSizes[0][1]}>
+            <Code>
+              {query.host}
+            </Code>
+          </StyledTd>
+          <StyledTd width={tableHeaderSizes[1][1]}>
+            {query.username}
+          </StyledTd>
+          <StyledTd title={query.query} width={tableHeaderSizes[2][1]}>
+            <Code>
+              {query.query}
+            </Code>
+          </StyledTd>
+          <StyledTd width={tableHeaderSizes[3][1]}>
+            <Code>
+              {query.parameters}
+            </Code>
+          </StyledTd>
+          <StyledTd width={tableHeaderSizes[4][1]}>
+            <Code>
+              {query.metaData}
+            </Code>
+          </StyledTd>
+          <StyledTd width={tableHeaderSizes[5][1]}>
+            {query.elapsedTimeMillis} ms
+          </StyledTd>
+          <StyledTd width={tableHeaderSizes[6][1]}>
+            <ConfirmationButton
+              onConfirmed={this.onCancelQuery.bind(
+                this,
+                query.host,
+                query.queryId
+              )}
+            />
+          </StyledTd>
+        </tr>
+      )
     })
 
     const tableHeaders = tableHeaderSizes.map((heading, i) => {
-      return <StyledTh width={heading[1]} key={i}>{heading[0]}</StyledTh>
+      return (
+        <StyledTh width={heading[1]} key={i}>
+          {heading[0]}
+        </StyledTh>
+      )
     })
     return (
       <StyledTable>
@@ -192,7 +266,7 @@ export class QueriesFrame extends Component {
   }
 
   setAutoRefresh (autoRefresh) {
-    this.setState({autoRefresh: autoRefresh})
+    this.setState({ autoRefresh: autoRefresh })
 
     if (autoRefresh) {
       this.getRunningQueries()
@@ -213,16 +287,21 @@ export class QueriesFrame extends Component {
           <Render if={this.state.success}>
             <StyledStatusBar>
               {this.state.success}
-              <RefreshQueriesButton onClick={() => this.getRunningQueries()}><RefreshIcon /></RefreshQueriesButton>
+              <RefreshQueriesButton onClick={() => this.getRunningQueries()}>
+                <RefreshIcon />
+              </RefreshQueriesButton>
               <AutoRefreshSpan>
-                <AutoRefreshToogle checked={this.state.autoRefresh} onClick={(e) => this.setAutoRefresh(e.target.checked)} />
+                <AutoRefreshToogle
+                  checked={this.state.autoRefresh}
+                  onClick={e => this.setAutoRefresh(e.target.checked)}
+                />
               </AutoRefreshSpan>
             </StyledStatusBar>
           </Render>
         </StatusbarWrapper>
       )
     } else {
-      frameContents = (<EnterpriseOnlyFrame command={this.props.frame.cmd} />)
+      frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
     }
     return (
       <FrameTemplate
@@ -234,7 +313,7 @@ export class QueriesFrame extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     availableProcedures: getAvailableProcedures(state) || [],
     connectionState: getConnectionState(state)

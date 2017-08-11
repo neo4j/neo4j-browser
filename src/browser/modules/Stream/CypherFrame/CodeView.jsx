@@ -20,7 +20,14 @@
 
 import { Component } from 'preact'
 import { deepEquals } from 'services/utils'
-import { PaddedDiv, StyledTable, StyledTBody, StyledAlteringTr, StyledStrongTd, StyledTd } from '../styled'
+import {
+  PaddedDiv,
+  StyledTable,
+  StyledTBody,
+  StyledAlteringTr,
+  StyledStrongTd,
+  StyledTd
+} from '../styled'
 import { TableStatusbar } from './TableView'
 
 export class CodeView extends Component {
@@ -36,20 +43,28 @@ export class CodeView extends Component {
           <StyledTBody>
             <StyledAlteringTr>
               <StyledStrongTd>Server version</StyledStrongTd>
-              <StyledTd>{request.result.summary.server.version}</StyledTd>
+              <StyledTd>
+                {request.result.summary.server.version}
+              </StyledTd>
             </StyledAlteringTr>
             <StyledAlteringTr>
               <StyledStrongTd>Server address</StyledStrongTd>
-              <StyledTd>{request.result.summary.server.address}</StyledTd>
+              <StyledTd>
+                {request.result.summary.server.address}
+              </StyledTd>
             </StyledAlteringTr>
             <StyledAlteringTr>
               <StyledStrongTd>Query</StyledStrongTd>
-              <StyledTd>{query}</StyledTd>
+              <StyledTd>
+                {query}
+              </StyledTd>
             </StyledAlteringTr>
             <StyledAlteringTr>
               <StyledStrongTd>Response</StyledStrongTd>
               <StyledTd>
-                <pre>{JSON.stringify(request.result.records, null, 2)}</pre>
+                <pre>
+                  {JSON.stringify(request.result.records, null, 2)}
+                </pre>
               </StyledTd>
             </StyledAlteringTr>
           </StyledTBody>

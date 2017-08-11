@@ -22,7 +22,7 @@ import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
 import { SyncSignInButton } from 'browser-components/buttons'
 
-const grow = (height) => {
+const grow = height => {
   return keyframes`
     0% {
       max-height: 0px;
@@ -87,19 +87,17 @@ export const SyncSignInBarButton = styled(SyncSignInButton)`
 export const StyledCancelLink = styled.a`
   cursor: pointer;
   text-decoration: none;
-  color: #D0D0D0;
+  color: #d0d0d0;
   &:hover {
-    color: #FFFFFF;
+    color: #ffffff;
     text-decoration: none;
-  };
+  }
 `
 export const StyledSyncReminderSpan = styled.span`
-  text-overflow : ellipsis;
-  white-space : nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
   float: left;
 `
 
-export const StyledSyncReminderButtonContainer = styled.div`
-  float: right;
-`
+export const StyledSyncReminderButtonContainer = styled.div`float: right;`

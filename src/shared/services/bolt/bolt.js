@@ -22,7 +22,13 @@ import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
-import { runCypherMessage, cancelTransactionMessage, CYPHER_ERROR_MESSAGE, CYPHER_RESPONSE_MESSAGE, POST_CANCEL_TRANSACTION_MESSAGE } from './boltWorkerMessages'
+import {
+  runCypherMessage,
+  cancelTransactionMessage,
+  CYPHER_ERROR_MESSAGE,
+  CYPHER_RESPONSE_MESSAGE,
+  POST_CANCEL_TRANSACTION_MESSAGE
+} from './boltWorkerMessages'
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
@@ -34,12 +40,18 @@ let cancellationRegister = {}
 
 function openConnection (props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
-    boltConnection.openConnection(props, opts, onLostConnection)
-      .then((r) => {
-        connectionProperties = { username: props.username, password: props.password, host: props.host, opts }
+    boltConnection
+      .openConnection(props, opts, onLostConnection)
+      .then(r => {
+        connectionProperties = {
+          username: props.username,
+          password: props.password,
+          host: props.host,
+          opts
+        }
         resolve(r)
       })
-      .catch((e) => {
+      .catch(e => {
         connectionProperties = null
         reject(e)
       })
@@ -55,32 +67,53 @@ function cancelTransaction (id, cb) {
   }
 }
 
-function routedWriteTransaction (input, parameters, requestId = null, cancelable = false, useCypherThread) {
+function routedWriteTransaction (
+  input,
+  parameters,
+  requestId = null,
+  cancelable = false,
+  useCypherThread
+) {
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
     const boltWorker = new BoltWorkerModule()
     boltWorkerRegister[id] = boltWorker
 
-    const workerFinalizer = getWorkerFinalizer(boltWorkerRegister, cancellationRegister, id)
+    const workerFinalizer = getWorkerFinalizer(
+      boltWorkerRegister,
+      cancellationRegister,
+      id
+    )
 
     const workerPromise = new Promise((resolve, reject) => {
-      boltWorker.postMessage(runCypherMessage(input, parameters, id, cancelable, {...connectionProperties, inheritedUseRouting: boltConnection.useRouting()}))
-      boltWorker.onmessage = (msg) => {
+      boltWorker.postMessage(
+        runCypherMessage(input, parameters, id, cancelable, {
+          ...connectionProperties,
+          inheritedUseRouting: boltConnection.useRouting()
+        })
+      )
+      boltWorker.onmessage = msg => {
         if (msg.data.type === CYPHER_ERROR_MESSAGE) {
           workerFinalizer(boltWorker)
           reject(msg.data.error)
         } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
           let records = msg.data.result.records.map(record => {
-            const typedRecord = new neo4j.types.Record(record.keys, record._fields, record._fieldLookup)
+            const typedRecord = new neo4j.types.Record(
+              record.keys,
+              record._fields,
+              record._fieldLookup
+            )
             if (typedRecord._fields) {
-              typedRecord._fields = typedRecord._fields.map(field => mappings.applyGraphTypes(field))
+              typedRecord._fields = typedRecord._fields.map(field =>
+                mappings.applyGraphTypes(field)
+              )
             }
             return typedRecord
           })
 
           let summary = mappings.applyGraphTypes(msg.data.result.summary)
           workerFinalizer(boltWorker)
-          resolve({summary, records})
+          resolve({ summary, records })
         } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
           workerFinalizer(boltWorker)
         }
@@ -89,12 +122,17 @@ function routedWriteTransaction (input, parameters, requestId = null, cancelable
 
     return [id, workerPromise]
   } else {
-    return boltConnection.routedWriteTransaction(input, parameters, requestId, cancelable)
+    return boltConnection.routedWriteTransaction(
+      input,
+      parameters,
+      requestId,
+      cancelable
+    )
   }
 }
 
 function getWorkerFinalizer (workerRegister, cancellationRegister, workerId) {
-  return (worker) => {
+  return worker => {
     if (cancellationRegister[workerId]) {
       cancellationRegister[workerId]()
       delete cancellationRegister[workerId]
@@ -119,24 +157,54 @@ export default {
   routedReadTransaction: boltConnection.routedReadTransaction,
   routedWriteTransaction,
   cancelTransaction,
-  useRoutingConfig: (shouldWe) => boltConnection.setUseRoutingConfig(shouldWe),
+  useRoutingConfig: shouldWe => boltConnection.setUseRoutingConfig(shouldWe),
   recordsToTableArray: (records, convertInts = true) => {
     const intChecker = convertInts ? neo4j.isInt : () => true
-    const intConverter = convertInts ? (item) => mappings.itemIntToString(item, { intChecker: neo4j.isInt, intConverter: (val) => val.toNumber() }) : (val) => val
-    return mappings.recordsToTableArray(records, { intChecker, intConverter, objectConverter: mappings.extractFromNeoObjects })
+    const intConverter = convertInts
+      ? item =>
+        mappings.itemIntToString(item, {
+          intChecker: neo4j.isInt,
+          intConverter: val => val.toNumber()
+        })
+      : val => val
+    return mappings.recordsToTableArray(records, {
+      intChecker,
+      intConverter,
+      objectConverter: mappings.extractFromNeoObjects
+    })
   },
-  extractNodesAndRelationshipsFromRecords: (records) => {
-    return mappings.extractNodesAndRelationshipsFromRecords(records, neo4j.types)
+  extractNodesAndRelationshipsFromRecords: records => {
+    return mappings.extractNodesAndRelationshipsFromRecords(
+      records,
+      neo4j.types
+    )
   },
-  extractNodesAndRelationshipsFromRecordsForOldVis: (records, filterRels = true) => {
+  extractNodesAndRelationshipsFromRecordsForOldVis: (
+    records,
+    filterRels = true
+  ) => {
     const intChecker = neo4j.isInt
-    const intConverter = (val) => val.toString()
-    return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(records, neo4j.types, filterRels, { intChecker, intConverter, objectConverter: mappings.extractFromNeoObjects })
+    const intConverter = val => val.toString()
+    return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(
+      records,
+      neo4j.types,
+      filterRels,
+      {
+        intChecker,
+        intConverter,
+        objectConverter: mappings.extractFromNeoObjects
+      }
+    )
   },
   extractPlan: (result, calculateTotalDbHits) => {
     return mappings.extractPlan(result, calculateTotalDbHits)
   },
   retrieveFormattedUpdateStatistics: mappings.retrieveFormattedUpdateStatistics,
-  itemIntToNumber: (item) => mappings.itemIntToString(item, { intChecker: neo4j.isInt, intConverter: (val) => val.toNumber(), objectConverter: mappings.extractFromNeoObjects }),
+  itemIntToNumber: item =>
+    mappings.itemIntToString(item, {
+      intChecker: neo4j.isInt,
+      intConverter: val => val.toNumber(),
+      objectConverter: mappings.extractFromNeoObjects
+    }),
   neo4j: neo4j
 }

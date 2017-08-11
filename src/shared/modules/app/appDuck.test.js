@@ -41,11 +41,11 @@ test('selector getHostedUrl returns whats in the store', () => {
   const action = { type: APP_START, url }
 
   // Then
-  expect(getHostedUrl({[NAME]: initState})).toEqual(null)
+  expect(getHostedUrl({ [NAME]: initState })).toEqual(null)
 
   // When
   const state = reducer(initState, action)
 
   // Then
-  expect(getHostedUrl({[NAME]: state})).toEqual(url)
+  expect(getHostedUrl({ [NAME]: state })).toEqual(url)
 })

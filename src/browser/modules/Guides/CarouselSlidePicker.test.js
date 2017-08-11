@@ -28,7 +28,7 @@ describe('CarouselSlidePicker', () => {
     const result = mount(CarouselSlidePicker)
       // When
       .withProps({})
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toBe('')
       })
     return result
@@ -38,8 +38,8 @@ describe('CarouselSlidePicker', () => {
     const slides = ['foo', 'bar']
     const result = mount(CarouselSlidePicker)
       // When
-      .withProps({slides})
-      .then((wrapper) => {
+      .withProps({ slides })
+      .then(wrapper => {
         expect(wrapper.find('li').length).toBe(2)
       })
     return result
@@ -50,8 +50,8 @@ describe('CarouselSlidePicker', () => {
     const visibleSlide = 0
     const result = mount(CarouselSlidePicker)
       // When
-      .withProps({slides, visibleSlide})
-      .then((wrapper) => {
+      .withProps({ slides, visibleSlide })
+      .then(wrapper => {
         expect(wrapper.find('li').length).toBe(2)
         expect(wrapper.find('li').get(0)).not.toEqual(wrapper.find('li').get(1))
       })

@@ -32,18 +32,17 @@ function request (method, url, data = null, extraHeaders = {}) {
     method,
     headers: headers,
     body: data
-  })
-  .then(checkStatus)
+  }).then(checkStatus)
 }
 
 function get (url) {
   return fetch(url, {
     method: 'get'
   })
-  .then(checkStatus)
-  .then(function (response) {
-    return response.text()
-  })
+    .then(checkStatus)
+    .then(function (response) {
+      return response.text()
+    })
 }
 
 export function getJSON (url) {
@@ -52,11 +51,13 @@ export function getJSON (url) {
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then((response) => {
-    return response.json()
-  }).catch((e) => {
-    throw new Error(e)
   })
+    .then(response => {
+      return response.json()
+    })
+    .catch(e => {
+      throw new Error(e)
+    })
 }
 
 function checkStatus (response) {

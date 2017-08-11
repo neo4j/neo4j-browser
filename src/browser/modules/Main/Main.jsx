@@ -18,15 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DISCONNECTED_STATE, PENDING_STATE } from 'shared/modules/connections/connectionsDuck'
+import {
+  DISCONNECTED_STATE,
+  PENDING_STATE
+} from 'shared/modules/connections/connectionsDuck'
 import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
 import Render from 'browser-components/Render'
 import ClickToCode from '../ClickToCode'
-import { StyledMain, WarningBanner, ErrorBanner, NotAuthedBanner, StyledCodeBlockAuthBar, StyledCodeBlockErrorBar } from './styled'
+import {
+  StyledMain,
+  WarningBanner,
+  ErrorBanner,
+  NotAuthedBanner,
+  StyledCodeBlockAuthBar,
+  StyledCodeBlockErrorBar
+} from './styled'
 import SyncReminderBanner from './SyncReminderBanner'
 
-const Main = (props) => {
+const Main = props => {
   return (
     <StyledMain>
       <Editor />
@@ -35,8 +45,7 @@ const Main = (props) => {
           Type&nbsp;
           <ClickToCode CodeComponent={StyledCodeBlockErrorBar}>
             {props.cmdchar}help commands
-          </ClickToCode>&nbsp;
-          for a list of available commands.
+          </ClickToCode>&nbsp; for a list of available commands.
         </ErrorBanner>
       </Render>
       <Render if={props.errorMessage}>
@@ -49,8 +58,8 @@ const Main = (props) => {
           Database access not available. Please use&nbsp;
           <ClickToCode CodeComponent={StyledCodeBlockAuthBar}>
             {props.cmdchar}server connect
-          </ClickToCode>&nbsp;
-          to establish connection. There's a graph waiting for you.
+          </ClickToCode>&nbsp; to establish connection. There's a graph waiting
+          for you.
         </NotAuthedBanner>
       </Render>
       <Render if={props.connectionState === PENDING_STATE}>

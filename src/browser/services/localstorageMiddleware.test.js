@@ -19,7 +19,10 @@
  */
 
 /* global test, expect */
-import { makeConnectionsInitialState, makeConnectionsPersistedState } from './localstorageMiddleware'
+import {
+  makeConnectionsInitialState,
+  makeConnectionsPersistedState
+} from './localstorageMiddleware'
 
 const connection = {
   reducer: (initialState, action) => {
@@ -47,7 +50,7 @@ describe('localstorageMiddleware', () => {
     const before = {
       activeConnection: 'anything',
       allConnectionIds: ['x'],
-      connectionsById: {'x': {name: 'x'}}
+      connectionsById: { x: { name: 'x' } }
     }
     const key = 'connections'
 

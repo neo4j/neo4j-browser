@@ -24,7 +24,7 @@ import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 import Render from 'browser-components/Render'
 
-const Disconnect = ({frame, activeConnectionData}) => {
+const Disconnect = ({ frame, activeConnectionData }) => {
   return (
     <FrameTemplate
       header={frame}
@@ -34,17 +34,13 @@ const Disconnect = ({frame, activeConnectionData}) => {
             <Render if={activeConnectionData}>
               <div>
                 <H3>Connected</H3>
-                <Lead>
-                  You're still connected
-                </Lead>
+                <Lead>You're still connected</Lead>
               </div>
             </Render>
             <Render if={!activeConnectionData}>
               <div>
                 <H3>Disconnected</H3>
-                <Lead>
-                  You are disconnected from the server
-                </Lead>
+                <Lead>You are disconnected from the server</Lead>
               </div>
             </Render>
           </StyledConnectionAside>

@@ -24,8 +24,8 @@ import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
   test('handles initial value', () => {
-    const nextState = reducer(undefined, {type: ''})
-    expect(dehydrate(nextState)).toEqual({availableProcedures: []})
+    const nextState = reducer(undefined, { type: '' })
+    expect(dehydrate(nextState)).toEqual({ availableProcedures: [] })
   })
 
   test('handles UPDATE_ALL_FEATURES without initial state', () => {
@@ -50,27 +50,38 @@ describe('features reducer', () => {
 
 describe('feature getters', () => {
   test('should return empty list of availableProcedures by default', () => {
-    const nextState = reducer(undefined, {type: ''})
-    expect(features.getAvailableProcedures({features: nextState})).toEqual([])
+    const nextState = reducer(undefined, { type: '' })
+    expect(features.getAvailableProcedures({ features: nextState })).toEqual([])
   })
   test('should return list of availableProcedures', () => {
-    const nextState = reducer({availableProcedures: ['foo.bar']}, {type: ''})
-    expect(features.getAvailableProcedures({features: nextState})).toContain('foo.bar')
+    const nextState = reducer(
+      { availableProcedures: ['foo.bar'] },
+      { type: '' }
+    )
+    expect(features.getAvailableProcedures({ features: nextState })).toContain(
+      'foo.bar'
+    )
   })
   test('should not be a causal cluster', () => {
-    const nextState = reducer(undefined, {type: ''})
-    expect(features.isACausalCluster({features: nextState})).toBe(false)
+    const nextState = reducer(undefined, { type: '' })
+    expect(features.isACausalCluster({ features: nextState })).toBe(false)
   })
   test('should be in a causal cluster', () => {
-    const nextState = reducer({availableProcedures: ['dbms.cluster.overview']}, {type: ''})
-    expect(features.isACausalCluster({features: nextState})).toBe(true)
+    const nextState = reducer(
+      { availableProcedures: ['dbms.cluster.overview'] },
+      { type: '' }
+    )
+    expect(features.isACausalCluster({ features: nextState })).toBe(true)
   })
   test('should not be able to assign roles to user', () => {
-    const nextState = reducer(undefined, {type: ''})
-    expect(features.canAssignRolesToUser({features: nextState})).toBe(false)
+    const nextState = reducer(undefined, { type: '' })
+    expect(features.canAssignRolesToUser({ features: nextState })).toBe(false)
   })
   test('should be able to assign roles to user', () => {
-    const nextState = reducer({availableProcedures: ['dbms.security.addRoleToUser']}, {type: ''})
-    expect(features.canAssignRolesToUser({features: nextState})).toBe(true)
+    const nextState = reducer(
+      { availableProcedures: ['dbms.security.addRoleToUser'] },
+      { type: '' }
+    )
+    expect(features.canAssignRolesToUser({ features: nextState })).toBe(true)
   })
 })

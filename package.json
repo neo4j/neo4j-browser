@@ -6,6 +6,8 @@
   "scripts": {
     "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
     "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
+    "precommit": "lint-staged",
+    "format": "prettier-standard 'src/**/!(*.min).js' 'src/**/*.jsx'",
     "lint": "standard --fix",
     "test": "npm run lint && jest",
     "e2e": "cypress run --config fixturesFolder=e2e_tests/fixtures,integrationFolder=e2e_tests/integration,screenshotsFolder=e2e_tests/screenshots,supportFile=e2e_tests/support,videosFolder=e2e_tests/videos",
@@ -14,6 +16,14 @@
     "jar": "yarn build && mvn package",
     "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.{js,jsx}": [
+        "prettier-standard",
+        "git add"
+      ]
+    }
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -108,6 +118,7 @@
     "preact-render-to-string": "^3.6.3",
     "preact-test-utils": "^0.1.3",
     "precss": "^2.0.0",
+    "prettier-standard": "^6.0.0",
     "react-addons-test-utils": "^15.0.2",
     "react-hot-loader": "^1.3.0",
     "redux-devtools": "^3.2.0",
@@ -131,8 +142,10 @@
     "dnd-core": "^2.2.4",
     "file-saver": "^1.3.3",
     "firebase": "^4.2.0",
+    "husky": "^0.14.3",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
+    "lint-staged": "^4.0.3",
     "lodash.debounce": "^4.0.8",
     "neo4j-driver": "~1.2.0",
     "node-noop": "^1.0.0",

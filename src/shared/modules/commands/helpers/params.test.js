@@ -34,8 +34,12 @@ describe('commandsDuck params helper', () => {
     const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
-    return expect(p)
-      .rejects.toEqual(new Error('Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'))
+    return expect(p).rejects
+      .toEqual(
+        new Error(
+          'Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'
+        )
+      )
       .then(() => expect(put).not.toHaveBeenCalled())
   })
   test('handles :param "x": 2 and calls the update action creator', () => {
@@ -48,9 +52,9 @@ describe('commandsDuck params helper', () => {
     const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
-    return p.then((res) => {
-      expect(res.result).toEqual({x: 2})
-      expect(put).toHaveBeenCalledWith(update({x: 2}))
+    return p.then(res => {
+      expect(res.result).toEqual({ x: 2 })
+      expect(put).toHaveBeenCalledWith(update({ x: 2 }))
     })
   })
   test('handles :param x: 2 and calls the update action creator', () => {
@@ -63,9 +67,9 @@ describe('commandsDuck params helper', () => {
     const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
-    return p.then((res) => {
-      expect(res.result).toEqual({x: 2})
-      expect(put).toHaveBeenCalledWith(update({x: 2}))
+    return p.then(res => {
+      expect(res.result).toEqual({ x: 2 })
+      expect(put).toHaveBeenCalledWith(update({ x: 2 }))
     })
   })
   test('handles :param "x y": 2 and calls the update action creator', () => {
@@ -78,9 +82,9 @@ describe('commandsDuck params helper', () => {
     const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
-    return p.then((res) => {
-      expect(res.result).toEqual({'x y': 2})
-      expect(put).toHaveBeenCalledWith(update({'x y': 2}))
+    return p.then(res => {
+      expect(res.result).toEqual({ 'x y': 2 })
+      expect(put).toHaveBeenCalledWith(update({ 'x y': 2 }))
     })
   })
   test('handles :params {"hej": "ho", "let\'s": "go"} and calls the replace action creator', () => {
@@ -93,9 +97,9 @@ describe('commandsDuck params helper', () => {
     const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
-    return p.then((res) => {
-      expect(res.result).toEqual({hej: 'ho', "let's": 'go'})
-      expect(put).toHaveBeenCalledWith(replace({hej: 'ho', "let's": 'go'}))
+    return p.then(res => {
+      expect(res.result).toEqual({ hej: 'ho', "let's": 'go' })
+      expect(put).toHaveBeenCalledWith(replace({ hej: 'ho', "let's": 'go' }))
     })
   })
   test('handles :params {x: 1, y: 2} and calls the replace action creator', () => {
@@ -108,9 +112,9 @@ describe('commandsDuck params helper', () => {
     const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
-    return p.then((res) => {
-      expect(res.result).toEqual({x: 1, y: 2})
-      expect(put).toHaveBeenCalledWith(replace({x: 1, y: 2}))
+    return p.then(res => {
+      expect(res.result).toEqual({ x: 1, y: 2 })
+      expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2 }))
     })
   })
 })

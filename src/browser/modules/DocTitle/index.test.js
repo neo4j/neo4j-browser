@@ -18,18 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- /* global describe, beforeEach, afterEach, test, expect */
+/* global describe, beforeEach, afterEach, test, expect */
 import { mount } from 'services/testUtils'
 import DocTitle from './index'
 
 describe('DocTitle', () => {
   test('should set document title', () => {
-   // Given
+    // Given
     const titleString = 'foo'
     const result = mount(DocTitle)
       // When
-      .withProps({titleString})
-      .then((wrapper) => {
+      .withProps({ titleString })
+      .then(wrapper => {
         expect(document.title).toBe(titleString)
       })
     return result

@@ -28,7 +28,10 @@ import { update as updateSettings } from 'shared/modules/settings/settingsDuck'
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(stream.maxFramesConfigEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+const mockStore = configureMockStore([
+  epicMiddleware,
+  createReduxMiddleware(bus)
+])
 
 describe('streamDuckEpics', () => {
   let store
@@ -50,10 +53,10 @@ describe('streamDuckEpics', () => {
     bus.reset()
   })
 
-  test('listens on UPDATE and sets new maxFrames', (done) => {
+  test('listens on UPDATE and sets new maxFrames', done => {
     // Given
-    const action = updateSettings({maxFrames: 3})
-    bus.take('NOOP', (currentAction) => {
+    const action = updateSettings({ maxFrames: 3 })
+    bus.take('NOOP', currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,

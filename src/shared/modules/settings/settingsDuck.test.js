@@ -24,7 +24,7 @@ import { dehydrate } from 'services/duckUtils'
 
 describe('settings reducer', () => {
   test('handles initial value', () => {
-    const nextState = dehydrate(reducer(undefined, {type: ''}))
+    const nextState = dehydrate(reducer(undefined, { type: '' }))
     expect(nextState.cmdchar).toEqual(':')
   })
 
@@ -58,7 +58,7 @@ describe('settings reducer', () => {
     const action = {
       type: REPLACE,
       state: {
-        'new': 'conf'
+        new: 'conf'
       }
     }
     const nextState = dehydrate(reducer(initialState, action))
@@ -82,7 +82,7 @@ describe('Selectors', () => {
     ]
 
     // When && Then
-    tests.forEach((t) => {
+    tests.forEach(t => {
       const state = {
         [NAME]: { shouldReportUdc: t.test }
       }

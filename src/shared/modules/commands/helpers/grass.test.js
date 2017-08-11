@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- /* global jest */
+/* global jest */
 
 import { fetchRemoteGrass, parseGrass } from './grass'
 
 jest.mock('services/remote', () => {
   return {
-    get: (url) => {
+    get: url => {
       return new Promise((resolve, reject) => {
         resolve(url)
       })
@@ -36,14 +36,18 @@ describe('Grass remote fetch', () => {
   test('should not fetch from url not in the whitelist', () => {
     const whitelist = 'foo'
     const urlNotInWhitelist = 'bar'
-    return expect(fetchRemoteGrass(urlNotInWhitelist, whitelist)).rejects.toMatchObject({
+    return expect(
+      fetchRemoteGrass(urlNotInWhitelist, whitelist)
+    ).rejects.toMatchObject({
       message: 'Hostname is not allowed according to server whitelist'
     })
   })
   test('should fetch from url in the whitelist', () => {
     const whitelist = 'foo'
     const urlInWhitelist = 'foo'
-    return expect(fetchRemoteGrass(urlInWhitelist, whitelist)).resolves.toBe(urlInWhitelist)
+    return expect(fetchRemoteGrass(urlInWhitelist, whitelist)).resolves.toBe(
+      urlInWhitelist
+    )
   })
 })
 
@@ -83,14 +87,16 @@ describe('Grass parser', () => {
   })
 
   test('Parsing grass with odd whitespace', () => {
-    const data = 'node {border-color : #9AA1AC ; \n\r\t  diameter:50px;color:#A5ABB6; border-width : 2px ; } relationship{ color : #A5ABB6 ; shaft-width : 1px ; font-size : 8px ; padding : 3px ; text-color-external : #000000 ; text-color-internal : #FFFFFF ; caption : <type>; }'
+    const data =
+      'node {border-color : #9AA1AC ; \n\r\t  diameter:50px;color:#A5ABB6; border-width : 2px ; } relationship{ color : #A5ABB6 ; shaft-width : 1px ; font-size : 8px ; padding : 3px ; text-color-external : #000000 ; text-color-internal : #FFFFFF ; caption : <type>; }'
     const parsed = parseGrass(data)
     expect(parsed.node.diameter).toEqual('50px')
     expect(parsed.relationship.color).toEqual('#A5ABB6')
   })
 
   test('Handles JSON data', () => {
-    const data = '{"node": {"diameter":"50px", "color":"#A5ABB6"}, "relationship":{"color":"#A5ABB6","shaft-width":"1px"}}'
+    const data =
+      '{"node": {"diameter":"50px", "color":"#A5ABB6"}, "relationship":{"color":"#A5ABB6","shaft-width":"1px"}}'
     const parsed = parseGrass(data)
     expect(parsed.node.diameter).toEqual('50px')
     expect(parsed.relationship.color).toEqual('#A5ABB6')

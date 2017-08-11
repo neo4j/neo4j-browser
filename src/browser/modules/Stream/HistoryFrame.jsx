@@ -24,18 +24,24 @@ import FrameTemplate from './FrameTemplate'
 import { StyledHistoryList } from './styled'
 import HistoryRow from './HistoryRow'
 
-export const HistoryFrame = (props) => {
-  const {frame, bus} = props
-  const onHistoryClick = (cmd) => {
+export const HistoryFrame = props => {
+  const { frame, bus } = props
+  const onHistoryClick = cmd => {
     bus.send(editor.SET_CONTENT, editor.setContent(cmd))
   }
   const historyRows = frame.result.map((entry, index) => {
-    return <HistoryRow key={index} handleEntryClick={onHistoryClick} entry={entry} />
+    return (
+      <HistoryRow key={index} handleEntryClick={onHistoryClick} entry={entry} />
+    )
   })
   return (
     <FrameTemplate
       header={frame}
-      contents={<StyledHistoryList>{historyRows}</StyledHistoryList>}
+      contents={
+        <StyledHistoryList>
+          {historyRows}
+        </StyledHistoryList>
+      }
     />
   )
 }

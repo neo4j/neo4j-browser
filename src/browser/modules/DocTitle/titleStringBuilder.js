@@ -18,14 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const asTitleString = (connectionData) => {
+const asTitleString = connectionData => {
   const buildTitleFromConnectionData = () => {
     if (!connectionData) return null
     if (connectionData.username && connectionData.host) {
       return `${connectionData.username}@${connectionData.host}`
     }
-    if (connectionData.username) { return connectionData.username }
-    if (connectionData.host) { return connectionData.host }
+    if (connectionData.username) {
+      return connectionData.username
+    }
+    if (connectionData.host) {
+      return connectionData.host
+    }
     return null
   }
   const builtTitle = buildTitleFromConnectionData()

@@ -24,7 +24,7 @@ import Directives from 'browser-components/Directives'
 import FrameTemplate from './FrameTemplate'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
 
-const HelpFrame = ({frame}) => {
+const HelpFrame = ({ frame }) => {
   let help = 'Help topic not specified'
   if (frame.result) {
     help = <Slide html={frame.result} />

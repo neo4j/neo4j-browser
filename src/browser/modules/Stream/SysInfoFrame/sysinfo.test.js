@@ -24,15 +24,17 @@ import { flattenAttributes } from './sysinfo'
 
 describe('sysinfo attribute types', () => {
   test('should handle string value', () => {
-    const attributeData = {attributes: [{ name: 'foo', value: 'bar' }]}
-    expect(flattenAttributes(attributeData)).toEqual({foo: 'bar'})
+    const attributeData = { attributes: [{ name: 'foo', value: 'bar' }] }
+    expect(flattenAttributes(attributeData)).toEqual({ foo: 'bar' })
   })
   test('should handle int value', () => {
-    const attributeData = {attributes: [{ name: 'foo', value: 0 }]}
-    expect(flattenAttributes(attributeData)).toEqual({foo: 0})
+    const attributeData = { attributes: [{ name: 'foo', value: 0 }] }
+    expect(flattenAttributes(attributeData)).toEqual({ foo: 0 })
   })
   test('should handle object value', () => {
-    const attributeData = {attributes: [{ name: 'foo', value: {bar: 'baz'} }]}
-    expect(flattenAttributes(attributeData)).toEqual({foo: {bar: 'baz'}})
+    const attributeData = {
+      attributes: [{ name: 'foo', value: { bar: 'baz' } }]
+    }
+    expect(flattenAttributes(attributeData)).toEqual({ foo: { bar: 'baz' } })
   })
 })

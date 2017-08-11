@@ -21,11 +21,12 @@
 import { Component } from 'preact'
 import { StyledRowToggle, StyledCaret } from './styled'
 
-const getHeightFromElem = (rowElem) => (rowElem && rowElem.base) ? rowElem.base.clientHeight : 0
+const getHeightFromElem = rowElem =>
+  rowElem && rowElem.base ? rowElem.base.clientHeight : 0
 
 export class RowExpandToggleComponent extends Component {
   updateDimensions () {
-    this.setState({rowHeight: getHeightFromElem(this.props.rowElem)})
+    this.setState({ rowHeight: getHeightFromElem(this.props.rowElem) })
   }
 
   componentDidMount () {
@@ -47,7 +48,11 @@ export class RowExpandToggleComponent extends Component {
     if (this.props.containerHeight * 1.1 < this.state.rowHeight) {
       return (
         <StyledRowToggle onClick={this.props.onClick}>
-          <StyledCaret className={this.props.contracted ? 'fa fa-caret-left' : 'fa fa-caret-down'} />
+          <StyledCaret
+            className={
+              this.props.contracted ? 'fa fa-caret-left' : 'fa fa-caret-down'
+            }
+          />
         </StyledRowToggle>
       )
     } else {

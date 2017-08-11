@@ -42,61 +42,74 @@ export default function reducer (state = initialState, action = {}) {
 
   switch (action.type) {
     case SET:
-      return Object.assign({}, state, {boltHost: action.boltHost})
+      return Object.assign({}, state, { boltHost: action.boltHost })
     default:
       return state
   }
 }
 
 // Action Creators
-export const setBoltHost = (bolt) => {
+export const setBoltHost = bolt => {
   return {
     type: SET,
     boltHost: bolt
   }
 }
 
-export const updateDiscoveryConnection = (props) => {
-  return updateConnection({ ...props, id: CONNECTION_ID, name: CONNECTION_ID, type: 'bolt' })
+export const updateDiscoveryConnection = props => {
+  return updateConnection({
+    ...props,
+    id: CONNECTION_ID,
+    name: CONNECTION_ID,
+    type: 'bolt'
+  })
 }
 
-export const getBoltHost = (state) => {
+export const getBoltHost = state => {
   return state.discovery.boltHost
 }
 
 export const discoveryOnStartupEpic = (some$, store) => {
-  return some$.ofType(APP_START).merge(some$.ofType(USER_CLEAR))
-    .map((action) => {
+  return some$
+    .ofType(APP_START)
+    .merge(some$.ofType(USER_CLEAR))
+    .map(action => {
       if (action.type !== APP_START) return action // Only read on app startup
       if (!action.url) return action
       const passedURL = getUrlParamValue('connectURL', action.url)
       if (!passedURL || !passedURL.length) return action
       const forceURL = decodeURIComponent(passedURL[0])
       action.forceURL = toBoltHost(forceURL) // Remove any protocol and prepend with bolt://
-      if (isRoutingHost(forceURL)) { // Set config to use routing if bolt+routing:// protocol
+      if (isRoutingHost(forceURL)) {
+        // Set config to use routing if bolt+routing:// protocol
         store.dispatch(updateBoltRouting(true))
       }
       return action
     })
-    .mergeMap((action) => {
+    .mergeMap(action => {
       if (action.forceURL) {
         store.dispatch(updateDiscoveryConnection({ host: action.forceURL }))
         return Promise.resolve()
       }
-      return Rx.Observable.fromPromise(
-        remote.getJSON(getDiscoveryEndpoint()).then((result) => { // Try to get info from server
-          if (!result || !result.bolt) {
-            throw new Error('No bolt address found') // No bolt info from server, throw
-          }
-          store.dispatch(updateDiscoveryConnection({ host: result.bolt })) // Update discovery host in redux
-          return result
-        }).catch((e) => {
-          throw new Error('No bolt address found') // No info from server, throw
+      return Rx.Observable
+        .fromPromise(
+          remote
+            .getJSON(getDiscoveryEndpoint())
+            .then(result => {
+              // Try to get info from server
+              if (!result || !result.bolt) {
+                throw new Error('No bolt address found') // No bolt info from server, throw
+              }
+              store.dispatch(updateDiscoveryConnection({ host: result.bolt })) // Update discovery host in redux
+              return result
+            })
+            .catch(e => {
+              throw new Error('No bolt address found') // No info from server, throw
+            })
+        )
+        .catch(e => {
+          return new Promise((resolve, reject) => resolve(e))
         })
-      )
-      .catch((e) => {
-        return new Promise((resolve, reject) => resolve(e))
-      })
     })
     .mapTo({ type: DONE })
 }

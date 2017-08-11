@@ -27,7 +27,7 @@ describe('localstorage', () => {
     const givenKey = 'myKey'
     const givenVal = 'myVal'
     const storage = {
-      getItem: (key) => {
+      getItem: key => {
         expect(key).toEqual(ls.keyPrefix + givenKey)
         return JSON.stringify(givenVal)
       }
@@ -68,7 +68,7 @@ describe('localstorage', () => {
       key2: [1, 2, 3]
     }
     const storage = {
-      getItem: (key) => {
+      getItem: key => {
         return JSON.stringify(vals[key.substring(ls.keyPrefix.length)])
       }
     }

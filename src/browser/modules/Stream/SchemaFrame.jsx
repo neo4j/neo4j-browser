@@ -33,15 +33,17 @@ export class SchemaFrame extends Component {
     }
   }
   responseHandler (name) {
-    return (res) => {
+    return res => {
       if (!res.success || !res.result || !res.result.records.length) {
         this.setState({ [name]: [] })
         return
       }
-      const out = res.result.records.map((rec) => rec.keys.reduce((acc, key) => {
-        acc[key] = rec.get(key)
-        return acc
-      }, {}))
+      const out = res.result.records.map(rec =>
+        rec.keys.reduce((acc, key) => {
+          acc[key] = rec.get(key)
+          return acc
+        }, {})
+      )
       this.setState({ [name]: out })
     }
   }
@@ -70,10 +72,17 @@ export class SchemaFrame extends Component {
     let indexString
     let constraintsString
 
-    if (indexes.length === 0) { indexString = 'No indexes' } else {
+    if (indexes.length === 0) {
+      indexString = 'No indexes'
+    } else {
       indexString = 'Indexes'
       indexString += indexes.reduce((acc, index) => {
-        acc += `\n  ${index.description.replace('INDEX', '')} ${index.state.toUpperCase()} ${index.type === 'node_unique_property' ? ' (for uniqueness constraint)' : ''}`
+        acc += `\n  ${index.description.replace(
+          'INDEX',
+          ''
+        )} ${index.state.toUpperCase()} ${index.type === 'node_unique_property'
+          ? ' (for uniqueness constraint)'
+          : ''}`
         return acc
       }, '')
     }
@@ -92,14 +101,16 @@ export class SchemaFrame extends Component {
   }
 
   render () {
-    const contents = <StyledSchemaBody>{this.formatIndexAndConstraints(this.state.indexes, this.state.constraints)}</StyledSchemaBody>
-
-    return (
-      <FrameTemplate
-        header={this.props.frame}
-        contents={contents}
-      />
+    const contents = (
+      <StyledSchemaBody>
+        {this.formatIndexAndConstraints(
+          this.state.indexes,
+          this.state.constraints
+        )}
+      </StyledSchemaBody>
     )
+
+    return <FrameTemplate header={this.props.frame} contents={contents} />
   }
 }
 export default withBus(SchemaFrame)

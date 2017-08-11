@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from 'preact'
+import { Component } from 'preact'
 import styled from 'styled-components'
 
 const StyledSettingTextInput = styled.input`
@@ -32,9 +32,7 @@ const StyledSettingTextInput = styled.input`
   width: 192px;
 `
 
-const StyledCheckbox = styled.input`
-  margin-right: 10px;
-`
+const StyledCheckbox = styled.input`margin-right: 10px;`
 const StyledLabel = styled.label`
   margin-left: 10px;
   display: inline-block;
@@ -42,17 +40,21 @@ const StyledLabel = styled.label`
     text-transform: uppercase;
   }
 `
-const StyledRadioEntry = styled.div`
-  margin: 10px 0;
-`
+const StyledRadioEntry = styled.div`margin: 10px 0;`
 
-export const TextInput = (props) => {
-  const {children, ...rest} = props
-  return <StyledSettingTextInput {...rest}>{children}</StyledSettingTextInput>
+export const TextInput = props => {
+  const { children, ...rest } = props
+  return (
+    <StyledSettingTextInput {...rest}>
+      {children}
+    </StyledSettingTextInput>
+  )
 }
 
-export const CheckboxSelector = (props) => {
-  return (props.checked) ? <StyledCheckbox type='checkbox' {...props} /> : <StyledCheckbox type='checkbox' {...props} />
+export const CheckboxSelector = props => {
+  return props.checked
+    ? <StyledCheckbox type='checkbox' {...props} />
+    : <StyledCheckbox type='checkbox' {...props} />
 }
 
 export class RadioSelector extends Component {
@@ -66,14 +68,23 @@ export class RadioSelector extends Component {
   render () {
     return (
       <form>
-        {this.props.options.map((option) => {
-          return (<StyledRadioEntry>
-            <input type='radio' value={option} checked={this.isSelectedValue(option)} onClick={(event) => {
-              this.state.selectedValue = option
-              this.props.onChange(event)
-            }} />
-            <StyledLabel>{option}</StyledLabel>
-          </StyledRadioEntry>)
+        {this.props.options.map(option => {
+          return (
+            <StyledRadioEntry>
+              <input
+                type='radio'
+                value={option}
+                checked={this.isSelectedValue(option)}
+                onClick={event => {
+                  this.state.selectedValue = option
+                  this.props.onChange(event)
+                }}
+              />
+              <StyledLabel>
+                {option}
+              </StyledLabel>
+            </StyledRadioEntry>
+          )
         })}
       </form>
     )

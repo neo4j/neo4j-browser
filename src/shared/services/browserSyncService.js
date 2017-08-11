@@ -20,11 +20,11 @@
 
 import * as firebase from 'firebase'
 
-export const authenticate = (dataToken) => {
+export const authenticate = dataToken => {
   return firebase.auth().signInWithCustomToken(dataToken)
 }
 
-export const initialize = (config) => {
+export const initialize = config => {
   if (firebase.apps.length && firebase.apps.length > 0) {
     return
   }
@@ -36,7 +36,7 @@ export const status = () => {
   return firebase.database().ref('.info/connected')
 }
 
-export const getResourceFor = (userId) => {
+export const getResourceFor = userId => {
   return firebase.database().ref('users/' + userId)
 }
 

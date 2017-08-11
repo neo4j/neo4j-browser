@@ -24,14 +24,19 @@ import {
   StyledUl
 } from './styled'
 
-const CarouselSlidePicker = ({slides, visibleSlide, onClickEvent}) => {
+const CarouselSlidePicker = ({ slides, visibleSlide, onClickEvent }) => {
   if (!slides || slides.length === 0) return null
-  const Indicators = slides.map((_, i) =>
-    (i !== visibleSlide)
-      ? <CarouselIndicatorInactive onClick={() => onClickEvent(i)} />
-      : <CarouselIndicatorActive onClick={() => onClickEvent(i)} />
-    )
-  return <StyledUl>{Indicators}</StyledUl>
+  const Indicators = slides.map(
+    (_, i) =>
+      i !== visibleSlide
+        ? <CarouselIndicatorInactive onClick={() => onClickEvent(i)} />
+        : <CarouselIndicatorActive onClick={() => onClickEvent(i)} />
+  )
+  return (
+    <StyledUl>
+      {Indicators}
+    </StyledUl>
+  )
 }
 
 export default CarouselSlidePicker

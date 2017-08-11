@@ -19,11 +19,16 @@
  */
 
 import styled from 'styled-components'
-import {QuestionIcon, PlayIcon, PlainPlayIcon, PlusIcon, BinIcon, EditIcon} from 'browser-components/icons/Icons'
+import {
+  QuestionIcon,
+  PlayIcon,
+  PlainPlayIcon,
+  PlusIcon,
+  BinIcon,
+  EditIcon
+} from 'browser-components/icons/Icons'
 
-export const StyledSetting = styled.div`
-  padding-bottom: 15px;
-`
+export const StyledSetting = styled.div`padding-bottom: 15px;`
 
 export const StyledSettingLabel = styled.div`
   word-wrap: break-wrap;
@@ -41,8 +46,7 @@ export const StyledSettingTextInput = styled.input`
   width: 192px;
 `
 
-export const StyledHelpLink = styled.a`
-`
+export const StyledHelpLink = styled.a``
 export const StyledHelpItem = styled.li`
   list-style-type: none;
   margin: 8px 0 0 0;
@@ -57,12 +61,13 @@ const StyledDocumentText = styled.a`
   }
 `
 
-export const StyledDocumentActionLink = (props) => {
-  const {name, ...rest} = props
+export const StyledDocumentActionLink = props => {
+  const { name, ...rest } = props
   return (
     <StyledHelpItem onClick={props.onClick}>
-      <StyledDocumentText {...rest}>{props.type === 'play' ? <PlayIcon />
-        : <QuestionIcon />}&nbsp;{name}</StyledDocumentText>
+      <StyledDocumentText {...rest}>
+        {props.type === 'play' ? <PlayIcon /> : <QuestionIcon />}&nbsp;{name}
+      </StyledDocumentText>
     </StyledHelpItem>
   )
 }
@@ -73,7 +78,7 @@ export const StyledList = styled.ul`
 `
 export const StyledListItem = styled.li`
   list-style-type: none;
-  margin: 8px 0px 8px ${props => props.isChild ? '16px' : '8px'};
+  margin: 8px 0px 8px ${props => (props.isChild ? '16px' : '8px')};
   cursor: pointer;
 `
 export const StyledListHeaderItem = styled.li`
@@ -105,19 +110,15 @@ const NewFolderStyledButton = styled.button`
   outline: none;
 `
 
-const SytledFavFolderButtonSpan = styled.span`
-  float: right;
-`
+const SytledFavFolderButtonSpan = styled.span`float: right;`
 
-export const FolderButtonContainer = styled.span`
-  float: right;
-`
+export const FolderButtonContainer = styled.span`float: right;`
 
 export const EditFolderInput = styled.input`
   color: black;
   border: none;
   outline: none;
-  border-radius:5px;
+  border-radius: 5px;
   line-height: 200%;
   padding-left: 5px;
 `
@@ -136,7 +137,7 @@ const StyledExecFavoriteButton = styled.div`
     opacity: 1;
   }
 `
-export const ExecFavoriteButton = (props) => {
+export const ExecFavoriteButton = props => {
   return (
     <StyledExecFavoriteButton {...props}>
       <PlainPlayIcon />
@@ -144,7 +145,7 @@ export const ExecFavoriteButton = (props) => {
   )
 }
 
-export const NewFolderButton = (props) => {
+export const NewFolderButton = props => {
   return (
     <NewFolderStyledButton onClick={props.onClick}>
       <PlusIcon />New Folder
@@ -152,15 +153,22 @@ export const NewFolderButton = (props) => {
   )
 }
 
-export const DeleteFavButton = (props) => {
-  const rightIcon = (props.removeClick && !props.isStatic) ? (<BinIcon className={'remove'} />) : null
+export const DeleteFavButton = props => {
+  const rightIcon =
+    props.removeClick && !props.isStatic
+      ? <BinIcon className={'remove'} />
+      : null
   return (
-    <SytledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>{rightIcon}</SytledFavFolderButtonSpan>
+    <SytledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>
+      {rightIcon}
+    </SytledFavFolderButtonSpan>
   )
 }
 
-export const EditFolderButton = (props) => {
+export const EditFolderButton = props => {
   return (
-    <FoldersButton onClick={props.editClick}><EditIcon /></FoldersButton>
+    <FoldersButton onClick={props.editClick}>
+      <EditIcon />
+    </FoldersButton>
   )
 }

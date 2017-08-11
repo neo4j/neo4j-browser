@@ -29,18 +29,27 @@ export const EDIT_CONTENT = NAME + '/EDIT_CONTENT'
 export const FOCUS = `${NAME}/FOCUS`
 export const EXPAND = `${NAME}/EXPAND`
 
-export const setContent = (newContent) => ({ type: SET_CONTENT, message: newContent })
-export const editContent = (id, message) => ({ type: EDIT_CONTENT, message, id })
+export const setContent = newContent => ({
+  type: SET_CONTENT,
+  message: newContent
+})
+export const editContent = (id, message) => ({
+  type: EDIT_CONTENT,
+  message,
+  id
+})
 
 export const populateEditorFromUrlEpic = (some$, store) => {
-  return some$.ofType(APP_START)
+  return some$
+    .ofType(APP_START)
     .delay(1) // Timing issue. Needs to be detached like this
-    .mergeMap((action) => {
+    .mergeMap(action => {
       if (!action.url) return Rx.Observable.never()
       const cmdParam = getUrlParamValue('cmd', action.url)
       if (!cmdParam || cmdParam[0] !== 'play') return Rx.Observable.never()
       const cmdCommand = getSettings(store.getState()).cmdchar + cmdParam[0]
-      const cmdArgs = getUrlParamValue('arg', decodeURIComponent(action.url)) || []
+      const cmdArgs =
+        getUrlParamValue('arg', decodeURIComponent(action.url)) || []
       const fullCommand = `${cmdCommand} ${cmdArgs.join(' ')}`
       return Rx.Observable.of({ type: SET_CONTENT, ...setContent(fullCommand) })
     })

@@ -30,9 +30,8 @@ describe('ErrorsViews', () => {
       // Given
       const result = mount(ErrorsView)
         .withProps({ result: {} })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           expect(wrapper.text()).toEqual('')
         })
 
@@ -42,13 +41,14 @@ describe('ErrorsViews', () => {
     test('does displays an error', () => {
       // Given
       const result = mount(ErrorsView)
-        .withProps({ result: {
-          code: 'Test.Error',
-          message: 'Test error description'
-        }})
-
+        .withProps({
+          result: {
+            code: 'Test.Error',
+            message: 'Test error description'
+          }
+        })
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           const text = wrapper.text()
           expect(text).toContain('ERROR')
           expect(text).toContain('Test.Error')
@@ -62,13 +62,14 @@ describe('ErrorsViews', () => {
       // Given
       const procErrorCode = 'Neo.ClientError.Procedure.ProcedureNotFound'
       const result = mount(ErrorsView)
-        .withProps({ result: {
-          code: procErrorCode,
-          message: 'not found'
-        }})
-
+        .withProps({
+          result: {
+            code: procErrorCode,
+            message: 'not found'
+          }
+        })
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           const text = wrapper.text()
           expect(text).toContain('ERROR')
           expect(text).toContain(procErrorCode)
@@ -85,9 +86,8 @@ describe('ErrorsViews', () => {
       // Given
       const result = mount(ErrorsStatusbar)
         .withProps({ result: {} })
-
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           expect(wrapper.text()).toEqual('')
         })
 
@@ -97,13 +97,14 @@ describe('ErrorsViews', () => {
     test('displays error', () => {
       // Given
       const result = mount(ErrorsStatusbar)
-        .withProps({ result: {
-          code: 'Test.Error',
-          message: 'Test error description'
-        }})
-
+        .withProps({
+          result: {
+            code: 'Test.Error',
+            message: 'Test error description'
+          }
+        })
         // Then
-        .then((wrapper) => {
+        .then(wrapper => {
           expect(wrapper.text()).toContain('Test.Error')
           expect(wrapper.text()).toContain('Test error description')
           expect(wrapper.html()).toContain('exclamation-triangle')

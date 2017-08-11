@@ -53,7 +53,10 @@ export default class CodeMirror extends Component {
 
   componentDidMount () {
     const textareaNode = this.editorReference
-    const { editor, editorSupport } = createCypherEditor(textareaNode, this.props.options)
+    const { editor, editorSupport } = createCypherEditor(
+      textareaNode,
+      this.props.options
+    )
     this.codeMirror = editor
     this.codeMirror.on('change', this.codemirrorValueChanged.bind(this))
     this.codeMirror.on('focus', this.focusChanged.bind(this, true))
@@ -79,13 +82,19 @@ export default class CodeMirror extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.codeMirror &&
+    if (
+      this.codeMirror &&
       nextProps.value !== undefined &&
-      normalizeLineEndings(this.codeMirror.getValue()) !== normalizeLineEndings(nextProps.value)) {
+      normalizeLineEndings(this.codeMirror.getValue()) !==
+        normalizeLineEndings(nextProps.value)
+    ) {
       if (this.props.preserveScrollPosition) {
         const prevScrollPosition = this.codeMirror.getScrollInfo()
         this.codeMirror.setValue(nextProps.value)
-        this.codeMirror.scrollTo(prevScrollPosition.left, prevScrollPosition.top)
+        this.codeMirror.scrollTo(
+          prevScrollPosition.left,
+          prevScrollPosition.top
+        )
       } else {
         this.codeMirror.setValue(nextProps.value)
       }
@@ -136,11 +145,9 @@ export default class CodeMirror extends Component {
       this.props.classNames
     )
 
-    const setEditorReference = (ref) => {
+    const setEditorReference = ref => {
       this.editorReference = ref
     }
-    return (
-      <div className={editorClassNames} ref={setEditorReference} />
-    )
+    return <div className={editorClassNames} ref={setEditorReference} />
   }
 }

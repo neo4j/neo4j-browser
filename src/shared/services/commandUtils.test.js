@@ -28,59 +28,76 @@ describe('commandutils', () => {
       '// Another comment\nRETURN 1',
       '// Another comment\nRETURN 1\n//Next comment'
     ]
-    testStrs.forEach((str) => {
+    testStrs.forEach(str => {
       expect(utils.stripCommandComments(str)).toEqual('RETURN 1')
     })
   })
 
   test('stripEmptyCommandLines should remove empty lines ', () => {
-    const testStrs = [
-      '\n\n     \nRETURN 1',
-      '   \n\nRETURN 1\n  \n\n'
-    ]
-    testStrs.forEach((str) => {
+    const testStrs = ['\n\n     \nRETURN 1', '   \n\nRETURN 1\n  \n\n']
+    testStrs.forEach(str => {
       expect(utils.stripEmptyCommandLines(str)).toEqual('RETURN 1')
     })
   })
 
   test('stripEmptyCommandLines should preserve usual newlines ', () => {
-    const testStrs = [
-      'MATCH (n)\nRETURN n'
-    ]
-    testStrs.forEach((str) => {
+    const testStrs = ['MATCH (n)\nRETURN n']
+    testStrs.forEach(str => {
       expect(utils.stripEmptyCommandLines(str)).toEqual('MATCH (n)\nRETURN n')
     })
   })
 
   test('splitStringOnFirst should split strings on first occurance of delimiter ', () => {
     const testStrs = [
-      {str: ':config test:"hello :space"', delimiter: ' ', expect: [':config', 'test:"hello :space"']},
-      {str: 'test:"hello :space"', delimiter: ':', expect: ['test', '"hello :space"']}
+      {
+        str: ':config test:"hello :space"',
+        delimiter: ' ',
+        expect: [':config', 'test:"hello :space"']
+      },
+      {
+        str: 'test:"hello :space"',
+        delimiter: ':',
+        expect: ['test', '"hello :space"']
+      }
     ]
-    testStrs.forEach((obj) => {
-      expect(utils.splitStringOnFirst(obj.str, obj.delimiter)).toEqual(obj.expect)
+    testStrs.forEach(obj => {
+      expect(utils.splitStringOnFirst(obj.str, obj.delimiter)).toEqual(
+        obj.expect
+      )
     })
   })
 
   test('splitStringOnLast should split strings on last occurance of delimiter ', () => {
     const testStrs = [
-      {str: ':config test:"hello :space"', delimiter: ' ', expect: [':config test:"hello', ':space"']},
-      {str: 'test:"hello :space"', delimiter: ':', expect: ['test:"hello ', 'space"']}
+      {
+        str: ':config test:"hello :space"',
+        delimiter: ' ',
+        expect: [':config test:"hello', ':space"']
+      },
+      {
+        str: 'test:"hello :space"',
+        delimiter: ':',
+        expect: ['test:"hello ', 'space"']
+      }
     ]
-    testStrs.forEach((obj) => {
-      expect(utils.splitStringOnLast(obj.str, obj.delimiter)).toEqual(obj.expect)
+    testStrs.forEach(obj => {
+      expect(utils.splitStringOnLast(obj.str, obj.delimiter)).toEqual(
+        obj.expect
+      )
     })
   })
 
   test('isCypherCommand should treat everything not starting with : as cypher', () => {
     const testStrs = [
-      {str: ':config {test: 10}', expect: false},
-      {str: 'return 1', expect: true},
-      {str: '//:hello\nRETURN 1', expect: true},
-      {str: '   RETURN 1', expect: true}
+      { str: ':config {test: 10}', expect: false },
+      { str: 'return 1', expect: true },
+      { str: '//:hello\nRETURN 1', expect: true },
+      { str: '   RETURN 1', expect: true }
     ]
-    testStrs.forEach((obj) => {
-      expect(obj.str + ': ' + utils.isCypherCommand(obj.str, ':')).toEqual(obj.str + ': ' + obj.expect)
+    testStrs.forEach(obj => {
+      expect(obj.str + ': ' + utils.isCypherCommand(obj.str, ':')).toEqual(
+        obj.str + ': ' + obj.expect
+      )
     })
   })
   test('extractPostConnectCommandsFromServerConfig should split and return an array of commands', () => {
@@ -93,18 +110,41 @@ describe('commandutils', () => {
       { str: ':play cypher;', expect: [':play cypher'] },
       { str: ':play cypher ;', expect: [':play cypher'] },
       { str: ';:play cypher;', expect: [':play cypher'] },
-      { str: ':play cypher; :param x: 1', expect: [':play cypher', ':param x: 1'] },
-      { str: 'RETURN 1; RETURN 3; :play start', expect: ['RETURN 1', 'RETURN 3', ':play start'] },
-      { str: 'MATCH (n: {foo: "bar;", bar: "foo;"}) RETURN n', expect: ['MATCH (n: {foo: "bar;", bar: "foo;"}) RETURN n'] },
-      { str: 'MATCH (n: {foo: \'bar;\'}) RETURN n', expect: ['MATCH (n: {foo: \'bar;\'}) RETURN n'] },
-      { str: 'MATCH (n: {foo: `bar;`}) RETURN n', expect: ['MATCH (n: {foo: `bar;`}) RETURN n'] },
-      { str: 'MATCH (n: {foo: `bar;;`}) RETURN n', expect: ['MATCH (n: {foo: `bar;;`}) RETURN n'] },
-      { str: ':play cypher; MATCH (n: {foo: `bar; en;`}) RETURN n', expect: [':play cypher', 'MATCH (n: {foo: `bar; en;`}) RETURN n'] }
+      {
+        str: ':play cypher; :param x: 1',
+        expect: [':play cypher', ':param x: 1']
+      },
+      {
+        str: 'RETURN 1; RETURN 3; :play start',
+        expect: ['RETURN 1', 'RETURN 3', ':play start']
+      },
+      {
+        str: 'MATCH (n: {foo: "bar;", bar: "foo;"}) RETURN n',
+        expect: ['MATCH (n: {foo: "bar;", bar: "foo;"}) RETURN n']
+      },
+      {
+        str: "MATCH (n: {foo: 'bar;'}) RETURN n",
+        expect: ["MATCH (n: {foo: 'bar;'}) RETURN n"]
+      },
+      {
+        str: 'MATCH (n: {foo: `bar;`}) RETURN n',
+        expect: ['MATCH (n: {foo: `bar;`}) RETURN n']
+      },
+      {
+        str: 'MATCH (n: {foo: `bar;;`}) RETURN n',
+        expect: ['MATCH (n: {foo: `bar;;`}) RETURN n']
+      },
+      {
+        str: ':play cypher; MATCH (n: {foo: `bar; en;`}) RETURN n',
+        expect: [':play cypher', 'MATCH (n: {foo: `bar; en;`}) RETURN n']
+      }
     ]
 
     // When & Then
-    testStrs.forEach((item) => {
-      expect(utils.extractPostConnectCommandsFromServerConfig(item.str)).toEqual(item.expect)
+    testStrs.forEach(item => {
+      expect(
+        utils.extractPostConnectCommandsFromServerConfig(item.str)
+      ).toEqual(item.expect)
     })
   })
   test('transformCommandToHelpTopic transforms input to help topics', () => {
@@ -121,7 +161,7 @@ describe('commandutils', () => {
     ]
 
     // When & Then
-    input.forEach((inp) => {
+    input.forEach(inp => {
       expect(utils.transformCommandToHelpTopic(inp.test)).toEqual(inp.expect)
     })
   })

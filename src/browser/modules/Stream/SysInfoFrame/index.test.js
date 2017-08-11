@@ -24,28 +24,38 @@ import uuid from 'uuid'
 import { mount } from 'services/testUtils'
 import { SysInfoFrame } from './index'
 
-jest.mock('browser/modules/Stream/FrameTemplate',
-  () => ({contents, children}) => <div>{contents}{children}</div>)
+jest.mock(
+  'browser/modules/Stream/FrameTemplate',
+  () => ({ contents, children }) =>
+    <div>
+      {contents}
+      {children}
+    </div>
+)
 
 describe('sysinfo component', () => {
   test('should render causal cluster table', () => {
-    return mount(SysInfoFrame).withProps({ isACausalCluster: true }).then((wrapper) => {
-      expect(wrapper.html()).toContain('Causal Cluster Members')
-    })
+    return mount(SysInfoFrame)
+      .withProps({ isACausalCluster: true })
+      .then(wrapper => {
+        expect(wrapper.html()).toContain('Causal Cluster Members')
+      })
   })
   test('should not render causal cluster table', () => {
-    return mount(SysInfoFrame).withProps({ isACausalCluster: false }).then((wrapper) => {
-      expect(wrapper.html()).not.toContain('Causal Cluster Members')
-    })
+    return mount(SysInfoFrame)
+      .withProps({ isACausalCluster: false })
+      .then(wrapper => {
+        expect(wrapper.html()).not.toContain('Causal Cluster Members')
+      })
   })
   test('should not render ha table', () => {
     const value = uuid.v4()
     const label = 'InstanceId'
-    return mount(SysInfoFrame).withProps({}).then((wrapper) => {
+    return mount(SysInfoFrame).withProps({}).then(wrapper => {
       expect(wrapper.html()).not.toContain(label)
       expect(wrapper.html()).not.toContain(value)
 
-      wrapper.setState({ha: [{ label, value }]})
+      wrapper.setState({ ha: [{ label, value }] })
       wrapper.update()
 
       expect(wrapper.html()).toContain(label)

@@ -27,7 +27,11 @@ import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
-import { PENDING_STATE, CONNECTED_STATE, DISCONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
+import {
+  PENDING_STATE,
+  CONNECTED_STATE,
+  DISCONNECTED_STATE
+} from 'shared/modules/connections/connectionsDuck'
 
 import {
   DatabaseIcon,
@@ -48,26 +52,66 @@ class Sidebar extends Component {
     const SettingsDrawer = Settings
     const AboutDrawer = About
     const topNavItemsList = [
-      {name: 'DB', title: 'Database', icon: (isOpen) => <DatabaseIcon isOpen={isOpen} connectionState={this.props.neo4jConnectionState} />, content: DatabaseDrawer},
-      {name: 'Favorites', title: 'Favorites', icon: (isOpen) => <FavoritesIcon isOpen={isOpen} />, content: FavoritesDrawer},
-      {name: 'Documents', title: 'Documentation', icon: (isOpen) => <DocumentsIcon isOpen={isOpen} />, content: DocumentsDrawer}
+      {
+        name: 'DB',
+        title: 'Database',
+        icon: isOpen =>
+          <DatabaseIcon
+            isOpen={isOpen}
+            connectionState={this.props.neo4jConnectionState}
+          />,
+        content: DatabaseDrawer
+      },
+      {
+        name: 'Favorites',
+        title: 'Favorites',
+        icon: isOpen => <FavoritesIcon isOpen={isOpen} />,
+        content: FavoritesDrawer
+      },
+      {
+        name: 'Documents',
+        title: 'Documentation',
+        icon: isOpen => <DocumentsIcon isOpen={isOpen} />,
+        content: DocumentsDrawer
+      }
     ]
     const bottomNavItemsList = [
-      {name: 'Sync', title: 'Cloud Services', icon: (isOpen) => <CloudSyncIcon isOpen={isOpen} connected={this.props.syncConnected} />, content: BrowserSync},
-      {name: 'Settings', title: 'Browser Settings', icon: (isOpen) => <SettingsIcon isOpen={isOpen} />, content: SettingsDrawer},
-      {name: 'About', title: 'About Neo4j', icon: (isOpen) => <AboutIcon isOpen={isOpen} />, content: AboutDrawer}
+      {
+        name: 'Sync',
+        title: 'Cloud Services',
+        icon: isOpen =>
+          <CloudSyncIcon
+            isOpen={isOpen}
+            connected={this.props.syncConnected}
+          />,
+        content: BrowserSync
+      },
+      {
+        name: 'Settings',
+        title: 'Browser Settings',
+        icon: isOpen => <SettingsIcon isOpen={isOpen} />,
+        content: SettingsDrawer
+      },
+      {
+        name: 'About',
+        title: 'About Neo4j',
+        icon: isOpen => <AboutIcon isOpen={isOpen} />,
+        content: AboutDrawer
+      }
     ]
 
-    return (<TabNavigation
-      openDrawer={openDrawer}
-      onNavClick={onNavClick}
-      topNavItems={topNavItemsList}
-      bottomNavItems={bottomNavItemsList}
-    />)
+    return (
+      <TabNavigation
+        openDrawer={openDrawer}
+        onNavClick={onNavClick}
+        topNavItems={topNavItemsList}
+        bottomNavItems={bottomNavItemsList}
+      />
+    )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   let connectionState = 'disconnected'
   if (state.connections) {
     switch (state.connections.connectionState) {

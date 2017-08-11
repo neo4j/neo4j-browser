@@ -20,9 +20,7 @@
 
 import styled from 'styled-components'
 
-export const Drawer = styled.div`
-  width: 285px;
-`
+export const Drawer = styled.div`width: 285px;`
 
 export const DrawerHeader = styled.h4`
   color: ${props => props.theme.primaryHeaderText};
@@ -54,9 +52,7 @@ export const DrawerSubHeader = styled.h5`
   font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
-export const DrawerSection = styled.div`
-  margin-bottom: 12px;
-`
+export const DrawerSection = styled.div`margin-bottom: 12px;`
 
 export const DrawerSectionBody = styled.div`
   font-family: ${props => props.theme.primaryFontFamily};
@@ -64,9 +60,7 @@ export const DrawerSectionBody = styled.div`
   color: #bcc0c9;
 `
 
-export const DrawerBody = styled.div`
-  padding: 0 24px;
-`
+export const DrawerBody = styled.div`padding: 0 24px;`
 
 export const DrawerFooter = styled.div`
   position: absolute;

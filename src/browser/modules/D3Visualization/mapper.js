@@ -27,22 +27,30 @@ export function createGraph (nodes, relationships) {
 }
 
 export function mapNodes (nodes) {
-  return nodes.map((node) => new neo.models.Node(node.id, node.labels, node.properties))
+  return nodes.map(
+    node => new neo.models.Node(node.id, node.labels, node.properties)
+  )
 }
 
 export function mapRelationships (relationships, graph) {
-  return relationships.map((rel) => {
+  return relationships.map(rel => {
     const source = graph.findNode(rel.startNodeId)
     const target = graph.findNode(rel.endNodeId)
-    return new neo.models.Relationship(rel.id, source, target, rel.type, rel.properties)
+    return new neo.models.Relationship(
+      rel.id,
+      source,
+      target,
+      rel.type,
+      rel.properties
+    )
   })
 }
 
 export function getGraphStats (graph) {
   let labelStats = {}
   let relTypeStats = {}
-  graph.nodes().forEach((node) => {
-    node.labels.forEach((label) => {
+  graph.nodes().forEach(node => {
+    node.labels.forEach(label => {
       if (labelStats['*']) {
         labelStats['*'].count = labelStats['*'].count + 1
       } else {
@@ -53,7 +61,11 @@ export function getGraphStats (graph) {
       }
       if (labelStats[label]) {
         labelStats[label].count = labelStats[label].count + 1
-        labelStats[label].properties = Object.assign({}, labelStats[label].properties, node.propertyMap)
+        labelStats[label].properties = Object.assign(
+          {},
+          labelStats[label].properties,
+          node.propertyMap
+        )
       } else {
         labelStats[label] = {
           count: 1,
@@ -62,7 +74,7 @@ export function getGraphStats (graph) {
       }
     })
   })
-  graph.relationships().forEach((rel) => {
+  graph.relationships().forEach(rel => {
     if (relTypeStats['*']) {
       relTypeStats['*'].count = relTypeStats['*'].count + 1
     } else {
@@ -73,7 +85,11 @@ export function getGraphStats (graph) {
     }
     if (relTypeStats[rel.type]) {
       relTypeStats[rel.type].count = relTypeStats[rel.type].count + 1
-      relTypeStats[rel.type].properties = Object.assign({}, relTypeStats[rel.type].properties, rel.propertyMap)
+      relTypeStats[rel.type].properties = Object.assign(
+        {},
+        relTypeStats[rel.type].properties,
+        rel.propertyMap
+      )
     } else {
       relTypeStats[rel.type] = {
         count: 1,
@@ -81,5 +97,5 @@ export function getGraphStats (graph) {
       }
     }
   })
-  return {labels: labelStats, relTypes: relTypeStats}
+  return { labels: labelStats, relTypes: relTypeStats }
 }

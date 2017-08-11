@@ -28,7 +28,7 @@ describe('FrameError', () => {
     const result = mount(FrameError)
       // When
       .withProps({})
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toBe('')
       })
     return result
@@ -38,8 +38,8 @@ describe('FrameError', () => {
     const code = 'foo'
     const result = mount(FrameError)
       // When
-      .withProps({code})
-      .then((wrapper) => {
+      .withProps({ code })
+      .then(wrapper => {
         expect(wrapper.text().trim()).toBe(code)
       })
     return result
@@ -50,8 +50,8 @@ describe('FrameError', () => {
     const code = undefined
     const result = mount(FrameError)
       // When
-      .withProps({message})
-      .then((wrapper) => {
+      .withProps({ message })
+      .then(wrapper => {
         expect(wrapper.text().trim()).toBe(`${code}: ${message}`)
       })
     return result
@@ -62,8 +62,8 @@ describe('FrameError', () => {
     const code = 'for'
     const result = mount(FrameError)
       // When
-      .withProps({message, code})
-      .then((wrapper) => {
+      .withProps({ message, code })
+      .then(wrapper => {
         expect(wrapper.text().trim()).toBe(`${code}: ${message}`)
       })
     return result

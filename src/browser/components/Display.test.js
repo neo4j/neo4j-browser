@@ -31,10 +31,9 @@ describe('<Display>', () => {
     const val = false
     const children = [<span>Hello</span>]
     const result = mount(Display)
-      .withProps({if: val, lazy: 1, children})
-
+      .withProps({ if: val, lazy: 1, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('')
       })
 
@@ -46,10 +45,9 @@ describe('<Display>', () => {
     const val = false
     const children = [<span>Hello</span>]
     const result = mount(Display)
-      .withProps({if: val, children})
-
+      .withProps({ if: val, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('Hello')
         expect(wrapper.html()).toContain('display: none')
       })
@@ -62,10 +60,9 @@ describe('<Display>', () => {
     const val = true
     const children = [<span>Hello</span>]
     const result = mount(Display)
-      .withProps({if: val, children})
-
+      .withProps({ if: val, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('Hello')
         expect(wrapper.html()).toContain('display: block')
       })
@@ -78,10 +75,9 @@ describe('<Display>', () => {
     const val = true
     const children = [<span>Hello</span>]
     const result = mount(Display)
-      .withProps({if: val, inline: 1, children})
-
+      .withProps({ if: val, inline: 1, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('Hello')
         expect(wrapper.html()).toContain('display: inline')
       })
@@ -95,15 +91,14 @@ describe('<Display>', () => {
     const secondVal = true
     const children = [<span>Hello</span>]
     const result = mount(Display)
-      .withProps({if: firstVal, lazy: 1, children})
-
+      .withProps({ if: firstVal, lazy: 1, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('')
         return wrapper
       })
-      .then((wrapper) => {
-        wrapper.setProps({if: secondVal, lazy: 1, children})
+      .then(wrapper => {
+        wrapper.setProps({ if: secondVal, lazy: 1, children })
         wrapper.update()
         expect(wrapper.text()).toEqual('Hello')
         expect(wrapper.html()).toContain('display: block')
@@ -116,22 +111,21 @@ describe('<Display>', () => {
     // Given
     const children = [<span>Hello</span>]
     const result = mount(Display)
-      .withProps({if: false, lazy: 1, children})
-
+      .withProps({ if: false, lazy: 1, children })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.text()).toEqual('')
         return wrapper
       })
-      .then((wrapper) => {
-        wrapper.setProps({if: true, lazy: 1, children})
+      .then(wrapper => {
+        wrapper.setProps({ if: true, lazy: 1, children })
         wrapper.update()
         expect(wrapper.text()).toEqual('Hello')
         expect(wrapper.html()).toContain('display: block')
         return wrapper
       })
-      .then((wrapper) => {
-        wrapper.setProps({if: false, lazy: 1, children})
+      .then(wrapper => {
+        wrapper.setProps({ if: false, lazy: 1, children })
         wrapper.update()
         expect(wrapper.text()).toEqual('Hello')
         expect(wrapper.html()).toContain('display: none')

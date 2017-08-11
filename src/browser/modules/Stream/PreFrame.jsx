@@ -21,11 +21,17 @@
 import FrameTemplate from './FrameTemplate'
 import { PaddedDiv } from './styled'
 
-const PreFrame = ({frame}) => {
+const PreFrame = ({ frame }) => {
   return (
     <FrameTemplate
       header={frame}
-      contents={<PaddedDiv><pre>{frame.result || frame.contents}</pre></PaddedDiv>}
+      contents={
+        <PaddedDiv>
+          <pre>
+            {frame.result || frame.contents}
+          </pre>
+        </PaddedDiv>
+      }
     />
   )
 }

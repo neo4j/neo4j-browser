@@ -36,15 +36,18 @@ export class ToolTip extends Component {
     }
   }
   onMouseEnterHandler () {
-    this.setState({mouseover: true})
+    this.setState({ mouseover: true })
   }
   onMouseLeaveHandler () {
-    this.setState({mouseover: false})
+    this.setState({ mouseover: false })
   }
   render () {
     const tooltip = null
     return (
-      <div onMouseLeave={this.onMouseLeaveHandler.bind(this)} onMouseEnter={this.onMouseEnterHandler.bind(this)}>
+      <div
+        onMouseLeave={this.onMouseLeaveHandler.bind(this)}
+        onMouseEnter={this.onMouseEnterHandler.bind(this)}
+      >
         {this.props.children}
         {tooltip}
       </div>
@@ -52,18 +55,16 @@ export class ToolTip extends Component {
   }
 }
 
-export const CloseButton = (props) => {
-  return (
-    <button {...props}>×</button>
-  )
+export const CloseButton = props => {
+  return <button {...props}>×</button>
 }
 
 export const EditorButton = styled.span`
   font-family: ${props => props.theme.streamlineFontFamily};
-  font-style: normal!important;
-  font-weight: 400!important;
-  font-variant: normal!important;
-  text-transform: none!important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-variant: normal !important;
+  text-transform: none !important;
   speak: none;
   -webkit-font-smoothing: antialiased;
   color: ${props => props.theme.secondaryButtonText};
@@ -105,7 +106,8 @@ export const StyledNavigationButton = styled.button`
 export const NavigationButtonContainer = styled.li`
   min-height: 70px;
   height: 70px;
-  background-color: ${props => !props.isOpen ? 'transparent' : props.theme.drawerBackground};
+  background-color: ${props =>
+    !props.isOpen ? 'transparent' : props.theme.drawerBackground};
   &:focus {
     outline: none;
   }
@@ -158,19 +160,43 @@ const buttonTypes = {
   drawer: StyledDrawerFormButton
 }
 
-export const FormButton = (props) => {
-  const {icon, label, children, ...rest} = props
+export const FormButton = props => {
+  const { icon, label, children, ...rest } = props
   const ButtonType = buttonTypes[props.buttonType] || buttonTypes.primary
 
-  if (icon && label) return (<ButtonType {...rest} type='button'>{label} {icon}</ButtonType>)
-  if (icon) return (<ButtonType {...rest} type='button'>{icon}</ButtonType>)
-  if (label) return (<ButtonType {...rest} type='button'>{label}</ButtonType>)
-  return (<ButtonType {...props} type='button'>{children}</ButtonType>)
+  if (icon && label) {
+    return (
+      <ButtonType {...rest} type='button'>
+        {label} {icon}
+      </ButtonType>
+    )
+  }
+  if (icon) {
+    return (
+      <ButtonType {...rest} type='button'>
+        {icon}
+      </ButtonType>
+    )
+  }
+  if (label) {
+    return (
+      <ButtonType {...rest} type='button'>
+        {label}
+      </ButtonType>
+    )
+  }
+  return (
+    <ButtonType {...props} type='button'>
+      {children}
+    </ButtonType>
+  )
 }
 
-export const CypherFrameButton = (props) => {
-  const {selected, ...rest} = props
-  return (selected) ? <StyledSelectedCypherFrameButton {...rest} /> : <StyledCypherFrameButton {...rest} />
+export const CypherFrameButton = props => {
+  const { selected, ...rest } = props
+  return selected
+    ? <StyledSelectedCypherFrameButton {...rest} />
+    : <StyledCypherFrameButton {...rest} />
 }
 
 const StyledCypherFrameButton = styled.li`
@@ -197,9 +223,15 @@ const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
   color: ${props => props.theme.secondaryButtonTextHover};
   fill: ${props => props.theme.secondaryButtonTextHover};
 `
-export const FrameButton = (props) => {
-  const {pressed, children, ...rest} = props
-  return (pressed) ? <StyledFrameButtonPressed {...rest}>{children}</StyledFrameButtonPressed> : <StyledFrameButton {...rest}>{children}</StyledFrameButton>
+export const FrameButton = props => {
+  const { pressed, children, ...rest } = props
+  return pressed
+    ? <StyledFrameButtonPressed {...rest}>
+      {children}
+    </StyledFrameButtonPressed>
+    : <StyledFrameButton {...rest}>
+      {children}
+    </StyledFrameButton>
 }
 const StyledFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
@@ -240,9 +272,9 @@ export const FrameButtonAChild = styled(DefaultA)`
   }
 `
 
-export const ActionButton = (props) => {
-  const {className, ...rest} = props
-  return (<button className={className + ' ' + styles.action} {...rest} />)
+export const ActionButton = props => {
+  const { className, ...rest } = props
+  return <button className={className + ' ' + styles.action} {...rest} />
 }
 
 const BaseCarouselButton = styled.button`
@@ -285,11 +317,13 @@ const CarouselButtonOverlay = styled.span`
   top: 13px;
   left: 9px;
 `
-export const CarouselButton = (props) => {
-  const {children, ...rest} = props
+export const CarouselButton = props => {
+  const { children, ...rest } = props
   return (
     <BaseCarouselButton {...rest}>
-      <CarouselButtonOverlay>{children}</CarouselButtonOverlay>
+      <CarouselButtonOverlay>
+        {children}
+      </CarouselButtonOverlay>
     </BaseCarouselButton>
   )
 }

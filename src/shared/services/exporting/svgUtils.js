@@ -20,12 +20,14 @@
 
 export const prepareForExport = (svgElement, graphElement) => {
   const dimensions = getSvgDimensions(graphElement)
-  let svg = window.d3.select(document.createElementNS('http://www.w3.org/2000/svg', 'svg'))
+  let svg = window.d3.select(
+    document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  )
 
   svg.append('title').text('Neo4j Graph Visualization')
   svg.append('desc').text('Created using Neo4j (http://www.neo4j.com/)')
 
-  window.d3.select(svgElement).selectAll('g.layer').each((node) => {
+  window.d3.select(svgElement).selectAll('g.layer').each(node => {
     svg.node().appendChild(window.d3.select('.' + node).node().cloneNode(true))
   })
   svg.selectAll('.overlay, .ring').remove()
@@ -39,13 +41,18 @@ export const prepareForExport = (svgElement, graphElement) => {
   return svg
 }
 
-export const getSvgDimensions = (view) => {
+export const getSvgDimensions = view => {
   let boundingBox, dimensions
   boundingBox = view.boundingBox()
   dimensions = {
     width: boundingBox.width,
     height: boundingBox.height,
-    viewBox: [boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height].join(' ')
+    viewBox: [
+      boundingBox.x,
+      boundingBox.y,
+      boundingBox.width,
+      boundingBox.height
+    ].join(' ')
   }
   return dimensions
 }

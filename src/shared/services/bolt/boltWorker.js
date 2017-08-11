@@ -20,40 +20,73 @@
 /* eslint-env serviceworker */
 import 'babel-polyfill'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
-import { ensureConnection, routedWriteTransaction, cancelTransaction, closeConnection } from './boltConnection'
-import { cypherErrorMessage, cypherResponseMessage, postCancelTransactionMessage, RUN_CYPHER_MESSAGE, CANCEL_TRANSACTION_MESSAGE } from './boltWorkerMessages'
+import {
+  ensureConnection,
+  routedWriteTransaction,
+  cancelTransaction,
+  closeConnection
+} from './boltConnection'
+import {
+  cypherErrorMessage,
+  cypherResponseMessage,
+  postCancelTransactionMessage,
+  RUN_CYPHER_MESSAGE,
+  CANCEL_TRANSACTION_MESSAGE
+} from './boltWorkerMessages'
 
 const onmessage = function (message) {
   const messageType = message.data.type
 
   if (messageType === RUN_CYPHER_MESSAGE) {
-    const { input, parameters, requestId, cancelable, connectionProperties } = message.data
+    const {
+      input,
+      parameters,
+      requestId,
+      cancelable,
+      connectionProperties
+    } = message.data
 
-    ensureConnection(connectionProperties, connectionProperties.opts, (e) => {
-      self.postMessage(cypherErrorMessage(createErrorObject(BoltConnectionError)))
-    }).then(() => {
-      const [, request] = routedWriteTransaction(input, parameters, requestId, cancelable)
-      request.then((r) => {
-        self.postMessage(cypherResponseMessage(r))
-        closeConnection()
-      })
-        .catch((e) => {
-          self.postMessage(cypherErrorMessage({ code: e.code, message: e.message }))
-          closeConnection()
-        })
-    }).catch((e) => {
-      self.postMessage(cypherErrorMessage({ code: e.code, message: e.message }))
+    ensureConnection(connectionProperties, connectionProperties.opts, e => {
+      self.postMessage(
+        cypherErrorMessage(createErrorObject(BoltConnectionError))
+      )
     })
+      .then(() => {
+        const [, request] = routedWriteTransaction(
+          input,
+          parameters,
+          requestId,
+          cancelable
+        )
+        request
+          .then(r => {
+            self.postMessage(cypherResponseMessage(r))
+            closeConnection()
+          })
+          .catch(e => {
+            self.postMessage(
+              cypherErrorMessage({ code: e.code, message: e.message })
+            )
+            closeConnection()
+          })
+      })
+      .catch(e => {
+        self.postMessage(
+          cypherErrorMessage({ code: e.code, message: e.message })
+        )
+      })
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
     cancelTransaction(message.data.id, () => {
       self.postMessage(postCancelTransactionMessage())
       closeConnection()
     })
   } else {
-    self.postMessage(cypherErrorMessage({
-      code: -1,
-      message: `Unknown message to Bolt Worker: ${messageType}`
-    }))
+    self.postMessage(
+      cypherErrorMessage({
+        code: -1,
+        message: `Unknown message to Bolt Worker: ${messageType}`
+      })
+    )
   }
 }
 

@@ -47,16 +47,14 @@ class DndContextWrapping extends Component {
     }
   }
   render () {
-    let childProps = {...this.props}
+    let childProps = { ...this.props }
     delete childProps.Component
-    return (
-      <this.props.Component {...childProps} />
-    )
+    return <this.props.Component {...childProps} />
   }
 }
 
-export const wrapWithDndContext = (Component) => {
-  return (props) => {
-    return (<DndContextWrapping {...props} Component={Component} />)
+export const wrapWithDndContext = Component => {
+  return props => {
+    return <DndContextWrapping {...props} Component={Component} />
   }
 }

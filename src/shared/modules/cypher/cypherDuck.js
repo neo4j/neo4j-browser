@@ -21,9 +21,9 @@
 import Rx from 'rxjs'
 
 import bolt from 'services/bolt/bolt'
-import {getActiveConnectionData} from 'shared/modules/connections/connectionsDuck'
-import {getCausalClusterAddresses} from './queriesProcedureHelper'
-import {flatten} from 'services/utils'
+import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import { getCausalClusterAddresses } from './queriesProcedureHelper'
+import { flatten } from 'services/utils'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = NAME + '/REQUEST'
@@ -34,91 +34,122 @@ export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
 // Helpers
 const adHocSession = (driver, resolve, action) => {
   const session = driver.session()
-  session.run(action.query, action.parameters)
-    .then((r) => {
+  session
+    .run(action.query, action.parameters)
+    .then(r => {
       driver.close()
-      resolve({type: action.$$responseChannel, success: true, result: Object.assign({}, r, {meta: action.host})})
+      resolve({
+        type: action.$$responseChannel,
+        success: true,
+        result: Object.assign({}, r, { meta: action.host })
+      })
     })
-    .catch((e) => {
+    .catch(e => {
       driver.close()
-      resolve(({type: action.$$responseChannel, success: false, error: e}))
+      resolve({ type: action.$$responseChannel, success: false, error: e })
     })
 }
 const callClusterMember = (connection, action, store) => {
   return new Promise((resolve, reject) => {
-    bolt.directConnect(connection, undefined, undefined, false) // Ignore validation errors
-      .then((driver) => {
+    bolt
+      .directConnect(connection, undefined, undefined, false) // Ignore validation errors
+      .then(driver => {
         adHocSession(driver, resolve, action)
       })
-      .catch((e) => {
-        resolve(({type: action.$$responseChannel, success: false, error: e}))
+      .catch(e => {
+        resolve({ type: action.$$responseChannel, success: false, error: e })
       })
   })
 }
 
 // Epics
 export const cypherRequestEpic = (some$, store) =>
-  some$.ofType(CYPHER_REQUEST)
-    .mergeMap((action) => {
-      if (!action.$$responseChannel) return Rx.Observable.of(null)
-      return bolt.directTransaction(action.query, (action.params || undefined))
-        .then((r) => ({type: action.$$responseChannel, success: true, result: r}))
-        .catch((e) => ({type: action.$$responseChannel, success: false, error: e}))
-    })
+  some$.ofType(CYPHER_REQUEST).mergeMap(action => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+    return bolt
+      .directTransaction(action.query, action.params || undefined)
+      .then(r => ({ type: action.$$responseChannel, success: true, result: r }))
+      .catch(e => ({
+        type: action.$$responseChannel,
+        success: false,
+        error: e
+      }))
+  })
 
 export const adHocCypherRequestEpic = (some$, store) =>
-  some$.ofType(AD_HOC_CYPHER_REQUEST)
-    .mergeMap((action) => {
-      const connection = getActiveConnectionData(store.getState())
-      const tempConnection = Object.assign({}, connection, {host: action.host})
-      return callClusterMember(tempConnection, action, store)
-    })
+  some$.ofType(AD_HOC_CYPHER_REQUEST).mergeMap(action => {
+    const connection = getActiveConnectionData(store.getState())
+    const tempConnection = Object.assign({}, connection, { host: action.host })
+    return callClusterMember(tempConnection, action, store)
+  })
 
 export const clusterCypherRequestEpic = (some$, store) =>
-  some$.ofType(CLUSTER_CYPHER_REQUEST)
-    .mergeMap((action) => {
+  some$
+    .ofType(CLUSTER_CYPHER_REQUEST)
+    .mergeMap(action => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
-      return bolt.directTransaction(getCausalClusterAddresses)
-        .then((res) => {
-          const addresses = flatten(res.records.map((record) => record.get('addresses'))).filter((address) => address.startsWith('bolt://'))
+      return bolt
+        .directTransaction(getCausalClusterAddresses)
+        .then(res => {
+          const addresses = flatten(
+            res.records.map(record => record.get('addresses'))
+          ).filter(address => address.startsWith('bolt://'))
           return {
             action,
-            observables: addresses.map((host) => {
+            observables: addresses.map(host => {
               const connection = getActiveConnectionData(store.getState())
-              const tempConnection = Object.assign({}, connection, {host})
-              return Rx.Observable.fromPromise(callClusterMember(tempConnection, action, store))
+              const tempConnection = Object.assign({}, connection, { host })
+              return Rx.Observable.fromPromise(
+                callClusterMember(tempConnection, action, store)
+              )
             })
           }
         })
-        .catch((error) => {
-          return Rx.Observable.of({action, error})
+        .catch(error => {
+          return Rx.Observable.of({ action, error })
         })
     })
-    .flatMap(({action, observables, value}) => {
+    .flatMap(({ action, observables, value }) => {
       if (value) return Rx.Observable.of(value)
       observables.push(Rx.Observable.of(action))
       return Rx.Observable.forkJoin(...observables)
     })
-    .map((value) => {
-      if (value && value.error) return {type: value.action.$$responseChannel, success: false, error: value.error}
+    .map(value => {
+      if (value && value.error) {
+        return {
+          type: value.action.$$responseChannel,
+          success: false,
+          error: value.error
+        }
+      }
       let action = value.pop()
-      const records = value.reduce((acc, {result}) => {
-        return acc.concat(result.records.map((record) => Object.assign({}, record, {host: result.summary.server.address})))
+      const records = value.reduce((acc, { result }) => {
+        return acc.concat(
+          result.records.map(record =>
+            Object.assign({}, record, { host: result.summary.server.address })
+          )
+        )
       }, [])
-      return {type: action.$$responseChannel, success: true, result: {records}}
+      return {
+        type: action.$$responseChannel,
+        success: true,
+        result: { records }
+      }
     })
 
 // We need this because this is the only case where we still
 // want to execute cypher even though we get an connection error back
 export const handleForcePasswordChangeEpic = (some$, store) =>
-  some$.ofType(FORCE_CHANGE_PASSWORD)
-    .mergeMap((action) => {
-      if (!action.$$responseChannel) return Rx.Observable.of(null)
-      return new Promise((resolve, reject) => {
-        bolt.directConnect(action, undefined, undefined, false) // Ignore validation errors
-          .then((driver) => {
-            adHocSession(driver, resolve, action)
-          })
-          .catch((e) => resolve(({type: action.$$responseChannel, success: false, error: e})))
-      })
+  some$.ofType(FORCE_CHANGE_PASSWORD).mergeMap(action => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+    return new Promise((resolve, reject) => {
+      bolt
+        .directConnect(action, undefined, undefined, false) // Ignore validation errors
+        .then(driver => {
+          adHocSession(driver, resolve, action)
+        })
+        .catch(e =>
+          resolve({ type: action.$$responseChannel, success: false, error: e })
+        )
     })
+  })

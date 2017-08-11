@@ -18,7 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getSettings, update, replace } from 'shared/modules/settings/settingsDuck'
+import {
+  getSettings,
+  update,
+  replace
+} from 'shared/modules/settings/settingsDuck'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
 import { hostIsAllowed } from 'services/utils'
@@ -38,37 +42,50 @@ export function handleUpdateConfigCommand (action, cmdchar, put, store) {
   const p = new Promise((resolve, reject) => {
     if (parts[1] === undefined || parts[1] === '') return resolve(true) // Nothing to do
     const param = parts[1].trim()
-    if (!isValidURL(param)) { // Not an URL. Parse as command line params
-      if (/^"?\{[^}]*\}"?$/.test(param)) { // JSON object string {"x": 2, "y":"string"}
+    if (!isValidURL(param)) {
+      // Not an URL. Parse as command line params
+      if (/^"?\{[^}]*\}"?$/.test(param)) {
+        // JSON object string {"x": 2, "y":"string"}
         try {
           const res = jsonic(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes
           put(replace(res))
           return resolve(res)
         } catch (e) {
-          return reject(new Error('Could not parse input. Usage: `:config {"x":1,"y":"string"}`. ' + e))
+          return reject(
+            new Error(
+              'Could not parse input. Usage: `:config {"x":1,"y":"string"}`. ' +
+                e
+            )
+          )
         }
-      } else { // Single param
+      } else {
+        // Single param
         try {
           const json = '{' + param + '}'
           const res = jsonic(json)
           put(update(res))
           return resolve(res)
         } catch (e) {
-          return reject(new Error('Could not parse input. Usage: `:config "x": 2`. ' + e))
+          return reject(
+            new Error('Could not parse input. Usage: `:config "x": 2`. ' + e)
+          )
         }
       }
     }
     // It's an URL
     const whitelist = getRemoteContentHostnameWhitelist(store.getState())
-    if (!hostIsAllowed(param, whitelist)) { // Make sure we're allowed to request entities on this host
-      return reject(new Error('Hostname is not allowed according to server whitelist'))
+    if (!hostIsAllowed(param, whitelist)) {
+      // Make sure we're allowed to request entities on this host
+      return reject(
+        new Error('Hostname is not allowed according to server whitelist')
+      )
     }
     getJSON(param)
-      .then((res) => {
+      .then(res => {
         put(replace(res))
         resolve(res)
       })
-      .catch((e) => {
+      .catch(e => {
         reject(e)
       })
   })

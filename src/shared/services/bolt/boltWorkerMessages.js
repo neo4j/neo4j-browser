@@ -24,7 +24,13 @@ export const CYPHER_ERROR_MESSAGE = 'CYPHER_ERROR_MESSAGE'
 export const CYPHER_RESPONSE_MESSAGE = 'CYPHER_RESPONSE_MESSAGE'
 export const POST_CANCEL_TRANSACTION_MESSAGE = 'POST_CANCEL_TRANSACTION_MESSAGE'
 
-export const runCypherMessage = (input, parameters, requestId = null, cancelable = false, connectionProperties) => {
+export const runCypherMessage = (
+  input,
+  parameters,
+  requestId = null,
+  cancelable = false,
+  connectionProperties
+) => {
   return {
     type: RUN_CYPHER_MESSAGE,
     input,
@@ -35,21 +41,21 @@ export const runCypherMessage = (input, parameters, requestId = null, cancelable
   }
 }
 
-export const cancelTransactionMessage = (id) => {
+export const cancelTransactionMessage = id => {
   return {
     type: CANCEL_TRANSACTION_MESSAGE,
     id
   }
 }
 
-export const cypherResponseMessage = (result) => {
+export const cypherResponseMessage = result => {
   return {
     type: CYPHER_RESPONSE_MESSAGE,
     result
   }
 }
 
-export const cypherErrorMessage = (error) => {
+export const cypherErrorMessage = error => {
   return {
     type: CYPHER_ERROR_MESSAGE,
     error

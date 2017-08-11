@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const makeConnectionsInitialState = (connectionsReducer) => {
+export const makeConnectionsInitialState = connectionsReducer => {
   return (key, val) => {
     if (key !== 'connections') return val
     if (!val) {
@@ -34,7 +34,9 @@ export const makeConnectionsInitialState = (connectionsReducer) => {
 
     // If not, add it
     out.allConnectionIds = ['offline'].concat(out.allConnectionIds)
-    out.connectionsById = Object.assign(out.connectionsById, {'offline': {name: 'Offline', type: 'offline', id: 'offline'}})
+    out.connectionsById = Object.assign(out.connectionsById, {
+      offline: { name: 'Offline', type: 'offline', id: 'offline' }
+    })
     return out
   }
 }

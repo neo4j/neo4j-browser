@@ -19,18 +19,55 @@
  */
 
 import { combineEpics } from 'redux-observable'
-import { handleCommandsEpic, postConnectCmdEpic, fetchGuideFromWhitelistEpic } from './modules/commands/commandsDuck'
-import { retainCredentialsSettingsEpic, checkSettingsForRoutingDriver, connectEpic, disconnectEpic, startupConnectEpic, disconnectSuccessEpic, startupConnectionSuccessEpic, startupConnectionFailEpic, detectActiveConnectionChangeEpic, connectionLostEpic } from './modules/connections/connectionsDuck'
-import { dbMetaEpic, clearMetaOnDisconnectEpic } from './modules/dbMeta/dbMetaDuck'
+import {
+  handleCommandsEpic,
+  postConnectCmdEpic,
+  fetchGuideFromWhitelistEpic
+} from './modules/commands/commandsDuck'
+import {
+  retainCredentialsSettingsEpic,
+  checkSettingsForRoutingDriver,
+  connectEpic,
+  disconnectEpic,
+  startupConnectEpic,
+  disconnectSuccessEpic,
+  startupConnectionSuccessEpic,
+  startupConnectionFailEpic,
+  detectActiveConnectionChangeEpic,
+  connectionLostEpic
+} from './modules/connections/connectionsDuck'
+import {
+  dbMetaEpic,
+  clearMetaOnDisconnectEpic
+} from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
 import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
-import { adHocCypherRequestEpic, cypherRequestEpic, clusterCypherRequestEpic, handleForcePasswordChangeEpic } from './modules/cypher/cypherDuck'
+import {
+  adHocCypherRequestEpic,
+  cypherRequestEpic,
+  clusterCypherRequestEpic,
+  handleForcePasswordChangeEpic
+} from './modules/cypher/cypherDuck'
 import { featuresDiscoveryEpic } from './modules/features/featuresDuck'
-import { syncItemsEpic, clearSyncEpic, syncFavoritesEpic, loadFavoritesFromSyncEpic, loadFoldersFromSyncEpic, syncFoldersEpic } from './modules/sync/syncDuck'
+import {
+  syncItemsEpic,
+  clearSyncEpic,
+  syncFavoritesEpic,
+  loadFavoritesFromSyncEpic,
+  loadFoldersFromSyncEpic,
+  syncFoldersEpic
+} from './modules/sync/syncDuck'
 import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
-import { bootEpic, incrementEventEpic, udcStartupEpic, trackSyncLogoutEpic, trackConnectsEpic, eventFiredEpic } from './modules/udc/udcDuck'
+import {
+  bootEpic,
+  incrementEventEpic,
+  udcStartupEpic,
+  trackSyncLogoutEpic,
+  trackConnectsEpic,
+  eventFiredEpic
+} from './modules/udc/udcDuck'
 import { maxFramesConfigEpic } from './modules/stream/streamDuck'
 
 export default combineEpics(

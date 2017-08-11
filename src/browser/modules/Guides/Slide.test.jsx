@@ -22,7 +22,7 @@
 import React from 'react'
 import Slide from './Slide'
 
-import {mount} from 'enzyme'
+import { mount } from 'enzyme'
 
 describe('Slide', () => {
   test('should render html', () => {

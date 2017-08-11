@@ -28,7 +28,7 @@ describe('ChangePasswordForm', () => {
     const result = mount(ChangePasswordForm)
       // When
       .withProps({})
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.length).toBe(1)
       })
     return result
@@ -38,8 +38,8 @@ describe('ChangePasswordForm', () => {
     const children = <span className='child'>foo</span>
     const result = mount(ChangePasswordForm)
       // When
-      .withProps({children})
-      .then((wrapper) => {
+      .withProps({ children })
+      .then(wrapper => {
         expect(wrapper.html()).toContain('<span class="child">foo</span>')
       })
     return result

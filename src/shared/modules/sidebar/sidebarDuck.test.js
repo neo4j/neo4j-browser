@@ -34,7 +34,7 @@ describe('sidebar reducer', () => {
   test('should set to undefined if drawer in payload is falsy', () => {
     const action = {
       type: sidebar.TOGGLE,
-      state: {drawer: ''}
+      state: { drawer: '' }
     }
     const nextState = reducer(undefined, action)
     expect(nextState).toEqual(null)
@@ -43,7 +43,7 @@ describe('sidebar reducer', () => {
   test('should open a drawer when closed', () => {
     const action = {
       type: sidebar.TOGGLE,
-      state: {drawer: 'db'}
+      state: { drawer: 'db' }
     }
     const nextState = reducer(undefined, action)
     expect(nextState).toEqual('db')
@@ -53,7 +53,7 @@ describe('sidebar reducer', () => {
     const initialState = 'profile'
     const action = {
       type: sidebar.TOGGLE,
-      state: {drawer: 'db'}
+      state: { drawer: 'db' }
     }
     const nextState = reducer(initialState, action)
     expect(nextState).toEqual('db')
@@ -63,7 +63,7 @@ describe('sidebar reducer', () => {
     const initialState = 'db'
     const action = {
       type: sidebar.TOGGLE,
-      state: {drawer: 'db'}
+      state: { drawer: 'db' }
     }
     const nextState = reducer(initialState, action)
     expect(nextState).toEqual(null)
@@ -75,7 +75,7 @@ describe('Sidebar actions', () => {
     const drawerId = 'db'
     expect(sidebar.toggle(drawerId)).toEqual({
       type: sidebar.TOGGLE,
-      state: {drawer: drawerId}
+      state: { drawer: drawerId }
     })
   })
 })

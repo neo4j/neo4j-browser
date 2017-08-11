@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const parseHttpVerbCommand = (input) => {
+export const parseHttpVerbCommand = input => {
   const p = new Promise((resolve, reject) => {
     const re = /^[^\w]*(get|post|put|delete|head)\s+(\S+)?\s*([\S\s]+)?$/i
     const result = re.exec(input)
     let method, url, data
     try {
-      [method, url, data] = [result[1], (result[2] || null), (result[3] || null)]
+      ;[method, url, data] = [result[1], result[2] || null, result[3] || null]
     } catch (e) {
       reject(new Error('Unparseable http request'))
       return
@@ -50,11 +50,14 @@ export const parseHttpVerbCommand = (input) => {
 
 // Check if valid url, from http://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
 export function isValidURL (str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
-  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-  '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-  '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
+  var pattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  ) // fragment locator
   return pattern.test(str)
 }

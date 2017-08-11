@@ -25,7 +25,11 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
 import Render from 'browser-components/Render'
-import { DrawerSubHeader, DrawerSection, DrawerSectionBody } from 'browser-components/drawer'
+import {
+  DrawerSubHeader,
+  DrawerSection,
+  DrawerSectionBody
+} from 'browser-components/drawer'
 import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
 export class UserDetails extends Component {
@@ -39,14 +43,18 @@ export class UserDetails extends Component {
     this.props.bus.self(
       CYPHER_REQUEST,
       { query: 'CALL dbms.security.showCurrentUser()' },
-      (response) => {
+      response => {
         if (!response.success) return
         const result = response.result
         const keys = result.records[0].keys
         this.setState({
           userDetails: {
-            username: (keys.includes('username')) ? result.records[0].get('username') : '-',
-            roles: (keys.includes('roles')) ? result.records[0].get('roles') : ['admin']
+            username: keys.includes('username')
+              ? result.records[0].get('username')
+              : '-',
+            roles: keys.includes('roles')
+              ? result.records[0].get('roles')
+              : ['admin']
           }
         })
       }
@@ -61,8 +69,11 @@ export class UserDetails extends Component {
   render () {
     const userDetails = this.state.userDetails
     if (userDetails.username) {
-      const mappedRoles = (userDetails.roles.length > 0) ? userDetails.roles.join(', ') : '-'
-      const hasAdminRole = userDetails.roles.map((role) => role.toLowerCase()).includes('admin')
+      const mappedRoles =
+        userDetails.roles.length > 0 ? userDetails.roles.join(', ') : '-'
+      const hasAdminRole = userDetails.roles
+        .map(role => role.toLowerCase())
+        .includes('admin')
       return (
         <DrawerSection className='user-details'>
           <DrawerSubHeader>Connected as</DrawerSubHeader>
@@ -70,14 +81,25 @@ export class UserDetails extends Component {
             <StyledTable>
               <tbody>
                 <tr>
-                  <StyledKey>Username:</StyledKey><StyledValue>{userDetails.username}</StyledValue>
+                  <StyledKey>Username:</StyledKey>
+                  <StyledValue>
+                    {userDetails.username}
+                  </StyledValue>
                 </tr>
                 <tr>
-                  <StyledKey>Roles:</StyledKey><StyledValue>{mappedRoles}</StyledValue>
+                  <StyledKey>Roles:</StyledKey>
+                  <StyledValue>
+                    {mappedRoles}
+                  </StyledValue>
                 </tr>
                 <Render if={hasAdminRole}>
                   <tr>
-                    <StyledKey className='user-list-button'>Admin:</StyledKey><Link onClick={() => this.props.onItemClick(':server user add')}>:server user add</Link>
+                    <StyledKey className='user-list-button'>Admin:</StyledKey>
+                    <Link
+                      onClick={() => this.props.onItemClick(':server user add')}
+                    >
+                      :server user add
+                    </Link>
                   </tr>
                 </Render>
               </tbody>
@@ -93,7 +115,7 @@ export class UserDetails extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onItemClick: (cmd) => {
+    onItemClick: cmd => {
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     }

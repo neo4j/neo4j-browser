@@ -24,7 +24,7 @@ import React from 'react'
 import Guides from './Guides'
 import Slide from './Slide'
 
-import {mount} from 'enzyme'
+import { mount } from 'enzyme'
 
 describe('Guides', () => {
   test('should render Guides when html has `slide` tag', () => {

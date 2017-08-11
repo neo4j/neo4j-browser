@@ -24,9 +24,9 @@ import * as utils from './utils'
 describe('utils', () => {
   test('can deeply compare objects', () => {
     // Given
-    const o1 = {a: 'a', b: 'b', c: {c: 'c'}}
-    const o2 = {...o1}
-    const o3 = {...o1, c: {c: 'd'}}
+    const o1 = { a: 'a', b: 'b', c: { c: 'c' } }
+    const o2 = { ...o1 }
+    const o3 = { ...o1, c: { c: 'd' } }
     const o4 = { ...o1, d: { e: { f: 'g' } } }
     const o5 = { ...o1, d: { e: { f: 'g' } } }
 
@@ -37,9 +37,9 @@ describe('utils', () => {
   })
   test('can shallowEquals compare objects', () => {
     // Given
-    const o1 = {a: 1, b: 2, c: 'hello'}
-    const o2 = {...o1}
-    const o3 = {...o1, c: {c: 'd'}}
+    const o1 = { a: 1, b: 2, c: 'hello' }
+    const o2 = { ...o1 }
+    const o3 = { ...o1, c: { c: 'd' } }
     const o4 = { ...o1, d: { e: { f: 'g' } } }
     const o5 = { ...o4, d: { e: { f: 'g' } } }
 
@@ -61,7 +61,7 @@ describe('utils', () => {
     ]
 
     // When && Then
-    tests.forEach((t) => {
+    tests.forEach(t => {
       expect(utils.moveInArray(t.from, t.to, t.test)).toEqual(t.expect)
     })
   })
@@ -268,23 +268,39 @@ describe('utils', () => {
       expect(utils.hostIsAllowed('anything', whitelist)).toEqual(true)
     })
     test('can parse url params correctly', () => {
-    // Given
+      // Given
       const urls = [
-        {location: 'http://neo4j.com/?param=1', paramName: 'param', expect: ['1']},
-        {location: 'http://neo4j.com/?param=1&param=2', paramName: 'param', expect: ['1', '2']},
-        {location: 'http://neo4j.com/?param2=2&param=1', paramName: 'param', expect: ['1']},
-        {location: 'http://neo4j.com/?param=', paramName: 'param', expect: undefined},
-        {location: 'http://neo4j.com/', paramName: 'param', expect: undefined}
+        {
+          location: 'http://neo4j.com/?param=1',
+          paramName: 'param',
+          expect: ['1']
+        },
+        {
+          location: 'http://neo4j.com/?param=1&param=2',
+          paramName: 'param',
+          expect: ['1', '2']
+        },
+        {
+          location: 'http://neo4j.com/?param2=2&param=1',
+          paramName: 'param',
+          expect: ['1']
+        },
+        {
+          location: 'http://neo4j.com/?param=',
+          paramName: 'param',
+          expect: undefined
+        },
+        { location: 'http://neo4j.com/', paramName: 'param', expect: undefined }
       ]
 
       // When & Then
-      urls.forEach((tCase) => {
+      urls.forEach(tCase => {
         const res = utils.getUrlParamValue(tCase.paramName, tCase.location)
         expect(res).toEqual(tCase.expect)
       })
     })
     test('can remove commented lines from a string', () => {
-    // Given
+      // Given
       const stringWithComments = '//Hello is is a comment\nSome string'
 
       // When & Then
@@ -294,7 +310,7 @@ describe('utils', () => {
   test('stringifyMod works just as JSON.stringify with no modFn', () => {
     // Given
     const tests = [
-      {x: 1, y: ['yy', true, undefined, null]},
+      { x: 1, y: ['yy', true, undefined, null] },
       null,
       false,
       [[], [0]],
@@ -302,24 +318,17 @@ describe('utils', () => {
     ]
 
     // When & Then
-    tests.forEach((t) => {
+    tests.forEach(t => {
       expect(utils.stringifyMod(t)).toEqual(JSON.stringify(t))
     })
   })
 
   test('stringifyMod works just as JSON.stringify with modFn', () => {
     // Given
-    const modFn = (val) => {
+    const modFn = val => {
       if (Number.isInteger(val)) return val.toString()
     }
-    const tests = [
-      null,
-      false,
-      [[], [0]],
-      '4',
-      4,
-      ['string']
-    ]
+    const tests = [null, false, [[], [0]], '4', 4, ['string']]
     const expects = [
       'null',
       'false',
@@ -342,7 +351,12 @@ describe('utils', () => {
       {
         prop1: 1,
         prop2: [
-          {innerProp: 'innerVal', innerProp2: [{innerInner: 'innerVal2', innerInner2: 'innerInnerVal2'}]}
+          {
+            innerProp: 'innerVal',
+            innerProp2: [
+              { innerInner: 'innerVal2', innerInner2: 'innerInnerVal2' }
+            ]
+          }
         ]
       },
       ['string']
@@ -350,12 +364,21 @@ describe('utils', () => {
     const expects = [
       'false',
       JSON.stringify([[], [0]], null, 2),
-      JSON.stringify({
-        prop1: 1,
-        prop2: [
-          {innerProp: 'innerVal', innerProp2: [{innerInner: 'innerVal2', innerInner2: 'innerInnerVal2'}]}
-        ]
-      }, null, 2),
+      JSON.stringify(
+        {
+          prop1: 1,
+          prop2: [
+            {
+              innerProp: 'innerVal',
+              innerProp2: [
+                { innerInner: 'innerVal2', innerInner2: 'innerInnerVal2' }
+              ]
+            }
+          ]
+        },
+        null,
+        2
+      ),
       JSON.stringify(['string'], null, 2)
     ]
 
@@ -377,7 +400,7 @@ describe('utils', () => {
     ]
 
     // When & Then
-    times.forEach((time) => {
+    times.forEach(time => {
       expect(utils.parseTimeMillis(time.test)).toEqual(time.expect)
     })
   })
@@ -392,7 +415,7 @@ describe('utils', () => {
     ]
 
     // When && Then
-    items.forEach((item) => {
+    items.forEach(item => {
       expect(utils.ecsapeCypherMetaItem(item.test)).toEqual(item.expect)
     })
   })

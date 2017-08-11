@@ -31,7 +31,7 @@ describe('paramsDuck', () => {
   test('Can add a param to empty state', () => {
     // Given
     const state = {}
-    const param = {x: 1}
+    const param = { x: 1 }
     const action = params.update(param)
 
     // When
@@ -43,9 +43,9 @@ describe('paramsDuck', () => {
 
   test('Can add a param to non-empty state', () => {
     // Given
-    const state = {y: 2}
-    const param = {x: 1}
-    const expected = {...state, ...param}
+    const state = { y: 2 }
+    const param = { x: 1 }
+    const expected = { ...state, ...param }
     const action = params.update(param)
 
     // When
@@ -57,8 +57,8 @@ describe('paramsDuck', () => {
 
   test('Can overwrite a param to non-empty state', () => {
     // Given
-    const state = {y: 2}
-    const param = {y: 1}
+    const state = { y: 2 }
+    const param = { y: 1 }
     const action = params.update(param)
 
     // When

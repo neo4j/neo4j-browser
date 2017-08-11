@@ -24,13 +24,13 @@ import { mount } from 'services/testUtils'
 import { CypherFrame } from './index'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 
-const toBoltRecord = (obj) => {
+const toBoltRecord = obj => {
   const keys = Object.keys(obj)
-  const vals = keys.map((key) => obj[key])
+  const vals = keys.map(key => obj[key])
   return {
-    get: (x) => obj[x],
-    forEach: (fn) => {
-      keys.forEach((key) => fn(obj[key], key))
+    get: x => obj[x],
+    forEach: fn => {
+      keys.forEach(key => fn(obj[key], key))
     },
     keys,
     _fields: vals
@@ -48,12 +48,12 @@ jest.mock('./VisualizationView', () => {
 })
 jest.mock('preact-suber', () => {
   return {
-    withBus: (a) => a
+    withBus: a => a
   }
 })
 jest.mock('preact-redux', () => {
   return {
-    connect: (msp, mdp) => (a) => a
+    connect: (msp, mdp) => a => a
   }
 })
 describe('CypherFrame', () => {
@@ -67,13 +67,12 @@ describe('CypherFrame', () => {
     }
     const result = mount(CypherFrame)
       .withProps({ request, frame: { cmd: '' } })
-
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         expect(wrapper.html()).toContain('fa-spinner')
         return wrapper
       })
-      .then((wrapper) => {
+      .then(wrapper => {
         wrapper.setProps({ request: failedRequest })
         wrapper.update()
         expect(wrapper.html()).not.toContain('fa-spinner')
@@ -83,22 +82,19 @@ describe('CypherFrame', () => {
     // Return test result (promise)
     return result
   })
-  test.skip('renders table view if no nodes', () => { // I have no idea why this doesn't work
+  test.skip('renders table view if no nodes', () => {
+    // I have no idea why this doesn't work
     // Given
     const request = {
       status: 'success',
       result: {
-        records: [
-          toBoltRecord({x: 'x'}),
-          toBoltRecord({y: 'y'})
-        ]
+        records: [toBoltRecord({ x: 'x' }), toBoltRecord({ y: 'y' })]
       }
     }
     const result = mount(CypherFrame)
       .withProps({ request, maxRows: 100, frame: { cmd: '' } })
-
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         wrapper.update()
         expect(wrapper.html()).toContain('<table>')
         expect(wrapper.instance().state.openView).toEqual(viewTypes.TABLE)
@@ -117,9 +113,8 @@ describe('CypherFrame', () => {
     }
     const result = mount(CypherFrame)
       .withProps({ request, maxRows: 100, frame: { cmd: '' } })
-
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         wrapper.update()
         expect(wrapper.text()).toContain('Test.Error')
         expect(wrapper.instance().state.openView).toEqual(viewTypes.ERRORS)
@@ -127,22 +122,23 @@ describe('CypherFrame', () => {
     // Return test result (promise)
     return result
   })
-  test('renders text view if it\'s the recent one', () => {
+  test("renders text view if it's the recent one", () => {
     // Given
     const request = {
       status: 'success',
       result: {
-        records: [
-          toBoltRecord({x: 'x'}),
-          toBoltRecord({y: 'y'})
-        ]
+        records: [toBoltRecord({ x: 'x' }), toBoltRecord({ y: 'y' })]
       }
     }
     const result = mount(CypherFrame)
-      .withProps({ request, maxRows: 100, recentView: viewTypes.TEXT, frame: { cmd: '' } })
-
+      .withProps({
+        request,
+        maxRows: 100,
+        recentView: viewTypes.TEXT,
+        frame: { cmd: '' }
+      })
       // Then
-      .then((wrapper) => {
+      .then(wrapper => {
         wrapper.update()
         expect(wrapper.text()).toContain('Max column width')
         expect(wrapper.instance().state.openView).toEqual(viewTypes.TEXT)

@@ -21,31 +21,50 @@
 import bolt from 'services/bolt/bolt'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import { recursivelyExtractGraphItems, flattenArray } from 'services/bolt/boltMappings'
+import {
+  recursivelyExtractGraphItems,
+  flattenArray
+} from 'services/bolt/boltMappings'
 import { stringifyMod } from 'services/utils'
 
 export function getBodyAndStatusBarMessages (result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
     return {}
   }
-  const resultAvailableAfter = (result.summary.resultAvailableAfter.toNumber() === 0) ? 'in less than 1' : 'after ' + result.summary.resultAvailableAfter.toString()
-  const totalTime = result.summary.resultAvailableAfter.add(result.summary.resultConsumedAfter)
-  const totalTimeString = (totalTime.toNumber() === 0) ? 'in less than 1' : 'after ' + totalTime.toString()
-  const streamMessageTail = result.records.length > maxRows ? `ms, displaying first ${maxRows} rows.` : ' ms.'
+  const resultAvailableAfter =
+    result.summary.resultAvailableAfter.toNumber() === 0
+      ? 'in less than 1'
+      : 'after ' + result.summary.resultAvailableAfter.toString()
+  const totalTime = result.summary.resultAvailableAfter.add(
+    result.summary.resultConsumedAfter
+  )
+  const totalTimeString =
+    totalTime.toNumber() === 0
+      ? 'in less than 1'
+      : 'after ' + totalTime.toString()
+  const streamMessageTail =
+    result.records.length > maxRows
+      ? `ms, displaying first ${maxRows} rows.`
+      : ' ms.'
 
   let updateMessages = bolt.retrieveFormattedUpdateStatistics(result)
-  let streamMessage = result.records.length > 0
-    ? `started streaming ${result.records.length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
-    : `completed ${totalTimeString} ${streamMessageTail}`
+  let streamMessage =
+    result.records.length > 0
+      ? `started streaming ${result.records
+        .length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
+      : `completed ${totalTimeString} ${streamMessageTail}`
 
   if (updateMessages && updateMessages.length > 0) {
-    updateMessages = updateMessages[0].toUpperCase() + updateMessages.slice(1) + ', '
+    updateMessages =
+      updateMessages[0].toUpperCase() + updateMessages.slice(1) + ', '
   } else {
     streamMessage = streamMessage[0].toUpperCase() + streamMessage.slice(1)
   }
 
-  const bodyMessage = (updateMessages.length === 0 && result.records.length === 0) ? '(no changes, no records)'
-    : updateMessages + `completed ${totalTimeString} ms.`
+  const bodyMessage =
+    updateMessages.length === 0 && result.records.length === 0
+      ? '(no changes, no records)'
+      : updateMessages + `completed ${totalTimeString} ms.`
 
   return { statusBarMessage: updateMessages + streamMessage, bodyMessage }
 }
@@ -65,20 +84,27 @@ export const resultHasNodes = (request, types = bolt.neo4j.types) => {
   if (!records || !records.length) return false
   let keys = records[0].keys
   for (let i = 0; i < records.length; i++) {
-    const graphItems = keys.map((key) => records[i].get(key))
+    const graphItems = keys.map(key => records[i].get(key))
     const items = recursivelyExtractGraphItems(types, graphItems)
     const flat = flattenArray(items)
-    const nodes = flat.filter((item) => item instanceof types.Node || item instanceof types.Path)
+    const nodes = flat.filter(
+      item => item instanceof types.Node || item instanceof types.Path
+    )
     if (nodes.length) return true
   }
   return false
 }
 
-export const resultHasRows = (request) => {
-  return !!(request && request.result && request.result.records && request.result.records.length)
+export const resultHasRows = request => {
+  return !!(
+    request &&
+    request.result &&
+    request.result.records &&
+    request.result.records.length
+  )
 }
 
-export const resultHasWarnings = (request) => {
+export const resultHasWarnings = request => {
   return !!(
     request &&
     request.result &&
@@ -88,7 +114,7 @@ export const resultHasWarnings = (request) => {
   )
 }
 
-export const resultHasPlan = (request) => {
+export const resultHasPlan = request => {
   return !!(
     request &&
     request.result &&
@@ -97,13 +123,19 @@ export const resultHasPlan = (request) => {
   )
 }
 
-export const resultIsError = (request) => {
+export const resultIsError = request => {
   return !!(request && request.result && request.result.code)
 }
 
 export const initialView = (props, state = {}) => {
   // Views that should override and always show if they exist
-  if (props === undefined || props.request === undefined || props.request.status === 'pending') return undefined
+  if (
+    props === undefined ||
+    props.request === undefined ||
+    props.request.status === 'pending'
+  ) {
+    return undefined
+  }
   // If openView exists, this is not initial render
   if (state.openView !== undefined) return state.openView
   if (props.frame && props.frame.forceView) return props.frame.forceView
@@ -116,7 +148,9 @@ export const initialView = (props, state = {}) => {
   let { recentView = undefined } = props
   // We can only have three views here: TABLE, TEXT or VISUALIZATION
   // If TABLE or TEXT are recentView, fast return
-  if ([viewTypes.TABLE, viewTypes.TEXT].indexOf(recentView) > -1) return recentView
+  if ([viewTypes.TABLE, viewTypes.TEXT].indexOf(recentView) > -1) {
+    return recentView
+  }
   // No we don't care about the recentView
   // If the response have viz elements, we show the viz
   if (resultHasNodes(props.request)) return viewTypes.VISUALIZATION
@@ -130,10 +164,10 @@ export const initialView = (props, state = {}) => {
  * Used so we can have Neo4j integers as string without quotes.
  */
 export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
-  return arr.map((col) => {
+  return arr.map(col => {
     if (!col) return col
-    return col.map((fVal) => {
-      return stringifyMod(fVal, (val) => {
+    return col.map(fVal => {
+      return stringifyMod(fVal, val => {
         if (intChecker(val)) return val.toString()
       })
     })
@@ -145,12 +179,14 @@ export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
  * Flattens graph items so only their props are left.
  * Leaves Neo4j Integers as they were.
  */
-export const transformResultRecordsToResultArray = (records) => {
+export const transformResultRecordsToResultArray = records => {
   return records && records.length
-  ? [records]
+    ? [records]
       .map(extractRecordsToResultArray)
-      .map(flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt))[0]
-  : undefined
+      .map(
+        flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
+      )[0]
+    : undefined
 }
 
 /**
@@ -161,13 +197,17 @@ export const extractRecordsToResultArray = (records = []) => {
   records = Array.isArray(records) ? records : []
   const keys = records[0] ? [records[0].keys] : undefined
   return (keys || []).concat(
-    records.map((record) => {
+    records.map(record => {
       return record.keys.map((key, i) => record._fields[i])
     })
   )
 }
 
-export const flattenGraphItemsInResultArray = (types = neo4j.types, intChecker = neo4j.isInt, result = []) => {
+export const flattenGraphItemsInResultArray = (
+  types = neo4j.types,
+  intChecker = neo4j.isInt,
+  result = []
+) => {
   return result.map(flattenGraphItems.bind(null, types, intChecker))
 }
 
@@ -175,9 +215,20 @@ export const flattenGraphItemsInResultArray = (types = neo4j.types, intChecker =
  * Recursively looks for graph items and elevates their properties if found.
  * Leaves everything else (including neo4j integers) as is
  */
-export const flattenGraphItems = (types = neo4j.types, intChecker = neo4j.isInt, item) => {
-  if (Array.isArray(item)) return item.map(flattenGraphItems.bind(null, types, intChecker))
-  if (typeof item === 'object' && item !== null && !isGraphItem(types, item) && !intChecker(item)) {
+export const flattenGraphItems = (
+  types = neo4j.types,
+  intChecker = neo4j.isInt,
+  item
+) => {
+  if (Array.isArray(item)) {
+    return item.map(flattenGraphItems.bind(null, types, intChecker))
+  }
+  if (
+    typeof item === 'object' &&
+    item !== null &&
+    !isGraphItem(types, item) &&
+    !intChecker(item)
+  ) {
     let out = {}
     const keys = Object.keys(item)
     for (let i = 0; i < keys.length; i++) {
@@ -185,7 +236,9 @@ export const flattenGraphItems = (types = neo4j.types, intChecker = neo4j.isInt,
     }
     return out
   }
-  if (isGraphItem(types, item)) return extractPropertiesFromGraphItems(types, item)
+  if (isGraphItem(types, item)) {
+    return extractPropertiesFromGraphItems(types, item)
+  }
   return item
 }
 
@@ -211,13 +264,13 @@ const arrayifyPath = (types = neo4j.types, path) => {
   let segments = path.segments
   // Zero length path. No relationship, end === start
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
-    segments = [{...path, end: null}]
+    segments = [{ ...path, end: null }]
   }
   return segments.map(function (segment) {
     return [
       extractPropertiesFromGraphItems(types, segment.start),
       extractPropertiesFromGraphItems(types, segment.relationship),
       extractPropertiesFromGraphItems(types, segment.end)
-    ].filter((part) => part !== null)
+    ].filter(part => part !== null)
   })
 }

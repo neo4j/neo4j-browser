@@ -22,7 +22,7 @@
 
 import reducer, { addToEventQueue } from './udcDuck'
 
-test('Doesn\'t break if there are no events in state', () => {
+test("Doesn't break if there are no events in state", () => {
   // Given
   const initialState = { uuid: 'x' }
   const action = addToEventQueue('my-event', 'now')
@@ -38,7 +38,7 @@ test('Can add events', () => {
   // Given
   const initialState = {
     uuid: 'x',
-    events: [{name: 'first-event', data: 1}]
+    events: [{ name: 'first-event', data: 1 }]
   }
   const action = addToEventQueue('my-event', 'now')
 

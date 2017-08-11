@@ -43,7 +43,8 @@ export const base = {
 
   // Fonts
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-  drawerHeaderFontFamily: "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+  drawerHeaderFontFamily:
+    "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif",
   streamlineFontFamily: 'streamline',
   editorFont: '"Inconsolata", "Monaco", "Lucida Console", Courier, monospace;',
 

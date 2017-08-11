@@ -23,7 +23,7 @@ import reducer, { UPDATE_GRAPH_STYLE_DATA } from './grassDuck'
 
 describe('grass reducer', () => {
   test('handles initial value', () => {
-    const nextState = reducer(undefined, {type: ''})
+    const nextState = reducer(undefined, { type: '' })
     expect(nextState).toBeNull()
   })
   test('handles UPDATE_GRAPH_STYLE_DATA without initial state', () => {

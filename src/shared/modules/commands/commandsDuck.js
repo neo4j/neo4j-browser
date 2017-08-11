@@ -19,14 +19,28 @@
  */
 
 import Rx from 'rxjs'
-import { getInterpreter, isNamedInterpreter, cleanCommand, extractPostConnectCommandsFromServerConfig } from 'services/commandUtils'
-import { extractWhitelistFromConfigString, addProtocolsToUrlList, firstSuccessPromise } from 'services/utils'
+import {
+  getInterpreter,
+  isNamedInterpreter,
+  cleanCommand,
+  extractPostConnectCommandsFromServerConfig
+} from 'services/commandUtils'
+import {
+  extractWhitelistFromConfigString,
+  addProtocolsToUrlList,
+  firstSuccessPromise
+} from 'services/utils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
 import { fetchRemoteGuide } from './helpers/play'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
-import { UPDATE_SETTINGS, getAvailableSettings, fetchMetaData, getRemoteContentHostnameWhitelist } from '../dbMeta/dbMetaDuck'
+import {
+  UPDATE_SETTINGS,
+  getAvailableSettings,
+  fetchMetaData,
+  getRemoteContentHostnameWhitelist
+} from '../dbMeta/dbMetaDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'commands'
@@ -43,8 +57,9 @@ export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 const initialState = {
   lastCommandWasUnknown: false
 }
-export const wasUnknownCommand = (state) => state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
-export const getErrorMessage = (state) => state[NAME].errorMessage
+export const wasUnknownCommand = state =>
+  state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
+export const getErrorMessage = state => state[NAME].errorMessage
 
 export default function reducer (state = initialState, action) {
   if (action.type === APP_START) {
@@ -84,30 +99,34 @@ export const executeSystemCommand = (cmd, contextId, requestId = null) => {
   }
 }
 
-export const unknownCommand = (cmd) => ({
+export const unknownCommand = cmd => ({
   type: UNKNOWN_COMMAND,
   cmd
 })
 
-export const showErrorMessage = (errorMessage) => ({
+export const showErrorMessage = errorMessage => ({
   type: SHOW_ERROR_MESSAGE,
   errorMessage: errorMessage
 })
-export const cypher = (query) => ({ type: CYPHER, query })
-export const successfulCypher = (query) => ({ type: CYPHER_SUCCEEDED, query })
-export const unsuccessfulCypher = (query) => ({ type: CYPHER_FAILED, query })
-export const fetchGuideFromWhitelistAction = (url) => ({ type: FETCH_GUIDE_FROM_WHITELIST, url })
+export const cypher = query => ({ type: CYPHER, query })
+export const successfulCypher = query => ({ type: CYPHER_SUCCEEDED, query })
+export const unsuccessfulCypher = query => ({ type: CYPHER_FAILED, query })
+export const fetchGuideFromWhitelistAction = url => ({
+  type: FETCH_GUIDE_FROM_WHITELIST,
+  url
+})
 
 // Epics
 export const handleCommandsEpic = (action$, store) =>
-  action$.ofType(USER_COMMAND_QUEUED)
+  action$
+    .ofType(USER_COMMAND_QUEUED)
     .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
-    .map((action) => {
+    .map(action => {
       const cmdchar = getCmdChar(store.getState())
       const interpreted = getInterpreter(helper.interpret, action.cmd, cmdchar)
-      return {action, interpreted, cmdchar}
+      return { action, interpreted, cmdchar }
     })
-    .do(({action, interpreted}) => {
+    .do(({ action, interpreted }) => {
       if (action.type === SYSTEM_COMMAND_QUEUED) return
       if (isNamedInterpreter(interpreted)) {
         const maxHistory = getMaxHistory(store.getState())
@@ -115,7 +134,7 @@ export const handleCommandsEpic = (action$, store) =>
         store.dispatch({ type: KNOWN_COMMAND }) // Clear any eventual unknown command notifications
       }
     })
-    .mergeMap(({action, interpreted, cmdchar}) => {
+    .mergeMap(({ action, interpreted, cmdchar }) => {
       return new Promise((resolve, reject) => {
         if (interpreted.name !== 'cypher') action.cmd = cleanCommand(action.cmd)
         const res = interpreted.exec(action, cmdchar, store.dispatch, store)
@@ -124,11 +143,11 @@ export const handleCommandsEpic = (action$, store) =>
           resolve(noop)
         } else {
           res
-            .then((r) => {
+            .then(r => {
               store.dispatch(fetchMetaData())
               resolve(noop)
             })
-            .catch((e) => resolve(noop))
+            .catch(e => resolve(noop))
         }
       })
     })
@@ -140,9 +159,11 @@ export const postConnectCmdEpic = (some$, store) =>
       const serverSettings = getAvailableSettings(store.getState())
       if (serverSettings && serverSettings['browser.post_connect_cmd']) {
         const cmdchar = getCmdChar(store.getState())
-        const cmds = extractPostConnectCommandsFromServerConfig(serverSettings['browser.post_connect_cmd'])
+        const cmds = extractPostConnectCommandsFromServerConfig(
+          serverSettings['browser.post_connect_cmd']
+        )
         if (cmds !== undefined) {
-          cmds.forEach((cmd) => {
+          cmds.forEach(cmd => {
             store.dispatch(executeSystemCommand(`${cmdchar}${cmd}`))
           })
         }
@@ -151,16 +172,24 @@ export const postConnectCmdEpic = (some$, store) =>
     .mapTo({ type: 'NOOP' })
 
 export const fetchGuideFromWhitelistEpic = (some$, store) =>
-  some$.ofType(FETCH_GUIDE_FROM_WHITELIST)
-    .mergeMap((action) => {
-      if (!action.$$responseChannel || !action.url) return Rx.Observable.of({ type: 'NOOP' })
-      const whitelistStr = getRemoteContentHostnameWhitelist(store.getState())
-      const whitelist = extractWhitelistFromConfigString(whitelistStr)
-      const urlWhitelist = addProtocolsToUrlList(whitelist)
-      const guidesUrls = urlWhitelist.map((url) => url + '/' + action.url)
-      return firstSuccessPromise(guidesUrls, (url) => { // Get first successful fetch
-        return fetchRemoteGuide(url, whitelistStr)
-                .then((r) => ({type: action.$$responseChannel, success: true, result: r}))
-      })
-        .catch((e) => ({type: action.$$responseChannel, success: false, error: e})) // If all fails, report that
-    })
+  some$.ofType(FETCH_GUIDE_FROM_WHITELIST).mergeMap(action => {
+    if (!action.$$responseChannel || !action.url) {
+      return Rx.Observable.of({ type: 'NOOP' })
+    }
+    const whitelistStr = getRemoteContentHostnameWhitelist(store.getState())
+    const whitelist = extractWhitelistFromConfigString(whitelistStr)
+    const urlWhitelist = addProtocolsToUrlList(whitelist)
+    const guidesUrls = urlWhitelist.map(url => url + '/' + action.url)
+    return firstSuccessPromise(guidesUrls, url => {
+      // Get first successful fetch
+      return fetchRemoteGuide(url, whitelistStr).then(r => ({
+        type: action.$$responseChannel,
+        success: true,
+        result: r
+      }))
+    }).catch(e => ({
+      type: action.$$responseChannel,
+      success: false,
+      error: e
+    })) // If all fails, report that
+  })

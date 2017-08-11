@@ -21,9 +21,9 @@
 export const deepEquals = (x, y) => {
   if (x && y && typeof x === 'object' && typeof y === 'object') {
     if (Object.keys(x).length !== Object.keys(y).length) return false
-    return Object.keys(x).every((key) => deepEquals(x[key], y[key]))
+    return Object.keys(x).every(key => deepEquals(x[key], y[key]))
   }
-  return (x === y)
+  return x === y
 }
 
 export const shallowEquals = (a, b) => {
@@ -32,7 +32,8 @@ export const shallowEquals = (a, b) => {
   return true
 }
 
-export const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+export const flatten = arr =>
+  arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
 
 export const moveInArray = (fromIndex, toIndex, arr) => {
   if (!Array.isArray(arr)) return false
@@ -49,7 +50,10 @@ export const debounce = (fn, time, context = null) => {
   let pending
   return (...args) => {
     if (pending) clearTimeout(pending)
-    pending = setTimeout(() => typeof fn === 'function' && fn.apply(context, args), parseInt(time))
+    pending = setTimeout(
+      () => typeof fn === 'function' && fn.apply(context, args),
+      parseInt(time)
+    )
   }
 }
 
@@ -65,20 +69,23 @@ export const throttle = (fn, time, context = null) => {
 
 export const firstSuccessPromise = (list, fn) => {
   return list.reduce((promise, item) => {
-    return promise
-      .catch(() => fn(item))
-      .then((r) => Promise.resolve(r))
+    return promise.catch(() => fn(item)).then(r => Promise.resolve(r))
   }, Promise.reject(new Error()))
 }
 
-export const isRoutingHost = (host) => {
+export const isRoutingHost = host => {
   return /^bolt\+routing:\/\//.test(host)
 }
 
-export const toBoltHost = (host) => {
-  return 'bolt://' + (host || '') // prepend with bolt://
-    .split('bolt://').join('') // remove bolt://
-    .split('bolt+routing://').join('') // remove bolt+routing://
+export const toBoltHost = host => {
+  return (
+    'bolt://' +
+    (host || '') // prepend with bolt://
+      .split('bolt://')
+      .join('') // remove bolt://
+      .split('bolt+routing://')
+      .join('')
+  ) // remove bolt+routing://
 }
 
 export const hostIsAllowed = (uri, whitelist = null) => {
@@ -86,13 +93,20 @@ export const hostIsAllowed = (uri, whitelist = null) => {
   const urlInfo = getUrlInfo(uri)
   const hostname = urlInfo.hostname
   const hostnamePlusProtocol = urlInfo.protocol + '//' + hostname
-  const whitelistedHosts = whitelist && whitelist !== '' ? extractWhitelistFromConfigString(whitelist) : []
-  return whitelistedHosts.indexOf(hostname) > -1 || whitelistedHosts.indexOf(hostnamePlusProtocol) > -1
+  const whitelistedHosts =
+    whitelist && whitelist !== ''
+      ? extractWhitelistFromConfigString(whitelist)
+      : []
+  return (
+    whitelistedHosts.indexOf(hostname) > -1 ||
+    whitelistedHosts.indexOf(hostnamePlusProtocol) > -1
+  )
 }
 
-export const extractWhitelistFromConfigString = (str) => str.split(',').map((s) => s.trim().replace(/\/$/, ''))
+export const extractWhitelistFromConfigString = str =>
+  str.split(',').map(s => s.trim().replace(/\/$/, ''))
 
-export const addProtocolsToUrlList = (list) => {
+export const addProtocolsToUrlList = list => {
   return list.reduce((all, uri) => {
     if (!uri || uri === '*') return all
     const urlInfo = getUrlInfo(uri)
@@ -101,24 +115,28 @@ export const addProtocolsToUrlList = (list) => {
   }, [])
 }
 
-export const getUrlInfo = (url) => {
-  const reURLInformation = new RegExp([
-    '^(?:(https?:)//)?', // protocol
-    '(([^:/?#]*)(?::([0-9]+))?)', // host (hostname and port)
-    '(/{0,1}[^?#]*)', // pathname
-    '(\\?[^#]*|)', // search
-    '(#.*|)$' // hash
-  ].join(''))
+export const getUrlInfo = url => {
+  const reURLInformation = new RegExp(
+    [
+      '^(?:(https?:)//)?', // protocol
+      '(([^:/?#]*)(?::([0-9]+))?)', // host (hostname and port)
+      '(/{0,1}[^?#]*)', // pathname
+      '(\\?[^#]*|)', // search
+      '(#.*|)$' // hash
+    ].join('')
+  )
   const match = url.match(reURLInformation)
-  return match && {
-    protocol: match[1],
-    host: match[2],
-    hostname: match[3],
-    port: match[4],
-    pathname: match[5],
-    search: match[6],
-    hash: match[7]
-  }
+  return (
+    match && {
+      protocol: match[1],
+      host: match[2],
+      hostname: match[3],
+      port: match[4],
+      pathname: match[5],
+      search: match[6],
+      hash: match[7]
+    }
+  )
 }
 
 export const getUrlParamValue = (name, url) => {
@@ -133,9 +151,11 @@ export const getUrlParamValue = (name, url) => {
   return out
 }
 
-export const toHumanReadableBytes = (input) => {
+export const toHumanReadableBytes = input => {
   let number = +input
-  if (!isFinite(number)) { return '-' }
+  if (!isFinite(number)) {
+    return '-'
+  }
 
   if (number < 1024) {
     return `${number} B`
@@ -145,7 +165,9 @@ export const toHumanReadableBytes = (input) => {
   let units = ['KiB', 'MiB', 'GiB', 'TiB']
 
   for (let unit of Array.from(units)) {
-    if (number < 1024) { return `${number.toFixed(2)} ${unit}` }
+    if (number < 1024) {
+      return `${number.toFixed(2)} ${unit}`
+    }
     number /= 1024
   }
 
@@ -175,22 +197,30 @@ export const getBrowserName = function () {
 }
 
 export const removeComments = (string = '') => {
-  return string.split(/\r?\n/).filter((line) => !line.startsWith('//')).join('\r\n')
+  return string
+    .split(/\r?\n/)
+    .filter(line => !line.startsWith('//'))
+    .join('\r\n')
 }
 
-export const canUseDOM = () => !!(
-  (typeof window !== 'undefined' &&
-  window.document && window.document.createElement)
-)
+export const canUseDOM = () =>
+  !!(
+    typeof window !== 'undefined' &&
+    window.document &&
+    window.document.createElement
+  )
 
-export const ecsapeCypherMetaItem = (str) => /^[A-Za-z][A-Za-z0-9_]*$/.test(str) ? str : '`' + str.replace(/`/g, '``') + '`'
+export const ecsapeCypherMetaItem = str =>
+  /^[A-Za-z][A-Za-z0-9_]*$/.test(str)
+    ? str
+    : '`' + str.replace(/`/g, '``') + '`'
 
-export const parseTimeMillis = (timeWithOrWithoutUnit) => {
+export const parseTimeMillis = timeWithOrWithoutUnit => {
   timeWithOrWithoutUnit += '' // cast to string
   const readUnit = timeWithOrWithoutUnit.match(/\D+/)
   const value = parseInt(timeWithOrWithoutUnit)
 
-  const unit = (readUnit === undefined || readUnit === null) ? 's' : readUnit[0] // Assume seconds
+  const unit = readUnit === undefined || readUnit === null ? 's' : readUnit[0] // Assume seconds
 
   switch (unit) {
     case 'ms':
@@ -204,24 +234,50 @@ export const parseTimeMillis = (timeWithOrWithoutUnit) => {
   }
 }
 
-export const stringifyMod = (value, modFn = null, prettyLevel = false, skipOpeningIndentation = false) => {
-  prettyLevel = !prettyLevel ? false : (prettyLevel === true ? 1 : parseInt(prettyLevel))
+export const stringifyMod = (
+  value,
+  modFn = null,
+  prettyLevel = false,
+  skipOpeningIndentation = false
+) => {
+  prettyLevel = !prettyLevel
+    ? false
+    : prettyLevel === true ? 1 : parseInt(prettyLevel)
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
-  const indentation = prettyLevel && !skipOpeningIndentation ? Array(prettyLevel).join('  ') : ''
+  const indentation =
+    prettyLevel && !skipOpeningIndentation ? Array(prettyLevel).join('  ') : ''
   const endIndentation = prettyLevel ? Array(prettyLevel).join('  ') : ''
   const propSpacing = prettyLevel ? ' ' : ''
   const toString = Object.prototype.toString
-  const isArray = Array.isArray || function (a) { return toString.call(a) === '[object Array]' }
-  const escMap = {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}
-  const escFunc = function (m) { return escMap[m] || '\\u' + (m.charCodeAt(0) + 0x10000).toString(16).substr(1) }
+  const isArray =
+    Array.isArray ||
+    function (a) {
+      return toString.call(a) === '[object Array]'
+    }
+  const escMap = {
+    '"': '\\"',
+    '\\': '\\\\',
+    '\b': '\\b',
+    '\f': '\\f',
+    '\n': '\\n',
+    '\r': '\\r',
+    '\t': '\\t'
+  }
+  const escFunc = function (m) {
+    return (
+      escMap[m] || '\\u' + (m.charCodeAt(0) + 0x10000).toString(16).substr(1)
+    )
+  }
   const escRE = /[\\"\u0000-\u001F\u2028\u2029]/g
   if (modFn) {
     const modVal = modFn && modFn(value)
     if (typeof modVal !== 'undefined') return indentation + modVal
   }
   if (value == null) return indentation + 'null'
-  if (typeof value === 'number') return indentation + (isFinite(value) ? value.toString() : 'null')
+  if (typeof value === 'number') {
+    return indentation + (isFinite(value) ? value.toString() : 'null')
+  }
   if (typeof value === 'boolean') return indentation + value.toString()
   if (typeof value === 'object') {
     if (typeof value.toJSON === 'function') {
@@ -231,19 +287,43 @@ export const stringifyMod = (value, modFn = null, prettyLevel = false, skipOpeni
       let res = ''
       for (let i = 0; i < value.length; i++) {
         hasValues = true
-        res += (i ? ',' : '') + newLine + stringifyMod(value[i], modFn, nextPrettyLevel)
+        res +=
+          (i ? ',' : '') +
+          newLine +
+          stringifyMod(value[i], modFn, nextPrettyLevel)
       }
-      return indentation + '[' + res + (hasValues ? newLine + endIndentation : '') + ']'
+      return (
+        indentation +
+        '[' +
+        res +
+        (hasValues ? newLine + endIndentation : '') +
+        ']'
+      )
     } else if (toString.call(value) === '[object Object]') {
       let tmp = []
       for (const k in value) {
-        if (value.hasOwnProperty(k)) tmp.push(stringifyMod(k, modFn, nextPrettyLevel) + ':' + propSpacing + stringifyMod(value[k], modFn, nextPrettyLevel, true))
+        if (value.hasOwnProperty(k)) {
+          tmp.push(
+            stringifyMod(k, modFn, nextPrettyLevel) +
+              ':' +
+              propSpacing +
+              stringifyMod(value[k], modFn, nextPrettyLevel, true)
+          )
+        }
       }
-      return indentation + '{' + newLine + tmp.join(',' + newLine) + newLine + endIndentation + '}'
+      return (
+        indentation +
+        '{' +
+        newLine +
+        tmp.join(',' + newLine) +
+        newLine +
+        endIndentation +
+        '}'
+      )
     }
   }
   return indentation + '"' + value.toString().replace(escRE, escFunc) + '"'
 }
 
 // Epic helpers
-export const put = (dispatch) => (action) => dispatch(action)
+export const put = dispatch => action => dispatch(action)

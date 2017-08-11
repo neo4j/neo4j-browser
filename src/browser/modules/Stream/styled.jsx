@@ -45,22 +45,27 @@ const rollDownAnimation = keyframes`
 export const StyledFrame = styled.article`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
-  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
   animation: ${rollDownAnimation} .4s ease-in;
   border: ${props => props.theme.frameBorder};
-  margin: ${props => props.fullscreen ? '0' : '10px 0px 10px 0px'};
-  ${props => props.fullscreen ? 'position: fixed' : null};
-  ${props => props.fullscreen ? 'left: 0' : null};
-  ${props => props.fullscreen ? 'top: 0' : null};
-  ${props => props.fullscreen ? 'bottom: 0' : null};
-  ${props => props.fullscreen ? 'right: 0' : null};
-  ${props => props.fullscreen ? 'z-index: 1030' : null};
+  margin: ${props => (props.fullscreen ? '0' : '10px 0px 10px 0px')};
+  ${props => (props.fullscreen ? 'position: fixed' : null)};
+  ${props => (props.fullscreen ? 'left: 0' : null)};
+  ${props => (props.fullscreen ? 'top: 0' : null)};
+  ${props => (props.fullscreen ? 'bottom: 0' : null)};
+  ${props => (props.fullscreen ? 'right: 0' : null)};
+  ${props => (props.fullscreen ? 'z-index: 1030' : null)};
 `
 
 export const StyledFrameBody = styled.div`
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props => props.collapsed ? 0 : (props.fullscreen ? '100%' : (dim.frameBodyHeight - dim.frameStatusbarHeight) + 1 + 'px')};
-  display: ${props => props.collapsed ? 'none' : 'flex'};
+  max-height: ${props =>
+    props.collapsed
+      ? 0
+      : props.fullscreen
+        ? '100%'
+        : dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'};
+  display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
 `
@@ -76,15 +81,18 @@ export const StyledFrameMainSection = styled.div`
 export const StyledFrameContents = styled.div`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props => (props.fullscreen ? '100vh' : (dim.frameBodyHeight - (dim.frameStatusbarHeight * 2)) + 'px')};
-  ${props => props.fullscreen ? 'height: 100vh' : null};
+  max-height: ${props =>
+    props.fullscreen
+      ? '100vh'
+      : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
+  ${props => (props.fullscreen ? 'height: 100vh' : null)};
   flex: auto;
 `
 
 export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight + 1}px;
-  ${props => props.fullscreen ? 'margin-top: -78px;' : ''};
+  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
   display: flex;
   flex-direction: row;
   flex: none;
@@ -92,7 +100,8 @@ export const StyledFrameStatusbar = styled.div`
 
 export const PaddedDiv = styled.div`
   padding: 0 20px 20px 20px;
-  padding-bottom: ${props => (props.fullscreen ? (dim.frameTitlebarHeight + 20) + 'px' : '20px')};
+  padding-bottom: ${props =>
+    props.fullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
 `
 
 export const PaddedTableViewDiv = styled(PaddedDiv)`
@@ -147,9 +156,7 @@ export const StyledFrameCommand = styled.label`
   }
 `
 
-export const StyledFrameStatusbarText = styled.label`
-  flex: 1 1 auto;
-`
+export const StyledFrameStatusbarText = styled.label`flex: 1 1 auto;`
 
 export const DottedLineHover = styled.span`
   cursor: pointer;
@@ -160,9 +167,7 @@ export const DottedLineHover = styled.span`
   }
 `
 
-export const StyledHelpFrame = styled.div`
-  padding: 30px;
-`
+export const StyledHelpFrame = styled.div`padding: 30px;`
 export const StyledHelpContent = styled.div`
   padding-top: 10px;
   padding-bottom: 10px;
@@ -172,8 +177,7 @@ export const StyledHelpDescription = styled.div`
   font-size: 15px;
 `
 
-export const StyledDiv = styled.div`
-`
+export const StyledDiv = styled.div``
 
 export const StyledLink = styled.a`
   cursor: pointer;
@@ -184,9 +188,7 @@ export const StyledLink = styled.a`
   }
 `
 
-export const StyledLinkContainer = styled.div`
-  margin: 16px 0;
-`
+export const StyledLinkContainer = styled.div`margin: 16px 0;`
 
 export const StyledCypherMessage = styled.div`
   font-weight: bold;
@@ -211,11 +213,9 @@ export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
   color: #FFFFFF;
 `
 
-export const StyledH4 = styled.h4`
-`
+export const StyledH4 = styled.h4``
 
-export const StyledBr = styled.br`
-`
+export const StyledBr = styled.br``
 
 export const StyledPreformattedArea = styled.pre`
   font-family: Monaco, "Courier New", Terminal, monospace;
@@ -273,9 +273,7 @@ export const StyledBodyMessage = styled.div`
   color: #666;
 `
 
-export const SpinnerContainer = styled.div`
-  padding-top: 20px;
-`
+export const SpinnerContainer = styled.div`padding-top: 20px;`
 
 export const DropdownButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
@@ -297,14 +295,12 @@ export const DropdownButton = styled.li`
   display: inline-block;
   &:hover {
     > ul li {
-    display: block;
+      display: block;
     }
-  };
+  }
 `
 
-export const DropdownList = styled.ul`
-
-`
+export const DropdownList = styled.ul``
 
 export const DropdownContent = styled.li`
   display: none;
@@ -312,7 +308,7 @@ export const DropdownContent = styled.li`
   background-color: ${props => props.theme.secondaryBackground};
   color: ${props => props.theme.secondaryButtonText};
   width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   z-index: 1;
   line-height: 30px;
@@ -331,13 +327,9 @@ export const DropdownItem = styled.a`
   }
 `
 
-export const StyledRightPartial = styled.div`
-  float: right;
-`
+export const StyledRightPartial = styled.div`float: right;`
 
-export const StyledLeftPartial = styled.div`
-  float: left;
-`
+export const StyledLeftPartial = styled.div`float: left;`
 
 export const StyledWidthSliderContainer = styled.div`
   margin-right: 10px;
@@ -366,7 +358,8 @@ export const StyledWidthSlider = styled.input`
     color: transparent;
     background: transparent;
   }
-  &::-ms-fill-lower, &::-ms-fill-upper {
+  &::-ms-fill-lower,
+  &::-ms-fill-upper {
     background: transparent;
   }
   &::-ms-tooltip {
@@ -379,7 +372,7 @@ export const StyledWidthSlider = styled.input`
     border-radius: 7px;
     cursor: pointer;
     border: none;
-    background-color: #008BC3;
+    background-color: #008bc3;
     outline: none;
   }
   &::-moz-range-thumb {
@@ -388,7 +381,7 @@ export const StyledWidthSlider = styled.input`
     border-radius: 7px;
     cursor: pointer;
     border: none;
-    background-color: #008BC3;
+    background-color: #008bc3;
     outline: none;
   }
   &::-ms-thumb {
@@ -397,14 +390,12 @@ export const StyledWidthSlider = styled.input`
     border-radius: 7px;
     cursor: pointer;
     border: none;
-    background-color: #008BC3;
+    background-color: #008bc3;
     outline: none;
   }
 `
 
-export const StyledTable = styled.table`
-  margin-top: 30px;
-`
+export const StyledTable = styled.table`margin-top: 30px;`
 
 export const StyledTBody = styled.tbody`
   & td:first-child {
@@ -419,22 +410,17 @@ export const StyledAlteringTr = styled.tr`
   }
 `
 
-export const StyledStrongTd = styled.td`
-  font-weight: bold;
-`
+export const StyledStrongTd = styled.td`font-weight: bold;`
 
-export const StyledTd = styled.td`
-`
+export const StyledTd = styled.td``
 
-export const StyledHistoryList = styled.ul`
-  list-style: none;
-`
+export const StyledHistoryList = styled.ul`list-style: none;`
 
 export const StyledHistoryRow = styled.li`
-    border: 1px solid black;
-    margin: 10px;
-    padding: 10px;
-    cursor: pointer;
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
   &:hover {
     background-color: ${props => props.theme.primaryBackground};
   }

@@ -20,70 +20,87 @@
 
 export default function neoGraphStyle () {
   const defaultStyle = {
-    'node': {
-      'diameter': '50px',
-      'color': '#A5ABB6',
+    node: {
+      diameter: '50px',
+      color: '#A5ABB6',
       'border-color': '#9AA1AC',
       'border-width': '2px',
       'text-color-internal': '#FFFFFF',
       'font-size': '10px'
     },
-    'relationship': {
-      'color': '#A5ABB6',
+    relationship: {
+      color: '#A5ABB6',
       'shaft-width': '1px',
       'font-size': '8px',
-      'padding': '3px',
+      padding: '3px',
       'text-color-external': '#000000',
       'text-color-internal': '#FFFFFF',
-      'caption': '<type>'
+      caption: '<type>'
     }
   }
   const defaultSizes = [
     {
       diameter: '10px'
-    }, {
+    },
+    {
       diameter: '20px'
-    }, {
+    },
+    {
       diameter: '50px'
-    }, {
+    },
+    {
       diameter: '65px'
-    }, {
+    },
+    {
       diameter: '80px'
     }
   ]
   const defaultIconCodes = [
     {
       'icon-code': 'a'
-    }, {
+    },
+    {
       'icon-code': '"'
-    }, {
+    },
+    {
       'icon-code': 'z'
-    }, {
+    },
+    {
       'icon-code': '_'
-    }, {
+    },
+    {
       'icon-code': '/'
-    }, {
+    },
+    {
       'icon-code': '>'
-    }, {
+    },
+    {
       'icon-code': 'k'
     }
   ]
   const defaultArrayWidths = [
     {
       'shaft-width': '1px'
-    }, {
+    },
+    {
       'shaft-width': '2px'
-    }, {
+    },
+    {
       'shaft-width': '3px'
-    }, {
+    },
+    {
       'shaft-width': '5px'
-    }, {
+    },
+    {
       'shaft-width': '8px'
-    }, {
+    },
+    {
       'shaft-width': '13px'
-    }, {
+    },
+    {
       'shaft-width': '25px'
-    }, {
+    },
+    {
       'shaft-width': '38px'
     }
   ]
@@ -92,27 +109,33 @@ export default function neoGraphStyle () {
       color: '#A5ABB6',
       'border-color': '#9AA1AC',
       'text-color-internal': '#FFFFFF'
-    }, {
+    },
+    {
       color: '#68BDF6',
       'border-color': '#5CA8DB',
       'text-color-internal': '#FFFFFF'
-    }, {
+    },
+    {
       color: '#6DCE9E',
       'border-color': '#60B58B',
       'text-color-internal': '#FFFFFF'
-    }, {
+    },
+    {
       color: '#FF756E',
       'border-color': '#E06760',
       'text-color-internal': '#FFFFFF'
-    }, {
+    },
+    {
       color: '#DE9BF9',
       'border-color': '#BF85D6',
       'text-color-internal': '#FFFFFF'
-    }, {
+    },
+    {
       color: '#FB95AF',
       'border-color': '#E0849B',
       'text-color-internal': '#FFFFFF'
-    }, {
+    },
+    {
       color: '#FFD86E',
       'border-color': '#EDBA39',
       'text-color-internal': '#604A0E'
@@ -150,7 +173,7 @@ export default function neoGraphStyle () {
       }
       for (let i = 0; i < this.selector.classes.length; i++) {
         const classs = this.selector.classes[i]
-        if ((classs != null) && selector.classes.indexOf(classs) === -1) {
+        if (classs != null && selector.classes.indexOf(classs) === -1) {
           return false
         }
       }
@@ -158,7 +181,10 @@ export default function neoGraphStyle () {
     }
 
     StyleRule.prototype.matchesExact = function (selector) {
-      return this.matches(selector) && this.selector.classes.length === selector.classes.length
+      return (
+        this.matches(selector) &&
+        this.selector.classes.length === selector.classes.length
+      )
     }
 
     return StyleRule
@@ -174,7 +200,7 @@ export default function neoGraphStyle () {
       for (let i = 0; i < rules.length; i++) {
         const rule = rules[i]
         if (rule.matches(this.selector)) {
-          this.props = {...this.props, ...rule.props}
+          this.props = { ...this.props, ...rule.props }
           this.props.caption = this.props.caption || this.props.defaultCaption
         }
       }
@@ -233,21 +259,39 @@ export default function neoGraphStyle () {
     }
 
     const findAvailableDefaultColor = function (rules) {
-      const usedColors = rules.filter((rule) => { return rule.props.color != null }).map((rule) => {
-        return rule.props.color
-      })
-      let index = usedColors.length - 1 > defaultColors ? 0 : usedColors.length - 1
+      const usedColors = rules
+        .filter(rule => {
+          return rule.props.color != null
+        })
+        .map(rule => {
+          return rule.props.color
+        })
+      let index =
+        usedColors.length - 1 > defaultColors ? 0 : usedColors.length - 1
       return defaultColors[index]
     }
 
     const getDefaultNodeCaption = function (item) {
-      if (!item || !(item.propertyList != null ? item.propertyList.length : 0) > 0) {
+      if (
+        !item ||
+        !(item.propertyList != null ? item.propertyList.length : 0) > 0
+      ) {
         return {
           defaultCaption: '<id>'
         }
       }
-      const captionPrioOrder = [/^name$/i, /^title$/i, /^label$/i, /name$/i, /description$/i, /^.+/]
-      let defaultCaption = captionPrioOrder.reduceRight(function (leading, current) {
+      const captionPrioOrder = [
+        /^name$/i,
+        /^title$/i,
+        /^label$/i,
+        /name$/i,
+        /description$/i,
+        /^.+/
+      ]
+      let defaultCaption = captionPrioOrder.reduceRight(function (
+        leading,
+        current
+      ) {
         let hits = item.propertyList.filter(function (prop) {
           return current.test(prop.key)
         })
@@ -285,12 +329,21 @@ export default function neoGraphStyle () {
           }
         }
       }
-      const minimalSelector = new Selector(selector.tag, selector.classes.sort().slice(0, 1))
+      const minimalSelector = new Selector(
+        selector.tag,
+        selector.classes.sort().slice(0, 1)
+      )
       if (defaultColor) {
-        this.changeForSelector(minimalSelector, findAvailableDefaultColor(this.rules))
+        this.changeForSelector(
+          minimalSelector,
+          findAvailableDefaultColor(this.rules)
+        )
       }
       if (defaultCaption) {
-        return this.changeForSelector(minimalSelector, getDefaultNodeCaption(item))
+        return this.changeForSelector(
+          minimalSelector,
+          getDefaultNodeCaption(item)
+        )
       }
     }
 
@@ -300,7 +353,7 @@ export default function neoGraphStyle () {
         rule = new StyleRule(selector, props)
         this.rules.push(rule)
       }
-      rule.props = {...rule.props, ...props}
+      rule.props = { ...rule.props, ...props }
       return rule
     }
 
@@ -349,7 +402,6 @@ export default function neoGraphStyle () {
             }
             break
           case "'":
-          case '\'':
             insideString ^= true
             break
           default:
@@ -369,7 +421,7 @@ export default function neoGraphStyle () {
       for (let k in rules) {
         const v = rules[k]
         rules[k] = {}
-        v.split(';').forEach((prop) => {
+        v.split(';').forEach(prop => {
           const [key, val] = prop.split(':')
           if (key && val) {
             rules[k][key.trim()] = val.trim()
@@ -386,7 +438,7 @@ export default function neoGraphStyle () {
 
     GraphStyle.prototype.toSheet = function () {
       let sheet = {}
-      this.rules.forEach((rule) => {
+      this.rules.forEach(rule => {
         sheet[rule.selector.toString()] = rule.props
       })
       return sheet
@@ -394,7 +446,7 @@ export default function neoGraphStyle () {
 
     GraphStyle.prototype.toString = function () {
       let str = ''
-      this.rules.forEach((r) => {
+      this.rules.forEach(r => {
         str += r.selector.toString() + ' {\n'
         for (let k in r.props) {
           let v = r.props[k]

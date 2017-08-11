@@ -25,7 +25,11 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { canAssignRolesToUser } from 'shared/modules/features/featuresDuck'
 
 import bolt from 'services/bolt/bolt'
-import { listRolesQuery, createDatabaseUser, addRoleToUser } from 'shared/modules/cypher/boltUserHelper'
+import {
+  listRolesQuery,
+  createDatabaseUser,
+  addRoleToUser
+} from 'shared/modules/cypher/boltUserHelper'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
@@ -35,7 +39,11 @@ import FrameSuccess from 'browser/modules/Stream/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { FormButton, StyledLink } from 'browser-components/buttons'
-import { StyledTable, StyledBodyTr, StyledTh } from 'browser-components/DataTables'
+import {
+  StyledTable,
+  StyledBodyTr,
+  StyledTh
+} from 'browser-components/DataTables'
 import { StyledUserTd, StyledInput, StyledButtonContainer } from './styled'
 
 export class UserAdd extends Component {
@@ -68,80 +76,108 @@ export class UserAdd extends Component {
   listRoles () {
     return this.state.roles.map((role, i) => {
       return (
-        <FormButton key={i} label={role} icon={<CloseIcon />} onClick={() => {
-          this.setState({roles: this.removeRole(role)})
-        }} />
+        <FormButton
+          key={i}
+          label={role}
+          icon={<CloseIcon />}
+          onClick={() => {
+            this.setState({ roles: this.removeRole(role) })
+          }}
+        />
       )
     })
   }
   addRoles () {
     let errors = []
-    this.state.roles.forEach((role) => {
-      this.props.bus && this.props.bus.self(
-        CYPHER_REQUEST,
-        {query: addRoleToUser(this.state.username, role)},
-        (response) => {
-          if (!response.success) {
-            return errors.add(response.error)
+    this.state.roles.forEach(role => {
+      this.props.bus &&
+        this.props.bus.self(
+          CYPHER_REQUEST,
+          { query: addRoleToUser(this.state.username, role) },
+          response => {
+            if (!response.success) {
+              return errors.add(response.error)
+            }
           }
-        }
-      )
+        )
     })
     if (errors.length > 0) {
-      return this.setState({errors: errors})
+      return this.setState({ errors: errors })
     }
-    return this.setState({success: `User '${this.state.username}' created`})
+    return this.setState({ success: `User '${this.state.username}' created` })
   }
   getRoles () {
-    this.props.bus && this.props.bus.self(
-      CYPHER_REQUEST,
-      {query: listRolesQuery()},
-      (response) => {
-        if (!response.success) {
-          return this.setState({errors: ['Unable to create user', response.error]})
+    this.props.bus &&
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        { query: listRolesQuery() },
+        response => {
+          if (!response.success) {
+            return this.setState({
+              errors: ['Unable to create user', response.error]
+            })
+          }
+          const flatten = arr =>
+            arr.reduce(
+              (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b),
+              []
+            )
+          return this.setState({
+            availableRoles: flatten(
+              this.extractUserNameAndRolesFromBolt(response.result)
+            )
+          })
         }
-        const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
-        return this.setState({availableRoles: flatten(this.extractUserNameAndRolesFromBolt(response.result))})
-      })
+      )
   }
   submit () {
-    this.setState({success: null, errors: null})
+    this.setState({ success: null, errors: null })
     let errors = []
     if (!this.state.username) errors.push('Missing username')
     if (!this.state.password) errors.push('Missing password')
-    if (!(this.state.password === this.state.confirmPassword)) errors.push('Passwords are not the same')
+    if (!(this.state.password === this.state.confirmPassword)) {
+      errors.push('Passwords are not the same')
+    }
     if (errors.length !== 0) {
-      return this.setState({errors: errors})
+      return this.setState({ errors: errors })
     } else {
-      this.setState({errors: null})
+      this.setState({ errors: null })
       return this.createUser()
     }
   }
   createUser () {
-    this.props.bus && this.props.bus.self(
-      CYPHER_REQUEST,
-      {query: createDatabaseUser(this.state)},
-      (response) => {
-        if (!response.success) {
-          return this.setState({errors: ['Unable to create user', response.error]})
+    this.props.bus &&
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        { query: createDatabaseUser(this.state) },
+        response => {
+          if (!response.success) {
+            return this.setState({
+              errors: ['Unable to create user', response.error]
+            })
+          }
+          return this.addRoles()
         }
-        return this.addRoles()
-      })
+      )
   }
   updateUsername (event) {
-    return this.setState({username: event.target.value})
+    return this.setState({ username: event.target.value })
   }
   updatePassword (event) {
-    return this.setState({password: event.target.value})
+    return this.setState({ password: event.target.value })
   }
   confirmUpdatePassword (event) {
-    return this.setState({confirmPassword: event.target.value})
+    return this.setState({ confirmPassword: event.target.value })
   }
   updateForcePasswordChange (event) {
-    return this.setState({forcePasswordChange: !this.state.forcePasswordChange})
+    return this.setState({
+      forcePasswordChange: !this.state.forcePasswordChange
+    })
   }
   availableRoles () {
-    return this.state.availableRoles.filter(role => this.state.roles.indexOf(role) < 0)
+    return this.state.availableRoles.filter(
+      role => this.state.roles.indexOf(role) < 0
+    )
   }
 
   openListUsersFrame () {
@@ -150,15 +186,30 @@ export class UserAdd extends Component {
   }
 
   render () {
-    const listOfAvailableRoles = (this.state.availableRoles)
-      ? (<RolesSelector roles={this.availableRoles()} onChange={(event) => {
-        this.setState({roles: this.state.roles.concat([event.target.value])})
-      }} />)
+    const listOfAvailableRoles = this.state.availableRoles
+      ? <RolesSelector
+        roles={this.availableRoles()}
+        onChange={event => {
+          this.setState({
+            roles: this.state.roles.concat([event.target.value])
+          })
+        }}
+      />
       : '-'
-    const tableHeaders = ['Username', 'Roles(s)', 'Set Password', 'Confirm Password', 'Force Password Change'].map((heading, i) => {
-      return (<StyledTh key={i}>{heading}</StyledTh>)
+    const tableHeaders = [
+      'Username',
+      'Roles(s)',
+      'Set Password',
+      'Confirm Password',
+      'Force Password Change'
+    ].map((heading, i) => {
+      return (
+        <StyledTh key={i}>
+          {heading}
+        </StyledTh>
+      )
     })
-    const errors = (this.state.errors) ? this.state.errors.join(', ') : null
+    const errors = this.state.errors ? this.state.errors.join(', ') : null
 
     const frameContents = (
       <StyledTable>
@@ -170,20 +221,32 @@ export class UserAdd extends Component {
         <tbody>
           <StyledBodyTr>
             <StyledUserTd>
-              <StyledInput className='username' onChange={this.updateUsername.bind(this)} />
+              <StyledInput
+                className='username'
+                onChange={this.updateUsername.bind(this)}
+              />
             </StyledUserTd>
             <StyledUserTd>
               {listOfAvailableRoles}
               {this.listRoles()}
             </StyledUserTd>
             <StyledUserTd>
-              <StyledInput onChange={this.updatePassword.bind(this)} type='password' />
+              <StyledInput
+                onChange={this.updatePassword.bind(this)}
+                type='password'
+              />
             </StyledUserTd>
             <StyledUserTd>
-              <StyledInput onChange={this.confirmUpdatePassword.bind(this)} type='password' />
+              <StyledInput
+                onChange={this.confirmUpdatePassword.bind(this)}
+                type='password'
+              />
             </StyledUserTd>
             <StyledUserTd>
-              <StyledInput onClick={this.updateForcePasswordChange.bind(this)} type='checkbox' />
+              <StyledInput
+                onClick={this.updateForcePasswordChange.bind(this)}
+                type='checkbox'
+              />
             </StyledUserTd>
           </StyledBodyTr>
           <tr>
@@ -224,7 +287,7 @@ export class UserAdd extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     canAssignRolesToUser: canAssignRolesToUser(state)
   }

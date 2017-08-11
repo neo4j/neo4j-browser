@@ -25,11 +25,8 @@ export function cleanCommand (cmd) {
 }
 
 export function stripEmptyCommandLines (str) {
-  const skipEmptyLines = (e) => !/^\s*$/.test(e)
-  return str
-    .split('\n')
-    .filter(skipEmptyLines)
-    .join('\n')
+  const skipEmptyLines = e => !/^\s*$/.test(e)
+  return str.split('\n').filter(skipEmptyLines).join('\n')
 }
 
 export function stripCommandComments (str) {
@@ -43,7 +40,10 @@ export function splitStringOnFirst (str, delimiter) {
 
 export function splitStringOnLast (str, delimiter) {
   const parts = str.split(delimiter)
-  return [].concat(parts.slice(0, parts.length - 1).join(delimiter), parts[parts.length - 1])
+  return [].concat(
+    parts.slice(0, parts.length - 1).join(delimiter),
+    parts[parts.length - 1]
+  )
 }
 
 export const isCypherCommand = (cmd, cmdchar) => {
@@ -56,35 +56,33 @@ export const getInterpreter = (interpret, cmd, cmdchar) => {
   return interpret(cleanCommand(cmd).substr(cmdchar.length))
 }
 
-export const isNamedInterpreter = (interpreter) => interpreter && interpreter.name !== 'catch-all'
+export const isNamedInterpreter = interpreter =>
+  interpreter && interpreter.name !== 'catch-all'
 
-export const extractPostConnectCommandsFromServerConfig = (str) => {
+export const extractPostConnectCommandsFromServerConfig = str => {
   const substituteStr = '@@semicolon@@'
   const substituteRe = new RegExp(substituteStr, 'g')
-  const replaceFn = (m) => m.replace(/;/g, substituteStr)
-  const qs = [
-    /(`[^`]*?`)/g,
-    /("[^"]*?")/g,
-    /('[^']*?')/g
-  ]
-  qs.forEach((q) => (str = str.replace(q, replaceFn)))
+  const replaceFn = m => m.replace(/;/g, substituteStr)
+  const qs = [/(`[^`]*?`)/g, /("[^"]*?")/g, /('[^']*?')/g]
+  qs.forEach(q => (str = str.replace(q, replaceFn)))
   const splitted = str
     .split(';')
-    .map((item) => item.trim())
-    .map((item) => item.replace(substituteRe, ';'))
-    .filter((item) => item && item.length)
+    .map(item => item.trim())
+    .map(item => item.replace(substituteRe, ';'))
+    .filter(item => item && item.length)
   return splitted && splitted.length ? splitted : undefined
 }
 
-const getHelpTopic = (str) => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
-const lowerCase = (str) => str.toLowerCase()
-const trim = (str) => str.trim()
-const replaceSpaceWithDash = (str) => str.replace(/\s/g, '-')
-const snakeToCamel = (str) => str.replace(/(-\w)/g, (match) => match[1].toUpperCase())
-const prependUnderscore = (str) => '_' + str
+const getHelpTopic = str => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
+const lowerCase = str => str.toLowerCase()
+const trim = str => str.trim()
+const replaceSpaceWithDash = str => str.replace(/\s/g, '-')
+const snakeToCamel = str =>
+  str.replace(/(-\w)/g, match => match[1].toUpperCase())
+const prependUnderscore = str => '_' + str
 
-export const transformCommandToHelpTopic = (inputStr) => {
-  const res = [(inputStr || '')]
+export const transformCommandToHelpTopic = inputStr => {
+  const res = [inputStr || '']
     .map(getHelpTopic)
     .map(lowerCase)
     .map(trim)

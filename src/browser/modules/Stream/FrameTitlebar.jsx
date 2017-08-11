@@ -29,11 +29,29 @@ import { removeComments } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
-import { ExpandIcon, ContractIcon, RefreshIcon, CloseIcon, UpIcon, DownIcon, PinIcon, DownloadIcon } from 'browser-components/icons/Icons'
-import { StyledFrameTitleBar, StyledFrameCommand, DottedLineHover, FrameTitlebarButtonSection, DropdownList, DropdownContent, DropdownButton, DropdownItem } from './styled'
+import {
+  ExpandIcon,
+  ContractIcon,
+  RefreshIcon,
+  CloseIcon,
+  UpIcon,
+  DownIcon,
+  PinIcon,
+  DownloadIcon
+} from 'browser-components/icons/Icons'
+import {
+  StyledFrameTitleBar,
+  StyledFrameCommand,
+  DottedLineHover,
+  FrameTitlebarButtonSection,
+  DropdownList,
+  DropdownContent,
+  DropdownButton,
+  DropdownItem
+} from './styled'
 import { downloadPNGFromSVG } from 'shared/services/exporting/pngUtils'
 
-const getCsvData = (exportData) => {
+const getCsvData = exportData => {
   if (exportData && exportData.length > 0) {
     let data = exportData.slice()
     const csv = CSVSerializer(data.shift())
@@ -54,12 +72,14 @@ class FrameTitlebar extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (this.props.exportData !== nextProps.exportData) {
-      this.setState({csvData: nextProps.exportData ? getCsvData(nextProps.exportData) : null})
+      this.setState({
+        csvData: nextProps.exportData ? getCsvData(nextProps.exportData) : null
+      })
     }
   }
 
   exportPNG () {
-    const {svgElement, graphElement} = this.props.visElement
+    const { svgElement, graphElement } = this.props.visElement
     const fileName = 'graph'
     downloadPNGFromSVG(svgElement, graphElement, fileName)
   }
@@ -67,44 +87,87 @@ class FrameTitlebar extends Component {
   render () {
     let props = this.props
     const { frame = {} } = props
-    const fullscreenIcon = (props.fullscreen) ? <ContractIcon /> : <ExpandIcon />
-    const expandCollapseIcon = (props.collapse) ? <DownIcon /> : <UpIcon />
+    const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
+    const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
     const cmd = removeComments(frame.cmd)
     return (
       <StyledFrameTitleBar>
         <StyledFrameCommand>
-          <DottedLineHover data-test-id='frameCommand' onClick={() => props.onTitlebarClick(frame.cmd)}>
+          <DottedLineHover
+            data-test-id='frameCommand'
+            onClick={() => props.onTitlebarClick(frame.cmd)}
+          >
             {cmd}
           </DottedLineHover>
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
-          <Render if={frame.type === 'cypher' && (props.exportData || props.visElement)}>
+          <Render
+            if={
+              frame.type === 'cypher' && (props.exportData || props.visElement)
+            }
+          >
             <DropdownButton>
               <DownloadIcon />
               <DropdownList>
                 <DropdownContent>
                   <Render if={props.visElement}>
-                    <DropdownItem onClick={() => this.exportPNG()}>Export PNG</DropdownItem>
+                    <DropdownItem onClick={() => this.exportPNG()}>
+                      Export PNG
+                    </DropdownItem>
                   </Render>
                   <Render if={props.exportData}>
-                    <DropdownItem download='export.csv' href={this.state.csvData}>Export CSV</DropdownItem>
+                    <DropdownItem
+                      download='export.csv'
+                      href={this.state.csvData}
+                    >
+                      Export CSV
+                    </DropdownItem>
                   </Render>
                 </DropdownContent>
               </DropdownList>
             </DropdownButton>
           </Render>
-          <FrameButton title='Pin at top' onClick={() => {
-            props.togglePin()
-            props.togglePinning(frame.id, frame.isPinned)
-          }} pressed={props.pinned}><PinIcon /></FrameButton>
-          <Render if={['cypher', 'play', 'play-remote'].indexOf(frame.type) > -1}>
-            <FrameButton title={(props.fullscreen) ? 'Close fullscreen' : 'Fullscreen'} onClick={() => props.fullscreenToggle()}>{fullscreenIcon}</FrameButton>
+          <FrameButton
+            title='Pin at top'
+            onClick={() => {
+              props.togglePin()
+              props.togglePinning(frame.id, frame.isPinned)
+            }}
+            pressed={props.pinned}
+          >
+            <PinIcon />
+          </FrameButton>
+          <Render
+            if={['cypher', 'play', 'play-remote'].indexOf(frame.type) > -1}
+          >
+            <FrameButton
+              title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
+              onClick={() => props.fullscreenToggle()}
+            >
+              {fullscreenIcon}
+            </FrameButton>
           </Render>
-          <FrameButton title={(props.collapse) ? 'Expand' : 'Collapse'}onClick={() => props.collapseToggle()}>{expandCollapseIcon}</FrameButton>
+          <FrameButton
+            title={props.collapse ? 'Expand' : 'Collapse'}
+            onClick={() => props.collapseToggle()}
+          >
+            {expandCollapseIcon}
+          </FrameButton>
           <Render if={frame.type === 'cypher'}>
-            <FrameButton title='Rerun' onClick={() => props.onReRunClick(frame.cmd, frame.id, frame.requestId)}><RefreshIcon /></FrameButton>
+            <FrameButton
+              title='Rerun'
+              onClick={() =>
+                props.onReRunClick(frame.cmd, frame.id, frame.requestId)}
+            >
+              <RefreshIcon />
+            </FrameButton>
           </Render>
-          <FrameButton title='Close' onClick={() => props.onCloseClick(frame.id, frame.requestId)}><CloseIcon /></FrameButton>
+          <FrameButton
+            title='Close'
+            onClick={() => props.onCloseClick(frame.id, frame.requestId)}
+          >
+            <CloseIcon />
+          </FrameButton>
         </FrameTitlebarButtonSection>
       </StyledFrameTitleBar>
     )
@@ -113,7 +176,7 @@ class FrameTitlebar extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onTitlebarClick: (cmd) => {
+    onTitlebarClick: cmd => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     },
     onCloseClick: (id, requestId) => {
@@ -125,9 +188,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(commands.executeCommand(cmd, id))
     },
     togglePinning: (id, isPinned) => {
-      isPinned
-        ? dispatch(unpin(id))
-        : dispatch(pin(id))
+      isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
     }
   }
 }

@@ -47,7 +47,7 @@ export function setItem (key, val) {
 
 export function getAll () {
   let out = {}
-  keys.forEach((key) => {
+  keys.forEach(key => {
     let current = getItem(key)
     if (current !== undefined) {
       out[key] = current
@@ -59,16 +59,16 @@ export function getAll () {
 export const clear = () => storage.clear()
 
 export function createReduxMiddleware () {
-  return (store) => (next) => (action) => {
+  return store => next => action => {
     const result = next(action)
     const state = store.getState()
-    keys.forEach((key) => setItem(key, dehydrate(state[key])))
+    keys.forEach(key => setItem(key, dehydrate(state[key])))
     return result
   }
 }
 
 export function applyKeys () {
-  Array.from(arguments).forEach((arg) => (keys.push(arg)))
+  Array.from(arguments).forEach(arg => keys.push(arg))
 }
-export const setPrefix = (p) => (keyPrefix = p)
-export const setStorage = (s) => (storage = s)
+export const setPrefix = p => (keyPrefix = p)
+export const setStorage = s => (storage = s)

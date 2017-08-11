@@ -18,12 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {connect} from 'preact-redux'
+import { connect } from 'preact-redux'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
-import {StyledListItem, StyledFavoriteText, DeleteFavButton, ExecFavoriteButton} from './styled'
-import {withBus} from 'preact-suber'
-import {Component} from 'preact'
-import {DragSource, DropTarget} from 'react-dnd'
+import {
+  StyledListItem,
+  StyledFavoriteText,
+  DeleteFavButton,
+  ExecFavoriteButton
+} from './styled'
+import { withBus } from 'preact-suber'
+import { Component } from 'preact'
+import { DragSource, DropTarget } from 'react-dnd'
 import ItemTypes from './DragItemTypes'
 
 function extractNameFromCommand (input) {
@@ -72,7 +77,14 @@ const calculateNewPosition = (props, component, monitor) => {
     return null
   }
 
-  return { dragIndex, dragFolder: dragItem.folder, hoverIndex, hoverFolder: props.entry.folder, dragItem, hoveredItemProps: props }
+  return {
+    dragIndex,
+    dragFolder: dragItem.folder,
+    hoverIndex,
+    hoverFolder: props.entry.folder,
+    dragItem,
+    hoveredItemProps: props
+  }
 }
 
 const favoriteTarget = {
@@ -80,7 +92,7 @@ const favoriteTarget = {
     let newValues = calculateNewPosition(props, component, monitor)
 
     if (newValues) {
-      props.moveFavorite(Object.assign({...newValues}, {dropped: false}))
+      props.moveFavorite(Object.assign({ ...newValues }, { dropped: false }))
       monitor.getItem().index = newValues.hoverIndex
     }
   },
@@ -88,7 +100,15 @@ const favoriteTarget = {
     const dragItem = monitor.getItem()
     const dragIndex = dragItem.index
     const hoverIndex = props.index
-    props.moveFavorite({ dragIndex, dragFolder: dragItem.folder, hoverIndex, hoverFolder: props.entry.folder, dragItem, hoveredItemProps: props, dropped: true })
+    props.moveFavorite({
+      dragIndex,
+      dragFolder: dragItem.folder,
+      hoverIndex,
+      hoverFolder: props.entry.folder,
+      dragItem,
+      hoveredItemProps: props,
+      dropped: true
+    })
   }
 }
 
@@ -97,20 +117,32 @@ class FavoriteDp extends Component {
     const name = extractNameFromCommand(this.props.content)
     let favoriteContent = (
       <StyledListItem isChild={this.props.isChild}>
-        <ExecFavoriteButton onClick={() => this.props.onExecClick(this.props.content)} />
-        <StyledFavoriteText {...this.props}
-          onClick={() => this.props.onItemClick(this.props.id, this.props.content)}>
+        <ExecFavoriteButton
+          onClick={() => this.props.onExecClick(this.props.content)}
+        />
+        <StyledFavoriteText
+          {...this.props}
+          onClick={() =>
+            this.props.onItemClick(this.props.id, this.props.content)}
+        >
           {name}
         </StyledFavoriteText>
-        <DeleteFavButton id={this.props.id} removeClick={() => this.props.removeClick(this.props.id)}
-          isStatic={this.props.isStatic} />
+        <DeleteFavButton
+          id={this.props.id}
+          removeClick={() => this.props.removeClick(this.props.id)}
+          isStatic={this.props.isStatic}
+        />
       </StyledListItem>
     )
 
     if (this.props.isStatic) {
       return favoriteContent
     } else {
-      return this.props.connectDropTarget(<div>{favoriteContent}</div>)
+      return this.props.connectDropTarget(
+        <div>
+          {favoriteContent}
+        </div>
+      )
     }
   }
 }
@@ -131,19 +163,27 @@ class FavoriteDg extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    removeClick: (id) => {
+    removeClick: id => {
       dispatch(favorite.removeFavorite(id))
     }
   }
 }
 
-const FavoriteDrop = DropTarget(ItemTypes.FAVORITE, favoriteTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
-}))(FavoriteDg)
+const FavoriteDrop = DropTarget(
+  ItemTypes.FAVORITE,
+  favoriteTarget,
+  connect => ({
+    connectDropTarget: connect.dropTarget()
+  })
+)(FavoriteDg)
 
-const FavoriteDrag = DragSource(ItemTypes.FAVORITE, favoriteSource, (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging()
-}))(FavoriteDrop)
+const FavoriteDrag = DragSource(
+  ItemTypes.FAVORITE,
+  favoriteSource,
+  (connect, monitor) => ({
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  })
+)(FavoriteDrop)
 
 export default withBus(connect(null, mapDispatchToProps)(FavoriteDrag))

@@ -24,7 +24,11 @@ export function listUsersQuery () {
 export function listRolesQuery () {
   return 'CALL dbms.security.listRoles YIELD role'
 }
-export function createDatabaseUser ({username, password, forcePasswordChange}) {
+export function createDatabaseUser ({
+  username,
+  password,
+  forcePasswordChange
+}) {
   return `CALL dbms.security.createUser("${username}", "${password}", ${forcePasswordChange})`
 }
 export function deleteUser (username) {

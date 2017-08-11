@@ -18,9 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const FrameSuccess = (props) => {
+const FrameSuccess = props => {
   if (!props || !props.message) return null
-  return <span style={{color: 'green'}}>{props.message}</span>
+  return (
+    <span style={{ color: 'green' }}>
+      {props.message}
+    </span>
+  )
 }
 
 export default FrameSuccess

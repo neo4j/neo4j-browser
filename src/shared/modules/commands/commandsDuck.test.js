@@ -23,7 +23,10 @@ import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 
-import { BoltConnectionError, createErrorObject } from '../../services/exceptions'
+import {
+  BoltConnectionError,
+  createErrorObject
+} from '../../services/exceptions'
 import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -31,13 +34,22 @@ import { update as updateQueryResult } from '../requests/requestsDuck'
 import { send } from 'shared/modules/requests/requestsDuck'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
-import { update as updateParams, replace as replaceParams } from 'shared/modules/params/paramsDuck'
-import { update as updateSettings, replace as replaceSettings } from 'shared/modules/settings/settingsDuck'
+import {
+  update as updateParams,
+  replace as replaceParams
+} from 'shared/modules/params/paramsDuck'
+import {
+  update as updateSettings,
+  replace as replaceSettings
+} from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
-const mockStore = configureMockStore([epicMiddleware, createReduxMiddleware(bus)])
+const mockStore = configureMockStore([
+  epicMiddleware,
+  createReduxMiddleware(bus)
+])
 
 describe('commandsDuck', () => {
   let store
@@ -63,19 +75,21 @@ describe('commandsDuck', () => {
     bus.reset()
   })
   describe('commandsEpic', () => {
-    test('listens on USER_COMMAND_QUEUED for ":" commands and does a series of things', (done) => {
+    test('listens on USER_COMMAND_QUEUED for ":" commands and does a series of things', done => {
       // Given
       const cmdString = 'history'
       const cmd = store.getState().settings.cmdchar + cmdString
       const id = 1
       const action = commands.executeCommand(cmd, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          helper.interpret(cmdString).exec(action, store.getState().settings.cmdchar, (a) => a, store),
+          helper
+            .interpret(cmdString)
+            .exec(action, store.getState().settings.cmdchar, a => a, store),
           { type: 'NOOP' }
         ])
         done()
@@ -85,13 +99,13 @@ describe('commandsDuck', () => {
       store.dispatch(action)
     })
 
-    test('listens on USER_COMMAND_QUEUED for cypher commands and does a series of things', (done) => {
+    test('listens on USER_COMMAND_QUEUED for cypher commands and does a series of things', done => {
       // Given
       const cmd = 'RETURN 1'
       const id = 2
       const requestId = 'xxx'
       const action = commands.executeCommand(cmd, id, requestId)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -99,8 +113,12 @@ describe('commandsDuck', () => {
           { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
           commands.cypher(cmd),
-          frames.add({...action, type: 'cypher'}),
-          updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
+          frames.add({ ...action, type: 'cypher' }),
+          updateQueryResult(
+            requestId,
+            createErrorObject(BoltConnectionError),
+            'error'
+          ),
           commands.unsuccessfulCypher(cmd),
           { type: 'NOOP' }
         ])
@@ -113,20 +131,25 @@ describe('commandsDuck', () => {
       // See snoopOnActions above
     })
 
-    test('does the right thing for :param x: 2', (done) => {
+    test('does the right thing for :param x: 2', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'param'
       const cmdString = cmd + ' x: 2'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          updateParams({x: 2}),
-          frames.add({...action, success: true, type: 'param', params: {x: 2}}),
+          updateParams({ x: 2 }),
+          frames.add({
+            ...action,
+            success: true,
+            type: 'param',
+            params: { x: 2 }
+          }),
           { type: 'NOOP' }
         ])
         done()
@@ -138,20 +161,20 @@ describe('commandsDuck', () => {
       // Then
       // See above
     })
-    test('does the right thing for :params {x: 2, y: 3}', (done) => {
+    test('does the right thing for :params {x: 2, y: 3}', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'params'
       const cmdString = cmd + ' {x: 2, y: 3}'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          replaceParams({x: 2, y: 3}),
-          frames.add({...action, success: true, type: 'params', params: {}}),
+          replaceParams({ x: 2, y: 3 }),
+          frames.add({ ...action, success: true, type: 'params', params: {} }),
           { type: 'NOOP' }
         ])
         done()
@@ -163,18 +186,18 @@ describe('commandsDuck', () => {
       // Then
       // See above
     })
-    test('does the right thing for :params', (done) => {
+    test('does the right thing for :params', done => {
       // Given
       const cmdString = store.getState().settings.cmdchar + 'params'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          frames.add({...action, type: 'params', params: {}}),
+          frames.add({ ...action, type: 'params', params: {} }),
           { type: 'NOOP' }
         ])
         done()
@@ -186,20 +209,24 @@ describe('commandsDuck', () => {
       // Then
       // See above
     })
-    test('does the right thing for :config x: 2', (done) => {
+    test('does the right thing for :config x: 2', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'config'
       const cmdString = cmd + ' "x": 2'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          updateSettings({x: 2}),
-          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
+          updateSettings({ x: 2 }),
+          frames.add({
+            ...action,
+            type: 'pre',
+            result: JSON.stringify({ cmdchar: ':', maxHistory: 20 }, null, 2)
+          }),
           { type: 'NOOP' }
         ])
         done()
@@ -211,20 +238,24 @@ describe('commandsDuck', () => {
       // Then
       // See above
     })
-    test('does the right thing for :config {"x": 2, "y":3}', (done) => {
+    test('does the right thing for :config {"x": 2, "y":3}', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'config'
       const cmdString = cmd + ' {"x": 2, "y":3}'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          replaceSettings({x: 2, y: 3}),
-          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
+          replaceSettings({ x: 2, y: 3 }),
+          frames.add({
+            ...action,
+            type: 'pre',
+            result: JSON.stringify({ cmdchar: ':', maxHistory: 20 }, null, 2)
+          }),
           { type: 'NOOP' }
         ])
         done()
@@ -237,19 +268,23 @@ describe('commandsDuck', () => {
       // See above
     })
 
-    test('does the right thing for :config', (done) => {
+    test('does the right thing for :config', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'config'
       const cmdString = cmd
       const id = 1
       const action = commands.executeCommand(cmdString, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          frames.add({...action, type: 'pre', result: JSON.stringify({cmdchar: ':', maxHistory: 20}, null, 2)}),
+          frames.add({
+            ...action,
+            type: 'pre',
+            result: JSON.stringify({ cmdchar: ':', maxHistory: 20 }, null, 2)
+          }),
           { type: 'NOOP' }
         ])
         done()
@@ -262,19 +297,23 @@ describe('commandsDuck', () => {
       // See above
     })
 
-    test('does the right thing for :style', (done) => {
+    test('does the right thing for :style', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'style'
       const cmdString = cmd
       const id = 1
       const action = commands.executeCommand(cmdString, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          frames.add({...action, type: 'pre', result: JSON.stringify({ node: { color: '#000' } }, null, 2)}),
+          frames.add({
+            ...action,
+            type: 'pre',
+            result: JSON.stringify({ node: { color: '#000' } }, null, 2)
+          }),
           { type: 'NOOP' }
         ])
         done()
@@ -287,25 +326,29 @@ describe('commandsDuck', () => {
       // See above
     })
 
-    test('does the right thing for list queries', (done) => {
+    test('does the right thing for list queries', done => {
       const cmd = store.getState().settings.cmdchar + 'queries'
       const id = 1
       const action = commands.executeCommand(cmd, id)
 
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          frames.add({ ...action, type: 'queries', result: "{res : 'QUERIES RESULT'}" }),
-          {type: 'NOOP'}
+          frames.add({
+            ...action,
+            type: 'queries',
+            result: "{res : 'QUERIES RESULT'}"
+          }),
+          { type: 'NOOP' }
         ])
         done()
       })
 
       store.dispatch(action)
     })
-    test('does the right thing for cypher with comments', (done) => {
+    test('does the right thing for cypher with comments', done => {
       // Given
       const comment = '//COMMENT FOR RETURN'
       const actualCommand = 'RETURN 1'
@@ -313,7 +356,7 @@ describe('commandsDuck', () => {
       const id = 2
       const requestId = 'xxx'
       const action = commands.executeCommand(cmd, id, requestId)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -321,8 +364,12 @@ describe('commandsDuck', () => {
           { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
           commands.cypher(cmd),
-          frames.add({...action, type: 'cypher'}),
-          updateQueryResult(requestId, createErrorObject(BoltConnectionError), 'error'),
+          frames.add({ ...action, type: 'cypher' }),
+          updateQueryResult(
+            requestId,
+            createErrorObject(BoltConnectionError),
+            'error'
+          ),
           commands.unsuccessfulCypher(cmd),
           { type: 'NOOP' }
         ])
@@ -331,7 +378,7 @@ describe('commandsDuck', () => {
       // When
       store.dispatch(action)
     })
-    test('does the right thing for history command with comments', (done) => {
+    test('does the right thing for history command with comments', done => {
       // Given
       const comment = '//COMMENT FOR HISTORY'
       const cmdString = 'history'
@@ -340,13 +387,18 @@ describe('commandsDuck', () => {
       const action = commands.executeCommand(cmd, id)
       const cmdChar = store.getState().settings.cmdchar
 
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          getInterpreter(helper.interpret, action.cmd, cmdChar).exec(Object.assign(action, {cmd: cleanCommand(action.cmd)}), cmdChar, (a) => a, store),
+          getInterpreter(helper.interpret, action.cmd, cmdChar).exec(
+            Object.assign(action, { cmd: cleanCommand(action.cmd) }),
+            cmdChar,
+            a => a,
+            store
+          ),
           { type: 'NOOP' }
         ])
         done()
@@ -357,12 +409,12 @@ describe('commandsDuck', () => {
     })
   })
   describe(':unknown', () => {
-    test('unkown commands send out an UNKNOWN_COMMAND acation and not added to history', (done) => {
+    test('unkown commands send out an UNKNOWN_COMMAND acation and not added to history', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'unknown'
       const id = 1
       const action = commands.executeCommand(cmd, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -377,19 +429,19 @@ describe('commandsDuck', () => {
     })
   })
   describe(':server disconnect', () => {
-    test(':server disconnect produces a DISCONNECT action and a action for a "disconnect" frame', (done) => {
+    test(':server disconnect produces a DISCONNECT action and a action for a "disconnect" frame', done => {
       // Given
       const serverCmd = 'disconnect'
       const cmd = store.getState().settings.cmdchar + 'server ' + serverCmd
       const id = 3
       const action = commands.executeCommand(cmd, id)
-      bus.take('NOOP', (currentAction) => {
+      bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmd, maxHistory),
           { type: commands.KNOWN_COMMAND },
-          frames.add({...action, type: 'disconnect'}),
+          frames.add({ ...action, type: 'disconnect' }),
           disconnectAction(null),
           { type: 'NOOP' }
         ])

@@ -32,7 +32,11 @@ describe('remoteUtils', () => {
       { local: undefined, request: '/yo', expect: false },
       { local: 'http://hej.com', request: '/yo', expect: true },
       { local: 'http://hej.com', request: 'http://hej.com/yo', expect: true },
-      { local: 'http://hej.com:8080', request: 'http://hej.com:9000/mine', expect: false },
+      {
+        local: 'http://hej.com:8080',
+        request: 'http://hej.com:9000/mine',
+        expect: false
+      },
       { local: 'http://hej.com', request: 'https://hej.com', expect: false },
       { local: 'http://hej.com', request: 'http://bye.com', expect: false }
     ]
@@ -40,18 +44,28 @@ describe('remoteUtils', () => {
       { local: undefined, request: '/yo', expect: false },
       { local: 'http://hej.com', request: '/yo', expect: true },
       { local: 'http://hej.com', request: 'http://hej.com/yo', expect: true },
-      { local: 'http://hej.com:8080', request: 'http://hej.com:9000/mine', expect: true },
+      {
+        local: 'http://hej.com:8080',
+        request: 'http://hej.com:9000/mine',
+        expect: true
+      },
       { local: 'http://hej.com', request: 'https://hej.com', expect: true },
       { local: 'http://hej.com', request: 'http://bye.com', expect: false },
-      { local: 'bolt://hej.com:7687', request: 'http://hej.com:7474', expect: true }
+      {
+        local: 'bolt://hej.com:7687',
+        request: 'http://hej.com:7474',
+        expect: true
+      }
     ]
 
     // When && Then
-    itemsStrict.forEach((item) => {
+    itemsStrict.forEach(item => {
       expect(utils.isLocalRequest(item.local, item.request)).toBe(item.expect)
     })
-    itemsHostnameOnly.forEach((item) => {
-      expect(utils.isLocalRequest(item.local, item.request, { hostnameOnly: true })).toBe(item.expect)
+    itemsHostnameOnly.forEach(item => {
+      expect(
+        utils.isLocalRequest(item.local, item.request, { hostnameOnly: true })
+      ).toBe(item.expect)
     })
   })
 })
