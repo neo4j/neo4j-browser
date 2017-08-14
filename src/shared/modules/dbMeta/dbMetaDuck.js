@@ -312,6 +312,15 @@ export const dbMetaEpic = (some$, store) =>
               ) {
                 retainCredentials = false
               }
+
+              // This assignment is workaround to have prettier
+              // play nice with standardJS
+              // Use isConfigValFalsy to cast undefined to true
+              const aocConfig = !isConfigValFalsy(
+                settings['browser.allow_outgoing_connections']
+              )
+              settings[`browser.allow_outgoing_connections`] = aocConfig
+
               store.dispatch(setRetainCredentials(retainCredentials))
               store.dispatch(updateSettings(settings))
             })

@@ -249,7 +249,7 @@ export const DownloadIcon = () => (
   <IconContainer className='sl-download-drive' />
 )
 export const ExpandMenuIcon = () => (
-  <IconContainer activeStyle={styles.blue} className='fa fa-caret-right' />
+  <IconContainer activeStyle={styles.blue} className='fa fa-caret-left' />
 )
 export const CollapseMenuIcon = () => (
   <IconContainer activeStyle={styles.blue} className='fa fa-caret-down' />

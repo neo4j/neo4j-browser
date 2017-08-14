@@ -23,18 +23,23 @@ import {
   initialize,
   status,
   getResourceFor,
-  setupUser
+  setupUser,
+  signOut
 } from 'services/browserSyncService'
 import { getBrowserName } from 'services/utils'
-
-export const UP = 'UP'
-export const DOWN = 'DOWN'
+import { UP, DOWN } from 'shared/modules/sync/syncDuck'
 
 class SyncSignInManager {
-  constructor ({ dbConfig, serviceReadyCallback, onSyncCallback }) {
+  constructor ({
+    dbConfig,
+    serviceReadyCallback,
+    onSyncCallback,
+    disconnectCallback = null
+  }) {
     initialize(dbConfig)
     this.isServiceUp(serviceReadyCallback)
     this.onSync = onSyncCallback
+    this.onDisconnect = disconnectCallback
   }
   isServiceUp (serviceReadyCallback) {
     status().on('value', v => {
@@ -56,25 +61,28 @@ class SyncSignInManager {
       this.error = error
       errorFn && errorFn(error)
     } else {
-      this.authData = data
-      authenticate(this.authData.data_token)
-        .then(a => {
-          this.serviceAuthenticated = true
-          this.error = null
-          this.bindToResource()
-          successFn && successFn(data)
-        })
-        .catch(e => {
-          this.serviceAuthenticated = false
-          this.error = e
-          errorFn && errorFn(e)
-        })
+      this.authenticateWithDataAndBind(data, successFn, errorFn)
     }
+  }
+  authenticateWithDataAndBind (authData, successFn = null, errorFn = null) {
+    this.authData = authData
+    authenticate(this.authData.data_token, this.onDisconnect)
+      .then(a => {
+        this.serviceAuthenticated = true
+        this.error = null
+        this.bindToResource()
+        successFn && successFn(authData)
+      })
+      .catch(e => {
+        this.serviceAuthenticated = false
+        this.error = e
+        errorFn && errorFn(e)
+      })
   }
   bindToResource () {
     this.syncRef = getResourceFor(this.authData.profile.user_id)
     this.syncRef.on('value', v => {
-      if (v.val() == null) {
+      if (v.val() === null) {
         setupUser(this.authData.profile.user_id, {
           documents: [
             {
@@ -84,16 +92,18 @@ class SyncSignInManager {
           ]
         })
       } else {
-        this.setSynCData(v.val())
+        this.setSyncData(v.val())
       }
     })
   }
-  setSynCData (value) {
+  signOut () {
+    signOut()
+  }
+  setSyncData (value) {
     this.onSync({
       key: this.authData.profile.user_id,
       syncObj: value,
-      lastSyncedAt: new Date(),
-      authData: this.authData
+      lastSyncedAt: new Date()
     })
   }
 }

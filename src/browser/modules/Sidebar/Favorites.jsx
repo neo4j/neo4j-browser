@@ -76,7 +76,7 @@ class Favorites extends Component {
     })
   }
 
-  moveFavorite (dragDropValues) {
+  moveFavorite = dragDropValues => {
     const { dropped } = dragDropValues
     let newFavorites = this.arrangeFavoriteList(dragDropValues)
 
@@ -126,7 +126,7 @@ class Favorites extends Component {
     return newFavorites
   }
 
-  moveToFolder (folder, draggedItem, dropped) {
+  moveToFolder = (folder, draggedItem, dropped) => {
     let draggedFav = this.state.favorites.find(fav => fav.id === draggedItem.id)
     draggedFav.folder = folder.id
 
@@ -137,7 +137,7 @@ class Favorites extends Component {
     }
   }
 
-  updateFolder (folderName, folderId) {
+  updateFolder = (folderName, folderId) => {
     let folder = this.state.folders.find(fold => fold.id === folderId)
     folder.name = folderName
     this.props.updateFolders(this.state.folders)
@@ -150,7 +150,7 @@ class Favorites extends Component {
       favorites.filter(fav => !fav.isStatic && !fav.folder),
       this.props,
       false,
-      this.moveFavorite.bind(this)
+      this.moveFavorite
     )
     const ListOfFolders = folders
       .filter(folder => !folder.isStatic)
@@ -159,14 +159,14 @@ class Favorites extends Component {
           favorites.filter(fav => !fav.isStatic && fav.folder === folder.id),
           this.props,
           true,
-          this.moveFavorite.bind(this)
+          this.moveFavorite
         )
         return (
           <Folder
             folder={folder}
             removeClick={this.props.removeFolderClick}
-            moveToFolder={this.moveToFolder.bind(this)}
-            updateFolder={this.updateFolder.bind(this)}
+            moveToFolder={this.moveToFolder}
+            updateFolder={this.updateFolder}
           >
             {Favorites}
           </Folder>
@@ -179,7 +179,7 @@ class Favorites extends Component {
           favorites.filter(fav => fav.isStatic && fav.folder === folder.id),
           this.props,
           true,
-          this.moveFavorite.bind(this)
+          this.moveFavorite
         )
         return <Folder folder={folder}>{Favorites}</Folder>
       })

@@ -20,8 +20,15 @@
 
 import * as firebase from 'firebase'
 
-export const authenticate = dataToken => {
-  return firebase.auth().signInWithCustomToken(dataToken)
+export const authenticate = (dataToken, onSignout = null) => {
+  return firebase.auth().signInWithCustomToken(dataToken).then(a => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user || !user.uid) {
+        onSignout && onSignout()
+      }
+    })
+    return a
+  })
 }
 
 export const initialize = config => {

@@ -41,7 +41,6 @@ applyKeys(
   'settings',
   'history',
   'documents',
-  'visualization',
   'folders',
   'grass',
   'syncConsent',

@@ -18,28 +18,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const BrowserSyncAuthWindow = (url, callback) => {
-  const win = window.open(
-    url,
-    'loginWindow',
-    'location=0,status=0,scrollbars=0, width=1080,height=720'
-  )
+const BrowserSyncAuthIframe = (silentAuthUrl, delegationTokenUrl, callback) => {
+  setupIframe(silentAuthUrl, 'auth0:silent-authentication', data => {
+    setupIframe(
+      `${delegationTokenUrl}${data.hash}`,
+      'auth0:delegation-token',
+      ({ userData }) => callback(userData)
+    )
+  })
+}
+
+function setupIframe (url, type, cb) {
+  let iframe = document.createElement('iframe')
+  iframe.style.display = 'none'
+  iframe.src = url
+  document.body.appendChild(iframe)
   const pollInterval = setInterval(() => {
-    win.postMessage('Polling for results', url)
-  }, 6000)
-  try {
-    win.moveTo(500, 300)
-  } catch (e) {
-    callback(null, e)
-  }
+    iframe.contentWindow.postMessage(`Polling ${url} for results`, url)
+  }, 3000)
   const listener = event => {
     if (url.indexOf(event.origin) !== 0) return
+    if (!event.data || event.data.type !== type) return
     clearInterval(pollInterval)
     window.removeEventListener('message', listener)
-    callback(event.data)
-    win.close()
+    iframe.parentElement.removeChild(iframe)
+    cb(event.data)
   }
   window.addEventListener('message', listener, false)
 }
 
-export default BrowserSyncAuthWindow
+export default BrowserSyncAuthIframe

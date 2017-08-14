@@ -161,7 +161,7 @@ export const bootEpic = (action$, store) => {
     .ofType(AUTHORIZED) // Browser sync auth
     .map(action => {
       // Store name locally
-      if (!action.userData || !action.userData['name']) return
+      if (!action.userData || !action.userData['name']) return action
       store.dispatch(updateData({ name: action.userData['name'] }))
       return action
     })

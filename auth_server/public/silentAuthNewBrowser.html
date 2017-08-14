@@ -1,0 +1,37 @@
+<html>
+
+<head>
+  <script src="//cdn.auth0.com/js/auth0/8.0.4/auth0.min.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    var webAuth = new auth0.WebAuth({
+      domain: 'neo4j-sync.auth0.com',
+      clientID: 'MSh9Q3sxUT6ZQy0xevjgv1rHVGOvgPpO'
+    });
+    if ('location' in window && 'hash' in window.location && window.location.hash.length > 1) {
+      parent.postMessage({
+        hash: window.location.hash,
+        type: 'auth0:silent-authentication'
+      }, window.location.href);
+    } else {
+      webAuth.renewAuth({
+        audience: '',
+        nonce: String(Math.floor(Math.random() * 100000)),
+        scope: 'openid',
+        responseType: 'token',
+        responseMode: 'fragment',
+        postMessageDataType: 'auth0:silent-authentication',
+        redirectUri: window.location.href,
+        usePostMessage: true
+      }, function (err, authResult) {
+        window.addEventListener('message', function (event) {
+          event.source.postMessage(authResult, event.origin);
+        }, false);
+      });
+    }
+  </script>
+</body>
+
+</html>

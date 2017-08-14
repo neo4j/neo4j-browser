@@ -45,22 +45,64 @@ import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck
 
 export const NAME = 'sync'
 export const NAME_CONSENT = 'syncConsent'
-export const SET_SYNC = 'sync/SET_SYNC'
+export const NAME_META = 'syncMetadata'
+export const SET_SYNC_DATA = 'sync/SET_SYNC_DATA'
 export const SYNC_ITEMS = 'sync/SYNC_ITEMS'
 export const CLEAR_SYNC = 'sync/CLEAR_SYNC'
 export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
 export const OPT_OUT_SYNC = 'sync/OPT_OUT_SYNC'
 export const AUTHORIZED = 'sync/AUTHORIZED'
+export const SET_AUTH_DATA = NAME_META + '/SET_AUTH_DATA'
+export const SET_SYNC_METADATA = NAME_META + '/SET_SYNC_METADATA'
+export const RESET_METADATA = NAME_META + '/RESET_METADATA'
+export const SERVICE_STATUS_UPDATED = NAME_META + '/SERVICE_STATUS_UPDATED'
+export const USER_AUTH_STATUS_UPDATED = NAME_META + '/USER_AUTH_STATUS_UPDATED'
+
+export const UP = 'UP'
+export const DOWN = 'DOWN'
+export const PENDING = 'PENDING'
+export const UNKNOWN = 'UNKNOWN'
+export const SIGNED_IN = 'SIGNED_IN'
+export const SIGNED_OUT = 'SIGNED_OUT'
 
 const initialState = null
 const initialConsentState = { consented: false, optedOut: false }
+const initialMetadataState = {
+  serviceStatus: UNKNOWN,
+  userAuthStatus: SIGNED_OUT,
+  key: null,
+  lastSyncedAt: null,
+  profile: null
+}
 
 /**
  * Selectors
 */
 export function getSync (state) {
   return state[NAME]
+}
+
+export function getMetadata (state) {
+  return state[NAME_META] || null
+}
+
+export function getServiceStatus (state) {
+  return (state[NAME_META] || initialMetadataState).serviceStatus
+}
+export function getUserAuthStatus (state) {
+  return (state[NAME_META] || {}).userAuthStatus || SIGNED_OUT
+}
+export function isUserSignedIn (state) {
+  return (state[NAME_META] || {}).userAuthStatus === SIGNED_IN
+}
+export function getUserData (state) {
+  return (state[NAME_META] || {}).profile
+}
+export function getLastSyncedAt (state) {
+  return (
+    (state[NAME_META] || {}).lastSyncedAt || initialMetadataState.lastSyncedAt
+  )
 }
 
 /**
@@ -73,7 +115,7 @@ export function syncReducer (state = initialState, action) {
   }
 
   switch (action.type) {
-    case SET_SYNC:
+    case SET_SYNC_DATA:
       return Object.assign({}, state, action.obj)
     case CLEAR_SYNC:
     case CLEAR_SYNC_AND_LOCAL:
@@ -95,17 +137,50 @@ export function syncConsentReducer (state = initialConsentState, action) {
       return { consented: false, optedOut: false }
     case OPT_OUT_SYNC:
       return Object.assign({}, state, { optedOut: true })
-    case SET_SYNC:
+    case SET_SYNC_DATA:
       return Object.assign({}, state, { optedOut: false })
     default:
       return state
   }
 }
 
+export function syncMetaDataReducer (state = initialMetadataState, action) {
+  if (action.type === APP_START) {
+    state = {
+      ...initialMetadataState,
+      ...state
+    }
+  }
+
+  switch (action.type) {
+    case SET_AUTH_DATA:
+      return {
+        ...state,
+        ...action.data
+      }
+    case SET_SYNC_METADATA:
+      return {
+        ...state,
+        key: action.key || null,
+        lastSyncedAt: action.lastSyncedAt
+      }
+    case SERVICE_STATUS_UPDATED:
+      return { ...state, serviceStatus: action.status }
+    case USER_AUTH_STATUS_UPDATED:
+      return { ...state, userAuthStatus: action.status }
+    case CLEAR_SYNC:
+    case CLEAR_SYNC_AND_LOCAL:
+    case RESET_METADATA:
+      return { ...initialMetadataState, serviceStatus: state.serviceStatus }
+    default:
+      return state
+  }
+}
+
 // Action creators
-export function setSync (obj) {
+export function setSyncData (obj) {
   return {
-    type: SET_SYNC,
+    type: SET_SYNC_DATA,
     obj
   }
 }
@@ -150,6 +225,39 @@ export const authorizedAs = userData => {
   }
 }
 
+export const setSyncAuthData = data => {
+  return {
+    type: SET_AUTH_DATA,
+    data
+  }
+}
+
+export function setSyncMetadata (obj) {
+  return {
+    type: SET_SYNC_METADATA,
+    ...obj
+  }
+}
+
+export function resetSyncMetadata () {
+  return {
+    type: RESET_METADATA
+  }
+}
+
+export function updateServiceStatus (status) {
+  return {
+    type: SERVICE_STATUS_UPDATED,
+    status
+  }
+}
+export function updateUserAuthStatus (status) {
+  return {
+    type: USER_AUTH_STATUS_UPDATED,
+    status
+  }
+}
+
 // Epics
 export const syncItemsEpic = (action$, store) =>
   action$
@@ -182,8 +290,7 @@ export const syncFavoritesEpic = (action$, store) =>
     )
     .map(action => {
       const syncValue = getSync(store.getState())
-
-      if (syncValue && syncValue.syncObj) {
+      if (syncValue && syncValue.syncObj !== undefined) {
         const documents = composeDocumentsToSync(store, syncValue)
         return syncItems('documents', documents)
       }
@@ -192,7 +299,7 @@ export const syncFavoritesEpic = (action$, store) =>
 
 export const loadFavoritesFromSyncEpic = (action$, store) =>
   action$
-    .ofType(SET_SYNC)
+    .ofType(SET_SYNC_DATA)
     .do(action => {
       const favoritesStatus = favoritesToLoad(action, store)
 
@@ -225,7 +332,7 @@ export const syncFoldersEpic = (action$, store) =>
 
 export const loadFoldersFromSyncEpic = (action$, store) =>
   action$
-    .ofType(SET_SYNC)
+    .ofType(SET_SYNC_DATA)
     .do(action => {
       const folderStatus = foldersToLoad(action, store)
 

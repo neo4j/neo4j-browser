@@ -27,6 +27,7 @@ import About from './About'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
+import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
@@ -126,7 +127,7 @@ const mapStateToProps = state => {
     }
   }
   return {
-    syncConnected: state.sync && state.sync.authData,
+    syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState
   }
 }
