@@ -25,6 +25,7 @@ const DashboardPlugin = require('webpack-dashboard/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const nodeEnv = process.env.NODE_ENV || 'development'
