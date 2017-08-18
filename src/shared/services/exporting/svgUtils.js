@@ -65,15 +65,14 @@ export const getSvgDimensions = view => {
 }
 
 const appendGraphLayers = (svgElement, svg) => {
-  window.d3.select(svgElement).selectAll('g.layer').each((node) => {
-    svg.node().appendChild(window.d3.select('.' + node).node().cloneNode(true))
+  window.d3.select(svgElement).selectAll('g.layer').each(function (node) {
+    svg.node().appendChild(window.d3.select(this).node().cloneNode(true))
   })
   return svg
 }
 const appendPlanLayers = (svgElement, svg) => {
-  window.d3.select(svgElement).selectAll('g.layer').each((node) => {
-    svg.node().appendChild(window.d3.select('.links').node().cloneNode(true))
-    svg.node().appendChild(window.d3.select('.operators').node().cloneNode(true))
+  window.d3.select(svgElement).selectAll('g.layer').each(function (node) {
+    svg.node().appendChild(window.d3.select(this).node().cloneNode(true))
   })
   return svg
 }
