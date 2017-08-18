@@ -46,7 +46,9 @@ describe('Neo4j Browser', () => {
     // update password
     cy.get('input[data-test-id="newPassword"]')
     cy.get('input[data-test-id="newPassword"]').should('have.value', '')
-    cy.get('input[data-test-id="newPasswordConfirmation"]').should('have.value', '')
+    cy
+      .get('input[data-test-id="newPasswordConfirmation"]')
+      .should('have.value', '')
 
     cy.get('input[data-test-id="newPassword"]').type('newpassword')
     cy.get('input[data-test-id="newPasswordConfirmation"]').type('newpassword')
@@ -56,20 +58,26 @@ describe('Neo4j Browser', () => {
 
     cy.get('input[data-test-id="connect"]').should('not.be.visible')
     cy.wait(500)
-    cy.get('[data-test-id="frameCommand"]').first().should('contain', ':play start')
+    cy
+      .get('[data-test-id="frameCommand"]')
+      .first()
+      .should('contain', ':play start')
   })
   it('can run cypher statement', () => {
     const cypher = 'return 1'
-    cy.get(Editor).type(cypher, {force: true})
+    cy.get(Editor).type(cypher, { force: true })
     cy.get(Editor).should('have.value', cypher)
     cy.get(SubmitQueryButton).click()
-    cy.get('[data-test-id="frameCommand"]').first().should('contain', cypher)
+    cy
+      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+      .first()
+      .should('contain', cypher)
   })
   it('can exec cypher from `:play movies`', () => {
     const cypher = ':play movies'
     cy.get('[data-test-id="clearEditorContent"]').click()
 
-    cy.get(Editor).type(cypher, {force: true})
+    cy.get(Editor).type(cypher, { force: true })
     cy.get(Editor).should('have.value', cypher)
 
     cy.get(SubmitQueryButton).click()
@@ -81,6 +89,9 @@ describe('Neo4j Browser', () => {
     cy.get(Carousel).find('.code').click()
     cy.get(SubmitQueryButton).click()
 
-    cy.get('[data-test-id="frameCommand"]').first().should('contain', 'Emil Eifrem')
+    cy
+      .get('[data-test-id="frameCommand"]')
+      .first()
+      .should('contain', 'Emil Eifrem')
   })
 })
