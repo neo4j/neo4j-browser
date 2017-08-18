@@ -38,9 +38,16 @@ import {
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
 
-const mapItemProperties = itemProperties => {
-  return itemProperties.map((prop, i) => {
-    return (
+const mapItemProperties = itemProperties => (
+  itemProperties
+    .sort(({ key: keyA }, { key: keyB }) => (
+      keyA < keyB
+        ? -1
+        : keyA === keyB
+          ? 0
+          : 1
+    ))
+    .map((prop, i) => (
       <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
         <StyledInspectorFooterRowListKey className='key'>
           {prop.key + ': '}
@@ -49,9 +56,8 @@ const mapItemProperties = itemProperties => {
           {prop.value.toString()}
         </StyledInspectorFooterRowListValue>
       </StyledInspectorFooterRowListPair>
-    )
-  })
-}
+    ))
+)
 
 const mapLabels = (graphStyle, itemLabels) => {
   return itemLabels.map((label, i) => {
