@@ -1,17 +1,17 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": ["es2015", "stage-2", "react"],
   "plugins": [
-    "transform-object-rest-spread",
     "preact-require",
-    ["transform-react-jsx", {
-      "pragma": "h"
-    }]
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "h"
+      }
+    ]
   ],
   "env": {
     "production": {
-      "plugins": [
-        "babel-plugin-jsx-remove-data-test-id"
-      ]
+      "plugins": ["babel-plugin-jsx-remove-data-test-id"]
     }
   }
 }

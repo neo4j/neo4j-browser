@@ -7,8 +7,8 @@
     "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
     "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
     "precommit": "lint-staged",
-    "format": "prettier-standard 'src/**/!(*.min).js' 'src/**/*.jsx'",
-    "lint": "standard --fix",
+    "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
+    "lint": "eslint --fix --ext .js --ext .jsx ./",
     "test": "npm run lint && jest",
     "e2e": "cypress run --config fixturesFolder=e2e_tests/fixtures,integrationFolder=e2e_tests/integration,screenshotsFolder=e2e_tests/screenshots,supportFile=e2e_tests/support,videosFolder=e2e_tests/videos",
     "dev": "jest --watch",
@@ -20,7 +20,7 @@
   "lint-staged": {
     "linters": {
       "*.{js,jsx}": [
-        "prettier-standard",
+        "prettier-eslint --write",
         "git add"
       ]
     }
@@ -48,26 +48,6 @@
       "<rootDir>/src/shared"
     ]
   },
-  "standard": {
-    "ignore": [
-      "node_modules",
-      "build",
-      "dist",
-      "src/browser/external"
-    ],
-    "globals": [
-      "it",
-      "describe",
-      "test",
-      "expect",
-      "beforeEach",
-      "afterEach",
-      "neo",
-      "FileReader",
-      "Blob",
-      "fetch"
-    ]
-  },
   "repository": {},
   "keywords": [],
   "author": "",
@@ -76,17 +56,18 @@
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.7.7",
+    "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-jsx-remove-data-test-id": "^1.0.8",
     "babel-plugin-module-resolver": "^2.4.0",
     "babel-plugin-preact-require": "^1.0.0",
     "babel-plugin-styled-components": "^1.1.7",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-react-jsx": "^6.23.0",
     "babel-polyfill": "^6.8.0",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-2": "^6.24.1",
     "babel-runtime": "^6.25.0",
     "coffee-loader": "^0.7.3",
     "coffee-script": "^1.12.7",
@@ -94,7 +75,7 @@
     "css-loader": "^0.28.0",
     "cypress-cli": "^0.13.1",
     "enzyme": "^2.9.1",
-    "eslint": "^4.4.0",
+    "eslint": "^4.4.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-jsx": "^4.0.1",
     "eslint-plugin-import": "^2.7.0",
@@ -118,14 +99,14 @@
     "preact-render-to-string": "^3.6.3",
     "preact-test-utils": "^0.1.3",
     "precss": "^2.0.0",
-    "prettier-standard": "^6.0.0",
+    "prettier-eslint": "^6.4.2",
+    "prettier-eslint-cli": "^4.2.0",
     "react-addons-test-utils": "^15.0.2",
     "react-hot-loader": "^1.3.0",
     "redux-devtools": "^3.2.0",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
     "redux-mock-store": "^1.2.3",
-    "standard": "^10.0.3",
     "style-loader": "^0.18.1",
     "url-loader": "^0.5.8",
     "webpack": "^3.4.1",
