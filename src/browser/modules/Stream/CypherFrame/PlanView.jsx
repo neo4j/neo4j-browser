@@ -87,7 +87,8 @@ export class PlanView extends Component {
         return this.el.getBBox()
       }
 
-      this.props.assignVisElement && this.props.assignVisElement(this.el, this.plan)
+      this.props.assignVisElement &&
+        this.props.assignVisElement(this.el, this.plan)
     }
   }
   ensureToggleExpand (props) {

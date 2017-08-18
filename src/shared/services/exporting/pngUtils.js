@@ -24,7 +24,9 @@ import FileSaver from 'file-saver'
 export const downloadPNGFromSVG = (svg, graph, type) => {
   const svgObj = prepareForExport(svg, graph, type)
   const filename = type
-  const svgData = new window.XMLSerializer().serializeToString(svgObj.node()).replace(/&nbsp;/g, '&#160;')
+  const svgData = new window.XMLSerializer()
+    .serializeToString(svgObj.node())
+    .replace(/&nbsp;/g, '&#160;')
 
   let canvas
   canvas = document.createElement('canvas')
