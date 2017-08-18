@@ -79,9 +79,8 @@ class FrameTitlebar extends Component {
   }
 
   exportPNG () {
-    const { svgElement, graphElement } = this.props.visElement
-    const fileName = 'graph'
-    downloadPNGFromSVG(svgElement, graphElement, fileName)
+    const { svgElement, graphElement, type } = this.props.visElement
+    downloadPNGFromSVG(svgElement, graphElement, type)
   }
 
   render () {
