@@ -64,17 +64,14 @@ const renderCell = entry => {
     return stringifyMod(entry, intToString, true)
   }
 }
-const renderObject = entry => {
+export const renderObject = entry => {
   if (neo4j.isInt(entry)) return entry.toString()
-  if (Object.keys(entry).length === 0 && entry.constructor === Object) {
-    return <em>(empty)</em>
-  } else {
-    return (
-      <StyledJsonPre>
-        {stringifyMod(entry, intToString, true)}
-      </StyledJsonPre>
-    )
-  }
+  if (entry === null) return <em>null</em>
+  return (
+    <StyledJsonPre>
+      {stringifyMod(entry, intToString, true)}
+    </StyledJsonPre>
+  )
 }
 const buildData = entries => {
   return entries.map(entry => {
@@ -87,7 +84,7 @@ const buildData = entries => {
     }
     return (
       <StyledTd className='table-properties' key={v4()}>
-        (empty)
+        null
       </StyledTd>
     )
   })

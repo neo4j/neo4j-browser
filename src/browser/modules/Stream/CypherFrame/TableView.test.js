@@ -22,7 +22,7 @@
 
 import { mount } from 'services/testUtils'
 
-import { TableView, TableStatusbar } from './TableView'
+import { TableView, TableStatusbar, renderObject } from './TableView'
 
 describe('TableViews', () => {
   describe('TableView', () => {
@@ -60,6 +60,16 @@ describe('TableViews', () => {
 
       // Return test result (promise)
       return result
+    })
+    test('renderObject handles null values', () => {
+      // Given
+      const datas = [{ x: 1 }, null]
+
+      // When
+      const results = datas.map(data => renderObject(data))
+
+      // Then
+      results.forEach((res, i) => expect(res).toMatchSnapshot())
     })
   })
   describe('TableStatusbar', () => {
