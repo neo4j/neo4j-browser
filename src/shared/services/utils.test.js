@@ -161,19 +161,23 @@ describe('utils', () => {
       protocol: 'http:',
       host: 'anything.com',
       hostname: 'anything.com',
-      port: undefined,
+      port: '',
       pathname: '',
       search: '',
-      hash: ''
+      hash: '',
+      username: '',
+      password: ''
     })
     expect(utils.getUrlInfo('https://anything.com')).toEqual({
       protocol: 'https:',
       host: 'anything.com',
       hostname: 'anything.com',
-      port: undefined,
+      port: '',
       pathname: '',
       search: '',
-      hash: ''
+      hash: '',
+      username: '',
+      password: ''
     })
     expect(utils.getUrlInfo('http://anything.com:8080/index.html')).toEqual({
       protocol: 'http:',
@@ -182,25 +186,35 @@ describe('utils', () => {
       port: '8080',
       pathname: '/index.html',
       search: '',
-      hash: ''
+      hash: '',
+      username: '',
+      password: ''
     })
-    expect(utils.getUrlInfo('guides.neo4j.com')).toEqual({
-      protocol: undefined,
-      host: 'guides.neo4j.com',
-      hostname: 'guides.neo4j.com',
-      port: undefined,
-      pathname: '',
-      search: '',
-      hash: ''
-    })
-    expect(utils.getUrlInfo('localhost')).toEqual({
-      protocol: undefined,
+    expect(utils.getUrlInfo('http://localhost')).toEqual({
+      protocol: 'http:',
       host: 'localhost',
       hostname: 'localhost',
-      port: undefined,
+      port: '',
       pathname: '',
       search: '',
-      hash: ''
+      hash: '',
+      username: '',
+      password: ''
+    })
+    expect(
+      utils.getUrlInfo(
+        'http://neo:neoPass@guides.neo4j.com:1111/path?arg1=a&arg2=2'
+      )
+    ).toEqual({
+      protocol: 'http:',
+      host: 'guides.neo4j.com:1111',
+      hostname: 'guides.neo4j.com',
+      port: '1111',
+      pathname: '/path',
+      search: '?arg1=a&arg2=2',
+      hash: '',
+      username: 'neo',
+      password: 'neoPass'
     })
   })
   describe('extractWhitelistFromConfigString', () => {

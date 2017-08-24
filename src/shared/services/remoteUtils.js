@@ -45,10 +45,6 @@ export const isLocalRequest = (
 ) => {
   if (!localUrl) return false
 
-  if (opts.hostnameOnly === true) {
-    localUrl = localUrl.trim().replace(/^[^:]+:\/\//, '')
-    requestUrl = requestUrl.trim().replace(/^[^:]+:\/\//, '')
-  }
   const localUrlInfo = getUrlInfo(localUrl)
   const requestUrlInfo = getUrlInfo(requestUrl)
   if (!requestUrlInfo.host) return true // GET /path

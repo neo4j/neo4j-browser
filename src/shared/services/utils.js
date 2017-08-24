@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import parseUrl from 'url-parse'
 
 export const deepEquals = (x, y) => {
   if (x && y && typeof x === 'object' && typeof y === 'object') {
@@ -81,11 +82,8 @@ export const toBoltHost = host => {
   return (
     'bolt://' +
     (host || '') // prepend with bolt://
-      .split('bolt://')
-      .join('') // remove bolt://
-      .split('bolt+routing://')
-      .join('')
-  ) // remove bolt+routing://
+      .replace(/(.*(?=@+)@|(bolt|bolt\+routing):\/\/)/, '') // remove bolt or bolt+routing protocol and auth info
+  )
 }
 
 export const hostIsAllowed = (uri, whitelist = null) => {
@@ -116,27 +114,29 @@ export const addProtocolsToUrlList = list => {
 }
 
 export const getUrlInfo = url => {
-  const reURLInformation = new RegExp(
-    [
-      '^(?:(https?:)//)?', // protocol
-      '(([^:/?#]*)(?::([0-9]+))?)', // host (hostname and port)
-      '(/{0,1}[^?#]*)', // pathname
-      '(\\?[^#]*|)', // search
-      '(#.*|)$' // hash
-    ].join('')
-  )
-  const match = url.match(reURLInformation)
-  return (
-    match && {
-      protocol: match[1],
-      host: match[2],
-      hostname: match[3],
-      port: match[4],
-      pathname: match[5],
-      search: match[6],
-      hash: match[7]
-    }
-  )
+  const {
+    protocol,
+    username,
+    password,
+    host,
+    hostname,
+    port,
+    pathname,
+    query: search,
+    hash
+  } = parseUrl(url, {})
+
+  return {
+    protocol,
+    username,
+    password,
+    host,
+    hostname,
+    port,
+    pathname,
+    search,
+    hash
+  }
 }
 
 export const getUrlParamValue = (name, url) => {

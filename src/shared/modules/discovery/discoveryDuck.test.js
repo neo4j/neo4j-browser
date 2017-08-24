@@ -110,7 +110,11 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedURL }),
+        discovery.updateDiscoveryConnection({
+          host: expectedURL,
+          username: '',
+          password: ''
+        }),
         { type: discovery.DONE }
       ])
       done()
@@ -131,7 +135,37 @@ describe('discoveryOnStartupEpic', () => {
       expect(store.getActions()).toEqual([
         action,
         updateBoltRouting(true),
-        discovery.updateDiscoveryConnection({ host: expectedURL }),
+        discovery.updateDiscoveryConnection({
+          host: expectedURL,
+          username: '',
+          password: ''
+        }),
+        { type: discovery.DONE }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('listens on APP_START and reads bolt URL with auth info from location URL and dispatches an action with the found host, incl protocol', done => {
+    // Given
+    const action = {
+      type: APP_START,
+      url:
+        'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fneo4j%3Aneo4j%40myhost%3A8889'
+    }
+    const expectedURL = 'bolt://myhost:8889'
+    bus.take(discovery.DONE, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        updateBoltRouting(true),
+        discovery.updateDiscoveryConnection({
+          host: expectedURL,
+          username: 'neo4j',
+          password: 'neo4j'
+        }),
         { type: discovery.DONE }
       ])
       done()
