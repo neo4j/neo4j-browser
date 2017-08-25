@@ -190,6 +190,17 @@ describe('utils', () => {
       username: '',
       password: ''
     })
+    expect(utils.getUrlInfo('guides.neo4j.com')).toEqual({
+      protocol: '',
+      host: 'guides.neo4j.com',
+      hostname: 'guides.neo4j.com',
+      port: '',
+      pathname: '',
+      search: '',
+      hash: '',
+      username: '',
+      password: ''
+    })
     expect(utils.getUrlInfo('http://localhost')).toEqual({
       protocol: 'http:',
       host: 'localhost',

@@ -92,13 +92,17 @@ export const discoveryOnStartupEpic = (some$, store) => {
     })
     .mergeMap(action => {
       if (action.forceURL) {
-        store.dispatch(
-          updateDiscoveryConnection({
+        let updateAction
+        if (action.username && action.password) {
+          updateAction = updateDiscoveryConnection({
             username: action.username,
             password: action.password,
             host: action.forceURL
           })
-        )
+        } else {
+          updateAction = updateDiscoveryConnection({ host: action.forceURL })
+        }
+        store.dispatch(updateAction)
         return Promise.resolve()
       }
       return Rx.Observable

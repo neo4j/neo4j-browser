@@ -114,6 +114,14 @@ export const addProtocolsToUrlList = list => {
 }
 
 export const getUrlInfo = url => {
+  let protocolMissing = false
+
+  // prepend a default protocol, if none was found
+  if (url.match(/^(.+:\/\/)?/)[1] === undefined) {
+    url = 'http://' + url
+    protocolMissing = true
+  }
+
   const {
     protocol,
     username,
@@ -127,7 +135,7 @@ export const getUrlInfo = url => {
   } = parseUrl(url, {})
 
   return {
-    protocol,
+    protocol: protocolMissing ? '' : protocol,
     username,
     password,
     host,

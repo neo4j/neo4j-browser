@@ -110,11 +110,7 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({
-          host: expectedURL,
-          username: '',
-          password: ''
-        }),
+        discovery.updateDiscoveryConnection({ host: expectedURL }),
         { type: discovery.DONE }
       ])
       done()
@@ -135,11 +131,7 @@ describe('discoveryOnStartupEpic', () => {
       expect(store.getActions()).toEqual([
         action,
         updateBoltRouting(true),
-        discovery.updateDiscoveryConnection({
-          host: expectedURL,
-          username: '',
-          password: ''
-        }),
+        discovery.updateDiscoveryConnection({ host: expectedURL }),
         { type: discovery.DONE }
       ])
       done()
