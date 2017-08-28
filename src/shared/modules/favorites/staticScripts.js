@@ -97,13 +97,13 @@ export const scripts = [
     folder: 'procedures',
     not_executable: true,
     content:
-      '// Wait for index to come online\n// E.g. db.awaitIndex(":Person(name)"))\nCALL db.awaitIndex(<param>)'
+      '// Wait for index to come online\n// E.g. db.awaitIndex(":Person(name)")\nCALL db.awaitIndex(<param>)'
   },
   {
     folder: 'procedures',
     not_executable: true,
     content:
-      '// Schedule resampling of an index\n// E.g. db.resampleIndex(":Person(name)"))\nCALL db.resampleIndex(<param>)'
+      '// Schedule resampling of an index\n// E.g. db.resampleIndex(":Person(name)")\nCALL db.resampleIndex(<param>)'
   }
 ]
 
