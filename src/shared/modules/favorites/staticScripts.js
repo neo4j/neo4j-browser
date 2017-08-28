@@ -67,7 +67,7 @@ export const scripts = [
   },
   {
     folder: 'profile',
-    content: '// Display contraints and indexes\n:schema'
+    content: '// Display constraints and indexes\n:schema'
   },
   {
     folder: 'graphs',
