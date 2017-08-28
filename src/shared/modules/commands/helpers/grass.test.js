@@ -34,8 +34,8 @@ jest.mock('services/remote', () => {
 
 describe('Grass remote fetch', () => {
   test('should not fetch from url not in the whitelist', () => {
-    const whitelist = 'foo'
-    const urlNotInWhitelist = 'bar'
+    const whitelist = 'http://foo'
+    const urlNotInWhitelist = 'http://bar'
     return expect(
       fetchRemoteGrass(urlNotInWhitelist, whitelist)
     ).rejects.toMatchObject({
@@ -43,8 +43,8 @@ describe('Grass remote fetch', () => {
     })
   })
   test('should fetch from url in the whitelist', () => {
-    const whitelist = 'foo'
-    const urlInWhitelist = 'foo'
+    const whitelist = 'http://foo'
+    const urlInWhitelist = 'http://foo'
     return expect(fetchRemoteGrass(urlInWhitelist, whitelist)).resolves.toBe(
       urlInWhitelist
     )

@@ -25,6 +25,7 @@ import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue, toBoltHost, isRoutingHost } from 'services/utils'
+import { getUrlInfo } from 'shared/services/utils'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -80,6 +81,9 @@ export const discoveryOnStartupEpic = (some$, store) => {
       if (!passedURL || !passedURL.length) return action
       const forceURL = decodeURIComponent(passedURL[0])
       action.forceURL = toBoltHost(forceURL) // Remove any protocol and prepend with bolt://
+      const { username, password } = getUrlInfo(forceURL)
+      action.username = username
+      action.password = password
       if (isRoutingHost(forceURL)) {
         // Set config to use routing if bolt+routing:// protocol
         store.dispatch(updateBoltRouting(true))
@@ -88,7 +92,17 @@ export const discoveryOnStartupEpic = (some$, store) => {
     })
     .mergeMap(action => {
       if (action.forceURL) {
-        store.dispatch(updateDiscoveryConnection({ host: action.forceURL }))
+        let updateAction
+        if (action.username && action.password) {
+          updateAction = updateDiscoveryConnection({
+            username: action.username,
+            password: action.password,
+            host: action.forceURL
+          })
+        } else {
+          updateAction = updateDiscoveryConnection({ host: action.forceURL })
+        }
+        store.dispatch(updateAction)
         return Promise.resolve()
       }
       return Rx.Observable
