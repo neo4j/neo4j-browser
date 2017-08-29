@@ -64,9 +64,10 @@ const createItems = (
     items.unshift('*')
   }
   return items.map((text, index) => {
-    const getNodesCypher = editorCommandTemplate(text)
+    const getNodesCypher = editorCommandTemplate(text, index)
     return (
       <RenderType.component
+        data-test-id='sidebarMetaItem'
         key={index}
         onClick={() => onItemClick(getNodesCypher)}
       >
@@ -76,7 +77,7 @@ const createItems = (
   })
 }
 const LabelItems = ({
-  labels,
+  labels = [],
   totalNumItems,
   onItemClick,
   moreStep,
@@ -84,8 +85,8 @@ const LabelItems = ({
 }) => {
   let labelItems = <p>There are no labels in database</p>
   if (labels.length) {
-    const editorCommandTemplate = text => {
-      if (text === '*') {
+    const editorCommandTemplate = (text, i) => {
+      if (i === 0) {
         return 'MATCH (n) RETURN n LIMIT 25'
       }
       return `MATCH (n:${ecsapeCypherMetaItem(text)}) RETURN n LIMIT 25`
@@ -117,7 +118,7 @@ const LabelItems = ({
   )
 }
 const RelationshipItems = ({
-  relationshipTypes,
+  relationshipTypes = [],
   totalNumItems,
   onItemClick,
   moreStep,
@@ -125,8 +126,8 @@ const RelationshipItems = ({
 }) => {
   let relationshipItems = <p>No relationships in database</p>
   if (relationshipTypes.length > 0) {
-    const editorCommandTemplate = text => {
-      if (text === '*') {
+    const editorCommandTemplate = (text, i) => {
+      if (i === 0) {
         return 'MATCH p=()-->() RETURN p LIMIT 25'
       }
       return `MATCH p=()-[r:${ecsapeCypherMetaItem(
