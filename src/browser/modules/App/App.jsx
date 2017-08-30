@@ -53,19 +53,19 @@ import Render from 'browser-components/Render'
 
 class App extends Component {
   componentDidMount () {
-    document.addEventListener('keyup', this.focusEditorOnSlash.bind(this))
-    document.addEventListener('keyup', this.expandEditorOnEsc.bind(this))
+    document.addEventListener('keyup', this.focusEditorOnSlash)
+    document.addEventListener('keyup', this.expandEditorOnEsc)
   }
   componentWillUnmount () {
-    document.removeEventListener('keyup', this.focusEditorOnSlash.bind(this))
-    document.removeEventListener('keyup', this.expandEditorOnEsc.bind(this))
+    document.removeEventListener('keyup', this.focusEditorOnSlash)
+    document.removeEventListener('keyup', this.expandEditorOnEsc)
   }
-  focusEditorOnSlash (e) {
+  focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
     if (e.key !== '/') return
     this.props.bus && this.props.bus.send(FOCUS)
   }
-  expandEditorOnEsc (e) {
+  expandEditorOnEsc = e => {
     if (e.keyCode !== 27) return
     this.props.bus && this.props.bus.send(EXPAND)
   }

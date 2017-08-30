@@ -25,7 +25,8 @@ const DashboardPlugin = require('webpack-dashboard/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 const nodeEnv = process.env.NODE_ENV || 'development'
 const isProduction = nodeEnv === 'production'
@@ -82,20 +83,24 @@ const rules = [
   {
     test: /\.(js|jsx)$/,
     exclude: /(node_modules)|(cypher-codemirror)/,
-    use: [{
-      loader: 'babel-loader',
-      options: {
-        presets: [['es2015', {modules: false}], 'react'],
-        plugins: [
-          'styled-components',
-          'transform-object-rest-spread',
-          'preact-require',
-          ['transform-react-jsx', {
-            'pragma': 'h'
-          }]
-        ]
+    use: [
+      {
+        loader: 'babel-loader',
+        options: {
+          presets: [['es2015', { modules: false }], 'stage-2', 'react'],
+          plugins: [
+            'styled-components',
+            'preact-require',
+            [
+              'transform-react-jsx',
+              {
+                pragma: 'h'
+              }
+            ]
+          ]
+        }
       }
-    }]
+    ]
   },
   {
     test: /\.json$/,
@@ -121,7 +126,10 @@ const rules = [
   {
     test: /\.css$/,
     include: path.resolve('./src'), // css modules for component css files
-    exclude: [path.resolve('./src/browser/styles'), path.resolve('./src/browser/modules/Guides')],
+    exclude: [
+      path.resolve('./src/browser/styles'),
+      path.resolve('./src/browser/modules/Guides')
+    ],
     use: [
       'style-loader',
       {
@@ -138,7 +146,10 @@ const rules = [
   },
   {
     test: /\.css$/, // global css files that don't need any processing
-    exclude: [path.resolve('./src/browser/components'), path.resolve('./src/browser/modules')],
+    exclude: [
+      path.resolve('./src/browser/components'),
+      path.resolve('./src/browser/modules')
+    ],
     use: ['style-loader', 'css-loader']
   },
   {
@@ -155,11 +166,31 @@ const rules = [
     test: /\.html?$/,
     use: ['html-loader']
   },
-  { test: /\.svg$/, use: 'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]' },
-  { test: /\.woff$/, use: 'file-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]' },
-  { test: /\.woff2$/, use: 'file-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]' },
-  { test: /\.[ot]tf$/, use: 'file-loader?limit=65000&mimetype=application/octet-stream&name=assets/fonts/[name].[ext]' },
-  { test: /\.eot$/, use: 'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]' }
+  {
+    test: /\.svg$/,
+    use:
+      'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]'
+  },
+  {
+    test: /\.woff$/,
+    use:
+      'file-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]'
+  },
+  {
+    test: /\.woff2$/,
+    use:
+      'file-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]'
+  },
+  {
+    test: /\.[ot]tf$/,
+    use:
+      'file-loader?limit=65000&mimetype=application/octet-stream&name=assets/fonts/[name].[ext]'
+  },
+  {
+    test: /\.eot$/,
+    use:
+      'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
+  }
 ]
 
 if (isProduction) {
@@ -205,9 +236,7 @@ module.exports = {
   devtool: isProduction ? 'eval' : 'source-map',
   context: jsSourcePath,
   entry: {
-    js: [
-      'index.jsx'
-    ],
+    js: ['index.jsx'],
     vendor: [
       'cypher-codemirror',
       'firebase',
@@ -237,22 +266,27 @@ module.exports = {
     rules
   },
   resolve: {
-    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx', '.css', '.coffee'],
-    modules: [
-      path.resolve(__dirname, 'node_modules'),
-      jsSourcePath
+    extensions: [
+      '.webpack-loader.js',
+      '.web-loader.js',
+      '.loader.js',
+      '.js',
+      '.jsx',
+      '.css',
+      '.coffee'
     ],
+    modules: [path.resolve(__dirname, 'node_modules'), jsSourcePath],
     alias: {
       'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
       'src-root': path.resolve(__dirname, 'src'),
       'project-root': path.resolve(__dirname),
-      'services': path.resolve(__dirname, 'src/shared/services'),
+      services: path.resolve(__dirname, 'src/shared/services'),
       'browser-services': path.resolve(__dirname, 'src/browser/services'),
-      'shared': path.resolve(__dirname, 'src/shared'),
-      'react': 'preact-compat/dist/preact-compat',
+      shared: path.resolve(__dirname, 'src/shared'),
+      react: 'preact-compat/dist/preact-compat',
       'react-dom': 'preact-compat/dist/preact-compat',
       'browser-components': path.resolve(__dirname, 'src/browser/components'),
-      'browser': path.resolve(__dirname, 'src/browser'),
+      browser: path.resolve(__dirname, 'src/browser'),
       'browser-styles': path.resolve(__dirname, 'src/browser/styles')
     }
   },
