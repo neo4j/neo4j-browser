@@ -6486,9 +6486,9 @@ preact@8.x:
   version "8.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/preact/-/preact-8.1.0.tgz#f035b808eebb74e46d56246b02ca0f190b6d6574"
 
-preact@^8.2.1:
-  version "8.2.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact/-/preact-8.2.1.tgz#674243df0c847884d019834044aa2fcd311e72ed"
+preact@^8.2.5:
+  version "8.2.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/preact/-/preact-8.2.5.tgz#cbfa3962a8012768159f6d01d46f9c1eb3213c0a"
 
 precss@^2.0.0:
   version "2.0.0"
