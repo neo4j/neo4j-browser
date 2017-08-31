@@ -2084,9 +2084,9 @@ css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
-css-loader@^0.28.5:
-  version "0.28.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/css-loader/-/css-loader-0.28.5.tgz#dd02bb91b94545710212ef7f6aaa66663113d754"
+css-loader@^0.28.7:
+  version "0.28.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/css-loader/-/css-loader-0.28.7.tgz#5f2ee989dd32edd907717f953317656160999c1b"
   dependencies:
     babel-code-frame "^6.11.0"
     css-selector-tokenizer "^0.7.0"
@@ -7782,9 +7782,9 @@ stylis@^3.2.1:
   version "3.2.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.8.tgz#9b23a3e06597f7944a3d9ae880d5796248b8784f"
 
-stylis@^3.2.13:
-  version "3.2.13"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.13.tgz#1a5d2ff5ab09f362d6d8065186d526740e9f4f24"
+stylis@^3.2.14:
+  version "3.2.14"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.14.tgz#30700e0507b7a804c03d7e2c28d8ee865697fb50"
 
 suber@^5.0.1:
   version "5.0.1"
