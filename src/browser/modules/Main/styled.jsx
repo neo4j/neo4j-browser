@@ -49,7 +49,7 @@ export const Banner = styled.div`
   padding: 0 24px;
   margin: 0 24px;
   overflow: hidden;
-  animation: ${grow('49px')} .3s ease-in;
+  animation: ${grow('49px')} 0.3s ease-in;
   flex: 0 0 49px;
 `
 
@@ -82,7 +82,7 @@ export const SyncSignInBarButton = styled(SyncSignInButton)`
   padding: 0 8px 0 8px;
   margin: 0 12px 0 12px;
   vertical-align: baseline;
-  border:none;
+  border: none;
 `
 export const StyledCancelLink = styled.a`
   cursor: pointer;

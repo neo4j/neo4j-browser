@@ -45,8 +45,8 @@ const rollDownAnimation = keyframes`
 export const StyledFrame = styled.article`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
-  animation: ${rollDownAnimation} .4s ease-in;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  animation: ${rollDownAnimation} 0.4s ease-in;
   border: ${props => props.theme.frameBorder};
   margin: ${props => (props.fullscreen ? '0' : '10px 0px 10px 0px')};
   ${props => (props.fullscreen ? 'position: fixed' : null)};
@@ -105,9 +105,7 @@ export const PaddedDiv = styled.div`
     props.fullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
 `
 
-export const PaddedTableViewDiv = styled(PaddedDiv)`
-  width: 100%
-`
+export const PaddedTableViewDiv = styled(PaddedDiv)`width: 100%;`
 
 export const StyledFrameSidebar = styled.ul`
   line-height: 33px;
@@ -205,13 +203,13 @@ export const StyledCypherMessage = styled.div`
   float: left;
 `
 export const StyledCypherWarningMessage = styled(StyledCypherMessage)`
-  background-color: #FFA500;
-  color: #FFFFFF;
+  background-color: #ffa500;
+  color: #ffffff;
 `
 
 export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
-  background-color: #E74C3C;
-  color: #FFFFFF;
+  background-color: #e74c3c;
+  color: #ffffff;
 `
 
 export const StyledH4 = styled.h4``
@@ -219,7 +217,7 @@ export const StyledH4 = styled.h4``
 export const StyledBr = styled.br``
 
 export const StyledPreformattedArea = styled.pre`
-  font-family: Monaco, "Courier New", Terminal, monospace;
+  font-family: Monaco, 'Courier New', Terminal, monospace;
   font-size: 14px;
   white-space: pre-wrap;
   padding: 12px 16px;
@@ -260,9 +258,7 @@ export const StyledStatsBar = styled.div`
   width: 100%;
 `
 
-export const StyledOneRowStatsBar = styled(StyledStatsBar)`
-  height: 39px;
-`
+export const StyledOneRowStatsBar = styled(StyledStatsBar)`height: 39px;`
 
 export const StyledSchemaBody = styled(StyledPreformattedArea)`
   padding-top: 6px;

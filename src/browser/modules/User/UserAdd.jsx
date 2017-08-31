@@ -186,8 +186,8 @@ export class UserAdd extends Component {
   }
 
   render () {
-    const listOfAvailableRoles = this.state.availableRoles
-      ? <RolesSelector
+    const listOfAvailableRoles = this.state.availableRoles ? (
+      <RolesSelector
         roles={this.availableRoles()}
         onChange={event => {
           this.setState({
@@ -195,7 +195,9 @@ export class UserAdd extends Component {
           })
         }}
       />
-      : '-'
+    ) : (
+      '-'
+    )
     const tableHeaders = [
       'Username',
       'Roles(s)',
@@ -203,20 +205,14 @@ export class UserAdd extends Component {
       'Confirm Password',
       'Force Password Change'
     ].map((heading, i) => {
-      return (
-        <StyledTh key={i}>
-          {heading}
-        </StyledTh>
-      )
+      return <StyledTh key={i}>{heading}</StyledTh>
     })
     const errors = this.state.errors ? this.state.errors.join(', ') : null
 
     const frameContents = (
       <StyledTable>
         <thead>
-          <tr>
-            {tableHeaders}
-          </tr>
+          <tr>{tableHeaders}</tr>
         </thead>
         <tbody>
           <StyledBodyTr>

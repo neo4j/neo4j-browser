@@ -34,23 +34,11 @@ import {
 
 const getWarningComponent = severity => {
   if (severity === 'ERROR') {
-    return (
-      <StyledCypherErrorMessage>
-        {severity}
-      </StyledCypherErrorMessage>
-    )
+    return <StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>
   } else if (severity === 'WARNING') {
-    return (
-      <StyledCypherWarningMessage>
-        {severity}
-      </StyledCypherWarningMessage>
-    )
+    return <StyledCypherWarningMessage>{severity}</StyledCypherWarningMessage>
   } else {
-    return (
-      <StyledCypherMessage>
-        {severity}
-      </StyledCypherMessage>
-    )
+    return <StyledCypherMessage>{severity}</StyledCypherMessage>
   }
 }
 
@@ -76,9 +64,7 @@ export class WarningsView extends Component {
         <StyledHelpContent>
           <StyledHelpDescription>
             {getWarningComponent(notification.severity)}
-            <StyledH4>
-              {notification.title}
-            </StyledH4>
+            <StyledH4>{notification.title}</StyledH4>
           </StyledHelpDescription>
           <StyledDiv>
             <StyledHelpDescription>
@@ -95,11 +81,7 @@ export class WarningsView extends Component {
         </StyledHelpContent>
       )
     })
-    return (
-      <StyledHelpFrame>
-        {notificationsList}
-      </StyledHelpFrame>
-    )
+    return <StyledHelpFrame>{notificationsList}</StyledHelpFrame>
   }
 }
 

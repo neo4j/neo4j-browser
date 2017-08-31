@@ -35,9 +35,7 @@ export const DrawerHeader = styled.h4`
   font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
-export const DrawerToppedHeader = styled(DrawerHeader)`
-  padding-top : 8px;
-`
+export const DrawerToppedHeader = styled(DrawerHeader)`padding-top: 8px;`
 
 export const DrawerSubHeader = styled.h5`
   color: ${props => props.theme.primaryHeaderText};

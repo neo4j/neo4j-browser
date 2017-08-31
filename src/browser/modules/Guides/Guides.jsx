@@ -54,11 +54,7 @@ export default class Guides extends Component {
             </div>
           )
         } else {
-          return (
-            <div key={uuid.v4()}>
-              {slideComponent}
-            </div>
-          )
+          return <div key={uuid.v4()}>{slideComponent}</div>
         }
       })
       return (

@@ -30,7 +30,7 @@ export const BaseBar = styled.div`
   min-height: ${props =>
     Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   margin: 0 24px;
 `
 export const Bar = styled(BaseBar)`
@@ -45,7 +45,7 @@ export const Bar = styled(BaseBar)`
         'bottom: 0;'
       )
     }
-  }}
+  }};
 `
 export const ActionButtonSection = styled.div`
   flex: 0 0 130px;
@@ -61,7 +61,7 @@ const BaseEditorWrapper = styled.div`
   flex: auto;
   padding: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
-  font-family: Monaco, "Courier New", Terminal, monospace;
+  font-family: Monaco, 'Courier New', Terminal, monospace;
   min-Height: ${props =>
     Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
   .CodeMirror {
@@ -88,5 +88,5 @@ export const EditorWrapper = styled(BaseEditorWrapper)`
         '}'
       )
     }
-  }}
+  }};
 `

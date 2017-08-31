@@ -49,9 +49,7 @@ const Main = props => {
         </ErrorBanner>
       </Render>
       <Render if={props.errorMessage}>
-        <ErrorBanner>
-          {props.errorMessage}
-        </ErrorBanner>
+        <ErrorBanner>{props.errorMessage}</ErrorBanner>
       </Render>
       <Render if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner>

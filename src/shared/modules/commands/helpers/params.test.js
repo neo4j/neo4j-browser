@@ -34,8 +34,8 @@ describe('commandsDuck params helper', () => {
     const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
-    return expect(p).rejects
-      .toEqual(
+    return expect(p)
+      .rejects.toEqual(
         new Error(
           'Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'
         )

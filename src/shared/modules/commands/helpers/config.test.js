@@ -56,8 +56,8 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return expect(p).rejects
-      .toEqual(
+    return expect(p)
+      .rejects.toEqual(
         new Error(
           'Could not parse input. Usage: `:config "x": 2`. SyntaxError: Expected ":" but "x" found.'
         )
@@ -149,8 +149,8 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return expect(p).rejects
-      .toEqual(
+    return expect(p)
+      .rejects.toEqual(
         new Error('Hostname is not allowed according to server whitelist')
       )
       .then(() => expect(put).not.toHaveBeenCalled())
@@ -158,7 +158,9 @@ describe('commandsDuck config helper', () => {
   test('handles :config https://okurl.com/cnf.json and calls the replace action creator', () => {
     // Given
     const json = JSON.stringify({ x: 1, y: 'hello' })
-    nock('https://okurl.com').get('/cnf.json').reply(200, json)
+    nock('https://okurl.com')
+      .get('/cnf.json')
+      .reply(200, json)
     const action = { cmd: ':config https://okurl.com/cnf.json' }
     const cmdchar = ':'
     const put = jest.fn()
@@ -175,7 +177,9 @@ describe('commandsDuck config helper', () => {
   test('indicates error parsing remote content', () => {
     // Given
     const json = 'no json'
-    nock('https://okurl.com').get('/cnf.json').reply(200, json)
+    nock('https://okurl.com')
+      .get('/cnf.json')
+      .reply(200, json)
     const action = { cmd: ':config https://okurl.com/cnf.json' }
     const cmdchar = ':'
     const put = jest.fn()
@@ -184,8 +188,8 @@ describe('commandsDuck config helper', () => {
     const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
 
     // Then
-    return expect(p).rejects
-      .toEqual(
+    return expect(p)
+      .rejects.toEqual(
         new Error(
           new FetchError(
             'invalid json response body at https://okurl.com/cnf.json reason: Unexpected token o in JSON at position 1'

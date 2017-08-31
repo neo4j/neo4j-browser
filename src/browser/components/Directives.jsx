@@ -121,11 +121,7 @@ export const Directives = props => {
       bindDynamicInputToDom(elem)
     }
   }
-  return (
-    <div ref={callback}>
-      {props.content}
-    </div>
-  )
+  return <div ref={callback}>{props.content}</div>
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {

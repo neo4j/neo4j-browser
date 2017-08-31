@@ -48,7 +48,12 @@ describe('DatabaseInfo', () => {
       const labels = [{ val: 'Person' }, { val: 'Movie' }]
       const wrapper = mount(<DatabaseInfoComponent labels={labels} />)
       expect(wrapper.find('.token-label').length).toBe(3)
-      expect(wrapper.find('.token-label').first().text()).toEqual('*')
+      expect(
+        wrapper
+          .find('.token-label')
+          .first()
+          .text()
+      ).toEqual('*')
     })
     test('should call on click callback with correct cypher * label is clicked', () => {
       const labels = [{ val: 'Person' }]
@@ -84,7 +89,12 @@ describe('DatabaseInfo', () => {
         <DatabaseInfoComponent relationshipTypes={relationshipTypes} />
       )
       expect(wrapper.find('.token-relationship').length).toBe(3)
-      expect(wrapper.find('.token-relationship').first().text()).toEqual('*')
+      expect(
+        wrapper
+          .find('.token-relationship')
+          .first()
+          .text()
+      ).toEqual('*')
     })
     test('should call on click callback with correct cypher when * relationship is clicked', () => {
       const relationshipTypes = [{ val: 'DIRECTED' }]
@@ -124,7 +134,12 @@ describe('DatabaseInfo', () => {
       const properties = [{ val: 'born' }, { val: 'name' }]
       const wrapper = mount(<DatabaseInfoComponent properties={properties} />)
       expect(wrapper.find('.token-property').length).toBe(2)
-      expect(wrapper.find('.token-property').first().text()).toEqual('born')
+      expect(
+        wrapper
+          .find('.token-property')
+          .first()
+          .text()
+      ).toEqual('born')
     })
     test('should call on click callback with correct cypher when property is clicked', () => {
       const properties = [{ val: 'born' }]

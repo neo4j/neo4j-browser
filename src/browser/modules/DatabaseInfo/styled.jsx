@@ -42,7 +42,9 @@ export const StyledLabel = styled(chip)`
 `
 export const StyledRelationship = styled(chip)`
   border-radius: 3px;
-  &:hover, &:focus, &:visited {
+  &:hover,
+  &:focus,
+  &:visited {
     background-color: #fff;
   }
 `
@@ -67,7 +69,7 @@ export const StyledKey = styled.td`
   color: #bcc0c9;
   font-family: ${props => props.theme.primaryFontFamily};
   outline-color: rgb(188, 192, 201);
-  text-shadow: rgba(0, 0, 0, .4)0 1px 0;
+  text-shadow: rgba(0, 0, 0, 0.4)0 1px 0;
 `
 export const StyledValue = styled.td`
   font-family: ${props => props.theme.primaryFontFamily};

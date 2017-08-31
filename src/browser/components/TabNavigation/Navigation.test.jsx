@@ -47,7 +47,12 @@ describe('Navigation', () => {
     const wrapper = mount(
       <Navigation openDrawer={drawer} topNavItems={navItems} />
     )
-    expect(wrapper.find('.tab').at(0).hasClass('hidden')).toEqual(true)
+    expect(
+      wrapper
+        .find('.tab')
+        .at(0)
+        .hasClass('hidden')
+    ).toEqual(true)
   })
 
   test('shows drawer when drawer should be open', () => {
@@ -55,7 +60,12 @@ describe('Navigation', () => {
     const wrapper = mount(
       <Navigation openDrawer={drawer} topNavItems={navItems} />
     )
-    expect(wrapper.find('.tab').at(0).hasClass('hidden')).toEqual(false)
+    expect(
+      wrapper
+        .find('.tab')
+        .at(0)
+        .hasClass('hidden')
+    ).toEqual(false)
   })
 
   test('should render the selected tab', () => {
@@ -63,7 +73,12 @@ describe('Navigation', () => {
     const wrapper = mount(
       <Navigation openDrawer={drawer} topNavItems={navItems} />
     )
-    expect(wrapper.find('.tab').at(0).hasClass('hidden')).toEqual(false)
+    expect(
+      wrapper
+        .find('.tab')
+        .at(0)
+        .hasClass('hidden')
+    ).toEqual(false)
     expect(wrapper.find('#thing').length).toBe(1)
     expect(wrapper.find('#thing2').length).toBe(0)
   })

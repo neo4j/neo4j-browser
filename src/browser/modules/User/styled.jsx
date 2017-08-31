@@ -21,9 +21,7 @@
 import styled from 'styled-components'
 import { StyledTd } from 'browser-components/DataTables'
 
-export const StyledUserTd = styled(StyledTd)`
-  padding: 10px 0;
-`
+export const StyledUserTd = styled(StyledTd)`padding: 10px 0;`
 export const StyledSelect = styled.select`
   border: ${props => props.theme.secondaryButtonBorder};
   color: #555;

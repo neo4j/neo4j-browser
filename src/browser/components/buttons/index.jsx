@@ -194,9 +194,11 @@ export const FormButton = props => {
 
 export const CypherFrameButton = props => {
   const { selected, ...rest } = props
-  return selected
-    ? <StyledSelectedCypherFrameButton {...rest} />
-    : <StyledCypherFrameButton {...rest} />
+  return selected ? (
+    <StyledSelectedCypherFrameButton {...rest} />
+  ) : (
+    <StyledCypherFrameButton {...rest} />
+  )
 }
 
 const StyledCypherFrameButton = styled.li`
@@ -225,13 +227,11 @@ const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
 `
 export const FrameButton = props => {
   const { pressed, children, ...rest } = props
-  return pressed
-    ? <StyledFrameButtonPressed {...rest}>
-      {children}
-    </StyledFrameButtonPressed>
-    : <StyledFrameButton {...rest}>
-      {children}
-    </StyledFrameButton>
+  return pressed ? (
+    <StyledFrameButtonPressed {...rest}>{children}</StyledFrameButtonPressed>
+  ) : (
+    <StyledFrameButton {...rest}>{children}</StyledFrameButton>
+  )
 }
 const StyledFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
@@ -266,8 +266,10 @@ export const DefaultA = styled.a`
 export const FrameButtonAChild = styled(DefaultA)`
   display: block;
   text-decoration: none;
-  &:focus, &:active, &:hover {
-    outline:0;
+  &:focus,
+  &:active,
+  &:hover {
+    outline: 0;
     text-decoration: none;
   }
 `
@@ -306,7 +308,7 @@ const BaseCarouselButton = styled.button`
     text-decoration: none;
     filter: alpha(opacity=90);
     outline: 0;
-    opacity: .9;
+    opacity: 0.9;
   }
   &:focus {
     outline: none;
@@ -321,9 +323,7 @@ export const CarouselButton = props => {
   const { children, ...rest } = props
   return (
     <BaseCarouselButton {...rest}>
-      <CarouselButtonOverlay>
-        {children}
-      </CarouselButtonOverlay>
+      <CarouselButtonOverlay>{children}</CarouselButtonOverlay>
     </BaseCarouselButton>
   )
 }
@@ -338,7 +338,7 @@ export const StyledLink = styled.a`
 `
 
 export const SyncSignInButton = styled(FormButton)`
-  background-color: #5FB434;
+  background-color: #5fb434;
   color: #ffffff;
   &:hover {
     color: #797979;

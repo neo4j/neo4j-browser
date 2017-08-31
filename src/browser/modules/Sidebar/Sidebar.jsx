@@ -55,11 +55,12 @@ class Sidebar extends Component {
       {
         name: 'DB',
         title: 'Database',
-        icon: isOpen =>
+        icon: isOpen => (
           <DatabaseIcon
             isOpen={isOpen}
             connectionState={this.props.neo4jConnectionState}
-          />,
+          />
+        ),
         content: DatabaseDrawer
       },
       {
@@ -79,11 +80,9 @@ class Sidebar extends Component {
       {
         name: 'Sync',
         title: 'Cloud Services',
-        icon: isOpen =>
-          <CloudSyncIcon
-            isOpen={isOpen}
-            connected={this.props.syncConnected}
-          />,
+        icon: isOpen => (
+          <CloudSyncIcon isOpen={isOpen} connected={this.props.syncConnected} />
+        ),
         content: BrowserSync
       },
       {

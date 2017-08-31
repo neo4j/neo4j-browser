@@ -376,17 +376,17 @@ export class CypherFrame extends Component {
         statusbar={statusBar}
         exportData={
           this.state.openView !== viewTypes.VISUALIZATION &&
-          this.state.openView !== viewTypes.PLAN
-            ? this.state.exportData
-            : null
+          this.state.openView !== viewTypes.PLAN ? (
+              this.state.exportData
+            ) : null
         }
         onResize={this.onResize.bind(this)}
         visElement={
           this.state.hasVis &&
           (this.state.openView === viewTypes.VISUALIZATION ||
-            this.state.openView === viewTypes.PLAN)
-            ? this.visElement
-            : null
+            this.state.openView === viewTypes.PLAN) ? (
+              this.visElement
+            ) : null
         }
       />
     )

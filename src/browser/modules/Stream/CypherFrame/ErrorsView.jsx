@@ -57,14 +57,10 @@ export class ErrorsView extends Component {
         <StyledHelpContent>
           <StyledHelpDescription>
             <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            <StyledH4>
-              {error.code}
-            </StyledH4>
+            <StyledH4>{error.code}</StyledH4>
           </StyledHelpDescription>
           <StyledDiv>
-            <StyledPreformattedArea>
-              {error.message}
-            </StyledPreformattedArea>
+            <StyledPreformattedArea>{error.message}</StyledPreformattedArea>
           </StyledDiv>
           <Render if={isUnknownProcedureError(error)}>
             <StyledLinkContainer>

@@ -181,11 +181,7 @@ class Favorites extends Component {
           true,
           this.moveFavorite.bind(this)
         )
-        return (
-          <Folder folder={folder}>
-            {Favorites}
-          </Folder>
-        )
+        return <Folder folder={folder}>{Favorites}</Folder>
       })
 
     return (

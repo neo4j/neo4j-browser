@@ -224,8 +224,14 @@ export class Editor extends Component {
     if (
       mode === 'cypher' &&
       newCode.trim().length > 0 &&
-      !newCode.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
-      !newCode.trimLeft().toUpperCase().startsWith('PROFILE')
+      !newCode
+        .trimLeft()
+        .toUpperCase()
+        .startsWith('EXPLAIN') &&
+      !newCode
+        .trimLeft()
+        .toUpperCase()
+        .startsWith('PROFILE')
     ) {
       this.debouncedCheckForHints(newCode)
     }

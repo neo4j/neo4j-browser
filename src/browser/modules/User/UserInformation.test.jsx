@@ -38,6 +38,11 @@ describe('UserInformation', () => {
     )
     expect(wrapper.find('.user-info').length).toBe(1)
     expect(wrapper.find('.user-info .username').text()).toMatch(user.username)
-    expect(wrapper.find('.roles').first().html()).toMatch(user.roles[0])
+    expect(
+      wrapper
+        .find('.roles')
+        .first()
+        .html()
+    ).toMatch(user.roles[0])
   })
 })

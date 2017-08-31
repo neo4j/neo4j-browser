@@ -27,9 +27,7 @@ const Frame = ({ frame }) => {
   if (errors) {
     frameContents = (
       <div>
-        <pre>
-          {errors.message}
-        </pre>
+        <pre>{errors.message}</pre>
       </div>
     )
   } else if (frame.type === 'unknown') {

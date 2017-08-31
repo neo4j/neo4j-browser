@@ -57,13 +57,9 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
   })
   return (
     <DrawerSection>
-      <DrawerSubHeader>
-        {header}
-      </DrawerSubHeader>
+      <DrawerSubHeader>{header}</DrawerSubHeader>
       <DrawerSectionBody>
-        <ul className='document'>
-          {listOfItems}
-        </ul>
+        <ul className='document'>{listOfItems}</ul>
       </DrawerSectionBody>
     </DrawerSection>
   )

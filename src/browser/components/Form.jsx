@@ -44,17 +44,15 @@ const StyledRadioEntry = styled.div`margin: 10px 0;`
 
 export const TextInput = props => {
   const { children, ...rest } = props
-  return (
-    <StyledSettingTextInput {...rest}>
-      {children}
-    </StyledSettingTextInput>
-  )
+  return <StyledSettingTextInput {...rest}>{children}</StyledSettingTextInput>
 }
 
 export const CheckboxSelector = props => {
-  return props.checked
-    ? <StyledCheckbox type='checkbox' {...props} />
-    : <StyledCheckbox type='checkbox' {...props} />
+  return props.checked ? (
+    <StyledCheckbox type='checkbox' {...props} />
+  ) : (
+    <StyledCheckbox type='checkbox' {...props} />
+  )
 }
 
 export class RadioSelector extends Component {
@@ -80,9 +78,7 @@ export class RadioSelector extends Component {
                   this.props.onChange(event)
                 }}
               />
-              <StyledLabel>
-                {option}
-              </StyledLabel>
+              <StyledLabel>{option}</StyledLabel>
             </StyledRadioEntry>
           )
         })}

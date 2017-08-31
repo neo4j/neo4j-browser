@@ -155,9 +155,9 @@ export const NewFolderButton = props => {
 
 export const DeleteFavButton = props => {
   const rightIcon =
-    props.removeClick && !props.isStatic
-      ? <BinIcon className={'remove'} />
-      : null
+    props.removeClick && !props.isStatic ? (
+      <BinIcon className={'remove'} />
+    ) : null
   return (
     <SytledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>
       {rightIcon}

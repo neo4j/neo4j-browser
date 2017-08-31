@@ -90,11 +90,7 @@ export class AsciiView extends Component {
   render () {
     const { _asciiMaxColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
-    let contents = (
-      <StyledBodyMessage>
-        {bodyMessage}
-      </StyledBodyMessage>
-    )
+    let contents = <StyledBodyMessage>{bodyMessage}</StyledBodyMessage>
     if (serializedRows !== undefined && serializedRows.length) {
       contents = (
         <pre>
@@ -102,11 +98,7 @@ export class AsciiView extends Component {
         </pre>
       )
     }
-    return (
-      <PaddedDiv>
-        {contents}
-      </PaddedDiv>
-    )
+    return <PaddedDiv>{contents}</PaddedDiv>
   }
 }
 
@@ -166,9 +158,7 @@ export class AsciiStatusbar extends Component {
     return (
       <StyledStatsBar>
         <Render if={!this.props._asciiSerializedRows}>
-          <Ellipsis>
-            {this.state.statusBarMessage}
-          </Ellipsis>
+          <Ellipsis>{this.state.statusBarMessage}</Ellipsis>
         </Render>
         <Render if={this.props._asciiSerializedRows}>
           <StyledRightPartial>

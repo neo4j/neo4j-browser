@@ -70,7 +70,12 @@ describe('Editor', () => {
       .getCodeMirrorInstance()
       .keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).toHaveBeenCalledWith(content)
-    expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('')
+    expect(
+      codeMirror
+        .get(0)
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('')
   })
 
   test.skip('should execute current command on Ctrl-Enter', () => {
@@ -89,7 +94,12 @@ describe('Editor', () => {
       .getCodeMirrorInstance()
       .keyMap['default']['Ctrl-Enter'](codeMirror.get(0).getCodeMirror())
     expect(onExecute).toHaveBeenCalledWith(content)
-    expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('')
+    expect(
+      codeMirror
+        .get(0)
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('')
   })
 
   test.skip(
@@ -110,27 +120,52 @@ describe('Editor', () => {
         .get(0)
         .getCodeMirrorInstance()
         .keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
-      expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('latest')
+      expect(
+        codeMirror
+          .get(0)
+          .getCodeMirror()
+          .getValue()
+      ).toEqual('latest')
       codeMirror
         .get(0)
         .getCodeMirrorInstance()
         .keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
-      expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('middle')
+      expect(
+        codeMirror
+          .get(0)
+          .getCodeMirror()
+          .getValue()
+      ).toEqual('middle')
       codeMirror
         .get(0)
         .getCodeMirrorInstance()
         .keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
-      expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('oldest')
+      expect(
+        codeMirror
+          .get(0)
+          .getCodeMirror()
+          .getValue()
+      ).toEqual('oldest')
       codeMirror
         .get(0)
         .getCodeMirrorInstance()
         .keyMap['default']['Cmd-Down'](codeMirror.get(0).getCodeMirror())
-      expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('middle')
+      expect(
+        codeMirror
+          .get(0)
+          .getCodeMirror()
+          .getValue()
+      ).toEqual('middle')
       codeMirror
         .get(0)
         .getCodeMirrorInstance()
         .keyMap['default']['Ctrl-Down'](codeMirror.get(0).getCodeMirror())
-      expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('latest')
+      expect(
+        codeMirror
+          .get(0)
+          .getCodeMirror()
+          .getValue()
+      ).toEqual('latest')
     }
   )
 
@@ -153,7 +188,12 @@ describe('Editor', () => {
       .get(0)
       .getCodeMirrorInstance()
       .keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
-    expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('middle')
+    expect(
+      codeMirror
+        .get(0)
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('middle')
     codeMirror
       .get(0)
       .getCodeMirrorInstance()
@@ -162,6 +202,11 @@ describe('Editor', () => {
       .get(0)
       .getCodeMirrorInstance()
       .keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
-    expect(codeMirror.get(0).getCodeMirror().getValue()).toEqual('latest')
+    expect(
+      codeMirror
+        .get(0)
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('latest')
   })
 })

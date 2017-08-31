@@ -26,11 +26,12 @@ import { SysInfoFrame } from './index'
 
 jest.mock(
   'browser/modules/Stream/FrameTemplate',
-  () => ({ contents, children }) =>
+  () => ({ contents, children }) => (
     <div>
       {contents}
       {children}
     </div>
+  )
 )
 
 describe('sysinfo component', () => {
@@ -51,15 +52,17 @@ describe('sysinfo component', () => {
   test('should not render ha table', () => {
     const value = uuid.v4()
     const label = 'InstanceId'
-    return mount(SysInfoFrame).withProps({}).then(wrapper => {
-      expect(wrapper.html()).not.toContain(label)
-      expect(wrapper.html()).not.toContain(value)
+    return mount(SysInfoFrame)
+      .withProps({})
+      .then(wrapper => {
+        expect(wrapper.html()).not.toContain(label)
+        expect(wrapper.html()).not.toContain(value)
 
-      wrapper.setState({ ha: [{ label, value }] })
-      wrapper.update()
+        wrapper.setState({ ha: [{ label, value }] })
+        wrapper.update()
 
-      expect(wrapper.html()).toContain(label)
-      expect(wrapper.html()).toContain(value)
-    })
+        expect(wrapper.html()).toContain(label)
+        expect(wrapper.html()).toContain(value)
+      })
   })
 })

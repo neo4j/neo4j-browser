@@ -27,9 +27,7 @@ const PreFrame = ({ frame }) => {
       header={frame}
       contents={
         <PaddedDiv>
-          <pre>
-            {frame.result || frame.contents}
-          </pre>
+          <pre>{frame.result || frame.contents}</pre>
         </PaddedDiv>
       }
     />

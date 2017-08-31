@@ -31,11 +31,7 @@ describe('ClickToCode', () => {
   beforeEach(() => {
     MyComp = ({ onClick, children }) => {
       onClick()
-      return (
-        <code>
-          {children}
-        </code>
-      )
+      return <code>{children}</code>
     }
     bus = createBus()
   })

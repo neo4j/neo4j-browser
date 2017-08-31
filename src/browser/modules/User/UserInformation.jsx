@@ -124,18 +124,14 @@ export class UserInformation extends Component {
     return (
       <StyledBodyTr className='user-info'>
         <StyledUserTd className='username'>
-          <StyledButtonContainer>
-            {this.props.username}
-          </StyledButtonContainer>
+          <StyledButtonContainer>{this.props.username}</StyledButtonContainer>
         </StyledUserTd>
         <StyledUserTd className='roles'>
           <RolesSelector
             roles={this.availableRoles()}
             onChange={this.onRoleSelect.bind(this)}
           />
-          <span>
-            {this.listRoles()}
-          </span>
+          <span>{this.listRoles()}</span>
         </StyledUserTd>
         <StyledUserTd className='status'>
           {this.statusButton(this.props.status)}

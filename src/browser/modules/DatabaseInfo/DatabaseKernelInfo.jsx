@@ -61,41 +61,31 @@ export const DatabaseKernelInfo = ({
             <Render if={role}>
               <tr>
                 <StyledKey>Cluster role: </StyledKey>
-                <StyledValue>
-                  {role}
-                </StyledValue>
+                <StyledValue>{role}</StyledValue>
               </tr>
             </Render>
             <Render if={version}>
               <tr>
                 <StyledKey>Version: </StyledKey>
-                <StyledValue>
-                  {version}
-                </StyledValue>
+                <StyledValue>{version}</StyledValue>
               </tr>
             </Render>
             <Render if={edition}>
               <tr>
                 <StyledKey>Edition: </StyledKey>
-                <StyledValueUCFirst>
-                  {edition}
-                </StyledValueUCFirst>
+                <StyledValueUCFirst>{edition}</StyledValueUCFirst>
               </tr>
             </Render>
             <Render if={dbName}>
               <tr>
                 <StyledKey>Name: </StyledKey>
-                <StyledValue>
-                  {dbName}
-                </StyledValue>
+                <StyledValue>{dbName}</StyledValue>
               </tr>
             </Render>
             <Render if={storeSize}>
               <tr>
                 <StyledKey>Size: </StyledKey>
-                <StyledValue>
-                  {toHumanReadableBytes(storeSize)}
-                </StyledValue>
+                <StyledValue>{toHumanReadableBytes(storeSize)}</StyledValue>
               </tr>
             </Render>
             <tr>

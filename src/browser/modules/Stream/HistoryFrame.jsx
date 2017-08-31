@@ -37,11 +37,7 @@ export const HistoryFrame = props => {
   return (
     <FrameTemplate
       header={frame}
-      contents={
-        <StyledHistoryList>
-          {historyRows}
-        </StyledHistoryList>
-      }
+      contents={<StyledHistoryList>{historyRows}</StyledHistoryList>}
     />
   )
 }

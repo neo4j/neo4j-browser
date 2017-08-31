@@ -122,12 +122,8 @@ class Navigation extends Component {
     return (
       <StyledSidebar>
         <StyledTabsWrapper>
-          <StyledTopNav>
-            {topNavItemsList}
-          </StyledTopNav>
-          <StyledBottomNav>
-            {bottomNavItemsList}
-          </StyledBottomNav>
+          <StyledTopNav>{topNavItemsList}</StyledTopNav>
+          <StyledBottomNav>{bottomNavItemsList}</StyledBottomNav>
         </StyledTabsWrapper>
         <StyledDrawer
           open={

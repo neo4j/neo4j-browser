@@ -61,14 +61,14 @@ class IconContainer extends Component {
         style={regulateSizeStyle}
       />
     )
-    return text
-      ? <span>
+    return text ? (
+      <span>
         {icon}
-        <StyledText>
-          {text}
-        </StyledText>
+        <StyledText>{text}</StyledText>
       </span>
-      : icon
+    ) : (
+      icon
+    )
   }
 }
 
@@ -97,7 +97,7 @@ const databaseConnectionStateStyles = {
   }
 }
 
-export const DatabaseIcon = ({ isOpen, connectionState }) =>
+export const DatabaseIcon = ({ isOpen, connectionState }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={databaseConnectionStateStyles[connectionState].active}
@@ -107,156 +107,188 @@ export const DatabaseIcon = ({ isOpen, connectionState }) =>
       databaseConnectionStateStyles[connectionState].classModifier
     }
   />
-export const FavoritesIcon = ({ isOpen }) =>
+)
+export const FavoritesIcon = ({ isOpen }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
     className='sl sl-star'
   />
-export const DocumentsIcon = ({ isOpen }) =>
+)
+export const DocumentsIcon = ({ isOpen }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
     className='sl sl-book'
   />
+)
 
-export const CloudIcon = ({ isOpen }) =>
+export const CloudIcon = ({ isOpen }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={styles.successGreen}
     inactiveStyle={styles.inactive}
     className='sl sl-cloud-checked'
   />
-export const CloudDisconnectedIcon = ({ isOpen }) =>
+)
+export const CloudDisconnectedIcon = ({ isOpen }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={styles.warningRed}
     inactiveStyle={styles.warningRed}
     className='sl sl-cloud-delete'
   />
-export const CloudSyncIcon = ({ isOpen, connected }) =>
+)
+export const CloudSyncIcon = ({ isOpen, connected }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={connected ? styles.successGreen : styles.warningRed}
     inactiveStyle={connected ? styles.inactive : styles.warningRed}
     className={'sl sl-cloud' + (connected ? '-checked' : '-delete')}
   />
+)
 
-export const SettingsIcon = ({ isOpen }) =>
+export const SettingsIcon = ({ isOpen }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
     className='sl sl-setting-gear'
   />
-export const AboutIcon = ({ isOpen }) =>
+)
+export const AboutIcon = ({ isOpen }) => (
   <IconContainer
     isOpen={isOpen}
     activeStyle={styles.credits}
     inactiveStyle={styles.inactive}
     className='nw nw-neo4j-outline-32px'
   />
+)
 
-export const TableIcon = () =>
+export const TableIcon = () => (
   <IconContainer className='fa fa-table' text='Table' />
-export const VisualizationIcon = () =>
+)
+export const VisualizationIcon = () => (
   <IconContainer className='nw nw-neo4j-outline-16px' text='Graph' />
-export const AsciiIcon = () =>
+)
+export const AsciiIcon = () => (
   <IconContainer className='fa fa-font' text='Text' />
-export const CodeIcon = () =>
+)
+export const CodeIcon = () => (
   <IconContainer className='fa fa-code' text='Code' />
-export const PlanIcon = () =>
+)
+export const PlanIcon = () => (
   <IconContainer className='sl-hierarchy' text='Plan' />
-export const AlertIcon = () =>
+)
+export const AlertIcon = () => (
   <IconContainer className='sl-alert' text='Warn' />
-export const ErrorIcon = () =>
+)
+export const ErrorIcon = () => (
   <IconContainer className='fa fa-file-text-o' text='Error' />
+)
 
-export const ZoomInIcon = () =>
+export const ZoomInIcon = () => (
   <IconContainer
     activeStyle={styles.active}
     inactiveStyle={styles.inactive}
     className='sl-zoom-in'
   />
-export const ZoomOutIcon = () =>
+)
+export const ZoomOutIcon = () => (
   <IconContainer
     activeStyle={styles.active}
     inactiveStyle={styles.inactive}
     className='sl-zoom-out'
   />
+)
 
-export const BinIcon = props =>
+export const BinIcon = props => (
   <IconContainer
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
     {...props}
     className='sl-bin'
   />
+)
 
 export const ExpandIcon = () => <IconContainer className='sl-scale-spread' />
 export const ContractIcon = () => <IconContainer className='sl-scale-reduce' />
 export const RefreshIcon = () => <IconContainer className='sl-loop' />
-export const CloseIcon = () =>
+export const CloseIcon = () => (
   <IconContainer className='sl-delete' regulateSize='0.85' />
+)
 export const UpIcon = () => <IconContainer className='sl-chevron-up' />
 export const DownIcon = () => <IconContainer className='sl-chevron-down' />
 export const DoubleUpIcon = () => <IconContainer className='sl-double-up' />
 export const DoubleDownIcon = () => <IconContainer className='sl-double-down' />
 export const PinIcon = () => <IconContainer className='sl-pin' />
-export const MinusIcon = () =>
+export const MinusIcon = () => (
   <IconContainer
     activeStyle={styles.blue}
     inactiveStyle={styles.inactive}
     className='sl-minus-circle'
   />
-export const RightArrowIcon = () =>
+)
+export const RightArrowIcon = () => (
   <IconContainer
     activeStyle={styles.blue}
     inactiveStyle={styles.inactive}
     className='sl-arrow-circle-right'
   />
-export const CancelIcon = () =>
+)
+export const CancelIcon = () => (
   <IconContainer
     activeStyle={styles.blue}
     inactiveStyle={styles.inactive}
     className='sl-delete-circle'
   />
-export const DownloadIcon = () =>
+)
+export const DownloadIcon = () => (
   <IconContainer className='sl-download-drive' />
-export const ExpandMenuIcon = () =>
+)
+export const ExpandMenuIcon = () => (
   <IconContainer activeStyle={styles.blue} className='fa fa-caret-right' />
-export const CollapseMenuIcon = () =>
+)
+export const CollapseMenuIcon = () => (
   <IconContainer activeStyle={styles.blue} className='fa fa-caret-down' />
-export const PlayIcon = () =>
+)
+export const PlayIcon = () => (
   <IconContainer
     activeStyle={styles.lightBlue}
     inactiveStyle={styles.blue}
     className='fa fa-play-circle-o'
   />
-export const PlainPlayIcon = () =>
+)
+export const PlainPlayIcon = () => (
   <IconContainer className='fa fa-play-circle' />
-export const QuestionIcon = () =>
+)
+export const QuestionIcon = () => (
   <IconContainer
     activeStyle={styles.lightBlue}
     inactiveStyle={styles.blue}
     className='fa fa-question-circle-o'
   />
-export const PlusIcon = () =>
+)
+export const PlusIcon = () => (
   <IconContainer
     activeStyle={styles.white}
     inactiveStyle={styles.white}
     className='fa fa-plus'
   />
-export const EditIcon = () =>
+)
+export const EditIcon = () => (
   <IconContainer
     activeStyle={styles.white}
     inactiveStyle={styles.white}
     className='sl-pencil'
   />
-export const Spinner = () =>
+)
+export const Spinner = () => (
   <IconContainer className='fa fa-spinner fa-spin fa-2x' />
+)
 
-export const ExclamationTriangleIcon = () =>
+export const ExclamationTriangleIcon = () => (
   <IconContainer suppressIconStyles className='fa fa-exclamation-triangle' />
+)

@@ -82,15 +82,11 @@ export class UserDetails extends Component {
               <tbody>
                 <tr>
                   <StyledKey>Username:</StyledKey>
-                  <StyledValue>
-                    {userDetails.username}
-                  </StyledValue>
+                  <StyledValue>{userDetails.username}</StyledValue>
                 </tr>
                 <tr>
                   <StyledKey>Roles:</StyledKey>
-                  <StyledValue>
-                    {mappedRoles}
-                  </StyledValue>
+                  <StyledValue>{mappedRoles}</StyledValue>
                 </tr>
                 <Render if={hasAdminRole}>
                   <tr>

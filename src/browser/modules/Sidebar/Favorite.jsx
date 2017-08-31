@@ -138,11 +138,7 @@ class FavoriteDp extends Component {
     if (this.props.isStatic) {
       return favoriteContent
     } else {
-      return this.props.connectDropTarget(
-        <div>
-          {favoriteContent}
-        </div>
-      )
+      return this.props.connectDropTarget(<div>{favoriteContent}</div>)
     }
   }
 }

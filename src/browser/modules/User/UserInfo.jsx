@@ -58,9 +58,7 @@ export class UserInfoComponent extends Component {
     return (
       <div id='db-user'>
         <h4>User Information</h4>
-        <p>
-          Current user: {result}
-        </p>
+        <p>Current user: {result}</p>
       </div>
     )
   }

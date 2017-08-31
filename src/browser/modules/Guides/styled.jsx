@@ -40,11 +40,11 @@ const CarouselIndicator = styled.li`
   border: 1px solid #fff;
   border-radius: 10px;
   cursor: pointer;
-  background-color: rgba(188, 195, 207, .64);
+  background-color: rgba(188, 195, 207, 0.64);
 `
 export const CarouselIndicatorInactive = styled(CarouselIndicator)`
   &:hover {
-    background-color: rgba(188,195,207,1);
+    background-color: rgba(188, 195, 207, 1);
   }
 `
 export const CarouselIndicatorActive = styled(CarouselIndicator)`

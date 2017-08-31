@@ -52,7 +52,10 @@ const downloadWithDataURI = (filename, dataURI) => {
   } else {
     byteString = unescape(dataURI.split(',')[1])
   }
-  mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  mimeString = dataURI
+    .split(',')[0]
+    .split(':')[1]
+    .split(';')[0]
   ia = new Uint8Array(byteString.length)
   for (
     i = j = 0, ref = byteString.length;

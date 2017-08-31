@@ -47,7 +47,7 @@ export const StyledConnectionTextInput = styled.input`
 export const StyledConnectionBodyContainer = styled.div`display: table-cell;`
 export const StyledConnectionBody = styled.div`
   font-size: 1.3em;
-  line-height: 2.0em;
+  line-height: 2em;
   padding-left: 50px;
 `
 export const StyledConnectionFooter = styled.span`

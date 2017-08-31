@@ -206,27 +206,17 @@ export class QueriesFrame extends Component {
       return (
         <tr>
           <StyledTd title={query.host} width={tableHeaderSizes[0][1]}>
-            <Code>
-              {query.host}
-            </Code>
+            <Code>{query.host}</Code>
           </StyledTd>
-          <StyledTd width={tableHeaderSizes[1][1]}>
-            {query.username}
-          </StyledTd>
+          <StyledTd width={tableHeaderSizes[1][1]}>{query.username}</StyledTd>
           <StyledTd title={query.query} width={tableHeaderSizes[2][1]}>
-            <Code>
-              {query.query}
-            </Code>
+            <Code>{query.query}</Code>
           </StyledTd>
           <StyledTd width={tableHeaderSizes[3][1]}>
-            <Code>
-              {query.parameters}
-            </Code>
+            <Code>{query.parameters}</Code>
           </StyledTd>
           <StyledTd width={tableHeaderSizes[4][1]}>
-            <Code>
-              {query.metaData}
-            </Code>
+            <Code>{query.metaData}</Code>
           </StyledTd>
           <StyledTd width={tableHeaderSizes[5][1]}>
             {query.elapsedTimeMillis} ms
@@ -254,13 +244,9 @@ export class QueriesFrame extends Component {
     return (
       <StyledTable>
         <thead>
-          <StyledHeaderRow>
-            {tableHeaders}
-          </StyledHeaderRow>
+          <StyledHeaderRow>{tableHeaders}</StyledHeaderRow>
         </thead>
-        <tbody>
-          {tableRows}
-        </tbody>
+        <tbody>{tableRows}</tbody>
       </StyledTable>
     )
   }

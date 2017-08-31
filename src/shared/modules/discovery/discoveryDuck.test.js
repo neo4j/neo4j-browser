@@ -69,7 +69,9 @@ describe('discoveryOnStartupEpic', () => {
   test('listens on APP_START and tries to find a bolt host and sets it to default when fail on server error', done => {
     // Given
     const action = { type: APP_START }
-    nock(getDiscoveryEndpoint()).get('/').reply(500)
+    nock(getDiscoveryEndpoint())
+      .get('/')
+      .reply(500)
 
     bus.take(discovery.DONE, currentAction => {
       // Then
@@ -85,7 +87,9 @@ describe('discoveryOnStartupEpic', () => {
     // Given
     const action = { type: APP_START }
     const expectedHost = 'bolt://myhost:7777'
-    nock(getDiscoveryEndpoint()).get('/').reply(200, { bolt: expectedHost })
+    nock(getDiscoveryEndpoint())
+      .get('/')
+      .reply(200, { bolt: expectedHost })
     bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([

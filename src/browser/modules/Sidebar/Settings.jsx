@@ -143,11 +143,7 @@ const visualSettings = [
 export const Settings = ({ settings, onSettingsSave = () => {} }) => {
   if (!settings) return null
   const mappedSettings = visualSettings.map((visualSetting, i) => {
-    const title = (
-      <DrawerSubHeader>
-        {visualSetting.title}
-      </DrawerSubHeader>
-    )
+    const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
     const mapSettings = visualSetting.settings
       .map((settingObj, i) => {
         const setting = Object.keys(settingObj)[0]
@@ -158,9 +154,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
         if (!settingObj[setting].type || settingObj[setting].type === 'input') {
           return (
             <StyledSetting key={i}>
-              <StyledSettingLabel title={tooltip}>
-                {visual}
-              </StyledSettingLabel>
+              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
               <StyledSettingTextInput
                 onChange={event => {
                   settings[setting] = event.target.value
@@ -175,9 +169,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
         } else if (settingObj[setting].type === 'radio') {
           return (
             <StyledSetting key={i}>
-              <StyledSettingLabel title={tooltip}>
-                {visual}
-              </StyledSettingLabel>
+              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
               <RadioSelector
                 options={settingObj[setting].options}
                 onChange={event => {
@@ -198,9 +190,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
                 }}
                 checked={settings[setting]}
               />
-              <StyledSettingLabel title={tooltip}>
-                {visual}
-              </StyledSettingLabel>
+              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
             </StyledSetting>
           )
         }
@@ -219,9 +209,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
       <DrawerHeader>Browser Settings</DrawerHeader>
       <DrawerBody>
         <DrawerSection>
-          <DrawerSectionBody>
-            {mappedSettings}
-          </DrawerSectionBody>
+          <DrawerSectionBody>{mappedSettings}</DrawerSectionBody>
         </DrawerSection>
       </DrawerBody>
     </Drawer>

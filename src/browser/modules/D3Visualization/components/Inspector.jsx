@@ -44,7 +44,7 @@ const mapItemProperties = itemProperties =>
       ({ key: keyA }, { key: keyB }) =>
         keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
-    .map((prop, i) =>
+    .map((prop, i) => (
       <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
         <StyledInspectorFooterRowListKey className='key'>
           {prop.key + ': '}
@@ -53,7 +53,7 @@ const mapItemProperties = itemProperties =>
           {prop.value.toString()}
         </StyledInspectorFooterRowListValue>
       </StyledInspectorFooterRowListPair>
-    )
+    ))
 
 const mapLabels = (graphStyle, itemLabels) => {
   return itemLabels.map((label, i) => {
@@ -205,23 +205,25 @@ export class InspectorComponent extends Component {
         <StyledStatus className='status'>
           <StyledInspectorFooter
             className={
-              this.state.contracted
-                ? 'contracted inspector-footer'
-                : 'inspector-footer'
+              this.state.contracted ? (
+                'contracted inspector-footer'
+              ) : (
+                'inspector-footer'
+              )
             }
           >
             <StyledInspectorFooterRow
               className='inspector-footer-row'
               ref={this.setFooterRowELem.bind(this)}
             >
-              {type === 'canvas'
-                ? null
-                : <RowExpandToggleComponent
+              {type === 'canvas' ? null : (
+                <RowExpandToggleComponent
                   contracted={this.state.contracted}
                   rowElem={this.footerRowElem}
                   containerHeight={inspectorFooterContractedHeight}
                   onClick={this.toggleExpand.bind(this)}
-                />}
+                />
+              )}
               {inspectorContent}
             </StyledInspectorFooterRow>
           </StyledInspectorFooter>

@@ -47,17 +47,13 @@ const intToString = val => {
 
 const renderCell = entry => {
   if (Array.isArray(entry)) {
-    const children = entry.map((item, index) =>
+    const children = entry.map((item, index) => (
       <span>
         {renderCell(item)}
         {index === entry.length - 1 ? null : ', '}
       </span>
-    )
-    return (
-      <span>
-        [{children}]
-      </span>
-    )
+    ))
+    return <span>[{children}]</span>
   } else if (typeof entry === 'object') {
     return renderObject(entry)
   } else {
@@ -67,11 +63,7 @@ const renderCell = entry => {
 export const renderObject = entry => {
   if (neo4j.isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
-  return (
-    <StyledJsonPre>
-      {stringifyMod(entry, intToString, true)}
-    </StyledJsonPre>
-  )
+  return <StyledJsonPre>{stringifyMod(entry, intToString, true)}</StyledJsonPre>
 }
 const buildData = entries => {
   return entries.map(entry => {
@@ -136,29 +128,23 @@ export class TableView extends Component {
     if (!this.state.columns.length) {
       return (
         <PaddedTableViewDiv>
-          <StyledBodyMessage>
-            {this.state.bodyMessage}
-          </StyledBodyMessage>
+          <StyledBodyMessage>{this.state.bodyMessage}</StyledBodyMessage>
         </PaddedTableViewDiv>
       )
     }
-    const tableHeader = this.state.columns.map((column, i) =>
+    const tableHeader = this.state.columns.map((column, i) => (
       <StyledTh className='table-header' key={i}>
         {column}
       </StyledTh>
-    )
+    ))
     const tableBody = (
-      <tbody>
-        {this.state.data.map(item => buildRow(item))}
-      </tbody>
+      <tbody>{this.state.data.map(item => buildRow(item))}</tbody>
     )
     return (
       <PaddedTableViewDiv>
         <StyledTable>
           <thead>
-            <tr>
-              {tableHeader}
-            </tr>
+            <tr>{tableHeader}</tr>
           </thead>
           {tableBody}
         </StyledTable>
@@ -194,9 +180,7 @@ export class TableStatusbar extends Component {
   render () {
     return (
       <StyledStatsBar>
-        <Ellipsis>
-          {this.state.statusBarMessage}
-        </Ellipsis>
+        <Ellipsis>{this.state.statusBarMessage}</Ellipsis>
       </StyledStatsBar>
     )
   }

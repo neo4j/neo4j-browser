@@ -99,18 +99,12 @@ export class UserList extends Component {
       'Password Change',
       'Delete'
     ].map((heading, i) => {
-      return (
-        <StyledTh key={i}>
-          {heading}
-        </StyledTh>
-      )
+      return <StyledTh key={i}>{heading}</StyledTh>
     })
     return (
       <StyledTable>
         <thead>
-          <tr>
-            {tableHeaders}
-          </tr>
+          <tr>{tableHeaders}</tr>
         </thead>
         <tbody>
           {items}
@@ -142,9 +136,7 @@ export class UserList extends Component {
       ? this.makeTable(this.state.userList)
       : 'No users'
     const frameContents = (
-      <div className='db-list-users'>
-        {renderedListOfUsers}
-      </div>
+      <div className='db-list-users'>{renderedListOfUsers}</div>
     )
     return <FrameTemplate header={this.props.frame} contents={frameContents} />
   }

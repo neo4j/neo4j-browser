@@ -61,10 +61,6 @@ export default class Display extends Component {
         ? 'none'
         : this.props.inline ? 'inline' : 'block'
     }
-    return (
-      <div style={modStyle}>
-        {children}
-      </div>
-    )
+    return <div style={modStyle}>{children}</div>
   }
 }

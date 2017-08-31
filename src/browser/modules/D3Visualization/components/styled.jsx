@@ -242,9 +242,7 @@ export const StyledTokenRelationshipType = styled(StyledToken)`
   border-radius: 3px;
 `
 
-export const tokenPropertyKey = styled(StyledToken)`
-  padding: 3px 5px 3px 5px;
-`
+export const tokenPropertyKey = styled(StyledToken)`padding: 3px 5px 3px 5px;`
 export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
   color: #f9fbfd;
   background-color: #d2d5da;
@@ -306,7 +304,7 @@ export const StyledPickerSelector = styled.a`
   }
 `
 export const StyledCircleSelector = styled(StyledPickerSelector)`
-   border-radius: 50%;
+  border-radius: 50%;
 `
 export const StyledCaptionSelector = styled.a`
   cursor: pointer;
@@ -318,7 +316,7 @@ export const StyledCaptionSelector = styled.a`
   color: #9195a0;
   border: 1px solid #9195a0;
   overflow: hidden;
-  border-radius: .25em;
+  border-radius: 0.25em;
   margin-right: 0;
   font-weight: bold;
   &:hover {
@@ -373,7 +371,7 @@ export const StyledZoomButton = styled.button`
     outline: none;
   }
   &.faded {
-    opacity: .3;
+    opacity: 0.3;
     cursor: auto;
     &:hover {
       color: #9b9da2;

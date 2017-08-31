@@ -34,9 +34,7 @@ const ErrorFrame = ({ frame }) => {
       header={frame}
       contents={
         <PaddedDiv>
-          <pre>
-            {errorContents}
-          </pre>
+          <pre>{errorContents}</pre>
         </PaddedDiv>
       }
     />
