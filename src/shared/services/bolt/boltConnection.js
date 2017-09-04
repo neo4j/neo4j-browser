@@ -118,7 +118,6 @@ export function openConnection (props, opts = {}, onLostConnection) {
     driver.onError = e => {
       onLostConnection(e)
       _drivers = null
-      driversObj.close()
       reject(e)
     }
     const myResolve = driver => {
