@@ -333,15 +333,15 @@ autoprefixer@^7.1.1:
     postcss "^6.0.6"
     postcss-value-parser "^3.2.3"
 
-autoprefixer@^7.1.3:
-  version "7.1.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/autoprefixer/-/autoprefixer-7.1.3.tgz#0e8d337976d6f13644db9f8813b4c42f3d1ccc34"
+autoprefixer@^7.1.4:
+  version "7.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/autoprefixer/-/autoprefixer-7.1.4.tgz#960847dbaa4016bc8e8e52ec891cbf8f1257a748"
   dependencies:
     browserslist "^2.4.0"
-    caniuse-lite "^1.0.30000718"
+    caniuse-lite "^1.0.30000726"
     normalize-range "^0.1.2"
     num2fraction "^1.2.2"
-    postcss "^6.0.10"
+    postcss "^6.0.11"
     postcss-value-parser "^3.2.3"
 
 aws-sign2@~0.6.0:
@@ -1538,6 +1538,10 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000697, caniuse-lite@^1.0.30000704:
 caniuse-lite@^1.0.30000718:
   version "1.0.30000721"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30000721.tgz#931a21a7bd85016300328d21f126d84b73437d35"
+
+caniuse-lite@^1.0.30000726:
+  version "1.0.30000726"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30000726.tgz#966a753fa107a09d4131cf8b3d616723a06ccf7e"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
@@ -2848,6 +2852,48 @@ eslint-scope@^3.7.1:
 eslint@^4.5.0:
   version "4.5.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint/-/eslint-4.5.0.tgz#bb75d3b8bde97fb5e13efcd539744677feb019c3"
+  dependencies:
+    ajv "^5.2.0"
+    babel-code-frame "^6.22.0"
+    chalk "^2.1.0"
+    concat-stream "^1.6.0"
+    cross-spawn "^5.1.0"
+    debug "^2.6.8"
+    doctrine "^2.0.0"
+    eslint-scope "^3.7.1"
+    espree "^3.5.0"
+    esquery "^1.0.0"
+    estraverse "^4.2.0"
+    esutils "^2.0.2"
+    file-entry-cache "^2.0.0"
+    functional-red-black-tree "^1.0.1"
+    glob "^7.1.2"
+    globals "^9.17.0"
+    ignore "^3.3.3"
+    imurmurhash "^0.1.4"
+    inquirer "^3.0.6"
+    is-resolvable "^1.0.0"
+    js-yaml "^3.9.1"
+    json-stable-stringify "^1.0.1"
+    levn "^0.3.0"
+    lodash "^4.17.4"
+    minimatch "^3.0.2"
+    mkdirp "^0.5.1"
+    natural-compare "^1.4.0"
+    optionator "^0.8.2"
+    path-is-inside "^1.0.2"
+    pluralize "^4.0.0"
+    progress "^2.0.0"
+    require-uncached "^1.0.3"
+    semver "^5.3.0"
+    strip-ansi "^4.0.0"
+    strip-json-comments "~2.0.1"
+    table "^4.0.1"
+    text-table "~0.2.0"
+
+eslint@^4.6.1:
+  version "4.6.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint/-/eslint-4.6.1.tgz#ddc7fc7fd70bf93205b0b3449bb16a1e9e7d4950"
   dependencies:
     ajv "^5.2.0"
     babel-code-frame "^6.22.0"
@@ -6342,13 +6388,13 @@ postcss@^6.0.1, postcss@^6.0.2:
     source-map "^0.5.6"
     supports-color "^4.0.0"
 
-postcss@^6.0.10:
-  version "6.0.10"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/postcss/-/postcss-6.0.10.tgz#c311b89734483d87a91a56dc9e53f15f4e6e84e4"
+postcss@^6.0.11:
+  version "6.0.11"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/postcss/-/postcss-6.0.11.tgz#f48db210b1d37a7f7ab6499b7a54982997ab6f72"
   dependencies:
     chalk "^2.1.0"
     source-map "^0.5.7"
-    supports-color "^4.2.1"
+    supports-color "^4.4.0"
 
 preact-compat-enzyme@^0.2.5:
   version "0.2.5"
@@ -7681,9 +7727,9 @@ stylis@^3.2.1:
   version "3.2.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.8.tgz#9b23a3e06597f7944a3d9ae880d5796248b8784f"
 
-stylis@^3.2.14:
-  version "3.2.14"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.14.tgz#30700e0507b7a804c03d7e2c28d8ee865697fb50"
+stylis@^3.2.15:
+  version "3.2.15"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.15.tgz#1800f829fdf3cf0d647ae6cdb5fb70a1fd81c3e2"
 
 suber@^5.0.1:
   version "5.0.1"
@@ -7714,6 +7760,12 @@ supports-color@^4.0.0:
 supports-color@^4.2.0, supports-color@^4.2.1:
   version "4.2.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/supports-color/-/supports-color-4.2.1.tgz#65a4bb2631e90e02420dba5554c375a4754bb836"
+  dependencies:
+    has-flag "^2.0.0"
+
+supports-color@^4.4.0:
+  version "4.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/supports-color/-/supports-color-4.4.0.tgz#883f7ddabc165142b2a61427f3352ded195d1a3e"
   dependencies:
     has-flag "^2.0.0"
 
@@ -8251,9 +8303,9 @@ webpack-sources@^1.0.1:
     source-list-map "^2.0.0"
     source-map "~0.5.3"
 
-webpack@^3.5.5:
-  version "3.5.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/webpack/-/webpack-3.5.5.tgz#3226f09fc8b3e435ff781e7af34f82b68b26996c"
+webpack@^3.5.6:
+  version "3.5.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/webpack/-/webpack-3.5.6.tgz#a492fb6c1ed7f573816f90e00c8fbb5a20cc5c36"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
