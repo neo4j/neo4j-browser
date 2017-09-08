@@ -216,10 +216,7 @@ export class Editor extends Component {
   }
 
   updateCode (newCode, change, cb = () => {}) {
-    const mode =
-      this.props.cmdchar && newCode.trim().indexOf(this.props.cmdchar) === 0
-        ? 'text'
-        : 'cypher'
+    const mode = 'cypher'
     this.clearHints()
     if (
       mode === 'cypher' &&
@@ -442,6 +439,7 @@ const mapStateToProps = state => {
     cmdchar: getCmdChar(state),
     schema: {
       consoleCommands: consoleCommands,
+      parameters: Object.keys(state.params),
       labels: state.meta.labels.map(schemaConvert.toLabel),
       relationshipTypes: state.meta.relationshipTypes.map(
         schemaConvert.toRelationshipType
