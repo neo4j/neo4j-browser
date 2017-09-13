@@ -119,7 +119,7 @@
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
-    "cypher-codemirror": "1.0.4",
+    "cypher-codemirror": "^1.0.5",
     "dnd-core": "^2.5.1",
     "file-saver": "^1.3.3",
     "firebase": "^4.2.0",

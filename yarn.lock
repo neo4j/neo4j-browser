@@ -2201,9 +2201,9 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
-cypher-codemirror@1.0.4:
-  version "1.0.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.0.4.tgz#b78643df281b3e9e1dbfa7cb1d299b3cee69d6d6"
+cypher-codemirror@^1.0.5:
+  version "1.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.0.5.tgz#9a6e1cb4bee2cfab846d7a1fad65078d8a361e77"
   dependencies:
     cypher-editor-support "1.0.4"
 
