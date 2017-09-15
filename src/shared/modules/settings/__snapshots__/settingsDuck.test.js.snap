@@ -18,6 +18,6 @@ Object {
   "showSampleScripts": true,
   "theme": "normal",
   "useBoltRouting": false,
-  "useCypherThread": true,
+  "useCypherThread": false,
 }
 `;
