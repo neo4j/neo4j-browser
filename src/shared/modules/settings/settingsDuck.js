@@ -60,7 +60,8 @@ export const getUseNewVisualization = state => state[NAME].useNewVis
 export const getCmdChar = state => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = state =>
   state[NAME].editorAutocomplete !== false
-export const shouldUseCypherThread = state => state[NAME].useCypherThread
+export const shouldUseCypherThread = state =>
+  state[NAME].useCypherThread && state[NAME].enableCypherThread
 
 const initialState = {
   cmdchar: ':',
@@ -78,7 +79,8 @@ const initialState = {
   scrollToTop: true,
   maxFrames: 30,
   editorAutocomplete: true,
-  useCypherThread: true
+  useCypherThread: true,
+  enableCypherThread: false
 }
 
 export default function settings (state = initialState, action) {
