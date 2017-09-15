@@ -78,7 +78,7 @@ const initialState = {
   scrollToTop: true,
   maxFrames: 30,
   editorAutocomplete: true,
-  useCypherThread: true
+  useCypherThread: false
 }
 
 export default function settings (state = initialState, action) {
