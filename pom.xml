@@ -51,14 +51,14 @@
   <build>
     <resources>
       <resource>
-        <directory>build</directory>
+        <directory>mvn</directory>
         <filtering>true</filtering>
         <includes>
           <include>**/*.html</include>
         </includes>
       </resource>
       <resource>
-        <directory>build</directory>
+        <directory>mvn</directory>
         <filtering>false</filtering>
         <excludes>
           <exclude>**/*.html</exclude>

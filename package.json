@@ -3,35 +3,38 @@
   "version": "3.0.8",
   "description": "Enjoy your data",
   "main": "index.js",
+  "neo4jDesktop": {
+    "apiVersion": "1.0.0"
+  },
   "scripts": {
-    "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
-    "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
+    "start":
+      "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
+    "starts":
+      "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
     "precommit": "lint-staged",
     "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
     "lint": "eslint --fix --ext .js --ext .jsx ./",
     "test": "npm run lint && jest",
-    "e2e": "cypress run --config fixturesFolder=e2e_tests/fixtures,integrationFolder=e2e_tests/integration,screenshotsFolder=e2e_tests/screenshots,supportFile=e2e_tests/support,videosFolder=e2e_tests/videos",
+    "e2e":
+      "cypress run --config fixturesFolder=e2e_tests/fixtures,integrationFolder=e2e_tests/integration,screenshotsFolder=e2e_tests/screenshots,supportFile=e2e_tests/support,videosFolder=e2e_tests/videos",
     "dev": "jest --watch",
     "build": "rm -rf ./build && NODE_ENV=\"production\" webpack",
+    "prepare-maven": "node ./scripts/prepare-mvn-package.js",
     "jar": "yarn build && mvn package",
-    "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
+    "version-pom":
+      "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml"
   },
   "lint-staged": {
     "linters": {
-      "*.{js,jsx}": [
-        "prettier-eslint --write",
-        "git add"
-      ]
+      "*.{js,jsx}": ["prettier-eslint --write", "git add"]
     }
   },
   "jest": {
-    "testPathIgnorePatterns": [
-      ".jsx$",
-      "/e2e_tests/"
-    ],
+    "testPathIgnorePatterns": [".jsx$", "/e2e_tests/"],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$":
+        "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "neo4j": "<rootDir>/__mocks__/neo4j.js",
       "^react-dom/server$": "preact-render-to-string",
@@ -43,10 +46,7 @@
       "^browser-components(.*)$": "<rootDir>/src/browser/components$1",
       "worker-loader": "<rootDir>/__mocks__/workerLoaderMock.js"
     },
-    "modulePaths": [
-      "<rootDir>/src",
-      "<rootDir>/src/shared"
-    ]
+    "modulePaths": ["<rootDir>/src", "<rootDir>/src/shared"]
   },
   "repository": {},
   "keywords": [],
@@ -90,6 +90,7 @@
     "jest": "^21.0.1",
     "jest-cli": "^21.0.1",
     "json-loader": "^0.5.7",
+    "ncp": "^2.0.0",
     "nock": "^9.0.14",
     "postcss": "^6.0.11",
     "postcss-cssnext": "^3.0.2",
