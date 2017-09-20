@@ -1,5 +1,4 @@
 node_modules/
-dist/bundle.js
 npm-debug.log
 coverage/
 .DS_Store
@@ -11,3 +10,5 @@ coverage/
 /target
 /e2e_tests/screenshots/
 /e2e_tests/videos/
+mvn/
+dist/

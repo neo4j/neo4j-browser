@@ -32,8 +32,8 @@ const nodeEnv = process.env.NODE_ENV || 'development'
 const isProduction = nodeEnv === 'production'
 
 const jsSourcePath = path.join(__dirname, './src/browser')
-const buildPath = path.join(__dirname, './build/browser')
-const assetsPath = path.join(__dirname, './build/browser/assets')
+const buildPath = path.join(__dirname, './dist')
+const assetsPath = path.join(__dirname, './dist/assets')
 const sourcePath = path.join(__dirname, './src/browser')
 
 // Common plugins
@@ -227,7 +227,7 @@ if (isProduction) {
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       openAnalyzer: false,
-      reportFilename: '../bundle-report.html'
+      reportFilename: './../bundle-report.html'
     })
   )
 }
