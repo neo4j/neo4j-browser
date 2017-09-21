@@ -2,7 +2,15 @@
   "name": "neo4j-browser",
   "version": "3.0.8",
   "description": "Enjoy your data",
-  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neo4j/neo4j-browser.git"
+  },
+  "keywords": [],
+  "author": "Neo4j Inc.",
+  "license": "GPL-3.0",
+  "homepage": "https://neo4j.com",
+  "main": "dist/index.html",
   "neo4jDesktop": {
     "apiVersion": "1.0.0"
   },
@@ -48,11 +56,6 @@
     },
     "modulePaths": ["<rootDir>/src", "<rootDir>/src/shared"]
   },
-  "repository": {},
-  "keywords": [],
-  "author": "",
-  "license": "GPL-3.0",
-  "homepage": "https://neo4j.com",
   "devDependencies": {
     "autoprefixer": "^7.1.4",
     "babel-core": "^6.26.0",
