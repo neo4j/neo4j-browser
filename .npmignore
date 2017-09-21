@@ -2,10 +2,11 @@ __mocks__/
 .github/
 auth_server/
 browser/
-e2e_test/
+e2e_tests/
 mvn/
 scripts/
 src/
+target/
 .babelrc
 .eslintignore
 .eslintrc.json
