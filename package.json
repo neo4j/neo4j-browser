@@ -18,7 +18,7 @@
     "e2e":
       "cypress run --config fixturesFolder=e2e_tests/fixtures,integrationFolder=e2e_tests/integration,screenshotsFolder=e2e_tests/screenshots,supportFile=e2e_tests/support,videosFolder=e2e_tests/videos",
     "dev": "jest --watch",
-    "build": "rm -rf ./build && NODE_ENV=\"production\" webpack",
+    "build": "rm -rf ./dist && NODE_ENV=\"production\" webpack",
     "prepare-jar": "$(which node) ./scripts/prepare-mvn-package.js",
     "jar": "yarn build && mvn package",
     "version-pom":
