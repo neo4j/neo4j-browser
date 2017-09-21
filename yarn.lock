@@ -2174,9 +2174,9 @@ cypher-editor-support@1.0.4:
     fuzzaldrin "2.1.0"
     lodash "4.17.4"
 
-cypress@^0.20.0:
-  version "0.20.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-0.20.0.tgz#d1211d103cf7bc326110dbd3c20ceb7279d08677"
+cypress@^0.20.1:
+  version "0.20.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-0.20.1.tgz#5bbf1cdb2ed2e4c342f98cea8085852c3bc0ea0c"
   dependencies:
     "@cypress/listr-verbose-renderer" "0.4.1"
     "@cypress/xvfb" "1.0.4"
