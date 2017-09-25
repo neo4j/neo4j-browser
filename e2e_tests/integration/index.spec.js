@@ -26,8 +26,10 @@ const Editor = '.ReactCodeMirror textarea'
 
 describe('Neo4j Browser', () => {
   it('loads', () => {
-    cy.visit('http://localhost:8080')
-    cy.title().should('include', 'Neo4j Browser')
+    cy
+      .visit(Cypress.env('BROWSER_URL') || 'http://localhost:8080')
+      .title()
+      .should('include', 'Neo4j Browser')
   })
   it('sets new login credentials', () => {
     cy.title().should('include', 'Neo4j Browser')
@@ -50,8 +52,9 @@ describe('Neo4j Browser', () => {
       .get('input[data-test-id="newPasswordConfirmation"]')
       .should('have.value', '')
 
-    cy.get('input[data-test-id="newPassword"]').type('newpassword')
-    cy.get('input[data-test-id="newPasswordConfirmation"]').type('newpassword')
+    const newPassword = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
+    cy.get('input[data-test-id="newPassword"]').type(newPassword)
+    cy.get('input[data-test-id="newPasswordConfirmation"]').type(newPassword)
     cy.get('button[data-test-id="changePassword"]').click()
 
     cy.get('input[data-test-id="changePassword"]').should('not.be.visible')
@@ -81,12 +84,27 @@ describe('Neo4j Browser', () => {
     cy.get(Editor).should('have.value', cypher)
 
     cy.get(SubmitQueryButton).click()
-    cy.get('[data-test-id="frameCommand"]').first().should('contain', cypher)
+    cy
+      .get('[data-test-id="frameCommand"]')
+      .first()
+      .should('contain', cypher)
 
-    cy.get(Carousel).find('[data-test-id="nextSlide"]').click()
-    cy.get(Carousel).find('[data-test-id="nextSlide"]').click()
-    cy.get(Carousel).find('[data-test-id="previousSlide"]').click()
-    cy.get(Carousel).find('.code').click()
+    cy
+      .get(Carousel)
+      .find('[data-test-id="nextSlide"]')
+      .click()
+    cy
+      .get(Carousel)
+      .find('[data-test-id="nextSlide"]')
+      .click()
+    cy
+      .get(Carousel)
+      .find('[data-test-id="previousSlide"]')
+      .click()
+    cy
+      .get(Carousel)
+      .find('.code')
+      .click()
     cy.get(SubmitQueryButton).click()
 
     cy
