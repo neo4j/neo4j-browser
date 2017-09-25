@@ -21,7 +21,7 @@
 import Rx from 'rxjs/Rx'
 import remote from 'services/remote'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
-import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
+import { APP_START, USER_CLEAR, WEB } from 'shared/modules/app/appDuck'
 import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue, toBoltHost, isRoutingHost } from 'services/utils'
@@ -77,6 +77,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
     .map(action => {
       if (action.type !== APP_START) return action // Only read on app startup
       if (!action.url) return action
+      if (action.env !== WEB) return action // Only when in a web environment
       const passedURL = getUrlParamValue('connectURL', action.url)
       if (!passedURL || !passedURL.length) return action
       const forceURL = decodeURIComponent(passedURL[0])
@@ -91,6 +92,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
       return action
     })
     .mergeMap(action => {
+      if (action.env !== WEB) return Promise.resolve() // Only when in a web environment
       if (action.forceURL) {
         let updateAction
         if (action.username && action.password) {

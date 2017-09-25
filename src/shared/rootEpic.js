@@ -34,7 +34,10 @@ import {
   startupConnectionSuccessEpic,
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
-  connectionLostEpic
+  connectionLostEpic,
+  switchConnectionEpic,
+  switchConnectionSuccessEpic,
+  switchConnectionFailEpic
 } from './modules/connections/connectionsDuck'
 import {
   dbMetaEpic,
@@ -75,6 +78,9 @@ export default combineEpics(
   postConnectCmdEpic,
   fetchGuideFromWhitelistEpic,
   connectionLostEpic,
+  switchConnectionEpic,
+  switchConnectionSuccessEpic,
+  switchConnectionFailEpic,
   retainCredentialsSettingsEpic,
   checkSettingsForRoutingDriver,
   connectEpic,

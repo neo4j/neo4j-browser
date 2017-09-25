@@ -38,10 +38,10 @@ import {
   getActiveConnection,
   getConnectionState,
   getActiveConnectionData,
-  isConnected
+  isConnected,
+  SWITCH_CONNECTION
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-
 import {
   StyledWrapper,
   StyledApp,
@@ -56,6 +56,7 @@ import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
+import DesktopIntegration from 'browser-components/DesktopIntegration'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 
 class App extends Component {
@@ -98,6 +99,10 @@ class App extends Component {
         <StyledWrapper>
           <DocTitle titleString={this.props.titleString} />
           <UserInteraction />
+          <DesktopIntegration
+            integrationPoint={this.props.desktopIntegrationPoint}
+            onConnectionChange={this.props.changeConnection}
+          />
           <Render if={loadExternalScripts}>
             <Intercom appID='lq70afwx' />
           </Render>
@@ -156,4 +161,20 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(App))
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const changeConnection = creds => {
+    console.log('ownProps.activeConnection: ', stateProps)
+    console.log('creds: ', creds)
+    ownProps.bus.send(SWITCH_CONNECTION, creds)
+  }
+  return {
+    ...stateProps,
+    ...ownProps,
+    ...dispatchProps,
+    changeConnection
+  }
+}
+
+export default withBus(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
+)
