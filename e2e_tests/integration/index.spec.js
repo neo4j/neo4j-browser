@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global cy, test, expect */
+/* global Cypress, cy, test, expect */
 
 const Carousel = '[data-test-id="carousel"]'
 const SubmitQueryButton = '[data-test-id="submitQuery"]'
