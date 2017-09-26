@@ -112,4 +112,8 @@ describe('Neo4j Browser', () => {
       .first()
       .should('contain', 'Emil Eifrem')
   })
+  it('can display meta items from side drawer', () => {
+    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-test-id="sidebarMetaItem"]').should('have.length', 18)
+  })
 })
