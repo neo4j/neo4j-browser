@@ -75,6 +75,9 @@ describe('Neo4j Browser', () => {
       .get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', cypher)
+    cy
+      .get('[data-test-id="frameLoading"]', { timeout: 10000 })
+      .should('not.be.visible')
   })
   it('can exec cypher from `:play movies`', () => {
     const cypher = ':play movies'
@@ -106,14 +109,15 @@ describe('Neo4j Browser', () => {
       .find('.code')
       .click()
     cy.get(SubmitQueryButton).click()
-
     cy
-      .get('[data-test-id="frameCommand"]')
+      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', 'Emil Eifrem')
   })
   it('can display meta items from side drawer', () => {
     cy.get('[data-test-id="drawerDB"]').click()
-    cy.get('[data-test-id="sidebarMetaItem"]').should('have.length', 18)
+    cy
+      .get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 })
+      .should('have.length', 18)
   })
 })
