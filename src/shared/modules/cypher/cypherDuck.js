@@ -23,6 +23,7 @@ import Rx from 'rxjs'
 import bolt from 'services/bolt/bolt'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
+import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 
 const NAME = 'cypher'
@@ -144,7 +145,12 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return new Promise((resolve, reject) => {
       bolt
-        .directConnect(action, undefined, undefined, false) // Ignore validation errors
+        .directConnect(
+          action,
+          { encrypted: getEncryptionMode() },
+          undefined,
+          false // Ignore validation errors
+        )
         .then(driver => {
           adHocSession(driver, resolve, action)
         })
