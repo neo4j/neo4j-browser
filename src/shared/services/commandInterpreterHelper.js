@@ -59,6 +59,7 @@ import {
   parseGrass
 } from 'shared/modules/commands/helpers/grass'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import { getIsTlsEnabled } from 'shared/modules/features/featuresDuck'
 
 const availableCommands = [
   {
@@ -137,7 +138,7 @@ const availableCommands = [
         action,
         put,
         getParams(state),
-        shouldUseCypherThread(state)
+        shouldUseCypherThread(state) && !getIsTlsEnabled(state)
       )
       put(cypher(action.cmd))
       put(frames.add({ ...action, type: 'cypher', requestId: id }))

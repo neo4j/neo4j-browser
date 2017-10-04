@@ -22,11 +22,15 @@ import bolt from 'services/bolt/bolt'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
+const TLS_ENABLED = 'TLS_ENABLED'
+
 export const NAME = 'features'
 export const RESET = 'features/RESET'
 export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
+export const UPDATE_FEATURE = 'features/UPDATE_FEATURE'
 
 export const getAvailableProcedures = state => state[NAME].availableProcedures
+export const getIsTlsEnabled = state => state[NAME][TLS_ENABLED]
 export const isACausalCluster = state =>
   getAvailableProcedures(state).includes('dbms.cluster.overview')
 export const canAssignRolesToUser = state =>
@@ -44,6 +48,8 @@ export default function (state = initialState, action) {
   switch (action.type) {
     case UPDATE_ALL_FEATURES:
       return { ...state, availableProcedures: [...action.availableProcedures] }
+    case UPDATE_FEATURE:
+      return { ...state, ...action.feature }
     case RESET:
       return initialState
     default:
@@ -58,7 +64,23 @@ export const updateFeatures = availableProcedures => {
     availableProcedures
   }
 }
+export const updateFeature = (featureKey, value) => {
+  return {
+    type: UPDATE_FEATURE,
+    feature: { [featureKey]: value }
+  }
+}
 
+export const appStartFeaturesDiscoveryEpic = (action$, store) => {
+  return action$
+    .ofType(APP_START)
+    .do(() =>
+      store.dispatch(
+        updateFeature(TLS_ENABLED, window.location.protocol.includes('https'))
+      )
+    )
+    .mapTo({ type: 'NOOP' })
+}
 export const featuresDiscoveryEpic = (action$, store) => {
   return action$
     .ofType(CONNECTION_SUCCESS)
