@@ -92,6 +92,7 @@ class Navigation extends Component {
         return (
           <NavigationButtonContainer
             title={item.title}
+            data-test-id={'drawer' + item.name}
             key={index}
             onClick={() => onNavClick(item.name.toLowerCase())}
             isOpen={isOpen}
