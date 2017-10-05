@@ -64,6 +64,7 @@ import {
   SmallHeaderText
 } from './styled'
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
+import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
 
 export class BrowserSync extends Component {
   constructor (props) {
@@ -300,19 +301,31 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const action = setEditorContent(':play neo4j sync')
       dispatch(action)
     },
-    onSignOutAndClear: () => {
-      signOut()
-      const action = clearSyncAndLocal()
-      dispatch(action)
-    },
-    onSignOut: () => {
-      signOut()
-      const action = clearSync()
-      dispatch(action)
-    },
+    sendActionToDispatch: dispatch,
     onConsentSyncChanged: consent => {
       dispatch(consentSync(consent))
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(BrowserSync)
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    onSignOut: () => {
+      signOut()
+      const action = clearSync()
+      dispatchProps.sendActionToDispatch(action)
+      BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
+    },
+    onSignOutAndClear: () => {
+      signOut()
+      const action = clearSyncAndLocal()
+      dispatchProps.sendActionToDispatch(action)
+      BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  BrowserSync
+)

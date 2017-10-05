@@ -18,7 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const BrowserSyncAuthIframe = (silentAuthUrl, delegationTokenUrl, callback) => {
+export const BrowserSyncAuthIframe = (
+  silentAuthUrl,
+  delegationTokenUrl,
+  callback
+) => {
   setupIframe(silentAuthUrl, 'auth0:silent-authentication', data => {
     setupIframe(
       `${delegationTokenUrl}${data.hash}`,
@@ -28,10 +32,19 @@ const BrowserSyncAuthIframe = (silentAuthUrl, delegationTokenUrl, callback) => {
   })
 }
 
+export const BrowserSyncSignoutIframe = (logoutUrl, callback = () => {}) =>
+  setupIframe(logoutUrl, undefined, callback)
+
 function setupIframe (url, type, cb) {
   let iframe = document.createElement('iframe')
   iframe.style.display = 'none'
   iframe.src = url
+  if (!type) {
+    // If no type, don't setup a listener and remove iframe onload
+    iframe.onload = () => iframe.parentElement.removeChild(iframe)
+    document.body.appendChild(iframe)
+    return cb()
+  }
   document.body.appendChild(iframe)
   const pollInterval = setInterval(() => {
     iframe.contentWindow.postMessage(`Polling ${url} for results`, url)
@@ -46,5 +59,3 @@ function setupIframe (url, type, cb) {
   }
   window.addEventListener('message', listener, false)
 }
-
-export default BrowserSyncAuthIframe

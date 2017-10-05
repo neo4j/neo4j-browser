@@ -34,7 +34,7 @@ import {
   SIGNED_OUT
 } from 'shared/modules/sync/syncDuck'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
-import BrowserSyncAuthIframe from './BrowserSyncAuthIframe'
+import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'
 
 export function hasAuthData (props) {
   return props.authData && props.authData.data_token
