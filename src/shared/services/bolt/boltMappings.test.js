@@ -345,7 +345,8 @@ describe('boltMappings', () => {
           planner: 'planner',
           runtime: 'runtime',
           'planner-impl': 'planner-impl',
-          'runtime-impl': 'runtime-impl'
+          'runtime-impl': 'runtime-impl',
+          Signature: 'Signature'
         },
         identifiers: [],
         children: []
@@ -367,6 +368,7 @@ describe('boltMappings', () => {
       expect(extractedPlan.runtime).toEqual('runtime')
       expect(extractedPlan['planner-impl']).toEqual('planner-impl')
       expect(extractedPlan['runtime-impl']).toEqual('runtime-impl')
+      expect(extractedPlan.Signature).toEqual('Signature')
     }
 
     test.skip('should extract plan from result summary', () => {
