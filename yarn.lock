@@ -572,9 +572,10 @@ babel-plugin-preact-require@^1.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-preact-require/-/babel-plugin-preact-require-1.0.0.tgz#951d1b3753a4ff3ebf6ab53503aacacf5f85326b"
 
 babel-plugin-styled-components@^1.2.0:
-  version "1.2.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-1.2.0.tgz#8bb8f9e69119bb8dee408c8d36a0dfef5191f3c7"
+  version "1.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-1.2.1.tgz#e1593f2a6a0327e2d156695306e60c4dd175866d"
   dependencies:
+    babel-types "^6.26.0"
     stylis "^3.2.1"
 
 babel-plugin-syntax-async-functions@^6.8.0:
@@ -7403,8 +7404,8 @@ style-loader@^0.18.1:
     schema-utils "^0.3.0"
 
 styled-components@^2.1.2:
-  version "2.2.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-2.2.0.tgz#23823d305b1929723f927837735fdc2431545956"
+  version "2.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-2.2.1.tgz#f4835f1001c37bcc301ac3865b5d93466de4dd5b"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
@@ -7416,9 +7417,13 @@ styled-components@^2.1.2:
     stylis "^3.2.1"
     supports-color "^3.2.3"
 
-stylis@^3.2.1, stylis@^3.2.15:
+stylis@^3.2.1:
   version "3.2.18"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.18.tgz#211661f13b636e9e451456a1aadcec31248edf0e"
+
+stylis@^3.2.15:
+  version "3.2.19"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/stylis/-/stylis-3.2.19.tgz#3bfeff425e12935cde5faed4a39de06b1aeb5acb"
 
 suber@^5.0.1:
   version "5.0.1"
