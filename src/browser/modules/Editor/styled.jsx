@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -62,7 +62,7 @@ const BaseEditorWrapper = styled.div`
   padding: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
   font-family: Monaco, 'Courier New', Terminal, monospace;
-  min-Height: ${props =>
+  min-height: ${props =>
     Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
   .CodeMirror {
     background-color: ${props => props.theme.editorBackground} !important;

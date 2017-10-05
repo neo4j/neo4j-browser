@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -123,11 +123,9 @@ export class PlanView extends Component {
     return (
       <PlanSVG
         style={
-          this.props.fullscreen ? (
-            { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
-          ) : (
-            {}
-          )
+          this.props.fullscreen
+            ? { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
+            : {}
         }
         innerRef={this.planInit.bind(this)}
       />
@@ -171,14 +169,12 @@ export class PlanStatusbar extends Component {
           <Ellipsis>
             Cypher version: {plan.root.version}, planner: {plan.root.planner},
             runtime: {plan.root.runtime}.
-            {plan.root.totalDbHits ? (
-              ` ${plan.root
+            {plan.root.totalDbHits
+              ? ` ${plan.root
                 .totalDbHits} total db hits in ${result.summary.resultAvailableAfter
                 .add(result.summary.resultConsumedAfter)
                 .toNumber() || 0} ms.`
-            ) : (
-              ``
-            )}
+              : ``}
           </Ellipsis>
         </StyledLeftPartial>
         <StyledRightPartial>

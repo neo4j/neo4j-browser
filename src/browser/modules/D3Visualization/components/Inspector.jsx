@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -205,11 +205,9 @@ export class InspectorComponent extends Component {
         <StyledStatus className='status'>
           <StyledInspectorFooter
             className={
-              this.state.contracted ? (
-                'contracted inspector-footer'
-              ) : (
-                'inspector-footer'
-              )
+              this.state.contracted
+                ? 'contracted inspector-footer'
+                : 'inspector-footer'
             }
           >
             <StyledInspectorFooterRow

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -63,11 +63,21 @@ var out = {
   }
 }
 
-out.v1.types.Node.prototype.toString = function () { return 'node' }
-out.v1.types.Relationship.prototype.toString = function () { return 'rel' }
-out.v1.types.Path.prototype.toString = function () { return 'path' }
-out.v1.types.PathSegment.prototype.toString = function () { return 'pathsegment' }
-out.v1.Integer.prototype.toInt = function () { return this.low }
-out.v1.int = (val) => new out.v1.Integer(val)
+out.v1.types.Node.prototype.toString = function () {
+  return 'node'
+}
+out.v1.types.Relationship.prototype.toString = function () {
+  return 'rel'
+}
+out.v1.types.Path.prototype.toString = function () {
+  return 'path'
+}
+out.v1.types.PathSegment.prototype.toString = function () {
+  return 'pathsegment'
+}
+out.v1.Integer.prototype.toInt = function () {
+  return this.low
+}
+out.v1.int = val => new out.v1.Integer(val)
 
 module.exports = out

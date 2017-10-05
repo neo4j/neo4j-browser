@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -43,13 +43,10 @@ describe('PlayFrame', () => {
     const card = shallow(wrapper.find('.playFrame').node)
     expect(card.find('.frame-contents').text()).to.match(/not\sfound/)
   })
-  test.skip(
-    'should render contents when contents is passed to PlayFrame',
-    () => {
-      const wrapper = shallow(<PlayFrame frame={{ result: 'Hello' }} />)
-      expect(wrapper.find('.playFrame').length).toBe(1)
-      const card = shallow(wrapper.find('.playFrame').node)
-      expect(card.find(Guides).props().html).to.eql('Hello')
-    }
-  )
+  test.skip('should render contents when contents is passed to PlayFrame', () => {
+    const wrapper = shallow(<PlayFrame frame={{ result: 'Hello' }} />)
+    expect(wrapper.find('.playFrame').length).toBe(1)
+    const card = shallow(wrapper.find('.playFrame').node)
+    expect(card.find(Guides).props().html).to.eql('Hello')
+  })
 })
