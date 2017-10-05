@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -20,12 +20,9 @@
 
 module.exports = {
   plugins: {
-    'precss': {},
-    'autoprefixer': {
-      browsers: [
-        'last 3 version',
-        'ie >= 10'
-      ]
+    precss: {},
+    autoprefixer: {
+      browsers: ['last 3 version', 'ie >= 10']
     }
   }
 }

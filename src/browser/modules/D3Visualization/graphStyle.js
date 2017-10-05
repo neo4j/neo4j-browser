@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -300,7 +300,8 @@ export default function neoGraphStyle () {
         } else {
           return leading
         }
-      }, '')
+      },
+      '')
       defaultCaption || (defaultCaption = '<id>')
       return {
         caption: defaultCaption

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -32,27 +32,24 @@ describe('Editor', () => {
     onExecute = jest.fn()
   })
 
-  test.skip(
-    'should render Codemirror component with correct properties',
-    () => {
-      const content = 'content-' + Math.random()
-      const wrapper = mount(
-        <EditorComponent
-          bus={createBus()}
-          onExecute={onExecute}
-          content={content}
-          history=''
-        />
-      )
-      const codeMirror = wrapper.find(Codemirror)
-      expect(codeMirror.props().value).toEqual(content)
-      codeMirror
-        .get(0)
-        .getCodeMirrorInstance()
-        .keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
-      expect(onExecute).toHaveBeenCalled()
-    }
-  )
+  test.skip('should render Codemirror component with correct properties', () => {
+    const content = 'content-' + Math.random()
+    const wrapper = mount(
+      <EditorComponent
+        bus={createBus()}
+        onExecute={onExecute}
+        content={content}
+        history=''
+      />
+    )
+    const codeMirror = wrapper.find(Codemirror)
+    expect(codeMirror.props().value).toEqual(content)
+    codeMirror
+      .get(0)
+      .getCodeMirrorInstance()
+      .keyMap['default']['Cmd-Enter'](codeMirror.get(0).getCodeMirror())
+    expect(onExecute).toHaveBeenCalled()
+  })
 
   test.skip('should execute current command on Cmd-Enter', () => {
     const content = 'content-' + Math.random()
@@ -102,72 +99,69 @@ describe('Editor', () => {
     ).toEqual('')
   })
 
-  test.skip(
-    'should replace content as with history as user arrows up and down',
-    () => {
-      const content = 'content-' + Math.random()
-      const history = [{ cmd: 'latest' }, { cmd: 'middle' }, { cmd: 'oldest' }]
-      const wrapper = mount(
-        <EditorComponent
-          bus={createBus()}
-          onExecute={onExecute}
-          content={content}
-          history={history}
-        />
-      )
-      const codeMirror = wrapper.find(Codemirror)
+  test.skip('should replace content as with history as user arrows up and down', () => {
+    const content = 'content-' + Math.random()
+    const history = [{ cmd: 'latest' }, { cmd: 'middle' }, { cmd: 'oldest' }]
+    const wrapper = mount(
+      <EditorComponent
+        bus={createBus()}
+        onExecute={onExecute}
+        content={content}
+        history={history}
+      />
+    )
+    const codeMirror = wrapper.find(Codemirror)
+    codeMirror
+      .get(0)
+      .getCodeMirrorInstance()
+      .keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
+    expect(
       codeMirror
         .get(0)
-        .getCodeMirrorInstance()
-        .keyMap['default']['Cmd-Up'](codeMirror.get(0).getCodeMirror())
-      expect(
-        codeMirror
-          .get(0)
-          .getCodeMirror()
-          .getValue()
-      ).toEqual('latest')
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('latest')
+    codeMirror
+      .get(0)
+      .getCodeMirrorInstance()
+      .keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
+    expect(
       codeMirror
         .get(0)
-        .getCodeMirrorInstance()
-        .keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
-      expect(
-        codeMirror
-          .get(0)
-          .getCodeMirror()
-          .getValue()
-      ).toEqual('middle')
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('middle')
+    codeMirror
+      .get(0)
+      .getCodeMirrorInstance()
+      .keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
+    expect(
       codeMirror
         .get(0)
-        .getCodeMirrorInstance()
-        .keyMap['default']['Ctrl-Up'](codeMirror.get(0).getCodeMirror())
-      expect(
-        codeMirror
-          .get(0)
-          .getCodeMirror()
-          .getValue()
-      ).toEqual('oldest')
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('oldest')
+    codeMirror
+      .get(0)
+      .getCodeMirrorInstance()
+      .keyMap['default']['Cmd-Down'](codeMirror.get(0).getCodeMirror())
+    expect(
       codeMirror
         .get(0)
-        .getCodeMirrorInstance()
-        .keyMap['default']['Cmd-Down'](codeMirror.get(0).getCodeMirror())
-      expect(
-        codeMirror
-          .get(0)
-          .getCodeMirror()
-          .getValue()
-      ).toEqual('middle')
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('middle')
+    codeMirror
+      .get(0)
+      .getCodeMirrorInstance()
+      .keyMap['default']['Ctrl-Down'](codeMirror.get(0).getCodeMirror())
+    expect(
       codeMirror
         .get(0)
-        .getCodeMirrorInstance()
-        .keyMap['default']['Ctrl-Down'](codeMirror.get(0).getCodeMirror())
-      expect(
-        codeMirror
-          .get(0)
-          .getCodeMirror()
-          .getValue()
-      ).toEqual('latest')
-    }
-  )
+        .getCodeMirror()
+        .getValue()
+    ).toEqual('latest')
+  })
 
   test.skip('should resest history after execution', () => {
     const history = [{ cmd: 'latest' }, { cmd: 'middle' }, { cmd: 'oldest' }]

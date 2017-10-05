@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo4j, Inc,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -182,11 +182,9 @@ export class BrowserSync extends Component {
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
               <FormButton
                 label={
-                  this.state.clearLocalRequested ? (
-                    'Sign out + clear'
-                  ) : (
-                    'Clear local data'
-                  )
+                  this.state.clearLocalRequested
+                    ? 'Sign out + clear'
+                    : 'Clear local data'
                 }
                 onClick={() => this.signOutAndClearLocalStorage()}
                 icon={<BinIcon suppressIconStyles='true' />}
