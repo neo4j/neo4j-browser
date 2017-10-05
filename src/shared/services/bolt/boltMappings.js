@@ -95,24 +95,16 @@ export function extractPlan (result, calculateTotalDbHits = false) {
     const boltPlanToRESTPlanShared = plan => {
       return {
         operatorType: plan.operatorType,
-        LegacyExpression: plan.arguments.LegacyExpression,
-        ExpandExpression: plan.arguments.ExpandExpression,
         DbHits: plan.dbHits,
         Rows: plan.rows,
-        EstimatedRows: plan.arguments.EstimatedRows,
         identifiers: plan.identifiers,
-        Index: plan.arguments.Index,
-        children: plan.children.map(boltPlanToRESTPlanShared)
+        children: plan.children.map(_ => ({
+          ..._.arguments,
+          ...boltPlanToRESTPlanShared(_)
+        }))
       }
     }
-    let obj = boltPlanToRESTPlanShared(rawPlan)
-    obj['runtime-impl'] = rawPlan.arguments['runtime-impl']
-    obj['planner-impl'] = rawPlan.arguments['planner-impl']
-    obj['version'] = rawPlan.arguments['version']
-    obj['KeyNames'] = rawPlan.arguments['KeyNames']
-    obj['planner'] = rawPlan.arguments['planner']
-    obj['runtime'] = rawPlan.arguments['runtime']
-    obj['Signature'] = rawPlan.arguments['Signature']
+    let obj = { ...rawPlan.arguments, ...boltPlanToRESTPlanShared(rawPlan) }
 
     if (calculateTotalDbHits === true) {
       obj.totalDbHits = collectHits(obj)
