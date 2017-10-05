@@ -112,6 +112,7 @@ export function extractPlan (result, calculateTotalDbHits = false) {
     obj['KeyNames'] = rawPlan.arguments['KeyNames']
     obj['planner'] = rawPlan.arguments['planner']
     obj['runtime'] = rawPlan.arguments['runtime']
+    obj['Signature'] = rawPlan.arguments['Signature']
 
     if (calculateTotalDbHits === true) {
       obj.totalDbHits = collectHits(obj)
