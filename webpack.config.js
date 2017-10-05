@@ -260,7 +260,8 @@ module.exports = {
   output: {
     path: buildPath,
     publicPath: '',
-    filename: 'app-[hash].js'
+    filename: 'app-[hash].js',
+    chunkFilename: '[name].[chunkhash].js'
   },
   module: {
     rules

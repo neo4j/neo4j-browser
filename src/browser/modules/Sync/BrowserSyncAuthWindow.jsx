@@ -32,15 +32,14 @@ const BrowserSyncAuthWindow = (url, callback) => {
   } catch (e) {
     callback(null, e)
   }
-  window.addEventListener(
-    'message',
-    event => {
-      clearInterval(pollInterval)
-      callback(event.data)
-      win.close()
-    },
-    false
-  )
+  const listener = event => {
+    if (url.indexOf(event.origin) !== 0) return
+    clearInterval(pollInterval)
+    window.removeEventListener('message', listener)
+    callback(event.data)
+    win.close()
+  }
+  window.addEventListener('message', listener, false)
 }
 
 export default BrowserSyncAuthWindow

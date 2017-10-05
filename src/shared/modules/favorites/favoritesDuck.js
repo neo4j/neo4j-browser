@@ -109,7 +109,7 @@ export function updateFavorites (favorites) {
 }
 
 export const composeDocumentsToSync = (store, syncValue) => {
-  const documents = syncValue.syncObj.documents
+  const documents = syncValue.syncObj.documents || []
   const favorites = getFavorites(store.getState()).filter(fav => !fav.isStatic)
 
   let newDocuments = [

@@ -23,7 +23,11 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
-import { getTheme, getCmdChar } from 'shared/modules/settings/settingsDuck'
+import {
+  getTheme,
+  getCmdChar,
+  getBrowserSyncConfig
+} from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import {
   wasUnknownCommand,
@@ -33,7 +37,8 @@ import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
   getConnectionState,
-  getActiveConnectionData
+  getActiveConnectionData,
+  isConnected
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 
@@ -50,6 +55,8 @@ import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
 import Render from 'browser-components/Render'
+import BrowserSyncInit from '../Sync/BrowserSyncInit'
+import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 
 class App extends Component {
   componentDidMount () {
@@ -79,7 +86,11 @@ class App extends Component {
       theme,
       showUnknownCommandBanner,
       errorMessage,
-      loadUdc
+      loadExternalScripts,
+      syncConsent,
+      browserSyncMetadata,
+      browserSyncConfig,
+      browserSyncAuthStatus
     } = this.props
     const themeData = themes[theme] || themes['normal']
     return (
@@ -87,8 +98,15 @@ class App extends Component {
         <StyledWrapper>
           <DocTitle titleString={this.props.titleString} />
           <UserInteraction />
-          <Render if={loadUdc}>
+          <Render if={loadExternalScripts}>
             <Intercom appID='lq70afwx' />
+          </Render>
+          <Render if={syncConsent && loadExternalScripts}>
+            <BrowserSyncInit
+              authStatus={browserSyncAuthStatus}
+              authData={browserSyncMetadata}
+              config={browserSyncConfig}
+            />
           </Render>
           <StyledApp>
             <StyledBody>
@@ -120,8 +138,13 @@ const mapStateToProps = state => {
     cmdchar: getCmdChar(state),
     showUnknownCommandBanner: wasUnknownCommand(state),
     errorMessage: getErrorMessage(state),
-    loadUdc: allowOutgoingConnections(state),
-    titleString: asTitleString(connectionData)
+    loadExternalScripts:
+      allowOutgoingConnections(state) !== false && isConnected(state),
+    titleString: asTitleString(connectionData),
+    syncConsent: state.syncConsent.consented,
+    browserSyncMetadata: getMetadata(state),
+    browserSyncConfig: getBrowserSyncConfig(state),
+    browserSyncAuthStatus: getUserAuthStatus(state)
   }
 }
 

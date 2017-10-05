@@ -31,14 +31,10 @@ export const getInitCmd = state => state[NAME].initCmd || initialState.initCmd
 export const getTheme = state => state[NAME].theme || initialState.theme
 export const getUseBoltRouting = state =>
   state[NAME].useBoltRouting || initialState.useBoltRouting
-export const getBrowserSyncConfig = state => {
-  return getSettings(state).browserSyncDebugServer
-    ? {
-      ...browserSyncConfig,
-      authWindowUrl: getSettings(state).browserSyncDebugServer
-    }
-    : browserSyncConfig
-}
+export const getBrowserSyncConfig = (
+  state,
+  host = getSettings(state).browserSyncDebugServer
+) => browserSyncConfig(host || undefined)
 export const getMaxNeighbours = state =>
   state[NAME].maxNeighbours || initialState.maxNeighbours
 export const getMaxRows = state => state[NAME].maxRows || initialState.maxRows
@@ -48,14 +44,17 @@ export const getScrollToTop = state => state[NAME].scrollToTop
 export const shouldReportUdc = state => state[NAME].shouldReportUdc !== false
 export const shouldAutoComplete = state => state[NAME].autoComplete !== false
 
-const browserSyncConfig = {
-  authWindowUrl: 'https://auth.neo4j.com/indexNewBrowser.html',
+const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
+  authWindowUrl: `${host}/indexNewBrowser.html`,
+  silentAuthIframeUrl: `${host}/silentAuthNewBrowser.html`,
+  delegationTokenIframeUrl: `${host}/getDelegationTokenNewBrowser.html`,
+  logoutUrl: `https://neo4j-sync.auth0.com/v2/logout`,
   firebaseConfig: {
     apiKey: 'AIzaSyA1RwZMBWHxqRGyY3CK60leRkr56H6GHV4',
     databaseURL: 'https://fiery-heat-7952.firebaseio.com',
     messagingSenderId: '352959348981'
   }
-}
+})
 export const getUseNewVisualization = state => state[NAME].useNewVis
 export const getCmdChar = state => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = state =>

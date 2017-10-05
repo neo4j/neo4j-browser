@@ -34,37 +34,53 @@ import {
 import Render from 'browser-components/Render'
 import BrowserSyncAuthWindow from '../Sync/BrowserSyncAuthWindow'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
-import SyncSignInManager from 'shared/modules/sync/SyncSignInManager'
-import { setSync, optOutSync } from 'shared/modules/sync/syncDuck'
+import {
+  setSync,
+  optOutSync,
+  getUserAuthStatus,
+  SIGNED_IN
+} from 'shared/modules/sync/syncDuck'
 
 class SyncReminderBanner extends Component {
-  componentWillMount () {
-    this.syncManager = new SyncSignInManager({
-      dbConfig: this.props.browserSyncConfig.firebaseConfig,
-      serviceReadyCallback: this.serviceReady.bind(this),
-      onSyncCallback: this.props.onSync
-    })
+  importSyncManager = () => {
+    if (this.syncManager) return Promise.resolve(this.syncManager)
+    return import(/* webpackChunkName: "sync-manager" */ 'shared/modules/sync/SyncSignInManager').then(
+      ({ default: SyncSignInManager }) => {
+        this.syncManager = new SyncSignInManager({
+          dbConfig: this.props.browserSyncConfig.firebaseConfig,
+          serviceReadyCallback: this.serviceReady.bind(this),
+          onSyncCallback: this.props.onSync
+        })
+        return this.syncManager
+      }
+    )
   }
   serviceReady (status) {
     this.setState({ status })
   }
   logIn () {
-    BrowserSyncAuthWindow(
-      this.props.browserSyncConfig.authWindowUrl,
-      this.syncManager.authCallBack.bind(this.syncManager)
-    )
+    this.importSyncManager().then(syncManager => {
+      BrowserSyncAuthWindow(
+        this.props.browserSyncConfig.authWindowUrl,
+        this.syncManager.authCallBack.bind(this.syncManager)
+      )
+    })
   }
   render () {
-    const { dbConnectionState, syncConsent, sync, optOutSync } = this.props
+    const {
+      dbConnectionState,
+      syncConsent,
+      optOutSync,
+      authStatus
+    } = this.props
     const dbConnected = dbConnectionState === CONNECTED_STATE
-    const syncDisconnected = !sync || !sync.authData
     const syncConsentGiven =
       syncConsent && syncConsent.consented === true && !syncConsent.optedOut
 
     const visible =
       dbConnected &&
-      syncDisconnected &&
       syncConsentGiven &&
+      authStatus !== SIGNED_IN &&
       this.state.status === 'UP'
 
     return (
@@ -89,7 +105,7 @@ class SyncReminderBanner extends Component {
 const mapStateToProps = state => {
   return {
     syncConsent: state.syncConsent,
-    sync: state.sync,
+    authStatus: getUserAuthStatus(state),
     dbConnectionState: getConnectionState(state),
     browserSyncConfig: getBrowserSyncConfig(state)
   }

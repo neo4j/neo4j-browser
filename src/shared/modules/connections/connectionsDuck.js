@@ -82,6 +82,10 @@ export function getConnectionState (state) {
   return state[NAME].connectionState || initialState.connectionState
 }
 
+export function isConnected (state) {
+  return getConnectionState(state) === CONNECTED_STATE
+}
+
 export function getActiveConnection (state) {
   return state[NAME].activeConnection || initialState.activeConnection
 }

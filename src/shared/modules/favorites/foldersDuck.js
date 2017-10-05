@@ -81,7 +81,7 @@ export default function reducer (state = initialState, action) {
 }
 
 export const composeFoldersToSync = (store, syncValue) => {
-  const folders = syncValue.syncObj.folders
+  const folders = syncValue.syncObj.folders || []
   const stateFolders = getFolders(store.getState()).filter(
     fold => !fold.isStatic
   )

@@ -49,7 +49,9 @@ import grassReducer, { NAME as grass } from 'shared/modules/grass/grassDuck'
 import {
   syncReducer,
   syncConsentReducer,
+  syncMetaDataReducer,
   NAME_CONSENT as syncConsent,
+  NAME_META as syncMetadata,
   NAME as sync
 } from 'shared/modules/sync/syncDuck'
 import foldersReducer, {
@@ -77,6 +79,7 @@ export default {
   [grass]: grassReducer,
   [sync]: syncReducer,
   [syncConsent]: syncConsentReducer,
+  [syncMetadata]: syncMetaDataReducer,
   [commands]: commandsReducer,
   [udc]: udcReducer,
   [app]: appReducer

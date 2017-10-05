@@ -20,15 +20,27 @@
 
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
-import { withBus } from 'preact-suber'
 import TimeAgo from 'react-timeago'
-
+import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
-  setSync,
+  getConnectionState,
+  DISCONNECTED_STATE
+} from 'shared/modules/connections/connectionsDuck'
+import {
+  setSyncData,
+  setSyncMetadata,
   clearSync,
   clearSyncAndLocal,
   consentSync,
-  authorizedAs
+  authorizedAs,
+  setSyncAuthData,
+  getLastSyncedAt,
+  getUserAuthStatus,
+  getServiceStatus,
+  getUserData,
+  SIGNED_IN,
+  DOWN,
+  PENDING
 } from 'shared/modules/sync/syncDuck'
 import { signOut } from 'services/browserSyncService'
 import { setContent as setEditorContent } from 'shared/modules/editor/editorDuck'
@@ -52,42 +64,27 @@ import {
   SmallHeaderText
 } from './styled'
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
-import SyncSignInManager from 'shared/modules/sync/SyncSignInManager'
+import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
 
 export class BrowserSync extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      authData: props.authData,
       error: null,
-      serviceAuthenticated: !!props.authData,
-      status: props.authData ? 'UP' : 'PENDING',
       userConsented: props.syncConsent,
       showConsentAlert: false,
       clearLocalRequested: false
     }
   }
 
-  componentWillMount () {
-    this.syncManager = new SyncSignInManager({
-      dbConfig: this.props.browserSyncConfig.firebaseConfig,
-      serviceReadyCallback: status => this.setState({ status }),
-      onSyncCallback: this.props.onSync
-    })
-  }
   logIn () {
     if (this.state.userConsented === true) {
       const { onSignIn } = this.props
-      const signInCallback = data => onSignIn(data.profile)
       BrowserSyncAuthWindow(
         this.props.browserSyncConfig.authWindowUrl,
         (data, error) => {
-          this.syncManager.authCallBack.bind(this.syncManager)(
-            data,
-            error,
-            signInCallback
-          )
+          onSignIn(data)
         }
       )
     } else {
@@ -98,8 +95,6 @@ export class BrowserSync extends Component {
     if (this.state.clearLocalRequested) {
       this.setState({
         clearLocalRequested: false,
-        authData: null,
-        serviceAuthenticated: false,
         userConsented: false
       })
       this.props.onSignOutAndClear()
@@ -108,17 +103,35 @@ export class BrowserSync extends Component {
     }
   }
   signOutFromSync () {
-    this.setState({ authData: null, serviceAuthenticated: false })
     this.props.onSignOut()
   }
   render () {
-    if (this.state.status === 'PENDING') {
+    if (this.props.serviceStatus === PENDING) {
       return (
         <Drawer id='sync-drawer'>
           <DrawerHeader>Connecting sync service... </DrawerHeader>
         </Drawer>
       )
-    } else if (this.state.status === 'DOWN') {
+    } else if (this.props.connectionState === DISCONNECTED_STATE) {
+      return (
+        <Drawer id='sync-drawer'>
+          <DrawerHeader>No database connection</DrawerHeader>
+          <DrawerBody>
+            You must first connect to a database to use Browser Sync.
+          </DrawerBody>
+        </Drawer>
+      )
+    } else if (!this.props.isAllowed) {
+      return (
+        <Drawer id='sync-drawer'>
+          <DrawerHeader>Browser Sync is disabled</DrawerHeader>
+          <DrawerBody>
+            Browser Sync is disabled due to Neo4j server configuration. Raise
+            the issue with your administrator.
+          </DrawerBody>
+        </Drawer>
+      )
+    } else if (this.props.serviceStatus === DOWN) {
       return (
         <Drawer id='sync-drawer'>
           <DrawerHeader>Sync service is down</DrawerHeader>
@@ -132,11 +145,10 @@ export class BrowserSync extends Component {
     let clearLocalDataContent = null
     let headerContent = null
 
-    const serviceAuthenticated = !!this.props.authData
-    if (serviceAuthenticated) {
+    if (this.props.authStatus === SIGNED_IN) {
       headerContent = (
         <DrawerToppedHeader>
-          {this.props.authData.profile.name}
+          {this.props.userData.name}
           <br />
           <SmallHeaderText>Connected</SmallHeaderText>
           <br />
@@ -173,7 +185,7 @@ export class BrowserSync extends Component {
       )
     }
 
-    if (serviceAuthenticated === true) {
+    if (this.props.authStatus === SIGNED_IN) {
       onlineContent = (
         <DrawerBody>
           <DrawerSection>
@@ -262,41 +274,58 @@ export class BrowserSync extends Component {
 
 const mapStateToProps = state => {
   return {
-    lastSyncedAt: state.sync ? state.sync.lastSyncedAt : null,
-    authData: state.sync ? state.sync.authData : null,
+    lastSyncedAt: getLastSyncedAt(state),
+    userData: getUserData(state),
+    authStatus: getUserAuthStatus(state),
+    serviceStatus: getServiceStatus(state),
     browserSyncConfig: getBrowserSyncConfig(state),
-    syncConsent: state.syncConsent.consented
+    syncConsent: state.syncConsent.consented,
+    connectionState: getConnectionState(state),
+    isAllowed: allowOutgoingConnections(state) !== false
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSignIn: data => {
-      const action = authorizedAs(data)
-      ownProps.bus.send(action.type, action)
+      const profileAction = authorizedAs(data.profile)
+      dispatch(profileAction)
+      const authDataAction = setSyncAuthData(data)
+      dispatch(authDataAction)
     },
     onSync: syncObject => {
-      dispatch(setSync(syncObject))
+      dispatch(setSyncMetadata(syncObject))
+      dispatch(setSyncData(syncObject))
     },
     onSyncHelpClick: play => {
       const action = setEditorContent(':play neo4j sync')
-      ownProps.bus.send(action.type, action)
+      dispatch(action)
     },
-    onSignOutAndClear: () => {
-      signOut()
-      const action = clearSyncAndLocal()
-      ownProps.bus.send(action.type, action)
-    },
-    onSignOut: () => {
-      signOut()
-      const action = clearSync()
-      ownProps.bus.send(action.type, action)
-    },
+    sendActionToDispatch: dispatch,
     onConsentSyncChanged: consent => {
       dispatch(consentSync(consent))
     }
   }
 }
-export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(BrowserSync)
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    onSignOut: () => {
+      signOut()
+      const action = clearSync()
+      dispatchProps.sendActionToDispatch(action)
+      BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
+    },
+    onSignOutAndClear: () => {
+      signOut()
+      const action = clearSyncAndLocal()
+      dispatchProps.sendActionToDispatch(action)
+      BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  BrowserSync
 )
