@@ -18,6 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const mapProperties = _ => Object.assign({}, ...stringifyValues(_))
+const stringifyValues = obj =>
+  Object.keys(obj).map(k => ({ [k]: obj[k].toString() }))
+
 export function createGraph (nodes, relationships) {
   let graph = new neo.models.Graph()
   graph.addNodes(mapNodes(nodes))
@@ -28,7 +32,8 @@ export function createGraph (nodes, relationships) {
 
 export function mapNodes (nodes) {
   return nodes.map(
-    node => new neo.models.Node(node.id, node.labels, node.properties)
+    node =>
+      new neo.models.Node(node.id, node.labels, mapProperties(node.properties))
   )
 }
 
@@ -41,7 +46,7 @@ export function mapRelationships (relationships, graph) {
       source,
       target,
       rel.type,
-      rel.properties
+      mapProperties(rel.properties)
     )
   })
 }
