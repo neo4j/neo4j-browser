@@ -264,13 +264,13 @@ export const stringifyMod = (
       return toString.call(a) === '[object Array]'
     }
   const escMap = {
-    '"': '\\"',
-    '\\': '\\\\',
-    '\b': '\\b',
-    '\f': '\\f',
-    '\n': '\\n',
-    '\r': '\\r',
-    '\t': '\\t'
+    '"': '"',
+    '\\': '\\',
+    '\b': '\b',
+    '\f': '\f',
+    '\n': '\n',
+    '\r': '\r',
+    '\t': '\t'
   }
   const escFunc = function (m) {
     return (

@@ -608,11 +608,7 @@ describe('helpers', () => {
       const res = stringifyResultArray(neo4j.isInt, step2)
       // Then
       expect(res).toEqual([
-        [
-          JSON.stringify('"neoInt"'),
-          JSON.stringify('"int"'),
-          JSON.stringify('"any"')
-        ],
+        ['""neoInt""', '""int""', '""any""'],
         ['882573709873217509', '100', '0.5'],
         ['300', '100', '"string"']
       ])
@@ -650,7 +646,7 @@ describe('helpers', () => {
       const res = stringifyResultArray(neo4j.isInt, step2)
       // Then
       expect(res).toEqual([
-        [JSON.stringify('"x"'), JSON.stringify('"y"'), JSON.stringify('"n"')],
+        ['""x""', '""y""', '""n""'],
         ['"x"', '"y"', JSON.stringify({ prop1: 'prop1' })],
         [
           '"xx"',
