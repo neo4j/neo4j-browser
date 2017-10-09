@@ -371,7 +371,7 @@ describe('boltMappings', () => {
       expect(extractedPlan.Signature).toEqual('Signature')
     }
 
-    test.skip('should extract plan from result summary', () => {
+    test('should extract plan from result summary', () => {
       // Given
       const result = {
         summary: {
@@ -382,7 +382,7 @@ describe('boltMappings', () => {
       checkExtractedPlan(extractedPlan)
     })
 
-    test.skip('should extract profile from result summary', () => {
+    test('should extract profile from result summary', () => {
       // Given
       const profile = createPlan()
       profile.dbHits = 20
