@@ -75,7 +75,6 @@ export default {
   _contains,
   _createConstraintOn,
   _createIndexOn,
-  _createUnique,
   _create,
   _cypher,
   _delete,
