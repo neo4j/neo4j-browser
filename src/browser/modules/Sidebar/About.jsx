@@ -48,7 +48,7 @@ const About = () => {
         <DrawerSection>
           <DrawerSubHeader>Neo4j Browser</DrawerSubHeader>
           <DrawerSectionBody>
-            You are running version {version}
+            You are running Neo4j Browser version: {version}
           </DrawerSectionBody>
         </DrawerSection>
         <DrawerSection>
