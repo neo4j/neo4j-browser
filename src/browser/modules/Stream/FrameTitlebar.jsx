@@ -49,7 +49,10 @@ import {
   DropdownButton,
   DropdownItem
 } from './styled'
-import { downloadPNGFromSVG } from 'shared/services/exporting/pngUtils'
+import {
+  downloadPNGFromSVG,
+  downloadSVG
+} from 'shared/services/exporting/imageUtils'
 
 const getCsvData = exportData => {
   if (exportData && exportData.length > 0) {
@@ -83,6 +86,11 @@ class FrameTitlebar extends Component {
     downloadPNGFromSVG(svgElement, graphElement, type)
   }
 
+  exportSVG () {
+    const { svgElement, graphElement, type } = this.props.visElement
+    downloadSVG(svgElement, graphElement, type)
+  }
+
   render () {
     let props = this.props
     const { frame = {} } = props
@@ -110,9 +118,14 @@ class FrameTitlebar extends Component {
               <DropdownList>
                 <DropdownContent>
                   <Render if={props.visElement}>
-                    <DropdownItem onClick={() => this.exportPNG()}>
-                      Export PNG
-                    </DropdownItem>
+                    <span>
+                      <DropdownItem onClick={() => this.exportPNG()}>
+                        Export PNG
+                      </DropdownItem>
+                      <DropdownItem onClick={() => this.exportSVG()}>
+                        Export SVG
+                      </DropdownItem>
+                    </span>
                   </Render>
                   <Render if={props.exportData}>
                     <DropdownItem

@@ -37,10 +37,18 @@ export const downloadPNGFromSVG = (svg, graph, type) => {
   return downloadWithDataURI(filename + '.png', canvas.toDataURL('image/png'))
 }
 
+export const downloadSVG = (svg, graph, type) => {
+  const svgObj = prepareForExport(svg, graph, type).node()
+  svgObj.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+  return download(
+    type + '.svg',
+    'image/svg+xml;charset=utf-8',
+    svgObj.outerHTML
+  )
+}
+
 const download = (filename, mime, data) => {
-  const blob = new Blob([data], {
-    type: mime
-  })
+  const blob = new Blob([data], { type: mime })
   return FileSaver.saveAs(blob, filename)
 }
 
