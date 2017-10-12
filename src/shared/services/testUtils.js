@@ -20,11 +20,15 @@
 
 import { mount as enyzmeMount } from 'enzyme'
 
-export const mount = Component => {
-  const wrapper = enyzmeMount(<Component />)
+export const mount = (Component, props = {}) => {
+  const wrapper = enyzmeMount(<Component {...props} />)
   return {
-    withProps: props => {
-      wrapper.setProps(props)
+    then: () => {
+      wrapper.update()
+      return Promise.resolve(wrapper)
+    },
+    withProps: (props = null) => {
+      if (props) wrapper.setProps(props)
       wrapper.update()
       return Promise.resolve(wrapper)
     }

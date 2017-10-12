@@ -76,14 +76,64 @@ describe('<DesktopIntegration>', () => {
       ]
     }
     const integrationPoint = { getContext: () => Promise.resolve(context) }
-
+    const props = { integrationPoint, onMount: mFn }
     // When
-    const result = mount(DesktopIntegration)
-      .withProps({ integrationPoint, onMount: mFn })
+    const result = mount(DesktopIntegration, props)
       // Then
+      .withProps()
       .then(wrapper => {
         expect(wrapper.text()).toEqual('')
         expect(mFn).toHaveBeenCalledTimes(1)
+        return wrapper
+      })
+      .then(wrapper => {
+        wrapper.setProps({ ...props, x: 1 }) // Update props for a rerender
+        wrapper.update()
+        expect(mFn).toHaveBeenCalledTimes(1)
+      })
+
+    // Return test result (promise)
+    return result
+  })
+  test('calls onXxx with data on event XXX', () => {
+    // Given
+    let componentOnContextUpdate
+    const fn = jest.fn()
+    const oldContext = { projects: [] }
+    const newContext = { projects: [{ project: {} }] }
+    const event = { type: 'XXX' }
+    const nonListenEvent = { type: 'YYY' }
+    const integrationPoint = {
+      onContextUpdate: fn => (componentOnContextUpdate = fn)
+    }
+    // We want to get called onXxx for XXX type events
+    const props = { integrationPoint, onXxx: fn }
+
+    // When
+    const result = mount(DesktopIntegration, props)
+      // Then
+      .withProps()
+      .then(wrapper => {
+        expect(fn).toHaveBeenCalledTimes(0)
+        return wrapper
+      })
+      .then(wrapper => {
+        componentOnContextUpdate(event, newContext, oldContext)
+        expect(fn).toHaveBeenCalledTimes(1)
+        expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+        return wrapper
+      })
+      .then(wrapper => {
+        componentOnContextUpdate(nonListenEvent, newContext, oldContext) // We don't listen for this
+        expect(fn).toHaveBeenCalledTimes(1)
+        expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+        return wrapper
+      })
+      .then(wrapper => {
+        componentOnContextUpdate(event, newContext, oldContext) // Another one we're listening on
+        expect(fn).toHaveBeenCalledTimes(2)
+        expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+        return wrapper
       })
 
     // Return test result (promise)
