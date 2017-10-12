@@ -75,8 +75,16 @@ const splitOnUnderscore = str => str.split('_')
 const toLower = str => str.toLowerCase()
 const upperFirst = str => str[0].toUpperCase() + str.substring(1)
 
-export const didChangeActiveGraph = (oldContext, newContext) => {
+export const didChangeActiveGraph = (newContext, oldContext) => {
   const oldActive = getActiveGraph(oldContext)
   const newActive = getActiveGraph(newContext)
+  if (!oldActive && !newActive) return false // If no active before and after = nu change
   return !(oldActive && newActive && newActive.id === oldActive.id)
+}
+
+export const getActiveCredentials = (type, context) => {
+  const activeGraph = getActiveGraph(context)
+  if (!activeGraph || typeof activeGraph.connection === 'undefined') return null
+  const creds = getCredentials('bolt', activeGraph.connection)
+  return creds || null
 }

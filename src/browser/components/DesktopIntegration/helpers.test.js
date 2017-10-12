@@ -22,7 +22,8 @@ import {
   getCredentials,
   getActiveGraph,
   eventToHandler,
-  didChangeActiveGraph
+  didChangeActiveGraph,
+  getActiveCredentials
 } from './helpers'
 
 test('getActiveGraph handles non objects and non-active projects', () => {
@@ -147,11 +148,98 @@ test('didChangeActiveGraph detects if the active graph changed', () => {
 
   // When
   const noChange = didChangeActiveGraph(id1Active, id1Active)
-  const didChange = didChangeActiveGraph(id1Active, id2Active)
-  const didChange2 = didChangeActiveGraph(id1Active, noActive)
+  const didChange = didChangeActiveGraph(id2Active, id1Active)
+  const didChange2 = didChangeActiveGraph(noActive, id1Active)
+  const noChange2 = didChangeActiveGraph(noActive, noActive)
 
   // Then
   expect(noChange).toBe(false)
   expect(didChange).toBe(true)
   expect(didChange2).toBe(true)
+  expect(noChange2).toBe(false)
+})
+
+test('getActiveCredentials finds the active connection from a context object and returns the creds', () => {
+  // Given
+  const bolt1 = {
+    username: 'one',
+    password: 'one1'
+  }
+  const bolt2 = {
+    username: 'two',
+    password: 'two2'
+  }
+  const createApiResponse = graphs => ({
+    projects: [{ graphs }]
+  })
+  const id1Active = createApiResponse([
+    {
+      id: 1,
+      status: 'ACTIVE',
+      connection: {
+        configuration: {
+          protocols: { bolt: bolt1 }
+        }
+      }
+    },
+    {
+      id: 2,
+      status: 'INACTIVE',
+      connection: {
+        configuration: {
+          protocols: { bolt: bolt2 }
+        }
+      }
+    }
+  ])
+  const id2Active = createApiResponse([
+    {
+      id: 1,
+      status: 'INACTIVE',
+      connection: {
+        configuration: {
+          protocols: { bolt: bolt1 }
+        }
+      }
+    },
+    {
+      id: 2,
+      status: 'ACTIVE',
+      connection: {
+        configuration: {
+          protocols: { bolt: bolt2 }
+        }
+      }
+    }
+  ])
+  const noActive = createApiResponse([
+    {
+      id: 1,
+      status: 'INACTIVE',
+      connection: {
+        configuration: {
+          protocols: { bolt: bolt1 }
+        }
+      }
+    },
+    {
+      id: 2,
+      status: 'INACTIVE',
+      connection: {
+        configuration: {
+          protocols: { bolt: bolt2 }
+        }
+      }
+    }
+  ])
+
+  // When
+  const firstActive = getActiveCredentials('bolt', id1Active)
+  const secondActive = getActiveCredentials('bolt', id2Active)
+  const zeroActive = getActiveCredentials('bolt', noActive)
+
+  // Then
+  expect(firstActive).toEqual(bolt1)
+  expect(secondActive).toEqual(bolt2)
+  expect(zeroActive).toEqual(null)
 })

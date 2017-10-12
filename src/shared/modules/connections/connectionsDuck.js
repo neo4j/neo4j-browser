@@ -459,6 +459,8 @@ export const switchConnectionEpic = (action$, store) => {
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap(action => {
       bolt.closeConnection()
+      const connectionInfo = { id: discovery.CONNECTION_ID, ...action }
+      store.dispatch(updateConnection(connectionInfo))
       return new Promise((resolve, reject) => {
         bolt
           .openConnection(
@@ -467,8 +469,6 @@ export const switchConnectionEpic = (action$, store) => {
             onLostConnection(store.dispatch)
           )
           .then(connection => {
-            const connectionInfo = { id: discovery.CONNECTION_ID, ...action }
-            store.dispatch(updateConnection(connectionInfo))
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
             resolve({ type: SWTICH_CONNECTION_SUCCESS })
           })

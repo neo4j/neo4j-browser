@@ -57,6 +57,10 @@ import Intercom from '../Intercom'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import DesktopIntegration from 'browser-components/DesktopIntegration'
+import {
+  didChangeActiveGraph,
+  getActiveCredentials
+} from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 
 class App extends Component {
@@ -101,7 +105,7 @@ class App extends Component {
           <UserInteraction />
           <DesktopIntegration
             integrationPoint={this.props.desktopIntegrationPoint}
-            onConnectionChange={this.props.changeConnection}
+            onDatabaseStarted={this.props.changeConnectionMaybe}
           />
           <Render if={loadExternalScripts}>
             <Intercom appID='lq70afwx' />
@@ -146,6 +150,7 @@ const mapStateToProps = state => {
     loadExternalScripts:
       allowOutgoingConnections(state) !== false && isConnected(state),
     titleString: asTitleString(connectionData),
+    connectionData,
     syncConsent: state.syncConsent.consented,
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),
@@ -162,16 +167,23 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const changeConnection = creds => {
-    console.log('ownProps.activeConnection: ', stateProps)
-    console.log('creds: ', creds)
-    ownProps.bus.send(SWITCH_CONNECTION, creds)
+  const changeConnectionMaybe = (event, newContext, oldContext) => {
+    const didChange = didChangeActiveGraph(newContext, oldContext)
+    if (!didChange) return
+    const creds = getActiveCredentials('bolt', newContext)
+    if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
+    const connectionCreds = {
+      ...stateProps.connectionData,
+      encrypted: creds.tlsLevel === 'REQUIRED',
+      host: `bolt://${creds.host}:${creds.port}`
+    }
+    ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
   }
   return {
     ...stateProps,
     ...ownProps,
     ...dispatchProps,
-    changeConnection
+    changeConnectionMaybe
   }
 }
 
