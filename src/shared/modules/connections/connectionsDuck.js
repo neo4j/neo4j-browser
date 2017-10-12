@@ -310,7 +310,10 @@ export const startupConnectEpic = (action$, store) => {
       bolt
         .openConnection(
           connection,
-          { withoutCredentials: true, encrypted: getEncryptionMode() },
+          {
+            withoutCredentials: true,
+            encrypted: getEncryptionMode(connection)
+          },
           onLostConnection(store.dispatch)
         ) // Try without creds
         .then(r => {
@@ -338,7 +341,7 @@ export const startupConnectEpic = (action$, store) => {
           bolt
             .openConnection(
               connection,
-              { encrypted: getEncryptionMode() },
+              { encrypted: getEncryptionMode(connection) },
               onLostConnection(store.dispatch)
             ) // Try with stored creds
             .then(connection => {
@@ -418,18 +421,21 @@ export const connectionLostEpic = (action$, store) =>
         .mergeMap(() => {
           return new Promise((resolve, reject) => {
             bolt
-              .directConnect(connection, {}, e =>
-                setTimeout(
-                  () => reject(new Error('Couldnt reconnect. Lost.')),
-                  4000
-                )
+              .directConnect(
+                connection,
+                { encrypted: getEncryptionMode(connection) },
+                e =>
+                  setTimeout(
+                    () => reject(new Error('Couldnt reconnect. Lost.')),
+                    5000
+                  )
               )
               .then(s => {
                 bolt.closeConnection()
                 bolt
                   .openConnection(
                     connection,
-                    {},
+                    { encrypted: getEncryptionMode(connection) },
                     onLostConnection(store.dispatch)
                   )
                   .then(() => {
@@ -439,11 +445,11 @@ export const connectionLostEpic = (action$, store) =>
                   .catch(e => reject(new Error('Error on connect')))
               })
               .catch(e =>
-                setTimeout(() => reject(new Error('Couldnt reconnect.')), 4000)
+                setTimeout(() => reject(new Error('Couldnt reconnect.')), 5000)
               )
           })
         })
-        .retry(5)
+        .retry(10)
         .catch(e => {
           bolt.closeConnection()
           store.dispatch(setActiveConnection(null))
@@ -473,7 +479,6 @@ export const switchConnectionEpic = (action$, store) => {
             resolve({ type: SWTICH_CONNECTION_SUCCESS })
           })
           .catch(e => {
-            console.log('e: ', e)
             store.dispatch(setActiveConnection(null))
             store.dispatch(
               discovery.updateDiscoveryConnection({
@@ -493,16 +498,17 @@ export const switchConnectionSuccessEpic = (action$, store) => {
     .do(() => store.dispatch(updateConnectionState(CONNECTED_STATE)))
     .do(() => store.dispatch(fetchMetaData()))
     .mapTo(
-      executeSystemCommand(getCmdChar(store.getState()) + 'server connect')
+      executeSystemCommand(
+        getCmdChar(store.getState()) + 'server switch success'
+      )
     )
 }
 export const switchConnectionFailEpic = (action$, store) => {
   return action$
     .ofType(SWTICH_CONNECTION_FAILED)
     .do(() => store.dispatch(updateConnectionState(DISCONNECTED_STATE)))
-    .do(() => store.dispatch(fetchMetaData()))
     .mapTo(
-      executeSystemCommand(getCmdChar(store.getState()) + 'server connect')
+      executeSystemCommand(getCmdChar(store.getState()) + 'server switch fail')
     )
 }
 

@@ -173,6 +173,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const creds = getActiveCredentials('bolt', newContext)
     if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
     const connectionCreds = {
+      // Use current connections creds until we get new from API
       ...stateProps.connectionData,
       encrypted: creds.tlsLevel === 'REQUIRED',
       host: `bolt://${creds.host}:${creds.port}`

@@ -54,6 +54,9 @@ export function handleServerCommand (action, cmdchar, put, store) {
   if (serverCmd === 'status') {
     return handleServerStatusCommand(action)
   }
+  if (serverCmd === 'switch') {
+    return handleServerSwitchCommand(action, props)
+  }
   return {
     ...action,
     type: 'error',
@@ -126,4 +129,13 @@ function handleServerAddCommand (action, cmdchar, put, store) {
 
 function handleServerStatusCommand (action) {
   return { ...action, type: 'status' }
+}
+
+function handleServerSwitchCommand (action, props) {
+  switch (props) {
+    case 'success':
+      return { ...action, type: 'switch-success' }
+    case 'fail':
+      return { ...action, type: 'switch-fail' }
+  }
 }
