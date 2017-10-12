@@ -32,7 +32,7 @@ export const getActiveGraph = (context = {}) => {
 }
 
 export const getCredentials = (type, connection) => {
-  if (!connection) return undefined
+  if (!connection) return null
   const { configuration = null } = connection
   if (
     !(
@@ -41,7 +41,7 @@ export const getCredentials = (type, connection) => {
       configuration.constructor === Object
     )
   ) {
-    return undefined
+    return null
   }
   if (
     !(
@@ -50,17 +50,17 @@ export const getCredentials = (type, connection) => {
       configuration.protocols.constructor === Object
     )
   ) {
-    return undefined
+    return null
   }
   if (typeof configuration.protocols[type] === 'undefined') {
-    return undefined
+    return null
   }
   return configuration.protocols[type]
 }
 
 // XXX_YYY -> onXxxYyy
 export const eventToHandler = type => {
-  if (typeof type !== 'string') return undefined
+  if (typeof type !== 'string') return null
   return (
     'on' +
     splitOnUnderscore(type)
@@ -74,3 +74,9 @@ const notEmpty = str => str.length > 0
 const splitOnUnderscore = str => str.split('_')
 const toLower = str => str.toLowerCase()
 const upperFirst = str => str[0].toUpperCase() + str.substring(1)
+
+export const didChangeActiveGraph = (oldContext, newContext) => {
+  const oldActive = getActiveGraph(oldContext)
+  const newActive = getActiveGraph(newContext)
+  return !(oldActive && newActive && newActive.id === oldActive.id)
+}

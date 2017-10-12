@@ -18,7 +18,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* global test, expect */
-import { getCredentials, getActiveGraph, eventToHandler } from './helpers'
+import {
+  getCredentials,
+  getActiveGraph,
+  eventToHandler,
+  didChangeActiveGraph
+} from './helpers'
 
 test('getActiveGraph handles non objects and non-active projects', () => {
   // Given
@@ -41,21 +46,15 @@ test('getActiveGraph handles non objects and non-active projects', () => {
 test('getActiveGraph handles expected objects', () => {
   // Given
   const graph = {
-    status: 'ACTIVE',
-    connection: {
-      configuration: {
-        host: 'bolt://host',
-        port: '7687',
-        username: 'username',
-        password: 'password',
-        encrypted: true
-      }
-    }
+    status: 'ACTIVE'
+  }
+  const graph2 = {
+    status: 'INACTIVE'
   }
   const apiResponse = {
     projects: [
       {
-        graphs: [graph]
+        graphs: [graph, graph2]
       }
     ]
   }
@@ -73,15 +72,43 @@ test('getCredentials handles non objects', () => {
 
   // When && Then
   configs.forEach(config => {
-    expect(getCredentials('xxx', config)).toBeUndefined()
+    expect(getCredentials('xxx', config)).toBe(null)
   })
+})
+
+test('getCredentials finds credentials on expected format', () => {
+  // Given
+
+  const config = {
+    bolt: {
+      username: 'molly',
+      password: 'stella'
+    },
+    http: {
+      username: 'oskar',
+      password: 'picachu'
+    }
+  }
+  const connection = {
+    configuration: { protocols: config }
+  }
+
+  // When
+  const boltRes = getCredentials('bolt', connection)
+  const httpRes = getCredentials('http', connection)
+  const notFoundRes = getCredentials('https', connection)
+
+  // Then
+  expect(boltRes).toEqual(config.bolt)
+  expect(httpRes).toEqual(config.http)
+  expect(notFoundRes).toBe(null)
 })
 
 test('XXX_YYY -> onXxxYyy', () => {
   // Given
   const tests = [
-    { type: undefined, expect: undefined },
-    { type: true, expect: undefined },
+    { type: undefined, expect: null },
+    { type: true, expect: null },
     { type: 'XXX', expect: 'onXxx' },
     { type: '_XXX', expect: 'onXxx' },
     { type: 'XXX_YYY', expect: 'onXxxYyy' },
@@ -91,11 +118,40 @@ test('XXX_YYY -> onXxxYyy', () => {
     { type: 'XXX_123', expect: 'onXxx123' },
     { type: '0', expect: 'on0' },
     { type: '1', expect: 'on1' },
-    { type: 1, expect: undefined }
+    { type: 1, expect: null }
   ]
 
   // When && Then
   tests.forEach(test => {
     expect(eventToHandler(test.type)).toEqual(test.expect)
   })
+})
+
+test('didChangeActiveGraph detects if the active graph changed', () => {
+  // Given
+  const createApiResponse = graphs => ({
+    projects: [{ graphs }]
+  })
+  const id1Active = createApiResponse([
+    { id: 1, status: 'ACTIVE' },
+    { id: 2, status: 'INACTIVE' }
+  ])
+  const id2Active = createApiResponse([
+    { id: 1, status: 'INACTIVE' },
+    { id: 2, status: 'ACTIVE' }
+  ])
+  const noActive = createApiResponse([
+    { id: 1, status: 'INACTIVE' },
+    { id: 2, status: 'INACTIVE' }
+  ])
+
+  // When
+  const noChange = didChangeActiveGraph(id1Active, id1Active)
+  const didChange = didChangeActiveGraph(id1Active, id2Active)
+  const didChange2 = didChangeActiveGraph(id1Active, noActive)
+
+  // Then
+  expect(noChange).toBe(false)
+  expect(didChange).toBe(true)
+  expect(didChange2).toBe(true)
 })
