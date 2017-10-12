@@ -25,7 +25,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
-import { APP_START } from 'shared/modules/app/appDuck'
+import { APP_START, WEB } from 'shared/modules/app/appDuck'
 import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
@@ -85,7 +85,7 @@ describe('discoveryOnStartupEpic', () => {
 
   test('listens on APP_START and finds a bolt host and dispatches an action with the found host', done => {
     // Given
-    const action = { type: APP_START }
+    const action = { type: APP_START, env: WEB }
     const expectedHost = 'bolt://myhost:7777'
     nock(getDiscoveryEndpoint())
       .get('/')

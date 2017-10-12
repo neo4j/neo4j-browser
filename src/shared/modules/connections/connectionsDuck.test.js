@@ -351,3 +351,119 @@ describe('retainCredentialsSettingsEpic', () => {
     store.dispatch(action)
   })
 })
+describe('switchConnectionEpic', () => {
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(connections.switchConnectionEpic)
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
+  let store
+  beforeAll(() => {
+    bolt.openConnection.mockReset()
+    store = mockStore({
+      connections: {
+        activeConnection: null,
+        connectionsById: {
+          [CONNECTION_ID]: {
+            id: CONNECTION_ID,
+            host: 'xxx',
+            username: 'neo4j',
+            password: 'neo4j'
+          }
+        },
+        allConnectionIds: [CONNECTION_ID]
+      }
+    })
+  })
+  afterEach(() => {
+    store.clearActions()
+    bus.reset()
+  })
+  test('switchConnectionEpic takes credentials and tries to connect (success)', () => {
+    // Given
+    const action = {
+      type: connections.SWITCH_CONNECTION,
+      username: 'neo4j',
+      password: 'test',
+      host: 'bolt://localhost:7687',
+      encrypted: true
+    }
+    const connectionInfo = { id: CONNECTION_ID, ...action }
+    bolt.openConnection.mockReturnValue(Promise.resolve()) // eslint-disable-line
+
+    const p = new Promise((resolve, reject) => {
+      bus.take(connections.SWTICH_CONNECTION_SUCCESS, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([
+            action,
+            connections.updateConnectionState(connections.PENDING_STATE),
+            connections.updateConnection(connectionInfo),
+            connections.setActiveConnection(CONNECTION_ID),
+            currentAction
+          ])
+          expect(bolt.closeConnection).toHaveBeenCalledTimes(2) // Why 2?
+          expect(bolt.openConnection).toHaveBeenCalledTimes(1)
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.switchConnectionEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+  test('switchConnectionEpic takes credentials and tries to connect (fail)', () => {
+    // Given
+    const action = {
+      type: connections.SWITCH_CONNECTION,
+      username: 'neo4j',
+      password: 'test',
+      host: 'bolt://localhost:7687',
+      encrypted: true
+    }
+    const connectionInfo = { id: CONNECTION_ID, ...action }
+    bolt.openConnection.mockReturnValue(Promise.reject()) // eslint-disable-line
+
+    const p = new Promise((resolve, reject) => {
+      bus.take(connections.SWTICH_CONNECTION_FAILED, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([
+            action,
+            connections.updateConnectionState(connections.PENDING_STATE),
+            connections.updateConnection(connectionInfo),
+            connections.setActiveConnection(null),
+            updateDiscoveryConnection({
+              username: 'neo4j',
+              password: ''
+            }),
+            currentAction
+          ])
+          expect(bolt.closeConnection).toHaveBeenCalledTimes(3) // Why 3?
+          expect(bolt.openConnection).toHaveBeenCalledTimes(2) // Why 2?
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.switchConnectionEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+})
