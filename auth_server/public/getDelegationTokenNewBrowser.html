@@ -49,15 +49,19 @@
           }
           window.addEventListener('message', function (event) {
             getFirebaseToken(hash.id_token, function (res) {
-              var data = {
-                profile: profile,
-                data_token: res.id_token,
-                token: hash.id_token,
-                accessToken: hash.access_token,
-                state: hash.state,
-                refreshToken: hash.refresh_token
+              var out = { userData: null, type: 'auth0:delegation-token' }
+
+              if (res) {
+                var data = {
+                  profile: profile,
+                  data_token: res.id_token,
+                  token: hash.id_token,
+                  accessToken: hash.access_token,
+                  state: hash.state,
+                  refreshToken: hash.refresh_token
+                }
+                out.userData = data;
               }
-              var out = { userData: data, type: 'auth0:delegation-token' }
               event.source.postMessage(out, event.origin);
             })
           }, false);
