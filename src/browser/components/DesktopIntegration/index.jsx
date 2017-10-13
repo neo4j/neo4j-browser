@@ -22,51 +22,41 @@ import { Component } from 'preact'
 import { getActiveGraph, getCredentials, eventToHandler } from './helpers'
 
 export default class DesktopIntegration extends Component {
-  state = {
-    listenerSetup: false,
-    cachedConnectionCredentials: {}
-  }
-  setupListener = props => {
-    if (this.state.listenerSetup) return
-    const { integrationPoint } = props
+  setupListener () {
+    const { integrationPoint } = this.props
     // Run on context updates
     if (integrationPoint && integrationPoint.onContextUpdate) {
-      const listenerSetup = () =>
-        integrationPoint.onContextUpdate((event, newContext, oldContext) => {
-          const handlerPropName = eventToHandler(event.type)
-          if (!handlerPropName) return
-          if (typeof this.props[handlerPropName] === 'undefined') return
-          this.props[handlerPropName](event, newContext, oldContext)
-        })
-      this.setState({ listenerSetup: true }, listenerSetup)
+      integrationPoint.onContextUpdate((event, newContext, oldContext) => {
+        const handlerPropName = eventToHandler(event.type)
+        if (!handlerPropName) return
+        if (typeof this.props[handlerPropName] === 'undefined') return
+        this.props[handlerPropName](event, newContext, oldContext)
+      })
     }
   }
-  checkContextForActiveConnection = props => {
-    const { integrationPoint } = props
+  checkContextForActiveConnection () {
+    const { integrationPoint, onMount = null } = this.props
     if (integrationPoint && integrationPoint.getContext) {
       integrationPoint
         .getContext()
         .then(context => {
           const activeGraph = getActiveGraph(context)
-          if (this.props.onMount) {
+          if (onMount) {
             const connectionCredentials = getCredentials(
               'bolt',
               activeGraph.connection
             )
-            this.props.onMount(activeGraph, connectionCredentials, context)
+            onMount(activeGraph, connectionCredentials, context)
           }
         })
         .catch(e => {}) // Catch but don't bother
     }
   }
   componentDidMount () {
-    this.checkContextForActiveConnection(this.props)
-    this.setupListener(this.props)
+    this.checkContextForActiveConnection()
+    this.setupListener()
   }
-  componentWillReceiveProps (props) {
-    this.setupListener(props)
-  }
-  render = () => {
+  render () {
     return null
   }
 }
