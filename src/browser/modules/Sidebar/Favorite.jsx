@@ -29,7 +29,6 @@ import ItemTypes from './DragItemTypes'
 import {
   StyledListItem,
   StyledFavoriteText,
-  DeleteFavButton,
   ExecFavoriteButton,
   SytledFavFolderButtonSpan
 } from './styled'

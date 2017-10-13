@@ -87,7 +87,7 @@ export const StyledListHeaderItem = styled.li`
 `
 export const StyledFavoriteText = styled.span`
   font-family: ${props => props.theme.primaryFontFamily};
-  width: 172px;
+  width: 168px;
   color: #bcc0c9;
   font-size: 13px;
   display: inline-block;
