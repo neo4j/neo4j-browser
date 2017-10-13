@@ -19,7 +19,6 @@
  */
 
 import { Component } from 'preact'
-import { connect } from 'preact-redux'
 import FrameTemplate from '../FrameTemplate'
 import {
   StyledConnectionFrame,
@@ -31,16 +30,11 @@ import ConnectedView from './ConnectedView'
 import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render'
 import ClickToCode from '../../ClickToCode'
-import {
-  getActiveConnectionData,
-  getActiveConnection
-} from 'shared/modules/connections/connectionsDuck'
-import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
 class ServerStatusFrame extends Component {
   render () {
-    const { frame, activeConnectionData, storeCredentials } = this.props
-
+    const { frame } = this.props
+    const { activeConnectionData, storeCredentials } = frame
     return (
       <FrameTemplate
         header={frame}
@@ -99,12 +93,4 @@ class ServerStatusFrame extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    activeConnection: getActiveConnection(state),
-    activeConnectionData: getActiveConnectionData(state),
-    storeCredentials: shouldRetainConnectionCredentials(state)
-  }
-}
-
-export default connect(mapStateToProps, null)(ServerStatusFrame)
+export default ServerStatusFrame

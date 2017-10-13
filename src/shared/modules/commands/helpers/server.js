@@ -22,6 +22,7 @@ import { splitStringOnFirst, splitStringOnLast } from 'services/commandUtils'
 import * as connections from 'shared/modules/connections/connectionsDuck'
 import { add as addFrameAction } from 'shared/modules/stream/streamDuck'
 import { CONNECTION_ID as DISCOVERY_CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   UnknownCommandError,
   getErrorMessage,
@@ -55,7 +56,7 @@ export function handleServerCommand (action, cmdchar, put, store) {
     return handleServerStatusCommand(action)
   }
   if (serverCmd === 'switch') {
-    return handleServerSwitchCommand(action, props)
+    return handleServerSwitchCommand(action, props, store)
   }
   return {
     ...action,
@@ -131,10 +132,21 @@ function handleServerStatusCommand (action) {
   return { ...action, type: 'status' }
 }
 
-function handleServerSwitchCommand (action, props) {
+function handleServerSwitchCommand (action, props, store) {
   switch (props) {
     case 'success':
-      return { ...action, type: 'switch-success' }
+      const activeConnectionData = connections.getActiveConnectionData(
+        store.getState()
+      )
+      const storeCredentials = shouldRetainConnectionCredentials(
+        store.getState()
+      )
+      return {
+        ...action,
+        type: 'switch-success',
+        activeConnectionData,
+        storeCredentials
+      }
     case 'fail':
       return { ...action, type: 'switch-fail' }
   }
