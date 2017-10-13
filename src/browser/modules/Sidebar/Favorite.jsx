@@ -19,17 +19,20 @@
  */
 
 import { connect } from 'preact-redux'
+import { withBus } from 'preact-suber'
+import { Component } from 'preact'
+import { DragSource, DropTarget } from 'react-dnd'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+import { BinIcon } from 'browser-components/icons/Icons'
+import ItemTypes from './DragItemTypes'
 import {
   StyledListItem,
   StyledFavoriteText,
   DeleteFavButton,
-  ExecFavoriteButton
+  ExecFavoriteButton,
+  SytledFavFolderButtonSpan
 } from './styled'
-import { withBus } from 'preact-suber'
-import { Component } from 'preact'
-import { DragSource, DropTarget } from 'react-dnd'
-import ItemTypes from './DragItemTypes'
 
 function extractNameFromCommand (input) {
   if (!input) {
@@ -127,11 +130,13 @@ class FavoriteDp extends Component {
         >
           {name}
         </StyledFavoriteText>
-        <DeleteFavButton
-          id={this.props.id}
-          removeClick={() => this.props.removeClick(this.props.id)}
-          isStatic={this.props.isStatic}
-        />
+
+        <SytledFavFolderButtonSpan>
+          <ConfirmationButton
+            requestIcon={<BinIcon />}
+            onConfirmed={() => this.props.removeClick(this.props.id)}
+          />
+        </SytledFavFolderButtonSpan>
       </StyledListItem>
     )
 

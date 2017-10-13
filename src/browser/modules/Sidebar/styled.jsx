@@ -87,7 +87,7 @@ export const StyledListHeaderItem = styled.li`
 `
 export const StyledFavoriteText = styled.span`
   font-family: ${props => props.theme.primaryFontFamily};
-  width: 182px;
+  width: 172px;
   color: #bcc0c9;
   font-size: 13px;
   display: inline-block;
@@ -110,7 +110,7 @@ const NewFolderStyledButton = styled.button`
   outline: none;
 `
 
-const SytledFavFolderButtonSpan = styled.span`float: right;`
+export const SytledFavFolderButtonSpan = styled.span`float: right;`
 
 export const FolderButtonContainer = styled.span`float: right;`
 
