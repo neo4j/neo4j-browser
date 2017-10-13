@@ -59,11 +59,11 @@ export default class DesktopIntegration extends Component {
         .catch(e => {}) // Catch but don't bother
     }
   }
-  componentDidMount = () => {
+  componentDidMount () {
     this.checkContextForActiveConnection(this.props)
     this.setupListener(this.props)
   }
-  componentWillReceiveProps = props => {
+  componentWillReceiveProps (props) {
     this.setupListener(props)
   }
   render = () => {
