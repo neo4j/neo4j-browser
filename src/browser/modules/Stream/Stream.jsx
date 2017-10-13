@@ -46,7 +46,6 @@ import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import { deepEquals } from 'services/utils'
 
 const getFrame = type => {
-  console.log('type: ', type)
   const trans = {
     error: ErrorFrame,
     cypher: CypherFrame,

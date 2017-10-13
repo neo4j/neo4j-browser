@@ -29,15 +29,14 @@ import { APP_START, WEB } from 'shared/modules/app/appDuck'
 import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
-const bus = createBus()
-const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
-const mockStore = configureMockStore([
-  epicMiddleware,
-  createReduxMiddleware(bus)
-])
-
 describe('discoveryOnStartupEpic', () => {
   let store
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
   beforeAll(() => {
     store = mockStore({
       connections: {}
@@ -115,7 +114,7 @@ describe('discoveryOnStartupEpic', () => {
       expect(store.getActions()).toEqual([
         action,
         discovery.updateDiscoveryConnection({ host: expectedURL }),
-        { type: discovery.DONE }
+        currentAction
       ])
       done()
     })
@@ -136,7 +135,7 @@ describe('discoveryOnStartupEpic', () => {
         action,
         updateBoltRouting(true),
         discovery.updateDiscoveryConnection({ host: expectedURL }),
-        { type: discovery.DONE }
+        currentAction
       ])
       done()
     })
@@ -162,12 +161,70 @@ describe('discoveryOnStartupEpic', () => {
           username: 'neo4j',
           password: 'neo4j'
         }),
-        { type: discovery.DONE }
+        currentAction
       ])
       done()
     })
 
     // When
     store.dispatch(action)
+  })
+})
+
+describe('injectDiscoveryEpic', () => {
+  let store
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(discovery.injectDiscoveryEpic)
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
+  beforeAll(() => {
+    store = mockStore({
+      connections: {}
+    })
+  })
+  afterEach(() => {
+    nock.cleanAll()
+    bus.reset()
+    store.clearActions()
+  })
+  test('injectDiscoveryEpic takes passed properties and updates discovery endpoint', () => {
+    // Given
+    const action = {
+      type: discovery.INJECTED_DISCOVERY,
+      username: 'neo4j',
+      password: 'test',
+      host: 'bolt://localhost:7687',
+      encrypted: true
+    }
+
+    const p = new Promise((resolve, reject) => {
+      bus.take(discovery.DONE, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([
+            action,
+            discovery.updateDiscoveryConnection({
+              host: action.host,
+              username: action.username,
+              password: action.password,
+              encrypted: action.encrypted
+            }),
+            currentAction
+          ])
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    store.dispatch(action)
+
+    // Return
+    return p
   })
 })

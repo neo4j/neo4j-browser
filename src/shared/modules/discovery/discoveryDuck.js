@@ -34,6 +34,7 @@ const initialState = {}
 // Actions
 const SET = `${NAME}/SET`
 export const DONE = `${NAME}/DONE`
+export const INJECTED_DISCOVERY = `${NAME}/INJECTED_DISCOVERY`
 
 // Reducer
 export default function reducer (state = initialState, action = {}) {
@@ -70,42 +71,51 @@ export const getBoltHost = state => {
   return state.discovery.boltHost
 }
 
+const updateDiscoveryState = (action, store) => {
+  // Remove any protocol and prepend with bolt://
+  const host = toBoltHost(action.forceURL)
+  const updateObj = { host }
+
+  // Set config to use routing if bolt+routing:// protocol
+  if (isRoutingHost(action.forceURL)) {
+    store.dispatch(updateBoltRouting(true))
+  }
+  if (action.username && action.password) {
+    updateObj.username = action.username
+    updateObj.password = action.password
+  }
+  if (typeof action.encrypted !== 'undefined') {
+    updateObj.encrypted = action.encrypted
+  }
+  const updateAction = updateDiscoveryConnection(updateObj)
+  store.dispatch(updateAction)
+}
+
+export const injectDiscoveryEpic = (action$, store) =>
+  action$
+    .ofType(INJECTED_DISCOVERY)
+    .map(action =>
+      updateDiscoveryState({ ...action, forceURL: action.host }, store)
+    )
+    .mapTo({ type: DONE })
+
 export const discoveryOnStartupEpic = (some$, store) => {
   return some$
     .ofType(APP_START)
-    .merge(some$.ofType(USER_CLEAR))
     .map(action => {
-      if (action.type !== APP_START) return action // Only read on app startup
       if (!action.url) return action
-      if (!inWebEnv(store)) return action // Only when in a web environment
       const passedURL = getUrlParamValue('connectURL', action.url)
       if (!passedURL || !passedURL.length) return action
-      const forceURL = decodeURIComponent(passedURL[0])
-      action.forceURL = toBoltHost(forceURL) // Remove any protocol and prepend with bolt://
-      const { username, password } = getUrlInfo(forceURL)
-      action.username = username
-      action.password = password
-      if (isRoutingHost(forceURL)) {
-        // Set config to use routing if bolt+routing:// protocol
-        store.dispatch(updateBoltRouting(true))
-      }
+      action.forceURL = decodeURIComponent(passedURL[0])
       return action
     })
+    .merge(some$.ofType(USER_CLEAR))
     .mergeMap(action => {
-      if (!inWebEnv(store)) return Promise.resolve() // Only when in a web environment
+      if (!inWebEnv(store.getState())) return Promise.resolve({ type: 'NOOP' }) // Only when in a web environment
       if (action.forceURL) {
-        let updateAction
-        if (action.username && action.password) {
-          updateAction = updateDiscoveryConnection({
-            username: action.username,
-            password: action.password,
-            host: action.forceURL
-          })
-        } else {
-          updateAction = updateDiscoveryConnection({ host: action.forceURL })
-        }
-        store.dispatch(updateAction)
-        return Promise.resolve()
+        const { username, password } = getUrlInfo(action.forceURL)
+        updateDiscoveryState({ ...action, username, password }, store)
+        return Promise.resolve({ type: DONE })
       }
       return Rx.Observable
         .fromPromise(
@@ -117,15 +127,15 @@ export const discoveryOnStartupEpic = (some$, store) => {
                 throw new Error('No bolt address found') // No bolt info from server, throw
               }
               store.dispatch(updateDiscoveryConnection({ host: result.bolt })) // Update discovery host in redux
-              return result
+              return { type: DONE }
             })
             .catch(e => {
-              throw new Error('No bolt address found') // No info from server, throw
+              throw new Error('No info from endpoint') // No info from server, throw
             })
         )
         .catch(e => {
-          return new Promise((resolve, reject) => resolve(e))
+          return Promise.resolve({ type: DONE })
         })
     })
-    .mapTo({ type: DONE })
+    .map(a => a)
 }

@@ -44,7 +44,10 @@ import {
   clearMetaOnDisconnectEpic
 } from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
-import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
+import {
+  discoveryOnStartupEpic,
+  injectDiscoveryEpic
+} from './modules/discovery/discoveryDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import {
@@ -94,6 +97,7 @@ export default combineEpics(
   clearMetaOnDisconnectEpic,
   cancelRequestEpic,
   discoveryOnStartupEpic,
+  injectDiscoveryEpic,
   populateEditorFromUrlEpic,
   adHocCypherRequestEpic,
   cypherRequestEpic,

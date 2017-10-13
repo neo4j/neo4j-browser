@@ -31,7 +31,7 @@ import {
   getCmdChar,
   UPDATE as SETTINGS_UPDATE
 } from 'shared/modules/settings/settingsDuck'
-import { USER_CLEAR, APP_START, inWebEnv } from 'shared/modules/app/appDuck'
+import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'connections'
 export const ADD = 'connections/ADD'
@@ -298,8 +298,7 @@ export const connectEpic = (action$, store) => {
 export const startupConnectEpic = (action$, store) => {
   return action$.ofType(discovery.DONE).mergeMap(action => {
     const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
-    // No startup connections when not on web. Exit early.
-    if (!connection || !connection.host || !inWebEnv(store.getState())) {
+    if (!connection || !connection.host) {
       store.dispatch(setActiveConnection(null))
       store.dispatch(
         discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' })
@@ -309,13 +308,14 @@ export const startupConnectEpic = (action$, store) => {
     return new Promise((resolve, reject) => {
       bolt
         .openConnection(
+          // Try without creds
           connection,
           {
             withoutCredentials: true,
             encrypted: getEncryptionMode(connection)
           },
           onLostConnection(store.dispatch)
-        ) // Try without creds
+        )
         .then(r => {
           store.dispatch(
             discovery.updateDiscoveryConnection({
@@ -411,6 +411,7 @@ export const connectionLostEpic = (action$, store) =>
   action$
     .ofType(LOST_CONNECTION)
     .filter(connectionLossFilter)
+    .filter(() => inWebEnv(store.getState())) // Only retry in web env
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap(action => {

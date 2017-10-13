@@ -42,6 +42,7 @@ import {
   SWITCH_CONNECTION
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
+import { INJECTED_DISCOVERY } from 'shared/modules/discovery/discoveryDuck'
 import {
   StyledWrapper,
   StyledApp,
@@ -105,6 +106,7 @@ class App extends Component {
           <UserInteraction />
           <DesktopIntegration
             integrationPoint={this.props.desktopIntegrationPoint}
+            onMount={this.props.setInitialConnectionData}
             onDatabaseStarted={this.props.changeConnectionMaybe}
           />
           <Render if={loadExternalScripts}>
@@ -180,11 +182,23 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     }
     ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
   }
+  const setInitialConnectionData = (graph, credentials, context) => {
+    const creds = getActiveCredentials('bolt', context)
+    if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
+    const connectionCreds = {
+      // Use current connections creds until we get new from API
+      ...stateProps.connectionData,
+      encrypted: creds.tlsLevel === 'REQUIRED',
+      host: `bolt://${creds.host}:${creds.port}`
+    }
+    ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
+  }
   return {
     ...stateProps,
     ...ownProps,
     ...dispatchProps,
-    changeConnectionMaybe
+    changeConnectionMaybe,
+    setInitialConnectionData
   }
 }
 
