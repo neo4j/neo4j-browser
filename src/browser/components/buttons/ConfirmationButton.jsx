@@ -19,12 +19,21 @@
  */
 
 import { Component } from 'preact'
-import styles from './style.css'
+import styled from 'styled-components'
 import {
   MinusIcon,
   RightArrowIcon,
   CancelIcon
 } from 'browser-components/icons/Icons'
+
+const IconButton = styled.button`
+  margin-left: 4px;
+  border: 0;
+  background: transparent;
+  &:focus {
+    outline: none;
+  }
+`
 
 export class ConfirmationButton extends Component {
   constructor (props) {
@@ -44,32 +53,25 @@ export class ConfirmationButton extends Component {
   render () {
     if (this.state.requested) {
       return (
-        <div>
-          <button
-            className={styles.icon}
+        <span>
+          <IconButton
             onClick={() => {
               this.setState({ requested: false })
               this.props.onConfirmed()
             }}
           >
             {this.confirmIcon}
-          </button>
-          <button
-            className={styles.icon}
-            onClick={() => this.setState({ requested: false })}
-          >
+          </IconButton>
+          <IconButton onClick={() => this.setState({ requested: false })}>
             {this.cancelIcon}
-          </button>
-        </div>
+          </IconButton>
+        </span>
       )
     } else {
       return (
-        <button
-          className={styles.icon}
-          onClick={() => this.setState({ requested: true })}
-        >
+        <IconButton onClick={() => this.setState({ requested: true })}>
           {this.requestIcon}
-        </button>
+        </IconButton>
       )
     }
   }

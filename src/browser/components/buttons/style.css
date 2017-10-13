@@ -1,9 +1,3 @@
-.icon {
-  min-width: 40px !important;
-  top: 4px !important;
-  border: 0;
-  background: transparent;
-}
 .tooltip {
   position: absolute;
   background-color: grey;
