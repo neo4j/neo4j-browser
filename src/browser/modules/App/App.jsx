@@ -39,10 +39,15 @@ import {
   getConnectionState,
   getActiveConnectionData,
   isConnected,
+  getConnectionData,
+  SILENT_DISCONNECT,
   SWITCH_CONNECTION
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import { INJECTED_DISCOVERY } from 'shared/modules/discovery/discoveryDuck'
+import {
+  CONNECTION_ID,
+  INJECTED_DISCOVERY
+} from 'shared/modules/discovery/discoveryDuck'
 import {
   StyledWrapper,
   StyledApp,
@@ -60,7 +65,8 @@ import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import DesktopIntegration from 'browser-components/DesktopIntegration'
 import {
   didChangeActiveGraph,
-  getActiveCredentials
+  getActiveCredentials,
+  getActiveGraph
 } from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 
@@ -108,6 +114,7 @@ class App extends Component {
             integrationPoint={this.props.desktopIntegrationPoint}
             onMount={this.props.setInitialConnectionData}
             onDatabaseStarted={this.props.changeConnectionMaybe}
+            onDatabaseStopped={this.props.closeConnectionMaybe}
           />
           <Render if={loadExternalScripts}>
             <Intercom appID='lq70afwx' />
@@ -152,7 +159,7 @@ const mapStateToProps = state => {
     loadExternalScripts:
       allowOutgoingConnections(state) !== false && isConnected(state),
     titleString: asTitleString(connectionData),
-    connectionData,
+    defaultConnectionData: getConnectionData(state, CONNECTION_ID),
     syncConsent: state.syncConsent.consented,
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),
@@ -176,7 +183,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
     const connectionCreds = {
       // Use current connections creds until we get new from API
-      ...stateProps.connectionData,
+      ...stateProps.defaultConnectionData,
       encrypted: creds.tlsLevel === 'REQUIRED',
       host: `bolt://${creds.host}:${creds.port}`
     }
@@ -187,18 +194,24 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
     const connectionCreds = {
       // Use current connections creds until we get new from API
-      ...stateProps.connectionData,
+      ...stateProps.defaultConnectionData,
       encrypted: creds.tlsLevel === 'REQUIRED',
       host: `bolt://${creds.host}:${creds.port}`
     }
     ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
+  }
+  const closeConnectionMaybe = (event, newContext, oldContext) => {
+    const activeGraph = getActiveGraph(newContext)
+    if (activeGraph) return // We still got an active graph, do nothing
+    ownProps.bus.send(SILENT_DISCONNECT, {})
   }
   return {
     ...stateProps,
     ...ownProps,
     ...dispatchProps,
     changeConnectionMaybe,
-    setInitialConnectionData
+    setInitialConnectionData,
+    closeConnectionMaybe
   }
 }
 

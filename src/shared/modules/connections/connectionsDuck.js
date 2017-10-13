@@ -22,7 +22,10 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
-import { fetchMetaData } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  fetchMetaData,
+  CLEAR as CLEAR_META
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
@@ -41,6 +44,7 @@ export const REMOVE = 'connections/REMOVE'
 export const MERGE = 'connections/MERGE'
 export const CONNECT = 'connections/CONNECT'
 export const DISCONNECT = 'connections/DISCONNECT'
+export const SILENT_DISCONNECT = 'connections/SILENT_DISCONNECT'
 export const STARTUP_CONNECTION_SUCCESS =
   'connections/STARTUP_CONNECTION_SUCCESS'
 export const STARTUP_CONNECTION_FAILED = 'connections/STARTUP_CONNECTION_FAILED'
@@ -97,7 +101,12 @@ export function getActiveConnection (state) {
 
 export function getActiveConnectionData (state) {
   if (!state[NAME].activeConnection) return null
-  let data = state[NAME].connectionsById[state[NAME].activeConnection]
+  return getConnectionData(state, state[NAME].activeConnection)
+}
+
+export function getConnectionData (state, id) {
+  if (typeof state[NAME].connectionsById[id] === 'undefined') return null
+  let data = state[NAME].connectionsById[id]
   if (data.username && data.password) return data
   if (!(data.username && data.password) && (memoryUsername && memoryPassword)) {
     // No retain state
@@ -216,10 +225,11 @@ export const selectConnection = id => {
   }
 }
 
-export const setActiveConnection = id => {
+export const setActiveConnection = (id, silent = false) => {
   return {
     type: SET_ACTIVE,
-    connectionId: id
+    connectionId: id,
+    silent: silent
   }
 }
 
@@ -237,7 +247,7 @@ export const updateConnection = connection => {
   }
 }
 
-export const disconnectAction = id => {
+export const disconnectAction = (id = discovery.CONNECTION_ID) => {
   return {
     type: DISCONNECT,
     id
@@ -382,9 +392,13 @@ export const detectActiveConnectionChangeEpic = (action$, store) => {
       return Rx.Observable.never()
     } // no change
     lastActiveConnectionId = action.connectionId
-    if (!action.connectionId) {
+    if (!action.connectionId && !action.silent) {
+      // Non silent disconnect
       return Rx.Observable.of({ type: DISCONNECTION_SUCCESS })
-    } // disconnect
+    } else if (!action.connectionId && action.silent) {
+      // Silent disconnect
+      return Rx.Observable.never()
+    }
     return Rx.Observable.of({ type: CONNECTION_SUCCESS }) // connect
   })
 }
@@ -396,7 +410,14 @@ export const disconnectEpic = (action$, store) => {
     .do(action =>
       store.dispatch(updateConnection({ id: action.id, password: '' }))
     )
-    .mapTo(setActiveConnection(null))
+    .map(action => setActiveConnection(null))
+}
+export const silentDisconnectEpic = (action$, store) => {
+  return action$
+    .ofType(SILENT_DISCONNECT)
+    .do(() => bolt.closeConnection())
+    .do(() => store.dispatch({ type: CLEAR_META }))
+    .mapTo(setActiveConnection(null, true))
 }
 export const disconnectSuccessEpic = (action$, store) => {
   return action$
