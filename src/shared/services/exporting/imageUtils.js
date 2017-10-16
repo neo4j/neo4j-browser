@@ -23,10 +23,7 @@ import FileSaver from 'file-saver'
 
 export const downloadPNGFromSVG = (svg, graph, type) => {
   const svgObj = prepareForExport(svg, graph, type)
-  const filename = type
-  const svgData = new window.XMLSerializer()
-    .serializeToString(svgObj.node())
-    .replace(/&nbsp;/g, '&#160;')
+  const svgData = htmlCharacterRefToNumericalRef(svgObj.node())
 
   let canvas
   canvas = document.createElement('canvas')
@@ -34,18 +31,20 @@ export const downloadPNGFromSVG = (svg, graph, type) => {
   canvas.height = svgObj.attr('height')
 
   window.canvg(canvas, svgData)
-  return downloadWithDataURI(filename + '.png', canvas.toDataURL('image/png'))
+  return downloadWithDataURI(type + '.png', canvas.toDataURL('image/png'))
 }
 
 export const downloadSVG = (svg, graph, type) => {
-  const svgObj = prepareForExport(svg, graph, type).node()
-  svgObj.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-  return download(
-    type + '.svg',
-    'image/svg+xml;charset=utf-8',
-    svgObj.outerHTML
-  )
+  const svgObj = prepareForExport(svg, graph, type)
+  const svgData = htmlCharacterRefToNumericalRef(svgObj.node())
+
+  return download(type + '.svg', 'image/svg+xml;charset=utf-8', svgData)
 }
+
+const htmlCharacterRefToNumericalRef = node =>
+  new window.XMLSerializer()
+    .serializeToString(node)
+    .replace(/&nbsp;/g, '&#160;')
 
 const download = (filename, mime, data) => {
   const blob = new Blob([data], { type: mime })
