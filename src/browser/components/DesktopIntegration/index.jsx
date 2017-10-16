@@ -24,7 +24,6 @@ import { getActiveGraph, getCredentials, eventToHandler } from './helpers'
 export default class DesktopIntegration extends Component {
   setupListener () {
     const { integrationPoint } = this.props
-    // Run on context updates
     if (integrationPoint && integrationPoint.onContextUpdate) {
       integrationPoint.onContextUpdate((event, newContext, oldContext) => {
         const handlerPropName = eventToHandler(event.type)
@@ -34,7 +33,7 @@ export default class DesktopIntegration extends Component {
       })
     }
   }
-  checkContextForActiveConnection () {
+  loadInitialContext () {
     const { integrationPoint, onMount = null } = this.props
     if (integrationPoint && integrationPoint.getContext) {
       integrationPoint
@@ -53,7 +52,7 @@ export default class DesktopIntegration extends Component {
     }
   }
   componentDidMount () {
-    this.checkContextForActiveConnection()
+    this.loadInitialContext()
     this.setupListener()
   }
   render () {
