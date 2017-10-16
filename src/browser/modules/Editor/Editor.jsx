@@ -22,6 +22,7 @@
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
+import uuid from 'uuid'
 import {
   executeCommand,
   executeSystemCommand
@@ -31,7 +32,8 @@ import {
   SET_CONTENT,
   EDIT_CONTENT,
   FOCUS,
-  EXPAND
+  EXPAND,
+  editContent
 } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import {
@@ -385,7 +387,9 @@ export class Editor extends Component {
           </Render>
           <Render if={!this.state.contentId}>
             <EditorButton
-              onClick={() => this.props.onFavoriteClick(this.getEditorValue())}
+              onClick={() => {
+                this.props.onFavoriteClick(this.getEditorValue())
+              }}
               disabled={this.getEditorValue().length < 1}
               title='Update favorite'
               hoverIcon='&quot;\58&quot;'
@@ -417,8 +421,13 @@ export class Editor extends Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onFavoriteClick: cmd => {
-      const action = favorites.addFavorite(cmd)
-      ownProps.bus.send(action.type, action)
+      const id = uuid.v4()
+
+      const addAction = favorites.addFavorite(cmd, id)
+      ownProps.bus.send(addAction.type, addAction)
+
+      const updateAction = editContent(id, cmd)
+      ownProps.bus.send(updateAction.type, updateAction)
     },
     onFavoriteUpdateClick: (id, cmd) => {
       const action = favorites.updateFavorite(id, cmd)

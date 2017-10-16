@@ -23,6 +23,31 @@ import uuid from 'uuid'
 import reducer, * as favorites from './favoritesDuck'
 
 describe('favorites reducer', () => {
+  test('should allow id to be injected when adding a favorite', () => {
+    const action = {
+      type: favorites.ADD_FAVORITE,
+      id: 'foo',
+      cmd: 'bar'
+    }
+    const nextState = reducer([], action)
+    expect(nextState.length).toBe(1)
+
+    const actual = nextState[0]
+    expect(actual.id).toEqual('foo')
+    expect(actual.content).toEqual('bar')
+  })
+  test('should generate an id when adding a favorite and only passing cmd value', () => {
+    const action = {
+      type: favorites.ADD_FAVORITE,
+      cmd: 'bar'
+    }
+    const nextState = reducer([], action)
+    expect(nextState.length).toBe(1)
+
+    const actual = nextState[0]
+    expect(actual.id).not.toBeFalsy()
+    expect(actual.content).toEqual('bar')
+  })
   test('should update state for favorites when favorite is removed and only one item is in the list', () => {
     const favoriteScript = {
       name: 'Test1',

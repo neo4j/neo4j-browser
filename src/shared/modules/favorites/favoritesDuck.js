@@ -49,7 +49,7 @@ export default function reducer (state = initialState, action) {
     case REMOVE_FAVORITE:
       return removeFavoriteById(state, action.id)
     case ADD_FAVORITE:
-      return state.concat([{ id: uuid.v4(), content: action.cmd }])
+      return state.concat([{ id: action.id || uuid.v4(), content: action.cmd }])
     case UPDATE_FAVORITE:
       const mergedFavorite = Object.assign({}, getFavorite(state, action.id), {
         content: action.cmd
@@ -76,10 +76,11 @@ export function removeFavorite (id) {
     id
   }
 }
-export function addFavorite (cmd) {
+export function addFavorite (cmd, id) {
   return {
     type: ADD_FAVORITE,
-    cmd
+    cmd,
+    id
   }
 }
 export function loadFavorites (favorites) {
