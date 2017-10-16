@@ -589,8 +589,8 @@ describe('helpers', () => {
       // Given
       const records = [
         {
-          keys: ['"neoInt"', '"int"', '"any"'],
-          _fields: [new neo4j.Int('882573709873217509'), 100, 0.5]
+          keys: ['"neoInt"', '"int"', '"any"', '"backslash"'],
+          _fields: [new neo4j.Int('882573709873217509'), 100, 0.5, '"\\"']
         },
         {
           keys: ['"neoInt"', '"int"', '"any"'],
@@ -608,12 +608,8 @@ describe('helpers', () => {
       const res = stringifyResultArray(neo4j.isInt, step2)
       // Then
       expect(res).toEqual([
-        [
-          JSON.stringify('"neoInt"'),
-          JSON.stringify('"int"'),
-          JSON.stringify('"any"')
-        ],
-        ['882573709873217509', '100', '0.5'],
+        ['""neoInt""', '""int""', '""any""', '""backslash""'],
+        ['882573709873217509', '100', '0.5', '""\\""'],
         ['300', '100', '"string"']
       ])
     })
@@ -650,7 +646,7 @@ describe('helpers', () => {
       const res = stringifyResultArray(neo4j.isInt, step2)
       // Then
       expect(res).toEqual([
-        [JSON.stringify('"x"'), JSON.stringify('"y"'), JSON.stringify('"n"')],
+        ['""x""', '""y""', '""n""'],
         ['"x"', '"y"', JSON.stringify({ prop1: 'prop1' })],
         [
           '"xx"',
