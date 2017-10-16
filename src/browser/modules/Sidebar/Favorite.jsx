@@ -133,6 +133,7 @@ class FavoriteDp extends Component {
         <SytledFavFolderButtonSpan>
           <ConfirmationButton
             requestIcon={<BinIcon />}
+            confirmIcon={<BinIcon deleteAction />}
             onConfirmed={() => this.props.removeClick(this.props.id)}
           />
         </SytledFavFolderButtonSpan>
