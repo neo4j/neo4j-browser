@@ -64,7 +64,6 @@ import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import DesktopIntegration from 'browser-components/DesktopIntegration'
 import {
-  didChangeActiveGraph,
   getActiveCredentials,
   getActiveGraph
 } from 'browser-components/DesktopIntegration/helpers'
@@ -113,8 +112,8 @@ class App extends Component {
           <DesktopIntegration
             integrationPoint={this.props.desktopIntegrationPoint}
             onMount={this.props.setInitialConnectionData}
-            onDatabaseStarted={this.props.changeConnectionMaybe}
-            onDatabaseStopped={this.props.closeConnectionMaybe}
+            onGraphActive={this.props.switchConnection}
+            onGraphInactive={this.props.closeConnectionMaybe}
           />
           <Render if={loadExternalScripts}>
             <Intercom appID='lq70afwx' />
@@ -176,14 +175,13 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const changeConnectionMaybe = (event, newContext, oldContext) => {
-    const didChange = didChangeActiveGraph(newContext, oldContext)
-    if (!didChange) return
+  const switchConnection = (event, newContext, oldContext) => {
     const creds = getActiveCredentials('bolt', newContext)
     if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
     const connectionCreds = {
       // Use current connections creds until we get new from API
       ...stateProps.defaultConnectionData,
+      ...creds,
       encrypted: creds.tlsLevel === 'REQUIRED',
       host: `bolt://${creds.host}:${creds.port}`
     }
@@ -209,7 +207,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     ...stateProps,
     ...ownProps,
     ...dispatchProps,
-    changeConnectionMaybe,
+    switchConnection,
     setInitialConnectionData,
     closeConnectionMaybe
   }

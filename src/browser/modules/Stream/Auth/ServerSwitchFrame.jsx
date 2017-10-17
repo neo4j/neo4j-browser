@@ -33,7 +33,10 @@ import ClickToCode from '../../ClickToCode'
 
 class ServerStatusFrame extends Component {
   render () {
-    const { frame } = this.props
+    const {
+      frame,
+      activeConnectionData: dynamicConnectionData = {}
+    } = this.props
     const { activeConnectionData, storeCredentials } = frame
     return (
       <FrameTemplate
@@ -49,7 +52,8 @@ class ServerStatusFrame extends Component {
             <StyledConnectionBodyContainer>
               <Render if={frame.type === 'switch-fail'}>
                 <StyledConnectionBody>
-                  The updated credentials was not correct.
+                  The connection credentials provided could not be used to
+                  connect.
                   <br />
                   You are now disconnected.
                   <br />
@@ -61,7 +65,8 @@ class ServerStatusFrame extends Component {
                 if={
                   frame.type === 'switch-success' &&
                   activeConnectionData &&
-                  activeConnectionData.authEnabled
+                  dynamicConnectionData &&
+                  dynamicConnectionData.authEnabled
                 }
               >
                 <ConnectedView
@@ -77,13 +82,18 @@ class ServerStatusFrame extends Component {
                 if={
                   frame.type === 'switch-success' &&
                   activeConnectionData &&
-                  !activeConnectionData.authEnabled
+                  dynamicConnectionData &&
+                  !dynamicConnectionData.authEnabled
                 }
               >
-                <StyledConnectionBody>
-                  You have a working connection with the Neo4j database and
-                  server auth is disabled.
-                </StyledConnectionBody>
+                <div>
+                  <ConnectedView
+                    host={activeConnectionData && activeConnectionData.host}
+                    showHost
+                    hideStoreCredentials
+                    additionalFooter='You have a working connection with the Neo4j database and server auth is disabled.'
+                  />
+                </div>
               </Render>
             </StyledConnectionBodyContainer>
           </StyledConnectionFrame>
