@@ -22,7 +22,10 @@
 import bolt from './bolt'
 import { getUrlInfo } from 'services/utils'
 
-export const getEncryptionMode = () => {
+export const getEncryptionMode = options => {
+  if (options && typeof options['encrypted'] !== 'undefined') {
+    return options.encrypted
+  }
   return location.protocol === 'https:'
 }
 

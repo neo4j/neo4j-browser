@@ -34,14 +34,21 @@ import {
   startupConnectionSuccessEpic,
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
-  connectionLostEpic
+  connectionLostEpic,
+  switchConnectionEpic,
+  switchConnectionSuccessEpic,
+  switchConnectionFailEpic,
+  silentDisconnectEpic
 } from './modules/connections/connectionsDuck'
 import {
   dbMetaEpic,
   clearMetaOnDisconnectEpic
 } from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
-import { discoveryOnStartupEpic } from './modules/discovery/discoveryDuck'
+import {
+  discoveryOnStartupEpic,
+  injectDiscoveryEpic
+} from './modules/discovery/discoveryDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import {
@@ -75,10 +82,14 @@ export default combineEpics(
   postConnectCmdEpic,
   fetchGuideFromWhitelistEpic,
   connectionLostEpic,
+  switchConnectionEpic,
+  switchConnectionSuccessEpic,
+  switchConnectionFailEpic,
   retainCredentialsSettingsEpic,
   checkSettingsForRoutingDriver,
   connectEpic,
   disconnectEpic,
+  silentDisconnectEpic,
   startupConnectEpic,
   disconnectSuccessEpic,
   startupConnectionSuccessEpic,
@@ -88,6 +99,7 @@ export default combineEpics(
   clearMetaOnDisconnectEpic,
   cancelRequestEpic,
   discoveryOnStartupEpic,
+  injectDiscoveryEpic,
   populateEditorFromUrlEpic,
   adHocCypherRequestEpic,
   cypherRequestEpic,

@@ -38,10 +38,16 @@ import {
   getActiveConnection,
   getConnectionState,
   getActiveConnectionData,
-  isConnected
+  isConnected,
+  getConnectionData,
+  SILENT_DISCONNECT,
+  SWITCH_CONNECTION
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-
+import {
+  CONNECTION_ID,
+  INJECTED_DISCOVERY
+} from 'shared/modules/discovery/discoveryDuck'
 import {
   StyledWrapper,
   StyledApp,
@@ -56,6 +62,11 @@ import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
+import DesktopIntegration from 'browser-components/DesktopIntegration'
+import {
+  getActiveCredentials,
+  getActiveGraph
+} from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 
 class App extends Component {
@@ -98,6 +109,12 @@ class App extends Component {
         <StyledWrapper>
           <DocTitle titleString={this.props.titleString} />
           <UserInteraction />
+          <DesktopIntegration
+            integrationPoint={this.props.desktopIntegrationPoint}
+            onMount={this.props.setInitialConnectionData}
+            onGraphActive={this.props.switchConnection}
+            onGraphInactive={this.props.closeConnectionMaybe}
+          />
           <Render if={loadExternalScripts}>
             <Intercom appID='lq70afwx' />
           </Render>
@@ -141,6 +158,7 @@ const mapStateToProps = state => {
     loadExternalScripts:
       allowOutgoingConnections(state) !== false && isConnected(state),
     titleString: asTitleString(connectionData),
+    defaultConnectionData: getConnectionData(state, CONNECTION_ID),
     syncConsent: state.syncConsent.consented,
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),
@@ -156,4 +174,45 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(App))
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const switchConnection = (event, newContext, oldContext) => {
+    const creds = getActiveCredentials('bolt', newContext)
+    if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
+    const connectionCreds = {
+      // Use current connections creds until we get new from API
+      ...stateProps.defaultConnectionData,
+      ...creds,
+      encrypted: creds.tlsLevel === 'REQUIRED',
+      host: `bolt://${creds.host}:${creds.port}`
+    }
+    ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
+  }
+  const setInitialConnectionData = (graph, credentials, context) => {
+    const creds = getActiveCredentials('bolt', context)
+    if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
+    const connectionCreds = {
+      // Use current connections creds until we get new from API
+      ...stateProps.defaultConnectionData,
+      encrypted: creds.tlsLevel === 'REQUIRED',
+      host: `bolt://${creds.host}:${creds.port}`
+    }
+    ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
+  }
+  const closeConnectionMaybe = (event, newContext, oldContext) => {
+    const activeGraph = getActiveGraph(newContext)
+    if (activeGraph) return // We still got an active graph, do nothing
+    ownProps.bus.send(SILENT_DISCONNECT, {})
+  }
+  return {
+    ...stateProps,
+    ...ownProps,
+    ...dispatchProps,
+    switchConnection,
+    setInitialConnectionData,
+    closeConnectionMaybe
+  }
+}
+
+export default withBus(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
+)

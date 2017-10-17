@@ -29,22 +29,34 @@ const ConnectedView = ({
   host,
   username,
   storeCredentials,
+  hideStoreCredentials = false,
+  additionalFooter = null,
   showHost = true
 }) => {
   return (
     <StyledConnectionBody>
-      You are connected as user <StyledCode>{username}</StyledCode>
-      <br />
+      <Render if={username}>
+        <span>
+          You are connected as user <StyledCode>{username}</StyledCode>
+          <br />
+        </span>
+      </Render>
+      <Render if={!username}>You are connected </Render>
       <Render if={showHost}>
         <span>
           to the server <StyledCode>{host}</StyledCode>
           <br />
         </span>
       </Render>
-      <StyledConnectionFooter>
-        Connection credentials are {storeCredentials ? '' : 'not '}stored in
-        your web browser.
-      </StyledConnectionFooter>
+      <Render if={!hideStoreCredentials}>
+        <StyledConnectionFooter>
+          Connection credentials are {storeCredentials ? '' : 'not '}stored in
+          your web browser.
+        </StyledConnectionFooter>
+      </Render>
+      <Render if={additionalFooter}>
+        <StyledConnectionFooter>{additionalFooter}</StyledConnectionFooter>
+      </Render>
     </StyledConnectionBody>
   )
 }

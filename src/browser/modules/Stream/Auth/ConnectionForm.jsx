@@ -54,7 +54,8 @@ export class ConnectionForm extends Component {
       passwordChangeNeeded: props.passwordChangeNeeded || false,
       forcePasswordChange: props.forcePasswordChange || false,
       successCallback: props.onSuccess || (() => {}),
-      used: isConnected
+      used: isConnected,
+      storeCredentials: this.props.storeCredentials
     }
   }
   connect (doneFn = () => {}) {
@@ -170,9 +171,9 @@ export class ConnectionForm extends Component {
     } else if (this.state.isConnected) {
       view = (
         <ConnectedView
-          host={this.props.activeConnectionData.host}
-          username={this.props.activeConnectionData.username}
-          storeCredentials={this.props.storeCredentials}
+          host={this.state.host}
+          username={this.state.username}
+          storeCredentials={this.state.storeCredentials}
         />
       )
     } else if (!this.state.isConnected && !this.state.passwordChangeNeeded) {
