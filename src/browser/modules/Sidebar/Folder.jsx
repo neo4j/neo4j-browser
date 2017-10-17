@@ -18,23 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Component } from 'preact'
+import { DropTarget } from 'react-dnd'
+import Render from 'browser-components/Render'
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+import {
+  CollapseMenuIcon,
+  ExpandMenuIcon,
+  BinIcon
+} from 'browser-components/icons/Icons'
+import ItemTypes from './DragItemTypes'
 import {
   FoldersButton,
   StyledList,
   StyledListHeaderItem,
-  DeleteFavButton,
+  SytledFavFolderButtonSpan,
   EditFolderButton,
   FolderButtonContainer,
   EditFolderInput
 } from './styled'
-import { Component } from 'preact'
-import {
-  CollapseMenuIcon,
-  ExpandMenuIcon
-} from 'browser-components/icons/Icons'
-import { DropTarget } from 'react-dnd'
-import Render from 'browser-components/Render'
-import ItemTypes from './DragItemTypes'
 
 class Folder extends Component {
   constructor (props) {
@@ -99,11 +101,14 @@ class Folder extends Component {
                   }}
                 />
               </Render>&nbsp;
-              <DeleteFavButton
-                id={this.props.folder.id}
-                removeClick={this.props.removeClick}
-                isStatic={this.props.folder.isStatic}
-              />
+              <SytledFavFolderButtonSpan>
+                <ConfirmationButton
+                  requestIcon={<BinIcon />}
+                  confirmIcon={<BinIcon deleteAction />}
+                  onConfirmed={() =>
+                    this.props.removeClick(this.props.folder.id)}
+                />
+              </SytledFavFolderButtonSpan>
             </FolderButtonContainer>
           </StyledListHeaderItem>
           {this.state.active ? this.props.children : null}

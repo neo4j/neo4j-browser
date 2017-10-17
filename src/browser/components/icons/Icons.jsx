@@ -206,8 +206,8 @@ export const ZoomOutIcon = () => (
 
 export const BinIcon = props => (
   <IconContainer
-    activeStyle={styles.white}
-    inactiveStyle={styles.inactive}
+    activeStyle={props.deleteAction ? styles.warningRed : styles.white}
+    inactiveStyle={props.deleteAction ? styles.warningRed : styles.white}
     {...props}
     className='sl-bin'
   />
