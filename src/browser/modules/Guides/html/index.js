@@ -21,7 +21,6 @@
 export { default as concepts } from './concepts.html'
 export { default as cypher } from './cypher.html'
 export { default as explore } from './explore.html'
-export { default as graphs } from './graphs.html'
 export { default as intro } from './intro.html'
 export { default as learn } from './learn.html'
 export { default as moviegraph } from './movie-graph.html'
