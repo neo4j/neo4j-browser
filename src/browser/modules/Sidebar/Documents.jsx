@@ -24,7 +24,7 @@ import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 const staticItems = {
   intro: [
     { name: 'Getting started', command: ':play intro', type: 'play' },
-    { name: 'Basic graph concepts', command: ':play graphs', type: 'play' },
+    { name: 'Basic graph concepts', command: ':play concepts', type: 'play' },
     { name: 'Writing Cypher queries', command: ':play cypher', type: 'play' }
   ],
   help: [
