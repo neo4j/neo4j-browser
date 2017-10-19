@@ -28,6 +28,7 @@ import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
+import { inWebEnv } from 'shared/modules/app/appDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
@@ -105,7 +106,11 @@ class Sidebar extends Component {
         openDrawer={openDrawer}
         onNavClick={onNavClick}
         topNavItems={topNavItemsList}
-        bottomNavItems={bottomNavItemsList}
+        bottomNavItems={
+          this.props.showSync
+            ? bottomNavItemsList
+            : bottomNavItemsList.filter(item => item.name !== 'Sync')
+        }
       />
     )
   }
@@ -128,7 +133,8 @@ const mapStateToProps = state => {
   }
   return {
     syncConnected: isUserSignedIn(state) || false,
-    neo4jConnectionState: connectionState
+    neo4jConnectionState: connectionState,
+    showSync: inWebEnv(state)
   }
 }
 
