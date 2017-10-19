@@ -34,6 +34,7 @@ import {
   getErrorMessage
 } from 'shared/modules/commands/commandsDuck'
 import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { inWebEnv } from 'shared/modules/app/appDuck'
 import {
   getActiveConnection,
   getConnectionState,
@@ -98,6 +99,7 @@ class App extends Component {
       showUnknownCommandBanner,
       errorMessage,
       loadExternalScripts,
+      loadSync,
       syncConsent,
       browserSyncMetadata,
       browserSyncConfig,
@@ -118,7 +120,7 @@ class App extends Component {
           <Render if={loadExternalScripts}>
             <Intercom appID='lq70afwx' />
           </Render>
-          <Render if={syncConsent && loadExternalScripts}>
+          <Render if={syncConsent && loadExternalScripts && loadSync}>
             <BrowserSyncInit
               authStatus={browserSyncAuthStatus}
               authData={browserSyncMetadata}
@@ -162,7 +164,8 @@ const mapStateToProps = state => {
     syncConsent: state.syncConsent.consented,
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),
-    browserSyncAuthStatus: getUserAuthStatus(state)
+    browserSyncAuthStatus: getUserAuthStatus(state),
+    loadSync: inWebEnv(state)
   }
 }
 
