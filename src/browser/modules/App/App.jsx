@@ -196,6 +196,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const connectionCreds = {
       // Use current connections creds until we get new from API
       ...stateProps.defaultConnectionData,
+      ...creds,
       encrypted: creds.tlsLevel === 'REQUIRED',
       host: `bolt://${creds.host}:${creds.port}`
     }
