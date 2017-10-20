@@ -25,7 +25,10 @@ import { dehydrate } from 'services/duckUtils'
 describe('features reducer', () => {
   test('handles initial value', () => {
     const nextState = reducer(undefined, { type: '' })
-    expect(dehydrate(nextState)).toEqual({ availableProcedures: [] })
+    expect(dehydrate(nextState)).toEqual({
+      availableProcedures: [],
+      browserSync: true
+    })
   })
 
   test('handles UPDATE_ALL_FEATURES without initial state', () => {
@@ -35,6 +38,7 @@ describe('features reducer', () => {
     }
     const nextState = reducer(undefined, action)
     expect(nextState.availableProcedures).toEqual(['proc'])
+    expect(nextState.browserSync).toEqual(true)
   })
 
   test('handles UPDATE_ALL_FEATURES', () => {

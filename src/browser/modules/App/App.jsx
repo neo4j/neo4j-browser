@@ -29,12 +29,12 @@ import {
   getBrowserSyncConfig
 } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
+import { useBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   wasUnknownCommand,
   getErrorMessage
 } from 'shared/modules/commands/commandsDuck'
 import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
-import { inWebEnv } from 'shared/modules/app/appDuck'
 import {
   getActiveConnection,
   getConnectionState,
@@ -137,6 +137,7 @@ class App extends Component {
                   connectionState={connectionState}
                   showUnknownCommandBanner={showUnknownCommandBanner}
                   errorMessage={errorMessage}
+                  useBrowserSync={loadSync}
                 />
               </StyledMainWrapper>
             </StyledBody>
@@ -165,7 +166,7 @@ const mapStateToProps = state => {
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),
     browserSyncAuthStatus: getUserAuthStatus(state),
-    loadSync: inWebEnv(state)
+    loadSync: useBrowserSync(state)
   }
 }
 

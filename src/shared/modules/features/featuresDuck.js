@@ -19,7 +19,7 @@
  */
 
 import bolt from 'services/bolt/bolt'
-import { APP_START } from 'shared/modules/app/appDuck'
+import { APP_START, WEB } from 'shared/modules/app/appDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'features'
@@ -31,14 +31,16 @@ export const isACausalCluster = state =>
   getAvailableProcedures(state).includes('dbms.cluster.overview')
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
+export const useBrowserSync = state => !!state[NAME].browserSync
 
 const initialState = {
-  availableProcedures: []
+  availableProcedures: [],
+  browserSync: true
 }
 
 export default function (state = initialState, action) {
   if (action.type === APP_START) {
-    state = { ...initialState, ...state }
+    state = { ...initialState, ...state, browserSync: action.env === WEB }
   }
 
   switch (action.type) {

@@ -35,6 +35,7 @@ import {
   StyledCodeBlockErrorBar
 } from './styled'
 import SyncReminderBanner from './SyncReminderBanner'
+import SyncConsentBanner from './SyncConsentBanner'
 
 const Main = props => {
   return (
@@ -65,7 +66,12 @@ const Main = props => {
           Connection to server lost. Reconnecting...
         </WarningBanner>
       </Render>
-      <SyncReminderBanner />
+      <Render if={props.useBrowserSync}>
+        <SyncReminderBanner />
+      </Render>
+      <Render if={props.useBrowserSync}>
+        <SyncConsentBanner />
+      </Render>
       <Stream />
     </StyledMain>
   )
