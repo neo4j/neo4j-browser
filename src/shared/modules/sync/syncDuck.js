@@ -132,7 +132,10 @@ export function syncConsentReducer (state = initialConsentState, action) {
 
   switch (action.type) {
     case CONSENT_SYNC:
-      return Object.assign({}, state, { consented: action.consent })
+      return Object.assign({}, state, {
+        consented: action.consent,
+        optedOut: action.consent ? false : state.optedOut
+      })
     case CLEAR_SYNC_AND_LOCAL:
       return { consented: false, optedOut: false }
     case OPT_OUT_SYNC:
