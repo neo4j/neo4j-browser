@@ -37,6 +37,7 @@ import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaD
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
 import { toBoltHost, isRoutingHost } from 'services/utils'
+import { getEncryptionMode } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
@@ -109,6 +110,7 @@ export class ConnectionForm extends Component {
         host: this.state.host,
         username: this.state.username,
         password: this.props.oldPassword || this.state.password,
+        encrypted: getEncryptionMode(this.state),
         ...changeCurrentUsersPasswordQueryObj(newPassword)
       },
       response => {

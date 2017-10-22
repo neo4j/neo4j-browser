@@ -37,6 +37,7 @@ export const getDiscoveryEndpoint = () => {
 
 export const getServerConfig = (includePrefixes = []) => {
   return getJmxValues([['Configuration']]).then(confs => {
+    if (!confs) return {}
     const conf = confs[0]
     let filtered
     if (conf) {

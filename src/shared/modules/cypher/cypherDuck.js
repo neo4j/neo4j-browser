@@ -147,7 +147,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
       bolt
         .directConnect(
           action,
-          { encrypted: getEncryptionMode() },
+          { encrypted: getEncryptionMode(action) },
           undefined,
           false // Ignore validation errors
         )
