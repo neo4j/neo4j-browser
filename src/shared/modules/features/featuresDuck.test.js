@@ -50,6 +50,11 @@ describe('features reducer', () => {
     const nextState = reducer(initialState, action)
     expect(nextState.availableProcedures).toEqual(['c'])
   })
+  test('handles UPDATE_FEATURE', () => {
+    const action = features.updateFeature('FOO', 'bar')
+    const nextState = reducer(undefined, action)
+    expect(nextState.FOO).toEqual('bar')
+  })
 })
 
 describe('feature getters', () => {
@@ -87,5 +92,10 @@ describe('feature getters', () => {
       { type: '' }
     )
     expect(features.canAssignRolesToUser({ features: nextState })).toBe(true)
+  })
+  test('should be able to getIsTlsEnabled value', () => {
+    const nextState = reducer({ TLS_ENABLED: true }, { type: '' })
+
+    expect(features.getIsTlsEnabled({ features: nextState })).toBe(true)
   })
 })

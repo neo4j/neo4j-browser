@@ -57,7 +57,10 @@ import {
   clusterCypherRequestEpic,
   handleForcePasswordChangeEpic
 } from './modules/cypher/cypherDuck'
-import { featuresDiscoveryEpic } from './modules/features/featuresDuck'
+import {
+  featuresDiscoveryEpic,
+  appStartFeaturesDiscoveryEpic
+} from './modules/features/featuresDuck'
 import {
   syncItemsEpic,
   clearSyncEpic,
@@ -107,6 +110,7 @@ export default combineEpics(
   clearLocalstorageEpic,
   handleForcePasswordChangeEpic,
   featuresDiscoveryEpic,
+  appStartFeaturesDiscoveryEpic,
   syncFavoritesEpic,
   loadFavoritesFromSyncEpic,
   syncItemsEpic,
