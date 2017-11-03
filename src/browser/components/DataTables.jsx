@@ -52,6 +52,5 @@ export const StyledJsonPre = styled.pre`
   color: ${props => props.theme.preText};
   line-height: 26px;
   padding: 2px 10px;
-  max-width: 320px;
   white-space: pre-wrap;
 `
