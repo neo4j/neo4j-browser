@@ -50,11 +50,9 @@ export class ExplorerComponent extends Component {
     let selectedItem = ''
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
-      relationships = this.props.relationships.filter(
-        item =>
-          nodes.filter(node => node.id === item.startNodeId).length > 0 &&
-          this.state.nodes.filter(node => node.id === item.endNodeId).length > 0
-      )
+      relationships = this.props.relationships.filter(item => {
+        return nodes.filter(node => node.id === item.startNodeId) > 0
+      })
       selectedItem = {
         type: 'status-item',
         item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this
