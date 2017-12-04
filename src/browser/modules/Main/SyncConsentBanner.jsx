@@ -60,7 +60,7 @@ class SyncReminderBanner extends Component {
       <Render if={visible}>
         <SyncDisconnectedBanner height='100px'>
           <StyledSyncReminderSpan>
-            To enjoy full experince of Neo4j Browser, we advice you to use{' '}
+            To enjoy full experience of Neo4j Browser, we advise you to use{' '}
             <strong>Neo4j Browser Sync</strong>. Toggle sidebar to get started.
           </StyledSyncReminderSpan>
           <StyledSyncReminderButtonContainer>
