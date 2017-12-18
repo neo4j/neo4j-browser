@@ -264,12 +264,6 @@ export class BrowserSync extends Component {
 
     return (
       <Drawer id='sync-drawer'>
-        <button
-          onClick={() =>
-            this.props.sendActionToDispatch({ type: 'grass/SYNC_GRASS' })}
-        >
-          Sync grass
-        </button>
         {headerContent}
         {offlineContent}
         {onlineContent}
