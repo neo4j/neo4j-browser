@@ -194,12 +194,15 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const setInitialConnectionData = (graph, credentials, context) => {
     const creds = getActiveCredentials('bolt', context)
     if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
+    const httpCreds = getActiveCredentials('http', context)
+    const restApi = `http://${httpCreds.host}:${httpCreds.port}`
     const connectionCreds = {
       // Use current connections creds until we get new from API
       ...stateProps.defaultConnectionData,
       ...creds,
       encrypted: creds.tlsLevel === 'REQUIRED',
-      host: `bolt://${creds.host}:${creds.port}`
+      host: `bolt://${creds.host}:${creds.port}`,
+      restApi
     }
     ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
   }
