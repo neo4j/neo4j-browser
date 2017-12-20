@@ -35,7 +35,10 @@ export const composeGrassToSync = (store, syncValue) => {
   const grassFromState = getGraphStyleData(store.getState())
   const stringifyedGrassFromState = JSON.stringify(grassFromState)
 
-  if (grassFromSync[0].data !== stringifyedGrassFromState) {
+  if (
+    grassFromSync.length < 1 ||
+    grassFromSync[0].data !== stringifyedGrassFromState
+  ) {
     return [
       {
         client: getBrowserName(),
