@@ -37,7 +37,9 @@ export const composeGrassToSync = (store, syncValue) => {
 
   if (
     grassFromSync.length < 1 ||
-    grassFromSync[0].data !== stringifyedGrassFromState
+    (grassFromSync[0].data &&
+      (grassFromSync[0].data !== stringifyedGrassFromState &&
+        grassFromSync[0].data !== grassFromState))
   ) {
     return [
       {
