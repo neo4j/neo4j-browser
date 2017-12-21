@@ -87,6 +87,8 @@ const updateDiscoveryState = (action, store) => {
   if (typeof action.encrypted !== 'undefined') {
     updateObj.encrypted = action.encrypted
   }
+  updateObj.restApi = action.restApi
+
   const updateAction = updateDiscoveryConnection(updateObj)
   store.dispatch(updateAction)
 }

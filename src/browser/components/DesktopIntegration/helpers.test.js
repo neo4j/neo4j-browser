@@ -243,3 +243,38 @@ test('getActiveCredentials finds the active connection from a context object and
   expect(secondActive).toEqual(bolt2)
   expect(zeroActive).toEqual(null)
 })
+
+test('getActiveCredentials should extract https and http creds', () => {
+  const bolt = {
+    username: 'one',
+    password: 'one1'
+  }
+  const http = {
+    host: 'foo',
+    port: 'bar'
+  }
+
+  const https = {
+    host: 'abc',
+    port: 'xyz'
+  }
+  const createApiResponse = graphs => ({
+    projects: [{ graphs }]
+  })
+  const activeConnectionData = createApiResponse([
+    {
+      id: 1,
+      status: 'ACTIVE',
+      connection: {
+        configuration: {
+          protocols: { bolt, http, https }
+        }
+      }
+    }
+  ])
+
+  expect(getActiveCredentials('bolt', activeConnectionData)).toEqual(bolt)
+  expect(getActiveCredentials('http', activeConnectionData)).toEqual(http)
+  expect(getActiveCredentials('https', activeConnectionData)).toEqual(https)
+  expect(getActiveCredentials('foobar', activeConnectionData)).toBeFalsy()
+})
