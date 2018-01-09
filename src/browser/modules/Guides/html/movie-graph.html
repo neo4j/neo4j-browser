@@ -663,7 +663,7 @@ RETURN p</pre>
         </ol>
       </div>
       <div class="col-sm-9">
-        <p class="lead">Extend Tom Hanks co-actors, to find co-co-actors who haven't work with Tom Hanks...</p>
+        <p class="lead">Extend Tom Hanks co-actors, to find co-co-actors who haven't worked with Tom Hanks...</p>
         <figure>
           <pre class="pre-scrollable code runnable">MATCH (tom:Person {name:&quot;Tom Hanks&quot;})-[:ACTED_IN]-&gt;(m)&lt;-[:ACTED_IN]-(coActors),
       (coActors)-[:ACTED_IN]-&gt;(m2)&lt;-[:ACTED_IN]-(cocoActors)
