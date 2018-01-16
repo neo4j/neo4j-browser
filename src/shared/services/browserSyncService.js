@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo4j, Inc,"
+ * Copyright (c) 2002-2018 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -21,14 +21,17 @@
 import * as firebase from 'firebase'
 
 export const authenticate = (dataToken, onSignout = null) => {
-  return firebase.auth().signInWithCustomToken(dataToken).then(a => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user || !user.uid) {
-        onSignout && onSignout()
-      }
+  return firebase
+    .auth()
+    .signInWithCustomToken(dataToken)
+    .then(a => {
+      firebase.auth().onAuthStateChanged(user => {
+        if (!user || !user.uid) {
+          onSignout && onSignout()
+        }
+      })
+      return a
     })
-    return a
-  })
 }
 
 export const initialize = config => {
