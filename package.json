@@ -17,6 +17,7 @@
   "scripts": {
     "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
     "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
+    "startnodash": "webpack-dev-server --colors --no-info",
     "precommit": "lint-staged",
     "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
     "lint": "eslint --fix --ext .js --ext .jsx ./",

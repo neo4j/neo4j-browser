@@ -6,7 +6,7 @@
 1. Install project dependencies: `yarn`
 
 ### Development server
-`yarn start` and point your web browser to `http://localhost:8080`.
+`yarn start` and point your web browser to `http://localhost:8080`. (Windows `yarn startnodash`)
 
 ### Testing
 `yarn test` to run a single test run. A linter will run first.
