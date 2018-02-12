@@ -20,6 +20,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { shouldAutoExecute } from 'shared/modules/settings/settingsDuck'
+import { store } from 'browser/AppInit'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { addClass, prependIcon } from 'shared/services/dom-helpers'
@@ -30,42 +32,54 @@ const directives = [
     valueExtractor: elem => {
       return `:${elem.getAttribute('exec-topic')}`
     },
-    autoExec: true
+    autoExec: () => {
+      return true
+    }
   },
   {
     selector: '[play-topic]',
     valueExtractor: elem => {
       return `:play ${elem.getAttribute('play-topic')}`
     },
-    autoExec: true
+    autoExec: () => {
+      return true
+    }
   },
   {
     selector: '[server-topic]',
     valueExtractor: elem => {
       return `:server ${elem.getAttribute('server-topic')}`
     },
-    autoExec: true
+    autoExec: () => {
+      return true
+    }
   },
   {
     selector: '[help-topic]',
     valueExtractor: elem => {
       return `:help ${elem.getAttribute('help-topic')}`
     },
-    autoExec: true
+    autoExec: () => {
+      return true
+    }
   },
   {
     selector: '.runnable pre',
     valueExtractor: elem => {
       return elem.textContent.trim()
     },
-    autoExec: false
+    autoExec: () => {
+      return shouldAutoExecute(store.getState())
+    }
   },
   {
     selector: 'pre.runnable',
     valueExtractor: elem => {
       return elem.textContent.trim()
     },
-    autoExec: false
+    autoExec: () => {
+      return shouldAutoExecute(store.getState())
+    }
   }
 ]
 
@@ -89,6 +103,9 @@ const bindDynamicInputToDom = element => {
         )
       })
       if (filteredValueKeyElems.length > 0) {
+        valueForElem.onchange = event => {
+          filteredValueKeyElems[0].innerText = event.target.value
+        }
         valueForElem.onkeyup = event => {
           filteredValueKeyElems.forEach(elm => {
             elm.innerText = event.target.value
@@ -130,7 +147,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: (cmd, autoExec) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
-        if (autoExec) {
+        if (autoExec()) {
           const action = executeCommand(cmd)
           ownProps.bus.send(action.type, action)
         } else {

@@ -20,6 +20,9 @@
 import Renderer from '../components/renderer'
 const noop = function () {}
 
+const duck = require("shared/modules/settings/settingsDuck");
+const store = require("browser/AppInit");
+
 const nodeRingStrokeSize = 8
 
 const nodeOutline = new Renderer({
@@ -75,6 +78,20 @@ const nodeCaption = new Renderer({
           return viz.style.forNode(line.node).get('text-color-internal')
         }
       })
+      .attr({
+        'style'(line) {
+          const shadowColor = viz.style.forNode(line.node).get('shadow-color');
+          if (shadowColor !== '') {
+            return 'text-shadow:' +
+            '-1px 1px 2px ' + shadowColor +
+            ', -1px -1px 2px ' + shadowColor +
+            ', 1px 1px 2px ' + shadowColor +
+            ', 1px -1px 2px ' + shadowColor;
+          } else {
+            return '';
+          }
+        }
+      });
 
     return text.exit().remove()
   },
@@ -104,6 +121,61 @@ const nodeIcon = new Renderer({
       })
 
     return text.exit().remove()
+  },
+
+  onTick: noop
+})
+
+const nodeImage = new Renderer({
+  onGraphChange(selection, viz) {
+    if (!duck.getSettings(store.store.getState()).showThumbnail) {
+      return;
+    }
+    const thumbnailAttr = duck.getSettings(store.store.getState()).thumbnailAttribute;
+    const pattern = selection.selectAll('pattern').data(function(node) {
+      if (node.propertyMap[thumbnailAttr]) { return [node]; } else { return []; }
+    });
+
+    pattern.enter()
+    .append('pattern')
+    .attr({
+      id(id) { return `img-fill-${id.id}`; },
+      patternUnits: 'userSpaceOnUse',
+      x(node) { return -(node.radius); },
+      y(node) { return -(node.radius); },
+      width(node) { return (node.radius * 2); },
+      height(node) { return (node.radius * 2); }}).append('image')
+    .attr("xlink:href", link => link.propertyMap[thumbnailAttr])
+    .attr({
+      type: 'image/png',
+      x: 0,
+      y: 0,
+      width(node) { return (node.radius * 2); },
+      height(node) { return (node.radius * 2); },
+      opacity: duck.getSettings(store.store.getState()).thumbnailOpacity
+    });
+
+    return pattern.exit().remove();
+  },
+
+  onTick: noop
+})
+
+const nodeImageFill = new Renderer({
+  onGraphChange(selection, viz) {
+    const filledCircle = selection.selectAll('circle.filled').data(node => [node]);
+
+    filledCircle.enter()
+    .append('circle')
+    .classed('filled', true)
+    .attr({
+      cx: 0,
+      cy: 0,
+      r(node) { return node.radius-1; },
+      fill(id) { return `url(#img-fill-${id.id})`; }
+    });
+
+    return filledCircle.exit().remove();
   },
 
   onTick: noop
@@ -146,7 +218,7 @@ const arrowPath = new Renderer({
 
     paths
       .attr('fill', rel => viz.style.forRelationship(rel).get('color'))
-      .attr('stroke', 'none')
+      .attr('stroke', rel => viz.style.forRelationship(rel).get('border-color'))
 
     return paths.exit().remove()
   },
@@ -229,6 +301,8 @@ node.push(nodeOutline)
 node.push(nodeIcon)
 node.push(nodeCaption)
 node.push(nodeRing)
+node.push(nodeImage)
+node.push(nodeImageFill)
 
 const relationship = []
 relationship.push(arrowPath)

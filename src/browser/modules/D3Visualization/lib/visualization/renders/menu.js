@@ -23,7 +23,7 @@ import icons from '../renders/icons'
 
 const noop = function () {}
 
-const numberOfItemsInContextMenu = 3
+const numberOfItemsInContextMenu = 5
 
 const arc = function (radius, itemNumber, width) {
   if (width == null) {
@@ -165,9 +165,26 @@ const donutRemoveNode = new Renderer({
       'nodeClose',
       1,
       'remove_node',
-      [-8, 0],
+      [-6, -2],
       'Remove',
       'Dismiss'
+    )
+  },
+
+  onTick: noop
+})
+
+const donutUrlNode = new Renderer({
+  onGraphChange (selection, viz) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeUrl',
+      2,
+      'url_node',
+      [-8, -8],
+      'URL',
+      'Open URL defined in attribute or by template'
     )
   },
 
@@ -180,11 +197,28 @@ const donutExpandNode = new Renderer({
       selection,
       viz,
       'nodeDblClicked',
-      2,
+      3,
       'expand_node',
       [-8, -10],
       'Expand / Collapse',
       'Expand / Collapse child relationships'
+    )
+  },
+
+  onTick: noop
+})
+
+const donutCopyNode = new Renderer({
+  onGraphChange (selection, viz) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeCopy',
+      4,
+      'copy_node',
+      [-3, -6],
+      'Copy Attribute',
+      'Copy defined attribute from node'
     )
   },
 
@@ -197,9 +231,9 @@ const donutUnlockNode = new Renderer({
       selection,
       viz,
       'nodeUnlock',
-      3,
+      5,
       'unlock_node',
-      [-10, -6],
+      [-8, -6],
       'Unlock',
       'Unlock the node to re-layout the graph'
     )
@@ -210,8 +244,10 @@ const donutUnlockNode = new Renderer({
 
 const menu = []
 
+menu.push(donutCopyNode)
 menu.push(donutExpandNode)
 menu.push(donutRemoveNode)
 menu.push(donutUnlockNode)
+menu.push(donutUrlNode)
 
 export { menu }

@@ -144,6 +144,57 @@ const visualSettings = [
             'If this is checked, after a cypher query result is retrieved, a second query is executed to fetch relationships between result nodes.',
           type: 'checkbox'
         }
+      },
+      {
+        autoExecute: {
+          displayName: 'Auto-execute guide queries',
+          tooltip:
+            'If this is checked, clickable queries in guides will execute immediately, rather than going to the commandline at the top',
+          type: 'checkbox'
+        }
+      },
+      {
+        onDblClick: {
+          displayName: 'On Doubleclick',
+          type: 'radio',
+          options: ['expand', 'open URL', 'copy']
+        }
+      },
+      {
+        urlAttribute: {
+          displayName: 'URL Attribute',
+          tooltip:
+            'URL button opens link defined in this attribute. May be an attribute name or a template with {variable} substitution. May provide multiple separated by |; first one that yields a valid URL will be followed.'
+        }
+      },
+      {
+        copyAttribute: {
+          displayName: 'Copy Attribute',
+          tooltip:
+            'Copy button copies this attribute to clipboard. May provide multiple separated by |; first one matches gets copied. If none are found, <id> is copied.'
+        }
+      },
+      {
+        showThumbnail: {
+          displayName: 'Show Thumbnails',
+          tooltip:
+            'If this is checked, images specified by the url in the attribute defined below will be shown instead of circles with text (if the attribute is non-null).',
+          type: 'checkbox'
+        }
+      },
+      {
+        thumbnailAttribute: {
+          displayName: 'Thumbnail Attribute',
+          tooltip:
+            'If "Show Thumbnails" is enabled, use the thumbnail URL defined in this attribute.'
+        }
+      },
+      {
+        thumbnailOpacity: {
+          displayName: 'Thumbnail Opacity',
+          tooltip:
+            'If "Show Thumbnails" is enabled, use this opacity (between 0.0 and 1.0).'
+        }
       }
     ]
   }

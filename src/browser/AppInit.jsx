@@ -65,7 +65,7 @@ const enhancer = compose(
     : f => f
 )
 
-const store = createStore(
+export const store = createStore(
   reducer,
   getAll(), // rehydrate from local storage on app start
   enhancer

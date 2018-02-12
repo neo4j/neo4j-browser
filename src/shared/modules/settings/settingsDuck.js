@@ -46,6 +46,18 @@ export const shouldAutoComplete = state => state[NAME].autoComplete !== false
 export const shouldEditorLint = state => state[NAME].editorLint === true
 export const shouldEnableMultiStatementMode = state =>
   state[NAME].enableMultiStatementMode
+export const shouldAutoExecute = state => state[NAME].autoExecute !== false
+export const getOnDblClick = state =>
+  state[NAME].onDblClick || initialState.onDblClick
+export const getUrlAttribute = state =>
+  state[NAME].urlAttribute || initialState.urlAttribute
+export const getCopyAttribute = state =>
+  state[NAME].copyAttribute || initialState.copyAttribute
+export const shouldShowThumbnail = state => state[NAME].showThumbnail !== false
+export const getThumbnailAttribute = state =>
+  state[NAME].thumbnailAttribute || initialState.thumbnailAttribute
+export const getThumbnailOpacity = state =>
+  state[NAME].thumbnailOpacity || initialState.thumbnailOpacity
 
 const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
   authWindowUrl: `${host}/indexNewBrowser.html`,
@@ -76,12 +88,19 @@ const initialState = {
   maxRows: 1000,
   shouldReportUdc: true,
   autoComplete: true,
+  autoExecute: false,
   scrollToTop: true,
   maxFrames: 30,
   editorAutocomplete: true,
   editorLint: false,
   useCypherThread: true,
-  enableMultiStatementMode: false
+  enableMultiStatementMode: false,
+  onDblClick: 'expand',
+  urlAttribute: 'url',
+  copyAttribute: 'id',
+  showThumbnail: false,
+  thumbnailAttribute: 'thumbnail',
+  thumbnailOpacity: 1.0
 }
 
 export default function settings (state = initialState, action) {
