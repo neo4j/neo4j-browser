@@ -89,11 +89,11 @@ class SyncReminderBanner extends Component {
           <StyledSyncReminderSpan>
             You are currently not signed into Neo4j Browser Sync. Connect
             through a simple social sign-in to get started.
-          </StyledSyncReminderSpan>
-          <StyledSyncReminderButtonContainer>
             <SyncSignInBarButton onClick={this.logIn.bind(this)}>
               Sign In
             </SyncSignInBarButton>
+          </StyledSyncReminderSpan>
+          <StyledSyncReminderButtonContainer>
             <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
           </StyledSyncReminderButtonContainer>
         </SyncDisconnectedBanner>
