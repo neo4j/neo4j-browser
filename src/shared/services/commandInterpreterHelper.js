@@ -248,6 +248,10 @@ const availableCommands = [
             r.url,
             { hostnameOnly: true }
           )
+          const url =
+            !isValidURL(r.url) && connectionData.restApi
+              ? `${connectionData.restApi}${r.url}`
+              : r.url
           let authHeaders = {}
           if (isLocal || isSameHostnameAsConnection) {
             if (connectionData.username) {
@@ -262,7 +266,7 @@ const availableCommands = [
             }
           }
           remote
-            .request(r.method, r.url, r.data, authHeaders)
+            .request(r.method, url, r.data, authHeaders)
             .then(res => res.text())
             .then(res => {
               put(frames.add({ ...action, result: res, type: 'pre' }))
