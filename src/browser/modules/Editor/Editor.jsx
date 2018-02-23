@@ -348,7 +348,8 @@ export class Editor extends Component {
       },
       autoCloseBrackets: {
         explode: ''
-      }
+      },
+      ...(!this.props.enableEditorAutocomplete ? { mode: '', theme: '' } : {})
     }
 
     const updateCode = (val, change) => this.updateCode(val, change)
