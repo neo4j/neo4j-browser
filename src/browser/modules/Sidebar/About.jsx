@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017 "Neo4j, Inc,"
+ * Copyright (c) 2002-2018 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -43,7 +43,7 @@ const About = () => {
           </DrawerSubHeader>
         </DrawerSection>
         <DrawerSection>
-          <DrawerSectionBody>Copyright &#169; 2002-2017</DrawerSectionBody>
+          <DrawerSectionBody>Copyright &#169; 2002-2018</DrawerSectionBody>
         </DrawerSection>
         <DrawerSection>
           <DrawerSubHeader>Neo4j Browser</DrawerSubHeader>
