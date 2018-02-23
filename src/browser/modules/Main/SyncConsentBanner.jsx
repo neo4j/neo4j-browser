@@ -60,13 +60,12 @@ class SyncReminderBanner extends Component {
       <Render if={visible}>
         <SyncDisconnectedBanner height='100px'>
           <StyledSyncReminderSpan>
-            To enjoy full experience of Neo4j Browser, we advise you to use{' '}
-            <strong>Neo4j Browser Sync</strong>. Toggle sidebar to get started.
+            To enjoy the full Neo4j Browser experience, we advise you to use
+            <SyncSignInBarButton onClick={this.props.onGetstartedClicked}>
+              Neo4j Browser Sync
+            </SyncSignInBarButton>
           </StyledSyncReminderSpan>
           <StyledSyncReminderButtonContainer>
-            <SyncSignInBarButton onClick={this.props.onGetstartedClicked}>
-              Toggle sidebar
-            </SyncSignInBarButton>
             <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
           </StyledSyncReminderButtonContainer>
         </SyncDisconnectedBanner>
