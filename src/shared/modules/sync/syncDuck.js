@@ -19,6 +19,7 @@
  */
 
 import { syncResourceFor } from 'services/browserSyncService'
+
 import { setItem } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
@@ -41,6 +42,14 @@ import {
   loadFolders,
   syncFolders
 } from 'shared/modules/favorites/foldersDuck'
+import {
+  grassToLoad,
+  updateGraphStyleData,
+  composeGrassToSync,
+  syncGrass,
+  SYNC_GRASS,
+  UPDATE_GRAPH_STYLE_DATA
+} from 'shared/modules/grass/grassDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
 
 export const NAME = 'sync'
@@ -278,6 +287,7 @@ export const clearSyncEpic = (action$, store) =>
       setItem('documents', null)
       setItem('folders', null)
       setItem('syncConsent', false)
+      setItem('grass', null)
     })
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
@@ -316,6 +326,20 @@ export const loadFavoritesFromSyncEpic = (action$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
+export const loadGrassFromSyncEpic = (action$, store) =>
+  action$
+    .ofType(SET_SYNC_DATA)
+    .do(action => {
+      const grass = grassToLoad(action, store)
+      if (grass.loadGrass) {
+        store.dispatch(updateGraphStyleData(grass.grass))
+      }
+      if (grass.syncGrass) {
+        store.dispatch(syncGrass(grass.grass))
+      }
+    })
+    .mapTo({ type: 'NOOP' })
+
 export const syncFoldersEpic = (action$, store) =>
   action$
     .filter(action =>
@@ -329,6 +353,21 @@ export const syncFoldersEpic = (action$, store) =>
       if (syncValue && syncValue.syncObj) {
         const folders = composeFoldersToSync(store, syncValue)
         return syncItems('folders', folders)
+      }
+      return { type: 'NOOP' }
+    })
+
+export const syncGrassEpic = (action$, store) =>
+  action$
+    .filter(action =>
+      [SYNC_GRASS, UPDATE_GRAPH_STYLE_DATA].includes(action.type)
+    )
+    .map(action => {
+      const syncValue = getSync(store.getState())
+
+      if (syncValue && syncValue.syncObj) {
+        const grass = composeGrassToSync(store, syncValue)
+        return syncItems('grass', grass)
       }
       return { type: 'NOOP' }
     })

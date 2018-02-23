@@ -63,8 +63,10 @@ import {
   clearSyncEpic,
   syncFavoritesEpic,
   loadFavoritesFromSyncEpic,
+  loadGrassFromSyncEpic,
   loadFoldersFromSyncEpic,
-  syncFoldersEpic
+  syncFoldersEpic,
+  syncGrassEpic
 } from './modules/sync/syncDuck'
 import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
 import {
@@ -109,10 +111,12 @@ export default combineEpics(
   featuresDiscoveryEpic,
   syncFavoritesEpic,
   loadFavoritesFromSyncEpic,
+  loadGrassFromSyncEpic,
   syncItemsEpic,
   clearSyncEpic,
   loadFoldersFromSyncEpic,
   syncFoldersEpic,
+  syncGrassEpic,
   credentialsTimeoutEpic,
   bootEpic,
   udcStartupEpic,
