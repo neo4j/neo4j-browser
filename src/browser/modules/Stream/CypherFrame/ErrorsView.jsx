@@ -30,6 +30,8 @@ import Render from 'browser-components/Render'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
 import { isUnknownProcedureError } from 'services/cypherErrorsHelper'
+import { errorMessageFormater } from './../errorMessageFormater'
+
 import {
   StyledCypherErrorMessage,
   StyledHelpContent,
@@ -52,15 +54,17 @@ export class ErrorsView extends Component {
     if (!error || !error.code) {
       return null
     }
+    const fullError = errorMessageFormater(error.code, error.message)
+
     return (
       <StyledHelpFrame>
         <StyledHelpContent>
           <StyledHelpDescription>
             <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            <StyledH4>{error.code}</StyledH4>
+            <StyledH4>{fullError.code}</StyledH4>
           </StyledHelpDescription>
           <StyledDiv>
-            <StyledPreformattedArea>{error.message}</StyledPreformattedArea>
+            <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>
           </StyledDiv>
           <Render if={isUnknownProcedureError(error)}>
             <StyledLinkContainer>
@@ -89,13 +93,12 @@ export class ErrorsStatusbar extends Component {
   render () {
     const error = this.props.result
     if (!error || (!error.code && !error.message)) return null
-    const fullError = `${error.code}${error.message
-      ? ':'
-      : ''} ${error.message || ''}`
+    const fullError = errorMessageFormater(error.code, error.message)
+
     return (
       <Ellipsis>
-        <ErrorText title={fullError}>
-          <ExclamationTriangleIcon /> {fullError}
+        <ErrorText title={fullError.title}>
+          <ExclamationTriangleIcon /> {fullError.message}
         </ErrorText>
       </Ellipsis>
     )

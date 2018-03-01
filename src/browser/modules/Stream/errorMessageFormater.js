@@ -18,21 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
-import Ellipsis from 'browser-components/Ellipsis'
-import { errorMessageFormater } from './errorMessageFormater'
-import { ErrorText } from './styled'
+import { IESecurityError18 } from './Errors/IESecurityErrors'
 
-const FrameError = props => {
-  if (!props || (!props.code && !props.message)) return null
-  const fullError = errorMessageFormater(props.code, props.message)
-  return (
-    <Ellipsis>
-      <ErrorText title={fullError.title}>
-        <ExclamationTriangleIcon /> {fullError.message}
-      </ErrorText>
-    </Ellipsis>
-  )
+const error = (title, message) => ({
+  title,
+  message: message || title
+})
+
+const knownErrors = {
+  18: IESecurityError18
 }
 
-export default FrameError
+export const errorMessageFormater = (code, message) =>
+  error(`${code}${message ? ':' : ''} ${message || ''}`, knownErrors[code])
