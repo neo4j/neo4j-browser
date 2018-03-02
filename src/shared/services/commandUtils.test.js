@@ -47,7 +47,7 @@ describe('commandutils', () => {
     })
   })
 
-  test('splitStringOnFirst should split strings on first occurance of delimiter ', () => {
+  test('splitStringOnFirst should split strings on first occurrence of delimiter ', () => {
     const testStrs = [
       {
         str: ':config test:"hello :space"',
@@ -67,7 +67,7 @@ describe('commandutils', () => {
     })
   })
 
-  test('splitStringOnLast should split strings on last occurance of delimiter ', () => {
+  test('splitStringOnLast should split strings on last occurrence of delimiter ', () => {
     const testStrs = [
       {
         str: ':config test:"hello :space"',
