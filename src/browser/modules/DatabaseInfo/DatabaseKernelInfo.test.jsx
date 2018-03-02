@@ -31,7 +31,7 @@ describe('connected as', () => {
     )
     expect(wrapper.find('.database-kernel-info').length).toBe(0)
   })
-  test('should show verion and edition when connected', () => {
+  test('should show version and edition when connected', () => {
     const databaseKernelInfo = {
       version: 'test',
       edition: ['3.1.0']
