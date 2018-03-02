@@ -24,7 +24,7 @@ import RolesSelector from './RolesSelector'
 import { shallow } from 'enzyme'
 
 describe('RolesSelector', () => {
-  test('should return component when roles are avaiable', () => {
+  test('should return component when roles are available', () => {
     const wrapper = shallow(<RolesSelector roles={['1', '2']} />)
     expect(wrapper.find('option').length).toBe(2)
     expect(
@@ -40,7 +40,7 @@ describe('RolesSelector', () => {
         .text()
     ).toBe('2')
   })
-  test('should not return component when roles are unavaiable', () => {
+  test('should not return component when roles are unavailable', () => {
     const wrapper = shallow(<RolesSelector roles={[]} />)
     expect(wrapper.type()).toBe(null)
   })
