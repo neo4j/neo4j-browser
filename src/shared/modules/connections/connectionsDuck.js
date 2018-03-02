@@ -55,8 +55,8 @@ export const UPDATE_CONNECTION_STATE = 'connections/UPDATE_CONNECTION_STATE'
 export const UPDATE_RETAIN_CREDENTIALS = NAME + '/UPDATE_RETAIN_CREDENTIALS'
 export const UPDATE_AUTH_ENABLED = NAME + '/UPDATE_AUTH_ENABLED'
 export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
-export const SWTICH_CONNECTION_SUCCESS = NAME + '/SWTICH_CONNECTION_SUCCESS'
-export const SWTICH_CONNECTION_FAILED = NAME + '/SWTICH_CONNECTION_FAILED'
+export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
+export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -498,7 +498,7 @@ export const switchConnectionEpic = (action$, store) => {
           )
           .then(connection => {
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
-            resolve({ type: SWTICH_CONNECTION_SUCCESS })
+            resolve({ type: SWITCH_CONNECTION_SUCCESS })
           })
           .catch(e => {
             store.dispatch(setActiveConnection(null))
@@ -508,7 +508,7 @@ export const switchConnectionEpic = (action$, store) => {
                 password: ''
               })
             )
-            resolve({ type: SWTICH_CONNECTION_FAILED })
+            resolve({ type: SWITCH_CONNECTION_FAILED })
           })
       })
     })
@@ -516,7 +516,7 @@ export const switchConnectionEpic = (action$, store) => {
 
 export const switchConnectionSuccessEpic = (action$, store) => {
   return action$
-    .ofType(SWTICH_CONNECTION_SUCCESS)
+    .ofType(SWITCH_CONNECTION_SUCCESS)
     .do(() => store.dispatch(updateConnectionState(CONNECTED_STATE)))
     .do(() => store.dispatch(fetchMetaData()))
     .mapTo(
@@ -527,7 +527,7 @@ export const switchConnectionSuccessEpic = (action$, store) => {
 }
 export const switchConnectionFailEpic = (action$, store) => {
   return action$
-    .ofType(SWTICH_CONNECTION_FAILED)
+    .ofType(SWITCH_CONNECTION_FAILED)
     .do(() => store.dispatch(updateConnectionState(DISCONNECTED_STATE)))
     .mapTo(
       executeSystemCommand(getCmdChar(store.getState()) + 'server switch fail')
