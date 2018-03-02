@@ -118,7 +118,7 @@ const visualSettings = [
       {
         maxNeighbours: {
           displayName: 'Max Neighbours',
-          tooltip: 'Limit exploratary queries to this limit.'
+          tooltip: 'Limit exploratory queries to this limit.'
         }
       },
       {
