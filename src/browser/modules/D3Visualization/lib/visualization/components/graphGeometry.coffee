@@ -53,8 +53,8 @@ class neo.NeoD3Geometry
       baseline = (1 + iLine - lineCount / 2) * lineHeight
       if (style.forNode(node).get("icon-code"))
         baseline = baseline + node.radius/3
-      constainingHeight = if iLine < lineCount / 2 then baseline - lineHeight else baseline
-      lineWidth = Math.sqrt(square(node.radius) - square(constainingHeight)) * 2
+      containingHeight = if iLine < lineCount / 2 then baseline - lineHeight else baseline
+      lineWidth = Math.sqrt(square(node.radius) - square(containingHeight)) * 2
       {
       node: node
       text: ''
