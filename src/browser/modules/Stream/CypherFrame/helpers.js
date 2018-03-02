@@ -175,7 +175,7 @@ export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
 }
 
 /**
- * Transformes an array of neo4j driver records to an array of objects.
+ * Transforms an array of neo4j driver records to an array of objects.
  * Flattens graph items so only their props are left.
  * Leaves Neo4j Integers as they were.
  */
@@ -190,7 +190,7 @@ export const transformResultRecordsToResultArray = records => {
 }
 
 /**
- * Transformes an array of neo4j driver records to an array of objects.
+ * Transforms an array of neo4j driver records to an array of objects.
  * Leaves all values as they were, just changing the data structure.
  */
 export const extractRecordsToResultArray = (records = []) => {
