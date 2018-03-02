@@ -110,7 +110,7 @@ const NewFolderStyledButton = styled.button`
   outline: none;
 `
 
-export const SytledFavFolderButtonSpan = styled.span`float: right;`
+export const StyledFavFolderButtonSpan = styled.span`float: right;`
 
 export const FolderButtonContainer = styled.span`float: right;`
 
@@ -159,9 +159,9 @@ export const DeleteFavButton = props => {
       <BinIcon className={'remove'} />
     ) : null
   return (
-    <SytledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>
+    <StyledFavFolderButtonSpan onClick={() => props.removeClick(props.id)}>
       {rightIcon}
-    </SytledFavFolderButtonSpan>
+    </StyledFavFolderButtonSpan>
   )
 }
 
