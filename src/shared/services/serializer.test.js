@@ -28,7 +28,7 @@ describe('resultTransform', () => {
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('col1,col2')
     })
-    test('should escape qoute with double qoute in columns', () => {
+    test('should escape quote with double quote in columns', () => {
       const cols = ['col1', '"col2"']
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('col1,"""col2"""')
@@ -67,7 +67,7 @@ describe('resultTransform', () => {
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('"column, first","column, second"')
     })
-    test('should both escape and qoute data', () => {
+    test('should both escape and quote data', () => {
       const cols = ['column, "first"', 'column, "second"']
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('"column, ""first""","column, ""second"""')
