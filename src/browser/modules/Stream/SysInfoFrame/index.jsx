@@ -59,7 +59,7 @@ export class SysInfoFrame extends Component {
         ccRecord.role,
         ccRecord.addresses.join(', '),
         <Render if={httpUrlForMember.length !== 0}>
-          <a taget='_blank' href={httpUrlForMember[0]}>
+          <a target='_blank' href={httpUrlForMember[0]}>
             Open
           </a>
         </Render>
