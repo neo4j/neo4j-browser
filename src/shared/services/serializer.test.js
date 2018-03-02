@@ -23,7 +23,7 @@ import { CSVSerializer } from './serializer'
 
 describe('resultTransform', () => {
   describe('CSV', () => {
-    test('should serlialize array to CSV', () => {
+    test('should serialize array to CSV', () => {
       const cols = ['col1', 'col2']
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('col1,col2')
