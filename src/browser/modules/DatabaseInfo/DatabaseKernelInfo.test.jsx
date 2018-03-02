@@ -24,7 +24,7 @@ import { DatabaseKernelInfo } from './DatabaseKernelInfo'
 import { shallow } from 'enzyme'
 
 describe('connected as', () => {
-  test('should not show database kernal info if not connected', () => {
+  test('should not show database kernel info if not connected', () => {
     const databaseKernelInfo = null
     const wrapper = shallow(
       <DatabaseKernelInfo databaseKernelInfo={databaseKernelInfo} />
