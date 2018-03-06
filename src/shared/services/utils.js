@@ -333,5 +333,49 @@ export const stringifyMod = (
   return indentation + '"' + value.toString().replace(escRE, escFunc) + '"'
 }
 
+export const safetlyAddObjectProp = (obj, prop, val) => {
+  obj = escapeReservedProps(obj, prop)
+  obj[prop] = val
+  return obj
+}
+
+export const safetlyRemoveObjectProp = (obj, prop) => {
+  if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
+    return obj
+  }
+  delete obj[prop]
+  obj = unEscapeReservedProps(obj, prop)
+  return obj
+}
+
+export const escapeReservedProps = (obj, prop) => {
+  if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
+    return obj
+  }
+  obj = safetlyAddObjectProp(obj, getEscapedObjectProp(prop), obj[prop])
+  delete obj[prop]
+  return obj
+}
+
+export const unEscapeReservedProps = (obj, prop) => {
+  let propName = getEscapedObjectProp(prop)
+  if (!Object.prototype.hasOwnProperty.call(obj, propName)) {
+    return obj
+  }
+  while (true) {
+    if (!Object.prototype.hasOwnProperty.call(obj, propName)) {
+      break
+    }
+    obj[getUnescapedObjectProp(propName)] = obj[propName]
+    delete obj[propName]
+    propName = getEscapedObjectProp(propName)
+  }
+  return obj
+}
+
+const getEscapedObjectProp = prop => `\\${prop}`
+const getUnescapedObjectProp = prop =>
+  prop.indexOf('\\') === 0 ? prop.substr(1) : prop // A bit weird because of escape chars
+
 // Epic helpers
 export const put = dispatch => action => dispatch(action)

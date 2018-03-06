@@ -27,9 +27,8 @@ integerFn.prototype.toString = function () {
 
 var out = {
   v1: {
-    Int: integerFn,
     isInt: function (val) {
-      return val instanceof integerFn
+      return val instanceof out.v1.Integer
     },
     types: {
       Node: function Node (id, labels, properties) {
@@ -56,7 +55,7 @@ var out = {
         this.end = end
       }
     },
-    Integer: function Integer ({ low, high }) {
+    Integer: function Integer (low, high) {
       this.low = low
       this.high = high
     }
@@ -78,6 +77,16 @@ out.v1.types.PathSegment.prototype.toString = function () {
 out.v1.Integer.prototype.toInt = function () {
   return this.low
 }
-out.v1.int = val => new out.v1.Integer(val)
+out.v1.Integer.prototype.toString = function () {
+  return this.low
+}
+out.v1.Int = out.v1.Integer
+out.v1.int = val => {
+  if (val /* is compatible */ instanceof out.v1.Integer) return val
+  if (typeof val === 'number') return new out.v1.Integer(val)
+  if (typeof val === 'string') return new out.v1.Integer(val)
+  // Throws for non-objects, converts non-instanceof Integer:
+  return new out.v1.Integer(val.low, val.high)
+}
 
 module.exports = out
