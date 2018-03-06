@@ -44,6 +44,7 @@ import {
   dbMetaEpic,
   clearMetaOnDisconnectEpic
 } from './modules/dbMeta/dbMetaDuck'
+import { jmxEpic } from './modules/jmx/jmxDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
 import {
   discoveryOnStartupEpic,
@@ -90,6 +91,7 @@ export default combineEpics(
   retainCredentialsSettingsEpic,
   checkSettingsForRoutingDriver,
   connectEpic,
+  jmxEpic,
   disconnectEpic,
   silentDisconnectEpic,
   startupConnectEpic,

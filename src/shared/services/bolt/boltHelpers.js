@@ -19,7 +19,6 @@
  */
 
 /* global location */
-import bolt from './bolt'
 import { getUrlInfo } from 'services/utils'
 
 export const getEncryptionMode = options => {
@@ -33,57 +32,6 @@ export const getDiscoveryEndpoint = () => {
   const url = location.host ? location.href : 'http://localhost:7474/'
   const info = getUrlInfo(url)
   return `${info.protocol}//${info.host}/`
-}
-
-export const getServerConfig = (includePrefixes = []) => {
-  return getJmxValues([['Configuration']]).then(confs => {
-    if (!confs) return {}
-    const conf = confs[0]
-    let filtered
-    if (conf) {
-      Object.keys(conf)
-        .filter(
-          key =>
-            includePrefixes.length < 1 ||
-            includePrefixes.some(pfx => key.startsWith(pfx))
-        )
-        .forEach(
-          key =>
-            (filtered = {
-              ...filtered,
-              [key]: bolt.itemIntToNumber(conf[key].value)
-            })
-        )
-    }
-    return filtered || conf
-  })
-}
-
-export const getJmxValues = (nameAttributePairs = []) => {
-  if (!nameAttributePairs.length) return Promise.reject(new Error())
-  return bolt
-    .directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
-    .then(res => {
-      let out = []
-      nameAttributePairs.forEach(pair => {
-        const [name, attribute = null] = pair
-        if (!name) return out.push(null)
-        const part = res.records.filter(record =>
-          record.get('name').match(new RegExp(name + '$'))
-        )
-        if (!part.length) return out.push(null)
-        const attributes = part[0].get('attributes')
-        if (!attribute) return out.push(attributes)
-        const key = attribute
-        if (typeof attributes[key] === 'undefined') return out.push(null)
-        const val = bolt.itemIntToNumber(attributes[key].value)
-        out.push({ [key]: val })
-      })
-      return out
-    })
-    .catch(e => {
-      return null
-    })
 }
 
 export const isConfigValTruthy = val =>
