@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { recursivelyTypeGraphItems } from './boltMappings'
 export const RUN_CYPHER_MESSAGE = 'RUN_CYPHER_MESSAGE'
 export const CANCEL_TRANSACTION_MESSAGE = 'CANCEL_TRANSACTION_MESSAGE'
 export const CYPHER_ERROR_MESSAGE = 'CYPHER_ERROR_MESSAGE'
@@ -51,7 +51,7 @@ export const cancelTransactionMessage = id => {
 export const cypherResponseMessage = result => {
   return {
     type: CYPHER_RESPONSE_MESSAGE,
-    result
+    result: recursivelyTypeGraphItems(result)
   }
 }
 
