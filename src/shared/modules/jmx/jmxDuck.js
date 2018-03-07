@@ -29,7 +29,6 @@ import {
   UPDATE_CONNECTION_STATE,
   connectionLossFilter
 } from 'shared/modules/connections/connectionsDuck'
-import { CYPHER_SUCCEEDED } from 'shared/modules/commands/commandsDuck'
 import { FORCE_FETCH } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export const NAME = 'jmx'
@@ -118,7 +117,6 @@ export const jmxEpic = (some$, store) =>
     .ofType(UPDATE_CONNECTION_STATE)
     .filter(s => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
-    .merge(some$.ofType(CYPHER_SUCCEEDED))
     .mergeMap(() => {
       return Rx.Observable
         .timer(0, 20000)

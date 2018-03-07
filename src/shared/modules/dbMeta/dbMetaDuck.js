@@ -22,7 +22,7 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { getJmxValues, forceFetchJmxValues } from 'shared/modules/jmx/jmxDuck'
+import { getJmxValues } from 'shared/modules/jmx/jmxDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
@@ -284,7 +284,6 @@ export const dbMetaEpic = (some$, store) =>
           )
           .filter(r => r)
           .do(res => store.dispatch(updateMeta(res)))
-          .do(res => store.dispatch(forceFetchJmxValues()))
           // Version and edition
           .do(() => {
             const jmxValueResult = getJmxValues(store.getState(), [
