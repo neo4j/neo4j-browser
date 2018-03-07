@@ -75,7 +75,7 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
   store.dispatch({ ...message, type: channel, ...origin })
 })
 
-// Introduce environment to be able to fork funtionality
+// Introduce environment to be able to fork functionality
 const env = window && window.neo4jDesktopApi ? DESKTOP : WEB
 
 // Signal app upstart (for epics)

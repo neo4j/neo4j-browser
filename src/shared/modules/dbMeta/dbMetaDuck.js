@@ -99,7 +99,7 @@ function updateMetaForContext (state, meta, context) {
   const mapResult = (metaIndex, mapFunction) =>
     meta.records[metaIndex].get(1).map(mapFunction)
   const mapSingleValue = r => ({ val: r, context })
-  const mapInvokableValue = r => {
+  const mapInvocableValue = r => {
     const { name, signature, description } = r
     return {
       val: name,
@@ -126,10 +126,10 @@ function updateMetaForContext (state, meta, context) {
     .sort(compareMetaItems)
   const functions = state.functions
     .filter(notInCurrentContext)
-    .concat(mapResult(3, mapInvokableValue))
+    .concat(mapResult(3, mapInvocableValue))
   const procedures = state.procedures
     .filter(notInCurrentContext)
-    .concat(mapResult(4, mapInvokableValue))
+    .concat(mapResult(4, mapInvocableValue))
 
   return {
     labels,

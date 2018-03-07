@@ -30,7 +30,7 @@ import {
   StyledListItem,
   StyledFavoriteText,
   ExecFavoriteButton,
-  SytledFavFolderButtonSpan
+  StyledFavFolderButtonSpan
 } from './styled'
 
 function extractNameFromCommand (input) {
@@ -130,13 +130,13 @@ class FavoriteDp extends Component {
           {name}
         </StyledFavoriteText>
 
-        <SytledFavFolderButtonSpan>
+        <StyledFavFolderButtonSpan>
           <ConfirmationButton
             requestIcon={<BinIcon />}
             confirmIcon={<BinIcon deleteAction />}
             onConfirmed={() => this.props.removeClick(this.props.id)}
           />
-        </SytledFavFolderButtonSpan>
+        </StyledFavFolderButtonSpan>
       </StyledListItem>
     )
 

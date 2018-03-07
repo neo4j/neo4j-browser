@@ -181,7 +181,7 @@ const mapDispatchToProps = dispatch => {
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const switchConnection = (event, newContext, oldContext) => {
     const creds = getActiveCredentials('bolt', newContext)
-    if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
+    if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
     const httpsCreds = getActiveCredentials('https', newContext)
     const httpCreds = getActiveCredentials('http', newContext)
     const restApi = httpsCreds.enabled
@@ -199,7 +199,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
   const setInitialConnectionData = (graph, credentials, context) => {
     const creds = getActiveCredentials('bolt', context)
-    if (!creds) return // No conection. Ignore and let browser show connection lost msgs.
+    if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
     const httpsCreds = getActiveCredentials('https', context)
     const httpCreds = getActiveCredentials('http', context)
     const restApi = httpsCreds.enabled

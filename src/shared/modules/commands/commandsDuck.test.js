@@ -409,7 +409,7 @@ describe('commandsDuck', () => {
     })
   })
   describe(':unknown', () => {
-    test('unkown commands send out an UNKNOWN_COMMAND acation and not added to history', done => {
+    test('unknown commands send out an UNKNOWN_COMMAND action and not added to history', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'unknown'
       const id = 1

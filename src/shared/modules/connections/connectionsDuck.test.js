@@ -393,7 +393,7 @@ describe('switchConnectionEpic', () => {
     bolt.openConnection.mockReturnValue(Promise.resolve()) // eslint-disable-line
 
     const p = new Promise((resolve, reject) => {
-      bus.take(connections.SWTICH_CONNECTION_SUCCESS, currentAction => {
+      bus.take(connections.SWITCH_CONNECTION_SUCCESS, currentAction => {
         // Then
         const actions = store.getActions()
         try {
@@ -434,7 +434,7 @@ describe('switchConnectionEpic', () => {
     bolt.openConnection.mockReturnValue(Promise.reject()) // eslint-disable-line
 
     const p = new Promise((resolve, reject) => {
-      bus.take(connections.SWTICH_CONNECTION_FAILED, currentAction => {
+      bus.take(connections.SWITCH_CONNECTION_FAILED, currentAction => {
         // Then
         const actions = store.getActions()
         try {

@@ -80,7 +80,7 @@ export const AutoRefreshSpan = styled.span`
 
 const ToggleLabel = styled.label`cursor: pointer;`
 
-export const AutoRefreshToogle = props => {
+export const AutoRefreshToggle = props => {
   return (
     <ToggleLabel>
       AUTO-REFRESH &nbsp;

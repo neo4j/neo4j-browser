@@ -173,7 +173,7 @@ export class ExplorerComponent extends Component {
   render () {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
-    // and also doing this in a different order from the graph. This leads to different default colors being asigned to different labels.
+    // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
     var legend
     if (this.state.freezeLegend) {
       legend = (

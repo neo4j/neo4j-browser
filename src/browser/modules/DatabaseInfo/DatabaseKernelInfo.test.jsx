@@ -24,14 +24,14 @@ import { DatabaseKernelInfo } from './DatabaseKernelInfo'
 import { shallow } from 'enzyme'
 
 describe('connected as', () => {
-  test('should not show database kernal info if not connected', () => {
+  test('should not show database kernel info if not connected', () => {
     const databaseKernelInfo = null
     const wrapper = shallow(
       <DatabaseKernelInfo databaseKernelInfo={databaseKernelInfo} />
     )
     expect(wrapper.find('.database-kernel-info').length).toBe(0)
   })
-  test('should show verion and edition when connected', () => {
+  test('should show version and edition when connected', () => {
     const databaseKernelInfo = {
       version: 'test',
       edition: ['3.1.0']

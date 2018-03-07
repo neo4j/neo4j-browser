@@ -32,7 +32,7 @@ import {
   FoldersButton,
   StyledList,
   StyledListHeaderItem,
-  SytledFavFolderButtonSpan,
+  StyledFavFolderButtonSpan,
   EditFolderButton,
   FolderButtonContainer,
   EditFolderInput
@@ -101,14 +101,14 @@ class Folder extends Component {
                   }}
                 />
               </Render>&nbsp;
-              <SytledFavFolderButtonSpan>
+              <StyledFavFolderButtonSpan>
                 <ConfirmationButton
                   requestIcon={<BinIcon />}
                   confirmIcon={<BinIcon deleteAction />}
                   onConfirmed={() =>
                     this.props.removeClick(this.props.folder.id)}
                 />
-              </SytledFavFolderButtonSpan>
+              </StyledFavFolderButtonSpan>
             </FolderButtonContainer>
           </StyledListHeaderItem>
           {this.state.active ? this.props.children : null}

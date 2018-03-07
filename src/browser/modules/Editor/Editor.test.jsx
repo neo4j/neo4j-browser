@@ -163,7 +163,7 @@ describe('Editor', () => {
     ).toEqual('latest')
   })
 
-  test.skip('should resest history after execution', () => {
+  test.skip('should reset history after execution', () => {
     const history = [{ cmd: 'latest' }, { cmd: 'middle' }, { cmd: 'oldest' }]
     const wrapper = mount(
       <EditorComponent

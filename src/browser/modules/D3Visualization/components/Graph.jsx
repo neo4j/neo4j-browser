@@ -53,7 +53,7 @@ export class GraphComponent extends Component {
     })
   }
 
-  zoomOutlicked (el) {
+  zoomOutClicked (el) {
     let limits = this.graphView.zoomOut(el)
     this.setState({
       zoomInLimitReached: limits.zoomInLimit,
@@ -182,7 +182,7 @@ export class GraphComponent extends Component {
             className={
               this.state.zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'
             }
-            onClick={this.zoomOutlicked.bind(this)}
+            onClick={this.zoomOutClicked.bind(this)}
           >
             <ZoomOutIcon />
           </StyledZoomButton>

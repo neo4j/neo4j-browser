@@ -37,8 +37,8 @@ export class FileDrop extends Component {
       error: null,
       success: null
     }
-    this.favoriteExtenstions = ['cyp', 'cypher', 'cql', 'txt']
-    this.grassExtenstions = ['grass']
+    this.favoriteExtensions = ['cyp', 'cypher', 'cql', 'txt']
+    this.grassExtensions = ['grass']
     this.fileReader = this.props.fileReader || new FileReader()
   }
   onDrop (files) {
@@ -48,9 +48,9 @@ export class FileDrop extends Component {
     const fileExtension = file.name.split('.').pop()
 
     let loader = () => {}
-    if (this.favoriteExtenstions.includes(fileExtension)) {
+    if (this.favoriteExtensions.includes(fileExtension)) {
       loader = this.props.onFavoriteFileDropped
-    } else if (this.grassExtenstions.includes(fileExtension)) {
+    } else if (this.grassExtensions.includes(fileExtension)) {
       loader = this.props.onGrassFileDropped
     } else {
       return this.setState({

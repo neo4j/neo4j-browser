@@ -71,7 +71,7 @@ describe('commandInterpreterHelper', () => {
       expect(actualCommandName).toEqual(expectedCommandName)
     })
 
-    test('should give the "catch-all" match back whn unkown command', () => {
+    test('should give the "catch-all" match back with unknown command', () => {
       // Given
       const cmd = 'nomatch'
       const expectedCommandName = 'catch-all'

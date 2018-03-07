@@ -45,7 +45,7 @@ import {
   StyledTd,
   Code,
   StyledStatusBar,
-  AutoRefreshToogle,
+  AutoRefreshToggle,
   RefreshQueriesButton,
   AutoRefreshSpan,
   StatusbarWrapper
@@ -277,7 +277,7 @@ export class QueriesFrame extends Component {
                 <RefreshIcon />
               </RefreshQueriesButton>
               <AutoRefreshSpan>
-                <AutoRefreshToogle
+                <AutoRefreshToggle
                   checked={this.state.autoRefresh}
                   onClick={e => this.setAutoRefresh(e.target.checked)}
                 />

@@ -11,7 +11,7 @@
 ### Testing
 `yarn test` to run a single test run. A linter will run first.
 
-`yarn dev` to have continous testing on every file change.
+`yarn dev` to have continuous testing on every file change.
 
 ## Devtools
 Download these two chrome extensions:

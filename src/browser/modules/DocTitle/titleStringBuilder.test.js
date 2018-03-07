@@ -32,7 +32,7 @@ describe('asTitleString', () => {
     // Then
     expect(title).toBe('Neo4j Browser')
   })
-  test('should return static copy if there is connectionData but values are both falsey', () => {
+  test('should return static copy if there is connectionData but values are both falsy', () => {
     // Given
     const username = undefined
     const host = null
