@@ -106,10 +106,6 @@ export const updateJmxValues = values => ({
   values
 })
 
-export const forceFetchJmxValues = () => ({
-  type: FORCE_FETCH
-})
-
 // Epics
 
 export const jmxEpic = (some$, store) =>

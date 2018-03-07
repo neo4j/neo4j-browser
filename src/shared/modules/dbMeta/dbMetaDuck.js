@@ -293,9 +293,10 @@ export const dbMetaEpic = (some$, store) =>
               ['Configuration', 'unsupported.dbms.edition'],
               ['Store file sizes', 'TotalStoreSize']
             ])
-
-            if (!jmxValueResult) return
-
+            if (
+              !jmxValueResult ||
+              jmxValueResult.filter(value => !!value).length === 0
+            ) { return }
             const jmxValues = jmxValueResult.reduce((obj, item) => {
               const key = Object.keys(item)[0]
               obj[key] = item[key]
@@ -323,47 +324,51 @@ export const dbMetaEpic = (some$, store) =>
             })
           })
           // Server config for browser
-          .do(() => {
-            const settings = getServerConfig(store.getState(), ['browser.'])
-            if (!settings) return
-            let retainCredentials = true
-            if (
-              // Check if we should wipe user creds from localstorage
-              typeof settings['browser.retain_connection_credentials'] !==
-                'undefined' &&
-              isConfigValFalsy(
-                settings['browser.retain_connection_credentials']
+          .mergeMap(() => {
+            return Rx.Observable.from(() => {
+              const settings = getServerConfig(store.getState(), ['browser.'])
+              if (!settings) return
+              let retainCredentials = true
+              if (
+                // Check if we should wipe user creds from localstorage
+                typeof settings['browser.retain_connection_credentials'] !==
+                  'undefined' &&
+                isConfigValFalsy(
+                  settings['browser.retain_connection_credentials']
+                )
+              ) {
+                retainCredentials = false
+              }
+
+              // This assignment is workaround to have prettier
+              // play nice with standardJS
+              // Use isConfigValFalsy to cast undefined to true
+              const aocConfig = !isConfigValFalsy(
+                settings['browser.allow_outgoing_connections']
               )
-            ) {
-              retainCredentials = false
-            }
+              settings[`browser.allow_outgoing_connections`] = aocConfig
 
-            // This assignment is workaround to have prettier
-            // play nice with standardJS
-            // Use isConfigValFalsy to cast undefined to true
-            const aocConfig = !isConfigValFalsy(
-              settings['browser.allow_outgoing_connections']
-            )
-            settings[`browser.allow_outgoing_connections`] = aocConfig
-
-            store.dispatch(setRetainCredentials(retainCredentials))
-            store.dispatch(updateSettings(settings))
+              store.dispatch(setRetainCredentials(retainCredentials))
+              store.dispatch(updateSettings(settings))
+            })
           })
           // Server security settings
-          .do(() => {
-            const settings = getServerConfig(store.getState(), [
-              'dbms.security'
-            ])
-            if (!settings) return
-            const authEnabledSetting = 'dbms.security.auth_enabled'
-            let authEnabled = true
-            if (
-              typeof settings[authEnabledSetting] !== 'undefined' &&
-              isConfigValFalsy(settings[authEnabledSetting])
-            ) {
-              authEnabled = false
-            }
-            store.dispatch(setAuthEnabled(authEnabled))
+          .mergeMap(() => {
+            return Rx.Observable.from(() => {
+              const settings = getServerConfig(store.getState(), [
+                'dbms.security'
+              ])
+              if (!settings) return
+              const authEnabledSetting = 'dbms.security.auth_enabled'
+              let authEnabled = true
+              if (
+                typeof settings[authEnabledSetting] !== 'undefined' &&
+                isConfigValFalsy(settings[authEnabledSetting])
+              ) {
+                authEnabled = false
+              }
+              store.dispatch(setAuthEnabled(authEnabled))
+            })
           })
           // Cluster role
           .mergeMap(() =>
