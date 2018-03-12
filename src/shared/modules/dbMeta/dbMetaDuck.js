@@ -20,12 +20,9 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import {
-  getJmxValues,
-  getServerConfig,
-  isConfigValFalsy
-} from 'services/bolt/boltHelpers'
+import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { getJmxValues } from 'shared/modules/jmx/jmxDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
@@ -94,6 +91,31 @@ export const shouldRetainConnectionCredentials = state => {
 /**
  * Helpers
  */
+
+export const getServerConfig = (state, includePrefixes = []) => {
+  const confs = getJmxValues(state, [['Configuration']])
+
+  if (!confs) return {}
+  const conf = confs[0]
+  let filtered
+  if (conf) {
+    Object.keys(conf)
+      .filter(
+        key =>
+          includePrefixes.length < 1 ||
+          includePrefixes.some(pfx => key.startsWith(pfx))
+      )
+      .forEach(
+        key =>
+          (filtered = {
+            ...filtered,
+            [key]: bolt.itemIntToNumber(conf[key].value)
+          })
+      )
+  }
+  return filtered || conf
+}
+
 function updateMetaForContext (state, meta, context) {
   const notInCurrentContext = e => e.context !== context
   const mapResult = (metaIndex, mapFunction) =>
@@ -263,31 +285,35 @@ export const dbMetaEpic = (some$, store) =>
           .filter(r => r)
           .do(res => store.dispatch(updateMeta(res)))
           // Version and edition
-          .mergeMap(() => {
-            return Rx.Observable
-              .fromPromise(
-                getJmxValues([
-                  ['Kernel', 'KernelVersion'],
-                  ['Kernel', 'StoreId'],
-                  ['Kernel', 'DatabaseName'],
-                  ['Configuration', 'unsupported.dbms.edition'],
-                  ['Store file sizes', 'TotalStoreSize']
-                ])
-              )
-              .catch(e => Rx.Observable.of(null))
-          })
-          .do(res => {
-            if (!res) return
-            const [kvObj, storeObj, nameObj, edObj, sizeObj] = res
-            const versionMatch = kvObj.KernelVersion.match(/version:\s([^,$]+)/)
+          .do(() => {
+            const jmxValueResult = getJmxValues(store.getState(), [
+              ['Kernel', 'KernelVersion'],
+              ['Kernel', 'StoreId'],
+              ['Kernel', 'DatabaseName'],
+              ['Configuration', 'unsupported.dbms.edition'],
+              ['Store file sizes', 'TotalStoreSize']
+            ])
+            if (
+              !jmxValueResult ||
+              jmxValueResult.filter(value => !!value).length === 0
+            ) { return }
+            const jmxValues = jmxValueResult.reduce((obj, item) => {
+              const key = Object.keys(item)[0]
+              obj[key] = item[key]
+              return obj
+            }, {})
+
+            const versionMatch = jmxValues.KernelVersion.match(
+              /version:\s([^,$]+)/
+            )
             const version =
               versionMatch !== null && versionMatch.length > 1
                 ? versionMatch[1]
                 : null
-            const edition = edObj['unsupported.dbms.edition']
-            const storeId = storeObj['StoreId']
-            const dbName = nameObj['DatabaseName']
-            const storeSize = sizeObj['TotalStoreSize']
+            const edition = jmxValues['unsupported.dbms.edition']
+            const storeId = jmxValues.StoreId
+            const dbName = jmxValues.DatabaseName
+            const storeSize = jmxValues.TotalStoreSize
             store.dispatch({
               type: UPDATE_SERVER,
               version,
@@ -299,7 +325,8 @@ export const dbMetaEpic = (some$, store) =>
           })
           // Server config for browser
           .mergeMap(() => {
-            return getServerConfig(['browser.']).then(settings => {
+            return Rx.Observable.from(() => {
+              const settings = getServerConfig(store.getState(), ['browser.'])
               if (!settings) return
               let retainCredentials = true
               if (
@@ -327,7 +354,10 @@ export const dbMetaEpic = (some$, store) =>
           })
           // Server security settings
           .mergeMap(() => {
-            return getServerConfig(['dbms.security']).then(settings => {
+            return Rx.Observable.from(() => {
+              const settings = getServerConfig(store.getState(), [
+                'dbms.security'
+              ])
               if (!settings) return
               const authEnabledSetting = 'dbms.security.auth_enabled'
               let authEnabled = true
