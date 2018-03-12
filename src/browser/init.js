@@ -19,7 +19,6 @@
  */
 
 import 'babel-polyfill'
-import 'preact/devtools'
 import './styles/bootstrap.grid-only.min.css'
 import './styles/streamline.css'
 import './styles/global-styles'
@@ -28,3 +27,7 @@ import './styles/neo4j-world.css'
 import './styles/font-awesome.min.css'
 import './styles/inconsolata.css'
 import './styles/open-sans.css'
+
+if (process.env.NODE_ENV !== 'production') {
+  require('preact/devtools')
+}
