@@ -22,7 +22,7 @@ export const font = {}
 
 export const dim = {
   // Editor bar
-  editorbarHeight: 70,
+  editorbarHeight: 71,
   // Frame
   frameBodyHeight: 550,
   frameTitlebarHeight: 39,
