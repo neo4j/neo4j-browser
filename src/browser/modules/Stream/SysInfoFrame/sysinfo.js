@@ -40,12 +40,12 @@ export const getTableDataFromRecords = records => {
   )
   const tx =
     flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) || {}
-  const kernel = Object.assign(
-    {},
-    flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`]),
-    flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`]),
-    flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`])
-  )
+  const kernel = {
+    ...flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`]),
+    ...flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`]),
+    ...flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`]),
+    ...flattenAttributes(result[`${jmxQueryPrefix},name=Store sizes`])
+  }
   const ha = result[`${jmxQueryPrefix},name=High Availability`]
     ? flattenAttributes(result[`${jmxQueryPrefix},name=High Availability`])
     : null
