@@ -34,7 +34,10 @@ describe('Neo4j Browser', () => {
   it('sets new login credentials', () => {
     cy.title().should('include', 'Neo4j Browser')
 
-    cy.get('input[data-test-id="boltaddress"]').type('bolt://localhost:7687')
+    cy
+      .get('input[data-test-id="boltaddress"]')
+      .clear()
+      .type('bolt://localhost:7687')
 
     cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
     cy.get('input[data-test-id="password"]').should('have.value', '')
