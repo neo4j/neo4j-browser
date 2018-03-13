@@ -104,8 +104,8 @@ function routedWriteTransaction (
               record._fieldLookup
             )
             if (typedRecord._fields) {
-              typedRecord._fields = typedRecord._fields.map(field =>
-                mappings.applyGraphTypes(field)
+              typedRecord._fields = mappings.applyGraphTypes(
+                typedRecord._fields
               )
             }
             return typedRecord

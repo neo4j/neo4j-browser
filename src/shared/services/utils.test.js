@@ -445,3 +445,67 @@ describe('utils', () => {
     })
   })
 })
+describe('Object props manipulation', () => {
+  const start1 = { x: 1, z: { zz: 1 } }
+  const start2 = { x: 1 }
+  const start3 = { x: 1, '\\x': 2, '\\\\x': 3 }
+  const res1 = { x: 1, y: 2, z: { zz: 1 } }
+  const res2 = { '\\x': 1, x: 2 }
+  const res3 = { x: 4, '\\x': 1, '\\\\x': 2, '\\\\\\x': 3 }
+  test('safetlyAddObjectProp adds prop if no collision', () => {
+    const orig = { ...start1 }
+    const res = utils.safetlyAddObjectProp(orig, 'y', 2)
+    expect(res).toEqual({ ...res1 })
+  })
+  test('safetlyAddObjectProp escapes existing props if collision', () => {
+    const orig = { ...start2 }
+    const res = utils.safetlyAddObjectProp(orig, 'x', 2)
+    expect(res).toEqual({ ...res2 })
+  })
+  test('safetlyAddObjectProp escapes existing props if collision chain', () => {
+    const orig = { ...start3 }
+    const res = utils.safetlyAddObjectProp(orig, 'x', 4)
+    expect(res).toEqual({ ...res3 })
+  })
+  test('safetlyRemoveObjectProp removes when no escapes', () => {
+    const orig = { ...res1 }
+    const res = utils.safetlyRemoveObjectProp(orig, 'y')
+    expect(res).toEqual({ ...start1 })
+  })
+  test('safetlyRemoveObjectProp removes when one escape', () => {
+    const orig = { ...res2 }
+    const res = utils.safetlyRemoveObjectProp(orig, 'x')
+    expect(res).toEqual({ ...start2 })
+  })
+  test('safetlyRemoveObjectProp removes when chained escapes', () => {
+    const orig = { ...res3 }
+    const res = utils.safetlyRemoveObjectProp(orig, 'x')
+    expect(res).toEqual({ ...start3 })
+  })
+  describe('escaping reserved props', () => {
+    const start1 = { x: 1, z: { zz: 1 } }
+    const start2 = { x: 1, '\\x': 2, '\\\\x': 3 }
+    const res1 = { x: 1, z: { zz: 1 } }
+    const res2 = { '\\x': 1, '\\\\x': 2, '\\\\\\x': 3 }
+    test('escapeReservedProps does nothing if no reserved props used', () => {
+      const orig = { ...start1 }
+      const res = utils.escapeReservedProps(orig, 'y')
+      expect(res).toEqual({ ...res1 })
+    })
+    test('escapeReservedProps does nothing if reserved prop used', () => {
+      const orig = { ...start2 }
+      const res = utils.escapeReservedProps(orig, 'x')
+      expect(res).toEqual({ ...res2 })
+    })
+    test('unEscapeReservedProps does nothing if no reserved props used', () => {
+      const orig = { ...res1 }
+      const res = utils.unEscapeReservedProps(orig, 'y')
+      expect(res).toEqual({ ...start1 })
+    })
+    test('unEscapeReservedProps does nothing if reserved prop used', () => {
+      const orig = { ...res2 }
+      const res = utils.unEscapeReservedProps(orig, 'x')
+      expect(res).toEqual({ ...start2 })
+    })
+  })
+})

@@ -19,7 +19,15 @@
  */
 
 import updateStatsFields from './updateStatisticsFields'
+import {
+  safetlyRemoveObjectProp,
+  safetlyAddObjectProp,
+  escapeReservedProps,
+  unEscapeReservedProps
+} from '../utils'
 import { v1 as neo4j } from 'neo4j-driver-alias'
+
+export const reservedTypePropertyName = 'transport-class'
 
 export function toObjects (records, converters) {
   const recordValues = records.map(record => {
@@ -278,65 +286,126 @@ export const flattenProperties = rows => {
   )
 }
 
-export const applyGraphTypes = item => {
+export const applyGraphTypes = (item, types = neo4j.types) => {
   if (item === null || item === undefined) {
     return item
   } else if (Array.isArray(item)) {
-    return item.map(applyGraphTypes)
+    return item.map(i => applyGraphTypes(i, types))
   } else if (
-    item.hasOwnProperty('labels') &&
-    item.hasOwnProperty('properties') &&
-    item.hasOwnProperty('identity')
+    Object.prototype.hasOwnProperty.call(item, reservedTypePropertyName)
   ) {
-    return new neo4j.types.Node(
-      neo4j.int(item.identity),
-      item.labels,
-      applyGraphTypes(item.properties)
-    )
-  } else if (
-    item.hasOwnProperty('segments') &&
-    item.hasOwnProperty('start') &&
-    item.hasOwnProperty('end')
-  ) {
-    const start = applyGraphTypes(item.start)
-    const end = applyGraphTypes(item.end)
-    const segments = item.segments.map(applyGraphTypes)
-    return new neo4j.types.Path(start, end, segments)
-  } else if (
-    item.hasOwnProperty('relationship') &&
-    item.hasOwnProperty('start') &&
-    item.hasOwnProperty('end')
-  ) {
-    const start = applyGraphTypes(item.start)
-    const end = applyGraphTypes(item.end)
-    const relationship = applyGraphTypes(item.relationship)
-    return new neo4j.types.PathSegment(start, relationship, end)
-  } else if (
-    item.hasOwnProperty('start') &&
-    item.hasOwnProperty('end') &&
-    item.hasOwnProperty('type')
-  ) {
-    return new neo4j.types.Relationship(
-      neo4j.int(item.identity),
-      neo4j.int(item.start),
-      neo4j.int(item.end),
-      item.type,
-      applyGraphTypes(item.properties)
-    )
-  } else if (
-    item.hasOwnProperty('low') &&
-    item.hasOwnProperty('high') &&
-    typeof item.low === 'number' &&
-    typeof item.high === 'number'
-  ) {
-    return neo4j.int(item)
+    const className = item[reservedTypePropertyName]
+    const tmpItem = safetlyRemoveObjectProp(item, reservedTypePropertyName)
+    switch (className) {
+      case 'Node':
+        return new types[className](
+          applyGraphTypes(tmpItem.identity, types),
+          tmpItem.labels,
+          applyGraphTypes(tmpItem.properties, types)
+        )
+      case 'Relationship':
+        return new types[className](
+          applyGraphTypes(tmpItem.identity, types),
+          applyGraphTypes(item.start, types),
+          applyGraphTypes(item.end, types),
+          item.type,
+          applyGraphTypes(item.properties, types)
+        )
+      case 'PathSegment':
+        return new types[className](
+          applyGraphTypes(item.start, types),
+          applyGraphTypes(item.relationship, types),
+          applyGraphTypes(item.end, types)
+        )
+      case 'Path':
+        return new types[className](
+          applyGraphTypes(item.start, types),
+          applyGraphTypes(item.end, types),
+          item.segments.map(x => applyGraphTypes(x, types))
+        )
+      case 'Integer':
+        return neo4j.int(tmpItem)
+      default:
+        return item
+    }
   } else if (typeof item === 'object') {
     let typedObject = {}
     Object.keys(item).forEach(key => {
-      typedObject[key] = applyGraphTypes(item[key])
+      typedObject[key] = applyGraphTypes(item[key], types)
     })
+    typedObject = unEscapeReservedProps(typedObject, reservedTypePropertyName)
     return typedObject
   } else {
     return item
   }
+}
+
+export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
+  if (item === null || item === undefined) {
+    return item
+  }
+  if (['number', 'string', 'boolean'].indexOf(typeof item) !== -1) {
+    return item
+  }
+  if (Array.isArray(item)) {
+    return item.map(i => recursivelyTypeGraphItems(i, types))
+  }
+  if (item instanceof types.Node) {
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'Node')
+    item.identity = safetlyAddObjectProp(
+      item.identity,
+      reservedTypePropertyName,
+      'Integer'
+    )
+    const props = recursivelyTypeGraphItems(item.properties, types)
+    item.properties = props
+    return item
+  }
+  if (item instanceof types.PathSegment) {
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'PathSegment')
+    item.start = recursivelyTypeGraphItems(item.start, types)
+    item.end = recursivelyTypeGraphItems(item.end, types)
+    item.relationship = recursivelyTypeGraphItems(item.relationship, types)
+    return item
+  }
+  if (item instanceof types.Path) {
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'Path')
+    item.segments = item.segments.map(x => recursivelyTypeGraphItems(x, types))
+    item.start = recursivelyTypeGraphItems(item.start, types)
+    item.end = recursivelyTypeGraphItems(item.end, types)
+    return item
+  }
+  if (item instanceof types.Relationship) {
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'Relationship')
+    item.identity = safetlyAddObjectProp(
+      item.identity,
+      reservedTypePropertyName,
+      'Integer'
+    )
+    item.start = safetlyAddObjectProp(
+      item.start,
+      reservedTypePropertyName,
+      'Integer'
+    )
+    item.end = safetlyAddObjectProp(
+      item.end,
+      reservedTypePropertyName,
+      'Integer'
+    )
+    const props = recursivelyTypeGraphItems(item.properties, types)
+    item.properties = props
+    return item
+  }
+  if (neo4j.isInt(item)) {
+    return safetlyAddObjectProp(item, reservedTypePropertyName, 'Integer')
+  }
+  if (typeof item === 'object') {
+    let typedObject = {}
+    item = escapeReservedProps(item, reservedTypePropertyName)
+    Object.keys(item).forEach(key => {
+      typedObject[key] = recursivelyTypeGraphItems(item[key], types)
+    })
+    return typedObject
+  }
+  return item
 }
