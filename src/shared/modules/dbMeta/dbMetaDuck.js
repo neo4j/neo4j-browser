@@ -279,7 +279,7 @@ export const dbMetaEpic = (some$, store) =>
           // Labels, types and propertyKeys
           .mergeMap(() =>
             Rx.Observable
-              .fromPromise(bolt.routedReadTransaction(metaQuery))
+              .fromPromise(bolt.routedWriteTransaction(metaQuery))
               .catch(e => Rx.Observable.of(null))
           )
           .filter(r => r)
