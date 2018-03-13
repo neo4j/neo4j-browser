@@ -58,7 +58,9 @@ const reducer = combineReducers({ ...reducers })
 
 const enhancer = compose(
   applyMiddleware(suberMiddleware, epicMiddleware, localStorageMiddleware),
-  window.devToolsExtension ? window.devToolsExtension() : f => f
+  process.env.NODE_ENV !== 'production' && window.devToolsExtension
+    ? window.devToolsExtension()
+    : f => f
 )
 
 const store = createStore(
