@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.neo4j.client</groupId>
   <artifactId>neo4j-browser</artifactId>
-  <version>3.1.4</version>
+  <version>3.1.5</version>
   <name>Neo4j - Browser</name>
   <description>Graph database client.</description>
   <url>https://github.com/neo4j/neo4j</url>
