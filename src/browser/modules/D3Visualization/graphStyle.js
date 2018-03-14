@@ -526,9 +526,15 @@ export default function neoGraphStyle () {
 
     GraphStyle.prototype.forRelationship = function (rel) {
       const selector = relationshipSelector(rel)
-      return this.calculateStyle(selector)
+      let style = this.calculateStyle(selector)
+      if (rel.propertyMap) {
+        if (typeof rel.propertyMap.weight !== 'undefined') {
+          let shaftWidth = Math.log2(rel.propertyMap.weight)
+          style['props']['shaft-width'] = shaftWidth
+        }
+      }
+      return style
     }
-
     return GraphStyle
   })()
   return new GraphStyle()
