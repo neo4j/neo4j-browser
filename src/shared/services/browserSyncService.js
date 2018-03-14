@@ -20,6 +20,8 @@
 
 import * as firebase from 'firebase'
 
+const appIsInitialized = () => firebase.apps.length && firebase.apps.length > 0
+
 export const authenticate = (dataToken, onSignout = null) => {
   return firebase
     .auth()
@@ -35,7 +37,7 @@ export const authenticate = (dataToken, onSignout = null) => {
 }
 
 export const initialize = config => {
-  if (firebase.apps.length && firebase.apps.length > 0) {
+  if (appIsInitialized()) {
     return
   }
 
@@ -63,5 +65,7 @@ export const setupUser = (userId, initialData) => {
 }
 
 export const signOut = () => {
-  firebase.auth().signOut()
+  if (appIsInitialized()) {
+    firebase.auth().signOut()
+  }
 }

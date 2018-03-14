@@ -126,8 +126,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(profileAction)
     },
     onSignOut: () => {
-      const action = clearSync()
-      dispatch(action)
+      dispatch(clearSync)
     },
     onServiceStatusChange: status => {
       dispatch(updateServiceStatus(status))

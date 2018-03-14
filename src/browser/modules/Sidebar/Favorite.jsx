@@ -118,7 +118,10 @@ class FavoriteDp extends Component {
   render () {
     const name = extractNameFromCommand(this.props.content)
     let favoriteContent = (
-      <StyledListItem isChild={this.props.isChild}>
+      <StyledListItem
+        isChild={this.props.isChild}
+        data-test-id='sidebarFavoriteItem'
+      >
         <ExecFavoriteButton
           onClick={() => this.props.onExecClick(this.props.content)}
         />
