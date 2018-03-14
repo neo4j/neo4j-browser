@@ -28,7 +28,9 @@ export const BaseBar = styled.div`
   flex-direction: row;
   align-items: middle;
   min-height: ${props =>
-    Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
+    props.expanded
+      ? '100vh'
+      : Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   margin: 0 24px;
@@ -63,7 +65,9 @@ const BaseEditorWrapper = styled.div`
   background-color: ${props => props.theme.editorBarBackground};
   font-family: Monaco, 'Courier New', Terminal, monospace;
   min-height: ${props =>
-    Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
+    props.expanded
+      ? '100vh'
+      : Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
   .CodeMirror {
     background-color: ${props => props.theme.editorBackground} !important;
     color: ${props => props.theme.editorCommandColor};

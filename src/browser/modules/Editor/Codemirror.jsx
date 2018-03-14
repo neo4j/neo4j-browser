@@ -58,7 +58,8 @@ export default class CodeMirror extends Component {
       this.props.options
     )
     this.codeMirror = editor
-    this.codeMirror.on('change', this.codemirrorValueChanged.bind(this))
+    this.codeMirror.on('change', this.codemirrorValueChange) // Triggered before DOM update
+    this.codeMirror.on('changes', this.codemirrorValueChanges) // Triggered after DOM update
     this.codeMirror.on('focus', this.focusChanged.bind(this, true))
     this.codeMirror.on('blur', this.focusChanged.bind(this, false))
     this.codeMirror.on('scroll', this.scrollChanged.bind(this))
@@ -132,9 +133,14 @@ export default class CodeMirror extends Component {
     this.props.onScroll && this.props.onScroll(cm.getScrollInfo())
   }
 
-  codemirrorValueChanged (doc, change) {
+  codemirrorValueChange = (doc, change) => {
     if (this.props.onChange && change.origin !== 'setValue') {
       this.props.onChange(doc.getValue(), change)
+    }
+  }
+  codemirrorValueChanges = (doc, change) => {
+    if (this.props.onChanges && change.origin !== 'setValue') {
+      this.props.onChanges(doc.getValue(), change)
     }
   }
 

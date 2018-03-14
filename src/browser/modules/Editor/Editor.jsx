@@ -43,7 +43,7 @@ import {
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { debounce } from 'services/utils'
+import { debounce, deepEquals, shallowEquals } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
@@ -60,10 +60,20 @@ export class Editor extends Component {
       mode: 'cypher',
       notifications: [],
       expanded: false,
-      lastPosition: { line: 0, column: 0 }
+      lastPosition: { line: 0, column: 0 },
+      contentId: null,
+      editorHeight: 0
     }
   }
-
+  shouldComponentUpdate (nextProps, nextState) {
+    return !(
+      nextState.expanded === this.state.expanded &&
+      nextState.contentId === this.state.contentId &&
+      nextState.editorHeight === this.state.editorHeight &&
+      shallowEquals(nextState.notifications, this.state.notifications) &&
+      deepEquals(nextProps.schema, this.props.schema)
+    )
+  }
   focusEditor () {
     this.codeMirror.focus()
     this.codeMirror.setCursor(this.codeMirror.lineCount(), 0)
@@ -94,8 +104,12 @@ export class Editor extends Component {
     if (!value) return
     this.props.onExecute(value)
     this.clearEditor()
-    this.clearHints()
-    this.setState({ historyIndex: -1, buffer: null, expanded: false })
+    this.setState({
+      notifications: [],
+      historyIndex: -1,
+      buffer: null,
+      expanded: false
+    })
   }
 
   moveCursorToEndOfLine (cm) {
@@ -128,8 +142,7 @@ export class Editor extends Component {
       this.setState({ buffer: cm.getValue() })
     }
     this.setState({
-      historyIndex: this.state.historyIndex + 1,
-      editorHeight: this.editor && this.editor.base.clientHeight
+      historyIndex: this.state.historyIndex + 1
     })
     this.setEditorValue(this.props.history[this.state.historyIndex])
   }
@@ -144,8 +157,7 @@ export class Editor extends Component {
       return
     }
     this.setState({
-      historyIndex: this.state.historyIndex - 1,
-      editorHeight: this.editor && this.editor.base.clientHeight
+      historyIndex: this.state.historyIndex - 1
     })
     this.setEditorValue(this.props.history[this.state.historyIndex])
   }
@@ -170,24 +182,8 @@ export class Editor extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (
-      nextProps.content !== null &&
-      nextProps.content !== this.getEditorValue()
-    ) {
-      this.setEditorValue(nextProps.content)
-    }
-  }
-
-  componentDidMount () {
+  componentWillMount () {
     this.debouncedCheckForHints = debounce(this.checkForHints, 350, this)
-    this.codeMirror = this.editor.getCodeMirror()
-    this.codeMirror.on('change', this.triggerAutocompletion.bind(this))
-
-    if (this.props.content) {
-      this.setEditorValue(this.props.content)
-    }
-
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
@@ -200,6 +196,11 @@ export class Editor extends Component {
       this.props.bus.take(FOCUS, this.focusEditor.bind(this))
       this.props.bus.take(EXPAND, this.expandEditorToggle.bind(this))
     }
+  }
+
+  componentDidMount () {
+    this.codeMirror = this.editor.getCodeMirror()
+    this.codeMirror.on('change', this.triggerAutocompletion.bind(this))
   }
 
   getEditorValue () {
@@ -217,11 +218,9 @@ export class Editor extends Component {
     this.setState({ contentId: id })
   }
 
-  updateCode (newCode, change, cb = () => {}) {
-    const mode = 'cypher'
-    this.clearHints()
+  updateCode = (newCode, change, cb = () => {}) => {
     if (
-      mode === 'cypher' &&
+      this.state.mode === 'cypher' &&
       newCode.trim().length > 0 &&
       !newCode
         .trimLeft()
@@ -239,14 +238,14 @@ export class Editor extends Component {
 
     this.setState(
       {
-        mode,
+        notifications: [],
         lastPosition: lastPosition
           ? { line: lastPosition.line, column: lastPosition.ch }
-          : this.state.lastPosition,
-        editorHeight: this.editor && this.editor.base.clientHeight
+          : this.state.lastPosition
       },
       cb
     )
+    this.updateHeight()
   }
 
   checkForHints (code) {
@@ -262,14 +261,10 @@ export class Editor extends Component {
             notifications: response.result.summary.notifications
           })
         } else {
-          this.clearHints()
+          this.setState({ notifications: [] })
         }
       }
     )
-  }
-
-  clearHints () {
-    this.setState({ notifications: [] })
   }
 
   setGutterMarkers () {
@@ -307,7 +302,7 @@ export class Editor extends Component {
     }
   }
 
-  componentDidUpdate () {
+  updateHeight = () => {
     if (this.editor) {
       const editorHeight = this.editor.base.clientHeight
       if (editorHeight !== this.state.editorHeight) {
@@ -352,7 +347,6 @@ export class Editor extends Component {
       ...(!this.props.enableEditorAutocomplete ? { mode: '', theme: '' } : {})
     }
 
-    const updateCode = (val, change) => this.updateCode(val, change)
     this.setGutterMarkers()
 
     return (
@@ -365,7 +359,7 @@ export class Editor extends Component {
             ref={ref => {
               this.editor = ref
             }}
-            onChange={updateCode}
+            onChanges={this.updateCode}
             options={options}
             schema={this.props.schema}
             initialPosition={this.state.lastPosition}
@@ -444,7 +438,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = state => {
   return {
     enableEditorAutocomplete: shouldEditorAutocomplete(state),
-    content: null,
     history: getHistory(state),
     cmdchar: getCmdChar(state),
     schema: {
