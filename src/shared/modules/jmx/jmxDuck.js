@@ -94,7 +94,7 @@ export default function jmx (state = initialState, action) {
   }
   switch (action.type) {
     case UPDATE_JMX_VALUES:
-      return [...state, ...action.values]
+      return [...action.values]
     default:
       return state
   }
