@@ -45,7 +45,7 @@ import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
-export const USER_GROUP_COMMAND_QUEUED = NAME + '/USER_GROUP_COMMAND_QUEUED'
+export const EDITOR_COMMAND_QUEUED = NAME + '/EDITOR_COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
 export const KNOWN_COMMAND = NAME + '/KNOWN_COMMAND'
@@ -82,12 +82,11 @@ export default function reducer (state = initialState, action) {
 }
 
 // Action creators
-export const executeEditorCommand = (cmd, contextId, requestId = null) => {
+export const executeEditorCommand = (cmd, toHistory) => {
   return {
-    type: USER_GROUP_COMMAND_QUEUED,
+    type: EDITOR_COMMAND_QUEUED,
     cmd,
-    id: contextId,
-    requestId
+    toHistory
   }
 }
 
@@ -128,18 +127,13 @@ export const fetchGuideFromWhitelistAction = url => ({
 
 export const handleGroupCommandEpic = (action$, store) =>
   action$
-    .ofType(USER_GROUP_COMMAND_QUEUED)
+    .ofType(EDITOR_COMMAND_QUEUED)
     .do(action => {
-      if (!Array.isArray(action.cmd) || !action.cmd.length) {
-        store.dispatch(
-          executeCommand(action.cmd, action.contextId, action.requestId)
-        )
-        return
-      }
       const maxHistory = getMaxHistory(store.getState())
-      store.dispatch(addHistory(action.cmd.join(';\n') + ';', maxHistory))
+      const history = action.toHistory || action.cmd.join(';\n') + ';'
+      store.dispatch(addHistory(history, maxHistory))
       action.cmd.forEach(cmd => {
-        store.dispatch(executeCommand(cmd, action.contextId, action.requestId))
+        store.dispatch(executeCommand(cmd))
       })
     })
     .mapTo({ type: 'NOOP' })

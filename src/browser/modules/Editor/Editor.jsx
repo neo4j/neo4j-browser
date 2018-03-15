@@ -131,7 +131,10 @@ export class Editor extends Component {
   execCurrent () {
     const statements = this.normalizeCurrentStatements()
     if (!statements.length) return
-    this.props.onExecute(statements.map(stmt => stmt.getText()))
+    this.props.onExecute(
+      statements.map(stmt => stmt.getText()),
+      this.getEditorValue()
+    )
     this.clearEditor()
     this.setState({
       notifications: [],
@@ -273,9 +276,8 @@ export class Editor extends Component {
       }
       const offset = stmt.start.line - 1
       console.log('stmt: ', stmt)
-      const that = this
       ;((text, offset) => {
-        that.props.bus.self(
+        this.props.bus.self(
           CYPHER_REQUEST,
           { query: 'EXPLAIN ' + text },
           response => {
@@ -290,7 +292,7 @@ export class Editor extends Component {
                   statement: response.result.summary.statement.text
                 })
               )
-              that.setState(state => ({
+              this.setState(state => ({
                 notifications: state.notifications.concat(notifications)
               }))
             }
@@ -460,8 +462,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const action = favorites.updateFavorite(id, cmd)
       ownProps.bus.send(action.type, action)
     },
-    onExecute: cmd => {
-      const action = executeEditorCommand(cmd)
+    onExecute: (cmd, toHistory) => {
+      const action = executeEditorCommand(cmd, toHistory)
       ownProps.bus.send(action.type, action)
     }
   }
