@@ -123,4 +123,28 @@ describe('Neo4j Browser', () => {
       .get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 })
       .should('have.length', 18)
   })
+  it('will clear local storage when clicking "Clear local data"', () => {
+    const scriptName = 'foo'
+    cy.get(Editor).type(`//${scriptName}`, { force: true })
+    cy.get('[data-test-id="editorFavorite"]').click()
+
+    cy.get('[data-test-id="drawerFavorites"]').click()
+    cy
+      .get('[data-test-id="sidebarFavoriteItem"]')
+      .first()
+      .should('be', scriptName)
+
+    cy.get('[data-test-id="drawerSync"]').click()
+    cy.get('[data-test-id="clearLocalData"]').click()
+    cy.wait(500)
+
+    // confirm clear
+    cy.get('[data-test-id="clearLocalData"]').click()
+
+    cy.get('[data-test-id="drawerFavorites"]').click()
+    cy.get('[data-test-id="sidebarFavoriteItem"]').should('have.length', 0)
+
+    // once data is cleared the user is logged out and the connect form is displayed
+    cy.get('input[data-test-id="boltaddress"]')
+  })
 })

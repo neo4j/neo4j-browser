@@ -382,6 +382,7 @@ export class Editor extends Component {
           </Render>
           <Render if={!this.state.contentId}>
             <EditorButton
+              data-test-id='editorFavorite'
               onClick={() => {
                 this.props.onFavoriteClick(this.getEditorValue())
               }}

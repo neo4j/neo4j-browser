@@ -205,16 +205,12 @@ export function syncItems (itemKey, items) {
   }
 }
 
-export function clearSync () {
-  return {
-    type: CLEAR_SYNC
-  }
+export const clearSync = {
+  type: CLEAR_SYNC
 }
 
-export function clearSyncAndLocal () {
-  return {
-    type: CLEAR_SYNC_AND_LOCAL
-  }
+export const clearSyncAndLocal = {
+  type: CLEAR_SYNC_AND_LOCAL
 }
 
 export function consentSync (consent) {

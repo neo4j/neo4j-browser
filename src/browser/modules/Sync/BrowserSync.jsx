@@ -29,8 +29,8 @@ import {
 import {
   setSyncData,
   setSyncMetadata,
-  clearSync,
-  clearSyncAndLocal,
+  clearSync as clearSyncAction,
+  clearSyncAndLocal as clearSyncAndLocalAction,
   consentSync,
   authorizedAs,
   setSyncAuthData,
@@ -251,6 +251,7 @@ export class BrowserSync extends Component {
             <DrawerSectionBody>
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
               <FormButton
+                data-test-id='clearLocalData'
                 label='Clear local data'
                 onClick={this.signOutAndClearLocalStorage.bind(this)}
                 icon={<BinIcon suppressIconStyles='true' />}
@@ -314,14 +315,12 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     ...dispatchProps,
     onSignOut: () => {
       signOut()
-      const action = clearSync()
-      dispatchProps.sendActionToDispatch(action)
+      dispatchProps.sendActionToDispatch(clearSyncAction)
       BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
     },
     onSignOutAndClear: () => {
       signOut()
-      const action = clearSyncAndLocal()
-      dispatchProps.sendActionToDispatch(action)
+      dispatchProps.sendActionToDispatch(clearSyncAndLocalAction)
       BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
     }
   }
