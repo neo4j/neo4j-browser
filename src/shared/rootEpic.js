@@ -20,6 +20,7 @@
 
 import { combineEpics } from 'redux-observable'
 import {
+  handleGroupCommandEpic,
   handleCommandsEpic,
   postConnectCmdEpic,
   fetchGuideFromWhitelistEpic
@@ -82,6 +83,7 @@ import {
 import { maxFramesConfigEpic } from './modules/stream/streamDuck'
 
 export default combineEpics(
+  handleGroupCommandEpic,
   handleCommandsEpic,
   postConnectCmdEpic,
   fetchGuideFromWhitelistEpic,

@@ -116,6 +116,10 @@ export default class CodeMirror extends Component {
     return this.codeMirror
   }
 
+  getEditorStatements () {
+    return this.editorSupport.queriesAndCommands
+  }
+
   focus () {
     if (this.codeMirror) {
       this.codeMirror.focus()

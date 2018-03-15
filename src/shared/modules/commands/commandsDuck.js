@@ -45,6 +45,7 @@ import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
+export const USER_GROUP_COMMAND_QUEUED = NAME + '/USER_GROUP_COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
 export const KNOWN_COMMAND = NAME + '/KNOWN_COMMAND'
@@ -81,6 +82,15 @@ export default function reducer (state = initialState, action) {
 }
 
 // Action creators
+export const executeEditorCommand = (cmd, contextId, requestId = null) => {
+  return {
+    type: USER_GROUP_COMMAND_QUEUED,
+    cmd,
+    id: contextId,
+    requestId
+  }
+}
+
 export const executeCommand = (cmd, contextId, requestId = null) => {
   return {
     type: USER_COMMAND_QUEUED,
@@ -116,6 +126,23 @@ export const fetchGuideFromWhitelistAction = url => ({
   url
 })
 
+export const handleGroupCommandEpic = (action$, store) =>
+  action$
+    .ofType(USER_GROUP_COMMAND_QUEUED)
+    .do(action => {
+      if (!Array.isArray(action.cmd) || !action.cmd.length) {
+        store.dispatch(
+          executeCommand(action.cmd, action.contextId, action.requestId)
+        )
+        return
+      }
+      const maxHistory = getMaxHistory(store.getState())
+      store.dispatch(addHistory(action.cmd.join(';\n') + ';', maxHistory))
+      action.cmd.forEach(cmd => {
+        store.dispatch(executeCommand(cmd, action.contextId, action.requestId))
+      })
+    })
+    .mapTo({ type: 'NOOP' })
 // Epics
 export const handleCommandsEpic = (action$, store) =>
   action$
@@ -129,8 +156,8 @@ export const handleCommandsEpic = (action$, store) =>
     .do(({ action, interpreted }) => {
       if (action.type === SYSTEM_COMMAND_QUEUED) return
       if (isNamedInterpreter(interpreted)) {
-        const maxHistory = getMaxHistory(store.getState())
-        store.dispatch(addHistory(action.cmd, maxHistory)) // Only save valid commands to history
+        // const maxHistory = getMaxHistory(store.getState())
+        // store.dispatch(addHistory(action.cmd, maxHistory)) // Only save valid commands to history
         store.dispatch({ type: KNOWN_COMMAND }) // Clear any eventual unknown command notifications
       }
     })

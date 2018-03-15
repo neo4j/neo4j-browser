@@ -24,7 +24,7 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid from 'uuid'
 import {
-  executeCommand,
+  executeEditorCommand,
   executeSystemCommand
 } from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
@@ -51,6 +51,18 @@ import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
 import consoleCommands from './language/consoleCommands'
 import Render from 'browser-components/Render'
+
+const shouldCheckForHints = code =>
+  code.trim().length > 0 &&
+  !code.trimLeft().startsWith(':') &&
+  !code
+    .trimLeft()
+    .toUpperCase()
+    .startsWith('EXPLAIN') &&
+  !code
+    .trimLeft()
+    .toUpperCase()
+    .startsWith('PROFILE')
 
 export class Editor extends Component {
   constructor (props) {
@@ -99,11 +111,27 @@ export class Editor extends Component {
   newlineAndIndent (cm) {
     cm.execCommand('newlineAndIndent')
   }
-
+  normalizeCurrentStatements () {
+    const rawStatements = this.editor.getEditorStatements()
+    let statements = []
+    if (Array.isArray(rawStatements) && rawStatements.length) {
+      statements = [...rawStatements]
+    } else {
+      const val = this.getEditorValue()
+      if (val) {
+        statements.push({
+          getText: () => val,
+          start: { line: 1 },
+          end: { line: this.codeMirror.lineCount() }
+        })
+      }
+    }
+    return statements
+  }
   execCurrent () {
-    const value = this.getEditorValue()
-    if (!value) return
-    this.props.onExecute(value)
+    const statements = this.normalizeCurrentStatements()
+    if (!statements.length) return
+    this.props.onExecute(statements.map(stmt => stmt.getText()))
     this.clearEditor()
     this.setState({
       notifications: [],
@@ -184,7 +212,7 @@ export class Editor extends Component {
   }
 
   componentWillMount () {
-    this.debouncedCheckForHints = debounce(this.checkForHints, 350, this)
+    this.debouncedCheckForHints = debounce(this.checkForHints, 500, this)
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
@@ -220,23 +248,8 @@ export class Editor extends Component {
   }
 
   updateCode = (newCode, change, cb = () => {}) => {
-    if (
-      this.state.mode === 'cypher' &&
-      newCode.trim().length > 0 &&
-      !newCode
-        .trimLeft()
-        .toUpperCase()
-        .startsWith('EXPLAIN') &&
-      !newCode
-        .trimLeft()
-        .toUpperCase()
-        .startsWith('PROFILE')
-    ) {
-      this.debouncedCheckForHints(newCode)
-    }
-
+    this.debouncedCheckForHints()
     const lastPosition = change && change.to
-
     this.setState(
       {
         notifications: [],
@@ -249,23 +262,42 @@ export class Editor extends Component {
     this.updateHeight()
   }
 
-  checkForHints (code) {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      { query: 'EXPLAIN ' + code },
-      response => {
-        if (
-          response.success === true &&
-          response.result.summary.notifications.length > 0
-        ) {
-          this.setState({
-            notifications: response.result.summary.notifications
-          })
-        } else {
-          this.setState({ notifications: [] })
-        }
+  checkForHints () {
+    const statements = this.normalizeCurrentStatements()
+    if (!statements.length) return
+    statements.forEach(stmt => {
+      const text = stmt.getText()
+      console.log('text: ', text)
+      if (!shouldCheckForHints(text)) {
+        return
       }
-    )
+      const offset = stmt.start.line - 1
+      console.log('stmt: ', stmt)
+      const that = this
+      ;((text, offset) => {
+        that.props.bus.self(
+          CYPHER_REQUEST,
+          { query: 'EXPLAIN ' + text },
+          response => {
+            if (
+              response.success === true &&
+              response.result.summary.notifications.length > 0
+            ) {
+              const notifications = response.result.summary.notifications.map(
+                n => ({
+                  ...n,
+                  position: { ...n.position, line: n.position.line + offset },
+                  statement: response.result.summary.statement.text
+                })
+              )
+              that.setState(state => ({
+                notifications: state.notifications.concat(notifications)
+              }))
+            }
+          }
+        )
+      })(text, offset)
+    })
   }
 
   setGutterMarkers () {
@@ -282,9 +314,7 @@ export class Editor extends Component {
               '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
             gutter.title = `${notification.title}\n${notification.description}`
             gutter.onclick = () => {
-              const action = executeSystemCommand(
-                `EXPLAIN ${this.getEditorValue()}`
-              )
+              const action = executeSystemCommand(notification.statement)
               action.forceView = viewTypes.WARNINGS
               this.props.bus.send(action.type, action)
             }
@@ -431,7 +461,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ownProps.bus.send(action.type, action)
     },
     onExecute: cmd => {
-      const action = executeCommand(cmd)
+      const action = executeEditorCommand(cmd)
       ownProps.bus.send(action.type, action)
     }
   }
