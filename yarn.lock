@@ -4855,6 +4855,12 @@ js-yaml@~3.7.0:
     argparse "^1.0.7"
     esprima "^2.6.0"
 
+js2xmlparser@^3.0.0:
+  version "3.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/js2xmlparser/-/js2xmlparser-3.0.0.tgz#3fb60eaa089c5440f9319f51760ccd07e2499733"
+  dependencies:
+    xmlcreate "^1.0.1"
+
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
@@ -9223,6 +9229,10 @@ xml2js@^0.4.19:
 xmlbuilder@~9.0.1:
   version "9.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/xmlbuilder/-/xmlbuilder-9.0.4.tgz#519cb4ca686d005a8420d3496f3f0caeecca580f"
+
+xmlcreate@^1.0.1:
+  version "1.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/xmlcreate/-/xmlcreate-1.0.2.tgz#fa6bf762a60a413fb3dd8f4b03c5b269238d308f"
 
 xmlhttprequest-ssl@1.5.3:
   version "1.5.3"

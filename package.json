@@ -28,7 +28,8 @@
     "prepare-jar": "node ./scripts/prepare-mvn-package.js",
     "jar": "yarn build && mvn package",
     "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
-    "version": "npm run version-pom && git add ./pom.xml"
+    "version": "npm run version-pom && git add ./pom.xml",
+    "update-licenses": "sh ./scripts/generate_licenses.sh"
   },
   "lint-staged": {
     "linters": {
@@ -98,6 +99,7 @@
     "html-webpack-plugin": "^2.30.1",
     "jest": "^21.0.1",
     "jest-cli": "^21.0.1",
+    "js2xmlparser": "^3.0.0",
     "json-loader": "^0.5.7",
     "lint-staged": "^4.1.3",
     "ncp": "^2.0.0",

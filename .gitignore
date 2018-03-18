@@ -12,3 +12,4 @@ coverage/
 /e2e_tests/videos/
 mvn/
 dist/
+NOTICE.xml
