@@ -125,7 +125,7 @@ export const fetchGuideFromWhitelistAction = url => ({
   url
 })
 
-export const handleGroupCommandEpic = (action$, store) =>
+export const handleEditorCommandEpic = (action$, store) =>
   action$
     .ofType(EDITOR_COMMAND_QUEUED)
     .do(action => {
