@@ -25,7 +25,7 @@ import codemirror from 'codemirror'
 import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/edit/closebrackets'
-import { createCypherEditor } from 'cypher-codemirror'
+import { createCypherEditor, parse } from 'cypher-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/lint/lint.css'
 import 'cypher-codemirror/dist/cypher-codemirror-syntax.css'
@@ -36,6 +36,8 @@ function normalizeLineEndings (str) {
 }
 
 export default class CodeMirror extends Component {
+  latestInputVersion = 0
+  latestParsedVersion = 0
   constructor (props) {
     super(props)
     this.state = {
@@ -65,6 +67,17 @@ export default class CodeMirror extends Component {
     this.codeMirror.on('scroll', this.scrollChanged.bind(this))
     this.codeMirror.setValue(this.props.defaultValue || this.props.value || '')
     this.editorSupport = editorSupport
+    this.editorSupport.on('update', () => {
+      this.latestInputVersion = this.codeMirror.version
+    })
+    this.editorSupport.on('updated', () => {
+      this.latestParsedVersion = this.editorSupport.version
+      this.props.onParsed &&
+        this.props.onParsed(
+          this.editorSupport.queriesAndCommands,
+          this.lastChange
+        )
+    })
     this.editorSupport.setSchema(this.props.schema)
 
     if (this.props.initialPosition) {
@@ -117,7 +130,17 @@ export default class CodeMirror extends Component {
   }
 
   getEditorStatements () {
-    return this.editorSupport.queriesAndCommands
+    return this.editorSupport
+      .ensureVersion(this.latestInputVersion)
+      .then(() => {
+        return this.editorSupport.queriesAndCommands
+      })
+  }
+
+  generateStatementsFromCurrentValue () {
+    const parsed = parse(this.codeMirror.getValue())
+    const { queriesAndCommands } = parsed.referencesListener
+    return queriesAndCommands
   }
 
   focus () {
@@ -138,6 +161,7 @@ export default class CodeMirror extends Component {
   }
 
   codemirrorValueChange = (doc, change) => {
+    this.lastChange = change
     if (this.props.onChange && change.origin !== 'setValue') {
       this.props.onChange(doc.getValue(), change)
     }

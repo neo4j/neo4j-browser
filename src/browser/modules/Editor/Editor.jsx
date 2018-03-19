@@ -49,7 +49,6 @@ import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
-import consoleCommands from './language/consoleCommands'
 import Render from 'browser-components/Render'
 
 const shouldCheckForHints = code =>
@@ -111,25 +110,9 @@ export class Editor extends Component {
   newlineAndIndent (cm) {
     cm.execCommand('newlineAndIndent')
   }
-  normalizeCurrentStatements () {
-    const rawStatements = this.editor.getEditorStatements()
-    let statements = []
-    if (Array.isArray(rawStatements) && rawStatements.length) {
-      statements = [...rawStatements]
-    } else {
-      const val = this.getEditorValue()
-      if (val) {
-        statements.push({
-          getText: () => val,
-          start: { line: 1 },
-          end: { line: this.codeMirror.lineCount() }
-        })
-      }
-    }
-    return statements
-  }
+
   execCurrent () {
-    const statements = this.normalizeCurrentStatements()
+    const statements = this.editor.generateStatementsFromCurrentValue()
     if (!statements.length) return
     this.props.onExecute(
       statements.map(stmt => stmt.getText()),
@@ -215,7 +198,7 @@ export class Editor extends Component {
   }
 
   componentWillMount () {
-    this.debouncedCheckForHints = debounce(this.checkForHints, 500, this)
+    this.debouncedCheckForHints = debounce(this.checkForHints, 0, this)
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
@@ -241,7 +224,7 @@ export class Editor extends Component {
 
   setEditorValue (cmd) {
     this.codeMirror.setValue(cmd)
-    this.updateCode(cmd, undefined, () => {
+    this.updateCode(undefined, undefined, () => {
       this.focusEditor()
     })
   }
@@ -250,8 +233,8 @@ export class Editor extends Component {
     this.setState({ contentId: id })
   }
 
-  updateCode = (newCode, change, cb = () => {}) => {
-    this.debouncedCheckForHints()
+  updateCode = (statements, change, cb = () => {}) => {
+    if (statements) this.debouncedCheckForHints(statements)
     const lastPosition = change && change.to
     this.setState(
       {
@@ -265,17 +248,14 @@ export class Editor extends Component {
     this.updateHeight()
   }
 
-  checkForHints () {
-    const statements = this.normalizeCurrentStatements()
+  checkForHints (statements) {
     if (!statements.length) return
     statements.forEach(stmt => {
       const text = stmt.getText()
-      console.log('text: ', text)
       if (!shouldCheckForHints(text)) {
         return
       }
       const offset = stmt.start.line - 1
-      console.log('stmt: ', stmt)
       ;((text, offset) => {
         this.props.bus.self(
           CYPHER_REQUEST,
@@ -392,7 +372,7 @@ export class Editor extends Component {
             ref={ref => {
               this.editor = ref
             }}
-            onChanges={this.updateCode}
+            onParsed={this.updateCode}
             options={options}
             schema={this.props.schema}
             initialPosition={this.state.lastPosition}
@@ -476,7 +456,6 @@ const mapStateToProps = state => {
     history: getHistory(state),
     cmdchar: getCmdChar(state),
     schema: {
-      consoleCommands: consoleCommands,
       parameters: Object.keys(state.params),
       labels: state.meta.labels.map(schemaConvert.toLabel),
       relationshipTypes: state.meta.relationshipTypes.map(
