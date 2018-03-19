@@ -44,7 +44,7 @@ import {
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { debounce, deepEquals, shallowEquals } from 'services/utils'
+import { deepEquals, shallowEquals } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
@@ -198,7 +198,6 @@ export class Editor extends Component {
   }
 
   componentWillMount () {
-    this.debouncedCheckForHints = debounce(this.checkForHints, 0, this)
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
@@ -234,7 +233,7 @@ export class Editor extends Component {
   }
 
   updateCode = (statements, change, cb = () => {}) => {
-    if (statements) this.debouncedCheckForHints(statements)
+    if (statements) this.checkForHints(statements)
     const lastPosition = change && change.to
     this.setState(
       {
