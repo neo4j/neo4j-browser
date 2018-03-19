@@ -29,7 +29,6 @@ import {
 } from '../../services/exceptions'
 import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
-import { addHistory } from '../history/historyDuck'
 import { update as updateQueryResult } from '../requests/requestsDuck'
 import { send } from 'shared/modules/requests/requestsDuck'
 import * as frames from 'shared/modules/stream/streamDuck'
@@ -92,8 +91,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmd, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           helper
             .interpret(cmdString)
             .exec(action, store.getState().settings.cmdchar, a => a, store),
@@ -116,8 +113,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmd, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
           commands.cypher(cmd),
           frames.add({ ...action, type: 'cypher' }),
@@ -149,8 +144,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           updateParams({ x: 2 }),
           frames.add({
             ...action,
@@ -215,8 +208,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           replaceParams({ x: 2, y: 3 }),
           frames.add({ ...action, success: true, type: 'params', params: {} }),
           { type: 'NOOP' }
@@ -239,8 +230,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           frames.add({ ...action, type: 'params', params: {} }),
           { type: 'NOOP' }
         ])
@@ -263,8 +252,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           updateSettings({ x: 2 }),
           frames.add({
             ...action,
@@ -292,8 +279,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           replaceSettings({ x: 2, y: 3 }),
           frames.add({
             ...action,
@@ -322,8 +307,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           frames.add({
             ...action,
             type: 'pre',
@@ -351,8 +334,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           frames.add({
             ...action,
             type: 'style',
@@ -378,8 +359,6 @@ describe('commandsDuck', () => {
       bus.take('NOOP', currentAction => {
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmd, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           frames.add({
             ...action,
             type: 'queries',
@@ -404,8 +383,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmd, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           send('cypher', requestId),
           commands.cypher(cmd),
           frames.add({ ...action, type: 'cypher' }),
@@ -435,34 +412,12 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmd, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           getInterpreter(helper.interpret, action.cmd, cmdChar).exec(
             Object.assign(action, { cmd: cleanCommand(action.cmd) }),
             cmdChar,
             a => a,
             store
           ),
-          { type: 'NOOP' }
-        ])
-        done()
-      })
-
-      // When
-      store.dispatch(action)
-    })
-  })
-  describe(':unknown', () => {
-    test('unknown commands send out an UNKNOWN_COMMAND action and not added to history', done => {
-      // Given
-      const cmd = store.getState().settings.cmdchar + 'unknown'
-      const id = 1
-      const action = commands.executeCommand(cmd, id)
-      bus.take('NOOP', currentAction => {
-        // Then
-        expect(store.getActions()).toEqual([
-          action,
-          commands.unknownCommand(cmd),
           { type: 'NOOP' }
         ])
         done()
@@ -483,8 +438,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmd, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           frames.add({ ...action, type: 'disconnect' }),
           disconnectAction(null),
           { type: 'NOOP' }

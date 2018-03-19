@@ -35,7 +35,6 @@ import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import {
-  unknownCommand,
   showErrorMessage,
   cypher,
   successfulCypher,
@@ -47,6 +46,8 @@ import {
   handleUpdateConfigCommand
 } from 'shared/modules/commands/helpers/config'
 import {
+  createErrorObject,
+  UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError
 } from 'services/exceptions'
@@ -183,7 +184,9 @@ const availableCommands = [
               ...action,
               type: 'play-remote',
               response: e.response || null,
-              error: CouldNotFetchRemoteGuideError(e.name + ': ' + e.message)
+              error: CouldNotFetchRemoteGuideError({
+                error: e.name + ': ' + e.message
+              })
             })
           )
         })
@@ -270,7 +273,7 @@ const availableCommands = [
               put(frames.add({ ...action, result: res, type: 'pre' }))
             })
             .catch(e => {
-              const error = new FetchURLError(e.message)
+              const error = new FetchURLError({ error: e.message })
               put(frames.add({ ...action, error, type: 'error' }))
             })
         })
@@ -324,7 +327,13 @@ const availableCommands = [
     name: 'catch-all',
     match: () => true,
     exec: (action, cmdchar, put) => {
-      put(unknownCommand(action.cmd))
+      put(
+        frames.add({
+          ...action,
+          error: createErrorObject(UnknownCommandError, action),
+          type: 'error'
+        })
+      )
     }
   }
 ]

@@ -20,24 +20,44 @@
 import React from 'react'
 import FrameTemplate from './FrameTemplate'
 import * as e from 'services/exceptionMessages'
-import { getErrorMessage } from 'services/exceptions'
-import { PaddedDiv } from './styled'
+import { createErrorObject } from 'services/exceptions'
+import { errorMessageFormater } from './errorMessageFormater'
+import {
+  StyledCypherErrorMessage,
+  StyledHelpContent,
+  StyledH4,
+  StyledPreformattedArea,
+  StyledHelpDescription,
+  StyledDiv,
+  StyledHelpFrame
+} from './styled'
 
-const ErrorFrame = ({ frame }) => {
+export const ErrorView = ({ frame }) => {
+  if (!frame) return null
   const error = frame.error || false
   let errorContents = error.message || 'No error message found'
-  if (error.type && typeof e[error.type] !== 'undefined') {
-    errorContents = getErrorMessage(error)
+  let errorCode = error.type || error.code || 'UndefinedError'
+  if (!error.message && errorCode && typeof e[errorCode] !== 'undefined') {
+    const eObj = createErrorObject(errorCode, error)
+    errorContents = eObj.message
   }
+  const fullError = errorMessageFormater(errorCode, errorContents)
   return (
-    <FrameTemplate
-      header={frame}
-      contents={
-        <PaddedDiv>
-          <pre>{errorContents}</pre>
-        </PaddedDiv>
-      }
-    />
+    <StyledHelpFrame>
+      <StyledHelpContent>
+        <StyledHelpDescription>
+          <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+          <StyledH4>{errorCode}</StyledH4>
+        </StyledHelpDescription>
+        <StyledDiv>
+          <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>
+        </StyledDiv>
+      </StyledHelpContent>
+    </StyledHelpFrame>
   )
+}
+
+const ErrorFrame = ({ frame }) => {
+  return <FrameTemplate header={frame} contents={<ErrorView frame={frame} />} />
 }
 export default ErrorFrame

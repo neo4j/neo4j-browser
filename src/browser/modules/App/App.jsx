@@ -29,10 +29,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
-import {
-  wasUnknownCommand,
-  getErrorMessage
-} from 'shared/modules/commands/commandsDuck'
+import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
@@ -95,7 +92,6 @@ export class App extends Component {
       activeConnection,
       connectionState,
       theme,
-      showUnknownCommandBanner,
       errorMessage,
       loadExternalScripts,
       loadSync,
@@ -134,7 +130,6 @@ export class App extends Component {
                   cmdchar={cmdchar}
                   activeConnection={activeConnection}
                   connectionState={connectionState}
-                  showUnknownCommandBanner={showUnknownCommandBanner}
                   errorMessage={errorMessage}
                   useBrowserSync={loadSync}
                 />
@@ -155,7 +150,6 @@ const mapStateToProps = state => {
     theme: getTheme(state),
     connectionState: getConnectionState(state),
     cmdchar: getCmdChar(state),
-    showUnknownCommandBanner: wasUnknownCommand(state),
     errorMessage: getErrorMessage(state),
     loadExternalScripts:
       allowOutgoingConnections(state) !== false && isConnected(state),

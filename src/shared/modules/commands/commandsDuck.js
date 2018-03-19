@@ -21,7 +21,6 @@
 import Rx from 'rxjs'
 import {
   getInterpreter,
-  isNamedInterpreter,
   cleanCommand,
   extractPostConnectCommandsFromServerConfig
 } from 'services/commandUtils'
@@ -48,18 +47,13 @@ export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
 export const EDITOR_COMMAND_QUEUED = NAME + '/EDITOR_COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
-export const KNOWN_COMMAND = NAME + '/KNOWN_COMMAND'
 export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
 export const CYPHER = NAME + '/CYPHER'
 export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
 export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
 export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 
-const initialState = {
-  lastCommandWasUnknown: false
-}
-export const wasUnknownCommand = state =>
-  state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
+const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
 
 export default function reducer (state = initialState, action) {
@@ -68,12 +62,8 @@ export default function reducer (state = initialState, action) {
   }
 
   switch (action.type) {
-    case UNKNOWN_COMMAND:
-      return { lastCommandWasUnknown: true }
-    case KNOWN_COMMAND:
-      return { lastCommandWasUnknown: false }
     case SHOW_ERROR_MESSAGE:
-      return { lastCommandWasUnknown: false, errorMessage: action.errorMessage }
+      return { errorMessage: action.errorMessage }
     case USER_CLEAR:
       return initialState
     default:
@@ -146,14 +136,6 @@ export const handleCommandsEpic = (action$, store) =>
       const cmdchar = getCmdChar(store.getState())
       const interpreted = getInterpreter(helper.interpret, action.cmd, cmdchar)
       return { action, interpreted, cmdchar }
-    })
-    .do(({ action, interpreted }) => {
-      if (action.type === SYSTEM_COMMAND_QUEUED) return
-      if (isNamedInterpreter(interpreted)) {
-        // const maxHistory = getMaxHistory(store.getState())
-        // store.dispatch(addHistory(action.cmd, maxHistory)) // Only save valid commands to history
-        store.dispatch({ type: KNOWN_COMMAND }) // Clear any eventual unknown command notifications
-      }
     })
     .mergeMap(({ action, interpreted, cmdchar }) => {
       return new Promise((resolve, reject) => {

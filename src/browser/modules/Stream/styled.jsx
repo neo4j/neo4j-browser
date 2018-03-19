@@ -200,20 +200,22 @@ export const StyledCypherMessage = styled.div`
   margin-right: 5px;
   padding: 4px 7px 4px 5px;
   border-radius: 3px;
-  float: left;
 `
 export const StyledCypherWarningMessage = styled(StyledCypherMessage)`
+  margin-bottom: 10px;
   background-color: ${props => props.theme.warning};
   color: #ffffff;
+  display: inline-block;
 `
 
 export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
+  margin-bottom: 10px;
   background-color: ${props => props.theme.error};
   color: #ffffff;
 `
 export const StyledInfoMessage = styled(StyledCypherMessage)`
   background-color: ${props => props.theme.info};
-  color: #ffffff;
+  display: inline-block;
 `
 
 export const StyledH4 = styled.h4``

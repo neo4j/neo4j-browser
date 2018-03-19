@@ -36,8 +36,7 @@ function normalizeLineEndings (str) {
 }
 
 export default class CodeMirror extends Component {
-  latestInputVersion = 0
-  latestParsedVersion = 0
+  lastChange = null
   constructor (props) {
     super(props)
     this.state = {
@@ -67,11 +66,7 @@ export default class CodeMirror extends Component {
     this.codeMirror.on('scroll', this.scrollChanged.bind(this))
     this.codeMirror.setValue(this.props.defaultValue || this.props.value || '')
     this.editorSupport = editorSupport
-    this.editorSupport.on('update', () => {
-      this.latestInputVersion = this.codeMirror.version
-    })
     this.editorSupport.on('updated', () => {
-      this.latestParsedVersion = this.editorSupport.version
       this.props.onParsed &&
         this.props.onParsed(
           this.editorSupport.queriesAndCommands,
@@ -127,14 +122,6 @@ export default class CodeMirror extends Component {
 
   getCodeMirror () {
     return this.codeMirror
-  }
-
-  getEditorStatements () {
-    return this.editorSupport
-      .ensureVersion(this.latestInputVersion)
-      .then(() => {
-        return this.editorSupport.queriesAndCommands
-      })
   }
 
   generateStatementsFromCurrentValue () {
