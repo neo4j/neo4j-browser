@@ -244,7 +244,6 @@ export class Editor extends Component {
       },
       cb
     )
-    this.updateHeight()
   }
 
   checkForHints (statements) {
@@ -372,6 +371,7 @@ export class Editor extends Component {
               this.editor = ref
             }}
             onParsed={this.updateCode}
+            onChanges={this.updateHeight}
             options={options}
             schema={this.props.schema}
             initialPosition={this.state.lastPosition}
