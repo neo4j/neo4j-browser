@@ -20,6 +20,7 @@
 
 /* global Cypress, cy, test, expect */
 
+const Editor = '.ReactCodeMirror textarea'
 const Carousel = '[data-test-id="carousel"]'
 const SubmitQueryButton = '[data-test-id="submitQuery"]'
 const Editor = '.ReactCodeMirror textarea'
@@ -56,13 +57,38 @@ describe('Neo4j Browser', () => {
   })
   it('can run cypher statement', () => {
     cy.executeCommand(':clear')
-    const query = 'return 1'
+    const query = 'RETURN 1'
     cy.executeCommand(query)
     cy.waitForCommandResult()
     cy
       .get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
+    cy
+      .get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'Started streaming')
+  })
+  it('shows error frame for unknown command', () => {
+    cy.executeCommand(':clear')
+    const query = ':unknown'
+    cy.executeCommand(query)
+    cy
+      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+      .first()
+      .should('contain', query)
+    cy
+      .get('[data-test-id="frame"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'Error')
+  })
+  it('can run multiple statements', () => {
+    cy.executeCommand(':clear')
+    const query = 'RETURN 1; :config; RETURN 2;'
+    cy.executeCommand(query)
+    cy
+      .get('[data-test-id="frame"]', { timeout: 10000 })
+      .should('have.length', 3)
     cy
       .get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
       .first()
