@@ -153,23 +153,26 @@ export const handleCommandsEpic = (action$, store) =>
     })
 
 export const postConnectCmdEpic = (some$, store) =>
-  some$
-    .concat(some$.ofType(CONNECTION_SUCCESS), some$.ofType(UPDATE_SETTINGS))
-    .do(() => {
-      const serverSettings = getAvailableSettings(store.getState())
-      if (serverSettings && serverSettings['browser.post_connect_cmd']) {
-        const cmdchar = getCmdChar(store.getState())
-        const cmds = extractPostConnectCommandsFromServerConfig(
-          serverSettings['browser.post_connect_cmd']
-        )
-        if (cmds !== undefined) {
-          cmds.forEach(cmd => {
-            store.dispatch(executeSystemCommand(`${cmdchar}${cmd}`))
-          })
+  some$.ofType(CONNECTION_SUCCESS).mergeMap(() =>
+    Rx.Observable
+      .from(some$.ofType(UPDATE_SETTINGS))
+      .map(() => {
+        const serverSettings = getAvailableSettings(store.getState())
+        if (serverSettings && serverSettings['browser.post_connect_cmd']) {
+          const cmdchar = getCmdChar(store.getState())
+          const cmds = extractPostConnectCommandsFromServerConfig(
+            serverSettings['browser.post_connect_cmd']
+          )
+          if (cmds !== undefined) {
+            cmds.forEach(cmd => {
+              store.dispatch(executeSystemCommand(`${cmdchar}${cmd}`))
+            })
+          }
         }
-      }
-    })
-    .mapTo({ type: 'NOOP' })
+        return { type: 'NOOP' }
+      })
+      .take(1)
+  )
 
 export const fetchGuideFromWhitelistEpic = (some$, store) =>
   some$.ofType(FETCH_GUIDE_FROM_WHITELIST).mergeMap(action => {
