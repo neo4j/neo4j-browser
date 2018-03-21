@@ -60,23 +60,19 @@ export const getJmxValues = ({ jmx }, arr) => {
 
 const fetchJmxValues = () => {
   return bolt
-    .directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
+    .directTransaction(
+      'CALL dbms.queryJmx("org.neo4j:*") YIELD name, attributes' // Skip description
+    )
     .then(res => {
       const converters = {
         intChecker: bolt.neo4j.isInt,
         intConverter: val => val.toString(),
         objectConverter: extractFromNeoObjects
       }
-      return toObjects(
-        res.records,
-        converters
-      ).map(([name, description, attributes]) => {
-        return {
-          name,
-          description,
-          attributes
-        }
-      })
+      return toObjects(res.records, converters).map(([name, attributes]) => ({
+        name,
+        attributes
+      }))
     })
     .catch(e => {
       return null
