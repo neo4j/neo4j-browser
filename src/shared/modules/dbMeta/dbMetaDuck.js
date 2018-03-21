@@ -382,7 +382,12 @@ export const dbMetaEpic = (some$, store) =>
                 return Rx.Observable.of(null)
               })
           )
-          .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))
+          .takeUntil(
+            some$
+              .ofType(LOST_CONNECTION)
+              .filter(connectionLossFilter)
+              .merge(some$.ofType(DISCONNECTION_SUCCESS))
+          )
           .mapTo({ type: 'NOOP' })
       )
     })

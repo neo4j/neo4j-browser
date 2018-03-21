@@ -25,6 +25,7 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
+  DISCONNECTION_SUCCESS,
   LOST_CONNECTION,
   UPDATE_CONNECTION_STATE,
   connectionLossFilter
@@ -124,6 +125,11 @@ export const jmxEpic = (some$, store) =>
         )
         .filter(r => r)
         .do(res => store.dispatch(updateJmxValues(res)))
-        .takeUntil(some$.ofType(LOST_CONNECTION).filter(connectionLossFilter))
+        .takeUntil(
+          some$
+            .ofType(LOST_CONNECTION)
+            .filter(connectionLossFilter)
+            .merge(some$.ofType(DISCONNECTION_SUCCESS))
+        )
         .mapTo({ type: 'NOOP' })
     })
