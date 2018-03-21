@@ -154,7 +154,7 @@ export const handleCommandsEpic = (action$, store) =>
 
 export const postConnectCmdEpic = (some$, store) =>
   some$
-    .zip(some$.ofType(CONNECTION_SUCCESS), some$.ofType(UPDATE_SETTINGS))
+    .concat(some$.ofType(CONNECTION_SUCCESS), some$.ofType(UPDATE_SETTINGS))
     .do(() => {
       const serverSettings = getAvailableSettings(store.getState())
       if (serverSettings && serverSettings['browser.post_connect_cmd']) {
