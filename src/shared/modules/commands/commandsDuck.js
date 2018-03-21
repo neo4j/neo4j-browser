@@ -154,8 +154,8 @@ export const handleCommandsEpic = (action$, store) =>
 
 export const postConnectCmdEpic = (some$, store) =>
   some$.ofType(CONNECTION_SUCCESS).mergeMap(() =>
-    Rx.Observable
-      .from(some$.ofType(UPDATE_SETTINGS))
+    some$
+      .ofType(UPDATE_SETTINGS)
       .map(() => {
         const serverSettings = getAvailableSettings(store.getState())
         if (serverSettings && serverSettings['browser.post_connect_cmd']) {
