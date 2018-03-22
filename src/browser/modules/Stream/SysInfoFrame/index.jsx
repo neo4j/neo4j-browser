@@ -99,6 +99,24 @@ export class SysInfoFrame extends Component {
       })
     }
 
+    const pageCache = [
+      { label: 'Faults', value: cache.Faults },
+      { label: 'Evictions', value: cache.Evictions },
+      { label: 'File Mappings', value: cache.FileMappings },
+      { label: 'Bytes Read', value: cache.BytesRead },
+      { label: 'Flushes', value: cache.Flushes },
+      { label: 'Eviction Exceptions', value: cache.EvictionExceptions },
+      { label: 'File Unmappings', value: cache.FileUnmappings },
+      { label: 'Bytes Written', value: cache.BytesWritten }
+    ]
+
+    if (cache.HitRatio) {
+      pageCache.push({
+        label: 'Hit Ratio',
+        value: `${(cache.HitRatio * 100).toFixed(2)}%`
+      })
+    }
+
     this.setState({
       storeSizes: [
         {
@@ -142,16 +160,7 @@ export class SysInfoFrame extends Component {
           value: primitive.NumberOfRelationshipTypeIdsInUse
         }
       ],
-      pageCache: [
-        { label: 'Faults', value: cache.Faults },
-        { label: 'Evictions', value: cache.Evictions },
-        { label: 'File Mappings', value: cache.FileMappings },
-        { label: 'Bytes Read', value: cache.BytesRead },
-        { label: 'Flushes', value: cache.Flushes },
-        { label: 'Eviction Exceptions', value: cache.EvictionExceptions },
-        { label: 'File Unmappings', value: cache.FileUnmappings },
-        { label: 'Bytes Written', value: cache.BytesWritten }
-      ],
+      pageCache,
       transactions: [
         { label: 'Last Tx Id', value: tx.LastCommittedTxId },
         { label: 'Current', value: tx.NumberOfOpenTransactions },
