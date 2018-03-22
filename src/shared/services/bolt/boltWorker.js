@@ -24,7 +24,12 @@ import {
   ensureConnection,
   routedWriteTransaction,
   cancelTransaction,
-  closeConnection
+  closeConnection,
+  routedReadTransaction,
+  directTransaction,
+  DIRECT_CONNECTION,
+  ROUTED_WRITE_CONNECTION,
+  ROUTED_READ_CONNECTION
 } from './boltConnection'
 import {
   cypherErrorMessage,
@@ -34,6 +39,18 @@ import {
   CANCEL_TRANSACTION_MESSAGE
 } from './boltWorkerMessages'
 
+const connectionTypeMap = {
+  [ROUTED_WRITE_CONNECTION]: {
+    create: routedWriteTransaction,
+    getPromise: res => res[1]
+  },
+  [ROUTED_READ_CONNECTION]: {
+    create: routedReadTransaction,
+    getPromise: res => res
+  },
+  [DIRECT_CONNECTION]: { create: directTransaction, getPromise: res => res }
+}
+
 const onmessage = function (message) {
   const messageType = message.data.type
 
@@ -41,6 +58,7 @@ const onmessage = function (message) {
     const {
       input,
       parameters,
+      connectionType,
       requestId,
       cancelable,
       connectionProperties
@@ -52,13 +70,14 @@ const onmessage = function (message) {
       )
     })
       .then(() => {
-        const [, request] = routedWriteTransaction(
+        const res = connectionTypeMap[connectionType].create(
           input,
           parameters,
           requestId,
           cancelable
         )
-        request
+        connectionTypeMap[connectionType]
+          .getPromise(res)
           .then(r => {
             self.postMessage(cypherResponseMessage(r))
             closeConnection()

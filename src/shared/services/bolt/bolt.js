@@ -29,7 +29,6 @@ import {
   CYPHER_RESPONSE_MESSAGE,
   POST_CANCEL_TRANSACTION_MESSAGE
 } from './boltWorkerMessages'
-
 /* eslint-disable import/no-webpack-loader-syntax */
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
@@ -67,59 +66,26 @@ function cancelTransaction (id, cb) {
   }
 }
 
-function routedWriteTransaction (
-  input,
-  parameters,
-  requestId = null,
-  cancelable = false,
-  useCypherThread
-) {
+function routedWriteTransaction (input, parameters, requestMetaData = {}) {
+  const {
+    useCypherThread = false,
+    requestId = null,
+    cancelable = false
+  } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
-    const boltWorker = new BoltWorkerModule()
-    boltWorkerRegister[id] = boltWorker
-
-    const workerFinalizer = getWorkerFinalizer(
-      boltWorkerRegister,
-      cancellationRegister,
-      id
-    )
-
-    const workerPromise = new Promise((resolve, reject) => {
-      boltWorker.postMessage(
-        runCypherMessage(input, parameters, id, cancelable, {
-          ...connectionProperties,
-          inheritedUseRouting: boltConnection.useRouting()
-        })
-      )
-      boltWorker.onmessage = msg => {
-        if (msg.data.type === CYPHER_ERROR_MESSAGE) {
-          workerFinalizer(boltWorker)
-          reject(msg.data.error)
-        } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
-          let records = msg.data.result.records.map(record => {
-            const typedRecord = new neo4j.types.Record(
-              record.keys,
-              record._fields,
-              record._fieldLookup
-            )
-            if (typedRecord._fields) {
-              typedRecord._fields = mappings.applyGraphTypes(
-                typedRecord._fields
-              )
-            }
-            return typedRecord
-          })
-
-          let summary = mappings.applyGraphTypes(msg.data.result.summary)
-          workerFinalizer(boltWorker)
-          resolve({ summary, records })
-        } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
-          workerFinalizer(boltWorker)
-        }
+    const workFn = runCypherMessage(
+      input,
+      parameters,
+      boltConnection.ROUTED_WRITE_CONNECTION,
+      id,
+      cancelable,
+      {
+        ...connectionProperties,
+        inheritedUseRouting: boltConnection.useRouting()
       }
-    })
-
+    )
+    const workerPromise = setupBoltWorker(id, workFn)
     return [id, workerPromise]
   } else {
     return boltConnection.routedWriteTransaction(
@@ -129,6 +95,105 @@ function routedWriteTransaction (
       cancelable
     )
   }
+}
+
+function routedReadTransaction (input, parameters, requestMetaData = {}) {
+  const {
+    useCypherThread = false,
+    requestId = null,
+    cancelable = false
+  } = requestMetaData
+  if (useCypherThread && window.Worker) {
+    const id = requestId || v4()
+    const workFn = runCypherMessage(
+      input,
+      parameters,
+      boltConnection.ROUTED_READ_CONNECTION,
+      id,
+      cancelable,
+      {
+        ...connectionProperties,
+        inheritedUseRouting: boltConnection.useRouting()
+      }
+    )
+    const workerPromise = setupBoltWorker(id, workFn)
+    return workerPromise
+  } else {
+    return boltConnection.routedReadTransaction(
+      input,
+      parameters,
+      requestId,
+      cancelable
+    )
+  }
+}
+
+function directTransaction (input, parameters, requestMetaData = {}) {
+  const {
+    useCypherThread = false,
+    requestId = null,
+    cancelable = false
+  } = requestMetaData
+  if (useCypherThread && window.Worker) {
+    const id = requestId || v4()
+    const workFn = runCypherMessage(
+      input,
+      parameters,
+      boltConnection.DIRECT_CONNECTION,
+      id,
+      cancelable,
+      {
+        ...connectionProperties,
+        inheritedUseRouting: false
+      }
+    )
+    const workerPromise = setupBoltWorker(id, workFn)
+    return workerPromise
+  } else {
+    return boltConnection.directTransaction(
+      input,
+      parameters,
+      requestId,
+      cancelable
+    )
+  }
+}
+
+function setupBoltWorker (id, workFn) {
+  const boltWorker = new BoltWorkerModule()
+  const onFinished = registerBoltWorker(id, boltWorker)
+  const workerPromise = new Promise((resolve, reject) => {
+    boltWorker.postMessage(workFn)
+    boltWorker.onmessage = msg => {
+      if (msg.data.type === CYPHER_ERROR_MESSAGE) {
+        onFinished(boltWorker)
+        reject(msg.data.error)
+      } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
+        let records = msg.data.result.records.map(record => {
+          const typedRecord = new neo4j.types.Record(
+            record.keys,
+            record._fields,
+            record._fieldLookup
+          )
+          if (typedRecord._fields) {
+            typedRecord._fields = mappings.applyGraphTypes(typedRecord._fields)
+          }
+          return typedRecord
+        })
+        let summary = mappings.applyGraphTypes(msg.data.result.summary)
+        onFinished(boltWorker)
+        resolve({ summary, records })
+      } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
+        onFinished(boltWorker)
+      }
+    }
+  })
+  return workerPromise
+}
+
+function registerBoltWorker (id, boltWorker) {
+  boltWorkerRegister[id] = boltWorker
+  return getWorkerFinalizer(boltWorkerRegister, cancellationRegister, id)
 }
 
 function getWorkerFinalizer (workerRegister, cancellationRegister, workerId) {
@@ -153,8 +218,8 @@ export default {
     connectionProperties = null
     boltConnection.closeConnection()
   },
-  directTransaction: boltConnection.directTransaction,
-  routedReadTransaction: boltConnection.routedReadTransaction,
+  directTransaction,
+  routedReadTransaction,
   routedWriteTransaction,
   cancelTransaction,
   useRoutingConfig: shouldWe => boltConnection.setUseRoutingConfig(shouldWe),
