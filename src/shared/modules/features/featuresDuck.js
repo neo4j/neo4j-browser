@@ -69,10 +69,8 @@ export const featuresDiscoveryEpic = (action$, store) => {
       return bolt
         .routedReadTransaction(
           'CALL dbms.procedures YIELD name',
-          undefined,
-          undefined,
-          undefined,
-          shouldUseCypherThread(store.getState())
+          {},
+          { useCypherThread: shouldUseCypherThread(store.getState()) }
         )
         .then(res => {
           store.dispatch(

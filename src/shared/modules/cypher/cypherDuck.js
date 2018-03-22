@@ -69,13 +69,9 @@ export const cypherRequestEpic = (some$, store) =>
   some$.ofType(CYPHER_REQUEST).mergeMap(action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
-      .directTransaction(
-        action.query,
-        action.params || undefined,
-        undefined,
-        undefined,
-        shouldUseCypherThread(store.getState())
-      )
+      .directTransaction(action.query, action.params || undefined, {
+        useCypherThread: shouldUseCypherThread(store.getState())
+      })
       .then(r => ({ type: action.$$responseChannel, success: true, result: r }))
       .catch(e => ({
         type: action.$$responseChannel,
@@ -99,10 +95,8 @@ export const clusterCypherRequestEpic = (some$, store) =>
       return bolt
         .directTransaction(
           getCausalClusterAddresses,
-          undefined,
-          undefined,
-          undefined,
-          shouldUseCypherThread(store.getState())
+          {},
+          { useCypherThread: shouldUseCypherThread(store.getState()) }
         )
         .then(res => {
           const addresses = flatten(

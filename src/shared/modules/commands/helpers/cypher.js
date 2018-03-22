@@ -27,13 +27,11 @@ export const handleCypherCommand = (
   params = {},
   shouldUseCypherThread = false
 ) => {
-  const [id, request] = bolt.routedWriteTransaction(
-    action.cmd,
-    params,
-    action.requestId,
-    true,
-    shouldUseCypherThread
-  )
+  const [id, request] = bolt.routedWriteTransaction(action.cmd, params, {
+    useCypherThread: shouldUseCypherThread,
+    requestId: action.requestId,
+    cancelable: true
+  })
   put(send('cypher', id))
   return [id, request]
 }

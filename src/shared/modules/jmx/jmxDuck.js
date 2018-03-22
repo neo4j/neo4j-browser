@@ -63,10 +63,8 @@ const fetchJmxValues = store => {
   return bolt
     .directTransaction(
       'CALL dbms.queryJmx("org.neo4j:*")',
-      undefined,
-      undefined,
-      undefined,
-      shouldUseCypherThread(store.getState())
+      {},
+      { useCypherThread: shouldUseCypherThread(store.getState()) }
     )
     .then(res => {
       const converters = {

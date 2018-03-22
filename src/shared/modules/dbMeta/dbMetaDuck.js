@@ -283,10 +283,10 @@ export const dbMetaEpic = (some$, store) =>
               .fromPromise(
                 bolt.routedReadTransaction(
                   metaQuery,
-                  undefined,
-                  undefined,
-                  undefined,
-                  shouldUseCypherThread(store.getState())
+                  {},
+                  {
+                    useCypherThread: shouldUseCypherThread(store.getState())
+                  }
                 )
               )
               .catch(e => Rx.Observable.of(null))
@@ -383,10 +383,8 @@ export const dbMetaEpic = (some$, store) =>
               .fromPromise(
                 bolt.directTransaction(
                   'CALL dbms.cluster.role() YIELD role',
-                  undefined,
-                  undefined,
-                  undefined,
-                  shouldUseCypherThread(store.getState())
+                  {},
+                  { useCypherThread: shouldUseCypherThread(store.getState()) }
                 )
               )
               .catch(e => Rx.Observable.of(null))

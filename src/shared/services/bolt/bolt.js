@@ -66,13 +66,12 @@ function cancelTransaction (id, cb) {
   }
 }
 
-function routedWriteTransaction (
-  input,
-  parameters,
-  requestId = null,
-  cancelable = false,
-  useCypherThread
-) {
+function routedWriteTransaction (input, parameters, requestMetaData = {}) {
+  const {
+    useCypherThread = false,
+    requestId = null,
+    cancelable = false
+  } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
     const workFn = runCypherMessage(
@@ -98,13 +97,12 @@ function routedWriteTransaction (
   }
 }
 
-function routedReadTransaction (
-  input,
-  parameters,
-  requestId = null,
-  cancelable = false,
-  useCypherThread
-) {
+function routedReadTransaction (input, parameters, requestMetaData = {}) {
+  const {
+    useCypherThread = false,
+    requestId = null,
+    cancelable = false
+  } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
     const workFn = runCypherMessage(
@@ -130,13 +128,12 @@ function routedReadTransaction (
   }
 }
 
-function directTransaction (
-  input,
-  parameters,
-  requestId = null,
-  cancelable = false,
-  useCypherThread
-) {
+function directTransaction (input, parameters, requestMetaData = {}) {
+  const {
+    useCypherThread = false,
+    requestId = null,
+    cancelable = false
+  } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
     const workFn = runCypherMessage(
