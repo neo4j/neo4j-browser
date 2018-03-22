@@ -22,6 +22,10 @@ import { v1 as neo4j } from 'neo4j-driver-alias'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 
+export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
+export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
+export const ROUTED_READ_CONNECTION = 'ROUTED_READ_CONNECTION'
+
 const runningQueryRegister = {}
 
 let _drivers = null

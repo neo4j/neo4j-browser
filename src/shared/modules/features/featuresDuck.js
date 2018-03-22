@@ -21,6 +21,7 @@
 import bolt from 'services/bolt/bolt'
 import { APP_START, WEB } from 'shared/modules/app/appDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
+import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
 export const NAME = 'features'
 export const RESET = 'features/RESET'
@@ -66,7 +67,13 @@ export const featuresDiscoveryEpic = (action$, store) => {
     .ofType(CONNECTION_SUCCESS)
     .mergeMap(() => {
       return bolt
-        .routedReadTransaction('CALL dbms.procedures YIELD name')
+        .routedReadTransaction(
+          'CALL dbms.procedures YIELD name',
+          undefined,
+          undefined,
+          undefined,
+          shouldUseCypherThread(store.getState())
+        )
         .then(res => {
           store.dispatch(
             updateFeatures(res.records.map(record => record.get('name')))

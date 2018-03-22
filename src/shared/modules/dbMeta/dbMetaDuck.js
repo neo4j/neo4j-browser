@@ -33,6 +33,7 @@ import {
   setRetainCredentials,
   setAuthEnabled
 } from 'shared/modules/connections/connectionsDuck'
+import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -279,7 +280,15 @@ export const dbMetaEpic = (some$, store) =>
           // Labels, types and propertyKeys
           .mergeMap(() =>
             Rx.Observable
-              .fromPromise(bolt.routedReadTransaction(metaQuery))
+              .fromPromise(
+                bolt.routedReadTransaction(
+                  metaQuery,
+                  undefined,
+                  undefined,
+                  undefined,
+                  shouldUseCypherThread(store.getState())
+                )
+              )
               .catch(e => Rx.Observable.of(null))
           )
           .filter(r => r)
@@ -372,7 +381,13 @@ export const dbMetaEpic = (some$, store) =>
           .mergeMap(() =>
             Rx.Observable
               .fromPromise(
-                bolt.directTransaction('CALL dbms.cluster.role() YIELD role')
+                bolt.directTransaction(
+                  'CALL dbms.cluster.role() YIELD role',
+                  undefined,
+                  undefined,
+                  undefined,
+                  shouldUseCypherThread(store.getState())
+                )
               )
               .catch(e => Rx.Observable.of(null))
               .do(res => {

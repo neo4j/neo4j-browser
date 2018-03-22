@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { recursivelyTypeGraphItems } from './boltMappings'
+import { ROUTED_WRITE_CONNECTION } from './boltConnection'
+
 export const RUN_CYPHER_MESSAGE = 'RUN_CYPHER_MESSAGE'
 export const CANCEL_TRANSACTION_MESSAGE = 'CANCEL_TRANSACTION_MESSAGE'
 export const CYPHER_ERROR_MESSAGE = 'CYPHER_ERROR_MESSAGE'
@@ -27,6 +29,7 @@ export const POST_CANCEL_TRANSACTION_MESSAGE = 'POST_CANCEL_TRANSACTION_MESSAGE'
 export const runCypherMessage = (
   input,
   parameters,
+  connectionType = ROUTED_WRITE_CONNECTION,
   requestId = null,
   cancelable = false,
   connectionProperties
@@ -35,6 +38,7 @@ export const runCypherMessage = (
     type: RUN_CYPHER_MESSAGE,
     input,
     parameters,
+    connectionType,
     requestId,
     cancelable,
     connectionProperties

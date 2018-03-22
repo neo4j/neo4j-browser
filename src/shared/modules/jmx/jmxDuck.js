@@ -31,6 +31,7 @@ import {
   connectionLossFilter
 } from 'shared/modules/connections/connectionsDuck'
 import { FORCE_FETCH } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
 export const NAME = 'jmx'
 export const UPDATE = NAME + '/UPDATE'
@@ -58,9 +59,15 @@ export const getJmxValues = ({ jmx }, arr) => {
  * Helpers
  */
 
-const fetchJmxValues = () => {
+const fetchJmxValues = store => {
   return bolt
-    .directTransaction('CALL dbms.queryJmx("org.neo4j:*")')
+    .directTransaction(
+      'CALL dbms.queryJmx("org.neo4j:*")',
+      undefined,
+      undefined,
+      undefined,
+      shouldUseCypherThread(store.getState())
+    )
     .then(res => {
       const converters = {
         intChecker: bolt.neo4j.isInt,
@@ -120,7 +127,7 @@ export const jmxEpic = (some$, store) =>
         .merge(some$.ofType(FORCE_FETCH))
         .mergeMap(() =>
           Rx.Observable
-            .fromPromise(fetchJmxValues())
+            .fromPromise(fetchJmxValues(store))
             .catch(e => Rx.Observable.of(null))
         )
         .filter(r => r)

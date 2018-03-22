@@ -25,6 +25,7 @@ import { getActiveConnectionData } from 'shared/modules/connections/connectionsD
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
+import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = NAME + '/REQUEST'
@@ -68,7 +69,13 @@ export const cypherRequestEpic = (some$, store) =>
   some$.ofType(CYPHER_REQUEST).mergeMap(action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
-      .directTransaction(action.query, action.params || undefined)
+      .directTransaction(
+        action.query,
+        action.params || undefined,
+        undefined,
+        undefined,
+        shouldUseCypherThread(store.getState())
+      )
       .then(r => ({ type: action.$$responseChannel, success: true, result: r }))
       .catch(e => ({
         type: action.$$responseChannel,
@@ -90,7 +97,13 @@ export const clusterCypherRequestEpic = (some$, store) =>
     .mergeMap(action => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt
-        .directTransaction(getCausalClusterAddresses)
+        .directTransaction(
+          getCausalClusterAddresses,
+          undefined,
+          undefined,
+          undefined,
+          shouldUseCypherThread(store.getState())
+        )
         .then(res => {
           const addresses = flatten(
             res.records.map(record => record.get('addresses'))
