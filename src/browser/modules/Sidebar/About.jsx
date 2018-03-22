@@ -53,7 +53,11 @@ const About = ({ serverVersion, serverEdition }) => (
           <p>Neo4j Browser version: {version}</p>
           <Render if={serverVersion && serverEdition}>
             <p>
-              Neo4j Server version: {serverVersion} ({serverEdition})
+              Neo4j Server version:{' '}
+              <a target='_blank' href={asChangeLogUrl(serverVersion)}>
+                {serverVersion}
+              </a>{' '}
+              ({serverEdition})
             </p>
           </Render>
         </DrawerSectionBody>
@@ -128,6 +132,14 @@ const About = ({ serverVersion, serverEdition }) => (
     </DrawerBody>
   </Drawer>
 )
+
+const asChangeLogUrl = serverVersion => {
+  const tokenisedServerVersion = serverVersion && serverVersion.split('.')
+  const releaseTag = tokenisedServerVersion.join('')
+  const urlServerVersion =
+    serverVersion && tokenisedServerVersion.splice(0, 2).join('.')
+  return `https://github.com/neo4j/neo4j/wiki/Neo4j-${urlServerVersion}-changelog#${releaseTag}`
+}
 
 const mapStateToProps = store => {
   return {
