@@ -33,6 +33,7 @@ import {
 import { toHumanReadableBytes } from 'services/utils'
 import { mapSysInfoRecords, getTableDataFromRecords } from './sysinfo'
 import Render from 'browser-components/Render'
+import { QuestionIcon } from 'browser-components/icons/Icons'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
@@ -215,7 +216,15 @@ export class SysInfoFrame extends Component {
           {this.buildTableData(this.state.transactions)}
         </SysInfoTable>
         <Render if={this.props.isACausalCluster}>
-          <SysInfoTable header='Causal Cluster Members' colspan='3'>
+          <SysInfoTable
+            header={
+              <span>
+                Causal Cluster Members{' '}
+                <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
+              </span>
+            }
+            colspan='3'
+          >
             <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
             {this.buildTableData(this.state.cc)}
           </SysInfoTable>
