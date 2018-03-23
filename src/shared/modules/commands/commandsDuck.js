@@ -90,11 +90,12 @@ export const executeCommand = (cmd, requestId) => {
   }
 }
 
-export const executeSubCommand = (cmd, parentId) => {
+export const executeSubCommand = (cmd, parentId, ignore) => {
   return {
     type: SYSTEM_COMMAND_QUEUED,
     cmd,
-    parentId
+    parentId,
+    ignore
   }
 }
 
@@ -135,8 +136,11 @@ export const handleEditorCommandEpic = (action$, store) =>
       }
       const parentId = v4()
       store.dispatch(addFrame({ type: 'cypher-script', id: parentId }))
+      const cmdchar = getCmdChar(store.getState())
       action.cmd.forEach(cmd => {
-        store.dispatch(executeSubCommand(cmd, parentId))
+        const statement = cleanCommand(cmd)
+        const ignore = !!statement.startsWith(cmdchar) // Ignore client commands
+        store.dispatch(executeSubCommand(cmd, parentId, ignore))
       })
     })
     .mapTo({ type: 'NOOP' })
@@ -147,7 +151,12 @@ export const handleCommandsEpic = (action$, store) =>
     .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
     .map(action => {
       const cmdchar = getCmdChar(store.getState())
-      const interpreted = getInterpreter(helper.interpret, action.cmd, cmdchar)
+      const interpreted = getInterpreter(
+        helper.interpret,
+        action.cmd,
+        cmdchar,
+        action.ignore
+      )
       return { action, interpreted, cmdchar }
     })
     .mergeMap(({ action, interpreted, cmdchar }) => {

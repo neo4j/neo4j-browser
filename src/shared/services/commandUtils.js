@@ -54,7 +54,8 @@ export const isCypherCommand = (cmd, cmdchar) => {
   return cleanCmd[0] !== cmdchar
 }
 
-export const getInterpreter = (interpret, cmd, cmdchar) => {
+export const getInterpreter = (interpret, cmd, cmdchar, ignore = false) => {
+  if (ignore) return interpret('noop')
   if (isCypherCommand(cmd, cmdchar)) return interpret('cypher')
   return interpret(cleanCommand(cmd).substr(cmdchar.length))
 }
