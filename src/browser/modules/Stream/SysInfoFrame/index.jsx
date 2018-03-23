@@ -116,6 +116,12 @@ export class SysInfoFrame extends Component {
         value: `${(cache.HitRatio * 100).toFixed(2)}%`
       })
     }
+    if (cache.UsageRatio) {
+      pageCache.push({
+        label: 'Usage Ratio',
+        value: `${(cache.UsageRatio * 100).toFixed(2)}%`
+      })
+    }
 
     this.setState({
       storeSizes: [
