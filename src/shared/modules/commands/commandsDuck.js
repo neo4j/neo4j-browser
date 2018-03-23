@@ -19,6 +19,7 @@
  */
 
 import Rx from 'rxjs'
+import { v4 } from 'uuid'
 import {
   getInterpreter,
   cleanCommand,
@@ -41,6 +42,7 @@ import {
   getRemoteContentHostnameWhitelist
 } from '../dbMeta/dbMetaDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
+import { add as addFrame } from 'shared/modules/stream/streamDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
@@ -80,21 +82,26 @@ export const executeEditorCommand = (cmd, toHistory) => {
   }
 }
 
-export const executeCommand = (cmd, contextId, requestId = null) => {
+export const executeCommand = (cmd, requestId) => {
   return {
     type: USER_COMMAND_QUEUED,
     cmd,
-    id: contextId,
-    requestId
+    id: requestId
   }
 }
 
-export const executeSystemCommand = (cmd, contextId, requestId = null) => {
+export const executeSubCommand = (cmd, parentId) => {
   return {
     type: SYSTEM_COMMAND_QUEUED,
     cmd,
-    id: contextId,
-    requestId
+    parentId
+  }
+}
+
+export const executeSystemCommand = cmd => {
+  return {
+    type: SYSTEM_COMMAND_QUEUED,
+    cmd
   }
 }
 
@@ -122,8 +129,14 @@ export const handleEditorCommandEpic = (action$, store) =>
       const maxHistory = getMaxHistory(store.getState())
       const history = action.toHistory || action.cmd.join(';\n') + ';'
       store.dispatch(addHistory(history, maxHistory))
+      if (action.cmd.length === 1) {
+        // Single command
+        return store.dispatch(executeCommand(action.cmd[0]))
+      }
+      const parentId = v4()
+      store.dispatch(addFrame({ type: 'cypher-script', id: parentId }))
       action.cmd.forEach(cmd => {
-        store.dispatch(executeCommand(cmd))
+        store.dispatch(executeSubCommand(cmd, parentId))
       })
     })
     .mapTo({ type: 'NOOP' })

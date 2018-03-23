@@ -54,18 +54,41 @@ export function getRecentView (state) {
  * Reducer helpers
 */
 function addFrame (state, newState) {
-  const byId = Object.assign({}, state.byId, { [newState.id]: newState })
+  if (newState.parentId && state.allIds.indexOf(newState.parentId) < 0) {
+    // No parent
+    return state
+  }
+  let byId = Object.assign({}, state.byId, { [newState.id]: newState })
   let allIds = [].concat(state.allIds)
-  if (allIds.indexOf(newState.id) < 0) {
-    // new frame
-    const pos = findFirstFreePos(state)
-    allIds.splice(pos, 0, newState.id)
+
+  if (newState.parentId) {
+    // Need to add this id to parent's list of statements
+    byId = {
+      ...byId,
+      [newState.parentId]: {
+        ...byId[newState.parentId],
+        statements: (byId[newState.parentId].statements || []).concat(
+          newState.id
+        )
+      }
+    }
+  } else {
+    allIds = insertIntoAllIds(state, allIds, newState)
   }
   return ensureFrameLimit({
     ...state,
     allIds,
     byId
   })
+}
+
+function insertIntoAllIds (state, allIds, newState) {
+  if (allIds.indexOf(newState.id) < 0) {
+    // new frame
+    const pos = findFirstFreePos(state)
+    allIds.splice(pos, 0, newState.id)
+  }
+  return allIds
 }
 
 function removeFrame (state, id) {
