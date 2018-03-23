@@ -18,7 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { connect } from 'preact-redux'
 import { version } from 'project-root/package.json'
+import Render from 'browser-components/Render'
 import {
   Drawer,
   DrawerBody,
@@ -28,98 +30,122 @@ import {
   DrawerSectionBody,
   DrawerFooter
 } from 'browser-components/drawer'
+import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
 
-const About = () => {
-  return (
-    <Drawer id='db-about'>
-      <DrawerHeader>About Neo4j</DrawerHeader>
-      <DrawerBody>
-        <DrawerSection>
-          <DrawerSubHeader>
-            Made by{' '}
-            <a target='_blank' href='http://neo4j.com/'>
-              Neo4j, Inc
-            </a>
-          </DrawerSubHeader>
-        </DrawerSection>
-        <DrawerSection>
-          <DrawerSectionBody>Copyright &#169; 2002-2018</DrawerSectionBody>
-        </DrawerSection>
-        <DrawerSection>
-          <DrawerSubHeader>Neo4j Browser</DrawerSubHeader>
-          <DrawerSectionBody>
-            You are running Neo4j Browser version: {version}
-          </DrawerSectionBody>
-        </DrawerSection>
-        <DrawerSection>
-          <DrawerSubHeader>License</DrawerSubHeader>
-          <DrawerSectionBody>
-            <a target='_blank' href='http://www.gnu.org/licenses/gpl.html'>
-              GPLv3
-            </a>{' '}
-            or{' '}
-            <a target='_blank' href='http://www.gnu.org/licenses/agpl-3.0.html'>
-              AGPL
-            </a>{' '}
-            for Open Source, and{' '}
-            <a target='_blank' href='https://neo4j.com/licensing/'>
-              NTCL
-            </a>{' '}
-            Commercial.
-          </DrawerSectionBody>
-        </DrawerSection>
-        <DrawerSection>
-          <DrawerSubHeader>Participate</DrawerSubHeader>
-          <DrawerSectionBody>
-            Ask questions at{' '}
-            <a
-              target='_blank'
-              href='http://stackoverflow.com/questions/tagged/neo4j'
-            >
-              Stack Overflow
-            </a>
-            <br />
-            Discuss Neo4j on{' '}
-            <a target='_blank' href='http://neo4j.com/slack'>
-              Slack
-            </a>{' '}
-            or{' '}
-            <a target='_blank' href='http://groups.google.com/group/neo4j'>
-              Google Groups
-            </a>
-            <br />
-            Visit a local{' '}
-            <a target='_blank' href='http://neo4j.meetup.com/'>
-              Meetup Group
-            </a>
-            <br />
-            Contribute code to{' '}
-            <a target='_blank' href='http://github.com/neo4j'>
-              Neo4j
-            </a>{' '}
-            or{' '}
-            <a target='_blank' href='http://github.com/neo4j/neo4j-browser'>
-              Neo4j Browser
-            </a>
-            <br />
-            Send us your Browser feedback via{' '}
-            <a href='mailto:browser@neotechnology.com?subject=Neo4j Browser feedback'>
-              email
-            </a>
-          </DrawerSectionBody>
-        </DrawerSection>
-        <DrawerSection>
-          <DrawerSubHeader>Thanks</DrawerSubHeader>
-          <DrawerSectionBody>
-            Neo4j wouldn't be possible without a fantastic community. Thanks for
-            all the feedback, discussions and contributions.
-          </DrawerSectionBody>
-          <DrawerFooter>
-            <DrawerSectionBody>With &#9829; from Sweden.</DrawerSectionBody>
-          </DrawerFooter>
-        </DrawerSection>
-      </DrawerBody>
-    </Drawer>
-  )
+const About = ({ serverVersion, serverEdition }) => (
+  <Drawer id='db-about'>
+    <DrawerHeader>About Neo4j</DrawerHeader>
+    <DrawerBody>
+      <DrawerSection>
+        <DrawerSubHeader>
+          Made by{' '}
+          <a target='_blank' href='http://neo4j.com/'>
+            Neo4j, Inc
+          </a>
+        </DrawerSubHeader>
+      </DrawerSection>
+      <DrawerSection>
+        <DrawerSectionBody>Copyright &#169; 2002-2018</DrawerSectionBody>
+      </DrawerSection>
+      <DrawerSection>
+        <DrawerSubHeader>You are running</DrawerSubHeader>
+        <DrawerSectionBody>
+          <p>Neo4j Browser version: {version}</p>
+          <Render if={serverVersion && serverEdition}>
+            <p>
+              Neo4j Server version:{' '}
+              <a target='_blank' href={asChangeLogUrl(serverVersion)}>
+                {serverVersion}
+              </a>{' '}
+              ({serverEdition})
+            </p>
+          </Render>
+        </DrawerSectionBody>
+      </DrawerSection>
+      <DrawerSection>
+        <DrawerSubHeader>License</DrawerSubHeader>
+        <DrawerSectionBody>
+          <a target='_blank' href='http://www.gnu.org/licenses/gpl.html'>
+            GPLv3
+          </a>{' '}
+          or{' '}
+          <a target='_blank' href='http://www.gnu.org/licenses/agpl-3.0.html'>
+            AGPL
+          </a>{' '}
+          for Open Source, and{' '}
+          <a target='_blank' href='https://neo4j.com/licensing/'>
+            NTCL
+          </a>{' '}
+          Commercial.
+        </DrawerSectionBody>
+      </DrawerSection>
+      <DrawerSection>
+        <DrawerSubHeader>Participate</DrawerSubHeader>
+        <DrawerSectionBody>
+          Ask questions at{' '}
+          <a
+            target='_blank'
+            href='http://stackoverflow.com/questions/tagged/neo4j'
+          >
+            Stack Overflow
+          </a>
+          <br />
+          Discuss Neo4j on{' '}
+          <a target='_blank' href='http://neo4j.com/slack'>
+            Slack
+          </a>{' '}
+          or{' '}
+          <a target='_blank' href='http://groups.google.com/group/neo4j'>
+            Google Groups
+          </a>
+          <br />
+          Visit a local{' '}
+          <a target='_blank' href='http://neo4j.meetup.com/'>
+            Meetup Group
+          </a>
+          <br />
+          Contribute code to{' '}
+          <a target='_blank' href='http://github.com/neo4j'>
+            Neo4j
+          </a>{' '}
+          or{' '}
+          <a target='_blank' href='http://github.com/neo4j/neo4j-browser'>
+            Neo4j Browser
+          </a>
+          <br />
+          Send us your Browser feedback via{' '}
+          <a href='mailto:browser@neotechnology.com?subject=Neo4j Browser feedback'>
+            email
+          </a>
+        </DrawerSectionBody>
+      </DrawerSection>
+      <DrawerSection>
+        <DrawerSubHeader>Thanks</DrawerSubHeader>
+        <DrawerSectionBody>
+          Neo4j wouldn't be possible without a fantastic community. Thanks for
+          all the feedback, discussions and contributions.
+        </DrawerSectionBody>
+        <DrawerFooter>
+          <DrawerSectionBody>With &#9829; from Sweden.</DrawerSectionBody>
+        </DrawerFooter>
+      </DrawerSection>
+    </DrawerBody>
+  </Drawer>
+)
+
+const asChangeLogUrl = serverVersion => {
+  const tokenisedServerVersion = serverVersion && serverVersion.split('.')
+  const releaseTag = tokenisedServerVersion.join('')
+  const urlServerVersion =
+    serverVersion && tokenisedServerVersion.splice(0, 2).join('.')
+  return `https://github.com/neo4j/neo4j/wiki/Neo4j-${urlServerVersion}-changelog#${releaseTag}`
 }
-export default About
+
+const mapStateToProps = store => {
+  return {
+    serverVersion: getVersion(store),
+    serverEdition: getEdition(store)
+  }
+}
+
+export default connect(mapStateToProps)(About)
