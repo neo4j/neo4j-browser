@@ -62,25 +62,46 @@ export const SysInfoTable = ({ header, colspan, children }) => {
   )
 }
 
-export const SysInfoTableEntry = ({ label, value, values, headers }) => {
+export const SysInfoTableEntry = ({
+  label,
+  value,
+  values,
+  headers,
+  mapper,
+  optional
+}) => {
+  const missingValuePlaceholder = '-'
+  const getValue = (v, m) => (m && v ? mapper(v) : v)
   if (headers) {
     return (
       <StyledTr>
-        {headers.map(value => <StyledTdKey>{value || '-'}</StyledTdKey>)}
+        {headers.map(value => {
+          const mappedValue = getValue(value, mapper)
+          return mappedValue || !optional ? (
+            <StyledTdKey>{mappedValue || missingValuePlaceholder}</StyledTdKey>
+          ) : null
+        })}
       </StyledTr>
     )
   }
   if (values) {
     return (
       <StyledTr>
-        {values.map(value => <StyledTd>{value || '-'}</StyledTd>)}
+        {values.map(value => {
+          const mappedValue = getValue(value, mapper)
+          return mappedValue || !optional ? (
+            <StyledTd>{mappedValue || missingValuePlaceholder}</StyledTd>
+          ) : null
+        })}
       </StyledTr>
     )
   }
-  return (
+  const mappedValue = getValue(value, mapper)
+
+  return mappedValue || !optional ? (
     <StyledTr>
       <StyledTdKey>{label}</StyledTdKey>
-      <StyledTd>{value || '-'}</StyledTd>
+      <StyledTd>{mappedValue || missingValuePlaceholder}</StyledTd>
     </StyledTr>
-  )
+  ) : null
 }
