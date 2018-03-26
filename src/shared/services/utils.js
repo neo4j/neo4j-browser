@@ -21,6 +21,46 @@
 
 import parseUrl from 'url-parse'
 
+export const serialExecution = (
+  prior,
+  work,
+  onSuccess = () => {},
+  onError = () => {},
+  onSkipped = () => {}
+) => {
+  return (
+    prior
+      // Set `catch` before `then` not to catch it's own rejection
+      // so only following promises catches it
+      .catch(e => {
+        onSkipped()
+        return Promise.reject(e) // Continue rejection chain
+      })
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          const res = work()
+          if (!res) {
+            onError()
+            return reject(new Error('work failed'))
+          }
+          if (res && !res.then) {
+            onSuccess(res)
+            return resolve(res)
+          }
+          return res
+            .then(r => {
+              onSuccess(r)
+              resolve(r)
+            })
+            .catch(e => {
+              onError(e)
+              reject(e)
+            })
+        })
+      })
+  )
+}
+
 export const deepEquals = (x, y) => {
   if (x && y && typeof x === 'object' && typeof y === 'object') {
     if (Object.keys(x).length !== Object.keys(y).length) return false

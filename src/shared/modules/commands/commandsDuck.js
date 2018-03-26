@@ -123,6 +123,8 @@ export const fetchGuideFromWhitelistAction = url => ({
   url
 })
 
+// Epics
+
 export const handleEditorCommandEpic = (action$, store) =>
   action$
     .ofType(EDITOR_COMMAND_QUEUED)
@@ -144,7 +146,7 @@ export const handleEditorCommandEpic = (action$, store) =>
       })
     })
     .mapTo({ type: 'NOOP' })
-// Epics
+
 export const handleCommandsEpic = (action$, store) =>
   action$
     .ofType(USER_COMMAND_QUEUED)

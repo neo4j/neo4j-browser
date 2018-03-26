@@ -22,6 +22,91 @@
 import * as utils from './utils'
 
 describe('utils', () => {
+  describe('serialExecution', () => {
+    test('handles happy path', () => {
+      const w1 = () => true // works with bool
+      const s1 = jest.fn()
+      const e1 = jest.fn()
+
+      const w2 = () => Promise.resolve(true) // and promises
+      const s2 = jest.fn()
+      const e2 = jest.fn()
+
+      const w3 = () => true
+      const s3 = jest.fn()
+      const e3 = jest.fn()
+
+      utils.serialExecution(
+        utils.serialExecution(
+          utils.serialExecution(Promise.resolve(), w1, s1, e1),
+          w2,
+          s2,
+          e2
+        ),
+        w3,
+        s3,
+        e3
+      )
+
+      return flushPromises().then(() => {
+        expect(s1).toHaveBeenCalledTimes(1)
+        expect(s2).toHaveBeenCalledTimes(1)
+        expect(s3).toHaveBeenCalledTimes(1)
+
+        expect(e1).toHaveBeenCalledTimes(0)
+        expect(e2).toHaveBeenCalledTimes(0)
+        expect(e3).toHaveBeenCalledTimes(0)
+        return Promise.resolve() // Resolve not to break test
+      })
+    })
+
+    test('breaks on first error', () => {
+      const w1 = () => true
+      const s1 = jest.fn()
+      const e1 = jest.fn()
+      const skip1 = jest.fn()
+
+      const w2 = () => Promise.reject(Error('nope'))
+      const s2 = jest.fn()
+      const e2 = jest.fn()
+      const skip2 = jest.fn()
+
+      const w3 = () => true
+      const s3 = jest.fn()
+      const e3 = jest.fn()
+      const skip3 = jest.fn()
+
+      const res = utils.serialExecution(
+        utils.serialExecution(
+          utils.serialExecution(Promise.resolve(), w1, s1, e1, skip1),
+          w2,
+          s2,
+          e2,
+          skip2
+        ),
+        w3,
+        s3,
+        e3,
+        skip3
+      )
+      res.catch(e => {}) // catch error from promise chain not to break test
+
+      return flushPromises().then(() => {
+        expect(s1).toHaveBeenCalledTimes(1)
+        expect(e1).toHaveBeenCalledTimes(0)
+        expect(skip1).toHaveBeenCalledTimes(0)
+
+        expect(s2).toHaveBeenCalledTimes(0)
+        expect(e2).toHaveBeenCalledTimes(1)
+        expect(skip2).toHaveBeenCalledTimes(0)
+
+        expect(s3).toHaveBeenCalledTimes(0)
+        expect(e3).toHaveBeenCalledTimes(0)
+        expect(skip3).toHaveBeenCalledTimes(1)
+        return Promise.resolve() // Resolve not to break test
+      })
+    })
+  })
   test('can deeply compare objects', () => {
     // Given
     const o1 = { a: 'a', b: 'b', c: { c: 'c' } }
@@ -538,3 +623,7 @@ describe('toKeyString', () => {
     })
   })
 })
+
+function flushPromises () {
+  return new Promise(resolve => setImmediate(resolve))
+}
