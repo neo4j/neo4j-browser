@@ -23,86 +23,84 @@ import * as utils from './utils'
 
 describe('utils', () => {
   describe('serialExecution', () => {
-    test('handles happy path', () => {
-      const w1 = () => true // works with bool
-      const s1 = jest.fn()
-      const e1 = jest.fn()
-
-      const w2 = () => Promise.resolve(true) // and promises
-      const s2 = jest.fn()
-      const e2 = jest.fn()
-
-      const w3 = () => true
-      const s3 = jest.fn()
-      const e3 = jest.fn()
-
-      utils.serialExecution(
-        utils.serialExecution(
-          utils.serialExecution(Promise.resolve(), w1, s1, e1),
-          w2,
-          s2,
-          e2
-        ),
-        w3,
-        s3,
-        e3
+    test('rejects if no args', () => {
+      return expect(utils.serialExecution()).rejects.toMatchObject(
+        Error('Nothing to do')
       )
+    })
+    test('rejects if no work', () => {
+      return expect(
+        utils.serialExecution({
+          something: true
+        })
+      ).rejects.toMatchObject(Error('Nothing to do'))
+    })
+    test('handles happy path', () => {
+      const w1 = {
+        workFn: () => true, // works with bool
+        onSuccess: jest.fn(),
+        onError: jest.fn()
+      }
+      const w2 = {
+        workFn: () => Promise.resolve(true), // and promises
+        onSuccess: jest.fn(),
+        onError: jest.fn()
+      }
+      const w3 = {
+        workFn: () => true,
+        onSuccess: jest.fn(),
+        onError: jest.fn()
+      }
+
+      utils.serialExecution(w1, w2, w3)
 
       return flushPromises().then(() => {
-        expect(s1).toHaveBeenCalledTimes(1)
-        expect(s2).toHaveBeenCalledTimes(1)
-        expect(s3).toHaveBeenCalledTimes(1)
+        expect(w1.onSuccess).toHaveBeenCalledTimes(1)
+        expect(w2.onSuccess).toHaveBeenCalledTimes(1)
+        expect(w3.onSuccess).toHaveBeenCalledTimes(1)
 
-        expect(e1).toHaveBeenCalledTimes(0)
-        expect(e2).toHaveBeenCalledTimes(0)
-        expect(e3).toHaveBeenCalledTimes(0)
+        expect(w1.onError).toHaveBeenCalledTimes(0)
+        expect(w2.onError).toHaveBeenCalledTimes(0)
+        expect(w3.onError).toHaveBeenCalledTimes(0)
         return Promise.resolve() // Resolve not to break test
       })
     })
 
     test('breaks on first error', () => {
-      const w1 = () => true
-      const s1 = jest.fn()
-      const e1 = jest.fn()
-      const skip1 = jest.fn()
+      const w1 = {
+        workFn: () => true, // works with bool
+        onSuccess: jest.fn(),
+        onError: jest.fn(),
+        onSkip: jest.fn()
+      }
+      const w2 = {
+        workFn: () => Promise.reject(Error('fail')), // and promises
+        onSuccess: jest.fn(),
+        onError: jest.fn(),
+        onSkip: jest.fn()
+      }
+      const w3 = {
+        workFn: () => true,
+        onSuccess: jest.fn(),
+        onError: jest.fn(),
+        onSkip: jest.fn()
+      }
 
-      const w2 = () => Promise.reject(Error('nope'))
-      const s2 = jest.fn()
-      const e2 = jest.fn()
-      const skip2 = jest.fn()
-
-      const w3 = () => true
-      const s3 = jest.fn()
-      const e3 = jest.fn()
-      const skip3 = jest.fn()
-
-      const res = utils.serialExecution(
-        utils.serialExecution(
-          utils.serialExecution(Promise.resolve(), w1, s1, e1, skip1),
-          w2,
-          s2,
-          e2,
-          skip2
-        ),
-        w3,
-        s3,
-        e3,
-        skip3
-      )
+      const res = utils.serialExecution(w1, w2, w3)
       res.catch(e => {}) // catch error from promise chain not to break test
 
       return flushPromises().then(() => {
-        expect(s1).toHaveBeenCalledTimes(1)
-        expect(e1).toHaveBeenCalledTimes(0)
-        expect(skip1).toHaveBeenCalledTimes(0)
+        expect(w1.onSuccess).toHaveBeenCalledTimes(1)
+        expect(w1.onError).toHaveBeenCalledTimes(0)
+        expect(w1.onSkip).toHaveBeenCalledTimes(0)
 
-        expect(s2).toHaveBeenCalledTimes(0)
-        expect(e2).toHaveBeenCalledTimes(1)
-        expect(skip2).toHaveBeenCalledTimes(0)
+        expect(w2.onSuccess).toHaveBeenCalledTimes(0)
+        expect(w2.onError).toHaveBeenCalledTimes(1)
+        expect(w2.onSkip).toHaveBeenCalledTimes(0)
 
-        expect(s3).toHaveBeenCalledTimes(0)
-        expect(e3).toHaveBeenCalledTimes(0)
-        expect(skip3).toHaveBeenCalledTimes(1)
+        expect(w3.onSuccess).toHaveBeenCalledTimes(0)
+        expect(w3.onError).toHaveBeenCalledTimes(0)
+        expect(w3.onSkip).toHaveBeenCalledTimes(1)
         return Promise.resolve() // Resolve not to break test
       })
     })
