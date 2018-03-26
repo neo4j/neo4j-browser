@@ -38,6 +38,10 @@ export const SET_MAX_FRAMES = NAME + '/SET_MAX_FRAMES'
 /**
  * Selectors
 */
+export function getFrame (state, id) {
+  return state[NAME].byId[id]
+}
+
 export function getFrames (state) {
   return state[NAME].allIds.map(id => state[NAME].byId[id])
 }
