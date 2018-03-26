@@ -291,6 +291,12 @@ export const EditIcon = () => (
 export const Spinner = () => (
   <IconContainer className='fa fa-spinner fa-spin fa-2x' />
 )
+export const SmallSpinner = () => (
+  <IconContainer className='fa fa-spinner fa-spin ' />
+)
+export const PauseIcon = () => <IconContainer className='fa fa-pause ' />
+export const DoneIcon = () => <IconContainer className='fa fa-check ' />
+export const SimpleMinusIcon = () => <IconContainer className='fa fa-minus ' />
 
 export const ExclamationTriangleIcon = () => (
   <IconContainer suppressIconStyles className='fa fa-exclamation-triangle' />

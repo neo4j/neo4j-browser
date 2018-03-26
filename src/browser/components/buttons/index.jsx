@@ -251,6 +251,21 @@ const StyledFrameButton = styled.li`
     text-decoration: none;
   }
 `
+
+export const StyledStatusSection = styled.li`
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: transparent;
+  height: ${dim.frameTitlebarHeight}px;
+  width: 41px;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: center;
+  line-height: 40px;
+  display: inline-block;
+  &:hover {
+    text-decoration: none;
+  }
+`
 const StyledFrameButtonPressed = styled(StyledFrameButton)`
   background-color: ${props => props.theme.secondaryButtonBackgroundHover};
   color: ${props => props.theme.secondaryButtonTextHover};
