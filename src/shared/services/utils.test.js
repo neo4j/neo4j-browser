@@ -38,16 +38,19 @@ describe('utils', () => {
     test('handles happy path', () => {
       const w1 = {
         workFn: () => true, // works with bool
+        onStart: jest.fn(),
         onSuccess: jest.fn(),
         onError: jest.fn()
       }
       const w2 = {
         workFn: () => Promise.resolve(true), // and promises
+        onStart: jest.fn(),
         onSuccess: jest.fn(),
         onError: jest.fn()
       }
       const w3 = {
         workFn: () => true,
+        onStart: jest.fn(),
         onSuccess: jest.fn(),
         onError: jest.fn()
       }
@@ -55,6 +58,10 @@ describe('utils', () => {
       utils.serialExecution(w1, w2, w3)
 
       return flushPromises().then(() => {
+        expect(w1.onStart).toHaveBeenCalledTimes(1)
+        expect(w2.onStart).toHaveBeenCalledTimes(1)
+        expect(w3.onStart).toHaveBeenCalledTimes(1)
+
         expect(w1.onSuccess).toHaveBeenCalledTimes(1)
         expect(w2.onSuccess).toHaveBeenCalledTimes(1)
         expect(w3.onSuccess).toHaveBeenCalledTimes(1)
@@ -69,18 +76,21 @@ describe('utils', () => {
     test('breaks on first error', () => {
       const w1 = {
         workFn: () => true, // works with bool
+        onStart: jest.fn(),
         onSuccess: jest.fn(),
         onError: jest.fn(),
         onSkip: jest.fn()
       }
       const w2 = {
         workFn: () => Promise.reject(Error('fail')), // and promises
+        onStart: jest.fn(),
         onSuccess: jest.fn(),
         onError: jest.fn(),
         onSkip: jest.fn()
       }
       const w3 = {
         workFn: () => true,
+        onStart: jest.fn(),
         onSuccess: jest.fn(),
         onError: jest.fn(),
         onSkip: jest.fn()
@@ -90,14 +100,17 @@ describe('utils', () => {
       res.catch(e => {}) // catch error from promise chain not to break test
 
       return flushPromises().then(() => {
+        expect(w1.onStart).toHaveBeenCalledTimes(1)
         expect(w1.onSuccess).toHaveBeenCalledTimes(1)
         expect(w1.onError).toHaveBeenCalledTimes(0)
         expect(w1.onSkip).toHaveBeenCalledTimes(0)
 
+        expect(w2.onStart).toHaveBeenCalledTimes(1)
         expect(w2.onSuccess).toHaveBeenCalledTimes(0)
         expect(w2.onError).toHaveBeenCalledTimes(1)
         expect(w2.onSkip).toHaveBeenCalledTimes(0)
 
+        expect(w3.onStart).toHaveBeenCalledTimes(0)
         expect(w3.onSuccess).toHaveBeenCalledTimes(0)
         expect(w3.onError).toHaveBeenCalledTimes(0)
         expect(w3.onSkip).toHaveBeenCalledTimes(1)

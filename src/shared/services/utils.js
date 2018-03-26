@@ -63,6 +63,7 @@ const linkPromises = next => {
       })
       .then(() => {
         return new Promise((resolve, reject) => {
+          next.onStart && next.onStart()
           const res = next.workFn()
           if (!res) {
             next.onError && next.onError()

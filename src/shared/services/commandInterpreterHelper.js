@@ -72,6 +72,7 @@ const availableCommands = [
     match: cmd => /^noop$/.test(cmd),
     exec: function (action, cmdchar, put, store) {
       put(frames.add({ ...action, type: 'noop' }))
+      return true
     }
   },
   {

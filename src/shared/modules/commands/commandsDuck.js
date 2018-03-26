@@ -21,14 +21,15 @@
 import Rx from 'rxjs'
 import { v4 } from 'uuid'
 import {
-  getInterpreter,
   cleanCommand,
-  extractPostConnectCommandsFromServerConfig
+  extractPostConnectCommandsFromServerConfig,
+  buildCommandObject
 } from 'services/commandUtils'
 import {
   extractWhitelistFromConfigString,
   addProtocolsToUrlList,
-  firstSuccessPromise
+  firstSuccessPromise,
+  serialExecution
 } from 'services/utils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -43,11 +44,13 @@ import {
 } from '../dbMeta/dbMetaDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/stream/streamDuck'
+import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 
 export const NAME = 'commands'
 export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
 export const EDITOR_COMMAND_QUEUED = NAME + '/EDITOR_COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
+export const SUB_COMMAND_QUEUED = NAME + '/SUB_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
 export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
 export const CYPHER = NAME + '/CYPHER'
@@ -92,7 +95,7 @@ export const executeCommand = (cmd, requestId) => {
 
 export const executeSubCommand = (cmd, parentId, ignore) => {
   return {
-    type: SYSTEM_COMMAND_QUEUED,
+    type: SUB_COMMAND_QUEUED,
     cmd,
     parentId,
     ignore
@@ -139,11 +142,33 @@ export const handleEditorCommandEpic = (action$, store) =>
       const parentId = v4()
       store.dispatch(addFrame({ type: 'cypher-script', id: parentId }))
       const cmdchar = getCmdChar(store.getState())
+      let jobs = []
       action.cmd.forEach(cmd => {
-        const statement = cleanCommand(cmd)
-        const ignore = !!statement.startsWith(cmdchar) // Ignore client commands
-        store.dispatch(executeSubCommand(cmd, parentId, ignore))
+        cmd = cleanCommand(cmd)
+        const requestId = v4()
+        const ignore = !!cmd.startsWith(cmdchar) // Ignore client commands
+
+        let { action, interpreted } = buildCommandObject(
+          { cmd, ignore },
+          helper.interpret,
+          getCmdChar(store.getState())
+        )
+        action.requestId = requestId
+        action.parentId = parentId
+
+        jobs.push({
+          workFn: () =>
+            interpreted.exec(action, cmdchar, store.dispatch, store),
+          onStart: () =>
+            ignore
+              ? null
+              : store.dispatch(updateQueryResult(requestId, null, 'waiting')),
+          onSkip: () =>
+            store.dispatch(updateQueryResult(requestId, null, 'skipped'))
+        })
       })
+
+      serialExecution(...jobs)
     })
     .mapTo({ type: 'NOOP' })
 
@@ -151,16 +176,9 @@ export const handleCommandsEpic = (action$, store) =>
   action$
     .ofType(USER_COMMAND_QUEUED)
     .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
-    .map(action => {
-      const cmdchar = getCmdChar(store.getState())
-      const interpreted = getInterpreter(
-        helper.interpret,
-        action.cmd,
-        cmdchar,
-        action.ignore
-      )
-      return { action, interpreted, cmdchar }
-    })
+    .map(action =>
+      buildCommandObject(action, helper.interpret, getCmdChar(store.getState()))
+    )
     .mergeMap(({ action, interpreted, cmdchar }) => {
       return new Promise((resolve, reject) => {
         if (interpreted.name !== 'cypher') action.cmd = cleanCommand(action.cmd)

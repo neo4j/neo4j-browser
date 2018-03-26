@@ -54,6 +54,16 @@ export const isCypherCommand = (cmd, cmdchar) => {
   return cleanCmd[0] !== cmdchar
 }
 
+export const buildCommandObject = (action, interpret, cmdchar) => {
+  const interpreted = getInterpreter(
+    interpret,
+    action.cmd,
+    cmdchar,
+    action.ignore
+  )
+  return { action, interpreted, cmdchar }
+}
+
 export const getInterpreter = (interpret, cmd, cmdchar, ignore = false) => {
   if (ignore) return interpret('noop')
   if (isCypherCommand(cmd, cmdchar)) return interpret('cypher')
