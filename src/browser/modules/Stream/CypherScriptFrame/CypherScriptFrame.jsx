@@ -26,8 +26,8 @@ import { getFrame } from 'shared/modules/stream/streamDuck'
 import { StyledStatusSection } from 'browser-components/buttons'
 import {
   SmallSpinner,
-  PauseIcon,
-  DoneIcon,
+  SquareIcon,
+  CheckedSquareIcon,
   ExclamationTriangleIcon
 } from 'browser-components/icons/Icons'
 import { getBodyAndStatusBarMessages } from 'browser/modules/Stream/CypherFrame/helpers'
@@ -57,17 +57,17 @@ const getIcon = status => {
       return <SmallSpinner />
     case 'skipped':
     case 'waiting':
-      return <PauseIcon />
+      return <SquareIcon />
     case 'success':
       return (
         <SuccessSpan>
-          <DoneIcon />
+          <CheckedSquareIcon />
         </SuccessSpan>
       )
     case 'ignored':
       return (
         <WarningSpan>
-          <ExclamationTriangleIcon />
+          <SquareIcon />
         </WarningSpan>
       )
     case 'error':
