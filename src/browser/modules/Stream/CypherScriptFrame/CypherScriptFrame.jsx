@@ -152,6 +152,7 @@ class CypherScriptFrame extends Component {
       <WrapperCenter>
         <ContentSizer>
           <Accordion
+            data-test-id='multi-statement-list'
             render={({ getChildProps }) => {
               return (
                 <div>
@@ -165,7 +166,10 @@ class CypherScriptFrame extends Component {
                     })
                     return (
                       <div>
-                        <Accordion.Title {...titleProps}>
+                        <Accordion.Title
+                          data-test-id='multi-statement-list-title'
+                          {...titleProps}
+                        >
                           <PointerFrameCommand title={frames[id].cmd}>
                             {frames[id].cmd}
                           </PointerFrameCommand>
@@ -175,7 +179,10 @@ class CypherScriptFrame extends Component {
                             </StyledStatusSection>
                           </FrameTitlebarButtonSection>
                         </Accordion.Title>
-                        <Accordion.Content {...contentProps}>
+                        <Accordion.Content
+                          data-test-id='multi-statement-list-content'
+                          {...contentProps}
+                        >
                           <Summary
                             status={status}
                             request={requests[frames[id].requestId]}

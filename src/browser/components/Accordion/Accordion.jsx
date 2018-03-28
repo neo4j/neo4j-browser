@@ -38,8 +38,11 @@ class Accordion extends Component {
   }
   render () {
     const { getChildProps } = this
+    const { render: renderProp, ...rest } = this.props
     return (
-      <BorderedWrapper>{this.props.render({ getChildProps })}</BorderedWrapper>
+      <BorderedWrapper {...rest}>
+        {renderProp({ getChildProps })}
+      </BorderedWrapper>
     )
   }
 }
