@@ -152,22 +152,20 @@ class CypherScriptFrame extends Component {
       <WrapperCenter>
         <ContentSizer>
           <Accordion
-            render={({ activeIndex, accordionClick }) => {
+            render={({ getChildProps }) => {
               return (
                 <div>
                   {(frame.statements || []).map((id, index) => {
                     const status = frames[id].ignore
                       ? 'ignored'
                       : requests[frames[id].requestId].status
+                    const { titleProps, contentProps } = getChildProps({
+                      index,
+                      defaultActive: ['error'].includes(status)
+                    })
                     return (
                       <div>
-                        <Accordion.Title
-                          key={id}
-                          active={activeIndex === index}
-                          index={index}
-                          onClick={() => accordionClick(index)}
-                          status={status}
-                        >
+                        <Accordion.Title {...titleProps}>
                           <PointerFrameCommand title={frames[id].cmd}>
                             {frames[id].cmd}
                           </PointerFrameCommand>
@@ -177,7 +175,7 @@ class CypherScriptFrame extends Component {
                             </StyledStatusSection>
                           </FrameTitlebarButtonSection>
                         </Accordion.Title>
-                        <Accordion.Content active={activeIndex === index}>
+                        <Accordion.Content {...contentProps}>
                           <Summary
                             status={status}
                             request={requests[frames[id].requestId]}

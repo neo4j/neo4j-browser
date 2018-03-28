@@ -19,6 +19,7 @@
  */
 
 module.exports = {
+  const wrapper = enyzmeMount(tree)
   plugins: {
     precss: {},
     autoprefixer: {

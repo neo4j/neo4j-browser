@@ -167,13 +167,12 @@ export const handleEditorCommandEpic = (action$, store) =>
           workFn: () =>
             interpreted.exec(action, cmdchar, store.dispatch, store),
           onStart: () => {},
-
           onSkip: () =>
             store.dispatch(updateQueryResult(requestId, null, 'skipped'))
         })
       })
 
-      serialExecution(...jobs)
+      serialExecution(...jobs).catch(() => {})
     })
     .mapTo({ type: 'NOOP' })
 
