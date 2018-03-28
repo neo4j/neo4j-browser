@@ -108,15 +108,20 @@ export class SysInfoFrame extends Component {
       { label: 'Flushes', value: cache.Flushes },
       { label: 'Eviction Exceptions', value: cache.EvictionExceptions },
       { label: 'File Unmappings', value: cache.FileUnmappings },
-      { label: 'Bytes Written', value: cache.BytesWritten }
-    ]
-
-    if (cache.HitRatio) {
-      pageCache.push({
+      { label: 'Bytes Written', value: cache.BytesWritten },
+      {
         label: 'Hit Ratio',
-        value: `${(cache.HitRatio * 100).toFixed(2)}%`
-      })
-    }
+        value: cache.HitRatio,
+        mapper: v => `${(v * 100).toFixed(2)}%`,
+        optional: true
+      },
+      {
+        label: 'Usage Ratio',
+        value: cache.UsageRatio,
+        mapper: v => `${(v * 100).toFixed(2)}%`,
+        optional: true
+      }
+    ]
 
     this.setState({
       storeSizes: [
@@ -193,11 +198,12 @@ export class SysInfoFrame extends Component {
   }
   buildTableData (data) {
     if (!data) return null
-    return data.map(({ label, value }) => {
+    return data.map(props => {
+      const { value } = props
       if (value instanceof Array) {
         return value.map(v => <SysInfoTableEntry values={v} />)
       }
-      return <SysInfoTableEntry label={label} value={value} />
+      return <SysInfoTableEntry {...props} />
     })
   }
   render () {
