@@ -212,9 +212,20 @@ export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
   margin-bottom: 10px;
   background-color: ${props => props.theme.error};
   color: #ffffff;
+  display: inline-block;
 `
-export const StyledInfoMessage = styled(StyledCypherMessage)`
+
+export const StyledCypherSuccessMessage = styled(StyledCypherMessage)`
+  margin-bottom: 10px;
+  background-color: ${props => props.theme.success};
+  color: #ffffff;
+  display: inline-block;
+`
+
+export const StyledCypherInfoMessage = styled(StyledCypherMessage)`
+  margin-bottom: 10px;
   background-color: ${props => props.theme.info};
+  color: #ffffff;
   display: inline-block;
 `
 

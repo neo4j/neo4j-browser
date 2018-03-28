@@ -140,12 +140,15 @@ export const handleEditorCommandEpic = (action$, store) =>
         return store.dispatch(executeCommand(action.cmd[0]))
       }
       const parentId = v4()
-      store.dispatch(addFrame({ type: 'cypher-script', id: parentId }))
+      store.dispatch(
+        addFrame({ type: 'cypher-script', id: parentId, cmd: history })
+      )
       const cmdchar = getCmdChar(store.getState())
       let jobs = []
       action.cmd.forEach(cmd => {
         cmd = cleanCommand(cmd)
         const requestId = v4()
+        const cmdId = v4()
         const ignore = !!cmd.startsWith(cmdchar) // Ignore client commands
 
         let { action, interpreted } = buildCommandObject(
@@ -155,14 +158,16 @@ export const handleEditorCommandEpic = (action$, store) =>
         )
         action.requestId = requestId
         action.parentId = parentId
-
+        action.id = cmdId
+        store.dispatch(
+          addFrame({ ...action, requestId, type: interpreted.name })
+        )
+        store.dispatch(updateQueryResult(requestId, null, 'waiting'))
         jobs.push({
           workFn: () =>
             interpreted.exec(action, cmdchar, store.dispatch, store),
-          onStart: () =>
-            ignore
-              ? null
-              : store.dispatch(updateQueryResult(requestId, null, 'waiting')),
+          onStart: () => {},
+
           onSkip: () =>
             store.dispatch(updateQueryResult(requestId, null, 'skipped'))
         })
