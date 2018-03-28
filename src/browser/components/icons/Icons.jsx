@@ -294,9 +294,6 @@ export const Spinner = () => (
 export const SmallSpinner = () => (
   <IconContainer className='fa fa-spinner fa-spin ' />
 )
-export const PauseIcon = () => <IconContainer className='fa fa-pause ' />
-export const DoneIcon = () => <IconContainer className='fa fa-check ' />
-export const SimpleMinusIcon = () => <IconContainer className='fa fa-minus ' />
 export const SquareIcon = () => <IconContainer className='fa fa-square-o' />
 export const CheckedSquareIcon = () => (
   <IconContainer className='fa fa-check-square-o' />
