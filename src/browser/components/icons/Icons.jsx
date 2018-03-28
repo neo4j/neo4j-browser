@@ -44,6 +44,7 @@ class IconContainer extends Component {
       regulateSize,
       ...rest
     } = this.props
+
     const state =
       this.state.mouseover || isOpen ? activeStyle || '' : inactiveStyle || ''
     const newClass = this.props.suppressIconStyles
@@ -264,10 +265,11 @@ export const PlayIcon = () => (
 export const PlainPlayIcon = () => (
   <IconContainer className='fa fa-play-circle' />
 )
-export const QuestionIcon = () => (
+export const QuestionIcon = props => (
   <IconContainer
     activeStyle={styles.lightBlue}
     inactiveStyle={styles.blue}
+    {...props}
     className='fa fa-question-circle-o'
   />
 )
