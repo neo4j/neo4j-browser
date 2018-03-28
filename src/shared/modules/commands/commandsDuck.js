@@ -85,11 +85,12 @@ export const executeEditorCommand = (cmd, toHistory) => {
   }
 }
 
-export const executeCommand = (cmd, requestId) => {
+export const executeCommand = (cmd, id, requestId) => {
   return {
     type: USER_COMMAND_QUEUED,
     cmd,
-    id: requestId
+    id,
+    requestId
   }
 }
 
