@@ -398,8 +398,11 @@ export const StyledTBody = styled.tbody`
   & td:first-child {
     vertical-align: top;
     width: 170px;
+    min-width: 170px;
   }
 `
+
+export const StyledExpandable = styled.div`margin: 0 10px;`
 
 export const StyledAlteringTr = styled.tr`
   &:nth-child(even) {
