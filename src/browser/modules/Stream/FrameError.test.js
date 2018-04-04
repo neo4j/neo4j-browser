@@ -44,15 +44,14 @@ describe('FrameError', () => {
       })
     return result
   })
-  test('should render message value and `undefined` text when message prop is passed', () => {
+  test('should render message value text when message prop is passed', () => {
     // Given
     const message = 'bar'
-    const code = undefined
     const result = mount(FrameError)
       // When
       .withProps({ message })
       .then(wrapper => {
-        expect(wrapper.text().trim()).toBe(`${code}: ${message}`)
+        expect(wrapper.text().trim()).toBe(`${message}`)
       })
     return result
   })

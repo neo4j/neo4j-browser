@@ -29,5 +29,9 @@ const knownErrors = {
   18: IESecurityError18
 }
 
-export const errorMessageFormater = (code, message) =>
-  error(`${code}${message ? ':' : ''} ${message || ''}`, knownErrors[code])
+export const errorMessageFormater = (code, message) => {
+  const title = `${code || code === 0 ? code : ''}${code && message
+    ? ': '
+    : ''}${message || ''}`
+  return error(title, knownErrors[code])
+}

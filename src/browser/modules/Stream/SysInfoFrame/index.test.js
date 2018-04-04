@@ -37,14 +37,14 @@ jest.mock(
 describe('sysinfo component', () => {
   test('should render causal cluster table', () => {
     return mount(SysInfoFrame)
-      .withProps({ isACausalCluster: true })
+      .withProps({ isACausalCluster: true, isConnected: true })
       .then(wrapper => {
         expect(wrapper.html()).toContain('Causal Cluster Members')
       })
   })
   test('should not render causal cluster table', () => {
     return mount(SysInfoFrame)
-      .withProps({ isACausalCluster: false })
+      .withProps({ isACausalCluster: false, isConnected: true })
       .then(wrapper => {
         expect(wrapper.html()).not.toContain('Causal Cluster Members')
       })
@@ -53,7 +53,7 @@ describe('sysinfo component', () => {
     const value = uuid.v4()
     const label = 'InstanceId'
     return mount(SysInfoFrame)
-      .withProps({})
+      .withProps({ isConnected: true })
       .then(wrapper => {
         expect(wrapper.html()).not.toContain(label)
         expect(wrapper.html()).not.toContain(value)
@@ -63,6 +63,13 @@ describe('sysinfo component', () => {
 
         expect(wrapper.html()).toContain(label)
         expect(wrapper.html()).toContain(value)
+      })
+  })
+  test('should display error when there is no connection', () => {
+    return mount(SysInfoFrame)
+      .withProps({ isConnected: false })
+      .then(wrapper => {
+        expect(wrapper.state('error')).toBe('No connection available')
       })
   })
 })

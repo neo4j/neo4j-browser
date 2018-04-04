@@ -47,4 +47,12 @@ describe('errorsHelper', () => {
     expect(error.title.trim()).toContain(errorText)
     expect(error.message.trim()).toContain(errorText)
   })
+  test('should only return error message when error code is missing', () => {
+    const errorCode = null
+    const errorText = 'foobar'
+    const error = errorMessageFormater(errorCode, errorText)
+
+    expect(error.title).toBe(errorText)
+    expect(error.message).toBe(errorText)
+  })
 })

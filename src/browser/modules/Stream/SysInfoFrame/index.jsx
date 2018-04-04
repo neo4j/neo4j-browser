@@ -23,6 +23,7 @@ import { connect } from 'preact-redux'
 import { withBus } from 'preact-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
+import { isConnected } from 'shared/modules/connections/connectionsDuck'
 import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
 import FrameError from 'browser/modules/Stream/FrameError'
 import {
@@ -177,7 +178,7 @@ export class SysInfoFrame extends Component {
     })
   }
   componentDidMount () {
-    if (this.props.bus) {
+    if (this.props.bus && this.props.isConnected) {
       this.props.bus.self(
         CYPHER_REQUEST,
         {
@@ -194,6 +195,8 @@ export class SysInfoFrame extends Component {
           this.clusterResponseHandler.bind(this)
         )
       }
+    } else {
+      this.setState({ error: 'No connection available' })
     }
   }
   buildTableData (data) {
@@ -207,7 +210,7 @@ export class SysInfoFrame extends Component {
     })
   }
   render () {
-    const content = (
+    const content = this.props.isConnected ? (
       <SysInfoTableContainer>
         <SysInfoTable header='Store Sizes'>
           {this.buildTableData(this.state.storeSizes)}
@@ -249,19 +252,24 @@ export class SysInfoFrame extends Component {
           </SysInfoTable>
         </Render>
       </SysInfoTableContainer>
+    ) : (
+      undefined
     )
 
     return (
-      <FrameTemplate header={this.props.frame} contents={content}>
-        <FrameError message={this.state.error} />
-      </FrameTemplate>
+      <FrameTemplate
+        header={this.props.frame}
+        contents={content}
+        statusbar={<FrameError message={this.state.error} />}
+      />
     )
   }
 }
 
 const mapStateToProps = state => {
   return {
-    isACausalCluster: isACausalCluster(state)
+    isACausalCluster: isACausalCluster(state),
+    isConnected: isConnected(state)
   }
 }
 
