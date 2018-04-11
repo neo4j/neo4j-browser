@@ -242,6 +242,14 @@ export const parseTimeMillis = timeWithOrWithoutUnit => {
   }
 }
 
+export const arrayToObject = array =>
+  array.reduce((obj, item) => {
+    const key = Object.keys(item)[0]
+    const value = Object.values(item)[0]
+    obj[key] = value
+    return obj
+  }, {})
+
 export const stringifyMod = (
   value,
   modFn = null,

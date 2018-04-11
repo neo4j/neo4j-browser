@@ -163,6 +163,22 @@ function directTransaction (input, parameters, requestMetaData = {}) {
   }
 }
 
+const addTypesAsField = result => {
+  const records = result.records.map(record => {
+    const typedRecord = new neo4j.types.Record(
+      record.keys,
+      record._fields,
+      record._fieldLookup
+    )
+    if (typedRecord._fields) {
+      typedRecord._fields = mappings.applyGraphTypes(typedRecord._fields)
+    }
+    return typedRecord
+  })
+  const summary = mappings.applyGraphTypes(result.summary)
+  return { summary, records }
+}
+
 function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
   const boltWorker = new BoltWorkerModule()
   const onFinished = registerBoltWorker(id, boltWorker)
@@ -178,20 +194,8 @@ function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
         onFinished(boltWorker)
         reject(msg.data.error)
       } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
-        let records = msg.data.result.records.map(record => {
-          const typedRecord = new neo4j.types.Record(
-            record.keys,
-            record._fields,
-            record._fieldLookup
-          )
-          if (typedRecord._fields) {
-            typedRecord._fields = mappings.applyGraphTypes(typedRecord._fields)
-          }
-          return typedRecord
-        })
-        let summary = mappings.applyGraphTypes(msg.data.result.summary)
         onFinished(boltWorker)
-        resolve({ summary, records })
+        resolve(addTypesAsField(msg.data.result))
       } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
         onFinished(boltWorker)
       }
@@ -280,5 +284,6 @@ export default {
       intConverter: val => val.toNumber(),
       objectConverter: mappings.extractFromNeoObjects
     }),
-  neo4j: neo4j
+  neo4j: neo4j,
+  addTypesAsField
 }

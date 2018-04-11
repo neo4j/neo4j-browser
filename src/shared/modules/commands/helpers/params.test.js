@@ -23,6 +23,10 @@
 import * as params from './params'
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
+let mockRoutedWriteTransaction = jest.fn()
+jest.mock('services/bolt/bolt', () => ({
+  routedWriteTransaction: mockRoutedWriteTransaction
+}))
 describe('commandsDuck params helper', () => {
   test('fails on :param x x x and shows error hint', () => {
     // Given
@@ -40,7 +44,7 @@ describe('commandsDuck params helper', () => {
           'Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'
         )
       )
-      .then(() => expect(put).not.toHaveBeenCalled())
+      .then(() => expect(mockRoutedWriteTransaction).toHaveBeenCalled())
   })
   test('handles :param "x": 2 and calls the update action creator', () => {
     // Given

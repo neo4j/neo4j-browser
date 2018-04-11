@@ -94,3 +94,13 @@ export const transformCommandToHelpTopic = inputStr => {
     .map(prependUnderscore)
   return res[0]
 }
+
+export const mapArrowFunctionToCypherStatement = (key, param) => {
+  const returnAs = value => `RETURN ${value} as ${key}`
+
+  const matchParamFunction = param.toString().match(/.*=>*.(.*)/)
+  if (matchParamFunction) {
+    return returnAs(matchParamFunction[1])
+  }
+  return returnAs(param)
+}
