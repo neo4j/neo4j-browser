@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, afterEach, test, expect, beforeAll */
+/* global jest, describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
@@ -43,6 +43,10 @@ import {
   replace as replaceSettings
 } from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
+
+jest.mock('services/bolt/bolt', () => ({
+  routedWriteTransaction: jest.fn()
+}))
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)

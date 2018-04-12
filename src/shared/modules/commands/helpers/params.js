@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import jsonic from 'jsonic'
-import bolt from 'services/bolt/bolt'
 import { recursivelyTypeGraphItems } from 'services/bolt/boltMappings'
 import {
   splitStringOnFirst,
@@ -27,31 +26,20 @@ import {
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
 export const extractParams = param => {
-  const splitParams = param.split(' ')
-  const paramName = splitParams.shift()
+  const quoted = param.match(/(".*"):?\s(.*)/)
+  const unquoted = param.match(/(.*):?\s(.*)/)
+  const paramName = quoted ? quoted[1] : unquoted[1]
+  const paramValue = quoted ? quoted[2] : unquoted[2]
+
   const json =
-    '{' +
-    paramName +
-    (paramName.endsWith(':') ? ' ' : ': ') +
-    splitParams.join(' ') +
-    '}'
+    '{' + paramName + (paramName.endsWith(':') ? ' ' : ': ') + paramValue + '}'
   const res = jsonic(json)
   const key = Object.keys(res)[0]
 
   return { key, res: res[key] }
 }
-const boltRequest = (cypherStatement, action) => {
-  return bolt.routedWriteTransaction(
-    cypherStatement,
-    {},
-    {
-      useCypherThread: false,
-      requestId: action.requestId,
-      cancelable: false
-    }
-  )
-}
-export const handleParamsCommand = (action, cmdchar, put, store) => {
+
+export const handleParamsCommand = (action, cmdchar, put, bolt) => {
   const strippedCmd = action.cmd.substr(cmdchar.length)
   const parts = splitStringOnFirst(strippedCmd, ' ')
   const param = parts[1].trim()
@@ -71,7 +59,7 @@ export const handleParamsCommand = (action, cmdchar, put, store) => {
       }
     } else {
       // Single param
-      if (false) {
+      if (!bolt) {
         try {
           const json = '{' + param + '}'
           const res = jsonic(json)
@@ -90,7 +78,16 @@ export const handleParamsCommand = (action, cmdchar, put, store) => {
             extractedParam.key,
             extractedParam.res
           )
-          boltRequest(cypherStatement, action)
+          bolt
+            .routedWriteTransaction(
+              cypherStatement,
+              {},
+              {
+                useCypherThread: false,
+                requestId: action.requestId,
+                cancelable: false
+              }
+            )
             .then(res => {
               let obj = {}
               res.records.forEach(record => {
@@ -103,10 +100,7 @@ export const handleParamsCommand = (action, cmdchar, put, store) => {
             .catch(e => reject(e))
         } catch (e) {
           reject(
-            new Error(
-              'Could not parse input. Usage: `:params {"x":1,"y":"string"}`. ' +
-                e
-            )
+            new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
           )
         }
       }

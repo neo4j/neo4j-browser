@@ -187,5 +187,10 @@ describe('commandutils', () => {
         utils.mapArrowFunctionToCypherStatement('foo', '=> 1 + 1')
       ).toEqual('RETURN 1 + 1 as foo')
     })
+    test('should wrap quoted string with backticks', () => {
+      expect(
+        utils.mapArrowFunctionToCypherStatement('"f o o"', '=> 1 + 1')
+      ).toEqual('RETURN 1 + 1 as `f o o`')
+    })
   })
 })

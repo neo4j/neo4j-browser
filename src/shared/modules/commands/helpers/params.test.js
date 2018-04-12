@@ -23,10 +23,10 @@
 import * as params from './params'
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
-let mockRoutedWriteTransaction = jest.fn()
-jest.mock('services/bolt/bolt', () => ({
-  routedWriteTransaction: mockRoutedWriteTransaction
-}))
+const mockBolt = (
+  result = Promise.resolve({ records: [{ get: () => 2 }] })
+) => ({ routedWriteTransaction: jest.fn(() => result) })
+
 describe('commandsDuck params helper', () => {
   test('fails on :param x x x and shows error hint', () => {
     // Given
@@ -35,7 +35,18 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(
+      action,
+      cmdchar,
+      put,
+      mockBolt(
+        Promise.reject(
+          new Error(
+            'Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'
+          )
+        )
+      )
+    )
 
     // Then
     return expect(p)
@@ -44,7 +55,7 @@ describe('commandsDuck params helper', () => {
           'Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'
         )
       )
-      .then(() => expect(mockRoutedWriteTransaction).toHaveBeenCalled())
+      .then(() => expect(put).not.toHaveBeenCalled())
   })
   test('handles :param "x": 2 and calls the update action creator', () => {
     // Given
@@ -53,7 +64,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
 
     // Then
     return p.then(res => {
@@ -68,27 +79,12 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
 
     // Then
     return p.then(res => {
       expect(res.result).toEqual({ x: 2 })
       expect(put).toHaveBeenCalledWith(update({ x: 2 }))
-    })
-  })
-  test('handles :param "x y": 2 and calls the update action creator', () => {
-    // Given
-    const action = { cmd: ':param "x y": 2' }
-    const cmdchar = ':'
-    const put = jest.fn()
-
-    // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
-
-    // Then
-    return p.then(res => {
-      expect(res.result).toEqual({ 'x y': 2 })
-      expect(put).toHaveBeenCalledWith(update({ 'x y': 2 }))
     })
   })
   test('handles :params {"hej": "ho", "let\'s": "go"} and calls the replace action creator', () => {
@@ -98,7 +94,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
 
     // Then
     return p.then(res => {
@@ -113,12 +109,38 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
 
     // Then
     return p.then(res => {
       expect(res.result).toEqual({ x: 1, y: 2 })
       expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2 }))
+    })
+  })
+  describe('extract key/value from params', () => {
+    test('<key> <value>', () => {
+      expect(params.extractParams('foo bar')).toEqual({
+        key: 'foo',
+        res: 'bar'
+      })
+    })
+    test('<key>: <value>', () => {
+      expect(params.extractParams('foo: bar')).toEqual({
+        key: 'foo',
+        res: 'bar'
+      })
+    })
+    test('<key with space> <value>', () => {
+      expect(params.extractParams('"f o o" bar')).toEqual({
+        key: 'f o o',
+        res: 'bar'
+      })
+    })
+    test('<key with space>: <value>', () => {
+      expect(params.extractParams('"f o o": bar')).toEqual({
+        key: 'f o o',
+        res: 'bar'
+      })
     })
   })
 })
