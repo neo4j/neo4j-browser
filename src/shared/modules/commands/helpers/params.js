@@ -26,8 +26,8 @@ import {
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
 export const extractParams = param => {
-  const quoted = param.match(/(".*"):?\s(.*)/)
-  const unquoted = param.match(/(.*):?\s(.*)/)
+  const quoted = param.match(/^(".*"):?\s(.*)/)
+  const unquoted = param.match(/^(.*):?\s(.*)/)
   const paramName = quoted ? quoted[1] : unquoted[1]
   const paramValue = quoted ? quoted[2] : unquoted[2]
 
