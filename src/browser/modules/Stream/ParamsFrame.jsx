@@ -28,7 +28,9 @@ const ParamsFrame = ({ frame, params }) => {
   const contents = (
     <PaddedDiv>
       <Render if={frame.success !== false}>
-        <pre>{JSON.stringify(frame.params, null, 2)}</pre>
+        <pre data-test-id='rawParamData'>
+          {JSON.stringify(frame.params, null, 2)}
+        </pre>
       </Render>
     </PaddedDiv>
   )
