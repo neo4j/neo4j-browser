@@ -26,9 +26,32 @@ import {
   StyledTBody,
   StyledAlteringTr,
   StyledStrongTd,
-  StyledTd
+  StyledTd,
+  StyledExpandable
 } from '../styled'
 import { TableStatusbar } from './TableView'
+
+class ExpandableContent extends Component {
+  render () {
+    return (
+      <StyledAlteringTr>
+        <StyledStrongTd>
+          {this.props.title}
+          <StyledExpandable
+            onClick={() => this.setState({ expanded: !this.state.expanded })}
+            className={
+              this.state.expanded ? 'fa fa-caret-down' : 'fa fa-caret-right'
+            }
+            title={this.state.expanded ? 'Hide section' : 'Expand section'}
+          />
+        </StyledStrongTd>
+        <StyledTd>
+          {this.state.expanded ? this.props.content : this.props.summary}
+        </StyledTd>
+      </StyledAlteringTr>
+    )
+  }
+}
 
 export class CodeView extends Component {
   shouldComponentUpdate (props) {
@@ -37,6 +60,8 @@ export class CodeView extends Component {
   render () {
     const { request = {}, query } = this.props
     if (request.status !== 'success') return null
+    const resultJson = JSON.stringify(request.result.records, null, 2)
+    const summaryJson = JSON.stringify(request.result.summary, null, 2)
     return (
       <PaddedDiv>
         <StyledTable>
@@ -53,12 +78,16 @@ export class CodeView extends Component {
               <StyledStrongTd>Query</StyledStrongTd>
               <StyledTd>{query}</StyledTd>
             </StyledAlteringTr>
-            <StyledAlteringTr>
-              <StyledStrongTd>Response</StyledStrongTd>
-              <StyledTd>
-                <pre>{JSON.stringify(request.result.records, null, 2)}</pre>
-              </StyledTd>
-            </StyledAlteringTr>
+            <ExpandableContent
+              title='Summary'
+              content={<pre>{summaryJson}</pre>}
+              summary={summaryJson.split('\n').slice(0, 3) + ' ...'}
+            />
+            <ExpandableContent
+              title='Response'
+              content={<pre>{resultJson}</pre>}
+              summary={resultJson.split('\n').slice(0, 3) + ' ...'}
+            />
           </StyledTBody>
         </StyledTable>
       </PaddedDiv>

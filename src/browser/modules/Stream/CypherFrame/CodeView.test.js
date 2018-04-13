@@ -51,7 +51,7 @@ describe('CodeViews', () => {
                 address: 'xx2'
               }
             },
-            records: [{ res: 'xx3' }, { res: 'xx4' }, { res: 'xx5' }]
+            records: [{ res: 'xx3' }]
           }
         }
       }
@@ -64,8 +64,6 @@ describe('CodeViews', () => {
           expect(text).toContain('xx1')
           expect(text).toContain('xx2')
           expect(text).toContain('xx3')
-          expect(text).toContain('xx4')
-          expect(text).toContain('xx5')
         })
 
       // Return test result (promise)
