@@ -151,7 +151,7 @@
     svg.log = function (msg) {}
     if (svg.opts['log'] == true && typeof console !== 'undefined') {
       svg.log = function (msg) {
-        console.log(msg)
+        // console.log(msg)
       }
     }
 
@@ -220,19 +220,32 @@
     }
 
     // ajax
-    svg.ajax = function (url) {
-      var AJAX
-      if (window.XMLHttpRequest) {
-        AJAX = new XMLHttpRequest()
-      } else {
-        AJAX = new ActiveXObject('Microsoft.XMLHTTP')
-      }
-      if (AJAX) {
-        AJAX.open('GET', url, false)
-        AJAX.send(null)
-        return AJAX.responseText
-      }
-      return null
+    // svg.ajax = function (url) {
+    //   debugger;
+    //   var AJAX
+    //   if (window.XMLHttpRequest) {
+    //     AJAX = new XMLHttpRequest()
+    //   } else {
+    //     AJAX = new ActiveXObject('Microsoft.XMLHTTP')
+    //   }
+    //   if (AJAX) {
+    //     AJAX.open('GET', url, false)
+    //     AJAX.send(null)
+    //     return AJAX.responseText
+    //   }
+    //   return null
+    // }
+
+    svg.cleanHtml = function (string) {
+      if (typeof string !== 'string') return string
+      string = string.replace(
+        /(\s+(on[^\s=]+)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/gi,
+        ''
+      )
+      return string.replace(
+        /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi,
+        ''
+      )
     }
 
     // parse xml
@@ -254,7 +267,7 @@
         xml = xml.replace(/<!DOCTYPE svg[^>]*>/, '')
         var xmlDoc = new ActiveXObject('Microsoft.XMLDOM')
         xmlDoc.async = 'false'
-        xmlDoc.loadXML(xml)
+        xmlDoc.loadXML(svg.cleanHtml(xml))
         return xmlDoc
       }
     }
