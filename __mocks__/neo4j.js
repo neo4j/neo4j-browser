@@ -53,6 +53,12 @@ var out = {
         this.start = start
         this.relationship = relationship
         this.end = end
+      },
+      Point: function Point (srid, x, y, z) {
+        this.srid = srid
+        this.x = x
+        this.y = y
+        this.z = z
       }
     },
     Integer: function Integer (low, high) {
@@ -73,6 +79,9 @@ out.v1.types.Path.prototype.toString = function () {
 }
 out.v1.types.PathSegment.prototype.toString = function () {
   return 'pathsegment'
+}
+out.v1.types.Point.prototype.toString = function () {
+  return 'point'
 }
 out.v1.Integer.prototype.toInt = function () {
   return this.low

@@ -400,6 +400,13 @@ describe('applyGraphTypes', () => {
       neo4j.types.PathSegment
     )
   })
+  test('should apply Point type', () => {
+    const point = new neo4j.types.Point('test-ref', 57.734588, 12.908685)
+    const rawPoint = nativeTypesToCustom(point)
+
+    const typedPoint = applyGraphTypes(rawPoint)
+    expect(typedPoint).toBeInstanceOf(neo4j.types.Point)
+  })
 })
 
 const nativeTypesToCustom = x => {

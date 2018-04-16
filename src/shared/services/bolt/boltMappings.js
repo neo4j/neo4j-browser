@@ -323,6 +323,13 @@ export const applyGraphTypes = (item, types = neo4j.types) => {
           applyGraphTypes(item.end, types),
           item.segments.map(x => applyGraphTypes(x, types))
         )
+      case 'Point':
+        return new types[className](
+          applyGraphTypes(item.srid),
+          applyGraphTypes(item.x),
+          applyGraphTypes(item.y),
+          applyGraphTypes(item.z)
+        )
       case 'Integer':
         return neo4j.int(tmpItem)
       default:
@@ -394,6 +401,14 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
     )
     const props = recursivelyTypeGraphItems(item.properties, types)
     item.properties = props
+    return item
+  }
+  if (item instanceof types.Point) {
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'Point')
+    item.srid = recursivelyTypeGraphItems(item.start, types)
+    item.x = recursivelyTypeGraphItems(item.x, types)
+    item.y = recursivelyTypeGraphItems(item.y, types)
+    item.z = recursivelyTypeGraphItems(item.z, types)
     return item
   }
   if (neo4j.isInt(item)) {
