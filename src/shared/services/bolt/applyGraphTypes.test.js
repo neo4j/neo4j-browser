@@ -125,7 +125,7 @@ describe('applyGraphTypes', () => {
   test('should apply integer type', () => {
     const rawNumber = nativeTypesToCustom(neo4j.int(5))
     const typedNumber = applyGraphTypes(rawNumber)
-    expect(typedNumber).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedNumber)).toBeTruthy()
   })
 
   test('should apply node type', () => {
@@ -134,7 +134,7 @@ describe('applyGraphTypes', () => {
 
     const typedNode = applyGraphTypes(rawNode)
     expect(typedNode).toBeInstanceOf(neo4j.types.Node)
-    expect(typedNode.identity).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedNode.identity)).toBeTruthy()
   })
 
   test('should not false positive on fake node object type', () => {
@@ -148,7 +148,8 @@ describe('applyGraphTypes', () => {
 
     const obj = applyGraphTypes(rawObject)
     expect(obj).toBeInstanceOf(Object)
-    expect(obj.identity).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(obj.identity)).toBeTruthy()
+    expect(neo4j.isInt(obj.identity2)).toBeFalsy()
     expect(obj.identity2).toBeInstanceOf(Object)
     expect(obj[reservedTypePropertyName]).toEqual('Node')
   })
@@ -180,7 +181,7 @@ describe('applyGraphTypes', () => {
 
     const typedNode = applyGraphTypes(rawNode)
     expect(typedNode).toBeInstanceOf(neo4j.types.Node)
-    expect(typedNode.identity).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedNode.identity)).toBeTruthy()
 
     expect(typedNode.properties.prop1).toBeNull()
     expect(typedNode.properties.prop2).toEqual(33)
@@ -191,7 +192,7 @@ describe('applyGraphTypes', () => {
     expect(typedNode.properties.prop6.prop1).toEqual(1)
     expect(typedNode.properties.prop6.prop2).toEqual('test')
 
-    expect(typedNode.properties.prop7.prop1).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedNode.properties.prop7.prop1)).toBeTruthy()
     expect(typedNode.properties.prop7.prop1.toInt()).toEqual(3)
     expect(typedNode.properties.prop7.prop2).toEqual('test')
 
@@ -223,9 +224,9 @@ describe('applyGraphTypes', () => {
     const typedNodes = applyGraphTypes(rawNodes, neo4j.types)
     expect(typedNodes.length).toEqual(2)
     expect(typedNodes[0]).toBeInstanceOf(neo4j.types.Node)
-    expect(typedNodes[0].identity).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedNodes[0].identity)).toBeTruthy()
     expect(typedNodes[1]).toBeInstanceOf(neo4j.types.Node)
-    expect(typedNodes[1].identity).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedNodes[1].identity)).toBeTruthy()
   })
 
   test('should apply relationship type', () => {
@@ -241,7 +242,7 @@ describe('applyGraphTypes', () => {
 
     const typedRelationship = applyGraphTypes(rawRelationship)
     expect(typedRelationship).toBeInstanceOf(neo4j.types.Relationship)
-    expect(typedRelationship.identity).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedRelationship.identity)).toBeTruthy()
     expect(typedRelationship.type).toEqual('TESTED_WITH')
   })
 
@@ -268,13 +269,13 @@ describe('applyGraphTypes', () => {
     const typedRelationships = applyGraphTypes(rawRelationships)
     expect(typedRelationships.length).toEqual(2)
     expect(typedRelationships[0]).toBeInstanceOf(neo4j.types.Relationship)
-    expect(typedRelationships[0].identity).toBeInstanceOf(neo4j.Integer)
-    expect(typedRelationships[0].start).toBeInstanceOf(neo4j.Integer)
-    expect(typedRelationships[0].end).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedRelationships[0].identity)).toBeTruthy()
+    expect(neo4j.isInt(typedRelationships[0].start)).toBeTruthy()
+    expect(neo4j.isInt(typedRelationships[0].end)).toBeTruthy()
     expect(typedRelationships[1]).toBeInstanceOf(neo4j.types.Relationship)
-    expect(typedRelationships[1].identity).toBeInstanceOf(neo4j.Integer)
-    expect(typedRelationships[1].start).toBeInstanceOf(neo4j.Integer)
-    expect(typedRelationships[1].end).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedRelationships[1].identity)).toBeTruthy()
+    expect(neo4j.isInt(typedRelationships[1].start)).toBeTruthy()
+    expect(neo4j.isInt(typedRelationships[1].end)).toBeTruthy()
   })
 
   test('should apply to custom object properties', () => {
@@ -286,7 +287,7 @@ describe('applyGraphTypes', () => {
 
     const typedObject = applyGraphTypes(rawData)
     expect(typedObject.node).toBeInstanceOf(neo4j.types.Node)
-    expect(typedObject.num).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedObject.num)).toBeTruthy()
   })
 
   test('should apply to array of custom object properties', () => {
@@ -304,9 +305,9 @@ describe('applyGraphTypes', () => {
     const typedObjects = applyGraphTypes(rawObj)
     expect(typedObjects.length).toEqual(2)
     expect(typedObjects[0].node).toBeInstanceOf(neo4j.types.Node)
-    expect(typedObjects[0].num).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedObjects[0].num)).toBeTruthy()
     expect(typedObjects[1].node).toBeInstanceOf(neo4j.types.Node)
-    expect(typedObjects[1].num).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedObjects[1].num)).toBeTruthy()
   })
 
   test('should apply PathSegment type', () => {
@@ -315,7 +316,7 @@ describe('applyGraphTypes', () => {
     expect(typedPathSegment).toBeTruthy()
     expect(typedPathSegment).toBeInstanceOf(neo4j.types.PathSegment)
     expect(typedPathSegment.start).toBeInstanceOf(neo4j.types.Node)
-    expect(typedPathSegment.start.identity).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedPathSegment.start.identity)).toBeTruthy()
     expect(typedPathSegment.end).toBeInstanceOf(neo4j.types.Node)
     expect(typedPathSegment.relationship).toBeInstanceOf(
       neo4j.types.Relationship
@@ -388,7 +389,7 @@ describe('applyGraphTypes', () => {
     })
     const typedObject = applyGraphTypes(complexObj)
     expect(typedObject).toBeTruthy()
-    expect(typedObject.rawNum).toBeInstanceOf(neo4j.Integer)
+    expect(neo4j.isInt(typedObject.rawNum)).toBeTruthy()
     expect(typedObject.rawNode).toBeInstanceOf(neo4j.types.Node)
     expect(typedObject.rawRelationship).toBeInstanceOf(neo4j.types.Relationship)
     expect(typedObject.rawPath).toBeInstanceOf(neo4j.types.Path)
@@ -423,7 +424,7 @@ describe('applyGraphTypes', () => {
       12,
       44,
       0,
-      3600,
+      null,
       'Europe/Stockholm'
     )
     const rawDateTime = nativeTypesToCustom(dateTime)
