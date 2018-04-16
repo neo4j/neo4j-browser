@@ -43,10 +43,10 @@ import {
   replace as replaceSettings
 } from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
+import bolt from 'services/bolt/bolt'
 
-jest.mock('services/bolt/bolt', () => ({
-  routedWriteTransaction: jest.fn()
-}))
+jest.unmock('services/bolt/bolt')
+const originalRoutedWriteTransaction = bolt.routedWriteTransaction
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
@@ -58,6 +58,9 @@ const mockStore = configureMockStore([
 describe('commandsDuck', () => {
   let store
   const maxHistory = 20
+  beforeEach(() => {
+    bolt.routedWriteTransaction = originalRoutedWriteTransaction
+  })
   beforeAll(() => {
     store = mockStore({
       settings: {
@@ -135,12 +138,18 @@ describe('commandsDuck', () => {
       // See snoopOnActions above
     })
 
-    test('does the right thing for :param x: 2', done => {
+    test.only('does the right thing for :param x: 2', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'param'
       const cmdString = cmd + ' x: 2'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
+      bolt.routedWriteTransaction = jest.fn(() =>
+        Promise.resolve({
+          records: [{ get: () => 2 }]
+        })
+      )
+
       bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
@@ -154,6 +163,7 @@ describe('commandsDuck', () => {
             type: 'param',
             params: { x: 2 }
           }),
+          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()

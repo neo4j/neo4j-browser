@@ -91,7 +91,7 @@ const availableCommands = [
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      handleParamsCommand(action, cmdchar, put, bolt)
+      return handleParamsCommand(action, cmdchar, put, bolt)
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
