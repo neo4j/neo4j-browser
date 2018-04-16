@@ -407,6 +407,30 @@ describe('applyGraphTypes', () => {
     const typedPoint = applyGraphTypes(rawPoint)
     expect(typedPoint).toBeInstanceOf(neo4j.types.Point)
   })
+  test('should apply Date type', () => {
+    const date = new neo4j.types.Date(2012, 5, 11)
+    const rawDate = nativeTypesToCustom(date)
+
+    const typedDate = applyGraphTypes(rawDate)
+    expect(typedDate).toBeInstanceOf(neo4j.types.Date)
+  })
+  test('should apply DateTime type', () => {
+    const dateTime = new neo4j.types.DateTime(
+      2012,
+      5,
+      11,
+      9,
+      12,
+      44,
+      0,
+      3600,
+      'Europe/Stockholm'
+    )
+    const rawDateTime = nativeTypesToCustom(dateTime)
+
+    const typedDateTime = applyGraphTypes(rawDateTime)
+    expect(typedDateTime).toBeInstanceOf(neo4j.types.DateTime)
+  })
 })
 
 const nativeTypesToCustom = x => {

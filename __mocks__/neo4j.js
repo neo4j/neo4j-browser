@@ -59,6 +59,32 @@ var out = {
         this.x = x
         this.y = y
         this.z = z
+      },
+      Date: function Date (year, month, day) {
+        this.year = year
+        this.month = month
+        this.day = day
+      },
+      DateTime: function DateTime (
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        nanosecond,
+        timeZoneOffsetSeconds,
+        timeZoneId
+      ) {
+        this.year = year
+        this.month = month
+        this.day = day
+        this.hour = hour
+        this.minute = minute
+        this.second = second
+        this.nanosecond = nanosecond
+        this.timeZoneOffsetSeconds = timeZoneOffsetSeconds
+        this.timeZoneId = timeZoneId
       }
     },
     Integer: function Integer (low, high) {
@@ -82,6 +108,12 @@ out.v1.types.PathSegment.prototype.toString = function () {
 }
 out.v1.types.Point.prototype.toString = function () {
   return 'point'
+}
+out.v1.types.Date.prototype.toString = function () {
+  return 'date'
+}
+out.v1.types.DateTime.prototype.toString = function () {
+  return 'datetime'
 }
 out.v1.Integer.prototype.toInt = function () {
   return this.low
