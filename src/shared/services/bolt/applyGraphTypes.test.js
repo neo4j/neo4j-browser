@@ -431,6 +431,34 @@ describe('applyGraphTypes', () => {
     const typedDateTime = applyGraphTypes(rawDateTime)
     expect(typedDateTime).toBeInstanceOf(neo4j.types.DateTime)
   })
+  test('should apply Duration type', () => {
+    const date = new neo4j.types.Duration(1, 2, 0, 0)
+    const rawDate = nativeTypesToCustom(date)
+
+    const typedDate = applyGraphTypes(rawDate)
+    expect(typedDate).toBeInstanceOf(neo4j.types.Duration)
+  })
+  test('should apply LocalDateTime type', () => {
+    const date = new neo4j.types.LocalDateTime(2012, 5, 11, 1, 12, 2)
+    const rawDate = nativeTypesToCustom(date)
+
+    const typedDate = applyGraphTypes(rawDate)
+    expect(typedDate).toBeInstanceOf(neo4j.types.LocalDateTime)
+  })
+  test('should apply LocalTime type', () => {
+    const date = new neo4j.types.LocalTime(11, 1, 12, 2)
+    const rawDate = nativeTypesToCustom(date)
+
+    const typedDate = applyGraphTypes(rawDate)
+    expect(typedDate).toBeInstanceOf(neo4j.types.LocalTime)
+  })
+  test('should apply Time type', () => {
+    const date = new neo4j.types.Time(11, 1, 12, 3600)
+    const rawDate = nativeTypesToCustom(date)
+
+    const typedDate = applyGraphTypes(rawDate)
+    expect(typedDate).toBeInstanceOf(neo4j.types.Time)
+  })
 })
 
 const nativeTypesToCustom = x => {

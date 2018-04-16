@@ -348,6 +348,38 @@ export const applyGraphTypes = (item, types = neo4j.types) => {
           applyGraphTypes(item.timeZoneOffsetSeconds),
           applyGraphTypes(item.timeZoneId)
         )
+      case 'Duration':
+        return new types[className](
+          applyGraphTypes(item.months),
+          applyGraphTypes(item.days),
+          applyGraphTypes(item.seconds),
+          applyGraphTypes(item.nanoseconds)
+        )
+      case 'LocalDateTime':
+        return new types[className](
+          applyGraphTypes(item.year),
+          applyGraphTypes(item.month),
+          applyGraphTypes(item.day),
+          applyGraphTypes(item.hour),
+          applyGraphTypes(item.minute),
+          applyGraphTypes(item.second),
+          applyGraphTypes(item.nanosecond)
+        )
+      case 'LocalTime':
+        return new types[className](
+          applyGraphTypes(item.hour),
+          applyGraphTypes(item.minute),
+          applyGraphTypes(item.second),
+          applyGraphTypes(item.nanosecond)
+        )
+      case 'Time':
+        return new types[className](
+          applyGraphTypes(item.hour),
+          applyGraphTypes(item.minute),
+          applyGraphTypes(item.second),
+          applyGraphTypes(item.nanosecond),
+          applyGraphTypes(item.timeZoneOffsetSeconds)
+        )
       case 'Integer':
         return neo4j.int(tmpItem)
       default:
@@ -443,6 +475,38 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
       key => (item[key] = recursivelyTypeGraphItems(item[key], types))
     )
     safetlyAddObjectProp(item, reservedTypePropertyName, 'DateTime')
+    return item
+  }
+  if (item instanceof types.Duration) {
+    const keys = Object.keys(item)
+    keys.forEach(
+      key => (item[key] = recursivelyTypeGraphItems(item[key], types))
+    )
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'Duration')
+    return item
+  }
+  if (item instanceof types.LocalDateTime) {
+    const keys = Object.keys(item)
+    keys.forEach(
+      key => (item[key] = recursivelyTypeGraphItems(item[key], types))
+    )
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'LocalDateTime')
+    return item
+  }
+  if (item instanceof types.LocalTime) {
+    const keys = Object.keys(item)
+    keys.forEach(
+      key => (item[key] = recursivelyTypeGraphItems(item[key], types))
+    )
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'LocalTime')
+    return item
+  }
+  if (item instanceof types.Time) {
+    const keys = Object.keys(item)
+    keys.forEach(
+      key => (item[key] = recursivelyTypeGraphItems(item[key], types))
+    )
+    safetlyAddObjectProp(item, reservedTypePropertyName, 'Time')
     return item
   }
   if (neo4j.isInt(item)) {

@@ -85,6 +85,48 @@ var out = {
         this.nanosecond = nanosecond
         this.timeZoneOffsetSeconds = timeZoneOffsetSeconds
         this.timeZoneId = timeZoneId
+      },
+      Duration: function Duration (months, days, seconds, nanoseconds) {
+        this.months = months
+        this.days = days
+        this.seconds = seconds
+        this.nanoseconds = nanoseconds
+      },
+      LocalDateTime: function LocalDateTime (
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        nanosecond
+      ) {
+        this.year = year
+        this.month = month
+        this.day = day
+        this.hour = hour
+        this.minute = minute
+        this.second = second
+        this.nanosecond = nanosecond
+      },
+      LocalTime: function LocalTime (hour, minute, second, nanosecond) {
+        this.hour = hour
+        this.minute = minute
+        this.second = second
+        this.nanosecond = nanosecond
+      },
+      Time: function Time (
+        hour,
+        minute,
+        second,
+        nanosecond,
+        timeZoneOffsetSeconds
+      ) {
+        this.hour = hour
+        this.minute = minute
+        this.second = second
+        this.nanosecond = nanosecond
+        this.timeZoneOffsetSeconds = timeZoneOffsetSeconds
       }
     },
     Integer: function Integer (low, high) {
@@ -114,6 +156,18 @@ out.v1.types.Date.prototype.toString = function () {
 }
 out.v1.types.DateTime.prototype.toString = function () {
   return 'datetime'
+}
+out.v1.types.Duration.prototype.toString = function () {
+  return 'duration'
+}
+out.v1.types.LocalDateTime.prototype.toString = function () {
+  return 'localdatetime'
+}
+out.v1.types.LocalTime.prototype.toString = function () {
+  return 'localtime'
+}
+out.v1.types.Time.prototype.toString = function () {
+  return 'time'
 }
 out.v1.Integer.prototype.toInt = function () {
   return this.low
