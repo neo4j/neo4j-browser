@@ -50,7 +50,7 @@ describe('WarningsViews', () => {
                   title: 'My xx1 warning',
                   description: 'This is xx2 warning',
                   position: {
-                    column: 7,
+                    offset: 7,
                     line: 1
                   }
                 }
@@ -69,7 +69,7 @@ describe('WarningsViews', () => {
           expect(text).toContain('xx2')
           expect(text).toContain('xx3')
           expect(text).toContain('^')
-          expect(text).not.toContain('EXPLAIN')
+          expect(text).toContain('EXPLAIN')
         })
 
       // Return test result (promise)
@@ -87,7 +87,7 @@ describe('WarningsViews', () => {
                   title: 'My xx1 warning',
                   description: 'This is xx2 warning',
                   position: {
-                    column: 7,
+                    offset: 7,
                     line: 1
                   }
                 },
@@ -96,7 +96,7 @@ describe('WarningsViews', () => {
                   title: 'My yy1 warning',
                   description: 'This is yy2 warning',
                   position: {
-                    column: 3,
+                    offset: 3,
                     line: 1
                   }
                 }
