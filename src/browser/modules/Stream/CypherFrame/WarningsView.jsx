@@ -55,10 +55,7 @@ export class WarningsView extends Component {
     if (!notifications || !cypher) {
       return null
     }
-
     let cypherLines = cypher.split('\n')
-    cypherLines[0] = cypherLines[0].replace(/^EXPLAIN /, '')
-
     let notificationsList = notifications.map(notification => {
       return (
         <StyledHelpContent>
@@ -74,7 +71,7 @@ export class WarningsView extends Component {
               <StyledPreformattedArea>
                 {cypherLines[notification.position.line - 1]}
                 <StyledBr />
-                {Array(notification.position.column).join(' ')}^
+                {Array(notification.position.offset + 1).join(' ')}^
               </StyledPreformattedArea>
             </StyledDiv>
           </StyledDiv>
