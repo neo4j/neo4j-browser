@@ -79,7 +79,7 @@ export const getDriversObj = (props, opts = {}, onConnectFail = () => {}) => {
   const driversObj = {}
   const auth =
     opts.withoutCredentials || !props.username
-      ? undefined
+      ? neo4j.auth.basic('', '')
       : neo4j.auth.basic(props.username, props.password)
   const getDirectDriver = () => {
     if (driversObj.direct) return driversObj.direct
@@ -123,7 +123,7 @@ export function directConnect (
   const p = new Promise((resolve, reject) => {
     const creds =
       opts.withoutCredentials || !props.username
-        ? undefined
+        ? neo4j.auth.basic('', '')
         : neo4j.auth.basic(props.username, props.password)
     const driver = getDriver(props.host, creds, opts, 'bolt://')
     driver.onError = e => {
