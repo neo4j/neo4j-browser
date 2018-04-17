@@ -61,7 +61,7 @@ export class ErrorsView extends Component {
         <StyledHelpContent>
           <StyledHelpDescription>
             <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            <StyledH4>{fullError.code}</StyledH4>
+            <StyledH4>{error.code}</StyledH4>
           </StyledHelpDescription>
           <StyledDiv>
             <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>
