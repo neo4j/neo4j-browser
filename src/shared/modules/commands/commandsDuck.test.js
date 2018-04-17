@@ -138,7 +138,7 @@ describe('commandsDuck', () => {
       // See snoopOnActions above
     })
 
-    test.only('does the right thing for :param x: 2', done => {
+    test('does the right thing for :param x: 2', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'param'
       const cmdString = cmd + ' x: 2'
@@ -189,6 +189,7 @@ describe('commandsDuck', () => {
           { type: commands.KNOWN_COMMAND },
           replaceParams({ x: 2, y: 3 }),
           frames.add({ ...action, success: true, type: 'params', params: {} }),
+          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()

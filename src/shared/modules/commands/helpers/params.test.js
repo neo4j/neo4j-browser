@@ -23,9 +23,11 @@
 import * as params from './params'
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
-const mockBolt = (
-  result = Promise.resolve({ records: [{ get: () => 2 }] })
-) => ({ routedWriteTransaction: jest.fn(() => result) })
+jest.mock('services/bolt/bolt', () => ({
+  routedWriteTransaction: jest.fn(() => {
+    return Promise.resolve({ records: [{ get: () => 2 }] })
+  })
+}))
 
 describe('commandsDuck params helper', () => {
   test('fails on :param x x x and shows error hint', () => {
@@ -35,18 +37,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(
-      action,
-      cmdchar,
-      put,
-      mockBolt(
-        Promise.reject(
-          new Error(
-            'Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'
-          )
-        )
-      )
-    )
+    const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
     return expect(p)
@@ -64,7 +55,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
+    const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
     return p.then(res => {
@@ -79,7 +70,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
+    const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
     return p.then(res => {
@@ -94,7 +85,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
+    const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
     return p.then(res => {
@@ -109,7 +100,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put, mockBolt())
+    const p = params.handleParamsCommand(action, cmdchar, put)
 
     // Then
     return p.then(res => {

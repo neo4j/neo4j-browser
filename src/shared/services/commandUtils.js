@@ -95,16 +95,24 @@ export const transformCommandToHelpTopic = inputStr => {
   return res[0]
 }
 
-export const mapArrowFunctionToCypherStatement = (key, param) => {
-  const quotedKey = key.match(/^"(.*)"|'(.*)'/)
+const quotedRegex = /^"(.*)"|'(.*)'/
+const arrowFunctionRegex = /.*=>*.(.*)/
+
+export const isArrowFunction = param => arrowFunctionRegex.test(param)
+
+export const mapParamToCypherStatement = (key, param) => {
+  const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
     ? '`' + quotedKey[1] + '`'
     : typeof key === 'string' ? '`' + key + '`' : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
-  const matchParamFunction = param.toString().match(/.*=>*.(.*)/)
-  if (matchParamFunction) {
-    return returnAs(matchParamFunction[1])
+  if (isArrowFunction(param)) {
+    const matchParamFunction = param.toString().match(arrowFunctionRegex)
+    if (matchParamFunction) {
+      return returnAs(matchParamFunction[1])
+    }
   }
-  return returnAs(param)
+
+  return param
 }

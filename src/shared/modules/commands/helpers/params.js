@@ -18,10 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import jsonic from 'jsonic'
+import bolt from 'services/bolt/bolt'
 import { recursivelyTypeGraphItems } from 'services/bolt/boltMappings'
 import {
   splitStringOnFirst,
-  mapArrowFunctionToCypherStatement
+  mapParamToCypherStatement,
+  isArrowFunction
 } from 'services/commandUtils'
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
@@ -39,7 +41,19 @@ export const extractParams = param => {
   return { key, res: res[key] }
 }
 
-export const handleParamsCommand = (action, cmdchar, put, bolt) => {
+const resolveAndStoreJsonValue = (param, put, resolve, reject) => {
+  try {
+    const json = '{' + param + '}'
+    const res = jsonic(json)
+    put(update(res))
+    return resolve({ result: res, type: 'param' })
+  } catch (e) {
+    return reject(
+      new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
+    )
+  }
+}
+export const handleParamsCommand = (action, cmdchar, put) => {
   const strippedCmd = action.cmd.substr(cmdchar.length)
   const parts = splitStringOnFirst(strippedCmd, ' ')
   const param = parts[1].trim()
@@ -59,50 +73,38 @@ export const handleParamsCommand = (action, cmdchar, put, bolt) => {
       }
     } else {
       // Single param
-      if (!bolt) {
-        try {
-          const json = '{' + param + '}'
-          const res = jsonic(json)
-          put(update(res))
-          return resolve({ result: res, type: 'param' })
-        } catch (e) {
-          return reject(
-            new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
-          )
+      try {
+        const extractedParam = extractParams(param)
+        const key = extractedParam.key
+        if (isArrowFunction(extractedParam)) {
+          resolveAndStoreJsonValue(param, put, resolve, reject)
         }
-      } else {
-        try {
-          const extractedParam = extractParams(param)
-          const key = extractedParam.key
-          const cypherStatement = mapArrowFunctionToCypherStatement(
-            extractedParam.key,
-            extractedParam.res
+        const cypherStatement = mapParamToCypherStatement(
+          extractedParam.key,
+          extractedParam.res
+        )
+        bolt
+          .routedWriteTransaction(
+            cypherStatement,
+            {},
+            {
+              useCypherThread: false,
+              requestId: action.requestId,
+              cancelable: false
+            }
           )
-          bolt
-            .routedWriteTransaction(
-              cypherStatement,
-              {},
-              {
-                useCypherThread: false,
-                requestId: action.requestId,
-                cancelable: false
-              }
-            )
-            .then(res => {
-              let obj = {}
-              res.records.forEach(record => {
-                obj[key] = record.get(key)
-              })
-              const result = recursivelyTypeGraphItems(obj)
-              put(update(result))
-              resolve({ result, type: 'param' })
+          .then(res => {
+            let obj = {}
+            res.records.forEach(record => {
+              obj[key] = record.get(key)
             })
-            .catch(e => reject(e))
-        } catch (e) {
-          reject(
-            new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
-          )
-        }
+            const result = recursivelyTypeGraphItems(obj)
+            put(update(result))
+            resolve({ result, type: 'param' })
+          })
+          .catch(e => reject(e))
+      } catch (e) {
+        reject(new Error('Could not parse input. Usage: `:param "x": 2`. ' + e))
       }
     }
   })
