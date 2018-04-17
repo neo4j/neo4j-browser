@@ -219,8 +219,8 @@ export class BrowserSync extends Component {
             <DrawerSubHeader>Sign In or Register</DrawerSubHeader>
             <DrawerSectionBody>
               <DrawerSection>
-                Neo4j Browser Sync is a companion cloud service for Neo4j
-                Browser. Connect through a simple social sign-in to get started.{' '}
+                Neo4j Browser Sync is a companion service for Neo4j Browser.
+                Connect through a simple social sign-in to get started.{' '}
                 <StyledSyncLink onClick={() => this.props.onSyncHelpClick()}>
                   About Neo4j Browser Sync
                 </StyledSyncLink>
