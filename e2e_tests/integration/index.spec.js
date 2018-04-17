@@ -36,6 +36,14 @@ describe('Neo4j Browser', () => {
     cy.setInitialPassword(newPassword)
     cy.disconnect()
   })
+  it('show "no connection" error', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand('RETURN 1')
+    cy
+      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'No connection found, did you connect to Neo4j')
+  })
   it('can login', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
