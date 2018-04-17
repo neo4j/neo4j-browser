@@ -104,15 +104,12 @@ export const mapParamToCypherStatement = (key, param) => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
     ? '`' + quotedKey[1] + '`'
-    : typeof key === 'string' ? '`' + key + '`' : key
+    : typeof key !== 'string' ? '`' + key + '`' : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
-  if (isArrowFunction(param)) {
-    const matchParamFunction = param.toString().match(arrowFunctionRegex)
-    if (matchParamFunction) {
-      return returnAs(matchParamFunction[1])
-    }
+  const matchParamFunction = param.toString().match(arrowFunctionRegex)
+  if (matchParamFunction) {
+    return returnAs(matchParamFunction[1])
   }
-
-  return param
+  return returnAs(param)
 }

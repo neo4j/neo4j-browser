@@ -22,28 +22,26 @@ import bolt from 'services/bolt/bolt'
 import { recursivelyTypeGraphItems } from 'services/bolt/boltMappings'
 import {
   splitStringOnFirst,
-  mapParamToCypherStatement,
-  isArrowFunction
+  mapParamToCypherStatement
 } from 'services/commandUtils'
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
 export const extractParams = param => {
-  const quoted = param.match(/^(".*"):?\s(.*)/)
-  const unquoted = param.match(/^(.*):?\s(.*)/)
-  const paramName = quoted ? quoted[1] : unquoted[1]
-  const paramValue = quoted ? quoted[2] : unquoted[2]
-
+  const matchParam = param.match(/^(".*"|'.*'|\S+)\s?(:|=>)\s(.*)/)
+  if (!matchParam) return {}
+  const [, paramName, delimiter, paramValue] = matchParam
   const json =
     '{' + paramName + (paramName.endsWith(':') ? ' ' : ': ') + paramValue + '}'
   const res = jsonic(json)
   const key = Object.keys(res)[0]
+  const value = res[key]
 
-  return { key, res: res[key] }
+  return { key, value, isFn: delimiter ? delimiter.includes('=>') : false }
 }
 
 const resolveAndStoreJsonValue = (param, put, resolve, reject) => {
   try {
-    const json = '{' + param + '}'
+    const json = `{${param}}`
     const res = jsonic(json)
     put(update(res))
     return resolve({ result: res, type: 'param' })
@@ -74,15 +72,11 @@ export const handleParamsCommand = (action, cmdchar, put) => {
     } else {
       // Single param
       try {
-        const extractedParam = extractParams(param)
-        const key = extractedParam.key
-        if (isArrowFunction(extractedParam)) {
-          resolveAndStoreJsonValue(param, put, resolve, reject)
+        const { key, value, isFn } = extractParams(param)
+        if (!key || !value || !isFn) {
+          return resolveAndStoreJsonValue(param, put, resolve, reject)
         }
-        const cypherStatement = mapParamToCypherStatement(
-          extractedParam.key,
-          extractedParam.res
-        )
+        const cypherStatement = mapParamToCypherStatement(key, value)
         bolt
           .routedWriteTransaction(
             cypherStatement,

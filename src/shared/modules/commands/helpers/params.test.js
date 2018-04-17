@@ -50,6 +50,8 @@ describe('commandsDuck params helper', () => {
   })
   test('handles :param "x": 2 and calls the update action creator', () => {
     // Given
+    // jest.spyOn(params, , accessType?)
+
     const action = { cmd: ':param "x": 2' }
     const cmdchar = ':'
     const put = jest.fn()
@@ -109,28 +111,25 @@ describe('commandsDuck params helper', () => {
     })
   })
   describe('extract key/value from params', () => {
-    test('<key> <value>', () => {
-      expect(params.extractParams('foo bar')).toEqual({
-        key: 'foo',
-        res: 'bar'
-      })
-    })
     test('<key>: <value>', () => {
       expect(params.extractParams('foo: bar')).toEqual({
         key: 'foo',
-        res: 'bar'
-      })
-    })
-    test('<key with space> <value>', () => {
-      expect(params.extractParams('"f o o" bar')).toEqual({
-        key: 'f o o',
-        res: 'bar'
+        value: 'bar',
+        isFn: false
       })
     })
     test('<key with space>: <value>', () => {
       expect(params.extractParams('"f o o": bar')).toEqual({
         key: 'f o o',
-        res: 'bar'
+        value: 'bar',
+        isFn: false
+      })
+    })
+    test('<key with space>=><value>', () => {
+      expect(params.extractParams('foo => 2')).toEqual({
+        key: 'foo',
+        value: 2,
+        isFn: true
       })
     })
   })

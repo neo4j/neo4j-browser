@@ -126,6 +126,25 @@ describe('Neo4j Browser', () => {
       .get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 })
       .should('have.length', 18)
   })
+  it('will add parameter using `:param` command', () => {
+    // add cypher evalutated param function
+    const command = ':param foo => 1 + 1'
+    cy.get(Editor).type(command, { force: true })
+    cy.get(Editor).should('have.value', command)
+    cy.get(SubmitQueryButton).click()
+    cy
+      .get('[data-test-id="frameCommand"]')
+      .first()
+      .should('contain', command)
+    cy
+      .get('[data-test-id="rawParamData"]')
+      .first()
+      .should('contain', 'foo')
+    cy
+      .get('[data-test-id="rawParamData"]')
+      .first()
+      .should('contain', 2)
+  })
   it('will clear local storage when clicking "Clear local data"', () => {
     const scriptName = 'foo'
     cy.get(Editor).type(`//${scriptName}`, { force: true })
@@ -149,24 +168,5 @@ describe('Neo4j Browser', () => {
 
     // once data is cleared the user is logged out and the connect form is displayed
     cy.get('input[data-test-id="boltaddress"]')
-  })
-  it('will add parameter using `:param` command', () => {
-    // add cypher evalutated param function
-    const command = ':param foo => 1 + 1'
-    cy.get(Editor).type(command, { force: true })
-    cy.get(Editor).should('have.value', command)
-    cy.get(SubmitQueryButton).click()
-    cy
-      .get('[data-test-id="frameCommand"]')
-      .first()
-      .should('contain', command)
-    cy
-      .get('[data-test-id="rawParamData"]')
-      .first()
-      .should('contain', 'foo')
-    cy
-      .get('[data-test-id="rawParamData"]')
-      .first()
-      .should('contain', 2)
   })
 })

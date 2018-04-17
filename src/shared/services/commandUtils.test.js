@@ -168,19 +168,23 @@ describe('commandutils', () => {
 
   describe('mapParamToCypherStatement', () => {
     test('should map string to cypher', () => {
-      expect(utils.mapParamToCypherStatement('foo', '"bar"')).toEqual('"bar"')
+      expect(utils.mapParamToCypherStatement('foo', '"bar"')).toEqual(
+        'RETURN "bar" as foo'
+      )
     })
     test('should map number to cypher', () => {
-      expect(utils.mapParamToCypherStatement('foo', '1337')).toEqual('1337')
+      expect(utils.mapParamToCypherStatement('foo', '1337')).toEqual(
+        'RETURN 1337 as foo'
+      )
     })
     test('should map fn with string to cypher', () => {
       expect(utils.mapParamToCypherStatement('foo', '=> "bar"')).toEqual(
-        'RETURN "bar" as `foo`'
+        'RETURN "bar" as foo'
       )
     })
     test('should map fn with numbers to cypher', () => {
       expect(utils.mapParamToCypherStatement('foo', '=> 1 + 1')).toEqual(
-        'RETURN 1 + 1 as `foo`'
+        'RETURN 1 + 1 as foo'
       )
     })
     test('should wrap quoted string with backticks', () => {
@@ -189,9 +193,9 @@ describe('commandutils', () => {
       )
     })
     test('should wrap quoted string with backticks', () => {
-      expect(
-        utils.mapArrowFunctionToCypherStatement('"f o o"', '=> 1 + 1')
-      ).toEqual('RETURN 1 + 1 as `f o o`')
+      expect(utils.mapParamToCypherStatement('"f o o"', '=> 1 + 1')).toEqual(
+        'RETURN 1 + 1 as `f o o`'
+      )
     })
   })
 })
