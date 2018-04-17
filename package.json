@@ -15,37 +15,37 @@
     "apiVersion": "^1.2.0"
   },
   "scripts": {
-    "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
-    "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
+    "start":
+      "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
+    "starts":
+      "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
     "startnodash": "webpack-dev-server --colors --no-info",
     "precommit": "lint-staged",
     "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
     "lint": "eslint --fix --ext .js --ext .jsx ./",
     "test": "npm run lint && jest",
     "e2e": "cypress run",
+    "e2e-local": "CYPRESS_E2E_TEST_ENV=\"local\" cypress run",
+    "e2e-local-open": "CYPRESS_E2E_TEST_ENV=\"local\" cypress open",
     "dev": "jest --watch",
     "build": "rm -rf ./dist && NODE_ENV=\"production\" webpack",
     "prepare-jar": "node ./scripts/prepare-mvn-package.js",
     "jar": "yarn build && mvn package",
-    "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
+    "version-pom":
+      "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml",
     "update-licenses": "sh ./scripts/generate_licenses.sh"
   },
   "lint-staged": {
     "linters": {
-      "*.{js,jsx}": [
-        "prettier-eslint --write",
-        "git add"
-      ]
+      "*.{js,jsx}": ["prettier-eslint --write", "git add"]
     }
   },
   "jest": {
-    "testPathIgnorePatterns": [
-      ".jsx$",
-      "/e2e_tests/"
-    ],
+    "testPathIgnorePatterns": [".jsx$", "/e2e_tests/"],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$":
+        "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "neo4j": "<rootDir>/__mocks__/neo4j.js",
       "^react-dom/server$": "preact-render-to-string",
@@ -57,10 +57,7 @@
       "^browser-components(.*)$": "<rootDir>/src/browser/components$1",
       "worker-loader": "<rootDir>/__mocks__/workerLoaderMock.js"
     },
-    "modulePaths": [
-      "<rootDir>/src",
-      "<rootDir>/src/shared"
-    ]
+    "modulePaths": ["<rootDir>/src", "<rootDir>/src/shared"]
   },
   "devDependencies": {
     "autoprefixer": "^7.1.4",

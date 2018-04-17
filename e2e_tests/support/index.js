@@ -13,6 +13,8 @@
 // https://on.cypress.io/guides/configuration#section-global
 // ***********************************************************
 
+/* global Cypress, cy */
+
 // Import commands.js and defaults.js
 // using ES2015 syntax:
 import './commands'
@@ -21,3 +23,9 @@ import './defaults'
 // Alternatively you can use CommonJS syntax:
 // require("./commands")
 // require("./defaults")
+
+afterEach(function () {
+  if (this.currentTest.state === 'failed') {
+    Cypress.runner.stop()
+  }
+})

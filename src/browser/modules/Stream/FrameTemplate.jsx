@@ -120,7 +120,10 @@ class FrameTemplate extends Component {
               {this.props.contents}
             </StyledFrameContents>
             <Render if={this.props.statusbar}>
-              <StyledFrameStatusbar fullscreen={this.state.fullscreen}>
+              <StyledFrameStatusbar
+                fullscreen={this.state.fullscreen}
+                data-test-id='frameStatusbar'
+              >
                 {this.props.statusbar}
               </StyledFrameStatusbar>
             </Render>
