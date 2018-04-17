@@ -13,7 +13,7 @@
 // https://on.cypress.io/guides/configuration#section-global
 // ***********************************************************
 
-/* global Cypress, cy */
+/* global Cypress */
 
 // Import commands.js and defaults.js
 // using ES2015 syntax:
