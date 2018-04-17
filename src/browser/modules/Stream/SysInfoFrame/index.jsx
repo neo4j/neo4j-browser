@@ -124,37 +124,58 @@ export class SysInfoFrame extends Component {
       }
     ]
 
-    this.setState({
-      storeSizes: [
+    let storeSizes = [
+      {
+        label: 'Array Store',
+        value: toHumanReadableBytes(kernel.ArrayStoreSize)
+      },
+      {
+        label: 'Logical Log',
+        value: toHumanReadableBytes(kernel.LogicalLogSize)
+      },
+      {
+        label: 'Node Store',
+        value: toHumanReadableBytes(kernel.NodeStoreSize)
+      },
+      {
+        label: 'Property Store',
+        value: toHumanReadableBytes(kernel.PropertyStoreSize)
+      },
+      {
+        label: 'Relationship Store',
+        value: toHumanReadableBytes(kernel.RelationshipStoreSize)
+      },
+      {
+        label: 'String Store',
+        value: toHumanReadableBytes(kernel.StringStoreSize)
+      },
+      {
+        label: 'Total Store Size',
+        value: toHumanReadableBytes(kernel.TotalStoreSize)
+      }
+    ]
+    if (kernel.CountStoreSize) {
+      storeSizes = storeSizes.concat([
         {
-          label: 'Array Store',
-          value: toHumanReadableBytes(kernel.ArrayStoreSize)
+          label: 'Count Store',
+          value: toHumanReadableBytes(kernel.CountStoreSize)
         },
         {
-          label: 'Logical Log',
-          value: toHumanReadableBytes(kernel.LogicalLogSize)
+          label: 'Label Store',
+          value: toHumanReadableBytes(kernel.LabelStoreSize)
         },
         {
-          label: 'Node Store',
-          value: toHumanReadableBytes(kernel.NodeStoreSize)
+          label: 'Index Store',
+          value: toHumanReadableBytes(kernel.IndexStoreSize)
         },
         {
-          label: 'Property Store',
-          value: toHumanReadableBytes(kernel.PropertyStoreSize)
-        },
-        {
-          label: 'Relationship Store',
-          value: toHumanReadableBytes(kernel.RelationshipStoreSize)
-        },
-        {
-          label: 'String Store',
-          value: toHumanReadableBytes(kernel.StringStoreSize)
-        },
-        {
-          label: 'Total Store Size',
-          value: toHumanReadableBytes(kernel.TotalStoreSize)
+          label: 'Schema Store',
+          value: toHumanReadableBytes(kernel.SchemaStoreSize)
         }
-      ],
+      ])
+    }
+    this.setState({
+      storeSizes,
       idAllocation: [
         { label: 'Node ID', value: primitive.NumberOfNodeIdsInUse },
         { label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse },
