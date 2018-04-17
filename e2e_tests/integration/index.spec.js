@@ -32,69 +32,53 @@ describe('Neo4j Browser', () => {
       .should('include', 'Neo4j Browser')
   })
   it('sets new login credentials', () => {
-    cy.title().should('include', 'Neo4j Browser')
-
-    cy
-      .get('input[data-test-id="boltaddress"]')
-      .clear()
-      .type('bolt://localhost:7687')
-
-    cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
-    cy.get('input[data-test-id="password"]').should('have.value', '')
-
-    cy.get('input[data-test-id="password"]').type('neo4j')
-
-    cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
-
-    cy.get('button[data-test-id="connect"]').click()
-
-    // update password
-    cy.get('input[data-test-id="newPassword"]')
-    cy.get('input[data-test-id="newPassword"]').should('have.value', '')
-    cy
-      .get('input[data-test-id="newPasswordConfirmation"]')
-      .should('have.value', '')
-
     const newPassword = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
-    cy.get('input[data-test-id="newPassword"]').type(newPassword)
-    cy.get('input[data-test-id="newPasswordConfirmation"]').type(newPassword)
-    cy.get('button[data-test-id="changePassword"]').click()
-
-    cy.get('input[data-test-id="changePassword"]').should('not.be.visible')
-
-    cy.get('input[data-test-id="connect"]').should('not.be.visible')
-    cy.wait(500)
-    cy
-      .get('[data-test-id="frameCommand"]')
-      .first()
-      .should('contain', ':play start')
+    cy.setInitialPassword(newPassword)
+    cy.disconnect()
   })
-  it('can run cypher statement', () => {
-    const cypher = 'return 1'
-    cy.get(Editor).type(cypher, { force: true })
-    cy.get(Editor).should('have.value', cypher)
-    cy.get(SubmitQueryButton).click()
+  it('can login', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(':server connect')
+    const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
+    cy.connect(password)
+  })
+  it('can empty the db', () => {
+    cy.executeCommand(':clear')
+    const query = 'MATCH (n) DETACH DELETE n'
+    cy.executeCommand(query)
     cy
       .get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
-      .should('contain', cypher)
+      .should('contain', query)
+    cy
+      .get('[data-test-id="frameStatusbar"]', { timeout: 100000 })
+      .first()
+      .contains(/completed/i)
+  })
+  it('can run cypher statement', () => {
+    cy.executeCommand(':clear')
+    const query = 'return 1'
+    cy.executeCommand(query)
     cy
       .get('[data-test-id="frameLoading"]', { timeout: 10000 })
       .should('not.be.visible')
+    cy
+      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+      .first()
+      .should('contain', query)
+    cy
+      .get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'Started streaming')
   })
   it('can exec cypher from `:play movies`', () => {
-    const cypher = ':play movies'
-    cy.get('[data-test-id="clearEditorContent"]').click()
-
-    cy.get(Editor).type(cypher, { force: true })
-    cy.get(Editor).should('have.value', cypher)
-
-    cy.get(SubmitQueryButton).click()
+    cy.executeCommand(':clear')
+    const query = ':play movies'
+    cy.executeCommand(query)
     cy
       .get('[data-test-id="frameCommand"]')
       .first()
-      .should('contain', cypher)
-
+      .should('contain', query)
     cy
       .get(Carousel)
       .find('[data-test-id="nextSlide"]')
@@ -118,6 +102,7 @@ describe('Neo4j Browser', () => {
       .should('contain', 'Emil Eifrem')
   })
   it('can display meta items from side drawer', () => {
+    cy.executeCommand(':clear')
     cy.get('[data-test-id="drawerDB"]').click()
     cy
       .get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 })

@@ -1,39 +1,79 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create the custom command: 'login'.
-//
-// The commands.js file is a great place to
-// modify existing commands and create custom
-// commands for use throughout your tests.
-//
-// You can read more about custom commands here:
-// https://on.cypress.io/api/commands
-// ***********************************************
-//
-// Cypress.addParentCommand("login", function(email, password){
-//   var email    = email || "joe@example.com"
-//   var password = password || "foobar"
-//
-//   var log = Cypress.Log.command({
-//     name: "login",
-//     message: [email, password],
-//     consoleProps: function(){
-//       return {
-//         email: email,
-//         password: password
-//       }
-//     }
-//   })
-//
-//   cy
-//     .visit("/login", {log: false})
-//     .contains("Log In", {log: false})
-//     .get("#email", {log: false}).type(email, {log: false})
-//     .get("#password", {log: false}).type(password, {log: false})
-//     .get("button", {log: false}).click({log: false}) //this should submit the form
-//     .get("h1", {log: false}).contains("Dashboard", {log: false}) //we should be on the dashboard now
-//     .url({log: false}).should("match", /dashboard/, {log: false})
-//     .then(function(){
-//       log.snapshot().end()
-//     })
-// })
+const SubmitQueryButton = '[data-test-id="submitQuery"]'
+const ClearEditorButton = '[data-test-id="clearEditorContent"]'
+const Editor = '.ReactCodeMirror textarea'
+
+/* global Cypress, cy */
+
+Cypress.Commands.add('setInitialPassword', newPassword => {
+  if (Cypress.env('E2E_TEST_ENV') === 'local') {
+    // We assume pw already set on local
+    return
+  }
+  cy.title().should('include', 'Neo4j Browser')
+
+  cy
+    .get('input[data-test-id="boltaddress"]')
+    .clear()
+    .type('bolt://localhost:7687')
+
+  cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
+  cy.get('input[data-test-id="password"]').should('have.value', '')
+
+  cy.get('input[data-test-id="password"]').type('neo4j')
+
+  cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
+
+  cy.get('button[data-test-id="connect"]').click()
+
+  // update password
+  cy.get('input[data-test-id="newPassword"]')
+  cy.get('input[data-test-id="newPassword"]').should('have.value', '')
+  cy
+    .get('input[data-test-id="newPasswordConfirmation"]')
+    .should('have.value', '')
+
+  cy.get('input[data-test-id="newPassword"]').type(newPassword)
+  cy.get('input[data-test-id="newPasswordConfirmation"]').type(newPassword)
+  cy.get('button[data-test-id="changePassword"]').click()
+
+  cy.get('input[data-test-id="changePassword"]').should('not.be.visible')
+
+  cy.get('input[data-test-id="connect"]').should('not.be.visible')
+  cy.wait(500)
+  cy
+    .get('[data-test-id="frameCommand"]')
+    .first()
+    .should('contain', ':play start')
+})
+Cypress.Commands.add('connect', password => {
+  cy.title().should('include', 'Neo4j Browser')
+  cy
+    .get('input[data-test-id="boltaddress"]')
+    .clear()
+    .type('bolt://localhost:7687')
+
+  cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
+  cy.get('input[data-test-id="password"]').should('have.value', '')
+
+  cy.get('input[data-test-id="password"]').type(password)
+
+  cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
+
+  cy.get('button[data-test-id="connect"]').click()
+  cy.get('[data-test-id="frame"]', { timeout: 10000 }).should('have.length', 2)
+  cy.wait(500)
+  cy
+    .get('[data-test-id="frameCommand"]')
+    .first()
+    .should('contain', ':play start')
+})
+Cypress.Commands.add('disconnect', () => {
+  const query = ':server disconnect'
+  cy.executeCommand(query)
+})
+Cypress.Commands.add('executeCommand', query => {
+  cy.get(ClearEditorButton).click()
+  cy.get(Editor).type(query, { force: true })
+  cy.get(Editor).should('have.value', query)
+  cy.get(SubmitQueryButton).click()
+})
