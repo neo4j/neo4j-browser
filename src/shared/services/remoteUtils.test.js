@@ -26,6 +26,17 @@ describe('remoteUtils', () => {
     const text = 'hello<script>alert(1)</script> <p onclick="alert(1)">test</p>'
     expect(utils.cleanHtml(text)).toEqual('hello <p>test</p>')
   })
+  test('removes script from href', () => {
+    const doubleQuoted = 'hello <a href="javascript:alert(1)">test</a>'
+    expect(utils.cleanHtml(doubleQuoted)).toEqual('hello <a href="">test</a>')
+
+    const singleQuoted = "hello <a href='javascript:alert(1)'>test</a>"
+    expect(utils.cleanHtml(singleQuoted)).toEqual("hello <a href=''>test</a>")
+  })
+  test('removes on* handlers from html', () => {
+    const text = 'hello <div onclick="foobar">test</div>'
+    expect(utils.cleanHtml(text)).toEqual('hello <div>test</div>')
+  })
   test('isLocalRequest figures out if a request is local or remote', () => {
     // Given
     const itemsStrict = [

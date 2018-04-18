@@ -21,16 +21,23 @@
 /* global btoa */
 import { getUrlInfo } from 'services/utils'
 
-export function cleanHtml (string) {
-  if (typeof string !== 'string') return string
-  string = string.replace(
+const removeJavascriptFromHref = string => {
+  string = string.replace(/href=".*javascript:[^"]*"/, 'href=""')
+  return string.replace(/href='.*javascript:[^']*'/, "href=''")
+}
+const removeScriptTags = string =>
+  string.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi, '')
+const removeOnHandlersFromHtml = string =>
+  string.replace(
     /(\s+(on[^\s=]+)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/gi,
     ''
   )
-  return string.replace(
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi,
-    ''
-  )
+
+export function cleanHtml (string) {
+  if (typeof string !== 'string') return string
+  string = removeOnHandlersFromHtml(string)
+  string = removeScriptTags(string)
+  return removeJavascriptFromHref(string)
 }
 
 export const authHeaderFromCredentials = (username, password) => {
