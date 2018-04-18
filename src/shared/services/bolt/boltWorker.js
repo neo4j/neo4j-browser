@@ -35,6 +35,7 @@ import {
   cypherErrorMessage,
   cypherResponseMessage,
   postCancelTransactionMessage,
+  boltConnectionErrorMessage,
   RUN_CYPHER_MESSAGE,
   CANCEL_TRANSACTION_MESSAGE
 } from './boltWorkerMessages'
@@ -66,7 +67,7 @@ const onmessage = function (message) {
 
     ensureConnection(connectionProperties, connectionProperties.opts, e => {
       self.postMessage(
-        cypherErrorMessage(createErrorObject(BoltConnectionError))
+        boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
       )
     })
       .then(() => {

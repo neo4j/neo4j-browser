@@ -259,7 +259,7 @@ export const updateConnectionState = state => ({
   type: UPDATE_CONNECTION_STATE
 })
 
-const onLostConnection = dispatch => e => {
+export const onLostConnection = dispatch => e => {
   dispatch({ type: LOST_CONNECTION, error: e })
 }
 

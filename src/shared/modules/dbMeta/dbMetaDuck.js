@@ -31,7 +31,8 @@ import {
   LOST_CONNECTION,
   UPDATE_CONNECTION_STATE,
   setRetainCredentials,
-  setAuthEnabled
+  setAuthEnabled,
+  onLostConnection
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
@@ -285,7 +286,8 @@ export const dbMetaEpic = (some$, store) =>
                   metaQuery,
                   {},
                   {
-                    useCypherThread: shouldUseCypherThread(store.getState())
+                    useCypherThread: shouldUseCypherThread(store.getState()),
+                    onLostConnection: onLostConnection(store.dispatch)
                   }
                 )
               )

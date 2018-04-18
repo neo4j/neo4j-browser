@@ -25,6 +25,7 @@ export const CANCEL_TRANSACTION_MESSAGE = 'CANCEL_TRANSACTION_MESSAGE'
 export const CYPHER_ERROR_MESSAGE = 'CYPHER_ERROR_MESSAGE'
 export const CYPHER_RESPONSE_MESSAGE = 'CYPHER_RESPONSE_MESSAGE'
 export const POST_CANCEL_TRANSACTION_MESSAGE = 'POST_CANCEL_TRANSACTION_MESSAGE'
+export const BOLT_CONNECTION_ERROR_MESSAGE = 'BOLT_CONNECTION_ERROR_MESSAGE'
 
 export const runCypherMessage = (
   input,
@@ -69,5 +70,12 @@ export const cypherErrorMessage = error => {
 export const postCancelTransactionMessage = () => {
   return {
     type: POST_CANCEL_TRANSACTION_MESSAGE
+  }
+}
+
+export const boltConnectionErrorMessage = error => {
+  return {
+    type: BOLT_CONNECTION_ERROR_MESSAGE,
+    error
   }
 }
