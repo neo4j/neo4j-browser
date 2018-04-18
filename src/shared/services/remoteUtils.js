@@ -21,8 +21,10 @@
 /* global btoa */
 import { getUrlInfo } from 'services/utils'
 
-const removeJavascriptFromHref = string =>
-  string.replace(/href=".*javascript:[^"]*"/, 'href=""')
+const removeJavascriptFromHref = string => {
+  string = string.replace(/href=".*javascript:[^"]*"/, 'href=""')
+  return string.replace(/href='.*javascript:[^']*'/, "href=''")
+}
 const removeScriptTags = string =>
   string.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi, '')
 const removeOnHandlersFromHtml = string =>
