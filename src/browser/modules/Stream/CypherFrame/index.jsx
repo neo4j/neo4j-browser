@@ -233,6 +233,7 @@ export class CypherFrame extends Component {
   getFrameContents (request, result, query) {
     return (
       <StyledFrameBody
+        data-test-id='frame-loaded-contents'
         fullscreen={this.state.fullscreen}
         collapsed={this.state.collapse}
       >

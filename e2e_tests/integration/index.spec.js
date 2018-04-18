@@ -46,6 +46,7 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':clear')
     const query = 'MATCH (n) DETACH DELETE n'
     cy.executeCommand(query)
+    cy.waitForCommandResult()
     cy
       .get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
@@ -59,9 +60,7 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':clear')
     const query = 'return 1'
     cy.executeCommand(query)
-    cy
-      .get('[data-test-id="frameLoading"]', { timeout: 10000 })
-      .should('not.be.visible')
+    cy.waitForCommandResult()
     cy
       .get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
@@ -96,6 +95,7 @@ describe('Neo4j Browser', () => {
       .find('.code')
       .click()
     cy.get(SubmitQueryButton).click()
+    cy.waitForCommandResult()
     cy
       .get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
