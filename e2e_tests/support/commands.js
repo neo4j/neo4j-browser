@@ -77,3 +77,8 @@ Cypress.Commands.add('executeCommand', query => {
   cy.get(Editor).should('have.value', query)
   cy.get(SubmitQueryButton).click()
 })
+Cypress.Commands.add('waitForCommandResult', () => {
+  cy
+    .get('[data-test-id="frame-loaded-contents"]', { timeout: 40000 })
+    .should('be.visible')
+})
