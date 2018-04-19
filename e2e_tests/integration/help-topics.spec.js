@@ -20,7 +20,7 @@
 
 /* global Cypress, cy, test, expect */
 
-describe('Neo4j Browser', () => {
+describe('Help topics', () => {
   it('loads', () => {
     cy
       .visit(Cypress.env('BROWSER_URL') || 'http://localhost:8080')
