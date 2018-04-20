@@ -58,26 +58,50 @@ const validateConnection = (driver, res, rej) => {
     })
 }
 
-export const getDriver = (host, auth, opts, protocol) => {
+export const getDriver = (
+  host,
+  auth,
+  opts,
+  protocol,
+  onConnectFail = () => {}
+) => {
   const boltHost = protocol + (host || '').split('bolt://').join('')
-  return neo4j.driver(boltHost, auth, opts)
+  try {
+    const res = neo4j.driver(boltHost, auth, opts)
+    return res
+  } catch (e) {
+    onConnectFail(e)
+    return null
+  }
 }
 
-export const getDriversObj = (props, opts = {}) => {
+export const getDriversObj = (props, opts = {}, onConnectFail = () => {}) => {
   const driversObj = {}
   const auth =
     opts.withoutCredentials || !props.username
-      ? undefined
+      ? neo4j.auth.basic('', '')
       : neo4j.auth.basic(props.username, props.password)
   const getDirectDriver = () => {
     if (driversObj.direct) return driversObj.direct
-    driversObj.direct = getDriver(props.host, auth, opts, 'bolt://')
+    driversObj.direct = getDriver(
+      props.host,
+      auth,
+      opts,
+      'bolt://',
+      onConnectFail
+    )
     return driversObj.direct
   }
   const getRoutedDriver = () => {
     if (!useRouting()) return getDirectDriver()
     if (driversObj.routed) return driversObj.routed
-    driversObj.routed = getDriver(props.host, auth, opts, 'bolt+routing://')
+    driversObj.routed = getDriver(
+      props.host,
+      auth,
+      opts,
+      'bolt+routing://',
+      onConnectFail
+    )
     return driversObj.routed
   }
   return {
@@ -99,7 +123,7 @@ export function directConnect (
   const p = new Promise((resolve, reject) => {
     const creds =
       opts.withoutCredentials || !props.username
-        ? undefined
+        ? neo4j.auth.basic('', '')
         : neo4j.auth.basic(props.username, props.password)
     const driver = getDriver(props.host, creds, opts, 'bolt://')
     driver.onError = e => {
@@ -117,13 +141,14 @@ export function directConnect (
 
 export function openConnection (props, opts = {}, onLostConnection) {
   const p = new Promise((resolve, reject) => {
-    const driversObj = getDriversObj(props, opts)
-    const driver = driversObj.getDirectDriver()
-    driver.onError = e => {
+    const onConnectFail = e => {
       onLostConnection(e)
       _drivers = null
       reject(e)
     }
+    const driversObj = getDriversObj(props, opts, onConnectFail)
+    const driver = driversObj.getDirectDriver()
+    driver.onError = onConnectFail
     const myResolve = driver => {
       _drivers = driversObj
       if (!props.hasOwnProperty('inheritedUseRouting')) {

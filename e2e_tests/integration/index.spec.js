@@ -36,6 +36,24 @@ describe('Neo4j Browser', () => {
     cy.setInitialPassword(newPassword)
     cy.disconnect()
   })
+  it('show "no connection" error when not using web workers', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(':config useCypherThread: false')
+    cy.executeCommand('RETURN 1')
+    cy
+      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'No connection found, did you connect to Neo4j')
+  })
+  it('show "no connection" error when using web workers', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(':config useCypherThread: true')
+    cy.executeCommand('RETURN 1')
+    cy
+      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'No connection found, did you connect to Neo4j')
+  })
   it('can login', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')

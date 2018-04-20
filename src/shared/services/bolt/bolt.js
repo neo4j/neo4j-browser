@@ -27,7 +27,8 @@ import {
   cancelTransactionMessage,
   CYPHER_ERROR_MESSAGE,
   CYPHER_RESPONSE_MESSAGE,
-  POST_CANCEL_TRANSACTION_MESSAGE
+  POST_CANCEL_TRANSACTION_MESSAGE,
+  BOLT_CONNECTION_ERROR_MESSAGE
 } from './boltWorkerMessages'
 /* eslint-disable import/no-webpack-loader-syntax */
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
@@ -70,7 +71,8 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
   const {
     useCypherThread = false,
     requestId = null,
-    cancelable = false
+    cancelable = false,
+    onLostConnection = () => {}
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -85,7 +87,7 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
         inheritedUseRouting: boltConnection.useRouting()
       }
     )
-    const workerPromise = setupBoltWorker(id, workFn)
+    const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
     return [id, workerPromise]
   } else {
     return boltConnection.routedWriteTransaction(
@@ -101,7 +103,8 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
   const {
     useCypherThread = false,
     requestId = null,
-    cancelable = false
+    cancelable = false,
+    onLostConnection = () => {}
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -116,7 +119,7 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
         inheritedUseRouting: boltConnection.useRouting()
       }
     )
-    const workerPromise = setupBoltWorker(id, workFn)
+    const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
     return workerPromise
   } else {
     return boltConnection.routedReadTransaction(
@@ -132,7 +135,8 @@ function directTransaction (input, parameters, requestMetaData = {}) {
   const {
     useCypherThread = false,
     requestId = null,
-    cancelable = false
+    cancelable = false,
+    onLostConnection = () => {}
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -147,7 +151,7 @@ function directTransaction (input, parameters, requestMetaData = {}) {
         inheritedUseRouting: false
       }
     )
-    const workerPromise = setupBoltWorker(id, workFn)
+    const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
     return workerPromise
   } else {
     return boltConnection.directTransaction(
@@ -159,12 +163,17 @@ function directTransaction (input, parameters, requestMetaData = {}) {
   }
 }
 
-function setupBoltWorker (id, workFn) {
+function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
   const boltWorker = new BoltWorkerModule()
   const onFinished = registerBoltWorker(id, boltWorker)
   const workerPromise = new Promise((resolve, reject) => {
     boltWorker.postMessage(workFn)
     boltWorker.onmessage = msg => {
+      if (msg.data.type === BOLT_CONNECTION_ERROR_MESSAGE) {
+        onFinished(boltWorker)
+        onLostConnection(msg.data.error)
+        return reject(msg.data.error)
+      }
       if (msg.data.type === CYPHER_ERROR_MESSAGE) {
         onFinished(boltWorker)
         reject(msg.data.error)
