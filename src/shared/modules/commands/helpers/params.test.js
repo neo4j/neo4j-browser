@@ -50,8 +50,6 @@ describe('commandsDuck params helper', () => {
   })
   test('handles :param "x": 2 and calls the update action creator', () => {
     // Given
-    // jest.spyOn(params, , accessType?)
-
     const action = { cmd: ':param "x": 2' }
     const cmdchar = ':'
     const put = jest.fn()

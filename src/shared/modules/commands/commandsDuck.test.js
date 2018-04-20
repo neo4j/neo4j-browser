@@ -144,6 +144,37 @@ describe('commandsDuck', () => {
       const cmdString = cmd + ' x: 2'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
+
+      bus.take('NOOP', currentAction => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmdString, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          updateParams({ x: 2 }),
+          frames.add({
+            ...action,
+            success: true,
+            type: 'param',
+            params: { x: 2 }
+          }),
+          { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+    test('does the right thing for :param x => 2', done => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'param'
+      const cmdString = cmd + ' x: 2'
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
       bolt.routedWriteTransaction = jest.fn(() =>
         Promise.resolve({
           records: [{ get: () => 2 }]
@@ -163,7 +194,6 @@ describe('commandsDuck', () => {
             type: 'param',
             params: { x: 2 }
           }),
-          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()
@@ -189,7 +219,6 @@ describe('commandsDuck', () => {
           { type: commands.KNOWN_COMMAND },
           replaceParams({ x: 2, y: 3 }),
           frames.add({ ...action, success: true, type: 'params', params: {} }),
-          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()

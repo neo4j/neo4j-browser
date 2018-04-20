@@ -71,11 +71,11 @@ export const handleParamsCommand = (action, cmdchar, put) => {
       }
     } else {
       // Single param
+      const { key, value, isFn } = extractParams(param)
+      if (!isFn || !key || !value) {
+        return resolveAndStoreJsonValue(param, put, resolve, reject)
+      }
       try {
-        const { key, value, isFn } = extractParams(param)
-        if (!key || !value || !isFn) {
-          return resolveAndStoreJsonValue(param, put, resolve, reject)
-        }
         const cypherStatement = mapParamToCypherStatement(key, value)
         bolt
           .routedWriteTransaction(

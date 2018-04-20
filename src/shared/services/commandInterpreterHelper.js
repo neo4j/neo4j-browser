@@ -31,7 +31,6 @@ import {
 import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
-import bolt from 'services/bolt/bolt'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
@@ -91,7 +90,7 @@ const availableCommands = [
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      return handleParamsCommand(action, cmdchar, put, bolt)
+      handleParamsCommand(action, cmdchar, put)
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())

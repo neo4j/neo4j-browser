@@ -129,13 +129,7 @@ describe('Neo4j Browser', () => {
   it('will add parameter using `:param` command', () => {
     // add cypher evalutated param function
     const command = ':param foo => 1 + 1'
-    cy.get(Editor).type(command, { force: true })
-    cy.get(Editor).should('have.value', command)
-    cy.get(SubmitQueryButton).click()
-    cy
-      .get('[data-test-id="frameCommand"]')
-      .first()
-      .should('contain', command)
+    cy.executeCommand(command)
     cy
       .get('[data-test-id="rawParamData"]')
       .first()
