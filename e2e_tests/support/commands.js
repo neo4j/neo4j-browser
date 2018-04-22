@@ -74,7 +74,6 @@ Cypress.Commands.add('disconnect', () => {
 Cypress.Commands.add('executeCommand', query => {
   cy.get(ClearEditorButton).click()
   cy.get(Editor).type(query, { force: true })
-  cy.get(Editor).should('have.value', query)
   cy.get(SubmitQueryButton).click()
 })
 Cypress.Commands.add('waitForCommandResult', () => {
