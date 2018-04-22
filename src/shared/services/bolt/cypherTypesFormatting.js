@@ -22,7 +22,7 @@ export const stringFormat = anything => {
     anything instanceof neo4j.types.LocalTime ||
     anything instanceof neo4j.types.Time
   ) {
-    return anything.toString()
+    return `"${anything.toString()}"`
   }
   return undefined
 }

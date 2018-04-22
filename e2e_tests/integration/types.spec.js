@@ -43,6 +43,7 @@ describe('Types in Browser', () => {
     cy
       .get('[data-test-id="frameContents"]', { timeout: 10000 })
       .then(contents => {
+        // Check for point type support
         if (contents.find('.table-row').length > 0) {
           cy
             .get('[data-test-id="frameContents"]', { timeout: 10000 })
@@ -63,6 +64,51 @@ describe('Types in Browser', () => {
             .get('[data-test-id="frameContents"]', { timeout: 10000 })
             .first()
             .should('contain', '│point({srid:4326, x:12.78, y:56.7})')
+        } else {
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should('contain', 'ERROR')
+        }
+      })
+  })
+  it('presents temporal types correctly', () => {
+    cy.executeCommand(':clear')
+    const query =
+      'RETURN datetime({{}year:2015, month:7, day:20, hour:15, minute:11, second:42, timezone:"Europe/Stockholm"}) AS t1'
+    cy.executeCommand(query)
+    cy.waitForCommandResult()
+
+    cy
+      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+      .then(contents => {
+        // Check for datetime type support
+        if (contents.find('.table-row').length > 0) {
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should(
+              'contain',
+              '"2015-07-20T15:11:42.000000000[Europe/Stockholm]"'
+            )
+          // Go to ascii view
+          cy
+            .get('[data-test-id="cypherFrameSidebarAscii"')
+            .first()
+            .click()
+
+          // make sure we're there
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should('contain', '══════')
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should(
+              'contain',
+              '│"2015-07-20T15:11:42.000000000[Europe/Stockholm]"'
+            )
         } else {
           cy
             .get('[data-test-id="frameContents"]', { timeout: 10000 })
