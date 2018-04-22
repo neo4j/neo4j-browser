@@ -39,25 +39,36 @@ describe('Types in Browser', () => {
       "WITH point({{}crs: 'wgs-84', longitude: 12.78, latitude: 56.7}) as p1 RETURN p1"
     cy.executeCommand(query)
     cy.waitForCommandResult()
-    cy
-      .get('[data-test-id="frameContents"]', { timeout: 10000 })
-      .first()
-      .should('contain', 'point({srid:4326, x:12.78, y:56.7})')
 
-    // Go to ascii view
     cy
-      .get('[data-test-id="cypherFrameSidebarAscii"')
-      .first()
-      .click()
+      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+      .then(contents => {
+        if (contents.find('.table-row').length > 0) {
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should('contain', 'point({srid:4326, x:12.78, y:56.7})')
+          // Go to ascii view
+          cy
+            .get('[data-test-id="cypherFrameSidebarAscii"')
+            .first()
+            .click()
 
-    // make sure we're there
-    cy
-      .get('[data-test-id="frameContents"]', { timeout: 10000 })
-      .first()
-      .should('contain', '══════')
-    cy
-      .get('[data-test-id="frameContents"]', { timeout: 10000 })
-      .first()
-      .should('contain', '│point({srid:4326, x:12.78, y:56.7})')
+          // make sure we're there
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should('contain', '══════')
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should('contain', '│point({srid:4326, x:12.78, y:56.7})')
+        } else {
+          cy
+            .get('[data-test-id="frameContents"]', { timeout: 10000 })
+            .first()
+            .should('contain', 'ERROR')
+        }
+      })
   })
 })
