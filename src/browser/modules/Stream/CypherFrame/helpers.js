@@ -26,6 +26,7 @@ import {
   flattenArray
 } from 'services/bolt/boltMappings'
 import { stringifyMod } from 'services/utils'
+import { stringFormat } from 'services/bolt/cypherTypesFormatting'
 
 export function getBodyAndStatusBarMessages (result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
@@ -167,9 +168,7 @@ export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
   return arr.map(col => {
     if (!col) return col
     return col.map(fVal => {
-      return stringifyMod(fVal, val => {
-        if (intChecker(val)) return val.toString()
-      })
+      return stringifyMod(fVal, stringFormat)
     })
   })
 }
@@ -247,7 +246,14 @@ export const isGraphItem = (types = neo4j.types, item) => {
     item instanceof types.Node ||
     item instanceof types.Relationship ||
     item instanceof types.Path ||
-    item instanceof types.PathSegment
+    item instanceof types.PathSegment ||
+    item instanceof neo4j.types.Date ||
+    item instanceof neo4j.types.DateTime ||
+    item instanceof neo4j.types.Duration ||
+    item instanceof neo4j.types.LocalDateTime ||
+    item instanceof neo4j.types.LocalTime ||
+    item instanceof neo4j.types.Time ||
+    item instanceof neo4j.types.Point
   )
 }
 

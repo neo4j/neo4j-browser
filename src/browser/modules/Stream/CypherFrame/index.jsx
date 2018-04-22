@@ -157,6 +157,7 @@ export class CypherFrame extends Component {
         </Render>
         <Render if={!resultIsError(this.props.request)}>
           <CypherFrameButton
+            data-test-id='cypherFrameSidebarTable'
             selected={this.state.openView === viewTypes.TABLE}
             onClick={() => {
               this.changeView(viewTypes.TABLE)
@@ -172,6 +173,7 @@ export class CypherFrame extends Component {
           }
         >
           <CypherFrameButton
+            data-test-id='cypherFrameSidebarAscii'
             selected={this.state.openView === viewTypes.TEXT}
             onClick={() => {
               this.changeView(viewTypes.TEXT)

@@ -20,6 +20,7 @@
 
 import { Component } from 'preact'
 import { v4 } from 'uuid'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import {
   StyledStatsBar,
   PaddedTableViewDiv,
@@ -34,16 +35,12 @@ import {
   StyledJsonPre
 } from 'browser-components/DataTables'
 import { deepEquals, shallowEquals, stringifyMod } from 'services/utils'
-import { v1 as neo4j } from 'neo4j-driver-alias'
 import {
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
   transformResultRecordsToResultArray
 } from './helpers'
-
-const intToString = val => {
-  if (neo4j.isInt(val)) return val.toString()
-}
+import { stringFormat } from 'services/bolt/cypherTypesFormatting'
 
 const renderCell = entry => {
   if (Array.isArray(entry)) {
@@ -57,13 +54,15 @@ const renderCell = entry => {
   } else if (typeof entry === 'object') {
     return renderObject(entry)
   } else {
-    return stringifyMod(entry, intToString, true)
+    return stringifyMod(entry, stringFormat, true)
   }
 }
 export const renderObject = entry => {
   if (neo4j.isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
-  return <StyledJsonPre>{stringifyMod(entry, intToString, true)}</StyledJsonPre>
+  return (
+    <StyledJsonPre>{stringifyMod(entry, stringFormat, true)}</StyledJsonPre>
+  )
 }
 const buildData = entries => {
   return entries.map(entry => {
