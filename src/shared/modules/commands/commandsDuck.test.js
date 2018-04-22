@@ -172,7 +172,7 @@ describe('commandsDuck', () => {
     test('does the right thing for :param x => 2', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'param'
-      const cmdString = cmd + ' x: 2'
+      const cmdString = cmd + ' x => 2'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
       bolt.routedWriteTransaction = jest.fn(() =>
@@ -181,20 +181,20 @@ describe('commandsDuck', () => {
         })
       )
 
-      bus.take('NOOP', currentAction => {
+      bus.take('frames/ADD', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           addHistory(cmdString, maxHistory),
           { type: commands.KNOWN_COMMAND },
           updateParams({ x: 2 }),
+          { type: 'NOOP' },
           frames.add({
             ...action,
             success: true,
             type: 'param',
             params: { x: 2 }
-          }),
-          { type: 'NOOP' }
+          })
         ])
         done()
       })
