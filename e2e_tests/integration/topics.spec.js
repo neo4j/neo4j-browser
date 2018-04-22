@@ -18,15 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect */
+/* global cy, test, expect */
 
 describe('Help topics', () => {
-  it('loads', () => {
-    cy
-      .visit(Cypress.env('BROWSER_URL') || 'http://localhost:8080')
-      .title()
-      .should('include', 'Neo4j Browser')
-  })
   it(':help commands has contents', () => {
     cy.executeCommand(':clear')
     const query = ':help commands'
