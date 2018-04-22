@@ -21,13 +21,8 @@
 /* global Cypress, cy, test, expect */
 
 describe('Types in Browser', () => {
-  it('loads', () => {
-    cy
-      .visit(Cypress.env('BROWSER_URL') || 'http://localhost:8080')
-      .title()
-      .should('include', 'Neo4j Browser')
-  })
-  it('can login', () => {
+  it('can connect', () => {
+    cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
     const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
