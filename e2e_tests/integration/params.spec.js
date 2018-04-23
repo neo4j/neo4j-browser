@@ -83,10 +83,11 @@ function runTests () {
 
   cy.get('[data-test-id="main"]', { timeout: 20000 }).then(contents => {
     // Check for point type support
-    if (
-      contents.find('[data-test-id="errorBanner"]', { timeout: 120000 })
-        .length < 1
-    ) {
+    const errorList =
+      contents.find('[data-test-id="errorBanner"]', {
+        timeout: 120000
+      }) || []
+    if (errorList.length < 1) {
       cy
         .get('[data-test-id="rawParamData"]', { timeout: 20000 })
         .first()
