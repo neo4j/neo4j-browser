@@ -30,17 +30,29 @@ export const extractParams = param => {
   const matchParam = param.match(/^(".*"|'.*'|\S+)\s?(:|=>)\s(.*)/)
   if (!matchParam) return {}
   const [, paramName, delimiter, paramValue] = matchParam
-  const json =
-    '{' + paramName + (paramName.endsWith(':') ? ' ' : ': ') + paramValue + '}'
-  const res = jsonic(json)
-  const key = Object.keys(res)[0]
-  const value = res[key]
-
-  return {
-    key,
-    value,
-    isFn: delimiter ? delimiter.includes('=>') : false,
-    originalParamValue: paramValue
+  try {
+    const json =
+      '{' +
+      paramName +
+      (paramName.endsWith(':') ? ' ' : ': ') +
+      paramValue +
+      '}'
+    const res = jsonic(json)
+    const key = Object.keys(res)[0]
+    const value = res[key]
+    return {
+      key,
+      value,
+      isFn: delimiter ? delimiter.includes('=>') : false,
+      originalParamValue: paramValue
+    }
+  } catch (e) {
+    return {
+      key: paramName,
+      value: paramValue,
+      isFn: delimiter ? delimiter.includes('=>') : false,
+      originalParamValue: paramValue
+    }
   }
 }
 
@@ -77,6 +89,7 @@ export const handleParamsCommand = (action, cmdchar, put) => {
     } else {
       // Single param
       const { key, value, isFn, originalParamValue } = extractParams(param)
+
       if (!isFn || !key || !value) {
         return resolveAndStoreJsonValue(param, put, resolve, reject)
       }
@@ -100,7 +113,7 @@ export const handleParamsCommand = (action, cmdchar, put) => {
             res.records.forEach(record => {
               obj[key] = record.get(key)
             })
-            const result = { [key]: { ...recursivelyTypeGraphItems(obj)[key] } }
+            const result = recursivelyTypeGraphItems(obj)
             put(update(result))
             resolve({ result, type: 'param' })
           })

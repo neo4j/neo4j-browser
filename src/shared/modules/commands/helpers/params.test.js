@@ -113,6 +113,7 @@ describe('commandsDuck params helper', () => {
       expect(params.extractParams('foo: bar')).toEqual({
         key: 'foo',
         value: 'bar',
+        originalParamValue: 'bar',
         isFn: false
       })
     })
@@ -120,6 +121,7 @@ describe('commandsDuck params helper', () => {
       expect(params.extractParams('"f o o": bar')).toEqual({
         key: 'f o o',
         value: 'bar',
+        originalParamValue: 'bar',
         isFn: false
       })
     })
@@ -127,6 +129,7 @@ describe('commandsDuck params helper', () => {
       expect(params.extractParams('foo => 2')).toEqual({
         key: 'foo',
         value: 2,
+        originalParamValue: '2',
         isFn: true
       })
     })
