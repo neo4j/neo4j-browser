@@ -126,19 +126,6 @@ describe('Neo4j Browser', () => {
       .get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 })
       .should('have.length', 18)
   })
-  it('will add parameter using `:param` command', () => {
-    // add cypher evalutated param function
-    const command = ':param foo => 1 + 1'
-    cy.executeCommand(command)
-    cy
-      .get('[data-test-id="rawParamData"]')
-      .first()
-      .should('contain', 'foo')
-    cy
-      .get('[data-test-id="rawParamData"]')
-      .first()
-      .should('contain', 2)
-  })
   it('will clear local storage when clicking "Clear local data"', () => {
     const scriptName = 'foo'
     cy.get(Editor).type(`//${scriptName}`, { force: true })
