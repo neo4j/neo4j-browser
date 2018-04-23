@@ -81,3 +81,9 @@ Cypress.Commands.add('waitForCommandResult', () => {
     .get('[data-test-id="frame-loaded-contents"]', { timeout: 40000 })
     .should('be.visible')
 })
+Cypress.Commands.add('resultContains', str => {
+  cy
+    .get('[data-test-id="frameContents"]', { timeout: 10000 })
+    .first()
+    .should('contain', str)
+})
