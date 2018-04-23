@@ -74,11 +74,16 @@ Cypress.Commands.add('disconnect', () => {
 Cypress.Commands.add('executeCommand', query => {
   cy.get(ClearEditorButton).click()
   cy.get(Editor).type(query, { force: true })
-  cy.get(Editor).should('have.value', query)
   cy.get(SubmitQueryButton).click()
 })
 Cypress.Commands.add('waitForCommandResult', () => {
   cy
     .get('[data-test-id="frame-loaded-contents"]', { timeout: 40000 })
     .should('be.visible')
+})
+Cypress.Commands.add('resultContains', str => {
+  cy
+    .get('[data-test-id="frameContents"]', { timeout: 10000 })
+    .first()
+    .should('contain', str)
 })

@@ -19,6 +19,7 @@
  */
 
 /* global describe, test, expect */
+/* eslint-disable new-cap */
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import {
@@ -517,7 +518,7 @@ describe('helpers', () => {
     test('extractRecordsToResultArray handles regular records', () => {
       // Given
       const start = new neo4j.types.Node(1, ['X'], { x: 1 })
-      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.Int(1) })
+      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.int(1) })
       const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
       const segments = [new neo4j.types.PathSegment(start, rel, end)]
       const path = new neo4j.types.Path(start, end, segments)
@@ -590,11 +591,11 @@ describe('helpers', () => {
       const records = [
         {
           keys: ['"neoInt"', '"int"', '"any"', '"backslash"'],
-          _fields: [new neo4j.Int('882573709873217509'), 100, 0.5, '"\\"']
+          _fields: [new neo4j.int('882573709873217509'), 100, 0.5, '"\\"']
         },
         {
           keys: ['"neoInt"', '"int"', '"any"'],
-          _fields: [new neo4j.Int(300), 100, 'string']
+          _fields: [new neo4j.int(300), 100, 'string']
         }
       ]
 
@@ -609,15 +610,17 @@ describe('helpers', () => {
       // Then
       expect(res).toEqual([
         ['""neoInt""', '""int""', '""any""', '""backslash""'],
-        ['882573709873217509', '100', '0.5', '""\\""'],
-        ['300', '100', '"string"']
+        ['882573709873217509', '100.0', '0.5', '""\\""'],
+        ['300', '100.0', '"string"']
       ])
     })
     test('stringifyResultArray handles neo4j integers nested within graph items', () => {
       // Given
-      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
-      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.Int(2) }) // <-- Neo4j integer
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
+      const start = new neo4j.types.Node(1, ['X'], { x: new neo4j.int(1) })
+      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.int(2) })
+      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', {
+        rel: new neo4j.int(1)
+      })
       const segments = [new neo4j.types.PathSegment(start, rel, end)]
       const path = new neo4j.types.Path(start, end, segments)
 

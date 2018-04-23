@@ -3,7 +3,7 @@
 exports[`TableViews TableView renderObject handles null values 1`] = `
 <styled.pre>
   {
-  "x": 1
+  "x": 1.0
 }
 </styled.pre>
 `;
