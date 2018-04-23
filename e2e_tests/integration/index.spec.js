@@ -146,6 +146,7 @@ describe('Neo4j Browser', () => {
 
     cy.get('[data-test-id="drawerFavorites"]').click()
     cy.get('[data-test-id="sidebarFavoriteItem"]').should('have.length', 0)
+    cy.get('[data-test-id="drawerFavorites"]').click()
 
     // once data is cleared the user is logged out and the connect form is displayed
     cy.get('input[data-test-id="boltaddress"]')
