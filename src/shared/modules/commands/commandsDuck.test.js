@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, afterEach, test, expect, beforeAll */
+/* global jest, describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
@@ -43,6 +43,10 @@ import {
   replace as replaceSettings
 } from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
+import bolt from 'services/bolt/bolt'
+
+jest.unmock('services/bolt/bolt')
+const originalRoutedWriteTransaction = bolt.routedWriteTransaction
 
 const bus = createBus()
 const epicMiddleware = createEpicMiddleware(commands.handleCommandsEpic)
@@ -54,6 +58,9 @@ const mockStore = configureMockStore([
 describe('commandsDuck', () => {
   let store
   const maxHistory = 20
+  beforeEach(() => {
+    bolt.routedWriteTransaction = originalRoutedWriteTransaction
+  })
   beforeAll(() => {
     store = mockStore({
       settings: {
@@ -137,6 +144,7 @@ describe('commandsDuck', () => {
       const cmdString = cmd + ' x: 2'
       const id = 1
       const action = commands.executeCommand(cmdString, id)
+
       bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
@@ -151,6 +159,42 @@ describe('commandsDuck', () => {
             params: { x: 2 }
           }),
           { type: 'NOOP' }
+        ])
+        done()
+      })
+
+      // When
+      store.dispatch(action)
+
+      // Then
+      // See above
+    })
+    test('does the right thing for :param x => 2', done => {
+      // Given
+      const cmd = store.getState().settings.cmdchar + 'param'
+      const cmdString = cmd + ' x => 2'
+      const id = 1
+      const action = commands.executeCommand(cmdString, id)
+      bolt.routedWriteTransaction = jest.fn(() =>
+        Promise.resolve({
+          records: [{ get: () => 2 }]
+        })
+      )
+
+      bus.take('frames/ADD', currentAction => {
+        // Then
+        expect(store.getActions()).toEqual([
+          action,
+          addHistory(cmdString, maxHistory),
+          { type: commands.KNOWN_COMMAND },
+          updateParams({ x: 2 }),
+          { type: 'NOOP' },
+          frames.add({
+            ...action,
+            success: true,
+            type: 'param',
+            params: { x: 2 }
+          })
         ])
         done()
       })

@@ -286,14 +286,15 @@ export const flattenProperties = rows => {
   )
 }
 
-export const applyGraphTypes = (item, types = neo4j.types) => {
-  if (item === null || item === undefined) {
-    return item
-  } else if (Array.isArray(item)) {
-    return item.map(i => applyGraphTypes(i, types))
+export const applyGraphTypes = (rawItem, types = neo4j.types) => {
+  if (rawItem === null || rawItem === undefined) {
+    return rawItem
+  } else if (Array.isArray(rawItem)) {
+    return rawItem.map(i => applyGraphTypes(i, types))
   } else if (
-    Object.prototype.hasOwnProperty.call(item, reservedTypePropertyName)
+    Object.prototype.hasOwnProperty.call(rawItem, reservedTypePropertyName)
   ) {
+    const item = { ...rawItem }
     const className = item[reservedTypePropertyName]
     const tmpItem = safetlyRemoveObjectProp(item, reservedTypePropertyName)
     switch (className) {
@@ -385,15 +386,15 @@ export const applyGraphTypes = (item, types = neo4j.types) => {
       default:
         return item
     }
-  } else if (typeof item === 'object') {
+  } else if (typeof rawItem === 'object') {
     let typedObject = {}
-    Object.keys(item).forEach(key => {
-      typedObject[key] = applyGraphTypes(item[key], types)
+    Object.keys(rawItem).forEach(key => {
+      typedObject[key] = applyGraphTypes(rawItem[key], types)
     })
     typedObject = unEscapeReservedProps(typedObject, reservedTypePropertyName)
     return typedObject
   } else {
-    return item
+    return rawItem
   }
 }
 

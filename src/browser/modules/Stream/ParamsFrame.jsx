@@ -19,16 +19,22 @@
  */
 
 import Render from 'browser-components/Render'
-import FrameTemplate from './FrameTemplate'
 import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import Ellipsis from 'browser-components/Ellipsis'
+import { stringFormat } from 'services/bolt/cypherTypesFormatting'
+import { stringifyMod } from 'services/utils'
+import FrameTemplate from './FrameTemplate'
 import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
+import { applyGraphTypes } from 'services/bolt/boltMappings'
 
-const ParamsFrame = ({ frame, params }) => {
+const ParamsFrame = ({ frame }) => {
+  const params = applyGraphTypes(frame.params)
   const contents = (
     <PaddedDiv>
       <Render if={frame.success !== false}>
-        <pre>{JSON.stringify(frame.params, null, 2)}</pre>
+        <pre data-test-id='rawParamData'>
+          {stringifyMod(params, stringFormat, true)}
+        </pre>
       </Render>
     </PaddedDiv>
   )

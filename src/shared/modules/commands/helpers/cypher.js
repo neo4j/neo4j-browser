@@ -19,6 +19,8 @@
  */
 
 import bolt from 'services/bolt/bolt'
+import { applyGraphTypes } from 'services/bolt/boltMappings'
+import { arrayToObject } from 'services/utils'
 import { send } from 'shared/modules/requests/requestsDuck'
 
 export const handleCypherCommand = (
@@ -27,11 +29,18 @@ export const handleCypherCommand = (
   params = {},
   shouldUseCypherThread = false
 ) => {
-  const [id, request] = bolt.routedWriteTransaction(action.cmd, params, {
-    useCypherThread: shouldUseCypherThread,
-    requestId: action.requestId,
-    cancelable: true
-  })
+  const paramsToNeo4jType = Object.keys(params).map(k => ({
+    [k]: applyGraphTypes(params[k])
+  }))
+  const [id, request] = bolt.routedWriteTransaction(
+    action.cmd,
+    arrayToObject(paramsToNeo4jType),
+    {
+      useCypherThread: shouldUseCypherThread,
+      requestId: action.requestId,
+      cancelable: true
+    }
+  )
   put(send('cypher', id))
   return [id, request]
 }

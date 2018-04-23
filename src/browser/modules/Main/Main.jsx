@@ -39,7 +39,7 @@ import SyncConsentBanner from './SyncConsentBanner'
 
 const Main = props => {
   return (
-    <StyledMain>
+    <StyledMain data-test-id='main'>
       <Editor />
       <Render if={props.showUnknownCommandBanner}>
         <ErrorBanner>
@@ -50,7 +50,9 @@ const Main = props => {
         </ErrorBanner>
       </Render>
       <Render if={props.errorMessage}>
-        <ErrorBanner>{props.errorMessage}</ErrorBanner>
+        <ErrorBanner data-test-id='errorBanner'>
+          {props.errorMessage}
+        </ErrorBanner>
       </Render>
       <Render if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner>

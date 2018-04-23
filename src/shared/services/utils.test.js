@@ -508,4 +508,7 @@ describe('Object props manipulation', () => {
       expect(res).toEqual({ ...start2 })
     })
   })
+  test('arrayToObject', () => {
+    expect(utils.arrayToObject([{ foo: 'bar' }])).toEqual({ foo: 'bar' })
+  })
 })

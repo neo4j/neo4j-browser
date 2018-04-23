@@ -18,10 +18,57 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import jsonic from 'jsonic'
-import { splitStringOnFirst } from 'services/commandUtils'
+import bolt from 'services/bolt/bolt'
+import { recursivelyTypeGraphItems } from 'services/bolt/boltMappings'
+import {
+  splitStringOnFirst,
+  mapParamToCypherStatement
+} from 'services/commandUtils'
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
-export const handleParamsCommand = (action, cmdchar, put, store) => {
+export const extractParams = param => {
+  const matchParam = param.match(/^(".*"|'.*'|\S+)\s?(:|=>)\s(.*)/)
+  if (!matchParam) return {}
+  const [, paramName, delimiter, paramValue] = matchParam
+  try {
+    const json =
+      '{' +
+      paramName +
+      (paramName.endsWith(':') ? ' ' : ': ') +
+      paramValue +
+      '}'
+    const res = jsonic(json)
+    const key = Object.keys(res)[0]
+    const value = res[key]
+    return {
+      key,
+      value,
+      isFn: delimiter ? delimiter.includes('=>') : false,
+      originalParamValue: paramValue
+    }
+  } catch (e) {
+    return {
+      key: paramName,
+      value: paramValue,
+      isFn: delimiter ? delimiter.includes('=>') : false,
+      originalParamValue: paramValue
+    }
+  }
+}
+
+const resolveAndStoreJsonValue = (param, put, resolve, reject) => {
+  try {
+    const json = `{${param}}`
+    const res = jsonic(json)
+    put(update(res))
+    return resolve({ result: res, type: 'param' })
+  } catch (e) {
+    return reject(
+      new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
+    )
+  }
+}
+export const handleParamsCommand = (action, cmdchar, put) => {
   const strippedCmd = action.cmd.substr(cmdchar.length)
   const parts = splitStringOnFirst(strippedCmd, ' ')
   const param = parts[1].trim()
@@ -41,15 +88,38 @@ export const handleParamsCommand = (action, cmdchar, put, store) => {
       }
     } else {
       // Single param
+      const { key, value, isFn, originalParamValue } = extractParams(param)
+
+      if (!isFn || !key || !value) {
+        return resolveAndStoreJsonValue(param, put, resolve, reject)
+      }
       try {
-        const json = '{' + param + '}'
-        const res = jsonic(json)
-        put(update(res))
-        return resolve({ result: res, type: 'param' })
-      } catch (e) {
-        return reject(
-          new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
+        const cypherStatement = mapParamToCypherStatement(
+          key,
+          originalParamValue
         )
+        bolt
+          .routedWriteTransaction(
+            cypherStatement,
+            {},
+            {
+              useCypherThread: false,
+              requestId: action.requestId,
+              cancelable: false
+            }
+          )
+          .then(res => {
+            let obj = {}
+            res.records.forEach(record => {
+              obj[key] = record.get(key)
+            })
+            const result = recursivelyTypeGraphItems(obj)
+            put(update(result))
+            resolve({ result, type: 'param' })
+          })
+          .catch(e => reject(e))
+      } catch (e) {
+        reject(new Error('Could not parse input. Usage: `:param "x": 2`. ' + e))
       }
     }
   })
