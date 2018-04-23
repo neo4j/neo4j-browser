@@ -83,7 +83,7 @@
     "coffee-script": "^1.12.7",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
-    "cypress": "^0.20.1",
+    "cypress": "^2.1.0",
     "enzyme": "^2.9.1",
     "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",

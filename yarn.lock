@@ -25,9 +25,69 @@
     date-fns "^1.27.2"
     figures "^1.7.0"
 
-"@cypress/xvfb@1.0.4":
-  version "1.0.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@cypress/xvfb/-/xvfb-1.0.4.tgz#e7391d534baef2b180bd84fdc2ffea1020f7d6a5"
+"@cypress/xvfb@1.1.3":
+  version "1.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@cypress/xvfb/-/xvfb-1.1.3.tgz?dl=https://registry.npmjs.org/@cypress/xvfb/-/xvfb-1.1.3.tgz#6294a7d1feb751f12302248f2089fc534c4acb7f"
+  dependencies:
+    lodash.once "^4.1.1"
+
+"@types/blob-util@1.3.3":
+  version "1.3.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/blob-util/-/blob-util-1.3.3.tgz?dl=https://registry.npmjs.org/@types/blob-util/-/blob-util-1.3.3.tgz#adba644ae34f88e1dd9a5864c66ad651caaf628a"
+
+"@types/bluebird@3.5.18":
+  version "3.5.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/bluebird/-/bluebird-3.5.18.tgz?dl=https://registry.npmjs.org/@types/bluebird/-/bluebird-3.5.18.tgz#6a60435d4663e290f3709898a4f75014f279c4d6"
+
+"@types/chai-jquery@1.1.35":
+  version "1.1.35"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/chai-jquery/-/chai-jquery-1.1.35.tgz?dl=https://registry.npmjs.org/@types/chai-jquery/-/chai-jquery-1.1.35.tgz#9a8f0a39ec0851b2768a8f8c764158c2a2568d04"
+  dependencies:
+    "@types/chai" "*"
+    "@types/jquery" "*"
+
+"@types/chai@*":
+  version "4.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/chai/-/chai-4.1.2.tgz?dl=https://registry.npmjs.org/@types/chai/-/chai-4.1.2.tgz#f1af664769cfb50af805431c407425ed619daa21"
+
+"@types/chai@4.0.8":
+  version "4.0.8"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/chai/-/chai-4.0.8.tgz?dl=https://registry.npmjs.org/@types/chai/-/chai-4.0.8.tgz#d27600e9ba2f371e08695d90a0fe0408d89c7be7"
+
+"@types/jquery@*":
+  version "3.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/jquery/-/jquery-3.3.1.tgz?dl=https://registry.npmjs.org/@types/jquery/-/jquery-3.3.1.tgz#55758d44d422756d6329cbf54e6d41931d7ba28f"
+
+"@types/jquery@3.2.16":
+  version "3.2.16"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/jquery/-/jquery-3.2.16.tgz?dl=https://registry.npmjs.org/@types/jquery/-/jquery-3.2.16.tgz#04419c404a3194350e7d3f339a90e72c88db3111"
+
+"@types/lodash@4.14.87":
+  version "4.14.87"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/lodash/-/lodash-4.14.87.tgz?dl=https://registry.npmjs.org/@types/lodash/-/lodash-4.14.87.tgz#55f92183b048c2c64402afe472f8333f4e319a6b"
+
+"@types/minimatch@3.0.1":
+  version "3.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/minimatch/-/minimatch-3.0.1.tgz?dl=https://registry.npmjs.org/@types/minimatch/-/minimatch-3.0.1.tgz#b683eb60be358304ef146f5775db4c0e3696a550"
+
+"@types/mocha@2.2.44":
+  version "2.2.44"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/mocha/-/mocha-2.2.44.tgz?dl=https://registry.npmjs.org/@types/mocha/-/mocha-2.2.44.tgz#1d4a798e53f35212fd5ad4d04050620171cd5b5e"
+
+"@types/sinon-chai@2.7.29":
+  version "2.7.29"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinon-chai/-/sinon-chai-2.7.29.tgz?dl=https://registry.npmjs.org/@types/sinon-chai/-/sinon-chai-2.7.29.tgz#4db01497e2dd1908b2bd30d1782f456353f5f723"
+  dependencies:
+    "@types/chai" "*"
+    "@types/sinon" "*"
+
+"@types/sinon@*":
+  version "4.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinon/-/sinon-4.3.1.tgz?dl=https://registry.npmjs.org/@types/sinon/-/sinon-4.3.1.tgz#32458f9b166cd44c23844eee4937814276f35199"
+
+"@types/sinon@4.0.0":
+  version "4.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinon/-/sinon-4.0.0.tgz?dl=https://registry.npmjs.org/@types/sinon/-/sinon-4.0.0.tgz#9a93ffa4ee1329e85166278a5ed99f81dc4c8362"
 
 abab@^1.0.3:
   version "1.0.4"
@@ -1602,6 +1662,10 @@ check-error@^1.0.1:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
 
+check-more-types@2.24.0:
+  version "2.24.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/check-more-types/-/check-more-types-2.24.0.tgz?dl=https://registry.npmjs.org/check-more-types/-/check-more-types-2.24.0.tgz#1420ffb10fd444dcfc79b43891bbfffd32a84600"
+
 check-types@^7.3.0:
   version "7.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/check-types/-/check-types-7.3.0.tgz#468f571a4435c24248f5fd0cb0e8d87c3c341e7d"
@@ -1849,19 +1913,13 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@2.11.x, commander@~2.11.0:
+commander@2.11.0, commander@2.11.x, commander@~2.11.0:
   version "2.11.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
 commander@2.14.x, commander@~2.14.1:
   version "2.14.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/commander/-/commander-2.14.1.tgz#2235123e37af8ca3c65df45b026dbd357b01b9aa"
-
-commander@2.9.0:
-  version "2.9.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/commander/-/commander-2.9.0.tgz#9c99094176e12240cb22d6c5146098400fe0f7d4"
-  dependencies:
-    graceful-readlink ">= 1.0.0"
 
 commander@^2.11.0, commander@^2.13.0, commander@^2.9.0:
   version "2.15.0"
@@ -2272,23 +2330,35 @@ cypher-editor-support@1.0.4:
     fuzzaldrin "2.1.0"
     lodash "4.17.4"
 
-cypress@^0.20.1:
-  version "0.20.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-0.20.3.tgz#741816124bfe544917b22d545cd2667696c0bb1c"
+cypress@^2.1.0:
+  version "2.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-2.1.0.tgz?dl=https://registry.npmjs.org/cypress/-/cypress-2.1.0.tgz#a8bd7d9b89c38a1e380db83b57d9bba0dbb95ba4"
   dependencies:
     "@cypress/listr-verbose-renderer" "0.4.1"
-    "@cypress/xvfb" "1.0.4"
+    "@cypress/xvfb" "1.1.3"
+    "@types/blob-util" "1.3.3"
+    "@types/bluebird" "3.5.18"
+    "@types/chai" "4.0.8"
+    "@types/chai-jquery" "1.1.35"
+    "@types/jquery" "3.2.16"
+    "@types/lodash" "4.14.87"
+    "@types/minimatch" "3.0.1"
+    "@types/mocha" "2.2.44"
+    "@types/sinon" "4.0.0"
+    "@types/sinon-chai" "2.7.29"
     bluebird "3.5.0"
     chalk "2.1.0"
-    commander "2.9.0"
+    check-more-types "2.24.0"
+    commander "2.11.0"
     common-tags "1.4.0"
-    debug "2.6.8"
-    extract-zip "1.6.5"
+    debug "3.1.0"
+    extract-zip "1.6.6"
     fs-extra "4.0.1"
     getos "2.8.4"
     glob "7.1.2"
     is-ci "1.0.10"
     is-installed-globally "0.1.0"
+    lazy-ass "1.6.0"
     listr "0.12.0"
     lodash "4.17.4"
     minimist "1.2.0"
@@ -2296,6 +2366,7 @@ cypress@^0.20.1:
     ramda "0.24.1"
     request "2.81.0"
     request-progress "0.3.1"
+    supports-color "5.1.0"
     tmp "0.0.31"
     url "0.11.0"
     yauzl "2.8.0"
@@ -2332,19 +2403,13 @@ debug@2.3.3:
   dependencies:
     ms "0.7.2"
 
-debug@2.6.8:
-  version "2.6.8"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
-  dependencies:
-    ms "2.0.0"
-
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.3, debug@^2.6.6, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   dependencies:
     ms "2.0.0"
 
-debug@^3.1.0:
+debug@3.1.0, debug@^3.1.0:
   version "3.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
   dependencies:
@@ -3233,12 +3298,12 @@ extract-text-webpack-plugin@^3.0.0:
     schema-utils "^0.3.0"
     webpack-sources "^1.0.1"
 
-extract-zip@1.6.5:
-  version "1.6.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/extract-zip/-/extract-zip-1.6.5.tgz#99a06735b6ea20ea9b705d779acffcc87cff0440"
+extract-zip@1.6.6:
+  version "1.6.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/extract-zip/-/extract-zip-1.6.6.tgz?dl=https://registry.npmjs.org/extract-zip/-/extract-zip-1.6.6.tgz#1290ede8d20d0872b429fd3f351ca128ec5ef85c"
   dependencies:
     concat-stream "1.6.0"
-    debug "2.2.0"
+    debug "2.6.9"
     mkdirp "0.5.0"
     yauzl "2.4.1"
 
@@ -3717,10 +3782,6 @@ globby@^7.1.1:
 graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
-
-"graceful-readlink@>= 1.0.0":
-  version "1.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
 growly@^1.3.0:
   version "1.3.0"
@@ -5011,6 +5072,10 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
 
+lazy-ass@1.6.0:
+  version "1.6.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lazy-ass/-/lazy-ass-1.6.0.tgz?dl=https://registry.npmjs.org/lazy-ass/-/lazy-ass-1.6.0.tgz#7999655e8646c17f089fdd187d150d3324d54513"
+
 lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
@@ -5224,7 +5289,7 @@ lodash.merge@^4.6.0:
   version "4.6.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
 
-lodash.once@^4.0.0:
+lodash.once@^4.0.0, lodash.once@^4.1.1:
   version "4.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
 
@@ -8436,6 +8501,12 @@ sugarss@^1.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/sugarss/-/sugarss-1.0.0.tgz#65e51b3958432fb70d5451a68bb33e32d0cf1ef7"
   dependencies:
     postcss "^6.0.0"
+
+supports-color@5.1.0:
+  version "5.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/supports-color/-/supports-color-5.1.0.tgz?dl=https://registry.npmjs.org/supports-color/-/supports-color-5.1.0.tgz#058a021d1b619f7ddf3980d712ea3590ce7de3d5"
+  dependencies:
+    has-flag "^2.0.0"
 
 supports-color@^2.0.0:
   version "2.0.0"

@@ -59,6 +59,7 @@ import _serverUser from './server-user.html'
 import _set from './set.html'
 import _start from './start.html'
 import _startsWith from './starts-with.html'
+import _style from './style.html'
 import _template from './template.html'
 import _unfound from './unfound.html'
 import _unknown from './unknown.html'
@@ -108,6 +109,7 @@ export default {
   _set,
   _start,
   _startsWith,
+  _style,
   _template,
   _unfound,
   _unknown,
