@@ -286,7 +286,8 @@ export const flattenProperties = rows => {
   )
 }
 
-export const applyGraphTypes = (item, types = neo4j.types) => {
+export const applyGraphTypes = (itemWithTypes, types = neo4j.types) => {
+  const item = { ...itemWithTypes }
   if (item === null || item === undefined) {
     return item
   } else if (Array.isArray(item)) {

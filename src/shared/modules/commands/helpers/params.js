@@ -100,7 +100,7 @@ export const handleParamsCommand = (action, cmdchar, put) => {
             res.records.forEach(record => {
               obj[key] = record.get(key)
             })
-            const result = recursivelyTypeGraphItems(obj)
+            const result = { [key]: { ...recursivelyTypeGraphItems(obj)[key] } }
             put(update(result))
             resolve({ result, type: 'param' })
           })
