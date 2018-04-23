@@ -36,7 +36,12 @@ export const extractParams = param => {
   const key = Object.keys(res)[0]
   const value = res[key]
 
-  return { key, value, isFn: delimiter ? delimiter.includes('=>') : false }
+  return {
+    key,
+    value,
+    isFn: delimiter ? delimiter.includes('=>') : false,
+    originalParamValue: paramValue
+  }
 }
 
 const resolveAndStoreJsonValue = (param, put, resolve, reject) => {
@@ -71,12 +76,15 @@ export const handleParamsCommand = (action, cmdchar, put) => {
       }
     } else {
       // Single param
-      const { key, value, isFn } = extractParams(param)
+      const { key, value, isFn, originalParamValue } = extractParams(param)
       if (!isFn || !key || !value) {
         return resolveAndStoreJsonValue(param, put, resolve, reject)
       }
       try {
-        const cypherStatement = mapParamToCypherStatement(key, value)
+        const cypherStatement = mapParamToCypherStatement(
+          key,
+          originalParamValue
+        )
         bolt
           .routedWriteTransaction(
             cypherStatement,

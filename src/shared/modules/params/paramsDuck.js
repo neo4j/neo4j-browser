@@ -39,7 +39,7 @@ export default function reducer (state = initialState, action) {
     case UPDATE:
       return { ...state, ...action.params }
     case REPLACE:
-      return action.params
+      return { ...action.params }
     default:
       return state
   }
