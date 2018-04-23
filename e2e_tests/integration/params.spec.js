@@ -84,7 +84,7 @@ function runTests () {
   cy.get('[data-test-id="main"]', { timeout: 20000 }).then(contents => {
     // Check for point type support
     if (
-      contents.find('[data-test-id="errorBanner"]', { timeout: 30000 }).length <
+      contents.find('[data-test-id="errorBanner"]', { timeout: 60000 }).length <
       1
     ) {
       cy
