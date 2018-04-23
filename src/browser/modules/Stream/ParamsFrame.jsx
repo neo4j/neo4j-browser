@@ -25,13 +25,15 @@ import { stringFormat } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod } from 'services/utils'
 import FrameTemplate from './FrameTemplate'
 import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
+import { applyGraphTypes } from 'services/bolt/boltMappings'
 
 const ParamsFrame = ({ frame }) => {
+  const params = applyGraphTypes(frame.params)
   const contents = (
     <PaddedDiv>
       <Render if={frame.success !== false}>
         <pre data-test-id='rawParamData'>
-          {stringifyMod(frame.params, stringFormat, true)}
+          {stringifyMod(params, stringFormat, true)}
         </pre>
       </Render>
     </PaddedDiv>
