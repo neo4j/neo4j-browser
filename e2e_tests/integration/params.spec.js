@@ -81,26 +81,26 @@ function runTests () {
     ":param x => point({{}crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
   cy.executeCommand(query)
 
-  cy.get('[data-test-id="main"]', { timeout: 10000 }).then(contents => {
+  cy.get('[data-test-id="main"]', { timeout: 20000 }).then(contents => {
     // Check for point type support
     if (
-      contents.find('[data-test-id="errorBanner"]', { timeout: 10000 }).length <
+      contents.find('[data-test-id="errorBanner"]', { timeout: 20000 }).length <
       1
     ) {
       cy
-        .get('[data-test-id="rawParamData"]', { timeout: 10000 })
+        .get('[data-test-id="rawParamData"]', { timeout: 20000 })
         .first()
         .should('contain', '"x": point({srid:4326, x:12.9082, y:57.7346})')
       getParamQ = 'RETURN $x'
       cy.executeCommand(getParamQ)
       cy.waitForCommandResult()
       cy
-        .get('[data-test-id="rawParamData"]', { timeout: 10000 })
+        .get('[data-test-id="rawParamData"]', { timeout: 20000 })
         .first()
         .should('contain', 'point({srid:4326, x:12.9082, y:57.7346})')
     } else {
       cy
-        .get('[data-test-id="errorBanner"]', { timeout: 10000 })
+        .get('[data-test-id="errorBanner"]', { timeout: 20000 })
         .should('contain', 'wgs')
     }
   })
