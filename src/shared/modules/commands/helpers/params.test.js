@@ -43,7 +43,7 @@ describe('commandsDuck params helper', () => {
     return expect(p)
       .rejects.toEqual(
         new Error(
-          'Could not parse input. Usage: `:param "x": 2`. SyntaxError: Expected ":" but "x" found.'
+          'Could not parse input. Usage: `:param x => 2`. SyntaxError: Expected ":" but "x" found.'
         )
       )
       .then(() => expect(put).not.toHaveBeenCalled())

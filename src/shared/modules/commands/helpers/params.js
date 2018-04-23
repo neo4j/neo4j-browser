@@ -64,7 +64,7 @@ const resolveAndStoreJsonValue = (param, put, resolve, reject) => {
     return resolve({ result: res, type: 'param' })
   } catch (e) {
     return reject(
-      new Error('Could not parse input. Usage: `:param "x": 2`. ' + e)
+      new Error('Could not parse input. Usage: `:param x => 2`. ' + e)
     )
   }
 }
@@ -119,7 +119,7 @@ export const handleParamsCommand = (action, cmdchar, put) => {
           })
           .catch(e => reject(e))
       } catch (e) {
-        reject(new Error('Could not parse input. Usage: `:param "x": 2`. ' + e))
+        reject(new Error('Could not parse input. Usage: `:param x => 2`. ' + e))
       }
     }
   })
