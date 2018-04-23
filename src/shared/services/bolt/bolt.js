@@ -78,7 +78,7 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
     const id = requestId || v4()
     const workFn = runCypherMessage(
       input,
-      parameters,
+      mappings.recursivelyTypeGraphItems(parameters),
       boltConnection.ROUTED_WRITE_CONNECTION,
       id,
       cancelable,
@@ -110,7 +110,7 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
     const id = requestId || v4()
     const workFn = runCypherMessage(
       input,
-      parameters,
+      mappings.recursivelyTypeGraphItems(parameters),
       boltConnection.ROUTED_READ_CONNECTION,
       id,
       cancelable,
@@ -142,7 +142,7 @@ function directTransaction (input, parameters, requestMetaData = {}) {
     const id = requestId || v4()
     const workFn = runCypherMessage(
       input,
-      parameters,
+      mappings.recursivelyTypeGraphItems(parameters),
       boltConnection.DIRECT_CONNECTION,
       id,
       cancelable,

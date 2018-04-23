@@ -39,6 +39,7 @@ import {
   RUN_CYPHER_MESSAGE,
   CANCEL_TRANSACTION_MESSAGE
 } from './boltWorkerMessages'
+import { applyGraphTypes } from 'services/bolt/boltMappings'
 
 const connectionTypeMap = {
   [ROUTED_WRITE_CONNECTION]: {
@@ -73,7 +74,7 @@ const onmessage = function (message) {
       .then(() => {
         const res = connectionTypeMap[connectionType].create(
           input,
-          parameters,
+          applyGraphTypes(parameters),
           requestId,
           cancelable
         )
