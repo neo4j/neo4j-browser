@@ -13,6 +13,10 @@
 
 `yarn dev` to have continuous testing on every file change.
 
+#### E2E Suite
+`yarn e2e` to run the cypress js test suite (requires a fresh installation of neo4j to run against, expects neo4j 3.4 by default)
+`yarn e2e --env server=3.3` to only run cypress js tests valid for neo4j server version 3.3
+
 ## Devtools
 Download these two chrome extensions:
 - [Redux devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
