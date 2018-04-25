@@ -75,35 +75,21 @@ function runTests () {
   cy.resultContains('1.0')
   // })
 
-  // it(":param x => point({crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})", () => {
-  cy.executeCommand(':clear')
-  let query =
-    ":param x => point({{}crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
-  cy.executeCommand(query)
+  if (Cypress.config.serverVersion >= 3.4) {
+    // it(":param x => point({crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})", () => {
+    cy.executeCommand(':clear')
+    let query =
+      ":param x => point({{}crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
+    cy.executeCommand(query)
 
-  cy.get('[data-test-id="main"]', { timeout: 20000 }).then(contents => {
-    // Check for point type support
-    const errorList =
-      contents.find('[data-test-id="errorBanner"]', {
-        timeout: 120000
-      }) || []
-    if (errorList.length < 1) {
-      cy
-        .get('[data-test-id="rawParamData"]', { timeout: 20000 })
-        .first()
-        .should('contain', '"x": point({srid:4326, x:12.9082, y:57.7346})')
-      getParamQ = 'RETURN $x'
-      cy.executeCommand(getParamQ)
-      cy.waitForCommandResult()
-      cy
-        .get('[data-test-id="rawParamData"]', { timeout: 20000 })
-        .first()
-        .should('contain', 'point({srid:4326, x:12.9082, y:57.7346})')
-    } else {
-      cy
-        .get('[data-test-id="errorBanner"]', { timeout: 20000 })
-        .should('contain', 'wgs')
-    }
-  })
+    cy
+      .get('[data-test-id="rawParamData"]', { timeout: 20000 })
+      .first()
+      .should('contain', '"x": point({srid:4326, x:12.9082, y:57.7346})')
+    getParamQ = 'RETURN $x'
+    cy.executeCommand(getParamQ)
+    cy.waitForCommandResult()
+    cy.resultContains('point({srid:4326, x:12.9082, y:57.7346})')
+  }
   // })
 }
