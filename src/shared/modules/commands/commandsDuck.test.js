@@ -178,8 +178,6 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          addHistory(cmdString, maxHistory),
-          { type: commands.KNOWN_COMMAND },
           updateParams({ x: 2 }),
           { type: 'NOOP' },
           frames.add({
