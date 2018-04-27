@@ -38,7 +38,8 @@ import {
 import { getHistory } from 'shared/modules/history/historyDuck'
 import {
   getCmdChar,
-  shouldEditorAutocomplete
+  shouldEditorAutocomplete,
+  shouldEditorLint
 } from 'shared/modules/settings/settingsDuck'
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
@@ -321,7 +322,7 @@ export class Editor extends Component {
       autofocus: true,
       smartIndent: false,
       lineNumberFormatter: this.lineNumberFormatter.bind(this),
-      lint: true,
+      lint: this.props.enableEditorLint,
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
         Enter: this.handleEnter.bind(this),
@@ -439,6 +440,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = state => {
   return {
     enableEditorAutocomplete: shouldEditorAutocomplete(state),
+    enableEditorLint: shouldEditorLint(state),
     history: getHistory(state),
     cmdchar: getCmdChar(state),
     schema: {
