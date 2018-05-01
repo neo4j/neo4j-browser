@@ -122,9 +122,9 @@ describe('Neo4j Browser', () => {
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')
     cy.get('[data-test-id="drawerDB"]').click()
-    cy
-      .get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 })
-      .should('have.length', 18)
+    cy.get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 }).should(p => {
+      expect(p).to.have.length.above(17)
+    })
   })
   it('will clear local storage when clicking "Clear local data"', () => {
     const scriptName = 'foo'

@@ -19,13 +19,14 @@
  */
 
 import updateStatsFields from './updateStatisticsFields'
+import { v1 as neo4j } from 'neo4j-driver-alias'
+import { stringFormat } from 'services/bolt/cypherTypesFormatting'
 import {
   safetlyRemoveObjectProp,
   safetlyAddObjectProp,
   escapeReservedProps,
   unEscapeReservedProps
 } from '../utils'
-import { v1 as neo4j } from 'neo4j-driver-alias'
 
 export const reservedTypePropertyName = 'transport-class'
 
@@ -45,6 +46,8 @@ export function recordsToTableArray (records, converters) {
 }
 
 export function itemIntToString (item, converters) {
+  const res = stringFormat(item)
+  if (res) return res
   if (converters.intChecker(item)) return converters.intConverter(item)
   if (Array.isArray(item)) return arrayIntToString(item, converters)
   if (['number', 'string', 'boolean'].indexOf(typeof item) !== -1) return item

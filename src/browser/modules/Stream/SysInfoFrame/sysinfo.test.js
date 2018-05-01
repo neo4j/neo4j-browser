@@ -29,7 +29,7 @@ describe('sysinfo attribute types', () => {
   })
   test('should handle int value', () => {
     const attributeData = { attributes: [{ name: 'foo', value: 0 }] }
-    expect(flattenAttributes(attributeData)).toEqual({ foo: 0 })
+    expect(flattenAttributes(attributeData)).toEqual({ foo: '0.0' })
   })
   test('should handle object value', () => {
     const attributeData = {
