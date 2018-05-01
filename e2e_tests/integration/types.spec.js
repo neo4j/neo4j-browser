@@ -190,5 +190,17 @@ describe('Types in Browser', () => {
           }
         })
     })
+    it('renders types in viz correctly', () => {
+      cy.executeCommand(':clear')
+      const query =
+        "CREATE (p:Types {{}location: point({{}crs: 'wgs-84', x: 12.78, y: 56.7}), date: duration.between(datetime('2014-07-21T21:40:36.143+0200'), date('2015-06-24'))}) RETURN p"
+      cy.executeCommand(query)
+      // cy.waitForCommandResult()
+      cy.get('circle.outline', { timeout: 10000 }).click()
+      cy
+        .get('[data-test-id="vizInspector"]')
+        .should('contain', 'date: "P11M3DT-78036.-143000000S"')
+        .and('contain', 'location: point({srid:4326, x:12.78, y:56.7})')
+    })
   }
 })
