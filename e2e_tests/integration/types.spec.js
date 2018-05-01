@@ -65,17 +65,13 @@ describe('Types in Browser', () => {
         .then(contents => {
           // Check for type support
           if (contents.find('.table-row').length > 0) {
-            cy.resultContains(
-              '"2015-07-20T15:11:42.000000000[Europe/Stockholm]"'
-            )
+            cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
             // Go to ascii view
             cy
               .get('[data-test-id="cypherFrameSidebarAscii"')
               .first()
               .click()
-            cy.resultContains(
-              '│"2015-07-20T15:11:42.000000000[Europe/Stockholm]"'
-            )
+            cy.resultContains('│"2015-07-20T15:11:42[Europe/Stockholm]"')
           } else {
             cy.resultContains('ERROR')
           }
@@ -92,13 +88,13 @@ describe('Types in Browser', () => {
         .then(contents => {
           // Check for type support
           if (contents.find('.table-row').length > 0) {
-            cy.resultContains('"2015-07-20T15:11:42.000000000"')
+            cy.resultContains('"2015-07-20T15:11:42"')
             // Go to ascii view
             cy
               .get('[data-test-id="cypherFrameSidebarAscii"')
               .first()
               .click()
-            cy.resultContains('│"2015-07-20T15:11:42.000000000"')
+            cy.resultContains('│"2015-07-20T15:11:42"')
           } else {
             cy.resultContains('ERROR')
           }
@@ -137,13 +133,13 @@ describe('Types in Browser', () => {
         .then(contents => {
           // Check for type support
           if (contents.find('.table-row').length > 0) {
-            cy.resultContains('"P14M3DT14706.000000000S"')
+            cy.resultContains('"P14M3DT14706S"')
             // Go to ascii view
             cy
               .get('[data-test-id="cypherFrameSidebarAscii"')
               .first()
               .click()
-            cy.resultContains('│"P14M3DT14706.000000000S"')
+            cy.resultContains('│"P14M3DT14706S"')
           } else {
             cy.resultContains('ERROR')
           }
@@ -160,13 +156,13 @@ describe('Types in Browser', () => {
         .then(contents => {
           // Check for type support
           if (contents.find('.table-row').length > 0) {
-            cy.resultContains('"14:03:04.000000000+02:00"')
+            cy.resultContains('"14:03:04+02:00"')
             // Go to ascii view
             cy
               .get('[data-test-id="cypherFrameSidebarAscii"')
               .first()
               .click()
-            cy.resultContains('│"14:03:04.000000000+02:00"')
+            cy.resultContains('│"14:03:04+02:00"')
           } else {
             cy.resultContains('ERROR')
           }
@@ -182,13 +178,13 @@ describe('Types in Browser', () => {
         .then(contents => {
           // Check for type support
           if (contents.find('.table-row').length > 0) {
-            cy.resultContains('"14:03:04.000000000"')
+            cy.resultContains('"14:03:04"')
             // Go to ascii view
             cy
               .get('[data-test-id="cypherFrameSidebarAscii"')
               .first()
               .click()
-            cy.resultContains('│"14:03:04.000000000"')
+            cy.resultContains('│"14:03:04"')
           } else {
             cy.resultContains('ERROR')
           }
