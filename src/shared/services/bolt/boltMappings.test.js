@@ -84,7 +84,7 @@ describe('boltMappings', () => {
           val: ['hello', 1],
           checker: _ => false,
           converter: val => false,
-          expected: ['hello', 1]
+          expected: ['hello', '1.0']
         },
         {
           val: ['hello', ['ola', 'hi']],
@@ -96,7 +96,7 @@ describe('boltMappings', () => {
           val: ['hello', 1],
           checker: val => typeof val === 'string',
           converter: val => val.toUpperCase(),
-          expected: ['HELLO', 1]
+          expected: ['HELLO', '1.0']
         }
       ]
 
@@ -136,9 +136,9 @@ describe('boltMappings', () => {
           expected: {
             arr: ['HELLO', ['OLA', 'HI']],
             str: 'HELLO',
-            num: 2,
+            num: '2.0',
             obj: {
-              num: 3,
+              num: '3.0',
               str: 'INNER HELLO'
             }
           }
@@ -530,7 +530,7 @@ describe('boltMappings', () => {
 
       // Then
       expect(out.nodes.length).toEqual(1)
-      expect(out.nodes[0].properties.x).toEqual(2)
+      expect(out.nodes[0].properties.x).toEqual('2.0')
     })
   })
   describe('extractFromNeoObjects', () => {
@@ -550,7 +550,7 @@ describe('boltMappings', () => {
       const result = extractFromNeoObjects(path, converters)
       // Then
       expect(result.length).toBe(1)
-      expect(result[0].x).toBe(1)
+      expect(result[0].x).toEqual('1.0')
     })
     test('should extract objects from paths with one segment', () => {
       // Given
@@ -570,9 +570,9 @@ describe('boltMappings', () => {
 
       // Then
       expect(result.length).toBe(3)
-      expect(result[0].x).toBe(1)
-      expect(result[1].rel).toBe(1)
-      expect(result[2].y).toBe(1)
+      expect(result[0].x).toEqual('1.0')
+      expect(result[1].rel).toEqual('1.0')
+      expect(result[2].y).toEqual('1.0')
     })
     test('should extract objects from paths with multiple segments', () => {
       // Given
@@ -597,12 +597,12 @@ describe('boltMappings', () => {
 
       // Then
       expect(result.length).toBe(6)
-      expect(result[0].x).toBe(1)
-      expect(result[1].rel).toBe(1)
-      expect(result[2].y).toBe(1)
-      expect(result[3].y).toBe(1) // Same as above line
-      expect(result[4].rel).toBe(2)
-      expect(result[5].y).toBe(2)
+      expect(result[0].x).toEqual('1.0')
+      expect(result[1].rel).toEqual('1.0')
+      expect(result[2].y).toEqual('1.0')
+      expect(result[3].y).toEqual('1.0') // Same as above line
+      expect(result[4].rel).toEqual('2.0')
+      expect(result[5].y).toEqual('2.0')
     })
   })
 })
