@@ -163,9 +163,11 @@ neo.queryPlan = function(element) {
       (expression =
         (left =
           (left1 =
-            operator.LegacyExpression != null
-              ? operator.LegacyExpression
-              : operator.ExpandExpression) != null
+            operator.Expression != null
+              ? operator.Expression
+              : operator.LegacyExpression != null
+                ? operator.LegacyExpression
+                : operator.ExpandExpression) != null
             ? left1
             : operator.LabelName) != null
           ? left
@@ -295,7 +297,10 @@ neo.queryPlan = function(element) {
       link.width = linkWidth(link.source)
     }
 
-    let ranks = d3.nest().key(operator => operator.rank).entries(operators)
+    let ranks = d3
+      .nest()
+      .key(operator => operator.rank)
+      .entries(operators)
 
     let currentY = 0
 
