@@ -18,56 +18,70 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { connect } from 'preact-redux'
+import semver from 'semver'
+import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 
-const staticItems = {
-  intro: [
-    { name: 'Getting started', command: ':play intro', type: 'play' },
-    { name: 'Basic graph concepts', command: ':play concepts', type: 'play' },
-    { name: 'Writing Cypher queries', command: ':play cypher', type: 'play' }
-  ],
-  help: [
-    { name: 'Help', command: ':help help', type: 'help' },
-    { name: 'Cypher syntax', command: ':help cypher', type: 'help' },
-    { name: 'Available commands', command: ':help commands', type: 'help' },
-    { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
-  ],
-  reference: [
-    {
-      name: 'Developer Manual',
-      command: 'https://neo4j.com/docs/developer-manual/3.2/',
-      type: 'link'
-    },
-    {
-      name: 'Operations Manual',
-      command: 'https://neo4j.com/docs/operations-manual/3.2/',
-      type: 'link'
-    },
-    {
-      name: 'Cypher Refcard',
-      command: 'https://neo4j.com/docs/cypher-refcard/3.2/',
-      type: 'link'
-    },
-    {
-      name: 'GraphGists',
-      command: 'https://neo4j.com/graphgists/',
-      type: 'link'
-    },
-    {
-      name: 'Developer Site',
-      command: 'https://www.neo4j.com/developer/',
-      type: 'link'
-    },
-    {
-      name: 'Knowledge Base',
-      command: 'https://neo4j.com/developer/kb/',
-      type: 'link'
-    }
-  ]
+export const formatDocVersion = v => {
+  if (!semver.valid(v)) return 'current'
+  return `${semver.major(v)}.${semver.minor(v)}` || 'current'
 }
 
-const Documents = ({ items = staticItems }) => {
+const intro = [
+  { name: 'Getting started', command: ':play intro', type: 'play' },
+  { name: 'Basic graph concepts', command: ':play concepts', type: 'play' },
+  { name: 'Writing Cypher queries', command: ':play cypher', type: 'play' }
+]
+const help = [
+  { name: 'Help', command: ':help help', type: 'help' },
+  { name: 'Cypher syntax', command: ':help cypher', type: 'help' },
+  { name: 'Available commands', command: ':help commands', type: 'help' },
+  { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
+]
+const getReferences = v => [
+  {
+    name: 'Developer Manual',
+    command: `https://neo4j.com/docs/developer-manual/${v}/`,
+    type: 'link'
+  },
+  {
+    name: 'Operations Manual',
+    command: `https://neo4j.com/docs/operations-manual/${v}/`,
+    type: 'link'
+  },
+  {
+    name: 'Cypher Refcard',
+    command: `https://neo4j.com/docs/cypher-refcard/${v}/`,
+    type: 'link'
+  },
+  {
+    name: 'GraphGists',
+    command: `https://neo4j.com/graphgists/`,
+    type: 'link'
+  },
+  {
+    name: 'Developer Site',
+    command: `https://www.neo4j.com/developer/`,
+    type: 'link'
+  },
+  {
+    name: 'Knowledge Base',
+    command: `https://neo4j.com/developer/kb/`,
+    type: 'link'
+  }
+]
+
+const getStaticItems = version => {
+  return {
+    help,
+    intro,
+    reference: getReferences(version)
+  }
+}
+
+const Documents = ({ items = {} }) => {
   return (
     <Drawer id='db-documents'>
       <DrawerHeader>Documents</DrawerHeader>
@@ -80,4 +94,10 @@ const Documents = ({ items = staticItems }) => {
   )
 }
 
-export default Documents
+const mapStateToProps = state => {
+  return {
+    items: getStaticItems(formatDocVersion(getVersion(state)))
+  }
+}
+
+export default connect(mapStateToProps)(Documents)

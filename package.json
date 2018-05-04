@@ -157,6 +157,7 @@
     "redux-observable": "^0.16.0",
     "rxjs": "^5.4.2",
     "save-as": "^0.1.7",
+    "semver": "^5.5.0",
     "styled-components": "^3.2.0",
     "stylis": "^3.4.10",
     "suber": "^5.0.1",
