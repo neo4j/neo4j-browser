@@ -42,18 +42,16 @@ describe('Plan output', () => {
     ORDER BY relevantNumberOfPublications DESC
     LIMIT 50;`)
     cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
-    cy
-      .get('[data-test-id="planSvg"]', { timeout: 10000 })
+    const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+    el
       .should('contain', 'NodeByLabelScan')
       .and('contain', 'tag')
       .and('contain', ':Tag')
       .and('contain', 'Filter')
-      .and('contain', 'tag.name IN')
       .and('contain', 'Expand(All)')
       .and('contain', 'publication, tag')
       .and('contain', '(tag)<-[') // Line breaks into next
       .and('contain', '-(publication)')
-      .and('contain', 'GetDegreePrimitive')
       .and('contain', ':PUBLISHED]-(expert)')
       .and('contain', 'EagerAggregation')
       .and('contain', 'Projection')
@@ -61,5 +59,10 @@ describe('Plan output', () => {
       .and('contain', 'relevantNumberOfPublications')
       .and('contain', 'relevantNumberOfTags')
       .and('contain', 'Result')
+    if (Cypress.config.serverVersion >= 3.3) {
+      el.should('contain', 'tag.name IN').and('contain', 'GetDegreePrimitive')
+    } else if (Cypress.config.serverVersion === 3.2) {
+      el.should('contain', 'ConstantCachedIn').and('contain', 'GetDegree')
+    }
   })
 })
