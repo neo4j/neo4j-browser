@@ -122,6 +122,7 @@ export class PlanView extends Component {
     if (!this.state.extractedPlan) return null
     return (
       <PlanSVG
+        data-test-id='planSvg'
         style={
           this.props.fullscreen
             ? { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
@@ -180,12 +181,14 @@ export class PlanStatusbar extends Component {
         <StyledRightPartial>
           <FrameTitlebarButtonSection>
             <FrameButton
+              data-test-id='planCollapseButton'
               onClick={() =>
                 this.props.setParentState({ _planExpand: 'COLLAPSE' })}
             >
               <DoubleUpIcon />
             </FrameButton>
             <FrameButton
+              data-test-id='planExpandButton'
               onClick={() =>
                 this.props.setParentState({ _planExpand: 'EXPAND' })}
             >
