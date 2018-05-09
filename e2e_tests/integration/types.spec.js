@@ -141,7 +141,7 @@ describe('Types in Browser', () => {
       cy.get('circle.outline', { timeout: 10000 }).click()
       cy
         .get('[data-test-id="vizInspector"]')
-        .should('contain', 'date: "P11M3DT-78037.857000000S"')
+        .should('contain', 'date: "P11M3DT-78036.143000000S"')
         .and('contain', 'location: point({srid:4326, x:12.78, y:56.7})')
     })
   }
