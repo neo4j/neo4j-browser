@@ -141,7 +141,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
     "lodash.debounce": "^4.0.8",
-    "neo4j-driver": "1.6.0",
+    "neo4j-driver": "^1.6.1",
     "node-noop": "^1.0.0",
     "preact": "^8.2.5",
     "preact-compat": "^3.17.0",
