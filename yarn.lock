@@ -5725,9 +5725,9 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-neo4j-driver@1.6.0:
-  version "1.6.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.6.0.tgz?dl=https://registry.npmjs.org/neo4j-driver/-/neo4j-driver-1.6.0.tgz#1010824ccc77472731003b202290a2187ee3672b"
+neo4j-driver@^1.6.1:
+  version "1.6.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.6.1.tgz?dl=https://registry.npmjs.org/neo4j-driver/-/neo4j-driver-1.6.1.tgz#22a9b383494c15614045a1bc15666b6bb1814b36"
   dependencies:
     babel-runtime "^6.18.0"
     uri-js "^4.2.1"
