@@ -90,7 +90,7 @@ export const handleParamsCommand = (action, cmdchar, put) => {
       // Single param
       const { key, value, isFn, originalParamValue } = extractParams(param)
 
-      if (!isFn || !key || !value) {
+      if (!isFn || !key || value === undefined) {
         return resolveAndStoreJsonValue(param, put, resolve, reject)
       }
       try {
