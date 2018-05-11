@@ -43,13 +43,15 @@ import {
   StyledHeaderRow,
   StyledTable,
   StyledTd,
-  Code,
+  Code
+} from './styled'
+import {
   StyledStatusBar,
   AutoRefreshToggle,
   RefreshQueriesButton,
   AutoRefreshSpan,
   StatusbarWrapper
-} from './styled'
+} from '../AutoRefresh/styled'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import { RefreshIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
