@@ -163,11 +163,13 @@ neo.queryPlan = function(element) {
       (expression =
         (left =
           (left1 =
-            operator.Expression != null
-              ? operator.Expression
-              : operator.LegacyExpression != null
-                ? operator.LegacyExpression
-                : operator.ExpandExpression) != null
+            operator.Expressions != null
+             ? operator.Expressions
+             : operator.Expression != null
+                ? operator.Expression
+                : operator.LegacyExpression != null
+                  ? operator.LegacyExpression
+                  : operator.ExpandExpression) != null
             ? left1
             : operator.LabelName) != null
           ? left

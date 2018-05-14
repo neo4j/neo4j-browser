@@ -64,5 +64,18 @@ describe('Plan output', () => {
     } else if (Cypress.config.serverVersion === 3.2) {
       el.should('contain', 'ConstantCachedIn').and('contain', 'GetDegree')
     }
+
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      `profile match (n:Person) with n where size ( (n)-[:Follows]->()) > 6 return n;`
+    )
+    cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
+    const el2 = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+    el2.should('contain', 'NodeByLabelScan')
+    if (Cypress.config.serverVersion >= 3.3) {
+      el2.should('contain', 'GetDegreePrimitive')
+    } else if (Cypress.config.serverVersion === 3.2) {
+      el2.should('contain', 'ConstantCachedIn').and('contain', 'GetDegree')
+    }
   })
 })
