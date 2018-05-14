@@ -267,7 +267,7 @@ export const StyledBodyMessage = styled.div`
   padding-top: 20px;
   line-height: 1.428;
   font-size: 15px;
-  color: #666;
+  color: ${props => props.theme.secondaryText};
 `
 
 export const SpinnerContainer = styled.div`padding-top: 20px;`
