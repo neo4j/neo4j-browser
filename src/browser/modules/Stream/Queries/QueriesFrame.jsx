@@ -42,6 +42,7 @@ import {
   StyledTh,
   StyledHeaderRow,
   StyledTable,
+  StyledTableWrapper,
   StyledTd,
   Code,
   StyledStatusBar,
@@ -242,12 +243,14 @@ export class QueriesFrame extends Component {
       )
     })
     return (
-      <StyledTable>
-        <thead>
-          <StyledHeaderRow>{tableHeaders}</StyledHeaderRow>
-        </thead>
-        <tbody>{tableRows}</tbody>
-      </StyledTable>
+      <StyledTableWrapper>
+        <StyledTable>
+          <thead>
+            <StyledHeaderRow>{tableHeaders}</StyledHeaderRow>
+          </thead>
+          <tbody>{tableRows}</tbody>
+        </StyledTable>
+      </StyledTableWrapper>
     )
   }
 
