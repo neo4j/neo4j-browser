@@ -75,6 +75,21 @@ function runTests () {
   cy.resultContains('1.0')
   // })
 
+  // it('handles falsy param value e.g. :param x => 0', () => {
+  // Set param
+  cy.executeCommand(':clear')
+  setParamQ = ':param x => 0'
+  cy.executeCommand(setParamQ)
+  cy.resultContains('"x": 0')
+
+  // return param
+  cy.executeCommand(':clear')
+  getParamQ = 'RETURN $x'
+  cy.executeCommand(getParamQ)
+  cy.waitForCommandResult()
+  cy.resultContains('0')
+  // })
+
   if (Cypress.config.serverVersion >= 3.4) {
     // it(":param x => point({crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})", () => {
     cy.executeCommand(':clear')
