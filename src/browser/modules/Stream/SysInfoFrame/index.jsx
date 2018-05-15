@@ -215,7 +215,6 @@ export class SysInfoFrame extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
-        console.log('update')
         this.timer = setInterval(
           this.getSysInfo.bind(this),
           this.state.autoRefreshInterval * 1000
@@ -251,7 +250,6 @@ export class SysInfoFrame extends Component {
     this.setState({ autoRefresh: autoRefresh })
 
     if (autoRefresh) {
-      console.log('refresh')
       this.getSysInfo()
     }
   }
