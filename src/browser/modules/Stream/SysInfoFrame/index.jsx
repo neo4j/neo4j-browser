@@ -124,7 +124,7 @@ export class SysInfoFrame extends Component {
       }
     ]
 
-    let storeSizes = [
+    const baseStoreSizes = [
       {
         label: 'Array Store',
         value: toHumanReadableBytes(kernel.ArrayStoreSize)
@@ -154,8 +154,9 @@ export class SysInfoFrame extends Component {
         value: toHumanReadableBytes(kernel.TotalStoreSize)
       }
     ]
-    if (kernel.CountStoreSize) {
-      storeSizes = storeSizes.concat([
+
+    const storeSizes = kernel.CountStoreSize
+      ? [
         {
           label: 'Count Store',
           value: toHumanReadableBytes(kernel.CountStoreSize)
@@ -171,9 +172,11 @@ export class SysInfoFrame extends Component {
         {
           label: 'Schema Store',
           value: toHumanReadableBytes(kernel.SchemaStoreSize)
-        }
-      ])
-    }
+        },
+        ...baseStoreSizes
+      ]
+      : [...baseStoreSizes]
+
     this.setState({
       storeSizes,
       idAllocation: [
