@@ -348,7 +348,7 @@ export const safetlyAddObjectProp = (obj, prop, val) => {
 }
 
 export const safetlyRemoveObjectProp = (obj, prop) => {
-  if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
+  if (!hasReservedProp(obj, prop)) {
     return obj
   }
   delete obj[prop]
@@ -357,7 +357,7 @@ export const safetlyRemoveObjectProp = (obj, prop) => {
 }
 
 export const escapeReservedProps = (obj, prop) => {
-  if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
+  if (!hasReservedProp(obj, prop)) {
     return obj
   }
   obj = safetlyAddObjectProp(obj, getEscapedObjectProp(prop), obj[prop])
@@ -367,11 +367,11 @@ export const escapeReservedProps = (obj, prop) => {
 
 export const unEscapeReservedProps = (obj, prop) => {
   let propName = getEscapedObjectProp(prop)
-  if (!Object.prototype.hasOwnProperty.call(obj, propName)) {
+  if (!hasReservedProp(obj, propName)) {
     return obj
   }
   while (true) {
-    if (!Object.prototype.hasOwnProperty.call(obj, propName)) {
+    if (!hasReservedProp(obj, propName)) {
       break
     }
     obj[getUnescapedObjectProp(propName)] = obj[propName]
@@ -384,6 +384,9 @@ export const unEscapeReservedProps = (obj, prop) => {
 const getEscapedObjectProp = prop => `\\${prop}`
 const getUnescapedObjectProp = prop =>
   prop.indexOf('\\') === 0 ? prop.substr(1) : prop // A bit weird because of escape chars
+
+export const hasReservedProp = (obj, propName) =>
+  Object.prototype.hasOwnProperty.call(obj, propName)
 
 // Epic helpers
 export const put = dispatch => action => dispatch(action)

@@ -144,5 +144,16 @@ describe('Types in Browser', () => {
         .should('contain', 'date: "P11M3DT-78036.143000000S"')
         .and('contain', 'location: point({srid:4326, x:12.78, y:56.7})')
     })
+    it('renders types in paths in viz correctly', () => {
+      cy.executeCommand(':clear')
+      const query = 'MATCH p=(:Types)-[]-() RETURN p'
+      cy.executeCommand(query)
+      // cy.waitForCommandResult()
+      cy.get('circle.outline', { timeout: 10000 }).click()
+      cy
+        .get('[data-test-id="vizInspector"]')
+        .should('contain', 'date: "P11M3DT-78036.143000000S"')
+        .and('contain', 'location: point({srid:4326, x:12.78, y:56.7})')
+    })
   }
 })
