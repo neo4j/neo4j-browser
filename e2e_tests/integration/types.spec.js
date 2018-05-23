@@ -146,7 +146,7 @@ describe('Types in Browser', () => {
     })
     it('renders types in paths in viz correctly', () => {
       cy.executeCommand(':clear')
-      const query = 'MATCH p=(:Types)-[]-() RETURN p'
+      const query = 'MATCH p=(:Types) RETURN p'
       cy.executeCommand(query)
       // cy.waitForCommandResult()
       cy.get('circle.outline', { timeout: 10000 }).click()
