@@ -285,7 +285,7 @@ export const stringifyMod = (
       escMap[m] || '\\u' + (m.charCodeAt(0) + 0x10000).toString(16).substr(1)
     )
   }
-  const escRE = /[\\"\u0000-\u001F\u2028\u2029]/g
+  const escRE = /[\\"\u0000-\u001F\u2028\u2029]/g // eslint-disable-line no-control-regex
   if (modFn) {
     const modVal = modFn && modFn(value)
     if (typeof modVal !== 'undefined') return indentation + modVal
