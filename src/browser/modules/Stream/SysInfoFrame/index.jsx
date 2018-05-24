@@ -25,6 +25,7 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
 import { isConnected } from 'shared/modules/connections/connectionsDuck'
 import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
+
 import FrameError from 'browser/modules/Stream/FrameError'
 import {
   SysInfoTableContainer,
@@ -34,19 +35,28 @@ import {
 import { toHumanReadableBytes } from 'services/utils'
 import { mapSysInfoRecords, getTableDataFromRecords } from './sysinfo'
 import Render from 'browser-components/Render'
-import { QuestionIcon } from 'browser-components/icons/Icons'
+import { QuestionIcon, RefreshIcon } from 'browser-components/icons/Icons'
+import {
+  StyledStatusBar,
+  AutoRefreshToggle,
+  RefreshQueriesButton,
+  AutoRefreshSpan,
+  StatusbarWrapper
+} from '../AutoRefresh/styled'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
       error: '',
-      results: false
+      results: false,
+      success: null,
+      autoRefreshInterval: 20 // seconds
     }
   }
   clusterResponseHandler (res) {
     if (!res.success) {
-      this.setState({ error: 'No causal cluster results' })
+      this.setState({ error: 'No causal cluster results', success: false })
       return
     }
     const mappedResult = mapSysInfoRecords(res.result.records)
@@ -67,11 +77,11 @@ export class SysInfoFrame extends Component {
         </Render>
       ]
     })
-    this.setState({ cc: [{ value: mappedTableComponents }] })
+    this.setState({ cc: [{ value: mappedTableComponents }], success: true })
   }
   responseHandler (res) {
     if (!res.success) {
-      this.setState({ error: 'No results' })
+      this.setState({ error: 'No results', success: false })
       return
     }
     const { ha, kernel, cache, tx, primitive } = getTableDataFromRecords(
@@ -198,10 +208,26 @@ export class SysInfoFrame extends Component {
         { label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions },
         { label: 'Opened', value: tx.NumberOfOpenedTransactions },
         { label: 'Committed', value: tx.NumberOfCommittedTransactions }
-      ]
+      ],
+      success: true
     })
   }
   componentDidMount () {
+    this.getSysInfo()
+  }
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.autoRefresh !== this.state.autoRefresh) {
+      if (this.state.autoRefresh) {
+        this.timer = setInterval(
+          this.getSysInfo.bind(this),
+          this.state.autoRefreshInterval * 1000
+        )
+      } else {
+        clearInterval(this.timer)
+      }
+    }
+  }
+  getSysInfo () {
     if (this.props.bus && this.props.isConnected) {
       this.props.bus.self(
         CYPHER_REQUEST,
@@ -221,6 +247,13 @@ export class SysInfoFrame extends Component {
       }
     } else {
       this.setState({ error: 'No connection available' })
+    }
+  }
+  setAutoRefresh (autoRefresh) {
+    this.setState({ autoRefresh: autoRefresh })
+
+    if (autoRefresh) {
+      this.getSysInfo()
     }
   }
   buildTableData (data) {
@@ -284,7 +317,27 @@ export class SysInfoFrame extends Component {
       <FrameTemplate
         header={this.props.frame}
         contents={content}
-        statusbar={<FrameError message={this.state.error} />}
+        statusbar={
+          <StatusbarWrapper>
+            <Render if={this.state.errors}>
+              <FrameError message={this.state.error} />
+            </Render>
+            <Render if={this.state.success}>
+              <StyledStatusBar>
+                {this.state.success}
+                <RefreshQueriesButton onClick={() => this.getSysInfo()}>
+                  <RefreshIcon />
+                </RefreshQueriesButton>
+                <AutoRefreshSpan>
+                  <AutoRefreshToggle
+                    checked={this.state.autoRefresh}
+                    onClick={e => this.setAutoRefresh(e.target.checked)}
+                  />
+                </AutoRefreshSpan>
+              </StyledStatusBar>
+            </Render>
+          </StatusbarWrapper>
+        }
       />
     )
   }
