@@ -75,7 +75,7 @@ describe('Plan output', () => {
     if (Cypress.config.serverVersion >= 3.3) {
       el2.should('contain', 'GetDegreePrimitive')
     } else if (Cypress.config.serverVersion === 3.2) {
-      el2.should('contain', 'ConstantCachedIn').and('contain', 'GetDegree')
+      el2.should('contain', 'GetDegree')
     }
   })
 })
