@@ -21,6 +21,7 @@
 import { connect } from 'preact-redux'
 import { Component } from 'preact'
 import { withBus } from 'preact-suber'
+import { saveAs } from 'file-saver'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
@@ -53,34 +54,29 @@ import {
   downloadPNGFromSVG,
   downloadSVG
 } from 'shared/services/exporting/imageUtils'
+import {
+  stringifyResultArray,
+  transformResultRecordsToResultArray
+} from 'browser/modules/Stream/CypherFrame/helpers'
+import { csvFormat } from 'services/bolt/cypherTypesFormatting'
 
-const getCsvData = exportData => {
-  if (exportData && exportData.length > 0) {
+class FrameTitlebar extends Component {
+  hasData () {
+    return this.props.numRecords > 0
+  }
+  exportCSV (records) {
+    const exportData = stringifyResultArray(
+      csvFormat,
+      transformResultRecordsToResultArray(records)
+    )
     let data = exportData.slice()
     const csv = CSVSerializer(data.shift())
     csv.appendRows(data)
-    return 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv.output())
-  } else {
-    return null
+    var blob = new Blob([csv.output()], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'export.csv')
   }
-}
-
-class FrameTitlebar extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      csvData: props.exportData && getCsvData(props.exportData)
-    }
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (this.props.exportData !== nextProps.exportData) {
-      this.setState({
-        csvData: nextProps.exportData ? getCsvData(nextProps.exportData) : null
-      })
-    }
-  }
-
   exportPNG () {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadPNGFromSVG(svgElement, graphElement, type)
@@ -109,9 +105,7 @@ class FrameTitlebar extends Component {
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
           <Render
-            if={
-              frame.type === 'cypher' && (props.exportData || props.visElement)
-            }
+            if={frame.type === 'cypher' && (this.hasData() || props.visElement)}
           >
             <DropdownButton>
               <DownloadIcon />
@@ -127,10 +121,9 @@ class FrameTitlebar extends Component {
                       </DropdownItem>
                     </span>
                   </Render>
-                  <Render if={props.exportData}>
+                  <Render if={this.hasData()}>
                     <DropdownItem
-                      download='export.csv'
-                      href={this.state.csvData}
+                      onClick={() => this.exportCSV(props.getRecords())}
                     >
                       Export CSV
                     </DropdownItem>

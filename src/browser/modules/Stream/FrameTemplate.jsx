@@ -104,7 +104,8 @@ class FrameTemplate extends Component {
           collapseToggle={this.toggleCollapse.bind(this)}
           pinned={this.state.pinned}
           togglePin={this.togglePin.bind(this)}
-          exportData={this.props.exportData}
+          numRecords={this.props.numRecords || 0}
+          getRecords={this.props.getRecords}
           visElement={this.props.visElement}
         />
         <StyledFrameBody

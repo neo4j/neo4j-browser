@@ -52,9 +52,7 @@ import {
   resultHasPlan,
   resultIsError,
   resultHasNodes,
-  initialView,
-  transformResultRecordsToResultArray,
-  stringifyResultArray
+  initialView
 } from './helpers'
 import {
   StyledFrameBody,
@@ -68,22 +66,14 @@ import {
   shouldAutoComplete
 } from 'shared/modules/settings/settingsDuck'
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
-import { csvFormat } from 'services/bolt/cypherTypesFormatting'
 
 export class CypherFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
       openView: undefined,
-      exportData: null,
       fullscreen: false
     }
-  }
-  makeExportData (records) {
-    return stringifyResultArray(
-      csvFormat,
-      transformResultRecordsToResultArray(records)
-    )
   }
   changeView (view) {
     this.setState({ openView: view })
@@ -110,37 +100,17 @@ export class CypherFrame extends Component {
       const view = initialView(props, this.state)
       if (view) newState['openView'] = view
     }
-    if (
-      this.props.request === undefined ||
-      !deepEquals(props.request.result, this.props.request.result)
-    ) {
-      if (
-        props.request.result &&
-        props.request.result.records &&
-        props.request.result.records.length
-      ) {
-        newState['exportData'] = this.makeExportData(
-          props.request.result.records
-        )
-      } else {
-        newState['exportData'] = null
-      }
-    }
     if (Object.keys(newState).length) this.setState(newState)
   }
   componentDidMount () {
     const view = initialView(this.props, this.state)
     if (view) this.setState({ openView: view })
-    if (
-      this.props.request &&
-      this.props.request.result &&
-      this.props.request.result.records &&
-      this.props.request.result.records.length
-    ) {
-      this.setState({
-        exportData: this.makeExportData(this.props.request.result.records)
-      })
+  }
+  getRecords = () => {
+    if (this.props.request.result && this.props.request.result.records) {
+      return this.props.request.result.records
     }
+    return []
   }
   sidebar () {
     return (
@@ -377,12 +347,8 @@ export class CypherFrame extends Component {
         header={frame}
         contents={frameContents}
         statusbar={statusBar}
-        exportData={
-          this.state.openView !== viewTypes.VISUALIZATION &&
-          this.state.openView !== viewTypes.PLAN
-            ? this.state.exportData
-            : null
-        }
+        numRecords={result && result.records ? result.records.length : 0}
+        getRecords={this.getRecords}
         onResize={this.onResize.bind(this)}
         visElement={
           this.state.hasVis &&
