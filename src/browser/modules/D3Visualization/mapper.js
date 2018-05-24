@@ -18,9 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { optionalToString } from 'services/utils'
+
 const mapProperties = _ => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = obj =>
-  Object.keys(obj).map(k => ({ [k]: obj[k] ? obj[k].toString() : obj[k] }))
+  Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
 
 export function createGraph (nodes, relationships) {
   let graph = new neo.models.Graph()

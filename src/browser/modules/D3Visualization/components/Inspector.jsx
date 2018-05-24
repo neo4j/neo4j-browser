@@ -19,7 +19,7 @@
  */
 
 import { Component } from 'preact'
-import { deepEquals } from 'services/utils'
+import { deepEquals, optionalToString } from 'services/utils'
 import {
   inspectorFooterContractedHeight,
   StyledInspectorFooterStatusMessage,
@@ -50,7 +50,7 @@ const mapItemProperties = itemProperties =>
           {prop.key + ': '}
         </StyledInspectorFooterRowListKey>
         <StyledInspectorFooterRowListValue className='value'>
-          {prop.value ? prop.value.toString() : prop.value}
+          {optionalToString(prop.value)}
         </StyledInspectorFooterRowListValue>
       </StyledInspectorFooterRowListPair>
     ))

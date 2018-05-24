@@ -387,3 +387,8 @@ const getUnescapedObjectProp = prop =>
 
 // Epic helpers
 export const put = dispatch => action => dispatch(action)
+
+export const optionalToString = v =>
+  ![null, undefined].includes(v) && typeof v.toString === 'function'
+    ? v.toString()
+    : v
