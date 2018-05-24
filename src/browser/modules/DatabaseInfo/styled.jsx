@@ -22,6 +22,7 @@ import styled from 'styled-components'
 import { PlainPlayIcon } from 'browser-components/icons/Icons'
 
 const chip = styled.div`
+  word-break: break-all;
   cursor: pointer;
   font-family: ${props => props.theme.primaryFontFamily};
   font-weight: bold;
