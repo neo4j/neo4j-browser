@@ -23,7 +23,6 @@ import { Component } from 'preact'
 import FrameTemplate from '../FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
-import { v1 as neo4j } from 'neo4j-driver-alias'
 import { deepEquals } from 'services/utils'
 import { getRequest } from 'shared/modules/requests/requestsDuck'
 import FrameSidebar from '../FrameSidebar'
@@ -69,6 +68,7 @@ import {
   shouldAutoComplete
 } from 'shared/modules/settings/settingsDuck'
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
+import { csvFormat } from 'services/bolt/cypherTypesFormatting'
 
 export class CypherFrame extends Component {
   constructor (props) {
@@ -81,7 +81,7 @@ export class CypherFrame extends Component {
   }
   makeExportData (records) {
     return stringifyResultArray(
-      neo4j.isInt,
+      csvFormat,
       transformResultRecordsToResultArray(records)
     )
   }

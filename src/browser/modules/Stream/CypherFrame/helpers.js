@@ -164,11 +164,11 @@ export const initialView = (props, state = {}) => {
  * It takes a replacer without enforcing quoting rules to it.
  * Used so we can have Neo4j integers as string without quotes.
  */
-export const stringifyResultArray = (intChecker = neo4j.isInt, arr = []) => {
+export const stringifyResultArray = (formatter = stringFormat, arr = []) => {
   return arr.map(col => {
     if (!col) return col
     return col.map(fVal => {
-      return stringifyMod(fVal, stringFormat)
+      return stringifyMod(fVal, formatter)
     })
   })
 }
