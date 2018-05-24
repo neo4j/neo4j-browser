@@ -25,7 +25,8 @@ import {
   safetlyRemoveObjectProp,
   safetlyAddObjectProp,
   escapeReservedProps,
-  unEscapeReservedProps
+  unEscapeReservedProps,
+  hasReservedProp
 } from '../utils'
 
 export const reservedTypePropertyName = 'transport-class'
@@ -136,7 +137,10 @@ const collectHits = function (operator) {
   return hits
 }
 
-export function extractNodesAndRelationshipsFromRecords (records, types) {
+export function extractNodesAndRelationshipsFromRecords (
+  records,
+  types = neo4j.types
+) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
@@ -432,8 +436,12 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
   if (item instanceof types.Path) {
     safetlyAddObjectProp(item, reservedTypePropertyName, 'Path')
     item.segments = item.segments.map(x => recursivelyTypeGraphItems(x, types))
-    item.start = recursivelyTypeGraphItems(item.start, types)
-    item.end = recursivelyTypeGraphItems(item.end, types)
+    item.start = !hasReservedProp(item.start, reservedTypePropertyName)
+      ? recursivelyTypeGraphItems(item.start, types)
+      : item.start
+    item.end = !hasReservedProp(item.end, reservedTypePropertyName)
+      ? recursivelyTypeGraphItems(item.end, types)
+      : item.end
     return item
   }
   if (item instanceof types.Relationship) {

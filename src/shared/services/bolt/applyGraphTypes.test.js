@@ -460,6 +460,62 @@ describe('applyGraphTypes', () => {
     const typedDate = applyGraphTypes(rawDate)
     expect(typedDate).toBeInstanceOf(neo4j.types.Time)
   })
+  test('should identify time in nodes in paths with refs for start and end', () => {
+    const date = new neo4j.types.Time(11, 1, 12, 3600)
+    const start = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
+    const end = new neo4j.types.Node(neo4j.int(3), ['To'], {})
+    const rel = new neo4j.types.Relationship(
+      neo4j.int(2),
+      neo4j.int(1),
+      neo4j.int(3),
+      'TestType',
+      {}
+    )
+    const seg = new neo4j.types.PathSegment(start, rel, end)
+    const segments = [seg]
+    const path = new neo4j.types.Path(
+      segments[0].start,
+      segments[segments.length - 1].end,
+      segments
+    )
+
+    // When
+    const res = nativeTypesToCustom(path)
+    const typed = applyGraphTypes(res)
+
+    // Then
+    expect(typed.start.properties.date instanceof neo4j.types.Time).toBeTruthy()
+    expect(
+      typed.segments[0].start.properties.date instanceof neo4j.types.Time
+    ).toBeTruthy()
+  })
+  test('should identify time in nodes in paths', () => {
+    const date = new neo4j.types.Time(11, 1, 12, 3600)
+    const start = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
+    const segmentStart = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
+    const end = new neo4j.types.Node(neo4j.int(3), ['To'], {})
+    const segmentEnd = new neo4j.types.Node(neo4j.int(3), ['To'], {})
+    const rel = new neo4j.types.Relationship(
+      neo4j.int(2),
+      neo4j.int(1),
+      neo4j.int(3),
+      'TestType',
+      {}
+    )
+    const seg = new neo4j.types.PathSegment(segmentStart, rel, segmentEnd)
+    const segments = [seg]
+    const path = new neo4j.types.Path(start, end, segments)
+
+    // When
+    const res = nativeTypesToCustom(path)
+    const typed = applyGraphTypes(res)
+
+    // Then
+    expect(typed.start.properties.date instanceof neo4j.types.Time).toBeTruthy()
+    expect(
+      typed.segments[0].start.properties.date instanceof neo4j.types.Time
+    ).toBeTruthy()
+  })
 })
 
 const nativeTypesToCustom = x => {
