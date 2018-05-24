@@ -20,7 +20,7 @@
 
 const mapProperties = _ => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = obj =>
-  Object.keys(obj).map(k => ({ [k]: obj[k].toString() }))
+  Object.keys(obj).map(k => ({ [k]: obj[k] ? obj[k].toString() : obj[k] }))
 
 export function createGraph (nodes, relationships) {
   let graph = new neo.models.Graph()

@@ -50,7 +50,7 @@ const mapItemProperties = itemProperties =>
           {prop.key + ': '}
         </StyledInspectorFooterRowListKey>
         <StyledInspectorFooterRowListValue className='value'>
-          {prop.value.toString()}
+          {prop.value ? prop.value.toString() : prop.value}
         </StyledInspectorFooterRowListValue>
       </StyledInspectorFooterRowListPair>
     ))
