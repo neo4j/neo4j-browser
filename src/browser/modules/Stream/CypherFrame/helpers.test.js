@@ -34,6 +34,7 @@ import {
   flattenGraphItemsInResultArray,
   stringifyResultArray
 } from './helpers'
+import { stringFormat, csvFormat } from 'services/bolt/cypherTypesFormatting'
 
 describe('helpers', () => {
   test('getRecordsToDisplayInTable should report if there are rows or not in the result', () => {
@@ -606,12 +607,46 @@ describe('helpers', () => {
         neo4j.isInt,
         step1
       )
-      const res = stringifyResultArray(neo4j.isInt, step2)
+      const res = stringifyResultArray(stringFormat, step2)
       // Then
       expect(res).toEqual([
         ['""neoInt""', '""int""', '""any""', '""backslash""'],
         ['882573709873217509', '100.0', '0.5', '""\\""'],
         ['300', '100.0', '"string"']
+      ])
+    })
+    test('stringifyResultArray can take different formatter function (csvFormat)', () => {
+      // Given
+      const records = [
+        {
+          keys: ['"neoInt"', '"int"', '"any"', '"backslash"', '"bool"'],
+          _fields: [
+            new neo4j.int('882573709873217509'),
+            100,
+            0.5,
+            '"\\"',
+            false
+          ]
+        },
+        {
+          keys: ['"neoInt"', '"int"', '"any"', '"string with comma"'],
+          _fields: [new neo4j.int(300), 100, 'string', 'my, string']
+        }
+      ]
+
+      // When
+      const step1 = extractRecordsToResultArray(records)
+      const step2 = flattenGraphItemsInResultArray(
+        neo4j.types,
+        neo4j.isInt,
+        step1
+      )
+      const res = stringifyResultArray(csvFormat, step2)
+      // Then
+      expect(res).toEqual([
+        ['"neoInt"', '"int"', '"any"', '"backslash"', '"bool"'],
+        ['882573709873217509', '100.0', '0.5', '"\\"', 'false'],
+        ['300', '100.0', 'string', 'my, string']
       ])
     })
     test('stringifyResultArray handles neo4j integers nested within graph items', () => {
@@ -646,7 +681,7 @@ describe('helpers', () => {
         neo4j.isInt,
         step1
       )
-      const res = stringifyResultArray(neo4j.isInt, step2)
+      const res = stringifyResultArray(stringFormat, step2)
       // Then
       expect(res).toEqual([
         ['""x""', '""y""', '""n""'],
