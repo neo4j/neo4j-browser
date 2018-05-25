@@ -511,4 +511,12 @@ describe('Object props manipulation', () => {
   test('arrayToObject', () => {
     expect(utils.arrayToObject([{ foo: 'bar' }])).toEqual({ foo: 'bar' })
   })
+  describe('optionalToString', () => {
+    test('will strings', () => {
+      expect(utils.optionalToString(null)).toBe(null)
+      expect(utils.optionalToString(1)).toBe('1')
+      expect(utils.optionalToString({ a: 'a' })).toBe('[object Object]')
+      expect(utils.optionalToString({ toString: () => 'a' })).toBe('a')
+    })
+  })
 })
