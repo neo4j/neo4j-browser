@@ -96,7 +96,10 @@ export default function reducer (state = initialState, action) {
     case INCREMENT:
       return { ...state, [action.what]: (state[action.what] || 0) + 1 }
     case EVENT_QUEUE:
-      return { ...state, events: (state.events || []).concat(action.event) }
+      return {
+        ...state,
+        events: (state.events || []).concat(action.event).slice(-100)
+      }
     case CLEAR_EVENTS:
       return { ...state, events: [] }
     case USER_CLEAR:

@@ -51,3 +51,27 @@ test('Can add events', () => {
   expect(state.events[1]).toEqual({ name: 'my-event', data: 'now' })
   expect(state.uuid).toBe('x')
 })
+
+test('Limit events in state', () => {
+  // Given
+  const initialState = { uuid: 'x' }
+
+  // When
+  // add 100 events
+  let state = reducer(initialState, addToEventQueue('first-event', 'now'))
+  for (let i = 0; i < 99; i++) {
+    state = reducer(state, addToEventQueue('some-event', 'now'))
+  }
+
+  // Then
+  expect(state.events.length).toBe(100)
+  expect(state.events[0].name).toEqual('first-event')
+
+  // When
+  state = reducer(state, addToEventQueue('last-event', 'now'))
+
+  // Then
+  expect(state.events.length).toBe(100)
+  expect(state.events[0].name).not.toEqual('first-event')
+  expect(state.events[99].name).toEqual('last-event')
+})
