@@ -197,13 +197,14 @@ export const StyledStatusBar = styled.div`
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
-  position: relative;
+  position: absolute;
   background-color: ${props => props.theme.secondaryBackground};
   white-space: nowrap;
   overflow: hidden;
   border-top: 1px solid #e6e9ef;
-  ${props =>
-    props.fullscreen ? 'margin-top: -39px;' : 'margin-bottom: -39px;'};
+  bottom: 0;
+  left: 0;
+  right: 0;
 `
 
 export const StyledStatus = styled.div`
@@ -214,6 +215,8 @@ export const StyledStatus = styled.div`
   margin-bottom: 0;
   width: 100%;
   margin-top: 3px;
+  max-height: 64px;
+  overflow: auto;
 `
 
 export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
@@ -268,10 +271,11 @@ export const StyledLegendRow = styled.div`
 `
 export const StyledLegend = styled.div`
   background-color: ${props => props.theme.secondaryBackground};
-  margin-top: -${legendRowHeight * 2 + 1}px;
-  &.one-row {
-    margin-top: -${legendRowHeight}px;
-  }
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  left: 0;
 `
 export const StyledLegendInlineList = styled(StyledInlineList)`
   padding: 7px 9px 0px 10px;
@@ -331,15 +335,8 @@ export const StyledCaptionSelector = styled.a`
 `
 
 export const StyledFullSizeContainer = styled.div`
+  position: relative;
   height: 100%;
-  padding-top: ${legendRowHeight * 2 + 1}px;
-  padding-bottom: ${props =>
-    props.forcePaddingBottom
-      ? props.forcePaddingBottom + 2 * pMarginTop + 'px'
-      : '39px'};
-  &.one-legend-row {
-    padding-top: ${legendRowHeight}px;
-  }
 `
 
 export const StyledInspectorFooterStatusMessage = styled.div`font-weight: bold;`
