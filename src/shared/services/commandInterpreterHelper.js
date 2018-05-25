@@ -54,10 +54,8 @@ import {
   parseHttpVerbCommand,
   isValidURL
 } from 'shared/modules/commands/helpers/http'
-import {
-  fetchRemoteGrass,
-  parseGrass
-} from 'shared/modules/commands/helpers/grass'
+import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
+import { parseGrass } from 'shared/services/grassUtils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
 const availableCommands = [
@@ -289,12 +287,8 @@ const availableCommands = [
       let param = match && match[1] ? match[1] : ''
 
       if (param === '') {
-        const grassData = JSON.stringify(
-          getGraphStyleData(store.getState()),
-          null,
-          2
-        )
-        put(frames.add({ ...action, type: 'pre', result: grassData }))
+        const grassData = getGraphStyleData(store.getState())
+        put(frames.add({ ...action, type: 'style', result: grassData }))
       } else if (param === 'reset') {
         put(updateGraphStyleData(null))
       } else if (isValidURL(param)) {

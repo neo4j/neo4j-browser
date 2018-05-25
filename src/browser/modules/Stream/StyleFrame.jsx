@@ -17,21 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import FrameTemplate from './FrameTemplate'
+import { PaddedDiv } from './styled'
+import { objToCss } from 'services/grassUtils'
 
-import { hostIsAllowed } from 'services/utils'
-import remote from 'services/remote'
-
-export const fetchRemoteGrass = (url, whitelist = null) => {
-  return new Promise((resolve, reject) => {
-    if (!hostIsAllowed(url, whitelist)) {
-      return reject(
-        new Error('Hostname is not allowed according to server whitelist')
-      )
-    }
-    resolve()
-  }).then(() => {
-    return remote.get(url).then(r => {
-      return r
-    })
-  })
+const StyleFrame = ({ frame }) => {
+  let contents = ''
+  if (frame.result) {
+    contents = objToCss(frame.result)
+  }
+  return (
+    <FrameTemplate
+      header={frame}
+      numRecords={1}
+      getRecords={() => contents}
+      contents={
+        <PaddedDiv>
+          <pre>{contents}</pre>
+        </PaddedDiv>
+      }
+    />
+  )
 }
+export default StyleFrame

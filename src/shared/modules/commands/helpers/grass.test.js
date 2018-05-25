@@ -20,7 +20,8 @@
 
 /* global jest */
 
-import { fetchRemoteGrass, parseGrass } from './grass'
+import { fetchRemoteGrass } from './grass'
+import { parseGrass } from 'shared/services/grassUtils'
 
 jest.mock('services/remote', () => {
   return {
