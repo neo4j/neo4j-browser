@@ -26,7 +26,7 @@ const Editor = '.ReactCodeMirror textarea'
 
 describe('Neo4j Browser', () => {
   it('sets new login credentials', () => {
-    const newPassword = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
+    const newPassword = Cypress.env('browser-password') || 'newpassword'
     cy.setInitialPassword(newPassword)
     cy.disconnect()
   })
@@ -49,7 +49,7 @@ describe('Neo4j Browser', () => {
       .should('contain', 'No connection found, did you connect to Neo4j')
   })
   it('can connect', () => {
-    const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
+    const password = Cypress.env('browser-password') || 'newpassword'
     cy.connect('neo4j', password)
   })
   it('can empty the db', () => {
