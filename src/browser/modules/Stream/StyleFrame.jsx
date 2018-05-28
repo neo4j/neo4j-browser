@@ -27,18 +27,53 @@ import {
 } from './styled'
 import { FrameButton } from 'browser-components/buttons'
 import { objToCss } from 'services/grassUtils'
-import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeSystemCommand,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import { getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
+import { InfoView } from './InfoView'
 
-const StyleStatusbar = ({ onClickCmd, onResetClick }) => {
+const StyleFrame = ({ frame }) => {
+  let grass = ''
+  let contents = (
+    <InfoView
+      title='No styles yet'
+      description='No style generated or set yet. Run a query and return a few nodes and
+    relationships to generate some styling.'
+    />
+  )
+  if (frame.result) {
+    grass = objToCss(frame.result)
+    contents = (
+      <PaddedDiv>
+        <pre>
+          {grass ||
+            'Something went wrong when parsing the GraSS. Please reset and try again.'}
+        </pre>
+      </PaddedDiv>
+    )
+  }
+  return (
+    <FrameTemplate
+      header={frame}
+      numRecords={1}
+      getRecords={() => grass}
+      contents={contents}
+      statusbar={<Statusbar frame={frame} />}
+    />
+  )
+}
+
+const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
   return (
     <StyledOneRowStatsBar>
       <StyledRightPartial>
         <FrameTitlebarButtonSection>
           <FrameButton
             data-test-id='styleResetButton'
-            onClick={() => onResetClick(onClickCmd)}
+            onClick={() => onResetClick(resetStyleAction, rerunAction)}
           >
             <FireExtinguisherIcon title='Reset style' />
           </FrameButton>
@@ -48,33 +83,19 @@ const StyleStatusbar = ({ onClickCmd, onResetClick }) => {
   )
 }
 
-const mapStateToProps = state => ({
-  onClickCmd: `${getCmdChar(state)}style reset`
-})
+const mapStateToProps = (state, ownProps) => {
+  return {
+    resetStyleAction: executeSystemCommand(`${getCmdChar(state)}style reset`),
+    rerunAction: executeCommand(ownProps.frame.cmd, ownProps.frame.id)
+  }
+}
 const mapDispatchToProps = dispatch => ({
-  onResetClick: cmd => dispatch(executeSystemCommand(cmd))
+  onResetClick: (resetStyleAction, rerunAction) => {
+    dispatch(resetStyleAction)
+    dispatch(rerunAction)
+  }
 })
 
 const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
-
-const StyleFrame = ({ frame }) => {
-  let contents = ''
-  if (frame.result) {
-    contents = objToCss(frame.result)
-  }
-  return (
-    <FrameTemplate
-      header={frame}
-      numRecords={1}
-      getRecords={() => contents}
-      contents={
-        <PaddedDiv>
-          <pre>{contents}</pre>
-        </PaddedDiv>
-      }
-      statusbar={<Statusbar />}
-    />
-  )
-}
 
 export default StyleFrame

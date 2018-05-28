@@ -53,13 +53,8 @@ describe(':style', () => {
       .first()
       .click()
     cy
-      .get('[data-test-id="rerunFrameButton"]', { timeout: 10000 })
-      .first()
-      .click()
-
-    cy
       .get('[data-test-id="frameContents"]', { timeout: 10000 })
       .first()
-      .should('not.contain', 'node {')
+      .should('contain', 'No style generated or set yet')
   })
 })
