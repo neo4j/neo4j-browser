@@ -22,11 +22,8 @@
 
 describe('Plan output', () => {
   it('can connect', () => {
-    cy.executeCommand(':server disconnect')
-    cy.executeCommand(':clear')
-    cy.executeCommand(':server connect')
     const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
-    cy.connect(password)
+    cy.connect('neo4j', password)
   })
   it('ouputs and preselects plan when using PROFILE', () => {
     cy.executeCommand(':clear')

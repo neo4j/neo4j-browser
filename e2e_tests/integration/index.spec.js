@@ -25,12 +25,6 @@ const SubmitQueryButton = '[data-test-id="submitQuery"]'
 const Editor = '.ReactCodeMirror textarea'
 
 describe('Neo4j Browser', () => {
-  it('loads', () => {
-    cy
-      .visit(Cypress.env('BROWSER_URL') || 'http://localhost:8080')
-      .title()
-      .should('include', 'Neo4j Browser')
-  })
   it('sets new login credentials', () => {
     const newPassword = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
     cy.setInitialPassword(newPassword)
@@ -54,11 +48,9 @@ describe('Neo4j Browser', () => {
       .first()
       .should('contain', 'No connection found, did you connect to Neo4j')
   })
-  it('can login', () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand(':server connect')
+  it('can connect', () => {
     const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
-    cy.connect(password)
+    cy.connect('neo4j', password)
   })
   it('can empty the db', () => {
     cy.executeCommand(':clear')

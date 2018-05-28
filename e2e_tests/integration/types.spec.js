@@ -22,11 +22,8 @@
 
 describe('Types in Browser', () => {
   it('can connect', () => {
-    cy.executeCommand(':server disconnect')
-    cy.executeCommand(':clear')
-    cy.executeCommand(':server connect')
     const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
-    cy.connect(password)
+    cy.connect('neo4j', password)
   })
   if (Cypress.config.serverVersion >= 3.4) {
     it('presents the point type correctly', () => {

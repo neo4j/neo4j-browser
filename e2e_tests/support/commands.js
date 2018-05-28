@@ -45,8 +45,11 @@ Cypress.Commands.add('setInitialPassword', newPassword => {
     .first()
     .should('contain', ':play start')
 })
-Cypress.Commands.add('connect', password => {
-  cy.title().should('include', 'Neo4j Browser')
+Cypress.Commands.add('connect', (username, password) => {
+  cy.executeCommand(':server disconnect')
+  cy.executeCommand(':clear')
+  cy.executeCommand(':server connect')
+
   cy
     .get('input[data-test-id="boltaddress"]')
     .clear()
@@ -55,9 +58,14 @@ Cypress.Commands.add('connect', password => {
   cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
   cy.get('input[data-test-id="password"]').should('have.value', '')
 
-  cy.get('input[data-test-id="password"]').type(password)
-
-  cy.get('input[data-test-id="username"]').should('have.value', 'neo4j')
+  cy
+    .get('input[data-test-id="username"]')
+    .clear()
+    .type(username)
+  cy
+    .get('input[data-test-id="password"]')
+    .clear()
+    .type(password)
 
   cy.get('button[data-test-id="connect"]').click()
   cy.get('[data-test-id="frame"]', { timeout: 10000 }).should('have.length', 2)
@@ -66,6 +74,7 @@ Cypress.Commands.add('connect', password => {
     .get('[data-test-id="frameCommand"]')
     .first()
     .should('contain', ':play start')
+  cy.executeCommand(':clear')
 })
 Cypress.Commands.add('disconnect', () => {
   const query = ':server disconnect'
