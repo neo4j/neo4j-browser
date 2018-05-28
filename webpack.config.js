@@ -233,7 +233,7 @@ if (isProduction) {
 }
 
 module.exports = {
-  devtool: isProduction ? 'eval' : 'source-map',
+  devtool: isProduction ? 'source-map' : 'eval-source-map',
   context: jsSourcePath,
   entry: {
     js: ['index.jsx'],
