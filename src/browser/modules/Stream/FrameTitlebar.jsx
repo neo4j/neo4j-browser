@@ -140,6 +140,7 @@ class FrameTitlebar extends Component {
                   </Render>
                   <Render if={this.hasData() && frame.type === 'style'}>
                     <DropdownItem
+                      data-test-id='exportGrassButton'
                       onClick={() => this.exportGrass(props.getRecords())}
                     >
                       Export GraSS
@@ -175,6 +176,7 @@ class FrameTitlebar extends Component {
           </FrameButton>
           <Render if={['cypher', 'style'].includes(frame.type)}>
             <FrameButton
+              data-test-id='rerunFrameButton'
               title='Rerun'
               onClick={() =>
                 props.onReRunClick(frame.cmd, frame.id, frame.requestId)}
