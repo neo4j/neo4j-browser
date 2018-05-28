@@ -17,9 +17,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { connect } from 'preact-redux'
 import FrameTemplate from './FrameTemplate'
-import { PaddedDiv } from './styled'
+import {
+  PaddedDiv,
+  StyledOneRowStatsBar,
+  StyledRightPartial,
+  FrameTitlebarButtonSection
+} from './styled'
+import { FrameButton } from 'browser-components/buttons'
 import { objToCss } from 'services/grassUtils'
+import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import { getCmdChar } from 'shared/modules/settings/settingsDuck'
+import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
+
+const StyleStatusbar = ({ onClickCmd, onResetClick }) => {
+  return (
+    <StyledOneRowStatsBar>
+      <StyledRightPartial>
+        <FrameTitlebarButtonSection>
+          <FrameButton
+            data-test-id='styleResetButton'
+            onClick={() => onResetClick(onClickCmd)}
+          >
+            <FireExtinguisherIcon title='Reset style' />
+          </FrameButton>
+        </FrameTitlebarButtonSection>
+      </StyledRightPartial>
+    </StyledOneRowStatsBar>
+  )
+}
+
+const mapStateToProps = state => ({
+  onClickCmd: `${getCmdChar(state)}style reset`
+})
+const mapDispatchToProps = dispatch => ({
+  onResetClick: cmd => dispatch(executeSystemCommand(cmd))
+})
+
+const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
 
 const StyleFrame = ({ frame }) => {
   let contents = ''
@@ -36,7 +72,9 @@ const StyleFrame = ({ frame }) => {
           <pre>{contents}</pre>
         </PaddedDiv>
       }
+      statusbar={<Statusbar />}
     />
   )
 }
+
 export default StyleFrame

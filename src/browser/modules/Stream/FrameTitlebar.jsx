@@ -159,9 +159,7 @@ class FrameTitlebar extends Component {
           >
             <PinIcon />
           </FrameButton>
-          <Render
-            if={['cypher', 'play', 'play-remote'].indexOf(frame.type) > -1}
-          >
+          <Render if={['cypher', 'play', 'play-remote'].includes(frame.type)}>
             <FrameButton
               title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
               onClick={() => props.fullscreenToggle()}
@@ -175,7 +173,7 @@ class FrameTitlebar extends Component {
           >
             {expandCollapseIcon}
           </FrameButton>
-          <Render if={frame.type === 'cypher'}>
+          <Render if={['cypher', 'style'].includes(frame.type)}>
             <FrameButton
               title='Rerun'
               onClick={() =>

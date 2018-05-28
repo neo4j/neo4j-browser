@@ -294,3 +294,7 @@ export const Spinner = () => (
 export const ExclamationTriangleIcon = () => (
   <IconContainer suppressIconStyles className='fa fa-exclamation-triangle' />
 )
+
+export const FireExtinguisherIcon = ({ title = 'Reset' }) => (
+  <IconContainer className='fa fa-fire-extinguisher' title={title} />
+)
