@@ -22,11 +22,8 @@
 
 describe(':style', () => {
   it('can connect', () => {
-    cy.executeCommand(':server disconnect')
-    cy.executeCommand(':clear')
-    cy.executeCommand(':server connect')
     const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
-    cy.connect(password)
+    cy.connect('neo4j', password)
   })
   it('print the current style', () => {
     cy.executeCommand(':clear')
