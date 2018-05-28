@@ -34,7 +34,7 @@ describe('parseGrass', () => {
   })
   it('should create an object from a valid GraSS string', () => {
     const css =
-      'node {caption: "<id>"; stroke: #ffffff;} relationship {caption: "{name};"}'
+      'node {caption: "<id>"; stroke: #ffffff;} relationship {caption: "{name}";} node.Person {caption: "{city} {zip}";}'
 
     // When
     const obj = parseGrass(css)
@@ -45,6 +45,7 @@ describe('parseGrass', () => {
     expect(obj.node.stroke).toEqual('#ffffff')
     expect(obj.relationship).toBeDefined()
     expect(obj.relationship.caption).toEqual('{name}')
+    expect(obj['node.Person'].caption).toEqual('{city} {zip}')
   })
 })
 
@@ -95,11 +96,11 @@ h1 {
 node.Person {
   color: green;
   border: 1px solid white;
-  caption: {name};
+  caption: "{name}";
 }
 relationship {
   color: #ffffff;
-  caption: <id>;
+  caption: "<id>";
 }
 `
 

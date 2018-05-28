@@ -113,7 +113,12 @@ export const objToCss = obj => {
         output += selector + ' {\n' + level
         for (let style in obj[selector]) {
           if (obj[selector].hasOwnProperty(style)) {
-            output += style + ': ' + obj[selector][style] + ';\n' + level
+            output +=
+              style +
+              ': ' +
+              quoteSpecialStyles(style, obj[selector][style]) +
+              ';\n' +
+              level
           }
         }
         output = output.trim() + '\n'
@@ -125,3 +130,9 @@ export const objToCss = obj => {
   }
   return output
 }
+
+const shouldQuoteStyle = style => ['defaultCaption', 'caption'].includes(style)
+const quoteSpecialStyles = (style, value) =>
+  (shouldQuoteStyle(style) ? '"' : '') +
+  value +
+  (shouldQuoteStyle(style) ? '"' : '')
