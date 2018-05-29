@@ -292,6 +292,8 @@ export const DropdownButton = styled.li`
     color: ${props => props.theme.secondaryButtonTextHover};
     fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
+    position: relative;
+    z-index: 99999;
   }
   display: inline-block;
   &:hover {
