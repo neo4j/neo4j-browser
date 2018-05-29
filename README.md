@@ -27,7 +27,7 @@ To run on an existing server (with a password already set), you can use any of t
 The latter just opens Cypress runner so you can see the tests being executed and run only some of them. Very useful when writing tests.
 
 There are also e2e tests that covers import from CSV files. To run thise, copy the `e2e_tests/files/import.csv` to the `import/` directory of the database you want to run the tests on and then start the e2e tests with the `--env include-import-tests=true` flag.
-Example: `yarn e2e-local-open --env server=3.4 --env include-import-tests=true`
+Example: `yarn e2e-local-open --env server=3.4,include-import-tests=true`
 
 ## Devtools
 
