@@ -20,20 +20,28 @@
 import { withBus } from 'preact-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { StyledCodeBlock } from './styled'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+
+const setOnClick = (bus, code) => bus.send(SET_CONTENT, setContent(code))
+const execOnClick = (bus, code) => {
+  const cmd = executeCommand(code)
+  console.log('cmd: ', cmd)
+  bus.send(cmd.type, cmd)
+}
 
 export const ClickToCode = ({
   CodeComponent = StyledCodeBlock,
   bus,
   code,
+  execute = false,
   children
 }) => {
   if (!children || children.length === 0) return null
   code = code || children.join('')
-  return (
-    <CodeComponent onClick={() => bus.send(SET_CONTENT, setContent(code))}>
-      {children}
-    </CodeComponent>
-  )
+  const fn = !execute
+    ? () => setOnClick(bus, code)
+    : () => execOnClick(bus, code)
+  return <CodeComponent onClick={fn}>{children}</CodeComponent>
 }
 
 export default withBus(ClickToCode)

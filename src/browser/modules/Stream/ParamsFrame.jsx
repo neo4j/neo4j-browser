@@ -26,6 +26,7 @@ import { stringifyMod } from 'services/utils'
 import FrameTemplate from './FrameTemplate'
 import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
+import ClickToCode from 'browser/modules/ClickToCode'
 
 const ParamsFrame = ({ frame }) => {
   const params = applyGraphTypes(frame.params)
@@ -36,6 +37,13 @@ const ParamsFrame = ({ frame }) => {
           {stringifyMod(params, stringFormat, true)}
         </pre>
       </Render>
+      <div style={{ marginTop: '20px' }}>
+        See{' '}
+        <ClickToCode code=':help param' execute>
+          :help param
+        </ClickToCode>{' '}
+        for usage of the <code>:param</code> command.
+      </div>
     </PaddedDiv>
   )
   const statusbar =
