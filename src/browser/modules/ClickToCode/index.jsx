@@ -25,7 +25,6 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 const setOnClick = (bus, code) => bus.send(SET_CONTENT, setContent(code))
 const execOnClick = (bus, code) => {
   const cmd = executeCommand(code)
-  console.log('cmd: ', cmd)
   bus.send(cmd.type, cmd)
 }
 
