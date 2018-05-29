@@ -39,7 +39,7 @@ function runTests () {
   let setParamQ
   let getParamQ
   // it('can connect', () => {
-  const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
+  const password = Cypress.env('browser-password') || 'newpassword'
   cy.connect('neo4j', password)
   // })
   // it(':param x => 1+1', () => {

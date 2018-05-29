@@ -22,7 +22,7 @@
 
 describe('Types in Browser', () => {
   it('can connect', () => {
-    const password = Cypress.env('BROWSER_NEW_PASSWORD') || 'newpassword'
+    const password = Cypress.env('browser-password') || 'newpassword'
     cy.connect('neo4j', password)
   })
   if (Cypress.config.serverVersion >= 3.4) {
