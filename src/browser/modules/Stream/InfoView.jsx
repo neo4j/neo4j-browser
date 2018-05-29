@@ -17,21 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Component } from 'preact'
+import {
+  StyledInfoMessage,
+  StyledHelpContent,
+  StyledH4,
+  StyledHelpDescription,
+  StyledDiv,
+  StyledHelpFrame
+} from './styled'
 
-import { hostIsAllowed } from 'services/utils'
-import remote from 'services/remote'
-
-export const fetchRemoteGrass = (url, whitelist = null) => {
-  return new Promise((resolve, reject) => {
-    if (!hostIsAllowed(url, whitelist)) {
-      return reject(
-        new Error('Hostname is not allowed according to server whitelist')
-      )
-    }
-    resolve()
-  }).then(() => {
-    return remote.get(url).then(r => {
-      return r
-    })
-  })
+export class InfoView extends Component {
+  shouldComponentUpdate (props, state) {
+    return false
+  }
+  render () {
+    const { title, description } = this.props
+    return (
+      <StyledHelpFrame>
+        <StyledHelpContent>
+          <StyledHelpDescription>
+            <StyledInfoMessage>INFO</StyledInfoMessage>
+            <StyledH4>{title}</StyledH4>
+          </StyledHelpDescription>
+          <StyledDiv>
+            <StyledHelpDescription>{description}</StyledHelpDescription>
+          </StyledDiv>
+        </StyledHelpContent>
+      </StyledHelpFrame>
+    )
+  }
 }

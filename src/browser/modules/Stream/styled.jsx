@@ -203,12 +203,16 @@ export const StyledCypherMessage = styled.div`
   float: left;
 `
 export const StyledCypherWarningMessage = styled(StyledCypherMessage)`
-  background-color: #ffa500;
+  background-color: ${props => props.theme.warning};
   color: #ffffff;
 `
 
 export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
-  background-color: #e74c3c;
+  background-color: ${props => props.theme.error};
+  color: #ffffff;
+`
+export const StyledInfoMessage = styled(StyledCypherMessage)`
+  background-color: ${props => props.theme.info};
   color: #ffffff;
 `
 

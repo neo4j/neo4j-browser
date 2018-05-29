@@ -56,6 +56,7 @@ export const base = {
   error: '#E74C3C',
   warning: '#FD952C',
   auth: '#428BCA',
+  info: '#428BCA',
 
   // Buttons
   primaryButtonText: '#fff',

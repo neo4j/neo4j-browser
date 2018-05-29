@@ -81,12 +81,24 @@ class FrameTitlebar extends Component {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadPNGFromSVG(svgElement, graphElement, type)
   }
-
   exportSVG () {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadSVG(svgElement, graphElement, type)
   }
-
+  exportGrass (data) {
+    var blob = new Blob([data], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'style.grass')
+  }
+  canExport = () => {
+    let props = this.props
+    const { frame = {} } = props
+    return (
+      (frame.type === 'cypher' && (this.hasData() || props.visElement)) ||
+      (frame.type === 'style' && this.hasData())
+    )
+  }
   render () {
     let props = this.props
     const { frame = {} } = props
@@ -104,9 +116,7 @@ class FrameTitlebar extends Component {
           </DottedLineHover>
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
-          <Render
-            if={frame.type === 'cypher' && (this.hasData() || props.visElement)}
-          >
+          <Render if={this.canExport()}>
             <DropdownButton>
               <DownloadIcon />
               <DropdownList>
@@ -121,11 +131,19 @@ class FrameTitlebar extends Component {
                       </DropdownItem>
                     </span>
                   </Render>
-                  <Render if={this.hasData()}>
+                  <Render if={this.hasData() && frame.type === 'cypher'}>
                     <DropdownItem
                       onClick={() => this.exportCSV(props.getRecords())}
                     >
                       Export CSV
+                    </DropdownItem>
+                  </Render>
+                  <Render if={this.hasData() && frame.type === 'style'}>
+                    <DropdownItem
+                      data-test-id='exportGrassButton'
+                      onClick={() => this.exportGrass(props.getRecords())}
+                    >
+                      Export GraSS
                     </DropdownItem>
                   </Render>
                 </DropdownContent>
@@ -142,9 +160,7 @@ class FrameTitlebar extends Component {
           >
             <PinIcon />
           </FrameButton>
-          <Render
-            if={['cypher', 'play', 'play-remote'].indexOf(frame.type) > -1}
-          >
+          <Render if={['cypher', 'play', 'play-remote'].includes(frame.type)}>
             <FrameButton
               title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
               onClick={() => props.fullscreenToggle()}
@@ -158,8 +174,9 @@ class FrameTitlebar extends Component {
           >
             {expandCollapseIcon}
           </FrameButton>
-          <Render if={frame.type === 'cypher'}>
+          <Render if={['cypher', 'style'].includes(frame.type)}>
             <FrameButton
+              data-test-id='rerunFrameButton'
               title='Rerun'
               onClick={() =>
                 props.onReRunClick(frame.cmd, frame.id, frame.requestId)}

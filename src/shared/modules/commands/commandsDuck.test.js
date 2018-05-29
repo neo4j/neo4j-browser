@@ -355,8 +355,8 @@ describe('commandsDuck', () => {
           { type: commands.KNOWN_COMMAND },
           frames.add({
             ...action,
-            type: 'pre',
-            result: JSON.stringify({ node: { color: '#000' } }, null, 2)
+            type: 'style',
+            result: { node: { color: '#000' } }
           }),
           { type: 'NOOP' }
         ])

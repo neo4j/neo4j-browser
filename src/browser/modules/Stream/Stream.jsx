@@ -31,6 +31,7 @@ import ParamsFrame from './ParamsFrame'
 import ErrorFrame from './ErrorFrame'
 import HelpFrame from './HelpFrame'
 import SchemaFrame from './SchemaFrame'
+import StyleFrame from './StyleFrame'
 import SysInfoFrame from './SysInfoFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
@@ -67,6 +68,7 @@ const getFrame = type => {
     status: ServerStatusFrame,
     'switch-success': ServerSwitchFrame,
     'switch-fail': ServerSwitchFrame,
+    style: StyleFrame,
     default: Frame
   }
   return trans[type] || trans['default']

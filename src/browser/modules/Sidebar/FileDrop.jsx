@@ -24,7 +24,7 @@ import { connect } from 'preact-redux'
 import Dropzone from 'react-dropzone'
 
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
-import { parseGrass } from 'shared/modules/commands/helpers/grass'
+import { parseGrass } from 'shared/services/grassUtils'
 import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import { showErrorMessage } from 'shared/modules/commands/commandsDuck'
 
