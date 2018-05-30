@@ -92,7 +92,6 @@ Cypress.Commands.add('waitForCommandResult', () => {
 })
 Cypress.Commands.add('resultContains', str => {
   cy
-    .get('[data-test-id="frameContents"]', { timeout: 10000 })
-    .first()
+    .get('[data-test-id="frameContents"]', { timeout: 40000 })
     .should('contain', str)
 })
