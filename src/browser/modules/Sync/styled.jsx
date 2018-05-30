@@ -19,7 +19,6 @@
  */
 
 import styled from 'styled-components'
-import { PlayIcon } from 'browser-components/icons/Icons'
 
 export const ConsentCheckBox = props => {
   return (

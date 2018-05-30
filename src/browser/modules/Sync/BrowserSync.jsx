@@ -43,7 +43,6 @@ import {
   PENDING
 } from 'shared/modules/sync/syncDuck'
 import { signOut } from 'services/browserSyncService'
-import { setContent as setEditorContent } from 'shared/modules/editor/editorDuck'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import {
   Drawer,
