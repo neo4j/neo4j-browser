@@ -109,14 +109,6 @@ export const SmallHeaderText = styled.span`font-size: 11px;`
 
 const AlertP = styled.p`margin: 10px;`
 
-export const StyledSyncLink = props => {
-  return (
-    <StyledSimpleLink onClick={props.onClick}>
-      <PlayIcon />&nbsp;{props.children}
-    </StyledSimpleLink>
-  )
-}
-
 export const StyledSimpleLink = styled.a`
   cursor: pointer;
   text-decoration: none;

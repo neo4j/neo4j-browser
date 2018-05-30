@@ -60,7 +60,6 @@ import {
   ConsentCheckBox,
   AlertBox,
   ClearLocalConfirmationBox,
-  StyledSyncLink,
   SmallHeaderText
 } from './styled'
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
@@ -220,10 +219,7 @@ export class BrowserSync extends Component {
             <DrawerSectionBody>
               <DrawerSection>
                 Neo4j Browser Sync is a companion service for Neo4j Browser.
-                Connect through a simple social sign-in to get started.{' '}
-                <StyledSyncLink onClick={() => this.props.onSyncHelpClick()}>
-                  About Neo4j Browser Sync
-                </StyledSyncLink>
+                Connect through a simple social sign-in to get started.
               </DrawerSection>
               <DrawerSection>
                 <ConsentCheckBox
@@ -297,10 +293,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onSync: syncObject => {
       dispatch(setSyncMetadata(syncObject))
       dispatch(setSyncData(syncObject))
-    },
-    onSyncHelpClick: play => {
-      const action = setEditorContent(':play neo4j sync')
-      dispatch(action)
     },
     sendActionToDispatch: dispatch,
     onConsentSyncChanged: consent => {
