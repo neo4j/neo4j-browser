@@ -2531,7 +2531,7 @@ cypher-editor-support@1.0.4:
     fuzzaldrin "2.1.0"
     lodash "4.17.4"
 
-cypress@3:
+cypress@^3.0.1:
   version "3.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-3.0.1.tgz?dl=https://registry.npmjs.org/cypress/-/cypress-3.0.1.tgz#6a8938ce8a551e4ae1bd5fb2ceab038d4ad39c4d"
   dependencies:
