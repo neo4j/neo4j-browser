@@ -35,8 +35,8 @@ Here are the avaialable options / env variables:
 server=3.2|3.3|3.4|3.5 (default 3.4)
 browser-password=<your-pw> (default 'newpassword')
 include-import-tests=true|false (default false)
-E2E_TEST_ENV=local|null (if the initial set of pw should run or not)
-BROWSER_URL=<url to reach the browser to test>
+E2E_TEST_ENV=local|null (if the initial set of pw should run or not) (default undefined)
+BROWSER_URL=<url to reach the browser to test> (default http://localhost:8080)
 ```
 
 ## Devtools
