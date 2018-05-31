@@ -29,6 +29,16 @@ The latter just opens Cypress runner so you can see the tests being executed and
 There are also e2e tests that covers import from CSV files. To run thise, copy the `e2e_tests/files/import.csv` to the `import/` directory of the database you want to run the tests on and then start the e2e tests with the `--env include-import-tests=true` flag.
 Example: `yarn e2e-local-open --env server=3.4,include-import-tests=true`
 
+Here are the avaialable options / env variables:
+
+```
+server=3.2|3.3|3.4|3.5 (default 3.4)
+browser-password=<your-pw> (default 'newpassword')
+include-import-tests=true|false (default false)
+E2E_TEST_ENV=local|null (if the initial set of pw should run or not)
+BROWSER_URL=<url to reach the browser to test>
+```
+
 ## Devtools
 
 Download these two chrome extensions:
