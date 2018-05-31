@@ -55,7 +55,7 @@ const Main = props => {
         </ErrorBanner>
       </Render>
       <Render if={props.connectionState === DISCONNECTED_STATE}>
-        <NotAuthedBanner>
+        <NotAuthedBanner data-test-id='disconnectedBanner'>
           Database access not available. Please use&nbsp;
           <ClickToCode CodeComponent={StyledCodeBlockAuthBar}>
             {props.cmdchar}server connect
@@ -64,7 +64,7 @@ const Main = props => {
         </NotAuthedBanner>
       </Render>
       <Render if={props.connectionState === PENDING_STATE}>
-        <WarningBanner>
+        <WarningBanner data-test-id='reconnectBanner'>
           Connection to server lost. Reconnecting...
         </WarningBanner>
       </Render>
