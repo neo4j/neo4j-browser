@@ -28,6 +28,9 @@ describe(':style', () => {
   it('print the current style', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (n:Style) RETURN n') // To generate any style
+
+    cy.waitForCommandResult()
+
     const query = ':style'
     cy.executeCommand(query)
     cy
