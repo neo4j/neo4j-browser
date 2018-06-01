@@ -37,12 +37,8 @@ Cypress.Commands.add('setInitialPassword', newPassword => {
   cy.get('button[data-test-id="changePassword"]').click()
 
   cy.get('input[data-test-id="changePassword"]').should('not.be.visible')
-
-  cy.get('input[data-test-id="connect"]').should('not.be.visible')
-  cy.wait(500)
   cy
-    .get('[data-test-id="frameCommand"]')
-    .first()
+    .get('[data-test-id="frameCommand"]', { timeout: 10000 })
     .should('contain', ':play start')
 })
 Cypress.Commands.add('connect', (username, password) => {
