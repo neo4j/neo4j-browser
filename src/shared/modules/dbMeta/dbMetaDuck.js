@@ -22,7 +22,7 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { getJmxValues } from 'shared/modules/jmx/jmxDuck'
+import { getJmxValues, UPDATE_JMX_VALUES } from 'shared/modules/jmx/jmxDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
@@ -276,7 +276,7 @@ export const dbMetaEpic = (some$, store) =>
     .mergeMap(() => {
       return (
         Rx.Observable
-          .timer(0, 20000)
+          .timer(1, 20000)
           .merge(some$.ofType(FORCE_FETCH))
           // Labels, types and propertyKeys
           .mergeMap(() =>
@@ -295,90 +295,6 @@ export const dbMetaEpic = (some$, store) =>
           )
           .filter(r => r)
           .do(res => store.dispatch(updateMeta(res)))
-          // Version and edition
-          .do(() => {
-            const jmxValueResult = getJmxValues(store.getState(), [
-              ['Kernel', 'KernelVersion'],
-              ['Kernel', 'StoreId'],
-              ['Kernel', 'DatabaseName'],
-              ['Configuration', 'unsupported.dbms.edition'],
-              ['Store file sizes', 'TotalStoreSize']
-            ])
-            if (
-              !jmxValueResult ||
-              jmxValueResult.filter(value => !!value).length === 0
-            ) {
-              return
-            }
-            const jmxValues = jmxValueResult.reduce((obj, item) => {
-              const key = Object.keys(item)[0]
-              obj[key] = item[key]
-              return obj
-            }, {})
-
-            const versionMatch = jmxValues.KernelVersion.match(
-              /version:\s([^,$]+)/
-            )
-            const version =
-              versionMatch !== null && versionMatch.length > 1
-                ? versionMatch[1]
-                : null
-            const edition = jmxValues['unsupported.dbms.edition']
-            const storeId = jmxValues.StoreId
-            const dbName = jmxValues.DatabaseName
-            const storeSize = jmxValues.TotalStoreSize
-            store.dispatch({
-              type: UPDATE_SERVER,
-              version,
-              edition,
-              storeId,
-              dbName,
-              storeSize
-            })
-          })
-          // Server config for browser
-          .do(() => {
-            const settings = getServerConfig(store.getState(), ['browser.'])
-            if (!settings) return
-            let retainCredentials = true
-            if (
-              // Check if we should wipe user creds from localstorage
-              typeof settings['browser.retain_connection_credentials'] !==
-                'undefined' &&
-              isConfigValFalsy(
-                settings['browser.retain_connection_credentials']
-              )
-            ) {
-              retainCredentials = false
-            }
-
-            // This assignment is workaround to have prettier
-            // play nice with standardJS
-            // Use isConfigValFalsy to cast undefined to true
-            const aocConfig = !isConfigValFalsy(
-              settings['browser.allow_outgoing_connections']
-            )
-            settings[`browser.allow_outgoing_connections`] = aocConfig
-
-            store.dispatch(setRetainCredentials(retainCredentials))
-            store.dispatch(updateSettings(settings))
-          })
-          // Server security settings
-          .do(() => {
-            const settings = getServerConfig(store.getState(), [
-              'dbms.security'
-            ])
-            if (!settings) return
-            const authEnabledSetting = 'dbms.security.auth_enabled'
-            let authEnabled = true
-            if (
-              typeof settings[authEnabledSetting] !== 'undefined' &&
-              isConfigValFalsy(settings[authEnabledSetting])
-            ) {
-              authEnabled = false
-            }
-            store.dispatch(setAuthEnabled(authEnabled))
-          })
           // Cluster role
           .mergeMap(() =>
             Rx.Observable
@@ -406,6 +322,89 @@ export const dbMetaEpic = (some$, store) =>
           .mapTo({ type: 'NOOP' })
       )
     })
+
+export const serverConfigEpic = (some$, store) =>
+  some$
+    .ofType(UPDATE_JMX_VALUES)
+    // Version and edition
+    .do(() => {
+      const jmxValueResult = getJmxValues(store.getState(), [
+        ['Kernel', 'KernelVersion'],
+        ['Kernel', 'StoreId'],
+        ['Kernel', 'DatabaseName'],
+        ['Configuration', 'unsupported.dbms.edition'],
+        ['Store file sizes', 'TotalStoreSize']
+      ])
+      if (
+        !jmxValueResult ||
+        jmxValueResult.filter(value => !!value).length === 0
+      ) {
+        return
+      }
+      const jmxValues = jmxValueResult.reduce((obj, item) => {
+        const key = Object.keys(item)[0]
+        obj[key] = item[key]
+        return obj
+      }, {})
+
+      const versionMatch = jmxValues.KernelVersion.match(/version:\s([^,$]+)/)
+      const version =
+        versionMatch !== null && versionMatch.length > 1
+          ? versionMatch[1]
+          : null
+      const edition = jmxValues['unsupported.dbms.edition']
+      const storeId = jmxValues.StoreId
+      const dbName = jmxValues.DatabaseName
+      const storeSize = jmxValues.TotalStoreSize
+      store.dispatch({
+        type: UPDATE_SERVER,
+        version,
+        edition,
+        storeId,
+        dbName,
+        storeSize
+      })
+    })
+    // Server config for browser
+    .do(() => {
+      const settings = getServerConfig(store.getState(), ['browser.'])
+      if (!settings) return
+      let retainCredentials = true
+      if (
+        // Check if we should wipe user creds from localstorage
+        typeof settings['browser.retain_connection_credentials'] !==
+          'undefined' &&
+        isConfigValFalsy(settings['browser.retain_connection_credentials'])
+      ) {
+        retainCredentials = false
+      }
+
+      // This assignment is workaround to have prettier
+      // play nice with standardJS
+      // Use isConfigValFalsy to cast undefined to true
+      const aocConfig = !isConfigValFalsy(
+        settings['browser.allow_outgoing_connections']
+      )
+      settings[`browser.allow_outgoing_connections`] = aocConfig
+
+      store.dispatch(setRetainCredentials(retainCredentials))
+      store.dispatch(updateSettings(settings))
+    })
+    // Server security settings
+    .do(() => {
+      const settings = getServerConfig(store.getState(), ['dbms.security'])
+      if (!settings) return
+      const authEnabledSetting = 'dbms.security.auth_enabled'
+      let authEnabled = true
+      if (
+        typeof settings[authEnabledSetting] !== 'undefined' &&
+        isConfigValFalsy(settings[authEnabledSetting])
+      ) {
+        authEnabled = false
+      }
+      store.dispatch(setAuthEnabled(authEnabled))
+    })
+    .mapTo({ type: 'NOOP' })
 
 export const clearMetaOnDisconnectEpic = (some$, store) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })
