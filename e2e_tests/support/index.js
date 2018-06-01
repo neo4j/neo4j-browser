@@ -8,9 +8,6 @@ before(function () {
     .visit(Cypress.env('BROWSER_URL') || 'http://localhost:8080')
     .title()
     .should('include', 'Neo4j Browser')
-  const newPassword = Cypress.env('browser-password') || 'newpassword'
-  cy.setInitialPassword(newPassword)
-  cy.disconnect()
 })
 
 afterEach(function () {

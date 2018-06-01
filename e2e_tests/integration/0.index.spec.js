@@ -25,6 +25,11 @@ const SubmitQueryButton = '[data-test-id="submitQuery"]'
 const Editor = '.ReactCodeMirror textarea'
 
 describe('Neo4j Browser', () => {
+  it('sets new login credentials', () => {
+    const newPassword = Cypress.env('browser-password') || 'newpassword'
+    cy.setInitialPassword(newPassword)
+    cy.disconnect()
+  })
   it('can connect', () => {
     const password = Cypress.env('browser-password') || 'newpassword'
     cy.connect('neo4j', password)
