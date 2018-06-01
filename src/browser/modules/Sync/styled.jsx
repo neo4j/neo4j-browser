@@ -19,7 +19,6 @@
  */
 
 import styled from 'styled-components'
-import { PlayIcon } from 'browser-components/icons/Icons'
 
 export const ConsentCheckBox = props => {
   return (
@@ -108,14 +107,6 @@ export const SmallText = styled.span`font-size: 85%;`
 export const SmallHeaderText = styled.span`font-size: 11px;`
 
 const AlertP = styled.p`margin: 10px;`
-
-export const StyledSyncLink = props => {
-  return (
-    <StyledSimpleLink onClick={props.onClick}>
-      <PlayIcon />&nbsp;{props.children}
-    </StyledSimpleLink>
-  )
-}
 
 export const StyledSimpleLink = styled.a`
   cursor: pointer;
