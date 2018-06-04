@@ -139,7 +139,7 @@ export function directConnect (
   return p
 }
 
-export function openConnection (props, opts = {}, onLostConnection) {
+export function openConnection (props, opts = {}, onLostConnection = () => {}) {
   const p = new Promise((resolve, reject) => {
     const onConnectFail = e => {
       onLostConnection(e)
