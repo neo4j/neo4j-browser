@@ -49,7 +49,9 @@ export class DatabaseInfo extends Component {
       properties = [],
       userDetails,
       databaseKernelInfo,
-      onItemClick
+      onItemClick,
+      nodes,
+      relationships
     } = this.props
 
     return (
@@ -57,6 +59,7 @@ export class DatabaseInfo extends Component {
         <DrawerHeader>Database Information</DrawerHeader>
         <DrawerBody>
           <LabelItems
+            count={nodes}
             labels={labels.slice(0, this.state.labelsMax).map(l => l.val)}
             totalNumItems={labels.length}
             onItemClick={onItemClick}
@@ -64,6 +67,7 @@ export class DatabaseInfo extends Component {
             moreStep={this.state.moreStep}
           />
           <RelationshipItems
+            count={relationships}
             relationshipTypes={relationshipTypes
               .slice(0, this.state.relationshipsMax)
               .map(l => l.val)}

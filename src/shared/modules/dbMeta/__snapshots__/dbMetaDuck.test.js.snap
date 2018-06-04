@@ -5,9 +5,11 @@ Object {
   "foo": "bar",
   "functions": Array [],
   "labels": Array [],
+  "nodes": 0,
   "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
+  "relationships": 0,
   "role": null,
   "server": Object {
     "dbName": null,
@@ -27,9 +29,11 @@ exports[`updating metadata can CLEAR to reset state 1`] = `
 Object {
   "functions": Array [],
   "labels": Array [],
+  "nodes": 0,
   "procedures": Array [],
   "properties": Array [],
   "relationshipTypes": Array [],
+  "relationships": 0,
   "role": null,
   "server": Object {
     "dbName": null,

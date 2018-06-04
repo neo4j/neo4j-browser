@@ -19,6 +19,7 @@
  */
 
 /* global describe, test, expect */
+import { v1 as neo4j } from 'neo4j-driver-alias'
 import reducer, * as meta from './dbMetaDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 
@@ -78,6 +79,15 @@ describe('updating metadata', () => {
         ]
       }
     }
+    const returnedNodes = {
+      a: 'nodes',
+      get: () => neo4j.int(5)
+    }
+    const returnedRelationships = {
+      a: 'relationships',
+      get: () => neo4j.int(10)
+    }
+
     const action = {
       type: meta.UPDATE_META,
       meta: {
@@ -86,7 +96,9 @@ describe('updating metadata', () => {
           returnedRelationshipTypes,
           returnedProperties,
           returnedFunctions,
-          returnedProcedures
+          returnedProcedures,
+          returnedNodes,
+          returnedRelationships
         ]
       },
       context: 'mycontext'
@@ -122,10 +134,13 @@ describe('updating metadata', () => {
         description: 'procedureDescription'
       }
     ])
+    expect(nextState.nodes).toEqual(5)
+    expect(nextState.relationships).toEqual(10)
   })
 
   test('should update state with empty metadata', () => {
     const returnNothing = () => []
+    const returnNull = () => null
     const action = {
       type: meta.UPDATE_META,
       meta: {
@@ -134,7 +149,9 @@ describe('updating metadata', () => {
           { a: 'relationshipTypes', get: returnNothing },
           { a: 'properties', get: returnNothing },
           { a: 'functions', get: returnNothing },
-          { a: 'procedures', get: returnNothing }
+          { a: 'procedures', get: returnNothing },
+          { a: 'nodes', get: returnNull },
+          { a: 'realtionships', get: returnNull }
         ]
       },
       context: 'mycontext'
@@ -147,6 +164,8 @@ describe('updating metadata', () => {
     expect(nextState.properties).toEqual([])
     expect(nextState.functions).toEqual([])
     expect(nextState.procedures).toEqual([])
+    expect(nextState.nodes).toEqual(0)
+    expect(nextState.relationships).toEqual(0)
   })
   test('can update server settings', () => {
     // Given
