@@ -207,24 +207,34 @@ export class QueriesFrame extends Component {
     ]
     const tableRows = queries.map(query => {
       return (
-        <tr>
-          <StyledTd title={query.host} width={tableHeaderSizes[0][1]}>
+        <tr key='rows'>
+          <StyledTd
+            key='host'
+            title={query.host}
+            width={tableHeaderSizes[0][1]}
+          >
             <Code>{query.host}</Code>
           </StyledTd>
-          <StyledTd width={tableHeaderSizes[1][1]}>{query.username}</StyledTd>
-          <StyledTd title={query.query} width={tableHeaderSizes[2][1]}>
+          <StyledTd key='username' width={tableHeaderSizes[1][1]}>
+            {query.username}
+          </StyledTd>
+          <StyledTd
+            key='query'
+            title={query.query}
+            width={tableHeaderSizes[2][1]}
+          >
             <Code>{query.query}</Code>
           </StyledTd>
-          <StyledTd width={tableHeaderSizes[3][1]}>
-            <Code>{query.parameters}</Code>
+          <StyledTd key='params' width={tableHeaderSizes[3][1]}>
+            <Code>{JSON.stringify(query.parameters, null, 2)}</Code>
           </StyledTd>
-          <StyledTd width={tableHeaderSizes[4][1]}>
-            <Code>{query.metaData}</Code>
+          <StyledTd key='meta' width={tableHeaderSizes[4][1]}>
+            <Code>{JSON.stringify(query.metaData, null, 2)}</Code>
           </StyledTd>
-          <StyledTd width={tableHeaderSizes[5][1]}>
+          <StyledTd key='time' width={tableHeaderSizes[5][1]}>
             {query.elapsedTimeMillis} ms
           </StyledTd>
-          <StyledTd width={tableHeaderSizes[6][1]}>
+          <StyledTd key='actions' width={tableHeaderSizes[6][1]}>
             <ConfirmationButton
               onConfirmed={this.onCancelQuery.bind(
                 this,
@@ -239,7 +249,7 @@ export class QueriesFrame extends Component {
 
     const tableHeaders = tableHeaderSizes.map((heading, i) => {
       return (
-        <StyledTh width={heading[1]} key={i}>
+        <StyledTh width={heading[1]} key={heading[0]}>
           {heading[0]}
         </StyledTh>
       )

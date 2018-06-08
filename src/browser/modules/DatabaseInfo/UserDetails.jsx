@@ -91,11 +91,14 @@ export class UserDetails extends Component {
                 <Render if={hasAdminRole}>
                   <tr>
                     <StyledKey className='user-list-button'>Admin:</StyledKey>
-                    <Link
-                      onClick={() => this.props.onItemClick(':server user add')}
-                    >
-                      :server user add
-                    </Link>
+                    <StyledValue>
+                      <Link
+                        onClick={() =>
+                          this.props.onItemClick(':server user add')}
+                      >
+                        :server user add
+                      </Link>
+                    </StyledValue>
                   </tr>
                 </Render>
               </tbody>

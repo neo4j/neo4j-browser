@@ -32,6 +32,7 @@ import {
 import { TableStatusbar } from './TableView'
 
 class ExpandableContent extends Component {
+  state = {}
   render () {
     return (
       <StyledAlteringTr>

@@ -261,28 +261,31 @@ export class SysInfoFrame extends Component {
     return data.map(props => {
       const { value } = props
       if (value instanceof Array) {
-        return value.map(v => <SysInfoTableEntry values={v} />)
+        return value.map(v => (
+          <SysInfoTableEntry key={props.label} values={v} />
+        ))
       }
-      return <SysInfoTableEntry {...props} />
+      return <SysInfoTableEntry key={props.label} {...props} />
     })
   }
   render () {
     const content = this.props.isConnected ? (
       <SysInfoTableContainer>
-        <SysInfoTable header='Store Sizes'>
+        <SysInfoTable key='Store Sizes' header='Store Sizes'>
           {this.buildTableData(this.state.storeSizes)}
         </SysInfoTable>
-        <SysInfoTable header='ID Allocation'>
+        <SysInfoTable key='ID Allocation' header='ID Allocation'>
           {this.buildTableData(this.state.idAllocation)}
         </SysInfoTable>
-        <SysInfoTable header='Page Cache'>
+        <SysInfoTable key='Page Cache' header='Page Cache'>
           {this.buildTableData(this.state.pageCache)}
         </SysInfoTable>
-        <SysInfoTable header='Transactions'>
+        <SysInfoTable key='Transactions' header='Transactions'>
           {this.buildTableData(this.state.transactions)}
         </SysInfoTable>
         <Render if={this.props.isACausalCluster}>
           <SysInfoTable
+            key='cc'
             header={
               <span>
                 Causal Cluster Members{' '}
@@ -296,12 +299,12 @@ export class SysInfoFrame extends Component {
           </SysInfoTable>
         </Render>
         <Render if={this.state.ha}>
-          <SysInfoTable header='High Availability'>
+          <SysInfoTable key='ha' header='High Availability'>
             {this.buildTableData(this.state.ha)}
           </SysInfoTable>
         </Render>
         <Render if={this.state.haInstances}>
-          <SysInfoTable header='Cluster' colspan='4'>
+          <SysInfoTable key='cluster' header='Cluster' colspan='4'>
             <SysInfoTableEntry
               headers={['Id', 'Alive', 'Available', 'Is Master']}
             />
