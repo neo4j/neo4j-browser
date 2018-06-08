@@ -28,6 +28,6 @@ import './styles/font-awesome.min.css'
 import './styles/inconsolata.css'
 import './styles/open-sans.css'
 
-if (process.env.NODE_ENV !== 'production') {
-  require('preact/devtools')
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   require('react/devtools')
+// }

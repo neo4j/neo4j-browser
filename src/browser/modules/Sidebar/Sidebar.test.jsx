@@ -22,7 +22,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { createStore, combineReducers } from 'redux'
-import { Provider } from 'preact-redux'
+import { Provider } from 'react-redux'
 import Sidebar from './Sidebar'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
 import Favorites from './Favorites'

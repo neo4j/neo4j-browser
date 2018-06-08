@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { CarouselButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import CarouselSlidePicker from './CarouselSlidePicker'

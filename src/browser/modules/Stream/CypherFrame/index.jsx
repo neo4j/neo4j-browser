@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { connect } from 'preact-redux'
-import { Component } from 'preact'
+import { connect } from 'react-redux'
+import React, { Component } from 'react'
 import FrameTemplate from '../FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'

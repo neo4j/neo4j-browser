@@ -3116,7 +3116,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: preact. A copy of the source code may be downloaded from https://github.com/developit/preact.git. This software contains the following license and notice below:
+The following software may be included in this product: react. A copy of the source code may be downloaded from https://github.com/developit/react.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -3142,7 +3142,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: preact-compat, preact-redux. A copy of the source code may be downloaded from https://github.com/developit/preact-compat.git (preact-compat), git+https://github.com/developit/preact-redux.git (preact-redux). This software contains the following license and notice below:
+The following software may be included in this product: react-compat, react-redux. A copy of the source code may be downloaded from https://github.com/developit/react-compat.git (react-compat), git+https://github.com/developit/react-redux.git (react-redux). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -3168,7 +3168,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: preact-render-to-string. A copy of the source code may be downloaded from https://github.com/developit/preact-render-to-string.git. This software contains the following license and notice below:
+The following software may be included in this product: react-render-to-string. A copy of the source code may be downloaded from https://github.com/developit/react-render-to-string.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
 

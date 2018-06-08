@@ -88,16 +88,7 @@ const rules = [
         loader: 'babel-loader',
         options: {
           presets: [['es2015', { modules: false }], 'stage-2', 'react'],
-          plugins: [
-            'styled-components',
-            'preact-require',
-            [
-              'transform-react-jsx',
-              {
-                pragma: 'h'
-              }
-            ]
-          ]
+          plugins: ['styled-components']
         }
       }
     ]
@@ -245,16 +236,14 @@ module.exports = {
       'rxjs',
       'babel-polyfill',
       'isomorphic-fetch',
-      'preact/dist/preact',
-      'preact-compat/dist/preact-compat',
       'redux-observable',
       'suber',
-      'preact-suber',
+      'react-suber',
       'redux',
       'styled-components',
       'iconv-lite',
       'pako',
-      'preact-redux'
+      'react-redux'
     ]
   },
   output: {
@@ -284,8 +273,6 @@ module.exports = {
       services: path.resolve(__dirname, 'src/shared/services'),
       'browser-services': path.resolve(__dirname, 'src/browser/services'),
       shared: path.resolve(__dirname, 'src/shared'),
-      react: 'preact-compat/dist/preact-compat',
-      'react-dom': 'preact-compat/dist/preact-compat',
       'browser-components': path.resolve(__dirname, 'src/browser/components'),
       browser: path.resolve(__dirname, 'src/browser'),
       'browser-styles': path.resolve(__dirname, 'src/browser/styles')

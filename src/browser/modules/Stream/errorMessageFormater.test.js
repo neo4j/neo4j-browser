@@ -20,7 +20,7 @@
 
 /* global describe, test, expect */
 
-import render from 'preact-render-to-string'
+import render from 'react-render-to-string'
 import { errorMessageFormater } from './errorMessageFormater'
 
 describe('errorsHelper', () => {

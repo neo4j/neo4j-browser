@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import {

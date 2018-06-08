@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { v4 } from 'uuid'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { withBus } from 'preact-suber'
+import { withBus } from 'react-suber'
 import {
   deleteUser,
   addRoleToUser,

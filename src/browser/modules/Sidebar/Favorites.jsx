@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
-import { withBus } from 'preact-suber'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import * as folder from 'shared/modules/favorites/foldersDuck'

@@ -408,29 +408,29 @@ Third-party licenses
    │  ├─ URL: https://github.com/TrySound/postcss-value-parser.git
    │  ├─ VendorName: Bogdan Chadkin
    │  └─ VendorUrl: https://github.com/TrySound/postcss-value-parser
-   ├─ preact-compat@3.18.0
-   │  ├─ URL: https://github.com/developit/preact-compat.git
+   ├─ react-compat@3.18.0
+   │  ├─ URL: https://github.com/developit/react-compat.git
    │  ├─ VendorName: Jason Miller
-   │  └─ VendorUrl: https://github.com/developit/preact-compat
-   ├─ preact-redux@2.0.3
-   │  ├─ URL: git+https://github.com/developit/preact-redux.git
+   │  └─ VendorUrl: https://github.com/developit/react-compat
+   ├─ react-redux@2.0.3
+   │  ├─ URL: git+https://github.com/developit/react-redux.git
    │  ├─ VendorName: Jason Miller
-   │  └─ VendorUrl: https://github.com/developit/preact-redux
-   ├─ preact-render-to-string@3.7.0
-   │  ├─ URL: https://github.com/developit/preact-render-to-string.git
+   │  └─ VendorUrl: https://github.com/developit/react-redux
+   ├─ react-render-to-string@3.7.0
+   │  ├─ URL: https://github.com/developit/react-render-to-string.git
    │  ├─ VendorName: Jason Miller
-   │  └─ VendorUrl: https://github.com/developit/preact-render-to-string
-   ├─ preact-suber@1.0.3
-   │  ├─ URL: https://github.com/oskarhane/react-suber.git#preact
+   │  └─ VendorUrl: https://github.com/developit/react-render-to-string
+   ├─ react-suber@1.0.3
+   │  ├─ URL: https://github.com/oskarhane/react-suber.git#react
    │  ├─ VendorName: Oskar Hane
    │  └─ VendorUrl: http://oskarhane.com/
-   ├─ preact-transition-group@1.1.1
-   │  ├─ URL: https://github.com/developit/preact-transition-group.git
-   │  └─ VendorUrl: http://github.com/developit/preact-transition-group
-   ├─ preact@8.2.7
-   │  ├─ URL: https://github.com/developit/preact.git
+   ├─ react-transition-group@1.1.1
+   │  ├─ URL: https://github.com/developit/react-transition-group.git
+   │  └─ VendorUrl: http://github.com/developit/react-transition-group
+   ├─ react@8.2.7
+   │  ├─ URL: https://github.com/developit/react.git
    │  ├─ VendorName: Jason Miller
-   │  └─ VendorUrl: https://github.com/developit/preact
+   │  └─ VendorUrl: https://github.com/developit/react
    ├─ pretty-format@3.8.0
    │  ├─ URL: https://github.com/thejameskyle/pretty-format.git
    │  ├─ VendorName: James Kyle

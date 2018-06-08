@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 
 const StyledSettingTextInput = styled.input`
@@ -56,6 +56,7 @@ export const CheckboxSelector = props => {
 }
 
 export class RadioSelector extends Component {
+  state = {}
   constructor (props) {
     super(props)
     this.state.selectedValue = this.props.selectedValue || null

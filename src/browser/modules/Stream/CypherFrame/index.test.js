@@ -46,12 +46,12 @@ jest.mock('./VisualizationView', () => {
     }
   }
 })
-jest.mock('preact-suber', () => {
+jest.mock('react-suber', () => {
   return {
     withBus: a => a
   }
 })
-jest.mock('preact-redux', () => {
+jest.mock('react-redux', () => {
   return {
     connect: (msp, mdp) => a => a
   }

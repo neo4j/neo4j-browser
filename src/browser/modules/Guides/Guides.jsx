@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import uuid from 'uuid'
 import Slide from './Slide'
 import Directives from 'browser-components/Directives'
@@ -30,6 +30,7 @@ export default class Guides extends Component {
     this.state = { slides: null, firstRender: true }
   }
   componentDidMount () {
+    if (!this.base) return
     const slides = this.base.getElementsByTagName('slide')
     let reactSlides = this
     if (slides.length > 0) {

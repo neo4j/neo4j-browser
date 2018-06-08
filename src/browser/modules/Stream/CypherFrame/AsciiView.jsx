@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import asciitable from 'ascii-data-table'
 import Render from 'browser-components/Render'
 import Ellipsis from 'browser-components/Ellipsis'

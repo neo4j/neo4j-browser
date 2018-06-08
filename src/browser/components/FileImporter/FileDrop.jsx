@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { NativeTypes } from 'react-dnd-html5-backend'
 import { DropTarget } from 'react-dnd'
 import { wrapWithDndContext } from './dndGlobalContext'

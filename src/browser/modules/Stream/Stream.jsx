@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { connect } from 'preact-redux'
-import { Component } from 'preact'
+import { connect } from 'react-redux'
+import React, { Component } from 'react'
 import { StyledStream } from './styled'
 
 import CypherFrame from './CypherFrame/index'
@@ -77,7 +77,7 @@ const getFrame = type => {
 class Stream extends Component {
   shouldComponentUpdate (props) {
     const frameHasBeenAdded = this.props.frames.length < props.frames.length
-    if (frameHasBeenAdded && this.props.scrollToTop) {
+    if (frameHasBeenAdded && this.props.scrollToTop && this.base) {
       this.base.scrollTop = 0
       return true
     }

@@ -19,7 +19,7 @@
  */
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
-import render from 'preact-render-to-string'
+import render from 'react-render-to-string'
 import { createBus } from 'suber'
 
 import { ClickToCode } from './index'
