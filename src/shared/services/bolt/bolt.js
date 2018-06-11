@@ -61,7 +61,7 @@ function openConnection (props, opts = {}, onLostConnection) {
 function cancelTransaction (id, cb) {
   if (boltWorkerRegister[id]) {
     cancellationRegister[id] = cb
-    boltWorkerRegister[id].postMessage(cancelTransactionMessage(id))
+    boltWorkerRegister[id].worker.postMessage(cancelTransactionMessage(id))
   } else {
     boltConnection.cancelTransaction(id, cb)
   }
@@ -180,8 +180,7 @@ const addTypesAsField = result => {
 }
 
 function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
-  const boltWorker = new BoltWorkerModule()
-  const onFinished = registerBoltWorker(id, boltWorker)
+  const { worker: boltWorker, onFinished } = getWorker(id)
   const workerPromise = new Promise((resolve, reject) => {
     boltWorker.postMessage(workFn)
     boltWorker.onmessage = msg => {
@@ -204,8 +203,26 @@ function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
   return workerPromise
 }
 
+function getWorker (id) {
+  const keys = Object.keys(boltWorkerRegister)
+  let taken = null
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    if (!boltWorkerRegister[key].busy) {
+      boltWorkerRegister[key].busy = true
+      taken = boltWorkerRegister[key].worker
+      delete boltWorkerRegister[key]
+      break
+    }
+  }
+  if (!taken) {
+    taken = new BoltWorkerModule()
+  }
+  return { worker: taken, onFinished: registerBoltWorker(id, taken) }
+}
+
 function registerBoltWorker (id, boltWorker) {
-  boltWorkerRegister[id] = boltWorker
+  boltWorkerRegister[id] = { worker: boltWorker, busy: true }
   return getWorkerFinalizer(boltWorkerRegister, cancellationRegister, id)
 }
 
@@ -216,10 +233,7 @@ function getWorkerFinalizer (workerRegister, cancellationRegister, workerId) {
       delete cancellationRegister[workerId]
     }
     if (workerRegister[workerId]) {
-      delete workerRegister[workerId]
-    }
-    if (worker) {
-      worker.terminate()
+      workerRegister[workerId].busy = false
     }
   }
 }
