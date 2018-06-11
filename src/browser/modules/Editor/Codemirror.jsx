@@ -66,13 +66,6 @@ export default class CodeMirror extends Component {
     this.codeMirror.on('scroll', this.scrollChanged.bind(this))
     this.codeMirror.setValue(this.props.defaultValue || this.props.value || '')
     this.editorSupport = editorSupport
-    this.editorSupport.on('updated', () => {
-      this.props.onParsed &&
-        this.props.onParsed(
-          this.editorSupport.queriesAndCommands,
-          this.lastChange
-        )
-    })
     this.editorSupport.setSchema(this.props.schema)
 
     if (this.props.initialPosition) {
@@ -157,6 +150,11 @@ export default class CodeMirror extends Component {
     if (this.props.onChanges && change.origin !== 'setValue') {
       this.props.onChanges(doc.getValue(), change)
     }
+    this.props.onParsed &&
+      this.props.onParsed(
+        this.generateStatementsFromCurrentValue(),
+        this.lastChange
+      )
   }
 
   render () {
