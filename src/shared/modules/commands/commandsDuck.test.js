@@ -151,6 +151,12 @@ describe('commandsDuck', () => {
             type: 'param',
             params: { x: 2 }
           }),
+          updateQueryResult(
+            undefined,
+            { result: { x: 2 }, type: 'param' },
+            'success'
+          ),
+          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()
@@ -179,7 +185,6 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           updateParams({ x: 2 }),
-          { type: 'NOOP' },
           frames.add({
             ...action,
             success: true,
@@ -208,6 +213,12 @@ describe('commandsDuck', () => {
           action,
           replaceParams({ x: 2, y: 3 }),
           frames.add({ ...action, success: true, type: 'params', params: {} }),
+          updateQueryResult(
+            undefined,
+            { result: { x: 2, y: 3 }, type: 'params' },
+            'success'
+          ),
+          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()
