@@ -97,14 +97,21 @@ const availableCommands = [
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      handleParamsCommand(action, cmdchar, put)
+      return handleParamsCommand(action, cmdchar, put)
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
           put(frames.add({ ...action, type: res.type, success: true, params }))
+          put(updateQueryResult(action.requestId, res, 'success'))
+          return true
         })
         .catch(e => {
-          put(showErrorMessage(e.message))
+          // Don't show error message bar if it's a sub command
+          if (!action.parentId) {
+            put(showErrorMessage(e.message))
+          }
+          put(updateQueryResult(action.requestId, e, 'error'))
+          throw e
         })
     }
   },

@@ -150,7 +150,12 @@ export const handleEditorCommandEpic = (action$, store) =>
         cmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
-        const ignore = !!cmd.startsWith(cmdchar) // Ignore client commands
+        const whitelistedCommands = [`${cmdchar}param`]
+        const isWhitelisted =
+          whitelistedCommands.filter(wcmd => !!cmd.startsWith(wcmd)).length > 0
+
+        // Ignore client commands that aren't whitelisted
+        const ignore = !!cmd.startsWith(cmdchar) && !isWhitelisted
 
         let { action, interpreted } = buildCommandObject(
           { cmd, ignore },

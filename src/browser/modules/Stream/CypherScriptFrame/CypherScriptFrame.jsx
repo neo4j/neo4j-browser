@@ -24,130 +24,19 @@ import FrameTemplate from '../FrameTemplate'
 import { getRequest } from 'shared/modules/requests/requestsDuck'
 import { getFrame } from 'shared/modules/stream/streamDuck'
 import { StyledStatusSection } from 'browser-components/buttons'
-import {
-  SmallSpinner,
-  SquareIcon,
-  CheckedSquareIcon,
-  ExclamationTriangleIcon
-} from 'browser-components/icons/Icons'
-import { getBodyAndStatusBarMessages } from 'browser/modules/Stream/CypherFrame/helpers'
-import { errorMessageFormater } from 'browser/modules/Stream/errorMessageFormater'
-import {
-  FrameTitlebarButtonSection,
-  StyledCypherErrorMessage,
-  StyledCypherWarningMessage,
-  StyledCypherSuccessMessage,
-  StyledCypherInfoMessage
-} from 'browser/modules/Stream/styled'
-import {
-  WrapperCenter,
-  MessageArea,
-  ContentSizer,
-  PointerFrameCommand,
-  WarningSpan,
-  ErrorSpan,
-  SuccessSpan,
-  PaddedStatsBar
-} from './styled'
+
+import { FrameTitlebarButtonSection } from 'browser/modules/Stream/styled'
+import { WrapperCenter, ContentSizer, PointerFrameCommand } from './styled'
 import Accordion from 'browser-components/Accordion/Accordion'
+import { getCmdChar } from 'shared/modules/settings/settingsDuck'
+import { Summary, CypherSummary } from './Summary'
+import { Icon } from './Icon'
 
-const getIcon = status => {
-  switch (status) {
-    case 'pending':
-      return <SmallSpinner />
-    case 'skipped':
-    case 'waiting':
-      return <SquareIcon />
-    case 'success':
-      return (
-        <SuccessSpan>
-          <CheckedSquareIcon />
-        </SuccessSpan>
-      )
-    case 'ignored':
-      return (
-        <WarningSpan>
-          <SquareIcon />
-        </WarningSpan>
-      )
-    case 'error':
-      return (
-        <ErrorSpan>
-          <ExclamationTriangleIcon />
-        </ErrorSpan>
-      )
-    default:
-      return '???'
-  }
-}
-
-const Summary = ({ status, request }) => {
-  switch (status) {
-    case 'ignored':
-      return (
-        <PaddedStatsBar>
-          <StyledCypherWarningMessage>WARNING</StyledCypherWarningMessage>
-          <MessageArea>
-            Only cypher commands will be executed in the multi statement mode.
-          </MessageArea>
-        </PaddedStatsBar>
-      )
-    case 'skipped':
-      return (
-        <PaddedStatsBar>
-          <StyledCypherInfoMessage>INFO</StyledCypherInfoMessage>
-          <MessageArea>
-            This statements was not executed due to a previous error.
-          </MessageArea>
-        </PaddedStatsBar>
-      )
-    case 'pending':
-      return (
-        <PaddedStatsBar>
-          <StyledCypherInfoMessage>INFO</StyledCypherInfoMessage>
-          <MessageArea>Currently executing this query...</MessageArea>
-        </PaddedStatsBar>
-      )
-    case 'waiting':
-      return (
-        <PaddedStatsBar>
-          <StyledCypherInfoMessage>INFO</StyledCypherInfoMessage>
-          <MessageArea>
-            This query is waiting for it's turn. The excution is serial and will
-            break on first error.
-          </MessageArea>
-        </PaddedStatsBar>
-      )
-    case 'success':
-      const { bodyMessage } = getBodyAndStatusBarMessages(
-        request.result,
-        999999999
-      )
-      return (
-        <PaddedStatsBar>
-          <StyledCypherSuccessMessage>SUCCESS</StyledCypherSuccessMessage>
-          <MessageArea>{ucFirst(bodyMessage)}</MessageArea>
-        </PaddedStatsBar>
-      )
-    case 'error':
-      const fullError = errorMessageFormater(
-        request.result.code,
-        request.result.message
-      )
-      return (
-        <PaddedStatsBar>
-          <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-          <MessageArea>{fullError.message}</MessageArea>
-        </PaddedStatsBar>
-      )
-  }
-}
-
-const ucFirst = str => str[0].toUpperCase() + str.slice(1)
+const isCypher = (str, cmdchar) => !str.startsWith(cmdchar)
 
 class CypherScriptFrame extends Component {
   render () {
-    const { frame, frames, requests = {} } = this.props
+    const { frame, frames, requests = {}, cmdchar = ':' } = this.props
     const contents = (
       <WrapperCenter>
         <ContentSizer>
@@ -164,6 +53,9 @@ class CypherScriptFrame extends Component {
                       index,
                       defaultActive: ['error'].includes(status)
                     })
+                    const SummaryC = isCypher(frames[id].cmd, cmdchar)
+                      ? CypherSummary
+                      : Summary
                     return (
                       <div>
                         <Accordion.Title
@@ -175,7 +67,7 @@ class CypherScriptFrame extends Component {
                           </PointerFrameCommand>
                           <FrameTitlebarButtonSection>
                             <StyledStatusSection title={`Status: ${status}`}>
-                              {getIcon(status)}
+                              <Icon status={status} />
                             </StyledStatusSection>
                           </FrameTitlebarButtonSection>
                         </Accordion.Title>
@@ -183,7 +75,7 @@ class CypherScriptFrame extends Component {
                           data-test-id='multi-statement-list-content'
                           {...contentProps}
                         >
-                          <Summary
+                          <SummaryC
                             status={status}
                             request={requests[frames[id].requestId]}
                           />
@@ -226,7 +118,8 @@ const mapStateToProps = (state, ownProps) => {
     }, {})
   return {
     frames,
-    requests
+    requests,
+    cmdchar: getCmdChar(state)
   }
 }
 
