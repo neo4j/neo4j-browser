@@ -229,6 +229,13 @@ export const StyledCypherInfoMessage = styled(StyledCypherMessage)`
   display: inline-block;
 `
 
+export const StyledInfoMessage = styled(StyledCypherMessage)`
+  margin-bottom: 10px;
+  background-color: ${props => props.theme.info};
+  color: #ffffff;
+  display: inline-block;
+`
+
 export const StyledH4 = styled.h4``
 
 export const StyledBr = styled.br``
