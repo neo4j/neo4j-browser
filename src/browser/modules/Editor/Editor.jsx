@@ -305,7 +305,7 @@ export class Editor extends Component {
 
   updateHeight = () => {
     if (this.editor) {
-      const editorHeight = this.editor.base.clientHeight
+      const editorHeight = this.editor.editorReference.clientHeight
       if (editorHeight !== this.state.editorHeight) {
         this.setState({ editorHeight })
       }
