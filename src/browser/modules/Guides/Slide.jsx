@@ -21,13 +21,14 @@ import React from 'react'
 import styles from './style.css'
 import { StyledSlide } from './styled.jsx'
 
-const Slide = ({ html }) => {
+const Slide = React.forwardRef(({ html }, ref) => {
   return (
     <StyledSlide
+      innerRef={ref}
       className={styles.slide}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
-}
+})
 
 export default Slide

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React from 'react'
 import {
   CarouselIndicatorInactive,
   CarouselIndicatorActive,
@@ -29,9 +29,9 @@ const CarouselSlidePicker = ({ slides, visibleSlide, onClickEvent }) => {
   const Indicators = slides.map(
     (_, i) =>
       i !== visibleSlide ? (
-        <CarouselIndicatorInactive onClick={() => onClickEvent(i)} />
+        <CarouselIndicatorInactive key={i} onClick={() => onClickEvent(i)} />
       ) : (
-        <CarouselIndicatorActive onClick={() => onClickEvent(i)} />
+        <CarouselIndicatorActive key={i} onClick={() => onClickEvent(i)} />
       )
   )
   return <StyledUl>{Indicators}</StyledUl>

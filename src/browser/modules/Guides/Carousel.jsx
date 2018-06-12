@@ -31,12 +31,13 @@ import {
 } from './styled'
 
 export default class Carousel extends Component {
+  state = {
+    visibleSlide: 0,
+    firstRender: true
+  }
   constructor (props) {
     super(props)
     this.slides = this.props.slides || []
-    this.state = {
-      visibleSlide: 0
-    }
   }
   shouldComponentUpdate () {
     return this.state.firstRender
