@@ -138,23 +138,17 @@ export class AsciiStatusbar extends Component {
   componentDidMount () {
     this.makeState(this.props)
   }
-  componentWillMount () {
-    this.debouncedMaxColWidthChanged = debounce(
-      this.maxColWidthChanged,
-      25,
-      this
-    )
-  }
-  maxColWidthChanged (w) {
-    this.setState({ maxColWidth: w.target.value })
-    this.props.setParentState({ _asciiMaxColWidth: w.target.value })
+  maxColWidthChanged = w => {
+    const value = w.target.value
+    this.setState({ maxColWidth: value })
+    this.props.setParentState({ _asciiMaxColWidth: value })
   }
   setMaxSliderWidth (w) {
     this.setState({ maxSliderWidth: w })
   }
   render () {
     const { maxColWidth, maxSliderWidth } = this.state
-    const onInput = this.debouncedMaxColWidthChanged
+    const onInput = this.maxColWidthChanged
     return (
       <StyledStatsBar>
         <Render if={!this.props._asciiSerializedRows}>
