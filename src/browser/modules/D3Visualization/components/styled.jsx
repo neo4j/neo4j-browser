@@ -254,7 +254,7 @@ export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
 `
 
 export const StyledTokenCount = styled.span`font-weight: normal;`
-export const StyledLegendContents = styled.div`
+export const StyledLegendContents = styled.ul`
   float: left;
   line-height: 1em;
   position: relative;

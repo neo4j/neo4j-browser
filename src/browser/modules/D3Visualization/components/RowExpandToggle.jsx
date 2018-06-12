@@ -21,10 +21,13 @@
 import React, { Component } from 'react'
 import { StyledRowToggle, StyledCaret } from './styled'
 
-const getHeightFromElem = rowElem =>
-  rowElem && rowElem.base ? rowElem.base.clientHeight : 0
+const getHeightFromElem = rowElem => {
+  console.log('rowElem: ', rowElem)
+  return rowElem && rowElem.base ? rowElem.base.clientHeight : 0
+}
 
 export class RowExpandToggleComponent extends Component {
+  state = {}
   updateDimensions () {
     this.setState({ rowHeight: getHeightFromElem(this.props.rowElem) })
   }
