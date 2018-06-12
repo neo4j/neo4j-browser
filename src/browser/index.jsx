@@ -84,8 +84,6 @@ const env = window && window.neo4jDesktopApi ? DESKTOP : WEB
 // Signal app upstart (for epics)
 store.dispatch({ type: APP_START, url: window.location.href, env })
 
-console.log('App: ', App)
-console.log('Capp: ', Capp)
 ReactDOM.render(
   <Provider store={store}>
     <BusProvider bus={bus}>
