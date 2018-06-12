@@ -213,7 +213,7 @@ export class InspectorComponent extends Component {
             <StyledInspectorFooterRow
               data-test-id='vizInspector'
               className='inspector-footer-row'
-              ref={this.setFooterRowELem.bind(this)}
+              innerRef={this.setFooterRowELem.bind(this)}
             >
               {type === 'canvas' ? null : (
                 <RowExpandToggleComponent
@@ -233,7 +233,7 @@ export class InspectorComponent extends Component {
 
   toggleExpand () {
     this.setState({ contracted: !this.state.contracted }, () => {
-      const inspectorHeight = this.footerRowElem.base.clientHeight
+      const inspectorHeight = this.footerRowElem.clientHeight
       this.props.onExpandToggled &&
         this.props.onExpandToggled(
           this.state.contracted,

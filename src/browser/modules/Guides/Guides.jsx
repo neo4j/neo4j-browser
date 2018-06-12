@@ -33,7 +33,6 @@ export default class Guides extends Component {
   componentDidMount () {
     if (!this.ref) return
     if (!this.ref.current) return
-    console.log('this.ref.current: ', this.ref.current)
     const slides = this.ref.current.getElementsByTagName('slide')
     let reactSlides = this
     if (slides.length > 0) {
