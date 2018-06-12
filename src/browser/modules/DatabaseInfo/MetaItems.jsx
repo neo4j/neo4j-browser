@@ -57,11 +57,16 @@ const createItems = (
   onItemClick,
   RenderType,
   editorCommandTemplate,
-  showStar = true
+  showStar = true,
+  count
 ) => {
   let items = [...originalList]
   if (showStar) {
-    items.unshift('*')
+    let str = '*'
+    if (count) {
+      str = `${str}(${count})`
+    }
+    items.unshift(str)
   }
   return items.map((text, index) => {
     const getNodesCypher = editorCommandTemplate(text, index)
@@ -81,7 +86,8 @@ const LabelItems = ({
   totalNumItems,
   onItemClick,
   moreStep,
-  onMoreClick
+  onMoreClick,
+  count
 }) => {
   let labelItems = <p>There are no labels in database</p>
   if (labels.length) {
@@ -95,7 +101,9 @@ const LabelItems = ({
       labels,
       onItemClick,
       { component: StyledLabel },
-      editorCommandTemplate
+      editorCommandTemplate,
+      true,
+      count
     )
   }
   return (
@@ -122,7 +130,8 @@ const RelationshipItems = ({
   totalNumItems,
   onItemClick,
   moreStep,
-  onMoreClick
+  onMoreClick,
+  count
 }) => {
   let relationshipItems = <p>No relationships in database</p>
   if (relationshipTypes.length > 0) {
@@ -138,7 +147,9 @@ const RelationshipItems = ({
       relationshipTypes,
       onItemClick,
       { component: StyledRelationship },
-      editorCommandTemplate
+      editorCommandTemplate,
+      true,
+      count
     )
   }
   return (

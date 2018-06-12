@@ -123,6 +123,7 @@ function updateMetaForContext (state, meta, context) {
   const mapResult = (metaIndex, mapFunction) =>
     meta.records[metaIndex].get(1).map(mapFunction)
   const mapSingleValue = r => ({ val: r, context })
+  const mapInteger = r => (bolt.neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
   const mapInvocableValue = r => {
     const { name, signature, description } = r
     return {
@@ -154,18 +155,28 @@ function updateMetaForContext (state, meta, context) {
   const procedures = state.procedures
     .filter(notInCurrentContext)
     .concat(mapResult(4, mapInvocableValue))
+  const nodes = meta.records[5]
+    ? mapInteger(meta.records[5].get(1))
+    : state.nodes
+  const relationships = meta.records[6]
+    ? mapInteger(meta.records[6].get(1))
+    : state.relationships
 
   return {
     labels,
     relationshipTypes,
     properties,
     functions,
-    procedures
+    procedures,
+    nodes,
+    relationships
   }
 }
 
 // Initial state
 const initialState = {
+  nodes: 0,
+  relationships: 0,
   labels: [],
   relationshipTypes: [],
   properties: [],
@@ -266,6 +277,10 @@ UNION
 CALL dbms.procedures() YIELD name, signature, description
 WITH collect({name: name, signature: signature, description: description}) as procedures
 RETURN 'procedures' as a, procedures as result
+UNION
+MATCH (n) RETURN 'nodes' AS a, count(n) AS result
+UNION
+MATCH ()-[]->() RETURN 'relationships' AS a, count(*) AS result
 `
 
 export const dbMetaEpic = (some$, store) =>
