@@ -20,6 +20,7 @@
 
 import { v4 } from 'uuid'
 import { v1 as neo4j } from 'neo4j-driver-alias'
+import WorkPool from './WorkPool'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
 import {
@@ -35,8 +36,7 @@ import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
 
 let connectionProperties = null
-let boltWorkerRegister = {}
-let cancellationRegister = {}
+let boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
 
 function openConnection (props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
@@ -59,9 +59,10 @@ function openConnection (props, opts = {}, onLostConnection) {
 }
 
 function cancelTransaction (id, cb) {
-  if (boltWorkerRegister[id]) {
-    cancellationRegister[id] = cb
-    boltWorkerRegister[id].worker.postMessage(cancelTransactionMessage(id))
+  const work = boltWorkPool.getWorkById(id)
+  if (work) {
+    work.onFinish(cb)
+    work.execute(cancelTransactionMessage(id))
   } else {
     boltConnection.cancelTransaction(id, cb)
   }
@@ -180,62 +181,29 @@ const addTypesAsField = result => {
 }
 
 function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
-  const { worker: boltWorker, onFinished } = getWorker(id)
   const workerPromise = new Promise((resolve, reject) => {
-    boltWorker.postMessage(workFn)
-    boltWorker.onmessage = msg => {
-      if (msg.data.type === BOLT_CONNECTION_ERROR_MESSAGE) {
-        onFinished(boltWorker)
-        onLostConnection(msg.data.error)
-        return reject(msg.data.error)
+    const work = boltWorkPool.doWork({
+      id,
+      payload: workFn,
+      onmessage: msg => {
+        if (msg.data.type === BOLT_CONNECTION_ERROR_MESSAGE) {
+          work.finish()
+          onLostConnection(msg.data.error)
+          return reject(msg.data.error)
+        }
+        if (msg.data.type === CYPHER_ERROR_MESSAGE) {
+          work.finish()
+          reject(msg.data.error)
+        } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
+          work.finish()
+          resolve(addTypesAsField(msg.data.result))
+        } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
+          work.finish()
+        }
       }
-      if (msg.data.type === CYPHER_ERROR_MESSAGE) {
-        onFinished(boltWorker)
-        reject(msg.data.error)
-      } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
-        onFinished(boltWorker)
-        resolve(addTypesAsField(msg.data.result))
-      } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
-        onFinished(boltWorker)
-      }
-    }
+    })
   })
   return workerPromise
-}
-
-function getWorker (id) {
-  const keys = Object.keys(boltWorkerRegister)
-  let taken = null
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    if (!boltWorkerRegister[key].busy) {
-      boltWorkerRegister[key].busy = true
-      taken = boltWorkerRegister[key].worker
-      delete boltWorkerRegister[key]
-      break
-    }
-  }
-  if (!taken) {
-    taken = new BoltWorkerModule()
-  }
-  return { worker: taken, onFinished: registerBoltWorker(id, taken) }
-}
-
-function registerBoltWorker (id, boltWorker) {
-  boltWorkerRegister[id] = { worker: boltWorker, busy: true }
-  return getWorkerFinalizer(boltWorkerRegister, cancellationRegister, id)
-}
-
-function getWorkerFinalizer (workerRegister, cancellationRegister, workerId) {
-  return worker => {
-    if (cancellationRegister[workerId]) {
-      cancellationRegister[workerId]()
-      delete cancellationRegister[workerId]
-    }
-    if (workerRegister[workerId]) {
-      workerRegister[workerId].busy = false
-    }
-  }
 }
 
 export default {
