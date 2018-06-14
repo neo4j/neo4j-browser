@@ -45,13 +45,12 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
         )
       default:
         return (
-          <StyledHelpItem key={item.command}>
-            <StyledDocumentActionLink
-              onClick={() => onItemClick(item.command)}
-              name={item.name}
-              type={item.type}
-            />
-          </StyledHelpItem>
+          <StyledDocumentActionLink
+            key={item.command}
+            onClick={() => onItemClick(item.command)}
+            name={item.name}
+            type={item.type}
+          />
         )
     }
   })
