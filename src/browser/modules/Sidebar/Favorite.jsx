@@ -114,11 +114,23 @@ const favoriteTarget = {
   }
 }
 
+const StyledListItemRef = React.forwardRef((props, ref) => {
+  return <StyledListItem innerRef={ref} {...props} />
+})
 class FavoriteDp extends Component {
+  constructor () {
+    super()
+    this.itemRef = React.createRef()
+  }
+  componentDidMount () {
+    this.props.onItemRef && this.props.onItemRef(this.itemRef.current)
+  }
+
   render () {
     const name = extractNameFromCommand(this.props.content)
     let favoriteContent = (
-      <StyledListItem
+      <StyledListItemRef
+        ref={this.itemRef}
         isChild={this.props.isChild}
         data-test-id='sidebarFavoriteItem'
       >
@@ -140,7 +152,7 @@ class FavoriteDp extends Component {
             onConfirmed={() => this.props.removeClick(this.props.id)}
           />
         </StyledFavFolderButtonSpan>
-      </StyledListItem>
+      </StyledListItemRef>
     )
 
     if (this.props.isStatic) {
@@ -158,7 +170,7 @@ class FavoriteDg extends Component {
     } else {
       return this.props.connectDragSource(
         <div>
-          <FavoriteDp {...this.props} />
+          <FavoriteDp onItemRef={ref => (this.base = ref)} {...this.props} />
         </div>
       )
     }
