@@ -69,12 +69,12 @@ export class RadioSelector extends Component {
       <form>
         {this.props.options.map(option => {
           return (
-            <StyledRadioEntry>
+            <StyledRadioEntry key={option}>
               <input
                 type='radio'
                 value={option}
                 checked={this.isSelectedValue(option)}
-                onClick={event => {
+                onChange={event => {
                   this.state.selectedValue = option
                   this.props.onChange(event)
                 }}

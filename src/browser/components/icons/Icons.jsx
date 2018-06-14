@@ -42,12 +42,13 @@ class IconContainer extends Component {
       isOpen,
       text,
       regulateSize,
+      suppressIconStyles,
       ...rest
     } = this.props
 
     const state =
       this.state.mouseover || isOpen ? activeStyle || '' : inactiveStyle || ''
-    const newClass = this.props.suppressIconStyles
+    const newClass = suppressIconStyles
       ? this.props.className
       : state + ' ' + this.props.className
     const regulateSizeStyle = regulateSize

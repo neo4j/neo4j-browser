@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+/* global btoa */
 import React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
@@ -141,7 +142,7 @@ const visualSettings = [
 
 export const Settings = ({ settings, onSettingsSave = () => {} }) => {
   if (!settings) return null
-  const mappedSettings = visualSettings.map((visualSetting, i) => {
+  const mappedSettings = visualSettings.map((visualSetting, oi) => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
     const mapSettings = visualSetting.settings
       .map((settingObj, i) => {
@@ -152,7 +153,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
 
         if (!settingObj[setting].type || settingObj[setting].type === 'input') {
           return (
-            <StyledSetting key={i}>
+            <StyledSetting key={btoa(visual)}>
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
               <StyledSettingTextInput
                 onChange={event => {
@@ -167,7 +168,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
           )
         } else if (settingObj[setting].type === 'radio') {
           return (
-            <StyledSetting key={i}>
+            <StyledSetting key={btoa(visual)}>
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
               <RadioSelector
                 options={settingObj[setting].options}
@@ -181,7 +182,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
           )
         } else if (settingObj[setting].type === 'checkbox') {
           return (
-            <StyledSetting key={i}>
+            <StyledSetting key={btoa(visual)}>
               <CheckboxSelector
                 onChange={event => {
                   settings[setting] = event.target.checked
@@ -196,10 +197,10 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
       })
       .filter(setting => setting !== false)
     return (
-      <div>
+      <React.Fragment key={btoa(visualSetting.title)}>
         {title}
         {mapSettings}
-      </div>
+      </React.Fragment>
     )
   })
 
