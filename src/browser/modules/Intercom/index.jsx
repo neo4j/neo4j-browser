@@ -24,14 +24,13 @@ import { canUseDOM } from 'services/utils'
 import { updateData } from 'shared/modules/udc/udcDuck'
 
 export class Intercom extends Component {
-  constructor (props) {
-    super(props)
+  componentDidMount () {
     const {
       appID,
       updateData,
       children, // eslint-disable-line
       ...otherProps
-    } = props
+    } = this.props
     if (!appID || !canUseDOM()) {
       return
     }
