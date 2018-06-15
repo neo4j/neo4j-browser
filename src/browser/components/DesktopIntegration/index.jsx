@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { getActiveGraph, getCredentials, eventToHandler } from './helpers'
 
 export default class DesktopIntegration extends Component {

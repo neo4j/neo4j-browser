@@ -22,7 +22,7 @@ import React, { Component } from 'react'
 import asciitable from 'ascii-data-table'
 import Render from 'browser-components/Render'
 import Ellipsis from 'browser-components/Ellipsis'
-import { debounce, shallowEquals, deepEquals } from 'services/utils'
+import { shallowEquals, deepEquals } from 'services/utils'
 import {
   StyledStatsBar,
   PaddedDiv,
