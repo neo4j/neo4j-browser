@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+/* global btoa */
 import React from 'react'
 import styled from 'styled-components'
 
@@ -74,11 +75,12 @@ export const SysInfoTableEntry = ({
   const getValue = (v, m) => (m && v ? mapper(v) : v)
   if (headers) {
     return (
-      <StyledTr>
+      <StyledTr key='headers-row'>
         {headers.map(value => {
           const mappedValue = getValue(value, mapper)
+          const val = mappedValue || missingValuePlaceholder
           return mappedValue || !optional ? (
-            <StyledTdKey>{mappedValue || missingValuePlaceholder}</StyledTdKey>
+            <StyledTdKey key={btoa(val)}>{val}</StyledTdKey>
           ) : null
         })}
       </StyledTr>
@@ -86,11 +88,12 @@ export const SysInfoTableEntry = ({
   }
   if (values) {
     return (
-      <StyledTr>
+      <StyledTr key='values-row'>
         {values.map(value => {
           const mappedValue = getValue(value, mapper)
+          const val = mappedValue || missingValuePlaceholder
           return mappedValue || !optional ? (
-            <StyledTd>{mappedValue || missingValuePlaceholder}</StyledTd>
+            <StyledTd key={btoa(val)}>{val}</StyledTd>
           ) : null
         })}
       </StyledTr>

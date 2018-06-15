@@ -271,41 +271,45 @@ export class SysInfoFrame extends Component {
   render () {
     const content = this.props.isConnected ? (
       <SysInfoTableContainer>
-        <SysInfoTable key='Store Sizes' header='Store Sizes'>
+        <SysInfoTable key='StoreSizes' header='Store Sizes'>
           {this.buildTableData(this.state.storeSizes)}
         </SysInfoTable>
-        <SysInfoTable key='ID Allocation' header='ID Allocation'>
+        <SysInfoTable key='IDAllocation' header='ID Allocation'>
           {this.buildTableData(this.state.idAllocation)}
         </SysInfoTable>
-        <SysInfoTable key='Page Cache' header='Page Cache'>
+        <SysInfoTable key='PageCache' header='Page Cache'>
           {this.buildTableData(this.state.pageCache)}
         </SysInfoTable>
-        <SysInfoTable key='Transactions' header='Transactions'>
+        <SysInfoTable key='Transactionss' header='Transactions'>
           {this.buildTableData(this.state.transactions)}
         </SysInfoTable>
         <Render if={this.props.isACausalCluster}>
           <SysInfoTable
-            key='cc'
+            key='cc-table'
             header={
-              <span>
+              <span data-testid='sysinfo-casual-cluster-members-title'>
                 Causal Cluster Members{' '}
                 <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
               </span>
             }
             colspan='3'
           >
-            <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
+            <SysInfoTableEntry
+              key='cc-entry'
+              headers={['Roles', 'Addresses', 'Actions']}
+            />
             {this.buildTableData(this.state.cc)}
           </SysInfoTable>
         </Render>
         <Render if={this.state.ha}>
-          <SysInfoTable key='ha' header='High Availability'>
+          <SysInfoTable key='ha-table' header='High Availability'>
             {this.buildTableData(this.state.ha)}
           </SysInfoTable>
         </Render>
         <Render if={this.state.haInstances}>
-          <SysInfoTable key='cluster' header='Cluster' colspan='4'>
+          <SysInfoTable key='cluster-table' header='Cluster' colspan='4'>
             <SysInfoTableEntry
+              key='ha-entry'
               headers={['Id', 'Alive', 'Available', 'Is Master']}
             />
             {this.buildTableData(this.state.haInstances)}
@@ -313,7 +317,7 @@ export class SysInfoFrame extends Component {
         </Render>
       </SysInfoTableContainer>
     ) : (
-      undefined
+      'No connection available'
     )
 
     return (
