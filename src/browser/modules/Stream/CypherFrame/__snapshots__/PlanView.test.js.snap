@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
+<div>
+  <div
+    class="sc-dVhcbM lhlpeY sc-fMiknA bfWcmG"
+  >
+    <div
+      class="sc-cJSrbW fwiFR"
+    >
+      <div
+        class="sc-gGBfsJ hdpDrB"
+      >
+        Cypher version: 
+        xx0
+        , planner: 
+        xx1
+        , runtime: 
+        xx2
+        .
+         xx3 total db hits in 120 ms.
+      </div>
+    </div>
+    <div
+      class="sc-kgAjT oWZEd"
+    >
+      <ul
+        class="sc-kkGfuU eKIggj"
+      >
+        <li
+          class="sc-iwsKbI eorUpA"
+          data-test-id="planCollapseButton"
+        >
+          <i
+            class=" sl-double-up"
+          />
+        </li>
+        <li
+          class="sc-iwsKbI eorUpA"
+          data-test-id="planExpandButton"
+        >
+          <i
+            class=" sl-double-down"
+          />
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
