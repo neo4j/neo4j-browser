@@ -58,7 +58,13 @@ export class WarningsView extends Component {
     let cypherLines = cypher.split('\n')
     let notificationsList = notifications.map(notification => {
       return (
-        <StyledHelpContent>
+        <StyledHelpContent
+          key={
+            notification.title +
+            notification.position.line +
+            notification.position.offset
+          }
+        >
           <StyledHelpDescription>
             {getWarningComponent(notification.severity)}
             <StyledH4>{notification.title}</StyledH4>
