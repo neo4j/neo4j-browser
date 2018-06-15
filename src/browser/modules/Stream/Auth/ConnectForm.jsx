@@ -27,22 +27,13 @@ import {
   StyledConnectionLabel,
   StyledConnectionFormEntry
 } from './styled'
-import FormKeyHandler from 'browser-components/form/formKeyHandler'
+import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 
 export default class ConnectForm extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      connecting: false
-    }
+  state = {
+    connecting: false
   }
-  componentWillMount () {
-    this.formKeyHandler = new FormKeyHandler(this.onConnectClick.bind(this))
-  }
-  componentDidMount () {
-    this.formKeyHandler.initialize(this.props.used === false)
-  }
-  onConnectClick () {
+  onConnectClick = () => {
     this.setState({ connecting: true }, () => {
       this.props.onConnectClick(() => this.setState({ connecting: false }))
     })
@@ -50,43 +41,64 @@ export default class ConnectForm extends Component {
   render () {
     return (
       <StyledConnectionForm>
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>Host</StyledConnectionLabel>
-          <StyledConnectionTextInput
-            data-test-id='boltaddress'
-            innerRef={el => this.formKeyHandler.registerInput(el, 1)}
-            onChange={this.props.onHostChange}
-            defaultValue={this.props.host}
-          />
-        </StyledConnectionFormEntry>
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>Username</StyledConnectionLabel>
-          <StyledConnectionTextInput
-            data-test-id='username'
-            innerRef={el => this.formKeyHandler.registerInput(el, 2)}
-            onChange={this.props.onUsernameChange}
-            defaultValue={this.props.username}
-          />
-        </StyledConnectionFormEntry>
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>Password</StyledConnectionLabel>
-          <StyledConnectionTextInput
-            data-test-id='password'
-            innerRef={el => this.formKeyHandler.registerInput(el, 3)}
-            onChange={this.props.onPasswordChange}
-            defaultValue={this.props.password}
-            type='password'
-          />
-        </StyledConnectionFormEntry>
-        <Render if={!this.state.connecting}>
-          <FormButton
-            data-test-id='connect'
-            onClick={this.onConnectClick.bind(this)}
-          >
-            Connect
-          </FormButton>
-        </Render>
-        <Render if={this.state.connecting}>Connecting...</Render>
+        <InputEnterStepping
+          steps='3'
+          submitAction={this.onConnectClick}
+          render={({
+            getSubmitProps,
+            getInputPropsForIndex,
+            setRefForIndex
+          }) => {
+            return (
+              <React.Fragment>
+                <StyledConnectionFormEntry>
+                  <StyledConnectionLabel>Host</StyledConnectionLabel>
+                  <StyledConnectionTextInput
+                    {...getInputPropsForIndex(0, {
+                      initialFocus: true,
+                      'data-test-id': 'boltaddress',
+                      onChange: this.props.onHostChange,
+                      defaultValue: this.props.host,
+                      innerRef: ref => setRefForIndex(0, ref)
+                    })}
+                  />
+                </StyledConnectionFormEntry>
+
+                <StyledConnectionFormEntry>
+                  <StyledConnectionLabel>Username</StyledConnectionLabel>
+                  <StyledConnectionTextInput
+                    {...getInputPropsForIndex(1, {
+                      'data-test-id': 'username',
+                      onChange: this.props.onUsernameChange,
+                      defaultValue: this.props.username,
+                      innerRef: ref => setRefForIndex(1, ref)
+                    })}
+                  />
+                </StyledConnectionFormEntry>
+
+                <StyledConnectionFormEntry>
+                  <StyledConnectionLabel>Password</StyledConnectionLabel>
+                  <StyledConnectionTextInput
+                    {...getInputPropsForIndex(2, {
+                      'data-test-id': 'password',
+                      onChange: this.props.onPasswordChange,
+                      defaultValue: this.props.password,
+                      type: 'password',
+                      innerRef: ref => setRefForIndex(2, ref)
+                    })}
+                  />
+                </StyledConnectionFormEntry>
+
+                <Render if={!this.state.connecting}>
+                  <FormButton data-test-id='connect' {...getSubmitProps()}>
+                    Connect
+                  </FormButton>
+                </Render>
+                <Render if={this.state.connecting}>Connecting...</Render>
+              </React.Fragment>
+            )
+          }}
+        />
       </StyledConnectionForm>
     )
   }

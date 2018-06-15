@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, beforeEach, afterEach, test, expect, jest, MouseEvent */
+/* global describe, beforeEach, afterEach, test, expect, jest */
 import React from 'react'
-import { render, fireEvent, Simulate } from 'react-testing-library'
+import { render, Simulate } from 'react-testing-library'
 
 import { createBus } from 'suber'
 

@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders the render prop 1`] = `
+<div>
+  <div>
+    hello
+  </div>
+</div>
+`;
+
+exports[`submits on button click 1`] = `
+<div>
+  <input
+    data-testid="first"
+    value="first"
+  />
+  <input
+    data-testid="second"
+    value="second"
+  />
+  <button>
+    Send
+  </button>
+</div>
+`;
+
+exports[`submits on enter in last input 1`] = `
+<div>
+  <input
+    data-testid="first"
+    value="first"
+  />
+  <input
+    data-testid="second"
+    value="second"
+  />
+</div>
+`;
