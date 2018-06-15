@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
+<div>
+  <div
+    class="sc-hSdWYo gcYLJq"
+  >
+    <div
+      class="sc-bdVaJa kwzqrW"
+    >
+      Completed after 10  ms.
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
+<div>
+  <div
+    class="sc-hSdWYo gcYLJq"
+  >
+    <div
+      class="sc-iRbamj dFpacx"
+    >
+      <div
+        class="sc-gipzik kSaAcF"
+      >
+        Max column width:
+        <input
+          class="sc-csuQGl fCZHdq"
+          max="3"
+          min="3"
+          type="range"
+          value="70"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
+<div>
+  <div
+    class="sc-gzVnrw hPaHhb"
+  >
+    <div
+      class="sc-jWBwVP bcdEzH"
+    >
+      (no changes, no records)
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AsciiViews AsciiView does not display bodyMessage if rows 1`] = `
+<div>
+  <div
+    class="sc-gzVnrw hPaHhb"
+  >
+    <pre>
+      ╒═══╕
+│"x"│
+╞═══╡
+│"y"│
+└───┘
+    </pre>
+  </div>
+</div>
+`;
