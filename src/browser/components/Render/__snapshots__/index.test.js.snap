@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Render> does not render if condition is false 1`] = `<div />`;
+
+exports[`<Render> does render if condition is true 1`] = `
+<div>
+  <span>
+    Hello
+  </span>
+</div>
+`;

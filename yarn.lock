@@ -559,6 +559,10 @@ atob@^2.0.0:
   version "2.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/atob/-/atob-2.0.3.tgz#19c7a760473774468f20b2d2d03372ad7d4cbf5d"
 
+atob@^2.1.1:
+  version "2.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/atob/-/atob-2.1.1.tgz?dl=https://registry.npmjs.org/atob/-/atob-2.1.1.tgz#ae2d5a729477f289d60dd7f96a6314a22dd6c22a"
+
 attr-accept@^1.0.3:
   version "1.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/attr-accept/-/attr-accept-1.1.2.tgz?dl=https://registry.npmjs.org/attr-accept/-/attr-accept-1.1.2.tgz#6836bfe054e4ef1ee3076fdde56cec9bb3ffead6"
@@ -2424,6 +2428,15 @@ css-what@2.1:
   version "2.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/css-what/-/css-what-2.1.0.tgz#9467d032c38cfaefb9f2d79501253062f87fa1bd"
 
+css@^2.2.3:
+  version "2.2.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/css/-/css-2.2.3.tgz?dl=https://registry.npmjs.org/css/-/css-2.2.3.tgz#f861f4ba61e79bedc962aa548e5780fd95cbc6be"
+  dependencies:
+    inherits "^2.0.1"
+    source-map "^0.1.38"
+    source-map-resolve "^0.5.1"
+    urix "^0.1.0"
+
 cssesc@^0.1.0:
   version "0.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cssesc/-/cssesc-0.1.0.tgz?dl=https://registry.npmjs.org/cssesc/-/cssesc-0.1.0.tgz#c814903e45623371a0477b40109aaafbeeaddbb4"
@@ -2790,6 +2803,15 @@ dom-serializer@0:
 dom-storage@2.1.0:
   version "2.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-storage/-/dom-storage-2.1.0.tgz?dl=https://registry.npmjs.org/dom-storage/-/dom-storage-2.1.0.tgz#00fb868bc9201357ea243c7bcfd3304c1e34ea39"
+
+dom-testing-library@^2.3.1:
+  version "2.6.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-testing-library/-/dom-testing-library-2.6.0.tgz?dl=https://registry.npmjs.org/dom-testing-library/-/dom-testing-library-2.6.0.tgz#8bc38c63b41b10830e6a5034f9fc0ed78c8ba484"
+  dependencies:
+    jest-dom "^1.0.0"
+    mutationobserver-shim "^0.3.2"
+    pretty-format "^22.4.3"
+    wait-for-expect "^0.4.0"
 
 domain-browser@^1.1.1:
   version "1.2.0"
@@ -4905,9 +4927,29 @@ jest-diff@^21.2.1:
     jest-get-type "^21.2.0"
     pretty-format "^21.2.1"
 
+jest-diff@^22.4.3:
+  version "22.4.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-diff/-/jest-diff-22.4.3.tgz?dl=https://registry.npmjs.org/jest-diff/-/jest-diff-22.4.3.tgz#e18cc3feff0aeef159d02310f2686d4065378030"
+  dependencies:
+    chalk "^2.0.1"
+    diff "^3.2.0"
+    jest-get-type "^22.4.3"
+    pretty-format "^22.4.3"
+
 jest-docblock@^21.2.0:
   version "21.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-docblock/-/jest-docblock-21.2.0.tgz#51529c3b30d5fd159da60c27ceedc195faf8d414"
+
+jest-dom@^1.0.0:
+  version "1.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-dom/-/jest-dom-1.3.1.tgz?dl=https://registry.npmjs.org/jest-dom/-/jest-dom-1.3.1.tgz#4eba15d54059182ee0d3682a9fff0d957ad874c7"
+  dependencies:
+    chalk "^2.4.1"
+    css "^2.2.3"
+    jest-diff "^22.4.3"
+    jest-matcher-utils "^22.4.3"
+    pretty-format "^23.0.1"
+    redent "^2.0.0"
 
 jest-environment-jsdom@^21.2.1:
   version "21.2.1"
@@ -4927,6 +4969,10 @@ jest-environment-node@^21.2.1:
 jest-get-type@^21.2.0:
   version "21.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-get-type/-/jest-get-type-21.2.0.tgz#f6376ab9db4b60d81e39f30749c6c466f40d4a23"
+
+jest-get-type@^22.4.3:
+  version "22.4.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-get-type/-/jest-get-type-22.4.3.tgz?dl=https://registry.npmjs.org/jest-get-type/-/jest-get-type-22.4.3.tgz#e3a8504d8479342dd4420236b322869f18900ce4"
 
 jest-haste-map@^21.2.0:
   version "21.2.0"
@@ -4959,6 +5005,14 @@ jest-matcher-utils@^21.2.1:
     chalk "^2.0.1"
     jest-get-type "^21.2.0"
     pretty-format "^21.2.1"
+
+jest-matcher-utils@^22.4.3:
+  version "22.4.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-matcher-utils/-/jest-matcher-utils-22.4.3.tgz?dl=https://registry.npmjs.org/jest-matcher-utils/-/jest-matcher-utils-22.4.3.tgz#4632fe428ebc73ebc194d3c7b65d37b161f710ff"
+  dependencies:
+    chalk "^2.0.1"
+    jest-get-type "^22.4.3"
+    pretty-format "^22.4.3"
 
 jest-message-util@^21.2.1:
   version "21.2.1"
@@ -5808,6 +5862,10 @@ multicast-dns@^6.0.1:
   dependencies:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
+
+mutationobserver-shim@^0.3.2:
+  version "0.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz?dl=https://registry.npmjs.org/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#f4d5dae7a4971a2207914fb5a90ebd514b65acca"
 
 mute-stream@0.0.7:
   version "0.0.7"
@@ -7216,6 +7274,20 @@ pretty-format@^22.0.3:
     ansi-regex "^3.0.0"
     ansi-styles "^3.2.0"
 
+pretty-format@^22.4.3:
+  version "22.4.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/pretty-format/-/pretty-format-22.4.3.tgz?dl=https://registry.npmjs.org/pretty-format/-/pretty-format-22.4.3.tgz#f873d780839a9c02e9664c8a082e9ee79eaac16f"
+  dependencies:
+    ansi-regex "^3.0.0"
+    ansi-styles "^3.2.0"
+
+pretty-format@^23.0.1:
+  version "23.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/pretty-format/-/pretty-format-23.0.1.tgz?dl=https://registry.npmjs.org/pretty-format/-/pretty-format-23.0.1.tgz#d61d065268e4c759083bccbca27a01ad7c7601f4"
+  dependencies:
+    ansi-regex "^3.0.0"
+    ansi-styles "^3.2.0"
+
 private@^0.1.6:
   version "0.1.7"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/private/-/private-0.1.7.tgz#68ce5e8a1ef0a23bb570cc28537b5332aba63ef1"
@@ -7539,6 +7611,13 @@ react-suber@1.0.4:
   dependencies:
     hoist-non-react-statics "^2.5.0"
 
+react-testing-library@^3.1.7:
+  version "3.1.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-testing-library/-/react-testing-library-3.1.7.tgz?dl=https://registry.npmjs.org/react-testing-library/-/react-testing-library-3.1.7.tgz#c5ce14483ef91c1ad611f074ff646b29952dd1ba"
+  dependencies:
+    dom-testing-library "^2.3.1"
+    wait-for-expect "^0.5.0"
+
 react-timeago@^3.4.3:
   version "3.4.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-3.4.3.tgz#eb9061eefb044e4a2b09ce8c99d34645b2dbfa25"
@@ -7645,6 +7724,13 @@ redent@^1.0.0:
   dependencies:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
+
+redent@^2.0.0:
+  version "2.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/redent/-/redent-2.0.0.tgz?dl=https://registry.npmjs.org/redent/-/redent-2.0.0.tgz#c1b2007b42d57eb1389079b3c8333639d5e1ccaa"
+  dependencies:
+    indent-string "^3.0.0"
+    strip-indent "^2.0.0"
 
 reduce-css-calc@^1.2.6, reduce-css-calc@^1.2.7:
   version "1.3.0"
@@ -8354,6 +8440,16 @@ source-map-resolve@^0.5.0:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
+source-map-resolve@^0.5.1:
+  version "0.5.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/source-map-resolve/-/source-map-resolve-0.5.2.tgz?dl=https://registry.npmjs.org/source-map-resolve/-/source-map-resolve-0.5.2.tgz#72e2cc34095543e43b2c62b2c4c10d4a9054f259"
+  dependencies:
+    atob "^2.1.1"
+    decode-uri-component "^0.2.0"
+    resolve-url "^0.2.1"
+    source-map-url "^0.4.0"
+    urix "^0.1.0"
+
 source-map-support@^0.4.15:
   version "0.4.18"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/source-map-support/-/source-map-support-0.4.18.tgz?dl=https://registry.npmjs.org/source-map-support/-/source-map-support-0.4.18.tgz#0286a6de8be42641338594e97ccea75f0a2c585f"
@@ -8367,6 +8463,12 @@ source-map-url@^0.4.0:
 source-map@0.5.x, source-map@^0.5.3, source-map@^0.5.6, source-map@^0.5.7, source-map@~0.5.0, source-map@~0.5.1, source-map@~0.5.6:
   version "0.5.7"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/source-map/-/source-map-0.5.7.tgz?dl=https://registry.npmjs.org/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
+
+source-map@^0.1.38:
+  version "0.1.43"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/source-map/-/source-map-0.1.43.tgz?dl=https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
+  dependencies:
+    amdefine ">=0.0.4"
 
 source-map@^0.4.4:
   version "0.4.4"
@@ -9169,6 +9271,14 @@ vm-browserify@0.0.4:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/vm-browserify/-/vm-browserify-0.0.4.tgz?dl=https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
   dependencies:
     indexof "0.0.1"
+
+wait-for-expect@^0.4.0:
+  version "0.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/wait-for-expect/-/wait-for-expect-0.4.0.tgz?dl=https://registry.npmjs.org/wait-for-expect/-/wait-for-expect-0.4.0.tgz#341c96ab89d6102a0169a9be6cd0de354de92c17"
+
+wait-for-expect@^0.5.0:
+  version "0.5.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/wait-for-expect/-/wait-for-expect-0.5.0.tgz?dl=https://registry.npmjs.org/wait-for-expect/-/wait-for-expect-0.5.0.tgz#cc935a94c6039967bd7760c9e9cc557f4674887a"
 
 walker@~1.0.5:
   version "1.0.7"

@@ -23,32 +23,32 @@
 import React from 'react'
 import { render } from 'react-testing-library'
 
-import Render from './index'
+import Display from './Display'
 
-describe('<Render>', () => {
-  test('does not render if condition is false', () => {
+describe('<Display>', () => {
+  test('hides if condition is false', () => {
     // Given
     const val = false
 
     // When
     const { container } = render(
-      <Render if={val}>
+      <Display if={val}>
         <span>Hello</span>
-      </Render>
+      </Display>
     )
 
     // Then
     expect(container).toMatchSnapshot()
   })
-  test('does render if condition is true', () => {
+  test('does display if condition is true', () => {
     // Given
     const val = true
 
     // When
     const { container } = render(
-      <Render if={val}>
+      <Display if={val}>
         <span>Hello</span>
-      </Render>
+      </Display>
     )
 
     // Then
