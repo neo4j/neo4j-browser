@@ -75,17 +75,26 @@ const getFrame = type => {
 }
 
 class Stream extends Component {
+  componentDidMount () {
+    this.base = React.createRef()
+  }
+
   shouldComponentUpdate (props) {
     const frameHasBeenAdded = this.props.frames.length < props.frames.length
-    if (frameHasBeenAdded && this.props.scrollToTop && this.base) {
-      this.base.scrollTop = 0
+    if (
+      frameHasBeenAdded &&
+      this.props.scrollToTop &&
+      this.base &&
+      this.base.current
+    ) {
+      this.base.current.scrollTop = 0
       return true
     }
     return !deepEquals(props, this.props)
   }
   render () {
     return (
-      <StyledStream>
+      <StyledStream innerRef={this.base}>
         {this.props.frames.map(frame => {
           const frameProps = {
             frame,
