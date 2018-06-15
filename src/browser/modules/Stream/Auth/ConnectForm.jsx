@@ -56,7 +56,7 @@ export default class ConnectForm extends Component {
             data-test-id='boltaddress'
             innerRef={el => this.formKeyHandler.registerInput(el, 1)}
             onChange={this.props.onHostChange}
-            value={this.props.host}
+            defaultValue={this.props.host}
           />
         </StyledConnectionFormEntry>
         <StyledConnectionFormEntry>
@@ -65,7 +65,7 @@ export default class ConnectForm extends Component {
             data-test-id='username'
             innerRef={el => this.formKeyHandler.registerInput(el, 2)}
             onChange={this.props.onUsernameChange}
-            value={this.props.username}
+            defaultValue={this.props.username}
           />
         </StyledConnectionFormEntry>
         <StyledConnectionFormEntry>
@@ -74,7 +74,7 @@ export default class ConnectForm extends Component {
             data-test-id='password'
             innerRef={el => this.formKeyHandler.registerInput(el, 3)}
             onChange={this.props.onPasswordChange}
-            value={this.props.password}
+            defaultValue={this.props.password}
             type='password'
           />
         </StyledConnectionFormEntry>
