@@ -47,21 +47,9 @@ describe('hydrate', () => {
     expect(newState.bar).toEqual(1)
     expect(newState.hydrated).toEqual(true)
   })
-  test('should not merge initialState with state when state is undefined', () => {
-    // Given
-    const initialState = { foo: 0 }
-    const state = undefined
-
-    // When
-    const newState = hydrate(initialState, state)
-
-    // Then
-    expect(newState.foo).toEqual(0)
-    expect(newState.hydrated).toEqual(true)
-  })
 })
 describe('dehydrate', () => {
-  test.only('should remove hydrated key from state', () => {
+  test('should remove hydrated key from state', () => {
     // Given
     const state = { bar: 1, hydrated: true }
 
