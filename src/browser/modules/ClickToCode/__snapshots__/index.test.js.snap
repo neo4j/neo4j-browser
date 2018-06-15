@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClickToCode does not render if no children 1`] = `<div />`;
+
+exports[`ClickToCode renders all children 1`] = `
+<div>
+  <code
+    class="sc-bdVaJa biJQaZ"
+  >
+    <div>
+      <span>
+        hello
+      </span>
+      hi!
+    </div>
+  </code>
+</div>
+`;
+
+exports[`ClickToCode renders children as code if no code is provided 1`] = `
+<div>
+  <code
+    class="sc-bdVaJa biJQaZ"
+  >
+    hellohi!
+  </code>
+</div>
+`;
+
+exports[`ClickToCode renders code as the code when code is available 1`] = `
+<div>
+  <code
+    class="sc-bdVaJa biJQaZ"
+  >
+    hello
+  </code>
+</div>
+`;
+
+exports[`ClickToCode renders if no CodeComponent is provided 1`] = `<div />`;

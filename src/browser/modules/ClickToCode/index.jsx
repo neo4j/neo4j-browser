@@ -37,7 +37,7 @@ export const ClickToCode = ({
   children
 }) => {
   if (!children || children.length === 0) return null
-  code = code || children.join('')
+  code = code || children
   const fn = !execute
     ? () => setOnClick(bus, code)
     : () => execOnClick(bus, code)
