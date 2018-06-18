@@ -57,7 +57,10 @@ const Main = props => {
       <Render if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner data-test-id='disconnectedBanner'>
           Database access not available. Please use&nbsp;
-          <ClickToCode CodeComponent={StyledCodeBlockAuthBar}>
+          <ClickToCode
+            data-test-id='disconnectedBannerCode'
+            CodeComponent={StyledCodeBlockAuthBar}
+          >
             {props.cmdchar}server connect
           </ClickToCode>&nbsp; to establish connection. There's a graph waiting
           for you.

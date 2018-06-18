@@ -23,7 +23,10 @@ import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { StyledCodeBlock } from './styled'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
-const setOnClick = (bus, code) => bus.send(SET_CONTENT, setContent(code))
+const setOnClick = (bus, code) => {
+  code = Array.isArray(code) ? code.join('') : code
+  bus.send(SET_CONTENT, setContent(code))
+}
 const execOnClick = (bus, code) => {
   const cmd = executeCommand(code)
   bus.send(cmd.type, cmd)
@@ -34,14 +37,20 @@ export const ClickToCode = ({
   bus,
   code,
   execute = false,
-  children
+  children,
+  className,
+  ...rest
 }) => {
   if (!children || children.length === 0) return null
   code = code || children
   const fn = !execute
     ? () => setOnClick(bus, code)
     : () => execOnClick(bus, code)
-  return <CodeComponent onClick={fn}>{children}</CodeComponent>
+  return (
+    <CodeComponent {...rest} onClick={fn}>
+      {children}
+    </CodeComponent>
+  )
 }
 
 export default withBus(ClickToCode)
