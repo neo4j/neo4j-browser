@@ -20,98 +20,83 @@
 
 /* global describe, test, expect */
 
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
 
 import { ErrorsView, ErrorsStatusbar } from './ErrorsView'
+
+afterEach(cleanup)
 
 describe('ErrorsViews', () => {
   describe('ErrorsView', () => {
     test('displays nothing if no errors', () => {
       // Given
-      const result = mount(ErrorsView)
-        .withProps({ result: {} })
-        // Then
-        .then(wrapper => {
-          expect(wrapper.text()).toEqual('')
-        })
+      const props = {
+        result: {}
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<ErrorsView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('does displays an error', () => {
       // Given
-      const result = mount(ErrorsView)
-        .withProps({
-          result: {
-            code: 'Test.Error',
-            message: 'Test error description'
-          }
-        })
-        // Then
-        .then(wrapper => {
-          const text = wrapper.text()
-          expect(text).toContain('ERROR')
-          expect(text).toContain('Test.Error')
-          expect(text).toContain('Test error description')
-        })
+      const props = {
+        result: {
+          code: 'Test.Error',
+          message: 'Test error description'
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<ErrorsView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('displays procedure link if unknown procedure', () => {
       // Given
       const procErrorCode = 'Neo.ClientError.Procedure.ProcedureNotFound'
-      const result = mount(ErrorsView)
-        .withProps({
-          result: {
-            code: procErrorCode,
-            message: 'not found'
-          }
-        })
-        // Then
-        .then(wrapper => {
-          const text = wrapper.text()
-          expect(text).toContain('ERROR')
-          expect(text).toContain(procErrorCode)
-          expect(text).toContain('not found')
-          expect(text).toContain('List available procedures')
-        })
+      const props = {
+        result: {
+          code: procErrorCode,
+          message: 'not found'
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container, getByText } = render(<ErrorsView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
+      expect(getByText('List available procedures')).not.toBeUndefined()
     })
   })
   describe('ErrorsStatusbar', () => {
     test('displays nothing if no error', () => {
       // Given
-      const result = mount(ErrorsStatusbar)
-        .withProps({ result: {} })
-        // Then
-        .then(wrapper => {
-          expect(wrapper.text()).toEqual('')
-        })
+      const props = {
+        result: {}
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<ErrorsStatusbar {...props} />)
+      expect(container).toMatchSnapshot()
     })
     test('displays error', () => {
       // Given
-      const result = mount(ErrorsStatusbar)
-        .withProps({
-          result: {
-            code: 'Test.Error',
-            message: 'Test error description'
-          }
-        })
-        // Then
-        .then(wrapper => {
-          expect(wrapper.text()).toContain('Test.Error')
-          expect(wrapper.text()).toContain('Test error description')
-          expect(wrapper.html()).toContain('exclamation-triangle')
-        })
+      const props = {
+        result: {
+          code: 'Test.Error',
+          message: 'Test error description'
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<ErrorsStatusbar {...props} />)
+      expect(container).toMatchSnapshot()
     })
   })
 })

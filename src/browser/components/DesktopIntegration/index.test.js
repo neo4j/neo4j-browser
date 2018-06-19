@@ -20,8 +20,11 @@
 
 /* global test, expect, jest */
 
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, wait, cleanup } from 'react-testing-library'
 import DesktopIntegration from './index'
+
+afterEach(cleanup)
 
 describe('<DesktopIntegration>', () => {
   test('does not render anything if no integration point', () => {
@@ -29,32 +32,26 @@ describe('<DesktopIntegration>', () => {
     const integrationPoint = null
 
     // When
-    const result = mount(DesktopIntegration)
-      .withProps({ integrationPoint })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('')
-      })
+    const { container } = render(
+      <DesktopIntegration integrationPoint={integrationPoint} />
+    )
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(container).toMatchSnapshot()
   })
   test('does not render anything if there is an integration point', () => {
     // Given
     const integrationPoint = { x: true }
 
     // When
-    const result = mount(DesktopIntegration)
-      .withProps({ integrationPoint })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('')
-      })
+    const { container } = render(
+      <DesktopIntegration integrationPoint={integrationPoint} />
+    )
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(container).toMatchSnapshot()
   })
-  test('calls onMount with data on mounting', () => {
+  test('calls onMount with data on mounting', async () => {
     // Given
     const mFn = jest.fn()
     const context = {
@@ -76,24 +73,21 @@ describe('<DesktopIntegration>', () => {
       ]
     }
     const integrationPoint = { getContext: () => Promise.resolve(context) }
-    const props = { integrationPoint, onMount: mFn }
-    // When
-    const result = mount(DesktopIntegration, props)
-      // Then
-      .withProps()
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('')
-        expect(mFn).toHaveBeenCalledTimes(1)
-        return wrapper
-      })
-      .then(wrapper => {
-        wrapper.setProps({ ...props, x: 1 }) // Update props for a rerender
-        wrapper.update()
-        expect(mFn).toHaveBeenCalledTimes(1)
-      })
 
-    // Return test result (promise)
-    return result
+    // When
+    const { container, rerender } = render(
+      <DesktopIntegration integrationPoint={integrationPoint} onMount={mFn} />
+    )
+    await wait(() => expect(mFn).toHaveBeenCalledTimes(1))
+    // Then
+    expect(container).toMatchSnapshot()
+
+    // When
+    rerender(<DesktopIntegration integrationPoint={integrationPoint} />)
+
+    // Then
+    expect(mFn).toHaveBeenCalledTimes(1)
+    expect(container).toMatchSnapshot()
   })
   test('calls onXxx with data on event XXX', () => {
     // Given
@@ -106,37 +100,35 @@ describe('<DesktopIntegration>', () => {
     const integrationPoint = {
       onContextUpdate: fn => (componentOnContextUpdate = fn)
     }
-    // We want to get called onXxx for XXX type events
-    const props = { integrationPoint, onXxx: fn }
 
     // When
-    const result = mount(DesktopIntegration, props)
-      // Then
-      .withProps()
-      .then(wrapper => {
-        expect(fn).toHaveBeenCalledTimes(0)
-        return wrapper
-      })
-      .then(wrapper => {
-        componentOnContextUpdate(event, newContext, oldContext)
-        expect(fn).toHaveBeenCalledTimes(1)
-        expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
-        return wrapper
-      })
-      .then(wrapper => {
-        componentOnContextUpdate(nonListenEvent, newContext, oldContext) // We don't listen for this
-        expect(fn).toHaveBeenCalledTimes(1)
-        expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
-        return wrapper
-      })
-      .then(wrapper => {
-        componentOnContextUpdate(event, newContext, oldContext) // Another one we're listening on
-        expect(fn).toHaveBeenCalledTimes(2)
-        expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
-        return wrapper
-      })
+    const { container } = render(
+      <DesktopIntegration integrationPoint={integrationPoint} onXxx={fn} />
+    )
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(fn).toHaveBeenCalledTimes(0)
+
+    // When
+    componentOnContextUpdate(event, newContext, oldContext)
+
+    // Then
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+
+    // When
+    componentOnContextUpdate(nonListenEvent, newContext, oldContext) // We don't listen for this
+
+    // Then
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+
+    // When
+    componentOnContextUpdate(event, newContext, oldContext) // Another one we're listening on
+
+    // Then
+    expect(fn).toHaveBeenCalledTimes(2)
+    expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+    expect(container).toMatchSnapshot()
   })
 })

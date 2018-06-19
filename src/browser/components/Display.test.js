@@ -21,117 +21,39 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { mount } from 'services/testUtils'
+import { render, cleanup } from 'react-testing-library'
 
 import Display from './Display'
 
+afterEach(cleanup)
+
 describe('<Display>', () => {
-  test('does not render if condition is false and lazy is set', () => {
+  test('hides if condition is false', () => {
     // Given
     const val = false
-    const children = [<span>Hello</span>]
-    const result = mount(Display)
-      .withProps({ if: val, lazy: 1, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('')
-      })
 
-    // Return test result (promise
-    return result
-  })
-  test('does render if condition is false but lazy isnt set', () => {
-    // Given
-    const val = false
-    const children = [<span>Hello</span>]
-    const result = mount(Display)
-      .withProps({ if: val, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('Hello')
-        expect(wrapper.html()).toContain('display: none')
-      })
+    // When
+    const { container } = render(
+      <Display if={val}>
+        <span>Hello</span>
+      </Display>
+    )
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(container).toMatchSnapshot()
   })
-  test('does render and display if condition is true', () => {
+  test('does display if condition is true', () => {
     // Given
     const val = true
-    const children = [<span>Hello</span>]
-    const result = mount(Display)
-      .withProps({ if: val, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('Hello')
-        expect(wrapper.html()).toContain('display: block')
-      })
 
-    // Return test result (promise)
-    return result
-  })
-  test('can render as inline', () => {
-    // Given
-    const val = true
-    const children = [<span>Hello</span>]
-    const result = mount(Display)
-      .withProps({ if: val, inline: 1, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('Hello')
-        expect(wrapper.html()).toContain('display: inline')
-      })
+    // When
+    const { container } = render(
+      <Display if={val}>
+        <span>Hello</span>
+      </Display>
+    )
 
-    // Return test result (promise)
-    return result
-  })
-  test('lazy loads', () => {
-    // Given
-    const firstVal = false
-    const secondVal = true
-    const children = [<span>Hello</span>]
-    const result = mount(Display)
-      .withProps({ if: firstVal, lazy: 1, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('')
-        return wrapper
-      })
-      .then(wrapper => {
-        wrapper.setProps({ if: secondVal, lazy: 1, children })
-        wrapper.update()
-        expect(wrapper.text()).toEqual('Hello')
-        expect(wrapper.html()).toContain('display: block')
-      })
-
-    // Return test result (promise)
-    return result
-  })
-  test('hides when condition becomes false', () => {
-    // Given
-    const children = [<span>Hello</span>]
-    const result = mount(Display)
-      .withProps({ if: false, lazy: 1, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('')
-        return wrapper
-      })
-      .then(wrapper => {
-        wrapper.setProps({ if: true, lazy: 1, children })
-        wrapper.update()
-        expect(wrapper.text()).toEqual('Hello')
-        expect(wrapper.html()).toContain('display: block')
-        return wrapper
-      })
-      .then(wrapper => {
-        wrapper.setProps({ if: false, lazy: 1, children })
-        wrapper.update()
-        expect(wrapper.text()).toEqual('Hello')
-        expect(wrapper.html()).toContain('display: none')
-      })
-
-    // Return test result (promise)
-    return result
+    // Then
+    expect(container).toMatchSnapshot()
   })
 })

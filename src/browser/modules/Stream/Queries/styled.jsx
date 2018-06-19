@@ -37,11 +37,11 @@ export const StyledTh = styled.th`
   height: 30px;
   vertical-align: top;
   padding: 5px;
-  width: {props => props.width || 'auto'};
+  width: ${props => props.width || 'auto'};
 `
 export const StyledTd = styled.td`
   padding: 5px;
-  width: {props => props.width || 'auto'};
+  width: ${props => props.width || 'auto'};
   text-overflow: ellipsis;
   overflow: hidden;
 `

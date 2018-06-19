@@ -19,28 +19,29 @@
  */
 
 /* global describe, test, expect */
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 
 import { CodeView, CodeStatusbar } from './CodeView'
+
+afterEach(cleanup)
 
 describe('CodeViews', () => {
   describe('CodeView', () => {
     test('displays nothing if not successful query', () => {
-      // we get no info from driver
       // Given
-      const result = mount(CodeView)
-        .withProps({ request: { status: 'error' } })
-        // Then
-        .then(wrapper => {
-          expect(wrapper.text()).toEqual('')
-        })
+      const props = { request: { status: 'error' } }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<CodeView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('displays request and response info if successful query', () => {
       // Given
-      const data = {
+      const props = {
         query: 'MATCH xx0',
         request: {
           status: 'success',
@@ -55,36 +56,45 @@ describe('CodeViews', () => {
           }
         }
       }
-      const result = mount(CodeView)
-        .withProps(data)
-        // Then
-        .then(wrapper => {
-          const text = wrapper.text()
-          expect(text).toContain('xx0')
-          expect(text).toContain('xx1')
-          expect(text).toContain('xx2')
-          expect(text).toContain('xx3')
-        })
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<CodeView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
   })
   describe('CodeStatusbar', () => {
+    test('displays no statusBarMessage', () => {
+      // Given
+      const props = { result: {}, maxRows: 0 }
+
+      // When
+      const { container } = render(<CodeStatusbar {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
+    })
     test('displays statusBarMessage', () => {
       // Given
-      const statusBarMessage = 'My message'
-      const result = mount(CodeStatusbar)
-        .withProps({ result: {}, maxRows: 0 })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ statusBarMessage })
-          wrapper.update()
-          expect(wrapper.text()).toContain('My message')
-        })
+      const props = {
+        query: 'MATCH xx0',
+        status: 'success',
+        result: {
+          summary: {
+            resultAvailableAfter: neo4j.int(5),
+            resultConsumedAfter: neo4j.int(5)
+          },
+          maxRows: 100,
+          records: [{ res: 'xx3' }]
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<CodeStatusbar {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
   })
 })

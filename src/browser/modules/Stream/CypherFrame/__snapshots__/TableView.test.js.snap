@@ -1,5 +1,78 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
+<div>
+  <div
+    class="sc-iAyFgw doKRWu"
+  >
+    <div
+      class="sc-eqIVtm dNNpFH"
+    />
+  </div>
+</div>
+`;
+
+exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
+<div>
+  <div
+    class="sc-iAyFgw doKRWu"
+  >
+    <div
+      class="sc-eqIVtm dNNpFH"
+    >
+      Started streaming 1 records after 5 ms and completed after 10  ms.
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
+<div>
+  <div
+    class="sc-gzVnrw eDeguU sc-bZQynM bblfwJ"
+  >
+    <div
+      class="sc-cvbbAY gJZQkc"
+    >
+      (no changes, no records)
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
+<div>
+  <div
+    class="sc-gzVnrw eDeguU sc-bZQynM bblfwJ"
+  >
+    <table
+      class="sc-fAjcbJ gfwabc"
+    >
+      <thead>
+        <tr>
+          <th
+            class="table-header sc-gisBJw cExavq"
+          >
+            x
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="table-row sc-caSCKo hvgHkX"
+        >
+          <td
+            class="table-properties sc-kjoXOD TRkWw"
+          >
+            "y"
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
 exports[`TableViews TableView renderObject handles null values 1`] = `
 <styled.pre>
   {

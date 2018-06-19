@@ -19,9 +19,9 @@
  */
 
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import uuid from 'uuid'
-import { withBus } from 'preact-suber'
+import { withBus } from 'react-suber'
 import {
   listUsersQuery,
   listRolesQuery

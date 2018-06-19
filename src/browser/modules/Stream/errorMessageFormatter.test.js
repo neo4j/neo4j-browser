@@ -20,17 +20,9 @@
 
 /* global describe, test, expect */
 
-import render from 'preact-render-to-string'
 import { errorMessageFormater } from './errorMessageFormater'
 
 describe('errorsHelper', () => {
-  test('should display custom message when code is 18 (IE + ws://localhost issue)', () => {
-    const error = errorMessageFormater(18)
-
-    expect(error.title).toContain('18')
-    expect(error.message).toBeTruthy()
-    expect(render(error.message)).toContain('Internet Explorer')
-  })
   test('should return error code as code and message when message is missing', () => {
     const errorCode = 0
     const error = errorMessageFormater(errorCode)

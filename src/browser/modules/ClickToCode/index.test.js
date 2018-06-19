@@ -19,20 +19,19 @@
  */
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
-import render from 'preact-render-to-string'
+import React from 'react'
+import { render, fireEvent, cleanup } from 'react-testing-library'
+
 import { createBus } from 'suber'
 
 import { ClickToCode } from './index'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 
+afterEach(cleanup)
+
 describe('ClickToCode', () => {
-  let MyComp
   let bus
   beforeEach(() => {
-    MyComp = ({ onClick, children }) => {
-      onClick()
-      return <code>{children}</code>
-    }
     bus = createBus()
   })
   afterEach(() => {
@@ -41,22 +40,29 @@ describe('ClickToCode', () => {
   test('does not render if no children', () => {
     // Given
     const myFn = jest.fn()
+    const MyComp = () => <span>yo!</span>
 
     // When
     bus.take(SET_CONTENT, myFn)
-    const component = render(<ClickToCode CodeComponent={MyComp} bus={bus} />)
+    const { container } = render(
+      <ClickToCode CodeComponent={MyComp} bus={bus} />
+    )
 
     // Then
-    expect(component).toMatchSnapshot()
+    expect(container).toMatchSnapshot()
     expect(myFn).toHaveBeenCalledTimes(0)
   })
   test('renders if no CodeComponent is provided', () => {
     // Given
+    const myFn = jest.fn()
+
     // When
-    const component = render(<ClickToCode>my code</ClickToCode>)
+    bus.take(SET_CONTENT, myFn)
+    const { container } = render(<ClickToCode bus={bus} />)
 
     // Then
-    expect(component).toMatchSnapshot()
+    expect(container).toMatchSnapshot()
+    expect(myFn).toHaveBeenCalledTimes(0)
   })
   test('renders code as the code when code is available', () => {
     // Given
@@ -65,33 +71,42 @@ describe('ClickToCode', () => {
 
     // When
     bus.take(SET_CONTENT, myFn)
-    const component = render(
-      <ClickToCode CodeComponent={MyComp} code={code} bus={bus}>
-        yo
+    const { container, getByText } = render(
+      <ClickToCode code={code} bus={bus}>
+        hello
       </ClickToCode>
     )
 
     // Then
-    expect(component).toMatchSnapshot()
+    expect(container).toMatchSnapshot()
+    expect(myFn).toHaveBeenCalledTimes(0)
+
+    // When
+    fireEvent.click(getByText('hello'))
+
+    // Then
     expect(myFn).toHaveBeenCalledTimes(1)
     expect(myFn).toHaveBeenCalledWith({ message: code, type: SET_CONTENT })
   })
   test('renders children as code if no code is provided', () => {
     // Given
     const myFn = jest.fn()
-    const hello = 'hello'
     const childrenString = 'hellohi!'
 
     // When
     bus.take(SET_CONTENT, myFn)
-    const component = render(
-      <ClickToCode CodeComponent={MyComp} bus={bus}>
-        {hello}hi!
-      </ClickToCode>
+    const { container, getByText } = render(
+      <ClickToCode bus={bus}>hellohi!</ClickToCode>
     )
 
     // Then
-    expect(component).toMatchSnapshot()
+    expect(container).toMatchSnapshot()
+    expect(myFn).toHaveBeenCalledTimes(0)
+
+    // When
+    fireEvent.click(getByText(childrenString))
+
+    // Then
     expect(myFn).toHaveBeenCalledTimes(1)
     expect(myFn).toHaveBeenCalledWith({
       message: childrenString,
@@ -100,8 +115,8 @@ describe('ClickToCode', () => {
   })
   test('renders all children', () => {
     // Given
-    const myFn = jest.fn()
     const code = 'my code'
+    const myFn = jest.fn()
     const children = (
       <div>
         <span>hello</span>hi!
@@ -110,15 +125,24 @@ describe('ClickToCode', () => {
 
     // When
     bus.take(SET_CONTENT, myFn)
-    const component = render(
-      <ClickToCode CodeComponent={MyComp} code={code} bus={bus}>
+    const { container, getByText } = render(
+      <ClickToCode code={code} bus={bus}>
         {children}
       </ClickToCode>
     )
 
     // Then
-    expect(component).toMatchSnapshot()
+    expect(container).toMatchSnapshot()
+    expect(myFn).toHaveBeenCalledTimes(0)
+
+    // When
+    fireEvent.click(getByText('hello'))
+
+    // Then
     expect(myFn).toHaveBeenCalledTimes(1)
-    expect(myFn).toHaveBeenCalledWith({ message: code, type: SET_CONTENT })
+    expect(myFn).toHaveBeenCalledWith({
+      message: code,
+      type: SET_CONTENT
+    })
   })
 })

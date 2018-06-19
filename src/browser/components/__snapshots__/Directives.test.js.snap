@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Directives should attach all directives when contents has both attributes in different elements 1`] = `
+<div>
+  <div>
+    <div>
+      <a
+        class="clicked"
+        help-topic="help"
+      >
+        <i
+          class="fa fa-question-circle-o"
+          style="padding-right:4px"
+        />
+        help
+      </a>
+      <a
+        class="clicked"
+        play-topic="play"
+      >
+        <i
+          class="fa fa-play-circle-o"
+          style="padding-right:4px"
+        />
+        play
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Directives should attach help topic directive when contents has a play-topic attribute 1`] = `
+<div>
+  <div>
+    <a
+      class="clicked"
+      help-topic="hello"
+    >
+      <i
+        class="fa fa-question-circle-o"
+        style="padding-right:4px"
+      />
+      link
+    </a>
+  </div>
+</div>
+`;
+
+exports[`Directives should attach play topic directive when contents has a play-topic attribute 1`] = `
+<div>
+  <div>
+    <a
+      class="clicked"
+      play-topic="hello"
+    >
+      <i
+        class="fa fa-play-circle-o"
+        style="padding-right:4px"
+      />
+      button
+    </a>
+  </div>
+</div>
+`;
+
+exports[`Directives should attach runnable directive when element has a class name of \`.runnable pre\` 1`] = `
+<div>
+  <div>
+    <span
+      class="runnable"
+    >
+      <pre
+        class="clicked"
+      >
+        <i
+          class="fa fa-play-circle-o"
+          style="padding-right:4px"
+        />
+        my code
+      </pre>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Directives should attach runnable directive when element has a tag of \`pre.runnable\` 1`] = `
+<div>
+  <div>
+    <pre
+      class="runnable clicked"
+    >
+      <i
+        class="fa fa-play-circle-o"
+        style="padding-right:4px"
+      />
+      my code
+    </pre>
+  </div>
+</div>
+`;
+
+exports[`Directives should not attach any directives when contents does not have any directive attributes 1`] = `
+<div>
+  <div>
+    <a>
+      foobar
+    </a>
+  </div>
+</div>
+`;

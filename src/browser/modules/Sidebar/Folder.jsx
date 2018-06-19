@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import Render from 'browser-components/Render'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'

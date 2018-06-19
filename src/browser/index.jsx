@@ -18,17 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './init.js'
+import React from 'react'
+import ReactDOM from 'react-dom'
 import { createEpicMiddleware } from 'redux-observable'
-import { render } from 'preact'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { Provider } from 'preact-redux'
+import { Provider } from 'react-redux'
 import {
   createBus,
   createReduxMiddleware as createSuberReduxMiddleware
 } from 'suber'
-import { BusProvider } from 'preact-suber'
-
+import { BusProvider } from 'react-suber'
+import './init.js'
+import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
 
@@ -83,28 +84,15 @@ const env = window && window.neo4jDesktopApi ? DESKTOP : WEB
 // Signal app upstart (for epics)
 store.dispatch({ type: APP_START, url: window.location.href, env })
 
-const mountElement = document.getElementById('mount')
-let elem
-const renderApp = () => {
-  const App = require('./modules/App/App').default
-  elem = render(
-    <Provider store={store}>
-      <BusProvider bus={bus}>
-        <App
-          desktopIntegrationPoint={
-            window && window.neo4jDesktopApi ? window.neo4jDesktopApi : null
-          }
-        />
-      </BusProvider>
-    </Provider>,
-    mountElement,
-    elem
-  )
-}
-renderApp()
-
-if (process.env.NODE_ENV !== 'production') {
-  if (module.hot) {
-    module.hot.accept('./modules/App/App', renderApp)
-  }
-}
+ReactDOM.render(
+  <Provider store={store}>
+    <BusProvider bus={bus}>
+      <App
+        desktopIntegrationPoint={
+          window && window.neo4jDesktopApi ? window.neo4jDesktopApi : null
+        }
+      />
+    </BusProvider>
+  </Provider>,
+  document.getElementById('mount')
+)

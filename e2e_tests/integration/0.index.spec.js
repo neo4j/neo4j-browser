@@ -23,12 +23,18 @@
 const Carousel = '[data-test-id="carousel"]'
 const SubmitQueryButton = '[data-test-id="submitQuery"]'
 const Editor = '.ReactCodeMirror textarea'
+const ClearEditorButton = '[data-test-id="clearEditorContent"]'
 
 describe('Neo4j Browser', () => {
   it('sets new login credentials', () => {
     const newPassword = Cypress.env('browser-password') || 'newpassword'
     cy.setInitialPassword(newPassword)
     cy.disconnect()
+  })
+  it('populates the editor when clicking the connect banner', () => {
+    cy.get('[data-test-id="disconnectedBannerCode"]').click()
+    cy.get('.ReactCodeMirror').should('contain', ':server connect')
+    cy.get(ClearEditorButton).click()
   })
   it('can connect', () => {
     const password = Cypress.env('browser-password') || 'newpassword'

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React from 'react'
 import { ecsapeCypherMetaItem } from 'services/utils'
 import classNames from 'classnames'
 import styles from './style_meta.css'

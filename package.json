@@ -42,19 +42,16 @@
     }
   },
   "jest": {
+    "setupFiles": [
+      "raf/polyfill.js"
+    ],
     "testPathIgnorePatterns": [
-      ".jsx$",
       "/e2e_tests/"
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "^neo4j-driver-alias$": "neo4j-driver",
-      "^react-dom/server$": "preact-render-to-string",
-      "^react-addons-test-utils$": "preact-test-utils",
-      "^react-addons-transition-group$": "preact-transition-group",
-      "^react$": "preact-compat-enzyme",
-      "^react-dom$": "preact-compat-enzyme",
       "^browser-styles(.*)$": "<rootDir>/src/browser/styles$1",
       "^browser-components(.*)$": "<rootDir>/src/browser/components$1",
       "worker-loader": "<rootDir>/__mocks__/workerLoaderMock.js"
@@ -71,7 +68,6 @@
     "babel-jest": "^21.0.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-module-resolver": "^2.4.0",
-    "babel-plugin-preact-require": "^1.0.0",
     "babel-plugin-styled-components": "^1.2.0",
     "babel-plugin-transform-react-jsx": "^6.23.0",
     "babel-polyfill": "^6.26.0",
@@ -84,7 +80,6 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
     "cypress": "^3.0.1",
-    "enzyme": "^2.9.1",
     "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-jsx": "^4.0.1",
@@ -99,24 +94,23 @@
     "file-loader": "^0.11.1",
     "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",
-    "jest": "^21.0.1",
-    "jest-cli": "^21.0.1",
+    "husky": "^0.14.3",
+    "jest-cli": "^23.1.0",
     "js2xmlparser": "^3.0.0",
     "json-loader": "^0.5.7",
     "lint-staged": "^4.1.3",
     "ncp": "^2.0.0",
     "nock": "^9.0.14",
+    "node-noop": "^1.0.0",
     "postcss": "^6.0.11",
     "postcss-cssnext": "^3.0.2",
     "postcss-loader": "^2.0.5",
-    "preact-compat-enzyme": "^0.2.5",
-    "preact-render-to-string": "^3.6.3",
-    "preact-test-utils": "^0.1.3",
     "precss": "^2.0.0",
     "prettier-eslint": "^7.1.0",
     "prettier-eslint-cli": "^4.3.0",
-    "react-addons-test-utils": "^15.0.2",
+    "raf": "^3.4.0",
     "react-hot-loader": "^1.3.0",
+    "react-testing-library": "^4.0.1",
     "redux-devtools": "^3.2.0",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
@@ -127,7 +121,8 @@
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dashboard": "^2.0.0",
     "webpack-dev-server": "^2.7.1",
-    "worker-loader": "^0.8.0"
+    "worker-loader": "^0.8.0",
+    "xml2js": "^0.4.19"
   },
   "dependencies": {
     "ascii-data-table": "^2.1.1",
@@ -137,21 +132,19 @@
     "dnd-core": "^2.5.1",
     "file-saver": "^1.3.8",
     "firebase": "^4.3.0",
-    "husky": "^0.14.3",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
     "lodash.debounce": "^4.0.8",
     "neo4j-driver": "^1.6.1",
-    "node-noop": "^1.0.0",
-    "preact": "^8.2.5",
-    "preact-compat": "^3.17.0",
-    "preact-redux": "^2.0.2",
-    "preact-suber": "^1.0.3",
+    "react": "^16.4.0",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dnd": "^2.5.1",
     "react-dnd-html5-backend": "^2.5.1",
+    "react-dom": "^16.4.0",
     "react-dropzone": "^4.1.2",
     "react-icons": "^2.2.1",
+    "react-redux": "^5.0.7",
+    "react-suber": "1.0.4",
     "react-timeago": "^3.4.3",
     "redux": "^3.7.2",
     "redux-observable": "^0.16.0",
@@ -163,7 +156,6 @@
     "suber": "^5.0.1",
     "swipe-js-iso": "^2.0.4",
     "url-parse": "^1.1.9",
-    "uuid": "^3.0.1",
-    "xml2js": "^0.4.19"
+    "uuid": "^3.0.1"
   }
 }

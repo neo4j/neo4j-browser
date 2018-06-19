@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HistoryRow triggers function on click 1`] = `
+<div>
+  <li
+    class="sc-dVhcbM dtqRMb"
+  >
+    :clear
+  </li>
+</div>
+`;

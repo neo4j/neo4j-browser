@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
-import { withBus } from 'preact-suber'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
 import { isConnected } from 'shared/modules/connections/connectionsDuck'
@@ -261,48 +261,55 @@ export class SysInfoFrame extends Component {
     return data.map(props => {
       const { value } = props
       if (value instanceof Array) {
-        return value.map(v => <SysInfoTableEntry values={v} />)
+        return value.map(v => (
+          <SysInfoTableEntry key={props.label} values={v} />
+        ))
       }
-      return <SysInfoTableEntry {...props} />
+      return <SysInfoTableEntry key={props.label} {...props} />
     })
   }
   render () {
     const content = this.props.isConnected ? (
       <SysInfoTableContainer>
-        <SysInfoTable header='Store Sizes'>
+        <SysInfoTable key='StoreSizes' header='Store Sizes'>
           {this.buildTableData(this.state.storeSizes)}
         </SysInfoTable>
-        <SysInfoTable header='ID Allocation'>
+        <SysInfoTable key='IDAllocation' header='ID Allocation'>
           {this.buildTableData(this.state.idAllocation)}
         </SysInfoTable>
-        <SysInfoTable header='Page Cache'>
+        <SysInfoTable key='PageCache' header='Page Cache'>
           {this.buildTableData(this.state.pageCache)}
         </SysInfoTable>
-        <SysInfoTable header='Transactions'>
+        <SysInfoTable key='Transactionss' header='Transactions'>
           {this.buildTableData(this.state.transactions)}
         </SysInfoTable>
         <Render if={this.props.isACausalCluster}>
           <SysInfoTable
+            key='cc-table'
             header={
-              <span>
+              <span data-test-id='sysinfo-casual-cluster-members-title'>
                 Causal Cluster Members{' '}
                 <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
               </span>
             }
             colspan='3'
           >
-            <SysInfoTableEntry headers={['Roles', 'Addresses', 'Actions']} />
+            <SysInfoTableEntry
+              key='cc-entry'
+              headers={['Roles', 'Addresses', 'Actions']}
+            />
             {this.buildTableData(this.state.cc)}
           </SysInfoTable>
         </Render>
         <Render if={this.state.ha}>
-          <SysInfoTable header='High Availability'>
+          <SysInfoTable key='ha-table' header='High Availability'>
             {this.buildTableData(this.state.ha)}
           </SysInfoTable>
         </Render>
         <Render if={this.state.haInstances}>
-          <SysInfoTable header='Cluster' colspan='4'>
+          <SysInfoTable key='cluster-table' header='Cluster' colspan='4'>
             <SysInfoTableEntry
+              key='ha-entry'
               headers={['Id', 'Alive', 'Available', 'Is Master']}
             />
             {this.buildTableData(this.state.haInstances)}
@@ -310,7 +317,7 @@ export class SysInfoFrame extends Component {
         </Render>
       </SysInfoTableContainer>
     ) : (
-      undefined
+      'No connection available'
     )
 
     return (

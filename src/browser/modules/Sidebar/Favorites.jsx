@@ -18,9 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
-import { withBus } from 'preact-suber'
+/* global btoa */
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import * as folder from 'shared/modules/favorites/foldersDuck'
@@ -47,7 +48,7 @@ const mapFavorites = (favorites, props, isChild, moveAction) => {
     return (
       <Favorite
         entry={entry}
-        key={entry.id}
+        key={`${btoa(entry.name + entry.content + entry.id)}`}
         id={entry.id}
         name={entry.name}
         content={entry.content}
@@ -163,6 +164,7 @@ class Favorites extends Component {
         )
         return (
           <Folder
+            key={folder.id}
             folder={folder}
             removeClick={this.props.removeFolderClick}
             moveToFolder={this.moveToFolder}
@@ -181,7 +183,11 @@ class Favorites extends Component {
           true,
           this.moveFavorite
         )
-        return <Folder folder={folder}>{Favorites}</Folder>
+        return (
+          <Folder key={folder.id} folder={folder}>
+            {Favorites}
+          </Folder>
+        )
       })
 
     return (

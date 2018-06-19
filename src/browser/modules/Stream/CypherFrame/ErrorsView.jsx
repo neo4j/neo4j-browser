@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import { withBus } from 'preact-suber'
+import React, { Component } from 'react'
+import { withBus } from 'react-suber'
 import Ellipsis from 'browser-components/Ellipsis'
 import {
   ExclamationTriangleIcon,

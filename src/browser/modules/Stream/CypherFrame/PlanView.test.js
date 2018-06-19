@@ -19,8 +19,13 @@
  */
 
 /* global jest, describe, test, expect */
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
+import { v1 as neo4j } from 'neo4j-driver-alias'
+
 import { PlanView, PlanStatusbar } from './PlanView'
+
+afterEach(cleanup)
 
 describe('PlanViews', () => {
   describe('PlanView', () => {
@@ -34,7 +39,7 @@ describe('PlanViews', () => {
           }
         }
       }
-      const data = {
+      const props = {
         query: 'MATCH xx0',
         result: {
           summary: {
@@ -46,59 +51,45 @@ describe('PlanViews', () => {
           }
         }
       }
-      const result = mount(PlanView)
-        .withProps(data)
-        // Then
-        .then(wrapper => {
-          const calls = display.mock.calls
-          const callObj = calls[0][0]
-          expect(callObj.root).toBeDefined()
-          expect(callObj.root.DbHits).toEqual('xx0')
-        })
 
-      // Return test result (promise)
-      return result
+      // When
+      render(<PlanView {...props} />)
+
+      // Then
+      const calls = display.mock.calls
+      const callObj = calls[0][0]
+      expect(callObj.root).toBeDefined()
+      expect(callObj.root.DbHits).toEqual('xx0')
     })
   })
   describe('PlanStatusbar', () => {
     test('displays statusBarMessage', () => {
       // Given
-      const intMock = num => {
-        return {
-          toNumber: () => num,
-          add: intMockInput => intMock(num + intMockInput.toNumber())
+      const props = {
+        result: {
+          summary: {
+            resultAvailableAfter: neo4j.int(100),
+            resultConsumedAfter: neo4j.int(20),
+            profile: {
+              children: [],
+              arguments: {
+                operatorType: {},
+                version: 'xx0',
+                planner: 'xx1',
+                runtime: 'xx2',
+                children: []
+              },
+              dbHits: 'xx3'
+            }
+          }
         }
       }
-      const results = {
-        summary: {
-          resultAvailableAfter: intMock(100),
-          resultConsumedAfter: intMock(20)
-        }
-      }
-      const extractedPlan = {
-        root: {
-          version: 'xx0',
-          planner: 'xx1',
-          runtime: 'xx2',
-          totalDbHits: 'xx3'
-        }
-      }
-      const result = mount(PlanStatusbar)
-        .withProps({ result: results })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ extractedPlan })
-          wrapper.update()
-          const text = wrapper.text()
-          expect(text).toContain('xx0')
-          expect(text).toContain('xx1')
-          expect(text).toContain('xx2')
-          expect(text).toContain('xx3')
-          expect(text).toContain('120 ms')
-        })
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<PlanStatusbar {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
   })
 })

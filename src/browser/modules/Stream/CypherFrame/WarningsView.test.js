@@ -20,121 +20,93 @@
 
 /* global describe, test, expect */
 
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
 
-import { WarningsView, WarningsStatusbar } from './WarningsView'
+import { WarningsView } from './WarningsView'
+
+afterEach(cleanup)
 
 describe('WarningsViews', () => {
   describe('WarningsView', () => {
     test('displays nothing if no notifications', () => {
       // Given
-      const result = mount(WarningsView)
-        .withProps({ result: {} })
-        // Then
-        .then(wrapper => {
-          expect(wrapper.text()).toEqual('')
-        })
+      const props = {
+        result: {}
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<WarningsView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('does displays a warning', () => {
       // Given
-      const result = mount(WarningsView)
-        .withProps({
-          result: {
-            summary: {
-              notifications: [
-                {
-                  severity: 'WARNING xx0',
-                  title: 'My xx1 warning',
-                  description: 'This is xx2 warning',
-                  position: {
-                    offset: 7,
-                    line: 1
-                  }
+      const props = {
+        result: {
+          summary: {
+            notifications: [
+              {
+                severity: 'WARNING xx0',
+                title: 'My xx1 warning',
+                description: 'This is xx2 warning',
+                position: {
+                  offset: 7,
+                  line: 1
                 }
-              ],
-              statement: {
-                text: 'EXPLAIN MATCH xx3'
               }
+            ],
+            statement: {
+              text: 'EXPLAIN MATCH xx3'
             }
           }
-        })
-        // Then
-        .then(wrapper => {
-          const text = wrapper.text()
-          expect(text).toContain('xx0')
-          expect(text).toContain('xx1')
-          expect(text).toContain('xx2')
-          expect(text).toContain('xx3')
-          expect(text).toContain('^')
-          expect(text).toContain('EXPLAIN')
-        })
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<WarningsView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('does displays multiple warnings', () => {
       // Given
-      const result = mount(WarningsView)
-        .withProps({
-          result: {
-            summary: {
-              notifications: [
-                {
-                  severity: 'WARNING xx0',
-                  title: 'My xx1 warning',
-                  description: 'This is xx2 warning',
-                  position: {
-                    offset: 7,
-                    line: 1
-                  }
-                },
-                {
-                  severity: 'WARNING yy0',
-                  title: 'My yy1 warning',
-                  description: 'This is yy2 warning',
-                  position: {
-                    offset: 3,
-                    line: 1
-                  }
+      const props = {
+        result: {
+          summary: {
+            notifications: [
+              {
+                severity: 'WARNING xx0',
+                title: 'My xx1 warning',
+                description: 'This is xx2 warning',
+                position: {
+                  offset: 7,
+                  line: 1
                 }
-              ],
-              statement: {
-                text: 'EXPLAIN MATCH zz3'
+              },
+              {
+                severity: 'WARNING yy0',
+                title: 'My yy1 warning',
+                description: 'This is yy2 warning',
+                position: {
+                  offset: 3,
+                  line: 1
+                }
               }
+            ],
+            statement: {
+              text: 'EXPLAIN MATCH zz3'
             }
           }
-        })
-        // Then
-        .then(wrapper => {
-          const text = wrapper.text()
-          expect(text).toContain('xx0')
-          expect(text).toContain('xx1')
-          expect(text).toContain('xx2')
-          expect(text).toContain('yy0')
-          expect(text).toContain('yy1')
-          expect(text).toContain('yy2')
-          expect(text).toContain('zz3')
-        })
+        }
+      }
 
-      // Return test result (promise)
-      return result
-    })
-  })
-  describe('WarningsStatusbar', () => {
-    test('displays nothing', () => {
-      // Given
-      const result = mount(WarningsStatusbar)
-        .withProps({})
-        // Then
-        .then(wrapper => {
-          expect(wrapper.text()).toEqual('')
-        })
+      // When
+      const { container } = render(<WarningsView {...props} />)
 
-      // Return test result (promise)
-      return result
+      // Then
+      expect(container).toMatchSnapshot()
     })
   })
 })

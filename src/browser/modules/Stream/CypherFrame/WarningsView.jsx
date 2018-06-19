@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { deepEquals } from 'services/utils'
 import {
   StyledCypherMessage,
@@ -58,7 +58,13 @@ export class WarningsView extends Component {
     let cypherLines = cypher.split('\n')
     let notificationsList = notifications.map(notification => {
       return (
-        <StyledHelpContent>
+        <StyledHelpContent
+          key={
+            notification.title +
+            notification.position.line +
+            notification.position.offset
+          }
+        >
           <StyledHelpDescription>
             {getWarningComponent(notification.severity)}
             <StyledH4>{notification.title}</StyledH4>

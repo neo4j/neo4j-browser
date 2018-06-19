@@ -1,3 +1,4 @@
+import React from 'react'
 export const IESecurityError18 = (
   <span>
     Unable to connect to local intranet. This is a known error when using

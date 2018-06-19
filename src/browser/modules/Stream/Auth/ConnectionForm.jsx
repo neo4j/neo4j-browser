@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
-import { withBus } from 'preact-suber'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import {
   getActiveConnectionData,
   getActiveConnection,
@@ -59,7 +59,13 @@ export class ConnectionForm extends Component {
       storeCredentials: this.props.storeCredentials
     }
   }
-  connect (doneFn = () => {}) {
+  tryConnect = (password, doneFn) => {
+    this.props.error({})
+    this.props.bus.self(CONNECT, { ...this.state, password }, res => {
+      doneFn(res)
+    })
+  }
+  connect = (doneFn = () => {}) => {
     this.props.error({})
     this.props.bus.self(CONNECT, this.state, res => {
       doneFn()
@@ -93,7 +99,7 @@ export class ConnectionForm extends Component {
     })
     this.props.error({})
   }
-  onChangePasswordChange ({ newPassword1, newPassword2 }) {
+  onChangePasswordChange () {
     this.props.error({})
   }
   onChangePassword ({ newPassword, error }) {
@@ -163,9 +169,10 @@ export class ConnectionForm extends Component {
     ) {
       view = (
         <ChangePasswordForm
-          formKeyHandler={this.props.formKeyHandler}
+          showExistingPasswordInput={this.props.showExistingPasswordInput}
           onChangePasswordClick={this.onChangePassword.bind(this)}
           onChange={this.onChangePasswordChange.bind(this)}
+          tryConnect={this.tryConnect}
         >
           {this.props.children}
         </ChangePasswordForm>

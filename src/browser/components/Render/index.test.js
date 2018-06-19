@@ -21,37 +21,39 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { mount } from 'services/testUtils'
+import { render, cleanup } from 'react-testing-library'
 
 import Render from './index'
+
+afterEach(cleanup)
 
 describe('<Render>', () => {
   test('does not render if condition is false', () => {
     // Given
     const val = false
-    const children = [<span>Hello</span>]
-    const result = mount(Render)
-      .withProps({ if: val, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('')
-      })
 
-    // Return test result (promise
-    return result
+    // When
+    const { container } = render(
+      <Render if={val}>
+        <span>Hello</span>
+      </Render>
+    )
+
+    // Then
+    expect(container).toMatchSnapshot()
   })
   test('does render if condition is true', () => {
     // Given
     const val = true
-    const children = [<span>Hello</span>]
-    const result = mount(Render)
-      .withProps({ if: val, children })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('Hello')
-      })
 
-    // Return test result (promise
-    return result
+    // When
+    const { container } = render(
+      <Render if={val}>
+        <span>Hello</span>
+      </Render>
+    )
+
+    // Then
+    expect(container).toMatchSnapshot()
   })
 })

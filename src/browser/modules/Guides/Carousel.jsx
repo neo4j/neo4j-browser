@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { CarouselButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import CarouselSlidePicker from './CarouselSlidePicker'
@@ -31,12 +31,13 @@ import {
 } from './styled'
 
 export default class Carousel extends Component {
+  state = {
+    visibleSlide: 0,
+    firstRender: true
+  }
   constructor (props) {
     super(props)
     this.slides = this.props.slides || []
-    this.state = {
-      visibleSlide: 0
-    }
   }
   shouldComponentUpdate () {
     return this.state.firstRender

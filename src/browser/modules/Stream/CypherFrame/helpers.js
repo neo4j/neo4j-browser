@@ -63,11 +63,15 @@ export function getBodyAndStatusBarMessages (result, maxRows) {
   }
 
   const bodyMessage =
-    updateMessages.length === 0 && result.records.length === 0
+    (!updateMessages || updateMessages.length === 0) &&
+    result.records.length === 0
       ? '(no changes, no records)'
       : updateMessages + `completed ${totalTimeString} ms.`
 
-  return { statusBarMessage: updateMessages + streamMessage, bodyMessage }
+  return {
+    statusBarMessage: (updateMessages || '') + streamMessage,
+    bodyMessage
+  }
 }
 
 export const getRecordsToDisplayInTable = (result, maxRows) => {

@@ -1,12 +1,3 @@
 {
-  "presets": ["es2015", "stage-2", "react"],
-  "plugins": [
-    "preact-require",
-    [
-      "transform-react-jsx",
-      {
-        "pragma": "h"
-      }
-    ]
-  ]
+  "presets": ["es2015", "stage-2", "react"]
 }

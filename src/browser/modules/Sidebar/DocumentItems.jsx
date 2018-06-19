@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { connect } from 'preact-redux'
-import { withBus } from 'preact-suber'
+import React from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import {
   DrawerSubHeader,
@@ -37,7 +37,7 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
     switch (item.type) {
       case 'link':
         return (
-          <StyledHelpItem>
+          <StyledHelpItem key={item.command}>
             <StyledHelpLink href={item.command} target='_blank'>
               {item.name}
             </StyledHelpLink>
@@ -45,13 +45,12 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
         )
       default:
         return (
-          <StyledHelpItem>
-            <StyledDocumentActionLink
-              onClick={() => onItemClick(item.command)}
-              name={item.name}
-              type={item.type}
-            />
-          </StyledHelpItem>
+          <StyledDocumentActionLink
+            key={item.command}
+            onClick={() => onItemClick(item.command)}
+            name={item.name}
+            type={item.type}
+          />
         )
     }
   })

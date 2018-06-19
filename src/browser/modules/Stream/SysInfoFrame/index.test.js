@@ -20,9 +20,11 @@
 
 /* global jest, describe, test, expect */
 
-import uuid from 'uuid'
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
 import { SysInfoFrame } from './index'
+
+afterEach(cleanup)
 
 jest.mock(
   'browser/modules/Stream/FrameTemplate',
@@ -36,40 +38,39 @@ jest.mock(
 
 describe('sysinfo component', () => {
   test('should render causal cluster table', () => {
-    return mount(SysInfoFrame)
-      .withProps({ isACausalCluster: true, isConnected: true })
-      .then(wrapper => {
-        expect(wrapper.html()).toContain('Causal Cluster Members')
-      })
+    // Given
+    const props = { isACausalCluster: true, isConnected: true }
+
+    // When
+    const { getByText, container } = render(<SysInfoFrame {...props} />)
+
+    // Then
+    expect(getByText('Causal Cluster Members')).not.toBeNull()
+    expect(
+      container.querySelector(
+        `[data-test-id="sysinfo-casual-cluster-members-title"]`
+      )
+    ).not.toBeNull()
   })
   test('should not render causal cluster table', () => {
-    return mount(SysInfoFrame)
-      .withProps({ isACausalCluster: false, isConnected: true })
-      .then(wrapper => {
-        expect(wrapper.html()).not.toContain('Causal Cluster Members')
-      })
-  })
-  test('should not render ha table', () => {
-    const value = uuid.v4()
-    const label = 'InstanceId'
-    return mount(SysInfoFrame)
-      .withProps({ isConnected: true })
-      .then(wrapper => {
-        expect(wrapper.html()).not.toContain(label)
-        expect(wrapper.html()).not.toContain(value)
+    // Given
+    const props = { isACausalCluster: false, isConnected: true }
 
-        wrapper.setState({ ha: [{ label, value }] })
-        wrapper.update()
+    // When
+    const { queryByTestId } = render(<SysInfoFrame {...props} />)
 
-        expect(wrapper.html()).toContain(label)
-        expect(wrapper.html()).toContain(value)
-      })
+    // Then
+    expect(queryByTestId('sysinfo-casual-cluster-members-title')).toBeNull()
   })
+
   test('should display error when there is no connection', () => {
-    return mount(SysInfoFrame)
-      .withProps({ isConnected: false })
-      .then(wrapper => {
-        expect(wrapper.state('error')).toBe('No connection available')
-      })
+    // Given
+    const props = { isConnected: false }
+
+    // When
+    const { getByText } = render(<SysInfoFrame {...props} />)
+
+    // Then
+    expect(getByText('No connection available')).not.toBeNull()
   })
 })

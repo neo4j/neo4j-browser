@@ -18,104 +18,160 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect, jest */
-import { Directives as DirectivesComponent } from './Directives'
+/* global test, expect, jest, MouseEvent */
 import React from 'react'
-import { mount } from 'services/testUtils'
+import { render, fireEvent, cleanup } from 'react-testing-library'
+import { Directives as DirectivesComponent } from './Directives'
+
+afterEach(cleanup)
 
 describe('Directives', () => {
   test('should attach play topic directive when contents has a play-topic attribute', () => {
+    // Given
     const clickEvent = jest.fn()
-    const html = <a play-topic='hello'>foobar</a>
-    const result = mount(DirectivesComponent)
-      .withProps({ content: html, onItemClick: clickEvent })
-      .then(wrapper => {
-        const actual = wrapper.find('a').get(0)
-        actual.click()
-        expect(clickEvent).toHaveBeenCalled()
-        expect(clickEvent).toHaveBeenCalledWith(':play hello', true)
+    const html = <a play-topic='hello'>button</a>
+
+    // When
+    const { container, getByText } = render(
+      <DirectivesComponent content={html} onItemClick={clickEvent} />
+    )
+    fireEvent(
+      getByText('button'),
+      new MouseEvent('click', {
+        bubbles: true, // click events must bubble for React to see it
+        cancelable: true
       })
-    return result
+    )
+
+    // Then
+    expect(clickEvent).toHaveBeenCalled()
+    expect(clickEvent).toHaveBeenCalledWith(':play hello', true)
+    expect(container).toMatchSnapshot()
   })
-  test('should attach help topic directive when contents has a help-topic attribute', () => {
+  test('should attach help topic directive when contents has a play-topic attribute', () => {
+    // Given
     const clickEvent = jest.fn()
-    const html = <a help-topic='hello'>foobar</a>
-    const result = mount(DirectivesComponent)
-      .withProps({ content: html, onItemClick: clickEvent })
-      .then(wrapper => {
-        const actual = wrapper.find('a').get(0)
-        actual.click()
-        expect(clickEvent).toHaveBeenCalled()
-        expect(clickEvent).toHaveBeenCalledWith(':help hello', true)
+    const html = <a help-topic='hello'>link</a>
+
+    // When
+    const { container, getByText } = render(
+      <DirectivesComponent content={html} onItemClick={clickEvent} />
+    )
+    fireEvent(
+      getByText('link'),
+      new MouseEvent('click', {
+        bubbles: true, // click events must bubble for React to see it
+        cancelable: true
       })
-    return result
+    )
+
+    // Then
+    expect(clickEvent).toHaveBeenCalled()
+    expect(clickEvent).toHaveBeenCalledWith(':help hello', true)
+    expect(container).toMatchSnapshot()
   })
   test('should attach runnable directive when element has a tag of `pre.runnable`', () => {
+    // Given
     const clickEvent = jest.fn()
-    const html = <pre className='runnable'>foobar</pre>
-    const result = mount(DirectivesComponent)
-      .withProps({ content: html, onItemClick: clickEvent })
-      .then(wrapper => {
-        const actual = wrapper.find('pre.runnable').get(0)
-        actual.click()
-        expect(clickEvent).toHaveBeenCalled()
-        expect(clickEvent).toHaveBeenCalledWith('foobar', false)
+    const html = <pre className='runnable'>my code</pre>
+
+    // When
+    const { container, getByText } = render(
+      <DirectivesComponent content={html} onItemClick={clickEvent} />
+    )
+    fireEvent(
+      getByText('my code'),
+      new MouseEvent('click', {
+        bubbles: true, // click events must bubble for React to see it
+        cancelable: true
       })
-    return result
+    )
+
+    // Then
+    expect(clickEvent).toHaveBeenCalled()
+    expect(clickEvent).toHaveBeenCalledWith('my code', false)
+    expect(container).toMatchSnapshot()
   })
   test('should attach runnable directive when element has a class name of `.runnable pre`', () => {
+    // Given
     const clickEvent = jest.fn()
     const html = (
       <span className='runnable'>
-        <pre>foobar</pre>
+        <pre>my code</pre>
       </span>
     )
-    const result = mount(DirectivesComponent)
-      .withProps({ content: html, onItemClick: clickEvent })
-      .then(wrapper => {
-        const actual = wrapper.find('.runnable pre').get(0)
-        actual.click()
-        expect(clickEvent).toHaveBeenCalled()
-        expect(clickEvent).toHaveBeenCalledWith('foobar', false)
-      })
-    return result
-  })
 
-  test('should not attach any directives when contents does not have any directive attributes', () => {
-    const clickEvent = jest.fn()
-    const html = <a>foobar</a>
-    const result = mount(DirectivesComponent)
-      .withProps({ content: html, onItemClick: clickEvent })
-      .then(wrapper => {
-        const actual = wrapper.find('a').get(0)
-        actual.click()
-        expect(clickEvent).not.toHaveBeenCalled()
+    // When
+    const { container, getByText } = render(
+      <DirectivesComponent content={html} onItemClick={clickEvent} />
+    )
+    fireEvent(
+      getByText('my code'),
+      new MouseEvent('click', {
+        bubbles: true, // click events must bubble for React to see it
+        cancelable: true
       })
-    return result
-  })
+    )
 
+    // Then
+    expect(clickEvent).toHaveBeenCalled()
+    expect(clickEvent).toHaveBeenCalledWith('my code', false)
+    expect(container).toMatchSnapshot()
+  })
   test('should attach all directives when contents has both attributes in different elements', () => {
+    // Given
     const clickEvent = jest.fn()
     const html = (
       <div>
-        <a class='help' is help-topic='help'>
-          foobar
-        </a>
-        <a class='play' is play-topic='play'>
-          foobar
-        </a>
+        <a help-topic='help'>help</a>
+        <a play-topic='play'>play</a>
       </div>
     )
-    const result = mount(DirectivesComponent)
-      .withProps({ content: html, onItemClick: clickEvent })
-      .then(wrapper => {
-        const actualHelp = wrapper.find('a.help').get(0)
-        const actualPlay = wrapper.find('a.play').get(0)
-        actualPlay.click()
-        expect(clickEvent).toHaveBeenCalledWith(':play play', true)
-        actualHelp.click()
-        expect(clickEvent).toHaveBeenCalledWith(':help help', true)
+
+    // When
+    const { container, getByText } = render(
+      <DirectivesComponent content={html} onItemClick={clickEvent} />
+    )
+    fireEvent(
+      getByText('help'),
+      new MouseEvent('click', {
+        bubbles: true, // click events must bubble for React to see it
+        cancelable: true
       })
-    return result
+    )
+    fireEvent(
+      getByText('play'),
+      new MouseEvent('click', {
+        bubbles: true, // click events must bubble for React to see it
+        cancelable: true
+      })
+    )
+
+    // Then
+    expect(clickEvent).toHaveBeenCalledTimes(2)
+    expect(clickEvent).toHaveBeenCalledWith(':help help', true)
+    expect(clickEvent).toHaveBeenCalledWith(':play play', true)
+    expect(container).toMatchSnapshot()
+  })
+  test('should not attach any directives when contents does not have any directive attributes', () => {
+    // Given
+    const clickEvent = jest.fn()
+    const html = <a>foobar</a>
+
+    // When
+    const { container, getByText } = render(
+      <DirectivesComponent content={html} onItemClick={clickEvent} />
+    )
+    fireEvent(
+      getByText('foobar'),
+      new MouseEvent('click', {
+        bubbles: true, // click events must bubble for React to see it
+        cancelable: true
+      })
+    )
+
+    // Then
+    expect(clickEvent).not.toHaveBeenCalled()
+    expect(container).toMatchSnapshot()
   })
 })

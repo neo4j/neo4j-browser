@@ -159,26 +159,26 @@ describe('boltMappings', () => {
   })
 
   describe('extractNodesAndRelationshipsFromRecords', () => {
-    test.skip('should map bolt records with a path to nodes and relationships', () => {
-      let startNode = new neo4j.v1.types.Node('1', ['Person'], {
+    test('should map bolt records with a path to nodes and relationships', () => {
+      let startNode = new neo4j.types.Node('1', ['Person'], {
         prop1: 'prop1'
       })
-      let endNode = new neo4j.v1.types.Node('2', ['Movie'], {
+      let endNode = new neo4j.types.Node('2', ['Movie'], {
         prop2: 'prop2'
       })
-      let relationship = new neo4j.v1.types.Relationship(
+      let relationship = new neo4j.types.Relationship(
         '3',
         startNode.identity,
         endNode.identity,
         'ACTED_IN',
         {}
       )
-      let pathSegment = new neo4j.v1.types.PathSegment(
+      let pathSegment = new neo4j.types.PathSegment(
         startNode,
         relationship,
         endNode
       )
-      let path = new neo4j.v1.types.Path(startNode, endNode, [pathSegment])
+      let path = new neo4j.types.Path(startNode, endNode, [pathSegment])
       let boltRecord = {
         keys: ['p'],
         get: key => path
@@ -186,33 +186,33 @@ describe('boltMappings', () => {
 
       let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
         [boltRecord],
-        neo4j.v1.types
+        neo4j.types
       )
-      expect(nodes).to.have.lengthOf(2)
-      let graphNodeStart = nodes.filter(node => node.id === '1')[0]
+      expect(nodes.length).toBe(2)
+      let graphNodeStart = nodes.filter(node => node.identity === '1')[0]
       expect(graphNodeStart).toBeDefined()
       expect(graphNodeStart.labels).toEqual(['Person'])
       expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
-      let graphNodeEnd = nodes.filter(node => node.id === '2')[0]
+      let graphNodeEnd = nodes.filter(node => node.identity === '2')[0]
       expect(graphNodeEnd).toBeDefined()
       expect(graphNodeEnd.labels).toEqual(['Movie'])
       expect(graphNodeEnd.properties).toEqual({ prop2: 'prop2' })
-      expect(relationships).to.have.lengthOf(1)
-      expect(relationships[0].id).toEqual('3')
-      expect(relationships[0].startNodeId).toEqual('1')
-      expect(relationships[0].endNodeId).toEqual('2')
+      expect(relationships.length).toBe(1)
+      expect(relationships[0].identity).toEqual('3')
+      expect(relationships[0].start).toEqual('1')
+      expect(relationships[0].end).toEqual('2')
       expect(relationships[0].type).toEqual('ACTED_IN')
       expect(relationships[0].properties).toEqual({})
     })
 
-    test.skip('should map bolt nodes and relationships to graph nodes and relationships', () => {
-      let startNode = new neo4j.v1.types.Node('1', ['Person'], {
+    test('should map bolt nodes and relationships to graph nodes and relationships', () => {
+      let startNode = new neo4j.types.Node('1', ['Person'], {
         prop1: 'prop1'
       })
-      let endNode = new neo4j.v1.types.Node('2', ['Movie'], {
+      let endNode = new neo4j.types.Node('2', ['Movie'], {
         prop2: 'prop2'
       })
-      let relationship = new neo4j.v1.types.Relationship(
+      let relationship = new neo4j.types.Relationship(
         '3',
         startNode.identity,
         endNode.identity,
@@ -236,98 +236,23 @@ describe('boltMappings', () => {
 
       let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
         [boltRecord],
-        neo4j.v1.types
+        neo4j.types
       )
-      expect(nodes).to.have.lengthOf(2)
-      let graphNodeStart = nodes.filter(node => node.id === '1')[0]
+      expect(nodes.length).toBe(2)
+      let graphNodeStart = nodes.filter(node => node.identity === '1')[0]
       expect(graphNodeStart).toBeDefined()
       expect(graphNodeStart.labels).toEqual(['Person'])
       expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
-      let graphNodeEnd = nodes.filter(node => node.id === '2')[0]
+      let graphNodeEnd = nodes.filter(node => node.identity === '2')[0]
       expect(graphNodeEnd).toBeDefined()
       expect(graphNodeEnd.labels).toEqual(['Movie'])
       expect(graphNodeEnd.properties).toEqual({ prop2: 'prop2' })
-      expect(relationships).to.have.lengthOf(1)
-      expect(relationships[0].id).toEqual('3')
-      expect(relationships[0].startNodeId).toEqual('1')
-      expect(relationships[0].endNodeId).toEqual('2')
+      expect(relationships.length).toBe(1)
+      expect(relationships[0].identity).toEqual('3')
+      expect(relationships[0].start).toEqual('1')
+      expect(relationships[0].end).toEqual('2')
       expect(relationships[0].type).toEqual('ACTED_IN')
       expect(relationships[0].properties).toEqual({})
-    })
-
-    test.skip('should not include relationships where neither start or end node is not in nodes list', () => {
-      let relationship = new neo4j.v1.types.Relationship(
-        '3',
-        1,
-        2,
-        'ACTED_IN',
-        {}
-      )
-      let boltRecord = {
-        keys: ['r'],
-        get: key => relationship
-      }
-      let relationships = extractNodesAndRelationshipsFromRecords(
-        [boltRecord],
-        neo4j.v1.types
-      ).relationships
-      expect(relationships.length).toBe(0)
-    })
-    test.skip('should not include relationships where end node is not in nodes list', () => {
-      let startNode = new neo4j.v1.types.Node('1', ['Person'], {
-        prop1: 'prop1'
-      })
-      let relationship = new neo4j.v1.types.Relationship(
-        '3',
-        startNode.identity,
-        2,
-        'ACTED_IN',
-        {}
-      )
-      let boltRecord = {
-        keys: ['r', 'n1'],
-        get: key => {
-          if (key === 'r') {
-            return relationship
-          }
-          if (key === 'n1') {
-            return startNode
-          }
-        }
-      }
-      let relationships = extractNodesAndRelationshipsFromRecords(
-        [boltRecord],
-        neo4j.v1.types
-      ).relationships
-      expect(relationships.length).toBe(0)
-    })
-    test.skip('should not include relationships where start node is not in nodes list', () => {
-      let endNode = new neo4j.v1.types.Node('2', ['Movie'], {
-        prop2: 'prop2'
-      })
-      let relationship = new neo4j.v1.types.Relationship(
-        '3',
-        '1',
-        endNode.identity,
-        'ACTED_IN',
-        {}
-      )
-      let boltRecord = {
-        keys: ['r', 'n1'],
-        get: key => {
-          if (key === 'r') {
-            return relationship
-          }
-          if (key === 'n1') {
-            return endNode
-          }
-        }
-      }
-      let relationships = extractNodesAndRelationshipsFromRecords(
-        [boltRecord],
-        neo4j.v1.types
-      ).relationships
-      expect(relationships.length).toBe(0)
     })
   })
   describe('extractPlan', () => {

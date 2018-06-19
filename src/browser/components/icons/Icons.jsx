@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import styles from './style.css'
 
@@ -42,16 +42,17 @@ class IconContainer extends Component {
       isOpen,
       text,
       regulateSize,
+      suppressIconStyles,
       ...rest
     } = this.props
 
     const state =
       this.state.mouseover || isOpen ? activeStyle || '' : inactiveStyle || ''
-    const newClass = this.props.suppressIconStyles
+    const newClass = suppressIconStyles
       ? this.props.className
       : state + ' ' + this.props.className
     const regulateSizeStyle = regulateSize
-      ? { 'font-size': regulateSize + 'em' }
+      ? { fontSize: regulateSize + 'em' }
       : null
     const icon = (
       <i

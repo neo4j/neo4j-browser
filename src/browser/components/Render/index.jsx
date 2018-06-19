@@ -19,6 +19,6 @@
  */
 
 const Render = ({ if: cond, children }) => {
-  return cond ? children[0] : null
+  return cond ? children : null
 }
 export default Render

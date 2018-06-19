@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import {
   StyledNavigationButton,
   NavigationButtonContainer
@@ -37,9 +37,12 @@ const Open = 'OPEN'
 const Opening = 'OPENING'
 
 class Navigation extends Component {
+  state = {}
   constructor (props) {
     super(props)
     this._onTransitionEnd = this.onTransitionEnd.bind(this)
+  }
+  componentDidMount () {
     this.setState({
       transitionState: Closed
     })
@@ -93,7 +96,7 @@ class Navigation extends Component {
           <NavigationButtonContainer
             title={item.title}
             data-test-id={'drawer' + item.name}
-            key={index}
+            key={item.name}
             onClick={() => onNavClick(item.name.toLowerCase())}
             isOpen={isOpen}
           >

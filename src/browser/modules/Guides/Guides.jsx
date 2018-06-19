@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import uuid from 'uuid'
 import Slide from './Slide'
 import Directives from 'browser-components/Directives'
@@ -27,10 +27,13 @@ import Carousel from './Carousel'
 export default class Guides extends Component {
   constructor (props) {
     super(props)
+    this.ref = React.createRef()
     this.state = { slides: null, firstRender: true }
   }
   componentDidMount () {
-    const slides = this.base.getElementsByTagName('slide')
+    if (!this.ref) return
+    if (!this.ref.current) return
+    const slides = this.ref.current.getElementsByTagName('slide')
     let reactSlides = this
     if (slides.length > 0) {
       reactSlides = Array.from(slides).map(slide => {
@@ -65,9 +68,11 @@ export default class Guides extends Component {
       )
     }
     if (this.props.withDirectives) {
-      return <Directives content={<Slide html={this.props.html} />} />
+      return (
+        <Directives content={<Slide ref={this.ref} html={this.props.html} />} />
+      )
     } else {
-      return <Slide html={this.props.html} />
+      return <Slide ref={this.ref} html={this.props.html} />
     }
   }
 }

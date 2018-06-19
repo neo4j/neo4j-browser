@@ -28,6 +28,13 @@ import './styles/font-awesome.min.css'
 import './styles/inconsolata.css'
 import './styles/open-sans.css'
 
-if (process.env.NODE_ENV !== 'production') {
-  require('preact/devtools')
+// non web env (just for tests)
+if (typeof btoa === 'undefined') {
+  global.btoa = function (str) {
+    return Buffer.from(str, 'binary').toString('base64')
+  }
 }
+
+// if (process.env.NODE_ENV !== 'production') {
+//   require('react/devtools')
+// }

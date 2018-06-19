@@ -20,7 +20,7 @@
 
 import { DragDropManager } from 'dnd-core'
 import HTML5Backend from 'react-dnd-html5-backend'
-import { Component } from 'preact'
+import React, { Component } from 'react'
 
 let defaultManager
 

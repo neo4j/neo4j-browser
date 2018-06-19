@@ -18,20 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
+import { Component } from 'react'
+import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
 import { updateData } from 'shared/modules/udc/udcDuck'
 
 export class Intercom extends Component {
-  constructor (props) {
-    super(props)
+  componentDidMount () {
     const {
       appID,
       updateData,
       children, // eslint-disable-line
       ...otherProps
-    } = props
+    } = this.props
     if (!appID || !canUseDOM()) {
       return
     }

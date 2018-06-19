@@ -19,8 +19,8 @@
  */
 
 /* global FileReader */
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'

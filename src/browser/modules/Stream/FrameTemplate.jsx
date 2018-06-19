@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import FrameTitlebar from './FrameTitlebar'
 import Render from 'browser-components/Render'
 import {
@@ -47,7 +47,7 @@ class FrameTemplate extends Component {
         this.props.onResize(
           this.state.fullscreen,
           this.state.collapse,
-          this.state.lastHeight
+          this.frameContentElement.clientHeight
         )
     )
   }
@@ -90,7 +90,7 @@ class FrameTemplate extends Component {
       this.setState({ lastHeight: this.frameContentElement.clientHeight })
     }
   }
-  setFrameContentElement (el) {
+  setFrameContentElement = el => {
     this.frameContentElement = el
   }
   render () {
@@ -116,7 +116,7 @@ class FrameTemplate extends Component {
           <StyledFrameMainSection>
             <StyledFrameContents
               fullscreen={this.state.fullscreen}
-              innerRef={this.setFrameContentElement.bind(this)}
+              innerRef={this.setFrameContentElement}
               data-test-id='frameContents'
             >
               {this.props.contents}

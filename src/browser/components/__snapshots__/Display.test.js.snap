@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Display> does display if condition is true 1`] = `
+<div>
+  <div
+    style="width: inherit; display: block;"
+  >
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;
+
+exports[`<Display> hides if condition is false 1`] = `
+<div>
+  <div
+    style="width: inherit; display: none;"
+  >
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;

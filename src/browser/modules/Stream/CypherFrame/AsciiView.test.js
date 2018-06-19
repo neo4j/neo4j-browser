@@ -19,86 +19,98 @@
  */
 
 /* global jest, describe, test, expect */
-
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 
 import { AsciiView, AsciiStatusbar } from './AsciiView'
+
+afterEach(cleanup)
 
 describe('AsciiViews', () => {
   describe('AsciiView', () => {
     test('displays bodyMessage if no rows', () => {
       // Given
       const sps = jest.fn()
-      const bodyMessage = 'My message'
-      const result = mount(AsciiView)
-        .withProps({ setParentState: sps, result: {} })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ bodyMessage })
-          wrapper.update()
-          expect(wrapper.text()).toContain('My message')
-        })
+      const result = {
+        records: [],
+        summary: {
+          resultAvailableAfter: neo4j.int(5),
+          resultConsumedAfter: neo4j.int(5)
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(
+        <AsciiView setParentState={sps} result={result} />
+      )
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('does not display bodyMessage if rows', () => {
       // Given
       const sps = jest.fn()
-      const bodyMessage = 'My message'
-      const serializedRows = [['x'], ['y']]
-      const result = mount(AsciiView)
-        .withProps({ setParentState: sps, result: {} })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ bodyMessage, serializedRows })
-          wrapper.update()
-          expect(wrapper.text()).not.toContain('My message')
-          expect(wrapper.text()).toContain('x')
-        })
+      const result = {
+        records: [{ keys: ['x'], _fields: ['y'], get: () => 'y' }],
+        summary: {
+          resultAvailableAfter: neo4j.int(5),
+          resultConsumedAfter: neo4j.int(5)
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(
+        <AsciiView setParentState={sps} result={result} />
+      )
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
   })
   describe('AsciiStatusbar', () => {
     test('displays statusBarMessage if no rows', () => {
       // Given
       const sps = jest.fn()
-      const statusBarMessage = 'My message'
-      const result = mount(AsciiStatusbar)
-        .withProps({ setParentState: sps, _asciiSerializedRows: undefined })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ statusBarMessage })
-          wrapper.update()
-          expect(wrapper.text()).toContain('My message')
-          expect(wrapper.text()).not.toContain('Max column width')
-        })
+      const result = {
+        records: [],
+        summary: {
+          resultAvailableAfter: neo4j.int(5),
+          resultConsumedAfter: neo4j.int(5)
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(
+        <AsciiStatusbar setParentState={sps} result={result} />
+      )
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
-    test('does not display statusBarMessage if rows', () => {
+    test('displays statusBarMessage if no rows', () => {
       // Given
       const sps = jest.fn()
-      const statusBarMessage = 'My message'
+      const result = {
+        records: [{ keys: ['x'], _fields: ['y'], get: () => 'y' }],
+        summary: {
+          resultAvailableAfter: neo4j.int(5),
+          resultConsumedAfter: neo4j.int(5)
+        }
+      }
       const serializedRows = [['x'], ['y']]
-      const result = mount(AsciiStatusbar)
-        .withProps({
-          setParentState: sps,
-          _asciiSerializedRows: serializedRows
-        })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ statusBarMessage })
-          wrapper.update()
-          expect(wrapper.text()).not.toContain('My message')
-          expect(wrapper.text()).toContain('Max column width')
-        })
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(
+        <AsciiStatusbar
+          setParentState={sps}
+          result={result}
+          _asciiSerializedRows={serializedRows}
+        />
+      )
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
   })
 })

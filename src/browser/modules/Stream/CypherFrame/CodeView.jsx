@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import { deepEquals } from 'services/utils'
 import {
   PaddedDiv,
@@ -32,6 +32,7 @@ import {
 import { TableStatusbar } from './TableView'
 
 class ExpandableContent extends Component {
+  state = {}
   render () {
     return (
       <StyledAlteringTr>

@@ -19,23 +19,26 @@
  */
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, fireEvent, cleanup } from 'react-testing-library'
 import HistoryRow from './HistoryRow'
+
+afterEach(cleanup)
 
 describe('HistoryRow', () => {
   test('triggers function on click', () => {
     // Given
     const myFn = jest.fn()
-    const entry = 'foobar'
+    const entry = ':clear'
 
     // When
-    const result = mount(HistoryRow)
-      .withProps({ handleEntryClick: myFn, entry: entry })
-      .then(wrapper => {
-        wrapper.simulate('click')
-        expect(wrapper.text()).toBe(entry)
-        expect(myFn).toHaveBeenCalledWith(entry)
-      })
-    return result
+    const { container, getByText } = render(
+      <HistoryRow handleEntryClick={myFn} entry={entry} />
+    )
+    fireEvent.click(getByText(':clear'))
+
+    // Then
+    expect(myFn).toHaveBeenCalled()
+    expect(container).toMatchSnapshot()
   })
 })

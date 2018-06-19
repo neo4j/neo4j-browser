@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { withBus } from 'preact-suber'
+import React from 'react'
+import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import FrameTemplate from './FrameTemplate'
 import { StyledHistoryList } from './styled'

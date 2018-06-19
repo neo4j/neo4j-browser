@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
+import React, { Component } from 'react'
 import {
   legendRowHeight,
   StyledLegendRow,
@@ -88,7 +88,7 @@ export class LegendComponent extends Component {
         >
           <StyledLegendInlineList
             className='list-inline'
-            ref={this.setLabelRowELem.bind(this)}
+            innerRef={this.setLabelRowELem.bind(this)}
           >
             <RowExpandToggleComponent
               contracted={this.state.labelRowContracted}
@@ -146,7 +146,7 @@ export class LegendComponent extends Component {
         >
           <StyledLegendInlineList
             className='list-inline'
-            ref={this.setTypeRowELem.bind(this)}
+            innerRef={this.setTypeRowELem.bind(this)}
           >
             <RowExpandToggleComponent
               contracted={this.state.typeRowContracted}

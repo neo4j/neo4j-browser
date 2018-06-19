@@ -17,17 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React from 'react'
 import styles from './style.css'
 import { StyledSlide } from './styled.jsx'
 
-const Slide = ({ html }) => {
+const Slide = React.forwardRef(({ html }, ref) => {
   return (
     <StyledSlide
+      innerRef={ref}
       className={styles.slide}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
-}
+})
 
 export default Slide

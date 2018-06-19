@@ -20,46 +20,54 @@
 
 /* global jest, describe, test, expect */
 
-import { mount } from 'services/testUtils'
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
+import { v1 as neo4j } from 'neo4j-driver-alias'
 
 import { TableView, TableStatusbar, renderObject } from './TableView'
+
+afterEach(cleanup)
 
 describe('TableViews', () => {
   describe('TableView', () => {
     test('displays bodyMessage if no rows', () => {
       // Given
       const sps = jest.fn()
-      const bodyMessage = 'My message'
-      const result = mount(TableView)
-        .withProps({ setParentState: sps, result: {} })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ bodyMessage })
-          wrapper.update()
-          expect(wrapper.text()).toContain('My message')
-        })
+      const props = {
+        setParentState: sps,
+        result: {
+          records: [],
+          summary: {
+            resultAvailableAfter: neo4j.int(5),
+            resultConsumedAfter: neo4j.int(5)
+          }
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<TableView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('does not display bodyMessage if rows', () => {
       // Given
       const sps = jest.fn()
-      const bodyMessage = 'My message'
-      const columns = [['x'], ['y']]
-      const data = [['z'], ['å']]
-      const result = mount(TableView)
-        .withProps({ setParentState: sps, result: {} })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ bodyMessage, columns, data })
-          wrapper.update()
-          expect(wrapper.text()).not.toContain('My message')
-          expect(wrapper.text()).toContain('x')
-        })
+      const result = {
+        records: [{ keys: ['x'], _fields: ['y'], get: () => 'y' }],
+        summary: {
+          resultAvailableAfter: neo4j.int(5),
+          resultConsumedAfter: neo4j.int(5)
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(
+        <TableView setParentState={sps} result={result} />
+      )
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
     test('renderObject handles null values', () => {
       // Given
@@ -73,20 +81,36 @@ describe('TableViews', () => {
     })
   })
   describe('TableStatusbar', () => {
+    test('displays no statusBarMessage', () => {
+      // Given
+      const props = { result: {}, maxRows: 0 }
+
+      // When
+      const { container } = render(<TableStatusbar {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
+    })
     test('displays statusBarMessage', () => {
       // Given
-      const statusBarMessage = 'My message'
-      const result = mount(TableStatusbar)
-        .withProps({ result: {}, maxRows: 0 })
-        // Then
-        .then(wrapper => {
-          wrapper.setState({ statusBarMessage })
-          wrapper.update()
-          expect(wrapper.text()).toContain('My message')
-        })
+      const props = {
+        query: 'MATCH xx0',
+        status: 'success',
+        result: {
+          summary: {
+            resultAvailableAfter: neo4j.int(5),
+            resultConsumedAfter: neo4j.int(5)
+          },
+          maxRows: 100,
+          records: [{ res: 'xx3' }]
+        }
+      }
 
-      // Return test result (promise)
-      return result
+      // When
+      const { container } = render(<TableStatusbar {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
     })
   })
 })

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React from 'react'
 import {
   DISCONNECTED_STATE,
   PENDING_STATE
@@ -57,7 +57,10 @@ const Main = props => {
       <Render if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner data-test-id='disconnectedBanner'>
           Database access not available. Please use&nbsp;
-          <ClickToCode CodeComponent={StyledCodeBlockAuthBar}>
+          <ClickToCode
+            data-test-id='disconnectedBannerCode'
+            CodeComponent={StyledCodeBlockAuthBar}
+          >
             {props.cmdchar}server connect
           </ClickToCode>&nbsp; to establish connection. There's a graph waiting
           for you.

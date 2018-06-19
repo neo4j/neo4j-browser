@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   SyncDisconnectedBanner,
   SyncSignInBarButton,
@@ -42,6 +42,7 @@ import {
 } from 'shared/modules/sync/syncDuck'
 
 class SyncReminderBanner extends Component {
+  state = {}
   importSyncManager = () => {
     if (this.syncManager) return Promise.resolve(this.syncManager)
     return import(/* webpackChunkName: "sync-manager" */ 'shared/modules/sync/SyncSignInManager').then(
