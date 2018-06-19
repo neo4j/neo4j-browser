@@ -22,7 +22,7 @@ Full license texts are found in LICENSES.txt.
 
 Third-party licenses
 --------------------├─ (BSD-2-Clause OR MIT OR Apache-2.0)
-│  └─ rc@1.2.7
+│  └─ rc@1.2.8
 │     ├─ URL: https://github.com/dominictarr/rc.git
 │     ├─ VendorName: Dominic Tarr
 │     └─ VendorUrl: dominictarr.com
@@ -171,16 +171,13 @@ Third-party licenses
 │     ├─ VendorName: Mikeal Rogers
 │     └─ VendorUrl: http://www.futurealoof.com
 ├─ BSD
-│  └─ antlr4@4.6.0
+│  └─ antlr4@4.7.0
 │     ├─ URL: https://github.com/antlr/antlr4.git
 │     └─ VendorUrl: https://github.com/antlr/antlr4
 ├─ BSD-2-Clause
-│  ├─ node-noop@1.0.0
-│  │  ├─ URL: git://github.com/euank/node-noop.git
-│  │  └─ VendorName: EuanK
 │  ├─ tar-pack@3.4.1
 │  │  └─ URL: https://github.com/ForbesLindesay/tar-pack.git
-│  └─ uri-js@4.2.1
+│  └─ uri-js@4.2.2
 │     ├─ URL: http://github.com/garycourt/uri-js
 │     ├─ VendorName: Gary Court
 │     └─ VendorUrl: https://github.com/garycourt/uri-js
@@ -198,30 +195,30 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/hueniverse/hawk
 │  │  ├─ VendorName: Eran Hammer
 │  │  └─ VendorUrl: http://hueniverse.com
-│  ├─ hoek@4.2.0
+│  ├─ hoek@4.2.1
 │  │  └─ URL: git://github.com/hapijs/hoek
-│  ├─ hoist-non-react-statics@2.5.0
+│  ├─ hoist-non-react-statics@2.5.5
 │  │  ├─ URL: git://github.com/mridgway/hoist-non-react-statics.git
 │  │  └─ VendorName: Michael Ridgway
-│  ├─ ieee754@1.1.11
+│  ├─ ieee754@1.1.12
 │  │  ├─ URL: git://github.com/feross/ieee754.git
 │  │  ├─ VendorName: Feross Aboukhadijeh
 │  │  └─ VendorUrl: http://feross.org
 │  ├─ node-pre-gyp@0.7.0
 │  │  ├─ URL: git://github.com/mapbox/node-pre-gyp.git
 │  │  └─ VendorName: Dane Springmeyer
-│  ├─ qs@6.5.1
+│  ├─ qs@6.5.2
 │  │  ├─ URL: https://github.com/ljharb/qs.git
 │  │  └─ VendorUrl: https://github.com/ljharb/qs
 │  ├─ react-dnd-html5-backend@2.6.0
 │  │  └─ URL: https://github.com/react-dnd/react-dnd.git
 │  ├─ react-dnd@2.6.0
 │  │  └─ URL: https://github.com/react-dnd/react-dnd.git
-│  ├─ sntp@2.0.2
+│  ├─ sntp@2.1.0
 │  │  ├─ URL: git://github.com/hueniverse/sntp
 │  │  ├─ VendorName: Eran Hammer
 │  │  └─ VendorUrl: http://hueniverse.com
-│  └─ tough-cookie@2.3.3
+│  └─ tough-cookie@2.3.4
 │     ├─ URL: git://github.com/salesforce/tough-cookie.git
 │     ├─ VendorName: Jeremy Stashewsky
 │     └─ VendorUrl: https://github.com/salesforce/tough-cookie
@@ -230,10 +227,10 @@ Third-party licenses
 │     ├─ URL: http://github.com/kriszyp/json-schema
 │     └─ VendorName: Kris Zyp
 ├─ GPL-3.0
-│  ├─ cypher-codemirror@1.0.5
+│  ├─ cypher-codemirror@1.1.0
 │  │  ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
 │  │  └─ VendorName: Neo Technology Inc.
-│  └─ cypher-editor-support@1.0.4
+│  └─ cypher-editor-support@1.1.0
 │     ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
 │     └─ VendorName: Neo Technology Inc.
 ├─ ISC
@@ -244,7 +241,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/iarna/aproba
 │  │  ├─ VendorName: Rebecca Turner
 │  │  └─ VendorUrl: https://github.com/iarna/aproba
-│  ├─ are-we-there-yet@1.1.4
+│  ├─ are-we-there-yet@1.1.5
 │  │  ├─ URL: https://github.com/iarna/are-we-there-yet.git
 │  │  ├─ VendorName: Rebecca Turner
 │  │  └─ VendorUrl: https://github.com/iarna/are-we-there-yet
@@ -334,10 +331,6 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/isaacs/rimraf.git
 │  │  ├─ VendorName: Isaac Z. Schlueter
 │  │  └─ VendorUrl: http://blog.izs.me/
-│  ├─ sax@1.2.4
-│  │  ├─ URL: git://github.com/isaacs/sax-js.git
-│  │  ├─ VendorName: Isaac Z. Schlueter
-│  │  └─ VendorUrl: http://blog.izs.me/
 │  ├─ semver@5.5.0
 │  │  └─ URL: https://github.com/npm/node-semver
 │  ├─ set-blocking@2.0.0
@@ -356,7 +349,7 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/isaacs/uid-number.git
 │  │  ├─ VendorName: Isaac Z. Schlueter
 │  │  └─ VendorUrl: http://blog.izs.me/
-│  ├─ wide-align@1.1.2
+│  ├─ wide-align@1.1.3
 │  │  ├─ URL: https://github.com/iarna/wide-align
 │  │  ├─ VendorName: Rebecca Turner
 │  │  └─ VendorUrl: http://re-becca.org/
@@ -369,11 +362,15 @@ Third-party licenses
 │     ├─ VendorName: Ben Coe
 │     └─ VendorUrl: https://github.com/yargs/y18n
 ├─ MIT
-│  ├─ ajv@5.2.3
+│  ├─ ajv@5.5.2
 │  │  ├─ URL: https://github.com/epoberezkin/ajv.git
 │  │  ├─ VendorName: Evgeny Poberezkin
 │  │  └─ VendorUrl: https://github.com/epoberezkin/ajv
 │  ├─ ansi-regex@2.1.1
+│  │  ├─ URL: https://github.com/chalk/ansi-regex.git
+│  │  ├─ VendorName: Sindre Sorhus
+│  │  └─ VendorUrl: sindresorhus.com
+│  ├─ ansi-regex@3.0.0
 │  │  ├─ URL: https://github.com/chalk/ansi-regex.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
@@ -397,11 +394,11 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/alexindigo/asynckit.git
 │  │  ├─ VendorName: Alex Indigo
 │  │  └─ VendorUrl: https://github.com/alexindigo/asynckit#readme
-│  ├─ attr-accept@1.1.2
+│  ├─ attr-accept@1.1.3
 │  │  ├─ URL: https://github.com/okonet/attr-accept.git
 │  │  ├─ VendorName: Andrey Okonetchnikov @okonetchnikov
 │  │  └─ VendorUrl: https://github.com/okonet/attr-accept#readme
-│  ├─ aws4@1.6.0
+│  ├─ aws4@1.7.0
 │  │  ├─ URL: https://github.com/mhart/aws4.git
 │  │  ├─ VendorName: Michael Hart
 │  │  └─ VendorUrl: http://github.com/mhart
@@ -436,11 +433,7 @@ Third-party licenses
 │  │  ├─ URL: git+ssh://git@github.com/chaijs/check-error.git
 │  │  ├─ VendorName: Jake Luer
 │  │  └─ VendorUrl: http://alogicalparadox.com
-│  ├─ ci-info@1.1.3
-│  │  ├─ URL: https://github.com/watson/ci-info.git
-│  │  ├─ VendorName: Thomas Watson Steen
-│  │  └─ VendorUrl: https://github.com/watson/ci-info
-│  ├─ classnames@2.2.5
+│  ├─ classnames@2.2.6
 │  │  ├─ URL: https://github.com/JedWatson/classnames.git
 │  │  └─ VendorName: Jed Watson
 │  ├─ co@4.6.0
@@ -449,7 +442,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/code-point-at.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ codemirror@5.30.0
+│  ├─ codemirror@5.38.0
 │  │  ├─ URL: https://github.com/codemirror/CodeMirror.git
 │  │  └─ VendorUrl: http://codemirror.net/
 │  ├─ colour@0.7.1
@@ -465,11 +458,9 @@ Third-party licenses
 │  │  └─ VendorUrl: http://substack.net
 │  ├─ core-js@1.2.7
 │  │  └─ URL: https://github.com/zloirock/core-js.git
-│  ├─ core-js@2.5.1
-│  │  └─ URL: https://github.com/zloirock/core-js.git
 │  ├─ core-js@2.5.5
 │  │  └─ URL: https://github.com/zloirock/core-js.git
-│  ├─ core-js@2.5.6
+│  ├─ core-js@2.5.7
 │  │  └─ URL: https://github.com/zloirock/core-js.git
 │  ├─ core-util-is@1.0.2
 │  │  ├─ URL: git://github.com/isaacs/core-util-is
@@ -493,7 +484,7 @@ Third-party licenses
 │  ├─ deep-eql@3.0.1
 │  │  ├─ URL: git@github.com:chaijs/deep-eql.git
 │  │  └─ VendorName: Jake Luer
-│  ├─ deep-extend@0.5.1
+│  ├─ deep-extend@0.6.0
 │  │  ├─ URL: git://github.com/unclechu/node-deep-extend.git
 │  │  ├─ VendorName: Viacheslav Lotsmanov
 │  │  └─ VendorUrl: https://github.com/unclechu/node-deep-extend
@@ -522,17 +513,21 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/epoberezkin/fast-deep-equal.git
 │  │  ├─ VendorName: Evgeny Poberezkin
 │  │  └─ VendorUrl: https://github.com/epoberezkin/fast-deep-equal#readme
+│  ├─ fast-json-stable-stringify@2.0.0
+│  │  ├─ URL: git://github.com/epoberezkin/fast-json-stable-stringify.git
+│  │  ├─ VendorName: James Halliday
+│  │  └─ VendorUrl: https://github.com/epoberezkin/fast-json-stable-stringify
 │  ├─ faye-websocket@0.11.1
 │  │  ├─ URL: git://github.com/faye/faye-websocket-node.git
 │  │  ├─ VendorName: James Coglan
 │  │  └─ VendorUrl: https://github.com/faye/faye-websocket-node
-│  ├─ fbjs@0.8.16
+│  ├─ fbjs@0.8.17
 │  │  └─ URL: https://github.com/facebook/fbjs.git
 │  ├─ file-saver@1.3.8
 │  │  ├─ URL: git+https://github.com/eligrey/FileSaver.js.git
 │  │  ├─ VendorName: Eli Grey
 │  │  └─ VendorUrl: https://github.com/eligrey/FileSaver.js#readme
-│  ├─ form-data@2.3.1
+│  ├─ form-data@2.3.2
 │  │  ├─ URL: git://github.com/form-data/form-data.git
 │  │  ├─ VendorName: Felix Geisendörfer
 │  │  └─ VendorUrl: http://debuggable.com/
@@ -558,10 +553,6 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/joyent/node-http-signature.git
 │  │  ├─ VendorName: Joyent, Inc
 │  │  └─ VendorUrl: https://github.com/joyent/node-http-signature/
-│  ├─ husky@0.14.3
-│  │  ├─ URL: git://github.com/typicode/husky.git
-│  │  ├─ VendorName: Typicode
-│  │  └─ VendorUrl: https://github.com/typicode/husky
 │  ├─ iconv-lite@0.4.23
 │  │  ├─ URL: git://github.com/ashtuchkin/iconv-lite.git
 │  │  ├─ VendorName: Alexander Shtuchkin
@@ -573,11 +564,11 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/invert-kv.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: http://sindresorhus.com
-│  ├─ is-ci@1.0.10
-│  │  ├─ URL: https://github.com/watson/is-ci.git
-│  │  ├─ VendorName: Thomas Watson Steen
-│  │  └─ VendorUrl: https://github.com/watson/is-ci
 │  ├─ is-fullwidth-code-point@1.0.0
+│  │  ├─ URL: https://github.com/sindresorhus/is-fullwidth-code-point.git
+│  │  ├─ VendorName: Sindre Sorhus
+│  │  └─ VendorUrl: sindresorhus.com
+│  ├─ is-fullwidth-code-point@2.0.0
 │  │  ├─ URL: https://github.com/sindresorhus/is-fullwidth-code-point.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
@@ -619,10 +610,6 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/epoberezkin/json-schema-traverse.git
 │  │  ├─ VendorName: Evgeny Poberezkin
 │  │  └─ VendorUrl: https://github.com/epoberezkin/json-schema-traverse#readme
-│  ├─ json-stable-stringify@1.0.1
-│  │  ├─ URL: git://github.com/substack/json-stable-stringify.git
-│  │  ├─ VendorName: James Halliday
-│  │  └─ VendorUrl: https://github.com/substack/json-stable-stringify
 │  ├─ jsonic@0.3.0
 │  │  ├─ URL: git://github.com/rjrodger/jsonic.git
 │  │  ├─ VendorName: Richard Rodger
@@ -653,12 +640,8 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/zertosh/loose-envify.git
 │  │  ├─ VendorName: Andres Suarez
 │  │  └─ VendorUrl: https://github.com/zertosh/loose-envify
-│  ├─ mime-db@1.30.0
-│  │  └─ URL: https://github.com/jshttp/mime-db.git
 │  ├─ mime-db@1.33.0
 │  │  └─ URL: https://github.com/jshttp/mime-db.git
-│  ├─ mime-types@2.1.17
-│  │  └─ URL: https://github.com/jshttp/mime-types.git
 │  ├─ mime-types@2.1.18
 │  │  └─ URL: https://github.com/jshttp/mime-types.git
 │  ├─ minimist@0.0.8
@@ -681,10 +664,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/bitinn/node-fetch.git
 │  │  ├─ VendorName: David Frank
 │  │  └─ VendorUrl: https://github.com/bitinn/node-fetch
-│  ├─ normalize-path@1.0.0
-│  │  ├─ URL: git://github.com/jonschlinkert/normalize-path.git
-│  │  ├─ VendorName: Jon Schlinkert
-│  │  └─ VendorUrl: https://github.com/jonschlinkert/normalize-path
 │  ├─ number-is-nan@1.0.1
 │  │  ├─ URL: https://github.com/sindresorhus/number-is-nan.git
 │  │  ├─ VendorName: Sindre Sorhus
@@ -741,7 +720,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/bestiejs/punycode.js.git
 │  │  ├─ VendorName: Mathias Bynens
 │  │  └─ VendorUrl: https://mths.be/punycode
-│  ├─ punycode@2.1.0
+│  ├─ punycode@2.1.1
 │  │  ├─ URL: https://github.com/bestiejs/punycode.js.git
 │  │  ├─ VendorName: Mathias Bynens
 │  │  └─ VendorUrl: https://mths.be/punycode
@@ -751,10 +730,10 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/unshiftio/querystringify
 │  ├─ react-addons-pure-render-mixin@15.6.2
 │  │  └─ URL: https://github.com/facebook/react.git
-│  ├─ react-dom@16.4.0
+│  ├─ react-dom@16.4.1
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
-│  ├─ react-dropzone@4.2.10
+│  ├─ react-dropzone@4.2.11
 │  │  ├─ URL: https://github.com/react-dropzone/react-dropzone.git
 │  │  ├─ VendorName: Param Aggarwal
 │  │  └─ VendorUrl: https://github.com/react-dropzone/react-dropzone
@@ -766,7 +745,7 @@ Third-party licenses
 │  │  ├─ URL: git+ssh://git@github.com/gorangajic/react-icons.git
 │  │  ├─ VendorName: Goran Gajic
 │  │  └─ VendorUrl: https://github.com/gorangajic/react-icons#readme
-│  ├─ react-is@16.3.2
+│  ├─ react-is@16.4.1
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
 │  ├─ react-redux@5.0.7
@@ -781,7 +760,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/naman34/react-timeago.git
 │  │  ├─ VendorName: Naman Goel
 │  │  └─ VendorUrl: https://github.com/nmn/react-timeago
-│  ├─ react@16.4.0
+│  ├─ react@16.4.1
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
 │  ├─ readable-stream@2.3.6
@@ -814,7 +793,7 @@ Third-party licenses
 │  ├─ setimmediate@1.0.5
 │  │  ├─ URL: https://github.com/YuzuJS/setImmediate.git
 │  │  └─ VendorName: YuzuJS
-│  ├─ sshpk@1.14.1
+│  ├─ sshpk@1.14.2
 │  │  ├─ URL: git+https://github.com/arekinath/node-sshpk.git
 │  │  ├─ VendorName: Joyent, Inc
 │  │  └─ VendorUrl: https://github.com/arekinath/node-sshpk#readme
@@ -825,7 +804,11 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/string-width.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ stringstream@0.0.5
+│  ├─ string-width@2.1.1
+│  │  ├─ URL: https://github.com/sindresorhus/string-width.git
+│  │  ├─ VendorName: Sindre Sorhus
+│  │  └─ VendorUrl: sindresorhus.com
+│  ├─ stringstream@0.0.6
 │  │  ├─ URL: https://github.com/mhart/StringStream.git
 │  │  ├─ VendorName: Michael Hart
 │  │  └─ VendorUrl: http://github.com/mhart
@@ -833,15 +816,15 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/chalk/strip-ansi.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ strip-indent@2.0.0
-│  │  ├─ URL: https://github.com/sindresorhus/strip-indent.git
+│  ├─ strip-ansi@4.0.0
+│  │  ├─ URL: https://github.com/chalk/strip-ansi.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
 │  ├─ strip-json-comments@2.0.1
 │  │  ├─ URL: https://github.com/sindresorhus/strip-json-comments.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ styled-components@3.2.6
+│  ├─ styled-components@3.3.2
 │  │  ├─ URL: git+https://github.com/styled-components/styled-components.git
 │  │  ├─ VendorName: Glen Maddern
 │  │  └─ VendorUrl: https://styled-components.com/
@@ -849,7 +832,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/thysultan/stylis.js
 │  │  ├─ VendorName: Sultan Tarimo
 │  │  └─ VendorUrl: https://github.com/thysultan/stylis.js
-│  ├─ stylis@3.5.0
+│  ├─ stylis@3.5.1
 │  │  ├─ URL: https://github.com/thysultan/stylis.js
 │  │  ├─ VendorName: Sultan Tarimo
 │  │  └─ VendorUrl: https://github.com/thysultan/stylis.js
@@ -874,15 +857,13 @@ Third-party licenses
 │  │  ├─ URL: git+ssh://git@github.com/chaijs/type-detect.git
 │  │  ├─ VendorName: Jake Luer
 │  │  └─ VendorUrl: http://alogicalparadox.com
-│  ├─ url-parse@1.4.0
+│  ├─ url-parse@1.4.1
 │  │  ├─ URL: https://github.com/unshiftio/url-parse.git
 │  │  └─ VendorName: Arnout Kazemier
 │  ├─ util-deprecate@1.0.2
 │  │  ├─ URL: git://github.com/TooTallNate/util-deprecate.git
 │  │  ├─ VendorName: Nathan Rajlich
 │  │  └─ VendorUrl: https://github.com/TooTallNate/util-deprecate
-│  ├─ uuid@3.1.0
-│  │  └─ URL: https://github.com/kelektiv/node-uuid.git
 │  ├─ uuid@3.2.1
 │  │  └─ URL: https://github.com/kelektiv/node-uuid.git
 │  ├─ verror@1.10.0
@@ -905,14 +886,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/chalk/wrap-ansi.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ xml2js@0.4.19
-│  │  ├─ URL: https://github.com/Leonidas-from-XIV/node-xml2js.git
-│  │  ├─ VendorName: Marek Kubica
-│  │  └─ VendorUrl: https://github.com/Leonidas-from-XIV/node-xml2js
-│  ├─ xmlbuilder@9.0.4
-│  │  ├─ URL: git://github.com/oozcitak/xmlbuilder-js.git
-│  │  ├─ VendorName: Ozgur Ozcitak
-│  │  └─ VendorUrl: http://github.com/oozcitak/xmlbuilder-js
 │  ├─ xmlhttprequest@1.8.0
 │  │  ├─ URL: git://github.com/driverdan/node-XMLHttpRequest.git
 │  │  ├─ VendorName: Dan DeFelippi
@@ -921,11 +894,6 @@ Third-party licenses
 │     ├─ URL: http://github.com/bcoe/yargs.git
 │     ├─ VendorName: Alex Ford
 │     └─ VendorUrl: http://CodeTunnel.com
-├─ Public Domain
-│  └─ jsonify@0.0.0
-│     ├─ URL: http://github.com/substack/jsonify.git
-│     ├─ VendorName: Douglas Crockford
-│     └─ VendorUrl: http://crockford.com/
 └─ Unlicense
    └─ tweetnacl@0.14.5
       ├─ URL: https://github.com/dchest/tweetnacl-js.git
