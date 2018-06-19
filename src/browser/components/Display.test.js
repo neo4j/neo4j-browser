@@ -21,9 +21,11 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 
 import Display from './Display'
+
+afterEach(cleanup)
 
 describe('<Display>', () => {
   test('hides if condition is false', () => {

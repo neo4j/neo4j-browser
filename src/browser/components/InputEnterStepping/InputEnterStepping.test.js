@@ -1,9 +1,11 @@
 /* global jest */
 
 import React from 'react'
-import { render, Simulate } from 'react-testing-library'
+import { render, fireEvent, cleanup } from 'react-testing-library'
 
 import InputEnterStepping from './InputEnterStepping'
+
+afterEach(cleanup)
 
 test('renders the render prop', () => {
   // When
@@ -24,7 +26,7 @@ test('submits on enter in last input', async () => {
   const myFn = jest.fn()
 
   // When
-  const { container, getByTestId } = render(
+  const { container, getByValue } = render(
     <InputEnterStepping
       submitAction={myFn}
       render={({ getInputPropsForIndex, setRefForIndex }) => {
@@ -32,14 +34,12 @@ test('submits on enter in last input', async () => {
           <React.Fragment>
             <input
               {...getInputPropsForIndex(0, {
-                'data-testid': 'first',
                 defaultValue: 'first',
                 ref: ref => setRefForIndex(0, ref)
               })}
             />
             <input
               {...getInputPropsForIndex(1, {
-                'data-testid': 'second',
                 defaultValue: 'second',
                 ref: ref => setRefForIndex(1, ref)
               })}
@@ -55,7 +55,7 @@ test('submits on enter in last input', async () => {
 
   // When
   // Enter in first should focus second
-  Simulate.keyDown(getByTestId('first'), {
+  fireEvent.keyDown(getByValue('first'), {
     key: 'Enter',
     keyCode: 13,
     which: 13
@@ -66,7 +66,7 @@ test('submits on enter in last input', async () => {
 
   // When
   // Enter in last should submit
-  Simulate.keyDown(getByTestId('second'), {
+  fireEvent.keyDown(getByValue('second'), {
     key: 'Enter',
     keyCode: 13,
     which: 13
@@ -89,14 +89,12 @@ test('submits on button click', async () => {
           <React.Fragment>
             <input
               {...getInputPropsForIndex(0, {
-                'data-testid': 'first',
                 defaultValue: 'first',
                 ref: ref => setRefForIndex(0, ref)
               })}
             />
             <input
               {...getInputPropsForIndex(1, {
-                'data-testid': 'second',
                 defaultValue: 'second',
                 ref: ref => setRefForIndex(1, ref)
               })}
@@ -114,7 +112,7 @@ test('submits on button click', async () => {
 
   // When
   // Click button!
-  Simulate.click(getByText('Send'))
+  fireEvent.click(getByText('Send'))
 
   // Then
   expect(myFn).toHaveBeenCalledTimes(1)

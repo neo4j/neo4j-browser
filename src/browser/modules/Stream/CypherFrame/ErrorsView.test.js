@@ -21,9 +21,11 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 
 import { ErrorsView, ErrorsStatusbar } from './ErrorsView'
+
+afterEach(cleanup)
 
 describe('ErrorsViews', () => {
   describe('ErrorsView', () => {

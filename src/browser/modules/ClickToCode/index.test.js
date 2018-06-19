@@ -20,12 +20,14 @@
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
 import React from 'react'
-import { render, Simulate } from 'react-testing-library'
+import { render, fireEvent, cleanup } from 'react-testing-library'
 
 import { createBus } from 'suber'
 
 import { ClickToCode } from './index'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
+
+afterEach(cleanup)
 
 describe('ClickToCode', () => {
   let bus
@@ -80,7 +82,7 @@ describe('ClickToCode', () => {
     expect(myFn).toHaveBeenCalledTimes(0)
 
     // When
-    Simulate.click(getByText('hello'))
+    fireEvent.click(getByText('hello'))
 
     // Then
     expect(myFn).toHaveBeenCalledTimes(1)
@@ -102,7 +104,7 @@ describe('ClickToCode', () => {
     expect(myFn).toHaveBeenCalledTimes(0)
 
     // When
-    Simulate.click(getByText(childrenString))
+    fireEvent.click(getByText(childrenString))
 
     // Then
     expect(myFn).toHaveBeenCalledTimes(1)
@@ -134,7 +136,7 @@ describe('ClickToCode', () => {
     expect(myFn).toHaveBeenCalledTimes(0)
 
     // When
-    Simulate.click(getByText('hello'))
+    fireEvent.click(getByText('hello'))
 
     // Then
     expect(myFn).toHaveBeenCalledTimes(1)

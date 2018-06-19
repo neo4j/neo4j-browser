@@ -20,8 +20,10 @@
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
 import React from 'react'
-import { render, Simulate } from 'react-testing-library'
+import { render, fireEvent, cleanup } from 'react-testing-library'
 import HistoryRow from './HistoryRow'
+
+afterEach(cleanup)
 
 describe('HistoryRow', () => {
   test('triggers function on click', () => {
@@ -33,7 +35,7 @@ describe('HistoryRow', () => {
     const { container, getByText } = render(
       <HistoryRow handleEntryClick={myFn} entry={entry} />
     )
-    Simulate.click(getByText(':clear'))
+    fireEvent.click(getByText(':clear'))
 
     // Then
     expect(myFn).toHaveBeenCalled()

@@ -21,9 +21,11 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 
 import { WarningsView } from './WarningsView'
+
+afterEach(cleanup)
 
 describe('WarningsViews', () => {
   describe('WarningsView', () => {

@@ -21,8 +21,10 @@
 /* global jest, describe, test, expect */
 
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 import { SysInfoFrame } from './index'
+
+afterEach(cleanup)
 
 jest.mock(
   'browser/modules/Stream/FrameTemplate',
@@ -40,11 +42,15 @@ describe('sysinfo component', () => {
     const props = { isACausalCluster: true, isConnected: true }
 
     // When
-    const { getByText, queryByTestId } = render(<SysInfoFrame {...props} />)
+    const { getByText, container } = render(<SysInfoFrame {...props} />)
 
     // Then
     expect(getByText('Causal Cluster Members')).not.toBeNull()
-    expect(queryByTestId('sysinfo-casual-cluster-members-title')).not.toBeNull()
+    expect(
+      container.querySelector(
+        `[data-test-id="sysinfo-casual-cluster-members-title"]`
+      )
+    ).not.toBeNull()
   })
   test('should not render causal cluster table', () => {
     // Given

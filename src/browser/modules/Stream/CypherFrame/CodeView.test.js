@@ -20,10 +20,12 @@
 
 /* global describe, test, expect */
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 
 import { CodeView, CodeStatusbar } from './CodeView'
+
+afterEach(cleanup)
 
 describe('CodeViews', () => {
   describe('CodeView', () => {

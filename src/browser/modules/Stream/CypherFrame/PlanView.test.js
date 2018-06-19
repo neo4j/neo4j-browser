@@ -20,10 +20,12 @@
 
 /* global jest, describe, test, expect */
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 import { v1 as neo4j } from 'neo4j-driver-alias'
 
 import { PlanView, PlanStatusbar } from './PlanView'
+
+afterEach(cleanup)
 
 describe('PlanViews', () => {
   describe('PlanView', () => {

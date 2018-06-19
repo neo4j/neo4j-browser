@@ -2889,9 +2889,9 @@ dom-storage@2.1.0:
   version "2.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-storage/-/dom-storage-2.1.0.tgz?dl=https://registry.npmjs.org/dom-storage/-/dom-storage-2.1.0.tgz#00fb868bc9201357ea243c7bcfd3304c1e34ea39"
 
-dom-testing-library@^2.3.1:
+dom-testing-library@^2.6.0:
   version "2.6.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-testing-library/-/dom-testing-library-2.6.0.tgz?dl=https://registry.npmjs.org/dom-testing-library/-/dom-testing-library-2.6.0.tgz#8bc38c63b41b10830e6a5034f9fc0ed78c8ba484"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-testing-library/-/dom-testing-library-2.6.0.tgz#8bc38c63b41b10830e6a5034f9fc0ed78c8ba484"
   dependencies:
     jest-dom "^1.0.0"
     mutationobserver-shim "^0.3.2"
@@ -8185,12 +8185,12 @@ react-suber@1.0.4:
   dependencies:
     hoist-non-react-statics "^2.5.0"
 
-react-testing-library@^3.1.7:
-  version "3.1.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-testing-library/-/react-testing-library-3.1.7.tgz?dl=https://registry.npmjs.org/react-testing-library/-/react-testing-library-3.1.7.tgz#c5ce14483ef91c1ad611f074ff646b29952dd1ba"
+react-testing-library@^4.0.1:
+  version "4.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-testing-library/-/react-testing-library-4.0.1.tgz#e92238ba811c5b2542acae88b6d42d7db0a95955"
   dependencies:
-    dom-testing-library "^2.3.1"
-    wait-for-expect "^0.5.0"
+    dom-testing-library "^2.6.0"
+    wait-for-expect "^1.0.0"
 
 react-timeago@^3.4.3:
   version "3.4.3"
@@ -9946,9 +9946,9 @@ wait-for-expect@^0.4.0:
   version "0.4.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/wait-for-expect/-/wait-for-expect-0.4.0.tgz?dl=https://registry.npmjs.org/wait-for-expect/-/wait-for-expect-0.4.0.tgz#341c96ab89d6102a0169a9be6cd0de354de92c17"
 
-wait-for-expect@^0.5.0:
-  version "0.5.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/wait-for-expect/-/wait-for-expect-0.5.0.tgz?dl=https://registry.npmjs.org/wait-for-expect/-/wait-for-expect-0.5.0.tgz#cc935a94c6039967bd7760c9e9cc557f4674887a"
+wait-for-expect@^1.0.0:
+  version "1.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/wait-for-expect/-/wait-for-expect-1.0.0.tgz#edf2d5790c36dc67c4e21ac6ccedd7d4b79dc6ac"
 
 walker@~1.0.5:
   version "1.0.7"

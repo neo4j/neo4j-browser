@@ -11,11 +11,9 @@ exports[`renders the render prop 1`] = `
 exports[`submits on button click 1`] = `
 <div>
   <input
-    data-testid="first"
     value="first"
   />
   <input
-    data-testid="second"
     value="second"
   />
   <button>
@@ -27,11 +25,9 @@ exports[`submits on button click 1`] = `
 exports[`submits on enter in last input 1`] = `
 <div>
   <input
-    data-testid="first"
     value="first"
   />
   <input
-    data-testid="second"
     value="second"
   />
 </div>
