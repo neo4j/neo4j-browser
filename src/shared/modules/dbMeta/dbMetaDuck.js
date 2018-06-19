@@ -121,7 +121,7 @@ export const getServerConfig = (state, includePrefixes = []) => {
 function updateMetaForContext (state, meta, context) {
   const notInCurrentContext = e => e.context !== context
   const mapResult = (metaIndex, mapFunction) =>
-    meta.records[metaIndex].get(1).map(mapFunction)
+    meta.records[metaIndex].get(0).data.map(mapFunction)
   const mapSingleValue = r => ({ val: r, context })
   const mapInteger = r => (bolt.neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
   const mapInvocableValue = r => {
@@ -156,10 +156,10 @@ function updateMetaForContext (state, meta, context) {
     .filter(notInCurrentContext)
     .concat(mapResult(4, mapInvocableValue))
   const nodes = meta.records[5]
-    ? mapInteger(meta.records[5].get(1))
+    ? mapInteger(meta.records[5].get(0).data)
     : state.nodes
   const relationships = meta.records[6]
-    ? mapInteger(meta.records[6].get(1))
+    ? mapInteger(meta.records[6].get(0).data)
     : state.relationships
 
   return {
