@@ -121,7 +121,7 @@ export const getServerConfig = (state, includePrefixes = []) => {
 function updateMetaForContext (state, meta, context) {
   const notInCurrentContext = e => e.context !== context
   const mapResult = (metaIndex, mapFunction) =>
-    meta.records[metaIndex].get(1).map(mapFunction)
+    meta.records[metaIndex].get(0).data.map(mapFunction)
   const mapSingleValue = r => ({ val: r, context })
   const mapInteger = r => (bolt.neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
   const mapInvocableValue = r => {
@@ -156,10 +156,10 @@ function updateMetaForContext (state, meta, context) {
     .filter(notInCurrentContext)
     .concat(mapResult(4, mapInvocableValue))
   const nodes = meta.records[5]
-    ? mapInteger(meta.records[5].get(1))
+    ? mapInteger(meta.records[5].get(0).data)
     : state.nodes
   const relationships = meta.records[6]
-    ? mapInteger(meta.records[6].get(1))
+    ? mapInteger(meta.records[6].get(0).data)
     : state.relationships
 
   return {
@@ -259,28 +259,23 @@ export const updateSettings = settings => {
 // Epics
 export const metaQuery = `
 CALL db.labels() YIELD label
-WITH COLLECT(label)[..1000] AS labels
-RETURN 'labels' as a, labels as result
-UNION
+RETURN {name:'labels', data:COLLECT(label)[..1000]} as result
+UNION ALL
 CALL db.relationshipTypes() YIELD relationshipType
-WITH COLLECT(relationshipType)[..1000] AS relationshipTypes
-RETURN 'relationshipTypes' as a, relationshipTypes as result
-UNION
+RETURN {name:'relationshipTypes', data:COLLECT(relationshipType)[..1000]} as result
+UNION ALL
 CALL db.propertyKeys() YIELD propertyKey
-WITH COLLECT(propertyKey)[..1000] AS propertyKeys
-RETURN 'propertyKeys' as a, propertyKeys as result
-UNION
+RETURN {name:'propertyKeys', data:COLLECT(propertyKey)[..1000]} as result
+UNION ALL
 CALL dbms.functions() YIELD name, signature, description
-WITH collect({name: name, signature: signature, description: description}) as functions
-RETURN 'functions' as a, functions AS result
-UNION
+RETURN {name:'functions', data: collect({name: name, signature: signature, description: description})} AS result
+UNION ALL
 CALL dbms.procedures() YIELD name, signature, description
-WITH collect({name: name, signature: signature, description: description}) as procedures
-RETURN 'procedures' as a, procedures as result
-UNION
-MATCH (n) RETURN 'nodes' AS a, count(n) AS result
-UNION
-MATCH ()-[]->() RETURN 'relationships' AS a, count(*) AS result
+RETURN {name:'procedures', data:collect({name: name, signature: signature, description: description})} as result
+UNION ALL
+MATCH () RETURN { name:'nodes', data:count(*) } AS result
+UNION ALL
+MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 `
 
 export const dbMetaEpic = (some$, store) =>

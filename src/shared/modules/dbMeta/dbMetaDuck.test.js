@@ -38,54 +38,62 @@ describe('hydrating state', () => {
 describe('updating metadata', () => {
   test('should update state when metadata is updated', () => {
     const returnedLabels = {
-      a: 'labels',
+      result: { name: 'labels' },
       get: () => {
-        return ['label1', 'label2']
+        return { data: ['label1', 'label2'] }
       }
     }
     const returnedRelationshipTypes = {
-      a: 'relationshipTypes',
+      result: { name: 'relationshipTypes' },
       get: () => {
-        return ['rel1', 'rel2']
+        return { data: ['rel1', 'rel2'] }
       }
     }
     const returnedProperties = {
-      a: 'properties',
+      result: { name: 'properties' },
       get: () => {
-        return ['prop1', 'prop2']
+        return { data: ['prop1', 'prop2'] }
       }
     }
     const returnedFunctions = {
-      a: 'functions',
+      result: { name: 'functions' },
       get: () => {
-        return [
-          {
-            name: 'ns.functionName',
-            signature: 'functionSignature',
-            description: 'functionDescription'
-          }
-        ]
+        return {
+          data: [
+            {
+              name: 'ns.functionName',
+              signature: 'functionSignature',
+              description: 'functionDescription'
+            }
+          ]
+        }
       }
     }
     const returnedProcedures = {
-      a: 'procedures',
+      result: { name: 'procedures' },
       get: () => {
-        return [
-          {
-            name: 'ns.procedureName',
-            signature: 'procedureSignature',
-            description: 'procedureDescription'
-          }
-        ]
+        return {
+          data: [
+            {
+              name: 'ns.procedureName',
+              signature: 'procedureSignature',
+              description: 'procedureDescription'
+            }
+          ]
+        }
       }
     }
     const returnedNodes = {
-      a: 'nodes',
-      get: () => neo4j.int(5)
+      result: { name: 'nodes' },
+      get: () => ({
+        data: neo4j.int(5)
+      })
     }
     const returnedRelationships = {
-      a: 'relationships',
-      get: () => neo4j.int(10)
+      result: { name: 'relationships' },
+      get: () => ({
+        data: neo4j.int(10)
+      })
     }
 
     const action = {
@@ -139,19 +147,19 @@ describe('updating metadata', () => {
   })
 
   test('should update state with empty metadata', () => {
-    const returnNothing = () => []
-    const returnNull = () => null
+    const returnNothing = () => ({ data: [] })
+    const returnNull = () => ({ data: null })
     const action = {
       type: meta.UPDATE_META,
       meta: {
         records: [
-          { a: 'labels', get: returnNothing },
-          { a: 'relationshipTypes', get: returnNothing },
-          { a: 'properties', get: returnNothing },
-          { a: 'functions', get: returnNothing },
-          { a: 'procedures', get: returnNothing },
-          { a: 'nodes', get: returnNull },
-          { a: 'realtionships', get: returnNull }
+          { result: { name: 'labels' }, get: returnNothing },
+          { result: { name: 'relationshipTypes' }, get: returnNothing },
+          { result: { name: 'properties' }, get: returnNothing },
+          { result: { name: 'functions' }, get: returnNothing },
+          { result: { name: 'procedures' }, get: returnNothing },
+          { result: { name: 'nodes' }, get: returnNull },
+          { result: { name: 'realtionships' }, get: returnNull }
         ]
       },
       context: 'mycontext'
