@@ -12,15 +12,16 @@ export default class InputEnterStepping extends Component {
   }
   getInputPropsForIndex = (i, props = {}) => {
     this.steps[i] = this.steps[i] || {}
+    const { initialFocus, ...cleanProps } = props
     const out = {
-      ...props,
+      ...cleanProps,
       onKeyDown: e => {
         // merge with users onKeyDown
         this.onKeyDown(e, i)
         props.onKeyDown && props.onKeyDown(e)
       }
     }
-    if (props.initialFocus) {
+    if (initialFocus) {
       this.steps[i].focusOnRef = true
     }
     return out

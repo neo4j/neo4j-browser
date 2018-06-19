@@ -1,7 +1,7 @@
 /* global jest */
 
 import React from 'react'
-import { render, fireEvent, cleanup } from 'react-testing-library'
+import { render, fireEvent, cleanup, wait } from 'react-testing-library'
 
 import InputEnterStepping from './InputEnterStepping'
 
@@ -21,7 +21,7 @@ test('renders the render prop', () => {
   expect(container).toMatchSnapshot()
 })
 
-test('submits on enter in last input', async () => {
+test('focuses correctly and submits on enter in last input', async () => {
   // Given
   const myFn = jest.fn()
 
@@ -34,6 +34,7 @@ test('submits on enter in last input', async () => {
           <React.Fragment>
             <input
               {...getInputPropsForIndex(0, {
+                initialFocus: true,
                 defaultValue: 'first',
                 ref: ref => setRefForIndex(0, ref)
               })}
@@ -52,6 +53,8 @@ test('submits on enter in last input', async () => {
 
   // Then
   expect(container).toMatchSnapshot()
+  // Need to wait for the focus to get there, since it's set by setTimeout
+  await wait(() => expect(document.activeElement).toEqual(getByValue('first')))
 
   // When
   // Enter in first should focus second
@@ -62,6 +65,7 @@ test('submits on enter in last input', async () => {
   })
 
   // Then
+  expect(document.activeElement).toEqual(getByValue('second'))
   expect(myFn).toHaveBeenCalledTimes(0)
 
   // When
@@ -73,6 +77,7 @@ test('submits on enter in last input', async () => {
   })
 
   // Then
+  expect(document.activeElement).toEqual(getByValue('second'))
   expect(myFn).toHaveBeenCalledTimes(1)
 })
 

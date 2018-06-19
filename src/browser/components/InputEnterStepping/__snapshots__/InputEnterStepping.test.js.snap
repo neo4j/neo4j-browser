@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`focuses correctly and submits on enter in last input 1`] = `
+<div>
+  <input
+    value="first"
+  />
+  <input
+    value="second"
+  />
+</div>
+`;
+
 exports[`renders the render prop 1`] = `
 <div>
   <div>
@@ -19,16 +30,5 @@ exports[`submits on button click 1`] = `
   <button>
     Send
   </button>
-</div>
-`;
-
-exports[`submits on enter in last input 1`] = `
-<div>
-  <input
-    value="first"
-  />
-  <input
-    value="second"
-  />
 </div>
 `;
