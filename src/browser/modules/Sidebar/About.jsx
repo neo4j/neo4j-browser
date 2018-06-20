@@ -134,6 +134,9 @@ const About = ({ serverVersion, serverEdition }) => (
 )
 
 const asChangeLogUrl = serverVersion => {
+  if (!serverVersion) {
+    return undefined
+  }
   const tokenisedServerVersion = serverVersion && serverVersion.split('.')
   const releaseTag = tokenisedServerVersion.join('')
   const urlServerVersion =
