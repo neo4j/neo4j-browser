@@ -59,12 +59,15 @@ function parseJson (data) {
   ]
 
   let res = {
-    'missing-artifact': {
+    'missing-artifacts': {
       artifact: resArr
     }
   }
 
-  let js2xmlparseOptions = { declaration: { include: false } }
+  let js2xmlparseOptions = {
+    declaration: { include: false },
+    format: { indent: '  ', doubleQuotes: true }
+  }
 
   return js2xmlparser.parse('licensing-requirements', res, js2xmlparseOptions)
 }
