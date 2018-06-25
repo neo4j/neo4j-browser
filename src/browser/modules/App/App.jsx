@@ -21,6 +21,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
+import { hot } from 'react-hot-loader'
 import * as themes from 'browser/styles/themes'
 import {
   getTheme,
@@ -229,6 +230,12 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-export default withBus(
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
+export default hot(module)(
+  withBus(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps,
+      mergeProps
+    )(App)
+  )
 )

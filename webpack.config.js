@@ -21,9 +21,11 @@
 const webpack = require('webpack')
 const path = require('path')
 
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const DashboardPlugin = require('webpack-dashboard/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
@@ -38,13 +40,11 @@ const sourcePath = path.join(__dirname, './src/browser')
 
 // Common plugins
 const plugins = [
+  new CleanWebpackPlugin('dist'),
   new CopyWebpackPlugin([
     {
-      from: {
-        glob: path.resolve('./src/browser/images') + '/**/*',
-        dot: false
-      },
-      to: assetsPath
+      from: path.resolve('./src/browser/images'),
+      to: assetsPath + '/images'
     },
     {
       from: path.resolve('./src/browser/external/d3.min.js'),
@@ -59,18 +59,11 @@ const plugins = [
       to: assetsPath + '/js/canvg'
     }
   ]),
-  new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, 'node-noop'),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: Infinity,
-    filename: 'vendor-[hash].js'
-  }),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(nodeEnv)
     }
   }),
-  new webpack.NamedModulesPlugin(),
   new HtmlWebpackPlugin({
     template: path.join(sourcePath, 'index.html'),
     path: buildPath,
@@ -80,6 +73,10 @@ const plugins = [
 
 // Common rules
 const rules = [
+  {
+    test: /\.worker\.js$/,
+    use: { loader: 'worker-loader', options: { inline: true, fallback: false } }
+  },
   {
     test: /\.(js|jsx)$/,
     exclude: /(node_modules)|(cypher-codemirror)/,
@@ -94,14 +91,10 @@ const rules = [
     ]
   },
   {
-    test: /\.json$/,
-    use: 'json-loader'
-  },
-  {
     test: /\.css$/, // Guides
     include: path.resolve('./src/browser/modules/Guides'),
     use: [
-      'style-loader',
+      MiniCssExtractPlugin.loader,
       {
         loader: 'css-loader',
         options: {
@@ -122,7 +115,7 @@ const rules = [
       path.resolve('./src/browser/modules/Guides')
     ],
     use: [
-      'style-loader',
+      MiniCssExtractPlugin.loader,
       {
         loader: 'css-loader',
         options: {
@@ -141,7 +134,7 @@ const rules = [
       path.resolve('./src/browser/components'),
       path.resolve('./src/browser/modules')
     ],
-    use: ['style-loader', 'css-loader']
+    use: [MiniCssExtractPlugin.loader, 'css-loader']
   },
   {
     test: /\.coffee$/,
@@ -187,47 +180,34 @@ const rules = [
 if (isProduction) {
   // Production plugins
   plugins.push(
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        screw_ie8: true,
-        conditionals: true,
-        unused: true,
-        comparisons: true,
-        sequences: true,
-        dead_code: true,
-        evaluate: true,
-        if_return: true,
-        join_vars: true
-      },
-      output: {
-        comments: false
-      }
-    }),
-    new ExtractTextPlugin('style-[hash].css')
+    new MiniCssExtractPlugin({
+      filename: 'style-[hash].css',
+      chunkFilename: '[hash].css'
+    })
   )
 } else {
   // Development plugins
   plugins.push(
-    new webpack.HotModuleReplacementPlugin(),
-    new DashboardPlugin(),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: false,
-      reportFilename: './../bundle-report.html'
-    })
+    new MiniCssExtractPlugin({
+      filename: 'style-[hash].css',
+      chunkFilename: '[hash].css'
+    }),
+    new DashboardPlugin()
   )
 }
+plugins.push(
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'static',
+    openAnalyzer: false,
+    reportFilename: './../bundle-report.html'
+  })
+)
 
 module.exports = {
-  devtool: isProduction ? 'source-map' : 'eval-source-map',
-  context: jsSourcePath,
+  mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? false : 'cheap-module-eval-source-map',
   entry: {
-    js: ['index.jsx'],
+    main: './src/browser/index.jsx',
     vendor: [
       'cypher-codemirror',
       'firebase',
@@ -247,10 +227,58 @@ module.exports = {
     ]
   },
   output: {
-    path: buildPath,
     publicPath: '',
-    filename: 'app-[hash].js',
-    chunkFilename: '[name].[chunkhash].js'
+    path: buildPath,
+    filename: isProduction ? 'app-[hash].js' : 'app.js',
+    chunkFilename: isProduction ? '[name].[chunkhash].js' : '[name].js',
+    globalObject: 'this'
+  },
+  optimization: {
+    namedModules: true,
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          ecma: 6,
+          output: {
+            comments: false
+          },
+          compress: {
+            dead_code: true
+          }
+        }
+      })
+    ],
+    splitChunks: {
+      cacheGroups: {
+        default: {
+          chunks: 'initial',
+          minSize: 30000,
+          priority: -20,
+          maxAsyncRequests: 5,
+          maxInitialRequests: 3,
+          minChunks: 2,
+          reuseExistingChunk: true
+        },
+        worker: {
+          chunks: 'all',
+          name: 'worker',
+          test: /\.worker\.js$/,
+          enforce: true
+        },
+        vendor: {
+          chunks: 'initial',
+          name: 'vendor',
+          test: 'vendor',
+          enforce: true
+        },
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
   },
   module: {
     rules
@@ -280,27 +308,11 @@ module.exports = {
   },
   plugins,
   devServer: {
-    contentBase: isProduction ? './build' : './src/browser',
-    historyApiFallback: true,
-    disableHostCheck: true,
+    publicPath: '',
+    contentBase: './dist',
+    hot: true,
+    open: false,
     port: 8080,
-    compress: isProduction,
-    inline: !isProduction,
-    hot: !isProduction,
-    host: '0.0.0.0',
-    stats: {
-      assets: true,
-      children: false,
-      chunks: false,
-      hash: false,
-      modules: false,
-      publicPath: false,
-      timings: true,
-      version: false,
-      warnings: true,
-      colors: {
-        green: '\u001b[32m'
-      }
-    }
+    host: '0.0.0.0'
   }
 }
