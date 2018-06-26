@@ -17,6 +17,7 @@
     "postcss.config.js",
     "webpack.config.js",
     "yarn.lock",
-    "README.md"
+    "README.md",
+    "bundle-report.html"
   ]
 }
