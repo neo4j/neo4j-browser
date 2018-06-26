@@ -36,11 +36,14 @@ import {
 } from './styled'
 import SyncReminderBanner from './SyncReminderBanner'
 import SyncConsentBanner from './SyncConsentBanner'
+import ErrorBoundary from 'browser-components/ErrorBoundary'
 
 const Main = props => {
   return (
     <StyledMain data-test-id='main'>
-      <Editor />
+      <ErrorBoundary>
+        <Editor />
+      </ErrorBoundary>
       <Render if={props.showUnknownCommandBanner}>
         <ErrorBanner>
           Type&nbsp;
@@ -77,7 +80,9 @@ const Main = props => {
       <Render if={props.useBrowserSync}>
         <SyncConsentBanner />
       </Render>
-      <Stream />
+      <ErrorBoundary>
+        <Stream />
+      </ErrorBoundary>
     </StyledMain>
   )
 }
