@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+/* global btoa */
+
 import parseUrl from 'url-parse'
 
 export const deepEquals = (x, y) => {
@@ -258,7 +260,9 @@ export const stringifyMod = (
 ) => {
   prettyLevel = !prettyLevel
     ? false
-    : prettyLevel === true ? 1 : parseInt(prettyLevel)
+    : prettyLevel === true
+      ? 1
+      : parseInt(prettyLevel)
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
   const indentation =
@@ -395,3 +399,5 @@ export const optionalToString = v =>
   ![null, undefined].includes(v) && typeof v.toString === 'function'
     ? v.toString()
     : v
+
+export const toKeyString = str => btoa(encodeURIComponent(str))

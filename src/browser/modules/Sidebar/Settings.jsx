@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global btoa */
 import React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
@@ -35,6 +34,7 @@ import {
   StyledSettingLabel,
   StyledSettingTextInput
 } from './styled'
+import { toKeyString } from 'services/utils'
 
 const visualSettings = [
   {
@@ -140,12 +140,16 @@ const visualSettings = [
   }
 ]
 
-export const Settings = ({ settings, onSettingsSave = () => {} }) => {
+export const Settings = ({
+  settings,
+  visualSettings,
+  onSettingsSave = () => {}
+}) => {
   if (!settings) return null
-  const mappedSettings = visualSettings.map((visualSetting, oi) => {
+  const mappedSettings = visualSettings.map(visualSetting => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
     const mapSettings = visualSetting.settings
-      .map((settingObj, i) => {
+      .map(settingObj => {
         const setting = Object.keys(settingObj)[0]
         if (typeof settings[setting] === 'undefined') return false
         const visual = settingObj[setting].displayName
@@ -153,7 +157,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
 
         if (!settingObj[setting].type || settingObj[setting].type === 'input') {
           return (
-            <StyledSetting key={btoa(visual)}>
+            <StyledSetting key={toKeyString(visual)}>
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
               <StyledSettingTextInput
                 onChange={event => {
@@ -168,7 +172,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
           )
         } else if (settingObj[setting].type === 'radio') {
           return (
-            <StyledSetting key={btoa(visual)}>
+            <StyledSetting key={toKeyString(visual)}>
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
               <RadioSelector
                 options={settingObj[setting].options}
@@ -182,7 +186,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
           )
         } else if (settingObj[setting].type === 'checkbox') {
           return (
-            <StyledSetting key={btoa(visual)}>
+            <StyledSetting key={toKeyString(visual)}>
               <CheckboxSelector
                 onChange={event => {
                   settings[setting] = event.target.checked
@@ -197,7 +201,7 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
       })
       .filter(setting => setting !== false)
     return (
-      <React.Fragment key={btoa(visualSetting.title)}>
+      <React.Fragment key={toKeyString(visualSetting.title)}>
         {title}
         {mapSettings}
       </React.Fragment>
@@ -218,7 +222,8 @@ export const Settings = ({ settings, onSettingsSave = () => {} }) => {
 
 const mapStateToProps = state => {
   return {
-    settings: state.settings
+    settings: state.settings,
+    visualSettings
   }
 }
 
@@ -230,4 +235,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Settings)

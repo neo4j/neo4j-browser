@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global btoa */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
@@ -27,6 +26,7 @@ import * as favorite from 'shared/modules/favorites/favoritesDuck'
 import * as folder from 'shared/modules/favorites/foldersDuck'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { toKeyString } from 'services/utils'
 
 import Render from 'browser-components/Render'
 import Favorite from './Favorite'
@@ -48,7 +48,7 @@ const mapFavorites = (favorites, props, isChild, moveAction) => {
     return (
       <Favorite
         entry={entry}
-        key={`${btoa(entry.name + entry.content + entry.id)}`}
+        key={`${toKeyString(entry.name + entry.content + entry.id)}`}
         id={entry.id}
         name={entry.name}
         content={entry.content}
@@ -257,5 +257,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 export default DragDropContext(HTML5Backend)(
-  withBus(connect(mapStateToProps, mapDispatchToProps)(Favorites))
+  withBus(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(Favorites)
+  )
 )
