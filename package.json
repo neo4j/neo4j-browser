@@ -31,7 +31,8 @@
     "jar": "yarn build && mvn package",
     "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml",
-    "update-licenses": "sh ./scripts/generate_licenses.sh"
+    "update-licenses": "sh ./scripts/generate_licenses.sh",
+    "now-start": "serve --single ./dist"
   },
   "lint-staged": {
     "linters": {
@@ -115,6 +116,7 @@
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
     "redux-mock-store": "^1.2.3",
+    "serve": "^9.1.0",
     "style-loader": "^0.18.1",
     "url-loader": "^0.5.8",
     "webpack": "^3.11.0",
