@@ -1,6 +1,5 @@
 {
   "name": "neo4j-browser",
-  "alias": "neo4j-browser",
   "engines": {
     "node": "^8.11.2"
   },
