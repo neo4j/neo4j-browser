@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global btoa */
 import React from 'react'
 import styled from 'styled-components'
+import { toKeyString } from 'services/utils'
 
 const StyledTable = styled.table`
   border-radius: 4px;
@@ -42,8 +42,12 @@ const StyledTh = styled.th`
   border-color: #ddd;
   padding: 10px 15px;
 `
-const StyledTd = styled.td`padding: 5px;`
-const StyledTdKey = styled(StyledTd)`font-weight: bold;`
+const StyledTd = styled.td`
+  padding: 5px;
+`
+const StyledTdKey = styled(StyledTd)`
+  font-weight: bold;
+`
 export const SysInfoTableContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
@@ -80,7 +84,7 @@ export const SysInfoTableEntry = ({
           const mappedValue = getValue(value, mapper)
           const val = mappedValue || missingValuePlaceholder
           return mappedValue || !optional ? (
-            <StyledTdKey key={btoa(val)}>{val}</StyledTdKey>
+            <StyledTdKey key={toKeyString(val)}>{val}</StyledTdKey>
           ) : null
         })}
       </StyledTr>
@@ -93,7 +97,7 @@ export const SysInfoTableEntry = ({
           const mappedValue = getValue(value, mapper)
           const val = mappedValue || missingValuePlaceholder
           return mappedValue || !optional ? (
-            <StyledTd key={btoa(val)}>{val}</StyledTd>
+            <StyledTd key={toKeyString(val)}>{val}</StyledTd>
           ) : null
         })}
       </StyledTr>

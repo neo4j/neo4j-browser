@@ -520,3 +520,21 @@ describe('Object props manipulation', () => {
     })
   })
 })
+describe('toKeyString', () => {
+  it('can encode strings with special characters', () => {
+    // Given
+    const strs = [
+      { str: 'hey ho ', expect: 'aGV5JTIwaG8lMjAlRUYlQTMlQkY=' },
+      {
+        str: '✓ à la mode',
+        expect: 'JUUyJTlDJTkzJTIwJUMzJUEwJTIwbGElMjBtb2Rl'
+      },
+      { str: '😍', expect: 'JUYwJTlGJTk4JThE' }
+    ]
+
+    // When & Then
+    strs.forEach(str => {
+      expect(utils.toKeyString(str.str)).toEqual(str.expect)
+    })
+  })
+})
