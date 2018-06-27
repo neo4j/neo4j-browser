@@ -209,7 +209,6 @@ module.exports = {
   entry: {
     main: './src/browser/index.jsx',
     vendor: [
-      'cypher-codemirror',
       'firebase',
       'neo4j-driver-alias',
       'codemirror',
@@ -272,9 +271,9 @@ module.exports = {
           enforce: true
         },
         styles: {
+          chunks: 'all',
           name: 'styles',
           test: /\.css$/,
-          chunks: 'all',
           enforce: true
         }
       }
