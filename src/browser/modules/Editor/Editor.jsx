@@ -384,7 +384,8 @@ export class Editor extends Component {
                 this.props.onFavoriteUpdateClick(
                   this.state.contentId,
                   this.getEditorValue()
-                )}
+                )
+              }
               disabled={this.getEditorValue().length < 1}
               color='#ffaf00'
               title='Favorite'
@@ -470,4 +471,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
+export default withBus(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Editor)
+)

@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { connect } from 'preact-redux'
-import { Component } from 'preact'
+import { connect } from 'react-redux'
+import React, { Component } from 'react'
 import FrameTemplate from '../FrameTemplate'
 import { getRequest } from 'shared/modules/requests/requestsDuck'
 import { getFrame } from 'shared/modules/stream/streamDuck'
@@ -46,6 +46,9 @@ class CypherScriptFrame extends Component {
               return (
                 <div>
                   {(frame.statements || []).map((id, index) => {
+                    if (!requests[frames[id].requestId]) {
+                      return
+                    }
                     const status = frames[id].ignore
                       ? 'ignored'
                       : requests[frames[id].requestId].status
@@ -57,7 +60,7 @@ class CypherScriptFrame extends Component {
                       ? CypherSummary
                       : Summary
                     return (
-                      <div>
+                      <div key={id}>
                         <Accordion.Title
                           data-test-id='multi-statement-list-title'
                           {...titleProps}

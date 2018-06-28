@@ -6,7 +6,7 @@ exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
     class="sc-bdVaJa kwzqrW"
   >
     <span
-      class="sc-kkGfuU kwrUQr"
+      class="sc-hSdWYo xUFHm"
       title="Test.Error: Test error description"
     >
       <i
@@ -35,12 +35,12 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
         class="sc-kAzzGY jQzNna"
       >
         <div
-          class="sc-ckVGcZ cxUQuB sc-kpOJdX cNDMKd"
+          class="sc-ckVGcZ fwCfGc sc-kpOJdX jAjPzu"
         >
           ERROR
         </div>
         <h4
-          class="sc-eNQAEJ fAbPPh"
+          class="sc-kEYyzF gfWKdx"
         >
           Neo.ClientError.Procedure.ProcedureNotFound
         </h4>
@@ -49,7 +49,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
         class="sc-chPdSV byfFmt"
       >
         <pre
-          class="sc-kEYyzF dXKHJM"
+          class="sc-iAyFgw hIxaSC"
         >
           Neo.ClientError.Procedure.ProcedureNotFound: not found
         </pre>
@@ -83,12 +83,12 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
         class="sc-kAzzGY jQzNna"
       >
         <div
-          class="sc-ckVGcZ cxUQuB sc-kpOJdX cNDMKd"
+          class="sc-ckVGcZ fwCfGc sc-kpOJdX jAjPzu"
         >
           ERROR
         </div>
         <h4
-          class="sc-eNQAEJ fAbPPh"
+          class="sc-kEYyzF gfWKdx"
         >
           Test.Error
         </h4>
@@ -97,7 +97,7 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
         class="sc-chPdSV byfFmt"
       >
         <pre
-          class="sc-kEYyzF dXKHJM"
+          class="sc-iAyFgw hIxaSC"
         >
           Test.Error: Test error description
         </pre>

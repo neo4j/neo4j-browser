@@ -137,7 +137,6 @@
     "firebase": "^4.3.0",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
-    "lodash.debounce": "^4.0.8",
     "neo4j-driver": "^1.6.1",
     "react": "^16.4.0",
     "react-addons-pure-render-mixin": "^15.0.2",

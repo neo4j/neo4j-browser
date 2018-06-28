@@ -19,67 +19,56 @@
  */
 
 /* global describe, test, expect */
-
-import { mount } from 'services/testUtils'
-
+import React from 'react'
+import { render, cleanup } from 'react-testing-library'
+import 'jest-dom/extend-expect'
 import { ErrorView } from './ErrorFrame'
+
+afterEach(cleanup)
 
 describe('ErrorFrame', () => {
   test('displays UndefinedError if no error specified', async () => {
     // Given
-    const result = mount(ErrorView)
-      .withProps({ frame: {} })
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toContain('UndefinedError')
-      })
+    const { getByText } = render(<ErrorView frame={{}} />)
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(getByText('UndefinedError')).toBeInTheDOM()
   })
   test('does display an error if info provided', () => {
     // Given
-    const result = mount(ErrorView)
-      .withProps({
-        frame: {
+    const { getByText } = render(
+      <ErrorView
+        frame={{
           error: {
             code: 'Test.Error',
             message: 'Test error description'
           }
-        }
-      })
-      // Then
-      .then(wrapper => {
-        const text = wrapper.text()
-        expect(text).toContain('ERROR')
-        expect(text).toContain('Test.Error')
-        expect(text).toContain('Test error description')
-      })
+        }}
+      />
+    )
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(getByText('ERROR')).toBeInTheDOM()
+    expect(getByText('Test.Error: Test error description')).toBeInTheDOM()
   })
   test('does display a known error if only code provided', () => {
     // Given
-    const result = mount(ErrorView)
-      .withProps({
-        frame: {
+    const { getByText } = render(
+      <ErrorView
+        frame={{
           error: {
             code: 'UnknownCommandError',
             cmd: ':unknown-command' // Needed to build error msg
           },
           cmd: ':unknown-command'
-        }
-      })
-      // Then
-      .then(wrapper => {
-        const text = wrapper.text()
-        expect(text).toContain('ERROR')
-        expect(text).toContain('UnknownCommandError')
-        expect(text).toContain(':unknown-command')
-      })
+        }}
+      />
+    )
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(getByText('ERROR')).toBeInTheDOM()
+    expect(
+      getByText('UnknownCommandError: Unknown command :unknown-command')
+    ).toBeInTheDOM()
   })
 })

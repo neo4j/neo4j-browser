@@ -1,10 +1,34 @@
-import { componentMount, mount } from 'services/testUtils'
+/*
+ * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ *
+ * This file is part of Neo4j.
+ *
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import React from 'react'
+import { render, fireEvent, cleanup } from 'react-testing-library'
 import Accordion from './Accordion'
+import 'jest-dom/extend-expect'
+
+afterEach(cleanup)
 
 describe('<Accordion>', () => {
   test('does not open any content by default', () => {
     // Given
-    const render = ({ getChildProps }) => {
+    const renderProp = ({ getChildProps }) => {
       const p0 = getChildProps({ index: 0 })
       const p1 = getChildProps({ index: 1 })
       return (
@@ -22,20 +46,18 @@ describe('<Accordion>', () => {
     }
 
     // When
-    const result = mount(Accordion, { render })
-      .then(wrapper => wrapper)
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual('FirstSecond')
-      })
+    const { getByText, queryByText } = render(<Accordion render={renderProp} />)
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(queryByText('First Content')).toBeNull()
+    expect(queryByText('Second Content')).toBeNull()
   })
 
   test('toggles content on title click', () => {
     // Given
-    const render = ({ getChildProps }) => {
+    const renderProp = ({ getChildProps }) => {
       const p0 = getChildProps({ index: 0 })
       const p1 = getChildProps({ index: 1 })
       return (
@@ -52,44 +74,48 @@ describe('<Accordion>', () => {
       )
     }
     // When
-    const result = componentMount(<Accordion render={render} />)
-      .then(wrapper => wrapper)
-      // Then
-      .then(wrapper => {
-        const inst = wrapper.instance()
-        inst.titleClick(0) // Click first title
-        wrapper.update()
-        expect(wrapper.text()).toEqual('FirstFirst ContentSecond')
-        return wrapper
-      })
-      .then(wrapper => {
-        const inst = wrapper.instance()
-        inst.titleClick(1) // Click second title
-        wrapper.update()
-        expect(wrapper.text()).toEqual('FirstSecondSecond Content')
-        return wrapper
-      })
-      .then(wrapper => {
-        const inst = wrapper.instance()
-        inst.titleClick(1) // Click second title again = close
-        wrapper.update()
-        expect(wrapper.text()).toEqual('FirstSecond')
-        return wrapper
-      })
+    const { getByText, queryByText } = render(<Accordion render={renderProp} />)
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(queryByText('First Content')).toBeNull()
+    expect(queryByText('Second Content')).toBeNull()
+
+    // When
+    fireEvent.click(getByText('First'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('First Content')).toBeInTheDOM()
+    expect(queryByText('Second Content')).toBeNull()
+
+    // When
+    fireEvent.click(getByText('Second'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(queryByText('First Content')).toBeNull()
+    expect(getByText('Second Content')).toBeInTheDOM()
+
+    // When
+    fireEvent.click(getByText('Second'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(queryByText('First Content')).toBeNull()
+    expect(queryByText('Second Content')).toBeNull()
   })
 
   test('can have content panes open by default and works as usual after that', () => {
     // Given
-    let p0Click, p1Click
-    const render = ({ getChildProps }) => {
+    const renderProp = ({ getChildProps }) => {
       const p0 = getChildProps({ index: 0, defaultActive: true })
       const p1 = getChildProps({ index: 1 })
       const p2 = getChildProps({ index: 2, defaultActive: true })
-      p0Click = p0.titleProps.onClick
-      p1Click = p1.titleProps.onClick
       return (
         <div>
           <Accordion.Title {...p0.titleProps}>First</Accordion.Title>
@@ -109,43 +135,45 @@ describe('<Accordion>', () => {
     }
 
     // When
-    const result = mount(Accordion, { render })
-      .then(wrapper => wrapper)
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual(
-          'FirstFirst ContentSecondThirdThird Content'
-        )
-        return wrapper
-      })
-      .then(wrapper => {
-        // Click an open title closes the default opened
-        p0Click()
-        wrapper.update()
-        expect(wrapper.text()).toEqual('FirstSecondThird')
-        return wrapper
-      })
-      .then(wrapper => {
-        // Click a title opens it
-        p1Click()
-        wrapper.update()
-        expect(wrapper.text()).toEqual('FirstSecondSecond ContentThird')
-        return wrapper
-      })
+    const { getByText, queryByText } = render(<Accordion render={renderProp} />)
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('Third')).toBeInTheDOM()
+    expect(getByText('First Content')).toBeInTheDOM()
+    expect(queryByText('Second Content')).toBeNull()
+    expect(getByText('Third Content')).toBeInTheDOM()
+
+    // When
+    fireEvent.click(getByText('First'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('Third')).toBeInTheDOM()
+    expect(queryByText('First Content')).toBeNull()
+    expect(queryByText('Second Content')).toBeNull()
+    expect(queryByText('Third Content')).toBeNull()
+
+    // When
+    fireEvent.click(getByText('Second'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('Third')).toBeInTheDOM()
+    expect(queryByText('First Content')).toBeNull()
+    expect(getByText('Second Content')).toBeInTheDOM()
+    expect(queryByText('Third Content')).toBeNull()
   })
 
   test('can have content panes always open', () => {
     // Given
-    let p1Click, p0Click
-    const render = ({ getChildProps }) => {
+    const renderProp = ({ getChildProps }) => {
       const p0 = getChildProps({ index: 0, forceActive: true })
       const p1 = getChildProps({ index: 1 })
       const p2 = getChildProps({ index: 2, forceActive: true })
-      p0Click = p0.titleProps.onClick
-      p1Click = p1.titleProps.onClick
       return (
         <div>
           <Accordion.Title {...p0.titleProps}>First</Accordion.Title>
@@ -165,44 +193,50 @@ describe('<Accordion>', () => {
     }
 
     // When
-    const result = mount(Accordion, { render })
-      .then(wrapper => wrapper)
-      // Then
-      .then(wrapper => {
-        expect(wrapper.text()).toEqual(
-          'FirstFirst ContentSecondThirdThird Content'
-        )
-        return wrapper
-      })
-      .then(wrapper => {
-        // Click a closed title does not close the forced opened
-        p1Click()
-        wrapper.update()
-        expect(wrapper.text()).toEqual(
-          'FirstFirst ContentSecondSecond ContentThirdThird Content'
-        )
-        return wrapper
-      })
-      .then(wrapper => {
-        // Click a forced opened does not do anything
-        p0Click()
-        wrapper.update()
-        expect(wrapper.text()).toEqual(
-          'FirstFirst ContentSecondSecond ContentThirdThird Content'
-        )
-        return wrapper
-      })
-      .then(wrapper => {
-        // Click a open non-forced opened closes itself
-        p1Click()
-        wrapper.update()
-        expect(wrapper.text()).toEqual(
-          'FirstFirst ContentSecondThirdThird Content'
-        )
-        return wrapper
-      })
+    const { getByText, queryByText } = render(<Accordion render={renderProp} />)
 
-    // Return test result (promise)
-    return result
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('Third')).toBeInTheDOM()
+    expect(getByText('First Content')).toBeInTheDOM()
+    expect(queryByText('Second Content')).toBeNull()
+    expect(getByText('Third Content')).toBeInTheDOM()
+
+    // When
+    // Click a closed title does not close the forced opened
+    fireEvent.click(getByText('Second'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('Third')).toBeInTheDOM()
+    expect(getByText('First Content')).toBeInTheDOM()
+    expect(getByText('Second Content')).toBeInTheDOM()
+    expect(getByText('Third Content')).toBeInTheDOM()
+
+    // When
+    // Click a forced opened does not do anything
+    fireEvent.click(getByText('First'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('Third')).toBeInTheDOM()
+    expect(getByText('First Content')).toBeInTheDOM()
+    expect(getByText('Second Content')).toBeInTheDOM()
+    expect(getByText('Third Content')).toBeInTheDOM()
+
+    // When
+    // Click a open non-forced opened closes itself
+    fireEvent.click(getByText('Second'))
+
+    // Then
+    expect(getByText('First')).toBeInTheDOM()
+    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('Third')).toBeInTheDOM()
+    expect(getByText('First Content')).toBeInTheDOM()
+    expect(queryByText('Second Content')).toBeNull()
+    expect(getByText('Third Content')).toBeInTheDOM()
   })
 })
