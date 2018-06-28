@@ -198,4 +198,27 @@ describe('commandutils', () => {
       )
     })
   })
+  describe('extractStatementsFromString', () => {
+    it('extracts simple statements from a string', () => {
+      // Given
+      const statements = [
+        { stmt: 'RETURN 1', expect: ['RETURN 1'] },
+        { stmt: 'RETURN 1;', expect: ['RETURN 1'] },
+        { stmt: 'RETURN 1;\nRETURN 2', expect: ['RETURN 1', 'RETURN 2'] },
+        // { // Ignored for now
+        //   stmt: 'RETURN 1;notcommandorcypher;\nRETURN 2',
+        //   expect: ['RETURN 1', 'notcommandorcypher', 'RETURN 2']
+        // },
+        {
+          stmt: ':history; RETURN 1;\nMATCH (n)\nRETURN n',
+          expect: [':history', 'RETURN 1', 'MATCH (n)\nRETURN n']
+        }
+      ]
+
+      // When && Then
+      statements.forEach(s => {
+        expect(utils.extractStatementsFromString(s.stmt)).toEqual(s.expect)
+      })
+    })
+  })
 })

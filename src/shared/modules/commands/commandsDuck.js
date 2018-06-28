@@ -23,7 +23,8 @@ import { v4 } from 'uuid'
 import {
   cleanCommand,
   extractPostConnectCommandsFromServerConfig,
-  buildCommandObject
+  buildCommandObject,
+  extractStatementsFromString
 } from 'services/commandUtils'
 import {
   extractWhitelistFromConfigString,
@@ -47,12 +48,12 @@ import { add as addFrame } from 'shared/modules/stream/streamDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 
 export const NAME = 'commands'
-export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
-export const EDITOR_COMMAND_QUEUED = NAME + '/EDITOR_COMMAND_QUEUED'
+export const SINGLE_COMMAND_QUEUED = NAME + '/SINGLE_COMMAND_QUEUED'
+export const COMMAND_QUEUED = NAME + '/COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
-export const SUB_COMMAND_QUEUED = NAME + '/SUB_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
 export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
+export const CLEAR_ERROR_MESSAGE = NAME + '/CLEAR_ERROR_MESSAGE'
 export const CYPHER = NAME + '/CYPHER'
 export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
 export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
@@ -69,6 +70,8 @@ export default function reducer (state = initialState, action) {
   switch (action.type) {
     case SHOW_ERROR_MESSAGE:
       return { errorMessage: action.errorMessage }
+    case CLEAR_ERROR_MESSAGE:
+      return {}
     case USER_CLEAR:
       return initialState
     default:
@@ -77,29 +80,23 @@ export default function reducer (state = initialState, action) {
 }
 
 // Action creators
-export const executeEditorCommand = (cmd, toHistory) => {
+
+export const executeCommand = (cmd, id, requestId, parentId) => {
   return {
-    type: EDITOR_COMMAND_QUEUED,
+    type: COMMAND_QUEUED,
     cmd,
-    toHistory
+    id,
+    requestId,
+    parentId
   }
 }
 
-export const executeCommand = (cmd, id, requestId) => {
+export const executeSingleCommand = (cmd, id, requestId) => {
   return {
-    type: USER_COMMAND_QUEUED,
+    type: SINGLE_COMMAND_QUEUED,
     cmd,
     id,
     requestId
-  }
-}
-
-export const executeSubCommand = (cmd, parentId, ignore) => {
-  return {
-    type: SUB_COMMAND_QUEUED,
-    cmd,
-    parentId,
-    ignore
   }
 }
 
@@ -119,6 +116,10 @@ export const showErrorMessage = errorMessage => ({
   type: SHOW_ERROR_MESSAGE,
   errorMessage: errorMessage
 })
+export const clearErrorMessage = () => ({
+  type: CLEAR_ERROR_MESSAGE
+})
+
 export const cypher = query => ({ type: CYPHER, query })
 export const successfulCypher = query => ({ type: CYPHER_SUCCEEDED, query })
 export const unsuccessfulCypher = query => ({ type: CYPHER_FAILED, query })
@@ -129,24 +130,27 @@ export const fetchGuideFromWhitelistAction = url => ({
 
 // Epics
 
-export const handleEditorCommandEpic = (action$, store) =>
+export const handleCommandEpic = (action$, store) =>
   action$
-    .ofType(EDITOR_COMMAND_QUEUED)
+    .ofType(COMMAND_QUEUED)
     .do(action => {
+      store.dispatch(clearErrorMessage())
       const maxHistory = getMaxHistory(store.getState())
-      const history = action.toHistory || action.cmd.join(';\n') + ';'
-      store.dispatch(addHistory(history, maxHistory))
-      if (action.cmd.length === 1) {
+      store.dispatch(addHistory(action.cmd, maxHistory))
+      const statements = extractStatementsFromString(action.cmd)
+      if (statements.length === 1) {
         // Single command
-        return store.dispatch(executeCommand(action.cmd[0]))
+        return store.dispatch(
+          executeSingleCommand(statements[0], action.id, action.requestId)
+        )
       }
-      const parentId = v4()
+      const parentId = action.parentId || v4()
       store.dispatch(
-        addFrame({ type: 'cypher-script', id: parentId, cmd: history })
+        addFrame({ type: 'cypher-script', id: parentId, cmd: action.cmd })
       )
       const cmdchar = getCmdChar(store.getState())
       let jobs = []
-      action.cmd.forEach(cmd => {
+      statements.forEach(cmd => {
         cmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
@@ -182,9 +186,9 @@ export const handleEditorCommandEpic = (action$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const handleCommandsEpic = (action$, store) =>
+export const handleSingleCommandEpic = (action$, store) =>
   action$
-    .ofType(USER_COMMAND_QUEUED)
+    .ofType(SINGLE_COMMAND_QUEUED)
     .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
     .map(action =>
       buildCommandObject(action, helper.interpret, getCmdChar(store.getState()))

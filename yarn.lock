@@ -2528,15 +2528,15 @@ cyclist@~0.2.2:
   version "0.2.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
 
-cypher-codemirror@1.1.0:
-  version "1.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.1.0.tgz#efe88b8a58aedb9e5f7d0ca73b70e711e54fa316"
+cypher-codemirror@1.1.1:
+  version "1.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.1.1.tgz#93c4359d4fd83b53cdd30bce327b6499c47e204f"
   dependencies:
-    cypher-editor-support "1.1.0"
+    cypher-editor-support "1.1.1"
 
-cypher-editor-support@1.1.0:
-  version "1.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.0.tgz#544041ce36fd597f9cf65a49b8bc5f93a400a593"
+cypher-editor-support@1.1.1:
+  version "1.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.1.tgz#90174d45334077edaeff34a9f4a7d88aa378a0eb"
   dependencies:
     antlr4 "4.7.0"
     fuzzaldrin "2.1.0"

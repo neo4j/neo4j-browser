@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { parse } from 'cypher-codemirror'
 
 export function cleanCommand (cmd) {
   const noComments = stripCommandComments(cmd)
@@ -123,4 +124,10 @@ export const mapParamToCypherStatement = (key, param) => {
     return returnAs(matchParamFunction[1])
   }
   return returnAs(param)
+}
+
+export const extractStatementsFromString = str => {
+  const parsed = parse(str)
+  const { queriesAndCommands } = parsed.referencesListener
+  return queriesAndCommands.map(stmt => stmt.getText())
 }

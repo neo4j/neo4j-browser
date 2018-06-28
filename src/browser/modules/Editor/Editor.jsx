@@ -24,7 +24,7 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid from 'uuid'
 import {
-  executeEditorCommand,
+  executeCommand,
   executeSystemCommand
 } from 'shared/modules/commands/commandsDuck'
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
@@ -112,12 +112,7 @@ export class Editor extends Component {
   }
 
   execCurrent () {
-    const statements = this.editor.generateStatementsFromCurrentValue()
-    if (!statements.length) return
-    this.props.onExecute(
-      statements.map(stmt => stmt.getText()),
-      this.getEditorValue()
-    )
+    this.props.onExecute(this.getEditorValue())
     this.clearEditor()
     this.setState({
       notifications: [],
@@ -442,8 +437,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const action = favorites.updateFavorite(id, cmd)
       ownProps.bus.send(action.type, action)
     },
-    onExecute: (cmd, toHistory) => {
-      const action = executeEditorCommand(cmd, toHistory)
+    onExecute: cmd => {
+      const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     }
   }
