@@ -107,15 +107,15 @@ export const transformCommandToHelpTopic = inputStr => {
 }
 
 const quotedRegex = /^"(.*)"|'(.*)'/
-const arrowFunctionRegex = /.*=>*.(.*)/
-
-export const isArrowFunction = param => arrowFunctionRegex.test(param)
+const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
 
 export const mapParamToCypherStatement = (key, param) => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
     ? '`' + quotedKey[1] + '`'
-    : typeof key !== 'string' ? '`' + key + '`' : key
+    : typeof key !== 'string'
+      ? '`' + key + '`'
+      : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
   const matchParamFunction = param.toString().match(arrowFunctionRegex)

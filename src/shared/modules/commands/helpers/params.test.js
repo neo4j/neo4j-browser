@@ -126,10 +126,24 @@ describe('commandsDuck params helper', () => {
       })
     })
     test('<key with space>=><value>', () => {
-      expect(params.extractParams('foo => 2')).toEqual({
-        key: 'foo',
+      expect(params.extractParams('"f o o" => 2')).toEqual({
+        key: 'f o o',
         value: 2,
         originalParamValue: '2',
+        isFn: true
+      })
+    })
+    test('<key>=><obj>', () => {
+      expect(
+        params.extractParams(`foo => {
+        x: 1
+      }`)
+      ).toEqual({
+        key: 'foo',
+        value: { x: 1 },
+        originalParamValue: `{
+        x: 1
+      }`,
         isFn: true
       })
     })
