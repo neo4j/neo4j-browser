@@ -26,36 +26,7 @@ import 'jest-dom/extend-expect'
 afterEach(cleanup)
 
 describe('<Accordion>', () => {
-  test('does not open any content by default', () => {
-    // Given
-    const renderProp = ({ getChildProps }) => {
-      const p0 = getChildProps({ index: 0 })
-      const p1 = getChildProps({ index: 1 })
-      return (
-        <div>
-          <Accordion.Title {...p0.titleProps}>First</Accordion.Title>
-          <Accordion.Content {...p0.contentProps}>
-            First Content
-          </Accordion.Content>
-          <Accordion.Title {...p1.titleProps}>Second</Accordion.Title>
-          <Accordion.Content {...p1.contentProps}>
-            Second Content
-          </Accordion.Content>
-        </div>
-      )
-    }
-
-    // When
-    const { getByText, queryByText } = render(<Accordion render={renderProp} />)
-
-    // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(queryByText('First Content')).toBeNull()
-    expect(queryByText('Second Content')).toBeNull()
-  })
-
-  test('toggles content on title click', () => {
+  test('does not open any content by default and toggles content on title click', () => {
     // Given
     const renderProp = ({ getChildProps }) => {
       const p0 = getChildProps({ index: 0 })
