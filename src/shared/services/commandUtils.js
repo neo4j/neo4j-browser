@@ -128,6 +128,6 @@ export const mapParamToCypherStatement = (key, param) => {
 
 export const extractStatementsFromString = str => {
   const parsed = parse(str)
-  const { queriesAndCommands } = parsed.referencesListener
-  return queriesAndCommands.map(stmt => stmt.getText())
+  const { statements } = parsed.referencesListener
+  return statements.map(stmt => stmt.getText().trim())
 }

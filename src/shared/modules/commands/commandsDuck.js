@@ -138,7 +138,7 @@ export const handleCommandEpic = (action$, store) =>
       const maxHistory = getMaxHistory(store.getState())
       store.dispatch(addHistory(action.cmd, maxHistory))
       const statements = extractStatementsFromString(action.cmd)
-      if (!statements.length) {
+      if (!statements.length || !statements[0]) {
         return
       }
       if (statements.length === 1) {

@@ -78,44 +78,6 @@ describe('Neo4j Browser', () => {
       .first()
       .should('contain', 'Error')
   })
-  it('can run multiple statements (non open by default)', () => {
-    cy.executeCommand(':clear')
-    const query = 'RETURN 1; :config; RETURN 2;'
-    cy.executeCommand(query)
-    cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
-      'have.length',
-      1
-    )
-    const frame = cy.get('[data-test-id="frame"]', { timeout: 10000 }).first()
-    frame.get('[data-test-id="multi-statement-list"]').should('have.length', 1)
-    frame
-      .get('[data-test-id="multi-statement-list-title"]')
-      .should('have.length', 3)
-    frame
-      .get('[data-test-id="multi-statement-list-content"]')
-      .should('have.length', 0)
-  })
-  it('can run multiple statements with error open', () => {
-    cy.executeCommand(':clear')
-    const query = 'RETURN 1; RETURN $x; RETURN 2;'
-    cy.executeCommand(query)
-    cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
-      'have.length',
-      1
-    )
-    const frame = cy.get('[data-test-id="frame"]', { timeout: 10000 }).first()
-    frame.find('[data-test-id="multi-statement-list"]').should('have.length', 1)
-    frame
-      .get('[data-test-id="multi-statement-list-title"]')
-      .should('have.length', 3)
-    frame
-      .get('[data-test-id="multi-statement-list-content"]', { timeout: 10000 })
-      .should('have.length', 1)
-    frame
-      .get('[data-test-id="multi-statement-list-content"]', { timeout: 10000 })
-      .first()
-      .should('contain', 'ERROR')
-  })
   it('can exec cypher from `:play movies`', () => {
     cy.executeCommand(':clear')
     const query = ':play movies'
