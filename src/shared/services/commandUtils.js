@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { parse } from 'cypher-codemirror'
 
 export function cleanCommand (cmd) {
   const noComments = stripCommandComments(cmd)
@@ -54,7 +55,18 @@ export const isCypherCommand = (cmd, cmdchar) => {
   return cleanCmd[0] !== cmdchar
 }
 
-export const getInterpreter = (interpret, cmd, cmdchar) => {
+export const buildCommandObject = (action, interpret, cmdchar) => {
+  const interpreted = getInterpreter(
+    interpret,
+    action.cmd,
+    cmdchar,
+    action.ignore
+  )
+  return { action, interpreted, cmdchar }
+}
+
+export const getInterpreter = (interpret, cmd, cmdchar, ignore = false) => {
+  if (ignore) return interpret('noop')
   if (isCypherCommand(cmd, cmdchar)) return interpret('cypher')
   return interpret(cleanCommand(cmd).substr(cmdchar.length))
 }
@@ -96,15 +108,15 @@ export const transformCommandToHelpTopic = inputStr => {
 }
 
 const quotedRegex = /^"(.*)"|'(.*)'/
-const arrowFunctionRegex = /.*=>*.(.*)/
-
-export const isArrowFunction = param => arrowFunctionRegex.test(param)
+const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
 
 export const mapParamToCypherStatement = (key, param) => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
     ? '`' + quotedKey[1] + '`'
-    : typeof key !== 'string' ? '`' + key + '`' : key
+    : typeof key !== 'string'
+      ? '`' + key + '`'
+      : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
   const matchParamFunction = param.toString().match(arrowFunctionRegex)
@@ -112,4 +124,10 @@ export const mapParamToCypherStatement = (key, param) => {
     return returnAs(matchParamFunction[1])
   }
   return returnAs(param)
+}
+
+export const extractStatementsFromString = str => {
+  const parsed = parse(str)
+  const { statements } = parsed.referencesListener
+  return statements.map(stmt => stmt.getText().trim())
 }

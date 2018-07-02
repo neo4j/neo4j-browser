@@ -32,53 +32,24 @@ export function getErrorMessage (errorObject) {
 }
 
 export function createErrorObject (ErrorType, ...rest) {
-  const obj = new ErrorType(...rest)
+  let Co = ErrorType
+  if (typeof ErrorType === 'string' && errorFunctions[ErrorType]) {
+    Co = errorFunctions[ErrorType]
+  }
+  const obj = new Co(...rest)
   if (!obj.code) obj.code = obj.type
   obj.message = getErrorMessage(obj)
   return obj
 }
 
-export function UserException (message) {
-  return {
-    type: 'UserException',
-    message
-  }
-}
-
-export function ConnectionException (message, code = 'Connection Error') {
-  return {
-    fields: [
-      {
-        code,
-        message
-      }
-    ]
-  }
-}
-
-export function AddServerValidationError () {
-  return {
-    type: 'AddServerValidationError'
-  }
-}
-
-export function CreateDataSourceValidationError () {
-  return {
-    type: 'CreateDataSourceValidationError'
-  }
-}
-
-export function RemoveDataSourceValidationError () {
-  return {
-    type: 'RemoveDataSourceValidationError'
-  }
-}
+const errorFunctions = {}
 
 export function BoltConnectionError () {
   return {
     type: 'BoltConnectionError'
   }
 }
+errorFunctions['BoltConnectionError'] = BoltConnectionError
 
 export function BoltError (obj) {
   return {
@@ -87,6 +58,7 @@ export function BoltError (obj) {
     message: obj.fields[0].message
   }
 }
+errorFunctions['BoltError'] = BoltError
 
 export function Neo4jError (obj) {
   return {
@@ -94,38 +66,36 @@ export function Neo4jError (obj) {
     message: obj.message
   }
 }
+errorFunctions['Neo4jError'] = Neo4jError
 
-export function ConnectionNotFoundError (name) {
-  return {
-    type: 'ConnectionNotFoundError',
-    name
-  }
-}
-
-export function OpenConnectionNotFoundError (name) {
-  return {
-    type: 'OpenConnectionNotFoundError',
-    name
-  }
-}
-
-export function UnknownCommandError (cmd) {
+export function UnknownCommandError (error) {
   return {
     type: 'UnknownCommandError',
-    cmd
+    cmd: error.cmd
   }
 }
+errorFunctions['UnknownCommandError'] = UnknownCommandError
+
+export function UndefinedError (error) {
+  return {
+    type: 'UndefinedError',
+    cmd: error.cmd
+  }
+}
+errorFunctions['UndefinedError'] = UndefinedError
 
 export function CouldNotFetchRemoteGuideError (error) {
   return {
     type: 'CouldNotFetchRemoteGuideError',
-    error
+    error: error.error
   }
 }
+errorFunctions['CouldNotFetchRemoteGuideError'] = CouldNotFetchRemoteGuideError
 
 export function FetchURLError (error) {
   return {
     type: 'FetchURLError',
-    error
+    error: error.error
   }
 }
+errorFunctions['FetchURLError'] = FetchURLError

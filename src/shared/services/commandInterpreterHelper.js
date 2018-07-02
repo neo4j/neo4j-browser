@@ -35,7 +35,6 @@ import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import {
-  unknownCommand,
   showErrorMessage,
   cypher,
   successfulCypher,
@@ -47,6 +46,8 @@ import {
   handleUpdateConfigCommand
 } from 'shared/modules/commands/helpers/config'
 import {
+  createErrorObject,
+  UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError
 } from 'services/exceptions'
@@ -64,6 +65,14 @@ const availableCommands = [
     match: cmd => cmd === 'clear',
     exec: function (action, cmdchar, put) {
       put(frames.clear())
+    }
+  },
+  {
+    name: 'noop',
+    match: cmd => /^noop$/.test(cmd),
+    exec: function (action, cmdchar, put, store) {
+      put(frames.add({ ...action, type: 'noop' }))
+      return true
     }
   },
   {
@@ -88,14 +97,21 @@ const availableCommands = [
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      handleParamsCommand(action, cmdchar, put)
+      return handleParamsCommand(action, cmdchar, put)
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
           put(frames.add({ ...action, type: res.type, success: true, params }))
+          put(updateQueryResult(action.requestId, res, 'success'))
+          return true
         })
         .catch(e => {
-          put(showErrorMessage(e.message))
+          // Don't show error message bar if it's a sub command
+          if (!action.parentId) {
+            put(showErrorMessage(e.message))
+          }
+          put(updateQueryResult(action.requestId, e, 'error'))
+          throw e
         })
     }
   },
@@ -183,7 +199,9 @@ const availableCommands = [
               ...action,
               type: 'play-remote',
               response: e.response || null,
-              error: CouldNotFetchRemoteGuideError(e.name + ': ' + e.message)
+              error: CouldNotFetchRemoteGuideError({
+                error: e.name + ': ' + e.message
+              })
             })
           )
         })
@@ -270,7 +288,7 @@ const availableCommands = [
               put(frames.add({ ...action, result: res, type: 'pre' }))
             })
             .catch(e => {
-              const error = new FetchURLError(e.message)
+              const error = new FetchURLError({ error: e.message })
               put(frames.add({ ...action, error, type: 'error' }))
             })
         })
@@ -324,7 +342,13 @@ const availableCommands = [
     name: 'catch-all',
     match: () => true,
     exec: (action, cmdchar, put) => {
-      put(unknownCommand(action.cmd))
+      put(
+        frames.add({
+          ...action,
+          error: createErrorObject(UnknownCommandError, action),
+          type: 'error'
+        })
+      )
     }
   }
 ]

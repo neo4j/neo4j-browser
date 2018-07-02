@@ -14,12 +14,12 @@ exports[`WarningsViews WarningsView does displays a warning 1`] = `
         class="sc-jzJRlG cOrBFf"
       >
         <div
-          class="sc-kgoBCf bdZQWn"
+          class="sc-kgoBCf jNgdNK"
         >
           WARNING xx0
         </div>
         <h4
-          class="sc-ckVGcZ foYhJp"
+          class="sc-eNQAEJ fAbPPh"
         >
           My xx1 warning
         </h4>
@@ -36,11 +36,11 @@ exports[`WarningsViews WarningsView does displays a warning 1`] = `
           class="sc-cSHVUG CAuLq"
         >
           <pre
-            class="sc-eNQAEJ kPnqqk"
+            class="sc-kEYyzF dXKHJM"
           >
             EXPLAIN MATCH xx3
             <br
-              class="sc-jKJlTe loXQau"
+              class="sc-hMqMXs cPxEnv"
             />
                    
             ^
@@ -64,12 +64,12 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         class="sc-jzJRlG cOrBFf"
       >
         <div
-          class="sc-kgoBCf bdZQWn"
+          class="sc-kgoBCf jNgdNK"
         >
           WARNING xx0
         </div>
         <h4
-          class="sc-ckVGcZ foYhJp"
+          class="sc-eNQAEJ fAbPPh"
         >
           My xx1 warning
         </h4>
@@ -86,11 +86,11 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
           class="sc-cSHVUG CAuLq"
         >
           <pre
-            class="sc-eNQAEJ kPnqqk"
+            class="sc-kEYyzF dXKHJM"
           >
             EXPLAIN MATCH zz3
             <br
-              class="sc-jKJlTe loXQau"
+              class="sc-hMqMXs cPxEnv"
             />
                    
             ^
@@ -105,12 +105,12 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         class="sc-jzJRlG cOrBFf"
       >
         <div
-          class="sc-kgoBCf bdZQWn"
+          class="sc-kgoBCf jNgdNK"
         >
           WARNING yy0
         </div>
         <h4
-          class="sc-ckVGcZ foYhJp"
+          class="sc-eNQAEJ fAbPPh"
         >
           My yy1 warning
         </h4>
@@ -127,11 +127,11 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
           class="sc-cSHVUG CAuLq"
         >
           <pre
-            class="sc-eNQAEJ kPnqqk"
+            class="sc-kEYyzF dXKHJM"
           >
             EXPLAIN MATCH zz3
             <br
-              class="sc-jKJlTe loXQau"
+              class="sc-hMqMXs cPxEnv"
             />
                
             ^

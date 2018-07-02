@@ -30,6 +30,7 @@ import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
 import ErrorFrame from './ErrorFrame'
 import HelpFrame from './HelpFrame'
+import CypherScriptFrame from './CypherScriptFrame/CypherScriptFrame'
 import SchemaFrame from './SchemaFrame'
 import StyleFrame from './StyleFrame'
 import SysInfoFrame from './SysInfoFrame'
@@ -50,6 +51,7 @@ const getFrame = type => {
   const trans = {
     error: ErrorFrame,
     cypher: CypherFrame,
+    'cypher-script': CypherScriptFrame,
     'user-list': UserList,
     'user-add': UserAdd,
     'change-password': ChangePasswordFrame,

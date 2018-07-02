@@ -47,6 +47,7 @@
       "raf/polyfill.js"
     ],
     "testPathIgnorePatterns": [
+      ".jsx$",
       "/e2e_tests/"
     ],
     "moduleNameMapper": {
@@ -130,13 +131,12 @@
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
-    "cypher-codemirror": "^1.0.5",
+    "cypher-codemirror": "1.1.2",
     "dnd-core": "^2.5.1",
     "file-saver": "^1.3.8",
     "firebase": "^4.3.0",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
-    "lodash.debounce": "^4.0.8",
     "neo4j-driver": "^1.6.1",
     "react": "^16.4.0",
     "react-addons-pure-render-mixin": "^15.0.2",

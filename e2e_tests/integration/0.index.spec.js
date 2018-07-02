@@ -20,9 +20,9 @@
 
 /* global Cypress, cy, test, expect */
 
+const Editor = '.ReactCodeMirror textarea'
 const Carousel = '[data-test-id="carousel"]'
 const SubmitQueryButton = '[data-test-id="submitQuery"]'
-const Editor = '.ReactCodeMirror textarea'
 const ClearEditorButton = '[data-test-id="clearEditorContent"]'
 
 describe('Neo4j Browser', () => {
@@ -38,64 +38,68 @@ describe('Neo4j Browser', () => {
   })
   it('can connect', () => {
     const password = Cypress.env('browser-password') || 'newpassword'
-    cy.connect('neo4j', password)
+    cy.connect(
+      'neo4j',
+      password
+    )
   })
   it('can empty the db', () => {
     cy.executeCommand(':clear')
     const query = 'MATCH (n) DETACH DELETE n'
     cy.executeCommand(query)
     cy.waitForCommandResult()
-    cy
-      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy
-      .get('[data-test-id="frameStatusbar"]', { timeout: 100000 })
+    cy.get('[data-test-id="frameStatusbar"]', { timeout: 100000 })
       .first()
       .contains(/completed/i)
   })
   it('can run cypher statement', () => {
     cy.executeCommand(':clear')
-    const query = 'return 1'
+    const query = 'RETURN 1'
     cy.executeCommand(query)
     cy.waitForCommandResult()
-    cy
-      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy
-      .get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
       .first()
       .should('contain', 'Started streaming')
+  })
+  it('shows error frame for unknown command', () => {
+    cy.executeCommand(':clear')
+    const query = ':unknown'
+    cy.executeCommand(query)
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+      .first()
+      .should('contain', query)
+    cy.get('[data-test-id="frame"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'Error')
   })
   it('can exec cypher from `:play movies`', () => {
     cy.executeCommand(':clear')
     const query = ':play movies'
     cy.executeCommand(query)
-    cy
-      .get('[data-test-id="frameCommand"]')
+    cy.get('[data-test-id="frameCommand"]')
       .first()
       .should('contain', query)
-    cy
-      .get(Carousel)
+    cy.get(Carousel)
       .find('[data-test-id="nextSlide"]')
       .click()
-    cy
-      .get(Carousel)
+    cy.get(Carousel)
       .find('[data-test-id="nextSlide"]')
       .click()
-    cy
-      .get(Carousel)
+    cy.get(Carousel)
       .find('[data-test-id="previousSlide"]')
       .click()
-    cy
-      .get(Carousel)
+    cy.get(Carousel)
       .find('.code')
       .click()
     cy.get(SubmitQueryButton).click()
     cy.waitForCommandResult()
-    cy
-      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', 'Emil Eifrem')
   })
@@ -112,8 +116,7 @@ describe('Neo4j Browser', () => {
     cy.get('[data-test-id="editorFavorite"]').click()
 
     cy.get('[data-test-id="drawerFavorites"]').click()
-    cy
-      .get('[data-test-id="sidebarFavoriteItem"]')
+    cy.get('[data-test-id="sidebarFavoriteItem"]')
       .first()
       .should('be', scriptName)
 

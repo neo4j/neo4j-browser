@@ -38,6 +38,10 @@ export const SET_MAX_FRAMES = NAME + '/SET_MAX_FRAMES'
 /**
  * Selectors
 */
+export function getFrame (state, id) {
+  return state[NAME].byId[id]
+}
+
 export function getFrames (state) {
   return state[NAME].allIds.map(id => state[NAME].byId[id])
 }
@@ -54,18 +58,42 @@ export function getRecentView (state) {
  * Reducer helpers
 */
 function addFrame (state, newState) {
-  const byId = Object.assign({}, state.byId, { [newState.id]: newState })
+  if (newState.parentId && state.allIds.indexOf(newState.parentId) < 0) {
+    // No parent
+    return state
+  }
+  let byId = Object.assign({}, state.byId, { [newState.id]: newState })
   let allIds = [].concat(state.allIds)
-  if (allIds.indexOf(newState.id) < 0) {
-    // new frame
-    const pos = findFirstFreePos(state)
-    allIds.splice(pos, 0, newState.id)
+
+  if (newState.parentId) {
+    const currentStatements = byId[newState.parentId].statements || []
+    // Need to add this id to parent's list of statements
+    if (!currentStatements.includes(newState.id)) {
+      byId = {
+        ...byId,
+        [newState.parentId]: {
+          ...byId[newState.parentId],
+          statements: currentStatements.concat(newState.id)
+        }
+      }
+    }
+  } else {
+    allIds = insertIntoAllIds(state, allIds, newState)
   }
   return ensureFrameLimit({
     ...state,
     allIds,
     byId
   })
+}
+
+function insertIntoAllIds (state, allIds, newState) {
+  if (allIds.indexOf(newState.id) < 0) {
+    // new frame
+    const pos = findFirstFreePos(state)
+    allIds.splice(pos, 0, newState.id)
+  }
+  return allIds
 }
 
 function removeFrame (state, id) {

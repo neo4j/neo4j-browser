@@ -21,6 +21,72 @@
 
 import parseUrl from 'url-parse'
 
+/**
+ * The work objects expected shape:
+  {
+    workFn,
+    onSuccess = () => {},
+    onError = () => {},
+    onSkip = () => {}
+  }
+ * workFn needs to return either a resolving Promise or a truthy value
+ * for the chain to continue
+ */
+
+export const serialExecution = (...args) => {
+  if (!args.length) {
+    return Promise.reject(Error('Nothing to do'))
+  }
+  let out = Promise.resolve()
+  args.forEach(arg => {
+    if (!arg) return
+    arg.prior = out
+    out = linkPromises(arg)
+  })
+  return out
+}
+
+const linkPromises = next => {
+  if (!next || !next.workFn) {
+    return Promise.reject(Error('Nothing to do'))
+  }
+  if (next && !next.prior) {
+    return Promise.resolve()
+  }
+  return (
+    next.prior
+      // Set `catch` before `then` not to catch it's own rejection
+      // so only following promises catches it
+      .catch(e => {
+        next.onSkip && next.onSkip()
+        return Promise.reject(e) // Continue rejection chain
+      })
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          next.onStart && next.onStart()
+          const res = next.workFn()
+          if (!res) {
+            next.onError && next.onError()
+            return reject(new Error('workFn failed'))
+          }
+          if (res && !res.then) {
+            next.onSuccess && next.onSuccess(res)
+            return resolve(res)
+          }
+          return res
+            .then(r => {
+              next.onSuccess && next.onSuccess(r)
+              resolve(r)
+            })
+            .catch(e => {
+              next.onError && next.onError(e)
+              reject(e)
+            })
+        })
+      })
+  )
+}
+
 export const deepEquals = (x, y) => {
   if (x && y && typeof x === 'object' && typeof y === 'object') {
     if (Object.keys(x).length !== Object.keys(y).length) return false

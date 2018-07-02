@@ -18,13 +18,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const BoltConnectionError =
-  'No connection found, did you connect to Neo4j?'
-export const BoltError = '#code# - #message#'
-export const Neo4jError = '#message#'
-export const UnknownCommandError = 'Unknown command #cmd#'
-export const UndefinedError = 'Undefined error. cmd: #cmd#'
-export const CouldNotFetchRemoteGuideError =
-  'Can not fetch remote guide: #error#'
-export const FetchURLError =
-  'Could not fetch URL: "#error#". This could be due to the remote server policy. See your web browsers error console for more information.'
+import React from 'react'
+import {
+  SmallSpinner,
+  SquareIcon,
+  CheckedSquareIcon,
+  ExclamationTriangleIcon
+} from 'browser-components/icons/Icons'
+import { WarningSpan, ErrorSpan, SuccessSpan } from './styled'
+
+export const Icon = ({ status }) => {
+  switch (status) {
+    case 'pending':
+      return <SmallSpinner />
+    case 'skipped':
+    case 'waiting':
+      return <SquareIcon />
+    case 'success':
+      return (
+        <SuccessSpan>
+          <CheckedSquareIcon />
+        </SuccessSpan>
+      )
+    case 'ignored':
+      return (
+        <WarningSpan>
+          <SquareIcon />
+        </WarningSpan>
+      )
+    case 'error':
+      return (
+        <ErrorSpan>
+          <ExclamationTriangleIcon />
+        </ErrorSpan>
+      )
+    default:
+      return '???'
+  }
+}

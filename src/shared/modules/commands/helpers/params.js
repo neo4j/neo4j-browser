@@ -27,7 +27,7 @@ import {
 import { update, replace } from 'shared/modules/params/paramsDuck'
 
 export const extractParams = param => {
-  const matchParam = param.match(/^(".*"|'.*'|\S+)\s?(:|=>)\s(.*)/)
+  const matchParam = param.match(/^(".*"|'.*'|\S+)\s?(:|=>)\s([^$]*)$/)
   if (!matchParam) return {}
   const [, paramName, delimiter, paramValue] = matchParam
   try {

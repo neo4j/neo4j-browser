@@ -19,16 +19,18 @@
  */
 
 import Rx from 'rxjs'
+import { v4 } from 'uuid'
 import {
-  getInterpreter,
-  isNamedInterpreter,
   cleanCommand,
-  extractPostConnectCommandsFromServerConfig
+  extractPostConnectCommandsFromServerConfig,
+  buildCommandObject,
+  extractStatementsFromString
 } from 'services/commandUtils'
 import {
   extractWhitelistFromConfigString,
   addProtocolsToUrlList,
-  firstSuccessPromise
+  firstSuccessPromise,
+  serialExecution
 } from 'services/utils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -42,23 +44,22 @@ import {
   getRemoteContentHostnameWhitelist
 } from '../dbMeta/dbMetaDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
+import { add as addFrame } from 'shared/modules/stream/streamDuck'
+import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 
 export const NAME = 'commands'
-export const USER_COMMAND_QUEUED = NAME + '/USER_COMMAND_QUEUED'
+export const SINGLE_COMMAND_QUEUED = NAME + '/SINGLE_COMMAND_QUEUED'
+export const COMMAND_QUEUED = NAME + '/COMMAND_QUEUED'
 export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
 export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
-export const KNOWN_COMMAND = NAME + '/KNOWN_COMMAND'
 export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
+export const CLEAR_ERROR_MESSAGE = NAME + '/CLEAR_ERROR_MESSAGE'
 export const CYPHER = NAME + '/CYPHER'
 export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
 export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
 export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 
-const initialState = {
-  lastCommandWasUnknown: false
-}
-export const wasUnknownCommand = state =>
-  state[NAME].lastCommandWasUnknown || initialState.lastCommandWasUnknown
+const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
 
 export default function reducer (state = initialState, action) {
@@ -67,12 +68,10 @@ export default function reducer (state = initialState, action) {
   }
 
   switch (action.type) {
-    case UNKNOWN_COMMAND:
-      return { lastCommandWasUnknown: true }
-    case KNOWN_COMMAND:
-      return { lastCommandWasUnknown: false }
     case SHOW_ERROR_MESSAGE:
-      return { lastCommandWasUnknown: false, errorMessage: action.errorMessage }
+      return { errorMessage: action.errorMessage }
+    case CLEAR_ERROR_MESSAGE:
+      return {}
     case USER_CLEAR:
       return initialState
     default:
@@ -81,21 +80,30 @@ export default function reducer (state = initialState, action) {
 }
 
 // Action creators
-export const executeCommand = (cmd, contextId, requestId = null) => {
+
+export const executeCommand = (cmd, id, requestId, parentId) => {
   return {
-    type: USER_COMMAND_QUEUED,
+    type: COMMAND_QUEUED,
     cmd,
-    id: contextId,
+    id,
+    requestId,
+    parentId
+  }
+}
+
+export const executeSingleCommand = (cmd, id, requestId) => {
+  return {
+    type: SINGLE_COMMAND_QUEUED,
+    cmd,
+    id,
     requestId
   }
 }
 
-export const executeSystemCommand = (cmd, contextId, requestId = null) => {
+export const executeSystemCommand = cmd => {
   return {
     type: SYSTEM_COMMAND_QUEUED,
-    cmd,
-    id: contextId,
-    requestId
+    cmd
   }
 }
 
@@ -108,6 +116,10 @@ export const showErrorMessage = errorMessage => ({
   type: SHOW_ERROR_MESSAGE,
   errorMessage: errorMessage
 })
+export const clearErrorMessage = () => ({
+  type: CLEAR_ERROR_MESSAGE
+})
+
 export const cypher = query => ({ type: CYPHER, query })
 export const successfulCypher = query => ({ type: CYPHER_SUCCEEDED, query })
 export const unsuccessfulCypher = query => ({ type: CYPHER_FAILED, query })
@@ -117,23 +129,73 @@ export const fetchGuideFromWhitelistAction = url => ({
 })
 
 // Epics
-export const handleCommandsEpic = (action$, store) =>
+
+export const handleCommandEpic = (action$, store) =>
   action$
-    .ofType(USER_COMMAND_QUEUED)
-    .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
-    .map(action => {
-      const cmdchar = getCmdChar(store.getState())
-      const interpreted = getInterpreter(helper.interpret, action.cmd, cmdchar)
-      return { action, interpreted, cmdchar }
-    })
-    .do(({ action, interpreted }) => {
-      if (action.type === SYSTEM_COMMAND_QUEUED) return
-      if (isNamedInterpreter(interpreted)) {
-        const maxHistory = getMaxHistory(store.getState())
-        store.dispatch(addHistory(action.cmd, maxHistory)) // Only save valid commands to history
-        store.dispatch({ type: KNOWN_COMMAND }) // Clear any eventual unknown command notifications
+    .ofType(COMMAND_QUEUED)
+    .do(action => {
+      store.dispatch(clearErrorMessage())
+      const maxHistory = getMaxHistory(store.getState())
+      store.dispatch(addHistory(action.cmd, maxHistory))
+      const statements = extractStatementsFromString(action.cmd)
+      if (!statements.length || !statements[0]) {
+        return
       }
+      if (statements.length === 1) {
+        // Single command
+        return store.dispatch(
+          executeSingleCommand(statements[0], action.id, action.requestId)
+        )
+      }
+      const parentId = action.parentId || v4()
+      store.dispatch(
+        addFrame({ type: 'cypher-script', id: parentId, cmd: action.cmd })
+      )
+      const cmdchar = getCmdChar(store.getState())
+      let jobs = []
+      statements.forEach(cmd => {
+        cmd = cleanCommand(cmd)
+        const requestId = v4()
+        const cmdId = v4()
+        const whitelistedCommands = [`${cmdchar}param`]
+        const isWhitelisted =
+          whitelistedCommands.filter(wcmd => !!cmd.startsWith(wcmd)).length > 0
+
+        // Ignore client commands that aren't whitelisted
+        const ignore = !!cmd.startsWith(cmdchar) && !isWhitelisted
+
+        let { action, interpreted } = buildCommandObject(
+          { cmd, ignore },
+          helper.interpret,
+          getCmdChar(store.getState())
+        )
+        action.requestId = requestId
+        action.parentId = parentId
+        action.id = cmdId
+        store.dispatch(
+          addFrame({ ...action, requestId, type: interpreted.name })
+        )
+        store.dispatch(updateQueryResult(requestId, null, 'waiting'))
+        jobs.push({
+          workFn: () =>
+            interpreted.exec(action, cmdchar, store.dispatch, store),
+          onStart: () => {},
+          onSkip: () =>
+            store.dispatch(updateQueryResult(requestId, null, 'skipped'))
+        })
+      })
+
+      serialExecution(...jobs).catch(() => {})
     })
+    .mapTo({ type: 'NOOP' })
+
+export const handleSingleCommandEpic = (action$, store) =>
+  action$
+    .ofType(SINGLE_COMMAND_QUEUED)
+    .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
+    .map(action =>
+      buildCommandObject(action, helper.interpret, getCmdChar(store.getState()))
+    )
     .mergeMap(({ action, interpreted, cmdchar }) => {
       return new Promise((resolve, reject) => {
         if (interpreted.name !== 'cypher') action.cmd = cleanCommand(action.cmd)

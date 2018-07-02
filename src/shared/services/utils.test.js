@@ -22,6 +22,102 @@
 import * as utils from './utils'
 
 describe('utils', () => {
+  describe('serialExecution', () => {
+    test('rejects if no args', () => {
+      return expect(utils.serialExecution()).rejects.toMatchObject(
+        Error('Nothing to do')
+      )
+    })
+    test('rejects if no work', () => {
+      return expect(
+        utils.serialExecution({
+          something: true
+        })
+      ).rejects.toMatchObject(Error('Nothing to do'))
+    })
+    test('handles happy path', () => {
+      const w1 = {
+        workFn: () => true, // works with bool
+        onStart: jest.fn(),
+        onSuccess: jest.fn(),
+        onError: jest.fn()
+      }
+      const w2 = {
+        workFn: () => Promise.resolve(true), // and promises
+        onStart: jest.fn(),
+        onSuccess: jest.fn(),
+        onError: jest.fn()
+      }
+      const w3 = {
+        workFn: () => true,
+        onStart: jest.fn(),
+        onSuccess: jest.fn(),
+        onError: jest.fn()
+      }
+
+      utils.serialExecution(w1, w2, w3)
+
+      return flushPromises().then(() => {
+        expect(w1.onStart).toHaveBeenCalledTimes(1)
+        expect(w2.onStart).toHaveBeenCalledTimes(1)
+        expect(w3.onStart).toHaveBeenCalledTimes(1)
+
+        expect(w1.onSuccess).toHaveBeenCalledTimes(1)
+        expect(w2.onSuccess).toHaveBeenCalledTimes(1)
+        expect(w3.onSuccess).toHaveBeenCalledTimes(1)
+
+        expect(w1.onError).toHaveBeenCalledTimes(0)
+        expect(w2.onError).toHaveBeenCalledTimes(0)
+        expect(w3.onError).toHaveBeenCalledTimes(0)
+        return Promise.resolve() // Resolve not to break test
+      })
+    })
+
+    test('breaks on first error', () => {
+      const w1 = {
+        workFn: () => true, // works with bool
+        onStart: jest.fn(),
+        onSuccess: jest.fn(),
+        onError: jest.fn(),
+        onSkip: jest.fn()
+      }
+      const w2 = {
+        workFn: () => Promise.reject(Error('fail')), // and promises
+        onStart: jest.fn(),
+        onSuccess: jest.fn(),
+        onError: jest.fn(),
+        onSkip: jest.fn()
+      }
+      const w3 = {
+        workFn: () => true,
+        onStart: jest.fn(),
+        onSuccess: jest.fn(),
+        onError: jest.fn(),
+        onSkip: jest.fn()
+      }
+
+      const res = utils.serialExecution(w1, w2, w3)
+      res.catch(e => {}) // catch error from promise chain not to break test
+
+      return flushPromises().then(() => {
+        expect(w1.onStart).toHaveBeenCalledTimes(1)
+        expect(w1.onSuccess).toHaveBeenCalledTimes(1)
+        expect(w1.onError).toHaveBeenCalledTimes(0)
+        expect(w1.onSkip).toHaveBeenCalledTimes(0)
+
+        expect(w2.onStart).toHaveBeenCalledTimes(1)
+        expect(w2.onSuccess).toHaveBeenCalledTimes(0)
+        expect(w2.onError).toHaveBeenCalledTimes(1)
+        expect(w2.onSkip).toHaveBeenCalledTimes(0)
+
+        expect(w3.onStart).toHaveBeenCalledTimes(0)
+        expect(w3.onSuccess).toHaveBeenCalledTimes(0)
+        expect(w3.onError).toHaveBeenCalledTimes(0)
+        expect(w3.onSkip).toHaveBeenCalledTimes(1)
+        return Promise.resolve() // Resolve not to break test
+      })
+    })
+  })
   test('can deeply compare objects', () => {
     // Given
     const o1 = { a: 'a', b: 'b', c: { c: 'c' } }
@@ -538,3 +634,7 @@ describe('toKeyString', () => {
     })
   })
 })
+
+function flushPromises () {
+  return new Promise(resolve => setImmediate(resolve))
+}

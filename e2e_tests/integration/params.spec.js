@@ -40,7 +40,10 @@ function runTests () {
   let getParamQ
   // it('can connect', () => {
   const password = Cypress.env('browser-password') || 'newpassword'
-  cy.connect('neo4j', password)
+  cy.connect(
+    'neo4j',
+    password
+  )
   // })
   // it(':param x => 1+1', () => {
   // Set param
@@ -48,13 +51,27 @@ function runTests () {
   setParamQ = ':param x => 1+1'
   cy.executeCommand(setParamQ)
   cy.resultContains('"x": 2')
-
   // return param
   cy.executeCommand(':clear')
   getParamQ = 'RETURN $x'
   cy.executeCommand(getParamQ)
   cy.waitForCommandResult()
   cy.resultContains('2')
+
+  // it(':param x => {prop: 1} multi line', () => {
+  // Set param
+  cy.executeCommand(':clear')
+  setParamQ = `:param x => {
+    prop: 1
+  }`
+  cy.executeCommand(setParamQ)
+  cy.resultContains('"prop": 1')
+  // return param
+  cy.executeCommand(':clear')
+  getParamQ = 'RETURN $x'
+  cy.executeCommand(getParamQ)
+  cy.waitForCommandResult()
+  cy.resultContains('"prop": 1')
   // })
 
   // it(':param x => 1.0', () => {
@@ -94,8 +111,7 @@ function runTests () {
       ":param x => point({{}crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
     cy.executeCommand(query)
 
-    cy
-      .get('[data-test-id="rawParamData"]', { timeout: 20000 })
+    cy.get('[data-test-id="rawParamData"]', { timeout: 20000 })
       .first()
       .should('contain', '"x": point({srid:4326, x:12.9082, y:57.7346})')
     getParamQ = 'RETURN $x'

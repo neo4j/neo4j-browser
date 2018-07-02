@@ -3,7 +3,7 @@
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-hSdWYo gcYLJq"
+    class="sc-cvbbAY AtklN"
   >
     <div
       class="sc-bdVaJa kwzqrW"
@@ -17,17 +17,17 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 <div>
   <div
-    class="sc-hSdWYo gcYLJq"
+    class="sc-cvbbAY AtklN"
   >
     <div
-      class="sc-iRbamj dFpacx"
+      class="sc-gipzik jvspFy"
     >
       <div
-        class="sc-gipzik kSaAcF"
+        class="sc-Rmtcm dlMiJv"
       >
         Max column width:
         <input
-          class="sc-csuQGl fCZHdq"
+          class="sc-bRBYWo ikSwwV"
           max="3"
           min="3"
           type="range"
@@ -45,7 +45,7 @@ exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
     class="sc-gzVnrw hPaHhb"
   >
     <div
-      class="sc-jWBwVP bcdEzH"
+      class="sc-cMljjf cIugeT"
     >
       (no changes, no records)
     </div>

@@ -20,15 +20,15 @@
 
 import React, { Component } from 'react'
 import classNames from 'classnames'
-import debounce from 'lodash.debounce'
 import codemirror from 'codemirror'
 import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/edit/closebrackets'
-import { createCypherEditor } from 'cypher-codemirror'
+import { createCypherEditor, parse } from 'cypher-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/lint/lint.css'
 import 'cypher-codemirror/dist/cypher-codemirror-syntax.css'
+import { debounce } from 'services/utils'
 
 function normalizeLineEndings (str) {
   if (!str) return str
@@ -36,6 +36,7 @@ function normalizeLineEndings (str) {
 }
 
 export default class CodeMirror extends Component {
+  lastChange = null
   constructor (props) {
     super(props)
     this.state = {
@@ -47,11 +48,8 @@ export default class CodeMirror extends Component {
     return codemirror
   }
 
-  componentWillMount () {
-    this.componentWillReceiveProps = debounce(this.componentWillReceiveProps, 0)
-  }
-
   componentDidMount () {
+    this.debouncedOnParse = debounce(this.onParsed, 300, this)
     const textareaNode = this.editorReference
     const { editor, editorSupport } = createCypherEditor(
       textareaNode,
@@ -116,6 +114,12 @@ export default class CodeMirror extends Component {
     return this.codeMirror
   }
 
+  generateStatementsFromCurrentValue () {
+    const parsed = parse(this.codeMirror.getValue())
+    const { queriesAndCommands } = parsed.referencesListener
+    return queriesAndCommands
+  }
+
   focus () {
     if (this.codeMirror) {
       this.codeMirror.focus()
@@ -134,16 +138,24 @@ export default class CodeMirror extends Component {
   }
 
   codemirrorValueChange = (doc, change) => {
+    this.lastChange = change
     if (this.props.onChange && change.origin !== 'setValue') {
       this.props.onChange(doc.getValue(), change)
     }
+    this.debouncedOnParse()
   }
   codemirrorValueChanges = (doc, change) => {
     if (this.props.onChanges && change.origin !== 'setValue') {
       this.props.onChanges(doc.getValue(), change)
     }
   }
-
+  onParsed = () => {
+    this.props.onParsed &&
+      this.props.onParsed(
+        this.generateStatementsFromCurrentValue(),
+        this.lastChange
+      )
+  }
   render () {
     const editorClassNames = classNames(
       'ReactCodeMirror',

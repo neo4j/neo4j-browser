@@ -44,13 +44,24 @@ import {
 import { Bar, ActionButtonSection, EditorWrapper } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { debounce, deepEquals, shallowEquals } from 'services/utils'
+import { deepEquals, shallowEquals } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
-import consoleCommands from './language/consoleCommands'
 import Render from 'browser-components/Render'
+
+const shouldCheckForHints = code =>
+  code.trim().length > 0 &&
+  !code.trimLeft().startsWith(':') &&
+  !code
+    .trimLeft()
+    .toUpperCase()
+    .startsWith('EXPLAIN') &&
+  !code
+    .trimLeft()
+    .toUpperCase()
+    .startsWith('PROFILE')
 
 export class Editor extends Component {
   constructor (props) {
@@ -101,9 +112,7 @@ export class Editor extends Component {
   }
 
   execCurrent () {
-    const value = this.getEditorValue()
-    if (!value) return
-    this.props.onExecute(value)
+    this.props.onExecute(this.getEditorValue())
     this.clearEditor()
     this.setState({
       notifications: [],
@@ -184,7 +193,6 @@ export class Editor extends Component {
   }
 
   componentWillMount () {
-    this.debouncedCheckForHints = debounce(this.checkForHints, 350, this)
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
@@ -210,7 +218,7 @@ export class Editor extends Component {
 
   setEditorValue (cmd) {
     this.codeMirror.setValue(cmd)
-    this.updateCode(cmd, undefined, () => {
+    this.updateCode(undefined, undefined, () => {
       this.focusEditor()
     })
   }
@@ -219,24 +227,9 @@ export class Editor extends Component {
     this.setState({ contentId: id })
   }
 
-  updateCode = (newCode, change, cb = () => {}) => {
-    if (
-      this.state.mode === 'cypher' &&
-      newCode.trim().length > 0 &&
-      !newCode
-        .trimLeft()
-        .toUpperCase()
-        .startsWith('EXPLAIN') &&
-      !newCode
-        .trimLeft()
-        .toUpperCase()
-        .startsWith('PROFILE')
-    ) {
-      this.debouncedCheckForHints(newCode)
-    }
-
+  updateCode = (statements, change, cb = () => {}) => {
+    if (statements) this.checkForHints(statements)
     const lastPosition = change && change.to
-
     this.setState(
       {
         notifications: [],
@@ -246,26 +239,40 @@ export class Editor extends Component {
       },
       cb
     )
-    this.updateHeight()
   }
 
-  checkForHints (code) {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      { query: 'EXPLAIN ' + code },
-      response => {
-        if (
-          response.success === true &&
-          response.result.summary.notifications.length > 0
-        ) {
-          this.setState({
-            notifications: response.result.summary.notifications
-          })
-        } else {
-          this.setState({ notifications: [] })
-        }
+  checkForHints (statements) {
+    if (!statements.length) return
+    statements.forEach(stmt => {
+      const text = stmt.getText()
+      if (!shouldCheckForHints(text)) {
+        return
       }
-    )
+      const offset = stmt.start.line - 1
+      ;((text, offset) => {
+        this.props.bus.self(
+          CYPHER_REQUEST,
+          { query: 'EXPLAIN ' + text },
+          response => {
+            if (
+              response.success === true &&
+              response.result.summary.notifications.length > 0
+            ) {
+              const notifications = response.result.summary.notifications.map(
+                n => ({
+                  ...n,
+                  position: { ...n.position, line: n.position.line + offset },
+                  statement: response.result.summary.statement.text
+                })
+              )
+              this.setState(state => ({
+                notifications: state.notifications.concat(notifications)
+              }))
+            }
+          }
+        )
+      })(text, offset)
+    })
   }
 
   setGutterMarkers () {
@@ -282,9 +289,7 @@ export class Editor extends Component {
               '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
             gutter.title = `${notification.title}\n${notification.description}`
             gutter.onclick = () => {
-              const action = executeSystemCommand(
-                `EXPLAIN ${this.getEditorValue()}`
-              )
+              const action = executeSystemCommand(notification.statement)
               action.forceView = viewTypes.WARNINGS
               this.props.bus.send(action.type, action)
             }
@@ -360,7 +365,8 @@ export class Editor extends Component {
             ref={ref => {
               this.editor = ref
             }}
-            onChanges={this.updateCode}
+            onParsed={this.updateCode}
+            onChanges={this.updateHeight}
             options={options}
             schema={this.props.schema}
             initialPosition={this.state.lastPosition}
@@ -373,7 +379,8 @@ export class Editor extends Component {
                 this.props.onFavoriteUpdateClick(
                   this.state.contentId,
                   this.getEditorValue()
-                )}
+                )
+              }
               disabled={this.getEditorValue().length < 1}
               color='#ffaf00'
               title='Favorite'
@@ -444,7 +451,6 @@ const mapStateToProps = state => {
     history: getHistory(state),
     cmdchar: getCmdChar(state),
     schema: {
-      consoleCommands: consoleCommands,
       parameters: Object.keys(state.params),
       labels: state.meta.labels.map(schemaConvert.toLabel),
       relationshipTypes: state.meta.relationshipTypes.map(
@@ -460,4 +466,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
+export default withBus(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Editor)
+)

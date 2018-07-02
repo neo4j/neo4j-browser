@@ -3,10 +3,10 @@
 exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-iAyFgw doKRWu"
+    class="sc-eHgmQL ALSTw"
   >
     <div
-      class="sc-eqIVtm dNNpFH"
+      class="sc-caSCKo dBwEvm"
     />
   </div>
 </div>
@@ -15,10 +15,10 @@ exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
 exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-iAyFgw doKRWu"
+    class="sc-eHgmQL ALSTw"
   >
     <div
-      class="sc-eqIVtm dNNpFH"
+      class="sc-caSCKo dBwEvm"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>
@@ -32,7 +32,7 @@ exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
     class="sc-gzVnrw eDeguU sc-bZQynM bblfwJ"
   >
     <div
-      class="sc-cvbbAY gJZQkc"
+      class="sc-brqgnP bWxJLn"
     >
       (no changes, no records)
     </div>
@@ -46,12 +46,12 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
     class="sc-gzVnrw eDeguU sc-bZQynM bblfwJ"
   >
     <table
-      class="sc-fAjcbJ gfwabc"
+      class="sc-gisBJw hMNjzC"
     >
       <thead>
         <tr>
           <th
-            class="table-header sc-gisBJw cExavq"
+            class="table-header sc-cHGsZl Sqoke"
           >
             x
           </th>
@@ -59,10 +59,10 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
       </thead>
       <tbody>
         <tr
-          class="table-row sc-caSCKo hvgHkX"
+          class="table-row sc-kjoXOD fWuSOJ"
         >
           <td
-            class="table-properties sc-kjoXOD TRkWw"
+            class="table-properties sc-TOsTZ itLVPa"
           >
             "y"
           </td>
