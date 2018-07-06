@@ -7,6 +7,7 @@ Object {
   "cmdchar": ":",
   "editorAutocomplete": true,
   "editorLint": false,
+  "enableMultiStatementMode": false,
   "initCmd": ":play start",
   "initialNodeDisplay": 300,
   "maxFrames": 30,
