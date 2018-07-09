@@ -97,6 +97,9 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
+const Statusbar = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StyleStatusbar)
 
 export default StyleFrame

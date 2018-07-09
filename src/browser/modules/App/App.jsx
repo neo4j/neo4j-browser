@@ -65,6 +65,7 @@ import {
   getActiveGraph
 } from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
+import ErrorBoundary from 'browser-components/ErrorBoundary'
 
 export class App extends Component {
   componentDidMount () {
@@ -75,6 +76,7 @@ export class App extends Component {
     document.removeEventListener('keyup', this.focusEditorOnSlash)
     document.removeEventListener('keyup', this.expandEditorOnEsc)
   }
+
   focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
     if (e.key !== '/') return
@@ -101,43 +103,48 @@ export class App extends Component {
       browserSyncAuthStatus
     } = this.props
     const themeData = themes[theme] || themes['normal']
+
     return (
-      <ThemeProvider theme={themeData}>
-        <StyledWrapper>
-          <DocTitle titleString={this.props.titleString} />
-          <UserInteraction />
-          <DesktopIntegration
-            integrationPoint={this.props.desktopIntegrationPoint}
-            onMount={this.props.setInitialConnectionData}
-            onGraphActive={this.props.switchConnection}
-            onGraphInactive={this.props.closeConnectionMaybe}
-          />
-          <Render if={loadExternalScripts}>
-            <Intercom appID='lq70afwx' />
-          </Render>
-          <Render if={syncConsent && loadExternalScripts && loadSync}>
-            <BrowserSyncInit
-              authStatus={browserSyncAuthStatus}
-              authData={browserSyncMetadata}
-              config={browserSyncConfig}
+      <ErrorBoundary>
+        <ThemeProvider theme={themeData}>
+          <StyledWrapper>
+            <DocTitle titleString={this.props.titleString} />
+            <UserInteraction />
+            <DesktopIntegration
+              integrationPoint={this.props.desktopIntegrationPoint}
+              onMount={this.props.setInitialConnectionData}
+              onGraphActive={this.props.switchConnection}
+              onGraphInactive={this.props.closeConnectionMaybe}
             />
-          </Render>
-          <StyledApp>
-            <StyledBody>
-              <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
-              <StyledMainWrapper>
-                <Main
-                  cmdchar={cmdchar}
-                  activeConnection={activeConnection}
-                  connectionState={connectionState}
-                  errorMessage={errorMessage}
-                  useBrowserSync={loadSync}
-                />
-              </StyledMainWrapper>
-            </StyledBody>
-          </StyledApp>
-        </StyledWrapper>
-      </ThemeProvider>
+            <Render if={loadExternalScripts}>
+              <Intercom appID='lq70afwx' />
+            </Render>
+            <Render if={syncConsent && loadExternalScripts && loadSync}>
+              <BrowserSyncInit
+                authStatus={browserSyncAuthStatus}
+                authData={browserSyncMetadata}
+                config={browserSyncConfig}
+              />
+            </Render>
+            <StyledApp>
+              <StyledBody>
+                <ErrorBoundary>
+                  <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+                </ErrorBoundary>
+                <StyledMainWrapper>
+                  <Main
+                    cmdchar={cmdchar}
+                    activeConnection={activeConnection}
+                    connectionState={connectionState}
+                    errorMessage={errorMessage}
+                    useBrowserSync={loadSync}
+                  />
+                </StyledMainWrapper>
+              </StyledBody>
+            </StyledApp>
+          </StyledWrapper>
+        </ThemeProvider>
+      </ErrorBoundary>
     )
   }
 }
@@ -224,5 +231,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+  )(App)
 )

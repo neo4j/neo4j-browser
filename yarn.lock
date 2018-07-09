@@ -7745,7 +7745,7 @@ react-timeago@^3.4.3:
   version "3.4.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-3.4.3.tgz#eb9061eefb044e4a2b09ce8c99d34645b2dbfa25"
 
-react@^16.4.0:
+react@^16.4.1:
   version "16.4.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react/-/react-16.4.1.tgz#de51ba5764b5dbcd1f9079037b862bd26b82fe32"
   dependencies:

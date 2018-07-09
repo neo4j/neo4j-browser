@@ -144,6 +144,17 @@ const StyledSecondaryFormButton = styled(StyledFormButton)`
     background-color: ${props => props.theme.secondaryButtonBackground};
   }
 `
+
+export const StyledErrorBoundaryButton = styled(StyledFormButton)`
+  color: #da4433;
+  border: 1px solid #da4433;
+  background-color: #fbf1f0;
+  &:hover {
+    color: #ff4433;
+    border: 1px solid #ff4433;
+    background-color: #fbf1f0;
+  }
+`
 const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
   color: #bcc0c9;
   border-color: #bcc0c9;

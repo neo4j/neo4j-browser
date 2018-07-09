@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import 'babel-polyfill'
 import './styles/bootstrap.grid-only.min.css'
 import './styles/streamline.css'
@@ -34,7 +33,3 @@ if (typeof btoa === 'undefined') {
     return Buffer.from(str, 'binary').toString('base64')
   }
 }
-
-// if (process.env.NODE_ENV !== 'production') {
-//   require('react/devtools')
-// }
