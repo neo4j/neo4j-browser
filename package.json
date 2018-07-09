@@ -131,7 +131,7 @@
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
-    "cypher-codemirror": "1.1.2",
+    "cypher-codemirror": "1.1.3",
     "dnd-core": "^2.5.1",
     "file-saver": "^1.3.8",
     "firebase": "^4.3.0",
