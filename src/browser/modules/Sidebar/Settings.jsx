@@ -53,6 +53,13 @@ const visualSettings = [
           tooltip: 'Autocomplete and syntax highlighting in query editor',
           type: 'checkbox'
         }
+      },
+      {
+        enableMultiStatementMode: {
+          displayName: 'Enable multi statement query editor',
+          tooltip: 'Allows query editor to execute multiple statements',
+          type: 'checkbox'
+        }
       }
     ]
   },
@@ -193,6 +200,7 @@ export const Settings = ({
                   onSettingsSave(settings)
                 }}
                 checked={settings[setting]}
+                data-test-id={setting}
               />
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
             </StyledSetting>

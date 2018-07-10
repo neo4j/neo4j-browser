@@ -34,7 +34,11 @@ import {
 } from 'services/utils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
-import { getCmdChar, getMaxHistory } from '../settings/settingsDuck'
+import {
+  getCmdChar,
+  getMaxHistory,
+  shouldEnableMultiStatementMode
+} from '../settings/settingsDuck'
 import { fetchRemoteGuide } from './helpers/play'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import {
@@ -137,7 +141,10 @@ export const handleCommandEpic = (action$, store) =>
       store.dispatch(clearErrorMessage())
       const maxHistory = getMaxHistory(store.getState())
       store.dispatch(addHistory(action.cmd, maxHistory))
-      const statements = extractStatementsFromString(action.cmd)
+      const statements = shouldEnableMultiStatementMode(store.getState())
+        ? extractStatementsFromString(action.cmd)
+        : [action.cmd]
+
       if (!statements.length || !statements[0]) {
         return
       }

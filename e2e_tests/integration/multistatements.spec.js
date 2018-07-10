@@ -18,9 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect */
+/* global Cypress, cy, test, expect, before, after */
 
 describe('Multi statements', () => {
+  const validQuery = 'RETURN 1; :config; RETURN 2;'
+
+  before(() => {
+    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-test-id="enableMultiStatementMode"]').click()
+    cy.get('[data-test-id="drawerSettings"]').click()
+  })
+  after(() => {
+    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-test-id="enableMultiStatementMode"]').click()
+    cy.get('[data-test-id="drawerSettings"]').click()
+  })
   it('can connect', () => {
     const password = Cypress.env('browser-password') || 'newpassword'
     cy.connect(
@@ -30,8 +42,7 @@ describe('Multi statements', () => {
   })
   it('can run multiple statements (non open by default)', () => {
     cy.executeCommand(':clear')
-    const query = 'RETURN 1; :config; RETURN 2;'
-    cy.executeCommand(query)
+    cy.executeCommand(validQuery)
     cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
       'have.length',
       1
@@ -45,6 +56,32 @@ describe('Multi statements', () => {
       .get('[data-test-id="multi-statement-list-content"]')
       .should('have.length', 0)
   })
+
+  it('can force run multiple statements to be executed as one statement', () => {
+    // Given
+    cy.executeCommand(':clear')
+    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-test-id="enableMultiStatementMode"]').click()
+    cy.get('[data-test-id="drawerSettings"]').click()
+
+    // When
+    cy.executeCommand(validQuery)
+    cy.waitForCommandResult()
+
+    // Then
+    // Error expected
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+      .first()
+      .should('contain', validQuery)
+    cy.get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'Error')
+
+    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-test-id="enableMultiStatementMode"]').click()
+    cy.get('[data-test-id="drawerSettings"]').click()
+  })
+
   it('can run multiple statements with error open', () => {
     cy.executeCommand(':clear')
     const query = 'RETURN 1; RETURN $nonsetparam; RETURN 2;'
