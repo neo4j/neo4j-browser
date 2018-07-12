@@ -94,7 +94,7 @@
         }
       }
     });
-    lock.on("hash_parsed", function (authResult) {
+    function result(authResult) {
       if (authResult && authResult.accessToken && authResult.idToken) {
         lock.getUserInfo(authResult.accessToken, function (err, userInfo) {
           if (!err) {
@@ -116,7 +116,9 @@
         });
         // use authResult.idTokenPayload for profile information
       }
-    });
+    }
+    lock.on("hash_parsed", result);
+    lock.on("authenticated", result);
     var userProfile = null;
     var auth0 = new auth0.WebAuth({
       domain: 'neo4j-sync.auth0.com',
