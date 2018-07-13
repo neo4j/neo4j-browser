@@ -104,6 +104,10 @@ export class GraphComponent extends Component {
         this.props.getNodeNeighbours,
         this.props.onItemMouseOver,
         this.props.onItemSelect,
+        this.props.onItemEdit,
+        this.props.onItemDelete,
+        this.props.onNodeConnect,
+        this.props.onRelationshipEdit,
         this.props.onGraphModelChange
       )
       this.graphEH.bindEventHandlers()

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 do ->
   noop = ->
 
-  numberOfItemsInContextMenu = 3
+  numberOfItemsInContextMenu = 6
 
   arc = (radius, itemNumber, width = 30) ->
     itemNumber = itemNumber - 1
@@ -115,6 +115,27 @@ do ->
     onTick: noop
   )
 
+  donutDeleteNode = new neo.Renderer(
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeDelete', 4, 'delete_node', [0, 0], '\uf1f8', 'Permanently delete node from graph')
+
+    onTick: noop
+  )
+
+  donutConnectNode = new neo.Renderer(
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeConnect', 5, 'connect_node', [0, 0], '\uf060', 'Draw connection from here')
+
+    onTick: noop
+  )
+
+  donutEditNode = new neo.Renderer(
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeEdit', 6, 'edit_node', [0, 0], '\uf044', 'Update properties')
+
+    onTick: noop
+  )
+
   neo.renderers.menu.push(donutExpandNode)
   neo.renderers.menu.push(donutRemoveNode)
   neo.renderers.menu.push(donutUnlockNode)
+  neo.renderers.menu.push(donutDeleteNode)
+  neo.renderers.menu.push(donutConnectNode)
+  neo.renderers.menu.push(donutEditNode)

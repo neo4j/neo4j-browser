@@ -27,6 +27,10 @@ export class GraphEventHandler {
     getNodeNeighbours,
     onItemMouseOver,
     onItemSelected,
+    onItemEdit,
+    onItemDelete,
+    onNodeConnect,
+    onRelationshipEdit,
     onGraphModelChange
   ) {
     this.graph = graph
@@ -35,7 +39,13 @@ export class GraphEventHandler {
     this.selectedItem = null
     this.onItemMouseOver = onItemMouseOver
     this.onItemSelected = onItemSelected
+    this.onItemEdit = onItemEdit
+    this.onItemDelete = onItemDelete
+    this.onNodeConnect = onNodeConnect
     this.onGraphModelChange = onGraphModelChange
+    this.onRelationshipEdit = onRelationshipEdit
+
+    this.connectionSource = null
   }
 
   graphModelChanged () {
@@ -74,6 +84,24 @@ export class GraphEventHandler {
     this.graphModelChanged()
   }
 
+  nodeDelete (d) {
+    this.onItemDelete({
+      type: 'node',
+      item: { id: d.id }
+    })
+  }
+
+  nodeConnect (d) {
+    this.connectionSource = d.id
+  }
+
+  nodeEdit (d) {
+    this.onItemEdit({
+      type: 'node',
+      item: { id: d.id, properties: d.propertyList }
+    })
+  }
+
   nodeClicked (d) {
     d.fixed = true
     if (!d.selected) {
@@ -85,6 +113,27 @@ export class GraphEventHandler {
     } else {
       this.deselectItem()
     }
+
+    if (this.connectionSource !== null) {
+      this.onNodeConnect({
+        type: 'relationship',
+        item: { source: this.connectionSource, target: d.id }
+      })
+
+      this.connectionSource = null
+    }
+  }
+
+  relationshipDblClicked (d) {
+    this.onRelationshipEdit({
+      type: 'relationship',
+      item: {
+        id: d.id,
+        properties: d.propertyList,
+        source: d.source.id,
+        target: d.target.id
+      }
+    })
   }
 
   nodeUnlock (d) {
@@ -182,8 +231,12 @@ export class GraphEventHandler {
       .on('relationshipClicked', this.onRelationshipClicked.bind(this))
       .on('canvasClicked', this.onCanvasClicked.bind(this))
       .on('nodeClose', this.nodeClose.bind(this))
+      .on('nodeDelete', this.nodeDelete.bind(this))
+      .on('nodeConnect', this.nodeConnect.bind(this))
+      .on('nodeEdit', this.nodeEdit.bind(this))
       .on('nodeClicked', this.nodeClicked.bind(this))
       .on('nodeDblClicked', this.nodeDblClicked.bind(this))
+      .on('relationshipDblClicked', this.relationshipDblClicked.bind(this))
       .on('nodeUnlock', this.nodeUnlock.bind(this))
     this.onItemMouseOut()
   }
