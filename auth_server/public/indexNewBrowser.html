@@ -70,28 +70,57 @@
       padding: 0 5em;
     }
   </style>
-  <script src="//cdn.auth0.com/js/lock-7.12.min.js"></script>
-  <script src="//cdn.auth0.com/w2/auth0-6.js"></script>
+  <script src="//cdn.auth0.com/js/lock/11.7.2/lock.min.js"></script>
+  <script src="//cdn.auth0.com/js/auth0/9.5.1/auth0.min.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      lock.show({
-        closable: false,
-        authParams: { scope: 'openid offline_access' },
-        callbackURL: location.href,
-        responseType: 'token',
-        disableSignupAction: true,
-        icon: 'http://neo4j.com/wp-content/themes/neo4jweb/assets/images/neo4j-logo-2015.png',
-        dict: {
-          signin: {
-            title: 'Sign in'
-          }
-        }
-      });
+      lock.show()
     });
-    var lock = new Auth0Lock('MSh9Q3sxUT6ZQy0xevjgv1rHVGOvgPpO', 'neo4j-sync.auth0.com');
+    var lock = new Auth0Lock('MSh9Q3sxUT6ZQy0xevjgv1rHVGOvgPpO', 'neo4j-sync.auth0.com', {
+      closable: false,
+      auth: {
+        params: {
+          scope: 'openid offline_access'
+        }
+      },
+      redirectUrl: location.href,
+      responseType: 'token',
+      disableSignupAction: true,
+      icon: 'http://neo4j.com/wp-content/themes/neo4jweb/assets/images/neo4j-logo-2015.png',
+      dict: {
+        signin: {
+          title: 'Sign in'
+        }
+      }
+    });
+    function result(authResult) {
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        lock.getUserInfo(authResult.accessToken, function (err, userInfo) {
+          if (!err) {
+            lock.hide()
+          }
+          window.addEventListener('message', function (event) {
+            getFirebaseToken(authResult.idToken, function (res) {
+              var mapObj = {
+                profile: userInfo,
+                data_token: res.idToken,
+                token: authResult.idToken,
+                accessToken: authResult.accessToken,
+                state: authResult.state,
+                refreshToken: authResult.refreshToken
+              }
+              event.source.postMessage(mapObj, event.origin);
+            })
+          }, false);
+        });
+        // use authResult.idTokenPayload for profile information
+      }
+    }
+    lock.on("hash_parsed", result);
+    lock.on("authenticated", result);
     var userProfile = null;
-    var auth0 = new Auth0({
+    var auth0 = new auth0.WebAuth({
       domain: 'neo4j-sync.auth0.com',
       clientID: 'MSh9Q3sxUT6ZQy0xevjgv1rHVGOvgPpO',
       callbackURL: location.href,
@@ -100,11 +129,12 @@
 
     function getFirebaseToken(id_token, cb) {
       var options = {
+        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
         id_token: id_token,
         api: 'firebase'
       };
-      auth0.getDelegationToken(options, function (err, delegationResult) {
-        cb(delegationResult)
+      auth0.client.delegation(options, function (err, res) {
+        cb(res);
       });
     }
   </script>
@@ -115,37 +145,12 @@
     <div id="wrap">
       <div class="item">
         <div class="spinner1"></div>
-        <p>Loading<span class="dot">.</span></p>
+        <p>Loading
+          <span class="dot">.</span>
+        </p>
       </div>
     </div>
   </div>
-  <script>
-    var hash = lock.parseHash();
-    if (hash) {
-      if (hash.error) {
-        console.log("There was an error logging in", hash.error);
-      } else {
-        lock.getProfile(hash.id_token, function (err, profile) {
-          if (!err) {
-            lock.hide()
-          }
-          window.addEventListener('message', function (event) {
-            getFirebaseToken(hash.id_token, function (res) {
-              var mapObj = {
-                profile: profile,
-                data_token: res.id_token,
-                token: hash.id_token,
-                accessToken: hash.access_token,
-                state: hash.state,
-                refreshToken: hash.refresh_token
-              }
-              event.source.postMessage(mapObj, event.origin);
-            })
-          }, false);
-        });
-      }
-    }
-  </script>
 </body>
 
 </html>
