@@ -22,6 +22,7 @@ import { USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'history'
 export const ADD = 'history/ADD'
+export const CLEAR = 'history/CLEAR'
 
 // Selectors
 export const getHistory = state => state[NAME]
@@ -42,6 +43,8 @@ export default function (state = initialState, action) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state, action.maxHistory)
+    case CLEAR:
+      return initialState
     case USER_CLEAR:
       return initialState
     default:
@@ -55,5 +58,10 @@ export const addHistory = (state, maxHistory) => {
     type: ADD,
     state,
     maxHistory
+  }
+}
+export const clearHistory = () => {
+  return {
+    type: CLEAR
   }
 }

@@ -58,4 +58,17 @@ describe('editor reducer', () => {
     const nextState = reducer(initalState, helpAction)
     expect(nextState).toEqual([':history', ':help', ':help'])
   })
+
+  test('handles editor.actionTypes.CLEAR_HISTORY', () => {
+    // Given
+    const initalState = [':emily']
+    const anAction = actions.addHistory(':elliot', 3)
+    const state = reducer(initalState, anAction)
+
+    // When
+    const nextState = reducer(state, actions.clearHistory())
+
+    // Then
+    expect(nextState).toEqual([])
+  })
 })
