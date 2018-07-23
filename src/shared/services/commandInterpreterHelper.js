@@ -20,7 +20,7 @@
 
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
-import { getHistory } from 'shared/modules/history/historyDuck'
+import { getHistory, clearHistory } from 'shared/modules/history/historyDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
@@ -216,8 +216,13 @@ const availableCommands = [
   },
   {
     name: 'history',
-    match: cmd => cmd === 'history',
+    match: cmd => /^history\s?/.test(cmd),
     exec: function (action, cmdchar, put, store) {
+      const match = action.cmd.match(/:history\s*(.*)$/)
+
+      if (Array.isArray(match) && match[1].trim() === 'clear') {
+        put(clearHistory())
+      }
       const historyState = getHistory(store.getState())
       const newAction = frames.add({
         ...action,
