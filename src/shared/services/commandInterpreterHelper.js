@@ -216,13 +216,23 @@ const availableCommands = [
   },
   {
     name: 'history',
-    match: cmd => /^history\s?/.test(cmd),
+    match: cmd => /^history(\s+clear)?/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      const match = action.cmd.match(/:history\s*(.*)$/)
+      const match = action.cmd.match(/^:history(\s+clear)?/)
+      if (match[0] !== match.input) {
+        return put(
+          frames.add({
+            ...action,
+            error: createErrorObject(UnknownCommandError, action),
+            type: 'error'
+          })
+        )
+      }
 
-      if (Array.isArray(match) && match[1].trim() === 'clear') {
+      if (match[1]) {
         put(clearHistory())
       }
+
       const historyState = getHistory(store.getState())
       const newAction = frames.add({
         ...action,
