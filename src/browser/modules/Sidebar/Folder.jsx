@@ -35,7 +35,8 @@ import {
   StyledFavFolderButtonSpan,
   EditFolderButton,
   FolderButtonContainer,
-  EditFolderInput
+  EditFolderInput,
+  StyledFolderLabel
 } from './styled'
 
 class Folder extends Component {
@@ -72,11 +73,11 @@ class Folder extends Component {
         <StyledList>
           <StyledListHeaderItem>
             <Render if={!this.state.editing}>
-              <span
+              <StyledFolderLabel
                 onClick={() => this.setState({ active: !this.state.active })}
               >
                 {this.props.folder.name}
-              </span>
+              </StyledFolderLabel>
             </Render>
             <Render if={this.state.editing}>
               <EditFolderInput
@@ -106,7 +107,8 @@ class Folder extends Component {
                   requestIcon={<BinIcon />}
                   confirmIcon={<BinIcon deleteAction />}
                   onConfirmed={() =>
-                    this.props.removeClick(this.props.folder.id)}
+                    this.props.removeClick(this.props.folder.id)
+                  }
                 />
               </StyledFavFolderButtonSpan>
             </FolderButtonContainer>
