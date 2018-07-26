@@ -21,7 +21,7 @@ import React from 'react'
 import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import FrameTemplate from './FrameTemplate'
-import { StyledHistoryList } from './styled'
+import { StyledHistoryList, PaddedDiv } from './styled'
 import HistoryRow from './HistoryRow'
 
 export const HistoryFrame = props => {
@@ -29,11 +29,22 @@ export const HistoryFrame = props => {
   const onHistoryClick = cmd => {
     bus.send(editor.SET_CONTENT, editor.setContent(cmd))
   }
-  const historyRows = frame.result.map((entry, index) => {
-    return (
-      <HistoryRow key={index} handleEntryClick={onHistoryClick} entry={entry} />
+  const historyRows =
+    frame.result.length > 0 ? (
+      frame.result.map((entry, index) => {
+        return (
+          <HistoryRow
+            key={index}
+            handleEntryClick={onHistoryClick}
+            entry={entry}
+          />
+        )
+      })
+    ) : (
+      <PaddedDiv>
+        <em>Empty history</em>
+      </PaddedDiv>
     )
-  })
   return (
     <FrameTemplate
       header={frame}
