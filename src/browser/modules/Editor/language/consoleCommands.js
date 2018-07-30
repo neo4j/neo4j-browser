@@ -18,6 +18,7 @@ export default [
       { name: 'bolt-routing' },
       { name: 'server-user' },
       { name: 'history' },
+      { name: 'history clear' },
       { name: 'explain' },
       { name: 'profile' },
       { name: 'match' },

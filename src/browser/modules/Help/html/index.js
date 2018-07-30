@@ -37,6 +37,7 @@ import _explain from './explain.html'
 import _foreach from './foreach.html'
 import _help from './help.html'
 import _history from './history.html'
+import _historyClear from './history-clear.html'
 import _keys from './keys.html'
 import _loadCsv from './load-csv.html'
 import _match from './match.html'
@@ -87,6 +88,7 @@ export default {
   _foreach,
   _help,
   _history,
+  _historyClear,
   _keys,
   _loadCsv,
   _match,
