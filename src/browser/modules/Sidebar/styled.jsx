@@ -28,7 +28,9 @@ import {
   EditIcon
 } from 'browser-components/icons/Icons'
 
-export const StyledSetting = styled.div`padding-bottom: 15px;`
+export const StyledSetting = styled.div`
+  padding-bottom: 15px;
+`
 
 export const StyledSettingLabel = styled.div`
   word-wrap: break-wrap;
@@ -91,6 +93,8 @@ export const StyledFavoriteText = styled.span`
   color: #bcc0c9;
   font-size: 13px;
   display: inline-block;
+  word-wrap: break-word;
+  word-break: break-word;
   max-height: 54px;
   overflow: hidden;
 `
@@ -110,9 +114,13 @@ const NewFolderStyledButton = styled.button`
   outline: none;
 `
 
-export const StyledFavFolderButtonSpan = styled.span`float: right;`
+export const StyledFavFolderButtonSpan = styled.span`
+  float: right;
+`
 
-export const FolderButtonContainer = styled.span`float: right;`
+export const FolderButtonContainer = styled.span`
+  float: right;
+`
 
 export const EditFolderInput = styled.input`
   color: black;
@@ -136,6 +144,11 @@ const StyledExecFavoriteButton = styled.div`
   &:hover {
     opacity: 1;
   }
+`
+
+export const StyledFolderLabel = styled.div`
+  display: inline-block;
+  max-width: 65%;
 `
 export const ExecFavoriteButton = props => {
   return (
