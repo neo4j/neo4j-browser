@@ -19,6 +19,7 @@
  */
 
 import React, { Component } from 'react'
+import deepmerge from 'deepmerge'
 import { deepEquals } from 'services/utils'
 import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
@@ -45,6 +46,7 @@ export class ExplorerComponent extends Component {
   constructor (props) {
     super(props)
     const graphStyle = neoGraphStyle()
+    this.defaultStyle = graphStyle.toSheet()
     let relationships = this.props.relationships
     let nodes = deduplicateNodes(this.props.nodes)
     let selectedItem = ''
@@ -55,13 +57,17 @@ export class ExplorerComponent extends Component {
       })
       selectedItem = {
         type: 'status-item',
-        item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this
-          .props
-          .initialNodeDisplay} of ${nodes.length} nodes are being displayed`
+        item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${
+          this.props.initialNodeDisplay
+        } of ${nodes.length} nodes are being displayed`
       }
     }
     if (this.props.graphStyleData) {
-      graphStyle.loadRules(this.props.graphStyleData)
+      const rebasedStyle = deepmerge(
+        this.defaultStyle,
+        this.props.graphStyleData
+      )
+      graphStyle.loadRules(rebasedStyle)
     }
     this.state = {
       stats: { labels: {}, relTypes: {} },
@@ -86,8 +92,9 @@ export class ExplorerComponent extends Component {
           this.setState({
             selectedItem: {
               type: 'status-item',
-              item: `Rendering was limited to ${this.props
-                .maxNeighbours} of the node's total ${result.count +
+              item: `Rendering was limited to ${
+                this.props.maxNeighbours
+              } of the node's total ${result.count +
                 currentNeighbours.length} neighbours due to browser config maxNeighbours.`
             }
           })
@@ -140,7 +147,8 @@ export class ExplorerComponent extends Component {
   componentWillReceiveProps (props) {
     if (!deepEquals(props.graphStyleData, this.props.graphStyleData)) {
       if (props.graphStyleData) {
-        this.state.graphStyle.loadRules(props.graphStyleData)
+        const rebasedStyle = deepmerge(this.defaultStyle, props.graphStyleData)
+        this.state.graphStyle.loadRules(rebasedStyle)
         this.setState({ graphStyle: this.state.graphStyle })
       } else {
         this.state.graphStyle.resetToDefault()
