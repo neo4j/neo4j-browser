@@ -63,8 +63,10 @@ export class SysInfoFrame extends Component {
     const mappedTableComponents = mappedResult.map(ccRecord => {
       const httpUrlForMember = ccRecord.addresses.filter(address => {
         return (
-          address.startsWith('http://') &&
-          !address.includes(window.location.href)
+          !address.includes(window.location.href) &&
+          (window.location.protocol.startsWith('file:')
+            ? address.startsWith('http://')
+            : address.startsWith(window.location.protocol))
         )
       })
       return [
@@ -357,4 +359,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, null)(SysInfoFrame))
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(SysInfoFrame)
+)
