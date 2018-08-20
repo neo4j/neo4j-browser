@@ -111,12 +111,15 @@ export function extractPlan (result, calculateTotalDbHits = false) {
         Rows: plan.rows,
         identifiers: plan.identifiers,
         children: plan.children.map(_ => ({
-          ..._.arguments,
+          ...transformPlanArguments(_.arguments),
           ...boltPlanToRESTPlanShared(_)
         }))
       }
     }
-    let obj = { ...rawPlan.arguments, ...boltPlanToRESTPlanShared(rawPlan) }
+    let obj = {
+      ...transformPlanArguments(rawPlan.arguments),
+      ...boltPlanToRESTPlanShared(rawPlan)
+    }
 
     if (calculateTotalDbHits === true) {
       obj.totalDbHits = collectHits(obj)
@@ -125,6 +128,17 @@ export function extractPlan (result, calculateTotalDbHits = false) {
     return { root: obj }
   }
   return null
+}
+
+const transformPlanArguments = args => {
+  const res = { ...args }
+  if (res.PageCacheHits) {
+    res.PageCacheHits = res.PageCacheHits.toNumber()
+  }
+  if (res.PageCacheMisses) {
+    res.PageCacheMisses = res.PageCacheMisses.toNumber()
+  }
+  return res
 }
 
 const collectHits = function (operator) {
@@ -279,9 +293,9 @@ export const retrieveFormattedUpdateStatistics = result => {
       .filter(field => stats[field.field] > 0)
       .map(
         field =>
-          `${field.verb} ${stats[field.field]} ${stats[field.field] === 1
-            ? field.singular
-            : field.plural}`
+          `${field.verb} ${stats[field.field]} ${
+            stats[field.field] === 1 ? field.singular : field.plural
+          }`
       )
     return statsMessages.join(', ')
   } else return null

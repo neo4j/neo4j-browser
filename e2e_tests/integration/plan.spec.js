@@ -23,7 +23,20 @@
 describe('Plan output', () => {
   it('can connect', () => {
     const password = Cypress.env('browser-password') || 'newpassword'
-    cy.connect('neo4j', password)
+    cy.connect(
+      'neo4j',
+      password
+    )
+  })
+  it('print pagecache stats in PROFILE', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      `PROFILE MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)`
+    )
+    cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
+    const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+    el.should('contain', 'pagecache hits')
+    el.should('contain', 'pagecache misses')
   })
   it('ouputs and preselects plan when using PROFILE', () => {
     cy.executeCommand(':clear')
@@ -40,8 +53,7 @@ describe('Plan output', () => {
     LIMIT 50;`)
     cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
     const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
-    el
-      .should('contain', 'NodeByLabelScan')
+    el.should('contain', 'NodeByLabelScan')
       .and('contain', 'tag')
       .and('contain', ':Tag')
       .and('contain', 'Filter')

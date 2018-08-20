@@ -164,8 +164,8 @@ neo.queryPlan = function(element) {
         (left =
           (left1 =
             operator.Expressions != null
-             ? operator.Expressions
-             : operator.Expression != null
+              ? operator.Expressions
+              : operator.Expression != null
                 ? operator.Expression
                 : operator.LegacyExpression != null
                   ? operator.LegacyExpression
@@ -177,6 +177,19 @@ neo.queryPlan = function(element) {
     ) {
       wordWrap(expression, 'expression')
       details.push({ className: 'padding' })
+    }
+
+    if (operator.PageCacheHits || operator.PageCacheMisses) {
+      details.push({
+        className: 'pagecache-hits',
+        key: 'pagecache hits',
+        value: formatNumber(operator.PageCacheHits)
+      })
+      details.push({
+        className: 'pagecache-misses',
+        key: 'pagecache misses',
+        value: formatNumber(operator.PageCacheMisses)
+      })
     }
 
     if (operator.Rows != null && operator.EstimatedRows != null) {
