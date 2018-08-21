@@ -28,16 +28,18 @@ describe('Plan output', () => {
       password
     )
   })
-  it('print pagecache stats in PROFILE', () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand(
-      `PROFILE MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)`
-    )
-    cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
-    const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
-    el.should('contain', 'pagecache hits')
-    el.should('contain', 'pagecache misses')
-  })
+  if (Cypress.config.serverVersion >= 3.4) {
+    it('print pagecache stats in PROFILE', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand(
+        `PROFILE MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)`
+      )
+      cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
+      const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+      el.should('contain', 'pagecache hits')
+      el.should('contain', 'pagecache misses')
+    })
+  }
   it('ouputs and preselects plan when using PROFILE', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(`PROFILE MATCH (tag:Tag)
