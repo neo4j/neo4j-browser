@@ -68,7 +68,6 @@ const initialState = {
   cmdchar: ':',
   maxHistory: 30,
   theme: 'normal',
-  useBoltRouting: false,
   initCmd: ':play start',
   initialNodeDisplay: 300,
   maxNeighbours: 100,
@@ -99,15 +98,6 @@ export default function settings (state = initialState, action) {
       return initialState
     default:
       return state
-  }
-}
-
-export const updateBoltRouting = useRouting => {
-  return {
-    type: UPDATE,
-    state: {
-      useBoltRouting: useRouting
-    }
   }
 }
 

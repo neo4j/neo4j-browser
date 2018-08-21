@@ -85,7 +85,7 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting()
+        inheritedRouting: boltConnection.useRouting(connectionProperties.host)
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -117,7 +117,7 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting()
+        inheritedRouting: boltConnection.useRouting(connectionProperties.host)
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -149,7 +149,7 @@ function directTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: false
+        inheritedRouting: boltConnection.useRouting(connectionProperties.host)
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -217,7 +217,6 @@ export default {
   routedReadTransaction,
   routedWriteTransaction,
   cancelTransaction,
-  useRoutingConfig: shouldWe => boltConnection.setUseRoutingConfig(shouldWe),
   recordsToTableArray: (records, convertInts = true) => {
     const intChecker = convertInts ? neo4j.isInt : () => true
     const intConverter = convertInts

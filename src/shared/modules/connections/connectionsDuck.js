@@ -71,7 +71,7 @@ const initialState = {
 
 /**
  * Selectors
-*/
+ */
 export function getConnection (state, id) {
   let connections = getConnections(state).filter(
     connection => connection && connection.id === id
@@ -371,6 +371,11 @@ export const startupConnectEpic = (action$, store) => {
 export const startupConnectionSuccessEpic = (action$, store) => {
   return action$
     .ofType(STARTUP_CONNECTION_SUCCESS)
+    .do(() =>
+      store.dispatch(
+        executeSystemCommand(getCmdChar(store.getState()) + 'server status')
+      )
+    )
     .mapTo(executeSystemCommand(getInitCmd(store.getState()))) // execute initCmd from settings
 }
 export const startupConnectionFailEpic = (action$, store) => {
@@ -434,8 +439,7 @@ export const connectionLostEpic = (action$, store) =>
     .mergeMap(action => {
       const connection = getActiveConnectionData(store.getState())
       if (!connection) return Rx.Observable.of(1)
-      return Rx.Observable
-        .of(1)
+      return Rx.Observable.of(1)
         .mergeMap(() => {
           return new Promise((resolve, reject) => {
             bolt
@@ -528,16 +532,6 @@ export const switchConnectionFailEpic = (action$, store) => {
     .mapTo(
       executeSystemCommand(getCmdChar(store.getState()) + 'server switch fail')
     )
-}
-
-export const checkSettingsForRoutingDriver = (action$, store) => {
-  return action$
-    .ofType(SETTINGS_UPDATE)
-    .merge(action$.ofType(APP_START))
-    .map(action => {
-      bolt.useRoutingConfig(getUseBoltRouting(store.getState()))
-      return { type: 'NOOP' }
-    })
 }
 
 export const retainCredentialsSettingsEpic = (action$, store) => {

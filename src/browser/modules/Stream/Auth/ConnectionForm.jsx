@@ -132,7 +132,6 @@ export class ConnectionForm extends Component {
   saveAndStart () {
     this.setState({ forcePasswordChange: false, used: true })
     this.state.successCallback()
-    this.updateRoutingSettings()
     this.saveCredentials()
     this.props.setActiveConnection(this.state.id)
     this.props.executeInitCmd()
@@ -144,12 +143,6 @@ export class ConnectionForm extends Component {
       username: this.state.username,
       password: this.state.password
     })
-  }
-  updateRoutingSettings () {
-    if (this.state.useBoltRouting) {
-      // Just enable if user uses protocol. No disabling.
-      this.props.updateBoltRoutingSetting(this.state.useBoltRouting)
-    }
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.oldPassword) {
@@ -217,8 +210,6 @@ const mapDispatchToProps = dispatch => {
     updateConnection: connection => {
       dispatch(updateConnection(connection))
     },
-    updateBoltRoutingSetting: useRouting =>
-      dispatch(updateBoltRouting(useRouting)),
     setActiveConnection: id => dispatch(setActiveConnection(id)),
     dispatchInitCmd: initCmd => dispatch(executeSystemCommand(initCmd))
   }
@@ -238,5 +229,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+  )(ConnectionForm)
 )

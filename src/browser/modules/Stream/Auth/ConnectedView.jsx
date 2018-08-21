@@ -44,7 +44,7 @@ const ConnectedView = ({
       <Render if={!username}>You are connected </Render>
       <Render if={showHost}>
         <span>
-          to the server <StyledCode>{host}</StyledCode>
+          to the url <StyledCode>{host}</StyledCode>
           <br />
         </span>
       </Render>

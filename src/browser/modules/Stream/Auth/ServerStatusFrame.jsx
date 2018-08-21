@@ -64,7 +64,8 @@ class ServerStatusFrame extends Component {
                   username={
                     activeConnectionData && activeConnectionData.username
                   }
-                  showHost={false}
+                  showHost
+                  host={activeConnectionData && activeConnectionData.host}
                   storeCredentials={storeCredentials}
                 />
               </Render>
@@ -92,4 +93,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(ServerStatusFrame)
+export default connect(
+  mapStateToProps,
+  null
+)(ServerStatusFrame)

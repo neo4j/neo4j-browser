@@ -119,25 +119,23 @@ export const discoveryOnStartupEpic = (some$, store) => {
         updateDiscoveryState({ ...action, username, password }, store)
         return Promise.resolve({ type: DONE })
       }
-      return Rx.Observable
-        .fromPromise(
-          remote
-            .getJSON(getDiscoveryEndpoint())
-            .then(result => {
-              // Try to get info from server
-              if (!result || !result.bolt) {
-                throw new Error('No bolt address found') // No bolt info from server, throw
-              }
-              store.dispatch(updateDiscoveryConnection({ host: result.bolt })) // Update discovery host in redux
-              return { type: DONE }
-            })
-            .catch(e => {
-              throw new Error('No info from endpoint') // No info from server, throw
-            })
-        )
-        .catch(e => {
-          return Promise.resolve({ type: DONE })
-        })
+      return Rx.Observable.fromPromise(
+        remote
+          .getJSON(getDiscoveryEndpoint())
+          .then(result => {
+            // Try to get info from server
+            if (!result || !result.bolt) {
+              throw new Error('No bolt address found') // No bolt info from server, throw
+            }
+            store.dispatch(updateDiscoveryConnection({ host: result.bolt })) // Update discovery host in redux
+            return { type: DONE }
+          })
+          .catch(e => {
+            throw new Error('No info from endpoint') // No info from server, throw
+          })
+      ).catch(e => {
+        return Promise.resolve({ type: DONE })
+      })
     })
     .map(a => a)
 }

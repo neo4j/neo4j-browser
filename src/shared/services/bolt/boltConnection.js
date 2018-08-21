@@ -21,26 +21,24 @@
 import { v1 as neo4j } from 'neo4j-driver-alias'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
+import { generateBoltHost } from 'services/utils'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
 export const ROUTED_READ_CONNECTION = 'ROUTED_READ_CONNECTION'
 
 const runningQueryRegister = {}
-
 let _drivers = null
-
-let _useRoutingConfig = false
 let _routingAvailable = false
-let _inheritedUseRouting = false
+const routingScheme = 'bolt+routing://'
 
-export const useRouting = () =>
-  (_useRoutingConfig && _routingAvailable) || _inheritedUseRouting
+export const useRouting = url => isRoutingUrl(url) && _routingAvailable
+const isRoutingUrl = url => generateBoltHost(url).startsWith(routingScheme)
 
 const _routingAvailability = () => {
-  return directTransaction('CALL dbms.procedures()').then(res => {
-    const names = res.records.map(r => r.get('name'))
-    return names.indexOf('dbms.cluster.overview') > -1
+  return directTransaction('CALL dbms.procedures() YIELD name').then(res => {
+    const names = res.records.map(r => r.get(0))
+    return names.includes('dbms.cluster.overview')
   })
 }
 
@@ -58,14 +56,8 @@ const validateConnection = (driver, res, rej) => {
     })
 }
 
-export const getDriver = (
-  host,
-  auth,
-  opts,
-  protocol,
-  onConnectFail = () => {}
-) => {
-  const boltHost = protocol + (host || '').split('bolt://').join('')
+const getDriver = (host, auth, opts, onConnectFail = () => {}) => {
+  const boltHost = generateBoltHost(host)
   try {
     const res = neo4j.driver(boltHost, auth, opts)
     return res
@@ -83,25 +75,13 @@ export const getDriversObj = (props, opts = {}, onConnectFail = () => {}) => {
       : neo4j.auth.basic(props.username, props.password)
   const getDirectDriver = () => {
     if (driversObj.direct) return driversObj.direct
-    driversObj.direct = getDriver(
-      props.host,
-      auth,
-      opts,
-      'bolt://',
-      onConnectFail
-    )
+    driversObj.direct = getDriver(props.host, auth, opts, onConnectFail)
     return driversObj.direct
   }
   const getRoutedDriver = () => {
-    if (!useRouting()) return getDirectDriver()
+    if (!useRouting(props.host)) return getDirectDriver()
     if (driversObj.routed) return driversObj.routed
-    driversObj.routed = getDriver(
-      props.host,
-      auth,
-      opts,
-      'bolt+routing://',
-      onConnectFail
-    )
+    driversObj.routed = getDriver(props.host, auth, opts, onConnectFail)
     return driversObj.routed
   }
   return {
@@ -125,7 +105,7 @@ export function directConnect (
       opts.withoutCredentials || !props.username
         ? neo4j.auth.basic('', '')
         : neo4j.auth.basic(props.username, props.password)
-    const driver = getDriver(props.host, creds, opts, 'bolt://')
+    const driver = getDriver(props.host, creds, opts)
     driver.onError = e => {
       onLostConnection(e)
       reject(e)
@@ -151,17 +131,26 @@ export function openConnection (props, opts = {}, onLostConnection = () => {}) {
     driver.onError = onConnectFail
     const myResolve = driver => {
       _drivers = driversObj
-      if (!props.hasOwnProperty('inheritedUseRouting')) {
+      if (opts.inheritedRouting) {
+        _routingAvailable = true
+        resolve(driver)
+        return
+      }
+      if (isRoutingUrl(props.host)) {
         _routingAvailability()
           .then(r => {
             if (r) _routingAvailable = true
             if (!r) _routingAvailable = false
+            resolve(driver)
           })
-          .catch(e => (_routingAvailable = false))
+          .catch(e => {
+            _routingAvailable = false
+            resolve(driver)
+          })
       } else {
-        _inheritedUseRouting = props.inheritedUseRouting
+        _routingAvailable = false
+        resolve(driver)
       }
-      resolve(driver)
     }
     const myReject = err => {
       _drivers = null
@@ -277,8 +266,4 @@ export const ensureConnection = (props, opts, onLostConnection) => {
   } else {
     return openConnection(props, opts, onLostConnection)
   }
-}
-
-export const setUseRoutingConfig = useRoutingConfig => {
-  _useRoutingConfig = useRoutingConfig
 }

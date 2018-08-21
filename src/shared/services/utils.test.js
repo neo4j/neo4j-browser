@@ -633,6 +633,30 @@ describe('toKeyString', () => {
       expect(utils.toKeyString(str.str)).toEqual(str.expect)
     })
   })
+  describe('generateBoltHost', () => {
+    it('generates a bolt host as expected', () => {
+      const tests = [
+        { host: '', expected: 'bolt://localhost:7687' },
+        { host: 'localhost', expected: 'bolt://localhost' },
+        { host: 'localhost:7688', expected: 'bolt://localhost:7688' },
+        { host: 'bolt://localhost', expected: 'bolt://localhost' },
+        { host: 'bolt://localhost:7688', expected: 'bolt://localhost:7688' },
+        {
+          host: 'bolt+routing://localhost',
+          expected: 'bolt+routing://localhost'
+        },
+        {
+          host: 'bolt+routing://localhost:7688',
+          expected: 'bolt+routing://localhost:7688'
+        },
+        { host: null, expected: 'bolt://localhost:7687' }
+      ]
+
+      tests.forEach(test => {
+        expect(utils.generateBoltHost(test.host)).toEqual(test.expected)
+      })
+    })
+  })
 })
 
 function flushPromises () {
