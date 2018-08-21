@@ -2528,7 +2528,7 @@ cyclist@~0.2.2:
   version "0.2.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
 
-cypher-codemirror@^1.1.4:
+cypher-codemirror@1.1.4:
   version "1.1.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.1.4.tgz#fe1ba60ddf0ae58ef93c8bdba36f00574663fa25"
   dependencies:
