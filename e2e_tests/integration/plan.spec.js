@@ -70,7 +70,9 @@ describe('Plan output', () => {
       .and('contain', 'relevantNumberOfPublications')
       .and('contain', 'relevantNumberOfTags')
       .and('contain', 'Result')
-    if (Cypress.config.serverVersion >= 3.3) {
+    if ([3.5].includes(Cypress.config.serverVersion)) {
+      el.should('contain', 'tag.name IN').and('contain', 'GetDegree')
+    } else if ([3.3, 3.4].includes(Cypress.config.serverVersion)) {
       el.should('contain', 'tag.name IN').and('contain', 'GetDegreePrimitive')
     } else if (Cypress.config.serverVersion === 3.2) {
       el.should('contain', 'ConstantCachedIn').and('contain', 'GetDegree')
@@ -83,9 +85,9 @@ describe('Plan output', () => {
     cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
     const el2 = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
     el2.should('contain', 'NodeByLabelScan')
-    if (Cypress.config.serverVersion >= 3.3) {
+    if ([3.3, 3.4].includes(Cypress.config.serverVersion)) {
       el2.should('contain', 'GetDegreePrimitive')
-    } else if (Cypress.config.serverVersion === 3.2) {
+    } else if ([3.2, 3.5].includes(Cypress.config.serverVersion)) {
       el2.should('contain', 'GetDegree')
     }
   })
