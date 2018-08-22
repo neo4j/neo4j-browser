@@ -48,13 +48,13 @@ class ServerStatusFrame extends Component {
             <StyledConnectionAside>
               <span>
                 <H3>Connection status</H3>
-                This is your current server connection information.
+                This is your current connection information.
               </span>
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>
               <Render if={!activeConnectionData}>
                 <StyledConnectionBody>
-                  You are not connected to the server.
+                  You are not connected.
                 </StyledConnectionBody>
               </Render>
               <Render
@@ -73,8 +73,7 @@ class ServerStatusFrame extends Component {
                 if={activeConnectionData && !activeConnectionData.authEnabled}
               >
                 <StyledConnectionBody>
-                  You have a working connection with the Neo4j database and
-                  server auth is disabled.
+                  You have a working connection and server auth is disabled.
                 </StyledConnectionBody>
               </Render>
             </StyledConnectionBodyContainer>
