@@ -33,7 +33,7 @@ import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
-import { toBoltHost, isRoutingHost } from 'services/utils'
+import { generateBoltHost } from 'services/utils'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
@@ -90,9 +90,8 @@ export class ConnectionForm extends Component {
   onHostChange (event) {
     const host = event.target.value
     this.setState({
-      host: toBoltHost(host),
-      hostInputVal: host,
-      useBoltRouting: isRoutingHost(host)
+      host: generateBoltHost(host),
+      hostInputVal: host
     })
     this.props.error({})
   }
