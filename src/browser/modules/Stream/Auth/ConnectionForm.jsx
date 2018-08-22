@@ -28,10 +28,7 @@ import {
   updateConnection,
   CONNECT
 } from 'shared/modules/connections/connectionsDuck'
-import {
-  getInitCmd,
-  updateBoltRouting
-} from 'shared/modules/settings/settingsDuck'
+import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'

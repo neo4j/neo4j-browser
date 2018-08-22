@@ -30,9 +30,7 @@ import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
   getSettings,
-  getUseBoltRouting,
-  getCmdChar,
-  UPDATE as SETTINGS_UPDATE
+  getCmdChar
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 

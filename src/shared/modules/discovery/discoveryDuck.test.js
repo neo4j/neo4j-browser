@@ -26,7 +26,6 @@ import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
 import { APP_START, WEB } from 'shared/modules/app/appDuck'
-import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
 describe('discoveryOnStartupEpic', () => {
@@ -108,7 +107,7 @@ describe('discoveryOnStartupEpic', () => {
       type: APP_START,
       url: 'http://localhost/?connectURL=myhost:8888'
     }
-    const expectedURL = 'bolt://myhost:8888'
+    const expectedURL = 'myhost:8888'
     bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([
@@ -128,12 +127,11 @@ describe('discoveryOnStartupEpic', () => {
       type: APP_START,
       url: 'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fmyhost%3A8889'
     }
-    const expectedURL = 'bolt://myhost:8889'
+    const expectedURL = 'bolt+routing://myhost:8889'
     bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        updateBoltRouting(true),
         discovery.updateDiscoveryConnection({ host: expectedURL }),
         currentAction
       ])
@@ -150,12 +148,11 @@ describe('discoveryOnStartupEpic', () => {
       url:
         'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fneo4j%3Aneo4j%40myhost%3A8889'
     }
-    const expectedURL = 'bolt://myhost:8889'
+    const expectedURL = 'bolt+routing://myhost:8889'
     bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        updateBoltRouting(true),
         discovery.updateDiscoveryConnection({
           host: expectedURL,
           username: 'neo4j',

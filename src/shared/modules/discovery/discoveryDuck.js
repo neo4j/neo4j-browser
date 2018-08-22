@@ -24,7 +24,7 @@ import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
 import { updateBoltRouting } from 'shared/modules/settings/settingsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
-import { getUrlParamValue, toBoltHost, isRoutingHost } from 'services/utils'
+import { getUrlParamValue, toBoltHost } from 'services/utils'
 import { getUrlInfo } from 'shared/services/utils'
 
 export const NAME = 'discover-bolt-host'
@@ -72,14 +72,7 @@ export const getBoltHost = state => {
 }
 
 const updateDiscoveryState = (action, store) => {
-  // Remove any protocol and prepend with bolt://
-  const host = toBoltHost(action.forceURL)
-  const updateObj = { host }
-
-  // Set config to use routing if bolt+routing:// protocol
-  if (isRoutingHost(action.forceURL)) {
-    store.dispatch(updateBoltRouting(true))
-  }
+  const updateObj = { host: action.forceURL }
   if (action.username && action.password) {
     updateObj.username = action.username
     updateObj.password = action.password
@@ -115,13 +108,26 @@ export const discoveryOnStartupEpic = (some$, store) => {
     .mergeMap(action => {
       if (!inWebEnv(store.getState())) return Promise.resolve({ type: 'NOOP' }) // Only when in a web environment
       if (action.forceURL) {
-        const { username, password } = getUrlInfo(action.forceURL)
-        updateDiscoveryState({ ...action, username, password }, store)
+        const { username, password, protocol, host } = getUrlInfo(
+          action.forceURL
+        )
+        updateDiscoveryState(
+          {
+            ...action,
+            username,
+            password,
+            forceURL: `${protocol ? protocol + '//' : ''}${host}`
+          },
+          store
+        )
         return Promise.resolve({ type: DONE })
       }
       return Rx.Observable.fromPromise(
         remote
           .getJSON(getDiscoveryEndpoint())
+          // Uncomment below and comment out above when doing manual tests in dev mode to
+          // fake discovery response
+          // Promise.resolve({ bolt: 'bolt+routing://localhost:7687' })
           .then(result => {
             // Try to get info from server
             if (!result || !result.bolt) {
