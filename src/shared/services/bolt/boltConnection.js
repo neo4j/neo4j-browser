@@ -131,8 +131,8 @@ export function openConnection (props, opts = {}, onLostConnection = () => {}) {
     driver.onError = onConnectFail
     const myResolve = driver => {
       _drivers = driversObj
-      if (opts.inheritedRouting) {
-        _routingAvailable = true
+      if (props.hasOwnProperty('inheritedUseRouting')) {
+        _routingAvailable = props.inheritedUseRouting
         resolve(driver)
         return
       }

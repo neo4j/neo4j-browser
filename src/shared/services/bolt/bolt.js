@@ -86,7 +86,7 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedRouting: boltConnection.useRouting(
+        inheritedUseRouting: boltConnection.useRouting(
           generateBoltHost(
             connectionProperties ? connectionProperties.host : ''
           )
@@ -122,7 +122,7 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedRouting: boltConnection.useRouting(
+        inheritedUseRouting: boltConnection.useRouting(
           generateBoltHost(
             connectionProperties ? connectionProperties.host : ''
           )
@@ -158,7 +158,7 @@ function directTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedRouting: boltConnection.useRouting(
+        inheritedUseRouting: boltConnection.useRouting(
           generateBoltHost(
             connectionProperties ? connectionProperties.host : ''
           )
