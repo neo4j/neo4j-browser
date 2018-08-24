@@ -172,7 +172,7 @@ export class Editor extends Component {
     this.setEditorValue(this.props.history[this.state.historyIndex])
   }
 
-  triggerAutocompletion = (cm, changed) => {
+  triggerAutocompletion (cm, changed) {
     if (changed.text.length !== 1 || !this.props.enableEditorAutocomplete) {
       return
     }
@@ -208,18 +208,10 @@ export class Editor extends Component {
   }
 
   componentDidMount () {
-    this.attachCodemirrorInstance()
+    this.codeMirror = this.editor.getCodeMirror()
+    this.codeMirror.on('change', this.triggerAutocompletion.bind(this))
   }
-  attachCodemirrorInstance = () => {
-    if (!this.codeMirror) {
-      setTimeout(() => {
-        if (this.editor) {
-          this.codeMirror = this.editor.getCodeMirror()
-          this.codeMirror.on('change', this.triggerAutocompletion)
-        }
-      }, 100)
-    }
-  }
+
   getEditorValue () {
     return this.codeMirror ? this.codeMirror.getValue().trim() : ''
   }
