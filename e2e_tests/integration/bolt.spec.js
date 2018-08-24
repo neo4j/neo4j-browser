@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global cy, test, expect */
+/* global Cypress, cy, test, expect */
 
 describe('Bolt connections', () => {
   it('show "no connection" error when not using web workers', () => {
@@ -34,13 +34,41 @@ describe('Bolt connections', () => {
     cy.resultContains('No connection found, did you connect to Neo4j')
   })
   it('does not show the "Reconnect" banner when trying to connect', () => {
-    cy.connect('neo4j', 'x', 'bolt://localhost:7685', false) // Non open port
+    cy.connect(
+      'neo4j',
+      'x',
+      'bolt://localhost:7685',
+      false
+    ) // Non open port
     cy.wait(10000)
     cy.get('[data-test-id="reconnectBanner"]').should('not.be.visible')
     cy.get('[data-test-id="disconnectedBanner"]').should('be.visible')
-    cy
-      .get('[data-test-id="main"]', { timeout: 1000 })
+    cy.get('[data-test-id="main"]', { timeout: 1000 })
       .and('contain', 'Database access not available')
       .should('not.contain', 'Connection lost')
+  })
+  it('users with no role can connect', () => {
+    cy.executeCommand(':clear')
+    const password = Cypress.env('browser-password') || 'newpassword'
+    cy.connect(
+      'neo4j',
+      password
+    )
+    cy.executeCommand('CALL dbms.security.deleteUser("no-roles")')
+    cy.executeCommand(':clear')
+    cy.executeCommand('CALL dbms.security.createUser("no-roles", "pw", true)')
+    cy.executeCommand(':server disconnect')
+    cy.executeCommand(':clear')
+    cy.executeCommand(':server connect')
+    cy.setInitialPassword('.', 'pw', 'no-roles', true)
+
+    // We need to reset the local storage value to
+    // default so other tests can pass
+    cy.executeCommand(':server disconnect')
+    cy.connect(
+      'neo4j',
+      password
+    )
+    cy.executeCommand(':server disconnect')
   })
 })
