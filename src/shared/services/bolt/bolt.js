@@ -23,6 +23,7 @@ import { v1 as neo4j } from 'neo4j-driver-alias'
 import WorkPool from '../WorkPool'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
+import { generateBoltHost } from 'services/utils'
 import {
   runCypherMessage,
   cancelTransactionMessage,
@@ -85,7 +86,11 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting()
+        inheritedUseRouting: boltConnection.useRouting(
+          generateBoltHost(
+            connectionProperties ? connectionProperties.host : ''
+          )
+        )
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -117,7 +122,11 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting()
+        inheritedUseRouting: boltConnection.useRouting(
+          generateBoltHost(
+            connectionProperties ? connectionProperties.host : ''
+          )
+        )
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -149,7 +158,11 @@ function directTransaction (input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: false
+        inheritedUseRouting: boltConnection.useRouting(
+          generateBoltHost(
+            connectionProperties ? connectionProperties.host : ''
+          )
+        )
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -217,7 +230,6 @@ export default {
   routedReadTransaction,
   routedWriteTransaction,
   cancelTransaction,
-  useRoutingConfig: shouldWe => boltConnection.setUseRoutingConfig(shouldWe),
   recordsToTableArray: (records, convertInts = true) => {
     const intChecker = convertInts ? neo4j.isInt : () => true
     const intConverter = convertInts

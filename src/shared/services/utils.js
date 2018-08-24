@@ -467,3 +467,10 @@ export const optionalToString = v =>
     : v
 
 export const toKeyString = str => btoa(encodeURIComponent(str))
+
+export const generateBoltHost = host => {
+  const urlParts = (host || '').split('://')
+  const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'bolt://'
+  host = urlParts.length > 1 ? urlParts[1] : urlParts[0]
+  return protocol + (host || 'localhost:7687')
+}

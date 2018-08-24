@@ -28,15 +28,12 @@ import {
   updateConnection,
   CONNECT
 } from 'shared/modules/connections/connectionsDuck'
-import {
-  getInitCmd,
-  updateBoltRouting
-} from 'shared/modules/settings/settingsDuck'
+import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
-import { toBoltHost, isRoutingHost } from 'services/utils'
+import { generateBoltHost } from 'services/utils'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
@@ -93,9 +90,8 @@ export class ConnectionForm extends Component {
   onHostChange (event) {
     const host = event.target.value
     this.setState({
-      host: toBoltHost(host),
-      hostInputVal: host,
-      useBoltRouting: isRoutingHost(host)
+      host: generateBoltHost(host),
+      hostInputVal: host
     })
     this.props.error({})
   }
@@ -132,7 +128,6 @@ export class ConnectionForm extends Component {
   saveAndStart () {
     this.setState({ forcePasswordChange: false, used: true })
     this.state.successCallback()
-    this.updateRoutingSettings()
     this.saveCredentials()
     this.props.setActiveConnection(this.state.id)
     this.props.executeInitCmd()
@@ -144,12 +139,6 @@ export class ConnectionForm extends Component {
       username: this.state.username,
       password: this.state.password
     })
-  }
-  updateRoutingSettings () {
-    if (this.state.useBoltRouting) {
-      // Just enable if user uses protocol. No disabling.
-      this.props.updateBoltRoutingSetting(this.state.useBoltRouting)
-    }
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.oldPassword) {
@@ -217,8 +206,6 @@ const mapDispatchToProps = dispatch => {
     updateConnection: connection => {
       dispatch(updateConnection(connection))
     },
-    updateBoltRoutingSetting: useRouting =>
-      dispatch(updateBoltRouting(useRouting)),
     setActiveConnection: id => dispatch(setActiveConnection(id)),
     dispatchInitCmd: initCmd => dispatch(executeSystemCommand(initCmd))
   }
@@ -238,5 +225,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+  )(ConnectionForm)
 )

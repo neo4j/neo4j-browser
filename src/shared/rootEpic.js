@@ -27,7 +27,6 @@ import {
 } from './modules/commands/commandsDuck'
 import {
   retainCredentialsSettingsEpic,
-  checkSettingsForRoutingDriver,
   connectEpic,
   disconnectEpic,
   startupConnectEpic,
@@ -92,7 +91,6 @@ export default combineEpics(
   switchConnectionSuccessEpic,
   switchConnectionFailEpic,
   retainCredentialsSettingsEpic,
-  checkSettingsForRoutingDriver,
   connectEpic,
   jmxEpic,
   disconnectEpic,

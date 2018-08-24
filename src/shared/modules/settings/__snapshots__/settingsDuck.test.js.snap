@@ -19,7 +19,6 @@ Object {
   "shouldReportUdc": true,
   "showSampleScripts": true,
   "theme": "normal",
-  "useBoltRouting": false,
   "useCypherThread": true,
 }
 `;
