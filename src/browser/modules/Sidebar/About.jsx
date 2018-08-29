@@ -82,21 +82,17 @@ const About = ({ serverVersion, serverEdition }) => (
       <DrawerSection>
         <DrawerSubHeader>Participate</DrawerSubHeader>
         <DrawerSectionBody>
+          Discuss on{' '}
+          <a target='_blank' href='https://community.neo4j.com/'>
+            Neo4j Community Forum
+          </a>{' '}
+          <br />
           Ask questions at{' '}
           <a
             target='_blank'
             href='http://stackoverflow.com/questions/tagged/neo4j'
           >
             Stack Overflow
-          </a>
-          <br />
-          Discuss Neo4j on{' '}
-          <a target='_blank' href='http://neo4j.com/slack'>
-            Slack
-          </a>{' '}
-          or{' '}
-          <a target='_blank' href='http://groups.google.com/group/neo4j'>
-            Google Groups
           </a>
           <br />
           Visit a local{' '}
