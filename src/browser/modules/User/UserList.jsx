@@ -94,7 +94,8 @@ export class UserList extends Component {
     })
     const tableHeaders = [
       'Username',
-      'Roles(s)',
+      'Add Role',
+      'Current Roles(s)',
       'Status',
       'Password Change',
       'Delete'

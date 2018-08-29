@@ -131,6 +131,8 @@ export class UserInformation extends Component {
             roles={this.availableRoles()}
             onChange={this.onRoleSelect.bind(this)}
           />
+        </StyledUserTd>
+        <StyledUserTd className='current-roles'>
           <span>{this.listRoles()}</span>
         </StyledUserTd>
         <StyledUserTd className='status'>

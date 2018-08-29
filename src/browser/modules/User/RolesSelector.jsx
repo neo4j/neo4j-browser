@@ -20,19 +20,22 @@
 import React from 'react'
 import { StyledSelect } from './styled'
 
-const RolesSelector = ({
-  roles = [],
-  onChange = null,
-  selectedValue = undefined
-}) => {
+const RolesSelector = ({ roles = [], onChange = null, selectedValue = 0 }) => {
+  let options = [
+    <option key={'-1'} value={0}>
+      {' '}
+    </option>
+  ]
   if (roles.length > 0) {
-    const options = roles.map((role, i) => {
-      return (
-        <option key={i} value={role}>
-          {role}
-        </option>
-      )
-    })
+    options = options.concat(
+      roles.map((role, i) => {
+        return (
+          <option key={i} value={role}>
+            {role}
+          </option>
+        )
+      })
+    )
     return (
       <StyledSelect
         className='roles-selector'
