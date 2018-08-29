@@ -60,7 +60,16 @@ describe('Bolt connections', () => {
     cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
+
+    // Make sure initial pw set works
     cy.setInitialPassword('.', 'pw', 'no-roles', true)
+
+    // Try regular connect
+    cy.executeCommand(':server disconnect')
+    cy.connect(
+      'no-roles',
+      '.'
+    )
 
     // We need to reset the local storage value to
     // default so other tests can pass
