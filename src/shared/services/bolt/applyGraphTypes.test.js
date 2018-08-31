@@ -402,7 +402,7 @@ describe('applyGraphTypes', () => {
     )
   })
   test('should apply Point type', () => {
-    const point = new neo4j.types.Point('test-ref', 57.734588, 12.908685)
+    const point = new neo4j.types.Point(4326, 57.734588, 12.908685)
     const rawPoint = nativeTypesToCustom(point)
 
     const typedPoint = applyGraphTypes(rawPoint)
@@ -440,7 +440,7 @@ describe('applyGraphTypes', () => {
     expect(typedDate).toBeInstanceOf(neo4j.types.Duration)
   })
   test('should apply LocalDateTime type', () => {
-    const date = new neo4j.types.LocalDateTime(2012, 5, 11, 1, 12, 2)
+    const date = new neo4j.types.LocalDateTime(2012, 5, 11, 1, 12, 2, 0)
     const rawDate = nativeTypesToCustom(date)
 
     const typedDate = applyGraphTypes(rawDate)
@@ -454,14 +454,14 @@ describe('applyGraphTypes', () => {
     expect(typedDate).toBeInstanceOf(neo4j.types.LocalTime)
   })
   test('should apply Time type', () => {
-    const date = new neo4j.types.Time(11, 1, 12, 3600)
+    const date = new neo4j.types.Time(11, 1, 12, 3600, 0)
     const rawDate = nativeTypesToCustom(date)
 
     const typedDate = applyGraphTypes(rawDate)
     expect(typedDate).toBeInstanceOf(neo4j.types.Time)
   })
   test('should identify time in nodes in paths with refs for start and end', () => {
-    const date = new neo4j.types.Time(11, 1, 12, 3600)
+    const date = new neo4j.types.Time(11, 1, 12, 3600, 0)
     const start = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
     const end = new neo4j.types.Node(neo4j.int(3), ['To'], {})
     const rel = new neo4j.types.Relationship(
@@ -490,7 +490,7 @@ describe('applyGraphTypes', () => {
     ).toBeTruthy()
   })
   test('should identify time in nodes in paths', () => {
-    const date = new neo4j.types.Time(11, 1, 12, 3600)
+    const date = new neo4j.types.Time(11, 1, 12, 3600, 0)
     const start = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
     const segmentStart = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
     const end = new neo4j.types.Node(neo4j.int(3), ['To'], {})
