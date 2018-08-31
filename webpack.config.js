@@ -229,10 +229,8 @@ module.exports = {
   entry: {
     js: ['index.jsx'],
     vendor: [
-      'cypher-codemirror',
       'firebase',
       'neo4j-driver-alias',
-      'codemirror',
       'rxjs',
       'babel-polyfill',
       'isomorphic-fetch',
