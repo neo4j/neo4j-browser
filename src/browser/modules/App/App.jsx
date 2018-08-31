@@ -184,9 +184,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
     const httpsCreds = getActiveCredentials('https', newContext)
     const httpCreds = getActiveCredentials('http', newContext)
-    const restApi = httpsCreds.enabled
-      ? `https://${httpsCreds.host}:${httpsCreds.port}`
-      : `http://${httpCreds.host}:${httpCreds.port}`
+    const restApi =
+      httpsCreds && httpsCreds.enabled
+        ? `https://${httpsCreds.host}:${httpsCreds.port}`
+        : `http://${httpCreds.host}:${httpCreds.port}`
     const connectionCreds = {
       // Use current connections creds until we get new from API
       ...stateProps.defaultConnectionData,
@@ -202,9 +203,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
     const httpsCreds = getActiveCredentials('https', context)
     const httpCreds = getActiveCredentials('http', context)
-    const restApi = httpsCreds.enabled
-      ? `https://${httpsCreds.host}:${httpsCreds.port}`
-      : `http://${httpCreds.host}:${httpCreds.port}`
+    const restApi =
+      httpsCreds && httpsCreds.enabled
+        ? `https://${httpsCreds.host}:${httpsCreds.port}`
+        : `http://${httpCreds.host}:${httpCreds.port}`
     const connectionCreds = {
       // Use current connections creds until we get new from API
       ...stateProps.defaultConnectionData,

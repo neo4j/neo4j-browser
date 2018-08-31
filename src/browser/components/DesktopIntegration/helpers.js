@@ -34,22 +34,10 @@ export const getActiveGraph = (context = {}) => {
 export const getCredentials = (type, connection) => {
   if (!connection) return null
   const { configuration = null } = connection
-  if (
-    !(
-      configuration &&
-      configuration.constructor &&
-      configuration.constructor === Object
-    )
-  ) {
+  if (!configuration) {
     return null
   }
-  if (
-    !(
-      configuration.protocols &&
-      configuration.protocols.constructor &&
-      configuration.protocols.constructor === Object
-    )
-  ) {
+  if (!configuration.protocols) {
     return null
   }
   if (typeof configuration.protocols[type] === 'undefined') {

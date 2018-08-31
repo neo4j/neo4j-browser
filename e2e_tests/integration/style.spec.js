@@ -18,12 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect */
+/* global Cypress, cy, test, expect, before */
 
 describe(':style', () => {
+  before(function () {
+    cy.visit(Cypress.config.url)
+      .title()
+      .should('include', 'Neo4j Browser')
+  })
   it('can connect', () => {
-    const password = Cypress.env('browser-password') || 'newpassword'
-    cy.connect('neo4j', password)
+    const password = Cypress.config.password
+    cy.connect(
+      'neo4j',
+      password
+    )
   })
   it('print the current style', () => {
     cy.executeCommand(':clear')
@@ -33,12 +41,10 @@ describe(':style', () => {
 
     const query = ':style'
     cy.executeCommand(query)
-    cy
-      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy
-      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', 'node {')
       .should('contain', 'relationship {')
@@ -48,12 +54,10 @@ describe(':style', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':style')
     cy.get('[data-test-id="exportGrassButton"]', { timeout: 10000 })
-    cy
-      .get('[data-test-id="styleResetButton"]', { timeout: 10000 })
+    cy.get('[data-test-id="styleResetButton"]', { timeout: 10000 })
       .first()
       .click()
-    cy
-      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', 'No style generated or set yet')
   })

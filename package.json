@@ -80,7 +80,7 @@
     "coffee-script": "^1.12.7",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
-    "cypress": "^3.0.1",
+    "cypress": "3.1.0",
     "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-jsx": "^4.0.1",

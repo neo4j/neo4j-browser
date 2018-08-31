@@ -18,12 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect */
+/* global Cypress, cy, test, expect, before */
 
 describe('LOAD CSV', () => {
+  before(function () {
+    cy.visit(Cypress.config.url)
+      .title()
+      .should('include', 'Neo4j Browser')
+  })
   it('can connect', () => {
-    const password = Cypress.env('browser-password') || 'newpassword'
-    cy.connect('neo4j', password)
+    const password = Cypress.config.password
+    cy.connect(
+      'neo4j',
+      password
+    )
   })
   it('imports without periodic commit', () => {
     if (!Cypress.config.includeImportTests) {

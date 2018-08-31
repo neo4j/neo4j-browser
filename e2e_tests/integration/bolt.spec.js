@@ -18,9 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect */
+/* global Cypress, cy, test, expect, before */
 
 describe('Bolt connections', () => {
+  before(function () {
+    cy.visit(Cypress.config.url)
+      .title()
+      .should('include', 'Neo4j Browser')
+  })
   it('show "no connection" error when not using web workers', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':config useCypherThread: false')
@@ -49,7 +54,7 @@ describe('Bolt connections', () => {
   })
   it('users with no role can connect', () => {
     cy.executeCommand(':clear')
-    const password = Cypress.env('browser-password') || 'newpassword'
+    const password = Cypress.config.password
     cy.connect(
       'neo4j',
       password
@@ -62,7 +67,7 @@ describe('Bolt connections', () => {
     cy.executeCommand(':server connect')
 
     // Make sure initial pw set works
-    cy.setInitialPassword('.', 'pw', 'no-roles', true)
+    cy.setInitialPassword('.', 'pw', 'no-roles', Cypress.config.boltUrl, true)
 
     // Try regular connect
     cy.executeCommand(':server disconnect')
@@ -70,14 +75,5 @@ describe('Bolt connections', () => {
       'no-roles',
       '.'
     )
-
-    // We need to reset the local storage value to
-    // default so other tests can pass
-    cy.executeCommand(':server disconnect')
-    cy.connect(
-      'neo4j',
-      password
-    )
-    cy.executeCommand(':server disconnect')
   })
 })

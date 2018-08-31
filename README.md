@@ -35,6 +35,7 @@ Here are the avaialable options / env variables:
 server=3.2|3.3|3.4|3.5 (default 3.4)
 browser-password=<your-pw> (default 'newpassword')
 include-import-tests=true|false (default false)
+bolt-url=<bolt url excluding the protocol> (default localhost:7687)
 E2E_TEST_ENV=local|null (if the initial set of pw should run or not) (default undefined)
 BROWSER_URL=<url to reach the browser to test> (default http://localhost:8080)
 ```
@@ -43,5 +44,5 @@ BROWSER_URL=<url to reach the browser to test> (default http://localhost:8080)
 
 Download these two chrome extensions:
 
-* [Redux devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
-* [React devtools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+- [Redux devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
+- [React devtools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
