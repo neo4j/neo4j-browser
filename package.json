@@ -20,7 +20,7 @@
     "startnodash": "webpack-dev-server --colors --no-info",
     "precommit": "lint-staged",
     "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
-    "lint": "eslint --fix --ext .js --ext .jsx ./",
+    "lint": "eslint --fix --ext .js --ext .jsx ./src",
     "test": "npm run lint && jest",
     "e2e": "cypress run",
     "e2e-local": "CYPRESS_E2E_TEST_ENV=\"local\" cypress run",
