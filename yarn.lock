@@ -3071,6 +3071,12 @@ eslint-plugin-jsx@^0.0.2:
     html-tags "1"
     svg-tags "1"
 
+eslint-plugin-mocha@^5.2.0:
+  version "5.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-plugin-mocha/-/eslint-plugin-mocha-5.2.0.tgz#d8786d9fff8cb8b5f6e4b61e40395d6568a5c4e2"
+  dependencies:
+    ramda "^0.25.0"
+
 eslint-plugin-node@^5.1.1:
   version "5.2.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-plugin-node/-/eslint-plugin-node-5.2.1.tgz#80df3253c4d7901045ec87fa660a284e32bdca29"
@@ -7355,6 +7361,10 @@ raf@^3.4.0:
 ramda@0.24.1:
   version "0.24.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ramda/-/ramda-0.24.1.tgz#c3b7755197f35b8dc3502228262c4c91ddb6b857"
+
+ramda@^0.25.0:
+  version "0.25.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
 
 randomatic@^3.0.0:
   version "3.0.0"
