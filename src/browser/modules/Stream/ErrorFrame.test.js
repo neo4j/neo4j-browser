@@ -32,7 +32,7 @@ describe('ErrorFrame', () => {
     const { getByText } = render(<ErrorView frame={{}} />)
 
     // Then
-    expect(getByText('UndefinedError')).toBeInTheDOM()
+    expect(getByText('UndefinedError')).toBeInTheDocument()
   })
   test('does display an error if info provided', () => {
     // Given
@@ -48,8 +48,8 @@ describe('ErrorFrame', () => {
     )
 
     // Then
-    expect(getByText('ERROR')).toBeInTheDOM()
-    expect(getByText('Test.Error: Test error description')).toBeInTheDOM()
+    expect(getByText('ERROR')).toBeInTheDocument()
+    expect(getByText('Test.Error: Test error description')).toBeInTheDocument()
   })
   test('does display a known error if only code provided', () => {
     // Given
@@ -66,9 +66,9 @@ describe('ErrorFrame', () => {
     )
 
     // Then
-    expect(getByText('ERROR')).toBeInTheDOM()
+    expect(getByText('ERROR')).toBeInTheDocument()
     expect(
       getByText('UnknownCommandError: Unknown command :unknown-command')
-    ).toBeInTheDOM()
+    ).toBeInTheDocument()
   })
 })

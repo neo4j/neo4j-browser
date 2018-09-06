@@ -48,8 +48,8 @@ describe('<Accordion>', () => {
     const { getByText, queryByText } = render(<Accordion render={renderProp} />)
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
     expect(queryByText('First Content')).toBeNull()
     expect(queryByText('Second Content')).toBeNull()
 
@@ -57,26 +57,26 @@ describe('<Accordion>', () => {
     fireEvent.click(getByText('First'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('First Content')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('First Content')).toBeInTheDocument()
     expect(queryByText('Second Content')).toBeNull()
 
     // When
     fireEvent.click(getByText('Second'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
     expect(queryByText('First Content')).toBeNull()
-    expect(getByText('Second Content')).toBeInTheDOM()
+    expect(getByText('Second Content')).toBeInTheDocument()
 
     // When
     fireEvent.click(getByText('Second'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
     expect(queryByText('First Content')).toBeNull()
     expect(queryByText('Second Content')).toBeNull()
   })
@@ -109,20 +109,20 @@ describe('<Accordion>', () => {
     const { getByText, queryByText } = render(<Accordion render={renderProp} />)
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('Third')).toBeInTheDOM()
-    expect(getByText('First Content')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('Third')).toBeInTheDocument()
+    expect(getByText('First Content')).toBeInTheDocument()
     expect(queryByText('Second Content')).toBeNull()
-    expect(getByText('Third Content')).toBeInTheDOM()
+    expect(getByText('Third Content')).toBeInTheDocument()
 
     // When
     fireEvent.click(getByText('First'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('Third')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('Third')).toBeInTheDocument()
     expect(queryByText('First Content')).toBeNull()
     expect(queryByText('Second Content')).toBeNull()
     expect(queryByText('Third Content')).toBeNull()
@@ -131,11 +131,11 @@ describe('<Accordion>', () => {
     fireEvent.click(getByText('Second'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('Third')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('Third')).toBeInTheDocument()
     expect(queryByText('First Content')).toBeNull()
-    expect(getByText('Second Content')).toBeInTheDOM()
+    expect(getByText('Second Content')).toBeInTheDocument()
     expect(queryByText('Third Content')).toBeNull()
   })
 
@@ -167,47 +167,47 @@ describe('<Accordion>', () => {
     const { getByText, queryByText } = render(<Accordion render={renderProp} />)
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('Third')).toBeInTheDOM()
-    expect(getByText('First Content')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('Third')).toBeInTheDocument()
+    expect(getByText('First Content')).toBeInTheDocument()
     expect(queryByText('Second Content')).toBeNull()
-    expect(getByText('Third Content')).toBeInTheDOM()
+    expect(getByText('Third Content')).toBeInTheDocument()
 
     // When
     // Click a closed title does not close the forced opened
     fireEvent.click(getByText('Second'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('Third')).toBeInTheDOM()
-    expect(getByText('First Content')).toBeInTheDOM()
-    expect(getByText('Second Content')).toBeInTheDOM()
-    expect(getByText('Third Content')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('Third')).toBeInTheDocument()
+    expect(getByText('First Content')).toBeInTheDocument()
+    expect(getByText('Second Content')).toBeInTheDocument()
+    expect(getByText('Third Content')).toBeInTheDocument()
 
     // When
     // Click a forced opened does not do anything
     fireEvent.click(getByText('First'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('Third')).toBeInTheDOM()
-    expect(getByText('First Content')).toBeInTheDOM()
-    expect(getByText('Second Content')).toBeInTheDOM()
-    expect(getByText('Third Content')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('Third')).toBeInTheDocument()
+    expect(getByText('First Content')).toBeInTheDocument()
+    expect(getByText('Second Content')).toBeInTheDocument()
+    expect(getByText('Third Content')).toBeInTheDocument()
 
     // When
     // Click a open non-forced opened closes itself
     fireEvent.click(getByText('Second'))
 
     // Then
-    expect(getByText('First')).toBeInTheDOM()
-    expect(getByText('Second')).toBeInTheDOM()
-    expect(getByText('Third')).toBeInTheDOM()
-    expect(getByText('First Content')).toBeInTheDOM()
+    expect(getByText('First')).toBeInTheDocument()
+    expect(getByText('Second')).toBeInTheDocument()
+    expect(getByText('Third')).toBeInTheDocument()
+    expect(getByText('First Content')).toBeInTheDocument()
     expect(queryByText('Second Content')).toBeNull()
-    expect(getByText('Third Content')).toBeInTheDOM()
+    expect(getByText('Third Content')).toBeInTheDocument()
   })
 })
