@@ -18,9 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect */
+/* global Cypress, cy, test, expect, before */
 
 describe(':param in Browser', () => {
+  before(function () {
+    cy.visit(Cypress.config.url)
+      .title()
+      .should('include', 'Neo4j Browser')
+  })
   it('handles :param without web worker', () => {
     cy.executeCommand(':config userCypherThread: false').then(() => {
       cy.executeCommand(':clear')
@@ -39,7 +44,7 @@ function runTests () {
   let setParamQ
   let getParamQ
   // it('can connect', () => {
-  const password = Cypress.env('browser-password') || 'newpassword'
+  const password = Cypress.config.password
   cy.connect(
     'neo4j',
     password

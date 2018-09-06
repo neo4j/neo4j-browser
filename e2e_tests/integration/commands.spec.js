@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect */
+/* global Cypress, cy, test, expect, before */
 
 const commands = [
   ':style',
@@ -44,6 +44,11 @@ const commands = [
 ]
 
 describe('Commands', () => {
+  before(function () {
+    cy.visit(Cypress.config.url)
+      .title()
+      .should('include', 'Neo4j Browser')
+  })
   it('can run all simple commands not connected without blowing up', () => {
     commands.forEach(cmd => {
       cy.executeCommand(cmd)
@@ -52,11 +57,19 @@ describe('Commands', () => {
   })
   it('can show connection error', () => {
     const password = 'unlikely password'
-    cy.connect('neo4j', password, undefined, false)
+    cy.connect(
+      'neo4j',
+      password,
+      undefined,
+      false
+    )
   })
   it('can connect', () => {
-    const password = Cypress.env('browser-password') || 'newpassword'
-    cy.connect('neo4j', password)
+    const password = Cypress.config.password
+    cy.connect(
+      'neo4j',
+      password
+    )
   })
   it('can run all simple commands while connected without blowing up', () => {
     commands.forEach(cmd => {

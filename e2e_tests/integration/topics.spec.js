@@ -18,19 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global cy, test, expect */
+/* global cy, test, expect, before, Cypress */
 
 describe('Help topics', () => {
+  before(function () {
+    cy.visit(Cypress.config.url)
+      .title()
+      .should('include', 'Neo4j Browser')
+  })
   it(':help commands has contents', () => {
     cy.executeCommand(':clear')
     const query = ':help commands'
     cy.executeCommand(query)
-    cy
-      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy
-      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', ':help style')
   })
@@ -38,12 +41,10 @@ describe('Help topics', () => {
     cy.executeCommand(':clear')
     const query = ':help style'
     cy.executeCommand(query)
-    cy
-      .get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy
-      .get('[data-test-id="frameContents"]', { timeout: 10000 })
+    cy.get('[data-test-id="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', 'style command')
   })

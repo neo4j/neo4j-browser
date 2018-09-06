@@ -24,6 +24,9 @@ describe('Multi statements', () => {
   const validQuery = 'RETURN 1; :config; RETURN 2;'
 
   before(() => {
+    cy.visit(Cypress.config.url)
+      .title()
+      .should('include', 'Neo4j Browser')
     cy.get('[data-test-id="drawerSettings"]').click()
     cy.get('[data-test-id="enableMultiStatementMode"]').click()
     cy.get('[data-test-id="drawerSettings"]').click()
@@ -34,7 +37,7 @@ describe('Multi statements', () => {
     cy.get('[data-test-id="drawerSettings"]').click()
   })
   it('can connect', () => {
-    const password = Cypress.env('browser-password') || 'newpassword'
+    const password = Cypress.config.password
     cy.connect(
       'neo4j',
       password

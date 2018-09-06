@@ -10,6 +10,7 @@ Cypress.Commands.add(
     newPassword,
     initialPassword = 'neo4j',
     username = 'neo4j',
+    boltUrl = Cypress.config.boltUrl,
     force = false
   ) => {
     if (Cypress.env('E2E_TEST_ENV') === 'local' && !force) {
@@ -20,7 +21,7 @@ Cypress.Commands.add(
 
     cy.get('input[data-test-id="boltaddress"]')
       .clear()
-      .type('bolt://localhost:7687')
+      .type(boltUrl)
 
     cy.get('input[data-test-id="username"]')
       .clear()
@@ -53,7 +54,7 @@ Cypress.Commands.add(
   (
     username,
     password,
-    host = 'bolt://localhost:7687',
+    boltUrl = Cypress.config.boltUrl,
     makeAssertions = true
   ) => {
     cy.executeCommand(':server disconnect')
@@ -62,7 +63,7 @@ Cypress.Commands.add(
 
     cy.get('input[data-test-id="boltaddress"]')
       .clear()
-      .type(host)
+      .type(boltUrl)
 
     cy.get('input[data-test-id="username"]')
       .clear()
