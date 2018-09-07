@@ -51,7 +51,8 @@ export default function reducer (state = initialState, action) {
     case REQUEST_UPDATED:
       const newRequest = Object.assign({}, state[action.id], {
         result: action.result,
-        status: action.status
+        status: action.status,
+        updated: new Date().getTime()
       })
       return Object.assign({}, state, { [action.id]: newRequest })
     default:

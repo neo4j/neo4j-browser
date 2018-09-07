@@ -23,7 +23,6 @@ import React, { Component } from 'react'
 import FrameTemplate from '../FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
-import { deepEquals } from 'services/utils'
 import { getRequest } from 'shared/modules/requests/requestsDuck'
 import FrameSidebar from '../FrameSidebar'
 import {
@@ -68,12 +67,9 @@ import {
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 
 export class CypherFrame extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      openView: undefined,
-      fullscreen: false
-    }
+  state = {
+    openView: undefined,
+    fullscreen: false
   }
   changeView (view) {
     this.setState({ openView: view })
@@ -89,18 +85,25 @@ export class CypherFrame extends Component {
     }
   }
   shouldComponentUpdate (props, state) {
-    return !(deepEquals(state, this.state) && deepEquals(props, this.props))
+    return (
+      this.props.request.updated !== props.request.updated ||
+      this.state.openView !== state.openView ||
+      this.state.fullscreen !== state.fullscreen
+    )
   }
-  componentWillReceiveProps (props) {
-    const newState = {}
+  componentDidUpdate () {
+    // When going from 'pending' to some other status
+    // we want to show an initial view.
+    // This only happens on first render of a response
     if (
-      props.request.status !== 'pending' &&
+      this.props.request.status !== 'pending' &&
       this.state.openView === undefined
     ) {
-      const view = initialView(props, this.state)
-      if (view) newState['openView'] = view
+      const openView = initialView(this.props, this.state)
+      if (openView) {
+        this.setState({ openView })
+      }
     }
-    if (Object.keys(newState).length) this.setState(newState)
   }
   componentDidMount () {
     const view = initialView(this.props, this.state)
@@ -381,4 +384,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CypherFrame)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CypherFrame)
