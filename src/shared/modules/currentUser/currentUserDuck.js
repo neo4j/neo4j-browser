@@ -18,47 +18,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Rx from 'rxjs/Rx'
+import bolt from 'services/bolt/bolt'
+import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
+import {
+  CONNECTION_SUCCESS,
+  DISCONNECTION_SUCCESS
+} from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
+export const FORCE_FETCH = NAME + '/FORCE_FETCH'
+export const CLEAR = NAME + '/CLEAR'
 
 const initialState = {
-  info: null
+  username: '',
+  roles: []
 }
 
 /**
  * Selectors
-*/
+ */
 
 export function getCurrentUser (state) {
-  return Object.assign({}, state[NAME])
-}
-
-/**
- * Helpers
-*/
-function updateCurrentUserInfo (state, info) {
-  return Object.assign({}, state, { info: info })
+  return state[NAME]
 }
 
 /**
  * Reducer
-*/
+ */
 export default function user (state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }
 
   switch (action.type) {
+    case CLEAR:
+      return { ...initialState }
     case UPDATE_CURRENT_USER:
-      const info = action.info
-      if (info) {
-        return updateCurrentUserInfo(state, action.info)
-      } else {
-        return state
-      }
-
+      const { username, roles } = action
+      return { username, roles }
     default:
       return state
   }
@@ -68,9 +68,45 @@ export default function user (state = initialState, action) {
 export function updateCurrentUser (username, roles) {
   return {
     type: UPDATE_CURRENT_USER,
-    info: {
-      username,
-      roles
-    }
+    username,
+    roles
   }
 }
+
+export function forceFetch () {
+  return {
+    type: FORCE_FETCH
+  }
+}
+
+// Epics
+export const getCurrentUserEpic = (some$, store) =>
+  some$
+    .ofType(CONNECTION_SUCCESS)
+    .merge(some$.ofType(FORCE_FETCH))
+    .mergeMap(() =>
+      Rx.Observable.fromPromise(
+        bolt.directTransaction(
+          'CALL dbms.security.showCurrentUser()',
+          {},
+          { useCypherThread: shouldUseCypherThread(store.getState()) }
+        )
+      )
+        .catch(e => ({ type: CLEAR }))
+        .map(result => {
+          if (!result) return { type: CLEAR }
+          const keys = result.records[0].keys
+
+          const username = keys.includes('username')
+            ? result.records[0].get('username')
+            : '-'
+          const roles = keys.includes('roles')
+            ? result.records[0].get('roles')
+            : ['admin']
+
+          return updateCurrentUser(username, roles)
+        })
+    )
+
+export const clearCurrentUserOnDisconnectEpic = (some$, store) =>
+  some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })

@@ -114,6 +114,14 @@ describe('Neo4j Browser', () => {
     cy.get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 }).should(p => {
       expect(p).to.have.length.above(17)
     })
+    cy.get('[data-test-id="drawerDB"]').click()
+  })
+  it('displays user info in sidebar (when connected)', () => {
+    cy.executeCommand(':clear')
+    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-test-id="user-details-username"]').should('contain', 'neo4j')
+    cy.get('[data-test-id="user-details-roles"]').should('contain', 'admin')
+    cy.get('[data-test-id="drawerDB"]').click()
   })
   it('will clear local storage when clicking "Clear local data"', () => {
     const scriptName = 'foo'
@@ -138,5 +146,12 @@ describe('Neo4j Browser', () => {
 
     // once data is cleared the user is logged out and the connect form is displayed
     cy.get('input[data-test-id="boltaddress"]')
+  })
+  it('displays no user info in sidebar (when not connected)', () => {
+    cy.executeCommand(':clear')
+    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-test-id="user-details-username"]').should('have.length', 0)
+    cy.get('[data-test-id="user-details-roles"]').should('have.length', 0)
+    cy.get('[data-test-id="drawerDB"]').click()
   })
 })
