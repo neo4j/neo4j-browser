@@ -121,6 +121,17 @@ describe('Neo4j Browser', () => {
     cy.get('[data-test-id="drawerDB"]').click()
     cy.get('[data-test-id="user-details-username"]').should('contain', 'neo4j')
     cy.get('[data-test-id="user-details-roles"]').should('contain', 'admin')
+    cy.executeCommand(':clear')
+    cy.executeCommand(':server disconnect')
+    cy.get('[data-test-id="user-details-username"]').should('have.length', 0)
+    cy.get('[data-test-id="user-details-roles"]').should('have.length', 0)
+    cy.connect(
+      'neo4j',
+      Cypress.config.password
+    )
+    cy.executeCommand(':clear')
+    cy.get('[data-test-id="user-details-username"]').should('contain', 'neo4j')
+    cy.get('[data-test-id="user-details-roles"]').should('contain', 'admin')
     cy.get('[data-test-id="drawerDB"]').click()
   })
   it('will clear local storage when clicking "Clear local data"', () => {
