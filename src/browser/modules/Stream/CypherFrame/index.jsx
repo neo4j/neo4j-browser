@@ -122,7 +122,7 @@ export class CypherFrame extends Component {
     }
     return []
   }
-  sidebar () {
+  sidebar = () => {
     return (
       <FrameSidebar>
         <Render if={resultHasNodes(this.props.request) && !this.state.errors}>
@@ -366,7 +366,7 @@ export class CypherFrame extends Component {
 
     return (
       <FrameTemplate
-        sidebar={this.sidebar.bind(this)}
+        sidebar={this.sidebar}
         header={frame}
         contents={frameContents}
         statusbar={statusBar}
