@@ -34,7 +34,7 @@ import {
   StyledTd,
   StyledJsonPre
 } from 'browser-components/DataTables'
-import { deepEquals, shallowEquals, stringifyMod } from 'services/utils'
+import { shallowEquals, stringifyMod } from 'services/utils'
 import {
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
@@ -89,13 +89,10 @@ const buildRow = item => {
 }
 
 export class TableView extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      columns: [],
-      data: [],
-      bodyMessage: ''
-    }
+  state = {
+    columns: [],
+    data: [],
+    bodyMessage: ''
   }
   componentDidMount () {
     this.makeState(this.props)
@@ -104,13 +101,15 @@ export class TableView extends Component {
     if (
       this.props === undefined ||
       this.props.result === undefined ||
-      !deepEquals(props.result.records, this.props.result.records)
+      this.props.updated !== props.updated
     ) {
       this.makeState(props)
     }
   }
   shouldComponentUpdate (props, state) {
-    return !shallowEquals(state, this.state)
+    return (
+      this.props.updated !== props.updated || !shallowEquals(state, this.state)
+    )
   }
   makeState (props) {
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
@@ -153,11 +152,8 @@ export class TableView extends Component {
 }
 
 export class TableStatusbar extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      statusBarMessage: ''
-    }
+  state = {
+    statusBarMessage: ''
   }
   componentDidMount () {
     this.makeState(this.props)
