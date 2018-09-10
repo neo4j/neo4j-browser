@@ -69,7 +69,9 @@ import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 export class CypherFrame extends Component {
   state = {
     openView: undefined,
-    fullscreen: false
+    fullscreen: false,
+    collapse: false,
+    frameHeight: 472
   }
   changeView (view) {
     this.setState({ openView: view })
@@ -77,7 +79,7 @@ export class CypherFrame extends Component {
       this.props.onRecentViewChanged(view)
     }
   }
-  onResize (fullscreen, collapse, frameHeight) {
+  onResize = (fullscreen, collapse, frameHeight) => {
     if (frameHeight) {
       this.setState({ fullscreen, collapse, frameHeight })
     } else {
@@ -89,6 +91,8 @@ export class CypherFrame extends Component {
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
       this.state.fullscreen !== state.fullscreen ||
+      this.state.frameHeight !== state.frameHeight ||
+      this.state.collapse !== state.collapse ||
       this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
       this.state._asciiSetColWidth !== state._asciiSetColWidth ||
       this.state._planExpand !== state._planExpand
@@ -368,7 +372,7 @@ export class CypherFrame extends Component {
         statusbar={statusBar}
         numRecords={result && result.records ? result.records.length : 0}
         getRecords={this.getRecords}
-        onResize={this.onResize.bind(this)}
+        onResize={this.onResize}
         visElement={
           this.state.hasVis &&
           (this.state.openView === viewTypes.VISUALIZATION ||
