@@ -88,7 +88,8 @@ export class CypherFrame extends Component {
     return (
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
-      this.state.fullscreen !== state.fullscreen
+      this.state.fullscreen !== state.fullscreen ||
+      this.state._planExpand !== state._planExpand
     )
   }
   componentDidUpdate () {
@@ -217,6 +218,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -225,6 +227,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -234,6 +237,7 @@ export class CypherFrame extends Component {
             result={result}
             request={request}
             query={query}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -241,6 +245,7 @@ export class CypherFrame extends Component {
           <ErrorsView
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -248,6 +253,7 @@ export class CypherFrame extends Component {
           <WarningsView
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -255,6 +261,7 @@ export class CypherFrame extends Component {
           <PlanView
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
             assignVisElement={(svgElement, graphElement) => {
               this.visElement = { svgElement, graphElement, type: 'plan' }
@@ -266,6 +273,7 @@ export class CypherFrame extends Component {
           <VisualizationConnectedBus
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
             frameHeight={this.state.frameHeight}
             assignVisElement={(svgElement, graphElement) => {
@@ -288,6 +296,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -296,6 +305,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -303,6 +313,7 @@ export class CypherFrame extends Component {
           <CodeStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -310,6 +321,7 @@ export class CypherFrame extends Component {
           <ErrorsStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -317,6 +329,7 @@ export class CypherFrame extends Component {
           <WarningsStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -324,6 +337,7 @@ export class CypherFrame extends Component {
           <PlanStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
