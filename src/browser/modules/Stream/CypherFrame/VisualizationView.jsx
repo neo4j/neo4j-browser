@@ -70,14 +70,6 @@ export class Visualization extends Component {
       updated: new Date().getTime()
     })
   }
-  mergeToList (list1, list2) {
-    return list1.concat(
-      list2.filter(
-        itemInList2 =>
-          list1.findIndex(itemInList1 => itemInList1.id === itemInList2.id) < 0
-      )
-    )
-  }
   autoCompleteRelationships (existingNodes, newNodes) {
     if (this.props.autoComplete) {
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
