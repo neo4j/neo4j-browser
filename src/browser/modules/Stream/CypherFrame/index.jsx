@@ -89,6 +89,8 @@ export class CypherFrame extends Component {
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
       this.state.fullscreen !== state.fullscreen ||
+      this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
+      this.state._asciiSetColWidth !== state._asciiSetColWidth ||
       this.state._planExpand !== state._planExpand
     )
   }

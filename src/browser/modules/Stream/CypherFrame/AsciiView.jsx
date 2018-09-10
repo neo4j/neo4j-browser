@@ -22,7 +22,7 @@ import React, { Component } from 'react'
 import asciitable from 'ascii-data-table'
 import Render from 'browser-components/Render'
 import Ellipsis from 'browser-components/Ellipsis'
-import { shallowEquals, deepEquals } from 'services/utils'
+import { shallowEquals } from 'services/utils'
 import {
   StyledStatsBar,
   PaddedDiv,
@@ -40,12 +40,9 @@ import {
 import { stringFormat } from 'services/bolt/cypherTypesFormatting'
 
 export class AsciiView extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      serializedRows: [],
-      bodyMessage: ''
-    }
+  state = {
+    serializedRows: [],
+    bodyMessage: ''
   }
   componentDidMount () {
     this.makeState(this.props)
@@ -59,9 +56,9 @@ export class AsciiView extends Component {
     if (
       this.props !== undefined &&
       this.props.result !== undefined &&
-      deepEquals(props.result.records, this.props.result.records) &&
+      this.props.updated === props.updated &&
       props.maxRows === this.props.maxRows &&
-      props._asciiMaxColWidth === this.props._asciiMaxColWidth
+      props._asciiSetColWidth === this.props._asciiSetColWidth
     ) {
       return true
     }
@@ -76,7 +73,7 @@ export class AsciiView extends Component {
     const { bodyMessage = null } =
       getBodyAndStatusBarMessages(result, maxRows) || {}
     this.setState({ bodyMessage })
-    if (!result || !result.records) return
+    if (!result || !result.records || !result.records.length) return
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
     const serializedRows =
       stringifyResultArray(
@@ -84,11 +81,13 @@ export class AsciiView extends Component {
         transformResultRecordsToResultArray(records)
       ) || []
     this.setState({ serializedRows })
+    const maxColWidth = asciitable.maxColumnWidth(serializedRows)
+
     this.props.setParentState &&
-      this.props.setParentState({ _asciiSerializedRows: serializedRows })
+      this.props.setParentState({ _asciiMaxColWidth: maxColWidth })
   }
   render () {
-    const { _asciiMaxColWidth: maxColWidth = 70 } = this.props
+    const { _asciiSetColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
     let contents = <StyledBodyMessage>{bodyMessage}</StyledBodyMessage>
     if (serializedRows !== undefined && serializedRows.length) {
@@ -103,66 +102,59 @@ export class AsciiView extends Component {
 }
 
 export class AsciiStatusbar extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      maxSliderWidth: 140,
-      maxColWidth: 70,
-      statusBarMessage: ''
-    }
+  state = {
+    maxSliderWidth: 140,
+    minSliderWidth: 3,
+    maxColWidth: 70,
+    statusBarMessage: ''
   }
   componentWillReceiveProps (props) {
-    if (
-      !deepEquals(props._asciiSerializedRows, this.props._asciiSerializedRows)
-    ) {
-      this.makeState(props)
-    }
+    this.makeState(props)
   }
   makeState (props) {
-    this.setMaxSliderWidth(
-      asciitable.maxColumnWidth(props._asciiSerializedRows)
-    )
+    this.setMaxSliderWidth(props._asciiMaxColWidth)
     const { statusBarMessage = null } =
       getBodyAndStatusBarMessages(props.result, props.maxRows) || {}
     this.setState({ statusBarMessage })
   }
   shouldComponentUpdate (props, state) {
-    if (
-      !deepEquals(props._asciiSerializedRows, this.props._asciiSerializedRows)
-    ) {
-      return true
-    }
-    if (!shallowEquals(state, this.state)) return true
-    return false
+    return (
+      state.maxColWidth !== this.state.maxColWidth ||
+      state.maxSliderWidth !== this.state.maxSliderWidth ||
+      props.updated !== this.props.updated ||
+      props._asciiMaxColWidth !== this.props._asciiMaxColWidth ||
+      props._asciiSetColWidth !== this.props._asciiSetColWidth
+    )
   }
   componentDidMount () {
     this.makeState(this.props)
   }
-  maxColWidthChanged = w => {
+  setColWidthChanged = w => {
     const value = w.target.value
     this.setState({ maxColWidth: value })
-    this.props.setParentState({ _asciiMaxColWidth: value })
+    this.props.setParentState({ _asciiSetColWidth: value })
   }
   setMaxSliderWidth (w) {
-    this.setState({ maxSliderWidth: w })
+    this.setState({ maxSliderWidth: w || this.state.minSliderWidth })
   }
   render () {
+    const hasRecords =
+      this.props.result.records && this.props.result.records.length
     const { maxColWidth, maxSliderWidth } = this.state
-    const onInput = this.maxColWidthChanged
     return (
       <StyledStatsBar>
-        <Render if={!this.props._asciiSerializedRows}>
+        <Render if={!hasRecords}>
           <Ellipsis>{this.state.statusBarMessage}</Ellipsis>
         </Render>
-        <Render if={this.props._asciiSerializedRows}>
+        <Render if={hasRecords}>
           <StyledRightPartial>
             <StyledWidthSliderContainer>
               Max column width:
               <StyledWidthSlider
                 value={maxColWidth}
-                onChange={onInput}
+                onChange={this.setColWidthChanged}
                 type='range'
-                min='3'
+                min={this.state.minSliderWidth}
                 max={maxSliderWidth}
               />
             </StyledWidthSliderContainer>
