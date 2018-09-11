@@ -1,7 +1,7 @@
 {
   "name": "neo4j-browser",
   "version": "3.2.7",
-  "description": "Enjoy your data",
+  "description": "Neo4j's client application. Query, visualize, and manage your graphs.",
   "repository": {
     "type": "git",
     "url": "https://github.com/neo4j/neo4j-browser.git"
@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
-  "homepage": "https://neo4j.com",
+  "homepage": "https://neo4j.com/developer/guide-neo4j-browser/",
   "main": "dist/index.html",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
