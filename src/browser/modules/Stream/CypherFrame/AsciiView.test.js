@@ -42,7 +42,7 @@ describe('AsciiViews', () => {
 
       // When
       const { container } = render(
-        <AsciiView setParentState={sps} result={result} />
+        <AsciiView setParentState={sps} result={result} maxRows={5} />
       )
 
       // Then

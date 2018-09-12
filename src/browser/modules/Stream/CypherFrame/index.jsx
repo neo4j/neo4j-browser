@@ -23,7 +23,6 @@ import React, { Component } from 'react'
 import FrameTemplate from '../FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
-import { deepEquals } from 'services/utils'
 import { getRequest } from 'shared/modules/requests/requestsDuck'
 import FrameSidebar from '../FrameSidebar'
 import {
@@ -68,12 +67,11 @@ import {
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 
 export class CypherFrame extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      openView: undefined,
-      fullscreen: false
-    }
+  state = {
+    openView: undefined,
+    fullscreen: false,
+    collapse: false,
+    frameHeight: 472
   }
   changeView (view) {
     this.setState({ openView: view })
@@ -81,7 +79,7 @@ export class CypherFrame extends Component {
       this.props.onRecentViewChanged(view)
     }
   }
-  onResize (fullscreen, collapse, frameHeight) {
+  onResize = (fullscreen, collapse, frameHeight) => {
     if (frameHeight) {
       this.setState({ fullscreen, collapse, frameHeight })
     } else {
@@ -89,18 +87,30 @@ export class CypherFrame extends Component {
     }
   }
   shouldComponentUpdate (props, state) {
-    return !(deepEquals(state, this.state) && deepEquals(props, this.props))
+    return (
+      this.props.request.updated !== props.request.updated ||
+      this.state.openView !== state.openView ||
+      this.state.fullscreen !== state.fullscreen ||
+      this.state.frameHeight !== state.frameHeight ||
+      this.state.collapse !== state.collapse ||
+      this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
+      this.state._asciiSetColWidth !== state._asciiSetColWidth ||
+      this.state._planExpand !== state._planExpand
+    )
   }
-  componentWillReceiveProps (props) {
-    const newState = {}
+  componentDidUpdate () {
+    // When going from 'pending' to some other status
+    // we want to show an initial view.
+    // This only happens on first render of a response
     if (
-      props.request.status !== 'pending' &&
+      this.props.request.status !== 'pending' &&
       this.state.openView === undefined
     ) {
-      const view = initialView(props, this.state)
-      if (view) newState['openView'] = view
+      const openView = initialView(this.props, this.state)
+      if (openView) {
+        this.setState({ openView })
+      }
     }
-    if (Object.keys(newState).length) this.setState(newState)
   }
   componentDidMount () {
     const view = initialView(this.props, this.state)
@@ -112,7 +122,7 @@ export class CypherFrame extends Component {
     }
     return []
   }
-  sidebar () {
+  sidebar = () => {
     return (
       <FrameSidebar>
         <Render if={resultHasNodes(this.props.request) && !this.state.errors}>
@@ -214,6 +224,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -222,6 +233,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -231,6 +243,7 @@ export class CypherFrame extends Component {
             result={result}
             request={request}
             query={query}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -238,6 +251,7 @@ export class CypherFrame extends Component {
           <ErrorsView
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -245,6 +259,7 @@ export class CypherFrame extends Component {
           <WarningsView
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -252,6 +267,7 @@ export class CypherFrame extends Component {
           <PlanView
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
             assignVisElement={(svgElement, graphElement) => {
               this.visElement = { svgElement, graphElement, type: 'plan' }
@@ -263,6 +279,7 @@ export class CypherFrame extends Component {
           <VisualizationConnectedBus
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
             frameHeight={this.state.frameHeight}
             assignVisElement={(svgElement, graphElement) => {
@@ -285,6 +302,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -293,6 +311,7 @@ export class CypherFrame extends Component {
             {...this.state}
             maxRows={this.props.maxRows}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -300,6 +319,7 @@ export class CypherFrame extends Component {
           <CodeStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -307,6 +327,7 @@ export class CypherFrame extends Component {
           <ErrorsStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -314,6 +335,7 @@ export class CypherFrame extends Component {
           <WarningsStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -321,6 +343,7 @@ export class CypherFrame extends Component {
           <PlanStatusbar
             {...this.state}
             result={result}
+            updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
           />
         </Display>
@@ -343,13 +366,13 @@ export class CypherFrame extends Component {
 
     return (
       <FrameTemplate
-        sidebar={this.sidebar.bind(this)}
+        sidebar={this.sidebar}
         header={frame}
         contents={frameContents}
         statusbar={statusBar}
         numRecords={result && result.records ? result.records.length : 0}
         getRecords={this.getRecords}
-        onResize={this.onResize.bind(this)}
+        onResize={this.onResize}
         visElement={
           this.state.hasVis &&
           (this.state.openView === viewTypes.VISUALIZATION ||
@@ -381,4 +404,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CypherFrame)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CypherFrame)

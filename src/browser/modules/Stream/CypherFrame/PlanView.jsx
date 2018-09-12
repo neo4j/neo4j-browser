@@ -44,12 +44,7 @@ export class PlanView extends Component {
     this.extractPlan(this.props.result).catch(e => {})
   }
   componentWillReceiveProps (props) {
-    if (
-      !deepEquals(
-        (props.result || {}).summary,
-        (this.props.result || {}).summary
-      )
-    ) {
+    if (props.updated !== this.props.updated) {
       return this.extractPlan(props.result || {})
         .then(() => {
           this.ensureToggleExpand(props)
@@ -135,11 +130,8 @@ export class PlanView extends Component {
 }
 
 export class PlanStatusbar extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      extractedPlan: null
-    }
+  state = {
+    extractedPlan: null
   }
   componentDidMount () {
     if (this.props === undefined || this.props.result === undefined) return
@@ -171,8 +163,9 @@ export class PlanStatusbar extends Component {
             Cypher version: {plan.root.version}, planner: {plan.root.planner},
             runtime: {plan.root.runtime}.
             {plan.root.totalDbHits
-              ? ` ${plan.root
-                .totalDbHits} total db hits in ${result.summary.resultAvailableAfter
+              ? ` ${
+                plan.root.totalDbHits
+              } total db hits in ${result.summary.resultAvailableAfter
                 .add(result.summary.resultConsumedAfter)
                 .toNumber() || 0} ms.`
               : ``}
@@ -183,14 +176,16 @@ export class PlanStatusbar extends Component {
             <FrameButton
               data-test-id='planCollapseButton'
               onClick={() =>
-                this.props.setParentState({ _planExpand: 'COLLAPSE' })}
+                this.props.setParentState({ _planExpand: 'COLLAPSE' })
+              }
             >
               <DoubleUpIcon />
             </FrameButton>
             <FrameButton
               data-test-id='planExpandButton'
               onClick={() =>
-                this.props.setParentState({ _planExpand: 'EXPAND' })}
+                this.props.setParentState({ _planExpand: 'EXPAND' })
+              }
             >
               <DoubleDownIcon />
             </FrameButton>

@@ -30,14 +30,9 @@ import { StyledVisContainer } from './VisualizationView.styled'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 export class Visualization extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      nodesAndRelationships: {
-        nodes: [],
-        relationships: []
-      }
-    }
+  state = {
+    nodes: [],
+    relationships: []
   }
   componentDidMount () {
     const { records = [] } = this.props.result
@@ -47,38 +42,33 @@ export class Visualization extends Component {
   }
   shouldComponentUpdate (props, state) {
     return (
-      !(
-        deepEquals(props.result.records, this.props.result.records) &&
-        deepEquals(props.graphStyleData, this.props.graphStyleData)
-      ) ||
-      !deepEquals(state, this.state) ||
-      !deepEquals(props.visElement, this.props.visElement) ||
+      this.props.updated !== props.updated ||
+      !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
+      this.state.updated !== state.updated ||
       this.props.frameHeight !== props.frameHeight ||
       this.props.autoComplete !== props.autoComplete
     )
   }
   componentWillReceiveProps (props) {
     if (
-      !deepEquals(props.result.records, this.props.result.records) ||
+      this.props.updated !== props.updated ||
       this.props.autoComplete !== props.autoComplete
     ) {
       this.populateDataToStateFromProps(props)
     }
   }
   populateDataToStateFromProps (props) {
-    this.setState({
-      nodesAndRelationships: bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-        props.result.records
-      )
-    })
-  }
-  mergeToList (list1, list2) {
-    return list1.concat(
-      list2.filter(
-        itemInList2 =>
-          list1.findIndex(itemInList1 => itemInList1.id === itemInList2.id) < 0
-      )
+    const {
+      nodes,
+      relationships
+    } = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+      props.result.records
     )
+    this.setState({
+      nodes,
+      relationships,
+      updated: new Date().getTime()
+    })
   }
   autoCompleteRelationships (existingNodes, newNodes) {
     if (this.props.autoComplete) {
@@ -154,7 +144,7 @@ export class Visualization extends Component {
     this.autoCompleteRelationships([], this.graph._nodes)
   }
   render () {
-    if (!this.state.nodesAndRelationships.nodes.length) return null
+    if (!this.state.nodes.length) return null
 
     return (
       <StyledVisContainer fullscreen={this.props.fullscreen}>
@@ -164,8 +154,8 @@ export class Visualization extends Component {
           graphStyleData={this.props.graphStyleData}
           updateStyle={this.props.updateStyle}
           getNeighbours={this.getNeighbours.bind(this)}
-          nodes={this.state.nodesAndRelationships.nodes}
-          relationships={this.state.nodesAndRelationships.relationships}
+          nodes={this.state.nodes}
+          relationships={this.state.relationships}
           fullscreen={this.props.fullscreen}
           frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
@@ -194,5 +184,8 @@ const mapDispatchToProps = dispatch => {
 }
 
 export const VisualizationConnectedBus = withBus(
-  connect(mapStateToProps, mapDispatchToProps)(Visualization)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Visualization)
 )
