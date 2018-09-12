@@ -7,6 +7,7 @@ mvn/
 scripts/
 src/
 target/
+cypress/
 .babelrc
 .eslintignore
 .eslintrc.json
@@ -18,3 +19,7 @@ postcss.config.js
 webpack.config.js
 yarn.lock
 README.md
+bundle-report.html
+now.json
+yarn-error.log
+*.tgz
