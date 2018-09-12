@@ -19,10 +19,6 @@
  */
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
 import Render from 'browser-components/Render'
 import {
@@ -33,41 +29,8 @@ import {
 import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
 export class UserDetails extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      userDetails: props.userDetails || {}
-    }
-  }
-  fetchUserData () {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      { query: 'CALL dbms.security.showCurrentUser()' },
-      response => {
-        if (!response.success) return
-        const result = response.result
-        const keys = result.records[0].keys
-        this.setState({
-          userDetails: {
-            username: keys.includes('username')
-              ? result.records[0].get('username')
-              : '-',
-            roles: keys.includes('roles')
-              ? result.records[0].get('roles')
-              : ['admin']
-          }
-        })
-      }
-    )
-  }
-  componentWillMount (props) {
-    this.fetchUserData()
-  }
-  componentWillReceiveProps (props) {
-    this.fetchUserData()
-  }
   render () {
-    const userDetails = this.state.userDetails
+    const userDetails = this.props.user
     if (userDetails.username) {
       const mappedRoles =
         userDetails.roles.length > 0 ? userDetails.roles.join(', ') : '-'
@@ -82,11 +45,15 @@ export class UserDetails extends Component {
               <tbody>
                 <tr>
                   <StyledKey>Username:</StyledKey>
-                  <StyledValue>{userDetails.username}</StyledValue>
+                  <StyledValue data-test-id='user-details-username'>
+                    {userDetails.username}
+                  </StyledValue>
                 </tr>
                 <tr>
                   <StyledKey>Roles:</StyledKey>
-                  <StyledValue>{mappedRoles}</StyledValue>
+                  <StyledValue data-test-id='user-details-roles'>
+                    {mappedRoles}
+                  </StyledValue>
                 </tr>
                 <Render if={hasAdminRole}>
                   <tr>
@@ -94,7 +61,8 @@ export class UserDetails extends Component {
                     <StyledValue>
                       <Link
                         onClick={() =>
-                          this.props.onItemClick(':server user add')}
+                          this.props.onItemClick(':server user add')
+                        }
                       >
                         :server user add
                       </Link>
@@ -111,14 +79,3 @@ export class UserDetails extends Component {
     }
   }
 }
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onItemClick: cmd => {
-      const action = executeCommand(cmd)
-      ownProps.bus.send(action.type, action)
-    }
-  }
-}
-
-export default withBus(connect(null, mapDispatchToProps)(UserDetails))

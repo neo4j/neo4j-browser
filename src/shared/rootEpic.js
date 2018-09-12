@@ -80,6 +80,10 @@ import {
   eventFiredEpic
 } from './modules/udc/udcDuck'
 import { maxFramesConfigEpic } from './modules/stream/streamDuck'
+import {
+  getCurrentUserEpic,
+  clearCurrentUserOnDisconnectEpic
+} from './modules/currentUser/currentUserDuck'
 
 export default combineEpics(
   handleCommandEpic,
@@ -128,5 +132,7 @@ export default combineEpics(
   trackSyncLogoutEpic,
   trackConnectsEpic,
   eventFiredEpic,
-  maxFramesConfigEpic
+  maxFramesConfigEpic,
+  getCurrentUserEpic,
+  clearCurrentUserOnDisconnectEpic
 )

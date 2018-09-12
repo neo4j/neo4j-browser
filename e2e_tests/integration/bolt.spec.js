@@ -76,4 +76,14 @@ describe('Bolt connections', () => {
       '.'
     )
   })
+  it('displays user info in sidebar (when connected)', () => {
+    cy.executeCommand(':clear')
+    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-test-id="user-details-username"]').should(
+      'contain',
+      'no-roles'
+    )
+    cy.get('[data-test-id="user-details-roles"]').should('contain', '-')
+    cy.get('[data-test-id="drawerDB"]').click()
+  })
 })

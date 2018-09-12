@@ -22,8 +22,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { getCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
-import UserDetails from './UserDetails'
+import { UserDetails } from './UserDetails'
 import DatabaseKernelInfo from './DatabaseKernelInfo'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 
@@ -47,12 +48,11 @@ export class DatabaseInfo extends Component {
       labels = [],
       relationshipTypes = [],
       properties = [],
-      userDetails,
       databaseKernelInfo,
-      onItemClick,
       nodes,
       relationships
-    } = this.props
+    } = this.props.meta
+    const { user, onItemClick } = this.props
 
     return (
       <Drawer id='db-drawer'>
@@ -85,7 +85,7 @@ export class DatabaseInfo extends Component {
             onMoreClick={this.onMoreClick.bind(this)('properties')}
             moreStep={this.state.moreStep}
           />
-          <UserDetails userDetails={userDetails} onItemClick={onItemClick} />
+          <UserDetails user={user} onItemClick={onItemClick} />
           <DatabaseKernelInfo
             databaseKernelInfo={databaseKernelInfo}
             onItemClick={onItemClick}
@@ -97,7 +97,7 @@ export class DatabaseInfo extends Component {
 }
 
 const mapStateToProps = state => {
-  return state.meta || {}
+  return { meta: state.meta, user: getCurrentUser(state) }
 }
 const mapDispatchToProps = (_, ownProps) => {
   return {
@@ -109,5 +109,8 @@ const mapDispatchToProps = (_, ownProps) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(DatabaseInfo)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DatabaseInfo)
 )

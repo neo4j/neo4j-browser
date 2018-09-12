@@ -25,28 +25,19 @@ import { dehydrate } from 'services/duckUtils'
 describe('user reducer current info', () => {
   test('handles unknown action type', () => {
     const action = {
-      type: 'UNKNOWN',
-      info: {}
+      type: 'UNKNOWN'
     }
     const nextState = reducer(undefined, action)
-    expect(dehydrate(nextState)).toEqual({ info: null })
-  })
-  test('should have no info', () => {
-    const action = {
-      type: currentUser.UPDATE_CURRENT_USER,
-      info: null
-    }
-    const nextState = reducer(undefined, action)
-    expect(Object.keys(nextState).indexOf('info')).toBeGreaterThan(-1)
-    expect(nextState.info).toEqual(null)
+    expect(dehydrate(nextState)).toEqual({ username: '', roles: [] })
   })
   test('should set info', () => {
     const action = {
       type: currentUser.UPDATE_CURRENT_USER,
-      info: { username: 'username', roles: ['king'] }
+      username: 'username',
+      roles: ['king']
     }
     const nextState = reducer({ a: 'b' }, action)
-    expect(nextState.info).toEqual({ username: 'username', roles: ['king'] })
+    expect(nextState).toEqual({ username: 'username', roles: ['king'] })
   })
 })
 
@@ -57,7 +48,7 @@ describe('User info actions', () => {
     const expectedUser = { username, roles }
     expect(currentUser.updateCurrentUser(username, roles)).toEqual({
       type: currentUser.UPDATE_CURRENT_USER,
-      info: expectedUser
+      ...expectedUser
     })
   })
 })

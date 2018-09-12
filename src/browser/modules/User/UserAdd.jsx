@@ -289,4 +289,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, null)(UserAdd))
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(UserAdd)
+)

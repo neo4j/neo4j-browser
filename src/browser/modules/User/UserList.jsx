@@ -34,6 +34,7 @@ import { StyledTable, StyledTh } from 'browser-components/DataTables'
 import { StyledButtonContainer } from './styled'
 
 import FrameTemplate from '../Stream/FrameTemplate'
+import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
 
 export class UserList extends Component {
   constructor (props) {
@@ -57,6 +58,7 @@ export class UserList extends Component {
           this.setState({
             userList: this.extractUserNameAndRolesFromBolt(response.result)
           })
+          this.props.bus.send(forceFetch().type, forceFetch())
         }
       }
     )
