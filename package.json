@@ -16,7 +16,7 @@
   },
   "icons": [
     {
-      "src": "./dist/assets/images/neo4j-logo.svg",
+      "src": "./dist/assets/images/device-icons/neo4j-desktop.svg",
       "type": "svg"
     }
   ],
