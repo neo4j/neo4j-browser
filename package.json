@@ -1,7 +1,7 @@
 {
   "name": "neo4j-browser",
   "version": "3.2.7",
-  "description": "Neo4j's client application. Query, visualize, and manage your graphs.",
+  "description": "Neo4j Browser is the general purpose user interface for working with Neo4j. Query, visualize, administrate and monitor the database.",
   "repository": {
     "type": "git",
     "url": "https://github.com/neo4j/neo4j-browser.git"
