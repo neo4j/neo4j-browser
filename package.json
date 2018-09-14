@@ -14,6 +14,12 @@
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
   },
+  "icons": [
+    {
+      "src": "./dist/assets/images/neo4j-logo.svg",
+      "type": "svg"
+    }
+  ],
   "scripts": {
     "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
     "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",
