@@ -1,7 +1,7 @@
 {
   "name": "neo4j-browser",
   "version": "3.2.7",
-  "description": "Enjoy your data",
+  "description": "Neo4j Browser is the general purpose user interface for working with Neo4j. Query, visualize, administrate and monitor the database.",
   "repository": {
     "type": "git",
     "url": "https://github.com/neo4j/neo4j-browser.git"
@@ -9,11 +9,17 @@
   "keywords": [],
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
-  "homepage": "https://neo4j.com",
+  "homepage": "https://neo4j.com/developer/guide-neo4j-browser/",
   "main": "dist/index.html",
   "neo4jDesktop": {
     "apiVersion": "^1.2.0"
   },
+  "icons": [
+    {
+      "src": "./dist/assets/images/device-icons/neo4j-desktop.svg",
+      "type": "svg"
+    }
+  ],
   "scripts": {
     "start": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --colors --no-info",
     "starts": "webpack-dashboard -t 'Neo4j Browser' -- webpack-dev-server --https --colors --no-info",

@@ -13,3 +13,4 @@ coverage/
 mvn/
 dist/
 NOTICE.xml
+*.tgz
