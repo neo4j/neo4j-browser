@@ -35,9 +35,10 @@ function request (method, url, data = null, extraHeaders = {}) {
   }).then(checkStatus)
 }
 
-function get (url) {
+function get (url, headers = {}) {
   return fetch(url, {
-    method: 'get'
+    method: 'get',
+    headers
   })
     .then(checkStatus)
     .then(function (response) {

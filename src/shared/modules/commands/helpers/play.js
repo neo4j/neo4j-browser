@@ -31,8 +31,10 @@ export const fetchRemoteGuide = (url, whitelist = null) => {
     }
     resolve()
   }).then(() => {
-    return remote.get(url).then(r => {
-      return cleanHtml(r)
-    })
+    return remote
+      .get(url, { pragma: 'no-cache', 'cache-control': 'no-cache' })
+      .then(r => {
+        return cleanHtml(r)
+      })
   })
 }
