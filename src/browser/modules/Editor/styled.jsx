@@ -68,6 +68,7 @@ const BaseEditorWrapper = styled.div`
     props.expanded
       ? '100vh'
       : Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
+  width: 0;
   .CodeMirror {
     background-color: ${props => props.theme.editorBackground} !important;
     color: ${props => props.theme.editorCommandColor};
