@@ -22,6 +22,8 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
+import SVGInline from 'react-svg-inline'
+
 import styles from './style.css'
 
 export class ToolTip extends Component {
@@ -59,7 +61,22 @@ export const CloseButton = props => {
   return <button {...props}>×</button>
 }
 
-export const EditorButton = styled.span`
+export const EditorButton = props => {
+  const { icon, title, ...rest } = props
+  return (
+    <BaseButton title={title}>
+      {
+        <SVGInline
+          svg={icon}
+          accessibilityLabel={title}
+          {...rest}
+          width='24px'
+        />
+      }
+    </BaseButton>
+  )
+}
+const BaseButton = styled.span`
   font-family: ${props => props.theme.streamlineFontFamily};
   font-style: normal !important;
   font-weight: 400 !important;
@@ -79,13 +96,6 @@ export const EditorButton = styled.span`
   cursor: pointer;
   vertical-align: middle;
   display: inline-block;
-  &:before {
-    content: ${props => props.icon};
-    text-decoration: none;
-  }
-  &:hover::before {
-    content: ${props => props.hoverIcon};
-  }
 `
 
 export const EditModeEditorButton = styled(EditorButton)`

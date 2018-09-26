@@ -61,6 +61,7 @@ class Sidebar extends Component {
           <DatabaseIcon
             isOpen={isOpen}
             connectionState={this.props.neo4jConnectionState}
+            title='Database'
           />
         ),
         content: DatabaseDrawer
@@ -68,13 +69,13 @@ class Sidebar extends Component {
       {
         name: 'Favorites',
         title: 'Favorites',
-        icon: isOpen => <FavoritesIcon isOpen={isOpen} />,
+        icon: isOpen => <FavoritesIcon isOpen={isOpen} title='Favorites' />,
         content: FavoritesDrawer
       },
       {
         name: 'Documents',
         title: 'Documentation',
-        icon: isOpen => <DocumentsIcon isOpen={isOpen} />,
+        icon: isOpen => <DocumentsIcon isOpen={isOpen} title='Documentation' />,
         content: DocumentsDrawer
       }
     ]
@@ -83,20 +84,26 @@ class Sidebar extends Component {
         name: 'Sync',
         title: 'Cloud Services',
         icon: isOpen => (
-          <CloudSyncIcon isOpen={isOpen} connected={this.props.syncConnected} />
+          <CloudSyncIcon
+            isOpen={isOpen}
+            connected={this.props.syncConnected}
+            title='Cloud Services'
+          />
         ),
         content: BrowserSync
       },
       {
         name: 'Settings',
         title: 'Browser Settings',
-        icon: isOpen => <SettingsIcon isOpen={isOpen} />,
+        icon: isOpen => (
+          <SettingsIcon isOpen={isOpen} title='Browser Settings' />
+        ),
         content: SettingsDrawer
       },
       {
         name: 'About',
         title: 'About Neo4j',
-        icon: isOpen => <AboutIcon isOpen={isOpen} />,
+        icon: isOpen => <AboutIcon isOpen={isOpen} title='About Neo4j' />,
         content: AboutDrawer
       }
     ]
@@ -138,4 +145,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(Sidebar)
+export default connect(
+  mapStateToProps,
+  null
+)(Sidebar)

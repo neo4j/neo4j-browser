@@ -46,78 +46,85 @@ const databaseConnectionStateStyles = {
   }
 }
 
-export const DatabaseIcon = ({ isOpen, connectionState }) => (
+export const DatabaseIcon = props => {
+  const { connectionState, ...rest } = props
+  return (
+    <IconContainer
+      activeStyle={databaseConnectionStateStyles[connectionState].active}
+      inactiveStyle={databaseConnectionStateStyles[connectionState].inactive}
+      className={databaseConnectionStateStyles[connectionState].classModifier}
+      icon={databaseCheck}
+      width={28}
+      {...rest}
+    />
+  )
+}
+
+export const FavoritesIcon = props => (
   <IconContainer
-    isOpen={isOpen}
-    activeStyle={databaseConnectionStateStyles[connectionState].active}
-    inactiveStyle={databaseConnectionStateStyles[connectionState].inactive}
-    className={databaseConnectionStateStyles[connectionState].classModifier}
-    icon={databaseCheck}
-    width={28}
-  />
-)
-export const FavoritesIcon = ({ isOpen }) => (
-  <IconContainer
-    isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
     icon={ratingStar}
     width={28}
+    {...props}
   />
 )
-export const DocumentsIcon = ({ isOpen }) => (
+export const DocumentsIcon = props => (
   <IconContainer
-    isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
     icon={bookSearch}
     width={28}
+    {...props}
   />
 )
 
-export const CloudIcon = ({ isOpen }) => (
+export const CloudIcon = props => (
   <IconContainer
-    isOpen={isOpen}
     activeStyle={styles.successGreen}
     inactiveStyle={styles.inactive}
     icon={cloudCheck}
     width={28}
+    {...props}
   />
 )
-export const CloudDisconnectedIcon = ({ isOpen }) => (
+export const CloudDisconnectedIcon = props => (
   <IconContainer
-    isOpen={isOpen}
     activeStyle={styles.warningRed}
     inactiveStyle={styles.warningRed}
     icon={cloudRemove}
     width={28}
+    {...props}
   />
 )
-export const CloudSyncIcon = ({ isOpen, connected }) => (
-  <IconContainer
-    isOpen={isOpen}
-    activeStyle={connected ? styles.successGreen : styles.warningRed}
-    inactiveStyle={connected ? styles.inactive : styles.warningRed}
-    icon={connected ? cloudCheck : cloudRemove}
-    width={28}
-  />
-)
+export const CloudSyncIcon = props => {
+  const { connected, ...rest } = props
+  return (
+    <IconContainer
+      activeStyle={connected ? styles.successGreen : styles.warningRed}
+      inactiveStyle={connected ? styles.inactive : styles.warningRed}
+      icon={connected ? cloudCheck : cloudRemove}
+      width={28}
+      {...rest}
+    />
+  )
+}
 
-export const SettingsIcon = ({ isOpen }) => (
+export const SettingsIcon = props => (
   <IconContainer
-    isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
     icon={cog}
     width={28}
+    {...props}
   />
 )
-export const AboutIcon = ({ isOpen }) => (
+export const AboutIcon = props => (
   <IconContainer
-    isOpen={isOpen}
     activeStyle={styles.credits}
     inactiveStyle={styles.inactive}
     className='nw nw-neo4j-outline-32px'
+    {...props}
   />
 )
 

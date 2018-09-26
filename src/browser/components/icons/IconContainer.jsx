@@ -45,6 +45,7 @@ export class IconContainer extends Component {
       suppressIconStyles,
       icon,
       width,
+      title,
       ...rest
     } = this.props
 
@@ -64,7 +65,7 @@ export class IconContainer extends Component {
         onMouseEnter={this.mouseover.bind(this)}
         onMouseLeave={this.mouseout.bind(this)}
       >
-        <SVGInline svg={icon} width={width + 'px'} />
+        <SVGInline svg={icon} accessibilityLabel={title} width={width + 'px'} />
       </i>
     ) : (
       <i
