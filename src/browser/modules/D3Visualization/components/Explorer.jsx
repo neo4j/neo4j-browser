@@ -27,6 +27,9 @@ import { InspectorComponent } from './Inspector'
 import { LegendComponent } from './Legend'
 import { StyledFullSizeContainer } from './styled'
 
+import { withBus } from 'react-suber'
+import * as editor from 'src-root/shared/modules/editor/editorDuck'
+
 const deduplicateNodes = nodes => {
   return nodes.reduce(
     (all, curr) => {
@@ -42,7 +45,7 @@ const deduplicateNodes = nodes => {
   ).nodes
 }
 
-export class ExplorerComponent extends Component {
+class ExplorerComponent extends Component {
   constructor (props) {
     super(props)
     const graphStyle = neoGraphStyle()
@@ -113,6 +116,61 @@ export class ExplorerComponent extends Component {
 
   onItemSelect (item) {
     this.setState({ selectedItem: item })
+  }
+
+  setQuery (query) {
+    this.props.bus.send(editor.SET_CONTENT, editor.setContent(query))
+  }
+
+  onItemEdit (item) {
+    const isNode = item.type === 'node'
+    let query = 'MATCH '
+
+    item = item.item
+
+    if (isNode) {
+      query += '(item)\n'
+    } else {
+      query += '(source)-[item]->(target)\n'
+    }
+
+    query += `WHERE id(item) = ${item.id}\n`
+
+    item.properties.forEach(property => {
+      query += `SET item.${property.key} = "${property.value}"\n`
+    })
+
+    if (isNode) {
+      query += 'RETURN item'
+    } else {
+      query += 'RETURN item, source, target\n'
+      query += '// DELETE item'
+    }
+
+    this.setQuery(query)
+  }
+
+  onItemDelete (item) {
+    // switch item type for relationship handling
+    item = item.item
+
+    let query = `MATCH (node)\nWHERE id(node) = ${
+      item.id
+    }\nOPTIONAL MATCH (node)-[rel]-()\nDELETE node, rel`
+
+    this.setQuery(query)
+  }
+
+  onNodeConnect (item) {
+    item = item.item
+
+    let query = 'MATCH (source)\nMATCH (target)\n'
+    query += `WHERE id(source) = ${item.source} AND id(target) = ${
+      item.target
+    }\n`
+    query += 'CREATE (source)-[:]->(target)\nRETURN source, target'
+
+    this.setQuery(query)
   }
 
   onGraphModelChange (stats) {
@@ -226,6 +284,10 @@ export class ExplorerComponent extends Component {
           getNodeNeighbours={this.getNodeNeighbours.bind(this)}
           onItemMouseOver={this.onItemMouseOver.bind(this)}
           onItemSelect={this.onItemSelect.bind(this)}
+          onItemEdit={this.onItemEdit.bind(this)}
+          onItemDelete={this.onItemDelete.bind(this)}
+          onNodeConnect={this.onNodeConnect.bind(this)}
+          onRelationshipEdit={this.onItemEdit.bind(this)}
           graphStyle={this.state.graphStyle}
           onGraphModelChange={this.onGraphModelChange.bind(this)}
           assignVisElement={this.props.assignVisElement}
@@ -243,4 +305,5 @@ export class ExplorerComponent extends Component {
     )
   }
 }
+export const ExplorerComponentWithBus = withBus(ExplorerComponent)
 export const Explorer = ExplorerComponent
