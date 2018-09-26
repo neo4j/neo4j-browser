@@ -1,21 +1,4 @@
 {
   "name": "neo4j-browser",
-  "engines": {
-    "node": "^8.11.2"
-  },
-  "public": true,
-  "files": [
-    "scripts/",
-    "src/",
-    ".babelrc",
-    ".eslintignore",
-    ".eslintrc.json",
-    ".yarnrc",
-    "cypress.json",
-    "jsconfig.json",
-    "postcss.config.js",
-    "webpack.config.js",
-    "yarn.lock",
-    "README.md"
-  ]
+  "type": "static"
 }
