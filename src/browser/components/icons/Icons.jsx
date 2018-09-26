@@ -21,12 +21,12 @@
 import React from 'react'
 import styles from './style.css'
 import { IconContainer } from './IconContainer'
-import ratingStar from './svg/rating-star.svg'
-import databaseCheck from './svg/database-check.svg'
-import bookSearch from './svg/book-search.svg'
-import cog from './svg/cog.svg'
-import cloudCheck from './svg/cloud-check.svg'
-import cloudRemove from './svg/cloud-remove.svg'
+import ratingStar from 'icons/rating-star.svg'
+import databaseCheck from 'icons/database-check.svg'
+import bookSearch from 'icons/book-search.svg'
+import cog from 'icons/cog.svg'
+import cloudCheck from 'icons/cloud-check.svg'
+import cloudRemove from 'icons/cloud-remove.svg'
 
 const databaseConnectionStateStyles = {
   connected: {
