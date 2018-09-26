@@ -18,68 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import styles from './style.css'
-
-class IconContainer extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      mouseover: false
-    }
-  }
-  mouseover () {
-    this.setState({ mouseover: true })
-  }
-  mouseout () {
-    this.setState({ mouseover: false })
-  }
-  render () {
-    const {
-      activeStyle,
-      inactiveStyle,
-      isOpen,
-      text,
-      regulateSize,
-      suppressIconStyles,
-      ...rest
-    } = this.props
-
-    const state =
-      this.state.mouseover || isOpen ? activeStyle || '' : inactiveStyle || ''
-    const newClass = suppressIconStyles
-      ? this.props.className
-      : state + ' ' + this.props.className
-    const regulateSizeStyle = regulateSize
-      ? { fontSize: regulateSize + 'em' }
-      : null
-    const icon = (
-      <i
-        {...rest}
-        className={newClass}
-        onMouseEnter={this.mouseover.bind(this)}
-        onMouseLeave={this.mouseout.bind(this)}
-        style={regulateSizeStyle}
-      />
-    )
-    return text ? (
-      <span>
-        {icon}
-        <StyledText>{text}</StyledText>
-      </span>
-    ) : (
-      icon
-    )
-  }
-}
-
-const StyledText = styled.div`
-  font-size: 9px;
-  line-height: 10px;
-  margin-top: 4px;
-  padding: 0;
-`
+import { IconContainer } from './IconContainer'
+import ratingStar from './svg/rating-star.svg'
+import databaseCheck from './svg/database-check.svg'
+import bookSearch from './svg/book-search.svg'
+import cog from './svg/cog.svg'
+import cloudCheck from './svg/cloud-check.svg'
+import cloudRemove from './svg/cloud-remove.svg'
 
 const databaseConnectionStateStyles = {
   connected: {
@@ -104,10 +51,9 @@ export const DatabaseIcon = ({ isOpen, connectionState }) => (
     isOpen={isOpen}
     activeStyle={databaseConnectionStateStyles[connectionState].active}
     inactiveStyle={databaseConnectionStateStyles[connectionState].inactive}
-    className={
-      'sl sl-database-' +
-      databaseConnectionStateStyles[connectionState].classModifier
-    }
+    className={databaseConnectionStateStyles[connectionState].classModifier}
+    icon={databaseCheck}
+    width={28}
   />
 )
 export const FavoritesIcon = ({ isOpen }) => (
@@ -115,7 +61,8 @@ export const FavoritesIcon = ({ isOpen }) => (
     isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
-    className='sl sl-star'
+    icon={ratingStar}
+    width={28}
   />
 )
 export const DocumentsIcon = ({ isOpen }) => (
@@ -123,7 +70,8 @@ export const DocumentsIcon = ({ isOpen }) => (
     isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
-    className='sl sl-book'
+    icon={bookSearch}
+    width={28}
   />
 )
 
@@ -132,7 +80,8 @@ export const CloudIcon = ({ isOpen }) => (
     isOpen={isOpen}
     activeStyle={styles.successGreen}
     inactiveStyle={styles.inactive}
-    className='sl sl-cloud-checked'
+    icon={cloudCheck}
+    width={28}
   />
 )
 export const CloudDisconnectedIcon = ({ isOpen }) => (
@@ -140,7 +89,8 @@ export const CloudDisconnectedIcon = ({ isOpen }) => (
     isOpen={isOpen}
     activeStyle={styles.warningRed}
     inactiveStyle={styles.warningRed}
-    className='sl sl-cloud-delete'
+    icon={cloudRemove}
+    width={28}
   />
 )
 export const CloudSyncIcon = ({ isOpen, connected }) => (
@@ -148,7 +98,8 @@ export const CloudSyncIcon = ({ isOpen, connected }) => (
     isOpen={isOpen}
     activeStyle={connected ? styles.successGreen : styles.warningRed}
     inactiveStyle={connected ? styles.inactive : styles.warningRed}
-    className={'sl sl-cloud' + (connected ? '-checked' : '-delete')}
+    icon={connected ? cloudCheck : cloudRemove}
+    width={28}
   />
 )
 
@@ -157,7 +108,8 @@ export const SettingsIcon = ({ isOpen }) => (
     isOpen={isOpen}
     activeStyle={styles.white}
     inactiveStyle={styles.inactive}
-    className='sl sl-setting-gear'
+    icon={cog}
+    width={28}
   />
 )
 export const AboutIcon = ({ isOpen }) => (
