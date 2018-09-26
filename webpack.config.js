@@ -160,7 +160,13 @@ const rules = [
   {
     test: /\.svg$/,
     use:
-      'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]'
+      'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
+    exclude: [path.resolve('./src/browser/components/icons/svg')]
+  },
+  {
+    test: /\.svg$/,
+    loader: 'raw-loader',
+    include: [path.resolve('./src/browser/components/icons/svg')]
   },
   {
     test: /\.woff$/,
