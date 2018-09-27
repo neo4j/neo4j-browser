@@ -20,6 +20,10 @@
 
 import React, { Component } from 'react'
 import { CarouselButton } from 'browser-components/buttons'
+import {
+  SlidePreviousIcon,
+  SlideNextIcon
+} from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
 import CarouselSlidePicker from './CarouselSlidePicker'
 import {
@@ -64,7 +68,7 @@ export default class Carousel extends Component {
                 data-test-id='previousSlide'
                 onClick={this.prev.bind(this)}
               >
-                {'‹'}
+                <SlidePreviousIcon />
               </CarouselButton>
             </StyledCarouselLeft>
           </Render>
@@ -74,7 +78,7 @@ export default class Carousel extends Component {
                 data-test-id='nextSlide'
                 onClick={this.next.bind(this)}
               >
-                {'›'}
+                <SlideNextIcon />
               </CarouselButton>
             </StyledCarouselRight>
           </Render>

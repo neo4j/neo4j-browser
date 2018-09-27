@@ -28,6 +28,17 @@ import cog from 'icons/cog.svg'
 import cloudCheck from 'icons/cloud-check.svg'
 import cloudRemove from 'icons/cloud-remove.svg'
 import neo4j from 'icons/neo-world.svg'
+import pin from 'icons/pin.svg'
+import arrowUp1 from 'icons/arrow-up-1.svg'
+import close from 'icons/close.svg'
+import expand01 from 'icons/expand-01.svg'
+import buttonRefreshArrow from 'icons/button-refresh-arrow.svg'
+import downloadBottom from 'icons/download-bottom.svg'
+import table01 from 'icons/table-01.svg'
+import Text201 from 'icons/Text2-01.svg'
+import appWindowCode from 'icons/app-window-code.svg'
+import arrowLeft1 from 'icons/arrow-left-1.svg'
+import arrowRight1 from 'icons/arrow-right-1.svg'
 
 const databaseConnectionStateStyles = {
   connected: {
@@ -130,17 +141,23 @@ export const AboutIcon = props => (
   />
 )
 
+export const SlidePreviousIcon = () => (
+  <IconContainer icon={arrowLeft1} width={16} />
+)
+export const SlideNextIcon = () => (
+  <IconContainer icon={arrowRight1} width={16} />
+)
 export const TableIcon = () => (
-  <IconContainer className='fa fa-table' text='Table' />
+  <IconContainer icon={table01} text='Table' width={20} />
 )
 export const VisualizationIcon = () => (
-  <IconContainer className='nw nw-neo4j-outline-16px' text='Graph' />
+  <IconContainer icon={neo4j} text='Graph' width={20} />
 )
 export const AsciiIcon = () => (
-  <IconContainer className='fa fa-font' text='Text' />
+  <IconContainer icon={Text201} text='Text' width={18} />
 )
 export const CodeIcon = () => (
-  <IconContainer className='fa fa-code' text='Code' />
+  <IconContainer icon={appWindowCode} text='Code' width={20} />
 )
 export const PlanIcon = () => (
   <IconContainer className='sl-hierarchy' text='Plan' />
@@ -176,17 +193,17 @@ export const BinIcon = props => (
   />
 )
 
-export const ExpandIcon = () => <IconContainer className='sl-scale-spread' />
+export const ExpandIcon = () => <IconContainer icon={expand01} width={12} />
 export const ContractIcon = () => <IconContainer className='sl-scale-reduce' />
-export const RefreshIcon = () => <IconContainer className='sl-loop' />
-export const CloseIcon = () => (
-  <IconContainer className='sl-delete' regulateSize='0.85' />
+export const RefreshIcon = () => (
+  <IconContainer icon={buttonRefreshArrow} width={12} />
 )
-export const UpIcon = () => <IconContainer className='sl-chevron-up' />
+export const CloseIcon = () => <IconContainer icon={close} width={12} />
+export const UpIcon = () => <IconContainer icon={arrowUp1} width={12} />
 export const DownIcon = () => <IconContainer className='sl-chevron-down' />
 export const DoubleUpIcon = () => <IconContainer className='sl-double-up' />
 export const DoubleDownIcon = () => <IconContainer className='sl-double-down' />
-export const PinIcon = () => <IconContainer className='sl-pin' />
+export const PinIcon = () => <IconContainer icon={pin} width={12} />
 export const MinusIcon = () => (
   <IconContainer
     activeStyle={styles.blue}
@@ -209,7 +226,7 @@ export const CancelIcon = () => (
   />
 )
 export const DownloadIcon = () => (
-  <IconContainer className='sl-download-drive' />
+  <IconContainer icon={downloadBottom} width={12} />
 )
 export const ExpandMenuIcon = () => (
   <IconContainer activeStyle={styles.blue} className='fa fa-caret-left' />

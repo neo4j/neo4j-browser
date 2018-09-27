@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.5 17"><title>table</title><path d="M2.25.75h18c.83,0,1.5.5,1.5,1.11V15.14c0,.62-.67,1.11-1.5,1.11h-18c-.83,0-1.5-.49-1.5-1.11V1.86C.75,1.25,1.42.75,2.25.75Z" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/><line x1="11.25" y1="0.75" x2="11.25" y2="16.25" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/><line x1="0.75" y1="11.25" x2="21.75" y2="11.25" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/><line x1="1.25" y1="1.63" x2="21.25" y2="1.63" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/><line x1="0.75" y1="6.25" x2="21.75" y2="6.25" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/></svg>
+<svg
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.5 17">
+    <defs>
+        <style>.a{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;}</style>
+    </defs>
+    <title>table</title>
+    <path d="M2.25.75h18c.83,0,1.5.5,1.5,1.11V15.14c0,.62-.67,1.11-1.5,1.11h-18c-.83,0-1.5-.49-1.5-1.11V1.86C.75,1.25,1.42.75,2.25.75Z" class="a" />
+    <line x1="11.25" y1="0.75" x2="11.25" y2="16.25" class="a" />
+    <line x1="0.75" y1="11.25" x2="21.75" y2="11.25" class="a" />
+    <line x1="1.25" y1="1.63" x2="21.25" y2="1.63" class="a" />
+    <line x1="0.75" y1="6.25" x2="21.75" y2="6.25" class="a" />
+</svg>

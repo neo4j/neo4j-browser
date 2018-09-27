@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.5 24"><title>Text2</title><path d="M2.85,23.25,10.46,1.1c.17-.47.42-.47.58,0l7.61,22.15" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/><line x1="0.75" y1="23.25" x2="5.75" y2="23.25" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/><line x1="15.75" y1="23.25" x2="20.75" y2="23.25" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/><line x1="6.28" y1="13.25" x2="15.21" y2="13.25" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px"/></svg>
+<svg
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.5 24">
+    <defs>
+        <style>.a{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;}</style>
+    </defs>
+    <title>Text2</title>
+    <path d="M2.85,23.25,10.46,1.1c.17-.47.42-.47.58,0l7.61,22.15" class="a" />
+    <line x1="0.75" y1="23.25" x2="5.75" y2="23.25" class="a" />
+    <line x1="15.75" y1="23.25" x2="20.75" y2="23.25" class="a" />
+    <line x1="6.28" y1="13.25" x2="15.21" y2="13.25" class="a" />
+</svg>

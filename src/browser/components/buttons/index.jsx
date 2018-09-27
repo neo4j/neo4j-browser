@@ -352,8 +352,8 @@ const BaseCarouselButton = styled.button`
 `
 const CarouselButtonOverlay = styled.span`
   position: absolute;
-  top: 13px;
-  left: 9px;
+  top: 5px;
+  left: 8px;
 `
 export const CarouselButton = props => {
   const { children, ...rest } = props
