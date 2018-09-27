@@ -27,6 +27,7 @@ import bookSearch from 'icons/book-search.svg'
 import cog from 'icons/cog.svg'
 import cloudCheck from 'icons/cloud-check.svg'
 import cloudRemove from 'icons/cloud-remove.svg'
+import neo4j from 'icons/neo-world.svg'
 
 const databaseConnectionStateStyles = {
   connected: {
@@ -123,7 +124,8 @@ export const AboutIcon = props => (
   <IconContainer
     activeStyle={styles.credits}
     inactiveStyle={styles.inactive}
-    className='nw nw-neo4j-outline-32px'
+    icon={neo4j}
+    width={28}
     {...props}
   />
 )

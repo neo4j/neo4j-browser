@@ -1,20 +1,21 @@
 .inactive {
   color: #797979;
+  fill: #797979;
 }
 .green {
-  color: #4cD950;
+  color: #4cd950;
 }
 .successGreen {
-  color: #4cD950;
+  color: #4cd950;
 }
 .orange {
-  color: #F79868;
+  color: #f79868;
 }
 .blue {
-  color: #58C8E3;
+  color: #58c8e3;
 }
 .purple {
-  color: #DB7295;
+  color: #db7295;
 }
 .yellow {
   color: #ffaf00;
@@ -23,25 +24,26 @@
   color: #ffaf00;
 }
 .warningRed {
-  color: #df4D3b;
+  color: #df4d3b;
 }
 .white {
   color: #ffffff;
 }
 .lightBlue {
-  color: #5dade2
+  color: #5dade2;
 }
 
 @keyframes neo4j-pulse {
-  0%, 100% {
-    color: #1bf621;
+  0%,
+  100% {
+    fill: #1bf621;
   }
   50% {
-    color: #00a3ff;
+    fill: #00a3ff;
   }
 }
 
 .credits {
   animation: neo4j-pulse 2s infinite;
-  animation-timing-function: ease-in-out
+  animation-timing-function: ease-in-out;
 }
