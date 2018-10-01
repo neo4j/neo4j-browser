@@ -32,6 +32,7 @@ import pin from 'icons/pin.svg'
 import arrowUp1 from 'icons/arrow-up-1.svg'
 import close from 'icons/close.svg'
 import expand01 from 'icons/expand-01.svg'
+import shrink from 'icons/shrink.svg'
 import buttonRefreshArrow from 'icons/button-refresh-arrow.svg'
 import downloadBottom from 'icons/download-bottom.svg'
 import table01 from 'icons/table-01.svg'
@@ -194,7 +195,7 @@ export const BinIcon = props => (
 )
 
 export const ExpandIcon = () => <IconContainer icon={expand01} width={12} />
-export const ContractIcon = () => <IconContainer className='sl-scale-reduce' />
+export const ContractIcon = () => <IconContainer icon={shrink} width={12} />
 export const RefreshIcon = () => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )

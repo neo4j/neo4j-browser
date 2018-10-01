@@ -54,6 +54,7 @@ import Render from 'browser-components/Render'
 import ratingStar from 'icons/rating-star.svg'
 import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
+import pencil from 'icons/pencil.svg'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -388,7 +389,7 @@ export class Editor extends Component {
               disabled={this.getEditorValue().length < 1}
               color='#ffaf00'
               title='Favorite'
-              icon={ratingStar}
+              icon={pencil}
             />
           </Render>
           <Render if={!this.state.contentId}>
