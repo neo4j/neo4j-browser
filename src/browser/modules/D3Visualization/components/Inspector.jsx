@@ -20,6 +20,7 @@
 
 import React, { Component } from 'react'
 import { deepEquals, optionalToString } from 'services/utils'
+import SVGInline from 'react-svg-inline'
 import {
   inspectorFooterContractedHeight,
   StyledInspectorFooterStatusMessage,
@@ -130,7 +131,7 @@ export class InspectorComponent extends Component {
                 'token' + ' ' + 'token-context-menu-key' + ' ' + 'token-label'
               }
             >
-              {item.label}
+              <SVGInline svg={item.label} width='12' />
             </StyledTokenContextMenuKey>
             <StyledInspectorFooterRowListPair key='pair' className='pair'>
               <StyledInspectorFooterRowListValue className='value'>
@@ -140,7 +141,9 @@ export class InspectorComponent extends Component {
           </StyledInlineList>
         )
       } else if (type === 'canvas') {
-        const description = `Displaying ${item.nodeCount} nodes, ${item.relationshipCount} relationships.`
+        const description = `Displaying ${item.nodeCount} nodes, ${
+          item.relationshipCount
+        } relationships.`
         inspectorContent = (
           <StyledInlineList className='list-inline'>
             <StyledInspectorFooterRowListPair className='pair' key='pair'>

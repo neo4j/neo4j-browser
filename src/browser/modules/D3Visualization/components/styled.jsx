@@ -245,15 +245,18 @@ export const StyledTokenRelationshipType = styled(StyledToken)`
   border-radius: 3px;
 `
 
-export const tokenPropertyKey = styled(StyledToken)`padding: 3px 5px 3px 5px;`
+export const tokenPropertyKey = styled(StyledToken)`
+  padding: 3px 5px 3px 5px;
+`
 export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
   color: #f9fbfd;
   background-color: #d2d5da;
-  font-family: FontAwesome;
   padding: 4px 9px;
 `
 
-export const StyledTokenCount = styled.span`font-weight: normal;`
+export const StyledTokenCount = styled.span`
+  font-weight: normal;
+`
 export const StyledLegendContents = styled.ul`
   float: left;
   line-height: 1em;
@@ -339,7 +342,9 @@ export const StyledFullSizeContainer = styled.div`
   height: 100%;
 `
 
-export const StyledInspectorFooterStatusMessage = styled.div`font-weight: bold;`
+export const StyledInspectorFooterStatusMessage = styled.div`
+  font-weight: bold;
+`
 
 export const StyledZoomHolder = styled.div`
   position: absolute;
