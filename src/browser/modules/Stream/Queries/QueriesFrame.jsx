@@ -105,20 +105,25 @@ export class QueriesFrame extends Component {
       { query: listQueriesProcedure() },
       response => {
         if (response.success) {
-          let queries = this.extractQueriesFromBoltResult(response.result)
-          let resultMessage = this.constructSuccessMessage(queries)
+          const queries = this.extractQueriesFromBoltResult(response.result)
+          const errors = queries.filter(_ => _.error).map(e => ({ ...e.error }))
+          const validQueries = queries.filter(_ => !_.error)
+          const resultMessage = this.constructOverviewMessage(
+            validQueries,
+            errors
+          )
 
           this.setState((prevState, props) => {
             return {
-              queries: queries,
-              errors: null,
+              queries: validQueries,
+              errors,
               success: suppressQuerySuccessMessage
                 ? prevState.success
                 : resultMessage
             }
           })
         } else {
-          let errors = this.state.errors || []
+          const errors = this.state.errors || []
           this.setState({
             errors: errors.concat([response.error]),
             success: false
@@ -140,7 +145,7 @@ export class QueriesFrame extends Component {
           })
           this.getRunningQueries(true)
         } else {
-          let errors = this.state.errors || []
+          const errors = this.state.errors || []
           this.setState({
             errors: errors.concat([response.error]),
             success: false
@@ -151,13 +156,16 @@ export class QueriesFrame extends Component {
   }
 
   extractQueriesFromBoltResult (result) {
-    return result.records.map(queryRecord => {
-      let queryInfo = {}
-      queryRecord.keys.forEach((key, idx) => {
-        queryInfo[key] = bolt.itemIntToNumber(queryRecord._fields[idx])
+    return result.records.map(({ keys, _fields, host, error }) => {
+      if (error) {
+        return { error }
+      }
+      const queryInfo = {}
+      keys.forEach((key, idx) => {
+        queryInfo[key] = bolt.itemIntToNumber(_fields[idx])
       })
-      if (queryRecord.host) {
-        queryInfo.host = 'bolt://' + queryRecord.host
+      if (host) {
+        queryInfo.host = 'bolt://' + host
       } else {
         queryInfo.host = 'bolt://' + result.summary.server.address
       }
@@ -169,27 +177,23 @@ export class QueriesFrame extends Component {
     this.killQueries(host, [queryId])
   }
 
-  constructSuccessMessage (queries) {
-    let hosts = queries.map(query => query.host).reduce((acc, host) => {
-      if (acc.host) {
-        return acc
-      } else {
-        acc[host] = 1
-        return acc
-      }
-    }, {})
+  constructOverviewMessage (queries, errors) {
+    const clusterCount = new Set(queries.map(query => query.host)).size
 
-    let clusterCount = Object.keys(hosts).map(key => hosts.hasOwnProperty(key))
-      .length
-    let numMachinesMsg = 'running on one server'
+    const numMachinesMsg =
+      clusterCount > 1
+        ? `running on ${clusterCount} cluster servers`
+        : 'running on one server'
 
-    if (clusterCount > 1) {
-      numMachinesMsg = `running on ${clusterCount} cluster servers`
-    }
+    const numQueriesMsg = queries.length > 1 ? 'queries' : 'query'
 
-    let numQueriesMsg = queries.length > 1 ? 'queries' : 'query'
+    const successMessage = `Found ${
+      queries.length
+    } ${numQueriesMsg} ${numMachinesMsg}`
 
-    return `Found ${queries.length} ${numQueriesMsg} ${numMachinesMsg}`
+    return errors.length > 0
+      ? `${successMessage} (${errors.length} unsuccessful)`
+      : successMessage
   }
 
   constructViewFromQueryList (queries) {
@@ -205,9 +209,9 @@ export class QueriesFrame extends Component {
       ['Elapsed time', '95px'],
       ['Kill', '95px']
     ]
-    const tableRows = queries.map(query => {
+    const tableRows = queries.map((query, i) => {
       return (
-        <tr key='rows'>
+        <tr key={`rows${i}`}>
           <StyledTd
             key='host'
             title={query.host}
@@ -282,8 +286,12 @@ export class QueriesFrame extends Component {
       frameContents = this.constructViewFromQueryList(this.state.queries)
       statusbar = (
         <StatusbarWrapper>
-          <Render if={this.state.errors}>
-            <FrameError message={(this.state.errors || []).join(', ')} />
+          <Render if={this.state.errors && !this.state.success}>
+            <FrameError
+              message={(this.state.errors || [])
+                .map(e => `${e.host}: ${e.message}`)
+                .join(', ')}
+            />
           </Render>
           <Render if={this.state.success}>
             <StyledStatusBar>
@@ -321,4 +329,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, null)(QueriesFrame))
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(QueriesFrame)
+)
