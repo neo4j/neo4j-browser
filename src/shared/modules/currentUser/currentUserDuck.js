@@ -92,7 +92,7 @@ export const getCurrentUserEpic = (some$, store) =>
           { useCypherThread: shouldUseCypherThread(store.getState()) }
         )
       )
-        .catch(e => ({ type: CLEAR }))
+        .catch(() => Rx.Observable.of(null))
         .map(result => {
           if (!result) return { type: CLEAR }
           const keys = result.records[0].keys
