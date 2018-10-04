@@ -1826,7 +1826,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.5:
+classnames@^2.2.1, classnames@^2.2.5:
   version "2.2.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -7431,6 +7431,13 @@ react-suber@1.0.4:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-suber/-/react-suber-1.0.4.tgz#99e86d0d13304584ba142025d38688124a92ea7c"
   dependencies:
     hoist-non-react-statics "^2.5.0"
+
+react-svg-inline@^2.1.1:
+  version "2.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-svg-inline/-/react-svg-inline-2.1.1.tgz#532664006bf5b4f9ca2879d185e546df9a7476ef"
+  dependencies:
+    classnames "^2.2.1"
+    prop-types "^15.5.8"
 
 react-testing-library@^5.0.0:
   version "5.0.1"

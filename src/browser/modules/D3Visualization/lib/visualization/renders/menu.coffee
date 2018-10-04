@@ -45,7 +45,7 @@ do ->
         node.contextMenu =
           menuSelection: event
           menuContent: content
-          label:label
+          label: label
         viz.trigger('menuMouseOver', node))
       elem.on('mouseout', (node) ->
         delete node.contextMenu
@@ -53,7 +53,7 @@ do ->
 
   createMenuItem = (selection, viz, eventName, itemNumber, className, position, textValue, helpValue) ->
     path = selection.selectAll('path.' + className).data(getSelectedNode)
-    textpath = selection.selectAll('text.' + className).data(getSelectedNode)
+    iconPath = selection.selectAll('.icon.' + className).data(getSelectedNode)
 
     tab = path.enter()
     .append('path')
@@ -62,27 +62,27 @@ do ->
     .attr
         d: (node) -> arc(node.radius, itemNumber, 1)()
 
-    text = textpath.enter()
-    .append('text')
+    rawSvgIcon = neo.icons[textValue]
+    icon = iconPath
+    .enter()
+    .appendSVG(rawSvgIcon)
+    .classed(className, true)
     .classed('context-menu-item', true)
-    .text(textValue)
-    .attr("transform", "scale(0.1)")
     .attr
-        'font-family': 'FontAwesome'
-        fill: (node) -> viz.style.forNode(node).get('text-color-internal')
-        x: (node) -> arc(node.radius, itemNumber).centroid()[0] + position[0]
-        y: (node) -> arc(node.radius, itemNumber).centroid()[1] + position[1]
+        transform: (node) ->
+          'translate(' +
+          Math.floor(arc(node.radius, itemNumber).centroid()[0] + position[0] * 100 / 100) + ',' +
+          Math.floor(arc(node.radius, itemNumber).centroid()[1] + position[1] * 100 / 100) + ')' + ' ' +
+          'scale(0.7)'
+        color: (node) -> viz.style.forNode(node).get('text-color-internal')
 
-    attachContextEvent(eventName, [tab, text], viz, helpValue, textValue)
+    attachContextEvent(eventName, [tab, icon], viz, helpValue, rawSvgIcon)
 
     tab
     .transition()
     .duration(200)
     .attr
         d: (node) -> arc(node.radius, itemNumber)()
-
-    text
-    .attr("transform", "scale(1)")
 
     path
     .exit()
@@ -92,25 +92,24 @@ do ->
         d: (node) -> arc(node.radius, itemNumber, 1)()
     .remove()
 
-    textpath
+    iconPath
     .exit()
-    .attr("transform", "scale(0)")
     .remove()
 
   donutRemoveNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeClose', 1, 'remove_node', [-4, 0], '\uf00d', 'Remove node from the visualization')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeClose', 1, 'remove_node', [-8, 0], 'Remove', 'Dismiss')
 
     onTick: noop
   )
 
   donutExpandNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeDblClicked', 2, 'expand_node', [0, 4], '\uf0b2', 'Expand child relationships')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeDblClicked', 2, 'expand_node', [-8, -10], 'Expand', 'Expand child relationships')
 
     onTick: noop
   )
 
   donutUnlockNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [4, 0], '\uf09c', 'Unlock the node to re-layout the graph')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [-10, -6], 'Unlock', 'Unlock the node to re-layout the graph')
 
     onTick: noop
   )

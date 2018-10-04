@@ -153,6 +153,7 @@
     "react-icons": "^2.2.1",
     "react-redux": "^5.0.7",
     "react-suber": "1.0.4",
+    "react-svg-inline": "^2.1.1",
     "react-timeago": "^3.4.3",
     "redux": "^3.7.2",
     "redux-observable": "^0.16.0",

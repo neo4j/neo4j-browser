@@ -24,6 +24,11 @@ window.neo = window.neo || {}
 
 neo.models = {}
 
+d3.selection.enter.prototype.appendSVG = (SVGString) ->
+    this.select(() ->
+      this.appendChild(document.importNode(new DOMParser().parseFromString(SVGString, 'application/xml').documentElement.firstChild, true))
+    );
+
 neo.renderers =
   menu: []
   node: []
