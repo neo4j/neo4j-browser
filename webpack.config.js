@@ -236,7 +236,7 @@ module.exports = {
     js: ['index.jsx'],
     vendor: [
       'firebase',
-      'neo4j-driver-alias',
+      'neo4j-driver',
       'rxjs',
       'babel-polyfill',
       'isomorphic-fetch',
@@ -271,7 +271,6 @@ module.exports = {
     ],
     modules: [path.resolve(__dirname, 'node_modules'), jsSourcePath],
     alias: {
-      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
       'src-root': path.resolve(__dirname, 'src'),
       'project-root': path.resolve(__dirname),
       services: path.resolve(__dirname, 'src/shared/services'),

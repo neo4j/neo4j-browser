@@ -1,4 +1,4 @@
-import { v1 as neo4j } from 'neo4j-driver-alias'
+import { v1 as neo4j } from 'neo4j-driver'
 
 export const csvFormat = anything => {
   if (typeof anything === 'number') {
@@ -43,7 +43,9 @@ const numberFormat = anything => {
 }
 const spacialFormat = anything => {
   const zString = anything.z ? `, z:${anything.z}` : ''
-  return `point({srid:${anything.srid}, x:${anything.x}, y:${anything.y}${zString}})`
+  return `point({srid:${anything.srid}, x:${anything.x}, y:${
+    anything.y
+  }${zString}})`
 }
 
 const isTemporalType = anything =>

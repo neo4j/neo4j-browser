@@ -58,7 +58,7 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
-      "^neo4j-driver-alias$": "neo4j-driver",
+      "^neo4j-driver$": "neo4j-driver",
       "^browser-styles(.*)$": "<rootDir>/src/browser/styles$1",
       "^browser-components(.*)$": "<rootDir>/src/browser/components$1",
       "worker-loader": "<rootDir>/__mocks__/workerLoaderMock.js"
@@ -148,7 +148,7 @@
     "firebase": "^4.3.0",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
-    "neo4j-driver": "^1.6.1",
+    "neo4j-driver": "^1.7.0-beta02",
     "react": "^16.4.1",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dnd": "^2.5.1",
