@@ -52,7 +52,7 @@ export default class ConnectForm extends Component {
             return (
               <React.Fragment>
                 <StyledConnectionFormEntry>
-                  <StyledConnectionLabel>Host</StyledConnectionLabel>
+                  <StyledConnectionLabel>Connect URL</StyledConnectionLabel>
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(0, {
                       initialFocus: true,
