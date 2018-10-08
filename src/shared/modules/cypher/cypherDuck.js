@@ -34,7 +34,7 @@ export const CLUSTER_CYPHER_REQUEST = NAME + '/CLUSTER_REQUEST'
 export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
 
 // Helpers
-const adHocSession = (driver, resolve, action) => {
+const adHocSession = (driver, resolve, action, host) => {
   const session = driver.session()
   session
     .run(action.query, action.parameters)
@@ -48,7 +48,12 @@ const adHocSession = (driver, resolve, action) => {
     })
     .catch(e => {
       driver.close()
-      resolve({ type: action.$$responseChannel, success: false, error: e })
+      resolve({
+        type: action.$$responseChannel,
+        success: false,
+        error: e,
+        host
+      })
     })
 }
 const callClusterMember = (connection, action, store) => {
@@ -56,10 +61,15 @@ const callClusterMember = (connection, action, store) => {
     bolt
       .directConnect(connection, undefined, undefined, false) // Ignore validation errors
       .then(driver => {
-        adHocSession(driver, resolve, action)
+        adHocSession(driver, resolve, action, connection.host)
       })
-      .catch(e => {
-        resolve({ type: action.$$responseChannel, success: false, error: e })
+      .catch(error => {
+        resolve({
+          type: action.$$responseChannel,
+          success: false,
+          host: connection.host,
+          error
+        })
       })
   })
 }
@@ -130,13 +140,24 @@ export const clusterCypherRequestEpic = (some$, store) =>
           error: value.error
         }
       }
-      let action = value.pop()
-      const records = value.reduce((acc, { result }) => {
-        return acc.concat(
-          result.records.map(record =>
-            Object.assign({}, record, { host: result.summary.server.address })
-          )
-        )
+      const action = value.pop()
+      const records = value.reduce((acc, { result, success, error, host }) => {
+        if (!success) {
+          return [
+            {
+              error: {
+                host,
+                message: error.message,
+                code: error.code
+              }
+            }
+          ]
+        }
+        const mappedRes = result.records.map(record => ({
+          ...record,
+          host: result.summary.server.address
+        }))
+        return [...acc, ...mappedRes]
       }, [])
       return {
         type: action.$$responseChannel,
