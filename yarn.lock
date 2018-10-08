@@ -187,8 +187,10 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/chai/-/chai-4.0.8.tgz#d27600e9ba2f371e08695d90a0fe0408d89c7be7"
 
 "@types/jquery@*":
-  version "3.3.11"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/jquery/-/jquery-3.3.11.tgz#f120f79e4abe92d449abc227072699417c853488"
+  version "3.3.12"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/jquery/-/jquery-3.3.12.tgz#e83229bcbf09dc668f9d4c1894864199521ff258"
+  dependencies:
+    "@types/sizzle" "*"
 
 "@types/jquery@3.2.16":
   version "3.2.16"
@@ -214,12 +216,16 @@
     "@types/sinon" "*"
 
 "@types/sinon@*":
-  version "5.0.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinon/-/sinon-5.0.3.tgz#2b1840122f372350c563e3ceda2f447b55f3a927"
+  version "5.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinon/-/sinon-5.0.4.tgz#a765b390b373cf01a3b19b0c97f9eb4bb2a168b1"
 
 "@types/sinon@4.0.0":
   version "4.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinon/-/sinon-4.0.0.tgz#9a93ffa4ee1329e85166278a5ed99f81dc4c8362"
+
+"@types/sizzle@*":
+  version "2.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sizzle/-/sizzle-2.3.2.tgz#a811b8c18e2babab7d542b3365887ae2e4d9de47"
 
 abab@^2.0.0:
   version "2.0.0"
@@ -1707,12 +1713,12 @@ caniuse-api@^2.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000889"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-db/-/caniuse-db-1.0.30000889.tgz#f6177927a0c56bbd56ff70f11e4bb28be3889052"
+  version "1.0.30000890"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-db/-/caniuse-db-1.0.30000890.tgz#b406595db8b631975b8dc5fa174f32925c23778b"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000805:
-  version "1.0.30000889"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30000889.tgz#53e266c83e725ad3bd2e4a3ea76d5031a8aa4c3e"
+  version "1.0.30000890"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30000890.tgz#86a18ffcc65d79ec6a437e985761b8bf1c4efeaf"
 
 capture-exit@^1.2.0:
   version "1.2.0"
@@ -2810,8 +2816,8 @@ ejs@^2.5.7:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
 
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
-  version "1.3.73"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.3.73.tgz#aa67787067d58cc3920089368b3b8d6fe0fc12f6"
+  version "1.3.75"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.3.75.tgz#dd04551739e7371862b0ac7f4ddaa9f3f95b7e68"
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -5171,8 +5177,8 @@ jsonfile@^3.0.0:
     graceful-fs "^4.1.6"
 
 jsonic@^0.3.0:
-  version "0.3.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/jsonic/-/jsonic-0.3.0.tgz#b545da95f54392e58b3dda05f5f2e377a6c9d1bf"
+  version "0.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jsonic/-/jsonic-0.3.1.tgz#da306185dc635b649ad934e3f6826188cad73bdb"
 
 jsprim@^1.2.2:
   version "1.4.1"
@@ -7523,8 +7529,8 @@ react-svg-inline@^2.1.1:
     prop-types "^15.5.8"
 
 react-testing-library@^5.0.0:
-  version "5.1.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-testing-library/-/react-testing-library-5.1.1.tgz#7cdbad6d546894dadc39f499d65018135b7e61a0"
+  version "5.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-testing-library/-/react-testing-library-5.2.0.tgz#d7af9b0e6d1b653287d8c06cd0eab9e6d5d645ba"
   dependencies:
     dom-testing-library "^3.8.1"
     wait-for-expect "^1.0.0"
