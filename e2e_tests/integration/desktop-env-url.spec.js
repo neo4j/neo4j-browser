@@ -19,11 +19,15 @@
  */
 
 /* global Cypress, cy, test, expect, before */
-import { getDesktopContext } from '../support/utils'
 
+import { getDesktopContext } from '../support/utils'
 let appContextListener
 
-describe('Neo4j Desktop environment', () => {
+// This file only esists to be able to test the auto connect using
+// the host field.
+// We can't load two times in the same file
+
+describe('Neo4j Desktop environment using url field', () => {
   before(() => {
     cy.visit(Cypress.config.url, {
       onBeforeLoad: win => {
@@ -35,7 +39,7 @@ describe('Neo4j Desktop environment', () => {
       }
     })
   })
-  it('can auto connect using host + post fields', () => {
+  it('can auto connect using url field', () => {
     const frames = cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
     frames.should('have.length', 2)
 
@@ -43,7 +47,7 @@ describe('Neo4j Desktop environment', () => {
     frames.first().should('contain', ':play start')
     cy.wait(1000)
   })
-  it('switches connection when that event is triggered using host + port fields', () => {
+  it('switches connection when that event is triggered using url field', () => {
     cy.executeCommand(':clear')
     cy.wait(1000).then(() => {
       appContextListener(
