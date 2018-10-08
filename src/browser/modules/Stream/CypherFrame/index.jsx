@@ -71,7 +71,8 @@ export class CypherFrame extends Component {
     openView: undefined,
     fullscreen: false,
     collapse: false,
-    frameHeight: 472
+    frameHeight: 472,
+    hasVis: false
   }
   changeView (view) {
     this.setState({ openView: view })
@@ -95,7 +96,8 @@ export class CypherFrame extends Component {
       this.state.collapse !== state.collapse ||
       this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
       this.state._asciiSetColWidth !== state._asciiSetColWidth ||
-      this.state._planExpand !== state._planExpand
+      this.state._planExpand !== state._planExpand ||
+      this.state.hasVis !== state.hasVis
     )
   }
   componentDidUpdate () {
