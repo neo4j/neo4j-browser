@@ -57,13 +57,13 @@ export class WarningsView extends Component {
     }
     let cypherLines = cypher.split('\n')
     let notificationsList = notifications.map(notification => {
+      // Detect generic warning without position information
+      const position = Object.keys(notification.position).length
+        ? notification.position
+        : { line: 1, offset: 0 }
       return (
         <StyledHelpContent
-          key={
-            notification.title +
-            notification.position.line +
-            notification.position.offset
-          }
+          key={notification.title + position.line + position.offset}
         >
           <StyledHelpDescription>
             {getWarningComponent(notification.severity)}
@@ -75,9 +75,9 @@ export class WarningsView extends Component {
             </StyledHelpDescription>
             <StyledDiv>
               <StyledPreformattedArea>
-                {cypherLines[notification.position.line - 1]}
+                {cypherLines[position.line - 1]}
                 <StyledBr />
-                {Array(notification.position.offset + 1).join(' ')}^
+                {Array(position.offset + 1).join(' ')}^
               </StyledPreformattedArea>
             </StyledDiv>
           </StyledDiv>
