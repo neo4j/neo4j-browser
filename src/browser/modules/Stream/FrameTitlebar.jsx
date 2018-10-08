@@ -117,7 +117,7 @@ class FrameTitlebar extends Component {
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
           <Render if={this.canExport()}>
-            <DropdownButton>
+            <DropdownButton data-test-id='frame-export-dropdown'>
               <DownloadIcon />
               <DropdownList>
                 <DropdownContent>
@@ -179,7 +179,8 @@ class FrameTitlebar extends Component {
               data-test-id='rerunFrameButton'
               title='Rerun'
               onClick={() =>
-                props.onReRunClick(frame.cmd, frame.id, frame.requestId)}
+                props.onReRunClick(frame.cmd, frame.id, frame.requestId)
+              }
             >
               <RefreshIcon />
             </FrameButton>
@@ -215,4 +216,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default withBus(connect(null, mapDispatchToProps)(FrameTitlebar))
+export default withBus(
+  connect(
+    null,
+    mapDispatchToProps
+  )(FrameTitlebar)
+)
