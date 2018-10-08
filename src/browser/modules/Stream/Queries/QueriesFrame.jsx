@@ -191,12 +191,16 @@ export class QueriesFrame extends Component {
       queries.length
     } ${numQueriesMsg} ${numMachinesMsg}`
 
-    return errors.length > 0
-      ? `${successMessage} (${errors.length} unsuccessful)`
-      : successMessage
+    return errors.length > 0 ? (
+      <span>
+        {successMessage} ({errors.length} unsuccessful)
+      </span>
+    ) : (
+      successMessage
+    )
   }
 
-  constructViewFromQueryList (queries) {
+  constructViewFromQueryList (queries, errors) {
     if (queries.length === 0) {
       return null
     }
@@ -251,6 +255,14 @@ export class QueriesFrame extends Component {
       )
     })
 
+    const errorRows = errors.map((error, i) => (
+      <tr key={`error${i}`}>
+        <StyledTd colSpan='7' title={error.message}>
+          <Code>Error connecting to: {error.host}</Code>
+        </StyledTd>
+      </tr>
+    ))
+
     const tableHeaders = tableHeaderSizes.map((heading, i) => {
       return (
         <StyledTh width={heading[1]} key={heading[0]}>
@@ -264,7 +276,10 @@ export class QueriesFrame extends Component {
           <thead>
             <StyledHeaderRow>{tableHeaders}</StyledHeaderRow>
           </thead>
-          <tbody>{tableRows}</tbody>
+          <tbody>
+            {tableRows}
+            {errorRows}
+          </tbody>
         </StyledTable>
       </StyledTableWrapper>
     )
@@ -283,7 +298,10 @@ export class QueriesFrame extends Component {
     let statusbar
 
     if (this.canListQueries()) {
-      frameContents = this.constructViewFromQueryList(this.state.queries)
+      frameContents = this.constructViewFromQueryList(
+        this.state.queries,
+        this.state.errors
+      )
       statusbar = (
         <StatusbarWrapper>
           <Render if={this.state.errors && !this.state.success}>
