@@ -23,7 +23,7 @@ import styled from 'styled-components'
 export const ConsentCheckBox = props => {
   return (
     <StyledP>
-      <CheckBoxLabel for='syncConsentCheckbox'>
+      <CheckBoxLabel htmlFor='syncConsentCheckbox'>
         <StyledCheckBox
           {...props}
           type='checkbox'
@@ -43,7 +43,8 @@ export const ConsentCheckBox = props => {
           target='blank'
         >
           Privacy Policy
-        </StyledSimpleLink>.
+        </StyledSimpleLink>
+        .
       </CheckBoxLabel>
     </StyledP>
   )
@@ -69,7 +70,8 @@ export const ClearLocalConfirmationBox = props => {
         browsers local storage
       </AlertP>
       <AlertP>
-        What do you want to do?<br />
+        What do you want to do?
+        <br />
         <SmallText>
           (nothing,{' '}
           <StyledSimpleLink onClick={props.onClick}>cancel</StyledSimpleLink>)
@@ -82,7 +84,9 @@ export const ClearLocalConfirmationBox = props => {
 const StyledP = styled.p``
 const StyledCheckBox = styled.input``
 
-const CheckBoxLabel = styled.label`display: inline-block;`
+const CheckBoxLabel = styled.label`
+  display: inline-block;
+`
 
 const AlertDiv = styled.div`
   color: #8a6d3b;
@@ -102,11 +106,17 @@ const CloseButton = styled.button`
   line-height: 1;
 `
 
-export const SmallText = styled.span`font-size: 85%;`
+export const SmallText = styled.span`
+  font-size: 85%;
+`
 
-export const SmallHeaderText = styled.span`font-size: 11px;`
+export const SmallHeaderText = styled.span`
+  font-size: 11px;
+`
 
-const AlertP = styled.p`margin: 10px;`
+const AlertP = styled.p`
+  margin: 10px;
+`
 
 export const StyledSimpleLink = styled.a`
   cursor: pointer;
