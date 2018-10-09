@@ -29,7 +29,7 @@ describe('Neo4j Desktop environment', () => {
       onBeforeLoad: win => {
         win.neo4jDesktopApi = {
           getContext: () =>
-            Promise.resolve(getDesktopContext(Cypress.config, 'url')),
+            Promise.resolve(getDesktopContext(Cypress.config, 'host')),
           onContextUpdate: fn => (appContextListener = fn.bind(fn))
         }
       }
@@ -48,7 +48,7 @@ describe('Neo4j Desktop environment', () => {
     cy.wait(1000).then(() => {
       appContextListener(
         { type: 'GRAPH_ACTIVE', id: 'test' },
-        getDesktopContext(Cypress.config, 'url')
+        getDesktopContext(Cypress.config, 'host')
       )
     })
 
