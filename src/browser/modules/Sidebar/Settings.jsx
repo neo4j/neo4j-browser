@@ -35,6 +35,13 @@ import {
   StyledSettingTextInput
 } from './styled'
 import { toKeyString } from 'services/utils'
+import {
+  getExperimentalFeatures,
+  experimentalFeatureSelfName,
+  enableExperimentalFeature,
+  disableExperimentalFeature
+} from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
 
 const visualSettings = [
   {
@@ -138,7 +145,9 @@ const visualSettings = [
 export const Settings = ({
   settings,
   visualSettings,
-  onSettingsSave = () => {}
+  experimentalFeatures = {},
+  onSettingsSave = () => {},
+  onFeatureChange
 }) => {
   if (!settings) return null
   const mappedSettings = visualSettings.map(visualSetting => {
@@ -204,12 +213,48 @@ export const Settings = ({
     )
   })
 
+  const mappedExperimentalFeatures = Object.keys(experimentalFeatures)
+    .map(key => {
+      const feature = experimentalFeatures[key]
+      // Don't show the toggle to disable this section
+      if (feature.name === experimentalFeatureSelfName) {
+        return null
+      }
+      const visual = feature.displayName
+      const tooltip = feature.tooltip || ''
+      return (
+        <StyledSetting key={toKeyString(feature.name)}>
+          <CheckboxSelector
+            onChange={event => {
+              const on = event.target.checked
+              onFeatureChange(feature.name, on)
+            }}
+            checked={experimentalFeatures[feature.name].on}
+          />
+          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
+        </StyledSetting>
+      )
+    })
+    .filter(r => r)
   return (
     <Drawer id='db-settings'>
       <DrawerHeader>Browser Settings</DrawerHeader>
       <DrawerBody>
         <DrawerSection>
-          <DrawerSectionBody>{mappedSettings}</DrawerSectionBody>
+          <DrawerSectionBody key='settings'>{mappedSettings}</DrawerSectionBody>
+          <FeatureToggle
+            name={experimentalFeatureSelfName}
+            on={
+              <React.Fragment>
+                {mappedExperimentalFeatures.length ? (
+                  <DrawerSubHeader>Experimental features</DrawerSubHeader>
+                ) : null}
+                <DrawerSectionBody key='experimental-features'>
+                  {mappedExperimentalFeatures}
+                </DrawerSectionBody>
+              </React.Fragment>
+            }
+          />
         </DrawerSection>
       </DrawerBody>
     </Drawer>
@@ -218,6 +263,7 @@ export const Settings = ({
 
 const mapStateToProps = state => {
   return {
+    experimentalFeatures: getExperimentalFeatures(state),
     settings: state.settings,
     visualSettings
   }
@@ -227,6 +273,13 @@ const mapDispatchToProps = dispatch => {
   return {
     onSettingsSave: settings => {
       dispatch(actions.update(settings))
+    },
+    onFeatureChange: (name, on) => {
+      if (on) {
+        dispatch(enableExperimentalFeature(name))
+      } else {
+        dispatch(disableExperimentalFeature(name))
+      }
     }
   }
 }
