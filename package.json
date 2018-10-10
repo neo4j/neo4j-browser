@@ -68,6 +68,10 @@
       "<rootDir>/src/shared"
     ]
   },
+  "engines": {
+    "yarn": "^1.10",
+    "node": ">=8"
+  },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
     "babel-core": "^6.26.0",
