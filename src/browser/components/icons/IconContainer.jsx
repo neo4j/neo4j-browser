@@ -22,6 +22,29 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import SVGInline from 'react-svg-inline'
 
+const StyledIconWrapper = ({
+  activeStyle,
+  inactiveStyle,
+  isOpen,
+  children,
+  ...rest
+}) => {
+  const I = styled.i`
+    ${isOpen ? activeStyle : inactiveStyle};
+    &:hover {
+      ${activeStyle};
+    }
+  `
+  return <I {...rest}>{children}</I>
+}
+
+const StyledText = styled.div`
+  font-size: 9px;
+  line-height: 10px;
+  margin-top: 4px;
+  padding: 0;
+`
+
 export class IconContainer extends Component {
   constructor (props) {
     super(props)
@@ -29,17 +52,8 @@ export class IconContainer extends Component {
       mouseover: false
     }
   }
-  mouseover () {
-    this.setState({ mouseover: true })
-  }
-  mouseout () {
-    this.setState({ mouseover: false })
-  }
   render () {
     const {
-      activeStyle,
-      inactiveStyle,
-      isOpen,
       text,
       regulateSize,
       suppressIconStyles,
@@ -49,32 +63,16 @@ export class IconContainer extends Component {
       ...rest
     } = this.props
 
-    const state =
-      this.state.mouseover || isOpen ? activeStyle || '' : inactiveStyle || ''
-    const newClass = suppressIconStyles
-      ? this.props.className
-      : state + ' ' + this.props.className
     const regulateSizeStyle = regulateSize
       ? { fontSize: regulateSize + 'em' }
       : null
 
     const currentIcon = icon ? (
-      <i
-        {...rest}
-        className={newClass}
-        onMouseEnter={this.mouseover.bind(this)}
-        onMouseLeave={this.mouseout.bind(this)}
-      >
+      <StyledIconWrapper {...rest}>
         <SVGInline svg={icon} accessibilityLabel={title} width={width + 'px'} />
-      </i>
+      </StyledIconWrapper>
     ) : (
-      <i
-        {...rest}
-        className={newClass}
-        onMouseEnter={this.mouseover.bind(this)}
-        onMouseLeave={this.mouseout.bind(this)}
-        style={regulateSizeStyle}
-      />
+      <StyledIconWrapper {...rest} style={regulateSizeStyle} />
     )
 
     return text ? (
@@ -87,10 +85,3 @@ export class IconContainer extends Component {
     )
   }
 }
-
-const StyledText = styled.div`
-  font-size: 9px;
-  line-height: 10px;
-  margin-top: 4px;
-  padding: 0;
-`

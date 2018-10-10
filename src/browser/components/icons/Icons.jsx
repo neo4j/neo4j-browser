@@ -41,20 +41,50 @@ import appWindowCode from 'icons/app-window-code.svg'
 import arrowLeft1 from 'icons/arrow-left-1.svg'
 import arrowRight1 from 'icons/arrow-right-1.svg'
 
+const inactive = `
+  color: #797979;
+  fill: #797979;
+`
+const green = `
+  color: #4cd950;
+`
+const successGreen = `
+  color: #4cd950;
+`
+const blue = `
+  color: #58c8e3;
+`
+const alertYellow = `
+  color: #ffaf00;
+`
+const warningRed = `
+  color: #df4d3b;
+`
+const white = `
+  color: #ffffff;
+`
+const lightBlue = `
+  color: #5dade2;
+`
+const credits = `
+  animation: neo4j-pulse 2s infinite;
+  animation-timing-function: ease-in-out;
+`
+
 const databaseConnectionStateStyles = {
   connected: {
-    active: styles.green,
-    inactive: styles.inactive,
+    active: green,
+    inactive: inactive,
     classModifier: 'check'
   },
   disconnected: {
-    active: styles.warningRed,
-    inactive: styles.inactive,
+    active: warningRed,
+    inactive: inactive,
     classModifier: 'delete'
   },
   pending: {
-    active: styles.alertYellow,
-    inactive: styles.inactive,
+    active: alertYellow,
+    inactive: inactive,
     classModifier: 'alert'
   }
 }
@@ -75,8 +105,8 @@ export const DatabaseIcon = props => {
 
 export const FavoritesIcon = props => (
   <IconContainer
-    activeStyle={styles.white}
-    inactiveStyle={styles.inactive}
+    activeStyle={white}
+    inactiveStyle={inactive}
     icon={ratingStar}
     width={28}
     {...props}
@@ -84,8 +114,8 @@ export const FavoritesIcon = props => (
 )
 export const DocumentsIcon = props => (
   <IconContainer
-    activeStyle={styles.white}
-    inactiveStyle={styles.inactive}
+    activeStyle={white}
+    inactiveStyle={inactive}
     icon={bookSearch}
     width={28}
     {...props}
@@ -94,8 +124,8 @@ export const DocumentsIcon = props => (
 
 export const CloudIcon = props => (
   <IconContainer
-    activeStyle={styles.successGreen}
-    inactiveStyle={styles.inactive}
+    activeStyle={successGreen}
+    inactiveStyle={inactive}
     icon={cloudCheck}
     width={28}
     {...props}
@@ -103,8 +133,8 @@ export const CloudIcon = props => (
 )
 export const CloudDisconnectedIcon = props => (
   <IconContainer
-    activeStyle={styles.warningRed}
-    inactiveStyle={styles.warningRed}
+    activeStyle={warningRed}
+    inactiveStyle={warningRed}
     icon={cloudRemove}
     width={28}
     {...props}
@@ -114,8 +144,8 @@ export const CloudSyncIcon = props => {
   const { connected, ...rest } = props
   return (
     <IconContainer
-      activeStyle={connected ? styles.successGreen : styles.warningRed}
-      inactiveStyle={connected ? styles.inactive : styles.warningRed}
+      activeStyle={connected ? successGreen : warningRed}
+      inactiveStyle={connected ? inactive : warningRed}
       icon={connected ? cloudCheck : cloudRemove}
       width={28}
       {...rest}
@@ -125,8 +155,8 @@ export const CloudSyncIcon = props => {
 
 export const SettingsIcon = props => (
   <IconContainer
-    activeStyle={styles.white}
-    inactiveStyle={styles.inactive}
+    activeStyle={white}
+    inactiveStyle={inactive}
     icon={cog}
     width={28}
     {...props}
@@ -134,8 +164,8 @@ export const SettingsIcon = props => (
 )
 export const AboutIcon = props => (
   <IconContainer
-    activeStyle={styles.credits}
-    inactiveStyle={styles.inactive}
+    activeStyle={credits}
+    inactiveStyle={inactive}
     icon={neo4j}
     width={28}
     {...props}
@@ -172,23 +202,23 @@ export const ErrorIcon = () => (
 
 export const ZoomInIcon = () => (
   <IconContainer
-    activeStyle={styles.active}
-    inactiveStyle={styles.inactive}
+    activeStyle={active}
+    inactiveStyle={inactive}
     className='sl-zoom-in'
   />
 )
 export const ZoomOutIcon = () => (
   <IconContainer
-    activeStyle={styles.active}
-    inactiveStyle={styles.inactive}
+    activeStyle={active}
+    inactiveStyle={inactive}
     className='sl-zoom-out'
   />
 )
 
 export const BinIcon = props => (
   <IconContainer
-    activeStyle={props.deleteAction ? styles.warningRed : styles.white}
-    inactiveStyle={props.deleteAction ? styles.warningRed : styles.white}
+    activeStyle={props.deleteAction ? warningRed : white}
+    inactiveStyle={props.deleteAction ? warningRed : white}
     {...props}
     className='sl-bin'
   />
@@ -207,22 +237,22 @@ export const DoubleDownIcon = () => <IconContainer className='sl-double-down' />
 export const PinIcon = () => <IconContainer icon={pin} width={12} />
 export const MinusIcon = () => (
   <IconContainer
-    activeStyle={styles.blue}
-    inactiveStyle={styles.inactive}
+    activeStyle={blue}
+    inactiveStyle={inactive}
     className='sl-minus-circle'
   />
 )
 export const RightArrowIcon = () => (
   <IconContainer
-    activeStyle={styles.blue}
-    inactiveStyle={styles.inactive}
+    activeStyle={blue}
+    inactiveStyle={inactive}
     className='sl-arrow-circle-right'
   />
 )
 export const CancelIcon = () => (
   <IconContainer
-    activeStyle={styles.blue}
-    inactiveStyle={styles.inactive}
+    activeStyle={blue}
+    inactiveStyle={inactive}
     className='sl-delete-circle'
   />
 )
@@ -230,15 +260,15 @@ export const DownloadIcon = () => (
   <IconContainer icon={downloadBottom} width={12} />
 )
 export const ExpandMenuIcon = () => (
-  <IconContainer activeStyle={styles.blue} className='fa fa-caret-left' />
+  <IconContainer activeStyle={blue} className='fa fa-caret-left' />
 )
 export const CollapseMenuIcon = () => (
-  <IconContainer activeStyle={styles.blue} className='fa fa-caret-down' />
+  <IconContainer activeStyle={blue} className='fa fa-caret-down' />
 )
 export const PlayIcon = () => (
   <IconContainer
-    activeStyle={styles.lightBlue}
-    inactiveStyle={styles.blue}
+    activeStyle={lightBlue}
+    inactiveStyle={blue}
     className='fa fa-play-circle-o'
   />
 )
@@ -247,23 +277,23 @@ export const PlainPlayIcon = () => (
 )
 export const QuestionIcon = props => (
   <IconContainer
-    activeStyle={styles.lightBlue}
-    inactiveStyle={styles.blue}
+    activeStyle={lightBlue}
+    inactiveStyle={blue}
     {...props}
     className='fa fa-question-circle-o'
   />
 )
 export const PlusIcon = () => (
   <IconContainer
-    activeStyle={styles.white}
-    inactiveStyle={styles.white}
+    activeStyle={white}
+    inactiveStyle={white}
     className='fa fa-plus'
   />
 )
 export const EditIcon = () => (
   <IconContainer
-    activeStyle={styles.white}
-    inactiveStyle={styles.white}
+    activeStyle={white}
+    inactiveStyle={white}
     className='sl-pencil'
   />
 )
