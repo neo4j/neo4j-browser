@@ -152,8 +152,12 @@ export class UserAdd extends Component {
         { query: createDatabaseUser(this.state) },
         response => {
           if (!response.success) {
+            const error =
+              response.error && response.error.message
+                ? response.error.message
+                : 'Unknown error'
             return this.setState({
-              errors: ['Unable to create user', response.error]
+              errors: ['Unable to create user', error]
             })
           }
           return this.addRoles()
