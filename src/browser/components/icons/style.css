@@ -1,9 +1,0 @@
-@keyframes neo4j-pulse {
-  0%,
-  100% {
-    fill: #1bf621;
-  }
-  50% {
-    fill: #00a3ff;
-  }
-}

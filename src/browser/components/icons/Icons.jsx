@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import styles from './style.css'
+import { keyframes } from 'styled-components'
 import { IconContainer } from './IconContainer'
 import ratingStar from 'icons/rating-star.svg'
 import databaseCheck from 'icons/database-check.svg'
@@ -66,8 +66,19 @@ const white = `
 const lightBlue = `
   color: #5dade2;
 `
+
+const neo4jPulse = keyframes`
+  0%,
+  100% {
+    fill: #1bf621;
+  }
+  50% {
+    fill: #00a3ff;
+  }
+`
+
 const credits = `
-  animation: neo4j-pulse 2s infinite;
+  animation: ${neo4jPulse} 2s infinite;
   animation-timing-function: ease-in-out;
 `
 
@@ -167,7 +178,7 @@ export const AboutIcon = props => (
     activeStyle={credits}
     inactiveStyle={inactive}
     icon={neo4j}
-    width={28}
+    width={32}
     {...props}
   />
 )
@@ -202,14 +213,14 @@ export const ErrorIcon = () => (
 
 export const ZoomInIcon = () => (
   <IconContainer
-    activeStyle={active}
+    activeStyle={inactive}
     inactiveStyle={inactive}
     className='sl-zoom-in'
   />
 )
 export const ZoomOutIcon = () => (
   <IconContainer
-    activeStyle={active}
+    activeStyle={inactive}
     inactiveStyle={inactive}
     className='sl-zoom-out'
   />
