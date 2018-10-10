@@ -75,8 +75,9 @@ export class LegendComponent extends Component {
                 className='token token-label'
               >
                 {legendItemKey}
-                <StyledTokenCount className='count'>{`(${labels[legendItemKey]
-                  .count})`}</StyledTokenCount>
+                <StyledTokenCount className='count'>{`(${
+                  labels[legendItemKey].count
+                })`}</StyledTokenCount>
               </StyledLabelToken>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
