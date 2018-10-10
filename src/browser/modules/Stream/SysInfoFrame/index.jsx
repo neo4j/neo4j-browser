@@ -32,7 +32,7 @@ import {
   SysInfoTable,
   SysInfoTableEntry
 } from 'browser-components/Tables'
-import { toHumanReadableBytes } from 'services/utils'
+import { toHumanReadableBytes, toKeyString } from 'services/utils'
 import { mapSysInfoRecords, getTableDataFromRecords } from './sysinfo'
 import Render from 'browser-components/Render'
 import { QuestionIcon, RefreshIcon } from 'browser-components/icons/Icons'
@@ -264,9 +264,10 @@ export class SysInfoFrame extends Component {
     return data.map(props => {
       const { value } = props
       if (value instanceof Array) {
-        return value.map(v => (
-          <SysInfoTableEntry key={props.label} values={v} />
-        ))
+        return value.map(v => {
+          const key = props.label ? props.label : toKeyString(v.join(''))
+          return <SysInfoTableEntry key={key} values={v} />
+        })
       }
       return <SysInfoTableEntry key={props.label} {...props} />
     })
