@@ -51,6 +51,7 @@ export class SysInfoFrame extends Component {
       error: '',
       results: false,
       success: null,
+      autoRefresh: false,
       autoRefreshInterval: 20 // seconds
     }
   }
@@ -340,7 +341,7 @@ export class SysInfoFrame extends Component {
                 <AutoRefreshSpan>
                   <AutoRefreshToggle
                     checked={this.state.autoRefresh}
-                    onClick={e => this.setAutoRefresh(e.target.checked)}
+                    onChange={e => this.setAutoRefresh(e.target.checked)}
                   />
                 </AutoRefreshSpan>
               </StyledStatusBar>

@@ -320,7 +320,7 @@ export class QueriesFrame extends Component {
               <AutoRefreshSpan>
                 <AutoRefreshToggle
                   checked={this.state.autoRefresh}
-                  onClick={e => this.setAutoRefresh(e.target.checked)}
+                  onChange={e => this.setAutoRefresh(e.target.checked)}
                 />
               </AutoRefreshSpan>
             </StyledStatusBar>

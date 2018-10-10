@@ -22,7 +22,9 @@ import styled from 'styled-components'
 import { FrameButton } from 'browser-components/buttons'
 import styles from './toggleStyles.css'
 
-export const StatusbarWrapper = styled.div`width: 100%;`
+export const StatusbarWrapper = styled.div`
+  width: 100%;
+`
 
 export const StyledStatusBar = styled.div`
   min-height: 39px;
@@ -41,14 +43,18 @@ export const StyledStatusBar = styled.div`
   width: 100%;
 `
 
-export const RefreshQueriesButton = styled(FrameButton)`float: right;`
+export const RefreshQueriesButton = styled(FrameButton)`
+  float: right;
+`
 
 export const AutoRefreshSpan = styled.span`
   float: right;
   margin-right: 5px;
 `
 
-const ToggleLabel = styled.label`cursor: pointer;`
+const ToggleLabel = styled.label`
+  cursor: pointer;
+`
 
 export const AutoRefreshToggle = props => {
   return (
@@ -57,7 +63,7 @@ export const AutoRefreshToggle = props => {
       <input
         type='checkbox'
         checked={props.checked}
-        onClick={props.onClick}
+        onChange={props.onChange}
         className={styles['toggle-check-input']}
       />
       <span className={styles['toggle-check-text']} />
