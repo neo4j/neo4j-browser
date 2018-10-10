@@ -66,6 +66,8 @@ import {
 } from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
+import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
 
 export class App extends Component {
   componentDidMount () {
@@ -100,49 +102,52 @@ export class App extends Component {
       syncConsent,
       browserSyncMetadata,
       browserSyncConfig,
-      browserSyncAuthStatus
+      browserSyncAuthStatus,
+      experimentalFeatures
     } = this.props
     const themeData = themes[theme] || themes['normal']
 
     return (
       <ErrorBoundary>
         <ThemeProvider theme={themeData}>
-          <StyledWrapper>
-            <DocTitle titleString={this.props.titleString} />
-            <UserInteraction />
-            <DesktopIntegration
-              integrationPoint={this.props.desktopIntegrationPoint}
-              onMount={this.props.setInitialConnectionData}
-              onGraphActive={this.props.switchConnection}
-              onGraphInactive={this.props.closeConnectionMaybe}
-            />
-            <Render if={loadExternalScripts}>
-              <Intercom appID='lq70afwx' />
-            </Render>
-            <Render if={syncConsent && loadExternalScripts && loadSync}>
-              <BrowserSyncInit
-                authStatus={browserSyncAuthStatus}
-                authData={browserSyncMetadata}
-                config={browserSyncConfig}
+          <FeatureToggleProvider features={experimentalFeatures}>
+            <StyledWrapper>
+              <DocTitle titleString={this.props.titleString} />
+              <UserInteraction />
+              <DesktopIntegration
+                integrationPoint={this.props.desktopIntegrationPoint}
+                onMount={this.props.setInitialConnectionData}
+                onGraphActive={this.props.switchConnection}
+                onGraphInactive={this.props.closeConnectionMaybe}
               />
-            </Render>
-            <StyledApp>
-              <StyledBody>
-                <ErrorBoundary>
-                  <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
-                </ErrorBoundary>
-                <StyledMainWrapper>
-                  <Main
-                    cmdchar={cmdchar}
-                    activeConnection={activeConnection}
-                    connectionState={connectionState}
-                    errorMessage={errorMessage}
-                    useBrowserSync={loadSync}
-                  />
-                </StyledMainWrapper>
-              </StyledBody>
-            </StyledApp>
-          </StyledWrapper>
+              <Render if={loadExternalScripts}>
+                <Intercom appID='lq70afwx' />
+              </Render>
+              <Render if={syncConsent && loadExternalScripts && loadSync}>
+                <BrowserSyncInit
+                  authStatus={browserSyncAuthStatus}
+                  authData={browserSyncMetadata}
+                  config={browserSyncConfig}
+                />
+              </Render>
+              <StyledApp>
+                <StyledBody>
+                  <ErrorBoundary>
+                    <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+                  </ErrorBoundary>
+                  <StyledMainWrapper>
+                    <Main
+                      cmdchar={cmdchar}
+                      activeConnection={activeConnection}
+                      connectionState={connectionState}
+                      errorMessage={errorMessage}
+                      useBrowserSync={loadSync}
+                    />
+                  </StyledMainWrapper>
+                </StyledBody>
+              </StyledApp>
+            </StyledWrapper>
+          </FeatureToggleProvider>
         </ThemeProvider>
       </ErrorBoundary>
     )
@@ -152,6 +157,7 @@ export class App extends Component {
 const mapStateToProps = state => {
   const connectionData = getActiveConnectionData(state)
   return {
+    experimentalFeatures: getExperimentalFeatures(state),
     drawer: state.drawer,
     activeConnection: getActiveConnection(state),
     theme: getTheme(state),

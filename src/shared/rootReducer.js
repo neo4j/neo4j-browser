@@ -63,6 +63,9 @@ import commandsReducer, {
 } from 'shared/modules/commands/commandsDuck'
 import udcReducer, { NAME as udc } from 'shared/modules/udc/udcDuck'
 import appReducer, { NAME as app } from 'shared/modules/app/appDuck'
+import experimentalFeaturesReducer, {
+  NAME as experimentalFeatures
+} from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
 export default {
   [connections]: connectionsReducer,
@@ -84,5 +87,6 @@ export default {
   [syncMetadata]: syncMetaDataReducer,
   [commands]: commandsReducer,
   [udc]: udcReducer,
-  [app]: appReducer
+  [app]: appReducer,
+  [experimentalFeatures]: experimentalFeaturesReducer
 }

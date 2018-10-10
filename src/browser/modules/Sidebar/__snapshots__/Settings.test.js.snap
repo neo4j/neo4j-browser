@@ -41,6 +41,9 @@ exports[`Settings renders with strange characters in display name 1`] = `
             />
           </div>
         </div>
+        <div
+          class="sc-EHOje fyzZhj"
+        />
       </div>
     </div>
   </div>
