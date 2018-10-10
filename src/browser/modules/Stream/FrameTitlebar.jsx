@@ -160,7 +160,11 @@ class FrameTitlebar extends Component {
           >
             <PinIcon />
           </FrameButton>
-          <Render if={['cypher', 'play', 'play-remote'].includes(frame.type)}>
+          <Render
+            if={['cypher', 'play', 'play-remote', 'queries'].includes(
+              frame.type
+            )}
+          >
             <FrameButton
               title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
               onClick={() => props.fullscreenToggle()}
