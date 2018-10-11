@@ -437,45 +437,68 @@ export const connectionLostEpic = (action$, store) =>
     .mergeMap(action => {
       const connection = getActiveConnectionData(store.getState())
       if (!connection) return Rx.Observable.of(1)
-      return Rx.Observable.of(1)
-        .mergeMap(() => {
-          return new Promise((resolve, reject) => {
-            bolt
-              .directConnect(
-                connection,
-                { encrypted: getEncryptionMode(connection) },
-                e =>
-                  setTimeout(
-                    () => reject(new Error('Couldnt reconnect. Lost.')),
-                    5000
-                  )
-              )
-              .then(s => {
-                bolt.closeConnection()
-                bolt
-                  .openConnection(
-                    connection,
-                    { encrypted: getEncryptionMode(connection) },
-                    onLostConnection(store.dispatch)
-                  )
-                  .then(() => {
-                    store.dispatch(updateConnectionState(CONNECTED_STATE))
-                    resolve()
-                  })
-                  .catch(e => reject(new Error('Error on connect')))
-              })
-              .catch(e =>
-                setTimeout(() => reject(new Error('Couldnt reconnect.')), 5000)
-              )
+      return (
+        Rx.Observable.of(1)
+          .mergeMap(() => {
+            return new Promise((resolve, reject) => {
+              bolt
+                .directConnect(
+                  connection,
+                  { encrypted: getEncryptionMode(connection) },
+                  e =>
+                    setTimeout(
+                      () => reject(new Error('Couldnt reconnect. Lost.')),
+                      5000
+                    )
+                )
+                .then(s => {
+                  bolt.closeConnection()
+                  bolt
+                    .openConnection(
+                      connection,
+                      { encrypted: getEncryptionMode(connection) },
+                      onLostConnection(store.dispatch)
+                    )
+                    .then(() => {
+                      store.dispatch(updateConnectionState(CONNECTED_STATE))
+                      resolve({ type: 'Success' })
+                    })
+                    .catch(e => reject(new Error('Error on connect')))
+                })
+                .catch(e => {
+                  // Don't retry if auth failed
+                  if (e.code === 'Neo.ClientError.Security.Unauthorized') {
+                    resolve({ type: e.code })
+                  } else {
+                    setTimeout(
+                      () => reject(new Error('Couldnt reconnect.')),
+                      5000
+                    )
+                  }
+                })
+            })
           })
-        })
-        .retry(10)
-        .catch(e => {
-          bolt.closeConnection()
-          store.dispatch(setActiveConnection(null))
-          return Rx.Observable.of(1)
-        })
-        .map(() => Rx.Observable.of(1))
+          .retry(10)
+          .catch(e => {
+            bolt.closeConnection()
+            store.dispatch(setActiveConnection(null))
+            return Rx.Observable.of(null)
+          })
+          // It can be resolved for a number of reasons:
+          // 1. Connection successful
+          // 2. Auth failure
+          .do(res => {
+            if (!res || res.type === 'Success') {
+              return
+            }
+            // If no connection because of auth failure, close and unset active connection
+            if (res.type === 'Neo.ClientError.Security.Unauthorized') {
+              bolt.closeConnection()
+              store.dispatch(setActiveConnection(null))
+            }
+          })
+          .map(() => Rx.Observable.of(null))
+      )
     })
     .mapTo({ type: 'NOOP' })
 
