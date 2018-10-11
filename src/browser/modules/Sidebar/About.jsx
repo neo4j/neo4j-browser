@@ -28,7 +28,8 @@ import {
   DrawerSubHeader,
   DrawerSection,
   DrawerSectionBody,
-  DrawerFooter
+  DrawerFooter,
+  DrawerFooterContent
 } from 'browser-components/drawer'
 import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
 
@@ -121,11 +122,9 @@ const About = ({ serverVersion, serverEdition }) => (
           Neo4j wouldn't be possible without a fantastic community. Thanks for
           all the feedback, discussions and contributions.
         </DrawerSectionBody>
-        <DrawerFooter>
-          <DrawerSectionBody>With &#9829; from Sweden.</DrawerSectionBody>
-        </DrawerFooter>
       </DrawerSection>
     </DrawerBody>
+    <DrawerFooter>With &#9829; from Sweden.</DrawerFooter>
   </Drawer>
 )
 

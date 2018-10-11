@@ -20,7 +20,12 @@
 
 import styled from 'styled-components'
 
-export const Drawer = styled.div`width: 285px;`
+export const Drawer = styled.div`
+  width: 285px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`
 
 export const DrawerHeader = styled.h4`
   color: ${props => props.theme.primaryHeaderText};
@@ -35,7 +40,9 @@ export const DrawerHeader = styled.h4`
   font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
-export const DrawerToppedHeader = styled(DrawerHeader)`padding-top: 8px;`
+export const DrawerToppedHeader = styled(DrawerHeader)`
+  padding-top: 8px;
+`
 
 export const DrawerSubHeader = styled.h5`
   color: ${props => props.theme.primaryHeaderText};
@@ -50,7 +57,9 @@ export const DrawerSubHeader = styled.h5`
   font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
-export const DrawerSection = styled.div`margin-bottom: 12px;`
+export const DrawerSection = styled.div`
+  margin-bottom: 12px;
+`
 
 export const DrawerSectionBody = styled.div`
   font-family: ${props => props.theme.primaryFontFamily};
@@ -58,11 +67,12 @@ export const DrawerSectionBody = styled.div`
   color: #bcc0c9;
 `
 
-export const DrawerBody = styled.div`padding: 0 24px;`
+export const DrawerBody = styled.div`
+  padding: 0 24px;
+  flex: 1;
+`
 
 export const DrawerFooter = styled.div`
-  position: absolute;
-  bottom: 12px;
+  margin-bottom: 20px;
   text-align: center;
-  width: 250px;
 `

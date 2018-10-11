@@ -26,7 +26,8 @@ import {
   DrawerSection,
   DrawerSectionBody,
   DrawerToppedHeader,
-  DrawerFooter
+  DrawerFooter,
+  DrawerFooterContent
 } from './Drawer'
 
 export {
@@ -37,5 +38,6 @@ export {
   DrawerSection,
   DrawerSectionBody,
   DrawerToppedHeader,
-  DrawerFooter
+  DrawerFooter,
+  DrawerFooterContent
 }
