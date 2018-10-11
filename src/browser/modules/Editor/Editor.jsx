@@ -51,6 +51,11 @@ import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
 import Render from 'browser-components/Render'
 
+import ratingStar from 'icons/rating-star.svg'
+import controlsPlay from 'icons/controls-play.svg'
+import eraser2 from 'icons/eraser-2.svg'
+import pencil from 'icons/pencil.svg'
+
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
   !code.trimLeft().startsWith(':') &&
@@ -384,8 +389,7 @@ export class Editor extends Component {
               disabled={this.getEditorValue().length < 1}
               color='#ffaf00'
               title='Favorite'
-              hoverIcon='&quot;\74&quot;'
-              icon='&quot;\25&quot;'
+              icon={pencil}
             />
           </Render>
           <Render if={!this.state.contentId}>
@@ -396,8 +400,7 @@ export class Editor extends Component {
               }}
               disabled={this.getEditorValue().length < 1}
               title='Update favorite'
-              hoverIcon='&quot;\58&quot;'
-              icon='&quot;\73&quot;'
+              icon={ratingStar}
             />
           </Render>
           <EditorButton
@@ -405,16 +408,14 @@ export class Editor extends Component {
             onClick={() => this.clearEditor()}
             disabled={this.getEditorValue().length < 1}
             title='Clear'
-            hoverIcon='&quot;\e005&quot;'
-            icon='&quot;\5e&quot;'
+            icon={eraser2}
           />
           <EditorButton
             data-test-id='submitQuery'
             onClick={() => this.execCurrent()}
             disabled={this.getEditorValue().length < 1}
             title='Play'
-            hoverIcon='&quot;\e002&quot;'
-            icon='&quot;\77&quot;'
+            icon={controlsPlay}
           />
         </ActionButtonSection>
       </Bar>

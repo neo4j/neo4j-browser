@@ -1,0 +1,11 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <defs>
+        <style>.a{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;}</style>
+    </defs>
+    <title>expand</title>
+    <line x1="9" y1="15" x2="0.75" y2="23.25" class="a"/>
+    <polyline points="23.25 7.5 23.25 0.75 16.5 0.75" class="a"/>
+    <polyline points="0.75 16.5 0.75 23.25 7.5 23.25" class="a"/>
+    <line x1="23.25" y1="0.75" x2="15" y2="9" class="a"/>
+</svg>

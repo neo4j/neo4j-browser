@@ -160,7 +160,13 @@ const rules = [
   {
     test: /\.svg$/,
     use:
-      'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]'
+      'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
+    exclude: [path.resolve('./src/browser/icons')]
+  },
+  {
+    test: /\.svg$/,
+    loader: 'raw-loader',
+    include: [path.resolve('./src/browser/icons')]
   },
   {
     test: /\.woff$/,
@@ -273,7 +279,8 @@ module.exports = {
       shared: path.resolve(__dirname, 'src/shared'),
       'browser-components': path.resolve(__dirname, 'src/browser/components'),
       browser: path.resolve(__dirname, 'src/browser'),
-      'browser-styles': path.resolve(__dirname, 'src/browser/styles')
+      'browser-styles': path.resolve(__dirname, 'src/browser/styles'),
+      icons: path.resolve(__dirname, 'src/browser/icons')
     }
   },
   plugins,
