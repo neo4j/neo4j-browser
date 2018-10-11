@@ -3,7 +3,7 @@
 exports[`Settings renders with strange characters in display name 1`] = `
 <div>
   <div
-    class="sc-bdVaJa fFGtIw"
+    class="sc-bdVaJa HuWkI"
     id="db-settings"
   >
     <h4
@@ -12,10 +12,10 @@ exports[`Settings renders with strange characters in display name 1`] = `
       Browser Settings
     </h4>
     <div
-      class="sc-bZQynM hYejcx"
+      class="sc-bZQynM gNquDR"
     >
       <div
-        class="sc-ifAKCX jDKYZc"
+        class="sc-ifAKCX kHWkUt"
       >
         <div
           class="sc-EHOje fyzZhj"

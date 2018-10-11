@@ -28,8 +28,7 @@ import {
   DrawerSubHeader,
   DrawerSection,
   DrawerSectionBody,
-  DrawerFooter,
-  DrawerFooterContent
+  DrawerFooter
 } from 'browser-components/drawer'
 import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
 
