@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+/* global beforeEach, afterEach */
 import { parseGrass, objToCss } from 'services/grassUtils'
 
 describe('parseGrass', () => {
@@ -50,6 +50,13 @@ describe('parseGrass', () => {
 })
 
 describe('objToCss', () => {
+  const origConsoleError = console.error
+  beforeEach(() => {
+    console.error = () => {}
+  })
+  afterEach(() => {
+    console.error = origConsoleError
+  })
   it('should create CSS from obj', () => {
     const obj = {
       body: {
@@ -72,8 +79,11 @@ h1 {
     const css = objToCss(obj)
 
     expect(css).toEqual(expected)
+    console.error = origConsoleError
   })
   it('should create GraSS from obj', () => {
+    const origConsoleError = console.error
+    console.error = () => {}
     const obj = {
       node: {
         color: 'red',
@@ -107,6 +117,7 @@ relationship {
     const grass = objToCss(obj)
 
     expect(grass).toEqual(expected)
+    console.error = origConsoleError
   })
   it('does not break on null', () => {
     const obj = null
