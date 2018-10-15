@@ -102,7 +102,17 @@ class Stream extends Component {
             frame,
             activeConnectionData: this.props.activeConnectionData
           }
-          const MyFrame = getFrame(frame.type)
+          let MyFrame = getFrame(frame.type)
+          if (frame.type === 'error') {
+            try {
+              const cmd = frame.cmd.replace(/^:/, '')
+              const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
+              MyFrame = require(`./Extras/${Frame}`).default
+              if (!MyFrame) {
+                MyFrame = getFrame(frame.type)
+              }
+            } catch (e) {}
+          }
           return <MyFrame {...frameProps} key={frame.id} />
         })}
       </StyledStream>
