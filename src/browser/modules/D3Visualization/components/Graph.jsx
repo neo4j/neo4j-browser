@@ -19,13 +19,7 @@
  */
 
 import React, { Component } from 'react'
-import { deepEquals } from 'services/utils'
-import {
-  createGraph,
-  mapNodes,
-  mapRelationships,
-  getGraphStats
-} from '../mapper'
+import { createGraph, mapRelationships, getGraphStats } from '../mapper'
 import { GraphEventHandler } from '../GraphEventHandler'
 import '../lib/visualization/index'
 import { dim } from 'browser-styles/constants'
@@ -33,12 +27,10 @@ import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
 
 export class GraphComponent extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      zoomInLimitReached: true,
-      zoomOutLimitReached: false
-    }
+  state = {
+    zoomInLimitReached: true,
+    zoomOutLimitReached: false,
+    shouldResize: false
   }
 
   graphInit (el) {
@@ -74,9 +66,7 @@ export class GraphComponent extends Component {
       this.initGraphView()
       this.graph && this.props.setGraph && this.props.setGraph(this.graph)
       this.props.getAutoCompleteCallback &&
-        this.props.getAutoCompleteCallback(
-          this.addInternalRelationships.bind(this)
-        )
+        this.props.getAutoCompleteCallback(this.addInternalRelationships)
       this.props.assignVisElement &&
         this.props.assignVisElement(this.svgElement, this.graphView)
     }
@@ -107,42 +97,27 @@ export class GraphComponent extends Component {
         this.props.onGraphModelChange
       )
       this.graphEH.bindEventHandlers()
-      this.state.currentStyleRules = this.props.graphStyle.toString()
       this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView.resize()
       this.graphView.update()
     }
   }
 
-  addInternalRelationships (internalRelationships) {
+  addInternalRelationships = internalRelationships => {
     if (this.graph) {
       this.graph.addInternalRelationships(
         mapRelationships(internalRelationships, this.graph)
       )
+      this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView.update()
       this.graphEH.onItemMouseOut()
     }
   }
 
   componentWillReceiveProps (props) {
-    if (
-      (!deepEquals(props.relationships, this.props.relationships) ||
-        !deepEquals(props.nodes, this.props.nodes)) &&
-      this.graphView
-    ) {
-      this.graph.resetGraph()
-      this.graph.addNodes(mapNodes(props.nodes))
-      this.graph.addRelationships(
-        mapRelationships(props.relationships, this.graph)
-      )
-      this.props.onGraphModelChange(getGraphStats(this.graph))
-    } else if (
-      !deepEquals(this.state.currentStyleRules, props.graphStyle.toString())
-    ) {
-      this.state.currentStyleRules = props.graphStyle.toString()
+    if (props.styleVersion !== this.props.styleVersion) {
       this.graphView.update()
     }
-
     if (
       this.props.fullscreen !== props.fullscreen ||
       this.props.frameHeight !== props.frameHeight

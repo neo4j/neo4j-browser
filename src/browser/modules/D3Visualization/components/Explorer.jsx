@@ -72,6 +72,7 @@ export class ExplorerComponent extends Component {
     this.state = {
       stats: { labels: {}, relTypes: {} },
       graphStyle,
+      styleVersion: 0,
       nodes,
       relationships,
       selectedItem
@@ -149,7 +150,10 @@ export class ExplorerComponent extends Component {
       if (props.graphStyleData) {
         const rebasedStyle = deepmerge(this.defaultStyle, props.graphStyleData)
         this.state.graphStyle.loadRules(rebasedStyle)
-        this.setState({ graphStyle: this.state.graphStyle })
+        this.setState({
+          graphStyle: this.state.graphStyle,
+          styleVersion: this.state.styleVersion + 1
+        })
       } else {
         this.state.graphStyle.resetToDefault()
         this.setState(
@@ -160,14 +164,6 @@ export class ExplorerComponent extends Component {
           }
         )
       }
-    }
-
-    if (!deepEquals(props.nodes, this.props.nodes)) {
-      this.setState({ nodes: props.nodes })
-    }
-
-    if (!deepEquals(props.relationships, this.props.relationships)) {
-      this.setState({ relationships: props.relationships })
     }
   }
 
@@ -227,6 +223,7 @@ export class ExplorerComponent extends Component {
           onItemMouseOver={this.onItemMouseOver.bind(this)}
           onItemSelect={this.onItemSelect.bind(this)}
           graphStyle={this.state.graphStyle}
+          styleVersion={this.state.styleVersion} // cheap way for child to check style updates
           onGraphModelChange={this.onGraphModelChange.bind(this)}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}

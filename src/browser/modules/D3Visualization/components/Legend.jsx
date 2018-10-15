@@ -67,7 +67,7 @@ export class LegendComponent extends Component {
           color: styleForItem.get('text-color-internal')
         }
         return (
-          <StyledLegendInlineListItem key={i}>
+          <StyledLegendInlineListItem key={i} data-test-id='viz-legend-labels'>
             <StyledLegendContents className='contents'>
               <StyledLabelToken
                 onClick={onClick}
@@ -75,8 +75,9 @@ export class LegendComponent extends Component {
                 className='token token-label'
               >
                 {legendItemKey}
-                <StyledTokenCount className='count'>{`(${labels[legendItemKey]
-                  .count})`}</StyledTokenCount>
+                <StyledTokenCount className='count'>{`(${
+                  labels[legendItemKey].count
+                })`}</StyledTokenCount>
               </StyledLabelToken>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
@@ -124,7 +125,10 @@ export class LegendComponent extends Component {
           color: styleForItem.get('text-color-internal')
         }
         return (
-          <StyledLegendInlineListItem key={i}>
+          <StyledLegendInlineListItem
+            key={i}
+            data-test-id='viz-legend-reltypes'
+          >
             <StyledLegendContents className='contents'>
               <StyledTokenRelationshipType
                 onClick={onClick}
