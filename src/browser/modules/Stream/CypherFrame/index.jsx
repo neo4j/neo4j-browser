@@ -67,6 +67,7 @@ import {
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 
 export class CypherFrame extends Component {
+  visElement = null
   state = {
     openView: undefined,
     fullscreen: false,
@@ -112,6 +113,10 @@ export class CypherFrame extends Component {
       if (openView) {
         this.setState({ openView })
       }
+    }
+    if (this.props.request.status === 'pending') {
+      this.visElement = null
+      this.setState({ hasVis: false })
     }
   }
   componentDidMount () {
