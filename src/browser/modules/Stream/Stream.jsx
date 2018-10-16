@@ -96,7 +96,7 @@ class Stream extends Component {
   }
   render () {
     return (
-      <StyledStream innerRef={this.base}>
+      <StyledStream ref={this.base}>
         {this.props.frames.map(frame => {
           const frameProps = {
             frame,

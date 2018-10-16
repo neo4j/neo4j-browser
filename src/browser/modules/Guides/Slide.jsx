@@ -24,7 +24,7 @@ import { StyledSlide } from './styled.jsx'
 const Slide = React.forwardRef(({ html }, ref) => {
   return (
     <StyledSlide
-      innerRef={ref}
+      ref={ref}
       className={styles.slide}
       dangerouslySetInnerHTML={{ __html: html }}
     />

@@ -52,6 +52,18 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@emotion/is-prop-valid@^0.6.8":
+  version "0.6.8"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@emotion/is-prop-valid/-/is-prop-valid-0.6.8.tgz#68ad02831da41213a2089d2cab4e8ac8b30cbd85"
+  integrity sha1-aK0Cgx2kEhOiCJ0sq06KyLMMvYU=
+  dependencies:
+    "@emotion/memoize" "^0.6.6"
+
+"@emotion/memoize@^0.6.6":
+  version "0.6.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@emotion/memoize/-/memoize-0.6.6.tgz#004b98298d04c7ca3b4f50ca2035d4f60d2eed1b"
+  integrity sha1-AEuYKY0Ex8o7T1DKIDXU9g0u7Rs=
+
 "@firebase/app-types@0.2.0":
   version "0.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/app-types/-/app-types-0.2.0.tgz#2a0e9c433d5f39e428358c5cd8065010d5a07985"
@@ -965,7 +977,7 @@ babel-plugin-module-resolver@^2.4.0:
     glob "^7.1.1"
     resolve "^1.2.0"
 
-babel-plugin-styled-components@^1.2.0:
+"babel-plugin-styled-components@>= 1", babel-plugin-styled-components@^1.8.0:
   version "1.8.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-1.8.0.tgz#9dd054c8e86825203449a852a5746f29f2dab857"
   integrity sha1-ndBUyOhoJSA0SahSpXRvKfLauFc=
@@ -1817,14 +1829,6 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.0.3:
-  version "5.2.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/buffer/-/buffer-5.2.1.tgz#dd57fa0f109ac59c602479044dca7b8b3d0b71d6"
-  integrity sha1-3Vf6DxCaxZxgJHkETcp7iz0LcdY=
-  dependencies:
-    base64-js "^1.0.2"
-    ieee754 "^1.1.4"
-
 builtin-modules@^1.0.0:
   version "1.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
@@ -2502,9 +2506,9 @@ copy-descriptor@^0.1.0:
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
 
 copy-webpack-plugin@^4.0.1:
-  version "4.5.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/copy-webpack-plugin/-/copy-webpack-plugin-4.5.2.tgz#d53444a8fea2912d806e78937390ddd7e632ee5c"
-  integrity sha1-1TREqP6ikS2AbniTc5Dd1+Yy7lw=
+  version "4.5.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/copy-webpack-plugin/-/copy-webpack-plugin-4.5.3.tgz#14a224d205e46f7a79f7956028e1da6df2225ff2"
+  integrity sha1-FKIk0gXkb3p595VgKOHabfIiX/I=
   dependencies:
     cacache "^10.0.4"
     find-cache-dir "^1.0.0"
@@ -2693,7 +2697,7 @@ css-selector-tokenizer@^0.7.0:
     fastparse "^1.1.1"
     regexpu-core "^1.0.0"
 
-css-to-react-native@^2.0.3:
+css-to-react-native@^2.2.2:
   version "2.2.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/css-to-react-native/-/css-to-react-native-2.2.2.tgz#c077d0f7bf3e6c915a539e7325821c9dd01f9965"
   integrity sha1-wHfQ978+bJFaU55zJYIcndAfmWU=
@@ -3227,9 +3231,9 @@ duplexer@^0.1.1:
   integrity sha1-rOb/gIwc5mtX0ev5eXessCM0z8E=
 
 duplexify@^3.4.2, duplexify@^3.6.0:
-  version "3.6.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/duplexify/-/duplexify-3.6.0.tgz#592903f5d80b38d037220541264d69a198fb3410"
-  integrity sha1-WSkD9dgLONA3IgVBJk1poZj7NBA=
+  version "3.6.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/duplexify/-/duplexify-3.6.1.tgz#b1a7a29c4abfd639585efaecce80d666b1e34125"
+  integrity sha1-saeinEq/1jlYXvrszoDWZrHjQSU=
   dependencies:
     end-of-stream "^1.0.0"
     inherits "^2.0.1"
@@ -3982,7 +3986,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fbjs@^0.8.16, fbjs@^0.8.4, fbjs@^0.8.5:
+fbjs@^0.8.4, fbjs@^0.8.5:
   version "0.8.17"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
@@ -6431,6 +6435,11 @@ mem@^1.1.0:
   integrity sha1-Xt1StIXKHZAP5kiVUFOZoN+kX3Y=
   dependencies:
     mimic-fn "^1.0.0"
+
+memoize-one@^4.0.0:
+  version "4.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/memoize-one/-/memoize-one-4.0.2.tgz#3fb8db695aa14ab9c0f1644e1585a8806adc1aee"
+  integrity sha1-P7jbaVqhSrnA8WROFYWogGrcGu4=
 
 memory-fs@^0.4.0, memory-fs@~0.4.1:
   version "0.4.1"
@@ -9370,7 +9379,7 @@ selfsigned@^1.9.1:
   dependencies:
     node-forge "0.7.5"
 
-"semver@2 || 3 || 4 || 5", semver@^5.3.0, semver@^5.4.1, semver@^5.5.0:
+"semver@2 || 3 || 4 || 5", semver@^5.3.0, semver@^5.4.1:
   version "5.5.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/semver/-/semver-5.5.1.tgz#7dfdd8814bdb7cabc7be0fb1d734cfb66c940477"
   integrity sha1-ff3YgUvbfKvHvg+x1zTPtmyUBHc=
@@ -9384,6 +9393,11 @@ semver@5.5.0:
   version "5.5.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
   integrity sha1-3Eu8emyp2Rbe5dQ1FvAJK1j3uKs=
+
+semver@^5.5.0:
+  version "5.6.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
+  integrity sha1-fnQlb7qknHWqfHogXMInmcrIAAQ=
 
 send@0.16.2:
   version "0.16.2"
@@ -9962,20 +9976,19 @@ style-loader@^0.18.1:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
 
-styled-components@^3.4.5:
-  version "3.4.9"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-3.4.9.tgz#519abeb351b37be5b7de6a15ff9e4efeb9d772da"
-  integrity sha1-UZq+s1Gze+W33moV/55O/rnXcto=
+styled-components@^4.0.0:
+  version "4.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-4.0.0.tgz#bd37d79408246302051cd63f52a3539f70aa3197"
+  integrity sha1-vTfXlAgkYwIFHNY/UqNTn3CqMZc=
   dependencies:
-    buffer "^5.0.3"
-    css-to-react-native "^2.0.3"
-    fbjs "^0.8.16"
-    hoist-non-react-statics "^2.5.0"
+    "@emotion/is-prop-valid" "^0.6.8"
+    babel-plugin-styled-components ">= 1"
+    css-to-react-native "^2.2.2"
+    memoize-one "^4.0.0"
     prop-types "^15.5.4"
     react-is "^16.3.1"
     stylis "^3.5.0"
     stylis-rule-sheet "^0.0.10"
-    supports-color "^3.2.3"
 
 stylis-rule-sheet@^0.0.10:
   version "0.0.10"

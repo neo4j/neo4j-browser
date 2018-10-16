@@ -35,6 +35,7 @@ import epics from 'shared/rootEpic'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START, DESKTOP, WEB } from 'shared/modules/app/appDuck'
+import { GlobalStyle } from './styles/global-styles.js'
 
 // Configure localstorage sync
 applyKeys(
@@ -88,11 +89,14 @@ store.dispatch({ type: APP_START, url: window.location.href, env })
 ReactDOM.render(
   <Provider store={store}>
     <BusProvider bus={bus}>
-      <App
-        desktopIntegrationPoint={
-          window && window.neo4jDesktopApi ? window.neo4jDesktopApi : null
-        }
-      />
+      <React.Fragment>
+        <GlobalStyle />
+        <App
+          desktopIntegrationPoint={
+            window && window.neo4jDesktopApi ? window.neo4jDesktopApi : null
+          }
+        />
+      </React.Fragment>
     </BusProvider>
   </Provider>,
   document.getElementById('mount')

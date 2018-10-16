@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import { keyframes } from 'styled-components'
+import { keyframes, css } from 'styled-components'
 import { IconContainer } from './IconContainer'
 import ratingStar from 'icons/rating-star.svg'
 import databaseCheck from 'icons/database-check.svg'
@@ -77,7 +77,7 @@ const neo4jPulse = keyframes`
   }
 `
 
-const credits = `
+const credits = css`
   animation: ${neo4jPulse} 2s infinite;
   animation-timing-function: ease-in-out;
 `

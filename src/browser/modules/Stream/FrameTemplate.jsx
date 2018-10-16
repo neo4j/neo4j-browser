@@ -116,7 +116,7 @@ class FrameTemplate extends Component {
           <StyledFrameMainSection>
             <StyledFrameContents
               fullscreen={this.state.fullscreen}
-              innerRef={this.setFrameContentElement}
+              ref={this.setFrameContentElement}
               data-test-id='frameContents'
             >
               {this.props.contents}

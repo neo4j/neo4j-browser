@@ -29,7 +29,7 @@ exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
 exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-gzVnrw eDeguU sc-bZQynM bblfwJ"
+    class="sc-gzVnrw jmtLCl"
   >
     <div
       class="sc-brqgnP bWxJLn"
@@ -43,7 +43,7 @@ exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="sc-gzVnrw eDeguU sc-bZQynM bblfwJ"
+    class="sc-gzVnrw jmtLCl"
   >
     <table
       class="sc-gisBJw hMNjzC"
@@ -74,11 +74,11 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
 `;
 
 exports[`TableViews TableView renderObject handles null values 1`] = `
-<styled.pre>
+<ForwardRef>
   {
   "x": 1.0
 }
-</styled.pre>
+</ForwardRef>
 `;
 
 exports[`TableViews TableView renderObject handles null values 2`] = `

@@ -115,7 +115,7 @@ const favoriteTarget = {
 }
 
 const StyledListItemRef = React.forwardRef((props, ref) => {
-  return <StyledListItem innerRef={ref} {...props} />
+  return <StyledListItem ref={ref} {...props} />
 })
 class FavoriteDp extends Component {
   constructor () {
@@ -128,20 +128,26 @@ class FavoriteDp extends Component {
 
   render () {
     const name = extractNameFromCommand(this.props.content)
+    const {
+      connectDropTarget,
+      isStatic,
+      onItemClick,
+      removeClick,
+      onItemRef,
+      id,
+      content,
+      onExecClick,
+      isChild,
+      ...rest
+    } = this.props
     let favoriteContent = (
       <StyledListItemRef
         ref={this.itemRef}
-        isChild={this.props.isChild}
+        isChild={isChild}
         data-test-id='sidebarFavoriteItem'
       >
-        <ExecFavoriteButton
-          onClick={() => this.props.onExecClick(this.props.content)}
-        />
-        <StyledFavoriteText
-          {...this.props}
-          onClick={() =>
-            this.props.onItemClick(this.props.id, this.props.content)}
-        >
+        <ExecFavoriteButton onClick={() => onExecClick(content)} />
+        <StyledFavoriteText {...rest} onClick={() => onItemClick(id, content)}>
           {name}
         </StyledFavoriteText>
 
@@ -149,16 +155,16 @@ class FavoriteDp extends Component {
           <ConfirmationButton
             requestIcon={<BinIcon />}
             confirmIcon={<BinIcon deleteAction />}
-            onConfirmed={() => this.props.removeClick(this.props.id)}
+            onConfirmed={() => removeClick(id)}
           />
         </StyledFavFolderButtonSpan>
       </StyledListItemRef>
     )
 
-    if (this.props.isStatic) {
+    if (isStatic) {
       return favoriteContent
     } else {
-      return this.props.connectDropTarget(<div>{favoriteContent}</div>)
+      return connectDropTarget(<div>{favoriteContent}</div>)
     }
   }
 }
@@ -202,4 +208,9 @@ const FavoriteDrag = DragSource(
   })
 )(FavoriteDrop)
 
-export default withBus(connect(null, mapDispatchToProps)(FavoriteDrag))
+export default withBus(
+  connect(
+    null,
+    mapDispatchToProps
+  )(FavoriteDrag)
+)

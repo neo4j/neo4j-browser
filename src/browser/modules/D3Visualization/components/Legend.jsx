@@ -89,7 +89,7 @@ export class LegendComponent extends Component {
         >
           <StyledLegendInlineList
             className='list-inline'
-            innerRef={this.setLabelRowELem.bind(this)}
+            ref={this.setLabelRowELem.bind(this)}
           >
             <RowExpandToggleComponent
               contracted={this.state.labelRowContracted}
@@ -150,7 +150,7 @@ export class LegendComponent extends Component {
         >
           <StyledLegendInlineList
             className='list-inline'
-            innerRef={this.setTypeRowELem.bind(this)}
+            ref={this.setTypeRowELem.bind(this)}
           >
             <RowExpandToggleComponent
               contracted={this.state.typeRowContracted}

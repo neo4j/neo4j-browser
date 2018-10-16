@@ -123,7 +123,7 @@ export class PlanView extends Component {
             ? { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
             : {}
         }
-        innerRef={this.planInit.bind(this)}
+        ref={this.planInit.bind(this)}
       />
     )
   }

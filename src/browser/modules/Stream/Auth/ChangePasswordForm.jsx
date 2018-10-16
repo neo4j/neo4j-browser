@@ -108,7 +108,7 @@ export default class ChangePasswordForm extends Component {
                         type: 'password',
                         onChange: this.onExistingPasswordChange,
                         value: this.state.password,
-                        innerRef: ref => setRefForIndex(0, ref)
+                        ref: ref => setRefForIndex(0, ref)
                       })}
                     />
                   </StyledConnectionFormEntry>
@@ -122,7 +122,7 @@ export default class ChangePasswordForm extends Component {
                       type: 'password',
                       onChange: this.onNewPasswordChange,
                       value: this.state.newPassword,
-                      innerRef: ref => setRefForIndex(indexStart, ref)
+                      ref: ref => setRefForIndex(indexStart, ref)
                     })}
                   />
                 </StyledConnectionFormEntry>
@@ -136,7 +136,7 @@ export default class ChangePasswordForm extends Component {
                       type: 'password',
                       onChange: this.onNewPasswordChange2,
                       value: this.state.newPassword2,
-                      innerRef: ref => setRefForIndex(indexStart + 1, ref)
+                      ref: ref => setRefForIndex(indexStart + 1, ref)
                     })}
                   />
                 </StyledConnectionFormEntry>
