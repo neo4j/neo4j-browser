@@ -108,6 +108,21 @@ describe('commandsDuck params helper', () => {
       expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2 }))
     })
   })
+  test('handles :params {x: 1, y: 2, z: {a: 3}} and calls the replace action creator', () => {
+    // Given
+    const action = { cmd: ':params {x: 1, y: 2, z: {a: 3}}' }
+    const cmdchar = ':'
+    const put = jest.fn()
+
+    // When
+    const p = params.handleParamsCommand(action, cmdchar, put)
+
+    // Then
+    return p.then(res => {
+      expect(res.result).toEqual({ x: 1, y: 2, z: { a: 3 } })
+      expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2, z: { a: 3 } }))
+    })
+  })
   describe('extract key/value from params', () => {
     test('<key>: <value>', () => {
       expect(params.extractParams('foo: bar')).toEqual({
