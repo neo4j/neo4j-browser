@@ -134,7 +134,7 @@ class Navigation extends Component {
             this.state.transitionState === Open ||
             this.state.transitionState === Opening
           }
-          innerRef={ref => {
+          ref={ref => {
             if (ref) {
               // Remove old listeners so we don't get multiple callbacks.
               // This function is called more than once with same html element

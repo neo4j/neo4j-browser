@@ -85,7 +85,7 @@ class Folder extends Component {
                 onChange={this.onFolderNameChanged.bind(this)}
                 onBlur={() => this.setState({ editing: false })}
                 value={this.props.folder.name}
-                innerRef={this.folderNameInputSet.bind(this)}
+                ref={this.folderNameInputSet.bind(this)}
               />
             </Render>
             <FolderButtonContainer>
@@ -101,7 +101,8 @@ class Folder extends Component {
                     return false
                   }}
                 />
-              </Render>&nbsp;
+              </Render>
+              &nbsp;
               <StyledFavFolderButtonSpan>
                 <ConfirmationButton
                   requestIcon={<BinIcon />}

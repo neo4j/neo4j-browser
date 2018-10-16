@@ -20,7 +20,6 @@
 import 'babel-polyfill'
 import './styles/bootstrap.grid-only.min.css'
 import './styles/streamline.css'
-import './styles/global-styles'
 import './styles/editor.css'
 import './styles/neo4j-world.css'
 import './styles/font-awesome.min.css'

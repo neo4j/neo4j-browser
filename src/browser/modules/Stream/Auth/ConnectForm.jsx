@@ -59,7 +59,7 @@ export default class ConnectForm extends Component {
                       'data-test-id': 'boltaddress',
                       onChange: this.props.onHostChange,
                       defaultValue: this.props.host,
-                      innerRef: ref => setRefForIndex(0, ref)
+                      ref: ref => setRefForIndex(0, ref)
                     })}
                   />
                 </StyledConnectionFormEntry>
@@ -71,7 +71,7 @@ export default class ConnectForm extends Component {
                       'data-test-id': 'username',
                       onChange: this.props.onUsernameChange,
                       defaultValue: this.props.username,
-                      innerRef: ref => setRefForIndex(1, ref)
+                      ref: ref => setRefForIndex(1, ref)
                     })}
                   />
                 </StyledConnectionFormEntry>
@@ -84,7 +84,7 @@ export default class ConnectForm extends Component {
                       onChange: this.props.onPasswordChange,
                       defaultValue: this.props.password,
                       type: 'password',
-                      innerRef: ref => setRefForIndex(2, ref)
+                      ref: ref => setRefForIndex(2, ref)
                     })}
                   />
                 </StyledConnectionFormEntry>

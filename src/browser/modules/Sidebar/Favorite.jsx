@@ -115,7 +115,7 @@ const favoriteTarget = {
 }
 
 const StyledListItemRef = React.forwardRef((props, ref) => {
-  return <StyledListItem innerRef={ref} {...props} />
+  return <StyledListItem ref={ref} {...props} />
 })
 class FavoriteDp extends Component {
   constructor () {
@@ -140,7 +140,8 @@ class FavoriteDp extends Component {
         <StyledFavoriteText
           {...this.props}
           onClick={() =>
-            this.props.onItemClick(this.props.id, this.props.content)}
+            this.props.onItemClick(this.props.id, this.props.content)
+          }
         >
           {name}
         </StyledFavoriteText>
@@ -202,4 +203,9 @@ const FavoriteDrag = DragSource(
   })
 )(FavoriteDrop)
 
-export default withBus(connect(null, mapDispatchToProps)(FavoriteDrag))
+export default withBus(
+  connect(
+    null,
+    mapDispatchToProps
+  )(FavoriteDrag)
+)

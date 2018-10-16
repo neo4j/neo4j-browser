@@ -216,7 +216,7 @@ export class InspectorComponent extends Component {
             <StyledInspectorFooterRow
               data-test-id='vizInspector'
               className='inspector-footer-row'
-              innerRef={this.setFooterRowELem.bind(this)}
+              ref={this.setFooterRowELem.bind(this)}
             >
               {type === 'canvas' ? null : (
                 <RowExpandToggleComponent
