@@ -143,11 +143,7 @@ const rules = [
     ],
     use: ['style-loader', 'css-loader']
   },
-  {
-    test: /\.coffee$/,
-    exclude: /node_modules/,
-    loader: 'coffee-loader'
-  },
+
   {
     test: /\.(png|gif|jpg|svg)$/,
     include: [path.resolve('./src/browser/modules')],
@@ -266,8 +262,7 @@ module.exports = {
       '.loader.js',
       '.js',
       '.jsx',
-      '.css',
-      '.coffee'
+      '.css'
     ],
     modules: [path.resolve(__dirname, 'node_modules'), jsSourcePath],
     alias: {

@@ -2233,18 +2233,6 @@ codemirror@^5.29.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.40.2.tgz#f4a41fee2d84e679543591b3680af259d903330b"
   integrity sha1-9KQf7i2E5nlUNZGzaAryWdkDMws=
 
-coffee-loader@^0.7.3:
-  version "0.7.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/coffee-loader/-/coffee-loader-0.7.3.tgz#fadbc6efd6fc7ecc88c5b3046a2c292066bcb54a"
-  integrity sha1-+tvG79b8fsyIxbMEaiwpIGa8tUo=
-  dependencies:
-    loader-utils "^1.0.2"
-
-coffee-script@^1.12.7:
-  version "1.12.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/coffee-script/-/coffee-script-1.12.7.tgz#c05dae0cb79591d05b3070a8433a98c9a89ccc53"
-  integrity sha1-wF2uDLeVkdBbMHCoQzqYyaiczFM=
-
 collection-visit@^1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/collection-visit/-/collection-visit-1.0.0.tgz#4bc0373c164bc3291b4d368c829cf1a80a59dca0"
