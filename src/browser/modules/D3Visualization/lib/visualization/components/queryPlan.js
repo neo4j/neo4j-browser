@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global d3 */
+import d3 from 'd3'
+
 neo.queryPlan = function (element) {
   const maxChildOperators = 2 // Fact we know about the cypher compiler
   const maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count

@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global d3, DOMParser */
-
+/* global DOMParser */
+import d3 from 'd3'
 window.neo = window.neo || {}
 
 neo.models = {}

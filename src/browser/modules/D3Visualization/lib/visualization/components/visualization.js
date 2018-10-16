@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global d3 */
+import d3 from 'd3'
 
 neo.viz = function (el, measureSize, graph, layout, style) {
   const viz = { style }
