@@ -20,27 +20,27 @@
 import d3 from 'd3'
 
 neo.queryPlan = function (element) {
-  const maxChildOperators = 2 // Fact we know about the cypher compiler
-  const maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
-  const maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
+  let maxChildOperators = 2 // Fact we know about the cypher compiler
+  let maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
+  let maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
 
-  const operatorWidth = 180
-  const operatorCornerRadius = 4
-  const operatorHeaderHeight = 18
-  const operatorHeaderFontSize = 11
-  const operatorDetailHeight = 14
-  const maxCostHeight = 50
-  const detailFontSize = 10
-  const operatorMargin = 50
-  const operatorPadding = 3
-  const rankMargin = 50
-  const margin = 10
-  const standardFont = "'Helvetica Neue',Helvetica,Arial,sans-serif"
-  const fixedWidthFont = "Monaco,'Courier New',Terminal,monospace"
-  const linkColor = '#DFE1E3'
-  const costColor = '#F25A29'
-  const dividerColor = '#DFE1E3'
-  const operatorColors = [
+  let operatorWidth = 180
+  let operatorCornerRadius = 4
+  let operatorHeaderHeight = 18
+  let operatorHeaderFontSize = 11
+  let operatorDetailHeight = 14
+  let maxCostHeight = 50
+  let detailFontSize = 10
+  let operatorMargin = 50
+  let operatorPadding = 3
+  let rankMargin = 50
+  let margin = 10
+  let standardFont = "'Helvetica Neue',Helvetica,Arial,sans-serif"
+  let fixedWidthFont = "Monaco,'Courier New',Terminal,monospace"
+  let linkColor = '#DFE1E3'
+  let costColor = '#F25A29'
+  let dividerColor = '#DFE1E3'
+  let operatorColors = [
     '#c6dbef',
     '#9ecae1',
     '#6baed6',
@@ -50,7 +50,7 @@ neo.queryPlan = function (element) {
     '#08306b'
   ]
 
-  const operatorCategories = {
+  let operatorCategories = {
     result: ['result'],
     seek: ['scan', 'seek', 'argument'],
     rows: ['limit', 'top', 'skip', 'sort', 'union', 'projection'],
@@ -60,20 +60,20 @@ neo.queryPlan = function (element) {
     eager: ['eager']
   }
 
-  const augment = color => ({
+  let augment = color => ({
     color,
     'border-color': d3.rgb(color).darker(),
     'text-color-internal': d3.hsl(color).l < 0.7 ? '#FFFFFF' : '#000000'
   })
 
-  const colors = d3.scale
+  let colors = d3.scale
     .ordinal()
     .domain(d3.keys(operatorCategories))
     .range(operatorColors)
 
-  const color = function (d) {
+  let color = function (d) {
     for (let name in operatorCategories) {
-      const keywords = operatorCategories[name]
+      let keywords = operatorCategories[name]
       for (let keyword of Array.from(keywords)) {
         if (new RegExp(keyword, 'i').test(d)) {
           return augment(colors(name))
@@ -83,7 +83,7 @@ neo.queryPlan = function (element) {
     return augment(colors('other'))
   }
 
-  const rows = function (operator) {
+  let rows = function (operator) {
     let left
     return (left =
       operator.Rows != null ? operator.Rows : operator.EstimatedRows) != null
@@ -91,7 +91,7 @@ neo.queryPlan = function (element) {
       : 0
   }
 
-  const plural = function (noun, count) {
+  let plural = function (noun, count) {
     if (count === 1) {
       return noun
     } else {
@@ -99,25 +99,25 @@ neo.queryPlan = function (element) {
     }
   }
 
-  const formatNumber = d3.format(',.0f')
+  let formatNumber = d3.format(',.0f')
 
-  const operatorDetails = function (operator) {
+  let operatorDetails = function (operator) {
     let expression, identifiers, index, left, left1
     if (!operator.expanded) {
       return []
     }
 
-    const details = []
+    let details = []
 
-    const wordWrap = function (string, className) {
-      const measure = text => neo.utils.measureText(text, fixedWidthFont, 10)
+    let wordWrap = function (string, className) {
+      let measure = text => neo.utils.measureText(text, fixedWidthFont, 10)
 
-      const words = string.split(/([^a-zA-Z\d])/)
+      let words = string.split(/([^a-zA-Z\d])/)
 
       let firstWord = 0
       let lastWord = 1
       return (() => {
-        const result = []
+        let result = []
         while (firstWord < words.length) {
           while (
             lastWord < words.length &&
@@ -161,9 +161,13 @@ neo.queryPlan = function (element) {
       (expression =
         (left =
           (left1 =
-            operator.LegacyExpression != null
-              ? operator.LegacyExpression
-              : operator.ExpandExpression) != null
+            operator.Expressions != null
+              ? operator.Expressions
+              : operator.Expression != null
+                ? operator.Expression
+                : operator.LegacyExpression != null
+                  ? operator.LegacyExpression
+                  : operator.ExpandExpression) != null
             ? left1
             : operator.LabelName) != null
           ? left
@@ -171,6 +175,19 @@ neo.queryPlan = function (element) {
     ) {
       wordWrap(expression, 'expression')
       details.push({ className: 'padding' })
+    }
+
+    if (operator.PageCacheHits || operator.PageCacheMisses) {
+      details.push({
+        className: 'pagecache-hits',
+        key: 'pagecache hits',
+        value: formatNumber(operator.PageCacheHits)
+      })
+      details.push({
+        className: 'pagecache-misses',
+        key: 'pagecache misses',
+        value: formatNumber(operator.PageCacheMisses)
+      })
     }
 
     if (operator.Rows != null && operator.EstimatedRows != null) {
@@ -204,16 +221,16 @@ neo.queryPlan = function (element) {
     return details
   }
 
-  const transform = function (queryPlan) {
-    const operators = []
-    const links = []
+  let transform = function (queryPlan) {
+    let operators = []
+    let links = []
 
-    const result = {
+    let result = {
       operatorType: 'Result',
       children: [queryPlan.root]
     }
 
-    var collectLinks = function (operator, rank) {
+    let collectLinks = function (operator, rank) {
       operators.push(operator)
       operator.rank = rank
       return (() => {
@@ -237,9 +254,9 @@ neo.queryPlan = function (element) {
     return [operators, links]
   }
 
-  const layout = function (operators, links) {
-    const costHeight = (function () {
-      const scale = d3.scale
+  let layout = function (operators, links) {
+    let costHeight = (function () {
+      let scale = d3.scale
         .log()
         .domain([
           1,
@@ -253,7 +270,7 @@ neo.queryPlan = function (element) {
         scale((operator.DbHits != null ? operator.DbHits : 0) + 1)
     })()
 
-    const operatorHeight = function (operator) {
+    let operatorHeight = function (operator) {
       let height = operatorHeaderHeight
       if (operator.expanded) {
         height += operatorDetails(operator).slice(-1)[0].y + operatorPadding * 2
@@ -262,8 +279,8 @@ neo.queryPlan = function (element) {
       return height
     }
 
-    const linkWidth = (function () {
-      const scale = d3.scale
+    let linkWidth = (function () {
+      let scale = d3.scale
         .log()
         .domain([
           1,
@@ -285,7 +302,7 @@ neo.queryPlan = function (element) {
       if (operator.costHeight > operatorDetailHeight + operatorPadding) {
         operator.alwaysShowCost = true
       }
-      const childrenWidth = d3.sum(operator.children, linkWidth)
+      let childrenWidth = d3.sum(operator.children, linkWidth)
       let tx = (operatorWidth - childrenWidth) / 2
       for (let child of Array.from(operator.children)) {
         child.tx = tx
@@ -297,7 +314,7 @@ neo.queryPlan = function (element) {
       link.width = linkWidth(link.source)
     }
 
-    const ranks = d3
+    let ranks = d3
       .nest()
       .key(operator => operator.rank)
       .entries(operators)
@@ -315,13 +332,14 @@ neo.queryPlan = function (element) {
     let width = d3.max(
       ranks.map(rank => rank.values.length * (operatorWidth + operatorMargin))
     )
-    const height = -currentY
+    let height = -currentY
 
-    const collide = () =>
+    let collide = () =>
       (() => {
-        const result = []
+        let result = []
         for (rank of Array.from(ranks)) {
           var dx
+          let item
           var x0 = 0
           for (operator of Array.from(rank.values)) {
             dx = x0 - operator.x
@@ -333,51 +351,48 @@ neo.queryPlan = function (element) {
 
           dx = x0 - operatorMargin - width
           if (dx > 0) {
-            const lastOperator = rank.values[rank.values.length - 1]
+            let lastOperator = rank.values[rank.values.length - 1]
             x0 = lastOperator.x -= dx
-            result.push(
-              (() => {
-                const result1 = []
-                for (let i = rank.values.length - 2; i >= 0; i--) {
-                  operator = rank.values[i]
-                  dx = operator.x + operatorWidth + operatorMargin - x0
-                  if (dx > 0) {
-                    operator.x -= operatorWidth
-                    result1.push((x0 = operator.x))
-                  } else {
-                    result1.push(undefined)
-                  }
+            item = (() => {
+              let result1 = []
+              for (let i = rank.values.length - 2; i >= 0; i--) {
+                let item1
+                operator = rank.values[i]
+                dx = operator.x + operatorWidth + operatorMargin - x0
+                if (dx > 0) {
+                  operator.x -= operatorWidth
+                  item1 = x0 = operator.x
                 }
-                return result1
-              })()
-            )
-          } else {
-            result.push(undefined)
+                result1.push(item1)
+              }
+              return result1
+            })()
           }
+          result.push(item)
         }
         return result
       })()
 
-    const center = operator => operator.x + operatorWidth / 2
+    let center = operator => operator.x + operatorWidth / 2
 
-    const relaxUpwards = alpha =>
+    let relaxUpwards = alpha =>
       (() => {
-        const result = []
+        let result = []
         for (rank of Array.from(ranks)) {
           result.push(
             (() => {
-              const result1 = []
+              let result1 = []
               for (operator of Array.from(rank.values)) {
+                let item
                 if (operator.children.length) {
-                  const x =
+                  let x =
                     d3.sum(
                       operator.children,
                       child => linkWidth(child) * center(child)
                     ) / d3.sum(operator.children, linkWidth)
-                  result1.push((operator.x += (x - center(operator)) * alpha))
-                } else {
-                  result1.push(undefined)
+                  item = operator.x += (x - center(operator)) * alpha
                 }
+                result1.push(item)
               }
               return result1
             })()
@@ -386,22 +401,20 @@ neo.queryPlan = function (element) {
         return result
       })()
 
-    const relaxDownwards = alpha =>
+    let relaxDownwards = alpha =>
       (() => {
-        const result = []
+        let result = []
         for (rank of Array.from(ranks.slice().reverse())) {
           result.push(
             (() => {
-              const result1 = []
+              let result1 = []
               for (operator of Array.from(rank.values)) {
+                let item
                 if (operator.parent) {
-                  result1.push(
-                    (operator.x +=
-                      (center(operator.parent) - center(operator)) * alpha)
-                  )
-                } else {
-                  result1.push(undefined)
+                  item = operator.x +=
+                    (center(operator.parent) - center(operator)) * alpha
                 }
+                result1.push(item)
               }
               return result1
             })()
@@ -427,8 +440,8 @@ neo.queryPlan = function (element) {
     return [width, height]
   }
 
-  const render = function (operators, links, width, height, redisplay) {
-    const svg = d3.select(element)
+  let render = function (operators, links, width, height, redisplay) {
+    let svg = d3.select(element)
 
     svg
       .transition()
@@ -446,15 +459,15 @@ neo.queryPlan = function (element) {
 
     var join = (parent, children) =>
       (() => {
-        const result = []
+        let result = []
         for (let child of Array.from(d3.entries(children))) {
-          const selection = parent.selectAll(child.key).data(child.value.data)
+          let item
+          let selection = parent.selectAll(child.key).data(child.value.data)
           child.value.selections(selection.enter(), selection, selection.exit())
           if (child.value.children) {
-            result.push(join(selection, child.value.children))
-          } else {
-            result.push(undefined)
+            item = join(selection, child.value.children)
           }
+          result.push(item)
         }
         return result
       })()
@@ -483,16 +496,16 @@ neo.queryPlan = function (element) {
 
                   return update.transition().attr('d', function (d) {
                     width = Math.max(1, d.width)
-                    const sourceX = d.source.x + operatorWidth / 2
-                    const targetX = d.target.x + d.source.tx
+                    let sourceX = d.source.x + operatorWidth / 2
+                    let targetX = d.target.x + d.source.tx
 
-                    const sourceY = d.source.y + d.source.height
-                    const targetY = d.target.y
-                    const yi = d3.interpolateNumber(sourceY, targetY)
+                    let sourceY = d.source.y + d.source.height
+                    let targetY = d.target.y
+                    let yi = d3.interpolateNumber(sourceY, targetY)
 
-                    const curvature = 0.5
-                    const control1 = yi(curvature)
-                    const control2 = yi(1 - curvature)
+                    let curvature = 0.5
+                    let control1 = yi(curvature)
+                    let control2 = yi(1 - curvature)
                     let controlWidth = Math.min(
                       width / Math.PI,
                       (targetY - sourceY) / Math.PI
@@ -530,11 +543,11 @@ neo.queryPlan = function (element) {
 
               text: {
                 data (d) {
-                  const x = d.source.x + operatorWidth / 2
-                  const y = d.source.y + d.source.height + operatorDetailHeight
-                  const { source } = d
+                  let x = d.source.x + operatorWidth / 2
+                  let y = d.source.y + d.source.height + operatorDetailHeight
+                  let { source } = d
                   if (source.Rows != null || source.EstimatedRows != null) {
-                    const [key, caption] = Array.from(
+                    let [key, caption] = Array.from(
                       source.Rows != null
                         ? ['Rows', 'row']
                         : ['EstimatedRows', 'estimated row']
@@ -636,7 +649,7 @@ neo.queryPlan = function (element) {
 
                       return update
                         .attr('d', function (d) {
-                          const shaving =
+                          let shaving =
                             d.height <= operatorHeaderHeight
                               ? operatorCornerRadius
                               : d.height <
@@ -713,7 +726,7 @@ neo.queryPlan = function (element) {
                       }
                     },
                     selections (enter, update) {
-                      const rotateForExpand = function (d) {
+                      let rotateForExpand = function (d) {
                         d3.transform()
                         return (
                           `translate(${operatorHeaderHeight /
@@ -865,7 +878,7 @@ neo.queryPlan = function (element) {
 
                   return update.transition().attr('d', function (d) {
                     if (d.costHeight < operatorCornerRadius) {
-                      const shaving =
+                      let shaving =
                         operatorCornerRadius -
                         Math.sqrt(
                           Math.pow(operatorCornerRadius, 2) -
@@ -936,7 +949,7 @@ neo.queryPlan = function (element) {
               'text.cost': {
                 data (d) {
                   if (d.alwaysShowCost) {
-                    const y = d.height - d.costHeight + operatorDetailHeight
+                    let y = d.height - d.costHeight + operatorDetailHeight
                     return [
                       {
                         text: formatNumber(d.DbHits) + '\u00A0',
@@ -992,8 +1005,8 @@ neo.queryPlan = function (element) {
   }
 
   var display = function (queryPlan) {
-    const [operators, links] = Array.from(transform(queryPlan))
-    const [width, height] = Array.from(layout(operators, links))
+    let [operators, links] = Array.from(transform(queryPlan))
+    let [width, height] = Array.from(layout(operators, links))
     return render(operators, links, width, height, () => display(queryPlan))
   }
   this.display = display
