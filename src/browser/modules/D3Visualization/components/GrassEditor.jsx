@@ -32,6 +32,7 @@ import {
   StyledCaptionSelector
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
+import { toKeyString } from 'src-root/shared/services/utils'
 
 export class GrassEditorComponent extends Component {
   constructor (props) {
@@ -77,7 +78,10 @@ export class GrassEditorComponent extends Component {
       const text = textProvider(styleProp)
       const active = activeProvider(styleProp)
       return (
-        <StyledPickerListItem className={className} key={i}>
+        <StyledPickerListItem
+          className={className}
+          key={toKeyString('circle' + i)}
+        >
           <StyledCircleSelector
             className={active ? 'active' : ''}
             style={style}
@@ -148,7 +152,10 @@ export class GrassEditorComponent extends Component {
         const active =
           styleForItem.get('shaft-width') === widthValue['shaft-width']
         return (
-          <StyledPickerListItem className='width-picker-item' key={i}>
+          <StyledPickerListItem
+            className='width-picker-item'
+            key={toKeyString('width' + i)}
+          >
             <StyledPickerSelector
               className={active ? 'active' : ''}
               style={style}
@@ -200,7 +207,7 @@ export class GrassEditorComponent extends Component {
       }
       let active = styleForItem.props.caption === captionToSave
       return (
-        <StyledPickerListItem key={key}>
+        <StyledPickerListItem key={toKeyString('caption' + displayCaption)}>
           <StyledCaptionSelector
             className={active ? 'active' : ''}
             onClick={onClick}
@@ -323,6 +330,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export const GrassEditor = connect(mapStateToProps, mapDispatchToProps)(
-  GrassEditorComponent
-)
+export const GrassEditor = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GrassEditorComponent)
