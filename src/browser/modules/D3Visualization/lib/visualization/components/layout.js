@@ -18,104 +18,104 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
-neo.layout = (function () {
-  const _layout = {}
+import collision from './collision'
+import circularLayout from '../utils/circularLayout'
+import cloneArray from '../utils/arrays'
 
-  _layout.force = function () {
-    const _force = {}
+const layout = {
+  force: () => {
+    return {
+      init: render => {
+        const forceLayout = {}
 
-    _force.init = function (render) {
-      const forceLayout = {}
+        const linkDistance = 45
 
-      const linkDistance = 45
+        const d3force = d3.layout
+          .force()
+          .linkDistance(
+            relationship =>
+              relationship.source.radius +
+              relationship.target.radius +
+              linkDistance
+          )
+          .charge(-1000)
 
-      const d3force = d3.layout
-        .force()
-        .linkDistance(
-          relationship =>
-            relationship.source.radius +
-            relationship.target.radius +
-            linkDistance
-        )
-        .charge(-1000)
-
-      const newStatsBucket = function () {
-        const bucket = {
-          layoutTime: 0,
-          layoutSteps: 0
-        }
-        return bucket
-      }
-
-      let currentStats = newStatsBucket()
-
-      forceLayout.collectStats = function () {
-        const latestStats = currentStats
-        currentStats = newStatsBucket()
-        return latestStats
-      }
-
-      const accelerateLayout = function () {
-        let maxStepsPerTick = 100
-        const maxAnimationFramesPerSecond = 60
-        const maxComputeTime = 1000 / maxAnimationFramesPerSecond
-        const now =
-          window.performance && window.performance.now
-            ? () => window.performance.now()
-            : () => Date.now()
-
-        const d3Tick = d3force.tick
-        return (d3force.tick = function () {
-          const startTick = now()
-          let step = maxStepsPerTick
-          while (step-- && now() - startTick < maxComputeTime) {
-            const startCalcs = now()
-            currentStats.layoutSteps++
-
-            neo.collision.avoidOverlap(d3force.nodes())
-
-            if (d3Tick()) {
-              maxStepsPerTick = 2
-              return true
-            }
-            currentStats.layoutTime += now() - startCalcs
+        const newStatsBucket = function () {
+          const bucket = {
+            layoutTime: 0,
+            layoutSteps: 0
           }
-          render()
-          return false
-        })
-      }
-
-      accelerateLayout()
-
-      const oneRelationshipPerPairOfNodes = graph =>
-        Array.from(graph.groupedRelationships()).map(
-          pair => pair.relationships[0]
-        )
-
-      forceLayout.update = function (graph, size) {
-        const nodes = neo.utils.cloneArray(graph.nodes())
-        const relationships = oneRelationshipPerPairOfNodes(graph)
-
-        const radius = (nodes.length * linkDistance) / (Math.PI * 2)
-        const center = {
-          x: size[0] / 2,
-          y: size[1] / 2
+          return bucket
         }
-        neo.utils.circularLayout(nodes, center, radius)
 
-        return d3force
-          .nodes(nodes)
-          .links(relationships)
-          .size(size)
-          .start()
+        let currentStats = newStatsBucket()
+
+        forceLayout.collectStats = function () {
+          const latestStats = currentStats
+          currentStats = newStatsBucket()
+          return latestStats
+        }
+
+        const accelerateLayout = function () {
+          let maxStepsPerTick = 100
+          const maxAnimationFramesPerSecond = 60
+          const maxComputeTime = 1000 / maxAnimationFramesPerSecond
+          const now =
+            window.performance && window.performance.now
+              ? () => window.performance.now()
+              : () => Date.now()
+
+          const d3Tick = d3force.tick
+          return (d3force.tick = function () {
+            const startTick = now()
+            let step = maxStepsPerTick
+            while (step-- && now() - startTick < maxComputeTime) {
+              const startCalcs = now()
+              currentStats.layoutSteps++
+
+              collision.avoidOverlap(d3force.nodes())
+
+              if (d3Tick()) {
+                maxStepsPerTick = 2
+                return true
+              }
+              currentStats.layoutTime += now() - startCalcs
+            }
+            render()
+            return false
+          })
+        }
+
+        accelerateLayout()
+
+        const oneRelationshipPerPairOfNodes = graph =>
+          Array.from(graph.groupedRelationships()).map(
+            pair => pair.relationships[0]
+          )
+
+        forceLayout.update = function (graph, size) {
+          const nodes = cloneArray(graph.nodes())
+          const relationships = oneRelationshipPerPairOfNodes(graph)
+
+          const radius = (nodes.length * linkDistance) / (Math.PI * 2)
+          const center = {
+            x: size[0] / 2,
+            y: size[1] / 2
+          }
+          circularLayout(nodes, center, radius)
+
+          return d3force
+            .nodes(nodes)
+            .links(relationships)
+            .size(size)
+            .start()
+        }
+
+        forceLayout.drag = d3force.drag
+        return forceLayout
       }
-
-      forceLayout.drag = d3force.drag
-      return forceLayout
     }
-
-    return _force
   }
+}
 
-  return _layout
-})()
+export default layout

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
-neo.utils.clickHandler = function () {
+export default function clickHandler () {
   const cc = function (selection) {
     // euclidean distance
     const dist = (a, b) =>

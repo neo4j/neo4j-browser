@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-neo.models.Graph = class Graph {
+export default class Graph {
   constructor () {
     this.addNodes = this.addNodes.bind(this)
     this.removeNode = this.removeNode.bind(this)
@@ -48,26 +48,6 @@ neo.models.Graph = class Graph {
   }
 
   groupedRelationships () {
-    class NodePair {
-      constructor (node1, node2) {
-        this.relationships = []
-        if (node1.id < node2.id) {
-          this.nodeA = node1
-          this.nodeB = node2
-        } else {
-          this.nodeA = node2
-          this.nodeB = node1
-        }
-      }
-
-      isLoop () {
-        return this.nodeA === this.nodeB
-      }
-
-      toString () {
-        return `${this.nodeA.id}:${this.nodeB.id}`
-      }
-    }
     const groups = {}
     for (let relationship of Array.from(this._relationships)) {
       let nodePair = new NodePair(relationship.source, relationship.target)
@@ -191,5 +171,26 @@ neo.models.Graph = class Graph {
     this._nodes = []
     this.relationshipMap = {}
     return (this._relationships = [])
+  }
+}
+
+class NodePair {
+  constructor (node1, node2) {
+    this.relationships = []
+    if (node1.id < node2.id) {
+      this.nodeA = node1
+      this.nodeB = node2
+    } else {
+      this.nodeA = node2
+      this.nodeB = node1
+    }
+  }
+
+  isLoop () {
+    return this.nodeA === this.nodeB
+  }
+
+  toString () {
+    return `${this.nodeA.id}:${this.nodeB.id}`
   }
 }

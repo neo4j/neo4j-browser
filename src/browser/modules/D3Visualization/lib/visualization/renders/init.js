@@ -17,225 +17,222 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import Renderer from '../components/renderer'
+const noop = function () {}
 
-;(function () {
-  const noop = function () {}
+const nodeRingStrokeSize = 8
 
-  const nodeRingStrokeSize = 8
+const nodeOutline = new Renderer({
+  onGraphChange (selection, viz) {
+    const circles = selection.selectAll('circle.outline').data(node => [node])
 
-  const nodeOutline = new neo.Renderer({
-    onGraphChange (selection, viz) {
-      const circles = selection.selectAll('circle.outline').data(node => [node])
+    circles
+      .enter()
+      .append('circle')
+      .classed('outline', true)
+      .attr({
+        cx: 0,
+        cy: 0
+      })
 
-      circles
-        .enter()
-        .append('circle')
-        .classed('outline', true)
-        .attr({
-          cx: 0,
-          cy: 0
-        })
+    circles.attr({
+      r (node) {
+        return node.radius
+      },
+      fill (node) {
+        return viz.style.forNode(node).get('color')
+      },
+      stroke (node) {
+        return viz.style.forNode(node).get('border-color')
+      },
+      'stroke-width' (node) {
+        return viz.style.forNode(node).get('border-width')
+      }
+    })
 
-      circles.attr({
-        r (node) {
-          return node.radius
-        },
-        fill (node) {
-          return viz.style.forNode(node).get('color')
-        },
-        stroke (node) {
-          return viz.style.forNode(node).get('border-color')
-        },
-        'stroke-width' (node) {
-          return viz.style.forNode(node).get('border-width')
+    return circles.exit().remove()
+  },
+  onTick: noop
+})
+
+const nodeCaption = new Renderer({
+  onGraphChange (selection, viz) {
+    const text = selection.selectAll('text.caption').data(node => node.caption)
+
+    text
+      .enter()
+      .append('text')
+      // .classed('caption', true)
+      .attr({ 'text-anchor': 'middle' })
+      .attr({ 'pointer-events': 'none' })
+
+    text
+      .text(line => line.text)
+      .attr('y', line => line.baseline)
+      .attr('font-size', line => viz.style.forNode(line.node).get('font-size'))
+      .attr({
+        fill (line) {
+          return viz.style.forNode(line.node).get('text-color-internal')
         }
       })
 
-      return circles.exit().remove()
-    },
-    onTick: noop
-  })
+    return text.exit().remove()
+  },
 
-  const nodeCaption = new neo.Renderer({
-    onGraphChange (selection, viz) {
-      const text = selection
-        .selectAll('text.caption')
-        .data(node => node.caption)
+  onTick: noop
+})
 
-      text
-        .enter()
-        .append('text')
-        // .classed('caption', true)
-        .attr({ 'text-anchor': 'middle' })
-        .attr({ 'pointer-events': 'none' })
+const nodeIcon = new Renderer({
+  onGraphChange (selection, viz) {
+    const text = selection.selectAll('text').data(node => node.caption)
 
-      text
-        .text(line => line.text)
-        .attr('y', line => line.baseline)
-        .attr('font-size', line =>
-          viz.style.forNode(line.node).get('font-size')
-        )
-        .attr({
-          fill (line) {
-            return viz.style.forNode(line.node).get('text-color-internal')
-          }
-        })
+    text
+      .enter()
+      .append('text')
+      .attr({ 'text-anchor': 'middle' })
+      .attr({ 'pointer-events': 'none' })
+      .attr({ 'font-family': 'streamline' })
 
-      return text.exit().remove()
-    },
-
-    onTick: noop
-  })
-
-  const nodeIcon = new neo.Renderer({
-    onGraphChange (selection, viz) {
-      const text = selection.selectAll('text').data(node => node.caption)
-
-      text
-        .enter()
-        .append('text')
-        .attr({ 'text-anchor': 'middle' })
-        .attr({ 'pointer-events': 'none' })
-        .attr({ 'font-family': 'streamline' })
-
-      text
-        .text(line => viz.style.forNode(line.node).get('icon-code'))
-        .attr('dy', line => line.node.radius / 16)
-        .attr('font-size', line => line.node.radius)
-        .attr({
-          fill (line) {
-            return viz.style.forNode(line.node).get('text-color-internal')
-          }
-        })
-
-      return text.exit().remove()
-    },
-
-    onTick: noop
-  })
-
-  const nodeRing = new neo.Renderer({
-    onGraphChange (selection) {
-      const circles = selection.selectAll('circle.ring').data(node => [node])
-      circles
-        .enter()
-        .insert('circle', '.outline')
-        .classed('ring', true)
-        .attr({
-          cx: 0,
-          cy: 0,
-          'stroke-width': nodeRingStrokeSize + 'px'
-        })
-
-      circles.attr({
-        r (node) {
-          return node.radius + 4
+    text
+      .text(line => viz.style.forNode(line.node).get('icon-code'))
+      .attr('dy', line => line.node.radius / 16)
+      .attr('font-size', line => line.node.radius)
+      .attr({
+        fill (line) {
+          return viz.style.forNode(line.node).get('text-color-internal')
         }
       })
 
-      return circles.exit().remove()
-    },
+    return text.exit().remove()
+  },
 
-    onTick: noop
-  })
+  onTick: noop
+})
 
-  const arrowPath = new neo.Renderer({
-    name: 'arrowPath',
-    onGraphChange (selection, viz) {
-      const paths = selection.selectAll('path.outline').data(rel => [rel])
+const nodeRing = new Renderer({
+  onGraphChange (selection) {
+    const circles = selection.selectAll('circle.ring').data(node => [node])
+    circles
+      .enter()
+      .insert('circle', '.outline')
+      .classed('ring', true)
+      .attr({
+        cx: 0,
+        cy: 0,
+        'stroke-width': nodeRingStrokeSize + 'px'
+      })
 
-      paths
-        .enter()
-        .append('path')
-        .classed('outline', true)
+    circles.attr({
+      r (node) {
+        return node.radius + 4
+      }
+    })
 
-      paths
-        .attr('fill', rel => viz.style.forRelationship(rel).get('color'))
-        .attr('stroke', 'none')
+    return circles.exit().remove()
+  },
 
-      return paths.exit().remove()
-    },
+  onTick: noop
+})
 
-    onTick (selection) {
-      return selection
-        .selectAll('path')
-        .attr('d', d => d.arrow.outline(d.shortCaptionLength))
-    }
-  })
+const arrowPath = new Renderer({
+  name: 'arrowPath',
+  onGraphChange (selection, viz) {
+    const paths = selection.selectAll('path.outline').data(rel => [rel])
 
-  const relationshipType = new neo.Renderer({
-    name: 'relationshipType',
-    onGraphChange (selection, viz) {
-      const texts = selection.selectAll('text').data(rel => [rel])
+    paths
+      .enter()
+      .append('path')
+      .classed('outline', true)
 
-      texts
-        .enter()
-        .append('text')
-        .attr({ 'text-anchor': 'middle' })
-        .attr({ 'pointer-events': 'none' })
+    paths
+      .attr('fill', rel => viz.style.forRelationship(rel).get('color'))
+      .attr('stroke', 'none')
 
-      texts
-        .attr('font-size', rel =>
-          viz.style.forRelationship(rel).get('font-size')
-        )
-        .attr('fill', rel =>
-          viz.style.forRelationship(rel).get(`text-color-${rel.captionLayout}`)
-        )
+    return paths.exit().remove()
+  },
 
-      return texts.exit().remove()
-    },
+  onTick (selection) {
+    return selection
+      .selectAll('path')
+      .attr('d', d => d.arrow.outline(d.shortCaptionLength))
+  }
+})
 
-    onTick (selection, viz) {
-      return selection
-        .selectAll('text')
-        .attr('x', rel => rel.arrow.midShaftPoint.x)
-        .attr(
-          'y',
-          rel =>
-            rel.arrow.midShaftPoint.y +
-            parseFloat(viz.style.forRelationship(rel).get('font-size')) / 2 -
-            1
-        )
-        .attr('transform', function (rel) {
-          if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
-            return `rotate(180 ${rel.arrow.midShaftPoint.x} ${
-              rel.arrow.midShaftPoint.y
-            })`
-          } else {
-            return null
-          }
-        })
-        .text(rel => rel.shortCaption)
-    }
-  })
+const relationshipType = new Renderer({
+  name: 'relationshipType',
+  onGraphChange (selection, viz) {
+    const texts = selection.selectAll('text').data(rel => [rel])
 
-  const relationshipOverlay = new neo.Renderer({
-    name: 'relationshipOverlay',
-    onGraphChange (selection) {
-      const rects = selection.selectAll('path.overlay').data(rel => [rel])
+    texts
+      .enter()
+      .append('text')
+      .attr({ 'text-anchor': 'middle' })
+      .attr({ 'pointer-events': 'none' })
 
-      rects
-        .enter()
-        .append('path')
-        .classed('overlay', true)
+    texts
+      .attr('font-size', rel => viz.style.forRelationship(rel).get('font-size'))
+      .attr('fill', rel =>
+        viz.style.forRelationship(rel).get(`text-color-${rel.captionLayout}`)
+      )
 
-      return rects.exit().remove()
-    },
+    return texts.exit().remove()
+  },
 
-    onTick (selection) {
-      const band = 16
+  onTick (selection, viz) {
+    return selection
+      .selectAll('text')
+      .attr('x', rel => rel.arrow.midShaftPoint.x)
+      .attr(
+        'y',
+        rel =>
+          rel.arrow.midShaftPoint.y +
+          parseFloat(viz.style.forRelationship(rel).get('font-size')) / 2 -
+          1
+      )
+      .attr('transform', function (rel) {
+        if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
+          return `rotate(180 ${rel.arrow.midShaftPoint.x} ${
+            rel.arrow.midShaftPoint.y
+          })`
+        } else {
+          return null
+        }
+      })
+      .text(rel => rel.shortCaption)
+  }
+})
 
-      return selection
-        .selectAll('path.overlay')
-        .attr('d', d => d.arrow.overlay(band))
-    }
-  })
+const relationshipOverlay = new Renderer({
+  name: 'relationshipOverlay',
+  onGraphChange (selection) {
+    const rects = selection.selectAll('path.overlay').data(rel => [rel])
 
-  neo.renderers.node.push(nodeOutline)
-  neo.renderers.node.push(nodeIcon)
-  neo.renderers.node.push(nodeCaption)
-  neo.renderers.node.push(nodeRing)
-  neo.renderers.relationship.push(arrowPath)
-  neo.renderers.relationship.push(relationshipType)
-  return neo.renderers.relationship.push(relationshipOverlay)
-})()
+    rects
+      .enter()
+      .append('path')
+      .classed('overlay', true)
+
+    return rects.exit().remove()
+  },
+
+  onTick (selection) {
+    const band = 16
+
+    return selection
+      .selectAll('path.overlay')
+      .attr('d', d => d.arrow.overlay(band))
+  }
+})
+
+const node = []
+node.push(nodeOutline)
+node.push(nodeIcon)
+node.push(nodeCaption)
+node.push(nodeRing)
+
+const relationship = []
+relationship.push(arrowPath)
+relationship.push(relationshipType)
+relationship.push(relationshipOverlay)
+
+export { node, relationship }

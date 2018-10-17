@@ -18,11 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Cls = (neo.models.Node = class Node {
-  static initClass () {
-    this.prototype.isNode = true
-    this.prototype.isRelationship = false
-  }
+export default class Node {
+  isNode = true
+  isRelationship = false
+
   constructor (id, labels, properties) {
     this.id = id
     this.labels = labels
@@ -51,5 +50,4 @@ const Cls = (neo.models.Node = class Node {
     }
     return rels.length
   }
-})
-Cls.initClass()
+}

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-neo.utils.cloneArray = function (original) {
+export default function cloneArray (original) {
   const clone = new Array(original.length)
   for (let idx = 0; idx < original.length; idx++) {
     const node = original[idx]

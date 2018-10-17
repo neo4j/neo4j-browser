@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-neo.utils.LoopArrow = class LoopArrow {
+export default class LoopArrow {
   constructor (
     nodeRadius,
     straightLength,

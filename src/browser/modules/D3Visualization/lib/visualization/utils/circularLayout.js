@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-neo.utils.circularLayout = function (nodes, center, radius) {
+export default function circularLayout (nodes, center, radius) {
   const unlocatedNodes = []
   for (let node of Array.from(nodes)) {
     if (!(node.x != null && node.y != null)) {

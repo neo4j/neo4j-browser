@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-neo.utils.AdjacentAngles = class AdjacentAngles {
+export default class AdjacentAngles {
   findRuns (AngleList, minSeparation) {
     let p = 0
     let start = 0

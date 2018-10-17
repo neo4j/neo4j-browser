@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-neo.utils.AngleList = class AngleList {
+export default class AngleList {
   constructor (list) {
     this.list = list
   }

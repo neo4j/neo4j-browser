@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global DOMParser */
-import d3 from 'd3'
-window.neo = window.neo || {}
 
-neo.models = {}
+/* global DOMParser */
+
+import d3 from 'd3'
 
 d3.selection.enter.prototype.appendSVG = function (SVGString) {
   return this.select(function () {
@@ -33,36 +32,4 @@ d3.selection.enter.prototype.appendSVG = function (SVGString) {
       )
     )
   })
-}
-
-neo.renderers = {
-  menu: [],
-  node: [],
-  relationship: []
-}
-
-neo.utils = {
-  // Note: quick n' dirty. Only works for serializable objects
-  copy (src) {
-    return JSON.parse(JSON.stringify(src))
-  },
-
-  extend (dest, src) {
-    if (!neo.utils.isObject(dest) && neo.utils.isObject(src)) {
-      return
-    }
-    for (let k of Object.keys(src || {})) {
-      const v = src[k]
-      dest[k] = v
-    }
-    return dest
-  },
-
-  isArray:
-    Array.isArray ||
-    (obj => Object.prototype.toString.call(obj) === '[object Array]'),
-
-  isObject (obj) {
-    return Object(obj) === obj
-  }
 }

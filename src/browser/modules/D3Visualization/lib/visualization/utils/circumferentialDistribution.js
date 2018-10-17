@@ -17,8 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import AngleListClass from './angleList'
+import AdjacentAngles from './adjacentAngles'
 
-neo.utils.distributeCircular = function (arrowAngles, minSeparation) {
+export default function distributeCircular (arrowAngles, minSeparation) {
   let angle
   const list = []
   for (var key in arrowAngles.floating) {
@@ -40,8 +42,8 @@ neo.utils.distributeCircular = function (arrowAngles, minSeparation) {
 
   list.sort((a, b) => a.angle - b.angle)
 
-  const AngleList = new neo.utils.AngleList(list)
-  const runsOfTooDenseArrows = new neo.utils.AdjacentAngles().findRuns(
+  const AngleList = new AngleListClass(list)
+  const runsOfTooDenseArrows = new AdjacentAngles().findRuns(
     AngleList,
     minSeparation
   )

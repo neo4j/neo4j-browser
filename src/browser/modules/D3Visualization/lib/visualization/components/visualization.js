@@ -19,8 +19,12 @@
  */
 
 import d3 from 'd3'
+import NeoD3Geometry from './graphGeometry'
+import * as vizRenderers from '../renders/init'
+import { menu as menuRenderer } from '../renders/menu'
+import vizClickHandler from '../utils/clickHandler'
 
-neo.viz = function (el, measureSize, graph, layout, style) {
+const vizFn = function (el, measureSize, graph, layout, style) {
   const viz = { style }
 
   const root = d3.select(el)
@@ -37,7 +41,7 @@ neo.viz = function (el, measureSize, graph, layout, style) {
     .attr('transform', 'scale(1)')
 
   const container = baseGroup.append('g')
-  const geometry = new neo.NeoD3Geometry(style)
+  const geometry = new NeoD3Geometry(style)
 
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
@@ -159,7 +163,7 @@ neo.viz = function (el, measureSize, graph, layout, style) {
       geometry: 0,
       relationshipRenderers: (function () {
         const timings = {}
-        neo.renderers.relationship.forEach(r => (timings[r.name] = 0))
+        vizRenderers.relationship.forEach(r => (timings[r.name] = 0))
         return timings
       })()
     }
@@ -216,7 +220,7 @@ neo.viz = function (el, measureSize, graph, layout, style) {
       .selectAll('g.node')
       .attr('transform', d => `translate(${d.x},${d.y})`)
 
-    for (var renderer of Array.from(neo.renderers.node)) {
+    for (var renderer of Array.from(vizRenderers.node)) {
       nodeGroups.call(renderer.onTick, viz)
     }
 
@@ -229,7 +233,7 @@ neo.viz = function (el, measureSize, graph, layout, style) {
             180})`
       )
 
-    for (renderer of Array.from(neo.renderers.relationship)) {
+    for (renderer of Array.from(vizRenderers.relationship)) {
       const startRenderer = now()
       relationshipGroups.call(renderer.onTick, viz)
       currentStats.relationshipRenderers[renderer.name] += now() - startRenderer
@@ -289,7 +293,7 @@ neo.viz = function (el, measureSize, graph, layout, style) {
 
     geometry.onGraphChange(graph)
 
-    for (var renderer of Array.from(neo.renderers.relationship)) {
+    for (var renderer of Array.from(vizRenderers.relationship)) {
       relationshipGroups.call(renderer.onGraphChange, viz)
     }
 
@@ -311,11 +315,11 @@ neo.viz = function (el, measureSize, graph, layout, style) {
 
     nodeGroups.classed('selected', node => node.selected)
 
-    for (renderer of Array.from(neo.renderers.node)) {
+    for (renderer of Array.from(vizRenderers.node)) {
       nodeGroups.call(renderer.onGraphChange, viz)
     }
 
-    for (renderer of Array.from(neo.renderers.menu)) {
+    for (renderer of Array.from(menuRenderer)) {
       nodeGroups.call(renderer.onGraphChange, viz)
     }
 
@@ -346,9 +350,11 @@ neo.viz = function (el, measureSize, graph, layout, style) {
 
   viz.boundingBox = () => container.node().getBBox()
 
-  var clickHandler = neo.utils.clickHandler()
+  var clickHandler = vizClickHandler()
   clickHandler.on('click', onNodeClick)
   clickHandler.on('dblclick', onNodeDblClick)
 
   return viz
 }
+
+export default vizFn

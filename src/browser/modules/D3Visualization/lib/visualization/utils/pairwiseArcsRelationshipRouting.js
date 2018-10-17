@@ -17,8 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import measureText from './textMeasurement'
+import LoopArrow from './loopArrow'
+import StraightArrow from './straightArrow'
+import ArcArrow from './arcArrow'
 
-neo.utils.PairwiseArcsRelationshipRouting = class PairwiseArcsRelationshipRouting {
+export default class PairwiseArcsRelationshipRouting {
   constructor (style) {
     this.style = style
   }
@@ -29,8 +33,7 @@ neo.utils.PairwiseArcsRelationshipRouting = class PairwiseArcsRelationshipRoutin
       this.style.forRelationship(relationship).get('padding')
     )
     return (
-      neo.utils.measureText(caption, fontFamily, relationship.captionHeight) +
-      padding * 2
+      measureText(caption, fontFamily, relationship.captionHeight) + padding * 2
     )
   }
 
@@ -217,7 +220,7 @@ neo.utils.PairwiseArcsRelationshipRouting = class PairwiseArcsRelationshipRoutin
               const headHeight = headWidth
 
               if (nodePair.isLoop()) {
-                relationship.arrow = new neo.utils.LoopArrow(
+                relationship.arrow = new LoopArrow(
                   relationship.source.radius,
                   40,
                   defaultDeflectionStep,
@@ -228,7 +231,7 @@ neo.utils.PairwiseArcsRelationshipRouting = class PairwiseArcsRelationshipRoutin
                 )
               } else {
                 if (i === middleRelationshipIndex) {
-                  relationship.arrow = new neo.utils.StraightArrow(
+                  relationship.arrow = new StraightArrow(
                     relationship.source.radius,
                     relationship.target.radius,
                     relationship.centreDistance,
@@ -245,7 +248,7 @@ neo.utils.PairwiseArcsRelationshipRouting = class PairwiseArcsRelationshipRoutin
                     deflection *= -1
                   }
 
-                  relationship.arrow = new neo.utils.ArcArrow(
+                  relationship.arrow = new ArcArrow(
                     relationship.source.radius,
                     relationship.target.radius,
                     relationship.centreDistance,

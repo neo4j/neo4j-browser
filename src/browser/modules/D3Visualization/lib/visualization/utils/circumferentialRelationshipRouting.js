@@ -17,8 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import measureText from './textMeasurement'
+import distributeCircular from './circumferentialDistribution'
+import StraightArrow from './straightArrow'
+import ArcArrow from './arcArrow'
 
-neo.utils.circumferentialRelationshipRouting = class circumferentialRelationshipRouting {
+export default class circumferentialRelationshipRouting {
   constructor (style) {
     this.style = style
   }
@@ -31,7 +35,7 @@ neo.utils.circumferentialRelationshipRouting = class circumferentialRelationship
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
     )
-    return neo.utils.measureText(caption, fontFamily, fontSize) + padding * 2
+    return measureText(caption, fontFamily, fontSize) + padding * 2
   }
 
   captionFitsInsideArrowShaftWidth (relationship) {
@@ -137,7 +141,7 @@ neo.utils.circumferentialRelationshipRouting = class circumferentialRelationship
         }
 
         if (relationships.length > 1) {
-          distributedAngles = neo.utils.distributeCircular(arrowAngles, 30)
+          distributedAngles = distributeCircular(arrowAngles, 30)
         }
 
         result.push(
@@ -167,7 +171,7 @@ neo.utils.circumferentialRelationshipRouting = class circumferentialRelationship
                 const centreDistance = Math.sqrt(square(dx) + square(dy))
 
                 if (Math.abs(deflection) < Math.PI / 180) {
-                  relationship.arrow = new neo.utils.StraightArrow(
+                  relationship.arrow = new StraightArrow(
                     relationship.source.radius,
                     relationship.target.radius,
                     centreDistance,
@@ -177,7 +181,7 @@ neo.utils.circumferentialRelationshipRouting = class circumferentialRelationship
                     relationship.captionLayout
                   )
                 } else {
-                  relationship.arrow = new neo.utils.ArcArrow(
+                  relationship.arrow = new ArcArrow(
                     relationship.source.radius,
                     relationship.target.radius,
                     centreDistance,

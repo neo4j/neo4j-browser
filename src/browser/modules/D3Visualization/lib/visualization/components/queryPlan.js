@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
+import measureText from '../utils/textMeasurement'
 
-neo.queryPlan = function (element) {
+function queryPlan (element) {
   let maxChildOperators = 2 // Fact we know about the cypher compiler
   let maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
   let maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
@@ -110,7 +111,7 @@ neo.queryPlan = function (element) {
     let details = []
 
     let wordWrap = function (string, className) {
-      let measure = text => neo.utils.measureText(text, fixedWidthFont, 10)
+      let measure = text => measureText(text, fixedWidthFont, 10)
 
       let words = string.split(/([^a-zA-Z\d])/)
 
@@ -1012,3 +1013,5 @@ neo.queryPlan = function (element) {
   this.display = display
   return this
 }
+
+export default queryPlan

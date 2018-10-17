@@ -18,10 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Cls = (neo.utils.StraightArrow = class StraightArrow {
-  static initClass () {
-    this.prototype.deflection = 0
-  }
+export default class StraightArrow {
+  deflection = 0
 
   constructor (
     startRadius,
@@ -136,5 +134,4 @@ const Cls = (neo.utils.StraightArrow = class StraightArrow {
       ].join(' ')
     }
   }
-})
-Cls.initClass()
+}

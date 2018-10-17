@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-neo.utils.ArcArrow = class ArcArrow {
+export default class ArcArrow {
   constructor (
     startRadius,
     endRadius,

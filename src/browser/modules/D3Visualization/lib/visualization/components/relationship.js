@@ -18,11 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Cls = (neo.models.Relationship = class Relationship {
-  static initClass () {
-    this.prototype.isNode = false
-    this.prototype.isRelationship = true
-  }
+export default class Relationship {
+  isNode = false
+  isRelationship = true
   constructor (id, source, target, type, properties) {
     this.id = id
     this.source = source
@@ -45,5 +43,4 @@ const Cls = (neo.models.Relationship = class Relationship {
   isLoop () {
     return this.source === this.target
   }
-})
-Cls.initClass()
+}

@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import viz from './visualization'
+import layout from './layout'
 
-neo.graphView = class graphView {
+export default class graphView {
   constructor (element, measureSize, graph, style) {
     this.graph = graph
     this.style = style
-    const layout = neo.layout.force()
-    this.viz = neo.viz(element, measureSize, this.graph, layout, this.style)
+    const forceLayout = layout.force()
+    this.viz = viz(element, measureSize, this.graph, forceLayout, this.style)
     this.callbacks = {}
     const { callbacks } = this
     this.viz.trigger = (() => (event, ...args) =>

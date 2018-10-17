@@ -25,6 +25,7 @@ import '../lib/visualization/index'
 import { dim } from 'browser-styles/constants'
 import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
+import graphView from '../lib/visualization/components/graphView'
 
 export class GraphComponent extends Component {
   state = {
@@ -74,7 +75,7 @@ export class GraphComponent extends Component {
 
   initGraphView () {
     if (!this.graphView) {
-      let NeoConstructor = neo.graphView
+      let NeoConstructor = graphView
       let measureSize = () => {
         return {
           width: this.svgElement.offsetWidth,

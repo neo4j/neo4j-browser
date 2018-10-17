@@ -17,17 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-neo.Renderer = class Renderer {
+export default class Renderer {
+  onGraphChange = null
+  onTick = null
   constructor (opts) {
     if (opts == null) {
       opts = {}
     }
-    neo.utils.extend(this, opts)
-    if (this.onGraphChange == null) {
+    Object.assign(this, opts)
+    if (this.onGraphChange === null) {
       this.onGraphChange = function () {}
     }
-    if (this.onTick == null) {
+    if (this.onTick === null) {
       this.onTick = function () {}
     }
   }

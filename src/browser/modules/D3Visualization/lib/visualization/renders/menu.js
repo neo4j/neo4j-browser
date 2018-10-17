@@ -18,195 +18,200 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
-  ;(function () {
-  const noop = function () {}
+import Renderer from '../components/renderer'
+import icons from '../renders/icons'
 
-  const numberOfItemsInContextMenu = 3
+const noop = function () {}
 
-  const arc = function (radius, itemNumber, width) {
-    if (width == null) {
-      width = 30
-    }
-    itemNumber = itemNumber - 1
-    const startAngle = ((2 * Math.PI) / numberOfItemsInContextMenu) * itemNumber
-    const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
-    const innerRadius = Math.max(radius + 8, 20)
-    return d3.svg
-      .arc()
-      .innerRadius(innerRadius)
-      .outerRadius(innerRadius + width)
-      .startAngle(startAngle)
-      .endAngle(endAngle)
-      .padAngle(0.03)
+const numberOfItemsInContextMenu = 3
+
+const arc = function (radius, itemNumber, width) {
+  if (width == null) {
+    width = 30
   }
+  itemNumber = itemNumber - 1
+  const startAngle = ((2 * Math.PI) / numberOfItemsInContextMenu) * itemNumber
+  const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
+  const innerRadius = Math.max(radius + 8, 20)
+  return d3.svg
+    .arc()
+    .innerRadius(innerRadius)
+    .outerRadius(innerRadius + width)
+    .startAngle(startAngle)
+    .endAngle(endAngle)
+    .padAngle(0.03)
+}
 
-  const getSelectedNode = function (node) {
-    if (node.selected) {
-      return [node]
-    } else {
-      return []
-    }
+const getSelectedNode = function (node) {
+  if (node.selected) {
+    return [node]
+  } else {
+    return []
   }
+}
 
-  const attachContextEvent = (event, elems, viz, content, label) =>
-    (() => {
-      const result = []
-      for (let elem of Array.from(elems)) {
-        elem.on('mousedown.drag', function () {
-          d3.event.stopPropagation()
-          return null
+const attachContextEvent = (event, elems, viz, content, label) =>
+  (() => {
+    const result = []
+    for (let elem of Array.from(elems)) {
+      elem.on('mousedown.drag', function () {
+        d3.event.stopPropagation()
+        return null
+      })
+      elem.on('mouseup', node => viz.trigger(event, node))
+      elem.on('mouseover', function (node) {
+        node.contextMenu = {
+          menuSelection: event,
+          menuContent: content,
+          label
+        }
+        return viz.trigger('menuMouseOver', node)
+      })
+      result.push(
+        elem.on('mouseout', function (node) {
+          delete node.contextMenu
+          return viz.trigger('menuMouseOut', node)
         })
-        elem.on('mouseup', node => viz.trigger(event, node))
-        elem.on('mouseover', function (node) {
-          node.contextMenu = {
-            menuSelection: event,
-            menuContent: content,
-            label
-          }
-          return viz.trigger('menuMouseOver', node)
-        })
-        result.push(
-          elem.on('mouseout', function (node) {
-            delete node.contextMenu
-            return viz.trigger('menuMouseOut', node)
-          })
-        )
+      )
+    }
+    return result
+  })()
+
+const createMenuItem = function (
+  selection,
+  viz,
+  eventName,
+  itemNumber,
+  className,
+  position,
+  textValue,
+  helpValue
+) {
+  const path = selection.selectAll(`path.${className}`).data(getSelectedNode)
+  const iconPath = selection
+    .selectAll(`.icon.${className}`)
+    .data(getSelectedNode)
+
+  const tab = path
+    .enter()
+    .append('path')
+    .classed(className, true)
+    .classed('context-menu-item', true)
+    .attr({
+      d (node) {
+        return arc(node.radius, itemNumber, 1)()
       }
-      return result
-    })()
+    })
 
-  const createMenuItem = function (
-    selection,
-    viz,
-    eventName,
-    itemNumber,
-    className,
-    position,
-    textValue,
-    helpValue
-  ) {
-    const path = selection.selectAll(`path.${className}`).data(getSelectedNode)
-    const iconPath = selection
-      .selectAll(`.icon.${className}`)
-      .data(getSelectedNode)
+  const rawSvgIcon = icons[textValue]
+  const icon = iconPath
+    .enter()
+    .appendSVG(rawSvgIcon)
+    .classed(className, true)
+    .classed('context-menu-item', true)
+    .attr({
+      transform (node) {
+        return (
+          'translate(' +
+          Math.floor(
+            arc(node.radius, itemNumber).centroid()[0] +
+              (position[0] * 100) / 100
+          ) +
+          ',' +
+          Math.floor(
+            arc(node.radius, itemNumber).centroid()[1] +
+              (position[1] * 100) / 100
+          ) +
+          ')' +
+          ' ' +
+          'scale(0.7)'
+        )
+      },
+      color (node) {
+        return viz.style.forNode(node).get('text-color-internal')
+      }
+    })
 
-    const tab = path
-      .enter()
-      .append('path')
-      .classed(className, true)
-      .classed('context-menu-item', true)
-      .attr({
-        d (node) {
-          return arc(node.radius, itemNumber, 1)()
-        }
-      })
+  attachContextEvent(eventName, [tab, icon], viz, helpValue, rawSvgIcon)
 
-    const rawSvgIcon = neo.icons[textValue]
-    const icon = iconPath
-      .enter()
-      .appendSVG(rawSvgIcon)
-      .classed(className, true)
-      .classed('context-menu-item', true)
-      .attr({
-        transform (node) {
-          return (
-            'translate(' +
-            Math.floor(
-              arc(node.radius, itemNumber).centroid()[0] +
-                (position[0] * 100) / 100
-            ) +
-            ',' +
-            Math.floor(
-              arc(node.radius, itemNumber).centroid()[1] +
-                (position[1] * 100) / 100
-            ) +
-            ')' +
-            ' ' +
-            'scale(0.7)'
-          )
-        },
-        color (node) {
-          return viz.style.forNode(node).get('text-color-internal')
-        }
-      })
+  tab
+    .transition()
+    .duration(200)
+    .attr({
+      d (node) {
+        return arc(node.radius, itemNumber)()
+      }
+    })
 
-    attachContextEvent(eventName, [tab, icon], viz, helpValue, rawSvgIcon)
+  path
+    .exit()
+    .transition()
+    .duration(200)
+    .attr({
+      d (node) {
+        return arc(node.radius, itemNumber, 1)()
+      }
+    })
+    .remove()
 
-    tab
-      .transition()
-      .duration(200)
-      .attr({
-        d (node) {
-          return arc(node.radius, itemNumber)()
-        }
-      })
+  return iconPath.exit().remove()
+}
 
-    path
-      .exit()
-      .transition()
-      .duration(200)
-      .attr({
-        d (node) {
-          return arc(node.radius, itemNumber, 1)()
-        }
-      })
-      .remove()
+const donutRemoveNode = new Renderer({
+  onGraphChange (selection, viz) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeClose',
+      1,
+      'remove_node',
+      [-8, 0],
+      'Remove',
+      'Dismiss'
+    )
+  },
 
-    return iconPath.exit().remove()
-  }
+  onTick: noop
+})
 
-  const donutRemoveNode = new neo.Renderer({
-    onGraphChange (selection, viz) {
-      return createMenuItem(
-        selection,
-        viz,
-        'nodeClose',
-        1,
-        'remove_node',
-        [-8, 0],
-        'Remove',
-        'Dismiss'
-      )
-    },
+const donutExpandNode = new Renderer({
+  onGraphChange (selection, viz) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeDblClicked',
+      2,
+      'expand_node',
+      [-8, -10],
+      'Expand',
+      'Expand child relationships'
+    )
+  },
 
-    onTick: noop
-  })
+  onTick: noop
+})
 
-  const donutExpandNode = new neo.Renderer({
-    onGraphChange (selection, viz) {
-      return createMenuItem(
-        selection,
-        viz,
-        'nodeDblClicked',
-        2,
-        'expand_node',
-        [-8, -10],
-        'Expand',
-        'Expand child relationships'
-      )
-    },
+const donutUnlockNode = new Renderer({
+  onGraphChange (selection, viz) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeUnlock',
+      3,
+      'unlock_node',
+      [-10, -6],
+      'Unlock',
+      'Unlock the node to re-layout the graph'
+    )
+  },
 
-    onTick: noop
-  })
+  onTick: noop
+})
 
-  const donutUnlockNode = new neo.Renderer({
-    onGraphChange (selection, viz) {
-      return createMenuItem(
-        selection,
-        viz,
-        'nodeUnlock',
-        3,
-        'unlock_node',
-        [-10, -6],
-        'Unlock',
-        'Unlock the node to re-layout the graph'
-      )
-    },
+const menu = []
 
-    onTick: noop
-  })
+menu.push(donutExpandNode)
+menu.push(donutRemoveNode)
+menu.push(donutUnlockNode)
 
-  neo.renderers.menu.push(donutExpandNode)
-  neo.renderers.menu.push(donutRemoveNode)
-  return neo.renderers.menu.push(donutUnlockNode)
-})()
+export { menu }
