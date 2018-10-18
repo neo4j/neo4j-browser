@@ -71,6 +71,9 @@
       "<rootDir>/src/shared"
     ]
   },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
+  },
   "engines": {
     "yarn": "^1.10",
     "node": ">=8"
@@ -83,7 +86,7 @@
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^7.1.4",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^21.0.0",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^2.4.0",
     "babel-plugin-styled-components": "^1.8.0",
@@ -111,7 +114,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^0.14.3",
-    "jest-cli": "^23.1.0",
+    "jest-cli": "^23.6.0",
     "jest-dom": "^1.12.0",
     "js2xmlparser": "^3.0.0",
     "json-loader": "^0.5.7",
