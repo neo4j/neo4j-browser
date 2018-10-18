@@ -45,14 +45,6 @@ const plugins = [
       to: assetsPath + '/images'
     },
     {
-      from: path.resolve('./src/browser/external/d3.min.js'),
-      to: assetsPath + '/js'
-    },
-    {
-      from: path.resolve('./src/browser/external/neoPlanner.js'),
-      to: assetsPath + '/js'
-    },
-    {
       from: path.resolve('./src/browser/external/canvg'),
       to: assetsPath + '/js/canvg'
     }
@@ -232,11 +224,6 @@ module.exports = {
         test: /\.svg$/,
         loader: 'raw-loader',
         include: [path.resolve('./src/browser/icons')]
-      },
-      {
-        test: /\.coffee$/,
-        exclude: /node_modules/,
-        loader: 'coffee-loader'
       },
       {
         test: /\.html?$/,
