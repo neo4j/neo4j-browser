@@ -32,6 +32,7 @@ import {
   FrameTitlebarButtonSection
 } from '../styled'
 import Ellipsis from 'browser-components/Ellipsis'
+import queryPlan from '../../D3Visualization/lib/visualization/components/queryPlan'
 
 export class PlanView extends Component {
   constructor (props) {
@@ -74,7 +75,7 @@ export class PlanView extends Component {
   }
   planInit (el) {
     if (el != null && !this.plan) {
-      const NeoConstructor = neo.queryPlan
+      const NeoConstructor = queryPlan
       this.el = el
       this.plan = new NeoConstructor(this.el)
       this.plan.display(this.state.extractedPlan)

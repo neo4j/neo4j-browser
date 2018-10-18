@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import d3 from 'd3'
 export const prepareForExport = (svgElement, graphElement, type) => {
   const dimensions = getSvgDimensions(graphElement)
-  let svg = window.d3.select(
+  let svg = d3.select(
     document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   )
 

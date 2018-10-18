@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import d3 from 'd3'
+import measureText from '../utils/textMeasurement'
 
-/* eslint-disable */
-window.neo = window.neo || {}
-
-neo.queryPlan = function(element) {
+function queryPlan (element) {
   let maxChildOperators = 2 // Fact we know about the cypher compiler
   let maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
   let maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
@@ -73,7 +72,7 @@ neo.queryPlan = function(element) {
     .domain(d3.keys(operatorCategories))
     .range(operatorColors)
 
-  let color = function(d) {
+  let color = function (d) {
     for (let name in operatorCategories) {
       let keywords = operatorCategories[name]
       for (let keyword of Array.from(keywords)) {
@@ -85,7 +84,7 @@ neo.queryPlan = function(element) {
     return augment(colors('other'))
   }
 
-  let rows = function(operator) {
+  let rows = function (operator) {
     let left
     return (left =
       operator.Rows != null ? operator.Rows : operator.EstimatedRows) != null
@@ -93,7 +92,7 @@ neo.queryPlan = function(element) {
       : 0
   }
 
-  let plural = function(noun, count) {
+  let plural = function (noun, count) {
     if (count === 1) {
       return noun
     } else {
@@ -103,7 +102,7 @@ neo.queryPlan = function(element) {
 
   let formatNumber = d3.format(',.0f')
 
-  let operatorDetails = function(operator) {
+  let operatorDetails = function (operator) {
     let expression, identifiers, index, left, left1
     if (!operator.expanded) {
       return []
@@ -111,8 +110,8 @@ neo.queryPlan = function(element) {
 
     let details = []
 
-    let wordWrap = function(string, className) {
-      let measure = text => neo.utils.measureText(text, fixedWidthFont, 10)
+    let wordWrap = function (string, className) {
+      let measure = text => measureText(text, fixedWidthFont, 10)
 
       let words = string.split(/([^a-zA-Z\d])/)
 
@@ -223,7 +222,7 @@ neo.queryPlan = function(element) {
     return details
   }
 
-  let transform = function(queryPlan) {
+  let transform = function (queryPlan) {
     let operators = []
     let links = []
 
@@ -232,19 +231,23 @@ neo.queryPlan = function(element) {
       children: [queryPlan.root]
     }
 
-    var collectLinks = function(operator, rank) {
+    let collectLinks = function (operator, rank) {
       operators.push(operator)
       operator.rank = rank
-      return Array.from(operator.children).map(
-        child => (
-          (child.parent = operator),
-          collectLinks(child, rank + 1),
-          links.push({
-            source: child,
-            target: operator
-          })
-        )
-      )
+      return (() => {
+        const result1 = []
+        for (let child of Array.from(operator.children)) {
+          child.parent = operator
+          collectLinks(child, rank + 1)
+          result1.push(
+            links.push({
+              source: child,
+              target: operator
+            })
+          )
+        }
+        return result1
+      })()
     }
 
     collectLinks(result, 0)
@@ -252,8 +255,8 @@ neo.queryPlan = function(element) {
     return [operators, links]
   }
 
-  let layout = function(operators, links) {
-    let costHeight = (function() {
+  let layout = function (operators, links) {
+    let costHeight = (function () {
       let scale = d3.scale
         .log()
         .domain([
@@ -268,7 +271,7 @@ neo.queryPlan = function(element) {
         scale((operator.DbHits != null ? operator.DbHits : 0) + 1)
     })()
 
-    let operatorHeight = function(operator) {
+    let operatorHeight = function (operator) {
       let height = operatorHeaderHeight
       if (operator.expanded) {
         height += operatorDetails(operator).slice(-1)[0].y + operatorPadding * 2
@@ -277,7 +280,7 @@ neo.queryPlan = function(element) {
       return height
     }
 
-    let linkWidth = (function() {
+    let linkWidth = (function () {
       let scale = d3.scale
         .log()
         .domain([
@@ -438,7 +441,7 @@ neo.queryPlan = function(element) {
     return [width, height]
   }
 
-  let render = function(operators, links, width, height, redisplay) {
+  let render = function (operators, links, width, height, redisplay) {
     let svg = d3.select(element)
 
     svg
@@ -473,26 +476,26 @@ neo.queryPlan = function(element) {
     return join(svg, {
       'g.layer.links': {
         data: [links],
-        selections(enter) {
+        selections (enter) {
           return enter.append('g').attr('class', 'layer links')
         },
         children: {
           '.link': {
-            data(d) {
+            data (d) {
               return d
             },
-            selections(enter) {
+            selections (enter) {
               return enter.append('g').attr('class', 'link')
             },
             children: {
               path: {
-                data(d) {
+                data (d) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections (enter, update) {
                   enter.append('path').attr('fill', linkColor)
 
-                  return update.transition().attr('d', function(d) {
+                  return update.transition().attr('d', function (d) {
                     width = Math.max(1, d.width)
                     let sourceX = d.source.x + operatorWidth / 2
                     let targetX = d.target.x + d.source.tx
@@ -540,7 +543,7 @@ neo.queryPlan = function(element) {
               },
 
               text: {
-                data(d) {
+                data (d) {
                   let x = d.source.x + operatorWidth / 2
                   let y = d.source.y + d.source.height + operatorDetailHeight
                   let { source } = d
@@ -568,7 +571,7 @@ neo.queryPlan = function(element) {
                     return []
                   }
                 },
-                selections(enter, update) {
+                selections (enter, update) {
                   enter
                     .append('text')
                     .attr('font-size', detailFontSize)
@@ -589,15 +592,15 @@ neo.queryPlan = function(element) {
 
       'g.layer.operators': {
         data: [operators],
-        selections(enter) {
+        selections (enter) {
           return enter.append('g').attr('class', 'layer operators')
         },
         children: {
           '.operator': {
-            data(d) {
+            data (d) {
               return d
             },
-            selections(enter, update) {
+            selections (enter, update) {
               enter.append('g').attr('class', 'operator')
 
               return update
@@ -606,10 +609,10 @@ neo.queryPlan = function(element) {
             },
             children: {
               'rect.background': {
-                data(d) {
+                data (d) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections (enter, update) {
                   enter.append('rect').attr('class', 'background')
 
                   return update
@@ -624,29 +627,29 @@ neo.queryPlan = function(element) {
               },
 
               'g.header': {
-                data(d) {
+                data (d) {
                   return [d]
                 },
-                selections(enter) {
+                selections (enter) {
                   return enter
                     .append('g')
                     .attr('class', 'header')
                     .attr('pointer-events', 'all')
-                    .on('click', function(d) {
+                    .on('click', function (d) {
                       d.expanded = !d.expanded
                       return redisplay()
                     })
                 },
                 children: {
                   'path.banner': {
-                    data(d) {
+                    data (d) {
                       return [d]
                     },
-                    selections(enter, update) {
+                    selections (enter, update) {
                       enter.append('path').attr('class', 'banner')
 
                       return update
-                        .attr('d', function(d) {
+                        .attr('d', function (d) {
                           let shaving =
                             d.height <= operatorHeaderHeight
                               ? operatorCornerRadius
@@ -716,15 +719,15 @@ neo.queryPlan = function(element) {
                   },
 
                   'path.expand': {
-                    data(d) {
+                    data (d) {
                       if (d.operatorType === 'Result') {
                         return []
                       } else {
                         return [d]
                       }
                     },
-                    selections(enter, update) {
-                      let rotateForExpand = function(d) {
+                    selections (enter, update) {
+                      let rotateForExpand = function (d) {
                         d3.transform()
                         return (
                           `translate(${operatorHeaderHeight /
@@ -753,10 +756,10 @@ neo.queryPlan = function(element) {
                   },
 
                   'text.title': {
-                    data(d) {
+                    data (d) {
                       return [d]
                     },
-                    selections(enter) {
+                    selections (enter) {
                       return enter
                         .append('text')
                         .attr('class', 'title')
@@ -776,7 +779,7 @@ neo.queryPlan = function(element) {
 
               'g.detail': {
                 data: operatorDetails,
-                selections(enter, update, exit) {
+                selections (enter, update, exit) {
                   enter.append('g')
 
                   update
@@ -785,7 +788,7 @@ neo.queryPlan = function(element) {
                       'transform',
                       d => `translate(0, ${operatorHeaderHeight + d.y})`
                     )
-                    .attr('font-family', function(d) {
+                    .attr('font-family', function (d) {
                       if (
                         d.className === 'expression' ||
                         d.className === 'identifiers'
@@ -800,7 +803,7 @@ neo.queryPlan = function(element) {
                 },
                 children: {
                   text: {
-                    data(d) {
+                    data (d) {
                       if (d.key) {
                         return [
                           {
@@ -816,7 +819,7 @@ neo.queryPlan = function(element) {
                         ]
                       }
                     },
-                    selections(enter, update, exit) {
+                    selections (enter, update, exit) {
                       enter.append('text').attr('font-size', detailFontSize)
 
                       update
@@ -831,14 +834,14 @@ neo.queryPlan = function(element) {
                   },
 
                   'path.divider': {
-                    data(d) {
+                    data (d) {
                       if (d.className === 'padding') {
                         return [d]
                       } else {
                         return []
                       }
                     },
-                    selections(enter, update) {
+                    selections (enter, update) {
                       enter
                         .append('path')
                         .attr('class', 'divider')
@@ -865,16 +868,16 @@ neo.queryPlan = function(element) {
               },
 
               'path.cost': {
-                data(d) {
+                data (d) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections (enter, update) {
                   enter
                     .append('path')
                     .attr('class', 'cost')
                     .attr('fill', costColor)
 
-                  return update.transition().attr('d', function(d) {
+                  return update.transition().attr('d', function (d) {
                     if (d.costHeight < operatorCornerRadius) {
                       let shaving =
                         operatorCornerRadius -
@@ -945,7 +948,7 @@ neo.queryPlan = function(element) {
               },
 
               'text.cost': {
-                data(d) {
+                data (d) {
                   if (d.alwaysShowCost) {
                     let y = d.height - d.costHeight + operatorDetailHeight
                     return [
@@ -960,7 +963,7 @@ neo.queryPlan = function(element) {
                     return []
                   }
                 },
-                selections(enter, update) {
+                selections (enter, update) {
                   enter
                     .append('text')
                     .attr('class', 'cost')
@@ -978,10 +981,10 @@ neo.queryPlan = function(element) {
               },
 
               'rect.outline': {
-                data(d) {
+                data (d) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections (enter, update) {
                   enter.append('rect').attr('class', 'outline')
 
                   return update
@@ -1002,7 +1005,7 @@ neo.queryPlan = function(element) {
     })
   }
 
-  var display = function(queryPlan) {
+  var display = function (queryPlan) {
     let [operators, links] = Array.from(transform(queryPlan))
     let [width, height] = Array.from(layout(operators, links))
     return render(operators, links, width, height, () => display(queryPlan))
@@ -1010,3 +1013,5 @@ neo.queryPlan = function(element) {
   this.display = display
   return this
 }
+
+export default queryPlan

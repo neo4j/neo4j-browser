@@ -19,13 +19,16 @@
  */
 
 import { optionalToString } from 'services/utils'
+import Graph from './lib/visualization/components/graph'
+import Node from './lib/visualization/components/node'
+import Relationship from './lib/visualization/components/relationship'
 
 const mapProperties = _ => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = obj =>
   Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
 
 export function createGraph (nodes, relationships) {
-  let graph = new neo.models.Graph()
+  let graph = new Graph()
   graph.addNodes(mapNodes(nodes))
   graph.addRelationships(mapRelationships(relationships, graph))
   graph.display = { initialNodeDisplay: 300, nodeCount: 1 }
@@ -34,8 +37,7 @@ export function createGraph (nodes, relationships) {
 
 export function mapNodes (nodes) {
   return nodes.map(
-    node =>
-      new neo.models.Node(node.id, node.labels, mapProperties(node.properties))
+    node => new Node(node.id, node.labels, mapProperties(node.properties))
   )
 }
 
@@ -43,7 +45,7 @@ export function mapRelationships (relationships, graph) {
   return relationships.map(rel => {
     const source = graph.findNode(rel.startNodeId)
     const target = graph.findNode(rel.endNodeId)
-    return new neo.models.Relationship(
+    return new Relationship(
       rel.id,
       source,
       target,

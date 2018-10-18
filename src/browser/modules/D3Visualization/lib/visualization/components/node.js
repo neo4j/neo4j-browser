@@ -18,4 +18,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './d3-appendSvg.js'
+export default class Node {
+  isNode = true
+  isRelationship = false
+
+  constructor (id, labels, properties) {
+    this.id = id
+    this.labels = labels
+    this.propertyMap = properties
+    this.propertyList = (() => {
+      const result = []
+      for (let key of Object.keys(properties || {})) {
+        const value = properties[key]
+        result.push({ key, value })
+      }
+      return result
+    })()
+  }
+
+  toJSON () {
+    return this.propertyMap
+  }
+
+  relationshipCount (graph) {
+    const node = this
+    const rels = []
+    for (let relationship of Array.from(graph.relationships())) {
+      if (relationship.source === node || relationship.target === node) {
+        rels.push(relationship)
+      }
+    }
+    return rels.length
+  }
+}

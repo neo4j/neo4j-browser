@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, test, expect */
+/* global describe, test, expect */
 import React from 'react'
 import { render, cleanup } from 'react-testing-library'
 import { v1 as neo4j } from 'neo4j-driver-alias'
@@ -31,14 +31,6 @@ describe('PlanViews', () => {
   describe('PlanView', () => {
     test('displays plan view if it exists', () => {
       // Given
-      const display = jest.fn()
-      global.neo = {
-        queryPlan: el => {
-          return {
-            display
-          }
-        }
-      }
       const props = {
         query: 'MATCH xx0',
         result: {
@@ -46,20 +38,19 @@ describe('PlanViews', () => {
             plan: {
               dbHits: 'xx0',
               arguments: {},
-              children: []
+              children: [],
+              operatorType: 'ProduceResults',
+              identifiers: ['n']
             }
           }
         }
       }
 
       // When
-      render(<PlanView {...props} />)
+      const { getByText } = render(<PlanView {...props} />)
 
       // Then
-      const calls = display.mock.calls
-      const callObj = calls[0][0]
-      expect(callObj.root).toBeDefined()
-      expect(callObj.root.DbHits).toEqual('xx0')
+      expect(getByText('ProduceResults'))
     })
   })
   describe('PlanStatusbar', () => {
