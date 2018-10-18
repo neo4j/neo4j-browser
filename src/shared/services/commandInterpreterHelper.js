@@ -59,7 +59,7 @@ import {
 import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass } from 'shared/services/grassUtils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
-import { getUserTxMetadata } from './bolt/txMetadata'
+import { getUserTxMetadata } from 'shared/services/bolt/txMetadata'
 
 const availableCommands = [
   {
