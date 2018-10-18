@@ -17,247 +17,89 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-const webpack = require('webpack')
 const path = require('path')
-
-const DashboardPlugin = require('webpack-dashboard/plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 
-const nodeEnv = process.env.NODE_ENV || 'development'
-const isProduction = nodeEnv === 'production'
-
-const jsSourcePath = path.join(__dirname, './src/browser')
 const buildPath = path.join(__dirname, './dist')
 const assetsPath = path.join(__dirname, './dist/assets')
 const sourcePath = path.join(__dirname, './src/browser')
 
-// Common plugins
+const nodeEnv = process.env.NODE_ENV || 'development'
+const isProduction = nodeEnv === 'production'
+
 const plugins = [
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify(nodeEnv)
+    }
+  }),
   new CopyWebpackPlugin([
     {
-      from: {
-        glob: path.resolve('./src/browser/images') + '/**/*',
-        dot: false
-      },
-      to: assetsPath
+      from: path.resolve('./src/browser/images'),
+      to: assetsPath + '/images'
+    },
+    {
+      from: path.resolve('./src/browser/external/d3.min.js'),
+      to: assetsPath + '/js'
+    },
+    {
+      from: path.resolve('./src/browser/external/neoPlanner.js'),
+      to: assetsPath + '/js'
     },
     {
       from: path.resolve('./src/browser/external/canvg'),
       to: assetsPath + '/js/canvg'
     }
   ]),
-  new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, 'node-noop'),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: Infinity,
-    filename: 'vendor-[hash].js'
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: '[name].css',
+    chunkFilename: '[id].css'
   }),
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify(nodeEnv)
-    }
-  }),
-  new webpack.NamedModulesPlugin(),
   new HtmlWebpackPlugin({
     template: path.join(sourcePath, 'index.html'),
     path: buildPath,
     filename: 'index.html'
+  }),
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'static',
+    openAnalyzer: false,
+    reportFilename: './../bundle-report.html'
   })
 ]
 
-// Common rules
-const rules = [
-  {
-    test: /\.(js|jsx)$/,
-    exclude: /(node_modules)|(cypher-codemirror)/,
-    use: [
-      {
-        loader: 'babel-loader',
-        options: {
-          presets: [['es2015', { modules: false }], 'stage-2', 'react'],
-          plugins: ['styled-components']
-        }
-      }
-    ]
-  },
-  {
-    test: /\.json$/,
-    use: 'json-loader'
-  },
-  {
-    test: /\.css$/, // Guides
-    include: path.resolve('./src/browser/modules/Guides'),
-    use: [
-      'style-loader',
-      {
-        loader: 'css-loader',
-        options: {
-          modules: true,
-          importLoaders: 1,
-          camelCase: true,
-          localIdentName: '[local]'
-        }
-      },
-      'postcss-loader'
-    ]
-  },
-  {
-    test: /\.css$/,
-    include: path.resolve('./src'), // css modules for component css files
-    exclude: [
-      path.resolve('./src/browser/styles'),
-      path.resolve('./src/browser/modules/Guides')
-    ],
-    use: [
-      'style-loader',
-      {
-        loader: 'css-loader',
-        options: {
-          modules: true,
-          importLoaders: 1,
-          camelCase: 1,
-          localIdentName: '[name]__[local]___[hash:base64:5]'
-        }
-      },
-      'postcss-loader'
-    ]
-  },
-  {
-    test: /\.css$/, // global css files that don't need any processing
-    exclude: [
-      path.resolve('./src/browser/components'),
-      path.resolve('./src/browser/modules')
-    ],
-    use: ['style-loader', 'css-loader']
-  },
-
-  {
-    test: /\.(png|gif|jpg|svg)$/,
-    include: [path.resolve('./src/browser/modules')],
-    use: 'url-loader?limit=20480&name=assets/[name]-[hash].[ext]'
-  },
-  {
-    test: /\.html?$/,
-    use: ['html-loader']
-  },
-  {
-    test: /\.svg$/,
-    use:
-      'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
-    exclude: [path.resolve('./src/browser/icons')]
-  },
-  {
-    test: /\.svg$/,
-    loader: 'raw-loader',
-    include: [path.resolve('./src/browser/icons')]
-  },
-  {
-    test: /\.woff$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]'
-  },
-  {
-    test: /\.woff2$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]'
-  },
-  {
-    test: /\.[ot]tf$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/octet-stream&name=assets/fonts/[name].[ext]'
-  },
-  {
-    test: /\.eot$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
-  }
-]
-
+if (!isProduction) {
+  plugins.push(new webpack.HotModuleReplacementPlugin())
+}
 if (isProduction) {
-  // Production plugins
-  plugins.push(
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        screw_ie8: true,
-        conditionals: true,
-        unused: true,
-        comparisons: true,
-        sequences: true,
-        dead_code: true,
-        evaluate: true,
-        if_return: true,
-        join_vars: true
-      },
-      output: {
-        comments: false
-      }
-    }),
-    new ExtractTextPlugin('style-[hash].css')
-  )
-} else {
-  // Development plugins
-  plugins.push(
-    new webpack.HotModuleReplacementPlugin(),
-    new DashboardPlugin(),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: false,
-      reportFilename: './../bundle-report.html'
-    })
-  )
+  plugins.unshift(new CleanWebpackPlugin([buildPath]))
 }
 
 module.exports = {
-  devtool: isProduction ? 'source-map' : 'eval-source-map',
-  context: jsSourcePath,
-  entry: {
-    js: ['index.jsx'],
-    vendor: [
-      'firebase',
-      'neo4j-driver',
-      'rxjs',
-      'babel-polyfill',
-      'isomorphic-fetch',
-      'redux-observable',
-      'suber',
-      'react-suber',
-      'redux',
-      'styled-components',
-      'iconv-lite',
-      'pako',
-      'react-redux'
-    ]
-  },
+  mode: isProduction ? 'production' : 'development',
+  entry: './src/browser/index.jsx',
   output: {
-    path: buildPath,
-    publicPath: '',
     filename: 'app-[hash].js',
-    chunkFilename: '[name].[chunkhash].js'
+    publicPath: '',
+    path: buildPath,
+    globalObject: 'this'
   },
-  module: {
-    rules
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
   },
+  plugins,
   resolve: {
-    extensions: [
-      '.webpack-loader.js',
-      '.web-loader.js',
-      '.loader.js',
-      '.js',
-      '.jsx',
-      '.css'
-    ],
-    modules: [path.resolve(__dirname, 'node_modules'), jsSourcePath],
     alias: {
+      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
       'src-root': path.resolve(__dirname, 'src'),
       'project-root': path.resolve(__dirname),
       services: path.resolve(__dirname, 'src/shared/services'),
@@ -267,31 +109,145 @@ module.exports = {
       browser: path.resolve(__dirname, 'src/browser'),
       'browser-styles': path.resolve(__dirname, 'src/browser/styles'),
       icons: path.resolve(__dirname, 'src/browser/icons')
-    }
+    },
+    extensions: [
+      '.webpack-loader.js',
+      '.web-loader.js',
+      '.loader.js',
+      '.js',
+      '.jsx',
+      '.css',
+      '.coffee'
+    ]
   },
-  plugins,
-  devServer: {
-    contentBase: isProduction ? './build' : './src/browser',
-    historyApiFallback: true,
-    disableHostCheck: true,
-    port: 8080,
-    compress: isProduction,
-    inline: !isProduction,
-    hot: !isProduction,
-    host: '0.0.0.0',
-    stats: {
-      assets: true,
-      children: false,
-      chunks: false,
-      hash: false,
-      modules: false,
-      publicPath: false,
-      timings: true,
-      version: false,
-      warnings: true,
-      colors: {
-        green: '\u001b[32m'
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules)|(cypher-codemirror)/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    useBuiltIns: 'entry',
+                    targets: {
+                      esmodules: false
+                    }
+                  }
+                ],
+                '@babel/preset-react'
+              ],
+              plugins: [
+                'styled-components',
+                'react-hot-loader/babel',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-syntax-dynamic-import'
+              ]
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|gif|jpg|svg)$/,
+        include: [path.resolve('./src/browser/modules')],
+        use: 'file-loader?limit=20480&name=assets/[name]-[hash].[ext]'
+      },
+      {
+        test: /\.woff$/,
+        use:
+          'file-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]'
+      },
+      {
+        test: /\.woff2$/,
+        use:
+          'file-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]'
+      },
+      {
+        test: /\.[ot]tf$/,
+        use:
+          'file-loader?limit=65000&mimetype=application/octet-stream&name=assets/fonts/[name].[ext]'
+      },
+      {
+        test: /\.eot$/,
+        use:
+          'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
+      },
+      {
+        test: /\.css$/, // Guides
+        include: path.resolve('./src/browser/modules/Guides'),
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              camelCase: true,
+              localIdentName: '[local]'
+            }
+          },
+          'postcss-loader'
+        ]
+      },
+      {
+        test: /\.css$/,
+        include: path.resolve('./src'), // css modules for component css files
+        exclude: [
+          path.resolve('./src/browser/styles'),
+          path.resolve('./src/browser/modules/Guides')
+        ],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              camelCase: 1,
+              localIdentName: '[name]__[local]___[hash:base64:5]'
+            }
+          },
+          'postcss-loader'
+        ]
+      },
+      {
+        test: /\.css$/, // global css files that don't need any processing
+        exclude: [
+          path.resolve('./src/browser/components'),
+          path.resolve('./src/browser/modules')
+        ],
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.svg$/,
+        use:
+          'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
+        exclude: [path.resolve('./src/browser/icons')]
+      },
+      {
+        test: /\.svg$/,
+        loader: 'raw-loader',
+        include: [path.resolve('./src/browser/icons')]
+      },
+      {
+        test: /\.coffee$/,
+        exclude: /node_modules/,
+        loader: 'coffee-loader'
+      },
+      {
+        test: /\.html?$/,
+        use: ['html-loader']
       }
-    }
+    ]
+  },
+  devtool: isProduction ? false : 'inline-source-map',
+  devServer: {
+    port: 8080,
+    disableHostCheck: true,
+    hot: !isProduction
   }
 }
