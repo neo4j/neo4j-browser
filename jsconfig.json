@@ -1,14 +1,11 @@
 {
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "compilerOptions": {
     "target": "ES6",
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src/",
     "checkJs": false,
     "paths": {
-      "src-root/*": ["*"],
       "services/*": ["shared/services/*"],
       "browser-services/*": ["browser/services/*"],
       "shared/*": ["shared/*"],
