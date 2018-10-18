@@ -209,7 +209,7 @@ export class QueriesFrame extends Component {
       ['User', '8%'],
       ['Query', 'auto'],
       ['Params', '7%'],
-      ['Meta', '8%'],
+      ['Meta', 'auto'],
       ['Elapsed time', '95px'],
       ['Kill', '95px']
     ]
@@ -236,7 +236,11 @@ export class QueriesFrame extends Component {
           <StyledTd key='params' width={tableHeaderSizes[3][1]}>
             <Code>{JSON.stringify(query.parameters, null, 2)}</Code>
           </StyledTd>
-          <StyledTd key='meta' width={tableHeaderSizes[4][1]}>
+          <StyledTd
+            key='meta'
+            title={JSON.stringify(query.metaData, null, 2)}
+            width={tableHeaderSizes[4][1]}
+          >
             <Code>{JSON.stringify(query.metaData, null, 2)}</Code>
           </StyledTd>
           <StyledTd key='time' width={tableHeaderSizes[5][1]}>

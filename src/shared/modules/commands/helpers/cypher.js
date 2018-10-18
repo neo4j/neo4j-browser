@@ -27,7 +27,8 @@ export const handleCypherCommand = (
   action,
   put,
   params = {},
-  shouldUseCypherThread = false
+  shouldUseCypherThread = false,
+  txMetadata = undefined
 ) => {
   const paramsToNeo4jType = Object.keys(params).map(k => ({
     [k]: applyGraphTypes(params[k])
@@ -38,7 +39,8 @@ export const handleCypherCommand = (
     {
       useCypherThread: shouldUseCypherThread,
       requestId: action.requestId,
-      cancelable: true
+      cancelable: true,
+      ...txMetadata
     }
   )
   put(send('cypher', id))

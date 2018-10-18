@@ -18,14 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import semver from 'semver'
+import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { APP_START, WEB } from 'shared/modules/app/appDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+import { getVersion } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'features'
 export const RESET = 'features/RESET'
 export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
+const NEO4J_TX_METADATA_VERSION = '3.5.0-alpha01'
 
 export const getAvailableProcedures = state => state[NAME].availableProcedures
 export const isACausalCluster = state =>
@@ -33,6 +38,16 @@ export const isACausalCluster = state =>
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
 export const useBrowserSync = state => !!state[NAME].browserSync
+export const canSendTxMetadata = state => {
+  const serverVersion = getVersion(state)
+  if (!serverVersion) {
+    return false
+  }
+  if (semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)) {
+    return true
+  }
+  return false
+}
 
 const initialState = {
   availableProcedures: [],
@@ -70,16 +85,21 @@ export const featuresDiscoveryEpic = (action$, store) => {
         .routedReadTransaction(
           'CALL dbms.procedures YIELD name',
           {},
-          { useCypherThread: shouldUseCypherThread(store.getState()) }
+          {
+            useCypherThread: shouldUseCypherThread(store.getState()),
+            ...getBackgroundTxMetadata({
+              hasServerSupport: canSendTxMetadata(store.getState())
+            })
+          }
         )
         .then(res => {
           store.dispatch(
             updateFeatures(res.records.map(record => record.get('name')))
           )
-          return null
+          return Rx.Observable.of(null)
         })
         .catch(e => {
-          return null
+          return Rx.Observable.of(null)
         })
     })
     .mapTo({ type: 'NOOP' })

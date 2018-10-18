@@ -31,7 +31,9 @@ import {
   connectionLossFilter
 } from 'shared/modules/connections/connectionsDuck'
 import { FORCE_FETCH } from 'shared/modules/dbMeta/dbMetaDuck'
+import { canSendTxMetadata } from 'shared/modules/features/featuresDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
 export const NAME = 'jmx'
 export const UPDATE = NAME + '/UPDATE'
@@ -64,7 +66,12 @@ const fetchJmxValues = store => {
     .directTransaction(
       'CALL dbms.queryJmx("org.neo4j:*")',
       {},
-      { useCypherThread: shouldUseCypherThread(store.getState()) }
+      {
+        useCypherThread: shouldUseCypherThread(store.getState()),
+        ...getBackgroundTxMetadata({
+          hasServerSupport: canSendTxMetadata(store.getState())
+        })
+      }
     )
     .then(res => {
       const converters = {
@@ -72,19 +79,18 @@ const fetchJmxValues = store => {
         intConverter: val => val.toString(),
         objectConverter: extractFromNeoObjects
       }
-      return toObjects(
-        res.records,
-        converters
-      ).map(([name, description, attributes]) => {
-        return {
-          name,
-          description,
-          attributes
+      return toObjects(res.records, converters).map(
+        ([name, description, attributes]) => {
+          return {
+            name,
+            description,
+            attributes
+          }
         }
-      })
+      )
     })
     .catch(e => {
-      return null
+      return Rx.Observable.of(null)
     })
 }
 
@@ -120,13 +126,12 @@ export const jmxEpic = (some$, store) =>
     .filter(s => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() => {
-      return Rx.Observable
-        .timer(0, 20000)
+      return Rx.Observable.timer(0, 20000)
         .merge(some$.ofType(FORCE_FETCH))
         .mergeMap(() =>
-          Rx.Observable
-            .fromPromise(fetchJmxValues(store))
-            .catch(e => Rx.Observable.of(null))
+          Rx.Observable.fromPromise(fetchJmxValues(store)).catch(e =>
+            Rx.Observable.of(null)
+          )
         )
         .filter(r => r)
         .do(res => store.dispatch(updateJmxValues(res)))

@@ -72,7 +72,8 @@ describe('commandsDuck', () => {
         node: {
           color: '#000'
         }
-      }
+      },
+      meta: {}
     })
   })
   afterEach(() => {

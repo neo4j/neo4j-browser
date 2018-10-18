@@ -26,6 +26,8 @@ import {
   CONNECTION_SUCCESS,
   DISCONNECTION_SUCCESS
 } from 'shared/modules/connections/connectionsDuck'
+import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+import { canSendTxMetadata } from '../features/featuresDuck'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
@@ -89,7 +91,12 @@ export const getCurrentUserEpic = (some$, store) =>
         bolt.directTransaction(
           'CALL dbms.security.showCurrentUser()',
           {},
-          { useCypherThread: shouldUseCypherThread(store.getState()) }
+          {
+            useCypherThread: shouldUseCypherThread(store.getState()),
+            ...getBackgroundTxMetadata({
+              hasServerSupport: canSendTxMetadata(store.getState())
+            })
+          }
         )
       )
         .catch(() => Rx.Observable.of(null))
