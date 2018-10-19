@@ -25,6 +25,7 @@ describe('Plan output', () => {
     cy.visit(Cypress.config.url)
       .title()
       .should('include', 'Neo4j Browser')
+    cy.disableEditorAutocomplete()
   })
   it('can connect', () => {
     const password = Cypress.config.password

@@ -95,6 +95,12 @@ Cypress.Commands.add('executeCommand', query => {
   cy.get(Editor).type(query, { force: true })
   cy.get(SubmitQueryButton).click()
 })
+Cypress.Commands.add('disableEditorAutocomplete', () => {
+  cy.get(ClearEditorButton).click()
+  cy.executeCommand(`:config editorAutocomplete: false`)
+  cy.get(SubmitQueryButton).click()
+  cy.executeCommand(`:clear`)
+})
 Cypress.Commands.add('waitForCommandResult', () => {
   cy.get('[data-test-id="frame-loaded-contents"]', { timeout: 40000 }).should(
     'be.visible'
