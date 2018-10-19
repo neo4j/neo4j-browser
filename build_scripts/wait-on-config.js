@@ -1,4 +1,4 @@
 module.exports = {
   strictSSL: false,
-  timeout: 30000
+  timeout: 60000
 }
