@@ -40,29 +40,21 @@ const commands = [
   ':queries',
   ':get /',
   ':unknown',
-  'RETURN rand()'
+  'RETURN 1',
+  'ASDF'
 ]
 
 describe('Commands', () => {
   before(function () {
     cy.visit(Cypress.config.url)
-      .title()
-      .should('include', 'Neo4j Browser')
+    cy.get('input[data-test-id="boltaddress"]', { timeout: 40000 })
   })
   it('can run all simple commands not connected without blowing up', () => {
     commands.forEach(cmd => {
       cy.executeCommand(cmd)
+      cy.wait(300)
       cy.executeCommand(':clear')
     })
-  })
-  it('can show connection error', () => {
-    const password = 'unlikely password'
-    cy.connect(
-      'neo4j',
-      password,
-      undefined,
-      false
-    )
   })
   it('can connect', () => {
     const password = Cypress.config.password
@@ -74,6 +66,7 @@ describe('Commands', () => {
   it('can run all simple commands while connected without blowing up', () => {
     commands.forEach(cmd => {
       cy.executeCommand(cmd)
+      cy.wait(300)
       cy.executeCommand(':clear')
     })
   })

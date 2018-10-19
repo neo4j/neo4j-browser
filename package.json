@@ -23,6 +23,7 @@
   "scripts": {
     "start": "NODE_ENV=\"development\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
     "starts": "NODE_ENV=\"development\" webpack-dev-server --https --colors --config ./build_scripts/webpack.config.js",
+    "start-prod": "NODE_ENV=\"production\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
     "precommit": "lint-staged",
     "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
     "lint": "eslint --fix --ext .js --ext .jsx ./",
@@ -36,7 +37,9 @@
     "jar": "yarn build && mvn package",
     "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml",
-    "update-licenses": "sh ./scripts/generate_licenses.sh"
+    "update-licenses": "sh ./scripts/generate_licenses.sh",
+    "wait-on-neo4j": "wait-on  http-get://localhost:7474",
+    "wait-on-dev": "wait-on  http-get://localhost:8080"
   },
   "lint-staged": {
     "linters": {
@@ -96,7 +99,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.3",
     "css-loader": "^1.0.0",
-    "cypress": "3.1.0",
+    "cypress": "^3.1.0",
     "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-jsx": "^4.0.1",
@@ -132,6 +135,7 @@
     "redux-mock-store": "^1.2.3",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
+    "wait-on": "^3.1.0",
     "webpack": "^4.21.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2",
