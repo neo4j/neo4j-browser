@@ -67,7 +67,13 @@ module.exports = () => {
     plugins.push(new webpack.HotModuleReplacementPlugin())
   }
   if (helpers.isProduction) {
-    plugins.unshift(new CleanWebpackPlugin([helpers.buildPath]))
+    plugins.unshift(
+      new CleanWebpackPlugin([helpers.buildPath], {
+        root: helpers.projectPath,
+        verbose: false,
+        dry: false
+      })
+    )
   }
   return plugins
 }
