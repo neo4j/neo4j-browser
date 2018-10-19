@@ -28,7 +28,7 @@ export const handleCypherCommand = (
   put,
   params = {},
   shouldUseCypherThread = false,
-  txMetadata = undefined
+  txMetadata = {}
 ) => {
   const paramsToNeo4jType = Object.keys(params).map(k => ({
     [k]: applyGraphTypes(params[k])
