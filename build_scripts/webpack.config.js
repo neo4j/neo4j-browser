@@ -60,15 +60,7 @@ module.exports = {
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
       icons: path.resolve(helpers.browserPath, 'icons')
     },
-    extensions: [
-      '.webpack-loader.js',
-      '.web-loader.js',
-      '.loader.js',
-      '.js',
-      '.jsx',
-      '.css',
-      '.coffee'
-    ]
+    extensions: ['.js', '.jsx']
   },
   module: {
     rules
