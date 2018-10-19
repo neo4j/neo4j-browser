@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect, before */
+/* global Cypress, cy, test, expect, before, after */
 
 describe('Plan output', () => {
   before(function () {
@@ -26,6 +26,9 @@ describe('Plan output', () => {
       .title()
       .should('include', 'Neo4j Browser')
     cy.disableEditorAutocomplete()
+  })
+  after(function () {
+    cy.enableEditorAutocomplete()
   })
   it('can connect', () => {
     const password = Cypress.config.password
