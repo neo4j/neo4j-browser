@@ -35,7 +35,6 @@ module.exports = {
   plugins: getPlugins(),
   resolve: {
     alias: {
-      'neo4j-driver-alias': 'neo4j-driver/lib/browser/neo4j-web.min.js',
       'src-root': path.resolve(helpers.sourcePath),
       'project-root': path.resolve(__dirname, '../'),
       services: path.resolve(helpers.sourcePath, 'shared/services'),
