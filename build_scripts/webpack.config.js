@@ -32,11 +32,6 @@ module.exports = {
     path: helpers.buildPath,
     globalObject: 'this'
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
-    }
-  },
   plugins: getPlugins(),
   resolve: {
     alias: {
