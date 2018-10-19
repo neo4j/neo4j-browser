@@ -19,7 +19,7 @@
  */
 
 import { v4 } from 'uuid'
-import { v1 as neo4j } from 'neo4j-driver-alias'
+import { v1 as neo4j } from 'neo4j-driver'
 import WorkPool from '../WorkPool'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
@@ -74,7 +74,8 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
     useCypherThread = false,
     requestId = null,
     cancelable = false,
-    onLostConnection = () => {}
+    onLostConnection = () => {},
+    txMetadata = undefined
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -90,7 +91,8 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
           generateBoltHost(
             connectionProperties ? connectionProperties.host : ''
           )
-        )
+        ),
+        txMetadata
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -110,7 +112,8 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
     useCypherThread = false,
     requestId = null,
     cancelable = false,
-    onLostConnection = () => {}
+    onLostConnection = () => {},
+    txMetadata = undefined
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -126,7 +129,8 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
           generateBoltHost(
             connectionProperties ? connectionProperties.host : ''
           )
-        )
+        ),
+        txMetadata
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -146,7 +150,8 @@ function directTransaction (input, parameters, requestMetaData = {}) {
     useCypherThread = false,
     requestId = null,
     cancelable = false,
-    onLostConnection = () => {}
+    onLostConnection = () => {},
+    txMetadata = undefined
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -162,7 +167,8 @@ function directTransaction (input, parameters, requestMetaData = {}) {
           generateBoltHost(
             connectionProperties ? connectionProperties.host : ''
           )
-        )
+        ),
+        txMetadata
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)

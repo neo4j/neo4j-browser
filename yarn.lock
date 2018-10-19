@@ -6764,12 +6764,13 @@ neo-async@^2.5.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.5.2.tgz#489105ce7bc54e709d736b195f82135048c50fcc"
   integrity sha1-SJEFznvFTnCdc2sZX4ITUEjFD8w=
 
-neo4j-driver@^1.6.1:
-  version "1.6.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.6.3.tgz#b7a51bac401bd341082dff7766e8643d61752eb7"
-  integrity sha1-t6UbrEAb00EILf93ZuhkPWF1Lrc=
+neo4j-driver@^1.7.0:
+  version "1.7.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.7.0.tgz#38ea2be2fe43b9a2edc63bdfd500d062f053be99"
+  integrity sha1-OOor4v5DuaLtxjvf1QDQYvBTvpk=
   dependencies:
-    babel-runtime "^6.18.0"
+    babel-runtime "^6.26.0"
+    text-encoding "^0.6.4"
     uri-js "^4.2.1"
 
 next-tick@1:
@@ -10144,6 +10145,11 @@ test-exclude@^4.2.1:
     object-assign "^4.1.0"
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
+
+text-encoding@^0.6.4:
+  version "0.6.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/text-encoding/-/text-encoding-0.6.4.tgz#e399a982257a276dae428bb92845cb71bdc26d19"
+  integrity sha1-45mpgiV6J22uQou5KEXLcb3CbRk=
 
 text-table@~0.2.0:
   version "0.2.0"

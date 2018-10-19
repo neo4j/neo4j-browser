@@ -29,6 +29,7 @@ import {
   getGraphStyleData
 } from 'shared/modules/grass/grassDuck'
 import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
+import { canSendTxMetadata } from 'shared/modules/features/featuresDuck'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
@@ -58,6 +59,7 @@ import {
 import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass } from 'shared/services/grassUtils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import { getUserTxMetadata } from 'shared/services/bolt/txMetadata'
 
 const availableCommands = [
   {
@@ -151,7 +153,10 @@ const availableCommands = [
         action,
         put,
         getParams(state),
-        shouldUseCypherThread(state)
+        shouldUseCypherThread(state),
+        getUserTxMetadata({
+          hasServerSupport: canSendTxMetadata(store.getState())
+        })
       )
       put(cypher(action.cmd))
       put(frames.add({ ...action, type: 'cypher', requestId: id }))

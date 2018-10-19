@@ -35,6 +35,8 @@ import {
   onLostConnection
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+import { canSendTxMetadata } from '../features/featuresDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -65,7 +67,8 @@ export function getMetaInContext (state, context) {
   }
 }
 
-export const getVersion = state => state[NAME].server.version
+export const getVersion = state =>
+  (state[NAME] || {}).server ? (state[NAME] || {}).server.version : 0
 export const getEdition = state => state[NAME].server.edition
 export const getDbName = state => state[NAME].server.dbName
 export const getStoreSize = state => state[NAME].server.storeSize
@@ -285,37 +288,45 @@ export const dbMetaEpic = (some$, store) =>
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() => {
       return (
-        Rx.Observable
-          .timer(1, 20000)
+        Rx.Observable.timer(1, 20000)
           .merge(some$.ofType(FORCE_FETCH))
           // Labels, types and propertyKeys
           .mergeMap(() =>
-            Rx.Observable
-              .fromPromise(
-                bolt.routedReadTransaction(
-                  metaQuery,
-                  {},
-                  {
-                    useCypherThread: shouldUseCypherThread(store.getState()),
-                    onLostConnection: onLostConnection(store.dispatch)
-                  }
-                )
+            Rx.Observable.fromPromise(
+              bolt.routedReadTransaction(
+                metaQuery,
+                {},
+                {
+                  useCypherThread: shouldUseCypherThread(store.getState()),
+                  onLostConnection: onLostConnection(store.dispatch),
+                  ...getBackgroundTxMetadata({
+                    hasServerSupport: canSendTxMetadata(store.getState())
+                  })
+                }
               )
-              .catch(e => Rx.Observable.of(null))
+            ).catch(e => {
+              return Rx.Observable.of(null)
+            })
           )
           .filter(r => r)
           .do(res => store.dispatch(updateMeta(res)))
           // Cluster role
           .mergeMap(() =>
-            Rx.Observable
-              .fromPromise(
-                bolt.directTransaction(
-                  'CALL dbms.cluster.role() YIELD role',
-                  {},
-                  { useCypherThread: shouldUseCypherThread(store.getState()) }
-                )
+            Rx.Observable.fromPromise(
+              bolt.directTransaction(
+                'CALL dbms.cluster.role() YIELD role',
+                {},
+                {
+                  useCypherThread: shouldUseCypherThread(store.getState()),
+                  ...getBackgroundTxMetadata({
+                    hasServerSupport: canSendTxMetadata(store.getState())
+                  })
+                }
               )
-              .catch(e => Rx.Observable.of(null))
+            )
+              .catch(e => {
+                return Rx.Observable.of(null)
+              })
               .do(res => {
                 if (!res) return Rx.Observable.of(null)
                 const role = res.records[0].get(0)

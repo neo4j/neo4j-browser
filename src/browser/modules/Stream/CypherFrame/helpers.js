@@ -19,7 +19,7 @@
  */
 
 import bolt from 'services/bolt/bolt'
-import { v1 as neo4j } from 'neo4j-driver-alias'
+import { v1 as neo4j } from 'neo4j-driver'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import {
   recursivelyExtractGraphItems,
@@ -51,8 +51,9 @@ export function getBodyAndStatusBarMessages (result, maxRows) {
   let updateMessages = bolt.retrieveFormattedUpdateStatistics(result)
   let streamMessage =
     result.records.length > 0
-      ? `started streaming ${result.records
-        .length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
+      ? `started streaming ${
+        result.records.length
+      } records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
       : `completed ${totalTimeString} ${streamMessageTail}`
 
   if (updateMessages && updateMessages.length > 0) {
