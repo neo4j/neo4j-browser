@@ -32,6 +32,21 @@ module.exports = {
     path: helpers.buildPath,
     globalObject: 'this'
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        default: false,
+        vendors: false,
+        // vendor chunk
+        vendor: {
+          // sync + async chunks
+          chunks: 'all',
+          // import file path containing node_modules
+          test: /node_modules/
+        }
+      }
+    }
+  },
   plugins: getPlugins(),
   resolve: {
     alias: {
