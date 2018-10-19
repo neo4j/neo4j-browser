@@ -38,8 +38,10 @@
     "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml",
     "update-licenses": "sh ./scripts/generate_licenses.sh",
-    "wait-on-neo4j": "wait-on  http-get://localhost:7474",
-    "wait-on-dev": "wait-on  http-get://localhost:8080"
+    "wait-on-neo4j": "wait-on -c ./build_scripts/wait-on-config.js http-get://localhost:7474",
+    "wait-on-neo4js": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:7473",
+    "wait-on-dev": "wait-on -c ./build_scripts/wait-on-config.js http-get://localhost:8080",
+    "wait-on-devs": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:8080"
   },
   "lint-staged": {
     "linters": {
