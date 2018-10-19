@@ -177,8 +177,13 @@ export class Editor extends Component {
     this.setEditorValue(this.props.history[this.state.historyIndex])
   }
 
-  triggerAutocompletion (cm, changed) {
-    if (changed.text.length !== 1 || !this.props.enableEditorAutocomplete) {
+  triggerAutocompletion = (cm, changed) => {
+    if (
+      !changed ||
+      !changed.text ||
+      changed.text.length !== 1 ||
+      !this.props.enableEditorAutocomplete
+    ) {
       return
     }
 
@@ -193,7 +198,9 @@ export class Editor extends Component {
       text === '(' ||
       text === '{'
     if (triggerAutocompletion) {
-      cm.execCommand('autocomplete')
+      try {
+        cm.execCommand('autocomplete')
+      } catch (e) {}
     }
   }
 
@@ -214,7 +221,13 @@ export class Editor extends Component {
 
   componentDidMount () {
     this.codeMirror = this.editor.getCodeMirror()
-    this.codeMirror.on('change', this.triggerAutocompletion.bind(this))
+    this.codeMirror.on('change', (cm, changed) => {
+      try {
+        this.triggerAutocompletion(cm, changed)
+      } catch (e) {
+        console.log(e)
+      }
+    })
   }
 
   getEditorValue () {

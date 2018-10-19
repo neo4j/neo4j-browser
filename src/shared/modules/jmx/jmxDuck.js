@@ -89,9 +89,6 @@ const fetchJmxValues = store => {
         }
       )
     })
-    .catch(e => {
-      return Rx.Observable.of(null)
-    })
 }
 
 // Initial state

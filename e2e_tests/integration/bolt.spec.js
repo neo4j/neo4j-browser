@@ -26,6 +26,15 @@ describe('Bolt connections', () => {
       .title()
       .should('include', 'Neo4j Browser')
   })
+  it('can show connection error', () => {
+    const password = 'unlikely password'
+    cy.connect(
+      'neo4j',
+      password,
+      undefined,
+      false
+    )
+  })
   it('show "no connection" error when not using web workers', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':config useCypherThread: false')

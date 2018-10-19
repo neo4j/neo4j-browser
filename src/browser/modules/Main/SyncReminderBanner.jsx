@@ -35,10 +35,10 @@ import Render from 'browser-components/Render'
 import BrowserSyncAuthWindow from '../Sync/BrowserSyncAuthWindow'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import {
-  setSync,
   optOutSync,
   getUserAuthStatus,
-  SIGNED_IN
+  SIGNED_IN,
+  setSyncData
 } from 'shared/modules/sync/syncDuck'
 
 class SyncReminderBanner extends Component {
@@ -115,7 +115,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSync: syncObject => {
-      dispatch(setSync(syncObject))
+      dispatch(setSyncData(syncObject))
     },
     optOutSync: () => {
       dispatch(optOutSync())
@@ -123,4 +123,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SyncReminderBanner)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SyncReminderBanner)
