@@ -21,27 +21,28 @@
     }
   ],
   "scripts": {
-    "start": "NODE_ENV=\"development\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
-    "starts": "NODE_ENV=\"development\" webpack-dev-server --https --colors --config ./build_scripts/webpack.config.js",
-    "start-prod": "NODE_ENV=\"production\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
-    "precommit": "lint-staged",
-    "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
-    "lint": "eslint --fix --ext .js --ext .jsx ./",
-    "test": "npm run lint && jest",
+    "build": "NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
+    "dev": "jest --watch",
     "e2e": "cypress run",
     "e2e-local": "CYPRESS_E2E_TEST_ENV=\"local\" cypress run",
     "e2e-local-open": "CYPRESS_E2E_TEST_ENV=\"local\" cypress open",
-    "dev": "jest --watch",
-    "build": "NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
-    "prepare-jar": "node ./scripts/prepare-mvn-package.js",
+    "format": "prettier-eslint 'src/**/!(*.min).js' 'src/**/*.jsx' --write",
     "jar": "yarn build && mvn package",
+    "jest": "jest --coverage",
+    "lint": "eslint --fix --ext .js --ext .jsx ./",
+    "precommit": "lint-staged",
+    "prepare-jar": "node ./scripts/prepare-mvn-package.js",
+    "start": "NODE_ENV=\"development\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
+    "starts": "NODE_ENV=\"development\" webpack-dev-server --https --colors --config ./build_scripts/webpack.config.js",
+    "start-prod": "NODE_ENV=\"production\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
+    "test": "npm run lint && npm run jest",
+    "update-licenses": "sh ./scripts/generate_licenses.sh",
     "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml",
-    "update-licenses": "sh ./scripts/generate_licenses.sh",
-    "wait-on-neo4j": "wait-on -c ./build_scripts/wait-on-config.js http-get://localhost:7474",
-    "wait-on-neo4js": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:7473",
     "wait-on-dev": "wait-on -c ./build_scripts/wait-on-config.js http-get://localhost:8080",
-    "wait-on-devs": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:8080"
+    "wait-on-devs": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:8080",
+    "wait-on-neo4j": "wait-on -c ./build_scripts/wait-on-config.js http-get://localhost:7474",
+    "wait-on-neo4js": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:7473"
   },
   "lint-staged": {
     "linters": {
@@ -55,27 +56,6 @@
     "last 1 version",
     "IE 11"
   ],
-  "jest": {
-    "setupFiles": [
-      "raf/polyfill.js"
-    ],
-    "testPathIgnorePatterns": [
-      ".jsx$",
-      "/e2e_tests/"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
-      "^browser-styles(.*)$": "<rootDir>/src/browser/styles$1",
-      "^browser-components(.*)$": "<rootDir>/src/browser/components$1",
-      "worker-loader": "<rootDir>/__mocks__/workerLoaderMock.js",
-      "project-root(.*)$": "<rootDir>$1"
-    },
-    "modulePaths": [
-      "<rootDir>/src",
-      "<rootDir>/src/shared"
-    ]
-  },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
   },

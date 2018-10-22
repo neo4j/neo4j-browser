@@ -5,3 +5,4 @@ src/browser/external
 mvn
 cypress
 yarn-cache
+coverage/
