@@ -2,7 +2,8 @@
   "plugins": [
     "react-hot-loader/babel",
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-syntax-dynamic-import"
+    "@babel/plugin-syntax-dynamic-import",
+    "styled-components"
   ],
   "presets": [
     ["@babel/preset-env", { "useBuiltIns": "entry" }],
