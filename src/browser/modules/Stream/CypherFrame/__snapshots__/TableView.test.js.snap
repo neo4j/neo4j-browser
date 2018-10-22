@@ -3,10 +3,10 @@
 exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-eHgmQL ALSTw"
+    class="styled__StyledStatsBar-sc-1dtvgs1-32 hNrxzW"
   >
     <div
-      class="sc-caSCKo dBwEvm"
+      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
     />
   </div>
 </div>
@@ -15,10 +15,10 @@ exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
 exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-eHgmQL ALSTw"
+    class="styled__StyledStatsBar-sc-1dtvgs1-32 hNrxzW"
   >
     <div
-      class="sc-caSCKo dBwEvm"
+      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>
@@ -29,10 +29,10 @@ exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
 exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-gzVnrw jmtLCl"
+    class="styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
   >
     <div
-      class="sc-brqgnP bWxJLn"
+      class="styled__StyledBodyMessage-sc-1dtvgs1-35 hfUgGP"
     >
       (no changes, no records)
     </div>
@@ -43,15 +43,15 @@ exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="sc-gzVnrw jmtLCl"
+    class="styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
   >
     <table
-      class="sc-gisBJw hMNjzC"
+      class="DataTables__StyledTable-bf850j-0 cZayOW"
     >
       <thead>
         <tr>
           <th
-            class="table-header sc-cHGsZl Sqoke"
+            class="table-header DataTables__StyledTh-bf850j-2 gjWFrA"
           >
             x
           </th>
@@ -59,10 +59,10 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
       </thead>
       <tbody>
         <tr
-          class="table-row sc-kjoXOD fWuSOJ"
+          class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
         >
           <td
-            class="table-properties sc-TOsTZ itLVPa"
+            class="table-properties DataTables__StyledTd-bf850j-3 jDsjVi"
           >
             "y"
           </td>

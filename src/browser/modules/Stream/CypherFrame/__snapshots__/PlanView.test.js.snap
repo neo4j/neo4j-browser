@@ -3,13 +3,13 @@
 exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-gisBJw dqfpqi"
+    class="styled__StyledOneRowStatsBar-sc-1dtvgs1-33 dkmnzU"
   >
     <div
-      class="sc-kvZOFW gfNjxO"
+      class="styled__StyledLeftPartial-sc-1dtvgs1-42 cEQgJw"
     >
       <div
-        class="sc-hEsumM dpcDje"
+        class="Ellipsis-sc-1dn9bou-0 gzqRPC"
       >
         Cypher version: 
         xx0
@@ -22,25 +22,25 @@ exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
       </div>
     </div>
     <div
-      class="sc-frDJqD jrNxwj"
+      class="styled__StyledRightPartial-sc-1dtvgs1-41 zWSxr"
     >
       <ul
-        class="sc-hSdWYo dRKhSV"
+        class="styled__FrameTitlebarButtonSection-sc-1dtvgs1-10 dRnwVT"
       >
         <li
-          class="sc-gZMcBi xeFmB"
+          class="buttons__StyledFrameButton-sc-3xi0d5-10 cajKMw"
           data-test-id="planCollapseButton"
         >
           <i
-            class="sl-double-up sc-ktHwxA iKTexq"
+            class="sl-double-up IconContainer__I-sc-16whwc5-0 bXwiKG"
           />
         </li>
         <li
-          class="sc-gZMcBi xeFmB"
+          class="buttons__StyledFrameButton-sc-3xi0d5-10 cajKMw"
           data-test-id="planExpandButton"
         >
           <i
-            class="sl-double-down sc-cIShpX DUjig"
+            class="sl-double-down IconContainer__I-sc-16whwc5-0 bXwiKG"
           />
         </li>
       </ul>

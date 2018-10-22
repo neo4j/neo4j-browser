@@ -25,7 +25,7 @@ const helpers = require('./webpack-helpers')
 
 module.exports = {
   mode: helpers.isProduction ? 'production' : 'development',
-  entry: path.resolve(helpers.browserPath, 'index.jsx'),
+  entry: ['babel-polyfill', path.resolve(helpers.browserPath, 'index.jsx')],
   output: {
     filename: 'app-[hash].js',
     publicPath: '',
@@ -52,6 +52,7 @@ module.exports = {
   },
   devtool: helpers.isProduction ? false : 'inline-source-map',
   devServer: {
+    host: '0.0.0.0',
     port: 8080,
     disableHostCheck: true,
     hot: !helpers.isProduction

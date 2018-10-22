@@ -3,10 +3,10 @@
 exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-eHgmQL ALSTw"
+    class="styled__StyledStatsBar-sc-1dtvgs1-32 hNrxzW"
   >
     <div
-      class="sc-caSCKo dBwEvm"
+      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
     />
   </div>
 </div>
@@ -15,10 +15,10 @@ exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-eHgmQL ALSTw"
+    class="styled__StyledStatsBar-sc-1dtvgs1-32 hNrxzW"
   >
     <div
-      class="sc-caSCKo dBwEvm"
+      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>
@@ -31,88 +31,88 @@ exports[`CodeViews CodeView displays nothing if not successful query 1`] = `<div
 exports[`CodeViews CodeView displays request and response info if successful query 1`] = `
 <div>
   <div
-    class="sc-bZQynM bblfwJ"
+    class="styled__PaddedDiv-sc-1dtvgs1-6 ccSRli"
   >
     <table
-      class="sc-bRBYWo eaCMQw"
+      class="styled__StyledTable-sc-1dtvgs1-45 gRxPNQ"
     >
       <tbody
-        class="sc-hzDkRC cQdbyR"
+        class="styled__StyledTBody-sc-1dtvgs1-46 kjlJBA"
       >
         <tr
-          class="sc-fBuWsC gyJlGD"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
         >
           <td
-            class="sc-fMiknA bVjRtJ"
+            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
           >
             Server version
           </td>
           <td
-            class="sc-dVhcbM fghLuF"
+            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
           >
             xx1
           </td>
         </tr>
         <tr
-          class="sc-fBuWsC gyJlGD"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
         >
           <td
-            class="sc-fMiknA bVjRtJ"
+            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
           >
             Server address
           </td>
           <td
-            class="sc-dVhcbM fghLuF"
+            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
           >
             xx2
           </td>
         </tr>
         <tr
-          class="sc-fBuWsC gyJlGD"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
         >
           <td
-            class="sc-fMiknA bVjRtJ"
+            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
           >
             Query
           </td>
           <td
-            class="sc-dVhcbM fghLuF"
+            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
           >
             MATCH xx0
           </td>
         </tr>
         <tr
-          class="sc-fBuWsC gyJlGD"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
         >
           <td
-            class="sc-fMiknA bVjRtJ"
+            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
           >
             Summary
             <div
-              class="fa fa-caret-right sc-jhAzac ZehGm"
+              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-47 eeYvUX"
               title="Expand section"
             />
           </td>
           <td
-            class="sc-dVhcbM fghLuF"
+            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
           >
             {,  "server": {,    "version": "xx1", ...
           </td>
         </tr>
         <tr
-          class="sc-fBuWsC gyJlGD"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
         >
           <td
-            class="sc-fMiknA bVjRtJ"
+            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
           >
             Response
             <div
-              class="fa fa-caret-right sc-jhAzac ZehGm"
+              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-47 eeYvUX"
               title="Expand section"
             />
           </td>
           <td
-            class="sc-dVhcbM fghLuF"
+            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
           >
             [,  {,    "res": "xx3" ...
           </td>

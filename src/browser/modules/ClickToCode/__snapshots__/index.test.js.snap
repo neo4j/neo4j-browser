@@ -5,7 +5,7 @@ exports[`ClickToCode does not render if no children 1`] = `<div />`;
 exports[`ClickToCode renders all children 1`] = `
 <div>
   <code
-    class="sc-bdVaJa biJQaZ"
+    class="styled__StyledCodeBlock-gc778v-0 hlKJHw"
   >
     <div>
       <span>
@@ -20,7 +20,7 @@ exports[`ClickToCode renders all children 1`] = `
 exports[`ClickToCode renders children as code if no code is provided 1`] = `
 <div>
   <code
-    class="sc-bdVaJa biJQaZ"
+    class="styled__StyledCodeBlock-gc778v-0 hlKJHw"
   >
     hellohi!
   </code>
@@ -30,7 +30,7 @@ exports[`ClickToCode renders children as code if no code is provided 1`] = `
 exports[`ClickToCode renders code as the code when code is available 1`] = `
 <div>
   <code
-    class="sc-bdVaJa biJQaZ"
+    class="styled__StyledCodeBlock-gc778v-0 hlKJHw"
   >
     hello
   </code>

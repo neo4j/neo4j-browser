@@ -3,14 +3,14 @@
 exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
 <div>
   <div
-    class="sc-bdVaJa kwzqrW"
+    class="Ellipsis-sc-1dn9bou-0 gzqRPC"
   >
     <span
-      class="sc-hSdWYo xUFHm"
+      class="styled__ErrorText-sc-1dtvgs1-29 dMsRZb"
       title="Test.Error: Test error description"
     >
       <i
-        class="fa fa-exclamation-triangle sc-cHGsZl hAqKMX"
+        class="fa fa-exclamation-triangle IconContainer__I-sc-16whwc5-0 bXwiKG"
       />
        
       Test.Error: Test error description
@@ -26,42 +26,42 @@ exports[`ErrorsViews ErrorsView displays nothing if no errors 1`] = `<div />`;
 exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`] = `
 <div>
   <div
-    class="sc-jzJRlG jCEPTw"
+    class="styled__StyledHelpFrame-sc-1dtvgs1-14 IJQaq"
   >
     <div
-      class="sc-cSHVUG bDcxKR"
+      class="styled__StyledHelpContent-sc-1dtvgs1-15 jPcVVC"
     >
       <div
-        class="sc-kAzzGY jQzNna"
+        class="styled__StyledHelpDescription-sc-1dtvgs1-16 buBBgk"
       >
         <div
-          class="sc-ckVGcZ kiGfIh"
+          class="styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
         >
           ERROR
         </div>
         <h4
-          class="sc-kEYyzF gfWKdx"
+          class="styled__StyledH4-sc-1dtvgs1-26 jXSkte"
         >
           Neo.ClientError.Procedure.ProcedureNotFound
         </h4>
       </div>
       <div
-        class="sc-chPdSV byfFmt"
+        class="styled__StyledDiv-sc-1dtvgs1-17 kkPWFM"
       >
         <pre
-          class="sc-iAyFgw hIxaSC"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-28 fxWKEH"
         >
           Neo.ClientError.Procedure.ProcedureNotFound: not found
         </pre>
       </div>
       <div
-        class="sc-kGXeez jXSbBA"
+        class="styled__StyledLinkContainer-sc-1dtvgs1-19 eorHIm"
       >
         <a
-          class="sc-kgoBCf chbNIl"
+          class="styled__StyledLink-sc-1dtvgs1-18 cLfBMz"
         >
           <i
-            class="fa fa-play-circle-o sc-kjoXOD dndEnR"
+            class="fa fa-play-circle-o IconContainer__I-sc-16whwc5-0 eTELIJ"
           />
            List available procedures
         </a>
@@ -74,30 +74,30 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
 exports[`ErrorsViews ErrorsView does displays an error 1`] = `
 <div>
   <div
-    class="sc-jzJRlG jCEPTw"
+    class="styled__StyledHelpFrame-sc-1dtvgs1-14 IJQaq"
   >
     <div
-      class="sc-cSHVUG bDcxKR"
+      class="styled__StyledHelpContent-sc-1dtvgs1-15 jPcVVC"
     >
       <div
-        class="sc-kAzzGY jQzNna"
+        class="styled__StyledHelpDescription-sc-1dtvgs1-16 buBBgk"
       >
         <div
-          class="sc-ckVGcZ kiGfIh"
+          class="styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
         >
           ERROR
         </div>
         <h4
-          class="sc-kEYyzF gfWKdx"
+          class="styled__StyledH4-sc-1dtvgs1-26 jXSkte"
         >
           Test.Error
         </h4>
       </div>
       <div
-        class="sc-chPdSV byfFmt"
+        class="styled__StyledDiv-sc-1dtvgs1-17 kkPWFM"
       >
         <pre
-          class="sc-iAyFgw hIxaSC"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-28 fxWKEH"
         >
           Test.Error: Test error description
         </pre>
