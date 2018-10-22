@@ -19,7 +19,13 @@
  */
 
 /* global describe, test, expect */
-import reducer, { NAME, UPDATE, REPLACE, shouldReportUdc } from './settingsDuck'
+import reducer, {
+  NAME,
+  UPDATE,
+  REPLACE,
+  shouldReportUdc,
+  getInitCmd
+} from './settingsDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('settings reducer', () => {
@@ -87,6 +93,28 @@ describe('Selectors', () => {
         [NAME]: { shouldReportUdc: t.test }
       }
       expect(shouldReportUdc(state)).toEqual(t.expect)
+    })
+  })
+  test("let getInitCmd be falsy and cast to empty string if that's the case", () => {
+    // Given
+    const tests = [
+      { test: ':play start', expect: ':play start' },
+      { test: null, expect: '' },
+      { test: undefined, expect: '' },
+      { test: '', expect: '' },
+      { test: ' ', expect: '' },
+      {
+        test: '//Todays number is:\nRETURN rand()',
+        expect: '//Todays number is:\nRETURN rand()'
+      }
+    ]
+
+    // When && Then
+    tests.forEach(t => {
+      const state = {
+        [NAME]: { initCmd: t.test }
+      }
+      expect(getInitCmd(state)).toEqual(t.expect)
     })
   })
 })

@@ -79,6 +79,13 @@ const visualSettings = [
           tooltip: 'Show sample scripts in favorites drawer.',
           type: 'checkbox'
         }
+      },
+      {
+        initCmd: {
+          displayName: 'Initial command to execute',
+          tooltip: 'This commands is executed once connected to a graph.',
+          type: 'input'
+        }
       }
     ]
   },

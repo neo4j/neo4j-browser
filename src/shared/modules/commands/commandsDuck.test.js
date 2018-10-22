@@ -111,6 +111,22 @@ describe('commandsDuck', () => {
       // See snoopOnActions above
     })
 
+    test('emtpy SYSTEM_COMMAND_QUEUED gets ignored', done => {
+      // Given
+      const cmd = ' '
+      const id = 2
+      const action = commands.executeSystemCommand(cmd, id)
+      bus.take('NOOP', () => {
+        // Then
+        const actions = store.getActions()
+        expect(actions[0]).toEqual(action)
+        expect(actions[1]).toEqual({ type: 'NOOP' })
+        done()
+      })
+      // When
+      store.dispatch(action)
+    })
+
     test('does the right thing for :param x: 2', done => {
       // Given
       const cmd = store.getState().settings.cmdchar + 'param'
