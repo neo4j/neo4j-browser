@@ -24,31 +24,7 @@ module.exports = [
   {
     test: /\.(js|jsx)$/,
     exclude: /(node_modules)|(cypher-codemirror)/,
-    use: [
-      {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                useBuiltIns: 'entry',
-                targets: {
-                  esmodules: false
-                }
-              }
-            ],
-            '@babel/preset-react'
-          ],
-          plugins: [
-            'styled-components',
-            'react-hot-loader/babel',
-            '@babel/plugin-proposal-class-properties',
-            '@babel/plugin-syntax-dynamic-import'
-          ]
-        }
-      }
-    ]
+    use: 'babel-loader'
   },
   {
     test: /\.(png|gif|jpg|svg)$/,
