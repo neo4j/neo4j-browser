@@ -179,7 +179,7 @@ function queryPlan (element) {
     }
 
     if (operator.Order) {
-      wordWrap(`Order by index: ${operator.Order}`, 'order')
+      wordWrap(`Ordered by ${operator.Order}`, 'order')
       details.push({ className: 'padding' })
     }
 

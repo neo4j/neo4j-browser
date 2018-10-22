@@ -46,7 +46,7 @@ describe('Plan output', () => {
       )
       cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
       const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
-      el.should('contain', 'Order by index: n.age ASC')
+      el.should('contain', 'Ordered by n.age ASC')
     })
   }
   if (Cypress.config.serverVersion >= 3.4) {
