@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfirmationButton renders changes state on clicks and finally calls the onConfirmed prop 1`] = `
+<div>
+  <button
+    class="ConfirmationButton__IconButton-sc-1h0apyh-0 dvujiG"
+    data-test-id="confirmation-button-initial"
+  >
+    <i
+      class="sl-minus-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
+    />
+  </button>
+</div>
+`;
+
+exports[`ConfirmationButton renders changes state on clicks and finally calls the onConfirmed prop 2`] = `
+<div>
+  <span>
+    <button
+      class="ConfirmationButton__IconButton-sc-1h0apyh-0 dvujiG"
+      data-test-id="confirmation-button-confirm"
+    >
+      <i
+        class="sl-arrow-circle-right IconContainer__I-sc-16whwc5-0 iJwbeZ"
+      />
+    </button>
+    <button
+      class="ConfirmationButton__IconButton-sc-1h0apyh-0 dvujiG"
+      data-test-id="confirmation-button-cancel"
+    >
+      <i
+        class="sl-delete-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
+      />
+    </button>
+  </span>
+</div>
+`;
+
+exports[`ConfirmationButton renders changes state on clicks and finally calls the onConfirmed prop 3`] = `
+<div>
+  <button
+    class="ConfirmationButton__IconButton-sc-1h0apyh-0 dvujiG"
+    data-test-id="confirmation-button-initial"
+  >
+    <i
+      class="sl-minus-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
+    />
+  </button>
+</div>
+`;
+
+exports[`ConfirmationButton renders changes state on clicks and finally calls the onConfirmed prop 4`] = `
+<div>
+  <button
+    class="ConfirmationButton__IconButton-sc-1h0apyh-0 dvujiG"
+    data-test-id="confirmation-button-initial"
+  >
+    <i
+      class="sl-minus-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
+    />
+  </button>
+</div>
+`;
