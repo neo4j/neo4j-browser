@@ -27,7 +27,7 @@ export const REPLACE = 'settings/REPLACE'
 export const getSettings = state => state[NAME]
 export const getMaxHistory = state =>
   state[NAME].maxHistory || initialState.maxHistory
-export const getInitCmd = state => state[NAME].initCmd || initialState.initCmd
+export const getInitCmd = state => (state[NAME].initCmd || '').trim()
 export const getTheme = state => state[NAME].theme || initialState.theme
 export const getUseBoltRouting = state =>
   state[NAME].useBoltRouting || initialState.useBoltRouting
