@@ -9,6 +9,8 @@ src/
 target/
 cypress/
 coverage/
+test_utils/
+build_scripts/
 .babelrc
 .eslintignore
 .eslintrc.json
@@ -17,10 +19,10 @@ cypress.json
 jsconfig.json
 pom.xml
 postcss.config.js
-webpack.config.js
 yarn.lock
 README.md
 bundle-report.html
 now.json
 yarn-error.log
 *.tgz
+jest.config.js
