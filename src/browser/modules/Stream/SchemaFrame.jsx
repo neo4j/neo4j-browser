@@ -66,6 +66,12 @@ export class SchemaFrame extends Component {
         this.responseHandler('constraints')
       )
     }
+    if (this.props.indexes) {
+      this.responseHandler('indexes')(this.props.indexes)
+    }
+    if (this.props.constraints) {
+      this.responseHandler('constraints')(this.props.constraints)
+    }
   }
 
   formatIndexAndConstraints (indexes, constraints) {
@@ -80,9 +86,11 @@ export class SchemaFrame extends Component {
         acc += `\n  ${index.description.replace(
           'INDEX',
           ''
-        )} ${index.state.toUpperCase()} ${index.type === 'node_unique_property'
-          ? ' (for uniqueness constraint)'
-          : ''}`
+        )} ${index.state.toUpperCase()} ${
+          index.type === 'node_unique_property'
+            ? ' (for uniqueness constraint)'
+            : ''
+        }`
         return acc
       }, '')
     }
@@ -101,7 +109,7 @@ export class SchemaFrame extends Component {
   }
 
   render () {
-    const contents = (
+    return (
       <StyledSchemaBody>
         {this.formatIndexAndConstraints(
           this.state.indexes,
@@ -109,8 +117,13 @@ export class SchemaFrame extends Component {
         )}
       </StyledSchemaBody>
     )
-
-    return <FrameTemplate header={this.props.frame} contents={contents} />
   }
 }
-export default withBus(SchemaFrame)
+
+const Frame = props => {
+  return (
+    <FrameTemplate header={props.frame} contents={<SchemaFrame {...props} />} />
+  )
+}
+
+export default withBus(Frame)

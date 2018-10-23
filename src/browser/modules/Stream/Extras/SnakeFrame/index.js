@@ -57,7 +57,7 @@ export const InitialStartButton = styled(FormButton)`
   color: #ffffff;
 `
 
-class SnakeFrame extends React.Component {
+export class SnakeFrame extends React.Component {
   state = {
     score: 0,
     play: false,
@@ -108,16 +108,17 @@ class SnakeFrame extends React.Component {
       </SplashScreen>
     )
     return (
-      <FrameTemplate
-        header={this.props.frame}
-        contents={
-          <PaddedDiv>
-            {game}
-            {splash}
-          </PaddedDiv>
-        }
-      />
+      <PaddedDiv>
+        {game}
+        {splash}
+      </PaddedDiv>
     )
   }
 }
-export default SnakeFrame
+
+const Frame = (...props) => {
+  return (
+    <FrameTemplate header={props.frame} contents={<SnakeFrame {...props} />} />
+  )
+}
+export default Frame
