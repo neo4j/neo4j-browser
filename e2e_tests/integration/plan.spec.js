@@ -37,6 +37,18 @@ describe('Plan output', () => {
       password
     )
   })
+  if (Cypress.config.serverVersion >= 3.5) {
+    it('print Order in PROFILE', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand(`CREATE INDEX ON :Person(age)`)
+      cy.executeCommand(
+        `EXPLAIN MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age`
+      )
+      cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
+      const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+      el.should('contain', 'Ordered by n.age ASC')
+    })
+  }
   if (Cypress.config.serverVersion >= 3.4) {
     it('print pagecache stats in PROFILE', () => {
       cy.executeCommand(':clear')

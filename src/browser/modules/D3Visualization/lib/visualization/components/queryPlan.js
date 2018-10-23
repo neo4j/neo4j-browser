@@ -178,6 +178,11 @@ function queryPlan (element) {
       details.push({ className: 'padding' })
     }
 
+    if (operator.Order) {
+      wordWrap(`Ordered by ${operator.Order}`, 'order')
+      details.push({ className: 'padding' })
+    }
+
     if (operator.PageCacheHits || operator.PageCacheMisses) {
       details.push({
         className: 'pagecache-hits',
