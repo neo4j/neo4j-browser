@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LabelItems renders empty 1`] = `
+<div>
+  <div
+    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+  >
+    <h5
+      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+    >
+      Node Labels
+    </h5>
+    <div
+      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+    >
+      <p>
+        There are no labels in database
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LabelItems renders labels 1`] = `
+<div>
+  <div
+    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+  >
+    <h5
+      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+    >
+      Node Labels
+    </h5>
+    <div
+      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+    >
+      <div
+        class="styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
+        data-test-id="sidebarMetaItem"
+      >
+        *
+      </div>
+      <div
+        class="styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
+        data-test-id="sidebarMetaItem"
+      >
+        MyLabel
+      </div>
+      <div
+        class="styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
+        data-test-id="sidebarMetaItem"
+      >
+        MyLabel2
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PropertyItems renders empty 1`] = `
+<div>
+  <div
+    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+  >
+    <h5
+      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+    >
+      Property Keys
+    </h5>
+    <div
+      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+    >
+      <p>
+        There are no properties in database
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PropertyItems renders properties 1`] = `
+<div>
+  <div
+    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+  >
+    <h5
+      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+    >
+      Property Keys
+    </h5>
+    <div
+      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+    >
+      <div
+        class="styled__StyledProperty-sc-1srdf8s-3 EddIa"
+        data-test-id="sidebarMetaItem"
+      >
+        prop1
+      </div>
+      <div
+        class="styled__StyledProperty-sc-1srdf8s-3 EddIa"
+        data-test-id="sidebarMetaItem"
+      >
+        prop2
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RelationshipItems renders empty 1`] = `
+<div>
+  <div
+    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+  >
+    <h5
+      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+    >
+      Relationship Types
+    </h5>
+    <div
+      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+    >
+      <p>
+        No relationships in database
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RelationshipItems renders relationshipTypes 1`] = `
+<div>
+  <div
+    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+  >
+    <h5
+      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+    >
+      Relationship Types
+    </h5>
+    <div
+      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+    >
+      <div
+        class="styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
+        data-test-id="sidebarMetaItem"
+      >
+        *
+      </div>
+      <div
+        class="styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
+        data-test-id="sidebarMetaItem"
+      >
+        MY_TYPE
+      </div>
+      <div
+        class="styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
+        data-test-id="sidebarMetaItem"
+      >
+        MY_TYPE2
+      </div>
+    </div>
+  </div>
+</div>
+`;
