@@ -18,7 +18,11 @@ module.exports = {
     'project-root(.*)$': '<rootDir>$1'
   },
   modulePaths: ['<rootDir>/src', '<rootDir>/src/shared'],
-  collectCoverageFrom: ['**/src/**/*.js', '**/src/**/*.jsx'],
+  collectCoverageFrom: [
+    '**/src/**/*.js',
+    '**/src/**/*.jsx',
+    '!**/src/browser/external/**/*.js'
+  ],
   coverageThreshold: {
     global: {
       statements: 30,
