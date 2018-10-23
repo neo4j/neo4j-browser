@@ -5385,6 +5385,11 @@ istanbul-reports@^1.5.1:
   dependencies:
     handlebars "^4.0.3"
 
+jest-canvas-mock@^1.1.0:
+  version "1.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-canvas-mock/-/jest-canvas-mock-1.1.0.tgz#f6ed0998b6be3ae2b7e095d7173441ae62cc831e"
+  integrity sha1-9u0JmLa+OuK34JXXFzRBrmLMgx4=
+
 jest-changed-files@^23.4.2:
   version "23.4.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jest-changed-files/-/jest-changed-files-23.4.2.tgz#1eed688370cd5eebafe4ae93d34bb3b64968fe83"

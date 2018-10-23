@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Visualization renders 1`] = `<div />`;
+
+exports[`Visualization renders with result 1`] = `
+<div>
+  <div
+    class="VisualizationViewstyled__StyledVisContainer-sc-1b47q51-0 dFbJTz"
+  >
+    <div
+      class="one-legend-row styled__StyledFullSizeContainer-sc-13boxex-30 hrlJke"
+      id="svg-vis"
+    >
+      <div
+        class="one-row styled__StyledLegend-sc-13boxex-23 epTuur"
+      >
+        <div
+          class="contracted styled__StyledLegendRow-sc-13boxex-22 btLVbI"
+        >
+          <ul
+            class="list-inline styled__StyledLegendInlineList-sc-13boxex-24 bXzLDX"
+          >
+            <li
+              class="styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
+              data-test-id="viz-legend-labels"
+            >
+              <ul
+                class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
+              >
+                <li
+                  class="token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
+                  style="background-color: rgb(109, 206, 158); color: rgb(255, 255, 255);"
+                >
+                  *
+                  <span
+                    class="count styled__StyledTokenCount-sc-13boxex-20 SIGMp"
+                  >
+                    (1)
+                  </span>
+                </li>
+              </ul>
+            </li>
+            <li
+              class="styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
+              data-test-id="viz-legend-labels"
+            >
+              <ul
+                class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
+              >
+                <li
+                  class="token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
+                  style="background-color: rgb(104, 189, 246); color: rgb(255, 255, 255);"
+                >
+                  Person
+                  <span
+                    class="count styled__StyledTokenCount-sc-13boxex-20 SIGMp"
+                  >
+                    (1)
+                  </span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="styled__StyledSvgWrapper-sc-13boxex-0 emUVWV"
+      >
+        <svg
+          class="neod3viz"
+          viewBox="0 100 200 0"
+        >
+          <g
+            transform="translate(0,0)"
+          >
+            <rect
+              height="5000"
+              style="fill: none; pointer-events: all;"
+              transform="scale(1)"
+              width="5000"
+              x="-2500"
+              y="-2500"
+            />
+            <g>
+              <g
+                class="layer relationships"
+              />
+              <g
+                class="layer nodes"
+              >
+                <g
+                  class="node"
+                >
+                  <circle
+                    class="ring"
+                    cx="0"
+                    cy="0"
+                    r="29"
+                    stroke-width="8px"
+                  />
+                  <circle
+                    class="outline"
+                    cx="0"
+                    cy="0"
+                    fill="#68BDF6"
+                    r="25"
+                    stroke="#5CA8DB"
+                    stroke-width="2px"
+                  />
+                  <text
+                    dy="1.5625"
+                    fill="#FFFFFF"
+                    font-family="streamline"
+                    font-size="25"
+                    pointer-events="none"
+                    text-anchor="middle"
+                  />
+                  <text
+                    fill="#FFFFFF"
+                    font-size="10px"
+                    pointer-events="none"
+                    text-anchor="middle"
+                    y="5"
+                  >
+                     pro…
+                  </text>
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div
+        class="status-bar styled__StyledStatusBar-sc-13boxex-12 fBQkwD"
+      >
+        <div
+          class="status styled__StyledStatus-sc-13boxex-13 lfPraq"
+        >
+          <div
+            class="contracted inspector-footer styled__StyledInspectorFooter-sc-13boxex-5 fLefTL"
+          >
+            <ul
+              class="inspector-footer-row styled__StyledInspectorFooterRow-sc-13boxex-6 cjMrGU"
+              data-test-id="vizInspector"
+            >
+              <ul
+                class="list-inline styled__StyledInlineList-sc-13boxex-9 fWraRP"
+              >
+                <li
+                  class="pair styled__StyledInspectorFooterRowListPair-sc-13boxex-14 jeBqUF"
+                >
+                  <div
+                    class="value styled__StyledInspectorFooterRowListValue-sc-13boxex-8 huEFTy"
+                  >
+                    Displaying 1 nodes, 0 relationships.
+                  </div>
+                </li>
+              </ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,6 +1,6 @@
 module.exports = {
   testEnvironment: 'jest-environment-jsdom',
-  setupFiles: ['raf/polyfill.js'],
+  setupFiles: ['raf/polyfill.js', 'jest-canvas-mock'],
   setupTestFrameworkScriptFile: require.resolve('./test_utils/setupTests.js'),
   testPathIgnorePatterns: [
     '/e2e_tests/',
