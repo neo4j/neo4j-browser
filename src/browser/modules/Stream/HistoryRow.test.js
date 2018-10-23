@@ -20,10 +20,8 @@
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
 import React from 'react'
-import { render, fireEvent, cleanup } from 'react-testing-library'
+import { render, fireEvent } from 'react-testing-library'
 import HistoryRow from './HistoryRow'
-
-afterEach(cleanup)
 
 describe('HistoryRow', () => {
   test('triggers function on click', () => {

@@ -23,7 +23,7 @@ import Snake from './Snake'
 import Score from './Score'
 import FrameTemplate from '../../FrameTemplate'
 import { PaddedDiv } from '../../styled'
-import { FormButton } from 'src-root/browser/components/buttons/index'
+import { FormButton } from 'browser/components/buttons/index'
 import { worldColor, foodColor } from './helpers'
 
 const width = 600

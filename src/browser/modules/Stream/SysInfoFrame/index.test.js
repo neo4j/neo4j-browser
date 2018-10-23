@@ -21,10 +21,8 @@
 /* global jest, describe, test, expect */
 
 import React from 'react'
-import { render, cleanup } from 'react-testing-library'
+import { render } from 'react-testing-library'
 import { SysInfoFrame } from './index'
-
-afterEach(cleanup)
 
 jest.mock(
   'browser/modules/Stream/FrameTemplate',

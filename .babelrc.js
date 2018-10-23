@@ -5,7 +5,8 @@ module.exports = {
     'react-hot-loader/babel',
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-syntax-dynamic-import',
-    'styled-components'
+    'styled-components',
+    isTest ? 'babel-plugin-dynamic-import-node' : null
   ],
   presets: [
     [

@@ -18,8 +18,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import AppInit from './AppInit.jsx'
-
-ReactDOM.render(<AppInit />, document.getElementById('mount'))
+module.exports = '<svg></svg>' // To have the <SVGInline> component not throwing

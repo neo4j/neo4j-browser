@@ -17,9 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import 'react-testing-library/cleanup-after-each'
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import AppInit from './AppInit.jsx'
-
-ReactDOM.render(<AppInit />, document.getElementById('mount'))
+// polyfill for jsdom (for tests only)
+// tests with codemirror breaks without it
+global.document.createRange = () => {
+  return {
+    setEnd: () => {},
+    setStart: () => {},
+    getBoundingClientRect: () => {}
+  }
+}

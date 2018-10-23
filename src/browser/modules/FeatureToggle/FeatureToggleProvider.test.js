@@ -20,11 +20,9 @@
 
 /* global describe, test, expect */
 import React from 'react'
-import { render, cleanup } from 'react-testing-library'
+import { render } from 'react-testing-library'
 
 import { FeatureToggleProvider, Consumer } from './FeatureToggleProvider'
-
-afterEach(cleanup)
 
 const MyConsumer = () => {
   return (

@@ -20,14 +20,12 @@
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
 import React from 'react'
-import { render, fireEvent, cleanup } from 'react-testing-library'
+import { render, fireEvent } from 'react-testing-library'
 
 import { createBus } from 'suber'
 
 import { ClickToCode } from './index'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
-
-afterEach(cleanup)
 
 describe('ClickToCode', () => {
   let bus
@@ -119,7 +117,8 @@ describe('ClickToCode', () => {
     const myFn = jest.fn()
     const children = (
       <div>
-        <span>hello</span>hi!
+        <span>hello</span>
+        hi!
       </div>
     )
 

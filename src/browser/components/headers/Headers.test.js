@@ -17,5 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React from 'react'
+import { render } from 'react-testing-library'
+import { H1, H2, H3, H4, H5 } from './Headers'
 
-module.exports = 'test-file-stub'
+describe('headers', () => {
+  test('H1 renders', () => {
+    render(<H1 />)
+  })
+  test('H2 renders', () => {
+    render(<H2 />)
+  })
+  test('H3 renders', () => {
+    render(<H3 />)
+  })
+  test('H4 renders', () => {
+    render(<H4 />)
+  })
+  test('H5 renders', () => {
+    render(<H5 />)
+  })
+})

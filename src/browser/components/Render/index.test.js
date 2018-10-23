@@ -21,11 +21,9 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { render, cleanup } from 'react-testing-library'
+import { render } from 'react-testing-library'
 
 import Render from './index'
-
-afterEach(cleanup)
 
 describe('<Render>', () => {
   test('does not render if condition is false', () => {

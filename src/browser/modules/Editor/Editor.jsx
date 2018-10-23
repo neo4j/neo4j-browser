@@ -220,6 +220,16 @@ export class Editor extends Component {
   }
 
   componentDidMount () {
+    this.loadCodeMirror()
+  }
+  loadCodeMirror = () => {
+    if (this.codeMirror) {
+      return
+    }
+    if (!this.editor) {
+      setTimeout(() => this.loadCodeMirror(), 200)
+      return
+    }
     this.codeMirror = this.editor.getCodeMirror()
     this.codeMirror.on('change', (cm, changed) => {
       try {

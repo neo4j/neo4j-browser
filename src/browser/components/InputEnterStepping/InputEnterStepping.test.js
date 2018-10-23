@@ -1,11 +1,9 @@
 /* global jest */
 
 import React from 'react'
-import { render, fireEvent, cleanup, wait } from 'react-testing-library'
+import { render, fireEvent, wait } from 'react-testing-library'
 
 import InputEnterStepping from './InputEnterStepping'
-
-afterEach(cleanup)
 
 test('renders the render prop', () => {
   // When

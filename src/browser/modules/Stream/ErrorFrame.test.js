@@ -20,11 +20,9 @@
 
 /* global describe, test, expect */
 import React from 'react'
-import { render, cleanup } from 'react-testing-library'
+import { render } from 'react-testing-library'
 import 'jest-dom/extend-expect'
 import { ErrorView } from './ErrorFrame'
-
-afterEach(cleanup)
 
 describe('ErrorFrame', () => {
   test('displays UndefinedError if no error specified', async () => {

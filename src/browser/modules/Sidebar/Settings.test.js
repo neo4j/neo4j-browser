@@ -20,10 +20,8 @@
 
 /* global describe, beforeEach, afterEach, test, expect */
 import React from 'react'
-import { render, cleanup } from 'react-testing-library'
+import { render } from 'react-testing-library'
 import { Settings } from './Settings'
-
-afterEach(cleanup)
 
 test('Settings renders with strange characters in display name', () => {
   // Given

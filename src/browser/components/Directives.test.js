@@ -20,10 +20,8 @@
 
 /* global test, expect, jest, MouseEvent */
 import React from 'react'
-import { render, fireEvent, cleanup } from 'react-testing-library'
+import { render, fireEvent } from 'react-testing-library'
 import { Directives as DirectivesComponent } from './Directives'
-
-afterEach(cleanup)
 
 describe('Directives', () => {
   test('should attach play topic directive when contents has a play-topic attribute', () => {

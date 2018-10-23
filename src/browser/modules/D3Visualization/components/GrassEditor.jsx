@@ -32,7 +32,7 @@ import {
   StyledCaptionSelector
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
-import { toKeyString } from 'src-root/shared/services/utils'
+import { toKeyString } from 'shared/services/utils'
 
 export class GrassEditorComponent extends Component {
   constructor (props) {

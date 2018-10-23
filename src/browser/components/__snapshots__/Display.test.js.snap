@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<Display> can lazy load if condition changes from false to true and has the lazy prop 1`] = `<div />`;
+
+exports[`<Display> can lazy load if condition changes from false to true and has the lazy prop 2`] = `
+<div>
+  <div
+    style="width: inherit; display: block;"
+  >
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;
+
 exports[`<Display> does display if condition is true 1`] = `
 <div>
   <div
@@ -12,10 +26,58 @@ exports[`<Display> does display if condition is true 1`] = `
 </div>
 `;
 
+exports[`<Display> hides if condition changes from true to false 1`] = `
+<div>
+  <div
+    style="width: inherit; display: block;"
+  >
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;
+
+exports[`<Display> hides if condition changes from true to false 2`] = `
+<div>
+  <div
+    style="width: inherit; display: none;"
+  >
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;
+
 exports[`<Display> hides if condition is false 1`] = `
 <div>
   <div
     style="width: inherit; display: none;"
+  >
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;
+
+exports[`<Display> shows if condition changes from false to true 1`] = `
+<div>
+  <div
+    style="width: inherit; display: none;"
+  >
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;
+
+exports[`<Display> shows if condition changes from false to true 2`] = `
+<div>
+  <div
+    style="width: inherit; display: block;"
   >
     <span>
       Hello

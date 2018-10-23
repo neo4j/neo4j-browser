@@ -21,10 +21,8 @@
 /* global test, expect, jest */
 
 import React from 'react'
-import { render, wait, cleanup } from 'react-testing-library'
+import { render, wait } from 'react-testing-library'
 import DesktopIntegration from './index'
-
-afterEach(cleanup)
 
 describe('<DesktopIntegration>', () => {
   test('does not render anything if no integration point', () => {
