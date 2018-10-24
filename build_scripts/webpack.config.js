@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const path = require('path')
 const getPlugins = require('./webpack-plugins')
 const rules = require('./webpack-rules')
-const path = require('path')
 const helpers = require('./webpack-helpers')
 
 module.exports = {
   mode: helpers.isProduction ? 'production' : 'development',
-  entry: ['babel-polyfill', path.resolve(helpers.browserPath, 'index.jsx')],
+  entry: [path.resolve(helpers.browserPath, 'index.jsx')],
   output: {
     filename: 'app-[hash].js',
     publicPath: '',

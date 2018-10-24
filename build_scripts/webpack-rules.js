@@ -23,7 +23,7 @@ const path = require('path')
 module.exports = [
   {
     test: /\.(js|jsx)$/,
-    exclude: /(node_modules)|(cypher-codemirror)/,
+    exclude: /(node_modules)|(cypher-codemirror)|(test_utils)|(dist)/,
     use: 'babel-loader'
   },
   {

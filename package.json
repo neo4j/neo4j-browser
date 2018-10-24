@@ -52,10 +52,6 @@
       ]
     }
   },
-  "targets": [
-    "last 1 version",
-    "IE 11"
-  ],
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
   },
@@ -77,7 +73,6 @@
     "babel-plugin-module-resolver": "^2.4.0",
     "babel-plugin-styled-components": "^1.8.0",
     "babel-plugin-transform-react-jsx": "^6.23.0",
-    "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.3",
@@ -128,6 +123,7 @@
     "xml2js": "^0.4.19"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",

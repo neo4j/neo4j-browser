@@ -107,7 +107,7 @@ class Stream extends Component {
             try {
               const cmd = frame.cmd.replace(/^:/, '')
               const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
-              MyFrame = require(`./Extras/${Frame}`).default
+              MyFrame = require(`./Extras/index.js`)[Frame]
               if (!MyFrame) {
                 MyFrame = getFrame(frame.type)
               }
