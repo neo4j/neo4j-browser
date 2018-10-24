@@ -25,17 +25,26 @@ export default class DesktopIntegration extends Component {
   setupListener () {
     const { integrationPoint } = this.props
     if (integrationPoint && integrationPoint.onContextUpdate) {
+      const getKerberosTicket =
+        integrationPoint.getKerberosTicket || function () {}
       integrationPoint.onContextUpdate((event, newContext, oldContext) => {
         const handlerPropName = eventToHandler(event.type)
         if (!handlerPropName) return
         if (typeof this.props[handlerPropName] === 'undefined') return
-        this.props[handlerPropName](event, newContext, oldContext)
+        this.props[handlerPropName](
+          event,
+          newContext,
+          oldContext,
+          getKerberosTicket
+        )
       })
     }
   }
   loadInitialContext () {
     const { integrationPoint, onMount = null } = this.props
     if (integrationPoint && integrationPoint.getContext) {
+      const getKerberosTicket =
+        integrationPoint.getKerberosTicket || function () {}
       integrationPoint
         .getContext()
         .then(context => {
@@ -45,7 +54,12 @@ export default class DesktopIntegration extends Component {
               'bolt',
               activeGraph.connection || null
             )
-            onMount(activeGraph, connectionCredentials, context)
+            onMount(
+              activeGraph,
+              connectionCredentials,
+              context,
+              getKerberosTicket
+            )
           }
         })
         .catch(e => {}) // Catch but don't bother
