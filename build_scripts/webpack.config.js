@@ -28,6 +28,7 @@ module.exports = {
   entry: [path.resolve(helpers.browserPath, 'index.jsx')],
   output: {
     filename: 'app-[hash].js',
+    chunkFilename: '[name].chunkhash.bundle.js',
     publicPath: '',
     path: helpers.buildPath,
     globalObject: 'this'
@@ -49,6 +50,12 @@ module.exports = {
   },
   module: {
     rules
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    },
+    runtimeChunk: true
   },
   devtool: helpers.isProduction ? false : 'inline-source-map',
   devServer: {
