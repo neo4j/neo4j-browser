@@ -39,7 +39,8 @@ import {
   isConnected,
   getConnectionData,
   SILENT_DISCONNECT,
-  SWITCH_CONNECTION
+  SWITCH_CONNECTION,
+  SWITCH_CONNECTION_FAILED
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 import {
@@ -207,7 +208,11 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
   const setInitialConnectionData = (graph, credentials, context) => {
     const creds = getActiveCredentials('bolt', context)
-    if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
+    // No connection. Probably no graph active.
+    if (!creds) {
+      ownProps.bus.send(SWITCH_CONNECTION_FAILED)
+      return
+    }
     const httpsCreds = getActiveCredentials('https', context)
     const httpCreds = getActiveCredentials('http', context)
     const restApi =
