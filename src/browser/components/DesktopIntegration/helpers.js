@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const KERBEROS = 'KERBEROS'
-export const NATIVE = 'NATIVE'
+import { NATIVE, KERBEROS } from 'shared/modules/connections/connectionsDuck'
+
+export { NATIVE, KERBEROS }
 
 export const getActiveGraph = (context = {}) => {
   if (!context) return null

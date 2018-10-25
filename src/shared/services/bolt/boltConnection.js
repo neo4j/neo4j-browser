@@ -22,6 +22,7 @@ import { v1 as neo4j } from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { generateBoltHost } from 'services/utils'
+import { KERBEROS } from 'shared/modules/connections/connectionsDuck'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
@@ -68,6 +69,19 @@ const validateConnection = (driver, res, rej) => {
     })
 }
 
+const buildAuthObj = (props, opts) => {
+  let auth
+  if (props.authenticationMethod === KERBEROS) {
+    auth = neo4j.auth.kerberos(props.password)
+  } else {
+    auth =
+      opts.withoutCredentials || !props.username
+        ? neo4j.auth.basic('', '')
+        : neo4j.auth.basic(props.username, props.password)
+  }
+  return auth
+}
+
 const getDriver = (host, auth, opts, onConnectFail = () => {}) => {
   const boltHost = generateBoltHost(host)
   try {
@@ -81,10 +95,7 @@ const getDriver = (host, auth, opts, onConnectFail = () => {}) => {
 
 export const getDriversObj = (props, opts = {}, onConnectFail = () => {}) => {
   const driversObj = {}
-  const auth =
-    opts.withoutCredentials || !props.username
-      ? neo4j.auth.basic('', '')
-      : neo4j.auth.basic(props.username, props.password)
+  const auth = buildAuthObj(props, opts)
   const getDirectDriver = () => {
     if (driversObj.direct) return driversObj.direct
     driversObj.direct = getDriver(props.host, auth, opts, onConnectFail)
@@ -113,11 +124,8 @@ export function directConnect (
   shouldValidateConnection = true
 ) {
   const p = new Promise((resolve, reject) => {
-    const creds =
-      opts.withoutCredentials || !props.username
-        ? neo4j.auth.basic('', '')
-        : neo4j.auth.basic(props.username, props.password)
-    const driver = getDriver(props.host, creds, opts)
+    const auth = buildAuthObj(props, opts)
+    const driver = getDriver(props.host, auth, opts)
     driver.onError = e => {
       onLostConnection(e)
       reject(e)

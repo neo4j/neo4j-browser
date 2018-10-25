@@ -35,6 +35,7 @@ import {
 /* eslint-disable import/no-webpack-loader-syntax */
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
+import { NATIVE } from 'shared/modules/connections/connectionsDuck'
 
 let connectionProperties = null
 let boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
@@ -45,6 +46,7 @@ function openConnection (props, opts = {}, onLostConnection) {
       .openConnection(props, opts, onLostConnection)
       .then(r => {
         connectionProperties = {
+          authenticationMethod: props.authenticationMethod || NATIVE,
           username: props.username,
           password: props.password,
           host: props.host,
