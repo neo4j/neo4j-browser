@@ -80,10 +80,11 @@ export const ServerSwitchFrame = props => {
           <StyledConnectionBody>
             The connection credentials provided could not be used to connect.
             <br />
-            Did you start a graph?
+            Do you have an active graph?
             <br />
             Execute <ClickToCode>:server connect</ClickToCode> to manually enter
-            credentials if you have a graph running.
+            credentials if you have an active graph but the provided credentials
+            were wrong.
           </StyledConnectionBody>
         </Render>
         <Render
