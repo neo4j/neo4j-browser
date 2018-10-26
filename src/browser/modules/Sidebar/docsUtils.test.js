@@ -30,7 +30,7 @@ test('formatDocVersion', () => {
     { test: false, expect: 'current' },
     { test: '', expect: 'current' },
     { test: '1.1.0', expect: '1.1' },
-    { test: '1.1.0-beta01', expect: '1.1' },
+    { test: '1.1.0-beta01', expect: '1.1-preview' },
     { test: '1.1.2', expect: '1.1' },
     { test: '2.1.10', expect: '2.1' }
   ]

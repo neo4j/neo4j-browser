@@ -25,8 +25,17 @@ import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 
 export const formatDocVersion = v => {
-  if (!semver.valid(v)) return 'current'
+  if (!semver.valid(v)) {
+    return 'current'
+  }
+  if (semver.prerelease(v)) {
+    return `${semver.major(v)}.${semver.minor(v)}-preview`
+  }
   return `${semver.major(v)}.${semver.minor(v)}` || 'current'
+}
+export const shouldLinkToNewRefs = v => {
+  if (!semver.valid(v)) return false
+  return semver.gte(v, '3.5.0-alpha01')
 }
 
 const intro = [
@@ -40,48 +49,83 @@ const help = [
   { name: 'Available commands', command: ':help commands', type: 'help' },
   { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
 ]
-const getReferences = v => [
-  {
-    name: 'Developer Manual',
-    command: `https://neo4j.com/docs/developer-manual/${v}/`,
-    type: 'link'
-  },
-  {
-    name: 'Operations Manual',
-    command: `https://neo4j.com/docs/operations-manual/${v}/`,
-    type: 'link'
-  },
-  {
-    name: 'Cypher Refcard',
-    command: `https://neo4j.com/docs/cypher-refcard/${v}/`,
-    type: 'link'
-  },
-  {
-    name: 'GraphGists',
-    command: `https://neo4j.com/graphgists/`,
-    type: 'link'
-  },
-  {
-    name: 'Developer Site',
-    command: `https://www.neo4j.com/developer/`,
-    type: 'link'
-  },
-  {
-    name: 'Knowledge Base',
-    command: `https://neo4j.com/developer/kb/`,
-    type: 'link'
-  }
-]
 
-const getStaticItems = version => {
+const getReferences = (version, v) => {
+  const newRefs = [
+    {
+      name: 'Getting Started',
+      command: `https://neo4j.com/docs/getting-started/${v}`,
+      type: 'link'
+    },
+    {
+      name: 'Cypher Introduction',
+      command: ` https://neo4j.com/docs/cypher-manual/${v}/introduction/ `,
+      type: 'link'
+    }
+  ]
+  const oldRefs = [
+    {
+      name: 'Getting Started',
+      command: `https://neo4j.com/docs/developer-manual/${v}/get-started/`,
+      type: 'link'
+    },
+    {
+      name: 'Developer Manual',
+      command: `https://neo4j.com/docs/developer-manual/${v}/`,
+      type: 'link'
+    },
+    {
+      name: 'Cypher Introduction',
+      command: `https://neo4j.com/docs/developer-manual/${v}/cypher/`,
+      type: 'link'
+    }
+  ]
+  const commonRefs = [
+    {
+      name: 'Operations Manual',
+      command: `https://neo4j.com/docs/operations-manual/${v}/`,
+      type: 'link'
+    },
+    // Drivers manual needs to wait for the page to be published
+    // {
+    //   name: 'Drivers Manual',
+    //   command: `https://neo4j.com/docs/driver-manual/current/`,
+    //   type: 'link'
+    // },
+    {
+      name: 'Cypher Refcard',
+      command: `https://neo4j.com/docs/cypher-refcard/${v}/`,
+      type: 'link'
+    },
+    {
+      name: 'GraphGists',
+      command: `https://neo4j.com/graphgists/`,
+      type: 'link'
+    },
+    {
+      name: 'Developer Site',
+      command: `https://www.neo4j.com/developer/`,
+      type: 'link'
+    },
+    {
+      name: 'Knowledge Base',
+      command: `https://neo4j.com/developer/kb/`,
+      type: 'link'
+    }
+  ]
+  return [].concat(shouldLinkToNewRefs(version) ? newRefs : oldRefs, commonRefs)
+}
+
+const getStaticItems = (version, urlVersion) => {
   return {
     help,
     intro,
-    reference: getReferences(version)
+    reference: getReferences(version, urlVersion)
   }
 }
 
-const Documents = ({ items = {} }) => {
+const Documents = ({ version, urlVersion }) => {
+  const items = getStaticItems(version, urlVersion)
   return (
     <Drawer id='db-documents'>
       <DrawerHeader>Documents</DrawerHeader>
@@ -95,8 +139,10 @@ const Documents = ({ items = {} }) => {
 }
 
 const mapStateToProps = state => {
+  const version = getVersion(state)
   return {
-    items: getStaticItems(formatDocVersion(getVersion(state)))
+    version,
+    urlVersion: formatDocVersion(version)
   }
 }
 
