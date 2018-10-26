@@ -35,7 +35,7 @@ export const formatDocVersion = v => {
 }
 export const shouldLinkToNewRefs = v => {
   if (!semver.valid(v)) return false
-  return semver.gte(v, '3.5.0')
+  return semver.gte(v, '3.5.0-alpha01')
 }
 
 const intro = [
@@ -50,7 +50,7 @@ const help = [
   { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
 ]
 
-const getReferences = v => {
+const getReferences = (version, v) => {
   const newRefs = [
     {
       name: 'Getting Started',
@@ -113,18 +113,19 @@ const getReferences = v => {
       type: 'link'
     }
   ]
-  return [].concat(shouldLinkToNewRefs(v) ? newRefs : oldRefs, commonRefs)
+  return [].concat(shouldLinkToNewRefs(version) ? newRefs : oldRefs, commonRefs)
 }
 
-const getStaticItems = version => {
+const getStaticItems = (version, urlVersion) => {
   return {
     help,
     intro,
-    reference: getReferences(version)
+    reference: getReferences(version, urlVersion)
   }
 }
 
-const Documents = ({ items = {} }) => {
+const Documents = ({ version, urlVersion }) => {
+  const items = getStaticItems(version, urlVersion)
   return (
     <Drawer id='db-documents'>
       <DrawerHeader>Documents</DrawerHeader>
@@ -138,8 +139,10 @@ const Documents = ({ items = {} }) => {
 }
 
 const mapStateToProps = state => {
+  const version = getVersion(state)
   return {
-    items: getStaticItems(formatDocVersion(getVersion(state)))
+    version,
+    urlVersion: formatDocVersion(version)
   }
 }
 
