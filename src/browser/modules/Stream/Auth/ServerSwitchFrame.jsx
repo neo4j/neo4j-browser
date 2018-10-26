@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React from 'react'
 import FrameTemplate from '../FrameTemplate'
 import {
   StyledConnectionFrame,
@@ -31,76 +31,105 @@ import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render'
 import ClickToCode from '../../ClickToCode'
 
-class ServerStatusFrame extends Component {
-  render () {
-    const {
-      frame,
-      activeConnectionData: dynamicConnectionData = {}
-    } = this.props
-    const { activeConnectionData, storeCredentials } = frame
-    return (
-      <FrameTemplate
-        header={frame}
-        contents={
-          <StyledConnectionFrame>
-            <StyledConnectionAside>
-              <span>
-                <H3>Connection updated</H3>
-                You have switched connection.
-              </span>
-            </StyledConnectionAside>
-            <StyledConnectionBodyContainer>
-              <Render if={frame.type === 'switch-fail'}>
-                <StyledConnectionBody>
-                  The connection credentials provided could not be used to
-                  connect.
-                  <br />
-                  You are now disconnected.
-                  <br />
-                  Execute <ClickToCode>:server connect</ClickToCode> to manually
-                  enter credentials.
-                </StyledConnectionBody>
-              </Render>
-              <Render
-                if={
-                  frame.type === 'switch-success' &&
-                  activeConnectionData &&
-                  dynamicConnectionData &&
-                  dynamicConnectionData.authEnabled
-                }
-              >
-                <ConnectedView
-                  host={activeConnectionData && activeConnectionData.host}
-                  username={
-                    activeConnectionData && activeConnectionData.username
-                  }
-                  showHost
-                  storeCredentials={storeCredentials}
-                />
-              </Render>
-              <Render
-                if={
-                  frame.type === 'switch-success' &&
-                  activeConnectionData &&
-                  dynamicConnectionData &&
-                  !dynamicConnectionData.authEnabled
-                }
-              >
-                <div>
-                  <ConnectedView
-                    host={activeConnectionData && activeConnectionData.host}
-                    showHost
-                    hideStoreCredentials
-                    additionalFooter='You have a working connection with the Neo4j database and server auth is disabled.'
-                  />
-                </div>
-              </Render>
-            </StyledConnectionBodyContainer>
-          </StyledConnectionFrame>
-        }
-      />
-    )
-  }
+const connectionFailed = frame => {
+  return frame.type === 'switch-fail'
 }
 
-export default ServerStatusFrame
+const connectionSuccess = (
+  frame,
+  activeConnectionData,
+  dynamicConnectionData
+) => {
+  return (
+    frame.type === 'switch-success' &&
+    activeConnectionData &&
+    dynamicConnectionData &&
+    dynamicConnectionData.authEnabled
+  )
+}
+
+export const ServerSwitchFrame = props => {
+  const { frame, activeConnectionData: dynamicConnectionData = {} } = props
+  const { activeConnectionData, storeCredentials } = frame
+  return (
+    <StyledConnectionFrame>
+      <StyledConnectionAside>
+        <span>
+          <Render if={connectionFailed(frame)}>
+            <React.Fragment>
+              <H3>Connection failed</H3>
+              Could not connect.
+            </React.Fragment>
+          </Render>
+          <Render
+            if={connectionSuccess(
+              frame,
+              activeConnectionData,
+              dynamicConnectionData
+            )}
+          >
+            <React.Fragment>
+              <H3>Connection updated</H3>
+              You have switched connection.
+            </React.Fragment>
+          </Render>
+        </span>
+      </StyledConnectionAside>
+      <StyledConnectionBodyContainer>
+        <Render if={connectionFailed(frame)}>
+          <StyledConnectionBody>
+            The connection credentials provided could not be used to connect.
+            <br />
+            Do you have an active graph?
+            <br />
+            Execute <ClickToCode>:server connect</ClickToCode> to manually enter
+            credentials if you have an active graph but the provided credentials
+            were wrong.
+          </StyledConnectionBody>
+        </Render>
+        <Render
+          if={connectionSuccess(
+            frame,
+            activeConnectionData,
+            dynamicConnectionData
+          )}
+        >
+          <ConnectedView
+            host={activeConnectionData && activeConnectionData.host}
+            username={activeConnectionData && activeConnectionData.username}
+            showHost
+            storeCredentials={storeCredentials}
+          />
+        </Render>
+        <Render
+          if={
+            frame.type === 'switch-success' &&
+            activeConnectionData &&
+            dynamicConnectionData &&
+            !dynamicConnectionData.authEnabled
+          }
+        >
+          <div>
+            <ConnectedView
+              host={activeConnectionData && activeConnectionData.host}
+              showHost
+              hideStoreCredentials
+              additionalFooter='You have a working connection with the Neo4j database and server auth is disabled.'
+            />
+          </div>
+        </Render>
+      </StyledConnectionBodyContainer>
+    </StyledConnectionFrame>
+  )
+}
+
+const Frame = props => {
+  return (
+    <FrameTemplate
+      header={props.frame}
+      contents={<ServerSwitchFrame {...props} />}
+    />
+  )
+}
+
+export default Frame

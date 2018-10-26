@@ -31,7 +31,7 @@ export const getActiveGraph = (context = {}) => {
   return activeProject.graphs.find(({ status }) => status === 'ACTIVE')
 }
 
-export const getCredentials = (type, connection) => {
+export const getCredentials = (type, connection = null) => {
   if (!connection) return null
   const { configuration = null } = connection
   if (!configuration) {

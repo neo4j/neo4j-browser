@@ -39,11 +39,11 @@ export default class DesktopIntegration extends Component {
       integrationPoint
         .getContext()
         .then(context => {
-          const activeGraph = getActiveGraph(context)
+          const activeGraph = getActiveGraph(context) || {}
           if (onMount) {
             const connectionCredentials = getCredentials(
               'bolt',
-              activeGraph.connection
+              activeGraph.connection || null
             )
             onMount(activeGraph, connectionCredentials, context)
           }
