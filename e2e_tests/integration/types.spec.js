@@ -110,12 +110,12 @@ describe('Types in Browser', () => {
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
-      cy.resultContains('"14:03:04+02:00"')
+      cy.resultContains('"14:03:04')
       // Go to ascii view
       cy.get('[data-test-id="cypherFrameSidebarAscii"')
         .first()
         .click()
-      cy.resultContains('│"14:03:04+02:00"')
+      cy.resultContains('│"14:03:04')
     })
     it('presents localtime type correctly', () => {
       cy.executeCommand(':clear')
