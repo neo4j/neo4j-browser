@@ -136,3 +136,30 @@ const quoteSpecialStyles = (style, value) =>
   (shouldQuoteStyle(style) ? '"' : '') +
   value +
   (shouldQuoteStyle(style) ? '"' : '')
+
+export const selectorStringToArray = selector => {
+  selector = selector
+    .split('')
+    .reverse()
+    .join('')
+  var re = /(.+?)(?!\.\\)(?:\.|$)/g
+  const out = []
+  let m
+  while ((m = re.exec(selector)) !== null) {
+    const res = m[1]
+      .split('')
+      .reverse()
+      .join('')
+    out.push(res)
+  }
+
+  return out
+    .filter(r => r)
+    .reverse()
+    .map(r => r.replace(/\\./g, '.'))
+}
+
+export const selectorArrayToString = selectors => {
+  const escaped = selectors.map(r => r.replace(/\./g, '\\.'))
+  return escaped.join('.')
+}
