@@ -1,8 +1,3 @@
-import {
-  selectorStringToArray,
-  selectorArrayToString
-} from 'services/grassUtils'
-
 /*
  * Copyright (c) 2002-2018 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
@@ -22,6 +17,11 @@ import {
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import {
+  selectorStringToArray,
+  selectorArrayToString
+} from 'services/grassUtils'
 
 export default function neoGraphStyle () {
   const defaultStyle = {

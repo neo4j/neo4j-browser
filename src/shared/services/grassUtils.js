@@ -138,6 +138,10 @@ const quoteSpecialStyles = (style, value) =>
   (shouldQuoteStyle(style) ? '"' : '')
 
 export const selectorStringToArray = selector => {
+  // Negative lookbehind simulation since js support is very limited.
+  // We want to match all . that are not preceded by \\
+  // Instead we reverse and look
+  // for . that are not followed by \\ (negative lookahead)
   selector = selector
     .split('')
     .reverse()
