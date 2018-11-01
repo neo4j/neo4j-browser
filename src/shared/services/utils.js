@@ -181,6 +181,15 @@ export const addProtocolsToUrlList = list => {
   }, [])
 }
 
+export const resolveWhitelistWildcard = (list, resolveTo = []) => {
+  return list.reduce((all, entry) => {
+    if (entry && entry.trim() === '*') {
+      entry = resolveTo
+    }
+    return all.concat(entry)
+  }, [])
+}
+
 export const getUrlInfo = url => {
   let protocolMissing = false
 

@@ -86,6 +86,8 @@ export const credentialsTimeout = state =>
 export const getRemoteContentHostnameWhitelist = state =>
   getAvailableSettings(state)['browser.remote_content_hostname_whitelist'] ||
   initialState.settings['browser.remote_content_hostname_whitelist']
+export const getDefaultRemoteContentHostnameWhitelist = () =>
+  initialState.settings['browser.remote_content_hostname_whitelist']
 export const shouldRetainConnectionCredentials = state => {
   const settings = getAvailableSettings(state)
   const conf = settings['browser.retain_connection_credentials']
