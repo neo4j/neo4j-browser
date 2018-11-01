@@ -18,6 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+  selectorStringToArray,
+  selectorArrayToString
+} from 'services/grassUtils'
+
 export default function neoGraphStyle () {
   const defaultStyle = {
     node: {
@@ -148,14 +153,7 @@ export default function neoGraphStyle () {
     }
 
     Selector.prototype.toString = function () {
-      let str = this.tag
-      for (let i = 0; i < this.classes.length; i++) {
-        const classs = this.classes[i]
-        if (classs != null) {
-          str += '.' + classs
-        }
-      }
-      return str
+      return selectorArrayToString([this.tag].concat(this.classes))
     }
 
     return Selector
@@ -225,7 +223,7 @@ export default function neoGraphStyle () {
     }
 
     const parseSelector = function (key) {
-      let tokens = key.split('.')
+      let tokens = selectorStringToArray(key)
       return new Selector(tokens[0], tokens.slice(1))
     }
 
