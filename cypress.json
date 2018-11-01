@@ -23,8 +23,8 @@
   "videoCompression": 32,
   "video": true,
   "videosFolder": "e2e_tests/videos",
-  "viewportHeight": 660,
-  "viewportWidth": 1000,
-  "waitForAnimations": true,
+  "viewportHeight": 720,
+  "viewportWidth": 1280,
+  "waitForAnimations": false,
   "watchForFileChanges": true
 }
