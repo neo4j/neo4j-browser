@@ -369,6 +369,43 @@ describe('utils', () => {
       ])
     })
   })
+  describe('resolveWhitelistWildcard', () => {
+    test('Resolves * to given urls', () => {
+      // Given
+      const input = ['*']
+      const resolveTo = ['guides.neo4j.com', 'localhost']
+
+      // When
+      const res = utils.resolveWhitelistWildcard(input, resolveTo)
+
+      // Then
+      expect(res).toEqual(['guides.neo4j.com', 'localhost'])
+    })
+    test('Resolves * to given urls when in a list', () => {
+      // Given
+      const input = [
+        'http://test.com',
+        'oskarhane.com',
+        '*',
+        null,
+        'https://mysite.com/guides'
+      ]
+      const resolveTo = ['guides.neo4j.com', 'localhost']
+
+      // When
+      const res = utils.resolveWhitelistWildcard(input, resolveTo)
+
+      // Then
+      expect(res).toEqual([
+        'http://test.com',
+        'oskarhane.com',
+        'guides.neo4j.com',
+        'localhost',
+        null,
+        'https://mysite.com/guides'
+      ])
+    })
+  })
   describe('hostIsAllowed', () => {
     test('should respect host whitelist', () => {
       // Given

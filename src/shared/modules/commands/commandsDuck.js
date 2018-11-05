@@ -30,7 +30,8 @@ import {
   extractWhitelistFromConfigString,
   addProtocolsToUrlList,
   firstSuccessPromise,
-  serialExecution
+  serialExecution,
+  resolveWhitelistWildcard
 } from 'services/utils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -45,7 +46,8 @@ import {
   UPDATE_SETTINGS,
   getAvailableSettings,
   fetchMetaData,
-  getRemoteContentHostnameWhitelist
+  getRemoteContentHostnameWhitelist,
+  getDefaultRemoteContentHostnameWhitelist
 } from '../dbMeta/dbMetaDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/stream/streamDuck'
@@ -256,7 +258,14 @@ export const fetchGuideFromWhitelistEpic = (some$, store) =>
     }
     const whitelistStr = getRemoteContentHostnameWhitelist(store.getState())
     const whitelist = extractWhitelistFromConfigString(whitelistStr)
-    const urlWhitelist = addProtocolsToUrlList(whitelist)
+    const defaultWhitelist = extractWhitelistFromConfigString(
+      getDefaultRemoteContentHostnameWhitelist(store.getState())
+    )
+    const resolvedWildcardWhitelist = resolveWhitelistWildcard(
+      whitelist,
+      defaultWhitelist
+    )
+    const urlWhitelist = addProtocolsToUrlList(resolvedWildcardWhitelist)
     const guidesUrls = urlWhitelist.map(url => url + '/' + action.url)
     return firstSuccessPromise(guidesUrls, url => {
       // Get first successful fetch

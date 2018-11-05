@@ -2,7 +2,7 @@
 
 Cypress.config.serverVersion = parseFloat(Cypress.env('server')) || 3.4
 Cypress.config.includeImportTests = Cypress.env('include-import-tests') || false
-Cypress.config.url = Cypress.env('BROWSER_URL') || 'http://localhost:8080'
+Cypress.config.url = '/'
 Cypress.config.password = Cypress.env('browser-password') || 'newpassword'
 Cypress.config.boltHost = Cypress.env('bolt-url')
   ? Cypress.env('bolt-url').split(':')[0]
