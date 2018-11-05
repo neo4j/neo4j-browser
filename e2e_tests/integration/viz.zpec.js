@@ -22,12 +22,12 @@
 
 describe('Viz rendering', () => {
   before(function () {
-    cy.visit(Cypress.config.url)
+    cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
   })
   it('can connect', () => {
-    const password = Cypress.config.password
+    const password = Cypress.config('password')
     cy.connect(
       'neo4j',
       password

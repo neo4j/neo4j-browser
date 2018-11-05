@@ -22,19 +22,19 @@
 
 describe('LOAD CSV', () => {
   before(function () {
-    cy.visit(Cypress.config.url)
+    cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
   })
   it('can connect', () => {
-    const password = Cypress.config.password
+    const password = Cypress.config('password')
     cy.connect(
       'neo4j',
       password
     )
   })
   it('imports without periodic commit', () => {
-    if (!Cypress.config.includeImportTests) {
+    if (!Cypress.config('includeImportTests')) {
       return
     }
     cy.executeCommand(':clear')
@@ -51,7 +51,7 @@ describe('LOAD CSV', () => {
     cy.resultContains('"I like unicorns, and "flying unicorns""')
   })
   it('imports with periodic commit', () => {
-    if (!Cypress.config.includeImportTests) {
+    if (!Cypress.config('includeImportTests')) {
       return
     }
     cy.executeCommand(':clear')

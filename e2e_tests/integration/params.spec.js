@@ -22,7 +22,7 @@
 
 describe(':param in Browser', () => {
   before(function () {
-    cy.visit(Cypress.config.url)
+    cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
   })
@@ -44,7 +44,7 @@ function runTests () {
   let setParamQ
   let getParamQ
   // it('can connect', () => {
-  const password = Cypress.config.password
+  const password = Cypress.config('password')
   cy.connect(
     'neo4j',
     password
@@ -109,7 +109,7 @@ function runTests () {
   cy.resultContains('0')
   // })
 
-  if (Cypress.config.serverVersion >= 3.4) {
+  if (Cypress.config('serverVersion') >= 3.4) {
     // it(":param x => point({crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})", () => {
     cy.executeCommand(':clear')
     let query =

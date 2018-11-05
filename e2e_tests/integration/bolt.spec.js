@@ -22,7 +22,7 @@
 
 describe('Bolt connections', () => {
   before(function () {
-    cy.visit(Cypress.config.url)
+    cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
   })
@@ -63,7 +63,7 @@ describe('Bolt connections', () => {
   })
   it('users with no role can connect', () => {
     cy.executeCommand(':clear')
-    const password = Cypress.config.password
+    const password = Cypress.config('password')
     cy.connect(
       'neo4j',
       password
@@ -76,7 +76,13 @@ describe('Bolt connections', () => {
     cy.executeCommand(':server connect')
 
     // Make sure initial pw set works
-    cy.setInitialPassword('.', 'pw', 'no-roles', Cypress.config.boltUrl, true)
+    cy.setInitialPassword(
+      '.',
+      'pw',
+      'no-roles',
+      Cypress.config('boltUrl'),
+      true
+    )
 
     // Try regular connect
     cy.executeCommand(':server disconnect')

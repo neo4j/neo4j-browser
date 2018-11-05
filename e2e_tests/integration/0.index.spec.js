@@ -27,12 +27,12 @@ const ClearEditorButton = '[data-test-id="clearEditorContent"]'
 
 describe('Neo4j Browser', () => {
   before(function () {
-    cy.visit(Cypress.config.url)
+    cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
   })
   it('sets new login credentials', () => {
-    const newPassword = Cypress.config.password
+    const newPassword = Cypress.config('password')
     cy.setInitialPassword(newPassword)
     cy.disconnect()
   })
@@ -42,7 +42,7 @@ describe('Neo4j Browser', () => {
     cy.get(ClearEditorButton).click()
   })
   it('can connect', () => {
-    const password = Cypress.config.password
+    const password = Cypress.config('password')
     cy.connect(
       'neo4j',
       password
@@ -127,7 +127,7 @@ describe('Neo4j Browser', () => {
     cy.get('[data-test-id="user-details-roles"]').should('have.length', 0)
     cy.connect(
       'neo4j',
-      Cypress.config.password
+      Cypress.config('password')
     )
     cy.executeCommand(':clear')
     cy.get('[data-test-id="user-details-username"]').should('contain', 'neo4j')

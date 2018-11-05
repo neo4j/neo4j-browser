@@ -25,7 +25,7 @@ let appContextListener
 
 describe('Neo4j Desktop environment', () => {
   before(() => {
-    cy.visit(Cypress.config.url, {
+    cy.visit(Cypress.config('url'), {
       onBeforeLoad: win => {
         win.neo4jDesktopApi = {
           getContext: () =>
