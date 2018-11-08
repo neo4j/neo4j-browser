@@ -39,7 +39,8 @@ import {
   showErrorMessage,
   cypher,
   successfulCypher,
-  unsuccessfulCypher
+  unsuccessfulCypher,
+  SINGLE_COMMAND_QUEUED
 } from 'shared/modules/commands/commandsDuck'
 import { handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import {
@@ -59,7 +60,10 @@ import {
 import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass } from 'shared/services/grassUtils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
-import { getUserTxMetadata } from 'shared/services/bolt/txMetadata'
+import {
+  getUserTxMetadata,
+  getBackgroundTxMetadata
+} from 'shared/services/bolt/txMetadata'
 
 const availableCommands = [
   {
@@ -154,9 +158,13 @@ const availableCommands = [
         put,
         getParams(state),
         shouldUseCypherThread(state),
-        getUserTxMetadata({
-          hasServerSupport: canSendTxMetadata(store.getState())
-        })
+        action.type === SINGLE_COMMAND_QUEUED
+          ? getUserTxMetadata({
+            hasServerSupport: canSendTxMetadata(store.getState())
+          })
+          : getBackgroundTxMetadata({
+            hasServerSupport: canSendTxMetadata(store.getState())
+          })
       )
       put(cypher(action.cmd))
       put(frames.add({ ...action, type: 'cypher', requestId: id }))

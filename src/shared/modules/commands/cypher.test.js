@@ -22,13 +22,20 @@
 import { version } from 'project-root/package.json'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
-import { executeSingleCommand, handleSingleCommandEpic } from './commandsDuck'
+import {
+  executeSystemCommand,
+  executeSingleCommand,
+  handleSingleCommandEpic
+} from './commandsDuck'
 
 jest.mock('services/bolt/bolt', () => {
   const orig = require.requireActual('services/bolt/bolt')
   return {
     ...orig,
-    routedWriteTransaction: jest.fn()
+    routedWriteTransaction: jest.fn(() => [
+      'id',
+      Promise.resolve({ records: [] })
+    ])
   }
 })
 const bolt = require.requireMock('services/bolt/bolt')
@@ -58,7 +65,7 @@ jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
   }
 })
 
-describe('tx metadata with executeSingleCommand with cypher', () => {
+describe('tx metadata with cypher', () => {
   afterEach(() => {
     bolt.routedWriteTransaction.mockReset()
   })
@@ -67,7 +74,6 @@ describe('tx metadata with executeSingleCommand with cypher', () => {
     // Given
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
-    bolt.routedWriteTransaction.mockImplementation(() => Promise.resolve(null))
     const $$responseChannel = 'test-channel'
     const action = executeSingleCommand('RETURN 1', 'id', 'rqid')
     action.$$responseChannel = $$responseChannel
@@ -80,6 +86,28 @@ describe('tx metadata with executeSingleCommand with cypher', () => {
         {},
         expect.objectContaining({
           txMetadata: { app: `neo4j-browser_v${version}`, type: 'user-direct' }
+        })
+      )
+      done()
+    })
+  })
+
+  it('it adds tx metadata for system cypher queries', done => {
+    // Given
+    const bus = createBus()
+    bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
+    const $$responseChannel = 'test-channel2'
+    const action = executeSystemCommand('RETURN 1')
+    action.$$responseChannel = $$responseChannel
+
+    bus.send(action.type, action)
+    flushPromises().then(() => {
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
+        'RETURN 1',
+        {},
+        expect.objectContaining({
+          txMetadata: { app: `neo4j-browser_v${version}`, type: 'system' }
         })
       )
       done()
