@@ -19,32 +19,20 @@
  */
 
 import { version } from 'project-root/package.json'
+import { getBackgroundTxMetadata, getUserTxMetadata } from './txMetadata'
 
-// Application info
-const NEO4J_BROWSER_BACKGROUND_QUERY = `system`
-const NEO4J_BROWSER_USER_QUERY = `user-direct`
-const NEO4J_BROWSER_APP_ID = `neo4j-browser_v${version}`
+test('getBackgroundTxMetadata has the expected format', () => {
+  const res = getBackgroundTxMetadata({ hasServerSupport: true })
+  expect(res.txMetadata).toEqual({
+    type: 'system',
+    app: `neo4j-browser_v${version}`
+  })
+})
 
-export const getBackgroundTxMetadata = ({ hasServerSupport = false }) => {
-  if (!hasServerSupport) {
-    return {}
-  }
-  return {
-    txMetadata: {
-      type: NEO4J_BROWSER_BACKGROUND_QUERY,
-      app: NEO4J_BROWSER_APP_ID
-    }
-  }
-}
-
-export const getUserTxMetadata = ({ hasServerSupport = false }) => {
-  if (!hasServerSupport) {
-    return {}
-  }
-  return {
-    txMetadata: {
-      type: NEO4J_BROWSER_USER_QUERY,
-      app: NEO4J_BROWSER_APP_ID
-    }
-  }
-}
+test('getUserTxMetadata has the expected format', () => {
+  const res = getUserTxMetadata({ hasServerSupport: true })
+  expect(res.txMetadata).toEqual({
+    type: 'user-direct',
+    app: `neo4j-browser_v${version}`
+  })
+})
