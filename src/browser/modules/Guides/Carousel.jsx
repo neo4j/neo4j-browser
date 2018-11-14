@@ -60,12 +60,12 @@ export default class Carousel extends Component {
   }
   render () {
     return (
-      <StyledCarousel data-test-id='carousel'>
+      <StyledCarousel data-testid='carousel'>
         <StyledCarouselButtonContainer>
           <Render if={this.state.visibleSlide !== 0}>
             <StyledCarouselLeft>
               <CarouselButton
-                data-test-id='previousSlide'
+                data-testid='previousSlide'
                 onClick={this.prev.bind(this)}
               >
                 <SlidePreviousIcon />
@@ -75,7 +75,7 @@ export default class Carousel extends Component {
           <Render if={this.state.visibleSlide !== this.slides.length - 1}>
             <StyledCarouselRight>
               <CarouselButton
-                data-test-id='nextSlide'
+                data-testid='nextSlide'
                 onClick={this.next.bind(this)}
               >
                 <SlideNextIcon />

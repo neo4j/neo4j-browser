@@ -67,7 +67,7 @@ export class LegendComponent extends Component {
           color: styleForItem.get('text-color-internal')
         }
         return (
-          <StyledLegendInlineListItem key={i} data-test-id='viz-legend-labels'>
+          <StyledLegendInlineListItem key={i} data-testid='viz-legend-labels'>
             <StyledLegendContents className='contents'>
               <StyledLabelToken
                 onClick={onClick}
@@ -125,10 +125,7 @@ export class LegendComponent extends Component {
           color: styleForItem.get('text-color-internal')
         }
         return (
-          <StyledLegendInlineListItem
-            key={i}
-            data-test-id='viz-legend-reltypes'
-          >
+          <StyledLegendInlineListItem key={i} data-testid='viz-legend-reltypes'>
             <StyledLegendContents className='contents'>
               <StyledTokenRelationshipType
                 onClick={onClick}

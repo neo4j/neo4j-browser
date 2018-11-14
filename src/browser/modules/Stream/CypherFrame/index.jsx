@@ -144,7 +144,7 @@ export class CypherFrame extends Component {
         </Render>
         <Render if={!resultIsError(this.props.request)}>
           <CypherFrameButton
-            data-test-id='cypherFrameSidebarTable'
+            data-testid='cypherFrameSidebarTable'
             selected={this.state.openView === viewTypes.TABLE}
             onClick={() => {
               this.changeView(viewTypes.TABLE)
@@ -160,7 +160,7 @@ export class CypherFrame extends Component {
           }
         >
           <CypherFrameButton
-            data-test-id='cypherFrameSidebarAscii'
+            data-testid='cypherFrameSidebarAscii'
             selected={this.state.openView === viewTypes.TEXT}
             onClick={() => {
               this.changeView(viewTypes.TEXT)
@@ -222,7 +222,7 @@ export class CypherFrame extends Component {
   getFrameContents (request, result, query) {
     return (
       <StyledFrameBody
-        data-test-id='frame-loaded-contents'
+        data-testid='frame-loaded-contents'
         fullscreen={this.state.fullscreen}
         collapsed={this.state.collapse}
       >

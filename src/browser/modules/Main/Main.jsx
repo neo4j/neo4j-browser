@@ -40,7 +40,7 @@ import ErrorBoundary from 'browser-components/ErrorBoundary'
 
 const Main = props => {
   return (
-    <StyledMain data-test-id='main'>
+    <StyledMain data-testid='main'>
       <ErrorBoundary>
         <Editor />
       </ErrorBoundary>
@@ -48,29 +48,32 @@ const Main = props => {
         <ErrorBanner>
           Type&nbsp;
           <ClickToCode CodeComponent={StyledCodeBlockErrorBar}>
-            {props.cmdchar}help commands
-          </ClickToCode>&nbsp; for a list of available commands.
+            {props.cmdchar}
+            help commands
+          </ClickToCode>
+          &nbsp; for a list of available commands.
         </ErrorBanner>
       </Render>
       <Render if={props.errorMessage}>
-        <ErrorBanner data-test-id='errorBanner'>
+        <ErrorBanner data-testid='errorBanner'>
           {props.errorMessage}
         </ErrorBanner>
       </Render>
       <Render if={props.connectionState === DISCONNECTED_STATE}>
-        <NotAuthedBanner data-test-id='disconnectedBanner'>
+        <NotAuthedBanner data-testid='disconnectedBanner'>
           Database access not available. Please use&nbsp;
           <ClickToCode
-            data-test-id='disconnectedBannerCode'
+            data-testid='disconnectedBannerCode'
             CodeComponent={StyledCodeBlockAuthBar}
           >
-            {props.cmdchar}server connect
-          </ClickToCode>&nbsp; to establish connection. There's a graph waiting
-          for you.
+            {props.cmdchar}
+            server connect
+          </ClickToCode>
+          &nbsp; to establish connection. There's a graph waiting for you.
         </NotAuthedBanner>
       </Render>
       <Render if={props.connectionState === PENDING_STATE}>
-        <WarningBanner data-test-id='reconnectBanner'>
+        <WarningBanner data-testid='reconnectBanner'>
           Connection to server lost. Reconnecting...
         </WarningBanner>
       </Render>

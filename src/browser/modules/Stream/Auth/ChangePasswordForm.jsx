@@ -118,7 +118,7 @@ export default class ChangePasswordForm extends Component {
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(indexStart, {
                       initialFocus: !this.props.showExistingPasswordInput,
-                      'data-test-id': 'newPassword',
+                      'data-testid': 'newPassword',
                       type: 'password',
                       onChange: this.onNewPasswordChange,
                       value: this.state.newPassword,
@@ -132,7 +132,7 @@ export default class ChangePasswordForm extends Component {
                   </StyledConnectionLabel>
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(indexStart + 1, {
-                      'data-test-id': 'newPasswordConfirmation',
+                      'data-testid': 'newPasswordConfirmation',
                       type: 'password',
                       onChange: this.onNewPasswordChange2,
                       value: this.state.newPassword2,
@@ -141,7 +141,7 @@ export default class ChangePasswordForm extends Component {
                   />
                 </StyledConnectionFormEntry>
                 <FormButton
-                  data-test-id='changePassword'
+                  data-testid='changePassword'
                   label='Change password'
                   {...getSubmitProps()}
                 />

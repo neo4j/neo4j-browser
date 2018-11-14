@@ -36,7 +36,7 @@ describe('Neo4j Desktop environment', () => {
     })
   })
   it('can auto connect using host + post fields', () => {
-    const frames = cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
     frames.should('have.length', 2)
 
     // Auto connected = :play start
@@ -52,12 +52,12 @@ describe('Neo4j Desktop environment', () => {
       )
     })
 
-    const frames = cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
     frames.should('have.length', 1)
 
     frames.first().should('contain', ':server switch success')
 
-    cy.get('[data-test-id="frame"]', { timeout: 10000 })
+    cy.get('[data-testid="frame"]', { timeout: 10000 })
       .first()
       .should('contain', 'Connection updated')
   })

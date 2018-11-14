@@ -21,9 +21,9 @@
 /* global Cypress, cy, test, expect, before */
 
 const Editor = '.ReactCodeMirror textarea'
-const Carousel = '[data-test-id="carousel"]'
-const SubmitQueryButton = '[data-test-id="submitQuery"]'
-const ClearEditorButton = '[data-test-id="clearEditorContent"]'
+const Carousel = '[data-testid="carousel"]'
+const SubmitQueryButton = '[data-testid="submitQuery"]'
+const ClearEditorButton = '[data-testid="clearEditorContent"]'
 
 describe('Neo4j Browser', () => {
   before(function () {
@@ -37,7 +37,7 @@ describe('Neo4j Browser', () => {
     cy.disconnect()
   })
   it('populates the editor when clicking the connect banner', () => {
-    cy.get('[data-test-id="disconnectedBannerCode"]').click()
+    cy.get('[data-testid="disconnectedBannerCode"]').click()
     cy.get('.ReactCodeMirror').should('contain', ':server connect')
     cy.get(ClearEditorButton).click()
   })
@@ -53,10 +53,10 @@ describe('Neo4j Browser', () => {
     const query = 'MATCH (n) DETACH DELETE n'
     cy.executeCommand(query)
     cy.waitForCommandResult()
-    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy.get('[data-test-id="frameStatusbar"]', { timeout: 100000 })
+    cy.get('[data-testid="frameStatusbar"]', { timeout: 100000 })
       .first()
       .contains(/completed/i)
   })
@@ -65,10 +65,10 @@ describe('Neo4j Browser', () => {
     const query = 'RETURN 1'
     cy.executeCommand(query)
     cy.waitForCommandResult()
-    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy.get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
+    cy.get('[data-testid="frameStatusbar"]', { timeout: 10000 })
       .first()
       .should('contain', 'Started streaming')
   })
@@ -76,10 +76,10 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':clear')
     const query = ':unknown'
     cy.executeCommand(query)
-    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy.get('[data-test-id="frame"]', { timeout: 10000 })
+    cy.get('[data-testid="frame"]', { timeout: 10000 })
       .first()
       .should('contain', 'Error')
   })
@@ -87,82 +87,82 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':clear')
     const query = ':play movies'
     cy.executeCommand(query)
-    cy.get('[data-test-id="frameCommand"]')
+    cy.get('[data-testid="frameCommand"]')
       .first()
       .should('contain', query)
     cy.get(Carousel)
-      .find('[data-test-id="nextSlide"]')
+      .find('[data-testid="nextSlide"]')
       .click()
     cy.get(Carousel)
-      .find('[data-test-id="nextSlide"]')
+      .find('[data-testid="nextSlide"]')
       .click()
     cy.get(Carousel)
-      .find('[data-test-id="previousSlide"]')
+      .find('[data-testid="previousSlide"]')
       .click()
     cy.get(Carousel)
       .find('.code')
       .click()
     cy.get(SubmitQueryButton).click()
     cy.waitForCommandResult()
-    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', 'Emil Eifrem')
   })
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')
-    cy.get('[data-test-id="drawerDB"]').click()
-    cy.get('[data-test-id="sidebarMetaItem"]', { timeout: 30000 }).should(p => {
+    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).should(p => {
       expect(p).to.have.length.above(17)
     })
-    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-testid="drawerDB"]').click()
   })
   it('displays user info in sidebar (when connected)', () => {
     cy.executeCommand(':clear')
-    cy.get('[data-test-id="drawerDB"]').click()
-    cy.get('[data-test-id="user-details-username"]').should('contain', 'neo4j')
-    cy.get('[data-test-id="user-details-roles"]').should('contain', 'admin')
+    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
+    cy.get('[data-testid="user-details-roles"]').should('contain', 'admin')
     cy.executeCommand(':clear')
     cy.executeCommand(':server disconnect')
-    cy.get('[data-test-id="user-details-username"]').should('have.length', 0)
-    cy.get('[data-test-id="user-details-roles"]').should('have.length', 0)
+    cy.get('[data-testid="user-details-username"]').should('have.length', 0)
+    cy.get('[data-testid="user-details-roles"]').should('have.length', 0)
     cy.connect(
       'neo4j',
       Cypress.config('password')
     )
     cy.executeCommand(':clear')
-    cy.get('[data-test-id="user-details-username"]').should('contain', 'neo4j')
-    cy.get('[data-test-id="user-details-roles"]').should('contain', 'admin')
-    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
+    cy.get('[data-testid="user-details-roles"]').should('contain', 'admin')
+    cy.get('[data-testid="drawerDB"]').click()
   })
   it('will clear local storage when clicking "Clear local data"', () => {
     const scriptName = 'foo'
     cy.get(Editor).type(`//${scriptName}`, { force: true })
-    cy.get('[data-test-id="editorFavorite"]').click()
+    cy.get('[data-testid="editorFavorite"]').click()
 
-    cy.get('[data-test-id="drawerFavorites"]').click()
-    cy.get('[data-test-id="sidebarFavoriteItem"]')
+    cy.get('[data-testid="drawerFavorites"]').click()
+    cy.get('[data-testid="sidebarFavoriteItem"]')
       .first()
       .should('be', scriptName)
 
-    cy.get('[data-test-id="drawerSync"]').click()
-    cy.get('[data-test-id="clearLocalData"]').click()
+    cy.get('[data-testid="drawerSync"]').click()
+    cy.get('[data-testid="clearLocalData"]').click()
     cy.wait(500)
 
     // confirm clear
-    cy.get('[data-test-id="clearLocalData"]').click()
+    cy.get('[data-testid="clearLocalData"]').click()
 
-    cy.get('[data-test-id="drawerFavorites"]').click()
-    cy.get('[data-test-id="sidebarFavoriteItem"]').should('have.length', 0)
-    cy.get('[data-test-id="drawerFavorites"]').click()
+    cy.get('[data-testid="drawerFavorites"]').click()
+    cy.get('[data-testid="sidebarFavoriteItem"]').should('have.length', 0)
+    cy.get('[data-testid="drawerFavorites"]').click()
 
     // once data is cleared the user is logged out and the connect form is displayed
-    cy.get('input[data-test-id="boltaddress"]')
+    cy.get('input[data-testid="boltaddress"]')
   })
   it('displays no user info in sidebar (when not connected)', () => {
     cy.executeCommand(':clear')
-    cy.get('[data-test-id="drawerDB"]').click()
-    cy.get('[data-test-id="user-details-username"]').should('have.length', 0)
-    cy.get('[data-test-id="user-details-roles"]').should('have.length', 0)
-    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="user-details-username"]').should('have.length', 0)
+    cy.get('[data-testid="user-details-roles"]').should('have.length', 0)
+    cy.get('[data-testid="drawerDB"]').click()
   })
 })

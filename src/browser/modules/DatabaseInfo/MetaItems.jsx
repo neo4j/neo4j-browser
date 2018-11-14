@@ -72,7 +72,7 @@ const createItems = (
     const getNodesCypher = editorCommandTemplate(text, index)
     return (
       <RenderType.component
-        data-test-id='sidebarMetaItem'
+        data-testid='sidebarMetaItem'
         key={index}
         onClick={() => onItemClick(getNodesCypher)}
       >

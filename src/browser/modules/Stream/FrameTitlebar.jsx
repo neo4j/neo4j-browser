@@ -109,7 +109,7 @@ class FrameTitlebar extends Component {
       <StyledFrameTitleBar>
         <StyledFrameCommand>
           <DottedLineHover
-            data-test-id='frameCommand'
+            data-testid='frameCommand'
             onClick={() => props.onTitlebarClick(frame.cmd)}
           >
             {cmd}
@@ -117,7 +117,7 @@ class FrameTitlebar extends Component {
         </StyledFrameCommand>
         <FrameTitlebarButtonSection>
           <Render if={this.canExport()}>
-            <DropdownButton data-test-id='frame-export-dropdown'>
+            <DropdownButton data-testid='frame-export-dropdown'>
               <DownloadIcon />
               <DropdownList>
                 <DropdownContent>
@@ -140,7 +140,7 @@ class FrameTitlebar extends Component {
                   </Render>
                   <Render if={this.hasData() && frame.type === 'style'}>
                     <DropdownItem
-                      data-test-id='exportGrassButton'
+                      data-testid='exportGrassButton'
                       onClick={() => this.exportGrass(props.getRecords())}
                     >
                       Export GraSS
@@ -180,7 +180,7 @@ class FrameTitlebar extends Component {
           </FrameButton>
           <Render if={['cypher', 'style'].includes(frame.type)}>
             <FrameButton
-              data-test-id='rerunFrameButton'
+              data-testid='rerunFrameButton'
               title='Rerun'
               onClick={() =>
                 props.onReRunClick(frame.cmd, frame.id, frame.requestId)

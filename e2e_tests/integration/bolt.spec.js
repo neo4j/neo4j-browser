@@ -55,9 +55,9 @@ describe('Bolt connections', () => {
       false
     ) // Non open port
     cy.wait(10000)
-    cy.get('[data-test-id="reconnectBanner"]').should('not.be.visible')
-    cy.get('[data-test-id="disconnectedBanner"]').should('be.visible')
-    cy.get('[data-test-id="main"]', { timeout: 1000 })
+    cy.get('[data-testid="reconnectBanner"]').should('not.be.visible')
+    cy.get('[data-testid="disconnectedBanner"]').should('be.visible')
+    cy.get('[data-testid="main"]', { timeout: 1000 })
       .and('contain', 'Database access not available')
       .should('not.contain', 'Connection lost')
   })
@@ -93,12 +93,12 @@ describe('Bolt connections', () => {
   })
   it('displays user info in sidebar (when connected)', () => {
     cy.executeCommand(':clear')
-    cy.get('[data-test-id="drawerDB"]').click()
-    cy.get('[data-test-id="user-details-username"]').should(
+    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="user-details-username"]').should(
       'contain',
       'no-roles'
     )
-    cy.get('[data-test-id="user-details-roles"]').should('contain', '-')
-    cy.get('[data-test-id="drawerDB"]').click()
+    cy.get('[data-testid="user-details-roles"]').should('contain', '-')
+    cy.get('[data-testid="drawerDB"]').click()
   })
 })

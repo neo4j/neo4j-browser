@@ -29,7 +29,7 @@ exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
       >
         <li
           class="buttons__StyledFrameButton-sc-3xi0d5-10 cajKMw"
-          data-test-id="planCollapseButton"
+          data-testid="planCollapseButton"
         >
           <i
             class="sl-double-up IconContainer__I-sc-16whwc5-0 bXwiKG"
@@ -37,7 +37,7 @@ exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
         </li>
         <li
           class="buttons__StyledFrameButton-sc-3xi0d5-10 cajKMw"
-          data-test-id="planExpandButton"
+          data-testid="planExpandButton"
         >
           <i
             class="sl-double-down IconContainer__I-sc-16whwc5-0 bXwiKG"

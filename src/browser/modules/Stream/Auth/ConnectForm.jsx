@@ -56,7 +56,7 @@ export default class ConnectForm extends Component {
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(0, {
                       initialFocus: true,
-                      'data-test-id': 'boltaddress',
+                      'data-testid': 'boltaddress',
                       onChange: this.props.onHostChange,
                       defaultValue: this.props.host,
                       ref: ref => setRefForIndex(0, ref)
@@ -68,7 +68,7 @@ export default class ConnectForm extends Component {
                   <StyledConnectionLabel>Username</StyledConnectionLabel>
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(1, {
-                      'data-test-id': 'username',
+                      'data-testid': 'username',
                       onChange: this.props.onUsernameChange,
                       defaultValue: this.props.username,
                       ref: ref => setRefForIndex(1, ref)
@@ -80,7 +80,7 @@ export default class ConnectForm extends Component {
                   <StyledConnectionLabel>Password</StyledConnectionLabel>
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(2, {
-                      'data-test-id': 'password',
+                      'data-testid': 'password',
                       onChange: this.props.onPasswordChange,
                       defaultValue: this.props.password,
                       type: 'password',
@@ -90,7 +90,7 @@ export default class ConnectForm extends Component {
                 </StyledConnectionFormEntry>
 
                 <Render if={!this.state.connecting}>
-                  <FormButton data-test-id='connect' {...getSubmitProps()}>
+                  <FormButton data-testid='connect' {...getSubmitProps()}>
                     Connect
                   </FormButton>
                 </Render>

@@ -1,5 +1,5 @@
-const SubmitQueryButton = '[data-test-id="submitQuery"]'
-const ClearEditorButton = '[data-test-id="clearEditorContent"]'
+const SubmitQueryButton = '[data-testid="submitQuery"]'
+const ClearEditorButton = '[data-testid="clearEditorContent"]'
 const Editor = '.ReactCodeMirror textarea'
 
 /* global Cypress, cy */
@@ -19,31 +19,31 @@ Cypress.Commands.add(
     }
     cy.title().should('include', 'Neo4j Browser')
 
-    cy.get('input[data-test-id="boltaddress"]')
+    cy.get('input[data-testid="boltaddress"]')
       .clear()
       .type(boltUrl)
 
-    cy.get('input[data-test-id="username"]')
+    cy.get('input[data-testid="username"]')
       .clear()
       .type(username)
-    cy.get('input[data-test-id="password"]').type(initialPassword)
+    cy.get('input[data-testid="password"]').type(initialPassword)
 
-    cy.get('button[data-test-id="connect"]').click()
+    cy.get('button[data-testid="connect"]').click()
 
     // update password
-    cy.get('input[data-test-id="newPassword"]')
-    cy.get('input[data-test-id="newPassword"]').should('have.value', '')
-    cy.get('input[data-test-id="newPasswordConfirmation"]').should(
+    cy.get('input[data-testid="newPassword"]')
+    cy.get('input[data-testid="newPassword"]').should('have.value', '')
+    cy.get('input[data-testid="newPasswordConfirmation"]').should(
       'have.value',
       ''
     )
 
-    cy.get('input[data-test-id="newPassword"]').type(newPassword)
-    cy.get('input[data-test-id="newPasswordConfirmation"]').type(newPassword)
-    cy.get('button[data-test-id="changePassword"]').click()
+    cy.get('input[data-testid="newPassword"]').type(newPassword)
+    cy.get('input[data-testid="newPasswordConfirmation"]').type(newPassword)
+    cy.get('button[data-testid="changePassword"]').click()
 
-    cy.get('input[data-test-id="changePassword"]').should('not.be.visible')
-    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 }).should(
+    cy.get('input[data-testid="changePassword"]').should('not.be.visible')
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).should(
       'contain',
       ':play start'
     )
@@ -61,25 +61,25 @@ Cypress.Commands.add(
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
 
-    cy.get('input[data-test-id="boltaddress"]')
+    cy.get('input[data-testid="boltaddress"]')
       .clear()
       .type(boltUrl)
 
-    cy.get('input[data-test-id="username"]')
+    cy.get('input[data-testid="username"]')
       .clear()
       .type(username)
-    cy.get('input[data-test-id="password"]')
+    cy.get('input[data-testid="password"]')
       .clear()
       .type(password)
 
-    cy.get('button[data-test-id="connect"]').click()
+    cy.get('button[data-testid="connect"]').click()
     if (makeAssertions) {
-      cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
+      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
         'have.length',
         2
       )
       cy.wait(500)
-      cy.get('[data-test-id="frameCommand"]')
+      cy.get('[data-testid="frameCommand"]')
         .first()
         .should('contain', ':play start')
       cy.executeCommand(':clear')
@@ -108,12 +108,12 @@ Cypress.Commands.add('enableEditorAutocomplete', () => {
   cy.executeCommand(`:clear`)
 })
 Cypress.Commands.add('waitForCommandResult', () => {
-  cy.get('[data-test-id="frame-loaded-contents"]', { timeout: 40000 }).should(
+  cy.get('[data-testid="frame-loaded-contents"]', { timeout: 40000 }).should(
     'be.visible'
   )
 })
 Cypress.Commands.add('resultContains', str => {
-  cy.get('[data-test-id="frameContents"]', { timeout: 40000 }).should(
+  cy.get('[data-testid="frameContents"]', { timeout: 40000 }).should(
     'contain',
     str
   )

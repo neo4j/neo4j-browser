@@ -41,10 +41,10 @@ describe(':style', () => {
 
     const query = ':style'
     cy.executeCommand(query)
-    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', query)
-    cy.get('[data-test-id="frameContents"]', { timeout: 10000 })
+    cy.get('[data-testid="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', 'node {')
       .should('contain', 'relationship {')
@@ -53,11 +53,11 @@ describe(':style', () => {
   it('can reset style with button', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':style')
-    cy.get('[data-test-id="exportGrassButton"]', { timeout: 10000 })
-    cy.get('[data-test-id="styleResetButton"]', { timeout: 10000 })
+    cy.get('[data-testid="exportGrassButton"]', { timeout: 10000 })
+    cy.get('[data-testid="styleResetButton"]', { timeout: 10000 })
       .first()
       .click()
-    cy.get('[data-test-id="frameContents"]', { timeout: 10000 })
+    cy.get('[data-testid="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', 'No style generated or set yet')
   })

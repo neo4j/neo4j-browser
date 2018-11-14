@@ -27,14 +27,14 @@ describe('Multi statements', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
-    cy.get('[data-test-id="drawerSettings"]').click()
-    cy.get('[data-test-id="enableMultiStatementMode"]').click()
-    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="enableMultiStatementMode"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
   })
   after(() => {
-    cy.get('[data-test-id="drawerSettings"]').click()
-    cy.get('[data-test-id="enableMultiStatementMode"]').click()
-    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="enableMultiStatementMode"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
   })
   it('can connect', () => {
     const password = Cypress.config('password')
@@ -46,26 +46,23 @@ describe('Multi statements', () => {
   it('can run multiple statements (non open by default)', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(validQuery)
-    cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
-      'have.length',
-      1
-    )
-    const frame = cy.get('[data-test-id="frame"]', { timeout: 10000 }).first()
-    frame.get('[data-test-id="multi-statement-list"]').should('have.length', 1)
+    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
+    const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
+    frame.get('[data-testid="multi-statement-list"]').should('have.length', 1)
     frame
-      .get('[data-test-id="multi-statement-list-title"]')
+      .get('[data-testid="multi-statement-list-title"]')
       .should('have.length', 3)
     frame
-      .get('[data-test-id="multi-statement-list-content"]')
+      .get('[data-testid="multi-statement-list-content"]')
       .should('have.length', 0)
   })
 
   it('can force run multiple statements to be executed as one statement', () => {
     // Given
     cy.executeCommand(':clear')
-    cy.get('[data-test-id="drawerSettings"]').click()
-    cy.get('[data-test-id="enableMultiStatementMode"]').click()
-    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="enableMultiStatementMode"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
 
     // When
     cy.executeCommand(validQuery)
@@ -73,36 +70,33 @@ describe('Multi statements', () => {
 
     // Then
     // Error expected
-    cy.get('[data-test-id="frameCommand"]', { timeout: 10000 })
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       .first()
       .should('contain', validQuery)
-    cy.get('[data-test-id="frameStatusbar"]', { timeout: 10000 })
+    cy.get('[data-testid="frameStatusbar"]', { timeout: 10000 })
       .first()
       .should('contain', 'Error')
 
-    cy.get('[data-test-id="drawerSettings"]').click()
-    cy.get('[data-test-id="enableMultiStatementMode"]').click()
-    cy.get('[data-test-id="drawerSettings"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="enableMultiStatementMode"]').click()
+    cy.get('[data-testid="drawerSettings"]').click()
   })
 
   it('can run multiple statements with error open', () => {
     cy.executeCommand(':clear')
     const query = 'RETURN 1; RETURN $nonsetparam; RETURN 2;'
     cy.executeCommand(query)
-    cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
-      'have.length',
-      1
-    )
-    const frame = cy.get('[data-test-id="frame"]', { timeout: 10000 }).first()
-    frame.find('[data-test-id="multi-statement-list"]').should('have.length', 1)
+    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
+    const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
+    frame.find('[data-testid="multi-statement-list"]').should('have.length', 1)
     frame
-      .get('[data-test-id="multi-statement-list-title"]')
+      .get('[data-testid="multi-statement-list-title"]')
       .should('have.length', 3)
     frame
-      .get('[data-test-id="multi-statement-list-content"]', { timeout: 10000 })
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
       .should('have.length', 1)
     frame
-      .get('[data-test-id="multi-statement-list-content"]', { timeout: 10000 })
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
       .first()
       .should('contain', 'ERROR')
   })
@@ -110,20 +104,17 @@ describe('Multi statements', () => {
     cy.executeCommand(':clear')
     const query = 'RETURN 1; hello1; RETURN 2; hello2;'
     cy.executeCommand(query)
-    cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
-      'have.length',
-      1
-    )
-    const frame = cy.get('[data-test-id="frame"]', { timeout: 10000 }).first()
-    frame.find('[data-test-id="multi-statement-list"]').should('have.length', 1)
+    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
+    const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
+    frame.find('[data-testid="multi-statement-list"]').should('have.length', 1)
     frame
-      .get('[data-test-id="multi-statement-list-title"]')
+      .get('[data-testid="multi-statement-list-title"]')
       .should('have.length', 4)
     frame
-      .get('[data-test-id="multi-statement-list-content"]', { timeout: 10000 })
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
       .should('have.length', 1)
     frame
-      .get('[data-test-id="multi-statement-list-content"]', { timeout: 10000 })
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
       .first()
       .should('contain', 'ERROR')
   })

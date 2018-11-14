@@ -36,19 +36,19 @@ exports[`LabelItems renders labels 1`] = `
     >
       <div
         class="styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
         class="styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         MyLabel
       </div>
       <div
         class="styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         MyLabel2
       </div>
@@ -93,13 +93,13 @@ exports[`PropertyItems renders properties 1`] = `
     >
       <div
         class="styled__StyledProperty-sc-1srdf8s-3 EddIa"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         prop1
       </div>
       <div
         class="styled__StyledProperty-sc-1srdf8s-3 EddIa"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         prop2
       </div>
@@ -144,19 +144,19 @@ exports[`RelationshipItems renders relationshipTypes 1`] = `
     >
       <div
         class="styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
         class="styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         MY_TYPE
       </div>
       <div
         class="styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
-        data-test-id="sidebarMetaItem"
+        data-testid="sidebarMetaItem"
       >
         MY_TYPE2
       </div>
