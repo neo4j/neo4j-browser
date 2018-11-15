@@ -24,10 +24,9 @@ import {
   eventToHandler,
   didChangeActiveGraph,
   getActiveCredentials,
-  buildConnectionCredentialsObject,
-  KERBEROS,
-  NATIVE
+  buildConnectionCredentialsObject
 } from './helpers'
+import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
 
 test('getActiveGraph handles non objects and non-active projects', () => {
   // Given

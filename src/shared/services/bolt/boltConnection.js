@@ -22,7 +22,7 @@ import { v1 as neo4j } from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { generateBoltHost } from 'services/utils'
-import { KERBEROS } from 'shared/modules/connections/connectionsDuck'
+import { KERBEROS } from 'services/bolt/boltHelpers'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'

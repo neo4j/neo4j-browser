@@ -32,10 +32,11 @@ import {
   POST_CANCEL_TRANSACTION_MESSAGE,
   BOLT_CONNECTION_ERROR_MESSAGE
 } from './boltWorkerMessages'
+import { NATIVE } from 'services/bolt/boltHelpers'
+
 /* eslint-disable import/no-webpack-loader-syntax */
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
-import { NATIVE } from 'shared/modules/connections/connectionsDuck'
 
 let connectionProperties = null
 let boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)

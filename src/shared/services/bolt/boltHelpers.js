@@ -21,6 +21,9 @@
 /* global location */
 import { getUrlInfo } from 'services/utils'
 
+export const KERBEROS = 'KERBEROS'
+export const NATIVE = 'NATIVE'
+
 export const getEncryptionMode = options => {
   if (options && typeof options['encrypted'] !== 'undefined') {
     return options.encrypted

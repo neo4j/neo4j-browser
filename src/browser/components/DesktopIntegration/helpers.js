@@ -18,9 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NATIVE, KERBEROS } from 'shared/modules/connections/connectionsDuck'
-
-export { NATIVE, KERBEROS }
+import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
 
 export const getActiveGraph = (context = {}) => {
   if (!context) return null

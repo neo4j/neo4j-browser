@@ -60,9 +60,6 @@ export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
 
-export const KERBEROS = 'KERBEROS'
-export const NATIVE = 'NATIVE'
-
 const initialState = {
   allConnectionIds: [],
   connectionsById: {},
