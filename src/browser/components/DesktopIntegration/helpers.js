@@ -100,7 +100,7 @@ const isKerberosEnabled = context => {
   if (!configuration.authenticationMethods.kerberos.enabled) {
     return false
   }
-  return true
+  return configuration.authenticationMethods.kerberos
 }
 
 export const buildConnectionCredentialsObject = (
@@ -113,8 +113,8 @@ export const buildConnectionCredentialsObject = (
   const httpsCreds = getActiveCredentials('https', context)
   const httpCreds = getActiveCredentials('http', context)
   const kerberos = isKerberosEnabled(context)
-  if (kerberos) {
-    creds.password = getKerberosTicket()
+  if (kerberos !== false) {
+    creds.password = getKerberosTicket(kerberos.servicePrincipal)
   }
   const restApi =
     httpsCreds && httpsCreds.enabled
