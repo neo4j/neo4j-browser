@@ -211,6 +211,11 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       stateProps.defaultConnectionData,
       getKerberosTicket
     )
+    // No connection. Probably no graph active.
+    if (!connectionCreds) {
+      ownProps.bus.send(SWITCH_CONNECTION_FAILED)
+      return
+    }
     ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
   }
   const closeConnectionMaybe = (event, newContext, oldContext) => {
