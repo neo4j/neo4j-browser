@@ -17,7 +17,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* global test, expect */
+/* global test, expect, jest */
 import {
   getCredentials,
   getActiveGraph,
@@ -257,16 +257,17 @@ test('getActiveCredentials should extract https and http creds', () => {
 })
 
 describe('buildConnectionCredentialsObject', () => {
-  test('it creates an expected object from context, and adds kerberos ticket as password', () => {
+  test('it creates an expected object from context, and adds kerberos ticket as password', async () => {
     // Given
     const kerberosTicket = 'kerberos-ticket-test'
     const activeConnectionData = createApiResponse(
       activeGraph({ enc: 'REQUIRED', kerberos: true })
     )
-    const connectionData = buildConnectionCredentialsObject(
+    const getKerberosTicket = jest.fn(principal => kerberosTicket)
+    const connectionData = await buildConnectionCredentialsObject(
       activeConnectionData,
       {},
-      () => kerberosTicket
+      getKerberosTicket
     )
     expect(connectionData).toEqual({
       username: 'one',
@@ -278,17 +279,20 @@ describe('buildConnectionCredentialsObject', () => {
       restApi: 'http://foo:bar',
       authenticationMethod: KERBEROS
     })
+    expect(getKerberosTicket).toHaveBeenCalledTimes(1)
+    expect(getKerberosTicket).toHaveBeenCalledWith('https')
   })
-  test('it creates an expected object from context, without kerberos', () => {
+  test('it creates an expected object from context, without kerberos', async () => {
     // Given
     const kerberosTicket = 'kerberos-ticket-test'
+    const getKerberosTicket = jest.fn(principal => kerberosTicket)
     const activeConnectionData = createApiResponse(
       activeGraph({ enc: 'REQUIRED', kerberos: false })
     )
-    const connectionData = buildConnectionCredentialsObject(
+    const connectionData = await buildConnectionCredentialsObject(
       activeConnectionData,
       {},
-      () => kerberosTicket
+      getKerberosTicket
     )
     expect(connectionData).toEqual({
       username: 'one',
@@ -300,6 +304,7 @@ describe('buildConnectionCredentialsObject', () => {
       restApi: 'http://foo:bar',
       authenticationMethod: NATIVE
     })
+    expect(getKerberosTicket).toHaveBeenCalledTimes(0)
   })
 })
 
@@ -331,7 +336,8 @@ const activeGraph = (props = { enc: 'OPTIONAL', kerberos: false }) => [
         protocols: { bolt: bolt(props.enc), http, https },
         authenticationMethods: {
           kerberos: {
-            enabled: props.kerberos
+            enabled: props.kerberos,
+            servicePrincipal: 'https'
           }
         }
       }

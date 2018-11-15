@@ -187,26 +187,26 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const switchConnection = (
+  const switchConnection = async (
     event,
     newContext,
     oldContext,
     getKerberosTicket
   ) => {
-    const connectionCreds = buildConnectionCredentialsObject(
+    const connectionCreds = await buildConnectionCredentialsObject(
       newContext,
       stateProps.defaultConnectionData,
       getKerberosTicket
     )
     ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
   }
-  const setInitialConnectionData = (
+  const setInitialConnectionData = async (
     graph,
     credentials,
     context,
     getKerberosTicket
   ) => {
-    const connectionCreds = buildConnectionCredentialsObject(
+    const connectionCreds = await buildConnectionCredentialsObject(
       context,
       stateProps.defaultConnectionData,
       getKerberosTicket
