@@ -291,7 +291,7 @@ export class SysInfoFrame extends Component {
           <SysInfoTable
             key='cc-table'
             header={
-              <span data-test-id='sysinfo-casual-cluster-members-title'>
+              <span data-testid='sysinfo-casual-cluster-members-title'>
                 Causal Cluster Members{' '}
                 <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
               </span>

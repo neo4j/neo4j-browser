@@ -59,23 +59,18 @@ import Render from 'browser-components/Render'
 import FrameError from '../FrameError'
 
 export class QueriesFrame extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      queries: [],
-      autoRefresh: false,
-      autoRefreshInterval: 20, // seconds
-      success: null,
-      errors: null
-    }
+  state = {
+    queries: [],
+    autoRefresh: false,
+    autoRefreshInterval: 20, // seconds
+    success: null,
+    errors: []
   }
-
   componentDidMount () {
     if (this.props.connectionState === CONNECTED_STATE) {
       this.getRunningQueries()
     } else {
-      this.setState({ errors: ['Unable to connect to bolt server'] })
+      this.setState({ errors: [new Error('Unable to connect to bolt server')] })
     }
   }
 
@@ -141,7 +136,7 @@ export class QueriesFrame extends Component {
         if (response.success) {
           this.setState({
             success: 'Query successfully cancelled',
-            errors: null
+            errors: []
           })
           this.getRunningQueries(true)
         } else {

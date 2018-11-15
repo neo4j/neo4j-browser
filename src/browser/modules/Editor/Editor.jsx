@@ -417,7 +417,7 @@ export class Editor extends Component {
           </Render>
           <Render if={!this.state.contentId}>
             <EditorButton
-              data-test-id='editorFavorite'
+              data-testid='editorFavorite'
               onClick={() => {
                 this.props.onFavoriteClick(this.getEditorValue())
               }}
@@ -427,14 +427,14 @@ export class Editor extends Component {
             />
           </Render>
           <EditorButton
-            data-test-id='clearEditorContent'
+            data-testid='clearEditorContent'
             onClick={() => this.clearEditor()}
             disabled={this.getEditorValue().length < 1}
             title='Clear'
             icon={eraser2}
           />
           <EditorButton
-            data-test-id='submitQuery'
+            data-testid='submitQuery'
             onClick={() => this.execCurrent()}
             disabled={this.getEditorValue().length < 1}
             title='Play'

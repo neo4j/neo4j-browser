@@ -22,7 +22,7 @@ exports[`Visualization renders with result 1`] = `
           >
             <li
               class="styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
-              data-test-id="viz-legend-labels"
+              data-testid="viz-legend-labels"
             >
               <ul
                 class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
@@ -42,7 +42,7 @@ exports[`Visualization renders with result 1`] = `
             </li>
             <li
               class="styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
-              data-test-id="viz-legend-labels"
+              data-testid="viz-legend-labels"
             >
               <ul
                 class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
@@ -141,7 +141,7 @@ exports[`Visualization renders with result 1`] = `
           >
             <ul
               class="inspector-footer-row styled__StyledInspectorFooterRow-sc-13boxex-6 cjMrGU"
-              data-test-id="vizInspector"
+              data-testid="vizInspector"
             >
               <ul
                 class="list-inline styled__StyledInlineList-sc-13boxex-9 fWraRP"

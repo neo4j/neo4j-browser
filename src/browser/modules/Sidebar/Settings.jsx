@@ -204,7 +204,7 @@ export const Settings = ({
                   onSettingsSave(settings)
                 }}
                 checked={settings[setting]}
-                data-test-id={setting}
+                data-testid={setting}
               />
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
             </StyledSetting>

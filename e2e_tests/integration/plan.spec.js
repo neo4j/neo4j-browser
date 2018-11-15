@@ -44,8 +44,8 @@ describe('Plan output', () => {
       cy.executeCommand(
         `EXPLAIN MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age`
       )
-      cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
-      const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+      cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
+      const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
       el.should('contain', 'Ordered by n.age ASC')
     })
   }
@@ -55,8 +55,8 @@ describe('Plan output', () => {
       cy.executeCommand(
         `PROFILE MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)`
       )
-      cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
-      const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+      cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
+      const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
       el.should('contain', 'pagecache hits')
       el.should('contain', 'pagecache misses')
     })
@@ -74,8 +74,8 @@ describe('Plan output', () => {
     RETURN expert.name, publications, relevantNumberOfPublications, 1 AS relevantNumberOfTags
     ORDER BY relevantNumberOfPublications DESC
     LIMIT 50;`)
-    cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
-    const el = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+    cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
+    const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
     el.should('contain', 'NodeByLabelScan')
       .and('contain', 'tag')
       .and('contain', ':Tag')
@@ -103,8 +103,8 @@ describe('Plan output', () => {
     cy.executeCommand(
       `profile match (n:Person) with n where size ( (n)-[:Follows]->()) > 6 return n;`
     )
-    cy.get('[data-test-id="planExpandButton"]', { timeout: 10000 }).click()
-    const el2 = cy.get('[data-test-id="planSvg"]', { timeout: 10000 })
+    cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
+    const el2 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
     el2.should('contain', 'NodeByLabelScan')
     if ([3.3, 3.4].includes(Cypress.config('serverVersion'))) {
       el2.should('contain', 'GetDegreePrimitive')

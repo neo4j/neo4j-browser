@@ -47,7 +47,7 @@ const commands = [
 describe('Commands', () => {
   before(function () {
     cy.visit(Cypress.config('url'))
-    cy.get('input[data-test-id="boltaddress"]', { timeout: 40000 })
+    cy.get('input[data-testid="boltaddress"]', { timeout: 40000 })
   })
   it('can run all simple commands not connected without blowing up', () => {
     commands.forEach(cmd => {

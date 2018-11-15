@@ -45,13 +45,13 @@ export class UserDetails extends Component {
               <tbody>
                 <tr>
                   <StyledKey>Username:</StyledKey>
-                  <StyledValue data-test-id='user-details-username'>
+                  <StyledValue data-testid='user-details-username'>
                     {userDetails.username}
                   </StyledValue>
                 </tr>
                 <tr>
                   <StyledKey>Roles:</StyledKey>
-                  <StyledValue data-test-id='user-details-roles'>
+                  <StyledValue data-testid='user-details-roles'>
                     {mappedRoles}
                   </StyledValue>
                 </tr>

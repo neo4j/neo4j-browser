@@ -116,7 +116,7 @@ function runTests () {
       ":param x => point({{}crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
     cy.executeCommand(query)
 
-    cy.get('[data-test-id="rawParamData"]', { timeout: 20000 })
+    cy.get('[data-testid="rawParamData"]', { timeout: 20000 })
       .first()
       .should('contain', '"x": point({srid:4326, x:12.9082, y:57.7346})')
     getParamQ = 'RETURN $x'

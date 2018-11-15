@@ -46,7 +46,7 @@ describe('sysinfo component', () => {
     expect(getByText('Causal Cluster Members')).not.toBeNull()
     expect(
       container.querySelector(
-        `[data-test-id="sysinfo-casual-cluster-members-title"]`
+        `[data-testid="sysinfo-casual-cluster-members-title"]`
       )
     ).not.toBeNull()
   })

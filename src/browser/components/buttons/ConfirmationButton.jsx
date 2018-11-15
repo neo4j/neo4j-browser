@@ -55,7 +55,7 @@ export class ConfirmationButton extends Component {
       return (
         <span>
           <IconButton
-            data-test-id='confirmation-button-confirm'
+            data-testid='confirmation-button-confirm'
             onClick={() => {
               this.setState({ requested: false })
               this.props.onConfirmed()
@@ -64,7 +64,7 @@ export class ConfirmationButton extends Component {
             {this.confirmIcon}
           </IconButton>
           <IconButton
-            data-test-id='confirmation-button-cancel'
+            data-testid='confirmation-button-cancel'
             onClick={() => this.setState({ requested: false })}
           >
             {this.cancelIcon}
@@ -74,7 +74,7 @@ export class ConfirmationButton extends Component {
     } else {
       return (
         <IconButton
-          data-test-id='confirmation-button-initial'
+          data-testid='confirmation-button-initial'
           onClick={() => this.setState({ requested: true })}
         >
           {this.requestIcon}

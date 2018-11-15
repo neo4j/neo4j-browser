@@ -43,7 +43,7 @@ describe('Types in Browser', () => {
       cy.resultContains('point({srid:4326, x:12.78, y:56.7})')
 
       // Go to ascii view
-      cy.get('[data-test-id="cypherFrameSidebarAscii"')
+      cy.get('[data-testid="cypherFrameSidebarAscii"')
         .first()
         .click()
       cy.resultContains('│point({srid:4326, x:12.78, y:56.7})')
@@ -57,7 +57,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
       // Go to ascii view
-      cy.get('[data-test-id="cypherFrameSidebarAscii"')
+      cy.get('[data-testid="cypherFrameSidebarAscii"')
         .first()
         .click()
       cy.resultContains('│"2015-07-20T15:11:42[Europe/Stockholm]"')
@@ -71,7 +71,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"2015-07-20T15:11:42"')
       // Go to ascii view
-      cy.get('[data-test-id="cypherFrameSidebarAscii"')
+      cy.get('[data-testid="cypherFrameSidebarAscii"')
         .first()
         .click()
       cy.resultContains('│"2015-07-20T15:11:42"')
@@ -84,7 +84,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"2015-07-20"')
       // Go to ascii view
-      cy.get('[data-test-id="cypherFrameSidebarAscii"')
+      cy.get('[data-testid="cypherFrameSidebarAscii"')
         .first()
         .click()
       cy.resultContains('│"2015-07-20"')
@@ -98,7 +98,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"P14M3DT14706S"')
       // Go to ascii view
-      cy.get('[data-test-id="cypherFrameSidebarAscii"')
+      cy.get('[data-testid="cypherFrameSidebarAscii"')
         .first()
         .click()
       cy.resultContains('│"P14M3DT14706S"')
@@ -112,7 +112,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"14:03:04')
       // Go to ascii view
-      cy.get('[data-test-id="cypherFrameSidebarAscii"')
+      cy.get('[data-testid="cypherFrameSidebarAscii"')
         .first()
         .click()
       cy.resultContains('│"14:03:04')
@@ -125,7 +125,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"14:03:04"')
       // Go to ascii view
-      cy.get('[data-test-id="cypherFrameSidebarAscii"')
+      cy.get('[data-testid="cypherFrameSidebarAscii"')
         .first()
         .click()
       cy.resultContains('│"14:03:04"')
@@ -137,7 +137,7 @@ describe('Types in Browser', () => {
       cy.executeCommand(query)
       // cy.waitForCommandResult()
       cy.get('circle.outline', { timeout: 10000 }).click()
-      cy.get('[data-test-id="vizInspector"]')
+      cy.get('[data-testid="vizInspector"]')
         .should('contain', 'date: "P11M2DT8363.857000000S"')
         .and('contain', 'location: point({srid:4326, x:12.78, y:56.7})')
     })
@@ -147,7 +147,7 @@ describe('Types in Browser', () => {
       cy.executeCommand(query)
       // cy.waitForCommandResult()
       cy.get('circle.outline', { timeout: 10000 }).click()
-      cy.get('[data-test-id="vizInspector"]')
+      cy.get('[data-testid="vizInspector"]')
         .should('contain', 'date: "P11M2DT8363.857000000S"')
         .and('contain', 'location: point({srid:4326, x:12.78, y:56.7})')
     })

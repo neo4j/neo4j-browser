@@ -144,7 +144,7 @@ class FavoriteDp extends Component {
       <StyledListItemRef
         ref={this.itemRef}
         isChild={isChild}
-        data-test-id='sidebarFavoriteItem'
+        data-testid='sidebarFavoriteItem'
       >
         <ExecFavoriteButton onClick={() => onExecClick(content)} />
         <StyledFavoriteText {...rest} onClick={() => onItemClick(id, content)}>

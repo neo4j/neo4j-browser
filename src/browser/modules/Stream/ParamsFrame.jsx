@@ -33,7 +33,7 @@ const ParamsFrame = ({ frame }) => {
   const contents = (
     <PaddedDiv>
       <Render if={frame.success !== false}>
-        <pre data-test-id='rawParamData'>
+        <pre data-testid='rawParamData'>
           {stringifyMod(params, stringFormat, true)}
         </pre>
       </Render>

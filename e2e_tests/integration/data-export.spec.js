@@ -37,14 +37,11 @@ describe('Data export', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (n:ExportTest) RETURN n')
 
-    cy.get('[data-test-id="frame"]', { timeout: 10000 }).should(
-      'have.length',
-      1
-    )
-    cy.get('[data-test-id="frame-export-dropdown"]')
+    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
+    cy.get('[data-testid="frame-export-dropdown"]')
       .first()
       .trigger('mouseover')
-    cy.get('[data-test-id="frame-export-dropdown"]')
+    cy.get('[data-testid="frame-export-dropdown"]')
       .first()
       .should('contain', 'Export PNG')
 

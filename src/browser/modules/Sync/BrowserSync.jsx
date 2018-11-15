@@ -246,7 +246,7 @@ export class BrowserSync extends Component {
             <DrawerSectionBody>
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
               <FormButton
-                data-test-id='clearLocalData'
+                data-testid='clearLocalData'
                 label='Clear local data'
                 onClick={this.signOutAndClearLocalStorage.bind(this)}
                 icon={<BinIcon suppressIconStyles='true' />}
@@ -316,6 +316,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-  BrowserSync
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
+)(BrowserSync)

@@ -214,7 +214,7 @@ export class InspectorComponent extends Component {
             }
           >
             <StyledInspectorFooterRow
-              data-test-id='vizInspector'
+              data-testid='vizInspector'
               className='inspector-footer-row'
               ref={this.setFooterRowELem.bind(this)}
             >
