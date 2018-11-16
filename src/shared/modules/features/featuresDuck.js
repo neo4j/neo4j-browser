@@ -40,7 +40,7 @@ export const canAssignRolesToUser = state =>
 export const useBrowserSync = state => !!state[NAME].browserSync
 export const canSendTxMetadata = state => {
   const serverVersion = getVersion(state)
-  if (!serverVersion) {
+  if (!semver.valid(serverVersion)) {
     return false
   }
   if (semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)) {

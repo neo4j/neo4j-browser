@@ -20,6 +20,7 @@
 
 /* global describe, test, expect */
 import reducer, * as features from './featuresDuck'
+import { NAME as META_NAME } from '../dbMeta/dbMetaDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
@@ -89,3 +90,22 @@ describe('feature getters', () => {
     expect(features.canAssignRolesToUser({ features: nextState })).toBe(true)
   })
 })
+describe('canSendTxMetadata', () => {
+  // Valid versions that should send
+  const validSemverVersions = ['3.5.0-alpha02', '3.5.0', '3.6.1']
+  test.each(validSemverVersions)('version %s returns true', version => {
+    expect(features.canSendTxMetadata(createVersionState(version))).toEqual(
+      true
+    )
+  })
+
+  // Invalid or old versions that should not send
+  const invalidSemverVersions = ['dev', null, undefined, '6.2', '3.4.10']
+  test.each(invalidSemverVersions)('version %s returns false', version => {
+    expect(features.canSendTxMetadata(createVersionState(version))).toEqual(
+      false
+    )
+  })
+})
+
+const createVersionState = version => ({ [META_NAME]: { server: { version } } })
