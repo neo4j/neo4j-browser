@@ -88,11 +88,4 @@ export class WarningsView extends Component {
   }
 }
 
-export class WarningsStatusbar extends Component {
-  shouldComponentUpdate (props, state) {
-    return false
-  }
-  render () {
-    return null
-  }
-}
+export default WarningsView

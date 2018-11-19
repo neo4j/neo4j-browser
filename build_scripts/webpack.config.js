@@ -52,10 +52,32 @@ module.exports = {
     rules
   },
   optimization: {
+    runtimeChunk: 'single',
     splitChunks: {
-      chunks: 'all'
-    },
-    runtimeChunk: true
+      chunks: 'all',
+      minSize: 500,
+      maxInitialRequests: Infinity,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name (module) {
+            // get the name. E.g. node_modules/packageName/not/this/part.js
+            // or node_modules/packageName
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+            )[1]
+
+            // npm package names are URL-safe, but some servers don't like @ symbols
+            return `npm.${packageName.replace('@', '')}`
+          }
+        },
+        boltworker: {
+          test: /boltWorker/,
+          chunks: 'all',
+          priority: 3
+        }
+      }
+    }
   },
   devtool: helpers.isProduction ? false : 'inline-source-map',
   devServer: {

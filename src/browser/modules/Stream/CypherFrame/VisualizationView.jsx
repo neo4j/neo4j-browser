@@ -189,3 +189,5 @@ export const VisualizationConnectedBus = withBus(
     mapDispatchToProps
   )(Visualization)
 )
+
+export default VisualizationConnectedBus

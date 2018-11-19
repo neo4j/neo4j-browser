@@ -196,3 +196,5 @@ export class PlanStatusbar extends Component {
     )
   }
 }
+
+export default PlanView

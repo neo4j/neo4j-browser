@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { Component, Suspense } from 'react'
 import uuid from 'uuid'
-import Slide from './Slide'
 import Directives from 'browser-components/Directives'
-import Carousel from './Carousel'
+const Carousel = React.lazy(() => import('./Carousel'))
+const Slide = React.lazy(() => import('./Slide'))
 
 export default class Guides extends Component {
   constructor (props) {
@@ -48,7 +48,9 @@ export default class Guides extends Component {
     if (this.state.slides && Array.isArray(this.state.slides)) {
       const ListOfSlides = this.state.slides.map(slide => {
         const slideComponent = (
-          <Slide key={uuid.v4()} html={slide.html.innerHTML} />
+          <Suspense maxDuration={1000} fallback={'...'}>
+            <Slide key={uuid.v4()} html={slide.html.innerHTML} />
+          </Suspense>
         )
         if (this.props.withDirectives) {
           return (
@@ -61,18 +63,30 @@ export default class Guides extends Component {
         }
       })
       return (
-        <Carousel
-          slides={ListOfSlides}
-          withDirectives={this.props.withDirectives}
-        />
+        <Suspense maxDuration={1000} fallback={'...'}>
+          <Carousel
+            slides={ListOfSlides}
+            withDirectives={this.props.withDirectives}
+          />
+        </Suspense>
       )
     }
     if (this.props.withDirectives) {
       return (
-        <Directives content={<Slide ref={this.ref} html={this.props.html} />} />
+        <Directives
+          content={
+            <Suspense maxDuration={1000} fallback={'...'}>
+              <Slide ref={this.ref} html={this.props.html} />
+            </Suspense>
+          }
+        />
       )
     } else {
-      return <Slide ref={this.ref} html={this.props.html} />
+      return (
+        <Suspense maxDuration={1000} fallback={'...'}>
+          <Slide ref={this.ref} html={this.props.html} />
+        </Suspense>
+      )
     }
   }
 }

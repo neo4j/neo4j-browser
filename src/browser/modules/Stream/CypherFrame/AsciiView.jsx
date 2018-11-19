@@ -164,3 +164,5 @@ export class AsciiStatusbar extends Component {
     )
   }
 }
+
+export default AsciiView

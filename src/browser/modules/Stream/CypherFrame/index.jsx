@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { Component, lazy, Suspense } from 'react'
 import FrameTemplate from '../FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
@@ -35,13 +35,12 @@ import {
   ErrorIcon,
   Spinner
 } from 'browser-components/icons/Icons'
-import { AsciiView, AsciiStatusbar } from './AsciiView'
-import { TableView, TableStatusbar } from './TableView'
-import { CodeView, CodeStatusbar } from './CodeView'
-import { ErrorsViewBus as ErrorsView, ErrorsStatusbar } from './ErrorsView'
-import { WarningsView, WarningsStatusbar } from './WarningsView'
-import { PlanView, PlanStatusbar } from './PlanView'
-import { VisualizationConnectedBus } from './VisualizationView'
+import { AsciiStatusbar } from './AsciiView'
+import { TableStatusbar } from './TableView'
+import { CodeStatusbar } from './CodeView'
+import { ErrorsStatusbar } from './ErrorsView'
+import { WarningsStatusbar } from './WarningsStatusbar'
+import { PlanStatusbar } from './PlanView'
 import Render from 'browser-components/Render'
 import Display from 'browser-components/Display'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
@@ -65,6 +64,14 @@ import {
   shouldAutoComplete
 } from 'shared/modules/settings/settingsDuck'
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
+
+const AsciiView = lazy(() => import('./AsciiView'))
+const TableView = lazy(() => import('./TableView'))
+const CodeView = lazy(() => import('./CodeView'))
+const ErrorsView = lazy(() => import('./ErrorsView'))
+const WarningsView = lazy(() => import('./WarningsView'))
+const PlanView = lazy(() => import('./PlanView'))
+const VisualizationConnectedBus = lazy(() => import('./VisualizationView'))
 
 export class CypherFrame extends Component {
   visElement = null
@@ -227,76 +234,90 @@ export class CypherFrame extends Component {
         collapsed={this.state.collapse}
       >
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
-          <AsciiView
-            {...this.state}
-            maxRows={this.props.maxRows}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <Suspense fallback={<Spinner />}>
+            <AsciiView
+              {...this.state}
+              maxRows={this.props.maxRows}
+              result={result}
+              updated={this.props.request.updated}
+              setParentState={this.setState.bind(this)}
+            />
+          </Suspense>
         </Display>
         <Display if={this.state.openView === viewTypes.TABLE} lazy>
-          <TableView
-            {...this.state}
-            maxRows={this.props.maxRows}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <Suspense fallback={<Spinner />}>
+            <TableView
+              {...this.state}
+              maxRows={this.props.maxRows}
+              result={result}
+              updated={this.props.request.updated}
+              setParentState={this.setState.bind(this)}
+            />
+          </Suspense>
         </Display>
         <Display if={this.state.openView === viewTypes.CODE} lazy>
-          <CodeView
-            {...this.state}
-            result={result}
-            request={request}
-            query={query}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <Suspense fallback={<Spinner />}>
+            <CodeView
+              {...this.state}
+              result={result}
+              request={request}
+              query={query}
+              updated={this.props.request.updated}
+              setParentState={this.setState.bind(this)}
+            />
+          </Suspense>
         </Display>
         <Display if={this.state.openView === viewTypes.ERRORS} lazy>
-          <ErrorsView
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <Suspense fallback={<Spinner />}>
+            <ErrorsView
+              {...this.state}
+              result={result}
+              updated={this.props.request.updated}
+              setParentState={this.setState.bind(this)}
+            />
+          </Suspense>
         </Display>
         <Display if={this.state.openView === viewTypes.WARNINGS} lazy>
-          <WarningsView
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <Suspense fallback={<Spinner />}>
+            <WarningsView
+              {...this.state}
+              result={result}
+              updated={this.props.request.updated}
+              setParentState={this.setState.bind(this)}
+            />
+          </Suspense>
         </Display>
         <Display if={this.state.openView === viewTypes.PLAN} lazy>
-          <PlanView
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-            assignVisElement={(svgElement, graphElement) => {
-              this.visElement = { svgElement, graphElement, type: 'plan' }
-              this.setState({ hasVis: true })
-            }}
-          />
+          <Suspense fallback={<Spinner />}>
+            <PlanView
+              {...this.state}
+              result={result}
+              updated={this.props.request.updated}
+              setParentState={this.setState.bind(this)}
+              assignVisElement={(svgElement, graphElement) => {
+                this.visElement = { svgElement, graphElement, type: 'plan' }
+                this.setState({ hasVis: true })
+              }}
+            />
+          </Suspense>
         </Display>
         <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
-          <VisualizationConnectedBus
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-            frameHeight={this.state.frameHeight}
-            assignVisElement={(svgElement, graphElement) => {
-              this.visElement = { svgElement, graphElement, type: 'graph' }
-              this.setState({ hasVis: true })
-            }}
-            initialNodeDisplay={this.props.initialNodeDisplay}
-            autoComplete={this.props.autoComplete}
-            maxNeighbours={this.props.maxNeighbours}
-          />
+          <Suspense fallback={<Spinner />}>
+            <VisualizationConnectedBus
+              {...this.state}
+              result={result}
+              updated={this.props.request.updated}
+              setParentState={this.setState.bind(this)}
+              frameHeight={this.state.frameHeight}
+              assignVisElement={(svgElement, graphElement) => {
+                this.visElement = { svgElement, graphElement, type: 'graph' }
+                this.setState({ hasVis: true })
+              }}
+              initialNodeDisplay={this.props.initialNodeDisplay}
+              autoComplete={this.props.autoComplete}
+              maxNeighbours={this.props.maxNeighbours}
+            />
+          </Suspense>
         </Display>
       </StyledFrameBody>
     )

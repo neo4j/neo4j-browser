@@ -69,7 +69,8 @@ export class ErrorsView extends Component {
           <Render if={isUnknownProcedureError(error)}>
             <StyledLinkContainer>
               <StyledLink onClick={() => onItemClick(bus)}>
-                <PlayIcon />&nbsp;List available procedures
+                <PlayIcon />
+                &nbsp;List available procedures
               </StyledLink>
             </StyledLinkContainer>
           </Render>
@@ -85,6 +86,7 @@ const onItemClick = bus => {
 }
 
 export const ErrorsViewBus = withBus(ErrorsView)
+export default ErrorsViewBus
 
 export class ErrorsStatusbar extends Component {
   shouldComponentUpdate (props, state) {

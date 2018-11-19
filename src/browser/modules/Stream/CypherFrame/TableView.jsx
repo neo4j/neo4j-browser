@@ -180,3 +180,5 @@ export class TableStatusbar extends Component {
     )
   }
 }
+
+export default TableView

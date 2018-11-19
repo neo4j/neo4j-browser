@@ -97,3 +97,4 @@ export class CodeView extends Component {
 }
 
 export const CodeStatusbar = TableStatusbar
+export default CodeView
