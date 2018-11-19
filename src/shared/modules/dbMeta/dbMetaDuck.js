@@ -365,6 +365,9 @@ export const serverConfigEpic = (some$, store) =>
         return
       }
       const jmxValues = jmxValueResult.reduce((obj, item) => {
+        if (!item) {
+          return obj
+        }
         const key = Object.keys(item)[0]
         obj[key] = item[key]
         return obj
