@@ -57,7 +57,7 @@ describe('utils', () => {
 
       utils.serialExecution(w1, w2, w3)
 
-      return flushPromises().then(() => {
+      return utils.flushPromises().then(() => {
         expect(w1.onStart).toHaveBeenCalledTimes(1)
         expect(w2.onStart).toHaveBeenCalledTimes(1)
         expect(w3.onStart).toHaveBeenCalledTimes(1)
@@ -99,7 +99,7 @@ describe('utils', () => {
       const res = utils.serialExecution(w1, w2, w3)
       res.catch(e => {}) // catch error from promise chain not to break test
 
-      return flushPromises().then(() => {
+      return utils.flushPromises().then(() => {
         expect(w1.onStart).toHaveBeenCalledTimes(1)
         expect(w1.onSuccess).toHaveBeenCalledTimes(1)
         expect(w1.onError).toHaveBeenCalledTimes(0)
@@ -695,7 +695,3 @@ describe('toKeyString', () => {
     })
   })
 })
-
-function flushPromises () {
-  return new Promise(resolve => setImmediate(resolve))
-}
