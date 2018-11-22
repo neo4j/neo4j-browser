@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { StyledStream } from './styled'
 
 import CypherFrame from './CypherFrame/index'
@@ -45,7 +45,6 @@ import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
-import { deepEquals } from 'services/utils'
 
 const getFrame = type => {
   const trans = {
@@ -76,23 +75,19 @@ const getFrame = type => {
   return trans[type] || trans['default']
 }
 
-class Stream extends Component {
+class Stream extends PureComponent {
   componentDidMount () {
     this.base = React.createRef()
   }
-
-  shouldComponentUpdate (props) {
-    const frameHasBeenAdded = this.props.frames.length < props.frames.length
+  componentDidUpdate (prevProps) {
     if (
-      frameHasBeenAdded &&
+      prevProps.framesSignature !== this.props.framesSignature &&
       this.props.scrollToTop &&
       this.base &&
       this.base.current
     ) {
       this.base.current.scrollTop = 0
-      return true
     }
-    return !deepEquals(props, this.props)
   }
   render () {
     return (
@@ -121,8 +116,12 @@ class Stream extends Component {
 }
 
 const mapStateToProps = state => {
+  const frames = getFrames(state)
   return {
-    frames: getFrames(state),
+    framesSignature: frames
+      .map(frame => frame.id + (frame.requestId || ''))
+      .join(''),
+    frames,
     activeConnectionData: getActiveConnectionData(state),
     scrollToTop: getScrollToTop(state)
   }

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import {
   SyncDisconnectedBanner,
@@ -39,40 +39,38 @@ import {
   SIGNED_IN
 } from 'shared/modules/sync/syncDuck'
 
-class SyncReminderBanner extends Component {
-  render () {
-    const {
-      dbConnectionState,
-      syncConsent,
-      optOutSync,
-      authStatus
-    } = this.props
-    const dbConnected = dbConnectionState === CONNECTED_STATE
-    const syncConsentGiven = syncConsent && syncConsent.consented === true
+const SyncReminderBanner = React.memo(function SyncReminderBanner ({
+  dbConnectionState,
+  syncConsent,
+  optOutSync,
+  authStatus,
+  onGetstartedClicked
+}) {
+  const dbConnected = dbConnectionState === CONNECTED_STATE
+  const syncConsentGiven = syncConsent && syncConsent.consented === true
 
-    const visible =
-      dbConnected &&
-      !syncConsentGiven &&
-      authStatus !== SIGNED_IN &&
-      !syncConsent.optedOut
+  const visible =
+    dbConnected &&
+    !syncConsentGiven &&
+    authStatus !== SIGNED_IN &&
+    !syncConsent.optedOut
 
-    return (
-      <Render if={visible}>
-        <SyncDisconnectedBanner height='100px'>
-          <StyledSyncReminderSpan>
-            To enjoy the full Neo4j Browser experience, we advise you to use
-            <SyncSignInBarButton onClick={this.props.onGetstartedClicked}>
-              Neo4j Browser Sync
-            </SyncSignInBarButton>
-          </StyledSyncReminderSpan>
-          <StyledSyncReminderButtonContainer>
-            <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
-          </StyledSyncReminderButtonContainer>
-        </SyncDisconnectedBanner>
-      </Render>
-    )
-  }
-}
+  return (
+    <Render if={visible}>
+      <SyncDisconnectedBanner height='100px'>
+        <StyledSyncReminderSpan>
+          To enjoy the full Neo4j Browser experience, we advise you to use
+          <SyncSignInBarButton onClick={onGetstartedClicked}>
+            Neo4j Browser Sync
+          </SyncSignInBarButton>
+        </StyledSyncReminderSpan>
+        <StyledSyncReminderButtonContainer>
+          <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
+        </StyledSyncReminderButtonContainer>
+      </SyncDisconnectedBanner>
+    </Render>
+  )
+})
 
 const mapStateToProps = state => {
   return {
@@ -93,4 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SyncReminderBanner)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SyncReminderBanner)
