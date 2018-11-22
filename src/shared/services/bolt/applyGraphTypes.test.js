@@ -460,6 +460,41 @@ describe('applyGraphTypes', () => {
     const typedDate = applyGraphTypes(rawDate)
     expect(typedDate).toBeInstanceOf(neo4j.types.Time)
   })
+  test('recursivelyTypeGraphItems with a bolt response data structure', () => {
+    // Given
+    const createDate = hour =>
+      new neo4j.types.Time(
+        neo4j.int(hour),
+        neo4j.int(0),
+        neo4j.int(0),
+        neo4j.int(0),
+        neo4j.int(0)
+      )
+    const boltResponse = {
+      records: [
+        new neo4j.types.Record(['mydate'], [createDate(12)]),
+        new neo4j.types.Record(['mydate'], [createDate(2)])
+      ],
+      summary: {}
+    }
+
+    // When
+    const forTransport = recursivelyTypeGraphItems(boltResponse)
+
+    // Then
+    expect(forTransport.records[0]._fields[0]).toEqual({
+      hour: { high: 0, low: 12, 'transport-class': 'Integer' },
+      minute: { high: 0, low: 0, 'transport-class': 'Integer' },
+      nanosecond: { high: 0, low: 0, 'transport-class': 'Integer' },
+      second: { high: 0, low: 0, 'transport-class': 'Integer' },
+      timeZoneOffsetSeconds: {
+        high: 0,
+        low: 0,
+        'transport-class': 'Integer'
+      },
+      'transport-class': 'Time'
+    })
+  })
   test('should identify time in nodes in paths with refs for start and end', () => {
     const date = new neo4j.types.Time(11, 1, 12, 3600, 0)
     const start = new neo4j.types.Node(neo4j.int(1), ['From'], { date })

@@ -543,7 +543,9 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
     return tmp
   }
   if (neo4j.isInt(item)) {
-    return safetlyAddObjectProp(item, reservedTypePropertyName, 'Integer')
+    const tmp = { ...item }
+    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Integer')
+    return tmp
   }
   if (typeof item === 'object') {
     let typedObject = {}
