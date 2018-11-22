@@ -82,7 +82,9 @@ class Stream extends PureComponent {
   componentDidUpdate (prevProps) {
     if (
       prevProps.framesSignature !== this.props.framesSignature &&
-      this.props.scrollToTop
+      this.props.scrollToTop &&
+      this.base &&
+      this.base.current
     ) {
       this.base.current.scrollTop = 0
     }
