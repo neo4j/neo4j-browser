@@ -38,7 +38,7 @@ import SyncReminderBanner from './SyncReminderBanner'
 import SyncConsentBanner from './SyncConsentBanner'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 
-const Main = props => {
+const Main = React.memo(function Main (props) {
   return (
     <StyledMain data-testid='main'>
       <ErrorBoundary>
@@ -88,6 +88,6 @@ const Main = props => {
       </ErrorBoundary>
     </StyledMain>
   )
-}
+})
 
 export default Main
