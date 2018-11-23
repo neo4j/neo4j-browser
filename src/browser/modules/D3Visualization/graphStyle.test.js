@@ -84,8 +84,8 @@ relationship {
 }
 
 node.foo {
-  color: #68BDF6;
-  border-color: #5CA8DB;
+  color: #C990C0;
+  border-color: #b261a5;
   text-color-internal: #FFFFFF;
   defaultCaption: <id>;
 }
@@ -124,8 +124,8 @@ relationship {
 }
 
 node.foo\\.bar {
-  color: #68BDF6;
-  border-color: #5CA8DB;
+  color: #C990C0;
+  border-color: #b261a5;
   text-color-internal: #FFFFFF;
   defaultCaption: <id>;
 }

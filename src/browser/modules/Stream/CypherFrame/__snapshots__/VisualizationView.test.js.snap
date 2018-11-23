@@ -29,7 +29,7 @@ exports[`Visualization renders with result 1`] = `
               >
                 <li
                   class="token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
-                  style="background-color: rgb(109, 206, 158); color: rgb(255, 255, 255);"
+                  style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                 >
                   *
                   <span
@@ -49,7 +49,7 @@ exports[`Visualization renders with result 1`] = `
               >
                 <li
                   class="token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
-                  style="background-color: rgb(104, 189, 246); color: rgb(255, 255, 255);"
+                  style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >
                   Person
                   <span
@@ -102,9 +102,9 @@ exports[`Visualization renders with result 1`] = `
                     class="outline"
                     cx="0"
                     cy="0"
-                    fill="#68BDF6"
+                    fill="#C990C0"
                     r="25"
-                    stroke="#5CA8DB"
+                    stroke="#b261a5"
                     stroke-width="2px"
                   />
                   <text
