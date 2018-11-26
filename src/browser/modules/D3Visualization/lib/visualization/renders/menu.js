@@ -183,8 +183,8 @@ const donutExpandNode = new Renderer({
       2,
       'expand_node',
       [-8, -10],
-      'Expand',
-      'Expand child relationships'
+      'Expand / Collapse',
+      'Expand / Collapse child relationships'
     )
   },
 

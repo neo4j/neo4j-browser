@@ -34,6 +34,7 @@ export default class Graph {
     this.findRelationship = this.findRelationship.bind(this)
     this.findAllRelationshipToNode = this.findAllRelationshipToNode.bind(this)
     this.nodeMap = {}
+    this.expandedNodeMap = {}
     this._nodes = []
     this.relationshipMap = {}
     this._relationships = []
@@ -74,6 +75,17 @@ export default class Graph {
     }
     return this
   }
+  addExpandedNodes = (node, nodes) => {
+    for (let eNode of Array.from(nodes)) {
+      if (this.findNode(eNode.id) == null) {
+        this.nodeMap[eNode.id] = eNode
+        this._nodes.push(eNode)
+        this.expandedNodeMap[node.id] = this.expandedNodeMap[node.id]
+          ? this.expandedNodeMap[node.id].concat([eNode.id])
+          : [eNode.id]
+      }
+    }
+  }
 
   removeNode (node) {
     if (this.findNode(node.id) != null) {
@@ -81,6 +93,19 @@ export default class Graph {
       this._nodes.splice(this._nodes.indexOf(node), 1)
     }
     return this
+  }
+
+  collapseNode = node => {
+    if (!this.expandedNodeMap[node.id]) {
+      return
+    }
+    this.expandedNodeMap[node.id].forEach(id => {
+      const eNode = this.nodeMap[id]
+      this.collapseNode(eNode)
+      this.removeConnectedRelationships(eNode)
+      this.removeNode(eNode)
+    })
+    this.expandedNodeMap[node.id] = []
   }
 
   updateNode (node) {

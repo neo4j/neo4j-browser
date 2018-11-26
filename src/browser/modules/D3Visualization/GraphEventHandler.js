@@ -75,6 +75,9 @@ export class GraphEventHandler {
   }
 
   nodeClicked (d) {
+    if (!d) {
+      return
+    }
     d.fixed = true
     if (!d.selected) {
       this.selectItem(d)
@@ -88,11 +91,19 @@ export class GraphEventHandler {
   }
 
   nodeUnlock (d) {
+    if (!d) {
+      return
+    }
     d.fixed = false
     this.deselectItem()
   }
 
   nodeDblClicked (d) {
+    if (d.expanded) {
+      this.nodeCollapse(d)
+      return
+    }
+    d.expanded = true
     const graph = this.graph
     const graphView = this.graphView
     const graphModelChanged = this.graphModelChanged.bind(this)
@@ -101,11 +112,18 @@ export class GraphEventHandler {
       { nodes, relationships }
     ) {
       if (err) return
-      graph.addNodes(mapNodes(nodes))
+      graph.addExpandedNodes(d, mapNodes(nodes))
       graph.addRelationships(mapRelationships(relationships, graph))
       graphView.update()
       graphModelChanged()
     })
+  }
+
+  nodeCollapse (d) {
+    d.expanded = false
+    this.graph.collapseNode(d)
+    this.graphView.update()
+    this.graphModelChanged()
   }
 
   onNodeMouseOver (node) {
