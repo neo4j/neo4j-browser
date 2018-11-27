@@ -26,3 +26,7 @@ now.json
 yarn-error.log
 *.tgz
 jest.config.js
+.babelrc.js
+.vscode
+Dockerfile
+NOTICE.xml
