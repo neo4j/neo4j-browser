@@ -70,6 +70,7 @@ import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
+import { URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 
 export class App extends Component {
   componentDidMount () {
@@ -118,6 +119,7 @@ export class App extends Component {
               <UserInteraction />
               <DesktopIntegration
                 integrationPoint={this.props.desktopIntegrationPoint}
+                onArgumentsChange={this.props.onArgumentsChange}
                 onMount={this.props.setInitialConnectionData}
                 onGraphActive={this.props.switchConnection}
                 onGraphInactive={this.props.closeConnectionMaybe}
@@ -234,13 +236,17 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     if (activeGraph) return // We still got an active graph, do nothing
     ownProps.bus.send(SILENT_DISCONNECT, {})
   }
+  const onArgumentsChange = argsString => {
+    ownProps.bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
+  }
   return {
     ...stateProps,
     ...ownProps,
     ...dispatchProps,
     switchConnection,
     setInitialConnectionData,
-    closeConnectionMaybe
+    closeConnectionMaybe,
+    onArgumentsChange
   }
 }
 

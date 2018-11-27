@@ -21,7 +21,7 @@
 import Rx from 'rxjs/Rx'
 import { getUrlParamValue } from 'services/utils'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
-import { APP_START } from 'shared/modules/app/appDuck'
+import { APP_START, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 
 const NAME = 'editor'
 export const SET_CONTENT = NAME + '/SET_CONTENT'
@@ -42,6 +42,7 @@ export const editContent = (id, message) => ({
 export const populateEditorFromUrlEpic = (some$, store) => {
   return some$
     .ofType(APP_START)
+    .merge(some$.ofType(URL_ARGUMENTS_CHANGE))
     .delay(1) // Timing issue. Needs to be detached like this
     .mergeMap(action => {
       if (!action.url) return Rx.Observable.never()
