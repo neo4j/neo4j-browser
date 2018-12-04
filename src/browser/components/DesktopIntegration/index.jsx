@@ -23,7 +23,7 @@ import { getActiveGraph, getCredentials, eventToHandler } from './helpers'
 
 export default class DesktopIntegration extends Component {
   setupListener () {
-    const { integrationPoint } = this.props
+    const { integrationPoint, onArgumentsChange = null } = this.props
     if (integrationPoint && integrationPoint.onContextUpdate) {
       integrationPoint.onContextUpdate((event, newContext, oldContext) => {
         const handlerPropName = eventToHandler(event.type)
@@ -31,6 +31,13 @@ export default class DesktopIntegration extends Component {
         if (typeof this.props[handlerPropName] === 'undefined') return
         this.props[handlerPropName](event, newContext, oldContext)
       })
+    }
+    if (
+      integrationPoint &&
+      integrationPoint.onArgumentsChange &&
+      onArgumentsChange
+    ) {
+      integrationPoint.onArgumentsChange(onArgumentsChange)
     }
   }
   loadInitialContext () {
