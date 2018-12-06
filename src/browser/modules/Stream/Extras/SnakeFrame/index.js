@@ -116,7 +116,7 @@ export class SnakeFrame extends React.Component {
   }
 }
 
-const Frame = (...props) => {
+const Frame = props => {
   return (
     <FrameTemplate header={props.frame} contents={<SnakeFrame {...props} />} />
   )
