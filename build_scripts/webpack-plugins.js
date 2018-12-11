@@ -37,6 +37,10 @@ module.exports = () => {
     }),
     new CopyWebpackPlugin([
       {
+        from: path.resolve(helpers.browserPath, 'manifest.json'),
+        to: helpers.buildPath + '/manifest.json'
+      },
+      {
         from: path.resolve(helpers.browserPath, 'images'),
         to: helpers.assetsPath + '/images'
       },

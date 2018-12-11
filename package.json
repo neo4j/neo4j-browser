@@ -11,15 +11,6 @@
   "license": "GPL-3.0",
   "homepage": "https://neo4j.com/developer/guide-neo4j-browser/",
   "main": "dist/index.html",
-  "neo4jDesktop": {
-    "apiVersion": "^1.2.0"
-  },
-  "icons": [
-    {
-      "src": "./dist/assets/images/device-icons/neo4j-desktop.svg",
-      "type": "svg"
-    }
-  ],
   "scripts": {
     "build": "NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
     "dev": "jest --watch",
