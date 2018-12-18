@@ -24,7 +24,6 @@ import {
   ensureConnection,
   routedWriteTransaction,
   cancelTransaction,
-  closeConnection,
   routedReadTransaction,
   directTransaction,
   DIRECT_CONNECTION,
@@ -83,13 +82,11 @@ const onmessage = function (message) {
           .getPromise(res)
           .then(r => {
             self.postMessage(cypherResponseMessage(r))
-            closeConnection()
           })
           .catch(e => {
             self.postMessage(
               cypherErrorMessage({ code: e.code, message: e.message })
             )
-            closeConnection()
           })
       })
       .catch(e => {
@@ -100,7 +97,6 @@ const onmessage = function (message) {
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
     cancelTransaction(message.data.id, () => {
       self.postMessage(postCancelTransactionMessage())
-      closeConnection()
     })
   } else {
     self.postMessage(
