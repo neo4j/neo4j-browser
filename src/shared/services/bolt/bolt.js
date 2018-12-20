@@ -32,6 +32,8 @@ import {
   POST_CANCEL_TRANSACTION_MESSAGE,
   BOLT_CONNECTION_ERROR_MESSAGE
 } from './boltWorkerMessages'
+import { NATIVE } from 'services/bolt/boltHelpers'
+
 /* eslint-disable import/no-webpack-loader-syntax */
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
@@ -45,6 +47,7 @@ function openConnection (props, opts = {}, onLostConnection) {
       .openConnection(props, opts, onLostConnection)
       .then(r => {
         connectionProperties = {
+          authenticationMethod: props.authenticationMethod || NATIVE,
           username: props.username,
           password: props.password,
           host: props.host,

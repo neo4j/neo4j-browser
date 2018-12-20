@@ -17,14 +17,16 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* global test, expect */
+/* global test, expect, jest */
 import {
   getCredentials,
   getActiveGraph,
   eventToHandler,
   didChangeActiveGraph,
-  getActiveCredentials
+  getActiveCredentials,
+  buildConnectionCredentialsObject
 } from './helpers'
+import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
 
 test('getActiveGraph handles non objects and non-active projects', () => {
   // Given
@@ -245,36 +247,99 @@ test('getActiveCredentials finds the active connection from a context object and
 })
 
 test('getActiveCredentials should extract https and http creds', () => {
-  const bolt = {
-    username: 'one',
-    password: 'one1'
-  }
-  const http = {
-    host: 'foo',
-    port: 'bar'
-  }
+  const activeConnectionData = createApiResponse(activeGraph())
 
-  const https = {
-    host: 'abc',
-    port: 'xyz'
-  }
-  const createApiResponse = graphs => ({
-    projects: [{ graphs }]
-  })
-  const activeConnectionData = createApiResponse([
-    {
-      id: 1,
-      status: 'ACTIVE',
-      connection: {
-        configuration: {
-          protocols: { bolt, http, https }
-        }
-      }
-    }
-  ])
-
-  expect(getActiveCredentials('bolt', activeConnectionData)).toEqual(bolt)
+  expect(getActiveCredentials('bolt', activeConnectionData)).toEqual(bolt())
   expect(getActiveCredentials('http', activeConnectionData)).toEqual(http)
   expect(getActiveCredentials('https', activeConnectionData)).toEqual(https)
   expect(getActiveCredentials('foobar', activeConnectionData)).toBeFalsy()
 })
+
+describe('buildConnectionCredentialsObject', () => {
+  test('it creates an expected object from context, and adds kerberos ticket as password', async () => {
+    // Given
+    const kerberosTicket = 'kerberos-ticket-test'
+    const activeConnectionData = createApiResponse(
+      activeGraph({ enc: 'REQUIRED', kerberos: true })
+    )
+    const getKerberosTicket = jest.fn(principal => kerberosTicket)
+    const connectionData = await buildConnectionCredentialsObject(
+      activeConnectionData,
+      {},
+      getKerberosTicket
+    )
+    expect(connectionData).toEqual({
+      username: 'one',
+      password: kerberosTicket,
+      url: 'bolt:port',
+      tlsLevel: 'REQUIRED',
+      encrypted: true,
+      host: 'bolt:port',
+      restApi: 'http://foo:bar',
+      authenticationMethod: KERBEROS
+    })
+    expect(getKerberosTicket).toHaveBeenCalledTimes(1)
+    expect(getKerberosTicket).toHaveBeenCalledWith('https')
+  })
+  test('it creates an expected object from context, without kerberos', async () => {
+    // Given
+    const kerberosTicket = 'kerberos-ticket-test'
+    const getKerberosTicket = jest.fn(principal => kerberosTicket)
+    const activeConnectionData = createApiResponse(
+      activeGraph({ enc: 'REQUIRED', kerberos: false })
+    )
+    const connectionData = await buildConnectionCredentialsObject(
+      activeConnectionData,
+      {},
+      getKerberosTicket
+    )
+    expect(connectionData).toEqual({
+      username: 'one',
+      password: 'one1',
+      url: 'bolt:port',
+      tlsLevel: 'REQUIRED',
+      encrypted: true,
+      host: 'bolt:port',
+      restApi: 'http://foo:bar',
+      authenticationMethod: NATIVE
+    })
+    expect(getKerberosTicket).toHaveBeenCalledTimes(0)
+  })
+})
+
+const bolt = (enc = 'OPTIONAL') => ({
+  username: 'one',
+  password: 'one1',
+  url: 'bolt:port',
+  tlsLevel: enc
+})
+const http = {
+  host: 'foo',
+  port: 'bar'
+}
+
+const https = {
+  host: 'abc',
+  port: 'xyz'
+}
+const createApiResponse = graphs => ({
+  projects: [{ graphs }]
+})
+
+const activeGraph = (props = { enc: 'OPTIONAL', kerberos: false }) => [
+  {
+    id: 1,
+    status: 'ACTIVE',
+    connection: {
+      configuration: {
+        protocols: { bolt: bolt(props.enc), http, https },
+        authenticationMethods: {
+          kerberos: {
+            enabled: props.kerberos,
+            servicePrincipal: 'https'
+          }
+        }
+      }
+    }
+  }
+]

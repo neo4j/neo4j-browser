@@ -22,6 +22,7 @@
 import { version } from 'project-root/package.json'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
+import { flushPromises } from 'services/utils'
 import {
   executeSystemCommand,
   executeSingleCommand,
@@ -114,7 +115,3 @@ describe('tx metadata with cypher', () => {
     })
   })
 })
-
-function flushPromises () {
-  return new Promise(resolve => setImmediate(resolve))
-}

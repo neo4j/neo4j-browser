@@ -63,8 +63,8 @@ import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import DesktopIntegration from 'browser-components/DesktopIntegration'
 import {
-  getActiveCredentials,
-  getActiveGraph
+  getActiveGraph,
+  buildConnectionCredentialsObject
 } from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
@@ -189,45 +189,34 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const switchConnection = (event, newContext, oldContext) => {
-    const creds = getActiveCredentials('bolt', newContext)
-    if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
-    const httpsCreds = getActiveCredentials('https', newContext)
-    const httpCreds = getActiveCredentials('http', newContext)
-    const restApi =
-      httpsCreds && httpsCreds.enabled
-        ? `https://${httpsCreds.host}:${httpsCreds.port}`
-        : `http://${httpCreds.host}:${httpCreds.port}`
-    const connectionCreds = {
-      // Use current connections creds until we get new from API
-      ...stateProps.defaultConnectionData,
-      ...creds,
-      encrypted: creds.tlsLevel === 'REQUIRED',
-      host: creds.url || `bolt://${creds.host}:${creds.port}`,
-      restApi
-    }
+  const switchConnection = async (
+    event,
+    newContext,
+    oldContext,
+    getKerberosTicket
+  ) => {
+    const connectionCreds = await buildConnectionCredentialsObject(
+      newContext,
+      stateProps.defaultConnectionData,
+      getKerberosTicket
+    )
     ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
   }
-  const setInitialConnectionData = (graph, credentials, context) => {
-    const creds = getActiveCredentials('bolt', context)
+  const setInitialConnectionData = async (
+    graph,
+    credentials,
+    context,
+    getKerberosTicket
+  ) => {
+    const connectionCreds = await buildConnectionCredentialsObject(
+      context,
+      stateProps.defaultConnectionData,
+      getKerberosTicket
+    )
     // No connection. Probably no graph active.
-    if (!creds) {
+    if (!connectionCreds) {
       ownProps.bus.send(SWITCH_CONNECTION_FAILED)
       return
-    }
-    const httpsCreds = getActiveCredentials('https', context)
-    const httpCreds = getActiveCredentials('http', context)
-    const restApi =
-      httpsCreds && httpsCreds.enabled
-        ? `https://${httpsCreds.host}:${httpsCreds.port}`
-        : `http://${httpCreds.host}:${httpCreds.port}`
-    const connectionCreds = {
-      // Use current connections creds until we get new from API
-      ...stateProps.defaultConnectionData,
-      ...creds,
-      encrypted: creds.tlsLevel === 'REQUIRED',
-      host: creds.url || `bolt://${creds.host}:${creds.port}`,
-      restApi
     }
     ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
   }

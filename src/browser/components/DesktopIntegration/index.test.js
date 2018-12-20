@@ -96,7 +96,8 @@ describe('<DesktopIntegration>', () => {
     const event = { type: 'XXX' }
     const nonListenEvent = { type: 'YYY' }
     const integrationPoint = {
-      onContextUpdate: fn => (componentOnContextUpdate = fn)
+      onContextUpdate: fn => (componentOnContextUpdate = fn),
+      getKerberosTicket: jest.fn()
     }
 
     // When
@@ -112,21 +113,36 @@ describe('<DesktopIntegration>', () => {
 
     // Then
     expect(fn).toHaveBeenCalledTimes(1)
-    expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+    expect(fn).toHaveBeenLastCalledWith(
+      event,
+      newContext,
+      oldContext,
+      integrationPoint.getKerberosTicket
+    )
 
     // When
     componentOnContextUpdate(nonListenEvent, newContext, oldContext) // We don't listen for this
 
     // Then
     expect(fn).toHaveBeenCalledTimes(1)
-    expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+    expect(fn).toHaveBeenLastCalledWith(
+      event,
+      newContext,
+      oldContext,
+      integrationPoint.getKerberosTicket
+    )
 
     // When
     componentOnContextUpdate(event, newContext, oldContext) // Another one we're listening on
 
     // Then
     expect(fn).toHaveBeenCalledTimes(2)
-    expect(fn).toHaveBeenLastCalledWith(event, newContext, oldContext)
+    expect(fn).toHaveBeenLastCalledWith(
+      event,
+      newContext,
+      oldContext,
+      integrationPoint.getKerberosTicket
+    )
     expect(container).toMatchSnapshot()
   })
 })

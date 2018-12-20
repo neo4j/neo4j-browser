@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
+
 export const getActiveGraph = (context = {}) => {
   if (!context) return null
   const { projects } = context
@@ -75,4 +77,55 @@ export const getActiveCredentials = (type, context) => {
   if (!activeGraph || typeof activeGraph.connection === 'undefined') return null
   const creds = getCredentials(type, activeGraph.connection)
   return creds || null
+}
+
+const isKerberosEnabled = context => {
+  const activeGraph = getActiveGraph(context)
+  if (!activeGraph || typeof activeGraph.connection === 'undefined') {
+    return false
+  }
+  if (!activeGraph.connection) return null
+  const { configuration = null } = activeGraph.connection
+  if (!configuration) {
+    return false
+  }
+  if (
+    !configuration.authenticationMethods ||
+    !configuration.authenticationMethods.kerberos
+  ) {
+    return false
+  }
+  if (!configuration.authenticationMethods.kerberos.enabled) {
+    return false
+  }
+  return configuration.authenticationMethods.kerberos
+}
+
+export const buildConnectionCredentialsObject = async (
+  context,
+  existingData = {},
+  getKerberosTicket = () => {}
+) => {
+  const creds = getActiveCredentials('bolt', context)
+  if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
+  const httpsCreds = getActiveCredentials('https', context)
+  const httpCreds = getActiveCredentials('http', context)
+  const kerberos = isKerberosEnabled(context)
+  if (kerberos !== false) {
+    creds.password = await getKerberosTicket(kerberos.servicePrincipal)
+  }
+  const restApi =
+    httpsCreds && httpsCreds.enabled
+      ? `https://${httpsCreds.host}:${httpsCreds.port}`
+      : `http://${httpCreds.host}:${httpCreds.port}`
+  const connectionCreds = {
+    // Use current connections creds until we get new from API
+    ...existingData,
+    ...creds,
+    encrypted: creds.tlsLevel === 'REQUIRED',
+    host: creds.url || `bolt://${creds.host}:${creds.port}`,
+    restApi,
+    authenticationMethod: kerberos ? KERBEROS : NATIVE
+  }
+  return connectionCreds
 }

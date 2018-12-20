@@ -483,3 +483,7 @@ export const generateBoltHost = host => {
   host = urlParts.length > 1 ? urlParts[1] : urlParts[0]
   return protocol + (host || 'localhost:7687')
 }
+
+export function flushPromises () {
+  return new Promise(resolve => setImmediate(resolve))
+}
