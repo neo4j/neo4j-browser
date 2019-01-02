@@ -143,9 +143,11 @@ export const initialView = (props, state = {}) => {
     return undefined
   }
   // If openView exists, this is not initial render
-  if (state.openView !== undefined) return state.openView
-  if (props.frame && props.frame.forceView) return props.frame.forceView
   if (props.request.status === 'error') return viewTypes.ERRORS
+  if (state.openView !== undefined && state.openView !== viewTypes.ERRORS) {
+    return state.openView
+  }
+  if (props.frame && props.frame.forceView) return props.frame.forceView
   if (resultHasPlan(props.request)) return viewTypes.PLAN
   if (!resultHasRows(props.request)) return viewTypes.TABLE
 

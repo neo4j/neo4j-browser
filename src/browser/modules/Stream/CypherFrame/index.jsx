@@ -104,17 +104,14 @@ export class CypherFrame extends Component {
   componentDidUpdate () {
     // When going from 'pending' to some other status
     // we want to show an initial view.
-    // This only happens on first render of a response
-    if (
-      this.props.request.status !== 'pending' &&
-      this.state.openView === undefined
-    ) {
+    // This happens on first render of a response and on re-runs
+    if (this.props.request.status !== 'pending') {
       const openView = initialView(this.props, this.state)
-      if (openView) {
-        this.setState({ openView })
+      if (openView !== this.state.openView) {
+        const hasVis = openView === viewTypes.ERRORS ? false : this.state.hasVis
+        this.setState({ openView, hasVis })
       }
-    }
-    if (this.props.request.status === 'pending') {
+    } else {
       this.visElement = null
       this.setState({ hasVis: false })
     }

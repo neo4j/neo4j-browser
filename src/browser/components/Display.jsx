@@ -18,48 +18,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
-import { shallowEquals } from 'services/utils'
+import React, { PureComponent } from 'react'
 
-export default class Display extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      displayed: false,
-      mounted: false
-    }
+export default class Display extends PureComponent {
+  state = {
+    mounted: false
   }
   componentDidMount () {
-    if (this.props.if === true) {
-      this.setState({ displayed: true, mounted: true })
+    if (this.props.if) {
+      this.setState({ mounted: true })
     }
   }
   componentWillReceiveProps (props) {
-    if (props.if && this.state.displayed === false) {
-      this.setState({ displayed: true, mounted: true })
-      return
+    if (this.state.mounted === false && props.if) {
+      this.setState({ mounted: true })
     }
-    if (!props.if && this.state.displayed === true) {
-      this.setState({ displayed: false })
-    }
-  }
-  shouldComponentUpdate (props, state) {
-    if (props.if === false && this.props.if === false) return false // Never rerender non displayed components
-    return !(
-      shallowEquals(props, this.props) && shallowEquals(state, this.state)
-    )
   }
   render () {
-    if (!this.state.displayed && !this.state.mounted && this.props.lazy) {
+    // If lazy, don't load anything until it's time
+    if (!this.props.if && !this.state.mounted && this.props.lazy) {
       return null
-    } // Lazy load it
+    }
     const { style = {}, children = [] } = this.props
     const modStyle = {
       ...style,
       width: 'inherit',
-      display: !this.state.displayed
-        ? 'none'
-        : this.props.inline
+      display: !this.props.if ? 'none' : this.props.inline ? 'inline' : 'block'
           ? 'inline'
           : 'block'
     }
