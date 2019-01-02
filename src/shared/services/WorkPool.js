@@ -54,6 +54,9 @@ class WorkPool {
     this._next()
     return work
   }
+  messageAllWorkers (msg) {
+    this.register.forEach(worker => worker.worker.postMessage(msg))
+  }
 
   // Implemtation details
   _getFreeWorker (id) {
