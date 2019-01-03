@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Copyright (c) 2002-2019 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -30,15 +30,13 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p
-      .then(r => {
-        expect(1).toBe(2)
-        done()
-      })
-      .catch(e => {
-        expect(e.message).toEqual('Unparseable http request')
-        done()
-      })
+    p.then(r => {
+      expect(1).toBe(2)
+      done()
+    }).catch(e => {
+      expect(e.message).toEqual('Unparseable http request')
+      done()
+    })
   })
   test('Fails without url', done => {
     // Given
@@ -48,15 +46,13 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p
-      .then(r => {
-        expect(1).toBe(2)
-        done()
-      })
-      .catch(e => {
-        expect(e.message).toEqual('Missing path')
-        done()
-      })
+    p.then(r => {
+      expect(1).toBe(2)
+      done()
+    }).catch(e => {
+      expect(e.message).toEqual('Missing path')
+      done()
+    })
   })
   test('Fails with non JSON data for post/put', done => {
     // Given
@@ -66,17 +62,13 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p
-      .then(r => {
-        expect(1).toBe(2)
-        done()
-      })
-      .catch(e => {
-        expect(e.message).toEqual(
-          'Payload does not seem to be valid (JSON) data'
-        )
-        done()
-      })
+    p.then(r => {
+      expect(1).toBe(2)
+      done()
+    }).catch(e => {
+      expect(e.message).toEqual('Payload does not seem to be valid (JSON) data')
+      done()
+    })
   })
   test('Passes post/put without data', done => {
     // Given
@@ -86,15 +78,13 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p
-      .then(r => {
-        expect(r.method).toBe('post')
-        done()
-      })
-      .catch(e => {
-        expect(1).toEqual(2)
-        done()
-      })
+    p.then(r => {
+      expect(r.method).toBe('post')
+      done()
+    }).catch(e => {
+      expect(1).toEqual(2)
+      done()
+    })
   })
   test('Passes post/put with JSON data', done => {
     // Given
@@ -105,15 +95,13 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p
-      .then(r => {
-        expect(r.method).toBe('post')
-        expect(r.data).toEqual(data)
-        done()
-      })
-      .catch(e => {
-        expect(1).toEqual(2)
-        done()
-      })
+    p.then(r => {
+      expect(r.method).toBe('post')
+      expect(r.data).toEqual(data)
+      done()
+    }).catch(e => {
+      expect(1).toEqual(2)
+      done()
+    })
   })
 })

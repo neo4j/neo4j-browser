@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Copyright (c) 2002-2019 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -21,7 +21,9 @@
 import styled from 'styled-components'
 import { StyledTd } from 'browser-components/DataTables'
 
-export const StyledUserTd = styled(StyledTd)`padding: 10px 0;`
+export const StyledUserTd = styled(StyledTd)`
+  padding: 10px 0;
+`
 export const StyledSelect = styled.select`
   border: ${props => props.theme.secondaryButtonBorder};
   color: #555;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Copyright (c) 2002-2019 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -26,9 +26,15 @@ export const SlideContainer = styled.div`
   width: 100%;
   display: inline-block;
 `
-export const StyledCarouselLeft = styled.div`float: left;`
-export const StyledCarouselRight = styled.div`float: right;`
-export const StyledCarouselButtonContainer = styled.div`margin-top: -40px;`
+export const StyledCarouselLeft = styled.div`
+  float: left;
+`
+export const StyledCarouselRight = styled.div`
+  float: right;
+`
+export const StyledCarouselButtonContainer = styled.div`
+  margin-top: -40px;
+`
 const CarouselIndicator = styled.li`
   display: inline-block;
   width: 10px;
@@ -52,7 +58,9 @@ export const CarouselIndicatorActive = styled(CarouselIndicator)`
   height: 12px;
   background-color: #428bca;
 `
-export const StyledUl = styled.ul`margin: 15px;`
+export const StyledUl = styled.ul`
+  margin: 15px;
+`
 
 export const StyledSlide = styled.div`
   color: ${props => props.theme.primaryText};

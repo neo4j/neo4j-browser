@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Copyright (c) 2002-2019 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -70,7 +70,7 @@ export const StyledKey = styled.td`
   color: #bcc0c9;
   font-family: ${props => props.theme.primaryFontFamily};
   outline-color: rgb(188, 192, 201);
-  text-shadow: rgba(0, 0, 0, 0.4)0 1px 0;
+  text-shadow: rgba(0, 0, 0, 0.4) 0 1px 0;
 `
 export const StyledValue = styled.td`
   font-family: ${props => props.theme.primaryFontFamily};
@@ -94,12 +94,16 @@ export const Link = props => {
   const { children, ...rest } = props
   return (
     <StyledLink {...rest}>
-      <PlainPlayIcon />&nbsp;{children}
+      <PlainPlayIcon />
+      &nbsp;
+      {children}
     </StyledLink>
   )
 }
 
-export const StyledShowMoreContainer = styled.div`margin-top: 10px;`
+export const StyledShowMoreContainer = styled.div`
+  margin-top: 10px;
+`
 
 export const StyledShowMoreLink = styled.span`
   cursor: pointer;

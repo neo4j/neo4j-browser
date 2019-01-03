@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Copyright (c) 2002-2019 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -27,7 +27,9 @@ export const Code = styled.code`
   background-color: #f9f2f4;
   border-radius: 4px;
 `
-export const StyledTableWrapper = styled.div`margin: 20px 10px;`
+export const StyledTableWrapper = styled.div`
+  margin: 20px 10px;
+`
 export const StyledTable = styled.table`
   width: 100%;
   table-layout: fixed;

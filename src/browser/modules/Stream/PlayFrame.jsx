@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Copyright (c) 2002-2019 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -80,8 +80,8 @@ export class PlayFrame extends Component {
         )
       })
     }
-    const topicInput = (splitStringOnFirst(this.props.frame.cmd, ' ')[1] ||
-      'start'
+    const topicInput = (
+      splitStringOnFirst(this.props.frame.cmd, ' ')[1] || 'start'
     ).trim()
     const guideName = topicInput.toLowerCase().replace(/\s|-/g, '')
     if (html[guideName] !== undefined) {

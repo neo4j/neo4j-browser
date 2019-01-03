@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
+ * Copyright (c) 2002-2019 "Neo4j, Inc"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -68,7 +68,9 @@ export const StyledDocumentActionLink = props => {
   return (
     <StyledHelpItem onClick={props.onClick}>
       <StyledDocumentText {...rest}>
-        {props.type === 'play' ? <PlayIcon /> : <QuestionIcon />}&nbsp;{name}
+        {props.type === 'play' ? <PlayIcon /> : <QuestionIcon />}
+        &nbsp;
+        {name}
       </StyledDocumentText>
     </StyledHelpItem>
   )
@@ -161,7 +163,8 @@ export const ExecFavoriteButton = props => {
 export const NewFolderButton = props => {
   return (
     <NewFolderStyledButton onClick={props.onClick}>
-      <PlusIcon />New Folder
+      <PlusIcon />
+      New Folder
     </NewFolderStyledButton>
   )
 }
