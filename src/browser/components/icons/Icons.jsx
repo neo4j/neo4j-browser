@@ -309,7 +309,10 @@ export const EditIcon = () => (
   />
 )
 export const Spinner = () => (
-  <IconContainer className='fa fa-spinner fa-spin fa-2x' />
+  <IconContainer
+    data-testid='spinner'
+    className='fa fa-spinner fa-spin fa-2x'
+  />
 )
 export const SmallSpinner = () => (
   <IconContainer className='fa fa-spinner fa-spin ' />

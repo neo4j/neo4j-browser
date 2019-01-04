@@ -228,7 +228,7 @@ describe('helpers', () => {
       // Given
       const props = {
         request: {
-          status: 'error'
+          status: 'success'
         },
         frame: {
           forceView: viewTypes.WARNINGS
@@ -241,6 +241,24 @@ describe('helpers', () => {
 
       // Then
       expect(view).toEqual(viewTypes.WARNINGS)
+    })
+    test('error overrides forced view', () => {
+      // Given
+      const props = {
+        request: {
+          status: 'error'
+        },
+        frame: {
+          forceView: viewTypes.WARNINGS
+        }
+      }
+      const state = {}
+
+      // When
+      const view = initialView(props, state)
+
+      // Then
+      expect(view).toEqual(viewTypes.ERRORS)
     })
     test('should return the plan view if plan is existent', () => {
       // Given
@@ -447,6 +465,20 @@ describe('helpers', () => {
 
       // Then
       expect(view).toEqual(viewTypes.TEXT)
+    })
+    test('an error overrides openView', () => {
+      // Given
+      const request = {
+        status: 'error'
+      }
+      const props = { request, recentView: viewTypes.VISUALIZATION }
+      const state = { openView: viewTypes.TEXT }
+
+      // When
+      const view = initialView(props, state)
+
+      // Then
+      expect(view).toEqual(viewTypes.ERRORS)
     })
     test('should return viz if the last view was plan but no plan exists and viz elements exists', () => {
       // Given
