@@ -35,9 +35,8 @@ export const getTableDataFromRecords = records => {
   )
   const cache =
     flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`]) || {}
-  const primitive = flattenAttributes(
-    result[`${jmxQueryPrefix},name=Primitive count`]
-  )
+  const primitive =
+    flattenAttributes(result[`${jmxQueryPrefix},name=Primitive count`]) || {}
   const tx =
     flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) || {}
   const kernel = {
