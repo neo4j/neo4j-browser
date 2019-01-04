@@ -61,6 +61,18 @@ export class UserDetails extends Component {
                     <StyledValue>
                       <Link
                         onClick={() =>
+                          this.props.onItemClick(':server user list')
+                        }
+                      >
+                        :server user list
+                      </Link>
+                    </StyledValue>
+                  </tr>
+                  <tr>
+                    <StyledKey className='user-list-button'></StyledKey>
+                    <StyledValue>
+                      <Link
+                        onClick={() =>
                           this.props.onItemClick(':server user add')
                         }
                       >
