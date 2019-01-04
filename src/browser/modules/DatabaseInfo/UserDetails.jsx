@@ -69,7 +69,7 @@ export class UserDetails extends Component {
                     </StyledValue>
                   </tr>
                   <tr>
-                    <StyledKey className='user-list-button'></StyledKey>
+                    <StyledKey className='user-list-button' />
                     <StyledValue>
                       <Link
                         onClick={() =>

@@ -44,8 +44,6 @@ export default class Display extends PureComponent {
       ...style,
       width: 'inherit',
       display: !this.props.if ? 'none' : this.props.inline ? 'inline' : 'block'
-          ? 'inline'
-          : 'block'
     }
     return <div style={modStyle}>{children}</div>
   }
