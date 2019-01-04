@@ -23,7 +23,7 @@
 import { v4 as uuid } from 'uuid'
 import WorkPool from './WorkPool'
 
-describe('creating work', () => {
+describe('Workpool', () => {
   let createWorker
   let register
   let id
@@ -235,5 +235,46 @@ describe('creating work', () => {
       poolSize
     )
     expect(localRegister.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(0)
+  })
+  test('Can message all workers at once', () => {
+    const message = { type: 'hello all' }
+    const postMessage1 = jest.fn()
+    const postMessage2 = jest.fn()
+    const postMessage3 = jest.fn()
+    const createWorker = jest
+      .fn()
+      .mockImplementationOnce(() => {
+        return {
+          postMessage: postMessage1
+        }
+      })
+      .mockImplementationOnce(() => {
+        return {
+          postMessage: postMessage2
+        }
+      })
+      .mockImplementationOnce(() => {
+        return {
+          postMessage: postMessage3
+        }
+      })
+    const localRegister = new WorkPool(createWorker)
+    const id1 = { id: uuid() } // No work, just to create workers
+    const id2 = { id: uuid() } // No work, just to create workers
+    const id3 = { id: uuid() } // No work, just to create workers
+
+    // When
+    localRegister.doWork(id1)
+    localRegister.doWork(id2)
+    localRegister.doWork(id3)
+    localRegister.messageAllWorkers(message)
+
+    // Then
+    expect(postMessage1).toHaveBeenCalledTimes(1)
+    expect(postMessage1).toHaveBeenCalledWith(message)
+    expect(postMessage2).toHaveBeenCalledTimes(1)
+    expect(postMessage2).toHaveBeenCalledWith(message)
+    expect(postMessage3).toHaveBeenCalledTimes(1)
+    expect(postMessage3).toHaveBeenCalledWith(message)
   })
 })

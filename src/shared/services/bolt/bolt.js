@@ -27,6 +27,7 @@ import { generateBoltHost } from 'services/utils'
 import {
   runCypherMessage,
   cancelTransactionMessage,
+  closeConnectionMessage,
   CYPHER_ERROR_MESSAGE,
   CYPHER_RESPONSE_MESSAGE,
   POST_CANCEL_TRANSACTION_MESSAGE,
@@ -228,12 +229,17 @@ function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
   return workerPromise
 }
 
+const closeConnectionInWorkers = () => {
+  boltWorkPool.messageAllWorkers(closeConnectionMessage())
+}
+
 export default {
   directConnect: boltConnection.directConnect,
   openConnection,
   closeConnection: () => {
     connectionProperties = null
     boltConnection.closeConnection()
+    closeConnectionInWorkers()
   },
   directTransaction,
   routedReadTransaction,

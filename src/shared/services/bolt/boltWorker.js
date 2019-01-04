@@ -24,9 +24,9 @@ import {
   ensureConnection,
   routedWriteTransaction,
   cancelTransaction,
-  closeConnection,
   routedReadTransaction,
   directTransaction,
+  closeConnection,
   DIRECT_CONNECTION,
   ROUTED_WRITE_CONNECTION,
   ROUTED_READ_CONNECTION
@@ -37,7 +37,8 @@ import {
   postCancelTransactionMessage,
   boltConnectionErrorMessage,
   RUN_CYPHER_MESSAGE,
-  CANCEL_TRANSACTION_MESSAGE
+  CANCEL_TRANSACTION_MESSAGE,
+  CLOSE_CONNECTION_MESSAGE
 } from './boltWorkerMessages'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 
@@ -53,6 +54,9 @@ const connectionTypeMap = {
   [DIRECT_CONNECTION]: { create: directTransaction, getPromise: res => res }
 }
 
+let busy = false
+const workQue = []
+
 const onmessage = function (message) {
   const messageType = message.data.type
 
@@ -65,6 +69,7 @@ const onmessage = function (message) {
       cancelable,
       connectionProperties
     } = message.data
+    beforeWork()
     const { txMetadata } = connectionProperties
     ensureConnection(connectionProperties, connectionProperties.opts, e => {
       self.postMessage(
@@ -82,17 +87,18 @@ const onmessage = function (message) {
         connectionTypeMap[connectionType]
           .getPromise(res)
           .then(r => {
+            afterWork()
             self.postMessage(cypherResponseMessage(r))
-            closeConnection()
           })
           .catch(e => {
+            afterWork()
             self.postMessage(
               cypherErrorMessage({ code: e.code, message: e.message })
             )
-            closeConnection()
           })
       })
       .catch(e => {
+        afterWork()
         self.postMessage(
           cypherErrorMessage({ code: e.code, message: e.message })
         )
@@ -100,6 +106,9 @@ const onmessage = function (message) {
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
     cancelTransaction(message.data.id, () => {
       self.postMessage(postCancelTransactionMessage())
+    })
+  } else if (messageType === CLOSE_CONNECTION_MESSAGE) {
+    queueWork(() => {
       closeConnection()
     })
   } else {
@@ -110,6 +119,31 @@ const onmessage = function (message) {
       })
     )
   }
+}
+
+const beforeWork = () => {
+  busy = true
+}
+
+const afterWork = () => {
+  busy = false
+  doWork()
+}
+
+const queueWork = fn => {
+  workQue.push(fn)
+  doWork()
+}
+const doWork = () => {
+  if (busy) {
+    return
+  }
+  if (!workQue.length) {
+    return
+  }
+  const workFn = workQue.shift()
+  workFn()
+  doWork()
 }
 
 self.addEventListener('message', onmessage)
