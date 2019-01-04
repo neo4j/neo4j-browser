@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
- * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ * Copyright (c) 2002-2019 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
  *
@@ -20,7 +20,9 @@
 
 import styled from 'styled-components'
 
-export const StyledConnectionForm = styled.form`padding: 0 15px;`
+export const StyledConnectionForm = styled.form`
+  padding: 0 15px;
+`
 export const StyledConnectionAside = styled.div`
   display: table-cell;
   padding: 0 15px;
@@ -30,9 +32,15 @@ export const StyledConnectionAside = styled.div`
   font-weight: 300;
   color: ${props => props.theme.asideText};
 `
-export const StyledConnectionFrame = styled.div`padding: 30px 45px;`
-export const StyledConnectionFormEntry = styled.div`padding-bottom: 15px;`
-export const StyledConnectionLabel = styled.label`display: block;`
+export const StyledConnectionFrame = styled.div`
+  padding: 30px 45px;
+`
+export const StyledConnectionFormEntry = styled.div`
+  padding-bottom: 15px;
+`
+export const StyledConnectionLabel = styled.label`
+  display: block;
+`
 export const StyledConnectionTextInput = styled.input`
   display: block;
   height: 34px;
@@ -44,7 +52,9 @@ export const StyledConnectionTextInput = styled.input`
   border-radius: 4px;
   width: 44%;
 `
-export const StyledConnectionBodyContainer = styled.div`display: table-cell;`
+export const StyledConnectionBodyContainer = styled.div`
+  display: table-cell;
+`
 export const StyledConnectionBody = styled.div`
   font-size: 1.3em;
   line-height: 2em;

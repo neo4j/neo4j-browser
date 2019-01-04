@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
- * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ * Copyright (c) 2002-2019 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
  *
@@ -30,13 +30,17 @@ const Aside = styled.div`
   font-weight: 300;
   color: ${props => props.theme.asideText};
 `
-const PaddedDiv = styled.div`padding: 30px 45px;`
+const PaddedDiv = styled.div`
+  padding: 30px 45px;
+`
 const StyledConnectionBody = styled.div`
   font-size: 1.3em;
   line-height: 1.6em;
   padding-left: 50px;
 `
-const BodyContainer = styled.div`display: table-cell;`
+const BodyContainer = styled.div`
+  display: table-cell;
+`
 const Code = styled.code`
   white-space: nowrap;
   overflow: hidden;
@@ -44,7 +48,9 @@ const Code = styled.code`
   background-color: #f9f2f4;
   border-radius: 4px;
 `
-const P = styled.p`margin: 20px 0;`
+const P = styled.p`
+  margin: 20px 0;
+`
 
 export const EnterpriseOnlyFrame = props => {
   const { command, ...rest } = props

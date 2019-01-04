@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
- * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ * Copyright (c) 2002-2019 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
  *
@@ -105,7 +105,9 @@ export const PaddedDiv = styled.div`
     props.fullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
 `
 
-export const PaddedTableViewDiv = styled(PaddedDiv)`width: 100%;`
+export const PaddedTableViewDiv = styled(PaddedDiv)`
+  width: 100%;
+`
 
 export const StyledFrameSidebar = styled.ul`
   line-height: 33px;
@@ -155,7 +157,9 @@ export const StyledFrameCommand = styled.label`
   }
 `
 
-export const StyledFrameStatusbarText = styled.label`flex: 1 1 auto;`
+export const StyledFrameStatusbarText = styled.label`
+  flex: 1 1 auto;
+`
 
 export const DottedLineHover = styled.span`
   cursor: pointer;
@@ -166,7 +170,9 @@ export const DottedLineHover = styled.span`
   }
 `
 
-export const StyledHelpFrame = styled.div`padding: 30px;`
+export const StyledHelpFrame = styled.div`
+  padding: 30px;
+`
 export const StyledHelpContent = styled.div`
   padding-top: 10px;
   padding-bottom: 10px;
@@ -187,7 +193,9 @@ export const StyledLink = styled.a`
   }
 `
 
-export const StyledLinkContainer = styled.div`margin: 16px 0;`
+export const StyledLinkContainer = styled.div`
+  margin: 16px 0;
+`
 
 export const StyledCypherMessage = styled.div`
   font-weight: bold;
@@ -282,7 +290,9 @@ export const StyledStatsBar = styled.div`
   width: 100%;
 `
 
-export const StyledOneRowStatsBar = styled(StyledStatsBar)`height: 39px;`
+export const StyledOneRowStatsBar = styled(StyledStatsBar)`
+  height: 39px;
+`
 
 export const StyledSchemaBody = styled(StyledPreformattedArea)`
   padding-top: 6px;
@@ -294,7 +304,9 @@ export const StyledBodyMessage = styled.div`
   color: ${props => props.theme.secondaryText};
 `
 
-export const SpinnerContainer = styled.div`padding-top: 20px;`
+export const SpinnerContainer = styled.div`
+  padding-top: 20px;
+`
 
 export const DropdownButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
@@ -350,9 +362,13 @@ export const DropdownItem = styled.a`
   }
 `
 
-export const StyledRightPartial = styled.div`float: right;`
+export const StyledRightPartial = styled.div`
+  float: right;
+`
 
-export const StyledLeftPartial = styled.div`float: left;`
+export const StyledLeftPartial = styled.div`
+  float: left;
+`
 
 export const StyledWidthSliderContainer = styled.div`
   margin-right: 10px;
@@ -418,7 +434,9 @@ export const StyledWidthSlider = styled.input`
   }
 `
 
-export const StyledTable = styled.table`margin-top: 30px;`
+export const StyledTable = styled.table`
+  margin-top: 30px;
+`
 
 export const StyledTBody = styled.tbody`
   & td:first-child {
@@ -428,7 +446,9 @@ export const StyledTBody = styled.tbody`
   }
 `
 
-export const StyledExpandable = styled.div`margin: 0 10px;`
+export const StyledExpandable = styled.div`
+  margin: 0 10px;
+`
 
 export const StyledAlteringTr = styled.tr`
   &:nth-child(even) {
@@ -436,11 +456,15 @@ export const StyledAlteringTr = styled.tr`
   }
 `
 
-export const StyledStrongTd = styled.td`font-weight: bold;`
+export const StyledStrongTd = styled.td`
+  font-weight: bold;
+`
 
 export const StyledTd = styled.td``
 
-export const StyledHistoryList = styled.ul`list-style: none;`
+export const StyledHistoryList = styled.ul`
+  list-style: none;
+`
 
 export const StyledHistoryRow = styled.li`
   border: 1px solid black;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
- * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ * Copyright (c) 2002-2019 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
  *
@@ -37,7 +37,7 @@ export const SET_MAX_FRAMES = NAME + '/SET_MAX_FRAMES'
 
 /**
  * Selectors
-*/
+ */
 export function getFrame (state, id) {
   return state[NAME].byId[id]
 }
@@ -56,7 +56,7 @@ export function getRecentView (state) {
 
 /**
  * Reducer helpers
-*/
+ */
 function addFrame (state, newState) {
   if (newState.parentId && state.allIds.indexOf(newState.parentId) < 0) {
     // No parent
@@ -167,7 +167,7 @@ export const initialState = {
 
 /**
  * Reducer
-*/
+ */
 export default function reducer (state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }

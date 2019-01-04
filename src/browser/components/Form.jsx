@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
- * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ * Copyright (c) 2002-2019 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
  *
@@ -32,7 +32,9 @@ const StyledSettingTextInput = styled.input`
   width: 192px;
 `
 
-const StyledCheckbox = styled.input`margin-right: 10px;`
+const StyledCheckbox = styled.input`
+  margin-right: 10px;
+`
 const StyledLabel = styled.label`
   margin-left: 10px;
   display: inline-block;
@@ -40,7 +42,9 @@ const StyledLabel = styled.label`
     text-transform: uppercase;
   }
 `
-const StyledRadioEntry = styled.div`margin: 10px 0;`
+const StyledRadioEntry = styled.div`
+  margin: 10px 0;
+`
 
 export const TextInput = props => {
   const { children, ...rest } = props

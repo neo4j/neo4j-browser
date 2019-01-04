@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2002-2018 "Neo4j, Inc"
- * Network Engine for Objects in Lund AB [http://neotechnology.com]
+ * Copyright (c) 2002-2019 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
  *
@@ -50,8 +50,8 @@ const ConnectedView = ({
       </Render>
       <Render if={!hideStoreCredentials}>
         <StyledConnectionFooter>
-          Connection credentials are {storeCredentials ? '' : 'not '}stored in
-          your web browser.
+          Connection credentials are {storeCredentials ? '' : 'not '}
+          stored in your web browser.
         </StyledConnectionFooter>
       </Render>
       <Render if={additionalFooter}>
