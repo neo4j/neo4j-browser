@@ -1,6 +1,6 @@
 # Neo4j Browser
 
-forked from http://github/neo4j/neo4j-Browser
+forked from http://github/neo4j/neo4j-browser
 
 includes http://github/graphasvantage/neo4j-browser-images enablement to overlay images on nodes
 
