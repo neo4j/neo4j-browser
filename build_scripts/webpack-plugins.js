@@ -27,6 +27,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
+const manifestGeneration = require('./generate-manifest-helpers')
 
 module.exports = () => {
   const plugins = [
@@ -37,8 +38,24 @@ module.exports = () => {
     }),
     new CopyWebpackPlugin([
       {
-        from: path.resolve(helpers.browserPath, 'manifest.json'),
-        to: helpers.buildPath + '/manifest.json'
+        // Copy manifest-base file and pick wanted data from package.json
+        // and merge them into the manifest.json output file
+        from: path.resolve(helpers.browserPath, 'manifest-base.json'),
+        to: path.resolve(helpers.buildPath, 'manifest.json'),
+        transform: content => {
+          const packageJsonData = manifestGeneration.loadDataFromFile(
+            path.join(helpers.projectPath, 'package.json')
+          )
+          const wantedData = manifestGeneration.buildTargetObject(
+            packageJsonData,
+            'propertiesToCopyToManifest'
+          )
+          const mergedData = manifestGeneration.mergeObjects(
+            wantedData,
+            JSON.parse(content)
+          )
+          return JSON.stringify(mergedData, null, 2)
+        }
       },
       {
         from: path.resolve(helpers.browserPath, 'images'),

@@ -1,0 +1,13 @@
+{
+  "name": "Neo4j Browser",
+  "short_name": "Neo4j Browser",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "icons": [
+    {
+      "src": "./assets/images/device-icons/neo4j-desktop.svg",
+      "type": "svg"
+    }
+  ]
+}
