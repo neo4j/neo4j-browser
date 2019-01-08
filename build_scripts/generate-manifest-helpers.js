@@ -30,15 +30,14 @@ function loadDataFromFile (file) {
 }
 
 function buildTargetObject (data, dataProp) {
-  let out = {}
+  const out = {}
   const keys = data[dataProp] || []
   keys.forEach(key => (out[key] = data[key]))
   return out
 }
 
 function mergeObjects (source, target) {
-  Object.keys(source).forEach(key => (target[key] = source[key]))
-  return target
+  return { ...target, ...source }
 }
 
 module.exports = {
