@@ -1,23 +1,5 @@
 # Neo4j Browser
 
-forked from http://github/neo4j/neo4j-browser
-
-includes http://github/graphasvantage/neo4j-browser-images enablement to overlay images on nodes
-
-to use:
-
-create node property called `image_url` and populate this with a fully qualified image url
-
-```
-MATCH (n:MyImageNode)
-SET n.image_url = "http://myimage.png"
-RETURN n
-```
-
-smaller images (100x100 px) work better, use the largest node size (80px) for best effect
-
-
-
 ## Development setup
 
 1.  Clone this repo
@@ -72,3 +54,15 @@ Download these two chrome extensions:
 
 - [Redux devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 - [React devtools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+
+## Images
+
+create node property called `image_url` and populate this with a fully qualified image url
+
+```
+MATCH (n:MyImageNode)
+SET n.image_url = "http://myimage.png"
+RETURN n
+```
+
+smaller images (100x100 px) work better, use the largest node size (80px) for best effect
