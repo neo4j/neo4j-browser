@@ -297,10 +297,10 @@ const relationshipOverlay = new Renderer({
 const node = []
 node.push(nodeOutline)
 node.push(nodeIcon)
-node.push(nodeCaption)
 node.push(nodeRing)
 node.push(nodeImage)
 node.push(nodeImageFill)
+node.push(nodeCaption)
 
 const relationship = []
 relationship.push(arrowPath)
