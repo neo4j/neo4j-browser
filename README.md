@@ -57,7 +57,8 @@ Download these two chrome extensions:
 
 ## Images
 
-create node property called `image_url` and populate this with a fully qualified image url
+Create node property called `image_url` and populate this with a fully qualified image url.
+
 
 ```
 MATCH (n:MyImageNode)
@@ -65,4 +66,12 @@ SET n.image_url = "http://myimage.png"
 RETURN n
 ```
 
-smaller images (100x100 px) work better, use the largest node size (80px) for best effect
+smaller images (100x100 px) work better, use the largest node size (80px) for best effect.
+
+## Neo4j Desktop
+
+Update Neo4j Desktop, copy and paste the npm repo link (below) in the 'Install Graph Application' box, and then add Neo4j Browser Images app to your Project.
+
+https://registry.npmjs.org/neo4j-browser-image-enabled
+
+<img width="299" alt="graph-app-url" src="https://user-images.githubusercontent.com/5991751/50950037-878a1b80-145d-11e9-900e-4949b78af427.png">
