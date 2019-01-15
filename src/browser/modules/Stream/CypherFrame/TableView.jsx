@@ -45,7 +45,7 @@ import { stringFormat } from 'services/bolt/cypherTypesFormatting'
 const renderCell = entry => {
   if (Array.isArray(entry)) {
     const children = entry.map((item, index) => (
-      <span>
+      <span key={index}>
         {renderCell(item)}
         {index === entry.length - 1 ? null : ', '}
       </span>
