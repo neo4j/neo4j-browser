@@ -20,7 +20,10 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { toObjects, extractFromNeoObjects } from 'services/bolt/boltMappings'
+import {
+  recordsToTableArray,
+  extractFromNeoObjects
+} from 'services/bolt/boltMappings'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTED_STATE,
@@ -61,10 +64,21 @@ export const getJmxValues = ({ jmx }, arr) => {
  * Helpers
  */
 
+const jmxQuery = `
+CALL dbms.queryJmx("org.neo4j:instance=*,name=Kernel") yield attributes
+RETURN {name: 'Kernel', data: collect(attributes)} as result
+UNION ALL
+CALL dbms.queryJmx("org.neo4j:instance=*,name=Store file sizes") yield attributes
+RETURN {name: 'Store file sizes', data: collect(attributes)} as result
+UNION ALL
+CALL dbms.queryJmx("org.neo4j:instance=*,name=Configuration") yield attributes
+RETURN {name: 'Configuration', data: collect(attributes)} as result
+`
+
 const fetchJmxValues = store => {
   return bolt
     .directTransaction(
-      'CALL dbms.queryJmx("org.neo4j:*")',
+      jmxQuery,
       {},
       {
         useCypherThread: shouldUseCypherThread(store.getState()),
@@ -79,15 +93,18 @@ const fetchJmxValues = store => {
         intConverter: val => val.toString(),
         objectConverter: extractFromNeoObjects
       }
-      return toObjects(res.records, converters).map(
-        ([name, description, attributes]) => {
-          return {
-            name,
-            description,
-            attributes
-          }
+      let objs = recordsToTableArray(res.records, converters)
+      if (!objs || !objs.length) {
+        return []
+      }
+      objs.shift() // remove title
+      objs = objs.map(rec => {
+        return {
+          name: rec[0].name,
+          attributes: rec[0].data[0]
         }
-      )
+      })
+      return objs
     })
 }
 
