@@ -101,7 +101,7 @@ const fetchJmxValues = store => {
       objs = objs.map(rec => {
         return {
           name: rec[0].name,
-          attributes: rec[0].data[0]
+          attributes: rec[0].data[0] || []
         }
       })
       return objs
@@ -143,9 +143,7 @@ export const jmxEpic = (some$, store) =>
       return Rx.Observable.timer(0, 20000)
         .merge(some$.ofType(FORCE_FETCH))
         .mergeMap(() =>
-          Rx.Observable.fromPromise(fetchJmxValues(store)).catch(e =>
-            Rx.Observable.of(null)
-          )
+          Rx.Observable.fromPromise(fetchJmxValues(store)).catch(e => null)
         )
         .filter(r => r)
         .do(res => store.dispatch(updateJmxValues(res)))
