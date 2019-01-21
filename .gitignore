@@ -16,3 +16,4 @@ NOTICE.xml
 *.tgz
 release-notes.md
 /stats.json
+signature.pem
