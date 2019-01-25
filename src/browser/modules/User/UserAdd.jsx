@@ -113,8 +113,12 @@ export class UserAdd extends Component {
         { query: listRolesQuery() },
         response => {
           if (!response.success) {
+            const error =
+              response.error && response.error.message
+                ? response.error.message
+                : 'Unknown error'
             return this.setState({
-              errors: ['Unable to create user', response.error]
+              errors: ['Unable to get roles list', error]
             })
           }
           const flatten = arr =>

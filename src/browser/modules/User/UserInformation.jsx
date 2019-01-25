@@ -69,7 +69,7 @@ export class UserInformation extends Component {
       this.handleResponse.bind(this)
     )
   }
-  statusButton (statusList) {
+  statusButton (statusList = []) {
     if (statusList.indexOf('is_suspended') !== -1) {
       return (
         <FormButton
