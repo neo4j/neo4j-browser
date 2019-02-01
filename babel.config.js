@@ -5,7 +5,7 @@ const toExport = {
     'react-hot-loader/babel',
     'styled-components',
     '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-syntax-dynamic-import'
+    'babel-plugin-dynamic-import-node'
   ],
   presets: [
     '@babel/preset-react',
@@ -20,10 +20,6 @@ const toExport = {
       }
     ]
   ]
-}
-
-if (isTest) {
-  toExport.plugins.push('babel-plugin-dynamic-import-node')
 }
 
 module.exports = toExport
