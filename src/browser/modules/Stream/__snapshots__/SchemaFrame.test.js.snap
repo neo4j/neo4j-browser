@@ -3,7 +3,7 @@
 exports[`SchemaFrame renders empty 1`] = `
 <div>
   <pre
-    class="styled__StyledSchemaBody-sc-1dtvgs1-34 fFNIDH"
+    class="styled__StyledPreformattedArea-sc-1dtvgs1-28 styled__StyledSchemaBody-sc-1dtvgs1-34 fFNIDH"
   >
     No indexes
 
@@ -16,7 +16,7 @@ No constraints
 exports[`SchemaFrame renders with result 1`] = `
 <div>
   <pre
-    class="styled__StyledSchemaBody-sc-1dtvgs1-34 fFNIDH"
+    class="styled__StyledPreformattedArea-sc-1dtvgs1-28 styled__StyledSchemaBody-sc-1dtvgs1-34 fFNIDH"
   >
     Indexes
    ON :Movie(released) ONLINE 

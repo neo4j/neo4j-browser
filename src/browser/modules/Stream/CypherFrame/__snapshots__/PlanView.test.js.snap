@@ -3,7 +3,7 @@
 exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledOneRowStatsBar-sc-1dtvgs1-33 dkmnzU"
+    class="styled__StyledStatsBar-sc-1dtvgs1-32 styled__StyledOneRowStatsBar-sc-1dtvgs1-33 dkmnzU"
   >
     <div
       class="styled__StyledLeftPartial-sc-1dtvgs1-42 cEQgJw"
