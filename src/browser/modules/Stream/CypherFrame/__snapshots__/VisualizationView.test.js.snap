@@ -18,17 +18,17 @@ exports[`Visualization renders with result 1`] = `
           class="contracted styled__StyledLegendRow-sc-13boxex-22 btLVbI"
         >
           <ul
-            class="list-inline styled__StyledLegendInlineList-sc-13boxex-24 bXzLDX"
+            class="styled__StyledInlineList-sc-13boxex-9 list-inline styled__StyledLegendInlineList-sc-13boxex-24 bXzLDX"
           >
             <li
-              class="styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
+              class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
               data-testid="viz-legend-labels"
             >
               <ul
                 class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
               >
                 <li
-                  class="token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
+                  class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledToken-sc-13boxex-15 token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
                   style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                 >
                   *
@@ -41,14 +41,14 @@ exports[`Visualization renders with result 1`] = `
               </ul>
             </li>
             <li
-              class="styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
+              class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
               data-testid="viz-legend-labels"
             >
               <ul
                 class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
               >
                 <li
-                  class="token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
+                  class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledToken-sc-13boxex-15 token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >
                   Person
@@ -147,7 +147,7 @@ exports[`Visualization renders with result 1`] = `
                 class="list-inline styled__StyledInlineList-sc-13boxex-9 fWraRP"
               >
                 <li
-                  class="pair styled__StyledInspectorFooterRowListPair-sc-13boxex-14 jeBqUF"
+                  class="styled__StyledInlineListItem-sc-13boxex-10 pair styled__StyledInspectorFooterRowListPair-sc-13boxex-14 jeBqUF"
                 >
                   <div
                     class="value styled__StyledInspectorFooterRowListValue-sc-13boxex-8 huEFTy"

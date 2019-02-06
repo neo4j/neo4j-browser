@@ -29,7 +29,7 @@ exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
 exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
+    class="styled__PaddedDiv-sc-1dtvgs1-6 styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
   >
     <div
       class="styled__StyledBodyMessage-sc-1dtvgs1-35 hfUgGP"
@@ -43,7 +43,7 @@ exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
+    class="styled__PaddedDiv-sc-1dtvgs1-6 styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
   >
     <table
       class="DataTables__StyledTable-bf850j-0 cZayOW"
