@@ -1,7 +1,11 @@
 module.exports = {
   testEnvironment: 'jest-environment-jsdom',
-  setupFiles: ['raf/polyfill.js', 'jest-canvas-mock'],
-  setupTestFrameworkScriptFile: require.resolve('./test_utils/setupTests.js'),
+  setupFiles: [
+    'raf/polyfill.js',
+    'jest-canvas-mock',
+    '<rootDir>/node_modules/regenerator-runtime/runtime'
+  ],
+  setupFilesAfterEnv: [require.resolve('./test_utils/setupTests.js')],
   testPathIgnorePatterns: [
     '/e2e_tests/',
     '/coverage/',

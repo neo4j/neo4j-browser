@@ -35,7 +35,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
         class="styled__StyledHelpDescription-sc-1dtvgs1-16 buBBgk"
       >
         <div
-          class="styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
+          class="styled__StyledCypherMessage-sc-1dtvgs1-20 styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
         >
           ERROR
         </div>
@@ -83,7 +83,7 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
         class="styled__StyledHelpDescription-sc-1dtvgs1-16 buBBgk"
       >
         <div
-          class="styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
+          class="styled__StyledCypherMessage-sc-1dtvgs1-20 styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
         >
           ERROR
         </div>

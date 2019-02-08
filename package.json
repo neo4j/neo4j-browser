@@ -51,9 +51,6 @@
       ]
     }
   },
-  "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
-  },
   "engines": {
     "yarn": "^1.10",
     "node": ">=8"
@@ -61,7 +58,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^7.1.4",
@@ -91,8 +88,8 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^0.14.3",
+    "jest": "^24.1.0",
     "jest-canvas-mock": "^1.1.0",
-    "jest-cli": "^23.6.0",
     "jest-dom": "^1.12.0",
     "js2xmlparser": "^3.0.0",
     "json-loader": "^0.5.7",
@@ -135,11 +132,11 @@
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
     "neo4j-driver": "^1.7.2",
-    "react": "^16.4.1",
+    "react": "^16.8.1",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dnd": "^2.5.1",
     "react-dnd-html5-backend": "^2.5.1",
-    "react-dom": "^16.4.0",
+    "react-dom": "^16.8.1",
     "react-dropzone": "^4.1.2",
     "react-icons": "^2.2.1",
     "react-redux": "^5.0.7",
