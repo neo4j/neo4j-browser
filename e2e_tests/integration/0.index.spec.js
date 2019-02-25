@@ -30,6 +30,7 @@ describe('Neo4j Browser', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
+    cy.wait(5000)
   })
   it('sets new login credentials', () => {
     const newPassword = Cypress.config('password')

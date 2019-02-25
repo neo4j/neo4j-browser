@@ -25,6 +25,7 @@ describe('Viz rendering', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
+    cy.wait(5000)
   })
   it('can connect', () => {
     const password = Cypress.config('password')

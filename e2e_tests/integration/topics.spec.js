@@ -25,6 +25,7 @@ describe('Help topics', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
+    cy.wait(5000)
   })
   it(':help commands has contents', () => {
     cy.executeCommand(':clear')

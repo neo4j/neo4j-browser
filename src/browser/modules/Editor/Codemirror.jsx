@@ -20,7 +20,6 @@
 
 import React, { Component } from 'react'
 import classNames from 'classnames'
-import codemirror from 'codemirror'
 import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/edit/closebrackets'
@@ -42,10 +41,6 @@ export default class CodeMirror extends Component {
     this.state = {
       isFocused: false
     }
-  }
-
-  getCodeMirrorInstance () {
-    return codemirror
   }
 
   componentDidMount () {

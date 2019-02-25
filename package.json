@@ -128,7 +128,7 @@
     "deepmerge": "^2.1.1",
     "dnd-core": "^2.5.1",
     "file-saver": "^1.3.8",
-    "firebase": "^4.3.0",
+    "firebase": "^5.8.3",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
     "neo4j-driver": "^1.7.2",
