@@ -25,6 +25,7 @@ describe('Bolt connections', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
+    cy.wait(5000)
   })
   it('can show connection error', () => {
     const password = 'unlikely password'

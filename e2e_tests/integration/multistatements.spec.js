@@ -27,6 +27,7 @@ describe('Multi statements', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
+    cy.wait(5000)
     cy.get('[data-testid="drawerSettings"]').click()
     cy.get('[data-testid="enableMultiStatementMode"]').click()
     cy.get('[data-testid="drawerSettings"]').click()

@@ -25,6 +25,7 @@ describe(':param in Browser', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
+    cy.wait(5000)
   })
   it('handles :param without web worker', () => {
     cy.executeCommand(':config userCypherThread: false').then(() => {
