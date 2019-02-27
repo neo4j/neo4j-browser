@@ -70,6 +70,7 @@ export const getCmdChar = state => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = state =>
   state[NAME].editorAutocomplete !== false
 export const shouldUseCypherThread = state => state[NAME].useCypherThread
+export const getConnectionTimeout = state => state[NAME].connectionTimeout
 
 const initialState = {
   cmdchar: ':',
@@ -88,7 +89,8 @@ const initialState = {
   editorAutocomplete: true,
   editorLint: false,
   useCypherThread: true,
-  enableMultiStatementMode: false
+  enableMultiStatementMode: false,
+  connectionTimeout: 5000
 }
 
 export default function settings (state = initialState, action) {

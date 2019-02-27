@@ -30,7 +30,8 @@ import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
   getSettings,
-  getCmdChar
+  getCmdChar,
+  getConnectionTimeout
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 
@@ -290,7 +291,10 @@ export const connectEpic = (action$, store) => {
     memoryUsername = ''
     memoryPassword = ''
     return bolt
-      .openConnection(action, { encrypted: getEncryptionMode(action) })
+      .openConnection(action, {
+        encrypted: getEncryptionMode(action),
+        connectionAcquisitionTimeout: getConnectionTimeout(store.getState())
+      })
       .then(res => ({ type: action.$$responseChannel, success: true }))
       .catch(e => ({
         type: action.$$responseChannel,
@@ -316,7 +320,8 @@ export const startupConnectEpic = (action$, store) => {
           connection,
           {
             withoutCredentials: true,
-            encrypted: getEncryptionMode(connection)
+            encrypted: getEncryptionMode(connection),
+            connectionAcquisitionTimeout: getConnectionTimeout(store.getState())
           },
           onLostConnection(store.dispatch)
         )
@@ -345,7 +350,12 @@ export const startupConnectEpic = (action$, store) => {
           bolt
             .openConnection(
               connection,
-              { encrypted: getEncryptionMode(connection) },
+              {
+                encrypted: getEncryptionMode(connection),
+                connectionAcquisitionTimeout: getConnectionTimeout(
+                  store.getState()
+                )
+              },
               onLostConnection(store.dispatch)
             ) // Try with stored creds
             .then(connection => {
@@ -444,7 +454,12 @@ export const connectionLostEpic = (action$, store) =>
               bolt
                 .directConnect(
                   connection,
-                  { encrypted: getEncryptionMode(connection) },
+                  {
+                    encrypted: getEncryptionMode(connection),
+                    connectionAcquisitionTimeout: getConnectionTimeout(
+                      store.getState()
+                    )
+                  },
                   e =>
                     setTimeout(
                       () => reject(new Error('Couldnt reconnect. Lost.')),
@@ -456,7 +471,12 @@ export const connectionLostEpic = (action$, store) =>
                   bolt
                     .openConnection(
                       connection,
-                      { encrypted: getEncryptionMode(connection) },
+                      {
+                        encrypted: getEncryptionMode(connection),
+                        connectionAcquisitionTimeout: getConnectionTimeout(
+                          store.getState()
+                        )
+                      },
                       onLostConnection(store.dispatch)
                     )
                     .then(() => {

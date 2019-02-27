@@ -93,6 +93,14 @@ const visualSettings = [
           tooltip: 'This commands is executed once connected to a graph.',
           type: 'input'
         }
+      },
+      {
+        connectionTimeout: {
+          displayName: 'Connection timeout (ms)',
+          tooltip:
+            'The timeout in milliseconds when establishing a connection to Neo4j.',
+          type: 'input'
+        }
       }
     ]
   },
