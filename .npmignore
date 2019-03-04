@@ -30,3 +30,4 @@ jest.config.js
 .vscode
 Dockerfile
 NOTICE.xml
+HEAD
