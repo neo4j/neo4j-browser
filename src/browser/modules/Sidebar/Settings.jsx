@@ -51,7 +51,12 @@ const visualSettings = [
         theme: {
           displayName: 'Theme',
           type: 'radio',
-          options: ['normal', 'outline', 'dark']
+          options: [
+            actions.AUTO_THEME,
+            actions.LIGHT_THEME,
+            actions.OUTLINE_THEME,
+            actions.DARK_THEME
+          ]
         }
       },
       {

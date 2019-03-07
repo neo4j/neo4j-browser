@@ -10,6 +10,7 @@
       "browser-services/*": ["browser/services/*"],
       "shared/*": ["shared/*"],
       "browser-components/*": ["browser/components/*"],
+      "browser-hooks/*": ["browser/hooks/*"],
       "browser/*": ["browser/*"],
       "browser-styles/*": ["browser/styles/*"]
     }

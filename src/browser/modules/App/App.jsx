@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -26,7 +26,9 @@ import * as themes from 'browser/styles/themes'
 import {
   getTheme,
   getCmdChar,
-  getBrowserSyncConfig
+  getBrowserSyncConfig,
+  AUTO_THEME,
+  LIGHT_THEME
 } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
@@ -70,92 +72,131 @@ import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
-import { URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
+import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
+import useAutoTheme from 'browser-hooks/useAutoTheme'
 
-export class App extends Component {
-  componentDidMount () {
-    document.addEventListener('keyup', this.focusEditorOnSlash)
-    document.addEventListener('keyup', this.expandEditorOnEsc)
-  }
-  componentWillUnmount () {
-    document.removeEventListener('keyup', this.focusEditorOnSlash)
-    document.removeEventListener('keyup', this.expandEditorOnEsc)
-  }
+export function App (props) {
+  const [autoTheme, overrideAutoTheme] = useAutoTheme(LIGHT_THEME)
+  const [desktopTheme, setDesktopTheme] = useState(null)
 
-  focusEditorOnSlash = e => {
+  useEffect(
+    () => {
+      if (desktopTheme) {
+        overrideAutoTheme(desktopTheme)
+        return
+      }
+      if (props.theme !== AUTO_THEME) {
+        overrideAutoTheme(props.theme)
+      } else {
+        overrideAutoTheme(null)
+      }
+    },
+    [props.theme, desktopTheme]
+  )
+
+  useEffect(() => {
+    document.addEventListener('keyup', focusEditorOnSlash)
+    document.addEventListener('keyup', expandEditorOnEsc)
+
+    return () => {
+      document.removeEventListener('keyup', focusEditorOnSlash)
+      document.removeEventListener('keyup', expandEditorOnEsc)
+    }
+  }, [])
+
+  const detectDesktopThemeChanges = (_, newContext) => {
+    if (newContext.global.prefersColorScheme) {
+      setDesktopTheme(newContext.global.prefersColorScheme)
+    } else {
+      setDesktopTheme(null)
+    }
+  }
+  const themeData = themes[autoTheme] || themes[LIGHT_THEME]
+
+  const focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
     if (e.key !== '/') return
-    this.props.bus && this.props.bus.send(FOCUS)
+    props.bus && props.bus.send(FOCUS)
   }
-  expandEditorOnEsc = e => {
+  const expandEditorOnEsc = e => {
     if (e.keyCode !== 27) return
-    this.props.bus && this.props.bus.send(EXPAND)
+    props.bus && props.bus.send(EXPAND)
   }
-  render () {
-    const {
-      drawer,
-      cmdchar,
-      handleNavClick,
-      activeConnection,
-      connectionState,
-      theme,
-      errorMessage,
-      loadExternalScripts,
-      loadSync,
-      syncConsent,
-      browserSyncMetadata,
-      browserSyncConfig,
-      browserSyncAuthStatus,
-      experimentalFeatures
-    } = this.props
-    const themeData = themes[theme] || themes['normal']
+  const {
+    drawer,
+    cmdchar,
+    handleNavClick,
+    activeConnection,
+    connectionState,
+    errorMessage,
+    loadExternalScripts,
+    loadSync,
+    syncConsent,
+    browserSyncMetadata,
+    browserSyncConfig,
+    browserSyncAuthStatus,
+    experimentalFeatures
+  } = props
 
-    return (
-      <ErrorBoundary>
-        <ThemeProvider theme={themeData}>
-          <FeatureToggleProvider features={experimentalFeatures}>
-            <StyledWrapper>
-              <DocTitle titleString={this.props.titleString} />
-              <UserInteraction />
-              <DesktopIntegration
-                integrationPoint={this.props.desktopIntegrationPoint}
-                onArgumentsChange={this.props.onArgumentsChange}
-                onMount={this.props.setInitialConnectionData}
-                onGraphActive={this.props.switchConnection}
-                onGraphInactive={this.props.closeConnectionMaybe}
+  return (
+    <ErrorBoundary>
+      <ThemeProvider theme={themeData}>
+        <FeatureToggleProvider features={experimentalFeatures}>
+          <StyledWrapper>
+            <DocTitle titleString={props.titleString} />
+            <UserInteraction />
+            <DesktopIntegration
+              integrationPoint={props.desktopIntegrationPoint}
+              onArgumentsChange={props.onArgumentsChange}
+              onMount={(
+                activeGraph,
+                connectionsCredentials,
+                context,
+                getKerberosTicket
+              ) => {
+                props.setInitialConnectionData(
+                  activeGraph,
+                  connectionsCredentials,
+                  context,
+                  getKerberosTicket
+                )
+                detectDesktopThemeChanges(null, context)
+              }}
+              onGraphActive={props.switchConnection}
+              onGraphInactive={props.closeConnectionMaybe}
+              onColorSchemeUpdated={detectDesktopThemeChanges}
+            />
+            <Render if={loadExternalScripts}>
+              <Intercom appID='lq70afwx' />
+            </Render>
+            <Render if={syncConsent && loadExternalScripts && loadSync}>
+              <BrowserSyncInit
+                authStatus={browserSyncAuthStatus}
+                authData={browserSyncMetadata}
+                config={browserSyncConfig}
               />
-              <Render if={loadExternalScripts}>
-                <Intercom appID='lq70afwx' />
-              </Render>
-              <Render if={syncConsent && loadExternalScripts && loadSync}>
-                <BrowserSyncInit
-                  authStatus={browserSyncAuthStatus}
-                  authData={browserSyncMetadata}
-                  config={browserSyncConfig}
-                />
-              </Render>
-              <StyledApp>
-                <StyledBody>
-                  <ErrorBoundary>
-                    <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
-                  </ErrorBoundary>
-                  <StyledMainWrapper>
-                    <Main
-                      cmdchar={cmdchar}
-                      activeConnection={activeConnection}
-                      connectionState={connectionState}
-                      errorMessage={errorMessage}
-                      useBrowserSync={loadSync}
-                    />
-                  </StyledMainWrapper>
-                </StyledBody>
-              </StyledApp>
-            </StyledWrapper>
-          </FeatureToggleProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    )
-  }
+            </Render>
+            <StyledApp>
+              <StyledBody>
+                <ErrorBoundary>
+                  <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+                </ErrorBoundary>
+                <StyledMainWrapper>
+                  <Main
+                    cmdchar={cmdchar}
+                    activeConnection={activeConnection}
+                    connectionState={connectionState}
+                    errorMessage={errorMessage}
+                    useBrowserSync={loadSync}
+                  />
+                </StyledMainWrapper>
+              </StyledBody>
+            </StyledApp>
+          </StyledWrapper>
+        </FeatureToggleProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  )
 }
 
 const mapStateToProps = state => {
@@ -176,7 +217,8 @@ const mapStateToProps = state => {
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),
     browserSyncAuthStatus: getUserAuthStatus(state),
-    loadSync: useBrowserSync(state)
+    loadSync: useBrowserSync(state),
+    isWebEnv: inWebEnv(state)
   }
 }
 

@@ -18,6 +18,7 @@ module.exports = {
     '\\.(css|less)$': '<rootDir>/test_utils/__mocks__/styleMock.js',
     '^browser-styles(.*)$': '<rootDir>/src/browser/styles$1',
     '^browser-components(.*)$': '<rootDir>/src/browser/components$1',
+    '^browser-hooks(.*)$': '<rootDir>/src/browser/hooks$1',
     'worker-loader': '<rootDir>/test_utils/__mocks__/workerLoaderMock.js',
     'project-root(.*)$': '<rootDir>$1'
   },
