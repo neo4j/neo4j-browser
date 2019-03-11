@@ -29,7 +29,7 @@ import {
   getGraphStyleData
 } from 'shared/modules/grass/grassDuck'
 import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
-import { canSendTxMetadata } from 'shared/modules/features/featuresDuck'
+import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'

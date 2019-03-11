@@ -36,7 +36,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
-import { canSendTxMetadata } from '../features/featuresDuck'
+import { canSendTxMetadata } from '../features/versionedFeatures'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'

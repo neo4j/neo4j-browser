@@ -27,7 +27,11 @@ import {
   DISCONNECTION_SUCCESS
 } from 'shared/modules/connections/connectionsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
-import { canSendTxMetadata } from '../features/featuresDuck'
+import {
+  canSendTxMetadata,
+  getShowCurrentUserProcedure
+} from '../features/versionedFeatures'
+import { UPDATE_SERVER, getVersion } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
@@ -85,11 +89,15 @@ export function forceFetch () {
 export const getCurrentUserEpic = (some$, store) =>
   some$
     .ofType(CONNECTION_SUCCESS)
-    .merge(some$.ofType(FORCE_FETCH))
-    .mergeMap(() =>
-      Rx.Observable.fromPromise(
+    .merge(some$.ofType(UPDATE_SERVER))
+    .mergeMap(() => {
+      // No server versions yet, do nothing
+      if (!getVersion(store.getState())) {
+        return Rx.Observable.of({ type: 'NOOP' })
+      }
+      return Rx.Observable.fromPromise(
         bolt.directTransaction(
-          'CALL dbms.security.showCurrentUser()',
+          getShowCurrentUserProcedure(store.getState()),
           {},
           {
             useCypherThread: shouldUseCypherThread(store.getState()),
@@ -113,7 +121,7 @@ export const getCurrentUserEpic = (some$, store) =>
 
           return updateCurrentUser(username, roles)
         })
-    )
+    })
 
 export const clearCurrentUserOnDisconnectEpic = (some$, store) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })
