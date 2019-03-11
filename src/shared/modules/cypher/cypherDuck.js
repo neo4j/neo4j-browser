@@ -27,7 +27,7 @@ import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getUserTxMetadata } from 'services/bolt/txMetadata'
-import { canSendTxMetadata } from '../features/featuresDuck'
+import { canSendTxMetadata } from '../features/versionedFeatures'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = NAME + '/REQUEST'
