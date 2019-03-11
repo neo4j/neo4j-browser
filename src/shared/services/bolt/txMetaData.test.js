@@ -19,7 +19,7 @@
  */
 
 import { version } from 'project-root/package.json'
-import { getBackgroundTxMetadata, getUserTxMetadata } from './txMetadata'
+import { getBackgroundTxMetadata, getUserDirectTxMetadata } from './txMetadata'
 
 test('getBackgroundTxMetadata has the expected format', () => {
   const res = getBackgroundTxMetadata({ hasServerSupport: true })
@@ -30,7 +30,7 @@ test('getBackgroundTxMetadata has the expected format', () => {
 })
 
 test('getUserTxMetadata has the expected format', () => {
-  const res = getUserTxMetadata({ hasServerSupport: true })
+  const res = getUserDirectTxMetadata({ hasServerSupport: true })
   expect(res.txMetadata).toEqual({
     type: 'user-direct',
     app: `neo4j-browser_v${version}`

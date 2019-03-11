@@ -61,7 +61,7 @@ import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass } from 'shared/services/grassUtils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import {
-  getUserTxMetadata,
+  getUserDirectTxMetadata,
   getBackgroundTxMetadata
 } from 'shared/services/bolt/txMetadata'
 
@@ -159,7 +159,7 @@ const availableCommands = [
         getParams(state),
         shouldUseCypherThread(state),
         action.type === SINGLE_COMMAND_QUEUED
-          ? getUserTxMetadata({
+          ? getUserDirectTxMetadata({
             hasServerSupport: canSendTxMetadata(store.getState())
           })
           : getBackgroundTxMetadata({
