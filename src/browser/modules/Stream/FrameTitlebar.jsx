@@ -225,7 +225,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onCloseClick: async (id, requestId, request) => {
       if (request && request.status === REQUEST_STATUS_PENDING) {
         dispatch(cancelRequest(requestId))
-        await sleep(2500) // sleep for 2500 ms to let user read the cancel info
+        await sleep(3000) // sleep for 3000 ms to let user read the cancel info
       }
       dispatch(remove(id))
     },

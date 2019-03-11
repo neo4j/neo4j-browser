@@ -362,8 +362,14 @@ export class CypherFrame extends Component {
   getCancelingView = () => {
     return (
       <InfoView
-        title='Terminating query'
-        description='The query that was running in this frame is being terminated due to the frame being closed.'
+        title='Terminating query and closing frame'
+        description={
+          <div>
+            The query that was running in this frame is being terminated.
+            <br />
+            This frame will self close soon.
+          </div>
+        }
       />
     )
   }
