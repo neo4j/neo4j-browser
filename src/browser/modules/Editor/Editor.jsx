@@ -55,6 +55,7 @@ import ratingStar from 'icons/rating-star.svg'
 import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -280,7 +281,10 @@ export class Editor extends Component {
       ;((text, offset) => {
         this.props.bus.self(
           CYPHER_REQUEST,
-          { query: 'EXPLAIN ' + text },
+          {
+            query: 'EXPLAIN ' + text,
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
           response => {
             if (
               response.success === true &&
