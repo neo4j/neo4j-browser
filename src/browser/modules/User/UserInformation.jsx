@@ -37,6 +37,7 @@ import { StyledBodyTr } from 'browser-components/DataTables'
 import { StyledUserTd, StyledButtonContainer } from './styled'
 
 import RolesSelector from './RolesSelector'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class UserInformation extends Component {
   constructor (props) {
@@ -51,21 +52,30 @@ export class UserInformation extends Component {
   removeClick (thing) {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: deleteUser(this.state.username) },
+      {
+        query: deleteUser(this.state.username),
+        queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+      },
       this.handleResponse.bind(this)
     )
   }
   suspendUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: suspendUser(this.state.username) },
+      {
+        query: suspendUser(this.state.username),
+        queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+      },
       this.handleResponse.bind(this)
     )
   }
   activateUser () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: activateUser(this.state.username) },
+      {
+        query: activateUser(this.state.username),
+        queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+      },
       this.handleResponse.bind(this)
     )
   }
@@ -96,7 +106,10 @@ export class UserInformation extends Component {
           onClick={() => {
             this.props.bus.self(
               CYPHER_REQUEST,
-              { query: removeRoleFromUser(role, this.state.username) },
+              {
+                query: removeRoleFromUser(role, this.state.username),
+                queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+              },
               this.handleResponse.bind(this)
             )
           }}
@@ -107,7 +120,10 @@ export class UserInformation extends Component {
   onRoleSelect (event) {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: addRoleToUser(this.state.username, event.target.value) },
+      {
+        query: addRoleToUser(this.state.username, event.target.value),
+        queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+      },
       this.handleResponse.bind(this)
     )
   }

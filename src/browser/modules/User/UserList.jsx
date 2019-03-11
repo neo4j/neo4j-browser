@@ -35,6 +35,7 @@ import { StyledButtonContainer } from './styled'
 
 import FrameTemplate from '../Stream/FrameTemplate'
 import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class UserList extends Component {
   constructor (props) {
@@ -52,7 +53,7 @@ export class UserList extends Component {
   getUserList () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: listUsersQuery() },
+      { query: listUsersQuery(), queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
       response => {
         if (response.success) {
           this.setState({
@@ -66,7 +67,7 @@ export class UserList extends Component {
   getRoles () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: listRolesQuery() },
+      { query: listRolesQuery(), queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
       response => {
         const flatten = arr =>
           arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
