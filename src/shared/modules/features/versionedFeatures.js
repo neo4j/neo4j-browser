@@ -29,10 +29,7 @@ export const canSendTxMetadata = state => {
   if (!semver.valid(serverVersion)) {
     return false
   }
-  if (semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)) {
-    return true
-  }
-  return false
+  return semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)
 }
 
 export const getShowCurrentUserProcedure = state => {
