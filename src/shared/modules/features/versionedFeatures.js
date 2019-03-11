@@ -35,7 +35,7 @@ export const canSendTxMetadata = state => {
   return false
 }
 
-export const getCurrentUserProcedure = state => {
+export const getShowCurrentUserProcedure = state => {
   const pre4 = 'CALL dbms.security.showCurrentUser()'
   const serverVersion = getVersion(state)
   if (!semver.valid(serverVersion)) {

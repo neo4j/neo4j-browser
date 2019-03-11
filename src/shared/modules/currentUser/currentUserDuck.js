@@ -29,7 +29,7 @@ import {
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
   canSendTxMetadata,
-  getCurrentUserProcedure
+  getShowCurrentUserProcedure
 } from '../features/versionedFeatures'
 import { UPDATE_SERVER, getVersion } from '../dbMeta/dbMetaDuck'
 
@@ -97,7 +97,7 @@ export const getCurrentUserEpic = (some$, store) =>
       }
       return Rx.Observable.fromPromise(
         bolt.directTransaction(
-          getCurrentUserProcedure(store.getState()),
+          getShowCurrentUserProcedure(store.getState()),
           {},
           {
             useCypherThread: shouldUseCypherThread(store.getState()),
