@@ -151,13 +151,14 @@ describe('Workpool', () => {
     expect(register.getPoolSize(WorkPool.workerStates.FREE)).toEqual(1)
     expect(register.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(2)
   })
-  it('exposes getWorkById', () => {
+  it('exposes getWorkById and finds queued and ongoing work', () => {
     // Given
     const localRegister = new WorkPool(createWorker, 1)
+    const initialWorkId = 'initial'
 
     // When
     // Just do some work so queue pool limit is reached
-    localRegister.doWork({ id: 'nope' })
+    const initialWorkObj = localRegister.doWork({ id: initialWorkId })
 
     const work = { id }
     const workObj = localRegister.doWork(work)
@@ -167,10 +168,12 @@ describe('Workpool', () => {
     expect(workObj.id).toEqual(id)
 
     // When
+    const workObj1 = localRegister.getWorkById(initialWorkId)
     const workObj2 = localRegister.getWorkById(id)
 
     // Then
     expect(workObj).toBe(workObj2) // same obj in memory
+    expect(workObj1).toBe(initialWorkObj) // same obj in memory
 
     // When
     // Try something that's not there

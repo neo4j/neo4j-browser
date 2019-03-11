@@ -46,6 +46,11 @@ class WorkPool {
         return this.q[i]
       }
     }
+    for (let i = 0; i < this.register.length; i++) {
+      if (this.register[i].id === id) {
+        return this.register[i].work
+      }
+    }
     return null
   }
   doWork ({ id, payload, onmessage }) {
@@ -135,6 +140,7 @@ class WorkPool {
     }
     obj._assignWorker = workerObj => {
       workerObj.state = WorkPool.workerStates.BUSY
+      workerObj.work = obj
       obj._workerObj = workerObj
     }
 
