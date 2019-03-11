@@ -34,7 +34,7 @@ import {
   connectionLossFilter
 } from 'shared/modules/connections/connectionsDuck'
 import { FORCE_FETCH } from 'shared/modules/dbMeta/dbMetaDuck'
-import { canSendTxMetadata } from 'shared/modules/features/featuresDuck'
+import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
