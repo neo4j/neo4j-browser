@@ -144,7 +144,7 @@ export const jmxEpic = (some$, store) =>
         .merge(some$.ofType(FORCE_FETCH))
         .mergeMap(() =>
           Rx.Observable.fromPromise(fetchJmxValues(store)).catch(() =>
-            Rx.Observable.of(null)
+            Rx.Observable.of([])
           )
         )
         .filter(r => r)

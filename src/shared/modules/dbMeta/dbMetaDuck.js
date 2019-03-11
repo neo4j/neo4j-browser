@@ -362,7 +362,10 @@ export const serverConfigEpic = (some$, store) =>
         !jmxValueResult ||
         jmxValueResult.filter(value => !!value).length === 0
       ) {
-        return
+        return store.dispatch({
+          type: UPDATE_SERVER,
+          version: 'unknown'
+        })
       }
       const jmxValues = jmxValueResult.reduce((obj, item) => {
         if (!item) {
