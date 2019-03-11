@@ -487,3 +487,7 @@ export const generateBoltHost = host => {
 export function flushPromises () {
   return new Promise(resolve => setImmediate(resolve))
 }
+
+export async function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}

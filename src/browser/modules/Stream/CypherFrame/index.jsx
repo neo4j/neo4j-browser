@@ -23,7 +23,11 @@ import React, { Component } from 'react'
 import FrameTemplate from '../FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
-import { getRequest } from 'shared/modules/requests/requestsDuck'
+import {
+  getRequest,
+  REQUEST_STATUS_PENDING,
+  isCancelStatus
+} from 'shared/modules/requests/requestsDuck'
 import FrameSidebar from '../FrameSidebar'
 import {
   VisualizationIcon,
@@ -65,6 +69,7 @@ import {
   shouldAutoComplete
 } from 'shared/modules/settings/settingsDuck'
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
+import { InfoView } from '../InfoView'
 
 export class CypherFrame extends Component {
   visElement = null
@@ -102,10 +107,10 @@ export class CypherFrame extends Component {
     )
   }
   componentDidUpdate () {
-    // When going from 'pending' to some other status
+    // When going from REQUEST_STATUS_PENDING to some other status
     // we want to show an initial view.
     // This happens on first render of a response and on re-runs
-    if (this.props.request.status !== 'pending') {
+    if (this.props.request.status !== REQUEST_STATUS_PENDING) {
       const openView = initialView(this.props, this.state)
       if (openView !== this.state.openView) {
         const hasVis = openView === viewTypes.ERRORS ? false : this.state.hasVis
@@ -354,15 +359,25 @@ export class CypherFrame extends Component {
       </StyledStatsBarContainer>
     )
   }
+  getCancelingView = () => {
+    return (
+      <InfoView
+        title='Terminating query'
+        description='The query that was running in this frame is being terminated due to the frame being closed.'
+      />
+    )
+  }
   render () {
     const { frame = {}, request = {} } = this.props
     const { cmd: query = '' } = frame
     const { result = {}, status: requestStatus } = request
 
     const frameContents =
-      requestStatus !== 'pending'
-        ? this.getFrameContents(request, result, query)
-        : this.getSpinner()
+      requestStatus === REQUEST_STATUS_PENDING
+        ? this.getSpinner()
+        : isCancelStatus(requestStatus)
+          ? this.getCancelingView()
+          : this.getFrameContents(request, result, query)
     const statusBar =
       this.state.openView !== viewTypes.VISUALIZATION
         ? this.getStatusbar(result)
