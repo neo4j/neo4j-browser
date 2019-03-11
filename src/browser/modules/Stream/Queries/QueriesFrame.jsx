@@ -57,6 +57,7 @@ import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import { RefreshIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
 import FrameError from '../FrameError'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class QueriesFrame extends Component {
   state = {
@@ -97,7 +98,10 @@ export class QueriesFrame extends Component {
   getRunningQueries (suppressQuerySuccessMessage = false) {
     this.props.bus.self(
       this.isCC() ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
-      { query: listQueriesProcedure() },
+      {
+        query: listQueriesProcedure(),
+        queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+      },
       response => {
         if (response.success) {
           const queries = this.extractQueriesFromBoltResult(response.result)
