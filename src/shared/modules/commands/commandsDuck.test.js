@@ -73,7 +73,12 @@ describe('commandsDuck', () => {
           color: '#000'
         }
       },
-      meta: {}
+      meta: {},
+      requests: {
+        xxx: {
+          status: 'pending'
+        }
+      }
     })
   })
   afterEach(() => {
