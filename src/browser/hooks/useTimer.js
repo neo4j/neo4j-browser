@@ -20,10 +20,10 @@
 
 import { useState, useEffect } from 'react'
 
-export default function useTimedReveal (ms) {
-  const [reveal, setReveal] = useState(false)
+export default function useTimer (ms) {
+  const [didPling, pling] = useState(false)
   useEffect(() => {
-    setTimeout(() => setReveal(true), ms)
+    setTimeout(() => pling(true), ms)
   }, [])
-  return reveal
+  return didPling
 }

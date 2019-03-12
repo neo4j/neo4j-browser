@@ -21,15 +21,15 @@
 /* global test, expect, jest */
 import React from 'react'
 import { render, act } from 'react-testing-library'
-import useTimedReveal from './useTimedReveal'
+import useTimer from './useTimer'
 
 jest.useFakeTimers()
 
-describe('useTimedReveal', () => {
+describe('useTimer', () => {
   test('children are revealed after the specified time', () => {
     // Given
     const MyComp = ({ delay, children }) => {
-      const show = useTimedReveal(delay)
+      const show = useTimer(delay)
       return show ? children : null
     }
     const delay = 1000

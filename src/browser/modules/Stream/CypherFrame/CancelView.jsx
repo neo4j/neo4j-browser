@@ -22,10 +22,10 @@ import React from 'react'
 import Centered from 'browser-components/Centered'
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import { Spinner } from 'browser-components/icons/Icons'
-import useTimedReveal from 'browser/hooks/useTimedReveal'
+import useTimer from 'browser/hooks/useTimer'
 
 export function CancelView () {
-  const showClosingMessage = useTimedReveal(1500)
+  const showClosingMessage = useTimer(1500)
   return (
     <Centered>
       <SpinnerContainer>
