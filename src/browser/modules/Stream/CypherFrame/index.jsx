@@ -69,7 +69,7 @@ import {
   shouldAutoComplete
 } from 'shared/modules/settings/settingsDuck'
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
-import { InfoView } from '../InfoView'
+import { CancelView } from './CancelView'
 
 export class CypherFrame extends Component {
   visElement = null
@@ -359,31 +359,19 @@ export class CypherFrame extends Component {
       </StyledStatsBarContainer>
     )
   }
-  getCancelingView = () => {
-    return (
-      <InfoView
-        title='Terminating query and closing frame'
-        description={
-          <div>
-            The query that was running in this frame is being terminated.
-            <br />
-            This frame will self close soon.
-          </div>
-        }
-      />
-    )
-  }
   render () {
     const { frame = {}, request = {} } = this.props
     const { cmd: query = '' } = frame
     const { result = {}, status: requestStatus } = request
 
     const frameContents =
-      requestStatus === REQUEST_STATUS_PENDING
-        ? this.getSpinner()
-        : isCancelStatus(requestStatus)
-          ? this.getCancelingView()
-          : this.getFrameContents(request, result, query)
+      requestStatus === REQUEST_STATUS_PENDING ? (
+        this.getSpinner()
+      ) : isCancelStatus(requestStatus) ? (
+        <CancelView />
+      ) : (
+        this.getFrameContents(request, result, query)
+      )
     const statusBar =
       this.state.openView !== viewTypes.VISUALIZATION
         ? this.getStatusbar(result)
