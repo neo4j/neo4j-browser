@@ -179,10 +179,6 @@ export function extractNodesAndRelationshipsFromRecords (
   return { nodes: rawNodes, relationships: rawRels }
 }
 
-const resultContainsGraphKeys = keys => {
-  return keys.includes('nodes') && keys.includes('relationships')
-}
-
 export function extractNodesAndRelationshipsFromRecordsForOldVis (
   records,
   types,
@@ -195,29 +191,26 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (
   let keys = records[0].keys
   let rawNodes = []
   let rawRels = []
-  if (resultContainsGraphKeys(keys)) {
-    rawNodes = [...rawNodes, ...records[0].get(keys[0])]
-    rawRels = [...rawRels, ...records[0].get(keys[1])]
-  } else {
-    records.forEach(record => {
-      let graphItems = keys.map(key => record.get(key))
-      graphItems = flattenArray(
-        recursivelyExtractGraphItems(types, graphItems)
-      ).filter(item => item !== false)
-      rawNodes = [
-        ...rawNodes,
-        ...graphItems.filter(item => item instanceof types.Node)
-      ]
-      rawRels = [
-        ...rawRels,
-        ...graphItems.filter(item => item instanceof types.Relationship)
-      ]
-      let paths = graphItems.filter(item => item instanceof types.Path)
-      paths.forEach(item =>
-        extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types)
-      )
-    })
-  }
+
+  records.forEach(record => {
+    let graphItems = keys.map(key => record.get(key))
+    graphItems = flattenArray(
+      recursivelyExtractGraphItems(types, graphItems)
+    ).filter(item => item !== false)
+    rawNodes = [
+      ...rawNodes,
+      ...graphItems.filter(item => item instanceof types.Node)
+    ]
+    rawRels = [
+      ...rawRels,
+      ...graphItems.filter(item => item instanceof types.Relationship)
+    ]
+    let paths = graphItems.filter(item => item instanceof types.Path)
+    paths.forEach(item =>
+      extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types)
+    )
+  })
+
   const nodes = rawNodes.map(item => {
     return {
       id: item.identity.toString(),
