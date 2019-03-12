@@ -28,6 +28,7 @@ import { ExplorerComponent } from '../../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './VisualizationView.styled'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class Visualization extends Component {
   state = {
@@ -95,22 +96,29 @@ export class Visualization extends Component {
                      currentNeighbourIds.length}`
     return new Promise((resolve, reject) => {
       this.props.bus &&
-        this.props.bus.self(CYPHER_REQUEST, { query: query }, response => {
-          if (!response.success) {
-            reject(new Error())
-          } else {
-            let count =
-              response.result.records.length > 0
-                ? parseInt(response.result.records[0].get('c').toString())
-                : 0
-            const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-              response.result.records,
-              false
-            )
-            this.autoCompleteRelationships(this.graph._nodes, resultGraph.nodes)
-            resolve({ ...resultGraph, count: count })
+        this.props.bus.self(
+          CYPHER_REQUEST,
+          { query: query, queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
+          response => {
+            if (!response.success) {
+              reject(new Error())
+            } else {
+              let count =
+                response.result.records.length > 0
+                  ? parseInt(response.result.records[0].get('c').toString())
+                  : 0
+              const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+                response.result.records,
+                false
+              )
+              this.autoCompleteRelationships(
+                this.graph._nodes,
+                resultGraph.nodes
+              )
+              resolve({ ...resultGraph, count: count })
+            }
           }
-        })
+        )
     })
   }
   getInternalRelationships (existingNodeIds, newNodeIds) {
@@ -123,7 +131,11 @@ export class Visualization extends Component {
       this.props.bus &&
         this.props.bus.self(
           CYPHER_REQUEST,
-          { query, params: { existingNodeIds, newNodeIds } },
+          {
+            query,
+            params: { existingNodeIds, newNodeIds },
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
           response => {
             if (!response.success) {
               reject(new Error())

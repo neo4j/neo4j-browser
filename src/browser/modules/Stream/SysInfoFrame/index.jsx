@@ -43,6 +43,7 @@ import {
   AutoRefreshSpan,
   StatusbarWrapper
 } from '../AutoRefresh/styled'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
@@ -235,7 +236,8 @@ export class SysInfoFrame extends Component {
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: 'CALL dbms.queryJmx("org.neo4j:*")'
+          query: 'CALL dbms.queryJmx("org.neo4j:*")',
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         this.responseHandler.bind(this)
       )
@@ -243,7 +245,8 @@ export class SysInfoFrame extends Component {
         this.props.bus.self(
           CYPHER_REQUEST,
           {
-            query: 'CALL dbms.cluster.overview'
+            query: 'CALL dbms.cluster.overview',
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
           this.clusterResponseHandler.bind(this)
         )

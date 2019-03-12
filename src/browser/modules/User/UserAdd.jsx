@@ -45,6 +45,7 @@ import {
   StyledTh
 } from 'browser-components/DataTables'
 import { StyledUserTd, StyledInput, StyledButtonContainer } from './styled'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class UserAdd extends Component {
   constructor (props) {
@@ -93,7 +94,10 @@ export class UserAdd extends Component {
       this.props.bus &&
         this.props.bus.self(
           CYPHER_REQUEST,
-          { query: addRoleToUser(this.state.username, role) },
+          {
+            query: addRoleToUser(this.state.username, role),
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
           response => {
             if (!response.success) {
               return errors.add(response.error)
@@ -110,7 +114,7 @@ export class UserAdd extends Component {
     this.props.bus &&
       this.props.bus.self(
         CYPHER_REQUEST,
-        { query: listRolesQuery() },
+        { query: listRolesQuery(), queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
         response => {
           if (!response.success) {
             const error =
@@ -153,7 +157,10 @@ export class UserAdd extends Component {
     this.props.bus &&
       this.props.bus.self(
         CYPHER_REQUEST,
-        { query: createDatabaseUser(this.state) },
+        {
+          query: createDatabaseUser(this.state),
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
         response => {
           if (!response.success) {
             const error =

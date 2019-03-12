@@ -23,6 +23,7 @@ import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Stream/FrameTemplate'
 import { StyledSchemaBody } from './styled'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class SchemaFrame extends Component {
   constructor (props) {
@@ -53,7 +54,8 @@ export class SchemaFrame extends Component {
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: 'CALL db.indexes()'
+          query: 'CALL db.indexes()',
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         this.responseHandler('indexes')
       )
@@ -61,7 +63,8 @@ export class SchemaFrame extends Component {
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: 'CALL db.constraints()'
+          query: 'CALL db.constraints()',
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         this.responseHandler('constraints')
       )

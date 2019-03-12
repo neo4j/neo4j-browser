@@ -26,6 +26,8 @@ import { getCausalClusterAddresses } from './queriesProcedureHelper'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import { getUserTxMetadata } from 'services/bolt/txMetadata'
+import { canSendTxMetadata } from '../features/versionedFeatures'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = NAME + '/REQUEST'
@@ -80,7 +82,10 @@ export const cypherRequestEpic = (some$, store) =>
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
       .directTransaction(action.query, action.params || undefined, {
-        useCypherThread: shouldUseCypherThread(store.getState())
+        useCypherThread: shouldUseCypherThread(store.getState()),
+        ...getUserTxMetadata(action.queryType || null)({
+          hasServerSupport: canSendTxMetadata(store.getState())
+        })
       })
       .then(r => ({ type: action.$$responseChannel, success: true, result: r }))
       .catch(e => ({
