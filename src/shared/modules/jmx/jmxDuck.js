@@ -41,6 +41,7 @@ import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 export const NAME = 'jmx'
 export const UPDATE = NAME + '/UPDATE'
 export const UPDATE_JMX_VALUES = NAME + '/UPDATE_JMX_VALUES'
+export const UPDATE_JMX_VALUES_DONE = NAME + '/UPDATE_JMX_VALUES_DONE'
 
 /**
  * Selectors
@@ -140,20 +141,24 @@ export const jmxEpic = (some$, store) =>
     .filter(s => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() => {
-      return Rx.Observable.timer(0, 20000)
-        .merge(some$.ofType(FORCE_FETCH))
-        .mergeMap(() =>
-          Rx.Observable.fromPromise(fetchJmxValues(store)).catch(() =>
-            Rx.Observable.of([])
+      return (
+        Rx.Observable.timer(0, 20000)
+          .merge(some$.ofType(FORCE_FETCH))
+          // Throw away new calls until we're finished
+          .throttle(() => some$.ofType(UPDATE_JMX_VALUES_DONE))
+          .mergeMap(() =>
+            Rx.Observable.fromPromise(fetchJmxValues(store)).catch(() =>
+              Rx.Observable.of([])
+            )
           )
-        )
-        .filter(r => r)
-        .do(res => store.dispatch(updateJmxValues(res)))
-        .takeUntil(
-          some$
-            .ofType(LOST_CONNECTION)
-            .filter(connectionLossFilter)
-            .merge(some$.ofType(DISCONNECTION_SUCCESS))
-        )
-        .mapTo({ type: 'NOOP' })
+          .filter(r => r)
+          .do(res => store.dispatch(updateJmxValues(res)))
+          .takeUntil(
+            some$
+              .ofType(LOST_CONNECTION)
+              .filter(connectionLossFilter)
+              .merge(some$.ofType(DISCONNECTION_SUCCESS))
+          )
+          .mapTo({ type: UPDATE_JMX_VALUES_DONE })
+      )
     })

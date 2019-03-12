@@ -45,6 +45,7 @@ export const UPDATE_SERVER = 'meta/UPDATE_SERVER'
 export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
+export const DB_META_DONE = 'meta/DB_META_DONE'
 
 /**
  * Selectors
@@ -292,6 +293,8 @@ export const dbMetaEpic = (some$, store) =>
       return (
         Rx.Observable.timer(1, 20000)
           .merge(some$.ofType(FORCE_FETCH))
+          // Throw away newly initiated calls until done
+          .throttle(() => some$.ofType(DB_META_DONE))
           // Labels, types and propertyKeys
           .mergeMap(() =>
             Rx.Observable.fromPromise(
@@ -342,7 +345,7 @@ export const dbMetaEpic = (some$, store) =>
               .filter(connectionLossFilter)
               .merge(some$.ofType(DISCONNECTION_SUCCESS))
           )
-          .mapTo({ type: 'NOOP' })
+          .mapTo({ type: DB_META_DONE })
       )
     })
 
