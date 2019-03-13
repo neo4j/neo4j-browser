@@ -305,7 +305,7 @@ export const StyledBodyMessage = styled.div`
 `
 
 export const SpinnerContainer = styled.div`
-  padding-top: 20px;
+  padding-top: 90px;
 `
 
 export const DropdownButton = styled.li`

@@ -21,7 +21,13 @@
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
 import { getHistory, clearHistory } from 'shared/modules/history/historyDuck'
-import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
+import {
+  update as updateQueryResult,
+  REQUEST_STATUS_SUCCESS,
+  REQUEST_STATUS_ERROR,
+  getRequest,
+  REQUEST_STATUS_PENDING
+} from 'shared/modules/requests/requestsDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import {
@@ -170,12 +176,17 @@ const availableCommands = [
       put(frames.add({ ...action, type: 'cypher', requestId: id }))
       return request
         .then(res => {
-          put(updateQueryResult(id, res, 'success'))
+          put(updateQueryResult(id, res, REQUEST_STATUS_SUCCESS))
           put(successfulCypher(action.cmd))
           return res
         })
         .catch(function (e) {
-          put(updateQueryResult(id, e, 'error'))
+          const request = getRequest(store.getState(), id)
+          // Only update error statuses for pending queries
+          if (request.status !== REQUEST_STATUS_PENDING) {
+            return
+          }
+          put(updateQueryResult(id, e, REQUEST_STATUS_ERROR))
           put(unsuccessfulCypher(action.cmd))
           throw e
         })

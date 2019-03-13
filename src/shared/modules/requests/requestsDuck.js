@@ -28,10 +28,18 @@ export const CANCEL_REQUEST = NAME + '/CANCEL'
 export const REQUEST_CANCELED = NAME + '/CANCELED'
 export const REQUEST_UPDATED = NAME + '/UPDATED'
 
+export const REQUEST_STATUS_PENDING = 'pending'
+export const REQUEST_STATUS_SUCCESS = 'success'
+export const REQUEST_STATUS_ERROR = 'error'
+export const REQUEST_STATUS_CANCELING = 'canceling'
+export const REQUEST_STATUS_CANCELED = 'canceled'
+
 const initialState = {}
 
 export const getRequest = (state, id) => state[NAME][id]
 export const getRequests = state => state[NAME]
+export const isCancelStatus = status =>
+  [REQUEST_STATUS_CANCELED, REQUEST_STATUS_CANCELING].includes(status)
 
 export default function reducer (state = initialState, action) {
   if (action.type === APP_START) {
@@ -47,6 +55,7 @@ export default function reducer (state = initialState, action) {
           type: action.requestType
         }
       })
+    case CANCEL_REQUEST:
     case REQUEST_CANCELED:
     case REQUEST_UPDATED:
       const newRequest = Object.assign({}, state[action.id], {
@@ -80,6 +89,7 @@ export const update = (id, result, status) => {
 export const cancel = id => {
   return {
     type: CANCEL_REQUEST,
+    status: REQUEST_STATUS_CANCELING,
     id
   }
 }
@@ -87,7 +97,7 @@ export const cancel = id => {
 const canceled = id => {
   return {
     type: REQUEST_CANCELED,
-    status: 'canceled',
+    status: REQUEST_STATUS_CANCELED,
     result: null,
     id
   }

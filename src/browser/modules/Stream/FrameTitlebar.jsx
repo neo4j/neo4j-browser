@@ -24,9 +24,13 @@ import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
-import { cancel as cancelRequest } from 'shared/modules/requests/requestsDuck'
+import {
+  cancel as cancelRequest,
+  getRequest,
+  REQUEST_STATUS_PENDING
+} from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
-import { removeComments } from 'shared/services/utils'
+import { removeComments, sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
@@ -191,7 +195,9 @@ class FrameTitlebar extends Component {
           </Render>
           <FrameButton
             title='Close'
-            onClick={() => props.onCloseClick(frame.id, frame.requestId)}
+            onClick={() =>
+              props.onCloseClick(frame.id, frame.requestId, props.request)
+            }
           >
             <CloseIcon />
           </FrameButton>
@@ -201,17 +207,32 @@ class FrameTitlebar extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const request = ownProps.frame.requestId
+    ? getRequest(state, ownProps.frame.requestId)
+    : null
+
+  return {
+    request
+  }
+}
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onTitlebarClick: cmd => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     },
-    onCloseClick: (id, requestId) => {
-      if (requestId) dispatch(cancelRequest(requestId))
+    onCloseClick: async (id, requestId, request) => {
+      if (request && request.status === REQUEST_STATUS_PENDING) {
+        dispatch(cancelRequest(requestId))
+        await sleep(3000) // sleep for 3000 ms to let user read the cancel info
+      }
       dispatch(remove(id))
     },
     onReRunClick: (cmd, id, requestId) => {
-      if (requestId) dispatch(cancelRequest(requestId))
+      if (requestId) {
+        dispatch(cancelRequest(requestId))
+      }
       dispatch(commands.executeCommand(cmd, id))
     },
     togglePinning: (id, isPinned) => {
@@ -222,7 +243,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 export default withBus(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )(FrameTitlebar)
 )
