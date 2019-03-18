@@ -23,7 +23,8 @@ import { useState, useEffect } from 'react'
 export default function useTimer (ms) {
   const [didPling, pling] = useState(false)
   useEffect(() => {
-    setTimeout(() => pling(true), ms)
+    const timer = setTimeout(() => pling(true), ms)
+    return () => clearTimeout(timer)
   }, [])
   return didPling
 }
