@@ -73,7 +73,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.3",
     "css-loader": "^1.0.0",
-    "cypress": "^3.1.0",
+    "cypress": "^3.2.0",
     "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-jsx": "^4.0.1",
