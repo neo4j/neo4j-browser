@@ -54,9 +54,19 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all'
-    },
-    runtimeChunk: true
+      cacheGroups: {
+        commons: {
+          name: 'commons',
+          chunks: 'initial',
+          minChunks: 2
+        },
+        vendor: {
+          test: /[\\/]node_modules[\\/](react|react-dom|cypher-codemirror|cypher-editor-support|neo4j-driver)[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
   },
   devtool: helpers.isProduction ? false : 'inline-source-map',
   devServer: {
