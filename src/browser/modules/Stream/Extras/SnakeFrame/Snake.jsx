@@ -62,7 +62,11 @@ class SnakeFrame extends React.Component {
         ArrowDown: DOWN,
         ArrowUp: UP,
         ArrowLeft: LEFT,
-        ArrowRight: RIGHT
+        ArrowRight: RIGHT,
+        s: DOWN,
+        w: UP,
+        a: LEFT,
+        d: RIGHT
       }
       if (!Object.keys(allowedKeys).includes(key)) {
         return

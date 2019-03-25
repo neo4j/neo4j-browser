@@ -43,6 +43,10 @@ const SplashContents = styled.div`
   height: auto;
   padding: 100px auto;
   text-align: center;
+  p {
+    color: white;
+    margin-top: 10px;
+  }
   h2 {
     color: white;
     padding-top: 50px;
@@ -104,6 +108,12 @@ export class SnakeFrame extends React.Component {
           <InitialStartButton backgroundColor={foodColor} onClick={this.play}>
             Start game!
           </InitialStartButton>
+          <p>
+            Use <strong>arrow keys</strong> or <strong>a-s-w-d</strong> to
+            control the snake.
+            <br />
+            How much can you eat?
+          </p>
         </SplashContents>
       </SplashScreen>
     )
