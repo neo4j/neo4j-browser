@@ -55,15 +55,27 @@ module.exports = {
   optimization: {
     splitChunks: {
       cacheGroups: {
-        commons: {
-          name: 'commons',
-          chunks: 'initial',
-          minChunks: 2
-        },
         vendor: {
-          test: /[\\/]node_modules[\\/](react|react-dom|cypher-codemirror|cypher-editor-support|neo4j-driver)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|@firebase|d3|codemirror)[\\/]/,
           name: 'vendor',
           chunks: 'all'
+        },
+        'cypher-codemirror': {
+          test: /[\\/]node_modules[\\/](cypher-codemirror|cypher-editor-support)[\\/]/,
+          name: 'cypher-codemirror',
+          chunks: 'all',
+          enforce: true
+        },
+        'neo4j-driver': {
+          test: /[\\/]node_modules[\\/](text-encoding|neo4j-driver)[\\/]/,
+          name: 'neo4j-driver',
+          chunks: 'all'
+        },
+        worker: {
+          test: /boltWorker/,
+          name: 'worker',
+          chunks: 'all',
+          enforce: true
         }
       }
     }
