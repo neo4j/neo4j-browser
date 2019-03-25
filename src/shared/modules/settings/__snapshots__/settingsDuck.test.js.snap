@@ -18,7 +18,7 @@ Object {
   "scrollToTop": true,
   "shouldReportUdc": true,
   "showSampleScripts": true,
-  "theme": "normal",
+  "theme": "auto",
   "useCypherThread": true,
 }
 `;

@@ -49,9 +49,16 @@ const visualSettings = [
     settings: [
       {
         theme: {
+          tooltip:
+            'Use "Auto" to have neo4j-browser detect system dark vs. light mode if available.',
           displayName: 'Theme',
           type: 'radio',
-          options: ['normal', 'outline', 'dark']
+          options: [
+            actions.AUTO_THEME,
+            actions.LIGHT_THEME,
+            actions.OUTLINE_THEME,
+            actions.DARK_THEME
+          ]
         }
       },
       {

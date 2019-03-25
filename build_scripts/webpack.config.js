@@ -42,6 +42,7 @@ module.exports = {
       'browser-services': path.resolve(helpers.browserPath, 'services'),
       shared: path.resolve(helpers.sourcePath, 'shared'),
       'browser-components': path.resolve(helpers.browserPath, 'components'),
+      'browser-hooks': path.resolve(helpers.browserPath, 'hooks'),
       browser: path.resolve(helpers.browserPath),
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
       icons: path.resolve(helpers.browserPath, 'icons')
@@ -53,9 +54,31 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all'
-    },
-    runtimeChunk: true
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/](react|react-dom|@firebase|d3|codemirror)[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        },
+        'cypher-codemirror': {
+          test: /[\\/]node_modules[\\/](cypher-codemirror|cypher-editor-support)[\\/]/,
+          name: 'cypher-codemirror',
+          chunks: 'all',
+          enforce: true
+        },
+        'neo4j-driver': {
+          test: /[\\/]node_modules[\\/](text-encoding|neo4j-driver)[\\/]/,
+          name: 'neo4j-driver',
+          chunks: 'all'
+        },
+        worker: {
+          test: /boltWorker/,
+          name: 'worker',
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
   },
   devtool: helpers.isProduction ? false : 'inline-source-map',
   devServer: {

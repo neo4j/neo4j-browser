@@ -18,6 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+  LIGHT_THEME,
+  OUTLINE_THEME,
+  DARK_THEME
+} from 'shared/modules/settings/settingsDuck'
+
 export const base = {
   name: 'base',
   // Text colors
@@ -84,12 +90,12 @@ export const base = {
 
 export const normal = {
   ...base,
-  name: 'normal'
+  name: LIGHT_THEME
 }
 
 export const outline = {
   ...base,
-  name: 'outline',
+  name: OUTLINE_THEME,
   primaryText: '#000',
   secondaryText: '#000',
   frameBorder: '1px solid #000',
@@ -99,7 +105,7 @@ export const outline = {
 
 export const dark = {
   ...base,
-  name: 'dark',
+  name: DARK_THEME,
 
   primaryText: '#f4f4f4',
   secondaryText: '#eee',
