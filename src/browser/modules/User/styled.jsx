@@ -41,6 +41,7 @@ export const StyledInput = styled.input`
   padding: 0 5px;
   border: ${props => props.theme.secondaryButtonBorder};
   border-radius: 4px;
+  color: ${props => props.theme.inputText};
 `
 export const StyledButtonContainer = styled.div`
   margin: 0 10px;
