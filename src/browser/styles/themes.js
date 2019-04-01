@@ -29,6 +29,7 @@ export const base = {
   // Text colors
   primaryText: '#333',
   secondaryText: '#717172',
+  inputText: '#717172',
   headerText: '#333',
   asideText: '#666',
   link: '#428BCA',

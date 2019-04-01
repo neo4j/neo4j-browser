@@ -334,6 +334,7 @@ export const CarouselButton = props => {
 }
 
 export const StyledLink = styled.a`
+  color: ${props => props.theme.link};
   cursor: pointer;
   text-decoration: none;
   &:hover {
