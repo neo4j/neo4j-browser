@@ -56,6 +56,7 @@ export const StyledConnectionBodyContainer = styled.div`
   display: table-cell;
 `
 export const StyledConnectionBody = styled.div`
+  display: table-cell;
   font-size: 1.3em;
   line-height: 2em;
   padding-left: 50px;
