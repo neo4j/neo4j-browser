@@ -64,7 +64,7 @@ test('should print correct state for retaining credentials', async () => {
   fireEvent.change(getByTestId('password'), { target: { value: 'xxx' } })
   fireEvent.click(getByTestId('connect'))
 
-  // When faking proagation
+  // When faking propagation
   activeConnection = true
   activeConnectionData = {
     username,
