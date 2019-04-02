@@ -24,7 +24,7 @@ import { ConnectionForm } from './ConnectionForm'
 
 /* global jest */
 
-test('should print correct state for reatining credentials', async () => {
+test('should print correct state for retaining credentials', async () => {
   const bus = {
     //  eslint-disable-next-line
     self: jest.fn((x, y, cb) => cb({ success: true }))
@@ -58,7 +58,7 @@ test('should print correct state for reatining credentials', async () => {
   // Then form should be there
   expect(getByText(/connect url/i)).toBeDefined()
 
-  // When connection is ok
+  // Fill form and click connect
   fireEvent.change(getByTestId('boltaddress'), { target: { value: host } })
   fireEvent.change(getByTestId('username'), { target: { value: username } })
   fireEvent.change(getByTestId('password'), { target: { value: 'xxx' } })
@@ -90,7 +90,7 @@ test('should print correct state for reatining credentials', async () => {
     getByText(/Connection credentials are\sstored in your web browser./i)
   ).toBeDefined()
 
-  // When not storing vredentials anymore
+  // When not storing credentials anymore
   storeCredentials = false
   rerender(
     <ConnectionForm
