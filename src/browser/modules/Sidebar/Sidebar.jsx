@@ -20,7 +20,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
+import DBMSInfo from '../DBMSInfo/DBMSInfo'
 import Favorites from './Favorites'
 import Documents from './Documents'
 import About from './About'
@@ -48,15 +48,15 @@ class Sidebar extends Component {
   render () {
     const openDrawer = this.props.openDrawer
     const onNavClick = this.props.onNavClick
-    const DatabaseDrawer = DatabaseInfo
+    const DBMSDrawer = DBMSInfo
     const FavoritesDrawer = Favorites
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
     const AboutDrawer = About
     const topNavItemsList = [
       {
-        name: 'DB',
-        title: 'Database',
+        name: 'DBMS',
+        title: 'DBMS Information',
         icon: isOpen => (
           <DatabaseIcon
             isOpen={isOpen}
@@ -64,7 +64,7 @@ class Sidebar extends Component {
             title='Database'
           />
         ),
-        content: DatabaseDrawer
+        content: DBMSDrawer
       },
       {
         name: 'Favorites',
