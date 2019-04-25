@@ -95,6 +95,7 @@ export const shouldRetainConnectionCredentials = state => {
   if (conf === null || typeof conf === 'undefined') return true
   return !isConfigValFalsy(conf)
 }
+export const getDatabases = state => (state[NAME] || initialState).databases
 
 /**
  * Helpers
@@ -196,6 +197,7 @@ const initialState = {
     dbName: null,
     storeSize: null
   },
+  databases: [],
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost'
@@ -336,6 +338,30 @@ export const dbMetaEpic = (some$, store) =>
                 if (!res) return Rx.Observable.of(null)
                 const role = res.records[0].get(0)
                 store.dispatch(update({ role }))
+                return Rx.Observable.of(null)
+              })
+          )
+          // Database list
+          .mergeMap(() =>
+            Rx.Observable.fromPromise(
+              bolt.directTransaction(
+                'CALL dbms.databases.list',
+                {},
+                {
+                  useCypherThread: shouldUseCypherThread(store.getState()),
+                  ...getBackgroundTxMetadata({
+                    hasServerSupport: canSendTxMetadata(store.getState())
+                  })
+                }
+              )
+            )
+              .catch(e => {
+                return Rx.Observable.of(null)
+              })
+              .do(res => {
+                if (!res) return Rx.Observable.of(null)
+                const databases = res.records[0].get(0)
+                store.dispatch(update({ databases }))
                 return Rx.Observable.of(null)
               })
           )
