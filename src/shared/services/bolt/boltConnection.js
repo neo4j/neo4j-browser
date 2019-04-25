@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { generateBoltHost } from 'services/utils'
@@ -45,7 +45,7 @@ const _routingAvailability = () => {
 
 const validateConnection = (driver, res, rej) => {
   if (!driver || !driver.session) return rej('No connection')
-  const tmp = driver.session()
+  const tmp = driver.session({ defaultAccessMode: neo4j.session.READ })
   tmp
     .run('CALL db.indexes()')
     .then(() => {
@@ -242,7 +242,11 @@ export function directTransaction (
   cancelable = false,
   txMetadata = undefined
 ) {
-  const session = _drivers ? _drivers.getDirectDriver().session() : false
+  const session = _drivers
+    ? _drivers
+      .getDirectDriver()
+      .session({ defaultAccessMode: neo4j.session.WRITE })
+    : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
@@ -255,7 +259,9 @@ export function routedReadTransaction (
   txMetadata = undefined
 ) {
   const session = _drivers
-    ? _drivers.getRoutedDriver().session(neo4j.session.READ)
+    ? _drivers
+      .getRoutedDriver()
+      .session({ defaultAccessMode: neo4j.session.READ })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -269,7 +275,9 @@ export function routedWriteTransaction (
   txMetadata = undefined
 ) {
   const session = _drivers
-    ? _drivers.getRoutedDriver().session(neo4j.session.WRITE)
+    ? _drivers
+      .getRoutedDriver()
+      .session({ defaultAccessMode: neo4j.session.WRITE })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -283,7 +291,11 @@ export const closeConnection = () => {
 }
 
 export const ensureConnection = (props, opts, onLostConnection) => {
-  const session = _drivers ? _drivers.getDirectDriver().session() : false
+  const session = _drivers
+    ? _drivers
+      .getDirectDriver()
+      .session({ defaultAccessMode: neo4j.session.READ })
+    : false
   if (session) {
     return new Promise((resolve, reject) => {
       session.close()

@@ -20,7 +20,7 @@
 
 import React, { Component } from 'react'
 import { v4 } from 'uuid'
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import {
   StyledStatsBar,
   PaddedTableViewDiv,

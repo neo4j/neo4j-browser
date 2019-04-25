@@ -19,7 +19,7 @@
  */
 
 import updateStatsFields from './updateStatisticsFields'
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import { stringFormat } from 'services/bolt/cypherTypesFormatting'
 import {
   safetlyRemoveObjectProp,

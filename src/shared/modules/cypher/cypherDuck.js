@@ -37,7 +37,9 @@ export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
 
 // Helpers
 const adHocSession = (driver, resolve, action, host) => {
-  const session = driver.session()
+  const session = driver.session({
+    defaultAccessMode: bolt.neo4j.session.WRITE
+  })
   session
     .run(action.query, action.parameters)
     .then(r => {

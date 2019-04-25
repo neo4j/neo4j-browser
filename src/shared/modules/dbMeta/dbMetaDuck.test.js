@@ -19,7 +19,7 @@
  */
 
 /* global describe, test, expect */
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import reducer, * as meta from './dbMetaDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 
