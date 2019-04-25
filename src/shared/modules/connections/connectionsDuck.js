@@ -55,6 +55,7 @@ export const UPDATE_AUTH_ENABLED = NAME + '/UPDATE_AUTH_ENABLED'
 export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
 export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
 export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
+export const USE_DB = NAME + '/USE_DB'
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -64,7 +65,8 @@ const initialState = {
   allConnectionIds: [],
   connectionsById: {},
   activeConnection: null,
-  connectionState: DISCONNECTED_STATE
+  connectionState: DISCONNECTED_STATE,
+  useDb: null
 }
 
 /**
@@ -79,6 +81,10 @@ export function getConnection (state, id) {
   } else {
     return null
   }
+}
+
+export function getUseDb (state) {
+  return state[NAME].useDb
 }
 
 export function getConnections (state) {
@@ -208,6 +214,8 @@ export default function (state = initialState, action) {
       return { ...state, connectionState: action.state }
     case UPDATE_AUTH_ENABLED:
       return updateAuthEnabledHelper(state, action.authEnabled)
+    case USE_DB:
+      return { ...state, useDb: action.useDb }
     case USER_CLEAR:
       return initialState
     default:
@@ -282,6 +290,8 @@ export const setAuthEnabled = authEnabled => {
     authEnabled
   }
 }
+
+export const useDb = (db = null) => ({ type: USE_DB, useDb: db })
 
 // Epics
 export const connectEpic = (action$, store) => {
