@@ -73,25 +73,12 @@ import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
 import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
-import useAutoTheme from 'browser-hooks/useAutoTheme'
+import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 
 export function App (props) {
-  const [autoTheme, overrideAutoTheme] = useAutoTheme(LIGHT_THEME)
-  const [desktopTheme, setDesktopTheme] = useState(null)
-
-  useEffect(
-    () => {
-      if (desktopTheme) {
-        overrideAutoTheme(desktopTheme)
-        return
-      }
-      if (props.theme !== AUTO_THEME) {
-        overrideAutoTheme(props.theme)
-      } else {
-        overrideAutoTheme(null)
-      }
-    },
-    [props.theme, desktopTheme]
+  const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
+    props.theme,
+    LIGHT_THEME
   )
 
   useEffect(() => {
@@ -106,12 +93,12 @@ export function App (props) {
 
   const detectDesktopThemeChanges = (_, newContext) => {
     if (newContext.global.prefersColorScheme) {
-      setDesktopTheme(newContext.global.prefersColorScheme)
+      setEnvironmentTheme(newContext.global.prefersColorScheme)
     } else {
-      setDesktopTheme(null)
+      setEnvironmentTheme(null)
     }
   }
-  const themeData = themes[autoTheme] || themes[LIGHT_THEME]
+  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
 
   const focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
