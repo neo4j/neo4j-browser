@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -27,7 +27,6 @@ import {
   getTheme,
   getCmdChar,
   getBrowserSyncConfig,
-  AUTO_THEME,
   LIGHT_THEME
 } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
