@@ -197,7 +197,7 @@ const initialState = {
     dbName: null,
     storeSize: null
   },
-  databases: [],
+  databases: ['my-db-1', 'e-commerce', 'personal-project'],
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost'

@@ -300,7 +300,10 @@ export const connectEpic = (action$, store) => {
     memoryUsername = ''
     memoryPassword = ''
     return bolt
-      .openConnection(action, { encrypted: getEncryptionMode(action) })
+      .openConnection(action, {
+        encrypted: getEncryptionMode(action),
+        db: getUseDb(store.getState())
+      })
       .then(res => ({ type: action.$$responseChannel, success: true }))
       .catch(e => ({
         type: action.$$responseChannel,
@@ -326,7 +329,8 @@ export const startupConnectEpic = (action$, store) => {
           connection,
           {
             withoutCredentials: true,
-            encrypted: getEncryptionMode(connection)
+            encrypted: getEncryptionMode(connection),
+            db: getUseDb(store.getState())
           },
           onLostConnection(store.dispatch)
         )
@@ -355,7 +359,10 @@ export const startupConnectEpic = (action$, store) => {
           bolt
             .openConnection(
               connection,
-              { encrypted: getEncryptionMode(connection) },
+              {
+                encrypted: getEncryptionMode(connection),
+                db: getUseDb(store.getState())
+              },
               onLostConnection(store.dispatch)
             ) // Try with stored creds
             .then(connection => {
@@ -454,7 +461,10 @@ export const connectionLostEpic = (action$, store) =>
               bolt
                 .directConnect(
                   connection,
-                  { encrypted: getEncryptionMode(connection) },
+                  {
+                    encrypted: getEncryptionMode(connection),
+                    db: getUseDb(store.getState())
+                  },
                   e =>
                     setTimeout(
                       () => reject(new Error('Couldnt reconnect. Lost.')),
@@ -466,7 +476,10 @@ export const connectionLostEpic = (action$, store) =>
                   bolt
                     .openConnection(
                       connection,
-                      { encrypted: getEncryptionMode(connection) },
+                      {
+                        encrypted: getEncryptionMode(connection),
+                        db: getUseDb(store.getState())
+                      },
                       onLostConnection(store.dispatch)
                     )
                     .then(() => {

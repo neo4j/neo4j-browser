@@ -134,3 +134,11 @@ export const extractStatementsFromString = str => {
     .map(stmt => stmt.getText().trim())
     .filter(_ => _)
 }
+
+export const getCommandAndParam = str => {
+  const [serverCmd, props] = splitStringOnFirst(
+    splitStringOnFirst(str, ' ')[1],
+    ' '
+  )
+  return [serverCmd, props]
+}

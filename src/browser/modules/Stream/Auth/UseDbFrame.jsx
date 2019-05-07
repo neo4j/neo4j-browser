@@ -29,7 +29,7 @@ import {
 } from './styled'
 import { H3 } from 'browser-components/headers'
 
-export const ServerUseFrame = props => {
+export const UseDbFrame = props => {
   const { frame } = props
   return (
     <StyledConnectionFrame>
@@ -53,10 +53,7 @@ export const ServerUseFrame = props => {
 
 const Frame = props => {
   return (
-    <FrameTemplate
-      header={props.frame}
-      contents={<ServerUseFrame {...props} />}
-    />
+    <FrameTemplate header={props.frame} contents={<UseDbFrame {...props} />} />
   )
 }
 

@@ -18,21 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { splitStringOnFirst } from 'services/commandUtils'
+import { getCommandAndParam } from 'services/commandUtils'
 import * as connections from 'shared/modules/connections/connectionsDuck'
 import { add as addFrameAction } from 'shared/modules/stream/streamDuck'
 import { CONNECTION_ID as DISCOVERY_CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
 import { UnknownCommandError, getErrorMessage } from 'services/exceptions'
-import {
-  shouldRetainConnectionCredentials,
-  fetchMetaData
-} from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export function handleServerCommand (action, cmdchar, put, store) {
-  const [serverCmd, props] = splitStringOnFirst(
-    splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1],
-    ' '
+  const [serverCmd, props] = getCommandAndParam(
+    action.cmd.substr(cmdchar.length)
   )
+
   if (serverCmd === 'connect') {
     return connectToConnection(action, props, put, store)
   }
@@ -50,9 +47,6 @@ export function handleServerCommand (action, cmdchar, put, store) {
   }
   if (serverCmd === 'switch') {
     return handleServerSwitchCommand(action, props, store)
-  }
-  if (serverCmd === 'use') {
-    return handleServerUseCommand(action, props, put)
   }
   return {
     ...action,
@@ -80,12 +74,6 @@ function handleUserCommand (action, props, cmdchar) {
 
 function handleChangePasswordCommand (action, props, cmdchar) {
   return { ...action, type: 'change-password' }
-}
-
-function handleServerUseCommand (action, props, put) {
-  put(connections.useDb(props))
-  put(fetchMetaData())
-  return { ...action, type: 'server-use', useDb: props }
 }
 
 export function connectToConnection (action, connectionName, put, store) {

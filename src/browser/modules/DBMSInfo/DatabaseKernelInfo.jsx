@@ -54,7 +54,7 @@ export const DatabaseKernelInfo = ({
 }) => {
   return (
     <DrawerSection className='database-kernel-info'>
-      <DrawerSubHeader>Database</DrawerSubHeader>
+      <DrawerSubHeader>DBMS</DrawerSubHeader>
       <DrawerSectionBody>
         <StyledTable>
           <tbody>

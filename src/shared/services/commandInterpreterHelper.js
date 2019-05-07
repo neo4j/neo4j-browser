@@ -28,13 +28,20 @@ import {
   getRequest,
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
-import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import {
+  getActiveConnectionData,
+  useDb
+} from 'shared/modules/connections/connectionsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import {
   updateGraphStyleData,
   getGraphStyleData
 } from 'shared/modules/grass/grassDuck'
-import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getRemoteContentHostnameWhitelist,
+  getDatabases,
+  fetchMetaData
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
@@ -70,6 +77,7 @@ import {
   getUserDirectTxMetadata,
   getBackgroundTxMetadata
 } from 'shared/services/bolt/txMetadata'
+import { getCommandAndParam } from './commandUtils'
 
 const availableCommands = [
   {
@@ -136,6 +144,36 @@ const availableCommands = [
           ...action,
           type: 'params',
           params: getParams(store.getState())
+        })
+      )
+    }
+  },
+  {
+    name: 'use-db',
+    match: cmd => /^db\s[^$]+$/.test(cmd),
+    exec: function (action, cmdchar, put, store) {
+      const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
+
+      put(useDb(dbName))
+      put(fetchMetaData())
+      put(
+        frames.add({
+          ...action,
+          type: 'use-db',
+          useDb: dbName
+        })
+      )
+    }
+  },
+  {
+    name: 'dbs',
+    match: cmd => /^dbs$/.test(cmd),
+    exec: function (action, cmdchar, put, store) {
+      put(
+        frames.add({
+          ...action,
+          type: 'dbs',
+          dbs: getDatabases(store.getState())
         })
       )
     }
