@@ -72,6 +72,7 @@ const getFrame = type => {
     'switch-success': ServerSwitchFrame,
     'switch-fail': ServerSwitchFrame,
     'use-db': UseDbFrame,
+    'reset-db': UseDbFrame,
     dbs: DbsFrame,
     style: StyleFrame,
     default: Frame

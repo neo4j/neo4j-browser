@@ -186,8 +186,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
         .directConnect(
           action,
           {
-            encrypted: getEncryptionMode(action),
-            db: getUseDb(store.getState())
+            encrypted: getEncryptionMode(action)
           },
           undefined,
           false // Ignore validation errors

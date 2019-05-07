@@ -40,6 +40,7 @@ import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
 
 let connectionProperties = null
+let _useDb = null
 let boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
 
 function openConnection (props, opts = {}, onLostConnection) {
@@ -96,7 +97,8 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
             connectionProperties ? connectionProperties.host : ''
           )
         ),
-        txMetadata
+        txMetadata,
+        useDb: _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -106,7 +108,9 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
       input,
       parameters,
       requestId,
-      cancelable
+      cancelable,
+      txMetadata,
+      _useDb
     )
   }
 }
@@ -134,7 +138,8 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
             connectionProperties ? connectionProperties.host : ''
           )
         ),
-        txMetadata
+        txMetadata,
+        useDb: _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -144,7 +149,9 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
       input,
       parameters,
       requestId,
-      cancelable
+      cancelable,
+      txMetadata,
+      _useDb
     )
   }
 }
@@ -172,7 +179,8 @@ function directTransaction (input, parameters, requestMetaData = {}) {
             connectionProperties ? connectionProperties.host : ''
           )
         ),
-        txMetadata
+        txMetadata,
+        useDb: _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -182,7 +190,9 @@ function directTransaction (input, parameters, requestMetaData = {}) {
       input,
       parameters,
       requestId,
-      cancelable
+      cancelable,
+      txMetadata,
+      _useDb
     )
   }
 }
@@ -234,6 +244,7 @@ const closeConnectionInWorkers = () => {
 }
 
 export default {
+  useDb: db => (_useDb = db),
   directConnect: boltConnection.directConnect,
   openConnection,
   closeConnection: () => {

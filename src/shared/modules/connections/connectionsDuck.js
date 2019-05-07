@@ -294,6 +294,13 @@ export const setAuthEnabled = authEnabled => {
 export const useDb = (db = null) => ({ type: USE_DB, useDb: db })
 
 // Epics
+export const useDbEpic = action$ => {
+  return action$
+    .ofType(USE_DB)
+    .do(action => bolt.useDb(action.useDb))
+    .mapTo({ type: 'NOOP' })
+}
+
 export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT).mergeMap(action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
@@ -301,8 +308,7 @@ export const connectEpic = (action$, store) => {
     memoryPassword = ''
     return bolt
       .openConnection(action, {
-        encrypted: getEncryptionMode(action),
-        db: getUseDb(store.getState())
+        encrypted: getEncryptionMode(action)
       })
       .then(res => ({ type: action.$$responseChannel, success: true }))
       .catch(e => ({
@@ -313,63 +319,48 @@ export const connectEpic = (action$, store) => {
   })
 }
 export const startupConnectEpic = (action$, store) => {
-  return action$.ofType(discovery.DONE).mergeMap(action => {
-    const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
-    if (!connection || !connection.host) {
-      store.dispatch(setActiveConnection(null))
-      store.dispatch(
-        discovery.updateDiscoveryConnection({ username: 'neo4j', password: '' })
+  return action$
+    .ofType(discovery.DONE)
+    .do(() => store.dispatch(useDb(null))) // reset db to use
+    .mergeMap(action => {
+      const connection = getConnection(
+        store.getState(),
+        discovery.CONNECTION_ID
       )
-      return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
-    }
-    return new Promise((resolve, reject) => {
-      bolt
-        .openConnection(
-          // Try without creds
-          connection,
-          {
-            withoutCredentials: true,
-            encrypted: getEncryptionMode(connection),
-            db: getUseDb(store.getState())
-          },
-          onLostConnection(store.dispatch)
+      if (!connection || !connection.host) {
+        store.dispatch(setActiveConnection(null))
+        store.dispatch(
+          discovery.updateDiscoveryConnection({
+            username: 'neo4j',
+            password: ''
+          })
         )
-        .then(r => {
-          store.dispatch(
-            discovery.updateDiscoveryConnection({
-              username: undefined,
-              password: undefined
-            })
+        return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
+      }
+      return new Promise((resolve, reject) => {
+        bolt
+          .openConnection(
+            // Try without creds
+            connection,
+            {
+              withoutCredentials: true,
+              encrypted: getEncryptionMode(connection)
+            },
+            onLostConnection(store.dispatch)
           )
-          store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
-          resolve({ type: STARTUP_CONNECTION_SUCCESS })
-        })
-        .catch(() => {
-          if (!connection || (!connection.username && !connection.password)) {
-            // No creds stored
-            store.dispatch(setActiveConnection(null))
+          .then(r => {
             store.dispatch(
               discovery.updateDiscoveryConnection({
-                username: 'neo4j',
-                password: ''
+                username: undefined,
+                password: undefined
               })
             )
-            return resolve({ type: STARTUP_CONNECTION_FAILED })
-          }
-          bolt
-            .openConnection(
-              connection,
-              {
-                encrypted: getEncryptionMode(connection),
-                db: getUseDb(store.getState())
-              },
-              onLostConnection(store.dispatch)
-            ) // Try with stored creds
-            .then(connection => {
-              store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
-              resolve({ type: STARTUP_CONNECTION_SUCCESS })
-            })
-            .catch(e => {
+            store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+            resolve({ type: STARTUP_CONNECTION_SUCCESS })
+          })
+          .catch(() => {
+            if (!connection || (!connection.username && !connection.password)) {
+              // No creds stored
               store.dispatch(setActiveConnection(null))
               store.dispatch(
                 discovery.updateDiscoveryConnection({
@@ -377,11 +368,33 @@ export const startupConnectEpic = (action$, store) => {
                   password: ''
                 })
               )
-              resolve({ type: STARTUP_CONNECTION_FAILED })
-            })
-        })
+              return resolve({ type: STARTUP_CONNECTION_FAILED })
+            }
+            bolt
+              .openConnection(
+                connection,
+                {
+                  encrypted: getEncryptionMode(connection)
+                },
+                onLostConnection(store.dispatch)
+              ) // Try with stored creds
+              .then(connection => {
+                store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+                resolve({ type: STARTUP_CONNECTION_SUCCESS })
+              })
+              .catch(e => {
+                store.dispatch(setActiveConnection(null))
+                store.dispatch(
+                  discovery.updateDiscoveryConnection({
+                    username: 'neo4j',
+                    password: ''
+                  })
+                )
+                resolve({ type: STARTUP_CONNECTION_FAILED })
+              })
+          })
+      })
     })
-  })
 }
 export const startupConnectionSuccessEpic = (action$, store) => {
   return action$
@@ -462,8 +475,7 @@ export const connectionLostEpic = (action$, store) =>
                 .directConnect(
                   connection,
                   {
-                    encrypted: getEncryptionMode(connection),
-                    db: getUseDb(store.getState())
+                    encrypted: getEncryptionMode(connection)
                   },
                   e =>
                     setTimeout(
@@ -477,8 +489,7 @@ export const connectionLostEpic = (action$, store) =>
                     .openConnection(
                       connection,
                       {
-                        encrypted: getEncryptionMode(connection),
-                        db: getUseDb(store.getState())
+                        encrypted: getEncryptionMode(connection)
                       },
                       onLostConnection(store.dispatch)
                     )

@@ -28,9 +28,11 @@ import {
   StyledCode
 } from './styled'
 import { H3 } from 'browser-components/headers'
+import Render from 'browser-components/Render/index'
 
 export const UseDbFrame = props => {
   const { frame } = props
+  const { useDb } = frame
   return (
     <StyledConnectionFrame>
       <StyledConnectionAside>
@@ -43,8 +45,13 @@ export const UseDbFrame = props => {
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
         <StyledConnectionBody>
-          Queries from this point and forward are using the database{' '}
-          <StyledCode>{frame.useDb}</StyledCode> as the target.
+          <Render if={useDb}>
+            Queries from this point and forward are using the database{' '}
+            <StyledCode>{useDb}</StyledCode> as the target.
+          </Render>
+          <Render if={!useDb}>
+            You are now targeting the dbms's default database.
+          </Render>
         </StyledConnectionBody>
       </StyledConnectionBodyContainer>
     </StyledConnectionFrame>

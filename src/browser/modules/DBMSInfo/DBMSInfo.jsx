@@ -111,7 +111,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     },
-    onDbSelect: dbName => dispatch(executeCommand(`:db ${dbName}`))
+    onDbSelect: dbName =>
+      dbName
+        ? dispatch(executeCommand(`:db ${dbName}`))
+        : dispatch(executeCommand(`:db`))
   }
 }
 

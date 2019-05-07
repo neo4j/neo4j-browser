@@ -45,7 +45,9 @@ const _routingAvailability = () => {
 
 const validateConnection = (driver, res, rej) => {
   if (!driver || !driver.session) return rej('No connection')
-  const tmp = driver.session({ defaultAccessMode: neo4j.session.READ })
+  const tmp = driver.session({
+    defaultAccessMode: neo4j.session.READ
+  })
   tmp
     .run('CALL db.indexes()')
     .then(() => {
@@ -214,7 +216,13 @@ function _trackedTransaction (
   return [id, queryPromise]
 }
 
-function _transaction (input, parameters, session, txMetadata = undefined) {
+function _transaction (
+  input,
+  parameters,
+  session,
+  txMetadata = undefined,
+  useDb = undefined
+) {
   if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
   return session
@@ -240,12 +248,13 @@ export function directTransaction (
   parameters,
   requestId = null,
   cancelable = false,
-  txMetadata = undefined
+  txMetadata = undefined,
+  useDb = undefined
 ) {
   const session = _drivers
     ? _drivers
       .getDirectDriver()
-      .session({ defaultAccessMode: neo4j.session.WRITE })
+      .session({ defaultAccessMode: neo4j.session.WRITE, db: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -256,12 +265,13 @@ export function routedReadTransaction (
   parameters,
   requestId = null,
   cancelable = false,
-  txMetadata = undefined
+  txMetadata = undefined,
+  useDb = undefined
 ) {
   const session = _drivers
     ? _drivers
       .getRoutedDriver()
-      .session({ defaultAccessMode: neo4j.session.READ })
+      .session({ defaultAccessMode: neo4j.session.READ, db: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -272,12 +282,13 @@ export function routedWriteTransaction (
   parameters,
   requestId = null,
   cancelable = false,
-  txMetadata = undefined
+  txMetadata = undefined,
+  useDb = undefined
 ) {
   const session = _drivers
     ? _drivers
       .getRoutedDriver()
-      .session({ defaultAccessMode: neo4j.session.WRITE })
+      .session({ defaultAccessMode: neo4j.session.WRITE, db: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)

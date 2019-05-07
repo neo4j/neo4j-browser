@@ -166,6 +166,20 @@ const availableCommands = [
     }
   },
   {
+    name: 'reset-db',
+    match: cmd => /^db$/.test(cmd),
+    exec: function (action, cmdchar, put, store) {
+      put(useDb(null))
+      put(fetchMetaData())
+      put(
+        frames.add({
+          ...action,
+          type: 'reset-db'
+        })
+      )
+    }
+  },
+  {
     name: 'dbs',
     match: cmd => /^dbs$/.test(cmd),
     exec: function (action, cmdchar, put, store) {

@@ -34,13 +34,11 @@ export const DatabaseSelector = ({
     return null
   }
   let placeholder
-  if (!selected) {
-    placeholder = (
-      <option value='' key='placeholder' disabled>
-        Choose database
-      </option>
-    )
-  }
+  placeholder = (
+    <option value='' key='placeholder'>
+      DBMS default database
+    </option>
+  )
   const selectionChange = ({ target }) => {
     onChange(target.value)
   }

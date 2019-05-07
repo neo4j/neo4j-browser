@@ -70,7 +70,7 @@ const onmessage = function (message) {
       connectionProperties
     } = message.data
     beforeWork()
-    const { txMetadata } = connectionProperties
+    const { txMetadata, useDb } = connectionProperties
     ensureConnection(connectionProperties, connectionProperties.opts, e => {
       self.postMessage(
         boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
@@ -82,7 +82,8 @@ const onmessage = function (message) {
           applyGraphTypes(parameters),
           requestId,
           cancelable,
-          txMetadata
+          txMetadata,
+          useDb
         )
         connectionTypeMap[connectionType]
           .getPromise(res)
