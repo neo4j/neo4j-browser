@@ -17,28 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { useState, useEffect } from 'react'
-import useDetectColorScheme from './useDetectColorScheme'
+import useAutoTheme from './useAutoTheme'
+import { AUTO_THEME, LIGHT_THEME } from 'shared/modules/settings/settingsDuck'
 
-export default function useAutoTheme (defaultTheme = 'light') {
-  const detectedScheme = useDetectColorScheme()
-  const [autoTheme, setAutoTheme] = useState(detectedScheme || defaultTheme)
-  const [overriddenTheme, overrideAutoTheme] = useState(null)
+export default function useDerivedTheme (
+  selectedTheme,
+  defaultTheme = LIGHT_THEME
+) {
+  const [derivedTheme, overrideAutoTheme] = useAutoTheme(defaultTheme)
+  const [environmentTheme, setEnvironmentTheme] = useState(null)
 
   useEffect(
     () => {
-      if (overriddenTheme) {
-        setAutoTheme(overriddenTheme)
+      if (environmentTheme && selectedTheme === AUTO_THEME) {
+        overrideAutoTheme(environmentTheme)
         return
       }
-      if (!detectedScheme && !overriddenTheme) {
-        setAutoTheme(defaultTheme)
-        return
+      if (selectedTheme !== AUTO_THEME) {
+        overrideAutoTheme(selectedTheme)
+      } else {
+        overrideAutoTheme(null)
       }
-      setAutoTheme(detectedScheme)
     },
-    [detectedScheme, overriddenTheme]
+    [selectedTheme, environmentTheme]
   )
-  return [autoTheme, overrideAutoTheme]
+  return [derivedTheme, setEnvironmentTheme]
 }
