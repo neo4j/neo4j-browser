@@ -6929,10 +6929,10 @@ neo-async@^2.5.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha1-udFeTXHGdikIZUtRg+04t1M0CDU=
 
-neo4j-driver@^1.7.3:
-  version "1.7.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.7.3.tgz#1c1108ab26b7243975f1b20045daf31d8f685207"
-  integrity sha1-HBEIqya3JDl18bIARdrzHY9oUgc=
+neo4j-driver@^1.7.4:
+  version "1.7.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.7.4.tgz#9661cf643b63818bff85e82c4691918e75098c1e"
+  integrity sha1-lmHPZDtjgYv/hegsRpGRjnUJjB4=
   dependencies:
     babel-runtime "^6.26.0"
     text-encoding "^0.6.4"

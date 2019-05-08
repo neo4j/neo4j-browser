@@ -131,7 +131,7 @@
     "firebase": "^5.8.3",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
-    "neo4j-driver": "^1.7.3",
+    "neo4j-driver": "^1.7.4",
     "react": "^16.8.1",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dnd": "^2.5.1",
