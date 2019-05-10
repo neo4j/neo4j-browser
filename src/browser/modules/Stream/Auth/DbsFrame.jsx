@@ -24,11 +24,15 @@ import {
   StyledConnectionFrame,
   StyledConnectionAside,
   StyledConnectionBodyContainer,
-  StyledConnectionBody
+  StyledConnectionBody,
+  StyledDbsRow
 } from './styled'
 import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render/index'
 import { toKeyString } from 'services/utils'
+import { UnstyledList } from '../styled'
+import { useDbCommand } from 'shared/modules/commands/commandsDuck'
+import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 
 export const DbsFrame = props => {
   const { frame } = props
@@ -39,20 +43,25 @@ export const DbsFrame = props => {
       <StyledConnectionAside>
         <span>
           <React.Fragment>
-            <H3>Avaialble databases</H3>
-            Databases available to the current user.
+            <H3>Available databases</H3>
+            Databases to use for the current user.
           </React.Fragment>
         </span>
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
         <StyledConnectionBody>
           <Render if={dbs.length}>
-            These databases are available. Click on one to switch to using it.
-            <ul>
+            These databases are available for you to target. Click on one to
+            switch to using it.
+            <UnstyledList>
               {dbs.map(db => {
-                return <li key={toKeyString(db)}>{db}</li>
+                return (
+                  <StyledDbsRow key={toKeyString(db)}>
+                    <TextCommand command={`${useDbCommand} ${db}`} />
+                  </StyledDbsRow>
+                )
               })}
-            </ul>
+            </UnstyledList>
           </Render>
           <Render if={!dbs.length}>
             Either you don't have permission to list available databases or the

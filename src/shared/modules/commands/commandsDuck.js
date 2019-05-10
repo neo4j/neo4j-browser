@@ -65,6 +65,9 @@ export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
 export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
 export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 
+export const useDbCommand = `db`
+export const listDbsCommand = `dbs`
+
 const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
 

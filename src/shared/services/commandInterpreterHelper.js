@@ -56,7 +56,9 @@ import {
   cypher,
   successfulCypher,
   unsuccessfulCypher,
-  SINGLE_COMMAND_QUEUED
+  SINGLE_COMMAND_QUEUED,
+  listDbsCommand,
+  useDbCommand
 } from 'shared/modules/commands/commandsDuck'
 import { handleParamsCommand } from 'shared/modules/commands/helpers/params'
 import {
@@ -154,7 +156,7 @@ const availableCommands = [
   },
   {
     name: 'use-db',
-    match: cmd => /^db\s[^$]+$/.test(cmd),
+    match: cmd => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
     exec: function (action, cmdchar, put, store) {
       const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
       if (hasMultiDbSupport(store.getState())) {
@@ -183,7 +185,7 @@ const availableCommands = [
   },
   {
     name: 'reset-db',
-    match: cmd => /^db$/.test(cmd),
+    match: cmd => new RegExp(`^${useDbCommand}$`).test(cmd),
     exec: function (action, cmdchar, put, store) {
       if (hasMultiDbSupport(store.getState())) {
         put(useDb(null))
@@ -210,7 +212,7 @@ const availableCommands = [
   },
   {
     name: 'dbs',
-    match: cmd => /^dbs$/.test(cmd),
+    match: cmd => new RegExp(`^${listDbsCommand}$`).test(cmd),
     exec: function (action, cmdchar, put, store) {
       if (hasMultiDbSupport(store.getState())) {
         put(

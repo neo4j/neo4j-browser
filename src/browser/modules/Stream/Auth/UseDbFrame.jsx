@@ -29,6 +29,8 @@ import {
 } from './styled'
 import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render/index'
+import TextCommand from 'browser/modules/DecoratedText/TextCommand'
+import { listDbsCommand } from 'shared/modules/commands/commandsDuck'
 
 export const UseDbFrame = props => {
   const { frame } = props
@@ -52,6 +54,10 @@ export const UseDbFrame = props => {
           <Render if={!useDb}>
             You are now targeting the dbms's default database.
           </Render>
+          <div>
+            Use the <TextCommand command={listDbsCommand} /> to list all
+            available databases.
+          </div>
         </StyledConnectionBody>
       </StyledConnectionBodyContainer>
     </StyledConnectionFrame>

@@ -73,3 +73,5 @@ export const StyledCode = styled.code`
   border: none;
   padding: 2px 4px;
 `
+
+export const StyledDbsRow = styled.li``
