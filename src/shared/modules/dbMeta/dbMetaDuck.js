@@ -36,7 +36,10 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
-import { canSendTxMetadata } from '../features/versionedFeatures'
+import {
+  canSendTxMetadata,
+  hasMultiDbSupport
+} from '../features/versionedFeatures'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -344,16 +347,25 @@ export const dbMetaEpic = (some$, store) =>
           // Database list
           .mergeMap(() =>
             Rx.Observable.fromPromise(
-              bolt.directTransaction(
-                'CALL dbms.databases.list',
-                {},
-                {
-                  useCypherThread: shouldUseCypherThread(store.getState()),
-                  ...getBackgroundTxMetadata({
-                    hasServerSupport: canSendTxMetadata(store.getState())
-                  })
+              new Promise((resolve, reject) => {
+                if (!hasMultiDbSupport(store.getState())) {
+                  return resolve(null)
                 }
-              )
+                bolt
+                  .directTransaction(
+                    'SHOW DATABASES',
+                    {},
+                    {
+                      useCypherThread: shouldUseCypherThread(store.getState()),
+                      ...getBackgroundTxMetadata({
+                        hasServerSupport: canSendTxMetadata(store.getState())
+                      }),
+                      useDb: 'neo4j' // System db
+                    }
+                  )
+                  .then(resolve)
+                  .catch(reject)
+              })
             )
               .catch(e => {
                 return Rx.Observable.of(null)

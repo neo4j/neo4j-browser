@@ -43,3 +43,14 @@ export const getShowCurrentUserProcedure = state => {
   }
   return pre4
 }
+
+export const hasMultiDbSupport = state => {
+  const serverVersion = getVersion(state)
+  if (!semver.valid(serverVersion)) {
+    return false
+  }
+  if (semver.gt(serverVersion, NEO4J_4_0)) {
+    return true
+  }
+  return false
+}

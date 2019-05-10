@@ -33,6 +33,7 @@ import {
   getCmdChar
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
+import { hasMultiDbSupport } from '../features/versionedFeatures'
 
 export const NAME = 'connections'
 export const ADD = 'connections/ADD'
@@ -56,6 +57,7 @@ export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
 export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
 export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
 export const USE_DB = NAME + '/USE_DB'
+export const USING_DB = NAME + '/USING_DB'
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -214,7 +216,7 @@ export default function (state = initialState, action) {
       return { ...state, connectionState: action.state }
     case UPDATE_AUTH_ENABLED:
       return updateAuthEnabledHelper(state, action.authEnabled)
-    case USE_DB:
+    case USING_DB:
       return { ...state, useDb: action.useDb }
     case USER_CLEAR:
       return initialState
@@ -292,12 +294,28 @@ export const setAuthEnabled = authEnabled => {
 }
 
 export const useDb = (db = null) => ({ type: USE_DB, useDb: db })
+const usingDb = (db = null) => ({ type: USING_DB, useDb: db }) // Do not export, we need the guard in useDbEpic epic
 
 // Epics
-export const useDbEpic = action$ => {
+export const useDbEpic = (action$, store) => {
   return action$
     .ofType(USE_DB)
-    .do(action => bolt.useDb(action.useDb))
+    .do(action => {
+      if (hasMultiDbSupport(store.getState())) {
+        store.dispatch(usingDb(action.db))
+      } else {
+        store.dispatch(usingDb(null))
+      }
+    })
+    .mapTo({ type: 'NOOP' })
+}
+
+export const usingDbEpic = action$ => {
+  return action$
+    .ofType(USING_DB)
+    .do(action => {
+      bolt.useDb(action.useDb)
+    })
     .mapTo({ type: 'NOOP' })
 }
 

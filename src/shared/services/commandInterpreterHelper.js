@@ -42,7 +42,10 @@ import {
   getDatabases,
   fetchMetaData
 } from 'shared/modules/dbMeta/dbMetaDuck'
-import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
+import {
+  canSendTxMetadata,
+  hasMultiDbSupport
+} from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
@@ -64,7 +67,8 @@ import {
   createErrorObject,
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
-  FetchURLError
+  FetchURLError,
+  UnsupportedError
 } from 'services/exceptions'
 import {
   parseHttpVerbCommand,
@@ -153,16 +157,28 @@ const availableCommands = [
     match: cmd => /^db\s[^$]+$/.test(cmd),
     exec: function (action, cmdchar, put, store) {
       const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
-
-      put(useDb(dbName))
-      put(fetchMetaData())
-      put(
-        frames.add({
-          ...action,
-          type: 'use-db',
-          useDb: dbName
-        })
-      )
+      if (hasMultiDbSupport(store.getState())) {
+        put(useDb(dbName))
+        put(fetchMetaData())
+        put(
+          frames.add({
+            ...action,
+            type: 'use-db',
+            useDb: dbName
+          })
+        )
+      } else {
+        put(
+          frames.add({
+            ...action,
+            type: 'error',
+            error: createErrorObject(
+              UnsupportedError,
+              'No multi db support detected.'
+            )
+          })
+        )
+      }
     }
   },
   {
