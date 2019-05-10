@@ -185,27 +185,53 @@ const availableCommands = [
     name: 'reset-db',
     match: cmd => /^db$/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      put(useDb(null))
-      put(fetchMetaData())
-      put(
-        frames.add({
-          ...action,
-          type: 'reset-db'
-        })
-      )
+      if (hasMultiDbSupport(store.getState())) {
+        put(useDb(null))
+        put(fetchMetaData())
+        put(
+          frames.add({
+            ...action,
+            type: 'reset-db'
+          })
+        )
+      } else {
+        put(
+          frames.add({
+            ...action,
+            type: 'error',
+            error: createErrorObject(
+              UnsupportedError,
+              'No multi db support detected.'
+            )
+          })
+        )
+      }
     }
   },
   {
     name: 'dbs',
     match: cmd => /^dbs$/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      put(
-        frames.add({
-          ...action,
-          type: 'dbs',
-          dbs: getDatabases(store.getState())
-        })
-      )
+      if (hasMultiDbSupport(store.getState())) {
+        put(
+          frames.add({
+            ...action,
+            type: 'dbs',
+            dbs: getDatabases(store.getState())
+          })
+        )
+      } else {
+        put(
+          frames.add({
+            ...action,
+            type: 'error',
+            error: createErrorObject(
+              UnsupportedError,
+              'No multi db support detected.'
+            )
+          })
+        )
+      }
     }
   },
   {
