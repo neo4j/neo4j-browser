@@ -64,7 +64,7 @@ describe('DatabaseSelector', () => {
     rerender(<DatabaseSelector databases={databases} selected={selected} />)
 
     // Then
-    expect(getByDisplayValue(/choose/i)).toBeDefined()
+    expect(getByDisplayValue(/default/i)).toBeDefined()
     expect(queryByDisplayValue('molly')).toBeNull()
     expect(queryByDisplayValue('stella')).toBeNull()
   })

@@ -21,10 +21,7 @@
 import Rx from 'rxjs'
 
 import bolt from 'services/bolt/bolt'
-import {
-  getActiveConnectionData,
-  getUseDb
-} from 'shared/modules/connections/connectionsDuck'
+import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
 import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'

@@ -62,10 +62,8 @@ Object {
 exports[`updating metadata can update server info 1`] = `
 Object {
   "server": Object {
-    "dbName": undefined,
     "edition": "enterprise",
     "storeId": "xxxx",
-    "storeSize": undefined,
     "version": "3.2.0-RC2",
   },
   "shouldKeep": true,

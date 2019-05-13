@@ -50,6 +50,8 @@ export const CLEAR = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 export const DB_META_DONE = 'meta/DB_META_DONE'
 
+export const SYSTEM_DB = 'neo4j'
+
 /**
  * Selectors
  */
@@ -200,7 +202,7 @@ const initialState = {
     dbName: null,
     storeSize: null
   },
-  databases: ['my-db-1', 'e-commerce', 'personal-project'],
+  databases: [],
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost'
@@ -225,10 +227,14 @@ export default function meta (state = initialState, action) {
         ...updateMetaForContext(state, action.meta, action.context)
       }
     case UPDATE_SERVER:
-      const { version, edition, storeId, dbName, storeSize } = action
+      const { type: serverType, ...serverRest } = action
+      const serverState = {}
+      Object.keys(serverRest).forEach(key => {
+        serverState[key] = action[key]
+      })
       return {
         ...state,
-        server: { version, edition, storeId, dbName, storeSize }
+        server: { ...state.server, ...serverState }
       }
     case UPDATE_SETTINGS:
       return { ...state, settings: { ...action.settings } }
@@ -300,7 +306,7 @@ export const dbMetaEpic = (some$, store) =>
           .merge(some$.ofType(FORCE_FETCH))
           // Throw away newly initiated calls until done
           .throttle(() => some$.ofType(DB_META_DONE))
-          // Labels, types and propertyKeys
+          // Labels, types and propertyKeys, and server version
           .mergeMap(() =>
             Rx.Observable.fromPromise(
               bolt.routedReadTransaction(
@@ -320,6 +326,40 @@ export const dbMetaEpic = (some$, store) =>
           )
           .filter(r => r)
           .do(res => store.dispatch(updateMeta(res)))
+          // Server version and edition
+          .mergeMap(() =>
+            Rx.Observable.fromPromise(
+              bolt.directTransaction(
+                'CALL dbms.components() YIELD name, versions, edition',
+                {},
+                {
+                  useCypherThread: shouldUseCypherThread(store.getState()),
+                  ...getBackgroundTxMetadata({
+                    hasServerSupport: canSendTxMetadata(store.getState())
+                  })
+                }
+              )
+            )
+              .catch(e => {
+                return Rx.Observable.of(null)
+              })
+              .do(res => {
+                if (!res) return Rx.Observable.of(null)
+                res.records.forEach(record => {
+                  const name = record.get('name')
+                  const versions = record.get('versions') || []
+                  const edition = record.get('edition')
+                  if (name === 'Neo4j Kernel') {
+                    store.dispatch({
+                      type: UPDATE_SERVER,
+                      version: versions[0] || 'unknown',
+                      edition: edition
+                    })
+                  }
+                })
+                return Rx.Observable.of(null)
+              })
+          )
           // Cluster role
           .mergeMap(() =>
             Rx.Observable.fromPromise(
@@ -360,7 +400,7 @@ export const dbMetaEpic = (some$, store) =>
                       ...getBackgroundTxMetadata({
                         hasServerSupport: canSendTxMetadata(store.getState())
                       }),
-                      useDb: 'neo4j' // System db
+                      useDb: SYSTEM_DB // System db
                     }
                   )
                   .then(resolve)
@@ -393,10 +433,8 @@ export const serverConfigEpic = (some$, store) =>
     // Version and edition
     .do(() => {
       const jmxValueResult = getJmxValues(store.getState(), [
-        ['Kernel', 'KernelVersion'],
         ['Kernel', 'StoreId'],
         ['Kernel', 'DatabaseName'],
-        ['Configuration', 'unsupported.dbms.edition'],
         ['Store file sizes', 'TotalStoreSize']
       ])
       if (
@@ -405,7 +443,7 @@ export const serverConfigEpic = (some$, store) =>
       ) {
         return store.dispatch({
           type: UPDATE_SERVER,
-          version: 'unknown'
+          storeId: 'unknown'
         })
       }
       const jmxValues = jmxValueResult.reduce((obj, item) => {
@@ -417,19 +455,11 @@ export const serverConfigEpic = (some$, store) =>
         return obj
       }, {})
 
-      const versionMatch = jmxValues.KernelVersion.match(/version:\s([^,$]+)/)
-      const version =
-        versionMatch !== null && versionMatch.length > 1
-          ? versionMatch[1]
-          : null
-      const edition = jmxValues['unsupported.dbms.edition']
       const storeId = jmxValues.StoreId
       const dbName = jmxValues.DatabaseName
       const storeSize = jmxValues.TotalStoreSize
       store.dispatch({
         type: UPDATE_SERVER,
-        version,
-        edition,
         storeId,
         dbName,
         storeSize

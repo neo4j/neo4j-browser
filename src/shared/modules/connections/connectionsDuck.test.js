@@ -199,6 +199,7 @@ describe('connectionsDucks Epics', () => {
         try {
           expect(store.getActions()).toEqual([
             action,
+            connections.useDb(null),
             connections.setActiveConnection(null),
             updateDiscoveryConnection({ username: 'neo4j', password: '' }),
             currentAction
@@ -281,6 +282,7 @@ describe('startupConnectEpic', () => {
         try {
           expect(actions).toEqual([
             action,
+            connections.useDb(null),
             connections.setActiveConnection(null),
             updateDiscoveryConnection({ username: 'neo4j', password: '' }),
             currentAction

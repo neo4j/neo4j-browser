@@ -138,10 +138,10 @@ const asChangeLogUrl = serverVersion => {
   return `https://github.com/neo4j/neo4j/wiki/Neo4j-${urlServerVersion}-changelog#${releaseTag}`
 }
 
-const mapStateToProps = store => {
+const mapStateToProps = state => {
   return {
-    serverVersion: getVersion(store),
-    serverEdition: getEdition(store)
+    serverVersion: getVersion(state),
+    serverEdition: getEdition(state)
   }
 }
 
