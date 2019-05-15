@@ -30,7 +30,8 @@ import {
 } from 'shared/modules/requests/requestsDuck'
 import {
   getActiveConnectionData,
-  useDb
+  useDb,
+  getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import {
@@ -97,7 +98,13 @@ const availableCommands = [
     name: 'noop',
     match: cmd => /^noop$/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      put(frames.add({ ...action, type: 'noop' }))
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState),
+          ...action,
+          type: 'noop'
+        })
+      )
       return true
     }
   },
@@ -109,6 +116,7 @@ const availableCommands = [
         .then(res => {
           put(
             frames.add({
+              useDb: getUseDb(store.getState),
               ...action,
               ...handleGetConfigCommand(action, cmdchar, store)
             })
@@ -127,7 +135,15 @@ const availableCommands = [
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
-          put(frames.add({ ...action, type: res.type, success: true, params }))
+          put(
+            frames.add({
+              useDb: getUseDb(store.getState),
+              ...action,
+              type: res.type,
+              success: true,
+              params
+            })
+          )
           put(updateQueryResult(action.requestId, res, 'success'))
           return true
         })
@@ -147,6 +163,7 @@ const availableCommands = [
     exec: function (action, cmdchar, put, store) {
       put(
         frames.add({
+          useDb: getUseDb(store.getState),
           ...action,
           type: 'params',
           params: getParams(store.getState())
@@ -172,6 +189,7 @@ const availableCommands = [
       } else {
         put(
           frames.add({
+            useDb: getUseDb(store.getState),
             ...action,
             type: 'error',
             error: createErrorObject(
@@ -192,6 +210,7 @@ const availableCommands = [
         put(fetchMetaData())
         put(
           frames.add({
+            useDb: getUseDb(store.getState),
             ...action,
             type: 'reset-db'
           })
@@ -199,6 +218,7 @@ const availableCommands = [
       } else {
         put(
           frames.add({
+            useDb: getUseDb(store.getState),
             ...action,
             type: 'error',
             error: createErrorObject(
@@ -217,6 +237,7 @@ const availableCommands = [
       if (hasMultiDbSupport(store.getState())) {
         put(
           frames.add({
+            useDb: getUseDb(store.getState),
             ...action,
             type: 'dbs',
             dbs: getDatabases(store.getState())
@@ -225,6 +246,7 @@ const availableCommands = [
       } else {
         put(
           frames.add({
+            useDb: getUseDb(store.getState),
             ...action,
             type: 'error',
             error: createErrorObject(
@@ -240,14 +262,26 @@ const availableCommands = [
     name: 'schema',
     match: cmd => /^schema$/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      put(frames.add({ ...action, type: 'schema' }))
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState),
+          ...action,
+          type: 'schema'
+        })
+      )
     }
   },
   {
     name: 'sysinfo',
     match: cmd => /^sysinfo$/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      put(frames.add({ ...action, type: 'sysinfo' }))
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState),
+          ...action,
+          type: 'sysinfo'
+        })
+      )
     }
   },
   {
@@ -269,7 +303,14 @@ const availableCommands = [
           })
       )
       put(cypher(action.cmd))
-      put(frames.add({ ...action, type: 'cypher', requestId: id }))
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState),
+          ...action,
+          type: 'cypher',
+          requestId: id
+        })
+      )
       return request
         .then(res => {
           put(updateQueryResult(id, res, REQUEST_STATUS_SUCCESS))
@@ -295,10 +336,24 @@ const availableCommands = [
       const response = handleServerCommand(action, cmdchar, put, store)
       if (response && response.then) {
         response.then(res => {
-          if (res) put(frames.add({ ...action, ...res }))
+          if (res) {
+            put(
+              frames.add({
+                useDb: getUseDb(store.getState),
+                ...action,
+                ...res
+              })
+            )
+          }
         })
       } else if (response) {
-        put(frames.add({ ...action, ...response }))
+        put(
+          frames.add({
+            useDb: getUseDb(store.getState),
+            ...action,
+            ...response
+          })
+        )
       }
       return response
     }
@@ -311,11 +366,19 @@ const availableCommands = [
       const whitelist = getRemoteContentHostnameWhitelist(store.getState())
       fetchRemoteGuide(url, whitelist)
         .then(r => {
-          put(frames.add({ ...action, type: 'play-remote', result: r }))
+          put(
+            frames.add({
+              useDb: getUseDb(store.getState),
+              ...action,
+              type: 'play-remote',
+              result: r
+            })
+          )
         })
         .catch(e => {
           put(
             frames.add({
+              useDb: getUseDb(store.getState),
               ...action,
               type: 'play-remote',
               response: e.response || null,
@@ -331,7 +394,13 @@ const availableCommands = [
     name: 'play',
     match: cmd => /^play(\s|$)/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      put(frames.add({ ...action, type: 'play' }))
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState),
+          ...action,
+          type: 'play'
+        })
+      )
     }
   },
   {
@@ -342,6 +411,7 @@ const availableCommands = [
       if (match[0] !== match.input) {
         return put(
           frames.add({
+            useDb: getUseDb(store.getState),
             ...action,
             error: createErrorObject(UnknownCommandError, action),
             type: 'error'
@@ -355,6 +425,7 @@ const availableCommands = [
 
       const historyState = getHistory(store.getState())
       const newAction = frames.add({
+        useDb: getUseDb(store.getState),
         ...action,
         result: historyState,
         type: 'history'
@@ -369,6 +440,7 @@ const availableCommands = [
     exec: (action, cmdchar, put, store) => {
       put(
         frames.add({
+          useDb: getUseDb(store.getState),
           ...action,
           type: 'queries',
           result: "{res : 'QUERIES RESULT'}"
@@ -380,7 +452,13 @@ const availableCommands = [
     name: 'help',
     match: cmd => /^help(\s|$)/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      put(frames.add({ ...action, type: 'help' }))
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState),
+          ...action,
+          type: 'help'
+        })
+      )
     }
   },
   {
@@ -420,15 +498,36 @@ const availableCommands = [
             .request(r.method, url, r.data, authHeaders)
             .then(res => res.text())
             .then(res => {
-              put(frames.add({ ...action, result: res, type: 'pre' }))
+              put(
+                frames.add({
+                  useDb: getUseDb(store.getState),
+                  ...action,
+                  result: res,
+                  type: 'pre'
+                })
+              )
             })
             .catch(e => {
               const error = new FetchURLError({ error: e.message })
-              put(frames.add({ ...action, error, type: 'error' }))
+              put(
+                frames.add({
+                  useDb: getUseDb(store.getState),
+                  ...action,
+                  error,
+                  type: 'error'
+                })
+              )
             })
         })
         .catch(error => {
-          put(frames.add({ ...action, error, type: 'error' }))
+          put(
+            frames.add({
+              useDb: getUseDb(store.getState),
+              ...action,
+              error,
+              type: 'error'
+            })
+          )
         })
     }
   },
@@ -441,7 +540,14 @@ const availableCommands = [
 
       if (param === '') {
         const grassData = getGraphStyleData(store.getState())
-        put(frames.add({ ...action, type: 'style', result: grassData }))
+        put(
+          frames.add({
+            useDb: getUseDb(store.getState),
+            ...action,
+            type: 'style',
+            result: grassData
+          })
+        )
       } else if (param === 'reset') {
         put(updateGraphStyleData(null))
       } else if (isValidURL(param)) {
@@ -461,7 +567,14 @@ const availableCommands = [
           })
           .catch(e => {
             const error = new Error(e)
-            put(frames.add({ ...action, error, type: 'error' }))
+            put(
+              frames.add({
+                useDb: getUseDb(store.getState),
+                ...action,
+                error,
+                type: 'error'
+              })
+            )
           })
       } else {
         const parsedGrass = parseGrass(param)
@@ -476,9 +589,10 @@ const availableCommands = [
   {
     name: 'catch-all',
     match: () => true,
-    exec: (action, cmdchar, put) => {
+    exec: (action, cmdchar, put, store) => {
       put(
         frames.add({
+          useDb: getUseDb(store.getState),
           ...action,
           error: createErrorObject(UnknownCommandError, action),
           type: 'error'

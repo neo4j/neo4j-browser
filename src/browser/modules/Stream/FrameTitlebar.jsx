@@ -111,7 +111,7 @@ class FrameTitlebar extends Component {
     const cmd = removeComments(frame.cmd)
     return (
       <StyledFrameTitleBar>
-        <StyledFrameCommand>
+        <StyledFrameCommand selectedDb={frame.useDb}>
           <DottedLineHover
             data-testid='frameCommand'
             onClick={() => props.onTitlebarClick(frame.cmd)}

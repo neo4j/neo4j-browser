@@ -86,7 +86,7 @@ export function getConnection (state, id) {
 }
 
 export function getUseDb (state) {
-  return state[NAME].useDb
+  return (state[NAME] || {}).useDb
 }
 
 export function getConnections (state) {
