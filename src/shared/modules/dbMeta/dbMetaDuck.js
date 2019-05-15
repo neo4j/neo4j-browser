@@ -131,6 +131,17 @@ export const getServerConfig = (state, includePrefixes = []) => {
 }
 
 function updateMetaForContext (state, meta, context) {
+  if (!meta || !meta.records || !meta.records.length) {
+    return {
+      labels: initialState.labels,
+      relationshipTypes: initialState.relationshipTypes,
+      properties: initialState.properties,
+      functions: initialState.functions,
+      procedures: initialState.procedures,
+      nodes: initialState.nodes,
+      relationships: initialState.relationships
+    }
+  }
   const notInCurrentContext = e => e.context !== context
   const mapResult = (metaIndex, mapFunction) =>
     meta.records[metaIndex].get(0).data.map(mapFunction)
@@ -321,6 +332,7 @@ export const dbMetaEpic = (some$, store) =>
                 }
               )
             ).catch(e => {
+              store.dispatch(updateMeta([]))
               return Rx.Observable.of(null)
             })
           )
