@@ -302,7 +302,7 @@ export const useDbEpic = (action$, store) => {
     .ofType(USE_DB)
     .do(action => {
       if (hasMultiDbSupport(store.getState())) {
-        store.dispatch(usingDb(action.db))
+        store.dispatch(usingDb(action.useDb))
       } else {
         store.dispatch(usingDb(null))
       }
@@ -316,7 +316,7 @@ export const usingDbEpic = action$ => {
     .do(action => {
       bolt.useDb(action.useDb)
     })
-    .mapTo({ type: 'NOOP' })
+    .mapTo(fetchMetaData())
 }
 
 export const connectEpic = (action$, store) => {

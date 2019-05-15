@@ -39,7 +39,10 @@ describe('DatabaseSelector', () => {
   })
   it('updates selection in list', () => {
     // Given
-    const databases = ['stella', 'molly']
+    const databases = [
+      { name: 'stella', status: 'online' },
+      { name: 'molly', status: 'online' }
+    ]
     let selected = 'stella'
 
     // When
@@ -48,16 +51,16 @@ describe('DatabaseSelector', () => {
     )
 
     // Then
-    expect(getByDisplayValue('stella')).toBeDefined()
-    expect(queryByDisplayValue('molly')).toBeNull()
+    expect(getByDisplayValue(/stella/i)).toBeDefined()
+    expect(queryByDisplayValue(/molly/i)).toBeNull()
 
     // When
     selected = 'molly'
     rerender(<DatabaseSelector databases={databases} selected={selected} />)
 
     // Then
-    expect(getByDisplayValue('molly')).toBeDefined()
-    expect(queryByDisplayValue('stella')).toBeNull()
+    expect(getByDisplayValue(/molly/i)).toBeDefined()
+    expect(queryByDisplayValue(/stella/i)).toBeNull()
 
     // When
     selected = ''
@@ -65,12 +68,15 @@ describe('DatabaseSelector', () => {
 
     // Then
     expect(getByDisplayValue(/default/i)).toBeDefined()
-    expect(queryByDisplayValue('molly')).toBeNull()
-    expect(queryByDisplayValue('stella')).toBeNull()
+    expect(queryByDisplayValue(/molly/i)).toBeNull()
+    expect(queryByDisplayValue(/stella/i)).toBeNull()
   })
   it('can handle selections', () => {
     // Given
-    const databases = ['stella', 'molly']
+    const databases = [
+      { name: 'stella', status: 'online' },
+      { name: 'molly', status: 'online' }
+    ]
     const onChange = jest.fn()
 
     // When

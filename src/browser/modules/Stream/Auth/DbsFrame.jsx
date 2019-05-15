@@ -50,20 +50,20 @@ export const DbsFrame = props => {
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
         <StyledConnectionBody>
-          <Render if={dbs.length}>
+          <Render if={Array.isArray(dbs) && dbs.length}>
             These databases are available for you to target. Click on one to
             switch to using it.
             <UnstyledList>
               {dbs.map(db => {
                 return (
-                  <StyledDbsRow key={toKeyString(db)}>
-                    <TextCommand command={`${useDbCommand} ${db}`} />
+                  <StyledDbsRow key={toKeyString(db.name)}>
+                    <TextCommand command={`${useDbCommand} ${db.name}`} />
                   </StyledDbsRow>
                 )
               })}
             </UnstyledList>
           </Render>
-          <Render if={!dbs.length}>
+          <Render if={!Array.isArray(dbs) || !dbs.length}>
             Either you don't have permission to list available databases or the
             dbms you're connected to don't support multiple databases.
           </Render>

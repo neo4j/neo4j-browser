@@ -30,7 +30,7 @@ export const DatabaseSelector = ({
   selected = '',
   onChange = () => {}
 }) => {
-  if (!databases.length) {
+  if (!Array.isArray(databases) || databases.length < 1) {
     return null
   }
   let placeholder
@@ -54,8 +54,8 @@ export const DatabaseSelector = ({
           {placeholder}
           {databases.map(db => {
             return (
-              <option key={db} value={db}>
-                {db}
+              <option key={db.name} value={db.name}>
+                {db.name} - {db.status}
               </option>
             )
           })}

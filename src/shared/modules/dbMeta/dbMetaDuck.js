@@ -50,7 +50,7 @@ export const CLEAR = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 export const DB_META_DONE = 'meta/DB_META_DONE'
 
-export const SYSTEM_DB = 'neo4j'
+export const SYSTEM_DB = 'system'
 
 /**
  * Selectors
@@ -412,7 +412,12 @@ export const dbMetaEpic = (some$, store) =>
               })
               .do(res => {
                 if (!res) return Rx.Observable.of(null)
-                const databases = res.records[0].get(0)
+                const databases = res.records.map(record => {
+                  return {
+                    name: record.get('name'),
+                    status: record.get('status')
+                  }
+                })
                 store.dispatch(update({ databases }))
                 return Rx.Observable.of(null)
               })
