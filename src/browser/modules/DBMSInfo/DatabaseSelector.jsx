@@ -19,11 +19,18 @@
  */
 
 import React from 'react'
+import styled from 'styled-components'
 import {
   DrawerSection,
   DrawerSubHeader,
   DrawerSectionBody
 } from 'browser-components/drawer/index'
+
+const Select = styled.select`
+  width: 100%;
+  height: 30px;
+  color: ${props => props.theme.inputText};
+`
 
 export const DatabaseSelector = ({
   databases = [],
@@ -46,7 +53,7 @@ export const DatabaseSelector = ({
     <DrawerSection>
       <DrawerSubHeader>Use database</DrawerSubHeader>
       <DrawerSectionBody>
-        <select
+        <Select
           value={selected || ''}
           data-testid='database-selection-list'
           onChange={selectionChange}
@@ -55,11 +62,11 @@ export const DatabaseSelector = ({
           {databases.map(db => {
             return (
               <option key={db.name} value={db.name}>
-                {db.name} - {db.status}
+                {db.name} ({db.status})
               </option>
             )
           })}
-        </select>
+        </Select>
       </DrawerSectionBody>
     </DrawerSection>
   )
