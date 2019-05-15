@@ -100,7 +100,7 @@ const availableCommands = [
     exec: function (action, cmdchar, put, store) {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'noop'
         })
@@ -116,7 +116,7 @@ const availableCommands = [
         .then(res => {
           put(
             frames.add({
-              useDb: getUseDb(store.getState),
+              useDb: getUseDb(store.getState()),
               ...action,
               ...handleGetConfigCommand(action, cmdchar, store)
             })
@@ -137,7 +137,7 @@ const availableCommands = [
             res.type === 'param' ? res.result : getParams(store.getState())
           put(
             frames.add({
-              useDb: getUseDb(store.getState),
+              useDb: getUseDb(store.getState()),
               ...action,
               type: res.type,
               success: true,
@@ -163,7 +163,7 @@ const availableCommands = [
     exec: function (action, cmdchar, put, store) {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'params',
           params: getParams(store.getState())
@@ -189,7 +189,7 @@ const availableCommands = [
       } else {
         put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             type: 'error',
             error: createErrorObject(
@@ -210,7 +210,7 @@ const availableCommands = [
         put(fetchMetaData())
         put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             type: 'reset-db'
           })
@@ -218,7 +218,7 @@ const availableCommands = [
       } else {
         put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             type: 'error',
             error: createErrorObject(
@@ -237,7 +237,7 @@ const availableCommands = [
       if (hasMultiDbSupport(store.getState())) {
         put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             type: 'dbs',
             dbs: getDatabases(store.getState())
@@ -246,7 +246,7 @@ const availableCommands = [
       } else {
         put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             type: 'error',
             error: createErrorObject(
@@ -264,7 +264,7 @@ const availableCommands = [
     exec: function (action, cmdchar, put, store) {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'schema'
         })
@@ -277,7 +277,7 @@ const availableCommands = [
     exec: function (action, cmdchar, put, store) {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'sysinfo'
         })
@@ -305,7 +305,7 @@ const availableCommands = [
       put(cypher(action.cmd))
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'cypher',
           requestId: id
@@ -339,7 +339,7 @@ const availableCommands = [
           if (res) {
             put(
               frames.add({
-                useDb: getUseDb(store.getState),
+                useDb: getUseDb(store.getState()),
                 ...action,
                 ...res
               })
@@ -349,7 +349,7 @@ const availableCommands = [
       } else if (response) {
         put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             ...response
           })
@@ -368,7 +368,7 @@ const availableCommands = [
         .then(r => {
           put(
             frames.add({
-              useDb: getUseDb(store.getState),
+              useDb: getUseDb(store.getState()),
               ...action,
               type: 'play-remote',
               result: r
@@ -378,7 +378,7 @@ const availableCommands = [
         .catch(e => {
           put(
             frames.add({
-              useDb: getUseDb(store.getState),
+              useDb: getUseDb(store.getState()),
               ...action,
               type: 'play-remote',
               response: e.response || null,
@@ -396,7 +396,7 @@ const availableCommands = [
     exec: function (action, cmdchar, put, store) {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'play'
         })
@@ -411,7 +411,7 @@ const availableCommands = [
       if (match[0] !== match.input) {
         return put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             error: createErrorObject(UnknownCommandError, action),
             type: 'error'
@@ -425,7 +425,7 @@ const availableCommands = [
 
       const historyState = getHistory(store.getState())
       const newAction = frames.add({
-        useDb: getUseDb(store.getState),
+        useDb: getUseDb(store.getState()),
         ...action,
         result: historyState,
         type: 'history'
@@ -440,7 +440,7 @@ const availableCommands = [
     exec: (action, cmdchar, put, store) => {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'queries',
           result: "{res : 'QUERIES RESULT'}"
@@ -454,7 +454,7 @@ const availableCommands = [
     exec: function (action, cmdchar, put, store) {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           type: 'help'
         })
@@ -500,7 +500,7 @@ const availableCommands = [
             .then(res => {
               put(
                 frames.add({
-                  useDb: getUseDb(store.getState),
+                  useDb: getUseDb(store.getState()),
                   ...action,
                   result: res,
                   type: 'pre'
@@ -511,7 +511,7 @@ const availableCommands = [
               const error = new FetchURLError({ error: e.message })
               put(
                 frames.add({
-                  useDb: getUseDb(store.getState),
+                  useDb: getUseDb(store.getState()),
                   ...action,
                   error,
                   type: 'error'
@@ -522,7 +522,7 @@ const availableCommands = [
         .catch(error => {
           put(
             frames.add({
-              useDb: getUseDb(store.getState),
+              useDb: getUseDb(store.getState()),
               ...action,
               error,
               type: 'error'
@@ -542,7 +542,7 @@ const availableCommands = [
         const grassData = getGraphStyleData(store.getState())
         put(
           frames.add({
-            useDb: getUseDb(store.getState),
+            useDb: getUseDb(store.getState()),
             ...action,
             type: 'style',
             result: grassData
@@ -569,7 +569,7 @@ const availableCommands = [
             const error = new Error(e)
             put(
               frames.add({
-                useDb: getUseDb(store.getState),
+                useDb: getUseDb(store.getState()),
                 ...action,
                 error,
                 type: 'error'
@@ -592,7 +592,7 @@ const availableCommands = [
     exec: (action, cmdchar, put, store) => {
       put(
         frames.add({
-          useDb: getUseDb(store.getState),
+          useDb: getUseDb(store.getState()),
           ...action,
           error: createErrorObject(UnknownCommandError, action),
           type: 'error'

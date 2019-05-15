@@ -56,6 +56,7 @@ import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -333,8 +334,9 @@ export class Editor extends Component {
   }
 
   lineNumberFormatter (line) {
+    const useDbString = this.props.useDb || ''
     if (!this.codeMirror || this.codeMirror.lineCount() === 1) {
-      return '$'
+      return `${useDbString}$`
     } else {
       return line
     }
@@ -474,6 +476,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const mapStateToProps = state => {
   return {
+    useDb: getUseDb(state),
     enableEditorAutocomplete: shouldEditorAutocomplete(state),
     enableEditorLint: shouldEditorLint(state),
     history: getHistory(state),

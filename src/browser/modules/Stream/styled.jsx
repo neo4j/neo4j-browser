@@ -153,6 +153,7 @@ export const StyledFrameCommand = styled.label`
   overflow: hidden;
   display: block;
   &::before {
+    color: ${props => props.theme.promptText};
     content: "${props => (props.selectedDb || '') + '$ '}";
   }
 `
@@ -318,6 +319,7 @@ export const DropdownButton = styled.li`
   text-align: center;
   line-height: 40px;
   display: inline-block;
+  float: left;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
     color: ${props => props.theme.secondaryButtonTextHover};
