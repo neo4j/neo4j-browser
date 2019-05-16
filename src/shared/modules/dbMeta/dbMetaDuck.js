@@ -106,30 +106,6 @@ export const getDatabases = state => (state[NAME] || initialState).databases
  * Helpers
  */
 
-export const getServerConfig = (state, includePrefixes = []) => {
-  const confs = getJmxValues(state, [['Configuration']])
-
-  if (!confs) return {}
-  const conf = confs[0]
-  let filtered
-  if (conf) {
-    Object.keys(conf)
-      .filter(
-        key =>
-          includePrefixes.length < 1 ||
-          includePrefixes.some(pfx => key.startsWith(pfx))
-      )
-      .forEach(
-        key =>
-          (filtered = {
-            ...filtered,
-            [key]: bolt.itemIntToNumber(conf[key].value)
-          })
-      )
-  }
-  return filtered || conf
-}
-
 function updateMetaForContext (state, meta, context) {
   if (!meta || !meta.records || !meta.records.length) {
     return {
@@ -372,6 +348,58 @@ export const dbMetaEpic = (some$, store) =>
                 return Rx.Observable.of(null)
               })
           )
+          // Server configuration
+          .mergeMap(() =>
+            Rx.Observable.fromPromise(
+              bolt.directTransaction(
+                'CALL dbms.listConfig()',
+                {},
+                {
+                  useCypherThread: shouldUseCypherThread(store.getState()),
+                  ...getBackgroundTxMetadata({
+                    hasServerSupport: canSendTxMetadata(store.getState())
+                  })
+                }
+              )
+            )
+              .catch(e => {
+                return Rx.Observable.of(null)
+              })
+              .do(res => {
+                if (!res) return Rx.Observable.of(null)
+                const settings = res.records.reduce((all, record) => {
+                  const name = record.get('name')
+                  let value = record.get('value')
+                  if (name === 'browser.retain_connection_credentials') {
+                    let retainCredentials = true
+                    // Check if we should wipe user creds from localstorage
+                    if (
+                      typeof value !== 'undefined' &&
+                      isConfigValFalsy(value)
+                    ) {
+                      retainCredentials = false
+                    }
+                    store.dispatch(setRetainCredentials(retainCredentials))
+                  } else if (name === 'browser.allow_outgoing_connections') {
+                    // Use isConfigValFalsy to cast undefined to true
+                    value = !isConfigValFalsy(value)
+                  } else if (name === 'dbms.security.auth_enabled') {
+                    let authEnabled = true
+                    if (
+                      typeof value !== 'undefined' &&
+                      isConfigValFalsy(value)
+                    ) {
+                      authEnabled = false
+                    }
+                    store.dispatch(setAuthEnabled(authEnabled))
+                  }
+                  all[name] = value
+                  return all
+                }, {})
+                store.dispatch(updateSettings(settings))
+                return Rx.Observable.of(null)
+              })
+          )
           // Cluster role
           .mergeMap(() =>
             Rx.Observable.fromPromise(
@@ -471,7 +499,6 @@ export const serverConfigEpic = (some$, store) =>
         obj[key] = item[key]
         return obj
       }, {})
-
       const storeId = jmxValues.StoreId
       const dbName = jmxValues.DatabaseName
       const storeSize = jmxValues.TotalStoreSize
@@ -481,45 +508,6 @@ export const serverConfigEpic = (some$, store) =>
         dbName,
         storeSize
       })
-    })
-    // Server config for browser
-    .do(() => {
-      const settings = getServerConfig(store.getState(), ['browser.'])
-      if (!settings) return
-      let retainCredentials = true
-      if (
-        // Check if we should wipe user creds from localstorage
-        typeof settings['browser.retain_connection_credentials'] !==
-          'undefined' &&
-        isConfigValFalsy(settings['browser.retain_connection_credentials'])
-      ) {
-        retainCredentials = false
-      }
-
-      // This assignment is workaround to have prettier
-      // play nice with standardJS
-      // Use isConfigValFalsy to cast undefined to true
-      const aocConfig = !isConfigValFalsy(
-        settings['browser.allow_outgoing_connections']
-      )
-      settings[`browser.allow_outgoing_connections`] = aocConfig
-
-      store.dispatch(setRetainCredentials(retainCredentials))
-      store.dispatch(updateSettings(settings))
-    })
-    // Server security settings
-    .do(() => {
-      const settings = getServerConfig(store.getState(), ['dbms.security'])
-      if (!settings) return
-      const authEnabledSetting = 'dbms.security.auth_enabled'
-      let authEnabled = true
-      if (
-        typeof settings[authEnabledSetting] !== 'undefined' &&
-        isConfigValFalsy(settings[authEnabledSetting])
-      ) {
-        authEnabled = false
-      }
-      store.dispatch(setAuthEnabled(authEnabled))
     })
     .mapTo({ type: 'NOOP' })
 

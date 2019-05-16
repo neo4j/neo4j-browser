@@ -71,9 +71,6 @@ RETURN {name: 'Kernel', data: collect(attributes)} as result
 UNION ALL
 CALL dbms.queryJmx("org.neo4j:instance=*,name=Store file sizes") yield attributes
 RETURN {name: 'Store file sizes', data: collect(attributes)} as result
-UNION ALL
-CALL dbms.queryJmx("org.neo4j:instance=*,name=Configuration") yield attributes
-RETURN {name: 'Configuration', data: collect(attributes)} as result
 `
 
 const fetchJmxValues = store => {
