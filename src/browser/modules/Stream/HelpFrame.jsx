@@ -20,29 +20,44 @@
 import React from 'react'
 import Slide from '../Guides/Slide'
 import * as html from '../Help/html'
+import * as chapters from '../Help'
 import Directives from 'browser-components/Directives'
-import FrameTemplate from './FrameTemplate'
+import FrameTemplate from '../Frame/FrameTemplate'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
+import { H3 } from 'browser-components/headers'
+import { Lead } from 'browser-components/Text'
+
+const Aside = ({ title, subtitle }) => {
+  return title ? (
+    <React.Fragment>
+      {title && <H3>{title}</H3>}
+      {subtitle && <Lead>{subtitle}</Lead>}
+    </React.Fragment>
+  ) : null
+}
 
 const HelpFrame = ({ frame }) => {
   let help = 'Help topic not specified'
+  let aside
   if (frame.result) {
     help = <Slide html={frame.result} />
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
-      const content = html.default[helpTopic]
+      const { title, subtitle, content } = chapters.default[helpTopic]
       if (content !== undefined) {
-        help = <Slide html={content} />
+        aside = title ? <Aside title={title} subtitle={subtitle} /> : null
+        help = <Slide content={content} />
       } else {
-        help = <Slide html={html.default['_unfound']} />
+        help = <Slide content={html.default['_unfound']} />
       }
     }
   }
   return (
     <FrameTemplate
-      className='helpFrame'
+      className='helpFrame help'
       header={frame}
+      aside={aside}
       contents={<Directives content={help} />}
     />
   )

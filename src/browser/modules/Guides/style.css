@@ -209,7 +209,7 @@
     }
   }
   & .example {
-    padding-left: 25%;
+    margin-top: 1rem;
   }
   & .links {
     display: table;

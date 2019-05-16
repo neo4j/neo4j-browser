@@ -285,44 +285,48 @@ export const ActionButton = props => {
 }
 
 const BaseCarouselButton = styled.button`
-  order: 1;
-  background-color: rgb(34, 34, 34);
-  border: 3px solid rgb(255, 255, 255);
-  color: rgb(255, 255, 255);
-  cursor: pointer;
-  margin: 0 20px;
-  font-family: ${props => props.theme.primaryFontFamily};
-  font-size: 60px;
-  font-weight: 100;
-  height: 40px;
-  min-height: 40px;
+  background-color: rgba(34, 34, 34, 0.5);
   border-radius: 50%;
-  line-height: 0;
-  opacity: 0.5;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  text-shadow: rgba(0, 0, 0, 0.6) 0px 1px 2px;
-  top: 130px;
-  width: 40px;
-  min-width: 40px;
-  -webkit-font-smoothing: antialiased;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  border: 0;
   user-select: none;
-  &:hover {
-    color: #fff;
-    text-decoration: none;
-    filter: alpha(opacity=90);
-    outline: 0;
-    opacity: 0.9;
+  outline: none;
+
+  &.previous-slide {
+    margin-right: 2rem;
+
+    svg {
+      margin-right: 2px;
+    }
   }
-  &:focus {
-    outline: none;
+  &.next-slide {
+    margin-left: 2rem;
+
+    svg {
+      margin-left: 2px;
+    }
+  }
+
+  /* &:focus, */
+  &:hover {
+    background-color: rgba(34, 34, 34, 0.9);
+  }
+
+  i,
+  span {
+    display: flex;
   }
 `
 const CarouselButtonOverlay = styled.span`
-  position: absolute;
+  /* position: absolute;
   top: 5px;
-  left: 8px;
+  left: 8px; */
 `
 export const CarouselButton = props => {
   const { children, ...rest } = props

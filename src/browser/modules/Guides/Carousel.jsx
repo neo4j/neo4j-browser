@@ -24,7 +24,6 @@ import {
   SlidePreviousIcon,
   SlideNextIcon
 } from 'browser-components/icons/Icons'
-import Render from 'browser-components/Render'
 import CarouselSlidePicker from './CarouselSlidePicker'
 import {
   StyledCarousel,
@@ -62,36 +61,42 @@ export default class Carousel extends Component {
     return (
       <StyledCarousel data-testid='carousel'>
         <StyledCarouselButtonContainer>
-          <Render if={this.state.visibleSlide !== 0}>
-            <StyledCarouselLeft>
-              <CarouselButton
-                data-testid='previousSlide'
-                onClick={this.prev.bind(this)}
-              >
-                <SlidePreviousIcon />
-              </CarouselButton>
-            </StyledCarouselLeft>
-          </Render>
-          <Render if={this.state.visibleSlide !== this.slides.length - 1}>
-            <StyledCarouselRight>
-              <CarouselButton
-                data-testid='nextSlide'
-                onClick={this.next.bind(this)}
-              >
-                <SlideNextIcon />
-              </CarouselButton>
-            </StyledCarouselRight>
-          </Render>
-        </StyledCarouselButtonContainer>
-        <SlideContainer>
-          {this.getSlide(this.state.visibleSlide)}
-        </SlideContainer>
-        <SlideContainer>
+          <StyledCarouselLeft
+            className={this.state.visibleSlide === 0 ? 'is-hidden' : ''}
+          >
+            <CarouselButton
+              className='previous-slide'
+              data-testid='previousSlide'
+              disabled={this.state.visibleSlide === 0}
+              onClick={this.prev.bind(this)}
+            >
+              <SlidePreviousIcon />
+            </CarouselButton>
+          </StyledCarouselLeft>
           <CarouselSlidePicker
             slides={this.slides}
             visibleSlide={this.state.visibleSlide}
             onClickEvent={slideNumber => this.goToSlide(slideNumber)}
           />
+          <StyledCarouselRight
+            className={
+              this.state.visibleSlide === this.slides.length - 1
+                ? 'is-hidden'
+                : ''
+            }
+          >
+            <CarouselButton
+              className='next-slide'
+              data-testid='nextSlide'
+              disabled={this.state.visibleSlide === this.slides.length - 1}
+              onClick={this.next.bind(this)}
+            >
+              <SlideNextIcon />
+            </CarouselButton>
+          </StyledCarouselRight>
+        </StyledCarouselButtonContainer>
+        <SlideContainer>
+          {this.getSlide(this.state.visibleSlide)}
         </SlideContainer>
       </StyledCarousel>
     )

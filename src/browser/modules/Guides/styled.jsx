@@ -27,24 +27,31 @@ export const SlideContainer = styled.div`
   display: inline-block;
 `
 export const StyledCarouselLeft = styled.div`
-  float: left;
+  &.is-hidden {
+    pointer-events: none;
+    visibility: hidden;
+  }
 `
 export const StyledCarouselRight = styled.div`
-  float: right;
+  &.is-hidden {
+    pointer-events: none;
+    visibility: hidden;
+  }
 `
+
 export const StyledCarouselButtonContainer = styled.div`
-  margin-top: -40px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
 `
 const CarouselIndicator = styled.li`
-  display: inline-block;
   width: 10px;
   height: 10px;
-  margin: 1px;
-  text-indent: -999px;
+  margin: 0 3px;
   cursor: pointer;
-  background-color: transparent;
-  border: 1px solid #fff;
-  border-radius: 10px;
+  border-radius: 50%;
   cursor: pointer;
   background-color: rgba(188, 195, 207, 0.64);
 `
@@ -54,12 +61,17 @@ export const CarouselIndicatorInactive = styled(CarouselIndicator)`
   }
 `
 export const CarouselIndicatorActive = styled(CarouselIndicator)`
-  width: 12px;
-  height: 12px;
   background-color: #428bca;
+  border: 0;
+  transform: scale(1.2);
 `
 export const StyledUl = styled.ul`
-  margin: 15px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding-left: 0 !important;
 `
 
 export const StyledSlide = styled.div`
