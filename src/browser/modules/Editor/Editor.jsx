@@ -90,7 +90,8 @@ export class Editor extends Component {
       nextState.contentId === this.state.contentId &&
       nextState.editorHeight === this.state.editorHeight &&
       shallowEquals(nextState.notifications, this.state.notifications) &&
-      deepEquals(nextProps.schema, this.props.schema)
+      deepEquals(nextProps.schema, this.props.schema) &&
+      nextProps.useDb === this.props.useDb
     )
   }
   focusEditor () {
@@ -333,7 +334,7 @@ export class Editor extends Component {
     }
   }
 
-  lineNumberFormatter (line) {
+  lineNumberFormatter = line => {
     const useDbString = this.props.useDb || ''
     if (!this.codeMirror || this.codeMirror.lineCount() === 1) {
       return `${useDbString}$`
@@ -360,7 +361,7 @@ export class Editor extends Component {
       lineWrapping: true,
       autofocus: true,
       smartIndent: false,
-      lineNumberFormatter: this.lineNumberFormatter.bind(this),
+      lineNumberFormatter: this.lineNumberFormatter,
       lint: this.props.enableEditorLint,
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
