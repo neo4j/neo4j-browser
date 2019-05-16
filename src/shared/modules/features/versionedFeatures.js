@@ -39,8 +39,21 @@ export const getShowCurrentUserProcedure = state => {
   if (!semver.valid(serverVersion)) {
     return pre4
   }
-  if (semver.gt(serverVersion, NEO4J_4_0)) {
+  if (semver.gte(serverVersion, NEO4J_4_0)) {
     return 'CALL dbms.showCurrentUser()'
+  }
+  return pre4
+}
+
+export const getDbClusterRole = state => {
+  const pre4 = 'CALL dbms.cluster.role() YIELD role'
+  const serverVersion = getVersion(state)
+  if (!semver.valid(serverVersion)) {
+    return pre4
+  }
+  if (semver.gte(serverVersion, NEO4J_4_0)) {
+    const db = getUseDb(state)
+    return `CALL dbms.cluster.role("${db}") YIELD role`
   }
   return pre4
 }

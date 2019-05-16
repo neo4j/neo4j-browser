@@ -39,7 +39,8 @@ import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
   canSendTxMetadata,
-  hasMultiDbSupport
+  hasMultiDbSupport,
+  getDbClusterRole
 } from '../features/versionedFeatures'
 
 export const NAME = 'meta'
@@ -410,7 +411,7 @@ export const dbMetaEpic = (some$, store) =>
           .mergeMap(() =>
             Rx.Observable.fromPromise(
               bolt.directTransaction(
-                'CALL dbms.cluster.role() YIELD role',
+                getDbClusterRole(store.getState()),
                 {},
                 {
                   useCypherThread: shouldUseCypherThread(store.getState()),
