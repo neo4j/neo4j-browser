@@ -19,7 +19,8 @@
  */
 
 import semver from 'semver'
-import { getVersion } from '../dbMeta/dbMetaDuck'
+import { getVersion, getActiveDbName } from '../dbMeta/dbMetaDuck'
+import { getUseDb } from '../connections/connectionsDuck'
 
 const NEO4J_TX_METADATA_VERSION = '3.5.0-alpha01'
 const NEO4J_4_0 = '4.0.0-alpha01'
@@ -49,8 +50,19 @@ export const hasMultiDbSupport = state => {
   if (!semver.valid(serverVersion)) {
     return false
   }
-  if (semver.gt(serverVersion, NEO4J_4_0)) {
+  if (semver.gte(serverVersion, NEO4J_4_0)) {
     return true
   }
   return false
+}
+
+export const getUsedDbName = state => {
+  const serverVersion = getVersion(state)
+  if (!semver.valid(serverVersion)) {
+    return undefined
+  }
+  if (semver.gte(serverVersion, NEO4J_4_0)) {
+    return getUseDb(state)
+  }
+  return getActiveDbName(state)
 }

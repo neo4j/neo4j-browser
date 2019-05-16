@@ -23,7 +23,6 @@ import { withBus } from 'react-suber'
 import {
   getVersion,
   getEdition,
-  getDbName,
   getStoreSize,
   getClusterRole
 } from 'shared/modules/dbMeta/dbMetaDuck'
@@ -43,6 +42,7 @@ import {
   StyledValueUCFirst,
   Link
 } from './styled'
+import { getUsedDbName } from 'shared/modules/features/versionedFeatures'
 
 export const DatabaseKernelInfo = ({
   role,
@@ -111,7 +111,7 @@ const mapStateToProps = store => {
   return {
     version: getVersion(store),
     edition: getEdition(store),
-    dbName: getDbName(store),
+    dbName: getUsedDbName(store),
     storeSize: getStoreSize(store),
     role: getClusterRole(store)
   }

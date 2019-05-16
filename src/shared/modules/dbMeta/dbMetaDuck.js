@@ -22,7 +22,6 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { getJmxValues, UPDATE_JMX_VALUES } from 'shared/modules/jmx/jmxDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
@@ -32,7 +31,9 @@ import {
   UPDATE_CONNECTION_STATE,
   setRetainCredentials,
   setAuthEnabled,
-  onLostConnection
+  onLostConnection,
+  getUseDb,
+  useDb
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
@@ -76,7 +77,6 @@ export function getMetaInContext (state, context) {
 export const getVersion = state =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : 0
 export const getEdition = state => state[NAME].server.edition
-export const getDbName = state => state[NAME].server.dbName
 export const getStoreSize = state => state[NAME].server.storeSize
 export const getClusterRole = state => state[NAME].role
 export const isEnterprise = state => state[NAME].server.edition === 'enterprise'
@@ -101,7 +101,8 @@ export const shouldRetainConnectionCredentials = state => {
   return !isConfigValFalsy(conf)
 }
 export const getDatabases = state => (state[NAME] || initialState).databases
-
+export const getActiveDbName = state =>
+  ((state[NAME] || {}).settings || {})['dbms.active_database']
 /**
  * Helpers
  */
@@ -185,8 +186,6 @@ const initialState = {
   server: {
     version: null,
     edition: null,
-    storeId: null,
-    dbName: null,
     storeSize: null
   },
   databases: [],
@@ -392,6 +391,13 @@ export const dbMetaEpic = (some$, store) =>
                       authEnabled = false
                     }
                     store.dispatch(setAuthEnabled(authEnabled))
+                  } else if (name === 'dbms.default_database') {
+                    // name of default db Neo4j >= 4.0
+
+                    // if no db selected, select the default one
+                    if (!getUseDb(store.getState())) {
+                      store.dispatch(useDb(value))
+                    }
                   }
                   all[name] = value
                   return all
@@ -471,45 +477,6 @@ export const dbMetaEpic = (some$, store) =>
           .mapTo({ type: DB_META_DONE })
       )
     })
-
-export const serverConfigEpic = (some$, store) =>
-  some$
-    .ofType(UPDATE_JMX_VALUES)
-    // Version and edition
-    .do(() => {
-      const jmxValueResult = getJmxValues(store.getState(), [
-        ['Kernel', 'StoreId'],
-        ['Kernel', 'DatabaseName'],
-        ['Store file sizes', 'TotalStoreSize']
-      ])
-      if (
-        !jmxValueResult ||
-        jmxValueResult.filter(value => !!value).length === 0
-      ) {
-        return store.dispatch({
-          type: UPDATE_SERVER,
-          storeId: 'unknown'
-        })
-      }
-      const jmxValues = jmxValueResult.reduce((obj, item) => {
-        if (!item) {
-          return obj
-        }
-        const key = Object.keys(item)[0]
-        obj[key] = item[key]
-        return obj
-      }, {})
-      const storeId = jmxValues.StoreId
-      const dbName = jmxValues.DatabaseName
-      const storeSize = jmxValues.TotalStoreSize
-      store.dispatch({
-        type: UPDATE_SERVER,
-        storeId,
-        dbName,
-        storeSize
-      })
-    })
-    .mapTo({ type: 'NOOP' })
 
 export const clearMetaOnDisconnectEpic = (some$, store) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })

@@ -32,7 +32,6 @@ import userReducer, {
   NAME as currentUser
 } from 'shared/modules/currentUser/currentUserDuck'
 import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/dbMetaDuck'
-import jmxReducer, { NAME as jmx } from 'shared/modules/jmx/jmxDuck'
 import favoritesReducer, {
   NAME as documents
 } from 'shared/modules/favorites/favoritesDuck'
@@ -75,7 +74,6 @@ export default {
   [history]: historyReducer,
   [currentUser]: userReducer,
   [dbMeta]: dbMetaReducer,
-  [jmx]: jmxReducer,
   [documents]: favoritesReducer,
   [folders]: foldersReducer,
   [sidebar]: sidebarReducer,

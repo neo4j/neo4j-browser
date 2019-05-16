@@ -194,7 +194,7 @@ let memoryPassword = ''
 // Reducer
 export default function (state = initialState, action) {
   if (action.type === APP_START) {
-    state = { ...initialState, ...state }
+    state = { ...initialState, ...state, useDb: initialState.useDb }
   }
 
   switch (action.type) {
