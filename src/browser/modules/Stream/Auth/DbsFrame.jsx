@@ -44,15 +44,14 @@ export const DbsFrame = props => {
         <span>
           <React.Fragment>
             <H3>Available databases</H3>
-            Databases to use for the current user.
+            Databases available for the current user.
           </React.Fragment>
         </span>
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
         <StyledConnectionBody>
           <Render if={Array.isArray(dbs) && dbs.length}>
-            These databases are available for you to target. Click on one to
-            switch to using it.
+            Click on one to start using it:
             <UnstyledList>
               {dbs.map(db => {
                 return (
