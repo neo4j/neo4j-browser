@@ -79,6 +79,7 @@ export const StyledFrameAside = styled.div`
   font-size: 16px;
   font-weight: 300;
   color: ${props => props.theme.asideText};
+  min-width: 150px;
 `
 
 export const StyledFrameContents = styled.div`

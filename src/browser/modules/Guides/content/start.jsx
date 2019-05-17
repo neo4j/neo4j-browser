@@ -4,7 +4,7 @@ const title = 'Neo4j'
 const subtitle = ''
 const content = (
   <React.Fragment>
-    <div>
+    <div className='teasers'>
       <div className='teaser teaser-3'>
         <h3>Learn about Neo4j</h3>
         <p className='lead'>A graph epiphany awaits you.</p>

@@ -15,6 +15,8 @@
 }
 .frame-title-logo {
   max-width: 200px;
+  min-width: 100px;
+  width: 100%;
 }
 .img-responsive {
   display: inline-block;
@@ -298,14 +300,21 @@
     border: 1px solid #dadada;
     display: inline-block;
   }
+  .teasers {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
   .teaser {
+    display: flex;
+    flex-direction: column;
     margin: 0.5em;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 270px;
-    float: left;
     position: relative;
+    overflow: hidden;
 
     &.teaser-2 {
       width: 45%;
@@ -325,16 +334,15 @@
     }
     &.teaser-3 {
       width: 30%;
-      min-width: 190px;
+      min-width: 220px;
       overflow: hidden;
     }
     button {
       font-weight: 600;
-      position: absolute;
-      bottom: 10px;
       width: 90%;
-      left: 5%;
       outline: none;
+      margin-top: auto;
+      align-self: center;
     }
     .icon {
       float: left;
@@ -370,8 +378,7 @@
       margin-top: 5px;
     }
     .icon-holder {
-      margin-top: 10px;
-      max-height: 130px;
+      margin: 10px 0 20px 0;
       overflow: hidden;
     }
   }
