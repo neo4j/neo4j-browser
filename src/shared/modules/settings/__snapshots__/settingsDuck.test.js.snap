@@ -6,6 +6,7 @@ Object {
   "browserSyncDebugServer": null,
   "cmdchar": ":",
   "connectionTimeout": 30000,
+  "codeFontLigatures": true,
   "editorAutocomplete": true,
   "editorLint": false,
   "enableMultiStatementMode": false,

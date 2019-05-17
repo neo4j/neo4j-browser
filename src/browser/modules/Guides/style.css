@@ -43,6 +43,10 @@
     white-space: pre-wrap;
     word-break: break-all;
     word-wrap: break-word;
+
+    .disable-font-ligatures & {
+      font-variant-ligatures: none;
+    }
   }
   & th {
     min-width: 50px;
@@ -261,6 +265,10 @@
     color: #428bca;
     cursor: pointer;
     text-decoration: none;
+
+    .disable-font-ligatures & {
+      font-variant-ligatures: none;
+    }
   }
   & pre {
     color: #333;

@@ -155,6 +155,9 @@ export const StyledFrameCommand = styled.label`
   &:before {
     content: '$ ';
   }
+  .disable-font-ligatures & {
+    font-variant-ligatures: none;
+  }
 `
 
 export const StyledFrameStatusbarText = styled.label`
@@ -262,6 +265,10 @@ export const StyledPreformattedArea = styled.pre`
   border: none;
   background-color: ${props => props.theme.primaryBackground};
   color: ${props => props.theme.preText};
+
+  .disable-font-ligatures & {
+    font-variant-ligatures: none;
+  }
 `
 
 export const ErrorText = styled.span`

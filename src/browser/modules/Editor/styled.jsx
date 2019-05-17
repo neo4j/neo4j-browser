@@ -73,6 +73,10 @@ const BaseEditorWrapper = styled.div`
     background-color: ${props => props.theme.editorBackground} !important;
     color: ${props => props.theme.editorCommandColor};
   }
+
+  .disable-font-ligatures & {
+    font-variant-ligatures: none;
+  }
 `
 
 export const EditorWrapper = styled(BaseEditorWrapper)`

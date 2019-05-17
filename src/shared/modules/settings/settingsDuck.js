@@ -72,6 +72,7 @@ export const shouldEditorAutocomplete = state =>
 export const shouldUseCypherThread = state => state[NAME].useCypherThread
 export const getConnectionTimeout = state =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
+export const codeFontLigatures = state => state[NAME].codeFontLigatures
 
 const initialState = {
   cmdchar: ':',
@@ -87,6 +88,7 @@ const initialState = {
   autoComplete: true,
   scrollToTop: true,
   maxFrames: 30,
+  codeFontLigatures: true,
   editorAutocomplete: true,
   editorLint: false,
   useCypherThread: true,
