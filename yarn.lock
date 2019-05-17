@@ -1703,6 +1703,13 @@ atob@^2.1.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=
 
+attr-accept@^1.1.3:
+  version "1.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/attr-accept/-/attr-accept-1.1.3.tgz#48230c79f93790ef2775fcec4f0db0f5db41ca52"
+  integrity sha1-SCMMefk3kO8ndfzsTw2w9dtBylI=
+  dependencies:
+    core-js "^2.5.0"
+
 autoprefixer@^7.1.1, autoprefixer@^7.1.4:
   version "7.2.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/autoprefixer/-/autoprefixer-7.2.6.tgz#256672f86f7c735da849c4f07d008abb056067dc"
@@ -7137,13 +7144,13 @@ neo-async@^2.5.0, neo-async@^2.6.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha1-rCetpmFn+ohJpq3dg39rGJrSCBw=
 
-neo4j-driver@^2.0.0-alpha01:
-  version "2.0.0-alpha01"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-2.0.0-alpha01.tgz#8ee340da1e2ab5ad99bb707d5fbcc5184898a758"
-  integrity sha1-juNA2h4qta2Zu3B9X7zFGEiYp1g=
+neo4j-driver@^2.0.0-alpha02:
+  version "2.0.0-alpha02"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-2.0.0-alpha02.tgz#ec3148a62fc7fd67f61f2bdf8e608ac35a30902d"
+  integrity sha1-7DFIpi/H/Wf2HyvfjmCKw1owkC0=
   dependencies:
     "@babel/runtime" "^7.4.4"
-    text-encoding-utf-8 "^1.0.2"
+    text-encoding "^0.7.0"
     uri-js "^4.2.2"
 
 nice-try@^1.0.4:
@@ -10265,10 +10272,10 @@ test-exclude@^5.2.3:
     read-pkg-up "^4.0.0"
     require-main-filename "^2.0.0"
 
-text-encoding-utf-8@^1.0.2:
-  version "1.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/text-encoding-utf-8/-/text-encoding-utf-8-1.0.2.tgz#585b62197b0ae437e3c7b5d0af27ac1021e10d13"
-  integrity sha1-WFtiGXsK5Dfjx7XQryesECHhDRM=
+text-encoding@^0.7.0:
+  version "0.7.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/text-encoding/-/text-encoding-0.7.0.tgz#f895e836e45990624086601798ea98e8f36ee643"
+  integrity sha1-+JXoNuRZkGJAhmAXmOqY6PNu5kM=
 
 text-table@~0.2.0:
   version "0.2.0"
