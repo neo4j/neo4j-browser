@@ -53,7 +53,7 @@ export const base = {
   drawerHeaderFontFamily:
     "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif",
   streamlineFontFamily: 'streamline',
-  editorFont: '"Inconsolata", "Monaco", "Lucida Console", Courier, monospace;',
+  editorFont: '"Fira Code", "Monaco", "Lucida Console", Courier, monospace;',
 
   // Headers
   primaryHeaderText: '#fff',

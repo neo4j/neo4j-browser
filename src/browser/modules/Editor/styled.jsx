@@ -63,7 +63,7 @@ const BaseEditorWrapper = styled.div`
   flex: auto;
   padding: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
-  font-family: Monaco, 'Courier New', Terminal, monospace;
+  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   min-height: ${props =>
     props.expanded
       ? '100vh'
