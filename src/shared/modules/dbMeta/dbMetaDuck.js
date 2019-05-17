@@ -312,8 +312,11 @@ export const dbMetaEpic = (some$, store) =>
               return Rx.Observable.of(null)
             })
           )
-          .filter(r => r)
-          .do(res => store.dispatch(updateMeta(res)))
+          .do(res => {
+            if (res) {
+              store.dispatch(updateMeta(res))
+            }
+          })
           // Server version and edition
           .mergeMap(() =>
             Rx.Observable.fromPromise(
