@@ -253,7 +253,7 @@ export const StyledErrorH4 = styled.h4`
 export const StyledBr = styled.br``
 
 export const StyledPreformattedArea = styled.pre`
-  font-family: Monaco, 'Courier New', Terminal, monospace;
+  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   font-size: 14px;
   white-space: pre-wrap;
   padding: 12px 16px;

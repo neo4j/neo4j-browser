@@ -23,8 +23,9 @@ import { withBus } from 'react-suber'
 import { fetchGuideFromWhitelistAction } from 'shared/modules/commands/commandsDuck'
 
 import Guides from '../Guides/Guides'
-import * as html from '../Guides/html'
-import FrameTemplate from './FrameTemplate'
+import * as guides from '../Guides'
+import FrameTemplate from '../Frame/FrameTemplate'
+import FrameAside from '../Frame/FrameAside'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { ErrorsView } from './CypherFrame/ErrorsView'
 
@@ -32,9 +33,11 @@ export class PlayFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      guide: null
+      guide: null,
+      aside: null
     }
   }
+
   componentDidMount () {
     if (this.props.frame.result) {
       // Found remote guide
@@ -50,9 +53,7 @@ export class PlayFrame extends Component {
     ) {
       // Not found remotely (or other error)
       if (this.props.frame.response.status === 404) {
-        return this.setState({
-          guide: <Guides withDirectives html={html['unfound']} />
-        })
+        return this.unfound(guides['unfound'])
       }
       return this.setState({
         guide: (
@@ -84,11 +85,18 @@ export class PlayFrame extends Component {
       splitStringOnFirst(this.props.frame.cmd, ' ')[1] || 'start'
     ).trim()
     const guideName = topicInput.toLowerCase().replace(/\s|-/g, '')
-    if (html[guideName] !== undefined) {
-      // Found it locally
-      this.setState({ guide: <Guides withDirectives html={html[guideName]} /> })
+    const guide = guides[guideName] || {}
+
+    // Check if content exists
+    if (Object.keys(guide).length) {
+      const { content, title, subtitle } = guide
+      this.setState({
+        guide: <Guides withDirectives content={content} />,
+        aside: title ? <FrameAside title={title} subtitle={subtitle} /> : null
+      })
       return
     }
+
     // Not found remotely or locally
     // Try to find it remotely by name
     if (this.props.bus) {
@@ -96,24 +104,29 @@ export class PlayFrame extends Component {
       this.props.bus.self(action.type, action, res => {
         if (!res.success) {
           // No luck
-          return this.setState({
-            guide: <Guides withDirectives html={html['unfound']} />
-          })
+          return this.unfound(guides['unfound'])
         }
         this.setState({ guide: <Guides withDirectives html={res.result} /> })
       })
     } else {
       // No bus. Give up
-      return this.setState({
-        guide: <Guides withDirectives html={html['unfound']} />
-      })
+      return this.unfound(guides['unfound'])
     }
   }
+
+  unfound ({ content, title, subtitle }) {
+    this.setState({
+      guide: <Guides withDirectives content={content} />,
+      aside: <FrameAside title={title} subtitle={subtitle} />
+    })
+  }
+
   render () {
     return (
       <FrameTemplate
         className='playFrame'
         header={this.props.frame}
+        aside={this.state.aside}
         contents={this.state.guide}
       />
     )

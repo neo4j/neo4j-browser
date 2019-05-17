@@ -19,6 +19,7 @@
  */
 
 import React, { Component } from 'react'
+import Directives from 'browser-components/Directives'
 import { CarouselButton } from 'browser-components/buttons'
 import {
   SlidePreviousIcon,
@@ -96,7 +97,11 @@ export default class Carousel extends Component {
           </StyledCarouselRight>
         </StyledCarouselButtonContainer>
         <SlideContainer>
-          {this.getSlide(this.state.visibleSlide)}
+          {this.props.withDirectives ? (
+            <Directives content={this.getSlide(this.state.visibleSlide)} />
+          ) : (
+            this.getSlide(this.state.visibleSlide)
+          )}
         </SlideContainer>
       </StyledCarousel>
     )

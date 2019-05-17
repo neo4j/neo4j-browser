@@ -285,24 +285,30 @@ export const ActionButton = props => {
 }
 
 const BaseCarouselButton = styled.button`
-  background-color: rgba(34, 34, 34, 0.5);
+  background-color: rgba(20, 20, 20, 0.75);
   border-radius: 50%;
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 32px;
-  width: 32px;
+  height: 28px;
+  width: 28px;
   padding: 0;
   border: 0;
   user-select: none;
   outline: none;
+
+  &:disabled {
+    background-color: rgba(20, 20, 20, 0.1);
+  }
 
   &.previous-slide {
     margin-right: 2rem;
 
     svg {
       margin-right: 2px;
+      height: 12px !important;
+      width: 12px !important;
     }
   }
   &.next-slide {
@@ -310,12 +316,14 @@ const BaseCarouselButton = styled.button`
 
     svg {
       margin-left: 2px;
+      height: 12px !important;
+      width: 12px !important;
     }
   }
 
   /* &:focus, */
   &:hover {
-    background-color: rgba(34, 34, 34, 0.9);
+    background-color: rgba(20, 20, 20, 0.6);
   }
 
   i,

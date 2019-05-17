@@ -30,6 +30,7 @@ export default class Guides extends Component {
     this.ref = React.createRef()
     this.state = { slides: null, firstRender: true }
   }
+
   componentDidMount () {
     if (!this.ref) return
     if (!this.ref.current) return
@@ -44,35 +45,24 @@ export default class Guides extends Component {
     }
     this.setState({ slides: reactSlides, firstRender: false })
   }
+
   render () {
+    const { content, html, withDirectives } = this.props
+
+    if (content !== undefined) {
+      return <Slide key={uuid.v4()} content={content} />
+    }
+
     if (this.state.slides && Array.isArray(this.state.slides)) {
       const ListOfSlides = this.state.slides.map(slide => {
-        const slideComponent = (
-          <Slide key={uuid.v4()} html={slide.html.innerHTML} />
-        )
-        if (this.props.withDirectives) {
-          return (
-            <div key={uuid.v4()}>
-              <Directives content={slideComponent} />
-            </div>
-          )
-        } else {
-          return <div key={uuid.v4()}>{slideComponent}</div>
-        }
+        return <Slide key={uuid.v4()} html={slide.html.innerHTML} />
       })
-      return (
-        <Carousel
-          slides={ListOfSlides}
-          withDirectives={this.props.withDirectives}
-        />
-      )
+      return <Carousel slides={ListOfSlides} withDirectives={withDirectives} />
     }
-    if (this.props.withDirectives) {
-      return (
-        <Directives content={<Slide ref={this.ref} html={this.props.html} />} />
-      )
+    if (withDirectives) {
+      return <Directives content={<Slide ref={this.ref} html={html} />} />
     } else {
-      return <Slide ref={this.ref} html={this.props.html} />
+      return <Slide ref={this.ref} html={html} />
     }
   }
 }

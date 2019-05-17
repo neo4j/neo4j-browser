@@ -29,13 +29,13 @@ export const SlideContainer = styled.div`
 export const StyledCarouselLeft = styled.div`
   &.is-hidden {
     pointer-events: none;
-    visibility: hidden;
+    /* visibility: hidden; */
   }
 `
 export const StyledCarouselRight = styled.div`
   &.is-hidden {
     pointer-events: none;
-    visibility: hidden;
+    /* visibility: hidden; */
   }
 `
 
@@ -44,20 +44,21 @@ export const StyledCarouselButtonContainer = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 `
 const CarouselIndicator = styled.li`
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   margin: 0 3px;
   cursor: pointer;
   border-radius: 50%;
   cursor: pointer;
-  background-color: rgba(188, 195, 207, 0.64);
+  background-color: rgba(20, 20, 20, 0.5);
 `
 export const CarouselIndicatorInactive = styled(CarouselIndicator)`
   &:hover {
-    background-color: rgba(188, 195, 207, 1);
+    background-color: rgba(20, 20, 20, 0.9);
+    transform: scale(1.2);
   }
 `
 export const CarouselIndicatorActive = styled(CarouselIndicator)`

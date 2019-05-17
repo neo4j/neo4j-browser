@@ -13,13 +13,22 @@
   order: 1;
   top: 30px
 }
+.frame-title-logo {
+  max-width: 200px;
+}
+.img-responsive {
+  display: inline-block;
+}
+.text-center {
+  text-align: center;
+}
 .slide {
   overflow-y: auto;
   font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;
   font-size: 14px;
   font-weight: 300;
-  padding-top: 2em;
+  /* padding-top: 2em; */
 
   & code,
   & .code,
@@ -27,7 +36,7 @@
   & pre,
   & samp,
   & figure pre {
-    font-family: "Inconsolata", "Monaco", "Lucida Console", Courier, monospace;
+    font-family: "Fira Code", "Monaco", "Lucida Console", Courier, monospace;
     background: #f3f3f3;
     padding-left: 0.25em;
     padding-right: 0.25em;
@@ -243,7 +252,7 @@
     border-radius: 3px;
     border: 1px solid #dadada;
     display: inline-block;
-    font-family: Monaco,"Courier New",Terminal,monospace;
+    font-family:  "Fira Code",Monaco,"Courier New",Terminal,monospace;
     font-size: 12px;
     line-height: 18px;
     margin-bottom: 5px;
