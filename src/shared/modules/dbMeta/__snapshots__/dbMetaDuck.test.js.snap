@@ -13,9 +13,7 @@ Object {
   "relationships": 0,
   "role": null,
   "server": Object {
-    "dbName": null,
     "edition": null,
-    "storeId": null,
     "storeSize": null,
     "version": null,
   },
@@ -38,9 +36,7 @@ Object {
   "relationships": 0,
   "role": null,
   "server": Object {
-    "dbName": null,
     "edition": null,
-    "storeId": null,
     "storeSize": null,
     "version": null,
   },
