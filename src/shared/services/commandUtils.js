@@ -103,7 +103,7 @@ export const transformCommandToHelpTopic = inputStr => {
     .map(trim)
     .map(replaceSpaceWithDash)
     .map(snakeToCamel)
-    .map(prependUnderscore)
+  // .map(prependUnderscore)
   return res[0]
 }
 

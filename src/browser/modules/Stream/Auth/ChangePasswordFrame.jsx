@@ -21,8 +21,8 @@
 import React, { Component } from 'react'
 
 import ConnectionForm from './ConnectionForm'
-import FrameTemplate from '../FrameTemplate'
-import FrameError from '../FrameError'
+import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameError from '../../Frame/FrameError'
 import Render from 'browser-components/Render'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'

@@ -59,8 +59,8 @@ module.exports = [
       'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
   },
   {
-    test: /\.css$/, // Guides
-    include: path.resolve(helpers.browserPath, 'modules/Guides'),
+    test: /\.css$/, // Carousel
+    include: path.resolve(helpers.browserPath, 'modules/Carousel'),
     use: [
       'style-loader',
       {
@@ -80,7 +80,7 @@ module.exports = [
     include: path.resolve(helpers.sourcePath), // css modules for component css files
     exclude: [
       path.resolve(helpers.browserPath, 'styles'),
-      path.resolve(helpers.browserPath, 'modules/Guides')
+      path.resolve(helpers.browserPath, 'modules/Carousel')
     ],
     use: [
       'style-loader',

@@ -33,9 +33,9 @@ import {
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
-import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
-import FrameError from 'browser/modules/Stream/FrameError'
-import FrameSuccess from 'browser/modules/Stream/FrameSuccess'
+import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameError from 'browser/modules/Frame/FrameError'
+import FrameSuccess from 'browser/modules/Frame/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { FormButton, StyledLink } from 'browser-components/buttons'

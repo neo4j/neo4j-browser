@@ -20,8 +20,8 @@
 import React from 'react'
 import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import Ellipsis from 'browser-components/Ellipsis'
-import { errorMessageFormater } from './errorMessageFormater'
-import { ErrorText } from './styled'
+import { errorMessageFormater } from '../Stream/errorMessageFormater'
+import { ErrorText } from '../Stream/styled'
 
 const FrameError = props => {
   if (!props || (!props.code && !props.message)) return null

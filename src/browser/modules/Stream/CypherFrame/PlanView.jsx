@@ -28,9 +28,9 @@ import { DoubleUpIcon, DoubleDownIcon } from 'browser-components/icons/Icons'
 import {
   StyledOneRowStatsBar,
   StyledRightPartial,
-  StyledLeftPartial,
-  FrameTitlebarButtonSection
+  StyledLeftPartial
 } from '../styled'
+import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import queryPlan from '../../D3Visualization/lib/visualization/components/queryPlan'
 
@@ -173,7 +173,7 @@ export class PlanStatusbar extends Component {
           </Ellipsis>
         </StyledLeftPartial>
         <StyledRightPartial>
-          <FrameTitlebarButtonSection>
+          <StyledFrameTitlebarButtonSection>
             <FrameButton
               data-testid='planCollapseButton'
               onClick={() =>
@@ -190,7 +190,7 @@ export class PlanStatusbar extends Component {
             >
               <DoubleDownIcon />
             </FrameButton>
-          </FrameTitlebarButtonSection>
+          </StyledFrameTitlebarButtonSection>
         </StyledRightPartial>
       </StyledOneRowStatsBar>
     )

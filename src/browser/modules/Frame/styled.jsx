@@ -102,3 +102,58 @@ export const StyledFrameStatusbar = styled.div`
   flex-direction: row;
   flex: none;
 `
+
+export const StyledFrameSidebar = styled.ul`
+  line-height: 33px;
+  width: 45px;
+  margin-left: -5px;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  flex: 0 0 auto;
+  border-right: ${props => props.theme.inFrameBorder};
+  background-color: ${props => props.theme.frameSidebarBackground};
+`
+
+export const StyledFrameTitlebarButtonSection = styled.ul`
+  flex: 0 0 auto;
+  margin-left: -5px;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  margin-left: auto;
+  color: ${props => props.theme.secondaryButtonText};
+`
+
+export const StyledFrameTitleBar = styled.div`
+  height: ${dim.frameTitlebarHeight}px;
+  border-bottom: ${props => props.theme.inFrameBorder};
+  line-height: ${dim.frameTitlebarHeight}px;
+  color: ${props => props.theme.frameTitlebarText};
+  display: flex;
+  flex-direction: row;
+`
+
+export const StyledFrameStatusbarText = styled.label`
+  flex: 1 1 auto;
+`
+
+export const StyledFrameCommand = styled.label`
+  font-family: ${props => props.theme.editorFont};
+  color: ${props => props.theme.secondaryButtonText};
+  font-size: 1.2em;
+  line-height: 2.2em;
+  margin: 3px 5px 3px 15px;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  &:before {
+    content: '$ ';
+  }
+  .disable-font-ligatures & {
+    font-variant-ligatures: none;
+  }
+`

@@ -20,7 +20,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import {
   StyledConnectionFrame,
   StyledConnectionAside,

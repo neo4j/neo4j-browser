@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import { StyledConnectionFrame, StyledConnectionAside } from './styled'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'

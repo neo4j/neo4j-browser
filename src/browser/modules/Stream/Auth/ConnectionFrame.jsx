@@ -20,9 +20,9 @@
 
 import React, { Component } from 'react'
 
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import ConnectionForm from './ConnectionForm'
-import FrameError from '../FrameError'
+import FrameError from '../../Frame/FrameError'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
 export const StyledStream = styled.div`
@@ -30,75 +30,7 @@ export const StyledStream = styled.div`
   padding: 0px 24px;
 `
 
-const rollDownAnimation = keyframes`
-  from {
-    transform: translate(0, -${dim.frameBodyHeight}px);
-    max-height: 0;
-  }
-  to {
-    transform: translateY(0);
-    max-height: 500px; /* Greater than a frame can be */
-  }
-`
-
 // Frames
-export const StyledFrame = styled.article`
-  width: auto;
-  background-color: ${props => props.theme.secondaryBackground};
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  animation: ${rollDownAnimation} 0.4s ease-in;
-  border: ${props => props.theme.frameBorder};
-  margin: ${props => (props.fullscreen ? '0' : '10px 0px 10px 0px')};
-  ${props => (props.fullscreen ? 'position: fixed' : null)};
-  ${props => (props.fullscreen ? 'left: 0' : null)};
-  ${props => (props.fullscreen ? 'top: 0' : null)};
-  ${props => (props.fullscreen ? 'bottom: 0' : null)};
-  ${props => (props.fullscreen ? 'right: 0' : null)};
-  ${props => (props.fullscreen ? 'z-index: 1030' : null)};
-`
-
-export const StyledFrameBody = styled.div`
-  min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props =>
-    props.collapsed
-      ? 0
-      : props.fullscreen
-        ? '100%'
-        : dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'};
-  display: ${props => (props.collapsed ? 'none' : 'flex')};
-  flex-direction: row;
-  width: 100%;
-`
-
-export const StyledFrameMainSection = styled.div`
-  min-width: 0;
-  flex: 1 1 auto;
-  height: inherit;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`
-
-export const StyledFrameContents = styled.div`
-  overflow: auto;
-  min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props =>
-    props.fullscreen
-      ? '100vh'
-      : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
-  ${props => (props.fullscreen ? 'height: 100vh' : null)};
-  flex: auto;
-`
-
-export const StyledFrameStatusbar = styled.div`
-  border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight + 1}px;
-  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
-  display: flex;
-  flex-direction: row;
-  flex: none;
-`
-
 export const PaddedDiv = styled.div`
   padding: 0 20px 20px 20px;
   padding-bottom: ${props =>
@@ -107,61 +39,6 @@ export const PaddedDiv = styled.div`
 
 export const PaddedTableViewDiv = styled(PaddedDiv)`
   width: 100%;
-`
-
-export const StyledFrameSidebar = styled.ul`
-  line-height: 33px;
-  width: 45px;
-  margin-left: -5px;
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  flex: 0 0 auto;
-  border-right: ${props => props.theme.inFrameBorder};
-  background-color: ${props => props.theme.frameSidebarBackground};
-`
-
-export const StyledFrameTitleBar = styled.div`
-  height: ${dim.frameTitlebarHeight}px;
-  border-bottom: ${props => props.theme.inFrameBorder};
-  line-height: ${dim.frameTitlebarHeight}px;
-  color: ${props => props.theme.frameTitlebarText};
-  display: flex;
-  flex-direction: row;
-`
-
-export const FrameTitlebarButtonSection = styled.ul`
-  flex: 0 0 auto;
-  margin-left: -5px;
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  margin-left: auto;
-  color: ${props => props.theme.secondaryButtonText};
-`
-
-export const StyledFrameCommand = styled.label`
-  font-family: ${props => props.theme.editorFont};
-  color: ${props => props.theme.secondaryButtonText};
-  font-size: 1.2em;
-  line-height: 2.2em;
-  margin: 3px 5px 3px 15px;
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: block;
-  &:before {
-    content: '$ ';
-  }
-  .disable-font-ligatures & {
-    font-variant-ligatures: none;
-  }
-`
-
-export const StyledFrameStatusbarText = styled.label`
-  flex: 1 1 auto;
 `
 
 export const DottedLineHover = styled.span`

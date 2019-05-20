@@ -20,9 +20,9 @@
 
 import React, { Component } from 'react'
 import uuid from 'uuid'
-import Slide from './Slide'
 import Directives from 'browser-components/Directives'
-import Carousel from './Carousel'
+import Carousel from '../Carousel/Carousel'
+import Slide from '../Carousel/Slide'
 
 export default class Guides extends Component {
   constructor (props) {

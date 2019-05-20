@@ -45,15 +45,17 @@ import {
   DownloadIcon
 } from 'browser-components/icons/Icons'
 import {
-  StyledFrameTitleBar,
-  StyledFrameCommand,
   DottedLineHover,
-  FrameTitlebarButtonSection,
   DropdownList,
   DropdownContent,
   DropdownButton,
   DropdownItem
 } from '../Stream/styled'
+import {
+  StyledFrameTitleBar,
+  StyledFrameTitlebarButtonSection,
+  StyledFrameCommand
+} from 'browser/modules/Frame/styled'
 import {
   downloadPNGFromSVG,
   downloadSVG
@@ -119,7 +121,7 @@ class FrameTitlebar extends Component {
             {cmd}
           </DottedLineHover>
         </StyledFrameCommand>
-        <FrameTitlebarButtonSection>
+        <StyledFrameTitlebarButtonSection>
           <Render if={this.canExport()}>
             <DropdownButton data-testid='frame-export-dropdown'>
               <DownloadIcon />
@@ -201,7 +203,7 @@ class FrameTitlebar extends Component {
           >
             <CloseIcon />
           </FrameButton>
-        </FrameTitlebarButtonSection>
+        </StyledFrameTitlebarButtonSection>
       </StyledFrameTitleBar>
     )
   }

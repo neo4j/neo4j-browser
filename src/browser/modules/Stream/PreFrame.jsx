@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import FrameTemplate from './FrameTemplate'
+import FrameTemplate from '../Frame/FrameTemplate'
 import { PaddedDiv } from './styled'
 
 const PreFrame = ({ frame }) => {

@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import bolt from 'services/bolt/bolt'
 import {
   listQueriesProcedure,
@@ -56,7 +56,7 @@ import {
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import { RefreshIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
-import FrameError from '../FrameError'
+import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class QueriesFrame extends Component {
