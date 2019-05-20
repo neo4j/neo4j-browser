@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import Carousel from '../Carousel'
+import Carousel from '../../modules/Carousel/Carousel'
 
 const slides = [
   <Fragment>

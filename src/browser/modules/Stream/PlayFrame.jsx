@@ -22,12 +22,14 @@ import React, { Component } from 'react'
 import { withBus } from 'react-suber'
 import { fetchGuideFromWhitelistAction } from 'shared/modules/commands/commandsDuck'
 
-import Guides from '../Guides/Guides'
-import * as guides from '../Guides'
+import Docs from '../Docs/Docs'
+import docs from '../../documentation'
 import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { ErrorsView } from './CypherFrame/ErrorsView'
+
+const { guides } = docs
 
 export class PlayFrame extends Component {
   constructor (props) {
@@ -42,7 +44,7 @@ export class PlayFrame extends Component {
     if (this.props.frame.result) {
       // Found remote guide
       this.setState({
-        guide: <Guides withDirectives html={this.props.frame.result} />
+        guide: <Docs withDirectives html={this.props.frame.result} />
       })
       return
     }
@@ -91,7 +93,7 @@ export class PlayFrame extends Component {
     if (Object.keys(guide).length) {
       const { content, title, subtitle } = guide
       this.setState({
-        guide: <Guides withDirectives content={content} />,
+        guide: <Docs withDirectives content={content} />,
         aside: title ? <FrameAside title={title} subtitle={subtitle} /> : null
       })
       return
@@ -106,7 +108,7 @@ export class PlayFrame extends Component {
           // No luck
           return this.unfound(guides['unfound'])
         }
-        this.setState({ guide: <Guides withDirectives html={res.result} /> })
+        this.setState({ guide: <Docs withDirectives html={res.result} /> })
       })
     } else {
       // No bus. Give up
@@ -116,7 +118,7 @@ export class PlayFrame extends Component {
 
   unfound ({ content, title, subtitle }) {
     this.setState({
-      guide: <Guides withDirectives content={content} />,
+      guide: <Docs withDirectives content={content} />,
       aside: <FrameAside title={title} subtitle={subtitle} />
     })
   }

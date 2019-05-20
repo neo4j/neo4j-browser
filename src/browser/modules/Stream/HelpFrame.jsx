@@ -18,27 +18,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import Slide from '../Guides/Slide'
-import * as chapters from '../Help'
+import Docs from '../Docs/Docs'
+import docs from '../../documentation'
 import Directives from 'browser-components/Directives'
 import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
 
+const { help: chapters } = docs
+
 const HelpFrame = ({ frame }) => {
   let help = 'Help topic not specified'
   let aside
   if (frame.result) {
-    help = <Slide html={frame.result} />
+    help = <Docs html={frame.result} />
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
-      const chapter = chapters.default[helpTopic]
-        ? chapters.default[helpTopic]
-        : chapters.default['_unfound']
+      const chapter = chapters[helpTopic]
+        ? chapters[helpTopic]
+        : chapters['_unfound']
       const { title, subtitle, content } = chapter
       aside = title ? <FrameAside title={title} subtitle={subtitle} /> : null
-      help = <Slide content={content} />
+      help = <Docs content={content} />
     }
   }
   return (
