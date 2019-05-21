@@ -113,6 +113,7 @@ export function getActiveConnectionData (state) {
 export function getConnectionData (state, id) {
   if (typeof state[NAME].connectionsById[id] === 'undefined') return null
   let data = state[NAME].connectionsById[id]
+  data.db = getUseDb(state)
   if (data.username && data.password) return data
   if (!(data.username && data.password) && (memoryUsername && memoryPassword)) {
     // No retain state
