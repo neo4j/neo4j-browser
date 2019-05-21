@@ -111,15 +111,15 @@ describe('Neo4j Browser', () => {
   })
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')
-    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="drawerDBMS"]').click()
     cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).should(p => {
       expect(p).to.have.length.above(17)
     })
-    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="drawerDBMS"]').click()
   })
   it('displays user info in sidebar (when connected)', () => {
     cy.executeCommand(':clear')
-    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="drawerDBMS"]').click()
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
     cy.get('[data-testid="user-details-roles"]').should('contain', 'admin')
     cy.executeCommand(':clear')
@@ -133,7 +133,7 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
     cy.get('[data-testid="user-details-roles"]').should('contain', 'admin')
-    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="drawerDBMS"]').click()
   })
   it('will clear local storage when clicking "Clear local data"', () => {
     const scriptName = 'foo'
@@ -161,9 +161,9 @@ describe('Neo4j Browser', () => {
   })
   it('displays no user info in sidebar (when not connected)', () => {
     cy.executeCommand(':clear')
-    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="drawerDBMS"]').click()
     cy.get('[data-testid="user-details-username"]').should('have.length', 0)
     cy.get('[data-testid="user-details-roles"]').should('have.length', 0)
-    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="drawerDBMS"]').click()
   })
 })

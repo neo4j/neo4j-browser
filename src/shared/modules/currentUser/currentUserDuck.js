@@ -31,7 +31,7 @@ import {
   canSendTxMetadata,
   getShowCurrentUserProcedure
 } from '../features/versionedFeatures'
-import { UPDATE_SERVER, getVersion } from '../dbMeta/dbMetaDuck'
+import { DB_META_DONE } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
@@ -89,12 +89,8 @@ export function forceFetch () {
 export const getCurrentUserEpic = (some$, store) =>
   some$
     .ofType(CONNECTION_SUCCESS)
-    .merge(some$.ofType(UPDATE_SERVER))
+    .merge(some$.ofType(DB_META_DONE))
     .mergeMap(() => {
-      // No server versions yet, do nothing
-      if (!getVersion(store.getState())) {
-        return Rx.Observable.of({ type: 'NOOP' })
-      }
       return Rx.Observable.fromPromise(
         bolt.directTransaction(
           getShowCurrentUserProcedure(store.getState()),
