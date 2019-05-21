@@ -104,6 +104,8 @@ export const shouldRetainConnectionCredentials = state => {
 export const getDatabases = state => (state[NAME] || initialState).databases
 export const getActiveDbName = state =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
+export const getDefaultDbName = state =>
+  ((state[NAME] || {}).settings || {})['dbms.default_database']
 /**
  * Helpers
  */

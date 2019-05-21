@@ -34,18 +34,13 @@ const Select = styled.select`
 
 export const DatabaseSelector = ({
   databases = [],
-  selected = '',
+  defaultDb = 'neo4j',
+  selectedDb = '',
   onChange = () => {}
 }) => {
   if (!Array.isArray(databases) || databases.length < 1) {
     return null
   }
-  let placeholder
-  placeholder = (
-    <option value='' key='placeholder'>
-      DBMS default database
-    </option>
-  )
   const selectionChange = ({ target }) => {
     onChange(target.value)
   }
@@ -54,15 +49,16 @@ export const DatabaseSelector = ({
       <DrawerSubHeader>Use database</DrawerSubHeader>
       <DrawerSectionBody>
         <Select
-          value={selected || ''}
+          value={selectedDb || ''}
           data-testid='database-selection-list'
           onChange={selectionChange}
         >
-          {placeholder}
           {databases.map(db => {
+            const defaultStr = db.name === defaultDb ? ' - default' : ''
             return (
               <option key={db.name} value={db.name}>
-                {db.name} ({db.status})
+                {db.name}
+                {defaultStr} ({db.status})
               </option>
             )
           })}

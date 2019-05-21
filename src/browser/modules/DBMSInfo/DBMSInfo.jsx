@@ -29,7 +29,10 @@ import DatabaseKernelInfo from './DatabaseKernelInfo'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 import { DatabaseSelector } from './DatabaseSelector'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getDatabases,
+  getDefaultDbName
+} from 'shared/modules/dbMeta/dbMetaDuck'
 
 export function DBMSInfo (props) {
   const moreStep = 50
@@ -54,7 +57,14 @@ export function DBMSInfo (props) {
     nodes,
     relationships
   } = props.meta
-  const { user, onItemClick, onDbSelect, useDb = '', databases = [] } = props
+  const {
+    user,
+    onItemClick,
+    onDbSelect,
+    useDb = '',
+    databases = [],
+    defaultDb
+  } = props
 
   return (
     <Drawer id='db-drawer'>
@@ -62,7 +72,8 @@ export function DBMSInfo (props) {
       <DrawerBody>
         <DatabaseSelector
           databases={databases}
-          selected={useDb}
+          selectedDb={useDb}
+          defaultDb={defaultDb}
           onChange={onDbSelect}
         />
         <LabelItems
@@ -102,8 +113,15 @@ export function DBMSInfo (props) {
 
 const mapStateToProps = state => {
   const useDb = getUseDb(state)
+  const defaultDb = getDefaultDbName(state)
   const databases = getDatabases(state)
-  return { meta: state.meta, user: getCurrentUser(state), useDb, databases }
+  return {
+    meta: state.meta,
+    user: getCurrentUser(state),
+    useDb,
+    databases,
+    defaultDb
+  }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
