@@ -679,6 +679,7 @@ describe('toKeyString', () => {
         { host: 'localhost:7688', expected: 'bolt://localhost:7688' },
         { host: 'bolt://localhost', expected: 'bolt://localhost' },
         { host: 'bolt://localhost:7688', expected: 'bolt://localhost:7688' },
+        { host: 'neo4j://localhost:7688', expected: 'neo4j://localhost:7688' },
         {
           host: 'bolt+routing://localhost',
           expected: 'bolt+routing://localhost'

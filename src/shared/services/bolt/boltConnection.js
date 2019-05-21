@@ -31,10 +31,19 @@ export const ROUTED_READ_CONNECTION = 'ROUTED_READ_CONNECTION'
 const runningQueryRegister = {}
 let _drivers = null
 let _routingAvailable = false
-const routingScheme = 'bolt+routing://'
+const routingSchemes = ['bolt+routing://', 'neo4j://']
 
 export const useRouting = url => isRoutingUrl(url) && _routingAvailable
-const isRoutingUrl = url => generateBoltHost(url).startsWith(routingScheme)
+const isRoutingUrl = url => {
+  const boltUrl = generateBoltHost(url)
+  for (let i = 0; i < routingSchemes.length; i++) {
+    const routingScheme = routingSchemes[i]
+    if (boltUrl.startsWith(routingScheme)) {
+      return true
+    }
+  }
+  return false
+}
 
 const _routingAvailability = () => {
   return directTransaction('CALL dbms.procedures() YIELD name').then(res => {
