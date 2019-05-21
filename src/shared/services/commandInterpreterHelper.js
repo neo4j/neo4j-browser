@@ -176,7 +176,21 @@ const availableCommands = [
     match: cmd => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
     exec: function (action, cmdchar, put, store) {
       const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
-      if (hasMultiDbSupport(store.getState())) {
+      try {
+        if (!hasMultiDbSupport(store.getState())) {
+          throw createErrorObject(
+            UnsupportedError,
+            'No multi db support detected.'
+          )
+        }
+        // Check if chosen db exists
+        const dbExists = getDatabases(store.getState())
+          .map(db => db.name)
+          .includes(dbName)
+        if (!dbExists) {
+          throw createErrorObject(UnsupportedError, 'Database name not found.')
+        }
+        // Everything ok
         put(useDb(dbName))
         put(fetchMetaData())
         put(
@@ -186,16 +200,13 @@ const availableCommands = [
             useDb: dbName
           })
         )
-      } else {
+      } catch (e) {
         put(
           frames.add({
             useDb: getUseDb(store.getState()),
             ...action,
             type: 'error',
-            error: createErrorObject(
-              UnsupportedError,
-              'No multi db support detected.'
-            )
+            error: e
           })
         )
       }
