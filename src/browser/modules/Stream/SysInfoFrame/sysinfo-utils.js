@@ -17,12 +17,14 @@
  * You should have received data copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React from 'react'
 import bolt from 'services/bolt/bolt'
 import {
   itemIntToString,
   extractFromNeoObjects
 } from 'services/bolt/boltMappings'
+import { SysInfoTableEntry } from 'browser-components/Tables'
+import { toKeyString } from 'services/utils'
 
 export const getTableDataFromRecords = records => {
   if (!records || !records.length) {
@@ -104,4 +106,18 @@ export const flattenAttributes = data => {
   } else {
     return null
   }
+}
+
+export function buildTableData (data) {
+  if (!data) return null
+  return data.map(props => {
+    const { value } = props
+    if (value instanceof Array) {
+      return value.map(v => {
+        const key = props.label ? props.label : toKeyString(v.join(''))
+        return <SysInfoTableEntry key={key} values={v} />
+      })
+    }
+    return <SysInfoTableEntry key={props.label} {...props} />
+  })
 }

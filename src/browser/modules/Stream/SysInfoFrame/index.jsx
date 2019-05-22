@@ -44,6 +44,8 @@ import {
   LegacySysinfo
 } from './legacyHelpers'
 import { ErrorsView } from '../CypherFrame/ErrorsView'
+import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
+import { Sysinfo } from './helpers'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
@@ -116,11 +118,10 @@ export class SysInfoFrame extends Component {
         result={{ code: 'No connection', message: 'No connection available' }}
       />
     ) : this.props.hasMultiDbSupport ? (
-      <ErrorsView
-        result={{
-          code: 'Not supported',
-          message: ':sysinfo not available for Neo4j 4.0 yet'
-        }}
+      <Sysinfo
+        {...this.state}
+        databases={this.props.databases}
+        isACausalCluster={this.props.isACausalCluster}
       />
     ) : (
       <LegacySysinfo
@@ -163,7 +164,8 @@ const mapStateToProps = state => {
   return {
     hasMultiDbSupport: hasMultiDbSupport(state),
     isACausalCluster: isACausalCluster(state),
-    isConnected: isConnected(state)
+    isConnected: isConnected(state),
+    databases: getDatabases(state)
   }
 }
 

@@ -18,23 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global, describe, test, expect, afterEach */
+import React from 'react'
+import { buildTableData } from './sysinfo-utils'
+import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
 
-import { flattenAttributes } from './sysinfo'
+export const sysInfoQuery = 'CALL dbms.queryJmx("org.neo4j:*")'
 
-describe('sysinfo attribute types', () => {
-  test('should handle string value', () => {
-    const attributeData = { attributes: [{ name: 'foo', value: 'bar' }] }
-    expect(flattenAttributes(attributeData)).toEqual({ foo: 'bar' })
-  })
-  test('should handle int value', () => {
-    const attributeData = { attributes: [{ name: 'foo', value: 0 }] }
-    expect(flattenAttributes(attributeData)).toEqual({ foo: '0.0' })
-  })
-  test('should handle object value', () => {
-    const attributeData = {
-      attributes: [{ name: 'foo', value: { bar: 'baz' } }]
+export const Sysinfo = ({ databases }) => {
+  const mappedDatabases = databases.map(db => {
+    return {
+      label: db.name,
+      value: db.status
     }
-    expect(flattenAttributes(attributeData)).toEqual({ foo: { bar: 'baz' } })
   })
-})
+  return (
+    <SysInfoTableContainer>
+      <SysInfoTable key='databases' header='Databases'>
+        {buildTableData(mappedDatabases)}
+      </SysInfoTable>
+    </SysInfoTableContainer>
+  )
+}

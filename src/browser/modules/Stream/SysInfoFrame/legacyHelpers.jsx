@@ -19,8 +19,12 @@
  */
 
 import React from 'react'
-import { getTableDataFromRecords, mapSysInfoRecords } from './sysinfo'
-import { toHumanReadableBytes, toKeyString } from 'services/utils'
+import {
+  getTableDataFromRecords,
+  mapSysInfoRecords,
+  buildTableData
+} from './sysinfo-utils'
+import { toHumanReadableBytes } from 'services/utils'
 import Render from 'browser-components/Render'
 import {
   SysInfoTableContainer,
@@ -89,20 +93,6 @@ export const LegacySysinfo = ({
       </Render>
     </SysInfoTableContainer>
   )
-}
-
-function buildTableData (data) {
-  if (!data) return null
-  return data.map(props => {
-    const { value } = props
-    if (value instanceof Array) {
-      return value.map(v => {
-        const key = props.label ? props.label : toKeyString(v.join(''))
-        return <SysInfoTableEntry key={key} values={v} />
-      })
-    }
-    return <SysInfoTableEntry key={props.label} {...props} />
-  })
 }
 
 export const responseHandler = setState =>
