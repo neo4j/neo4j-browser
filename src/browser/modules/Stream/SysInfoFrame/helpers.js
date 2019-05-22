@@ -19,10 +19,61 @@
  */
 
 import React from 'react'
-import { buildTableData } from './sysinfo-utils'
+import {
+  buildTableData,
+  getTableDataFromRecords,
+  flattenAttributes
+} from './sysinfo-utils'
 import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
 
-export const sysInfoQuery = 'CALL dbms.queryJmx("org.neo4j:*")'
+export const sysinfoQuery = useDb => `
+// Page cache. Per DBMS.
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.flushes") YIELD name, attributes
+RETURN "Page Cache" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.evictions") YIELD name, attributes
+RETURN "Page Cache" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.eviction_exceptions") YIELD name, attributes
+RETURN "Page Cache" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.hit_ratio") YIELD name, attributes
+RETURN "Page Cache" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.usage_ratio") YIELD name, attributes
+RETURN "Page Cache" AS group, name, attributes
+UNION ALL
+
+// Primitive counts. Per db.
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.node") YIELD name, attributes
+RETURN "Primitive Count" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.property") YIELD name, attributes
+RETURN "Primitive Count" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.relationship") YIELD name, attributes
+RETURN "Primitive Count" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.relationship_type") YIELD name, attributes
+RETURN "Primitive Count" AS group, name, attributes
+UNION ALL
+
+// Transactions. Per db.
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.last_committed_tx_id") YIELD name, attributes
+RETURN "Transactions" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.active") YIELD name, attributes
+RETURN "Transactions" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.peak_concurrent") YIELD name, attributes
+RETURN "Transactions" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.started") YIELD name, attributes
+RETURN "Transactions" AS group, name, attributes
+UNION ALL
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.committed") YIELD name, attributes
+RETURN "Transactions" AS group, name, attributes
+`
 
 export const Sysinfo = ({ databases }) => {
   const mappedDatabases = databases.map(db => {
@@ -39,3 +90,30 @@ export const Sysinfo = ({ databases }) => {
     </SysInfoTableContainer>
   )
 }
+
+export const responseHandler = setState =>
+  function (res) {
+    console.log('res: ', res)
+    const intoGroups = res.result.records.reduce((grouped, record) => {
+      if (!grouped.hasOwnProperty(record.get('group'))) {
+        grouped[record.get('group')] = {
+          name: record.get('group'),
+          attributes: []
+        }
+      }
+      const mappedRecord = {
+        name: record.get('name'),
+        attributes: record.get('attributes')
+      }
+      grouped[record.get('group')].attributes.push(mappedRecord)
+      return grouped
+    }, {})
+    console.log('intoGroups: ', intoGroups)
+    const x = flattenAttributes(intoGroups['Page Cache'])
+    console.log('x: ', x)
+  }
+
+export const clusterResponseHandler = setState =>
+  function (res) {
+    return null
+  }

@@ -23,7 +23,10 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
-import { isConnected } from 'shared/modules/connections/connectionsDuck'
+import {
+  isConnected,
+  getUseDb
+} from 'shared/modules/connections/connectionsDuck'
 import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
 import FrameError from 'browser/modules/Stream/FrameError'
 import Render from 'browser-components/Render'
@@ -37,15 +40,10 @@ import {
 } from '../AutoRefresh/styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
-import {
-  responseHandler,
-  sysInfoQuery,
-  clusterResponseHandler,
-  LegacySysinfo
-} from './legacyHelpers'
 import { ErrorsView } from '../CypherFrame/ErrorsView'
 import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
-import { Sysinfo } from './helpers'
+import * as legacyHelpers from './legacyHelpers'
+import * as helpers from './helpers'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
@@ -64,6 +62,7 @@ export class SysInfoFrame extends Component {
       autoRefresh: false,
       autoRefreshInterval: 20 // seconds
     }
+    this.helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
   }
 
   componentDidMount () {
@@ -86,10 +85,10 @@ export class SysInfoFrame extends Component {
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: sysInfoQuery,
+          query: this.helpers.sysinfoQuery(this.props.useDb),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        responseHandler(this.setState.bind(this))
+        this.helpers.responseHandler(this.setState.bind(this))
       )
       if (this.props.isACausalCluster) {
         this.props.bus.self(
@@ -98,7 +97,7 @@ export class SysInfoFrame extends Component {
             query: 'CALL dbms.cluster.overview',
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
-          clusterResponseHandler(this.setState.bind(this))
+          this.helpers.clusterResponseHandler(this.setState.bind(this))
         )
       }
     } else {
@@ -113,20 +112,17 @@ export class SysInfoFrame extends Component {
     }
   }
   render () {
+    const SysinfoComponent = this.helpers.Sysinfo
     const content = !this.props.isConnected ? (
       <ErrorsView
         result={{ code: 'No connection', message: 'No connection available' }}
       />
-    ) : this.props.hasMultiDbSupport ? (
-      <Sysinfo
+    ) : (
+      <SysinfoComponent
         {...this.state}
         databases={this.props.databases}
         isACausalCluster={this.props.isACausalCluster}
-      />
-    ) : (
-      <LegacySysinfo
-        {...this.state}
-        isACausalCluster={this.props.isACausalCluster}
+        useDb={this.props.useDb}
       />
     )
 
@@ -165,7 +161,8 @@ const mapStateToProps = state => {
     hasMultiDbSupport: hasMultiDbSupport(state),
     isACausalCluster: isACausalCluster(state),
     isConnected: isConnected(state),
-    databases: getDatabases(state)
+    databases: getDatabases(state),
+    useDb: getUseDb(state)
   }
 }
 

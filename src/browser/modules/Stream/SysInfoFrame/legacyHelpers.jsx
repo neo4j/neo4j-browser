@@ -33,9 +33,9 @@ import {
 } from 'browser-components/Tables'
 import { QuestionIcon } from 'browser-components/icons/Icons'
 
-export const sysInfoQuery = 'CALL dbms.queryJmx("org.neo4j:*")'
+export const sysinfoQuery = () => 'CALL dbms.queryJmx("org.neo4j:*")'
 
-export const LegacySysinfo = ({
+export const Sysinfo = ({
   storeSizes,
   idAllocation,
   pageCache,

@@ -68,11 +68,9 @@ const mappedJMXresult = records => {
     const origAttributes = record.get('attributes')
     return {
       name: record.get('name'),
-      description: record.get('description'),
       attributes: Object.keys(record.get('attributes')).map(attributeName => {
         return {
           name: attributeName,
-          description: origAttributes[attributeName].description,
           value: origAttributes[attributeName].value
         }
       })
