@@ -107,3 +107,11 @@ export function UnsupportedError (message) {
   }
 }
 errorFunctions['UnsupportedError'] = UnsupportedError
+
+export function NotFoundError (message) {
+  return {
+    type: 'NotFoundError',
+    message
+  }
+}
+errorFunctions['NotFoundError'] = NotFoundError

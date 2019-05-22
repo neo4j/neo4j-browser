@@ -71,7 +71,8 @@ import {
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError,
-  UnsupportedError
+  UnsupportedError,
+  NotFoundError
 } from 'services/exceptions'
 import {
   parseHttpVerbCommand,
@@ -188,7 +189,10 @@ const availableCommands = [
           .map(db => db.name)
           .includes(dbName)
         if (!dbExists) {
-          throw createErrorObject(UnsupportedError, 'Database name not found.')
+          throw createErrorObject(
+            NotFoundError,
+            'Database with that name not found.'
+          )
         }
         // Everything ok
         put(useDb(dbName))

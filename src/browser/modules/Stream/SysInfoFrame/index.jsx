@@ -43,7 +43,6 @@ import {
   clusterResponseHandler,
   LegacySysinfo
 } from './legacyHelpers'
-import { PaddedDiv } from '../styled'
 import { ErrorsView } from '../CypherFrame/ErrorsView'
 
 export class SysInfoFrame extends Component {

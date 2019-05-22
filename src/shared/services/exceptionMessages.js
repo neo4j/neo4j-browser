@@ -29,3 +29,4 @@ export const CouldNotFetchRemoteGuideError =
 export const FetchURLError =
   'Could not fetch URL: "#error#". This could be due to the remote server policy. See your web browsers error console for more information.'
 export const UnsupportedError = '#message#'
+export const NotFoundError = '#message#'
