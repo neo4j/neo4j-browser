@@ -21,7 +21,10 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeCommand,
+  useDbCommand
+} from 'shared/modules/commands/commandsDuck'
 import { getCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import { UserDetails } from './UserDetails'
@@ -131,8 +134,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onDbSelect: dbName =>
       dbName
-        ? dispatch(executeCommand(`:db ${dbName}`))
-        : dispatch(executeCommand(`:db`))
+        ? dispatch(executeCommand(`:${useDbCommand} ${dbName}`))
+        : dispatch(executeCommand(`:${useDbCommand}`))
   }
 }
 
