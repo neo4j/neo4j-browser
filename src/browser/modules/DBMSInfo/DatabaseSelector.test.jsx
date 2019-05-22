@@ -43,11 +43,16 @@ describe('DatabaseSelector', () => {
       { name: 'stella', status: 'online' },
       { name: 'molly', status: 'online' }
     ]
+    const defaultDb = 'stella'
     let selected = 'stella'
 
     // When
     const { getByDisplayValue, queryByDisplayValue, rerender } = render(
-      <DatabaseSelector databases={databases} selected={selected} />
+      <DatabaseSelector
+        databases={databases}
+        selectedDb={selected}
+        defaultDb={defaultDb}
+      />
     )
 
     // Then
@@ -56,7 +61,13 @@ describe('DatabaseSelector', () => {
 
     // When
     selected = 'molly'
-    rerender(<DatabaseSelector databases={databases} selected={selected} />)
+    rerender(
+      <DatabaseSelector
+        databases={databases}
+        selectedDb={selected}
+        defaultDb={defaultDb}
+      />
+    )
 
     // Then
     expect(getByDisplayValue(/molly/i)).toBeDefined()
@@ -64,12 +75,17 @@ describe('DatabaseSelector', () => {
 
     // When
     selected = ''
-    rerender(<DatabaseSelector databases={databases} selected={selected} />)
+    rerender(
+      <DatabaseSelector
+        databases={databases}
+        selectedDb={selected}
+        defaultDb={defaultDb}
+      />
+    )
 
-    // Then
-    expect(getByDisplayValue(/default/i)).toBeDefined()
+    // Then default db should be selected
+    expect(getByDisplayValue(/stella/i)).toBeDefined()
     expect(queryByDisplayValue(/molly/i)).toBeNull()
-    expect(queryByDisplayValue(/stella/i)).toBeNull()
   })
   it('can handle selections', () => {
     // Given
