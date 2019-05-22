@@ -25,6 +25,9 @@ import {
 } from 'services/bolt/boltMappings'
 
 export const getTableDataFromRecords = records => {
+  if (!records || !records.length) {
+    return {}
+  }
   const mappedJMXresults = mappedJMXresult(records)
   const jmxQueryPrefix = mappedJMXresults[0].name.split(',')[0]
   const result = Object.assign(
