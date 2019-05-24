@@ -31,7 +31,7 @@ const Aside = styled.div`
   color: ${props => props.theme.asideText};
 `
 const PaddedDiv = styled.div`
-  padding: 30px 45px;
+  padding: 30px;
 `
 const StyledConnectionBody = styled.div`
   font-size: 1.3em;

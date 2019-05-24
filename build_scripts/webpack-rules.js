@@ -59,7 +59,7 @@ module.exports = [
       'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
   },
   {
-    test: /\.css$/, // Carousel
+    test: /\.less$/, // Carousel
     include: path.resolve(helpers.browserPath, 'modules/Carousel'),
     use: [
       'style-loader',

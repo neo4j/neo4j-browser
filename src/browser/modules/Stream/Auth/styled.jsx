@@ -32,9 +32,6 @@ export const StyledConnectionAside = styled.div`
   font-weight: 300;
   color: ${props => props.theme.asideText};
 `
-export const StyledConnectionFrame = styled.div`
-  padding: 30px 45px;
-`
 export const StyledConnectionFormEntry = styled.div`
   padding-bottom: 15px;
 `

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import styles from './style.css'
+import styles from './style.less'
 import { StyledSlide } from './styled.jsx'
 
 const Slide = React.forwardRef(({ content, html }, ref) => {

@@ -25,7 +25,6 @@ const slides = [
         <li>Convenient exploration of Neo4j's REST API</li>
       </ul>
     </div>
-    {/* <div className='col-sm-3'><img src='./assets/images/click-next.png' style={{'position': 'relative', 'right': '-23px'}} className='pull-right' /></div> */}
   </Fragment>,
   <Fragment>
     <div className='col-sm-3'>
@@ -152,6 +151,13 @@ const slides = [
   </Fragment>
 ]
 
-const content = <Carousel className='deck container-fluid' slides={slides} />
+const content = (
+  <Carousel
+    className='deck container-fluid'
+    slides={slides}
+    showIntro
+    withDirectives
+  />
+)
 
 export default { content }

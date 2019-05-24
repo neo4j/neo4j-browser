@@ -185,6 +185,8 @@ const slides = [
   </Fragment>
 ]
 
-const content = <Carousel className='deck container-fluid' slides={slides} />
+const content = (
+  <Carousel className='deck container-fluid' slides={slides} withDirectives />
+)
 
 export default { content }

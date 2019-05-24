@@ -19,6 +19,8 @@
  */
 
 import styled from 'styled-components'
+import { hexToRgba } from 'browser-styles/utils'
+import { bounceLeft } from 'browser-styles/animations'
 
 export const StyledCarousel = styled.div``
 export const SlideContainer = styled.div`
@@ -26,46 +28,92 @@ export const SlideContainer = styled.div`
   width: 100%;
   display: inline-block;
 `
-export const StyledCarouselLeft = styled.div`
-  &.is-hidden {
-    pointer-events: none;
-    /* visibility: hidden; */
-  }
-`
-export const StyledCarouselRight = styled.div`
-  &.is-hidden {
-    pointer-events: none;
-    /* visibility: hidden; */
-  }
-`
 
 export const StyledCarouselButtonContainer = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   margin-bottom: 3rem;
+  margin-right: -15px;
 `
+export const StyledCarouselButtonContainerInner = styled.div`
+  background-color: ${props => props.theme.primaryBackground};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  position: relative;
+`
+
 const CarouselIndicator = styled.li`
-  width: 8px;
-  height: 8px;
-  margin: 0 3px;
+  box-sizing: content-box;
+  width: 4px;
+  height: 4px;
+  margin: 0;
   cursor: pointer;
   border-radius: 50%;
   cursor: pointer;
-  background-color: rgba(20, 20, 20, 0.5);
+  background-color: ${props => hexToRgba(props.theme.primaryText, 0.2)};
+  border: 3px solid;
+  border-color: ${props => props.theme.primaryBackground};
 `
 export const CarouselIndicatorInactive = styled(CarouselIndicator)`
   &:hover {
-    background-color: rgba(20, 20, 20, 0.9);
+    background-color: ${props => props.theme.primaryText};
     transform: scale(1.2);
   }
 `
 export const CarouselIndicatorActive = styled(CarouselIndicator)`
-  background-color: #428bca;
-  border: 0;
+  background-color: ${props => props.theme.primaryText};
   transform: scale(1.2);
 `
+
+export const StyledCarouselIntroAnimated = styled.div`
+  align-items: center;
+  animation: ${bounceLeft} 4s ease-in-out infinite;
+  animation-fill-mode: forwards;
+  color: #222;
+  display: flex;
+  position: absolute;
+  right: 110%;
+`
+
+export const StyledCarouselIntro = styled.div`
+  align-items: center;
+  background-color: #f6e58d;
+  border-radius: 20px;
+  color: #222;
+  display: flex;
+  font-family: 'Fira Code', 'Monaco', 'Lucida Console', Courier, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 10px;
+  user-select: none;
+  white-space: nowrap;
+
+  span:first-child {
+    min-width: 140px;
+  }
+
+  span:last-child {
+    margin-left: 5px;
+  }
+
+  /* @media (min-width: 700px) {
+    display: flex;
+    span:last-child {
+      min-width: 120px;
+    }
+  }
+
+  @media (min-width: 850px) {
+    span:last-child {
+      white-space: nowrap;
+    }
+  } */
+`
+
 export const StyledUl = styled.ul`
   list-style: none;
   display: flex;

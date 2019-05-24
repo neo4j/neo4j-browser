@@ -59,7 +59,7 @@ export const StyledFrameBody = styled.div`
   display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
-  padding: 30px 45px;
+  padding: 30px;
 `
 
 export const StyledFrameMainSection = styled.div`

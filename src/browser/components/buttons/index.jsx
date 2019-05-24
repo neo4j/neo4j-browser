@@ -21,6 +21,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
+import { hexToRgba } from 'browser-styles/utils'
 
 import SVGInline from 'react-svg-inline'
 
@@ -45,6 +46,7 @@ export const EditorButton = props => {
     </BaseButton>
   )
 }
+
 const BaseButton = styled.span`
   font-family: ${props => props.theme.streamlineFontFamily};
   font-style: normal !important;
@@ -82,6 +84,7 @@ export const StyledNavigationButton = styled.button`
     outline: none;
   }
 `
+
 export const NavigationButtonContainer = styled.li`
   min-height: 70px;
   height: 70px;
@@ -223,6 +226,7 @@ export const FrameButton = props => {
     <StyledFrameButton {...rest}>{children}</StyledFrameButton>
   )
 }
+
 const StyledFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
@@ -285,9 +289,9 @@ export const ActionButton = props => {
 }
 
 const BaseCarouselButton = styled.button`
-  background-color: rgba(20, 20, 20, 0.75);
-  border-radius: 50%;
-  color: #fff;
+  color: ${props => props.theme.primaryText};
+  /* color: #fff; */
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -299,31 +303,29 @@ const BaseCarouselButton = styled.button`
   outline: none;
 
   &:disabled {
-    background-color: rgba(20, 20, 20, 0.1);
+    color: ${props => hexToRgba(props.theme.primaryText, 0.2)};
+    pointer-events: none;
   }
 
   &.previous-slide {
-    margin-right: 2rem;
+    margin-right: 0.5rem;
 
-    svg {
-      margin-right: 2px;
-      height: 12px !important;
-      width: 12px !important;
+    &:hover {
+      svg {
+        transform: translateX(-2px);
+        transition: transform 0.2s ease-in-out;
+      }
     }
   }
   &.next-slide {
-    margin-left: 2rem;
+    margin-left: 0.5rem;
 
-    svg {
-      margin-left: 2px;
-      height: 12px !important;
-      width: 12px !important;
+    &:hover {
+      svg {
+        transform: translateX(2px);
+        transition: transform 0.2s ease-in-out;
+      }
     }
-  }
-
-  /* &:focus, */
-  &:hover {
-    background-color: rgba(20, 20, 20, 0.6);
   }
 
   i,
@@ -331,18 +333,10 @@ const BaseCarouselButton = styled.button`
     display: flex;
   }
 `
-const CarouselButtonOverlay = styled.span`
-  /* position: absolute;
-  top: 5px;
-  left: 8px; */
-`
+
 export const CarouselButton = props => {
   const { children, ...rest } = props
-  return (
-    <BaseCarouselButton {...rest}>
-      <CarouselButtonOverlay>{children}</CarouselButtonOverlay>
-    </BaseCarouselButton>
-  )
+  return <BaseCarouselButton {...rest}>{children}</BaseCarouselButton>
 }
 
 export const StyledLink = styled.a`

@@ -29,15 +29,17 @@ import CarouselSlidePicker from './CarouselSlidePicker'
 import {
   StyledCarousel,
   SlideContainer,
-  StyledCarouselLeft,
-  StyledCarouselRight,
-  StyledCarouselButtonContainer
+  StyledCarouselButtonContainer,
+  StyledCarouselButtonContainerInner,
+  StyledCarouselIntroAnimated,
+  StyledCarouselIntro
 } from './styled'
 
 export default class Carousel extends Component {
   state = {
     visibleSlide: 0,
-    firstRender: true
+    firstRender: true,
+    wasClicked: false
   }
   constructor (props) {
     super(props)
@@ -48,6 +50,7 @@ export default class Carousel extends Component {
   }
   next () {
     this.setState({ visibleSlide: this.state.visibleSlide + 1 })
+    this.setState({ wasClicked: true })
   }
   prev () {
     this.setState({ visibleSlide: this.state.visibleSlide - 1 })
@@ -59,45 +62,45 @@ export default class Carousel extends Component {
     this.setState({ visibleSlide: slideNumber })
   }
   render () {
+    const { showIntro, withDirectives } = this.props
     return (
       <StyledCarousel data-testid='carousel'>
         <StyledCarouselButtonContainer>
-          <StyledCarouselLeft
-            className={this.state.visibleSlide === 0 ? 'is-hidden' : ''}
-          >
+          <StyledCarouselButtonContainerInner>
+            {showIntro &&
+              !this.state.wasClicked && (
+              <StyledCarouselIntroAnimated>
+                <StyledCarouselIntro>
+                  <span>Use the navigation to get started</span>
+                  <span>{`->`}</span>
+                </StyledCarouselIntro>
+              </StyledCarouselIntroAnimated>
+            )}
             <CarouselButton
-              className='previous-slide'
+              className={'previous-slide'}
               data-testid='previousSlide'
               disabled={this.state.visibleSlide === 0}
               onClick={this.prev.bind(this)}
             >
               <SlidePreviousIcon />
             </CarouselButton>
-          </StyledCarouselLeft>
-          <CarouselSlidePicker
-            slides={this.slides}
-            visibleSlide={this.state.visibleSlide}
-            onClickEvent={slideNumber => this.goToSlide(slideNumber)}
-          />
-          <StyledCarouselRight
-            className={
-              this.state.visibleSlide === this.slides.length - 1
-                ? 'is-hidden'
-                : ''
-            }
-          >
+            <CarouselSlidePicker
+              slides={this.slides}
+              visibleSlide={this.state.visibleSlide}
+              onClickEvent={slideNumber => this.goToSlide(slideNumber)}
+            />
             <CarouselButton
-              className='next-slide'
+              className={'next-slide'}
               data-testid='nextSlide'
               disabled={this.state.visibleSlide === this.slides.length - 1}
               onClick={this.next.bind(this)}
             >
               <SlideNextIcon />
             </CarouselButton>
-          </StyledCarouselRight>
+          </StyledCarouselButtonContainerInner>
         </StyledCarouselButtonContainer>
         <SlideContainer>
-          {this.props.withDirectives ? (
+          {withDirectives ? (
             <Directives content={this.getSlide(this.state.visibleSlide)} />
           ) : (
             this.getSlide(this.state.visibleSlide)
