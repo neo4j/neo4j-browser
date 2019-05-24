@@ -40,8 +40,8 @@ const slides = [
       </p>
       <ul>
         <li>Single line editing for brief queries or commands</li>
-        <li>Switch to multi-line editing with &lt;shift-enter&gt;</li>
-        <li>Run a query with &lt;ctrl-enter&gt;</li>
+        <li>Switch to multi-line editing with {`<shift-enter`}</li>
+        <li>Run a query with {`<ctrl-enter>`}</li>
         <li>History is kept for easily retrieving previous commands</li>
       </ul>
     </div>
@@ -65,8 +65,7 @@ const slides = [
         <li>Expand a frame to full screen</li>
         <li>Remove a specific frame from the stream</li>
         <li>
-          Clear the stream with the &nbsp;
-          <code>:clear</code> command
+          Clear the stream with the <code>:clear</code> command
         </li>
       </ul>
     </div>

@@ -555,7 +555,7 @@ CREATE
 (JessicaThompson)-[:REVIEWED {summary:'You had me at Jerry', rating:92}]->(JerryMaguire)
 
 WITH TomH as a
-MATCH (a)-[:ACTED_IN]->(m)&lt;-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
+MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
 ;
 `}</pre>
       </figure>
@@ -593,7 +593,7 @@ MATCH (a)-[:ACTED_IN]->(m)&lt;-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
       </figure>
       <p className='lead'>Find movies released in the 1990s...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released &lt; 2000 RETURN nineties.title`}</pre>
+        <pre className='pre-scrollable code runnable'>{`MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title`}</pre>
       </figure>
     </div>
   </Fragment>,
@@ -619,11 +619,11 @@ MATCH (a)-[:ACTED_IN]->(m)&lt;-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
       </figure>
       <p className='lead'>Who directed "Cloud Atlas"?</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (cloudAtlas {title: "Cloud Atlas"})&lt;-[:DIRECTED]-(directors) RETURN directors.name`}</pre>
+        <pre className='pre-scrollable code runnable'>{`MATCH (cloudAtlas {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name`}</pre>
       </figure>
       <p className='lead'>Tom Hanks' co-actors...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)&lt;-[:ACTED_IN]-(coActors) RETURN coActors.name`}</pre>
+        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN coActors.name`}</pre>
       </figure>
       <p className='lead'>How people are related to "Cloud Atlas"...</p>
       <figure>
@@ -691,15 +691,15 @@ RETURN p`}</pre>
         Tom Hanks...
       </p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)&lt;-[:ACTED_IN]-(coActors),
-  (coActors)-[:ACTED_IN]->(m2)&lt;-[:ACTED_IN]-(cocoActors)
-WHERE NOT (tom)-[:ACTED_IN]->()&lt;-[:ACTED_IN]-(cocoActors) AND tom &lt;> cocoActors
+        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+  (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cocoActors)
+WHERE NOT (tom)-[:ACTED_IN]->()<-[:ACTED_IN]-(cocoActors) AND tom <> cocoActors
 RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC`}</pre>
       </figure>
       <p className='lead'>Find someone to introduce Tom Hanks to Tom Cruise</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)&lt;-[:ACTED_IN]-(coActors),
-  (coActors)-[:ACTED_IN]->(m2)&lt;-[:ACTED_IN]-(cruise:Person {name:"Tom Cruise"})
+        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+  (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cruise:Person {name:"Tom Cruise"})
 RETURN tom, m, coActors, m2, cruise`}</pre>
       </figure>
     </div>

@@ -102,10 +102,10 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
 (ir:Person { name: "Ian", from: "England", title: "author" }),
 (rvb:Person { name: "Rik", from: "Belgium", pet: "Orval" }),
 (ally:Person { name: "Allison", from: "California", hobby: "surfing" }),
-(ee)-[:KNOWS {since: 2001}]-&gt;(js),(ee)-[:KNOWS {rating: 5}]-&gt;(ir),
-(js)-[:KNOWS]-&gt;(ir),(js)-[:KNOWS]-&gt;(rvb),
-(ir)-[:KNOWS]-&gt;(js),(ir)-[:KNOWS]-&gt;(ally),
-(rvb)-[:KNOWS]-&gt;(ally)`}</pre>
+(ee)-[:KNOWS {since: 2001}]->(js),(ee)-[:KNOWS {rating: 5}]->(ir),
+(js)-[:KNOWS]->(ir),(js)-[:KNOWS]->(rvb),
+(ir)-[:KNOWS]->(js),(ir)-[:KNOWS]->(ally),
+(rvb)-[:KNOWS]->(ally)`}</pre>
       </figure>
     </div>
   </Fragment>,
@@ -186,9 +186,7 @@ RETURN DISTINCT surfer`}</pre>
     </div>
     <div className='col-sm-9'>
       <p className='summary'>
-        Understand how your query works by prepending&nbsp;
-        <code>EXPLAIN</code>
-        &nbsp; or &nbsp;
+        Understand how your query works by prepending <code>EXPLAIN</code> or{' '}
         <code>PROFILE</code>:
       </p>
       <figure>

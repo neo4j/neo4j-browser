@@ -151,7 +151,7 @@ const content = (
       <div className='col-lg-4'>
         <h2 className='vtop'>Code</h2>
         <p>
-          Within body text, use <code>&lt;code&gt;</code> for citing Cypher
+          Within body text, use <code>{`<code>`}</code> for citing Cypher
           keywords like <code>MERGE</code> or indicating key-combinations. Avoid
           code-snippets within a paragraph, preferring a code block.
         </p>
