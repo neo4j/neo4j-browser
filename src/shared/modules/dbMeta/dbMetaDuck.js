@@ -51,6 +51,7 @@ export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 export const DB_META_DONE = 'meta/DB_META_DONE'
+export const UPDATE_DEFAULT_DB = 'meta/UPDATE_DEFAULT_DB'
 
 export const SYSTEM_DB = 'system'
 
@@ -104,8 +105,7 @@ export const shouldRetainConnectionCredentials = state => {
 export const getDatabases = state => (state[NAME] || initialState).databases
 export const getActiveDbName = state =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
-export const getDefaultDbName = state =>
-  ((state[NAME] || {}).settings || {})['dbms.default_database']
+export const getDefaultDbName = state => (state[NAME] || {}).defaultDb
 /**
  * Helpers
  */
@@ -195,7 +195,8 @@ const initialState = {
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost'
-  }
+  },
+  defaultDb: null
 }
 
 /**
@@ -227,6 +228,8 @@ export default function meta (state = initialState, action) {
       }
     case UPDATE_SETTINGS:
       return { ...state, settings: { ...action.settings } }
+    case UPDATE_DEFAULT_DB:
+      return { ...state, defaultDb: action.db }
     case CLEAR:
       return { ...initialState }
     default:
@@ -261,6 +264,8 @@ export const updateSettings = settings => {
     settings
   }
 }
+
+export const updateDefaultDb = db => ({ type: UPDATE_DEFAULT_DB, db })
 
 // Epics
 export const metaQuery = `
@@ -397,18 +402,42 @@ export const dbMetaEpic = (some$, store) =>
                       authEnabled = false
                     }
                     store.dispatch(setAuthEnabled(authEnabled))
-                  } else if (name === 'dbms.default_database') {
-                    // name of default db Neo4j >= 4.0
-
-                    // if no db selected, select the default one
-                    if (!getUseDb(store.getState())) {
-                      store.dispatch(useDb(value))
-                    }
                   }
                   all[name] = value
                   return all
                 }, {})
                 store.dispatch(updateSettings(settings))
+                return Rx.Observable.of(null)
+              })
+          )
+          // Default database
+          .mergeMap(() =>
+            Rx.Observable.fromPromise(
+              bolt.directTransaction(
+                'RETURN 1',
+                {},
+                {
+                  useCypherThread: shouldUseCypherThread(store.getState()),
+                  ...getBackgroundTxMetadata({
+                    hasServerSupport: canSendTxMetadata(store.getState())
+                  }),
+                  useDb: '' // connect to default
+                }
+              )
+            )
+              .catch(e => {
+                return Rx.Observable.of(null)
+              })
+              .do(res => {
+                if (!res) return Rx.Observable.of(null)
+                const { name: database = null } = res.summary.database
+                if (database) {
+                  store.dispatch(updateDefaultDb(database))
+                  // if no db selected, select the default one
+                  if (!getUseDb(store.getState())) {
+                    store.dispatch(useDb(database))
+                  }
+                }
                 return Rx.Observable.of(null)
               })
           )
