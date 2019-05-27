@@ -88,7 +88,7 @@ export class SysInfoFrame extends Component {
           query: this.helpers.sysinfoQuery(this.props.useDb),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        this.helpers.responseHandler(this.setState.bind(this))
+        this.helpers.responseHandler(this.setState.bind(this), this.props.useDb)
       )
       if (this.props.isACausalCluster) {
         this.props.bus.self(

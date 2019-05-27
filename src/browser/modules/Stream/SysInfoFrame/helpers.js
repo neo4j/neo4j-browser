@@ -22,56 +22,63 @@ import React from 'react'
 import { buildTableData, flattenAttributes } from './sysinfo-utils'
 import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
 
+const jmxPrefix = 'neo4j.metrics:name='
+
 export const sysinfoQuery = useDb => `
 // Page cache. Per DBMS.
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.flushes") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.flushes") YIELD name, attributes
 RETURN "Page Cache" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.evictions") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.evictions") YIELD name, attributes
 RETURN "Page Cache" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.eviction_exceptions") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.eviction_exceptions") YIELD name, attributes
 RETURN "Page Cache" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.hit_ratio") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.hit_ratio") YIELD name, attributes
 RETURN "Page Cache" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.page_cache.usage_ratio") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.usage_ratio") YIELD name, attributes
 RETURN "Page Cache" AS group, name, attributes
 UNION ALL
 
 // Primitive counts. Per db.
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.node") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.node") YIELD name, attributes
 RETURN "Primitive Count" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.property") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.property") YIELD name, attributes
 RETURN "Primitive Count" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.relationship") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.relationship") YIELD name, attributes
 RETURN "Primitive Count" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.ids_in_use.relationship_type") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.relationship_type") YIELD name, attributes
 RETURN "Primitive Count" AS group, name, attributes
 UNION ALL
 
 // Transactions. Per db.
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.last_committed_tx_id") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.last_committed_tx_id") YIELD name, attributes
 RETURN "Transactions" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.active") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.active") YIELD name, attributes
 RETURN "Transactions" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.peak_concurrent") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.peak_concurrent") YIELD name, attributes
 RETURN "Transactions" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.started") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.started") YIELD name, attributes
 RETURN "Transactions" AS group, name, attributes
 UNION ALL
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.${useDb}.transaction.committed") YIELD name, attributes
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.committed") YIELD name, attributes
 RETURN "Transactions" AS group, name, attributes
 `
 
-export const Sysinfo = ({ databases }) => {
+export const Sysinfo = ({
+  databases,
+  pageCache,
+  idAllocation,
+  transactions
+}) => {
   const mappedDatabases = databases.map(db => {
     return {
       label: db.name,
@@ -80,6 +87,15 @@ export const Sysinfo = ({ databases }) => {
   })
   return (
     <SysInfoTableContainer>
+      <SysInfoTable key='IDAllocation' header='ID Allocation'>
+        {buildTableData(idAllocation)}
+      </SysInfoTable>
+      <SysInfoTable key='PageCache' header='Page Cache'>
+        {buildTableData(pageCache)}
+      </SysInfoTable>
+      <SysInfoTable key='Transactionss' header='Transactions'>
+        {buildTableData(transactions)}
+      </SysInfoTable>
       <SysInfoTable key='databases' header='Databases'>
         {buildTableData(mappedDatabases)}
       </SysInfoTable>
@@ -87,9 +103,12 @@ export const Sysinfo = ({ databases }) => {
   )
 }
 
-export const responseHandler = setState =>
+export const responseHandler = (setState, useDb) =>
   function (res) {
-    console.log('res: ', res)
+    if (!res || !res.result || !res.result.records) {
+      setState({ success: false })
+      return null
+    }
     const intoGroups = res.result.records.reduce((grouped, record) => {
       if (!grouped.hasOwnProperty(record.get('group'))) {
         grouped[record.get('group')] = {
@@ -98,15 +117,73 @@ export const responseHandler = setState =>
         }
       }
       const mappedRecord = {
-        name: record.get('name'),
-        attributes: record.get('attributes')
+        name: record.get('name').replace(jmxPrefix, ''),
+        value: (
+          record.get('attributes').Count || record.get('attributes').Value
+        ).value
       }
       grouped[record.get('group')].attributes.push(mappedRecord)
       return grouped
     }, {})
-    console.log('intoGroups: ', intoGroups)
-    const x = flattenAttributes(intoGroups['Page Cache'])
-    console.log('x: ', x)
+
+    // Page cache
+    const cache = flattenAttributes(intoGroups['Page Cache'])
+    const pageCache = [
+      { label: 'Flushes', value: cache['neo4j.page_cache.flushes'] },
+      { label: 'Evictions', value: cache['neo4j.page_cache.evictions'] },
+      {
+        label: 'Eviction Exceptions',
+        value: cache['neo4j.page_cache.eviction_exceptions']
+      },
+      {
+        label: 'Hit Ratio',
+        value: cache['neo4j.page_cache.hit_ratio'],
+        mapper: v => `${(v * 100).toFixed(2)}%`,
+        optional: true
+      },
+      {
+        label: 'Usage Ratio',
+        value: cache['neo4j.page_cache.usage_ratio'],
+        mapper: v => `${(v * 100).toFixed(2)}%`,
+        optional: true
+      }
+    ]
+
+    // Primitive count
+    const primitive = flattenAttributes(intoGroups['Primitive Count'])
+    const idAllocation = [
+      { label: 'Node ID', value: primitive[`neo4j.${useDb}.ids_in_use.node`] },
+      {
+        label: 'Property ID',
+        value: primitive[`neo4j.${useDb}.ids_in_use.property`]
+      },
+      {
+        label: 'Relationship ID',
+        value: primitive[`neo4j.${useDb}.ids_in_use.relationship`]
+      },
+      {
+        label: 'Relationship Type ID',
+        value: primitive[`neo4j.${useDb}.ids_in_use.relationship_type`]
+      }
+    ]
+
+    // Transactions
+    const tx = flattenAttributes(intoGroups['Transactions'])
+    const transactions = [
+      {
+        label: 'Last Tx Id',
+        value: tx[`neo4j.${useDb}.transaction.last_committed_tx_id`]
+      },
+      { label: 'Current', value: tx[`neo4j.${useDb}.transaction.active`] },
+      {
+        label: 'Peak',
+        value: tx[`neo4j.${useDb}.transaction.peak_concurrent`]
+      },
+      { label: 'Opened', value: tx[`neo4j.${useDb}.transaction.started`] },
+      { label: 'Committed', value: tx[`neo4j.${useDb}.transaction.committed`] }
+    ]
+
+    setState({ pageCache, idAllocation, transactions, success: true })
   }
 
 export const clusterResponseHandler = setState =>
