@@ -19,11 +19,7 @@
  */
 
 import React from 'react'
-import {
-  buildTableData,
-  getTableDataFromRecords,
-  flattenAttributes
-} from './sysinfo-utils'
+import { buildTableData, flattenAttributes } from './sysinfo-utils'
 import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
 
 export const sysinfoQuery = useDb => `
