@@ -3,6 +3,7 @@
 exports[`hydrating state should merge inital state and state on load 1`] = `
 Object {
   "databases": Array [],
+  "defaultDb": null,
   "foo": "bar",
   "functions": Array [],
   "labels": Array [],
@@ -27,6 +28,7 @@ Object {
 exports[`updating metadata can CLEAR to reset state 1`] = `
 Object {
   "databases": Array [],
+  "defaultDb": null,
   "functions": Array [],
   "labels": Array [],
   "nodes": 0,
