@@ -92,7 +92,7 @@ export const Sysinfo = ({
   })
   return (
     <SysInfoTableContainer>
-      <SysInfoTable key='IDAllocation' header='ID Allocation'>
+      <SysInfoTable key='IDAllocation' header='Id Allocation'>
         {buildTableData(idAllocation)}
       </SysInfoTable>
       <SysInfoTable key='PageCache' header='Page Cache'>
