@@ -31,6 +31,7 @@
     "lint": "eslint --fix --ext .js --ext .jsx ./",
     "precommit": "lint-staged",
     "prepare-jar": "node ./scripts/prepare-mvn-package.js",
+    "prepare-canary": "node ./scripts/prepare-canary.js",
     "start": "NODE_ENV=\"development\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
     "starts": "NODE_ENV=\"development\" webpack-dev-server --https --colors --config ./build_scripts/webpack.config.js",
     "start-prod": "NODE_ENV=\"production\" webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
