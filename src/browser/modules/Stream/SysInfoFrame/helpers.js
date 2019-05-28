@@ -19,8 +19,13 @@
  */
 
 import React from 'react'
-import { buildTableData, flattenAttributes } from './sysinfo-utils'
+import {
+  buildTableData,
+  flattenAttributes,
+  mapSysInfoRecords
+} from './sysinfo-utils'
 import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
+import Render from 'browser-components/Render/index'
 
 const jmxPrefix = 'neo4j.metrics:name='
 
@@ -188,5 +193,32 @@ export const responseHandler = (setState, useDb) =>
 
 export const clusterResponseHandler = setState =>
   function (res) {
-    return null
+    if (!res.success) {
+      setState({ error: 'No causal cluster results', success: false })
+      return
+    }
+    const mappedResult = mapSysInfoRecords(res.result.records)
+    const mappedTableComponents = mappedResult.map(ccRecord => {
+      const httpUrlForMember = ccRecord.addresses.filter(address => {
+        return (
+          !address.includes(window.location.href) &&
+          (window.location.protocol.startsWith('file:')
+            ? address.startsWith('http://')
+            : address.startsWith(window.location.protocol))
+        )
+      })
+      const databases = Object.keys(ccRecord.databases).map(
+        db => `${db}: ${ccRecord.databases[db]}`
+      )
+      return [
+        databases.join(', '),
+        ccRecord.addresses.join(', '),
+        <Render if={httpUrlForMember.length !== 0}>
+          <a target='_blank' href={httpUrlForMember[0]}>
+            Open
+          </a>
+        </Render>
+      ]
+    })
+    setState({ cc: [{ value: mappedTableComponents }], success: true })
   }
