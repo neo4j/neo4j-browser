@@ -20,6 +20,9 @@
 
 const fs = require('fs')
 const file = './package.json'
+const npmrc = './.npmrc'
+const yarnrc = './.yarnrc'
+const registry = 'https://registry.npmjs.org/'
 const packageName = '@neo4j/neo4j-browser-canary'
 
 function failExit (msg) {
@@ -32,27 +35,36 @@ function successExit () {
   process.exit(0)
 }
 
+function changeName (name) {
+  const data = fs.readFileSync(file)
+  try {
+    const obj = JSON.parse(data)
+    if (!obj.name) {
+      throw new Error('No name found in: ' + JSON.stringify(obj, null, 2))
+    }
+    obj.name = name
+    fs.writeFileSync(file, JSON.stringify(obj, null, 2) + '\n')
+  } catch (e) {
+    return failExit(e)
+  }
+}
+
+function setRegistries (registry) {
+  const yarnContents = 'registry "' + registry + '"\n'
+  const npmContents = 'registry=' + registry + '\n' + 'tag-version-prefix=""\n'
+
+  try {
+    fs.writeFileSync(yarnrc, yarnContents)
+    fs.writeFileSync(npmrc, npmContents)
+  } catch (e) {
+    failExit('Could not set registry. ' + e.message)
+  }
+}
+
 function main () {
-  fs.readFile(file, function (err, data) {
-    if (err) {
-      return failExit(err)
-    }
-    try {
-      const obj = JSON.parse(data)
-      if (!obj.name) {
-        throw new Error('No name found in: ' + JSON.stringify(obj, null, 2))
-      }
-      obj.name = packageName
-      fs.writeFile(file, JSON.stringify(obj, null, 2) + '\n', function (err) {
-        if (err) {
-          return failExit('Could not write to file. ' + err.message)
-        }
-        successExit()
-      })
-    } catch (e) {
-      return failExit(e)
-    }
-  })
+  changeName(packageName)
+  setRegistries(registry)
+  successExit()
 }
 
 main()
