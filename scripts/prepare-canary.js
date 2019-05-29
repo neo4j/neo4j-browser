@@ -19,11 +19,13 @@
  */
 
 const fs = require('fs')
-const file = './package.json'
+const packageJson = './package.json'
+const manifestJson = './src/browser/manifest-base.json'
 const npmrc = './.npmrc'
 const yarnrc = './.yarnrc'
 const registry = 'https://registry.npmjs.org/'
 const packageName = '@neo4j/neo4j-browser-canary'
+const displayName = 'Neo4j Browser Canary'
 
 function failExit (msg) {
   console.log('Error. ' + msg)
@@ -31,28 +33,33 @@ function failExit (msg) {
 }
 
 function successExit () {
-  console.log('Name change successful.\n')
+  console.log('Files updated successfully.\n')
   process.exit(0)
 }
 
-function changeName (name) {
+function changeJsonFileField (file, fields, vals) {
+  if (
+    !Array.isArray(fields) ||
+    !Array.isArray(vals) ||
+    fields.length !== vals.length
+  ) {
+    return failExit('Fields and vals need to be arrays')
+  }
   const data = fs.readFileSync(file)
   try {
     const obj = JSON.parse(data)
-    if (!obj.name) {
-      throw new Error('No name found in: ' + JSON.stringify(obj, null, 2))
+    for (let i = 0; i < fields.length; i++) {
+      obj[fields[i]] = vals[i]
     }
-    obj.name = name
     fs.writeFileSync(file, JSON.stringify(obj, null, 2) + '\n')
   } catch (e) {
-    return failExit(e)
+    return failExit('Failed writing to: ' + file + '. Message: ' + e.message)
   }
 }
 
 function setRegistries (registry) {
   const yarnContents = 'registry "' + registry + '"\n'
   const npmContents = 'registry=' + registry + '\n' + 'tag-version-prefix=""\n'
-
   try {
     fs.writeFileSync(yarnrc, yarnContents)
     fs.writeFileSync(npmrc, npmContents)
@@ -62,7 +69,21 @@ function setRegistries (registry) {
 }
 
 function main () {
-  changeName(packageName)
+  changeJsonFileField(packageJson, ['name'], [packageName])
+  changeJsonFileField(
+    manifestJson,
+    ['name', 'short_name', 'icons'],
+    [
+      displayName,
+      displayName,
+      [
+        {
+          src: './assets/images/device-icons/neo4j-desktop-canary.svg',
+          type: 'svg'
+        }
+      ]
+    ]
+  )
   setRegistries(registry)
   successExit()
 }
