@@ -42,7 +42,7 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-6 ccSRli"
+    class="styled__PaddedDiv-sc-1dtvgs1-1 kyHRpW"
   >
     <div
       class="styled__StyledBodyMessage-sc-1dtvgs1-36 dLAxdh"
@@ -56,7 +56,7 @@ exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 exports[`AsciiViews AsciiView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-6 ccSRli"
+    class="styled__PaddedDiv-sc-1dtvgs1-1 kyHRpW"
   >
     <pre>
       ╒═══╕

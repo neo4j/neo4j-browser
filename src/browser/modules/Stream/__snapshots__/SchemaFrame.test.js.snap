@@ -19,7 +19,7 @@ exports[`SchemaFrame renders with result 1`] = `
     class="styled__StyledPreformattedArea-sc-1dtvgs1-29 styled__StyledSchemaBody-sc-1dtvgs1-35 gZeYef"
   >
     Indexes
-   ON :Movie(released) ONLINE 
+   ON :Movie(released) ONLINE
 
 Constraints
    ON ( book:Book ) ASSERT book.isbn IS UNIQUE

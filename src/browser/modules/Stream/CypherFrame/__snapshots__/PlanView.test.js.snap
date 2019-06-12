@@ -11,11 +11,11 @@ exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
       <div
         class="Ellipsis-sc-1dn9bou-0 gzqRPC"
       >
-        Cypher version: 
+        Cypher version:
         xx0
-        , planner: 
+        , planner:
         xx1
-        , runtime: 
+        , runtime:
         xx2
         .
          xx3 total db hits in 120 ms.
@@ -25,7 +25,7 @@ exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
       class="styled__StyledRightPartial-sc-1dtvgs1-42 ifFzJO"
     >
       <ul
-        class="styled__StyledFrameTitlebarButtonSection-sc-1dtvgs1-10 dRnwVT"
+        class="styled__StyledFrameTitlebarButtonSection-ywjnrd-7 jOdvlQ"
       >
         <li
           class="buttons__StyledFrameButton-sc-3xi0d5-10 cajKMw"

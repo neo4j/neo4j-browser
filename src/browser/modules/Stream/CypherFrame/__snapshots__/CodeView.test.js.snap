@@ -31,7 +31,7 @@ exports[`CodeViews CodeView displays nothing if not successful query 1`] = `<div
 exports[`CodeViews CodeView displays request and response info if successful query 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-6 ccSRli"
+    class="styled__PaddedDiv-sc-1dtvgs1-1 kyHRpW"
   >
     <table
       class="styled__StyledTable-sc-1dtvgs1-46 fTaAJu"
