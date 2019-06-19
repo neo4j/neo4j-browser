@@ -103,9 +103,11 @@ export function FileDrop (props) {
       if (['cyp', 'cypher', 'cql', 'txt'].includes(extension)) {
         setUserSelect(true)
       } else if (extension === 'grass') {
-        fileLoader(files[0], importGrass)
-        const action = executeCommand(':style')
-        props.bus.send(action.type, action)
+        fileLoader(files[0], result => {
+          importGrass(result)
+          const action = executeCommand(':style')
+          props.bus.send(action.type, action)
+        })
       } else {
         dispatchErrorMessage(`'.${extension}' is not a valid file extension`)
         resetState()
