@@ -122,14 +122,15 @@ export function App (props) {
     browserSyncMetadata,
     browserSyncConfig,
     browserSyncAuthStatus,
-    experimentalFeatures
+    experimentalFeatures,
+    store
   } = props
 
   return (
     <ErrorBoundary>
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
-          <FileDrop>
+          <FileDrop store={store}>
             <StyledWrapper className='app-wrapper'>
               <DocTitle titleString={props.titleString} />
               <UserInteraction />
