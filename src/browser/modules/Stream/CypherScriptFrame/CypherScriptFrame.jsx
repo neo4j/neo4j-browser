@@ -93,7 +93,13 @@ class CypherScriptFrame extends Component {
         </ContentSizer>
       </WrapperCenter>
     )
-    return <FrameTemplate header={frame} contents={contents} />
+    return (
+      <FrameTemplate
+        className='no-padding'
+        header={frame}
+        contents={contents}
+      />
+    )
   }
 }
 

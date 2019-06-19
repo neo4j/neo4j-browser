@@ -378,6 +378,7 @@ export class CypherFrame extends Component {
     return (
       <FrameTemplate
         sidebar={requestStatus !== 'error' ? this.sidebar : null}
+        className='no-padding'
         header={frame}
         contents={frameContents}
         statusbar={statusBar}

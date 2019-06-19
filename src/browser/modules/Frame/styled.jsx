@@ -60,6 +60,10 @@ export const StyledFrameBody = styled.div`
   flex-direction: row;
   width: 100%;
   padding: 30px;
+
+  .no-padding & {
+    padding: 0;
+  }
 `
 
 export const StyledFrameMainSection = styled.div`

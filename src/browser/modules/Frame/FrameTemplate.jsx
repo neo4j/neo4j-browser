@@ -95,8 +95,13 @@ class FrameTemplate extends Component {
     this.frameContentElement = el
   }
   render () {
+    const { className } = this.props
     return (
-      <StyledFrame data-testid='frame' fullscreen={this.state.fullscreen}>
+      <StyledFrame
+        className={className}
+        data-testid='frame'
+        fullscreen={this.state.fullscreen}
+      >
         <FrameTitlebar
           frame={this.props.header}
           fullscreen={this.state.fullscreen}
