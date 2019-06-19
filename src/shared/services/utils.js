@@ -20,6 +20,7 @@
 /* global btoa */
 
 import parseUrl from 'url-parse'
+import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
 
 /**
  * The work objects expected shape:
@@ -490,4 +491,28 @@ export function flushPromises () {
 
 export async function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export function detectRuntimeEnv (win, cloudDomains = []) {
+  if (win && win.neo4jDesktopApi) {
+    return DESKTOP
+  }
+
+  const parsedUrl =
+    win && win.location && win.location.href
+      ? parseUrl(win.location.href, true)
+      : parseUrl('')
+  if (
+    parsedUrl.query.neo4jDesktopApiUrl &&
+    parsedUrl.query.neo4jDesktopGraphAppClientId
+  ) {
+    return DESKTOP
+  }
+  for (const cloudDomain of cloudDomains) {
+    if (parsedUrl.hostname.endsWith(cloudDomain)) {
+      return CLOUD
+    }
+  }
+
+  return WEB
 }

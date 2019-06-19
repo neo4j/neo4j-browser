@@ -33,8 +33,10 @@ import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
-import { APP_START, DESKTOP, WEB } from 'shared/modules/app/appDuck'
+import { APP_START } from 'shared/modules/app/appDuck'
 import { GlobalStyle } from './styles/global-styles.js'
+import { detectRuntimeEnv } from 'services/utils.js'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck.js'
 
 // Configure localstorage sync
 applyKeys(
@@ -80,7 +82,7 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
 })
 
 // Introduce environment to be able to fork functionality
-const env = window && window.neo4jDesktopApi ? DESKTOP : WEB
+const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 
 // Signal app upstart (for epics)
 store.dispatch({ type: APP_START, url: window.location.href, env })
