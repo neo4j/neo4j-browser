@@ -49,20 +49,24 @@ export default class Guides extends Component {
   render () {
     const { content, html, withDirectives } = this.props
 
-    if (content !== undefined) {
-      return <Slide key={uuid.v4()} content={content} />
-    }
-
     if (this.state.slides && Array.isArray(this.state.slides)) {
       const ListOfSlides = this.state.slides.map(slide => {
         return <Slide key={uuid.v4()} html={slide.html.innerHTML} />
       })
       return <Carousel slides={ListOfSlides} withDirectives={withDirectives} />
     }
+
+    let slide = <Slide ref={this.ref} html={''} />
+    if (content) {
+      slide = <Slide ref={this.ref} content={content} />
+    } else if (!content && html) {
+      slide = <Slide ref={this.ref} html={html} />
+    }
+
     if (withDirectives) {
-      return <Directives content={<Slide ref={this.ref} html={html} />} />
+      return <Directives content={slide} />
     } else {
-      return <Slide ref={this.ref} html={html} />
+      return slide
     }
   }
 }
