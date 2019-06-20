@@ -22,20 +22,27 @@ import styled from 'styled-components'
 import { hexToRgba } from 'browser-styles/utils'
 import { bounceLeft } from 'browser-styles/animations'
 
-export const StyledCarousel = styled.div``
+export const StyledCarousel = styled.div`
+  position: relative;
+  padding-top: 33px;
+`
+
 export const SlideContainer = styled.div`
-  padding: 0 60px;
+  padding: 0;
   width: 100%;
   display: inline-block;
+  max-height: 400px;
+  overflow-y: auto;
 `
 
 export const StyledCarouselButtonContainer = styled.div`
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 3rem;
-  margin-right: -15px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
 `
 export const StyledCarouselButtonContainerInner = styled.div`
   background-color: ${props => props.theme.primaryBackground};

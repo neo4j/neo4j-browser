@@ -25,6 +25,7 @@ const slides = [
   <Fragment>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
+      <br />
       <h3>Create</h3>
       <p>
         To the right is a giant code block containing a single Cypher query
@@ -48,7 +49,8 @@ const slides = [
     </div>
     <div className='col-sm-9'>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
+        <pre className='pre-scrollable code runnable'>
+          {`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
 CREATE (Keanu:Person {name:'Keanu Reeves', born:1964})
 CREATE (Carrie:Person {name:'Carrie-Anne Moss', born:1967})
 CREATE (Laurence:Person {name:'Laurence Fishburne', born:1961})
@@ -555,15 +557,15 @@ CREATE
 (JessicaThompson)-[:REVIEWED {summary:'You had me at Jerry', rating:92}]->(JerryMaguire)
 
 WITH TomH as a
-MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
-;
-`}</pre>
+MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
+        </pre>
       </figure>
     </div>
   </Fragment>,
   <Fragment>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
+      <br />
       <h3>Find</h3>
       <p>Example queries for finding individual nodes.</p>
       <ol>
@@ -600,6 +602,7 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
   <Fragment>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
+      <br />
       <h3>Query</h3>
       <p>Finding patterns within the graph.</p>
       <ol>
@@ -634,6 +637,7 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10
   <Fragment>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
+      <br />
       <h3>Solve</h3>
       <p>
         You've heard of the classic "Six Degrees of Kevin Bacon"? That is simply
@@ -670,6 +674,7 @@ RETURN p`}</pre>
   <Fragment>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
+      <br />
       <h3>Recommend</h3>
       <p>
         Let's recommend new co-actors for Tom Hanks. A basic recommendation
@@ -707,6 +712,7 @@ RETURN tom, m, coActors, m2, cruise`}</pre>
   <Fragment>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
+      <br />
       <h3>Clean up</h3>
       <p>When you're done experimenting, you can remove the movie data set.</p>
       <p>Note:</p>
