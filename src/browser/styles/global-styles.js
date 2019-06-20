@@ -32,7 +32,7 @@ export const GlobalStyle = createGlobalStyle`
   .code-style,
   .CodeMirror {
     font-family: "Fira Code",Monaco,"Courier New",Terminal,monospace !important;
-    font-size: 18px !important;
+    font-size: 17px !important;
     line-height: 23px !important;
     -webkit-font-smoothing: initial !important;
     cursor: text !important;

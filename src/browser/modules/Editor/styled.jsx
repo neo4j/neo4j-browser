@@ -72,6 +72,7 @@ const BaseEditorWrapper = styled.div`
   .CodeMirror {
     background-color: ${props => props.theme.editorBackground} !important;
     color: ${props => props.theme.editorCommandColor};
+    font-size: 17px;
   }
 
   .disable-font-ligatures & {
