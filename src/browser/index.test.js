@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render } from '@testing-library/react'
 import AppInit from './AppInit'
 
 describe('browser entry', () => {

@@ -23,7 +23,7 @@
 /* eslint-disable standard/no-callback-literal */
 
 import React from 'react'
-import { render, fireEvent } from 'react-testing-library'
+import { render, fireEvent } from '@testing-library/react'
 import { createBus } from 'suber'
 import { QueriesFrame } from './QueriesFrame'
 import {

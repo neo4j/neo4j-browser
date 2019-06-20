@@ -74,11 +74,11 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
 `;
 
 exports[`TableViews TableView renderObject handles null values 1`] = `
-<ForwardRef>
+<ForwardRef(DataTables__StyledJsonPre)>
   {
   "x": 1.0
 }
-</ForwardRef>
+</ForwardRef(DataTables__StyledJsonPre)>
 `;
 
 exports[`TableViews TableView renderObject handles null values 2`] = `

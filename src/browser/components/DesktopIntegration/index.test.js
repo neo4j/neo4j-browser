@@ -21,7 +21,7 @@
 /* global test, expect, jest */
 
 import React from 'react'
-import { render, wait } from 'react-testing-library'
+import { render, wait } from '@testing-library/react'
 import DesktopIntegration from './index'
 
 describe('<DesktopIntegration>', () => {

@@ -20,7 +20,7 @@
 
 /* global jest, test, expect */
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render } from '@testing-library/react'
 import configureMockStore from 'redux-mock-store'
 import { App } from './App'
 import { buildConnectionCredentialsObject } from 'browser-components/DesktopIntegration/helpers'

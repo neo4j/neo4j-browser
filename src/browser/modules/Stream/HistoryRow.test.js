@@ -20,7 +20,7 @@
 
 /* global describe, beforeEach, afterEach, test, expect, jest */
 import React from 'react'
-import { render, fireEvent } from 'react-testing-library'
+import { render, fireEvent } from '@testing-library/react'
 import HistoryRow from './HistoryRow'
 
 describe('HistoryRow', () => {

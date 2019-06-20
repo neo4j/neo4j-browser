@@ -1,7 +1,7 @@
 /* global jest */
 
 import React from 'react'
-import { render, fireEvent, wait } from 'react-testing-library'
+import { render, fireEvent, wait } from '@testing-library/react'
 
 import InputEnterStepping from './InputEnterStepping'
 
@@ -24,7 +24,7 @@ test('focuses correctly and submits on enter in last input', async () => {
   const myFn = jest.fn()
 
   // When
-  const { container, getByValue } = render(
+  const { container, getByDisplayValue } = render(
     <InputEnterStepping
       submitAction={myFn}
       render={({ getInputPropsForIndex, setRefForIndex }) => {
@@ -52,30 +52,32 @@ test('focuses correctly and submits on enter in last input', async () => {
   // Then
   expect(container).toMatchSnapshot()
   // Need to wait for the focus to get there, since it's set by setTimeout
-  await wait(() => expect(document.activeElement).toEqual(getByValue('first')))
+  await wait(() =>
+    expect(document.activeElement).toEqual(getByDisplayValue('first'))
+  )
 
   // When
   // Enter in first should focus second
-  fireEvent.keyDown(getByValue('first'), {
+  fireEvent.keyDown(getByDisplayValue('first'), {
     key: 'Enter',
     keyCode: 13,
     which: 13
   })
 
   // Then
-  expect(document.activeElement).toEqual(getByValue('second'))
+  expect(document.activeElement).toEqual(getByDisplayValue('second'))
   expect(myFn).toHaveBeenCalledTimes(0)
 
   // When
   // Enter in last should submit
-  fireEvent.keyDown(getByValue('second'), {
+  fireEvent.keyDown(getByDisplayValue('second'), {
     key: 'Enter',
     keyCode: 13,
     which: 13
   })
 
   // Then
-  expect(document.activeElement).toEqual(getByValue('second'))
+  expect(document.activeElement).toEqual(getByDisplayValue('second'))
   expect(myFn).toHaveBeenCalledTimes(1)
 })
 
