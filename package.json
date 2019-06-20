@@ -62,6 +62,7 @@
     "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@hot-loader/react-dom": "^16.8.6",
     "@testing-library/react": "^8.0.1",
     "autoprefixer": "^7.1.4",
     "babel-eslint": "^7.2.3",
@@ -120,10 +121,10 @@
     "xml2js": "^0.4.19"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.0.0",
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
+    "core-js": "3",
     "cypher-codemirror": "1.1.5",
     "d3": "3",
     "deepmerge": "^2.1.1",
@@ -145,6 +146,7 @@
     "react-timeago": "^4.1.9",
     "redux": "^3.7.2",
     "redux-observable": "^0.16.0",
+    "regenerator-runtime": "^0.13.2",
     "rxjs": "^5.4.2",
     "save-as": "^0.1.7",
     "semver": "^5.5.0",

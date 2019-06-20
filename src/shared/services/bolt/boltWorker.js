@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* eslint-env serviceworker */
-import '@babel/polyfill'
+import 'core-js/stable'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import {
   ensureConnection,

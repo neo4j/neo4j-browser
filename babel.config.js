@@ -13,6 +13,7 @@ const toExport = {
       '@babel/preset-env',
       {
         useBuiltIns: 'entry',
+        corejs: 3,
         modules: isTest ? 'commonjs' : false,
         targets: {
           browsers: ['last 1 version', 'ie >= 11']
