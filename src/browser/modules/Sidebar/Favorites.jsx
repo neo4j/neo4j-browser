@@ -31,7 +31,6 @@ import { toKeyString } from 'services/utils'
 import Render from 'browser-components/Render'
 import Favorite from './Favorite'
 import Folder from './Folder'
-import FileDrop from './FileDrop'
 import {
   Drawer,
   DrawerBody,
@@ -210,7 +209,8 @@ class Favorites extends Component {
           </Render>
           <DrawerSection>
             <DrawerSubHeader>Import</DrawerSubHeader>
-            <FileDrop />
+            Drag a file to the browser window to import Cypher (*.cyp, *.cypher,
+            *.cql, *.txt) or Grass (*.grass)
           </DrawerSection>
         </DrawerBody>
       </Drawer>

@@ -21,9 +21,13 @@
 /* global jest, test, expect */
 import React from 'react'
 import { render } from 'react-testing-library'
+import configureMockStore from 'redux-mock-store'
 import { App } from './App'
 import { buildConnectionCredentialsObject } from 'browser-components/DesktopIntegration/helpers'
 import { flushPromises } from 'services/utils'
+
+const mockStore = configureMockStore()
+const store = mockStore({})
 
 jest.mock('../FeatureToggle/FeatureToggleProvider', () => {
   return ({ children }) => <div>{children}</div>
@@ -43,6 +47,7 @@ describe('App', () => {
     const desktopIntegrationPoint = getIntegrationPoint(true, getKerberosTicket)
     let connectionCreds = null
     const props = {
+      store,
       desktopIntegrationPoint,
       setInitialConnectionData: async (
         graph,

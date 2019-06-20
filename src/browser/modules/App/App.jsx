@@ -73,6 +73,7 @@ import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/exp
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
 import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
+import FileDrop from 'browser-components/FileDrop/FileDrop'
 
 export function App (props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
@@ -121,64 +122,67 @@ export function App (props) {
     browserSyncMetadata,
     browserSyncConfig,
     browserSyncAuthStatus,
-    experimentalFeatures
+    experimentalFeatures,
+    store
   } = props
 
   return (
     <ErrorBoundary>
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
-          <StyledWrapper>
-            <DocTitle titleString={props.titleString} />
-            <UserInteraction />
-            <DesktopIntegration
-              integrationPoint={props.desktopIntegrationPoint}
-              onArgumentsChange={props.onArgumentsChange}
-              onMount={(
-                activeGraph,
-                connectionsCredentials,
-                context,
-                getKerberosTicket
-              ) => {
-                props.setInitialConnectionData(
+          <FileDrop store={store}>
+            <StyledWrapper className='app-wrapper'>
+              <DocTitle titleString={props.titleString} />
+              <UserInteraction />
+              <DesktopIntegration
+                integrationPoint={props.desktopIntegrationPoint}
+                onArgumentsChange={props.onArgumentsChange}
+                onMount={(
                   activeGraph,
                   connectionsCredentials,
                   context,
                   getKerberosTicket
-                )
-                detectDesktopThemeChanges(null, context)
-              }}
-              onGraphActive={props.switchConnection}
-              onGraphInactive={props.closeConnectionMaybe}
-              onColorSchemeUpdated={detectDesktopThemeChanges}
-            />
-            <Render if={loadExternalScripts}>
-              <Intercom appID='lq70afwx' />
-            </Render>
-            <Render if={syncConsent && loadExternalScripts && loadSync}>
-              <BrowserSyncInit
-                authStatus={browserSyncAuthStatus}
-                authData={browserSyncMetadata}
-                config={browserSyncConfig}
+                ) => {
+                  props.setInitialConnectionData(
+                    activeGraph,
+                    connectionsCredentials,
+                    context,
+                    getKerberosTicket
+                  )
+                  detectDesktopThemeChanges(null, context)
+                }}
+                onGraphActive={props.switchConnection}
+                onGraphInactive={props.closeConnectionMaybe}
+                onColorSchemeUpdated={detectDesktopThemeChanges}
               />
-            </Render>
-            <StyledApp>
-              <StyledBody>
-                <ErrorBoundary>
-                  <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
-                </ErrorBoundary>
-                <StyledMainWrapper>
-                  <Main
-                    cmdchar={cmdchar}
-                    activeConnection={activeConnection}
-                    connectionState={connectionState}
-                    errorMessage={errorMessage}
-                    useBrowserSync={loadSync}
-                  />
-                </StyledMainWrapper>
-              </StyledBody>
-            </StyledApp>
-          </StyledWrapper>
+              <Render if={loadExternalScripts}>
+                <Intercom appID='lq70afwx' />
+              </Render>
+              <Render if={syncConsent && loadExternalScripts && loadSync}>
+                <BrowserSyncInit
+                  authStatus={browserSyncAuthStatus}
+                  authData={browserSyncMetadata}
+                  config={browserSyncConfig}
+                />
+              </Render>
+              <StyledApp>
+                <StyledBody>
+                  <ErrorBoundary>
+                    <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+                  </ErrorBoundary>
+                  <StyledMainWrapper>
+                    <Main
+                      cmdchar={cmdchar}
+                      activeConnection={activeConnection}
+                      connectionState={connectionState}
+                      errorMessage={errorMessage}
+                      useBrowserSync={loadSync}
+                    />
+                  </StyledMainWrapper>
+                </StyledBody>
+              </StyledApp>
+            </StyledWrapper>
+          </FileDrop>
         </FeatureToggleProvider>
       </ThemeProvider>
     </ErrorBoundary>
