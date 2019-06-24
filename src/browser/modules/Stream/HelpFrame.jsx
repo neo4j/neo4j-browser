@@ -35,9 +35,7 @@ const HelpFrame = ({ frame }) => {
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
-      const chapter = chapters[helpTopic]
-        ? chapters[helpTopic]
-        : chapters['_unfound']
+      const chapter = chapters[helpTopic] || chapters['unfound']
       const { title, subtitle, content } = chapter
       aside = title ? <FrameAside title={title} subtitle={subtitle} /> : null
       help = <Docs content={content} />
