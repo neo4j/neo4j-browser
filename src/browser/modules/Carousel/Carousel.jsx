@@ -31,6 +31,7 @@ import {
   SlideContainer,
   StyledCarouselButtonContainer,
   StyledCarouselButtonContainerInner,
+  StyledCarouselCount,
   StyledCarouselIntroAnimated,
   StyledCarouselIntro
 } from './styled'
@@ -66,16 +67,19 @@ export default class Carousel extends Component {
     return (
       <StyledCarousel data-testid='carousel'>
         <StyledCarouselButtonContainer>
+          {showIntro &&
+            !this.state.wasClicked && (
+            <StyledCarouselIntroAnimated>
+              <StyledCarouselIntro>
+                <span>Use the navigation to get started</span>
+                <span>{`->`}</span>
+              </StyledCarouselIntro>
+            </StyledCarouselIntroAnimated>
+          )}
+          <StyledCarouselCount>
+            {`${this.state.visibleSlide + 1} / ${this.slides.length}`}
+          </StyledCarouselCount>
           <StyledCarouselButtonContainerInner>
-            {showIntro &&
-              !this.state.wasClicked && (
-              <StyledCarouselIntroAnimated>
-                <StyledCarouselIntro>
-                  <span>Use the navigation to get started</span>
-                  <span>{`->`}</span>
-                </StyledCarouselIntro>
-              </StyledCarouselIntroAnimated>
-            )}
             <CarouselButton
               className={'previous-slide'}
               data-testid='previousSlide'

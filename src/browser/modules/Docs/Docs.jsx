@@ -59,7 +59,7 @@ export default class Guides extends Component {
     let slide = <Slide ref={this.ref} html={''} />
     if (content) {
       slide = <Slide ref={this.ref} content={content} />
-    } else if (!content && html) {
+    } else if (html) {
       slide = <Slide ref={this.ref} html={html} />
     }
 

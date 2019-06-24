@@ -36,15 +36,20 @@ export class PlayFrame extends Component {
     super(props)
     this.state = {
       guide: null,
-      aside: null
+      aside: null,
+      hasCarousel: false
     }
   }
 
   componentDidMount () {
     if (this.props.frame.result) {
       // Found remote guide
+      const el = document.createElement('html')
+      el.innerHTML = this.props.frame.result
+      const slides = el.getElementsByTagName('slide')
       this.setState({
-        guide: <Docs withDirectives html={this.props.frame.result} />
+        guide: <Docs withDirectives html={this.props.frame.result} />,
+        hasCarousel: !!slides.length
       })
       return
     }
@@ -94,7 +99,8 @@ export class PlayFrame extends Component {
       const { content, title, subtitle } = guide
       this.setState({
         guide: <Docs withDirectives content={content} />,
-        aside: title ? <FrameAside title={title} subtitle={subtitle} /> : null
+        aside: title ? <FrameAside title={title} subtitle={subtitle} /> : null,
+        hasCarousel: !!content.props.slides
       })
       return
     }
@@ -124,9 +130,14 @@ export class PlayFrame extends Component {
   }
 
   render () {
+    const classNames = ['playFrame']
+    if (this.state.hasCarousel) {
+      classNames.push('has-carousel')
+    }
+
     return (
       <FrameTemplate
-        className='playFrame'
+        className={classNames.join(' ')}
         header={this.props.frame}
         aside={this.state.aside}
         contents={this.state.guide}

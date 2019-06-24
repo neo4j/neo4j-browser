@@ -53,6 +53,21 @@ export const StyledCarouselButtonContainerInner = styled.div`
   position: relative;
 `
 
+export const StyledCarouselCount = styled.div`
+  background-color: ${props => props.theme.primaryBackground};
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: bold;
+  justify-content: center;
+  height: 28px;
+  min-width: 56px;
+  border-radius: 30px;
+  position: relative;
+  margin-right: 5px;
+  padding: 0 10px;
+`
+
 const CarouselIndicator = styled.li`
   box-sizing: content-box;
   width: 4px;
@@ -64,16 +79,55 @@ const CarouselIndicator = styled.li`
   background-color: ${props => hexToRgba(props.theme.primaryText, 0.2)};
   border: 3px solid;
   border-color: ${props => props.theme.primaryBackground};
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    border-radius: 2px;
+    content: attr(data-title);
+    color: ${props => props.theme.primaryBackground};
+    background-color: ${props => props.theme.primaryText};
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    left: 50%;
+    min-width: 24px;
+    bottom: calc(100% + 5px);
+    pointer-events: none;
+    transform: translateX(-50%);
+    padding: 5px;
+    line-height: 1;
+    text-align: center;
+    z-index: 1000;
+    visibility: hidden;
+  }
+
+  &::after {
+    border: solid;
+    border-color: ${props => props.theme.primaryText} transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 5px;
+    content: '';
+    left: 50%;
+    pointer-events: none;
+    position: absolute;
+    transform: translateX(-50%);
+    z-index: 1000;
+    visibility: hidden;
+  }
+
+  &:hover::before,
+  &:hover::after {
+    visibility: visible;
+  }
 `
 export const CarouselIndicatorInactive = styled(CarouselIndicator)`
   &:hover {
     background-color: ${props => props.theme.primaryText};
-    transform: scale(1.2);
   }
 `
 export const CarouselIndicatorActive = styled(CarouselIndicator)`
   background-color: ${props => props.theme.primaryText};
-  transform: scale(1.2);
 `
 
 export const StyledCarouselIntroAnimated = styled.div`
@@ -83,7 +137,7 @@ export const StyledCarouselIntroAnimated = styled.div`
   color: #222;
   display: flex;
   position: absolute;
-  right: 110%;
+  right: calc(100% + 20px);
 `
 
 export const StyledCarouselIntro = styled.div`
@@ -191,5 +245,9 @@ export const StyledSlide = styled.div`
   }
   &.slide .code {
     background-color: transparent;
+  }
+
+  .has-carousel & {
+    overflow: visible;
   }
 `

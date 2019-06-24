@@ -96,6 +96,10 @@ export const StyledFrameContents = styled.div`
   ${props => (props.fullscreen ? 'height: 100vh' : null)};
   flex: auto;
   display: table-cell;
+
+  .has-carousel & {
+    overflow: visible;
+  }
 `
 
 export const StyledFrameStatusbar = styled.div`

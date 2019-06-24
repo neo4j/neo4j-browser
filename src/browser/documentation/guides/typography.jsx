@@ -5,7 +5,7 @@ const subtitle =
   'The typography is pleasantly minimal. Just enough to make for easy reading of brief content.'
 const content = (
   <React.Fragment>
-    <div class='row'>
+    <div className='row'>
       <div className='col-lg-4'>
         <h3 className='hbaseline'>Fonts</h3>
         <p>
