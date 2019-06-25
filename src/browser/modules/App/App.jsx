@@ -271,12 +271,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-export default hot(module)(
-  withBus(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps,
-      mergeProps
-    )(App)
-  )
+export default withBus(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+  )(App)
 )
