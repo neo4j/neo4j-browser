@@ -102,6 +102,18 @@ const content = (
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
             >
+              <defs>
+                <style>
+                  {`
+                    .cls-1 {
+                      fill: none;
+                      stroke: currentColor;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-width: 1.5px;
+                    }`}
+                </style>
+              </defs>
               <path
                 className='cls-1'
                 d='M17.033,16.583l-4.492,4.686a.749.749,0,0,1-1.082,0L6.966,16.582'
