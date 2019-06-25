@@ -37,7 +37,8 @@ export class PlayFrame extends Component {
     this.state = {
       guide: null,
       aside: null,
-      hasCarousel: false
+      hasCarousel: false,
+      isRemote: false
     }
   }
 
@@ -49,7 +50,8 @@ export class PlayFrame extends Component {
       const slides = el.getElementsByTagName('slide')
       this.setState({
         guide: <Docs withDirectives html={this.props.frame.result} />,
-        hasCarousel: !!slides.length
+        hasCarousel: !!slides.length,
+        isRemote: true
       })
       return
     }
@@ -133,6 +135,9 @@ export class PlayFrame extends Component {
     const classNames = ['playFrame']
     if (this.state.hasCarousel) {
       classNames.push('has-carousel')
+    }
+    if (this.state.isRemote) {
+      classNames.push('is-remote')
     }
 
     return (
