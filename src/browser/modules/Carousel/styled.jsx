@@ -45,16 +45,16 @@ export const StyledCarouselButtonContainer = styled.div`
   z-index: 10;
 `
 export const StyledCarouselButtonContainerInner = styled.div`
-  background-color: ${props => props.theme.primaryBackground};
+  background-color: ${props => hexToRgba(props.theme.primaryBackground, 0.4)};
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 30px;
+  border-radius: 3px;
   position: relative;
 `
 
 export const StyledCarouselCount = styled.div`
-  background-color: ${props => props.theme.primaryBackground};
+  background-color: ${props => hexToRgba(props.theme.primaryBackground, 0.4)};
   display: flex;
   align-items: center;
   font-size: 10px;
@@ -62,29 +62,31 @@ export const StyledCarouselCount = styled.div`
   justify-content: center;
   height: 28px;
   min-width: 56px;
-  border-radius: 30px;
+  border-radius: 3px;
   position: relative;
   margin-right: 5px;
   padding: 0 10px;
 `
 
 const CarouselIndicator = styled.li`
-  box-sizing: content-box;
-  width: 4px;
-  height: 4px;
   margin: 0;
   cursor: pointer;
   border-radius: 50%;
-  cursor: pointer;
-  background-color: ${props => hexToRgba(props.theme.primaryText, 0.2)};
-  border: 3px solid;
-  border-color: ${props => props.theme.primaryBackground};
+  border: 3px solid transparent;
   position: relative;
   z-index: 1;
 
+  > span {
+    background-color: ${props => hexToRgba(props.theme.primaryText, 0.2)};
+    display: block;
+    border-radius: 2px;
+    width: 4px;
+    height: 4px;
+  }
+
   &::before {
     border-radius: 2px;
-    content: attr(data-title);
+    content: attr(aria-label);
     color: ${props => props.theme.primaryBackground};
     background-color: ${props => props.theme.primaryText};
     position: absolute;
@@ -122,12 +124,14 @@ const CarouselIndicator = styled.li`
   }
 `
 export const CarouselIndicatorInactive = styled(CarouselIndicator)`
-  &:hover {
+  &:hover > span {
     background-color: ${props => props.theme.primaryText};
   }
 `
 export const CarouselIndicatorActive = styled(CarouselIndicator)`
-  background-color: ${props => props.theme.primaryText};
+  > span {
+    background-color: ${props => props.theme.primaryText};
+  }
 `
 
 export const StyledCarouselIntroAnimated = styled.div`

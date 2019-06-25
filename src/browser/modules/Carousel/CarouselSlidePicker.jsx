@@ -31,15 +31,19 @@ const CarouselSlidePicker = ({ slides, visibleSlide, onClickEvent }) => {
       i !== visibleSlide ? (
         <CarouselIndicatorInactive
           key={i}
-          data-title={i + 1}
+          aria-label={i + 1}
           onClick={() => onClickEvent(i)}
-        />
+        >
+          <span />
+        </CarouselIndicatorInactive>
       ) : (
         <CarouselIndicatorActive
           key={i}
-          data-title={i + 1}
+          aria-label={i + 1}
           onClick={() => onClickEvent(i)}
-        />
+        >
+          <span />
+        </CarouselIndicatorActive>
       )
   )
   return <StyledUl>{Indicators}</StyledUl>
