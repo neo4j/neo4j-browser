@@ -21,7 +21,6 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
-import { hot } from 'react-hot-loader'
 import * as themes from 'browser/styles/themes'
 import {
   getTheme,
