@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
 
+const title = 'Movie Graph'
 const slides = [
   <Fragment>
     <div className='col-sm-3'>
@@ -786,4 +787,4 @@ const content = (
   <Carousel className='deck container-fluid' slides={slides} withDirectives />
 )
 
-export default { content }
+export default { title, content }

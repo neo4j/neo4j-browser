@@ -19,19 +19,22 @@
  */
 
 import styled from 'styled-components'
-import { hexToRgba } from 'browser-styles/utils'
+import { hexToRgba, lightenDarkenColor } from 'browser-styles/utils'
 import { bounceLeft } from 'browser-styles/animations'
 
 export const StyledCarousel = styled.div`
   position: relative;
-  padding-top: 33px;
+
+  &:hover .carousel-intro-animation {
+    opacity: 0;
+  }
 `
 
 export const SlideContainer = styled.div`
   padding: 0;
   width: 100%;
   display: inline-block;
-  max-height: 400px;
+  max-height: 430px;
   overflow-y: auto;
 `
 
@@ -40,12 +43,31 @@ export const StyledCarouselButtonContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: absolute;
-  right: 0;
-  top: 0;
+  left: -30px;
+  top: -30px;
   z-index: 10;
+  padding: 15px;
+  transition: transform 0.2s ease-in-out;
+
+  &.is-hidden {
+    transform: translateX(calc(-100% + 15px));
+
+    .carousel-menu-icon {
+      opacity: 0.8;
+    }
+  }
+
+  &:hover {
+    transform: translateX(0);
+
+    .carousel-menu-icon {
+      opacity: 0;
+    }
+  }
 `
 export const StyledCarouselButtonContainerInner = styled.div`
-  background-color: ${props => hexToRgba(props.theme.primaryBackground, 0.4)};
+  background-color: ${props =>
+    lightenDarkenColor(props.theme.primaryBackground, 20)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +76,8 @@ export const StyledCarouselButtonContainerInner = styled.div`
 `
 
 export const StyledCarouselCount = styled.div`
-  background-color: ${props => hexToRgba(props.theme.primaryBackground, 0.4)};
+  background-color: ${props =>
+    lightenDarkenColor(props.theme.primaryBackground, 20)};
   display: flex;
   align-items: center;
   font-size: 10px;
@@ -64,8 +87,19 @@ export const StyledCarouselCount = styled.div`
   min-width: 56px;
   border-radius: 3px;
   position: relative;
-  margin-right: 5px;
+  margin-left: 5px;
   padding: 0 10px;
+`
+
+export const StyledCarouselMenu = styled(StyledCarouselCount)`
+  min-width: initial;
+  position: absolute;
+  padding: 0 5px;
+  top: 15px;
+  left: 100%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  margin-left: 0;
 `
 
 const CarouselIndicator = styled.li`
@@ -140,8 +174,11 @@ export const StyledCarouselIntroAnimated = styled.div`
   animation-fill-mode: forwards;
   color: #222;
   display: flex;
+  opacity: 0.8;
   position: absolute;
-  right: calc(100% + 20px);
+  pointer-events: none;
+  left: calc(100% + 70px);
+  transition: opacity 0.2s ease-in-out;
 `
 
 export const StyledCarouselIntro = styled.div`
@@ -158,11 +195,11 @@ export const StyledCarouselIntro = styled.div`
   white-space: nowrap;
 
   span:first-child {
-    min-width: 140px;
+    margin-right: 5px;
   }
 
   span:last-child {
-    margin-left: 5px;
+    min-width: 140px;
   }
 
   /* @media (min-width: 700px) {
@@ -201,6 +238,26 @@ export const StyledSlide = styled.div`
     th {
       padding-right: 10px;
       text-align: left;
+    }
+
+    &--header {
+      th {
+        border-bottom: ${props => props.theme.topicBorder};
+        font-size: 2rem;
+        padding: 15px 0 0 0;
+      }
+
+      &:first-child {
+        th {
+          padding-top: 0;
+        }
+      }
+    }
+
+    &--commands {
+      td {
+        padding: 3px 10px 3px 0;
+      }
     }
 
     &--keys {

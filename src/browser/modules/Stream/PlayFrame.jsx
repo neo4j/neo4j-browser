@@ -29,7 +29,7 @@ import FrameAside from '../Frame/FrameAside'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { ErrorsView } from './CypherFrame/ErrorsView'
 
-const { guides } = docs
+const { play } = docs
 
 export class PlayFrame extends Component {
   constructor (props) {
@@ -62,7 +62,7 @@ export class PlayFrame extends Component {
     ) {
       // Not found remotely (or other error)
       if (this.props.frame.response.status === 404) {
-        return this.unfound(guides['unfound'])
+        return this.unfound(play['unfound'])
       }
       return this.setState({
         guide: (
@@ -94,15 +94,19 @@ export class PlayFrame extends Component {
       splitStringOnFirst(this.props.frame.cmd, ' ')[1] || 'start'
     ).trim()
     const guideName = topicInput.toLowerCase().replace(/\s|-/g, '')
-    const guide = guides[guideName] || {}
+    const guide = play[guideName] || {}
 
     // Check if content exists
     if (Object.keys(guide).length) {
       const { content, title, subtitle } = guide
+      const hasCarousel = !!content.props.slides
       this.setState({
         guide: <Docs withDirectives content={content} />,
-        aside: title ? <FrameAside title={title} subtitle={subtitle} /> : null,
-        hasCarousel: !!content.props.slides
+        aside:
+          title && !hasCarousel ? (
+            <FrameAside title={title} subtitle={subtitle} />
+          ) : null,
+        hasCarousel
       })
       return
     }
@@ -114,13 +118,13 @@ export class PlayFrame extends Component {
       this.props.bus.self(action.type, action, res => {
         if (!res.success) {
           // No luck
-          return this.unfound(guides['unfound'])
+          return this.unfound(play['unfound'])
         }
         this.setState({ guide: <Docs withDirectives html={res.result} /> })
       })
     } else {
       // No bus. Give up
-      return this.unfound(guides['unfound'])
+      return this.unfound(play['unfound'])
     }
   }
 

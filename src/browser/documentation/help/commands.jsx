@@ -2,7 +2,7 @@ import React from 'react'
 
 const title = 'Commands'
 const subtitle = 'Typing commands is 1337'
-const content = (
+const content = types => (
   <React.Fragment>
     <p>
       In addition to composing and running Cypher queries, the editor bar up
@@ -10,52 +10,36 @@ const content = (
       <code>:</code>. Without a colon, we'll assume you're trying to enter a
       Cypher query.
     </p>
-    <table className='table-condensed table-help'>
+    <table className='table-condensed table-help table-help--commands'>
       <tbody>
-        <tr>
-          <th>Information:</th>
-          <td>
-            <a help-topic='play'>:help play</a>
-          </td>
-        </tr>
-        <tr>
-          <th>Server:</th>
-          <td>
-            <a help-topic='server'>:help server</a>
-          </td>
-        </tr>
-        <tr>
-          <th>Cypher:</th>
-          <td>
-            <a help-topic='cypher'>:help cypher</a>
-          </td>
-        </tr>
-        <tr>
-          <th>REST:</th>
-          <td>
-            <a help-topic='rest-get'>:help REST GET</a>
-            <a help-topic='rest-post'>:help REST POST</a>
-          </td>
-        </tr>
-        <tr>
-          <th>Params:</th>
-          <td>
-            <a help-topic='param'>:help param</a>
-            <a help-topic='params'>:help params</a>
-          </td>
-        </tr>
-        <tr>
-          <th>Query status:</th>
-          <td>
-            <a help-topic='queries'>:help queries</a>
-          </td>
-        </tr>
-        <tr>
-          <th>Styling visualization:</th>
-          <td>
-            <a help-topic='style'>:help style</a>
-          </td>
-        </tr>
+        {Object.keys(types).map((type, i) => {
+          const usage = type === 'help' ? 'topic' : 'guide | url'
+          return (
+            <React.Fragment key={`${type}-${i}`}>
+              <tr className='table-help--header'>
+                <th>{types[type].title}</th>
+                <th />
+              </tr>
+              <tr>
+                <th>Usage:</th>
+                <td>
+                  <code>{`:${type} <${usage}>`}</code>
+                </td>
+              </tr>
+              {types[type].commands.map((command, j) => {
+                const attrs = { [`${type}-topic`]: command.command }
+                return (
+                  <tr key={`${command.title}-${i}-${j}`}>
+                    <th>{command.title}:</th>
+                    <td>
+                      <a {...attrs}>{`:${type} ${command.command}`}</a>
+                    </td>
+                  </tr>
+                )
+              })}
+            </React.Fragment>
+          )
+        })}
       </tbody>
     </table>
   </React.Fragment>

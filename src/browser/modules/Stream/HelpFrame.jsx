@@ -23,9 +23,21 @@ import docs from '../../documentation'
 import Directives from 'browser-components/Directives'
 import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
-import { transformCommandToHelpTopic } from 'services/commandUtils'
+import {
+  transformCommandToHelpTopic,
+  transformHelpTopicToCommand
+} from 'services/commandUtils'
 
-const { help: chapters } = docs
+const { help: chapters, play } = docs
+
+const formatCommands = commands =>
+  Object.keys(commands)
+    .filter(key => key !== 'unknown' && key !== 'unfound')
+    .sort()
+    .map(command => ({
+      command: transformHelpTopicToCommand(command),
+      title: commands[command].title
+    }))
 
 const HelpFrame = ({ frame }) => {
   let help = 'Help topic not specified'
@@ -36,7 +48,24 @@ const HelpFrame = ({ frame }) => {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
       const chapter = chapters[helpTopic] || chapters['unfound']
-      const { title, subtitle, content } = chapter
+      const { title, subtitle } = chapter
+      let { content } = chapter
+
+      // The commands topic is a special case that uses dymaic data
+      if (helpTopic === 'commands') {
+        const commands = {
+          help: {
+            title: 'Help',
+            commands: formatCommands(chapters)
+          },
+          play: {
+            title: 'Play',
+            commands: formatCommands(play)
+          }
+        }
+        content = content(commands)
+      }
+
       aside = title ? <FrameAside title={title} subtitle={subtitle} /> : null
       help = <Docs content={content} />
     }

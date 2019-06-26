@@ -94,6 +94,13 @@ const trim = str => str.trim()
 const replaceSpaceWithDash = str => str.replace(/\s/g, '-')
 const snakeToCamel = str =>
   str.replace(/(-\w)/g, match => match[1].toUpperCase())
+const camelToSnake = (name, separator) => {
+  return name
+    .replace(/([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g, function (_, $1, $2) {
+      return $1 + ($2 && (separator || '_') + $2)
+    })
+    .toLowerCase()
+}
 
 export const transformCommandToHelpTopic = inputStr =>
   [inputStr || '']
@@ -102,6 +109,9 @@ export const transformCommandToHelpTopic = inputStr =>
     .map(trim)
     .map(replaceSpaceWithDash)
     .map(snakeToCamel)[0]
+
+export const transformHelpTopicToCommand = inputStr =>
+  camelToSnake(inputStr, '-')
 
 const quotedRegex = /^"(.*)"|'(.*)'/
 const arrowFunctionRegex = /^.*=>\s*([^$]*)$/

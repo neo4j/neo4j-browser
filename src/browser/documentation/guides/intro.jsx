@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
 
+const title = 'Intro'
 const slides = [
   <Fragment>
     <div className='col-sm-3'>
@@ -159,4 +160,4 @@ const content = (
   />
 )
 
-export default { content }
+export default { title, content }

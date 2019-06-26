@@ -87,7 +87,7 @@ import helpWhere from './help/where'
 import helpWith from './help/with'
 
 export default {
-  guides: {
+  play: {
     concepts: guideConcepts,
     cypher: guideCypher,
     intro: guideIntro,
