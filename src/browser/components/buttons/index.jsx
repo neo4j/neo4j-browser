@@ -21,7 +21,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
-import { hexToRgba } from 'browser-styles/utils'
 
 import SVGInline from 'react-svg-inline'
 
@@ -289,8 +288,6 @@ export const ActionButton = props => {
 }
 
 const BaseCarouselButton = styled.button`
-  color: ${props => props.theme.primaryText};
-  /* color: #fff; */
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -303,7 +300,7 @@ const BaseCarouselButton = styled.button`
   outline: none;
 
   &:disabled {
-    color: ${props => hexToRgba(props.theme.primaryText, 0.2)};
+    opacity: 0.4;
     pointer-events: none;
   }
 

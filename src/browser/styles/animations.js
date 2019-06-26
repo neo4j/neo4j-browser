@@ -26,7 +26,7 @@ export const pulse = keyframes`
   }
 `
 
-export const bounceLeft = keyframes`
+export const bounceRight = keyframes`
   0%, 90% {
     transform: translate3d(0, 0, 0);
   }

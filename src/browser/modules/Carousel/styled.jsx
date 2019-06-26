@@ -19,55 +19,36 @@
  */
 
 import styled from 'styled-components'
-import { hexToRgba, lightenDarkenColor } from 'browser-styles/utils'
-import { bounceLeft } from 'browser-styles/animations'
+import { bounceRight } from 'browser-styles/animations'
 
 export const StyledCarousel = styled.div`
   position: relative;
-
-  &:hover .carousel-intro-animation {
-    opacity: 0;
-  }
+  padding-top: 6px;
 `
 
 export const SlideContainer = styled.div`
   padding: 0;
   width: 100%;
   display: inline-block;
-  max-height: 430px;
+  max-height: 420px;
   overflow-y: auto;
 `
 
 export const StyledCarouselButtonContainer = styled.div`
+  color: ${props => props.theme.secondaryButtonText};
   display: flex;
   align-items: center;
   justify-content: flex-end;
   position: absolute;
-  left: -30px;
+  right: -30px;
   top: -30px;
   z-index: 10;
-  padding: 15px;
   transition: transform 0.2s ease-in-out;
-
-  &.is-hidden {
-    transform: translateX(calc(-100% + 15px));
-
-    .carousel-menu-icon {
-      opacity: 0.8;
-    }
-  }
-
-  &:hover {
-    transform: translateX(0);
-
-    .carousel-menu-icon {
-      opacity: 0;
-    }
-  }
+  border-left: ${props => props.theme.inFrameBorder};
+  border-bottom: ${props => props.theme.inFrameBorder};
 `
 export const StyledCarouselButtonContainerInner = styled.div`
-  background-color: ${props =>
-    lightenDarkenColor(props.theme.primaryBackground, 20)};
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,30 +57,15 @@ export const StyledCarouselButtonContainerInner = styled.div`
 `
 
 export const StyledCarouselCount = styled.div`
-  background-color: ${props =>
-    lightenDarkenColor(props.theme.primaryBackground, 20)};
   display: flex;
   align-items: center;
   font-size: 10px;
   font-weight: bold;
-  justify-content: center;
-  height: 28px;
-  min-width: 56px;
+  justify-content: flex-end;
+  height: 26px;
   border-radius: 3px;
   position: relative;
-  margin-left: 5px;
-  padding: 0 10px;
-`
-
-export const StyledCarouselMenu = styled(StyledCarouselCount)`
-  min-width: initial;
-  position: absolute;
-  padding: 0 5px;
-  top: 15px;
-  left: 100%;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-  margin-left: 0;
+  padding: 0 10px 0 15px;
 `
 
 const CarouselIndicator = styled.li`
@@ -111,11 +77,13 @@ const CarouselIndicator = styled.li`
   z-index: 1;
 
   > span {
-    background-color: ${props => hexToRgba(props.theme.primaryText, 0.2)};
+    background-color: ${props => props.theme.secondaryButtonText};
     display: block;
     border-radius: 2px;
     width: 4px;
     height: 4px;
+    opacity: 0.4;
+    transition: opacity 0.1s ease-in-out;
   }
 
   &::before {
@@ -159,25 +127,26 @@ const CarouselIndicator = styled.li`
 `
 export const CarouselIndicatorInactive = styled(CarouselIndicator)`
   &:hover > span {
-    background-color: ${props => props.theme.primaryText};
+    opacity: 1;
   }
 `
 export const CarouselIndicatorActive = styled(CarouselIndicator)`
   > span {
-    background-color: ${props => props.theme.primaryText};
+    opacity: 1;
   }
 `
 
 export const StyledCarouselIntroAnimated = styled.div`
   align-items: center;
-  animation: ${bounceLeft} 4s ease-in-out infinite;
+  animation: ${bounceRight} 4s ease-in-out infinite;
   animation-fill-mode: forwards;
   color: #222;
   display: flex;
   opacity: 0.8;
   position: absolute;
+  right: calc(100% + 20px);
+  bottom: 0;
   pointer-events: none;
-  left: calc(100% + 70px);
   transition: opacity 0.2s ease-in-out;
 `
 
@@ -195,11 +164,8 @@ export const StyledCarouselIntro = styled.div`
   white-space: nowrap;
 
   span:first-child {
-    margin-right: 5px;
-  }
-
-  span:last-child {
     min-width: 140px;
+    margin-right: 5px;
   }
 
   /* @media (min-width: 700px) {

@@ -69,7 +69,7 @@ export default class Carousel extends Component {
         <StyledCarouselButtonContainer>
           {showIntro &&
             !this.state.wasClicked && (
-            <StyledCarouselIntroAnimated>
+            <StyledCarouselIntroAnimated className='carousel-intro-animation'>
               <StyledCarouselIntro>
                 <span>Use the navigation to get started</span>
                 <span>{`->`}</span>

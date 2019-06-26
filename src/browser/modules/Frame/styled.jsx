@@ -46,6 +46,10 @@ export const StyledFrame = styled.article`
   ${props => (props.fullscreen ? 'bottom: 0' : null)};
   ${props => (props.fullscreen ? 'right: 0' : null)};
   ${props => (props.fullscreen ? 'z-index: 1030' : null)};
+
+  &:hover .carousel-intro-animation {
+    opacity: 0;
+  }
 `
 
 export const StyledFrameBody = styled.div`
