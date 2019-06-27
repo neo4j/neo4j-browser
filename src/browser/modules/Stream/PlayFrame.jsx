@@ -31,6 +31,13 @@ import { ErrorsView } from './CypherFrame/ErrorsView'
 
 const { play } = docs
 
+const checkHtmlForSlides = html => {
+  const el = document.createElement('html')
+  el.innerHTML = html
+  const slides = el.getElementsByTagName('slide')
+  return !!slides.length
+}
+
 export class PlayFrame extends Component {
   constructor (props) {
     super(props)
@@ -45,12 +52,9 @@ export class PlayFrame extends Component {
   componentDidMount () {
     if (this.props.frame.result) {
       // Found remote guide
-      const el = document.createElement('html')
-      el.innerHTML = this.props.frame.result
-      const slides = el.getElementsByTagName('slide')
       this.setState({
         guide: <Docs withDirectives html={this.props.frame.result} />,
-        hasCarousel: !!slides.length,
+        hasCarousel: checkHtmlForSlides(this.props.frame.result),
         isRemote: true
       })
       return
@@ -120,7 +124,11 @@ export class PlayFrame extends Component {
           // No luck
           return this.unfound(play['unfound'])
         }
-        this.setState({ guide: <Docs withDirectives html={res.result} /> })
+        // Found remote guide
+        this.setState({
+          guide: <Docs withDirectives html={res.result} />,
+          hasCarousel: checkHtmlForSlides(res.result)
+        })
       })
     } else {
       // No bus. Give up
