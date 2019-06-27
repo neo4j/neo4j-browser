@@ -24,6 +24,11 @@ import { bounceRight } from 'browser-styles/animations'
 export const StyledCarousel = styled.div`
   position: relative;
   padding-top: 6px;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
 `
 
 export const SlideContainer = styled.div`
