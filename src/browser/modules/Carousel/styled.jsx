@@ -23,7 +23,7 @@ import { bounceRight } from 'browser-styles/animations'
 
 export const StyledCarousel = styled.div`
   position: relative;
-  padding-top: 6px;
+  padding-top: 10px;
 
   .row {
     margin-left: 0;
@@ -45,15 +45,16 @@ export const StyledCarouselButtonContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: absolute;
-  right: -30px;
+  left: 50%;
   top: -30px;
   z-index: 10;
-  transition: transform 0.2s ease-in-out;
   border-left: ${props => props.theme.inFrameBorder};
   border-bottom: ${props => props.theme.inFrameBorder};
+  border-right: 1px solid #e6e9ef;
+  transform: translateX(-50%);
 `
 export const StyledCarouselButtonContainerInner = styled.div`
-  height: 26px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,7 +68,7 @@ export const StyledCarouselCount = styled.div`
   font-size: 10px;
   font-weight: bold;
   justify-content: flex-end;
-  height: 26px;
+  height: 30px;
   border-radius: 3px;
   position: relative;
   padding: 0 10px 0 15px;
@@ -84,9 +85,9 @@ const CarouselIndicator = styled.li`
   > span {
     background-color: ${props => props.theme.secondaryButtonText};
     display: block;
-    border-radius: 2px;
-    width: 4px;
-    height: 4px;
+    border-radius: 3px;
+    width: 6px;
+    height: 6px;
     opacity: 0.4;
     transition: opacity 0.1s ease-in-out;
   }

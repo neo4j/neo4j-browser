@@ -184,10 +184,10 @@ export const AboutIcon = props => (
 )
 
 export const SlidePreviousIcon = () => (
-  <IconContainer icon={arrowLeft1} width={16} />
+  <IconContainer icon={arrowLeft1} width={20} />
 )
 export const SlideNextIcon = () => (
-  <IconContainer icon={arrowRight1} width={16} />
+  <IconContainer icon={arrowRight1} width={20} />
 )
 export const TableIcon = () => (
   <IconContainer icon={table01} text='Table' width={20} />
