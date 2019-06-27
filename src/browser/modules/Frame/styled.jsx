@@ -129,6 +129,7 @@ export const StyledFrameSidebar = styled.ul`
 
 export const StyledFrameTitlebarButtonSection = styled.ul`
   flex: 0 0 auto;
+  display: flex;
   margin-left: -5px;
   list-style: none;
   padding-left: 0;

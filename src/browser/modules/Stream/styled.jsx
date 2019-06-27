@@ -215,7 +215,6 @@ export const DropdownButton = styled.li`
     position: relative;
     z-index: 99999;
   }
-  display: inline-block;
   &:hover {
     > ul li {
       display: block;
