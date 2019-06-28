@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
+import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Intro'
 const slides = [
-  <Fragment>
+  <Slide>
     <div className='col-sm-3'>
       <h3>Introduction</h3>
       <p className='lead'>Getting started with Neo4j Browser</p>
@@ -26,8 +27,8 @@ const slides = [
         <li>Convenient exploration of Neo4j's REST API</li>
       </ul>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Editor</h3>
       <p className='lead'>Command editing and execution</p>
@@ -49,8 +50,8 @@ const slides = [
     <div className='col-sm-4'>
       <img src='./assets/images/screen_editor.png' className='img-responsive' />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Stream</h3>
       <p className='lead'>Scrolling series of result frames</p>
@@ -73,8 +74,8 @@ const slides = [
     <div className='col-sm-4'>
       <img src='./assets/images/screen_stream.png' className='img-responsive' />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Frame code view</h3>
       <p className='lead'>Viewing requests and responses</p>
@@ -96,8 +97,8 @@ const slides = [
         className='img-responsive'
       />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Sidebar</h3>
       <p className='lead'>Convenient clickable access</p>
@@ -120,8 +121,8 @@ const slides = [
         className='img-responsive'
       />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-4'>
       <h3>Next steps</h3>
       <p className='lead'>
@@ -148,7 +149,7 @@ const slides = [
         </li>
       </ul>
     </div>
-  </Fragment>
+  </Slide>
 ]
 
 const content = (

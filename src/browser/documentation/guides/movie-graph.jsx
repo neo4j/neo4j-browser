@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
+import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Movie Graph'
 const slides = [
-  <Fragment>
+  <Slide>
     <div className='col-sm-3'>
       <h3>Movie Graph</h3>
       <p className='lead'>Pop-cultural connections between actors and movies</p>
@@ -22,8 +23,8 @@ const slides = [
         <li>Solve: the Bacon Path</li>
       </ol>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
       <br />
@@ -562,8 +563,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
         </pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
       <br />
@@ -599,8 +600,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
         <pre className='pre-scrollable code runnable'>{`MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
       <br />
@@ -634,8 +635,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
         <pre className='pre-scrollable code runnable'>{`MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
       <br />
@@ -671,8 +672,8 @@ RETURN p`}</pre>
         </aside>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
       <br />
@@ -709,8 +710,8 @@ RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DE
 RETURN tom, m, coActors, m2, cruise`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h5>The Movie Graph</h5>
       <br />
@@ -745,8 +746,8 @@ RETURN tom, m, coActors, m2, cruise`}</pre>
         <pre className='pre-scrollable code runnable'>{`MATCH (n) RETURN n`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-4'>
       <h3>Next steps</h3>
     </div>
@@ -780,7 +781,7 @@ RETURN tom, m, coActors, m2, cruise`}</pre>
         </li>
       </ul>
     </div>
-  </Fragment>
+  </Slide>
 ]
 
 const content = (

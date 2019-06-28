@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
+import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Cypher'
 const slides = [
-  <Fragment>
+  <Slide>
     <div className='col-sm-3'>
       <h3>Cypher</h3>
       <p className='lead'>Neo4j's graph query language</p>
@@ -18,8 +19,8 @@ const slides = [
         <li>declarative, describing what to find, not how to find it</li>
       </ul>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>CREATE</h3>
       <p className='lead'>Create a node</p>
@@ -48,8 +49,8 @@ const slides = [
         </li>
       </ul>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>MATCH</h3>
       <p className='lead'>Finding nodes</p>
@@ -83,8 +84,8 @@ const slides = [
         </li>
       </ul>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>CREATE more</h3>
       <p className='lead'>Nodes and relationships</p>
@@ -109,8 +110,8 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
 (rvb)-[:KNOWS]->(ally)`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Pattern matching</h3>
       <p className='lead'>Describe what to find in the graph</p>
@@ -145,8 +146,8 @@ WHERE ee.name = "Emil" RETURN ee, friends`}</pre>
         </li>
       </ul>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Recommend</h3>
       <p className='lead'>Using patterns</p>
@@ -179,8 +180,8 @@ RETURN DISTINCT surfer`}</pre>
         </li>
       </ul>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Analyze</h3>
       <p className='lead'>Using the visual query plan</p>
@@ -199,8 +200,8 @@ WHERE js.name = "Johan" AND surfer.hobby = "surfing"
 RETURN DISTINCT surfer`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Live Cypher warnings</h3>
       <p className='lead'>Identify query problems in real time</p>
@@ -217,8 +218,8 @@ RETURN DISTINCT surfer`}</pre>
         className='img-responsive'
       />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-4'>
       <h3>Next steps</h3>
       <p>
@@ -273,7 +274,7 @@ RETURN DISTINCT surfer`}</pre>
         </li>
       </ul>
     </div>
-  </Fragment>
+  </Slide>
 ]
 
 const content = (

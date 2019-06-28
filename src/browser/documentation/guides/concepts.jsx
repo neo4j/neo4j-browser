@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
+import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Concepts'
 const slides = [
-  <Fragment>
+  <Slide>
     <div className='col-sm-3'>
       <h3>Graph Fundamentals</h3>
       <p className='lead'>Basic concepts to get you going.</p>
@@ -18,8 +19,8 @@ const slides = [
         <li>Properties - named data values</li>
       </ol>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>
         A&nbsp;
@@ -48,8 +49,8 @@ const slides = [
     <div className='col-sm-4'>
       <img src='./assets/images/one_node.png' className='img-responsive' />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Labels</h3>
       <p className='lead'>Associate a set of nodes.</p>
@@ -71,8 +72,8 @@ const slides = [
     <div className='col-sm-4'>
       <img src='./assets/images/labeled_node.png' className='img-responsive' />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>More Nodes</h3>
       <p className='lead'>
@@ -100,8 +101,8 @@ const slides = [
     <div className='col-sm-4'>
       <img src='./assets/images/more_nodes.png' className='img-responsive' />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Consider Relationships</h3>
       <p className='lead'>Connect nodes in the graph</p>
@@ -126,8 +127,8 @@ const slides = [
     <div className='col-sm-4'>
       <img src='./assets/images/relationships.png' className='img-responsive' />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Relationship properties</h3>
       <p className='lead'>Store information shared by two nodes.</p>
@@ -147,8 +148,8 @@ const slides = [
     <div className='col-sm-4'>
       <img src='./assets/images/rel-props.png' className='img-responsive' />
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-4'>
       <h3>Next steps</h3>
       <p>
@@ -183,7 +184,7 @@ const slides = [
         </li>
       </ul>
     </div>
-  </Fragment>
+  </Slide>
 ]
 
 const content = (

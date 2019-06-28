@@ -105,7 +105,13 @@ export class PlayFrame extends Component {
       const { content, title, subtitle } = guide
       const hasCarousel = !!content.props.slides
       this.setState({
-        guide: <Docs withDirectives content={content} />,
+        guide: (
+          <Docs
+            withDirectives
+            hasCarouselComponent={hasCarousel}
+            content={content}
+          />
+        ),
         aside:
           title && !hasCarousel ? (
             <FrameAside title={title} subtitle={subtitle} />

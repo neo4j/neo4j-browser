@@ -47,7 +47,11 @@ export default class Guides extends Component {
   }
 
   render () {
-    const { content, html, withDirectives } = this.props
+    const { content, html, withDirectives, hasCarouselComponent } = this.props
+
+    if (hasCarouselComponent) {
+      return content
+    }
 
     if (this.state.slides && Array.isArray(this.state.slides)) {
       const ListOfSlides = this.state.slides.map(slide => {

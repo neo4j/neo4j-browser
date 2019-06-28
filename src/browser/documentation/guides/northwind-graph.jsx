@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
+import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Northwind Graph'
 const slides = [
-  <Fragment>
+  <Slide>
     <div className='col-sm-3'>
       <h3>Northwind Graph</h3>
       <p className='lead'>From RDBMS to Graph, using a classic dataset</p>
@@ -25,8 +26,8 @@ const slides = [
         <li>Promote: transform join records into relationships</li>
       </ol>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Product Catalog</h3>
       <p>
@@ -82,8 +83,8 @@ SET n = row`}</pre>
         <pre className='pre-scrollable code runnable'>{`CREATE INDEX ON :Supplier(supplierID)`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Product Catalog Graph</h3>
       <p>
@@ -135,8 +136,8 @@ CREATE (s)-[:SUPPLIES]->(p)`}</pre>
         </aside>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Querying Product Catalog Graph</h3>
       <p>Lets try some queries using patterns.</p>
@@ -167,8 +168,8 @@ RETURN DISTINCT s.companyName as ProduceSuppliers`}</pre>
         <figcaption>Find the produce suppliers.</figcaption>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Customer Orders</h3>
       <p>
@@ -213,8 +214,8 @@ CREATE (c)-[:PURCHASED]->(o)`}</pre>
         </aside>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-3'>
       <h3>Customer Order Graph</h3>
       <p>
@@ -258,8 +259,8 @@ details.quantity = toInteger(row.quantity)`}</pre>
 RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased`}</pre>
       </figure>
     </div>
-  </Fragment>,
-  <Fragment>
+  </Slide>,
+  <Slide>
     <div className='col-sm-4'>
       <h4>Northwind Graph</h4>
       <h3>Next steps</h3>
@@ -301,7 +302,7 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
         </li>
       </ul>
     </div>
-  </Fragment>
+  </Slide>
 ]
 
 const content = (
