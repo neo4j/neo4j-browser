@@ -39,15 +39,22 @@ import {
 export default class Carousel extends Component {
   state = {
     visibleSlide: 0,
-    firstRender: true,
     wasClicked: false
   }
   constructor (props) {
     super(props)
     this.slides = this.props.slides || []
   }
-  shouldComponentUpdate () {
-    return this.state.firstRender
+  onKeyDown (ev) {
+    if (ev.keyCode === 37 && this.state.visibleSlide !== 0) {
+      this.prev()
+    }
+    if (
+      ev.keyCode === 39 &&
+      this.state.visibleSlide !== this.slides.length - 1
+    ) {
+      this.next()
+    }
   }
   next () {
     this.setState({ visibleSlide: this.state.visibleSlide + 1 })
@@ -65,7 +72,11 @@ export default class Carousel extends Component {
   render () {
     const { showIntro, withDirectives } = this.props
     return (
-      <StyledCarousel data-testid='carousel'>
+      <StyledCarousel
+        data-testid='carousel'
+        onKeyDown={e => this.onKeyDown(e)}
+        tabIndex='0'
+      >
         <StyledCarouselButtonContainer>
           {showIntro &&
             !this.state.wasClicked && (

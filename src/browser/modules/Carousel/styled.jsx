@@ -23,6 +23,9 @@ import { bounceRight } from 'browser-styles/animations'
 
 export const StyledCarousel = styled.div`
   padding-bottom: 20px;
+  min-height: 100%;
+  width: 100%;
+  outline: none;
 
   .row {
     margin-left: 0;
