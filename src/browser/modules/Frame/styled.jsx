@@ -65,6 +65,11 @@ export const StyledFrameBody = styled.div`
   width: 100%;
   padding: 30px;
 
+  .has-carousel & {
+    position: relative;
+    padding-bottom: 40px;
+  }
+
   .no-padding & {
     padding: 0;
   }

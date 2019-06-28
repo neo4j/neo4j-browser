@@ -22,8 +22,7 @@ import styled from 'styled-components'
 import { bounceRight } from 'browser-styles/animations'
 
 export const StyledCarousel = styled.div`
-  position: relative;
-  padding-top: 10px;
+  padding-bottom: 20px;
 
   .row {
     margin-left: 0;
@@ -43,18 +42,17 @@ export const StyledCarouselButtonContainer = styled.div`
   color: ${props => props.theme.secondaryButtonText};
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   position: absolute;
   left: 50%;
-  top: -30px;
+  bottom: 0;
   z-index: 10;
-  border-left: ${props => props.theme.inFrameBorder};
-  border-bottom: ${props => props.theme.inFrameBorder};
-  border-right: 1px solid #e6e9ef;
+  border-top: ${props => props.theme.inFrameBorder};
   transform: translateX(-50%);
+  height: 39px;
+  width: 100%;
 `
 export const StyledCarouselButtonContainerInner = styled.div`
-  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,10 +66,11 @@ export const StyledCarouselCount = styled.div`
   font-size: 10px;
   font-weight: bold;
   justify-content: flex-end;
-  height: 30px;
   border-radius: 3px;
+  min-width: 44px;
   position: relative;
-  padding: 0 10px 0 15px;
+  padding: 0;
+  margin-right: 10px;
 `
 
 const CarouselIndicator = styled.li`
