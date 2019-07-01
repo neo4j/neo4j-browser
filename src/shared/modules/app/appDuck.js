@@ -28,6 +28,7 @@ export const URL_ARGUMENTS_CHANGE = `${NAME}/URL_ARGUMENTS_CHANGE`
 // State constants
 export const DESKTOP = 'DESKTOP'
 export const WEB = 'WEB'
+export const CLOUD = 'CLOUD'
 
 // Selectors
 export const getHostedUrl = state => (state[NAME] || {}).hostedUrl || null

@@ -20,6 +20,7 @@
 
 /* global jest, describe, test, expect */
 import * as utils from './utils'
+import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
 
 describe('utils', () => {
   describe('serialExecution', () => {
@@ -693,5 +694,61 @@ describe('toKeyString', () => {
         expect(utils.generateBoltHost(test.host)).toEqual(test.expected)
       })
     })
+  })
+  describe('detectRuntimeEnv', () => {
+    const tests = [
+      [
+        'Injected Desktop API',
+        [
+          {
+            neo4jDesktopApi: { exists: true },
+            location: { href: 'https://mydomain.com:7474' }
+          },
+          []
+        ],
+        DESKTOP
+      ],
+      [
+        'URL params Desktop API',
+        [
+          {
+            location: {
+              href:
+                'https://mydomain.com:7474?neo4jDesktopApiUrl=' +
+                encodeURIComponent('https://graphql.api.local:3001') +
+                '&neo4jDesktopGraphAppClientId=xxx'
+            }
+          },
+          []
+        ],
+        DESKTOP
+      ],
+      [
+        'Cloud root domain',
+        [{ location: { href: 'https://cloud.com:7474' } }, ['cloud.com']],
+        CLOUD
+      ],
+      [
+        'Cloud sub domain',
+        [
+          { location: { href: 'https://xyxy.zyzy.cloud.com:7474/path' } },
+          ['cloud.com']
+        ],
+        CLOUD
+      ],
+      [
+        'No cloud match',
+        [{ location: { href: 'https://otherdomain.com:7474' } }, ['cloud.com']],
+        WEB
+      ],
+      ['No input', [undefined], WEB]
+    ]
+
+    test.each(tests)(
+      'Detects correct environment for test named %s',
+      (name, input, output) => {
+        expect(utils.detectRuntimeEnv(...input)).toEqual(output)
+      }
+    )
   })
 })

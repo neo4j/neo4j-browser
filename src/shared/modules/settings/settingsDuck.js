@@ -29,6 +29,8 @@ export const LIGHT_THEME = 'normal'
 export const OUTLINE_THEME = 'outline'
 export const DARK_THEME = 'dark'
 
+export const NEO4J_CLOUD_DOMAINS = ['neo4j.io']
+
 export const getSettings = state => state[NAME]
 export const getMaxHistory = state =>
   state[NAME].maxHistory || initialState.maxHistory

@@ -20,7 +20,7 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { APP_START, WEB } from 'shared/modules/app/appDuck'
+import { APP_START, DESKTOP, CLOUD } from 'shared/modules/app/appDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
@@ -44,7 +44,11 @@ const initialState = {
 
 export default function (state = initialState, action) {
   if (action.type === APP_START) {
-    state = { ...initialState, ...state, browserSync: action.env === WEB }
+    state = {
+      ...initialState,
+      ...state,
+      browserSync: shouldUseBrowserSync(action)
+    }
   }
 
   switch (action.type) {
@@ -55,6 +59,11 @@ export default function (state = initialState, action) {
     default:
       return state
   }
+}
+
+// Helper functions
+const shouldUseBrowserSync = action => {
+  return ![DESKTOP, CLOUD].includes(action.env)
 }
 
 // Action creators
