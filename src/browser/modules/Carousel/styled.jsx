@@ -71,7 +71,8 @@ export const StyledCarouselCount = styled.div`
   justify-content: flex-end;
   border-radius: 3px;
   min-width: 44px;
-  position: relative;
+  position: absolute;
+  right: 100%;
   padding: 0;
   margin-right: 10px;
 `
@@ -152,8 +153,7 @@ export const StyledCarouselIntroAnimated = styled.div`
   display: flex;
   opacity: 0.8;
   position: absolute;
-  right: calc(100% + 20px);
-  bottom: 0;
+  right: calc(100% + 50px);
   pointer-events: none;
   transition: opacity 0.2s ease-in-out;
 `
@@ -175,19 +175,6 @@ export const StyledCarouselIntro = styled.div`
     min-width: 140px;
     margin-right: 5px;
   }
-
-  /* @media (min-width: 700px) {
-    display: flex;
-    span:last-child {
-      min-width: 120px;
-    }
-  }
-
-  @media (min-width: 850px) {
-    span:last-child {
-      white-space: nowrap;
-    }
-  } */
 `
 
 export const StyledUl = styled.ul`

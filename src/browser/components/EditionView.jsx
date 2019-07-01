@@ -22,9 +22,9 @@ import styled from 'styled-components'
 import { H3 } from 'browser-components/headers'
 
 const Aside = styled.div`
-  display: table-cell;
-  padding: 0 15px;
+  flex: 0 0 25%;
   width: 25%;
+  padding: 0 15px;
   font-family: ${props => props.theme.primaryFontFamily};
   font-size: 16px;
   font-weight: 300;
@@ -39,7 +39,7 @@ const StyledConnectionBody = styled.div`
   padding-left: 50px;
 `
 const BodyContainer = styled.div`
-  display: table-cell;
+  flex: 1 1 auto;
 `
 const Code = styled.code`
   white-space: nowrap;

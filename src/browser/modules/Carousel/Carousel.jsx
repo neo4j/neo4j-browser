@@ -87,10 +87,10 @@ export default class Carousel extends Component {
               </StyledCarouselIntro>
             </StyledCarouselIntroAnimated>
           )}
-          <StyledCarouselCount>
-            {`${this.state.visibleSlide + 1} / ${this.slides.length}`}
-          </StyledCarouselCount>
           <StyledCarouselButtonContainerInner>
+            <StyledCarouselCount>
+              {`${this.state.visibleSlide + 1} / ${this.slides.length}`}
+            </StyledCarouselCount>
             <CarouselButton
               className={'previous-slide'}
               data-testid='previousSlide'

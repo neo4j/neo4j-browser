@@ -24,9 +24,9 @@ export const StyledConnectionForm = styled.form`
   padding: 0 15px;
 `
 export const StyledConnectionAside = styled.div`
-  display: table-cell;
-  padding: 0 15px;
+  flex: 0 0 25%;
   width: 25%;
+  padding: 0 15px;
   font-family: ${props => props.theme.primaryFontFamily};
   font-size: 16px;
   font-weight: 300;
@@ -50,10 +50,10 @@ export const StyledConnectionTextInput = styled.input`
   width: 44%;
 `
 export const StyledConnectionBodyContainer = styled.div`
-  display: table-cell;
+  flex: 1 1 auto;
 `
 export const StyledConnectionBody = styled.div`
-  display: table-cell;
+  flex: 1 1 auto;
   font-size: 1.3em;
   line-height: 2em;
   padding-left: 50px;
