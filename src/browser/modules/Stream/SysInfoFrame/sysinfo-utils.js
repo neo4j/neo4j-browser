@@ -102,7 +102,7 @@ export const flattenAttributes = data => {
       }))
     )
   } else {
-    return null
+    return {}
   }
 }
 
