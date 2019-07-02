@@ -20,7 +20,7 @@
 
 /* global describe, test, expect */
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
 import { CypherFrame } from './index.jsx'
@@ -53,9 +53,13 @@ describe('CypherFrame', () => {
     const errorProps = createProps('error', { code: 'Test.Error' })
 
     // When
-    const { queryByText, getByText, getByTestId, rerender } = render(
-      withProvider(store, <CypherFrame {...pendingProps} />)
-    )
+    const {
+      queryByText,
+      getByText,
+      getAllByText,
+      getByTestId,
+      rerender
+    } = render(withProvider(store, <CypherFrame {...pendingProps} />))
 
     // Then
     expect(getByTestId('spinner')).not.toBeNull()
@@ -78,8 +82,8 @@ describe('CypherFrame', () => {
     // Then
     expect(queryByText(/Table/i)).toBeNull()
     expect(queryByText(/Code/i)).toBeNull()
-    expect(getByText(/Error/)).not.toBeNull()
-    expect(getByText(/Test.Error/)).not.toBeNull()
+    expect(getAllByText(/Error/)).not.toBeNull()
+    expect(getAllByText(/Test.Error/)).not.toBeNull()
 
     // When successful request again
     rerender(withProvider(store, <CypherFrame {...successProps} />))

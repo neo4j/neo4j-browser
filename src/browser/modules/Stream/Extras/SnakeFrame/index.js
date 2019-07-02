@@ -106,7 +106,7 @@ export class SnakeFrame extends React.Component {
         <SplashContents>
           <h2>Snake game!</h2>
           <InitialStartButton backgroundColor={foodColor} onClick={this.play}>
-            Start game!
+            Start the game!
           </InitialStartButton>
           <p>
             Use <strong>arrow keys</strong> or <strong>a-s-w-d</strong> to

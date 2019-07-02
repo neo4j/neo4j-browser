@@ -21,14 +21,14 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { render, fireEvent } from 'react-testing-library'
+import { render, fireEvent } from '@testing-library/react'
 
 import Snake from './Snake'
 import { SnakeFrame } from './index'
 
 test('Frame renders', () => {
   const { getByText } = render(<SnakeFrame />)
-  const startBtn = getByText(/start/i)
+  const startBtn = getByText(/start the game!/i)
   fireEvent.click(startBtn)
 })
 test('Extras renders', () => {

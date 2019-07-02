@@ -27,7 +27,6 @@ import {
   createReduxMiddleware as createSuberReduxMiddleware
 } from 'suber'
 import { BusProvider } from 'react-suber'
-import './init.js'
 import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'

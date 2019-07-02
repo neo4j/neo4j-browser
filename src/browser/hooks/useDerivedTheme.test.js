@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import { render, act } from 'react-testing-library'
+import { render, act } from '@testing-library/react'
 import useDerivedTheme from './useDerivedTheme'
 import {
   LIGHT_THEME,

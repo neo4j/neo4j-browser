@@ -36,6 +36,7 @@ module.exports = {
   plugins: getPlugins(),
   resolve: {
     alias: {
+      'react-dom': '@hot-loader/react-dom',
       'src-root': path.resolve(helpers.sourcePath),
       'project-root': path.resolve(__dirname, '../'),
       services: path.resolve(helpers.sourcePath, 'shared/services'),
