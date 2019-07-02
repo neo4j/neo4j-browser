@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Bolt encryption'
 const subtitle = 'Certificate handling in web browsers'
+const category = 'boltProtocol'
 const content = (
   <React.Fragment>
     <p>
@@ -35,4 +36,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'FOREACH'
 const subtitle = 'Operate on a collection'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -45,4 +46,4 @@ FOREACH (n IN nodes(p) | SET n.available = FALSE )`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

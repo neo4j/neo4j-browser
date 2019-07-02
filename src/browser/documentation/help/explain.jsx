@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'EXPLAIN'
 const subtitle = 'Explain query execution'
+const category = 'executionPlans'
 const content = (
   <React.Fragment>
     <p>
@@ -40,4 +41,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

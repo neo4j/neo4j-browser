@@ -1,6 +1,7 @@
 import React from 'react'
 
 const title = 'REST DELETE'
+const category = 'restApiCommands'
 const content = (
   <React.Fragment>
     <p>
@@ -33,4 +34,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, content }
+export default { title, category, content }

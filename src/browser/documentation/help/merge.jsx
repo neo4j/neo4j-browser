@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'MERGE'
 const subtitle = 'Create missing graph data'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -64,4 +65,4 @@ RETURN charlie`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

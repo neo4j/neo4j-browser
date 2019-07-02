@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Play'
 const subtitle = 'Display a mini-deck'
+const category = 'browserUiCommands'
 const content = (
   <React.Fragment>
     <p>
@@ -40,4 +41,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

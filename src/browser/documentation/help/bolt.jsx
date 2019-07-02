@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Bolt'
 const subtitle = 'Using Bolt in Neo4j Browser'
+const category = 'boltProtocol'
 const content = (
   <React.Fragment>
     <p>
@@ -28,4 +29,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

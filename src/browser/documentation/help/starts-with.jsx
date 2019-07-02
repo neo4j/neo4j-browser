@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'STARTS WITH'
 const subtitle = 'Matching the start of a string'
+const category = 'cypherPredicates'
 const content = (
   <React.Fragment>
     <p>
@@ -44,4 +45,4 @@ RETURN director.name`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

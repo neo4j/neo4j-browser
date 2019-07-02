@@ -3,6 +3,7 @@ import React from 'react'
 const title = 'DROP CONSTRAINT ON'
 const subtitle =
   'Drops a property constraint on a node label or relationship type'
+const category = 'schemaClauses'
 const content = (
   <React.Fragment>
     <p>
@@ -61,4 +62,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

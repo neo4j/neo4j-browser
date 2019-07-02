@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'bolt+routing in Neo4j Browser'
 const subtitle = 'What drivers are used when'
+const category = 'boltProtocol'
 const content = (
   <React.Fragment>
     <p>
@@ -76,4 +77,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

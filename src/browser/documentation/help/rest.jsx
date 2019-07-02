@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'REST'
 const subtitle = 'Any HTTP verb'
+const category = 'restApiCommands'
 const content = (
   <React.Fragment>
     <p>
@@ -24,4 +25,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

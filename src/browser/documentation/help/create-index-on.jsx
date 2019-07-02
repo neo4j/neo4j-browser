@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'CREATE INDEX ON'
 const subtitle = 'Index labeled nodes by property'
+const category = 'schemaClauses'
 const content = (
   <React.Fragment>
     <p>
@@ -41,4 +42,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

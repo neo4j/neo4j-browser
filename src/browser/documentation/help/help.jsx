@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Help'
 const subtitle = 'What is all this?'
+const category = 'browserUiCommands'
 const content = (
   <React.Fragment>
     <p>
@@ -53,4 +54,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

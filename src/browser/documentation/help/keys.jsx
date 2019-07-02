@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Keys'
 const subtitle = 'Keyboard shortcuts'
+const category = 'browserUiCommands'
 const content = (
   <React.Fragment>
     <table className='table-condensed table-help table-help--keys'>
@@ -87,4 +88,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

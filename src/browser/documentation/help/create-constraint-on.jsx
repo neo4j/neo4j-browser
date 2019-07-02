@@ -3,6 +3,7 @@ import React from 'react'
 const title = 'CREATE CONSTRAINT ON'
 const subtitle =
   'Create a property constraint on a node label or relationship type'
+const category = 'schemaClauses'
 const content = (
   <React.Fragment>
     <p>
@@ -65,4 +66,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

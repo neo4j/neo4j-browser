@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Set a parameter'
 const subtitle = 'Set a parameter to be sent with queries.'
+const category = 'cypherQueries'
 const content = (
   <React.Fragment>
     <p>
@@ -37,4 +38,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

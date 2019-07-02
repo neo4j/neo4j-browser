@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'CONTAINS'
 const subtitle = 'Matching within in a string'
+const category = 'cypherPredicates'
 const content = (
   <React.Fragment>
     <p>
@@ -43,4 +44,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

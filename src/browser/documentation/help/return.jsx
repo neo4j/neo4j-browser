@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'RETURN'
 const subtitle = 'data from a query'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -45,4 +46,4 @@ RETURN director.name AS Director, collect(movie.title) AS Movies`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

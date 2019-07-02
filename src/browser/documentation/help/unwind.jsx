@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'UNWIND'
 const subtitle = 'Unwind a collection into a sequence of rows'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -46,4 +47,4 @@ RETURN n.name`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

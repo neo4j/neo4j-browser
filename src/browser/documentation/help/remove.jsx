@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'REMOVE'
 const subtitle = 'Remove properties and labels'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -51,4 +52,4 @@ RETURN soren`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

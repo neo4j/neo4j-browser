@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'START'
 const subtitle = 'with known data'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -38,4 +39,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

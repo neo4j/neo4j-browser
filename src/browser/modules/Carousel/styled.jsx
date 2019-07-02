@@ -194,10 +194,10 @@ export const StyledSlide = styled.div`
   .content > p,
   .table-help {
     color: ${props => props.theme.primaryText} !important;
-    line-height: 1.7;
+    line-height: 2;
 
     th {
-      padding-right: 10px;
+      padding-right: 20px;
       text-align: left;
     }
 
@@ -206,6 +206,20 @@ export const StyledSlide = styled.div`
         border-bottom: ${props => props.theme.topicBorder};
         font-size: 2rem;
         padding: 15px 0 0 0;
+      }
+
+      &:first-child {
+        th {
+          padding-top: 0;
+        }
+      }
+    }
+
+    &--subheader {
+      th {
+        border-bottom: ${props => props.theme.topicBorder};
+        font-size: 1.5rem;
+        padding: 10px 0 0 0;
       }
 
       &:first-child {

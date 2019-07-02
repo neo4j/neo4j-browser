@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'WHERE'
 const subtitle = 'Filter results'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -50,4 +51,4 @@ RETURN movie.title`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

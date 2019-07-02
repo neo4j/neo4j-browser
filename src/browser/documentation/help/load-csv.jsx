@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'LOAD CSV'
 const subtitle = 'Load data from a CSV file'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -59,4 +60,4 @@ RETURN n`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

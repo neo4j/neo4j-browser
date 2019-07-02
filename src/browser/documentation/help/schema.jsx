@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Schema'
 const subtitle = 'Database schema indexes'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>Shows information about database schema indexes and constraints.</p>
@@ -35,4 +36,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

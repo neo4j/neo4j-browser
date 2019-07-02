@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'History'
 const subtitle = 'Show command history'
+const category = 'browserUiCommands'
 const content = (
   <React.Fragment>
     <p>
@@ -23,4 +24,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

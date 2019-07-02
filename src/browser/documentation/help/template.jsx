@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Cypher'
 const subtitle = 'A graph query language'
+const category = 'cypherQueries'
 const content = (
   <React.Fragment>
     <p>
@@ -73,4 +74,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

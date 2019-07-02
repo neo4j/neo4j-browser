@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'PROFILE'
 const subtitle = 'Profile query execution'
+const category = 'executionPlans'
 const content = (
   <React.Fragment>
     <p>
@@ -47,4 +48,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'SET'
 const subtitle = 'property updates'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -44,4 +45,4 @@ SET w.rating = 5`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

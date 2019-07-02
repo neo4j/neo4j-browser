@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'CREATE'
 const subtitle = 'Insert graph data'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -54,4 +55,4 @@ const content = (
     </section>
   </React.Fragment>
 )
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

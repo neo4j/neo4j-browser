@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'DROP INDEX ON'
 const subtitle = 'Drop a schema index'
+const category = 'schemaClauses'
 const content = (
   <React.Fragment>
     <p>
@@ -39,4 +40,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

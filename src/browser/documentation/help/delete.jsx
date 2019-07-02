@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'DELETE'
 const subtitle = 'Delete nodes and relationships'
+const category = 'cypherHelp'
 const content = (
   <React.Fragment>
     <p>
@@ -47,4 +48,4 @@ DELETE r`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

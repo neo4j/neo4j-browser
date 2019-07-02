@@ -2,6 +2,7 @@ import React from 'react'
 
 const title = 'Query Plan'
 const subtitle = 'Understand what cypher is doing'
+const category = 'cypherQueries'
 const content = (
   <React.Fragment>
     <div className='details'>
@@ -161,4 +162,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, subtitle, content }
+export default { title, subtitle, category, content }

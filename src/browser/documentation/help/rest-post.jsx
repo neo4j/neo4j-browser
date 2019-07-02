@@ -1,6 +1,7 @@
 import React from 'react'
 
 const title = 'REST POST'
+const category = 'restApiCommands'
 const content = (
   <React.Fragment>
     <p>
@@ -31,4 +32,4 @@ const content = (
   </React.Fragment>
 )
 
-export default { title, content }
+export default { title, category, content }
