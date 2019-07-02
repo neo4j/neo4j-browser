@@ -27,12 +27,10 @@ import guideMovieGraph from './guides/movie-graph'
 import guideNorthwindGraph from './guides/northwind-graph'
 
 // Pages
-import guideExplore from './guides/explore'
 import guideIconography from './guides/iconography'
 import guideStart from './guides/start'
 import guideTypography from './guides/typography'
 import guideUnfound from './guides/unfound'
-import guideWelcome from './guides/welcome'
 import guideWritecode from './guides/write-code'
 
 // Help
@@ -95,12 +93,10 @@ export default {
     moviegraph: guideMovieGraph,
     movies: guideMovieGraph,
     northwindgraph: guideNorthwindGraph,
-    explore: guideExplore,
     iconography: guideIconography,
     start: guideStart,
     typography: guideTypography,
     unfound: guideUnfound,
-    welcome: guideWelcome,
     writecode: guideWritecode
   },
   help: {
