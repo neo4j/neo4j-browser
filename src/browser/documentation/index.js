@@ -97,7 +97,12 @@ export default {
     start: guideStart,
     typography: guideTypography,
     unfound: guideUnfound,
-    writecode: guideWritecode
+    writecode: guideWritecode,
+    // Commands only
+    queryTemplates: {
+      title: 'Query Templates',
+      category: 'guides'
+    }
   },
   help: {
     bolt: helpBolt,
