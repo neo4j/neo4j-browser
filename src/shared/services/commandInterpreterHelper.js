@@ -184,24 +184,24 @@ const availableCommands = [
             'No multi db support detected.'
           )
         }
-        // Check if chosen db exists
-        const dbExists = getDatabases(store.getState())
-          .map(db => db.name)
-          .includes(dbName)
-        if (!dbExists) {
+        // Check if chosen db exists. Case insensitive.
+        const existingDb = getDatabases(store.getState()).find(
+          db => db.name.toLowerCase() === dbName.toLowerCase()
+        )
+        if (!existingDb) {
           throw createErrorObject(
             NotFoundError,
             'Database with that name not found.'
           )
         }
         // Everything ok
-        put(useDb(dbName))
+        put(useDb(existingDb.name))
         put(fetchMetaData())
         put(
           frames.add({
             ...action,
             type: 'use-db',
-            useDb: dbName
+            useDb: existingDb.name
           })
         )
       } catch (e) {
