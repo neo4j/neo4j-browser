@@ -21,7 +21,7 @@
 /* global jest, describe, test, expect */
 
 import React from 'react'
-import { render, fireEvent } from 'react-testing-library'
+import { render, fireEvent } from '@testing-library/react'
 import { DatabaseSelector } from './DatabaseSelector'
 
 const testId = 'database-selection-list'
