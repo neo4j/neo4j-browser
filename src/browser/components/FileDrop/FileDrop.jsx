@@ -18,19 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
+import React, {useState} from 'react'
+import {connect} from 'react-redux'
+import {withBus} from 'react-suber'
 import SVGInline from 'react-svg-inline'
+import {every} from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
-import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
-import { parseGrass } from 'shared/services/grassUtils'
-import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
+import {
+  addFavorite,
+  addManyFavorites
+} from '../../../shared/modules/user-favorites/user-favorites.duck'
+import {parseGrass} from 'shared/services/grassUtils'
+import {updateGraphStyleData} from 'shared/modules/grass/grassDuck'
 import {
   showErrorMessage,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
+import {readZipFiles} from './file-drop.utils'
 
 import {
   StyledFileDrop,
@@ -40,12 +45,19 @@ import {
   StyledFileDropActionButton
 } from './styled'
 import icon from 'icons/task-list-download.svg'
+import { addScriptPathPrefix } from '../../modules/my-scripts/my-scripts.utils'
+import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
 
 export function FileDrop (props) {
   const [fileHoverState, setFileHoverState] = useState(false)
   const [userSelect, setUserSelect] = useState(false)
   const [file, setFile] = useState(null)
-  const { saveCypherToFavorites, importGrass, dispatchErrorMessage } = props
+  const {
+    saveCypherToFavorites,
+    saveManyFavorites,
+    importGrass,
+    dispatchErrorMessage
+  } = props
 
   const resetState = () => {
     setFileHoverState(false)
@@ -95,28 +107,44 @@ export function FileDrop (props) {
 
   const handleDrop = event => {
     const files = event.dataTransfer.files
-    if (files.length === 1) {
-      event.stopPropagation()
-      event.preventDefault()
 
-      setFile(files[0])
-
-      const extension = ((files[0] || {}).name || '').split('.').pop()
-      if (['cyp', 'cypher', 'cql', 'txt'].includes(extension)) {
-        setUserSelect(true)
-      } else if (extension === 'grass') {
-        fileLoader(files[0], result => {
-          importGrass(result)
-          const action = executeCommand(':style')
-          props.bus.send(action.type, action)
-        })
-      } else {
-        dispatchErrorMessage(`'.${extension}' is not a valid file extension`)
-        resetState()
-      }
-    } else {
+    if (files.length !== 1) {
       resetState()
+      return
     }
+
+    event.stopPropagation()
+    event.preventDefault()
+
+    setFile(files[0])
+
+    const extension = ((files[0] || {}).name || '').split('.').pop()
+
+    if (['cyp', 'cypher', 'cql', 'txt'].includes(extension)) {
+      setUserSelect(true)
+
+      return
+    }
+
+    if (every(files, ({type}) => type === 'application/zip')) {
+      readZipFiles(files)
+        .then(saveManyFavorites)
+        .then(resetState)
+      return
+    }
+
+    if (extension === 'grass') {
+      fileLoader(files[0], result => {
+        importGrass(result)
+        const action = executeCommand(':style')
+        props.bus.send(action.type, action)
+      })
+
+      return
+    }
+
+    dispatchErrorMessage(`'.${extension}' is not a valid file extension`)
+    resetState()
   }
 
   const className = ['filedrop']
@@ -168,8 +196,16 @@ export function FileDrop (props) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    saveCypherToFavorites: file => {
-      dispatch(addFavorite(file))
+    saveCypherToFavorites: contents => {
+      dispatch(
+        addFavorite({
+          contents,
+          path: addScriptPathPrefix(BROWSER_FAVOURITES_NAMESPACE, '')
+        })
+      )
+    },
+    saveManyFavorites: favorites => {
+      dispatch(addManyFavorites(favorites))
     },
     importGrass: file => {
       const parsedGrass = parseGrass(file)

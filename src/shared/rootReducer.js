@@ -66,6 +66,9 @@ import appReducer, { NAME as app } from 'shared/modules/app/appDuck'
 import experimentalFeaturesReducer, {
   NAME as experimentalFeatures
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import userFavoritesReducer, {
+  NAME as userFavorites
+} from './modules/user-favorites/user-favorites.duck'
 
 export default {
   [connections]: connectionsReducer,
@@ -88,5 +91,6 @@ export default {
   [commands]: commandsReducer,
   [udc]: udcReducer,
   [app]: appReducer,
-  [experimentalFeatures]: experimentalFeaturesReducer
+  [experimentalFeatures]: experimentalFeaturesReducer,
+  [userFavorites]: userFavoritesReducer
 }

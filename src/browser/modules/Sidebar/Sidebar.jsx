@@ -21,9 +21,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
-import Favorites from './Favorites'
 import Documents from './Documents'
 import About from './About'
+import Favorites from './favorites'
+import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
@@ -45,11 +46,16 @@ import {
 } from 'browser-components/icons/Icons'
 
 class Sidebar extends Component {
-  render () {
+  render() {
     const openDrawer = this.props.openDrawer
     const onNavClick = this.props.onNavClick
     const DatabaseDrawer = DatabaseInfo
-    const FavoritesDrawer = Favorites
+    const FavoritesDrawer = () => (
+      <>
+        <Favorites />
+        <StaticScripts />
+      </>
+    )
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
     const AboutDrawer = About
@@ -61,7 +67,7 @@ class Sidebar extends Component {
           <DatabaseIcon
             isOpen={isOpen}
             connectionState={this.props.neo4jConnectionState}
-            title='Database'
+            title="Database"
           />
         ),
         content: DatabaseDrawer
@@ -69,13 +75,13 @@ class Sidebar extends Component {
       {
         name: 'Favorites',
         title: 'Favorites',
-        icon: isOpen => <FavoritesIcon isOpen={isOpen} title='Favorites' />,
+        icon: isOpen => <FavoritesIcon isOpen={isOpen} title="Favorites" />,
         content: FavoritesDrawer
       },
       {
         name: 'Documents',
         title: 'Documentation',
-        icon: isOpen => <DocumentsIcon isOpen={isOpen} title='Documentation' />,
+        icon: isOpen => <DocumentsIcon isOpen={isOpen} title="Documentation" />,
         content: DocumentsDrawer
       }
     ]
@@ -87,7 +93,7 @@ class Sidebar extends Component {
           <CloudSyncIcon
             isOpen={isOpen}
             connected={this.props.syncConnected}
-            title='Cloud Services'
+            title="Cloud Services"
           />
         ),
         content: BrowserSync
@@ -96,14 +102,14 @@ class Sidebar extends Component {
         name: 'Settings',
         title: 'Browser Settings',
         icon: isOpen => (
-          <SettingsIcon isOpen={isOpen} title='Browser Settings' />
+          <SettingsIcon isOpen={isOpen} title="Browser Settings" />
         ),
         content: SettingsDrawer
       },
       {
         name: 'About',
         title: 'About Neo4j',
-        icon: isOpen => <AboutIcon isOpen={isOpen} title='About Neo4j' />,
+        icon: isOpen => <AboutIcon isOpen={isOpen} title="About Neo4j" />,
         content: AboutDrawer
       }
     ]

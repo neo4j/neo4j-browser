@@ -273,6 +273,9 @@ export const DownloadIcon = () => (
 export const ExpandMenuIcon = () => (
   <IconContainer activeStyle={blue} className='fa fa-caret-left' />
 )
+export const ExpandMenuRightIcon = () => (
+  <IconContainer activeStyle={blue} className='fa fa-caret-right' />
+)
 export const CollapseMenuIcon = () => (
   <IconContainer activeStyle={blue} className='fa fa-caret-down' />
 )

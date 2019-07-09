@@ -84,6 +84,15 @@ import {
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic
 } from './modules/currentUser/currentUserDuck'
+import {
+  getUserFavoritesEpic,
+  addUserFavoritesEpic,
+  addManyUserFavoritesEpic,
+  updateUserFavoritesEpic,
+  updateManyUserFavoritesEpic,
+  removeUserFavoritesEpic,
+  removeManyUserFavoritesEpic
+} from './modules/user-favorites/user-favorites.duck'
 
 export default combineEpics(
   handleCommandEpic,
@@ -134,5 +143,12 @@ export default combineEpics(
   eventFiredEpic,
   maxFramesConfigEpic,
   getCurrentUserEpic,
-  clearCurrentUserOnDisconnectEpic
+  clearCurrentUserOnDisconnectEpic,
+  getUserFavoritesEpic,
+  addUserFavoritesEpic,
+  addManyUserFavoritesEpic,
+  updateUserFavoritesEpic,
+  updateManyUserFavoritesEpic,
+  removeUserFavoritesEpic,
+  removeManyUserFavoritesEpic
 )

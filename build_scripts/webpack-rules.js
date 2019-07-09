@@ -69,11 +69,17 @@ module.exports = [
     ]
   },
   {
+    test: /\.css$/, // global css files that don't need any processing
+    include: path.resolve(`${helpers.browserPath}/modules/my-scripts`),
+    use: ['style-loader', 'css-loader']
+  },
+  {
     test: /\.css$/,
     include: path.resolve(helpers.sourcePath), // css modules for component css files
     exclude: [
       path.resolve(helpers.browserPath, 'styles'),
-      path.resolve(helpers.browserPath, 'modules/Guides')
+      path.resolve(helpers.browserPath, 'modules/Guides'),
+      path.resolve(helpers.browserPath, 'modules/my-scripts')
     ],
     use: [
       'style-loader',

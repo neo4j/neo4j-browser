@@ -27,7 +27,7 @@ import {
   executeCommand,
   executeSystemCommand
 } from 'shared/modules/commands/commandsDuck'
-import * as favorites from 'shared/modules/favorites/favoritesDuck'
+import * as userFavorites from 'shared/modules/user-favorites/user-favorites.duck'
 import {
   SET_CONTENT,
   EDIT_CONTENT,
@@ -56,6 +56,8 @@ import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
+import { addScriptPathPrefix } from '../my-scripts/my-scripts.utils'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -452,17 +454,20 @@ export class Editor extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFavoriteClick: cmd => {
+    onFavoriteClick: contents => {
       const id = uuid.v4()
 
-      const addAction = favorites.addFavorite(cmd, id)
+      const addAction = userFavorites.addFavorite({
+        path: addScriptPathPrefix(BROWSER_FAVOURITES_NAMESPACE, ''),
+        contents
+      })
       ownProps.bus.send(addAction.type, addAction)
 
-      const updateAction = editContent(id, cmd)
+      const updateAction = editContent(id, contents)
       ownProps.bus.send(updateAction.type, updateAction)
     },
-    onFavoriteUpdateClick: (id, cmd) => {
-      const action = favorites.updateFavorite(id, cmd)
+    onFavoriteUpdateClick: (id, contents) => {
+      const action = userFavorites.updateFavorite({ id, contents })
       ownProps.bus.send(action.type, action)
     },
     onExecute: cmd => {
