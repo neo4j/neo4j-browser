@@ -19,6 +19,7 @@
  */
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import ConnectionForm from './ConnectionForm'
 import FrameTemplate from '../../Frame/FrameTemplate'
@@ -26,7 +27,8 @@ import FrameError from '../../Frame/FrameError'
 import Render from 'browser-components/Render'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
-import { StyledConnectionAside } from './styled'
+import { StyledConnectionFrame, StyledConnectionAside } from './styled'
+import { getActiveConnection } from 'shared/modules/connections/connectionsDuck'
 
 export class ChangePasswordFrame extends Component {
   constructor (props) {
@@ -51,13 +53,14 @@ export class ChangePasswordFrame extends Component {
   }
   render () {
     const content = (
-      <React.Fragment>
+      <StyledConnectionFrame>
         <StyledConnectionAside>
           <H3>Password change</H3>
           <Render if={!this.state.success}>
             <Lead>
-              Enter your current password and the new twice to change your
-              password.
+              {this.props.activeConnection
+                ? 'Enter your current password and the new twice to change your password.'
+                : 'Please connect to a database to change the password.'}
             </Lead>
           </Render>
           <Render if={this.state.success}>
@@ -65,14 +68,16 @@ export class ChangePasswordFrame extends Component {
           </Render>
         </StyledConnectionAside>
 
-        <ConnectionForm
-          {...this.props}
-          error={this.error}
-          onSuccess={this.onSuccess}
-          forcePasswordChange
-          showExistingPasswordInput
-        />
-      </React.Fragment>
+        <Render if={this.props.activeConnection}>
+          <ConnectionForm
+            {...this.props}
+            error={this.error}
+            onSuccess={this.onSuccess}
+            forcePasswordChange
+            showExistingPasswordInput
+          />
+        </Render>
+      </StyledConnectionFrame>
     )
     return (
       <FrameTemplate
@@ -88,4 +93,14 @@ export class ChangePasswordFrame extends Component {
     )
   }
 }
-export default ChangePasswordFrame
+
+const mapStateToProps = state => {
+  return {
+    activeConnection: getActiveConnection(state)
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  () => ({})
+)(ChangePasswordFrame)

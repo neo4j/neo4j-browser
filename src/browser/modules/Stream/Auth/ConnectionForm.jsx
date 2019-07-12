@@ -50,6 +50,7 @@ export class ConnectionForm extends Component {
     this.state = {
       ...connection,
       isConnected: isConnected,
+      isLoading: false,
       passwordChangeNeeded: props.passwordChangeNeeded || false,
       forcePasswordChange: props.forcePasswordChange || false,
       successCallback: props.onSuccess || (() => {}),
@@ -113,9 +114,11 @@ export class ConnectionForm extends Component {
   }
   onChangePassword ({ newPassword, error }) {
     if (error && error.code) {
+      this.setState({ isLoading: false })
       return this.props.error(error)
     }
     if (this.state.password === null) {
+      this.setState({ isLoading: false })
       return this.props.error({ message: 'Please set existing password' })
     }
     this.props.error({})
@@ -137,14 +140,20 @@ export class ConnectionForm extends Component {
               if (res.error.code === 'Neo.ClientError.Security.Unauthorized') {
                 retries--
                 if (retries > 0) {
-                  setTimeout(() => this.connect(undefined, retryFn), 200)
+                  setTimeout(() => this.connect(() => {
+                    this.setState({ isLoading: false })
+                  }, retryFn), 200)
                 }
               } else {
                 this.props.error(res.error)
               }
             }
-            this.connect(undefined, retryFn)
+            this.connect(() => {
+              this.setState({ isLoading: false })
+            }, retryFn)
           })
+        } else {
+          this.setState({ isLoading: false })
         }
         this.props.error(response.error)
       }
@@ -186,7 +195,12 @@ export class ConnectionForm extends Component {
           showExistingPasswordInput={this.props.showExistingPasswordInput}
           onChangePasswordClick={this.onChangePassword.bind(this)}
           onChange={this.onChangePasswordChange.bind(this)}
-          tryConnect={this.tryConnect}
+          tryConnect={(password, doneFn) => {
+            this.setState({ isLoading: true }, () =>
+              this.tryConnect(password, doneFn)
+            )
+          }}
+          isLoading={this.state.isLoading}
         >
           {this.props.children}
         </ChangePasswordForm>
