@@ -73,8 +73,10 @@ export function FileDrop (props) {
   const handleDragOver = event => {
     event.stopPropagation()
     event.preventDefault()
+  }
 
-    if (!fileHoverState) {
+  const handleDragEnter = event => {
+    if (!fileHoverState && event.dataTransfer.items[0].kind === 'file') {
       setFileHoverState(true)
     }
   }
@@ -112,6 +114,8 @@ export function FileDrop (props) {
         dispatchErrorMessage(`'.${extension}' is not a valid file extension`)
         resetState()
       }
+    } else {
+      resetState()
     }
   }
 
@@ -128,6 +132,7 @@ export function FileDrop (props) {
     <StyledFileDrop
       className={className.join(' ')}
       onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
