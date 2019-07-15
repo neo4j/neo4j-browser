@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Rx from 'rxjs'
+import * as Rx from 'rxjs/Rx'
 import { v4 } from 'uuid'
 import {
   cleanCommand,

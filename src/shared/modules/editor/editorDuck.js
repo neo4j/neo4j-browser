@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Rx from 'rxjs/Rx'
+import * as Rx from 'rxjs/Rx'
 import { getUrlParamValue } from 'services/utils'
 import { getSettings } from 'shared/modules/settings/settingsDuck'
 import { APP_START, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
