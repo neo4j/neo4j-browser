@@ -15,14 +15,22 @@
  *
  */
 
+import { combineLatest } from 'rxjs'
 import { flatMap, map } from 'rxjs/operators'
 import { map as _map } from 'lodash-es'
 
 import { APP_START } from '../app/appDuck'
+import * as oldFavorites from '../favorites/favoritesDuck'
+import * as oldFolders from '../favorites/foldersDuck'
 import {
   BROWSER_FAVORITES_BASE_URL,
   STATIC_SCRIPTS
 } from './user-favorites.constants'
+import {
+  mapOldFavoritesAndFolders,
+  onlyNewFavorites
+} from './user-favorites.utils'
+import { arrayHasItems } from '../../../browser/modules/my-scripts/generic.utils' // @todo: generics?
 
 export const NAME = 'user-favorites'
 
@@ -39,6 +47,7 @@ const REMOVE_FAVORITE = `${NAME}/REMOVE_FAVORITE`
 const FAVORITE_REMOVED = `${NAME}/FAVORITE_REMOVED`
 const REMOVE_MANY_FAVORITES = `${NAME}/REMOVE_MANY_FAVORITES`
 const MANY_FAVORITES_REMOVED = `${NAME}/MANY_FAVORITES_REMOVED`
+const NO_OP = `${NAME}/NO_OP`
 
 const initialState = {
   favorites: [],
@@ -57,6 +66,9 @@ export default function useFavoritesReducer (state = initialState, action) {
   }
 }
 
+const noOp = () => ({
+  type: NO_OP
+})
 const setFavorites = favorites => ({
   type: SET_FAVORITES,
   payload: favorites
@@ -210,4 +222,28 @@ export const removeManyUserFavoritesEpic = action$ =>
       }).then(_ => _.json())
     }),
     map(manyFavoritesRemoved)
+  )
+
+export const migrateLocalFavorites = action$ =>
+  combineLatest([
+    action$.ofType(oldFavorites.LOAD_FAVORITES),
+    action$.ofType(oldFolders.LOAD_FOLDERS),
+    action$.ofType(SET_FAVORITES)
+  ]).pipe(
+    map(
+      ([
+        { favorites: oldFavorites },
+        { folders: oldFolders },
+        { payload: favorites }
+      ]) => [mapOldFavoritesAndFolders(oldFavorites, oldFolders), favorites]
+    ),
+    map(([unsavedFavorites, savedFavorites]) =>
+      onlyNewFavorites(unsavedFavorites, savedFavorites)
+    ),
+    map(
+      favoritesToCreate =>
+        arrayHasItems(favoritesToCreate)
+          ? addManyFavorites(favoritesToCreate)
+          : noOp()
+    )
   )

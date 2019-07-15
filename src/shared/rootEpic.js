@@ -91,7 +91,8 @@ import {
   updateUserFavoritesEpic,
   updateManyUserFavoritesEpic,
   removeUserFavoritesEpic,
-  removeManyUserFavoritesEpic
+  removeManyUserFavoritesEpic,
+  migrateLocalFavorites
 } from './modules/user-favorites/user-favorites.duck'
 
 export default combineEpics(
@@ -150,5 +151,6 @@ export default combineEpics(
   updateUserFavoritesEpic,
   updateManyUserFavoritesEpic,
   removeUserFavoritesEpic,
-  removeManyUserFavoritesEpic
+  removeManyUserFavoritesEpic,
+  migrateLocalFavorites
 )

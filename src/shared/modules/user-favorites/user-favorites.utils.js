@@ -15,6 +15,10 @@
  *
  */
 
+import { filter, map, some } from 'lodash-es'
+import { addScriptPathPrefix } from '../../../browser/modules/my-scripts/my-scripts.utils'
+import { BROWSER_FAVOURITES_NAMESPACE } from './user-favorites.constants'
+
 /**
  * Opens a new window/tab
  * @param     {String}    href
@@ -23,4 +27,70 @@
 export function openNewWindow (href, target = 'blank') {
   // @todo: electron support
   window.open(href, target)
+}
+
+/**
+ * Converts old user favorites into new structure
+ * @param     {Object[]}    oldFavorites
+ * @param     {Object[]}    oldFolders
+ * @return    {Object[]}                    new user favorites objects ("my scripts")
+ */
+export function mapOldFavoritesAndFolders (oldFavorites, oldFolders) {
+  const oldFoldersMap = new Map(
+    map(filter(oldFolders, isNonStatic), folder => [folder.id, folder])
+  )
+  const oldFilteredFavorites = filter(
+    oldFavorites,
+    favorite => isNonStatic(favorite) && hasContent(favorite)
+  )
+
+  return map(oldFilteredFavorites, favorite => {
+    const folder = oldFoldersMap.get(favorite.folder)
+
+    return {
+      contents: favorite.content,
+      path: addScriptPathPrefix(
+        BROWSER_FAVOURITES_NAMESPACE,
+        folder ? folder.name : ''
+      )
+    }
+  })
+}
+
+/**
+ * Array.prototype.filter predicate for removing static favorites and folders (old structure)
+ * @param     {Object}      oldFavoriteOrFolder
+ * @param     {Boolean}     oldFavoriteOrFolder.isStatic
+ * @return    {Boolean}
+ */
+function isNonStatic ({ isStatic }) {
+  return !isStatic
+}
+
+/**
+ * Array.prototype.filter predicate for removing old favorites without content
+ * @param     {Object}      oldFavorite
+ * @param     {String}      oldFavorite.content
+ * @return    {Boolean}
+ */
+function hasContent ({ content }) {
+  return Boolean(content)
+}
+
+/**
+ * Returns all unsaved favorites that are not already represented in the saved dataset
+ * @param     {Object[]}    unsavedFavorites
+ * @param     {Object[]}    savedFavorites
+ * @return    {Object[]}                        unsaved favorites that do not have a peer in shared
+ */
+export function onlyNewFavorites (unsavedFavorites, savedFavorites) {
+  return filter(
+    unsavedFavorites,
+    unsaved =>
+      !some(
+        savedFavorites,
+        saved =>
+          saved.contents === unsaved.contents && saved.path === unsaved.path
+      )
+  )
 }
