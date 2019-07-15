@@ -21,7 +21,7 @@
 import React from 'react'
 import {
   getTableDataFromRecords,
-  mapSysInfoRecords,
+  mapLegacySysInfoRecords,
   buildTableData
 } from './sysinfo-utils'
 import { toHumanReadableBytes } from 'services/utils'
@@ -240,7 +240,7 @@ export const clusterResponseHandler = setState =>
       setState({ error: 'No causal cluster results', success: false })
       return
     }
-    const mappedResult = mapSysInfoRecords(res.result.records)
+    const mappedResult = mapLegacySysInfoRecords(res.result.records)
     const mappedTableComponents = mappedResult.map(ccRecord => {
       const httpUrlForMember = ccRecord.addresses.filter(address => {
         return (
