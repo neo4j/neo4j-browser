@@ -90,7 +90,11 @@ export class AsciiView extends Component {
     const { _asciiSetColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
     let contents = <StyledBodyMessage>{bodyMessage}</StyledBodyMessage>
-    if (serializedRows !== undefined && serializedRows.length) {
+    if (
+      serializedRows !== undefined &&
+      serializedRows.length &&
+      serializedRows[0].length
+    ) {
       contents = (
         <pre>
           {asciitable.tableFromSerializedData(serializedRows, maxColWidth)}
