@@ -15,9 +15,33 @@
  *
  */
 
-import { filter, map, some } from 'lodash-es'
-import { addScriptPathPrefix } from '../../../browser/modules/my-scripts/my-scripts.utils'
-import { BROWSER_FAVOURITES_NAMESPACE } from './user-favorites.constants'
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
+import dateFormat from 'dateformat'
+import {
+  compact,
+  filter,
+  forEach,
+  join,
+  kebabCase,
+  last,
+  map,
+  slice,
+  some,
+  split
+} from 'lodash-es'
+
+import {
+  addScriptPathPrefix,
+  getScriptDisplayName,
+  sortAndGroupScriptsByPath
+} from '../../../browser/modules/my-scripts/my-scripts.utils'
+import {
+  BROWSER_FAVORITES_EXPORT_URL,
+  BROWSER_FAVOURITES_NAMESPACE,
+  LOCAL_STORAGE_NAMESPACE,
+  USE_REST_API
+} from './user-favorites.constants'
 
 /**
  * Opens a new window/tab
@@ -93,4 +117,85 @@ export function onlyNewFavorites (unsavedFavorites, savedFavorites) {
           saved.contents === unsaved.contents && saved.path === unsaved.path
       )
   )
+}
+
+/**
+ * Gracefully try to get user favorites from localStorage
+ * @return    {Object[]}
+ */
+export function tryGetUserFavoritesLocalState () {
+  try {
+    return (
+      JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_NAMESPACE)) || []
+    )
+  } catch (e) {
+    return []
+  }
+}
+
+/**
+ * Set user favorites in localStorage
+ * @param     {Object[]}    value     new localstorage value
+ */
+export function setUserFavoritesLocalState (value) {
+  window.localStorage.setItem(LOCAL_STORAGE_NAMESPACE, JSON.stringify(value))
+}
+
+/**
+ * Triggers a user favorite export
+ */
+export function exportFavorites () {
+  if (USE_REST_API) {
+    // @todo: electron support
+    openNewWindow(BROWSER_FAVORITES_EXPORT_URL)
+    return
+  }
+
+  localFavoritesExport()
+}
+
+/**
+ * Exports local favorites using JSZip
+ * - Attempts to mirror output from userdata-store API /raw equivalent
+ */
+export function localFavoritesExport () {
+  const localFavorites = tryGetUserFavoritesLocalState()
+  const grouped = sortAndGroupScriptsByPath(
+    BROWSER_FAVOURITES_NAMESPACE,
+    localFavorites
+  )
+  const zipArchive = new JSZip()
+  const dirMap = new Map([['/', zipArchive]])
+  const joinPathParts = pathParts =>
+    pathParts.length > 1 ? `/${join(pathParts, '/')}/` : join(pathParts, '/')
+
+  zipArchive.file('.placeholder', 'forces directory creation')
+  forEach(grouped, ([path, favorites]) => {
+    const pathParts = compact(split(path, '/'))
+    const folderName = last(pathParts)
+    const folderPath = joinPathParts(pathParts)
+    const parentPath =
+      joinPathParts(slice(pathParts, 0, pathParts.length - 1)) || '/'
+    const parent = dirMap.get(parentPath) || dirMap.get('/')
+
+    dirMap.set(folderPath, createZipDirAndFiles(parent, folderName, favorites))
+  })
+
+  zipArchive
+    .generateAsync({ type: 'blob' })
+    .then(blob =>
+      saveAs(blob, `my-scripts-${dateFormat(Date.now(), 'isoDateTime')}.zip`)
+    )
+}
+
+function createZipDirAndFiles (parent, name, favorites) {
+  const dir = parent.folder(name)
+
+  forEach(favorites, favorite => {
+    const fileName = `${kebabCase(getScriptDisplayName(favorite))}.cypher`
+
+    dir.file(fileName, favorite.contents)
+  })
+
+  return dir
 }

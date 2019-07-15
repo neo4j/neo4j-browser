@@ -21,11 +21,8 @@ import { connect } from 'react-redux'
 import * as userFavorites from '../../../shared/modules/user-favorites/user-favorites.duck'
 import * as editor from '../../../shared/modules/editor/editorDuck'
 import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
-import { openNewWindow } from '../../../shared/modules/user-favorites/user-favorites.utils'
-import {
-  BROWSER_FAVOURITES_NAMESPACE,
-  BROWSER_FAVORITES_EXPORT_URL
-} from '../../../shared/modules/user-favorites/user-favorites.constants'
+import { exportFavorites } from '../../../shared/modules/user-favorites/user-favorites.utils'
+import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
 
 import MyScripts from '../my-scripts/my-scripts'
 
@@ -40,7 +37,7 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
       editor.editContent(favorite.id, favorite.contents)
     ),
   onExecScript: favorite => dispatch(executeCommand(favorite.contents)),
-  onExportScripts: () => openNewWindow(BROWSER_FAVORITES_EXPORT_URL),
+  onExportScripts: () => exportFavorites(),
   onRemoveScript: favorite => dispatch(userFavorites.removeFavorite(favorite)),
   onUpdateFolder: (favorites, payload) =>
     dispatch(userFavorites.updateManyFavorites(favorites, payload)),

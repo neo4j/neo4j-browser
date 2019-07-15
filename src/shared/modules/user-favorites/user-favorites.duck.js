@@ -22,10 +22,10 @@ import { map as _map } from 'lodash-es'
 import { APP_START } from '../app/appDuck'
 import * as oldFavorites from '../favorites/favoritesDuck'
 import * as oldFolders from '../favorites/foldersDuck'
-import {
-  BROWSER_FAVORITES_BASE_URL,
-  STATIC_SCRIPTS
-} from './user-favorites.constants'
+
+import { STATIC_SCRIPTS } from './user-favorites.constants'
+import * as userFavoriteClient from './client'
+
 import {
   mapOldFavoritesAndFolders,
   onlyNewFavorites
@@ -118,9 +118,6 @@ const manyFavoritesRemoved = favorites => ({
   payload: _map(favorites, ({ id }) => id)
 })
 
-// @todo: move and update these
-const headers = { 'content-type': 'application/json' }
-
 export const getUserFavoritesEpic = action$ =>
   action$
     .ofType(
@@ -133,41 +130,21 @@ export const getUserFavoritesEpic = action$ =>
       MANY_FAVORITES_REMOVED
     )
     .pipe(
-      flatMap(() =>
-        fetch(BROWSER_FAVORITES_BASE_URL).then(_ => {
-          if (!_.ok) {
-            return []
-          }
-
-          return _.json()
-        })
-      ),
+      flatMap(userFavoriteClient.getAllUserFavorites),
       map(setFavorites)
     )
 
 export const addUserFavoritesEpic = action$ =>
   action$.ofType(ADD_FAVORITE).pipe(
-    flatMap(({ payload }) => {
-      return fetch(BROWSER_FAVORITES_BASE_URL, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload)
-      }).then(_ => _.json())
-    }),
+    flatMap(({ payload }) => userFavoriteClient.createUserFavorite(payload)),
     map(favoriteAdded)
   )
 
 export const addManyUserFavoritesEpic = action$ =>
   action$.ofType(ADD_MANY_FAVORITES).pipe(
-    flatMap(({ payload }) => {
-      const url = `${BROWSER_FAVORITES_BASE_URL}/bulk-create`
-
-      return fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload)
-      }).then(_ => _.json())
-    }),
+    flatMap(({ payload }) =>
+      userFavoriteClient.createManyUserFavorites(payload)
+    ),
     map(manyFavoritesAdded)
   )
 
@@ -175,13 +152,8 @@ export const updateUserFavoritesEpic = action$ =>
   action$.ofType(UPDATE_FAVORITE).pipe(
     flatMap(({ payload }) => {
       const { id, ...data } = payload
-      const url = `${BROWSER_FAVORITES_BASE_URL}/${id}`
 
-      return fetch(url, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify(data)
-      }).then(_ => _.json())
+      return userFavoriteClient.updateUserFavorite(id, data)
     }),
     map(favoriteUpdated)
   )
@@ -189,13 +161,9 @@ export const updateUserFavoritesEpic = action$ =>
 export const updateManyUserFavoritesEpic = action$ =>
   action$.ofType(UPDATE_MANY_FAVORITES).pipe(
     flatMap(({ payload }) => {
-      const url = `${BROWSER_FAVORITES_BASE_URL}/bulk-update`
+      const { scriptIds, ...data } = payload
 
-      return fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload)
-      }).then(_ => _.json())
+      return userFavoriteClient.updateManyUserFavorites(scriptIds, data)
     }),
     map(manyFavoritesUpdated)
   )
@@ -203,9 +171,9 @@ export const updateManyUserFavoritesEpic = action$ =>
 export const removeUserFavoritesEpic = action$ =>
   action$.ofType(REMOVE_FAVORITE).pipe(
     flatMap(({ payload }) => {
-      const url = `${BROWSER_FAVORITES_BASE_URL}/${payload.id}`
+      const { id } = payload
 
-      return fetch(url, { method: 'DELETE' }).then(_ => _.json())
+      return userFavoriteClient.removeUserFavorite(id)
     }),
     map(favoriteRemoved)
   )
@@ -213,13 +181,9 @@ export const removeUserFavoritesEpic = action$ =>
 export const removeManyUserFavoritesEpic = action$ =>
   action$.ofType(REMOVE_MANY_FAVORITES).pipe(
     flatMap(({ payload }) => {
-      const url = `${BROWSER_FAVORITES_BASE_URL}/bulk-delete`
+      const { scriptIds } = payload
 
-      return fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload)
-      }).then(_ => _.json())
+      return userFavoriteClient.removeManyUserFavorites(scriptIds)
     }),
     map(manyFavoritesRemoved)
   )

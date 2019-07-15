@@ -17,10 +17,12 @@
 
 export const USER_DATA_API = 'http://127.0.0.1:3000/api/v1'
 export const BROWSER_FAVORITES_BASE_URL = `${USER_DATA_API}/my/scripts`
+export const USE_REST_API = false // @todo: figure out how to set this.
+export const LOCAL_STORAGE_NAMESPACE = 'neo4j/user-favorites'
 
 export const BROWSER_FAVOURITES_NAMESPACE = '/neo4j-browser/'
 export const BROWSER_STATIC_SCRIPTS_NAMESPACE = '/static-scripts/'
-export const BROWSER_FAVORITES_EXPORT_URL = `${USER_DATA_API}/my/raw/scripts`
+export const BROWSER_FAVORITES_EXPORT_URL = `${USER_DATA_API}/my/raw/scripts?filter=[{"field":"path", "type":"STARTS_WITH", "value": "${BROWSER_FAVOURITES_NAMESPACE}"}]`
 
 export const STATIC_SCRIPTS = [
   {

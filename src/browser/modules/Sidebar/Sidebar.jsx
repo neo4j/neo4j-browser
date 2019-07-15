@@ -49,11 +49,12 @@ class Sidebar extends Component {
   render() {
     const openDrawer = this.props.openDrawer
     const onNavClick = this.props.onNavClick
+    const { showStaticScripts } = this.props
     const DatabaseDrawer = DatabaseInfo
     const FavoritesDrawer = () => (
       <>
         <Favorites />
-        <StaticScripts />
+        {showStaticScripts && <StaticScripts />}
       </>
     )
     const DocumentsDrawer = Documents
@@ -147,7 +148,8 @@ const mapStateToProps = state => {
   return {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
-    loadSync: useBrowserSync(state)
+    loadSync: useBrowserSync(state),
+    showStaticScripts: state.settings.showSampleScripts
   }
 }
 
