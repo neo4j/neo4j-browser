@@ -33,10 +33,7 @@ describe('Plan output', () => {
   })
   it('can connect', () => {
     const password = Cypress.config('password')
-    cy.connect(
-      'neo4j',
-      password
-    )
+    cy.connect('neo4j', password)
   })
   if (Cypress.config('serverVersion') >= 3.5) {
     it('print Order in PROFILE', () => {
@@ -54,7 +51,7 @@ describe('Plan output', () => {
     it('print pagecache stats in PROFILE', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(
-        `PROFILE MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)`
+        `PROFILE CYPHER runtime=compiled MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)`
       )
       cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
       const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
