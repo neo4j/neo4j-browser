@@ -270,19 +270,19 @@ export const updateDefaultDb = db => ({ type: UPDATE_DEFAULT_DB, db })
 // Epics
 export const metaQuery = `
 CALL db.labels() YIELD label
-RETURN {name:'labels', data:COLLECT(label)[..1000]} as result
+RETURN {name:'labels', data:COLLECT(label)[..1000]} AS result
 UNION ALL
 CALL db.relationshipTypes() YIELD relationshipType
-RETURN {name:'relationshipTypes', data:COLLECT(relationshipType)[..1000]} as result
+RETURN {name:'relationshipTypes', data:COLLECT(relationshipType)[..1000]} AS result
 UNION ALL
 CALL db.propertyKeys() YIELD propertyKey
-RETURN {name:'propertyKeys', data:COLLECT(propertyKey)[..1000]} as result
+RETURN {name:'propertyKeys', data:COLLECT(propertyKey)[..1000]} AS result
 UNION ALL
 CALL dbms.functions() YIELD name, signature, description
 RETURN {name:'functions', data: collect({name: name, signature: signature, description: description})} AS result
 UNION ALL
 CALL dbms.procedures() YIELD name, signature, description
-RETURN {name:'procedures', data:collect({name: name, signature: signature, description: description})} as result
+RETURN {name:'procedures', data:collect({name: name, signature: signature, description: description})} AS result
 UNION ALL
 MATCH () RETURN { name:'nodes', data:count(*) } AS result
 UNION ALL
@@ -301,8 +301,15 @@ export const dbMetaEpic = (some$, store) =>
           // Throw away newly initiated calls until done
           .throttle(() => some$.ofType(DB_META_DONE))
           // Labels, types and propertyKeys, and server version
-          .mergeMap(() =>
-            Rx.Observable.fromPromise(
+          .mergeMap(() => {
+            const state = store.getState()
+            const db = getUseDb(state)
+            if (db === 'system') {
+              store.dispatch(updateMeta([]))
+              return Rx.Observable.of(null)
+            }
+
+            return Rx.Observable.fromPromise(
               bolt.routedReadTransaction(
                 metaQuery,
                 {},
@@ -318,17 +325,23 @@ export const dbMetaEpic = (some$, store) =>
               store.dispatch(updateMeta([]))
               return Rx.Observable.of(null)
             })
-          )
+          })
           .do(res => {
             if (res) {
               store.dispatch(updateMeta(res))
             }
           })
           // Server version and edition
-          .mergeMap(() =>
-            Rx.Observable.fromPromise(
+          .mergeMap(() => {
+            const state = store.getState()
+            const db = getUseDb(state)
+            const query =
+              db === 'system'
+                ? 'SHOW DATABASES'
+                : 'CALL dbms.components() YIELD name, versions, edition'
+            return Rx.Observable.fromPromise(
               bolt.directTransaction(
-                'CALL dbms.components() YIELD name, versions, edition',
+                query,
                 {},
                 {
                   useCypherThread: shouldUseCypherThread(store.getState()),
@@ -343,21 +356,39 @@ export const dbMetaEpic = (some$, store) =>
               })
               .do(res => {
                 if (!res) return Rx.Observable.of(null)
-                res.records.forEach(record => {
-                  const name = record.get('name')
-                  const versions = record.get('versions') || []
-                  const edition = record.get('edition')
-                  if (name === 'Neo4j Kernel') {
-                    store.dispatch({
-                      type: UPDATE_SERVER,
-                      version: versions[0] || 'unknown',
-                      edition: edition
-                    })
-                  }
-                })
+
+                const serverVersion = {
+                  type: UPDATE_SERVER,
+                  version: 'unknown',
+                  edition: ''
+                }
+
+                // Always get server version
+                if (res.summary.server.version) {
+                  serverVersion.version = res.summary.server.version
+                    .split('/')
+                    .pop()
+                }
+
+                // Get server edition if available
+                if (
+                  res.records.length &&
+                  res.records[0].keys.includes['name'] &&
+                  res.records[0].keys.includes['edition']
+                ) {
+                  res.records.forEach(record => {
+                    const name = record.get('name')
+                    const edition = record.get('edition')
+                    if (name === 'Neo4j Kernel') {
+                      serverVersion.edition = edition
+                    }
+                  })
+                }
+
+                store.dispatch(serverVersion)
                 return Rx.Observable.of(null)
               })
-          )
+          })
           // Server configuration
           .mergeMap(() =>
             Rx.Observable.fromPromise(
