@@ -69,6 +69,7 @@ const validateConnection = (driver, res, rej) => {
       // or credentials have expired
       const invalidStates = [
         'ServiceUnavailable',
+        'Neo.ClientError.Security.AuthenticationRateLimit',
         'Neo.ClientError.Security.Unauthorized',
         'Neo.ClientError.Security.CredentialsExpired'
       ]
@@ -136,11 +137,10 @@ export function directConnect (
 ) {
   const p = new Promise((resolve, reject) => {
     const auth = buildAuthObj(props, opts)
-    const driver = getDriver(props.host, auth, opts)
-    driver.onError = e => {
+    const driver = getDriver(props.host, auth, opts, e => {
       onLostConnection(e)
       reject(e)
-    }
+    })
     if (shouldValidateConnection) {
       validateConnection(driver, resolve, reject)
     } else {
@@ -159,7 +159,6 @@ export function openConnection (props, opts = {}, onLostConnection = () => {}) {
     }
     const driversObj = getDriversObj(props, opts, onConnectFail)
     const driver = driversObj.getDirectDriver()
-    driver.onError = onConnectFail
     const myResolve = driver => {
       _drivers = driversObj
       if (props.hasOwnProperty('inheritedUseRouting')) {
@@ -184,6 +183,7 @@ export function openConnection (props, opts = {}, onLostConnection = () => {}) {
       }
     }
     const myReject = err => {
+      onLostConnection(err)
       _drivers = null
       driversObj.close()
       reject(err)
@@ -263,7 +263,7 @@ export function directTransaction (
   const session = _drivers
     ? _drivers
       .getDirectDriver()
-      .session({ defaultAccessMode: neo4j.session.WRITE, db: useDb })
+      .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -280,7 +280,7 @@ export function routedReadTransaction (
   const session = _drivers
     ? _drivers
       .getRoutedDriver()
-      .session({ defaultAccessMode: neo4j.session.READ, db: useDb })
+      .session({ defaultAccessMode: neo4j.session.READ, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -297,7 +297,7 @@ export function routedWriteTransaction (
   const session = _drivers
     ? _drivers
       .getRoutedDriver()
-      .session({ defaultAccessMode: neo4j.session.WRITE, db: useDb })
+      .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
