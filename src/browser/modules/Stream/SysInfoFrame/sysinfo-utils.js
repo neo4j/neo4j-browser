@@ -83,6 +83,17 @@ export const mapSysInfoRecords = records => {
     return {
       id: record.get('id'),
       addresses: record.get('addresses'),
+      databases: record.get('databases'),
+      groups: record.get('groups')
+    }
+  })
+}
+
+export const mapLegacySysInfoRecords = records => {
+  return records.map(record => {
+    return {
+      id: record.get('id'),
+      addresses: record.get('addresses'),
       role: record.get('role'),
       groups: record.get('groups')
     }
