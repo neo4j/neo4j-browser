@@ -121,6 +121,7 @@
     "xml2js": "^0.4.19"
   },
   "dependencies": {
+    "@relate-by-ui/saved-scripts": "1.0.0",
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
@@ -154,6 +155,8 @@
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.5.2",
     "save-as": "^0.1.7",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.87.3",
     "semver": "^5.5.0",
     "styled-components": "^4.0.0",
     "stylis": "^3.4.10",

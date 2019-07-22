@@ -34,7 +34,7 @@ import {
   addScriptPathPrefix,
   getScriptDisplayName,
   omitScriptPathPrefix
-} from '../../modules/my-scripts/my-scripts.utils'
+} from '@relate-by-ui/saved-scripts'
 import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
 
 const CYPHER_FILE_EXTENSION = '.cypher'

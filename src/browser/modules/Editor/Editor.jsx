@@ -57,7 +57,7 @@ import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
-import { addScriptPathPrefix } from '../my-scripts/my-scripts.utils'
+import { addScriptPathPrefix } from '@relate-by-ui/saved-scripts'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&

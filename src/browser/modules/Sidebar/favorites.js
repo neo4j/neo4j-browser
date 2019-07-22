@@ -24,7 +24,9 @@ import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
 import { exportFavorites } from '../../../shared/modules/user-favorites/user-favorites.utils'
 import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
 
-import MyScripts from '../my-scripts/my-scripts'
+import 'semantic-ui-css/semantic.min.css' // @todo: remove this?
+
+import MyScripts from '@relate-by-ui/saved-scripts'
 
 const mapFavoritesStateToProps = state => ({
   scriptsNamespace: BROWSER_FAVOURITES_NAMESPACE,

@@ -69,17 +69,11 @@ module.exports = [
     ]
   },
   {
-    test: /\.css$/, // global css files that don't need any processing
-    include: path.resolve(`${helpers.browserPath}/modules/my-scripts`),
-    use: ['style-loader', 'css-loader']
-  },
-  {
     test: /\.css$/,
     include: path.resolve(helpers.sourcePath), // css modules for component css files
     exclude: [
       path.resolve(helpers.browserPath, 'styles'),
-      path.resolve(helpers.browserPath, 'modules/Guides'),
-      path.resolve(helpers.browserPath, 'modules/my-scripts')
+      path.resolve(helpers.browserPath, 'modules/Guides')
     ],
     use: [
       'style-loader',
@@ -97,6 +91,11 @@ module.exports = [
   },
   {
     test: /\.css$/, // global css files that don't need any processing
+    include: path.resolve(`${helpers.browserPath}/modules/Sidebar/favorites`),
+    use: ['style-loader', 'css-loader']
+  },
+  {
+    test: /\.css$/, // global css files that don't need any processing
     exclude: [
       path.resolve(helpers.browserPath, 'components'),
       path.resolve(helpers.browserPath, 'modules')
@@ -104,7 +103,7 @@ module.exports = [
     use: ['style-loader', 'css-loader']
   },
   {
-    test: /\.svg$/,
+    test: /\.(svg|png)$/,
     use:
       'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
     exclude: [path.resolve(helpers.browserPath, 'icons')]

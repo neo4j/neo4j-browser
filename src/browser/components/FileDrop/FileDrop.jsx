@@ -18,24 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {useState} from 'react'
-import {connect} from 'react-redux'
-import {withBus} from 'react-suber'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import SVGInline from 'react-svg-inline'
-import {every} from 'lodash-es'
+import { every } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import {
   addFavorite,
   addManyFavorites
 } from '../../../shared/modules/user-favorites/user-favorites.duck'
-import {parseGrass} from 'shared/services/grassUtils'
-import {updateGraphStyleData} from 'shared/modules/grass/grassDuck'
+import { parseGrass } from 'shared/services/grassUtils'
+import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import {
   showErrorMessage,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import {readZipFiles} from './file-drop.utils'
+import { readZipFiles } from './file-drop.utils'
 
 import {
   StyledFileDrop,
@@ -45,7 +45,7 @@ import {
   StyledFileDropActionButton
 } from './styled'
 import icon from 'icons/task-list-download.svg'
-import { addScriptPathPrefix } from '../../modules/my-scripts/my-scripts.utils'
+import { addScriptPathPrefix } from '@relate-by-ui/saved-scripts'
 import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
 
 export function FileDrop (props) {
@@ -126,7 +126,7 @@ export function FileDrop (props) {
       return
     }
 
-    if (every(files, ({type}) => type === 'application/zip')) {
+    if (every(files, ({ type }) => type === 'application/zip')) {
       readZipFiles(files)
         .then(saveManyFavorites)
         .then(resetState)

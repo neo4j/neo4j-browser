@@ -23,7 +23,7 @@ import * as editor from '../../../shared/modules/editor/editorDuck'
 import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
 import { BROWSER_STATIC_SCRIPTS_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
 
-import MyScripts from '../my-scripts/my-scripts'
+import MyScripts from '@relate-by-ui/saved-scripts'
 
 const mapFavoritesStateToProps = state => ({
   title: 'Sample Scripts',
