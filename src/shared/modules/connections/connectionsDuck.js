@@ -30,7 +30,8 @@ import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
   getSettings,
-  getCmdChar
+  getCmdChar,
+  NEO4J_CLOUD_DOMAINS
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 
@@ -179,6 +180,15 @@ const updateAuthEnabledHelper = (state, authEnabled) => {
   return Object.assign({}, state, { connectionsById: updatedConnectionByIds })
 }
 
+const connectionTimeoutHelper = host => {
+  for (const cloudDomain of NEO4J_CLOUD_DOMAINS) {
+    if (host.endsWith(cloudDomain)) {
+      return 30000
+    }
+  }
+  return 5000
+}
+
 // Local vars
 let memoryUsername = ''
 let memoryPassword = ''
@@ -290,7 +300,10 @@ export const connectEpic = (action$, store) => {
     memoryUsername = ''
     memoryPassword = ''
     return bolt
-      .openConnection(action, { encrypted: getEncryptionMode(action) })
+      .openConnection(action, {
+        encrypted: getEncryptionMode(action),
+        connectionTimeout: connectionTimeoutHelper(action.host)
+      })
       .then(res => ({ type: action.$$responseChannel, success: true }))
       .catch(e => ({
         type: action.$$responseChannel,
@@ -316,7 +329,8 @@ export const startupConnectEpic = (action$, store) => {
           connection,
           {
             withoutCredentials: true,
-            encrypted: getEncryptionMode(connection)
+            encrypted: getEncryptionMode(connection),
+            connectionTimeout: connectionTimeoutHelper(connection.host)
           },
           onLostConnection(store.dispatch)
         )
@@ -345,7 +359,10 @@ export const startupConnectEpic = (action$, store) => {
           bolt
             .openConnection(
               connection,
-              { encrypted: getEncryptionMode(connection) },
+              {
+                encrypted: getEncryptionMode(connection),
+                connectionTimeout: connectionTimeoutHelper(connection.host)
+              },
               onLostConnection(store.dispatch)
             ) // Try with stored creds
             .then(connection => {
@@ -444,7 +461,10 @@ export const connectionLostEpic = (action$, store) =>
               bolt
                 .directConnect(
                   connection,
-                  { encrypted: getEncryptionMode(connection) },
+                  {
+                    encrypted: getEncryptionMode(connection),
+                    connectionTimeout: connectionTimeoutHelper(connection.host)
+                  },
                   e =>
                     setTimeout(
                       () => reject(new Error('Couldnt reconnect. Lost.')),
@@ -456,7 +476,12 @@ export const connectionLostEpic = (action$, store) =>
                   bolt
                     .openConnection(
                       connection,
-                      { encrypted: getEncryptionMode(connection) },
+                      {
+                        encrypted: getEncryptionMode(connection),
+                        connectionTimeout: connectionTimeoutHelper(
+                          connection.host
+                        )
+                      },
                       onLostConnection(store.dispatch)
                     )
                     .then(() => {
