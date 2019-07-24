@@ -159,7 +159,8 @@ describe('connectionsDucks Epics', () => {
           }
         },
         allConnectionIds: [CONNECTION_ID]
-      }
+      },
+      settings: {}
     })
   })
   afterEach(() => {
@@ -260,7 +261,8 @@ describe('startupConnectEpic', () => {
           }
         },
         allConnectionIds: [CONNECTION_ID]
-      }
+      },
+      settings: {}
     })
   })
   afterEach(() => {
@@ -323,7 +325,8 @@ describe('retainCredentialsSettingsEpic', () => {
           xxx: { id: 'xxx', username: 'usr', password: 'pw' }
         },
         allConnectionIds: ['xxx']
-      }
+      },
+      settings: {}
     })
   })
   afterEach(() => {
@@ -373,7 +376,8 @@ describe('switchConnectionEpic', () => {
           }
         },
         allConnectionIds: [CONNECTION_ID]
-      }
+      },
+      settings: {}
     })
   })
   afterEach(() => {
