@@ -28,7 +28,6 @@ import {
   CONNECTION_ID,
   updateDiscoveryConnection
 } from 'shared/modules/discovery/discoveryDuck'
-
 import bolt from 'services/bolt/bolt'
 jest.mock('services/bolt/bolt', () => {
   return {
@@ -262,7 +261,9 @@ describe('startupConnectEpic', () => {
         },
         allConnectionIds: [CONNECTION_ID]
       },
-      settings: {}
+      settings: {
+        connectionTimeout: 10
+      }
     })
   })
   afterEach(() => {
@@ -288,6 +289,23 @@ describe('startupConnectEpic', () => {
             currentAction
           ])
           expect(bolt.openConnection).toHaveBeenCalledTimes(2)
+          expect(bolt.openConnection).toHaveBeenCalledWith(
+            expect.any(Object),
+            {
+              withoutCredentials: true,
+              encrypted: expect.any(Boolean),
+              connectionTimeout: 10
+            },
+            expect.any(Function)
+          )
+          expect(bolt.openConnection).toHaveBeenCalledWith(
+            expect.any(Object),
+            {
+              encrypted: expect.any(Boolean),
+              connectionTimeout: 10
+            },
+            expect.any(Function)
+          )
           expect(bolt.closeConnection).toHaveBeenCalledTimes(1)
           resolve()
         } catch (e) {
@@ -377,7 +395,9 @@ describe('switchConnectionEpic', () => {
         },
         allConnectionIds: [CONNECTION_ID]
       },
-      settings: {}
+      settings: {
+        connectionTimeout: 10
+      }
     })
   })
   afterEach(() => {
@@ -410,6 +430,15 @@ describe('switchConnectionEpic', () => {
           ])
           expect(bolt.closeConnection).toHaveBeenCalledTimes(2) // Why 2?
           expect(bolt.openConnection).toHaveBeenCalledTimes(1)
+          expect(bolt.openConnection).toHaveBeenCalledWith(
+            expect.any(Object),
+            {
+              encrypted: expect.any(Boolean),
+              connectionTimeout: 10
+            },
+            expect.any(Function)
+          )
+
           resolve()
         } catch (e) {
           reject(e)
@@ -455,6 +484,14 @@ describe('switchConnectionEpic', () => {
           ])
           expect(bolt.closeConnection).toHaveBeenCalledTimes(3) // Why 3?
           expect(bolt.openConnection).toHaveBeenCalledTimes(2) // Why 2?
+          expect(bolt.openConnection).toHaveBeenCalledWith(
+            expect.any(Object),
+            {
+              encrypted: expect.any(Boolean),
+              connectionTimeout: 10
+            },
+            expect.any(Function)
+          )
           resolve()
         } catch (e) {
           reject(e)

@@ -30,11 +30,10 @@ import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
   getSettings,
-  getCmdChar,
-  getConnectionTimeout,
-  NEO4J_CLOUD_DOMAINS
+  getCmdChar
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
+import { connectionTimeoutHelper } from 'shared/modules/connections/connectionHelpers'
 
 export const NAME = 'connections'
 export const ADD = 'connections/ADD'
@@ -179,16 +178,6 @@ const updateAuthEnabledHelper = (state, authEnabled) => {
   updatedConnectionByIds[connectionId] = updatedConnection
 
   return Object.assign({}, state, { connectionsById: updatedConnectionByIds })
-}
-
-const connectionTimeoutHelper = (state, host) => {
-  if (getConnectionTimeout(state)) return getConnectionTimeout(state)
-  for (const cloudDomain of NEO4J_CLOUD_DOMAINS) {
-    if (host.endsWith(cloudDomain)) {
-      return 10000
-    }
-  }
-  return 5000
 }
 
 // Local vars
@@ -554,7 +543,13 @@ export const switchConnectionEpic = (action$, store) => {
         bolt
           .openConnection(
             action,
-            { encrypted: action.encrypted },
+            {
+              encrypted: action.encrypted,
+              connectionTimeout: connectionTimeoutHelper(
+                store.getState(),
+                action.host
+              )
+            },
             onLostConnection(store.dispatch)
           )
           .then(connection => {
