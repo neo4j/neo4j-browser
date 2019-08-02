@@ -67,6 +67,8 @@ const initialState = {
   connectionState: DISCONNECTED_STATE
 }
 
+var firstUse = true
+
 /**
  * Selectors
  */
@@ -369,10 +371,17 @@ export const startupConnectEpic = (action$, store) => {
 export const startupConnectionSuccessEpic = (action$, store) => {
   return action$
     .ofType(STARTUP_CONNECTION_SUCCESS)
-    .do(() =>
-      store.dispatch(
-        executeSystemCommand(getCmdChar(store.getState()) + 'server status')
-      )
+    .do(
+      () =>
+        firstUse
+          ? store.dispatch(
+            executeSystemCommand(getCmdChar(store.getState()) + 'play hello')
+          )
+          : store.dispatch(
+            executeSystemCommand(
+              getCmdChar(store.getState()) + 'server status'
+            )
+          )
     )
     .mapTo(executeSystemCommand(getInitCmd(store.getState()))) // execute initCmd from settings
 }

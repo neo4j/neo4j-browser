@@ -126,11 +126,12 @@ export const StyledFrameTitleBar = styled.div`
   border-bottom: ${props => props.theme.inFrameBorder};
   line-height: ${dim.frameTitlebarHeight}px;
   color: ${props => props.theme.frameTitlebarText};
-  display: flex;
+  display: ${props => (props.visible ? 'flex' : 'none')};
   flex-direction: row;
 `
 
 export const FrameTitlebarButtonSection = styled.ul`
+  display: ${props => (props.visible ? 'inherit' : 'none')};
   flex: 0 0 auto;
   margin-left: -5px;
   list-style: none;

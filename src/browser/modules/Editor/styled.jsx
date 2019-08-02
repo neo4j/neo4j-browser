@@ -24,7 +24,7 @@ import { dim } from 'browser-styles/constants'
 const editorPadding = 12
 
 export const BaseBar = styled.div`
-  display: flex;
+  display: ${props => (props.visible ? 'flex' : 'none')};
   flex-direction: row;
   align-items: middle;
   min-height: ${props =>
@@ -52,7 +52,7 @@ export const Bar = styled(BaseBar)`
 export const ActionButtonSection = styled.div`
   flex: 0 0 130px;
   align-items: top;
-  display: flex;
+  display: ${props => (props.visible ? 'flex' : 'none')};
   padding-top: 21px;
   justify-content: space-between;
   padding-right: ${editorPadding}px;

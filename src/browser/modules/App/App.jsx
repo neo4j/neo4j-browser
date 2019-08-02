@@ -167,7 +167,11 @@ export function App (props) {
               <StyledApp>
                 <StyledBody>
                   <ErrorBoundary>
-                    <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+                    <Sidebar
+                      visible={false}
+                      openDrawer={drawer}
+                      onNavClick={handleNavClick}
+                    />
                   </ErrorBoundary>
                   <StyledMainWrapper>
                     <Main

@@ -1,5 +1,5 @@
 {
-  "name": "neo4j-browser",
+  "name": "neo4j-browser-abk",
   "version": "3.2.20",
   "description": "Neo4j Browser is the general purpose user interface for working with Neo4j. Query, visualize, administrate and monitor the database.",
   "neo4jDesktop": {
@@ -91,6 +91,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^0.14.3",
+    "image-webpack-loader": "^5.0.0",
     "jest": "^24.1.0",
     "jest-canvas-mock": "^1.1.0",
     "jest-dom": "^1.12.0",
@@ -149,6 +150,7 @@
     "regenerator-runtime": "^0.13.2",
     "rxjs": "^5.4.2",
     "save-as": "^0.1.7",
+    "semantic-ui-css": "^2.4.1",
     "semver": "^5.5.0",
     "styled-components": "^4.0.0",
     "stylis": "^3.4.10",

@@ -108,7 +108,7 @@ class Sidebar extends Component {
       }
     ]
 
-    return (
+    return this.props.visible ? (
       <TabNavigation
         openDrawer={openDrawer}
         onNavClick={onNavClick}
@@ -119,7 +119,7 @@ class Sidebar extends Component {
             : bottomNavItemsList.filter(item => item.name !== 'Sync')
         }
       />
-    )
+    ) : null
   }
 }
 

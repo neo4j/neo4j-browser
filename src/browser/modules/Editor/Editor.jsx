@@ -388,7 +388,11 @@ export class Editor extends Component {
     this.setGutterMarkers()
 
     return (
-      <Bar expanded={this.state.expanded} minHeight={this.state.editorHeight}>
+      <Bar
+        visible={this.props.visible}
+        expanded={this.state.expanded}
+        minHeight={this.state.editorHeight}
+      >
         <EditorWrapper
           expanded={this.state.expanded}
           minHeight={this.state.editorHeight}
@@ -404,7 +408,7 @@ export class Editor extends Component {
             initialPosition={this.state.lastPosition}
           />
         </EditorWrapper>
-        <ActionButtonSection>
+        <ActionButtonSection visible={false}>
           <Render if={this.state.contentId}>
             <EditModeEditorButton
               onClick={() =>

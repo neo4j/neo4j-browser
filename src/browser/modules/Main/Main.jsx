@@ -42,7 +42,7 @@ const Main = React.memo(function Main (props) {
   return (
     <StyledMain data-testid='main'>
       <ErrorBoundary>
-        <Editor />
+        <Editor visible={false} />
       </ErrorBoundary>
       <Render if={props.showUnknownCommandBanner}>
         <ErrorBanner>

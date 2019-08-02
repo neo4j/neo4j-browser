@@ -1,0 +1,37 @@
+<article class="guide">
+  <div class="ui container">
+    <div class="ui basic segment ">
+      <h1>Neo4j understands a graph query language called Cypher.</h1>
+
+      <h4>Cypher is like SQL with pattern matching to describe graphs.</h4>
+
+      <div class="ui segment">
+        <p>Let's create a data record about you. Just fill out this form...</p>
+      <form class="ui form">
+          <div class="inline fields">
+            <div class="eight wide field">
+            <label>What's your name?</label>
+            <input type="text" name="name" placeholder="Amazing Person" />
+          </div>
+          </div>
+      </form>
+      <p>Here's the Cypher statement for creating a "node". Click on the query below to run it.</p>
+      <figure><pre mode="cypher" class="code runnable">CREATE (a:Person {name:"Amazing Person"}) RETURN a</pre></figure>
+
+    </div>
+
+
+      <div class="ui message">
+        
+        <div class="ui text menu">
+          <a class="item" play-topic="repeat">What just happened?</a>
+          &nbsp;
+          <a class="item" play-topic="code">Can I try that my?</a>
+          <div class="right menu">
+            <a class="item" play-topic="start">Skip ahead.</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>

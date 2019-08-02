@@ -110,7 +110,7 @@ class FrameTitlebar extends Component {
     const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
     const cmd = removeComments(frame.cmd)
     return (
-      <StyledFrameTitleBar>
+      <StyledFrameTitleBar visible={false}>
         <StyledFrameCommand>
           <DottedLineHover
             data-testid='frameCommand'
@@ -119,7 +119,7 @@ class FrameTitlebar extends Component {
             {cmd}
           </DottedLineHover>
         </StyledFrameCommand>
-        <FrameTitlebarButtonSection>
+        <FrameTitlebarButtonSection visible={false}>
           <Render if={this.canExport()}>
             <DropdownButton data-testid='frame-export-dropdown'>
               <DownloadIcon />

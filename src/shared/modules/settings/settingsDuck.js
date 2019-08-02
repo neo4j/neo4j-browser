@@ -71,11 +71,13 @@ export const shouldEditorAutocomplete = state =>
   state[NAME].editorAutocomplete !== false
 export const shouldUseCypherThread = state => state[NAME].useCypherThread
 
+const firstUse = true
+
 const initialState = {
   cmdchar: ':',
   maxHistory: 30,
   theme: AUTO_THEME,
-  initCmd: ':play start',
+  initCmd: firstUse ? null : ':play start',
   initialNodeDisplay: 300,
   maxNeighbours: 100,
   showSampleScripts: true,
