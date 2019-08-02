@@ -67,6 +67,7 @@ import _unknown from './unknown.html'
 import _unwind from './unwind.html'
 import _where from './where.html'
 import _with from './with.html'
+import _distance from './distance.html'
 
 export default {
   _bolt,
@@ -117,5 +118,6 @@ export default {
   _unknown,
   _unwind,
   _where,
-  _with
+  _with,
+  _distance
 }

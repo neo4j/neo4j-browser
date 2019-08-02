@@ -1,3 +1,6 @@
+.settings/
+.project
+.classpath
 node_modules/
 npm-debug.log
 coverage/

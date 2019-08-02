@@ -74,6 +74,10 @@ export default [
       {
         name: 'northwind graph',
         description: ' - from RDBMS to Graph, using a classic dataset'
+      },
+      {
+        name: 'eroads graph',
+        description: ' - spatial coordinates in a Graph'
       }
     ]
   },

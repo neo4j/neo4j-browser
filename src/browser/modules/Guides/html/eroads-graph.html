@@ -1,0 +1,127 @@
+<article class="guide">
+  <carousel class="deck container-fluid">
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>E-Roads Graph</h3>
+        <p class="lead">Spatial data in a graph</p>
+      </div>
+      <div class="col-sm-9">
+        <p>The <em>E-Roads Graph</em> demonstrates how to spatial data points within Neo4j,
+          using a small set of roads connecting European cities.
+        </p>
+        <p>This guide will show you how to:</p>
+        <ol class="big">
+          <li>Load: create data from external CSV files</li>
+          <li>Create: spatial data using latitude & longitude</li>
+          <li>Relate: connect spatial points roads that include distance</li>
+        </ol>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Import Places & Roads</h3>
+        <p>
+          The E-Roads use a single csv which contains an origin place, destination place, and the road connecting them..
+        </p>
+        <p>The load statements to the right require public internet access.<code>LOAD CSV</code> will retrieve a CSV file from a valid URL, applying a Cypher statement to
+          each row using a named map (here we're using the name `row`).
+        </p>
+        <p><img src="images/eroads/place-road.png" class="img-responsive"></p>
+        <hr>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="load-csv">LOAD CSV</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Load records</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">LOAD CSV WITH HEADERS FROM &quot;http://data.neo4j.com/spatial/eroads.csv&quot; AS row
+MERGE (origin:Place {reference:row.origin_reference_place, countryCode:row.origin_country_code})
+  ON CREATE
+  SET origin.location = point({latitude: toFloat(row.origin_lat), longitude: toFloat(row.origin_lon)})
+MERGE (destination:Place {reference:row.destination_reference_place, countryCode:row.destination_country_code})
+  ON CREATE
+  SET destination.location = point({latitude: toFloat(row.destination_lat), longitude: toFloat(row.destination_lon)})
+CREATE (origin)-[:ROAD {roadNumber:row.road_number,
+						distance: toInteger(row.distance),
+                        watercrossing: (row.watercrossing = &quot;true&quot;)}
+                ]->(destination)
+RETURN row</pre>
+        </figure>
+        <h4>Create indexes</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">CREATE INDEX ON :Place(location)</pre>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">CREATE INDEX ON :Place(reference)</pre>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Querying E-Roads Graph</h3>
+        <p>Lets try some queries using locations.</p>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="match">MATCH</a>&nbsp;<a help-topic="distance">distance()</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Query using distance()</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">
+MATCH (origin:Place {reference:"Paris"}), (nearby:Place {countryCode:"F"})
+RETURN origin, nearby, distance(origin.location, nearby.location)/1000 as `distance in km` ORDER BY `distance in km`</pre>
+          <figcaption>Within France, distances to Paris.</figcaption>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">
+MATCH (origin:Place {reference:"Paris"}), (nearby:Place)
+WHERE distance(origin.location, nearby.location)/1000 <= 200
+RETURN nearby
+          </pre>
+          <figcaption>Places nearest to Paris (within 200km)</figcaption>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid">
+      <div class="col-sm-3">
+        <h3>Finding E-Roads routes</h3>
+        <p>Now lets find some paths.</p>
+        <p><small>:help</small>&nbsp;<a help-topic="cypher">cypher</a>&nbsp;<a help-topic="match">MATCH</a>&nbsp;<a help-topic="distance">distance()</a></p>
+      </div>
+      <div class="col-sm-9">
+        <h4>Path finding</h4>
+        <figure>
+          <pre class="pre-scrollable code runnable">
+MATCH (origin:Place {reference:"Paris"})-[:ROAD]-(nextStop:Place)
+RETURN nextStop, distance(origin.location, nextStop.location) as distance ORDER BY distance LIMIT 1
+          </pre>
+          <figcaption>Closest stop from Paris.</figcaption>
+        </figure>
+        <figure>
+          <pre class="pre-scrollable code runnable">
+MATCH p=shortestPath( (origin:Place {reference:"Paris"})-[*]-(destination:Place {reference:"Stockholm"}) )
+RETURN p
+          </pre>
+          <figcaption>Shortest path from Paris to Stockholm.</figcaption>
+        </figure>
+      </div>
+    </slide>
+    <slide class="row-fluid header">
+      <div class="col-sm-4">
+        <h4>E-Roads Graph</h4><br>
+        <h3>Next steps</h3>
+      </div>
+      <div class="col-sm-4">
+        <h3>More code</h3>
+        <ul class="undecorated">
+          <li><a play-topic="cypher">Cypher</a> - query language fundamentals</li>
+        </ul>
+      </div>
+      <div class="col-sm-4">
+        <h3>Reference</h3>
+        <ul class="undecorated">
+          <li><a target="_blank" href="https://neo4j.com/developer/guide-importing-data-and-etl/">Full Northwind import example</a></li>
+          <li><a target="_blank" href="https://neo4j.com/developer/">Developer resources</a></li>
+          <li><a target="_blank" href="https://neo4j.com/docs/developer-manual/3.2/">Neo4j Developer Manual</a></li>
+        </ul>
+      </div>
+    </slide>
+  </carousel>
+</article>

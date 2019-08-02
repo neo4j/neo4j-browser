@@ -1,0 +1,36 @@
+<article class="help">
+  <section class="main">
+    <div class="headings">
+      <p class="title">distance()</p>
+      <p class="subtitle">Calculate distance</p>
+    </div>
+    <div class="content">
+      <p>The <code>distance()</code> function returns a floating point number representing the linear distance between two points. 
+        The returned units will be the same as those of the point coordinate input arguments. Supports both 2D and 3D cartesian points.
+      </p>
+      <div class="links">
+        <div class="link">
+          <p class="title">Reference</p>
+          <p class="content">
+            <code><a target="_blank" href="https://neo4j.com/docs/developer-manual/3.2/cypher/functions/spatial/#functions-distance">distance()</a> manual page</code>
+          </p>
+        </div>
+        <div class="link">
+          <p class="title">Related</p>
+          <p class="content">
+            <a help-topic="cypher">:help Cypher</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="example">
+    <figure class="runnable">
+      <pre>
+MATCH (paris:Place {reference:"Paris"}), (stockholm:Place {reference:"Stockholm"})
+RETURN distance(paris.location, stockholm.location)
+      </pre>
+      <figcaption>Distance from Paris to Stockholm. (requires the <a play-topic="eroads-graph">E Roads Graph</a>).</figcaption>
+    </figure>
+  </section>
+</article>

@@ -758,6 +758,11 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/app-types/-/app-types-0.3.10.tgz#8f6d24d80bf833622b53ed26eaa04cfa9dd0f2f3"
   integrity sha1-j20k2Av4M2IrU+0m6qBM+p3Q8vM=
 
+"@firebase/app-types@^0.4.2":
+  version "0.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/app-types/-/app-types-0.4.2.tgz#dd6b1106e6e406ba69a271a319569ab23f2cc691"
+  integrity sha1-3WsRBubkBrpponGjGVaasj8sxpE=
+
 "@firebase/app@0.3.17":
   version "0.3.17"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/app/-/app-0.3.17.tgz#491dc3bc1a2837bbb4869161cc9852cfc04da891"
@@ -773,6 +778,11 @@
   version "0.6.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/auth-types/-/auth-types-0.6.1.tgz#9b60142e3a4adc1db09c037d068ab98cd54c10a8"
   integrity sha1-m2AULjpK3B2wnAN9Boq5jNVMEKg=
+
+"@firebase/auth-types@^0.7.2":
+  version "0.7.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/auth-types/-/auth-types-0.7.2.tgz#6343639d422ea84feddf619e22d8db7f63b0eb62"
+  integrity sha1-Y0NjnUIuqE/t32GeItjbf2Ow62I=
 
 "@firebase/auth@0.10.2":
   version "0.10.2"
@@ -890,6 +900,11 @@
   version "0.2.11"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/storage-types/-/storage-types-0.2.11.tgz#cbbcdca9bbd68c527ca2c2be2241d619126cb5b3"
   integrity sha1-y7zcqbvWjFJ8osK+IkHWGRJstbM=
+
+"@firebase/storage-types@^0.3.3":
+  version "0.3.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/storage-types/-/storage-types-0.3.3.tgz#179ad38485d450023406cf9731560d690ef39d19"
+  integrity sha1-F5rThIXUUAI0Bs+XMVYNaQ7znRk=
 
 "@firebase/storage@0.2.15":
   version "0.2.15"
