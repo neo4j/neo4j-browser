@@ -20,7 +20,7 @@
 
 import updateStatsFields from './updateStatisticsFields'
 import { v1 as neo4j } from 'neo4j-driver'
-import { stringFormat } from 'services/bolt/cypherTypesFormatting'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import {
   safetlyRemoveObjectProp,
   safetlyAddObjectProp,
@@ -46,7 +46,7 @@ export function recordsToTableArray (records, converters) {
 }
 
 export function itemIntToString (item, converters) {
-  const res = stringFormat(item)
+  const res = stringModifier(item)
   if (res) return res
   if (converters.intChecker(item)) return converters.intConverter(item)
   if (Array.isArray(item)) return arrayIntToString(item, converters)

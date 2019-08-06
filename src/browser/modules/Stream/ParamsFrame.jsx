@@ -21,7 +21,7 @@ import React from 'react'
 import Render from 'browser-components/Render'
 import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import Ellipsis from 'browser-components/Ellipsis'
-import { stringFormat } from 'services/bolt/cypherTypesFormatting'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod } from 'services/utils'
 import FrameTemplate from './FrameTemplate'
 import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
@@ -34,7 +34,7 @@ const ParamsFrame = ({ frame }) => {
     <PaddedDiv>
       <Render if={frame.success !== false}>
         <pre data-testid='rawParamData'>
-          {stringifyMod(params, stringFormat, true)}
+          {stringifyMod(params, stringModifier, true)}
         </pre>
       </Render>
       <div style={{ marginTop: '20px' }}>

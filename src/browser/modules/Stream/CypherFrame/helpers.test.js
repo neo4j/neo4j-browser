@@ -34,7 +34,7 @@ import {
   flattenGraphItemsInResultArray,
   stringifyResultArray
 } from './helpers'
-import { stringFormat, csvFormat } from 'services/bolt/cypherTypesFormatting'
+import { stringModifier, csvFormat } from 'services/bolt/cypherTypesFormatting'
 
 describe('helpers', () => {
   test('getRecordsToDisplayInTable should report if there are rows or not in the result', () => {
@@ -639,7 +639,7 @@ describe('helpers', () => {
         neo4j.isInt,
         step1
       )
-      const res = stringifyResultArray(stringFormat, step2)
+      const res = stringifyResultArray(stringModifier, step2)
       // Then
       expect(res).toEqual([
         ['""neoInt""', '""int""', '""any""', '""backslash""'],
@@ -713,7 +713,7 @@ describe('helpers', () => {
         neo4j.isInt,
         step1
       )
-      const res = stringifyResultArray(stringFormat, step2)
+      const res = stringifyResultArray(stringModifier, step2)
       // Then
       expect(res).toEqual([
         ['""x""', '""y""', '""n""'],
