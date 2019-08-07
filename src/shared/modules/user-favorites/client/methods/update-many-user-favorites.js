@@ -17,20 +17,12 @@
 
 import { filter, includes, map, without } from 'lodash-es'
 
-import { USE_REST_API } from '../../user-favorites.constants'
 import {
   setUserFavoritesLocalState,
   tryGetUserFavoritesLocalState
 } from '../../user-favorites.utils'
-import getRestClient from '../get-rest-client'
 
 export default async function updateManyUserFavorites (scriptIds, data) {
-  if (USE_REST_API) {
-    const restClient = getRestClient()
-
-    return restClient.POST('/bulk-update', { scriptIds, ...data })
-  }
-
   const alreadySaved = tryGetUserFavoritesLocalState()
   const allToUpdate = filter(alreadySaved, ({ id }) => includes(scriptIds, id))
   const others = without(alreadySaved, ...allToUpdate)

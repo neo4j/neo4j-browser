@@ -15,16 +15,8 @@
  *
  */
 
-import { USE_REST_API } from '../../user-favorites.constants'
 import { tryGetUserFavoritesLocalState } from '../../user-favorites.utils'
-import getRestClient from '../get-rest-client'
 
 export default async function getAllUserFavorites () {
-  if (USE_REST_API) {
-    const restClient = getRestClient()
-
-    return restClient.GET('/')
-  }
-
   return tryGetUserFavoritesLocalState()
 }

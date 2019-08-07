@@ -17,20 +17,12 @@
 
 import uuid from 'uuid/v4'
 
-import { USE_REST_API } from '../../user-favorites.constants'
 import {
   setUserFavoritesLocalState,
   tryGetUserFavoritesLocalState
 } from '../../user-favorites.utils'
-import getRestClient from '../get-rest-client'
 
 export default async function createUserFavorite (data) {
-  if (USE_REST_API) {
-    const restClient = getRestClient()
-
-    return restClient.POST('/', data)
-  }
-
   const alreadySaved = tryGetUserFavoritesLocalState()
   const toSave = { ...data, id: uuid() }
 

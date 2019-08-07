@@ -18,20 +18,12 @@
 import uuid from 'uuid/v4'
 import { map } from 'lodash-es'
 
-import { USE_REST_API } from '../../user-favorites.constants'
 import {
   setUserFavoritesLocalState,
   tryGetUserFavoritesLocalState
 } from '../../user-favorites.utils'
-import getRestClient from '../get-rest-client'
 
 export default async function createManyUserFavorites (data) {
-  if (USE_REST_API) {
-    const restClient = getRestClient()
-
-    return restClient.POST('/bulk-create', data)
-  }
-
   const alreadySaved = tryGetUserFavoritesLocalState()
   const toSave = map(data, item => ({ ...item, id: uuid() }))
 

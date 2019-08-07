@@ -17,23 +17,32 @@
 
 import { combineLatest } from 'rxjs'
 import { flatMap, map } from 'rxjs/operators'
-import { map as _map } from 'lodash-es'
+import { get as _get, map as _map } from 'lodash-es'
+import { arrayHasItems } from '@relate-by-ui/saved-scripts'
 
 import { APP_START } from '../app/appDuck'
 import * as oldFavorites from '../favorites/favoritesDuck'
 import * as oldFolders from '../favorites/foldersDuck'
 
-import { STATIC_SCRIPTS } from './user-favorites.constants'
+import { STATIC_SCRIPTS, STATE_NAME } from './user-favorites.constants'
 import * as userFavoriteClient from './client'
 
 import {
+  getNewUserFavoriteSyncHistoryRevision,
+  getLatestRemoteFavoritesVersionData,
+  getLocalFavoritesFromState,
   mapOldFavoritesAndFolders,
-  onlyNewFavorites
+  mergeRemoteAndLocalFavorites,
+  onlyNewFavorites,
+  favoritesAreEqual,
+  getAllRemoteFavoritesVersions
 } from './user-favorites.utils'
-import { arrayHasItems } from '../../../browser/modules/my-scripts/generic.utils' // @todo: generics?
+import { getSync, SET_SYNC_DATA, syncItems } from '../sync/syncDuck'
 
-export const NAME = 'user-favorites'
+export const NAME = STATE_NAME
 
+const SYNC_FAVORITES = `${NAME}/SYNC_FAVORITES`
+const MIGRATE_OLD_FAVORITES = `${NAME}/MIGRATE_OLD_FAVORITES`
 const SET_FAVORITES = `${NAME}/SET_FAVORITES`
 const ADD_FAVORITE = `${NAME}/ADD_FAVORITE`
 const FAVORITE_ADDED = `${NAME}/FAVORITE_ADDED`
@@ -55,20 +64,34 @@ const initialState = {
 }
 
 export default function useFavoritesReducer (state = initialState, action) {
-  switch (action.type) {
-    case SET_FAVORITES:
-      return {
-        ...state,
-        favorites: action.payload
-      }
-    default:
-      return state
+  if (action.type === SET_FAVORITES) {
+    return {
+      ...state,
+      favorites: action.payload
+    }
   }
+
+  return state
 }
 
 const noOp = () => ({
   type: NO_OP
 })
+
+export function syncFavorites (favorites) {
+  return {
+    type: SYNC_FAVORITES,
+    payload: favorites
+  }
+}
+
+export function migrateOldFavorites (oldFavorites) {
+  return {
+    type: MIGRATE_OLD_FAVORITES,
+    payload: oldFavorites
+  }
+}
+
 const setFavorites = favorites => ({
   type: SET_FAVORITES,
   payload: favorites
@@ -118,7 +141,7 @@ const manyFavoritesRemoved = favorites => ({
   payload: _map(favorites, ({ id }) => id)
 })
 
-export const getUserFavoritesEpic = action$ =>
+export const setUserFavoritesEpic = action$ =>
   action$
     .ofType(
       APP_START,
@@ -141,7 +164,7 @@ export const addUserFavoritesEpic = action$ =>
   )
 
 export const addManyUserFavoritesEpic = action$ =>
-  action$.ofType(ADD_MANY_FAVORITES).pipe(
+  action$.ofType(ADD_MANY_FAVORITES, MIGRATE_OLD_FAVORITES).pipe(
     flatMap(({ payload }) =>
       userFavoriteClient.createManyUserFavorites(payload)
     ),
@@ -207,7 +230,52 @@ export const migrateLocalFavorites = action$ =>
     map(
       favoritesToCreate =>
         arrayHasItems(favoritesToCreate)
-          ? addManyFavorites(favoritesToCreate)
+          ? migrateOldFavorites(favoritesToCreate)
           : noOp()
     )
+  )
+
+export const clearOldFavoritesAndFoldersEpic = action$ =>
+  action$
+    .ofType(MIGRATE_OLD_FAVORITES)
+    .pipe(map(oldFavorites.clearOldFavorites))
+
+export const syncUserFavoritesEpic = (action$, store) =>
+  action$.ofType(SET_FAVORITES).pipe(
+    map(({ payload }) => {
+      const { syncObj } = getSync(store.getState()) || {}
+      const remoteFavorites = getLatestRemoteFavoritesVersionData(syncObj)
+
+      if (syncObj && !favoritesAreEqual(remoteFavorites, payload)) {
+        return syncItems(
+          NAME,
+          getNewUserFavoriteSyncHistoryRevision(
+            getAllRemoteFavoritesVersions(syncObj),
+            payload
+          )
+        )
+      }
+
+      return noOp()
+    })
+  )
+
+export const loadUserFavoritesFromSyncEpic = (action$, store) =>
+  action$.ofType(SET_SYNC_DATA).pipe(
+    map(action => {
+      const remoteFavorites = getLatestRemoteFavoritesVersionData(
+        _get(action, 'obj.syncObj')
+      )
+      const localFavorites = getLocalFavoritesFromState(store.getState())
+      const mergedUserFavorites = mergeRemoteAndLocalFavorites(
+        remoteFavorites,
+        localFavorites
+      )
+
+      if (favoritesAreEqual(remoteFavorites, localFavorites)) {
+        return noOp()
+      }
+
+      return setFavorites(mergedUserFavorites)
+    })
   )

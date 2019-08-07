@@ -30,7 +30,6 @@ export const Drawer = styled.div`
 export const DrawerHeader = styled.h4`
   color: ${props => props.theme.primaryHeaderText};
   background-color: ${props => props.theme.drawerBackground};
-  font-family: ${props => props.theme.drawerHeaderFontFamily};
   font-size: 18px;
   height: 73px;
   padding: 25px 0 0 25px;
@@ -38,6 +37,7 @@ export const DrawerHeader = styled.h4`
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
 export const DrawerToppedHeader = styled(DrawerHeader)`
@@ -46,7 +46,6 @@ export const DrawerToppedHeader = styled(DrawerHeader)`
 
 export const DrawerSubHeader = styled.h5`
   color: ${props => props.theme.primaryHeaderText};
-  font-family: ${props => props.theme.drawerHeaderFontFamily};
   border-bottom: 1px solid #424650;
   font-size: 14px;
   margin-bottom: 12px;
@@ -55,6 +54,7 @@ export const DrawerSubHeader = styled.h5`
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
 export const DrawerSection = styled.div`

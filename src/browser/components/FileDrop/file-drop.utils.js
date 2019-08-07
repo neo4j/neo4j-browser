@@ -35,9 +35,10 @@ import {
   getScriptDisplayName,
   omitScriptPathPrefix
 } from '@relate-by-ui/saved-scripts'
-import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
-
-const CYPHER_FILE_EXTENSION = '.cypher'
+import {
+  BROWSER_FAVOURITES_NAMESPACE,
+  CYPHER_FILE_EXTENSION
+} from '../../../shared/modules/user-favorites/user-favorites.constants'
 
 /**
  * Extracts all .cypher files from a .zip archive and converts them to user scripts

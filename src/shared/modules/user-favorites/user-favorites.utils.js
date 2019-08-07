@@ -22,6 +22,8 @@ import {
   compact,
   filter,
   forEach,
+  get,
+  intersectionBy,
   join,
   kebabCase,
   last,
@@ -35,23 +37,15 @@ import {
   addScriptPathPrefix,
   getScriptDisplayName,
   sortAndGroupScriptsByPath
-} from '../../../browser/modules/my-scripts/my-scripts.utils'
+} from '@relate-by-ui/saved-scripts'
 import {
-  BROWSER_FAVORITES_EXPORT_URL,
+  STATE_NAME,
   BROWSER_FAVOURITES_NAMESPACE,
+  CYPHER_FILE_EXTENSION,
   LOCAL_STORAGE_NAMESPACE,
-  USE_REST_API
+  SYNC_VERSION_HISTORY_SIZE
 } from './user-favorites.constants'
-
-/**
- * Opens a new window/tab
- * @param     {String}    href
- * @param     {String}    target
- */
-export function openNewWindow (href, target = 'blank') {
-  // @todo: electron support
-  window.open(href, target)
-}
+import { getBrowserName } from '../../services/utils'
 
 /**
  * Converts old user favorites into new structure
@@ -145,29 +139,23 @@ export function setUserFavoritesLocalState (value) {
  * Triggers a user favorite export
  */
 export function exportFavorites () {
-  if (USE_REST_API) {
-    // @todo: electron support
-    openNewWindow(BROWSER_FAVORITES_EXPORT_URL)
-    return
-  }
-
   localFavoritesExport()
 }
 
 /**
  * Exports local favorites using JSZip
- * - Attempts to mirror output from userdata-store API /raw equivalent
  */
 export function localFavoritesExport () {
-  const localFavorites = tryGetUserFavoritesLocalState()
   const grouped = sortAndGroupScriptsByPath(
     BROWSER_FAVOURITES_NAMESPACE,
-    localFavorites
+    tryGetUserFavoritesLocalState()
   )
   const zipArchive = new JSZip()
-  const dirMap = new Map([['/', zipArchive]])
+  const dirMap = new Map([[BROWSER_FAVOURITES_NAMESPACE, zipArchive]])
   const joinPathParts = pathParts =>
-    pathParts.length > 1 ? `/${join(pathParts, '/')}/` : join(pathParts, '/')
+    pathParts.length > 1
+      ? `${BROWSER_FAVOURITES_NAMESPACE}${join(pathParts, '/')}`
+      : `${BROWSER_FAVOURITES_NAMESPACE}${join(pathParts, '/')}`
 
   zipArchive.file('.placeholder', 'forces directory creation')
   forEach(grouped, ([path, favorites]) => {
@@ -175,8 +163,10 @@ export function localFavoritesExport () {
     const folderName = last(pathParts)
     const folderPath = joinPathParts(pathParts)
     const parentPath =
-      joinPathParts(slice(pathParts, 0, pathParts.length - 1)) || '/'
-    const parent = dirMap.get(parentPath) || dirMap.get('/')
+      joinPathParts(slice(pathParts, 0, pathParts.length - 1)) ||
+      BROWSER_FAVOURITES_NAMESPACE
+    const parent =
+      dirMap.get(parentPath) || dirMap.get(BROWSER_FAVOURITES_NAMESPACE)
 
     dirMap.set(folderPath, createZipDirAndFiles(parent, folderName, favorites))
   })
@@ -184,18 +174,113 @@ export function localFavoritesExport () {
   zipArchive
     .generateAsync({ type: 'blob' })
     .then(blob =>
-      saveAs(blob, `my-scripts-${dateFormat(Date.now(), 'isoDateTime')}.zip`)
+      saveAs(blob, `saved-scripts-${dateFormat(Date.now(), 'isoDateTime')}.zip`)
     )
 }
 
+/**
+ * Creates a directory in a JSZip instance and populats files
+ * @param     {JSZip}     parent      parent directory
+ * @param     {string}    name        name of new dir
+ * @param     {Object[]}  favorites   scripts to save
+ * @return    {JSZip}                 created dir
+ */
 function createZipDirAndFiles (parent, name, favorites) {
   const dir = parent.folder(name)
 
   forEach(favorites, favorite => {
-    const fileName = `${kebabCase(getScriptDisplayName(favorite))}.cypher`
+    const fileName = `${kebabCase(
+      getScriptDisplayName(favorite)
+    )}${CYPHER_FILE_EXTENSION}`
 
     dir.file(fileName, favorite.contents)
   })
 
   return dir
+}
+
+/**
+ * Gets locally saved favorites from redux state
+ * @param     {Object}    state
+ * @return    {Object[]}
+ */
+export function getLocalFavoritesFromState (state) {
+  return get(state, [STATE_NAME, 'favorites'], [])
+}
+
+/**
+ * Gets all versions of remotely saved favorites from sync object (from state or action)
+ * @param     {Object}    syncObj
+ * @return    {Object[]}
+ */
+export function getAllRemoteFavoritesVersions (syncObj) {
+  return get(syncObj, STATE_NAME, [])
+}
+
+/**
+ * Gets latest version of remotely saved favorites from sync object (from state or action)
+ * @param     {Object}    syncObj
+ * @return    {Object[]}
+ */
+export function getLatestRemoteFavoritesVersionData (syncObj) {
+  return get(syncObj, [STATE_NAME, '0', 'data'], [])
+}
+
+/**
+ * Generates a new sync version entry for upload to firebase
+ * @param     {Object[]}    allVersions
+ * @param     {Object[]}    localUserFavorites
+ * @return    {Object[]}
+ */
+export function getNewUserFavoriteSyncHistoryRevision (
+  allVersions,
+  localUserFavorites
+) {
+  return [
+    {
+      client: getBrowserName(),
+      data: localUserFavorites,
+      syncedAt: Date.now()
+    },
+    ...slice(allVersions, 0, SYNC_VERSION_HISTORY_SIZE)
+  ]
+}
+
+/**
+ * Merges local and remove favorites, priority to local
+ * @param     {Object[]}    remoteUserFavorites
+ * @param     {Object[]}    localUserFavorites
+ * @return    {Object[]}
+ */
+export function mergeRemoteAndLocalFavorites (
+  remoteUserFavorites,
+  localUserFavorites
+) {
+  return [
+    ...filter(
+      remoteUserFavorites,
+      ({ id }) => !some(localUserFavorites, local => local.id === id)
+    ),
+    ...localUserFavorites
+  ]
+}
+
+/**
+ * Compares two arrays of favorites by id
+ * - @todo: this is very naive
+ * @param     {Object[]}    remoteUserFavorites
+ * @param     {Object[]}    localUserFavorites
+ * @return    {boolean}
+ */
+export function favoritesAreEqual (remoteUserFavorites, localUserFavorites) {
+  const intersect = intersectionBy(
+    remoteUserFavorites,
+    localUserFavorites,
+    'id'
+  )
+
+  return (
+    intersect.length === remoteUserFavorites.length &&
+    remoteUserFavorites.length === localUserFavorites.length
+  )
 }

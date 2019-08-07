@@ -17,20 +17,12 @@
 
 import { find, without } from 'lodash-es'
 
-import { USE_REST_API } from '../../user-favorites.constants'
 import {
   setUserFavoritesLocalState,
   tryGetUserFavoritesLocalState
 } from '../../user-favorites.utils'
-import getRestClient from '../get-rest-client'
 
 export default async function updateUserFavorite (scriptId, data) {
-  if (USE_REST_API) {
-    const restClient = getRestClient()
-
-    return restClient.PUT(`/${scriptId}`, data)
-  }
-
   const alreadySaved = tryGetUserFavoritesLocalState()
   const toUpdate = find(alreadySaved, ({ id }) => id === scriptId)
   const others = without(alreadySaved, toUpdate)

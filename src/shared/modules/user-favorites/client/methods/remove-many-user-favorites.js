@@ -15,26 +15,19 @@
  *
  */
 
-import { includes, omitBy } from 'lodash-es'
+import { includes, filter, without } from 'lodash-es'
 
-import { USE_REST_API } from '../../user-favorites.constants'
 import {
   setUserFavoritesLocalState,
   tryGetUserFavoritesLocalState
 } from '../../user-favorites.utils'
-import getRestClient from '../get-rest-client'
 
 export default async function removeManyUserFavorites (scriptIds) {
-  if (USE_REST_API) {
-    const restClient = getRestClient()
-
-    return restClient.POST(`/bulk-delete`, { scriptIds })
-  }
-
   const alreadySaved = tryGetUserFavoritesLocalState()
-  const omitted = omitBy(alreadySaved, ({ id }) => includes(scriptIds, id))
+  const toRemove = filter(alreadySaved, ({ id }) => includes(scriptIds, id))
+  const omitted = without(alreadySaved, ...toRemove)
 
   setUserFavoritesLocalState(omitted)
 
-  return omitted
+  return toRemove
 }

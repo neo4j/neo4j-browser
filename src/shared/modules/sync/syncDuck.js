@@ -18,30 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { map } from 'rxjs/operators'
+
 import { syncResourceFor } from 'services/browserSyncService'
 
 import { setItem } from 'services/localstorage'
-import { APP_START } from 'shared/modules/app/appDuck'
+import { APP_START } from '../app/appDuck'
 import {
-  composeDocumentsToSync,
+  getEmptyDocumentSyncData,
   favoritesToLoad,
   loadFavorites,
-  syncFavorites,
-  ADD_FAVORITE,
-  REMOVE_FAVORITE,
-  SYNC_FAVORITES,
-  UPDATE_FAVORITES
-} from 'shared/modules/favorites/favoritesDuck'
+  CLEAR_OLD_FAVORITES
+} from '../favorites/favoritesDuck'
 import {
-  REMOVE_FOLDER,
-  ADD_FOLDER,
-  UPDATE_FOLDERS,
-  SYNC_FOLDERS,
-  composeFoldersToSync,
+  CLEAR_OLD_FOLDERS,
+  getEmptyFolderSyncData,
   foldersToLoad,
-  loadFolders,
-  syncFolders
-} from 'shared/modules/favorites/foldersDuck'
+  loadFolders
+} from '../favorites/foldersDuck'
 import {
   grassToLoad,
   updateGraphStyleData,
@@ -51,6 +45,7 @@ import {
   UPDATE_GRAPH_STYLE_DATA
 } from 'shared/modules/grass/grassDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
+import { NAME as USER_FAVORITES_NAME } from '../user-favorites/user-favorites.duck'
 
 export const NAME = 'sync'
 export const NAME_CONSENT = 'syncConsent'
@@ -99,15 +94,19 @@ export function getMetadata (state) {
 export function getServiceStatus (state) {
   return (state[NAME_META] || initialMetadataState).serviceStatus
 }
+
 export function getUserAuthStatus (state) {
   return (state[NAME_META] || {}).userAuthStatus || SIGNED_OUT
 }
+
 export function isUserSignedIn (state) {
   return (state[NAME_META] || {}).userAuthStatus === SIGNED_IN
 }
+
 export function getUserData (state) {
   return (state[NAME_META] || {}).profile
 }
+
 export function getLastSyncedAt (state) {
   return (
     (state[NAME_META] || {}).lastSyncedAt || initialMetadataState.lastSyncedAt
@@ -259,6 +258,7 @@ export function updateServiceStatus (status) {
     status
   }
 }
+
 export function updateUserAuthStatus (status) {
   return {
     type: USER_AUTH_STATUS_UPDATED,
@@ -281,46 +281,40 @@ export const clearSyncEpic = (action$, store) =>
     .ofType(CLEAR_SYNC_AND_LOCAL)
     .do(action => {
       setItem('documents', null)
+      setItem(USER_FAVORITES_NAME, null)
       setItem('folders', null)
       setItem('syncConsent', false)
       setItem('grass', null)
     })
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
-export const syncFavoritesEpic = (action$, store) =>
+export const syncFavoritesEpic = action$ =>
   action$
-    .filter(action =>
-      [
-        ADD_FAVORITE,
-        REMOVE_FAVORITE,
-        SYNC_FAVORITES,
-        UPDATE_FAVORITES
-      ].includes(action.type)
-    )
-    .map(action => {
-      const syncValue = getSync(store.getState())
-      if (syncValue && syncValue.syncObj !== undefined) {
-        const documents = composeDocumentsToSync(store, syncValue)
-        return syncItems('documents', documents)
-      }
-      return { type: 'NOOP' }
-    })
+    .ofType(CLEAR_OLD_FAVORITES)
+    .pipe(map(() => syncItems('documents', getEmptyDocumentSyncData())))
+
+export const syncFoldersEpic = action$ =>
+  action$
+    .ofType(CLEAR_OLD_FOLDERS)
+    .pipe(map(() => syncItems('folders', getEmptyFolderSyncData())))
 
 export const loadFavoritesFromSyncEpic = (action$, store) =>
-  action$
-    .ofType(SET_SYNC_DATA)
-    .do(action => {
-      const favoritesStatus = favoritesToLoad(action, store)
+  action$.ofType(SET_SYNC_DATA).pipe(
+    map(action => {
+      const { favorites = [] } = favoritesToLoad(action, store)
 
-      if (favoritesStatus.loadFavorites) {
-        store.dispatch(loadFavorites(favoritesStatus.favorites))
-      }
-
-      if (favoritesStatus.syncFavorites) {
-        store.dispatch(syncFavorites(favoritesStatus.favorites))
-      }
+      return loadFavorites(favorites)
     })
-    .mapTo({ type: 'NOOP' })
+  )
+
+export const loadFoldersFromSyncEpic = (action$, store) =>
+  action$.ofType(SET_SYNC_DATA).pipe(
+    map(action => {
+      const { folders = [] } = foldersToLoad(action, store)
+
+      return loadFolders(folders)
+    })
+  )
 
 export const loadGrassFromSyncEpic = (action$, store) =>
   action$
@@ -336,23 +330,6 @@ export const loadGrassFromSyncEpic = (action$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const syncFoldersEpic = (action$, store) =>
-  action$
-    .filter(action =>
-      [ADD_FOLDER, REMOVE_FOLDER, SYNC_FOLDERS, UPDATE_FOLDERS].includes(
-        action.type
-      )
-    )
-    .map(action => {
-      const syncValue = getSync(store.getState())
-
-      if (syncValue && syncValue.syncObj) {
-        const folders = composeFoldersToSync(store, syncValue)
-        return syncItems('folders', folders)
-      }
-      return { type: 'NOOP' }
-    })
-
 export const syncGrassEpic = (action$, store) =>
   action$
     .filter(action =>
@@ -367,19 +344,3 @@ export const syncGrassEpic = (action$, store) =>
       }
       return { type: 'NOOP' }
     })
-
-export const loadFoldersFromSyncEpic = (action$, store) =>
-  action$
-    .ofType(SET_SYNC_DATA)
-    .do(action => {
-      const folderStatus = foldersToLoad(action, store)
-
-      if (folderStatus.loadFolders) {
-        store.dispatch(loadFolders(folderStatus.folders))
-      }
-
-      if (folderStatus.syncFolders) {
-        store.dispatch(syncFolders(folderStatus.folders))
-      }
-    })
-    .mapTo({ type: 'NOOP' })
