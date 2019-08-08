@@ -19,7 +19,7 @@ export const csvFormat = anything => {
   return undefined
 }
 
-export const stringFormat = anything => {
+export const stringModifier = anything => {
   if (typeof anything === 'number') {
     return numberFormat(anything)
   }
@@ -36,6 +36,10 @@ export const stringFormat = anything => {
 }
 
 const numberFormat = anything => {
+  // Exclude false positives and return early
+  if ([Infinity, -Infinity].includes(anything)) {
+    return `${anything}`
+  }
   if (Math.floor(anything) === anything) {
     return `${anything}.0`
   }
@@ -43,9 +47,7 @@ const numberFormat = anything => {
 }
 const spacialFormat = anything => {
   const zString = anything.z ? `, z:${anything.z}` : ''
-  return `point({srid:${anything.srid}, x:${anything.x}, y:${
-    anything.y
-  }${zString}})`
+  return `point({srid:${anything.srid}, x:${anything.x}, y:${anything.y}${zString}})`
 }
 
 const isTemporalType = anything =>

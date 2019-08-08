@@ -37,7 +37,7 @@ import {
   transformResultRecordsToResultArray,
   stringifyResultArray
 } from './helpers'
-import { stringFormat } from 'services/bolt/cypherTypesFormatting'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 export class AsciiView extends Component {
   state = {
@@ -77,7 +77,7 @@ export class AsciiView extends Component {
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
     const serializedRows =
       stringifyResultArray(
-        stringFormat,
+        stringModifier,
         transformResultRecordsToResultArray(records)
       ) || []
     this.setState({ serializedRows })

@@ -40,7 +40,7 @@ import {
   getRecordsToDisplayInTable,
   transformResultRecordsToResultArray
 } from './helpers'
-import { stringFormat } from 'services/bolt/cypherTypesFormatting'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 const renderCell = entry => {
   if (Array.isArray(entry)) {
@@ -54,14 +54,14 @@ const renderCell = entry => {
   } else if (typeof entry === 'object') {
     return renderObject(entry)
   } else {
-    return stringifyMod(entry, stringFormat, true)
+    return stringifyMod(entry, stringModifier, true)
   }
 }
 export const renderObject = entry => {
   if (neo4j.isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
   return (
-    <StyledJsonPre>{stringifyMod(entry, stringFormat, true)}</StyledJsonPre>
+    <StyledJsonPre>{stringifyMod(entry, stringModifier, true)}</StyledJsonPre>
   )
 }
 const buildData = entries => {
