@@ -26,7 +26,7 @@ import {
   flattenArray
 } from 'services/bolt/boltMappings'
 import { stringifyMod } from 'services/utils'
-import { stringFormat } from 'services/bolt/cypherTypesFormatting'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 export function getBodyAndStatusBarMessages (result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
@@ -171,7 +171,7 @@ export const initialView = (props, state = {}) => {
  * It takes a replacer without enforcing quoting rules to it.
  * Used so we can have Neo4j integers as string without quotes.
  */
-export const stringifyResultArray = (formatter = stringFormat, arr = []) => {
+export const stringifyResultArray = (formatter = stringModifier, arr = []) => {
   return arr.map(col => {
     if (!col) return col
     return col.map(fVal => {
