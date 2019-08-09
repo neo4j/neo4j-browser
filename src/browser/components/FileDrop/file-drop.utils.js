@@ -36,9 +36,9 @@ import {
   omitScriptPathPrefix
 } from '@relate-by-ui/saved-scripts'
 import {
-  BROWSER_FAVOURITES_NAMESPACE,
+  BROWSER_FAVORITES_NAMESPACE,
   CYPHER_FILE_EXTENSION
-} from '../../../shared/modules/user-favorites/user-favorites.constants'
+} from 'shared/modules/userFavorites/user-favorites.constants'
 
 /**
  * Extracts all .cypher files from a .zip archive and converts them to user scripts
@@ -75,12 +75,12 @@ function fileContentToFavoriteFactory (file) {
       ? file.name
       : `/${file.name}`
     const pathParts = split(
-      omitScriptPathPrefix(BROWSER_FAVOURITES_NAMESPACE, pathWithLeadingSlash),
+      omitScriptPathPrefix(BROWSER_FAVORITES_NAMESPACE, pathWithLeadingSlash),
       '/'
     )
     const name = replace(last(pathParts), CYPHER_FILE_EXTENSION, '')
     const path = addScriptPathPrefix(
-      BROWSER_FAVOURITES_NAMESPACE,
+      BROWSER_FAVORITES_NAMESPACE,
       join(reverse(tail(reverse(pathParts))), '/')
     )
     const displayName = getScriptDisplayName({ contents })

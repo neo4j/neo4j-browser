@@ -23,11 +23,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid from 'uuid'
+import { addScriptPathPrefix } from '@relate-by-ui/saved-scripts'
+
 import {
   executeCommand,
   executeSystemCommand
 } from 'shared/modules/commands/commandsDuck'
-import * as userFavorites from 'shared/modules/user-favorites/user-favorites.duck'
+import * as userFavorites from 'shared/modules/userFavorites/userFavoritesDuck'
 import {
   SET_CONTENT,
   EDIT_CONTENT,
@@ -56,8 +58,7 @@ import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
-import { addScriptPathPrefix } from '@relate-by-ui/saved-scripts'
+import { BROWSER_FAVORITES_NAMESPACE } from 'shared/modules/userFavorites/user-favorites.constants'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -458,7 +459,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const id = uuid.v4()
 
       const addAction = userFavorites.addFavorite({
-        path: addScriptPathPrefix(BROWSER_FAVOURITES_NAMESPACE, ''),
+        path: addScriptPathPrefix(BROWSER_FAVORITES_NAMESPACE, ''),
         contents
       })
       ownProps.bus.send(addAction.type, addAction)

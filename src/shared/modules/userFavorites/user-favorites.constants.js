@@ -19,7 +19,7 @@ export const STATE_NAME = 'user-favorites'
 
 export const LOCAL_STORAGE_NAMESPACE = `neo4j/${STATE_NAME}`
 
-export const BROWSER_FAVOURITES_NAMESPACE = '/neo4j-browser/'
+export const BROWSER_FAVORITES_NAMESPACE = '/neo4j-browser/'
 export const BROWSER_STATIC_SCRIPTS_NAMESPACE = '/static-scripts/'
 export const SYNC_VERSION_HISTORY_SIZE = 20
 export const CYPHER_FILE_EXTENSION = '.cypher'

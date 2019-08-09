@@ -45,7 +45,7 @@ import {
   UPDATE_GRAPH_STYLE_DATA
 } from 'shared/modules/grass/grassDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
-import { NAME as USER_FAVORITES_NAME } from '../user-favorites/user-favorites.duck'
+import { NAME as USER_FAVORITES_NAME } from '../userFavorites/userFavoritesDuck'
 
 export const NAME = 'sync'
 export const NAME_CONSENT = 'syncConsent'

@@ -18,18 +18,18 @@
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 
-import * as userFavorites from '../../../shared/modules/user-favorites/user-favorites.duck'
-import * as editor from '../../../shared/modules/editor/editorDuck'
-import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
-import { exportFavorites } from '../../../shared/modules/user-favorites/user-favorites.utils'
-import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
+import * as userFavorites from 'shared/modules/userFavorites/userFavoritesDuck'
+import * as editor from 'shared/modules/editor/editorDuck'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { exportFavorites } from 'shared/modules/userFavorites/user-favorites.utils'
+import { BROWSER_FAVORITES_NAMESPACE } from 'shared/modules/userFavorites/user-favorites.constants'
 
 import 'semantic-ui-css/semantic.min.css' // @todo: remove this?
 
 import MyScripts from '@relate-by-ui/saved-scripts'
 
 const mapFavoritesStateToProps = state => ({
-  scriptsNamespace: BROWSER_FAVOURITES_NAMESPACE,
+  scriptsNamespace: BROWSER_FAVORITES_NAMESPACE,
   scripts: state[userFavorites.NAME].favorites
 })
 const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({

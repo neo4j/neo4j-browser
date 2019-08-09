@@ -29,7 +29,6 @@ import {
 
 import { reset } from './user-favorites.utils'
 
-jest.mock('uuid/v4', () => () => 'apa')
 jest.mock('./user-favorites.utils', () => {
   const mockPrefix = '/foo/'
   const favs = [
@@ -56,7 +55,7 @@ const mockFavoritesCopy = [
   { path: `${mockPrefixCopy}baz`, contents: 'bam', id: '2' }
 ]
 
-describe('user-favorites/client', () => {
+describe('userFavorites/client', () => {
   beforeEach(() => {
     reset()
   })
@@ -67,7 +66,7 @@ describe('user-favorites/client', () => {
     })
     test('should add one favorite to localstate', async () => {
       const data = { contents: 'bom' }
-      const expected = { contents: 'bom', id: 'apa' }
+      const expected = { contents: 'bom', id: expect.any(String) }
       const newState = [...mockFavoritesCopy, expected]
 
       await expect(createUserFavorite(data)).resolves.toEqual(expected)
@@ -82,7 +81,7 @@ describe('user-favorites/client', () => {
 
     test('should add one favorite to localstate', async () => {
       const data = [{ contents: 'bom' }]
-      const expected = [{ contents: 'bom', id: 'apa' }]
+      const expected = [{ contents: 'bom', id: expect.any(String) }]
       const newState = [...mockFavoritesCopy, ...expected]
 
       await expect(createManyUserFavorites(data)).resolves.toEqual(expected)
@@ -92,8 +91,8 @@ describe('user-favorites/client', () => {
     test('should add several favorites to localstate', async () => {
       const data = [{ contents: 'bom' }, { contents: 'apa' }]
       const expected = [
-        { contents: 'bom', id: 'apa' },
-        { contents: 'apa', id: 'apa' }
+        { contents: 'bom', id: expect.any(String) },
+        { contents: 'apa', id: expect.any(String) }
       ]
       const newState = [...mockFavoritesCopy, ...expected]
 

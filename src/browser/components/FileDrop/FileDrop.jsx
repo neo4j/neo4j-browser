@@ -22,13 +22,14 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import SVGInline from 'react-svg-inline'
+import { addScriptPathPrefix } from '@relate-by-ui/saved-scripts'
 import { every } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import {
   addFavorite,
   addManyFavorites
-} from '../../../shared/modules/user-favorites/user-favorites.duck'
+} from 'shared/modules/userFavorites/userFavoritesDuck'
 import { parseGrass } from 'shared/services/grassUtils'
 import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import {
@@ -45,8 +46,7 @@ import {
   StyledFileDropActionButton
 } from './styled'
 import icon from 'icons/task-list-download.svg'
-import { addScriptPathPrefix } from '@relate-by-ui/saved-scripts'
-import { BROWSER_FAVOURITES_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
+import { BROWSER_FAVORITES_NAMESPACE } from 'shared/modules/userFavorites/user-favorites.constants'
 
 export function FileDrop (props) {
   const [fileHoverState, setFileHoverState] = useState(false)
@@ -200,7 +200,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(
         addFavorite({
           contents,
-          path: addScriptPathPrefix(BROWSER_FAVOURITES_NAMESPACE, '')
+          path: addScriptPathPrefix(BROWSER_FAVORITES_NAMESPACE, '')
         })
       )
     },

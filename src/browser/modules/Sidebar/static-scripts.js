@@ -18,10 +18,10 @@
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 
-import * as userFavorites from '../../../shared/modules/user-favorites/user-favorites.duck'
-import * as editor from '../../../shared/modules/editor/editorDuck'
-import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
-import { BROWSER_STATIC_SCRIPTS_NAMESPACE } from '../../../shared/modules/user-favorites/user-favorites.constants'
+import * as userFavorites from 'shared/modules/userFavorites/userFavoritesDuck'
+import * as editor from 'shared/modules/editor/editorDuck'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { BROWSER_STATIC_SCRIPTS_NAMESPACE } from 'shared/modules/userFavorites/user-favorites.constants'
 
 import MyScripts from '@relate-by-ui/saved-scripts'
 

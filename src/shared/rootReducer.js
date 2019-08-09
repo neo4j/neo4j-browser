@@ -68,7 +68,7 @@ import experimentalFeaturesReducer, {
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import userFavoritesReducer, {
   NAME as userFavorites
-} from './modules/user-favorites/user-favorites.duck'
+} from './modules/userFavorites/userFavoritesDuck'
 
 export default {
   [connections]: connectionsReducer,

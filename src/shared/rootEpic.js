@@ -96,7 +96,7 @@ import {
   clearOldFavoritesAndFoldersEpic,
   syncUserFavoritesEpic,
   loadUserFavoritesFromSyncEpic
-} from './modules/user-favorites/user-favorites.duck'
+} from './modules/userFavorites/userFavoritesDuck'
 
 export default combineEpics(
   handleCommandEpic,

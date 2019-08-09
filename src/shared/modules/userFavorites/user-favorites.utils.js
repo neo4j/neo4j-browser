@@ -40,7 +40,7 @@ import {
 } from '@relate-by-ui/saved-scripts'
 import {
   STATE_NAME,
-  BROWSER_FAVOURITES_NAMESPACE,
+  BROWSER_FAVORITES_NAMESPACE,
   CYPHER_FILE_EXTENSION,
   LOCAL_STORAGE_NAMESPACE,
   SYNC_VERSION_HISTORY_SIZE
@@ -68,7 +68,7 @@ export function mapOldFavoritesAndFolders (oldFavorites, oldFolders) {
     return {
       contents: favorite.content,
       path: addScriptPathPrefix(
-        BROWSER_FAVOURITES_NAMESPACE,
+        BROWSER_FAVORITES_NAMESPACE,
         folder ? folder.name : ''
       )
     }
@@ -147,15 +147,15 @@ export function exportFavorites () {
  */
 export function localFavoritesExport () {
   const grouped = sortAndGroupScriptsByPath(
-    BROWSER_FAVOURITES_NAMESPACE,
+    BROWSER_FAVORITES_NAMESPACE,
     tryGetUserFavoritesLocalState()
   )
   const zipArchive = new JSZip()
-  const dirMap = new Map([[BROWSER_FAVOURITES_NAMESPACE, zipArchive]])
+  const dirMap = new Map([[BROWSER_FAVORITES_NAMESPACE, zipArchive]])
   const joinPathParts = pathParts =>
     pathParts.length > 1
-      ? `${BROWSER_FAVOURITES_NAMESPACE}${join(pathParts, '/')}`
-      : `${BROWSER_FAVOURITES_NAMESPACE}${join(pathParts, '/')}`
+      ? `${BROWSER_FAVORITES_NAMESPACE}${join(pathParts, '/')}`
+      : `${BROWSER_FAVORITES_NAMESPACE}${join(pathParts, '/')}`
 
   zipArchive.file('.placeholder', 'forces directory creation')
   forEach(grouped, ([path, favorites]) => {
@@ -164,9 +164,9 @@ export function localFavoritesExport () {
     const folderPath = joinPathParts(pathParts)
     const parentPath =
       joinPathParts(slice(pathParts, 0, pathParts.length - 1)) ||
-      BROWSER_FAVOURITES_NAMESPACE
+      BROWSER_FAVORITES_NAMESPACE
     const parent =
-      dirMap.get(parentPath) || dirMap.get(BROWSER_FAVOURITES_NAMESPACE)
+      dirMap.get(parentPath) || dirMap.get(BROWSER_FAVORITES_NAMESPACE)
 
     dirMap.set(folderPath, createZipDirAndFiles(parent, folderName, favorites))
   })
