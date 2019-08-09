@@ -32,12 +32,12 @@ import {
   some,
   split
 } from 'lodash-es'
-
 import {
   addScriptPathPrefix,
   getScriptDisplayName,
   sortAndGroupScriptsByPath
 } from '@relate-by-ui/saved-scripts'
+
 import {
   STATE_NAME,
   BROWSER_FAVORITES_NAMESPACE,
@@ -247,7 +247,8 @@ export function getNewUserFavoriteSyncHistoryRevision (
 }
 
 /**
- * Merges local and remove favorites, priority to local
+ * Merges local and remove favorites by id, priority to local
+ * - @todo: this is very naive
  * @param     {Object[]}    remoteUserFavorites
  * @param     {Object[]}    localUserFavorites
  * @return    {Object[]}
