@@ -30,12 +30,7 @@ import {
   loadFavorites,
   CLEAR_OLD_FAVORITES
 } from '../favorites/favoritesDuck'
-import {
-  CLEAR_OLD_FOLDERS,
-  getEmptyFolderSyncData,
-  foldersToLoad,
-  loadFolders
-} from '../favorites/foldersDuck'
+import { foldersToLoad, loadFolders } from '../favorites/foldersDuck'
 import {
   grassToLoad,
   updateGraphStyleData,
@@ -288,15 +283,14 @@ export const clearSyncEpic = (action$, store) =>
     })
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
-export const syncFavoritesEpic = action$ =>
-  action$
-    .ofType(CLEAR_OLD_FAVORITES)
-    .pipe(map(() => syncItems('documents', getEmptyDocumentSyncData())))
+export const syncFavoritesEpic = (action$, store) =>
+  action$.ofType(CLEAR_OLD_FAVORITES).pipe(
+    map(() => {
+      const { syncObj } = getSync(store.getState()) || {}
 
-export const syncFoldersEpic = action$ =>
-  action$
-    .ofType(CLEAR_OLD_FOLDERS)
-    .pipe(map(() => syncItems('folders', getEmptyFolderSyncData())))
+      return syncItems('documents', getEmptyDocumentSyncData(syncObj))
+    })
+  )
 
 export const loadFavoritesFromSyncEpic = (action$, store) =>
   action$.ofType(SET_SYNC_DATA).pipe(

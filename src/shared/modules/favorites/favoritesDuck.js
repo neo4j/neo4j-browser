@@ -18,9 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { slice } from 'lodash-es'
 import { arrayHasItems } from '@relate-by-ui/saved-scripts'
 
 import { getBrowserName } from '../../services/utils'
+import {
+  getAllRemoteFavoritesVersions,
+  getLatestRemoteFavoritesVersionData
+} from '../userFavorites/user-favorites.utils'
+import { SYNC_VERSION_HISTORY_SIZE } from '../userFavorites/user-favorites.constants'
 
 export const NAME = 'documents'
 
@@ -51,14 +57,20 @@ export function clearOldFavorites () {
   }
 }
 
-export function getEmptyDocumentSyncData () {
-  return [
-    {
-      client: getBrowserName(),
-      data: [],
-      syncedAt: Date.now()
-    }
-  ]
+export function getEmptyDocumentSyncData (syncObj) {
+  const allVersions = getAllRemoteFavoritesVersions(syncObj)
+  const latestVersion = getLatestRemoteFavoritesVersionData(syncObj)
+
+  return arrayHasItems(latestVersion)
+    ? [
+      {
+        client: getBrowserName(),
+        data: [],
+        syncedAt: Date.now()
+      },
+      ...slice(latestVersion, 0, SYNC_VERSION_HISTORY_SIZE)
+    ]
+    : allVersions
 }
 
 export function favoritesToLoad (action) {

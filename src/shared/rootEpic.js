@@ -67,7 +67,6 @@ import {
   loadFavoritesFromSyncEpic,
   loadGrassFromSyncEpic,
   loadFoldersFromSyncEpic,
-  syncFoldersEpic,
   syncGrassEpic
 } from './modules/sync/syncDuck'
 import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
@@ -136,7 +135,6 @@ export default combineEpics(
   syncItemsEpic,
   clearSyncEpic,
   loadFoldersFromSyncEpic,
-  syncFoldersEpic,
   syncGrassEpic,
   credentialsTimeoutEpic,
   bootEpic,

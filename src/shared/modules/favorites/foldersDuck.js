@@ -19,39 +19,20 @@
  */
 import { arrayHasItems } from '@relate-by-ui/saved-scripts'
 
-import { getBrowserName } from '../../services/utils'
-
 export const NAME = 'folders'
 export const LOAD_FOLDERS = 'folders/LOAD_FOLDERS'
-export const CLEAR_OLD_FOLDERS = 'folders/SYNC_FOLDERS'
 
 export function loadFolders (folders) {
   return { type: LOAD_FOLDERS, folders }
-}
-
-export function clearOldFolders () {
-  return { type: CLEAR_OLD_FOLDERS }
 }
 
 export default function reducer (state = [], action) {
   switch (action.type) {
     case LOAD_FOLDERS:
       return action.folders
-    case CLEAR_OLD_FOLDERS:
-      return []
     default:
       return state
   }
-}
-
-export function getEmptyFolderSyncData () {
-  return [
-    {
-      client: getBrowserName(),
-      data: [],
-      syncedAt: Date.now()
-    }
-  ]
 }
 
 export function foldersToLoad (action) {
