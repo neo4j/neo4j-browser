@@ -90,7 +90,7 @@ const initialState = {
   editorLint: false,
   useCypherThread: true,
   enableMultiStatementMode: false,
-  connectionTimeout: 5000
+  connectionTimeout: 30 * 1000 // 30 seconds
 }
 
 export default function settings (state = initialState, action) {
