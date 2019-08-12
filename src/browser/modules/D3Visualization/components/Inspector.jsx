@@ -38,6 +38,7 @@ import {
 } from './styled'
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
+import ClickableUrls from '../../../components/clickable-urls'
 
 const mapItemProperties = itemProperties =>
   itemProperties
@@ -51,7 +52,7 @@ const mapItemProperties = itemProperties =>
           {prop.key + ': '}
         </StyledInspectorFooterRowListKey>
         <StyledInspectorFooterRowListValue className='value'>
-          {optionalToString(prop.value)}
+          <ClickableUrls text={optionalToString(prop.value)} />
         </StyledInspectorFooterRowListValue>
       </StyledInspectorFooterRowListPair>
     ))

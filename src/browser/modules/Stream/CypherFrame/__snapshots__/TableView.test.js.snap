@@ -64,7 +64,9 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
           <td
             class="table-properties DataTables__StyledTd-bf850j-3 jDsjVi"
           >
-            "y"
+            <span>
+              "y"
+            </span>
           </td>
         </tr>
       </tbody>
@@ -74,11 +76,15 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
 `;
 
 exports[`TableViews TableView renderObject handles null values 1`] = `
-<ForwardRef(DataTables__StyledJsonPre)>
-  {
-  "x": 1.0
-}
-</ForwardRef(DataTables__StyledJsonPre)>
+<ForwardRef(DataTables__StyledJsonPre)
+  dangerouslySetInnerHTML={
+    Object {
+      "__html": "{
+  \\"x\\": 1.0
+}",
+    }
+  }
+/>
 `;
 
 exports[`TableViews TableView renderObject handles null values 2`] = `
