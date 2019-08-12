@@ -29,7 +29,7 @@ export default function ClickableUrls ({ text }) {
 }
 
 // credits to https://www.regextester.com/96504
-const URL_REGEX = /(([a-zA-Z]+):\/\/)(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))?/gi
+const URL_REGEX = /(([a-zA-Z]+):\/\/)(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()[\]{};:'".,<>?«»“”‘’]))?/gi
 
 /**
  * Finds all urls in a string and wraps them in <a target="_blank" />
