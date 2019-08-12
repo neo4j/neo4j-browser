@@ -36,8 +36,8 @@ const URL_REGEX = /(([a-zA-Z]+):\/\/)(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s(
  * @param     {string}    text
  * @return    {string}
  */
-export function convertUrlsToHrefTags (text = '') {
-  return text.replace(
+export function convertUrlsToHrefTags (text) {
+  return `${text || ''}`.replace(
     URL_REGEX,
     match => `<a href="${match}" target="_blank">${match}</a>`
   )
