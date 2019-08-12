@@ -55,7 +55,7 @@ describe('clickable-urls', () => {
       )
     })
 
-    test('does not include puncuation, comma, exclamation', () => {
+    test('does not include punctuation, comma, exclamation', () => {
       expect(convertUrlsToHrefTags('http://foo.com/.')).toBe(
         '<a href="http://foo.com/" target="_blank">http://foo.com/</a>.'
       )
@@ -65,6 +65,25 @@ describe('clickable-urls', () => {
       expect(convertUrlsToHrefTags('http://foo.com/,')).toBe(
         '<a href="http://foo.com/" target="_blank">http://foo.com/</a>,'
       )
+    })
+
+    test('Handles multiple URLs, even if in a text block', () => {
+      const URLs = 'sftp://foo.se is better than ftp://bar.dk'
+      const expectedURLs =
+        '<a href="sftp://foo.se" target="_blank">sftp://foo.se</a> is better than <a href="ftp://bar.dk" target="_blank">ftp://bar.dk</a>'
+      const textBlock = `
+        Shred all toilet paper and spread around the house grass smells good.
+        ${URLs}
+        Tickle my belly at your own peril i will pester for food when you're in the kitchen even if it's salad murr
+      `
+      const expectedTextBlock = `
+        Shred all toilet paper and spread around the house grass smells good.
+        ${expectedURLs}
+        Tickle my belly at your own peril i will pester for food when you're in the kitchen even if it's salad murr
+      `
+
+      expect(convertUrlsToHrefTags(URLs)).toBe(expectedURLs)
+      expect(convertUrlsToHrefTags(textBlock)).toBe(expectedTextBlock)
     })
   })
 })
