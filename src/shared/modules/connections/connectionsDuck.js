@@ -293,7 +293,7 @@ export const connectEpic = (action$, store) => {
     return bolt
       .openConnection(action, {
         encrypted: getEncryptionMode(action),
-        connectionAcquisitionTimeout: getConnectionTimeout(store.getState())
+        connectionTimeout: getConnectionTimeout(store.getState())
       })
       .then(res => ({ type: action.$$responseChannel, success: true }))
       .catch(e => ({
@@ -321,7 +321,7 @@ export const startupConnectEpic = (action$, store) => {
           {
             withoutCredentials: true,
             encrypted: getEncryptionMode(connection),
-            connectionAcquisitionTimeout: getConnectionTimeout(store.getState())
+            connectionTimeout: getConnectionTimeout(store.getState())
           },
           onLostConnection(store.dispatch)
         )
@@ -352,9 +352,7 @@ export const startupConnectEpic = (action$, store) => {
               connection,
               {
                 encrypted: getEncryptionMode(connection),
-                connectionAcquisitionTimeout: getConnectionTimeout(
-                  store.getState()
-                )
+                connectionTimeout: getConnectionTimeout(store.getState())
               },
               onLostConnection(store.dispatch)
             ) // Try with stored creds
@@ -456,9 +454,7 @@ export const connectionLostEpic = (action$, store) =>
                   connection,
                   {
                     encrypted: getEncryptionMode(connection),
-                    connectionAcquisitionTimeout: getConnectionTimeout(
-                      store.getState()
-                    )
+                    connectionTimeout: getConnectionTimeout(store.getState())
                   },
                   e =>
                     setTimeout(
@@ -473,7 +469,7 @@ export const connectionLostEpic = (action$, store) =>
                       connection,
                       {
                         encrypted: getEncryptionMode(connection),
-                        connectionAcquisitionTimeout: getConnectionTimeout(
+                        connectionTimeout: getConnectionTimeout(
                           store.getState()
                         )
                       },
