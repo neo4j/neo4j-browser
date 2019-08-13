@@ -87,6 +87,46 @@ describe('editorDuck Epics', () => {
     // When
     store.dispatch(action)
   })
+  test('Handles the param command', done => {
+    const cmd = 'param'
+    const arg = 'x => 1'
+    const action = {
+      type: APP_START,
+      url: `?cmd=${cmd}&arg=${encodeURIComponent(arg)}`
+    }
+
+    bus.take(SET_CONTENT, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        { type: SET_CONTENT, message: `:${cmd} ${arg}` }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('Handles the params command', done => {
+    const cmd = 'params'
+    const arg = '{x: 1, y: "hello"}'
+    const action = {
+      type: APP_START,
+      url: `?cmd=${cmd}&arg=${encodeURIComponent(arg)}`
+    }
+
+    bus.take(SET_CONTENT, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        { type: SET_CONTENT, message: `:${cmd} ${arg}` }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
   test('Accepts one or more Cypher queries from URL params and populates the editor', done => {
     const cmd = 'cypher'
     const args = ['RETURN 1;', 'RETURN rand();']
