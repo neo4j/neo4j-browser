@@ -63,11 +63,13 @@ import {
   transformResultRecordsToResultArray
 } from 'browser/modules/Stream/CypherFrame/helpers'
 import { csvFormat } from 'services/bolt/cypherTypesFormatting'
+import arrayHasItems from 'shared/utils/array-has-items'
 
 class FrameTitlebar extends Component {
   hasData () {
     return this.props.numRecords > 0
   }
+
   exportCSV (records) {
     const exportData = stringifyResultArray(
       csvFormat,
@@ -81,28 +83,64 @@ class FrameTitlebar extends Component {
     })
     saveAs(blob, 'export.csv')
   }
+
+  exportTXT = () => {
+    const { frame } = this.props
+
+    if (frame.type === 'history') {
+      const asTxt = frame.result
+        .map(result => {
+          const safe = `${result}`.trim()
+
+          if (safe.startsWith(':')) {
+            return safe
+          }
+
+          return safe.endsWith(';') ? safe : `${safe};`
+        })
+        .join('\n\n')
+      const blob = new Blob([asTxt], {
+        type: 'text/plain;charset=utf-8'
+      })
+
+      saveAs(blob, 'history.txt')
+    }
+  }
+
   exportPNG () {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadPNGFromSVG(svgElement, graphElement, type)
   }
+
   exportSVG () {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadSVG(svgElement, graphElement, type)
   }
+
   exportGrass (data) {
     var blob = new Blob([data], {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'style.grass')
   }
+
   canExport = () => {
     let props = this.props
     const { frame = {} } = props
+
     return (
-      (frame.type === 'cypher' && (this.hasData() || props.visElement)) ||
+      this.canExportTXT() ||
+      (frame.type === 'cypher' && (this.hasData() || this.props.visElement)) ||
       (frame.type === 'style' && this.hasData())
     )
   }
+
+  canExportTXT () {
+    const { frame = {} } = this.props
+
+    return frame.type === 'history' && arrayHasItems(frame.result)
+  }
+
   render () {
     let props = this.props
     const { frame = {} } = props
@@ -140,6 +178,11 @@ class FrameTitlebar extends Component {
                       onClick={() => this.exportCSV(props.getRecords())}
                     >
                       Export CSV
+                    </DropdownItem>
+                  </Render>
+                  <Render if={this.canExportTXT()}>
+                    <DropdownItem onClick={this.exportTXT}>
+                      Export TXT
                     </DropdownItem>
                   </Render>
                   <Render if={this.hasData() && frame.type === 'style'}>
