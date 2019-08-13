@@ -37,8 +37,11 @@ import {
 import SyncReminderBanner from './SyncReminderBanner'
 import SyncConsentBanner from './SyncConsentBanner'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
+import { useSlowConnectionState } from './main.hooks'
 
 const Main = React.memo(function Main (props) {
+  const [showSlowConnectionBanner] = useSlowConnectionState(props)
+
   return (
     <StyledMain data-testid='main'>
       <ErrorBoundary>
@@ -72,9 +75,18 @@ const Main = React.memo(function Main (props) {
           &nbsp; to establish connection. There's a graph waiting for you.
         </NotAuthedBanner>
       </Render>
-      <Render if={props.connectionState === PENDING_STATE}>
+      <Render
+        if={
+          props.connectionState === PENDING_STATE && !showSlowConnectionBanner
+        }
+      >
         <WarningBanner data-testid='reconnectBanner'>
           Connection to server lost. Reconnecting...
+        </WarningBanner>
+      </Render>
+      <Render if={showSlowConnectionBanner}>
+        <WarningBanner data-testid='reconnectBanner'>
+          Server is taking long to respond...
         </WarningBanner>
       </Render>
       <Render if={props.useBrowserSync}>

@@ -60,12 +60,14 @@ export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
+export const CONNECTING_STATE = 'CONNECTING_STATE'
 
 const initialState = {
   allConnectionIds: [],
   connectionsById: {},
   activeConnection: null,
-  connectionState: DISCONNECTED_STATE
+  connectionState: DISCONNECTED_STATE,
+  lastUpdate: 0
 }
 
 /**
@@ -88,6 +90,10 @@ export function getConnections (state) {
 
 export function getConnectionState (state) {
   return state[NAME].connectionState || initialState.connectionState
+}
+
+export function getLastConnectionUpdate (state) {
+  return state[NAME].lastUpdate || initialState.lastUpdate
 }
 
 export function isConnected (state) {
@@ -199,14 +205,25 @@ export default function (state = initialState, action) {
       return {
         ...state,
         activeConnection: action.connectionId,
-        connectionState: cState
+        connectionState: cState,
+        lastUpdate: Date.now()
+      }
+    case CONNECT:
+      return {
+        ...state,
+        connectionState: CONNECTING_STATE,
+        lastUpdate: Date.now()
       }
     case REMOVE:
       return removeConnectionHelper(state, action.connectionId)
     case MERGE:
       return mergeConnectionHelper(state, action.connection)
     case UPDATE_CONNECTION_STATE:
-      return { ...state, connectionState: action.state }
+      return {
+        ...state,
+        connectionState: action.state,
+        lastUpdate: Date.now()
+      }
     case UPDATE_AUTH_ENABLED:
       return updateAuthEnabledHelper(state, action.authEnabled)
     case USER_CLEAR:
@@ -296,11 +313,15 @@ export const connectEpic = (action$, store) => {
         connectionTimeout: getConnectionTimeout(store.getState())
       })
       .then(res => ({ type: action.$$responseChannel, success: true }))
-      .catch(e => ({
-        type: action.$$responseChannel,
-        success: false,
-        error: e
-      }))
+      .catch(e => {
+        store.dispatch(setActiveConnection(null))
+
+        return {
+          type: action.$$responseChannel,
+          success: false,
+          error: e
+        }
+      })
   })
 }
 export const startupConnectEpic = (action$, store) => {
