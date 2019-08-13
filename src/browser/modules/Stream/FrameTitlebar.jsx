@@ -88,7 +88,17 @@ class FrameTitlebar extends Component {
     const { frame } = this.props
 
     if (frame.type === 'history') {
-      const asTxt = frame.result.join(';\n\n')
+      const asTxt = frame.result
+        .map(result => {
+          const safe = `${result}`.trim()
+
+          if (safe.startsWith(':')) {
+            return safe
+          }
+
+          return safe.endsWith(';') ? safe : `${safe};`
+        })
+        .join('\n\n')
       const blob = new Blob([asTxt], {
         type: 'text/plain;charset=utf-8'
       })
