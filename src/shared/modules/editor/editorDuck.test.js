@@ -21,7 +21,11 @@
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
-import { populateEditorFromUrlEpic, SET_CONTENT } from './editorDuck'
+import {
+  populateEditorFromUrlEpic,
+  SET_CONTENT,
+  NOT_SUPPORTED_URL_PARAM_COMMAND
+} from './editorDuck'
 import { APP_START, URL_ARGUMENTS_CHANGE } from '../app/appDuck'
 
 describe('editorDuck Epics', () => {
@@ -76,6 +80,51 @@ describe('editorDuck Epics', () => {
       expect(store.getActions()).toEqual([
         action,
         { type: SET_CONTENT, message: `:${cmd} ${arg}` }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('Accepts one or more Cypher queries from URL params and populates the editor', done => {
+    const cmd = 'cypher'
+    const args = ['RETURN 1;', 'RETURN rand();']
+    const action = {
+      type: APP_START,
+      url:
+        `http://url.com?cmd=${cmd}` +
+        args.map(arg => `&arg=${encodeURIComponent(arg)}`).join('')
+    }
+
+    bus.take(SET_CONTENT, () => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        {
+          type: SET_CONTENT,
+          message: args.join('\n')
+        }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('Does not accept arbitrary URL params and populate the editor', done => {
+    const cmd = 'not-supported'
+    const arg = 'evil'
+    const action = {
+      type: APP_START,
+      url: `http://url.com?cmd=${cmd}&arg=${arg}`
+    }
+
+    bus.take(NOT_SUPPORTED_URL_PARAM_COMMAND, () => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        { type: NOT_SUPPORTED_URL_PARAM_COMMAND, command: cmd }
       ])
       done()
     })
