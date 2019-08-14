@@ -49,8 +49,9 @@ export function useSlowConnectionState ({
     () => {
       if (!canShowBanner()) {
         clearTimeout(timeout)
+        setShowBanner(false)
 
-        return setShowBanner(false)
+        return
       }
 
       timeout = setTimeout(() => {
