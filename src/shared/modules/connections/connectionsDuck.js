@@ -60,7 +60,7 @@ export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
-export const CONNECTING_STATE = 'CONNECTING_STATE'
+export const CONNECTING_STATE = 3
 
 const initialState = {
   allConnectionIds: [],

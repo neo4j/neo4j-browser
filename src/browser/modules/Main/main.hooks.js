@@ -28,9 +28,10 @@ import {
 
 /**
  * Custom hook for detecting slow connections
- * @param     {number}      connectionState
- * @param     {string}      errorMessage
- * @param     {number}      lastConnectionUpdate
+ * @param     {object}      props
+ * @param     {number}      props.connectionState
+ * @param     {string}      props.errorMessage
+ * @param     {number}      props.lastConnectionUpdate
  * @return    {boolean[]}
  */
 export function useSlowConnectionState ({
