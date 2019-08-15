@@ -86,7 +86,7 @@ const Main = React.memo(function Main (props) {
       </Render>
       <Render if={showSlowConnectionBanner}>
         <WarningBanner data-testid='reconnectBanner'>
-          Server is taking long to respond...
+          Server is taking a long time to respond...
         </WarningBanner>
       </Render>
       <Render if={props.useBrowserSync}>
