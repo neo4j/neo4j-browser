@@ -346,8 +346,9 @@ export const DropdownContent = styled.li`
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   z-index: 1;
+  text-align: left;
   line-height: 30px;
-  padding: 5px 0 5px 0;
+  padding: 5px 10px;
 `
 
 export const DropdownItem = styled.a`

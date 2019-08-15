@@ -18,8 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import bolt from 'services/bolt/bolt'
 import { v1 as neo4j } from 'neo4j-driver'
+import {
+  entries,
+  get,
+  includes,
+  isObjectLike,
+  lowerCase,
+  map,
+  omit,
+  reduce
+} from 'lodash-es'
+
+import bolt from 'services/bolt/bolt'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import {
   recursivelyExtractGraphItems,
@@ -286,4 +297,87 @@ const arrayifyPath = (types = neo4j.types, path) => {
       extractPropertiesFromGraphItems(types, segment.end)
     ].filter(part => part !== null)
   })
+}
+
+/**
+ * Converts a raw Neo4j record into a JSON friendly format, mimicking APOC output
+ * @param     {Record}    record
+ * @return    {*}
+ */
+export function recordToJSONMapper (record) {
+  const keys = get(record, 'keys', [])
+
+  return reduce(
+    keys,
+    (agg, key) => {
+      const field = record.get(key)
+
+      return {
+        ...agg,
+        [key]: mapNeo4jValuesToPlainValues(field)
+      }
+    },
+    {}
+  )
+}
+
+/**
+ * Recursively converts Neo4j values to plain values, leaving other types untouched
+ * @param     {*}     values
+ * @return    {*}
+ */
+function mapNeo4jValuesToPlainValues (values) {
+  if (!isObjectLike(values)) {
+    return values
+  }
+
+  if (Array.isArray(values)) {
+    return map(values, mapNeo4jValuesToPlainValues)
+  }
+
+  // could be a Node or Relationship
+  const type = lowerCase(get(values, 'constructor.name', ''))
+
+  if (includes(['relationship', 'node'], type)) {
+    const labels =
+      type === 'relationship'
+        ? { label: get(values, 'type') }
+        : { labels: get(values, 'labels', []) }
+
+    return {
+      type,
+      ...labels,
+      ...mapNeo4jValuesToPlainValues(omit(values, ['type', 'labels']))
+    }
+  }
+
+  return reduce(
+    entries(values),
+    (agg, [key, value]) => ({
+      ...agg,
+      [key]: mapNeo4jValuesToPlainValues(neo4jValueToPlainValue(value))
+    }),
+    {}
+  )
+}
+
+/**
+ * Recursively convert Neo4j value to plain value, leaving other types untouched
+ * @param     {*}   value
+ * @return    {*}
+ */
+function neo4jValueToPlainValue (value) {
+  switch (get(value, 'constructor')) {
+    case neo4j.types.Date:
+    case neo4j.types.DateTime:
+    case neo4j.types.Duration:
+    case neo4j.types.LocalDateTime:
+    case neo4j.types.LocalTime:
+    case neo4j.types.Time:
+    case neo4j.types.Point:
+    case neo4j.types.Integer: // not exposed in typings but still there
+      return value.toString()
+    default:
+      return value
+  }
 }
