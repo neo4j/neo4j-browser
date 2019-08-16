@@ -22,7 +22,7 @@ export default function ClickableUrls ({ text }) {
   return (
     <span
       dangerouslySetInnerHTML={{
-        __html: sanitize(convertUrlsToHrefTags(text))
+        __html: convertUrlsToHrefTags(sanitize(text))
       }}
     />
   )
