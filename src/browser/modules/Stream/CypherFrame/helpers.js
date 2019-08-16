@@ -381,14 +381,6 @@ function neo4jValueToPlainValue (value) {
       return value.toString()
     case neo4j.types.Integer: // not exposed in typings but still there
       return value.inSafeRange() ? value.toInt() : value.toNumber()
-    case neo4j.types.Point:
-      return {
-        type: neo4j.types.Point.name,
-        coordinates:
-          value.z !== undefined
-            ? [value.x, value.y, value.z]
-            : [value.x, value.y]
-      }
     default:
       return value
   }
@@ -407,7 +399,6 @@ function isNeo4jValue (value) {
     case neo4j.types.LocalDateTime:
     case neo4j.types.LocalTime:
     case neo4j.types.Time:
-    case neo4j.types.Point:
     case neo4j.types.Integer: // not exposed in typings but still there
       return true
     default:

@@ -870,10 +870,7 @@ describe('helpers', () => {
             type: 'node',
             labels: ['foo'],
             properties: {
-              bar: {
-                type: 'Point',
-                coordinates: [10, 5, 15]
-              }
+              bar: { srid: 1, x: 10, y: 5, z: 15 }
             }
           }
         }
@@ -1062,10 +1059,7 @@ describe('helpers', () => {
             type: 'relationship',
             label: 'foo',
             properties: {
-              bar: {
-                type: 'Point',
-                coordinates: [10, 5, 15]
-              }
+              bar: { srid: 1, x: 10, y: 5, z: 15 }
             }
           }
         }
@@ -1231,15 +1225,7 @@ describe('helpers', () => {
         )
         const expected = {
           foo: {
-            data: [
-              1,
-              'car',
-              {
-                type: 'Point',
-                coordinates: [10, 5, 15]
-              },
-              '1970-01-01'
-            ]
+            data: [1, 'car', { srid: 1, x: 10, y: 5, z: 15 }, '1970-01-01']
           }
         }
 
