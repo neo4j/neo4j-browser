@@ -39,31 +39,44 @@ export function useSlowConnectionState ({
   errorMessage,
   lastConnectionUpdate
 }) {
-  const [showBanner, setShowBanner] = useState(false)
-  const DELAY = 5 * 1000 // five seconds
-  const canShowBanner = () =>
+  const [past5Sec, setPast5Sec] = useState(false)
+  const [past10Sec, setPast10Sec] = useState(false)
+  const DELAY_5SEC = 5 * 1000 // five seconds
+  const DELAY_10SEC = 10 * 1000 // ten seconds
+  const shouldTimeConnection = () =>
     [CONNECTING_STATE, PENDING_STATE].includes(connectionState) && !errorMessage
-  let timeout = null
+  let timeout5Sec = null
+  let timeout10Sec = null
 
   useEffect(
     () => {
-      if (!canShowBanner()) {
-        clearTimeout(timeout)
-        setShowBanner(false)
+      if (!shouldTimeConnection()) {
+        clearTimeout(timeout5Sec)
+        clearTimeout(timeout10Sec)
+        setPast5Sec(false)
+        setPast10Sec(false)
 
         return
       }
 
-      timeout = setTimeout(() => {
+      timeout5Sec = setTimeout(() => {
         const diff = Date.now() - lastConnectionUpdate
 
-        setShowBanner(diff > DELAY)
-      }, DELAY)
+        setPast5Sec(diff > DELAY_5SEC)
+      }, DELAY_5SEC)
+      timeout10Sec = setTimeout(() => {
+        const diff = Date.now() - lastConnectionUpdate
 
-      return () => clearTimeout(timeout)
+        setPast10Sec(diff > DELAY_10SEC)
+      }, DELAY_10SEC)
+
+      return () => {
+        clearTimeout(timeout5Sec)
+        clearTimeout(timeout10Sec)
+      }
     },
     [connectionState, lastConnectionUpdate]
   )
 
-  return [showBanner]
+  return [past5Sec, past10Sec]
 }
