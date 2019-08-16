@@ -739,7 +739,7 @@ describe('helpers', () => {
             type: 'node',
             labels: ['foo'],
             properties: {
-              bar: '3'
+              bar: 3
             }
           }
         }
@@ -861,7 +861,7 @@ describe('helpers', () => {
 
       test('handles point values', () => {
         const node = new neo4j.types.Node(1, ['foo'], {
-          bar: new neo4j.types.Point(1, 10, 10, 10)
+          bar: new neo4j.types.Point(1, 10, 5, 15)
         })
         const record = new neo4j.types.Record(['n'], [node])
         const expected = {
@@ -870,7 +870,10 @@ describe('helpers', () => {
             type: 'node',
             labels: ['foo'],
             properties: {
-              bar: 'Point{srid=1.0, x=10.0, y=10.0, z=10.0}'
+              bar: {
+                type: 'Point',
+                coordinates: [10, 5, 15]
+              }
             }
           }
         }
@@ -912,7 +915,7 @@ describe('helpers', () => {
             type: 'relationship',
             label: 'foo',
             properties: {
-              bar: '3'
+              bar: 3
             }
           }
         }
@@ -1048,7 +1051,7 @@ describe('helpers', () => {
 
       test('handles point values', () => {
         const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.Point(1, 10, 10, 10)
+          bar: new neo4j.types.Point(1, 10, 5, 15)
         })
         const record = new neo4j.types.Record(['r'], [relationship])
         const expected = {
@@ -1059,7 +1062,10 @@ describe('helpers', () => {
             type: 'relationship',
             label: 'foo',
             properties: {
-              bar: 'Point{srid=1.0, x=10.0, y=10.0, z=10.0}'
+              bar: {
+                type: 'Point',
+                coordinates: [10, 5, 15]
+              }
             }
           }
         }
@@ -1110,7 +1116,7 @@ describe('helpers', () => {
             type: 'node',
             labels: ['foo'],
             properties: {
-              bar: '3'
+              bar: 3
             }
           },
           r1: {
@@ -1160,7 +1166,7 @@ describe('helpers', () => {
               type: 'node',
               labels: ['foo'],
               properties: {
-                bar: '3'
+                bar: 3
               }
             },
             end: {
@@ -1178,7 +1184,7 @@ describe('helpers', () => {
                   type: 'node',
                   labels: ['foo'],
                   properties: {
-                    bar: '3'
+                    bar: 3
                   }
                 },
                 relationship: {
@@ -1200,6 +1206,39 @@ describe('helpers', () => {
                   }
                 }
               }
+            ]
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+    })
+
+    describe('Returns of raw data', () => {
+      test('RETURN {...data} as foo', () => {
+        const record = new neo4j.types.Record(
+          ['foo'],
+          [
+            {
+              data: [
+                new neo4j.int(1),
+                'car',
+                new neo4j.types.Point(1, 10, 5, 15),
+                new neo4j.types.Date(1970, 1, 1)
+              ]
+            }
+          ]
+        )
+        const expected = {
+          foo: {
+            data: [
+              1,
+              'car',
+              {
+                type: 'Point',
+                coordinates: [10, 5, 15]
+              },
+              '1970-01-01'
             ]
           }
         }

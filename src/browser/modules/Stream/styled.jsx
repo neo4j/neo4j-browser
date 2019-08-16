@@ -348,7 +348,7 @@ export const DropdownContent = styled.li`
   z-index: 1;
   text-align: left;
   line-height: 30px;
-  padding: 5px 10px;
+  padding: 5px 0;
 `
 
 export const DropdownItem = styled.a`
@@ -356,6 +356,7 @@ export const DropdownItem = styled.a`
   color: ${props => props.theme.secondaryButtonText};
   width: 100%;
   display: inline-block;
+  padding: 0 10px;
   &:hover {
     color: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;

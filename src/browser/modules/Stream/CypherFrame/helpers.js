@@ -335,6 +335,10 @@ function mapNeo4jValuesToPlainValues (values) {
     return map(values, mapNeo4jValuesToPlainValues)
   }
 
+  if (isNeo4jValue(values)) {
+    return neo4jValueToPlainValue(values)
+  }
+
   // could be a Node or Relationship
   const type = lowerCase(get(values, 'constructor.name', ''))
 
@@ -355,7 +359,7 @@ function mapNeo4jValuesToPlainValues (values) {
     entries(values),
     (agg, [key, value]) => ({
       ...agg,
-      [key]: mapNeo4jValuesToPlainValues(neo4jValueToPlainValue(value))
+      [key]: mapNeo4jValuesToPlainValues(value)
     }),
     {}
   )
@@ -374,10 +378,39 @@ function neo4jValueToPlainValue (value) {
     case neo4j.types.LocalDateTime:
     case neo4j.types.LocalTime:
     case neo4j.types.Time:
-    case neo4j.types.Point:
-    case neo4j.types.Integer: // not exposed in typings but still there
       return value.toString()
+    case neo4j.types.Integer: // not exposed in typings but still there
+      return value.inSafeRange() ? value.toInt() : value.toNumber()
+    case neo4j.types.Point:
+      return {
+        type: neo4j.types.Point.name,
+        coordinates:
+          value.z !== undefined
+            ? [value.x, value.y, value.z]
+            : [value.x, value.y]
+      }
     default:
       return value
+  }
+}
+
+/**
+ * checks if a value is a neo4j value
+ * @param value
+ * @return {boolean}
+ */
+function isNeo4jValue (value) {
+  switch (get(value, 'constructor')) {
+    case neo4j.types.Date:
+    case neo4j.types.DateTime:
+    case neo4j.types.Duration:
+    case neo4j.types.LocalDateTime:
+    case neo4j.types.LocalTime:
+    case neo4j.types.Time:
+    case neo4j.types.Point:
+    case neo4j.types.Integer: // not exposed in typings but still there
+      return true
+    default:
+      return false
   }
 }
