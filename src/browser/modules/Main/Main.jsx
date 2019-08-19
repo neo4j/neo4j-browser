@@ -20,7 +20,8 @@
 import React from 'react'
 import {
   DISCONNECTED_STATE,
-  PENDING_STATE
+  PENDING_STATE,
+  CONNECTING_STATE
 } from 'shared/modules/connections/connectionsDuck'
 import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
@@ -37,8 +38,11 @@ import {
 import SyncReminderBanner from './SyncReminderBanner'
 import SyncConsentBanner from './SyncConsentBanner'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
+import { useSlowConnectionState } from './main.hooks'
 
 const Main = React.memo(function Main (props) {
+  const [past5Sec, past10Sec] = useSlowConnectionState(props)
+
   return (
     <StyledMain data-testid='main'>
       <ErrorBoundary>
@@ -72,9 +76,21 @@ const Main = React.memo(function Main (props) {
           &nbsp; to establish connection. There's a graph waiting for you.
         </NotAuthedBanner>
       </Render>
-      <Render if={props.connectionState === PENDING_STATE}>
+      <Render if={props.connectionState === PENDING_STATE && !past10Sec}>
         <WarningBanner data-testid='reconnectBanner'>
           Connection to server lost. Reconnecting...
+        </WarningBanner>
+      </Render>
+      <Render
+        if={
+          props.connectionState === CONNECTING_STATE && past5Sec && !past10Sec
+        }
+      >
+        <NotAuthedBanner>Still connecting...</NotAuthedBanner>
+      </Render>
+      <Render if={past10Sec}>
+        <WarningBanner>
+          Server is taking a long time to respond...
         </WarningBanner>
       </Render>
       <Render if={props.useBrowserSync}>

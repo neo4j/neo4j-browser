@@ -249,6 +249,9 @@ describe('startupConnectEpic', () => {
   beforeAll(() => {
     bolt.openConnection.mockReset()
     store = mockStore({
+      settings: {
+        connectionTimeout: 30
+      },
       connections: {
         activeConnection: null,
         connectionsById: {
