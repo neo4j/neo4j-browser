@@ -19,6 +19,7 @@ module.exports = {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$':
       '<rootDir>/test_utils/__mocks__/fileMock.js',
     '\\.(css|less)$': '<rootDir>/test_utils/__mocks__/styleMock.js',
+    '\\.(graphql)$': '<rootDir>/test_utils/__mocks__/graphqlMock.js',
     '^browser-styles(.*)$': '<rootDir>/src/browser/styles$1',
     '^browser-components(.*)$': '<rootDir>/src/browser/components$1',
     '^browser-hooks(.*)$': '<rootDir>/src/browser/hooks$1',
