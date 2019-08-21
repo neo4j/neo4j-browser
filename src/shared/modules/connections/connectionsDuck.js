@@ -200,7 +200,7 @@ export default function (state = initialState, action) {
     case ADD:
       return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:
-      let cState = PENDING_STATE
+      let cState = CONNECTED_STATE
       if (!action.connectionId) cState = DISCONNECTED_STATE
       return {
         ...state,
