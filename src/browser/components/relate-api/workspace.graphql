@@ -1,0 +1,75 @@
+query {
+    workspace {
+        me {
+            activationKeys {
+                featureName
+                expirationDate
+            }
+            name
+        }
+        host {
+            publicInternetAccess
+            settings {
+                allowSendReports
+                allowSendStats
+                allowStoreCredentials
+            }
+        }
+        projects {
+            id
+            name
+            graphs {
+                id
+                name
+                status
+                connection {
+                    type
+                    databaseType
+                    databaseStatus
+                    info {
+                        edition
+                        version
+                    }
+                    principals {
+                        path
+                        protocols {
+                            bolt {
+                                enabled
+                                host
+                                password
+                                port
+                                tlsLevel
+                                url
+                                username
+                            }
+                            http {
+                                enabled
+                                host
+                                port
+                                url
+                            }
+                            https {
+                                enabled
+                                host
+                                port
+                                url
+                            }
+                        }
+                        authenticationMethods {
+                            servicePrincipal
+                            kerberos {
+                                enabled
+                            }
+                        }
+                    }
+                }
+            }
+            apps {
+                id
+                name
+                publisher
+                version
+            }
+        }
+    }
+}

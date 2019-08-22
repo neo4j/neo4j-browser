@@ -27,6 +27,8 @@ import {
   createReduxMiddleware as createSuberReduxMiddleware
 } from 'suber'
 import { BusProvider } from 'react-suber'
+import { ApolloProvider } from '@apollo/react-hooks'
+
 import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
@@ -36,6 +38,7 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import { GlobalStyle } from './styles/global-styles.js'
 import { detectRuntimeEnv } from 'services/utils.js'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck.js'
+import { createClient } from 'browser-components/relate-api/relate-api.utils'
 
 // Configure localstorage sync
 applyKeys(
@@ -83,6 +86,14 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
 // Introduce environment to be able to fork functionality
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 
+// Load realte api graphql client
+const url = new URL(window.location.href)
+const apiEndpoint = url.searchParams.get('neo4jDesktopApiUrl')
+console.log('apiEndpoint: ', apiEndpoint)
+const apiClientId = url.searchParams.get('neo4jDesktopGraphAppClientId')
+console.log('apiClientId: ', apiClientId)
+const relateApiClient = createClient(apiEndpoint || undefined, apiClientId)
+
 // Signal app upstart (for epics)
 store.dispatch({ type: APP_START, url: window.location.href, env })
 
@@ -92,11 +103,9 @@ const AppInit = () => {
       <BusProvider bus={bus}>
         <React.Fragment>
           <GlobalStyle />
-          <App
-            desktopIntegrationPoint={
-              window && window.neo4jDesktopApi ? window.neo4jDesktopApi : null
-            }
-          />
+          <ApolloProvider client={relateApiClient}>
+            <App />
+          </ApolloProvider>
         </React.Fragment>
       </BusProvider>
     </Provider>

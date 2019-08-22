@@ -63,23 +63,75 @@ import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
-import DesktopIntegration from 'browser-components/DesktopIntegration'
-import {
-  getActiveGraph,
-  buildConnectionCredentialsObject
-} from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
-import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
+import { inWebEnv } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
+import {
+  useWorkspaceData,
+  useActiveGraphMonitor
+} from 'browser-components/relate-api/relate-api.hooks'
+import {
+  getActiveGraphData,
+  createConnectionCredentialsObject
+} from 'browser-components/relate-api/relate-api.utils'
+
+// <DesktopIntegration
+//                 integrationPoint={props.desktopIntegrationPoint}
+//                 onArgumentsChange={props.onArgumentsChange}
+//                 onMount={(
+//                   activeGraph,
+//                   connectionsCredentials,
+//                   context,
+//                   getKerberosTicket
+//                 ) => {
+//                   props.setInitialConnectionData(
+//                     activeGraph,
+//                     connectionsCredentials,
+//                     context,
+//                     getKerberosTicket
+//                   )
+//                   detectDesktopThemeChanges(null, context)
+//                 }}
+//                 onGraphActive={props.switchConnection}
+//                 onGraphInactive={props.closeConnectionMaybe}
+//                 onColorSchemeUpdated={detectDesktopThemeChanges}
+//               />
 
 export function App (props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
     LIGHT_THEME
+  )
+
+  const workspaceData = useWorkspaceData()
+  useEffect(
+    () => {
+      if (!workspaceData) {
+        return
+      }
+      const activeGraph = getActiveGraphData(workspaceData)
+      props.setInitialConnectionData(activeGraph)
+    },
+    [workspaceData]
+  )
+  const activeGraph = useActiveGraphMonitor()
+  useEffect(
+    () => {
+      if (activeGraph === undefined) {
+        // Not loaded yet
+        return
+      }
+      if (activeGraph === null) {
+        props.closeConnectionMaybe()
+        return
+      }
+      props.switchConnection(activeGraph)
+    },
+    [activeGraph]
   )
 
   useEffect(() => {
@@ -110,6 +162,7 @@ export function App (props) {
     if (e.keyCode !== 27) return
     props.bus && props.bus.send(EXPAND)
   }
+
   const {
     drawer,
     cmdchar,
@@ -142,27 +195,6 @@ export function App (props) {
             <StyledWrapper className={wrapperClassNames}>
               <DocTitle titleString={props.titleString} />
               <UserInteraction />
-              <DesktopIntegration
-                integrationPoint={props.desktopIntegrationPoint}
-                onArgumentsChange={props.onArgumentsChange}
-                onMount={(
-                  activeGraph,
-                  connectionsCredentials,
-                  context,
-                  getKerberosTicket
-                ) => {
-                  props.setInitialConnectionData(
-                    activeGraph,
-                    connectionsCredentials,
-                    context,
-                    getKerberosTicket
-                  )
-                  detectDesktopThemeChanges(null, context)
-                }}
-                onGraphActive={props.switchConnection}
-                onGraphInactive={props.closeConnectionMaybe}
-                onColorSchemeUpdated={detectDesktopThemeChanges}
-              />
               <Render if={loadExternalScripts}>
                 <Intercom appID='lq70afwx' />
               </Render>
@@ -232,53 +264,38 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const switchConnection = async (
-    event,
-    newContext,
-    oldContext,
-    getKerberosTicket
-  ) => {
-    const connectionCreds = await buildConnectionCredentialsObject(
-      newContext,
-      stateProps.defaultConnectionData,
-      getKerberosTicket
+  const switchConnection = async activeGraph => {
+    const connectionCreds = await createConnectionCredentialsObject(
+      activeGraph,
+      stateProps.defaultConnectionData
     )
     ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
   }
-  const setInitialConnectionData = async (
-    graph,
-    credentials,
-    context,
-    getKerberosTicket
-  ) => {
-    const connectionCreds = await buildConnectionCredentialsObject(
-      context,
-      stateProps.defaultConnectionData,
-      getKerberosTicket
+  const setInitialConnectionData = async activeGraph => {
+    const connectionsCredentials = await createConnectionCredentialsObject(
+      activeGraph,
+      stateProps.defaultConnectionData
     )
+    console.log('connectionsCredentials: ', connectionsCredentials)
     // No connection. Probably no graph active.
-    if (!connectionCreds) {
+    if (!connectionsCredentials) {
       ownProps.bus.send(SWITCH_CONNECTION_FAILED)
       return
     }
-    ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
+    ownProps.bus.send(INJECTED_DISCOVERY, connectionsCredentials)
   }
-  const closeConnectionMaybe = (event, newContext, oldContext) => {
-    const activeGraph = getActiveGraph(newContext)
+  const closeConnectionMaybe = activeGraph => {
     if (activeGraph) return // We still got an active graph, do nothing
     ownProps.bus.send(SILENT_DISCONNECT, {})
   }
-  const onArgumentsChange = argsString => {
-    ownProps.bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
-  }
+
   return {
     ...stateProps,
     ...ownProps,
     ...dispatchProps,
     switchConnection,
     setInitialConnectionData,
-    closeConnectionMaybe,
-    onArgumentsChange
+    closeConnectionMaybe
   }
 }
 
