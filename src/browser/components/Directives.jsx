@@ -106,9 +106,7 @@ export const Directives = props => {
         const elems = elem.querySelectorAll(directive.selector)
         Array.from(elems).forEach(e => {
           if (e.firstChild.nodeName !== 'I') {
-            directive.selector === '[help-topic]'
-              ? prependHelpIcon(e)
-              : prependPlayIcon(e)
+            prependPlayIcon(e)
           }
 
           e.onclick = () => {

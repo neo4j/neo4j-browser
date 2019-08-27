@@ -18,6 +18,12 @@
         <code>:param x => 1</code> and to set it as a float, do
         <code>:param x => 1.0</code>.
       </p>
+      <p>
+        If you need more fine-grained control or advanced Cypher queries, you can use the explicit syntax: <code>x => { ... RETURN 1 as foo }</code>
+        <br/> Explicit returns yield a list of records, matching that of your Cypher query: <code>x => { RETURN 1 as foo }</code> yields <code>$x = [{foo: 1}]</code>
+        <br/> You can pick out individual values from your result using destructuring: <code> [{foo}] => { RETURN 1 as foo }</code> yields <code>$foo = 1</code>
+        <br/> You can also rename destructured params: <code> [{foo: bar}] => { RETURN 1 as foo }</code> yields <code>$bar = 1</code>
+      </p>
       <p>Cypher query example with a param:&nbsp;
         <code>MATCH (n:Person) WHERE n.name = $name</code>
       </p>

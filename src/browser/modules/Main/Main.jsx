@@ -26,19 +26,17 @@ import {
 import Editor from '../Editor/Editor'
 import Stream from '../Stream/Stream'
 import Render from 'browser-components/Render'
-import ClickToCode from '../ClickToCode'
 import {
   StyledMain,
   WarningBanner,
   ErrorBanner,
-  NotAuthedBanner,
-  StyledCodeBlockAuthBar,
-  StyledCodeBlockErrorBar
+  NotAuthedBanner
 } from './styled'
 import SyncReminderBanner from './SyncReminderBanner'
 import SyncConsentBanner from './SyncConsentBanner'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { useSlowConnectionState } from './main.hooks'
+import AutoExecButton from '../Stream/auto-exec-button'
 
 const Main = React.memo(function Main (props) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
@@ -51,11 +49,8 @@ const Main = React.memo(function Main (props) {
       <Render if={props.showUnknownCommandBanner}>
         <ErrorBanner>
           Type&nbsp;
-          <ClickToCode CodeComponent={StyledCodeBlockErrorBar}>
-            {props.cmdchar}
-            help commands
-          </ClickToCode>
-          &nbsp; for a list of available commands.
+          <AutoExecButton cmd={`${props.cmdchar}help commands`} />
+          &nbsp;for a list of available commands.
         </ErrorBanner>
       </Render>
       <Render if={props.errorMessage}>
@@ -66,13 +61,10 @@ const Main = React.memo(function Main (props) {
       <Render if={props.connectionState === DISCONNECTED_STATE}>
         <NotAuthedBanner data-testid='disconnectedBanner'>
           Database access not available. Please use&nbsp;
-          <ClickToCode
+          <AutoExecButton
+            cmd={`${props.cmdchar}server connect`}
             data-testid='disconnectedBannerCode'
-            CodeComponent={StyledCodeBlockAuthBar}
-          >
-            {props.cmdchar}
-            server connect
-          </ClickToCode>
+          />
           &nbsp; to establish connection. There's a graph waiting for you.
         </NotAuthedBanner>
       </Render>
