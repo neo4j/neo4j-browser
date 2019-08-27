@@ -75,10 +75,7 @@ export function parseLambdaStatement (lambda) {
     })
 }
 
-export function collectLambdaValues (
-  { parameters, query, variant, returnValues },
-  requestId
-) {
+export function collectLambdaValues ({ parameters, query, variant }, requestId) {
   return bolt
     .routedWriteTransaction(
       query,
@@ -92,15 +89,12 @@ export function collectLambdaValues (
     .then(({ records }) => {
       if (variant === IMPLICIT) {
         const firstResult = head(records)
-        const firstReturn = head(returnValues)
 
         return firstResult
           ? recursivelyTypeGraphItems({
-            [parameters.value]: firstResult.get(
-              firstReturn.alias || firstReturn.value
-            )
+            [parameters.value]: firstResult.get(head(firstResult.keys))
           })
-          : null
+          : {}
       }
 
       if (parameters.type === TOKEN) {
@@ -123,7 +117,7 @@ export function collectLambdaValues (
       }
 
       // future proofing
-      if (parameters.type !== ARRAY) return null
+      if (parameters.type !== ARRAY) return {}
 
       const { items } = parameters
       const extractedRecords = map(

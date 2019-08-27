@@ -37,16 +37,15 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
-
-    // Then
-    return expect(p)
-      .rejects.toEqual(
-        new Error(
-          'Could not parse input. Usage: `:param x => 2`. SyntaxError: Expected ":" but "x" found.'
-        )
-      )
-      .then(() => expect(put).not.toHaveBeenCalled())
+    return params
+      .handleParamsCommand(action, cmdchar, put)
+      .then(() => {
+        throw Error('THIS SHOULD NEVER HAPPEN')
+      })
+      .catch(error => {
+        expect(error.message).toMatch('Error: Syntax error at line 1 col 3:')
+        expect(put).not.toHaveBeenCalled()
+      })
   })
   test('handles :param "x": 2 and calls the update action creator', () => {
     // Given
@@ -138,28 +137,6 @@ describe('commandsDuck params helper', () => {
         value: 'bar',
         originalParamValue: 'bar',
         isFn: false
-      })
-    })
-    test('<key with space>=><value>', () => {
-      expect(params.extractParams('"f o o" => 2')).toEqual({
-        key: 'f o o',
-        value: 2,
-        originalParamValue: '2',
-        isFn: true
-      })
-    })
-    test('<key>=><obj>', () => {
-      expect(
-        params.extractParams(`foo => {
-        x: 1
-      }`)
-      ).toEqual({
-        key: 'foo',
-        value: { x: 1 },
-        originalParamValue: `{
-        x: 1
-      }`,
-        isFn: true
       })
     })
   })

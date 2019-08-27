@@ -69,10 +69,6 @@ const directives = [
   }
 ]
 
-const prependHelpIcon = element => {
-  prependIcon(element, 'fa fa-question-circle-o')
-}
-
 const prependPlayIcon = element => {
   prependIcon(element, 'fa fa-play-circle-o')
 }

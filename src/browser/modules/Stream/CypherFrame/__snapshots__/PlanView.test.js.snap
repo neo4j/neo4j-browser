@@ -3,10 +3,10 @@
 exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-32 styled__StyledOneRowStatsBar-sc-1dtvgs1-33 dkmnzU"
+    class="styled__StyledStatsBar-sc-1dtvgs1-33 styled__StyledOneRowStatsBar-sc-1dtvgs1-34 fVAUbt"
   >
     <div
-      class="styled__StyledLeftPartial-sc-1dtvgs1-42 cEQgJw"
+      class="styled__StyledLeftPartial-sc-1dtvgs1-43 Wnjnc"
     >
       <div
         class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -22,7 +22,7 @@ exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
       </div>
     </div>
     <div
-      class="styled__StyledRightPartial-sc-1dtvgs1-41 zWSxr"
+      class="styled__StyledRightPartial-sc-1dtvgs1-42 ifFzJO"
     >
       <ul
         class="styled__FrameTitlebarButtonSection-sc-1dtvgs1-10 dRnwVT"
