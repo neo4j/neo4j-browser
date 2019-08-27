@@ -96,9 +96,16 @@ class FrameTemplate extends Component {
   }
   render () {
     const { className } = this.props
+    const classNames = []
+    if (className) {
+      classNames.push(className)
+    }
+    if (this.state.fullscreen) {
+      classNames.push('is-fullscreen')
+    }
     return (
       <StyledFrame
-        className={className}
+        className={classNames.join(' ')}
         data-testid='frame'
         fullscreen={this.state.fullscreen}
       >

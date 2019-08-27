@@ -24,6 +24,8 @@ import { dim } from 'browser-styles/constants'
 
 import SVGInline from 'react-svg-inline'
 
+import { hexToRgba } from '../../styles/utils'
+
 import styles from './style.css'
 
 export const CloseButton = props => {
@@ -298,6 +300,41 @@ const BaseCarouselButton = styled.button`
   border: 0;
   user-select: none;
   outline: none;
+
+  &.rounded {
+    background-color: ${props =>
+    hexToRgba(props.theme.secondaryButtonText, 0.1)};
+    border-radius: 0 5px 5px 0;
+    position: absolute;
+    left: 0;
+    top: 20px;
+    bottom: 59px;
+    height: auto;
+    width: 32px;
+
+    i {
+      margin-right: 3px;
+    }
+
+    &.next-slide {
+      border-radius: 5px 0 0 5px;
+      left: auto;
+      right: 0;
+
+      i {
+        margin-left: 3px;
+        margin-right: 0;
+      }
+    }
+
+    .is-fullscreen & {
+      top: calc(50% - 20px);
+      bottom: auto;
+      height: 50%;
+      max-height: 420px;
+      transform: translateY(-50%);
+    }
+  }
 
   &:disabled {
     opacity: 0.4;

@@ -77,6 +77,14 @@ export default class Carousel extends Component {
         onKeyDown={e => this.onKeyDown(e)}
         tabIndex='0'
       >
+        <CarouselButton
+          className={'previous-slide  rounded'}
+          data-testid='previousSlide'
+          disabled={this.state.visibleSlide === 0}
+          onClick={this.prev.bind(this)}
+        >
+          <SlidePreviousIcon />
+        </CarouselButton>
         <StyledCarouselButtonContainer>
           {showIntro &&
             !this.state.wasClicked && (
@@ -93,7 +101,6 @@ export default class Carousel extends Component {
             </StyledCarouselCount>
             <CarouselButton
               className={'previous-slide'}
-              data-testid='previousSlide'
               disabled={this.state.visibleSlide === 0}
               onClick={this.prev.bind(this)}
             >
@@ -106,7 +113,6 @@ export default class Carousel extends Component {
             />
             <CarouselButton
               className={'next-slide'}
-              data-testid='nextSlide'
               disabled={this.state.visibleSlide === this.slides.length - 1}
               onClick={this.next.bind(this)}
             >
@@ -121,6 +127,14 @@ export default class Carousel extends Component {
             this.getSlide(this.state.visibleSlide)
           )}
         </SlideContainer>
+        <CarouselButton
+          className={'next-slide rounded'}
+          data-testid='nextSlide'
+          disabled={this.state.visibleSlide === this.slides.length - 1}
+          onClick={this.next.bind(this)}
+        >
+          <SlideNextIcon />
+        </CarouselButton>
       </StyledCarousel>
     )
   }

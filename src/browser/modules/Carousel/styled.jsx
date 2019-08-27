@@ -54,6 +54,10 @@ export const StyledCarouselButtonContainer = styled.div`
   transform: translateX(-50%);
   height: 39px;
   width: 100%;
+
+  .is-fullscreen & {
+    bottom: 39px;
+  }
 `
 export const StyledCarouselButtonContainerInner = styled.div`
   display: flex;
