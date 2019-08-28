@@ -24,14 +24,16 @@ import Directives from 'browser-components/Directives'
 import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
-
-const { help: chapters } = docs
+import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
 
 const HelpFrame = ({ frame }) => {
-  let help = 'Help topic not specified'
+  const { help, cypher } = docs
+  const chapters = { ...help.chapters, ...cypher.chapters }
+
+  let ret = 'Help topic not specified'
   let aside
   if (frame.result) {
-    help = <Docs html={frame.result} />
+    ret = <Docs html={frame.result} />
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
@@ -40,12 +42,13 @@ const HelpFrame = ({ frame }) => {
       let { content } = chapter
 
       // The commands topic is a special case that uses dymaic data
-      if (helpTopic === 'commands') {
-        content = <chapter.Content docs={docs} />
+      const dynamic = ['commands', 'play', 'guides', 'help', 'cypher']
+      if (dynamic.includes(helpTopic)) {
+        content = <DynamicTopics docs={docs} {...chapter} />
       }
 
       aside = title ? <FrameAside title={title} subtitle={subtitle} /> : null
-      help = <Docs content={content} />
+      ret = <Docs content={content} />
     }
   }
   return (
@@ -53,7 +56,7 @@ const HelpFrame = ({ frame }) => {
       className='helpFrame help'
       header={frame}
       aside={aside}
-      contents={<Directives content={help} />}
+      contents={<Directives content={ret} />}
     />
   )
 }

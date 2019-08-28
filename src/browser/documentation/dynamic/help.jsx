@@ -22,7 +22,7 @@ import React from 'react'
 const title = 'Help'
 const subtitle = 'What is all this?'
 const category = 'browserUiCommands'
-const content = (
+const description = (
   <React.Fragment>
     <p>
       Neo4j Browser is a command shell. Use the editor bar up above ↑ to enter
@@ -72,5 +72,6 @@ const content = (
     </table>
   </React.Fragment>
 )
+const filter = ['help']
 
-export default { title, subtitle, category, content }
+export default { title, subtitle, category, content: null, description, filter }

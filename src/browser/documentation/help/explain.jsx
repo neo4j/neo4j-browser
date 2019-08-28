@@ -34,17 +34,19 @@ const content = (
       understanding the query plan output.
     </p>
     <table className='table-condensed table-help'>
-      {/* <tr>
-      <th>Reference:</th>
-      <td><code><a href='{{ neo4j.version | neo4jDeveloperDoc }}/#execution-plans'>Execution Plans</a></code> manual page</td>
-    </tr> */}
-      <tr>
-        <th>Related:</th>
-        <td>
-          <a help-topic='profile'>:help PROFILE</a>{' '}
-          <a help-topic='query plan'>:help QUERY PLAN</a>{' '}
-        </td>
-      </tr>
+      <tbody>
+        {/* <tr>
+          <th>Reference:</th>
+          <td><code><a href='{{ neo4j.version | neo4jDeveloperDoc }}/#execution-plans'>Execution Plans</a></code> manual page</td>
+        </tr> */}
+        <tr>
+          <th>Related:</th>
+          <td>
+            <a help-topic='profile'>:help PROFILE</a>{' '}
+            <a help-topic='query plan'>:help QUERY PLAN</a>{' '}
+          </td>
+        </tr>
+      </tbody>
     </table>
     <section className='example'>
       <figure>

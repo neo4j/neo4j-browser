@@ -18,32 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Carousels
-import guideConcepts from './guides/concepts'
-import guideCypher from './guides/cypher'
-import guideIntro from './guides/intro'
-import guideLearn from './guides/learn'
-import guideMovieGraph from './guides/movie-graph'
-import guideNorthwindGraph from './guides/northwind-graph'
-
-// Pages
-import guideIconography from './guides/iconography'
-import guideStart from './guides/start'
-import guideTypography from './guides/typography'
-import guideUnfound from './guides/unfound'
-import guideWritecode from './guides/write-code'
-
 // Help
 import helpBolt from './help/bolt'
 import helpBoltEncryption from './help/bolt-encryption'
 import helpBoltRouting from './help/bolt-routing'
 import helpClear from './help/clear'
-import helpCommands from './help/commands'
 import helpContains from './help/contains'
 import helpCreateConstraintOn from './help/create-constraint-on'
 import helpCreateIndexOn from './help/create-index-on'
 import helpCreate from './help/create'
-import helpCypher from './help/cypher'
 import helpDelete from './help/delete'
 import helpDropConstraintOn from './help/drop-constraint-on'
 import helpDropIndexOn from './help/drop-index-on'
@@ -51,7 +34,6 @@ import helpDetachDelete from './help/detach-delete'
 import helpEndsWith from './help/ends-with'
 import helpExplain from './help/explain'
 import helpForeach from './help/foreach'
-import helpHelp from './help/help'
 import helpHistory from './help/history'
 import helpHistoryClear from './help/history-clear'
 import helpKeys from './help/keys'
@@ -60,7 +42,6 @@ import helpMatch from './help/match'
 import helpMerge from './help/merge'
 import helpParam from './help/param'
 import helpParams from './help/params'
-import helpPlay from './help/play'
 import helpProfile from './help/profile'
 import helpQueries from './help/queries'
 import helpQueryPlan from './help/query-plan'
@@ -84,75 +65,109 @@ import helpUnwind from './help/unwind'
 import helpWhere from './help/where'
 import helpWith from './help/with'
 
+// Dynamic Help
+import helpCommands from './dynamic/commands'
+import helpCypher from './dynamic/cypher'
+import helpHelp from './dynamic/help'
+import helpPlay from './dynamic/play'
+
+// Carousels
+import guideConcepts from './guides/concepts'
+import guideCypher from './guides/cypher'
+import guideIntro from './guides/intro'
+import guideLearn from './guides/learn'
+import guideMovieGraph from './guides/movie-graph'
+import guideNorthwindGraph from './guides/northwind-graph'
+
+// Pages
+import guideIconography from './guides/iconography'
+import guideStart from './guides/start'
+import guideTypography from './guides/typography'
+import guideUnfound from './guides/unfound'
+import guideWritecode from './guides/write-code'
+
 export default {
-  play: {
-    concepts: guideConcepts,
-    cypher: guideCypher,
-    intro: guideIntro,
-    learn: guideLearn,
-    moviegraph: guideMovieGraph,
-    movies: guideMovieGraph,
-    northwindgraph: guideNorthwindGraph,
-    iconography: guideIconography,
-    start: guideStart,
-    typography: guideTypography,
-    unfound: guideUnfound,
-    writecode: guideWritecode,
-    // Commands only
-    queryTemplates: {
-      title: 'Query Templates',
-      category: 'guides'
+  help: {
+    title: 'Help',
+    chapters: {
+      bolt: helpBolt,
+      boltEncryption: helpBoltEncryption,
+      boltRouting: helpBoltRouting,
+      clear: helpClear,
+      cypher: helpCypher,
+      commands: helpCommands,
+      guides: helpPlay,
+      help: helpHelp,
+      history: helpHistory,
+      historyClear: helpHistoryClear,
+      keys: helpKeys,
+      loadCsv: helpLoadCsv,
+      match: helpMatch,
+      merge: helpMerge,
+      param: helpParam,
+      params: helpParams,
+      play: helpPlay,
+      server: helpServer,
+      serverUser: helpServerUser,
+      style: helpStyle,
+      unfound: helpUnfound
     }
   },
-  help: {
-    bolt: helpBolt,
-    boltEncryption: helpBoltEncryption,
-    boltRouting: helpBoltRouting,
-    clear: helpClear,
-    commands: helpCommands,
-    contains: helpContains,
-    createConstraintOn: helpCreateConstraintOn,
-    createIndexOn: helpCreateIndexOn,
-    create: helpCreate,
-    cypher: helpCypher,
-    delete: helpDelete,
-    detachDelete: helpDetachDelete,
-    dropConstraintOn: helpDropConstraintOn,
-    dropIndexOn: helpDropIndexOn,
-    endsWith: helpEndsWith,
-    explain: helpExplain,
-    foreach: helpForeach,
-    help: helpHelp,
-    history: helpHistory,
-    historyClear: helpHistoryClear,
-    keys: helpKeys,
-    loadCsv: helpLoadCsv,
-    match: helpMatch,
-    merge: helpMerge,
-    param: helpParam,
-    params: helpParams,
-    play: helpPlay,
-    profile: helpProfile,
-    queries: helpQueries,
-    queryPlan: helpQueryPlan,
-    remove: helpRemove,
-    rest: helpRest,
-    restDelete: helpRestDelete,
-    restGet: helpRestGet,
-    restPost: helpRestPost,
-    restPut: helpRestPut,
-    return: helpReturn,
-    server: helpServer,
-    serverUser: helpServerUser,
-    set: helpSet,
-    start: helpStart,
-    startsWith: helpStartsWith,
-    style: helpStyle,
-    template: helpTemplate,
-    unfound: helpUnfound,
-    unknown: helpUnknown,
-    unwind: helpUnwind,
-    where: helpWhere,
-    with: helpWith
+  cypher: {
+    title: 'Cypher',
+    chapters: {
+      contains: helpContains,
+      createConstraintOn: helpCreateConstraintOn,
+      createIndexOn: helpCreateIndexOn,
+      create: helpCreate,
+      delete: helpDelete,
+      detachDelete: helpDetachDelete,
+      dropConstraintOn: helpDropConstraintOn,
+      dropIndexOn: helpDropIndexOn,
+      endsWith: helpEndsWith,
+      explain: helpExplain,
+      foreach: helpForeach,
+      profile: helpProfile,
+      queries: helpQueries,
+      queryPlan: helpQueryPlan,
+      remove: helpRemove,
+      rest: helpRest,
+      restDelete: helpRestDelete,
+      restGet: helpRestGet,
+      restPost: helpRestPost,
+      restPut: helpRestPut,
+      return: helpReturn,
+      set: helpSet,
+      start: helpStart,
+      startsWith: helpStartsWith,
+      template: helpTemplate,
+      unfound: helpUnfound,
+      unknown: helpUnknown,
+      unwind: helpUnwind,
+      where: helpWhere,
+      with: helpWith
+    }
+  },
+  play: {
+    title: 'Play',
+    chapters: {
+      concepts: guideConcepts,
+      cypher: guideCypher,
+      intro: guideIntro,
+      learn: guideLearn,
+      moviegraph: guideMovieGraph,
+      movies: guideMovieGraph,
+      northwindgraph: guideNorthwindGraph,
+      iconography: guideIconography,
+      start: guideStart,
+      typography: guideTypography,
+      unfound: guideUnfound,
+      writecode: guideWritecode,
+      // Commands only
+      queryTemplates: {
+        title: 'Query Templates',
+        category: 'guides'
+      }
+    }
   }
 }

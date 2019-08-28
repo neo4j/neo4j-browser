@@ -29,7 +29,9 @@ import FrameAside from '../Frame/FrameAside'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { ErrorsView } from './CypherFrame/ErrorsView'
 
-const { play } = docs
+const {
+  play: { chapters }
+} = docs
 
 const checkHtmlForSlides = html => {
   const el = document.createElement('html')
@@ -66,7 +68,7 @@ export class PlayFrame extends Component {
     ) {
       // Not found remotely (or other error)
       if (this.props.frame.response.status === 404) {
-        return this.unfound(play['unfound'])
+        return this.unfound(chapters['unfound'])
       }
       return this.setState({
         guide: (
@@ -98,7 +100,7 @@ export class PlayFrame extends Component {
       splitStringOnFirst(this.props.frame.cmd, ' ')[1] || 'start'
     ).trim()
     const guideName = topicInput.toLowerCase().replace(/\s|-/g, '')
-    const guide = play[guideName] || {}
+    const guide = chapters[guideName] || {}
 
     // Check if content exists
     if (Object.keys(guide).length) {
@@ -128,7 +130,7 @@ export class PlayFrame extends Component {
       this.props.bus.self(action.type, action, res => {
         if (!res.success) {
           // No luck
-          return this.unfound(play['unfound'])
+          return this.unfound(chapters['unfound'])
         }
         // Found remote guide
         this.setState({
@@ -138,7 +140,7 @@ export class PlayFrame extends Component {
       })
     } else {
       // No bus. Give up
-      return this.unfound(play['unfound'])
+      return this.unfound(chapters['unfound'])
     }
   }
 

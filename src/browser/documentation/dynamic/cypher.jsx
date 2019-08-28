@@ -22,7 +22,8 @@ import React from 'react'
 const title = 'Cypher'
 const subtitle = 'A graph query language'
 const category = 'cypherQueries'
-const content = (
+const filter = ['cypher']
+const description = (
   <React.Fragment>
     <p>
       Cypher is Neo4j's graph query language. Working with a graph is all about
@@ -88,4 +89,4 @@ RETURN <expressions>`}</pre>
   </React.Fragment>
 )
 
-export default { title, subtitle, category, content }
+export default { title, subtitle, category, content: null, description, filter }
