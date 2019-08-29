@@ -83,6 +83,30 @@ class FrameTitlebar extends Component {
     })
     saveAs(blob, 'export.csv')
   }
+
+  exportTXT = () => {
+    const { frame } = this.props
+
+    if (frame.type === 'history') {
+      const asTxt = frame.result
+        .map(result => {
+          const safe = `${result}`.trim()
+
+          if (safe.startsWith(':')) {
+            return safe
+          }
+
+          return safe.endsWith(';') ? safe : `${safe};`
+        })
+        .join('\n\n')
+      const blob = new Blob([asTxt], {
+        type: 'text/plain;charset=utf-8'
+      })
+
+      saveAs(blob, 'history.txt')
+    }
+  }
+
   exportPNG () {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadPNGFromSVG(svgElement, graphElement, type)
@@ -105,6 +129,13 @@ class FrameTitlebar extends Component {
       (frame.type === 'style' && this.hasData())
     )
   }
+
+  canExportTXT () {
+    const { frame = {} } = this.props
+
+    return frame.type === 'history' && arrayHasItems(frame.result)
+  }
+
   render () {
     let props = this.props
     const { frame = {} } = props
@@ -142,6 +173,11 @@ class FrameTitlebar extends Component {
                       onClick={() => this.exportCSV(props.getRecords())}
                     >
                       Export CSV
+                    </DropdownItem>
+                  </Render>
+                  <Render if={this.canExportTXT()}>
+                    <DropdownItem onClick={this.exportTXT}>
+                      Export TXT
                     </DropdownItem>
                   </Render>
                   <Render if={this.hasData() && frame.type === 'style'}>
