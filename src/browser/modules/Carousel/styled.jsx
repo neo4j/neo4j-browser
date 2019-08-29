@@ -286,6 +286,13 @@ export const StyledSlide = styled.div`
   &.slide .code {
     background-color: transparent;
   }
+  &.slide .key {
+    background-color: ${props => props.theme.preBackground};
+    border-radius: 3px;
+    font-size: 12px;
+    display: inline-block;
+    padding: 0 6px;
+  }
 
   .has-carousel & {
     overflow: visible;
