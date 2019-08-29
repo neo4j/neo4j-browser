@@ -25,12 +25,24 @@ const subtitle = 'Typing commands is 1337'
 const category = 'browserUiCommands'
 const filter = ['help']
 const description = (
-  <p>
-    In addition to composing and running Cypher queries, the editor bar up above
-    ↑ understands a few client-side commands, which begin with a{` `}
-    <code>:</code>. Without a colon, we'll assume you're trying to enter a
-    Cypher query.
-  </p>
+  <React.Fragment>
+    <p>
+      In addition to composing and running Cypher queries, the editor bar up
+      above ↑ understands a few client-side commands, which begin with a{` `}
+      <code>:</code>. Without a colon, we'll assume you're trying to enter a
+      Cypher query.
+    </p>
+    <table className='table-condensed table-help'>
+      <tbody>
+        <tr>
+          <th>Usage:</th>
+          <td>
+            <code>{`:help <topic>`}</code>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </React.Fragment>
 )
 
 export default { title, subtitle, category, content: null, description, filter }

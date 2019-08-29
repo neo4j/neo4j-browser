@@ -27,8 +27,12 @@ import { transformCommandToHelpTopic } from 'services/commandUtils'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
 
 const HelpFrame = ({ frame }) => {
-  const { help, cypher } = docs
-  const chapters = { ...help.chapters, ...cypher.chapters }
+  const { help, cypher, bolt } = docs
+  const chapters = {
+    ...help.chapters,
+    ...cypher.chapters,
+    ...bolt.chapters
+  }
 
   let ret = 'Help topic not specified'
   let aside
@@ -42,7 +46,7 @@ const HelpFrame = ({ frame }) => {
       let { content } = chapter
 
       // The commands topic is a special case that uses dymaic data
-      const dynamic = ['commands', 'play', 'guides', 'help', 'cypher']
+      const dynamic = ['bolt', 'commands', 'play', 'guides', 'help', 'cypher']
       if (dynamic.includes(helpTopic)) {
         content = <DynamicTopics docs={docs} {...chapter} />
       }

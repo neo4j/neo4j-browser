@@ -21,7 +21,7 @@
 import React from 'react'
 const title = 'Cypher'
 const subtitle = 'A graph query language'
-const category = 'cypherQueries'
+const category = 'browserUiCommands'
 const filter = ['cypher']
 const description = (
   <React.Fragment>

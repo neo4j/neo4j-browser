@@ -234,6 +234,8 @@ export const StyledSlide = styled.div`
     }
 
     &--commands {
+      margin-top: 2rem;
+
       td {
         padding: 3px 10px 3px 0;
       }

@@ -25,7 +25,8 @@ const category = 'browserUiCommands'
 const content = (
   <React.Fragment>
     <p>
-      The <code>:clear</code> command will remove all frames from the stream.
+      The <a exec-topic='clear'>:clear</a> command will remove all frames from
+      the stream.
     </p>
     <table className='table-condensed table-help'>
       <tbody>

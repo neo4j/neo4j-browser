@@ -19,7 +19,7 @@
  */
 
 // Help
-import helpBolt from './help/bolt'
+import helpBolt from './dynamic/bolt'
 import helpBoltEncryption from './help/bolt-encryption'
 import helpBoltRouting from './help/bolt-routing'
 import helpClear from './help/clear'
@@ -90,22 +90,15 @@ export default {
   help: {
     title: 'Help',
     chapters: {
-      bolt: helpBolt,
-      boltEncryption: helpBoltEncryption,
-      boltRouting: helpBoltRouting,
       clear: helpClear,
       cypher: helpCypher,
+      bolt: helpBolt,
       commands: helpCommands,
       guides: helpPlay,
       help: helpHelp,
       history: helpHistory,
       historyClear: helpHistoryClear,
       keys: helpKeys,
-      loadCsv: helpLoadCsv,
-      match: helpMatch,
-      merge: helpMerge,
-      param: helpParam,
-      params: helpParams,
       play: helpPlay,
       server: helpServer,
       serverUser: helpServerUser,
@@ -127,6 +120,11 @@ export default {
       endsWith: helpEndsWith,
       explain: helpExplain,
       foreach: helpForeach,
+      loadCsv: helpLoadCsv,
+      match: helpMatch,
+      merge: helpMerge,
+      param: helpParam,
+      params: helpParams,
       profile: helpProfile,
       queries: helpQueries,
       queryPlan: helpQueryPlan,
@@ -146,6 +144,13 @@ export default {
       unwind: helpUnwind,
       where: helpWhere,
       with: helpWith
+    }
+  },
+  bolt: {
+    title: 'Bolt',
+    chapters: {
+      boltEncryption: helpBoltEncryption,
+      boltRouting: helpBoltRouting
     }
   },
   play: {

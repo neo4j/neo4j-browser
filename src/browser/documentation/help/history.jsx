@@ -25,8 +25,8 @@ const category = 'browserUiCommands'
 const content = (
   <React.Fragment>
     <p>
-      The <code>:history</code> command will display your most recent executed
-      commands.
+      The <a exec-topic='history'>:history</a> command will display your most
+      recent executed commands.
     </p>
     <table className='table-condensed table-help'>
       <tbody>

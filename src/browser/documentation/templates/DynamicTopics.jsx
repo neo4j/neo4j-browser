@@ -21,6 +21,8 @@
 import React from 'react'
 import { transformHelpTopicToCommand } from 'services/commandUtils'
 
+const unlistedCommands = ['unfound', 'unknown']
+
 const categorize = commands => {
   const categories = {
     browserUiCommands: { title: 'Browser UI Commands' },
@@ -40,12 +42,12 @@ const categorize = commands => {
     const value = command[1]
     const cmd = transformHelpTopicToCommand(command[0])
 
-    if (cmd === 'unfound' || cmd === 'unknown') {
+    if (unlistedCommands.includes(cmd)) {
       return
     }
 
     const newValue = {
-      command: cmd,
+      command: cmd.replace('-', ' '),
       title: value.title
     }
 
@@ -94,54 +96,30 @@ export const DynamicTopics = ({ docs = {}, description = '', filter = [] }) => {
       {Object.keys(types) && (
         <table className='table-condensed table-help table-help--commands'>
           <tbody>
-            {Object.keys(types).map((type, i) => {
-              const usage =
-                type === 'help' || 'cypher' ? 'topic' : 'guide | url'
-              return (
-                <React.Fragment key={`${type}-${i}`}>
-                  <tr className='table-help--header'>
-                    <th>{types[type].title}</th>
-                    <th />
-                  </tr>
-                  <tr>
-                    <th>Usage:</th>
-                    <td>
-                      <code>{`:${type} <${usage}>`}</code>
-                    </td>
-                  </tr>
-                  {types[type].categories.map((section, j) => {
-                    return (
-                      <React.Fragment key={`${type}-${i}-${j}`}>
-                        <tr className='table-help--subheader'>
-                          <th>{section.title}</th>
-                          <th />
+            {Object.keys(types).map((type, i) => (
+              <React.Fragment key={`${type}-${i}`}>
+                {types[type].categories.map((section, j) => (
+                  <React.Fragment key={`${type}-${i}-${j}`}>
+                    <tr className='table-help--subheader'>
+                      <th>{section.title}</th>
+                      <th />
+                    </tr>
+                    {section.entries.map((command, k) => {
+                      const topic = type === 'play' ? 'play' : 'help'
+                      const attrs = { [`${topic}-topic`]: command.command }
+                      return (
+                        <tr key={`${command.title}-${i}-${k}`}>
+                          <th>{command.title}</th>
+                          <td>
+                            <a {...attrs}>{`:${topic} ${command.command}`}</a>
+                          </td>
                         </tr>
-                        {section.entries.map((command, k) => {
-                          const topic = type === 'cypher' ? 'help' : type
-                          const attrs = { [`${topic}-topic`]: command.command }
-                          return (
-                            <tr key={`${command.title}-${i}-${k}`}>
-                              <th>
-                                {type === 'help' ? (
-                                  <a {...attrs}>{`${command.command}`}</a>
-                                ) : (
-                                  command.title
-                                )}
-                              </th>
-                              <td>
-                                <a {...attrs}>{`:${topic} ${
-                                  command.command
-                                }`}</a>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </React.Fragment>
-                    )
-                  })}
-                </React.Fragment>
-              )
-            })}
+                      )
+                    })}
+                  </React.Fragment>
+                ))}
+              </React.Fragment>
+            ))}
           </tbody>
         </table>
       )}
