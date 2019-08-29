@@ -88,7 +88,7 @@ import guideWritecode from './guides/write-code'
 
 export default {
   help: {
-    title: 'Help',
+    title: 'Commands',
     chapters: {
       clear: helpClear,
       cypher: helpCypher,
@@ -103,7 +103,9 @@ export default {
       server: helpServer,
       serverUser: helpServerUser,
       style: helpStyle,
-      unfound: helpUnfound
+      unfound: helpUnfound,
+      unknown: helpUnknown,
+      queries: helpQueries
     }
   },
   cypher: {
@@ -126,7 +128,6 @@ export default {
       param: helpParam,
       params: helpParams,
       profile: helpProfile,
-      queries: helpQueries,
       queryPlan: helpQueryPlan,
       remove: helpRemove,
       rest: helpRest,
@@ -139,8 +140,6 @@ export default {
       start: helpStart,
       startsWith: helpStartsWith,
       template: helpTemplate,
-      unfound: helpUnfound,
-      unknown: helpUnknown,
       unwind: helpUnwind,
       where: helpWhere,
       with: helpWith
@@ -154,7 +153,7 @@ export default {
     }
   },
   play: {
-    title: 'Play',
+    title: 'Guides & Examples',
     chapters: {
       concepts: guideConcepts,
       cypher: guideCypher,

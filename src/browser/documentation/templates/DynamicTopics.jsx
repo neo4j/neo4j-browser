@@ -21,7 +21,7 @@
 import React from 'react'
 import { transformHelpTopicToCommand } from 'services/commandUtils'
 
-const unlistedCommands = ['unfound', 'unknown']
+const unlistedCommands = ['unfound', 'unknown', 'help']
 
 const categorize = commands => {
   const categories = {
@@ -69,6 +69,59 @@ const categorize = commands => {
     .map(category => category[1])
 }
 
+const Entry = ({ type, command }) => {
+  const topic = type === 'play' ? 'play' : 'help'
+  const attrs = { [`${topic}-topic`]: command.command }
+  return (
+    <tr>
+      <th>{command.title}</th>
+      <td>
+        <a {...attrs}>{`:${topic} ${command.command}`}</a>
+      </td>
+    </tr>
+  )
+}
+
+const Section = ({ section, type, i }) => {
+  return (
+    <React.Fragment>
+      <tr className='table-help--subheader'>
+        <th>{section.title}</th>
+        <th />
+      </tr>
+      {section.entries.map((command, k) => (
+        <Entry
+          key={`${command.title}-${i}-${k}`}
+          type={type}
+          command={command}
+        />
+      ))}
+    </React.Fragment>
+  )
+}
+
+const Categories = ({ types, type, i }) => {
+  const showCategoryHeadline = !!Object.keys(types).length
+  return (
+    <React.Fragment>
+      {showCategoryHeadline && (
+        <tr className='table-help--header'>
+          <th>{types[type].title}</th>
+          <th />
+        </tr>
+      )}
+      {types[type].categories.map((section, j) => (
+        <Section
+          key={`${type}-${i}-${j}`}
+          section={section}
+          type={type}
+          i={i}
+        />
+      ))}
+    </React.Fragment>
+  )
+}
+
 export const DynamicTopics = ({ docs = {}, description = '', filter = [] }) => {
   let filteredDocs = {}
   if (filter.length) {
@@ -97,28 +150,12 @@ export const DynamicTopics = ({ docs = {}, description = '', filter = [] }) => {
         <table className='table-condensed table-help table-help--commands'>
           <tbody>
             {Object.keys(types).map((type, i) => (
-              <React.Fragment key={`${type}-${i}`}>
-                {types[type].categories.map((section, j) => (
-                  <React.Fragment key={`${type}-${i}-${j}`}>
-                    <tr className='table-help--subheader'>
-                      <th>{section.title}</th>
-                      <th />
-                    </tr>
-                    {section.entries.map((command, k) => {
-                      const topic = type === 'play' ? 'play' : 'help'
-                      const attrs = { [`${topic}-topic`]: command.command }
-                      return (
-                        <tr key={`${command.title}-${i}-${k}`}>
-                          <th>{command.title}</th>
-                          <td>
-                            <a {...attrs}>{`:${topic} ${command.command}`}</a>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </React.Fragment>
-                ))}
-              </React.Fragment>
+              <Categories
+                key={`${type}-${i}`}
+                types={types}
+                type={type}
+                i={i}
+              />
             ))}
           </tbody>
         </table>

@@ -109,7 +109,7 @@ class FrameTemplate extends Component {
         data-testid='frame'
         fullscreen={this.state.fullscreen}
       >
-        <FrameTitlebar
+        {this.props.header && <FrameTitlebar
           frame={this.props.header}
           fullscreen={this.state.fullscreen}
           fullscreenToggle={this.toggleFullScreen.bind(this)}
@@ -120,7 +120,7 @@ class FrameTemplate extends Component {
           numRecords={this.props.numRecords || 0}
           getRecords={this.props.getRecords}
           visElement={this.props.visElement}
-        />
+        />}
         <StyledFrameBody
           fullscreen={this.state.fullscreen}
           collapsed={this.state.collapse}

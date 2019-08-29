@@ -25,8 +25,8 @@ const category = 'browserUiCommands'
 const content = (
   <React.Fragment>
     <p>
-      The <code>:queries</code> command will list your servers and clusters
-      running queries.
+      The <a exec-topic='queries'>:queries</a> command will list your servers
+      and clusters running queries.
       <br />
       From that list you have the ability to kill unwanted queries.
     </p>

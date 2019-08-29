@@ -98,6 +98,7 @@ export const StyledFrameAside = styled.div`
 `
 
 export const StyledFrameContents = styled.div`
+  font-size: 14px;
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props =>
@@ -111,6 +112,10 @@ export const StyledFrameContents = styled.div`
 
   .has-carousel & {
     overflow: visible;
+  }
+
+  p {
+    margin: 0 0 20px 0;
   }
 `
 

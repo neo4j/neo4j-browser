@@ -22,6 +22,7 @@ import React from 'react'
 const title = 'Help'
 const subtitle = 'What is all this?'
 const category = 'browserUiCommands'
+const filter = ['help', 'play']
 const description = (
   <React.Fragment>
     <p>
@@ -72,6 +73,5 @@ const description = (
     </table>
   </React.Fragment>
 )
-const filter = ['help']
 
 export default { title, subtitle, category, content: null, description, filter }

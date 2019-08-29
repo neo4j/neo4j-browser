@@ -22,6 +22,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameAside from '../../Frame/FrameAside'
 import bolt from 'services/bolt/bolt'
 import {
   listQueriesProcedure,
@@ -298,6 +299,7 @@ export class QueriesFrame extends Component {
 
   render () {
     let frameContents
+    let aside
     let statusbar
 
     if (this.canListQueries()) {
@@ -331,11 +333,13 @@ export class QueriesFrame extends Component {
         </StatusbarWrapper>
       )
     } else {
+      aside = <FrameAside title={'Frame unavailable'} subtitle={'What edition are you running?'} />
       frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
     }
     return (
       <FrameTemplate
         header={this.props.frame}
+        aside={aside}
         contents={frameContents}
         statusbar={statusbar}
       />

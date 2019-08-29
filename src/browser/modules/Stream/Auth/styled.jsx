@@ -37,6 +37,9 @@ export const StyledConnectionFormEntry = styled.div`
 `
 export const StyledConnectionLabel = styled.label`
   display: block;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 2;
 `
 export const StyledConnectionTextInput = styled.input`
   display: block;

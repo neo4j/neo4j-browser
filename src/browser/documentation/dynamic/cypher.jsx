@@ -31,8 +31,11 @@ const description = (
     </p>
     <p>
       Use
+      {` `}
       <code>MATCH</code> clauses for reading data, and
+      {` `}
       <code>CREATE</code> or
+      {` `}
       <code>MERGE</code> for writing data.
     </p>
     <div className='links'>
