@@ -65,6 +65,7 @@ import {
   transformResultRecordsToResultArray
 } from 'browser/modules/Stream/CypherFrame/helpers'
 import { csvFormat } from 'services/bolt/cypherTypesFormatting'
+import arrayHasItems from 'shared/utils/array-has-items'
 
 class FrameTitlebar extends Component {
   hasData () {
