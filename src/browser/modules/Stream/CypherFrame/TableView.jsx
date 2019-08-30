@@ -68,8 +68,8 @@ export const renderObject = entry => {
   return (
     <StyledJsonPre
       dangerouslySetInnerHTML={{
-        __html: sanitize(
-          convertUrlsToHrefTags(stringifyMod(entry, stringModifier, true))
+        __html: convertUrlsToHrefTags(
+          sanitize(stringifyMod(entry, stringModifier, true))
         )
       }}
     />

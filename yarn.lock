@@ -677,6 +677,13 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime@^7.5.4":
+  version "7.5.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/runtime/-/runtime-7.5.5.tgz#74fba56d35efbeca444091c7850ccd494fd2f132"
+  integrity sha1-dPulbTXvvspEQJHHhQzNSU/S8TI=
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/template@^7.1.0", "@babel/template@^7.4.0", "@babel/template@^7.4.4":
   version "7.4.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/template/-/template-7.4.4.tgz#f4b88d1225689a08f5bc3a17483545be9e4ed237"
@@ -1083,6 +1090,15 @@
     pretty-format "^24.8.0"
     wait-for-expect "^1.2.0"
 
+"@testing-library/react-hooks@^2.0.1":
+  version "2.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/react-hooks/-/react-hooks-2.0.1.tgz#1c3ec40882d0830df3078ddae0056fdf7366c81d"
+  integrity sha1-HD7ECILQgw3zB43a4AVv33NmyB0=
+  dependencies:
+    "@babel/runtime" "^7.5.4"
+    "@types/react" ">=16.9.0"
+    "@types/react-test-renderer" ">=16.9.0"
+
 "@testing-library/react@^8.0.1":
   version "8.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/react/-/react-8.0.2.tgz#e5df2102fca261b887ca5da803f3e520fe5eb8aa"
@@ -1167,6 +1183,26 @@
   version "12.0.10"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-12.0.10.tgz#51babf9c7deadd5343620055fc8aff7995c8b031"
   integrity sha1-Ubq/nH3q3VNDYgBV/Ir/eZXIsDE=
+
+"@types/prop-types@*":
+  version "15.7.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
+  integrity sha1-8aEee6uww8rWgQC+OB0eBkxo8fY=
+
+"@types/react-test-renderer@>=16.9.0":
+  version "16.9.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-test-renderer/-/react-test-renderer-16.9.0.tgz#d60f530ecf4c906721511603cca711b4fa830d41"
+  integrity sha1-1g9TDs9MkGchURYDzKcRtPqDDUE=
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@>=16.9.0":
+  version "16.9.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react/-/react-16.9.1.tgz#862c83b4c9d5cd116e42fd9a4f3694843cd2c051"
+  integrity sha1-hiyDtMnVzRFuQv2aTzaUhDzSwFE=
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -3104,6 +3140,11 @@ cssstyle@^1.0.0:
   integrity sha1-Qn6k1YWxhiT2/b+d56Kho7pxMHc=
   dependencies:
     cssom "0.3.x"
+
+csstype@^2.2.0:
+  version "2.6.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/csstype/-/csstype-2.6.6.tgz#c34f8226a94bbb10c32cc0d714afdf942291fc41"
+  integrity sha1-w0+CJqlLuxDDLMDXFK/flCKR/EE=
 
 cyclist@~0.2.2:
   version "0.2.2"
@@ -7046,6 +7087,11 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
+mockdate@^2.0.5:
+  version "2.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/mockdate/-/mockdate-2.0.5.tgz#70c6abf9ed4b2dae65c81dfc170dd1a5cec53620"
+  integrity sha1-cMar+e1LLa5lyB38Fw3Rpc7FNiA=
+
 moment@2.24.0:
   version "2.24.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
@@ -8880,6 +8926,11 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha1-W7weLSkUHJ+9/tRWND/ivEMKahY=
 
+react-is@^16.9.0:
+  version "16.9.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
+  integrity sha1-IcqVYTmarQ/xp3AcAWg+jKmB7cs=
+
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
@@ -8913,20 +8964,29 @@ react-svg-inline@^2.1.1:
     classnames "^2.2.1"
     prop-types "^15.5.8"
 
+react-test-renderer@^16.9.0:
+  version "16.9.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-test-renderer/-/react-test-renderer-16.9.0.tgz#7ed657a374af47af88f66f33a3ef99c9610c8ae9"
+  integrity sha1-ftZXo3SvR6+I9m8zo++ZyWEMiuk=
+  dependencies:
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    react-is "^16.9.0"
+    scheduler "^0.15.0"
+
 react-timeago@^4.1.9:
   version "4.4.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-timeago/-/react-timeago-4.4.0.tgz#4520dd9ba63551afc4d709819f52b14b9343ba2b"
   integrity sha1-RSDdm6Y1Ua/E1wmBn1KxS5NDuis=
 
-react@^16.8.1:
-  version "16.8.6"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
-  integrity sha1-rWw6lhT9Ok6e9REX9U2IjaAfK74=
+react@^16.9.0:
+  version "16.9.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react/-/react-16.9.0.tgz#40ba2f9af13bc1a38d75dbf2f4359a5185c4f7aa"
+  integrity sha1-QLovmvE7waONddvy9DWaUYXE96o=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.13.6"
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -9529,6 +9589,14 @@ scheduler@^0.13.6:
   version "0.13.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/scheduler/-/scheduler-0.13.6.tgz#466a4ec332467b31a91b9bf74e5347072e4cd889"
   integrity sha1-RmpOwzJGezGpG5v3TlNHBy5M2Ik=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
+scheduler@^0.15.0:
+  version "0.15.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/scheduler/-/scheduler-0.15.0.tgz#6bfcf80ff850b280fed4aeecc6513bc0b4f17f8e"
+  integrity sha1-a/z4D/hQsoD+1K7sxlE7wLTxf44=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"

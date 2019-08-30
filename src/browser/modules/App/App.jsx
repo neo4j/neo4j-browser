@@ -35,6 +35,7 @@ import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
   getConnectionState,
+  getLastConnectionUpdate,
   getActiveConnectionData,
   isConnected,
   getConnectionData,
@@ -114,6 +115,7 @@ export function App (props) {
     handleNavClick,
     activeConnection,
     connectionState,
+    lastConnectionUpdate,
     errorMessage,
     loadExternalScripts,
     loadSync,
@@ -174,6 +176,7 @@ export function App (props) {
                       cmdchar={cmdchar}
                       activeConnection={activeConnection}
                       connectionState={connectionState}
+                      lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
                       useBrowserSync={loadSync}
                     />
@@ -196,6 +199,7 @@ const mapStateToProps = state => {
     activeConnection: getActiveConnection(state),
     theme: getTheme(state),
     connectionState: getConnectionState(state),
+    lastConnectionUpdate: getLastConnectionUpdate(state),
     cmdchar: getCmdChar(state),
     errorMessage: getErrorMessage(state),
     loadExternalScripts:
