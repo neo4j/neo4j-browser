@@ -736,7 +736,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: 3
@@ -753,7 +753,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: 'baz'
@@ -772,7 +772,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: '1970-01-01'
@@ -791,7 +791,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: '11:01:12Z'
@@ -810,7 +810,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: '11:01:12'
@@ -829,7 +829,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: '1970-01-01T11:01:12Z'
@@ -848,7 +848,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: '1970-01-01T11:01:12'
@@ -867,7 +867,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: { srid: 1, x: 10, y: 5, z: 15 }
@@ -886,7 +886,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: 'P10M5DT1S'
@@ -909,8 +909,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: 3
             }
@@ -930,8 +930,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: 'baz'
             }
@@ -951,8 +951,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: '1970-01-01'
             }
@@ -972,8 +972,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: '11:01:12Z'
             }
@@ -993,8 +993,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: '11:01:12'
             }
@@ -1014,8 +1014,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: '1970-01-01T11:01:12Z'
             }
@@ -1035,8 +1035,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: '1970-01-01T11:01:12'
             }
@@ -1056,8 +1056,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: { srid: 1, x: 10, y: 5, z: 15 }
             }
@@ -1077,8 +1077,8 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
-            type: 'relationship',
-            label: 'foo',
+            elementType: 'relationship',
+            type: 'foo',
             properties: {
               bar: 'P10M5DT1S'
             }
@@ -1107,7 +1107,7 @@ describe('helpers', () => {
         const expected = {
           n1: {
             identity: 1,
-            type: 'node',
+            elementType: 'node',
             labels: ['foo'],
             properties: {
               bar: 3
@@ -1115,8 +1115,8 @@ describe('helpers', () => {
           },
           r1: {
             identity: 3,
-            type: 'relationship',
-            label: 'bom',
+            elementType: 'relationship',
+            type: 'bom',
             start: 1,
             end: 2,
             properties: {
@@ -1125,7 +1125,7 @@ describe('helpers', () => {
           },
           n2: {
             identity: 2,
-            type: 'node',
+            elementType: 'node',
             labels: ['bam'],
             properties: {
               bar: '1970-01-01'
@@ -1157,7 +1157,7 @@ describe('helpers', () => {
             length: 1,
             start: {
               identity: 1,
-              type: 'node',
+              elementType: 'node',
               labels: ['foo'],
               properties: {
                 bar: 3
@@ -1165,7 +1165,7 @@ describe('helpers', () => {
             },
             end: {
               identity: 2,
-              type: 'node',
+              elementType: 'node',
               labels: ['bam'],
               properties: {
                 bar: '1970-01-01'
@@ -1175,7 +1175,7 @@ describe('helpers', () => {
               {
                 start: {
                   identity: 1,
-                  type: 'node',
+                  elementType: 'node',
                   labels: ['foo'],
                   properties: {
                     bar: 3
@@ -1183,8 +1183,8 @@ describe('helpers', () => {
                 },
                 relationship: {
                   identity: 3,
-                  type: 'relationship',
-                  label: 'bom',
+                  elementType: 'relationship',
+                  type: 'bom',
                   start: 1,
                   end: 2,
                   properties: {
@@ -1193,7 +1193,7 @@ describe('helpers', () => {
                 },
                 end: {
                   identity: 2,
-                  type: 'node',
+                  elementType: 'node',
                   labels: ['bam'],
                   properties: {
                     bar: '1970-01-01'

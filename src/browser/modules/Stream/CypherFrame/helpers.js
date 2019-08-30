@@ -26,7 +26,6 @@ import {
   isObjectLike,
   lowerCase,
   map,
-  omit,
   reduce
 } from 'lodash-es'
 
@@ -340,18 +339,12 @@ function mapNeo4jValuesToPlainValues (values) {
   }
 
   // could be a Node or Relationship
-  const type = lowerCase(get(values, 'constructor.name', ''))
+  const elementType = lowerCase(get(values, 'constructor.name', ''))
 
-  if (includes(['relationship', 'node'], type)) {
-    const labels =
-      type === 'relationship'
-        ? { label: get(values, 'type') }
-        : { labels: get(values, 'labels', []) }
-
+  if (includes(['relationship', 'node'], elementType)) {
     return {
-      type,
-      ...labels,
-      ...mapNeo4jValuesToPlainValues(omit(values, ['type', 'labels']))
+      elementType,
+      ...mapNeo4jValuesToPlainValues({ ...values })
     }
   }
 
