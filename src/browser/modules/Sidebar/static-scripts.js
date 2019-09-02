@@ -32,7 +32,8 @@ import {
 const mapFavoritesStateToProps = state => {
   const scripts = mapOldFavoritesAndFolders(
     favorites.getFavorites(state),
-    folders.getFolders(state)
+    folders.getFolders(state),
+    ({ isStatic }) => isStatic
   )
 
   return {

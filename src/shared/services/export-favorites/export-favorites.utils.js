@@ -40,17 +40,22 @@ import { SLASH, CYPHER_FILE_EXTENSION } from './export-favorites.constants'
 
 /**
  * Converts old user favorites into new structure
- * @param     {Object[]}    favorites
- * @param     {Object[]}    folders
- * @return    {Object[]}                    new user favorites objects ("my scripts")
+ * @param     {Object[]}            favorites
+ * @param     {Object[]}            folders
+ * @param     {Function<boolean>}   isAllowed   checks if a favorite should be allowed
+ * @return    {Object[]}                        new user favorites objects ("my scripts")
  */
-export function mapOldFavoritesAndFolders (favorites, folders) {
+export function mapOldFavoritesAndFolders (
+  favorites,
+  folders,
+  isAllowed = isNonStatic
+) {
   const oldFoldersMap = new Map(
-    map(filter(folders, isNonStatic), folder => [folder.id, folder])
+    map(filter(folders, isAllowed), folder => [folder.id, folder])
   )
   const oldFilteredFavorites = filter(
     favorites,
-    favorite => isNonStatic(favorite) && hasContent(favorite)
+    favorite => isAllowed(favorite) && hasContent(favorite)
   )
 
   return map(oldFilteredFavorites, favorite => {
