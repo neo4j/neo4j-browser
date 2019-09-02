@@ -151,3 +151,7 @@ export function mapNewFavoritesToOld (newFavorites, update = {}) {
     )
   )
 }
+
+export function updateFolder (folder, update, allFolders) {
+  return [...without(allFolders, folder), { ...folder, ...update }]
+}

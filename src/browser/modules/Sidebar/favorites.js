@@ -35,7 +35,8 @@ import {
   folderHasRemainingFavorites,
   getFirstFavorite,
   getFavoriteIds,
-  getFolderFromPath
+  getFolderFromPath,
+  updateFolder
 } from './favorites.utils'
 
 const mapFavoritesStateToProps = state => {
@@ -83,7 +84,9 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
 
     if (sourceFolder && payload.isFolderName) {
       dispatch(
-        foldersDuck.updateFolders([{ ...sourceFolder, name: folderName }])
+        foldersDuck.updateFolders(
+          updateFolder(sourceFolder, { name: folderName }, allFolders)
+        )
       )
 
       return
