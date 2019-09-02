@@ -22,6 +22,7 @@ import uuid from 'uuid'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { getBrowserName } from 'services/utils'
 import { folders } from './staticScripts'
+import { kebabCase } from 'lodash-es'
 
 export const NAME = 'folders'
 export const LOAD_FOLDERS = 'folders/LOAD_FOLDERS'
@@ -44,8 +45,8 @@ const mergeFolders = (list1, list2) => {
   )
 }
 
-export const addFolder = () => {
-  return { type: ADD_FOLDER }
+export const addFolder = (id, name) => {
+  return { type: ADD_FOLDER, id, name }
 }
 export const updateFolders = folders => {
   return { type: UPDATE_FOLDERS, folders }
@@ -72,7 +73,7 @@ export default function reducer (state = initialState, action) {
     case REMOVE_FOLDER:
       return state.filter(folder => folder.id !== action.id)
     case ADD_FOLDER:
-      return state.concat([{ id: uuid.v4(), name: 'Unnamed Folder' }])
+      return state.concat([{ id: action.id, name: action.name }])
     case USER_CLEAR:
       return initialState
     default:
