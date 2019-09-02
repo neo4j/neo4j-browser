@@ -24,14 +24,16 @@ import {
   join,
   map,
   omit,
-  some,
   split,
   startsWith,
   tail,
   trim,
   without
 } from 'lodash-es'
-import { omitScriptPathPrefix } from '@relate-by-ui/saved-scripts'
+import {
+  getScriptDisplayName,
+  omitScriptPathPrefix
+} from '@relate-by-ui/saved-scripts'
 
 import { SLASH } from 'shared/services/export-favorites'
 import arrayHasItems from 'shared/utils/array-has-items'
@@ -77,7 +79,7 @@ export function getFolderFavorites (folderId, allFavorites) {
 }
 
 /**
- * Returns all favorites not present in first arg
+ * Returns all favorites for a given folder not present in first list
  * @param     {string}      folderId
  * @param     {Object[]}    favorites
  * @param     {Object[]}    allFavorites
@@ -104,33 +106,21 @@ export function generateFolderNameAndIdForPath (path) {
 }
 
 /**
- * Restores an array of broken favorites
- * - For example drag n drop returns array of objects containing only id
- * @param     {Object[]}    brokenFavorites
- * @param     {Object[]}    allFavorites
- * @return    {Object[]}
- */
-export function restoreBrokenFavorites (brokenFavorites, allFavorites) {
-  return filter(allFavorites, ({ id }) =>
-    some(brokenFavorites, favorite => favorite.id === id)
-  )
-}
-
-/**
  * Adds a name comment on first line of query
- * @param     {string}    content
- * @param     {string}    name
+ * @param     {string}    contents
+ * @param     {string}    newName
  * @return    {string}
  */
-export function addNameComment (content, name) {
-  const parts = split(content, '\n')
-  const first = trim(head(parts))
+export function addNameComment (contents, newName) {
+  const parts = split(contents, '\n')
+  const first = trim(head(parts) || '')
+  const oldName = trim(getScriptDisplayName({ contents }))
 
-  if (startsWith(first, '//')) {
-    return join([`// ${name}`, ...tail(parts)], '\n')
+  if (startsWith(first, '//') && first === `// ${oldName}`) {
+    return join([`// ${newName}`, ...tail(parts)], '\n')
   }
 
-  return join([`// ${name}`, ...parts], '\n')
+  return join([`// ${newName}`, ...parts], '\n')
 }
 
 /**
@@ -153,5 +143,8 @@ export function mapNewFavoritesToOld (newFavorites, update = {}) {
 }
 
 export function updateFolder (folder, update, allFolders) {
-  return [...without(allFolders, folder), { ...folder, ...update }]
+  return [
+    ...filter(allFolders, ({ id }) => folder.id !== id),
+    { ...folder, ...update }
+  ]
 }

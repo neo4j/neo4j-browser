@@ -31,7 +31,6 @@ import {
 import {
   generateFolderNameAndIdForPath,
   mapNewFavoritesToOld,
-  restoreBrokenFavorites,
   folderHasRemainingFavorites,
   getFirstFavorite,
   getFavoriteIds,
@@ -128,19 +127,13 @@ const mergeProps = (stateProps, dispatchProps) => {
     ...stateProps,
     ...dispatchProps,
     onExportScripts: () => dispatchProps.onExportScripts(stateProps.scripts),
-    onUpdateFolder (favorites, payload) {
-      const restoredFavorites = restoreBrokenFavorites(
+    onUpdateFolder: (favorites, payload) =>
+      dispatchProps.onUpdateFolder(
         favorites,
-        stateProps.scripts
-      )
-
-      return dispatchProps.onUpdateFolder(
-        restoredFavorites,
         payload,
         stateProps.scripts,
         stateProps.folders
       )
-    }
   }
 }
 const Favorites = withBus(
