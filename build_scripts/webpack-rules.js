@@ -98,7 +98,7 @@ module.exports = [
     use: ['style-loader', 'css-loader']
   },
   {
-    test: /\.svg$/,
+    test: /\.(svg|png)/,
     use:
       'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
     exclude: [path.resolve(helpers.browserPath, 'icons')]
