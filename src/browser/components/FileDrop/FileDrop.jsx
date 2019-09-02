@@ -35,7 +35,6 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import {
   createLoadFavoritesPayload,
-  getExistingFoldersFromNames,
   getFolderNamesFromFavorites,
   getMissingFoldersFromNames,
   readZipFiles
@@ -207,20 +206,16 @@ const mapDispatchToProps = dispatch => {
     },
     saveManyFavorites: (favoritesToAdd, allFolders) => {
       const folderNames = getFolderNamesFromFavorites(favoritesToAdd)
-      const existingFolders = getExistingFoldersFromNames(
-        folderNames,
-        allFolders
-      )
       const missingFolders = getMissingFoldersFromNames(folderNames, allFolders)
-      const allFoldersToLoad = [...existingFolders, ...missingFolders]
+      const allFoldersIncludingMissing = [...allFolders, ...missingFolders]
 
       if (arrayHasItems(missingFolders)) {
-        dispatch(foldersDuck.loadFolders(allFoldersToLoad))
+        dispatch(foldersDuck.loadFolders(allFoldersIncludingMissing))
       }
 
       dispatch(
         favoritesDuck.loadFavorites(
-          createLoadFavoritesPayload(favoritesToAdd, allFoldersToLoad)
+          createLoadFavoritesPayload(favoritesToAdd, allFoldersIncludingMissing)
         )
       )
     },

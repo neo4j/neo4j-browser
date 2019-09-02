@@ -16,6 +16,7 @@
  */
 
 import {
+  assign,
   compact,
   endsWith,
   filter,
@@ -23,9 +24,7 @@ import {
   includes,
   join,
   keyBy,
-  last,
   map,
-  replace,
   reverse,
   split,
   startsWith,
@@ -34,7 +33,6 @@ import {
 } from 'lodash-es'
 import JSZip from 'jszip'
 import uuid from 'uuid'
-import { getScriptDisplayName } from '@relate-by-ui/saved-scripts'
 
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 
@@ -45,16 +43,6 @@ import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
  */
 export function getFolderNamesFromFavorites (favorites) {
   return compact(map(favorites, 'folderName'))
-}
-
-/**
- * Returns all folders who have a matching name
- * @param     {string[]}    folderNames
- * @param     {Object[]}    allFolders
- * @return    {Object[]}
- */
-export function getExistingFoldersFromNames (folderNames, allFolders) {
-  return filter(allFolders, ({ name }) => includes(folderNames, name))
 }
 
 /**
@@ -84,14 +72,17 @@ export function getMissingFoldersFromNames (folderNames, allFolders) {
 export function createLoadFavoritesPayload (favoritesToAdd, allFolders) {
   const allFavoriteFolders = keyBy(allFolders, 'name')
 
-  return map(favoritesToAdd, ({ id, content, folderName }) => ({
-    id,
-    content,
-    folder:
+  return map(favoritesToAdd, ({ id, contents, folderName }) =>
+    assign(
+      {
+        id,
+        content: contents
+      },
       folderName in allFavoriteFolders
-        ? allFavoriteFolders[folderName].id
-        : undefined
-  }))
+        ? { folder: allFavoriteFolders[folderName].id }
+        : {}
+    )
+  )
 }
 
 /**
@@ -102,8 +93,10 @@ export function createLoadFavoritesPayload (favoritesToAdd, allFolders) {
 export async function readZipFiles (uploads) {
   const archives = await Promise.all(map(uploads, JSZip.loadAsync))
   const allFiles = flatMap(archives, ({ files }) => values(files))
-  const onlyCypherFiles = filter(allFiles, ({ name }) =>
-    endsWith(name, CYPHER_FILE_EXTENSION)
+  const onlyCypherFiles = filter(
+    allFiles,
+    ({ name }) =>
+      !startsWith(name, '__MACOSX') && endsWith(name, CYPHER_FILE_EXTENSION)
   )
 
   return Promise.all(
@@ -118,7 +111,7 @@ export async function readZipFiles (uploads) {
  * @param     {File}        file
  * @return    {Function}            user scripts mapper
  */
-function fileContentToFavoriteFactory (file) {
+export function fileContentToFavoriteFactory (file) {
   /**
    * Maps .zip archive file contents to a user script object
    * @param     {String}      contents    file contents
@@ -126,22 +119,11 @@ function fileContentToFavoriteFactory (file) {
    */
   return contents => {
     const pathWithoutLeadingSlash = startsWith(file.name, '/')
-      ? file.name.slice(0, 1)
+      ? file.name.slice(1)
       : file.name
     const pathParts = split(pathWithoutLeadingSlash, '/')
-    const name = replace(last(pathParts), CYPHER_FILE_EXTENSION, '')
     const folderName = join(reverse(tail(reverse(pathParts))), '/')
-    const displayName = getScriptDisplayName({ contents })
 
-    if (name && name !== displayName) {
-      return {
-        id: uuid.v4(),
-        name,
-        folderName,
-        content: contents
-      }
-    }
-
-    return { id: uuid.v4(), content: contents, folderName }
+    return { id: uuid.v4(), contents, folderName }
   }
 }

@@ -1195,10 +1195,10 @@
     react-dom "^16.8.6"
     react-placeholder "^3.0.2"
 
-"@relate-by-ui/saved-scripts@^1.0.1":
-  version "1.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/saved-scripts/-/saved-scripts-1.0.1.tgz#1760025381f5e2705ac0f607c479e51de44cbf62"
-  integrity sha1-F2ACU4H14nBawPYHxHnlHeRMv2I=
+"@relate-by-ui/saved-scripts@^1.0.2":
+  version "1.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/saved-scripts/-/saved-scripts-1.0.2.tgz#e527c80cbc90f7f5364aed544db173281f7f608e"
+  integrity sha1-5SfIDLyQ9/U2Su1UTbFzKB9/YI4=
   dependencies:
     "@emotion/core" "10.0.10"
     "@emotion/styled" "10.0.10"

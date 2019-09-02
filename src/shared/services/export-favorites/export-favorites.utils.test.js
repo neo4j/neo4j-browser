@@ -21,22 +21,22 @@ import { mapOldFavoritesAndFolders } from './export-favorites.utils'
 describe('user-favorites.utils', () => {
   describe('mapOldFavoritesAndFolders', () => {
     const oldFavorites = [
-      { folder: '', content: 'foo' },
-      { folder: 'bar', content: 'baz' },
-      { folder: 'bar', content: 'bam' },
-      { folder: 'bom', content: 'apa' }
+      { folder: '', content: 'foo', id: '1' },
+      { folder: 'bar', content: 'baz', id: '2' },
+      { folder: 'bar', content: 'bam', id: '3' },
+      { folder: 'bom', content: 'apa', id: '4' }
     ]
     const oldFavoritesWithStatic = [
-      { folder: '', content: 'foo' },
-      { folder: 'bar', content: 'baz', isStatic: true },
-      { folder: 'bar', content: 'bam' },
-      { folder: 'bom', content: 'apa' }
+      { folder: '', content: 'foo', id: '1' },
+      { folder: 'bar', content: 'baz', isStatic: true, id: '2' },
+      { folder: 'bar', content: 'bam', id: '3' },
+      { folder: 'bom', content: 'apa', id: '4' }
     ]
     const oldFavoritesWithEmpty = [
-      { folder: '', content: '' },
-      { folder: 'bar', content: 'baz' },
-      { folder: 'bar', content: 'bam' },
-      { folder: 'bom', content: 'apa' }
+      { folder: '', content: '', id: '1' },
+      { folder: 'bar', content: 'baz', id: '2' },
+      { folder: 'bar', content: 'bam', id: '3' },
+      { folder: 'bom', content: 'apa', id: '4' }
     ]
     const oldFolders = [{ id: 'bar', name: 'bar' }, { id: 'bom', name: 'bom' }]
     const oldFoldersWithStatic = [
@@ -46,10 +46,25 @@ describe('user-favorites.utils', () => {
 
     test('should map old favorites to new', () => {
       const expected = [
-        { path: SLASH, contents: 'foo' },
-        { path: `${SLASH}bar`, contents: 'baz' },
-        { path: `${SLASH}bar`, contents: 'bam' },
-        { path: `${SLASH}bom`, contents: 'apa' }
+        { path: SLASH, contents: 'foo', id: '1' },
+        {
+          path: `${SLASH}bar`,
+          contents: 'baz',
+          id: '2',
+          folder: { id: 'bar', name: 'bar' }
+        },
+        {
+          path: `${SLASH}bar`,
+          contents: 'bam',
+          id: '3',
+          folder: { id: 'bar', name: 'bar' }
+        },
+        {
+          path: `${SLASH}bom`,
+          contents: 'apa',
+          id: '4',
+          folder: { id: 'bom', name: 'bom' }
+        }
       ]
 
       expect(mapOldFavoritesAndFolders(oldFavorites, oldFolders)).toEqual(
@@ -59,9 +74,19 @@ describe('user-favorites.utils', () => {
 
     test('should ignore old static favorites', () => {
       const expected = [
-        { path: SLASH, contents: 'foo' },
-        { path: `${SLASH}bar`, contents: 'bam' },
-        { path: `${SLASH}bom`, contents: 'apa' }
+        { path: SLASH, contents: 'foo', id: '1' },
+        {
+          path: `${SLASH}bar`,
+          contents: 'bam',
+          id: '3',
+          folder: { id: 'bar', name: 'bar' }
+        },
+        {
+          path: `${SLASH}bom`,
+          contents: 'apa',
+          id: '4',
+          folder: { id: 'bom', name: 'bom' }
+        }
       ]
 
       expect(
@@ -71,9 +96,24 @@ describe('user-favorites.utils', () => {
 
     test('should ignore old empty favorites', () => {
       const expected = [
-        { path: `${SLASH}bar`, contents: 'baz' },
-        { path: `${SLASH}bar`, contents: 'bam' },
-        { path: `${SLASH}bom`, contents: 'apa' }
+        {
+          path: `${SLASH}bar`,
+          contents: 'baz',
+          id: '2',
+          folder: { id: 'bar', name: 'bar' }
+        },
+        {
+          path: `${SLASH}bar`,
+          contents: 'bam',
+          id: '3',
+          folder: { id: 'bar', name: 'bar' }
+        },
+        {
+          path: `${SLASH}bom`,
+          contents: 'apa',
+          id: '4',
+          folder: { id: 'bom', name: 'bom' }
+        }
       ]
 
       expect(
@@ -83,10 +123,20 @@ describe('user-favorites.utils', () => {
 
     test('should remove old static folders', () => {
       const expected = [
-        { path: SLASH, contents: 'foo' },
-        { path: `${SLASH}bar`, contents: 'baz' },
-        { path: `${SLASH}bar`, contents: 'bam' },
-        { path: `${SLASH}`, contents: 'apa' }
+        { path: SLASH, contents: 'foo', id: '1' },
+        {
+          path: `${SLASH}bar`,
+          contents: 'baz',
+          id: '2',
+          folder: { id: 'bar', name: 'bar' }
+        },
+        {
+          path: `${SLASH}bar`,
+          contents: 'bam',
+          id: '3',
+          folder: { id: 'bar', name: 'bar' }
+        },
+        { path: `${SLASH}`, contents: 'apa', id: '4' }
       ]
 
       expect(

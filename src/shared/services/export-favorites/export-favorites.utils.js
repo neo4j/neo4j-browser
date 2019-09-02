@@ -60,13 +60,17 @@ export function mapOldFavoritesAndFolders (
 
   return map(oldFilteredFavorites, favorite => {
     const folder = oldFoldersMap.get(favorite.folder)
-
-    return {
+    const newFavorite = {
       id: favorite.id,
       contents: favorite.content,
-      path: addScriptPathPrefix(SLASH, get(folder, 'name', '')),
-      folder
+      path: addScriptPathPrefix(SLASH, get(folder, 'name', ''))
     }
+
+    if (folder) {
+      return { ...newFavorite, folder }
+    }
+
+    return newFavorite
   })
 }
 
