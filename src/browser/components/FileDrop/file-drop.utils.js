@@ -16,11 +16,13 @@
  */
 
 import {
+  compact,
   endsWith,
   filter,
   flatMap,
+  includes,
   join,
-  kebabCase,
+  keyBy,
   last,
   map,
   replace,
@@ -31,26 +33,65 @@ import {
   values
 } from 'lodash-es'
 import JSZip from 'jszip'
-import {
-  addScriptPathPrefix,
-  getScriptDisplayName
-} from '@relate-by-ui/saved-scripts'
+import uuid from 'uuid'
+import { getScriptDisplayName } from '@relate-by-ui/saved-scripts'
 
-import { SLASH, CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 
 /**
  * Extracts folders from favorites
  * @param     {Object[]}    favorites
+ * @return    {string[]}
+ */
+export function getFolderNamesFromFavorites (favorites) {
+  return compact(map(favorites, 'folderName'))
+}
+
+/**
+ * Returns all folders who have a matching name
+ * @param     {string[]}    folderNames
+ * @param     {Object[]}    allFolders
  * @return    {Object[]}
  */
-export function getFoldersFromFavorites (favorites) {
+export function getExistingFoldersFromNames (folderNames, allFolders) {
+  return filter(allFolders, ({ name }) => includes(folderNames, name))
+}
+
+/**
+ * Returns new folder objects for those who do not have a matching name
+ * @param     {string[]}    folderNames
+ * @param     {Object[]}    allFolders
+ * @return    {Object[]}
+ */
+export function getMissingFoldersFromNames (folderNames, allFolders) {
+  const existingNames = map(allFolders, 'name')
+
   return map(
-    filter(favorites, ({ folder }) => Boolean(folder)),
-    ({ folder }) => ({
-      id: kebabCase(folder),
-      name: folder
+    filter(folderNames, folderName => !includes(existingNames, folderName)),
+    name => ({
+      name,
+      id: uuid.v4()
     })
   )
+}
+
+/**
+ * Creates a LOAD_FAVORITES payload complete with folder IDs when applicable
+ * @param     {Object[]}    favoritesToAdd
+ * @param     {Object[]}    allFolders
+ * @return    {Object[]}
+ */
+export function createLoadFavoritesPayload (favoritesToAdd, allFolders) {
+  const allFavoriteFolders = keyBy(allFolders, 'name')
+
+  return map(favoritesToAdd, ({ id, content, folderName }) => ({
+    id,
+    content,
+    folder:
+      folderName in allFavoriteFolders
+        ? allFavoriteFolders[folderName].id
+        : undefined
+  }))
 }
 
 /**
@@ -89,20 +130,18 @@ function fileContentToFavoriteFactory (file) {
       : file.name
     const pathParts = split(pathWithoutLeadingSlash, '/')
     const name = replace(last(pathParts), CYPHER_FILE_EXTENSION, '')
-    const folder = addScriptPathPrefix(
-      SLASH,
-      join(reverse(tail(reverse(pathParts))), '/')
-    )
+    const folderName = join(reverse(tail(reverse(pathParts))), '/')
     const displayName = getScriptDisplayName({ contents })
 
     if (name && name !== displayName) {
       return {
+        id: uuid.v4(),
         name,
-        folder,
+        folderName,
         content: contents
       }
     }
 
-    return { content: contents, folder }
+    return { id: uuid.v4(), content: contents, folderName }
   }
 }

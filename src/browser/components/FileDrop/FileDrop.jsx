@@ -25,14 +25,21 @@ import SVGInline from 'react-svg-inline'
 import { every } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
-import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
+import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
 import { parseGrass } from 'shared/services/grassUtils'
 import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import {
   showErrorMessage,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { getFoldersFromFavorites, readZipFiles } from './file-drop.utils'
+import {
+  createLoadFavoritesPayload,
+  getExistingFoldersFromNames,
+  getFolderNamesFromFavorites,
+  getMissingFoldersFromNames,
+  readZipFiles
+} from './file-drop.utils'
 
 import {
   StyledFileDrop,
@@ -42,6 +49,7 @@ import {
   StyledFileDropActionButton
 } from './styled'
 import icon from 'icons/task-list-download.svg'
+import arrayHasItems from '../../../shared/utils/array-has-items'
 
 export function FileDrop (props) {
   const [fileHoverState, setFileHoverState] = useState(false)
@@ -189,14 +197,32 @@ export function FileDrop (props) {
   )
 }
 
+const mapStateToProps = state => ({
+  folders: foldersDuck.getFolders(state)
+})
 const mapDispatchToProps = dispatch => {
   return {
     saveCypherToFavorites: file => {
-      dispatch(addFavorite(file))
+      dispatch(favoritesDuck.addFavorite(file))
     },
-    saveManyFavorites: favorites => {
-      const folders = getFoldersFromFavorites(favorites)
-      console.log('saveManyFavorites', favorites, folders)
+    saveManyFavorites: (favoritesToAdd, allFolders) => {
+      const folderNames = getFolderNamesFromFavorites(favoritesToAdd)
+      const existingFolders = getExistingFoldersFromNames(
+        folderNames,
+        allFolders
+      )
+      const missingFolders = getMissingFoldersFromNames(folderNames, allFolders)
+      const allFoldersToLoad = [...existingFolders, ...missingFolders]
+
+      if (arrayHasItems(missingFolders)) {
+        dispatch(foldersDuck.loadFolders(allFoldersToLoad))
+      }
+
+      dispatch(
+        favoritesDuck.loadFavorites(
+          createLoadFavoritesPayload(favoritesToAdd, allFoldersToLoad)
+        )
+      )
     },
     importGrass: file => {
       const parsedGrass = parseGrass(file)
@@ -209,10 +235,18 @@ const mapDispatchToProps = dispatch => {
     dispatchErrorMessage: message => dispatch(showErrorMessage(message))
   }
 }
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...stateProps,
+  ...dispatchProps,
+  saveManyFavorites: favorites =>
+    dispatchProps.saveManyFavorites(favorites, stateProps.folders),
+  ...ownProps
+})
 
 export default withBus(
   connect(
-    null,
-    mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
   )(FileDrop)
 )
