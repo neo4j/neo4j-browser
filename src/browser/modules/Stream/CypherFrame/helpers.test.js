@@ -32,7 +32,8 @@ import {
   initialView,
   extractRecordsToResultArray,
   flattenGraphItemsInResultArray,
-  stringifyResultArray
+  stringifyResultArray,
+  recordToJSONMapper
 } from './helpers'
 import { stringModifier, csvFormat } from 'services/bolt/cypherTypesFormatting'
 
@@ -724,6 +725,512 @@ describe('helpers', () => {
           JSON.stringify({ prop: [{ x: 1 }, { rel: 1 }, { y: 2 }] })
         ] // <--
       ])
+    })
+  })
+
+  describe('recordToJSONMapper', () => {
+    describe('Nodes', () => {
+      test('handles integer values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], { bar: new neo4j.int(3) })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: 3
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles string values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], { bar: 'baz' })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: 'baz'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles date values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.types.Date(1970, 1, 1)
+        })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: '1970-01-01'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles time values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.types.Time(11, 1, 12, 0, 0)
+        })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: '11:01:12Z'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles local time values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.types.LocalTime(11, 1, 12, 0)
+        })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: '11:01:12'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles datetime values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.types.DateTime(1970, 1, 1, 11, 1, 12, 0, 0)
+        })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: '1970-01-01T11:01:12Z'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles local datetime values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.types.LocalDateTime(1970, 1, 1, 11, 1, 12, 0)
+        })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: '1970-01-01T11:01:12'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles point values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.types.Point(1, 10, 5, 15)
+        })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: { srid: 1, x: 10, y: 5, z: 15 }
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles duration values', () => {
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.types.Duration(10, 5, 1, 0)
+        })
+        const record = new neo4j.types.Record(['n'], [node])
+        const expected = {
+          n: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: 'P10M5DT1S'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+    })
+
+    describe('Relationships', () => {
+      test('handles integer values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.int(3)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: 3
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles string values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: 'baz'
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: 'baz'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles date values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.types.Date(1970, 1, 1)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: '1970-01-01'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles time values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.types.Time(11, 1, 12, 0, 0)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: '11:01:12Z'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles local time values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.types.LocalTime(11, 1, 12, 0)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: '11:01:12'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles datetime values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.types.DateTime(1970, 1, 1, 11, 1, 12, 0, 0)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: '1970-01-01T11:01:12Z'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles local datetime values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.types.LocalDateTime(1970, 1, 1, 11, 1, 12, 0)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: '1970-01-01T11:01:12'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles point values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.types.Point(1, 10, 5, 15)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: { srid: 1, x: 10, y: 5, z: 15 }
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles duration values', () => {
+        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
+          bar: new neo4j.types.Duration(10, 5, 1, 0)
+        })
+        const record = new neo4j.types.Record(['r'], [relationship])
+        const expected = {
+          r: {
+            identity: 1,
+            start: 2,
+            end: 3,
+            elementType: 'relationship',
+            type: 'foo',
+            properties: {
+              bar: 'P10M5DT1S'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+    })
+
+    describe('Nodes and Relationships', () => {
+      test('Node -> Relationship -> Node', () => {
+        const node1 = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.int(3)
+        })
+        const relationship = new neo4j.types.Relationship(3, 1, 2, 'bom', {
+          bar: 'apa'
+        })
+        const node2 = new neo4j.types.Node(2, ['bam'], {
+          bar: new neo4j.types.Date(1970, 1, 1)
+        })
+        const record = new neo4j.types.Record(
+          ['n1', 'r1', 'n2'],
+          [node1, relationship, node2]
+        )
+        const expected = {
+          n1: {
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              bar: 3
+            }
+          },
+          r1: {
+            identity: 3,
+            elementType: 'relationship',
+            type: 'bom',
+            start: 1,
+            end: 2,
+            properties: {
+              bar: 'apa'
+            }
+          },
+          n2: {
+            identity: 2,
+            elementType: 'node',
+            labels: ['bam'],
+            properties: {
+              bar: '1970-01-01'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+    })
+
+    describe('Paths', () => {
+      test('MATCH p = (:Person)-[r]-(:Movie) RETURN p', () => {
+        const node1 = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.int(3)
+        })
+        const relationship = new neo4j.types.Relationship(3, 1, 2, 'bom', {
+          bar: 'apa'
+        })
+        const node2 = new neo4j.types.Node(2, ['bam'], {
+          bar: new neo4j.types.Date(1970, 1, 1)
+        })
+        const path = new neo4j.types.Path(node1, node2, [
+          new neo4j.types.PathSegment(node1, relationship, node2)
+        ])
+        const record = new neo4j.types.Record(['p'], [path])
+        const expected = {
+          p: {
+            length: 1,
+            start: {
+              identity: 1,
+              elementType: 'node',
+              labels: ['foo'],
+              properties: {
+                bar: 3
+              }
+            },
+            end: {
+              identity: 2,
+              elementType: 'node',
+              labels: ['bam'],
+              properties: {
+                bar: '1970-01-01'
+              }
+            },
+            segments: [
+              {
+                start: {
+                  identity: 1,
+                  elementType: 'node',
+                  labels: ['foo'],
+                  properties: {
+                    bar: 3
+                  }
+                },
+                relationship: {
+                  identity: 3,
+                  elementType: 'relationship',
+                  type: 'bom',
+                  start: 1,
+                  end: 2,
+                  properties: {
+                    bar: 'apa'
+                  }
+                },
+                end: {
+                  identity: 2,
+                  elementType: 'node',
+                  labels: ['bam'],
+                  properties: {
+                    bar: '1970-01-01'
+                  }
+                }
+              }
+            ]
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+    })
+
+    describe('Returns of raw data', () => {
+      test('RETURN {...data} as foo', () => {
+        const record = new neo4j.types.Record(
+          ['foo'],
+          [
+            {
+              data: [
+                new neo4j.int(1),
+                'car',
+                new neo4j.types.Point(1, 10, 5, 15),
+                new neo4j.types.Date(1970, 1, 1)
+              ]
+            }
+          ]
+        )
+        const expected = {
+          foo: {
+            data: [1, 'car', { srid: 1, x: 10, y: 5, z: 15 }, '1970-01-01']
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
     })
   })
 })
