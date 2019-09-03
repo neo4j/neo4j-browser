@@ -159,16 +159,17 @@ export default {
       cypher: guideCypher,
       intro: guideIntro,
       learn: guideLearn,
-      moviegraph: guideMovieGraph,
+      movieGraph: guideMovieGraph,
       movies: guideMovieGraph,
-      northwindgraph: guideNorthwindGraph,
+      northwindGraph: guideNorthwindGraph,
+      northwind: guideNorthwindGraph,
       iconography: guideIconography,
       start: guideStart,
       typography: guideTypography,
       unfound: guideUnfound,
       writecode: guideWritecode,
       // Commands only
-      queryTemplates: {
+      'query-template': {
         title: 'Query Templates',
         category: 'guides'
       }

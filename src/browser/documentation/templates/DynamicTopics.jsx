@@ -21,7 +21,15 @@
 import React from 'react'
 import { transformHelpTopicToCommand } from 'services/commandUtils'
 
-const unlistedCommands = ['unfound', 'unknown', 'help']
+// Avoid duplication and don list error-pages
+const unlistedCommands = [
+  'unfound',
+  'unknown',
+  'help',
+  'movies',
+  'northwind',
+  'guides'
+]
 
 const categorize = commands => {
   const categories = {
@@ -47,7 +55,7 @@ const categorize = commands => {
     }
 
     const newValue = {
-      command: cmd.replace('-', ' '),
+      command: cmd,
       title: value.title
     }
 

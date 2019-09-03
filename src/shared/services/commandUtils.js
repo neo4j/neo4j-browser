@@ -110,8 +110,12 @@ export const transformCommandToHelpTopic = inputStr =>
     .map(replaceSpaceWithDash)
     .map(snakeToCamel)[0]
 
-export const transformHelpTopicToCommand = inputStr =>
-  camelToSnake(inputStr, '-')
+export const transformHelpTopicToCommand = inputStr => {
+  if (inputStr.indexOf('-') > -1) {
+    return inputStr
+  }
+  return camelToSnake(inputStr, '-').replace('-', ' ')
+}
 
 const quotedRegex = /^"(.*)"|'(.*)'/
 const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
