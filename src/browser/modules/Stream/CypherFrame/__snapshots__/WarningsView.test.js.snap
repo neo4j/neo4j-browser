@@ -36,11 +36,11 @@ exports[`WarningsViews WarningsView does displays a warning 1`] = `
           class="styled__StyledDiv-sc-1dtvgs1-17 kkPWFM"
         >
           <pre
-            class="styled__StyledPreformattedArea-sc-1dtvgs1-28 fxWKEH"
+            class="styled__StyledPreformattedArea-sc-1dtvgs1-29 ezHXzL"
           >
             EXPLAIN MATCH xx3
             <br
-              class="styled__StyledBr-sc-1dtvgs1-27 bdFSvo"
+              class="styled__StyledBr-sc-1dtvgs1-28 bQIEoZ"
             />
                    
             ^
@@ -86,11 +86,11 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
           class="styled__StyledDiv-sc-1dtvgs1-17 kkPWFM"
         >
           <pre
-            class="styled__StyledPreformattedArea-sc-1dtvgs1-28 fxWKEH"
+            class="styled__StyledPreformattedArea-sc-1dtvgs1-29 ezHXzL"
           >
             EXPLAIN MATCH zz3
             <br
-              class="styled__StyledBr-sc-1dtvgs1-27 bdFSvo"
+              class="styled__StyledBr-sc-1dtvgs1-28 bQIEoZ"
             />
                    
             ^
@@ -127,11 +127,11 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
           class="styled__StyledDiv-sc-1dtvgs1-17 kkPWFM"
         >
           <pre
-            class="styled__StyledPreformattedArea-sc-1dtvgs1-28 fxWKEH"
+            class="styled__StyledPreformattedArea-sc-1dtvgs1-29 ezHXzL"
           >
             EXPLAIN MATCH zz3
             <br
-              class="styled__StyledBr-sc-1dtvgs1-27 bdFSvo"
+              class="styled__StyledBr-sc-1dtvgs1-28 bQIEoZ"
             />
                
             ^

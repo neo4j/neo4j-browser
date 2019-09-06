@@ -373,13 +373,14 @@ export class CypherFrame extends Component {
         this.getFrameContents(request, result, query)
       )
     const statusBar =
-      this.state.openView !== viewTypes.VISUALIZATION
+      this.state.openView !== viewTypes.VISUALIZATION &&
+      requestStatus !== 'error'
         ? this.getStatusbar(result)
         : null
 
     return (
       <FrameTemplate
-        sidebar={this.sidebar}
+        sidebar={requestStatus !== 'error' ? this.sidebar : null}
         header={frame}
         contents={frameContents}
         statusbar={statusBar}

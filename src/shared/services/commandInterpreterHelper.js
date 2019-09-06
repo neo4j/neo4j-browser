@@ -48,7 +48,10 @@ import {
   unsuccessfulCypher,
   SINGLE_COMMAND_QUEUED
 } from 'shared/modules/commands/commandsDuck'
-import { handleParamsCommand } from 'shared/modules/commands/helpers/params'
+import {
+  getParamName,
+  handleParamsCommand
+} from 'shared/modules/commands/helpers/params'
 import {
   handleGetConfigCommand,
   handleUpdateConfigCommand
@@ -117,13 +120,23 @@ const availableCommands = [
           put(updateQueryResult(action.requestId, res, 'success'))
           return true
         })
-        .catch(e => {
-          // Don't show error message bar if it's a sub command
+        .catch(error => {
+          // Don't show error message if it's a sub command
           if (!action.parentId) {
-            put(showErrorMessage(e.message))
+            put(
+              frames.add({
+                ...action,
+                error: {
+                  type: 'Syntax Error',
+                  message: error.message.substring('Error: '.length)
+                },
+                showHelpForCmd: getParamName(action, cmdchar),
+                type: 'error'
+              })
+            )
           }
-          put(updateQueryResult(action.requestId, e, 'error'))
-          throw e
+          put(updateQueryResult(action.requestId, error, 'error'))
+          throw error
         })
     }
   },
