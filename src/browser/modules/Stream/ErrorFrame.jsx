@@ -18,19 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
+
 import FrameTemplate from './FrameTemplate'
 import * as e from 'services/exceptionMessages'
-import { createErrorObject } from 'services/exceptions'
+import { createErrorObject, UnknownCommandError } from 'services/exceptions'
 import { errorMessageFormater } from './errorMessageFormater'
 import {
   StyledCypherErrorMessage,
   StyledHelpContent,
-  StyledH4,
+  StyledErrorH4,
   StyledPreformattedArea,
   StyledHelpDescription,
   StyledDiv,
   StyledHelpFrame
 } from './styled'
+import AutoExecButton from './auto-exec-button'
 
 export const ErrorView = ({ frame }) => {
   if (!frame) return null
@@ -41,18 +43,30 @@ export const ErrorView = ({ frame }) => {
     const eObj = createErrorObject(errorCode, error)
     errorContents = eObj.message
   }
-  const fullError = errorMessageFormater(errorCode, errorContents)
+  const fullError = errorMessageFormater(null, errorContents)
   return (
     <StyledHelpFrame>
       <StyledHelpContent>
         <StyledHelpDescription>
           <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-          <StyledH4>{errorCode}</StyledH4>
+          <StyledErrorH4>{errorCode}</StyledErrorH4>
         </StyledHelpDescription>
         <StyledDiv>
           <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>
         </StyledDiv>
       </StyledHelpContent>
+      {frame.showHelpForCmd ? (
+        <React.Fragment>
+          Use <AutoExecButton cmd={`help ${frame.showHelpForCmd}`} /> for more
+          information.
+        </React.Fragment>
+      ) : null}
+      {errorCode === UnknownCommandError.name ? (
+        <React.Fragment>
+          Use <AutoExecButton cmd={'help commands'} /> to list available
+          commands.
+        </React.Fragment>
+      ) : null}
     </StyledHelpFrame>
   )
 }

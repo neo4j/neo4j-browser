@@ -39,7 +39,9 @@ describe('Neo4j Browser', () => {
   })
   it('populates the editor when clicking the connect banner', () => {
     cy.get('[data-testid="disconnectedBannerCode"]').click()
-    cy.get('.ReactCodeMirror').should('contain', ':server connect')
+    cy.get('[data-testid="frameCommand"]')
+      .first()
+      .should('contain', ':server connect')
     cy.get(ClearEditorButton).click()
   })
   it('can connect', () => {

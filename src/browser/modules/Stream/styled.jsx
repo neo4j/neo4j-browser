@@ -246,6 +246,10 @@ export const StyledInfoMessage = styled(StyledCypherMessage)`
 
 export const StyledH4 = styled.h4``
 
+export const StyledErrorH4 = styled.h4`
+  display: inline-block;
+`
+
 export const StyledBr = styled.br``
 
 export const StyledPreformattedArea = styled.pre`

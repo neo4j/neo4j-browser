@@ -35,7 +35,7 @@ import { errorMessageFormater } from './../errorMessageFormater'
 import {
   StyledCypherErrorMessage,
   StyledHelpContent,
-  StyledH4,
+  StyledErrorH4,
   StyledPreformattedArea,
   StyledHelpDescription,
   StyledDiv,
@@ -54,14 +54,14 @@ export class ErrorsView extends Component {
     if (!error || !error.code) {
       return null
     }
-    const fullError = errorMessageFormater(error.code, error.message)
+    const fullError = errorMessageFormater(null, error.message)
 
     return (
       <StyledHelpFrame>
         <StyledHelpContent>
           <StyledHelpDescription>
             <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            <StyledH4>{error.code}</StyledH4>
+            <StyledErrorH4>{error.code}</StyledErrorH4>
           </StyledHelpDescription>
           <StyledDiv>
             <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>

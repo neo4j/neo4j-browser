@@ -3,7 +3,7 @@
 exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-32 hNrxzW"
+    class="styled__StyledStatsBar-sc-1dtvgs1-33 cjTact"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -15,7 +15,7 @@ exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-32 hNrxzW"
+    class="styled__StyledStatsBar-sc-1dtvgs1-33 cjTact"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -34,85 +34,85 @@ exports[`CodeViews CodeView displays request and response info if successful que
     class="styled__PaddedDiv-sc-1dtvgs1-6 ccSRli"
   >
     <table
-      class="styled__StyledTable-sc-1dtvgs1-45 gRxPNQ"
+      class="styled__StyledTable-sc-1dtvgs1-46 fTaAJu"
     >
       <tbody
-        class="styled__StyledTBody-sc-1dtvgs1-46 kjlJBA"
+        class="styled__StyledTBody-sc-1dtvgs1-47 bwJrql"
       >
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-49 dgZoom"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
+            class="styled__StyledStrongTd-sc-1dtvgs1-50 iVZzKL"
           >
             Server version
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
+            class="styled__StyledTd-sc-1dtvgs1-51 gDipvD"
           >
             xx1
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-49 dgZoom"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
+            class="styled__StyledStrongTd-sc-1dtvgs1-50 iVZzKL"
           >
             Server address
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
+            class="styled__StyledTd-sc-1dtvgs1-51 gDipvD"
           >
             xx2
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-49 dgZoom"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
+            class="styled__StyledStrongTd-sc-1dtvgs1-50 iVZzKL"
           >
             Query
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
+            class="styled__StyledTd-sc-1dtvgs1-51 gDipvD"
           >
             MATCH xx0
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-49 dgZoom"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
+            class="styled__StyledStrongTd-sc-1dtvgs1-50 iVZzKL"
           >
             Summary
             <div
-              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-47 eeYvUX"
+              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-48 jBrOTl"
               title="Expand section"
             />
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
+            class="styled__StyledTd-sc-1dtvgs1-51 gDipvD"
           >
             {,  "server": {,    "version": "xx1", ...
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-48 bVMTCr"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-49 dgZoom"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-49 cyBixT"
+            class="styled__StyledStrongTd-sc-1dtvgs1-50 iVZzKL"
           >
             Response
             <div
-              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-47 eeYvUX"
+              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-48 jBrOTl"
               title="Expand section"
             />
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-50 eFHdOJ"
+            class="styled__StyledTd-sc-1dtvgs1-51 gDipvD"
           >
             [,  {,    "res": "xx3" ...
           </td>
