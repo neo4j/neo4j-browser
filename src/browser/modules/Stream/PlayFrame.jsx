@@ -26,7 +26,10 @@ import Docs from '../Docs/Docs'
 import docs from '../../documentation'
 import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
-import { splitStringOnFirst } from 'services/commandUtils'
+import {
+  splitStringOnFirst,
+  transformCommandToHelpTopic
+} from 'services/commandUtils'
 import { ErrorsView } from './CypherFrame/ErrorsView'
 
 const {
@@ -96,10 +99,10 @@ export class PlayFrame extends Component {
         )
       })
     }
-    const topicInput = (
-      splitStringOnFirst(this.props.frame.cmd, ' ')[1] || 'start'
-    ).trim()
-    const guideName = topicInput.toLowerCase().replace(/\s|-/g, '')
+
+    const guideName = transformCommandToHelpTopic(
+      this.props.frame.cmd || 'start'
+    )
     const guide = chapters[guideName] || {}
 
     // Check if content exists
@@ -126,6 +129,9 @@ export class PlayFrame extends Component {
     // Not found remotely or locally
     // Try to find it remotely by name
     if (this.props.bus) {
+      const topicInput = (
+        splitStringOnFirst(this.props.frame.cmd, ' ')[1] || ''
+      ).trim()
       const action = fetchGuideFromWhitelistAction(topicInput)
       this.props.bus.self(action.type, action, res => {
         if (!res.success) {
