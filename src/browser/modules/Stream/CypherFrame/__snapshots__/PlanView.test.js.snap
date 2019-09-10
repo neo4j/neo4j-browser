@@ -3,26 +3,26 @@
 exports[`PlanViews PlanStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-33 styled__StyledOneRowStatsBar-sc-1dtvgs1-34 fVAUbt"
+    class="styled__StyledStatsBar-sc-1dtvgs1-23 styled__StyledOneRowStatsBar-sc-1dtvgs1-24 jGUkZy"
   >
     <div
-      class="styled__StyledLeftPartial-sc-1dtvgs1-43 Wnjnc"
+      class="styled__StyledLeftPartial-sc-1dtvgs1-33 kiemUR"
     >
       <div
         class="Ellipsis-sc-1dn9bou-0 gzqRPC"
       >
-        Cypher version:
+        Cypher version: 
         xx0
-        , planner:
+        , planner: 
         xx1
-        , runtime:
+        , runtime: 
         xx2
         .
          xx3 total db hits in 120 ms.
       </div>
     </div>
     <div
-      class="styled__StyledRightPartial-sc-1dtvgs1-42 ifFzJO"
+      class="styled__StyledRightPartial-sc-1dtvgs1-32 ghhzbn"
     >
       <ul
         class="styled__StyledFrameTitlebarButtonSection-ywjnrd-7 brRDvV"

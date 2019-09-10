@@ -6,13 +6,13 @@ exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
     class="Ellipsis-sc-1dn9bou-0 gzqRPC"
   >
     <span
-      class="styled__ErrorText-sc-1dtvgs1-30 kqUQfd"
+      class="styled__ErrorText-sc-1dtvgs1-20 fSEPRL"
       title="Test.Error: Test error description"
     >
       <i
         class="fa fa-exclamation-triangle IconContainer__I-sc-16whwc5-0 bXwiKG"
       />
-
+       
       Test.Error: Test error description
     </span>
   </div>
@@ -40,7 +40,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
           ERROR
         </div>
         <h4
-          class="styled__StyledErrorH4-sc-1dtvgs1-27 kqKuFe"
+          class="styled__StyledErrorH4-sc-1dtvgs1-17 DSsi"
         >
           Neo.ClientError.Procedure.ProcedureNotFound
         </h4>
@@ -49,7 +49,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
         class="styled__StyledDiv-sc-1dtvgs1-7 hvhkie"
       >
         <pre
-          class="styled__StyledPreformattedArea-sc-1dtvgs1-29 ezHXzL"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 kYkFhf"
         >
           not found
         </pre>
@@ -88,7 +88,7 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
           ERROR
         </div>
         <h4
-          class="styled__StyledErrorH4-sc-1dtvgs1-27 kqKuFe"
+          class="styled__StyledErrorH4-sc-1dtvgs1-17 DSsi"
         >
           Test.Error
         </h4>
@@ -97,7 +97,7 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
         class="styled__StyledDiv-sc-1dtvgs1-7 hvhkie"
       >
         <pre
-          class="styled__StyledPreformattedArea-sc-1dtvgs1-29 ezHXzL"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 kYkFhf"
         >
           Test error description
         </pre>
