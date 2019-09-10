@@ -44,6 +44,7 @@ export default class Carousel extends Component {
   constructor (props) {
     super(props)
     this.slides = this.props.slides || []
+    this.myRef = React.createRef()
   }
   onKeyDown (ev) {
     if (ev.keyCode === 37 && this.state.visibleSlide !== 0) {
@@ -59,9 +60,11 @@ export default class Carousel extends Component {
   next () {
     this.setState({ visibleSlide: this.state.visibleSlide + 1 })
     this.setState({ wasClicked: true })
+    this.myRef.current.scrollTo(0, 0)
   }
   prev () {
     this.setState({ visibleSlide: this.state.visibleSlide - 1 })
+    this.myRef.current.scrollTo(0, 0)
   }
   getSlide (slideNumber) {
     return this.slides[slideNumber]
@@ -120,7 +123,7 @@ export default class Carousel extends Component {
             </CarouselButton>
           </StyledCarouselButtonContainerInner>
         </StyledCarouselButtonContainer>
-        <SlideContainer>
+        <SlideContainer ref={this.myRef}>
           {withDirectives ? (
             <Directives content={this.getSlide(this.state.visibleSlide)} />
           ) : (
