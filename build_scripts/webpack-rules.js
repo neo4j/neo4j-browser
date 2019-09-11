@@ -23,7 +23,11 @@ const path = require('path')
 module.exports = [
   {
     test: /\.(js|jsx)$/,
-    exclude: /(node_modules)|(cypher-codemirror)|(test_utils)|(dist)/,
+    include: [
+      path.resolve('src'),
+      path.resolve('node_modules/@neo4j/browser-lambda-parser')
+    ],
+    // exclude: /(node_modules(?!:\/@neo4j))|(cypher-codemirror)|(test_utils)|(dist)/,
     use: 'babel-loader'
   },
   {
