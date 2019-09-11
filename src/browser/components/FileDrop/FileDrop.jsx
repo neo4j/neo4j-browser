@@ -90,7 +90,12 @@ export function FileDrop (props) {
   }
 
   const handleDragEnter = event => {
-    if (!fileHoverState && event.dataTransfer.items[0].kind === 'file') {
+    if (
+      !fileHoverState &&
+      event.dataTransfer.types &&
+      event.dataTransfer.types.length === 1 &&
+      event.dataTransfer.types[0] === 'Files'
+    ) {
       setFileHoverState(true)
     }
   }
