@@ -22,7 +22,6 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import SVGInline from 'react-svg-inline'
-import { every } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
@@ -133,10 +132,11 @@ export function FileDrop (props) {
       return
     }
 
-    if (every(files, ({ type }) => type === 'application/zip')) {
+    if (extension === 'zip') {
       readZipFiles(files)
         .then(saveManyFavorites)
         .then(resetState)
+
       return
     }
 

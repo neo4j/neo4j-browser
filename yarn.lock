@@ -1185,6 +1185,13 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
+"@neo4j/browser-lambda-parser@^1.0.3":
+  version "1.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j/browser-lambda-parser/-/browser-lambda-parser-1.0.3.tgz#d49675122aa673e0ed888e5959e4519d66cf20ff"
+  integrity sha1-1JZ1Eiqmc+DtiI5ZWeRRnWbPIP8=
+  dependencies:
+    nearley "2.18.0"
+
 "@relate-by-ui/css@^1.0.4":
   version "1.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/css/-/css-1.0.4.tgz#dedbae26f6775540e487632d8f036437068451de"
@@ -1195,10 +1202,10 @@
     react-dom "^16.8.6"
     react-placeholder "^3.0.2"
 
-"@relate-by-ui/saved-scripts@^1.0.2":
-  version "1.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/saved-scripts/-/saved-scripts-1.0.2.tgz#e527c80cbc90f7f5364aed544db173281f7f608e"
-  integrity sha1-5SfIDLyQ9/U2Su1UTbFzKB9/YI4=
+"@relate-by-ui/saved-scripts@^1.0.3":
+  version "1.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/saved-scripts/-/saved-scripts-1.0.3.tgz#291514a1a7e2d987b5d8caa336a419a5ec035ab5"
+  integrity sha1-KRUUoafi2Ye12MqjNqQZpewDWrU=
   dependencies:
     "@emotion/core" "10.0.10"
     "@emotion/styled" "10.0.10"
@@ -1211,13 +1218,6 @@
   dependencies:
     exenv "^1.2.2"
     prop-types "^15.6.2"
-
-"@neo4j/browser-lambda-parser@^1.0.3":
-  version "1.0.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j/browser-lambda-parser/-/browser-lambda-parser-1.0.3.tgz#d49675122aa673e0ed888e5959e4519d66cf20ff"
-  integrity sha1-1JZ1Eiqmc+DtiI5ZWeRRnWbPIP8=
-  dependencies:
-    nearley "2.18.0"
 
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.2"
@@ -3677,11 +3677,6 @@ discontinuous-range@1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/discontinuous-range/-/discontinuous-range-1.0.0.tgz#e38331f0844bba49b9a9cb71c771585aab1bc65a"
   integrity sha1-44Mx8IRLukm5qctxx3FYWqsbxlo=
-
-disposables@^1.0.1:
-  version "1.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/disposables/-/disposables-1.0.2.tgz#36c6a674475f55a2d6913567a601444e487b4b6e"
-  integrity sha1-NsamdEdfVaLWkTVnpgFETkh7S24=
 
 dlv@^1.1.0:
   version "1.1.2"
