@@ -32,7 +32,10 @@ module.exports = [
   },
   {
     test: /\.(png|gif|jpg|svg)$/,
-    include: [path.resolve(helpers.browserPath, 'modules')],
+    include: [
+      path.resolve(helpers.browserPath, 'modules'),
+      path.resolve('node_modules/@relate-by-ui/css')
+    ],
     use: 'file-loader?limit=20480&name=assets/[name]-[hash].[ext]'
   },
   {
@@ -102,7 +105,7 @@ module.exports = [
     use: ['style-loader', 'css-loader']
   },
   {
-    test: /\.(svg|png)/,
+    test: /\.svg$/,
     use:
       'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
     exclude: [path.resolve(helpers.browserPath, 'icons')]
