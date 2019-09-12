@@ -1308,16 +1308,17 @@
     prop-types "^15.7.2"
     react-is "^16.6.3"
 
-"@testing-library/dom@^5.6.1":
-  version "5.6.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/dom/-/dom-5.6.1.tgz#705a1cb4a039b877c1e69e916824038e837ab637"
-  integrity sha1-cFoctKA5uHfB5p6RaCQDjoN6tjc=
+"@testing-library/dom@^6.1.0":
+  version "6.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/dom/-/dom-6.2.0.tgz#6eeee738af12a2f02e74dc8cbadeaed1fc4223e5"
+  integrity sha1-bu7nOK8SovAudNyMut6u0fxCI+U=
   dependencies:
     "@babel/runtime" "^7.5.5"
     "@sheerun/mutationobserver-shim" "^0.3.2"
+    "@types/testing-library__dom" "^6.0.0"
     aria-query "3.0.0"
     pretty-format "^24.8.0"
-    wait-for-expect "^1.2.0"
+    wait-for-expect "^1.3.0"
 
 "@testing-library/react-hooks@^2.0.1":
   version "2.0.1"
@@ -1328,13 +1329,14 @@
     "@types/react" ">=16.9.0"
     "@types/react-test-renderer" ">=16.9.0"
 
-"@testing-library/react@^8.0.1":
-  version "8.0.9"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/react/-/react-8.0.9.tgz#1ecd96bc3471b06dd2f9763b6e53a7ace28a54a2"
-  integrity sha1-Hs2WvDRxsG3S+XY7blOnrOKKVKI=
+"@testing-library/react@^9.0.1":
+  version "9.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/react/-/react-9.1.4.tgz#4cc1a228a944c0f468ee501e7da1651d8bbd9902"
+  integrity sha1-TMGiKKlEwPRo7lAefaFlHYu9mQI=
   dependencies:
     "@babel/runtime" "^7.5.5"
-    "@testing-library/dom" "^5.6.1"
+    "@testing-library/dom" "^6.1.0"
+    "@types/testing-library__react" "^9.1.0"
 
 "@types/asap@^2.0.0":
   version "2.0.0"
@@ -1436,6 +1438,13 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
   integrity sha1-8aEee6uww8rWgQC+OB0eBkxo8fY=
 
+"@types/react-dom@*":
+  version "16.9.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-dom/-/react-dom-16.9.0.tgz#ba6ddb00bf5de700b0eb91daa452081ffccbfdea"
+  integrity sha1-um3bAL9d5wCw65HapFIIH/zL/eo=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-test-renderer@>=16.9.0":
   version "16.9.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-test-renderer/-/react-test-renderer-16.9.0.tgz#d60f530ecf4c906721511603cca711b4fa830d41"
@@ -1460,6 +1469,21 @@
   version "1.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha1-CoUdO9lkmPolwzq3J47TvWXwbD4=
+
+"@types/testing-library__dom@*", "@types/testing-library__dom@^6.0.0":
+  version "6.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/testing-library__dom/-/testing-library__dom-6.0.3.tgz#fb7f98d215de209a9c8ad677c13c2955a5b8a999"
+  integrity sha1-+3+Y0hXeIJqcitZ3wTwpVaW4qZk=
+  dependencies:
+    pretty-format "^24.3.0"
+
+"@types/testing-library__react@^9.1.0":
+  version "9.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/testing-library__react/-/testing-library__react-9.1.1.tgz#4bcb8bba54b07fbb6c084f2f00e7f9410e587c10"
+  integrity sha1-S8uLulSwf7tsCE8vAOf5QQ5YfBA=
+  dependencies:
+    "@types/react-dom" "*"
+    "@types/testing-library__dom" "*"
 
 "@types/yargs-parser@*":
   version "13.1.0"
@@ -6575,7 +6599,7 @@ jest-worker@^24.6.0, jest-worker@^24.9.0:
     merge-stream "^2.0.0"
     supports-color "^6.1.0"
 
-jest@^24.1.0:
+jest@^24.9.0:
   version "24.9.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jest/-/jest-24.9.0.tgz#987d290c05a08b52c56188c1002e368edb007171"
   integrity sha1-mH0pDAWgi1LFYYjBAC42jtsAcXE=
@@ -9059,7 +9083,7 @@ pretty-format@^23.0.1:
     ansi-regex "^3.0.0"
     ansi-styles "^3.2.0"
 
-pretty-format@^24.8.0, pretty-format@^24.9.0:
+pretty-format@^24.3.0, pretty-format@^24.8.0, pretty-format@^24.9.0:
   version "24.9.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/pretty-format/-/pretty-format-24.9.0.tgz#12fac31b37019a4eea3c11aa9a959eb7628aa7c9"
   integrity sha1-EvrDGzcBmk7qPBGqmpWet2KKp8k=
@@ -11367,7 +11391,7 @@ w3c-hr-time@^1.0.1:
   dependencies:
     browser-process-hrtime "^0.1.2"
 
-wait-for-expect@^1.2.0:
+wait-for-expect@^1.3.0:
   version "1.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/wait-for-expect/-/wait-for-expect-1.3.0.tgz#65241ce355425f907f5d127bdb5e72c412ff830c"
   integrity sha1-ZSQc41VCX5B/XRJ7215yxBL/gww=
