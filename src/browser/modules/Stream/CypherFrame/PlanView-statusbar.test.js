@@ -21,9 +21,7 @@
 /* global describe, test, expect */
 import React from 'react'
 import { render } from '@testing-library/react'
-import { v1 as neo4j } from 'neo4j-driver'
-
-import { PlanView, PlanStatusbar } from './PlanView'
+import { PlanView } from './PlanView'
 
 describe('PlanViews', () => {
   describe('PlanView', () => {
@@ -49,36 +47,6 @@ describe('PlanViews', () => {
 
       // Then
       expect(getByText('ProduceResults'))
-    })
-  })
-  describe('PlanStatusbar', () => {
-    test('displays statusBarMessage', () => {
-      // Given
-      const props = {
-        result: {
-          summary: {
-            resultAvailableAfter: neo4j.int(100),
-            resultConsumedAfter: neo4j.int(20),
-            profile: {
-              children: [],
-              arguments: {
-                operatorType: {},
-                version: 'xx0',
-                planner: 'xx1',
-                runtime: 'xx2',
-                children: []
-              },
-              dbHits: 'xx3'
-            }
-          }
-        }
-      }
-
-      // When
-      const { container } = render(<PlanStatusbar {...props} />)
-
-      // Then
-      expect(container).toMatchSnapshot()
     })
   })
 })
