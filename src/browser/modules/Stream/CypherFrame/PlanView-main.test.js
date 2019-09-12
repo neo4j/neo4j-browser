@@ -26,7 +26,7 @@ import { PlanStatusbar } from './PlanView'
 
 describe('PlanViews', () => {
   describe('PlanStatusbar', () => {
-    test('displays statusBarMessage', () => {
+    test('displays statusBarMessage', async () => {
       // Given
       const props = {
         result: {
@@ -49,10 +49,13 @@ describe('PlanViews', () => {
       }
 
       // When
-      const { container } = render(<PlanStatusbar {...props} />)
+      const { getByText } = render(<PlanStatusbar {...props} />)
 
       // Then
-      expect(container).toMatchSnapshot()
+      expect(getByText(/xx0/))
+      expect(getByText(/xx1/))
+      expect(getByText(/xx2/))
+      expect(getByText(/xx3/))
     })
   })
 })
