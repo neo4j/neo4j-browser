@@ -49,7 +49,7 @@ const Main = React.memo(function Main (props) {
       <Render if={props.showUnknownCommandBanner}>
         <ErrorBanner>
           Type&nbsp;
-          <AutoExecButton cmd={`${props.cmdchar}help commands`} />
+          <AutoExecButton cmd={`help commands`} />
           &nbsp;for a list of available commands.
         </ErrorBanner>
       </Render>
@@ -62,7 +62,7 @@ const Main = React.memo(function Main (props) {
         <NotAuthedBanner data-testid='disconnectedBanner'>
           Database access not available. Please use&nbsp;
           <AutoExecButton
-            cmd={`${props.cmdchar}server connect`}
+            cmd={`server connect`}
             data-testid='disconnectedBannerCode'
           />
           &nbsp; to establish connection. There's a graph waiting for you.

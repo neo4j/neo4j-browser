@@ -23,12 +23,19 @@ const path = require('path')
 module.exports = [
   {
     test: /\.(js|jsx)$/,
-    exclude: /(node_modules)|(cypher-codemirror)|(test_utils)|(dist)/,
+    include: [
+      path.resolve('src'),
+      path.resolve('node_modules/@neo4j/browser-lambda-parser')
+    ],
+    // exclude: /(node_modules(?!:\/@neo4j))|(cypher-codemirror)|(test_utils)|(dist)/,
     use: 'babel-loader'
   },
   {
     test: /\.(png|gif|jpg|svg)$/,
-    include: [path.resolve(helpers.browserPath, 'modules')],
+    include: [
+      path.resolve(helpers.browserPath, 'modules'),
+      path.resolve('node_modules/@relate-by-ui/css')
+    ],
     use: 'file-loader?limit=20480&name=assets/[name]-[hash].[ext]'
   },
   {
