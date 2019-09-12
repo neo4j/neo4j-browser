@@ -77,7 +77,8 @@ module.exports = {
         'neo4j-driver': {
           test: /[\\/]node_modules[\\/](text-encoding|neo4j-driver)[\\/]/,
           name: 'neo4j-driver',
-          chunks: 'all'
+          chunks: 'all',
+          enforce: true
         },
         worker: {
           test: /boltWorker/,
