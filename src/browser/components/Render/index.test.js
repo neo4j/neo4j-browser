@@ -21,14 +21,14 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { render } from '@testing-library/react/pure'
+import { render } from '@testing-library/react'
 
 import Render from './index'
 
 describe('<Render>', () => {
-  const text = 'Hello'
   test('does not render if condition is false', () => {
     // Given
+    const text = 'Hello'
     const val = false
 
     // When
@@ -43,6 +43,7 @@ describe('<Render>', () => {
   })
   test('does render if condition is true', () => {
     // Given
+    const text = 'Hello'
     const val = true
 
     // When
