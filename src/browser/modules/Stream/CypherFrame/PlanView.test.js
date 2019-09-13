@@ -20,11 +20,36 @@
 
 /* global describe, test, expect */
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render } from '@testing-library/react/pure'
 import { v1 as neo4j } from 'neo4j-driver'
-import { PlanStatusbar } from './PlanView'
+import { PlanView, PlanStatusbar } from './PlanView'
 
 describe('PlanViews', () => {
+  describe('PlanView', () => {
+    test('displays plan view if it exists', () => {
+      // Given
+      const props = {
+        query: 'MATCH xx0',
+        result: {
+          summary: {
+            plan: {
+              dbHits: 'xx0',
+              arguments: {},
+              children: [],
+              operatorType: 'ProduceResults',
+              identifiers: ['n']
+            }
+          }
+        }
+      }
+
+      // When
+      const { getByText } = render(<PlanView {...props} />)
+
+      // Then
+      expect(getByText('ProduceResults'))
+    })
+  })
   describe('PlanStatusbar', () => {
     test('displays statusBarMessage', () => {
       // Given
