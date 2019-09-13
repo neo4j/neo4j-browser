@@ -69,10 +69,6 @@ const directives = [
   }
 ]
 
-const prependHelpIcon = element => {
-  prependIcon(element, 'fa fa-question-circle-o')
-}
-
 const prependPlayIcon = element => {
   prependIcon(element, 'fa fa-play-circle-o')
 }
@@ -106,9 +102,7 @@ export const Directives = props => {
         const elems = elem.querySelectorAll(directive.selector)
         Array.from(elems).forEach(e => {
           if (e.firstChild.nodeName !== 'I') {
-            directive.selector === '[help-topic]'
-              ? prependHelpIcon(e)
-              : prependPlayIcon(e)
+            prependPlayIcon(e)
           }
 
           e.onclick = () => {

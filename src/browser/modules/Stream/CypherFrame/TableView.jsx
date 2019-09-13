@@ -21,6 +21,8 @@
 import React, { Component } from 'react'
 import { v4 } from 'uuid'
 import neo4j from 'neo4j-driver'
+import { sanitize } from 'dompurify'
+
 import {
   StyledStatsBar,
   PaddedTableViewDiv,
@@ -41,6 +43,9 @@ import {
   transformResultRecordsToResultArray
 } from './helpers'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+import ClickableUrls, {
+  convertUrlsToHrefTags
+} from '../../../components/clickable-urls'
 
 const renderCell = entry => {
   if (Array.isArray(entry)) {
@@ -54,14 +59,20 @@ const renderCell = entry => {
   } else if (typeof entry === 'object') {
     return renderObject(entry)
   } else {
-    return stringifyMod(entry, stringModifier, true)
+    return <ClickableUrls text={stringifyMod(entry, stringModifier, true)} />
   }
 }
 export const renderObject = entry => {
   if (neo4j.isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
   return (
-    <StyledJsonPre>{stringifyMod(entry, stringModifier, true)}</StyledJsonPre>
+    <StyledJsonPre
+      dangerouslySetInnerHTML={{
+        __html: convertUrlsToHrefTags(
+          sanitize(stringifyMod(entry, stringModifier, true))
+        )
+      }}
+    />
   )
 }
 const buildData = entries => {

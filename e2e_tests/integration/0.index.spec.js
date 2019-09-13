@@ -39,7 +39,9 @@ describe('Neo4j Browser', () => {
   })
   it('populates the editor when clicking the connect banner', () => {
     cy.get('[data-testid="disconnectedBannerCode"]').click()
-    cy.get('.ReactCodeMirror').should('contain', ':server connect')
+    cy.get('[data-testid="frameCommand"]')
+      .first()
+      .should('contain', ':server connect')
     cy.get(ClearEditorButton).click()
   })
   it('can connect', () => {
@@ -141,7 +143,7 @@ describe('Neo4j Browser', () => {
     cy.get('[data-testid="editorFavorite"]').click()
 
     cy.get('[data-testid="drawerFavorites"]').click()
-    cy.get('[data-testid="sidebarFavoriteItem"]')
+    cy.get('.saved-scripts-list-item')
       .first()
       .should('be', scriptName)
 
@@ -153,7 +155,7 @@ describe('Neo4j Browser', () => {
     cy.get('[data-testid="clearLocalData"]').click()
 
     cy.get('[data-testid="drawerFavorites"]').click()
-    cy.get('[data-testid="sidebarFavoriteItem"]').should('have.length', 0)
+    cy.get('.saved-scripts-list-item').should('have.length', 0)
     cy.get('[data-testid="drawerFavorites"]').click()
 
     // once data is cleared the user is logged out and the connect form is displayed

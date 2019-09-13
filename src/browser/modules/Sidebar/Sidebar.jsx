@@ -18,12 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import DBMSInfo from '../DBMSInfo/DBMSInfo'
-import Favorites from './Favorites'
+import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
 import Documents from './Documents'
 import About from './About'
+import Favorites from './favorites'
+import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
@@ -44,83 +45,85 @@ import {
   AboutIcon
 } from 'browser-components/icons/Icons'
 
-class Sidebar extends Component {
-  render () {
-    const openDrawer = this.props.openDrawer
-    const onNavClick = this.props.onNavClick
-    const DBMSDrawer = DBMSInfo
-    const FavoritesDrawer = Favorites
-    const DocumentsDrawer = Documents
-    const SettingsDrawer = Settings
-    const AboutDrawer = About
-    const topNavItemsList = [
-      {
-        name: 'DBMS',
-        title: 'DBMS Information',
-        icon: isOpen => (
-          <DatabaseIcon
-            isOpen={isOpen}
-            connectionState={this.props.neo4jConnectionState}
-            title='Database'
-          />
-        ),
-        content: DBMSDrawer
-      },
-      {
-        name: 'Favorites',
-        title: 'Favorites',
-        icon: isOpen => <FavoritesIcon isOpen={isOpen} title='Favorites' />,
-        content: FavoritesDrawer
-      },
-      {
-        name: 'Documents',
-        title: 'Documentation',
-        icon: isOpen => <DocumentsIcon isOpen={isOpen} title='Documentation' />,
-        content: DocumentsDrawer
-      }
-    ]
-    const bottomNavItemsList = [
-      {
-        name: 'Sync',
-        title: 'Cloud Services',
-        icon: isOpen => (
-          <CloudSyncIcon
-            isOpen={isOpen}
-            connected={this.props.syncConnected}
-            title='Cloud Services'
-          />
-        ),
-        content: BrowserSync
-      },
-      {
-        name: 'Settings',
-        title: 'Browser Settings',
-        icon: isOpen => (
-          <SettingsIcon isOpen={isOpen} title='Browser Settings' />
-        ),
-        content: SettingsDrawer
-      },
-      {
-        name: 'About',
-        title: 'About Neo4j',
-        icon: isOpen => <AboutIcon isOpen={isOpen} title='About Neo4j' />,
-        content: AboutDrawer
-      }
-    ]
+function Sidebar (props) {
+  const openDrawer = props.openDrawer
+  const onNavClick = props.onNavClick
+  const { showStaticScripts } = props
+  const DatabaseDrawer = DatabaseInfo
+  const FavoritesDrawer = () => (
+    <React.Fragment>
+      <Favorites />
+      {showStaticScripts && <StaticScripts />}
+    </React.Fragment>
+  )
+  const DocumentsDrawer = Documents
+  const SettingsDrawer = Settings
+  const AboutDrawer = About
+  const topNavItemsList = [
+    {
+      name: 'DB',
+      title: 'Database',
+      icon: isOpen => (
+        <DatabaseIcon
+          isOpen={isOpen}
+          connectionState={props.neo4jConnectionState}
+          title='Database'
+        />
+      ),
+      content: DatabaseDrawer
+    },
+    {
+      name: 'Favorites',
+      title: 'Favorites',
+      icon: isOpen => <FavoritesIcon isOpen={isOpen} title='Favorites' />,
+      content: FavoritesDrawer
+    },
+    {
+      name: 'Documents',
+      title: 'Documentation',
+      icon: isOpen => <DocumentsIcon isOpen={isOpen} title='Documentation' />,
+      content: DocumentsDrawer
+    }
+  ]
+  const bottomNavItemsList = [
+    {
+      name: 'Sync',
+      title: 'Cloud Services',
+      icon: isOpen => (
+        <CloudSyncIcon
+          isOpen={isOpen}
+          connected={props.syncConnected}
+          title='Cloud Services'
+        />
+      ),
+      content: BrowserSync
+    },
+    {
+      name: 'Settings',
+      title: 'Browser Settings',
+      icon: isOpen => <SettingsIcon isOpen={isOpen} title='Browser Settings' />,
+      content: SettingsDrawer
+    },
+    {
+      name: 'About',
+      title: 'About Neo4j',
+      icon: isOpen => <AboutIcon isOpen={isOpen} title='About Neo4j' />,
+      content: AboutDrawer
+    }
+  ]
 
-    return (
-      <TabNavigation
-        openDrawer={openDrawer}
-        onNavClick={onNavClick}
-        topNavItems={topNavItemsList}
-        bottomNavItems={
-          this.props.loadSync
-            ? bottomNavItemsList
-            : bottomNavItemsList.filter(item => item.name !== 'Sync')
-        }
-      />
-    )
-  }
+  return (
+    <TabNavigation
+      openDrawer={openDrawer}
+      onNavClick={onNavClick}
+      topNavItems={topNavItemsList}
+      bottomNavItems={
+        props.loadSync
+          ? bottomNavItemsList
+          : bottomNavItemsList.filter(item => item.name !== 'Sync')
+      }
+    />
+  )
 }
 
 const mapStateToProps = state => {
@@ -141,7 +144,8 @@ const mapStateToProps = state => {
   return {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
-    loadSync: useBrowserSync(state)
+    loadSync: useBrowserSync(state),
+    showStaticScripts: state.settings.showSampleScripts
   }
 }
 

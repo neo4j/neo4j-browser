@@ -30,7 +30,8 @@ import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
   getSettings,
-  getCmdChar
+  getCmdChar,
+  getConnectionTimeout
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { hasMultiDbSupport } from '../features/versionedFeatures'
@@ -62,12 +63,14 @@ export const USING_DB = NAME + '/USING_DB'
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
+export const CONNECTING_STATE = 3
 
 const initialState = {
   allConnectionIds: [],
   connectionsById: {},
   activeConnection: null,
   connectionState: DISCONNECTED_STATE,
+  lastUpdate: 0,
   useDb: null
 }
 
@@ -95,6 +98,10 @@ export function getConnections (state) {
 
 export function getConnectionState (state) {
   return state[NAME].connectionState || initialState.connectionState
+}
+
+export function getLastConnectionUpdate (state) {
+  return state[NAME].lastUpdate || initialState.lastUpdate
 }
 
 export function isConnected (state) {
@@ -207,14 +214,25 @@ export default function (state = initialState, action) {
       return {
         ...state,
         activeConnection: action.connectionId,
-        connectionState: cState
+        connectionState: cState,
+        lastUpdate: Date.now()
+      }
+    case CONNECT:
+      return {
+        ...state,
+        connectionState: CONNECTING_STATE,
+        lastUpdate: Date.now()
       }
     case REMOVE:
       return removeConnectionHelper(state, action.connectionId)
     case MERGE:
       return mergeConnectionHelper(state, action.connection)
     case UPDATE_CONNECTION_STATE:
-      return { ...state, connectionState: action.state }
+      return {
+        ...state,
+        connectionState: action.state,
+        lastUpdate: Date.now()
+      }
     case UPDATE_AUTH_ENABLED:
       return updateAuthEnabledHelper(state, action.authEnabled)
     case USING_DB:
@@ -327,14 +345,19 @@ export const connectEpic = (action$, store) => {
     memoryPassword = ''
     return bolt
       .openConnection(action, {
-        encrypted: getEncryptionMode(action)
+        encrypted: getEncryptionMode(action),
+        connectionTimeout: getConnectionTimeout(store.getState())
       })
       .then(res => ({ type: action.$$responseChannel, success: true }))
-      .catch(e => ({
-        type: action.$$responseChannel,
-        success: false,
-        error: e
-      }))
+      .catch(e => {
+        store.dispatch(setActiveConnection(null))
+
+        return {
+          type: action.$$responseChannel,
+          success: false,
+          error: e
+        }
+      })
   })
 }
 export const startupConnectEpic = (action$, store) => {
@@ -363,7 +386,8 @@ export const startupConnectEpic = (action$, store) => {
             connection,
             {
               withoutCredentials: true,
-              encrypted: getEncryptionMode(connection)
+              encrypted: getEncryptionMode(connection),
+              connectionTimeout: getConnectionTimeout(store.getState())
             },
             onLostConnection(store.dispatch)
           )
@@ -393,7 +417,8 @@ export const startupConnectEpic = (action$, store) => {
               .openConnection(
                 connection,
                 {
-                  encrypted: getEncryptionMode(connection)
+                  encrypted: getEncryptionMode(connection),
+                  connectionTimeout: getConnectionTimeout(store.getState())
                 },
                 onLostConnection(store.dispatch)
               ) // Try with stored creds
@@ -494,7 +519,8 @@ export const connectionLostEpic = (action$, store) =>
                 .directConnect(
                   connection,
                   {
-                    encrypted: getEncryptionMode(connection)
+                    encrypted: getEncryptionMode(connection),
+                    connectionTimeout: getConnectionTimeout(store.getState())
                   },
                   e =>
                     setTimeout(
@@ -508,7 +534,10 @@ export const connectionLostEpic = (action$, store) =>
                     .openConnection(
                       connection,
                       {
-                        encrypted: getEncryptionMode(connection)
+                        encrypted: getEncryptionMode(connection),
+                        connectionTimeout: getConnectionTimeout(
+                          store.getState()
+                        )
                       },
                       onLostConnection(store.dispatch)
                     )

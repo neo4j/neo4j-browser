@@ -68,7 +68,7 @@ jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
 
 describe('tx metadata with cypher', () => {
   afterEach(() => {
-    bolt.routedWriteTransaction.mockReset()
+    bolt.routedWriteTransaction.mockClear()
   })
 
   it('it adds tx metadata for user entered cypher queries', done => {

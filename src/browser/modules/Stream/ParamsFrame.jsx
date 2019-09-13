@@ -26,7 +26,7 @@ import { stringifyMod } from 'services/utils'
 import FrameTemplate from './FrameTemplate'
 import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
-import ClickToCode from 'browser/modules/ClickToCode'
+import AutoExecButton from './auto-exec-button'
 
 const ParamsFrame = ({ frame }) => {
   const params = applyGraphTypes(frame.params)
@@ -38,11 +38,8 @@ const ParamsFrame = ({ frame }) => {
         </pre>
       </Render>
       <div style={{ marginTop: '20px' }}>
-        See{' '}
-        <ClickToCode code=':help param' execute>
-          :help param
-        </ClickToCode>{' '}
-        for usage of the <code>:param</code> command.
+        See <AutoExecButton cmd='help param' /> for usage of the{' '}
+        <code>:param</code> command.
       </div>
     </PaddedDiv>
   )

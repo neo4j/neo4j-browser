@@ -9,7 +9,7 @@ exports[`Directives should attach all directives when contents has both attribut
         help-topic="help"
       >
         <i
-          class="fa fa-question-circle-o"
+          class="fa fa-play-circle-o"
           style="padding-right:4px"
         />
         help
@@ -37,7 +37,7 @@ exports[`Directives should attach help topic directive when contents has a play-
       help-topic="hello"
     >
       <i
-        class="fa fa-question-circle-o"
+        class="fa fa-play-circle-o"
         style="padding-right:4px"
       />
       link

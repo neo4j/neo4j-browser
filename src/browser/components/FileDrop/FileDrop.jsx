@@ -24,13 +24,20 @@ import { withBus } from 'react-suber'
 import SVGInline from 'react-svg-inline'
 
 import * as editor from 'shared/modules/editor/editorDuck'
-import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
+import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
 import { parseGrass } from 'shared/services/grassUtils'
 import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import {
   showErrorMessage,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
+import {
+  createLoadFavoritesPayload,
+  getFolderNamesFromFavorites,
+  getMissingFoldersFromNames,
+  readZipFiles
+} from './file-drop.utils'
 
 import {
   StyledFileDrop,
@@ -40,12 +47,18 @@ import {
   StyledFileDropActionButton
 } from './styled'
 import icon from 'icons/task-list-download.svg'
+import arrayHasItems from '../../../shared/utils/array-has-items'
 
 export function FileDrop (props) {
   const [fileHoverState, setFileHoverState] = useState(false)
   const [userSelect, setUserSelect] = useState(false)
   const [file, setFile] = useState(null)
-  const { saveCypherToFavorites, importGrass, dispatchErrorMessage } = props
+  const {
+    saveCypherToFavorites,
+    saveManyFavorites,
+    importGrass,
+    dispatchErrorMessage
+  } = props
 
   const resetState = () => {
     setFileHoverState(false)
@@ -76,7 +89,12 @@ export function FileDrop (props) {
   }
 
   const handleDragEnter = event => {
-    if (!fileHoverState && event.dataTransfer.items[0].kind === 'file') {
+    if (
+      !fileHoverState &&
+      event.dataTransfer.types &&
+      event.dataTransfer.types.length === 1 &&
+      event.dataTransfer.types[0] === 'Files'
+    ) {
       setFileHoverState(true)
     }
   }
@@ -95,28 +113,45 @@ export function FileDrop (props) {
 
   const handleDrop = event => {
     const files = event.dataTransfer.files
-    if (files.length === 1) {
-      event.stopPropagation()
-      event.preventDefault()
 
-      setFile(files[0])
-
-      const extension = ((files[0] || {}).name || '').split('.').pop()
-      if (['cyp', 'cypher', 'cql', 'txt'].includes(extension)) {
-        setUserSelect(true)
-      } else if (extension === 'grass') {
-        fileLoader(files[0], result => {
-          importGrass(result)
-          const action = executeCommand(':style')
-          props.bus.send(action.type, action)
-        })
-      } else {
-        dispatchErrorMessage(`'.${extension}' is not a valid file extension`)
-        resetState()
-      }
-    } else {
+    if (files.length !== 1) {
       resetState()
+      return
     }
+
+    event.stopPropagation()
+    event.preventDefault()
+
+    setFile(files[0])
+
+    const extension = ((files[0] || {}).name || '').split('.').pop()
+
+    if (['cyp', 'cypher', 'cql', 'txt'].includes(extension)) {
+      setUserSelect(true)
+
+      return
+    }
+
+    if (extension === 'zip') {
+      readZipFiles(files)
+        .then(saveManyFavorites)
+        .then(resetState)
+
+      return
+    }
+
+    if (extension === 'grass') {
+      fileLoader(files[0], result => {
+        importGrass(result)
+        const action = executeCommand(':style')
+        props.bus.send(action.type, action)
+      })
+
+      return
+    }
+
+    dispatchErrorMessage(`'.${extension}' is not a valid file extension`)
+    resetState()
   }
 
   const className = ['filedrop']
@@ -166,10 +201,28 @@ export function FileDrop (props) {
   )
 }
 
+const mapStateToProps = state => ({
+  folders: foldersDuck.getFolders(state)
+})
 const mapDispatchToProps = dispatch => {
   return {
     saveCypherToFavorites: file => {
-      dispatch(addFavorite(file))
+      dispatch(favoritesDuck.addFavorite(file))
+    },
+    saveManyFavorites: (favoritesToAdd, allFolders) => {
+      const folderNames = getFolderNamesFromFavorites(favoritesToAdd)
+      const missingFolders = getMissingFoldersFromNames(folderNames, allFolders)
+      const allFoldersIncludingMissing = [...allFolders, ...missingFolders]
+
+      if (arrayHasItems(missingFolders)) {
+        dispatch(foldersDuck.loadFolders(allFoldersIncludingMissing))
+      }
+
+      dispatch(
+        favoritesDuck.loadFavorites(
+          createLoadFavoritesPayload(favoritesToAdd, allFoldersIncludingMissing)
+        )
+      )
     },
     importGrass: file => {
       const parsedGrass = parseGrass(file)
@@ -182,10 +235,18 @@ const mapDispatchToProps = dispatch => {
     dispatchErrorMessage: message => dispatch(showErrorMessage(message))
   }
 }
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...stateProps,
+  ...dispatchProps,
+  saveManyFavorites: favorites =>
+    dispatchProps.saveManyFavorites(favorites, stateProps.folders),
+  ...ownProps
+})
 
 export default withBus(
   connect(
-    null,
-    mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
   )(FileDrop)
 )

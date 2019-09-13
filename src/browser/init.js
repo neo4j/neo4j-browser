@@ -26,6 +26,7 @@ import './styles/neo4j-world.css'
 import './styles/font-awesome.min.css'
 import './styles/inconsolata.css'
 import './styles/open-sans.css'
+import '@relate-by-ui/css/semantic/dist/relate-by.min.css'
 
 // non web env (just for tests)
 if (typeof btoa === 'undefined') {

@@ -27,6 +27,7 @@ export const NAME = 'documents'
 
 export const ADD_FAVORITE = 'favorites/ADD_FAVORITE'
 export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
+export const REMOVE_FAVORITES = 'favorites/REMOVE_FAVORITES'
 export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
 export const UPDATE_FAVORITE = 'favorites/UPDATE_FAVORITE'
@@ -37,6 +38,8 @@ export const getFavorite = (state, id) =>
   state.filter(favorite => favorite.id === id)[0]
 export const removeFavoriteById = (state, id) =>
   state.filter(favorite => favorite.id !== id)
+export const removeFavoritesById = (state, ids) =>
+  state.filter(favorite => !ids.includes(favorite.id))
 const versionSize = 20
 
 // reducer
@@ -48,6 +51,8 @@ export default function reducer (state = initialState, action) {
   switch (action.type) {
     case REMOVE_FAVORITE:
       return removeFavoriteById(state, action.id)
+    case REMOVE_FAVORITES:
+      return removeFavoritesById(state, action.ids)
     case ADD_FAVORITE:
       return state.concat([{ id: action.id || uuid.v4(), content: action.cmd }])
     case UPDATE_FAVORITE:
@@ -60,7 +65,7 @@ export default function reducer (state = initialState, action) {
       return mergeFavorites(initialState, updatedFavorites)
     case LOAD_FAVORITES:
     case UPDATE_FAVORITES:
-      return mergeFavorites(initialState, action.favorites)
+      return mergeFavorites(action.favorites, state)
     case USER_CLEAR:
       return initialState
     case APP_START:
@@ -74,6 +79,12 @@ export function removeFavorite (id) {
   return {
     type: REMOVE_FAVORITE,
     id
+  }
+}
+export function removeFavorites (ids) {
+  return {
+    type: REMOVE_FAVORITES,
+    ids
   }
 }
 export function addFavorite (cmd, id) {

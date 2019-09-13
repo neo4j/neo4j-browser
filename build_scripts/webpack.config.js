@@ -35,6 +35,7 @@ module.exports = {
   },
   plugins: getPlugins(),
   resolve: {
+    symlinks: false,
     alias: {
       'react-dom': '@hot-loader/react-dom',
       'src-root': path.resolve(helpers.sourcePath),
@@ -67,10 +68,17 @@ module.exports = {
           chunks: 'all',
           enforce: true
         },
+        ui: {
+          test: /[\\/]node_modules[\\/](@relate-by-ui|semantic-ui-react)[\\/]/,
+          name: 'ui',
+          chunks: 'all',
+          enforce: true
+        },
         'neo4j-driver': {
           test: /[\\/]node_modules[\\/](text-encoding|neo4j-driver)[\\/]/,
           name: 'neo4j-driver',
-          chunks: 'all'
+          chunks: 'all',
+          enforce: true
         },
         worker: {
           test: /boltWorker/,
