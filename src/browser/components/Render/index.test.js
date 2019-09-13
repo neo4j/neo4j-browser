@@ -26,32 +26,33 @@ import { render } from '@testing-library/react'
 import Render from './index'
 
 describe('<Render>', () => {
-  test('does not render if condition is false', () => {
+  const text = 'Hello'
+  test('does not render if condition is false', async () => {
     // Given
     const val = false
 
     // When
-    const { container } = render(
+    const { queryByText } = render(
       <Render if={val}>
-        <span>Hello</span>
+        <span>{text}</span>
       </Render>
     )
 
     // Then
-    expect(container).toMatchSnapshot()
+    expect(queryByText(text)).toBeNull()
   })
   test('does render if condition is true', () => {
     // Given
     const val = true
 
     // When
-    const { container } = render(
+    const { getByText } = render(
       <Render if={val}>
-        <span>Hello</span>
+        <span>{text}</span>
       </Render>
     )
 
     // Then
-    expect(container).toMatchSnapshot()
+    expect(getByText(text))
   })
 })

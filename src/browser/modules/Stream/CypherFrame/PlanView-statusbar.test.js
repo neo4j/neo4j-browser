@@ -18,12 +18,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// polyfill for jsdom (for tests only)
-// tests with codemirror breaks without it
-global.document.createRange = () => {
-  return {
-    setEnd: () => {},
-    setStart: () => {},
-    getBoundingClientRect: () => {}
-  }
-}
+/* global describe, test, expect */
+import React from 'react'
+import { render } from '@testing-library/react'
+import { PlanView } from './PlanView'
+
+describe('PlanViews', () => {
+  describe('PlanView', () => {
+    test('displays plan view if it exists', () => {
+      // Given
+      const props = {
+        query: 'MATCH xx0',
+        result: {
+          summary: {
+            plan: {
+              dbHits: 'xx0',
+              arguments: {},
+              children: [],
+              operatorType: 'ProduceResults',
+              identifiers: ['n']
+            }
+          }
+        }
+      }
+
+      // When
+      const { getByText } = render(<PlanView {...props} />)
+
+      // Then
+      expect(getByText('ProduceResults'))
+    })
+  })
+})

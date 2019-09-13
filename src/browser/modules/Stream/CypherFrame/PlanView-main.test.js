@@ -22,37 +22,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { v1 as neo4j } from 'neo4j-driver'
-
-import { PlanView, PlanStatusbar } from './PlanView'
+import { PlanStatusbar } from './PlanView'
 
 describe('PlanViews', () => {
-  describe('PlanView', () => {
-    test('displays plan view if it exists', () => {
-      // Given
-      const props = {
-        query: 'MATCH xx0',
-        result: {
-          summary: {
-            plan: {
-              dbHits: 'xx0',
-              arguments: {},
-              children: [],
-              operatorType: 'ProduceResults',
-              identifiers: ['n']
-            }
-          }
-        }
-      }
-
-      // When
-      const { getByText } = render(<PlanView {...props} />)
-
-      // Then
-      expect(getByText('ProduceResults'))
-    })
-  })
   describe('PlanStatusbar', () => {
-    test('displays statusBarMessage', () => {
+    test('displays statusBarMessage', async () => {
       // Given
       const props = {
         result: {
@@ -75,10 +49,13 @@ describe('PlanViews', () => {
       }
 
       // When
-      const { container } = render(<PlanStatusbar {...props} />)
+      const { getByText } = render(<PlanStatusbar {...props} />)
 
       // Then
-      expect(container).toMatchSnapshot()
+      expect(getByText(/xx0/))
+      expect(getByText(/xx1/))
+      expect(getByText(/xx2/))
+      expect(getByText(/xx3/))
     })
   })
 })
