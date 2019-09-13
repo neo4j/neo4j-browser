@@ -27,7 +27,7 @@ import Render from './index'
 
 describe('<Render>', () => {
   const text = 'Hello'
-  test('does not render if condition is false', async () => {
+  test('does not render if condition is false', () => {
     // Given
     const val = false
 

@@ -26,7 +26,7 @@ import { PlanStatusbar } from './PlanView'
 
 describe('PlanViews', () => {
   describe('PlanStatusbar', () => {
-    test('displays statusBarMessage', async () => {
+    test('displays statusBarMessage', () => {
       // Given
       const props = {
         result: {
