@@ -19,13 +19,9 @@
  */
 import React from 'react'
 import { connect } from 'react-redux'
-import FrameTemplate from './FrameTemplate'
-import {
-  PaddedDiv,
-  StyledOneRowStatsBar,
-  StyledRightPartial,
-  FrameTitlebarButtonSection
-} from './styled'
+import FrameTemplate from '../Frame/FrameTemplate'
+import { PaddedDiv, StyledOneRowStatsBar, StyledRightPartial } from './styled'
+import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { FrameButton } from 'browser-components/buttons'
 import { objToCss } from 'services/grassUtils'
 import {
@@ -71,14 +67,14 @@ const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
   return (
     <StyledOneRowStatsBar>
       <StyledRightPartial>
-        <FrameTitlebarButtonSection>
+        <StyledFrameTitlebarButtonSection>
           <FrameButton
             data-testid='styleResetButton'
             onClick={() => onResetClick(resetStyleAction, rerunAction)}
           >
             <FireExtinguisherIcon title='Reset style' />
           </FrameButton>
-        </FrameTitlebarButtonSection>
+        </StyledFrameTitlebarButtonSection>
       </StyledRightPartial>
     </StyledOneRowStatsBar>
   )

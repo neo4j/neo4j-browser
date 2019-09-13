@@ -150,14 +150,14 @@ describe('commandutils', () => {
   test('transformCommandToHelpTopic transforms input to help topics', () => {
     // Given
     const input = [
-      { test: '', expect: '_help' },
-      { test: 'help', expect: '_help' },
-      { test: 'help topic', expect: '_topic' },
-      { test: 'help  TOpic ', expect: '_topic' },
-      { test: 'help topic me', expect: '_topicMe' },
-      { test: 'help topic me now', expect: '_topicMeNow' },
-      { test: 'help topic-me', expect: '_topicMe' },
-      { test: 'help topic_me', expect: '_topic_me' }
+      { test: '', expect: 'help' },
+      { test: 'help', expect: 'help' },
+      { test: 'help topic', expect: 'topic' },
+      { test: 'help  TOpic ', expect: 'topic' },
+      { test: 'help topic me', expect: 'topicMe' },
+      { test: 'help topic me now', expect: 'topicMeNow' },
+      { test: 'help topic-me', expect: 'topicMe' },
+      { test: 'help topic_me', expect: 'topic_me' }
     ]
 
     // When & Then

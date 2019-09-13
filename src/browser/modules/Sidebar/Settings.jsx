@@ -62,6 +62,13 @@ const visualSettings = [
         }
       },
       {
+        codeFontLigatures: {
+          displayName: 'Code font ligatures',
+          tooltip: 'Use font ligatures for the command bar and cypher snippets',
+          type: 'checkbox'
+        }
+      },
+      {
         editorAutocomplete: {
           displayName: 'Enhanced query editor',
           tooltip: 'Autocomplete and syntax highlighting in query editor',

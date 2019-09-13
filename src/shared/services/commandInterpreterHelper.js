@@ -295,7 +295,7 @@ const availableCommands = [
   },
   {
     name: 'help',
-    match: cmd => /^help(\s|$)/.test(cmd),
+    match: cmd => /^(help|\?)(\s|$)/.test(cmd),
     exec: function (action, cmdchar, put, store) {
       put(frames.add({ ...action, type: 'help' }))
     }

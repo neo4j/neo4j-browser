@@ -31,7 +31,7 @@ import {
   CONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
 
-jest.mock('../FrameTemplate', () => ({ contents, statusbar }) => (
+jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusbar }) => (
   <div>
     {contents}
     {statusbar}

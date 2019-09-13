@@ -20,12 +20,12 @@
 
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import { getRequest } from 'shared/modules/requests/requestsDuck'
 import { getFrame } from 'shared/modules/stream/streamDuck'
 import { StyledStatusSection } from 'browser-components/buttons'
 
-import { FrameTitlebarButtonSection } from 'browser/modules/Stream/styled'
+import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { WrapperCenter, ContentSizer, PointerFrameCommand } from './styled'
 import Accordion from 'browser-components/Accordion/Accordion'
 import { getCmdChar } from 'shared/modules/settings/settingsDuck'
@@ -68,11 +68,11 @@ class CypherScriptFrame extends Component {
                           <PointerFrameCommand title={frames[id].cmd}>
                             {frames[id].cmd}
                           </PointerFrameCommand>
-                          <FrameTitlebarButtonSection>
+                          <StyledFrameTitlebarButtonSection>
                             <StyledStatusSection title={`Status: ${status}`}>
                               <Icon status={status} />
                             </StyledStatusSection>
-                          </FrameTitlebarButtonSection>
+                          </StyledFrameTitlebarButtonSection>
                         </Accordion.Title>
                         <Accordion.Content
                           data-testid='multi-statement-list-content'
@@ -93,7 +93,13 @@ class CypherScriptFrame extends Component {
         </ContentSizer>
       </WrapperCenter>
     )
-    return <FrameTemplate header={frame} contents={contents} />
+    return (
+      <FrameTemplate
+        className='no-padding'
+        header={frame}
+        contents={contents}
+      />
+    )
   }
 }
 

@@ -25,7 +25,7 @@ import { render } from '@testing-library/react'
 import { SysInfoFrame } from './index'
 
 jest.mock(
-  'browser/modules/Stream/FrameTemplate',
+  'browser/modules/Frame/FrameTemplate',
   () => ({ contents, children }) => (
     <div>
       {contents}

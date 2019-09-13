@@ -29,7 +29,6 @@ import cloudCheck from 'icons/cloud-check.svg'
 import cloudRemove from 'icons/cloud-remove.svg'
 import neo4j from 'icons/neo-world.svg'
 import pin from 'icons/pin.svg'
-import arrowUp1 from 'icons/arrow-up-1.svg'
 import close from 'icons/close.svg'
 import expand01 from 'icons/expand-01.svg'
 import shrink from 'icons/shrink.svg'
@@ -184,10 +183,10 @@ export const AboutIcon = props => (
 )
 
 export const SlidePreviousIcon = () => (
-  <IconContainer icon={arrowLeft1} width={16} />
+  <IconContainer icon={arrowLeft1} width={20} />
 )
 export const SlideNextIcon = () => (
-  <IconContainer icon={arrowRight1} width={16} />
+  <IconContainer icon={arrowRight1} width={20} />
 )
 export const TableIcon = () => (
   <IconContainer icon={table01} text='Table' width={20} />
@@ -241,7 +240,7 @@ export const RefreshIcon = () => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )
 export const CloseIcon = () => <IconContainer icon={close} width={12} />
-export const UpIcon = () => <IconContainer icon={arrowUp1} width={12} />
+export const UpIcon = () => <IconContainer className='sl-chevron-up' />
 export const DownIcon = () => <IconContainer className='sl-chevron-down' />
 export const DoubleUpIcon = () => <IconContainer className='sl-double-up' />
 export const DoubleDownIcon = () => <IconContainer className='sl-double-down' />

@@ -1,22 +1,22 @@
 /*
-* Copyright (c) 2002-2019 "Neo4j,"
-* Neo4j Sweden AB [http://neo4j.com]
-*
-* This file is part of Neo4j.
-*
-* Neo4j is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (c) 2002-2019 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
+ *
+ * This file is part of Neo4j.
+ *
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /* global test, expect, jest */
 import {
   getCredentials,
@@ -262,7 +262,7 @@ describe('buildConnectionCredentialsObject', () => {
     const activeConnectionData = createApiResponse(
       activeGraph({ enc: 'REQUIRED', kerberos: true })
     )
-    const getKerberosTicket = jest.fn(principal => kerberosTicket)
+    const getKerberosTicket = jest.fn(() => kerberosTicket)
     const connectionData = await buildConnectionCredentialsObject(
       activeConnectionData,
       {},
@@ -284,7 +284,7 @@ describe('buildConnectionCredentialsObject', () => {
   test('it creates an expected object from context, without kerberos', async () => {
     // Given
     const kerberosTicket = 'kerberos-ticket-test'
-    const getKerberosTicket = jest.fn(principal => kerberosTicket)
+    const getKerberosTicket = jest.fn(() => kerberosTicket)
     const activeConnectionData = createApiResponse(
       activeGraph({ enc: 'REQUIRED', kerberos: false })
     )

@@ -5,6 +5,7 @@ Object {
   "autoComplete": true,
   "browserSyncDebugServer": null,
   "cmdchar": ":",
+  "codeFontLigatures": true,
   "connectionTimeout": 30000,
   "editorAutocomplete": true,
   "editorLint": false,

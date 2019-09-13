@@ -6,7 +6,7 @@ exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
     class="Ellipsis-sc-1dn9bou-0 gzqRPC"
   >
     <span
-      class="styled__ErrorText-sc-1dtvgs1-30 kqUQfd"
+      class="styled__ErrorText-sc-1dtvgs1-20 fSEPRL"
       title="Test.Error: Test error description"
     >
       <i
@@ -26,39 +26,39 @@ exports[`ErrorsViews ErrorsView displays nothing if no errors 1`] = `<div />`;
 exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`] = `
 <div>
   <div
-    class="styled__StyledHelpFrame-sc-1dtvgs1-14 IJQaq"
+    class="styled__StyledHelpFrame-sc-1dtvgs1-4 eyxhwb"
   >
     <div
-      class="styled__StyledHelpContent-sc-1dtvgs1-15 jPcVVC"
+      class="styled__StyledHelpContent-sc-1dtvgs1-5 efmbmX"
     >
       <div
-        class="styled__StyledHelpDescription-sc-1dtvgs1-16 buBBgk"
+        class="styled__StyledHelpDescription-sc-1dtvgs1-6 eUrIkF"
       >
         <div
-          class="styled__StyledCypherMessage-sc-1dtvgs1-20 styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
+          class="styled__StyledCypherMessage-sc-1dtvgs1-10 styled__StyledCypherErrorMessage-sc-1dtvgs1-12 exWlHZ"
         >
           ERROR
         </div>
         <h4
-          class="styled__StyledErrorH4-sc-1dtvgs1-27 kqKuFe"
+          class="styled__StyledErrorH4-sc-1dtvgs1-17 DSsi"
         >
           Neo.ClientError.Procedure.ProcedureNotFound
         </h4>
       </div>
       <div
-        class="styled__StyledDiv-sc-1dtvgs1-17 kkPWFM"
+        class="styled__StyledDiv-sc-1dtvgs1-7 hvhkie"
       >
         <pre
-          class="styled__StyledPreformattedArea-sc-1dtvgs1-29 ezHXzL"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 kYkFhf"
         >
           not found
         </pre>
       </div>
       <div
-        class="styled__StyledLinkContainer-sc-1dtvgs1-19 eorHIm"
+        class="styled__StyledLinkContainer-sc-1dtvgs1-9 dZlgHA"
       >
         <a
-          class="styled__StyledLink-sc-1dtvgs1-18 cLfBMz"
+          class="styled__StyledLink-sc-1dtvgs1-8 fPQgTq"
         >
           <i
             class="fa fa-play-circle-o IconContainer__I-sc-16whwc5-0 eTELIJ"
@@ -74,30 +74,30 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
 exports[`ErrorsViews ErrorsView does displays an error 1`] = `
 <div>
   <div
-    class="styled__StyledHelpFrame-sc-1dtvgs1-14 IJQaq"
+    class="styled__StyledHelpFrame-sc-1dtvgs1-4 eyxhwb"
   >
     <div
-      class="styled__StyledHelpContent-sc-1dtvgs1-15 jPcVVC"
+      class="styled__StyledHelpContent-sc-1dtvgs1-5 efmbmX"
     >
       <div
-        class="styled__StyledHelpDescription-sc-1dtvgs1-16 buBBgk"
+        class="styled__StyledHelpDescription-sc-1dtvgs1-6 eUrIkF"
       >
         <div
-          class="styled__StyledCypherMessage-sc-1dtvgs1-20 styled__StyledCypherErrorMessage-sc-1dtvgs1-22 izHDyp"
+          class="styled__StyledCypherMessage-sc-1dtvgs1-10 styled__StyledCypherErrorMessage-sc-1dtvgs1-12 exWlHZ"
         >
           ERROR
         </div>
         <h4
-          class="styled__StyledErrorH4-sc-1dtvgs1-27 kqKuFe"
+          class="styled__StyledErrorH4-sc-1dtvgs1-17 DSsi"
         >
           Test.Error
         </h4>
       </div>
       <div
-        class="styled__StyledDiv-sc-1dtvgs1-17 kkPWFM"
+        class="styled__StyledDiv-sc-1dtvgs1-7 hvhkie"
       >
         <pre
-          class="styled__StyledPreformattedArea-sc-1dtvgs1-29 ezHXzL"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 kYkFhf"
         >
           Test error description
         </pre>

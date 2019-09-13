@@ -20,9 +20,8 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import {
-  StyledConnectionFrame,
   StyledConnectionAside,
   StyledConnectionBodyContainer,
   StyledConnectionBody
@@ -44,7 +43,7 @@ class ServerStatusFrame extends Component {
       <FrameTemplate
         header={frame}
         contents={
-          <StyledConnectionFrame>
+          <React.Fragment>
             <StyledConnectionAside>
               <span>
                 <H3>Connection status</H3>
@@ -77,7 +76,7 @@ class ServerStatusFrame extends Component {
                 </StyledConnectionBody>
               </Render>
             </StyledConnectionBodyContainer>
-          </StyledConnectionFrame>
+          </React.Fragment>
         }
       />
     )

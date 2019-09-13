@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-
-import FrameTemplate from './FrameTemplate'
+import FrameTemplate from '../Frame/FrameTemplate'
 import * as e from 'services/exceptionMessages'
 import { createErrorObject, UnknownCommandError } from 'services/exceptions'
 import { errorMessageFormater } from './errorMessageFormater'

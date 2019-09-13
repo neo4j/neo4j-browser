@@ -140,6 +140,11 @@ export const handleCommandEpic = (action$, store) =>
   action$
     .ofType(COMMAND_QUEUED)
     .do(action => {
+      // Map some commands to the help command
+      if (['?', 'help', ':'].includes(action.cmd)) {
+        action.cmd = ':help'
+      }
+
       store.dispatch(clearErrorMessage())
       const maxHistory = getMaxHistory(store.getState())
       store.dispatch(addHistory(action.cmd, maxHistory))

@@ -26,6 +26,7 @@ import {
   getTheme,
   getCmdChar,
   getBrowserSyncConfig,
+  codeFontLigatures,
   LIGHT_THEME
 } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
@@ -124,15 +125,21 @@ export function App (props) {
     browserSyncConfig,
     browserSyncAuthStatus,
     experimentalFeatures,
-    store
+    store,
+    codeFontLigatures
   } = props
+
+  const wrapperClassNames = []
+  if (!codeFontLigatures) {
+    wrapperClassNames.push('disable-font-ligatures')
+  }
 
   return (
     <ErrorBoundary>
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
-            <StyledWrapper className='app-wrapper'>
+            <StyledWrapper className={wrapperClassNames}>
               <DocTitle titleString={props.titleString} />
               <UserInteraction />
               <DesktopIntegration
@@ -198,6 +205,7 @@ const mapStateToProps = state => {
     drawer: state.drawer,
     activeConnection: getActiveConnection(state),
     theme: getTheme(state),
+    codeFontLigatures: codeFontLigatures(state),
     connectionState: getConnectionState(state),
     lastConnectionUpdate: getLastConnectionUpdate(state),
     cmdchar: getCmdChar(state),

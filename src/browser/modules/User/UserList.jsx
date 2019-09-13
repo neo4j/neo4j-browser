@@ -33,7 +33,7 @@ import { StyledLink } from 'browser-components/buttons'
 import { StyledTable, StyledTh } from 'browser-components/DataTables'
 import { StyledButtonContainer } from './styled'
 
-import FrameTemplate from '../Stream/FrameTemplate'
+import FrameTemplate from '../Frame/FrameTemplate'
 import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 

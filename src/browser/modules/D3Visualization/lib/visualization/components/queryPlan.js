@@ -37,7 +37,7 @@ function queryPlan (element) {
   let rankMargin = 50
   let margin = 10
   let standardFont = "'Helvetica Neue',Helvetica,Arial,sans-serif"
-  let fixedWidthFont = "Monaco,'Courier New',Terminal,monospace"
+  let fixedWidthFont = "'Fira Code',Monaco,'Courier New',Terminal,monospace"
   let linkColor = '#DFE1E3'
   let costColor = '#F25A29'
   let dividerColor = '#DFE1E3'

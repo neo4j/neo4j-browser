@@ -20,18 +20,14 @@
 
 import React, { Component } from 'react'
 
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import ConnectionForm from './ConnectionForm'
-import FrameError from '../FrameError'
+import FrameError from '../../Frame/FrameError'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 
 import Render from 'browser-components/Render'
-import {
-  StyledConnectionFrame,
-  StyledConnectionAside,
-  StyledConnectionBodyContainer
-} from './styled'
+import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
 
 export class ConnectionFrame extends Component {
   constructor (props) {
@@ -57,7 +53,7 @@ export class ConnectionFrame extends Component {
           />
         }
         contents={
-          <StyledConnectionFrame>
+          <React.Fragment>
             <StyledConnectionAside>
               <Render if={!this.state.success}>
                 <div>
@@ -81,7 +77,7 @@ export class ConnectionFrame extends Component {
                 error={this.error.bind(this)}
               />
             </StyledConnectionBodyContainer>
-          </StyledConnectionFrame>
+          </React.Fragment>
         }
       />
     )

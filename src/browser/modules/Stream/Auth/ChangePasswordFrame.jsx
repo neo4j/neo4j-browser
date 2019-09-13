@@ -21,12 +21,12 @@
 import React, { Component } from 'react'
 
 import ConnectionForm from './ConnectionForm'
-import FrameTemplate from '../FrameTemplate'
-import FrameError from '../FrameError'
+import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameError from '../../Frame/FrameError'
 import Render from 'browser-components/Render'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
-import { StyledConnectionFrame, StyledConnectionAside } from './styled'
+import { StyledConnectionAside } from './styled'
 
 export class ChangePasswordFrame extends Component {
   constructor (props) {
@@ -51,7 +51,7 @@ export class ChangePasswordFrame extends Component {
   }
   render () {
     const content = (
-      <StyledConnectionFrame>
+      <React.Fragment>
         <StyledConnectionAside>
           <H3>Password change</H3>
           <Render if={!this.state.success}>
@@ -72,7 +72,7 @@ export class ChangePasswordFrame extends Component {
           forcePasswordChange
           showExistingPasswordInput
         />
-      </StyledConnectionFrame>
+      </React.Fragment>
     )
     return (
       <FrameTemplate
