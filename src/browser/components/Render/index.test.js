@@ -21,7 +21,7 @@
 /* global describe, test, expect */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render } from '@testing-library/react/pure'
 
 import Render from './index'
 
