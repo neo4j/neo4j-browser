@@ -94,17 +94,27 @@ const trim = str => str.trim()
 const replaceSpaceWithDash = str => str.replace(/\s/g, '-')
 const snakeToCamel = str =>
   str.replace(/(-\w)/g, match => match[1].toUpperCase())
-const prependUnderscore = str => '_' + str
+const camelToSnake = (name, separator) => {
+  return name
+    .replace(/([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g, function (_, $1, $2) {
+      return $1 + ($2 && (separator || '_') + $2)
+    })
+    .toLowerCase()
+}
 
-export const transformCommandToHelpTopic = inputStr => {
-  const res = [inputStr || '']
+export const transformCommandToHelpTopic = inputStr =>
+  [inputStr || '']
     .map(getHelpTopic)
     .map(lowerCase)
     .map(trim)
     .map(replaceSpaceWithDash)
-    .map(snakeToCamel)
-    .map(prependUnderscore)
-  return res[0]
+    .map(snakeToCamel)[0]
+
+export const transformHelpTopicToCommand = inputStr => {
+  if (inputStr.indexOf('-') > -1) {
+    return inputStr
+  }
+  return camelToSnake(inputStr, '-').replace('-', ' ')
 }
 
 const quotedRegex = /^"(.*)"|'(.*)'/

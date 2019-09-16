@@ -53,15 +53,7 @@ export class IconContainer extends Component {
     }
   }
   render () {
-    const {
-      text,
-      regulateSize,
-      suppressIconStyles,
-      icon,
-      width,
-      title,
-      ...rest
-    } = this.props
+    const { text, regulateSize, icon, width, title, ...rest } = this.props
 
     const regulateSizeStyle = regulateSize
       ? { fontSize: regulateSize + 'em' }

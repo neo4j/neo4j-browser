@@ -63,7 +63,7 @@ const BaseEditorWrapper = styled.div`
   flex: auto;
   padding: ${editorPadding}px;
   background-color: ${props => props.theme.editorBarBackground};
-  font-family: Monaco, 'Courier New', Terminal, monospace;
+  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   min-height: ${props =>
     props.expanded
       ? '100vh'
@@ -72,6 +72,11 @@ const BaseEditorWrapper = styled.div`
   .CodeMirror {
     background-color: ${props => props.theme.editorBackground} !important;
     color: ${props => props.theme.editorCommandColor};
+    font-size: 17px;
+  }
+
+  .disable-font-ligatures & {
+    font-variant-ligatures: none;
   }
 `
 

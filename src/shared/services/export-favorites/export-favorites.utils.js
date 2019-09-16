@@ -63,7 +63,8 @@ export function mapOldFavoritesAndFolders (
     const newFavorite = {
       id: favorite.id,
       contents: favorite.content,
-      path: addScriptPathPrefix(SLASH, get(folder, 'name', ''))
+      path: addScriptPathPrefix(SLASH, get(folder, 'name', '')),
+      isSuggestion: favorite.not_executable
     }
 
     if (folder) {

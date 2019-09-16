@@ -20,8 +20,8 @@
 import React from 'react'
 import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
-import FrameTemplate from './FrameTemplate'
-import { UnstyledList, PaddedDiv } from './styled'
+import FrameTemplate from '../Frame/FrameTemplate'
+import { StyledHistoryList, PaddedDiv } from './styled'
 import HistoryRow from './HistoryRow'
 
 export const HistoryFrame = props => {
@@ -48,7 +48,7 @@ export const HistoryFrame = props => {
   return (
     <FrameTemplate
       header={frame}
-      contents={<UnstyledList>{historyRows}</UnstyledList>}
+      contents={<StyledHistoryList>{historyRows}</StyledHistoryList>}
     />
   )
 }

@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import FrameTemplate from '../Stream/FrameTemplate'
+import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledSchemaBody } from './styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 

@@ -22,24 +22,45 @@ import React, { Component } from 'react'
 import { withBus } from 'react-suber'
 import { fetchGuideFromWhitelistAction } from 'shared/modules/commands/commandsDuck'
 
-import Guides from '../Guides/Guides'
-import * as html from '../Guides/html'
-import FrameTemplate from './FrameTemplate'
-import { splitStringOnFirst } from 'services/commandUtils'
+import Docs from '../Docs/Docs'
+import docs from '../../documentation'
+import FrameTemplate from '../Frame/FrameTemplate'
+import FrameAside from '../Frame/FrameAside'
+import {
+  splitStringOnFirst,
+  transformCommandToHelpTopic
+} from 'services/commandUtils'
 import { ErrorsView } from './CypherFrame/ErrorsView'
+
+const {
+  play: { chapters }
+} = docs
+
+const checkHtmlForSlides = html => {
+  const el = document.createElement('html')
+  el.innerHTML = html
+  const slides = el.getElementsByTagName('slide')
+  return !!slides.length
+}
 
 export class PlayFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      guide: null
+      guide: null,
+      aside: null,
+      hasCarousel: false,
+      isRemote: false
     }
   }
+
   componentDidMount () {
     if (this.props.frame.result) {
       // Found remote guide
       this.setState({
-        guide: <Guides withDirectives html={this.props.frame.result} />
+        guide: <Docs withDirectives html={this.props.frame.result} />,
+        hasCarousel: checkHtmlForSlides(this.props.frame.result),
+        isRemote: true
       })
       return
     }
@@ -50,9 +71,7 @@ export class PlayFrame extends Component {
     ) {
       // Not found remotely (or other error)
       if (this.props.frame.response.status === 404) {
-        return this.setState({
-          guide: <Guides withDirectives html={html['unfound']} />
-        })
+        return this.unfound(chapters['unfound'])
       }
       return this.setState({
         guide: (
@@ -80,40 +99,78 @@ export class PlayFrame extends Component {
         )
       })
     }
-    const topicInput = (
-      splitStringOnFirst(this.props.frame.cmd, ' ')[1] || 'start'
-    ).trim()
-    const guideName = topicInput.toLowerCase().replace(/\s|-/g, '')
-    if (html[guideName] !== undefined) {
-      // Found it locally
-      this.setState({ guide: <Guides withDirectives html={html[guideName]} /> })
+
+    const guideName = transformCommandToHelpTopic(
+      this.props.frame.cmd || 'start'
+    )
+    const guide = chapters[guideName] || {}
+
+    // Check if content exists
+    if (Object.keys(guide).length) {
+      const { content, title, subtitle } = guide
+      const hasCarousel = !!content.props.slides
+      this.setState({
+        guide: (
+          <Docs
+            withDirectives
+            hasCarouselComponent={hasCarousel}
+            content={content}
+          />
+        ),
+        aside:
+          title && !hasCarousel ? (
+            <FrameAside title={title} subtitle={subtitle} />
+          ) : null,
+        hasCarousel
+      })
       return
     }
+
     // Not found remotely or locally
     // Try to find it remotely by name
     if (this.props.bus) {
+      const topicInput = (
+        splitStringOnFirst(this.props.frame.cmd, ' ')[1] || ''
+      ).trim()
       const action = fetchGuideFromWhitelistAction(topicInput)
       this.props.bus.self(action.type, action, res => {
         if (!res.success) {
           // No luck
-          return this.setState({
-            guide: <Guides withDirectives html={html['unfound']} />
-          })
+          return this.unfound(chapters['unfound'])
         }
-        this.setState({ guide: <Guides withDirectives html={res.result} /> })
+        // Found remote guide
+        this.setState({
+          guide: <Docs withDirectives html={res.result} />,
+          hasCarousel: checkHtmlForSlides(res.result)
+        })
       })
     } else {
       // No bus. Give up
-      return this.setState({
-        guide: <Guides withDirectives html={html['unfound']} />
-      })
+      return this.unfound(chapters['unfound'])
     }
   }
+
+  unfound ({ content, title, subtitle }) {
+    this.setState({
+      guide: <Docs withDirectives content={content} />,
+      aside: <FrameAside title={title} subtitle={subtitle} />
+    })
+  }
+
   render () {
+    const classNames = ['playFrame']
+    if (this.state.hasCarousel) {
+      classNames.push('has-carousel')
+    }
+    if (this.state.isRemote) {
+      classNames.push('is-remote')
+    }
+
     return (
       <FrameTemplate
-        className='playFrame'
+        className={classNames.join(' ')}
         header={this.props.frame}
+        aside={this.state.aside}
         contents={this.state.guide}
       />
     )

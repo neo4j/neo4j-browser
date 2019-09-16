@@ -3,7 +3,7 @@
 exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-33 cjTact"
+    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -15,7 +15,7 @@ exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
 exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-33 cjTact"
+    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -29,10 +29,10 @@ exports[`TableViews TableStatusbar displays statusBarMessage 1`] = `
 exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-6 styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
+    class="styled__PaddedDiv-sc-1dtvgs1-1 styled__PaddedTableViewDiv-sc-1dtvgs1-2 clXnC"
   >
     <div
-      class="styled__StyledBodyMessage-sc-1dtvgs1-36 dLAxdh"
+      class="styled__StyledBodyMessage-sc-1dtvgs1-26 gpPoTU"
     >
       (no changes, no records)
     </div>
@@ -43,7 +43,7 @@ exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-6 styled__PaddedTableViewDiv-sc-1dtvgs1-7 iNSchp"
+    class="styled__PaddedDiv-sc-1dtvgs1-1 styled__PaddedTableViewDiv-sc-1dtvgs1-2 clXnC"
   >
     <table
       class="DataTables__StyledTable-bf850j-0 cZayOW"

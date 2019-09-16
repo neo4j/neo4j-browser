@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { StyledFrameCommand, StyledStatsBar } from '../styled'
+import { StyledFrameCommand } from 'browser/modules/Frame/styled'
+import { StyledStatsBar } from 'browser/modules/Stream/styled'
 
 export const WrapperCenter = styled.div`
   display: flex;
@@ -18,10 +19,20 @@ export const MessageArea = styled.pre`
   white-space: pre-wrap;
 `
 
-export const PaddedStatsBar = styled(StyledStatsBar)`padding: 0 15px 15px 24px;`
+export const PaddedStatsBar = styled(StyledStatsBar)`
+  padding: 0 15px 15px 24px;
+`
 
-export const PointerFrameCommand = styled(StyledFrameCommand)`cursor: pointer;`
+export const PointerFrameCommand = styled(StyledFrameCommand)`
+  cursor: pointer;
+`
 
-export const WarningSpan = styled.span`color: ${props => props.theme.warning};`
-export const ErrorSpan = styled.span`color: ${props => props.theme.error};`
-export const SuccessSpan = styled.span`color: ${props => props.theme.success};`
+export const WarningSpan = styled.span`
+  color: ${props => props.theme.warning};
+`
+export const ErrorSpan = styled.span`
+  color: ${props => props.theme.error};
+`
+export const SuccessSpan = styled.span`
+  color: ${props => props.theme.success};
+`

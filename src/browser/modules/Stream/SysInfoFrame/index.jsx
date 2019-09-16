@@ -23,10 +23,14 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
-import {
+import { isConnected,
   isConnected,
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
+import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+
+import FrameError from 'browser/modules/Frame/FrameError'
+
 import FrameTemplate from 'browser/modules/Stream/FrameTemplate'
 import FrameError from 'browser/modules/Stream/FrameError'
 import Render from 'browser-components/Render'

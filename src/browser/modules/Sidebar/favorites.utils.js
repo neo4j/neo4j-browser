@@ -134,9 +134,9 @@ export function mapNewFavoritesToOld (newFavorites, update = {}) {
     assign(
       {
         id,
-        content: update.name ? addNameComment(contents, update.name) : contents,
-        folder: folder && folder.id
+        content: update.name ? addNameComment(contents, update.name) : contents
       },
+      folder ? { folder: folder.id } : {},
       omit(update, 'name')
     )
   )

@@ -19,9 +19,8 @@
  */
 
 import React from 'react'
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from '../../Frame/FrameTemplate'
 import {
-  StyledConnectionFrame,
   StyledConnectionAside,
   StyledConnectionBodyContainer,
   StyledConnectionBody
@@ -52,7 +51,7 @@ export const ServerSwitchFrame = props => {
   const { frame, activeConnectionData: dynamicConnectionData = {} } = props
   const { activeConnectionData, storeCredentials } = frame
   return (
-    <StyledConnectionFrame>
+    <React.Fragment>
       <StyledConnectionAside>
         <span>
           <Render if={connectionFailed(frame)}>
@@ -119,7 +118,7 @@ export const ServerSwitchFrame = props => {
           </div>
         </Render>
       </StyledConnectionBodyContainer>
-    </StyledConnectionFrame>
+    </React.Fragment>
   )
 }
 

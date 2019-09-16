@@ -119,8 +119,12 @@ export class Editor extends Component {
     cm.execCommand('newlineAndIndent')
   }
 
+  execCommand (cmd) {
+    this.props.onExecute(cmd)
+  }
+
   execCurrent () {
-    this.props.onExecute(this.getEditorValue())
+    this.execCommand(this.getEditorValue())
     this.clearEditor()
     this.setState({
       notifications: [],
@@ -225,6 +229,7 @@ export class Editor extends Component {
   componentDidMount () {
     this.loadCodeMirror()
   }
+
   loadCodeMirror = () => {
     if (this.codeMirror) {
       return
@@ -352,7 +357,7 @@ export class Editor extends Component {
     }
   }
 
-  render () {
+  render (cm) {
     const options = {
       lineNumbers: true,
       mode: this.state.mode,
@@ -374,6 +379,10 @@ export class Editor extends Component {
         Up: this.handleUp.bind(this),
         'Cmd-Down': this.historyNext.bind(this),
         'Ctrl-Down': this.historyNext.bind(this),
+        'Cmd-/': this.execCommand.bind(this, ':help keys'),
+        'Ctrl-/': this.execCommand.bind(this, ':help keys'),
+        'Cmd-.': this.execCommand.bind(this, ':help keys'),
+        'Ctrl-.': this.execCommand.bind(this, ':help keys'),
         Down: this.handleDown.bind(this)
       },
       hintOptions: {
