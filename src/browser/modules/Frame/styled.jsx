@@ -176,8 +176,9 @@ export const StyledFrameCommand = styled.label`
   text-overflow: ellipsis;
   overflow: hidden;
   display: block;
-  &:before {
-    content: '$ ';
+  &::before {
+    color: ${props => props.theme.promptText};
+    content: "${props => (props.selectedDb || '') + '$ '}";
   }
   .disable-font-ligatures & {
     font-variant-ligatures: none;
