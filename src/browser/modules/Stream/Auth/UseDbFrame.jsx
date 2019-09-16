@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import FrameTemplate from '../FrameTemplate'
+import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
 import {
   StyledConnectionFrame,
   StyledConnectionAside,
