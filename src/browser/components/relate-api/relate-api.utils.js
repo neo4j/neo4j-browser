@@ -27,6 +27,11 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { getMainDefinition } from 'apollo-utilities'
 import { onError } from 'apollo-link-error'
 import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
+import {
+  SWITCH_CONNECTION,
+  SWITCH_CONNECTION_FAILED
+} from 'shared/modules/connections/connectionsDuck'
+import { INJECTED_DISCOVERY } from 'shared/modules/discovery/discoveryDuck'
 
 export const createClient = (apiEndpoint, apiClientId = null) => {
   const apiEndpointUrl = new URL(apiEndpoint)
@@ -34,7 +39,6 @@ export const createClient = (apiEndpoint, apiClientId = null) => {
     apiEndpointUrl.pathname ? apiEndpointUrl.pathname : ''
   }`
 
-  console.log('apiEndpointNoScheme: ', apiEndpointNoScheme)
   const httpLink = createHttpLink({
     uri: `http://${apiEndpointNoScheme}`
   })
@@ -90,6 +94,13 @@ export const createClient = (apiEndpoint, apiClientId = null) => {
   return client
 }
 
+export function getPrefersColorScheme (workspaceData) {
+  return (
+    ((workspaceData.workspace || workspaceData.onWorkspaceChange).host || {})
+      .prefersColorScheme || null
+  )
+}
+
 const graphStatus = {
   ACTIVE: 'ACTIVE'
 }
@@ -136,7 +147,6 @@ export async function createConnectionCredentialsObject (
   getKerberosTicket = () => {}
 ) {
   const creds = getCredentialsForGraph('bolt', activeGraph)
-  console.log('creds: ', creds)
   if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
   const httpsCreds = getCredentialsForGraph('https', activeGraph)
   const httpCreds = getCredentialsForGraph('http', activeGraph)
@@ -179,4 +189,48 @@ function isKerberosEnabled (activeGraph) {
     return false
   }
   return principals.authenticationMethods.kerberos
+}
+
+export function detectDesktopThemeChanges (
+  setEnvironmentTheme,
+  prefersColorScheme
+) {
+  if (prefersColorScheme) {
+    setEnvironmentTheme(prefersColorScheme)
+  } else {
+    setEnvironmentTheme(null)
+  }
+}
+
+export async function switchConnection (
+  activeGraph,
+  defaultConnectionData,
+  getKerberosTicket,
+  bus
+) {
+  const connectionCreds = await createConnectionCredentialsObject(
+    activeGraph,
+    defaultConnectionData,
+    getKerberosTicket
+  )
+  bus.send(SWITCH_CONNECTION, connectionCreds)
+}
+export async function setInitialConnectionData (
+  activeGraph,
+  defaultConnectionData,
+  getKerberosTicket,
+  bus
+) {
+  const connectionsCredentials = await createConnectionCredentialsObject(
+    activeGraph,
+    defaultConnectionData,
+    getKerberosTicket
+  )
+
+  // No connection. Probably no graph active.
+  if (!connectionsCredentials) {
+    bus.send(SWITCH_CONNECTION_FAILED)
+    return
+  }
+  bus.send(INJECTED_DISCOVERY, connectionsCredentials)
 }

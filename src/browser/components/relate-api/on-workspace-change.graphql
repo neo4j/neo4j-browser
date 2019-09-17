@@ -1,5 +1,21 @@
 subscription {
     onWorkspaceChange {
+        me {
+            activationKeys {
+                featureName
+                expirationDate
+            }
+            name
+        }
+        host {
+            prefersColorScheme
+            publicInternetAccess
+            settings {
+                allowSendReports
+                allowSendStats
+                allowStoreCredentials
+            }
+        }
         projects {
             id
             name

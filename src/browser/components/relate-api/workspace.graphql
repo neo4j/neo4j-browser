@@ -8,6 +8,7 @@ query {
             name
         }
         host {
+            prefersColorScheme
             publicInternetAccess
             settings {
                 allowSendReports

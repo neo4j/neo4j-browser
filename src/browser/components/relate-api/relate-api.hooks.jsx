@@ -2,14 +2,21 @@ import { useState, useEffect } from 'react'
 import { useApolloClient } from '@apollo/react-hooks'
 import workspaceQuery from './workspace.graphql'
 import workspaceSubscription from './on-workspace-change.graphql'
-import { getActiveGraphData } from './relate-api.utils'
+import { getActiveGraphData, getPrefersColorScheme } from './relate-api.utils'
 import { deepEquals } from 'services/utils'
 
 export function useWorkspaceData () {
-  const client = useApolloClient()
+  let client
+  // We might not be in a GraphQL env
+  try {
+    client = useApolloClient()
+  } catch (e) {}
   const [workspaceData, setState] = useState(null)
   useEffect(() => {
     async function fetchData () {
+      if (!client) {
+        return
+      }
       const { data } = await client.query({ query: workspaceQuery })
       setState(data)
     }
@@ -20,9 +27,16 @@ export function useWorkspaceData () {
 }
 
 export function useWorkspaceDataOnChange () {
-  const client = useApolloClient()
+  let client
+  // We might not be in a GraphQL env
+  try {
+    client = useApolloClient()
+  } catch (e) {}
   const [workspaceData, setState] = useState(null)
   useEffect(() => {
+    if (!client) {
+      return
+    }
     const observer = client.subscribe({ query: workspaceSubscription })
     observer.subscribe({
       next: ({ data }) => {
@@ -38,23 +52,42 @@ export function useWorkspaceDataOnChange () {
   return workspaceData
 }
 
-export function useActiveGraphMonitor () {
+export function useActiveGraphMonitor (onWorkspaceChangeData) {
   const [activeGraph, setActiveGraph] = useState(undefined)
-  const { onWorkspaceChange } = useWorkspaceDataOnChange() || {}
   useEffect(
     () => {
       // Wait until initial data comes back
-      if (activeGraph === undefined && !onWorkspaceChange) {
+      if (activeGraph === undefined && !onWorkspaceChangeData) {
         return
       }
       const latestActiveGraph = getActiveGraphData({
-        workspace: onWorkspaceChange
+        workspace: onWorkspaceChangeData.onWorkspaceChange
       })
       if (!deepEquals(activeGraph, latestActiveGraph)) {
         setActiveGraph(latestActiveGraph)
       }
     },
-    [onWorkspaceChange]
+    [onWorkspaceChangeData]
   )
   return activeGraph
+}
+
+export function usePrefersColorSchemeMonitor (onWorkspaceChangeData) {
+  const [prefersColorScheme, setPrefersColorScheme] = useState(undefined)
+  useEffect(
+    () => {
+      // Wait until initial data comes back
+      if (prefersColorScheme === undefined && !onWorkspaceChangeData) {
+        return
+      }
+      const latestPrefersColorScheme = getPrefersColorScheme(
+        onWorkspaceChangeData
+      )
+      if (prefersColorScheme !== latestPrefersColorScheme) {
+        setPrefersColorScheme(latestPrefersColorScheme)
+      }
+    },
+    [onWorkspaceChangeData]
+  )
+  return prefersColorScheme
 }

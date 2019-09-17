@@ -39,16 +39,10 @@ import {
   getLastConnectionUpdate,
   getActiveConnectionData,
   isConnected,
-  getConnectionData,
-  SILENT_DISCONNECT,
-  SWITCH_CONNECTION,
-  SWITCH_CONNECTION_FAILED
+  getConnectionData
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import {
-  CONNECTION_ID,
-  INJECTED_DISCOVERY
-} from 'shared/modules/discovery/discoveryDuck'
+import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
 import {
   StyledWrapper,
   StyledApp,
@@ -70,69 +64,14 @@ import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
 import { inWebEnv } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
-import {
-  useWorkspaceData,
-  useActiveGraphMonitor
-} from 'browser-components/relate-api/relate-api.hooks'
-import {
-  getActiveGraphData,
-  createConnectionCredentialsObject
-} from 'browser-components/relate-api/relate-api.utils'
-
-// <DesktopIntegration
-//                 integrationPoint={props.desktopIntegrationPoint}
-//                 onArgumentsChange={props.onArgumentsChange}
-//                 onMount={(
-//                   activeGraph,
-//                   connectionsCredentials,
-//                   context,
-//                   getKerberosTicket
-//                 ) => {
-//                   props.setInitialConnectionData(
-//                     activeGraph,
-//                     connectionsCredentials,
-//                     context,
-//                     getKerberosTicket
-//                   )
-//                   detectDesktopThemeChanges(null, context)
-//                 }}
-//                 onGraphActive={props.switchConnection}
-//                 onGraphInactive={props.closeConnectionMaybe}
-//                 onColorSchemeUpdated={detectDesktopThemeChanges}
-//               />
+import RelateApi from 'browser-components/relate-api/relate-api'
 
 export function App (props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
     LIGHT_THEME
   )
-
-  const workspaceData = useWorkspaceData()
-  useEffect(
-    () => {
-      if (!workspaceData) {
-        return
-      }
-      const activeGraph = getActiveGraphData(workspaceData)
-      props.setInitialConnectionData(activeGraph)
-    },
-    [workspaceData]
-  )
-  const activeGraph = useActiveGraphMonitor()
-  useEffect(
-    () => {
-      if (activeGraph === undefined) {
-        // Not loaded yet
-        return
-      }
-      if (activeGraph === null) {
-        props.closeConnectionMaybe()
-        return
-      }
-      props.switchConnection(activeGraph)
-    },
-    [activeGraph]
-  )
+  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
 
   useEffect(() => {
     document.addEventListener('keyup', focusEditorOnSlash)
@@ -143,15 +82,6 @@ export function App (props) {
       document.removeEventListener('keyup', expandEditorOnEsc)
     }
   }, [])
-
-  const detectDesktopThemeChanges = (_, newContext) => {
-    if (newContext.global.prefersColorScheme) {
-      setEnvironmentTheme(newContext.global.prefersColorScheme)
-    } else {
-      setEnvironmentTheme(null)
-    }
-  }
-  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
 
   const focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
@@ -180,6 +110,7 @@ export function App (props) {
     experimentalFeatures,
     store,
     codeFontLigatures
+    defaultConnectionData
   } = props
 
   const wrapperClassNames = []
@@ -189,6 +120,10 @@ export function App (props) {
 
   return (
     <ErrorBoundary>
+      <RelateApi
+        defaultConnectionData={defaultConnectionData}
+        setEnvironmentTheme={setEnvironmentTheme}
+      />
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
@@ -263,46 +198,9 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const switchConnection = async activeGraph => {
-    const connectionCreds = await createConnectionCredentialsObject(
-      activeGraph,
-      stateProps.defaultConnectionData
-    )
-    ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
-  }
-  const setInitialConnectionData = async activeGraph => {
-    const connectionsCredentials = await createConnectionCredentialsObject(
-      activeGraph,
-      stateProps.defaultConnectionData
-    )
-    console.log('connectionsCredentials: ', connectionsCredentials)
-    // No connection. Probably no graph active.
-    if (!connectionsCredentials) {
-      ownProps.bus.send(SWITCH_CONNECTION_FAILED)
-      return
-    }
-    ownProps.bus.send(INJECTED_DISCOVERY, connectionsCredentials)
-  }
-  const closeConnectionMaybe = activeGraph => {
-    if (activeGraph) return // We still got an active graph, do nothing
-    ownProps.bus.send(SILENT_DISCONNECT, {})
-  }
-
-  return {
-    ...stateProps,
-    ...ownProps,
-    ...dispatchProps,
-    switchConnection,
-    setInitialConnectionData,
-    closeConnectionMaybe
-  }
-}
-
 export default withBus(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
+    mapDispatchToProps
   )(App)
 )
