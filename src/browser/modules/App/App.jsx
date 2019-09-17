@@ -109,7 +109,7 @@ export function App (props) {
     browserSyncAuthStatus,
     experimentalFeatures,
     store,
-    codeFontLigatures
+    codeFontLigatures,
     defaultConnectionData
   } = props
 
