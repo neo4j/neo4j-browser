@@ -1,6 +1,6 @@
 {
-  "name": "Neo4j Browser Dev 1",
-  "short_name": "Neo4j Browser Dev 1",
+  "name": "Neo4j Browser",
+  "short_name": "Neo4j Browser",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
