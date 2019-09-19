@@ -109,18 +109,20 @@ class FrameTemplate extends Component {
         data-testid='frame'
         fullscreen={this.state.fullscreen}
       >
-        {this.props.header && <FrameTitlebar
-          frame={this.props.header}
-          fullscreen={this.state.fullscreen}
-          fullscreenToggle={this.toggleFullScreen.bind(this)}
-          collapse={this.state.collapse}
-          collapseToggle={this.toggleCollapse.bind(this)}
-          pinned={this.state.pinned}
-          togglePin={this.togglePin.bind(this)}
-          numRecords={this.props.numRecords || 0}
-          getRecords={this.props.getRecords}
-          visElement={this.props.visElement}
-        />}
+        {this.props.header && (
+          <FrameTitlebar
+            frame={this.props.header}
+            fullscreen={this.state.fullscreen}
+            fullscreenToggle={this.toggleFullScreen.bind(this)}
+            collapse={this.state.collapse}
+            collapseToggle={this.toggleCollapse.bind(this)}
+            pinned={this.state.pinned}
+            togglePin={this.togglePin.bind(this)}
+            numRecords={this.props.numRecords || 0}
+            getRecords={this.props.getRecords}
+            visElement={this.props.visElement}
+          />
+        )}
         <StyledFrameBody
           fullscreen={this.state.fullscreen}
           collapsed={this.state.collapse}
@@ -137,16 +139,16 @@ class FrameTemplate extends Component {
             >
               {this.props.contents}
             </StyledFrameContents>
-            <Render if={this.props.statusbar}>
-              <StyledFrameStatusbar
-                fullscreen={this.state.fullscreen}
-                data-testid='frameStatusbar'
-              >
-                {this.props.statusbar}
-              </StyledFrameStatusbar>
-            </Render>
           </StyledFrameMainSection>
         </StyledFrameBody>
+        <Render if={this.props.statusbar}>
+          <StyledFrameStatusbar
+            fullscreen={this.state.fullscreen}
+            data-testid='frameStatusbar'
+          >
+            {this.props.statusbar}
+          </StyledFrameStatusbar>
+        </Render>
       </StyledFrame>
     )
   }
