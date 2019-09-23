@@ -29,7 +29,7 @@ export const base = {
   // Text colors
   primaryText: '#333',
   secondaryText: '#717172',
-  inputText: '#717172',
+  inputText: '#222',
   headerText: '#333',
   asideText: '#666',
   link: '#428BCA',
@@ -69,12 +69,12 @@ export const base = {
   // Buttons
   primaryButtonText: '#fff',
   primaryButtonBackground: '#008cc1',
-  secondaryButtonText: '#717172',
-  secondaryButtonBorder: '1px solid #717172',
+  secondaryButtonText: '#888',
+  secondaryButtonBorder: '1px solid #888',
   secondaryButtonBackground: 'transparent',
   secondaryButtonTextHover: '#fff',
-  secondaryButtonBorderHover: '1px solid #717172',
-  secondaryButtonBackgroundHover: '#717172',
+  secondaryButtonBorderHover: '1px solid #888',
+  secondaryButtonBackgroundHover: '#888',
   formButtonBorder: '1px solid #ccc',
   formButtonBorderHover: '1px solid ##adadad',
   formButtonBackgroundHover: '#e6e6e6',
@@ -133,10 +133,10 @@ export const dark = {
   primaryButtonText: '#fff',
   primaryButtonBackground: '#008cc1',
   secondaryButtonText: '#f4f4f4',
-  secondaryButtonBorder: '1px solid #717172',
+  secondaryButtonBorder: '1px solid #888',
   secondaryButtonBackground: 'transparent',
   secondaryButtonTextHover: '#f4f4f4',
-  secondaryButtonBorderHover: '1px solid #717172',
+  secondaryButtonBorderHover: '1px solid #888',
   secondaryButtonBackgroundHover: '#282c32',
 
   // Borders

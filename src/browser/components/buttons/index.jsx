@@ -97,12 +97,13 @@ export const NavigationButtonContainer = styled.li`
 `
 
 const StyledFormButton = styled.button`
-  color: ${props => props.theme.secondaryButtonText};
-  background-color: ${props => props.theme.secondaryButtonBackground};
-  border: ${props => props.theme.secondaryButtonBorder};
+  color: ${props => props.theme.primaryButtonText};
+  background-color: ${props => props.theme.primaryButtonBackground};
+  border: 1px solid ${props => props.theme.primaryButtonBackground};
   font-family: ${props => props.theme.primaryFontFamily};
-  padding: 6px 12px;
-  font-weight: 400;
+  padding: 12px 24px;
+  margin-right: 10px;
+  font-weight: 600;
   font-size: 14px;
   text-align: center;
   white-space: nowrap;
@@ -113,7 +114,53 @@ const StyledFormButton = styled.button`
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
     color: ${props => props.theme.secondaryButtonTextHover};
-    border: ${props => props.theme.secondaryButtonBorderHover};
+    border: 1px solid ${props => props.theme.secondaryButtonBackgroundHover};
+  }
+`
+
+const StyledTagButton = styled(StyledFormButton)`
+  background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+  color: ${props => props.theme.secondaryButtonTextHover};
+  border: 1px solid ${props => props.theme.secondaryButtonBackgroundHover};
+  font-weight: 400;
+  padding: 6px 30px 6px 12px;
+  position: relative;
+  text-align: left;
+
+  > i {
+    background-color: ${props => props.theme.primaryButtonText};
+    border-radius: 50%;
+    color: ${props => props.theme.secondaryButtonBackgroundHover};
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    svg {
+      display: block;
+      width: 8px !important;
+      height: 8px !important;
+    }
+
+    line {
+      stroke-width: 4px;
+    }
+  }
+
+  &:hover {
+    > i {
+      color: ${props => props.theme.secondaryButtonBackgroundHover};
+    }
   }
 `
 
@@ -138,6 +185,16 @@ export const StyledErrorBoundaryButton = styled(StyledFormButton)`
     background-color: #fbf1f0;
   }
 `
+export const StyledDestructiveButton = styled(StyledFormButton)`
+  color: #fff;
+  border: 1px solid #da4433;
+  background-color: #da4433;
+  &:hover {
+    color: #fff;
+    border: 1px solid #da4433;
+    background-color: #da4433;
+  }
+`
 const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
   color: #bcc0c9;
   border-color: #bcc0c9;
@@ -151,7 +208,9 @@ const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
 const buttonTypes = {
   primary: StyledFormButton,
   secondary: StyledSecondaryFormButton,
-  drawer: StyledDrawerFormButton
+  drawer: StyledDrawerFormButton,
+  destructive: StyledDestructiveButton,
+  tag: StyledTagButton
 }
 
 export const FormButton = props => {

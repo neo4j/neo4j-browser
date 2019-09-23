@@ -22,28 +22,47 @@ import styled from 'styled-components'
 import { StyledTd } from 'browser-components/DataTables'
 
 export const StyledUserTd = styled(StyledTd)`
-  padding: 10px 0;
+  padding: 10px 16px 10px 0;
 `
 export const StyledSelect = styled.select`
-  border: ${props => props.theme.secondaryButtonBorder};
-  color: #555;
-  height: 28px;
-  font-size: 16px;
-  overflow: hidden;
-  margin-right: 20px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 150px;
-  vertical-align: top;
-`
-export const StyledInput = styled.input`
-  margin: 0 10px;
-  padding: 0 5px;
+  background-color: #fff;
   border: ${props => props.theme.secondaryButtonBorder};
   border-radius: 4px;
   color: ${props => props.theme.inputText};
+  display: block;
+  height: 34px;
+  font-size: 14px;
+  padding: 6px 12px;
+  min-width: 120px;
+  width: 100%;
+`
+export const StyledInput = styled.input`
+  background-color: #fff;
+  border: ${props => props.theme.secondaryButtonBorder};
+  border-radius: 4px;
+  color: ${props => props.theme.inputText};
+  display: block;
+  height: 34px;
+  font-size: 14px;
+  padding: 6px 12px;
+  width: 100%;
 `
 export const StyledButtonContainer = styled.div`
-  margin: 0 10px;
   padding: 10px 0;
+`
+
+export const StyleRolesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  &:not(:first-child) {
+    padding: 10px 0;
+  }
+
+  > button {
+    margin: 0 0 5px 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 `

@@ -44,7 +44,12 @@ import {
   StyledBodyTr,
   StyledTh
 } from 'browser-components/DataTables'
-import { StyledUserTd, StyledInput, StyledButtonContainer } from './styled'
+import {
+  StyledUserTd,
+  StyledInput,
+  StyledButtonContainer,
+  StyleRolesContainer
+} from './styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class UserAdd extends Component {
@@ -75,18 +80,25 @@ export class UserAdd extends Component {
     return roles
   }
   listRoles () {
-    return this.state.roles.map((role, i) => {
-      return (
-        <FormButton
-          key={i}
-          label={role}
-          icon={<CloseIcon />}
-          onClick={() => {
-            this.setState({ roles: this.removeRole(role) })
-          }}
-        />
+    return (
+      !!this.state.roles.length && (
+        <StyleRolesContainer>
+          {this.state.roles.map((role, i) => {
+            return (
+              <FormButton
+                key={i}
+                label={role}
+                icon={<CloseIcon />}
+                buttonType='tag'
+                onClick={() => {
+                  this.setState({ roles: this.removeRole(role) })
+                }}
+              />
+            )
+          })}
+        </StyleRolesContainer>
       )
-    })
+    )
   }
   addRoles () {
     let errors = []

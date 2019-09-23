@@ -100,6 +100,7 @@ export class UserList extends Component {
       'Add Role',
       'Current Roles(s)',
       'Status',
+      'Action',
       'Password Change',
       'Delete'
     ].map((heading, i) => {
@@ -139,9 +140,7 @@ export class UserList extends Component {
     const renderedListOfUsers = this.state.userList
       ? this.makeTable(this.state.userList)
       : 'No users'
-    const frameContents = (
-      <div className='db-list-users'>{renderedListOfUsers}</div>
-    )
+    const frameContents = <React.Fragment>{renderedListOfUsers}</React.Fragment>
     return <FrameTemplate header={this.props.frame} contents={frameContents} />
   }
 }
