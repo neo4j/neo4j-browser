@@ -20,33 +20,17 @@
 
 import styled from 'styled-components'
 import { StyledTd } from 'browser-components/DataTables'
+import {
+  StyledInput as Input,
+  StyledSelect as Select
+} from 'browser-components/Form'
 
 export const StyledUserTd = styled(StyledTd)`
   padding: 10px 16px 10px 0;
 `
-export const StyledSelect = styled.select`
-  background-color: #fff;
-  border: ${props => props.theme.secondaryButtonBorder};
-  border-radius: 4px;
-  color: ${props => props.theme.inputText};
-  display: block;
-  height: 34px;
-  font-size: 14px;
-  padding: 6px 12px;
-  min-width: 120px;
-  width: 100%;
-`
-export const StyledInput = styled.input`
-  background-color: #fff;
-  border: ${props => props.theme.secondaryButtonBorder};
-  border-radius: 4px;
-  color: ${props => props.theme.inputText};
-  display: block;
-  height: 34px;
-  font-size: 14px;
-  padding: 6px 12px;
-  width: 100%;
-`
+export const StyledSelect = styled(Select)``
+export const StyledInput = styled(Input)``
+
 export const StyledButtonContainer = styled.div`
   padding: 10px 0;
 `

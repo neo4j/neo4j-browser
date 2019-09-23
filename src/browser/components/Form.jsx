@@ -21,7 +21,31 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-const StyledSettingTextInput = styled.input`
+export const StyledSelect = styled.select`
+  background-color: #fff;
+  border: ${props => props.theme.secondaryButtonBorder};
+  border-radius: 4px;
+  color: ${props => props.theme.inputText};
+  display: block;
+  height: 34px;
+  font-size: 14px;
+  padding: 6px 12px;
+  min-width: 120px;
+  width: 100%;
+`
+export const StyledInput = styled.input`
+  background-color: #fff;
+  border: ${props => props.theme.secondaryButtonBorder};
+  border-radius: 4px;
+  color: ${props => props.theme.inputText};
+  display: block;
+  height: 34px;
+  font-size: 14px;
+  padding: 6px 12px;
+  width: 100%;
+`
+
+const StyledSettingTextInput = styled(StyledInput)`
   height: 34px;
   color: #555;
   font-size: 14px;

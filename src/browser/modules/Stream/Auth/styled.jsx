@@ -19,19 +19,13 @@
  */
 
 import styled from 'styled-components'
+import { StyledInput } from 'browser-components/Form'
+import { StyledFrameAside } from '../../Frame/styled'
 
 export const StyledConnectionForm = styled.form`
   padding: 0 15px;
 `
-export const StyledConnectionAside = styled.div`
-  flex: 0 0 25%;
-  width: 25%;
-  padding: 0 15px;
-  font-family: ${props => props.theme.primaryFontFamily};
-  font-size: 16px;
-  font-weight: 300;
-  color: ${props => props.theme.asideText};
-`
+export const StyledConnectionAside = styled(StyledFrameAside)``
 export const StyledConnectionFormEntry = styled.div`
   padding-bottom: 15px;
 `
@@ -41,15 +35,8 @@ export const StyledConnectionLabel = styled.label`
   font-weight: 600;
   line-height: 2;
 `
-export const StyledConnectionTextInput = styled.input`
-  display: block;
-  height: 34px;
-  color: #555;
-  font-size: 14px;
-  padding: 6px 12px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+export const StyledConnectionTextInput = styled(StyledInput)`
+  min-width: 200px;
   width: 44%;
 `
 export const StyledConnectionBodyContainer = styled.div`
