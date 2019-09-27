@@ -27,7 +27,16 @@ import { getEncryptionMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getUserTxMetadata } from 'services/bolt/txMetadata'
-import { canSendTxMetadata } from '../features/versionedFeatures'
+import {
+  canSendTxMetadata,
+  changeUserPasswordQuery,
+  driverDatabaseSelection
+} from '../features/versionedFeatures'
+import {
+  updateServerInfo,
+  serverInfoQuery,
+  getVersion
+} from '../dbMeta/dbMetaDuck'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = NAME + '/REQUEST'
@@ -36,36 +45,39 @@ export const CLUSTER_CYPHER_REQUEST = NAME + '/CLUSTER_REQUEST'
 export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
 
 // Helpers
-const adHocSession = (driver, resolve, action, host) => {
-  const session = driver.session({
-    defaultAccessMode: bolt.neo4j.session.WRITE
+const queryAndResovle = async (driver, action, host, useDb = {}) => {
+  return new Promise(resolve => {
+    const session = driver.session({
+      defaultAccessMode: bolt.neo4j.session.WRITE,
+      ...useDb
+    })
+    session
+      .run(action.query, action.parameters)
+      .then(r => {
+        resolve({
+          type: action.$$responseChannel,
+          success: true,
+          result: Object.assign({}, r, { meta: action.host })
+        })
+      })
+      .catch(e => {
+        resolve({
+          type: action.$$responseChannel,
+          success: false,
+          error: e,
+          host
+        })
+      })
   })
-  session
-    .run(action.query, action.parameters)
-    .then(r => {
-      driver.close()
-      resolve({
-        type: action.$$responseChannel,
-        success: true,
-        result: Object.assign({}, r, { meta: action.host })
-      })
-    })
-    .catch(e => {
-      driver.close()
-      resolve({
-        type: action.$$responseChannel,
-        success: false,
-        error: e,
-        host
-      })
-    })
 }
-const callClusterMember = (connection, action, store) => {
-  return new Promise((resolve, reject) => {
+const callClusterMember = async (connection, action, store) => {
+  return new Promise(resolve => {
     bolt
       .directConnect(connection, undefined, undefined, false) // Ignore validation errors
-      .then(driver => {
-        adHocSession(driver, resolve, action, connection.host)
+      .then(async driver => {
+        const res = await queryAndResovle(driver, action, connection.host)
+        driver.close()
+        resolve(res)
       })
       .catch(error => {
         resolve({
@@ -188,8 +200,39 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
           undefined,
           false // Ignore validation errors
         )
-        .then(driver => {
-          adHocSession(driver, resolve, action)
+        .then(async driver => {
+          // Let's establish what server version we're connected to if not in state
+          if (!getVersion(store.getState())) {
+            const versionRes = await queryAndResovle(
+              driver,
+              { ...action, query: serverInfoQuery, parameters: {} },
+              undefined
+            )
+            // It not successful, fake it for now until driver supports
+            // getting server version without auth
+            if (!versionRes.success) {
+              versionRes.result = {
+                records: [],
+                summary: { server: { version: 'fake/4.0.0-alphafake' } }
+              }
+            }
+            store.dispatch(updateServerInfo(versionRes.result))
+          }
+          // Figure out how to change the pw on that server version
+          const queryObj = changeUserPasswordQuery(
+            store.getState(),
+            action.password,
+            action.newPassword
+          )
+          // and then change the password
+          const res = await queryAndResovle(
+            driver,
+            { ...action, ...queryObj },
+            undefined,
+            driverDatabaseSelection(store.getState(), 'system') // target system db if it has multi-db support
+          )
+          driver.close()
+          resolve(res)
         })
         .catch(e =>
           resolve({ type: action.$$responseChannel, success: false, error: e })

@@ -26,7 +26,8 @@ import {
   getActiveConnection,
   setActiveConnection,
   updateConnection,
-  CONNECT
+  CONNECT,
+  VALIDATE_CONNECTION_CREDENTIALS
 } from 'shared/modules/connections/connectionsDuck'
 import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
@@ -56,9 +57,11 @@ export class ConnectionForm extends Component {
   }
   tryConnect = (password, doneFn) => {
     this.props.error({})
-    this.props.bus.self(CONNECT, { ...this.state, password }, res => {
-      doneFn(res)
-    })
+    this.props.bus.self(
+      VALIDATE_CONNECTION_CREDENTIALS,
+      { ...this.state, password },
+      res => doneFn(res)
+    )
   }
   connect = (doneFn = () => {}) => {
     this.props.error({})

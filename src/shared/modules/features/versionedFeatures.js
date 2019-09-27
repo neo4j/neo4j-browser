@@ -79,3 +79,33 @@ export const getUsedDbName = state => {
   }
   return getActiveDbName(state)
 }
+
+export const changeUserPasswordQuery = (state, oldPw, newPw) => {
+  const pre4 = {
+    query: 'CALL dbms.security.changePassword($password)',
+    parameters: { password: newPw }
+  }
+  const serverVersion = getVersion(state)
+  if (!semver.valid(serverVersion)) {
+    return pre4
+  }
+  if (semver.gte(serverVersion, NEO4J_4_0)) {
+    return {
+      query: 'ALTER CURRENT USER SET PASSWORD FROM $oldPw TO $newPw',
+      parameters: { oldPw, newPw }
+    }
+  }
+  return pre4
+}
+
+export const driverDatabaseSelection = (state, database) => {
+  const pre4 = undefined
+  const serverVersion = getVersion(state)
+  if (!semver.valid(serverVersion)) {
+    return pre4
+  }
+  if (semver.gte(serverVersion, NEO4J_4_0)) {
+    return { database }
+  }
+  return pre4
+}
