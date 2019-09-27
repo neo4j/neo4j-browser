@@ -44,6 +44,7 @@ import {
 } from './modules/connections/connectionsDuck'
 import {
   dbMetaEpic,
+  serverInfoEpic,
   clearMetaOnDisconnectEpic
 } from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
@@ -106,6 +107,7 @@ export default combineEpics(
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
   dbMetaEpic,
+  serverInfoEpic,
   clearMetaOnDisconnectEpic,
   cancelRequestEpic,
   discoveryOnStartupEpic,
