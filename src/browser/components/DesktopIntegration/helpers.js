@@ -105,7 +105,8 @@ const isKerberosEnabled = context => {
 export const buildConnectionCredentialsObject = async (
   context,
   existingData = {},
-  getKerberosTicket = () => {}
+  getKerberosTicket = () => {},
+  neo4jVersion = '4.0.0'
 ) => {
   const creds = getActiveCredentials('bolt', context)
   if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
@@ -126,7 +127,7 @@ export const buildConnectionCredentialsObject = async (
     encrypted: creds.tlsLevel === 'REQUIRED',
     host:
       creds.url ||
-      `${getDefaultBoltScheme('4.0.0')}${creds.host}:${creds.port}`,
+      `${getDefaultBoltScheme(neo4jVersion)}${creds.host}:${creds.port}`,
     restApi,
     authenticationMethod: kerberos ? KERBEROS : NATIVE
   }

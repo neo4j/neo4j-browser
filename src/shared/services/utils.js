@@ -21,7 +21,6 @@
 
 import parseUrl from 'url-parse'
 import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
-import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 
 /**
  * The work objects expected shape:
@@ -481,8 +480,7 @@ export const toKeyString = str => btoa(encodeURIComponent(str))
 
 export const generateBoltHost = host => {
   const urlParts = (host || '').split('://')
-  const protocol =
-    urlParts.length > 1 ? `${urlParts[0]}://` : getDefaultBoltScheme('4.0.0')
+  const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'neo4j://'
   host = urlParts.length > 1 ? urlParts[1] : urlParts[0]
   return protocol + (host || 'localhost:7687')
 }
