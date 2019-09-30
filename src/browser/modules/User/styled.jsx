@@ -56,6 +56,15 @@ export const StyleRolesContainer = styled.div`
   display: flex;
   flex-direction: column;
 
+  &.roles-inline {
+    flex-direction: row;
+    align-items: flex-start;
+
+    > button {
+      margin-right: 5px;
+    }
+  }
+
   &:not(:first-child) {
     padding: 10px 0;
   }

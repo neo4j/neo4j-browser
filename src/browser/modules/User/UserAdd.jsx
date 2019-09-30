@@ -34,22 +34,19 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameAside from 'browser/modules/Frame/FrameAside'
 import FrameError from 'browser/modules/Frame/FrameError'
 import FrameSuccess from 'browser/modules/Frame/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { FormButton, StyledLink } from 'browser-components/buttons'
 import {
-  StyledTable,
-  StyledBodyTr,
-  StyledTh
-} from 'browser-components/DataTables'
-import {
-  StyledUserTd,
-  StyledInput,
-  StyledButtonContainer,
-  StyleRolesContainer
-} from './styled'
+  StyledForm,
+  StyledFormElement,
+  StyledFormElementWrapper,
+  StyledLabel
+} from 'browser-components/Form'
+import { StyledInput, StyleRolesContainer } from './styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class UserAdd extends Component {
@@ -82,7 +79,7 @@ export class UserAdd extends Component {
   listRoles () {
     return (
       !!this.state.roles.length && (
-        <StyleRolesContainer>
+        <StyleRolesContainer className='roles-inline'>
           {this.state.roles.map((role, i) => {
             return (
               <FormButton
@@ -196,7 +193,7 @@ export class UserAdd extends Component {
   confirmUpdatePassword (event) {
     return this.setState({ confirmPassword: event.target.value })
   }
-  updateForcePasswordChange (event) {
+  updateForcePasswordChange () {
     return this.setState({
       forcePasswordChange: !this.state.forcePasswordChange
     })
@@ -225,71 +222,60 @@ export class UserAdd extends Component {
     ) : (
       '-'
     )
-    const tableHeaders = [
-      'Username',
-      'Roles(s)',
-      'Set Password',
-      'Confirm Password',
-      'Force Password Change'
-    ].map((heading, i) => {
-      return <StyledTh key={i}>{heading}</StyledTh>
-    })
+
     const errors = this.state.errors ? this.state.errors.join(', ') : null
 
     const frameContents = (
-      <StyledTable>
-        <thead>
-          <tr>{tableHeaders}</tr>
-        </thead>
-        <tbody>
-          <StyledBodyTr>
-            <StyledUserTd>
-              <StyledInput
-                className='username'
-                onChange={this.updateUsername.bind(this)}
-              />
-            </StyledUserTd>
-            <StyledUserTd>
-              {listOfAvailableRoles}
-              {this.listRoles()}
-            </StyledUserTd>
-            <StyledUserTd>
-              <StyledInput
-                onChange={this.updatePassword.bind(this)}
-                type='password'
-              />
-            </StyledUserTd>
-            <StyledUserTd>
-              <StyledInput
-                onChange={this.confirmUpdatePassword.bind(this)}
-                type='password'
-              />
-            </StyledUserTd>
-            <StyledUserTd>
-              <StyledInput
-                onClick={this.updateForcePasswordChange.bind(this)}
-                type='checkbox'
-              />
-            </StyledUserTd>
-          </StyledBodyTr>
-          <tr>
-            <td>
-              <StyledButtonContainer>
-                <FormButton onClick={this.submit.bind(this)} label='Add User' />
-              </StyledButtonContainer>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <StyledButtonContainer>
-                <StyledLink onClick={this.openListUsersFrame.bind(this)}>
-                  See user list
-                </StyledLink>
-              </StyledButtonContainer>
-            </td>
-          </tr>
-        </tbody>
-      </StyledTable>
+      <StyledForm>
+        <StyledFormElement>
+          <StyledLabel>Username</StyledLabel>
+          <StyledInput
+            className='username'
+            onChange={this.updateUsername.bind(this)}
+          />
+        </StyledFormElement>
+
+        <StyledFormElementWrapper>
+          <StyledFormElement>
+            <StyledLabel>Password</StyledLabel>
+            <StyledInput
+              onChange={this.updatePassword.bind(this)}
+              type='password'
+            />
+          </StyledFormElement>
+          <StyledFormElement>
+            <StyledLabel>Confirm password</StyledLabel>
+            <StyledInput
+              onChange={this.confirmUpdatePassword.bind(this)}
+              type='password'
+            />
+          </StyledFormElement>
+        </StyledFormElementWrapper>
+
+        <StyledFormElement>
+          <StyledLabel>Roles</StyledLabel>
+          {listOfAvailableRoles}
+          {this.listRoles()}
+        </StyledFormElement>
+
+        <StyledFormElement>
+          <StyledLabel>
+            <StyledInput
+              onClick={this.updateForcePasswordChange.bind(this)}
+              type='checkbox'
+            />
+            Force password change
+          </StyledLabel>
+        </StyledFormElement>
+
+        <StyledFormElement>
+          <FormButton onClick={this.submit.bind(this)} label='Add User' />
+        </StyledFormElement>
+
+        <StyledLink onClick={this.openListUsersFrame.bind(this)}>
+          See user list
+        </StyledLink>
+      </StyledForm>
     )
 
     const getStatusBar = () => {
@@ -303,6 +289,12 @@ export class UserAdd extends Component {
     return (
       <FrameTemplate
         header={this.props.frame}
+        aside={
+          <FrameAside
+            title='Add user'
+            subtitle='Add a user to the current databse'
+          />
+        }
         contents={frameContents}
         statusbar={getStatusBar()}
       />

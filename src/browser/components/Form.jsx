@@ -43,6 +43,31 @@ export const StyledInput = styled.input`
   font-size: 14px;
   padding: 6px 12px;
   width: 100%;
+
+  &[type='checkbox'] {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+    width: auto;
+  }
+`
+
+export const StyledForm = styled.form`
+  width: 100%;
+`
+
+export const StyledFormElement = styled.div`
+  margin: 0 0 10px 0;
+`
+
+export const StyledFormElementWrapper = styled.div`
+  display: flex;
+  > div {
+    flex-grow: 1;
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
 `
 
 const StyledSettingTextInput = styled(StyledInput)`
@@ -59,9 +84,12 @@ const StyledSettingTextInput = styled(StyledInput)`
 const StyledCheckbox = styled.input`
   margin-right: 10px;
 `
-const StyledLabel = styled.label`
-  margin-left: 10px;
+export const StyledLabel = styled.label`
+  /* margin-left: 10px; */
   display: inline-block;
+  font-weight: 600;
+  vertical-align: middle;
+
   &:first-letter {
     text-transform: uppercase;
   }
