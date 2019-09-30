@@ -42,11 +42,13 @@ import {
   hasMultiDbSupport,
   getDbClusterRole
 } from '../features/versionedFeatures'
+import { extractServerInfo } from './dbMeta.utils'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
 export const UPDATE_META = 'meta/UPDATE_META'
 export const UPDATE_SERVER = 'meta/UPDATE_SERVER'
+export const FETCH_SERVER_INFO = 'meta/FETCH_SERVER_INFO'
 export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
@@ -250,6 +252,11 @@ export function fetchMetaData () {
     type: FORCE_FETCH
   }
 }
+export function fetchServerInfo () {
+  return {
+    type: FETCH_SERVER_INFO
+  }
+}
 
 export const update = obj => {
   return {
@@ -266,6 +273,14 @@ export const updateSettings = settings => {
 }
 
 export const updateDefaultDb = db => ({ type: UPDATE_DEFAULT_DB, db })
+
+export const updateServerInfo = res => {
+  const extrated = extractServerInfo(res)
+  return {
+    ...extrated,
+    type: UPDATE_SERVER
+  }
+}
 
 // Epics
 export const metaQuery = `
@@ -288,6 +303,8 @@ MATCH () RETURN { name:'nodes', data:count(*) } AS result
 UNION ALL
 MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 `
+export const serverInfoQuery =
+  'CALL dbms.components() YIELD name, versions, edition'
 
 export const dbMetaEpic = (some$, store) =>
   some$
@@ -300,6 +317,8 @@ export const dbMetaEpic = (some$, store) =>
           .merge(some$.ofType(FORCE_FETCH))
           // Throw away newly initiated calls until done
           .throttle(() => some$.ofType(DB_META_DONE))
+          // Server version and edition
+          .do(store.dispatch({ type: FETCH_SERVER_INFO }))
           // Labels, types and propertyKeys, and server version
           .mergeMap(() => {
             const state = store.getState()
@@ -330,64 +349,6 @@ export const dbMetaEpic = (some$, store) =>
             if (res) {
               store.dispatch(updateMeta(res))
             }
-          })
-          // Server version and edition
-          .mergeMap(() => {
-            const state = store.getState()
-            const db = getUseDb(state)
-            const query =
-              db === 'system'
-                ? 'SHOW DATABASES'
-                : 'CALL dbms.components() YIELD name, versions, edition'
-            return Rx.Observable.fromPromise(
-              bolt.directTransaction(
-                query,
-                {},
-                {
-                  useCypherThread: shouldUseCypherThread(store.getState()),
-                  ...getBackgroundTxMetadata({
-                    hasServerSupport: canSendTxMetadata(store.getState())
-                  })
-                }
-              )
-            )
-              .catch(e => {
-                return Rx.Observable.of(null)
-              })
-              .do(res => {
-                if (!res) return Rx.Observable.of(null)
-
-                const serverVersion = {
-                  type: UPDATE_SERVER,
-                  version: 'unknown',
-                  edition: ''
-                }
-
-                // Always get server version
-                if (res.summary.server.version) {
-                  serverVersion.version = res.summary.server.version
-                    .split('/')
-                    .pop()
-                }
-
-                // Get server edition if available
-                if (
-                  res.records.length &&
-                  res.records[0].keys.includes['name'] &&
-                  res.records[0].keys.includes['edition']
-                ) {
-                  res.records.forEach(record => {
-                    const name = record.get('name')
-                    const edition = record.get('edition')
-                    if (name === 'Neo4j Kernel') {
-                      serverVersion.edition = edition
-                    }
-                  })
-                }
-
-                store.dispatch(serverVersion)
-                return Rx.Observable.of(null)
-              })
           })
           // Server configuration
           .mergeMap(() =>
@@ -543,6 +504,37 @@ export const dbMetaEpic = (some$, store) =>
           .mapTo({ type: DB_META_DONE })
       )
     })
+
+export const serverInfoEpic = (some$, store) =>
+  some$
+    .ofType(FETCH_SERVER_INFO)
+    .mergeMap(() => {
+      const state = store.getState()
+      const db = getUseDb(state)
+      const query = db === 'system' ? 'SHOW DATABASES' : serverInfoQuery
+      return Rx.Observable.fromPromise(
+        bolt.directTransaction(
+          query,
+          {},
+          {
+            useCypherThread: shouldUseCypherThread(store.getState()),
+            ...getBackgroundTxMetadata({
+              hasServerSupport: canSendTxMetadata(store.getState())
+            })
+          }
+        )
+      )
+        .catch(e => {
+          return Rx.Observable.of(null)
+        })
+        .do(res => {
+          if (!res) return Rx.Observable.of(null)
+
+          store.dispatch(updateServerInfo(res))
+          return Rx.Observable.of(null)
+        })
+    })
+    .mapTo({ type: 'NOOP' })
 
 export const clearMetaOnDisconnectEpic = (some$, store) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })

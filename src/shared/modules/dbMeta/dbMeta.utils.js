@@ -18,4 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const listAvailableProcedures = 'CALL dbms.procedures()'
+export function extractServerInfo (res) {
+  const serverInfo = {
+    version: 'unknown',
+    edition: ''
+  }
+
+  if (!res) {
+    return serverInfo
+  }
+
+  // Always get server version
+  if (res.summary.server.version) {
+    serverInfo.version = res.summary.server.version.split('/').pop()
+  }
+
+  // Get server edition if available
+  if (
+    res.records.length &&
+    res.records[0].keys.includes['name'] &&
+    res.records[0].keys.includes['edition']
+  ) {
+    res.records.forEach(record => {
+      const name = record.get('name')
+      const edition = record.get('edition')
+      if (name === 'Neo4j Kernel') {
+        serverInfo.edition = edition
+      }
+    })
+  }
+  return serverInfo
+}

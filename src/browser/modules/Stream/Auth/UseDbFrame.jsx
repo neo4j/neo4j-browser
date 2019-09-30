@@ -21,7 +21,6 @@
 import React from 'react'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
 import {
-  StyledConnectionFrame,
   StyledConnectionAside,
   StyledConnectionBodyContainer,
   StyledConnectionBody,
@@ -36,7 +35,7 @@ export const UseDbFrame = props => {
   const { frame } = props
   const { useDb } = frame
   return (
-    <StyledConnectionFrame>
+    <React.Fragment>
       <StyledConnectionAside>
         <span>
           <React.Fragment>
@@ -60,7 +59,7 @@ export const UseDbFrame = props => {
           </div>
         </StyledConnectionBody>
       </StyledConnectionBodyContainer>
-    </StyledConnectionFrame>
+    </React.Fragment>
   )
 }
 

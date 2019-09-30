@@ -57,6 +57,8 @@ export const UPDATE_AUTH_ENABLED = NAME + '/UPDATE_AUTH_ENABLED'
 export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
 export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
 export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
+export const VALIDATE_CONNECTION_CREDENTIALS =
+  NAME + '/VALIDATE_CONNECTION_CREDENTIALS'
 export const USE_DB = NAME + '/USE_DB'
 export const USING_DB = NAME + '/USING_DB'
 
@@ -360,6 +362,29 @@ export const connectEpic = (action$, store) => {
       })
   })
 }
+
+export const validateConnectionCredentials = (action$, store) => {
+  return action$.ofType(VALIDATE_CONNECTION_CREDENTIALS).mergeMap(action => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+    return bolt
+      .directConnect(action, {
+        encrypted: getEncryptionMode(action),
+        connectionTimeout: getConnectionTimeout(store.getState())
+      })
+      .then(driver => {
+        driver.close()
+        return { type: action.$$responseChannel, success: true }
+      })
+      .catch(e => {
+        return {
+          type: action.$$responseChannel,
+          success: false,
+          error: e
+        }
+      })
+  })
+}
+
 export const startupConnectEpic = (action$, store) => {
   return action$
     .ofType(discovery.DONE)

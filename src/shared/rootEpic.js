@@ -31,6 +31,7 @@ import {
   disconnectEpic,
   startupConnectEpic,
   disconnectSuccessEpic,
+  validateConnectionCredentials,
   startupConnectionSuccessEpic,
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
@@ -44,6 +45,7 @@ import {
 } from './modules/connections/connectionsDuck'
 import {
   dbMetaEpic,
+  serverInfoEpic,
   clearMetaOnDisconnectEpic
 } from './modules/dbMeta/dbMetaDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
@@ -102,10 +104,12 @@ export default combineEpics(
   useDbEpic,
   startupConnectEpic,
   disconnectSuccessEpic,
+  validateConnectionCredentials,
   startupConnectionSuccessEpic,
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
   dbMetaEpic,
+  serverInfoEpic,
   clearMetaOnDisconnectEpic,
   cancelRequestEpic,
   discoveryOnStartupEpic,
