@@ -157,11 +157,15 @@ export class UserInformation extends Component {
           <span>{this.listRoles()}</span>
         </StyledUserTd>
         <StyledUserTd className='status'>
-          <StyledButtonContainer>
+          <StyledButtonContainer
+            className={`status-indicator status-${this.status(
+              this.props.status
+            ).toLowerCase()}`}
+          >
             {this.status(this.props.status)}
           </StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd className='status-actoin'>
+        <StyledUserTd className='status-action'>
           {this.statusButton(this.props.status)}
         </StyledUserTd>
         <StyledUserTd className='password-change'>

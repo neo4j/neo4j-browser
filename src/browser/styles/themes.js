@@ -62,13 +62,13 @@ export const base = {
   // User feedback colors
   success: '#65B144',
   error: '#E74C3C',
-  warning: '#FD952C',
+  warning: '#ffaf00',
   auth: '#428BCA',
   info: '#428BCA',
 
   // Buttons
   primaryButtonText: '#fff',
-  primaryButtonBackground: '#008cc1',
+  primaryButtonBackground: '#428BCA',
   secondaryButtonText: '#888',
   secondaryButtonBorder: '1px solid #888',
   secondaryButtonBackground: 'transparent',
@@ -131,7 +131,7 @@ export const dark = {
 
   // Buttons
   primaryButtonText: '#fff',
-  primaryButtonBackground: '#008cc1',
+  primaryButtonBackground: '#428BCA',
   secondaryButtonText: '#f4f4f4',
   secondaryButtonBorder: '1px solid #888',
   secondaryButtonBackground: 'transparent',

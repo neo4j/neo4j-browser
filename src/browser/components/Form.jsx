@@ -23,7 +23,7 @@ import styled from 'styled-components'
 
 export const StyledSelect = styled.select`
   background-color: #fff;
-  border: ${props => props.theme.secondaryButtonBorder};
+  border: ${props => props.theme.formButtonBorder};
   border-radius: 4px;
   color: ${props => props.theme.inputText};
   display: block;
@@ -35,7 +35,7 @@ export const StyledSelect = styled.select`
 `
 export const StyledInput = styled.input`
   background-color: #fff;
-  border: ${props => props.theme.secondaryButtonBorder};
+  border: ${props => props.theme.formButtonBorder};
   border-radius: 4px;
   color: ${props => props.theme.inputText};
   display: block;

@@ -32,7 +32,24 @@ export const StyledSelect = styled(Select)``
 export const StyledInput = styled(Input)``
 
 export const StyledButtonContainer = styled.div`
-  padding: 10px 0;
+  padding: 6px 0;
+
+  &.status-indicator::before {
+    background-color: #eee;
+    border-radius: 5px;
+    display: inline-block;
+    content: '';
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+  }
+
+  &.status-active::before {
+    background-color: ${props => props.theme.success};
+  }
+  &.status-suspended::before {
+    background-color: ${props => props.theme.warning};
+  }
 `
 
 export const StyleRolesContainer = styled.div`

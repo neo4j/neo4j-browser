@@ -101,7 +101,7 @@ const StyledFormButton = styled.button`
   background-color: ${props => props.theme.primaryButtonBackground};
   border: 1px solid ${props => props.theme.primaryButtonBackground};
   font-family: ${props => props.theme.primaryFontFamily};
-  padding: 12px 24px;
+  padding: 6px 18px;
   margin-right: 10px;
   font-weight: 600;
   font-size: 14px;
