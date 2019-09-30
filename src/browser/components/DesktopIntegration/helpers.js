@@ -19,6 +19,7 @@
  */
 
 import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
+import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 
 export const getActiveGraph = (context = {}) => {
   if (!context) return null
@@ -123,7 +124,9 @@ export const buildConnectionCredentialsObject = async (
     ...existingData,
     ...creds,
     encrypted: creds.tlsLevel === 'REQUIRED',
-    host: creds.url || `bolt://${creds.host}:${creds.port}`,
+    host:
+      creds.url ||
+      `${getDefaultBoltScheme('4.0.0')}${creds.host}:${creds.port}`,
     restApi,
     authenticationMethod: kerberos ? KERBEROS : NATIVE
   }

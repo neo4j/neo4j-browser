@@ -80,6 +80,17 @@ export const getUsedDbName = state => {
   return getActiveDbName(state)
 }
 
+export const getDefaultBoltScheme = serverVersion => {
+  const pre4 = 'bolt://'
+  if (!semver.valid(serverVersion)) {
+    return pre4
+  }
+  if (semver.gte(serverVersion, NEO4J_4_0)) {
+    return 'neo4j://'
+  }
+  return pre4
+}
+
 export const changeUserPasswordQuery = (state, oldPw, newPw) => {
   const pre4 = {
     query: 'CALL dbms.security.changePassword($password)',

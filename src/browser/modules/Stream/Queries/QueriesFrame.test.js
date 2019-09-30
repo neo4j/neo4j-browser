@@ -86,7 +86,7 @@ it('can list and kill queries', () => {
   const { getByText, getByTestId } = render(<QueriesFrame {...props} />)
 
   // Check that it's listed
-  expect(getByText('bolt://testhost.test')).not.toBeNull()
+  expect(getByText('neo4j://testhost.test')).not.toBeNull()
   expect(getByText('TEST RETURN')).not.toBeNull()
 
   // When

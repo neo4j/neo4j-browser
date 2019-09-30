@@ -59,6 +59,7 @@ import { RefreshIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
 import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 
 export class QueriesFrame extends Component {
   state = {
@@ -165,9 +166,10 @@ export class QueriesFrame extends Component {
         queryInfo[key] = bolt.itemIntToNumber(_fields[idx])
       })
       if (host) {
-        queryInfo.host = 'bolt://' + host
+        queryInfo.host = getDefaultBoltScheme('4.0.0') + host
       } else {
-        queryInfo.host = 'bolt://' + result.summary.server.address
+        queryInfo.host =
+          getDefaultBoltScheme('4.0.0') + result.summary.server.address
       }
       return queryInfo
     })
