@@ -149,8 +149,8 @@ export const isRoutingHost = host => {
 
 export const toBoltHost = host => {
   return (
-    'bolt://' +
-    (host || '') // prepend with bolt://
+    'neo4j://' +
+    (host || '') // prepend with neo4j://
       .replace(/(.*(?=@+)@|(bolt|bolt\+routing):\/\/)/, '') // remove bolt or bolt+routing protocol and auth info
   )
 }
@@ -480,7 +480,7 @@ export const toKeyString = str => btoa(encodeURIComponent(str))
 
 export const generateBoltHost = host => {
   const urlParts = (host || '').split('://')
-  const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'bolt://'
+  const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'neo4j://'
   host = urlParts.length > 1 ? urlParts[1] : urlParts[0]
   return protocol + (host || 'localhost:7687')
 }

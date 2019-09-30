@@ -674,9 +674,9 @@ describe('toKeyString', () => {
   describe('generateBoltHost', () => {
     it('generates a bolt host as expected', () => {
       const tests = [
-        { host: '', expected: 'bolt://localhost:7687' },
-        { host: 'localhost', expected: 'bolt://localhost' },
-        { host: 'localhost:7688', expected: 'bolt://localhost:7688' },
+        { host: '', expected: 'neo4j://localhost:7687' },
+        { host: 'localhost', expected: 'neo4j://localhost' },
+        { host: 'localhost:7688', expected: 'neo4j://localhost:7688' },
         { host: 'bolt://localhost', expected: 'bolt://localhost' },
         { host: 'bolt://localhost:7688', expected: 'bolt://localhost:7688' },
         { host: 'neo4j://localhost:7688', expected: 'neo4j://localhost:7688' },
@@ -688,7 +688,7 @@ describe('toKeyString', () => {
           host: 'bolt+routing://localhost:7688',
           expected: 'bolt+routing://localhost:7688'
         },
-        { host: null, expected: 'bolt://localhost:7687' }
+        { host: null, expected: 'neo4j://localhost:7687' }
       ]
 
       tests.forEach(test => {

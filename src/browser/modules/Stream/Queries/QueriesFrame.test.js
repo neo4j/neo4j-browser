@@ -80,13 +80,14 @@ it('can list and kill queries', () => {
   const props = {
     availableProcedures: ['dbms.listQueries'],
     connectionState: CONNECTED_STATE,
-    bus
+    bus,
+    neo4jVersion: '4.0.0'
   }
 
   const { getByText, getByTestId } = render(<QueriesFrame {...props} />)
 
   // Check that it's listed
-  expect(getByText('bolt://testhost.test')).not.toBeNull()
+  expect(getByText('neo4j://testhost.test')).not.toBeNull()
   expect(getByText('TEST RETURN')).not.toBeNull()
 
   // When
