@@ -19,10 +19,11 @@
  */
 
 import React, { Component } from 'react'
-import { v4 } from 'uuid'
+import uuid, { v4 } from 'uuid'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'react-suber'
+
 import {
   deleteUser,
   addRoleToUser,
@@ -144,19 +145,20 @@ export class UserInformation extends Component {
   render () {
     return (
       <StyledBodyTr className='user-info'>
-        <StyledUserTd className='username'>
+        <StyledUserTd className='username' aria-labelledby='username'>
           <StyledButtonContainer>{this.props.username}</StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd className='roles'>
+        <StyledUserTd className='roles' aria-labelledby='roles'>
           <RolesSelector
+            id={`roles-selector-${uuid()}`}
             roles={this.availableRoles()}
             onChange={this.onRoleSelect.bind(this)}
           />
         </StyledUserTd>
-        <StyledUserTd className='current-roles'>
+        <StyledUserTd className='current-roles' aria-labelledby='current-roles'>
           <span>{this.listRoles()}</span>
         </StyledUserTd>
-        <StyledUserTd className='status'>
+        <StyledUserTd className='status' aria-labelledby='status'>
           <StyledButtonContainer
             className={`status-indicator status-${this.status(
               this.props.status
@@ -165,15 +167,18 @@ export class UserInformation extends Component {
             {this.status(this.props.status)}
           </StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd className='status-action'>
+        <StyledUserTd className='status-action' aria-labelledby='status-action'>
           {this.statusButton(this.props.status)}
         </StyledUserTd>
-        <StyledUserTd className='password-change'>
+        <StyledUserTd
+          className='password-change'
+          aria-labelledby='password-change'
+        >
           <StyledButtonContainer>
             {this.passwordChange(this.props.status)}
           </StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd>
+        <StyledUserTd className='delete' aria-labelledby='delete'>
           <FormButton
             className='delete'
             label='Remove'

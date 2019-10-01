@@ -81,7 +81,18 @@ export class UserList extends Component {
       }
     )
   }
+
   makeTable (data) {
+    const tableHeaderValues = {
+      username: 'Username',
+      roles: 'Add Role',
+      'current-roles': 'Current Roles(s)',
+      status: 'Status',
+      'status-action': 'Action',
+      'password-change': 'Password Change',
+      delete: 'Delete'
+    }
+
     const items = data.map(row => {
       return (
         <UserInformation
@@ -95,16 +106,13 @@ export class UserList extends Component {
         />
       )
     })
-    const tableHeaders = [
-      'Username',
-      'Add Role',
-      'Current Roles(s)',
-      'Status',
-      'Action',
-      'Password Change',
-      'Delete'
-    ].map((heading, i) => {
-      return <StyledTh key={i}>{heading}</StyledTh>
+
+    const tableHeaders = Object.keys(tableHeaderValues).map((id, key) => {
+      return (
+        <StyledTh key={`${id}-${key}`} id={id}>
+          {tableHeaderValues[id]}
+        </StyledTh>
+      )
     })
     return (
       <StyledTable>

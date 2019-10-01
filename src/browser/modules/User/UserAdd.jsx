@@ -20,6 +20,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import uuid from 'uuid'
 
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { canAssignRolesToUser } from 'shared/modules/features/featuresDuck'
@@ -210,51 +211,71 @@ export class UserAdd extends Component {
   }
 
   render () {
-    const listOfAvailableRoles = this.state.availableRoles ? (
-      <RolesSelector
-        roles={this.availableRoles()}
-        onChange={event => {
-          this.setState({
-            roles: this.state.roles.concat([event.target.value])
-          })
-        }}
-      />
-    ) : (
-      '-'
-    )
+    const listOfAvailableRoles = rolesSelectorId =>
+      this.state.availableRoles ? (
+        <RolesSelector
+          roles={this.availableRoles()}
+          className='roles'
+          name={rolesSelectorId}
+          id={rolesSelectorId}
+          onChange={event => {
+            this.setState({
+              roles: this.state.roles.concat([event.target.value])
+            })
+          }}
+        />
+      ) : (
+        '-'
+      )
 
     const errors = this.state.errors ? this.state.errors.join(', ') : null
 
+    const formId = uuid()
+    const usernameId = `username-${formId}`
+    const passwordId = `password-${formId}`
+    const passwordConfirmId = `password-confirm-${formId}`
+    const rolesSelectorId = `roles-selector-${formId}`
+
     const frameContents = (
-      <StyledForm>
+      <StyledForm id={`user-add-${formId}`}>
         <StyledFormElement>
-          <StyledLabel>Username</StyledLabel>
+          <StyledLabel htmlFor={usernameId}>Username</StyledLabel>
           <StyledInput
             className='username'
+            name={usernameId}
+            id={usernameId}
             onChange={this.updateUsername.bind(this)}
           />
         </StyledFormElement>
 
         <StyledFormElementWrapper>
           <StyledFormElement>
-            <StyledLabel>Password</StyledLabel>
+            <StyledLabel htmlFor={passwordId}>Password</StyledLabel>
             <StyledInput
-              onChange={this.updatePassword.bind(this)}
               type='password'
+              className='password'
+              name={passwordId}
+              id={passwordId}
+              onChange={this.updatePassword.bind(this)}
             />
           </StyledFormElement>
           <StyledFormElement>
-            <StyledLabel>Confirm password</StyledLabel>
+            <StyledLabel htmlFor={passwordConfirmId}>
+              Confirm password
+            </StyledLabel>
             <StyledInput
-              onChange={this.confirmUpdatePassword.bind(this)}
               type='password'
+              className='password-confirm'
+              name={passwordConfirmId}
+              id={passwordConfirmId}
+              onChange={this.confirmUpdatePassword.bind(this)}
             />
           </StyledFormElement>
         </StyledFormElementWrapper>
 
         <StyledFormElement>
-          <StyledLabel>Roles</StyledLabel>
-          {listOfAvailableRoles}
+          <StyledLabel htmlFor={rolesSelectorId}>Roles</StyledLabel>
+          {listOfAvailableRoles(rolesSelectorId)}
           {this.listRoles()}
         </StyledFormElement>
 
