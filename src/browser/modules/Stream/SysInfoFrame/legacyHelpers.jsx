@@ -25,6 +25,7 @@ import {
   buildTableData
 } from './sysinfo-utils'
 import { toHumanReadableBytes } from 'services/utils'
+import arrayHasItems from 'shared/utils/array-has-items'
 import Render from 'browser-components/Render'
 import {
   SysInfoTableContainer,
@@ -68,21 +69,21 @@ export const Sysinfo = ({
               <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
             </span>
           }
-          colspan='3'
+          colspan='5'
         >
           <SysInfoTableEntry
             key='cc-entry'
-            headers={['Roles', 'Addresses', 'Actions']}
+            headers={['Roles', 'Addresses', 'Groups', 'Database', 'Actions']}
           />
           {buildTableData(cc)}
         </SysInfoTable>
       </Render>
-      <Render if={ha}>
+      <Render if={arrayHasItems(ha)}>
         <SysInfoTable key='ha-table' header='High Availability'>
           {buildTableData(ha)}
         </SysInfoTable>
       </Render>
-      <Render if={haInstances}>
+      <Render if={arrayHasItems(haInstances)}>
         <SysInfoTable key='cluster-table' header='Cluster' colspan='4'>
           <SysInfoTableEntry
             key='ha-entry'
@@ -253,6 +254,8 @@ export const clusterResponseHandler = setState =>
       return [
         ccRecord.role,
         ccRecord.addresses.join(', '),
+        ccRecord.groups.join(', '),
+        ccRecord.database,
         <Render if={httpUrlForMember.length !== 0}>
           <a target='_blank' href={httpUrlForMember[0]}>
             Open

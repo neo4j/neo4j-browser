@@ -95,7 +95,8 @@ export const mapLegacySysInfoRecords = records => {
       id: record.get('id'),
       addresses: record.get('addresses'),
       role: record.get('role'),
-      groups: record.get('groups')
+      groups: record.get('groups'),
+      database: record.get('database')
     }
   })
 }
