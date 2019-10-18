@@ -20,7 +20,12 @@
 import React from 'react'
 import { StyledSelect } from './styled'
 
-const RolesSelector = ({ roles = [], onChange = null, selectedValue = 0 }) => {
+const RolesSelector = ({
+  roles = [],
+  onChange = null,
+  selectedValue = 0,
+  id
+}) => {
   let options = [
     <option key={'-1'} value={0}>
       {' '}
@@ -36,12 +41,18 @@ const RolesSelector = ({ roles = [], onChange = null, selectedValue = 0 }) => {
         )
       })
     )
+
+    const args = {
+      ...(id && { id, name: id })
+    }
+
     return (
       <StyledSelect
         className='roles-selector'
         placeholder='Select role'
         value={selectedValue}
         onChange={onChange}
+        {...args}
       >
         {options}
       </StyledSelect>

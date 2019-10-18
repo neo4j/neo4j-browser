@@ -87,7 +87,7 @@ export const StyledFrameMainSection = styled.div`
 `
 
 export const StyledFrameAside = styled.div`
-  flex: 1 0 25%;
+  flex: 0 0 25%;
   padding: 0 15px;
   width: 25%;
   font-family: ${props => props.theme.primaryFontFamily};

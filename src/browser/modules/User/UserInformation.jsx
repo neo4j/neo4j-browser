@@ -19,10 +19,11 @@
  */
 
 import React, { Component } from 'react'
-import { v4 } from 'uuid'
+import uuid, { v4 } from 'uuid'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { withBus } from 'react-suber'
+
 import {
   deleteUser,
   addRoleToUser,
@@ -34,7 +35,11 @@ import {
 import { FormButton } from 'browser-components/buttons'
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { StyledBodyTr } from 'browser-components/DataTables'
-import { StyledUserTd, StyledButtonContainer } from './styled'
+import {
+  StyledUserTd,
+  StyledButtonContainer,
+  StyleRolesContainer
+} from './styled'
 
 import RolesSelector from './RolesSelector'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
@@ -79,43 +84,44 @@ export class UserInformation extends Component {
       this.handleResponse.bind(this)
     )
   }
-  statusButton (statusList = []) {
-    if (statusList.indexOf('is_suspended') !== -1) {
-      return (
-        <FormButton
-          label='Suspend user'
-          onClick={this.activateUser.bind(this)}
-        />
-      )
-    } else {
-      return (
-        <FormButton label='Active user' onClick={this.suspendUser.bind(this)} />
-      )
-    }
+  status = () =>
+    this.props.status.includes('is_suspended') ? 'Suspended' : 'Active'
+  statusButton () {
+    return this.props.status.includes('is_suspended') ? (
+      <FormButton label='Activate' onClick={this.activateUser.bind(this)} />
+    ) : (
+      <FormButton label='Suspend' onClick={this.suspendUser.bind(this)} />
+    )
   }
-  passwordChange () {
-    return '-'
-  }
+  passwordChange = () =>
+    this.props.status.includes('password_change_required') ? 'Required' : '-'
   listRoles () {
-    return this.state.roles.map(role => {
-      return (
-        <FormButton
-          key={v4()}
-          label={role}
-          icon={<CloseIcon />}
-          onClick={() => {
-            this.props.bus.self(
-              CYPHER_REQUEST,
-              {
-                query: removeRoleFromUser(role, this.state.username),
-                queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-              },
-              this.handleResponse.bind(this)
+    return (
+      !!this.state.roles.length && (
+        <StyleRolesContainer>
+          {this.state.roles.map(role => {
+            return (
+              <FormButton
+                key={v4()}
+                label={role}
+                icon={<CloseIcon />}
+                buttonType='tag'
+                onClick={() => {
+                  this.props.bus.self(
+                    CYPHER_REQUEST,
+                    {
+                      query: removeRoleFromUser(role, this.state.username),
+                      queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+                    },
+                    this.handleResponse.bind(this)
+                  )
+                }}
+              />
             )
-          }}
-        />
+          })}
+        </StyleRolesContainer>
       )
-    })
+    )
   }
   onRoleSelect (event) {
     this.props.bus.self(
@@ -139,28 +145,44 @@ export class UserInformation extends Component {
   render () {
     return (
       <StyledBodyTr className='user-info'>
-        <StyledUserTd className='username'>
+        <StyledUserTd className='username' aria-labelledby='username'>
           <StyledButtonContainer>{this.props.username}</StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd className='roles'>
+        <StyledUserTd className='roles' aria-labelledby='roles'>
           <RolesSelector
+            id={`roles-selector-${uuid()}`}
             roles={this.availableRoles()}
             onChange={this.onRoleSelect.bind(this)}
           />
         </StyledUserTd>
-        <StyledUserTd className='current-roles'>
+        <StyledUserTd className='current-roles' aria-labelledby='current-roles'>
           <span>{this.listRoles()}</span>
         </StyledUserTd>
-        <StyledUserTd className='status'>
+        <StyledUserTd className='status' aria-labelledby='status'>
+          <StyledButtonContainer
+            className={`status-indicator status-${this.status(
+              this.props.status
+            ).toLowerCase()}`}
+          >
+            {this.status(this.props.status)}
+          </StyledButtonContainer>
+        </StyledUserTd>
+        <StyledUserTd className='status-action' aria-labelledby='status-action'>
           {this.statusButton(this.props.status)}
         </StyledUserTd>
-        <StyledUserTd className='password-change'>
-          {this.passwordChange()}
+        <StyledUserTd
+          className='password-change'
+          aria-labelledby='password-change'
+        >
+          <StyledButtonContainer>
+            {this.passwordChange(this.props.status)}
+          </StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd>
+        <StyledUserTd className='delete' aria-labelledby='delete'>
           <FormButton
             className='delete'
             label='Remove'
+            buttonType='destructive'
             onClick={this.removeClick.bind(this)}
           />
         </StyledUserTd>

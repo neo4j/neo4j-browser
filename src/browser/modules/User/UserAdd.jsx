@@ -20,6 +20,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import uuid from 'uuid'
 
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { canAssignRolesToUser } from 'shared/modules/features/featuresDuck'
@@ -34,17 +35,19 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameAside from 'browser/modules/Frame/FrameAside'
 import FrameError from 'browser/modules/Frame/FrameError'
 import FrameSuccess from 'browser/modules/Frame/FrameSuccess'
 
 import { CloseIcon } from 'browser-components/icons/Icons'
 import { FormButton, StyledLink } from 'browser-components/buttons'
 import {
-  StyledTable,
-  StyledBodyTr,
-  StyledTh
-} from 'browser-components/DataTables'
-import { StyledUserTd, StyledInput, StyledButtonContainer } from './styled'
+  StyledForm,
+  StyledFormElement,
+  StyledFormElementWrapper,
+  StyledLabel
+} from 'browser-components/Form'
+import { StyledInput, StyleRolesContainer } from './styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 export class UserAdd extends Component {
@@ -75,18 +78,25 @@ export class UserAdd extends Component {
     return roles
   }
   listRoles () {
-    return this.state.roles.map((role, i) => {
-      return (
-        <FormButton
-          key={i}
-          label={role}
-          icon={<CloseIcon />}
-          onClick={() => {
-            this.setState({ roles: this.removeRole(role) })
-          }}
-        />
+    return (
+      !!this.state.roles.length && (
+        <StyleRolesContainer className='roles-inline'>
+          {this.state.roles.map((role, i) => {
+            return (
+              <FormButton
+                key={i}
+                label={role}
+                icon={<CloseIcon />}
+                buttonType='tag'
+                onClick={() => {
+                  this.setState({ roles: this.removeRole(role) })
+                }}
+              />
+            )
+          })}
+        </StyleRolesContainer>
       )
-    })
+    )
   }
   addRoles () {
     let errors = []
@@ -184,7 +194,7 @@ export class UserAdd extends Component {
   confirmUpdatePassword (event) {
     return this.setState({ confirmPassword: event.target.value })
   }
-  updateForcePasswordChange (event) {
+  updateForcePasswordChange () {
     return this.setState({
       forcePasswordChange: !this.state.forcePasswordChange
     })
@@ -201,83 +211,92 @@ export class UserAdd extends Component {
   }
 
   render () {
-    const listOfAvailableRoles = this.state.availableRoles ? (
-      <RolesSelector
-        roles={this.availableRoles()}
-        onChange={event => {
-          this.setState({
-            roles: this.state.roles.concat([event.target.value])
-          })
-        }}
-      />
-    ) : (
-      '-'
-    )
-    const tableHeaders = [
-      'Username',
-      'Roles(s)',
-      'Set Password',
-      'Confirm Password',
-      'Force Password Change'
-    ].map((heading, i) => {
-      return <StyledTh key={i}>{heading}</StyledTh>
-    })
+    const listOfAvailableRoles = rolesSelectorId =>
+      this.state.availableRoles ? (
+        <RolesSelector
+          roles={this.availableRoles()}
+          className='roles'
+          name={rolesSelectorId}
+          id={rolesSelectorId}
+          onChange={event => {
+            this.setState({
+              roles: this.state.roles.concat([event.target.value])
+            })
+          }}
+        />
+      ) : (
+        '-'
+      )
+
     const errors = this.state.errors ? this.state.errors.join(', ') : null
 
+    const formId = uuid()
+    const usernameId = `username-${formId}`
+    const passwordId = `password-${formId}`
+    const passwordConfirmId = `password-confirm-${formId}`
+    const rolesSelectorId = `roles-selector-${formId}`
+
     const frameContents = (
-      <StyledTable>
-        <thead>
-          <tr>{tableHeaders}</tr>
-        </thead>
-        <tbody>
-          <StyledBodyTr>
-            <StyledUserTd>
-              <StyledInput
-                className='username'
-                onChange={this.updateUsername.bind(this)}
-              />
-            </StyledUserTd>
-            <StyledUserTd>
-              {listOfAvailableRoles}
-              {this.listRoles()}
-            </StyledUserTd>
-            <StyledUserTd>
-              <StyledInput
-                onChange={this.updatePassword.bind(this)}
-                type='password'
-              />
-            </StyledUserTd>
-            <StyledUserTd>
-              <StyledInput
-                onChange={this.confirmUpdatePassword.bind(this)}
-                type='password'
-              />
-            </StyledUserTd>
-            <StyledUserTd>
-              <StyledInput
-                onClick={this.updateForcePasswordChange.bind(this)}
-                type='checkbox'
-              />
-            </StyledUserTd>
-          </StyledBodyTr>
-          <tr>
-            <td>
-              <StyledButtonContainer>
-                <FormButton onClick={this.submit.bind(this)} label='Add User' />
-              </StyledButtonContainer>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <StyledButtonContainer>
-                <StyledLink onClick={this.openListUsersFrame.bind(this)}>
-                  See user list
-                </StyledLink>
-              </StyledButtonContainer>
-            </td>
-          </tr>
-        </tbody>
-      </StyledTable>
+      <StyledForm id={`user-add-${formId}`}>
+        <StyledFormElement>
+          <StyledLabel htmlFor={usernameId}>Username</StyledLabel>
+          <StyledInput
+            className='username'
+            name={usernameId}
+            id={usernameId}
+            onChange={this.updateUsername.bind(this)}
+          />
+        </StyledFormElement>
+
+        <StyledFormElementWrapper>
+          <StyledFormElement>
+            <StyledLabel htmlFor={passwordId}>Password</StyledLabel>
+            <StyledInput
+              type='password'
+              className='password'
+              name={passwordId}
+              id={passwordId}
+              onChange={this.updatePassword.bind(this)}
+            />
+          </StyledFormElement>
+          <StyledFormElement>
+            <StyledLabel htmlFor={passwordConfirmId}>
+              Confirm password
+            </StyledLabel>
+            <StyledInput
+              type='password'
+              className='password-confirm'
+              name={passwordConfirmId}
+              id={passwordConfirmId}
+              onChange={this.confirmUpdatePassword.bind(this)}
+            />
+          </StyledFormElement>
+        </StyledFormElementWrapper>
+
+        <StyledFormElement>
+          <StyledLabel htmlFor={rolesSelectorId}>Roles</StyledLabel>
+          {listOfAvailableRoles(rolesSelectorId)}
+          {this.listRoles()}
+        </StyledFormElement>
+
+        <StyledFormElement>
+          <StyledLabel>
+            <StyledInput
+              onClick={this.updateForcePasswordChange.bind(this)}
+              type='checkbox'
+            />
+            Force password change
+          </StyledLabel>
+        </StyledFormElement>
+
+        <StyledFormElement>
+          <FormButton onClick={this.submit.bind(this)} label='Add User' />
+        </StyledFormElement>
+
+        <StyledLink onClick={this.openListUsersFrame.bind(this)}>
+          See user list
+        </StyledLink>
+      </StyledForm>
     )
 
     const getStatusBar = () => {
@@ -291,6 +310,12 @@ export class UserAdd extends Component {
     return (
       <FrameTemplate
         header={this.props.frame}
+        aside={
+          <FrameAside
+            title='Add user'
+            subtitle='Add a user to the current databse'
+          />
+        }
         contents={frameContents}
         statusbar={getStatusBar()}
       />
