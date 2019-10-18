@@ -84,11 +84,18 @@ const StyledSettingTextInput = styled(StyledInput)`
 const StyledCheckbox = styled.input`
   margin-right: 10px;
 `
+const StyledRadio = styled.input`
+  margin-right: 10px;
+`
 export const StyledLabel = styled.label`
   /* margin-left: 10px; */
   display: inline-block;
   font-weight: 600;
   vertical-align: middle;
+
+  input[type='radio'] + & {
+    font-weight: 400;
+  }
 
   &:first-letter {
     text-transform: uppercase;
@@ -126,7 +133,7 @@ export class RadioSelector extends Component {
         {this.props.options.map(option => {
           return (
             <StyledRadioEntry key={option}>
-              <input
+              <StyledRadio
                 type='radio'
                 value={option}
                 checked={this.isSelectedValue(option)}
