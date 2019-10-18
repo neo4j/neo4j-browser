@@ -40,7 +40,7 @@ export const createClient = (apiEndpoint, apiClientId = null) => {
   }`
 
   const httpLink = createHttpLink({
-    uri: `http://${apiEndpointNoScheme}`
+    uri: apiEndpoint
   })
 
   const wsLink = new WebSocketLink({
