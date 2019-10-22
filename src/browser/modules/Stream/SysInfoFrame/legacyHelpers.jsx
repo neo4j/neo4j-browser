@@ -254,7 +254,7 @@ export const clusterResponseHandler = setState =>
       return [
         ccRecord.role,
         ccRecord.addresses.join(', '),
-        ccRecord.groups.join(', '),
+        (ccRecord.groups || []).join(', '),
         ccRecord.database,
         <Render if={httpUrlForMember.length !== 0}>
           <a target='_blank' href={httpUrlForMember[0]}>

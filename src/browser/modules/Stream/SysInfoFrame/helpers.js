@@ -24,8 +24,13 @@ import {
   flattenAttributes,
   mapSysInfoRecords
 } from './sysinfo-utils'
-import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
 import { toHumanReadableBytes } from 'services/utils'
+import {
+  SysInfoTableContainer,
+  SysInfoTable,
+  SysInfoTableEntry
+} from 'browser-components/Tables'
+import { QuestionIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render/index'
 
 const jmxPrefix = 'neo4j.metrics:name='
@@ -89,7 +94,9 @@ export const Sysinfo = ({
   pageCache,
   storeSizes,
   idAllocation,
-  transactions
+  transactions,
+  isACausalCluster,
+  cc
 }) => {
   const mappedDatabases = databases.map(db => {
     return {
@@ -114,6 +121,24 @@ export const Sysinfo = ({
       <SysInfoTable key='databases' header='Databases'>
         {buildTableData(mappedDatabases)}
       </SysInfoTable>
+      <Render if={isACausalCluster}>
+        <SysInfoTable
+          key='cc-table'
+          header={
+            <span data-testid='sysinfo-casual-cluster-members-title'>
+              Causal Cluster Members{' '}
+              <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
+            </span>
+          }
+          colspan='3'
+        >
+          <SysInfoTableEntry
+            key='cc-entry'
+            headers={['Roles', 'Addresses', 'Actions']}
+          />
+          {buildTableData(cc)}
+        </SysInfoTable>
+      </Render>
     </SysInfoTableContainer>
   )
 }
