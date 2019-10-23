@@ -112,7 +112,7 @@ const content = (
         </button>
       </div>
       <div className='teaser teaser-3'>
-        <h3>Monitor the system</h3>
+        <h3>System information</h3>
         <p className='lead'>Key system health and status metrics.</p>
         <div className='icon-holder'>
           <div className='icon sl red'>
@@ -148,9 +148,11 @@ const content = (
             </svg>
           </div>
           <ul className='topic-bullets'>
-            <li>Disk utilization</li>
-            <li>Cache activity</li>
-            <li>Cluster health and status</li>
+            <li>Store sizes</li>
+            <li>ID allocation</li>
+            <li>Page cache</li>
+            <li>Transaction count</li>
+            <li>Cluster status</li>
           </ul>
           <div className='clearfix' />
         </div>
