@@ -17,38 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/* global jest, test, expect */
 import React from 'react'
-import { render } from '@testing-library/react'
-import configureMockStore from 'redux-mock-store'
-import { App } from './App'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { createClient } from 'browser-components/relate-api/relate-api.utils'
 
-const mockStore = configureMockStore()
-const store = mockStore({})
+export default function RelateApiProvider ({ urlString, children }) {
+  // Load relate api graphql client
+  const url = new URL(urlString)
+  const apiEndpoint = url.searchParams.get('neo4jDesktopApiUrl')
+  const apiClientId = url.searchParams.get('neo4jDesktopGraphAppClientId')
 
-jest.mock('../FeatureToggle/FeatureToggleProvider', () => {
-  return ({ children }) => <div>{children}</div>
-})
-jest.mock('./styled', () => {
-  const orig = require.requireActual('./styled')
-  return {
-    ...orig,
-    StyledApp: () => <div>Loaded</div>
+  // If not in relate-api env, render children
+  if (!apiEndpoint) {
+    return children
   }
-})
+  const relateApiClient = createClient(apiEndpoint, apiClientId)
 
-describe('App', () => {
-  test('App loads', async () => {
-    // Given
-    const props = {
-      store
-    }
-
-    // When
-    const { getByText } = render(<App {...props} />)
-
-    // Then
-    expect(getByText('Loaded'))
-  })
-})
+  return <ApolloProvider client={relateApiClient}>{children}</ApolloProvider>
+}

@@ -18,37 +18,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, test, expect */
-import React from 'react'
-import { render } from '@testing-library/react'
-import configureMockStore from 'redux-mock-store'
-import { App } from './App'
-
-const mockStore = configureMockStore()
-const store = mockStore({})
-
-jest.mock('../FeatureToggle/FeatureToggleProvider', () => {
-  return ({ children }) => <div>{children}</div>
-})
-jest.mock('./styled', () => {
-  const orig = require.requireActual('./styled')
-  return {
-    ...orig,
-    StyledApp: () => <div>Loaded</div>
-  }
-})
-
-describe('App', () => {
-  test('App loads', async () => {
-    // Given
-    const props = {
-      store
-    }
-
-    // When
-    const { getByText } = render(<App {...props} />)
-
-    // Then
-    expect(getByText('Loaded'))
-  })
-})
+module.exports = {}
