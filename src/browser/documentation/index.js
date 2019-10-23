@@ -167,7 +167,7 @@ export default {
       start: guideStart,
       typography: guideTypography,
       unfound: guideUnfound,
-      writecode: guideWritecode,
+      writeCode: guideWritecode,
       // Commands only
       'query-template': {
         title: 'Query Templates',
