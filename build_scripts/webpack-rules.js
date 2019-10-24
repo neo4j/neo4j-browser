@@ -118,10 +118,5 @@ module.exports = [
   {
     test: /\.html?$/,
     use: ['html-loader']
-  },
-  {
-    test: /\.(graphql|gql)$/,
-    exclude: /node_modules/,
-    loader: 'graphql-tag/loader'
   }
 ]
