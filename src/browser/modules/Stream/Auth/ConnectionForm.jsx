@@ -26,7 +26,8 @@ import {
   getActiveConnection,
   setActiveConnection,
   updateConnection,
-  CONNECT
+  CONNECT,
+  VERIFY_CREDENTIALS
 } from 'shared/modules/connections/connectionsDuck'
 import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
@@ -57,24 +58,37 @@ export class ConnectionForm extends Component {
   }
   tryConnect = (password, doneFn) => {
     this.props.error({})
-    this.props.bus.self(CONNECT, { ...this.state, password }, res => {
-      doneFn(res)
-    })
+    this.props.bus.self(
+      VERIFY_CREDENTIALS,
+      { ...this.state, password },
+      res => {
+        doneFn(res)
+      }
+    )
   }
-  connect = (doneFn = () => {}) => {
+  connect = (doneFn = () => {}, onError = null) => {
     this.props.error({})
-    this.props.bus.self(CONNECT, this.state, res => {
-      doneFn()
-      if (res.success) {
-        this.saveAndStart()
-      } else {
-        if (res.error.code === 'Neo.ClientError.Security.CredentialsExpired') {
-          this.setState({ passwordChangeNeeded: true })
+    this.props.bus.self(
+      CONNECT,
+      { ...this.state, noResetConnectionOnFail: true },
+      res => {
+        doneFn()
+        if (res.success) {
+          this.saveAndStart()
         } else {
-          this.props.error(res.error)
+          if (
+            res.error.code === 'Neo.ClientError.Security.CredentialsExpired'
+          ) {
+            this.setState({ passwordChangeNeeded: true })
+          } else {
+            if (onError) {
+              return onError(res)
+            }
+            this.props.error(res.error)
+          }
         }
       }
-    })
+    )
   }
   onUsernameChange (event) {
     const username = event.target.value
@@ -117,7 +131,19 @@ export class ConnectionForm extends Component {
       response => {
         if (response.success) {
           return this.setState({ password: newPassword }, () => {
-            this.connect()
+            let retries = 5
+            const retryFn = res => {
+              // New password not accepted yet, initiate retry
+              if (res.error.code === 'Neo.ClientError.Security.Unauthorized') {
+                retries--
+                if (retries > 0) {
+                  this.connect(undefined, retryFn)
+                }
+              } else {
+                this.props.error(res.error)
+              }
+            }
+            this.connect(undefined, retryFn)
           })
         }
         this.props.error(response.error)

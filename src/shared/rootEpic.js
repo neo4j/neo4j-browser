@@ -38,7 +38,8 @@ import {
   switchConnectionEpic,
   switchConnectionSuccessEpic,
   switchConnectionFailEpic,
-  silentDisconnectEpic
+  silentDisconnectEpic,
+  verifyConnectionCredentialsEpic
 } from './modules/connections/connectionsDuck'
 import {
   dbMetaEpic,
@@ -99,6 +100,7 @@ export default combineEpics(
   jmxEpic,
   disconnectEpic,
   silentDisconnectEpic,
+  verifyConnectionCredentialsEpic,
   startupConnectEpic,
   disconnectSuccessEpic,
   startupConnectionSuccessEpic,

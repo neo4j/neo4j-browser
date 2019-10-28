@@ -56,6 +56,7 @@ export const UPDATE_AUTH_ENABLED = NAME + '/UPDATE_AUTH_ENABLED'
 export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
 export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
 export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
+export const VERIFY_CREDENTIALS = NAME + '/VERIFY_CREDENTIALS'
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -303,10 +304,12 @@ export const setAuthEnabled = authEnabled => {
 
 // Epics
 export const connectEpic = (action$, store) => {
-  return action$.ofType(CONNECT).mergeMap(action => {
+  return action$.ofType(CONNECT).mergeMap(async action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     memoryUsername = ''
     memoryPassword = ''
+    bolt.closeConnection()
+    await new Promise(resolve => setTimeout(() => resolve()), 2000)
     return bolt
       .openConnection(action, {
         encrypted: getEncryptionMode(action),
@@ -314,8 +317,9 @@ export const connectEpic = (action$, store) => {
       })
       .then(res => ({ type: action.$$responseChannel, success: true }))
       .catch(e => {
-        store.dispatch(setActiveConnection(null))
-
+        if (!action.noResetConnectionOnFail) {
+          store.dispatch(setActiveConnection(null))
+        }
         return {
           type: action.$$responseChannel,
           success: false,
@@ -324,6 +328,25 @@ export const connectEpic = (action$, store) => {
       })
   })
 }
+
+export const verifyConnectionCredentialsEpic = (action$, store) => {
+  return action$.ofType(VERIFY_CREDENTIALS).mergeMap(action => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+    return bolt
+      .directConnect(
+        action,
+        { encrypted: getEncryptionMode(action) },
+        undefined
+      )
+      .then(driver => {
+        return { type: action.$$responseChannel, success: true }
+      })
+      .catch(e => {
+        return { type: action.$$responseChannel, success: false, error: e }
+      })
+  })
+}
+
 export const startupConnectEpic = (action$, store) => {
   return action$.ofType(discovery.DONE).mergeMap(action => {
     const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
