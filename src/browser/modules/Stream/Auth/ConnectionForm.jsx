@@ -137,7 +137,7 @@ export class ConnectionForm extends Component {
               if (res.error.code === 'Neo.ClientError.Security.Unauthorized') {
                 retries--
                 if (retries > 0) {
-                  this.connect(undefined, retryFn)
+                  setTimeout(() => this.connect(undefined, retryFn), 200)
                 }
               } else {
                 this.props.error(res.error)
