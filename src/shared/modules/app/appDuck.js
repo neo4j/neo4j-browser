@@ -33,6 +33,8 @@ export const CLOUD = 'CLOUD'
 // Selectors
 export const getHostedUrl = state => (state[NAME] || {}).hostedUrl || null
 export const getEnv = state => (state[NAME] || {}).env || WEB
+export const hasDiscoveryEndpoint = state =>
+  [WEB, CLOUD].includes(getEnv(state))
 export const inWebEnv = state => getEnv(state) === WEB
 
 // Reducer

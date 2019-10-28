@@ -25,7 +25,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
-import { APP_START, WEB } from 'shared/modules/app/appDuck'
+import { APP_START, WEB, CLOUD } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
 describe('discoveryOnStartupEpic', () => {
@@ -38,7 +38,10 @@ describe('discoveryOnStartupEpic', () => {
   ])
   beforeAll(() => {
     store = mockStore({
-      connections: {}
+      connections: {},
+      app: {
+        env: WEB
+      }
     })
   })
   afterEach(() => {
@@ -159,6 +162,49 @@ describe('discoveryOnStartupEpic', () => {
           password: 'neo4j'
         }),
         currentAction
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+})
+
+describe('discoveryOnStartupEpic cloud env', () => {
+  let store
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
+  beforeAll(() => {
+    store = mockStore({
+      connections: {},
+      app: {
+        env: CLOUD
+      }
+    })
+  })
+  afterEach(() => {
+    nock.cleanAll()
+    bus.reset()
+    store.clearActions()
+  })
+  test('listens on APP_START and finds a bolt host and dispatches an action with the found host in cloud env', done => {
+    // Given
+    const expectedHost = 'bolt://myhost:7777'
+    const action = { type: APP_START, env: CLOUD }
+    nock(getDiscoveryEndpoint())
+      .get('/')
+      .reply(200, { bolt: expectedHost })
+    bus.take(discovery.DONE, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        { type: discovery.DONE }
       ])
       done()
     })
