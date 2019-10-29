@@ -27,7 +27,7 @@ import FrameError from '../../Frame/FrameError'
 import Render from 'browser-components/Render'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
-import { StyledConnectionFrame, StyledConnectionAside } from './styled'
+import { StyledConnectionAside } from './styled'
 import { getActiveConnection } from 'shared/modules/connections/connectionsDuck'
 
 export class ChangePasswordFrame extends Component {
@@ -53,7 +53,7 @@ export class ChangePasswordFrame extends Component {
   }
   render () {
     const content = (
-      <StyledConnectionFrame>
+      <React.Fragment>
         <StyledConnectionAside>
           <H3>Password change</H3>
           <Render if={!this.state.success}>
@@ -77,7 +77,7 @@ export class ChangePasswordFrame extends Component {
             showExistingPasswordInput
           />
         </Render>
-      </StyledConnectionFrame>
+      </React.Fragment>
     )
     return (
       <FrameTemplate

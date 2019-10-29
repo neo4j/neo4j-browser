@@ -113,6 +113,7 @@ export class ConnectionForm extends Component {
     this.props.error({})
   }
   onChangePassword ({ newPassword, error }) {
+    this.setState({ isLoading: true })
     if (error && error.code) {
       this.setState({ isLoading: false })
       return this.props.error(error)
@@ -152,9 +153,8 @@ export class ConnectionForm extends Component {
               this.setState({ isLoading: false })
             }, retryFn)
           })
-        } else {
-          this.setState({ isLoading: false })
         }
+        this.setState({ isLoading: false })
         this.props.error(response.error)
       }
     )
