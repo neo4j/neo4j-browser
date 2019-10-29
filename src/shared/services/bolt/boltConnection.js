@@ -283,7 +283,7 @@ export const closeConnection = () => {
 }
 
 export const ensureConnection = (props, opts, onLostConnection) => {
-  const session = _drivers ? _drivers.getRoutedDriver().session() : false
+  const session = _drivers ? _drivers.getDirectDriver().session() : false
   if (session) {
     return new Promise((resolve, reject) => {
       session.close()
