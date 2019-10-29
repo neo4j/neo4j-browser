@@ -126,6 +126,12 @@ export const StyledFrameStatusbar = styled.div`
   display: flex;
   flex-direction: row;
   flex: none;
+  align-items: center;
+  padding-left: 10px;
+
+  .statusbar--success {
+    color: ${props => props.theme.success};
+  }
 `
 
 export const StyledFrameSidebar = styled.ul`
