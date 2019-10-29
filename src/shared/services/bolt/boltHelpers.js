@@ -31,9 +31,8 @@ export const getEncryptionMode = options => {
   return location.protocol === 'https:'
 }
 
-export const getDiscoveryEndpoint = () => {
-  const url = location.host ? location.href : 'http://localhost:7474/'
-  const info = getUrlInfo(url)
+export const getDiscoveryEndpoint = url => {
+  const info = getUrlInfo(url || 'http://localhost:7474/')
   return `${info.protocol}//${info.host}/`
 }
 
