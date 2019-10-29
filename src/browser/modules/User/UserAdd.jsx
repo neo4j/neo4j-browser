@@ -59,9 +59,10 @@ export class UserAdd extends Component {
       username: '',
       password: '',
       confirmPassword: '',
-      forcePasswordChange: false,
+      forcePasswordChange: '',
       errors: null,
-      success: null
+      success: null,
+      isLoading: false
     }
   }
   componentWillMount () {
@@ -116,9 +117,17 @@ export class UserAdd extends Component {
         )
     })
     if (errors.length > 0) {
-      return this.setState({ errors: errors })
+      return this.setState({ errors: errors, isLoading: false })
     }
-    return this.setState({ success: `User '${this.state.username}' created` })
+    return this.setState({
+      success: `User '${this.state.username}' created`,
+      username: '',
+      password: '',
+      confirmPassword: '',
+      roles: [],
+      forcePasswordChange: '',
+      isLoading: false
+    })
   }
   getRoles () {
     this.props.bus &&
@@ -149,7 +158,7 @@ export class UserAdd extends Component {
       )
   }
   submit () {
-    this.setState({ success: null, errors: null })
+    this.setState({ isLoading: true, success: null, errors: null })
     let errors = []
     if (!this.state.username) errors.push('Missing username')
     if (!this.state.password) errors.push('Missing password')
@@ -178,7 +187,8 @@ export class UserAdd extends Component {
                 ? response.error.message
                 : 'Unknown error'
             return this.setState({
-              errors: ['Unable to create user', error]
+              errors: ['Unable to create user', error],
+              isLoading: false
             })
           }
           return this.addRoles()
@@ -211,6 +221,8 @@ export class UserAdd extends Component {
   }
 
   render () {
+    const { isLoading } = this.props
+
     const listOfAvailableRoles = rolesSelectorId =>
       this.state.availableRoles ? (
         <RolesSelector
@@ -244,7 +256,9 @@ export class UserAdd extends Component {
             className='username'
             name={usernameId}
             id={usernameId}
+            value={this.state.username}
             onChange={this.updateUsername.bind(this)}
+            disabled={isLoading}
           />
         </StyledFormElement>
 
@@ -256,7 +270,9 @@ export class UserAdd extends Component {
               className='password'
               name={passwordId}
               id={passwordId}
+              value={this.state.password}
               onChange={this.updatePassword.bind(this)}
+              disabled={isLoading}
             />
           </StyledFormElement>
           <StyledFormElement>
@@ -268,7 +284,9 @@ export class UserAdd extends Component {
               className='password-confirm'
               name={passwordConfirmId}
               id={passwordConfirmId}
+              value={this.state.confirmPassword}
               onChange={this.confirmUpdatePassword.bind(this)}
+              disabled={isLoading}
             />
           </StyledFormElement>
         </StyledFormElementWrapper>
@@ -283,6 +301,8 @@ export class UserAdd extends Component {
           <StyledLabel>
             <StyledInput
               onClick={this.updateForcePasswordChange.bind(this)}
+              checked={this.state.forcePasswordChange}
+              disabled={isLoading}
               type='checkbox'
             />
             Force password change
@@ -290,7 +310,11 @@ export class UserAdd extends Component {
         </StyledFormElement>
 
         <StyledFormElement>
-          <FormButton onClick={this.submit.bind(this)} label='Add User' />
+          <FormButton
+            onClick={this.submit.bind(this)}
+            label='Add User'
+            disabled={isLoading}
+          />
         </StyledFormElement>
 
         <StyledLink onClick={this.openListUsersFrame.bind(this)}>
