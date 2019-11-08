@@ -67,11 +67,15 @@ export class ConnectionForm extends Component {
       }
     )
   }
-  connect = (doneFn = () => {}, onError = null) => {
+  connect = (
+    doneFn = () => {},
+    onError = null,
+    noResetConnectionOnFail = false
+  ) => {
     this.props.error({})
     this.props.bus.self(
       CONNECT,
-      { ...this.state, noResetConnectionOnFail: true },
+      { ...this.state, noResetConnectionOnFail },
       res => {
         doneFn()
         if (res.success) {
@@ -141,17 +145,29 @@ export class ConnectionForm extends Component {
               if (res.error.code === 'Neo.ClientError.Security.Unauthorized') {
                 retries--
                 if (retries > 0) {
-                  setTimeout(() => this.connect(() => {
-                    this.setState({ isLoading: false })
-                  }, retryFn), 200)
+                  setTimeout(
+                    () =>
+                      this.connect(
+                        () => {
+                          this.setState({ isLoading: false })
+                        },
+                        retryFn,
+                        true
+                      ),
+                    200
+                  )
                 }
               } else {
                 this.props.error(res.error)
               }
             }
-            this.connect(() => {
-              this.setState({ isLoading: false })
-            }, retryFn)
+            this.connect(
+              () => {
+                this.setState({ isLoading: false })
+              },
+              retryFn,
+              true
+            )
           })
         }
         this.setState({ isLoading: false })
