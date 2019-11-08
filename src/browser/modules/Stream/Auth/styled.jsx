@@ -24,6 +24,10 @@ import { StyledFrameAside } from '../../Frame/styled'
 
 export const StyledConnectionForm = styled.form`
   padding: 0 15px;
+
+  &.isLoading {
+    opacity: 0.5;
+  }
 `
 export const StyledConnectionAside = styled(StyledFrameAside)``
 export const StyledConnectionFormEntry = styled.div`
