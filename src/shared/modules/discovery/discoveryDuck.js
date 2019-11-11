@@ -21,7 +21,12 @@
 import Rx from 'rxjs/Rx'
 import remote from 'services/remote'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
-import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
+import {
+  APP_START,
+  USER_CLEAR,
+  hasDiscoveryEndpoint,
+  getHostedUrl
+} from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
 import { getUrlInfo } from 'shared/services/utils'
@@ -105,7 +110,10 @@ export const discoveryOnStartupEpic = (some$, store) => {
     })
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap(action => {
-      if (!inWebEnv(store.getState())) return Promise.resolve({ type: 'NOOP' }) // Only when in a web environment
+      // Only when in a environment were we can guess discovery endpoint
+      if (!hasDiscoveryEndpoint(store.getState())) {
+        return Promise.resolve({ type: 'NOOP' })
+      }
       if (action.forceURL) {
         const { username, password, protocol, host } = getUrlInfo(
           action.forceURL
@@ -123,7 +131,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
       }
       return Rx.Observable.fromPromise(
         remote
-          .getJSON(getDiscoveryEndpoint())
+          .getJSON(getDiscoveryEndpoint(getHostedUrl(store.getState())))
           // Uncomment below and comment out above when doing manual tests in dev mode to
           // fake discovery response
           // Promise.resolve({ bolt: 'bolt+routing://localhost:7687' })

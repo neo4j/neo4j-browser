@@ -341,10 +341,12 @@ export const usingDbEpic = action$ => {
 }
 
 export const connectEpic = (action$, store) => {
-  return action$.ofType(CONNECT).mergeMap(action => {
+  return action$.ofType(CONNECT).mergeMap(async action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     memoryUsername = ''
     memoryPassword = ''
+    bolt.closeConnection()
+    await new Promise(resolve => setTimeout(() => resolve()), 2000)
     return bolt
       .openConnection(action, {
         encrypted: getEncryptionMode(action),
@@ -352,8 +354,9 @@ export const connectEpic = (action$, store) => {
       })
       .then(res => ({ type: action.$$responseChannel, success: true }))
       .catch(e => {
-        store.dispatch(setActiveConnection(null))
-
+        if (!action.noResetConnectionOnFail) {
+          store.dispatch(setActiveConnection(null))
+        }
         return {
           type: action.$$responseChannel,
           success: false,
@@ -368,6 +371,7 @@ export const validateConnectionCredentials = (action$, store) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
       .directConnect(action, {
+        action,
         encrypted: getEncryptionMode(action),
         connectionTimeout: getConnectionTimeout(store.getState())
       })

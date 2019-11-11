@@ -56,18 +56,18 @@ export class ConnectionFrame extends Component {
           <React.Fragment>
             <StyledConnectionAside>
               <Render if={!this.state.success}>
-                <div>
+                <React.Fragment>
                   <H3>Connect to Neo4j</H3>
                   <Lead>
                     Database access requires an authenticated connection.
                   </Lead>
-                </div>
+                </React.Fragment>
               </Render>
               <Render if={this.state.success}>
-                <div>
+                <React.Fragment>
                   <H3>Connected to Neo4j</H3>
                   <Lead>Nice to meet you.</Lead>
-                </div>
+                </React.Fragment>
               </Render>
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>

@@ -81,7 +81,18 @@ export class UserList extends Component {
       }
     )
   }
+
   makeTable (data) {
+    const tableHeaderValues = {
+      username: 'Username',
+      roles: 'Add Role',
+      'current-roles': 'Current Roles(s)',
+      status: 'Status',
+      'status-action': 'Action',
+      'password-change': 'Password Change',
+      delete: 'Delete'
+    }
+
     const items = data.map(row => {
       return (
         <UserInformation
@@ -95,15 +106,13 @@ export class UserList extends Component {
         />
       )
     })
-    const tableHeaders = [
-      'Username',
-      'Add Role',
-      'Current Roles(s)',
-      'Status',
-      'Password Change',
-      'Delete'
-    ].map((heading, i) => {
-      return <StyledTh key={i}>{heading}</StyledTh>
+
+    const tableHeaders = Object.keys(tableHeaderValues).map((id, key) => {
+      return (
+        <StyledTh key={`${id}-${key}`} id={id}>
+          {tableHeaderValues[id]}
+        </StyledTh>
+      )
     })
     return (
       <StyledTable>
@@ -139,9 +148,7 @@ export class UserList extends Component {
     const renderedListOfUsers = this.state.userList
       ? this.makeTable(this.state.userList)
       : 'No users'
-    const frameContents = (
-      <div className='db-list-users'>{renderedListOfUsers}</div>
-    )
+    const frameContents = <React.Fragment>{renderedListOfUsers}</React.Fragment>
     return <FrameTemplate header={this.props.frame} contents={frameContents} />
   }
 }

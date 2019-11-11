@@ -85,8 +85,13 @@ export default class ChangePasswordForm extends Component {
   }
   render () {
     const indexStart = this.props.showExistingPasswordInput ? 1 : 0
+    const { isLoading } = this.props
+    const classNames = []
+    if (isLoading) {
+      classNames.push('isLoading')
+    }
     return (
-      <StyledConnectionForm>
+      <StyledConnectionForm className={classNames.join(' ')}>
         <InputEnterStepping
           steps={this.props.showExistingPasswordInput ? 3 : 2}
           submitAction={this.validateSame}
@@ -108,7 +113,8 @@ export default class ChangePasswordForm extends Component {
                         type: 'password',
                         onChange: this.onExistingPasswordChange,
                         value: this.state.password,
-                        ref: ref => setRefForIndex(0, ref)
+                        ref: ref => setRefForIndex(0, ref),
+                        disabled: isLoading
                       })}
                     />
                   </StyledConnectionFormEntry>
@@ -122,7 +128,8 @@ export default class ChangePasswordForm extends Component {
                       type: 'password',
                       onChange: this.onNewPasswordChange,
                       value: this.state.newPassword,
-                      ref: ref => setRefForIndex(indexStart, ref)
+                      ref: ref => setRefForIndex(indexStart, ref),
+                      disabled: isLoading
                     })}
                   />
                 </StyledConnectionFormEntry>
@@ -136,15 +143,20 @@ export default class ChangePasswordForm extends Component {
                       type: 'password',
                       onChange: this.onNewPasswordChange2,
                       value: this.state.newPassword2,
-                      ref: ref => setRefForIndex(indexStart + 1, ref)
+                      ref: ref => setRefForIndex(indexStart + 1, ref),
+                      disabled: isLoading
                     })}
                   />
                 </StyledConnectionFormEntry>
-                <FormButton
-                  data-testid='changePassword'
-                  label='Change password'
-                  {...getSubmitProps()}
-                />
+                <Render if={!isLoading}>
+                  <FormButton
+                    data-testid='changePassword'
+                    label='Change password'
+                    disabled={isLoading}
+                    {...getSubmitProps()}
+                  />
+                </Render>
+                <Render if={isLoading}>Please wait...</Render>
               </React.Fragment>
             )
           }}
