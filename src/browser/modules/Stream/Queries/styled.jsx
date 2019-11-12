@@ -26,6 +26,10 @@ export const Code = styled.code`
   color: #c7254e;
   background-color: #f9f2f4;
   border-radius: 4px;
+
+  a {
+    color: #c7254e !important;
+  }
 `
 export const StyledTableWrapper = styled.div`
   margin: 20px 10px;
