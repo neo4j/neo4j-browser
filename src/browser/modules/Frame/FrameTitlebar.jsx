@@ -22,6 +22,8 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
+import { map } from 'lodash-es'
+
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import {
@@ -55,22 +57,26 @@ import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
   StyledFrameCommand
-} from 'browser/modules/Frame/styled'
+} from './styled'
 import {
   downloadPNGFromSVG,
   downloadSVG
 } from 'shared/services/exporting/imageUtils'
 import {
   stringifyResultArray,
-  transformResultRecordsToResultArray
+  transformResultRecordsToResultArray,
+  recordToJSONMapper
 } from 'browser/modules/Stream/CypherFrame/helpers'
 import { csvFormat } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
+
+const JSON_EXPORT_INDENT = 2
 
 class FrameTitlebar extends Component {
   hasData () {
     return this.props.numRecords > 0
   }
+
   exportCSV (records) {
     const exportData = stringifyResultArray(
       csvFormat,
@@ -108,25 +114,43 @@ class FrameTitlebar extends Component {
     }
   }
 
+  exportJSON (records) {
+    const data = JSON.stringify(
+      map(records, recordToJSONMapper),
+      null,
+      JSON_EXPORT_INDENT
+    )
+    const blob = new Blob([data], {
+      type: 'text/plain;charset=utf-8'
+    })
+
+    saveAs(blob, 'records.json')
+  }
+
   exportPNG () {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadPNGFromSVG(svgElement, graphElement, type)
   }
+
   exportSVG () {
     const { svgElement, graphElement, type } = this.props.visElement
     downloadSVG(svgElement, graphElement, type)
   }
+
   exportGrass (data) {
     var blob = new Blob([data], {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'style.grass')
   }
+
   canExport = () => {
     let props = this.props
     const { frame = {} } = props
+
     return (
-      (frame.type === 'cypher' && (this.hasData() || props.visElement)) ||
+      this.canExportTXT() ||
+      (frame.type === 'cypher' && (this.hasData() || this.props.visElement)) ||
       (frame.type === 'style' && this.hasData())
     )
   }
@@ -174,6 +198,11 @@ class FrameTitlebar extends Component {
                       onClick={() => this.exportCSV(props.getRecords())}
                     >
                       Export CSV
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => this.exportJSON(props.getRecords())}
+                    >
+                      Export JSON
                     </DropdownItem>
                   </Render>
                   <Render if={this.canExportTXT()}>
