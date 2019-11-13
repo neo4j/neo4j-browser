@@ -29,7 +29,7 @@ export function createDatabaseUser ({
   password,
   forcePasswordChange
 }) {
-  return `CALL dbms.security.createUser("${username}", "${password}", ${forcePasswordChange})`
+  return `CALL dbms.security.createUser("${username}", "${password}", ${!!forcePasswordChange})`
 }
 export function deleteUser (username) {
   return `CALL dbms.security.deleteUser("${username}")`
