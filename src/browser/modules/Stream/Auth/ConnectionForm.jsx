@@ -47,7 +47,8 @@ export class ConnectionForm extends Component {
     const connection =
       this.props.activeConnectionData || this.props.frame.connectionData
     const isConnected = !!props.activeConnection
-    const authenticationMethod = connection.authenticationMethod || NATIVE
+    const authenticationMethod =
+      (connection && connection.authenticationMethod) || NATIVE
 
     this.state = {
       ...connection,
