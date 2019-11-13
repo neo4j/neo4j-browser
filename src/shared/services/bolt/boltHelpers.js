@@ -23,6 +23,7 @@ import { getUrlInfo } from 'services/utils'
 
 export const KERBEROS = 'KERBEROS'
 export const NATIVE = 'NATIVE'
+export const NO_AUTH = 'NO_AUTH'
 
 export const getEncryptionMode = options => {
   if (options && typeof options['encrypted'] !== 'undefined') {

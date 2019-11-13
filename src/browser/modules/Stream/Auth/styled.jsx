@@ -19,7 +19,7 @@
  */
 
 import styled from 'styled-components'
-import { StyledInput } from 'browser-components/Form'
+import { StyledInput, StyledSelect } from 'browser-components/Form'
 import { StyledFrameAside } from '../../Frame/styled'
 
 export const StyledConnectionForm = styled.form`
@@ -43,6 +43,12 @@ export const StyledConnectionTextInput = styled(StyledInput)`
   min-width: 200px;
   width: 44%;
 `
+
+export const StyledConnectionSelect = styled(StyledSelect)`
+  min-width: 200px;
+  width: 44%;
+`
+
 export const StyledConnectionBodyContainer = styled.div`
   flex: 1 1 auto;
 `
