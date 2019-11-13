@@ -62,7 +62,7 @@
     word-wrap: break-word;
 
     .disable-font-ligatures & {
-      font-variant-ligatures: none;
+      font-variant-ligatures: none !important;
     }
   }
   & th {
@@ -284,7 +284,7 @@
     text-decoration: none;
 
     .disable-font-ligatures & {
-      font-variant-ligatures: none;
+      font-variant-ligatures: none !important;
     }
   }
   & pre {
@@ -298,6 +298,10 @@
     color: #c7254e;
     background-color: #f9f2f4;
     border-radius: 4px;
+
+    a {
+      color: #c7254e !important;
+    }
   }
   & figcaption {
     font-style: italic;

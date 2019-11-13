@@ -63,4 +63,8 @@ export const StyledCode = styled.code`
   cursor: pointer;
   border: none;
   padding: 2px 4px;
+
+  a {
+    color: #c7254e !important;
+  }
 `

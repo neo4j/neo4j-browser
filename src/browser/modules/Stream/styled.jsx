@@ -144,7 +144,7 @@ export const StyledPreformattedArea = styled.pre`
   color: ${props => props.theme.preText};
 
   .disable-font-ligatures & {
-    font-variant-ligatures: none;
+    font-variant-ligatures: none !important;
   }
 `
 

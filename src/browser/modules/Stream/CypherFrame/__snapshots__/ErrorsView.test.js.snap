@@ -49,7 +49,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
         class="styled__StyledDiv-sc-1dtvgs1-7 hvhkie"
       >
         <pre
-          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 kYkFhf"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 bNiVzc"
         >
           not found
         </pre>
@@ -97,7 +97,7 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
         class="styled__StyledDiv-sc-1dtvgs1-7 hvhkie"
       >
         <pre
-          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 kYkFhf"
+          class="styled__StyledPreformattedArea-sc-1dtvgs1-19 bNiVzc"
         >
           Test error description
         </pre>

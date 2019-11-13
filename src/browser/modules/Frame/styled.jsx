@@ -186,6 +186,6 @@ export const StyledFrameCommand = styled.label`
     content: '$ ';
   }
   .disable-font-ligatures & {
-    font-variant-ligatures: none;
+    font-variant-ligatures: none !important;
   }
 `
