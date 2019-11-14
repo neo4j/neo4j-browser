@@ -119,3 +119,18 @@ Cypress.Commands.add('resultContains', str => {
     str
   )
 })
+Cypress.Commands.add('addUser', (userName, password, role, force) => {
+  cy.get('[id*=username]')
+  cy.get('[id*=username]').type(userName)
+  cy.get('[id*=password]')
+    .first()
+    .type(password)
+  cy.get('[id*=password-confirm]').type(password)
+  cy.get('[id*=roles-selector]').select(role)
+  if (force === true) {
+    cy.get('[type=checkbox]').click()
+  }
+  cy.get('[class*=Button]')
+    .contains('Add User')
+    .click()
+})
