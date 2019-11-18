@@ -24,10 +24,17 @@ import { FormButton } from 'browser-components/buttons'
 import {
   StyledConnectionForm,
   StyledConnectionTextInput,
+  StyledConnectionSelect,
   StyledConnectionLabel,
   StyledConnectionFormEntry
 } from './styled'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
+import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+
+const readableauthenticationMethods = {
+  [NATIVE]: 'Username / Password',
+  [NO_AUTH]: 'No authentication'
+}
 
 export default class ConnectForm extends Component {
   state = {
@@ -63,31 +70,54 @@ export default class ConnectForm extends Component {
                     })}
                   />
                 </StyledConnectionFormEntry>
-
                 <StyledConnectionFormEntry>
-                  <StyledConnectionLabel>Username</StyledConnectionLabel>
-                  <StyledConnectionTextInput
+                  <StyledConnectionLabel>
+                    Authentication type
+                  </StyledConnectionLabel>
+                  <StyledConnectionSelect
                     {...getInputPropsForIndex(1, {
-                      'data-testid': 'username',
-                      onChange: this.props.onUsernameChange,
-                      defaultValue: this.props.username,
+                      'data-testid': 'authenticationMethod',
+                      onChange: this.props.onAuthenticationMethodChange,
+                      value: this.props.authenticationMethod,
                       ref: ref => setRefForIndex(1, ref)
                     })}
-                  />
+                  >
+                    {[NATIVE, NO_AUTH].map((auth, i) => (
+                      <option value={auth} key={i}>
+                        {readableauthenticationMethods[auth]}
+                      </option>
+                    ))}
+                  </StyledConnectionSelect>
                 </StyledConnectionFormEntry>
 
-                <StyledConnectionFormEntry>
-                  <StyledConnectionLabel>Password</StyledConnectionLabel>
-                  <StyledConnectionTextInput
-                    {...getInputPropsForIndex(2, {
-                      'data-testid': 'password',
-                      onChange: this.props.onPasswordChange,
-                      defaultValue: this.props.password,
-                      type: 'password',
-                      ref: ref => setRefForIndex(2, ref)
-                    })}
-                  />
-                </StyledConnectionFormEntry>
+                {this.props.authenticationMethod === NATIVE && (
+                  <StyledConnectionFormEntry>
+                    <StyledConnectionLabel>Username</StyledConnectionLabel>
+                    <StyledConnectionTextInput
+                      {...getInputPropsForIndex(2, {
+                        'data-testid': 'username',
+                        onChange: this.props.onUsernameChange,
+                        defaultValue: this.props.username,
+                        ref: ref => setRefForIndex(2, ref)
+                      })}
+                    />
+                  </StyledConnectionFormEntry>
+                )}
+
+                {this.props.authenticationMethod === NATIVE && (
+                  <StyledConnectionFormEntry>
+                    <StyledConnectionLabel>Password</StyledConnectionLabel>
+                    <StyledConnectionTextInput
+                      {...getInputPropsForIndex(3, {
+                        'data-testid': 'password',
+                        onChange: this.props.onPasswordChange,
+                        defaultValue: this.props.password,
+                        type: 'password',
+                        ref: ref => setRefForIndex(3, ref)
+                      })}
+                    />
+                  </StyledConnectionFormEntry>
+                )}
 
                 <Render if={!this.state.connecting}>
                   <FormButton data-testid='connect' {...getSubmitProps()}>

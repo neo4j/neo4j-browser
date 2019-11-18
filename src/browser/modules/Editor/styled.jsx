@@ -76,7 +76,7 @@ const BaseEditorWrapper = styled.div`
   }
 
   .disable-font-ligatures & {
-    font-variant-ligatures: none;
+    font-variant-ligatures: none !important;
   }
 `
 

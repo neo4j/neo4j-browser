@@ -27,14 +27,14 @@ import {
   setActiveConnection,
   updateConnection,
   CONNECT,
-  VALIDATE_CONNECTION_CREDENTIALS
+  VERIFY_CREDENTIALS
 } from 'shared/modules/connections/connectionsDuck'
 import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { generateBoltHost } from 'services/utils'
-import { getEncryptionMode } from 'services/bolt/boltHelpers'
+import { getEncryptionMode, NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
@@ -46,8 +46,12 @@ export class ConnectionForm extends Component {
     const connection =
       this.props.activeConnectionData || this.props.frame.connectionData
     const isConnected = !!props.activeConnection
+    const authenticationMethod =
+      (connection && connection.authenticationMethod) || NATIVE
+
     this.state = {
       ...connection,
+      authenticationMethod,
       isConnected: isConnected,
       isLoading: false,
       passwordChangeNeeded: props.passwordChangeNeeded || false,
@@ -58,10 +62,8 @@ export class ConnectionForm extends Component {
   }
   tryConnect = (password, doneFn) => {
     this.props.error({})
-    this.props.bus.self(
-      VALIDATE_CONNECTION_CREDENTIALS,
-      { ...this.state, password },
-      res => doneFn(res)
+    this.props.bus.self(VERIFY_CREDENTIALS, { ...this.state, password }, res =>
+      doneFn(res)
     )
   }
   connect = (
@@ -100,6 +102,14 @@ export class ConnectionForm extends Component {
   onPasswordChange (event) {
     const password = event.target.value
     this.setState({ password })
+    this.props.error({})
+  }
+  onAuthenticationMethodChange (event) {
+    const authenticationMethod = event.target.value
+    const username =
+      authenticationMethod === NO_AUTH ? '' : this.state.username || 'neo4j'
+    const password = authenticationMethod === NO_AUTH ? '' : this.state.password
+    this.setState({ authenticationMethod, username, password })
     this.props.error({})
   }
   onHostChange (event) {
@@ -184,7 +194,8 @@ export class ConnectionForm extends Component {
       id: this.state.id,
       host: this.state.host,
       username: this.state.username,
-      password: this.state.password
+      password: this.state.password,
+      authenticationMethod: this.state.authenticationMethod
     })
   }
   componentWillReceiveProps (nextProps) {
@@ -224,6 +235,7 @@ export class ConnectionForm extends Component {
           host={this.state.host}
           username={this.state.username}
           storeCredentials={this.props.storeCredentials}
+          hideStoreCredentials={this.state.authenticationMethod === NO_AUTH}
         />
       )
     } else if (!this.state.isConnected && !this.state.passwordChangeNeeded) {
@@ -233,9 +245,13 @@ export class ConnectionForm extends Component {
           onHostChange={this.onHostChange.bind(this)}
           onUsernameChange={this.onUsernameChange.bind(this)}
           onPasswordChange={this.onPasswordChange.bind(this)}
+          onAuthenticationMethodChange={this.onAuthenticationMethodChange.bind(
+            this
+          )}
           host={this.state.hostInputVal || this.state.host}
           username={this.state.username}
           password={this.state.password}
+          authenticationMethod={this.state.authenticationMethod}
           used={this.state.used}
         />
       )

@@ -58,7 +58,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0 !important;
 
     .disable-font-ligatures & {
-      font-variant-ligatures: none;
+      font-variant-ligatures: none !important;
     }
   }
 

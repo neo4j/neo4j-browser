@@ -187,6 +187,6 @@ export const StyledFrameCommand = styled.label`
     content: "${props => (props.selectedDb || '') + '$ '}";
   }
   .disable-font-ligatures & {
-    font-variant-ligatures: none;
+    font-variant-ligatures: none !important;
   }
 `

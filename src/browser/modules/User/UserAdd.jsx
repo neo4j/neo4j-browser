@@ -300,7 +300,7 @@ export class UserAdd extends Component {
         <StyledFormElement>
           <StyledLabel>
             <StyledInput
-              onClick={this.updateForcePasswordChange.bind(this)}
+              onChange={this.updateForcePasswordChange.bind(this)}
               checked={this.state.forcePasswordChange}
               disabled={isLoading}
               type='checkbox'
