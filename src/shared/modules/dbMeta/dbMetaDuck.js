@@ -488,7 +488,7 @@ export const dbMetaEpic = (some$, store) =>
                 const databases = res.records.map(record => {
                   return {
                     name: record.get('name'),
-                    status: record.get('status')
+                    status: record.get('currentStatus')
                   }
                 })
                 store.dispatch(update({ databases }))
