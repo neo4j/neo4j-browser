@@ -20,6 +20,8 @@
 
 import React, { Component } from 'react'
 import { withBus } from 'react-suber'
+import { replace } from 'lodash-es'
+
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledSchemaBody } from './styled'
@@ -86,7 +88,8 @@ export class SchemaFrame extends Component {
     } else {
       indexString = 'Indexes'
       indexString += indexes.reduce((acc, index) => {
-        acc += `\n  ${index.description.replace(
+        acc += `\n  ${replace(
+          index.description,
           'INDEX',
           ''
         )} ${index.state.toUpperCase()} ${
