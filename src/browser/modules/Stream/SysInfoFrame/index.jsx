@@ -21,6 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import dateFormat from 'dateformat'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
 import {
@@ -49,6 +50,7 @@ export class SysInfoFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      lastFetch: null,
       cc: [],
       ha: [],
       haInstances: [],
@@ -82,6 +84,7 @@ export class SysInfoFrame extends Component {
   }
   getSysInfo () {
     if (this.props.bus && this.props.isConnected) {
+      this.setState({ lastFetch: Date.now() })
       this.props.bus.self(
         CYPHER_REQUEST,
         {
@@ -137,6 +140,8 @@ export class SysInfoFrame extends Component {
             </Render>
             <Render if={this.state.success}>
               <StyledStatusBar>
+                {this.state.lastFetch &&
+                  `Updated: ${dateFormat(this.state.lastFetch)}`}
                 {this.state.success}
                 <RefreshQueriesButton onClick={() => this.getSysInfo()}>
                   <RefreshIcon />

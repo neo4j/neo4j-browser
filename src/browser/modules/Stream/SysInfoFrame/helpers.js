@@ -24,12 +24,23 @@ import {
   flattenAttributes,
   mapSysInfoRecords
 } from './sysinfo-utils'
-import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
+import { toHumanReadableBytes } from 'services/utils'
+import {
+  SysInfoTableContainer,
+  SysInfoTable,
+  SysInfoTableEntry
+} from 'browser-components/Tables'
+import { QuestionIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render/index'
 
 const jmxPrefix = 'neo4j.metrics:name='
 
 export const sysinfoQuery = useDb => `
+// Store size. Per db
+CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.store.size.total") YIELD name, attributes
+RETURN "Store Size" AS group, name, attributes
+UNION ALL
+
 // Page cache. Per DBMS.
 CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.flushes") YIELD name, attributes
 RETURN "Page Cache" AS group, name, attributes
@@ -81,8 +92,11 @@ RETURN "Transactions" AS group, name, attributes
 export const Sysinfo = ({
   databases,
   pageCache,
+  storeSizes,
   idAllocation,
-  transactions
+  transactions,
+  isACausalCluster,
+  cc
 }) => {
   const mappedDatabases = databases.map(db => {
     return {
@@ -92,6 +106,9 @@ export const Sysinfo = ({
   })
   return (
     <SysInfoTableContainer>
+      <SysInfoTable key='StoreSize' header='Store Size' colspan='2'>
+        {buildTableData(storeSizes)}
+      </SysInfoTable>
       <SysInfoTable key='IDAllocation' header='Id Allocation'>
         {buildTableData(idAllocation)}
       </SysInfoTable>
@@ -104,6 +121,24 @@ export const Sysinfo = ({
       <SysInfoTable key='databases' header='Databases'>
         {buildTableData(mappedDatabases)}
       </SysInfoTable>
+      <Render if={isACausalCluster}>
+        <SysInfoTable
+          key='cc-table'
+          header={
+            <span data-testid='sysinfo-casual-cluster-members-title'>
+              Causal Cluster Members{' '}
+              <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
+            </span>
+          }
+          colspan='3'
+        >
+          <SysInfoTableEntry
+            key='cc-entry'
+            headers={['Roles', 'Addresses', 'Actions']}
+          />
+          {buildTableData(cc)}
+        </SysInfoTable>
+      </Render>
     </SysInfoTableContainer>
   )
 }
@@ -132,6 +167,13 @@ export const responseHandler = (setState, useDb) =>
     }, {})
 
     // Page cache
+    const size = flattenAttributes(intoGroups['Store Size'])
+    const storeSizes = [
+      {
+        label: 'Size',
+        value: toHumanReadableBytes(size[`neo4j.${useDb}.store.size.total`])
+      }
+    ]
     const cache = flattenAttributes(intoGroups['Page Cache'])
     const pageCache = [
       { label: 'Flushes', value: cache['neo4j.page_cache.flushes'] },
@@ -188,7 +230,13 @@ export const responseHandler = (setState, useDb) =>
       { label: 'Committed', value: tx[`neo4j.${useDb}.transaction.committed`] }
     ]
 
-    setState({ pageCache, idAllocation, transactions, success: true })
+    setState({
+      pageCache,
+      storeSizes,
+      idAllocation,
+      transactions,
+      success: true
+    })
   }
 
 export const clusterResponseHandler = setState =>

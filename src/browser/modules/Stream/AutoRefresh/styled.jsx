@@ -31,6 +31,7 @@ export const StyledStatusBar = styled.div`
   line-height: 39px;
   white-space: nowrap;
   font-size: 13px;
+  color: ${props => props.theme.secondaryText};
   position: relative;
   overflow: hidden;
   margin-top: 0;
