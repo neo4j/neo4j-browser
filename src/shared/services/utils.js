@@ -478,11 +478,16 @@ export const optionalToString = v =>
 
 export const toKeyString = str => btoa(encodeURIComponent(str))
 
+const DEPRECATED_ROUTING_PROTOCOL = 'bolt+routing://'
+
 export const generateBoltHost = host => {
   const urlParts = (host || '').split('://')
   const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'neo4j://'
   host = urlParts.length > 1 ? urlParts[1] : urlParts[0]
-  return protocol + (host || 'localhost:7687')
+  const aliasedProtocol =
+    protocol !== DEPRECATED_ROUTING_PROTOCOL ? protocol : 'neo4j://'
+
+  return aliasedProtocol + (host || 'localhost:7687')
 }
 
 export function flushPromises () {
