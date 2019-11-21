@@ -107,8 +107,8 @@ export class UserList extends Component {
           arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
         if (response.success) {
           this.setState({
-            listRoles: flatten(
-              this.extractUserNameAndRolesFromBolt(response.result)
+            listRoles: map(response.result.records, record =>
+              record.get('role')
             )
           })
         }

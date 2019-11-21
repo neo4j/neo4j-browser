@@ -31,7 +31,7 @@ export function listRolesQuery (is40 = false) {
     return 'SHOW ALL ROLES'
   }
 
-  return 'CALL dbms.security.listRoles YIELD role'
+  return 'CALL dbms.security.listRoles'
 }
 export function createDatabaseUser (
   { username, password, forcePasswordChange },

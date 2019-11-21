@@ -21,6 +21,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid from 'uuid'
+import { map } from 'lodash-es'
 
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { canAssignRolesToUser } from 'shared/modules/features/featuresDuck'
@@ -160,8 +161,8 @@ export class UserAdd extends Component {
               []
             )
           return this.setState({
-            availableRoles: flatten(
-              this.extractUserNameAndRolesFromBolt(response.result)
+            availableRoles: map(response.result.records, record =>
+              record.get('role')
             )
           })
         }
