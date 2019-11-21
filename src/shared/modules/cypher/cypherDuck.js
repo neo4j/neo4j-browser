@@ -99,7 +99,8 @@ export const cypherRequestEpic = (some$, store) =>
         useCypherThread: shouldUseCypherThread(store.getState()),
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
-        })
+        }),
+        useDb: action.useDb
       })
       .then(r => ({ type: action.$$responseChannel, success: true, result: r }))
       .catch(e => ({
@@ -190,6 +191,7 @@ export const clusterCypherRequestEpic = (some$, store) =>
 export const handleForcePasswordChangeEpic = (some$, store) =>
   some$.ofType(FORCE_CHANGE_PASSWORD).mergeMap(action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
+
     return new Promise((resolve, reject) => {
       bolt
         .directConnect(

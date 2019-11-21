@@ -163,7 +163,7 @@ function directTransaction (input, parameters, requestMetaData = {}) {
     cancelable = false,
     onLostConnection = () => {},
     txMetadata = undefined,
-    useDb = _useDb
+    useDb
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -181,7 +181,7 @@ function directTransaction (input, parameters, requestMetaData = {}) {
           )
         ),
         txMetadata,
-        useDb
+        useDb: useDb || _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)

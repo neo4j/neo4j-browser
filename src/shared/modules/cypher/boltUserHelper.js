@@ -18,31 +18,65 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function listUsersQuery () {
+export function listUsersQuery (is40 = false) {
+  if (is40) {
+    return 'SHOW USERS'
+  }
+
   return 'CALL dbms.security.listUsers'
 }
-export function listRolesQuery () {
+
+export function listRolesQuery (is40 = false) {
+  if (is40) {
+    return 'SHOW ALL ROLES'
+  }
+
   return 'CALL dbms.security.listRoles YIELD role'
 }
-export function createDatabaseUser ({
-  username,
-  password,
-  forcePasswordChange
-}) {
+export function createDatabaseUser (
+  { username, password, forcePasswordChange },
+  is40 = false
+) {
+  if (is40) {
+    return `CREATE USER ${username} SET PASSWORD "${password}" CHANGE ${
+      forcePasswordChange ? '' : 'NOT'
+    } REQUIRED`
+  }
+
   return `CALL dbms.security.createUser("${username}", "${password}", ${!!forcePasswordChange})`
 }
-export function deleteUser (username) {
+export function deleteUser (username, is40 = false) {
+  if (is40) {
+    return `DROP USER ${username}`
+  }
+
   return `CALL dbms.security.deleteUser("${username}")`
 }
-export function addRoleToUser (username, role) {
+export function addRoleToUser (username, role, is40 = false) {
+  if (is40) {
+    return `GRANT ROLE ${role} TO ${username}`
+  }
+
   return `CALL dbms.security.addRoleToUser("${role}", "${username}")`
 }
-export function removeRoleFromUser (role, username) {
+export function removeRoleFromUser (role, username, is40 = false) {
+  if (is40) {
+    return `REVOKE ROLE ${role} FROM ${username}`
+  }
+
   return `CALL dbms.security.removeRoleFromUser("${role}", "${username}")`
 }
-export function activateUser (username) {
+export function activateUser (username, is40 = false) {
+  if (is40) {
+    return `ALTER USER ${username} SET STATUS ACTIVE`
+  }
+
   return `CALL dbms.security.activateUser("${username}", false)`
 }
-export function suspendUser (username) {
+export function suspendUser (username, is40 = false) {
+  if (is40) {
+    return `ALTER USER ${username} SET STATUS SUSPENDED`
+  }
+
   return `CALL dbms.security.suspendUser("${username}")`
 }
