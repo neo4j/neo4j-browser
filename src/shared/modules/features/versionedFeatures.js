@@ -25,6 +25,11 @@ import { getUseDb } from '../connections/connectionsDuck'
 const NEO4J_TX_METADATA_VERSION = '3.5.0-alpha01'
 const NEO4J_4_0 = '4.0.0-alpha01'
 
+export const FIRST_MULTI_DB_SUPPORT = NEO4J_4_0
+// Keep the following as 3.4.0 as 3.5.X has a
+// compatible bolt server.
+export const FIRST_NO_MULTI_DB_SUPPORT = '3.4.0'
+
 export const canSendTxMetadata = state => {
   const serverVersion = getVersion(state)
   if (!semver.valid(serverVersion)) {
