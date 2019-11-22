@@ -61,6 +61,9 @@ export class UserInformation extends Component {
       CYPHER_REQUEST,
       {
         query: deleteUser(this.state.username, Boolean(this.props.useSystemDb)),
+        params: {
+          username: this.state.username
+        },
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
         useDb: this.props.useSystemDb
       },
@@ -75,6 +78,9 @@ export class UserInformation extends Component {
           this.state.username,
           Boolean(this.props.useSystemDb)
         ),
+        params: {
+          username: this.state.username
+        },
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
         useDb: this.props.useSystemDb
       },
@@ -89,6 +95,9 @@ export class UserInformation extends Component {
           this.state.username,
           Boolean(this.props.useSystemDb)
         ),
+        params: {
+          username: this.state.username
+        },
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
         useDb: this.props.useSystemDb
       },
@@ -125,6 +134,10 @@ export class UserInformation extends Component {
                         this.state.username,
                         Boolean(this.props.useSystemDb)
                       ),
+                      params: {
+                        username: this.state.username,
+                        role
+                      },
                       queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
                       useDb: this.props.useSystemDb
                     },
@@ -147,6 +160,10 @@ export class UserInformation extends Component {
           event.target.value,
           Boolean(this.props.useSystemDb)
         ),
+        params: {
+          username: this.state.username,
+          role: event.target.value
+        },
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
         useDb: this.props.useSystemDb
       },

@@ -113,6 +113,10 @@ export class UserAdd extends Component {
               role,
               Boolean(this.props.useSystemDb)
             ),
+            params: {
+              username: this.state.username,
+              role
+            },
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
             useDb: this.props.useSystemDb
           },
@@ -192,6 +196,10 @@ export class UserAdd extends Component {
             this.state,
             Boolean(this.props.useSystemDb)
           ),
+          params: {
+            username: this.state.username,
+            password: this.state.password
+          },
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
           useDb: this.props.useSystemDb
         },
