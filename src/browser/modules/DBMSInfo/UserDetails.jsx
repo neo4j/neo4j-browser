@@ -31,10 +31,10 @@ import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 export class UserDetails extends Component {
   render () {
     const userDetails = this.props.user
+    const roles = userDetails && userDetails.roles ? userDetails.roles : []
     if (userDetails.username) {
-      const mappedRoles =
-        userDetails.roles.length > 0 ? userDetails.roles.join(', ') : '-'
-      const hasAdminRole = userDetails.roles
+      const mappedRoles = roles.length > 0 ? roles.join(', ') : '-'
+      const hasAdminRole = roles
         .map(role => role.toLowerCase())
         .includes('admin')
       return (

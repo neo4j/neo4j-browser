@@ -34,18 +34,8 @@ export function extractServerInfo (res) {
   }
 
   // Get server edition if available
-  if (
-    res.records.length &&
-    res.records[0].keys.includes['name'] &&
-    res.records[0].keys.includes['edition']
-  ) {
-    res.records.forEach(record => {
-      const name = record.get('name')
-      const edition = record.get('edition')
-      if (name === 'Neo4j Kernel') {
-        serverInfo.edition = edition
-      }
-    })
+  if (res.records.length && res.records[0].keys.includes('edition')) {
+    serverInfo.edition = res.records[0].get('edition')
   }
   return serverInfo
 }

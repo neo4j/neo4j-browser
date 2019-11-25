@@ -39,6 +39,9 @@ import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 import { connect } from 'react-redux'
+import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
+import FrameAside from '../Frame/FrameAside'
+import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 
 export class UserList extends Component {
   constructor (props) {
@@ -173,22 +176,44 @@ export class UserList extends Component {
   }
 
   componentWillMount () {
-    this.getUserList()
-    this.getRoles()
+    if (this.props.isEnterpriseEdition) {
+      this.getUserList()
+      this.getRoles()
+    }
   }
   render () {
-    const renderedListOfUsers = this.state.userList
-      ? this.makeTable(this.state.userList)
-      : 'No users'
-    const frameContents = <React.Fragment>{renderedListOfUsers}</React.Fragment>
-    return <FrameTemplate header={this.props.frame} contents={frameContents} />
+    let aside = null
+    let frameContents
+    if (!this.props.isEnterpriseEdition) {
+      aside = (
+        <FrameAside
+          title={'Frame unavailable'}
+          subtitle={'What edition are you running?'}
+        />
+      )
+      frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
+    } else {
+      const renderedListOfUsers = this.state.userList
+        ? this.makeTable(this.state.userList)
+        : 'No users'
+      frameContents = <React.Fragment>{renderedListOfUsers}</React.Fragment>
+    }
+    return (
+      <FrameTemplate
+        header={this.props.frame}
+        contents={frameContents}
+        aside={aside}
+      />
+    )
   }
 }
 const mapStateToProps = state => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
+  const isEnterpriseEdition = isEnterprise(state)
 
   return {
-    useSystemDb: database
+    useSystemDb: database,
+    isEnterpriseEdition
   }
 }
 

@@ -51,6 +51,8 @@ import {
 import { StyledInput, StyleRolesContainer } from './styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
+import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
+import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 
 export class UserAdd extends Component {
   constructor (props) {
@@ -245,6 +247,8 @@ export class UserAdd extends Component {
 
   render () {
     const { isLoading } = this.props
+    let aside
+    let frameContents
 
     const listOfAvailableRoles = rolesSelectorId =>
       this.state.availableRoles ? (
@@ -263,88 +267,104 @@ export class UserAdd extends Component {
         '-'
       )
 
-    const errors = this.state.errors ? this.state.errors.join(', ') : null
-
+    let errors = this.state.errors ? this.state.errors.join(', ') : null
     const formId = uuid()
     const usernameId = `username-${formId}`
     const passwordId = `password-${formId}`
     const passwordConfirmId = `password-confirm-${formId}`
     const rolesSelectorId = `roles-selector-${formId}`
 
-    const frameContents = (
-      <StyledForm id={`user-add-${formId}`}>
-        <StyledFormElement>
-          <StyledLabel htmlFor={usernameId}>Username</StyledLabel>
-          <StyledInput
-            className='username'
-            name={usernameId}
-            id={usernameId}
-            value={this.state.username}
-            onChange={this.updateUsername.bind(this)}
-            disabled={isLoading}
-          />
-        </StyledFormElement>
-
-        <StyledFormElementWrapper>
+    if (!this.props.isEnterpriseEdition) {
+      errors = null
+      aside = (
+        <FrameAside
+          title={'Frame unavailable'}
+          subtitle={'What edition are you running?'}
+        />
+      )
+      frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
+    } else {
+      aside = (
+        <FrameAside
+          title='Add user'
+          subtitle='Add a user to the current database'
+        />
+      )
+      frameContents = (
+        <StyledForm id={`user-add-${formId}`}>
           <StyledFormElement>
-            <StyledLabel htmlFor={passwordId}>Password</StyledLabel>
+            <StyledLabel htmlFor={usernameId}>Username</StyledLabel>
             <StyledInput
-              type='password'
-              className='password'
-              name={passwordId}
-              id={passwordId}
-              value={this.state.password}
-              onChange={this.updatePassword.bind(this)}
+              className='username'
+              name={usernameId}
+              id={usernameId}
+              value={this.state.username}
+              onChange={this.updateUsername.bind(this)}
               disabled={isLoading}
             />
           </StyledFormElement>
+
+          <StyledFormElementWrapper>
+            <StyledFormElement>
+              <StyledLabel htmlFor={passwordId}>Password</StyledLabel>
+              <StyledInput
+                type='password'
+                className='password'
+                name={passwordId}
+                id={passwordId}
+                value={this.state.password}
+                onChange={this.updatePassword.bind(this)}
+                disabled={isLoading}
+              />
+            </StyledFormElement>
+            <StyledFormElement>
+              <StyledLabel htmlFor={passwordConfirmId}>
+                Confirm password
+              </StyledLabel>
+              <StyledInput
+                type='password'
+                className='password-confirm'
+                name={passwordConfirmId}
+                id={passwordConfirmId}
+                value={this.state.confirmPassword}
+                onChange={this.confirmUpdatePassword.bind(this)}
+                disabled={isLoading}
+              />
+            </StyledFormElement>
+          </StyledFormElementWrapper>
+
           <StyledFormElement>
-            <StyledLabel htmlFor={passwordConfirmId}>
-              Confirm password
+            <StyledLabel htmlFor={rolesSelectorId}>Roles</StyledLabel>
+            {listOfAvailableRoles(rolesSelectorId)}
+            {this.listRoles()}
+          </StyledFormElement>
+
+          <StyledFormElement>
+            <StyledLabel>
+              <StyledInput
+                onChange={this.updateForcePasswordChange.bind(this)}
+                checked={this.state.forcePasswordChange}
+                disabled={isLoading}
+                type='checkbox'
+              />
+              Force password change
             </StyledLabel>
-            <StyledInput
-              type='password'
-              className='password-confirm'
-              name={passwordConfirmId}
-              id={passwordConfirmId}
-              value={this.state.confirmPassword}
-              onChange={this.confirmUpdatePassword.bind(this)}
+          </StyledFormElement>
+
+          <StyledFormElement>
+            <FormButton
+              onClick={this.submit.bind(this)}
+              label='Add User'
               disabled={isLoading}
             />
           </StyledFormElement>
-        </StyledFormElementWrapper>
 
-        <StyledFormElement>
-          <StyledLabel htmlFor={rolesSelectorId}>Roles</StyledLabel>
-          {listOfAvailableRoles(rolesSelectorId)}
-          {this.listRoles()}
-        </StyledFormElement>
-
-        <StyledFormElement>
-          <StyledLabel>
-            <StyledInput
-              onChange={this.updateForcePasswordChange.bind(this)}
-              checked={this.state.forcePasswordChange}
-              disabled={isLoading}
-              type='checkbox'
-            />
-            Force password change
-          </StyledLabel>
-        </StyledFormElement>
-
-        <StyledFormElement>
-          <FormButton
-            onClick={this.submit.bind(this)}
-            label='Add User'
-            disabled={isLoading}
-          />
-        </StyledFormElement>
-
-        <StyledLink onClick={this.openListUsersFrame.bind(this)}>
-          See user list
-        </StyledLink>
-      </StyledForm>
-    )
+          <StyledLink onClick={this.openListUsersFrame.bind(this)}>
+            See user list
+          </StyledLink>
+        </StyledForm>
+      )
+    }
 
     const getStatusBar = () => {
       if (errors) return <FrameError message={errors} code='Error' />
@@ -357,12 +377,7 @@ export class UserAdd extends Component {
     return (
       <FrameTemplate
         header={this.props.frame}
-        aside={
-          <FrameAside
-            title='Add user'
-            subtitle='Add a user to the current database'
-          />
-        }
+        aside={aside}
         contents={frameContents}
         statusbar={getStatusBar()}
       />
@@ -372,10 +387,12 @@ export class UserAdd extends Component {
 
 const mapStateToProps = state => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
+  const isEnterpriseEdition = isEnterprise(state)
 
   return {
     canAssignRolesToUser: canAssignRolesToUser(state),
-    useSystemDb: database
+    useSystemDb: database,
+    isEnterpriseEdition
   }
 }
 
