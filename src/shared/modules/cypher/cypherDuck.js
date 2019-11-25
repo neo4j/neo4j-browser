@@ -30,7 +30,9 @@ import { getUserTxMetadata } from 'services/bolt/txMetadata'
 import {
   canSendTxMetadata,
   changeUserPasswordQuery,
-  driverDatabaseSelection
+  driverDatabaseSelection,
+  FIRST_MULTI_DB_SUPPORT,
+  FIRST_NO_MULTI_DB_SUPPORT
 } from '../features/versionedFeatures'
 import {
   updateServerInfo,
@@ -210,12 +212,18 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
               { ...action, query: serverInfoQuery, parameters: {} },
               undefined
             )
-            // It not successful, fake it for now until driver supports
-            // getting server version without auth
+            // What does the driver say, does the server support multidb?
+            const supportsMultiDb = await driver.supportsMultiDb()
             if (!versionRes.success) {
+              // This is just a placeholder version to figure out how to
+              // change password. This will be updated to the correct server version
+              // when we're connected and dbMetaEpic runs
+              const fakeVersion = supportsMultiDb
+                ? FIRST_MULTI_DB_SUPPORT
+                : FIRST_NO_MULTI_DB_SUPPORT
               versionRes.result = {
                 records: [],
-                summary: { server: { version: 'fake/4.0.0-alphafake' } }
+                summary: { server: { version: `placeholder/${fakeVersion}` } }
               }
             }
             store.dispatch(updateServerInfo(versionRes.result))
