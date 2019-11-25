@@ -70,6 +70,7 @@ export const listDbsCommand = `dbs`
 
 const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
+export const whitelistedMultiCommands = () => [':param', ':use']
 
 export default function reducer (state = initialState, action) {
   if (action.type === APP_START) {
@@ -174,7 +175,7 @@ export const handleCommandEpic = (action$, store) =>
         cmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
-        const whitelistedCommands = [`${cmdchar}param`]
+        const whitelistedCommands = whitelistedMultiCommands()
         const isWhitelisted =
           whitelistedCommands.filter(wcmd => !!cmd.startsWith(wcmd)).length > 0
 

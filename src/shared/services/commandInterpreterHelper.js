@@ -204,7 +204,7 @@ const availableCommands = [
         if (!existingDb) {
           throw createErrorObject(
             NotFoundError,
-            'Database with that name not found.'
+            'A database with that name not found.'
           )
         }
         // Everything ok
@@ -217,15 +217,25 @@ const availableCommands = [
             useDb: existingDb.name
           })
         )
-      } catch (e) {
-        put(
-          frames.add({
-            useDb: getUseDb(store.getState()),
-            ...action,
-            type: 'error',
-            error: e
-          })
-        )
+        if (action.requestId) {
+          put(updateQueryResult(action.requestId, null, 'success'))
+        }
+        return true
+      } catch (error) {
+        if (!action.parentId) {
+          put(
+            frames.add({
+              useDb: getUseDb(store.getState()),
+              ...action,
+              type: 'error',
+              error
+            })
+          )
+        }
+        if (action.requestId) {
+          put(updateQueryResult(action.requestId, error, 'error'))
+        }
+        throw error
       }
     }
   },

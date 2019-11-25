@@ -61,7 +61,7 @@ function Sidebar (props) {
   const AboutDrawer = About
   const topNavItemsList = [
     {
-      name: 'DB',
+      name: 'DBMS',
       title: 'Database',
       icon: isOpen => (
         <DatabaseIcon
