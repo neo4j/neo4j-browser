@@ -32,6 +32,9 @@ import { toKeyString } from 'services/utils'
 import { UnstyledList } from '../styled'
 import { useDbCommand } from 'shared/modules/commands/commandsDuck'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
+import { Code } from '../Queries/styled'
+import ClickToCode from 'browser/modules/ClickToCode/index'
+import { StyledCodeBlockFrame } from 'browser/modules/Main/styled'
 
 export const DbsFrame = props => {
   const { frame } = props
@@ -62,8 +65,18 @@ export const DbsFrame = props => {
             </UnstyledList>
           </Render>
           <Render if={!Array.isArray(dbs) || !dbs.length}>
-            Either you don't have permission to list available databases or the
-            dbms you're connected to don't support multiple databases.
+            <div>
+              Either you don't have permission to list available databases or
+              the dbms you're connected to don't support multiple databases.
+            </div>
+            <div>
+              If you know you have access to a database with a certain name, you
+              can use the{' '}
+              <ClickToCode
+                CodeComponent={StyledCodeBlockFrame}
+              >{`:${useDbCommand} databaseName`}</ClickToCode>{' '}
+              command to start using it.
+            </div>
           </Render>
         </StyledConnectionBody>
       </StyledConnectionBodyContainer>

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
 import { getHistory, clearHistory } from 'shared/modules/history/historyDuck'
@@ -188,33 +188,34 @@ const availableCommands = [
   {
     name: 'use-db',
     match: cmd => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: async function (action, cmdchar, put, store) {
       const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
       try {
-        if (!hasMultiDbSupport(store.getState())) {
+        const supportsMultiDb = await bolt.hasMultiDbSupport()
+        if (!supportsMultiDb) {
           throw createErrorObject(
             UnsupportedError,
             'No multi db support detected.'
           )
         }
-        // Check if chosen db exists. Case insensitive.
-        const existingDb = getDatabases(store.getState()).find(
-          db => db.name.toLowerCase() === dbName.toLowerCase()
-        )
-        if (!existingDb) {
-          throw createErrorObject(
-            NotFoundError,
-            'A database with that name not found.'
-          )
-        }
+        // // Check if chosen db exists. Case insensitive.
+        // const existingDb = getDatabases(store.getState()).find(
+        //   db => db.name.toLowerCase() === dbName.toLowerCase()
+        // )
+        // if (!existingDb) {
+        //   throw createErrorObject(
+        //     NotFoundError,
+        //     'A database with that name not found.'
+        //   )
+        // }
         // Everything ok
-        put(useDb(existingDb.name))
-        put(fetchMetaData())
+        put(useDb(dbName))
+        // put(fetchMetaData())
         put(
           frames.add({
             ...action,
             type: 'use-db',
-            useDb: existingDb.name
+            useDb: dbName
           })
         )
         if (action.requestId) {
@@ -241,8 +242,9 @@ const availableCommands = [
   {
     name: 'reset-db',
     match: cmd => new RegExp(`^${useDbCommand}$`).test(cmd),
-    exec: function (action, cmdchar, put, store) {
-      if (hasMultiDbSupport(store.getState())) {
+    exec: async function (action, cmdchar, put, store) {
+      const supportsMultiDb = await bolt.hasMultiDbSupport()
+      if (supportsMultiDb) {
         put(useDb(null))
         put(fetchMetaData())
         put(
@@ -270,8 +272,9 @@ const availableCommands = [
   {
     name: 'dbs',
     match: cmd => new RegExp(`^${listDbsCommand}$`).test(cmd),
-    exec: function (action, cmdchar, put, store) {
-      if (hasMultiDbSupport(store.getState())) {
+    exec: async function (action, cmdchar, put, store) {
+      const supportsMultiDb = await bolt.hasMultiDbSupport()
+      if (supportsMultiDb) {
         put(
           frames.add({
             useDb: getUseDb(store.getState()),
@@ -363,6 +366,9 @@ const availableCommands = [
           put(updateQueryResult(id, e, REQUEST_STATUS_ERROR))
           put(unsuccessfulCypher(action.cmd))
           throw e
+        })
+        .finally(() => {
+          put(fetchMetaData())
         })
     }
   },

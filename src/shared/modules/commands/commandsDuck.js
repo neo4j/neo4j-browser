@@ -230,7 +230,6 @@ export const handleSingleCommandEpic = (action$, store) =>
         } else {
           res
             .then(r => {
-              store.dispatch(fetchMetaData())
               resolve(noop)
             })
             .catch(e => resolve(noop))

@@ -27,9 +27,15 @@ import {
 } from 'browser-components/icons/Icons'
 import { deepEquals } from 'services/utils'
 import Render from 'browser-components/Render'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeCommand,
+  listDbsCommand
+} from 'shared/modules/commands/commandsDuck'
 import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
-import { isUnknownProcedureError } from 'services/cypherErrorsHelper'
+import {
+  isUnknownProcedureError,
+  isNoDbAccessError
+} from 'services/cypherErrorsHelper'
 import { errorMessageFormater } from './../errorMessageFormater'
 
 import {
@@ -68,9 +74,21 @@ export class ErrorsView extends Component {
           </StyledDiv>
           <Render if={isUnknownProcedureError(error)}>
             <StyledLinkContainer>
-              <StyledLink onClick={() => onItemClick(bus)}>
+              <StyledLink
+                onClick={() => onItemClick(bus, listAvailableProcedures)}
+              >
                 <PlayIcon />
                 &nbsp;List available procedures
+              </StyledLink>
+            </StyledLinkContainer>
+          </Render>
+          <Render if={isNoDbAccessError(error)}>
+            <StyledLinkContainer>
+              <StyledLink
+                onClick={() => onItemClick(bus, `:${listDbsCommand}`)}
+              >
+                <PlayIcon />
+                &nbsp;List available databases
               </StyledLink>
             </StyledLinkContainer>
           </Render>
@@ -80,8 +98,8 @@ export class ErrorsView extends Component {
   }
 }
 
-const onItemClick = bus => {
-  const action = executeCommand(listAvailableProcedures)
+const onItemClick = (bus, statement) => {
+  const action = executeCommand(statement)
   bus.send(action.type, action)
 }
 

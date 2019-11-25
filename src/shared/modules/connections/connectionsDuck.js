@@ -320,12 +320,14 @@ const usingDb = (db = null) => ({ type: USING_DB, useDb: db }) // Do not export,
 export const useDbEpic = (action$, store) => {
   return action$
     .ofType(USE_DB)
-    .do(action => {
-      if (hasMultiDbSupport(store.getState())) {
+    .mergeMap(async action => {
+      const supportsMultiDb = await bolt.hasMultiDbSupport()
+      if (supportsMultiDb) {
         store.dispatch(usingDb(action.useDb))
       } else {
         store.dispatch(usingDb(null))
       }
+      return Rx.Observable.of(null)
     })
     .mapTo({ type: 'NOOP' })
 }
