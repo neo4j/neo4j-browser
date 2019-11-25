@@ -336,7 +336,12 @@ export const usingDbEpic = action$ => {
     .do(action => {
       bolt.useDb(action.useDb)
     })
-    .mapTo(fetchMetaData())
+    .map(action => {
+      if (!action.useDb) {
+        return { type: 'NOOP' }
+      }
+      return fetchMetaData()
+    })
 }
 
 export const connectEpic = (action$, store) => {
@@ -475,6 +480,7 @@ export const disconnectEpic = (action$, store) => {
     .ofType(DISCONNECT)
     .merge(action$.ofType(USER_CLEAR))
     .do(() => bolt.closeConnection())
+    .do(() => store.dispatch(useDb(null)))
     .do(action =>
       store.dispatch(updateConnection({ id: action.id, password: '' }))
     )
@@ -484,6 +490,7 @@ export const silentDisconnectEpic = (action$, store) => {
   return action$
     .ofType(SILENT_DISCONNECT)
     .do(() => bolt.closeConnection())
+    .do(() => store.dispatch(useDb(null)))
     .do(() => store.dispatch({ type: CLEAR_META }))
     .mapTo(setActiveConnection(null, true))
 }

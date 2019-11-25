@@ -179,6 +179,7 @@ describe('connectionsDucks Epics', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
+        connections.useDb(null),
         connections.updateConnection({ id, password: '' }),
         connections.setActiveConnection(null)
       ])
