@@ -51,7 +51,7 @@ export const DbsFrame = props => {
         <StyledConnectionBody>
           <Render if={Array.isArray(dbs) && dbs.length}>
             Click on one to start using it:
-            <UnstyledList>
+            <UnstyledList data-testid='dbs-command-list'>
               {dbs.map(db => {
                 return (
                   <StyledDbsRow key={toKeyString(db.name)}>

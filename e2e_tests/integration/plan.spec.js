@@ -47,7 +47,10 @@ describe('Plan output', () => {
       el.should('contain', 'Ordered by n.age ASC')
     })
   }
-  if (Cypress.config('serverVersion') >= 3.4) {
+  if (
+    Cypress.config('serverVersion') >= 3.4 &&
+    Cypress.config('serverVersion') < 4.0
+  ) {
     it('print pagecache stats in PROFILE', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(
