@@ -21,6 +21,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid from 'uuid'
+import { map } from 'lodash-es'
 
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { canAssignRolesToUser } from 'shared/modules/features/featuresDuck'
@@ -49,6 +50,7 @@ import {
 } from 'browser-components/Form'
 import { StyledInput, StyleRolesContainer } from './styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 
 export class UserAdd extends Component {
   constructor (props) {
@@ -106,12 +108,21 @@ export class UserAdd extends Component {
         this.props.bus.self(
           CYPHER_REQUEST,
           {
-            query: addRoleToUser(this.state.username, role),
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+            query: addRoleToUser(
+              this.state.username,
+              role,
+              Boolean(this.props.useSystemDb)
+            ),
+            params: {
+              username: this.state.username,
+              role
+            },
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+            useDb: this.props.useSystemDb
           },
           response => {
             if (!response.success) {
-              return errors.add(response.error)
+              return errors.push(response.error)
             }
           }
         )
@@ -133,7 +144,11 @@ export class UserAdd extends Component {
     this.props.bus &&
       this.props.bus.self(
         CYPHER_REQUEST,
-        { query: listRolesQuery(), queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
+        {
+          query: listRolesQuery(Boolean(this.props.useSystemDb)),
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          useDb: this.props.useSystemDb
+        },
         response => {
           if (!response.success) {
             const error =
@@ -150,8 +165,8 @@ export class UserAdd extends Component {
               []
             )
           return this.setState({
-            availableRoles: flatten(
-              this.extractUserNameAndRolesFromBolt(response.result)
+            availableRoles: map(response.result.records, record =>
+              record.get('role')
             )
           })
         }
@@ -177,8 +192,16 @@ export class UserAdd extends Component {
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: createDatabaseUser(this.state),
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          query: createDatabaseUser(
+            this.state,
+            Boolean(this.props.useSystemDb)
+          ),
+          params: {
+            username: this.state.username,
+            password: this.state.password
+          },
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          useDb: this.props.useSystemDb
         },
         response => {
           if (!response.success) {
@@ -337,7 +360,7 @@ export class UserAdd extends Component {
         aside={
           <FrameAside
             title='Add user'
-            subtitle='Add a user to the current databse'
+            subtitle='Add a user to the current database'
           />
         }
         contents={frameContents}
@@ -348,8 +371,11 @@ export class UserAdd extends Component {
 }
 
 const mapStateToProps = state => {
+  const { database } = driverDatabaseSelection(state, 'system') || {}
+
   return {
-    canAssignRolesToUser: canAssignRolesToUser(state)
+    canAssignRolesToUser: canAssignRolesToUser(state),
+    useSystemDb: database
   }
 }
 

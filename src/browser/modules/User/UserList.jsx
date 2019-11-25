@@ -22,6 +22,7 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import React, { Component } from 'react'
 import uuid from 'uuid'
 import { withBus } from 'react-suber'
+import { map } from 'lodash-es'
 import {
   listUsersQuery,
   listRolesQuery
@@ -36,6 +37,8 @@ import { StyledButtonContainer } from './styled'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
+import { connect } from 'react-redux'
 
 export class UserList extends Component {
   constructor (props) {
@@ -50,14 +53,41 @@ export class UserList extends Component {
     tableArray.shift()
     return tableArray
   }
+
+  recordToUserObject = record => {
+    const is40 = Boolean(this.props.useSystemDb)
+
+    if (is40) {
+      return {
+        username: record.get('user'),
+        roles: record.get('roles'),
+        active: !record.get('suspended'),
+        passwordChangeRequired: record.get('passwordChangeRequired')
+      }
+    }
+
+    return {
+      username: record.get('username'),
+      roles: record.get('roles'),
+      active: !record.get('flags').includes('is_suspended'),
+      passwordChangeRequired: record
+        .get('flags')
+        .includes('password_change_required')
+    }
+  }
+
   getUserList () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: listUsersQuery(), queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
+      {
+        query: listUsersQuery(Boolean(this.props.useSystemDb)),
+        queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+        useDb: this.props.useSystemDb
+      },
       response => {
         if (response.success) {
           this.setState({
-            userList: this.extractUserNameAndRolesFromBolt(response.result)
+            userList: map(response.result.records, this.recordToUserObject)
           })
           this.props.bus.send(forceFetch().type, forceFetch())
         }
@@ -67,14 +97,18 @@ export class UserList extends Component {
   getRoles () {
     this.props.bus.self(
       CYPHER_REQUEST,
-      { query: listRolesQuery(), queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
+      {
+        query: listRolesQuery(Boolean(this.props.useSystemDb)),
+        queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+        useDb: this.props.useSystemDb
+      },
       response => {
         const flatten = arr =>
           arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
         if (response.success) {
           this.setState({
-            listRoles: flatten(
-              this.extractUserNameAndRolesFromBolt(response.result)
+            listRoles: map(response.result.records, record =>
+              record.get('role')
             )
           })
         }
@@ -98,9 +132,7 @@ export class UserList extends Component {
         <UserInformation
           className='user-information'
           key={uuid.v4()}
-          username={row[0]}
-          roles={row[1]}
-          status={row[2]}
+          user={row}
           refresh={this.getUserList.bind(this)}
           availableRoles={this.state.listRoles}
         />
@@ -152,5 +184,17 @@ export class UserList extends Component {
     return <FrameTemplate header={this.props.frame} contents={frameContents} />
   }
 }
+const mapStateToProps = state => {
+  const { database } = driverDatabaseSelection(state, 'system') || {}
 
-export default withBus(UserList)
+  return {
+    useSystemDb: database
+  }
+}
+
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(UserList)
+)
