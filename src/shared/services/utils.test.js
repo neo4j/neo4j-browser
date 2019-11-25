@@ -682,11 +682,11 @@ describe('toKeyString', () => {
         { host: 'neo4j://localhost:7688', expected: 'neo4j://localhost:7688' },
         {
           host: 'bolt+routing://localhost',
-          expected: 'bolt+routing://localhost'
+          expected: 'neo4j://localhost'
         },
         {
           host: 'bolt+routing://localhost:7688',
-          expected: 'bolt+routing://localhost:7688'
+          expected: 'neo4j://localhost:7688'
         },
         { host: null, expected: 'neo4j://localhost:7687' }
       ]
