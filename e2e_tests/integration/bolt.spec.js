@@ -58,16 +58,7 @@ describe('Bolt connections', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
 
-    if (Cypress.config('serverVersion') >= 4.0) {
-      cy.executeCommand(':use system')
-      cy.executeCommand('DROP USER noroles')
-      cy.executeCommand(':clear')
-      cy.executeCommand('CREATE USER noroles SET PASSWORD "pw" CHANGE REQUIRED')
-    } else {
-      cy.executeCommand('CALL dbms.security.deleteUser("noroles")')
-      cy.executeCommand(':clear')
-      cy.executeCommand('CALL dbms.security.createUser("noroles", "pw", true)')
-    }
+    cy.createUser('noroles', 'pw', true)
     cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
