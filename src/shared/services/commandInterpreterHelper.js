@@ -235,7 +235,6 @@ const availableCommands = [
         if (action.requestId) {
           put(updateQueryResult(action.requestId, error, 'error'))
         }
-        throw error
       }
     }
   },
