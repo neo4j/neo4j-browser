@@ -25,6 +25,7 @@ import {
   DrawerSubHeader,
   DrawerSectionBody
 } from 'browser-components/drawer/index'
+import { uniqBy } from 'lodash-es'
 
 const Select = styled.select`
   width: 100%;
@@ -48,10 +49,13 @@ export const DatabaseSelector = ({
     }
     onChange(target.value)
   }
+
   let databasesList = databases
   if (!selectedDb) {
     databasesList = [].concat([{ name: EMPTY_OPTION, status: null }], databases)
   }
+  const uniqDatabases = uniqBy(databasesList, 'name')
+
   return (
     <DrawerSection>
       <DrawerSubHeader>Use database</DrawerSubHeader>
@@ -61,13 +65,13 @@ export const DatabaseSelector = ({
           data-testid='database-selection-list'
           onChange={selectionChange}
         >
-          {databasesList.map(db => {
+          {uniqDatabases.map(db => {
             const defaultStr = db.default ? ' - default' : ''
-            const statusStr = db.status ? `(${db.status})` : ''
+
             return (
               <option key={db.name} value={db.name}>
                 {db.name}
-                {defaultStr} {statusStr}
+                {defaultStr}
               </option>
             )
           })}

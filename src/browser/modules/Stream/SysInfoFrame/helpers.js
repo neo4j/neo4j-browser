@@ -98,12 +98,21 @@ export const Sysinfo = ({
   isACausalCluster,
   cc
 }) => {
-  const mappedDatabases = databases.map(db => {
-    return {
-      label: db.name,
-      value: db.status
+  const mappedDatabases = [
+    {
+      value: databases.map(db => {
+        return [
+          db.name,
+          db.address,
+          db.role,
+          db.status,
+          db.default ? 'true' : '-',
+          db.error
+        ]
+      })
     }
-  })
+  ]
+
   return (
     <SysInfoTableContainer>
       <SysInfoTable key='StoreSize' header='Store Size' colspan='2'>
@@ -118,27 +127,13 @@ export const Sysinfo = ({
       <SysInfoTable key='Transactionss' header='Transactions'>
         {buildTableData(transactions)}
       </SysInfoTable>
-      <SysInfoTable key='databases' header='Databases'>
+      <SysInfoTable key='database-table' header='Databases' colspan='6'>
+        <SysInfoTableEntry
+          key='database-entry'
+          headers={['Name', 'Address', 'Role', 'Status', 'Default', 'Error']}
+        />
         {buildTableData(mappedDatabases)}
       </SysInfoTable>
-      <Render if={isACausalCluster}>
-        <SysInfoTable
-          key='cc-table'
-          header={
-            <span data-testid='sysinfo-casual-cluster-members-title'>
-              Causal Cluster Members{' '}
-              <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
-            </span>
-          }
-          colspan='3'
-        >
-          <SysInfoTableEntry
-            key='cc-entry'
-            headers={['Roles', 'Addresses', 'Actions']}
-          />
-          {buildTableData(cc)}
-        </SysInfoTable>
-      </Render>
     </SysInfoTableContainer>
   )
 }
