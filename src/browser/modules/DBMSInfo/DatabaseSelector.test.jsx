@@ -84,7 +84,8 @@ describe('DatabaseSelector', () => {
     )
 
     // Then default db should be selected
-    expect(getByDisplayValue(/stella/i)).toBeDefined()
+    expect(getByDisplayValue(/select db/i)).toBeDefined()
+    expect(queryByDisplayValue(/stella/i)).toBeDefined()
     expect(queryByDisplayValue(/molly/i)).toBeNull()
   })
   it('can handle selections', () => {

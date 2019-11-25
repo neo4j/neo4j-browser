@@ -32,7 +32,6 @@ import { toKeyString } from 'services/utils'
 import { UnstyledList } from '../styled'
 import { useDbCommand } from 'shared/modules/commands/commandsDuck'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
-import { Code } from '../Queries/styled'
 import ClickToCode from 'browser/modules/ClickToCode/index'
 import { StyledCodeBlockFrame } from 'browser/modules/Main/styled'
 

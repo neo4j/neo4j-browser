@@ -43,10 +43,7 @@ import {
   getDatabases,
   fetchMetaData
 } from 'shared/modules/dbMeta/dbMetaDuck'
-import {
-  canSendTxMetadata,
-  hasMultiDbSupport
-} from 'shared/modules/features/versionedFeatures'
+import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
@@ -74,8 +71,7 @@ import {
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError,
-  UnsupportedError,
-  NotFoundError
+  UnsupportedError
 } from 'services/exceptions'
 import {
   parseHttpVerbCommand,
@@ -198,19 +194,7 @@ const availableCommands = [
             'No multi db support detected.'
           )
         }
-        // // Check if chosen db exists. Case insensitive.
-        // const existingDb = getDatabases(store.getState()).find(
-        //   db => db.name.toLowerCase() === dbName.toLowerCase()
-        // )
-        // if (!existingDb) {
-        //   throw createErrorObject(
-        //     NotFoundError,
-        //     'A database with that name not found.'
-        //   )
-        // }
-        // Everything ok
         put(useDb(dbName))
-        // put(fetchMetaData())
         put(
           frames.add({
             ...action,

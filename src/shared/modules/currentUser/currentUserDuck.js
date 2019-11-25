@@ -18,14 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTION_SUCCESS,
-  DISCONNECTION_SUCCESS,
-  getUseDb
+  DISCONNECTION_SUCCESS
 } from 'shared/modules/connections/connectionsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
