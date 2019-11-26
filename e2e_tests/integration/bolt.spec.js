@@ -53,7 +53,7 @@ describe('Bolt connections', () => {
       .should('not.contain', 'Connection lost')
   })
 
-  it('users with no role can connect', () => {
+  it('users with no role can connect and shows up in sidebar', () => {
     cy.executeCommand(':clear')
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
@@ -69,12 +69,16 @@ describe('Bolt connections', () => {
     // Try regular connect
     cy.executeCommand(':server disconnect')
     cy.connect('noroles', '.')
-  })
-  it('displays user info in sidebar (when connected)', () => {
-    cy.executeCommand(':clear')
+
+    // Check sidebar
     cy.get('[data-testid="drawerDBMS"]').click()
     cy.get('[data-testid="user-details-username"]').should('contain', 'noroles')
     cy.get('[data-testid="user-details-roles"]').should('contain', '-')
     cy.get('[data-testid="drawerDBMS"]').click()
+
+    cy.executeCommand(':server disconnect')
+    cy.executeCommand(':server connect')
+    cy.connect('neo4j', password)
+    cy.dropUser('noroles')
   })
 })

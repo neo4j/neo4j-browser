@@ -44,5 +44,7 @@ describe('User: ', () => {
     cy.executeCommand(':server user list')
     cy.get('.user-info > .username').should('have.length', 3)
     cy.get('.user-info > .username').contains('Rob')
+    cy.dropUser('Bob')
+    cy.dropUser('Rob')
   })
 })
