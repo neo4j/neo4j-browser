@@ -64,6 +64,8 @@ describe('Plan output', () => {
   }
   it('ouputs and preselects plan when using PROFILE', () => {
     cy.executeCommand(':clear')
+    cy.executeCommand('CREATE (:Tag)')
+    cy.executeCommand(':clear')
     cy.executeCommand(`PROFILE MATCH (tag:Tag)
     WHERE tag.name IN ["Eutheria"]
     WITH tag
