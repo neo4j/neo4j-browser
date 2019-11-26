@@ -48,8 +48,9 @@ export const DatabaseSelector = ({
     }
     onChange(target.value)
   }
+  let databasesList = databases
   if (!selectedDb) {
-    databases.unshift({ name: EMPTY_OPTION, status: null })
+    databasesList = [].concat([{ name: EMPTY_OPTION, status: null }], databases)
   }
   return (
     <DrawerSection>
@@ -60,7 +61,7 @@ export const DatabaseSelector = ({
           data-testid='database-selection-list'
           onChange={selectionChange}
         >
-          {databases.map(db => {
+          {databasesList.map(db => {
             const defaultStr = db.default ? ' - default' : ''
             const statusStr = db.status ? `(${db.status})` : ''
             return (
