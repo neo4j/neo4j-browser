@@ -39,7 +39,6 @@ import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
   canSendTxMetadata,
-  hasMultiDbSupport,
   getDbClusterRole
 } from '../features/versionedFeatures'
 import { extractServerInfo } from './dbMeta.utils'
@@ -53,7 +52,6 @@ export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 export const DB_META_DONE = 'meta/DB_META_DONE'
-export const UPDATE_DEFAULT_DB = 'meta/UPDATE_DEFAULT_DB'
 
 export const SYSTEM_DB = 'system'
 
@@ -107,7 +105,6 @@ export const shouldRetainConnectionCredentials = state => {
 export const getDatabases = state => (state[NAME] || initialState).databases
 export const getActiveDbName = state =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
-export const getDefaultDbName = state => (state[NAME] || {}).defaultDb
 /**
  * Helpers
  */
@@ -197,8 +194,7 @@ const initialState = {
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost'
-  },
-  defaultDb: null
+  }
 }
 
 /**
@@ -230,8 +226,6 @@ export default function meta (state = initialState, action) {
       }
     case UPDATE_SETTINGS:
       return { ...state, settings: { ...action.settings } }
-    case UPDATE_DEFAULT_DB:
-      return { ...state, defaultDb: action.db }
     case CLEAR:
       return { ...initialState }
     default:
@@ -271,8 +265,6 @@ export const updateSettings = settings => {
     settings
   }
 }
-
-export const updateDefaultDb = db => ({ type: UPDATE_DEFAULT_DB, db })
 
 export const updateServerInfo = res => {
   const extrated = extractServerInfo(res)
@@ -402,37 +394,6 @@ export const dbMetaEpic = (some$, store) =>
                 return Rx.Observable.of(null)
               })
           )
-          // Default database
-          .mergeMap(() =>
-            Rx.Observable.fromPromise(
-              bolt.directTransaction(
-                'RETURN 1',
-                {},
-                {
-                  useCypherThread: shouldUseCypherThread(store.getState()),
-                  ...getBackgroundTxMetadata({
-                    hasServerSupport: canSendTxMetadata(store.getState())
-                  }),
-                  useDb: '' // connect to default
-                }
-              )
-            )
-              .catch(e => {
-                return Rx.Observable.of(null)
-              })
-              .do(res => {
-                if (!res) return Rx.Observable.of(null)
-                const { name: database = null } = res.summary.database
-                if (database) {
-                  store.dispatch(updateDefaultDb(database))
-                  // if no db selected, select the default one
-                  if (!getUseDb(store.getState())) {
-                    store.dispatch(useDb(database))
-                  }
-                }
-                return Rx.Observable.of(null)
-              })
-          )
           // Cluster role
           .mergeMap(() =>
             Rx.Observable.fromPromise(
@@ -460,8 +421,9 @@ export const dbMetaEpic = (some$, store) =>
           // Database list
           .mergeMap(() =>
             Rx.Observable.fromPromise(
-              new Promise((resolve, reject) => {
-                if (!hasMultiDbSupport(store.getState())) {
+              new Promise(async (resolve, reject) => {
+                const supportsMultiDb = await bolt.hasMultiDbSupport()
+                if (!supportsMultiDb) {
                   return resolve(null)
                 }
                 bolt
@@ -488,10 +450,20 @@ export const dbMetaEpic = (some$, store) =>
                 const databases = res.records.map(record => {
                   return {
                     name: record.get('name'),
-                    status: record.get('currentStatus')
+                    status: record.get('currentStatus'),
+                    default: record.get('default')
                   }
                 })
+
                 store.dispatch(update({ databases }))
+
+                // Currently not using a db
+                if (!getUseDb(store.getState())) {
+                  const defaultDb = databases.filter(db => db.default)
+                  if (defaultDb.length) {
+                    store.dispatch(useDb(defaultDb[0].name))
+                  }
+                }
                 return Rx.Observable.of(null)
               })
           )

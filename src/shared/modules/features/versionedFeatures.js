@@ -38,9 +38,8 @@ export const canSendTxMetadata = state => {
   return semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)
 }
 
-export const getShowCurrentUserProcedure = state => {
+export const getShowCurrentUserProcedure = serverVersion => {
   const pre4 = 'CALL dbms.security.showCurrentUser()'
-  const serverVersion = getVersion(state)
   if (!semver.valid(serverVersion)) {
     return pre4
   }

@@ -45,7 +45,6 @@ import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import {
   UPDATE_SETTINGS,
   getAvailableSettings,
-  fetchMetaData,
   getRemoteContentHostnameWhitelist,
   getDefaultRemoteContentHostnameWhitelist
 } from '../dbMeta/dbMetaDuck'
@@ -230,7 +229,6 @@ export const handleSingleCommandEpic = (action$, store) =>
         } else {
           res
             .then(r => {
-              store.dispatch(fetchMetaData())
               resolve(noop)
             })
             .catch(e => resolve(noop))

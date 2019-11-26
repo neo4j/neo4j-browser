@@ -52,6 +52,18 @@ const _routingAvailability = () => {
   })
 }
 
+export const hasMultiDbSupport = async () => {
+  if (!_drivers) {
+    return false
+  }
+  const tmpDriver = _drivers.getRoutedDriver()
+  if (!tmpDriver) {
+    return false
+  }
+  const supportsMultiDb = await tmpDriver.supportsMultiDb()
+  return supportsMultiDb
+}
+
 const validateConnection = (driver, res, rej) => {
   if (!driver || !driver.session) return rej('No connection')
   const tmp = driver.session({

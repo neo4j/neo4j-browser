@@ -21,6 +21,11 @@
 /* global Cypress, cy, test, expect, before, after */
 
 describe('Multi database', () => {
+  const databaseList = () =>
+    cy.get('[data-testid="dbs-command-list"] li', {
+      timeout: 5000
+    })
+
   before(() => {
     cy.visit(Cypress.config('url'))
       .title()
@@ -72,11 +77,6 @@ describe('Multi database', () => {
     it('lists databases with :dbs command', () => {
       cy.executeCommand(':clear')
 
-      const databaseList = () =>
-        cy.get('[data-testid="dbs-command-list"] li', {
-          timeout: 5000
-        })
-
       cy.executeCommand(':dbs')
 
       databaseList().should('have.length', 2)
@@ -99,6 +99,34 @@ describe('Multi database', () => {
       databaseList().should('have.length', 2)
       databaseList().contains('system')
       databaseList().contains('neo4j')
+    })
+    it('user with no roles can lists databases with :dbs command but cant run cypher', () => {
+      cy.executeCommand(':clear')
+      cy.createUser('noroles', 'pw1', false)
+      cy.executeCommand(':server disconnect')
+      cy.executeCommand(':clear')
+      cy.executeCommand(':server connect')
+      cy.connect('noroles', 'pw1')
+
+      // Try to list dbs, should work
+      cy.executeCommand(':dbs')
+      databaseList().should('have.length', 2)
+      databaseList().contains('system')
+      databaseList().contains('neo4j')
+
+      // Try to run Cypher, shoudl show error
+      cy.executeCommand('RETURN 1')
+      const resultFrame = cy
+        .get('[data-testid="frame"]', { timeout: 10000 })
+        .first()
+      resultFrame.should('contain', 'Neo.ClientError.Security.Forbidden')
+      resultFrame.should('contain', 'List available databases')
+
+      // Cleanup
+      cy.executeCommand(':server disconnect')
+      cy.executeCommand(':clear')
+      cy.connect('neo4j', Cypress.config('password'))
+      cy.dropUser('noroles')
     })
   }
 })

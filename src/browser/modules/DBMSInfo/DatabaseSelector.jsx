@@ -32,9 +32,10 @@ const Select = styled.select`
   color: ${props => props.theme.inputText};
 `
 
+const EMPTY_OPTION = 'Select db to use'
+
 export const DatabaseSelector = ({
   databases = [],
-  defaultDb = 'neo4j',
   selectedDb = '',
   onChange = () => {}
 }) => {
@@ -42,7 +43,14 @@ export const DatabaseSelector = ({
     return null
   }
   const selectionChange = ({ target }) => {
+    if (target.value === EMPTY_OPTION) {
+      return
+    }
     onChange(target.value)
+  }
+  let databasesList = databases
+  if (!selectedDb) {
+    databasesList = [].concat([{ name: EMPTY_OPTION, status: null }], databases)
   }
   return (
     <DrawerSection>
@@ -53,12 +61,13 @@ export const DatabaseSelector = ({
           data-testid='database-selection-list'
           onChange={selectionChange}
         >
-          {databases.map(db => {
-            const defaultStr = db.name === defaultDb ? ' - default' : ''
+          {databasesList.map(db => {
+            const defaultStr = db.default ? ' - default' : ''
+            const statusStr = db.status ? `(${db.status})` : ''
             return (
               <option key={db.name} value={db.name}>
                 {db.name}
-                {defaultStr} ({db.status})
+                {defaultStr} {statusStr}
               </option>
             )
           })}

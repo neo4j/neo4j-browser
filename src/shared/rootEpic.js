@@ -40,7 +40,6 @@ import {
   switchConnectionSuccessEpic,
   switchConnectionFailEpic,
   silentDisconnectEpic,
-  usingDbEpic,
   useDbEpic
 } from './modules/connections/connectionsDuck'
 import {
@@ -100,7 +99,6 @@ export default combineEpics(
   connectEpic,
   disconnectEpic,
   silentDisconnectEpic,
-  usingDbEpic,
   useDbEpic,
   startupConnectEpic,
   disconnectSuccessEpic,

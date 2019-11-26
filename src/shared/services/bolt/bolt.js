@@ -181,7 +181,7 @@ function directTransaction (input, parameters, requestMetaData = {}) {
           )
         ),
         txMetadata,
-        useDb: useDb || _useDb
+        useDb: useDb !== undefined ? useDb : _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -245,6 +245,10 @@ const closeConnectionInWorkers = () => {
 }
 
 export default {
+  hasMultiDbSupport: async () => {
+    const supportsMultiDb = await boltConnection.hasMultiDbSupport()
+    return supportsMultiDb
+  },
   useDb: db => (_useDb = db),
   directConnect: boltConnection.directConnect,
   openConnection,

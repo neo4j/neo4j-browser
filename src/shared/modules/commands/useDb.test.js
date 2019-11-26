@@ -48,7 +48,7 @@ describe(':use', () => {
     store.clearActions()
     bus.reset()
   })
-  test(':use <db-name> is case insensitive', done => {
+  test.skip(':use <db-name> is case insensitive', done => {
     // Given
     const dbName = 'System' // uppercase first letter
     const cmd = store.getState().settings.cmdchar + 'use ' + dbName

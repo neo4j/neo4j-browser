@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -29,9 +28,11 @@ import {
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
   canSendTxMetadata,
-  getShowCurrentUserProcedure
+  getShowCurrentUserProcedure,
+  FIRST_MULTI_DB_SUPPORT,
+  FIRST_NO_MULTI_DB_SUPPORT
 } from '../features/versionedFeatures'
-import { DB_META_DONE } from '../dbMeta/dbMetaDuck'
+import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
@@ -91,32 +92,40 @@ export const getCurrentUserEpic = (some$, store) =>
     .ofType(CONNECTION_SUCCESS)
     .merge(some$.ofType(DB_META_DONE))
     .mergeMap(() => {
-      return Rx.Observable.fromPromise(
-        bolt.directTransaction(
-          getShowCurrentUserProcedure(store.getState()),
-          {},
-          {
-            useCypherThread: shouldUseCypherThread(store.getState()),
-            ...getBackgroundTxMetadata({
-              hasServerSupport: canSendTxMetadata(store.getState())
-            })
-          }
-        )
-      )
-        .catch(() => Rx.Observable.of(null))
-        .map(result => {
-          if (!result) return { type: CLEAR }
-          const keys = result.records[0].keys
+      return new Promise(async (resolve, reject) => {
+        const supportsMultiDb = await bolt.hasMultiDbSupport()
+        bolt
+          .directTransaction(
+            getShowCurrentUserProcedure(
+              supportsMultiDb
+                ? FIRST_MULTI_DB_SUPPORT
+                : FIRST_NO_MULTI_DB_SUPPORT
+            ),
+            {},
+            {
+              useCypherThread: shouldUseCypherThread(store.getState()),
+              ...getBackgroundTxMetadata({
+                hasServerSupport: canSendTxMetadata(store.getState())
+              }),
+              useDb: SYSTEM_DB
+            }
+          )
+          .then(res => resolve(res))
+          .catch(() => resolve(null))
+      })
+    })
+    .map(result => {
+      if (!result) return { type: CLEAR }
+      const keys = result.records[0].keys
 
-          const username = keys.includes('username')
-            ? result.records[0].get('username')
-            : '-'
-          const roles = keys.includes('roles')
-            ? result.records[0].get('roles')
-            : ['admin']
+      const username = keys.includes('username')
+        ? result.records[0].get('username')
+        : '-'
+      const roles = keys.includes('roles')
+        ? result.records[0].get('roles')
+        : ['admin']
 
-          return updateCurrentUser(username, roles)
-        })
+      return updateCurrentUser(username, roles)
     })
 
 export const clearCurrentUserOnDisconnectEpic = (some$, store) =>

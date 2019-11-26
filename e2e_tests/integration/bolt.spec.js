@@ -53,42 +53,28 @@ describe('Bolt connections', () => {
       .should('not.contain', 'Connection lost')
   })
 
-  // From 4.0, user can't find info about itself
-  if (Cypress.config('serverVersion') < 4.0) {
-    it('users with no role can connect', () => {
-      cy.executeCommand(':clear')
-      const password = Cypress.config('password')
-      cy.connect('neo4j', password)
+  it('users with no role can connect', () => {
+    cy.executeCommand(':clear')
+    const password = Cypress.config('password')
+    cy.connect('neo4j', password)
 
-      cy.executeCommand('CALL dbms.security.deleteUser("noroles")')
-      cy.executeCommand(':clear')
-      cy.executeCommand('CALL dbms.security.createUser("noroles", "pw", true)')
-      cy.executeCommand(':server disconnect')
-      cy.executeCommand(':clear')
-      cy.executeCommand(':server connect')
+    cy.createUser('noroles', 'pw', true)
+    cy.executeCommand(':server disconnect')
+    cy.executeCommand(':clear')
+    cy.executeCommand(':server connect')
 
-      // Make sure initial pw set works
-      cy.setInitialPassword(
-        '.',
-        'pw',
-        'noroles',
-        Cypress.config('boltUrl'),
-        true
-      )
+    // Make sure initial pw set works
+    cy.setInitialPassword('.', 'pw', 'noroles', Cypress.config('boltUrl'), true)
 
-      // Try regular connect
-      cy.executeCommand(':server disconnect')
-      cy.connect('noroles', '.')
-    })
-    it('displays user info in sidebar (when connected)', () => {
-      cy.executeCommand(':clear')
-      cy.get('[data-testid="drawerDBMS"]').click()
-      cy.get('[data-testid="user-details-username"]').should(
-        'contain',
-        'noroles'
-      )
-      cy.get('[data-testid="user-details-roles"]').should('contain', '-')
-      cy.get('[data-testid="drawerDBMS"]').click()
-    })
-  }
+    // Try regular connect
+    cy.executeCommand(':server disconnect')
+    cy.connect('noroles', '.')
+  })
+  it('displays user info in sidebar (when connected)', () => {
+    cy.executeCommand(':clear')
+    cy.get('[data-testid="drawerDBMS"]').click()
+    cy.get('[data-testid="user-details-username"]').should('contain', 'noroles')
+    cy.get('[data-testid="user-details-roles"]').should('contain', '-')
+    cy.get('[data-testid="drawerDBMS"]').click()
+  })
 })
