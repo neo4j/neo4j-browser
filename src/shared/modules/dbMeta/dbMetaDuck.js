@@ -42,6 +42,7 @@ import {
   getDbClusterRole
 } from '../features/versionedFeatures'
 import { extractServerInfo } from './dbMeta.utils'
+import { assign, reduce } from 'lodash-es'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -447,13 +448,14 @@ export const dbMetaEpic = (some$, store) =>
               })
               .do(res => {
                 if (!res) return Rx.Observable.of(null)
-                const databases = res.records.map(record => {
-                  return {
-                    name: record.get('name'),
-                    status: record.get('currentStatus'),
-                    default: record.get('default')
-                  }
-                })
+                const databases = res.records.map(record => ({
+                  ...reduce(
+                    record.keys,
+                    (agg, key) => assign(agg, { [key]: record.get(key) }),
+                    {}
+                  ),
+                  status: record.get('currentStatus')
+                }))
 
                 store.dispatch(update({ databases }))
 
