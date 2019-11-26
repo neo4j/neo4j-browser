@@ -107,7 +107,7 @@ export const getCurrentUserEpic = (some$, store) =>
               ...getBackgroundTxMetadata({
                 hasServerSupport: canSendTxMetadata(store.getState())
               }),
-              useDb: SYSTEM_DB
+              useDb: supportsMultiDb ? SYSTEM_DB : ''
             }
           )
           .then(res => resolve(res))

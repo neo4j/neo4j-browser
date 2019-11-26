@@ -301,7 +301,7 @@ export class Editor extends Component {
                 n => ({
                   ...n,
                   position: { ...n.position, line: n.position.line + offset },
-                  statement: response.result.summary.statement.text
+                  statement: response.result.summary.query.text
                 })
               )
               this.setState(state => ({
