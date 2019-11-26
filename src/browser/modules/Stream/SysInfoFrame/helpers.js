@@ -30,7 +30,6 @@ import {
   SysInfoTable,
   SysInfoTableEntry
 } from 'browser-components/Tables'
-import { QuestionIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render/index'
 
 const jmxPrefix = 'neo4j.metrics:name='
