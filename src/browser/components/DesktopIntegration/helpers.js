@@ -19,6 +19,7 @@
  */
 
 import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
+import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 
 export const getActiveGraph = (context = {}) => {
   if (!context) return null
@@ -104,7 +105,8 @@ const isKerberosEnabled = context => {
 export const buildConnectionCredentialsObject = async (
   context,
   existingData = {},
-  getKerberosTicket = () => {}
+  getKerberosTicket = () => {},
+  neo4jVersion = '4.0.0'
 ) => {
   const creds = getActiveCredentials('bolt', context)
   if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
@@ -123,7 +125,9 @@ export const buildConnectionCredentialsObject = async (
     ...existingData,
     ...creds,
     encrypted: creds.tlsLevel === 'REQUIRED',
-    host: creds.url || `bolt://${creds.host}:${creds.port}`,
+    host:
+      creds.url ||
+      `${getDefaultBoltScheme(neo4jVersion)}${creds.host}:${creds.port}`,
     restApi,
     authenticationMethod: kerberos ? KERBEROS : NATIVE
   }

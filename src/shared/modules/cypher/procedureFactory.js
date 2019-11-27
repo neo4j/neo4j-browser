@@ -18,9 +18,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const changeCurrentUsersPasswordQueryObj = newPw => ({
-  query: 'CALL dbms.security.changePassword($password)',
-  parameters: { password: newPw }
-})
-
 export const listAvailableProcedures = 'CALL dbms.procedures()'

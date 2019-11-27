@@ -37,6 +37,7 @@ export const base = {
   editorCommandColor: '#333',
   topicText: '#428BCA',
   preText: '#333',
+  promptText: '#c0c2c5',
 
   // Backgrounds
   primaryBackground: '#D2D5DA',

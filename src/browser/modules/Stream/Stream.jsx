@@ -38,6 +38,7 @@ import ConnectionFrame from './Auth/ConnectionFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import ServerStatusFrame from './Auth/ServerStatusFrame'
 import ServerSwitchFrame from './Auth/ServerSwitchFrame'
+import UseDbFrame from './Auth/UseDbFrame'
 import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
@@ -45,6 +46,7 @@ import UserAdd from '../User/UserAdd'
 import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
+import DbsFrame from './Auth/DbsFrame'
 
 const getFrame = type => {
   const trans = {
@@ -69,6 +71,9 @@ const getFrame = type => {
     status: ServerStatusFrame,
     'switch-success': ServerSwitchFrame,
     'switch-fail': ServerSwitchFrame,
+    'use-db': UseDbFrame,
+    'reset-db': UseDbFrame,
+    dbs: DbsFrame,
     style: StyleFrame,
     default: Frame
   }

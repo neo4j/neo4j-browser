@@ -59,6 +59,8 @@ import { RefreshIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
 import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
+import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export class QueriesFrame extends Component {
   state = {
@@ -165,9 +167,11 @@ export class QueriesFrame extends Component {
         queryInfo[key] = bolt.itemIntToNumber(_fields[idx])
       })
       if (host) {
-        queryInfo.host = 'bolt://' + host
+        queryInfo.host = getDefaultBoltScheme(this.props.neo4jVersion) + host
       } else {
-        queryInfo.host = 'bolt://' + result.summary.server.address
+        queryInfo.host =
+          getDefaultBoltScheme(this.props.neo4jVersion) +
+          result.summary.server.address
       }
       return queryInfo
     })
@@ -187,9 +191,7 @@ export class QueriesFrame extends Component {
 
     const numQueriesMsg = queries.length > 1 ? 'queries' : 'query'
 
-    const successMessage = `Found ${
-      queries.length
-    } ${numQueriesMsg} ${numMachinesMsg}`
+    const successMessage = `Found ${queries.length} ${numQueriesMsg} ${numMachinesMsg}`
 
     return errors.length > 0 ? (
       <span>
@@ -333,7 +335,12 @@ export class QueriesFrame extends Component {
         </StatusbarWrapper>
       )
     } else {
-      aside = <FrameAside title={'Frame unavailable'} subtitle={'What edition are you running?'} />
+      aside = (
+        <FrameAside
+          title={'Frame unavailable'}
+          subtitle={'What edition are you running?'}
+        />
+      )
       frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
     }
     return (
@@ -350,7 +357,8 @@ export class QueriesFrame extends Component {
 const mapStateToProps = state => {
   return {
     availableProcedures: getAvailableProcedures(state) || [],
-    connectionState: getConnectionState(state)
+    connectionState: getConnectionState(state),
+    neo4jVersion: getVersion(state)
   }
 }
 

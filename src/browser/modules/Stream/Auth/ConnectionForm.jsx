@@ -33,7 +33,6 @@ import { getInitCmd } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
-import { changeCurrentUsersPasswordQueryObj } from 'shared/modules/cypher/procedureFactory'
 import { generateBoltHost } from 'services/utils'
 import { getEncryptionMode, NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 
@@ -63,12 +62,8 @@ export class ConnectionForm extends Component {
   }
   tryConnect = (password, doneFn) => {
     this.props.error({})
-    this.props.bus.self(
-      VERIFY_CREDENTIALS,
-      { ...this.state, password },
-      res => {
-        doneFn(res)
-      }
+    this.props.bus.self(VERIFY_CREDENTIALS, { ...this.state, password }, res =>
+      doneFn(res)
     )
   }
   connect = (
@@ -146,7 +141,7 @@ export class ConnectionForm extends Component {
         username: this.state.username,
         password: this.props.oldPassword || this.state.password,
         encrypted: getEncryptionMode(this.state),
-        ...changeCurrentUsersPasswordQueryObj(newPassword)
+        newPassword
       },
       response => {
         if (response.success) {

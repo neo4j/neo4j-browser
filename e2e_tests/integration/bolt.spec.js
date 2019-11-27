@@ -29,12 +29,7 @@ describe('Bolt connections', () => {
   })
   it('can show connection error', () => {
     const password = 'unlikely password'
-    cy.connect(
-      'neo4j',
-      password,
-      undefined,
-      false
-    )
+    cy.connect('neo4j', password, undefined, false)
   })
   it('show "no connection" error when not using web workers', () => {
     cy.executeCommand(':clear')
@@ -49,12 +44,7 @@ describe('Bolt connections', () => {
     cy.resultContains('No connection found, did you connect to Neo4j')
   })
   it('does not show the "Reconnect" banner when trying to connect', () => {
-    cy.connect(
-      'neo4j',
-      'x',
-      'bolt://localhost:7685',
-      false
-    ) // Non open port
+    cy.connect('neo4j', 'x', 'bolt://localhost:7685', false) // Non open port
     cy.wait(10000)
     cy.get('[data-testid="reconnectBanner"]').should('not.be.visible')
     cy.get('[data-testid="disconnectedBanner"]').should('be.visible')
@@ -62,44 +52,33 @@ describe('Bolt connections', () => {
       .and('contain', 'Database access not available')
       .should('not.contain', 'Connection lost')
   })
-  it('users with no role can connect', () => {
+
+  it('users with no role can connect and shows up in sidebar', () => {
     cy.executeCommand(':clear')
     const password = Cypress.config('password')
-    cy.connect(
-      'neo4j',
-      password
-    )
-    cy.executeCommand('CALL dbms.security.deleteUser("no-roles")')
-    cy.executeCommand(':clear')
-    cy.executeCommand('CALL dbms.security.createUser("no-roles", "pw", true)')
+    cy.connect('neo4j', password)
+
+    cy.createUser('noroles', 'pw', true)
     cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
 
     // Make sure initial pw set works
-    cy.setInitialPassword(
-      '.',
-      'pw',
-      'no-roles',
-      Cypress.config('boltUrl'),
-      true
-    )
+    cy.setInitialPassword('.', 'pw', 'noroles', Cypress.config('boltUrl'), true)
 
     // Try regular connect
     cy.executeCommand(':server disconnect')
-    cy.connect(
-      'no-roles',
-      '.'
-    )
-  })
-  it('displays user info in sidebar (when connected)', () => {
-    cy.executeCommand(':clear')
-    cy.get('[data-testid="drawerDB"]').click()
-    cy.get('[data-testid="user-details-username"]').should(
-      'contain',
-      'no-roles'
-    )
+    cy.connect('noroles', '.')
+
+    // Check sidebar
+    cy.get('[data-testid="drawerDBMS"]').click()
+    cy.get('[data-testid="user-details-username"]').should('contain', 'noroles')
     cy.get('[data-testid="user-details-roles"]').should('contain', '-')
-    cy.get('[data-testid="drawerDB"]').click()
+    cy.get('[data-testid="drawerDBMS"]').click()
+
+    cy.executeCommand(':server disconnect')
+    cy.executeCommand(':server connect')
+    cy.connect('neo4j', password)
+    cy.dropUser('noroles')
   })
 })

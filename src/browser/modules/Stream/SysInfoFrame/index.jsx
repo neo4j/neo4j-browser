@@ -21,21 +21,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import dateFormat from 'dateformat'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
-import { isConnected } from 'shared/modules/connections/connectionsDuck'
-import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
-
-import FrameError from 'browser/modules/Frame/FrameError'
 import {
-  SysInfoTableContainer,
-  SysInfoTable,
-  SysInfoTableEntry
-} from 'browser-components/Tables'
-import { toHumanReadableBytes, toKeyString } from 'services/utils'
-import { mapSysInfoRecords, getTableDataFromRecords } from './sysinfo'
+  isConnected,
+  getUseDb
+} from 'shared/modules/connections/connectionsDuck'
+import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameError from 'browser/modules/Frame/FrameError'
 import Render from 'browser-components/Render'
-import { QuestionIcon, RefreshIcon } from 'browser-components/icons/Icons'
+import { RefreshIcon } from 'browser-components/icons/Icons'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
@@ -44,178 +40,33 @@ import {
   StatusbarWrapper
 } from '../AutoRefresh/styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
+import { ErrorsView } from '../CypherFrame/ErrorsView'
+import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
+import * as legacyHelpers from './legacyHelpers'
+import * as helpers from './helpers'
 
 export class SysInfoFrame extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      lastFetch: null,
+      cc: [],
+      ha: [],
+      haInstances: [],
+      storeSizes: [],
+      idAllocation: [],
+      pageCache: [],
+      transactions: [],
       error: '',
       results: false,
       success: null,
       autoRefresh: false,
       autoRefreshInterval: 20 // seconds
     }
+    this.helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
   }
-  clusterResponseHandler (res) {
-    if (!res.success) {
-      this.setState({ error: 'No causal cluster results', success: false })
-      return
-    }
-    const mappedResult = mapSysInfoRecords(res.result.records)
-    const mappedTableComponents = mappedResult.map(ccRecord => {
-      const httpUrlForMember = ccRecord.addresses.filter(address => {
-        return (
-          !address.includes(window.location.href) &&
-          (window.location.protocol.startsWith('file:')
-            ? address.startsWith('http://')
-            : address.startsWith(window.location.protocol))
-        )
-      })
-      return [
-        ccRecord.role,
-        ccRecord.addresses.join(', '),
-        <Render if={httpUrlForMember.length !== 0}>
-          <a target='_blank' href={httpUrlForMember[0]}>
-            Open
-          </a>
-        </Render>
-      ]
-    })
-    this.setState({ cc: [{ value: mappedTableComponents }], success: true })
-  }
-  responseHandler (res) {
-    if (!res.success) {
-      this.setState({ error: 'No results', success: false })
-      return
-    }
-    const { ha, kernel, cache, tx, primitive } = getTableDataFromRecords(
-      res.result.records
-    )
 
-    if (ha) {
-      const instancesInCluster = ha.InstancesInCluster.map(({ properties }) => {
-        return [
-          properties.instanceId,
-          properties.alive.toString(),
-          properties.available.toString(),
-          properties.haRole === 'master' ? 'yes' : '-'
-        ]
-      })
-
-      this.setState({
-        ha: [
-          { label: 'InstanceId', value: ha.InstanceId },
-          { label: 'Role', value: ha.Role },
-          { label: 'Alive', value: ha.Alive.toString() },
-          { label: 'Available', value: ha.Available.toString() },
-          { label: 'Last Committed Tx Id', value: ha.LastCommittedTxId },
-          { label: 'Last Update Time', value: ha.LastUpdateTime }
-        ],
-        haInstances: [{ value: instancesInCluster }]
-      })
-    }
-
-    const pageCache = [
-      { label: 'Faults', value: cache.Faults },
-      { label: 'Evictions', value: cache.Evictions },
-      { label: 'File Mappings', value: cache.FileMappings },
-      { label: 'Bytes Read', value: cache.BytesRead },
-      { label: 'Flushes', value: cache.Flushes },
-      { label: 'Eviction Exceptions', value: cache.EvictionExceptions },
-      { label: 'File Unmappings', value: cache.FileUnmappings },
-      { label: 'Bytes Written', value: cache.BytesWritten },
-      {
-        label: 'Hit Ratio',
-        value: cache.HitRatio,
-        mapper: v => `${(v * 100).toFixed(2)}%`,
-        optional: true
-      },
-      {
-        label: 'Usage Ratio',
-        value: cache.UsageRatio,
-        mapper: v => `${(v * 100).toFixed(2)}%`,
-        optional: true
-      }
-    ]
-
-    const baseStoreSizes = [
-      {
-        label: 'Array Store',
-        value: toHumanReadableBytes(kernel.ArrayStoreSize)
-      },
-      {
-        label: 'Logical Log',
-        value: toHumanReadableBytes(kernel.LogicalLogSize)
-      },
-      {
-        label: 'Node Store',
-        value: toHumanReadableBytes(kernel.NodeStoreSize)
-      },
-      {
-        label: 'Property Store',
-        value: toHumanReadableBytes(kernel.PropertyStoreSize)
-      },
-      {
-        label: 'Relationship Store',
-        value: toHumanReadableBytes(kernel.RelationshipStoreSize)
-      },
-      {
-        label: 'String Store',
-        value: toHumanReadableBytes(kernel.StringStoreSize)
-      },
-      {
-        label: 'Total Store Size',
-        value: toHumanReadableBytes(kernel.TotalStoreSize)
-      }
-    ]
-
-    const storeSizes = kernel.CountStoreSize
-      ? [
-        {
-          label: 'Count Store',
-          value: toHumanReadableBytes(kernel.CountStoreSize)
-        },
-        {
-          label: 'Label Store',
-          value: toHumanReadableBytes(kernel.LabelStoreSize)
-        },
-        {
-          label: 'Index Store',
-          value: toHumanReadableBytes(kernel.IndexStoreSize)
-        },
-        {
-          label: 'Schema Store',
-          value: toHumanReadableBytes(kernel.SchemaStoreSize)
-        },
-        ...baseStoreSizes
-      ]
-      : [...baseStoreSizes]
-
-    this.setState({
-      storeSizes,
-      idAllocation: [
-        { label: 'Node ID', value: primitive.NumberOfNodeIdsInUse },
-        { label: 'Property ID', value: primitive.NumberOfPropertyIdsInUse },
-        {
-          label: 'Relationship ID',
-          value: primitive.NumberOfRelationshipIdsInUse
-        },
-        {
-          label: 'Relationship Type ID',
-          value: primitive.NumberOfRelationshipTypeIdsInUse
-        }
-      ],
-      pageCache,
-      transactions: [
-        { label: 'Last Tx Id', value: tx.LastCommittedTxId },
-        { label: 'Current', value: tx.NumberOfOpenTransactions },
-        { label: 'Peak', value: tx.PeakNumberOfConcurrentTransactions },
-        { label: 'Opened', value: tx.NumberOfOpenedTransactions },
-        { label: 'Committed', value: tx.NumberOfCommittedTransactions }
-      ],
-      success: true
-    })
-  }
   componentDidMount () {
     this.getSysInfo()
   }
@@ -233,13 +84,14 @@ export class SysInfoFrame extends Component {
   }
   getSysInfo () {
     if (this.props.bus && this.props.isConnected) {
+      this.setState({ lastFetch: Date.now() })
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: 'CALL dbms.queryJmx("org.neo4j:*")',
+          query: this.helpers.sysinfoQuery(this.props.useDb),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        this.responseHandler.bind(this)
+        this.helpers.responseHandler(this.setState.bind(this), this.props.useDb)
       )
       if (this.props.isACausalCluster) {
         this.props.bus.self(
@@ -248,7 +100,7 @@ export class SysInfoFrame extends Component {
             query: 'CALL dbms.cluster.overview',
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
-          this.clusterResponseHandler.bind(this)
+          this.helpers.clusterResponseHandler(this.setState.bind(this))
         )
       }
     } else {
@@ -262,69 +114,19 @@ export class SysInfoFrame extends Component {
       this.getSysInfo()
     }
   }
-  buildTableData (data) {
-    if (!data) return null
-    return data.map(props => {
-      const { value } = props
-      if (value instanceof Array) {
-        return value.map(v => {
-          const key = props.label ? props.label : toKeyString(v.join(''))
-          return <SysInfoTableEntry key={key} values={v} />
-        })
-      }
-      return <SysInfoTableEntry key={props.label} {...props} />
-    })
-  }
   render () {
-    const content = this.props.isConnected ? (
-      <SysInfoTableContainer>
-        <SysInfoTable key='StoreSizes' header='Store Sizes'>
-          {this.buildTableData(this.state.storeSizes)}
-        </SysInfoTable>
-        <SysInfoTable key='IDAllocation' header='ID Allocation'>
-          {this.buildTableData(this.state.idAllocation)}
-        </SysInfoTable>
-        <SysInfoTable key='PageCache' header='Page Cache'>
-          {this.buildTableData(this.state.pageCache)}
-        </SysInfoTable>
-        <SysInfoTable key='Transactionss' header='Transactions'>
-          {this.buildTableData(this.state.transactions)}
-        </SysInfoTable>
-        <Render if={this.props.isACausalCluster}>
-          <SysInfoTable
-            key='cc-table'
-            header={
-              <span data-testid='sysinfo-casual-cluster-members-title'>
-                Causal Cluster Members{' '}
-                <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
-              </span>
-            }
-            colspan='3'
-          >
-            <SysInfoTableEntry
-              key='cc-entry'
-              headers={['Roles', 'Addresses', 'Actions']}
-            />
-            {this.buildTableData(this.state.cc)}
-          </SysInfoTable>
-        </Render>
-        <Render if={this.state.ha}>
-          <SysInfoTable key='ha-table' header='High Availability'>
-            {this.buildTableData(this.state.ha)}
-          </SysInfoTable>
-        </Render>
-        <Render if={this.state.haInstances}>
-          <SysInfoTable key='cluster-table' header='Cluster' colspan='4'>
-            <SysInfoTableEntry
-              key='ha-entry'
-              headers={['Id', 'Alive', 'Available', 'Is Master']}
-            />
-            {this.buildTableData(this.state.haInstances)}
-          </SysInfoTable>
-        </Render>
-      </SysInfoTableContainer>
+    const SysinfoComponent = this.helpers.Sysinfo
+    const content = !this.props.isConnected ? (
+      <ErrorsView
+        result={{ code: 'No connection', message: 'No connection available' }}
+      />
     ) : (
-      'No connection available'
+      <SysinfoComponent
+        {...this.state}
+        databases={this.props.databases}
+        isACausalCluster={this.props.isACausalCluster}
+        useDb={this.props.useDb}
+      />
     )
 
     return (
@@ -338,6 +140,8 @@ export class SysInfoFrame extends Component {
             </Render>
             <Render if={this.state.success}>
               <StyledStatusBar>
+                {this.state.lastFetch &&
+                  `Updated: ${dateFormat(this.state.lastFetch)}`}
                 {this.state.success}
                 <RefreshQueriesButton onClick={() => this.getSysInfo()}>
                   <RefreshIcon />
@@ -359,14 +163,12 @@ export class SysInfoFrame extends Component {
 
 const mapStateToProps = state => {
   return {
+    hasMultiDbSupport: hasMultiDbSupport(state),
     isACausalCluster: isACausalCluster(state),
-    isConnected: isConnected(state)
+    isConnected: isConnected(state),
+    databases: getDatabases(state),
+    useDb: getUseDb(state)
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(SysInfoFrame)
-)
+export default withBus(connect(mapStateToProps)(SysInfoFrame))

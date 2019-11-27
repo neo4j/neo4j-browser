@@ -50,8 +50,8 @@ export class WarningsView extends Component {
   render () {
     if (this.props.result === undefined) return null
     const { summary = {} } = this.props.result
-    const { notifications = [], statement = {} } = summary
-    const { text: cypher = '' } = statement
+    const { notifications = [], query = {} } = summary
+    const { text: cypher = '' } = query
     if (!notifications || !cypher) {
       return null
     }

@@ -56,6 +56,7 @@ import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -89,7 +90,8 @@ export class Editor extends Component {
       nextState.contentId === this.state.contentId &&
       nextState.editorHeight === this.state.editorHeight &&
       shallowEquals(nextState.notifications, this.state.notifications) &&
-      deepEquals(nextProps.schema, this.props.schema)
+      deepEquals(nextProps.schema, this.props.schema) &&
+      nextProps.useDb === this.props.useDb
     )
   }
   focusEditor () {
@@ -299,7 +301,7 @@ export class Editor extends Component {
                 n => ({
                   ...n,
                   position: { ...n.position, line: n.position.line + offset },
-                  statement: response.result.summary.statement.text
+                  statement: response.result.summary.query.text
                 })
               )
               this.setState(state => ({
@@ -337,9 +339,10 @@ export class Editor extends Component {
     }
   }
 
-  lineNumberFormatter (line) {
+  lineNumberFormatter = line => {
+    const useDbString = this.props.useDb || ''
     if (!this.codeMirror || this.codeMirror.lineCount() === 1) {
-      return '$'
+      return `${useDbString}$`
     } else {
       return line
     }
@@ -363,7 +366,7 @@ export class Editor extends Component {
       lineWrapping: true,
       autofocus: true,
       smartIndent: false,
-      lineNumberFormatter: this.lineNumberFormatter.bind(this),
+      lineNumberFormatter: this.lineNumberFormatter,
       lint: this.props.enableEditorLint,
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
@@ -483,6 +486,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const mapStateToProps = state => {
   return {
+    useDb: getUseDb(state),
     enableEditorAutocomplete: shouldEditorAutocomplete(state),
     enableEditorLint: shouldEditorLint(state),
     history: getHistory(state),

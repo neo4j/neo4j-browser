@@ -179,6 +179,7 @@ describe('connectionsDucks Epics', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
+        connections.useDb(null),
         connections.updateConnection({ id, password: '' }),
         connections.setActiveConnection(null)
       ])
@@ -199,6 +200,7 @@ describe('connectionsDucks Epics', () => {
         try {
           expect(store.getActions()).toEqual([
             action,
+            connections.useDb(null),
             connections.setActiveConnection(null),
             updateDiscoveryConnection({ username: '', password: '' }),
             currentAction
@@ -284,6 +286,7 @@ describe('startupConnectEpic', () => {
         try {
           expect(actions).toEqual([
             action,
+            connections.useDb(null),
             connections.setActiveConnection(null),
             updateDiscoveryConnection({ username: '', password: '' }),
             currentAction

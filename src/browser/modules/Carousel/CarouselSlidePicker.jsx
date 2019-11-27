@@ -26,25 +26,24 @@ import {
 
 const CarouselSlidePicker = ({ slides, visibleSlide, onClickEvent }) => {
   if (!slides || slides.length === 0) return null
-  const Indicators = slides.map(
-    (_, i) =>
-      i !== visibleSlide ? (
-        <CarouselIndicatorInactive
-          key={i}
-          aria-label={i + 1}
-          onClick={() => onClickEvent(i)}
-        >
-          <span />
-        </CarouselIndicatorInactive>
-      ) : (
-        <CarouselIndicatorActive
-          key={i}
-          aria-label={i + 1}
-          onClick={() => onClickEvent(i)}
-        >
-          <span />
-        </CarouselIndicatorActive>
-      )
+  const Indicators = slides.map((_, i) =>
+    i !== visibleSlide ? (
+      <CarouselIndicatorInactive
+        key={i}
+        aria-label={i + 1}
+        onClick={() => onClickEvent(i)}
+      >
+        <span />
+      </CarouselIndicatorInactive>
+    ) : (
+      <CarouselIndicatorActive
+        key={i}
+        aria-label={i + 1}
+        onClick={() => onClickEvent(i)}
+      >
+        <span />
+      </CarouselIndicatorActive>
+    )
   )
   return <StyledUl>{Indicators}</StyledUl>
 }

@@ -104,6 +104,48 @@ describe('discoveryOnStartupEpic', () => {
     // When
     store.dispatch(action)
   })
+
+  test('listens on APP_START and finds a bolt_direct host and dispatches an action with the found host', done => {
+    // Given
+    const action = { type: APP_START, env: WEB }
+    const expectedHost = 'bolt://myhost:7777'
+    nock(getDiscoveryEndpoint())
+      .get('/')
+      .reply(200, { bolt_direct: expectedHost })
+    bus.take(discovery.DONE, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        { type: discovery.DONE }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+
+  test('listens on APP_START and finds both a bolt_direct and a bold host and dispatches an action with the found bolt_direct host', done => {
+    // Given
+    const action = { type: APP_START, env: WEB }
+    const expectedHost = 'bolt://myhost:7777'
+    nock(getDiscoveryEndpoint())
+      .get('/')
+      .reply(200, { bolt_direct: expectedHost, bolt: 'very://bad:1337' })
+    bus.take(discovery.DONE, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        { type: discovery.DONE }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
   test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host', done => {
     // Given
     const action = {

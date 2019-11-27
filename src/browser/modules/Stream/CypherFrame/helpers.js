@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import {
   entries,
   get,
@@ -30,6 +30,7 @@ import {
 } from 'lodash-es'
 
 import bolt from 'services/bolt/bolt'
+
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import {
   recursivelyExtractGraphItems,

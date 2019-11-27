@@ -35,19 +35,19 @@ exports[`LabelItems renders labels 1`] = `
       class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
     >
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
+        class="styled__chip-t72hk3-0 styled__StyledLabel-t72hk3-1 hThrTr"
         data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
+        class="styled__chip-t72hk3-0 styled__StyledLabel-t72hk3-1 hThrTr"
         data-testid="sidebarMetaItem"
       >
         MyLabel
       </div>
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 cnkXFe"
+        class="styled__chip-t72hk3-0 styled__StyledLabel-t72hk3-1 hThrTr"
         data-testid="sidebarMetaItem"
       >
         MyLabel2
@@ -92,13 +92,13 @@ exports[`PropertyItems renders properties 1`] = `
       class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
     >
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledProperty-sc-1srdf8s-3 EddIa"
+        class="styled__chip-t72hk3-0 styled__StyledProperty-t72hk3-3 EbItw"
         data-testid="sidebarMetaItem"
       >
         prop1
       </div>
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledProperty-sc-1srdf8s-3 EddIa"
+        class="styled__chip-t72hk3-0 styled__StyledProperty-t72hk3-3 EbItw"
         data-testid="sidebarMetaItem"
       >
         prop2
@@ -143,19 +143,19 @@ exports[`RelationshipItems renders relationshipTypes 1`] = `
       class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
     >
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
+        class="styled__chip-t72hk3-0 styled__StyledRelationship-t72hk3-2 jIILpR"
         data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
+        class="styled__chip-t72hk3-0 styled__StyledRelationship-t72hk3-2 jIILpR"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE
       </div>
       <div
-        class="styled__chip-sc-1srdf8s-0 styled__StyledRelationship-sc-1srdf8s-2 fcKIry"
+        class="styled__chip-t72hk3-0 styled__StyledRelationship-t72hk3-2 jIILpR"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE2

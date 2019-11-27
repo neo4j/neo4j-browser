@@ -136,11 +136,12 @@ export const discoveryOnStartupEpic = (some$, store) => {
           // fake discovery response
           // Promise.resolve({ bolt: 'bolt+routing://localhost:7687' })
           .then(result => {
+            const host = result && (result.bolt_direct || result.bolt)
             // Try to get info from server
-            if (!result || !result.bolt) {
+            if (!host) {
               throw new Error('No bolt address found') // No bolt info from server, throw
             }
-            store.dispatch(updateDiscoveryConnection({ host: result.bolt })) // Update discovery host in redux
+            store.dispatch(updateDiscoveryConnection({ host })) // Update discovery host in redux
             return { type: DONE }
           })
           .catch(e => {

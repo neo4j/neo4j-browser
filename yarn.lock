@@ -7541,12 +7541,13 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha1-rCetpmFn+ohJpq3dg39rGJrSCBw=
 
-neo4j-driver@^1.7.5:
-  version "1.7.6"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.7.6.tgz#eccb135a71eba9048c68717444593a6424cffc49"
-  integrity sha1-7MsTWnHrqQSMaHF0RFk6ZCTP/Ek=
+neo4j-driver@4.0.0-rc1:
+  version "4.0.0-rc1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-4.0.0-rc1.tgz#f52563dc63a391a8b730dc7179e281c6dd9d51f3"
+  integrity sha1-9SVj3GOjkai3MNxxeeKBxt2dUfM=
   dependencies:
     "@babel/runtime" "^7.5.5"
+    rxjs "^6.5.2"
     text-encoding-utf-8 "^1.0.2"
     uri-js "^4.2.2"
 
@@ -9904,6 +9905,13 @@ rxjs@^5.0.0-beta.11, rxjs@^5.3.0, rxjs@^5.4.2:
   integrity sha1-b6YbinfD15PbrycL7i9D9lLXQcw=
   dependencies:
     symbol-observable "1.0.1"
+
+rxjs@^6.5.2:
+  version "6.5.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-6.5.3.tgz#510e26317f4db91a7eb1de77d9dd9ba0a4899a3a"
+  integrity sha1-UQ4mMX9NuRp+sd532d2boKSJmjo=
+  dependencies:
+    tslib "^1.9.0"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"

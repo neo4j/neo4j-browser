@@ -33,6 +33,8 @@ export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
 export const getAvailableProcedures = state => state[NAME].availableProcedures
 export const isACausalCluster = state =>
   getAvailableProcedures(state).includes('dbms.cluster.overview')
+export const isMultiDatabase = state =>
+  getAvailableProcedures(state).includes('dbms.databases.overview')
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
 export const useBrowserSync = state => !!state[NAME].browserSync

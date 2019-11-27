@@ -55,7 +55,7 @@ describe('WarningsViews', () => {
                 }
               }
             ],
-            statement: {
+            query: {
               text: 'EXPLAIN MATCH xx3'
             }
           }
@@ -93,7 +93,7 @@ describe('WarningsViews', () => {
                 }
               }
             ],
-            statement: {
+            query: {
               text: 'EXPLAIN MATCH zz3'
             }
           }

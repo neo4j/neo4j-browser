@@ -661,15 +661,15 @@ function queryPlan (element) {
                               : d.height <
                                 operatorHeaderHeight + operatorCornerRadius
                                 ? operatorCornerRadius -
-                                  Math.sqrt(
-                                    Math.pow(operatorCornerRadius, 2) -
-                                      Math.pow(
-                                        operatorCornerRadius -
-                                          d.height +
-                                          operatorHeaderHeight,
-                                        2
-                                      )
-                                  )
+                                Math.sqrt(
+                                  Math.pow(operatorCornerRadius, 2) -
+                                    Math.pow(
+                                      operatorCornerRadius -
+                                        d.height +
+                                        operatorHeaderHeight,
+                                      2
+                                    )
+                                )
                                 : 0
                           return [
                             'M',

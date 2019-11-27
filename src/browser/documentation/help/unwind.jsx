@@ -53,8 +53,7 @@ const content = (
     </div>
     <section className='example'>
       <figure className='runnable'>
-        <pre
-        >{`MATCH p = shortestPath( (lucy:Person {name:"Lucy Liu"})-[:ACTED_IN*]-(bacon:Person {name:"Kevin Bacon"}) )
+        <pre>{`MATCH p = shortestPath( (lucy:Person {name:"Lucy Liu"})-[:ACTED_IN*]-(bacon:Person {name:"Kevin Bacon"}) )
 UNWIND nodes(p) as n
 RETURN n.name`}</pre>
         <figcaption>

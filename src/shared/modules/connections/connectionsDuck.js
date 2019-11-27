@@ -57,6 +57,7 @@ export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
 export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
 export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
 export const VERIFY_CREDENTIALS = NAME + '/VERIFY_CREDENTIALS'
+export const USE_DB = NAME + '/USE_DB'
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -68,7 +69,8 @@ const initialState = {
   connectionsById: {},
   activeConnection: null,
   connectionState: DISCONNECTED_STATE,
-  lastUpdate: 0
+  lastUpdate: 0,
+  useDb: null
 }
 
 /**
@@ -83,6 +85,10 @@ export function getConnection (state, id) {
   } else {
     return null
   }
+}
+
+export function getUseDb (state) {
+  return (state[NAME] || {}).useDb
 }
 
 export function getConnections (state) {
@@ -113,6 +119,7 @@ export function getActiveConnectionData (state) {
 export function getConnectionData (state, id) {
   if (typeof state[NAME].connectionsById[id] === 'undefined') return null
   let data = state[NAME].connectionsById[id]
+  data.db = getUseDb(state)
   if (data.username && data.password) return data
   if (!(data.username && data.password) && (memoryUsername && memoryPassword)) {
     // No retain state
@@ -194,7 +201,7 @@ let memoryPassword = ''
 // Reducer
 export default function (state = initialState, action) {
   if (action.type === APP_START) {
-    state = { ...initialState, ...state }
+    state = { ...initialState, ...state, useDb: initialState.useDb }
   }
 
   switch (action.type) {
@@ -227,6 +234,8 @@ export default function (state = initialState, action) {
       }
     case UPDATE_AUTH_ENABLED:
       return updateAuthEnabledHelper(state, action.authEnabled)
+    case USE_DB:
+      return { ...state, useDb: action.useDb }
     case USER_CLEAR:
       return initialState
     default:
@@ -302,7 +311,23 @@ export const setAuthEnabled = authEnabled => {
   }
 }
 
+export const useDb = (db = null) => ({ type: USE_DB, useDb: db })
+
 // Epics
+export const useDbEpic = (action$, store) => {
+  return action$
+    .ofType(USE_DB)
+    .do(action => {
+      bolt.useDb(action.useDb)
+    })
+    .map(action => {
+      if (!action.useDb) {
+        return { type: 'NOOP' }
+      }
+      return fetchMetaData()
+    })
+}
+
 export const connectEpic = (action$, store) => {
   return action$.ofType(CONNECT).mergeMap(async action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
@@ -339,6 +364,7 @@ export const verifyConnectionCredentialsEpic = (action$, store) => {
         undefined
       )
       .then(driver => {
+        driver.close()
         return { type: action.$$responseChannel, success: true }
       })
       .catch(e => {
@@ -348,49 +374,56 @@ export const verifyConnectionCredentialsEpic = (action$, store) => {
 }
 
 export const startupConnectEpic = (action$, store) => {
-  return action$.ofType(discovery.DONE).mergeMap(action => {
-    const connection = getConnection(store.getState(), discovery.CONNECTION_ID)
-
-    // No creds stored, fail auto-connect
-    if (
-      !connection ||
-      connection.authenticationMethod === NO_AUTH ||
-      !(connection.host && connection.username && connection.password)
-    ) {
-      store.dispatch(setActiveConnection(null))
-      store.dispatch(
-        discovery.updateDiscoveryConnection({ username: '', password: '' })
+  return action$
+    .ofType(discovery.DONE)
+    .do(() => store.dispatch(useDb(null))) // reset db to use
+    .mergeMap(action => {
+      const connection = getConnection(
+        store.getState(),
+        discovery.CONNECTION_ID
       )
-      return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
-    }
-    return new Promise((resolve, reject) => {
-      // Try to connect with stored creds
-      bolt
-        .openConnection(
-          connection,
-          {
-            encrypted: getEncryptionMode(connection),
-            connectionTimeout: getConnectionTimeout(store.getState())
-          },
-          onLostConnection(store.dispatch)
+
+      // No creds stored, fail auto-connect
+      if (
+        !connection ||
+        connection.authenticationMethod === NO_AUTH ||
+        !(connection.host && connection.username && connection.password)
+      ) {
+        store.dispatch(setActiveConnection(null))
+        store.dispatch(
+          discovery.updateDiscoveryConnection({ username: '', password: '' })
         )
-        .then(() => {
-          store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
-          resolve({ type: STARTUP_CONNECTION_SUCCESS })
-        })
-        .catch(e => {
-          store.dispatch(setActiveConnection(null))
-          store.dispatch(
-            discovery.updateDiscoveryConnection({
-              username: '',
-              password: ''
-            })
+        return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
+      }
+      return new Promise((resolve, reject) => {
+        // Try to connect with stored creds
+        bolt
+          .openConnection(
+            connection,
+            {
+              encrypted: getEncryptionMode(connection),
+              connectionTimeout: getConnectionTimeout(store.getState())
+            },
+            onLostConnection(store.dispatch)
           )
-          resolve({ type: STARTUP_CONNECTION_FAILED })
-        })
+          .then(() => {
+            store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+            resolve({ type: STARTUP_CONNECTION_SUCCESS })
+          })
+          .catch(e => {
+            store.dispatch(setActiveConnection(null))
+            store.dispatch(
+              discovery.updateDiscoveryConnection({
+                username: '',
+                password: ''
+              })
+            )
+            resolve({ type: STARTUP_CONNECTION_FAILED })
+          })
+      })
     })
-  })
 }
+
 export const startupConnectionSuccessEpic = (action$, store) => {
   return action$
     .ofType(STARTUP_CONNECTION_SUCCESS)
@@ -431,6 +464,7 @@ export const disconnectEpic = (action$, store) => {
     .ofType(DISCONNECT)
     .merge(action$.ofType(USER_CLEAR))
     .do(() => bolt.closeConnection())
+    .do(() => store.dispatch(useDb(null)))
     .do(action =>
       store.dispatch(updateConnection({ id: action.id, password: '' }))
     )
@@ -440,6 +474,7 @@ export const silentDisconnectEpic = (action$, store) => {
   return action$
     .ofType(SILENT_DISCONNECT)
     .do(() => bolt.closeConnection())
+    .do(() => store.dispatch(useDb(null)))
     .do(() => store.dispatch({ type: CLEAR_META }))
     .mapTo(setActiveConnection(null, true))
 }

@@ -71,6 +71,14 @@ export const StyledCodeBlockErrorBar = styled(StyledCodeBlock)`
   background-color: white;
   color: ${props => props.theme.error};
 `
+export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
+  white-space: nowrap;
+  overflow: hidden;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+  cursor: pointer;
+`
 
 export const SyncDisconnectedBanner = styled(Banner)`
   background-color: ${props => props.theme.auth};

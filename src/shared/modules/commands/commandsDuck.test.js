@@ -43,6 +43,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
 import bolt from 'services/bolt/bolt'
+import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 
 const originalRoutedWriteTransaction = bolt.routedWriteTransaction
 
@@ -105,6 +106,7 @@ describe('commandsDuck', () => {
             'error'
           ),
           commands.unsuccessfulCypher(cmd),
+          fetchMetaData(),
           { type: 'NOOP' }
         ])
         done()
@@ -155,7 +157,6 @@ describe('commandsDuck', () => {
             { result: { x: 2 }, type: 'param' },
             'success'
           ),
-          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()
@@ -217,7 +218,6 @@ describe('commandsDuck', () => {
             { result: { x: 2, y: 3 }, type: 'params' },
             'success'
           ),
-          { type: 'meta/FORCE_FETCH' },
           { type: 'NOOP' }
         ])
         done()
@@ -400,6 +400,7 @@ describe('commandsDuck', () => {
             'error'
           ),
           commands.unsuccessfulCypher(cmd),
+          fetchMetaData(),
           { type: 'NOOP' }
         ])
         done()

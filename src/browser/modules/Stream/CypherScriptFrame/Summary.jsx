@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import ClickToCode from 'browser/modules/ClickToCode/index'
 import { getBodyAndStatusBarMessages } from 'browser/modules/Stream/CypherFrame/helpers'
 import { errorMessageFormater } from 'browser/modules/Stream/errorMessageFormater'
 import {
@@ -28,6 +27,7 @@ import {
   StyledCypherInfoMessage
 } from 'browser/modules/Stream/styled'
 import { MessageArea, PaddedStatsBar } from './styled'
+import { whitelistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 
 const ucFirst = str => str[0].toUpperCase() + str.slice(1)
 
@@ -64,8 +64,12 @@ const GenericSummary = ({ status }) => {
         <PaddedStatsBar>
           <StyledCypherWarningMessage>WARNING</StyledCypherWarningMessage>
           <MessageArea>
-            Only cypher and <code>:param</code> commands will be executed in the
-            multi statement mode.
+            Only the commands{' '}
+            {whitelistedMultiCommands().map((cmd, i) => {
+              const maybeComma = i > 0 ? ', ' : ''
+              return [maybeComma, <code key={cmd}>{cmd}</code>]
+            })}{' '}
+            and Cypher will be executed in the multi-statement mode.
           </MessageArea>
         </PaddedStatsBar>
       )
@@ -105,7 +109,7 @@ export const CypherSummary = ({ status, request }) => {
   }
 }
 
-export const Summary = ({ status }) => {
+export const Summary = ({ status, request }) => {
   switch (status) {
     case 'ignored':
       return <GenericSummary status={status} />
@@ -119,7 +123,7 @@ export const Summary = ({ status }) => {
       return (
         <PaddedStatsBar>
           <StyledCypherSuccessMessage>SUCCESS</StyledCypherSuccessMessage>
-          <MessageArea>Parameter was successfully set</MessageArea>
+          <MessageArea>Command was successfully executed</MessageArea>
         </PaddedStatsBar>
       )
     case 'error':
@@ -127,12 +131,7 @@ export const Summary = ({ status }) => {
         <PaddedStatsBar>
           <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
           <MessageArea>
-            Error while setting parameter. Usage:{' '}
-            <code>:param x => [1, 2, 3]</code>. See{' '}
-            <ClickToCode code=':help param' execute>
-              :help param
-            </ClickToCode>{' '}
-            for more info.
+            {(request.result || {}).message || 'Unknown error'}
           </MessageArea>
         </PaddedStatsBar>
       )

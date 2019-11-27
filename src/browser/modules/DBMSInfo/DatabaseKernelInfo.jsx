@@ -23,11 +23,14 @@ import { withBus } from 'react-suber'
 import {
   getVersion,
   getEdition,
-  getDbName,
   getStoreSize,
-  getClusterRole
+  getClusterRole,
+  getDatabases
 } from 'shared/modules/dbMeta/dbMetaDuck'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeCommand,
+  listDbsCommand
+} from 'shared/modules/commands/commandsDuck'
 import { toHumanReadableBytes } from 'services/utils'
 
 import Render from 'browser-components/Render'
@@ -43,6 +46,7 @@ import {
   StyledValueUCFirst,
   Link
 } from './styled'
+import { getUsedDbName } from 'shared/modules/features/versionedFeatures'
 
 export const DatabaseKernelInfo = ({
   role,
@@ -50,11 +54,12 @@ export const DatabaseKernelInfo = ({
   edition,
   dbName,
   storeSize,
-  onItemClick
+  onItemClick,
+  databases
 }) => {
   return (
     <DrawerSection className='database-kernel-info'>
-      <DrawerSubHeader>Database</DrawerSubHeader>
+      <DrawerSubHeader>DBMS</DrawerSubHeader>
       <DrawerSectionBody>
         <StyledTable>
           <tbody>
@@ -88,6 +93,16 @@ export const DatabaseKernelInfo = ({
                 <StyledValue>{toHumanReadableBytes(storeSize)}</StyledValue>
               </tr>
             </Render>
+            <Render if={databases && databases.length}>
+              <tr>
+                <StyledKey>Databases: </StyledKey>
+                <StyledValue>
+                  <Link onClick={() => onItemClick(`:${listDbsCommand}`)}>
+                    :{listDbsCommand}
+                  </Link>
+                </StyledValue>
+              </tr>
+            </Render>
             <tr>
               <StyledKey>Information: </StyledKey>
               <StyledValue>
@@ -107,13 +122,14 @@ export const DatabaseKernelInfo = ({
   )
 }
 
-const mapStateToProps = store => {
+const mapStateToProps = state => {
   return {
-    version: getVersion(store),
-    edition: getEdition(store),
-    dbName: getDbName(store),
-    storeSize: getStoreSize(store),
-    role: getClusterRole(store)
+    version: getVersion(state),
+    edition: getEdition(state),
+    dbName: getUsedDbName(state),
+    storeSize: getStoreSize(state),
+    role: getClusterRole(state),
+    databases: getDatabases(state)
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {

@@ -31,6 +31,7 @@ import {
   disconnectEpic,
   startupConnectEpic,
   disconnectSuccessEpic,
+  verifyConnectionCredentialsEpic,
   startupConnectionSuccessEpic,
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
@@ -39,14 +40,13 @@ import {
   switchConnectionSuccessEpic,
   switchConnectionFailEpic,
   silentDisconnectEpic,
-  verifyConnectionCredentialsEpic
+  useDbEpic
 } from './modules/connections/connectionsDuck'
 import {
   dbMetaEpic,
-  serverConfigEpic,
+  serverInfoEpic,
   clearMetaOnDisconnectEpic
 } from './modules/dbMeta/dbMetaDuck'
-import { jmxEpic } from './modules/jmx/jmxDuck'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
 import {
   discoveryOnStartupEpic,
@@ -97,17 +97,17 @@ export default combineEpics(
   switchConnectionFailEpic,
   retainCredentialsSettingsEpic,
   connectEpic,
-  jmxEpic,
   disconnectEpic,
   silentDisconnectEpic,
-  verifyConnectionCredentialsEpic,
+  useDbEpic,
   startupConnectEpic,
   disconnectSuccessEpic,
+  verifyConnectionCredentialsEpic,
   startupConnectionSuccessEpic,
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
   dbMetaEpic,
-  serverConfigEpic,
+  serverInfoEpic,
   clearMetaOnDisconnectEpic,
   cancelRequestEpic,
   discoveryOnStartupEpic,

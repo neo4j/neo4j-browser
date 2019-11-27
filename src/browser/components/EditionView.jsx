@@ -20,13 +20,13 @@
 import React from 'react'
 import { Code } from '../modules/Stream/Queries/styled'
 
-export const EnterpriseOnlyFrame = ({command}) => {
+export const EnterpriseOnlyFrame = ({ command }) => {
   return (
     <div>
       <p>
-        Unable to display <Code>{command}</Code> because the procedures
-        required to run this frame are missing. These procedures are usually
-        found in Neo4j Enterprise edition.
+        Unable to display <Code>{command}</Code> because the procedures required
+        to run this frame are missing. These procedures are usually found in
+        Neo4j Enterprise edition.
       </p>
       <p>
         Find out more over at{' '}

@@ -18,23 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global, describe, test, expect, afterEach */
+export function extractServerInfo (res) {
+  const serverInfo = {
+    version: 'unknown',
+    edition: ''
+  }
 
-import { flattenAttributes } from './sysinfo'
+  if (!res) {
+    return serverInfo
+  }
 
-describe('sysinfo attribute types', () => {
-  test('should handle string value', () => {
-    const attributeData = { attributes: [{ name: 'foo', value: 'bar' }] }
-    expect(flattenAttributes(attributeData)).toEqual({ foo: 'bar' })
-  })
-  test('should handle int value', () => {
-    const attributeData = { attributes: [{ name: 'foo', value: 0 }] }
-    expect(flattenAttributes(attributeData)).toEqual({ foo: '0.0' })
-  })
-  test('should handle object value', () => {
-    const attributeData = {
-      attributes: [{ name: 'foo', value: { bar: 'baz' } }]
-    }
-    expect(flattenAttributes(attributeData)).toEqual({ foo: { bar: 'baz' } })
-  })
-})
+  // Always get server version
+  if (res.summary.server.version) {
+    serverInfo.version = res.summary.server.version.split('/').pop()
+  }
+
+  // Get server edition if available
+  if (res.records.length && res.records[0].keys.includes('edition')) {
+    serverInfo.edition = res.records[0].get('edition')
+  }
+  return serverInfo
+}

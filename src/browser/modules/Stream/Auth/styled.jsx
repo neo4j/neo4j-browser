@@ -74,3 +74,5 @@ export const StyledCode = styled.code`
     color: #c7254e !important;
   }
 `
+
+export const StyledDbsRow = styled.li``

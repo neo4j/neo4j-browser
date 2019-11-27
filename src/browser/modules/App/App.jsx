@@ -32,7 +32,10 @@ import {
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
-import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  allowOutgoingConnections,
+  getVersion
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
   getConnectionState,
@@ -219,7 +222,8 @@ const mapStateToProps = state => {
     browserSyncConfig: getBrowserSyncConfig(state),
     browserSyncAuthStatus: getUserAuthStatus(state),
     loadSync: useBrowserSync(state),
-    isWebEnv: inWebEnv(state)
+    isWebEnv: inWebEnv(state),
+    neo4jVersion: getVersion(state)
   }
 }
 
@@ -241,7 +245,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const connectionCreds = await buildConnectionCredentialsObject(
       newContext,
       stateProps.defaultConnectionData,
-      getKerberosTicket
+      getKerberosTicket,
+      stateProps.neo4jVersion
     )
     ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
   }
@@ -254,7 +259,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const connectionCreds = await buildConnectionCredentialsObject(
       context,
       stateProps.defaultConnectionData,
-      getKerberosTicket
+      getKerberosTicket,
+      stateProps.neo4jVersion
     )
     // No connection. Probably no graph active.
     if (!connectionCreds) {

@@ -99,3 +99,19 @@ export function FetchURLError (error) {
   }
 }
 errorFunctions['FetchURLError'] = FetchURLError
+
+export function UnsupportedError (message) {
+  return {
+    type: 'UnsupportedError',
+    message
+  }
+}
+errorFunctions['UnsupportedError'] = UnsupportedError
+
+export function NotFoundError (message) {
+  return {
+    type: 'NotFoundError',
+    message
+  }
+}
+errorFunctions['NotFoundError'] = NotFoundError

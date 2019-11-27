@@ -351,8 +351,9 @@ export const StyledStrongTd = styled.td`
 
 export const StyledTd = styled.td``
 
-export const StyledHistoryList = styled.ul`
+export const UnstyledList = styled.ul`
   list-style: none;
+  width: 100%;
 `
 
 export const StyledHistoryRow = styled.li`

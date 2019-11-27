@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { splitStringOnFirst } from 'services/commandUtils'
+import { getCommandAndParam } from 'services/commandUtils'
 import * as connections from 'shared/modules/connections/connectionsDuck'
 import { add as addFrameAction } from 'shared/modules/stream/streamDuck'
 import { CONNECTION_ID as DISCOVERY_CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
@@ -26,10 +26,10 @@ import { UnknownCommandError, getErrorMessage } from 'services/exceptions'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export function handleServerCommand (action, cmdchar, put, store) {
-  const [serverCmd, props] = splitStringOnFirst(
-    splitStringOnFirst(action.cmd.substr(cmdchar.length), ' ')[1],
-    ' '
+  const [serverCmd, props] = getCommandAndParam(
+    action.cmd.substr(cmdchar.length)
   )
+
   if (serverCmd === 'connect') {
     return connectToConnection(action, props, put, store)
   }

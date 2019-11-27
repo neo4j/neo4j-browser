@@ -45,7 +45,6 @@ import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import {
   UPDATE_SETTINGS,
   getAvailableSettings,
-  fetchMetaData,
   getRemoteContentHostnameWhitelist,
   getDefaultRemoteContentHostnameWhitelist
 } from '../dbMeta/dbMetaDuck'
@@ -65,8 +64,12 @@ export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
 export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
 export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 
+export const useDbCommand = `use`
+export const listDbsCommand = `dbs`
+
 const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
+export const whitelistedMultiCommands = () => [':param', ':use']
 
 export default function reducer (state = initialState, action) {
   if (action.type === APP_START) {
@@ -171,7 +174,7 @@ export const handleCommandEpic = (action$, store) =>
         cmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
-        const whitelistedCommands = [`${cmdchar}param`]
+        const whitelistedCommands = whitelistedMultiCommands()
         const isWhitelisted =
           whitelistedCommands.filter(wcmd => !!cmd.startsWith(wcmd)).length > 0
 
@@ -226,7 +229,6 @@ export const handleSingleCommandEpic = (action$, store) =>
         } else {
           res
             .then(r => {
-              store.dispatch(fetchMetaData())
               resolve(noop)
             })
             .catch(e => resolve(noop))

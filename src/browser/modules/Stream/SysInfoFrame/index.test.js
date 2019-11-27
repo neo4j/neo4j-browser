@@ -69,6 +69,6 @@ describe('sysinfo component', () => {
     const { getByText } = render(<SysInfoFrame {...props} />)
 
     // Then
-    expect(getByText('No connection available')).not.toBeNull()
+    expect(getByText(/No connection available/i)).not.toBeNull()
   })
 })

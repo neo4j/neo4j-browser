@@ -19,7 +19,7 @@
  */
 
 import { v4 } from 'uuid'
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import WorkPool from '../WorkPool'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
@@ -40,6 +40,7 @@ import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 /* eslint-enable import/no-webpack-loader-syntax */
 
 let connectionProperties = null
+let _useDb = null
 let boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
 
 function openConnection (props, opts = {}, onLostConnection) {
@@ -96,7 +97,8 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
             connectionProperties ? connectionProperties.host : ''
           )
         ),
-        txMetadata
+        txMetadata,
+        useDb: _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -106,7 +108,9 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
       input,
       parameters,
       requestId,
-      cancelable
+      cancelable,
+      txMetadata,
+      _useDb
     )
   }
 }
@@ -134,7 +138,8 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
             connectionProperties ? connectionProperties.host : ''
           )
         ),
-        txMetadata
+        txMetadata,
+        useDb: _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -144,7 +149,9 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
       input,
       parameters,
       requestId,
-      cancelable
+      cancelable,
+      txMetadata,
+      _useDb
     )
   }
 }
@@ -155,7 +162,8 @@ function directTransaction (input, parameters, requestMetaData = {}) {
     requestId = null,
     cancelable = false,
     onLostConnection = () => {},
-    txMetadata = undefined
+    txMetadata = undefined,
+    useDb
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -172,7 +180,8 @@ function directTransaction (input, parameters, requestMetaData = {}) {
             connectionProperties ? connectionProperties.host : ''
           )
         ),
-        txMetadata
+        txMetadata,
+        useDb: useDb !== undefined ? useDb : _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -182,7 +191,9 @@ function directTransaction (input, parameters, requestMetaData = {}) {
       input,
       parameters,
       requestId,
-      cancelable
+      cancelable,
+      txMetadata,
+      _useDb
     )
   }
 }
@@ -234,6 +245,11 @@ const closeConnectionInWorkers = () => {
 }
 
 export default {
+  hasMultiDbSupport: async () => {
+    const supportsMultiDb = await boltConnection.hasMultiDbSupport()
+    return supportsMultiDb
+  },
+  useDb: db => (_useDb = db),
   directConnect: boltConnection.directConnect,
   openConnection,
   closeConnection: () => {

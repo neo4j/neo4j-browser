@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { generateBoltHost } from 'services/utils'
@@ -31,10 +31,19 @@ export const ROUTED_READ_CONNECTION = 'ROUTED_READ_CONNECTION'
 const runningQueryRegister = {}
 let _drivers = null
 let _routingAvailable = false
-const routingScheme = 'bolt+routing://'
+const routingSchemes = ['bolt+routing://', 'neo4j://']
 
 export const useRouting = url => isRoutingUrl(url) && _routingAvailable
-const isRoutingUrl = url => generateBoltHost(url).startsWith(routingScheme)
+const isRoutingUrl = url => {
+  const boltUrl = generateBoltHost(url)
+  for (let i = 0; i < routingSchemes.length; i++) {
+    const routingScheme = routingSchemes[i]
+    if (boltUrl.startsWith(routingScheme)) {
+      return true
+    }
+  }
+  return false
+}
 
 const _routingAvailability = () => {
   return directTransaction('CALL dbms.procedures() YIELD name').then(res => {
@@ -43,9 +52,23 @@ const _routingAvailability = () => {
   })
 }
 
+export const hasMultiDbSupport = async () => {
+  if (!_drivers) {
+    return false
+  }
+  const tmpDriver = _drivers.getRoutedDriver()
+  if (!tmpDriver) {
+    return false
+  }
+  const supportsMultiDb = await tmpDriver.supportsMultiDb()
+  return supportsMultiDb
+}
+
 const validateConnection = (driver, res, rej) => {
   if (!driver || !driver.session) return rej('No connection')
-  const tmp = driver.session()
+  const tmp = driver.session({
+    defaultAccessMode: neo4j.session.READ
+  })
   tmp
     .run('CALL db.indexes()')
     .then(() => {
@@ -58,6 +81,7 @@ const validateConnection = (driver, res, rej) => {
       // or credentials have expired
       const invalidStates = [
         'ServiceUnavailable',
+        'Neo.ClientError.Security.AuthenticationRateLimit',
         'Neo.ClientError.Security.Unauthorized',
         'Neo.ClientError.Security.CredentialsExpired'
       ]
@@ -127,11 +151,10 @@ export function directConnect (
 ) {
   const p = new Promise((resolve, reject) => {
     const auth = buildAuthObj(props)
-    const driver = getDriver(props.host, auth, opts)
-    driver.onError = e => {
+    const driver = getDriver(props.host, auth, opts, e => {
       onLostConnection(e)
       reject(e)
-    }
+    })
     if (shouldValidateConnection) {
       validateConnection(driver, resolve, reject)
     } else {
@@ -150,7 +173,6 @@ export function openConnection (props, opts = {}, onLostConnection = () => {}) {
     }
     const driversObj = getDriversObj(props, opts, onConnectFail)
     const driver = driversObj.getDirectDriver()
-    driver.onError = onConnectFail
     const myResolve = driver => {
       _drivers = driversObj
       if (props.hasOwnProperty('inheritedUseRouting')) {
@@ -175,6 +197,7 @@ export function openConnection (props, opts = {}, onLostConnection = () => {}) {
       }
     }
     const myReject = err => {
+      onLostConnection(err)
       _drivers = null
       driversObj.close()
       reject(err)
@@ -216,7 +239,13 @@ function _trackedTransaction (
   return [id, queryPromise]
 }
 
-function _transaction (input, parameters, session, txMetadata = undefined) {
+function _transaction (
+  input,
+  parameters,
+  session,
+  txMetadata = undefined,
+  useDb = undefined
+) {
   if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
   return session
@@ -242,9 +271,14 @@ export function directTransaction (
   parameters,
   requestId = null,
   cancelable = false,
-  txMetadata = undefined
+  txMetadata = undefined,
+  useDb = undefined
 ) {
-  const session = _drivers ? _drivers.getDirectDriver().session() : false
+  const session = _drivers
+    ? _drivers
+      .getDirectDriver()
+      .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
+    : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
@@ -254,10 +288,13 @@ export function routedReadTransaction (
   parameters,
   requestId = null,
   cancelable = false,
-  txMetadata = undefined
+  txMetadata = undefined,
+  useDb = undefined
 ) {
   const session = _drivers
-    ? _drivers.getRoutedDriver().session(neo4j.session.READ)
+    ? _drivers
+      .getRoutedDriver()
+      .session({ defaultAccessMode: neo4j.session.READ, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -268,10 +305,13 @@ export function routedWriteTransaction (
   parameters,
   requestId = null,
   cancelable = false,
-  txMetadata = undefined
+  txMetadata = undefined,
+  useDb = undefined
 ) {
   const session = _drivers
-    ? _drivers.getRoutedDriver().session(neo4j.session.WRITE)
+    ? _drivers
+      .getRoutedDriver()
+      .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -285,7 +325,11 @@ export const closeConnection = () => {
 }
 
 export const ensureConnection = (props, opts, onLostConnection) => {
-  const session = _drivers ? _drivers.getDirectDriver().session() : false
+  const session = _drivers
+    ? _drivers
+      .getDirectDriver()
+      .session({ defaultAccessMode: neo4j.session.READ })
+    : false
   if (session) {
     return new Promise((resolve, reject) => {
       session.close()

@@ -21,7 +21,7 @@
 /* global jest, describe, test, expect */
 import React from 'react'
 import { render } from '@testing-library/react'
-import { v1 as neo4j } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 
 import { AsciiView, AsciiStatusbar } from './AsciiView'
 
