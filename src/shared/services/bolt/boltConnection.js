@@ -65,32 +65,38 @@ export const hasMultiDbSupport = async () => {
 }
 
 const validateConnection = (driver, res, rej) => {
-  if (!driver || !driver.session) return rej('No connection')
-  const tmp = driver.session({
-    defaultAccessMode: neo4j.session.READ
-  })
-  tmp
-    .run('CALL db.indexes()')
-    .then(() => {
-      tmp.close()
-      res(driver)
+  driver
+    .supportsMultiDb()
+    .then(multiDbSupport => {
+      if (!driver || !driver.session) return rej('No connection')
+      const tmp = driver.session({
+        defaultAccessMode: neo4j.session.READ,
+        database: multiDbSupport ? 'system' : undefined
+      })
+      tmp
+        .run('CALL db.indexes()')
+        .then(() => {
+          tmp.close()
+          res(driver)
+        })
+        .catch(e => {
+          // Only invalidate the connection if not available
+          // or not authed
+          // or credentials have expired
+          const invalidStates = [
+            'ServiceUnavailable',
+            'Neo.ClientError.Security.AuthenticationRateLimit',
+            'Neo.ClientError.Security.Unauthorized',
+            'Neo.ClientError.Security.CredentialsExpired'
+          ]
+          if (!e.code || invalidStates.includes(e.code)) {
+            rej(e)
+          } else {
+            res(driver)
+          }
+        })
     })
-    .catch(e => {
-      // Only invalidate the connection if not available
-      // or not authed
-      // or credentials have expired
-      const invalidStates = [
-        'ServiceUnavailable',
-        'Neo.ClientError.Security.AuthenticationRateLimit',
-        'Neo.ClientError.Security.Unauthorized',
-        'Neo.ClientError.Security.CredentialsExpired'
-      ]
-      if (!e.code || invalidStates.includes(e.code)) {
-        rej(e)
-      } else {
-        res(driver)
-      }
-    })
+    .catch(rej)
 }
 
 const buildAuthObj = props => {
