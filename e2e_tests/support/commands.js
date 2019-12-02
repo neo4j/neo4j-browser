@@ -32,7 +32,7 @@ Cypress.Commands.add(
     cy.get('button[data-testid="connect"]').click()
 
     // update password
-    cy.get('input[data-testid="newPassword"]')
+    cy.get('input[data-testid="newPassword"]', { timeout: 20000 })
     cy.get('input[data-testid="newPassword"]').should('have.value', '')
     cy.get('input[data-testid="newPasswordConfirmation"]').should(
       'have.value',
