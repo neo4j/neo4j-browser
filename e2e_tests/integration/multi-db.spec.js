@@ -86,6 +86,8 @@ describe('Multi database', () => {
       cy.executeCommand(':use system')
       cy.executeCommand('CREATE DATABASE sidebartest')
 
+      cy.wait(3000) // CREATE database can take a sec
+
       cy.executeCommand(':clear')
       cy.executeCommand(':dbs')
       databaseList().should('have.length', 3)
