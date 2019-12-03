@@ -18,7 +18,7 @@ Cypress.Commands.add(
       return
     }
     cy.title().should('include', 'Neo4j Browser')
-    cy.wait(5000)
+    cy.wait(3000)
 
     cy.get('input[data-testid="boltaddress"]')
       .clear()
@@ -95,6 +95,7 @@ Cypress.Commands.add('executeCommand', query => {
   cy.get(ClearEditorButton).click()
   cy.get(Editor).type(query, { force: true })
   cy.get(SubmitQueryButton).click()
+  cy.wait(1000)
 })
 Cypress.Commands.add('disableEditorAutocomplete', () => {
   cy.get(ClearEditorButton).click()

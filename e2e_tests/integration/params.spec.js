@@ -25,7 +25,7 @@ describe(':param in Browser', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
-    cy.wait(5000)
+    cy.wait(3000)
   })
   it('handles :param without web worker', () => {
     cy.executeCommand(':config userCypherThread: false').then(() => {
@@ -46,10 +46,7 @@ function runTests () {
   let getParamQ
   // it('can connect', () => {
   const password = Cypress.config('password')
-  cy.connect(
-    'neo4j',
-    password
-  )
+  cy.connect('neo4j', password)
   // })
   // it(':param x => 1+1', () => {
   // Set param
