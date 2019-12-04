@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ParamsOnSystemDb from './partials/params-on-systemdb'
 const title = 'Set a parameter'
 const subtitle = 'Set a parameter to be sent with queries.'
 const category = 'cypherQueries'
@@ -46,6 +47,7 @@ const content = (
       Cypher query example with a param:
       <code>MATCH (n:Person) WHERE n.name = $name</code>
     </p>
+    <ParamsOnSystemDb />
     <div className='links'>
       <div className='link'>
         <p className='title'>Related</p>

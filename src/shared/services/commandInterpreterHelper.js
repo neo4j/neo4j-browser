@@ -131,7 +131,12 @@ const availableCommands = [
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      return handleParamsCommand(action, cmdchar, put)
+      return handleParamsCommand(
+        action,
+        cmdchar,
+        put,
+        getUseDb(store.getState())
+      )
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
@@ -152,10 +157,11 @@ const availableCommands = [
           if (!action.parentId) {
             put(
               frames.add({
+                useDb: getUseDb(store.getState()),
                 ...action,
                 error: {
                   type: 'Syntax Error',
-                  message: error.message.substring('Error: '.length)
+                  message: error.message.replace(/^Error: /, '')
                 },
                 showHelpForCmd: getParamName(action, cmdchar),
                 type: 'error'
