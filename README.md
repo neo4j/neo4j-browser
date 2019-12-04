@@ -37,7 +37,7 @@ Example: `yarn e2e-local-open --env server=3.4,include-import-tests=true`
 Here are the available options / env variables:
 
 ```
-server=3.2|3.3|3.4|3.5 (default 3.4)
+server=3.2|3.3|3.4|3.5|4.0 (default 3.5)
 browser-password=<your-pw> (default 'newpassword')
 include-import-tests=true|false (default false)
 bolt-url=<bolt url excluding the protocol> (default localhost:7687)
@@ -51,7 +51,7 @@ CYPRESS_E2E_TEST_ENV=local|null (if the initial set of pw should run or not) (de
 CYPRESS_BASE_URL=<url to reach the browser to test> (default http://localhost:8080)
 ```
 
-Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:8081 cypress open --env server=3.4`
+Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:8081 cypress open --env server=3.5`
 
 ## Devtools
 

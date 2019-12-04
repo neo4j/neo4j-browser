@@ -30,7 +30,7 @@ describe('Neo4j Browser', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
-    cy.wait(5000)
+    cy.wait(3000)
   })
   it('sets new login credentials', () => {
     const newPassword = Cypress.config('password')
@@ -46,10 +46,7 @@ describe('Neo4j Browser', () => {
   })
   it('can connect', () => {
     const password = Cypress.config('password')
-    cy.connect(
-      'neo4j',
-      password
-    )
+    cy.connect('neo4j', password)
   })
   it('can empty the db', () => {
     cy.executeCommand(':clear')
@@ -128,10 +125,7 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':server disconnect')
     cy.get('[data-testid="user-details-username"]').should('have.length', 0)
     cy.get('[data-testid="user-details-roles"]').should('have.length', 0)
-    cy.connect(
-      'neo4j',
-      Cypress.config('password')
-    )
+    cy.connect('neo4j', Cypress.config('password'))
     cy.executeCommand(':clear')
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
     cy.get('[data-testid="user-details-roles"]').should('contain', 'admin')

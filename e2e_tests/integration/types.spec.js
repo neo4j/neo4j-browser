@@ -25,14 +25,11 @@ describe('Types in Browser', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
-    cy.wait(5000)
+    cy.wait(3000)
   })
   it('can connect', () => {
     const password = Cypress.config('password')
-    cy.connect(
-      'neo4j',
-      password
-    )
+    cy.connect('neo4j', password)
   })
   if (Cypress.config('serverVersion') >= 3.4) {
     it('presents the point type correctly', () => {
