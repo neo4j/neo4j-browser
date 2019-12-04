@@ -130,5 +130,22 @@ describe('Multi database', () => {
       cy.connect('neo4j', Cypress.config('password'))
       cy.dropUser('noroles')
     })
+    it('shows error message when trying to set a parameter on system db', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand(':use system')
+      cy.executeCommand(':param x => 1')
+      const resultFrame = cy
+        .get('[data-testid="frame"]', { timeout: 10000 })
+        .first()
+      resultFrame.should('contain', 'cannot be declared')
+    })
+    it('shows error when trying to use a db that doesnt exist', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand(':use nonexistingdb')
+      const resultFrame = cy
+        .get('[data-testid="frame"]', { timeout: 10000 })
+        .first()
+      resultFrame.should('contain', 'could not be found')
+    })
   }
 })

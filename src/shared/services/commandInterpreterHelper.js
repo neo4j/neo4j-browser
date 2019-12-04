@@ -131,7 +131,12 @@ const availableCommands = [
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
     exec: function (action, cmdchar, put, store) {
-      return handleParamsCommand(action, cmdchar, put)
+      return handleParamsCommand(
+        action,
+        cmdchar,
+        put,
+        getUseDb(store.getState())
+      )
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
@@ -152,10 +157,11 @@ const availableCommands = [
           if (!action.parentId) {
             put(
               frames.add({
+                useDb: getUseDb(store.getState()),
                 ...action,
                 error: {
                   type: 'Syntax Error',
-                  message: error.message.substring('Error: '.length)
+                  message: error.message.replace(/^Error: /, '')
                 },
                 showHelpForCmd: getParamName(action, cmdchar),
                 type: 'error'
@@ -193,6 +199,17 @@ const availableCommands = [
             UnsupportedError,
             'No multi db support detected.'
           )
+        }
+        const databaseNames = getDatabases(store.getState()).map(db =>
+          db.name.toLowerCase()
+        )
+        // Do we have a db with that name?
+        if (!databaseNames.includes(dbName.toLowerCase())) {
+          const error = new Error(
+            `A database with the "${dbName}" name could not be found.`
+          )
+          error.code = 'NotFound'
+          throw error
         }
         put(useDb(dbName))
         put(
