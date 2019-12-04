@@ -42,9 +42,8 @@ import ClickableUrls from '../../../components/clickable-urls'
 
 const mapItemProperties = itemProperties =>
   itemProperties
-    .sort(
-      ({ key: keyA }, { key: keyB }) =>
-        keyA < keyB ? -1 : keyA === keyB ? 0 : 1
+    .sort(({ key: keyA }, { key: keyB }) =>
+      keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
     .map((prop, i) => (
       <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
@@ -118,7 +117,7 @@ export class InspectorComponent extends Component {
       }
       if (type === 'status-item') {
         inspectorContent = (
-          <StyledInspectorFooterStatusMessage className='value'>
+          <StyledInspectorFooterStatusMessage className='value test-not-to-be-kept-dont-worry'>
             {item}
           </StyledInspectorFooterStatusMessage>
         )
@@ -142,9 +141,7 @@ export class InspectorComponent extends Component {
           </StyledInlineList>
         )
       } else if (type === 'canvas') {
-        const description = `Displaying ${item.nodeCount} nodes, ${
-          item.relationshipCount
-        } relationships.`
+        const description = `Displaying ${item.nodeCount} nodes, ${item.relationshipCount} relationships.`
         inspectorContent = (
           <StyledInlineList className='list-inline'>
             <StyledInspectorFooterRowListPair className='pair' key='pair'>
