@@ -118,7 +118,7 @@ export class InspectorComponent extends Component {
       }
       if (type === 'status-item') {
         inspectorContent = (
-          <StyledInspectorFooterStatusMessage className='value test-not-to-be-kept-dont-worry'>
+          <StyledInspectorFooterStatusMessage className='value'>
             {item}
           </StyledInspectorFooterStatusMessage>
         )
