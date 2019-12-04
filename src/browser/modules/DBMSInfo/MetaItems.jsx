@@ -34,6 +34,7 @@ import {
   StyledShowMoreLink
 } from './styled'
 import Render from 'browser-components/Render'
+import thousandsCommaSeparatedNumber from '../../../shared/utils/thousands-separated-number'
 
 const ShowMore = ({ total, shown, moreStep, onMore }) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown
@@ -103,7 +104,7 @@ const LabelItems = ({
       { component: StyledLabel },
       editorCommandTemplate,
       true,
-      count
+      thousandsCommaSeparatedNumber(count)
     )
   }
   return (
@@ -149,7 +150,7 @@ const RelationshipItems = ({
       { component: StyledRelationship },
       editorCommandTemplate,
       true,
-      count
+      thousandsCommaSeparatedNumber(count)
     )
   }
   return (

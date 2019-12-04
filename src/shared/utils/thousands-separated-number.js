@@ -15,8 +15,7 @@
  *
  */
 
-export default function commaSeparatedNumber (value) {
-  return isNaN(parseInt(value, 10))
+export default value =>
+  isNaN(parseInt(value, 10))
     ? value
     : parseInt(value, 10).toLocaleString('en-US')
-}

@@ -19,27 +19,37 @@
  */
 
 /* global describe, test, expect */
-import commaSeparatedNumber from './comma-separated-number'
+import thousandsSeparatedNumber from './thousands-separated-number'
 
-describe('commaSeparatedNumber', () => {
+describe('thousandsSeparatedNumber', () => {
   test('should return the original value if isNaN(value) is true', () => {
     // Given
     const value = null
 
     // When
-    const returnValue = commaSeparatedNumber(value)
+    const returnValue = thousandsSeparatedNumber(value)
 
     // Then
-    expect(returnValue).toBe(Value)
+    expect(returnValue).toBe(value)
   })
-  test('should return a comma separated number if isNaN(value) is false', () => {
+  test('should return a thousands comma separated number if isNaN(value) is false', () => {
+    let value, returnValue
     // Given
-    const value = '123456789'
+    value = '123456789'
 
     // When
-    const returnValue = commaSeparatedNumber(value)
+    returnValue = thousandsSeparatedNumber(value)
 
     // Then
-    expect(returnValue).toBe('1,223,456,789')
+    expect(returnValue).toBe('123,456,789')
+
+    // Given
+    value = 987654312345
+
+    // When
+    returnValue = thousandsSeparatedNumber(value)
+
+    // Then
+    expect(returnValue).toBe('987,654,312,345')
   })
 })

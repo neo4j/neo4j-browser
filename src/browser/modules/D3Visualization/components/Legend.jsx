@@ -31,6 +31,7 @@ import {
   StyledLegendInlineList
 } from './styled'
 import { RowExpandToggleComponent } from './RowExpandToggle'
+import thousandsCommaSeparatedNumber from '../../../../shared/utils/thousands-separated-number'
 
 export class LegendComponent extends Component {
   constructor (props) {
@@ -75,9 +76,9 @@ export class LegendComponent extends Component {
                 className='token token-label'
               >
                 {legendItemKey}
-                <StyledTokenCount className='count'>{`(${
+                <StyledTokenCount className='count'>{`(${thousandsCommaSeparatedNumber(
                   labels[legendItemKey].count
-                })`}</StyledTokenCount>
+                )})`}</StyledTokenCount>
               </StyledLabelToken>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
@@ -134,7 +135,9 @@ export class LegendComponent extends Component {
               >
                 {legendItemKey}
                 <StyledTokenCount className='count'>
-                  {`(${legendItems[legendItemKey].count})`}
+                  {`(${thousandsCommaSeparatedNumber(
+                    legendItems[legendItemKey].count
+                  )})`}
                 </StyledTokenCount>
               </StyledTokenRelationshipType>
             </StyledLegendContents>

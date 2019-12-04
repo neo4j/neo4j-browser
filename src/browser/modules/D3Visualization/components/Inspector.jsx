@@ -39,7 +39,7 @@ import {
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
 import ClickableUrls from '../../../components/clickable-urls'
-import commaSeparatedNumber from '../../../../shared/utils/comma-separated-number'
+import thousandsCommaSeparatedNumber from '../../../../shared/utils/thousands-separated-number'
 
 const mapItemProperties = itemProperties =>
   itemProperties
@@ -142,11 +142,9 @@ export class InspectorComponent extends Component {
           </StyledInlineList>
         )
       } else if (type === 'canvas') {
-        item.nodeCount = null
-        item.relationshipCount = 9876543210
-        const description = `Displaying ${commaSeparatedNumber(
+        const description = `Displaying ${thousandsCommaSeparatedNumber(
           item.nodeCount
-        )} nodes, ${commaSeparatedNumber(
+        )} nodes, ${thousandsCommaSeparatedNumber(
           item.relationshipCount
         )} relationships.`
         inspectorContent = (
