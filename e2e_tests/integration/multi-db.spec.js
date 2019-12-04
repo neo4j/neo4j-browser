@@ -139,5 +139,13 @@ describe('Multi database', () => {
         .first()
       resultFrame.should('contain', 'cannot be declared')
     })
+    it('shows error when trying to use a db that doesnt exist', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand(':use nonexistingdb')
+      const resultFrame = cy
+        .get('[data-testid="frame"]', { timeout: 10000 })
+        .first()
+      resultFrame.should('contain', 'could not be found')
+    })
   }
 })

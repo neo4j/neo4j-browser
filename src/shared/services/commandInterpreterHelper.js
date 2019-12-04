@@ -200,6 +200,17 @@ const availableCommands = [
             'No multi db support detected.'
           )
         }
+        const databaseNames = getDatabases(store.getState()).map(db =>
+          db.name.toLowerCase()
+        )
+        // Do we have a db with that name?
+        if (!databaseNames.includes(dbName.toLowerCase())) {
+          const error = new Error(
+            `A database with the "${dbName}" name could not be found.`
+          )
+          error.code = 'NotFound'
+          throw error
+        }
         put(useDb(dbName))
         put(
           frames.add({
