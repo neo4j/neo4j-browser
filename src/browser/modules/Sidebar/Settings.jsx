@@ -160,6 +160,13 @@ const visualSettings = [
         }
       },
       {
+        maxFieldItems: {
+          displayName: 'Max field items',
+          tooltip:
+            'Max items of result fields shown. When reached, fields get truncated.'
+        }
+      },
+      {
         autoComplete: {
           displayName: 'Connect result nodes',
           tooltip:

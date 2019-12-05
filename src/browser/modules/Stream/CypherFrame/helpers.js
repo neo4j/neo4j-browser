@@ -26,16 +26,14 @@ import {
   isObjectLike,
   lowerCase,
   map,
-  reduce
+  reduce,
+  take
 } from 'lodash-es'
 
 import bolt from 'services/bolt/bolt'
 
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import {
-  recursivelyExtractGraphItems,
-  flattenArray
-} from 'services/bolt/boltMappings'
+import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
 import { stringifyMod } from 'services/utils'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
@@ -94,6 +92,13 @@ export const getRecordsToDisplayInTable = (result, maxRows) => {
   return result && result.records && result.records.length > maxRows
     ? result.records.slice(0, maxRows)
     : result.records
+}
+
+export const flattenArray = arr => {
+  return arr.reduce((all, curr) => {
+    if (Array.isArray(curr)) return all.concat(flattenArray(curr))
+    return all.concat(curr)
+  }, [])
 }
 
 export const resultHasNodes = (request, types = bolt.neo4j.types) => {
@@ -199,13 +204,13 @@ export const stringifyResultArray = (formatter = stringModifier, arr = []) => {
  * Flattens graph items so only their props are left.
  * Leaves Neo4j Integers as they were.
  */
-export const transformResultRecordsToResultArray = records => {
+export const transformResultRecordsToResultArray = (records, maxFieldItems) => {
   return records && records.length
     ? [records]
-        .map(extractRecordsToResultArray)
-        .map(
-          flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
-        )[0]
+      .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
+      .map(
+        flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
+      )[0]
     : undefined
 }
 
@@ -213,12 +218,20 @@ export const transformResultRecordsToResultArray = records => {
  * Transforms an array of neo4j driver records to an array of objects.
  * Leaves all values as they were, just changing the data structure.
  */
-export const extractRecordsToResultArray = (records = []) => {
+export const extractRecordsToResultArray = (records = [], maxFieldItems) => {
   records = Array.isArray(records) ? records : []
   const keys = records[0] ? [records[0].keys] : undefined
   return (keys || []).concat(
     records.map(record => {
-      return record.keys.map((key, i) => record._fields[i])
+      return record.keys.map((key, i) => {
+        const val = record._fields[i]
+
+        if (!maxFieldItems || !Array.isArray(val)) {
+          return val
+        }
+
+        return take(val, maxFieldItems)
+      })
     })
   )
 }

@@ -29,6 +29,7 @@ import { StyledVisContainer } from './VisualizationView.styled'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 
 export class Visualization extends Component {
   state = {
@@ -67,7 +68,9 @@ export class Visualization extends Component {
       nodes,
       relationships
     } = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-      props.result.records
+      props.result.records,
+      true,
+      props.maxFieldItems
     )
     this.setState({
       nodes,
@@ -115,7 +118,8 @@ export class Visualization extends Component {
                   : 0
               const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
                 response.result.records,
-                false
+                false,
+                this.props.maxFieldItems
               )
               this.autoCompleteRelationships(
                 this.graph._nodes,
@@ -150,7 +154,8 @@ export class Visualization extends Component {
               resolve({
                 ...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
                   response.result.records,
-                  false
+                  false,
+                  this.props.maxFieldItems
                 )
               })
             }
@@ -192,7 +197,8 @@ export class Visualization extends Component {
 
 const mapStateToProps = state => {
   return {
-    graphStyleData: grassActions.getGraphStyleData(state)
+    graphStyleData: grassActions.getGraphStyleData(state),
+    maxFieldItems: getMaxFieldItems(state)
   }
 }
 

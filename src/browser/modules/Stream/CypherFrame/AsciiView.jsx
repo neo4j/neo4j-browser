@@ -38,8 +38,10 @@ import {
   stringifyResultArray
 } from './helpers'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { connect } from 'react-redux'
 
-export class AsciiView extends Component {
+export class AsciiViewComponent extends Component {
   state = {
     serializedRows: [],
     bodyMessage: ''
@@ -72,8 +74,8 @@ export class AsciiView extends Component {
     return !this.equalProps(props) || !shallowEquals(state, this.state)
   }
 
-  makeState(props) {
-    const { result, maxRows } = props
+  makeState (props) {
+    const { result, maxRows, maxFieldItems } = props
     const { bodyMessage = null } =
       getBodyAndStatusBarMessages(result, maxRows) || {}
     this.setState({ bodyMessage })
@@ -82,7 +84,7 @@ export class AsciiView extends Component {
     const serializedRows =
       stringifyResultArray(
         stringModifier,
-        transformResultRecordsToResultArray(records)
+        transformResultRecordsToResultArray(records, maxFieldItems)
       ) || []
     this.setState({ serializedRows })
     const maxColWidth = asciitable.maxColumnWidth(serializedRows)
@@ -109,6 +111,10 @@ export class AsciiView extends Component {
     return <PaddedDiv>{contents}</PaddedDiv>
   }
 }
+
+export const AsciiView = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(AsciiViewComponent)
 
 export class AsciiStatusbar extends Component {
   state = {

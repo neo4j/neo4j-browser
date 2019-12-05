@@ -243,18 +243,21 @@ export default {
       objectConverter: mappings.extractFromNeoObjects
     })
   },
-  extractNodesAndRelationshipsFromRecords: records => {
+  extractNodesAndRelationshipsFromRecords: (records, maxFieldItems) => {
     return mappings.extractNodesAndRelationshipsFromRecords(
       records,
-      neo4j.types
+      neo4j.types,
+      maxFieldItems
     )
   },
   extractNodesAndRelationshipsFromRecordsForOldVis: (
     records,
-    filterRels = true
+    filterRels = true,
+    maxFieldItems
   ) => {
     const intChecker = neo4j.isInt
     const intConverter = val => val.toString()
+
     return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(
       records,
       neo4j.types,
@@ -263,7 +266,8 @@ export default {
         intChecker,
         intConverter,
         objectConverter: mappings.extractFromNeoObjects
-      }
+      },
+      maxFieldItems
     )
   },
   extractPlan: (result, calculateTotalDbHits) => {

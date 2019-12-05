@@ -46,12 +46,14 @@ import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import ClickableUrls, {
   convertUrlsToHrefTags
 } from '../../../components/clickable-urls'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { connect } from 'react-redux'
 
-const renderCell = entry => {
+const renderCell = (entry, maxFieldItems) => {
   if (Array.isArray(entry)) {
-    const children = entry.map((item, index) => (
+    const children = entry.slice(0, maxFieldItems).map((item, index) => (
       <span key={index}>
-        {renderCell(item)}
+        {renderCell(item, maxFieldItems)}
         {index === entry.length - 1 ? null : ', '}
       </span>
     ))
@@ -75,12 +77,12 @@ export const renderObject = entry => {
     />
   )
 }
-const buildData = entries => {
+const buildData = (entries, maxFieldItems) => {
   return entries.map(entry => {
     if (entry !== null) {
       return (
-        <StyledTd className="table-properties" key={v4()}>
-          {renderCell(entry)}
+        <StyledTd className='table-properties' key={v4()}>
+          {renderCell(entry, maxFieldItems)}
         </StyledTd>
       )
     }
@@ -91,15 +93,15 @@ const buildData = entries => {
     )
   })
 }
-const buildRow = item => {
+const buildRow = (item, maxFieldItems) => {
   return (
-    <StyledBodyTr className="table-row" key={v4()}>
-      {buildData(item)}
+    <StyledBodyTr className='table-row' key={v4()}>
+      {buildData(item, maxFieldItems)}
     </StyledBodyTr>
   )
 }
 
-export class TableView extends Component {
+export class TableViewComponent extends Component {
   state = {
     columns: [],
     data: [],
@@ -155,7 +157,9 @@ export class TableView extends Component {
       </StyledTh>
     ))
     const tableBody = (
-      <tbody>{this.state.data.map(item => buildRow(item))}</tbody>
+      <tbody>
+        {this.state.data.map(item => buildRow(item, this.props.maxFieldItems))}
+      </tbody>
     )
     return (
       <PaddedTableViewDiv>
@@ -169,6 +173,10 @@ export class TableView extends Component {
     )
   }
 }
+
+export const TableView = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(TableViewComponent)
 
 export class TableStatusbar extends Component {
   state = {
