@@ -19,13 +19,63 @@
  */
 
 import React, { Component } from 'react'
+import { v4 } from 'uuid'
 import { withBus } from 'react-suber'
-import { replace } from 'lodash-es'
+import { replace, toUpper } from 'lodash-es'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Frame/FrameTemplate'
-import { StyledSchemaBody } from './styled'
+import Slide from '../Carousel/Slide'
+import {
+  StyledTable,
+  StyledTh,
+  StyledBodyTr,
+  StyledTd
+} from 'browser-components/DataTables'
+import { Directives } from 'browser-components/Directives'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+
+const formatIndexes = indexes => {
+  if (indexes.length === 0) {
+    return ['None']
+  }
+
+  return indexes.map(
+    index =>
+      `${replace(index.description, 'INDEX', '')} ${toUpper(index.state)} ${
+        index.type === 'node_unique_property'
+          ? '(for uniqueness constraint)'
+          : ''
+      }`
+  )
+}
+
+const formatConstraints = constraints => {
+  if (constraints.length === 0) {
+    return ['None']
+  }
+
+  return constraints.map(constraint =>
+    replace(constraint.description, 'CONSTRAINT', '')
+  )
+}
+
+const SchemaTable = ({ name, content }) => (
+  <StyledTable>
+    <thead>
+      <tr>
+        <StyledTh className='table-header'>{name}</StyledTh>
+      </tr>
+    </thead>
+    <tbody>
+      {content.map(row => (
+        <StyledBodyTr className='table-row' key={v4()}>
+          <StyledTd className='table-properties'>{row}</StyledTd>
+        </StyledBodyTr>
+      ))}
+    </tbody>
+  </StyledTable>
+)
 
 export class SchemaFrame extends Component {
   constructor (props) {
@@ -79,49 +129,26 @@ export class SchemaFrame extends Component {
     }
   }
 
-  formatIndexAndConstraints (indexes, constraints) {
-    let indexString
-    let constraintsString
-
-    if (indexes.length === 0) {
-      indexString = 'No indexes'
-    } else {
-      indexString = 'Indexes'
-      indexString += indexes.reduce((acc, index) => {
-        acc += `\n  ${replace(
-          index.description,
-          'INDEX',
-          ''
-        )} ${index.state.toUpperCase()} ${
-          index.type === 'node_unique_property'
-            ? ' (for uniqueness constraint)'
-            : ''
-        }`
-        return acc
-      }, '')
-    }
-
-    if (constraints.length === 0) {
-      constraintsString = 'No constraints'
-    } else {
-      constraintsString = 'Constraints'
-      constraintsString += constraints.reduce((acc, constraint) => {
-        acc += `\n  ${constraint.description.replace('CONSTRAINT', '')}`
-        return acc
-      }, '')
-    }
-
-    return `${indexString}\n\n${constraintsString}\n`
-  }
-
   render () {
+    const indexes = formatIndexes(this.state.indexes)
+    const constraints = formatConstraints(this.state.constraints)
+
+    const frame = (
+      <Slide>
+        <SchemaTable name='Indexes' content={indexes} />
+        <SchemaTable name='Constraints' content={constraints} />
+        <br />
+        <p className='lead'>Execute the following query for more information</p>
+        <figure>
+          <pre className='code runnable'>CALL db.schema.visualization</pre>
+        </figure>
+      </Slide>
+    )
+
     return (
-      <StyledSchemaBody>
-        {this.formatIndexAndConstraints(
-          this.state.indexes,
-          this.state.constraints
-        )}
-      </StyledSchemaBody>
+      <div style={{ width: '100%' }}>
+        <Directives content={frame} />
+      </div>
     )
   }
 }

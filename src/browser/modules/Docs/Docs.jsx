@@ -24,7 +24,7 @@ import Directives from 'browser-components/Directives'
 import Carousel from '../Carousel/Carousel'
 import Slide from '../Carousel/Slide'
 
-export default class Guides extends Component {
+export default class Docs extends Component {
   constructor (props) {
     super(props)
     this.ref = React.createRef()
