@@ -76,3 +76,17 @@ export const StyledCode = styled.code`
 `
 
 export const StyledDbsRow = styled.li``
+
+export const StyledChangePasswordFormWrapper = styled.div`
+  display: flex;
+`
+
+export const StyledPasswordSuggestionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+
+  > * {
+    margin-bottom: 10px;
+  }
+`

@@ -19,6 +19,7 @@
  */
 
 import React, { Component } from 'react'
+import faker from 'faker'
 import { FormButton } from 'browser-components/buttons'
 import {
   StyledConnectionForm,
@@ -28,6 +29,11 @@ import {
 } from './styled'
 import Render from 'browser-components/Render'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
+import {
+  StyledChangePasswordFormWrapper,
+  StyledPasswordSuggestionWrapper
+} from 'browser/modules/Stream/Auth/styled'
+import { StyledPreformattedArea } from 'browser/modules/Stream/styled'
 
 export default class ChangePasswordForm extends Component {
   constructor (props) {
@@ -35,7 +41,8 @@ export default class ChangePasswordForm extends Component {
     this.state = {
       password: '',
       newPassword: '',
-      newPassword2: ''
+      newPassword2: '',
+      suggestion: null
     }
   }
   onExistingPasswordChange = event => {
@@ -52,6 +59,11 @@ export default class ChangePasswordForm extends Component {
   }
   onChange = () => {
     this.props.onChange(this.state.newPassword, this.state.newPassword2)
+  }
+  onSuggestPassword = () => {
+    this.setState({
+      suggestion: `${faker.random.words(3)} ${faker.random.number(100)}`
+    })
   }
   validateSame = () => {
     if (
@@ -91,77 +103,90 @@ export default class ChangePasswordForm extends Component {
       classNames.push('isLoading')
     }
     return (
-      <StyledConnectionForm className={classNames.join(' ')}>
-        <InputEnterStepping
-          steps={this.props.showExistingPasswordInput ? 3 : 2}
-          submitAction={this.validateSame}
-          render={({
-            getSubmitProps,
-            getInputPropsForIndex,
-            setRefForIndex
-          }) => {
-            return (
-              <React.Fragment>
-                <Render if={this.props.showExistingPasswordInput}>
+      <StyledChangePasswordFormWrapper>
+        <StyledConnectionForm className={classNames.join(' ')}>
+          <InputEnterStepping
+            steps={this.props.showExistingPasswordInput ? 3 : 2}
+            submitAction={this.validateSame}
+            render={({
+              getSubmitProps,
+              getInputPropsForIndex,
+              setRefForIndex
+            }) => {
+              return (
+                <React.Fragment>
+                  <Render if={this.props.showExistingPasswordInput}>
+                    <StyledConnectionFormEntry>
+                      <StyledConnectionLabel>
+                        Existing password
+                      </StyledConnectionLabel>
+                      <StyledConnectionTextInput
+                        {...getInputPropsForIndex(0, {
+                          initialFocus: true,
+                          type: 'password',
+                          onChange: this.onExistingPasswordChange,
+                          value: this.state.password,
+                          ref: ref => setRefForIndex(0, ref),
+                          disabled: isLoading
+                        })}
+                      />
+                    </StyledConnectionFormEntry>
+                  </Render>
                   <StyledConnectionFormEntry>
-                    <StyledConnectionLabel>
-                      Existing password
-                    </StyledConnectionLabel>
+                    <StyledConnectionLabel>New password</StyledConnectionLabel>
                     <StyledConnectionTextInput
-                      {...getInputPropsForIndex(0, {
-                        initialFocus: true,
+                      {...getInputPropsForIndex(indexStart, {
+                        initialFocus: !this.props.showExistingPasswordInput,
+                        'data-testid': 'newPassword',
                         type: 'password',
-                        onChange: this.onExistingPasswordChange,
-                        value: this.state.password,
-                        ref: ref => setRefForIndex(0, ref),
+                        onChange: this.onNewPasswordChange,
+                        value: this.state.newPassword,
+                        ref: ref => setRefForIndex(indexStart, ref),
                         disabled: isLoading
                       })}
                     />
                   </StyledConnectionFormEntry>
-                </Render>
-                <StyledConnectionFormEntry>
-                  <StyledConnectionLabel>New password</StyledConnectionLabel>
-                  <StyledConnectionTextInput
-                    {...getInputPropsForIndex(indexStart, {
-                      initialFocus: !this.props.showExistingPasswordInput,
-                      'data-testid': 'newPassword',
-                      type: 'password',
-                      onChange: this.onNewPasswordChange,
-                      value: this.state.newPassword,
-                      ref: ref => setRefForIndex(indexStart, ref),
-                      disabled: isLoading
-                    })}
-                  />
-                </StyledConnectionFormEntry>
-                <StyledConnectionFormEntry>
-                  <StyledConnectionLabel>
-                    Repeat new password
-                  </StyledConnectionLabel>
-                  <StyledConnectionTextInput
-                    {...getInputPropsForIndex(indexStart + 1, {
-                      'data-testid': 'newPasswordConfirmation',
-                      type: 'password',
-                      onChange: this.onNewPasswordChange2,
-                      value: this.state.newPassword2,
-                      ref: ref => setRefForIndex(indexStart + 1, ref),
-                      disabled: isLoading
-                    })}
-                  />
-                </StyledConnectionFormEntry>
-                <Render if={!isLoading}>
-                  <FormButton
-                    data-testid='changePassword'
-                    label='Change password'
-                    disabled={isLoading}
-                    {...getSubmitProps()}
-                  />
-                </Render>
-                <Render if={isLoading}>Please wait...</Render>
-              </React.Fragment>
-            )
-          }}
-        />
-      </StyledConnectionForm>
+                  <StyledConnectionFormEntry>
+                    <StyledConnectionLabel>
+                      Repeat new password
+                    </StyledConnectionLabel>
+                    <StyledConnectionTextInput
+                      {...getInputPropsForIndex(indexStart + 1, {
+                        'data-testid': 'newPasswordConfirmation',
+                        type: 'password',
+                        onChange: this.onNewPasswordChange2,
+                        value: this.state.newPassword2,
+                        ref: ref => setRefForIndex(indexStart + 1, ref),
+                        disabled: isLoading
+                      })}
+                    />
+                  </StyledConnectionFormEntry>
+                  <Render if={!isLoading}>
+                    <FormButton
+                      data-testid='changePassword'
+                      label='Change password'
+                      disabled={isLoading}
+                      {...getSubmitProps()}
+                    />
+                  </Render>
+                  <Render if={isLoading}>Please wait...</Render>
+                </React.Fragment>
+              )
+            }}
+          />
+        </StyledConnectionForm>
+        <StyledPasswordSuggestionWrapper>
+          <h3>Need help figuring out a password?</h3>
+          {this.state.suggestion ? (
+            <StyledPreformattedArea>
+              {this.state.suggestion}
+            </StyledPreformattedArea>
+          ) : null}
+          <FormButton onClick={this.onSuggestPassword}>
+            Suggest password
+          </FormButton>
+        </StyledPasswordSuggestionWrapper>
+      </StyledChangePasswordFormWrapper>
     )
   }
 }
