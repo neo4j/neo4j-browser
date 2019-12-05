@@ -414,7 +414,7 @@ describe('boltMappings', () => {
       // Then
       expect(out.nodes.length).toEqual(4)
     })
-    test('should find items in paths with segments', () => {
+    test('should find items in paths with segments, and only return unique items', () => {
       // Given
       const converters = {
         intChecker: () => false,
@@ -448,7 +448,7 @@ describe('boltMappings', () => {
       )
 
       // Then
-      expect(out.nodes.length).toEqual(4)
+      expect(out.nodes.length).toEqual(3)
     })
     test('should find items in paths zero segments', () => {
       // Given
