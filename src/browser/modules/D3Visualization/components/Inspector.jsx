@@ -39,7 +39,7 @@ import {
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
 import ClickableUrls from '../../../components/clickable-urls'
-import thousandsCommaSeparatedNumber from '../../../../shared/utils/thousands-separated-number'
+import numberToUSLocale from '../../../../shared/utils/number-to-US-locale'
 
 const mapItemProperties = itemProperties =>
   itemProperties
@@ -142,11 +142,9 @@ export class InspectorComponent extends Component {
           </StyledInlineList>
         )
       } else if (type === 'canvas') {
-        const description = `Displaying ${thousandsCommaSeparatedNumber(
+        const description = `Displaying ${numberToUSLocale(
           item.nodeCount
-        )} nodes, ${thousandsCommaSeparatedNumber(
-          item.relationshipCount
-        )} relationships.`
+        )} nodes, ${numberToUSLocale(item.relationshipCount)} relationships.`
         inspectorContent = (
           <StyledInlineList className='list-inline'>
             <StyledInspectorFooterRowListPair className='pair' key='pair'>

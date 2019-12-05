@@ -16,6 +16,4 @@
  */
 
 export default value =>
-  isNaN(parseInt(value, 10))
-    ? value
-    : parseInt(value, 10).toLocaleString('en-US')
+  (parseInt(value, 10) && parseInt(value, 10).toLocaleString('en-US')) || value

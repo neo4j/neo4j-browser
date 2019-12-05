@@ -19,15 +19,15 @@
  */
 
 /* global describe, test, expect */
-import thousandsSeparatedNumber from './thousands-separated-number'
+import numberToUSLocale from './number-to-US-locale'
 
-describe('thousandsSeparatedNumber', () => {
+describe('numberToUSLocale', () => {
   test('should return the original value if isNaN(value) is true', () => {
     // Given
     const value = null
 
     // When
-    const returnValue = thousandsSeparatedNumber(value)
+    const returnValue = numberToUSLocale(value)
 
     // Then
     expect(returnValue).toBe(value)
@@ -38,7 +38,7 @@ describe('thousandsSeparatedNumber', () => {
     value = '123456789'
 
     // When
-    returnValue = thousandsSeparatedNumber(value)
+    returnValue = numberToUSLocale(value)
 
     // Then
     expect(returnValue).toBe('123,456,789')
@@ -47,7 +47,7 @@ describe('thousandsSeparatedNumber', () => {
     value = 987654312345
 
     // When
-    returnValue = thousandsSeparatedNumber(value)
+    returnValue = numberToUSLocale(value)
 
     // Then
     expect(returnValue).toBe('987,654,312,345')
