@@ -15,5 +15,10 @@
  *
  */
 
-export default value =>
-  (parseInt(value, 10) && parseInt(value, 10).toLocaleString('en-US')) || value
+export default value => {
+  value = 0
+  return (
+    (parseInt(value, 10) >= 0 && parseInt(value, 10).toLocaleString('en-US')) ||
+    value
+  )
+}

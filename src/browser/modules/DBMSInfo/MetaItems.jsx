@@ -34,7 +34,7 @@ import {
   StyledShowMoreLink
 } from './styled'
 import Render from 'browser-components/Render'
-import numberToUSLocale from '../../../shared/utils/number-to-US-locale'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 const ShowMore = ({ total, shown, moreStep, onMore }) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown

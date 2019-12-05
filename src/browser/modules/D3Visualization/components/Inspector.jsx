@@ -39,7 +39,7 @@ import {
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
 import ClickableUrls from '../../../components/clickable-urls'
-import numberToUSLocale from '../../../../shared/utils/number-to-US-locale'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 const mapItemProperties = itemProperties =>
   itemProperties

@@ -31,7 +31,7 @@ import {
   StyledLegendInlineList
 } from './styled'
 import { RowExpandToggleComponent } from './RowExpandToggle'
-import numberToUSLocale from '../../../../shared/utils/number-to-US-locale'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 export class LegendComponent extends Component {
   constructor (props) {
