@@ -22,7 +22,11 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import neo4j from 'neo4j-driver'
 
-import { TableView, TableStatusbar, renderObject } from './TableView'
+import {
+  TableViewComponent as TableView,
+  TableStatusbarComponent as TableStatusbar,
+  renderObject
+} from './TableView'
 
 describe('TableViews', () => {
   describe('TableView', () => {

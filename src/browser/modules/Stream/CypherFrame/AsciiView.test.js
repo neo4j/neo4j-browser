@@ -22,7 +22,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import neo4j from 'neo4j-driver'
 
-import { AsciiView, AsciiStatusbar } from './AsciiView'
+import { AsciiViewComponent as AsciiView, AsciiStatusbar } from './AsciiView'
 
 describe('AsciiViews', () => {
   describe('AsciiView', () => {

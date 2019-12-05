@@ -160,6 +160,13 @@ const visualSettings = [
         }
       },
       {
+        maxFieldItems: {
+          displayName: 'Record field limit',
+          tooltip:
+            'Max number of items in a field per record being handled. When reached, items get truncated.'
+        }
+      },
+      {
         autoComplete: {
           displayName: 'Connect result nodes',
           tooltip:

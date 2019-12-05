@@ -21,23 +21,45 @@
 import neo4j from 'neo4j-driver'
 import {
   entries,
+  flatten,
+  filter,
   get,
   includes,
   isObjectLike,
   lowerCase,
   map,
-  reduce
+  some,
+  reduce,
+  take
 } from 'lodash-es'
 
 import bolt from 'services/bolt/bolt'
 
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
-import {
-  recursivelyExtractGraphItems,
-  flattenArray
-} from 'services/bolt/boltMappings'
+import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
 import { stringifyMod } from 'services/utils'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+
+/**
+ * Checks if a results has records which fields will be truncated when displayed
+ * - O(N2) complexity
+ * @param     {Object}    result
+ * @param     {Number}    maxFieldItems
+ * @return    {boolean}
+ */
+export const resultHasTruncatedFields = (result, maxFieldItems) => {
+  if (!maxFieldItems) {
+    return false
+  }
+
+  return some(result.records, record =>
+    some(record.keys, key => {
+      const val = record.get(key)
+
+      return Array.isArray(val) && val.length > maxFieldItems
+    })
+  )
+}
 
 export function getBodyAndStatusBarMessages(result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
@@ -96,6 +118,18 @@ export const getRecordsToDisplayInTable = (result, maxRows) => {
     : result.records
 }
 
+export const flattenArrayDeep = arr => {
+  let toFlatten = arr
+  let result = []
+
+  while (toFlatten.length > 0) {
+    result = [...result, ...filter(toFlatten, item => !Array.isArray(item))]
+    toFlatten = flatten(filter(toFlatten, Array.isArray))
+  }
+
+  return result
+}
+
 export const resultHasNodes = (request, types = neo4j.types) => {
   if (!request) return false
   const { result = {} } = request
@@ -106,7 +140,7 @@ export const resultHasNodes = (request, types = neo4j.types) => {
   for (let i = 0; i < records.length; i++) {
     const graphItems = keys.map(key => records[i].get(key))
     const items = recursivelyExtractGraphItems(types, graphItems)
-    const flat = flattenArray(items)
+    const flat = flattenArrayDeep(items)
     const nodes = flat.filter(
       item => item instanceof types.Node || item instanceof types.Path
     )
@@ -199,10 +233,10 @@ export const stringifyResultArray = (formatter = stringModifier, arr = []) => {
  * Flattens graph items so only their props are left.
  * Leaves Neo4j Integers as they were.
  */
-export const transformResultRecordsToResultArray = records => {
+export const transformResultRecordsToResultArray = (records, maxFieldItems) => {
   return records && records.length
     ? [records]
-        .map(extractRecordsToResultArray)
+        .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
         .map(
           flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
         )[0]
@@ -213,12 +247,20 @@ export const transformResultRecordsToResultArray = records => {
  * Transforms an array of neo4j driver records to an array of objects.
  * Leaves all values as they were, just changing the data structure.
  */
-export const extractRecordsToResultArray = (records = []) => {
+export const extractRecordsToResultArray = (records = [], maxFieldItems) => {
   records = Array.isArray(records) ? records : []
   const keys = records[0] ? [records[0].keys] : undefined
   return (keys || []).concat(
     records.map(record => {
-      return record.keys.map((key, i) => record._fields[i])
+      return record.keys.map((key, i) => {
+        const val = record._fields[i]
+
+        if (!maxFieldItems || !Array.isArray(val)) {
+          return val
+        }
+
+        return take(val, maxFieldItems)
+      })
     })
   )
 }

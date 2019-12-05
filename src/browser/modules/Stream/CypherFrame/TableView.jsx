@@ -26,7 +26,8 @@ import { HTMLEntities } from 'services/santize.utils'
 import {
   StyledStatsBar,
   PaddedTableViewDiv,
-  StyledBodyMessage
+  StyledBodyMessage,
+  StyledTruncatedMessage
 } from '../styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import {
@@ -40,16 +41,21 @@ import { shallowEquals, stringifyMod } from 'services/utils'
 import {
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
-  transformResultRecordsToResultArray
+  transformResultRecordsToResultArray,
+  resultHasTruncatedFields
 } from './helpers'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import ClickableUrls, {
   convertUrlsToHrefTags
 } from '../../../components/clickable-urls'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { connect } from 'react-redux'
+import { Icon } from 'semantic-ui-react'
 
-const renderCell = entry => {
+const renderCell = (entry, maxFieldItems) => {
   if (Array.isArray(entry)) {
-    const children = entry.map((item, index) => (
+    const entryToUse = maxFieldItems ? entry.slice(0, maxFieldItems) : entry
+    const children = entryToUse.map((item, index) => (
       <span key={index}>
         {renderCell(item)}
         {index === entry.length - 1 ? null : ', '}
@@ -75,12 +81,12 @@ export const renderObject = entry => {
     />
   )
 }
-const buildData = entries => {
+const buildData = (entries, maxFieldItems) => {
   return entries.map(entry => {
     if (entry !== null) {
       return (
         <StyledTd className="table-properties" key={v4()}>
-          {renderCell(entry)}
+          {renderCell(entry, maxFieldItems)}
         </StyledTd>
       )
     }
@@ -91,15 +97,15 @@ const buildData = entries => {
     )
   })
 }
-const buildRow = item => {
+const buildRow = (item, maxFieldItems) => {
   return (
     <StyledBodyTr className="table-row" key={v4()}>
-      {buildData(item)}
+      {buildData(item, maxFieldItems)}
     </StyledBodyTr>
   )
 }
 
-export class TableView extends Component {
+export class TableViewComponent extends Component {
   state = {
     columns: [],
     data: [],
@@ -155,7 +161,9 @@ export class TableView extends Component {
       </StyledTh>
     ))
     const tableBody = (
-      <tbody>{this.state.data.map(item => buildRow(item))}</tbody>
+      <tbody>
+        {this.state.data.map(item => buildRow(item, this.props.maxFieldItems))}
+      </tbody>
     )
     return (
       <PaddedTableViewDiv>
@@ -170,7 +178,11 @@ export class TableView extends Component {
   }
 }
 
-export class TableStatusbar extends Component {
+export const TableView = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(TableViewComponent)
+
+export class TableStatusbarComponent extends Component {
   state = {
     statusBarMessage: ''
   }
@@ -193,14 +205,32 @@ export class TableStatusbar extends Component {
       this.props.result,
       this.props.maxRows
     )
-    if (statusBarMessage !== undefined) this.setState({ statusBarMessage })
+    const hasTruncatedFields = resultHasTruncatedFields(
+      props.result,
+      props.maxFieldItems
+    )
+    if (statusBarMessage !== undefined) {
+      this.setState({ statusBarMessage, hasTruncatedFields })
+    }
   }
 
   render() {
     return (
       <StyledStatsBar>
-        <Ellipsis>{this.state.statusBarMessage}</Ellipsis>
+        <Ellipsis>
+          {this.state.hasTruncatedFields && (
+            <StyledTruncatedMessage>
+              <Icon name="warning sign" /> Record fields have been
+              truncated.&nbsp;
+            </StyledTruncatedMessage>
+          )}
+          {this.state.statusBarMessage}
+        </Ellipsis>
       </StyledStatsBar>
     )
   }
 }
+
+export const TableStatusbar = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(TableStatusbarComponent)

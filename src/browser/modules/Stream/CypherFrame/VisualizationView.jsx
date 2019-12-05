@@ -30,6 +30,8 @@ import { StyledVisContainer } from './VisualizationView.styled'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
 
 export class Visualization extends Component {
   state = {
@@ -68,11 +70,18 @@ export class Visualization extends Component {
       nodes,
       relationships
     } = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-      props.result.records
+      props.result.records,
+      true,
+      props.maxFieldItems
+    )
+    const hasTruncatedFields = resultHasTruncatedFields(
+      props.result,
+      props.maxFieldItems
     )
     this.setState({
       nodes,
       relationships,
+      hasTruncatedFields,
       updated: new Date().getTime()
     })
   }
@@ -116,7 +125,8 @@ export class Visualization extends Component {
                   : 0
               const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
                 response.result.records,
-                false
+                false,
+                this.props.maxFieldItems
               )
               this.autoCompleteRelationships(
                 this.graph._nodes,
@@ -151,7 +161,8 @@ export class Visualization extends Component {
               resolve({
                 ...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
                   response.result.records,
-                  false
+                  false,
+                  this.props.maxFieldItems
                 )
               })
             }
@@ -172,6 +183,7 @@ export class Visualization extends Component {
       <StyledVisContainer fullscreen={this.props.fullscreen}>
         <ExplorerComponent
           maxNeighbours={this.props.maxNeighbours}
+          hasTruncatedFields={this.state.hasTruncatedFields}
           initialNodeDisplay={this.props.initialNodeDisplay}
           graphStyleData={this.props.graphStyleData}
           updateStyle={this.props.updateStyle}
@@ -193,7 +205,8 @@ export class Visualization extends Component {
 
 const mapStateToProps = state => {
   return {
-    graphStyleData: grassActions.getGraphStyleData(state)
+    graphStyleData: grassActions.getGraphStyleData(state),
+    maxFieldItems: getMaxFieldItems(state)
   }
 }
 

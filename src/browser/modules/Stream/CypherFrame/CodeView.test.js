@@ -22,7 +22,10 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import neo4j from 'neo4j-driver'
 
-import { CodeView, CodeStatusbar } from './CodeView'
+import {
+  CodeViewComponent as CodeView,
+  CodeStatusbarComponent as CodeStatusbar
+} from './CodeView'
 
 describe('CodeViews', () => {
   describe('CodeView', () => {

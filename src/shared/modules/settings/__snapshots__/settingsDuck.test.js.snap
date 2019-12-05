@@ -12,6 +12,7 @@ Object {
   "enableMultiStatementMode": true,
   "initCmd": ":play start",
   "initialNodeDisplay": 300,
+  "maxFieldItems": 500,
   "maxFrames": 30,
   "maxHistory": 30,
   "maxNeighbours": 100,
