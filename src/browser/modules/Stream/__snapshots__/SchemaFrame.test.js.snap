@@ -61,7 +61,7 @@ exports[`SchemaFrame renders empty 1`] = `
         <p
           class="lead"
         >
-          Execute the following query for more information
+          Execute the following command to visualize what's related, and how
         </p>
         <figure>
           <pre
@@ -141,7 +141,7 @@ exports[`SchemaFrame renders with result 1`] = `
         <p
           class="lead"
         >
-          Execute the following query for more information
+          Execute the following command to visualize what's related, and how
         </p>
         <figure>
           <pre

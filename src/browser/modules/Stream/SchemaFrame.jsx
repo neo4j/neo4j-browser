@@ -20,9 +20,12 @@
 
 import React, { Component } from 'react'
 import { v4 } from 'uuid'
+import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { replace, toUpper } from 'lodash-es'
+import semver from 'semver'
 
+import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Frame/FrameTemplate'
 import Slide from '../Carousel/Slide'
@@ -32,7 +35,7 @@ import {
   StyledBodyTr,
   StyledTd
 } from 'browser-components/DataTables'
-import { Directives } from 'browser-components/Directives'
+import Directives from 'browser-components/Directives'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 const formatIndexes = indexes => {
@@ -132,15 +135,20 @@ export class SchemaFrame extends Component {
   render () {
     const indexes = formatIndexes(this.state.indexes)
     const constraints = formatConstraints(this.state.constraints)
+    const schemaCommand = semver.satisfies(this.props.neo4jVersion, '<=3.4.*')
+      ? 'CALL db.schema()'
+      : 'CALL db.schema.visualization'
 
     const frame = (
       <Slide>
         <SchemaTable name='Indexes' content={indexes} />
         <SchemaTable name='Constraints' content={constraints} />
         <br />
-        <p className='lead'>Execute the following query for more information</p>
+        <p className='lead'>
+          Execute the following command to visualize what's related, and how
+        </p>
         <figure>
-          <pre className='code runnable'>CALL db.schema.visualization</pre>
+          <pre className='code runnable'>{schemaCommand}</pre>
         </figure>
       </Slide>
     )
@@ -159,4 +167,13 @@ const Frame = props => {
   )
 }
 
-export default withBus(Frame)
+const mapStateToProps = state => ({
+  neo4jVersion: getVersion(state)
+})
+
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(Frame)
+)
