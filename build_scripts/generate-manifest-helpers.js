@@ -20,7 +20,7 @@
 
 const fs = require('fs')
 
-function loadDataFromFile (file) {
+function loadDataFromFile(file) {
   try {
     const obj = JSON.parse(fs.readFileSync(file, 'utf8'))
     return obj
@@ -29,14 +29,14 @@ function loadDataFromFile (file) {
   }
 }
 
-function buildTargetObject (data, dataProp) {
+function buildTargetObject(data, dataProp) {
   const out = {}
   const keys = data[dataProp] || []
   keys.forEach(key => (out[key] = data[key]))
   return out
 }
 
-function mergeObjects (source, target) {
+function mergeObjects(source, target) {
   return { ...target, ...source }
 }
 

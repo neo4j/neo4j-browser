@@ -27,21 +27,21 @@ const mapProperties = _ => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = obj =>
   Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
 
-export function createGraph (nodes, relationships) {
-  let graph = new Graph()
+export function createGraph(nodes, relationships) {
+  const graph = new Graph()
   graph.addNodes(mapNodes(nodes))
   graph.addRelationships(mapRelationships(relationships, graph))
   graph.display = { initialNodeDisplay: 300, nodeCount: 1 }
   return graph
 }
 
-export function mapNodes (nodes) {
+export function mapNodes(nodes) {
   return nodes.map(
     node => new Node(node.id, node.labels, mapProperties(node.properties))
   )
 }
 
-export function mapRelationships (relationships, graph) {
+export function mapRelationships(relationships, graph) {
   return relationships.map(rel => {
     const source = graph.findNode(rel.startNodeId)
     const target = graph.findNode(rel.endNodeId)
@@ -55,9 +55,9 @@ export function mapRelationships (relationships, graph) {
   })
 }
 
-export function getGraphStats (graph) {
-  let labelStats = {}
-  let relTypeStats = {}
+export function getGraphStats(graph) {
+  const labelStats = {}
+  const relTypeStats = {}
   graph.nodes().forEach(node => {
     node.labels.forEach(label => {
       if (labelStats['*']) {

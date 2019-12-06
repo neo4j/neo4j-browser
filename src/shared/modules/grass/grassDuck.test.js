@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
 import reducer, { UPDATE_GRAPH_STYLE_DATA } from './grassDuck'
 
 describe('grass reducer', () => {

@@ -91,7 +91,7 @@ const initialState = {
 }
 
 // Reducer
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case INCREMENT:
       return { ...state, [action.what]: (state[action.what] || 0) + 1 }
@@ -164,26 +164,26 @@ export const bootEpic = (action$, store) => {
     .ofType(AUTHORIZED) // Browser sync auth
     .map(action => {
       // Store name locally
-      if (!action.userData || !action.userData['name']) return action
-      store.dispatch(updateData({ name: action.userData['name'] }))
+      if (!action.userData || !action.userData.name) return action
+      store.dispatch(updateData({ name: action.userData.name }))
       return action
     })
     .map(action => {
       if (booted) return false
-      if (!action.userData || !action.userData['user_id']) return false // No info
+      if (!action.userData || !action.userData.user_id) return false // No info
       if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) {
         // No opt out of pre releases
-        api('boot', { user_id: action.userData['user_id'] })
+        api('boot', { user_id: action.userData.user_id })
       } else {
         api('boot', {
           ...getData(store.getState()),
           companies: getCompanies(store.getState()),
           neo4j_version: getVersion(store.getState()),
-          user_id: action.userData['user_id']
+          user_id: action.userData.user_id
         })
         api('trackEvent', 'syncAuthenticated', {
           // Track that user connected to browser sync
-          user_id: action.userData['user_id'],
+          user_id: action.userData.user_id,
           name: getName(store.getState())
         })
         const waitingEvents = getEvents(store.getState())

@@ -24,7 +24,7 @@ import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import { Spinner } from 'browser-components/icons/Icons'
 import useTimer from 'browser/hooks/useTimer'
 
-export function CancelView () {
+export function CancelView() {
   const showClosingMessage = useTimer(1500)
   return (
     <Centered>

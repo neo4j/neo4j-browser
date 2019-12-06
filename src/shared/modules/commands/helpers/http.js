@@ -49,7 +49,7 @@ export const parseHttpVerbCommand = input => {
 }
 
 // Check if valid url, from http://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
-export function isValidURL (str) {
+export function isValidURL(str) {
   var pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name

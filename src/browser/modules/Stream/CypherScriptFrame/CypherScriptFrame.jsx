@@ -35,13 +35,13 @@ import { Icon } from './Icon'
 const isCypher = (str, cmdchar) => !str.startsWith(cmdchar)
 
 class CypherScriptFrame extends Component {
-  render () {
+  render() {
     const { frame, frames, requests = {}, cmdchar = ':' } = this.props
     const contents = (
       <WrapperCenter>
         <ContentSizer>
           <Accordion
-            data-testid='multi-statement-list'
+            data-testid="multi-statement-list"
             render={({ getChildProps }) => {
               return (
                 <div>
@@ -62,7 +62,7 @@ class CypherScriptFrame extends Component {
                     return (
                       <div key={id}>
                         <Accordion.Title
-                          data-testid='multi-statement-list-title'
+                          data-testid="multi-statement-list-title"
                           {...titleProps}
                         >
                           <PointerFrameCommand title={frames[id].cmd}>
@@ -75,7 +75,7 @@ class CypherScriptFrame extends Component {
                           </StyledFrameTitlebarButtonSection>
                         </Accordion.Title>
                         <Accordion.Content
-                          data-testid='multi-statement-list-content'
+                          data-testid="multi-statement-list-content"
                           {...contentProps}
                         >
                           <SummaryC
@@ -95,7 +95,7 @@ class CypherScriptFrame extends Component {
     )
     return (
       <FrameTemplate
-        className='no-padding'
+        className="no-padding"
         header={frame}
         contents={contents}
       />

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global describe, test, expect, jest */
+
 import {
   createErrorObject,
   getErrorMessage,
@@ -55,7 +55,7 @@ describe('createErrorObject', () => {
     const obj = createErrorObject(BoltConnectionError)
 
     // Then
-    expect(obj.message).toEqual(messages['BoltConnectionError'])
+    expect(obj.message).toEqual(messages.BoltConnectionError)
   })
 
   test('createErrorObject should pass along parameters', () => {

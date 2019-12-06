@@ -30,19 +30,22 @@ import Render from 'browser-components/Render'
 import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
 
 export class ConnectionFrame extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       error: {}
     }
   }
-  error (e) {
+
+  error(e) {
     this.setState({ error: e })
   }
-  success () {
+
+  success() {
     this.setState({ success: true })
   }
-  render () {
+
+  render() {
     return (
       <FrameTemplate
         header={this.props.frame}
@@ -53,7 +56,7 @@ export class ConnectionFrame extends Component {
           />
         }
         contents={
-          <React.Fragment>
+          <>
             <StyledConnectionAside>
               <Render if={!this.state.success}>
                 <React.Fragment>
@@ -77,7 +80,7 @@ export class ConnectionFrame extends Component {
                 error={this.error.bind(this)}
               />
             </StyledConnectionBodyContainer>
-          </React.Fragment>
+          </>
         }
       />
     )

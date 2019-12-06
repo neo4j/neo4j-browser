@@ -23,7 +23,7 @@ const title = 'bolt+routing in Neo4j Browser'
 const subtitle = 'What drivers are used when'
 const category = 'boltProtocol'
 const content = (
-  <React.Fragment>
+  <>
     <p>
       There are two kinds of Bolt drivers specified by URI scheme: the 'bolt://'
       scheme is used to create a <b>direct</b> driver and the 'bolt+routing://'
@@ -34,7 +34,7 @@ const content = (
     </p>
     <p>
       Neo4j Browser will always:
-      <ul className='topic-bullets'>
+      <ul className="topic-bullets">
         <li>
           use a <b>direct</b> driver for user administration frames
         </li>
@@ -48,7 +48,7 @@ const content = (
       If bolt+routing is on and the provided URI points to a Core Causal Cluster
       member Neo4j Browser will:
     </p>
-    <ul className='topic-bullets'>
+    <ul className="topic-bullets">
       <li>
         use a <b>routing</b> driver for all cypher queries submitted via the
         editor (including calls to user administration procedures)
@@ -63,7 +63,7 @@ const content = (
       Cluster member or the provided URI points to a Read-Replica Causal Cluster
       member, Neo4j Browser will:
     </p>
-    <ul className='topic-bullets'>
+    <ul className="topic-bullets">
       <li>
         use a <b>direct</b> driver for all cypher queries submitted via the
         editor
@@ -78,7 +78,7 @@ const content = (
       user must exist on all members in the cluster with the same authentication
       credentials.
     </p>
-    <table className='table-condensed table-help'>
+    <table className="table-condensed table-help">
       <tbody>
         {/* <tr>
     <th>Reference:</th>
@@ -87,13 +87,13 @@ const content = (
         <tr>
           <th>Related:</th>
           <td>
-            <a help-topic='bolt'>:help bolt</a>{' '}
-            <a help-topic='bolt-encryption'>:help bolt encryption</a>
+            <a help-topic="bolt">:help bolt</a>{' '}
+            <a help-topic="bolt-encryption">:help bolt encryption</a>
           </td>
         </tr>
       </tbody>
     </table>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

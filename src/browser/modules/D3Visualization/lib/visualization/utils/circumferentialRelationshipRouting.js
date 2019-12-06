@@ -23,11 +23,11 @@ import StraightArrow from './straightArrow'
 import ArcArrow from './arcArrow'
 
 export default class circumferentialRelationshipRouting {
-  constructor (style) {
+  constructor(style) {
     this.style = style
   }
 
-  measureRelationshipCaption (relationship, caption) {
+  measureRelationshipCaption(relationship, caption) {
     const fontFamily = 'sans-serif'
     const fontSize = parseFloat(
       this.style.forRelationship(relationship).get('font-size')
@@ -38,17 +38,17 @@ export default class circumferentialRelationshipRouting {
     return measureText(caption, fontFamily, fontSize) + padding * 2
   }
 
-  captionFitsInsideArrowShaftWidth (relationship) {
+  captionFitsInsideArrowShaftWidth(relationship) {
     return (
       parseFloat(this.style.forRelationship(relationship).get('shaft-width')) >
       parseFloat(this.style.forRelationship(relationship).get('font-size'))
     )
   }
 
-  measureRelationshipCaptions (relationships) {
+  measureRelationshipCaptions(relationships) {
     return (() => {
       const result = []
-      for (let relationship of Array.from(relationships)) {
+      for (const relationship of Array.from(relationships)) {
         relationship.captionLength = this.measureRelationshipCaption(
           relationship,
           relationship.type
@@ -65,7 +65,7 @@ export default class circumferentialRelationshipRouting {
     })()
   }
 
-  shortenCaption (relationship, caption, targetWidth) {
+  shortenCaption(relationship, caption, targetWidth) {
     let shortCaption = caption
     while (true) {
       if (shortCaption.length <= 2) {
@@ -78,7 +78,8 @@ export default class circumferentialRelationshipRouting {
       }
     }
   }
-  layoutRelationships (graph) {
+
+  layoutRelationships(graph) {
     let dx, dy
     for (var relationship of Array.from(graph.relationships())) {
       dx = relationship.target.x - relationship.source.x
@@ -203,10 +204,10 @@ export default class circumferentialRelationshipRouting {
                       relationship.captionLength
                         ? [relationship.caption, relationship.captionLength]
                         : this.shortenCaption(
-                          relationship,
-                          relationship.caption,
-                          relationship.arrow.shaftLength
-                        ))
+                            relationship,
+                            relationship.caption,
+                            relationship.arrow.shaftLength
+                          ))
                   )),
                   ref
                 )

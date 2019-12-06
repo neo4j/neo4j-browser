@@ -44,7 +44,7 @@ const checkHtmlForSlides = html => {
 }
 
 export class PlayFrame extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       guide: null,
@@ -54,7 +54,7 @@ export class PlayFrame extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.frame.result) {
       // Found remote guide
       this.setState({
@@ -71,7 +71,7 @@ export class PlayFrame extends Component {
     ) {
       // Not found remotely (or other error)
       if (this.props.frame.response.status === 404) {
-        return this.unfound(chapters['unfound'])
+        return this.unfound(chapters.unfound)
       }
       return this.setState({
         guide: (
@@ -136,7 +136,7 @@ export class PlayFrame extends Component {
       this.props.bus.self(action.type, action, res => {
         if (!res.success) {
           // No luck
-          return this.unfound(chapters['unfound'])
+          return this.unfound(chapters.unfound)
         }
         // Found remote guide
         this.setState({
@@ -146,18 +146,18 @@ export class PlayFrame extends Component {
       })
     } else {
       // No bus. Give up
-      return this.unfound(chapters['unfound'])
+      return this.unfound(chapters.unfound)
     }
   }
 
-  unfound ({ content, title, subtitle }) {
+  unfound({ content, title, subtitle }) {
     this.setState({
       guide: <Docs withDirectives content={content} />,
       aside: <FrameAside title={title} subtitle={subtitle} />
     })
   }
 
-  render () {
+  render() {
     const classNames = ['playFrame']
     if (this.state.hasCarousel) {
       classNames.push('has-carousel')

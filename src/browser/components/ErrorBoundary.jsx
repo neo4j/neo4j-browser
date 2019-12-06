@@ -33,10 +33,12 @@ export default class ErrorBoundary extends Component {
     errorInfo: null,
     error: null
   }
-  componentDidCatch (error, errorInfo) {
+
+  componentDidCatch(error, errorInfo) {
     this.setState({ errorInfo, error })
   }
-  render () {
+
+  render() {
     if (this.state.error) {
       return (
         <ErrorWrapper>

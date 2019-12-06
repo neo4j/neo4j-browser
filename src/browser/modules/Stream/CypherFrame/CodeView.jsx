@@ -33,7 +33,7 @@ import { TableStatusbar } from './TableView'
 
 class ExpandableContent extends Component {
   state = {}
-  render () {
+  render() {
     return (
       <StyledAlteringTr>
         <StyledStrongTd>
@@ -55,10 +55,11 @@ class ExpandableContent extends Component {
 }
 
 export class CodeView extends Component {
-  shouldComponentUpdate (props) {
+  shouldComponentUpdate(props) {
     return !this.props.result || !deepEquals(props.result, this.props.result)
   }
-  render () {
+
+  render() {
     const { request = {}, query } = this.props
     if (request.status !== 'success') return null
     const resultJson = JSON.stringify(request.result.records, null, 2)
@@ -80,12 +81,12 @@ export class CodeView extends Component {
               <StyledTd>{query}</StyledTd>
             </StyledAlteringTr>
             <ExpandableContent
-              title='Summary'
+              title="Summary"
               content={<pre>{summaryJson}</pre>}
               summary={summaryJson.split('\n').slice(0, 3) + ' ...'}
             />
             <ExpandableContent
-              title='Response'
+              title="Response"
               content={<pre>{resultJson}</pre>}
               summary={resultJson.split('\n').slice(0, 3) + ' ...'}
             />

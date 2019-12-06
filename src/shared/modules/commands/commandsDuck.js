@@ -64,14 +64,14 @@ export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
 export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
 export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 
-export const useDbCommand = `use`
-export const listDbsCommand = `dbs`
+export const useDbCommand = 'use'
+export const listDbsCommand = 'dbs'
 
 const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
 export const whitelistedMultiCommands = () => [':param', ':use']
 
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }
@@ -169,7 +169,7 @@ export const handleCommandEpic = (action$, store) =>
         addFrame({ type: 'cypher-script', id: parentId, cmd: action.cmd })
       )
       const cmdchar = getCmdChar(store.getState())
-      let jobs = []
+      const jobs = []
       statements.forEach(cmd => {
         cmd = cleanCommand(cmd)
         const requestId = v4()
@@ -181,7 +181,7 @@ export const handleCommandEpic = (action$, store) =>
         // Ignore client commands that aren't whitelisted
         const ignore = !!cmd.startsWith(cmdchar) && !isWhitelisted
 
-        let { action, interpreted } = buildCommandObject(
+        const { action, interpreted } = buildCommandObject(
           { cmd, ignore },
           helper.interpret,
           getCmdChar(store.getState())

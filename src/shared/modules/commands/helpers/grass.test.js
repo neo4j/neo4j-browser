@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest */
-
 import { fetchRemoteGrass } from './grass'
 import { parseGrass } from 'shared/services/grassUtils'
 

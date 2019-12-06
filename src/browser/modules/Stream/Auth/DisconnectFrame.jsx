@@ -29,7 +29,7 @@ const Disconnect = ({ frame, activeConnectionData }) => {
     <FrameTemplate
       header={frame}
       contents={
-        <React.Fragment>
+        <>
           <StyledConnectionAside>
             <Render if={activeConnectionData}>
               <div>
@@ -44,7 +44,7 @@ const Disconnect = ({ frame, activeConnectionData }) => {
               </div>
             </Render>
           </StyledConnectionAside>
-        </React.Fragment>
+        </>
       }
     />
   )

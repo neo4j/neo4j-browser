@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
-
 import React from 'react'
 import { render } from '@testing-library/react'
 import { createStore } from 'redux'
@@ -27,7 +25,7 @@ import { Provider } from 'react-redux'
 
 import { SchemaFrame } from './SchemaFrame'
 
-function renderWithRedux (children) {
+function renderWithRedux(children) {
   return render(
     <Provider store={createStore(() => ({}), {})}>{children}</Provider>
   )
@@ -71,7 +69,7 @@ test('SchemaFrame renders with result', () => {
       ]
     }
   }
-  let firstIndexRecord = indexResult.result.records[0]
+  const firstIndexRecord = indexResult.result.records[0]
   firstIndexRecord.get = key =>
     firstIndexRecord._fields[firstIndexRecord.keys.indexOf(key)]
 
@@ -86,7 +84,7 @@ test('SchemaFrame renders with result', () => {
       ]
     }
   }
-  let firstConstraintRecord = constraintResult.result.records[0]
+  const firstConstraintRecord = constraintResult.result.records[0]
   firstConstraintRecord.get = key =>
     firstConstraintRecord._fields[firstConstraintRecord.keys.indexOf(key)]
 

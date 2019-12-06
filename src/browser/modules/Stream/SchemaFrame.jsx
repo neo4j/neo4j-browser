@@ -67,13 +67,13 @@ const SchemaTable = ({ name, content }) => (
   <StyledTable>
     <thead>
       <tr>
-        <StyledTh className='table-header'>{name}</StyledTh>
+        <StyledTh className="table-header">{name}</StyledTh>
       </tr>
     </thead>
     <tbody>
       {content.map(row => (
-        <StyledBodyTr className='table-row' key={v4()}>
-          <StyledTd className='table-properties'>{row}</StyledTd>
+        <StyledBodyTr className="table-row" key={v4()}>
+          <StyledTd className="table-properties">{row}</StyledTd>
         </StyledBodyTr>
       ))}
     </tbody>
@@ -81,14 +81,15 @@ const SchemaTable = ({ name, content }) => (
 )
 
 export class SchemaFrame extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       indexes: [],
       constraints: []
     }
   }
-  responseHandler (name) {
+
+  responseHandler(name) {
     return res => {
       if (!res.success || !res.result || !res.result.records.length) {
         this.setState({ [name]: [] })
@@ -103,7 +104,8 @@ export class SchemaFrame extends Component {
       this.setState({ [name]: out })
     }
   }
-  fetchData () {
+
+  fetchData() {
     if (this.props.bus) {
       // Indexes
       this.props.bus.self(
@@ -125,7 +127,7 @@ export class SchemaFrame extends Component {
       )
     }
   }
-  componentDidMount () {
+  componentDidMount() {
     this.fetchData()
     if (this.props.indexes) {
       this.responseHandler('indexes')(this.props.indexes)
@@ -135,7 +137,7 @@ export class SchemaFrame extends Component {
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (
       this.props.frame &&
       this.props.frame.schemaRequestId !== prevProps.frame.schemaRequestId
@@ -144,7 +146,7 @@ export class SchemaFrame extends Component {
     }
   }
 
-  render () {
+  render() {
     const indexes = formatIndexes(this.state.indexes)
     const constraints = formatConstraints(this.state.constraints)
     const schemaCommand = semver.satisfies(this.props.neo4jVersion, '<=3.4.*')
@@ -153,14 +155,14 @@ export class SchemaFrame extends Component {
 
     const frame = (
       <Slide>
-        <SchemaTable name='Indexes' content={indexes} />
-        <SchemaTable name='Constraints' content={constraints} />
+        <SchemaTable name="Indexes" content={indexes} />
+        <SchemaTable name="Constraints" content={constraints} />
         <br />
-        <p className='lead'>
+        <p className="lead">
           Execute the following command to visualize what's related, and how
         </p>
         <figure>
-          <pre className='code runnable'>{schemaCommand}</pre>
+          <pre className="code runnable">{schemaCommand}</pre>
         </figure>
       </Slide>
     )
@@ -183,9 +185,4 @@ const mapStateToProps = state => ({
   neo4jVersion: getVersion(state)
 })
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(Frame)
-)
+export default withBus(connect(mapStateToProps, null)(Frame))

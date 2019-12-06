@@ -61,7 +61,7 @@ const createItems = (
   showStar = true,
   count
 ) => {
-  let items = [...originalList]
+  const items = [...originalList]
   if (showStar) {
     let str = '*'
     if (count) {
@@ -73,7 +73,7 @@ const createItems = (
     const getNodesCypher = editorCommandTemplate(text, index)
     return (
       <RenderType.component
-        data-testid='sidebarMetaItem'
+        data-testid="sidebarMetaItem"
         key={index}
         onClick={() => onItemClick(getNodesCypher)}
       >
@@ -112,7 +112,7 @@ const LabelItems = ({
       <DrawerSubHeader>Node Labels</DrawerSubHeader>
       <DrawerSectionBody
         className={classNames({
-          [styles['wrapper']]: true
+          [styles.wrapper]: true
         })}
       >
         {labelItems}
@@ -158,7 +158,7 @@ const RelationshipItems = ({
       <DrawerSubHeader>Relationship Types</DrawerSubHeader>
       <DrawerSectionBody
         className={classNames({
-          [styles['wrapper']]: true
+          [styles.wrapper]: true
         })}
       >
         {relationshipItems}
@@ -207,7 +207,7 @@ const PropertyItems = ({
       <DrawerSubHeader>Property Keys</DrawerSubHeader>
       <DrawerSectionBody
         className={classNames({
-          [styles['wrapper']]: true
+          [styles.wrapper]: true
         })}
       >
         {propertyItems}

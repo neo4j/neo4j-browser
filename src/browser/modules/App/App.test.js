@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, test, expect */
 import React from 'react'
 import { render } from '@testing-library/react'
 import configureMockStore from 'redux-mock-store'
@@ -30,7 +29,9 @@ const mockStore = configureMockStore()
 const store = mockStore({})
 
 jest.mock('../FeatureToggle/FeatureToggleProvider', () => {
-  return ({ children }) => <div>{children}</div>
+  const FT = ({ children }) => <div>{children}</div>
+  FT.displayName = 'FTMock'
+  return FT
 })
 jest.mock('./styled', () => {
   const orig = require.requireActual('./styled')
@@ -105,7 +106,7 @@ const getDesktopContext = (kerberosEnabled = false) => ({
                   username: 'neo4j',
                   password: 'password',
                   tlsLevel: 'REQUIRED',
-                  url: `bolt://localhost:7687`
+                  url: 'bolt://localhost:7687'
                 },
                 http: {
                   enabled: true,

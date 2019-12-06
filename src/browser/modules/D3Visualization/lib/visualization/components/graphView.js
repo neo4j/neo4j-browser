@@ -21,7 +21,7 @@ import viz from './visualization'
 import layout from './layout'
 
 export default class graphView {
-  constructor (element, measureSize, graph, style) {
+  constructor(element, measureSize, graph, style) {
     this.graph = graph
     this.style = style
     const forceLayout = layout.force()
@@ -34,7 +34,7 @@ export default class graphView {
       ))()
   }
 
-  on (event, callback) {
+  on(event, callback) {
     ;(this.callbacks[event] != null
       ? this.callbacks[event]
       : (this.callbacks[event] = [])
@@ -42,7 +42,7 @@ export default class graphView {
     return this
   }
 
-  layout (value) {
+  layout(value) {
     if (!arguments.length) {
       return this.layout
     }
@@ -50,7 +50,7 @@ export default class graphView {
     return this
   }
 
-  grass (value) {
+  grass(value) {
     if (!arguments.length) {
       return this.style.toSheet()
     }
@@ -58,29 +58,29 @@ export default class graphView {
     return this
   }
 
-  update () {
+  update() {
     this.viz.update()
     return this
   }
 
-  resize () {
+  resize() {
     this.viz.resize()
     return this
   }
 
-  boundingBox () {
+  boundingBox() {
     return this.viz.boundingBox()
   }
 
-  collectStats () {
+  collectStats() {
     return this.viz.collectStats()
   }
 
-  zoomIn (elem) {
+  zoomIn(elem) {
     return this.viz.zoomInClick(elem)
   }
 
-  zoomOut (elem) {
+  zoomOut(elem) {
     return this.viz.zoomOutClick(elem)
   }
 }

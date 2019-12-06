@@ -25,34 +25,34 @@ import Slide from '../../modules/Carousel/Slide'
 const title = 'Learn'
 const category = 'guides'
 const slides = [
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s1">
+    <div className="col-sm-3">
       <h3>Start Learning</h3>
-      <p className='lead'>Graph database fundamentals.</p>
+      <p className="lead">Graph database fundamentals.</p>
     </div>
-    <div className='col-sm-9'>
+    <div className="col-sm-9">
       <p>
         Neo4j is a graph database. You can store any data in Neo4j, then ask
         questions about how that data is related.
       </p>
-      <ol className='big'>
+      <ol className="big">
         <li>What is a graph database?</li>
         <li>How can I query a graph?</li>
         <li>What do people do with Neo4j?</li>
       </ol>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s2">
+    <div className="col-sm-3">
       <h3>
         A&nbsp;
         <em>Graph</em> Database
       </h3>
-      <p className='lead'>
+      <p className="lead">
         Neo4j stores data in a Graph, with records called Nodes.
       </p>
     </div>
-    <div className='col-sm-5'>
+    <div className="col-sm-5">
       <p>
         The simplest graph has just a single node with some named values called
         Properties. Let's draw a social graph of our friends on the Neo4j team:
@@ -68,16 +68,16 @@ const slides = [
         <li>Properties are simple name/value pairs</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
-      <img src='./assets/images/one_node.png' className='img-responsive' />
+    <div className="col-sm-4">
+      <img src="./assets/images/one_node.png" className="img-responsive" />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s3">
+    <div className="col-sm-3">
       <h3>Labels</h3>
-      <p className='lead'>Associate a set of nodes.</p>
+      <p className="lead">Associate a set of nodes.</p>
     </div>
-    <div className='col-sm-5'>
+    <div className="col-sm-5">
       <p>
         Nodes can be grouped together by applying a Label to each member. In our
         social graph, we'll label each node that represents a Person.
@@ -91,18 +91,18 @@ const slides = [
         <li>Labels do not have any properties</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
-      <img src='./assets/images/labeled_node.png' className='img-responsive' />
+    <div className="col-sm-4">
+      <img src="./assets/images/labeled_node.png" className="img-responsive" />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s4">
+    <div className="col-sm-3">
       <h3>More Nodes</h3>
-      <p className='lead'>
+      <p className="lead">
         Schema-free, nodes can have a mix of common and unique properties.
       </p>
     </div>
-    <div className='col-sm-5'>
+    <div className="col-sm-5">
       <p>
         Like any database, storing data in Neo4j can be as simple as adding more
         records. We'll add a few more nodes:
@@ -120,17 +120,17 @@ const slides = [
         <li>Neo4j can store billions of nodes</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
-      <img src='./assets/images/more_nodes.png' className='img-responsive' />
+    <div className="col-sm-4">
+      <img src="./assets/images/more_nodes.png" className="img-responsive" />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s5">
+    <div className="col-sm-3">
       <h3>Consider Relationships</h3>
-      <p className='lead'>Connect nodes in the graph</p>
+      <p className="lead">Connect nodes in the graph</p>
     </div>
-    <div className='col-sm-5'>
-      <p className='summary'>
+    <div className="col-sm-5">
+      <p className="summary">
         The real power of Neo4j is in connected data. To associate any two
         nodes, add a Relationship which describes how the records are related.
       </p>
@@ -146,17 +146,17 @@ const slides = [
         <li>Relationships form patterns of data</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
-      <img src='./assets/images/relationships.png' className='img-responsive' />
+    <div className="col-sm-4">
+      <img src="./assets/images/relationships.png" className="img-responsive" />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s6">
+    <div className="col-sm-3">
       <h3>Relationship properties</h3>
-      <p className='lead'>Store information shared by two nodes.</p>
+      <p className="lead">Store information shared by two nodes.</p>
     </div>
-    <div className='col-sm-5'>
-      <p className='summary'>
+    <div className="col-sm-5">
+      <p className="summary">
         In a property graph, relationships are data records that can also
         contain properties. Looking more closely at Emil's relationships, note
         that:
@@ -167,42 +167,42 @@ const slides = [
         <li>Everyone else can have similar relationship properties</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
-      <img src='./assets/images/rel-props.png' className='img-responsive' />
+    <div className="col-sm-4">
+      <img src="./assets/images/rel-props.png" className="img-responsive" />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-4'>
+  <Slide key="s7">
+    <div className="col-sm-4">
       <h3>Next steps</h3>
       <p>
         A property graph contains nodes and relationships, with properties on
         both.
       </p>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <h3>Keep getting started</h3>
-      <ul className='undecorated'>
+      <ul className="undecorated">
         <li>
-          <a play-topic='intro'>Intro</a> - a guided tour
+          <a play-topic="intro">Intro</a> - a guided tour
         </li>
         <li>
-          <a play-topic='cypher'>Cypher</a> - query language
+          <a play-topic="cypher">Cypher</a> - query language
         </li>
         <li>
           <a
-            target='_blank'
-            href='https://neo4j.com/docs/developer-manual/3.2/'
+            target="_blank"
+            href="https://neo4j.com/docs/developer-manual/3.2/"
           >
             Neo4j Developer Manual
           </a>
         </li>
       </ul>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <h3>Jump into code</h3>
-      <ul className='undecorated'>
+      <ul className="undecorated">
         <li>
-          <a play-topic='movie-graph'>The Movie Graph</a>
+          <a play-topic="movie-graph">The Movie Graph</a>
         </li>
       </ul>
     </div>
@@ -210,7 +210,7 @@ const slides = [
 ]
 
 const content = (
-  <Carousel className='deck container-fluid' slides={slides} withDirectives />
+  <Carousel className="deck container-fluid" slides={slides} withDirectives />
 )
 
 export default { title, category, content }

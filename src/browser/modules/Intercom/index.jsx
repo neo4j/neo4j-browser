@@ -24,7 +24,7 @@ import { canUseDOM } from 'services/utils'
 import { updateData } from 'shared/modules/udc/udcDuck'
 
 export class Intercom extends Component {
-  componentDidMount () {
+  componentDidMount() {
     const {
       appID,
       updateData,
@@ -35,12 +35,12 @@ export class Intercom extends Component {
       return
     }
     if (!window.Intercom) {
-      ;(function (w, d, id, s, x) {
-        function i () {
+      ;(function(w, d, id, s, x) {
+        function i() {
           i.c(arguments)
         }
         i.q = []
-        i.c = function (args) {
+        i.c = function(args) {
           i.q.push(args)
         }
         w.Intercom = i
@@ -54,7 +54,7 @@ export class Intercom extends Component {
     updateData({ ...otherProps, app_id: appID })
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     const {
       appID,
       updateData,
@@ -65,17 +65,17 @@ export class Intercom extends Component {
     updateData({ ...otherProps, app_id: appID })
   }
 
-  shouldComponentUpdate () {
+  shouldComponentUpdate() {
     return false
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (!canUseDOM()) return false
     window.Intercom('shutdown')
     delete window.Intercom
   }
 
-  render () {
+  render() {
     return null
   }
 }
@@ -85,7 +85,4 @@ const mapDispatchToProps = dispatch => {
     updateData: data => dispatch(updateData(data))
   }
 }
-export default connect(
-  null,
-  mapDispatchToProps
-)(Intercom)
+export default connect(null, mapDispatchToProps)(Intercom)

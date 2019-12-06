@@ -40,16 +40,18 @@ export default class ConnectForm extends Component {
   state = {
     connecting: false
   }
+
   onConnectClick = () => {
     this.setState({ connecting: true }, () => {
       this.props.onConnectClick(() => this.setState({ connecting: false }))
     })
   }
-  render () {
+
+  render() {
     return (
       <StyledConnectionForm>
         <InputEnterStepping
-          steps='3'
+          steps="3"
           submitAction={this.onConnectClick}
           render={({
             getSubmitProps,
@@ -57,7 +59,7 @@ export default class ConnectForm extends Component {
             setRefForIndex
           }) => {
             return (
-              <React.Fragment>
+              <>
                 <StyledConnectionFormEntry>
                   <StyledConnectionLabel>Connect URL</StyledConnectionLabel>
                   <StyledConnectionTextInput
@@ -120,12 +122,12 @@ export default class ConnectForm extends Component {
                 )}
 
                 <Render if={!this.state.connecting}>
-                  <FormButton data-testid='connect' {...getSubmitProps()}>
+                  <FormButton data-testid="connect" {...getSubmitProps()}>
                     Connect
                   </FormButton>
                 </Render>
                 <Render if={this.state.connecting}>Connecting...</Render>
-              </React.Fragment>
+              </>
             )
           }}
         />

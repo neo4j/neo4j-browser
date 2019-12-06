@@ -34,16 +34,13 @@ import {
   BOLT_CONNECTION_ERROR_MESSAGE
 } from './boltWorkerMessages'
 import { NATIVE } from 'services/bolt/boltHelpers'
-
-/* eslint-disable import/no-webpack-loader-syntax */
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
-/* eslint-enable import/no-webpack-loader-syntax */
 
 let connectionProperties = null
 let _useDb = null
-let boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
+const boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
 
-function openConnection (props, opts = {}, onLostConnection) {
+function openConnection(props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
     boltConnection
       .openConnection(props, opts, onLostConnection)
@@ -64,7 +61,7 @@ function openConnection (props, opts = {}, onLostConnection) {
   })
 }
 
-function cancelTransaction (id, cb) {
+function cancelTransaction(id, cb) {
   const work = boltWorkPool.getWorkById(id)
   if (work) {
     work.onFinish(cb)
@@ -74,7 +71,7 @@ function cancelTransaction (id, cb) {
   }
 }
 
-function routedWriteTransaction (input, parameters, requestMetaData = {}) {
+function routedWriteTransaction(input, parameters, requestMetaData = {}) {
   const {
     useCypherThread = false,
     requestId = null,
@@ -115,7 +112,7 @@ function routedWriteTransaction (input, parameters, requestMetaData = {}) {
   }
 }
 
-function routedReadTransaction (input, parameters, requestMetaData = {}) {
+function routedReadTransaction(input, parameters, requestMetaData = {}) {
   const {
     useCypherThread = false,
     requestId = null,
@@ -156,7 +153,7 @@ function routedReadTransaction (input, parameters, requestMetaData = {}) {
   }
 }
 
-function directTransaction (input, parameters, requestMetaData = {}) {
+function directTransaction(input, parameters, requestMetaData = {}) {
   const {
     useCypherThread = false,
     requestId = null,
@@ -214,7 +211,7 @@ const addTypesAsField = result => {
   return { summary, records }
 }
 
-function setupBoltWorker (id, workFn, onLostConnection = () => {}) {
+function setupBoltWorker(id, workFn, onLostConnection = () => {}) {
   const workerPromise = new Promise((resolve, reject) => {
     const work = boltWorkPool.doWork({
       id,
@@ -265,10 +262,10 @@ export default {
     const intChecker = convertInts ? neo4j.isInt : () => true
     const intConverter = convertInts
       ? item =>
-        mappings.itemIntToString(item, {
-          intChecker: neo4j.isInt,
-          intConverter: val => val.toNumber()
-        })
+          mappings.itemIntToString(item, {
+            intChecker: neo4j.isInt,
+            intConverter: val => val.toNumber()
+          })
       : val => val
     return mappings.recordsToTableArray(records, {
       intChecker,

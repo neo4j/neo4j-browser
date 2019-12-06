@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 import neo4j from 'neo4j-driver'
 import {
   itemIntToString,
@@ -160,40 +159,40 @@ describe('boltMappings', () => {
 
   describe('extractNodesAndRelationshipsFromRecords', () => {
     test('should map bolt records with a path to nodes and relationships', () => {
-      let startNode = new neo4j.types.Node('1', ['Person'], {
+      const startNode = new neo4j.types.Node('1', ['Person'], {
         prop1: 'prop1'
       })
-      let endNode = new neo4j.types.Node('2', ['Movie'], {
+      const endNode = new neo4j.types.Node('2', ['Movie'], {
         prop2: 'prop2'
       })
-      let relationship = new neo4j.types.Relationship(
+      const relationship = new neo4j.types.Relationship(
         '3',
         startNode.identity,
         endNode.identity,
         'ACTED_IN',
         {}
       )
-      let pathSegment = new neo4j.types.PathSegment(
+      const pathSegment = new neo4j.types.PathSegment(
         startNode,
         relationship,
         endNode
       )
-      let path = new neo4j.types.Path(startNode, endNode, [pathSegment])
-      let boltRecord = {
+      const path = new neo4j.types.Path(startNode, endNode, [pathSegment])
+      const boltRecord = {
         keys: ['p'],
         get: key => path
       }
 
-      let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
+      const { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
         [boltRecord],
         neo4j.types
       )
       expect(nodes.length).toBe(2)
-      let graphNodeStart = nodes.filter(node => node.identity === '1')[0]
+      const graphNodeStart = nodes.filter(node => node.identity === '1')[0]
       expect(graphNodeStart).toBeDefined()
       expect(graphNodeStart.labels).toEqual(['Person'])
       expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
-      let graphNodeEnd = nodes.filter(node => node.identity === '2')[0]
+      const graphNodeEnd = nodes.filter(node => node.identity === '2')[0]
       expect(graphNodeEnd).toBeDefined()
       expect(graphNodeEnd.labels).toEqual(['Movie'])
       expect(graphNodeEnd.properties).toEqual({ prop2: 'prop2' })
@@ -206,20 +205,20 @@ describe('boltMappings', () => {
     })
 
     test('should map bolt nodes and relationships to graph nodes and relationships', () => {
-      let startNode = new neo4j.types.Node('1', ['Person'], {
+      const startNode = new neo4j.types.Node('1', ['Person'], {
         prop1: 'prop1'
       })
-      let endNode = new neo4j.types.Node('2', ['Movie'], {
+      const endNode = new neo4j.types.Node('2', ['Movie'], {
         prop2: 'prop2'
       })
-      let relationship = new neo4j.types.Relationship(
+      const relationship = new neo4j.types.Relationship(
         '3',
         startNode.identity,
         endNode.identity,
         'ACTED_IN',
         {}
       )
-      let boltRecord = {
+      const boltRecord = {
         keys: ['r', 'n1', 'n2'],
         get: key => {
           if (key === 'r') {
@@ -234,16 +233,16 @@ describe('boltMappings', () => {
         }
       }
 
-      let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
+      const { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
         [boltRecord],
         neo4j.types
       )
       expect(nodes.length).toBe(2)
-      let graphNodeStart = nodes.filter(node => node.identity === '1')[0]
+      const graphNodeStart = nodes.filter(node => node.identity === '1')[0]
       expect(graphNodeStart).toBeDefined()
       expect(graphNodeStart.labels).toEqual(['Person'])
       expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
-      let graphNodeEnd = nodes.filter(node => node.identity === '2')[0]
+      const graphNodeEnd = nodes.filter(node => node.identity === '2')[0]
       expect(graphNodeEnd).toBeDefined()
       expect(graphNodeEnd.labels).toEqual(['Movie'])
       expect(graphNodeEnd.properties).toEqual({ prop2: 'prop2' })

@@ -68,7 +68,7 @@ const appendGraphLayers = (svgElement, svg) => {
   window.d3
     .select(svgElement)
     .selectAll('g.layer')
-    .each(function (node) {
+    .each(function(node) {
       svg.node().appendChild(
         window.d3
           .select(this)
@@ -82,7 +82,7 @@ const appendPlanLayers = (svgElement, svg) => {
   window.d3
     .select(svgElement)
     .selectAll('g.layer')
-    .each(function (node) {
+    .each(function(node) {
       svg.node().appendChild(
         window.d3
           .select(this)

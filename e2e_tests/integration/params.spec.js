@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect, before */
+/* global Cypress, cy, before */
 
 describe(':param in Browser', () => {
-  before(function () {
+  before(function() {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
@@ -41,7 +41,7 @@ describe(':param in Browser', () => {
   })
 })
 
-function runTests () {
+function runTests() {
   let setParamQ
   let getParamQ
   // it('can connect', () => {
@@ -110,7 +110,7 @@ function runTests () {
   if (Cypress.config('serverVersion') >= 3.4) {
     // it(":param x => point({crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})", () => {
     cy.executeCommand(':clear')
-    let query =
+    const query =
       ":param x => point({{}crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
     cy.executeCommand(query)
 

@@ -25,19 +25,19 @@ import Slide from '../../modules/Carousel/Slide'
 const title = 'Movie Graph'
 const category = 'graphExamples'
 const slides = [
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s1">
+    <div className="col-sm-3">
       <h3>Movie Graph</h3>
-      <p className='lead'>Pop-cultural connections between actors and movies</p>
+      <p className="lead">Pop-cultural connections between actors and movies</p>
     </div>
-    <div className='col-sm-9'>
+    <div className="col-sm-9">
       <p>
         <em>The Movie Graph</em> is a mini graph application containing actors
         and directors that are related through the movies they've collaborated
         on.
       </p>
       <p>This guide will show you how to:</p>
-      <ol className='big'>
+      <ol className="big">
         <li>Create: insert movie data into the graph</li>
         <li>Find: retrieve individual movies and actors</li>
         <li>Query: discover related actors and directors</li>
@@ -45,8 +45,8 @@ const slides = [
       </ol>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s2">
+    <div className="col-sm-3">
       <h5>The Movie Graph</h5>
       <br />
       <h3>Create</h3>
@@ -61,18 +61,18 @@ const slides = [
         <li>Click the editor's play button to execute</li>
         <li>Wait for the query to finish</li>
       </ol>
-      <p className='text-center text-warning bg-warning'>
+      <p className="text-center text-warning bg-warning">
         WARNING: This adds data to the current database, each time it is run!
       </p>
       <hr />
       <p>
-        <small>:help</small> <a help-topic='cypher'>cypher</a>{' '}
-        <a help-topic='create'>CREATE</a>
+        <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
+        <a help-topic="create">CREATE</a>
       </p>
     </div>
-    <div className='col-sm-9'>
+    <div className="col-sm-9">
       <figure>
-        <pre className='pre-scrollable code runnable'>
+        <pre className="pre-scrollable code runnable">
           {`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
 CREATE (Keanu:Person {name:'Keanu Reeves', born:1964})
 CREATE (Carrie:Person {name:'Carrie-Anne Moss', born:1967})
@@ -585,8 +585,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       </figure>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s3">
+    <div className="col-sm-3">
       <h5>The Movie Graph</h5>
       <br />
       <h3>Find</h3>
@@ -599,31 +599,41 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       </ol>
       <hr />
       <p>
-        <small>:help</small> <a help-topic='match'>MATCH</a>{' '}
-        <a help-topic='where'>WHERE</a> <a help-topic='return'>RETURN</a>
+        <small>:help</small> <a help-topic="match">MATCH</a>{' '}
+        <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
       </p>
     </div>
-    <div className='col-sm-9'>
-      <p className='lead'>Find the actor named "Tom Hanks"...</p>
+    <div className="col-sm-9">
+      <p className="lead">Find the actor named "Tom Hanks"...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom {name: "Tom Hanks"}) RETURN tom`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {'MATCH (tom {name: "Tom Hanks"}) RETURN tom'}
+        </pre>
       </figure>
-      <p className='lead'>Find the movie with title "Cloud Atlas"...</p>
+      <p className="lead">Find the movie with title "Cloud Atlas"...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (cloudAtlas {title: "Cloud Atlas"}) RETURN cloudAtlas`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {'MATCH (cloudAtlas {title: "Cloud Atlas"}) RETURN cloudAtlas'}
+        </pre>
       </figure>
-      <p className='lead'>Find 10 people...</p>
+      <p className="lead">Find 10 people...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (people:Person) RETURN people.name LIMIT 10`}</pre>
+        <pre className="pre-scrollable code runnable">
+          MATCH (people:Person) RETURN people.name LIMIT 10
+        </pre>
       </figure>
-      <p className='lead'>Find movies released in the 1990s...</p>
+      <p className="lead">Find movies released in the 1990s...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {
+            'MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title'
+          }
+        </pre>
       </figure>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s4">
+    <div className="col-sm-3">
       <h5>The Movie Graph</h5>
       <br />
       <h3>Query</h3>
@@ -635,30 +645,46 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       </ol>
       <hr />
       <p>
-        <small>:help</small> <a help-topic='match'>MATCH</a>
+        <small>:help</small> <a help-topic="match">MATCH</a>
       </p>
     </div>
-    <div className='col-sm-9'>
-      <p className='lead'>List all Tom Hanks movies...</p>
+    <div className="col-sm-9">
+      <p className="lead">List all Tom Hanks movies...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->(tomHanksMovies) RETURN tom,tomHanksMovies`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {
+            'MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->(tomHanksMovies) RETURN tom,tomHanksMovies'
+          }
+        </pre>
       </figure>
-      <p className='lead'>Who directed "Cloud Atlas"?</p>
+      <p className="lead">Who directed "Cloud Atlas"?</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (cloudAtlas {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {
+            'MATCH (cloudAtlas {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name'
+          }
+        </pre>
       </figure>
-      <p className='lead'>Tom Hanks' co-actors...</p>
+      <p className="lead">Tom Hanks' co-actors...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN coActors.name`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {
+            'MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN coActors.name'
+          }
+        </pre>
       </figure>
-      <p className='lead'>How people are related to "Cloud Atlas"...</p>
+      <p className="lead">How people are related to "Cloud Atlas"...</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {
+            'MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo'
+          }
+        </pre>
       </figure>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s5">
+    <div className="col-sm-3">
       <h5>The Movie Graph</h5>
       <br />
       <h3>Solve</h3>
@@ -671,31 +697,35 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
         <li>Built-in shortestPath() algorithm</li>
       </ol>
     </div>
-    <div className='col-sm-9'>
-      <p className='lead'>
+    <div className="col-sm-9">
+      <p className="lead">
         Movies and actors up to 4 "hops" away from Kevin Bacon
       </p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (bacon:Person {name:"Kevin Bacon"})-[*1..4]-(hollywood)
-RETURN DISTINCT hollywood`}</pre>
+        <pre className="pre-scrollable code runnable">
+          {`MATCH (bacon:Person {name:"Kevin Bacon"})-[*1..4]-(hollywood)
+RETURN DISTINCT hollywood`}
+        </pre>
       </figure>
-      <p className='lead'>
+      <p className="lead">
         Bacon path, the shortest path of any relationships to Meg Ryan
       </p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH p=shortestPath(
+        <pre className="pre-scrollable code runnable">
+          {`MATCH p=shortestPath(
 (bacon:Person {name:"Kevin Bacon"})-[*]-(meg:Person {name:"Meg Ryan"})
 )
-RETURN p`}</pre>
-        <aside className='warn'>
+RETURN p`}
+        </pre>
+        <aside className="warn">
           Note you only need to compare property values like this when first
           creating relationships
         </aside>
       </figure>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s6">
+    <div className="col-sm-3">
       <h5>The Movie Graph</h5>
       <br />
       <h3>Recommend</h3>
@@ -713,27 +743,31 @@ RETURN p`}</pre>
         <li>Find someone who can introduce Tom to his potential co-actor.</li>
       </ol>
     </div>
-    <div className='col-sm-9'>
-      <p className='lead'>
+    <div className="col-sm-9">
+      <p className="lead">
         Extend Tom Hanks co-actors, to find co-co-actors who haven't worked with
         Tom Hanks...
       </p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+        <pre className="pre-scrollable code runnable">
+          {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
   (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cocoActors)
 WHERE NOT (tom)-[:ACTED_IN]->()<-[:ACTED_IN]-(cocoActors) AND tom <> cocoActors
-RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC`}</pre>
+RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC`}
+        </pre>
       </figure>
-      <p className='lead'>Find someone to introduce Tom Hanks to Tom Cruise</p>
+      <p className="lead">Find someone to introduce Tom Hanks to Tom Cruise</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+        <pre className="pre-scrollable code runnable">
+          {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
   (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cruise:Person {name:"Tom Cruise"})
-RETURN tom, m, coActors, m2, cruise`}</pre>
+RETURN tom, m, coActors, m2, cruise`}
+        </pre>
       </figure>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s7">
+    <div className="col-sm-3">
       <h5>The Movie Graph</h5>
       <br />
       <h3>Clean up</h3>
@@ -743,59 +777,61 @@ RETURN tom, m, coActors, m2, cruise`}</pre>
         <li>Nodes can't be deleted if relationships exist</li>
         <li>Delete both nodes and relationships together</li>
       </ol>
-      <p className='text-center text-warning bg-warning'>
+      <p className="text-center text-warning bg-warning">
         WARNING: This will remove all Person and Movie nodes!
       </p>
       <hr />
       <p>
-        <small>:help</small> <a help-topic='delete'>DELETE</a>
+        <small>:help</small> <a help-topic="delete">DELETE</a>
       </p>
     </div>
-    <div className='col-sm-9'>
-      <p className='lead'>
+    <div className="col-sm-9">
+      <p className="lead">
         Delete all Movie and Person nodes, and their relationships
       </p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (n) DETACH DELETE n`}</pre>
-        <aside className='warn'>
+        <pre className="pre-scrollable code runnable">
+          MATCH (n) DETACH DELETE n
+        </pre>
+        <aside className="warn">
           Note you only need to compare property values like this when first
           creating relationships
         </aside>
       </figure>
-      <p className='lead'>Prove that the Movie Graph is gone</p>
+      <p className="lead">Prove that the Movie Graph is gone</p>
       <figure>
-        <pre className='pre-scrollable code runnable'>{`MATCH (n) RETURN n`}</pre>
+        <pre className="pre-scrollable code runnable">MATCH (n) RETURN n</pre>
       </figure>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-4'>
+  <Slide key="s8">
+    <div className="col-sm-4">
       <h3>Next steps</h3>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <h3>More code</h3>
-      <ul className='undecorated'>
+      <ul className="undecorated">
         <li>
-          <a play-topic='northwind-graph'>Northwind Graph</a> - from RDBMS to
+          <a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to
           graph
         </li>
         <li>
-          <a play-topic='cypher'>Cypher</a> - query language fundamentals
+          <a play-topic="cypher">Cypher</a> - query language fundamentals
         </li>
       </ul>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <h3>Reference</h3>
-      <ul className='undecorated'>
+      <ul className="undecorated">
         <li>
-          <a target='_blank' href='https://neo4j.com/developer/'>
+          <a target="_blank" href="https://neo4j.com/developer/">
             Developer resources
           </a>
         </li>
         <li>
           <a
-            target='_blank'
-            href='https://neo4j.com/docs/developer-manual/3.2/'
+            target="_blank"
+            href="https://neo4j.com/docs/developer-manual/3.2/"
           >
             Neo4j Developer Manual
           </a>
@@ -806,7 +842,7 @@ RETURN tom, m, coActors, m2, cruise`}</pre>
 ]
 
 const content = (
-  <Carousel className='deck container-fluid' slides={slides} withDirectives />
+  <Carousel className="deck container-fluid" slides={slides} withDirectives />
 )
 
 export default { title, category, content }

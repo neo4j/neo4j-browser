@@ -1,4 +1,4 @@
-export function createMediaListenerMatch (media) {
+export function createMediaListenerMatch(media) {
   return {
     matches: true,
     media

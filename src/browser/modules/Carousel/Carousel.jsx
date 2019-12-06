@@ -41,12 +41,14 @@ export default class Carousel extends Component {
     visibleSlide: 0,
     wasClicked: false
   }
-  constructor (props) {
+
+  constructor(props) {
     super(props)
     this.slides = this.props.slides || []
     this.myRef = React.createRef()
   }
-  onKeyDown (ev) {
+
+  onKeyDown(ev) {
     if (ev.keyCode === 37 && this.state.visibleSlide !== 0) {
       this.prev()
     }
@@ -57,32 +59,37 @@ export default class Carousel extends Component {
       this.next()
     }
   }
-  next () {
+
+  next() {
     this.setState({ visibleSlide: this.state.visibleSlide + 1 })
     this.setState({ wasClicked: true })
     this.myRef.current.scrollTo(0, 0)
   }
-  prev () {
+
+  prev() {
     this.setState({ visibleSlide: this.state.visibleSlide - 1 })
     this.myRef.current.scrollTo(0, 0)
   }
-  getSlide (slideNumber) {
+
+  getSlide(slideNumber) {
     return this.slides[slideNumber]
   }
-  goToSlide (slideNumber) {
+
+  goToSlide(slideNumber) {
     this.setState({ visibleSlide: slideNumber })
   }
-  render () {
+
+  render() {
     const { showIntro, withDirectives } = this.props
     return (
       <StyledCarousel
-        data-testid='carousel'
+        data-testid="carousel"
         onKeyDown={e => this.onKeyDown(e)}
-        tabIndex='0'
+        tabIndex="0"
       >
         <CarouselButton
-          className={'previous-slide  rounded'}
-          data-testid='previousSlide'
+          className="previous-slide  rounded"
+          data-testid="previousSlide"
           disabled={this.state.visibleSlide === 0}
           onClick={this.prev.bind(this)}
         >
@@ -90,10 +97,10 @@ export default class Carousel extends Component {
         </CarouselButton>
         <StyledCarouselButtonContainer>
           {showIntro && !this.state.wasClicked && (
-            <StyledCarouselIntroAnimated className='carousel-intro-animation'>
+            <StyledCarouselIntroAnimated className="carousel-intro-animation">
               <StyledCarouselIntro>
                 <span>Use the navigation to get started</span>
-                <span>{`->`}</span>
+                <span>{'->'}</span>
               </StyledCarouselIntro>
             </StyledCarouselIntroAnimated>
           )}
@@ -102,7 +109,7 @@ export default class Carousel extends Component {
               {`${this.state.visibleSlide + 1} / ${this.slides.length}`}
             </StyledCarouselCount>
             <CarouselButton
-              className={'previous-slide'}
+              className="previous-slide"
               disabled={this.state.visibleSlide === 0}
               onClick={this.prev.bind(this)}
             >
@@ -114,7 +121,7 @@ export default class Carousel extends Component {
               onClickEvent={slideNumber => this.goToSlide(slideNumber)}
             />
             <CarouselButton
-              className={'next-slide'}
+              className="next-slide"
               disabled={this.state.visibleSlide === this.slides.length - 1}
               onClick={this.next.bind(this)}
             >
@@ -130,8 +137,8 @@ export default class Carousel extends Component {
           )}
         </SlideContainer>
         <CarouselButton
-          className={'next-slide rounded'}
-          data-testid='nextSlide'
+          className="next-slide rounded"
+          data-testid="nextSlide"
           disabled={this.state.visibleSlide === this.slides.length - 1}
           onClick={this.next.bind(this)}
         >

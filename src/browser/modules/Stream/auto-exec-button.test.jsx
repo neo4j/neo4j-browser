@@ -29,18 +29,18 @@ const send = jest.fn()
 const initialState = { settings: { cmdchar: ':' } }
 const store = createStore(() => initialState, initialState)
 
-function renderWithRedux (ui) {
+function renderWithRedux(ui) {
   return render(<Provider store={store}>{ui}</Provider>)
 }
 
-describe('AutoExecButton', function () {
+describe('AutoExecButton', function() {
   beforeEach(() => {
     jest.resetAllMocks()
   })
   test('should display command with cmd char', () => {
     // Given
     const { getByText } = renderWithRedux(
-      <AutoExecButtonNoBus bus={{ send }} cmd='help params' />
+      <AutoExecButtonNoBus bus={{ send }} cmd="help params" />
     )
 
     // Then
@@ -51,7 +51,7 @@ describe('AutoExecButton', function () {
   test('should auto execute when clicked', () => {
     // Given
     const { getByText } = renderWithRedux(
-      <AutoExecButtonNoBus bus={{ send }} cmd='help params' />
+      <AutoExecButtonNoBus bus={{ send }} cmd="help params" />
     )
 
     fireEvent.click(getByText(':help params'))
@@ -71,7 +71,7 @@ describe('AutoExecButton', function () {
   test('supports any random cmd string', () => {
     // Given
     const { getByText } = renderWithRedux(
-      <AutoExecButtonNoBus bus={{ send }} cmd='foo bar' />
+      <AutoExecButtonNoBus bus={{ send }} cmd="foo bar" />
     )
 
     fireEvent.click(getByText(':foo bar'))

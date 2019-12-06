@@ -30,7 +30,7 @@ const reportInteraction = bus => {
 const throttledReportInteraction = throttle(reportInteraction, 5000)
 
 export class UserInteraction extends Component {
-  componentDidMount () {
+  componentDidMount() {
     document.addEventListener('keyup', () =>
       throttledReportInteraction(this.props.bus)
     )
@@ -38,7 +38,8 @@ export class UserInteraction extends Component {
       throttledReportInteraction(this.props.bus)
     )
   }
-  componentWillUnmount () {
+
+  componentWillUnmount() {
     document.removeEventListener('keyup', () =>
       throttledReportInteraction(this.props.bus)
     )
@@ -46,7 +47,8 @@ export class UserInteraction extends Component {
       throttledReportInteraction(this.props.bus)
     )
   }
-  render () {
+
+  render() {
     return null
   }
 }

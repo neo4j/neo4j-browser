@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect, before */
+/* global Cypress, cy, before */
 
 describe('Viz rendering', () => {
-  before(function () {
+  before(function() {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
@@ -34,14 +34,14 @@ describe('Viz rendering', () => {
   it('shows legend with rel types + node labels on first render', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(
-      `CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b`
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
     )
-    cy.get(`[data-testid="viz-legend-reltypes"]`, { timeout: 5000 }).contains(
+    cy.get('[data-testid="viz-legend-reltypes"]', { timeout: 5000 }).contains(
       'CONNECTS'
     )
-    cy.get(`[data-testid="viz-legend-labels"]`, { timeout: 5000 }).contains(
+    cy.get('[data-testid="viz-legend-labels"]', { timeout: 5000 }).contains(
       'TestLabel'
     )
-    cy.executeCommand(`MATCH (a:TestLabel) DETACH DELETE a`)
+    cy.executeCommand('MATCH (a:TestLabel) DETACH DELETE a')
   })
 })

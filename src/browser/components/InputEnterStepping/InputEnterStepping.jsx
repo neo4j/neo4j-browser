@@ -4,12 +4,14 @@ export default class InputEnterStepping extends Component {
   state = {
     initial: true
   }
+
   steps = []
   getSubmitProps = () => {
     return {
       onClick: this.props.submitAction
     }
   }
+
   getInputPropsForIndex = (i, props = {}) => {
     this.steps[i] = this.steps[i] || {}
     const { initialFocus, ...cleanProps } = props
@@ -26,6 +28,7 @@ export default class InputEnterStepping extends Component {
     }
     return out
   }
+
   onKeyDown = (e, i) => {
     if (e.keyCode === 13) {
       e.preventDefault()
@@ -36,6 +39,7 @@ export default class InputEnterStepping extends Component {
       }
     }
   }
+
   setRefForIndex = (i, ref) => {
     this.steps[i] = this.steps[i] || {}
     this.steps[i].focusFn = () => ref.focus()
@@ -46,7 +50,8 @@ export default class InputEnterStepping extends Component {
       })
     }
   }
-  render () {
+
+  render() {
     return this.props.render({
       getInputPropsForIndex: this.getInputPropsForIndex,
       getSubmitProps: this.getSubmitProps,

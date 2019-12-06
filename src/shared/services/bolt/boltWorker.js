@@ -57,7 +57,7 @@ const connectionTypeMap = {
 let busy = false
 const workQue = []
 
-const onmessage = function (message) {
+const onmessage = function(message) {
   const messageType = message.data.type
 
   if (messageType === RUN_CYPHER_MESSAGE) {

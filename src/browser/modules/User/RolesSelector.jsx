@@ -27,7 +27,7 @@ const RolesSelector = ({
   id
 }) => {
   let options = [
-    <option key={'-1'} value={0}>
+    <option key="-1" value={0}>
       {' '}
     </option>
   ]
@@ -48,8 +48,8 @@ const RolesSelector = ({
 
     return (
       <StyledSelect
-        className='roles-selector'
-        placeholder='Select role'
+        className="roles-selector"
+        placeholder="Select role"
         value={selectedValue}
         onChange={onChange}
         {...args}

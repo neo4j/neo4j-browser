@@ -30,7 +30,7 @@ const initialState = {}
 export const getParams = state => state[NAME]
 
 // Reducer
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }

@@ -47,7 +47,7 @@ import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatur
 import { connect } from 'react-redux'
 
 export class UserInformation extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       edit: false,
@@ -56,7 +56,8 @@ export class UserInformation extends Component {
       username: this.props.user.username
     }
   }
-  removeClick (thing) {
+
+  removeClick(thing) {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -70,7 +71,8 @@ export class UserInformation extends Component {
       this.handleResponse.bind(this)
     )
   }
-  suspendUser () {
+
+  suspendUser() {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -87,7 +89,8 @@ export class UserInformation extends Component {
       this.handleResponse.bind(this)
     )
   }
-  activateUser () {
+
+  activateUser() {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -104,17 +107,20 @@ export class UserInformation extends Component {
       this.handleResponse.bind(this)
     )
   }
+
   status = () => (!this.props.user.active ? 'Suspended' : 'Active')
-  statusButton () {
+  statusButton() {
     return !this.props.user.active ? (
-      <FormButton label='Activate' onClick={this.activateUser.bind(this)} />
+      <FormButton label="Activate" onClick={this.activateUser.bind(this)} />
     ) : (
-      <FormButton label='Suspend' onClick={this.suspendUser.bind(this)} />
+      <FormButton label="Suspend" onClick={this.suspendUser.bind(this)} />
     )
   }
+
   passwordChange = () =>
     this.props.user.passwordChangeRequired ? 'Required' : '-'
-  listRoles () {
+
+  listRoles() {
     return (
       !!this.state.roles.length && (
         <StyleRolesContainer>
@@ -124,7 +130,7 @@ export class UserInformation extends Component {
                 key={v4()}
                 label={role}
                 icon={<CloseIcon />}
-                buttonType='tag'
+                buttonType="tag"
                 onClick={() => {
                   this.props.bus.self(
                     CYPHER_REQUEST,
@@ -151,7 +157,8 @@ export class UserInformation extends Component {
       )
     )
   }
-  onRoleSelect (event) {
+
+  onRoleSelect(event) {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -170,54 +177,57 @@ export class UserInformation extends Component {
       this.handleResponse.bind(this)
     )
   }
-  handleResponse (response) {
+
+  handleResponse(response) {
     if (!response.success) return this.setState({ errors: [response.error] })
     return this.props.refresh()
   }
-  availableRoles () {
+
+  availableRoles() {
     return this.state.availableRoles.filter(
       role => this.props.user.roles.indexOf(role) < 0
     )
   }
-  render () {
+
+  render() {
     return (
-      <StyledBodyTr className='user-info'>
-        <StyledUserTd className='username' aria-labelledby='username'>
+      <StyledBodyTr className="user-info">
+        <StyledUserTd className="username" aria-labelledby="username">
           <StyledButtonContainer>
             {this.props.user.username}
           </StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd className='roles' aria-labelledby='roles'>
+        <StyledUserTd className="roles" aria-labelledby="roles">
           <RolesSelector
             id={`roles-selector-${uuid()}`}
             roles={this.availableRoles()}
             onChange={this.onRoleSelect.bind(this)}
           />
         </StyledUserTd>
-        <StyledUserTd className='current-roles' aria-labelledby='current-roles'>
+        <StyledUserTd className="current-roles" aria-labelledby="current-roles">
           <span>{this.listRoles()}</span>
         </StyledUserTd>
-        <StyledUserTd className='status' aria-labelledby='status'>
+        <StyledUserTd className="status" aria-labelledby="status">
           <StyledButtonContainer
             className={`status-indicator status-${this.status().toLowerCase()}`}
           >
             {this.status()}
           </StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd className='status-action' aria-labelledby='status-action'>
+        <StyledUserTd className="status-action" aria-labelledby="status-action">
           {this.statusButton()}
         </StyledUserTd>
         <StyledUserTd
-          className='password-change'
-          aria-labelledby='password-change'
+          className="password-change"
+          aria-labelledby="password-change"
         >
           <StyledButtonContainer>{this.passwordChange()}</StyledButtonContainer>
         </StyledUserTd>
-        <StyledUserTd className='delete' aria-labelledby='delete'>
+        <StyledUserTd className="delete" aria-labelledby="delete">
           <FormButton
-            className='delete'
-            label='Remove'
-            buttonType='destructive'
+            className="delete"
+            label="Remove"
+            buttonType="destructive"
             onClick={this.removeClick.bind(this)}
           />
         </StyledUserTd>
@@ -233,9 +243,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(UserInformation)
-)
+export default withBus(connect(mapStateToProps, null)(UserInformation))

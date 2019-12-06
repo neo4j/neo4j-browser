@@ -34,24 +34,28 @@ import { RowExpandToggleComponent } from './RowExpandToggle'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 export class LegendComponent extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {}
     this.state.typeRowContracted = true
     this.state.labelRowContracted = true
+    this.typeRowElem = null
+    this.labelRowELem = null
   }
 
-  setTypeRowELem (elem) {
+  setTypeRowELem(elem) {
     if (elem) {
-      this.state.typeRowElem = elem
+      this.typeRowElem = elem
     }
   }
-  setLabelRowELem (elem) {
+
+  setLabelRowELem(elem) {
     if (elem) {
-      this.state.labelRowELem = elem
+      this.labelRowELem = elem
     }
   }
-  render () {
+
+  render() {
     const mapLabels = labels => {
       const labelList = Object.keys(labels).map((legendItemKey, i) => {
         const styleForItem = this.props.graphStyle.forNode({
@@ -68,15 +72,15 @@ export class LegendComponent extends Component {
           color: styleForItem.get('text-color-internal')
         }
         return (
-          <StyledLegendInlineListItem key={i} data-testid='viz-legend-labels'>
-            <StyledLegendContents className='contents'>
+          <StyledLegendInlineListItem key={i} data-testid="viz-legend-labels">
+            <StyledLegendContents className="contents">
               <StyledLabelToken
                 onClick={onClick}
                 style={style}
-                className='token token-label'
+                className="token token-label"
               >
                 {legendItemKey}
-                <StyledTokenCount className='count'>{`(${numberToUSLocale(
+                <StyledTokenCount className="count">{`(${numberToUSLocale(
                   labels[legendItemKey].count
                 )})`}</StyledTokenCount>
               </StyledLabelToken>
@@ -89,12 +93,12 @@ export class LegendComponent extends Component {
           className={this.state.labelRowContracted ? 'contracted' : ''}
         >
           <StyledLegendInlineList
-            className='list-inline'
+            className="list-inline"
             ref={this.setLabelRowELem.bind(this)}
           >
             <RowExpandToggleComponent
               contracted={this.state.labelRowContracted}
-              rowElem={this.state.labelRowELem}
+              rowElem={this.labelRowELem}
               containerHeight={legendRowHeight}
               onClick={() => {
                 this.setState({
@@ -126,15 +130,15 @@ export class LegendComponent extends Component {
           color: styleForItem.get('text-color-internal')
         }
         return (
-          <StyledLegendInlineListItem key={i} data-testid='viz-legend-reltypes'>
-            <StyledLegendContents className='contents'>
+          <StyledLegendInlineListItem key={i} data-testid="viz-legend-reltypes">
+            <StyledLegendContents className="contents">
               <StyledTokenRelationshipType
                 onClick={onClick}
                 style={style}
-                className='token token-relationship-type'
+                className="token token-relationship-type"
               >
                 {legendItemKey}
-                <StyledTokenCount className='count'>
+                <StyledTokenCount className="count">
                   {`(${numberToUSLocale(legendItems[legendItemKey].count)})`}
                 </StyledTokenCount>
               </StyledTokenRelationshipType>
@@ -147,12 +151,12 @@ export class LegendComponent extends Component {
           className={this.state.typeRowContracted ? 'contracted' : ''}
         >
           <StyledLegendInlineList
-            className='list-inline'
+            className="list-inline"
             ref={this.setTypeRowELem.bind(this)}
           >
             <RowExpandToggleComponent
               contracted={this.state.typeRowContracted}
-              rowElem={this.state.typeRowElem}
+              rowElem={this.typeRowElem}
               containerHeight={legendRowHeight}
               onClick={() => {
                 this.setState({
@@ -165,7 +169,7 @@ export class LegendComponent extends Component {
         </StyledLegendRow>
       )
     }
-    let relTypes = mapRelTypes(this.props.stats.relTypes)
+    const relTypes = mapRelTypes(this.props.stats.relTypes)
     return (
       <StyledLegend className={relTypes ? '' : 'one-row'}>
         {mapLabels(this.props.stats.labels)}

@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, beforeEach */
-
 import { v4 as uuid } from 'uuid'
 import WorkPool from './WorkPool'
 

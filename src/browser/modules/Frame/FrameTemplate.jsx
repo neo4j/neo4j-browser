@@ -31,7 +31,7 @@ import {
 } from './styled'
 
 class FrameTemplate extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       fullscreen: false,
@@ -40,7 +40,8 @@ class FrameTemplate extends Component {
       lastHeight: 10
     }
   }
-  toggleFullScreen () {
+
+  toggleFullScreen() {
     this.setState(
       { fullscreen: !this.state.fullscreen },
       () =>
@@ -52,7 +53,8 @@ class FrameTemplate extends Component {
         )
     )
   }
-  toggleCollapse () {
+
+  toggleCollapse() {
     this.setState(
       { collapse: !this.state.collapse },
       () =>
@@ -64,7 +66,8 @@ class FrameTemplate extends Component {
         )
     )
   }
-  togglePin () {
+
+  togglePin() {
     this.setState(
       { pinned: !this.state.pinned },
       () =>
@@ -76,7 +79,8 @@ class FrameTemplate extends Component {
         )
     )
   }
-  componentDidUpdate () {
+
+  componentDidUpdate() {
     if (this.frameContentElement.clientHeight < 300) return // No need to report a transition
     if (
       this.frameContentElement &&
@@ -91,10 +95,12 @@ class FrameTemplate extends Component {
       this.setState({ lastHeight: this.frameContentElement.clientHeight })
     }
   }
+
   setFrameContentElement = el => {
     this.frameContentElement = el
   }
-  render () {
+
+  render() {
     const { className } = this.props
     const classNames = []
     if (className) {
@@ -106,7 +112,7 @@ class FrameTemplate extends Component {
     return (
       <StyledFrame
         className={classNames.join(' ')}
-        data-testid='frame'
+        data-testid="frame"
         fullscreen={this.state.fullscreen}
       >
         {this.props.header && (
@@ -135,7 +141,7 @@ class FrameTemplate extends Component {
             <StyledFrameContents
               fullscreen={this.state.fullscreen}
               ref={this.setFrameContentElement}
-              data-testid='frameContents'
+              data-testid="frameContents"
             >
               {this.props.contents}
             </StyledFrameContents>
@@ -144,7 +150,7 @@ class FrameTemplate extends Component {
         <Render if={this.props.statusbar}>
           <StyledFrameStatusbar
             fullscreen={this.state.fullscreen}
-            data-testid='frameStatusbar'
+            data-testid="frameStatusbar"
           >
             {this.props.statusbar}
           </StyledFrameStatusbar>

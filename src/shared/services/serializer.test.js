@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 import { CSVSerializer } from './serializer'
 
 describe('resultTransform', () => {
@@ -57,7 +56,10 @@ describe('resultTransform', () => {
     })
     test('should take many rows at once with appendRows', () => {
       const cols = ['col1', '"col2"']
-      const data = [['data1', 'data2'], ['data3', 'data4']]
+      const data = [
+        ['data1', 'data2'],
+        ['data3', 'data4']
+      ]
       const s = CSVSerializer(cols)
       s.appendRows(data)
       expect(s.output().split('\n').length).toEqual(3)

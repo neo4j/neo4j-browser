@@ -45,7 +45,7 @@ const ExecutableText = styled.a`
 export const TextCommand = ({ command, onClick, cmdchar, ...rest }) => {
   return (
     <ExecutableText {...rest} onClick={() => onClick(`${cmdchar}${command}`)}>
-      <ExecutableIcon className='fa fa-play-circle-o' />
+      <ExecutableIcon className="fa fa-play-circle-o" />
       {cmdchar}
       {command}
     </ExecutableText>
@@ -64,7 +64,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TextCommand)
+export default connect(mapStateToProps, mapDispatchToProps)(TextCommand)

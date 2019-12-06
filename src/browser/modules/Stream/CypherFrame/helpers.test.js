@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 /* eslint-disable new-cap */
 import neo4j from 'neo4j-driver'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
@@ -182,7 +181,7 @@ describe('helpers', () => {
     })
     test('should return true if nodes are found, even nested', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
       const mappedGet = map => key => map[key]
       const request = {
         result: {
@@ -301,7 +300,7 @@ describe('helpers', () => {
     })
     test('should return the viz view if nodes are existent', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
       const mappedGet = map => key => map[key]
       const request = {
         result: {
@@ -387,7 +386,7 @@ describe('helpers', () => {
     })
     test('should return the ascii if thats the last view', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
       const mappedGet = map => key => map[key]
       const request = {
         result: {
@@ -483,7 +482,7 @@ describe('helpers', () => {
     })
     test('should return viz if the last view was plan but no plan exists and viz elements exists', () => {
       // Given
-      let node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
       const mappedGet = map => key => map[key]
       const request = {
         result: {

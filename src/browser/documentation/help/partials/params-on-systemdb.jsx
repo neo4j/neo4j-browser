@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-export default function ParamsOnSystemDb () {
+export default function ParamsOnSystemDb() {
   return (
     <p>
       <strong>A note on system database</strong>

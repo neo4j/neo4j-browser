@@ -70,7 +70,8 @@ export class QueriesFrame extends Component {
     success: null,
     errors: []
   }
-  componentDidMount () {
+
+  componentDidMount() {
     if (this.props.connectionState === CONNECTED_STATE) {
       this.getRunningQueries()
     } else {
@@ -78,7 +79,7 @@ export class QueriesFrame extends Component {
     }
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
@@ -91,14 +92,15 @@ export class QueriesFrame extends Component {
     }
   }
 
-  isCC () {
+  isCC() {
     return this.props.availableProcedures.includes('dbms.cluster.overview')
   }
-  canListQueries () {
+
+  canListQueries() {
     return this.props.availableProcedures.includes('dbms.listQueries')
   }
 
-  getRunningQueries (suppressQuerySuccessMessage = false) {
+  getRunningQueries(suppressQuerySuccessMessage = false) {
     this.props.bus.self(
       this.isCC() ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {
@@ -135,7 +137,7 @@ export class QueriesFrame extends Component {
     )
   }
 
-  killQueries (host, queryIdList) {
+  killQueries(host, queryIdList) {
     this.props.bus.self(
       this.isCC() ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
       { host, query: killQueriesProcedure(queryIdList) },
@@ -157,7 +159,7 @@ export class QueriesFrame extends Component {
     )
   }
 
-  extractQueriesFromBoltResult (result) {
+  extractQueriesFromBoltResult(result) {
     return result.records.map(({ keys, _fields, host, error }) => {
       if (error) {
         return { error }
@@ -177,11 +179,11 @@ export class QueriesFrame extends Component {
     })
   }
 
-  onCancelQuery (host, queryId) {
+  onCancelQuery(host, queryId) {
     this.killQueries(host, [queryId])
   }
 
-  constructOverviewMessage (queries, errors) {
+  constructOverviewMessage(queries, errors) {
     const clusterCount = new Set(queries.map(query => query.host)).size
 
     const numMachinesMsg =
@@ -202,7 +204,7 @@ export class QueriesFrame extends Component {
     )
   }
 
-  constructViewFromQueryList (queries, errors) {
+  constructViewFromQueryList(queries, errors) {
     if (queries.length === 0) {
       return null
     }
@@ -219,36 +221,36 @@ export class QueriesFrame extends Component {
       return (
         <tr key={`rows${i}`}>
           <StyledTd
-            key='host'
+            key="host"
             title={query.host}
             width={tableHeaderSizes[0][1]}
           >
             <Code>{query.host}</Code>
           </StyledTd>
-          <StyledTd key='username' width={tableHeaderSizes[1][1]}>
+          <StyledTd key="username" width={tableHeaderSizes[1][1]}>
             {query.username}
           </StyledTd>
           <StyledTd
-            key='query'
+            key="query"
             title={query.query}
             width={tableHeaderSizes[2][1]}
           >
             <Code>{query.query}</Code>
           </StyledTd>
-          <StyledTd key='params' width={tableHeaderSizes[3][1]}>
+          <StyledTd key="params" width={tableHeaderSizes[3][1]}>
             <Code>{JSON.stringify(query.parameters, null, 2)}</Code>
           </StyledTd>
           <StyledTd
-            key='meta'
+            key="meta"
             title={JSON.stringify(query.metaData, null, 2)}
             width={tableHeaderSizes[4][1]}
           >
             <Code>{JSON.stringify(query.metaData, null, 2)}</Code>
           </StyledTd>
-          <StyledTd key='time' width={tableHeaderSizes[5][1]}>
+          <StyledTd key="time" width={tableHeaderSizes[5][1]}>
             {query.elapsedTimeMillis} ms
           </StyledTd>
-          <StyledTd key='actions' width={tableHeaderSizes[6][1]}>
+          <StyledTd key="actions" width={tableHeaderSizes[6][1]}>
             <ConfirmationButton
               onConfirmed={this.onCancelQuery.bind(
                 this,
@@ -263,7 +265,7 @@ export class QueriesFrame extends Component {
 
     const errorRows = errors.map((error, i) => (
       <tr key={`error${i}`}>
-        <StyledTd colSpan='7' title={error.message}>
+        <StyledTd colSpan="7" title={error.message}>
           <Code>Error connecting to: {error.host}</Code>
         </StyledTd>
       </tr>
@@ -291,7 +293,7 @@ export class QueriesFrame extends Component {
     )
   }
 
-  setAutoRefresh (autoRefresh) {
+  setAutoRefresh(autoRefresh) {
     this.setState({ autoRefresh: autoRefresh })
 
     if (autoRefresh) {
@@ -299,7 +301,7 @@ export class QueriesFrame extends Component {
     }
   }
 
-  render () {
+  render() {
     let frameContents
     let aside
     let statusbar
@@ -337,8 +339,8 @@ export class QueriesFrame extends Component {
     } else {
       aside = (
         <FrameAside
-          title={'Frame unavailable'}
-          subtitle={'What edition are you running?'}
+          title="Frame unavailable"
+          subtitle="What edition are you running?"
         />
       )
       frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
@@ -362,9 +364,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(QueriesFrame)
-)
+export default withBus(connect(mapStateToProps, null)(QueriesFrame))

@@ -25,22 +25,22 @@ const subtitle = 'Display a mini-deck'
 const category = 'browserUiCommands'
 const filter = ['play']
 const description = (
-  <React.Fragment>
+  <>
     <p>
       The <code>:play</code> command loads a mini-deck with either guide
       material or sample data.
     </p>
-    <table className='table-condensed table-help'>
+    <table className="table-condensed table-help">
       <tbody>
         <tr>
           <th>Usage:</th>
           <td>
-            <code>{`:play <guide | url>`}</code>
+            <code>{':play <guide | url>'}</code>
           </td>
         </tr>
       </tbody>
     </table>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content: null, description, filter }

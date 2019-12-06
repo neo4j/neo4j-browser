@@ -65,7 +65,7 @@ import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
 import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
 
 export class BrowserSync extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -76,7 +76,7 @@ export class BrowserSync extends Component {
     }
   }
 
-  logIn () {
+  logIn() {
     if (this.state.userConsented === true) {
       const { onSignIn } = this.props
       BrowserSyncAuthWindow(
@@ -89,7 +89,8 @@ export class BrowserSync extends Component {
       this.setState({ showConsentAlert: true })
     }
   }
-  signOutAndClearLocalStorage () {
+
+  signOutAndClearLocalStorage() {
     if (this.state.clearLocalRequested) {
       this.setState({
         clearLocalRequested: false,
@@ -100,19 +101,21 @@ export class BrowserSync extends Component {
       this.setState({ clearLocalRequested: true })
     }
   }
-  signOutFromSync () {
+
+  signOutFromSync() {
     this.props.onSignOut()
   }
-  render () {
+
+  render() {
     if (this.props.serviceStatus === PENDING) {
       return (
-        <Drawer id='sync-drawer'>
+        <Drawer id="sync-drawer">
           <DrawerHeader>Connecting sync service... </DrawerHeader>
         </Drawer>
       )
     } else if (this.props.connectionState === DISCONNECTED_STATE) {
       return (
-        <Drawer id='sync-drawer'>
+        <Drawer id="sync-drawer">
           <DrawerHeader>No database connection</DrawerHeader>
           <DrawerBody>
             You must first connect to a database to use Browser Sync.
@@ -121,7 +124,7 @@ export class BrowserSync extends Component {
       )
     } else if (!this.props.isAllowed) {
       return (
-        <Drawer id='sync-drawer'>
+        <Drawer id="sync-drawer">
           <DrawerHeader>Browser Sync is disabled</DrawerHeader>
           <DrawerBody>
             Browser Sync is disabled due to Neo4j server configuration. Raise
@@ -131,7 +134,7 @@ export class BrowserSync extends Component {
       )
     } else if (this.props.serviceStatus === DOWN) {
       return (
-        <Drawer id='sync-drawer'>
+        <Drawer id="sync-drawer">
           <DrawerHeader>Sync service is down</DrawerHeader>
         </Drawer>
       )
@@ -152,7 +155,7 @@ export class BrowserSync extends Component {
           <br />
           <SmallHeaderText>
             Synced{' '}
-            <TimeAgo date={new Date(this.props.lastSyncedAt)} minPeriod='5' />
+            <TimeAgo date={new Date(this.props.lastSyncedAt)} minPeriod="5" />
           </SmallHeaderText>
         </DrawerToppedHeader>
       )
@@ -197,14 +200,14 @@ export class BrowserSync extends Component {
                     : 'Clear local data'
                 }
                 onClick={() => this.signOutAndClearLocalStorage()}
-                icon={<BinIcon suppressIconStyles='true' />}
-                buttonType='drawer'
+                icon={<BinIcon suppressIconStyles="true" />}
+                buttonType="drawer"
               />
               <p>&nbsp;</p>
               <FormButton
-                label='Sign Out'
+                label="Sign Out"
                 onClick={() => this.signOutFromSync()}
-                buttonType='drawer'
+                buttonType="drawer"
               />
             </DrawerSectionBody>
           </DrawerSection>
@@ -246,11 +249,11 @@ export class BrowserSync extends Component {
             <DrawerSectionBody>
               <DrawerSection>{clearLocalDataContent}</DrawerSection>
               <FormButton
-                data-testid='clearLocalData'
-                label='Clear local data'
+                data-testid="clearLocalData"
+                label="Clear local data"
                 onClick={this.signOutAndClearLocalStorage.bind(this)}
-                icon={<BinIcon suppressIconStyles='true' />}
-                buttonType='drawer'
+                icon={<BinIcon suppressIconStyles="true" />}
+                buttonType="drawer"
               />
             </DrawerSectionBody>
           </DrawerSection>
@@ -259,7 +262,7 @@ export class BrowserSync extends Component {
     }
 
     return (
-      <Drawer id='sync-drawer'>
+      <Drawer id="sync-drawer">
         {headerContent}
         {offlineContent}
         {onlineContent}

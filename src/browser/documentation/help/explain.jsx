@@ -23,17 +23,17 @@ const title = 'EXPLAIN'
 const subtitle = 'Explain query execution'
 const category = 'executionPlans'
 const content = (
-  <React.Fragment>
+  <>
     <p>
       Prefix any query with the <code>EXPLAIN</code> keyword to have Neo4j
       return the execution plan it would use to execute the query. However, the
       query is not executed, and Neo4j will make no changes to the database.
     </p>
     <p>
-      See <a help-topic='query plan'>:help QUERY PLAN</a> for a guide to
+      See <a help-topic="query plan">:help QUERY PLAN</a> for a guide to
       understanding the query plan output.
     </p>
-    <table className='table-condensed table-help'>
+    <table className="table-condensed table-help">
       <tbody>
         {/* <tr>
           <th>Reference:</th>
@@ -42,15 +42,15 @@ const content = (
         <tr>
           <th>Related:</th>
           <td>
-            <a help-topic='profile'>:help PROFILE</a>{' '}
-            <a help-topic='query plan'>:help QUERY PLAN</a>{' '}
+            <a help-topic="profile">:help PROFILE</a>{' '}
+            <a help-topic="query plan">:help QUERY PLAN</a>{' '}
           </td>
         </tr>
       </tbody>
     </table>
-    <section className='example'>
+    <section className="example">
       <figure>
-        <pre className='code runnable standalone-example'>
+        <pre className="code runnable standalone-example">
           EXPLAIN MATCH (n:Person) RETURN n LIMIT 25
         </pre>
         <figcaption>
@@ -59,7 +59,7 @@ const content = (
         </figcaption>
       </figure>
     </section>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }
