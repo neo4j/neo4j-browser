@@ -10,7 +10,7 @@ exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
       title="Test.Error: Test error description"
     >
       <i
-        class="fa fa-exclamation-triangle IconContainer__I-sc-16whwc5-0 bXwiKG"
+        class="IconContainer__I-sc-16whwc5-0 bXwiKG fa fa-exclamation-triangle"
       />
        
       Test.Error: Test error description
@@ -61,7 +61,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
           class="styled__StyledLink-sc-1dtvgs1-8 fPQgTq"
         >
           <i
-            class="fa fa-play-circle-o IconContainer__I-sc-16whwc5-0 eTELIJ"
+            class="IconContainer__I-sc-16whwc5-0 eTELIJ fa fa-play-circle-o"
           />
            List available procedures
         </a>

@@ -11,7 +11,7 @@ exports[`LabelItems renders empty 1`] = `
       Node Labels
     </h5>
     <div
-      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs undefined"
     >
       <p>
         There are no labels in database
@@ -32,7 +32,7 @@ exports[`LabelItems renders labels 1`] = `
       Node Labels
     </h5>
     <div
-      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs undefined"
     >
       <div
         class="styled__chip-t72hk3-0 styled__StyledLabel-t72hk3-1 hThrTr"
@@ -68,7 +68,7 @@ exports[`PropertyItems renders empty 1`] = `
       Property Keys
     </h5>
     <div
-      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs undefined"
     >
       <p>
         There are no properties in database
@@ -89,7 +89,7 @@ exports[`PropertyItems renders properties 1`] = `
       Property Keys
     </h5>
     <div
-      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs undefined"
     >
       <div
         class="styled__chip-t72hk3-0 styled__StyledProperty-t72hk3-3 EbItw"
@@ -119,7 +119,7 @@ exports[`RelationshipItems renders empty 1`] = `
       Relationship Types
     </h5>
     <div
-      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs undefined"
     >
       <p>
         No relationships in database
@@ -140,7 +140,7 @@ exports[`RelationshipItems renders relationshipTypes 1`] = `
       Relationship Types
     </h5>
     <div
-      class="undefined Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs undefined"
     >
       <div
         class="styled__chip-t72hk3-0 styled__StyledRelationship-t72hk3-2 jIILpR"

@@ -23,7 +23,7 @@ const webpack = require('webpack')
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
@@ -88,13 +88,7 @@ module.exports = () => {
     plugins.push(new webpack.HotModuleReplacementPlugin())
   }
   if (helpers.isProduction) {
-    plugins.unshift(
-      new CleanWebpackPlugin([helpers.buildPath], {
-        root: helpers.projectPath,
-        verbose: false,
-        dry: false
-      })
-    )
+    plugins.unshift(new CleanWebpackPlugin())
   }
   return plugins
 }
