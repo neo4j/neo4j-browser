@@ -35,7 +35,7 @@ exports[`Settings renders with strange characters in display name 1`] = `
               åäö üüü
             </div>
             <input
-              class="testSetting styled__StyledSettingTextInput-xqaooh-2 coeKcS"
+              class="styled__StyledSettingTextInput-xqaooh-2 coeKcS testSetting"
               title=""
               value="true"
             />
