@@ -23,24 +23,24 @@ import styled from 'styled-components'
 export const ConsentCheckBox = props => {
   return (
     <StyledP>
-      <CheckBoxLabel htmlFor='syncConsentCheckbox'>
+      <CheckBoxLabel htmlFor="syncConsentCheckbox">
         <StyledCheckBox
           {...props}
-          type='checkbox'
-          id='syncConsentCheckbox'
-          value='first_checkbox'
+          type="checkbox"
+          id="syncConsentCheckbox"
+          value="first_checkbox"
         />
         &nbsp; By checking this box you are agreeing to the &nbsp;
         <StyledSimpleLink
-          href='http://neo4j.com/terms/neo4j-browser-sync/'
-          target='blank'
+          href="http://neo4j.com/terms/neo4j-browser-sync/"
+          target="blank"
         >
           Neo4j Browser Sync Terms of Use
         </StyledSimpleLink>
         &nbsp; and our &nbsp;
         <StyledSimpleLink
-          href='http://neo4j.com/privacy-policy/'
-          target='blank'
+          href="http://neo4j.com/privacy-policy/"
+          target="blank"
         >
           Privacy Policy
         </StyledSimpleLink>

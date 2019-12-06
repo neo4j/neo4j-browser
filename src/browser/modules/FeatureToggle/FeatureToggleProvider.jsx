@@ -14,7 +14,8 @@ class FeatureToggleProvider extends React.Component {
     }
     return !!this.props.features[featureName].on
   }
-  render () {
+
+  render() {
     return (
       <FeatureToggleContext.Provider value={this.showFeature}>
         {this.props.children}

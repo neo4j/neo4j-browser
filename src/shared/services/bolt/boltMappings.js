@@ -30,22 +30,22 @@ import {
 
 export const reservedTypePropertyName = 'transport-class'
 
-export function toObjects (records, converters) {
+export function toObjects(records, converters) {
   const recordValues = records.map(record => {
-    let out = []
+    const out = []
     record.forEach(val => out.push(itemIntToString(val, converters)))
     return out
   })
   return recordValues
 }
 
-export function recordsToTableArray (records, converters) {
+export function recordsToTableArray(records, converters) {
   const recordValues = toObjects(records, converters)
   const keys = records[0].keys
   return [[...keys], ...recordValues]
 }
 
-export function itemIntToString (item, converters) {
+export function itemIntToString(item, converters) {
   const res = stringModifier(item)
   if (res) return res
   if (converters.intChecker(item)) return converters.intConverter(item)
@@ -55,12 +55,12 @@ export function itemIntToString (item, converters) {
   if (typeof item === 'object') return objIntToString(item, converters)
 }
 
-export function arrayIntToString (arr, converters) {
+export function arrayIntToString(arr, converters) {
   return arr.map(item => itemIntToString(item, converters))
 }
 
-export function objIntToString (obj, converters) {
-  let entry = converters.objectConverter(obj, converters)
+export function objIntToString(obj, converters) {
+  const entry = converters.objectConverter(obj, converters)
   let newObj = null
   if (Array.isArray(entry)) {
     newObj = entry.map(item => itemIntToString(item, converters))
@@ -73,7 +73,7 @@ export function objIntToString (obj, converters) {
   return newObj
 }
 
-export function extractFromNeoObjects (obj, converters) {
+export function extractFromNeoObjects(obj, converters) {
   if (
     obj instanceof neo4j.types.Node ||
     obj instanceof neo4j.types.Relationship
@@ -91,7 +91,7 @@ const extractPathForRows = (path, converters) => {
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(function (segment) {
+  return segments.map(function(segment) {
     return [
       objIntToString(segment.start, converters),
       objIntToString(segment.relationship, converters),
@@ -100,7 +100,7 @@ const extractPathForRows = (path, converters) => {
   })
 }
 
-export function extractPlan (result, calculateTotalDbHits = false) {
+export function extractPlan(result, calculateTotalDbHits = false) {
   if (result.summary && (result.summary.plan || result.summary.profile)) {
     const rawPlan = result.summary.profile || result.summary.plan
     const boltPlanToRESTPlanShared = plan => {
@@ -115,7 +115,7 @@ export function extractPlan (result, calculateTotalDbHits = false) {
         }))
       }
     }
-    let obj = {
+    const obj = {
       ...transformPlanArguments(rawPlan.arguments),
       ...boltPlanToRESTPlanShared(rawPlan)
     }
@@ -140,7 +140,7 @@ const transformPlanArguments = args => {
   return res
 }
 
-const collectHits = function (operator) {
+const collectHits = function(operator) {
   let hits = operator.DbHits || 0
   if (operator.children) {
     hits = operator.children.reduce((acc, subOperator) => {
@@ -150,7 +150,7 @@ const collectHits = function (operator) {
   return hits
 }
 
-export function extractNodesAndRelationshipsFromRecords (
+export function extractNodesAndRelationshipsFromRecords(
   records,
   types = neo4j.types
 ) {
@@ -158,11 +158,11 @@ export function extractNodesAndRelationshipsFromRecords (
     return { nodes: [], relationships: [] }
   }
 
-  let keys = records[0].keys
+  const keys = records[0].keys
   let rawNodes = []
   let rawRels = []
   records.forEach(record => {
-    let graphItems = keys.map(key => record.get(key))
+    const graphItems = keys.map(key => record.get(key))
     rawNodes = [
       ...rawNodes,
       ...graphItems.filter(item => item instanceof types.Node)
@@ -171,7 +171,7 @@ export function extractNodesAndRelationshipsFromRecords (
       ...rawRels,
       ...graphItems.filter(item => item instanceof types.Relationship)
     ]
-    let paths = graphItems.filter(item => item instanceof types.Path)
+    const paths = graphItems.filter(item => item instanceof types.Path)
     paths.forEach(item =>
       extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types)
     )
@@ -179,7 +179,7 @@ export function extractNodesAndRelationshipsFromRecords (
   return { nodes: rawNodes, relationships: rawRels }
 }
 
-export function extractNodesAndRelationshipsFromRecordsForOldVis (
+export function extractNodesAndRelationshipsFromRecordsForOldVis(
   records,
   types,
   filterRels,
@@ -188,7 +188,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
-  let keys = records[0].keys
+  const keys = records[0].keys
   let rawNodes = []
   let rawRels = []
 
@@ -205,7 +205,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (
       ...rawRels,
       ...graphItems.filter(item => item instanceof types.Relationship)
     ]
-    let paths = graphItems.filter(item => item instanceof types.Path)
+    const paths = graphItems.filter(item => item instanceof types.Path)
     paths.forEach(item =>
       extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types)
     )
@@ -263,7 +263,7 @@ export const flattenArray = arr => {
 }
 
 const extractNodesAndRelationshipsFromPath = (item, rawNodes, rawRels) => {
-  let paths = Array.isArray(item) ? item : [item]
+  const paths = Array.isArray(item) ? item : [item]
   paths.forEach(path => {
     let segments = path.segments
     // Zero length path. No relationship, end === start
@@ -482,7 +482,7 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
     return tmp
   }
   if (typeof item === 'object') {
-    let typedObject = {}
+    const typedObject = {}
     item = escapeReservedProps(item, reservedTypePropertyName)
     Object.keys(item).forEach(key => {
       typedObject[key] = recursivelyTypeGraphItems(item[key], types)
@@ -492,9 +492,9 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
   return item
 }
 
-function copyAndType (any, types = neo4j.types) {
+function copyAndType(any, types = neo4j.types) {
   const keys = Object.keys(any)
-  let tmp = {}
+  const tmp = {}
   keys.forEach(key => (tmp[key] = recursivelyTypeGraphItems(any[key], types)))
   return tmp
 }

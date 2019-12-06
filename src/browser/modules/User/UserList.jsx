@@ -44,15 +44,16 @@ import FrameAside from '../Frame/FrameAside'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 
 export class UserList extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       userList: this.props.users || [],
       listRoles: this.props.roles || []
     }
   }
-  extractUserNameAndRolesFromBolt (result) {
-    let tableArray = bolt.recordsToTableArray(result.records)
+
+  extractUserNameAndRolesFromBolt(result) {
+    const tableArray = bolt.recordsToTableArray(result.records)
     tableArray.shift()
     return tableArray
   }
@@ -79,7 +80,7 @@ export class UserList extends Component {
     }
   }
 
-  getUserList () {
+  getUserList() {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -97,7 +98,8 @@ export class UserList extends Component {
       }
     )
   }
-  getRoles () {
+
+  getRoles() {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -106,8 +108,6 @@ export class UserList extends Component {
         useDb: this.props.useSystemDb
       },
       response => {
-        const flatten = arr =>
-          arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
         if (response.success) {
           this.setState({
             listRoles: map(response.result.records, record =>
@@ -119,7 +119,7 @@ export class UserList extends Component {
     )
   }
 
-  makeTable (data) {
+  makeTable(data) {
     const tableHeaderValues = {
       username: 'Username',
       roles: 'Add Role',
@@ -133,7 +133,7 @@ export class UserList extends Component {
     const items = data.map(row => {
       return (
         <UserInformation
-          className='user-information'
+          className="user-information"
           key={uuid.v4()}
           user={row}
           refresh={this.getUserList.bind(this)}
@@ -170,25 +170,26 @@ export class UserList extends Component {
     )
   }
 
-  openAddNewUserFrame () {
+  openAddNewUserFrame() {
     const action = executeCommand(':server user add')
     this.props.bus.send(action.type, action)
   }
 
-  componentWillMount () {
+  componentWillMount() {
     if (this.props.isEnterpriseEdition) {
       this.getUserList()
       this.getRoles()
     }
   }
-  render () {
+
+  render() {
     let aside = null
     let frameContents
     if (!this.props.isEnterpriseEdition) {
       aside = (
         <FrameAside
-          title={'Frame unavailable'}
-          subtitle={'What edition are you running?'}
+          title="Frame unavailable"
+          subtitle="What edition are you running?"
         />
       )
       frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
@@ -196,7 +197,7 @@ export class UserList extends Component {
       const renderedListOfUsers = this.state.userList
         ? this.makeTable(this.state.userList)
         : 'No users'
-      frameContents = <React.Fragment>{renderedListOfUsers}</React.Fragment>
+      frameContents = <>{renderedListOfUsers}</>
     }
     return (
       <FrameTemplate
@@ -217,9 +218,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(UserList)
-)
+export default withBus(connect(mapStateToProps, null)(UserList))

@@ -36,14 +36,14 @@ import {
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
 class ServerStatusFrame extends Component {
-  render () {
+  render() {
     const { frame, activeConnectionData, storeCredentials } = this.props
 
     return (
       <FrameTemplate
         header={frame}
         contents={
-          <React.Fragment>
+          <>
             <StyledConnectionAside>
               <span>
                 <H3>Connection status</H3>
@@ -76,7 +76,7 @@ class ServerStatusFrame extends Component {
                 </StyledConnectionBody>
               </Render>
             </StyledConnectionBodyContainer>
-          </React.Fragment>
+          </>
         }
       />
     )
@@ -91,7 +91,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(ServerStatusFrame)
+export default connect(mapStateToProps, null)(ServerStatusFrame)

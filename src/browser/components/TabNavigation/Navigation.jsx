@@ -38,17 +38,18 @@ const Opening = 'OPENING'
 
 class Navigation extends Component {
   state = {}
-  constructor (props) {
+  constructor(props) {
     super(props)
     this._onTransitionEnd = this.onTransitionEnd.bind(this)
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.setState({
       transitionState: Closed
     })
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.openDrawer !== this.props.openDrawer) {
       var newState = {}
       if (nextProps.openDrawer) {
@@ -72,7 +73,7 @@ class Navigation extends Component {
     }
   }
 
-  onTransitionEnd () {
+  onTransitionEnd() {
     if (this.transitionState === Closing) {
       this.setState({
         transitionState: Closed,
@@ -86,8 +87,8 @@ class Navigation extends Component {
     }
   }
 
-  render () {
-    let { onNavClick, topNavItems, bottomNavItems = [] } = this.props
+  render() {
+    const { onNavClick, topNavItems, bottomNavItems = [] } = this.props
 
     const buildNavList = (list, selected) => {
       return list.map((item, index) => {
@@ -109,10 +110,10 @@ class Navigation extends Component {
     }
     const getContentToShow = openDrawer => {
       if (openDrawer) {
-        let filteredList = topNavItems.concat(bottomNavItems).filter(item => {
+        const filteredList = topNavItems.concat(bottomNavItems).filter(item => {
           return item.name.toLowerCase() === openDrawer
         })
-        let TabContent = filteredList[0].content
+        const TabContent = filteredList[0].content
         return <TabContent />
       }
       return null

@@ -77,12 +77,14 @@ export class CypherFrame extends Component {
     frameHeight: 472,
     hasVis: false
   }
-  changeView (view) {
+
+  changeView(view) {
     this.setState({ openView: view })
     if (this.props.onRecentViewChanged) {
       this.props.onRecentViewChanged(view)
     }
   }
+
   onResize = (fullscreen, collapse, frameHeight) => {
     if (frameHeight) {
       this.setState({ fullscreen, collapse, frameHeight })
@@ -90,7 +92,8 @@ export class CypherFrame extends Component {
       this.setState({ fullscreen, collapse })
     }
   }
-  shouldComponentUpdate (props, state) {
+
+  shouldComponentUpdate(props, state) {
     return (
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
@@ -103,7 +106,8 @@ export class CypherFrame extends Component {
       this.state.hasVis !== state.hasVis
     )
   }
-  componentDidUpdate () {
+
+  componentDidUpdate() {
     // When going from REQUEST_STATUS_PENDING to some other status
     // we want to show an initial view.
     // This happens on first render of a response and on re-runs
@@ -118,16 +122,19 @@ export class CypherFrame extends Component {
       this.setState({ hasVis: false })
     }
   }
-  componentDidMount () {
+
+  componentDidMount() {
     const view = initialView(this.props, this.state)
     if (view) this.setState({ openView: view })
   }
+
   getRecords = () => {
     if (this.props.request.result && this.props.request.result.records) {
       return this.props.request.result.records
     }
     return []
   }
+
   sidebar = () => {
     return (
       <FrameSidebar>
@@ -143,7 +150,7 @@ export class CypherFrame extends Component {
         </Render>
         <Render if={!resultIsError(this.props.request)}>
           <CypherFrameButton
-            data-testid='cypherFrameSidebarTable'
+            data-testid="cypherFrameSidebarTable"
             selected={this.state.openView === viewTypes.TABLE}
             onClick={() => {
               this.changeView(viewTypes.TABLE)
@@ -159,7 +166,7 @@ export class CypherFrame extends Component {
           }
         >
           <CypherFrameButton
-            data-testid='cypherFrameSidebarAscii'
+            data-testid="cypherFrameSidebarAscii"
             selected={this.state.openView === viewTypes.TEXT}
             onClick={() => {
               this.changeView(viewTypes.TEXT)
@@ -209,7 +216,8 @@ export class CypherFrame extends Component {
       </FrameSidebar>
     )
   }
-  getSpinner () {
+
+  getSpinner() {
     return (
       <Centered>
         <SpinnerContainer>
@@ -218,10 +226,11 @@ export class CypherFrame extends Component {
       </Centered>
     )
   }
-  getFrameContents (request, result, query) {
+
+  getFrameContents(request, result, query) {
     return (
       <StyledFrameBody
-        data-testid='frame-loaded-contents'
+        data-testid="frame-loaded-contents"
         fullscreen={this.state.fullscreen}
         collapsed={this.state.collapse}
       >
@@ -300,7 +309,8 @@ export class CypherFrame extends Component {
       </StyledFrameBody>
     )
   }
-  getStatusbar (result) {
+
+  getStatusbar(result) {
     return (
       <StyledStatsBarContainer>
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
@@ -356,7 +366,8 @@ export class CypherFrame extends Component {
       </StyledStatsBarContainer>
     )
   }
-  render () {
+
+  render() {
     const { frame = {}, request = {} } = this.props
     const { cmd: query = '' } = frame
     const { result = {}, status: requestStatus } = request
@@ -378,7 +389,7 @@ export class CypherFrame extends Component {
     return (
       <FrameTemplate
         sidebar={requestStatus !== 'error' ? this.sidebar : null}
-        className='no-padding'
+        className="no-padding"
         header={frame}
         contents={frameContents}
         statusbar={statusBar}
@@ -416,7 +427,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CypherFrame)
+export default connect(mapStateToProps, mapDispatchToProps)(CypherFrame)

@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, beforeEach, afterEach, test, expect, jest */
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 

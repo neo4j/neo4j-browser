@@ -19,13 +19,13 @@
  */
 import { extractStatements } from 'cypher-codemirror'
 
-export function cleanCommand (cmd) {
+export function cleanCommand(cmd) {
   const noComments = stripCommandComments(cmd)
   const noEmptyLines = stripEmptyCommandLines(noComments)
   return noEmptyLines
 }
 
-export function stripEmptyCommandLines (str) {
+export function stripEmptyCommandLines(str) {
   const skipEmptyLines = e => !/^\s*$/.test(e)
   return str
     .split('\n')
@@ -33,16 +33,16 @@ export function stripEmptyCommandLines (str) {
     .join('\n')
 }
 
-export function stripCommandComments (str) {
+export function stripCommandComments(str) {
   return str.replace(/((^|\n)\/\/[^\n$]+\n?)/g, '')
 }
 
-export function splitStringOnFirst (str, delimiter) {
+export function splitStringOnFirst(str, delimiter) {
   const parts = str.split(delimiter)
   return [].concat(parts[0], parts.slice(1).join(delimiter))
 }
 
-export function splitStringOnLast (str, delimiter) {
+export function splitStringOnLast(str, delimiter) {
   const parts = str.split(delimiter)
   return [].concat(
     parts.slice(0, parts.length - 1).join(delimiter),
@@ -96,7 +96,7 @@ const snakeToCamel = str =>
   str.replace(/(-\w)/g, match => match[1].toUpperCase())
 const camelToSnake = (name, separator) => {
   return name
-    .replace(/([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g, function (_, $1, $2) {
+    .replace(/([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g, function(_, $1, $2) {
       return $1 + ($2 && (separator || '_') + $2)
     })
     .toLowerCase()
@@ -125,8 +125,8 @@ export const mapParamToCypherStatement = (key, param) => {
   const cleanKey = quotedKey
     ? '`' + quotedKey[1] + '`'
     : typeof key !== 'string'
-      ? '`' + key + '`'
-      : key
+    ? '`' + key + '`'
+    : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
   const matchParamFunction = param.toString().match(arrowFunctionRegex)

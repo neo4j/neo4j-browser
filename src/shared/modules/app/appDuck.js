@@ -38,7 +38,7 @@ export const hasDiscoveryEndpoint = state =>
 export const inWebEnv = state => getEnv(state) === WEB
 
 // Reducer
-export default function reducer (state = { hostedUrl: null }, action) {
+export default function reducer(state = { hostedUrl: null }, action) {
   switch (action.type) {
     case APP_START:
       return { ...state, hostedUrl: action.url, env: action.env }

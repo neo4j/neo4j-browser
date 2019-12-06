@@ -25,13 +25,13 @@ import Carousel from '../Carousel/Carousel'
 import Slide from '../Carousel/Slide'
 
 export default class Docs extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.ref = React.createRef()
     this.state = { slides: null, firstRender: true }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (!this.ref) return
     if (!this.ref.current) return
     const slides = this.ref.current.getElementsByTagName('slide')
@@ -46,7 +46,7 @@ export default class Docs extends Component {
     this.setState({ slides: reactSlides, firstRender: false })
   }
 
-  render () {
+  render() {
     const { content, html, withDirectives, hasCarouselComponent } = this.props
 
     if (hasCarouselComponent) {
@@ -60,7 +60,7 @@ export default class Docs extends Component {
       return <Carousel slides={ListOfSlides} withDirectives={withDirectives} />
     }
 
-    let slide = <Slide ref={this.ref} html={''} />
+    let slide = <Slide ref={this.ref} html="" />
     if (content) {
       slide = <Slide ref={this.ref} content={content} />
     } else if (html) {

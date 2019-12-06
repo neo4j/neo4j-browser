@@ -24,17 +24,20 @@ export default class Display extends PureComponent {
   state = {
     mounted: false
   }
-  componentDidMount () {
+
+  componentDidMount() {
     if (this.props.if) {
       this.setState({ mounted: true })
     }
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     if (this.state.mounted === false && props.if) {
       this.setState({ mounted: true })
     }
   }
-  render () {
+
+  render() {
     // If lazy, don't load anything until it's time
     if (!this.props.if && !this.state.mounted && this.props.lazy) {
       return null

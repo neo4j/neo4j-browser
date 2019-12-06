@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
-
 import reducer, { addToEventQueue } from './udcDuck'
 
 test("Doesn't break if there are no events in state", () => {

@@ -15,6 +15,6 @@
  *
  */
 
-export default function arrayHasItems (arr) {
+export default function arrayHasItems(arr) {
   return Array.isArray(arr) && arr.length > 0
 }

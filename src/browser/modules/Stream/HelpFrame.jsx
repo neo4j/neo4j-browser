@@ -41,7 +41,7 @@ const HelpFrame = ({ frame }) => {
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
-      const chapter = chapters[helpTopic] || chapters['unfound']
+      const chapter = chapters[helpTopic] || chapters.unfound
       const { title, subtitle } = chapter
       let { content } = chapter
 
@@ -57,7 +57,7 @@ const HelpFrame = ({ frame }) => {
   }
   return (
     <FrameTemplate
-      className='helpFrame help'
+      className="helpFrame help"
       header={frame}
       aside={aside}
       contents={<Directives content={ret} />}

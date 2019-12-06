@@ -91,14 +91,14 @@ const availableCommands = [
   {
     name: 'clear',
     match: cmd => cmd === 'clear',
-    exec: function (action, cmdchar, put) {
+    exec: function(action, cmdchar, put) {
       put(frames.clear())
     }
   },
   {
     name: 'noop',
     match: cmd => /^noop$/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -112,7 +112,7 @@ const availableCommands = [
   {
     name: 'config',
     match: cmd => /^config(\s|$)/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       handleUpdateConfigCommand(action, cmdchar, put, store)
         .then(res => {
           put(
@@ -131,7 +131,7 @@ const availableCommands = [
   {
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       return handleParamsCommand(
         action,
         cmdchar,
@@ -177,7 +177,7 @@ const availableCommands = [
   {
     name: 'params',
     match: cmd => /^params$/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -191,7 +191,7 @@ const availableCommands = [
   {
     name: 'use-db',
     match: cmd => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
-    exec: async function (action, cmdchar, put, store) {
+    exec: async function(action, cmdchar, put, store) {
       const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
       try {
         const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -244,7 +244,7 @@ const availableCommands = [
   {
     name: 'reset-db',
     match: cmd => new RegExp(`^${useDbCommand}$`).test(cmd),
-    exec: async function (action, cmdchar, put, store) {
+    exec: async function(action, cmdchar, put, store) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(useDb(null))
@@ -274,7 +274,7 @@ const availableCommands = [
   {
     name: 'dbs',
     match: cmd => new RegExp(`^${listDbsCommand}$`).test(cmd),
-    exec: async function (action, cmdchar, put, store) {
+    exec: async function(action, cmdchar, put, store) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(
@@ -303,7 +303,7 @@ const availableCommands = [
   {
     name: 'schema',
     match: cmd => /^schema$/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -317,7 +317,7 @@ const availableCommands = [
   {
     name: 'sysinfo',
     match: cmd => /^sysinfo$/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -339,11 +339,11 @@ const availableCommands = [
         shouldUseCypherThread(state),
         action.type === SINGLE_COMMAND_QUEUED
           ? getUserDirectTxMetadata({
-            hasServerSupport: canSendTxMetadata(store.getState())
-          })
+              hasServerSupport: canSendTxMetadata(store.getState())
+            })
           : getBackgroundTxMetadata({
-            hasServerSupport: canSendTxMetadata(store.getState())
-          })
+              hasServerSupport: canSendTxMetadata(store.getState())
+            })
       )
       put(cypher(action.cmd))
       put(
@@ -360,7 +360,7 @@ const availableCommands = [
           put(successfulCypher(action.cmd))
           return res
         })
-        .catch(function (e) {
+        .catch(function(e) {
           const request = getRequest(store.getState(), id)
           // Only update error statuses for pending queries
           if (request.status !== REQUEST_STATUS_PENDING) {
@@ -407,7 +407,7 @@ const availableCommands = [
   {
     name: 'play-remote',
     match: cmd => /^play(\s|$)https?/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       const url = action.cmd.substr(cmdchar.length + 'play '.length)
       const whitelist = getRemoteContentHostnameWhitelist(store.getState())
       fetchRemoteGuide(url, whitelist)
@@ -439,7 +439,7 @@ const availableCommands = [
   {
     name: 'play',
     match: cmd => /^play(\s|$)/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -452,7 +452,7 @@ const availableCommands = [
   {
     name: 'history',
     match: cmd => /^history(\s+clear)?/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       const match = action.cmd.match(/^:history(\s+clear)?/)
       if (match[0] !== match.input) {
         return put(
@@ -497,7 +497,7 @@ const availableCommands = [
   {
     name: 'help',
     match: cmd => /^(help|\?)(\s|$)/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -521,7 +521,9 @@ const availableCommands = [
           const isSameHostnameAsConnection = isLocalRequest(
             connectionData.host,
             r.url,
-            { hostnameOnly: true }
+            {
+              hostnameOnly: true
+            }
           )
           const url =
             !isValidURL(r.url) && connectionData.restApi
@@ -580,7 +582,7 @@ const availableCommands = [
   {
     name: 'style',
     match: cmd => /^style(\s|$)/.test(cmd),
-    exec: function (action, cmdchar, put, store) {
+    exec: function(action, cmdchar, put, store) {
       const match = action.cmd.match(/:style\s*(\S.*)$/)
       let param = match && match[1] ? match[1] : ''
 

@@ -33,23 +33,23 @@ process.stdin.on('readable', () => {
 })
 
 process.stdin.on('end', () => {
-  let packagesList = parseJson(data)
+  const packagesList = parseJson(data)
 
   process.stdout.write(packagesList)
   process.exit(1)
 })
 
-function buildDependencyObject (id, name, license) {
+function buildDependencyObject(id, name, license) {
   const tempObj = { '@': { id: '', name: '' }, license: '' }
-  tempObj['@']['id'] = id
-  tempObj['@']['name'] = name
-  tempObj['license'] = license
+  tempObj['@'].id = id
+  tempObj['@'].name = name
+  tempObj.license = license
 
   return tempObj
 }
 
-function parseJson (data) {
-  let parsedObj = JSON.parse(data).data.body
+function parseJson(data) {
+  const parsedObj = JSON.parse(data).data.body
 
   const resArr = [
     ...externalDependencies.map(dep =>
@@ -58,13 +58,13 @@ function parseJson (data) {
     ...parsedObj.map(dep => buildDependencyObject(dep[0], dep[0], dep[2]))
   ]
 
-  let res = {
+  const res = {
     'missing-artifacts': {
       artifact: resArr
     }
   }
 
-  let js2xmlparseOptions = {
+  const js2xmlparseOptions = {
     declaration: { include: false },
     format: { indent: '  ', doubleQuotes: true }
   }

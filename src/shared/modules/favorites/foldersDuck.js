@@ -61,7 +61,7 @@ export const syncFolders = folders => {
   return { type: SYNC_FOLDERS, folders }
 }
 
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_FOLDERS:
     case UPDATE_FOLDERS:
@@ -85,7 +85,7 @@ export const composeFoldersToSync = (store, syncValue) => {
     fold => !fold.isStatic
   )
 
-  let newFolders = [
+  const newFolders = [
     {
       client: getBrowserName(),
       data: stateFolders,

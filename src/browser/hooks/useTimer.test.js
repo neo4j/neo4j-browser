@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect, jest */
 import React from 'react'
 import { render, act } from '@testing-library/react'
 import useTimer from './useTimer'

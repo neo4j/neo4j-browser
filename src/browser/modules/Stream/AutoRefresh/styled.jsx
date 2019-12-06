@@ -56,7 +56,7 @@ export const AutoRefreshToggle = props => {
     <ToggleLabel>
       AUTO-REFRESH &nbsp;
       <input
-        type='checkbox'
+        type="checkbox"
         checked={props.checked}
         onChange={props.onChange}
         className={styles['toggle-check-input']}

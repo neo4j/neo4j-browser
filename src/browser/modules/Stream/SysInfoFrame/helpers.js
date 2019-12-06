@@ -24,7 +24,7 @@ import {
   flattenAttributes,
   mapSysInfoRecords
 } from './sysinfo-utils'
-import { toHumanReadableBytes } from 'services/utils'
+import { toHumanReadableBytes, toKeyString } from 'services/utils'
 import {
   SysInfoTableContainer,
   SysInfoTable,
@@ -114,21 +114,21 @@ export const Sysinfo = ({
 
   return (
     <SysInfoTableContainer>
-      <SysInfoTable key='StoreSize' header='Store Size' colspan='2'>
+      <SysInfoTable key="StoreSize" header="Store Size" colspan="2">
         {buildTableData(storeSizes)}
       </SysInfoTable>
-      <SysInfoTable key='IDAllocation' header='Id Allocation'>
+      <SysInfoTable key="IDAllocation" header="Id Allocation">
         {buildTableData(idAllocation)}
       </SysInfoTable>
-      <SysInfoTable key='PageCache' header='Page Cache'>
+      <SysInfoTable key="PageCache" header="Page Cache">
         {buildTableData(pageCache)}
       </SysInfoTable>
-      <SysInfoTable key='Transactionss' header='Transactions'>
+      <SysInfoTable key="Transactionss" header="Transactions">
         {buildTableData(transactions)}
       </SysInfoTable>
-      <SysInfoTable key='database-table' header='Databases' colspan='6'>
+      <SysInfoTable key="database-table" header="Databases" colspan="6">
         <SysInfoTableEntry
-          key='database-entry'
+          key="database-entry"
           headers={['Name', 'Address', 'Role', 'Status', 'Default', 'Error']}
         />
         {buildTableData(mappedDatabases)}
@@ -138,7 +138,7 @@ export const Sysinfo = ({
 }
 
 export const responseHandler = (setState, useDb) =>
-  function (res) {
+  function(res) {
     if (!res || !res.result || !res.result.records) {
       setState({ success: false })
       return null
@@ -209,7 +209,7 @@ export const responseHandler = (setState, useDb) =>
     ]
 
     // Transactions
-    const tx = flattenAttributes(intoGroups['Transactions'])
+    const tx = flattenAttributes(intoGroups.Transactions)
     const transactions = [
       {
         label: 'Last Tx Id',
@@ -234,7 +234,7 @@ export const responseHandler = (setState, useDb) =>
   }
 
 export const clusterResponseHandler = setState =>
-  function (res) {
+  function(res) {
     if (!res.success) {
       setState({ error: 'No causal cluster results', success: false })
       return
@@ -255,8 +255,15 @@ export const clusterResponseHandler = setState =>
       return [
         databases.join(', '),
         ccRecord.addresses.join(', '),
-        <Render if={httpUrlForMember.length !== 0}>
-          <a target='_blank' href={httpUrlForMember[0]}>
+        <Render
+          key={toKeyString(httpUrlForMember[0])}
+          if={httpUrlForMember.length !== 0}
+        >
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            href={httpUrlForMember[0]}
+          >
             Open
           </a>
         </Render>

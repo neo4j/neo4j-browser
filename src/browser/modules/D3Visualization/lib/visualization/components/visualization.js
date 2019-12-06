@@ -24,7 +24,7 @@ import * as vizRenderers from '../renders/init'
 import { menu as menuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 
-const vizFn = function (el, measureSize, graph, layout, style) {
+const vizFn = function(el, measureSize, graph, layout, style) {
   const viz = { style }
 
   const root = d3.select(el)
@@ -54,7 +54,7 @@ const vizFn = function (el, measureSize, graph, layout, style) {
   let updateViz = true
 
   // To be overridden
-  viz.trigger = function (event, ...args) {}
+  viz.trigger = function(event, ...args) {}
 
   const onNodeClick = node => {
     updateViz = false
@@ -79,7 +79,7 @@ const vizFn = function (el, measureSize, graph, layout, style) {
 
   let zoomLevel = null
 
-  const zoomed = function () {
+  const zoomed = function() {
     draw = true
     return container.attr(
       'transform',
@@ -96,10 +96,10 @@ const vizFn = function (el, measureSize, graph, layout, style) {
     d3
       .transition()
       .duration(500)
-      .tween('zoom', function () {
+      .tween('zoom', function() {
         const t = d3.interpolate(zoomBehavior.translate(), translate)
         const s = d3.interpolate(zoomBehavior.scale(), scale)
-        return function (a) {
+        return function(a) {
           zoomBehavior.scale(s(a)).translate(t(a))
           return zoomed()
         }
@@ -107,17 +107,17 @@ const vizFn = function (el, measureSize, graph, layout, style) {
 
   let isZoomingIn = true
 
-  viz.zoomInClick = function () {
+  viz.zoomInClick = function() {
     isZoomingIn = true
     return zoomClick(this)
   }
 
-  viz.zoomOutClick = function () {
+  viz.zoomOutClick = function() {
     isZoomingIn = false
     return zoomClick(this)
   }
 
-  var zoomClick = function (element) {
+  var zoomClick = function(element) {
     draw = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
@@ -142,7 +142,7 @@ const vizFn = function (el, measureSize, graph, layout, style) {
   }
   // Background click event
   // Check if panning is ongoing
-  rect.on('click', function () {
+  rect.on('click', function() {
     if (!draw) {
       return viz.trigger('canvasClicked', el)
     }
@@ -157,11 +157,11 @@ const vizFn = function (el, measureSize, graph, layout, style) {
     .on('wheel.zoom', null)
     .on('mousewheel.zoom', null)
 
-  const newStatsBucket = function () {
+  const newStatsBucket = function() {
     const bucket = {
       frameCount: 0,
       geometry: 0,
-      relationshipRenderers: (function () {
+      relationshipRenderers: (function() {
         const timings = {}
         vizRenderers.relationship.forEach(r => (timings[r.name] = 0))
         return timings
@@ -172,10 +172,10 @@ const vizFn = function (el, measureSize, graph, layout, style) {
       ((1000 * bucket.frameCount) / bucket.duration()).toFixed(1)
     bucket.lps = () =>
       ((1000 * bucket.layout.layoutSteps) / bucket.duration()).toFixed(1)
-    bucket.top = function () {
+    bucket.top = function() {
       let time
       const renderers = []
-      for (let name in bucket.relationshipRenderers) {
+      for (const name in bucket.relationshipRenderers) {
         time = bucket.relationshipRenderers[name]
         renderers.push({
           name,
@@ -207,7 +207,7 @@ const vizFn = function (el, measureSize, graph, layout, style) {
       ? () => window.performance.now()
       : () => Date.now()
 
-  const render = function () {
+  const render = function() {
     if (!currentStats.firstFrame) {
       currentStats.firstFrame = now()
     }
@@ -250,14 +250,14 @@ const vizFn = function (el, measureSize, graph, layout, style) {
     .on('dragstart.node', d => onNodeDragToggle(d))
     .on('dragend.node', () => onNodeDragToggle())
 
-  viz.collectStats = function () {
+  viz.collectStats = function() {
     const latestStats = currentStats
     latestStats.layout = force.collectStats()
     currentStats = newStatsBucket()
     return latestStats
   }
 
-  viz.update = function () {
+  viz.update = function() {
     if (!graph) {
       return
     }
@@ -335,7 +335,7 @@ const vizFn = function (el, measureSize, graph, layout, style) {
     return (updateViz = true)
   }
 
-  viz.resize = function () {
+  viz.resize = function() {
     const size = measureSize()
     return root.attr(
       'viewBox',

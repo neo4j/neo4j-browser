@@ -37,7 +37,7 @@ export const ErrorView = ({ frame }) => {
   if (!frame) return null
   const error = frame.error || false
   let errorContents = error.message || 'No error message found'
-  let errorCode = error.type || error.code || 'UndefinedError'
+  const errorCode = error.type || error.code || 'UndefinedError'
   if (!error.message && errorCode && typeof e[errorCode] !== 'undefined') {
     const eObj = createErrorObject(errorCode, error)
     errorContents = eObj.message
@@ -55,16 +55,15 @@ export const ErrorView = ({ frame }) => {
         </StyledDiv>
       </StyledHelpContent>
       {frame.showHelpForCmd ? (
-        <React.Fragment>
+        <>
           Use <AutoExecButton cmd={`help ${frame.showHelpForCmd}`} /> for more
           information.
-        </React.Fragment>
+        </>
       ) : null}
       {errorCode === UnknownCommandError.name ? (
-        <React.Fragment>
-          Use <AutoExecButton cmd={'help commands'} /> to list available
-          commands.
-        </React.Fragment>
+        <>
+          Use <AutoExecButton cmd="help commands" /> to list available commands.
+        </>
       ) : null}
     </StyledHelpFrame>
   )

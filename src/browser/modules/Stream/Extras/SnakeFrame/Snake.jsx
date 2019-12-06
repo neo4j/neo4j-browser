@@ -50,8 +50,9 @@ class SnakeFrame extends React.Component {
     this.props.height,
     this.props.gridSize
   )
+
   blockInput = false
-  componentDidMount () {
+  componentDidMount() {
     this.ctx = this.canvas.current.getContext('2d')
     this.canvas.current.addEventListener('keydown', ev => {
       const { key } = ev
@@ -79,7 +80,8 @@ class SnakeFrame extends React.Component {
     })
     this.updateCanvas()
   }
-  componentDidUpdate () {
+
+  componentDidUpdate() {
     if (this.gameState.play !== this.props.play) {
       this.gameState.play = this.props.play
       if (this.props.play) {
@@ -89,6 +91,7 @@ class SnakeFrame extends React.Component {
       }
     }
   }
+
   reset = () => {
     this.gameState = getInitialState(
       this.props.play,
@@ -97,6 +100,7 @@ class SnakeFrame extends React.Component {
       this.props.gridSize
     )
   }
+
   drawFood = () => {
     this.ctx.fillStyle = foodColor
     rect({
@@ -107,6 +111,7 @@ class SnakeFrame extends React.Component {
       height: this.gameState.snake.height
     })
   }
+
   drawSnake = () => {
     this.ctx.fillStyle = snakeColor
     const { snake } = this.gameState
@@ -120,6 +125,7 @@ class SnakeFrame extends React.Component {
       })
     })
   }
+
   drawWorld = () => {
     const { color, width, height } = this.gameState.world
     this.ctx.fillStyle = color
@@ -131,6 +137,7 @@ class SnakeFrame extends React.Component {
       height: height
     })
   }
+
   calcNextHeadPos = () => {
     let { x, y } = this.gameState.snake.body[0]
     if (this.gameState.snake.direction === UP) {
@@ -150,11 +157,13 @@ class SnakeFrame extends React.Component {
       return { x, y }
     }
   }
+
   growSnake = () => {
     this.gameState.snake.body.unshift(this.gameState.snake.body[0])
   }
+
   eatMaybe = () => {
-    let { x, y } = this.gameState.snake.body[0]
+    const { x, y } = this.gameState.snake.body[0]
     const { x: fx, y: fy } = this.gameState.food
     if (x === fx && y === fy) {
       newFood(this.gameState)
@@ -163,6 +172,7 @@ class SnakeFrame extends React.Component {
       this.setNewSpeed()
     }
   }
+
   setNewSpeed = () => {
     const speedLen =
       this.gameState.snake.body.length % 5
@@ -170,6 +180,7 @@ class SnakeFrame extends React.Component {
         : this.gameState.speed - 1
     this.gameState.speed = Math.max(speedLen, maxSpeed)
   }
+
   updateCanvas = () => {
     if (this.gameState.frame % this.gameState.speed) {
       this.tick()
@@ -206,16 +217,18 @@ class SnakeFrame extends React.Component {
     this.eatMaybe()
     this.tick()
   }
+
   tick = () => {
     this.gameState.frame++
     window.requestAnimationFrame(() => {
       this.updateCanvas()
     })
   }
-  render () {
+
+  render() {
     return (
       <SnakeCanvas
-        tabIndex='1'
+        tabIndex="1"
         ref={this.canvas}
         width={this.gameState.world.width}
         height={this.gameState.world.height}

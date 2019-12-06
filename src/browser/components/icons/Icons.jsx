@@ -189,39 +189,39 @@ export const SlideNextIcon = () => (
   <IconContainer icon={arrowRight1} width={20} />
 )
 export const TableIcon = () => (
-  <IconContainer icon={table01} text='Table' width={20} />
+  <IconContainer icon={table01} text="Table" width={20} />
 )
 export const VisualizationIcon = () => (
-  <IconContainer icon={neo4j} text='Graph' width={20} />
+  <IconContainer icon={neo4j} text="Graph" width={20} />
 )
 export const AsciiIcon = () => (
-  <IconContainer icon={Text201} text='Text' width={18} />
+  <IconContainer icon={Text201} text="Text" width={18} />
 )
 export const CodeIcon = () => (
-  <IconContainer icon={appWindowCode} text='Code' width={20} />
+  <IconContainer icon={appWindowCode} text="Code" width={20} />
 )
 export const PlanIcon = () => (
-  <IconContainer className='sl-hierarchy' text='Plan' />
+  <IconContainer className="sl-hierarchy" text="Plan" />
 )
 export const AlertIcon = () => (
-  <IconContainer className='sl-alert' text='Warn' />
+  <IconContainer className="sl-alert" text="Warn" />
 )
 export const ErrorIcon = () => (
-  <IconContainer className='fa fa-file-text-o' text='Error' />
+  <IconContainer className="fa fa-file-text-o" text="Error" />
 )
 
 export const ZoomInIcon = () => (
   <IconContainer
     activeStyle={inactive}
     inactiveStyle={inactive}
-    className='sl-zoom-in'
+    className="sl-zoom-in"
   />
 )
 export const ZoomOutIcon = () => (
   <IconContainer
     activeStyle={inactive}
     inactiveStyle={inactive}
-    className='sl-zoom-out'
+    className="sl-zoom-out"
   />
 )
 
@@ -230,7 +230,7 @@ export const BinIcon = props => (
     activeStyle={props.deleteAction ? warningRed : white}
     inactiveStyle={props.deleteAction ? warningRed : white}
     {...props}
-    className='sl-bin'
+    className="sl-bin"
   />
 )
 
@@ -240,91 +240,91 @@ export const RefreshIcon = () => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )
 export const CloseIcon = () => <IconContainer icon={close} width={12} />
-export const UpIcon = () => <IconContainer className='sl-chevron-up' />
-export const DownIcon = () => <IconContainer className='sl-chevron-down' />
-export const DoubleUpIcon = () => <IconContainer className='sl-double-up' />
-export const DoubleDownIcon = () => <IconContainer className='sl-double-down' />
+export const UpIcon = () => <IconContainer className="sl-chevron-up" />
+export const DownIcon = () => <IconContainer className="sl-chevron-down" />
+export const DoubleUpIcon = () => <IconContainer className="sl-double-up" />
+export const DoubleDownIcon = () => <IconContainer className="sl-double-down" />
 export const PinIcon = () => <IconContainer icon={pin} width={12} />
 export const MinusIcon = () => (
   <IconContainer
     activeStyle={blue}
     inactiveStyle={inactive}
-    className='sl-minus-circle'
+    className="sl-minus-circle"
   />
 )
 export const RightArrowIcon = () => (
   <IconContainer
     activeStyle={blue}
     inactiveStyle={inactive}
-    className='sl-arrow-circle-right'
+    className="sl-arrow-circle-right"
   />
 )
 export const CancelIcon = () => (
   <IconContainer
     activeStyle={blue}
     inactiveStyle={inactive}
-    className='sl-delete-circle'
+    className="sl-delete-circle"
   />
 )
 export const DownloadIcon = () => (
   <IconContainer icon={downloadBottom} width={12} />
 )
 export const ExpandMenuIcon = () => (
-  <IconContainer activeStyle={blue} className='fa fa-caret-left' />
+  <IconContainer activeStyle={blue} className="fa fa-caret-left" />
 )
 export const CollapseMenuIcon = () => (
-  <IconContainer activeStyle={blue} className='fa fa-caret-down' />
+  <IconContainer activeStyle={blue} className="fa fa-caret-down" />
 )
 export const PlayIcon = () => (
   <IconContainer
     activeStyle={lightBlue}
     inactiveStyle={blue}
-    className='fa fa-play-circle-o'
+    className="fa fa-play-circle-o"
   />
 )
 export const PlainPlayIcon = () => (
-  <IconContainer className='fa fa-play-circle' />
+  <IconContainer className="fa fa-play-circle" />
 )
 export const QuestionIcon = props => (
   <IconContainer
     activeStyle={lightBlue}
     inactiveStyle={blue}
     {...props}
-    className='fa fa-question-circle-o'
+    className="fa fa-question-circle-o"
   />
 )
 export const PlusIcon = () => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={white}
-    className='fa fa-plus'
+    className="fa fa-plus"
   />
 )
 export const EditIcon = () => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={white}
-    className='sl-pencil'
+    className="sl-pencil"
   />
 )
 export const Spinner = () => (
   <IconContainer
-    data-testid='spinner'
-    className='fa fa-spinner fa-spin fa-2x'
+    data-testid="spinner"
+    className="fa fa-spinner fa-spin fa-2x"
   />
 )
 export const SmallSpinner = () => (
-  <IconContainer className='fa fa-spinner fa-spin ' />
+  <IconContainer className="fa fa-spinner fa-spin " />
 )
-export const SquareIcon = () => <IconContainer className='fa fa-square-o' />
+export const SquareIcon = () => <IconContainer className="fa fa-square-o" />
 export const CheckedSquareIcon = () => (
-  <IconContainer className='fa fa-check-square-o' />
+  <IconContainer className="fa fa-check-square-o" />
 )
 
 export const ExclamationTriangleIcon = () => (
-  <IconContainer suppressIconStyles className='fa fa-exclamation-triangle' />
+  <IconContainer suppressIconStyles className="fa fa-exclamation-triangle" />
 )
 
 export const FireExtinguisherIcon = ({ title = 'Reset' }) => (
-  <IconContainer className='fa fa-fire-extinguisher' title={title} />
+  <IconContainer className="fa fa-fire-extinguisher" title={title} />
 )

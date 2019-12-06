@@ -23,8 +23,8 @@ const title = 'Query Plan'
 const subtitle = 'Understand what cypher is doing'
 const category = 'cypherQueries'
 const content = (
-  <React.Fragment>
-    <div className='details'>
+  <>
+    <div className="details">
       <p>
         Cypher breaks down the work of executing a query into small pieces
         called <em>operators</em>. Each operator is responsible for a small part
@@ -32,8 +32,8 @@ const content = (
         called a Query Plan.
       </p>
       <p>
-        When you use the <a help-topic='explain'>EXPLAIN</a> or{' '}
-        <a help-topic='profile'>PROFILE</a> commands, Neo4j Browser displays a
+        When you use the <a help-topic="explain">EXPLAIN</a> or{' '}
+        <a help-topic="profile">PROFILE</a> commands, Neo4j Browser displays a
         diagram of the Query Plan.
       </p>
       <p>
@@ -41,26 +41,26 @@ const content = (
         explain how to read the Query Plan diagram.
       </p>
     </div>
-    <div className='details'>
+    <div className="details">
       <img
-        src='./assets/images/query-plan.svg'
-        className='img-responsive pull-right'
+        src="./assets/images/query-plan.svg"
+        className="img-responsive pull-right"
       />
     </div>
-    <div className='details'>
+    <div className="details">
       <img
-        src='./assets/images/query-plan-operator-rows.svg'
-        className='img-responsive'
+        src="./assets/images/query-plan-operator-rows.svg"
+        className="img-responsive"
       />
     </div>
-    <div className='details'>
+    <div className="details">
       <h4>Operators</h4>
       <p>
         Each Operator is displayed as a rectangle with its name in the top-left
         corner. See the{' '}
         <a
-          target='_blank'
-          href='https://neo4j.com/docs/developer-manual/cypher/execution-plans/'
+          target="_blank"
+          href="https://neo4j.com/docs/developer-manual/cypher/execution-plans/"
         >
           operators manual page
         </a>{' '}
@@ -80,7 +80,7 @@ const content = (
       </p>
       <h4>Estimated rows</h4>
       <p>
-        When you use the <a help-topic='explain'>EXPLAIN</a> keyword, the query
+        When you use the <a help-topic="explain">EXPLAIN</a> keyword, the query
         is not actually executed; so it's not possible to show actual number of
         rows for each pipe. In this case, the Query Plan diagram shows{' '}
         <em>estimated rows</em> instead. These numbers are predicted based on
@@ -88,13 +88,13 @@ const content = (
         estimated rows to determine the optimal query plan.
       </p>
     </div>
-    <div className='details'>
+    <div className="details">
       <img
-        src='./assets/images/query-plan-operator-cost.svg'
-        className='img-responsive'
+        src="./assets/images/query-plan-operator-cost.svg"
+        className="img-responsive"
       />
     </div>
-    <div className='details'>
+    <div className="details">
       <h4>Database hits</h4>
       <p>
         Each operator will ask the Neo4j storage engine to do work such as
@@ -102,7 +102,7 @@ const content = (
         of this storage engine work.
       </p>
       <p>
-        When you use the <a help-topic='profile'>PROFILE</a>
+        When you use the <a help-topic="profile">PROFILE</a>
         command, the footer of the result frame displays the total number of
         database hits incurred while running the query. By comparing this total
         for different query plans, you can tell which one is better in terms of
@@ -117,13 +117,13 @@ const content = (
         operators that are responsible for significant storage engine work.
       </p>
     </div>
-    <div className='details'>
+    <div className="details">
       <img
-        src='./assets/images/query-plan-operator-details.svg'
-        className='img-responsive'
+        src="./assets/images/query-plan-operator-details.svg"
+        className="img-responsive"
       />
     </div>
-    <div className='details'>
+    <div className="details">
       <h4>Click to expand</h4>
       <p>
         Some operators can reveal more information about what they are doing. If
@@ -134,8 +134,8 @@ const content = (
       </p>
       <p>
         If you want to quickly expand all the operators, there are expand-all{' '}
-        <i className='fa fa-caret-square-o-down' /> and collapse-all{' '}
-        <i className='fa fa-caret-square-o-up' /> buttons below the diagram.
+        <i className="fa fa-caret-square-o-down" /> and collapse-all{' '}
+        <i className="fa fa-caret-square-o-up" /> buttons below the diagram.
       </p>
       <h4>Identifiers</h4>
       <p>
@@ -152,15 +152,15 @@ const content = (
         commonly a boolean expression such as <code>hasProp(born)</code> or it
         can be a graph pattern to be expanded such as <code>()-[r]-()</code>
       </p>
-      <table className='table-condensed table-help'>
+      <table className="table-condensed table-help">
         <tbody>
           <tr>
             <th>Reference:</th>
             <td>
               <code>
                 <a
-                  target='_blank'
-                  href='https://neo4j.com/docs/developer-manual/3.2/cypher/execution-plans/'
+                  target="_blank"
+                  href="https://neo4j.com/docs/developer-manual/3.2/cypher/execution-plans/"
                 >
                   Execution Plans
                 </a>
@@ -171,14 +171,14 @@ const content = (
           <tr>
             <th>Related:</th>
             <td>
-              <a help-topic='explain'>:help EXPLAIN</a>{' '}
-              <a help-topic='profile'>:help PROFILE</a>{' '}
+              <a help-topic="explain">:help EXPLAIN</a>{' '}
+              <a help-topic="profile">:help PROFILE</a>{' '}
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

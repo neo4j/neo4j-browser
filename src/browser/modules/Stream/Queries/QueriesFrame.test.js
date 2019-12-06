@@ -18,10 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, test, expect */
-
-/* eslint-disable standard/no-callback-literal */
-
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { createBus } from 'suber'
@@ -31,6 +27,7 @@ import {
   CONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
 
+// eslint-disable-next-line
 jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusbar }) => (
   <div>
     {contents}

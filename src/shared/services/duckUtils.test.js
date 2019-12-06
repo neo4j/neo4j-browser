@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global describe, test, expect */
+
 import { hydrate, dehydrate } from './duckUtils'
 
 describe('hydrate', () => {

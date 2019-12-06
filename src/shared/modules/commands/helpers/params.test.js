@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, test, expect */
-
 import * as params from './params'
 import { update, replace } from 'shared/modules/params/paramsDuck'
 

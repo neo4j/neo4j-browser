@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
-
 import { errorMessageFormater } from './errorMessageFormater'
 
 describe('errorsHelper', () => {

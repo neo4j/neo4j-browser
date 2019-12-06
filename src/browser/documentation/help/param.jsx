@@ -24,7 +24,7 @@ const title = 'Set a parameter'
 const subtitle = 'Set a parameter to be sent with queries.'
 const category = 'cypherQueries'
 const content = (
-  <React.Fragment>
+  <>
     <p>
       The
       <code>:param name => 'Stella'</code> command will define a parameter named
@@ -48,15 +48,15 @@ const content = (
       <code>MATCH (n:Person) WHERE n.name = $name</code>
     </p>
     <ParamsOnSystemDb />
-    <div className='links'>
-      <div className='link'>
-        <p className='title'>Related</p>
-        <p className='content'>
-          <a help-topic='params'>:help params</a>
+    <div className="links">
+      <div className="link">
+        <p className="title">Related</p>
+        <p className="content">
+          <a help-topic="params">:help params</a>
         </p>
       </div>
     </div>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

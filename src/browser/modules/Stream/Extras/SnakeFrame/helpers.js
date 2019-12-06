@@ -31,7 +31,7 @@ export const getInitialState = (
   height = 400,
   gridSize = 20
 ) => {
-  let state = {
+  const state = {
     play,
     world: {
       color: worldColor,
@@ -59,8 +59,8 @@ export const getInitialState = (
 
 export const newFood = state => {
   const size = state.snake.width
-  let foodX = Math.max(Math.random() * state.world.width - size, 0)
-  let foodY = Math.max(Math.random() * state.world.height - size, 0)
+  const foodX = Math.max(Math.random() * state.world.width - size, 0)
+  const foodY = Math.max(Math.random() * state.world.height - size, 0)
   state.food = {
     x: foodX - (foodX % size),
     y: foodY - (foodY % size)

@@ -27,17 +27,17 @@ const registry = 'https://registry.npmjs.org/'
 const packageName = '@neo4j/neo4j-browser-canary'
 const displayName = 'Neo4j Browser Canary'
 
-function failExit (msg) {
+function failExit(msg) {
   console.log('Error. ' + msg)
   process.exit(1)
 }
 
-function successExit () {
+function successExit() {
   console.log('Files updated successfully.\n')
   process.exit(0)
 }
 
-function changeJsonFileField (file, fields, vals) {
+function changeJsonFileField(file, fields, vals) {
   if (
     !Array.isArray(fields) ||
     !Array.isArray(vals) ||
@@ -57,7 +57,7 @@ function changeJsonFileField (file, fields, vals) {
   }
 }
 
-function setRegistries (registry) {
+function setRegistries(registry) {
   const yarnContents = 'registry "' + registry + '"\n'
   const npmContents = 'registry=' + registry + '\n' + 'tag-version-prefix=""\n'
   try {
@@ -68,7 +68,7 @@ function setRegistries (registry) {
   }
 }
 
-function main () {
+function main() {
   changeJsonFileField(packageJson, ['name'], [packageName])
   changeJsonFileField(
     manifestJson,

@@ -38,7 +38,7 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
       case 'link':
         return (
           <StyledHelpItem key={item.command}>
-            <StyledHelpLink href={item.command} target='_blank'>
+            <StyledHelpLink href={item.command} target="_blank">
               {item.name}
             </StyledHelpLink>
           </StyledHelpItem>
@@ -58,7 +58,7 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
     <DrawerSection>
       <DrawerSubHeader>{header}</DrawerSubHeader>
       <DrawerSectionBody>
-        <ul className='document'>{listOfItems}</ul>
+        <ul className="document">{listOfItems}</ul>
       </DrawerSectionBody>
     </DrawerSection>
   )
@@ -72,9 +72,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default withBus(
-  connect(
-    null,
-    mapDispatchToProps
-  )(DocumentItems)
-)
+export default withBus(connect(null, mapDispatchToProps)(DocumentItems))

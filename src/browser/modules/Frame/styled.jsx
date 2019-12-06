@@ -58,8 +58,8 @@ export const StyledFrameBody = styled.div`
     props.collapsed
       ? 0
       : props.fullscreen
-        ? '100%'
-        : dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'};
+      ? '100%'
+      : dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'};
   display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;

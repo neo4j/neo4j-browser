@@ -41,7 +41,7 @@ import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
  * @param     {Object[]}    favorites
  * @return    {string[]}
  */
-export function getFolderNamesFromFavorites (favorites) {
+export function getFolderNamesFromFavorites(favorites) {
   return compact(map(favorites, 'folderName'))
 }
 
@@ -51,7 +51,7 @@ export function getFolderNamesFromFavorites (favorites) {
  * @param     {Object[]}    allFolders
  * @return    {Object[]}
  */
-export function getMissingFoldersFromNames (folderNames, allFolders) {
+export function getMissingFoldersFromNames(folderNames, allFolders) {
   const existingNames = map(allFolders, 'name')
 
   return map(
@@ -69,7 +69,7 @@ export function getMissingFoldersFromNames (folderNames, allFolders) {
  * @param     {Object[]}    allFolders
  * @return    {Object[]}
  */
-export function createLoadFavoritesPayload (favoritesToAdd, allFolders) {
+export function createLoadFavoritesPayload(favoritesToAdd, allFolders) {
   const allFavoriteFolders = keyBy(allFolders, 'name')
 
   return map(favoritesToAdd, ({ id, contents, folderName }) =>
@@ -90,7 +90,7 @@ export function createLoadFavoritesPayload (favoritesToAdd, allFolders) {
  * @param     {File[]}                uploads uploaded .zip files
  * @return    {Promise<Object[]>}
  */
-export async function readZipFiles (uploads) {
+export async function readZipFiles(uploads) {
   const archives = await Promise.all(map(uploads, JSZip.loadAsync))
   const allFiles = flatMap(archives, ({ files }) => values(files))
   const onlyCypherFiles = filter(
@@ -111,7 +111,7 @@ export async function readZipFiles (uploads) {
  * @param     {File}        file
  * @return    {Function}            user scripts mapper
  */
-export function fileContentToFavoriteFactory (file) {
+export function fileContentToFavoriteFactory(file) {
   /**
    * Maps .zip archive file contents to a user script object
    * @param     {String}      contents    file contents

@@ -39,7 +39,7 @@ import {
   SIGNED_IN
 } from 'shared/modules/sync/syncDuck'
 
-const SyncReminderBanner = React.memo(function SyncReminderBanner ({
+const SyncReminderBanner = React.memo(function SyncReminderBanner({
   dbConnectionState,
   syncConsent,
   optOutSync,
@@ -57,7 +57,7 @@ const SyncReminderBanner = React.memo(function SyncReminderBanner ({
 
   return (
     <Render if={visible}>
-      <SyncDisconnectedBanner height='100px'>
+      <SyncDisconnectedBanner height="100px">
         <StyledSyncReminderSpan>
           To enjoy the full Neo4j Browser experience, we advise you to use
           <SyncSignInBarButton onClick={onGetstartedClicked}>
@@ -91,7 +91,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SyncReminderBanner)
+export default connect(mapStateToProps, mapDispatchToProps)(SyncReminderBanner)

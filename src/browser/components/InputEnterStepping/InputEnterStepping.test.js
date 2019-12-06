@@ -1,5 +1,3 @@
-/* global jest */
-
 import React from 'react'
 import { render, fireEvent, wait } from '@testing-library/react'
 
@@ -29,7 +27,7 @@ test('focuses correctly and submits on enter in last input', async () => {
       submitAction={myFn}
       render={({ getInputPropsForIndex, setRefForIndex }) => {
         return (
-          <React.Fragment>
+          <>
             <input
               {...getInputPropsForIndex(0, {
                 initialFocus: true,
@@ -43,7 +41,7 @@ test('focuses correctly and submits on enter in last input', async () => {
                 ref: ref => setRefForIndex(1, ref)
               })}
             />
-          </React.Fragment>
+          </>
         )
       }}
     />
@@ -91,7 +89,7 @@ test('submits on button click', async () => {
       submitAction={myFn}
       render={({ getInputPropsForIndex, getSubmitProps, setRefForIndex }) => {
         return (
-          <React.Fragment>
+          <>
             <input
               {...getInputPropsForIndex(0, {
                 defaultValue: 'first',
@@ -105,7 +103,7 @@ test('submits on button click', async () => {
               })}
             />
             <button {...getSubmitProps()}>Send</button>
-          </React.Fragment>
+          </>
         )
       }}
     />

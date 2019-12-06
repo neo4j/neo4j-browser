@@ -99,15 +99,15 @@ Cypress.Commands.add('executeCommand', query => {
 })
 Cypress.Commands.add('disableEditorAutocomplete', () => {
   cy.get(ClearEditorButton).click()
-  cy.executeCommand(`:config editorAutocomplete: false`)
+  cy.executeCommand(':config editorAutocomplete: false')
   cy.get(SubmitQueryButton).click()
-  cy.executeCommand(`:clear`)
+  cy.executeCommand(':clear')
 })
 Cypress.Commands.add('enableEditorAutocomplete', () => {
   cy.get(ClearEditorButton).click()
-  cy.executeCommand(`:config editorAutocomplete: true`)
+  cy.executeCommand(':config editorAutocomplete: true')
   cy.get(SubmitQueryButton).click()
-  cy.executeCommand(`:clear`)
+  cy.executeCommand(':clear')
 })
 Cypress.Commands.add('waitForCommandResult', () => {
   cy.get('[data-testid="frame-loaded-contents"]', { timeout: 40000 }).should(

@@ -41,7 +41,7 @@ export const DONE = `${NAME}/DONE`
 export const INJECTED_DISCOVERY = `${NAME}/INJECTED_DISCOVERY`
 
 // Reducer
-export default function reducer (state = initialState, action = {}) {
+export default function reducer(state = initialState, action = {}) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }

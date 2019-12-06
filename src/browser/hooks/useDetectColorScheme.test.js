@@ -3,8 +3,6 @@ import { render, act } from '@testing-library/react'
 import useDetectColorScheme, { colorSchemes } from './useDetectColorScheme'
 import { createMediaListenerMatch } from './testUtils'
 
-/* global jest */
-
 describe('useDetectColorScheme', () => {
   it('returns null if no window.matchMedia support', () => {
     window.matchMedia = undefined
@@ -16,9 +14,9 @@ describe('useDetectColorScheme', () => {
     }
 
     render(
-      <React.Fragment>
+      <>
         <Comp />
-      </React.Fragment>
+      </>
     )
 
     expect(scheme).toBe(null)
@@ -41,9 +39,9 @@ describe('useDetectColorScheme', () => {
     }
 
     render(
-      <React.Fragment>
+      <>
         <Comp />
-      </React.Fragment>
+      </>
     )
 
     act(() => listenerFn({ matches: false }))
@@ -70,9 +68,9 @@ describe('useDetectColorScheme', () => {
 
     // When
     render(
-      <React.Fragment>
+      <>
         <Comp />
-      </React.Fragment>
+      </>
     )
     act(() => listenerFn(createMediaListenerMatch(colorSchemes.DARK))) // Simulate media match event
 
@@ -99,9 +97,9 @@ describe('useDetectColorScheme', () => {
 
     // When
     render(
-      <React.Fragment>
+      <>
         <Comp />
-      </React.Fragment>
+      </>
     )
     act(() => listenerFn(createMediaListenerMatch(nonExistingTheme))) // Simulate media match event
 

@@ -24,7 +24,7 @@ import {
   mapLegacySysInfoRecords,
   buildTableData
 } from './sysinfo-utils'
-import { toHumanReadableBytes } from 'services/utils'
+import { toHumanReadableBytes, toKeyString } from 'services/utils'
 import arrayHasItems from 'shared/utils/array-has-items'
 import Render from 'browser-components/Render'
 import {
@@ -48,45 +48,45 @@ export const Sysinfo = ({
 }) => {
   return (
     <SysInfoTableContainer>
-      <SysInfoTable key='StoreSizes' header='Store Sizes'>
+      <SysInfoTable key="StoreSizes" header="Store Sizes">
         {buildTableData(storeSizes)}
       </SysInfoTable>
-      <SysInfoTable key='IDAllocation' header='ID Allocation'>
+      <SysInfoTable key="IDAllocation" header="ID Allocation">
         {buildTableData(idAllocation)}
       </SysInfoTable>
-      <SysInfoTable key='PageCache' header='Page Cache'>
+      <SysInfoTable key="PageCache" header="Page Cache">
         {buildTableData(pageCache)}
       </SysInfoTable>
-      <SysInfoTable key='Transactionss' header='Transactions'>
+      <SysInfoTable key="Transactionss" header="Transactions">
         {buildTableData(transactions)}
       </SysInfoTable>
       <Render if={isACausalCluster}>
         <SysInfoTable
-          key='cc-table'
+          key="cc-table"
           header={
-            <span data-testid='sysinfo-casual-cluster-members-title'>
+            <span data-testid="sysinfo-casual-cluster-members-title">
               Causal Cluster Members{' '}
-              <QuestionIcon title='Values shown in `:sysinfo` may differ between cluster members' />
+              <QuestionIcon title="Values shown in `:sysinfo` may differ between cluster members" />
             </span>
           }
-          colspan='5'
+          colspan="5"
         >
           <SysInfoTableEntry
-            key='cc-entry'
+            key="cc-entry"
             headers={['Roles', 'Addresses', 'Groups', 'Database', 'Actions']}
           />
           {buildTableData(cc)}
         </SysInfoTable>
       </Render>
       <Render if={arrayHasItems(ha)}>
-        <SysInfoTable key='ha-table' header='High Availability'>
+        <SysInfoTable key="ha-table" header="High Availability">
           {buildTableData(ha)}
         </SysInfoTable>
       </Render>
       <Render if={arrayHasItems(haInstances)}>
-        <SysInfoTable key='cluster-table' header='Cluster' colspan='4'>
+        <SysInfoTable key="cluster-table" header="Cluster" colspan="4">
           <SysInfoTableEntry
-            key='ha-entry'
+            key="ha-entry"
             headers={['Id', 'Alive', 'Available', 'Is Master']}
           />
           {buildTableData(haInstances)}
@@ -97,7 +97,7 @@ export const Sysinfo = ({
 }
 
 export const responseHandler = setState =>
-  function (res) {
+  function(res) {
     if (!res.success) {
       setState({ error: 'No results', success: false })
       return
@@ -189,24 +189,24 @@ export const responseHandler = setState =>
 
     const storeSizes = kernel.CountStoreSize
       ? [
-        {
-          label: 'Count Store',
-          value: toHumanReadableBytes(kernel.CountStoreSize)
-        },
-        {
-          label: 'Label Store',
-          value: toHumanReadableBytes(kernel.LabelStoreSize)
-        },
-        {
-          label: 'Index Store',
-          value: toHumanReadableBytes(kernel.IndexStoreSize)
-        },
-        {
-          label: 'Schema Store',
-          value: toHumanReadableBytes(kernel.SchemaStoreSize)
-        },
-        ...baseStoreSizes
-      ]
+          {
+            label: 'Count Store',
+            value: toHumanReadableBytes(kernel.CountStoreSize)
+          },
+          {
+            label: 'Label Store',
+            value: toHumanReadableBytes(kernel.LabelStoreSize)
+          },
+          {
+            label: 'Index Store',
+            value: toHumanReadableBytes(kernel.IndexStoreSize)
+          },
+          {
+            label: 'Schema Store',
+            value: toHumanReadableBytes(kernel.SchemaStoreSize)
+          },
+          ...baseStoreSizes
+        ]
       : [...baseStoreSizes]
 
     setState({
@@ -236,7 +236,7 @@ export const responseHandler = setState =>
   }
 
 export const clusterResponseHandler = setState =>
-  function (res) {
+  function(res) {
     if (!res.success) {
       setState({ error: 'No causal cluster results', success: false })
       return
@@ -256,8 +256,15 @@ export const clusterResponseHandler = setState =>
         ccRecord.addresses.join(', '),
         (ccRecord.groups || []).join(', '),
         ccRecord.database,
-        <Render if={httpUrlForMember.length !== 0}>
-          <a target='_blank' href={httpUrlForMember[0]}>
+        <Render
+          key={toKeyString(httpUrlForMember[0])}
+          if={httpUrlForMember.length !== 0}
+        >
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            href={httpUrlForMember[0]}
+          >
             Open
           </a>
         </Render>

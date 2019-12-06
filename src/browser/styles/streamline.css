@@ -1,19 +1,18 @@
 @charset "UTF-8";
 
 @font-face {
-  font-family: "streamline";
-  src:url("fonts/streamline.eot");
-  src:url("fonts/streamline.eot?#iefix") format("embedded-opentype"),
-    url("fonts/streamline.woff") format("woff"),
-    url("fonts/streamline.ttf") format("truetype"),
-    url("fonts/streamline.svg#streamline") format("svg");
+  font-family: 'streamline';
+  src: url('fonts/streamline.eot');
+  src: url('fonts/streamline.eot?#iefix') format('embedded-opentype'),
+    url('fonts/streamline.woff') format('woff'),
+    url('fonts/streamline.ttf') format('truetype'),
+    url('fonts/streamline.svg#streamline') format('svg');
   font-weight: normal;
   font-style: normal;
-
 }
 
 [data-icon]:before {
-  font-family: "streamline" !important;
+  font-family: 'streamline' !important;
   content: attr(data-icon);
   font-style: normal !important;
   font-weight: normal !important;
@@ -25,9 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-[class^="sl-"]:before,
-[class*=" sl-"]:before {
-  font-family: "streamline" !important;
+[class^='sl-']:before,
+[class*=' sl-']:before {
+  font-family: 'streamline' !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
@@ -39,302 +38,302 @@
 }
 
 .sl-star:before {
-  content: "\61";
+  content: '\61';
 }
 .sl-bubble-comment:before {
-  content: "\62";
+  content: '\62';
 }
 .sl-user-circle:before {
-  content: "\63";
+  content: '\63';
 }
 .sl-setting-gear:before {
-  content: "\64";
+  content: '\64';
 }
 .sl-book:before {
-  content: "\65";
+  content: '\65';
 }
 .sl-scale-reduce:before {
-  content: "\67";
+  content: '\67';
 }
 .sl-pin:before {
-  content: "\68";
+  content: '\68';
 }
 .sl-star-circle:before {
-  content: "\73";
+  content: '\73';
 }
 .sl-play:before {
-  content: "\77";
+  content: '\77';
 }
 .sl-cloud:before {
-  content: "\78";
+  content: '\78';
 }
 .sl-alert:before {
-  content: "\79";
+  content: '\79';
 }
 .sl-question-mark:before {
-  content: "\7a";
+  content: '\7a';
 }
 .sl-setting-adjustment:before {
-  content: "\41";
+  content: '\41';
 }
 .sl-palette:before {
-  content: "\42";
+  content: '\42';
 }
 .sl-business-chart:before {
-  content: "\43";
+  content: '\43';
 }
 .sl-scale-spread:before {
-  content: "\4f";
+  content: '\4f';
 }
 .sl-cloud-download:before {
-  content: "\50";
+  content: '\50';
 }
 .sl-cloud-upload:before {
-  content: "\51";
+  content: '\51';
 }
 .sl-database:before {
-  content: "\52";
+  content: '\52';
 }
 .sl-lock-unlock:before {
-  content: "\53";
+  content: '\53';
 }
 .sl-lock:before {
-  content: "\54";
+  content: '\54';
 }
 .sl-heart:before {
-  content: "\69";
+  content: '\69';
 }
 .sl-heart-circle:before {
-  content: "\6a";
+  content: '\6a';
 }
 .sl-address:before {
-  content: "\6b";
+  content: '\6b';
 }
 .sl-cloud-delete:before {
-  content: "\6d";
+  content: '\6d';
 }
 .sl-cloud-checked:before {
-  content: "\6e";
+  content: '\6e';
 }
 .sl-cloud-sync:before {
-  content: "\6f";
+  content: '\6f';
 }
 .sl-database-check:before {
-  content: "\70";
+  content: '\70';
 }
 .sl-database-delete:before {
-  content: "\71";
+  content: '\71';
 }
 .sl-window-code:before {
-  content: "\72";
+  content: '\72';
 }
 .sl-arrow-circle-left:before {
-  content: "\76";
+  content: '\76';
 }
 .sl-arrow-circle-right:before {
-  content: "\44";
+  content: '\44';
 }
 .sl-arrow-circle-up:before {
-  content: "\45";
+  content: '\45';
 }
 .sl-arrow-circle-down:before {
-  content: "\46";
+  content: '\46';
 }
 .sl-chevron-left:before {
-  content: "\47";
+  content: '\47';
 }
 .sl-chevron-right:before {
-  content: "\48";
+  content: '\48';
 }
 .sl-chevron-up:before {
-  content: "\4a";
+  content: '\4a';
 }
 .sl-chevron-down:before {
-  content: "\4b";
+  content: '\4b';
 }
 .sl-arrow-left:before {
-  content: "\4c";
+  content: '\4c';
 }
 .sl-arrow-right:before {
-  content: "\4d";
+  content: '\4d';
 }
 .sl-arrow-up:before {
-  content: "\4e";
+  content: '\4e';
 }
 .sl-arrow-down:before {
-  content: "\55";
+  content: '\55';
 }
 .sl-database-alert:before {
-  content: "\30";
+  content: '\30';
 }
 .sl-database-block:before {
-  content: "\31";
+  content: '\31';
 }
 .sl-database-lock:before {
-  content: "\32";
+  content: '\32';
 }
 .sl-database-sync:before {
-  content: "\33";
+  content: '\33';
 }
 .sl-database-setting:before {
-  content: "\34";
+  content: '\34';
 }
 .sl-database-edit:before {
-  content: "\35";
+  content: '\35';
 }
 .sl-database-minus:before {
-  content: "\36";
+  content: '\36';
 }
 .sl-database-plus:before {
-  content: "\37";
+  content: '\37';
 }
 .sl-upload-drive:before {
-  content: "\38";
+  content: '\38';
 }
 .sl-download-drive:before {
-  content: "\39";
+  content: '\39';
 }
 .sl-signal-camera:before {
-  content: "\21";
+  content: '\21';
 }
 .sl-user:before {
-  content: "\22";
+  content: '\22';
 }
 .sl-pencil:before {
-  content: "\23";
+  content: '\23';
 }
 .sl-bin:before {
-  content: "\24";
+  content: '\24';
 }
 .sl-pencil-circle:before {
-  content: "\25";
+  content: '\25';
 }
 .sl-zoom-in:before {
-  content: "\26";
+  content: '\26';
 }
 .sl-zoom-out:before {
-  content: "\27";
+  content: '\27';
 }
 .sl-upload-arrow:before {
-  content: "\28";
+  content: '\28';
 }
 .sl-download-arrow:before {
-  content: "\29";
+  content: '\29';
 }
 .sl-keyhole:before {
-  content: "\2a";
+  content: '\2a';
 }
 .sl-link:before {
-  content: "\2b";
+  content: '\2b';
 }
 .sl-link-broken:before {
-  content: "\2c";
+  content: '\2c';
 }
 .sl-show:before {
-  content: "\2d";
+  content: '\2d';
 }
 .sl-hide:before {
-  content: "\2e";
+  content: '\2e';
 }
 .sl-folder:before {
-  content: "\3d";
+  content: '\3d';
 }
 .sl-duplicate:before {
-  content: "\6c";
+  content: '\6c';
 }
 .sl-mail:before {
-  content: "\2f";
+  content: '\2f';
 }
 .sl-delete:before {
-  content: "\49";
+  content: '\49';
 }
 .sl-double-down:before {
-  content: "\3f";
+  content: '\3f';
 }
 .sl-double-up:before {
-  content: "\40";
+  content: '\40';
 }
 .sl-triangle-down:before {
-  content: "\56";
+  content: '\56';
 }
 .sl-triangle-up:before {
-  content: "\59";
+  content: '\59';
 }
 .sl-unfold:before {
-  content: "\5a";
+  content: '\5a';
 }
 .sl-chat-bubble:before {
-  content: "\3e";
+  content: '\3e';
 }
 .sl-minus-circle:before {
-  content: "\5b";
+  content: '\5b';
 }
 .sl-add-circle:before {
-  content: "\5d";
+  content: '\5d';
 }
 .sl-delete-circle:before {
-  content: "\5e";
+  content: '\5e';
 }
 .sl-house:before {
-  content: "\5f";
+  content: '\5f';
 }
 .sl-marker:before {
-  content: "\60";
+  content: '\60';
 }
 .sl-arrange:before {
-  content: "\7b";
+  content: '\7b';
 }
 .sl-bubble-conversation:before {
-  content: "\5c";
+  content: '\5c';
 }
 .sl-pulse-graph:before {
-  content: "\e000";
+  content: '\e000';
 }
 .sl-pencil-filled:before {
-  content: "\74";
+  content: '\74';
 }
 .sl-keyhole-filled:before {
-  content: "\57";
+  content: '\57';
 }
 .sl-star-filled:before {
-  content: "\58";
+  content: '\58';
 }
 .sl-heart-filled:before {
-  content: "\3c";
+  content: '\3c';
 }
 .sl-play-filled:before {
-  content: "\e002";
+  content: '\e002';
 }
 .sl-add-filled:before {
-  content: "\e003";
+  content: '\e003';
 }
 .sl-minus-filled:before {
-  content: "\e004";
+  content: '\e004';
 }
 .sl-delete-filled:before {
-  content: "\e005";
+  content: '\e005';
 }
 .sl-thumbnails:before {
-  content: "\3b";
+  content: '\3b';
 }
 .sl-arrow-undo:before {
-  content: "\66";
+  content: '\66';
 }
 .sl-network:before {
-  content: "\75";
+  content: '\75';
 }
 .sl-tag:before {
-  content: "\3a";
+  content: '\3a';
 }
 .sl-arrow-up-right:before {
-  content: "\7d";
+  content: '\7d';
 }
 .sl-network-trio:before {
-  content: "\7e";
+  content: '\7e';
 }
 .sl-loop:before {
-  content: "\7c";
+  content: '\7c';
 }
 .sl-hierarchy:before {
-  content: "\e001";
+  content: '\e001';
 }

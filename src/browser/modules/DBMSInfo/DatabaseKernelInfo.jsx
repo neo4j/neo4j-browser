@@ -58,7 +58,7 @@ export const DatabaseKernelInfo = ({
   databases
 }) => {
   return (
-    <DrawerSection className='database-kernel-info'>
+    <DrawerSection className="database-kernel-info">
       <DrawerSubHeader>DBMS</DrawerSubHeader>
       <DrawerSectionBody>
         <StyledTable>
@@ -142,8 +142,5 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(DatabaseKernelInfo)
+  connect(mapStateToProps, mapDispatchToProps)(DatabaseKernelInfo)
 )

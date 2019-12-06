@@ -59,7 +59,7 @@ export const SYSTEM_DB = 'system'
 /**
  * Selectors
  */
-export function getMetaInContext (state, context) {
+export function getMetaInContext(state, context) {
   const inCurrentContext = e => e.context === context
 
   const labels = state.labels.filter(inCurrentContext)
@@ -110,7 +110,7 @@ export const getActiveDbName = state =>
  * Helpers
  */
 
-function updateMetaForContext (state, meta, context) {
+function updateMetaForContext(state, meta, context) {
   if (!meta || !meta.records || !meta.records.length) {
     return {
       labels: initialState.labels,
@@ -201,7 +201,7 @@ const initialState = {
 /**
  * Reducer
  */
-export default function meta (state = initialState, action) {
+export default function meta(state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }
@@ -235,19 +235,19 @@ export default function meta (state = initialState, action) {
 }
 
 // Actions
-export function updateMeta (meta, context) {
+export function updateMeta(meta, context) {
   return {
     type: UPDATE_META,
     meta,
     context
   }
 }
-export function fetchMetaData () {
+export function fetchMetaData() {
   return {
     type: FORCE_FETCH
   }
 }
-export function fetchServerInfo () {
+export function fetchServerInfo() {
   return {
     type: FETCH_SERVER_INFO
   }

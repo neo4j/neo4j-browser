@@ -35,16 +35,18 @@ import Ellipsis from 'browser-components/Ellipsis'
 import queryPlan from '../../D3Visualization/lib/visualization/components/queryPlan'
 
 export class PlanView extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       extractedPlan: null
     }
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.extractPlan(this.props.result).catch(e => {})
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     if (props.updated !== this.props.updated) {
       return this.extractPlan(props.result || {})
         .then(() => {
@@ -57,7 +59,8 @@ export class PlanView extends Component {
     this.ensureToggleExpand(props)
     props.assignVisElement && props.assignVisElement(this.el, this.plan)
   }
-  shouldComponentUpdate (props, state) {
+
+  shouldComponentUpdate(props, state) {
     if (this.props.result === undefined) return true
     return (
       !deepEquals(props.result.summary, this.props.result.summary) ||
@@ -65,7 +68,8 @@ export class PlanView extends Component {
       props._planExpand !== this.props._planExpand
     )
   }
-  extractPlan (result) {
+
+  extractPlan(result) {
     if (result === undefined) return Promise.reject(new Error('No result'))
     return new Promise((resolve, reject) => {
       const extractedPlan = bolt.extractPlan(result)
@@ -73,7 +77,8 @@ export class PlanView extends Component {
       resolve()
     })
   }
-  planInit (el) {
+
+  planInit(el) {
     if (el != null && !this.plan) {
       const NeoConstructor = queryPlan
       this.el = el
@@ -87,7 +92,8 @@ export class PlanView extends Component {
         this.props.assignVisElement(this.el, this.plan)
     }
   }
-  ensureToggleExpand (props) {
+
+  ensureToggleExpand(props) {
     if (props._planExpand && props._planExpand !== this.props._planExpand) {
       switch (props._planExpand) {
         case 'COLLAPSE': {
@@ -101,7 +107,8 @@ export class PlanView extends Component {
       }
     }
   }
-  toggleExpanded (expanded) {
+
+  toggleExpanded(expanded) {
     const visit = operator => {
       operator.expanded = expanded
       if (operator.children) {
@@ -110,15 +117,16 @@ export class PlanView extends Component {
         })
       }
     }
-    let tmpPlan = { ...this.state.extractedPlan }
+    const tmpPlan = { ...this.state.extractedPlan }
     visit(tmpPlan.root)
     this.plan.display(tmpPlan)
   }
-  render () {
+
+  render() {
     if (!this.state.extractedPlan) return null
     return (
       <PlanSVG
-        data-testid='planSvg'
+        data-testid="planSvg"
         style={
           this.props.fullscreen
             ? { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
@@ -134,12 +142,14 @@ export class PlanStatusbar extends Component {
   state = {
     extractedPlan: null
   }
-  componentDidMount () {
+
+  componentDidMount() {
     if (this.props === undefined || this.props.result === undefined) return
     const extractedPlan = bolt.extractPlan(this.props.result, true)
     if (extractedPlan) this.setState({ extractedPlan })
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     if (props.result === undefined) return
     if (
       this.props.result === undefined ||
@@ -149,11 +159,13 @@ export class PlanStatusbar extends Component {
       this.setState({ extractedPlan })
     }
   }
-  shouldComponentUpdate (props, state) {
+
+  shouldComponentUpdate(props, state) {
     if (this.props.result === undefined) return true
     return !deepEquals(state, this.state)
   }
-  render () {
+
+  render() {
     const plan = this.state.extractedPlan
     if (!plan) return null
     const { result = {} } = this.props
@@ -165,17 +177,17 @@ export class PlanStatusbar extends Component {
             runtime: {plan.root.runtime}.
             {plan.root.totalDbHits
               ? ` ${
-                plan.root.totalDbHits
-              } total db hits in ${result.summary.resultAvailableAfter
-                .add(result.summary.resultConsumedAfter)
-                .toNumber() || 0} ms.`
-              : ``}
+                  plan.root.totalDbHits
+                } total db hits in ${result.summary.resultAvailableAfter
+                  .add(result.summary.resultConsumedAfter)
+                  .toNumber() || 0} ms.`
+              : ''}
           </Ellipsis>
         </StyledLeftPartial>
         <StyledRightPartial>
           <StyledFrameTitlebarButtonSection>
             <FrameButton
-              data-testid='planCollapseButton'
+              data-testid="planCollapseButton"
               onClick={() =>
                 this.props.setParentState({ _planExpand: 'COLLAPSE' })
               }
@@ -183,7 +195,7 @@ export class PlanStatusbar extends Component {
               <DoubleUpIcon />
             </FrameButton>
             <FrameButton
-              data-testid='planExpandButton'
+              data-testid="planExpandButton"
               onClick={() =>
                 this.props.setParentState({ _planExpand: 'EXPAND' })
               }

@@ -22,7 +22,7 @@ const fs = require('fs')
 const path = require('path')
 const ncp = require('ncp').ncp
 
-function mkPath (dirPath) {
+function mkPath(dirPath) {
   if (!fs.existsSync(dirPath)) {
     try {
       fs.mkdirSync(dirPath)

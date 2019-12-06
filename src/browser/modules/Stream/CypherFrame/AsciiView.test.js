@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, test, expect */
 import React from 'react'
 import { render } from '@testing-library/react'
 import neo4j from 'neo4j-driver'

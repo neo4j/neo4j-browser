@@ -44,15 +44,18 @@ export class AsciiView extends Component {
     serializedRows: [],
     bodyMessage: ''
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.makeState(this.props)
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     if (!this.equalProps(props)) {
       this.makeState(props)
     }
   }
-  equalProps (props) {
+
+  equalProps(props) {
     if (
       this.props !== undefined &&
       this.props.result !== undefined &&
@@ -65,10 +68,11 @@ export class AsciiView extends Component {
     return false
   }
 
-  shouldComponentUpdate (props, state) {
+  shouldComponentUpdate(props, state) {
     return !this.equalProps(props) || !shallowEquals(state, this.state)
   }
-  makeState (props) {
+
+  makeState(props) {
     const { result, maxRows } = props
     const { bodyMessage = null } =
       getBodyAndStatusBarMessages(result, maxRows) || {}
@@ -86,7 +90,8 @@ export class AsciiView extends Component {
     this.props.setParentState &&
       this.props.setParentState({ _asciiMaxColWidth: maxColWidth })
   }
-  render () {
+
+  render() {
     const { _asciiSetColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
     let contents = <StyledBodyMessage>{bodyMessage}</StyledBodyMessage>
@@ -112,16 +117,19 @@ export class AsciiStatusbar extends Component {
     maxColWidth: 70,
     statusBarMessage: ''
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     this.makeState(props)
   }
-  makeState (props) {
+
+  makeState(props) {
     this.setMaxSliderWidth(props._asciiMaxColWidth)
     const { statusBarMessage = null } =
       getBodyAndStatusBarMessages(props.result, props.maxRows) || {}
     this.setState({ statusBarMessage })
   }
-  shouldComponentUpdate (props, state) {
+
+  shouldComponentUpdate(props, state) {
     return (
       state.maxColWidth !== this.state.maxColWidth ||
       state.maxSliderWidth !== this.state.maxSliderWidth ||
@@ -130,18 +138,22 @@ export class AsciiStatusbar extends Component {
       props._asciiSetColWidth !== this.props._asciiSetColWidth
     )
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.makeState(this.props)
   }
+
   setColWidthChanged = w => {
     const value = w.target.value
     this.setState({ maxColWidth: value })
     this.props.setParentState({ _asciiSetColWidth: value })
   }
-  setMaxSliderWidth (w) {
+
+  setMaxSliderWidth(w) {
     this.setState({ maxSliderWidth: w || this.state.minSliderWidth })
   }
-  render () {
+
+  render() {
     const hasRecords =
       this.props.result.records && this.props.result.records.length
     const { maxColWidth, maxSliderWidth } = this.state
@@ -157,7 +169,7 @@ export class AsciiStatusbar extends Component {
               <StyledWidthSlider
                 value={maxColWidth}
                 onChange={this.setColWidthChanged}
-                type='range'
+                type="range"
                 min={this.state.minSliderWidth}
                 max={maxSliderWidth}
               />

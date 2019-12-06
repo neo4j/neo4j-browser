@@ -79,13 +79,13 @@ const buildData = entries => {
   return entries.map(entry => {
     if (entry !== null) {
       return (
-        <StyledTd className='table-properties' key={v4()}>
+        <StyledTd className="table-properties" key={v4()}>
           {renderCell(entry)}
         </StyledTd>
       )
     }
     return (
-      <StyledTd className='table-properties' key={v4()}>
+      <StyledTd className="table-properties" key={v4()}>
         null
       </StyledTd>
     )
@@ -93,7 +93,7 @@ const buildData = entries => {
 }
 const buildRow = item => {
   return (
-    <StyledBodyTr className='table-row' key={v4()}>
+    <StyledBodyTr className="table-row" key={v4()}>
       {buildData(item)}
     </StyledBodyTr>
   )
@@ -105,10 +105,12 @@ export class TableView extends Component {
     data: [],
     bodyMessage: ''
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.makeState(this.props)
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     if (
       this.props === undefined ||
       this.props.result === undefined ||
@@ -117,12 +119,14 @@ export class TableView extends Component {
       this.makeState(props)
     }
   }
-  shouldComponentUpdate (props, state) {
+
+  shouldComponentUpdate(props, state) {
     return (
       this.props.updated !== props.updated || !shallowEquals(state, this.state)
     )
   }
-  makeState (props) {
+
+  makeState(props) {
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
     const table = transformResultRecordsToResultArray(records) || []
     const data = table ? table.slice() : []
@@ -133,7 +137,8 @@ export class TableView extends Component {
     )
     this.setState({ data, columns, bodyMessage })
   }
-  render () {
+
+  render() {
     if (!this.state.columns.length) {
       return (
         <PaddedTableViewDiv>
@@ -142,7 +147,7 @@ export class TableView extends Component {
       )
     }
     const tableHeader = this.state.columns.map((column, i) => (
-      <StyledTh className='table-header' key={i}>
+      <StyledTh className="table-header" key={i}>
         {column}
       </StyledTh>
     ))
@@ -166,24 +171,29 @@ export class TableStatusbar extends Component {
   state = {
     statusBarMessage: ''
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.makeState(this.props)
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     this.makeState(props)
   }
-  shouldComponentUpdate (props, state) {
+
+  shouldComponentUpdate(props, state) {
     if (!shallowEquals(state, this.state)) return true
     return false
   }
-  makeState (props) {
+
+  makeState(props) {
     const { statusBarMessage } = getBodyAndStatusBarMessages(
       props.result,
       props.maxRows
     )
     if (statusBarMessage !== undefined) this.setState({ statusBarMessage })
   }
-  render () {
+
+  render() {
     return (
       <StyledStatsBar>
         <Ellipsis>{this.state.statusBarMessage}</Ellipsis>

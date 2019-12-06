@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
 import uuid from 'uuid'
 import reducer, * as favorites from './favoritesDuck'
 

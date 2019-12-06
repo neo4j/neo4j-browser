@@ -51,7 +51,7 @@ export const ServerSwitchFrame = props => {
   const { frame, activeConnectionData: dynamicConnectionData = {} } = props
   const { activeConnectionData, storeCredentials } = frame
   return (
-    <React.Fragment>
+    <>
       <StyledConnectionAside>
         <span>
           <Render if={connectionFailed(frame)}>
@@ -113,12 +113,12 @@ export const ServerSwitchFrame = props => {
               host={activeConnectionData && activeConnectionData.host}
               showHost
               hideStoreCredentials
-              additionalFooter='You have a working connection with the Neo4j database and server auth is disabled.'
+              additionalFooter="You have a working connection with the Neo4j database and server auth is disabled."
             />
           </div>
         </Render>
       </StyledConnectionBodyContainer>
-    </React.Fragment>
+    </>
   )
 }
 

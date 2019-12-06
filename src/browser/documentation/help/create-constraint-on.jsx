@@ -24,7 +24,7 @@ const subtitle =
   'Create a property constraint on a node label or relationship type'
 const category = 'schemaClauses'
 const content = (
-  <React.Fragment>
+  <>
     <p>
       The <code>CREATE CONSTRAINT ON</code> clause will create a property
       constraint on all nodes/relationships that have the specified label/type.
@@ -33,7 +33,7 @@ const content = (
       The <code>IS UNIQUE</code> property constraint will create an accompanying
       index.
     </p>
-    <table className='table-condensed table-help'>
+    <table className="table-condensed table-help">
       <tbody>
         {/* <tr>
         <th>Reference:</th>
@@ -42,16 +42,16 @@ const content = (
         <tr>
           <th>Related:</th>
           <td>
-            <a help-topic='drop-constraint-on'>:help DROP CONSTRAINT ON</a>{' '}
-            <a help-topic='schema'>:help Schema</a>{' '}
-            <a help-topic='cypher'>:help Cypher</a>
+            <a help-topic="drop-constraint-on">:help DROP CONSTRAINT ON</a>{' '}
+            <a help-topic="schema">:help Schema</a>{' '}
+            <a help-topic="cypher">:help Cypher</a>
           </td>
         </tr>
       </tbody>
     </table>
-    <section className='example'>
+    <section className="example">
       <figure>
-        <pre className='code runnable standalone-example'>
+        <pre className="code runnable standalone-example">
           CREATE CONSTRAINT ON (p:Person) ASSERT p.name IS UNIQUE
         </pre>
         <figcaption>
@@ -60,9 +60,9 @@ const content = (
         </figcaption>
       </figure>
     </section>
-    <section className='example'>
+    <section className="example">
       <figure>
-        <pre className='code runnable standalone-example'>
+        <pre className="code runnable standalone-example">
           CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)
         </pre>
         <figcaption>
@@ -71,9 +71,9 @@ const content = (
         </figcaption>
       </figure>
     </section>
-    <section className=' example'>
+    <section className=" example">
       <figure>
-        <pre className='code runnable standalone-example'>
+        <pre className="code runnable standalone-example">
           CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)
         </pre>
         <figcaption>
@@ -82,7 +82,7 @@ const content = (
         </figcaption>
       </figure>
     </section>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

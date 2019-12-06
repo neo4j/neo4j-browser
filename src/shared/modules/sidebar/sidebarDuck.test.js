@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
 import reducer, * as sidebar from './sidebarDuck'
 
 describe('sidebar reducer', () => {
