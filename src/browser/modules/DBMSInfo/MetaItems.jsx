@@ -34,6 +34,7 @@ import {
   StyledShowMoreLink
 } from './styled'
 import Render from 'browser-components/Render'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 const ShowMore = ({ total, shown, moreStep, onMore }) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown
@@ -64,7 +65,7 @@ const createItems = (
   if (showStar) {
     let str = '*'
     if (count) {
-      str = `${str}(${count})`
+      str = `${str}(${numberToUSLocale(count)})`
     }
     items.unshift(str)
   }

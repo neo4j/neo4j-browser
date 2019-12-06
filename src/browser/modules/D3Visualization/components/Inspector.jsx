@@ -39,12 +39,12 @@ import {
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
 import ClickableUrls from '../../../components/clickable-urls'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 const mapItemProperties = itemProperties =>
   itemProperties
-    .sort(
-      ({ key: keyA }, { key: keyB }) =>
-        keyA < keyB ? -1 : keyA === keyB ? 0 : 1
+    .sort(({ key: keyA }, { key: keyB }) =>
+      keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
     .map((prop, i) => (
       <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
@@ -142,9 +142,9 @@ export class InspectorComponent extends Component {
           </StyledInlineList>
         )
       } else if (type === 'canvas') {
-        const description = `Displaying ${item.nodeCount} nodes, ${
-          item.relationshipCount
-        } relationships.`
+        const description = `Displaying ${numberToUSLocale(
+          item.nodeCount
+        )} nodes, ${numberToUSLocale(item.relationshipCount)} relationships.`
         inspectorContent = (
           <StyledInlineList className='list-inline'>
             <StyledInspectorFooterRowListPair className='pair' key='pair'>

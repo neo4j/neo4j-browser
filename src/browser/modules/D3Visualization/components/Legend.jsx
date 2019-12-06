@@ -31,6 +31,7 @@ import {
   StyledLegendInlineList
 } from './styled'
 import { RowExpandToggleComponent } from './RowExpandToggle'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 export class LegendComponent extends Component {
   constructor (props) {
@@ -75,9 +76,9 @@ export class LegendComponent extends Component {
                 className='token token-label'
               >
                 {legendItemKey}
-                <StyledTokenCount className='count'>{`(${
+                <StyledTokenCount className='count'>{`(${numberToUSLocale(
                   labels[legendItemKey].count
-                })`}</StyledTokenCount>
+                )})`}</StyledTokenCount>
               </StyledLabelToken>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
@@ -134,7 +135,7 @@ export class LegendComponent extends Component {
               >
                 {legendItemKey}
                 <StyledTokenCount className='count'>
-                  {`(${legendItems[legendItemKey].count})`}
+                  {`(${numberToUSLocale(legendItems[legendItemKey].count)})`}
                 </StyledTokenCount>
               </StyledTokenRelationshipType>
             </StyledLegendContents>
