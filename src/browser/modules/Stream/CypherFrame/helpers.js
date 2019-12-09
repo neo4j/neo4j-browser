@@ -62,9 +62,7 @@ export function getBodyAndStatusBarMessages (result, maxRows) {
   let updateMessages = bolt.retrieveFormattedUpdateStatistics(result)
   let streamMessage =
     result.records.length > 0
-      ? `started streaming ${
-        result.records.length
-      } records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
+      ? `started streaming ${result.records.length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
       : `completed ${totalTimeString} ${streamMessageTail}`
 
   if (updateMessages && updateMessages.length > 0) {
@@ -74,10 +72,15 @@ export function getBodyAndStatusBarMessages (result, maxRows) {
     streamMessage = streamMessage[0].toUpperCase() + streamMessage.slice(1)
   }
 
+  const systemUpdatesValue = get(result, 'summary.counters._systemUpdates')
   const bodyMessage =
     (!updateMessages || updateMessages.length === 0) &&
     result.records.length === 0
-      ? '(no changes, no records)'
+      ? `(${(systemUpdatesValue > 0 &&
+          `${systemUpdatesValue} system update${(systemUpdatesValue > 1 &&
+            's') ||
+            ''}`) ||
+          'no changes'}, no records)`
       : updateMessages + `completed ${totalTimeString} ms.`
 
   return {
