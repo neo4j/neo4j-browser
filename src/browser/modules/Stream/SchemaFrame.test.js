@@ -22,12 +22,22 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
 import { SchemaFrame } from './SchemaFrame'
 
+function renderWithRedux (children) {
+  return render(
+    <Provider store={createStore(() => ({}), {})}>{children}</Provider>
+  )
+}
+
 test('SchemaFrame renders empty', () => {
   const indexResult = { records: [] }
-  const { container } = render(<SchemaFrame indexes={indexResult} />)
+  const { container } = renderWithRedux(
+    <SchemaFrame indexes={indexResult} neo4jVersion={null} />
+  )
 
   expect(container).toMatchSnapshot()
 })
@@ -80,9 +90,31 @@ test('SchemaFrame renders with result', () => {
   firstConstraintRecord.get = key =>
     firstConstraintRecord._fields[firstConstraintRecord.keys.indexOf(key)]
 
-  const { container } = render(
-    <SchemaFrame indexes={indexResult} constraints={constraintResult} />
+  const { container } = renderWithRedux(
+    <SchemaFrame
+      indexes={indexResult}
+      constraints={constraintResult}
+      neo4jVersion={null}
+    />
   )
 
   expect(container).toMatchSnapshot()
+})
+
+test('SchemaFrame renders correct suggestion for Neo4j > 3.4', () => {
+  const indexResult = { records: [] }
+  const { getByText } = renderWithRedux(
+    <SchemaFrame indexes={indexResult} neo4jVersion={'3.5.1'} />
+  )
+
+  expect(getByText('CALL db.schema.visualization')).not.toBeNull()
+})
+
+test('SchemaFrame renders correct suggestion for Neo4j <= 3.4', () => {
+  const indexResult = { records: [] }
+  const { getByText } = renderWithRedux(
+    <SchemaFrame indexes={indexResult} neo4jVersion={'3.4.1'} />
+  )
+
+  expect(getByText('CALL db.schema()')).not.toBeNull()
 })

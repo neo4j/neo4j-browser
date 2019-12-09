@@ -47,7 +47,7 @@ export const CLUSTER_CYPHER_REQUEST = NAME + '/CLUSTER_REQUEST'
 export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
 
 // Helpers
-const queryAndResovle = async (driver, action, host, useDb = {}) => {
+const queryAndResolve = async (driver, action, host, useDb = {}) => {
   return new Promise(resolve => {
     const session = driver.session({
       defaultAccessMode: bolt.neo4j.session.WRITE,
@@ -77,7 +77,7 @@ const callClusterMember = async (connection, action, store) => {
     bolt
       .directConnect(connection, undefined, undefined, false) // Ignore validation errors
       .then(async driver => {
-        const res = await queryAndResovle(driver, action, connection.host)
+        const res = await queryAndResolve(driver, action, connection.host)
         driver.close()
         resolve(res)
       })
@@ -207,7 +207,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
         .then(async driver => {
           // Let's establish what server version we're connected to if not in state
           if (!getVersion(store.getState())) {
-            const versionRes = await queryAndResovle(
+            const versionRes = await queryAndResolve(
               driver,
               { ...action, query: serverInfoQuery, parameters: {} },
               undefined
@@ -235,7 +235,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
             action.newPassword
           )
           // and then change the password
-          const res = await queryAndResovle(
+          const res = await queryAndResolve(
             driver,
             { ...action, ...queryObj },
             undefined,

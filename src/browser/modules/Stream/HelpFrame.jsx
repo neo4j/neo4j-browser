@@ -45,7 +45,7 @@ const HelpFrame = ({ frame }) => {
       const { title, subtitle } = chapter
       let { content } = chapter
 
-      // The commands topic is a special case that uses dymaic data
+      // The commands topic is a special case that uses dynamic data
       const dynamic = ['bolt', 'commands', 'play', 'guides', 'help', 'cypher']
       if (dynamic.includes(helpTopic)) {
         content = <DynamicTopics docs={docs} {...chapter} />
