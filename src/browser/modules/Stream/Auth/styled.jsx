@@ -29,6 +29,10 @@ export const StyledConnectionForm = styled.form`
     opacity: 0.5;
   }
 `
+export const StyledChangePasswordForm = styled(StyledConnectionForm)`
+  flex: 1;
+`
+
 export const StyledConnectionAside = styled(StyledFrameAside)``
 export const StyledConnectionFormEntry = styled.div`
   padding-bottom: 15px;
@@ -42,6 +46,28 @@ export const StyledConnectionLabel = styled.label`
 export const StyledConnectionTextInput = styled(StyledInput)`
   min-width: 200px;
   width: 44%;
+`
+export const StyledRevealablePasswordWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 44%;
+  min-width: 200px;
+
+  > input {
+    padding-right: 30px;
+    width: 100%;
+  }
+
+  > .icon {
+    position: absolute;
+    user-select: none;
+    right: 0;
+    top: 6px;
+    height: auto;
+    width: auto;
+    padding: 3px;
+    cursor: pointer;
+  }
 `
 
 export const StyledConnectionSelect = styled(StyledSelect)`
@@ -76,17 +102,3 @@ export const StyledCode = styled.code`
 `
 
 export const StyledDbsRow = styled.li``
-
-export const StyledChangePasswordFormWrapper = styled.div`
-  display: flex;
-`
-
-export const StyledPasswordSuggestionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 10px;
-
-  > * {
-    margin-bottom: 10px;
-  }
-`
