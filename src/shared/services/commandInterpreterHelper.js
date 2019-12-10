@@ -21,6 +21,7 @@ import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
 import { getHistory, clearHistory } from 'shared/modules/history/historyDuck'
+import { v4 } from 'uuid'
 import {
   update as updateQueryResult,
   REQUEST_STATUS_SUCCESS,
@@ -307,7 +308,8 @@ const availableCommands = [
         frames.add({
           useDb: getUseDb(store.getState()),
           ...action,
-          type: 'schema'
+          type: 'schema',
+          schemaRequestId: v4()
         })
       )
     }

@@ -103,7 +103,7 @@ export class SchemaFrame extends Component {
       this.setState({ [name]: out })
     }
   }
-  componentDidMount () {
+  fetchData () {
     if (this.props.bus) {
       // Indexes
       this.props.bus.self(
@@ -124,11 +124,23 @@ export class SchemaFrame extends Component {
         this.responseHandler('constraints')
       )
     }
+  }
+  componentDidMount () {
+    this.fetchData()
     if (this.props.indexes) {
       this.responseHandler('indexes')(this.props.indexes)
     }
     if (this.props.constraints) {
       this.responseHandler('constraints')(this.props.constraints)
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (
+      this.props.frame &&
+      this.props.frame.schemaRequestId !== prevProps.frame.schemaRequestId
+    ) {
+      this.fetchData()
     }
   }
 

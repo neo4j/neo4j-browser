@@ -250,7 +250,7 @@ class FrameTitlebar extends Component {
           >
             {expandCollapseIcon}
           </FrameButton>
-          <Render if={['cypher', 'style'].includes(frame.type)}>
+          <Render if={['cypher', 'style', 'schema'].includes(frame.type)}>
             <FrameButton
               data-testid='rerunFrameButton'
               title='Rerun'
