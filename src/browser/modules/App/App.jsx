@@ -32,26 +32,17 @@ import {
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
-import {
-  allowOutgoingConnections,
-  getVersion
-} from 'shared/modules/dbMeta/dbMetaDuck'
+import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
   getConnectionState,
   getLastConnectionUpdate,
   getActiveConnectionData,
   isConnected,
-  getConnectionData,
-  SILENT_DISCONNECT,
-  SWITCH_CONNECTION,
-  SWITCH_CONNECTION_FAILED
+  getConnectionData
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import {
-  CONNECTION_ID,
-  INJECTED_DISCOVERY
-} from 'shared/modules/discovery/discoveryDuck'
+import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
 import {
   StyledWrapper,
   StyledApp,
@@ -66,24 +57,21 @@ import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
-import DesktopIntegration from 'browser-components/DesktopIntegration'
-import {
-  getActiveGraph,
-  buildConnectionCredentialsObject
-} from 'browser-components/DesktopIntegration/helpers'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
-import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
+import { inWebEnv } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
+import RelateApi from 'browser-components/relate-api/relate-api'
 
 export function App(props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
     LIGHT_THEME
   )
+  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
 
   useEffect(() => {
     document.addEventListener('keyup', focusEditorOnSlash)
@@ -95,15 +83,6 @@ export function App(props) {
     }
   }, [])
 
-  const detectDesktopThemeChanges = (_, newContext) => {
-    if (newContext.global.prefersColorScheme) {
-      setEnvironmentTheme(newContext.global.prefersColorScheme)
-    } else {
-      setEnvironmentTheme(null)
-    }
-  }
-  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
-
   const focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
     if (e.key !== '/') return
@@ -113,6 +92,7 @@ export function App(props) {
     if (e.keyCode !== 27) return
     props.bus && props.bus.send(EXPAND)
   }
+
   const {
     drawer,
     cmdchar,
@@ -129,7 +109,8 @@ export function App(props) {
     browserSyncAuthStatus,
     experimentalFeatures,
     store,
-    codeFontLigatures
+    codeFontLigatures,
+    defaultConnectionData
   } = props
 
   const wrapperClassNames = []
@@ -139,33 +120,16 @@ export function App(props) {
 
   return (
     <ErrorBoundary>
+      <RelateApi
+        defaultConnectionData={defaultConnectionData}
+        setEnvironmentTheme={setEnvironmentTheme}
+      />
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
             <StyledWrapper className={wrapperClassNames}>
               <DocTitle titleString={props.titleString} />
               <UserInteraction />
-              <DesktopIntegration
-                integrationPoint={props.desktopIntegrationPoint}
-                onArgumentsChange={props.onArgumentsChange}
-                onMount={(
-                  activeGraph,
-                  connectionsCredentials,
-                  context,
-                  getKerberosTicket
-                ) => {
-                  props.setInitialConnectionData(
-                    activeGraph,
-                    connectionsCredentials,
-                    context,
-                    getKerberosTicket
-                  )
-                  detectDesktopThemeChanges(null, context)
-                }}
-                onGraphActive={props.switchConnection}
-                onGraphInactive={props.closeConnectionMaybe}
-                onColorSchemeUpdated={detectDesktopThemeChanges}
-              />
               <Render if={loadExternalScripts}>
                 <Intercom appID="lq70afwx" />
               </Render>
@@ -222,8 +186,7 @@ const mapStateToProps = state => {
     browserSyncConfig: getBrowserSyncConfig(state),
     browserSyncAuthStatus: getUserAuthStatus(state),
     loadSync: useBrowserSync(state),
-    isWebEnv: inWebEnv(state),
-    neo4jVersion: getVersion(state)
+    isWebEnv: inWebEnv(state)
   }
 }
 
@@ -235,59 +198,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const switchConnection = async (
-    event,
-    newContext,
-    oldContext,
-    getKerberosTicket
-  ) => {
-    const connectionCreds = await buildConnectionCredentialsObject(
-      newContext,
-      stateProps.defaultConnectionData,
-      getKerberosTicket,
-      stateProps.neo4jVersion
-    )
-    ownProps.bus.send(SWITCH_CONNECTION, connectionCreds)
-  }
-  const setInitialConnectionData = async (
-    graph,
-    credentials,
-    context,
-    getKerberosTicket
-  ) => {
-    const connectionCreds = await buildConnectionCredentialsObject(
-      context,
-      stateProps.defaultConnectionData,
-      getKerberosTicket,
-      stateProps.neo4jVersion
-    )
-    // No connection. Probably no graph active.
-    if (!connectionCreds) {
-      ownProps.bus.send(SWITCH_CONNECTION_FAILED)
-      return
-    }
-    ownProps.bus.send(INJECTED_DISCOVERY, connectionCreds)
-  }
-  const closeConnectionMaybe = (event, newContext, oldContext) => {
-    const activeGraph = getActiveGraph(newContext)
-    if (activeGraph) return // We still got an active graph, do nothing
-    ownProps.bus.send(SILENT_DISCONNECT, {})
-  }
-  const onArgumentsChange = argsString => {
-    ownProps.bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
-  }
-  return {
-    ...stateProps,
-    ...ownProps,
-    ...dispatchProps,
-    switchConnection,
-    setInitialConnectionData,
-    closeConnectionMaybe,
-    onArgumentsChange
-  }
-}
-
-export default withBus(
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
-)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(App))

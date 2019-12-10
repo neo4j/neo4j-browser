@@ -7,7 +7,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
     data-testid="confirmation-button-initial"
   >
     <i
-      class="IconContainer__I-sc-16whwc5-0 iJwbeZ sl-minus-circle"
+      class="sl-minus-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
     />
   </button>
 </div>
@@ -21,7 +21,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
       data-testid="confirmation-button-confirm"
     >
       <i
-        class="IconContainer__I-sc-16whwc5-0 iJwbeZ sl-arrow-circle-right"
+        class="sl-arrow-circle-right IconContainer__I-sc-16whwc5-0 iJwbeZ"
       />
     </button>
     <button
@@ -29,7 +29,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
       data-testid="confirmation-button-cancel"
     >
       <i
-        class="IconContainer__I-sc-16whwc5-0 iJwbeZ sl-delete-circle"
+        class="sl-delete-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
       />
     </button>
   </span>
@@ -43,7 +43,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
     data-testid="confirmation-button-initial"
   >
     <i
-      class="IconContainer__I-sc-16whwc5-0 iJwbeZ sl-minus-circle"
+      class="sl-minus-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
     />
   </button>
 </div>
@@ -56,7 +56,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
     data-testid="confirmation-button-initial"
   >
     <i
-      class="IconContainer__I-sc-16whwc5-0 iJwbeZ sl-minus-circle"
+      class="sl-minus-circle IconContainer__I-sc-16whwc5-0 iJwbeZ"
     />
   </button>
 </div>

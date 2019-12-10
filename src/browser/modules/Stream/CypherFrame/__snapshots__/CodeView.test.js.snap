@@ -89,7 +89,7 @@ exports[`CodeViews CodeView displays request and response info if successful que
           >
             Summary
             <div
-              class="styled__StyledExpandable-sc-1dtvgs1-38 dMVSiX fa fa-caret-right"
+              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-38 dMVSiX"
               title="Expand section"
             />
           </td>
@@ -107,7 +107,7 @@ exports[`CodeViews CodeView displays request and response info if successful que
           >
             Response
             <div
-              class="styled__StyledExpandable-sc-1dtvgs1-38 dMVSiX fa fa-caret-right"
+              class="fa fa-caret-right styled__StyledExpandable-sc-1dtvgs1-38 dMVSiX"
               title="Expand section"
             />
           </td>

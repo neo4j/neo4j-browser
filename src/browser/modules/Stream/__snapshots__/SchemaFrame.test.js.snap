@@ -15,7 +15,7 @@ exports[`SchemaFrame renders empty 1`] = `
           <thead>
             <tr>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Indexes
               </th>
@@ -23,10 +23,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
             >
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               >
                 None
               </td>
@@ -39,7 +39,7 @@ exports[`SchemaFrame renders empty 1`] = `
           <thead>
             <tr>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Constraints
               </th>
@@ -47,10 +47,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
             >
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               >
                 None
               </td>
@@ -95,7 +95,7 @@ exports[`SchemaFrame renders with result 1`] = `
           <thead>
             <tr>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Indexes
               </th>
@@ -103,10 +103,10 @@ exports[`SchemaFrame renders with result 1`] = `
           </thead>
           <tbody>
             <tr
-              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
             >
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               >
                  ON :Movie(released) ONLINE 
               </td>
@@ -119,7 +119,7 @@ exports[`SchemaFrame renders with result 1`] = `
           <thead>
             <tr>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Constraints
               </th>
@@ -127,10 +127,10 @@ exports[`SchemaFrame renders with result 1`] = `
           </thead>
           <tbody>
             <tr
-              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
             >
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               >
                  ON ( book:Book ) ASSERT book.isbn IS UNIQUE
               </td>
