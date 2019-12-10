@@ -54,7 +54,8 @@ describe('Plan output', () => {
     it('print pagecache stats in PROFILE', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(
-        'PROFILE CYPHER runtime=compiled MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)'
+        'PROFILE CYPHER runtime=compiled MATCH (n:VendorId {uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)',
+        { parseSpecialCharSequences: false }
       )
       cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
       const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
@@ -66,8 +67,7 @@ describe('Plan output', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (:Tag)')
     cy.executeCommand(':clear')
-    cy.executeCommand(`PROFILE MATCH (tag:Tag)
-    WHERE tag.name IN ["Eutheria"]
+    cy.executeCommand(`PROFILE MATCH (tag:Tag){shift}{enter}WHERE tag.name IN ["Eutheria"]
     WITH tag
     MATCH (publication)-[:HAS_TAG]->(tag)
     WHERE SIZE((publication)-[:HAS_TAG]->()) = 1
