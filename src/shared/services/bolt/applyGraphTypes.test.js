@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 import neo4j from 'neo4j-driver'
 import {
   applyGraphTypes,
@@ -60,7 +59,7 @@ describe('applyGraphTypes', () => {
   })
 
   test('should work with boolean', () => {
-    let x = nativeTypesToCustom(true)
+    const x = nativeTypesToCustom(true)
     const result = applyGraphTypes(nativeTypesToCustom(true))
     const xResult = applyGraphTypes(x)
     expect(result).toEqual(true)

@@ -26,7 +26,7 @@ export const NATIVE = 'NATIVE'
 export const NO_AUTH = 'NO_AUTH'
 
 export const getEncryptionMode = options => {
-  if (options && typeof options['encrypted'] !== 'undefined') {
+  if (options && typeof options.encrypted !== 'undefined') {
     return options.encrypted
   }
   return location.protocol === 'https:'

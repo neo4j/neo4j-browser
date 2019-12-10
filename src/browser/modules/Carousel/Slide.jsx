@@ -51,4 +51,6 @@ const Slide = React.forwardRef(({ children, content, html }, ref) => {
   return null
 })
 
+Slide.displayName = 'Slide'
+
 export default Slide

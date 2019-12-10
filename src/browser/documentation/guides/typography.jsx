@@ -24,13 +24,13 @@ const subtitle =
   'The typography is pleasantly minimal. Just enough to make for easy reading of brief content.'
 const category = 'guides'
 const content = (
-  <React.Fragment>
-    <div className='row'>
-      <div className='col-lg-4'>
-        <h3 className='hbaseline'>Fonts</h3>
+  <>
+    <div className="row">
+      <div className="col-lg-4">
+        <h3 className="hbaseline">Fonts</h3>
         <p>
           All regular text is in{' '}
-          <a target='_blank' href='https://fonts.google.com/specimen/Open+Sans'>
+          <a target="_blank" href="https://fonts.google.com/specimen/Open+Sans">
             Open Sans
           </a>
           , a &#8220;humanist sans serif typeface designed by Steve
@@ -38,33 +38,30 @@ const content = (
         </p>
         <p>
           Code appears in{' '}
-          <a target='_blank' href='https://github.com/tonsky/FiraCode'>
+          <a target="_blank" href="https://github.com/tonsky/FiraCode">
             Fira Code
           </a>
           , a &#8220;monospace font, designed for printed code listings and the
           like.&#8220;
         </p>
       </div>
-      <div className='col-lg-4'>
+      <div className="col-lg-4">
         <h3>Font Variants</h3>
         <p>
           For expressive text treatment there are classes for
-          <span className='italic'>.italic</span>,{` `}
-          <span className='caps'>.caps</span>,{` `}
-          <span className='small'>.small</span>,{` `}
-          <span className='muted'>.muted</span> and
-          {` `}
-          <span className='code'>.code</span>, plus weights like
-          {` `}
-          <span className='light'>.light</span>,{` `}
-          <span className='semi-bold'>.semi-bold</span>,{` `}
-          <span className='bold'>.bold</span>, and
-          {` `}
-          <span className='extra-bold'>.extra-bold</span>.
+          <span className="italic">.italic</span>,
+          <span className="caps">.caps</span>,
+          <span className="small">.small</span>,
+          <span className="muted">.muted</span> and
+          <span className="code">.code</span>, plus weights like
+          <span className="light">.light</span>,
+          <span className="semi-bold">.semi-bold</span>,
+          <span className="bold">.bold</span>, and
+          <span className="extra-bold">.extra-bold</span>.
         </p>
         <p>
           With caution you can use <code>.nobreak</code> to{' '}
-          <span className='nobreak'>
+          <span className="nobreak">
             write-hyphen-cased-words-that-wont-break
           </span>
           .
@@ -72,8 +69,8 @@ const content = (
       </div>
     </div>
     <hr />
-    <div className='row'>
-      <div className='col-lg-4'>
+    <div className="row">
+      <div className="col-lg-4">
         <h2>Headings</h2>
         <p>
           There are also heading classes available the represent heading styles.
@@ -81,20 +78,20 @@ const content = (
           looking for.
         </p>
         <p>
-          <span className='h1'>.h1</span>
-          {` `}
-          <span className='h2'>.h2</span>
-          {` `}
-          <span className='h3'>.h3</span>
-          {` `}
-          <span className='h4'>.h4</span>
-          {` `}
-          <span className='h5'>.h5</span>
-          {` `}
-          <span className='h6'>.h6</span>
+          <span className="h1">.h1</span>
+
+          <span className="h2">.h2</span>
+
+          <span className="h3">.h3</span>
+
+          <span className="h4">.h4</span>
+
+          <span className="h5">.h5</span>
+
+          <span className="h6">.h6</span>
         </p>
       </div>
-      <div className='col-lg-8'>
+      <div className="col-lg-8">
         <h1>Does Size Change the Meaning of Words?</h1>
         <h2>Does Size Change the Meaning of Words?</h2>
         <h3>Does Size Change the Meaning of Words?</h3>
@@ -104,51 +101,51 @@ const content = (
       </div>
     </div>
     <hr />
-    <div className='row'>
-      <div className='col-lg-2'>
-        <h1 className='vtop'>H1 Top</h1>
+    <div className="row">
+      <div className="col-lg-2">
+        <h1 className="vtop">H1 Top</h1>
         <p>
           Add <code>.vtop</code> to align heading baselines.
         </p>
       </div>
-      <div className='col-lg-2'>
-        <h2 className='vtop'>H2 Top</h2>
+      <div className="col-lg-2">
+        <h2 className="vtop">H2 Top</h2>
         <p>
           Add <code>.vtop</code> to align heading baselines.
         </p>
       </div>
-      <div className='col-lg-2'>
-        <h3 className='vtop'>H3 Top</h3>
+      <div className="col-lg-2">
+        <h3 className="vtop">H3 Top</h3>
         <p>
           Add <code>.vtop</code> to align heading baselines.
         </p>
       </div>
-      <div className='col-lg-2'>
-        <h4 className='vtop'>H4 Top</h4>
+      <div className="col-lg-2">
+        <h4 className="vtop">H4 Top</h4>
         <p>
           Add <code>.vtop</code> to align heading baselines.
         </p>
       </div>
-      <div className='col-lg-2'>
-        <h5 className='vtop'>H5 Top</h5>
+      <div className="col-lg-2">
+        <h5 className="vtop">H5 Top</h5>
         <p>
           Add <code>.vtop</code> to align heading baselines.
         </p>
       </div>
-      <div className='col-lg-2'>
-        <h6 className='vtop'>H6 Top</h6>
+      <div className="col-lg-2">
+        <h6 className="vtop">H6 Top</h6>
         <p>
           Add <code>.vtop</code> to align heading baselines.
         </p>
       </div>
     </div>
     <hr />
-    <div className='row'>
-      <div className='col-lg-4'>
-        <h2 className='vtop'>Lists</h2>
+    <div className="row">
+      <div className="col-lg-4">
+        <h2 className="vtop">Lists</h2>
       </div>
-      <div className='col-lg-4'>
-        <h5 className='vtop'>Ordered</h5>
+      <div className="col-lg-4">
+        <h5 className="vtop">Ordered</h5>
         <ol>
           <li>Nodes</li>
           <li>Relationships</li>
@@ -156,8 +153,8 @@ const content = (
           <li>Labels, Types, etc.</li>
         </ol>
       </div>
-      <div className='col-lg-4'>
-        <h5 className='vtop'>Unordered</h5>
+      <div className="col-lg-4">
+        <h5 className="vtop">Unordered</h5>
         <ul>
           <li>Nodes</li>
           <li>Relationships</li>
@@ -167,11 +164,11 @@ const content = (
       </div>
     </div>
     <hr />
-    <div className='row'>
-      <div className='col-lg-4'>
-        <h2 className='vtop'>Code</h2>
+    <div className="row">
+      <div className="col-lg-4">
+        <h2 className="vtop">Code</h2>
         <p>
-          Within body text, use <code>{`<code>`}</code> for citing Cypher
+          Within body text, use <code>{'<code>'}</code> for citing Cypher
           keywords like <code>MERGE</code> or indicating key-combinations. Avoid
           code-snippets within a paragraph, preferring a code block.
         </p>
@@ -183,15 +180,17 @@ const content = (
           <li>mixed with other points</li>
         </ul>
       </div>
-      <div className='col-lg-8'>
-        <h5 className='vtop'>Code Block</h5>
+      <div className="col-lg-8">
+        <h5 className="vtop">Code Block</h5>
         <p>Create a static block of Cypher using...</p>
         <pre>
-          {`<figure><pre mode="cypher" className="code">>MATCH ... RETURN ... </pre></figure>`}
+          {
+            '<figure><pre mode="cypher" className="code">>MATCH ... RETURN ... </pre></figure>'
+          }
         </pre>
         <figure>
-          <pre mode='cypher' className='pre-scrollable code'>
-            {`MATCH (tom:Person) WHERE tom.name = "Tom Hanks" RETURN tom`}
+          <pre mode="cypher" className="pre-scrollable code">
+            MATCH (tom:Person) WHERE tom.name = "Tom Hanks" RETURN tom
           </pre>
         </figure>
         <p>
@@ -199,16 +198,20 @@ const content = (
           ...
         </p>
         <pre>
-          {`<figure><pre mode="cypher" className="code runnable">MATCH ... RETURN ... </pre></figure>`}
+          {
+            '<figure><pre mode="cypher" className="code runnable">MATCH ... RETURN ... </pre></figure>'
+          }
         </pre>
         <figure>
-          <pre mode='cypher' className='pre-scrollable code runnable'>
-            {`MATCH (tom:Person)-[r]->(movies) WHERE tom.name = "Tom Hanks" RETURN tom, r, movies`}
+          <pre mode="cypher" className="pre-scrollable code runnable">
+            {
+              'MATCH (tom:Person)-[r]->(movies) WHERE tom.name = "Tom Hanks" RETURN tom, r, movies'
+            }
           </pre>
         </figure>
       </div>
     </div>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

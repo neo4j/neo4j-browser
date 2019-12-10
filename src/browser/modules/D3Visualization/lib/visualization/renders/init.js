@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import Renderer from '../components/renderer'
-const noop = function () {}
+const noop = function() {}
 
 const nodeRingStrokeSize = 8
 
 const nodeOutline = new Renderer({
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     const circles = selection.selectAll('circle.outline').data(node => [node])
 
     circles
@@ -36,16 +36,16 @@ const nodeOutline = new Renderer({
       })
 
     circles.attr({
-      r (node) {
+      r(node) {
         return node.radius
       },
-      fill (node) {
+      fill(node) {
         return viz.style.forNode(node).get('color')
       },
-      stroke (node) {
+      stroke(node) {
         return viz.style.forNode(node).get('border-color')
       },
-      'stroke-width' (node) {
+      'stroke-width'(node) {
         return viz.style.forNode(node).get('border-width')
       }
     })
@@ -56,7 +56,7 @@ const nodeOutline = new Renderer({
 })
 
 const nodeCaption = new Renderer({
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     const text = selection.selectAll('text.caption').data(node => node.caption)
 
     text
@@ -71,7 +71,7 @@ const nodeCaption = new Renderer({
       .attr('y', line => line.baseline)
       .attr('font-size', line => viz.style.forNode(line.node).get('font-size'))
       .attr({
-        fill (line) {
+        fill(line) {
           return viz.style.forNode(line.node).get('text-color-internal')
         }
       })
@@ -83,7 +83,7 @@ const nodeCaption = new Renderer({
 })
 
 const nodeIcon = new Renderer({
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     const text = selection.selectAll('text').data(node => node.caption)
 
     text
@@ -98,7 +98,7 @@ const nodeIcon = new Renderer({
       .attr('dy', line => line.node.radius / 16)
       .attr('font-size', line => line.node.radius)
       .attr({
-        fill (line) {
+        fill(line) {
           return viz.style.forNode(line.node).get('text-color-internal')
         }
       })
@@ -110,7 +110,7 @@ const nodeIcon = new Renderer({
 })
 
 const nodeRing = new Renderer({
-  onGraphChange (selection) {
+  onGraphChange(selection) {
     const circles = selection.selectAll('circle.ring').data(node => [node])
     circles
       .enter()
@@ -123,7 +123,7 @@ const nodeRing = new Renderer({
       })
 
     circles.attr({
-      r (node) {
+      r(node) {
         return node.radius + 4
       }
     })
@@ -136,7 +136,7 @@ const nodeRing = new Renderer({
 
 const arrowPath = new Renderer({
   name: 'arrowPath',
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     const paths = selection.selectAll('path.outline').data(rel => [rel])
 
     paths
@@ -151,7 +151,7 @@ const arrowPath = new Renderer({
     return paths.exit().remove()
   },
 
-  onTick (selection) {
+  onTick(selection) {
     return selection
       .selectAll('path')
       .attr('d', d => d.arrow.outline(d.shortCaptionLength))
@@ -160,7 +160,7 @@ const arrowPath = new Renderer({
 
 const relationshipType = new Renderer({
   name: 'relationshipType',
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     const texts = selection.selectAll('text').data(rel => [rel])
 
     texts
@@ -178,7 +178,7 @@ const relationshipType = new Renderer({
     return texts.exit().remove()
   },
 
-  onTick (selection, viz) {
+  onTick(selection, viz) {
     return selection
       .selectAll('text')
       .attr('x', rel => rel.arrow.midShaftPoint.x)
@@ -189,11 +189,9 @@ const relationshipType = new Renderer({
           parseFloat(viz.style.forRelationship(rel).get('font-size')) / 2 -
           1
       )
-      .attr('transform', function (rel) {
+      .attr('transform', function(rel) {
         if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
-          return `rotate(180 ${rel.arrow.midShaftPoint.x} ${
-            rel.arrow.midShaftPoint.y
-          })`
+          return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
         } else {
           return null
         }
@@ -204,7 +202,7 @@ const relationshipType = new Renderer({
 
 const relationshipOverlay = new Renderer({
   name: 'relationshipOverlay',
-  onGraphChange (selection) {
+  onGraphChange(selection) {
     const rects = selection.selectAll('path.overlay').data(rel => [rel])
 
     rects
@@ -215,7 +213,7 @@ const relationshipOverlay = new Renderer({
     return rects.exit().remove()
   },
 
-  onTick (selection) {
+  onTick(selection) {
     const band = 16
 
     return selection

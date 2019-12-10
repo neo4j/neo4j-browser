@@ -20,28 +20,28 @@
 import d3 from 'd3'
 import measureText from '../utils/textMeasurement'
 
-function queryPlan (element) {
-  let maxChildOperators = 2 // Fact we know about the cypher compiler
-  let maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
-  let maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
+function queryPlan(element) {
+  const maxChildOperators = 2 // Fact we know about the cypher compiler
+  const maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
+  const maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
 
-  let operatorWidth = 180
-  let operatorCornerRadius = 4
-  let operatorHeaderHeight = 18
-  let operatorHeaderFontSize = 11
-  let operatorDetailHeight = 14
-  let maxCostHeight = 50
-  let detailFontSize = 10
-  let operatorMargin = 50
-  let operatorPadding = 3
-  let rankMargin = 50
-  let margin = 10
-  let standardFont = "'Helvetica Neue',Helvetica,Arial,sans-serif"
-  let fixedWidthFont = "'Fira Code',Monaco,'Courier New',Terminal,monospace"
-  let linkColor = '#DFE1E3'
-  let costColor = '#F25A29'
-  let dividerColor = '#DFE1E3'
-  let operatorColors = [
+  const operatorWidth = 180
+  const operatorCornerRadius = 4
+  const operatorHeaderHeight = 18
+  const operatorHeaderFontSize = 11
+  const operatorDetailHeight = 14
+  const maxCostHeight = 50
+  const detailFontSize = 10
+  const operatorMargin = 50
+  const operatorPadding = 3
+  const rankMargin = 50
+  const margin = 10
+  const standardFont = "'Helvetica Neue',Helvetica,Arial,sans-serif"
+  const fixedWidthFont = "'Fira Code',Monaco,'Courier New',Terminal,monospace"
+  const linkColor = '#DFE1E3'
+  const costColor = '#F25A29'
+  const dividerColor = '#DFE1E3'
+  const operatorColors = [
     '#c6dbef',
     '#9ecae1',
     '#6baed6',
@@ -51,7 +51,7 @@ function queryPlan (element) {
     '#08306b'
   ]
 
-  let operatorCategories = {
+  const operatorCategories = {
     result: ['result'],
     seek: ['scan', 'seek', 'argument'],
     rows: ['limit', 'top', 'skip', 'sort', 'union', 'projection'],
@@ -61,21 +61,21 @@ function queryPlan (element) {
     eager: ['eager']
   }
 
-  let augment = color => ({
+  const augment = color => ({
     color,
     'border-color': d3.rgb(color).darker(),
     'text-color-internal': d3.hsl(color).l < 0.7 ? '#FFFFFF' : '#000000'
   })
 
-  let colors = d3.scale
+  const colors = d3.scale
     .ordinal()
     .domain(d3.keys(operatorCategories))
     .range(operatorColors)
 
-  let color = function (d) {
-    for (let name in operatorCategories) {
-      let keywords = operatorCategories[name]
-      for (let keyword of Array.from(keywords)) {
+  const color = function(d) {
+    for (const name in operatorCategories) {
+      const keywords = operatorCategories[name]
+      for (const keyword of Array.from(keywords)) {
         if (new RegExp(keyword, 'i').test(d)) {
           return augment(colors(name))
         }
@@ -84,7 +84,7 @@ function queryPlan (element) {
     return augment(colors('other'))
   }
 
-  let rows = function (operator) {
+  const rows = function(operator) {
     let left
     return (left =
       operator.Rows != null ? operator.Rows : operator.EstimatedRows) != null
@@ -92,7 +92,7 @@ function queryPlan (element) {
       : 0
   }
 
-  let plural = function (noun, count) {
+  const plural = function(noun, count) {
     if (count === 1) {
       return noun
     } else {
@@ -100,25 +100,25 @@ function queryPlan (element) {
     }
   }
 
-  let formatNumber = d3.format(',.0f')
+  const formatNumber = d3.format(',.0f')
 
-  let operatorDetails = function (operator) {
+  const operatorDetails = function(operator) {
     let expression, identifiers, index, left, left1
     if (!operator.expanded) {
       return []
     }
 
-    let details = []
+    const details = []
 
-    let wordWrap = function (string, className) {
-      let measure = text => measureText(text, fixedWidthFont, 10)
+    const wordWrap = function(string, className) {
+      const measure = text => measureText(text, fixedWidthFont, 10)
 
-      let words = string.split(/([^a-zA-Z\d])/)
+      const words = string.split(/([^a-zA-Z\d])/)
 
       let firstWord = 0
       let lastWord = 1
       return (() => {
-        let result = []
+        const result = []
         while (firstWord < words.length) {
           while (
             lastWord < words.length &&
@@ -143,8 +143,8 @@ function queryPlan (element) {
         operator.identifiers != null
           ? operator.identifiers
           : operator.KeyNames != null
-            ? operator.KeyNames.split(', ')
-            : undefined)
+          ? operator.KeyNames.split(', ')
+          : undefined)
     ) {
       wordWrap(
         identifiers.filter(d => !/^ {2}/.test(d)).join(', '),
@@ -165,10 +165,10 @@ function queryPlan (element) {
             operator.Expressions != null
               ? operator.Expressions
               : operator.Expression != null
-                ? operator.Expression
-                : operator.LegacyExpression != null
-                  ? operator.LegacyExpression
-                  : operator.ExpandExpression) != null
+              ? operator.Expression
+              : operator.LegacyExpression != null
+              ? operator.LegacyExpression
+              : operator.ExpandExpression) != null
             ? left1
             : operator.LabelName) != null
           ? left
@@ -216,7 +216,7 @@ function queryPlan (element) {
     }
 
     let y = operatorDetailHeight
-    for (let detail of Array.from(details)) {
+    for (const detail of Array.from(details)) {
       detail.y = y
       y +=
         detail.className === 'padding'
@@ -227,21 +227,21 @@ function queryPlan (element) {
     return details
   }
 
-  let transform = function (queryPlan) {
-    let operators = []
-    let links = []
+  const transform = function(queryPlan) {
+    const operators = []
+    const links = []
 
-    let result = {
+    const result = {
       operatorType: 'Result',
       children: [queryPlan.root]
     }
 
-    let collectLinks = function (operator, rank) {
+    const collectLinks = function(operator, rank) {
       operators.push(operator)
       operator.rank = rank
       return (() => {
         const result1 = []
-        for (let child of Array.from(operator.children)) {
+        for (const child of Array.from(operator.children)) {
           child.parent = operator
           collectLinks(child, rank + 1)
           result1.push(
@@ -260,9 +260,9 @@ function queryPlan (element) {
     return [operators, links]
   }
 
-  let layout = function (operators, links) {
-    let costHeight = (function () {
-      let scale = d3.scale
+  const layout = function(operators, links) {
+    const costHeight = (function() {
+      const scale = d3.scale
         .log()
         .domain([
           1,
@@ -276,7 +276,7 @@ function queryPlan (element) {
         scale((operator.DbHits != null ? operator.DbHits : 0) + 1)
     })()
 
-    let operatorHeight = function (operator) {
+    const operatorHeight = function(operator) {
       let height = operatorHeaderHeight
       if (operator.expanded) {
         height += operatorDetails(operator).slice(-1)[0].y + operatorPadding * 2
@@ -285,8 +285,8 @@ function queryPlan (element) {
       return height
     }
 
-    let linkWidth = (function () {
-      let scale = d3.scale
+    const linkWidth = (function() {
+      const scale = d3.scale
         .log()
         .domain([
           1,
@@ -308,19 +308,19 @@ function queryPlan (element) {
       if (operator.costHeight > operatorDetailHeight + operatorPadding) {
         operator.alwaysShowCost = true
       }
-      let childrenWidth = d3.sum(operator.children, linkWidth)
+      const childrenWidth = d3.sum(operator.children, linkWidth)
       let tx = (operatorWidth - childrenWidth) / 2
-      for (let child of Array.from(operator.children)) {
+      for (const child of Array.from(operator.children)) {
         child.tx = tx
         tx += linkWidth(child)
       }
     }
 
-    for (let link of Array.from(links)) {
+    for (const link of Array.from(links)) {
       link.width = linkWidth(link.source)
     }
 
-    let ranks = d3
+    const ranks = d3
       .nest()
       .key(operator => operator.rank)
       .entries(operators)
@@ -338,11 +338,11 @@ function queryPlan (element) {
     let width = d3.max(
       ranks.map(rank => rank.values.length * (operatorWidth + operatorMargin))
     )
-    let height = -currentY
+    const height = -currentY
 
-    let collide = () =>
+    const collide = () =>
       (() => {
-        let result = []
+        const result = []
         for (rank of Array.from(ranks)) {
           var dx
           let item
@@ -357,10 +357,10 @@ function queryPlan (element) {
 
           dx = x0 - operatorMargin - width
           if (dx > 0) {
-            let lastOperator = rank.values[rank.values.length - 1]
+            const lastOperator = rank.values[rank.values.length - 1]
             x0 = lastOperator.x -= dx
             item = (() => {
-              let result1 = []
+              const result1 = []
               for (let i = rank.values.length - 2; i >= 0; i--) {
                 let item1
                 operator = rank.values[i]
@@ -379,19 +379,19 @@ function queryPlan (element) {
         return result
       })()
 
-    let center = operator => operator.x + operatorWidth / 2
+    const center = operator => operator.x + operatorWidth / 2
 
-    let relaxUpwards = alpha =>
+    const relaxUpwards = alpha =>
       (() => {
-        let result = []
+        const result = []
         for (rank of Array.from(ranks)) {
           result.push(
             (() => {
-              let result1 = []
+              const result1 = []
               for (operator of Array.from(rank.values)) {
                 let item
                 if (operator.children.length) {
-                  let x =
+                  const x =
                     d3.sum(
                       operator.children,
                       child => linkWidth(child) * center(child)
@@ -407,13 +407,13 @@ function queryPlan (element) {
         return result
       })()
 
-    let relaxDownwards = alpha =>
+    const relaxDownwards = alpha =>
       (() => {
-        let result = []
+        const result = []
         for (rank of Array.from(ranks.slice().reverse())) {
           result.push(
             (() => {
-              let result1 = []
+              const result1 = []
               for (operator of Array.from(rank.values)) {
                 let item
                 if (operator.parent) {
@@ -446,8 +446,8 @@ function queryPlan (element) {
     return [width, height]
   }
 
-  let render = function (operators, links, width, height, redisplay) {
-    let svg = d3.select(element)
+  const render = function(operators, links, width, height, redisplay) {
+    const svg = d3.select(element)
 
     svg
       .transition()
@@ -465,10 +465,10 @@ function queryPlan (element) {
 
     var join = (parent, children) =>
       (() => {
-        let result = []
-        for (let child of Array.from(d3.entries(children))) {
+        const result = []
+        for (const child of Array.from(d3.entries(children))) {
           let item
-          let selection = parent.selectAll(child.key).data(child.value.data)
+          const selection = parent.selectAll(child.key).data(child.value.data)
           child.value.selections(selection.enter(), selection, selection.exit())
           if (child.value.children) {
             item = join(selection, child.value.children)
@@ -481,37 +481,37 @@ function queryPlan (element) {
     return join(svg, {
       'g.layer.links': {
         data: [links],
-        selections (enter) {
+        selections(enter) {
           return enter.append('g').attr('class', 'layer links')
         },
         children: {
           '.link': {
-            data (d) {
+            data(d) {
               return d
             },
-            selections (enter) {
+            selections(enter) {
               return enter.append('g').attr('class', 'link')
             },
             children: {
               path: {
-                data (d) {
+                data(d) {
                   return [d]
                 },
-                selections (enter, update) {
+                selections(enter, update) {
                   enter.append('path').attr('fill', linkColor)
 
-                  return update.transition().attr('d', function (d) {
+                  return update.transition().attr('d', function(d) {
                     width = Math.max(1, d.width)
-                    let sourceX = d.source.x + operatorWidth / 2
-                    let targetX = d.target.x + d.source.tx
+                    const sourceX = d.source.x + operatorWidth / 2
+                    const targetX = d.target.x + d.source.tx
 
-                    let sourceY = d.source.y + d.source.height
-                    let targetY = d.target.y
-                    let yi = d3.interpolateNumber(sourceY, targetY)
+                    const sourceY = d.source.y + d.source.height
+                    const targetY = d.target.y
+                    const yi = d3.interpolateNumber(sourceY, targetY)
 
-                    let curvature = 0.5
-                    let control1 = yi(curvature)
-                    let control2 = yi(1 - curvature)
+                    const curvature = 0.5
+                    const control1 = yi(curvature)
+                    const control2 = yi(1 - curvature)
                     let controlWidth = Math.min(
                       width / Math.PI,
                       (targetY - sourceY) / Math.PI
@@ -548,12 +548,12 @@ function queryPlan (element) {
               },
 
               text: {
-                data (d) {
-                  let x = d.source.x + operatorWidth / 2
-                  let y = d.source.y + d.source.height + operatorDetailHeight
-                  let { source } = d
+                data(d) {
+                  const x = d.source.x + operatorWidth / 2
+                  const y = d.source.y + d.source.height + operatorDetailHeight
+                  const { source } = d
                   if (source.Rows != null || source.EstimatedRows != null) {
-                    let [key, caption] = Array.from(
+                    const [key, caption] = Array.from(
                       source.Rows != null
                         ? ['Rows', 'row']
                         : ['EstimatedRows', 'estimated row']
@@ -576,7 +576,7 @@ function queryPlan (element) {
                     return []
                   }
                 },
-                selections (enter, update) {
+                selections(enter, update) {
                   enter
                     .append('text')
                     .attr('font-size', detailFontSize)
@@ -597,15 +597,15 @@ function queryPlan (element) {
 
       'g.layer.operators': {
         data: [operators],
-        selections (enter) {
+        selections(enter) {
           return enter.append('g').attr('class', 'layer operators')
         },
         children: {
           '.operator': {
-            data (d) {
+            data(d) {
               return d
             },
-            selections (enter, update) {
+            selections(enter, update) {
               enter.append('g').attr('class', 'operator')
 
               return update
@@ -614,10 +614,10 @@ function queryPlan (element) {
             },
             children: {
               'rect.background': {
-                data (d) {
+                data(d) {
                   return [d]
                 },
-                selections (enter, update) {
+                selections(enter, update) {
                   enter.append('rect').attr('class', 'background')
 
                   return update
@@ -632,35 +632,35 @@ function queryPlan (element) {
               },
 
               'g.header': {
-                data (d) {
+                data(d) {
                   return [d]
                 },
-                selections (enter) {
+                selections(enter) {
                   return enter
                     .append('g')
                     .attr('class', 'header')
                     .attr('pointer-events', 'all')
-                    .on('click', function (d) {
+                    .on('click', function(d) {
                       d.expanded = !d.expanded
                       return redisplay()
                     })
                 },
                 children: {
                   'path.banner': {
-                    data (d) {
+                    data(d) {
                       return [d]
                     },
-                    selections (enter, update) {
+                    selections(enter, update) {
                       enter.append('path').attr('class', 'banner')
 
                       return update
-                        .attr('d', function (d) {
-                          let shaving =
+                        .attr('d', function(d) {
+                          const shaving =
                             d.height <= operatorHeaderHeight
                               ? operatorCornerRadius
                               : d.height <
                                 operatorHeaderHeight + operatorCornerRadius
-                                ? operatorCornerRadius -
+                              ? operatorCornerRadius -
                                 Math.sqrt(
                                   Math.pow(operatorCornerRadius, 2) -
                                     Math.pow(
@@ -670,7 +670,7 @@ function queryPlan (element) {
                                       2
                                     )
                                 )
-                                : 0
+                              : 0
                           return [
                             'M',
                             operatorWidth - operatorCornerRadius,
@@ -724,15 +724,15 @@ function queryPlan (element) {
                   },
 
                   'path.expand': {
-                    data (d) {
+                    data(d) {
                       if (d.operatorType === 'Result') {
                         return []
                       } else {
                         return [d]
                       }
                     },
-                    selections (enter, update) {
-                      let rotateForExpand = function (d) {
+                    selections(enter, update) {
+                      const rotateForExpand = function(d) {
                         d3.transform()
                         return (
                           `translate(${operatorHeaderHeight /
@@ -761,10 +761,10 @@ function queryPlan (element) {
                   },
 
                   'text.title': {
-                    data (d) {
+                    data(d) {
                       return [d]
                     },
-                    selections (enter) {
+                    selections(enter) {
                       return enter
                         .append('text')
                         .attr('class', 'title')
@@ -784,7 +784,7 @@ function queryPlan (element) {
 
               'g.detail': {
                 data: operatorDetails,
-                selections (enter, update, exit) {
+                selections(enter, update, exit) {
                   enter.append('g')
 
                   update
@@ -793,7 +793,7 @@ function queryPlan (element) {
                       'transform',
                       d => `translate(0, ${operatorHeaderHeight + d.y})`
                     )
-                    .attr('font-family', function (d) {
+                    .attr('font-family', function(d) {
                       if (
                         d.className === 'expression' ||
                         d.className === 'identifiers'
@@ -808,7 +808,7 @@ function queryPlan (element) {
                 },
                 children: {
                   text: {
-                    data (d) {
+                    data(d) {
                       if (d.key) {
                         return [
                           {
@@ -824,7 +824,7 @@ function queryPlan (element) {
                         ]
                       }
                     },
-                    selections (enter, update, exit) {
+                    selections(enter, update, exit) {
                       enter.append('text').attr('font-size', detailFontSize)
 
                       update
@@ -839,14 +839,14 @@ function queryPlan (element) {
                   },
 
                   'path.divider': {
-                    data (d) {
+                    data(d) {
                       if (d.className === 'padding') {
                         return [d]
                       } else {
                         return []
                       }
                     },
-                    selections (enter, update) {
+                    selections(enter, update) {
                       enter
                         .append('path')
                         .attr('class', 'divider')
@@ -873,18 +873,18 @@ function queryPlan (element) {
               },
 
               'path.cost': {
-                data (d) {
+                data(d) {
                   return [d]
                 },
-                selections (enter, update) {
+                selections(enter, update) {
                   enter
                     .append('path')
                     .attr('class', 'cost')
                     .attr('fill', costColor)
 
-                  return update.transition().attr('d', function (d) {
+                  return update.transition().attr('d', function(d) {
                     if (d.costHeight < operatorCornerRadius) {
-                      let shaving =
+                      const shaving =
                         operatorCornerRadius -
                         Math.sqrt(
                           Math.pow(operatorCornerRadius, 2) -
@@ -953,9 +953,9 @@ function queryPlan (element) {
               },
 
               'text.cost': {
-                data (d) {
+                data(d) {
                   if (d.alwaysShowCost) {
-                    let y = d.height - d.costHeight + operatorDetailHeight
+                    const y = d.height - d.costHeight + operatorDetailHeight
                     return [
                       {
                         text: formatNumber(d.DbHits) + '\u00A0',
@@ -968,7 +968,7 @@ function queryPlan (element) {
                     return []
                   }
                 },
-                selections (enter, update) {
+                selections(enter, update) {
                   enter
                     .append('text')
                     .attr('class', 'cost')
@@ -986,10 +986,10 @@ function queryPlan (element) {
               },
 
               'rect.outline': {
-                data (d) {
+                data(d) {
                   return [d]
                 },
-                selections (enter, update) {
+                selections(enter, update) {
                   enter.append('rect').attr('class', 'outline')
 
                   return update
@@ -1010,9 +1010,9 @@ function queryPlan (element) {
     })
   }
 
-  var display = function (queryPlan) {
-    let [operators, links] = Array.from(transform(queryPlan))
-    let [width, height] = Array.from(layout(operators, links))
+  var display = function(queryPlan) {
+    const [operators, links] = Array.from(transform(queryPlan))
+    const [width, height] = Array.from(layout(operators, links))
     return render(operators, links, width, height, () => display(queryPlan))
   }
   this.display = display

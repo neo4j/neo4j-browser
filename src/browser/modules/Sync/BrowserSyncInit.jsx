@@ -36,55 +36,61 @@ import {
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'
 
-export function hasAuthData (props) {
+export function hasAuthData(props) {
   return props.authData && props.authData.data_token
 }
 
 export class BrowserSyncInit extends Component {
-  constructor (props) {
+  constructor(props) {
     super()
     this.state = {
       pendingSignIn: false
     }
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     // We only connect when props update and not on CDM because
     // tokens should never be in state when this component first loads
     this.connect(props)
   }
-  componentWillUnmount () {
+
+  componentWillUnmount() {
     this.syncManager && this.syncManager.signOut()
     this.props.onSignOut()
   }
 
-  componentDidMount () {
+  componentDidMount() {
     BrowserSyncAuthIframe(
       this.props.silentAuthIframeUrl,
       this.props.delegationTokenIframeUrl,
       this.props.onTokensReceived
     )
   }
-  setAuthStatus (status) {
+
+  setAuthStatus(status) {
     this.props.onUserAuthStatusChange(status)
   }
-  setServiceStatus (status) {
+
+  setServiceStatus(status) {
     this.props.onServiceStatusChange(status)
   }
+
   importSyncManager = () => {
     if (this.syncManager) return Promise.resolve(this.syncManager)
-    return import(/* webpackChunkName: "sync-manager" */ 'shared/modules/sync/SyncSignInManager').then(
-      ({ default: SyncSignInManager }) => {
-        this.syncManager = new SyncSignInManager({
-          dbConfig: this.props.config.firebaseConfig,
-          serviceReadyCallback: this.setServiceStatus.bind(this),
-          onSyncCallback: this.props.onSync,
-          disconnectCallback: () => this.setAuthStatus(SIGNED_OUT)
-        })
-        return this.syncManager
-      }
-    )
+    return import(
+      /* webpackChunkName: "sync-manager" */ 'shared/modules/sync/SyncSignInManager'
+    ).then(({ default: SyncSignInManager }) => {
+      this.syncManager = new SyncSignInManager({
+        dbConfig: this.props.config.firebaseConfig,
+        serviceReadyCallback: this.setServiceStatus.bind(this),
+        onSyncCallback: this.props.onSync,
+        disconnectCallback: () => this.setAuthStatus(SIGNED_OUT)
+      })
+      return this.syncManager
+    })
   }
-  connect (props) {
+
+  connect(props) {
     // Sign in one time only
     if (this.state.pendingSignIn) return
 
@@ -108,7 +114,8 @@ export class BrowserSyncInit extends Component {
       })
     }
   }
-  render () {
+
+  render() {
     return null
   }
 }
@@ -144,7 +151,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
   }
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BrowserSyncInit)
+export default connect(mapStateToProps, mapDispatchToProps)(BrowserSyncInit)

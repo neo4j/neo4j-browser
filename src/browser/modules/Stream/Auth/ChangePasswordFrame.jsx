@@ -31,7 +31,7 @@ import { StyledConnectionAside } from './styled'
 import { getActiveConnection } from 'shared/modules/connections/connectionsDuck'
 
 export class ChangePasswordFrame extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     const connection = this.props.frame.connectionData
     this.state = {
@@ -41,19 +41,22 @@ export class ChangePasswordFrame extends Component {
       success: false
     }
   }
+
   error = e => {
     if (e.code === 'N/A') {
       e.message = 'Existing password is incorrect'
     }
     this.setState({ error: e })
   }
+
   onSuccess = () => {
     this.setState({ password: '' })
     this.setState({ success: true })
   }
-  render () {
+
+  render() {
     const content = (
-      <React.Fragment>
+      <>
         <StyledConnectionAside>
           <H3>Password change</H3>
           <Render if={!this.state.success}>
@@ -77,7 +80,7 @@ export class ChangePasswordFrame extends Component {
             showExistingPasswordInput
           />
         </Render>
-      </React.Fragment>
+      </>
     )
     return (
       <FrameTemplate
@@ -100,7 +103,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  () => ({})
-)(ChangePasswordFrame)
+export default connect(mapStateToProps, () => ({}))(ChangePasswordFrame)

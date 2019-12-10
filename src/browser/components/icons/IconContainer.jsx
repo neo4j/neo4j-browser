@@ -46,13 +46,14 @@ const StyledText = styled.div`
 `
 
 export class IconContainer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       mouseover: false
     }
   }
-  render () {
+
+  render() {
     const { text, regulateSize, icon, width, title, ...rest } = this.props
 
     const regulateSizeStyle = regulateSize

@@ -7,7 +7,7 @@ const FeatureToggle = ({ name, on, off }) => {
       {showFeature => {
         if (!name) {
           throw new Error(
-            `No "name" property provided to FeatureToggle component.`
+            'No "name" property provided to FeatureToggle component.'
           )
         }
         const shouldShow = showFeature(name)

@@ -18,26 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function toLabel (label) {
+export function toLabel(label) {
   return `:${label.val}`
 }
 
-export function toRelationshipType (relationshipType) {
+export function toRelationshipType(relationshipType) {
   return `:${relationshipType.val}`
 }
 
-export function toPropertyKey (propertyKey) {
+export function toPropertyKey(propertyKey) {
   return propertyKey.val
 }
 
-export function toFunction (func) {
+export function toFunction(func) {
   return {
     name: func.val,
     signature: func.signature.replace(func.val, '')
   }
 }
 
-export function toProcedure (procedure) {
+export function toProcedure(procedure) {
   const name = procedure.val
   const signature = procedure.signature.replace(procedure.val, '')
 

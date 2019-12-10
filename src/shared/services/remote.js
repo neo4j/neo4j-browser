@@ -18,10 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global fetch */
 import 'isomorphic-fetch'
 
-function request (method, url, data = null, extraHeaders = {}) {
+function request(method, url, data = null, extraHeaders = {}) {
   const headers = {
     'Content-Type': 'application/json',
     'X-Ajax-Browser-Auth': 'true',
@@ -35,18 +34,18 @@ function request (method, url, data = null, extraHeaders = {}) {
   }).then(checkStatus)
 }
 
-function get (url, headers = {}) {
+function get(url, headers = {}) {
   return fetch(url, {
     method: 'get',
     headers
   })
     .then(checkStatus)
-    .then(function (response) {
+    .then(function(response) {
       return response.text()
     })
 }
 
-export function getJSON (url) {
+export function getJSON(url) {
   return fetch(url, {
     method: 'get',
     headers: {
@@ -61,7 +60,7 @@ export function getJSON (url) {
     })
 }
 
-function checkStatus (response) {
+function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {

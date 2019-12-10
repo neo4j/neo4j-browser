@@ -36,14 +36,7 @@ export const EditorButton = props => {
   const { icon, title, ...rest } = props
   return (
     <BaseButton title={title}>
-      {
-        <SVGInline
-          svg={icon}
-          accessibilityLabel={title}
-          {...rest}
-          width='24px'
-        />
-      }
+      <SVGInline svg={icon} accessibilityLabel={title} {...rest} width="24px" />
     </BaseButton>
   )
 }
@@ -219,27 +212,27 @@ export const FormButton = props => {
 
   if (icon && label) {
     return (
-      <ButtonType {...rest} type='button'>
+      <ButtonType {...rest} type="button">
         {label} {icon}
       </ButtonType>
     )
   }
   if (icon) {
     return (
-      <ButtonType {...rest} type='button'>
+      <ButtonType {...rest} type="button">
         {icon}
       </ButtonType>
     )
   }
   if (label) {
     return (
-      <ButtonType {...rest} type='button'>
+      <ButtonType {...rest} type="button">
         {label}
       </ButtonType>
     )
   }
   return (
-    <ButtonType {...props} type='button'>
+    <ButtonType {...props} type="button">
       {children}
     </ButtonType>
   )
@@ -362,7 +355,7 @@ const BaseCarouselButton = styled.button`
 
   &.rounded {
     background-color: ${props =>
-    hexToRgba(props.theme.secondaryButtonText, 0.1)};
+      hexToRgba(props.theme.secondaryButtonText, 0.1)};
     border-radius: 0 5px 5px 0;
     position: absolute;
     left: 0;

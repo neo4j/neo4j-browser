@@ -61,7 +61,7 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
   onExportScripts: scripts => exportFavorites(scripts),
   onRemoveScript: favorite =>
     dispatch(favoritesDuck.removeFavorite(favorite.id)),
-  onUpdateFolder (favorites, payload, allFavorites, allFolders) {
+  onUpdateFolder(favorites, payload, allFavorites, allFolders) {
     // favorite name update
     if (payload.name) {
       dispatch(
@@ -113,7 +113,7 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
       dispatch(foldersDuck.removeFolder(sourceFolder.id))
     }
   },
-  onRemoveFolder (favorites) {
+  onRemoveFolder(favorites) {
     const { folder } = getFirstFavorite(favorites) || {}
 
     if (!folder) return

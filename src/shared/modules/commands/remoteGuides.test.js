@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, afterEach, test, expect */
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
 import {

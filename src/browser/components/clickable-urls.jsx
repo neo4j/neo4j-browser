@@ -18,7 +18,7 @@
 import React from 'react'
 import { sanitize } from 'dompurify'
 
-export default function ClickableUrls ({ text }) {
+export default function ClickableUrls({ text }) {
   return (
     <span
       dangerouslySetInnerHTML={{
@@ -36,7 +36,7 @@ const URL_REGEX = /(([a-zA-Z]+):\/\/)(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s(
  * @param     {string}    text
  * @return    {string}
  */
-export function convertUrlsToHrefTags (text) {
+export function convertUrlsToHrefTags(text) {
   return `${text || ''}`.replace(
     URL_REGEX,
     match => `<a href="${match}" target="_blank">${match}</a>`

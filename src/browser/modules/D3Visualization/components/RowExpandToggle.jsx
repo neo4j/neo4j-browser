@@ -30,22 +30,23 @@ export class RowExpandToggleComponent extends Component {
     this.setState({ rowHeight: getHeightFromElem(this.props.rowElem) })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.updateDimensions()
     window.addEventListener('resize', this.updateDimensions)
   }
-  componentWillUnmount () {
+
+  componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions)
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const rowHeight = getHeightFromElem(this.props.rowElem)
     if (this.state.rowHeight !== rowHeight) {
       this.updateDimensions()
     }
   }
 
-  render () {
+  render() {
     if (this.props.containerHeight * 1.1 < this.state.rowHeight) {
       return (
         <StyledRowToggle onClick={this.props.onClick}>

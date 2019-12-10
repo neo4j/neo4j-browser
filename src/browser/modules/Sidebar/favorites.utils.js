@@ -43,7 +43,7 @@ import arrayHasItems from 'shared/utils/array-has-items'
  * @param     {Object[]}        favorites
  * @return    {Object|null}
  */
-export function getFirstFavorite (favorites) {
+export function getFirstFavorite(favorites) {
   return head(favorites)
 }
 
@@ -52,7 +52,7 @@ export function getFirstFavorite (favorites) {
  * @param     {Object[]}        favorites
  * @return    {string[]}
  */
-export function getFavoriteIds (favorites) {
+export function getFavoriteIds(favorites) {
   return map(favorites, 'id')
 }
 
@@ -62,7 +62,7 @@ export function getFavoriteIds (favorites) {
  * @param     {Object[]}  folders
  * @return    {string}
  */
-export function getFolderFromPath (path, folders) {
+export function getFolderFromPath(path, folders) {
   const name = omitScriptPathPrefix(SLASH, path)
 
   return find(folders, folder => folder.name === name)
@@ -74,7 +74,7 @@ export function getFolderFromPath (path, folders) {
  * @param     {Object[]}    allFavorites
  * @return    {Object[]}
  */
-export function getFolderFavorites (folderId, allFavorites) {
+export function getFolderFavorites(folderId, allFavorites) {
   return filter(allFavorites, ({ folder }) => folder && folderId === folder.id)
 }
 
@@ -85,7 +85,7 @@ export function getFolderFavorites (folderId, allFavorites) {
  * @param     {Object[]}    allFavorites
  * @return    {Object[]}
  */
-export function folderHasRemainingFavorites (folderId, favorites, allFavorites) {
+export function folderHasRemainingFavorites(folderId, favorites, allFavorites) {
   const folderFavorites = getFolderFavorites(folderId, allFavorites)
 
   return arrayHasItems(
@@ -98,7 +98,7 @@ export function folderHasRemainingFavorites (folderId, favorites, allFavorites) 
  * @param     {string}                      path
  * @return    {{id: string, name: string}}
  */
-export function generateFolderNameAndIdForPath (path) {
+export function generateFolderNameAndIdForPath(path) {
   return {
     id: uuid.v4(),
     name: omitScriptPathPrefix(SLASH, path)
@@ -111,7 +111,7 @@ export function generateFolderNameAndIdForPath (path) {
  * @param     {string}    newName
  * @return    {string}
  */
-export function addNameComment (contents, newName) {
+export function addNameComment(contents, newName) {
   const parts = split(contents, '\n')
   const first = trim(head(parts) || '')
   const oldName = trim(getScriptDisplayName({ contents }))
@@ -129,7 +129,7 @@ export function addNameComment (contents, newName) {
  * @param     {Object}      update
  * @return    {Object[]}
  */
-export function mapNewFavoritesToOld (newFavorites, update = {}) {
+export function mapNewFavoritesToOld(newFavorites, update = {}) {
   return map(newFavorites, ({ id, folder, contents }) =>
     assign(
       {
@@ -142,7 +142,7 @@ export function mapNewFavoritesToOld (newFavorites, update = {}) {
   )
 }
 
-export function updateFolder (folder, update, allFolders) {
+export function updateFolder(folder, update, allFolders) {
   return [
     ...filter(allFolders, ({ id }) => folder.id !== id),
     { ...folder, ...update }

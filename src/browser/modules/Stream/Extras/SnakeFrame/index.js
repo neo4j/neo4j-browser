@@ -67,16 +67,20 @@ export class SnakeFrame extends React.Component {
     play: false,
     initialLoad: true
   }
+
   setScore = score => {
     this.setState({ score: score - 1 })
   }
+
   stop = () => {
     this.setState({ play: false })
   }
+
   play = () => {
     this.setState({ play: true, score: 0, initialLoad: false })
   }
-  render () {
+
+  render() {
     const game = (
       <GameDiv
         width={width}

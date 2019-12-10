@@ -91,23 +91,24 @@ Cypress.Commands.add('disconnect', () => {
   const query = ':server disconnect'
   cy.executeCommand(query)
 })
-Cypress.Commands.add('executeCommand', query => {
+Cypress.Commands.add('executeCommand', (query, options = {}) => {
   cy.get(ClearEditorButton).click()
-  cy.get(Editor).type(query, { force: true })
+  cy.get(Editor).type(query, { force: true, ...options })
+  cy.wait(100)
   cy.get(SubmitQueryButton).click()
   cy.wait(1000)
 })
 Cypress.Commands.add('disableEditorAutocomplete', () => {
   cy.get(ClearEditorButton).click()
-  cy.executeCommand(`:config editorAutocomplete: false`)
+  cy.executeCommand(':config editorAutocomplete: false')
   cy.get(SubmitQueryButton).click()
-  cy.executeCommand(`:clear`)
+  cy.executeCommand(':clear')
 })
 Cypress.Commands.add('enableEditorAutocomplete', () => {
   cy.get(ClearEditorButton).click()
-  cy.executeCommand(`:config editorAutocomplete: true`)
+  cy.executeCommand(':config editorAutocomplete: true')
   cy.get(SubmitQueryButton).click()
-  cy.executeCommand(`:clear`)
+  cy.executeCommand(':clear')
 })
 Cypress.Commands.add('waitForCommandResult', () => {
   cy.get('[data-testid="frame-loaded-contents"]', { timeout: 40000 }).should(

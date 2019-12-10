@@ -22,8 +22,6 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { ConnectionForm } from './ConnectionForm'
 
-/* global jest */
-
 test('should print correct state for retaining credentials', async () => {
   const bus = {
     //  eslint-disable-next-line
@@ -37,7 +35,7 @@ test('should print correct state for retaining credentials', async () => {
   let storeCredentials = true // initial default value
   let activeConnectionData = null
   let activeConnection = null
-  let frame = {}
+  const frame = {}
   const error = jest.fn()
 
   // When

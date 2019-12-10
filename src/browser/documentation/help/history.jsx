@@ -23,24 +23,24 @@ const title = 'History'
 const subtitle = 'Show command history'
 const category = 'browserUiCommands'
 const content = (
-  <React.Fragment>
+  <>
     <p>
-      The <a exec-topic='history'>:history</a> command will display your most
+      The <a exec-topic="history">:history</a> command will display your most
       recent executed commands.
     </p>
-    <table className='table-condensed table-help'>
+    <table className="table-condensed table-help">
       <tbody>
         <tr>
           <th>Related:</th>
           <td>
-            <a help-topic='history clear'>:help history clear</a>
-            <a help-topic='help'>:help help</a>
-            <a help-topic='commands'>:help commands</a>
+            <a help-topic="history clear">:help history clear</a>
+            <a help-topic="help">:help help</a>
+            <a help-topic="commands">:help commands</a>
           </td>
         </tr>
       </tbody>
     </table>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

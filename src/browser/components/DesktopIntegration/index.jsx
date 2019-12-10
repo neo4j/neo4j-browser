@@ -22,11 +22,11 @@ import { Component } from 'react'
 import { getActiveGraph, getCredentials, eventToHandler } from './helpers'
 
 export default class DesktopIntegration extends Component {
-  setupListener () {
+  setupListener() {
     const { integrationPoint, onArgumentsChange = null } = this.props
     if (integrationPoint && integrationPoint.onContextUpdate) {
       const getKerberosTicket =
-        integrationPoint.getKerberosTicket || function () {}
+        integrationPoint.getKerberosTicket || function() {}
       integrationPoint.onContextUpdate((event, newContext, oldContext) => {
         const handlerPropName = eventToHandler(event.type)
         if (!handlerPropName) return
@@ -47,11 +47,12 @@ export default class DesktopIntegration extends Component {
       integrationPoint.onArgumentsChange(onArgumentsChange)
     }
   }
-  loadInitialContext () {
+
+  loadInitialContext() {
     const { integrationPoint, onMount = null } = this.props
     if (integrationPoint && integrationPoint.getContext) {
       const getKerberosTicket =
-        integrationPoint.getKerberosTicket || function () {}
+        integrationPoint.getKerberosTicket || function() {}
       integrationPoint
         .getContext()
         .then(context => {
@@ -72,11 +73,13 @@ export default class DesktopIntegration extends Component {
         .catch(e => {}) // Catch but don't bother
     }
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.loadInitialContext()
     this.setupListener()
   }
-  render () {
+
+  render() {
     return null
   }
 }

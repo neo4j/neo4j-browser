@@ -26,6 +26,6 @@ export const shouldTriggerConnectEvent = (state, todayDate = null) => {
 }
 
 export const getTodayDate = () => {
-  let today = new Date()
+  const today = new Date()
   return new Date(today.getFullYear(), today.getMonth(), today.getDate())
 }

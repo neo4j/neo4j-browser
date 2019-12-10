@@ -26,10 +26,12 @@ class Accordion extends Component {
     activeIndex: -1,
     initialLoad: true
   }
+
   titleClick = index => {
     const newIndex = this.state.activeIndex === index ? -1 : index
     this.setState({ activeIndex: newIndex, initialLoad: false })
   }
+
   getChildProps = ({ index, defaultActive = false, forceActive = false }) => {
     const props = {
       titleProps: {
@@ -56,7 +58,8 @@ class Accordion extends Component {
     props.contentProps.active = false
     return props
   }
-  render () {
+
+  render() {
     const { getChildProps } = this
     const { render: renderProp, ...rest } = this.props
     return (

@@ -21,7 +21,7 @@
 import { mapNodes, mapRelationships, getGraphStats } from './mapper'
 
 export class GraphEventHandler {
-  constructor (
+  constructor(
     graph,
     graphView,
     getNodeNeighbours,
@@ -38,11 +38,11 @@ export class GraphEventHandler {
     this.onGraphModelChange = onGraphModelChange
   }
 
-  graphModelChanged () {
+  graphModelChanged() {
     this.onGraphModelChange(getGraphStats(this.graph))
   }
 
-  selectItem (item) {
+  selectItem(item) {
     if (this.selectedItem) {
       this.selectedItem.selected = false
     }
@@ -51,7 +51,7 @@ export class GraphEventHandler {
     this.graphView.update()
   }
 
-  deselectItem () {
+  deselectItem() {
     if (this.selectedItem) {
       this.selectedItem.selected = false
       this.selectedItem = null
@@ -66,7 +66,7 @@ export class GraphEventHandler {
     this.graphView.update()
   }
 
-  nodeClose (d) {
+  nodeClose(d) {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
@@ -74,7 +74,7 @@ export class GraphEventHandler {
     this.graphModelChanged()
   }
 
-  nodeClicked (d) {
+  nodeClicked(d) {
     if (!d) {
       return
     }
@@ -90,7 +90,7 @@ export class GraphEventHandler {
     }
   }
 
-  nodeUnlock (d) {
+  nodeUnlock(d) {
     if (!d) {
       return
     }
@@ -98,7 +98,7 @@ export class GraphEventHandler {
     this.deselectItem()
   }
 
-  nodeDblClicked (d) {
+  nodeDblClicked(d) {
     if (d.expanded) {
       this.nodeCollapse(d)
       return
@@ -107,7 +107,7 @@ export class GraphEventHandler {
     const graph = this.graph
     const graphView = this.graphView
     const graphModelChanged = this.graphModelChanged.bind(this)
-    this.getNodeNeighbours(d, this.graph.findNodeNeighbourIds(d.id), function (
+    this.getNodeNeighbours(d, this.graph.findNodeNeighbourIds(d.id), function(
       err,
       { nodes, relationships }
     ) {
@@ -119,14 +119,14 @@ export class GraphEventHandler {
     })
   }
 
-  nodeCollapse (d) {
+  nodeCollapse(d) {
     d.expanded = false
     this.graph.collapseNode(d)
     this.graphView.update()
     this.graphModelChanged()
   }
 
-  onNodeMouseOver (node) {
+  onNodeMouseOver(node) {
     if (!node.contextMenu) {
       this.onItemMouseOver({
         type: 'node',
@@ -138,7 +138,8 @@ export class GraphEventHandler {
       })
     }
   }
-  onMenuMouseOver (itemWithMenu) {
+
+  onMenuMouseOver(itemWithMenu) {
     this.onItemMouseOver({
       type: 'context-menu-item',
       item: {
@@ -148,7 +149,8 @@ export class GraphEventHandler {
       }
     })
   }
-  onRelationshipMouseOver (relationship) {
+
+  onRelationshipMouseOver(relationship) {
     this.onItemMouseOver({
       type: 'relationship',
       item: {
@@ -159,7 +161,7 @@ export class GraphEventHandler {
     })
   }
 
-  onRelationshipClicked (relationship) {
+  onRelationshipClicked(relationship) {
     if (!relationship.selected) {
       this.selectItem(relationship)
       this.onItemSelected({
@@ -175,11 +177,11 @@ export class GraphEventHandler {
     }
   }
 
-  onCanvasClicked () {
+  onCanvasClicked() {
     this.deselectItem()
   }
 
-  onItemMouseOut (item) {
+  onItemMouseOut(item) {
     this.onItemMouseOver({
       type: 'canvas',
       item: {
@@ -189,7 +191,7 @@ export class GraphEventHandler {
     })
   }
 
-  bindEventHandlers () {
+  bindEventHandlers() {
     this.graphView
       .on('nodeMouseOver', this.onNodeMouseOver.bind(this))
       .on('nodeMouseOut', this.onItemMouseOut.bind(this))

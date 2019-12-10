@@ -23,7 +23,7 @@ import { isEnterpriseEdition } from '../support/utils'
 /* global Cypress, cy, test, expect, before */
 
 describe('Bolt connections', () => {
-  before(function () {
+  before(function() {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')

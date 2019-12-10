@@ -97,8 +97,8 @@ export const deepEquals = (x, y) => {
 }
 
 export const shallowEquals = (a, b) => {
-  for (let key in a) if (a[key] !== b[key]) return false
-  for (let key in b) if (!(key in a)) return false
+  for (const key in a) if (a[key] !== b[key]) return false
+  for (const key in b) if (!(key in a)) return false
   return true
 }
 
@@ -227,7 +227,7 @@ export const getUrlInfo = url => {
 
 export const getUrlParamValue = (name, url) => {
   if (!url) return false
-  let out = []
+  const out = []
   const re = new RegExp('[\\?&]' + name + '=([^&#]*)', 'g')
   let results
   while ((results = re.exec(url)) !== null) {
@@ -248,9 +248,9 @@ export const toHumanReadableBytes = input => {
   }
 
   number /= 1024
-  let units = ['KiB', 'MiB', 'GiB', 'TiB']
+  const units = ['KiB', 'MiB', 'GiB', 'TiB']
 
-  for (let unit of Array.from(units)) {
+  for (const unit of Array.from(units)) {
     if (number < 1024) {
       return `${number.toFixed(2)} ${unit}`
     }
@@ -260,7 +260,7 @@ export const toHumanReadableBytes = input => {
   return `${number.toFixed(2)} PiB`
 }
 
-export const getBrowserName = function () {
+export const getBrowserName = function() {
   if (!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0) {
     return 'Opera'
   }
@@ -337,8 +337,8 @@ export const stringifyMod = (
   prettyLevel = !prettyLevel
     ? false
     : prettyLevel === true
-      ? 1
-      : parseInt(prettyLevel)
+    ? 1
+    : parseInt(prettyLevel)
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
   const indentation =
@@ -348,7 +348,7 @@ export const stringifyMod = (
   const toString = Object.prototype.toString
   const isArray =
     Array.isArray ||
-    function (a) {
+    function(a) {
       return toString.call(a) === '[object Array]'
     }
   const escMap = {
@@ -360,7 +360,7 @@ export const stringifyMod = (
     '\r': '\r',
     '\t': '\t'
   }
-  const escFunc = function (m) {
+  const escFunc = function(m) {
     return (
       escMap[m] || '\\u' + (m.charCodeAt(0) + 0x10000).toString(16).substr(1)
     )
@@ -396,7 +396,7 @@ export const stringifyMod = (
         ']'
       )
     } else if (toString.call(value) === '[object Object]') {
-      let tmp = []
+      const tmp = []
       for (const k in value) {
         if (value.hasOwnProperty(k)) {
           tmp.push(
@@ -490,15 +490,15 @@ export const generateBoltHost = host => {
   return aliasedProtocol + (host || 'localhost:7687')
 }
 
-export function flushPromises () {
+export function flushPromises() {
   return new Promise(resolve => setImmediate(resolve))
 }
 
-export async function sleep (ms) {
+export async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export function detectRuntimeEnv (win, cloudDomains = []) {
+export function detectRuntimeEnv(win, cloudDomains = []) {
   if (win && win.neo4jDesktopApi) {
     return DESKTOP
   }

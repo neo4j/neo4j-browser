@@ -55,7 +55,7 @@ import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 
 export class UserAdd extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       availableRoles: this.props.availableRoles || [],
@@ -69,30 +69,34 @@ export class UserAdd extends Component {
       isLoading: false
     }
   }
-  componentWillMount () {
+
+  componentWillMount() {
     this.getRoles()
   }
-  extractUserNameAndRolesFromBolt (result) {
-    let tableArray = bolt.recordsToTableArray(result.records)
+
+  extractUserNameAndRolesFromBolt(result) {
+    const tableArray = bolt.recordsToTableArray(result.records)
     tableArray.shift()
     return tableArray
   }
-  removeRole (role) {
+
+  removeRole(role) {
     const roles = this.state.roles.slice()
     roles.splice(this.state.roles.indexOf(role), 1)
     return roles
   }
-  listRoles () {
+
+  listRoles() {
     return (
       !!this.state.roles.length && (
-        <StyleRolesContainer className='roles-inline'>
+        <StyleRolesContainer className="roles-inline">
           {this.state.roles.map((role, i) => {
             return (
               <FormButton
                 key={i}
                 label={role}
                 icon={<CloseIcon />}
-                buttonType='tag'
+                buttonType="tag"
                 onClick={() => {
                   this.setState({ roles: this.removeRole(role) })
                 }}
@@ -103,8 +107,9 @@ export class UserAdd extends Component {
       )
     )
   }
-  addRoles () {
-    let errors = []
+
+  addRoles() {
+    const errors = []
     this.state.roles.forEach(role => {
       this.props.bus &&
         this.props.bus.self(
@@ -142,7 +147,8 @@ export class UserAdd extends Component {
       isLoading: false
     })
   }
-  getRoles () {
+
+  getRoles() {
     this.props.bus &&
       this.props.bus.self(
         CYPHER_REQUEST,
@@ -161,11 +167,6 @@ export class UserAdd extends Component {
               errors: ['Unable to get roles list', error]
             })
           }
-          const flatten = arr =>
-            arr.reduce(
-              (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b),
-              []
-            )
           return this.setState({
             availableRoles: map(response.result.records, record =>
               record.get('role')
@@ -174,9 +175,10 @@ export class UserAdd extends Component {
         }
       )
   }
-  submit () {
+
+  submit() {
     this.setState({ isLoading: true, success: null, errors: null })
-    let errors = []
+    const errors = []
     if (!this.state.username) errors.push('Missing username')
     if (!this.state.password) errors.push('Missing password')
     if (!(this.state.password === this.state.confirmPassword)) {
@@ -189,7 +191,8 @@ export class UserAdd extends Component {
       return this.createUser()
     }
   }
-  createUser () {
+
+  createUser() {
     this.props.bus &&
       this.props.bus.self(
         CYPHER_REQUEST,
@@ -220,32 +223,37 @@ export class UserAdd extends Component {
         }
       )
   }
-  updateUsername (event) {
+
+  updateUsername(event) {
     return this.setState({ username: event.target.value })
   }
-  updatePassword (event) {
+
+  updatePassword(event) {
     return this.setState({ password: event.target.value })
   }
-  confirmUpdatePassword (event) {
+
+  confirmUpdatePassword(event) {
     return this.setState({ confirmPassword: event.target.value })
   }
-  updateForcePasswordChange () {
+
+  updateForcePasswordChange() {
     return this.setState({
       forcePasswordChange: !this.state.forcePasswordChange
     })
   }
-  availableRoles () {
+
+  availableRoles() {
     return this.state.availableRoles.filter(
       role => this.state.roles.indexOf(role) < 0
     )
   }
 
-  openListUsersFrame () {
+  openListUsersFrame() {
     const action = executeCommand(':server user list')
     this.props.bus.send(action.type, action)
   }
 
-  render () {
+  render() {
     const { isLoading } = this.props
     let aside
     let frameContents
@@ -254,7 +262,7 @@ export class UserAdd extends Component {
       this.state.availableRoles ? (
         <RolesSelector
           roles={this.availableRoles()}
-          className='roles'
+          className="roles"
           name={rolesSelectorId}
           id={rolesSelectorId}
           onChange={event => {
@@ -278,16 +286,16 @@ export class UserAdd extends Component {
       errors = null
       aside = (
         <FrameAside
-          title={'Frame unavailable'}
-          subtitle={'What edition are you running?'}
+          title="Frame unavailable"
+          subtitle="What edition are you running?"
         />
       )
       frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
     } else {
       aside = (
         <FrameAside
-          title='Add user'
-          subtitle='Add a user to the current database'
+          title="Add user"
+          subtitle="Add a user to the current database"
         />
       )
       frameContents = (
@@ -295,7 +303,7 @@ export class UserAdd extends Component {
           <StyledFormElement>
             <StyledLabel htmlFor={usernameId}>Username</StyledLabel>
             <StyledInput
-              className='username'
+              className="username"
               name={usernameId}
               id={usernameId}
               value={this.state.username}
@@ -308,8 +316,8 @@ export class UserAdd extends Component {
             <StyledFormElement>
               <StyledLabel htmlFor={passwordId}>Password</StyledLabel>
               <StyledInput
-                type='password'
-                className='password'
+                type="password"
+                className="password"
                 name={passwordId}
                 id={passwordId}
                 value={this.state.password}
@@ -322,8 +330,8 @@ export class UserAdd extends Component {
                 Confirm password
               </StyledLabel>
               <StyledInput
-                type='password'
-                className='password-confirm'
+                type="password"
+                className="password-confirm"
                 name={passwordConfirmId}
                 id={passwordConfirmId}
                 value={this.state.confirmPassword}
@@ -345,7 +353,7 @@ export class UserAdd extends Component {
                 onChange={this.updateForcePasswordChange.bind(this)}
                 checked={this.state.forcePasswordChange}
                 disabled={isLoading}
-                type='checkbox'
+                type="checkbox"
               />
               Force password change
             </StyledLabel>
@@ -354,7 +362,7 @@ export class UserAdd extends Component {
           <StyledFormElement>
             <FormButton
               onClick={this.submit.bind(this)}
-              label='Add User'
+              label="Add User"
               disabled={isLoading}
             />
           </StyledFormElement>
@@ -367,7 +375,7 @@ export class UserAdd extends Component {
     }
 
     const getStatusBar = () => {
-      if (errors) return <FrameError message={errors} code='Error' />
+      if (errors) return <FrameError message={errors} code="Error" />
       if (this.state.success) {
         return <FrameSuccess message={this.state.success} />
       }
@@ -396,9 +404,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(UserAdd)
-)
+export default withBus(connect(mapStateToProps, null)(UserAdd))

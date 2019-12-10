@@ -28,7 +28,7 @@ const SubmitQueryButton = '[data-testid="submitQuery"]'
 const ClearEditorButton = '[data-testid="clearEditorContent"]'
 
 describe('Neo4j Browser', () => {
-  before(function () {
+  before(function() {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')

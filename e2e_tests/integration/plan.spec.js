@@ -18,17 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global Cypress, cy, test, expect, before, after */
+import { isEnterpriseEdition } from '../support/utils'
+
+/* global Cypress, cy, before, after */
 
 describe('Plan output', () => {
-  before(function () {
+  before(function() {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
     cy.disableEditorAutocomplete()
   })
-  after(function () {
+  after(function() {
     cy.enableEditorAutocomplete()
   })
   it('can connect', () => {
@@ -38,9 +40,9 @@ describe('Plan output', () => {
   if (Cypress.config('serverVersion') >= 3.5) {
     it('print Order in PROFILE', () => {
       cy.executeCommand(':clear')
-      cy.executeCommand(`CREATE INDEX ON :Person(age)`)
+      cy.executeCommand('CREATE INDEX ON :Person(age)')
       cy.executeCommand(
-        `EXPLAIN MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age`
+        'EXPLAIN MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
       )
       cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
       const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
@@ -49,12 +51,14 @@ describe('Plan output', () => {
   }
   if (
     Cypress.config('serverVersion') >= 3.4 &&
-    Cypress.config('serverVersion') < 4.0
+    Cypress.config('serverVersion') < 4.0 &&
+    isEnterpriseEdition()
   ) {
     it('print pagecache stats in PROFILE', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(
-        `PROFILE CYPHER runtime=compiled MATCH (n:VendorId {{}uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)`
+        'PROFILE CYPHER runtime=compiled MATCH (n:VendorId {uid: "d8eedae3ef0b4c45a9a27308", vendor: "run"}) RETURN n.uid, n.vendor, id(n)',
+        { parseSpecialCharSequences: false }
       )
       cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
       const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
@@ -66,8 +70,7 @@ describe('Plan output', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (:Tag)')
     cy.executeCommand(':clear')
-    cy.executeCommand(`PROFILE MATCH (tag:Tag)
-    WHERE tag.name IN ["Eutheria"]
+    cy.executeCommand(`PROFILE MATCH (tag:Tag){shift}{enter}WHERE tag.name IN ["Eutheria"]
     WITH tag
     MATCH (publication)-[:HAS_TAG]->(tag)
     WHERE SIZE((publication)-[:HAS_TAG]->()) = 1
@@ -99,7 +102,7 @@ describe('Plan output', () => {
 
     cy.executeCommand(':clear')
     cy.executeCommand(
-      `profile match (n:Person) with n where size ( (n)-[:Follows]->()) > 6 return n;`
+      'profile match (n:Person) with n where size ( (n)-[:Follows]->()) > 6 return n;'
     )
     cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
     const el2 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })

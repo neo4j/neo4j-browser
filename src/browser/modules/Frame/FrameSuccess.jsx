@@ -20,7 +20,7 @@
 import React from 'react'
 const FrameSuccess = props => {
   if (!props || !props.message) return null
-  return <span className='statusbar--success'>{props.message}</span>
+  return <span className="statusbar--success">{props.message}</span>
 }
 
 export default FrameSuccess

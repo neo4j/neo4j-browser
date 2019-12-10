@@ -47,7 +47,7 @@ import * as legacyHelpers from './legacyHelpers'
 import * as helpers from './helpers'
 
 export class SysInfoFrame extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       lastFetch: null,
@@ -67,10 +67,11 @@ export class SysInfoFrame extends Component {
     this.helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getSysInfo()
   }
-  componentDidUpdate (prevProps, prevState) {
+
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
@@ -82,7 +83,8 @@ export class SysInfoFrame extends Component {
       }
     }
   }
-  getSysInfo () {
+
+  getSysInfo() {
     if (this.props.bus && this.props.isConnected) {
       this.setState({ lastFetch: Date.now() })
       this.props.bus.self(
@@ -107,14 +109,16 @@ export class SysInfoFrame extends Component {
       this.setState({ error: 'No connection available' })
     }
   }
-  setAutoRefresh (autoRefresh) {
+
+  setAutoRefresh(autoRefresh) {
     this.setState({ autoRefresh: autoRefresh })
 
     if (autoRefresh) {
       this.getSysInfo()
     }
   }
-  render () {
+
+  render() {
     const SysinfoComponent = this.helpers.Sysinfo
     const content = !this.props.isConnected ? (
       <ErrorsView

@@ -33,7 +33,7 @@ const removeOnHandlersFromHtml = string =>
     ''
   )
 
-export function cleanHtml (string) {
+export function cleanHtml(string) {
   if (typeof string !== 'string') return string
   string = removeOnHandlersFromHtml(string)
   string = removeScriptTags(string)

@@ -35,13 +35,15 @@ export class Visualization extends Component {
     nodes: [],
     relationships: []
   }
-  componentDidMount () {
+
+  componentDidMount() {
     const { records = [] } = this.props.result
     if (records && records.length > 0) {
       this.populateDataToStateFromProps(this.props)
     }
   }
-  shouldComponentUpdate (props, state) {
+
+  shouldComponentUpdate(props, state) {
     return (
       this.props.updated !== props.updated ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
@@ -50,7 +52,8 @@ export class Visualization extends Component {
       this.props.autoComplete !== props.autoComplete
     )
   }
-  componentWillReceiveProps (props) {
+
+  componentWillReceiveProps(props) {
     if (
       this.props.updated !== props.updated ||
       this.props.autoComplete !== props.autoComplete
@@ -58,7 +61,8 @@ export class Visualization extends Component {
       this.populateDataToStateFromProps(props)
     }
   }
-  populateDataToStateFromProps (props) {
+
+  populateDataToStateFromProps(props) {
     const {
       nodes,
       relationships
@@ -71,7 +75,8 @@ export class Visualization extends Component {
       updated: new Date().getTime()
     })
   }
-  autoCompleteRelationships (existingNodes, newNodes) {
+
+  autoCompleteRelationships(existingNodes, newNodes) {
     if (this.props.autoComplete) {
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
       const newNodeIds = newNodes.map(node => parseInt(node.id))
@@ -86,7 +91,8 @@ export class Visualization extends Component {
       this.autoCompleteCallback && this.autoCompleteCallback([])
     }
   }
-  getNeighbours (id, currentNeighbourIds = []) {
+
+  getNeighbours(id, currentNeighbourIds = []) {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
@@ -103,7 +109,7 @@ export class Visualization extends Component {
             if (!response.success) {
               reject(new Error())
             } else {
-              let count =
+              const count =
                 response.result.records.length > 0
                   ? parseInt(response.result.records[0].get('c').toString())
                   : 0
@@ -121,7 +127,8 @@ export class Visualization extends Component {
         )
     })
   }
-  getInternalRelationships (existingNodeIds, newNodeIds) {
+
+  getInternalRelationships(existingNodeIds, newNodeIds) {
     newNodeIds = newNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.concat(newNodeIds)
@@ -151,11 +158,13 @@ export class Visualization extends Component {
         )
     })
   }
-  setGraph (graph) {
+
+  setGraph(graph) {
     this.graph = graph
     this.autoCompleteRelationships([], this.graph._nodes)
   }
-  render () {
+
+  render() {
     if (!this.state.nodes.length) return null
 
     return (
@@ -196,8 +205,5 @@ const mapDispatchToProps = dispatch => {
 }
 
 export const VisualizationConnectedBus = withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Visualization)
+  connect(mapStateToProps, mapDispatchToProps)(Visualization)
 )

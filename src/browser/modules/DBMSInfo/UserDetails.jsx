@@ -29,7 +29,7 @@ import {
 import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
 export class UserDetails extends Component {
-  render () {
+  render() {
     const userDetails = this.props.user
     const roles = userDetails && userDetails.roles ? userDetails.roles : []
     if (userDetails.username) {
@@ -38,26 +38,26 @@ export class UserDetails extends Component {
         .map(role => role.toLowerCase())
         .includes('admin')
       return (
-        <DrawerSection className='user-details'>
+        <DrawerSection className="user-details">
           <DrawerSubHeader>Connected as</DrawerSubHeader>
           <DrawerSectionBody>
             <StyledTable>
               <tbody>
                 <tr>
                   <StyledKey>Username:</StyledKey>
-                  <StyledValue data-testid='user-details-username'>
+                  <StyledValue data-testid="user-details-username">
                     {userDetails.username}
                   </StyledValue>
                 </tr>
                 <tr>
                   <StyledKey>Roles:</StyledKey>
-                  <StyledValue data-testid='user-details-roles'>
+                  <StyledValue data-testid="user-details-roles">
                     {mappedRoles}
                   </StyledValue>
                 </tr>
                 <Render if={hasAdminRole}>
                   <tr>
-                    <StyledKey className='user-list-button'>Admin:</StyledKey>
+                    <StyledKey className="user-list-button">Admin:</StyledKey>
                     <StyledValue>
                       <Link
                         onClick={() =>
@@ -69,7 +69,7 @@ export class UserDetails extends Component {
                     </StyledValue>
                   </tr>
                   <tr>
-                    <StyledKey className='user-list-button' />
+                    <StyledKey className="user-list-button" />
                     <StyledValue>
                       <Link
                         onClick={() =>

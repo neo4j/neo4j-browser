@@ -23,7 +23,7 @@ import { isEnterpriseEdition } from '../support/utils'
 /* global Cypress, cy, test, expect, before */
 
 describe('User: ', () => {
-  before(function () {
+  before(function() {
     cy.visit(Cypress.config('url'))
     cy.get('input[data-testid="boltaddress"]', { timeout: 40000 })
     const password = Cypress.config('password')

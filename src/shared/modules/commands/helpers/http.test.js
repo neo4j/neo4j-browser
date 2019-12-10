@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 import { parseHttpVerbCommand } from './http'
 
 describe('HTTP verbs command', () => {

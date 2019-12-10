@@ -52,10 +52,11 @@ import {
 } from '../styled'
 
 export class ErrorsView extends Component {
-  shouldComponentUpdate (props, state) {
+  shouldComponentUpdate(props, state) {
     return !deepEquals(props.result, this.props.result)
   }
-  render () {
+
+  render() {
     const { result: error, bus } = this.props
     if (!error || !error.code) {
       return null
@@ -106,10 +107,11 @@ const onItemClick = (bus, statement) => {
 export const ErrorsViewBus = withBus(ErrorsView)
 
 export class ErrorsStatusbar extends Component {
-  shouldComponentUpdate (props, state) {
+  shouldComponentUpdate(props, state) {
     return !deepEquals(props.result, this.props.result)
   }
-  render () {
+
+  render() {
     const error = this.props.result
     if (!error || (!error.code && !error.message)) return null
     const fullError = errorMessageFormater(error.code, error.message)

@@ -79,7 +79,7 @@ export const SysInfoTableEntry = ({
   const getValue = (v, m) => (m && v ? mapper(v) : v)
   if (headers) {
     return (
-      <StyledTr key='headers-row'>
+      <StyledTr key="headers-row">
         {headers.map(value => {
           const mappedValue = getValue(value, mapper)
           const val = mappedValue || missingValuePlaceholder
@@ -92,7 +92,7 @@ export const SysInfoTableEntry = ({
   }
   if (values) {
     return (
-      <StyledTr key='values-row'>
+      <StyledTr key="values-row">
         {values.map(value => {
           const mappedValue = getValue(value, mapper)
           const val = mappedValue || missingValuePlaceholder

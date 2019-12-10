@@ -118,7 +118,7 @@ export const flattenAttributes = data => {
   }
 }
 
-export function buildTableData (data) {
+export function buildTableData(data) {
   if (!data) return null
   return data.map(props => {
     const { value } = props
