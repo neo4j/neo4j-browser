@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 import Carousel from '../../modules/Carousel/Carousel'
 import Slide from '../../modules/Carousel/Slide'
 
@@ -274,17 +275,14 @@ RETURN DISTINCT surfer`}
           </a>
         </li>
         <li>
-          <a target="_blank" href="https://neo4j.com/docs/cypher-refcard/3.2/">
+          <ManualLink chapter="cypher-refcard" page="/">
             Cypher Refcard
-          </a>
+          </ManualLink>
         </li>
         <li>
-          <a
-            target="_blank"
-            href="https://neo4j.com/docs/developer-manual/3.2/cypher/"
-          >
+          <ManualLink manual="developer-manual" page="/cypher/">
             The Cypher chapter
-          </a>{' '}
+          </ManualLink>{' '}
           of the Neo4j Developer Manual
         </li>
       </ul>

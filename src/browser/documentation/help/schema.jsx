@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'Schema'
 const subtitle = 'Database schema indexes'
 const category = 'cypherHelp'
@@ -29,12 +30,9 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <a
-            target="_blank"
-            href="https://neo4j.com/docs/developer-manual/3.2/cypher/schema/"
-          >
+          <ManualLink chapter="developer-manual" page="/cypher/schema/">
             Cypher Schema
-          </a>
+          </ManualLink>
         </p>
       </div>
       <div className="link">
