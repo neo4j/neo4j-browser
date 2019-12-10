@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isEnterpriseEdition } from '../support/utils'
+
 /* global Cypress, cy, test, expect, before, after */
 
 describe('Multi statements', () => {
@@ -113,64 +115,74 @@ describe('Multi statements', () => {
       .should('contain', 'ERROR')
   })
   if (Cypress.config('serverVersion') >= 4.0) {
-    it('Can use :use command in multi-statements', () => {
-      cy.executeCommand(':clear')
-      // Create databases
-      cy.executeCommand(':use system')
-      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-        'have.length',
-        1
-      )
-      cy.executeCommand('DROP DATABASE test1')
-      cy.executeCommand('DROP DATABASE test2')
-      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-        'have.length',
-        3
-      )
-      cy.executeCommand(':clear')
+    if (isEnterpriseEdition()) {
+      it('Can use :use command in multi-statements', () => {
+        cy.executeCommand(':clear')
+        // Create databases
+        cy.executeCommand(':use system')
+        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+          'have.length',
+          1
+        )
+        cy.executeCommand('DROP DATABASE test1')
+        cy.executeCommand('DROP DATABASE test2')
+        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+          'have.length',
+          3
+        )
+        cy.executeCommand(':clear')
 
-      cy.executeCommand('CREATE DATABASE test1')
-      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-        'have.length',
-        1
-      )
-      cy.executeCommand('CREATE DATABASE test2')
-      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-        'have.length',
-        2
-      )
-      cy.executeCommand(':clear')
+        cy.executeCommand('CREATE DATABASE test1')
+        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+          'have.length',
+          1
+        )
+        cy.executeCommand('CREATE DATABASE test2')
+        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+          'have.length',
+          2
+        )
+        cy.executeCommand(':clear')
 
-      // Time to try it
-      const query = ':use test1; CREATE(:Test1); :use test2; CREATE(:Test2);'
-      cy.executeCommand(query)
-      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-        'have.length',
-        1
-      )
-      const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
-      frame.get('[data-testid="multi-statement-list"]').should('have.length', 1)
-      frame
-        .get('[data-testid="multi-statement-list-title"]')
-        .should('have.length', 4)
-      frame
-        .get('[data-testid="multi-statement-list-content"]')
-        .should('have.length', 0)
+        // Time to try it
+        const query = ':use test1; CREATE(:Test1); :use test2; CREATE(:Test2);'
+        cy.executeCommand(query)
+        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+          'have.length',
+          1
+        )
+        const frame = cy
+          .get('[data-testid="frame"]', { timeout: 10000 })
+          .first()
+        frame
+          .get('[data-testid="multi-statement-list"]')
+          .should('have.length', 1)
+        frame
+          .get('[data-testid="multi-statement-list-title"]')
+          .should('have.length', 4)
+        frame
+          .get('[data-testid="multi-statement-list-content"]')
+          .should('have.length', 0)
 
-      // Check sidebar for test1
-      cy.executeCommand(':use test1')
-      cy.get('[data-testid="drawerDBMS"]').click()
-      cy.contains('[data-testid="sidebarMetaItem"]', 'Test1', { timeout: 5000 })
-      cy.get('[data-testid="drawerDBMS"]').click()
+        // Check sidebar for test1
+        cy.executeCommand(':use test1')
+        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.contains('[data-testid="sidebarMetaItem"]', 'Test1', {
+          timeout: 5000
+        })
+        cy.get('[data-testid="drawerDBMS"]').click()
 
-      cy.executeCommand(':use test2')
-      cy.get('[data-testid="drawerDBMS"]').click()
-      cy.contains('[data-testid="sidebarMetaItem"]', 'Test2', { timeout: 5000 })
-      cy.get('[data-testid="drawerDBMS"]').click()
+        cy.executeCommand(':use test2')
+        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.contains('[data-testid="sidebarMetaItem"]', 'Test2', {
+          timeout: 5000
+        })
+        cy.get('[data-testid="drawerDBMS"]').click()
 
-      cy.executeCommand(':use system')
-      cy.executeCommand('DROP DATABASE test1')
-      cy.executeCommand('DROP DATABASE test2')
-    })
+        cy.executeCommand(':use system')
+        cy.executeCommand('DROP DATABASE test1')
+        cy.executeCommand('DROP DATABASE test2')
+      })
+    }
   }
 })

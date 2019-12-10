@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isEnterpriseEdition } from '../support/utils'
+
 /* global Cypress, cy, test, expect, before */
 
 const Editor = '.ReactCodeMirror textarea'
@@ -120,7 +122,11 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
-    cy.get('[data-testid="user-details-roles"]').should('contain', 'admin')
+    console.log('isEnterpriseEdition(): ', isEnterpriseEdition())
+    cy.get('[data-testid="user-details-roles"]').should(
+      'contain',
+      isEnterpriseEdition() ? 'admin' : '-'
+    )
     cy.executeCommand(':clear')
     cy.executeCommand(':server disconnect')
     cy.get('[data-testid="user-details-username"]').should('have.length', 0)
@@ -128,7 +134,10 @@ describe('Neo4j Browser', () => {
     cy.connect('neo4j', Cypress.config('password'))
     cy.executeCommand(':clear')
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
-    cy.get('[data-testid="user-details-roles"]').should('contain', 'admin')
+    cy.get('[data-testid="user-details-roles"]').should(
+      'contain',
+      isEnterpriseEdition() ? 'admin' : '-'
+    )
     cy.get('[data-testid="drawerDBMS"]').click()
   })
   it('will clear local storage when clicking "Clear local data"', () => {
