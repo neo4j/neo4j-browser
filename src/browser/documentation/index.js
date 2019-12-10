@@ -52,10 +52,10 @@ import helpRestGet from './help/rest-get'
 import helpRestPost from './help/rest-post'
 import helpRestPut from './help/rest-put'
 import helpReturn from './help/return'
+import helpSchema from './help/schema'
 import helpServer from './help/server'
 import helpServerUser from './help/server-user'
 import helpSet from './help/set'
-import helpStart from './help/start'
 import helpStartsWith from './help/starts-with'
 import helpStyle from './help/style'
 import helpTemplate from './help/template'
@@ -136,8 +136,8 @@ export default {
       restPost: helpRestPost,
       restPut: helpRestPut,
       return: helpReturn,
+      schema: helpSchema,
       set: helpSet,
-      start: helpStart,
       startsWith: helpStartsWith,
       template: helpTemplate,
       unwind: helpUnwind,

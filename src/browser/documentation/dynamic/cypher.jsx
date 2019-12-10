@@ -60,7 +60,6 @@ const description = (
           <a help-topic="with">:help WITH</a>
           <a help-topic="load-csv">:help LOAD CSV</a>
           <a help-topic="unwind">:help UNWIND</a>
-          <a help-topic="start">:help START</a>
           <a help-topic="create-index-on">:help CREATE INDEX ON</a>
           <a help-topic="starts-with">:help STARTS WITH</a>
           <a help-topic="ends-with">:help ENDS WITH</a>
