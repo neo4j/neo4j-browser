@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isEnterpriseEdition } from '../support/utils'
+
 /* global Cypress, cy, before, after */
 
 describe('Plan output', () => {
@@ -49,7 +51,8 @@ describe('Plan output', () => {
   }
   if (
     Cypress.config('serverVersion') >= 3.4 &&
-    Cypress.config('serverVersion') < 4.0
+    Cypress.config('serverVersion') < 4.0 &&
+    isEnterpriseEdition()
   ) {
     it('print pagecache stats in PROFILE', () => {
       cy.executeCommand(':clear')
