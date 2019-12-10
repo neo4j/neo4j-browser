@@ -64,9 +64,7 @@ function runTests() {
   // it(':param x => {prop: 1} multi line', () => {
   // Set param
   cy.executeCommand(':clear')
-  setParamQ = `:param [x] => {
-    RETURN {{}prop: 1} AS x
-  }`
+  setParamQ = `:param [x] => {{}{shift}{enter}RETURN {{}prop: 1} AS x{enter}}`
   cy.executeCommand(setParamQ)
   cy.resultContains('"prop": 1')
   // return param
@@ -111,8 +109,8 @@ function runTests() {
     // it(":param x => point({crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})", () => {
     cy.executeCommand(':clear')
     const query =
-      ":param x => point({{}crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
-    cy.executeCommand(query)
+      ":param x => point({crs: 'wgs-84', latitude: 57.7346, longitude: 12.9082})"
+    cy.executeCommand(query, { parseSpecialCharSequences: false })
 
     cy.get('[data-testid="rawParamData"]', { timeout: 20000 })
       .first()
