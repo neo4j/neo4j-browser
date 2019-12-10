@@ -70,7 +70,8 @@ describe('Plan output', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (:Tag)')
     cy.executeCommand(':clear')
-    cy.executeCommand(`PROFILE MATCH (tag:Tag){shift}{enter}WHERE tag.name IN ["Eutheria"]
+    cy.executeCommand(`PROFILE MATCH (tag:Tag){shift}{enter}
+    WHERE tag.name IN ["Eutheria"]
     WITH tag
     MATCH (publication)-[:HAS_TAG]->(tag)
     WHERE SIZE((publication)-[:HAS_TAG]->()) = 1
@@ -92,13 +93,6 @@ describe('Plan output', () => {
       .and('contain', 'relevantNumberOfPublications')
       .and('contain', 'relevantNumberOfTags')
       .and('contain', 'Result')
-    if ([3.5].includes(Cypress.config('serverVersion'))) {
-      el.should('contain', 'tag.name IN').and('contain', 'GetDegree')
-    } else if ([3.3, 3.4].includes(Cypress.config('serverVersion'))) {
-      el.should('contain', 'tag.name IN').and('contain', 'GetDegreePrimitive')
-    } else if (Cypress.config('serverVersion') === 3.2) {
-      el.should('contain', 'ConstantCachedIn').and('contain', 'GetDegree')
-    }
 
     cy.executeCommand(':clear')
     cy.executeCommand(

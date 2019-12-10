@@ -125,7 +125,9 @@ describe('Neo4j Browser', () => {
     console.log('isEnterpriseEdition(): ', isEnterpriseEdition())
     cy.get('[data-testid="user-details-roles"]').should(
       'contain',
-      isEnterpriseEdition() ? 'admin' : '-'
+      isEnterpriseEdition() || Cypress.config('serverVersion') < 4.0
+        ? 'admin'
+        : '-'
     )
     cy.executeCommand(':clear')
     cy.executeCommand(':server disconnect')
@@ -136,7 +138,9 @@ describe('Neo4j Browser', () => {
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
     cy.get('[data-testid="user-details-roles"]').should(
       'contain',
-      isEnterpriseEdition() ? 'admin' : '-'
+      isEnterpriseEdition() || Cypress.config('serverVersion') < 4.0
+        ? 'admin'
+        : '-'
     )
     cy.get('[data-testid="drawerDBMS"]').click()
   })

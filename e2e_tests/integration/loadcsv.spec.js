@@ -37,7 +37,7 @@ describe('LOAD CSV', () => {
     }
     cy.executeCommand(':clear')
     cy.executeCommand('MATCH (n) DETACH DELETE n')
-    cy.executeCommand(`LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row 
+    cy.executeCommand(`LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row{shift}{enter}
     CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`)
 
     cy.resultContains('Added 3 labels, created 3 nodes, set 11 properties,')
@@ -54,7 +54,7 @@ describe('LOAD CSV', () => {
     }
     cy.executeCommand(':clear')
     cy.executeCommand('MATCH (n) DETACH DELETE n')
-    cy.executeCommand(`USING PERIODIC COMMIT 1
+    cy.executeCommand(`USING PERIODIC COMMIT 1{shift}{enter}
     LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row 
     CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`)
 
