@@ -18,11 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isEnterpriseEdition } from '../support/utils'
+
 /* global Cypress, cy, test, expect, before, after */
 
 describe('Multi database', () => {
   const databaseList = () =>
     cy.get('[data-testid="dbs-command-list"] li', {
+      timeout: 5000
+    })
+  const databaseOptionList = () =>
+    cy.get('[data-testid="database-selection-list"] option', {
       timeout: 5000
     })
 
@@ -54,25 +60,22 @@ describe('Multi database', () => {
     it('lists databases in sidebar', () => {
       cy.executeCommand(':clear')
       cy.get('[data-testid="drawerDBMS"]').click()
-
-      const databaseList = () =>
-        cy.get('[data-testid="database-selection-list"] option', {
-          timeout: 5000
-        })
-
-      databaseList().should('have.length', 2)
-
-      cy.executeCommand(':use system')
-      cy.executeCommand('CREATE DATABASE sidebartest')
-      databaseList().should('have.length', 3)
-      databaseList().contains('system')
-      databaseList().contains('neo4j')
-      databaseList().contains('sidebartest')
-
-      cy.executeCommand('DROP DATABASE sidebartest')
-      databaseList().should('have.length', 2)
-      cy.get('[data-testid="drawerDBMS"]').click()
+      databaseOptionList().should('have.length', 2)
     })
+    if (isEnterpriseEdition()) {
+      it('lists new databases in sidebar', () => {
+        cy.executeCommand(':use system')
+        cy.executeCommand('CREATE DATABASE sidebartest')
+        databaseOptionList().should('have.length', 3)
+        databaseOptionList().contains('system')
+        databaseOptionList().contains('neo4j')
+        databaseOptionList().contains('sidebartest')
+
+        cy.executeCommand('DROP DATABASE sidebartest')
+        databaseOptionList().should('have.length', 2)
+        cy.get('[data-testid="drawerDBMS"]').click()
+      })
+    }
 
     it('lists databases with :dbs command', () => {
       cy.executeCommand(':clear')
@@ -84,52 +87,58 @@ describe('Multi database', () => {
       databaseList().contains('neo4j')
 
       cy.executeCommand(':use system')
-      cy.executeCommand('CREATE DATABASE sidebartest')
-
-      cy.wait(3000) // CREATE database can take a sec
-
-      cy.executeCommand(':clear')
-      cy.executeCommand(':dbs')
-      databaseList().should('have.length', 3)
-      databaseList().contains('system')
-      databaseList().contains('neo4j')
-      databaseList().contains('sidebartest')
-
-      cy.executeCommand('DROP DATABASE sidebartest')
-      cy.executeCommand(':clear')
-      cy.executeCommand(':dbs')
-      databaseList().should('have.length', 2)
-      databaseList().contains('system')
-      databaseList().contains('neo4j')
     })
-    it('user with no roles can lists databases with :dbs command but cant run cypher', () => {
-      cy.executeCommand(':clear')
-      cy.createUser('noroles', 'pw1', false)
-      cy.executeCommand(':server disconnect')
-      cy.executeCommand(':clear')
-      cy.executeCommand(':server connect')
-      cy.connect('noroles', 'pw1')
+    if (isEnterpriseEdition()) {
+      it('lists new databases with :dbs command', () => {
+        cy.executeCommand('CREATE DATABASE sidebartest')
 
-      // Try to list dbs, should work
-      cy.executeCommand(':dbs')
-      databaseList().should('have.length', 2)
-      databaseList().contains('system')
-      databaseList().contains('neo4j')
+        cy.wait(3000) // CREATE database can take a sec
 
-      // Try to run Cypher, shoudl show error
-      cy.executeCommand('RETURN 1')
-      const resultFrame = cy
-        .get('[data-testid="frame"]', { timeout: 10000 })
-        .first()
-      resultFrame.should('contain', 'Neo.ClientError.Security.Forbidden')
-      resultFrame.should('contain', 'List available databases')
+        cy.executeCommand(':clear')
+        cy.executeCommand(':dbs')
+        databaseList().should('have.length', 3)
+        databaseList().contains('system')
+        databaseList().contains('neo4j')
+        databaseList().contains('sidebartest')
 
-      // Cleanup
-      cy.executeCommand(':server disconnect')
-      cy.executeCommand(':clear')
-      cy.connect('neo4j', Cypress.config('password'))
-      cy.dropUser('noroles')
-    })
+        cy.executeCommand('DROP DATABASE sidebartest')
+        cy.executeCommand(':clear')
+        cy.executeCommand(':dbs')
+        databaseList().should('have.length', 2)
+        databaseList().contains('system')
+        databaseList().contains('neo4j')
+      })
+    }
+    if (isEnterpriseEdition()) {
+      it('user with no roles can lists databases with :dbs command but cant run cypher', () => {
+        cy.executeCommand(':clear')
+        cy.createUser('noroles', 'pw1', false)
+        cy.executeCommand(':server disconnect')
+        cy.executeCommand(':clear')
+        cy.executeCommand(':server connect')
+        cy.connect('noroles', 'pw1')
+
+        // Try to list dbs, should work
+        cy.executeCommand(':dbs')
+        databaseList().should('have.length', 2)
+        databaseList().contains('system')
+        databaseList().contains('neo4j')
+
+        // Try to run Cypher, shoudl show error
+        cy.executeCommand('RETURN 1')
+        const resultFrame = cy
+          .get('[data-testid="frame"]', { timeout: 10000 })
+          .first()
+        resultFrame.should('contain', 'Neo.ClientError.Security.Forbidden')
+        resultFrame.should('contain', 'List available databases')
+
+        // Cleanup
+        cy.executeCommand(':server disconnect')
+        cy.executeCommand(':clear')
+        cy.connect('neo4j', Cypress.config('password'))
+        cy.dropUser('noroles')
+      })
+    }
     it('shows error message when trying to set a parameter on system db', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':use system')

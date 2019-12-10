@@ -1,3 +1,8 @@
+/* global Cypress */
+
+export const isEnterpriseEdition = () =>
+  Cypress.config('serverEdition') === 'enterprise'
+
 export const getDesktopContext = (config, connectionCredsType = 'host') => ({
   projects: [
     {
