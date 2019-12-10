@@ -38,6 +38,27 @@ describe('Multi database', () => {
     cy.connect('neo4j', password)
   })
   if (Cypress.config('serverVersion') >= 4.0) {
+    it('shows a message indicating whether system updates have occured', () => {
+      cy.executeCommand(':clear')
+
+      cy.executeCommand(':use system')
+      cy.executeCommand('CREATE DATABASE test1')
+
+      cy.wait(3000) // CREATE database can take a sec
+
+      cy.resultContains('1 system update, no records')
+
+      cy.executeCommand('STOP DATABASE test1')
+      cy.wait(1000)
+      cy.resultContains('1 system update, no records')
+
+      cy.executeCommand('STOP DATABASE test1')
+      cy.wait(1000)
+      cy.resultContains('no changes, no records')
+
+      cy.executeCommand('DROP DATABASE test1')
+      cy.executeCommand(':clear')
+    })
     it(':use command works + shows current db in editor gutter', () => {
       cy.executeCommand(':clear')
       const editor = () => cy.get('[data-testid="editor-wrapper"]')
