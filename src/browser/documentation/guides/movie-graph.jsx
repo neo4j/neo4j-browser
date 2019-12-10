@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 import Carousel from '../../modules/Carousel/Carousel'
 import Slide from '../../modules/Carousel/Slide'
 
@@ -829,12 +830,9 @@ RETURN tom, m, coActors, m2, cruise`}
           </a>
         </li>
         <li>
-          <a
-            target="_blank"
-            href="https://neo4j.com/docs/developer-manual/3.2/"
-          >
+          <ManualLink chapter="developer-manual" page="/">
             Neo4j Developer Manual
-          </a>
+          </ManualLink>
         </li>
       </ul>
     </div>

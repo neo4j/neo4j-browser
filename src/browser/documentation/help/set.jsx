@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'SET'
 const subtitle = 'property updates'
 const category = 'cypherHelp'
@@ -31,15 +32,10 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <code>
-            <a
-              target="_blank"
-              href="https://neo4j.com/docs/developer-manual/3.2/cypher/clauses/set/"
-            >
-              SET
-            </a>{' '}
-            manual page
-          </code>
+          <ManualLink chapter="developer-manual" page="/cypher/clauses/set/">
+            SET
+          </ManualLink>{' '}
+          manual page
         </p>
       </div>
       <div className="link">

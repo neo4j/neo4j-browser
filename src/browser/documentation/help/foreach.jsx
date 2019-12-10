@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'FOREACH'
 const subtitle = 'Operate on a collection'
 const category = 'cypherHelp'
@@ -32,15 +33,13 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <code>
-            <a
-              target="_blank"
-              href="https://neo4j.com/docs/developer-manual/3.2/cypher/clauses/foreach/"
-            >
-              FOREACH
-            </a>{' '}
-            manual page
-          </code>
+          <ManualLink
+            chapter="developer-manual"
+            page="/cypher/clauses/foreach/"
+          >
+            FOREACH
+          </ManualLink>{' '}
+          manual page
         </p>
       </div>
       <div className="link">
