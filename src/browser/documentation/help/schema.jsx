@@ -20,9 +20,9 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-const title = 'Schema'
+const title = 'SCHEMA'
 const subtitle = 'Database schema indexes'
-const category = 'cypherHelp'
+const category = 'schemaClauses'
 const content = (
   <>
     <p>Shows information about database schema indexes and constraints.</p>
