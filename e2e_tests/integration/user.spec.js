@@ -34,7 +34,7 @@ describe('User: ', () => {
     cy.executeCommand(':server user list')
     cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
       'contain',
-      'Unable to display'
+      isEnterpriseEdition() ? 'Username' : 'Unable to display'
     )
   })
   // Only on enterprise
