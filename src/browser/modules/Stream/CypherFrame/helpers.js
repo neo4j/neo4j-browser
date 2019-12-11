@@ -21,11 +21,14 @@
 import neo4j from 'neo4j-driver'
 import {
   entries,
+  flatten,
+  filter,
   get,
   includes,
   isObjectLike,
   lowerCase,
   map,
+  some,
   reduce,
   take
 } from 'lodash-es'
@@ -37,7 +40,26 @@ import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
 import { stringifyMod } from 'services/utils'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
-export function getBodyAndStatusBarMessages(result, maxRows) {
+/**
+ * Checks if a results has records which fields will be truncated when displayed
+ * - O(N2) complexity
+ * @param     {Object}    result
+ * @param     {Number}    maxFieldItems
+ * @return    {boolean}
+ */
+export const resultHasTruncatedFields = (result, maxFieldItems) => {
+  if (!maxFieldItems) {
+    return false
+  }
+
+  return some(result.records, record =>
+    some(record.keys, key =>
+      Array.isArray(record.get(key) && record.get(key).length > maxFieldItems)
+    )
+  )
+}
+
+export function getBodyAndStatusBarMessages (result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
     return {}
   }
@@ -95,10 +117,15 @@ export const getRecordsToDisplayInTable = (result, maxRows) => {
 }
 
 export const flattenArray = arr => {
-  return arr.reduce((all, curr) => {
-    if (Array.isArray(curr)) return all.concat(flattenArray(curr))
-    return all.concat(curr)
-  }, [])
+  let toFlatten = arr
+  let result = []
+
+  while (toFlatten.length > 0) {
+    result = [...result, ...filter(toFlatten, item => !Array.isArray(item))]
+    toFlatten = flatten(filter(toFlatten, Array.isArray))
+  }
+
+  return result
 }
 
 export const resultHasNodes = (request, types = bolt.neo4j.types) => {
