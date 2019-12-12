@@ -24,7 +24,7 @@ import neo4j from 'neo4j-driver'
 
 import {
   TableViewComponent as TableView,
-  TableStatusbar,
+  TableStatusbarComponent as TableStatusbar,
   renderObject
 } from './TableView'
 

@@ -26,7 +26,8 @@ import { HTMLEntities } from 'services/santize.utils'
 import {
   StyledStatsBar,
   PaddedTableViewDiv,
-  StyledBodyMessage
+  StyledBodyMessage,
+  StyledTruncatedMessage
 } from '../styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import {
@@ -40,7 +41,8 @@ import { shallowEquals, stringifyMod } from 'services/utils'
 import {
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
-  transformResultRecordsToResultArray
+  transformResultRecordsToResultArray,
+  resultHasTruncatedFields
 } from './helpers'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import ClickableUrls, {
@@ -48,6 +50,7 @@ import ClickableUrls, {
 } from '../../../components/clickable-urls'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
+import { Icon } from 'semantic-ui-react'
 
 const renderCell = (entry, maxFieldItems) => {
   if (Array.isArray(entry)) {
@@ -178,7 +181,7 @@ export const TableView = connect(state => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(TableViewComponent)
 
-export class TableStatusbar extends Component {
+export class TableStatusbarComponent extends Component {
   state = {
     statusBarMessage: ''
   }
@@ -201,14 +204,30 @@ export class TableStatusbar extends Component {
       this.props.result,
       this.props.maxRows
     )
-    if (statusBarMessage !== undefined) this.setState({ statusBarMessage })
+    const hasTruncatedFields = resultHasTruncatedFields(
+      props.result,
+      props.maxFieldItems
+    )
+    if (statusBarMessage !== undefined) { this.setState({ statusBarMessage, hasTruncatedFields }) }
   }
 
   render() {
     return (
       <StyledStatsBar>
-        <Ellipsis>{this.state.statusBarMessage}</Ellipsis>
+        <Ellipsis>
+          {this.state.hasTruncatedFields && (
+            <StyledTruncatedMessage>
+              <Icon name='warning sign' /> Result fields have been
+              truncated.&nbsp;
+            </StyledTruncatedMessage>
+          )}
+          {this.state.statusBarMessage}
+        </Ellipsis>
       </StyledStatsBar>
     )
   }
 }
+
+export const TableStatusbar = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(TableStatusbarComponent)

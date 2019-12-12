@@ -29,7 +29,7 @@ import {
   StyledTd,
   StyledExpandable
 } from '../styled'
-import { TableStatusbar } from './TableView'
+import { TableStatusbar, TableStatusbarComponent } from './TableView'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import { map, take } from 'lodash-es'
@@ -121,4 +121,5 @@ export const CodeView = connect(state => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(CodeViewComponent)
 
+export const CodeStatusbarComponent = TableStatusbarComponent
 export const CodeStatusbar = TableStatusbar

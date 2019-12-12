@@ -7,7 +7,9 @@ exports[`TableViews TableStatusbar displays no statusBarMessage 1`] = `
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
-    />
+    >
+      
+    </div>
   </div>
 </div>
 `;
@@ -32,7 +34,7 @@ exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
     class="styled__PaddedDiv-sc-1dtvgs1-1 styled__PaddedTableViewDiv-sc-1dtvgs1-2 clXnC"
   >
     <div
-      class="styled__StyledBodyMessage-sc-1dtvgs1-26 gpPoTU"
+      class="styled__StyledBodyMessage-sc-1dtvgs1-27 hpwxul"
     >
       (no changes, no records)
     </div>

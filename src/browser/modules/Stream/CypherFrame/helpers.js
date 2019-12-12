@@ -53,9 +53,11 @@ export const resultHasTruncatedFields = (result, maxFieldItems) => {
   }
 
   return some(result.records, record =>
-    some(record.keys, key =>
-      Array.isArray(record.get(key) && record.get(key).length > maxFieldItems)
-    )
+    some(record.keys, key => {
+      const val = record.get(key)
+
+      return Array.isArray(val) && val.length > maxFieldItems
+    })
   )
 }
 
