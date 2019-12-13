@@ -34,7 +34,7 @@ import {
  * @param     {number}      props.lastConnectionUpdate
  * @return    {boolean[]}
  */
-export function useSlowConnectionState ({
+export function useSlowConnectionState({
   connectionState,
   errorMessage,
   lastConnectionUpdate
@@ -48,35 +48,32 @@ export function useSlowConnectionState ({
   let timeout5Sec = null
   let timeout10Sec = null
 
-  useEffect(
-    () => {
-      if (!shouldTimeConnection()) {
-        clearTimeout(timeout5Sec)
-        clearTimeout(timeout10Sec)
-        setPast5Sec(false)
-        setPast10Sec(false)
+  useEffect(() => {
+    if (!shouldTimeConnection()) {
+      clearTimeout(timeout5Sec)
+      clearTimeout(timeout10Sec)
+      setPast5Sec(false)
+      setPast10Sec(false)
 
-        return
-      }
+      return
+    }
 
-      timeout5Sec = setTimeout(() => {
-        const diff = Date.now() - lastConnectionUpdate
+    timeout5Sec = setTimeout(() => {
+      const diff = Date.now() - lastConnectionUpdate
 
-        setPast5Sec(diff > DELAY_5SEC)
-      }, DELAY_5SEC)
-      timeout10Sec = setTimeout(() => {
-        const diff = Date.now() - lastConnectionUpdate
+      setPast5Sec(diff > DELAY_5SEC)
+    }, DELAY_5SEC)
+    timeout10Sec = setTimeout(() => {
+      const diff = Date.now() - lastConnectionUpdate
 
-        setPast10Sec(diff > DELAY_10SEC)
-      }, DELAY_10SEC)
+      setPast10Sec(diff > DELAY_10SEC)
+    }, DELAY_10SEC)
 
-      return () => {
-        clearTimeout(timeout5Sec)
-        clearTimeout(timeout10Sec)
-      }
-    },
-    [connectionState, lastConnectionUpdate]
-  )
+    return () => {
+      clearTimeout(timeout5Sec)
+      clearTimeout(timeout10Sec)
+    }
+  }, [connectionState, lastConnectionUpdate])
 
   return [past5Sec, past10Sec]
 }

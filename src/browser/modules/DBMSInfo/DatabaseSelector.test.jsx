@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, test, expect */
-
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { DatabaseSelector } from './DatabaseSelector'
@@ -35,7 +33,7 @@ describe('DatabaseSelector', () => {
     const { container } = render(<DatabaseSelector databases={databases} />)
 
     // Then
-    expect(container).toMatchInlineSnapshot(`<div />`)
+    expect(container).toMatchInlineSnapshot('<div />')
   })
   it('updates selection in list', () => {
     // Given

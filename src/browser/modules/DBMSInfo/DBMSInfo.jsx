@@ -34,13 +34,13 @@ import { DatabaseSelector } from './DatabaseSelector'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
 
-export function DBMSInfo (props) {
+export function DBMSInfo(props) {
   const moreStep = 50
   const [labelsMax, setLabelsMax] = useState(moreStep)
   const [relationshipsMax, setRelationshipsMax] = useState(moreStep)
   const [propertiesMax, setPropertiesMax] = useState(moreStep)
 
-  function onMoreClick (type, currentMax) {
+  function onMoreClick(type, currentMax) {
     const map = {
       labels: setLabelsMax,
       relationships: setRelationshipsMax,
@@ -60,7 +60,7 @@ export function DBMSInfo (props) {
   const { user, onItemClick, onDbSelect, useDb = '', databases = [] } = props
 
   return (
-    <Drawer id='db-drawer'>
+    <Drawer id="db-drawer">
       <DrawerHeader>Database Information</DrawerHeader>
       <DrawerBody>
         <DatabaseSelector
@@ -126,9 +126,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(DBMSInfo)
-)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(DBMSInfo))

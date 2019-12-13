@@ -39,14 +39,14 @@ const IMPLICIT = 'implicit'
 const NEARLEY_ERROR_SPLIT =
   'Instead, I was expecting to see one of the following:'
 
-export function parseLambdaStatement (lambda) {
+export function parseLambdaStatement(lambda) {
   return Promise.resolve()
     .then(() => {
       const ast = parseLambda(trim(lambda))
 
       if (!arrayHasItems(ast)) {
         throw new Error(
-          `Unrecognized input. Sorry we couldn't be more specific.`
+          "Unrecognized input. Sorry we couldn't be more specific."
         )
       }
 
@@ -75,7 +75,7 @@ export function parseLambdaStatement (lambda) {
     })
 }
 
-export function collectLambdaValues ({ parameters, query, variant }, requestId) {
+export function collectLambdaValues({ parameters, query, variant }, requestId) {
   return bolt
     .routedWriteTransaction(
       query,
@@ -92,8 +92,8 @@ export function collectLambdaValues ({ parameters, query, variant }, requestId) 
 
         return firstResult
           ? recursivelyTypeGraphItems({
-            [parameters.value]: firstResult.get(head(firstResult.keys))
-          })
+              [parameters.value]: firstResult.get(head(firstResult.keys))
+            })
           : {}
       }
 

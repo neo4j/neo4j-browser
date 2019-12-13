@@ -38,7 +38,10 @@ describe('user-favorites.utils', () => {
       { folder: 'bar', content: 'bam', id: '3' },
       { folder: 'bom', content: 'apa', id: '4' }
     ]
-    const oldFolders = [{ id: 'bar', name: 'bar' }, { id: 'bom', name: 'bom' }]
+    const oldFolders = [
+      { id: 'bar', name: 'bar' },
+      { id: 'bom', name: 'bom' }
+    ]
     const oldFoldersWithStatic = [
       { id: 'bar', name: 'bar' },
       { id: 'bom', name: 'bom', isStatic: true }

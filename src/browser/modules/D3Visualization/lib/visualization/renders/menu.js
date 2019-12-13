@@ -21,11 +21,11 @@ import d3 from 'd3'
 import Renderer from '../components/renderer'
 import icons from '../renders/icons'
 
-const noop = function () {}
+const noop = function() {}
 
 const numberOfItemsInContextMenu = 3
 
-const arc = function (radius, itemNumber, width) {
+const arc = function(radius, itemNumber, width) {
   if (width == null) {
     width = 30
   }
@@ -42,7 +42,7 @@ const arc = function (radius, itemNumber, width) {
     .padAngle(0.03)
 }
 
-const getSelectedNode = function (node) {
+const getSelectedNode = function(node) {
   if (node.selected) {
     return [node]
   } else {
@@ -53,13 +53,13 @@ const getSelectedNode = function (node) {
 const attachContextEvent = (event, elems, viz, content, label) =>
   (() => {
     const result = []
-    for (let elem of Array.from(elems)) {
-      elem.on('mousedown.drag', function () {
+    for (const elem of Array.from(elems)) {
+      elem.on('mousedown.drag', function() {
         d3.event.stopPropagation()
         return null
       })
       elem.on('mouseup', node => viz.trigger(event, node))
-      elem.on('mouseover', function (node) {
+      elem.on('mouseover', function(node) {
         node.contextMenu = {
           menuSelection: event,
           menuContent: content,
@@ -68,7 +68,7 @@ const attachContextEvent = (event, elems, viz, content, label) =>
         return viz.trigger('menuMouseOver', node)
       })
       result.push(
-        elem.on('mouseout', function (node) {
+        elem.on('mouseout', function(node) {
           delete node.contextMenu
           return viz.trigger('menuMouseOut', node)
         })
@@ -77,7 +77,7 @@ const attachContextEvent = (event, elems, viz, content, label) =>
     return result
   })()
 
-const createMenuItem = function (
+const createMenuItem = function(
   selection,
   viz,
   eventName,
@@ -98,7 +98,7 @@ const createMenuItem = function (
     .classed(className, true)
     .classed('context-menu-item', true)
     .attr({
-      d (node) {
+      d(node) {
         return arc(node.radius, itemNumber, 1)()
       }
     })
@@ -110,7 +110,7 @@ const createMenuItem = function (
     .classed(className, true)
     .classed('context-menu-item', true)
     .attr({
-      transform (node) {
+      transform(node) {
         return (
           'translate(' +
           Math.floor(
@@ -127,7 +127,7 @@ const createMenuItem = function (
           'scale(0.7)'
         )
       },
-      color (node) {
+      color(node) {
         return viz.style.forNode(node).get('text-color-internal')
       }
     })
@@ -138,7 +138,7 @@ const createMenuItem = function (
     .transition()
     .duration(200)
     .attr({
-      d (node) {
+      d(node) {
         return arc(node.radius, itemNumber)()
       }
     })
@@ -148,7 +148,7 @@ const createMenuItem = function (
     .transition()
     .duration(200)
     .attr({
-      d (node) {
+      d(node) {
         return arc(node.radius, itemNumber, 1)()
       }
     })
@@ -158,7 +158,7 @@ const createMenuItem = function (
 }
 
 const donutRemoveNode = new Renderer({
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     return createMenuItem(
       selection,
       viz,
@@ -175,7 +175,7 @@ const donutRemoveNode = new Renderer({
 })
 
 const donutExpandNode = new Renderer({
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     return createMenuItem(
       selection,
       viz,
@@ -192,7 +192,7 @@ const donutExpandNode = new Renderer({
 })
 
 const donutUnlockNode = new Renderer({
-  onGraphChange (selection, viz) {
+  onGraphChange(selection, viz) {
     return createMenuItem(
       selection,
       viz,

@@ -79,7 +79,7 @@ import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
 
-export function App (props) {
+export function App(props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
     LIGHT_THEME
@@ -167,7 +167,7 @@ export function App (props) {
                 onColorSchemeUpdated={detectDesktopThemeChanges}
               />
               <Render if={loadExternalScripts}>
-                <Intercom appID='lq70afwx' />
+                <Intercom appID="lq70afwx" />
               </Render>
               <Render if={syncConsent && loadExternalScripts && loadSync}>
                 <BrowserSyncInit
@@ -289,9 +289,5 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
-  )(App)
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
 )

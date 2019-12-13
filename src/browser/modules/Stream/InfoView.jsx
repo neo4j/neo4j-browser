@@ -28,10 +28,11 @@ import {
 } from './styled'
 
 export class InfoView extends Component {
-  shouldComponentUpdate (props, state) {
+  shouldComponentUpdate(props, state) {
     return false
   }
-  render () {
+
+  render() {
     const { title, description } = this.props
     return (
       <StyledHelpFrame>

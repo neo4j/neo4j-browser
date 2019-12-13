@@ -41,7 +41,7 @@ import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
 
 export class ConnectionForm extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     const connection =
       this.props.activeConnectionData || this.props.frame.connectionData
@@ -60,12 +60,14 @@ export class ConnectionForm extends Component {
       used: isConnected
     }
   }
+
   tryConnect = (password, doneFn) => {
     this.props.error({})
     this.props.bus.self(VERIFY_CREDENTIALS, { ...this.state, password }, res =>
       doneFn(res)
     )
   }
+
   connect = (
     doneFn = () => {},
     onError = null,
@@ -94,17 +96,20 @@ export class ConnectionForm extends Component {
       }
     )
   }
-  onUsernameChange (event) {
+
+  onUsernameChange(event) {
     const username = event.target.value
     this.setState({ username })
     this.props.error({})
   }
-  onPasswordChange (event) {
+
+  onPasswordChange(event) {
     const password = event.target.value
     this.setState({ password })
     this.props.error({})
   }
-  onAuthenticationMethodChange (event) {
+
+  onAuthenticationMethodChange(event) {
     const authenticationMethod = event.target.value
     const username =
       authenticationMethod === NO_AUTH ? '' : this.state.username || 'neo4j'
@@ -112,7 +117,8 @@ export class ConnectionForm extends Component {
     this.setState({ authenticationMethod, username, password })
     this.props.error({})
   }
-  onHostChange (event) {
+
+  onHostChange(event) {
     const host = event.target.value
     this.setState({
       host: generateBoltHost(host),
@@ -120,10 +126,12 @@ export class ConnectionForm extends Component {
     })
     this.props.error({})
   }
-  onChangePasswordChange () {
+
+  onChangePasswordChange() {
     this.props.error({})
   }
-  onChangePassword ({ newPassword, error }) {
+
+  onChangePassword({ newPassword, error }) {
     this.setState({ isLoading: true })
     if (error && error.code) {
       this.setState({ isLoading: false })
@@ -182,14 +190,16 @@ export class ConnectionForm extends Component {
       }
     )
   }
-  saveAndStart () {
+
+  saveAndStart() {
     this.setState({ forcePasswordChange: false, used: true })
     this.state.successCallback()
     this.saveCredentials()
     this.props.setActiveConnection(this.state.id)
     this.props.executeInitCmd()
   }
-  saveCredentials () {
+
+  saveCredentials() {
     this.props.updateConnection({
       id: this.state.id,
       host: this.state.host,
@@ -198,7 +208,8 @@ export class ConnectionForm extends Component {
       authenticationMethod: this.state.authenticationMethod
     })
   }
-  componentWillReceiveProps (nextProps) {
+
+  componentWillReceiveProps(nextProps) {
     if (nextProps.oldPassword) {
       this.setState({ oldPassword: nextProps.oldPassword })
     }
@@ -208,7 +219,8 @@ export class ConnectionForm extends Component {
       this.setState({ isConnected: false })
     }
   }
-  render () {
+
+  render() {
     let view
     if (
       this.state.forcePasswordChange ||
@@ -293,9 +305,5 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
-  )(ConnectionForm)
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm)
 )

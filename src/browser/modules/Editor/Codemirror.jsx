@@ -29,21 +29,21 @@ import 'codemirror/addon/lint/lint.css'
 import 'cypher-codemirror/dist/cypher-codemirror-syntax.css'
 import { debounce } from 'services/utils'
 
-function normalizeLineEndings (str) {
+function normalizeLineEndings(str) {
   if (!str) return str
   return str.replace(/\r\n|\r/g, '\n')
 }
 
 export default class CodeMirror extends Component {
   lastChange = null
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isFocused: false
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.debouncedOnParse = debounce(this.onParsed, 300, this)
     const textareaNode = this.editorReference
     const { editor, editorSupport } = createCypherEditor(
@@ -65,7 +65,7 @@ export default class CodeMirror extends Component {
     }
   }
 
-  goToPosition (position) {
+  goToPosition(position) {
     for (let i = 0; i < position.line; i++) {
       this.codeMirror.execCommand('goLineDown')
     }
@@ -75,7 +75,7 @@ export default class CodeMirror extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (
       this.codeMirror &&
       nextProps.value !== undefined &&
@@ -94,7 +94,7 @@ export default class CodeMirror extends Component {
       }
     }
     if (typeof nextProps.options === 'object') {
-      for (let optionName in nextProps.options) {
+      for (const optionName in nextProps.options) {
         if (nextProps.options.hasOwnProperty(optionName)) {
           this.codeMirror.setOption(optionName, nextProps.options[optionName])
         }
@@ -105,30 +105,30 @@ export default class CodeMirror extends Component {
     }
   }
 
-  getCodeMirror () {
+  getCodeMirror() {
     return this.codeMirror
   }
 
-  generateStatementsFromCurrentValue () {
+  generateStatementsFromCurrentValue() {
     const parsed = parse(this.codeMirror.getValue())
     const { queriesAndCommands } = parsed.referencesListener
     return queriesAndCommands
   }
 
-  focus () {
+  focus() {
     if (this.codeMirror) {
       this.codeMirror.focus()
     }
   }
 
-  focusChanged (focused) {
+  focusChanged(focused) {
     this.setState({
       isFocused: focused
     })
     this.props.onFocusChange && this.props.onFocusChange(focused)
   }
 
-  scrollChanged (cm) {
+  scrollChanged(cm) {
     this.props.onScroll && this.props.onScroll(cm.getScrollInfo())
   }
 
@@ -139,11 +139,13 @@ export default class CodeMirror extends Component {
     }
     this.debouncedOnParse()
   }
+
   codemirrorValueChanges = (doc, change) => {
     if (this.props.onChanges && change.origin !== 'setValue') {
       this.props.onChanges(doc.getValue(), change)
     }
   }
+
   onParsed = () => {
     this.props.onParsed &&
       this.props.onParsed(
@@ -151,7 +153,8 @@ export default class CodeMirror extends Component {
         this.lastChange
       )
   }
-  render () {
+
+  render() {
     const editorClassNames = classNames(
       'ReactCodeMirror',
       { 'ReactCodeMirror--focused': this.state.isFocused },
@@ -165,7 +168,7 @@ export default class CodeMirror extends Component {
       <div
         className={editorClassNames}
         ref={setEditorReference}
-        data-testid='editor-wrapper'
+        data-testid="editor-wrapper"
       />
     )
   }

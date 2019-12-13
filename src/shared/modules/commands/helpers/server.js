@@ -25,7 +25,7 @@ import { CONNECTION_ID as DISCOVERY_CONNECTION_ID } from 'shared/modules/discove
 import { UnknownCommandError, getErrorMessage } from 'services/exceptions'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
-export function handleServerCommand (action, cmdchar, put, store) {
+export function handleServerCommand(action, cmdchar, put, store) {
   const [serverCmd, props] = getCommandAndParam(
     action.cmd.substr(cmdchar.length)
   )
@@ -55,7 +55,7 @@ export function handleServerCommand (action, cmdchar, put, store) {
   }
 }
 
-function handleDisconnectCommand (action, cmdchar, put, store) {
+function handleDisconnectCommand(action, cmdchar, put, store) {
   put(addFrameAction({ ...action, type: 'disconnect' }))
   const activeConnection = connections.getActiveConnection(store.getState())
   const disconnectAction = connections.disconnectAction(activeConnection)
@@ -63,7 +63,7 @@ function handleDisconnectCommand (action, cmdchar, put, store) {
   return null
 }
 
-function handleUserCommand (action, props, cmdchar) {
+function handleUserCommand(action, props, cmdchar) {
   switch (props) {
     case 'list':
       return { ...action, type: 'user-list' }
@@ -72,11 +72,11 @@ function handleUserCommand (action, props, cmdchar) {
   }
 }
 
-function handleChangePasswordCommand (action, props, cmdchar) {
+function handleChangePasswordCommand(action, props, cmdchar) {
   return { ...action, type: 'change-password' }
 }
 
-export function connectToConnection (action, connectionName, put, store) {
+export function connectToConnection(action, connectionName, put, store) {
   const state = store.getState()
   connectionName = connectionName || DISCOVERY_CONNECTION_ID
   const foundConnections = connections
@@ -86,11 +86,11 @@ export function connectToConnection (action, connectionName, put, store) {
   return { ...action, type: 'connection', connectionData }
 }
 
-function handleServerStatusCommand (action) {
+function handleServerStatusCommand(action) {
   return { ...action, type: 'status' }
 }
 
-function handleServerSwitchCommand (action, props, store) {
+function handleServerSwitchCommand(action, props, store) {
   switch (props) {
     case 'success':
       const activeConnectionData = connections.getActiveConnectionData(

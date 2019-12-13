@@ -35,8 +35,8 @@ export const BrowserSyncAuthIframe = (
 export const BrowserSyncSignoutIframe = (logoutUrl, callback = () => {}) =>
   setupIframe(logoutUrl, undefined, callback)
 
-function setupIframe (url, type, cb) {
-  let iframe = document.createElement('iframe')
+function setupIframe(url, type, cb) {
+  const iframe = document.createElement('iframe')
   iframe.style.display = 'none'
   iframe.src = url
   if (!type) {

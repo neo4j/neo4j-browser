@@ -18,13 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, test, expect, afterEach */
-
 import nock from 'nock'
 import * as config from './config'
 import { update, replace } from 'shared/modules/settings/settingsDuck'
 
-function FetchError (message) {
+function FetchError(message) {
   this.name = 'FetchError'
   this.message = message
 }

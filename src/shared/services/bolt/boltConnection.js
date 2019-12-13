@@ -149,7 +149,7 @@ export const getDriversObj = (props, opts = {}, onConnectFail = () => {}) => {
   }
 }
 
-export function directConnect (
+export function directConnect(
   props,
   opts = {},
   onLostConnection = () => {},
@@ -170,7 +170,7 @@ export function directConnect (
   return p
 }
 
-export function openConnection (props, opts = {}, onLostConnection = () => {}) {
+export function openConnection(props, opts = {}, onLostConnection = () => {}) {
   const p = new Promise((resolve, reject) => {
     const onConnectFail = e => {
       onLostConnection(e)
@@ -213,7 +213,7 @@ export function openConnection (props, opts = {}, onLostConnection = () => {}) {
   return p
 }
 
-function _trackedTransaction (
+function _trackedTransaction(
   input,
   parameters = {},
   session,
@@ -245,7 +245,7 @@ function _trackedTransaction (
   return [id, queryPromise]
 }
 
-function _transaction (
+function _transaction(
   input,
   parameters,
   session,
@@ -266,13 +266,13 @@ function _transaction (
     })
 }
 
-export function cancelTransaction (id, cb) {
+export function cancelTransaction(id, cb) {
   if (runningQueryRegister[id]) {
     runningQueryRegister[id](cb)
   }
 }
 
-export function directTransaction (
+export function directTransaction(
   input,
   parameters,
   requestId = null,
@@ -282,14 +282,14 @@ export function directTransaction (
 ) {
   const session = _drivers
     ? _drivers
-      .getDirectDriver()
-      .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
+        .getDirectDriver()
+        .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
 
-export function routedReadTransaction (
+export function routedReadTransaction(
   input,
   parameters,
   requestId = null,
@@ -299,14 +299,14 @@ export function routedReadTransaction (
 ) {
   const session = _drivers
     ? _drivers
-      .getRoutedDriver()
-      .session({ defaultAccessMode: neo4j.session.READ, database: useDb })
+        .getRoutedDriver()
+        .session({ defaultAccessMode: neo4j.session.READ, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
 
-export function routedWriteTransaction (
+export function routedWriteTransaction(
   input,
   parameters,
   requestId = null,
@@ -316,8 +316,8 @@ export function routedWriteTransaction (
 ) {
   const session = _drivers
     ? _drivers
-      .getRoutedDriver()
-      .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
+        .getRoutedDriver()
+        .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
@@ -333,8 +333,8 @@ export const closeConnection = () => {
 export const ensureConnection = (props, opts, onLostConnection) => {
   const session = _drivers
     ? _drivers
-      .getDirectDriver()
-      .session({ defaultAccessMode: neo4j.session.READ })
+        .getDirectDriver()
+        .session({ defaultAccessMode: neo4j.session.READ })
     : false
   if (session) {
     return new Promise((resolve, reject) => {

@@ -41,11 +41,11 @@ const HelpFrame = ({ frame }) => {
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
-      const chapter = chapters[helpTopic] || chapters['unfound']
+      const chapter = chapters[helpTopic] || chapters.unfound
       const { title, subtitle } = chapter
       let { content } = chapter
 
-      // The commands topic is a special case that uses dymaic data
+      // The commands topic is a special case that uses dynamic data
       const dynamic = ['bolt', 'commands', 'play', 'guides', 'help', 'cypher']
       if (dynamic.includes(helpTopic)) {
         content = <DynamicTopics docs={docs} {...chapter} />
@@ -57,7 +57,7 @@ const HelpFrame = ({ frame }) => {
   }
   return (
     <FrameTemplate
-      className='helpFrame help'
+      className="helpFrame help"
       header={frame}
       aside={aside}
       contents={<Directives content={ret} />}

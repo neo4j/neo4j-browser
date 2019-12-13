@@ -21,10 +21,10 @@
 import { version } from 'project-root/package.json'
 
 // Application info
-export const NEO4J_BROWSER_BACKGROUND_QUERY = `system`
-export const NEO4J_BROWSER_USER_QUERY = `user-direct`
-export const NEO4J_BROWSER_USER_ACTION_QUERY = `user-action`
-export const NEO4J_BROWSER_USER_TRANSPILED_QUERY = `user-transpiled`
+export const NEO4J_BROWSER_BACKGROUND_QUERY = 'system'
+export const NEO4J_BROWSER_USER_QUERY = 'user-direct'
+export const NEO4J_BROWSER_USER_ACTION_QUERY = 'user-action'
+export const NEO4J_BROWSER_USER_TRANSPILED_QUERY = 'user-transpiled'
 export const NEO4J_BROWSER_APP_ID = `neo4j-browser_v${version}`
 
 export const getBackgroundTxMetadata = ({ hasServerSupport = false }) => {

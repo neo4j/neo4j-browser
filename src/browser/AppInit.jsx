@@ -90,14 +90,14 @@ const AppInit = () => {
   return (
     <Provider store={store}>
       <BusProvider bus={bus}>
-        <React.Fragment>
+        <>
           <GlobalStyle />
           <App
             desktopIntegrationPoint={
               window && window.neo4jDesktopApi ? window.neo4jDesktopApi : null
             }
           />
-        </React.Fragment>
+        </>
       </BusProvider>
     </Provider>
   )

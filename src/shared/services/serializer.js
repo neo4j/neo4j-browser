@@ -47,7 +47,7 @@ const csvChain = input =>
 
 export const CSVSerializer = cols => {
   const _cols = cols
-  let _data = []
+  const _data = []
   const append = row => {
     const emptyRowInOneCol = isEmpty(row) && _cols.length === 1
     if (emptyRowInOneCol) return _data.push(row)

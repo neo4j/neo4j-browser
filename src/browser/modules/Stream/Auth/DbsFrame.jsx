@@ -42,7 +42,7 @@ export const DbsFrame = props => {
   const dbsToShow = uniqBy(dbs, 'name')
 
   return (
-    <React.Fragment>
+    <>
       <StyledConnectionAside>
         <span>
           <React.Fragment>
@@ -55,7 +55,7 @@ export const DbsFrame = props => {
         <StyledConnectionBody>
           <Render if={Array.isArray(dbsToShow) && dbsToShow.length}>
             Click on one to start using it:
-            <UnstyledList data-testid='dbs-command-list'>
+            <UnstyledList data-testid="dbs-command-list">
               {dbsToShow.map(db => {
                 return (
                   <StyledDbsRow key={toKeyString(db.name)}>
@@ -73,15 +73,15 @@ export const DbsFrame = props => {
             <div>
               If you know you have access to a database with a certain name, you
               can use the{' '}
-              <ClickToCode
-                CodeComponent={StyledCodeBlockFrame}
-              >{`:${useDbCommand} databaseName`}</ClickToCode>{' '}
+              <ClickToCode CodeComponent={StyledCodeBlockFrame}>
+                {`:${useDbCommand} databaseName`}
+              </ClickToCode>{' '}
               command to start using it.
             </div>
           </Render>
         </StyledConnectionBody>
       </StyledConnectionBodyContainer>
-    </React.Fragment>
+    </>
   )
 }
 

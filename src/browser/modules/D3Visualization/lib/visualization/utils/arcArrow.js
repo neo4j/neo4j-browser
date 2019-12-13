@@ -19,7 +19,7 @@
  */
 
 export default class ArcArrow {
-  constructor (
+  constructor(
     startRadius,
     endRadius,
     endCentre,
@@ -41,7 +41,7 @@ export default class ArcArrow {
     const radiusRatio = startRadius / (endRadius + headLength)
     const homotheticCenter = (-endCentre * radiusRatio) / (1 - radiusRatio)
 
-    const intersectWithOtherCircle = function (
+    const intersectWithOtherCircle = function(
       fixedPoint,
       radius,
       xCenter,
@@ -102,7 +102,7 @@ export default class ArcArrow {
       y: cy - arcRadius * Math.cos(midShaftAngle)
     }
 
-    const startTangent = function (dr) {
+    const startTangent = function(dr) {
       const dx = (dr < 0 ? 1 : -1) * Math.sqrt(square(dr) / (1 + square(g1)))
       const dy = g1 * dx
       return {
@@ -111,7 +111,7 @@ export default class ArcArrow {
       }
     }
 
-    const endTangent = function (dr) {
+    const endTangent = function(dr) {
       const dx = (dr < 0 ? -1 : 1) * Math.sqrt(square(dr) / (1 + square(g2)))
       const dy = g2 * dx
       return {
@@ -125,7 +125,7 @@ export default class ArcArrow {
       y: cy - (arcRadius + dr) * Math.cos(angle)
     })
 
-    const endNormal = function (dc) {
+    const endNormal = function(dc) {
       const dx =
         (dc < 0 ? -1 : 1) * Math.sqrt(square(dc) / (1 + square(1 / g2)))
       const dy = dx / g2
@@ -135,7 +135,7 @@ export default class ArcArrow {
       }
     }
 
-    const endOverlayCorner = function (dr, dc) {
+    const endOverlayCorner = function(dr, dc) {
       const shoulder = endTangent(dr)
       const arrowTip = endNormal(dc)
       return {
@@ -151,7 +151,7 @@ export default class ArcArrow {
     const positiveSweep = startAttach.y > 0 ? 0 : 1
     const negativeSweep = startAttach.y < 0 ? 0 : 1
 
-    this.outline = function (shortCaptionLength) {
+    this.outline = function(shortCaptionLength) {
       if (startAngle > endAngle) {
         return [
           'M',
@@ -254,7 +254,7 @@ export default class ArcArrow {
       }
     }
 
-    this.overlay = function (minWidth) {
+    this.overlay = function(minWidth) {
       const radius = Math.max(minWidth / 2, shaftRadius)
 
       return [

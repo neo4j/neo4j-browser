@@ -32,7 +32,7 @@ import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnter
 import RevealablePasswordInput from './revealable-password-input'
 
 export default class ChangePasswordForm extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       password: '',
@@ -40,26 +40,32 @@ export default class ChangePasswordForm extends Component {
       newPassword2: ''
     }
   }
+
   onExistingPasswordChange = event => {
     const password = event.target.value
     this.setState({ password, error: {} }, () => this.onChange())
   }
+
   onNewPasswordChange = event => {
     const newPassword = event.target.value
     this.setState({ newPassword, error: {} }, () => this.onChange())
   }
+
   onNewPasswordChange2 = event => {
     const newPassword2 = event.target.value
     this.setState({ newPassword2, error: {} }, () => this.onChange())
   }
+
   onChange = () => {
     this.props.onChange(this.state.newPassword, this.state.newPassword2)
   }
+  
   onSuggestPassword = () => {
     this.setState({
       newPassword: `${faker.random.words(3)} ${faker.random.number(100)}`
     })
   }
+    
   validateSame = () => {
     if (
       this.state.newPassword &&
@@ -90,7 +96,8 @@ export default class ChangePasswordForm extends Component {
       })
     }
   }
-  render () {
+
+  render() {
     const indexStart = this.props.showExistingPasswordInput ? 1 : 0
     const { isLoading } = this.props
     const classNames = []
@@ -108,7 +115,7 @@ export default class ChangePasswordForm extends Component {
             setRefForIndex
           }) => {
             return (
-              <React.Fragment>
+              <>
                 <Render if={this.props.showExistingPasswordInput}>
                   <StyledConnectionFormEntry>
                     <StyledConnectionLabel>
@@ -161,14 +168,14 @@ export default class ChangePasswordForm extends Component {
                 </StyledConnectionFormEntry>
                 <Render if={!isLoading}>
                   <FormButton
-                    data-testid='changePassword'
-                    label='Change password'
+                    data-testid="changePassword"
+                    label="Change password"
                     disabled={isLoading}
                     {...getSubmitProps()}
                   />
                 </Render>
                 <Render if={isLoading}>Please wait...</Render>
-              </React.Fragment>
+              </>
             )
           }}
         />

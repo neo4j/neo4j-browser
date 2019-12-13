@@ -41,7 +41,7 @@ export const getRequests = state => state[NAME]
 export const isCancelStatus = status =>
   [REQUEST_STATUS_CANCELED, REQUEST_STATUS_CANCELING].includes(status)
 
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }

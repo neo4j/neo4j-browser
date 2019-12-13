@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 import reducer, { add, SET_MAX_FRAMES, initialState } from './streamDuck'
 
 describe('streamDuck', () => {
@@ -46,7 +45,7 @@ describe('streamDuck', () => {
       ...initialState,
       maxFrames: 2,
       allIds: [1, 2],
-      byId: { '1': { id: 1 }, '2': { id: 2 } }
+      byId: { 1: { id: 1 }, 2: { id: 2 } }
     }
     const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
 
@@ -60,7 +59,7 @@ describe('streamDuck', () => {
   })
   test('dont remove pinned frames when cutting frames', () => {
     // Given
-    const byId = { '1': { isPinned: 1 }, '2': { isPinned: 1 } }
+    const byId = { 1: { isPinned: 1 }, 2: { isPinned: 1 } }
     const init = { ...initialState, maxFrames: 2, allIds: [1, 2], byId }
     const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
 

@@ -76,8 +76,8 @@ const initialState = {
 /**
  * Selectors
  */
-export function getConnection (state, id) {
-  let connections = getConnections(state).filter(
+export function getConnection(state, id) {
+  const connections = getConnections(state).filter(
     connection => connection && connection.id === id
   )
   if (connections && connections.length > 0) {
@@ -87,41 +87,41 @@ export function getConnection (state, id) {
   }
 }
 
-export function getUseDb (state) {
+export function getUseDb(state) {
   return (state[NAME] || {}).useDb
 }
 
-export function getConnections (state) {
+export function getConnections(state) {
   return state[NAME].allConnectionIds.map(id => state[NAME].connectionsById[id])
 }
 
-export function getConnectionState (state) {
+export function getConnectionState(state) {
   return state[NAME].connectionState || initialState.connectionState
 }
 
-export function getLastConnectionUpdate (state) {
+export function getLastConnectionUpdate(state) {
   return state[NAME].lastUpdate || initialState.lastUpdate
 }
 
-export function isConnected (state) {
+export function isConnected(state) {
   return getConnectionState(state) === CONNECTED_STATE
 }
 
-export function getActiveConnection (state) {
+export function getActiveConnection(state) {
   return state[NAME].activeConnection || initialState.activeConnection
 }
 
-export function getActiveConnectionData (state) {
+export function getActiveConnectionData(state) {
   if (!state[NAME].activeConnection) return null
   return getConnectionData(state, state[NAME].activeConnection)
 }
 
-export function getConnectionData (state, id) {
+export function getConnectionData(state, id) {
   if (typeof state[NAME].connectionsById[id] === 'undefined') return null
-  let data = state[NAME].connectionsById[id]
+  const data = state[NAME].connectionsById[id]
   data.db = getUseDb(state)
   if (data.username && data.password) return data
-  if (!(data.username && data.password) && (memoryUsername && memoryPassword)) {
+  if (!(data.username && data.password) && memoryUsername && memoryPassword) {
     // No retain state
     return { ...data, username: memoryUsername, password: memoryPassword }
   }
@@ -144,7 +144,7 @@ const addConnectionHelper = (state, obj) => {
 
 const removeConnectionHelper = (state, connectionId) => {
   const connectionsById = { ...state.connectionsById }
-  let allConnectionIds = state.allConnectionIds
+  const allConnectionIds = state.allConnectionIds
   const index = allConnectionIds.indexOf(connectionId)
   if (index > 0) {
     allConnectionIds.splice(index, 1)
@@ -161,7 +161,7 @@ const removeConnectionHelper = (state, connectionId) => {
 const mergeConnectionHelper = (state, connection) => {
   const connectionId = connection.id
   const connectionsById = { ...state.connectionsById }
-  let allConnectionIds = state.allConnectionIds
+  const allConnectionIds = state.allConnectionIds
   const index = allConnectionIds.indexOf(connectionId)
   if (index >= 0) {
     connectionsById[connectionId] = Object.assign(
@@ -186,7 +186,9 @@ const updateAuthEnabledHelper = (state, authEnabled) => {
   const updatedConnection = Object.assign(
     {},
     state.connectionsById[connectionId],
-    { authEnabled: authEnabled }
+    {
+      authEnabled: authEnabled
+    }
   )
   const updatedConnectionByIds = Object.assign({}, state.connectionsById)
   updatedConnectionByIds[connectionId] = updatedConnection
@@ -199,7 +201,7 @@ let memoryUsername = ''
 let memoryPassword = ''
 
 // Reducer
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state, useDb: initialState.useDb }
   }

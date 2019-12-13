@@ -6,7 +6,7 @@ export const colorSchemes = {
   LIGHT: '(prefers-color-scheme: light)'
 }
 
-export default function useDetectColorScheme () {
+export default function useDetectColorScheme() {
   const [scheme, setScheme] = useState(null)
 
   useEffect(() => {

@@ -41,7 +41,7 @@ export const DONE = `${NAME}/DONE`
 export const INJECTED_DISCOVERY = `${NAME}/INJECTED_DISCOVERY`
 
 // Reducer
-export default function reducer (state = initialState, action = {}) {
+export default function reducer(state = initialState, action = {}) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }
@@ -136,7 +136,9 @@ export const discoveryOnStartupEpic = (some$, store) => {
           // fake discovery response
           // Promise.resolve({ bolt: 'bolt+routing://localhost:7687' })
           .then(result => {
-            const host = result && (result.bolt_direct || result.bolt)
+            const host =
+              result &&
+              (result.bolt_routing || result.bolt_direct || result.bolt)
             // Try to get info from server
             if (!host) {
               throw new Error('No bolt address found') // No bolt info from server, throw

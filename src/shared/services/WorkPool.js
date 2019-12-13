@@ -24,23 +24,27 @@ class WorkPool {
     BUSY: 'busy',
     FREE: 'free'
   }
-  constructor (createWorker, maxPoolSize = 15) {
+
+  constructor(createWorker, maxPoolSize = 15) {
     this.createWorker = createWorker
     this.maxPoolSize = maxPoolSize
     this.register = []
     this.q = []
   }
+
   // Public methods
-  getPoolSize (state) {
+  getPoolSize(state) {
     if (!state) {
       return this.register.length
     }
     return this.register.filter(w => w.state === state).length
   }
-  getQueueSize () {
+
+  getQueueSize() {
     return this.q.length
   }
-  getWorkById (id) {
+
+  getWorkById(id) {
     for (let i = 0; i < this.q.length; i++) {
       if (this.q[i].id === id) {
         return this.q[i]
@@ -53,18 +57,20 @@ class WorkPool {
     }
     return null
   }
-  doWork ({ id, payload, onmessage }) {
+
+  doWork({ id, payload, onmessage }) {
     const work = this._buildWorkObj({ id: id || uuid(), payload, onmessage })
     this._addToQ(work)
     this._next()
     return work
   }
-  messageAllWorkers (msg) {
+
+  messageAllWorkers(msg) {
     this.register.forEach(worker => worker.worker.postMessage(msg))
   }
 
   // Implemtation details
-  _getFreeWorker (id) {
+  _getFreeWorker(id) {
     const len = this.register.length
     for (let i = len - 1; i >= 0; i--) {
       if (this.register[i].state === WorkPool.workerStates.FREE) {
@@ -82,7 +88,8 @@ class WorkPool {
     }
     return null
   }
-  _next () {
+
+  _next() {
     if (!this.getQueueSize()) {
       return
     }
@@ -95,12 +102,18 @@ class WorkPool {
     work._assignWorker(workerObj)
     work._executeInitial()
   }
-  _addToQ (work) {
+
+  _addToQ(work) {
     this.q.push(work)
   }
-  _removeFromQ (id) {
-    this.q.splice(this.q.findIndex(el => el.id === id), 1)
+
+  _removeFromQ(id) {
+    this.q.splice(
+      this.q.findIndex(el => el.id === id),
+      1
+    )
   }
+
   _unregisterWorker = id => {
     const worker = this._getWorkerById(id)
     if (worker === null) {
@@ -109,7 +122,8 @@ class WorkPool {
     worker.state = WorkPool.workerStates.FREE
     this._next()
   }
-  _buildWorkObj ({ id, payload, onmessage }) {
+
+  _buildWorkObj({ id, payload, onmessage }) {
     const obj = {
       id,
       _worker: undefined,
@@ -146,7 +160,8 @@ class WorkPool {
 
     return obj
   }
-  _buildWorkerObj (worker, state) {
+
+  _buildWorkerObj(worker, state) {
     const obj = {
       worker,
       state
@@ -156,7 +171,8 @@ class WorkPool {
     }
     return obj
   }
-  _getWorkerById (id) {
+
+  _getWorkerById(id) {
     for (let i = 0; i < this.register.length; i++) {
       if (this.register[i].id === id) {
         return this.register[i]

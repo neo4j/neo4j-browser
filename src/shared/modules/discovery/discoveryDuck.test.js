@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, afterEach, test, expect, beforeAll */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
@@ -133,6 +132,30 @@ describe('discoveryOnStartupEpic', () => {
     nock(getDiscoveryEndpoint())
       .get('/')
       .reply(200, { bolt_direct: expectedHost, bolt: 'very://bad:1337' })
+    bus.take(discovery.DONE, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        { type: discovery.DONE }
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('listens on APP_START and finds all of bolt_routing, bolt_direct and a bold host and dispatches an action with the found bolt_routing host', done => {
+    // Given
+    const action = { type: APP_START, env: WEB }
+    const expectedHost = 'neo4j://myhost:7777'
+    nock(getDiscoveryEndpoint())
+      .get('/')
+      .reply(200, {
+        bolt_routing: expectedHost,
+        bolt_direct: 'bolt://myhost:666',
+        bolt: 'very://bad:1337'
+      })
     bus.take(discovery.DONE, currentAction => {
       // Then
       expect(store.getActions()).toEqual([

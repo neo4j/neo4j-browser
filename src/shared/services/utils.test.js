@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, test, expect */
 import * as utils from './utils'
 import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
 
@@ -190,9 +189,9 @@ describe('utils', () => {
     // Given
     jest.useFakeTimers()
     const callMe = jest.fn()
-    function TestFn () {
+    function TestFn() {
       this.val = 'hello'
-      this.fn = function (extVal) {
+      this.fn = function(extVal) {
         callMe(this.val, extVal)
       }
       this.dbFn = utils.debounce(this.fn, 500, this)
@@ -235,9 +234,9 @@ describe('utils', () => {
     // Given
     jest.useFakeTimers()
     const callMe = jest.fn()
-    function TestFn () {
+    function TestFn() {
       this.val = 'hello'
-      this.fn = function (extVal) {
+      this.fn = function(extVal) {
         callMe(this.val, extVal)
       }
       this.thFn = utils.throttle(this.fn, 500, this)

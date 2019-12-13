@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 import reducer, * as actions from './historyDuck'
 
 describe('editor reducer', () => {

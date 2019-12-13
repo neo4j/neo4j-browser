@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 
 class FrameAside extends Component {
-  render () {
+  render() {
     const { subtitle } = this.props
     let { title } = this.props
 
@@ -31,18 +31,18 @@ class FrameAside extends Component {
     if (title === 'Neo4j') {
       title = (
         <img
-          src='./assets/images/neo4j-world.png'
-          alt='Neo4j'
-          className='frame-title-logo'
+          src="./assets/images/neo4j-world.png"
+          alt="Neo4j"
+          className="frame-title-logo"
         />
       )
     }
 
     return title ? (
-      <Fragment>
+      <>
         {title && <H3>{title}</H3>}
         {subtitle && <Lead>{subtitle}</Lead>}
-      </Fragment>
+      </>
     ) : null
   }
 }

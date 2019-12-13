@@ -43,7 +43,7 @@ const deduplicateNodes = nodes => {
 }
 
 export class ExplorerComponent extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     const graphStyle = neoGraphStyle()
     this.defaultStyle = graphStyle.toSheet()
@@ -57,9 +57,7 @@ export class ExplorerComponent extends Component {
       })
       selectedItem = {
         type: 'status-item',
-        item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${
-          this.props.initialNodeDisplay
-        } of ${nodes.length} nodes are being displayed`
+        item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`
       }
     }
     if (this.props.graphStyleData) {
@@ -79,13 +77,13 @@ export class ExplorerComponent extends Component {
     }
   }
 
-  getNodeNeighbours (node, currentNeighbours, callback) {
+  getNodeNeighbours(node, currentNeighbours, callback) {
     if (currentNeighbours.length > this.props.maxNeighbours) {
       callback(null, { nodes: [], relationships: [] })
     }
     this.props.getNeighbours(node.id, currentNeighbours).then(
       result => {
-        let nodes = result.nodes
+        const nodes = result.nodes
         if (
           result.count >
           this.props.maxNeighbours - currentNeighbours.length
@@ -108,20 +106,20 @@ export class ExplorerComponent extends Component {
     )
   }
 
-  onItemMouseOver (item) {
+  onItemMouseOver(item) {
     this.setState({ hoveredItem: item })
   }
 
-  onItemSelect (item) {
+  onItemSelect(item) {
     this.setState({ selectedItem: item })
   }
 
-  onGraphModelChange (stats) {
+  onGraphModelChange(stats) {
     this.setState({ stats: stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
-  onSelectedLabel (label, propertyKeys) {
+  onSelectedLabel(label, propertyKeys) {
     this.setState({
       selectedItem: {
         type: 'legend-item',
@@ -133,7 +131,7 @@ export class ExplorerComponent extends Component {
     })
   }
 
-  onSelectedRelType (relType, propertyKeys) {
+  onSelectedRelType(relType, propertyKeys) {
     this.setState({
       selectedItem: {
         type: 'legend-item',
@@ -145,7 +143,7 @@ export class ExplorerComponent extends Component {
     })
   }
 
-  componentWillReceiveProps (props) {
+  componentWillReceiveProps(props) {
     if (!deepEquals(props.graphStyleData, this.props.graphStyleData)) {
       if (props.graphStyleData) {
         const rebasedStyle = deepmerge(this.defaultStyle, props.graphStyleData)
@@ -167,14 +165,14 @@ export class ExplorerComponent extends Component {
     }
   }
 
-  onInspectorExpandToggled (contracted, inspectorHeight) {
+  onInspectorExpandToggled(contracted, inspectorHeight) {
     this.setState({
       inspectorContracted: contracted,
       forcePaddingBottom: inspectorHeight
     })
   }
 
-  render () {
+  render() {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
@@ -205,7 +203,7 @@ export class ExplorerComponent extends Component {
 
     return (
       <StyledFullSizeContainer
-        id='svg-vis'
+        id="svg-vis"
         className={
           Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
         }

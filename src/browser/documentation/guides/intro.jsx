@@ -24,18 +24,18 @@ import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Intro'
 const slides = [
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s1">
+    <div className="col-sm-3">
       <h3>Introduction</h3>
-      <p className='lead'>Getting started with Neo4j Browser</p>
+      <p className="lead">Getting started with Neo4j Browser</p>
     </div>
-    <div className='col-sm-6'>
+    <div className="col-sm-6">
       <p>
         Neo4j Browser is a command driven client, like a web-based shell
         environment. It is perfect for running ad-hoc graph queries, with just
         enough ability to prototype a Neo4j-based application.
       </p>
-      <ul className='big'>
+      <ul className="big">
         <li>
           Developer focused, for writing and running graph queries with Cypher
         </li>
@@ -48,12 +48,12 @@ const slides = [
       </ul>
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s2">
+    <div className="col-sm-3">
       <h3>Editor</h3>
-      <p className='lead'>Command editing and execution</p>
+      <p className="lead">Command editing and execution</p>
     </div>
-    <div className='col-sm-5'>
+    <div className="col-sm-5">
       <p>
         The editor is the primary interface for entering and running commands.
         Enter Cypher queries to work with graph data. Use client-side commands
@@ -62,21 +62,21 @@ const slides = [
       </p>
       <ul>
         <li>Single line editing for brief queries or commands</li>
-        <li>Switch to multi-line editing with {`<shift-enter`}</li>
-        <li>Run a query with {`<ctrl-enter>`}</li>
+        <li>Switch to multi-line editing with {'<shift-enter'}</li>
+        <li>Run a query with {'<ctrl-enter>'}</li>
         <li>History is kept for easily retrieving previous commands</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
-      <img src='./assets/images/screen_editor.png' className='img-responsive' />
+    <div className="col-sm-4">
+      <img src="./assets/images/screen_editor.png" className="img-responsive" />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s3">
+    <div className="col-sm-3">
       <h3>Stream</h3>
-      <p className='lead'>Scrolling series of result frames</p>
+      <p className="lead">Scrolling series of result frames</p>
     </div>
-    <div className='col-sm-5'>
+    <div className="col-sm-5">
       <p>
         A result frame is created for each command execution, added to the top
         of the stream to create a scrollable collection in reverse chronological
@@ -91,16 +91,16 @@ const slides = [
         </li>
       </ul>
     </div>
-    <div className='col-sm-4'>
-      <img src='./assets/images/screen_stream.png' className='img-responsive' />
+    <div className="col-sm-4">
+      <img src="./assets/images/screen_stream.png" className="img-responsive" />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s4">
+    <div className="col-sm-3">
       <h3>Frame code view</h3>
-      <p className='lead'>Viewing requests and responses</p>
+      <p className="lead">Viewing requests and responses</p>
     </div>
-    <div className='col-sm-5'>
+    <div className="col-sm-5">
       <p>
         The code tab displays everything sent to and received from the Neo4j
         server, including:
@@ -111,19 +111,19 @@ const slides = [
         <li>Raw request and response content in JSON format</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <img
-        src='./assets/images/screen_code_frame.png'
-        className='img-responsive'
+        src="./assets/images/screen_code_frame.png"
+        className="img-responsive"
       />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-3'>
+  <Slide key="s5">
+    <div className="col-sm-3">
       <h3>Sidebar</h3>
-      <p className='lead'>Convenient clickable access</p>
+      <p className="lead">Convenient clickable access</p>
     </div>
-    <div className='col-sm-5'>
+    <div className="col-sm-5">
       <p>
         The sidebar expands to reveal different functional panels for common
         queries and information.
@@ -135,37 +135,37 @@ const slides = [
         <li>Credits and licensing information</li>
       </ul>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <img
-        src='./assets/images/screen_sidebar.png'
-        className='img-responsive'
+        src="./assets/images/screen_sidebar.png"
+        className="img-responsive"
       />
     </div>
   </Slide>,
-  <Slide>
-    <div className='col-sm-4'>
+  <Slide key="s6">
+    <div className="col-sm-4">
       <h3>Next steps</h3>
-      <p className='lead'>
+      <p className="lead">
         Neo4j is like a mashup of a REPL + lightweight IDE + graph
         visualization.
       </p>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <h3>Keep getting started</h3>
-      <ul className='undecorated'>
+      <ul className="undecorated">
         <li>
-          <a play-topic='concepts'>Concepts</a> - GraphDB 101
+          <a play-topic="concepts">Concepts</a> - GraphDB 101
         </li>
         <li>
-          <a play-topic='cypher'>Cypher</a> - query language
+          <a play-topic="cypher">Cypher</a> - query language
         </li>
       </ul>
     </div>
-    <div className='col-sm-4'>
+    <div className="col-sm-4">
       <h3>Jump into code</h3>
-      <ul className='undecorated'>
+      <ul className="undecorated">
         <li>
-          <a play-topic='movie-graph'>The Movie Graph</a>
+          <a play-topic="movie-graph">The Movie Graph</a>
         </li>
       </ul>
     </div>
@@ -174,7 +174,7 @@ const slides = [
 
 const content = (
   <Carousel
-    className='deck container-fluid'
+    className="deck container-fluid"
     slides={slides}
     showIntro
     withDirectives

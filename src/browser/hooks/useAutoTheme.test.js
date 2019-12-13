@@ -4,8 +4,6 @@ import { createMediaListenerMatch } from './testUtils'
 import useAutoTheme from './useAutoTheme'
 import { colorSchemes } from './useDetectColorScheme'
 
-/* global jest */
-
 describe('useAutoTheme', () => {
   it('uses light as default theme if no default is passed in', () => {
     window.matchMedia = undefined

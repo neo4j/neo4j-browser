@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global describe, test, expect */
 import React from 'react'
 import { render } from '@testing-library/react'
 import 'jest-dom/extend-expect'
@@ -30,7 +29,7 @@ import { Provider } from 'react-redux'
 
 const initialState = { settings: { cmdchar: ':' } }
 const store = createStore(() => initialState, initialState)
-function renderWithRedux (ui) {
+function renderWithRedux(ui) {
   return render(<Provider store={store}>{ui}</Provider>)
 }
 

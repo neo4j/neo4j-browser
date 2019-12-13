@@ -35,7 +35,7 @@ export const UseDbFrame = props => {
   const { frame } = props
   const { useDb } = frame
   return (
-    <React.Fragment>
+    <>
       <StyledConnectionAside>
         <span>
           <React.Fragment>
@@ -59,7 +59,7 @@ export const UseDbFrame = props => {
           </div>
         </StyledConnectionBody>
       </StyledConnectionBodyContainer>
-    </React.Fragment>
+    </>
   )
 }
 

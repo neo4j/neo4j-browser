@@ -18,10 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isEnterpriseEdition } from '../support/utils'
+
 /* global Cypress, cy, test, expect, before */
 
 describe('Bolt connections', () => {
-  before(function () {
+  before(function() {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
@@ -53,32 +55,43 @@ describe('Bolt connections', () => {
       .should('not.contain', 'Connection lost')
   })
 
-  it('users with no role can connect and shows up in sidebar', () => {
-    cy.executeCommand(':clear')
-    const password = Cypress.config('password')
-    cy.connect('neo4j', password)
+  if (isEnterpriseEdition()) {
+    it('users with no role can connect and shows up in sidebar', () => {
+      cy.executeCommand(':clear')
+      const password = Cypress.config('password')
+      cy.connect('neo4j', password)
 
-    cy.createUser('noroles', 'pw', true)
-    cy.executeCommand(':server disconnect')
-    cy.executeCommand(':clear')
-    cy.executeCommand(':server connect')
+      cy.createUser('noroles', 'pw', true)
+      cy.executeCommand(':server disconnect')
+      cy.executeCommand(':clear')
+      cy.executeCommand(':server connect')
 
-    // Make sure initial pw set works
-    cy.setInitialPassword('.', 'pw', 'noroles', Cypress.config('boltUrl'), true)
+      // Make sure initial pw set works
+      cy.setInitialPassword(
+        '.',
+        'pw',
+        'noroles',
+        Cypress.config('boltUrl'),
+        true
+      )
 
-    // Try regular connect
-    cy.executeCommand(':server disconnect')
-    cy.connect('noroles', '.')
+      // Try regular connect
+      cy.executeCommand(':server disconnect')
+      cy.connect('noroles', '.')
 
-    // Check sidebar
-    cy.get('[data-testid="drawerDBMS"]').click()
-    cy.get('[data-testid="user-details-username"]').should('contain', 'noroles')
-    cy.get('[data-testid="user-details-roles"]').should('contain', '-')
-    cy.get('[data-testid="drawerDBMS"]').click()
+      // Check sidebar
+      cy.get('[data-testid="drawerDBMS"]').click()
+      cy.get('[data-testid="user-details-username"]').should(
+        'contain',
+        'noroles'
+      )
+      cy.get('[data-testid="user-details-roles"]').should('contain', '-')
+      cy.get('[data-testid="drawerDBMS"]').click()
 
-    cy.executeCommand(':server disconnect')
-    cy.executeCommand(':server connect')
-    cy.connect('neo4j', password)
-    cy.dropUser('noroles')
-  })
+      cy.executeCommand(':server disconnect')
+      cy.executeCommand(':server connect')
+      cy.connect('neo4j', password)
+      cy.dropUser('noroles')
+    })
+  }
 })

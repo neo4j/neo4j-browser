@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, describe, beforeAll, afterEach, test, expect */
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
@@ -60,9 +59,9 @@ describe('connections reducer', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
-        '1': { id: 1, name: 'bm1' },
-        '2': { id: 2, name: 'bm2' },
-        '3': { id: 3, name: 'bm3' }
+        1: { id: 1, name: 'bm1' },
+        2: { id: 2, name: 'bm2' },
+        3: { id: 3, name: 'bm3' }
       }
     }
     const action = {
@@ -77,9 +76,9 @@ describe('connections reducer', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
-        '1': { id: 1, name: 'bm1' },
-        '2': { id: 2, name: 'bm2' },
-        '3': { id: 3, name: 'bm3' }
+        1: { id: 1, name: 'bm1' },
+        2: { id: 2, name: 'bm2' },
+        3: { id: 3, name: 'bm3' }
       }
     }
     const action = {
@@ -95,9 +94,9 @@ describe('connections reducer', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
-        '1': { id: 1, name: 'bm1' },
-        '2': { id: 2, name: 'bm2' },
-        '3': { id: 3, name: 'bm3' }
+        1: { id: 1, name: 'bm1' },
+        2: { id: 2, name: 'bm2' },
+        3: { id: 3, name: 'bm3' }
       }
     }
     const action = {

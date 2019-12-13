@@ -43,11 +43,12 @@ const getWarningComponent = severity => {
 }
 
 export class WarningsView extends Component {
-  shouldComponentUpdate (props, state) {
+  shouldComponentUpdate(props, state) {
     if (!this.props.result) return true
     return !deepEquals(props.result.summary, this.props.result.summary)
   }
-  render () {
+
+  render() {
     if (this.props.result === undefined) return null
     const { summary = {} } = this.props.result
     const { notifications = [], query = {} } = summary
@@ -55,8 +56,8 @@ export class WarningsView extends Component {
     if (!notifications || !cypher) {
       return null
     }
-    let cypherLines = cypher.split('\n')
-    let notificationsList = notifications.map(notification => {
+    const cypherLines = cypher.split('\n')
+    const notificationsList = notifications.map(notification => {
       // Detect generic warning without position information
       const position = Object.keys(notification.position).length
         ? notification.position
@@ -89,10 +90,11 @@ export class WarningsView extends Component {
 }
 
 export class WarningsStatusbar extends Component {
-  shouldComponentUpdate (props, state) {
+  shouldComponentUpdate(props, state) {
     return false
   }
-  render () {
+
+  render() {
     return null
   }
 }

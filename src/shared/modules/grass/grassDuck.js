@@ -38,8 +38,8 @@ export const composeGrassToSync = (store, syncValue) => {
   if (
     grassFromSync.length < 1 ||
     (grassFromSync[0].data &&
-      (grassFromSync[0].data !== stringifyedGrassFromState &&
-        grassFromSync[0].data !== grassFromState))
+      grassFromSync[0].data !== stringifyedGrassFromState &&
+      grassFromSync[0].data !== grassFromState)
   ) {
     return [
       {
@@ -53,11 +53,11 @@ export const composeGrassToSync = (store, syncValue) => {
   return grassFromSync
 }
 
-function updateStyleData (state, styleData) {
+function updateStyleData(state, styleData) {
   return styleData
 }
 
-export default function visualization (state = initialState, action) {
+export default function visualization(state = initialState, action) {
   if (action.type === APP_START) {
     state = !state ? state : { ...initialState, ...state }
   }
@@ -75,7 +75,7 @@ export const updateGraphStyleData = graphStyleData => {
     styleData: graphStyleData
   }
 }
-export function syncGrass (grass) {
+export function syncGrass(grass) {
   return {
     type: SYNC_GRASS,
     grass

@@ -36,9 +36,9 @@ const StyleFrame = ({ frame }) => {
   let grass = ''
   let contents = (
     <InfoView
-      title='No styles yet'
-      description='No style generated or set yet. Run a query and return a few nodes and
-    relationships to generate some styling.'
+      title="No styles yet"
+      description="No style generated or set yet. Run a query and return a few nodes and
+    relationships to generate some styling."
     />
   )
   if (frame.result) {
@@ -69,10 +69,10 @@ const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
       <StyledRightPartial>
         <StyledFrameTitlebarButtonSection>
           <FrameButton
-            data-testid='styleResetButton'
+            data-testid="styleResetButton"
             onClick={() => onResetClick(resetStyleAction, rerunAction)}
           >
-            <FireExtinguisherIcon title='Reset style' />
+            <FireExtinguisherIcon title="Reset style" />
           </FrameButton>
         </StyledFrameTitlebarButtonSection>
       </StyledRightPartial>
@@ -93,9 +93,6 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-const Statusbar = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StyleStatusbar)
+const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
 
 export default StyleFrame

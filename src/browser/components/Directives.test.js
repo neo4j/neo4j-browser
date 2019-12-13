@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/* global test, expect, jest, MouseEvent */
+/* global MouseEvent */
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { Directives as DirectivesComponent } from './Directives'
@@ -27,7 +26,7 @@ describe('Directives', () => {
   test('should attach play topic directive when contents has a play-topic attribute', () => {
     // Given
     const clickEvent = jest.fn()
-    const html = <a play-topic='hello'>button</a>
+    const html = <a play-topic="hello">button</a>
 
     // When
     const { container, getByText } = render(
@@ -49,7 +48,7 @@ describe('Directives', () => {
   test('should attach help topic directive when contents has a play-topic attribute', () => {
     // Given
     const clickEvent = jest.fn()
-    const html = <a help-topic='hello'>link</a>
+    const html = <a help-topic="hello">link</a>
 
     // When
     const { container, getByText } = render(
@@ -71,7 +70,7 @@ describe('Directives', () => {
   test('should attach runnable directive when element has a tag of `pre.runnable`', () => {
     // Given
     const clickEvent = jest.fn()
-    const html = <pre className='runnable'>my code</pre>
+    const html = <pre className="runnable">my code</pre>
 
     // When
     const { container, getByText } = render(
@@ -94,7 +93,7 @@ describe('Directives', () => {
     // Given
     const clickEvent = jest.fn()
     const html = (
-      <span className='runnable'>
+      <span className="runnable">
         <pre>my code</pre>
       </span>
     )
@@ -121,8 +120,8 @@ describe('Directives', () => {
     const clickEvent = jest.fn()
     const html = (
       <div>
-        <a help-topic='help'>help</a>
-        <a play-topic='play'>play</a>
+        <a help-topic="help">help</a>
+        <a play-topic="play">play</a>
       </div>
     )
 

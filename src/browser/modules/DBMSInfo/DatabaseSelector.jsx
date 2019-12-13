@@ -62,7 +62,7 @@ export const DatabaseSelector = ({
       <DrawerSectionBody>
         <Select
           value={selectedDb || ''}
-          data-testid='database-selection-list'
+          data-testid="database-selection-list"
           onChange={selectionChange}
         >
           {uniqDatabases.map(db => {

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export function parseGrass (string) {
+export function parseGrass(string) {
   let result
   try {
     result = JSON.parse(string)
@@ -27,14 +27,14 @@ export function parseGrass (string) {
   return result
 }
 
-function parseGrassCSS (string) {
-  let chars = string.split('')
+function parseGrassCSS(string) {
+  const chars = string.split('')
   let insideString = false
   let insideProps = false
   let insideBinding = false
   let keyword = ''
   let props = ''
-  let rules = {}
+  const rules = {}
   let i, j
 
   for (i = 0; i < chars.length; i++) {
@@ -107,11 +107,11 @@ export const objToCss = obj => {
   }
   let output = ''
   try {
-    let level = '  '
-    for (let selector in obj) {
+    const level = '  '
+    for (const selector in obj) {
       if (obj.hasOwnProperty(selector)) {
         output += selector + ' {\n' + level
-        for (let style in obj[selector]) {
+        for (const style in obj[selector]) {
           if (obj[selector].hasOwnProperty(style)) {
             output +=
               style +

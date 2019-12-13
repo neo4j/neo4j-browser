@@ -99,17 +99,17 @@ const getReferences = (version, v) => {
     },
     {
       name: 'GraphGists',
-      command: `https://neo4j.com/graphgists/`,
+      command: 'https://neo4j.com/graphgists/',
       type: 'link'
     },
     {
       name: 'Developer Site',
-      command: `https://www.neo4j.com/developer/`,
+      command: 'https://www.neo4j.com/developer/',
       type: 'link'
     },
     {
       name: 'Knowledge Base',
-      command: `https://neo4j.com/developer/kb/`,
+      command: 'https://neo4j.com/developer/kb/',
       type: 'link'
     }
   ]
@@ -127,12 +127,12 @@ const getStaticItems = (version, urlVersion) => {
 const Documents = ({ version, urlVersion }) => {
   const items = getStaticItems(version, urlVersion)
   return (
-    <Drawer id='db-documents'>
+    <Drawer id="db-documents">
       <DrawerHeader>Documents</DrawerHeader>
       <DrawerBody>
-        <DocumentItems header={'Introduction'} items={items.intro} />
-        <DocumentItems header={'Help'} items={items.help} />
-        <DocumentItems header={'Useful Resources'} items={items.reference} />
+        <DocumentItems header="Introduction" items={items.intro} />
+        <DocumentItems header="Help" items={items.help} />
+        <DocumentItems header="Useful Resources" items={items.reference} />
       </DrawerBody>
     </Drawer>
   )

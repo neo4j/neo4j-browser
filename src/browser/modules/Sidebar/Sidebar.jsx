@@ -45,16 +45,16 @@ import {
   AboutIcon
 } from 'browser-components/icons/Icons'
 
-function Sidebar (props) {
+function Sidebar(props) {
   const openDrawer = props.openDrawer
   const onNavClick = props.onNavClick
   const { showStaticScripts } = props
   const DatabaseDrawer = DBMSInfo
   const FavoritesDrawer = () => (
-    <React.Fragment>
+    <>
       <Favorites />
       {showStaticScripts && <StaticScripts />}
-    </React.Fragment>
+    </>
   )
   const DocumentsDrawer = Documents
   const SettingsDrawer = Settings
@@ -67,7 +67,7 @@ function Sidebar (props) {
         <DatabaseIcon
           isOpen={isOpen}
           connectionState={props.neo4jConnectionState}
-          title='Database'
+          title="Database"
         />
       ),
       content: DatabaseDrawer
@@ -75,13 +75,13 @@ function Sidebar (props) {
     {
       name: 'Favorites',
       title: 'Favorites',
-      icon: isOpen => <FavoritesIcon isOpen={isOpen} title='Favorites' />,
+      icon: isOpen => <FavoritesIcon isOpen={isOpen} title="Favorites" />,
       content: FavoritesDrawer
     },
     {
       name: 'Documents',
       title: 'Documentation',
-      icon: isOpen => <DocumentsIcon isOpen={isOpen} title='Documentation' />,
+      icon: isOpen => <DocumentsIcon isOpen={isOpen} title="Documentation" />,
       content: DocumentsDrawer
     }
   ]
@@ -93,7 +93,7 @@ function Sidebar (props) {
         <CloudSyncIcon
           isOpen={isOpen}
           connected={props.syncConnected}
-          title='Cloud Services'
+          title="Cloud Services"
         />
       ),
       content: BrowserSync
@@ -101,13 +101,13 @@ function Sidebar (props) {
     {
       name: 'Settings',
       title: 'Browser Settings',
-      icon: isOpen => <SettingsIcon isOpen={isOpen} title='Browser Settings' />,
+      icon: isOpen => <SettingsIcon isOpen={isOpen} title="Browser Settings" />,
       content: SettingsDrawer
     },
     {
       name: 'About',
       title: 'About Neo4j',
-      icon: isOpen => <AboutIcon isOpen={isOpen} title='About Neo4j' />,
+      icon: isOpen => <AboutIcon isOpen={isOpen} title="About Neo4j" />,
       content: AboutDrawer
     }
   ]
@@ -149,7 +149,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(Sidebar)
+export default connect(mapStateToProps, null)(Sidebar)

@@ -39,7 +39,7 @@ import {
 import { stringifyMod } from 'services/utils'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
-export function getBodyAndStatusBarMessages (result, maxRows) {
+export function getBodyAndStatusBarMessages(result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
     return {}
   }
@@ -62,9 +62,7 @@ export function getBodyAndStatusBarMessages (result, maxRows) {
   let updateMessages = bolt.retrieveFormattedUpdateStatistics(result)
   let streamMessage =
     result.records.length > 0
-      ? `started streaming ${
-        result.records.length
-      } records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
+      ? `started streaming ${result.records.length} records ${resultAvailableAfter} ms and completed ${totalTimeString} ${streamMessageTail}`
       : `completed ${totalTimeString} ${streamMessageTail}`
 
   if (updateMessages && updateMessages.length > 0) {
@@ -74,10 +72,15 @@ export function getBodyAndStatusBarMessages (result, maxRows) {
     streamMessage = streamMessage[0].toUpperCase() + streamMessage.slice(1)
   }
 
+  const systemUpdatesValue = get(result, 'summary.counters._systemUpdates')
   const bodyMessage =
     (!updateMessages || updateMessages.length === 0) &&
     result.records.length === 0
-      ? '(no changes, no records)'
+      ? `(${(systemUpdatesValue > 0 &&
+          `${systemUpdatesValue} system update${(systemUpdatesValue > 1 &&
+            's') ||
+            ''}`) ||
+          'no changes'}, no records)`
       : updateMessages + `completed ${totalTimeString} ms.`
 
   return {
@@ -99,7 +102,7 @@ export const resultHasNodes = (request, types = bolt.neo4j.types) => {
   if (!result || !result.records) return false
   const { records = undefined } = result
   if (!records || !records.length) return false
-  let keys = records[0].keys
+  const keys = records[0].keys
   for (let i = 0; i < records.length; i++) {
     const graphItems = keys.map(key => records[i].get(key))
     const items = recursivelyExtractGraphItems(types, graphItems)
@@ -164,7 +167,7 @@ export const initialView = (props, state = {}) => {
 
   // Non forced views
   // This get set when the user changes view in _any_ frame
-  let { recentView = undefined } = props
+  const { recentView = undefined } = props
   // We can only have three views here: TABLE, TEXT or VISUALIZATION
   // If TABLE or TEXT are recentView, fast return
   if ([viewTypes.TABLE, viewTypes.TEXT].indexOf(recentView) > -1) {
@@ -199,10 +202,10 @@ export const stringifyResultArray = (formatter = stringModifier, arr = []) => {
 export const transformResultRecordsToResultArray = records => {
   return records && records.length
     ? [records]
-      .map(extractRecordsToResultArray)
-      .map(
-        flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
-      )[0]
+        .map(extractRecordsToResultArray)
+        .map(
+          flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
+        )[0]
     : undefined
 }
 
@@ -246,7 +249,7 @@ export const flattenGraphItems = (
     !isGraphItem(types, item) &&
     !intChecker(item)
   ) {
-    let out = {}
+    const out = {}
     const keys = Object.keys(item)
     for (let i = 0; i < keys.length; i++) {
       out[keys[i]] = flattenGraphItems(types, intChecker, item[keys[i]])
@@ -275,7 +278,7 @@ export const isGraphItem = (types = neo4j.types, item) => {
   )
 }
 
-export function extractPropertiesFromGraphItems (types = neo4j.types, obj) {
+export function extractPropertiesFromGraphItems(types = neo4j.types, obj) {
   if (obj instanceof types.Node || obj instanceof types.Relationship) {
     return obj.properties
   } else if (obj instanceof types.Path) {
@@ -290,7 +293,7 @@ const arrayifyPath = (types = neo4j.types, path) => {
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(function (segment) {
+  return segments.map(function(segment) {
     return [
       extractPropertiesFromGraphItems(types, segment.start),
       extractPropertiesFromGraphItems(types, segment.relationship),
@@ -304,7 +307,7 @@ const arrayifyPath = (types = neo4j.types, path) => {
  * @param     {Record}    record
  * @return    {*}
  */
-export function recordToJSONMapper (record) {
+export function recordToJSONMapper(record) {
   const keys = get(record, 'keys', [])
 
   return reduce(
@@ -326,7 +329,7 @@ export function recordToJSONMapper (record) {
  * @param     {*}     values
  * @return    {*}
  */
-function mapNeo4jValuesToPlainValues (values) {
+function mapNeo4jValuesToPlainValues(values) {
   if (!isObjectLike(values)) {
     return values
   }
@@ -364,7 +367,7 @@ function mapNeo4jValuesToPlainValues (values) {
  * @param     {*}   value
  * @return    {*}
  */
-function neo4jValueToPlainValue (value) {
+function neo4jValueToPlainValue(value) {
   switch (get(value, 'constructor')) {
     case neo4j.types.Date:
     case neo4j.types.DateTime:
@@ -385,7 +388,7 @@ function neo4jValueToPlainValue (value) {
  * @param value
  * @return {boolean}
  */
-function isNeo4jValue (value) {
+function isNeo4jValue(value) {
   switch (get(value, 'constructor')) {
     case neo4j.types.Date:
     case neo4j.types.DateTime:

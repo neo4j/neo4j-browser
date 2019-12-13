@@ -24,7 +24,7 @@ const title = 'Parameters'
 const subtitle = 'View and set parameters to be sent with queries.'
 const category = 'cypherQueries'
 const content = (
-  <React.Fragment>
+  <>
     <p>
       The
       <code>:param name => 'Stella'</code> command will define a parameter named
@@ -46,35 +46,34 @@ const content = (
     </p>
     <p>
       If you need more fine-grained control or advanced Cypher queries, you can
-      use the explicit syntax: <code>{`x => { ... RETURN 1 as foo }`}</code>
+      use the explicit syntax: <code>{'x => { ... RETURN 1 as foo }'}</code>
       <br />
       Explicit returns yield a list of records, matching that of your Cypher
-      query: <code>{`x => { RETURN 1 as foo }`}</code> yields{' '}
-      <code>{`$x = [{foo: 1}]`}</code>
+      query: <code>{'x => { RETURN 1 as foo }'}</code> yields{' '}
+      <code>{'$x = [{foo: 1}]'}</code>
       <br />
       You can pick out individual values from your result using destructuring:{' '}
-      <code>{`[{foo}] => { RETURN 1 as foo }`}</code> yields{' '}
-      <code>{`$foo = 1`}</code>
+      <code>{'[{foo}] => { RETURN 1 as foo }'}</code> yields{' '}
+      <code>$foo = 1</code>
       <br />
       You can also rename destructured params:{' '}
-      <code>{`[{foo: bar}] => { RETURN 1 as foo }`}</code> yields{' '}
-      <code>{`$bar = 1`}</code>
+      <code>{'[{foo: bar}] => { RETURN 1 as foo }'}</code> yields{' '}
+      <code>$bar = 1</code>
     </p>
     <p>
       Cypher query example with a param:
-      {` `}
-      <code>{`MATCH (n:Person) WHERE n.name = $name`}</code>
+      <code>MATCH (n:Person) WHERE n.name = $name</code>
     </p>
     <ParamsOnSystemDb />
-    <div className='links'>
-      <div className='link'>
-        <p className='title'>Related</p>
-        <p className='content'>
-          <a help-topic='param'>:help param</a>
+    <div className="links">
+      <div className="link">
+        <p className="title">Related</p>
+        <p className="content">
+          <a help-topic="param">:help param</a>
         </p>
       </div>
     </div>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

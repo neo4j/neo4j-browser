@@ -77,14 +77,15 @@ const getFrame = type => {
     style: StyleFrame,
     default: Frame
   }
-  return trans[type] || trans['default']
+  return trans[type] || trans.default
 }
 
 class Stream extends PureComponent {
-  componentDidMount () {
+  componentDidMount() {
     this.base = React.createRef()
   }
-  componentDidUpdate (prevProps) {
+
+  componentDidUpdate(prevProps) {
     if (
       prevProps.framesSignature !== this.props.framesSignature &&
       this.props.scrollToTop &&
@@ -94,7 +95,8 @@ class Stream extends PureComponent {
       this.base.current.scrollTop = 0
     }
   }
-  render () {
+
+  render() {
     return (
       <StyledStream ref={this.base}>
         {this.props.frames.map(frame => {
@@ -107,7 +109,7 @@ class Stream extends PureComponent {
             try {
               const cmd = frame.cmd.replace(/^:/, '')
               const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
-              MyFrame = require(`./Extras/index.js`)[Frame]
+              MyFrame = require('./Extras/index.js')[Frame]
               if (!MyFrame) {
                 MyFrame = getFrame(frame.type)
               }

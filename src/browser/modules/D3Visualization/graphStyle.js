@@ -23,7 +23,7 @@ import {
   selectorArrayToString
 } from 'services/grassUtils'
 
-export default function neoGraphStyle () {
+export default function neoGraphStyle() {
   const defaultStyle = {
     node: {
       diameter: '50px',
@@ -171,26 +171,26 @@ export default function neoGraphStyle () {
       'text-color-internal': '#FFFFFF'
     }
   ]
-  const Selector = (function () {
-    function Selector (tag1, classes1) {
+  const Selector = (function() {
+    function Selector(tag1, classes1) {
       this.tag = tag1
       this.classes = classes1 != null ? classes1 : []
     }
 
-    Selector.prototype.toString = function () {
+    Selector.prototype.toString = function() {
       return selectorArrayToString([this.tag].concat(this.classes))
     }
 
     return Selector
   })()
 
-  const StyleRule = (function () {
-    function StyleRule (selector1, props1) {
+  const StyleRule = (function() {
+    function StyleRule(selector1, props1) {
       this.selector = selector1
       this.props = props1
     }
 
-    StyleRule.prototype.matches = function (selector) {
+    StyleRule.prototype.matches = function(selector) {
       if (this.selector.tag !== selector.tag) {
         return false
       }
@@ -203,7 +203,7 @@ export default function neoGraphStyle () {
       return true
     }
 
-    StyleRule.prototype.matchesExact = function (selector) {
+    StyleRule.prototype.matchesExact = function(selector) {
       return (
         this.matches(selector) &&
         this.selector.classes.length === selector.classes.length
@@ -213,13 +213,13 @@ export default function neoGraphStyle () {
     return StyleRule
   })()
 
-  const StyleElement = (function () {
-    function StyleElement (selector) {
+  const StyleElement = (function() {
+    function StyleElement(selector) {
       this.selector = selector
       this.props = {}
     }
 
-    StyleElement.prototype.applyRules = function (rules) {
+    StyleElement.prototype.applyRules = function(rules) {
       for (let i = 0; i < rules.length; i++) {
         const rule = rules[i]
         if (rule.matches(this.selector)) {
@@ -230,15 +230,15 @@ export default function neoGraphStyle () {
       return this
     }
 
-    StyleElement.prototype.get = function (attr) {
+    StyleElement.prototype.get = function(attr) {
       return this.props[attr] || ''
     }
 
     return StyleElement
   })()
 
-  const GraphStyle = (function () {
-    function GraphStyle () {
+  const GraphStyle = (function() {
+    function GraphStyle() {
       this.rules = []
       try {
         this.loadRules()
@@ -247,12 +247,12 @@ export default function neoGraphStyle () {
       }
     }
 
-    const parseSelector = function (key) {
-      let tokens = selectorStringToArray(key)
+    const parseSelector = function(key) {
+      const tokens = selectorStringToArray(key)
       return new Selector(tokens[0], tokens.slice(1))
     }
 
-    const selector = function (item) {
+    const selector = function(item) {
       if (item.isNode) {
         return nodeSelector(item)
       } else if (item.isRelationship) {
@@ -260,28 +260,28 @@ export default function neoGraphStyle () {
       }
     }
 
-    const nodeSelector = function (node) {
+    const nodeSelector = function(node) {
       node = node || {}
       const classes = node.labels != null ? node.labels : []
       return new Selector('node', classes)
     }
 
-    const relationshipSelector = function (rel) {
+    const relationshipSelector = function(rel) {
       rel = rel || {}
       const classes = rel.type != null ? [rel.type] : []
       return new Selector('relationship', classes)
     }
 
-    const findRule = function (selector, rules) {
+    const findRule = function(selector, rules) {
       for (let i = 0; i < rules.length; i++) {
-        let rule = rules[i]
+        const rule = rules[i]
         if (rule.matchesExact(selector)) {
           return rule
         }
       }
     }
 
-    const findAvailableDefaultColor = function (rules) {
+    const findAvailableDefaultColor = function(rules) {
       const usedColors = rules
         .filter(rule => {
           return rule.props.color != null
@@ -289,12 +289,12 @@ export default function neoGraphStyle () {
         .map(rule => {
           return rule.props.color
         })
-      let index =
+      const index =
         usedColors.length - 1 > defaultColors ? 0 : usedColors.length - 1
       return defaultColors[index]
     }
 
-    const getDefaultNodeCaption = function (item) {
+    const getDefaultNodeCaption = function(item) {
       if (
         !item ||
         !(item.propertyList != null ? item.propertyList.length : 0) > 0
@@ -311,11 +311,11 @@ export default function neoGraphStyle () {
         /description$/i,
         /^.+/
       ]
-      let defaultCaption = captionPrioOrder.reduceRight(function (
+      let defaultCaption = captionPrioOrder.reduceRight(function(
         leading,
         current
       ) {
-        let hits = item.propertyList.filter(function (prop) {
+        const hits = item.propertyList.filter(function(prop) {
           return current.test(prop.key)
         })
         if (hits.length) {
@@ -331,19 +331,19 @@ export default function neoGraphStyle () {
       }
     }
 
-    GraphStyle.prototype.calculateStyle = function (selector) {
+    GraphStyle.prototype.calculateStyle = function(selector) {
       return new StyleElement(selector).applyRules(this.rules)
     }
 
-    GraphStyle.prototype.forEntity = function (item) {
+    GraphStyle.prototype.forEntity = function(item) {
       return this.calculateStyle(selector(item))
     }
 
-    GraphStyle.prototype.setDefaultNodeStyling = function (selector, item) {
+    GraphStyle.prototype.setDefaultNodeStyling = function(selector, item) {
       let defaultColor = true
       let defaultCaption = true
       for (let i = 0; i < this.rules.length; i++) {
-        let rule = this.rules[i]
+        const rule = this.rules[i]
         if (rule.selector.classes.length > 0 && rule.matches(selector)) {
           if (rule.props.hasOwnProperty('color')) {
             defaultColor = false
@@ -371,7 +371,7 @@ export default function neoGraphStyle () {
       }
     }
 
-    GraphStyle.prototype.changeForSelector = function (selector, props) {
+    GraphStyle.prototype.changeForSelector = function(selector, props) {
       let rule = findRule(selector, this.rules)
       if (rule == null) {
         rule = new StyleRule(selector, props)
@@ -381,14 +381,14 @@ export default function neoGraphStyle () {
       return rule
     }
 
-    GraphStyle.prototype.destroyRule = function (rule) {
+    GraphStyle.prototype.destroyRule = function(rule) {
       const idx = this.rules.indexOf(rule)
       if (idx != null) {
         this.rules.splice(idx, 1)
       }
     }
 
-    GraphStyle.prototype.importGrass = function (string) {
+    GraphStyle.prototype.importGrass = function(string) {
       try {
         const rules = this.parse(string)
         return this.loadRules(rules)
@@ -397,13 +397,13 @@ export default function neoGraphStyle () {
       }
     }
 
-    GraphStyle.prototype.parse = function (string) {
+    GraphStyle.prototype.parse = function(string) {
       const chars = string.split('')
       let insideString = false
       let insideProps = false
       let keyword = ''
       let props = ''
-      let rules = {}
+      const rules = {}
       for (let i = 0; i < chars.length; i++) {
         const c = chars[i]
         let skipThis = true
@@ -442,7 +442,7 @@ export default function neoGraphStyle () {
           }
         }
       }
-      for (let k in rules) {
+      for (const k in rules) {
         const v = rules[k]
         rules[k] = {}
         v.split(';').forEach(prop => {
@@ -455,24 +455,24 @@ export default function neoGraphStyle () {
       return rules
     }
 
-    GraphStyle.prototype.resetToDefault = function () {
+    GraphStyle.prototype.resetToDefault = function() {
       this.loadRules()
       return true
     }
 
-    GraphStyle.prototype.toSheet = function () {
-      let sheet = {}
+    GraphStyle.prototype.toSheet = function() {
+      const sheet = {}
       this.rules.forEach(rule => {
         sheet[rule.selector.toString()] = rule.props
       })
       return sheet
     }
 
-    GraphStyle.prototype.toString = function () {
+    GraphStyle.prototype.toString = function() {
       let str = ''
       this.rules.forEach(r => {
         str += r.selector.toString() + ' {\n'
-        for (let k in r.props) {
+        for (const k in r.props) {
           let v = r.props[k]
           if (k === 'caption') {
             v = "'" + v + "'"
@@ -484,37 +484,37 @@ export default function neoGraphStyle () {
       return str
     }
 
-    GraphStyle.prototype.loadRules = function (data) {
+    GraphStyle.prototype.loadRules = function(data) {
       if (typeof data !== 'object') {
         data = defaultStyle
       }
       this.rules.length = 0
-      for (let key in data) {
+      for (const key in data) {
         const props = data[key]
         this.rules.push(new StyleRule(parseSelector(key), props))
       }
       return this
     }
 
-    GraphStyle.prototype.defaultSizes = function () {
+    GraphStyle.prototype.defaultSizes = function() {
       return defaultSizes
     }
 
-    GraphStyle.prototype.defaultIconCodes = function () {
+    GraphStyle.prototype.defaultIconCodes = function() {
       return defaultIconCodes
     }
 
-    GraphStyle.prototype.defaultArrayWidths = function () {
+    GraphStyle.prototype.defaultArrayWidths = function() {
       return defaultArrayWidths
     }
 
-    GraphStyle.prototype.defaultColors = function () {
+    GraphStyle.prototype.defaultColors = function() {
       return defaultColors
     }
 
-    GraphStyle.prototype.interpolate = function (str, item) {
-      let ips = str.replace(/\{([^{}]*)\}/g, function (a, b) {
-        let r = item.propertyMap[b]
+    GraphStyle.prototype.interpolate = function(str, item) {
+      let ips = str.replace(/\{([^{}]*)\}/g, function(a, b) {
+        const r = item.propertyMap[b]
         if (typeof r === 'object') {
           return r.join(', ')
         }
@@ -529,7 +529,7 @@ export default function neoGraphStyle () {
       if (ips.length < 1 && str === '{id}' && item.isNode) {
         ips = '<id>'
       }
-      return ips.replace(/^<(id|type)>$/, function (a, b) {
+      return ips.replace(/^<(id|type)>$/, function(a, b) {
         const r = item[b]
         if (typeof r === 'string' || typeof r === 'number') {
           return r
@@ -538,7 +538,7 @@ export default function neoGraphStyle () {
       })
     }
 
-    GraphStyle.prototype.forNode = function (node) {
+    GraphStyle.prototype.forNode = function(node) {
       node = node || {}
       const selector = nodeSelector(node)
       if ((node.labels != null ? node.labels.length : 0) > 0) {
@@ -547,7 +547,7 @@ export default function neoGraphStyle () {
       return this.calculateStyle(selector)
     }
 
-    GraphStyle.prototype.forRelationship = function (rel) {
+    GraphStyle.prototype.forRelationship = function(rel) {
       const selector = relationshipSelector(rel)
       return this.calculateStyle(selector)
     }

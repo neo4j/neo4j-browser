@@ -35,7 +35,7 @@ import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
 
 export class GrassEditorComponent extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.graphStyle = neoGraphStyle()
     if (this.props.graphStyleData) {
@@ -49,18 +49,18 @@ export class GrassEditorComponent extends Component {
     }
   }
 
-  sizeLessThan (size1, size2) {
-    let size1Numerical = size1 ? size1.replace('px', '') + 0 : 0
-    let size2Numerical = size1 ? size2.replace('px', '') + 0 : 0
+  sizeLessThan(size1, size2) {
+    const size1Numerical = size1 ? size1.replace('px', '') + 0 : 0
+    const size2Numerical = size1 ? size2.replace('px', '') + 0 : 0
     return size1Numerical <= size2Numerical
   }
 
-  updateStyle (selector, styleProp) {
+  updateStyle(selector, styleProp) {
     this.graphStyle.changeForSelector(selector, styleProp)
     this.props.update(this.graphStyle.toSheet())
   }
 
-  circleSelector (
+  circleSelector(
     styleProps,
     styleProvider,
     activeProvider,
@@ -94,10 +94,10 @@ export class GrassEditorComponent extends Component {
     })
   }
 
-  colorPicker (selector, styleForLabel) {
+  colorPicker(selector, styleForLabel) {
     return (
-      <StyledInlineListItem key='color-picker'>
-        <StyledInlineList className='color-picker picker'>
+      <StyledInlineListItem key="color-picker">
+        <StyledInlineList className="color-picker picker">
           <StyledInlineListItem>Color:</StyledInlineListItem>
           {this.circleSelector(
             this.graphStyle.defaultColors(),
@@ -115,10 +115,10 @@ export class GrassEditorComponent extends Component {
     )
   }
 
-  sizePicker (selector, styleForLabel) {
+  sizePicker(selector, styleForLabel) {
     return (
-      <StyledInlineListItem key='size-picker'>
-        <StyledInlineList className='size-picker picker'>
+      <StyledInlineListItem key="size-picker">
+        <StyledInlineList className="size-picker picker">
           <StyledInlineListItem>Size:</StyledInlineListItem>
           {this.circleSelector(
             this.graphStyle.defaultSizes(),
@@ -141,8 +141,9 @@ export class GrassEditorComponent extends Component {
       </StyledInlineListItem>
     )
   }
-  widthPicker (selector, styleForItem) {
-    let widthSelectors = this.graphStyle
+
+  widthPicker(selector, styleForItem) {
+    const widthSelectors = this.graphStyle
       .defaultArrayWidths()
       .map((widthValue, i) => {
         const onClick = () => {
@@ -153,7 +154,7 @@ export class GrassEditorComponent extends Component {
           styleForItem.get('shaft-width') === widthValue['shaft-width']
         return (
           <StyledPickerListItem
-            className='width-picker-item'
+            className="width-picker-item"
             key={toKeyString('width' + i)}
           >
             <StyledPickerSelector
@@ -165,8 +166,8 @@ export class GrassEditorComponent extends Component {
         )
       })
     return (
-      <StyledInlineListItem key='width-picker'>
-        <StyledInlineList className='width-picker picker'>
+      <StyledInlineListItem key="width-picker">
+        <StyledInlineList className="width-picker picker">
           <StyledInlineListItem>Line width:</StyledInlineListItem>
           {widthSelectors}
         </StyledInlineList>
@@ -174,11 +175,11 @@ export class GrassEditorComponent extends Component {
     )
   }
 
-  iconPicker (selector) {
+  iconPicker(selector) {
     return (
-      <li key='icon-picker'>
+      <li key="icon-picker">
         Icon:
-        <ul className='icon-picker picker'>
+        <ul className="icon-picker picker">
           {this.picker(
             this.graphStyle.defaultIconCodes(),
             iconCode => {
@@ -195,17 +196,17 @@ export class GrassEditorComponent extends Component {
     )
   }
 
-  captionPicker (
+  captionPicker(
     selector,
     styleForItem,
     propertyKeys,
     showTypeSelector = false
   ) {
-    let captionSelector = (displayCaption, captionToSave, key) => {
+    const captionSelector = (displayCaption, captionToSave, key) => {
       const onClick = () => {
         this.updateStyle(selector, { caption: captionToSave })
       }
-      let active = styleForItem.props.caption === captionToSave
+      const active = styleForItem.props.caption === captionToSave
       return (
         <StyledPickerListItem key={toKeyString('caption' + displayCaption)}>
           <StyledCaptionSelector
@@ -217,7 +218,7 @@ export class GrassEditorComponent extends Component {
         </StyledPickerListItem>
       )
     }
-    let captionSelectors = propertyKeys.map((propKey, i) => {
+    const captionSelectors = propertyKeys.map((propKey, i) => {
       return captionSelector(propKey, `{${propKey}}`)
     })
     let typeCaptionSelector = null
@@ -225,8 +226,8 @@ export class GrassEditorComponent extends Component {
       typeCaptionSelector = captionSelector('<type>', '<type>', 'typecaption')
     }
     return (
-      <StyledInlineListItem key='caption-picker'>
-        <StyledInlineList className='caption-picker picker'>
+      <StyledInlineListItem key="caption-picker">
+        <StyledInlineList className="caption-picker picker">
           <StyledInlineListItem>Caption:</StyledInlineListItem>
           {captionSelector('<id>', '<id>', 'idcaption')}
           {typeCaptionSelector}
@@ -236,7 +237,7 @@ export class GrassEditorComponent extends Component {
     )
   }
 
-  stylePicker () {
+  stylePicker() {
     let pickers
     let title
     if (this.props.selectedLabel) {
@@ -259,7 +260,7 @@ export class GrassEditorComponent extends Component {
         )
       ]
       title = (
-        <StyledLabelToken className='token token-label' style={inlineStyle}>
+        <StyledLabelToken className="token token-label" style={inlineStyle}>
           {this.props.selectedLabel.label || '*'}
         </StyledLabelToken>
       )
@@ -285,7 +286,7 @@ export class GrassEditorComponent extends Component {
       ]
       title = (
         <StyledTokenRelationshipType
-          className='token token-relationship'
+          className="token token-relationship"
           style={inlineStyle}
         >
           {this.props.selectedRelType.relType || '*'}
@@ -295,14 +296,14 @@ export class GrassEditorComponent extends Component {
       return null
     }
     return (
-      <StyledInlineList className='style-picker'>
+      <StyledInlineList className="style-picker">
         {title}
         {pickers}
       </StyledInlineList>
     )
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (
       nextProps.graphStyleData &&
       nextProps.graphStyleData !== this.props.graphStyleData
@@ -311,7 +312,7 @@ export class GrassEditorComponent extends Component {
     }
   }
 
-  render () {
+  render() {
     return this.stylePicker()
   }
 }

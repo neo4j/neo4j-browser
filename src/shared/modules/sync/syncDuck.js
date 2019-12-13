@@ -88,27 +88,27 @@ const initialMetadataState = {
 /**
  * Selectors
  */
-export function getSync (state) {
+export function getSync(state) {
   return state[NAME]
 }
 
-export function getMetadata (state) {
+export function getMetadata(state) {
   return state[NAME_META] || null
 }
 
-export function getServiceStatus (state) {
+export function getServiceStatus(state) {
   return (state[NAME_META] || initialMetadataState).serviceStatus
 }
-export function getUserAuthStatus (state) {
+export function getUserAuthStatus(state) {
   return (state[NAME_META] || {}).userAuthStatus || SIGNED_OUT
 }
-export function isUserSignedIn (state) {
+export function isUserSignedIn(state) {
   return (state[NAME_META] || {}).userAuthStatus === SIGNED_IN
 }
-export function getUserData (state) {
+export function getUserData(state) {
   return (state[NAME_META] || {}).profile
 }
-export function getLastSyncedAt (state) {
+export function getLastSyncedAt(state) {
   return (
     (state[NAME_META] || {}).lastSyncedAt || initialMetadataState.lastSyncedAt
   )
@@ -118,7 +118,7 @@ export function getLastSyncedAt (state) {
  * Reducer
  */
 
-export function syncReducer (state = initialState, action) {
+export function syncReducer(state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }
@@ -134,7 +134,7 @@ export function syncReducer (state = initialState, action) {
   }
 }
 
-export function syncConsentReducer (state = initialConsentState, action) {
+export function syncConsentReducer(state = initialConsentState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }
@@ -156,7 +156,7 @@ export function syncConsentReducer (state = initialConsentState, action) {
   }
 }
 
-export function syncMetaDataReducer (state = initialMetadataState, action) {
+export function syncMetaDataReducer(state = initialMetadataState, action) {
   if (action.type === APP_START) {
     state = {
       ...initialMetadataState,
@@ -190,14 +190,14 @@ export function syncMetaDataReducer (state = initialMetadataState, action) {
 }
 
 // Action creators
-export function setSyncData (obj) {
+export function setSyncData(obj) {
   return {
     type: SET_SYNC_DATA,
     obj
   }
 }
 
-export function syncItems (itemKey, items) {
+export function syncItems(itemKey, items) {
   return {
     type: SYNC_ITEMS,
     itemKey,
@@ -213,14 +213,14 @@ export const clearSyncAndLocal = {
   type: CLEAR_SYNC_AND_LOCAL
 }
 
-export function consentSync (consent) {
+export function consentSync(consent) {
   return {
     type: CONSENT_SYNC,
     consent
   }
 }
 
-export function optOutSync () {
+export function optOutSync() {
   return {
     type: OPT_OUT_SYNC
   }
@@ -240,26 +240,26 @@ export const setSyncAuthData = data => {
   }
 }
 
-export function setSyncMetadata (obj) {
+export function setSyncMetadata(obj) {
   return {
     type: SET_SYNC_METADATA,
     ...obj
   }
 }
 
-export function resetSyncMetadata () {
+export function resetSyncMetadata() {
   return {
     type: RESET_METADATA
   }
 }
 
-export function updateServiceStatus (status) {
+export function updateServiceStatus(status) {
   return {
     type: SERVICE_STATUS_UPDATED,
     status
   }
 }
-export function updateUserAuthStatus (status) {
+export function updateUserAuthStatus(status) {
   return {
     type: USER_AUTH_STATUS_UPDATED,
     status

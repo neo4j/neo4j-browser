@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global test, expect */
 import reducer, { NAME, APP_START, getHostedUrl } from './appDuck'
 
 test('reducer stores hostedUrl', () => {

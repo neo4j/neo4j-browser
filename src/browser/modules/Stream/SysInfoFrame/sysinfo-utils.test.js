@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global, describe, test, expect, afterEach */
+/* global, describe afterEach */
 
 import { flattenAttributes } from './sysinfo-utils'
 

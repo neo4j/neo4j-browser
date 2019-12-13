@@ -185,6 +185,7 @@ export const StyledOneRowStatsBar = styled(StyledStatsBar)`
 export const StyledSchemaBody = styled(StyledPreformattedArea)`
   padding-top: 6px;
 `
+
 export const StyledBodyMessage = styled.div`
   padding-top: 20px;
   line-height: 1.428;

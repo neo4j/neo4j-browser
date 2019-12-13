@@ -266,22 +266,22 @@ export const Settings = ({
     })
     .filter(r => r)
   return (
-    <Drawer id='db-settings'>
+    <Drawer id="db-settings">
       <DrawerHeader>Browser Settings</DrawerHeader>
       <DrawerBody>
         <DrawerSection>
-          <DrawerSectionBody key='settings'>{mappedSettings}</DrawerSectionBody>
+          <DrawerSectionBody key="settings">{mappedSettings}</DrawerSectionBody>
           <FeatureToggle
             name={experimentalFeatureSelfName}
             on={
-              <React.Fragment>
+              <>
                 {mappedExperimentalFeatures.length ? (
                   <DrawerSubHeader>Experimental features</DrawerSubHeader>
                 ) : null}
-                <DrawerSectionBody key='experimental-features'>
+                <DrawerSectionBody key="experimental-features">
                   {mappedExperimentalFeatures}
                 </DrawerSectionBody>
-              </React.Fragment>
+              </>
             }
           />
         </DrawerSection>
@@ -313,7 +313,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Settings)
+export default connect(mapStateToProps, mapDispatchToProps)(Settings)

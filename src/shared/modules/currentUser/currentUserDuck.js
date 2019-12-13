@@ -48,14 +48,14 @@ const initialState = {
  * Selectors
  */
 
-export function getCurrentUser (state) {
+export function getCurrentUser(state) {
   return state[NAME]
 }
 
 /**
  * Reducer
  */
-export default function user (state = initialState, action) {
+export default function user(state = initialState, action) {
   if (action.type === APP_START) {
     state = { ...initialState, ...state }
   }
@@ -72,7 +72,7 @@ export default function user (state = initialState, action) {
 }
 
 // actions
-export function updateCurrentUser (username, roles) {
+export function updateCurrentUser(username, roles) {
   return {
     type: UPDATE_CURRENT_USER,
     username,
@@ -80,7 +80,7 @@ export function updateCurrentUser (username, roles) {
   }
 }
 
-export function forceFetch () {
+export function forceFetch() {
   return {
     type: FORCE_FETCH
   }

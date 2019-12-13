@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global jest */
+
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 
@@ -35,7 +35,7 @@ test('ConfirmationButton renders changes state on clicks and finally calls the o
 
   // When
   const initialIcon = container.querySelector(
-    `[data-testid="confirmation-button-initial"]`
+    '[data-testid="confirmation-button-initial"]'
   )
   fireEvent.click(initialIcon)
 
@@ -44,7 +44,7 @@ test('ConfirmationButton renders changes state on clicks and finally calls the o
 
   // When
   const cancelIcon = container.querySelector(
-    `[data-testid="confirmation-button-cancel"]`
+    '[data-testid="confirmation-button-cancel"]'
   )
   fireEvent.click(cancelIcon)
 
@@ -53,11 +53,11 @@ test('ConfirmationButton renders changes state on clicks and finally calls the o
 
   // When
   const initialIcon2 = container.querySelector(
-    `[data-testid="confirmation-button-initial"]`
+    '[data-testid="confirmation-button-initial"]'
   )
   fireEvent.click(initialIcon2)
   const confirmIcon = container.querySelector(
-    `[data-testid="confirmation-button-confirm"]`
+    '[data-testid="confirmation-button-confirm"]'
   )
   fireEvent.click(confirmIcon)
 

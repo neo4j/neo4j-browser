@@ -49,7 +49,7 @@ import {
 import icon from 'icons/task-list-download.svg'
 import arrayHasItems from '../../../shared/utils/array-has-items'
 
-export function FileDrop (props) {
+export function FileDrop(props) {
   const [fileHoverState, setFileHoverState] = useState(false)
   const [userSelect, setUserSelect] = useState(false)
   const [file, setFile] = useState(null)
@@ -77,7 +77,7 @@ export function FileDrop (props) {
       resetState()
     }
     reader.onerror = () => {
-      dispatchErrorMessage(`Something wen't wrong when reading the file`)
+      dispatchErrorMessage("Something wen't wrong when reading the file")
       resetState()
     }
     reader.readAsText(file)
@@ -174,11 +174,11 @@ export function FileDrop (props) {
       {props.children}
       <StyledFileDropInner onClick={resetState}>
         <StyledFileDropContent>
-          <SVGInline svg={icon} accessibilityLabel={'Import'} width={'14rem'} />
+          <SVGInline svg={icon} accessibilityLabel="Import" width="14rem" />
           {userSelect && (
             <StyledFileDropActions>
               <StyledFileDropActionButton
-                className='filedrop-save-to-favorites'
+                className="filedrop-save-to-favorites"
                 onClick={() => {
                   fileLoader(file, saveCypherToFavorites)
                 }}
@@ -186,7 +186,7 @@ export function FileDrop (props) {
                 Save to favorites
               </StyledFileDropActionButton>
               <StyledFileDropActionButton
-                className='filedrop-paste-in-editor'
+                className="filedrop-paste-in-editor"
                 onClick={() => {
                   fileLoader(file, pasteInEditor)
                 }}
@@ -244,9 +244,5 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
 })
 
 export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
-  )(FileDrop)
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(FileDrop)
 )

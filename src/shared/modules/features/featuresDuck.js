@@ -44,7 +44,7 @@ const initialState = {
   browserSync: true
 }
 
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   if (action.type === APP_START) {
     state = {
       ...initialState,

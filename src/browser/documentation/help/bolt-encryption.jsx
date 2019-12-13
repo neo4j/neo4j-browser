@@ -23,7 +23,7 @@ const title = 'Bolt encryption'
 const subtitle = 'Certificate handling in web browsers'
 const category = 'boltProtocol'
 const content = (
-  <React.Fragment>
+  <>
     <p>
       Because of how web browsers handle (self signed) certificates the web
       browser needs to go to a HTTPS URL and accept / permanently trust the
@@ -31,14 +31,14 @@ const content = (
     </p>
     <p>
       By default Neo4j offers a HTTPS URL on{' '}
-      <a href='https://localhost:7473'>https://localhost:7473</a>.
+      <a href="https://localhost:7473">https://localhost:7473</a>.
     </p>
     <p>
       You will need to manually view (usually by clicking in a broken padlock in
       the address bar) and trust the certificate to be able to create a secure
       connection.
     </p>
-    <table className='table-condensed table-help'>
+    <table className="table-condensed table-help">
       <tbody>
         {/* <tr>
   <th>Reference:</th>
@@ -47,12 +47,12 @@ const content = (
         <tr>
           <th>Related:</th>
           <td>
-            <a help-topic='bolt'>:help bolt</a>
+            <a help-topic="bolt">:help bolt</a>
           </td>
         </tr>
       </tbody>
     </table>
-  </React.Fragment>
+  </>
 )
 
 export default { title, subtitle, category, content }

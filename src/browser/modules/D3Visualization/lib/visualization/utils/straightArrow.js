@@ -21,7 +21,7 @@
 export default class StraightArrow {
   deflection = 0
 
-  constructor (
+  constructor(
     startRadius,
     endRadius,
     centreDistance,
@@ -44,7 +44,7 @@ export default class StraightArrow {
       y: 0
     }
 
-    this.outline = function (shortCaptionLength) {
+    this.outline = function(shortCaptionLength) {
       if (captionLayout === 'external') {
         const startBreak =
           startArrow + (this.shaftLength - shortCaptionLength) / 2
@@ -115,7 +115,7 @@ export default class StraightArrow {
       }
     }
 
-    this.overlay = function (minWidth) {
+    this.overlay = function(minWidth) {
       const radius = Math.max(minWidth / 2, shaftRadius)
       return [
         'M',
