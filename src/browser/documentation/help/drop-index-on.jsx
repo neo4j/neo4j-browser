@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'DROP INDEX ON'
 const subtitle = 'Drop a schema index'
 const category = 'schemaClauses'
@@ -32,15 +33,10 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <code>
-            <a
-              target="_blank"
-              href="https://neo4j.com/docs/developer-manual/3.2/cypher/schema/index/"
-            >
-              schema indexes
-            </a>{' '}
-            manual page
-          </code>
+          <ManualLink chapter="developer-manual" page="/cypher/schema/index/">
+            schema indexes
+          </ManualLink>{' '}
+          manual page
         </p>
       </div>
       <div className="link">

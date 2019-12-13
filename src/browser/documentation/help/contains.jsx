@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'CONTAINS'
 const subtitle = 'Matching within in a string'
 const category = 'cypherPredicates'
@@ -32,12 +33,12 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <a
-            target="_blank"
-            href="https://neo4j.com/docs/developer-manual/3.2/cypher/clauses/where/#query-where-string"
+          <ManualLink
+            chapter="developer-manual"
+            page="/cypher/clauses/where/#query-where-string"
           >
             WHERE
-          </a>{' '}
+          </ManualLink>{' '}
           manual page
         </p>
       </div>

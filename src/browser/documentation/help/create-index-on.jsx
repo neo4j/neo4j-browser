@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'CREATE INDEX ON'
 const subtitle = 'Index labeled nodes by property'
 const category = 'schemaClauses'
@@ -32,12 +33,10 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <a
-            target="_blank"
-            href="https://neo4j.com/docs/developer-manual/preview/cypher/schema/index/"
-          >
-            <code>schema indexes</code> manual page
-          </a>
+          <ManualLink chapter="developer-manual" page="/cypher/schema/index/">
+            schema indexes
+          </ManualLink>{' '}
+          manual page
         </p>
       </div>
       <div className="link">

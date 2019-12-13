@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'LOAD CSV'
 const subtitle = 'Load data from a CSV file'
 const category = 'cypherHelp'
@@ -36,24 +37,21 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <code>
-            <a
-              target="_blank"
-              href="https://neo4j.com/docs/developer-manual/3.2/cypher/clauses/load-csv/"
-            >
-              LOAD CSV
-            </a>{' '}
-            manual page
-          </code>
-          <code>
-            <a
-              target="_blank"
-              href="https://neo4j.com/docs/developer-manual/3.2/cypher/query-tuning/using/#query-using-periodic-commit-hint"
-            >
-              USING PERIODIC COMMIT
-            </a>{' '}
-            manual page
-          </code>
+          <ManualLink
+            chapter="developer-manual"
+            page="/cypher/clauses/load-csv/"
+          >
+            LOAD CSV
+          </ManualLink>{' '}
+          manual page
+          <br />
+          <ManualLink
+            chapter="developer-manual"
+            page="/cypher/query-tuning/using/#query-using-periodic-commit-hint"
+          >
+            USING PERIODIC COMMIT
+          </ManualLink>{' '}
+          manual page
         </p>
       </div>
       <div className="link">

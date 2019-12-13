@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'PROFILE'
 const subtitle = 'Profile query execution'
 const category = 'executionPlans'
@@ -37,12 +38,12 @@ const content = (
       <div className="link">
         <p className="title">Reference:</p>
         <p className="content">
-          <a
-            target="_blank"
-            href="https://neo4j.com/docs/developer-manual/3.2/cypher/execution-plans/"
+          <ManualLink
+            chapter="developer-manual"
+            page="/cypher/execution-plans/"
           >
             Execution Plans
-          </a>{' '}
+          </ManualLink>{' '}
           manual page
         </p>
       </div>

@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'Query Plan'
 const subtitle = 'Understand what cypher is doing'
 const category = 'cypherQueries'
@@ -58,12 +59,9 @@ const content = (
       <p>
         Each Operator is displayed as a rectangle with its name in the top-left
         corner. See the{' '}
-        <a
-          target="_blank"
-          href="https://neo4j.com/docs/developer-manual/cypher/execution-plans/"
-        >
+        <ManualLink chapter="developer-manual" page="/cypher/execution-plans/">
           operators manual page
-        </a>{' '}
+        </ManualLink>{' '}
         for a description of what each operator does.
       </p>
       <h4>Pipes</h4>
@@ -157,14 +155,12 @@ const content = (
           <tr>
             <th>Reference:</th>
             <td>
-              <code>
-                <a
-                  target="_blank"
-                  href="https://neo4j.com/docs/developer-manual/3.2/cypher/execution-plans/"
-                >
-                  Execution Plans
-                </a>
-              </code>{' '}
+              <ManualLink
+                chapter="developer-manual"
+                page="/cypher/execution-plans/"
+              >
+                Execution Plans
+              </ManualLink>{' '}
               manual page
             </td>
           </tr>

@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'Cypher'
 const subtitle = 'A graph query language'
 const category = 'browserUiCommands'
@@ -39,12 +40,9 @@ const description = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <a
-            target="_blank"
-            href="https://neo4j.com/docs/developer-manual/3.2/cypher/"
-          >
+          <ManualLink chapter="developer-manual" page="/cypher/">
             Cypher introduction
-          </a>
+          </ManualLink>
         </p>
       </div>
       <div className="link">
@@ -62,7 +60,6 @@ const description = (
           <a help-topic="with">:help WITH</a>
           <a help-topic="load-csv">:help LOAD CSV</a>
           <a help-topic="unwind">:help UNWIND</a>
-          <a help-topic="start">:help START</a>
           <a help-topic="create-index-on">:help CREATE INDEX ON</a>
           <a help-topic="starts-with">:help STARTS WITH</a>
           <a help-topic="ends-with">:help ENDS WITH</a>
@@ -91,4 +88,11 @@ RETURN <expressions>`}
   </>
 )
 
-export default { title, subtitle, category, content: null, description, filter }
+export default {
+  title,
+  subtitle,
+  category,
+  content: null,
+  description,
+  filter
+}
