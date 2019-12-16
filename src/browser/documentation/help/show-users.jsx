@@ -38,6 +38,7 @@ const content = (
           <ManualLink
             chapter="cypher-manual"
             page="/administration/security/users-and-roles/#administration-security-users-show"
+            minVersion="4.0.0"
           >
             SHOW USER
           </ManualLink>{' '}

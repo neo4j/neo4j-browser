@@ -36,6 +36,7 @@ const content = (
           <ManualLink
             chapter="cypher-manual"
             page="/administration/databases/#administration-databases-create-database"
+            minVersion="4.0.0"
           >
             CREATE DATABASE
           </ManualLink>{' '}

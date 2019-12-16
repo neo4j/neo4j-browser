@@ -36,6 +36,7 @@ const content = (
           <ManualLink
             chapter="cypher-manual"
             page="/administration/databases/#administration-databases-drop-database"
+            minVersion="4.0.0"
           >
             DROP DATABASE
           </ManualLink>{' '}

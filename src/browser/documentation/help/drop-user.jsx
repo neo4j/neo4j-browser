@@ -36,6 +36,7 @@ const content = (
           <ManualLink
             chapter="cypher-manual"
             page="/administration/security/users-and-roles/#administration-security-users-drop"
+            minVersion="4.0.0"
           >
             DROP USER
           </ManualLink>{' '}

@@ -20,13 +20,25 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import semver from 'semver'
 
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { formatDocVersion } from 'browser/modules/Sidebar/Documents'
 
-export function ManualLink({ chapter, page, children, neo4jVersion }) {
+export function ManualLink({
+  chapter,
+  page,
+  children,
+  neo4jVersion,
+  minVersion
+}) {
   const cleanPage = page.replace(/^\//, '')
-  const version = formatDocVersion(neo4jVersion)
+
+  let version = formatDocVersion(neo4jVersion)
+  if (minVersion && semver.cmp(neo4jVersion, '<', minVersion)) {
+    version = formatDocVersion(minVersion)
+  }
+
   const url = `https://neo4j.com/docs/${chapter}/${version}/${cleanPage}`
 
   return (
