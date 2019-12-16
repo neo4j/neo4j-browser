@@ -76,7 +76,6 @@ export class CypherFrame extends Component {
     collapse: false,
     frameHeight: 472,
     hasVis: false
-    // _planExpand: 'EXPAND'
   }
 
   changeView(view) {
