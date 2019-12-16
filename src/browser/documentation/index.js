@@ -25,11 +25,15 @@ import helpBoltRouting from './help/bolt-routing'
 import helpClear from './help/clear'
 import helpContains from './help/contains'
 import helpCreateConstraintOn from './help/create-constraint-on'
+import helpCreateDatabase from './help/create-database'
 import helpCreateIndexOn from './help/create-index-on'
+import helpCreateUser from './help/create-user'
 import helpCreate from './help/create'
 import helpDelete from './help/delete'
 import helpDropConstraintOn from './help/drop-constraint-on'
+import helpDropDatabase from './help/drop-database'
 import helpDropIndexOn from './help/drop-index-on'
+import helpDropUser from './help/drop-user'
 import helpDetachDelete from './help/detach-delete'
 import helpEndsWith from './help/ends-with'
 import helpExplain from './help/explain'
@@ -56,6 +60,8 @@ import helpSchema from './help/schema'
 import helpServer from './help/server'
 import helpServerUser from './help/server-user'
 import helpSet from './help/set'
+import helpShowDatabases from './help/show-databases'
+import helpShowUsers from './help/show-users'
 import helpStartsWith from './help/starts-with'
 import helpStyle from './help/style'
 import helpTemplate from './help/template'
@@ -113,12 +119,16 @@ export default {
     chapters: {
       contains: helpContains,
       createConstraintOn: helpCreateConstraintOn,
+      createDatabase: helpCreateDatabase,
       createIndexOn: helpCreateIndexOn,
+      createUser: helpCreateUser,
       create: helpCreate,
       delete: helpDelete,
       detachDelete: helpDetachDelete,
       dropConstraintOn: helpDropConstraintOn,
+      dropDatabase: helpDropDatabase,
       dropIndexOn: helpDropIndexOn,
+      dropUser: helpDropUser,
       endsWith: helpEndsWith,
       explain: helpExplain,
       foreach: helpForeach,
@@ -138,6 +148,8 @@ export default {
       return: helpReturn,
       schema: helpSchema,
       set: helpSet,
+      showDatabases: helpShowDatabases,
+      showUsers: helpShowUsers,
       startsWith: helpStartsWith,
       template: helpTemplate,
       unwind: helpUnwind,

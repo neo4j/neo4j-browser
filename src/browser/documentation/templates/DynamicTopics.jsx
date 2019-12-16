@@ -39,6 +39,7 @@ const categorize = commands => {
     executionPlans: { title: 'Execution Plans' },
     cypherHelp: { title: 'Cypher Help' },
     schemaClauses: { title: 'Schema Clauses' },
+    administration: { title: 'Administration' },
     cypherPredicates: { title: 'Cypher Predicates' },
     restApiCommands: { title: 'Rest API Commands' },
     guides: { title: 'Guides' },
