@@ -47,7 +47,7 @@ const content = (
         <p className="title">Related</p>
         <p className="content">
           <a help-topic="show-databases">:help SHOW DATABASES</a>{' '}
-          <a help-topic="drop-database">:help CREATE DATABASE</a>{' '}
+          <a help-topic="create-database">:help CREATE DATABASE</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
