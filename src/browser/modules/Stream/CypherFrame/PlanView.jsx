@@ -43,10 +43,16 @@ export class PlanView extends Component {
   }
 
   componentDidMount() {
-    this.extractPlan(this.props.result).catch(e => {})
+    this.extractPlan(this.props.result)
+      .then(() => this.props.setParentState({ _planExpand: 'EXPAND' }))
+      .catch(e => {})
   }
 
   componentWillReceiveProps(props) {
+    console.log(
+      '++componentWillReceiveProps 1',
+      props.updated !== this.props.updated
+    )
     if (props.updated !== this.props.updated) {
       return this.extractPlan(props.result || {})
         .then(() => {
@@ -56,11 +62,16 @@ export class PlanView extends Component {
           console.log(e)
         })
     }
+    // console.log('++componentWillReceiveProps 2', props.updated, this.props.updated)
     this.ensureToggleExpand(props)
     props.assignVisElement && props.assignVisElement(this.el, this.plan)
   }
 
   shouldComponentUpdate(props, state) {
+    console.log(
+      '++shouldComponentUpdate',
+      props._planExpand !== this.props._planExpand
+    )
     if (this.props.result === undefined) return true
     return (
       !deepEquals(props.result.summary, this.props.result.summary) ||
@@ -94,8 +105,12 @@ export class PlanView extends Component {
   }
 
   ensureToggleExpand(props) {
-    if (props._planExpand && props._planExpand !== this.props._planExpand) {
-      switch (props._planExpand) {
+    let expandvalue = props._planExpand
+    // if (!expandvalue) expandvalue = 'EXPAND'
+    // console.log('++props._planExpand', expandvalue)
+    // console.log('++this.props._planExpand', this.props._planExpand)
+    if (expandvalue !== this.props._planExpand) {
+      switch (expandvalue) {
         case 'COLLAPSE': {
           this.toggleExpanded(false)
           break
@@ -109,6 +124,7 @@ export class PlanView extends Component {
   }
 
   toggleExpanded(expanded) {
+    // console.log('++expanded', expanded)
     const visit = operator => {
       operator.expanded = expanded
       if (operator.children) {
@@ -118,6 +134,8 @@ export class PlanView extends Component {
       }
     }
     const tmpPlan = { ...this.state.extractedPlan }
+    // console.log('++tmpPlan', tmpPlan)
+    // console.log('++tmpPlan.root', tmpPlan.root)
     visit(tmpPlan.root)
     this.plan.display(tmpPlan)
   }
