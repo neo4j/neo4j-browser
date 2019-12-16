@@ -37,6 +37,26 @@ describe('Plan output', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
+  it('displays the expanded details by default and displays/hides details when clicking the plan expand/collapse buttons respectively', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      'EXPLAIN MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
+    )
+
+    // initially should be expanded
+    const el1 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
+    el1.find('.detail').should('exist')
+
+    // collapse
+    cy.get('[data-testid="planCollapseButton"]', { timeout: 10000 }).click()
+    const el2 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
+    el2.find('.detail').should('not.exist')
+
+    // expand
+    cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
+    const el3 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
+    el3.find('.detail').should('exist')
+  })
   if (Cypress.config('serverVersion') >= 3.5) {
     it('print Order in PROFILE', () => {
       cy.executeCommand(':clear')
