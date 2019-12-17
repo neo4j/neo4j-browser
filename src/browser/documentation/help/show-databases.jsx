@@ -27,8 +27,8 @@ const category = 'administration'
 const content = (
   <>
     <p>
-      All available databases can be seen using the command{' '}
-      <code>SHOW DATABASES.</code>
+      The command <code>SHOW DATABASES</code> can be used to show all available
+      databases.
     </p>
     <div className="links">
       <div className="link">

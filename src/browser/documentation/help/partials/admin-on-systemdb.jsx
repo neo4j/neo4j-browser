@@ -25,7 +25,7 @@ export default function AdminOnSystemDb() {
       <br />
       Neo4j has a complex security model stored in the system graph, maintained
       in a special database called the <code>system</code> database. All
-      administrative commands need to be executing against the{' '}
+      administrative commands need to be executed against the{' '}
       <code>system</code> database.
     </p>
   )

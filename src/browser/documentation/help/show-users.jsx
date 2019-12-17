@@ -27,9 +27,8 @@ const category = 'administration'
 const content = (
   <>
     <p>
-      Available users can be seen using <code>SHOW USERS</code> which will
-      produce a table of users with four columns: user, roles,
-      passwordChangeRequired, suspended.
+      The command <code>SHOW USERS</code> will produce a table of available
+      users with four columns: user, roles, passwordChangeRequired, suspended.
     </p>
     <div className="links">
       <div className="link">
@@ -40,7 +39,7 @@ const content = (
             page="/administration/security/users-and-roles/#administration-security-users-show"
             minVersion="4.0.0"
           >
-            SHOW USER
+            SHOW USERS
           </ManualLink>{' '}
           manual page
         </p>

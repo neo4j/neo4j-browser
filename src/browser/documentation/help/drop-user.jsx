@@ -27,7 +27,7 @@ const category = 'administration'
 const content = (
   <>
     <p>
-      Users can be deleted using <code>DROP USER</code>.
+      The command <code>DROP USER</code> can be used to delete an existing user.
     </p>
     <div className="links">
       <div className="link">

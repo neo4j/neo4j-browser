@@ -27,7 +27,7 @@ const category = 'administration'
 const content = (
   <>
     <p>
-      Users can be created using <code>CREATE USER</code>.
+      The command <code>CREATE USER</code> can be used to create a new user.
     </p>
     <div className="links">
       <div className="link">

@@ -27,7 +27,7 @@ const category = 'administration'
 const content = (
   <>
     <p>
-      Databases can be created using <code>CREATE DATABASE</code>
+      The command <code>CREATE DATABASE</code> can be used to create a database.
     </p>
     <div className="links">
       <div className="link">

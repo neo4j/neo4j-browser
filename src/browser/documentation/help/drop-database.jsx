@@ -27,7 +27,7 @@ const category = 'administration'
 const content = (
   <>
     <p>
-      Databases can be deleted using the command <code>DROP DATABASE.</code>
+      The <code>DROP DATABASE</code> command can be used to delete a database.
     </p>
     <div className="links">
       <div className="link">
