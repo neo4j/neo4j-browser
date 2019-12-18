@@ -43,7 +43,9 @@ export class PlanView extends Component {
   }
 
   componentDidMount() {
-    this.extractPlan(this.props.result).catch(e => {})
+    this.extractPlan(this.props.result)
+      .then(() => this.props.setParentState({ _planExpand: 'EXPAND' }))
+      .catch(e => {})
   }
 
   componentWillReceiveProps(props) {
