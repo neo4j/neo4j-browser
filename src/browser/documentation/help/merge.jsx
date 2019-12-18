@@ -34,14 +34,14 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink chapter="developer-manual" page="/cypher/clauses/merge/">
+          <ManualLink chapter="cypher-manual" page="/clauses/merge/">
             MERGE
           </ManualLink>{' '}
           manual page
           <br />
           <ManualLink
-            chapter="developer-manual"
-            page="/cypher/clauses/merge/#query-merge-on-create-on-match"
+            chapter="cypher-manual"
+            page="/clauses/merge/#query-merge-on-create-on-match"
           >
             ON CREATE and ON MATCH
           </ManualLink>{' '}
