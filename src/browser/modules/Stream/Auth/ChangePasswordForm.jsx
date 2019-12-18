@@ -19,15 +19,17 @@
  */
 
 import React, { Component } from 'react'
+import faker from 'faker'
 import { FormButton } from 'browser-components/buttons'
 import {
-  StyledConnectionForm,
   StyledConnectionTextInput,
   StyledConnectionLabel,
-  StyledConnectionFormEntry
+  StyledConnectionFormEntry,
+  StyledChangePasswordForm
 } from './styled'
 import Render from 'browser-components/Render'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
+import RevealablePasswordInput from './revealable-password-input'
 
 export default class ChangePasswordForm extends Component {
   constructor(props) {
@@ -57,7 +59,13 @@ export default class ChangePasswordForm extends Component {
   onChange = () => {
     this.props.onChange(this.state.newPassword, this.state.newPassword2)
   }
-
+  
+  onSuggestPassword = () => {
+    this.setState({
+      newPassword: `${faker.random.words(3)} ${faker.random.number(100)}`
+    })
+  }
+    
   validateSame = () => {
     if (
       this.state.newPassword &&
@@ -97,7 +105,7 @@ export default class ChangePasswordForm extends Component {
       classNames.push('isLoading')
     }
     return (
-      <StyledConnectionForm className={classNames.join(' ')}>
+      <StyledChangePasswordForm className={classNames.join(' ')}>
         <InputEnterStepping
           steps={this.props.showExistingPasswordInput ? 3 : 2}
           submitAction={this.validateSame}
@@ -127,29 +135,33 @@ export default class ChangePasswordForm extends Component {
                 </Render>
                 <StyledConnectionFormEntry>
                   <StyledConnectionLabel>New password</StyledConnectionLabel>
-                  <StyledConnectionTextInput
+                  <RevealablePasswordInput
                     {...getInputPropsForIndex(indexStart, {
                       initialFocus: !this.props.showExistingPasswordInput,
                       'data-testid': 'newPassword',
                       type: 'password',
                       onChange: this.onNewPasswordChange,
                       value: this.state.newPassword,
-                      ref: ref => setRefForIndex(indexStart, ref),
+                      setRef: ref => setRefForIndex(indexStart, ref),
                       disabled: isLoading
                     })}
                   />
+                  &nbsp;OR&nbsp;
+                  <FormButton onClick={this.onSuggestPassword}>
+                    Generate
+                  </FormButton>
                 </StyledConnectionFormEntry>
                 <StyledConnectionFormEntry>
                   <StyledConnectionLabel>
                     Repeat new password
                   </StyledConnectionLabel>
-                  <StyledConnectionTextInput
+                  <RevealablePasswordInput
                     {...getInputPropsForIndex(indexStart + 1, {
                       'data-testid': 'newPasswordConfirmation',
                       type: 'password',
                       onChange: this.onNewPasswordChange2,
                       value: this.state.newPassword2,
-                      ref: ref => setRefForIndex(indexStart + 1, ref),
+                      setRef: ref => setRefForIndex(indexStart + 1, ref),
                       disabled: isLoading
                     })}
                   />
@@ -167,7 +179,7 @@ export default class ChangePasswordForm extends Component {
             )
           }}
         />
-      </StyledConnectionForm>
+      </StyledChangePasswordForm>
     )
   }
 }
