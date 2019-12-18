@@ -59,13 +59,13 @@ export default class ChangePasswordForm extends Component {
   onChange = () => {
     this.props.onChange(this.state.newPassword, this.state.newPassword2)
   }
-  
+
   onSuggestPassword = () => {
     this.setState({
       newPassword: `${faker.random.words(3)} ${faker.random.number(100)}`
     })
   }
-    
+
   validateSame = () => {
     if (
       this.state.newPassword &&

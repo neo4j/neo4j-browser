@@ -22,7 +22,7 @@ import {
   StyledConnectionTextInput
 } from './styled'
 
-export default function RevealablePasswordInput ({ setRef, ...props }) {
+export default function RevealablePasswordInput({ setRef, ...props }) {
   const [inputRef, isRevealed, toggleReveal] = useReveal()
 
   return (
@@ -33,7 +33,7 @@ export default function RevealablePasswordInput ({ setRef, ...props }) {
   )
 }
 
-function useReveal () {
+function useReveal() {
   const inputRef = useRef(null)
   const [isRevealed, setIsRevealed] = useState(false)
   const toggleReveal = () => setIsRevealed(!isRevealed)
