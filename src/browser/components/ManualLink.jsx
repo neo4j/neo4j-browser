@@ -35,7 +35,10 @@ export function ManualLink({
   const cleanPage = page.replace(/^\//, '')
 
   let version = formatDocVersion(neo4jVersion)
-  if (minVersion && semver.cmp(neo4jVersion, '<', minVersion)) {
+  if (
+    minVersion &&
+    (!neo4jVersion || semver.cmp(neo4jVersion, '<', minVersion))
+  ) {
     version = formatDocVersion(minVersion)
   }
 

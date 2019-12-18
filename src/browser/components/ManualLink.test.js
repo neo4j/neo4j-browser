@@ -57,6 +57,10 @@ const tests = [
       minVersion: '3.5.0'
     },
     'https://neo4j.com/docs/driver-manual/4.0-preview/'
+  ],
+  [
+    { chapter: 'driver-manual', page: '/', minVersion: '3.5.0' },
+    'https://neo4j.com/docs/driver-manual/3.5/'
   ]
 ]
 
