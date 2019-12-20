@@ -25,6 +25,27 @@ import semver from 'semver'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { formatDocVersion } from 'browser/modules/Sidebar/Documents'
 
+const movedPages = {
+  '/administration/indexes-for-search-performance/': {
+    oldPage: 'schema/index/',
+    oldContent: 'Schema indexes'
+  },
+  '/administration/constraints/': {
+    oldPage: 'schema/constraints/',
+    oldContent: 'Schema constraints'
+  },
+  '/administration/': {
+    oldPage: 'schema/',
+    oldContent: 'Cypher Schema'
+  }
+}
+
+const isPageMoved = (chapter, page, neo4jVersion) =>
+  chapter === 'cypher-manual' &&
+  movedPages[page] &&
+  neo4jVersion &&
+  semver.satisfies(neo4jVersion, '<4.0.0-alpha.1')
+
 export function ManualLink({
   chapter,
   page,
@@ -32,7 +53,12 @@ export function ManualLink({
   neo4jVersion,
   minVersion
 }) {
-  const cleanPage = page.replace(/^\//, '')
+  let cleanPage = page.replace(/^\//, '')
+  let content = children
+  if (isPageMoved(chapter, page, neo4jVersion)) {
+    cleanPage = movedPages[page].oldPage
+    content = movedPages[page].oldContent
+  }
 
   let version = formatDocVersion(neo4jVersion)
   if (
@@ -46,7 +72,7 @@ export function ManualLink({
 
   return (
     <a href={url} target="_blank">
-      {children}
+      {content}
     </a>
   )
 }
