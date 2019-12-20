@@ -37,7 +37,7 @@ export const stringModifier = anything => {
 
 const numberFormat = anything => {
   // Exclude false positives and return early
-  if ([Infinity, -Infinity].includes(anything)) {
+  if ([Infinity, -Infinity, NaN].includes(anything)) {
     return `${anything}`
   }
   if (Math.floor(anything) === anything) {

@@ -26,7 +26,8 @@ describe('Cypher Types Number modifier only modifies where needed', () => {
     [Number(123.1), undefined],
     [Number(-123.1), undefined],
     [Number(Infinity), 'Infinity'],
-    [Number(-Infinity), '-Infinity']
+    [Number(-Infinity), '-Infinity'],
+    [Number(NaN), 'NaN']
   ]
 
   test.each(tests)('Modifies %s correctly if needed', (input, output) => {
