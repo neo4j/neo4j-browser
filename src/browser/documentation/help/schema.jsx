@@ -30,8 +30,8 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink chapter="cypher-manual" page="/schema/">
-            Cypher Schema
+          <ManualLink chapter="cypher-manual" page="/administration/">
+            Neo4j Database Administration
           </ManualLink>
         </p>
       </div>

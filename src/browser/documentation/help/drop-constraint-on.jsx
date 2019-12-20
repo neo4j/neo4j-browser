@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import ManualLink from 'browser-components/ManualLink'
 const title = 'DROP CONSTRAINT ON'
 const subtitle =
   'Drops a property constraint on a node label or relationship type'
@@ -29,22 +30,28 @@ const content = (
       The <code>DROP CONSTRAINT ON</code> clause will delete a property
       constraint
     </p>
-    <table className="table-condensed table-help">
-      <tbody>
-        {/* <tr>
-        <th>Reference:</th>
-        <td><code><a href='{{ neo4j.version | neo4jDeveloperDoc }}/cypher/#query-constraints'>schema constraints</a></code> manual page</td>
-      </tr> */}
-        <tr>
-          <th>Related:</th>
-          <td>
-            <a help-topic="drop-constraint-on">:help CREATE CONSTRAINT ON</a>{' '}
-            <a help-topic="schema">:help Schema</a>{' '}
-            <a help-topic="cypher">:help Cypher</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="links">
+      <div className="link">
+        <p className="title">Reference</p>
+        <p className="content">
+          <ManualLink
+            chapter="cypher-manual"
+            page="/administration/constraints/"
+          >
+            Constraints
+          </ManualLink>{' '}
+          manual page
+        </p>
+      </div>
+      <div className="link">
+        <p className="title">Related</p>
+        <p className="content">
+          <a help-topic="drop-constraint-on">:help CREATE CONSTRAINT ON</a>{' '}
+          <a help-topic="schema">:help Schema</a>{' '}
+          <a help-topic="cypher">:help Cypher</a>
+        </p>
+      </div>
+    </div>
     <section className="example">
       <figure>
         <pre className="code runnable standalone-example">
