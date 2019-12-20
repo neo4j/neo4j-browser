@@ -17,42 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import { connect } from 'react-redux'
-import semver from 'semver'
-
-import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { formatDocVersion } from 'browser/modules/Sidebar/Documents'
-
-export function ManualLink({
-  chapter,
-  page,
-  children,
-  neo4jVersion,
-  minVersion
-}) {
-  const cleanPage = page.replace(/^\//, '')
-
-  let version = formatDocVersion(neo4jVersion)
-  if (
-    minVersion &&
-    (!neo4jVersion || semver.cmp(neo4jVersion, '<', minVersion))
-  ) {
-    version = formatDocVersion(minVersion)
-  }
-
-  const url = `https://neo4j.com/docs/${chapter}/${version}/${cleanPage}`
-
+export default function DbsOnSystemDb() {
   return (
-    <a href={url} target="_blank">
-      {children}
-    </a>
+    <p>
+      <strong>A note on system database</strong>
+      <br />
+      Neo4j allows the same server to manage multiple databases. The metadata
+      for these databases, including the associated security model, is
+      maintained in a special database called the <code>system</code> database.
+      All multi-database administrative commands need to be executing against
+      the <code>system</code> database.
+    </p>
   )
 }
-
-const mapStateToProps = state => ({
-  neo4jVersion: getVersion(state)
-})
-
-export default connect(mapStateToProps, null)(ManualLink)

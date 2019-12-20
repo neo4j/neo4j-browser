@@ -39,6 +39,28 @@ const tests = [
   [
     { neo4jVersion: '4.0.0-beta03mr03', chapter: 'driver-manual', page: '' },
     'https://neo4j.com/docs/driver-manual/4.0-preview/'
+  ],
+  [
+    {
+      neo4jVersion: '3.4.11',
+      chapter: 'driver-manual',
+      page: '',
+      minVersion: '4.0.0'
+    },
+    'https://neo4j.com/docs/driver-manual/4.0/'
+  ],
+  [
+    {
+      neo4jVersion: '4.0.0-rc01',
+      chapter: 'driver-manual',
+      page: '',
+      minVersion: '3.5.0'
+    },
+    'https://neo4j.com/docs/driver-manual/4.0-preview/'
+  ],
+  [
+    { chapter: 'driver-manual', page: '/', minVersion: '3.5.0' },
+    'https://neo4j.com/docs/driver-manual/3.5/'
   ]
 ]
 
