@@ -43,10 +43,10 @@ describe('Data export', () => {
       () => {
         cy.get('a').then(exportButtonsList => {
           expect(exportButtonsList).to.have.length(4)
-          expect(exportButtonsList.eq(0)).to.contain('Export PNG')
-          expect(exportButtonsList.eq(1)).to.contain('Export SVG')
-          expect(exportButtonsList.eq(2)).to.contain('Export CSV')
-          expect(exportButtonsList.eq(3)).to.contain('Export JSON')
+          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
+          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
+          expect(exportButtonsList.eq(2)).to.contain('Export PNG')
+          expect(exportButtonsList.eq(3)).to.contain('Export SVG')
         })
       }
     )
