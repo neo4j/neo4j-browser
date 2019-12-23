@@ -27,7 +27,7 @@ const category = 'administration'
 const content = (
   <>
     <p>
-      The command <code>ALTER USER</code> can be used to modify an existing
+      The <code>ALTER USER</code> command can be used to modify an existing
       user.
     </p>
     <div className="links">
