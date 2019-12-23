@@ -140,6 +140,7 @@ export class CypherFrame extends Component {
       <FrameSidebar>
         <Render if={resultHasNodes(this.props.request) && !this.state.errors}>
           <CypherFrameButton
+            data-testid="cypherFrameSidebarVisualization"
             selected={this.state.openView === viewTypes.VISUALIZATION}
             onClick={() => {
               this.changeView(viewTypes.VISUALIZATION)

@@ -31,69 +31,49 @@ describe('Data export', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
-  it('shows the correct export buttons', () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand('CREATE (n:ExportTest) RETURN n')
-
-    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
-
-    // viz
-    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
-    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
-      () => {
-        cy.get('a').then(exportButtonsList => {
-          expect(exportButtonsList).to.have.length(4)
-          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
-          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
-          expect(exportButtonsList.eq(2)).to.contain('Export PNG')
-          expect(exportButtonsList.eq(3)).to.contain('Export SVG')
-        })
+  context('export options', () => {
+    before(function() {
+      cy.executeCommand(':clear')
+      cy.executeCommand('CREATE (n:ExportTest) RETURN n')
+      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+        'have.length',
+        1
+      )
+    })
+    after(function() {
+      cy.executeCommand('MATCH (n:ExportTest) DETACH DELETE n')
+    })
+    const exportOptionsConfig = [
+      {
+        names: ['Visualization'],
+        order: ['CSV', 'JSON', 'PNG', 'SVG']
+      },
+      {
+        names: ['Table', 'Ascii', 'Code'],
+        order: ['CSV', 'JSON']
       }
-    )
-
-    // table
-    cy.get('[data-testid="cypherFrameSidebarTable"]', {
-      timeout: 10000
-    }).click()
-    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
-    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
-      () => {
-        cy.get('a').then(exportButtonsList => {
-          expect(exportButtonsList).to.have.length(2)
-          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
-          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
+    ]
+    exportOptionsConfig.forEach(config => {
+      config.names.forEach(name => {
+        it(`shows the correct export buttons for ${name} view`, () => {
+          cy.get(`[data-testid="cypherFrameSidebar${name}"]`, {
+            timeout: 10000
+          }).click()
+          cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
+          cy.get('[data-testid="frame-export-dropdown"]', {
+            timeout: 10000
+          }).within(() => {
+            cy.get('a').then(exportButtonsList => {
+              expect(exportButtonsList).to.have.length(config.order.length)
+              config.order.forEach((exportType, index) => {
+                expect(exportButtonsList.eq(index)).to.contain(
+                  `Export ${exportType}`
+                )
+              })
+            })
+          })
         })
-      }
-    )
-
-    // text
-    cy.get('[data-testid="cypherFrameSidebarAscii"]', {
-      timeout: 10000
-    }).click()
-    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
-    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
-      () => {
-        cy.get('a').then(exportButtonsList => {
-          expect(exportButtonsList).to.have.length(2)
-          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
-          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
-        })
-      }
-    )
-
-    // code
-    cy.get('[data-testid="cypherFrameSidebarCode"]', { timeout: 10000 }).click()
-    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
-    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
-      () => {
-        cy.get('a').then(exportButtonsList => {
-          expect(exportButtonsList).to.have.length(2)
-          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
-          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
-        })
-      }
-    )
-
-    cy.executeCommand('MATCH (n:ExportTest) DETACH DELETE n')
+      })
+    })
   })
 })
