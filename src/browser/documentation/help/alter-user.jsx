@@ -21,13 +21,14 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import AdminOnSystemDb from './partials/admin-on-systemdb'
-const title = 'DROP USER'
-const subtitle = 'Delete a user'
+const title = 'ALTER USER'
+const subtitle = 'Modify a user'
 const category = 'administration'
 const content = (
   <>
     <p>
-      The command <code>DROP USER</code> can be used to delete an existing user.
+      The command <code>ALTER USER</code> can be used to modify an existing
+      user.
     </p>
     <div className="links">
       <div className="link">
@@ -35,10 +36,10 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/security/users-and-roles/#administration-security-users-drop"
+            page="/administration/security/users-and-roles/#administration-security-users-alter"
             minVersion="4.0.0"
           >
-            DROP USER
+            ALTER USER
           </ManualLink>{' '}
           manual page
         </p>
@@ -47,15 +48,37 @@ const content = (
         <p className="title">Related</p>
         <p className="content">
           <a help-topic="show-users">:help SHOW USERS</a>{' '}
-          <a help-topic="drop-user">:help CREATE USER</a>{' '}
-          <a help-topic="alter-user">:help ALTER USER</a>{' '}
+          <a help-topic="create-user">:help CREATE USER</a>{' '}
+          <a help-topic="drop-user">:help DROP USER</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
     <section className="example">
       <figure>
-        <pre className="code runnable standalone-example">DROP USER jake</pre>
+        <pre className="code runnable standalone-example">
+          ALTER USER jake SET PASSWORD 'abc123'
+          <br />
+          CHANGE NOT REQUIRED SET STATUS
+          <br />
+          ACTIVE
+        </pre>
+        <figcaption>
+          Modify the user jake with a new password and active status as well as
+          remove the requirement to change his password.
+        </figcaption>
+      </figure>
+      <figure>
+        <pre className="code runnable standalone-example">
+          ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'
+        </pre>
+        <figcaption>
+          Users can change their own password using ALTER CURRENT USER SET
+          PASSWORD. The old password is required in addition to the new one, and
+          either or both can be a string value or a string parameter. When a
+          user executes this command it will change their password as well as
+          set the CHANGE NOT REQUIRED flag.
+        </figcaption>
       </figure>
     </section>
     <AdminOnSystemDb />

@@ -21,13 +21,14 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import AdminOnSystemDb from './partials/admin-on-systemdb'
-const title = 'DROP USER'
-const subtitle = 'Delete a user'
-const category = 'administration'
+const title = 'REVOKE ROLE'
+const subtitle = 'Revoke roles from users'
+const category = 'security'
 const content = (
   <>
     <p>
-      The command <code>DROP USER</code> can be used to delete an existing user.
+      The <code>REVOKE ROLE</code> command can be used to revoke roles from
+      users, removing access rights from them.
     </p>
     <div className="links">
       <div className="link">
@@ -35,10 +36,10 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/security/users-and-roles/#administration-security-users-drop"
+            page="/administration/security/users-and-roles/#administration-security-roles-revoke"
             minVersion="4.0.0"
           >
-            DROP USER
+            REVOKE ROLE
           </ManualLink>{' '}
           manual page
         </p>
@@ -46,16 +47,28 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="show-users">:help SHOW USERS</a>{' '}
-          <a help-topic="drop-user">:help CREATE USER</a>{' '}
-          <a help-topic="alter-user">:help ALTER USER</a>{' '}
+          <a help-topic="show-roles">:help SHOW ROLES</a>{' '}
+          <a help-topic="create-role">:help CREATE ROLE</a>{' '}
+          <a help-topic="drop-role">:help DROP ROLE</a>{' '}
+          <a help-topic="grant-role">:help GRANT ROLE</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
     <section className="example">
       <figure>
-        <pre className="code runnable standalone-example">DROP USER jake</pre>
+        <pre className="code runnable standalone-example">
+          REVOKE ROLE myrole FROM jake
+        </pre>
+      </figure>
+      <figure>
+        <pre className="code runnable standalone-example">
+          REVOKE ROLES role1, role2 TO user1, user2, user3
+        </pre>
+        <figcaption>
+          It is possible to revoke multiple roles from multiple users in one
+          command.
+        </figcaption>
       </figure>
     </section>
     <AdminOnSystemDb />

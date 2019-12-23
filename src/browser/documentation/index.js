@@ -19,6 +19,7 @@
  */
 
 // Help
+import helpAlterUser from './help/alter-user'
 import helpBolt from './dynamic/bolt'
 import helpBoltEncryption from './help/bolt-encryption'
 import helpBoltRouting from './help/bolt-routing'
@@ -27,17 +28,22 @@ import helpContains from './help/contains'
 import helpCreateConstraintOn from './help/create-constraint-on'
 import helpCreateDatabase from './help/create-database'
 import helpCreateIndexOn from './help/create-index-on'
+import helpCreateRole from './help/create-role'
 import helpCreateUser from './help/create-user'
 import helpCreate from './help/create'
 import helpDelete from './help/delete'
+import helpDeny from './help/deny'
 import helpDropConstraintOn from './help/drop-constraint-on'
 import helpDropDatabase from './help/drop-database'
 import helpDropIndexOn from './help/drop-index-on'
+import helpDropRole from './help/drop-role'
 import helpDropUser from './help/drop-user'
 import helpDetachDelete from './help/detach-delete'
 import helpEndsWith from './help/ends-with'
 import helpExplain from './help/explain'
 import helpForeach from './help/foreach'
+import helpGrant from './help/grant'
+import helpGrantRole from './help/grant-role'
 import helpHistory from './help/history'
 import helpHistoryClear from './help/history-clear'
 import helpKeys from './help/keys'
@@ -56,11 +62,15 @@ import helpRestGet from './help/rest-get'
 import helpRestPost from './help/rest-post'
 import helpRestPut from './help/rest-put'
 import helpReturn from './help/return'
+import helpRevoke from './help/revoke'
+import helpRevokeRole from './help/revoke-role'
 import helpSchema from './help/schema'
 import helpServer from './help/server'
 import helpServerUser from './help/server-user'
 import helpSet from './help/set'
 import helpShowDatabases from './help/show-databases'
+import helpShowPrivileges from './help/show-privileges'
+import helpShowRoles from './help/show-roles'
 import helpShowUsers from './help/show-users'
 import helpStartsWith from './help/starts-with'
 import helpStyle from './help/style'
@@ -117,21 +127,27 @@ export default {
   cypher: {
     title: 'Cypher',
     chapters: {
+      alterUser: helpAlterUser,
       contains: helpContains,
       createConstraintOn: helpCreateConstraintOn,
       createDatabase: helpCreateDatabase,
       createIndexOn: helpCreateIndexOn,
+      createRole: helpCreateRole,
       createUser: helpCreateUser,
       create: helpCreate,
       delete: helpDelete,
+      deny: helpDeny,
       detachDelete: helpDetachDelete,
       dropConstraintOn: helpDropConstraintOn,
       dropDatabase: helpDropDatabase,
       dropIndexOn: helpDropIndexOn,
+      dropRole: helpDropRole,
       dropUser: helpDropUser,
       endsWith: helpEndsWith,
       explain: helpExplain,
       foreach: helpForeach,
+      grant: helpGrant,
+      grantRole: helpGrantRole,
       loadCsv: helpLoadCsv,
       match: helpMatch,
       merge: helpMerge,
@@ -146,9 +162,13 @@ export default {
       restPost: helpRestPost,
       restPut: helpRestPut,
       return: helpReturn,
+      revoke: helpRevoke,
+      revokeRole: helpRevokeRole,
       schema: helpSchema,
       set: helpSet,
       showDatabases: helpShowDatabases,
+      showPrivileges: helpShowPrivileges,
+      showRoles: helpShowRoles,
       showUsers: helpShowUsers,
       startsWith: helpStartsWith,
       template: helpTemplate,

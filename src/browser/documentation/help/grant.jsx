@@ -21,13 +21,14 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import AdminOnSystemDb from './partials/admin-on-systemdb'
-const title = 'DROP USER'
-const subtitle = 'Delete a user'
-const category = 'administration'
+const title = 'GRANT'
+const subtitle = 'Grant privileges to roles'
+const category = 'security'
 const content = (
   <>
     <p>
-      The command <code>DROP USER</code> can be used to delete an existing user.
+      The <code>GRANT</code> command allows an administrator to grant a
+      privilege to a role in order to access an entity.
     </p>
     <div className="links">
       <div className="link">
@@ -35,10 +36,19 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/security/users-and-roles/#administration-security-users-drop"
+            page="/administration/security/subgraph/#administration-security-subgraph-introduction"
             minVersion="4.0.0"
           >
-            DROP USER
+            Subgraph security
+          </ManualLink>{' '}
+          manual page
+          <br />
+          <ManualLink
+            chapter="cypher-manual"
+            page="/administration/security/administration/#administration-security-administration-database-privileges"
+            minVersion="4.0.0"
+          >
+            Database administration
           </ManualLink>{' '}
           manual page
         </p>
@@ -46,16 +56,30 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="show-users">:help SHOW USERS</a>{' '}
-          <a help-topic="drop-user">:help CREATE USER</a>{' '}
-          <a help-topic="alter-user">:help ALTER USER</a>{' '}
+          <a help-topic="show-privileges">:help SHOW PRIVILEGES</a>{' '}
+          <a help-topic="revoke">:help REVOKE</a>{' '}
+          <a help-topic="deny">:help DENY</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
     <section className="example">
       <figure>
-        <pre className="code runnable standalone-example">DROP USER jake</pre>
+        <pre className="code runnable standalone-example">
+          GRANT graph-privilege ON GRAPH dbname entity TO role
+        </pre>
+        <figcaption>
+          Grant a subgraph privilege to a role (eg. write nodes/relationships).
+        </figcaption>
+      </figure>
+      <figure>
+        <pre className="code runnable standalone-example">
+          GRANT database-privilege ON DATABASE dbname TO role
+        </pre>
+        <figcaption>
+          Grant a database administrative privilege to a role (eg. create index
+          or start/stop database).
+        </figcaption>
       </figure>
     </section>
     <AdminOnSystemDb />

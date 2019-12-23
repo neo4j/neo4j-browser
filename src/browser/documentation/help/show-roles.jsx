@@ -21,13 +21,13 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import AdminOnSystemDb from './partials/admin-on-systemdb'
-const title = 'DROP USER'
-const subtitle = 'Delete a user'
-const category = 'administration'
+const title = 'SHOW ROLES'
+const subtitle = 'List available roles'
+const category = 'security'
 const content = (
   <>
     <p>
-      The command <code>DROP USER</code> can be used to delete an existing user.
+      The <code>SHOW ROLES</code> command can be used to list available roles.
     </p>
     <div className="links">
       <div className="link">
@@ -35,10 +35,10 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/security/users-and-roles/#administration-security-users-drop"
+            page="/administration/security/users-and-roles/#administration-security-roles-show"
             minVersion="4.0.0"
           >
-            DROP USER
+            SHOW ROLES
           </ManualLink>{' '}
           manual page
         </p>
@@ -46,16 +46,17 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="show-users">:help SHOW USERS</a>{' '}
-          <a help-topic="drop-user">:help CREATE USER</a>{' '}
-          <a help-topic="alter-user">:help ALTER USER</a>{' '}
+          <a help-topic="create-role">:help CREATE ROLE</a>{' '}
+          <a help-topic="drop-role">:help DROP ROLE</a>{' '}
+          <a help-topic="grant-roles">:help GRANT ROLE</a>{' '}
+          <a help-topic="revoke-role">:help REVOKE ROLE</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
     <section className="example">
       <figure>
-        <pre className="code runnable standalone-example">DROP USER jake</pre>
+        <pre className="code runnable standalone-example">SHOW ROLES</pre>
       </figure>
     </section>
     <AdminOnSystemDb />
