@@ -184,14 +184,12 @@ class FrameTitlebar extends Component {
               <DropdownList>
                 <DropdownContent>
                   <Render if={props.visElement}>
-                    <span>
-                      <DropdownItem onClick={() => this.exportPNG()}>
-                        Export PNG
-                      </DropdownItem>
-                      <DropdownItem onClick={() => this.exportSVG()}>
-                        Export SVG
-                      </DropdownItem>
-                    </span>
+                    <DropdownItem onClick={() => this.exportPNG()}>
+                      Export PNG
+                    </DropdownItem>
+                    <DropdownItem onClick={() => this.exportSVG()}>
+                      Export SVG
+                    </DropdownItem>
                   </Render>
                   <Render if={this.hasData() && frame.type === 'cypher'}>
                     <DropdownItem

@@ -31,17 +31,68 @@ describe('Data export', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
-  it('shows export buttons on viz load', () => {
+  it('shows the correct export buttons', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (n:ExportTest) RETURN n')
 
     cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
-    cy.get('[data-testid="frame-export-dropdown"]')
-      .first()
-      .trigger('mouseover')
-    cy.get('[data-testid="frame-export-dropdown"]')
-      .first()
-      .should('contain', 'Export PNG')
+
+    // viz
+    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
+    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
+      () => {
+        cy.get('a').then(exportButtonsList => {
+          expect(exportButtonsList).to.have.length(4)
+          expect(exportButtonsList.eq(0)).to.contain('Export PNG')
+          expect(exportButtonsList.eq(1)).to.contain('Export SVG')
+          expect(exportButtonsList.eq(2)).to.contain('Export CSV')
+          expect(exportButtonsList.eq(3)).to.contain('Export JSON')
+        })
+      }
+    )
+
+    // table
+    cy.get('[data-testid="cypherFrameSidebarTable"]', {
+      timeout: 10000
+    }).click()
+    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
+    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
+      () => {
+        cy.get('a').then(exportButtonsList => {
+          expect(exportButtonsList).to.have.length(2)
+          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
+          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
+        })
+      }
+    )
+
+    // text
+    cy.get('[data-testid="cypherFrameSidebarAscii"]', {
+      timeout: 10000
+    }).click()
+    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
+    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
+      () => {
+        cy.get('a').then(exportButtonsList => {
+          expect(exportButtonsList).to.have.length(2)
+          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
+          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
+        })
+      }
+    )
+
+    // code
+    cy.get('[data-testid="cypherFrameSidebarCode"]', { timeout: 10000 }).click()
+    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
+    cy.get('[data-testid="frame-export-dropdown"]', { timeout: 10000 }).within(
+      () => {
+        cy.get('a').then(exportButtonsList => {
+          expect(exportButtonsList).to.have.length(2)
+          expect(exportButtonsList.eq(0)).to.contain('Export CSV')
+          expect(exportButtonsList.eq(1)).to.contain('Export JSON')
+        })
+      }
+    )
 
     cy.executeCommand('MATCH (n:ExportTest) DETACH DELETE n')
   })
