@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// https://neo4j.com/docs/developer-manual/current/cypher/functions/
+// https://neo4j.com/docs/cypher-manual/current/functions/
 /**
  * Signature syntax examples:
  * - (name :: TYPE?, name = default :: INTEGER?) :: VOID

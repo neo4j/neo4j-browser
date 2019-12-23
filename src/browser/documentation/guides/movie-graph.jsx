@@ -830,8 +830,8 @@ RETURN tom, m, coActors, m2, cruise`}
           </a>
         </li>
         <li>
-          <ManualLink chapter="developer-manual" page="/">
-            Neo4j Developer Manual
+          <ManualLink chapter="cypher-manual" page="/">
+            Neo4j Cypher Manual
           </ManualLink>
         </li>
       </ul>

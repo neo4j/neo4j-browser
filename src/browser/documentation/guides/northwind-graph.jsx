@@ -349,8 +349,8 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
           </a>
         </li>
         <li>
-          <ManualLink chapter="developer-manual" page="/">
-            Neo4j Developer Manual
+          <ManualLink chapter="cypher-manual" page="/">
+            Neo4j Cypher Manual
           </ManualLink>
         </li>
       </ul>

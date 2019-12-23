@@ -33,7 +33,7 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink chapter="developer-manual" page="/cypher/clauses/return/">
+          <ManualLink chapter="cypher-manual" page="/clauses/return/">
             RETURN
           </ManualLink>{' '}
           manual page

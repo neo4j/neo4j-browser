@@ -72,3 +72,40 @@ test.each(tests)('Render correct url for props %o', (props, expected) => {
   const url = getByText('link to manual').getAttribute('href')
   expect(url).toEqual(expected)
 })
+
+const movedPages = [
+  [
+    { neo4jVersion: '3.5.0', page: '/administration/' },
+    {
+      text: 'Cypher Schema',
+      url: 'https://neo4j.com/docs/cypher-manual/3.5/schema/'
+    }
+  ],
+  [
+    { neo4jVersion: '4.0.0', page: '/administration/' },
+    {
+      text: 'link to manual',
+      url: 'https://neo4j.com/docs/cypher-manual/4.0/administration/'
+    }
+  ],
+  [
+    { page: '/administration/' },
+    {
+      text: 'link to manual',
+      url: 'https://neo4j.com/docs/cypher-manual/current/administration/'
+    }
+  ]
+]
+
+test.each(movedPages)(
+  'Render correct url for moved page %o',
+  (props, expected) => {
+    const { getByText } = render(
+      <ManualLink chapter="cypher-manual" {...props}>
+        link to manual
+      </ManualLink>
+    )
+    const url = getByText(expected.text).getAttribute('href')
+    expect(url).toEqual(expected.url)
+  }
+)
