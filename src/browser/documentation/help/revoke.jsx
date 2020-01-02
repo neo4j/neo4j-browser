@@ -20,15 +20,15 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-const title = 'DROP CONSTRAINT ON'
-const subtitle =
-  'Drops a property constraint on a node label or relationship type'
-const category = 'schemaClauses'
+import AdminOnSystemDb from './partials/admin-on-systemdb'
+const title = 'REVOKE'
+const subtitle = 'Revoke granted or denied privileges'
+const category = 'security'
 const content = (
   <>
     <p>
-      The <code>DROP CONSTRAINT ON</code> clause will delete a property
-      constraint
+      The <code>REVOKE</code> command allows an administrator to remove a
+      previously granted or denied privilege.
     </p>
     <div className="links">
       <div className="link">
@@ -36,9 +36,19 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/constraints/"
+            page="/administration/security/subgraph/#administration-security-subgraph-introduction"
+            minVersion="4.0.0"
           >
-            Constraints
+            Subgraph security
+          </ManualLink>{' '}
+          manual page
+          <br />
+          <ManualLink
+            chapter="cypher-manual"
+            page="/administration/security/administration/#administration-security-administration-database-privileges"
+            minVersion="4.0.0"
+          >
+            Database administration
           </ManualLink>{' '}
           manual page
         </p>
@@ -46,8 +56,9 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="drop-constraint-on">:help CREATE CONSTRAINT ON</a>{' '}
-          <a help-topic="schema">:help Schema</a>{' '}
+          <a help-topic="show-privileges">:help SHOW PRIVILEGES</a>{' '}
+          <a help-topic="grant">:help GRANT</a>{' '}
+          <a help-topic="deny">:help DENY</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
@@ -55,37 +66,38 @@ const content = (
     <section className="example">
       <figure>
         <pre className="code runnable standalone-example">
-          DROP CONSTRAINT ON (p:Person) ASSERT p.name IS UNIQUE
+          REVOKE GRANT graph-privilege ON GRAPH dbname entity TO role
         </pre>
         <figcaption>
-          Drop the unique constraint and index on the label Person and property
-          name.
+          Revoke a granted subgraph privilege from a role (eg. write
+          nodes/relationships).
         </figcaption>
       </figure>
-    </section>
-    <section className="example">
       <figure>
         <pre className="code runnable standalone-example">
-          DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)
+          REVOKE DENY graph-privilege ON GRAPH dbname entity TO role
         </pre>
-        <figcaption>
-          Drop the node property existence constraint on the label Person and
-          property name.
-        </figcaption>
+        <figcaption>Revoke a denied subgraph privilege from a role.</figcaption>
       </figure>
-    </section>
-    <section className="example">
       <figure>
         <pre className="code runnable standalone-example">
-          DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)
+          REVOKE graph-privilege ON GRAPH dbname entity TO role
         </pre>
         <figcaption>
-          Drop the relationship property existence constraint on the type LIKED
-          and property when.
+          Revoke a granted or denied subgraph privilege from a role.
+        </figcaption>
+      </figure>
+      <figure>
+        <pre className="code runnable standalone-example">
+          REVOKE GRANT database-privilege ON DATABASE dbname TO role
+        </pre>
+        <figcaption>
+          Revoke a granted database administrative privilege from a role (eg.
+          create index or start/stop database).
         </figcaption>
       </figure>
     </section>
+    <AdminOnSystemDb />
   </>
 )
-
 export default { title, subtitle, category, content }

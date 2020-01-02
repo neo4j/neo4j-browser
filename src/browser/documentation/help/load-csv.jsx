@@ -37,17 +37,14 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink
-            chapter="developer-manual"
-            page="/cypher/clauses/load-csv/"
-          >
+          <ManualLink chapter="cypher-manual" page="/clauses/load-csv/">
             LOAD CSV
           </ManualLink>{' '}
           manual page
           <br />
           <ManualLink
-            chapter="developer-manual"
-            page="/cypher/query-tuning/using/#query-using-periodic-commit-hint"
+            chapter="cypher-manual"
+            page="/query-tuning/using/#query-using-periodic-commit-hint"
           >
             USING PERIODIC COMMIT
           </ManualLink>{' '}

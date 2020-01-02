@@ -20,21 +20,25 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-const title = 'REMOVE'
-const subtitle = 'Remove properties and labels'
-const category = 'cypherHelp'
+import AdminOnSystemDb from './partials/admin-on-systemdb'
+const title = 'DROP ROLE'
+const subtitle = 'Delete a role'
+const category = 'security'
 const content = (
   <>
     <p>
-      The <code>REMOVE</code> clause is used to remove properties and labels
-      from graph elements.
+      The <code>DROP ROLE</code> command can be used to delete roles.
     </p>
     <div className="links">
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink chapter="cypher-manual" page="/clauses/remove/">
-            REMOVE
+          <ManualLink
+            chapter="cypher-manual"
+            page="/administration/security/users-and-roles/#administration-security-roles-drop"
+            minVersion="4.0.0"
+          >
+            DROP ROLE
           </ManualLink>{' '}
           manual page
         </p>
@@ -42,33 +46,20 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="match">:help MATCH</a>
-          <a help-topic="where">:help WHERE</a>
-          <a help-topic="return">:help RETURN</a>
-          <a help-topic="delete">:help DELETE</a>
+          <a help-topic="show-roles">:help SHOW ROLES</a>{' '}
+          <a help-topic="create-role">:help CREATE ROLE</a>{' '}
+          <a help-topic="grant-role">:help GRANT ROLE</a>{' '}
+          <a help-topic="revoke-role">:help REVOKE ROLE</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
     <section className="example">
-      <figure className="runnable">
-        <pre>
-          {`MATCH (soren {name: 'Soren'})
-REMOVE soren.age
-RETURN soren`}
-        </pre>
-        <figcaption>Remove Soren's age.</figcaption>
-      </figure>
-      <figure className="runnable">
-        <pre>
-          {`MATCH (soren {name: 'Soren'})
-REMOVE soren:Intern
-RETURN soren`}
-        </pre>
-        <figcaption>Soren is no longer an intern.</figcaption>
+      <figure>
+        <pre className="code runnable standalone-example">DROP ROLE myrole</pre>
       </figure>
     </section>
+    <AdminOnSystemDb />
   </>
 )
-
 export default { title, subtitle, category, content }

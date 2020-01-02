@@ -33,7 +33,7 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink chapter="developer-manual" page="/cypher/clauses/where/">
+          <ManualLink chapter="cypher-manual" page="/clauses/where/">
             WHERE
           </ManualLink>{' '}
           manual page

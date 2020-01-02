@@ -34,8 +34,8 @@ const content = (
         <p className="title">Reference</p>
         <p className="content">
           <ManualLink
-            chapter="developer-manual"
-            page="/cypher/clauses/where/#query-where-string"
+            chapter="cypher-manual"
+            page="/clauses/where/#query-where-string"
           >
             WHERE
           </ManualLink>{' '}

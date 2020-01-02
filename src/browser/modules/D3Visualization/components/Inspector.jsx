@@ -132,7 +132,7 @@ export class InspectorComponent extends Component {
                 'token' + ' ' + 'token-context-menu-key' + ' ' + 'token-label'
               }
             >
-              <SVGInline svg={item.label} width="12" />
+              <SVGInline svg={item.label} width="12px" />
             </StyledTokenContextMenuKey>
             <StyledInspectorFooterRowListPair key="pair" className="pair">
               <StyledInspectorFooterRowListValue className="value">

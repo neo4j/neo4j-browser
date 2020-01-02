@@ -40,6 +40,7 @@ const categorize = commands => {
     cypherHelp: { title: 'Cypher Help' },
     schemaClauses: { title: 'Schema Clauses' },
     administration: { title: 'Administration' },
+    security: { title: 'Security' },
     cypherPredicates: { title: 'Cypher Predicates' },
     restApiCommands: { title: 'Rest API Commands' },
     guides: { title: 'Guides' },

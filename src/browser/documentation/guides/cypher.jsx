@@ -280,7 +280,7 @@ RETURN DISTINCT surfer`}
           </ManualLink>
         </li>
         <li>
-          <ManualLink manual="developer-manual" page="/cypher/">
+          <ManualLink chapter="cypher-manual" page="/">
             The Cypher chapter
           </ManualLink>{' '}
           of the Neo4j Developer Manual
