@@ -45,7 +45,7 @@ describe('Data export', () => {
     })
     const exportOptionsConfig = [
       {
-        names: ['Visualization'],
+        names: ['Plan', 'Visualization'],
         order: ['CSV', 'JSON', 'PNG', 'SVG']
       },
       {
