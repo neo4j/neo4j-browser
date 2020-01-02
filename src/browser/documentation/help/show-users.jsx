@@ -48,6 +48,7 @@ const content = (
         <p className="title">Related</p>
         <p className="content">
           <a help-topic="create-user">:help CREATE USER</a>{' '}
+          <a help-topic="alter-user">:help ALTER USER</a>{' '}
           <a help-topic="drop-user">:help DROP USER</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>

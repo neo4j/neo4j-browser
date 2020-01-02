@@ -21,13 +21,14 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import AdminOnSystemDb from './partials/admin-on-systemdb'
-const title = 'DROP USER'
-const subtitle = 'Delete a user'
-const category = 'administration'
+const title = 'SHOW PRIVILEGES'
+const subtitle = 'List available privileges'
+const category = 'security'
 const content = (
   <>
     <p>
-      The command <code>DROP USER</code> can be used to delete an existing user.
+      The <code>SHOW PRIVILEGES</code> command can be used to list available
+      privileges for all roles.
     </p>
     <div className="links">
       <div className="link">
@@ -35,10 +36,10 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/security/users-and-roles/#administration-security-users-drop"
+            page="/administration/security/subgraph/#administration-security-subgraph-show"
             minVersion="4.0.0"
           >
-            DROP USER
+            SHOW PRIVILEGES
           </ManualLink>{' '}
           manual page
         </p>
@@ -46,16 +47,16 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="show-users">:help SHOW USERS</a>{' '}
-          <a help-topic="drop-user">:help CREATE USER</a>{' '}
-          <a help-topic="alter-user">:help ALTER USER</a>{' '}
+          <a help-topic="grant">:help GRANT</a>{' '}
+          <a help-topic="deny">:help DENY</a>{' '}
+          <a help-topic="revoke">:help REVOKE</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
     <section className="example">
       <figure>
-        <pre className="code runnable standalone-example">DROP USER jake</pre>
+        <pre className="code runnable standalone-example">SHOW PRIVILEGES</pre>
       </figure>
     </section>
     <AdminOnSystemDb />
