@@ -34,7 +34,7 @@ describe('Data export', () => {
   context('export options', () => {
     before(function() {
       cy.executeCommand(':clear')
-      cy.executeCommand('CREATE (n:ExportTest) RETURN n')
+      cy.executeCommand('PROFILE CREATE (n:ExportTest) RETURN n')
       cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
         'have.length',
         1
