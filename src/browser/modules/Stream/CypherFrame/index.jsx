@@ -140,6 +140,7 @@ export class CypherFrame extends Component {
       <FrameSidebar>
         <Render if={resultHasNodes(this.props.request) && !this.state.errors}>
           <CypherFrameButton
+            data-testid="cypherFrameSidebarVisualization"
             selected={this.state.openView === viewTypes.VISUALIZATION}
             onClick={() => {
               this.changeView(viewTypes.VISUALIZATION)
@@ -177,6 +178,7 @@ export class CypherFrame extends Component {
         </Render>
         <Render if={resultHasPlan(this.props.request)}>
           <CypherFrameButton
+            data-testid="cypherFrameSidebarPlan"
             selected={this.state.openView === viewTypes.PLAN}
             onClick={() => this.changeView(viewTypes.PLAN)}
           >
@@ -205,6 +207,7 @@ export class CypherFrame extends Component {
         </Render>
         <Render if={!resultIsError(this.props.request)}>
           <CypherFrameButton
+            data-testid="cypherFrameSidebarCode"
             selected={this.state.openView === viewTypes.CODE}
             onClick={() => {
               this.changeView(viewTypes.CODE)

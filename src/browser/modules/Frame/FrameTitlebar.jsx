@@ -183,16 +183,6 @@ class FrameTitlebar extends Component {
               <DownloadIcon />
               <DropdownList>
                 <DropdownContent>
-                  <Render if={props.visElement}>
-                    <span>
-                      <DropdownItem onClick={() => this.exportPNG()}>
-                        Export PNG
-                      </DropdownItem>
-                      <DropdownItem onClick={() => this.exportSVG()}>
-                        Export SVG
-                      </DropdownItem>
-                    </span>
-                  </Render>
                   <Render if={this.hasData() && frame.type === 'cypher'}>
                     <DropdownItem
                       onClick={() => this.exportCSV(props.getRecords())}
@@ -203,6 +193,14 @@ class FrameTitlebar extends Component {
                       onClick={() => this.exportJSON(props.getRecords())}
                     >
                       Export JSON
+                    </DropdownItem>
+                  </Render>
+                  <Render if={props.visElement}>
+                    <DropdownItem onClick={() => this.exportPNG()}>
+                      Export PNG
+                    </DropdownItem>
+                    <DropdownItem onClick={() => this.exportSVG()}>
+                      Export SVG
                     </DropdownItem>
                   </Render>
                   <Render if={this.canExportTXT()}>
