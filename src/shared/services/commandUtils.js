@@ -154,7 +154,7 @@ export const getCommandAndParam = str => {
   return [serverCmd, props]
 }
 
-export function tryGetRemoteSlideIndexFromUrl(url) {
+export function tryGetRemoteInitialSlideFromUrl(url) {
   const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
 
   if (!startsWith(hashBang, 'slide-')) return 0

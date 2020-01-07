@@ -56,14 +56,14 @@ export class PlayFrame extends Component {
 
   componentDidMount() {
     if (this.props.frame.result) {
-      const { slideIndex } = this.props.frame
+      const { initialSlide } = this.props.frame
 
       // Found remote guide
       this.setState({
         guide: (
           <Docs
             withDirectives
-            initialSlide={slideIndex}
+            initialSlide={initialSlide}
             html={this.props.frame.result}
           />
         ),

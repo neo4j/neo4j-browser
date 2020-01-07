@@ -221,25 +221,25 @@ describe('commandutils', () => {
     })
   })
 
-  describe('tryGetRemoteSlideIndexFromUrl', () => {
-    it('extracts slide index hashbangs from a string', () => {
-      expect(utils.tryGetRemoteSlideIndexFromUrl('foo#slide-1')).toEqual(1)
+  describe('tryGetRemoteInitialSlideFromUrl', () => {
+    it('extracts initial slide hashbangs from a string', () => {
+      expect(utils.tryGetRemoteInitialSlideFromUrl('foo#slide-1')).toEqual(1)
       expect(
-        utils.tryGetRemoteSlideIndexFromUrl('http://foo.com#slide-2')
+        utils.tryGetRemoteInitialSlideFromUrl('http://foo.com#slide-2')
       ).toEqual(2)
       expect(
-        utils.tryGetRemoteSlideIndexFromUrl(
+        utils.tryGetRemoteInitialSlideFromUrl(
           'http://www.google.com/yarr/#slide-21'
         )
       ).toEqual(21)
     })
     it('returns 0 when no valid hashbang found', () => {
-      expect(utils.tryGetRemoteSlideIndexFromUrl('foo')).toEqual(0)
+      expect(utils.tryGetRemoteInitialSlideFromUrl('foo')).toEqual(0)
       expect(
-        utils.tryGetRemoteSlideIndexFromUrl('http://foo.com#sloide-2')
+        utils.tryGetRemoteInitialSlideFromUrl('http://foo.com#sloide-2')
       ).toEqual(0)
       expect(
-        utils.tryGetRemoteSlideIndexFromUrl(
+        utils.tryGetRemoteInitialSlideFromUrl(
           'http://www.google.com/yarr/#slide-fooo'
         )
       ).toEqual(0)
