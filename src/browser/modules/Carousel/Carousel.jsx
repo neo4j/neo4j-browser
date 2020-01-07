@@ -46,6 +46,10 @@ export default class Carousel extends Component {
     super(props)
     this.slides = this.props.slides || []
     this.myRef = React.createRef()
+
+    if (props.initialSlide && props.initialSlide <= this.slides.length) {
+      this.state.visibleSlide = props.initialSlide - 1
+    }
   }
 
   onKeyDown(ev) {

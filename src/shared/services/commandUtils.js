@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { includes, last, split, startsWith } from 'lodash-es'
 import { extractStatements } from 'cypher-codemirror'
 
 export function cleanCommand(cmd) {
@@ -151,4 +152,14 @@ export const getCommandAndParam = str => {
     ' '
   )
   return [serverCmd, props]
+}
+
+export function tryGetRemoteSlideIndexFromUrl(url) {
+  const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
+
+  if (!startsWith(hashBang, 'slide-')) return 0
+
+  const slideIndex = Number(last(split(hashBang, 'slide-')))
+
+  return !isNaN(slideIndex) ? slideIndex : 0
 }

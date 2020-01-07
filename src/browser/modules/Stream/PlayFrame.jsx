@@ -56,9 +56,17 @@ export class PlayFrame extends Component {
 
   componentDidMount() {
     if (this.props.frame.result) {
+      const { slideIndex } = this.props.frame
+
       // Found remote guide
       this.setState({
-        guide: <Docs withDirectives html={this.props.frame.result} />,
+        guide: (
+          <Docs
+            withDirectives
+            initialSlide={slideIndex}
+            html={this.props.frame.result}
+          />
+        ),
         hasCarousel: checkHtmlForSlides(this.props.frame.result),
         isRemote: true
       })
