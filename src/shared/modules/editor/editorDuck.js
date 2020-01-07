@@ -33,7 +33,7 @@ export const NOT_SUPPORTED_URL_PARAM_COMMAND = `${NAME}/NOT_SUPPORTED_URL_PARAM_
 // Supported commands
 const validCommandTypes = {
   play: (cmdchar, args) => `${cmdchar}play ${args.join(' ')}`,
-  cypher: (_, args) => args.join('\n'),
+  edit: (_, args) => args.join('\n'),
   param: (cmdchar, args) => `${cmdchar}param ${args.join(' ')}`,
   params: (cmdchar, args) => `${cmdchar}params ${args.join(' ')}`
 }

@@ -128,7 +128,7 @@ describe('editorDuck Epics', () => {
     store.dispatch(action)
   })
   test('Accepts one or more Cypher queries from URL params and populates the editor', done => {
-    const cmd = 'cypher'
+    const cmd = 'edit'
     const args = ['RETURN 1;', 'RETURN rand();']
     const action = {
       type: APP_START,
