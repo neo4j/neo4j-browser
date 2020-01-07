@@ -61,7 +61,7 @@ export const resultHasTruncatedFields = (result, maxFieldItems) => {
   )
 }
 
-export function getBodyAndStatusBarMessages (result, maxRows) {
+export function getBodyAndStatusBarMessages(result, maxRows) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
     return {}
   }
@@ -118,7 +118,7 @@ export const getRecordsToDisplayInTable = (result, maxRows) => {
     : result.records
 }
 
-export const flattenArray = arr => {
+export const flattenArrayDeep = arr => {
   let toFlatten = arr
   let result = []
 
@@ -140,7 +140,7 @@ export const resultHasNodes = (request, types = bolt.neo4j.types) => {
   for (let i = 0; i < records.length; i++) {
     const graphItems = keys.map(key => records[i].get(key))
     const items = recursivelyExtractGraphItems(types, graphItems)
-    const flat = flattenArray(items)
+    const flat = flattenArrayDeep(items)
     const nodes = flat.filter(
       item => item instanceof types.Node || item instanceof types.Path
     )
@@ -236,10 +236,10 @@ export const stringifyResultArray = (formatter = stringModifier, arr = []) => {
 export const transformResultRecordsToResultArray = (records, maxFieldItems) => {
   return records && records.length
     ? [records]
-      .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
-      .map(
-        flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
-      )[0]
+        .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
+        .map(
+          flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
+        )[0]
     : undefined
 }
 

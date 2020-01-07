@@ -30,6 +30,7 @@ import { StyledVisContainer } from './VisualizationView.styled'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
 
 export class Visualization extends Component {
   state = {
@@ -72,9 +73,14 @@ export class Visualization extends Component {
       true,
       props.maxFieldItems
     )
+    const hasTruncatedFields = resultHasTruncatedFields(
+      props.result,
+      props.maxFieldItems
+    )
     this.setState({
       nodes,
       relationships,
+      hasTruncatedFields,
       updated: new Date().getTime()
     })
   }
@@ -176,6 +182,7 @@ export class Visualization extends Component {
       <StyledVisContainer fullscreen={this.props.fullscreen}>
         <ExplorerComponent
           maxNeighbours={this.props.maxNeighbours}
+          hasTruncatedFields={this.state.hasTruncatedFields}
           initialNodeDisplay={this.props.initialNodeDisplay}
           graphStyleData={this.props.graphStyleData}
           updateStyle={this.props.updateStyle}

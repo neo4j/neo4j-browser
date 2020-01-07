@@ -161,9 +161,9 @@ const visualSettings = [
       },
       {
         maxFieldItems: {
-          displayName: 'Max field items',
+          displayName: 'Property item limit',
           tooltip:
-            'Max items of result fields shown. When reached, fields get truncated.'
+            'Max amount of items shown for list properties. When reached, lists get truncated.'
         }
       },
       {

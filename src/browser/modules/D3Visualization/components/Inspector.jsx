@@ -40,6 +40,9 @@ import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
 import ClickableUrls from '../../../components/clickable-urls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
+import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
+import { Icon } from 'semantic-ui-react'
+import Ellipsis from 'browser-components/Ellipsis'
 
 const mapItemProperties = itemProperties =>
   itemProperties
@@ -149,6 +152,12 @@ export class InspectorComponent extends Component {
           <StyledInlineList className="list-inline">
             <StyledInspectorFooterRowListPair className="pair" key="pair">
               <StyledInspectorFooterRowListValue className="value">
+                {this.props.hasTruncatedFields && (
+                  <StyledTruncatedMessage>
+                    <Icon name="warning sign" /> Result fields have been
+                    truncated.&nbsp;
+                  </StyledTruncatedMessage>
+                )}
                 {description}
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>

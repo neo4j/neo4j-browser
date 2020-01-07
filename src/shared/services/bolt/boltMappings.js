@@ -19,7 +19,7 @@
  */
 
 import updateStatsFields from './updateStatisticsFields'
-import { flatten, take } from 'lodash-es'
+import { flatten, map, take } from 'lodash-es'
 import neo4j from 'neo4j-driver'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import {
@@ -229,7 +229,7 @@ export const recursivelyExtractGraphItems = (types, item) => {
   return item
 }
 
-export function extractRawNodesAndRelationShipsFromRecords (
+export function extractRawNodesAndRelationShipsFromRecords(
   records,
   types = neo4j.types,
   maxFieldItems
@@ -246,9 +246,11 @@ export function extractRawNodesAndRelationShipsFromRecords (
     }
   }
 
-  const flatTruncatedItems = maxFieldItems
-    ? take(flatten([...items]), maxFieldItems)
-    : flatten([...items])
+  const flatTruncatedItems = flatten(
+    map([...items], item =>
+      maxFieldItems && Array.isArray(item) ? take(item, maxFieldItems) : item
+    )
+  )
 
   for (const item of flatTruncatedItems) {
     if (item instanceof types.Relationship) {
