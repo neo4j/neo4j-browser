@@ -82,7 +82,7 @@ export default class Graph {
         this.nodeMap[eNode.id] = eNode
         this._nodes.push(eNode)
         this.expandedNodeMap[node.id] = this.expandedNodeMap[node.id]
-          ? this.expandedNodeMap[node.id].concat([eNode.id])
+          ? [...new Set(this.expandedNodeMap[node.id].concat([eNode.id]))]
           : [eNode.id]
       }
     }
