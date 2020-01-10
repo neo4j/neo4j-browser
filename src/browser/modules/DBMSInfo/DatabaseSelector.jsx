@@ -26,6 +26,7 @@ import {
   DrawerSectionBody
 } from 'browser-components/drawer/index'
 import { uniqBy } from 'lodash-es'
+import { escapeCypherIdentifier } from 'services/utils'
 
 const Select = styled.select`
   width: 100%;
@@ -47,7 +48,7 @@ export const DatabaseSelector = ({
     if (target.value === EMPTY_OPTION) {
       return
     }
-    onChange(target.value)
+    onChange(escapeCypherIdentifier(target.value))
   }
 
   let databasesList = databases

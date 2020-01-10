@@ -114,4 +114,32 @@ describe('DatabaseSelector', () => {
     expect(onChange).toHaveBeenCalledTimes(2)
     expect(onChange).toHaveBeenLastCalledWith('stella')
   })
+  it('escapes db names when needed', () => {
+    // Given
+    const databases = [
+      { name: 'regulardb', status: 'online' },
+      { name: 'db-with-dash', status: 'online' }
+    ]
+    const onChange = jest.fn()
+
+    // When
+    const { getByTestId } = render(
+      <DatabaseSelector databases={databases} onChange={onChange} />
+    )
+    const select = getByTestId(testId)
+
+    // Select something
+    fireEvent.change(select, { target: { value: 'regulardb' } })
+
+    // Then
+    expect(onChange).toHaveBeenCalledTimes(1)
+    expect(onChange).toHaveBeenLastCalledWith('regulardb')
+
+    // Select something else
+    fireEvent.change(select, { target: { value: 'db-with-dash' } })
+
+    // Then
+    expect(onChange).toHaveBeenCalledTimes(2)
+    expect(onChange).toHaveBeenLastCalledWith('`db-with-dash`')
+  })
 })

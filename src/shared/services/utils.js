@@ -21,6 +21,7 @@
 
 import parseUrl from 'url-parse'
 import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
+import { trimStart, trimEnd } from 'lodash-es'
 
 /**
  * The work objects expected shape:
@@ -296,10 +297,16 @@ export const canUseDOM = () =>
     window.document.createElement
   )
 
-export const ecsapeCypherMetaItem = str =>
+export const escapeCypherIdentifier = str =>
   /^[A-Za-z][A-Za-z0-9_]*$/.test(str)
     ? str
     : '`' + str.replace(/`/g, '``') + '`'
+
+export const unescapeCypherIdentifier = str =>
+  [str]
+    .map(s => trimStart(s, '`'))
+    .map(s => trimEnd(s, '`'))
+    .map(s => s.replace(/``/g, '`'))[0]
 
 export const parseTimeMillis = timeWithOrWithoutUnit => {
   timeWithOrWithoutUnit += '' // cast to string

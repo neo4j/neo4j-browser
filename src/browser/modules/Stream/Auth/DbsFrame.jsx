@@ -28,7 +28,7 @@ import {
 } from './styled'
 import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render/index'
-import { toKeyString } from 'services/utils'
+import { toKeyString, escapeCypherIdentifier } from 'services/utils'
 import { UnstyledList } from '../styled'
 import { useDbCommand } from 'shared/modules/commands/commandsDuck'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
@@ -59,7 +59,11 @@ export const DbsFrame = props => {
               {dbsToShow.map(db => {
                 return (
                   <StyledDbsRow key={toKeyString(db.name)}>
-                    <TextCommand command={`${useDbCommand} ${db.name}`} />
+                    <TextCommand
+                      command={`${useDbCommand} ${escapeCypherIdentifier(
+                        db.name
+                      )}`}
+                    />
                   </StyledDbsRow>
                 )
               })}

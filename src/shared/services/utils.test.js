@@ -562,7 +562,7 @@ describe('utils', () => {
       expect(utils.parseTimeMillis(time.test)).toEqual(time.expect)
     })
   })
-  describe('ecsapeCypherMetaItem', () => {
+  describe('escapeCypherIdentifier', () => {
     // Given
     const items = [
       { test: 'Label', expect: 'Label' },
@@ -574,7 +574,21 @@ describe('utils', () => {
 
     // When && Then
     items.forEach(item => {
-      expect(utils.ecsapeCypherMetaItem(item.test)).toEqual(item.expect)
+      expect(utils.escapeCypherIdentifier(item.test)).toEqual(item.expect)
+    })
+  })
+  describe('unescapeCypherIdentifier', () => {
+    // Given
+    const items = [
+      { test: 'Label', expect: 'Label' },
+      { test: '`Label Space`', expect: 'Label Space' },
+      { test: '`Label-dash`', expect: 'Label-dash' },
+      { test: '`Label``Backtick`', expect: 'Label`Backtick' }
+    ]
+
+    // When && Then
+    items.forEach(item => {
+      expect(utils.unescapeCypherIdentifier(item.test)).toEqual(item.expect)
     })
   })
 })
