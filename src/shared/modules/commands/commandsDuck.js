@@ -274,6 +274,7 @@ export const fetchGuideFromWhitelistEpic = (some$, store) =>
     )
     const urlWhitelist = addProtocolsToUrlList(resolvedWildcardWhitelist)
     const guidesUrls = urlWhitelist.map(url => url + '/' + action.url)
+
     return firstSuccessPromise(guidesUrls, url => {
       // Get first successful fetch
       return fetchRemoteGuide(url, whitelistStr).then(r => ({

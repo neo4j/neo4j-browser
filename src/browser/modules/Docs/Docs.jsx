@@ -47,7 +47,13 @@ export default class Docs extends Component {
   }
 
   render() {
-    const { content, html, withDirectives, hasCarouselComponent } = this.props
+    const {
+      content,
+      html,
+      withDirectives,
+      initialSlide,
+      hasCarouselComponent
+    } = this.props
 
     if (hasCarouselComponent) {
       return content
@@ -57,7 +63,13 @@ export default class Docs extends Component {
       const ListOfSlides = this.state.slides.map(slide => {
         return <Slide key={uuid.v4()} html={slide.html.innerHTML} />
       })
-      return <Carousel slides={ListOfSlides} withDirectives={withDirectives} />
+      return (
+        <Carousel
+          slides={ListOfSlides}
+          initialSlide={initialSlide}
+          withDirectives={withDirectives}
+        />
+      )
     }
 
     let slide = <Slide ref={this.ref} html="" />
