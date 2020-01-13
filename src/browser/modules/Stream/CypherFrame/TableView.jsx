@@ -54,9 +54,10 @@ import { Icon } from 'semantic-ui-react'
 
 const renderCell = (entry, maxFieldItems) => {
   if (Array.isArray(entry)) {
-    const children = entry.slice(0, maxFieldItems).map((item, index) => (
+    const entryToUse = maxFieldItems ? entry.slice(0, maxFieldItems) : entry
+    const children = entryToUse.map((item, index) => (
       <span key={index}>
-        {renderCell(item, maxFieldItems)}
+        {renderCell(item)}
         {index === entry.length - 1 ? null : ', '}
       </span>
     ))
@@ -84,7 +85,7 @@ const buildData = (entries, maxFieldItems) => {
   return entries.map(entry => {
     if (entry !== null) {
       return (
-        <StyledTd className='table-properties' key={v4()}>
+        <StyledTd className="table-properties" key={v4()}>
           {renderCell(entry, maxFieldItems)}
         </StyledTd>
       )
@@ -98,7 +99,7 @@ const buildData = (entries, maxFieldItems) => {
 }
 const buildRow = (item, maxFieldItems) => {
   return (
-    <StyledBodyTr className='table-row' key={v4()}>
+    <StyledBodyTr className="table-row" key={v4()}>
       {buildData(item, maxFieldItems)}
     </StyledBodyTr>
   )
@@ -208,7 +209,9 @@ export class TableStatusbarComponent extends Component {
       props.result,
       props.maxFieldItems
     )
-    if (statusBarMessage !== undefined) { this.setState({ statusBarMessage, hasTruncatedFields }) }
+    if (statusBarMessage !== undefined) {
+      this.setState({ statusBarMessage, hasTruncatedFields })
+    }
   }
 
   render() {
@@ -217,7 +220,7 @@ export class TableStatusbarComponent extends Component {
         <Ellipsis>
           {this.state.hasTruncatedFields && (
             <StyledTruncatedMessage>
-              <Icon name='warning sign' /> Result fields have been
+              <Icon name="warning sign" /> Result fields have been
               truncated.&nbsp;
             </StyledTruncatedMessage>
           )}
