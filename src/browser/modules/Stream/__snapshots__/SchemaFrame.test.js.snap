@@ -15,6 +15,134 @@ exports[`SchemaFrame renders empty 1`] = `
           <thead>
             <tr>
               <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                Index Name
+              </th>
+              <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                Type
+              </th>
+              <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                Uniqueness
+              </th>
+              <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                EntityType
+              </th>
+              <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                LabelsOrTypes
+              </th>
+              <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                Properties
+              </th>
+              <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                State
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+            >
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              >
+                None
+              </td>
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              />
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              />
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              />
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              />
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              />
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              />
+            </tr>
+          </tbody>
+        </table>
+        <table
+          class="DataTables__StyledTable-bf850j-0 cZayOW"
+        >
+          <thead>
+            <tr>
+              <th
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+              >
+                Constraints
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+            >
+              <td
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+              >
+                None
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <p
+          class="lead"
+        >
+          Execute the following command to visualize what's related, and how
+        </p>
+        <figure>
+          <pre
+            class="code runnable"
+          >
+            <i
+              class="fa fa-play-circle-o"
+              style="padding-right:4px"
+            />
+            CALL db.schema.visualization
+          </pre>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SchemaFrame renders empty for Neo4j < 4.0 1`] = `
+<div>
+  <div
+    style="width: 100%;"
+  >
+    <div>
+      <div
+        class="styled__StyledSlide-sc-9xe8te-11 fPXIVT"
+      >
+        <table
+          class="DataTables__StyledTable-bf850j-0 cZayOW"
+        >
+          <thead>
+            <tr>
+              <th
                 class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Indexes
@@ -80,7 +208,7 @@ exports[`SchemaFrame renders empty 1`] = `
 </div>
 `;
 
-exports[`SchemaFrame renders with result 1`] = `
+exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
 <div>
   <div
     style="width: 100%;"

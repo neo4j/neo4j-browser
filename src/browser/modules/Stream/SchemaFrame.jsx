@@ -38,47 +38,79 @@ import {
 import Directives from 'browser-components/Directives'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
-const formatIndexes = indexes => {
-  if (indexes.length === 0) {
-    return ['None']
-  }
-
-  return indexes.map(
-    index =>
+const Indexes = ({ indexes, neo4jVersion }) => {
+  if (semver.satisfies(neo4jVersion, '<4.0.0-rc01')) {
+    const rows = indexes.map(index => [
       `${replace(index.description, 'INDEX', '')} ${toUpper(index.state)} ${
         index.type === 'node_unique_property'
           ? '(for uniqueness constraint)'
           : ''
       }`
-  )
-}
+    ])
 
-const formatConstraints = constraints => {
-  if (constraints.length === 0) {
-    return ['None']
+    return <SchemaTable header={['Indexes']} rows={rows} />
   }
 
-  return constraints.map(constraint =>
-    replace(constraint.description, 'CONSTRAINT', '')
-  )
+  const rows = indexes.map(index => [
+    index.name,
+    index.type,
+    index.uniqueness,
+    index.entityType,
+    JSON.stringify(index.labelsOrTypes, null, 2),
+    JSON.stringify(index.properties, null, 2),
+    index.state
+  ])
+
+  const header = [
+    'Index Name',
+    'Type',
+    'Uniqueness',
+    'EntityType',
+    'LabelsOrTypes',
+    'Properties',
+    'State'
+  ]
+
+  return <SchemaTable header={header} rows={rows} />
 }
 
-const SchemaTable = ({ name, content }) => (
-  <StyledTable>
-    <thead>
-      <tr>
-        <StyledTh className="table-header">{name}</StyledTh>
-      </tr>
-    </thead>
-    <tbody>
-      {content.map(row => (
-        <StyledBodyTr className="table-row" key={v4()}>
-          <StyledTd className="table-properties">{row}</StyledTd>
-        </StyledBodyTr>
+const Constraints = ({ constraints }) => {
+  const rows = constraints.map(constraint => [
+    replace(constraint.description, 'CONSTRAINT', '')
+  ])
+
+  return <SchemaTable header={['Constraints']} rows={rows} />
+}
+
+const SchemaTable = ({ header, rows }) => {
+  const rowsOrNone =
+    rows && rows.length ? rows : [header.map((_, i) => (i === 0 ? 'None' : ''))]
+
+  const body = rowsOrNone.map(row => (
+    <StyledBodyTr className="table-row" key={v4()}>
+      {row.map(cell => (
+        <StyledTd className="table-properties" key={v4()}>
+          {cell}
+        </StyledTd>
       ))}
-    </tbody>
-  </StyledTable>
-)
+    </StyledBodyTr>
+  ))
+
+  return (
+    <StyledTable>
+      <thead>
+        <tr>
+          {header.map(cell => (
+            <StyledTh className="table-header" key={v4()}>
+              {cell}
+            </StyledTh>
+          ))}
+        </tr>
+      </thead>
+      <tbody>{body}</tbody>
+    </StyledTable>
+  )
+}
 
 export class SchemaFrame extends Component {
   constructor(props) {
@@ -147,16 +179,16 @@ export class SchemaFrame extends Component {
   }
 
   render() {
-    const indexes = formatIndexes(this.state.indexes)
-    const constraints = formatConstraints(this.state.constraints)
-    const schemaCommand = semver.satisfies(this.props.neo4jVersion, '<=3.4.*')
+    const { neo4jVersion } = this.props
+    const { indexes, constraints } = this.state
+    const schemaCommand = semver.satisfies(neo4jVersion, '<=3.4.*')
       ? 'CALL db.schema()'
       : 'CALL db.schema.visualization'
 
     const frame = (
       <Slide>
-        <SchemaTable name="Indexes" content={indexes} />
-        <SchemaTable name="Constraints" content={constraints} />
+        <Indexes indexes={indexes} neo4jVersion={neo4jVersion} />
+        <Constraints constraints={constraints} />
         <br />
         <p className="lead">
           Execute the following command to visualize what's related, and how
