@@ -8,32 +8,32 @@ exports[`Visualization renders with result 1`] = `
     class="VisualizationViewstyled__StyledVisContainer-sc-1b47q51-0 dFbJTz"
   >
     <div
-      class="styled__StyledFullSizeContainer-sc-13boxex-30 hrlJke one-legend-row"
+      class="one-legend-row styled__StyledFullSizeContainer-sc-13boxex-30 hrlJke"
       id="svg-vis"
     >
       <div
-        class="styled__StyledLegend-sc-13boxex-23 epTuur one-row"
+        class="one-row styled__StyledLegend-sc-13boxex-23 epTuur"
       >
         <div
-          class="styled__StyledLegendRow-sc-13boxex-22 btLVbI contracted"
+          class="contracted styled__StyledLegendRow-sc-13boxex-22 btLVbI"
         >
           <ul
-            class="styled__StyledInlineList-sc-13boxex-9 styled__StyledLegendInlineList-sc-13boxex-24 bXzLDX list-inline"
+            class="styled__StyledInlineList-sc-13boxex-9 list-inline styled__StyledLegendInlineList-sc-13boxex-24 bXzLDX"
           >
             <li
               class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledLegendInlineListItem-sc-13boxex-25 bKGCvD"
               data-testid="viz-legend-labels"
             >
               <ul
-                class="styled__StyledLegendContents-sc-13boxex-21 hvWlVe contents"
+                class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
               >
                 <li
-                  class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledToken-sc-13boxex-15 styled__StyledLabelToken-sc-13boxex-16 jNYiQl token token-label"
+                  class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledToken-sc-13boxex-15 token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
                   style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                 >
                   *
                   <span
-                    class="styled__StyledTokenCount-sc-13boxex-20 SIGMp count"
+                    class="count styled__StyledTokenCount-sc-13boxex-20 SIGMp"
                   >
                     (1)
                   </span>
@@ -45,15 +45,15 @@ exports[`Visualization renders with result 1`] = `
               data-testid="viz-legend-labels"
             >
               <ul
-                class="styled__StyledLegendContents-sc-13boxex-21 hvWlVe contents"
+                class="contents styled__StyledLegendContents-sc-13boxex-21 hvWlVe"
               >
                 <li
-                  class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledToken-sc-13boxex-15 styled__StyledLabelToken-sc-13boxex-16 jNYiQl token token-label"
+                  class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledToken-sc-13boxex-15 token token-label styled__StyledLabelToken-sc-13boxex-16 jNYiQl"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >
                   Person
                   <span
-                    class="styled__StyledTokenCount-sc-13boxex-20 SIGMp count"
+                    class="count styled__StyledTokenCount-sc-13boxex-20 SIGMp"
                   >
                     (1)
                   </span>
@@ -131,26 +131,26 @@ exports[`Visualization renders with result 1`] = `
         </svg>
       </div>
       <div
-        class="styled__StyledStatusBar-sc-13boxex-12 fBQkwD status-bar"
+        class="status-bar styled__StyledStatusBar-sc-13boxex-12 fBQkwD"
       >
         <div
-          class="styled__StyledStatus-sc-13boxex-13 lfPraq status"
+          class="status styled__StyledStatus-sc-13boxex-13 lfPraq"
         >
           <div
-            class="styled__StyledInspectorFooter-sc-13boxex-5 fLefTL contracted inspector-footer"
+            class="contracted inspector-footer styled__StyledInspectorFooter-sc-13boxex-5 fLefTL"
           >
             <ul
-              class="styled__StyledInspectorFooterRow-sc-13boxex-6 cjMrGU inspector-footer-row"
+              class="inspector-footer-row styled__StyledInspectorFooterRow-sc-13boxex-6 cjMrGU"
               data-testid="vizInspector"
             >
               <ul
-                class="styled__StyledInlineList-sc-13boxex-9 fWraRP list-inline"
+                class="list-inline styled__StyledInlineList-sc-13boxex-9 fWraRP"
               >
                 <li
-                  class="styled__StyledInlineListItem-sc-13boxex-10 styled__StyledInspectorFooterRowListPair-sc-13boxex-14 jeBqUF pair"
+                  class="styled__StyledInlineListItem-sc-13boxex-10 pair styled__StyledInspectorFooterRowListPair-sc-13boxex-14 jeBqUF"
                 >
                   <div
-                    class="styled__StyledInspectorFooterRowListValue-sc-13boxex-8 huEFTy value"
+                    class="value styled__StyledInspectorFooterRowListValue-sc-13boxex-8 huEFTy"
                   >
                     Displaying 1 nodes, 0 relationships.
                   </div>

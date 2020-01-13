@@ -30,6 +30,7 @@ import { BusProvider } from 'react-suber'
 import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
+import RelateApiProvider from 'browser-components/relate-api/relate-api-provider'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -83,8 +84,11 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
 // Introduce environment to be able to fork functionality
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 
+// URL we're on
+const url = window.location.href
+
 // Signal app upstart (for epics)
-store.dispatch({ type: APP_START, url: window.location.href, env })
+store.dispatch({ type: APP_START, url, env })
 
 const AppInit = () => {
   return (
@@ -92,11 +96,9 @@ const AppInit = () => {
       <BusProvider bus={bus}>
         <>
           <GlobalStyle />
-          <App
-            desktopIntegrationPoint={
-              window && window.neo4jDesktopApi ? window.neo4jDesktopApi : null
-            }
-          />
+          <RelateApiProvider urlString={url}>
+            <App />
+          </RelateApiProvider>
         </>
       </BusProvider>
     </Provider>
