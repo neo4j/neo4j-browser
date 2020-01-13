@@ -121,7 +121,7 @@
     "xml2js": "^0.4.19"
   },
   "dependencies": {
-    "@neo4j/browser-lambda-parser": "^1.0.3",
+    "@neo4j/browser-lambda-parser": "1.0.4",
     "@relate-by-ui/css": "^1.0.4",
     "@relate-by-ui/saved-scripts": "^1.0.4",
     "ascii-data-table": "^2.1.1",

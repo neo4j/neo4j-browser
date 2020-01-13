@@ -165,6 +165,7 @@ describe('Multi statements', () => {
           .should('have.length', 0)
 
         // Check sidebar for test1
+        cy.wait(5000) // Wait to ensure last meta update in finished
         cy.executeCommand(':use test1')
         cy.get('[data-testid="drawerDBMS"]').click()
         cy.contains('[data-testid="sidebarMetaItem"]', 'Test1', {
@@ -172,6 +173,7 @@ describe('Multi statements', () => {
         })
         cy.get('[data-testid="drawerDBMS"]').click()
 
+        cy.wait(5000) // Wait to ensure last meta update in finished
         cy.executeCommand(':use test2')
         cy.get('[data-testid="drawerDBMS"]').click()
         cy.contains('[data-testid="sidebarMetaItem"]', 'Test2', {

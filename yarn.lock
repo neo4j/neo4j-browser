@@ -1228,10 +1228,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@neo4j/browser-lambda-parser@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.npmjs.org/@neo4j/browser-lambda-parser/-/browser-lambda-parser-1.0.3.tgz#d49675122aa673e0ed888e5959e4519d66cf20ff"
-  integrity sha512-+4DZ1kjyoJR9JUPzNqNKLnI/jtoTPV7I79EUe4vOE6baSoYd+fqdC+ZIWaAmZH/UCljvqTZn5ZV9jI65IFiu/g==
+"@neo4j/browser-lambda-parser@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/@neo4j/browser-lambda-parser/-/browser-lambda-parser-1.0.4.tgz#d9fa3711e49d93acfec25b183adc3fd11d8e1fa4"
+  integrity sha512-8iJWtSylP73gk1rnS2pNRl+mPkNye17Uur4MagZxc8sBpNiPWoF2XJmtNLboJgq+ocwaj5Ju0E7tWXbDSmsGzA==
   dependencies:
     nearley "2.18.0"
 
