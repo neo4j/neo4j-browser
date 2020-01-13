@@ -154,7 +154,7 @@ export class InspectorComponent extends Component {
               <StyledInspectorFooterRowListValue className="value">
                 {this.props.hasTruncatedFields && (
                   <StyledTruncatedMessage>
-                    <Icon name="warning sign" /> Result fields have been
+                    <Icon name="warning sign" /> Record fields have been
                     truncated.&nbsp;
                   </StyledTruncatedMessage>
                 )}

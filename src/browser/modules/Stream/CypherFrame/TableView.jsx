@@ -220,7 +220,7 @@ export class TableStatusbarComponent extends Component {
         <Ellipsis>
           {this.state.hasTruncatedFields && (
             <StyledTruncatedMessage>
-              <Icon name="warning sign" /> Result fields have been
+              <Icon name="warning sign" /> Record fields have been
               truncated.&nbsp;
             </StyledTruncatedMessage>
           )}

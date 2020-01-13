@@ -161,9 +161,9 @@ const visualSettings = [
       },
       {
         maxFieldItems: {
-          displayName: 'Property item limit',
+          displayName: 'Record field limit',
           tooltip:
-            'Max amount of items shown for list properties. When reached, lists get truncated.'
+            'Max number of items in a field per record being handled. When reached, items get truncated.'
         }
       },
       {
