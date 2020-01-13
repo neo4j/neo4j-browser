@@ -34,69 +34,60 @@ import {
 } from './relate-api.utils'
 import { SILENT_DISCONNECT } from 'shared/modules/connections/connectionsDuck'
 
-function RelateApi ({ setEnvironmentTheme, defaultConnectionData, bus = {} }) {
+function RelateApi({ setEnvironmentTheme, defaultConnectionData, bus = {} }) {
   // Until supported in relate-api
   const getKerberosTicket =
-    (window.neo4jDesktopApi || {}).getKerberosTicket || function () {}
+    (window.neo4jDesktopApi || {}).getKerberosTicket || function() {}
 
   // Initial data from Relate-API
   const workspaceData = useWorkspaceData()
-  useEffect(
-    () => {
-      if (!workspaceData) {
-        return
-      }
-      const activeGraph = getActiveGraphData(workspaceData)
-      setInitialConnectionData(
-        activeGraph,
-        getKerberosTicket,
-        defaultConnectionData,
-        bus
-      )
-      detectDesktopThemeChanges(
-        setEnvironmentTheme,
-        getPrefersColorScheme(workspaceData)
-      )
-    },
-    [workspaceData]
-  )
+  useEffect(() => {
+    if (!workspaceData) {
+      return
+    }
+    const activeGraph = getActiveGraphData(workspaceData)
+    setInitialConnectionData(
+      activeGraph,
+      getKerberosTicket,
+      defaultConnectionData,
+      bus
+    )
+    detectDesktopThemeChanges(
+      setEnvironmentTheme,
+      getPrefersColorScheme(workspaceData)
+    )
+  }, [workspaceData])
 
   // Subscriptions from Relate-API
   const onWorkspaceChangeData = useWorkspaceDataOnChange()
 
   const activeGraphMonitorData = useActiveGraphMonitor(onWorkspaceChangeData)
-  useEffect(
-    () => {
-      if (activeGraphMonitorData === undefined) {
-        // Not loaded yet
-        return
-      }
-      if (activeGraphMonitorData === null) {
-        bus.send(SILENT_DISCONNECT, {})
-        return
-      }
-      switchConnection(
-        activeGraphMonitorData,
-        defaultConnectionData,
-        getKerberosTicket,
-        bus
-      )
-    },
-    [activeGraphMonitorData]
-  )
+  useEffect(() => {
+    if (activeGraphMonitorData === undefined) {
+      // Not loaded yet
+      return
+    }
+    if (activeGraphMonitorData === null) {
+      bus.send(SILENT_DISCONNECT, {})
+      return
+    }
+    switchConnection(
+      activeGraphMonitorData,
+      defaultConnectionData,
+      getKerberosTicket,
+      bus
+    )
+  }, [activeGraphMonitorData])
 
   const prefersColorSchemeMonitorData = usePrefersColorSchemeMonitor(
     onWorkspaceChangeData
   )
-  useEffect(
-    () => {
-      detectDesktopThemeChanges(
-        setEnvironmentTheme,
-        prefersColorSchemeMonitorData
-      )
-    },
-    [prefersColorSchemeMonitorData]
-  )
+  useEffect(() => {
+    detectDesktopThemeChanges(
+      setEnvironmentTheme,
+      prefersColorSchemeMonitorData
+    )
+  }, [prefersColorSchemeMonitorData])
 
   return null
 }
