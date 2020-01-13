@@ -36,6 +36,13 @@ import {
 import Render from 'browser-components/Render'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
+const wrapperStyleObj =
+  styles && styles.wrapper
+    ? {
+        [styles.wrapper]: true
+      }
+    : {}
+
 const ShowMore = ({ total, shown, moreStep, onMore }) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown
   return (
@@ -110,11 +117,7 @@ const LabelItems = ({
   return (
     <DrawerSection>
       <DrawerSubHeader>Node Labels</DrawerSubHeader>
-      <DrawerSectionBody
-        className={classNames({
-          [styles.wrapper]: true
-        })}
-      >
+      <DrawerSectionBody className={classNames(wrapperStyleObj)}>
         {labelItems}
       </DrawerSectionBody>
       <ShowMore
@@ -156,11 +159,7 @@ const RelationshipItems = ({
   return (
     <DrawerSection>
       <DrawerSubHeader>Relationship Types</DrawerSubHeader>
-      <DrawerSectionBody
-        className={classNames({
-          [styles.wrapper]: true
-        })}
-      >
+      <DrawerSectionBody className={classNames(wrapperStyleObj)}>
         {relationshipItems}
       </DrawerSectionBody>
       <ShowMore
@@ -205,11 +204,7 @@ const PropertyItems = ({
   return (
     <DrawerSection>
       <DrawerSubHeader>Property Keys</DrawerSubHeader>
-      <DrawerSectionBody
-        className={classNames({
-          [styles.wrapper]: true
-        })}
-      >
+      <DrawerSectionBody className={classNames(wrapperStyleObj)}>
         {propertyItems}
       </DrawerSectionBody>
       <ShowMore
