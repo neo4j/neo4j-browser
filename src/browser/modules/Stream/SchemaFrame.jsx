@@ -48,7 +48,13 @@ const Indexes = ({ indexes, neo4jVersion }) => {
       }`
     ])
 
-    return <SchemaTable header={['Indexes']} rows={rows} />
+    return (
+      <SchemaTable
+        testid="schemaFrameIndexesTable"
+        header={['Indexes']}
+        rows={rows}
+      />
+    )
   }
 
   const rows = indexes.map(index => [
@@ -71,7 +77,9 @@ const Indexes = ({ indexes, neo4jVersion }) => {
     'State'
   ]
 
-  return <SchemaTable header={header} rows={rows} />
+  return (
+    <SchemaTable testid="schemaFrameIndexesTable" header={header} rows={rows} />
+  )
 }
 
 const Constraints = ({ constraints }) => {
@@ -79,10 +87,16 @@ const Constraints = ({ constraints }) => {
     replace(constraint.description, 'CONSTRAINT', '')
   ])
 
-  return <SchemaTable header={['Constraints']} rows={rows} />
+  return (
+    <SchemaTable
+      testid="schemaFrameConstraintsTable"
+      header={['Constraints']}
+      rows={rows}
+    />
+  )
 }
 
-const SchemaTable = ({ header, rows }) => {
+const SchemaTable = ({ testid, header, rows }) => {
   const rowsOrNone =
     rows && rows.length ? rows : [header.map((_, i) => (i === 0 ? 'None' : ''))]
 
@@ -97,7 +111,7 @@ const SchemaTable = ({ header, rows }) => {
   ))
 
   return (
-    <StyledTable>
+    <StyledTable data-testid={testid}>
       <thead>
         <tr>
           {header.map(cell => (

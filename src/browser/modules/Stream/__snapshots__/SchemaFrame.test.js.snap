@@ -11,41 +11,42 @@ exports[`SchemaFrame renders empty 1`] = `
       >
         <table
           class="DataTables__StyledTable-bf850j-0 cZayOW"
+          data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Index Name
               </th>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Type
               </th>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Uniqueness
               </th>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 EntityType
               </th>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 LabelsOrTypes
               </th>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Properties
               </th>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 State
               </th>
@@ -53,41 +54,42 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
             >
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               >
                 None
               </td>
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               />
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               />
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               />
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               />
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               />
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               />
             </tr>
           </tbody>
         </table>
         <table
           class="DataTables__StyledTable-bf850j-0 cZayOW"
+          data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
+                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
               >
                 Constraints
               </th>
@@ -95,10 +97,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
+              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
             >
               <td
-                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
+                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
               >
                 None
               </td>
@@ -139,6 +141,7 @@ exports[`SchemaFrame renders empty for Neo4j < 4.0 1`] = `
       >
         <table
           class="DataTables__StyledTable-bf850j-0 cZayOW"
+          data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
@@ -163,6 +166,7 @@ exports[`SchemaFrame renders empty for Neo4j < 4.0 1`] = `
         </table>
         <table
           class="DataTables__StyledTable-bf850j-0 cZayOW"
+          data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
@@ -219,6 +223,7 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
       >
         <table
           class="DataTables__StyledTable-bf850j-0 cZayOW"
+          data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
@@ -243,6 +248,7 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
         </table>
         <table
           class="DataTables__StyledTable-bf850j-0 cZayOW"
+          data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
