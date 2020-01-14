@@ -39,7 +39,10 @@ import Directives from 'browser-components/Directives'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
 const Indexes = ({ indexes, neo4jVersion }) => {
-  if (semver.satisfies(neo4jVersion, '<4.0.0-rc01')) {
+  if (
+    !semver.valid(neo4jVersion) ||
+    semver.satisfies(neo4jVersion, '<4.0.0-rc01')
+  ) {
     const rows = indexes.map(index => [
       `${replace(index.description, 'INDEX', '')} ${toUpper(index.state)} ${
         index.type === 'node_unique_property'
@@ -195,9 +198,10 @@ export class SchemaFrame extends Component {
   render() {
     const { neo4jVersion } = this.props
     const { indexes, constraints } = this.state
-    const schemaCommand = semver.satisfies(neo4jVersion, '<=3.4.*')
-      ? 'CALL db.schema()'
-      : 'CALL db.schema.visualization'
+    const schemaCommand =
+      semver.valid(neo4jVersion) && semver.satisfies(neo4jVersion, '<=3.4.*')
+        ? 'CALL db.schema()'
+        : 'CALL db.schema.visualization'
 
     const frame = (
       <Slide>
@@ -231,4 +235,9 @@ const mapStateToProps = state => ({
   neo4jVersion: getVersion(state)
 })
 
-export default withBus(connect(mapStateToProps, null)(Frame))
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(Frame)
+)
