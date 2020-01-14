@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { ecsapeCypherMetaItem } from 'services/utils'
+import { escapeCypherIdentifier } from 'services/utils'
 import classNames from 'classnames'
 import styles from './style_meta.css'
 import {
@@ -103,7 +103,7 @@ const LabelItems = ({
       if (i === 0) {
         return 'MATCH (n) RETURN n LIMIT 25'
       }
-      return `MATCH (n:${ecsapeCypherMetaItem(text)}) RETURN n LIMIT 25`
+      return `MATCH (n:${escapeCypherIdentifier(text)}) RETURN n LIMIT 25`
     }
     labelItems = createItems(
       labels,
@@ -143,7 +143,7 @@ const RelationshipItems = ({
       if (i === 0) {
         return 'MATCH p=()-->() RETURN p LIMIT 25'
       }
-      return `MATCH p=()-[r:${ecsapeCypherMetaItem(
+      return `MATCH p=()-[r:${escapeCypherIdentifier(
         text
       )}]->() RETURN p LIMIT 25`
     }
@@ -181,17 +181,17 @@ const PropertyItems = ({
   let propertyItems = <p>There are no properties in database</p>
   if (properties.length > 0) {
     const editorCommandTemplate = text => {
-      return `MATCH (n) WHERE EXISTS(n.${ecsapeCypherMetaItem(
+      return `MATCH (n) WHERE EXISTS(n.${escapeCypherIdentifier(
         text
-      )}) RETURN DISTINCT "node" as entity, n.${ecsapeCypherMetaItem(
+      )}) RETURN DISTINCT "node" as entity, n.${escapeCypherIdentifier(
         text
-      )} AS ${ecsapeCypherMetaItem(
+      )} AS ${escapeCypherIdentifier(
         text
-      )} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${ecsapeCypherMetaItem(
+      )} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${escapeCypherIdentifier(
         text
-      )}) RETURN DISTINCT "relationship" AS entity, r.${ecsapeCypherMetaItem(
+      )}) RETURN DISTINCT "relationship" AS entity, r.${escapeCypherIdentifier(
         text
-      )} AS ${ecsapeCypherMetaItem(text)} LIMIT 25`
+      )} AS ${escapeCypherIdentifier(text)} LIMIT 25`
     }
     propertyItems = createItems(
       properties,

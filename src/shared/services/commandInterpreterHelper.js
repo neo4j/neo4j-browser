@@ -89,6 +89,7 @@ import {
   getCommandAndParam,
   tryGetRemoteInitialSlideFromUrl
 } from './commandUtils'
+import { unescapeCypherIdentifier } from './utils'
 
 const availableCommands = [
   {
@@ -207,20 +208,24 @@ const availableCommands = [
         const databaseNames = getDatabases(store.getState()).map(db =>
           db.name.toLowerCase()
         )
+
+        const normalizedName = dbName.toLowerCase()
+        const cleanDbName = unescapeCypherIdentifier(normalizedName)
+
         // Do we have a db with that name?
-        if (!databaseNames.includes(dbName.toLowerCase())) {
+        if (!databaseNames.includes(cleanDbName)) {
           const error = new Error(
             `A database with the "${dbName}" name could not be found.`
           )
           error.code = 'NotFound'
           throw error
         }
-        put(useDb(dbName))
+        put(useDb(cleanDbName))
         put(
           frames.add({
             ...action,
             type: 'use-db',
-            useDb: dbName
+            useDb: cleanDbName
           })
         )
         if (action.requestId) {

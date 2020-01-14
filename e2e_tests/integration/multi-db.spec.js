@@ -27,8 +27,12 @@ describe('Multi database', () => {
     cy.get('[data-testid="dbs-command-list"] li', {
       timeout: 5000
     })
-  const databaseOptionList = () =>
+  const databaseOptionListOptions = () =>
     cy.get('[data-testid="database-selection-list"] option', {
+      timeout: 5000
+    })
+  const databaseOptionList = () =>
+    cy.get('[data-testid="database-selection-list"]', {
       timeout: 5000
     })
 
@@ -83,19 +87,48 @@ describe('Multi database', () => {
     it('lists databases in sidebar', () => {
       cy.executeCommand(':clear')
       cy.get('[data-testid="drawerDBMS"]').click()
-      databaseOptionList().should('have.length', 2)
+      databaseOptionListOptions().should('have.length', 2)
+      cy.get('[data-testid="drawerDBMS"]').click()
     })
     if (isEnterpriseEdition()) {
-      it('lists new databases in sidebar', () => {
+      it('adds databases to the sidebar and adds backticks to special db names', () => {
+        // Add db
         cy.executeCommand(':use system')
-        cy.executeCommand('CREATE DATABASE sidebartest')
-        databaseOptionList().should('have.length', 3)
-        databaseOptionList().contains('system')
-        databaseOptionList().contains('neo4j')
-        databaseOptionList().contains('sidebartest')
+        cy.executeCommand('CREATE DATABASE `name-with-dash`')
+        cy.resultContains('1 system update')
+        cy.executeCommand(':clear')
 
-        cy.executeCommand('DROP DATABASE sidebartest')
-        databaseOptionList().should('have.length', 2)
+        // Count items in list
+        cy.get('[data-testid="drawerDBMS"]').click()
+        databaseOptionListOptions().should('have.length', 3)
+        databaseOptionListOptions().contains('system')
+        databaseOptionListOptions().contains('neo4j')
+        databaseOptionListOptions().contains('name-with-dash')
+
+        // Select to use db, make sure backticked
+        databaseOptionList().select('name-with-dash')
+        cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
+          .first()
+          .should('contain', ':use `name-with-dash`')
+        cy.resultContains(
+          'Queries from this point and forward are using the database'
+        )
+
+        // Try without backticks
+        cy.executeCommand(':use system')
+        cy.resultContains(
+          'Queries from this point and forward are using the database'
+        )
+        cy.executeCommand(':clear')
+        cy.executeCommand(':use name-with-dash')
+        cy.resultContains(
+          'Queries from this point and forward are using the database'
+        )
+
+        // Cleanup
+        cy.executeCommand(':use system')
+        cy.executeCommand('DROP DATABASE `name-with-dash`')
+        databaseOptionListOptions().should('have.length', 2)
         cy.get('[data-testid="drawerDBMS"]').click()
       })
     }
