@@ -40,10 +40,10 @@ test('SchemaFrame renders empty', () => {
   expect(container).toMatchSnapshot()
 })
 
-test('SchemaFrame renders empty for Neo4j < 4.0', () => {
+test('SchemaFrame renders empty for Neo4j >= 4.0', () => {
   const indexResult = { records: [] }
   const { container } = renderWithRedux(
-    <SchemaFrame indexes={indexResult} neo4jVersion={'3.5.13'} />
+    <SchemaFrame indexes={indexResult} neo4jVersion={'4.0.0-rc1'} />
   )
 
   expect(container).toMatchSnapshot()
