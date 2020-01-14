@@ -54,10 +54,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
+              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
             >
               <td
-                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
               >
                 None
               </td>
@@ -89,7 +89,7 @@ exports[`SchemaFrame renders empty 1`] = `
           <thead>
             <tr>
               <th
-                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
               >
                 Constraints
               </th>
@@ -97,10 +97,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
+              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
             >
               <td
-                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
               >
                 None
               </td>
@@ -146,7 +146,7 @@ exports[`SchemaFrame renders empty for Neo4j < 4.0 1`] = `
           <thead>
             <tr>
               <th
-                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
               >
                 Indexes
               </th>
@@ -171,7 +171,7 @@ exports[`SchemaFrame renders empty for Neo4j < 4.0 1`] = `
           <thead>
             <tr>
               <th
-                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
               >
                 Constraints
               </th>
@@ -228,7 +228,7 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           <thead>
             <tr>
               <th
-                class="table-header DataTables__StyledTh-bf850j-2 ikUpyS"
+                class="DataTables__StyledTh-bf850j-2 ikUpyS table-header"
               >
                 Indexes
               </th>
@@ -236,10 +236,10 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
+              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
             >
               <td
-                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
               >
                  ON :Movie(released) ONLINE 
               </td>
@@ -261,10 +261,10 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="table-row DataTables__StyledBodyTr-bf850j-1 iGjwRr"
+              class="DataTables__StyledBodyTr-bf850j-1 iGjwRr table-row"
             >
               <td
-                class="table-properties DataTables__StyledTd-bf850j-3 lfnTDs"
+                class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
               >
                  ON ( book:Book ) ASSERT book.isbn IS UNIQUE
               </td>
