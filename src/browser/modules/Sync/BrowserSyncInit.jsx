@@ -35,6 +35,7 @@ import {
 } from 'shared/modules/sync/syncDuck'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'
+import { deepEquals } from 'services/utils'
 
 export function hasAuthData(props) {
   return props.authData && props.authData.data_token
@@ -48,10 +49,36 @@ export class BrowserSyncInit extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
+  shouldComponentUpdate(props) {
+    return !deepEquals(this.props, props)
+  }
+
+  componentDidUpdate() {
     // We only connect when props update and not on CDM because
     // tokens should never be in state when this component first loads
-    this.connect(props)
+
+    // Sign in one time only
+    if (this.state.pendingSignIn) return
+
+    if (hasAuthData(this.props) && this.props.authStatus !== SIGNED_IN) {
+      this.setState({ pendingSignIn: true }, () => {
+        this.importSyncManager().then(syncManager => {
+          syncManager.authenticateWithDataAndBind(
+            this.props.authData,
+            data => {
+              this.setAuthStatus(SIGNED_IN)
+              this.props.onSignIn(data)
+              this.setState({ pendingSignIn: false })
+            },
+            () => {
+              this.setAuthStatus(SIGNED_OUT)
+              this.props.resetSyncMetadata()
+              this.setState({ pendingSignIn: false })
+            }
+          )
+        })
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -90,31 +117,6 @@ export class BrowserSyncInit extends Component {
     })
   }
 
-  connect(props) {
-    // Sign in one time only
-    if (this.state.pendingSignIn) return
-
-    if (hasAuthData(props) && props.authStatus !== SIGNED_IN) {
-      this.setState({ pendingSignIn: true }, () => {
-        this.importSyncManager().then(syncManager => {
-          syncManager.authenticateWithDataAndBind(
-            props.authData,
-            data => {
-              this.setAuthStatus(SIGNED_IN)
-              props.onSignIn(data)
-              this.setState({ pendingSignIn: false })
-            },
-            e => {
-              this.setAuthStatus(SIGNED_OUT)
-              this.props.resetSyncMetadata()
-              this.setState({ pendingSignIn: false })
-            }
-          )
-        })
-      })
-    }
-  }
-
   render() {
     return null
   }
@@ -151,4 +153,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(BrowserSyncInit)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BrowserSyncInit)

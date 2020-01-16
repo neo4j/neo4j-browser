@@ -303,12 +303,12 @@ export class GrassEditorComponent extends Component {
     )
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      nextProps.graphStyleData &&
-      nextProps.graphStyleData !== this.props.graphStyleData
+      this.props.graphStyleData &&
+      prevProps.graphStyleData !== this.props.graphStyleData
     ) {
-      this.graphStyle.loadRules(nextProps.graphStyleData)
+      this.graphStyle.loadRules(this.props.graphStyleData)
     }
   }
 

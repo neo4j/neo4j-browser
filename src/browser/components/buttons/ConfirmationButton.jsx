@@ -42,9 +42,7 @@ export class ConfirmationButton extends Component {
     this.state = {
       requested: false
     }
-  }
 
-  componentWillMount() {
     this.confirmIcon = this.props.confirmIcon || <RightArrowIcon />
     this.cancelIcon = this.props.cancelIcon || <CancelIcon />
     this.requestIcon = this.props.requestIcon || <MinusIcon />

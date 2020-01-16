@@ -50,6 +50,11 @@ export class UserList extends Component {
       userList: this.props.users || [],
       listRoles: this.props.roles || []
     }
+
+    if (this.props.isEnterpriseEdition) {
+      this.getUserList()
+      this.getRoles()
+    }
   }
 
   extractUserNameAndRolesFromBolt(result) {
@@ -175,13 +180,6 @@ export class UserList extends Component {
     this.props.bus.send(action.type, action)
   }
 
-  componentWillMount() {
-    if (this.props.isEnterpriseEdition) {
-      this.getUserList()
-      this.getRoles()
-    }
-  }
-
   render() {
     let aside = null
     let frameContents
@@ -218,4 +216,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, null)(UserList))
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(UserList)
+)

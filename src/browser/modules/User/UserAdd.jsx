@@ -68,9 +68,7 @@ export class UserAdd extends Component {
       success: null,
       isLoading: false
     }
-  }
 
-  componentWillMount() {
     this.getRoles()
   }
 
@@ -404,4 +402,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, null)(UserAdd))
+export default withBus(
+  connect(
+    mapStateToProps,
+    null
+  )(UserAdd)
+)

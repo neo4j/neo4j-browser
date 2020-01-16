@@ -107,16 +107,16 @@ export class TableView extends Component {
   }
 
   componentDidMount() {
-    this.makeState(this.props)
+    this.makeState()
   }
 
-  componentWillReceiveProps(props) {
+  componentDidUpdate(prevProps) {
     if (
       this.props === undefined ||
       this.props.result === undefined ||
-      this.props.updated !== props.updated
+      this.props.updated !== prevProps.updated
     ) {
-      this.makeState(props)
+      this.makeState()
     }
   }
 
@@ -126,14 +126,17 @@ export class TableView extends Component {
     )
   }
 
-  makeState(props) {
-    const records = getRecordsToDisplayInTable(props.result, props.maxRows)
+  makeState() {
+    const records = getRecordsToDisplayInTable(
+      this.props.result,
+      this.props.maxRows
+    )
     const table = transformResultRecordsToResultArray(records) || []
     const data = table ? table.slice() : []
     const columns = data.length > 0 ? data.shift() : []
     const { bodyMessage } = getBodyAndStatusBarMessages(
-      props.result,
-      props.maxRows
+      this.props.result,
+      this.props.maxRows
     )
     this.setState({ data, columns, bodyMessage })
   }
@@ -173,11 +176,11 @@ export class TableStatusbar extends Component {
   }
 
   componentDidMount() {
-    this.makeState(this.props)
+    this.makeState()
   }
 
-  componentWillReceiveProps(props) {
-    this.makeState(props)
+  componentDidUpdate() {
+    this.makeState()
   }
 
   shouldComponentUpdate(props, state) {
@@ -185,10 +188,10 @@ export class TableStatusbar extends Component {
     return false
   }
 
-  makeState(props) {
+  makeState() {
     const { statusBarMessage } = getBodyAndStatusBarMessages(
-      props.result,
-      props.maxRows
+      this.props.result,
+      this.props.maxRows
     )
     if (statusBarMessage !== undefined) this.setState({ statusBarMessage })
   }

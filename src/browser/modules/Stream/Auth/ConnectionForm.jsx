@@ -147,7 +147,7 @@ export class ConnectionForm extends Component {
       {
         host: this.state.host,
         username: this.state.username,
-        password: this.props.oldPassword || this.state.password,
+        password: this.state.password,
         encrypted: getEncryptionMode(this.state),
         newPassword
       },
@@ -209,15 +209,15 @@ export class ConnectionForm extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.oldPassword) {
-      this.setState({ oldPassword: nextProps.oldPassword })
+  static getDerivedStateFromProps(props, state) {
+    if (props.activeConnection && props.activeConnectionData) {
+      if (!state.isConnected) {
+        return { isConnected: true }
+      }
+    } else if (state.isConnected) {
+      return { isConnected: false }
     }
-    if (nextProps.activeConnection && nextProps.activeConnectionData) {
-      this.setState({ isConnected: true })
-    } else {
-      this.setState({ isConnected: false })
-    }
+    return null
   }
 
   render() {
@@ -305,5 +305,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+  )(ConnectionForm)
 )

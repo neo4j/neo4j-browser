@@ -53,12 +53,12 @@ export class Visualization extends Component {
     )
   }
 
-  componentWillReceiveProps(props) {
+  componentDidUpdate(prevProps) {
     if (
-      this.props.updated !== props.updated ||
-      this.props.autoComplete !== props.autoComplete
+      this.props.updated !== prevProps.updated ||
+      this.props.autoComplete !== prevProps.autoComplete
     ) {
-      this.populateDataToStateFromProps(props)
+      this.populateDataToStateFromProps(this.props)
     }
   }
 
@@ -205,5 +205,8 @@ const mapDispatchToProps = dispatch => {
 }
 
 export const VisualizationConnectedBus = withBus(
-  connect(mapStateToProps, mapDispatchToProps)(Visualization)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Visualization)
 )

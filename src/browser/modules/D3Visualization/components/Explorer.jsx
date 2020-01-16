@@ -143,10 +143,13 @@ export class ExplorerComponent extends Component {
     })
   }
 
-  componentWillReceiveProps(props) {
-    if (!deepEquals(props.graphStyleData, this.props.graphStyleData)) {
-      if (props.graphStyleData) {
-        const rebasedStyle = deepmerge(this.defaultStyle, props.graphStyleData)
+  componentDidUpdate(prevProps) {
+    if (!deepEquals(prevProps.graphStyleData, this.props.graphStyleData)) {
+      if (this.props.graphStyleData) {
+        const rebasedStyle = deepmerge(
+          this.defaultStyle,
+          this.props.graphStyleData
+        )
         this.state.graphStyle.loadRules(rebasedStyle)
         this.setState({
           graphStyle: this.state.graphStyle,

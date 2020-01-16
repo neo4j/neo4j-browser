@@ -31,10 +31,11 @@ export default class Display extends PureComponent {
     }
   }
 
-  componentWillReceiveProps(props) {
-    if (this.state.mounted === false && props.if) {
-      this.setState({ mounted: true })
+  static getDerivedStateFromProps(props, state) {
+    if (state.mounted === false && props.if) {
+      return { mounted: true }
     }
+    return null
   }
 
   render() {

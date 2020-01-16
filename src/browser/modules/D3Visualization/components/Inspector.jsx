@@ -246,8 +246,8 @@ export class InspectorComponent extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!deepEquals(this.props.selectedItem, nextProps.selectedItem)) {
+  componentDidUpdate(prevProps) {
+    if (!deepEquals(this.props.selectedItem, prevProps.selectedItem)) {
       this.setState({ contracted: true })
       this.props.onExpandToggled && this.props.onExpandToggled(true, 0)
     }
