@@ -22,7 +22,11 @@ import neo4j from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { generateBoltHost } from 'services/utils'
-import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
+import {
+  KERBEROS,
+  NATIVE,
+  buildTxFunctionByMode
+} from 'services/bolt/boltHelpers'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
@@ -69,17 +73,18 @@ const validateConnection = (driver, res, rej) => {
     .supportsMultiDb()
     .then(multiDbSupport => {
       if (!driver || !driver.session) return rej('No connection')
-      const tmp = driver.session({
+      const session = driver.session({
         defaultAccessMode: neo4j.session.READ,
         database: multiDbSupport ? 'system' : undefined
       })
-      tmp
-        .run('CALL db.indexes()')
+      const txFn = buildTxFunctionByMode(session)
+      txFn(tx => tx.run('CALL db.indexes()'))
         .then(() => {
-          tmp.close()
+          session.close()
           res(driver)
         })
         .catch(e => {
+          session.close()
           // Only invalidate the connection if not available
           // or not authed
           // or credentials have expired
@@ -231,31 +236,27 @@ function _trackedTransaction(
   runningQueryRegister[id] = closeFn
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
-  const queryPromise = session
-    .run(input, parameters, metadata)
-    .then(r => {
+  const txFn = buildTxFunctionByMode(session)
+
+  const queryPromise = txFn(tx => tx.run(input, parameters, metadata))
+    .then(result => {
       closeFn()
-      return r
+      return result
     })
     .catch(e => {
       closeFn()
       throw e
     })
-
   return [id, queryPromise]
 }
 
-function _transaction(
-  input,
-  parameters,
-  session,
-  txMetadata = undefined,
-  useDb = undefined
-) {
+function _transaction(input, parameters, session, txMetadata = undefined) {
   if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
+
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
-  return session
-    .run(input, parameters, metadata)
+  const txFn = buildTxFunctionByMode(session)
+
+  return txFn(tx => tx.run(input, parameters, metadata))
     .then(r => {
       session.close()
       return r
