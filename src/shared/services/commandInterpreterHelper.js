@@ -58,7 +58,7 @@ import {
   SINGLE_COMMAND_QUEUED,
   listDbsCommand,
   useDbCommand,
-  implicitTxCommand
+  autoCommitTxCommand
 } from 'shared/modules/commands/commandsDuck'
 import {
   getParamName,
@@ -343,22 +343,22 @@ const availableCommands = [
     name: 'cypher',
     match: cmd =>
       /^cypher$/.test(cmd) ||
-      new RegExp(`^${implicitTxCommand}`, 'i').test(cmd),
+      new RegExp(`^${autoCommitTxCommand}`, 'i').test(cmd),
     exec: (action, cmdchar, put, store) => {
       const state = store.getState()
 
-      // Since we now also handle queries with the :implicit prefix, we need to strip that
+      // Since we now also handle queries with the :auto prefix, we need to strip that
       // and attach to the actions object
       const query = action.cmd.replace(
-        getCmdChar(state) + implicitTxCommand,
+        getCmdChar(state) + autoCommitTxCommand,
         ''
       )
       action.query = query.trim()
 
       // We need to find out if this is an impllicit tx or not
       // i.e. Did we strip something off above here?
-      const implicit = action.query.length < action.cmd.trim().length
-      action.implicit = implicit
+      const autoCommit = action.query.length < action.cmd.trim().length
+      action.autoCommit = autoCommit
 
       const [id, request] = handleCypherCommand(
         action,
@@ -372,7 +372,7 @@ const availableCommands = [
           : getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
             }),
-        implicit
+        autoCommit
       )
       put(cypher(action.cmd))
       put(

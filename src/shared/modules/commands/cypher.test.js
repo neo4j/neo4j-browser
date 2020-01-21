@@ -26,7 +26,7 @@ import {
   executeSystemCommand,
   executeSingleCommand,
   handleSingleCommandEpic,
-  implicitTxCommand
+  autoCommitTxCommand
 } from './commandsDuck'
 
 jest.mock('services/bolt/bolt', () => {
@@ -120,12 +120,12 @@ describe('Implicit vs explicit transactions', () => {
   afterEach(() => {
     bolt.routedWriteTransaction.mockClear()
   })
-  test(`it sends the implicit flag = true to tx functions when using the :${implicitTxCommand} command`, done => {
+  test(`it sends the autoCommit flag = true to tx functions when using the :${autoCommitTxCommand} command`, done => {
     // Given
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel3'
-    const action = executeSingleCommand(`:${implicitTxCommand} RETURN 1`)
+    const action = executeSingleCommand(`:${autoCommitTxCommand} RETURN 1`)
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)
@@ -135,13 +135,13 @@ describe('Implicit vs explicit transactions', () => {
         'RETURN 1',
         {},
         expect.objectContaining({
-          implicit: true
+          autoCommit: true
         })
       )
       done()
     })
   })
-  test('it sends the implicit flag = false to tx functions on regular cypher', done => {
+  test('it sends the autoCommit flag = false to tx functions on regular cypher', done => {
     // Given
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
@@ -156,7 +156,7 @@ describe('Implicit vs explicit transactions', () => {
         'RETURN 1',
         {},
         expect.objectContaining({
-          implicit: false
+          autoCommit: false
         })
       )
       done()

@@ -224,7 +224,7 @@ function _trackedTransaction(
   session,
   requestId = null,
   txMetadata = undefined,
-  implicit = false
+  autoCommit = false
 ) {
   const id = requestId || v4()
   if (!session) {
@@ -239,12 +239,12 @@ function _trackedTransaction(
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
   let queryPromise
 
-  // Explicit tx's are the norm
-  if (!implicit) {
+  // Transaction functions are the norm
+  if (!autoCommit) {
     const txFn = buildTxFunctionByMode(session)
     queryPromise = txFn(tx => tx.run(input, parameters, metadata))
   } else {
-    // Implicit transaction, only used for PERIODIC COMMIT etc.
+    // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
     queryPromise = session.run(input, parameters, metadata)
   }
 
@@ -324,7 +324,7 @@ export function routedWriteTransaction(
   cancelable = false,
   txMetadata = undefined,
   useDb = undefined,
-  implicit = false
+  autoCommit = false
 ) {
   const session = _drivers
     ? _drivers
@@ -338,7 +338,7 @@ export function routedWriteTransaction(
     session,
     requestId,
     txMetadata,
-    implicit
+    autoCommit
   )
 }
 

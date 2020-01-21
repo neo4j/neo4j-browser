@@ -66,7 +66,7 @@ export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
 
 export const useDbCommand = 'use'
 export const listDbsCommand = 'dbs'
-export const implicitTxCommand = 'implicit'
+export const autoCommitTxCommand = 'auto'
 
 const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
