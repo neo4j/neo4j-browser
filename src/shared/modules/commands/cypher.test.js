@@ -25,7 +25,8 @@ import { flushPromises } from 'services/utils'
 import {
   executeSystemCommand,
   executeSingleCommand,
-  handleSingleCommandEpic
+  handleSingleCommandEpic,
+  implicitTxCommand
 } from './commandsDuck'
 
 jest.mock('services/bolt/bolt', () => {
@@ -108,6 +109,54 @@ describe('tx metadata with cypher', () => {
         {},
         expect.objectContaining({
           txMetadata: { app: `neo4j-browser_v${version}`, type: 'system' }
+        })
+      )
+      done()
+    })
+  })
+})
+
+describe('Implicit vs explicit transactions', () => {
+  afterEach(() => {
+    bolt.routedWriteTransaction.mockClear()
+  })
+  test(`it sends the implicit flag = true to tx functions when using the :${implicitTxCommand} command`, done => {
+    // Given
+    const bus = createBus()
+    bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
+    const $$responseChannel = 'test-channel3'
+    const action = executeSingleCommand(`:${implicitTxCommand} RETURN 1`)
+    action.$$responseChannel = $$responseChannel
+
+    bus.send(action.type, action)
+    flushPromises().then(() => {
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
+        'RETURN 1',
+        {},
+        expect.objectContaining({
+          implicit: true
+        })
+      )
+      done()
+    })
+  })
+  test('it sends the implicit flag = false to tx functions on regular cypher', done => {
+    // Given
+    const bus = createBus()
+    bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
+    const $$responseChannel = 'test-channel4'
+    const action = executeSingleCommand(`RETURN 1`)
+    action.$$responseChannel = $$responseChannel
+
+    bus.send(action.type, action)
+    flushPromises().then(() => {
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
+        'RETURN 1',
+        {},
+        expect.objectContaining({
+          implicit: false
         })
       )
       done()

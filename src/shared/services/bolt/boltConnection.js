@@ -223,7 +223,8 @@ function _trackedTransaction(
   parameters = {},
   session,
   requestId = null,
-  txMetadata = undefined
+  txMetadata = undefined,
+  implicit = false
 ) {
   const id = requestId || v4()
   if (!session) {
@@ -236,9 +237,18 @@ function _trackedTransaction(
   runningQueryRegister[id] = closeFn
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
-  const txFn = buildTxFunctionByMode(session)
+  let queryPromise
 
-  const queryPromise = txFn(tx => tx.run(input, parameters, metadata))
+  // Explicit tx's are the norm
+  if (!implicit) {
+    const txFn = buildTxFunctionByMode(session)
+    queryPromise = txFn(tx => tx.run(input, parameters, metadata))
+  } else {
+    // Implicit transaction, only used for PERIODIC COMMIT etc.
+    queryPromise = session.run(input, parameters, metadata)
+  }
+
+  queryPromise
     .then(result => {
       closeFn()
       return result
@@ -313,7 +323,8 @@ export function routedWriteTransaction(
   requestId = null,
   cancelable = false,
   txMetadata = undefined,
-  useDb = undefined
+  useDb = undefined,
+  implicit = false
 ) {
   const session = _drivers
     ? _drivers
@@ -321,7 +332,14 @@ export function routedWriteTransaction(
         .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
-  return _trackedTransaction(input, parameters, session, requestId, txMetadata)
+  return _trackedTransaction(
+    input,
+    parameters,
+    session,
+    requestId,
+    txMetadata,
+    implicit
+  )
 }
 
 export const closeConnection = () => {

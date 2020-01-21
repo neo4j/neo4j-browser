@@ -77,7 +77,8 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
     requestId = null,
     cancelable = false,
     onLostConnection = () => {},
-    txMetadata = undefined
+    txMetadata = undefined,
+    implicit = false
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -95,7 +96,8 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
           )
         ),
         txMetadata,
-        useDb: _useDb
+        useDb: _useDb,
+        implicit
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -107,7 +109,8 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
       requestId,
       cancelable,
       txMetadata,
-      _useDb
+      _useDb,
+      implicit
     )
   }
 }
