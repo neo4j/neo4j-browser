@@ -355,7 +355,7 @@ const availableCommands = [
       )
       action.query = query.trim()
 
-      // We need to find out if this is an impllicit tx or not
+      // We need to find out if this is an auto-committing tx or not
       // i.e. Did we strip something off above here?
       const autoCommit = action.query.length < action.cmd.trim().length
       action.autoCommit = autoCommit

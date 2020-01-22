@@ -46,7 +46,7 @@ export const buildTxFunctionByMode = session => {
   if (!session) {
     return null
   }
-  return session && session._mode !== 'READ'
+  return session._mode !== 'READ'
     ? session.writeTransaction.bind(session)
     : session.readTransaction.bind(session)
 }
