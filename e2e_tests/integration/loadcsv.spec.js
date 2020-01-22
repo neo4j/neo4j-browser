@@ -52,11 +52,18 @@ describe('LOAD CSV', () => {
     if (!Cypress.config('includeImportTests')) {
       return
     }
+    const periodicQuery = `USING PERIODIC COMMIT 1{shift}{enter}
+    LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row 
+    CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`
+
+    // Let's see it fail when not using auto-committed tx's first
+    cy.executeCommand(':clear')
+    cy.executeCommand(periodicQuery)
+    cy.resultContains('Neo.ClientError.Statement.SemanticError')
+
     cy.executeCommand(':clear')
     cy.executeCommand('MATCH (n) DETACH DELETE n')
-    cy.executeCommand(`USING PERIODIC COMMIT 1{shift}{enter}
-    LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row 
-    CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`)
+    cy.executeCommand(`:auto ${periodicQuery}`)
 
     cy.resultContains('Added 3 labels, created 3 nodes, set 11 properties,')
 

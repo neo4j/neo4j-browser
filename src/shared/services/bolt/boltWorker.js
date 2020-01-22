@@ -70,7 +70,7 @@ const onmessage = function(message) {
       connectionProperties
     } = message.data
     beforeWork()
-    const { txMetadata, useDb } = connectionProperties
+    const { txMetadata, useDb, autoCommit } = connectionProperties
     ensureConnection(connectionProperties, connectionProperties.opts, e => {
       self.postMessage(
         boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
@@ -83,7 +83,8 @@ const onmessage = function(message) {
           requestId,
           cancelable,
           txMetadata,
-          useDb
+          useDb,
+          autoCommit
         )
         connectionTypeMap[connectionType]
           .getPromise(res)

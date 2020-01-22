@@ -57,7 +57,8 @@ import {
   unsuccessfulCypher,
   SINGLE_COMMAND_QUEUED,
   listDbsCommand,
-  useDbCommand
+  useDbCommand,
+  autoCommitTxCommand
 } from 'shared/modules/commands/commandsDuck'
 import {
   getParamName,
@@ -80,7 +81,10 @@ import {
 } from 'shared/modules/commands/helpers/http'
 import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass } from 'shared/services/grassUtils'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import {
+  shouldUseCypherThread,
+  getCmdChar
+} from 'shared/modules/settings/settingsDuck'
 import {
   getUserDirectTxMetadata,
   getBackgroundTxMetadata
@@ -337,9 +341,25 @@ const availableCommands = [
   },
   {
     name: 'cypher',
-    match: cmd => /^cypher$/.test(cmd),
+    match: cmd =>
+      /^cypher$/.test(cmd) ||
+      new RegExp(`^${autoCommitTxCommand}`, 'i').test(cmd),
     exec: (action, cmdchar, put, store) => {
       const state = store.getState()
+
+      // Since we now also handle queries with the :auto prefix, we need to strip that
+      // and attach to the actions object
+      const query = action.cmd.replace(
+        getCmdChar(state) + autoCommitTxCommand,
+        ''
+      )
+      action.query = query.trim()
+
+      // We need to find out if this is an auto-committing tx or not
+      // i.e. Did we strip something off above here?
+      const autoCommit = action.query.length < action.cmd.trim().length
+      action.autoCommit = autoCommit
+
       const [id, request] = handleCypherCommand(
         action,
         put,
@@ -351,7 +371,8 @@ const availableCommands = [
             })
           : getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
-            })
+            }),
+        autoCommit
       )
       put(cypher(action.cmd))
       put(

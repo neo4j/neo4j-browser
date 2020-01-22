@@ -41,3 +41,12 @@ export const isConfigValTruthy = val =>
   [true, 'true', 'yes', 1, '1'].indexOf(val) > -1
 export const isConfigValFalsy = val =>
   [false, 'false', 'no', 0, '0'].indexOf(val) > -1
+
+export const buildTxFunctionByMode = session => {
+  if (!session) {
+    return null
+  }
+  return session._mode !== 'READ'
+    ? session.writeTransaction.bind(session)
+    : session.readTransaction.bind(session)
+}

@@ -22,7 +22,11 @@ import neo4j from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import { generateBoltHost } from 'services/utils'
-import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
+import {
+  KERBEROS,
+  NATIVE,
+  buildTxFunctionByMode
+} from 'services/bolt/boltHelpers'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
@@ -69,17 +73,18 @@ const validateConnection = (driver, res, rej) => {
     .supportsMultiDb()
     .then(multiDbSupport => {
       if (!driver || !driver.session) return rej('No connection')
-      const tmp = driver.session({
+      const session = driver.session({
         defaultAccessMode: neo4j.session.READ,
         database: multiDbSupport ? 'system' : undefined
       })
-      tmp
-        .run('CALL db.indexes()')
+      const txFn = buildTxFunctionByMode(session)
+      txFn(tx => tx.run('CALL db.indexes()'))
         .then(() => {
-          tmp.close()
+          session.close()
           res(driver)
         })
         .catch(e => {
+          session.close()
           // Only invalidate the connection if not available
           // or not authed
           // or credentials have expired
@@ -218,7 +223,8 @@ function _trackedTransaction(
   parameters = {},
   session,
   requestId = null,
-  txMetadata = undefined
+  txMetadata = undefined,
+  autoCommit = false
 ) {
   const id = requestId || v4()
   if (!session) {
@@ -231,31 +237,42 @@ function _trackedTransaction(
   runningQueryRegister[id] = closeFn
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
-  const queryPromise = session
-    .run(input, parameters, metadata)
-    .then(r => {
+
+  // Declare variable to store tx function in
+  // so we can use same promise chain further down
+  // for both types of tx functions
+  let runFn
+
+  // Transaction functions are the norm
+  if (!autoCommit) {
+    const txFn = buildTxFunctionByMode(session)
+    // Use same fn signature as session.run
+    runFn = (input, parameters, metadata) =>
+      txFn(tx => tx.run(input, parameters, metadata))
+  } else {
+    // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
+    runFn = session.run.bind(session)
+  }
+
+  const queryPromise = runFn(input, parameters, metadata)
+    .then(result => {
       closeFn()
-      return r
+      return result
     })
     .catch(e => {
       closeFn()
       throw e
     })
-
   return [id, queryPromise]
 }
 
-function _transaction(
-  input,
-  parameters,
-  session,
-  txMetadata = undefined,
-  useDb = undefined
-) {
+function _transaction(input, parameters, session, txMetadata = undefined) {
   if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
+
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
-  return session
-    .run(input, parameters, metadata)
+  const txFn = buildTxFunctionByMode(session)
+
+  return txFn(tx => tx.run(input, parameters, metadata))
     .then(r => {
       session.close()
       return r
@@ -312,7 +329,8 @@ export function routedWriteTransaction(
   requestId = null,
   cancelable = false,
   txMetadata = undefined,
-  useDb = undefined
+  useDb = undefined,
+  autoCommit = false
 ) {
   const session = _drivers
     ? _drivers
@@ -320,7 +338,14 @@ export function routedWriteTransaction(
         .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
     : false
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
-  return _trackedTransaction(input, parameters, session, requestId, txMetadata)
+  return _trackedTransaction(
+    input,
+    parameters,
+    session,
+    requestId,
+    txMetadata,
+    autoCommit
+  )
 }
 
 export const closeConnection = () => {

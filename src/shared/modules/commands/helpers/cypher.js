@@ -28,19 +28,21 @@ export const handleCypherCommand = (
   put,
   params = {},
   shouldUseCypherThread = false,
-  txMetadata = {}
+  txMetadata = {},
+  autoCommit = false
 ) => {
   const paramsToNeo4jType = Object.keys(params).map(k => ({
     [k]: applyGraphTypes(params[k])
   }))
   const [id, request] = bolt.routedWriteTransaction(
-    action.cmd,
+    action.query,
     arrayToObject(paramsToNeo4jType),
     {
       useCypherThread: shouldUseCypherThread,
       requestId: action.requestId,
       cancelable: true,
-      ...txMetadata
+      ...txMetadata,
+      autoCommit
     }
   )
   put(send('cypher', id))
