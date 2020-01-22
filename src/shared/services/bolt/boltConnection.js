@@ -237,18 +237,24 @@ function _trackedTransaction(
   runningQueryRegister[id] = closeFn
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
-  let queryPromise
+
+  // Declare variable to store tx function in
+  // so we can use same promise chain further down
+  // for both types of tx functions
+  let runFn
 
   // Transaction functions are the norm
   if (!autoCommit) {
     const txFn = buildTxFunctionByMode(session)
-    queryPromise = txFn(tx => tx.run(input, parameters, metadata))
+    // Use same fn signature as session.run
+    runFn = (input, parameters, metadata) =>
+      txFn(tx => tx.run(input, parameters, metadata))
   } else {
     // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
-    queryPromise = session.run(input, parameters, metadata)
+    runFn = session.run.bind(session)
   }
 
-  queryPromise
+  const queryPromise = runFn(input, parameters, metadata)
     .then(result => {
       closeFn()
       return result
