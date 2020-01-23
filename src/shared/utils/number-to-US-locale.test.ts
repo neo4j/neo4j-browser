@@ -19,75 +19,75 @@
  */
 
 /* global describe, test, expect */
-import numberToUSLocale from './number-to-US-locale'
+import numberToUSLocale from './number-to-US-locale';
 
 describe('numberToUSLocale', () => {
   test('should return the original value if isNaN(value) is true', () => {
     // Given
-    const value = null
+    const value = null;
 
     // When
-    const returnValue = numberToUSLocale(value)
+    const returnValue = numberToUSLocale(value);
 
     // Then
-    expect(returnValue).toBe(value)
-  })
+    expect(returnValue).toBe(value);
+  });
   test('should return a non-comma separated number if isNaN(value) is false and 0 <= value < 1000', () => {
-    let value, returnValue
+    let value, returnValue;
     // Given
-    value = 0
+    value = 0;
 
     // When
-    returnValue = numberToUSLocale(value)
+    returnValue = numberToUSLocale(value);
 
     // Then
-    expect(returnValue).toBe('0')
+    expect(returnValue).toBe('0');
 
     // Given
-    value = '10'
+    value = '10';
 
     // When
-    returnValue = numberToUSLocale(value)
+    returnValue = numberToUSLocale(value);
 
     // Then
-    expect(returnValue).toBe('10')
+    expect(returnValue).toBe('10');
 
     // Given
-    value = 999
+    value = 999;
 
     // When
-    returnValue = numberToUSLocale(value)
+    returnValue = numberToUSLocale(value);
 
     // Then
-    expect(returnValue).toBe('999')
-  })
+    expect(returnValue).toBe('999');
+  });
   test('should return a thousands comma separated number if isNaN(value) is false and value >= 1000 ', () => {
-    let value, returnValue
+    let value, returnValue;
     // Given
-    value = 1000
+    value = 1000;
 
     // When
-    returnValue = numberToUSLocale(value)
+    returnValue = numberToUSLocale(value);
 
     // Then
-    expect(returnValue).toBe('1,000')
+    expect(returnValue).toBe('1,000');
 
     // Given
-    value = '123456789'
+    value = '123456789';
 
     // When
-    returnValue = numberToUSLocale(value)
+    returnValue = numberToUSLocale(value);
 
     // Then
-    expect(returnValue).toBe('123,456,789')
+    expect(returnValue).toBe('123,456,789');
 
     // Given
-    value = 987654312345
+    value = 987654312345;
 
     // When
-    returnValue = numberToUSLocale(value)
+    returnValue = numberToUSLocale(value);
 
     // Then
-    expect(returnValue).toBe('987,654,312,345')
-  })
-})
+    expect(returnValue).toBe('987,654,312,345');
+  });
+});

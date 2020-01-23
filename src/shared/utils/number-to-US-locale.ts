@@ -15,6 +15,15 @@
  *
  */
 
-export default value =>
-  (parseInt(value, 10) >= 0 && parseInt(value, 10).toLocaleString('en-US')) ||
-  value
+export default (value: any): string | null => {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  const n = typeof value === 'number' ? value : parseInt(value, 10);
+  if (isNaN(n)) {
+    return n.toString();
+  }
+
+  return n.toLocaleString('en-US');
+};
