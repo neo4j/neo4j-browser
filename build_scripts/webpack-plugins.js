@@ -60,10 +60,6 @@ module.exports = () => {
       {
         from: path.resolve(helpers.browserPath, 'images'),
         to: helpers.assetsPath + '/images'
-      },
-      {
-        from: path.resolve(helpers.browserPath, 'external/canvg'),
-        to: helpers.assetsPath + '/js/canvg'
       }
     ]),
     new MiniCssExtractPlugin({

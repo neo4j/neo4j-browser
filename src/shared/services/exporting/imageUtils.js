@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import canvg from 'canvg'
+
 import { prepareForExport } from './svgUtils'
 import FileSaver from 'file-saver'
 
@@ -30,7 +32,7 @@ export const downloadPNGFromSVG = (svg, graph, type) => {
   canvas.width = svgObj.attr('width')
   canvas.height = svgObj.attr('height')
 
-  window.canvg(canvas, svgData)
+  canvg(canvas, svgData)
   return downloadWithDataURI(type + '.png', canvas.toDataURL('image/png'))
 }
 
