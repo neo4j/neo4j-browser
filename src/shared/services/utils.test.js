@@ -131,6 +131,14 @@ describe('utils', () => {
     expect(utils.deepEquals(o1, o3)).toBeFalsy()
     expect(utils.deepEquals(o4, o5)).toBeTruthy()
   })
+  test('deepEquals compares object methods by source instead of by reference', () => {
+    const foo1 = { someMethod: () => 'foo' }
+    const foo2 = { someMethod: () => 'foo' }
+    const bar = { someMethod: () => 'bar' }
+
+    expect(utils.deepEquals(foo1, foo2)).toBeTruthy()
+    expect(utils.deepEquals(foo1, bar)).toBeFalsy()
+  })
   test('can shallowEquals compare objects', () => {
     // Given
     const o1 = { a: 1, b: 2, c: 'hello' }
