@@ -1,65 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Neo4j Browser</title>
-  <style>
-    * {
+  <head>
+    <meta charset="UTF-8" />
+    <title>Neo4j Browser</title>
+    <style>
+      * {
         padding: 0;
         margin: 0;
-    }
-    html, body {
+      }
+      html,
+      body {
         width: 100%;
         height: 100%;
-    }
-  </style>
-  <link rel="apple-touch-icon" sizes="57x57" href="assets/images/device-icons/apple-touch-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="assets/images/device-icons/apple-touch-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="assets/images/device-icons/apple-touch-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="assets/images/device-icons/apple-touch-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="assets/images/device-icons/apple-touch-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="assets/images/device-icons/apple-touch-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="assets/images/device-icons/apple-touch-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="assets/images/device-icons/apple-touch-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/device-icons/apple-touch-icon-180x180.png">
-  <link rel="icon" type="image/png" href="assets/images/device-icons/favicon-32x32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="assets/images/device-icons/android-chrome-192x192.png" sizes="192x192">
-  <link rel="icon" type="image/png" href="assets/images/device-icons/favicon-96x96.png" sizes="96x96">
-  <link rel="icon" type="image/png" href="assets/images/device-icons/favicon-16x16.png" sizes="16x16">
-  <link rel="manifest" href="assets/images/device-icons/manifest.json">
-  <link rel="shortcut icon" href="assets/images/device-icons/favicon.ico">
-  <script type="text/javascript" src="assets/js/canvg/rgbcolor.js"></script>
-  <script type="text/javascript" src="assets/js/canvg/StackBlur.js"></script>
-  <script type="text/javascript" src="assets/js/canvg/canvg.js"></script>
-  <noscript>
-    <style>
-      .noscript-error {
-        margin: 0;
-        padding: 0;
-        background-color: #D2D5DA;
-        text-align: center;
-        height: 100vh;
-      }
-
-      .noscript-message {
-        margin: 300px auto;
-        border: 1px solid #E6E9EE;
-        padding: 30px;
-        display: inline-block;
-        background-color: white;
       }
     </style>
-    <div class="noscript-error">
-      <div class="noscript-message">
-        Neo4j Browser <strong>requires</strong> JavaScript to work properly. Please enable it and reload.
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="assets/images/device-icons/apple-touch-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="assets/images/device-icons/apple-touch-icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="assets/images/device-icons/apple-touch-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="assets/images/device-icons/apple-touch-icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="assets/images/device-icons/apple-touch-icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="assets/images/device-icons/apple-touch-icon-120x120.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="assets/images/device-icons/apple-touch-icon-144x144.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="assets/images/device-icons/apple-touch-icon-152x152.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/images/device-icons/apple-touch-icon-180x180.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/images/device-icons/favicon-32x32.png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/images/device-icons/android-chrome-192x192.png"
+      sizes="192x192"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/images/device-icons/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/images/device-icons/favicon-16x16.png"
+      sizes="16x16"
+    />
+    <link rel="manifest" href="assets/images/device-icons/manifest.json" />
+    <link rel="shortcut icon" href="assets/images/device-icons/favicon.ico" />
+    <noscript>
+      <style>
+        .noscript-error {
+          margin: 0;
+          padding: 0;
+          background-color: #d2d5da;
+          text-align: center;
+          height: 100vh;
+        }
+
+        .noscript-message {
+          margin: 300px auto;
+          border: 1px solid #e6e9ee;
+          padding: 30px;
+          display: inline-block;
+          background-color: white;
+        }
+      </style>
+      <div class="noscript-error">
+        <div class="noscript-message">
+          Neo4j Browser <strong>requires</strong> JavaScript to work properly.
+          Please enable it and reload.
+        </div>
       </div>
-    </div>
-  </noscript>
-</head>
+    </noscript>
+  </head>
 
-<body>
-  <div id="mount"></div>
-</body>
-
+  <body>
+    <div id="mount"></div>
+  </body>
 </html>
