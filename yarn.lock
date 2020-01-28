@@ -2299,7 +2299,7 @@ array-union@^1.0.1:
   dependencies:
     array-uniq "^1.0.1"
 
-array-uniq@^1.0.1:
+array-uniq@^1.0.1, array-uniq@^1.0.2:
   version "1.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/array-uniq/-/array-uniq-1.0.3.tgz#af6ac877a25cc7f74e058894753858dfdb24fdb6"
   integrity sha1-r2rId6Jcx/dOBYiUdThY39sk/bY=
@@ -4240,11 +4240,6 @@ domhandler@^2.3.0:
   dependencies:
     domelementtype "1"
 
-dompurify@^2.0.7:
-  version "2.0.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/dompurify/-/dompurify-2.0.7.tgz#f8266ad38fe1602fb5b3222f31eedbf5c16c4fd5"
-  integrity sha1-+CZq04/hYC+1syIvMe7b9cFsT9U=
-
 domutils@1.5.1:
   version "1.5.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/domutils/-/domutils-1.5.1.tgz#dcd8488a26f563d61079e48c9f7b7e32373682cf"
@@ -5837,7 +5832,7 @@ html-webpack-plugin@^3.2.0:
     toposort "^1.0.0"
     util.promisify "1.0.0"
 
-htmlparser2@^3.3.0:
+htmlparser2@^3.10.0, htmlparser2@^3.3.0:
   version "3.10.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/htmlparser2/-/htmlparser2-3.10.1.tgz#bd679dc3f59897b6a34bb10749c855bb53a9392f"
   integrity sha1-vWedw/WYl7ajS7EHSchVu1OpOS8=
@@ -7407,10 +7402,25 @@ lodash.clone@^4.5.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.clone/-/lodash.clone-4.5.0.tgz#195870450f5a13192478df4bc3d23d2dea1907b6"
   integrity sha1-GVhwRQ9aExkkeN9Lw9I9LeoZB7Y=
 
+lodash.clonedeep@^4.5.0:
+  version "4.5.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
+  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
+
+lodash.escaperegexp@^4.1.2:
+  version "4.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.escaperegexp/-/lodash.escaperegexp-4.1.2.tgz#64762c48618082518ac3df4ccf5d5886dae20347"
+  integrity sha1-ZHYsSGGAglGKw99Mz11YhtriA0c=
+
 lodash.isplainobject@^4.0.6:
   version "4.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
   integrity sha1-fFJqUtibRcRcxpC4gWO+BJf1UMs=
+
+lodash.isstring@^4.0.1:
+  version "4.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
+  integrity sha1-1SfftUVuynzJu5XV2ur4i6VKVFE=
 
 lodash.memoize@^4.1.2:
   version "4.1.2"
@@ -7421,6 +7431,11 @@ lodash.merge@^4.6.0:
   version "4.6.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha1-VYqlO0O2YeGSWgr9+japoQhf5Xo=
+
+lodash.mergewith@^4.6.1:
+  version "4.6.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.mergewith/-/lodash.mergewith-4.6.2.tgz#617121f89ac55f59047c7aec1ccd6654c6590f55"
+  integrity sha1-YXEh+JrFX1kEfHrsHM1mVMZZD1U=
 
 lodash.once@^4.1.1:
   version "4.1.1"
@@ -9237,6 +9252,15 @@ postcss@^7.0.0, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.18, postcss@^7.0.
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+postcss@^7.0.5:
+  version "7.0.26"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/postcss/-/postcss-7.0.26.tgz#5ed615cfcab35ba9bbb82414a4fa88ea10429587"
+  integrity sha1-XtYVz8qzW6m7uCQUpPqI6hBClYc=
+  dependencies:
+    chalk "^2.4.2"
+    source-map "^0.6.1"
+    supports-color "^6.1.0"
+
 precss@^2.0.0:
   version "2.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/precss/-/precss-2.0.0.tgz#7f567e3318e06d44c8fdbf9e58452e8358bf4b71"
@@ -10340,6 +10364,22 @@ sane@^4.0.3:
     minimist "^1.1.1"
     walker "~1.0.5"
 
+sanitize-html@^1.21.1:
+  version "1.21.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/sanitize-html/-/sanitize-html-1.21.1.tgz#1647d15c0c672901aa41eac1b86d0c38146d30ce"
+  integrity sha1-FkfRXAxnKQGqQerBuG0MOBRtMM4=
+  dependencies:
+    chalk "^2.4.1"
+    htmlparser2 "^3.10.0"
+    lodash.clonedeep "^4.5.0"
+    lodash.escaperegexp "^4.1.2"
+    lodash.isplainobject "^4.0.6"
+    lodash.isstring "^4.0.1"
+    lodash.mergewith "^4.6.1"
+    postcss "^7.0.5"
+    srcset "^1.0.0"
+    xtend "^4.0.1"
+
 save-as@^0.1.7:
   version "0.1.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/save-as/-/save-as-0.1.8.tgz#765f947b7878bab233e1952bbc9120e1c3f041be"
@@ -10780,6 +10820,14 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
+
+srcset@^1.0.0:
+  version "1.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/srcset/-/srcset-1.0.0.tgz#a5669de12b42f3b1d5e83ed03c71046fc48f41ef"
+  integrity sha1-pWad4StC87HV6D7QPHEEb8SPQe8=
+  dependencies:
+    array-uniq "^1.0.2"
+    number-is-nan "^1.0.0"
 
 sshpk@^1.7.0:
   version "1.16.1"
@@ -12066,7 +12114,7 @@ xmlhttprequest@1.8.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
   integrity sha1-Z/4HXFwk/vOfnWX197f+dRcZaPw=
 
-xtend@^4.0.0, xtend@~4.0.1:
+xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   version "4.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha1-u3J3n1+kZRhrH0OPZ0+jR/2121Q=

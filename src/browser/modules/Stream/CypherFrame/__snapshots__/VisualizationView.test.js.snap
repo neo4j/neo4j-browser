@@ -2,7 +2,7 @@
 
 exports[`Visualization renders 1`] = `<div />`;
 
-exports[`Visualization renders with result 1`] = `
+exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
     class="VisualizationViewstyled__StyledVisContainer-sc-1b47q51-0 dFbJTz"
@@ -122,7 +122,7 @@ exports[`Visualization renders with result 1`] = `
                     text-anchor="middle"
                     y="5"
                   >
-                     pro…
+                     &lt;b&gt;…
                   </text>
                 </g>
               </g>

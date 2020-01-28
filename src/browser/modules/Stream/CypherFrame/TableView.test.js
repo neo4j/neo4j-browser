@@ -46,11 +46,12 @@ describe('TableViews', () => {
       // Then
       expect(container).toMatchSnapshot()
     })
-    test('does not display bodyMessage if rows', () => {
+    test('does not display bodyMessage if rows, and escapes HTML', () => {
       // Given
       const sps = jest.fn()
+      const value = 'String with HTML <strong>in</strong> it'
       const result = {
-        records: [{ keys: ['x'], _fields: ['y'], get: () => 'y' }],
+        records: [{ keys: ['x'], _fields: [value], get: () => value }],
         summary: {
           resultAvailableAfter: neo4j.int(5),
           resultConsumedAfter: neo4j.int(5)

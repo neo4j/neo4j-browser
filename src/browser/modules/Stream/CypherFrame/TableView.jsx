@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { v4 } from 'uuid'
 import neo4j from 'neo4j-driver'
-import { sanitize } from 'dompurify'
+import { HTMLEntities } from 'services/santize.utils'
 
 import {
   StyledStatsBar,
@@ -69,7 +69,7 @@ export const renderObject = entry => {
     <StyledJsonPre
       dangerouslySetInnerHTML={{
         __html: convertUrlsToHrefTags(
-          sanitize(stringifyMod(entry, stringModifier, true))
+          HTMLEntities(stringifyMod(entry, stringModifier, true))
         )
       }}
     />
