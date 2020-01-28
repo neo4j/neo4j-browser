@@ -15,7 +15,11 @@
  *
  */
 
+import React from 'react'
+import { sanitizeQueryResult } from 'services/santize.utils'
 import { convertUrlsToHrefTags } from './clickable-urls'
+import { render } from '@testing-library/react'
+import ClickableUrls from './clickable-urls'
 
 describe('clickable-urls', () => {
   describe('convertUrlsToHrefTags', () => {
@@ -84,6 +88,27 @@ describe('clickable-urls', () => {
 
       expect(convertUrlsToHrefTags(URLs)).toBe(expectedURLs)
       expect(convertUrlsToHrefTags(textBlock)).toBe(expectedTextBlock)
+    })
+  })
+  describe('ClickableUrls', () => {
+    it('renders escaped HTML except for generated tags', () => {
+      const text = `Hello, my <strong>name</strong> is <a href="http://twitter.com/neo4j" onClick="alert(1)">Neo4j</a>.`
+
+      const { container } = render(<ClickableUrls text={text} />)
+      expect(container).toMatchInlineSnapshot(`
+        <div>
+          <span>
+            Hello, my &lt;strong&gt;name&lt;/strong&gt; is &lt;a href="
+            <a
+              href="http://twitter.com/neo4j"
+              target="_blank"
+            >
+              http://twitter.com/neo4j
+            </a>
+            " onclick="alert(1)"&gt;Neo4j&lt;/a&gt;.
+          </span>
+        </div>
+      `)
     })
   })
 })

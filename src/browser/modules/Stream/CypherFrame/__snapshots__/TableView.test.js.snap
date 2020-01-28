@@ -40,7 +40,7 @@ exports[`TableViews TableView displays bodyMessage if no rows 1`] = `
 </div>
 `;
 
-exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
+exports[`TableViews TableView does not display bodyMessage if rows, and escapes HTML 1`] = `
 <div>
   <div
     class="styled__PaddedDiv-sc-1dtvgs1-1 styled__PaddedTableViewDiv-sc-1dtvgs1-2 clXnC"
@@ -65,7 +65,7 @@ exports[`TableViews TableView does not display bodyMessage if rows 1`] = `
             class="DataTables__StyledTd-bf850j-3 lfnTDs table-properties"
           >
             <span>
-              "y"
+              "String with HTML &lt;strong&gt;in&lt;/strong&gt; it"
             </span>
           </td>
         </tr>

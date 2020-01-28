@@ -16,20 +16,20 @@
  */
 
 import React from 'react'
-import { sanitize } from 'dompurify'
+import { HTMLEntities } from 'services/santize.utils'
 
 export default function ClickableUrls({ text }) {
   return (
     <span
       dangerouslySetInnerHTML={{
-        __html: convertUrlsToHrefTags(sanitize(text))
+        __html: convertUrlsToHrefTags(HTMLEntities(text))
       }}
     />
   )
 }
 
 // credits to https://www.regextester.com/96504
-const URL_REGEX = /(([a-zA-Z]+):\/\/)(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()[\]{};:'".,<>?«»“”‘’]))?/gi
+const URL_REGEX = /(([a-zA-Z]+):\/\/)(?:(?:[^\s()<>"]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()[\]{};:'".,<>?«»“”‘’]))?/gi
 
 /**
  * Finds all urls in a string and wraps them in <a target="_blank" />
