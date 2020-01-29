@@ -147,7 +147,7 @@ export default class ChangePasswordForm extends Component {
                     })}
                   />
                   &nbsp;OR&nbsp;
-                  <FormButton onClick={this.onSuggestPassword}>
+                  <FormButton tabIndex="-1" onClick={this.onSuggestPassword}>
                     Generate
                   </FormButton>
                 </StyledConnectionFormEntry>
