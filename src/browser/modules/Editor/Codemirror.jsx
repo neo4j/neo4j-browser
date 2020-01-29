@@ -29,11 +29,6 @@ import 'codemirror/addon/lint/lint.css'
 import 'cypher-codemirror/dist/cypher-codemirror-syntax.css'
 import { debounce } from 'services/utils'
 
-function normalizeLineEndings(str) {
-  if (!str) return str
-  return str.replace(/\r\n|\r/g, '\n')
-}
-
 export default class CodeMirror extends Component {
   lastChange = null
   constructor(props) {
@@ -75,33 +70,16 @@ export default class CodeMirror extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.codeMirror &&
-      nextProps.value !== undefined &&
-      normalizeLineEndings(this.codeMirror.getValue()) !==
-        normalizeLineEndings(nextProps.value)
-    ) {
-      if (this.props.preserveScrollPosition) {
-        const prevScrollPosition = this.codeMirror.getScrollInfo()
-        this.codeMirror.setValue(nextProps.value)
-        this.codeMirror.scrollTo(
-          prevScrollPosition.left,
-          prevScrollPosition.top
-        )
-      } else {
-        this.codeMirror.setValue(nextProps.value)
-      }
-    }
-    if (typeof nextProps.options === 'object') {
-      for (const optionName in nextProps.options) {
-        if (nextProps.options.hasOwnProperty(optionName)) {
-          this.codeMirror.setOption(optionName, nextProps.options[optionName])
+  componentDidUpdate(prevProps) {
+    if (typeof this.props.options === 'object') {
+      for (const optionName in this.props.options) {
+        if (this.props.options.hasOwnProperty(optionName)) {
+          this.codeMirror.setOption(optionName, this.props.options[optionName])
         }
       }
     }
-    if (nextProps.schema) {
-      this.editorSupport.setSchema(this.props.schema)
+    if (this.props.schema) {
+      this.editorSupport.setSchema(prevProps.schema)
     }
   }
 

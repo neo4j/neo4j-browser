@@ -54,13 +54,13 @@ export class Intercom extends Component {
     updateData({ ...otherProps, app_id: appID })
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate() {
     const {
       appID,
       updateData,
       children, // eslint-disable-line
       ...otherProps
-    } = nextProps
+    } = this.props
     if (!canUseDOM()) return
     updateData({ ...otherProps, app_id: appID })
   }
@@ -85,4 +85,7 @@ const mapDispatchToProps = dispatch => {
     updateData: data => dispatch(updateData(data))
   }
 }
-export default connect(null, mapDispatchToProps)(Intercom)
+export default connect(
+  null,
+  mapDispatchToProps
+)(Intercom)

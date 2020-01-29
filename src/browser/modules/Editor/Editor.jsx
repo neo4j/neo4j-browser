@@ -83,6 +83,19 @@ export class Editor extends Component {
       contentId: null,
       editorHeight: 0
     }
+
+    if (this.props.bus) {
+      this.props.bus.take(SET_CONTENT, msg => {
+        this.setContentId(null)
+        this.setEditorValue(msg.message)
+      })
+      this.props.bus.take(EDIT_CONTENT, msg => {
+        this.setContentId(msg.id)
+        this.setEditorValue(msg.message)
+      })
+      this.props.bus.take(FOCUS, this.focusEditor.bind(this))
+      this.props.bus.take(EXPAND, this.expandEditorToggle.bind(this))
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -210,21 +223,6 @@ export class Editor extends Component {
       try {
         cm.execCommand('autocomplete')
       } catch (e) {}
-    }
-  }
-
-  componentWillMount() {
-    if (this.props.bus) {
-      this.props.bus.take(SET_CONTENT, msg => {
-        this.setContentId(null)
-        this.setEditorValue(msg.message)
-      })
-      this.props.bus.take(EDIT_CONTENT, msg => {
-        this.setContentId(msg.id)
-        this.setEditorValue(msg.message)
-      })
-      this.props.bus.take(FOCUS, this.focusEditor.bind(this))
-      this.props.bus.take(EXPAND, this.expandEditorToggle.bind(this))
     }
   }
 
@@ -509,4 +507,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
+export default withBus(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Editor)
+)

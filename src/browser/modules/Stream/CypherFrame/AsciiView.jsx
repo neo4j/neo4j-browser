@@ -49,9 +49,9 @@ export class AsciiView extends Component {
     this.makeState(this.props)
   }
 
-  componentWillReceiveProps(props) {
-    if (!this.equalProps(props)) {
-      this.makeState(props)
+  componentDidUpdate(prevProps) {
+    if (!this.equalProps(prevProps)) {
+      this.makeState(this.props)
     }
   }
 
@@ -118,8 +118,8 @@ export class AsciiStatusbar extends Component {
     statusBarMessage: ''
   }
 
-  componentWillReceiveProps(props) {
-    this.makeState(props)
+  componentDidUpdate() {
+    this.makeState(this.props)
   }
 
   makeState(props) {

@@ -5,6 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src/",
     "checkJs": false,
+    "jsx": "react",
     "paths": {
       "services/*": ["shared/services/*"],
       "browser-services/*": ["browser/services/*"],

@@ -30,8 +30,7 @@ import graphView from '../lib/visualization/components/graphView'
 export class GraphComponent extends Component {
   state = {
     zoomInLimitReached: true,
-    zoomOutLimitReached: false,
-    shouldResize: false
+    zoomOutLimitReached: false
   }
 
   graphInit(el) {
@@ -115,22 +114,14 @@ export class GraphComponent extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    if (props.styleVersion !== this.props.styleVersion) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.styleVersion !== this.props.styleVersion) {
       this.graphView.update()
     }
     if (
-      this.props.fullscreen !== props.fullscreen ||
-      this.props.frameHeight !== props.frameHeight
+      this.props.fullscreen !== prevProps.fullscreen ||
+      this.props.frameHeight !== prevProps.frameHeight
     ) {
-      this.setState({ shouldResize: true })
-    } else {
-      this.setState({ shouldResize: false })
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.state.shouldResize) {
       this.graphView.resize()
     }
   }

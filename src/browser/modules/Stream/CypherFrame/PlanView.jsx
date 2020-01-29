@@ -48,18 +48,19 @@ export class PlanView extends Component {
       .catch(e => {})
   }
 
-  componentWillReceiveProps(props) {
-    if (props.updated !== this.props.updated) {
-      return this.extractPlan(props.result || {})
+  componentDidUpdate(prevProps) {
+    if (prevProps.updated !== this.props.updated) {
+      return this.extractPlan(this.props.result || {})
         .then(() => {
-          this.ensureToggleExpand(props)
+          this.ensureToggleExpand(prevProps)
         })
         .catch(e => {
           console.log(e)
         })
     }
-    this.ensureToggleExpand(props)
-    props.assignVisElement && props.assignVisElement(this.el, this.plan)
+    this.ensureToggleExpand(prevProps)
+    this.props.assignVisElement &&
+      this.props.assignVisElement(this.el, this.plan)
   }
 
   shouldComponentUpdate(props, state) {
@@ -95,9 +96,12 @@ export class PlanView extends Component {
     }
   }
 
-  ensureToggleExpand(props) {
-    if (props._planExpand && props._planExpand !== this.props._planExpand) {
-      switch (props._planExpand) {
+  ensureToggleExpand(prevProps) {
+    if (
+      this.props._planExpand &&
+      this.props._planExpand !== prevProps._planExpand
+    ) {
+      switch (this.props._planExpand) {
         case 'COLLAPSE': {
           this.toggleExpanded(false)
           break
@@ -151,13 +155,13 @@ export class PlanStatusbar extends Component {
     if (extractedPlan) this.setState({ extractedPlan })
   }
 
-  componentWillReceiveProps(props) {
-    if (props.result === undefined) return
+  componentDidUpdate(prevProps) {
+    if (this.props.result === undefined) return
     if (
-      this.props.result === undefined ||
-      !deepEquals(props.result.summary, this.props.result.summary)
+      prevProps.result === undefined ||
+      !deepEquals(this.props.result.summary, prevProps.result.summary)
     ) {
-      const extractedPlan = bolt.extractPlan(props.result, true)
+      const extractedPlan = bolt.extractPlan(this.props.result, true)
       this.setState({ extractedPlan })
     }
   }

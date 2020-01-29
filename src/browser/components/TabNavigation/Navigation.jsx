@@ -49,22 +49,22 @@ class Navigation extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.openDrawer !== this.props.openDrawer) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.openDrawer !== this.props.openDrawer) {
       var newState = {}
-      if (nextProps.openDrawer) {
-        newState.drawerContent = nextProps.openDrawer
+      if (this.props.openDrawer) {
+        newState.drawerContent = this.props.openDrawer
         if (
-          this.state.transitionState === Closed ||
-          this.state.transitionState === Closing
+          prevState.transitionState === Closed ||
+          prevState.transitionState === Closing
         ) {
           newState.transitionState = Opening
         }
       } else {
         newState.drawerContent = ''
         if (
-          this.state.transitionState === Open ||
-          this.state.transitionState === Opening
+          prevState.transitionState === Open ||
+          prevState.transitionState === Opening
         ) {
           newState.transitionState = Closing
         }
