@@ -34,7 +34,8 @@ import {
 import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
 import {
   isUnknownProcedureError,
-  isNoDbAccessError
+  isNoDbAccessError,
+  isPeriodicCommitError
 } from 'services/cypherErrorsHelper'
 import { errorMessageFormater } from './../errorMessageFormater'
 
@@ -91,6 +92,15 @@ export class ErrorsView extends Component {
                 <PlayIcon />
                 &nbsp;List available databases
               </StyledLink>
+            </StyledLinkContainer>
+          </Render>
+          <Render if={isPeriodicCommitError(error)}>
+            <StyledLinkContainer>
+              <StyledLink onClick={() => onItemClick(bus, `:help auto`)}>
+                <PlayIcon />
+                &nbsp;Info on the <code>:auto</code> command
+              </StyledLink>
+              &nbsp;(auto-committing transactions)
             </StyledLinkContainer>
           </Render>
         </StyledHelpContent>

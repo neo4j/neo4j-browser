@@ -31,7 +31,8 @@ const content = (
       <code>CREATE</code> and <code>MERGE</code> to import tabular data into the
       graph. If you are importing a substantially sized data set, you should
       consider using <code>LOAD CSV</code> in combination with{' '}
-      <code>USING PERIODIC COMMIT</code>.
+      <code>USING PERIODIC COMMIT</code> (read{' '}
+      <a help-topic="auto">:help auto</a> if you are).
     </p>
     <div className="links">
       <div className="link">
@@ -54,6 +55,7 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
+          <a help-topic="auto">:help auto</a>
           <a help-topic="create">:help CREATE</a>
           <a help-topic="merge">:help MERGE</a>
           <a help-topic="cypher">:help Cypher</a>

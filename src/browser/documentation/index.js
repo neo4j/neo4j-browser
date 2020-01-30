@@ -20,6 +20,7 @@
 
 // Help
 import helpAlterUser from './help/alter-user'
+import helpAuto from './help/auto'
 import helpBolt from './dynamic/bolt'
 import helpBoltEncryption from './help/bolt-encryption'
 import helpBoltRouting from './help/bolt-routing'
@@ -106,6 +107,7 @@ export default {
   help: {
     title: 'Commands',
     chapters: {
+      auto: helpAuto,
       clear: helpClear,
       cypher: helpCypher,
       bolt: helpBolt,
