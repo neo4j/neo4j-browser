@@ -20,7 +20,6 @@
  */
 
 import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
-import { SWITCH_CONNECTION } from 'shared/modules/connections/connectionsDuck'
 
 const notEmpty = str => str.length > 0
 const splitOnUnderscore = str => str.split('_')
@@ -53,7 +52,7 @@ export const getActiveGraph = (context = {}) => {
   return activeProject.graphs.find(({ status }) => status === 'ACTIVE')
 }
 
-export const getCredentialsForGraph = (protocol, graph = null) => {
+const getCredentialsForGraph = (protocol, graph = null) => {
   if (!graph || !graph.connection) return null
   const { configuration = null } = graph.connection
   if (!configuration) {
@@ -95,20 +94,6 @@ export async function createConnectionCredentialsObject(
     authenticationMethod: kerberos ? KERBEROS : NATIVE
   }
   return connectionCreds
-}
-
-export async function switchConnection(
-  activeGraph,
-  defaultConnectionData,
-  getKerberosTicket,
-  bus
-) {
-  const connectionCreds = await createConnectionCredentialsObject(
-    activeGraph,
-    defaultConnectionData,
-    getKerberosTicket
-  )
-  bus.send(SWITCH_CONNECTION, connectionCreds)
 }
 
 const isKerberosEnabled = activeGraph => {
