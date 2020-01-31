@@ -25,11 +25,12 @@ const category = 'browserUiCommands'
 const content = (
   <>
     <p>
-      The <code>:auto</code> command will send the Cypher query after is in an
-      auto committing transaction. In general this is not recommended because of
-      the lack of support for auto retrying on leader switch errors in clusters.
+      The <code>:auto</code> command will send the Cypher query following it, in
+      an auto committing transaction. In general this is not recommended because
+      of the lack of support for auto retrying on leader switch errors in
+      clusters.
       <br />
-      Some query types does however need to be sent in auto-committing
+      Some query types do however need to be sent in auto-committing
       transactions, <code>USING PERIODIC COMMIT</code> is the most notable one.
     </p>
     <table className="table-condensed table-help">
