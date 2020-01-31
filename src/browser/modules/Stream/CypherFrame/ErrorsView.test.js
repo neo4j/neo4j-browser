@@ -69,6 +69,25 @@ describe('ErrorsViews', () => {
       expect(container).toMatchSnapshot()
       expect(getByText('List available procedures')).not.toBeUndefined()
     })
+    test('displays procedure link if periodic commit error', () => {
+      // Given
+      const props = {
+        result: {
+          code: 'Neo.ClientError.Statement.SemanticError',
+          message:
+            'Executing queries that use periodic commit in an open transaction is not possible.'
+        }
+      }
+
+      // When
+      const { getByText } = render(<ErrorsView {...props} />)
+
+      // Then
+      // We need to split up because of the use of <code> tags in the rendered document
+      expect(getByText(/info on the/i)).not.toBeUndefined()
+      expect(getByText(':auto')).not.toBeUndefined()
+      expect(getByText('(auto-committing transactions)')).not.toBeUndefined()
+    })
   })
   describe('ErrorsStatusbar', () => {
     test('displays nothing if no error', () => {
