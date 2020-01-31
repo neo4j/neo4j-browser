@@ -30,7 +30,6 @@ import { BusProvider } from 'react-suber'
 import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
-import RelateApiProvider from 'browser-components/relate-api/relate-api-provider'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -96,9 +95,7 @@ const AppInit = () => {
       <BusProvider bus={bus}>
         <>
           <GlobalStyle />
-          <RelateApiProvider urlString={url}>
-            <App />
-          </RelateApiProvider>
+          <App />
         </>
       </BusProvider>
     </Provider>

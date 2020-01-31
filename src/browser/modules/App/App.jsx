@@ -39,10 +39,16 @@ import {
   getLastConnectionUpdate,
   getActiveConnectionData,
   isConnected,
-  getConnectionData
+  getConnectionData,
+  SWITCH_CONNECTION_FAILED,
+  SWITCH_CONNECTION,
+  SILENT_DISCONNECT
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
+import {
+  CONNECTION_ID,
+  INJECTED_DISCOVERY
+} from 'shared/modules/discovery/discoveryDuck'
 import {
   StyledWrapper,
   StyledApp,
@@ -64,7 +70,11 @@ import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
 import { inWebEnv } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
-import RelateApi from 'browser-components/relate-api/relate-api'
+import DesktopApi from 'browser-components/desktop-api/desktop-api'
+import {
+  buildConnectionCreds,
+  getDesktopTheme
+} from 'browser-components/desktop-api/desktop-api.handlers'
 
 export function App(props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
@@ -120,9 +130,26 @@ export function App(props) {
 
   return (
     <ErrorBoundary>
-      <RelateApi
-        defaultConnectionData={defaultConnectionData}
-        setEnvironmentTheme={setEnvironmentTheme}
+      <DesktopApi
+        onMount={(...args) => {
+          buildConnectionCreds(...args, { defaultConnectionData })
+            .then(creds => props.bus.send(INJECTED_DISCOVERY, creds))
+            .catch(() => props.bus.send(SWITCH_CONNECTION_FAILED))
+          getDesktopTheme(...args)
+            .then(theme => setEnvironmentTheme(theme))
+            .catch(setEnvironmentTheme(null))
+        }}
+        onGraphActive={(...args) => {
+          buildConnectionCreds(...args, { defaultConnectionData })
+            .then(creds => props.bus.send(SWITCH_CONNECTION, creds))
+            .catch(e => props.bus.send(SWITCH_CONNECTION_FAILED))
+        }}
+        onGraphInactive={() => props.bus.send(SILENT_DISCONNECT)}
+        onColorSchemeUpdated={(...args) =>
+          getDesktopTheme(...args)
+            .then(theme => setEnvironmentTheme(theme))
+            .catch(setEnvironmentTheme(null))
+        }
       />
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
@@ -198,4 +225,9 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(App))
+export default withBus(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App)
+)
