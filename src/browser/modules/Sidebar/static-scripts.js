@@ -18,11 +18,13 @@
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 import MyScripts from '@relate-by-ui/saved-scripts'
+import semver from 'semver'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
 import * as folders from '../../../shared/modules/favorites/foldersDuck'
+import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 
 import {
   mapOldFavoritesAndFolders,
@@ -30,10 +32,12 @@ import {
 } from '../../../shared/services/export-favorites'
 
 const mapFavoritesStateToProps = state => {
+  const version = semver.coerce(getVersion(state) || '0')
   const scripts = mapOldFavoritesAndFolders(
     favorites.getFavorites(state),
     folders.getFolders(state),
-    ({ isStatic }) => isStatic
+    ({ isStatic, versionRange }) =>
+      isStatic && semver.satisfies(version, versionRange)
   )
 
   return {
@@ -56,7 +60,10 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
   onRemoveFolder: Function.prototype
 })
 const Favorites = withBus(
-  connect(mapFavoritesStateToProps, mapFavoritesDispatchToProps)(MyScripts)
+  connect(
+    mapFavoritesStateToProps,
+    mapFavoritesDispatchToProps
+  )(MyScripts)
 )
 
 export default Favorites
