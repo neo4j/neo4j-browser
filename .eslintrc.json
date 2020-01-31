@@ -16,7 +16,7 @@
     "react/jsx-indent": "off",
     "react/no-deprecated": "warn",
     "react/display-name": "warn",
-    "react/no-unescaped-entities": "warn",
+    "react/no-unescaped-entities": "off",
     "import/no-webpack-loader-syntax": "off"
   },
   "globals": {
