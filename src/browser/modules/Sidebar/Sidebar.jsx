@@ -63,25 +63,31 @@ function Sidebar(props) {
     {
       name: 'DBMS',
       title: 'Database',
-      icon: isOpen => (
-        <DatabaseIcon
-          isOpen={isOpen}
-          connectionState={props.neo4jConnectionState}
-          title="Database"
-        />
-      ),
+      icon: function dbIcon(isOpen) {
+        return (
+          <DatabaseIcon
+            isOpen={isOpen}
+            connectionState={props.neo4jConnectionState}
+            title="Database"
+          />
+        )
+      },
       content: DatabaseDrawer
     },
     {
       name: 'Favorites',
       title: 'Favorites',
-      icon: isOpen => <FavoritesIcon isOpen={isOpen} title="Favorites" />,
+      icon: function favIcon(isOpen) {
+        return <FavoritesIcon isOpen={isOpen} title="Favorites" />
+      },
       content: FavoritesDrawer
     },
     {
       name: 'Documents',
       title: 'Documentation',
-      icon: isOpen => <DocumentsIcon isOpen={isOpen} title="Documentation" />,
+      icon: function docsIcon(isOpen) {
+        return <DocumentsIcon isOpen={isOpen} title="Documentation" />
+      },
       content: DocumentsDrawer
     }
   ]
@@ -89,25 +95,31 @@ function Sidebar(props) {
     {
       name: 'Sync',
       title: 'Cloud Services',
-      icon: isOpen => (
-        <CloudSyncIcon
-          isOpen={isOpen}
-          connected={props.syncConnected}
-          title="Cloud Services"
-        />
-      ),
+      icon: function syncIcon(isOpen) {
+        return (
+          <CloudSyncIcon
+            isOpen={isOpen}
+            connected={props.syncConnected}
+            title="Cloud Services"
+          />
+        )
+      },
       content: BrowserSync
     },
     {
       name: 'Settings',
       title: 'Browser Settings',
-      icon: isOpen => <SettingsIcon isOpen={isOpen} title="Browser Settings" />,
+      icon: function settingIcon(isOpen) {
+        return <SettingsIcon isOpen={isOpen} title="Browser Settings" />
+      },
       content: SettingsDrawer
     },
     {
       name: 'About',
       title: 'About Neo4j',
-      icon: isOpen => <AboutIcon isOpen={isOpen} title="About Neo4j" />,
+      icon: function aboutIcon(isOpen) {
+        return <AboutIcon isOpen={isOpen} title="About Neo4j" />
+      },
       content: AboutDrawer
     }
   ]
@@ -149,4 +161,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(Sidebar)
+export default connect(
+  mapStateToProps,
+  null
+)(Sidebar)
