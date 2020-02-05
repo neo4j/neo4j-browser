@@ -78,7 +78,8 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
     cancelable = false,
     onLostConnection = () => {},
     txMetadata = undefined,
-    autoCommit = false
+    autoCommit = false,
+    useDb = null
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -96,7 +97,7 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
           )
         ),
         txMetadata,
-        useDb: _useDb,
+        useDb: useDb || _useDb,
         autoCommit
       }
     )
@@ -121,7 +122,8 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
     requestId = null,
     cancelable = false,
     onLostConnection = () => {},
-    txMetadata = undefined
+    txMetadata = undefined,
+    useDb = null
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -139,7 +141,7 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
           )
         ),
         txMetadata,
-        useDb: _useDb
+        useDb: useDb || _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
@@ -163,7 +165,7 @@ function directTransaction(input, parameters, requestMetaData = {}) {
     cancelable = false,
     onLostConnection = () => {},
     txMetadata = undefined,
-    useDb
+    useDb = null
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -181,7 +183,7 @@ function directTransaction(input, parameters, requestMetaData = {}) {
           )
         ),
         txMetadata,
-        useDb: useDb !== undefined ? useDb : _useDb
+        useDb: useDb || _useDb
       }
     )
     const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
