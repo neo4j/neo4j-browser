@@ -27,13 +27,11 @@ import { generateBoltHost } from 'services/utils'
 import {
   runCypherMessage,
   cancelTransactionMessage,
-  closeConnectionMessage,
-  CYPHER_ERROR_MESSAGE,
-  CYPHER_RESPONSE_MESSAGE,
-  POST_CANCEL_TRANSACTION_MESSAGE,
-  BOLT_CONNECTION_ERROR_MESSAGE
+  closeConnectionMessage
 } from './boltWorkerMessages'
 import { NATIVE } from 'services/bolt/boltHelpers'
+import { setupBoltWorker, addTypesAsField } from './setup-bolt-worker'
+
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
 
 let connectionProperties = null
@@ -101,18 +99,22 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
         autoCommit
       }
     )
-    const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
+    const workerPromise = setupBoltWorker(
+      boltWorkPool,
+      id,
+      workFn,
+      onLostConnection
+    )
     return [id, workerPromise]
   } else {
-    return boltConnection.routedWriteTransaction(
-      input,
-      parameters,
+    console.log('dfdfdf')
+    return boltConnection.routedWriteTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
-      _useDb,
+      useDb: useDb || _useDb,
       autoCommit
-    )
+    })
   }
 }
 
@@ -144,17 +146,20 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
         useDb: useDb || _useDb
       }
     )
-    const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
+    const workerPromise = setupBoltWorker(
+      boltWorkPool,
+      id,
+      workFn,
+      onLostConnection
+    )
     return workerPromise
   } else {
-    return boltConnection.routedReadTransaction(
-      input,
-      parameters,
+    return boltConnection.routedReadTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
-      _useDb
-    )
+      useDb: useDb || _useDb
+    })
   }
 }
 
@@ -186,60 +191,21 @@ function directTransaction(input, parameters, requestMetaData = {}) {
         useDb: useDb || _useDb
       }
     )
-    const workerPromise = setupBoltWorker(id, workFn, onLostConnection)
+    const workerPromise = setupBoltWorker(
+      boltWorkPool,
+      id,
+      workFn,
+      onLostConnection
+    )
     return workerPromise
   } else {
-    return boltConnection.directTransaction(
-      input,
-      parameters,
+    return boltConnection.directTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
-      _useDb
-    )
-  }
-}
-
-const addTypesAsField = result => {
-  const records = result.records.map(record => {
-    const typedRecord = new neo4j.types.Record(
-      record.keys,
-      record._fields,
-      record._fieldLookup
-    )
-    if (typedRecord._fields) {
-      typedRecord._fields = mappings.applyGraphTypes(typedRecord._fields)
-    }
-    return typedRecord
-  })
-  const summary = mappings.applyGraphTypes(result.summary)
-  return { summary, records }
-}
-
-function setupBoltWorker(id, workFn, onLostConnection = () => {}) {
-  const workerPromise = new Promise((resolve, reject) => {
-    const work = boltWorkPool.doWork({
-      id,
-      payload: workFn,
-      onmessage: msg => {
-        if (msg.data.type === BOLT_CONNECTION_ERROR_MESSAGE) {
-          work.finish()
-          onLostConnection(msg.data.error)
-          return reject(msg.data.error)
-        }
-        if (msg.data.type === CYPHER_ERROR_MESSAGE) {
-          work.finish()
-          reject(msg.data.error)
-        } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
-          work.finish()
-          resolve(addTypesAsField(msg.data.result))
-        } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
-          work.finish()
-        }
-      }
+      useDb: useDb || _useDb
     })
-  })
-  return workerPromise
+  }
 }
 
 const closeConnectionInWorkers = () => {
