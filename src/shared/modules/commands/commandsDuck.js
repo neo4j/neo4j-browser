@@ -105,7 +105,7 @@ export const executeCommand = (
   }
 }
 
-export const executeSingleCommand = (cmd, id, requestId, useDb) => {
+export const executeSingleCommand = (cmd, { id, requestId, useDb } = {}) => {
   return {
     type: SINGLE_COMMAND_QUEUED,
     cmd,
@@ -135,7 +135,7 @@ export const clearErrorMessage = () => ({
   type: CLEAR_ERROR_MESSAGE
 })
 
-export const cypher = (query, useDb) => ({ type: CYPHER, query, useDb })
+export const cypher = query => ({ type: CYPHER, query })
 export const successfulCypher = query => ({ type: CYPHER_SUCCEEDED, query })
 export const unsuccessfulCypher = query => ({ type: CYPHER_FAILED, query })
 export const fetchGuideFromWhitelistAction = url => ({
@@ -167,12 +167,11 @@ export const handleCommandEpic = (action$, store) =>
       if (statements.length === 1) {
         // Single command
         return store.dispatch(
-          executeSingleCommand(
-            statements[0],
-            action.id,
-            action.requestId,
-            action.useDb
-          )
+          executeSingleCommand(statements[0], {
+            id: action.id,
+            requestId: action.requestId,
+            useDb: action.useDb
+          })
         )
       }
       const parentId = action.parentId || v4()

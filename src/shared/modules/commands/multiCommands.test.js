@@ -76,7 +76,7 @@ describe('handleCommandEpic', () => {
         action,
         commands.clearErrorMessage(),
         addHistory(action.cmd, maxHistory),
-        commands.executeSingleCommand(cmd, id, requestId),
+        commands.executeSingleCommand(cmd, { id, requestId }),
         { type: 'NOOP' }
       ])
       done()
