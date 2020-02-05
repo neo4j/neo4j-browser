@@ -91,7 +91,10 @@ export default function reducer(state = initialState, action) {
 
 // Action creators
 
-export const executeCommand = (cmd, id, requestId, parentId, useDb) => {
+export const executeCommand = (
+  cmd,
+  { id, requestId, parentId, useDb } = {}
+) => {
   return {
     type: COMMAND_QUEUED,
     cmd,

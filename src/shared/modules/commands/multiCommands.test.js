@@ -69,7 +69,7 @@ describe('handleCommandEpic', () => {
     const cmd = 'RETURN 1'
     const id = 2
     const requestId = 'xxx'
-    const action = commands.executeCommand(cmd, id, requestId)
+    const action = commands.executeCommand(cmd, { id, requestId })
     bus.take('NOOP', currentAction => {
       // Then
       expect(store.getActions()).toEqual([
@@ -94,7 +94,11 @@ describe('handleCommandEpic', () => {
     const id = 2
     const requestId = 'xxx'
     const parentId = 'yyy'
-    const action = commands.executeCommand(cmd, id, requestId, parentId)
+    const action = commands.executeCommand(cmd, {
+      id,
+      requestId,
+      parentId
+    })
 
     bus.take('NOOP', currentAction => {
       // Then

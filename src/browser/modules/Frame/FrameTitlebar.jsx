@@ -297,7 +297,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
-      dispatch(commands.executeCommand(cmd, id, undefined, undefined, useDb))
+      dispatch(commands.executeCommand(cmd, { id, useDb }))
     },
     togglePinning: (id, isPinned) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
