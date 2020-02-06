@@ -212,5 +212,38 @@ describe('Multi database', () => {
         .first()
       resultFrame.should('contain', 'could not be found')
     })
+    if (isEnterpriseEdition()) {
+      it('re-runs query from frame action button on original db', () => {
+        cy.executeCommand(':clear')
+        cy.executeCommand(':use neo4j')
+        cy.executeCommand(':clear')
+        cy.executeCommand('RETURN "Test string"')
+        cy.executeCommand(':use system')
+
+        // Close first frame
+        cy.get('[title="Close"]', { timeout: 10000 })
+          .first()
+          .click()
+
+        // Make sure it's closed
+        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+          'have.length',
+          1
+        )
+
+        // Click re-run
+        cy.get('[data-testid="rerunFrameButton"]', { timeout: 10000 })
+          .first()
+          .click()
+
+        // Make sure we have what we expect
+        cy.get('[data-testid="frame"]', { timeout: 10000 })
+          .first()
+          .should(frame => {
+            expect(frame).to.contain('"Test string"')
+            expect(frame).to.not.contain('ERROR')
+          })
+      })
+    }
   }
 })
