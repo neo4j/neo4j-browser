@@ -22,6 +22,7 @@
 
 import { getDesktopContext } from '../support/utils'
 let appContextListener
+let appOnAgumentsChange
 
 // This file only esists to be able to test the auto connect using
 // the host field.
@@ -34,7 +35,8 @@ describe('Neo4j Desktop environment using url field', () => {
         win.neo4jDesktopApi = {
           getContext: () =>
             Promise.resolve(getDesktopContext(Cypress.config, 'url')),
-          onContextUpdate: fn => (appContextListener = fn.bind(fn))
+          onContextUpdate: fn => (appContextListener = fn.bind(fn)),
+          onArgumentsChange: fn => (appOnAgumentsChange = fn.bind(fn))
         }
       }
     })
@@ -64,5 +66,15 @@ describe('Neo4j Desktop environment using url field', () => {
     cy.get('[data-testid="frame"]', { timeout: 10000 })
       .first()
       .should('contain', 'Connection updated')
+  })
+  it('reacts to arguments changing', () => {
+    const expectedCommand = ':play reco'
+    cy.executeCommand(':clear')
+
+    cy.wait(1000).then(() => {
+      appOnAgumentsChange('cmd=play&arg=reco')
+    })
+
+    cy.getEditor().should('contain', expectedCommand)
   })
 })

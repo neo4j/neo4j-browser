@@ -38,6 +38,15 @@ function DesktopApi({ integrationPoint = DEFAULT_INTEGRATION_POINT, ...rest }) {
     }
 
     function onUpdate() {
+      // Arguments change
+      if (
+        integrationPoint &&
+        integrationPoint.onArgumentsChange &&
+        rest.onArgumentsChange
+      ) {
+        integrationPoint.onArgumentsChange(rest.onArgumentsChange)
+      }
+      // Regular events
       if (integrationPoint && integrationPoint.onContextUpdate) {
         // Setup generic event listener
         integrationPoint.onContextUpdate((event, context, oldContext) => {
@@ -53,10 +62,14 @@ function DesktopApi({ integrationPoint = DEFAULT_INTEGRATION_POINT, ...rest }) {
     mountEvent()
     onUpdate()
 
-    return () =>
+    return () => {
       integrationPoint &&
-      integrationPoint.onContextUpdate &&
-      integrationPoint.onContextUpdate(null)
+        integrationPoint.onContextUpdate &&
+        integrationPoint.onContextUpdate(null)
+      integrationPoint &&
+        integrationPoint.onArgumentsChange &&
+        integrationPoint.onArgumentsChange(null)
+    }
   }, [integrationPoint])
   return null
 }

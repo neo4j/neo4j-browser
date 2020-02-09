@@ -1,8 +1,11 @@
 const SubmitQueryButton = '[data-testid="submitQuery"]'
 const ClearEditorButton = '[data-testid="clearEditorContent"]'
 const Editor = '.ReactCodeMirror textarea'
+const VisibleEditor = '[data-testid="editor-wrapper"]'
 
 /* global Cypress, cy */
+
+Cypress.Commands.add('getEditor', () => cy.get(VisibleEditor))
 
 Cypress.Commands.add(
   'setInitialPassword',
