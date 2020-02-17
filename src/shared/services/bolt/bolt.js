@@ -107,7 +107,6 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
     )
     return [id, workerPromise]
   } else {
-    console.log('dfdfdf')
     return boltConnection.routedWriteTransaction(input, parameters, {
       requestId,
       cancelable,
