@@ -139,4 +139,28 @@ describe('<DesktopApi>', () => {
       integrationPoint.getKerberosTicket
     )
   })
+  test('calls onArgumentsChange when args change', () => {
+    // Given
+    let componentOnArgumentsChange
+    const newArgsString = 'test=1&test2=2'
+    const fn = jest.fn()
+    const integrationPoint = {
+      onArgumentsChange: fn => (componentOnArgumentsChange = fn)
+    }
+
+    // When
+    render(
+      <DesktopApi integrationPoint={integrationPoint} onArgumentsChange={fn} />
+    )
+
+    // Then
+    expect(fn).toHaveBeenCalledTimes(0)
+
+    // When
+    componentOnArgumentsChange(newArgsString)
+
+    // Then
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(fn).toHaveBeenLastCalledWith(newArgsString)
+  })
 })
