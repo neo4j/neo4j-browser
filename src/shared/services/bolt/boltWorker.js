@@ -80,11 +80,7 @@ const onmessage = function(message) {
         const res = connectionTypeMap[connectionType].create(
           input,
           applyGraphTypes(parameters),
-          requestId,
-          cancelable,
-          txMetadata,
-          useDb,
-          autoCommit
+          { requestId, cancelable, txMetadata, useDb, autoCommit }
         )
         connectionTypeMap[connectionType]
           .getPromise(res)

@@ -377,8 +377,8 @@ const availableCommands = [
       put(cypher(action.cmd))
       put(
         frames.add({
-          useDb: getUseDb(store.getState()),
           ...action,
+          useDb: action.useDb || getUseDb(store.getState()),
           type: 'cypher',
           requestId: id
         })

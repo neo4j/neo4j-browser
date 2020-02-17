@@ -252,9 +252,7 @@ class FrameTitlebar extends Component {
             <FrameButton
               data-testid="rerunFrameButton"
               title="Rerun"
-              onClick={() =>
-                props.onReRunClick(frame.cmd, frame.id, frame.requestId)
-              }
+              onClick={() => props.onReRunClick(frame)}
             >
               <RefreshIcon />
             </FrameButton>
@@ -295,11 +293,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
       dispatch(remove(id))
     },
-    onReRunClick: (cmd, id, requestId) => {
+    onReRunClick: ({ cmd, useDb, id, requestId }) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
-      dispatch(commands.executeCommand(cmd, id))
+      dispatch(commands.executeCommand(cmd, { id, useDb }))
     },
     togglePinning: (id, isPinned) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
@@ -308,5 +306,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(FrameTitlebar)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(FrameTitlebar)
 )

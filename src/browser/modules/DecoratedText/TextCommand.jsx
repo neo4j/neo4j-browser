@@ -64,4 +64,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextCommand)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TextCommand)

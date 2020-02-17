@@ -42,7 +42,8 @@ export const handleCypherCommand = (
       requestId: action.requestId,
       cancelable: true,
       ...txMetadata,
-      autoCommit
+      autoCommit,
+      useDb: action.useDb
     }
   )
   put(send('cypher', id))
