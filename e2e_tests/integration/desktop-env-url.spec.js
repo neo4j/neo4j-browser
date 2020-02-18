@@ -67,14 +67,15 @@ describe('Neo4j Desktop environment using url field', () => {
       .first()
       .should('contain', 'Connection updated')
   })
-  it('reacts to arguments changing', () => {
-    const expectedCommand = ':play reco'
+  it('reacts to arguments changing and handle different encodings', () => {
+    // Use regular expression to match multiple lines
+    const expectedCommand = /RETURN 1;[^R]*RETURN 2;/
     cy.executeCommand(':clear')
 
     cy.wait(1000).then(() => {
-      appOnAgumentsChange('cmd=play&arg=reco')
+      appOnAgumentsChange('cmd=edit&arg=RETURN+1;&arg=RETURN%202;')
     })
 
-    cy.getEditor().should('contain', expectedCommand)
+    cy.getEditor().contains(expectedCommand)
   })
 })
