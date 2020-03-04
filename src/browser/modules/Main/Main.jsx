@@ -40,17 +40,19 @@ import AutoExecButton from '../Stream/auto-exec-button'
 
 const Main = React.memo(function Main(props) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
+  const { databases, useDb } = props
+  const dbMeta = databases && databases.find(db => db.name === useDb)
+  const dbIsUnavailable = useDb && (!dbMeta || dbMeta.status !== 'online')
 
   return (
     <StyledMain data-testid="main">
       <ErrorBoundary>
         <Editor />
       </ErrorBoundary>
-      <Render if={props.showUnknownCommandBanner}>
+      <Render if={dbIsUnavailable}>
         <ErrorBanner>
-          Type&nbsp;
-          <AutoExecButton cmd="help commands" />
-          &nbsp;for a list of available commands.
+          Database '{useDb}' is unavailable. Run{' '}
+          <AutoExecButton cmd="sysinfo" /> for more info.
         </ErrorBanner>
       </Render>
       <Render if={props.errorMessage}>
