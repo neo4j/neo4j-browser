@@ -209,20 +209,31 @@ const availableCommands = [
             'No multi db support detected.'
           )
         }
-        const databaseNames = getDatabases(store.getState()).map(db =>
-          db.name.toLowerCase()
-        )
 
         const normalizedName = dbName.toLowerCase()
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
 
+        const dbMeta = getDatabases(store.getState()).find(
+          db => db.name.toLowerCase() === cleanDbName
+        )
+
+        function UseDbError({ code, message }) {
+          this.code = code
+          this.message = message
+        }
+
         // Do we have a db with that name?
-        if (!databaseNames.includes(cleanDbName)) {
-          const error = new Error(
-            `A database with the "${dbName}" name could not be found.`
-          )
-          error.code = 'NotFound'
-          throw error
+        if (!dbMeta) {
+          throw new UseDbError({
+            code: 'NotFound',
+            message: `A database with the "${dbName}" name could not be found.`
+          })
+        }
+        if (dbMeta.status !== 'online') {
+          throw new UseDbError({
+            code: 'DatabaseUnavailable',
+            message: `Database "${dbName}" is unavailable, its status is "${dbMeta.status}."`
+          })
         }
         put(useDb(cleanDbName))
         put(
