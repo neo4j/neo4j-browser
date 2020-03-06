@@ -86,8 +86,9 @@ class Stream extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
+    // If we want to scroll to top when a new frame is added
     if (
-      prevProps.framesSignature !== this.props.framesSignature &&
+      prevProps.frames.length < this.props.frames.length &&
       this.props.scrollToTop &&
       this.base &&
       this.base.current
@@ -125,9 +126,6 @@ class Stream extends PureComponent {
 const mapStateToProps = state => {
   const frames = getFrames(state)
   return {
-    framesSignature: frames
-      .map(frame => frame.id + (frame.requestId || ''))
-      .join(''),
     frames,
     activeConnectionData: getActiveConnectionData(state),
     scrollToTop: getScrollToTop(state)
