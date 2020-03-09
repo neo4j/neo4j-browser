@@ -312,162 +312,166 @@ export const dbMetaEpic = (some$, store) =>
           .throttle(() => some$.ofType(DB_META_DONE))
           // Server version and edition
           .do(store.dispatch({ type: FETCH_SERVER_INFO }))
-          // Labels, types and propertyKeys, and server version
-          .mergeMap(() => {
-            const state = store.getState()
-            const db = getUseDb(state)
-            if (db === 'system') {
-              store.dispatch(updateMeta([]))
-              return Rx.Observable.of(null)
-            }
-
-            return Rx.Observable.fromPromise(
-              bolt.routedReadTransaction(
-                metaQuery,
-                {},
-                {
-                  useCypherThread: shouldUseCypherThread(store.getState()),
-                  onLostConnection: onLostConnection(store.dispatch),
-                  ...getBackgroundTxMetadata({
-                    hasServerSupport: canSendTxMetadata(store.getState())
-                  })
-                }
-              )
-            ).catch(e => {
-              store.dispatch(updateMeta([]))
-              return Rx.Observable.of(null)
-            })
-          })
-          .do(res => {
-            if (res) {
-              store.dispatch(updateMeta(res))
-            }
-          })
-          // Server configuration
           .mergeMap(() =>
-            Rx.Observable.fromPromise(
-              bolt.directTransaction(
-                'CALL dbms.listConfig()',
-                {},
-                {
-                  useCypherThread: shouldUseCypherThread(store.getState()),
-                  ...getBackgroundTxMetadata({
-                    hasServerSupport: canSendTxMetadata(store.getState())
-                  })
-                }
-              )
-            )
-              .catch(e => {
-                return Rx.Observable.of(null)
-              })
-              .do(res => {
-                if (!res) return Rx.Observable.of(null)
-                const settings = res.records.reduce((all, record) => {
-                  const name = record.get('name')
-                  let value = record.get('value')
-                  if (name === 'browser.retain_connection_credentials') {
-                    let retainCredentials = true
-                    // Check if we should wipe user creds from localstorage
-                    if (
-                      typeof value !== 'undefined' &&
-                      isConfigValFalsy(value)
-                    ) {
-                      retainCredentials = false
-                    }
-                    store.dispatch(setRetainCredentials(retainCredentials))
-                  } else if (name === 'browser.allow_outgoing_connections') {
-                    // Use isConfigValFalsy to cast undefined to true
-                    value = !isConfigValFalsy(value)
-                  } else if (name === 'dbms.security.auth_enabled') {
-                    let authEnabled = true
-                    if (
-                      typeof value !== 'undefined' &&
-                      isConfigValFalsy(value)
-                    ) {
-                      authEnabled = false
-                    }
-                    store.dispatch(setAuthEnabled(authEnabled))
+            Rx.Observable.forkJoin([
+              // Labels, types and propertyKeys, and server version
+              Rx.Observable.if(
+                () => {
+                  const state = store.getState()
+                  const db = getUseDb(state)
+                  const isSystem = db === 'system'
+                  if (isSystem) {
+                    store.dispatch(updateMeta([]))
                   }
-                  all[name] = value
-                  return all
-                }, {})
-                store.dispatch(updateSettings(settings))
-                return Rx.Observable.of(null)
-              })
-          )
-          // Cluster role
-          .mergeMap(() =>
-            Rx.Observable.fromPromise(
-              bolt.directTransaction(
-                getDbClusterRole(store.getState()),
-                {},
-                {
-                  useCypherThread: shouldUseCypherThread(store.getState()),
-                  ...getBackgroundTxMetadata({
-                    hasServerSupport: canSendTxMetadata(store.getState())
-                  })
-                }
-              )
-            )
-              .catch(e => {
-                return Rx.Observable.of(null)
-              })
-              .do(res => {
-                if (!res) return Rx.Observable.of(null)
-                const role = res.records[0].get(0)
-                store.dispatch(update({ role }))
-                return Rx.Observable.of(null)
-              })
-          )
-          // Database list
-          .mergeMap(() =>
-            Rx.Observable.fromPromise(
-              new Promise(async (resolve, reject) => {
-                const supportsMultiDb = await bolt.hasMultiDbSupport()
-                if (!supportsMultiDb) {
-                  return resolve(null)
-                }
-                bolt
-                  .directTransaction(
-                    'SHOW DATABASES',
+                  return isSystem
+                },
+                Rx.Observable.of(null),
+                Rx.Observable.fromPromise(
+                  bolt.routedReadTransaction(
+                    metaQuery,
                     {},
                     {
                       useCypherThread: shouldUseCypherThread(store.getState()),
+                      onLostConnection: onLostConnection(store.dispatch),
                       ...getBackgroundTxMetadata({
                         hasServerSupport: canSendTxMetadata(store.getState())
-                      }),
-                      useDb: SYSTEM_DB // System db
+                      })
                     }
                   )
-                  .then(resolve)
-                  .catch(reject)
-              })
-            )
-              .catch(e => {
-                return Rx.Observable.of(null)
-              })
-              .do(res => {
-                if (!res) return Rx.Observable.of(null)
-                const databases = res.records.map(record => ({
-                  ...reduce(
-                    record.keys,
-                    (agg, key) => assign(agg, { [key]: record.get(key) }),
-                    {}
-                  ),
-                  status: record.get('currentStatus')
-                }))
-
-                store.dispatch(update({ databases }))
-
-                // Currently not using a db
-                if (!getUseDb(store.getState())) {
-                  const defaultDb = databases.filter(db => db.default)
-                  if (defaultDb.length) {
-                    store.dispatch(useDb(defaultDb[0].name))
+                )
+                  .do(res => {
+                    if (res) {
+                      store.dispatch(updateMeta(res))
+                    }
+                  })
+                  .catch(e => {
+                    store.dispatch(updateMeta([]))
+                    return Rx.Observable.of(null)
+                  })
+              ),
+              // Server configuration
+              Rx.Observable.fromPromise(
+                bolt.directTransaction(
+                  'CALL dbms.listConfig()',
+                  {},
+                  {
+                    useCypherThread: shouldUseCypherThread(store.getState()),
+                    ...getBackgroundTxMetadata({
+                      hasServerSupport: canSendTxMetadata(store.getState())
+                    })
                   }
-                }
-                return Rx.Observable.of(null)
-              })
+                )
+              )
+                .catch(e => {
+                  return Rx.Observable.of(null)
+                })
+                .do(res => {
+                  if (!res) return Rx.Observable.of(null)
+                  const settings = res.records.reduce((all, record) => {
+                    const name = record.get('name')
+                    let value = record.get('value')
+                    if (name === 'browser.retain_connection_credentials') {
+                      let retainCredentials = true
+                      // Check if we should wipe user creds from localstorage
+                      if (
+                        typeof value !== 'undefined' &&
+                        isConfigValFalsy(value)
+                      ) {
+                        retainCredentials = false
+                      }
+                      store.dispatch(setRetainCredentials(retainCredentials))
+                    } else if (name === 'browser.allow_outgoing_connections') {
+                      // Use isConfigValFalsy to cast undefined to true
+                      value = !isConfigValFalsy(value)
+                    } else if (name === 'dbms.security.auth_enabled') {
+                      let authEnabled = true
+                      if (
+                        typeof value !== 'undefined' &&
+                        isConfigValFalsy(value)
+                      ) {
+                        authEnabled = false
+                      }
+                      store.dispatch(setAuthEnabled(authEnabled))
+                    }
+                    all[name] = value
+                    return all
+                  }, {})
+                  store.dispatch(updateSettings(settings))
+                  return Rx.Observable.of(null)
+                }),
+              // Cluster role
+              Rx.Observable.fromPromise(
+                bolt.directTransaction(
+                  getDbClusterRole(store.getState()),
+                  {},
+                  {
+                    useCypherThread: shouldUseCypherThread(store.getState()),
+                    ...getBackgroundTxMetadata({
+                      hasServerSupport: canSendTxMetadata(store.getState())
+                    })
+                  }
+                )
+              )
+                .catch(e => {
+                  return Rx.Observable.of(null)
+                })
+                .do(res => {
+                  if (!res) return Rx.Observable.of(null)
+                  const role = res.records[0].get(0)
+                  store.dispatch(update({ role }))
+                  return Rx.Observable.of(null)
+                }),
+              // Database list
+              Rx.Observable.fromPromise(
+                new Promise(async (resolve, reject) => {
+                  const supportsMultiDb = await bolt.hasMultiDbSupport()
+                  if (!supportsMultiDb) {
+                    return resolve(null)
+                  }
+                  bolt
+                    .directTransaction(
+                      'SHOW DATABASES',
+                      {},
+                      {
+                        useCypherThread: shouldUseCypherThread(
+                          store.getState()
+                        ),
+                        ...getBackgroundTxMetadata({
+                          hasServerSupport: canSendTxMetadata(store.getState())
+                        }),
+                        useDb: SYSTEM_DB // System db
+                      }
+                    )
+                    .then(resolve)
+                    .catch(reject)
+                })
+              )
+                .catch(e => {
+                  return Rx.Observable.of(null)
+                })
+                .do(res => {
+                  if (!res) return Rx.Observable.of(null)
+                  const databases = res.records.map(record => ({
+                    ...reduce(
+                      record.keys,
+                      (agg, key) => assign(agg, { [key]: record.get(key) }),
+                      {}
+                    ),
+                    status: record.get('currentStatus')
+                  }))
+
+                  store.dispatch(update({ databases }))
+
+                  // Currently not using a db
+                  if (!getUseDb(store.getState())) {
+                    const defaultDb = databases.filter(db => db.default)
+                    if (defaultDb.length) {
+                      store.dispatch(useDb(defaultDb[0].name))
+                    }
+                  }
+                  return Rx.Observable.of(null)
+                })
+            ])
           )
           .takeUntil(
             some$
