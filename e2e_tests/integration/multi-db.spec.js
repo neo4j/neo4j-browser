@@ -165,36 +165,6 @@ describe('Multi database', () => {
         databaseList().contains('neo4j')
       })
     }
-    if (isEnterpriseEdition()) {
-      it('user with no roles can lists databases with :dbs command but cant run cypher', () => {
-        cy.executeCommand(':clear')
-        cy.createUser('noroles', 'pw1', false)
-        cy.executeCommand(':server disconnect')
-        cy.executeCommand(':clear')
-        cy.executeCommand(':server connect')
-        cy.connect('noroles', 'pw1')
-
-        // Try to list dbs, should work
-        cy.executeCommand(':dbs')
-        databaseList().should('have.length', 2)
-        databaseList().contains('system')
-        databaseList().contains('neo4j')
-
-        // Try to run Cypher, shoudl show error
-        cy.executeCommand('RETURN 1')
-        const resultFrame = cy
-          .get('[data-testid="frame"]', { timeout: 10000 })
-          .first()
-        resultFrame.should('contain', 'Neo.ClientError.Security.Forbidden')
-        resultFrame.should('contain', 'List available databases')
-
-        // Cleanup
-        cy.executeCommand(':server disconnect')
-        cy.executeCommand(':clear')
-        cy.connect('neo4j', Cypress.config('password'))
-        cy.dropUser('noroles')
-      })
-    }
     it('shows error message when trying to set a parameter on system db', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':use system')
