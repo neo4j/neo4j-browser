@@ -29,6 +29,7 @@ import {
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
+  getPlayImplicitInitCommands,
   getSettings,
   getCmdChar,
   getConnectionTimeout
@@ -56,6 +57,8 @@ export const UPDATE_AUTH_ENABLED = NAME + '/UPDATE_AUTH_ENABLED'
 export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
 export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
 export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
+export const INITIAL_SWITCH_CONNECTION_FAILED =
+  NAME + '/INITIAL_SWITCH_CONNECTION_FAILED'
 export const VERIFY_CREDENTIALS = NAME + '/VERIFY_CREDENTIALS'
 export const USE_DB = NAME + '/USE_DB'
 
@@ -429,19 +432,27 @@ export const startupConnectEpic = (action$, store) => {
 export const startupConnectionSuccessEpic = (action$, store) => {
   return action$
     .ofType(STARTUP_CONNECTION_SUCCESS)
-    .do(() =>
-      store.dispatch(
-        executeSystemCommand(getCmdChar(store.getState()) + 'server status')
-      )
-    )
-    .mapTo(executeSystemCommand(getInitCmd(store.getState()))) // execute initCmd from settings
+    .do(() => {
+      if (getPlayImplicitInitCommands(store.getState())) {
+        store.dispatch(
+          executeSystemCommand(getCmdChar(store.getState()) + 'server status')
+        )
+        store.dispatch(executeSystemCommand(getInitCmd(store.getState())))
+      }
+    })
+    .mapTo({ type: 'NOOP' })
 }
 export const startupConnectionFailEpic = (action$, store) => {
   return action$
     .ofType(STARTUP_CONNECTION_FAILED)
-    .mapTo(
-      executeSystemCommand(getCmdChar(store.getState()) + 'server connect')
-    )
+    .do(() => {
+      if (getPlayImplicitInitCommands(store.getState())) {
+        store.dispatch(
+          executeSystemCommand(getCmdChar(store.getState()) + 'server connect')
+        )
+      }
+    })
+    .mapTo({ type: 'NOOP' })
 }
 
 let lastActiveConnectionId = null
@@ -623,6 +634,21 @@ export const switchConnectionFailEpic = (action$, store) => {
     .mapTo(
       executeSystemCommand(getCmdChar(store.getState()) + 'server switch fail')
     )
+}
+export const initialSwitchConnectionFailEpic = (action$, store) => {
+  return action$
+    .ofType(INITIAL_SWITCH_CONNECTION_FAILED)
+    .do(() => {
+      store.dispatch(updateConnectionState(DISCONNECTED_STATE))
+      if (getPlayImplicitInitCommands(store.getState())) {
+        store.dispatch(
+          executeSystemCommand(
+            getCmdChar(store.getState()) + 'server switch fail'
+          )
+        )
+      }
+    })
+    .mapTo({ type: 'NOOP' })
 }
 
 export const retainCredentialsSettingsEpic = (action$, store) => {

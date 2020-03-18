@@ -50,7 +50,12 @@ export function getAll() {
   keys.forEach(key => {
     const current = getItem(key)
     if (current !== undefined) {
-      out[key] = current
+      if (key === 'settings') {
+        const { playImplicitInitCommands, ...otherSettings } = current
+        out[key] = { ...otherSettings, playImplicitInitCommands: true }
+      } else {
+        out[key] = current
+      }
     }
   })
   return out

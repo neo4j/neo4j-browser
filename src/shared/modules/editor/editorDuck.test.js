@@ -27,6 +27,7 @@ import {
   NOT_SUPPORTED_URL_PARAM_COMMAND
 } from './editorDuck'
 import { APP_START, URL_ARGUMENTS_CHANGE } from '../app/appDuck'
+import { COMMAND_QUEUED, executeCommand } from '../commands/commandsDuck'
 
 describe('editorDuck Epics', () => {
   let store
@@ -47,9 +48,29 @@ describe('editorDuck Epics', () => {
     bus.reset()
     store.clearActions()
   })
-  test('Sends a SET_CONTENT event on initial url arguments', done => {
+  test('Sends a COMMAND_QUEUED event if cmd is "play"', done => {
     const cmd = 'play'
     const arg = 'test-guide'
+    const action = {
+      type: APP_START,
+      url: `http://url.com?cmd=${cmd}&arg=${arg}`
+    }
+
+    bus.take(COMMAND_QUEUED, () => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        executeCommand(`:${cmd} ${arg}`)
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+  test('Sends a SET_CONTENT event on initial url arguments', done => {
+    const cmd = 'edit'
+    const arg = 'RETURN 1'
     const action = {
       type: APP_START,
       url: `http://url.com?cmd=${cmd}&arg=${arg}`
@@ -59,7 +80,7 @@ describe('editorDuck Epics', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        { type: SET_CONTENT, message: `:${cmd} ${arg}` }
+        { type: SET_CONTENT, message: arg }
       ])
       done()
     })
@@ -68,8 +89,8 @@ describe('editorDuck Epics', () => {
     store.dispatch(action)
   })
   test('Sends a SET_CONTENT event on url arguments change', done => {
-    const cmd = 'play'
-    const arg = 'test-guide'
+    const cmd = 'edit'
+    const arg = 'RETURN 1'
     const action = {
       type: URL_ARGUMENTS_CHANGE,
       url: `?cmd=${cmd}&arg=${arg}`
@@ -79,7 +100,7 @@ describe('editorDuck Epics', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        { type: SET_CONTENT, message: `:${cmd} ${arg}` }
+        { type: SET_CONTENT, message: arg }
       ])
       done()
     })

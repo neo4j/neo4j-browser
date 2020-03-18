@@ -17,6 +17,7 @@ Object {
   "maxNeighbours": 100,
   "maxRows": 1000,
   "new": "conf",
+  "playImplicitInitCommands": true,
   "scrollToTop": true,
   "shouldReportUdc": true,
   "showSampleScripts": true,

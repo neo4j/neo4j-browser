@@ -23,6 +23,8 @@ import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 export const NAME = 'settings'
 export const UPDATE = 'settings/UPDATE'
 export const REPLACE = 'settings/REPLACE'
+export const DISABLE_IMPLICIT_INIT_COMMANDS =
+  'settings/DISABLE_IMPLICIT_INIT_COMMANDS'
 
 export const AUTO_THEME = 'auto'
 export const LIGHT_THEME = 'normal'
@@ -35,6 +37,8 @@ export const getSettings = state => state[NAME]
 export const getMaxHistory = state =>
   state[NAME].maxHistory || initialState.maxHistory
 export const getInitCmd = state => (state[NAME].initCmd || '').trim()
+export const getPlayImplicitInitCommands = state =>
+  state[NAME].playImplicitInitCommands
 export const getTheme = state => state[NAME].theme || initialState.theme
 export const getUseBoltRouting = state =>
   state[NAME].useBoltRouting || initialState.useBoltRouting
@@ -79,6 +83,7 @@ const initialState = {
   maxHistory: 30,
   theme: AUTO_THEME,
   initCmd: ':play start',
+  playImplicitInitCommands: true,
   initialNodeDisplay: 300,
   maxNeighbours: 100,
   showSampleScripts: true,
@@ -108,6 +113,8 @@ export default function settings(state = initialState, action) {
       return Object.assign({}, { ...initialState }, action.state)
     case USER_CLEAR:
       return initialState
+    case DISABLE_IMPLICIT_INIT_COMMANDS:
+      return { ...state, playImplicitInitCommands: false }
     default:
       return state
   }

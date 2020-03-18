@@ -40,7 +40,8 @@ describe('postConnectCmdEpic', () => {
     const command = 'play hello'
     const store = mockStoreLocal({
       settings: {
-        cmdchar: ':'
+        cmdchar: ':',
+        playImplicitInitCommands: true
       },
       meta: {
         settings: {
@@ -80,7 +81,8 @@ describe('postConnectCmdEpic', () => {
     ])
     const store = mockStoreLocal({
       settings: {
-        cmdchar: ':'
+        cmdchar: ':',
+        playImplicitInitCommands: true
       },
       meta: {
         settings: {
