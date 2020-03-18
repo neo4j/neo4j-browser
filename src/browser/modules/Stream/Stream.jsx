@@ -105,7 +105,8 @@ class Stream extends PureComponent {
           const frame = getLatestFromFrameStack(frameObject)
           const frameProps = {
             frame: { ...frame, isPinned: frameObject.isPinned },
-            activeConnectionData: this.props.activeConnectionData
+            activeConnectionData: this.props.activeConnectionData,
+            stack: frameObject.stack
           }
           let MyFrame = getFrame(frame.type)
           if (frame.type === 'error') {

@@ -25,8 +25,43 @@ import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
+import Carousel from '../Carousel/Carousel'
+import Slide from '../Carousel/Slide'
 
-const HelpFrame = ({ frame }) => {
+const HelpFrame = ({ frame, stack = [] }) => {
+  const { aside, main } = generateContent(frame)
+
+  console.log('stack: ', stack)
+  const contents =
+    stack.length > 1 ? (
+      <Carousel
+        className="deck container-fluid"
+        slides={stack.map(generateDirective).reverse()}
+        initialSlide={stack.length}
+      />
+    ) : (
+      <Directives originFrameId={frame.id} content={main} />
+    )
+  return (
+    <FrameTemplate
+      className="helpFrame has-carousel"
+      header={frame}
+      aside={aside}
+      contents={contents}
+    />
+  )
+}
+
+function generateDirective(frame, i) {
+  const { aside, main } = generateContent(frame)
+  return (
+    <Slide key={`${frame.id}-${i}`}>
+      <Directives originFrameId={frame.id} content={main} />
+    </Slide>
+  )
+}
+
+function generateContent(frame) {
   const { help, cypher, bolt } = docs
   const chapters = {
     ...help.chapters,
@@ -34,10 +69,11 @@ const HelpFrame = ({ frame }) => {
     ...bolt.chapters
   }
 
-  let ret = 'Help topic not specified'
+  let main = 'Help topic not specified'
   let aside
+
   if (frame.result) {
-    ret = <Docs html={frame.result} />
+    main = <Docs html={frame.result} />
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
@@ -52,16 +88,10 @@ const HelpFrame = ({ frame }) => {
       }
 
       aside = title ? <FrameAside title={title} subtitle={subtitle} /> : null
-      ret = <Docs content={content} />
+      main = <Docs content={content} />
     }
   }
-  return (
-    <FrameTemplate
-      className="helpFrame help"
-      header={frame}
-      aside={aside}
-      contents={<Directives originFrameId={frame.id} content={ret} />}
-    />
-  )
+  return { aside, main }
 }
+
 export default HelpFrame
