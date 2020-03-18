@@ -529,10 +529,25 @@ const availableCommands = [
     name: 'help',
     match: cmd => /^(help|\?)(\s|$)/.test(cmd),
     exec: function(action, cmdchar, put, store) {
+      const HELP_FRAME_TYPE = 'help'
+      let id
+
+      // We have a frame that generated this command
+      if (action.id) {
+        const originFrame = frames.getFrame(store.getState(), action.id)
+        // Only replace when the origin is a help frame
+        if (originFrame && originFrame.type === HELP_FRAME_TYPE) {
+          id = action.id
+        } else {
+          // New id === new frame
+          id = v4()
+        }
+      }
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
           ...action,
+          id,
           type: 'help'
         })
       )

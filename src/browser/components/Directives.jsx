@@ -109,7 +109,8 @@ export const Directives = props => {
             addClass(e, 'clicked')
             return props.onItemClick(
               directive.valueExtractor(e),
-              directive.autoExec
+              directive.autoExec,
+              props.originFrameId
             )
           }
         })
@@ -122,10 +123,10 @@ export const Directives = props => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onItemClick: (cmd, autoExec) => {
+    onItemClick: (cmd, autoExec, id) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
         if (autoExec) {
-          const action = executeCommand(cmd)
+          const action = executeCommand(cmd, { id })
           ownProps.bus.send(action.type, action)
         } else {
           ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
@@ -135,4 +136,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default withBus(connect(null, mapDispatchToProps)(Directives))
+export default withBus(
+  connect(
+    null,
+    mapDispatchToProps
+  )(Directives)
+)

@@ -60,7 +60,7 @@ const HelpFrame = ({ frame }) => {
       className="helpFrame help"
       header={frame}
       aside={aside}
-      contents={<Directives content={ret} />}
+      contents={<Directives originFrameId={frame.id} content={ret} />}
     />
   )
 }
