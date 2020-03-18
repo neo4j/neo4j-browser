@@ -47,6 +47,7 @@ import { getFrames } from 'shared/modules/stream/streamDuck'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
+import { getLatestFromFrameStack } from './stream.utils'
 
 const getFrame = type => {
   const trans = {
@@ -100,9 +101,10 @@ class Stream extends PureComponent {
   render() {
     return (
       <StyledStream ref={this.base}>
-        {this.props.frames.map(frame => {
+        {this.props.frames.map(frameObject => {
+          const frame = getLatestFromFrameStack(frameObject)
           const frameProps = {
-            frame,
+            frame: { ...frame, isPinned: frameObject.isPinned },
             activeConnectionData: this.props.activeConnectionData
           }
           let MyFrame = getFrame(frame.type)

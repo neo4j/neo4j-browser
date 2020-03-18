@@ -94,6 +94,7 @@ import {
   tryGetRemoteInitialSlideFromUrl
 } from './commandUtils'
 import { unescapeCypherIdentifier } from './utils'
+import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
 
 const availableCommands = [
   {
@@ -536,8 +537,11 @@ const availableCommands = [
       if (action.id) {
         const originFrame = frames.getFrame(store.getState(), action.id)
         // Only replace when the origin is a help frame
-        if (originFrame && originFrame.type === HELP_FRAME_TYPE) {
-          id = action.id
+        if (originFrame) {
+          const latest = getLatestFromFrameStack(originFrame)
+          if (latest && latest.type === HELP_FRAME_TYPE) {
+            id = action.id
+          }
         } else {
           // New id === new frame
           id = v4()
