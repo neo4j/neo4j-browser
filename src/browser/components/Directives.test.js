@@ -42,7 +42,7 @@ describe('Directives', () => {
 
     // Then
     expect(clickEvent).toHaveBeenCalled()
-    expect(clickEvent).toHaveBeenCalledWith(':play hello', true)
+    expect(clickEvent).toHaveBeenCalledWith(':play hello', true, undefined)
     expect(container).toMatchSnapshot()
   })
   test('should attach help topic directive when contents has a play-topic attribute', () => {
@@ -64,7 +64,7 @@ describe('Directives', () => {
 
     // Then
     expect(clickEvent).toHaveBeenCalled()
-    expect(clickEvent).toHaveBeenCalledWith(':help hello', true)
+    expect(clickEvent).toHaveBeenCalledWith(':help hello', true, undefined)
     expect(container).toMatchSnapshot()
   })
   test('should attach runnable directive when element has a tag of `pre.runnable`', () => {
@@ -86,7 +86,7 @@ describe('Directives', () => {
 
     // Then
     expect(clickEvent).toHaveBeenCalled()
-    expect(clickEvent).toHaveBeenCalledWith('my code', false)
+    expect(clickEvent).toHaveBeenCalledWith('my code', false, undefined)
     expect(container).toMatchSnapshot()
   })
   test('should attach runnable directive when element has a class name of `.runnable pre`', () => {
@@ -112,7 +112,7 @@ describe('Directives', () => {
 
     // Then
     expect(clickEvent).toHaveBeenCalled()
-    expect(clickEvent).toHaveBeenCalledWith('my code', false)
+    expect(clickEvent).toHaveBeenCalledWith('my code', false, undefined)
     expect(container).toMatchSnapshot()
   })
   test('should attach all directives when contents has both attributes in different elements', () => {
@@ -146,8 +146,8 @@ describe('Directives', () => {
 
     // Then
     expect(clickEvent).toHaveBeenCalledTimes(2)
-    expect(clickEvent).toHaveBeenCalledWith(':help help', true)
-    expect(clickEvent).toHaveBeenCalledWith(':play play', true)
+    expect(clickEvent).toHaveBeenCalledWith(':help help', true, undefined)
+    expect(clickEvent).toHaveBeenCalledWith(':play play', true, undefined)
     expect(container).toMatchSnapshot()
   })
   test('should not attach any directives when contents does not have any directive attributes', () => {

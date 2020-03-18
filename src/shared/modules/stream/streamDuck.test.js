@@ -45,7 +45,7 @@ describe('streamDuck', () => {
       ...initialState,
       maxFrames: 2,
       allIds: [1, 2],
-      byId: { 1: { id: 1 }, 2: { id: 2 } }
+      byId: { 1: { stack: [{ id: 1 }] }, 2: { stack: [{ id: 2 }] } }
     }
     const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
 
@@ -59,7 +59,10 @@ describe('streamDuck', () => {
   })
   test('dont remove pinned frames when cutting frames', () => {
     // Given
-    const byId = { 1: { isPinned: 1 }, 2: { isPinned: 1 } }
+    const byId = {
+      1: { stack: [{}], isPinned: 1 },
+      2: { stack: [{}], isPinned: 1 }
+    }
     const init = { ...initialState, maxFrames: 2, allIds: [1, 2], byId }
     const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
 
@@ -70,5 +73,56 @@ describe('streamDuck', () => {
     expect(newState.allIds.length).toBe(2)
     expect(newState.allIds).toMatchSnapshot()
     expect(newState.byId).toMatchSnapshot()
+  })
+  test('saves a stack of same ids', () => {
+    const ID = 'test-id'
+    const BEFORE = 'before'
+    const AFTER = 'after'
+    const byId = { [ID]: { stack: [{ type: BEFORE }] }, 2: { stack: [{}] } }
+    const init = { ...initialState, allIds: [ID, 2], byId }
+    const action = add({ id: ID, type: AFTER })
+
+    // Then
+    expect(init.byId).toMatchInlineSnapshot(`
+      Object {
+        "2": Object {
+          "stack": Array [
+            Object {},
+          ],
+        },
+        "test-id": Object {
+          "stack": Array [
+            Object {
+              "type": "before",
+            },
+          ],
+        },
+      }
+    `)
+    // When
+    const newState = reducer(init, action)
+
+    // Then
+    expect(newState.allIds.length).toBe(2)
+    expect(newState.byId).toMatchInlineSnapshot(`
+      Object {
+        "2": Object {
+          "stack": Array [
+            Object {},
+          ],
+        },
+        "test-id": Object {
+          "stack": Array [
+            Object {
+              "id": "test-id",
+              "type": "after",
+            },
+            Object {
+              "type": "before",
+            },
+          ],
+        },
+      }
+    `)
   })
 })

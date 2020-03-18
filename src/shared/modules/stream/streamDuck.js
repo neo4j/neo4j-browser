@@ -62,7 +62,10 @@ function addFrame(state, newState) {
     // No parent
     return state
   }
-  let byId = Object.assign({}, state.byId, { [newState.id]: newState })
+
+  let frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
+  frameObject.stack.unshift(newState)
+  let byId = Object.assign({}, state.byId, { [newState.id]: frameObject })
   let allIds = [].concat(state.allIds)
 
   if (newState.parentId) {

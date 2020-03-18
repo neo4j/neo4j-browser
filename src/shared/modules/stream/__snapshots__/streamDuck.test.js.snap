@@ -9,7 +9,11 @@ Array [
 exports[`streamDuck cuts the number of frames when config is set 2`] = `
 Object {
   "1": Object {
-    "id": 1,
+    "stack": Array [
+      Object {
+        "id": 1,
+      },
+    ],
   },
 }
 `;
@@ -25,9 +29,15 @@ exports[`streamDuck dont remove pinned frames when cutting frames 2`] = `
 Object {
   "1": Object {
     "isPinned": 1,
+    "stack": Array [
+      Object {},
+    ],
   },
   "2": Object {
     "isPinned": 1,
+    "stack": Array [
+      Object {},
+    ],
   },
 }
 `;
