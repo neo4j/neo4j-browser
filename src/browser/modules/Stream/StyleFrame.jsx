@@ -42,6 +42,7 @@ const StyleFrame = ({ frame }) => {
     />
   )
   if (frame.result) {
+    console.log('++1')
     grass = objToCss(frame.result)
     contents = (
       <PaddedDiv>
@@ -52,8 +53,13 @@ const StyleFrame = ({ frame }) => {
       </PaddedDiv>
     )
   }
+  // edit is true
+  if (false && frame.result) {
+    contents = objToCss(frame.result)
+  }
   return (
     <FrameTemplate
+      edit={false}
       header={frame}
       numRecords={1}
       getRecords={() => grass}

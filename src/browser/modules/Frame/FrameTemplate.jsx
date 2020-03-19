@@ -19,6 +19,7 @@
  */
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import FrameTitlebar from './FrameTitlebar'
 import Render from 'browser-components/Render'
 import {
@@ -27,8 +28,10 @@ import {
   StyledFrameContents,
   StyledFrameStatusbar,
   StyledFrameMainSection,
-  StyledFrameAside
+  StyledFrameAside,
+  StyledFrameContentsEdit
 } from './styled'
+import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 
 class FrameTemplate extends Component {
   constructor(props) {
@@ -37,7 +40,8 @@ class FrameTemplate extends Component {
       fullscreen: false,
       collapse: false,
       pinned: false,
-      lastHeight: 10
+      lastHeight: 10,
+      editContent: this.props.contents || ''
     }
   }
 
@@ -138,15 +142,33 @@ class FrameTemplate extends Component {
             <StyledFrameAside>{this.props.aside}</StyledFrameAside>
           )}
           <StyledFrameMainSection>
-            <StyledFrameContents
-              fullscreen={this.state.fullscreen}
-              ref={this.setFrameContentElement}
-              data-testid="frameContents"
-            >
-              {this.props.contents}
-            </StyledFrameContents>
+            {!this.props.edit && (
+              <StyledFrameContents
+                fullscreen={this.state.fullscreen}
+                ref={this.setFrameContentElement}
+                data-testid="frameContents"
+              >
+                {this.props.contents}
+              </StyledFrameContents>
+            )}
+            {this.props.edit && (
+              <StyledFrameContentsEdit
+                fullscreen={this.state.fullscreen}
+                ref={this.setFrameContentElement}
+                defaultValue={this.state.editContent}
+                onChange={e => {
+                  const target = e.target.value
+                  this.setState(() => ({
+                    editContent: target
+                  }))
+                }}
+              />
+            )}
           </StyledFrameMainSection>
         </StyledFrameBody>
+        <div onClick={() => this.props.onSaveClick(this.props.editContent)}>
+          Save CSS
+        </div>
         <Render if={this.props.statusbar}>
           <StyledFrameStatusbar
             fullscreen={this.state.fullscreen}
@@ -160,4 +182,13 @@ class FrameTemplate extends Component {
   }
 }
 
-export default FrameTemplate
+const mapDispatchToProps = dispatch => ({
+  onSaveClick: data => {
+    dispatch(updateGraphStyleData(data))
+  }
+})
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(FrameTemplate)

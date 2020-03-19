@@ -119,6 +119,28 @@ export const StyledFrameContents = styled.div`
     margin: 0 0 20px 0;
   }
 `
+export const StyledFrameContentsEdit = styled.textarea`
+  font-size: 14px;
+  color: black;
+  overflow: auto;
+  min-height: ${dim.frameBodyHeight / 2}px;
+  max-height: ${props =>
+    props.fullscreen
+      ? '100vh'
+      : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
+  ${props => (props.fullscreen ? 'height: 100vh' : null)};
+  flex: auto;
+  display: flex;
+  width: 100%;
+
+  .has-carousel & {
+    overflow: visible;
+  }
+
+  p {
+    margin: 0 0 20px 0;
+  }
+`
 
 export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
