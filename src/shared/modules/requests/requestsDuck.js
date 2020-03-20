@@ -42,11 +42,9 @@ export const isCancelStatus = status =>
   [REQUEST_STATUS_CANCELED, REQUEST_STATUS_CANCELING].includes(status)
 
 export default function reducer(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case REQUEST_SENT:
       return Object.assign({}, state, {
         [action.id]: {

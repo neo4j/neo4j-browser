@@ -188,21 +188,14 @@ export const addProtocolsToUrlList = list => {
 
 export const resolveWhitelistWildcard = (list, resolveTo = []) => {
   return list.reduce((all, entry) => {
-    if (entry && entry.trim() === '*') {
-      entry = resolveTo
-    }
-    return all.concat(entry)
+    return all.concat(entry && entry.trim() === '*' ? resolveTo : entry)
   }, [])
 }
 
 export const getUrlInfo = url => {
-  let protocolMissing = false
-
+  const protocolMissing = url.match(/^(.+:\/\/)?/)[1] === undefined
   // prepend a default protocol, if none was found
-  if (url.match(/^(.+:\/\/)?/)[1] === undefined) {
-    url = 'http://' + url
-    protocolMissing = true
-  }
+  const urlWithProtocol = protocolMissing ? `http://${url}` : url
 
   const {
     protocol,
@@ -214,7 +207,7 @@ export const getUrlInfo = url => {
     pathname,
     query: search,
     hash
-  } = parseUrl(url, {})
+  } = parseUrl(urlWithProtocol, {})
 
   return {
     protocol: protocolMissing ? '' : protocol,
@@ -312,9 +305,9 @@ export const unescapeCypherIdentifier = str =>
     .map(s => s.replace(/``/g, '`'))[0]
 
 export const parseTimeMillis = timeWithOrWithoutUnit => {
-  timeWithOrWithoutUnit += '' // cast to string
-  const readUnit = timeWithOrWithoutUnit.match(/\D+/)
-  const value = parseInt(timeWithOrWithoutUnit)
+  const time = String(timeWithOrWithoutUnit) // cast to string
+  const readUnit = time.match(/\D+/)
+  const value = parseInt(time)
 
   const unit = readUnit === undefined || readUnit === null ? 's' : readUnit[0] // Assume seconds
 
@@ -341,14 +334,10 @@ export const arrayToObject = array =>
 export const stringifyMod = (
   value,
   modFn = null,
-  prettyLevel = false,
+  pretty = false,
   skipOpeningIndentation = false
 ) => {
-  prettyLevel = !prettyLevel
-    ? false
-    : prettyLevel === true
-    ? 1
-    : parseInt(prettyLevel)
+  const prettyLevel = !pretty ? false : pretty === true ? 1 : parseInt(pretty)
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
   const indentation =
@@ -432,9 +421,9 @@ export const stringifyMod = (
 }
 
 export const safetlyAddObjectProp = (obj, prop, val) => {
-  obj = escapeReservedProps(obj, prop)
-  obj[prop] = val
-  return obj
+  const localObj = escapeReservedProps(obj, prop)
+  localObj[prop] = val
+  return localObj
 }
 
 export const safetlyRemoveObjectProp = (obj, prop) => {
@@ -442,17 +431,20 @@ export const safetlyRemoveObjectProp = (obj, prop) => {
     return obj
   }
   delete obj[prop]
-  obj = unEscapeReservedProps(obj, prop)
-  return obj
+  return unEscapeReservedProps(obj, prop)
 }
 
 export const escapeReservedProps = (obj, prop) => {
   if (!hasReservedProp(obj, prop)) {
     return obj
   }
-  obj = safetlyAddObjectProp(obj, getEscapedObjectProp(prop), obj[prop])
-  delete obj[prop]
-  return obj
+  const localObj = safetlyAddObjectProp(
+    obj,
+    getEscapedObjectProp(prop),
+    obj[prop]
+  )
+  delete localObj[prop]
+  return localObj
 }
 
 export const unEscapeReservedProps = (obj, prop) => {
@@ -493,11 +485,11 @@ const DEPRECATED_ROUTING_PROTOCOL = 'bolt+routing://'
 export const generateBoltHost = host => {
   const urlParts = (host || '').split('://')
   const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'neo4j://'
-  host = urlParts.length > 1 ? urlParts[1] : urlParts[0]
+  const hostName = urlParts.length > 1 ? urlParts[1] : urlParts[0]
   const aliasedProtocol =
     protocol !== DEPRECATED_ROUTING_PROTOCOL ? protocol : 'neo4j://'
 
-  return aliasedProtocol + (host || 'localhost:7687')
+  return aliasedProtocol + (hostName || 'localhost:7687')
 }
 
 export function flushPromises() {

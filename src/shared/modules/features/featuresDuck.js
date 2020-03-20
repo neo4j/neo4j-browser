@@ -63,15 +63,13 @@ const initialState = {
 }
 
 export default function(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = {
-      ...initialState,
-      ...state,
-      browserSync: shouldUseBrowserSync(action)
-    }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return {
+        ...initialState,
+        ...state,
+        browserSync: shouldUseBrowserSync(action)
+      }
     case UPDATE_ALL_FEATURES:
       return { ...state, availableProcedures: [...action.availableProcedures] }
     case UPDATE_USER_CAPABILITIES:

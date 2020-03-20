@@ -205,11 +205,9 @@ let memoryPassword = ''
 
 // Reducer
 export default function(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state, useDb: initialState.useDb }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state, useDb: initialState.useDb }
     case ADD:
       return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:

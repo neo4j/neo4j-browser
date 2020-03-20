@@ -142,14 +142,14 @@ export const selectorStringToArray = selector => {
   // We want to match all . that are not preceded by \\
   // Instead we reverse and look
   // for . that are not followed by \\ (negative lookahead)
-  selector = selector
+  const reverseSelector = selector
     .split('')
     .reverse()
     .join('')
   var re = /(.+?)(?!\.\\)(?:\.|$)/g
   const out = []
   let m
-  while ((m = re.exec(selector)) !== null) {
+  while ((m = re.exec(reverseSelector)) !== null) {
     const res = m[1]
       .split('')
       .reverse()

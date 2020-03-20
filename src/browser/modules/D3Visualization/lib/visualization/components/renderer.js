@@ -21,10 +21,7 @@ export default class Renderer {
   onGraphChange = null
   onTick = null
   constructor(opts) {
-    if (opts == null) {
-      opts = {}
-    }
-    Object.assign(this, opts)
+    Object.assign(this, opts == null ? {} : opts)
     if (this.onGraphChange === null) {
       this.onGraphChange = function() {}
     }

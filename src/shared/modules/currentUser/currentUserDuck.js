@@ -56,11 +56,9 @@ export function getCurrentUser(state) {
  * Reducer
  */
 export default function user(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case CLEAR:
       return { ...initialState }
     case UPDATE_CURRENT_USER:

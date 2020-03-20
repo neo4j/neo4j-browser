@@ -503,7 +503,7 @@ function queryPlan(element) {
                   enter.append('path').attr('fill', linkColor)
 
                   return update.transition().attr('d', d => {
-                    width = Math.max(1, d.width)
+                    const width = Math.max(1, d.width)
                     const sourceX = d.source.x + operatorWidth / 2
                     const targetX = d.target.x + d.source.tx
 

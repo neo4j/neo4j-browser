@@ -260,14 +260,12 @@ export default function neoGraphStyle() {
       }
     }
 
-    const nodeSelector = function(node) {
-      node = node || {}
+    const nodeSelector = function(node = {}) {
       const classes = node.labels != null ? node.labels : []
       return new Selector('node', classes)
     }
 
-    const relationshipSelector = function(rel) {
-      rel = rel || {}
+    const relationshipSelector = function(rel = {}) {
       const classes = rel.type != null ? [rel.type] : []
       return new Selector('relationship', classes)
     }
@@ -479,12 +477,10 @@ export default function neoGraphStyle() {
     }
 
     GraphStyle.prototype.loadRules = function(data) {
-      if (typeof data !== 'object') {
-        data = defaultStyle
-      }
+      const localData = typeof data === 'object' ? data : defaultStyle
       this.rules.length = 0
-      for (const key in data) {
-        const props = data[key]
+      for (const key in localData) {
+        const props = localData[key]
         this.rules.push(new StyleRule(parseSelector(key), props))
       }
       return this
@@ -532,8 +528,7 @@ export default function neoGraphStyle() {
       })
     }
 
-    GraphStyle.prototype.forNode = function(node) {
-      node = node || {}
+    GraphStyle.prototype.forNode = function(node = {}) {
       const selector = nodeSelector(node)
       if ((node.labels != null ? node.labels.length : 0) > 0) {
         this.setDefaultNodeStyling(selector, node)

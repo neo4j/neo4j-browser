@@ -26,17 +26,15 @@ const noop = function() {}
 const numberOfItemsInContextMenu = 3
 
 const arc = function(radius, itemNumber, width) {
-  if (width == null) {
-    width = 30
-  }
-  itemNumber = itemNumber - 1
-  const startAngle = ((2 * Math.PI) / numberOfItemsInContextMenu) * itemNumber
+  const localWidth = width == null ? 30 : width
+  const startAngle =
+    ((2 * Math.PI) / numberOfItemsInContextMenu) * (itemNumber - 1)
   const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
   const innerRadius = Math.max(radius + 8, 20)
   return d3.svg
     .arc()
     .innerRadius(innerRadius)
-    .outerRadius(innerRadius + width)
+    .outerRadius(innerRadius + localWidth)
     .startAngle(startAngle)
     .endAngle(endAngle)
     .padAngle(0.03)

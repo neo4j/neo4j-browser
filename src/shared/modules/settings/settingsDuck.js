@@ -102,11 +102,9 @@ const initialState = {
 }
 
 export default function settings(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case UPDATE:
       return Object.assign({}, state, action.state)
     case REPLACE:

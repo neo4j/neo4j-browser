@@ -74,11 +74,9 @@ export const getErrorMessage = state => state[NAME].errorMessage
 export const whitelistedMultiCommands = () => [':param', ':use']
 
 export default function reducer(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case SHOW_ERROR_MESSAGE:
       return { errorMessage: action.errorMessage }
     case CLEAR_ERROR_MESSAGE:
@@ -182,18 +180,19 @@ export const handleCommandEpic = (action$, store) =>
       const cmdchar = getCmdChar(store.getState())
       const jobs = []
       statements.forEach(cmd => {
-        cmd = cleanCommand(cmd)
+        const cleanCmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
         const whitelistedCommands = whitelistedMultiCommands()
         const isWhitelisted =
-          whitelistedCommands.filter(wcmd => !!cmd.startsWith(wcmd)).length > 0
+          whitelistedCommands.filter(wcmd => !!cleanCmd.startsWith(wcmd))
+            .length > 0
 
         // Ignore client commands that aren't whitelisted
-        const ignore = !!cmd.startsWith(cmdchar) && !isWhitelisted
+        const ignore = !!cleanCmd.startsWith(cmdchar) && !isWhitelisted
 
         const { action, interpreted } = buildCommandObject(
-          { cmd, ignore },
+          { cmd: cleanCmd, ignore },
           helper.interpret,
           getCmdChar(store.getState())
         )

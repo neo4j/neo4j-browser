@@ -177,11 +177,9 @@ export const initialState = {
  * Reducer
  */
 export default function reducer(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case ADD:
       return addFrame(state, action.state)
     case REMOVE:

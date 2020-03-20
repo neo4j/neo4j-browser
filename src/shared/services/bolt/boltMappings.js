@@ -483,9 +483,9 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
   }
   if (typeof item === 'object') {
     const typedObject = {}
-    item = escapeReservedProps(item, reservedTypePropertyName)
-    Object.keys(item).forEach(key => {
-      typedObject[key] = recursivelyTypeGraphItems(item[key], types)
+    const localItem = escapeReservedProps(item, reservedTypePropertyName)
+    Object.keys(localItem).forEach(key => {
+      typedObject[key] = recursivelyTypeGraphItems(localItem[key], types)
     })
     return typedObject
   }

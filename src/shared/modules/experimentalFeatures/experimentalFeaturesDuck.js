@@ -36,11 +36,9 @@ const cherrypickAndMergeStates = (base, stored) => {
 
 // Reducer
 export default function experimentalFeatures(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = cherrypickAndMergeStates(initialState, state)
-  }
-
   switch (action.type) {
+    case APP_START:
+      return cherrypickAndMergeStates(initialState, state)
     case FEATURE_ON:
       if (!state.hasOwnProperty(action.name)) {
         return state

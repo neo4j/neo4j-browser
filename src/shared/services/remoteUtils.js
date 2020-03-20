@@ -22,8 +22,8 @@
 import { getUrlInfo } from 'services/utils'
 
 const removeJavascriptFromHref = string => {
-  string = string.replace(/href=".*javascript:[^"]*"/, 'href=""')
-  return string.replace(/href='.*javascript:[^']*'/, "href=''")
+  const localString = string.replace(/href=".*javascript:[^"]*"/, 'href=""')
+  return localString.replace(/href='.*javascript:[^']*'/, "href=''")
 }
 const removeScriptTags = string =>
   string.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi, '')
@@ -35,9 +35,9 @@ const removeOnHandlersFromHtml = string =>
 
 export function cleanHtml(string) {
   if (typeof string !== 'string') return string
-  string = removeOnHandlersFromHtml(string)
-  string = removeScriptTags(string)
-  return removeJavascriptFromHref(string)
+  const stringWithoutHandlers = removeOnHandlersFromHtml(string)
+  const stringWithoutScript = removeScriptTags(stringWithoutHandlers)
+  return removeJavascriptFromHref(stringWithoutScript)
 }
 
 export const authHeaderFromCredentials = (username, password) => {

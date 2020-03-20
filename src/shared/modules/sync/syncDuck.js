@@ -119,11 +119,9 @@ export function getLastSyncedAt(state) {
  */
 
 export function syncReducer(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case SET_SYNC_DATA:
       return Object.assign({}, state, action.obj)
     case CLEAR_SYNC:
@@ -135,11 +133,9 @@ export function syncReducer(state = initialState, action) {
 }
 
 export function syncConsentReducer(state = initialConsentState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case CONSENT_SYNC:
       return Object.assign({}, state, {
         consented: action.consent,
@@ -157,14 +153,9 @@ export function syncConsentReducer(state = initialConsentState, action) {
 }
 
 export function syncMetaDataReducer(state = initialMetadataState, action) {
-  if (action.type === APP_START) {
-    state = {
-      ...initialMetadataState,
-      ...state
-    }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialMetadataState, ...state }
     case SET_AUTH_DATA:
       return {
         ...state,
