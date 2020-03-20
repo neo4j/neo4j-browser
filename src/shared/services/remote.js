@@ -40,9 +40,7 @@ function get(url, headers = {}) {
     headers
   })
     .then(checkStatus)
-    .then(function(response) {
-      return response.text()
-    })
+    .then(response => response.text())
 }
 
 export function getJSON(url) {

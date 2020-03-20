@@ -425,7 +425,7 @@ const availableCommands = [
           put(successfulCypher(action.cmd))
           return res
         })
-        .catch(function(e) {
+        .catch(e => {
           const request = getRequest(store.getState(), id)
           // Only update error statuses for pending queries
           if (request.status !== REQUEST_STATUS_PENDING) {

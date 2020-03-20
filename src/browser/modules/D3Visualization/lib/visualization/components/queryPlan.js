@@ -502,7 +502,7 @@ function queryPlan(element) {
                 selections(enter, update) {
                   enter.append('path').attr('fill', linkColor)
 
-                  return update.transition().attr('d', function(d) {
+                  return update.transition().attr('d', d => {
                     width = Math.max(1, d.width)
                     const sourceX = d.source.x + operatorWidth / 2
                     const targetX = d.target.x + d.source.tx
@@ -642,7 +642,7 @@ function queryPlan(element) {
                     .append('g')
                     .attr('class', 'header')
                     .attr('pointer-events', 'all')
-                    .on('click', function(d) {
+                    .on('click', d => {
                       d.expanded = !d.expanded
                       return redisplay()
                     })
@@ -656,7 +656,7 @@ function queryPlan(element) {
                       enter.append('path').attr('class', 'banner')
 
                       return update
-                        .attr('d', function(d) {
+                        .attr('d', d => {
                           const shaving =
                             d.height <= operatorHeaderHeight
                               ? operatorCornerRadius
@@ -795,7 +795,7 @@ function queryPlan(element) {
                       'transform',
                       d => `translate(0, ${operatorHeaderHeight + d.y})`
                     )
-                    .attr('font-family', function(d) {
+                    .attr('font-family', d => {
                       if (
                         d.className === 'expression' ||
                         d.className === 'identifiers'
@@ -884,7 +884,7 @@ function queryPlan(element) {
                     .attr('class', 'cost')
                     .attr('fill', costColor)
 
-                  return update.transition().attr('d', function(d) {
+                  return update.transition().attr('d', d => {
                     if (d.costHeight < operatorCornerRadius) {
                       const shaving =
                         operatorCornerRadius -

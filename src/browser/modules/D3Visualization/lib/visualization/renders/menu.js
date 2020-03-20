@@ -54,12 +54,12 @@ const attachContextEvent = (event, elems, viz, content, label) =>
   (() => {
     const result = []
     for (const elem of Array.from(elems)) {
-      elem.on('mousedown.drag', function() {
+      elem.on('mousedown.drag', () => {
         d3.event.stopPropagation()
         return null
       })
       elem.on('mouseup', node => viz.trigger(event, node))
-      elem.on('mouseover', function(node) {
+      elem.on('mouseover', node => {
         node.contextMenu = {
           menuSelection: event,
           menuContent: content,
@@ -68,7 +68,7 @@ const attachContextEvent = (event, elems, viz, content, label) =>
         return viz.trigger('menuMouseOver', node)
       })
       result.push(
-        elem.on('mouseout', function(node) {
+        elem.on('mouseout', node => {
           delete node.contextMenu
           return viz.trigger('menuMouseOut', node)
         })

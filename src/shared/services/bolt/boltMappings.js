@@ -91,13 +91,13 @@ const extractPathForRows = (path, converters) => {
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(function(segment) {
-    return [
+  return segments.map(segment =>
+    [
       objIntToString(segment.start, converters),
       objIntToString(segment.relationship, converters),
       objIntToString(segment.end, converters)
     ].filter(part => part !== null)
-  })
+  )
 }
 
 export function extractPlan(result, calculateTotalDbHits = false) {

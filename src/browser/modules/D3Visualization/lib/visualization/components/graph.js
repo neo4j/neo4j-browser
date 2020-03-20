@@ -173,7 +173,7 @@ export default class Graph {
         relationship =>
           relationship.source.id === id || relationship.target.id === id
       )
-      .map(function(relationship) {
+      .map(relationship => {
         if (relationship.target.id === id) {
           return relationship.source.id
         }

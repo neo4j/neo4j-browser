@@ -96,7 +96,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     d3
       .transition()
       .duration(500)
-      .tween('zoom', function() {
+      .tween('zoom', () => {
         const t = d3.interpolate(zoomBehavior.translate(), translate)
         const s = d3.interpolate(zoomBehavior.scale(), scale)
         return function(a) {
@@ -142,7 +142,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
   }
   // Background click event
   // Check if panning is ongoing
-  rect.on('click', function() {
+  rect.on('click', () => {
     if (!draw) {
       return viz.trigger('canvasClicked', el)
     }

@@ -26,13 +26,13 @@ export default function clickHandler() {
     let down
     const tolerance = 5
     let wait = null
-    selection.on('mousedown', function() {
+    selection.on('mousedown', () => {
       d3.event.target.__data__.fixed = true
       down = d3.mouse(document.body)
       return d3.event.stopPropagation()
     })
 
-    return selection.on('mouseup', function() {
+    return selection.on('mouseup', () => {
       if (dist(down, d3.mouse(document.body)) > tolerance) {
       } else {
         if (wait) {

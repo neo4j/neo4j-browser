@@ -311,20 +311,14 @@ export default function neoGraphStyle() {
         /description$/i,
         /^.+/
       ]
-      let defaultCaption = captionPrioOrder.reduceRight(function(
-        leading,
-        current
-      ) {
-        const hits = item.propertyList.filter(function(prop) {
-          return current.test(prop.key)
-        })
+      let defaultCaption = captionPrioOrder.reduceRight((leading, current) => {
+        const hits = item.propertyList.filter(prop => current.test(prop.key))
         if (hits.length) {
           return '{' + hits[0].key + '}'
         } else {
           return leading
         }
-      },
-      '')
+      }, '')
       defaultCaption || (defaultCaption = '<id>')
       return {
         caption: defaultCaption
@@ -513,7 +507,7 @@ export default function neoGraphStyle() {
     }
 
     GraphStyle.prototype.interpolate = function(str, item) {
-      let ips = str.replace(/\{([^{}]*)\}/g, function(a, b) {
+      let ips = str.replace(/\{([^{}]*)\}/g, (a, b) => {
         const r = item.propertyMap[b]
         if (typeof r === 'object') {
           return r.join(', ')
@@ -529,7 +523,7 @@ export default function neoGraphStyle() {
       if (ips.length < 1 && str === '{id}' && item.isNode) {
         ips = '<id>'
       }
-      return ips.replace(/^<(id|type)>$/, function(a, b) {
+      return ips.replace(/^<(id|type)>$/, (a, b) => {
         const r = item[b]
         if (typeof r === 'string' || typeof r === 'number') {
           return r

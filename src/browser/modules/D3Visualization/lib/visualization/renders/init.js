@@ -189,7 +189,7 @@ const relationshipType = new Renderer({
           parseFloat(viz.style.forRelationship(rel).get('font-size')) / 2 -
           1
       )
-      .attr('transform', function(rel) {
+      .attr('transform', rel => {
         if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
           return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
         } else {

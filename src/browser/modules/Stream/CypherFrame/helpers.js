@@ -293,13 +293,13 @@ const arrayifyPath = (types = neo4j.types, path) => {
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(function(segment) {
-    return [
+  return segments.map(segment =>
+    [
       extractPropertiesFromGraphItems(types, segment.start),
       extractPropertiesFromGraphItems(types, segment.relationship),
       extractPropertiesFromGraphItems(types, segment.end)
     ].filter(part => part !== null)
-  })
+  )
 }
 
 /**
