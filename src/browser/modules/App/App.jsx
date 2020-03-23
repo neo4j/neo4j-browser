@@ -32,7 +32,10 @@ import {
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
-import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  allowOutgoingConnections,
+  getDatabases
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
   getConnectionState,
@@ -42,7 +45,8 @@ import {
   getConnectionData,
   SWITCH_CONNECTION_FAILED,
   SWITCH_CONNECTION,
-  SILENT_DISCONNECT
+  SILENT_DISCONNECT,
+  getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 import {
@@ -120,7 +124,9 @@ export function App(props) {
     experimentalFeatures,
     store,
     codeFontLigatures,
-    defaultConnectionData
+    defaultConnectionData,
+    useDb,
+    databases
   } = props
 
   const wrapperClassNames = []
@@ -183,6 +189,8 @@ export function App(props) {
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
                       useBrowserSync={loadSync}
+                      useDb={useDb}
+                      databases={databases}
                     />
                   </StyledMainWrapper>
                 </StyledBody>
@@ -216,7 +224,9 @@ const mapStateToProps = state => {
     browserSyncConfig: getBrowserSyncConfig(state),
     browserSyncAuthStatus: getUserAuthStatus(state),
     loadSync: useBrowserSync(state),
-    isWebEnv: inWebEnv(state)
+    isWebEnv: inWebEnv(state),
+    useDb: getUseDb(state),
+    databases: getDatabases(state)
   }
 }
 
