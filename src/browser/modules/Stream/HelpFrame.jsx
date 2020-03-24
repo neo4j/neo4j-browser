@@ -27,8 +27,8 @@ import { transformCommandToHelpTopic } from 'services/commandUtils'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
 import { CarouselButton } from 'browser-components/buttons/index'
 import {
-  SlideNextIcon,
-  SlidePreviousIcon
+  StackNextIcon,
+  StackPreviousIcon
 } from 'browser-components/icons/Icons'
 
 const HelpFrame = ({ frame, stack = [] }) => {
@@ -42,27 +42,27 @@ const HelpFrame = ({ frame, stack = [] }) => {
 
   const { aside, main } = generateContent(currentFrame)
 
-  const prevBtn = (
-    <CarouselButton
-      className="previous-slide  rounded"
-      data-testid="previousSlide"
-      disabled={currentFrameIndex === stack.length - 1}
-      onClick={() => setCurrentFrameIndex(currentFrameIndex + 1)}
-    >
-      <SlidePreviousIcon />
-    </CarouselButton>
-  )
+  const prevBtn =
+    currentFrameIndex === stack.length - 1 ? null : (
+      <CarouselButton
+        className="previous-slide  rounded"
+        data-testid="previousSlide"
+        onClick={() => setCurrentFrameIndex(currentFrameIndex + 1)}
+      >
+        <StackPreviousIcon />
+      </CarouselButton>
+    )
 
-  const nextBtn = (
-    <CarouselButton
-      className="next-slide rounded"
-      data-testid="nextSlide"
-      disabled={currentFrameIndex === 0}
-      onClick={() => setCurrentFrameIndex(currentFrameIndex - 1)}
-    >
-      <SlideNextIcon />
-    </CarouselButton>
-  )
+  const nextBtn =
+    currentFrameIndex === 0 ? null : (
+      <CarouselButton
+        className="next-slide rounded"
+        data-testid="nextSlide"
+        onClick={() => setCurrentFrameIndex(currentFrameIndex - 1)}
+      >
+        <StackNextIcon />
+      </CarouselButton>
+    )
 
   const contents =
     stack.length > 1 ? (

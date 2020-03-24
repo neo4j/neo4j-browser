@@ -39,6 +39,7 @@ import Text201 from 'icons/Text2-01.svg'
 import appWindowCode from 'icons/app-window-code.svg'
 import arrowLeft1 from 'icons/arrow-left-1.svg'
 import arrowRight1 from 'icons/arrow-right-1.svg'
+import skipPrev from 'icons/skip-prev.svg'
 
 const inactive = `
   color: #797979;
@@ -187,6 +188,16 @@ export const SlidePreviousIcon = () => (
 )
 export const SlideNextIcon = () => (
   <IconContainer icon={arrowRight1} width={20} />
+)
+export const StackPreviousIcon = () => (
+  <IconContainer icon={skipPrev} width={12} />
+)
+export const StackNextIcon = () => (
+  <IconContainer
+    icon={skipPrev}
+    style={{ transform: 'rotate(180deg)' }}
+    width={12}
+  />
 )
 export const TableIcon = () => (
   <IconContainer icon={table01} text="Table" width={20} />
