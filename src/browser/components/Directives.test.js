@@ -117,6 +117,7 @@ describe('Directives', () => {
   })
   test('should attach all directives when contents has both attributes in different elements', () => {
     // Given
+    const FRAME_ID = 'FRAME_ID'
     const clickEvent = jest.fn()
     const html = (
       <div>
@@ -127,7 +128,11 @@ describe('Directives', () => {
 
     // When
     const { container, getByText } = render(
-      <DirectivesComponent content={html} onItemClick={clickEvent} />
+      <DirectivesComponent
+        originFrameId={FRAME_ID}
+        content={html}
+        onItemClick={clickEvent}
+      />
     )
     fireEvent(
       getByText('help'),
@@ -146,8 +151,8 @@ describe('Directives', () => {
 
     // Then
     expect(clickEvent).toHaveBeenCalledTimes(2)
-    expect(clickEvent).toHaveBeenCalledWith(':help help', true, undefined)
-    expect(clickEvent).toHaveBeenCalledWith(':play play', true, undefined)
+    expect(clickEvent).toHaveBeenCalledWith(':help help', true, FRAME_ID)
+    expect(clickEvent).toHaveBeenCalledWith(':play play', true, FRAME_ID)
     expect(container).toMatchSnapshot()
   })
   test('should not attach any directives when contents does not have any directive attributes', () => {
