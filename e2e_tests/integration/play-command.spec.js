@@ -29,7 +29,7 @@ describe('Play command', () => {
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
-  it('can `:help` command', () => {
+  it('can stack `:play` commands', () => {
     cy.executeCommand(':clear')
     const query = ':play start'
     cy.executeCommand(query)
@@ -94,5 +94,57 @@ describe('Play command', () => {
 
     // And we should be back on the movie
     frame.should('have.length', 1).should('contain', 'Pop-cultural connections')
+  })
+  it('can execute remote types of `:play`', () => {
+    cy.executeCommand(':clear')
+
+    // Existing guide
+    cy.executeCommand(':play reco')
+    cy.getFrames().should(
+      'contain',
+      'Welcome to the Neo4j recommendations training'
+    )
+
+    // Next slide
+    nextSlideBtn().click()
+
+    // Click link to new guide
+    cy.contains('Procedures').click()
+
+    // Assert
+    cy.getFrames()
+      .should('have.length', 1)
+      .should('contain', 'Procedures are a new feature in')
+
+    // Click back in stack
+    cy.getPrevInFrameStackBtn().click()
+
+    // Assert
+    cy.getFrames()
+      .should('have.length', 1)
+      .should('contain', 'Welcome to the Neo4j recommendations training')
+  })
+  it('handles not found guides', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(':play not-found-guide-anywhere')
+
+    cy.getFrames()
+      .should('have.length', 1)
+      .should('contain', 'Not found')
+  })
+  it('populates editor on code click', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(':play movies')
+
+    // Goto slide 2
+    nextSlideBtn().click()
+
+    // Click code
+    cy.getFrames()
+      .get('.runnable')
+      .click()
+
+    // Assert
+    cy.getEditor().should('contain', 'CREATE')
   })
 })

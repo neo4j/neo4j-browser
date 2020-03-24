@@ -230,7 +230,7 @@ function generateContent(stackFrame, bus, onSlide) {
       bus.self(action.type, action, res => {
         if (!res.success) {
           // No luck
-          return resolve(unfound(chapters.unfound))
+          return resolve(unfound(stackFrame, chapters.unfound, onSlide))
         }
         // Found remote guide
         return resolve({
