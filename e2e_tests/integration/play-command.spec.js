@@ -20,7 +20,9 @@
 
 /* global Cypress, cy, test, expect, before */
 
-describe('Help command', () => {
+const nextSlideBtn = () => cy.get('[data-testid="nextSlide"]')
+
+describe('Play command', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
       .title()
@@ -29,67 +31,68 @@ describe('Help command', () => {
   })
   it('can `:help` command', () => {
     cy.executeCommand(':clear')
-    const query = ':help'
+    const query = ':play start'
     cy.executeCommand(query)
 
     let frame = cy.getFrames()
 
     // Make sure first loads
-    frame
-      .should('have.length', 1)
-      .should('contain', 'Neo4j Browser is a command shell')
+    frame.should('have.length', 1).should('contain', 'Learn about Neo4j')
 
-    // Click a help topic
-    frame.contains('help commands').click()
+    // Click a guide button
+    frame.contains('Start Learning').click()
 
     frame = cy.getFrames()
 
     // Make sure it loads in same frame
-    frame
-      .should('have.length', 1)
-      .should('contain', 'In addition to composing and running Cypher queries')
+    frame.should('have.length', 1).should('contain', 'Graph Fundamentals')
 
     // Click back in stack
     cy.getPrevInFrameStackBtn().click()
     frame = cy.getFrames()
 
     // Make sure we're back
-    frame
-      .should('have.length', 1)
-      .should('contain', 'Neo4j Browser is a command shell')
+    frame.should('have.length', 1).should('contain', 'Learn about Neo4j')
 
-    // Click forward
+    // Go to next again
+    cy.getNextInFrameStackBtn().click()
+
+    // Click forward 7 times (to last slide)
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+
+    frame = cy.getFrames()
+
+    frame.should('have.length', 1).should('contain', 'Keep getting started')
+
+    // Click new guide
+    frame.contains('The Movie Graph').click()
+    frame = cy.getFrames()
+
+    frame.should('have.length', 1).should('contain', 'Pop-cultural connections')
+
+    // Then click back in stack once
+    cy.getPrevInFrameStackBtn().click()
+    // Click to last slide again
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
+
+    frame = cy.getFrames()
+    frame.should('have.length', 1).should('contain', 'Keep getting started')
+
+    // Click next in stack
     cy.getNextInFrameStackBtn().click()
     frame = cy.getFrames()
-    frame
-      .should('have.length', 1)
-      .should('contain', 'In addition to composing and running Cypher queries')
 
-    // Click new topic
-    frame.contains('help auto').click()
-    frame = cy.getFrames()
-
-    frame
-      .should('have.length', 1)
-      .should(
-        'contain',
-        'Execute a Cypher query within an auto-committing transaction'
-      )
-
-    // Then click back twice
-    cy.getPrevInFrameStackBtn().click()
-    cy.getPrevInFrameStackBtn().click()
-    frame = cy.getFrames()
-
-    // And we should be back
-    frame
-      .should('have.length', 1)
-      .should('contain', 'Neo4j Browser is a command shell')
-
-    // Click something else
-    frame.contains('play concepts').click()
-
-    // We should now have two frames
-    cy.getFrames().should('have.length', 2)
+    // And we should be back on the movie
+    frame.should('have.length', 1).should('contain', 'Pop-cultural connections')
   })
 })

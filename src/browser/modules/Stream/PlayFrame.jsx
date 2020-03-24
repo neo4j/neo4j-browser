@@ -97,7 +97,7 @@ export function PlayFrame({ stack, bus }) {
     stackIndex === stack.length - 1 || !atSlideStart ? null : (
       <CarouselButton
         className="previous-slide  rounded"
-        data-testid="previousSlide"
+        data-testid="prev-in-stack-button"
         onClick={prevGuide}
       >
         <StackPreviousIcon />
@@ -108,7 +108,7 @@ export function PlayFrame({ stack, bus }) {
     stackIndex === 0 || !atSlideEnd ? null : (
       <CarouselButton
         className="next-slide rounded"
-        data-testid="nextSlide"
+        data-testid="next-in-stack-button"
         onClick={nextGuide}
       >
         <StackNextIcon />
