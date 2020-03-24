@@ -69,14 +69,19 @@ function addFrame(state, newState) {
   let allIds = [].concat(state.allIds)
 
   if (newState.parentId) {
-    const currentStatements = byId[newState.parentId].statements || []
+    const currentStatements = byId[newState.parentId].stack[0].statements || []
     // Need to add this id to parent's list of statements
     if (!currentStatements.includes(newState.id)) {
       byId = {
         ...byId,
         [newState.parentId]: {
           ...byId[newState.parentId],
-          statements: currentStatements.concat(newState.id)
+          stack: [
+            {
+              ...byId[newState.parentId].stack[0],
+              statements: currentStatements.concat(newState.id)
+            }
+          ]
         }
       }
     }
