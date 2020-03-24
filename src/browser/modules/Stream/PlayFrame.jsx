@@ -83,12 +83,10 @@ export function PlayFrame({ stack, bus }) {
 
   const prevGuide = () => {
     setStackIndex(stackIndex + 1)
-    // useForceUpdate()
   }
 
   const nextGuide = () => {
     setStackIndex(stackIndex - 1)
-    // useForceUpdate()
   }
 
   useEffect(() => {

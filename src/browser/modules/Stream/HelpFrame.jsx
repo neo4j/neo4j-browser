@@ -68,11 +68,11 @@ const HelpFrame = ({ frame, stack = [] }) => {
     stack.length > 1 ? (
       <React.Fragment>
         {prevBtn}
-        <Directives originFrameId={frame.id} content={main} />
+        {main}
         {nextBtn}
       </React.Fragment>
     ) : (
-      <Directives originFrameId={frame.id} content={main} />
+      main
     )
   return (
     <FrameTemplate
@@ -96,7 +96,7 @@ function generateContent(frame) {
   let aside
 
   if (frame.result) {
-    main = <Docs html={frame.result} />
+    main = <Docs withDirectives originFrameId={frame.id} html={frame.result} />
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
@@ -111,7 +111,7 @@ function generateContent(frame) {
       }
 
       aside = title ? <FrameAside title={title} subtitle={subtitle} /> : null
-      main = <Docs content={content} />
+      main = <Docs withDirectives originFrameId={frame.id} content={content} />
     }
   }
   return { aside, main }
