@@ -43,11 +43,6 @@ const {
   play: { chapters }
 } = docs
 
-const useForceUpdate = () => {
-  const [, updateState] = useState()
-  return useCallback(() => updateState({}), [])
-}
-
 const checkHtmlForSlides = html => {
   const el = document.createElement('html')
   el.innerHTML = html
