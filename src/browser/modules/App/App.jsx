@@ -43,6 +43,7 @@ import {
   getActiveConnectionData,
   isConnected,
   getConnectionData,
+  INITIAL_SWITCH_CONNECTION_FAILED,
   SWITCH_CONNECTION_FAILED,
   SWITCH_CONNECTION,
   SILENT_DISCONNECT,
@@ -140,7 +141,7 @@ export function App(props) {
         onMount={(...args) => {
           buildConnectionCreds(...args, { defaultConnectionData })
             .then(creds => props.bus.send(INJECTED_DISCOVERY, creds))
-            .catch(() => props.bus.send(SWITCH_CONNECTION_FAILED))
+            .catch(() => props.bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
           getDesktopTheme(...args)
             .then(theme => setEnvironmentTheme(theme))
             .catch(setEnvironmentTheme(null))

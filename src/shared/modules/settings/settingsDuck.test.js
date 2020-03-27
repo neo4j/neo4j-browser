@@ -19,6 +19,7 @@
  */
 
 import reducer, {
+  DISABLE_IMPLICIT_INIT_COMMANDS,
   NAME,
   UPDATE,
   REPLACE,
@@ -70,6 +71,18 @@ describe('settings reducer', () => {
     expect(nextState.greeting).toBeUndefined()
     expect(nextState.type).toBeUndefined()
     expect(nextState).toMatchSnapshot()
+  })
+
+  it('defaults playImplicitInitCommands to true', () => {
+    expect(reducer(undefined, { type: 'dummy action' })).toEqual(
+      expect.objectContaining({ playImplicitInitCommands: true })
+    )
+  })
+
+  it('sets playImplicitInitCommands to false on DISABLE_IMPLICIT_INIT_COMMANDS', () => {
+    expect(
+      reducer(undefined, { type: DISABLE_IMPLICIT_INIT_COMMANDS })
+    ).toEqual(expect.objectContaining({ playImplicitInitCommands: false }))
   })
 })
 

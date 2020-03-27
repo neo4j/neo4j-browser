@@ -38,6 +38,7 @@ import { addHistory } from '../history/historyDuck'
 import {
   getCmdChar,
   getMaxHistory,
+  getPlayImplicitInitCommands,
   shouldEnableMultiStatementMode
 } from '../settings/settingsDuck'
 import { fetchRemoteGuide } from './helpers/play'
@@ -257,7 +258,10 @@ export const postConnectCmdEpic = (some$, store) =>
           const cmds = extractPostConnectCommandsFromServerConfig(
             serverSettings['browser.post_connect_cmd']
           )
-          if (cmds !== undefined) {
+          const playImplicitInitCommands = getPlayImplicitInitCommands(
+            store.getState()
+          )
+          if (playImplicitInitCommands && cmds !== undefined) {
             cmds.forEach(cmd => {
               store.dispatch(executeSystemCommand(`${cmdchar}${cmd}`))
             })

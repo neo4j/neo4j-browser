@@ -29,7 +29,10 @@ import {
   CONNECT,
   VERIFY_CREDENTIALS
 } from 'shared/modules/connections/connectionsDuck'
-import { getInitCmd } from 'shared/modules/settings/settingsDuck'
+import {
+  getInitCmd,
+  getPlayImplicitInitCommands
+} from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
@@ -196,7 +199,9 @@ export class ConnectionForm extends Component {
     this.state.successCallback()
     this.saveCredentials()
     this.props.setActiveConnection(this.state.id)
-    this.props.executeInitCmd()
+    if (this.props.playImplicitInitCommands) {
+      this.props.executeInitCmd()
+    }
   }
 
   saveCredentials() {
@@ -277,6 +282,7 @@ const mapStateToProps = state => {
     initCmd: getInitCmd(state),
     activeConnection: getActiveConnection(state),
     activeConnectionData: getActiveConnectionData(state),
+    playImplicitInitCommands: getPlayImplicitInitCommands(state),
     storeCredentials: shouldRetainConnectionCredentials(state)
   }
 }
@@ -293,6 +299,7 @@ const mapDispatchToProps = dispatch => {
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
+    playImplicitInitCommands: stateProps.playImplicitInitCommands,
     activeConnection: stateProps.activeConnection,
     activeConnectionData: stateProps.activeConnectionData,
     storeCredentials: stateProps.storeCredentials,

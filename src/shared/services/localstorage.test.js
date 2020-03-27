@@ -80,4 +80,17 @@ describe('localstorage', () => {
     // Then
     expect(response).toEqual(vals)
   })
+
+  it('returns "settings" with the playImplicitInitCommands flag set true', () => {
+    ls.applyKeys('settings')
+    ls.setStorage({
+      getItem: () => JSON.stringify({})
+    })
+
+    expect(ls.getAll()).toEqual(
+      expect.objectContaining({
+        settings: { playImplicitInitCommands: true }
+      })
+    )
+  })
 })
