@@ -6,6 +6,13 @@ const VisibleEditor = '[data-testid="editor-wrapper"]'
 /* global Cypress, cy */
 
 Cypress.Commands.add('getEditor', () => cy.get(VisibleEditor))
+Cypress.Commands.add('getFrames', () => cy.get('[data-testid="frame"]'))
+Cypress.Commands.add('getPrevInFrameStackBtn', () =>
+  cy.get('[data-testid="prev-in-stack-button"]')
+)
+Cypress.Commands.add('getNextInFrameStackBtn', () =>
+  cy.get('[data-testid="next-in-stack-button"]')
+)
 
 Cypress.Commands.add(
   'setInitialPassword',

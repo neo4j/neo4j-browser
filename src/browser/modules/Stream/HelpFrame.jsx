@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Docs from '../Docs/Docs'
 import docs from '../../documentation'
 import Directives from 'browser-components/Directives'
@@ -25,8 +25,66 @@ import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
+import { CarouselButton } from 'browser-components/buttons/index'
+import {
+  StackNextIcon,
+  StackPreviousIcon
+} from 'browser-components/icons/Icons'
 
-const HelpFrame = ({ frame }) => {
+const HelpFrame = ({ frame, stack = [] }) => {
+  const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
+  const currentFrame = stack[currentFrameIndex]
+
+  // When we get a new frame, go to it
+  useEffect(() => {
+    setCurrentFrameIndex(0)
+  }, [stack.length])
+
+  const { aside, main } = generateContent(currentFrame)
+
+  const prevBtn =
+    currentFrameIndex === stack.length - 1 ? null : (
+      <CarouselButton
+        className="previous-slide rounded"
+        data-testid="prev-in-stack-button"
+        onClick={() => setCurrentFrameIndex(currentFrameIndex + 1)}
+      >
+        <StackPreviousIcon />
+      </CarouselButton>
+    )
+
+  const nextBtn =
+    currentFrameIndex === 0 ? null : (
+      <CarouselButton
+        className="next-slide rounded"
+        data-testid="next-in-stack-button"
+        onClick={() => setCurrentFrameIndex(currentFrameIndex - 1)}
+      >
+        <StackNextIcon />
+      </CarouselButton>
+    )
+
+  const contents =
+    stack.length > 1 ? (
+      <React.Fragment>
+        {prevBtn}
+        {main}
+        {nextBtn}
+      </React.Fragment>
+    ) : (
+      main
+    )
+  return (
+    <FrameTemplate
+      className="helpFrame has-stack"
+      header={currentFrame}
+      aside={aside}
+      contents={contents}
+    />
+  )
+}
+
+function generateContent(frame) {
   const { help, cypher, bolt } = docs
   const chapters = {
     ...help.chapters,
@@ -34,10 +92,11 @@ const HelpFrame = ({ frame }) => {
     ...bolt.chapters
   }
 
-  let ret = 'Help topic not specified'
+  let main = 'Help topic not specified'
   let aside
+
   if (frame.result) {
-    ret = <Docs html={frame.result} />
+    main = <Docs withDirectives originFrameId={frame.id} html={frame.result} />
   } else {
     const helpTopic = transformCommandToHelpTopic(frame.cmd)
     if (helpTopic !== '') {
@@ -52,16 +111,10 @@ const HelpFrame = ({ frame }) => {
       }
 
       aside = title ? <FrameAside title={title} subtitle={subtitle} /> : null
-      ret = <Docs content={content} />
+      main = <Docs withDirectives originFrameId={frame.id} content={content} />
     }
   }
-  return (
-    <FrameTemplate
-      className="helpFrame help"
-      header={frame}
-      aside={aside}
-      contents={<Directives content={ret} />}
-    />
-  )
+  return { aside, main }
 }
+
 export default HelpFrame

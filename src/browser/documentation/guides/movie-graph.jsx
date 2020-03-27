@@ -839,8 +839,4 @@ RETURN tom, m, coActors, m2, cruise`}
   </Slide>
 ]
 
-const content = (
-  <Carousel className="deck container-fluid" slides={slides} withDirectives />
-)
-
-export default { title, category, content }
+export default { title, category, slides }

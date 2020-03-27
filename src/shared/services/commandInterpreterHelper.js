@@ -94,6 +94,9 @@ import {
   tryGetRemoteInitialSlideFromUrl
 } from './commandUtils'
 import { unescapeCypherIdentifier } from './utils'
+import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
+
+const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
 const availableCommands = [
   {
@@ -448,6 +451,22 @@ const availableCommands = [
     name: 'play-remote',
     match: cmd => /^play(\s|$)https?/.test(cmd),
     exec: function(action, cmdchar, put, store) {
+      let id
+      // We have a frame that generated this command
+      if (action.id) {
+        const originFrame = frames.getFrame(store.getState(), action.id)
+        // Only replace when the origin is a help frame
+        if (originFrame) {
+          const latest = getLatestFromFrameStack(originFrame)
+          if (latest && PLAY_FRAME_TYPES.includes(latest.type)) {
+            id = action.id
+          }
+        } else {
+          // New id === new frame
+          id = v4()
+        }
+      }
+
       const url = action.cmd.substr(cmdchar.length + 'play '.length)
       const whitelist = getRemoteContentHostnameWhitelist(store.getState())
       fetchRemoteGuide(url, whitelist)
@@ -456,6 +475,7 @@ const availableCommands = [
             frames.add({
               useDb: getUseDb(store.getState()),
               ...action,
+              id,
               type: 'play-remote',
               initialSlide: tryGetRemoteInitialSlideFromUrl(url),
               result: r
@@ -467,6 +487,7 @@ const availableCommands = [
             frames.add({
               useDb: getUseDb(store.getState()),
               ...action,
+              id,
               type: 'play-remote',
               response: e.response || null,
               initialSlide: tryGetRemoteInitialSlideFromUrl(url),
@@ -482,10 +503,27 @@ const availableCommands = [
     name: 'play',
     match: cmd => /^play(\s|$)/.test(cmd),
     exec: function(action, cmdchar, put, store) {
+      let id
+      // We have a frame that generated this command
+      if (action.id) {
+        const originFrame = frames.getFrame(store.getState(), action.id)
+        // Only replace when the origin is a help frame
+        if (originFrame) {
+          const latest = getLatestFromFrameStack(originFrame)
+          if (latest && PLAY_FRAME_TYPES.includes(latest.type)) {
+            id = action.id
+          }
+        } else {
+          // New id === new frame
+          id = v4()
+        }
+      }
+
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
           ...action,
+          id,
           type: 'play'
         })
       )
@@ -540,10 +578,28 @@ const availableCommands = [
     name: 'help',
     match: cmd => /^(help|\?)(\s|$)/.test(cmd),
     exec: function(action, cmdchar, put, store) {
+      const HELP_FRAME_TYPE = 'help'
+      let id
+
+      // We have a frame that generated this command
+      if (action.id) {
+        const originFrame = frames.getFrame(store.getState(), action.id)
+        // Only replace when the origin is a help frame
+        if (originFrame) {
+          const latest = getLatestFromFrameStack(originFrame)
+          if (latest && latest.type === HELP_FRAME_TYPE) {
+            id = action.id
+          }
+        } else {
+          // New id === new frame
+          id = v4()
+        }
+      }
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
           ...action,
+          id,
           type: 'help'
         })
       )

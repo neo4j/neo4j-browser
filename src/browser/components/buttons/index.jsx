@@ -342,6 +342,7 @@ export const ActionButton = props => {
 }
 
 const BaseCarouselButton = styled.button`
+  color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   display: flex;
   justify-content: center;

@@ -31,6 +31,7 @@ import Accordion from 'browser-components/Accordion/Accordion'
 import { getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { Summary, CypherSummary } from './Summary'
 import { Icon } from './Icon'
+import { getLatestFromFrameStack } from '../stream.utils'
 
 const isCypher = (str, cmdchar) => !str.startsWith(cmdchar)
 
@@ -106,7 +107,7 @@ class CypherScriptFrame extends Component {
 const mapStateToProps = (state, ownProps) => {
   if (!ownProps.frame.statements) return {}
   const frames = ownProps.frame.statements
-    .map(id => getFrame(state, id))
+    .map(id => getLatestFromFrameStack(getFrame(state, id)))
     .reduce((all, curr) => {
       all[curr.id] = curr
       return all

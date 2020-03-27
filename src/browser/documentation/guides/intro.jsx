@@ -172,13 +172,4 @@ const slides = [
   </Slide>
 ]
 
-const content = (
-  <Carousel
-    className="deck container-fluid"
-    slides={slides}
-    showIntro
-    withDirectives
-  />
-)
-
-export default { title, content }
+export default { title, slides, showIntro: true }

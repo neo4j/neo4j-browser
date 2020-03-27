@@ -65,7 +65,8 @@ export const StyledFrameBody = styled.div`
   width: 100%;
   padding: 30px;
 
-  .has-carousel & {
+  .has-carousel &,
+  .has-stack & {
     position: relative;
     padding-bottom: 40px;
     padding-left: 40px;
