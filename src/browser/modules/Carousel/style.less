@@ -8,15 +8,18 @@
   position: relative;
 }
 
-.left-button, .right-button, .carousel {
+.left-button,
+.right-button,
+.carousel {
   order: 1;
 }
-.left-button, .right-button {
+.left-button,
+.right-button {
   order: 1;
-  top: 30px
+  top: 30px;
 }
 .frame-title-logo {
-  max-width: 200px;
+  max-width: 180px;
   min-width: 100px;
   width: 100%;
 }
@@ -26,7 +29,9 @@
 .embed-responsive {
   position: relative;
   padding-bottom: 56.25%;
-  padding-top: 30px; height: 0; overflow: hidden;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
 
   iframe,
   object,
@@ -43,7 +48,8 @@
 }
 .slide {
   overflow-y: auto;
-  font-family: "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
 
@@ -53,7 +59,7 @@
   & pre,
   & samp,
   & figure pre {
-    font-family: "Fira Code", "Monaco", "Lucida Console", Courier, monospace;
+    font-family: 'Fira Code', 'Monaco', 'Lucida Console', Courier, monospace;
     background: #f3f3f3;
     padding-left: 0.25em;
     padding-right: 0.25em;
@@ -80,8 +86,8 @@
       border: 2px dashed #e1e1e8;
     }
     &.clicked {
-      border: 2px solid #8DD465;
-      opacity: .5;
+      border: 2px solid #8dd465;
+      opacity: 0.5;
     }
   }
   & .text-right {
@@ -97,16 +103,20 @@
   }
 
   & .light {
-    font-weight: 300; }
+    font-weight: 300;
+  }
 
   & .semi-bold {
-    font-weight: 600; }
+    font-weight: 600;
+  }
 
   & .bold {
-    font-weight: 700; }
+    font-weight: 700;
+  }
 
   & .extra-bold {
-    font-weight: 800; }
+    font-weight: 800;
+  }
 
   & small,
   & .small,
@@ -115,10 +125,12 @@
   }
 
   & .caps {
-    font-variant: small-caps; }
+    font-variant: small-caps;
+  }
 
   & .muted {
-    opacity: .7; }
+    opacity: 0.7;
+  }
 
   & h1,
   & h2,
@@ -133,7 +145,8 @@
 
   & h1,
   & .h1 {
-    font-size: 2.441em; }
+    font-size: 2.441em;
+  }
   & h2,
   & .h2 {
     font-size: 1.953em;
@@ -183,7 +196,8 @@
     }
   }
 
-  & ul, & ol {
+  & ul,
+  & ol {
     list-style-position: outside;
     padding-left: 1em;
     margin-top: 0.5em;
@@ -195,7 +209,7 @@
   }
 
   & ul.vtop {
-      margin-top: 0;
+    margin-top: 0;
   }
   & .icon.icon-sm {
     font-size: 0.5em;
@@ -253,10 +267,11 @@
     }
   }
   & .links {
-    display:table;
+    display: table;
     & .link {
       display: table-row;
-      & .title, & .content {
+      & .title,
+      & .content {
         display: table-cell;
         padding: 5px;
         font-size: 13px;
@@ -268,12 +283,15 @@
     }
   }
 
-  & a[help-topic], [play-topic], [server-topic], [exec-topic] {
+  & a[help-topic],
+  [play-topic],
+  [server-topic],
+  [exec-topic] {
     background-color: #f8f8f8;
     border-radius: 3px;
     border: 1px solid #dadada;
     display: inline-block;
-    font-family:  "Fira Code",Monaco,"Courier New",Terminal,monospace;
+    font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
     font-size: 12px;
     line-height: 18px;
     margin-bottom: 5px;
@@ -352,7 +370,7 @@
     }
     &.teaser-3 {
       width: 30%;
-      min-width: 190px;
+      min-width: 215px;
       overflow: hidden;
     }
     button {
@@ -365,11 +383,11 @@
     }
     .icon {
       float: left;
-      max-width: 67px;
-      width: 25%;
+      max-width: 60px;
+      width: 18%;
     }
     .icon.sl {
-      padding-left: 10px;
+      padding-left: 0;
       font-size: 48px;
     }
     .icon.sl.green {
@@ -382,13 +400,16 @@
       color: #ff5641;
     }
     .topic-bullets {
+      font-size: 13px;
+      line-height: 1.3em;
       float: left;
       word-wrap: break-word;
       min-width: 100px;
-      max-width: 65%;
+      max-width: 75%;
       list-style: none;
       padding-left: 10px;
       margin-top: 0;
+      overflow: hidden;
     }
     .topic-bullets :first-child {
       margin-top: 0;
@@ -397,7 +418,7 @@
       margin-top: 5px;
     }
     .icon-holder {
-      margin: 10px 0 20px 0;
+      margin: 6px 0 20px 0;
       overflow: hidden;
     }
   }
