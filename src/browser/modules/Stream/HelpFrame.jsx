@@ -45,7 +45,7 @@ const HelpFrame = ({ frame, stack = [] }) => {
   const prevBtn =
     currentFrameIndex === stack.length - 1 ? null : (
       <CarouselButton
-        className="previous-slide  rounded"
+        className="previous-slide rounded"
         data-testid="prev-in-stack-button"
         onClick={() => setCurrentFrameIndex(currentFrameIndex + 1)}
       >

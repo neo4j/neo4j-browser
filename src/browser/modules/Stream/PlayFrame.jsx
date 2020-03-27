@@ -91,7 +91,7 @@ export function PlayFrame({ stack, bus }) {
   const prevBtn =
     stackIndex === stack.length - 1 || !atSlideStart ? null : (
       <CarouselButton
-        className="previous-slide  rounded"
+        className="previous-slide rounded"
         data-testid="prev-in-stack-button"
         onClick={prevGuide}
       >
@@ -198,14 +198,14 @@ function generateContent(stackFrame, bus, onSlide) {
   const guide = chapters[guideName] || {}
   // Check if content exists locally
   if (Object.keys(guide).length) {
-    const { content, title, subtitle, slides } = guide
+    const { content, title, subtitle, slides = null } = guide
     return {
       guide: (
         <Docs
           originFrameId={stackFrame.id}
           withDirectives
-          content={!!slides ? null : content}
-          slides={!!slides ? slides : null}
+          content={slides ? null : content}
+          slides={slides ? slides : null}
           onSlide={onSlide}
         />
       ),
