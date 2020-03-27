@@ -198,7 +198,7 @@ export const StyledSlide = styled.div`
   .content > p,
   .table-help {
     color: ${props => props.theme.primaryText} !important;
-    line-height: 2;
+    line-height: 1.3;
 
     th {
       padding-right: 20px;

@@ -88,14 +88,14 @@ export const StyledFrameMainSection = styled.div`
 `
 
 export const StyledFrameAside = styled.div`
-  flex: 0 0 25%;
+  flex: 0 0 20%;
   padding: 0 15px;
   width: 25%;
   font-family: ${props => props.theme.primaryFontFamily};
   font-size: 16px;
   font-weight: 300;
   color: ${props => props.theme.asideText};
-  min-width: 150px;
+  min-width: 120px;
 `
 
 export const StyledFrameContents = styled.div`
