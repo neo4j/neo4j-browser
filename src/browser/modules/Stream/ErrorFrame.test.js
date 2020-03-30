@@ -20,7 +20,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import 'jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect'
 import { ErrorView } from './ErrorFrame'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'

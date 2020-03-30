@@ -76,7 +76,7 @@ exports[`TableViews TableView does not display bodyMessage if rows, and escapes 
 `;
 
 exports[`TableViews TableView renderObject handles null values 1`] = `
-<ForwardRef(DataTables__StyledJsonPre)
+<DataTables__StyledJsonPre
   dangerouslySetInnerHTML={
     Object {
       "__html": "{
