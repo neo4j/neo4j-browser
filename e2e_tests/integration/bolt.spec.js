@@ -85,7 +85,12 @@ describe('Bolt connections', () => {
         'contain',
         'noroles'
       )
-      cy.get('[data-testid="user-details-roles"]').should('contain', '-')
+      if (Cypress.config('serverVersion') <= 4.0) {
+        cy.get('[data-testid="user-details-roles"]').should('contain', '-')
+      }
+      if (Cypress.config('serverVersion') === 4.1) {
+        cy.get('[data-testid="user-details-roles"]').should('contain', 'PUBLIC')
+      }
       cy.get('[data-testid="drawerDBMS"]').click()
 
       cy.executeCommand(':server disconnect')
