@@ -697,7 +697,6 @@ const availableCommands = [
       } else if (param === 'reset') {
         put(updateGraphStyleData(null))
       } else if (param === 'edit') {
-        console.log('+++edit')
         const grassData = getGraphStyleData(store.getState())
         put(
           frames.add({

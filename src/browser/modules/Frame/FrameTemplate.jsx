@@ -31,7 +31,11 @@ import {
   StyledFrameAside,
   StyledFrameContentsEdit
 } from './styled'
-import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
+// import { getCmdChar } from 'shared/modules/settings/settingsDuck'
+import {
+  executeSystemCommand
+  // executeCommand
+} from 'shared/modules/commands/commandsDuck'
 
 class FrameTemplate extends Component {
   constructor(props) {
@@ -166,8 +170,12 @@ class FrameTemplate extends Component {
             )}
           </StyledFrameMainSection>
         </StyledFrameBody>
-        <div onClick={() => this.props.onSaveClick(this.props.editContent)}>
-          Save CSS
+        <div
+          onClick={() => {
+            this.props.updateStyle(this.state.editContent.replace(/ |\n/g, ''))
+          }}
+        >
+          Save
         </div>
         <Render if={this.props.statusbar}>
           <StyledFrameStatusbar
@@ -183,12 +191,9 @@ class FrameTemplate extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onSaveClick: data => {
-    dispatch(updateGraphStyleData(data))
+  updateStyle: data => {
+    dispatch(executeSystemCommand(`:style ${data}`))
   }
 })
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(FrameTemplate)
+export default connect(null, mapDispatchToProps)(FrameTemplate)

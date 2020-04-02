@@ -42,7 +42,6 @@ const StyleFrame = ({ frame }) => {
     />
   )
   if (frame.result) {
-    console.log('++1')
     grass = objToCss(frame.result)
     contents = (
       <PaddedDiv>
@@ -54,12 +53,12 @@ const StyleFrame = ({ frame }) => {
     )
   }
   // edit is true
-  if (false && frame.result) {
-    contents = objToCss(frame.result)
+  if (true && frame.result) {
+    contents = grass
   }
   return (
     <FrameTemplate
-      edit={false}
+      edit={true}
       header={frame}
       numRecords={1}
       getRecords={() => grass}
@@ -96,14 +95,12 @@ const mapStateToProps = (state, ownProps) => {
 }
 const mapDispatchToProps = dispatch => ({
   onResetClick: (resetStyleAction, rerunAction) => {
+    console.log('++reset Style')
     dispatch(resetStyleAction)
     dispatch(rerunAction)
   }
 })
 
-const Statusbar = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StyleStatusbar)
+const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
 
 export default StyleFrame

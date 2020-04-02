@@ -24,6 +24,7 @@ import { APP_START } from 'shared/modules/app/appDuck'
 export const NAME = 'grass'
 export const UPDATE_GRAPH_STYLE_DATA = 'grass/UPDATE_GRAPH_STYLE_DATA'
 export const SYNC_GRASS = 'grass/SYNC_GRASS'
+export const EDIT_GRAPH_STYLE_DATA = 'grass/EDIT_GRAPH_STYLE_DATA'
 
 export const getGraphStyleData = state => state[NAME]
 
