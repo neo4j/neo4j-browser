@@ -3,12 +3,16 @@
 export const isEnterpriseEdition = () =>
   Cypress.config('serverEdition') === 'enterprise'
 
-export const getDesktopContext = (config, connectionCredsType = 'host') => ({
+export const getDesktopContext = (
+  config,
+  connectionCredsType = 'host',
+  status = 'ACTIVE'
+) => ({
   projects: [
     {
       graphs: [
         {
-          status: 'ACTIVE',
+          status,
           connection: {
             type: 'REMOTE',
             configuration: {

@@ -61,4 +61,26 @@ describe('Neo4j Desktop environment', () => {
       .first()
       .should('contain', 'Connection updated')
   })
+
+  it('displays disconnected banner and connection failed frame when initial state is INACTIVE', () => {
+    cy.visit(Cypress.config('url'), {
+      onBeforeLoad: win => {
+        win.neo4jDesktopApi = {
+          getContext: () =>
+            Promise.resolve(
+              getDesktopContext(Cypress.config, 'host', 'INACTIVE')
+            )
+        }
+      }
+    })
+
+    const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
+    frames.should('have.length', 1)
+
+    frames.first().should('contain', ':server switch fail')
+
+    cy.get('[data-testid="disconnectedBanner"]', { timeout: 10000 })
+      .first()
+      .should('contain', 'Database access not available.')
+  })
 })
