@@ -117,7 +117,6 @@ export const executeSingleCommand = (cmd, { id, requestId, useDb } = {}) => {
 }
 
 export const executeSystemCommand = cmd => {
-  console.log('+++cmd', cmd)
   return {
     type: SYSTEM_COMMAND_QUEUED,
     cmd

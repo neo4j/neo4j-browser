@@ -703,7 +703,8 @@ const availableCommands = [
             useDb: getUseDb(store.getState()),
             ...action,
             type: 'style',
-            result: grassData
+            result: grassData,
+            edit: true
           })
         )
       } else if (isValidURL(param)) {

@@ -31,6 +31,13 @@ import {
   StyledFrameAside,
   StyledFrameContentsEdit
 } from './styled'
+import {
+  StyledOneRowStatsBar,
+  StyledRightPartial
+} from 'browser/modules/Stream/styled'
+import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
+import { FrameButton } from 'browser-components/buttons'
+import { remove } from 'shared/modules/stream/streamDuck'
 // import { getCmdChar } from 'shared/modules/settings/settingsDuck'
 import {
   executeSystemCommand
@@ -88,6 +95,28 @@ class FrameTemplate extends Component {
     )
   }
 
+  editStatusBar() {
+    return (
+      <StyledOneRowStatsBar>
+        <StyledRightPartial>
+          <StyledFrameTitlebarButtonSection>
+            <FrameButton
+              // data-testid="styleResetButton"
+              onClick={() => {
+                this.props.updateStyle(
+                  this.state.editContent.replace(/ |\n/g, ''),
+                  this.props.id
+                )
+              }}
+            >
+              Save
+            </FrameButton>
+          </StyledFrameTitlebarButtonSection>
+        </StyledRightPartial>
+      </StyledOneRowStatsBar>
+    )
+  }
+
   componentDidUpdate() {
     if (this.frameContentElement.clientHeight < 300) return // No need to report a transition
     if (
@@ -106,6 +135,33 @@ class FrameTemplate extends Component {
 
   setFrameContentElement = el => {
     this.frameContentElement = el
+  }
+
+  mainSectionContent = () => {
+    if (this.props.edit) {
+      return (
+        <StyledFrameContentsEdit
+          fullscreen={this.state.fullscreen}
+          ref={this.setFrameContentElement}
+          defaultValue={this.state.editContent}
+          onChange={e => {
+            const target = e.target.value
+            this.setState(() => ({
+              editContent: target
+            }))
+          }}
+        />
+      )
+    }
+    return (
+      <StyledFrameContents
+        fullscreen={this.state.fullscreen}
+        ref={this.setFrameContentElement}
+        data-testid="frameContents"
+      >
+        {this.props.contents}
+      </StyledFrameContents>
+    )
   }
 
   render() {
@@ -146,43 +202,15 @@ class FrameTemplate extends Component {
             <StyledFrameAside>{this.props.aside}</StyledFrameAside>
           )}
           <StyledFrameMainSection>
-            {!this.props.edit && (
-              <StyledFrameContents
-                fullscreen={this.state.fullscreen}
-                ref={this.setFrameContentElement}
-                data-testid="frameContents"
-              >
-                {this.props.contents}
-              </StyledFrameContents>
-            )}
-            {this.props.edit && (
-              <StyledFrameContentsEdit
-                fullscreen={this.state.fullscreen}
-                ref={this.setFrameContentElement}
-                defaultValue={this.state.editContent}
-                onChange={e => {
-                  const target = e.target.value
-                  this.setState(() => ({
-                    editContent: target
-                  }))
-                }}
-              />
-            )}
+            {this.mainSectionContent()}
           </StyledFrameMainSection>
         </StyledFrameBody>
-        <div
-          onClick={() => {
-            this.props.updateStyle(this.state.editContent.replace(/ |\n/g, ''))
-          }}
-        >
-          Save
-        </div>
         <Render if={this.props.statusbar}>
           <StyledFrameStatusbar
             fullscreen={this.state.fullscreen}
             data-testid="frameStatusbar"
           >
-            {this.props.statusbar}
+            {this.props.edit ? this.editStatusBar() : this.props.statusbar}
           </StyledFrameStatusbar>
         </Render>
       </StyledFrame>
@@ -191,8 +219,10 @@ class FrameTemplate extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateStyle: data => {
+  updateStyle: (data, frameId) => {
     dispatch(executeSystemCommand(`:style ${data}`))
+    // dispatch(remove(frameId))
+    dispatch(executeSystemCommand(':style'))
   }
 })
 

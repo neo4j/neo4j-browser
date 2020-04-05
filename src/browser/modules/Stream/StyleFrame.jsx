@@ -41,7 +41,7 @@ const StyleFrame = ({ frame }) => {
     relationships to generate some styling."
     />
   )
-  if (frame.result) {
+  if (!frame.edit && frame.result) {
     grass = objToCss(frame.result)
     contents = (
       <PaddedDiv>
@@ -52,13 +52,14 @@ const StyleFrame = ({ frame }) => {
       </PaddedDiv>
     )
   }
-  // edit is true
-  if (true && frame.result) {
+  if (frame.edit && frame.result) {
+    grass = objToCss(frame.result)
     contents = grass
   }
   return (
     <FrameTemplate
-      edit={true}
+      edit={frame.edit}
+      id={frame.id}
       header={frame}
       numRecords={1}
       getRecords={() => grass}
@@ -95,7 +96,6 @@ const mapStateToProps = (state, ownProps) => {
 }
 const mapDispatchToProps = dispatch => ({
   onResetClick: (resetStyleAction, rerunAction) => {
-    console.log('++reset Style')
     dispatch(resetStyleAction)
     dispatch(rerunAction)
   }
