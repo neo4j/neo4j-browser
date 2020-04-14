@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isAura } from '../support/utils'
+
 /* global Cypress, cy, before */
 
 describe(':style', () => {
@@ -31,23 +33,26 @@ describe(':style', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
-  it('print the current style', () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand('CREATE (n:Style) RETURN n') // To generate any style
+  // CREATE is a write operation that will fail on an Aura follower
+  if (!isAura()) {
+    it('print the current style', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand('CREATE (n:Style) RETURN n') // To generate any style
 
-    cy.waitForCommandResult()
+      cy.waitForCommandResult()
 
-    const query = ':style'
-    cy.executeCommand(query)
-    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-      .first()
-      .should('contain', query)
-    cy.get('[data-testid="frameContents"]', { timeout: 10000 })
-      .first()
-      .should('contain', 'node {')
-      .should('contain', 'relationship {')
-      .should('contain', '"<type>"')
-  })
+      const query = ':style'
+      cy.executeCommand(query)
+      cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
+        .first()
+        .should('contain', query)
+      cy.get('[data-testid="frameContents"]', { timeout: 10000 })
+        .first()
+        .should('contain', 'node {')
+        .should('contain', 'relationship {')
+        .should('contain', '"<type>"')
+    })
+  }
   it('can reset style with button', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':style')

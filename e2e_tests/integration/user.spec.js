@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isEnterpriseEdition } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, test, expect, before */
 
@@ -38,7 +38,7 @@ describe('User: ', () => {
     )
   })
   // Only on enterprise
-  if (isEnterpriseEdition()) {
+  if (isEnterpriseEdition() && !isAura()) {
     it('Add User', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':server user add')

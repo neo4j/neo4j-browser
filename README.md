@@ -42,6 +42,7 @@ edition=enterprise|community (default enterprise)
 browser-password=<your-pw> (default 'newpassword')
 include-import-tests=true|false (default false)
 bolt-url=<bolt url excluding the protocol> (default localhost:7687)
+platform=aura (default undefined)
 ```
 
 Test environment options (cannot be set using the `--env` flag as the ones above).

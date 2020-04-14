@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isEnterpriseEdition } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, test, expect, before */
 
@@ -50,18 +50,21 @@ describe('Neo4j Browser', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
-  it('can empty the db', () => {
-    cy.executeCommand(':clear')
-    const query = 'MATCH (n) DETACH DELETE n'
-    cy.executeCommand(query)
-    cy.waitForCommandResult()
-    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-      .first()
-      .should('contain', query)
-    cy.get('[data-testid="frameStatusbar"]', { timeout: 100000 })
-      .first()
-      .contains(/completed/i)
-  })
+  // DELETE is a write operation that will fail if connected to aura follower
+  if (!isAura()) {
+    it('can empty the db', () => {
+      cy.executeCommand(':clear')
+      const query = 'MATCH (n) DETACH DELETE n'
+      cy.executeCommand(query)
+      cy.waitForCommandResult()
+      cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
+        .first()
+        .should('contain', query)
+      cy.get('[data-testid="frameStatusbar"]', { timeout: 100000 })
+        .first()
+        .contains(/completed/i)
+    })
+  }
   it('can run cypher statement', () => {
     cy.executeCommand(':clear')
     const query = 'RETURN 1'
@@ -118,57 +121,64 @@ describe('Neo4j Browser', () => {
     })
     cy.get('[data-testid="drawerDBMS"]').click()
   })
-  it('displays user info in sidebar (when connected)', () => {
-    cy.executeCommand(':clear')
-    cy.get('[data-testid="drawerDBMS"]').click()
-    cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
-    console.log('isEnterpriseEdition(): ', isEnterpriseEdition())
-    cy.get('[data-testid="user-details-roles"]').should(
-      'contain',
-      isEnterpriseEdition() || Cypress.config('serverVersion') < 4.0
-        ? 'admin'
-        : '-'
-    )
-    cy.executeCommand(':clear')
-    cy.executeCommand(':server disconnect')
-    cy.get('[data-testid="user-details-username"]').should('have.length', 0)
-    cy.get('[data-testid="user-details-roles"]').should('have.length', 0)
-    cy.connect('neo4j', Cypress.config('password'))
-    cy.executeCommand(':clear')
-    cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
-    cy.get('[data-testid="user-details-roles"]').should(
-      'contain',
-      isEnterpriseEdition() || Cypress.config('serverVersion') < 4.0
-        ? 'admin'
-        : '-'
-    )
-    cy.get('[data-testid="drawerDBMS"]').click()
-  })
-  it('will clear local storage when clicking "Clear local data"', () => {
-    const scriptName = 'foo'
-    cy.get(Editor).type(`//${scriptName}`, { force: true })
-    cy.get('[data-testid="editorFavorite"]').click()
+  // Role is PUBLIC in Aura
+  if (!isAura()) {
+    it('displays user info in sidebar (when connected)', () => {
+      cy.executeCommand(':clear')
+      cy.get('[data-testid="drawerDBMS"]').click()
+      cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
+      console.log('isEnterpriseEdition(): ', isEnterpriseEdition())
+      cy.get('[data-testid="user-details-roles"]').should(
+        'contain',
+        isEnterpriseEdition() || Cypress.config('serverVersion') < 4.0
+          ? 'admin'
+          : '-'
+      )
+      cy.executeCommand(':clear')
+      cy.executeCommand(':server disconnect')
+      cy.get('[data-testid="user-details-username"]').should('have.length', 0)
+      cy.get('[data-testid="user-details-roles"]').should('have.length', 0)
+      cy.connect('neo4j', Cypress.config('password'))
+      cy.executeCommand(':clear')
+      cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
+      cy.get('[data-testid="user-details-roles"]').should(
+        'contain',
+        isEnterpriseEdition() || Cypress.config('serverVersion') < 4.0
+          ? 'admin'
+          : '-'
+      )
+      cy.get('[data-testid="drawerDBMS"]').click()
+    })
+  }
+  // Browser sync is disabled on Aura
+  if (!isAura) {
+    it('will clear local storage when clicking "Clear local data"', () => {
+      const scriptName = 'foo'
+      cy.get(Editor).type(`//${scriptName}`, { force: true })
+      cy.get('[data-testid="editorFavorite"]').click()
 
-    cy.get('[data-testid="drawerFavorites"]').click()
-    cy.get('.saved-scripts-list-item')
-      .first()
-      .should('be', scriptName)
+      cy.get('[data-testid="drawerFavorites"]').click()
+      cy.get('.saved-scripts-list-item')
+        .first()
+        .should('be', scriptName)
 
-    cy.get('[data-testid="drawerSync"]').click()
-    cy.get('[data-testid="clearLocalData"]').click()
-    cy.wait(500)
+      cy.get('[data-testid="drawerSync"]').click()
+      cy.get('[data-testid="clearLocalData"]').click()
+      cy.wait(500)
 
-    // confirm clear
-    cy.get('[data-testid="clearLocalData"]').click()
+      // confirm clear
+      cy.get('[data-testid="clearLocalData"]').click()
 
-    cy.get('[data-testid="drawerFavorites"]').click()
-    cy.get('.saved-scripts-list-item').should('have.length', 0)
-    cy.get('[data-testid="drawerFavorites"]').click()
+      cy.get('[data-testid="drawerFavorites"]').click()
+      cy.get('.saved-scripts-list-item').should('have.length', 0)
+      cy.get('[data-testid="drawerFavorites"]').click()
 
-    // once data is cleared the user is logged out and the connect form is displayed
-    cy.get('input[data-testid="boltaddress"]')
-  })
+      // once data is cleared the user is logged out and the connect form is displayed
+      cy.get('input[data-testid="boltaddress"]')
+    })
+  }
   it('displays no user info in sidebar (when not connected)', () => {
+    cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
     cy.get('[data-testid="user-details-username"]').should('have.length', 0)

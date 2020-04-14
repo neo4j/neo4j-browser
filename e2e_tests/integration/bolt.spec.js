@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isEnterpriseEdition } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, test, expect, before */
 
@@ -55,7 +55,8 @@ describe('Bolt connections', () => {
       .should('not.contain', 'Connection lost')
   })
 
-  if (isEnterpriseEdition()) {
+  // Creating users is not allowed on Aura
+  if (isEnterpriseEdition() && !isAura()) {
     it('users with no role can connect and shows up in sidebar', () => {
       cy.executeCommand(':clear')
       const password = Cypress.config('password')
@@ -85,10 +86,10 @@ describe('Bolt connections', () => {
         'contain',
         'noroles'
       )
-      if (Cypress.config('serverVersion') <= 4.0) {
+      if (Cypress.config('serverVersion') <= 4.0 && !isAura()) {
         cy.get('[data-testid="user-details-roles"]').should('contain', '-')
       }
-      if (Cypress.config('serverVersion') === 4.1) {
+      if (Cypress.config('serverVersion') === 4.1 || isAura()) {
         cy.get('[data-testid="user-details-roles"]').should('contain', 'PUBLIC')
       }
       cy.get('[data-testid="drawerDBMS"]').click()

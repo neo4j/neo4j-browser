@@ -19,7 +19,7 @@
  */
 
 /* global Cypress, cy, before */
-import { getDesktopContext } from '../support/utils'
+import { isAura, getDesktopContext } from '../support/utils'
 
 let appContextListener
 
@@ -43,24 +43,27 @@ describe('Neo4j Desktop environment', () => {
     frames.first().should('contain', ':play start')
     cy.wait(1000)
   })
-  it('switches connection when that event is triggered using host + port fields', () => {
-    cy.executeCommand(':clear')
-    cy.wait(1000).then(() => {
-      appContextListener(
-        { type: 'GRAPH_ACTIVE', id: 'test' },
-        getDesktopContext(Cypress.config, 'host')
-      )
+  // Connection updated header is not displayed if auth is disabled, which it is on Aura
+  if (!isAura()) {
+    it('switches connection when that event is triggered using host + port fields', () => {
+      cy.executeCommand(':clear')
+      cy.wait(1000).then(() => {
+        appContextListener(
+          { type: 'GRAPH_ACTIVE', id: 'test' },
+          getDesktopContext(Cypress.config, 'host')
+        )
+      })
+
+      const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
+      frames.should('have.length', 1)
+
+      frames.first().should('contain', ':server switch success')
+
+      cy.get('[data-testid="frame"]', { timeout: 10000 })
+        .first()
+        .should('contain', 'Connection updated')
     })
-
-    const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-    frames.should('have.length', 1)
-
-    frames.first().should('contain', ':server switch success')
-
-    cy.get('[data-testid="frame"]', { timeout: 10000 })
-      .first()
-      .should('contain', 'Connection updated')
-  })
+  }
 
   it('displays disconnected banner and connection failed frame when initial state is INACTIVE', () => {
     cy.visit(Cypress.config('url'), {

@@ -20,6 +20,8 @@
 
 /* global Cypress, cy, before */
 
+import { isAura } from '../support/utils'
+
 describe('Viz rendering', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
@@ -31,17 +33,20 @@ describe('Viz rendering', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
-  it('shows legend with rel types + node labels on first render', () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand(
-      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
-    )
-    cy.get('[data-testid="viz-legend-reltypes"]', { timeout: 5000 }).contains(
-      'CONNECTS'
-    )
-    cy.get('[data-testid="viz-legend-labels"]', { timeout: 5000 }).contains(
-      'TestLabel'
-    )
-    cy.executeCommand('MATCH (a:TestLabel) DETACH DELETE a')
-  })
+  // CREATE is a write operation that will fail on an Aura follower
+  if (!isAura()) {
+    it('shows legend with rel types + node labels on first render', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand(
+        'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+      )
+      cy.get('[data-testid="viz-legend-reltypes"]', { timeout: 5000 }).contains(
+        'CONNECTS'
+      )
+      cy.get('[data-testid="viz-legend-labels"]', { timeout: 5000 }).contains(
+        'TestLabel'
+      )
+      cy.executeCommand('MATCH (a:TestLabel) DETACH DELETE a')
+    })
+  }
 })
