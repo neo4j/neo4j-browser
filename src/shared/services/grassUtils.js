@@ -28,6 +28,7 @@ export function parseGrass(string) {
 }
 
 function parseGrassCSS(string) {
+  console.log('++hello')
   const chars = string.split('')
   let insideString = false
   let insideProps = false

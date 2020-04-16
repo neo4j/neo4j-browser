@@ -15,6 +15,12 @@ export const initialState = {
     on: true,
     displayName: 'Show experimental features',
     tooltip: 'Show feature section in settings drawer'
+  },
+  'grass-sidebar': {
+    name: 'grass-sidebar',
+    on: false,
+    displayName: 'GraSS edtior sidebar',
+    tooltip: 'Edit graph style directly in the sidebar'
   }
 }
 

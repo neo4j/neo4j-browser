@@ -183,6 +183,16 @@ export const AboutIcon = props => (
   />
 )
 
+export const GrassIcon = props => (
+  <IconContainer
+    activeStyle={white}
+    inactiveStyle={inactive}
+    className="fa fa-adjust"
+    width={28}
+    {...props}
+  />
+)
+
 export const SlidePreviousIcon = () => (
   <IconContainer icon={arrowLeft1} width={20} />
 )

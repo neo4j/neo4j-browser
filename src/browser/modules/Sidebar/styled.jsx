@@ -41,6 +41,26 @@ export const StyledSettingTextInput = styled.input`
   width: 192px;
 `
 
+export const StyledSettingTextArea = styled.textarea`
+  height: 300px;
+  color: #555;
+  font-size: 14px;
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 235px;
+`
+
+export const StyledSettingButton = styled.button`
+  margin-left: 4px;
+  border: 0;
+  background: transparent;
+  &:focus {
+    outline: none;
+  }
+`
+
 export const StyledHelpLink = styled.a``
 export const StyledHelpItem = styled.li`
   list-style-type: none;

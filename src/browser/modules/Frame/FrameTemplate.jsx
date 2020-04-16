@@ -222,7 +222,7 @@ const mapDispatchToProps = dispatch => ({
   updateStyle: (data, frameId) => {
     dispatch(executeSystemCommand(`:style ${data}`))
     // dispatch(remove(frameId))
-    dispatch(executeSystemCommand(':style'))
+    // dispatch(executeSystemCommand(':style'))
   }
 })
 

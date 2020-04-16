@@ -24,6 +24,7 @@ import DBMSInfo from '../DBMSInfo/DBMSInfo'
 import Documents from './Documents'
 import About from './About'
 import Favorites from './favorites'
+import GraphStyling from './GraphStyling'
 import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import Settings from './Settings'
@@ -42,13 +43,15 @@ import {
   DocumentsIcon,
   CloudSyncIcon,
   SettingsIcon,
-  AboutIcon
+  AboutIcon,
+  GrassIcon
 } from 'browser-components/icons/Icons'
+import { showFeature } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
 function Sidebar(props) {
   const openDrawer = props.openDrawer
   const onNavClick = props.onNavClick
-  const { showStaticScripts } = props
+  const { showStaticScripts, showGrassStyling } = props
   const DatabaseDrawer = DBMSInfo
   const FavoritesDrawer = () => (
     <>
@@ -91,6 +94,16 @@ function Sidebar(props) {
       content: DocumentsDrawer
     }
   ]
+  if (showGrassStyling) {
+    topNavItemsList.push({
+      name: 'Graph styling',
+      title: 'GraSS',
+      icon: function favIcon(isOpen) {
+        return <GrassIcon isOpen={isOpen} title="GraSS" />
+      },
+      content: GraphStyling
+    })
+  }
   const bottomNavItemsList = [
     {
       name: 'Sync',
@@ -153,15 +166,14 @@ const mapStateToProps = state => {
         break
     }
   }
+  const showGrassStyling = showFeature(state, 'grass-sidebar')
   return {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
     loadSync: useBrowserSync(state),
-    showStaticScripts: state.settings.showSampleScripts
+    showStaticScripts: state.settings.showSampleScripts,
+    showGrassStyling
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(Sidebar)
+export default connect(mapStateToProps, null)(Sidebar)
