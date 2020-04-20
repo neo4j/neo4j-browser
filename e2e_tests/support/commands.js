@@ -31,7 +31,7 @@ Cypress.Commands.add(
     }
     boltUrl = !boltUrl
       ? isAura()
-        ? cypress.config('neo4jUrl')
+        ? Cypress.config('neo4jUrl')
         : Cypress.config('boltUrl')
       : boltUrl
 
@@ -73,7 +73,7 @@ Cypress.Commands.add(
   (username, password, boltUrl, makeAssertions = true) => {
     boltUrl = !boltUrl
       ? isAura()
-        ? cypress.config('neo4jUrl')
+        ? Cypress.config('neo4jUrl')
         : Cypress.config('boltUrl')
       : boltUrl
     cy.executeCommand(':server disconnect')
