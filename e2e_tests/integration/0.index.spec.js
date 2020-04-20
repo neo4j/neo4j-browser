@@ -151,7 +151,7 @@ describe('Neo4j Browser', () => {
     })
   }
   // Browser sync is disabled on Aura
-  if (!isAura) {
+  if (!isAura()) {
     it('will clear local storage when clicking "Clear local data"', () => {
       const scriptName = 'foo'
       cy.get(Editor).type(`//${scriptName}`, { force: true })
