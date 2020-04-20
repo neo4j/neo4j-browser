@@ -30,7 +30,11 @@ export function extractServerInfo(res) {
 
   // Always get server version
   if (res.summary.server.version) {
-    serverInfo.version = res.summary.server.version.split('/').pop()
+    if (res.summary.server.version.includes('/')) {
+      serverInfo.version = res.summary.server.version.split('/').pop()
+    } else {
+      serverInfo.version = res.summary.server.version
+    }
   }
 
   // Get server edition if available
