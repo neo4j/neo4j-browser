@@ -2,6 +2,8 @@
 
 Cypress.config('serverVersion', parseFloat(Cypress.env('server')) || 3.5)
 Cypress.config('serverEdition', Cypress.env('edition') || 'enterprise')
+Cypress.config('serverPlatform', Cypress.env('platform') || null)
+
 Cypress.config(
   'includeImportTests',
   Cypress.env('include-import-tests') || false
@@ -19,6 +21,13 @@ Cypress.config(
 Cypress.config(
   'boltUrl',
   'bolt://' +
+    (Cypress.env('bolt-url')
+      ? Cypress.env('bolt-url')
+      : Cypress.config('boltHost') + ':' + Cypress.config('boltPort'))
+)
+Cypress.config(
+  'neo4jUrl',
+  'neo4j://' +
     (Cypress.env('bolt-url')
       ? Cypress.env('bolt-url')
       : Cypress.config('boltHost') + ':' + Cypress.config('boltPort'))

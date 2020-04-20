@@ -1,3 +1,5 @@
+import { isAura } from './utils'
+
 const SubmitQueryButton = '[data-testid="submitQuery"]'
 const ClearEditorButton = '[data-testid="clearEditorContent"]'
 const Editor = '.ReactCodeMirror textarea'
@@ -20,13 +22,19 @@ Cypress.Commands.add(
     newPassword,
     initialPassword = 'neo4j',
     username = 'neo4j',
-    boltUrl = Cypress.config('boltUrl'),
+    boltUrl,
     force = false
   ) => {
     if (Cypress.env('E2E_TEST_ENV') === 'local' && !force) {
       // We assume pw already set on local
       return
     }
+    boltUrl = !boltUrl
+      ? isAura()
+        ? cypress.config('neo4jUrl')
+        : Cypress.config('boltUrl')
+      : boltUrl
+
     cy.title().should('include', 'Neo4j Browser')
     cy.wait(3000)
 
@@ -62,12 +70,12 @@ Cypress.Commands.add(
 )
 Cypress.Commands.add(
   'connect',
-  (
-    username,
-    password,
-    boltUrl = Cypress.config('boltUrl'),
-    makeAssertions = true
-  ) => {
+  (username, password, boltUrl, makeAssertions = true) => {
+    boltUrl = !boltUrl
+      ? isAura()
+        ? cypress.config('neo4jUrl')
+        : Cypress.config('boltUrl')
+      : boltUrl
     cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
