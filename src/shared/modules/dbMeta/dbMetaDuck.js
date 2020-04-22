@@ -319,7 +319,7 @@ export const dbMetaEpic = (some$, store) =>
                 () => {
                   const state = store.getState()
                   const db = getUseDb(state)
-                  const isSystem = db === 'system'
+                  const isSystem = db === SYSTEM_DB
                   if (isSystem) {
                     store.dispatch(updateMeta([]))
                   }
@@ -327,17 +327,21 @@ export const dbMetaEpic = (some$, store) =>
                 },
                 Rx.Observable.of(null),
                 Rx.Observable.fromPromise(
-                  bolt.routedReadTransaction(
-                    metaQuery,
-                    {},
-                    {
-                      useCypherThread: shouldUseCypherThread(store.getState()),
-                      onLostConnection: onLostConnection(store.dispatch),
-                      ...getBackgroundTxMetadata({
-                        hasServerSupport: canSendTxMetadata(store.getState())
-                      })
-                    }
-                  )
+                  bolt
+                    .routedReadTransaction(
+                      metaQuery,
+                      {},
+                      {
+                        useCypherThread: shouldUseCypherThread(
+                          store.getState()
+                        ),
+                        onLostConnection: onLostConnection(store.dispatch),
+                        ...getBackgroundTxMetadata({
+                          hasServerSupport: canSendTxMetadata(store.getState())
+                        })
+                      }
+                    )
+                    .catch(() => {})
                 )
                   .do(res => {
                     if (res) {
