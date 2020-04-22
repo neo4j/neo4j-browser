@@ -93,7 +93,7 @@ Cypress.Commands.add(
 
     cy.get('button[data-testid="connect"]').click()
     if (makeAssertions) {
-      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+      cy.get('[data-testid="frame"]', { timeout: 25000 }).should(
         'have.length',
         2
       )
