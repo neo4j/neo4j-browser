@@ -11,11 +11,15 @@ Cypress.config('url', '/')
 Cypress.config('password', Cypress.env('browser-password') || 'newpassword')
 Cypress.config(
   'boltHost',
-  Cypress.env('bolt-url') ? Cypress.env('bolt-url').split(':')[0] : 'localhost'
+  Cypress.env('bolt-url')
+    ? removeUriScheme(Cypress.env('bolt-url')).split(':')[0]
+    : 'localhost'
 )
 Cypress.config(
   'boltPort',
-  Cypress.env('bolt-url') ? Cypress.env('bolt-url').split(':')[1] : 7687
+  Cypress.env('bolt-url')
+    ? removeUriScheme(Cypress.env('bolt-url')).split(':')[1]
+    : 7687
 )
 Cypress.config(
   'boltUrl',
@@ -23,3 +27,11 @@ Cypress.config(
     ? Cypress.env('bolt-url')
     : 'bolt://' + Cypress.config('boltHost') + ':' + Cypress.config('boltPort')
 )
+
+function removeUriScheme(uri = '') {
+  const SEPARATOR = '://'
+  const [_skip, ...rest] = uri.includes(SEPARATOR)
+    ? uri.split(SEPARATOR)
+    : [, uri]
+  return rest.join(SEPARATOR)
+}
