@@ -22,18 +22,13 @@ Cypress.Commands.add(
     newPassword,
     initialPassword = 'neo4j',
     username = 'neo4j',
-    boltUrl,
+    boltUrl = Cypress.config('boltUrl'),
     force = false
   ) => {
     if (Cypress.env('E2E_TEST_ENV') === 'local' && !force) {
       // We assume pw already set on local
       return
     }
-    boltUrl = !boltUrl
-      ? isAura()
-        ? Cypress.config('neo4jUrl')
-        : Cypress.config('boltUrl')
-      : boltUrl
 
     cy.title().should('include', 'Neo4j Browser')
     cy.wait(3000)
@@ -70,12 +65,12 @@ Cypress.Commands.add(
 )
 Cypress.Commands.add(
   'connect',
-  (username, password, boltUrl, makeAssertions = true) => {
-    boltUrl = !boltUrl
-      ? isAura()
-        ? Cypress.config('neo4jUrl')
-        : Cypress.config('boltUrl')
-      : boltUrl
+  (
+    username,
+    password,
+    boltUrl = Cypress.config('boltUrl'),
+    makeAssertions = true
+  ) => {
     cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')

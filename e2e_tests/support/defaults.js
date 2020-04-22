@@ -19,15 +19,7 @@ Cypress.config(
 )
 Cypress.config(
   'boltUrl',
-  'bolt://' +
-    (Cypress.env('bolt-url')
-      ? Cypress.env('bolt-url')
-      : Cypress.config('boltHost') + ':' + Cypress.config('boltPort'))
-)
-Cypress.config(
-  'neo4jUrl',
-  'neo4j://' +
-    (Cypress.env('bolt-url')
-      ? Cypress.env('bolt-url')
-      : Cypress.config('boltHost') + ':' + Cypress.config('boltPort'))
+  Cypress.env('bolt-url')
+    ? Cypress.env('bolt-url')
+    : 'bolt://' + Cypress.config('boltHost') + ':' + Cypress.config('boltPort')
 )
