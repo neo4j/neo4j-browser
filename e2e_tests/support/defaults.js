@@ -2,7 +2,6 @@
 
 Cypress.config('serverVersion', parseFloat(Cypress.env('server')) || 3.5)
 Cypress.config('serverEdition', Cypress.env('edition') || 'enterprise')
-Cypress.config('serverPlatform', Cypress.env('platform') || null)
 
 Cypress.config(
   'includeImportTests',

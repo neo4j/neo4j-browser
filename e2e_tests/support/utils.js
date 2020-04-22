@@ -3,7 +3,7 @@
 export const isEnterpriseEdition = () =>
   Cypress.config('serverEdition') === 'enterprise'
 
-export const isAura = () => Cypress.config('serverPlatform') === 'aura'
+export const isAura = () => Cypress.config('serverEdition') === 'aura'
 
 export const getDesktopContext = (
   config,
