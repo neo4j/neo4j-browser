@@ -25,7 +25,7 @@ Cypress.Commands.add(
     boltUrl = Cypress.config('boltUrl'),
     force = false
   ) => {
-    if (Cypress.env('E2E_TEST_ENV') === 'local' && !force) {
+    if (!Cypress.config('setInitialPassword') && !force) {
       // We assume pw already set on local
       return
     }

@@ -23,6 +23,7 @@
     "build": "NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
     "dev": "jest --watch",
     "e2e": "cypress run",
+    "e2e-aura": "CYPRESS_E2E_TEST_ENV=\"aura\" cypress run",
     "e2e-local": "CYPRESS_E2E_TEST_ENV=\"local\" cypress run",
     "e2e-local-open": "CYPRESS_E2E_TEST_ENV=\"local\" cypress open",
     "format": "prettier-eslint --write 'src/**/!(*.min).{js,jsx,css,json}' 'e2e_tests/**/*.{js,jsx,css,json}' 'scripts/**/*.{js,jsx,css,json}' 'build_scripts/**/*.{js,jsx,css,json}'",

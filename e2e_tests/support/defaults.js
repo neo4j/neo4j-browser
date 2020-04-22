@@ -7,6 +7,13 @@ Cypress.config(
   'includeImportTests',
   Cypress.env('include-import-tests') || false
 )
+
+// Don't set initial pw on local or aura
+Cypress.config(
+  'setInitialPassword',
+  !['local', 'aura'].includes(Cypress.env('E2E_TEST_ENV'))
+)
+
 Cypress.config('url', '/')
 Cypress.config('password', Cypress.env('browser-password') || 'newpassword')
 Cypress.config(
