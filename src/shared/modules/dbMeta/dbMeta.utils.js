@@ -30,12 +30,23 @@ export function extractServerInfo(res) {
 
   // Always get server version
   if (res.summary.server.version) {
-    serverInfo.version = res.summary.server.version.split('/').pop()
+    if (res.summary.server.version.includes('/')) {
+      serverInfo.version = res.summary.server.version.split('/').pop()
+    } else {
+      serverInfo.version = res.summary.server.version
+    }
   }
 
   // Get server edition if available
   if (res.records.length && res.records[0].keys.includes('edition')) {
     serverInfo.edition = res.records[0].get('edition')
   }
+
+  // Temporarily hardcoded solution for Aura
+  if (serverInfo.version === '4.0-aura') {
+    serverInfo.version = '4.0.0'
+    serverInfo.edition = 'aura'
+  }
+
   return serverInfo
 }

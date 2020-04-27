@@ -3,6 +3,8 @@
 export const isEnterpriseEdition = () =>
   Cypress.config('serverEdition') === 'enterprise'
 
+export const isAura = () => Cypress.config('serverEdition') === 'aura'
+
 export const getDesktopContext = (
   config,
   connectionCredsType = 'host',
@@ -42,7 +44,7 @@ const getBoltConfig = (config, type) => {
     tlsLevel: config('baseUrl').startsWith('https') ? 'REQUIRED' : 'OPTIONAL'
   }
   if (type === 'url') {
-    obj.url = `bolt://${config('boltHost')}:${config('boltPort')}`
+    obj.url = config('boltUrl')
   } else {
     obj.host = config('boltHost')
     obj.port = config('boltPort')

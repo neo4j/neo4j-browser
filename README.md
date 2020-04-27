@@ -38,7 +38,7 @@ Here are the available options / env variables:
 
 ```
 server=3.2|3.3|3.4|3.5|4.0 (default 3.5)
-edition=enterprise|community (default enterprise)
+edition=enterprise|community|aura (default enterprise)
 browser-password=<your-pw> (default 'newpassword')
 include-import-tests=true|false (default false)
 bolt-url=<bolt url excluding the protocol> (default localhost:7687)

@@ -1,3 +1,5 @@
+import { isAura } from './utils'
+
 const SubmitQueryButton = '[data-testid="submitQuery"]'
 const ClearEditorButton = '[data-testid="clearEditorContent"]'
 const Editor = '.ReactCodeMirror textarea'
@@ -23,10 +25,11 @@ Cypress.Commands.add(
     boltUrl = Cypress.config('boltUrl'),
     force = false
   ) => {
-    if (Cypress.env('E2E_TEST_ENV') === 'local' && !force) {
+    if (!Cypress.config('setInitialPassword') && !force) {
       // We assume pw already set on local
       return
     }
+
     cy.title().should('include', 'Neo4j Browser')
     cy.wait(3000)
 
@@ -85,7 +88,7 @@ Cypress.Commands.add(
 
     cy.get('button[data-testid="connect"]').click()
     if (makeAssertions) {
-      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+      cy.get('[data-testid="frame"]', { timeout: 25000 }).should(
         'have.length',
         2
       )
