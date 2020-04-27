@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isAura, isEnterpriseEdition } from '../support/utils'
+import { isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, test, expect, before, after */
 
@@ -115,8 +115,7 @@ describe('Multi statements', () => {
       .should('contain', 'ERROR')
   })
   if (Cypress.config('serverVersion') >= 4.0) {
-    // Databases cannot be created or dropped on Aura
-    if (isEnterpriseEdition() && !isAura()) {
+    if (isEnterpriseEdition()) {
       it('Can use :use command in multi-statements', () => {
         cy.executeCommand(':clear')
         // Create databases

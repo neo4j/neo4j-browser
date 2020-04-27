@@ -41,16 +41,16 @@ describe('Neo4j Desktop environment using url field', () => {
       }
     })
   })
-  it('can auto connect using url field', () => {
-    const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-    frames.should('have.length', 2)
-
-    // Auto connected = :play start
-    frames.first().should('contain', ':play start')
-    cy.wait(1000)
-  })
-  // Connection updated header is not displayed if auth is disabled, which it is on Aura
+  // No need to run these when in Aura
   if (!isAura()) {
+    it('can auto connect using url field', () => {
+      const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
+      frames.should('have.length', 2)
+
+      // Auto connected = :play start
+      frames.first().should('contain', ':play start')
+      cy.wait(1000)
+    })
     it('switches connection when that event is triggered using url field', () => {
       cy.executeCommand(':clear')
       cy.wait(1000).then(() => {
@@ -69,16 +69,16 @@ describe('Neo4j Desktop environment using url field', () => {
         .first()
         .should('contain', 'Connection updated')
     })
-  }
-  it('reacts to arguments changing and handle different encodings', () => {
-    // Use regular expression to match multiple lines
-    const expectedCommand = /RETURN 1;[^R]*RETURN 2;/
-    cy.executeCommand(':clear')
+    it('reacts to arguments changing and handle different encodings', () => {
+      // Use regular expression to match multiple lines
+      const expectedCommand = /RETURN 1;[^R]*RETURN 2;/
+      cy.executeCommand(':clear')
 
-    cy.wait(1000).then(() => {
-      appOnAgumentsChange('cmd=edit&arg=RETURN+1;&arg=RETURN%202;')
+      cy.wait(1000).then(() => {
+        appOnAgumentsChange('cmd=edit&arg=RETURN+1;&arg=RETURN%202;')
+      })
+
+      cy.getEditor().contains(expectedCommand)
     })
-
-    cy.getEditor().contains(expectedCommand)
-  })
+  }
 })

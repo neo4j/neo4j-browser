@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isAura, isEnterpriseEdition } from '../support/utils'
+import { isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, test, expect, before, after */
 
@@ -48,7 +48,7 @@ describe('Multi database', () => {
     cy.connect('neo4j', password)
   })
   if (Cypress.config('serverVersion') >= 4.0) {
-    if (isEnterpriseEdition() && !isAura()) {
+    if (isEnterpriseEdition()) {
       it('shows a message indicating whether system updates have occured', () => {
         cy.executeCommand(':clear')
 
@@ -90,7 +90,7 @@ describe('Multi database', () => {
       databaseOptionListOptions().should('have.length', 2)
       cy.get('[data-testid="drawerDBMS"]').click()
     })
-    if (isEnterpriseEdition() && !isAura()) {
+    if (isEnterpriseEdition()) {
       it('adds databases to the sidebar and adds backticks to special db names', () => {
         // Add db
         cy.executeCommand(':use system')
@@ -144,7 +144,7 @@ describe('Multi database', () => {
 
       cy.executeCommand(':use system')
     })
-    if (isEnterpriseEdition() && !isAura()) {
+    if (isEnterpriseEdition()) {
       it('lists new databases with :dbs command', () => {
         cy.executeCommand('CREATE DATABASE sidebartest')
 
@@ -182,7 +182,7 @@ describe('Multi database', () => {
         .first()
       resultFrame.should('contain', 'could not be found')
     })
-    if (isEnterpriseEdition() && !isAura()) {
+    if (isEnterpriseEdition()) {
       it('re-runs query from frame action button on original db', () => {
         cy.executeCommand(':clear')
         cy.executeCommand(':use neo4j')
