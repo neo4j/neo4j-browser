@@ -9,7 +9,7 @@ Object {
   "connectionTimeout": 30000,
   "editorAutocomplete": true,
   "editorLint": false,
-  "enableMultiStatementMode": false,
+  "enableMultiStatementMode": true,
   "initCmd": ":play start",
   "initialNodeDisplay": 300,
   "maxFrames": 30,
