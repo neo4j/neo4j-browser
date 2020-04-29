@@ -41,7 +41,12 @@ describe('CypherFrame', () => {
   const store = {
     subscribe: () => {},
     dispatch: () => {},
-    getState: () => ({})
+    getState: () => ({
+      settings: {
+        maxRows: 1000,
+        maxFieldItems: 1000
+      }
+    })
   }
   test('renders accordingly from pending to success to error to success', () => {
     // Given

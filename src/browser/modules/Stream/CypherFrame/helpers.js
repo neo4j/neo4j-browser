@@ -48,7 +48,7 @@ import { stringModifier } from 'services/bolt/cypherTypesFormatting'
  * @return    {boolean}
  */
 export const resultHasTruncatedFields = (result, maxFieldItems) => {
-  if (!maxFieldItems) {
+  if (!maxFieldItems || !result) {
     return false
   }
 
@@ -130,6 +130,12 @@ export const flattenArrayDeep = arr => {
   return result
 }
 
+const VIS_MAX_SAFE_LIMIT = 1000
+
+export const requestExceedsVisLimits = ({ result } = {}) => {
+  return resultHasTruncatedFields(result, VIS_MAX_SAFE_LIMIT)
+}
+
 export const resultHasNodes = (request, types = neo4j.types) => {
   if (!request) return false
   const { result = {} } = request
@@ -209,7 +215,8 @@ export const initialView = (props, state = {}) => {
   }
   // No we don't care about the recentView
   // If the response have viz elements, we show the viz
-  if (resultHasNodes(props.request)) return viewTypes.VISUALIZATION
+  if (!requestExceedsVisLimits(props.request) && resultHasNodes(props.request))
+    return viewTypes.VISUALIZATION
   return viewTypes.TABLE
 }
 
@@ -237,9 +244,9 @@ export const transformResultRecordsToResultArray = (records, maxFieldItems) => {
   return records && records.length
     ? [records]
         .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
-        .map(
+        .flatMap(
           flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
-        )[0]
+        )
     : undefined
 }
 
@@ -371,7 +378,7 @@ export function recordToJSONMapper(record) {
  * @param     {*}     values
  * @return    {*}
  */
-function mapNeo4jValuesToPlainValues(values) {
+export function mapNeo4jValuesToPlainValues(values) {
   if (!isObjectLike(values)) {
     return values
   }

@@ -23,18 +23,15 @@ import { render } from '@testing-library/react'
 import neo4j from 'neo4j-driver'
 
 import {
-  TableViewComponent as TableView,
-  TableStatusbarComponent as TableStatusbar,
-  renderObject
-} from './TableView'
+  RelatableViewComponent as RelatableView,
+  RelatableStatusbarComponent as RelatableStatusbar
+} from './relatable-view'
 
-describe('TableViews', () => {
-  describe('TableView', () => {
+describe('RelatableViews', () => {
+  describe('RelatableView', () => {
     test('displays bodyMessage if no rows', () => {
       // Given
-      const sps = jest.fn()
       const props = {
-        setParentState: sps,
         result: {
           records: [],
           summary: {
@@ -45,14 +42,14 @@ describe('TableViews', () => {
       }
 
       // When
-      const { container } = render(<TableView {...props} />)
+      const { container } = render(
+        <RelatableView {...props} maxFieldItems={1000} maxRows={1000} />
+      )
 
       // Then
       expect(container).toMatchSnapshot()
     })
     test('does not display bodyMessage if rows, and escapes HTML', () => {
-      // Given
-      const sps = jest.fn()
       const value = 'String with HTML <strong>in</strong> it'
       const result = {
         records: [{ keys: ['x'], _fields: [value], get: () => value }],
@@ -64,21 +61,11 @@ describe('TableViews', () => {
 
       // When
       const { container } = render(
-        <TableView setParentState={sps} result={result} />
+        <RelatableView result={result} maxFieldItems={1000} maxRows={1000} />
       )
 
       // Then
       expect(container).toMatchSnapshot()
-    })
-    test('renderObject handles null values', () => {
-      // Given
-      const datas = [{ x: 1 }, null]
-
-      // When
-      const results = datas.map(data => renderObject(data))
-
-      // Then
-      results.forEach((res, i) => expect(res).toMatchSnapshot())
     })
   })
   describe('TableStatusbar', () => {
@@ -87,7 +74,9 @@ describe('TableViews', () => {
       const props = { result: {}, maxRows: 0 }
 
       // When
-      const { container } = render(<TableStatusbar {...props} />)
+      const { container } = render(
+        <RelatableStatusbar {...props} maxFieldItems={1000} maxRows={1000} />
+      )
 
       // Then
       expect(container).toMatchSnapshot()
@@ -108,7 +97,9 @@ describe('TableViews', () => {
       }
 
       // When
-      const { container } = render(<TableStatusbar {...props} />)
+      const { container } = render(
+        <RelatableStatusbar {...props} maxFieldItems={1000} maxRows={1000} />
+      )
 
       // Then
       expect(container).toMatchSnapshot()

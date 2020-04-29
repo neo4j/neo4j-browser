@@ -7,9 +7,7 @@ exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
-    >
-      
-    </div>
+    />
   </div>
 </div>
 `;

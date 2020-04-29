@@ -29,7 +29,10 @@ import {
   StyledTd,
   StyledExpandable
 } from '../styled'
-import { TableStatusbar, TableStatusbarComponent } from './TableView'
+import {
+  RelatableStatusbar,
+  RelatableStatusbarComponent
+} from './relatable-view'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import { map, take } from 'lodash-es'
@@ -68,10 +71,10 @@ const fieldLimiterFactory = maxFieldItems => (key, val) => {
 }
 
 export class CodeViewComponent extends Component {
-  shouldComponentUpdate (props) {
+  shouldComponentUpdate(props) {
     return !this.props.result || !deepEquals(props.result, this.props.result)
   }
-  render () {
+  render() {
     const { request = {}, query, maxFieldItems } = this.props
     if (request.status !== 'success') return null
     const resultJson = JSON.stringify(
@@ -121,5 +124,5 @@ export const CodeView = connect(state => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(CodeViewComponent)
 
-export const CodeStatusbarComponent = TableStatusbarComponent
-export const CodeStatusbar = TableStatusbar
+export const CodeStatusbarComponent = RelatableStatusbarComponent
+export const CodeStatusbar = RelatableStatusbar
