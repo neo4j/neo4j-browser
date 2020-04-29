@@ -93,11 +93,11 @@ export const SysInfoTableEntry = ({
   if (values) {
     return (
       <StyledTr key="values-row">
-        {values.map(value => {
+        {values.map((value, rowIndex) => {
           const mappedValue = getValue(value, mapper)
           const val = mappedValue || missingValuePlaceholder
           return mappedValue || !optional ? (
-            <StyledTd key={toKeyString(val)}>{val}</StyledTd>
+            <StyledTd key={toKeyString(`${val}${rowIndex}`)}>{val}</StyledTd>
           ) : null
         })}
       </StyledTr>
