@@ -696,17 +696,6 @@ const availableCommands = [
         )
       } else if (param === 'reset') {
         put(updateGraphStyleData(null))
-      } else if (param === 'edit') {
-        const grassData = getGraphStyleData(store.getState())
-        put(
-          frames.add({
-            useDb: getUseDb(store.getState()),
-            ...action,
-            type: 'style',
-            result: grassData,
-            edit: true
-          })
-        )
       } else if (isValidURL(param)) {
         if (!param.startsWith('http')) {
           param = 'http://' + param

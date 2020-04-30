@@ -98,10 +98,7 @@ function addFrame(state, newState) {
 }
 
 function setFrameEditMode(state, id) {
-  console.log('++state', state)
-  console.log('++id', id)
   let byId = Object.assign({}, state.byId)
-  console.log('++byId[id].stack[0]', byId[id].stack[0])
   byId = {
     ...byId,
     [id]: {
@@ -114,7 +111,6 @@ function setFrameEditMode(state, id) {
       ]
     }
   }
-  console.log('++byId after', byId[id].stack[0])
   return {
     ...state,
     byId
@@ -273,7 +269,6 @@ export function setRecentView(view) {
 }
 
 export function setEditMode(id) {
-  console.log('++id', id)
   return {
     type: EDIT_GRAPH_STYLE_DATA,
     id

@@ -35,12 +35,8 @@ import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
 import { setEditMode } from 'shared/modules/stream/streamDuck'
 
 const StyleFrame = ({ frame }) => {
-  const [grassState, setGrassState] = useState('')
-  const updateGrassState = value => {
-    setGrassState(value)
-  }
+  const [grass, setGrass] = useState(frame.result ? objToCss(frame.result) : '')
 
-  let grass = ''
   let contents = (
     <InfoView
       title="No styles yet"
@@ -49,7 +45,6 @@ const StyleFrame = ({ frame }) => {
     />
   )
   if (!frame.edit && frame.result) {
-    grass = objToCss(frame.result)
     contents = (
       <PaddedDiv>
         <pre>
@@ -60,9 +55,6 @@ const StyleFrame = ({ frame }) => {
     )
   }
   if (frame.edit && frame.result) {
-    // console.log('++frame.res', frame.result, typeof frame.result)
-    grass = objToCss(frame.result)
-    // console.log('++grass', grass, typeof grass)
     contents = grass
   }
 
@@ -73,9 +65,9 @@ const StyleFrame = ({ frame }) => {
       header={frame}
       numRecords={1}
       getRecords={() => grass}
-      updateGrassValue={value => updateGrassState(value)}
+      updateGrassValue={value => setGrass(value)}
       contents={contents}
-      statusbar={<Statusbar frame={frame} grassState={grassState} />}
+      statusbar={<Statusbar frame={frame} grass={grass} />}
     />
   )
 }
@@ -87,8 +79,8 @@ const StyleStatusbar = ({
   setGrassEditMode,
   setEditModeAction,
   isInEditMode,
-  updateStyle,
-  updateStyleAction
+  updateGrass,
+  updateGrassAction
 }) => {
   return (
     <StyledOneRowStatsBar>
@@ -102,7 +94,7 @@ const StyleStatusbar = ({
                   // data-testid="styleResetButton"
                   onClick={() => {
                     return isInEditMode
-                      ? updateStyle(updateStyleAction)
+                      ? updateGrass(updateGrassAction)
                       : setGrassEditMode(setEditModeAction)
                   }}
                 >
@@ -132,7 +124,6 @@ const StyleStatusbar = ({
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // console.log('!!!ownProps.grassState', ownProps.grassState)
   return {
     resetStyleAction: executeSystemCommand(`${getCmdChar(state)}style reset`),
     rerunAction: executeCommand(ownProps.frame.cmd, {
@@ -143,8 +134,8 @@ const mapStateToProps = (state, ownProps) => {
       (state.frames.byId[ownProps.frame.id].stack[0].hasOwnProperty('edit') &&
         state.frames.byId[ownProps.frame.id].stack[0].edit === true) ||
       false,
-    updateStyleAction: executeSystemCommand(
-      `:style ${ownProps.grassState.replace(/ |\n/g, '')}`
+    updateGrassAction: executeSystemCommand(
+      `:style ${ownProps.grass.replace(/ |\n/g, '')}`
     )
   }
 }
@@ -156,18 +147,10 @@ const mapDispatchToProps = dispatch => ({
   setGrassEditMode: setEditModeAction => {
     dispatch(setEditModeAction)
   },
-  updateStyle: updateStyleAction => {
-    dispatch(updateStyleAction)
+  updateGrass: updateGrassAction => {
+    dispatch(updateGrassAction)
   }
 })
-
-// const mapDispatchToProps = dispatch => ({
-//   updateStyle: (data, frameId) => {
-//     dispatch(executeSystemCommand(`:style ${data}`))
-//     // dispatch(remove(frameId))
-//     // dispatch(executeSystemCommand(':style'))
-//   }
-// })
 
 const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
 

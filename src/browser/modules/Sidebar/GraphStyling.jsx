@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'shared/modules/settings/settingsDuck'
 import {
@@ -65,10 +65,15 @@ const visualSettings = [
 export const GraphStyling = ({
   grass,
   visualSettings,
-  onSettingsSave = () => {}
+  onSettingsSave = () => {},
+  onResetClick = () => {}
 }) => {
-  const [grassValue, setGrassValue] = useState(grass)
   if (!grass) return 'No GraSS yet...'
+  const [grassValue, setGrassValue] = useState(grass)
+
+  useEffect(() => {
+    setGrassValue(grass)
+  }, [grass])
 
   const mappedSettings = visualSettings.map(visualSetting => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
@@ -88,6 +93,9 @@ export const GraphStyling = ({
                 title={[tooltip]}
                 onChange={e => setGrassValue(parseGrass(e.target.value))}
               />
+              <StyledSettingButton onClick={() => onResetClick(grassValue)}>
+                Reset
+              </StyledSettingButton>
               <StyledSettingButton onClick={() => onSettingsSave(grassValue)}>
                 Save
               </StyledSettingButton>
@@ -129,6 +137,10 @@ const mapDispatchToProps = dispatch => {
       // can only get the command to work by stripping out all spaces and new lines
       const grassVal = objToCss(grass).replace(/ |\n/g, '')
       dispatch(executeSystemCommand(`:style ${grassVal})}`))
+    },
+    onResetClick: () => {
+      dispatch(executeSystemCommand(':style reset'))
+      dispatch(executeSystemCommand(':style')) // equivalent to the re-run previous command occuring on the style frame currently. Seems like incorrect behaviour but leaving here for consistency for now...
     }
   }
 }

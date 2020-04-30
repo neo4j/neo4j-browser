@@ -10,9 +10,7 @@ const FeatureToggle = ({ name, on, off }) => {
             'No "name" property provided to FeatureToggle component.'
           )
         }
-        console.log('++name', name)
         const shouldShow = showFeature(name)
-        console.log('++shouldSHow', shouldShow)
         if (!shouldShow && !off) {
           return null
         }

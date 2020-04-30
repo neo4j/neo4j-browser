@@ -53,7 +53,6 @@ function Sidebar(props) {
   const onNavClick = props.onNavClick
   const { showStaticScripts, showGrassStyling } = props
   const DatabaseDrawer = DBMSInfo
-  console.log('++showGrass', showGrassStyling)
   const FavoritesDrawer = () => (
     <>
       <Favorites />

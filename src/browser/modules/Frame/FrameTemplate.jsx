@@ -38,11 +38,6 @@ import {
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { FrameButton } from 'browser-components/buttons'
 import { remove } from 'shared/modules/stream/streamDuck'
-// import { getCmdChar } from 'shared/modules/settings/settingsDuck'
-// import {
-//   executeSystemCommand
-//   // executeCommand
-// } from 'shared/modules/commands/commandsDuck'
 
 class FrameTemplate extends Component {
   constructor(props) {
@@ -103,28 +98,6 @@ class FrameTemplate extends Component {
     )
   }
 
-  // editStatusBar() {
-  //   return (
-  //     <StyledOneRowStatsBar>
-  //       <StyledRightPartial>
-  //         <StyledFrameTitlebarButtonSection>
-  //           <FrameButton
-  //             // data-testid="styleResetButton"
-  //             onClick={() => {
-  //               this.props.updateStyle(
-  //                 this.state.editContent.replace(/ |\n/g, ''),
-  //                 this.props.id
-  //               )
-  //             }}
-  //           >
-  //             Save
-  //           </FrameButton>
-  //         </StyledFrameTitlebarButtonSection>
-  //       </StyledRightPartial>
-  //     </StyledOneRowStatsBar>
-  //   )
-  // }
-
   componentDidUpdate() {
     if (this.frameContentElement.clientHeight < 300) return // No need to report a transition
     if (
@@ -147,12 +120,6 @@ class FrameTemplate extends Component {
 
   mainSectionContent = () => {
     if (this.props.edit) {
-      console.log(
-        '++editmode',
-        this.state.editContent,
-        typeof this.state.editContent
-      )
-      console.log('++editmode', this.props.contents, typeof this.props.contents)
       return (
         <StyledFrameContentsEdit
           fullscreen={this.state.fullscreen}
@@ -160,9 +127,6 @@ class FrameTemplate extends Component {
           defaultValue={this.props.contents}
           onChange={e => {
             const target = e.target.value
-            // this.setState(() => ({
-            //   editContent: target
-            // }))
             this.props.updateGrassValue(target)
           }}
         />
@@ -225,7 +189,6 @@ class FrameTemplate extends Component {
             fullscreen={this.state.fullscreen}
             data-testid="frameStatusbar"
           >
-            {/* this.props.edit ? this.editStatusBar() : this.props.statusbar */}
             {this.props.statusbar}
           </StyledFrameStatusbar>
         </Render>
@@ -234,13 +197,4 @@ class FrameTemplate extends Component {
   }
 }
 
-// const mapDispatchToProps = dispatch => ({
-//   updateStyle: (data, frameId) => {
-//     dispatch(executeSystemCommand(`:style ${data}`))
-//     // dispatch(remove(frameId))
-//     // dispatch(executeSystemCommand(':style'))
-//   }
-// })
-
-// export default connect(null, mapDispatchToProps)(FrameTemplate)
 export default FrameTemplate
