@@ -312,7 +312,7 @@ export default function neoGraphStyle() {
       let defaultCaption = captionPrioOrder.reduceRight((leading, current) => {
         const hits = item.propertyList.filter(prop => current.test(prop.key))
         if (hits.length) {
-          return '{' + hits[0].key + '}'
+          return `{${hits[0].key}}`
         } else {
           return leading
         }
@@ -463,13 +463,13 @@ export default function neoGraphStyle() {
     GraphStyle.prototype.toString = function() {
       let str = ''
       this.rules.forEach(r => {
-        str += r.selector.toString() + ' {\n'
+        str += `${r.selector.toString()} {\n`
         for (const k in r.props) {
           let v = r.props[k]
           if (k === 'caption') {
-            v = "'" + v + "'"
+            v = `'${v}'`
           }
-          str += '  ' + k + ': ' + v + ';\n'
+          str += `  ${k}: ${v};\n`
         }
         str += '}\n\n'
       })

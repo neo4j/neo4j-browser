@@ -119,7 +119,7 @@ const nodeRing = new Renderer({
       .attr({
         cx: 0,
         cy: 0,
-        'stroke-width': nodeRingStrokeSize + 'px'
+        'stroke-width': `${nodeRingStrokeSize}px`
       })
 
     circles.attr({

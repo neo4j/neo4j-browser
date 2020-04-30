@@ -514,7 +514,7 @@ const availableCommands = [
               response: e.response || null,
               initialSlide: tryGetRemoteInitialSlideFromUrl(url),
               error: CouldNotFetchRemoteGuideError({
-                error: e.name + ': ' + e.message
+                error: `${e.name}: ${e.message}`
               })
             })
           )
@@ -653,12 +653,10 @@ const availableCommands = [
           if (isLocal || isSameHostnameAsConnection) {
             if (connectionData.username) {
               authHeaders = {
-                Authorization:
-                  'Basic ' +
-                  authHeaderFromCredentials(
-                    connectionData.username,
-                    connectionData.password
-                  )
+                Authorization: `Basic ${authHeaderFromCredentials(
+                  connectionData.username,
+                  connectionData.password
+                )}`
               }
             }
           }
@@ -720,7 +718,7 @@ const availableCommands = [
         put(updateGraphStyleData(null))
       } else if (isValidURL(param)) {
         if (!param.startsWith('http')) {
-          param = 'http://' + param
+          param = `http://${param}`
         }
 
         const whitelist = getRemoteContentHostnameWhitelist(store.getState())

@@ -33,7 +33,7 @@ export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
 export const PIN = `${NAME}/PIN`
 export const UNPIN = `${NAME}/UNPIN`
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
-export const SET_MAX_FRAMES = NAME + '/SET_MAX_FRAMES'
+export const SET_MAX_FRAMES = `${NAME}/SET_MAX_FRAMES`
 
 /**
  * Selectors

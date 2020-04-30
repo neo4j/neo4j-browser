@@ -153,9 +153,9 @@ describe('editorDuck Epics', () => {
     const args = ['RETURN 1;', 'RETURN rand();']
     const action = {
       type: APP_START,
-      url:
-        `http://url.com?cmd=${cmd}` +
-        args.map(arg => `&arg=${encodeURIComponent(arg)}`).join('')
+      url: `http://url.com?cmd=${cmd}${args
+        .map(arg => `&arg=${encodeURIComponent(arg)}`)
+        .join('')}`
     }
 
     bus.take(SET_CONTENT, () => {

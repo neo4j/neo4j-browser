@@ -1,8 +1,8 @@
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'experimentalFeatures'
-const FEATURE_ON = NAME + '/FEATURE_ON'
-const FEATURE_OFF = NAME + '/FEATURE_OFF'
+const FEATURE_ON = `${NAME}/FEATURE_ON`
+const FEATURE_OFF = `${NAME}/FEATURE_OFF`
 
 export const getExperimentalFeatures = state => state[NAME]
 export const showFeature = (state, name) => !!(state[NAME][name] || {}).on

@@ -70,7 +70,7 @@ const getCompanies = state => {
     return [
       {
         type: 'company',
-        name: 'Neo4j ' + getVersion(state) + ' ' + getStoreId(state),
+        name: `Neo4j ${getVersion(state)} ${getStoreId(state)}`,
         company_id: getStoreId(state)
       }
     ]

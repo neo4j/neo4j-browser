@@ -152,18 +152,18 @@ export const isRoutingHost = host => {
 }
 
 export const toBoltHost = host => {
-  return (
-    'neo4j://' +
-    (host || '') // prepend with neo4j://
-      .replace(/(.*(?=@+)@|(bolt|bolt\+routing):\/\/)/, '') // remove bolt or bolt+routing protocol and auth info
-  )
+  // prepend with neo4j:// and remove bolt or bolt+routing protocol and auth info
+  return `neo4j://${(host || '').replace(
+    /(.*(?=@+)@|(bolt|bolt\+routing):\/\/)/,
+    ''
+  )}`
 }
 
 export const hostIsAllowed = (uri, whitelist = null) => {
   if (whitelist === '*') return true
   const urlInfo = getUrlInfo(uri)
   const hostname = urlInfo.hostname
-  const hostnamePlusProtocol = urlInfo.protocol + '//' + hostname
+  const hostnamePlusProtocol = `${urlInfo.protocol}//${hostname}`
   const whitelistedHosts =
     whitelist && whitelist !== ''
       ? extractWhitelistFromConfigString(whitelist)
@@ -182,7 +182,7 @@ export const addProtocolsToUrlList = list => {
     if (!uri || uri === '*') return all
     const urlInfo = getUrlInfo(uri)
     if (urlInfo.protocol) return all.concat(uri)
-    return all.concat(['https://' + uri, 'http://' + uri])
+    return all.concat([`https://${uri}`, `http://${uri}`])
   }, [])
 }
 
@@ -225,7 +225,7 @@ export const getUrlInfo = url => {
 export const getUrlParamValue = (name, url) => {
   if (!url) return false
   const out = []
-  const re = new RegExp('[\\?&]' + name + '=([^&#]*)', 'g')
+  const re = new RegExp(`[\\?&]${name}=([^&#]*)`, 'g')
   let results
   while ((results = re.exec(url)) !== null) {
     if (results && results[1]) out.push(results[1])
@@ -294,9 +294,7 @@ export const canUseDOM = () =>
   )
 
 export const escapeCypherIdentifier = str =>
-  /^[A-Za-z][A-Za-z0-9_]*$/.test(str)
-    ? str
-    : '`' + str.replace(/`/g, '``') + '`'
+  /^[A-Za-z][A-Za-z0-9_]*$/.test(str) ? str : `\`${str.replace(/`/g, '``')}\``
 
 export const unescapeCypherIdentifier = str =>
   [str]
@@ -361,7 +359,7 @@ export const stringifyMod = (
   }
   const escFunc = function(m) {
     return (
-      escMap[m] || '\\u' + (m.charCodeAt(0) + 0x10000).toString(16).substr(1)
+      escMap[m] || `\\u${(m.charCodeAt(0) + 0x10000).toString(16).substr(1)}`
     )
   }
   const escRE = /[\\"\u0000-\u001F\u2028\u2029]/g // eslint-disable-line no-control-regex
@@ -369,11 +367,11 @@ export const stringifyMod = (
     const modVal = modFn && modFn(value)
     if (typeof modVal !== 'undefined') return indentation + modVal
   }
-  if (value == null) return indentation + 'null'
+  if (value == null) return `${indentation}null`
   if (typeof value === 'number') {
     return indentation + (isFinite(value) ? value.toString() : 'null')
   }
-  if (typeof value === 'boolean') return indentation + value.toString()
+  if (typeof value === 'boolean') return `${indentation}${value.toString()}`
   if (typeof value === 'object') {
     if (typeof value.toJSON === 'function') {
       return stringifyMod(value.toJSON(), modFn, nextPrettyLevel)
@@ -387,37 +385,33 @@ export const stringifyMod = (
           newLine +
           stringifyMod(value[i], modFn, nextPrettyLevel)
       }
-      return (
-        indentation +
-        '[' +
-        res +
-        (hasValues ? newLine + endIndentation : '') +
-        ']'
-      )
+      return `${indentation}[${res}${
+        hasValues ? newLine + endIndentation : ''
+      }]`
     } else if (toString.call(value) === '[object Object]') {
       const tmp = []
       for (const k in value) {
         if (value.hasOwnProperty(k)) {
           tmp.push(
-            stringifyMod(k, modFn, nextPrettyLevel) +
-              ':' +
-              propSpacing +
-              stringifyMod(value[k], modFn, nextPrettyLevel, true)
+            `${stringifyMod(
+              k,
+              modFn,
+              nextPrettyLevel
+            )}:${propSpacing}${stringifyMod(
+              value[k],
+              modFn,
+              nextPrettyLevel,
+              true
+            )}`
           )
         }
       }
-      return (
-        indentation +
-        '{' +
-        newLine +
-        tmp.join(',' + newLine) +
-        newLine +
-        endIndentation +
-        '}'
-      )
+      return `${indentation}{${newLine}${tmp.join(
+        `,${newLine}`
+      )}${newLine}${endIndentation}}`
     }
   }
-  return indentation + '"' + value.toString().replace(escRE, escFunc) + '"'
+  return `${indentation}"${value.toString().replace(escRE, escFunc)}"`
 }
 
 export const safetlyAddObjectProp = (obj, prop, val) => {

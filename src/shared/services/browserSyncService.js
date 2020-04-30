@@ -51,18 +51,18 @@ export const status = () => {
 }
 
 export const getResourceFor = userId => {
-  return firebase.database().ref('users/' + userId)
+  return firebase.database().ref(`users/${userId}`)
 }
 
 export const syncResourceFor = (userId, key, value) => {
-  const userRef = firebase.database().ref('users/' + userId)
+  const userRef = firebase.database().ref(`users/${userId}`)
   userRef.child(key).set(value)
 }
 
 export const setupUser = (userId, initialData) => {
   firebase
     .database()
-    .ref('users/' + userId)
+    .ref(`users/${userId}`)
     .set(initialData)
 }
 

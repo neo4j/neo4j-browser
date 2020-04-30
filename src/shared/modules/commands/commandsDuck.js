@@ -54,16 +54,16 @@ import { add as addFrame } from 'shared/modules/stream/streamDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 
 export const NAME = 'commands'
-export const SINGLE_COMMAND_QUEUED = NAME + '/SINGLE_COMMAND_QUEUED'
-export const COMMAND_QUEUED = NAME + '/COMMAND_QUEUED'
-export const SYSTEM_COMMAND_QUEUED = NAME + '/SYSTEM_COMMAND_QUEUED'
-export const UNKNOWN_COMMAND = NAME + '/UNKNOWN_COMMAND'
-export const SHOW_ERROR_MESSAGE = NAME + '/SHOW_ERROR_MESSAGE'
-export const CLEAR_ERROR_MESSAGE = NAME + '/CLEAR_ERROR_MESSAGE'
-export const CYPHER = NAME + '/CYPHER'
-export const CYPHER_SUCCEEDED = NAME + '/CYPHER_SUCCEEDED'
-export const CYPHER_FAILED = NAME + '/CYPHER_FAILED'
-export const FETCH_GUIDE_FROM_WHITELIST = NAME + 'FETCH_GUIDE_FROM_WHITELIST'
+export const SINGLE_COMMAND_QUEUED = `${NAME}/SINGLE_COMMAND_QUEUED`
+export const COMMAND_QUEUED = `${NAME}/COMMAND_QUEUED`
+export const SYSTEM_COMMAND_QUEUED = `${NAME}/SYSTEM_COMMAND_QUEUED`
+export const UNKNOWN_COMMAND = `${NAME}/UNKNOWN_COMMAND`
+export const SHOW_ERROR_MESSAGE = `${NAME}/SHOW_ERROR_MESSAGE`
+export const CLEAR_ERROR_MESSAGE = `${NAME}/CLEAR_ERROR_MESSAGE`
+export const CYPHER = `${NAME}/CYPHER`
+export const CYPHER_SUCCEEDED = `${NAME}/CYPHER_SUCCEEDED`
+export const CYPHER_FAILED = `${NAME}/CYPHER_FAILED`
+export const FETCH_GUIDE_FROM_WHITELIST = `${NAME}FETCH_GUIDE_FROM_WHITELIST`
 
 export const useDbCommand = 'use'
 export const listDbsCommand = 'dbs'
@@ -286,7 +286,7 @@ export const fetchGuideFromWhitelistEpic = (some$, store) =>
       defaultWhitelist
     )
     const urlWhitelist = addProtocolsToUrlList(resolvedWildcardWhitelist)
-    const guidesUrls = urlWhitelist.map(url => url + '/' + action.url)
+    const guidesUrls = urlWhitelist.map(url => `${url}/${action.url}`)
 
     return firstSuccessPromise(guidesUrls, url => {
       // Get first successful fetch

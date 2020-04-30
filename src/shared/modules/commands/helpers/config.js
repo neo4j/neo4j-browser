@@ -53,21 +53,20 @@ export function handleUpdateConfigCommand(action, cmdchar, put, store) {
         } catch (e) {
           return reject(
             new Error(
-              'Could not parse input. Usage: `:config {"x":1,"y":"string"}`. ' +
-                e
+              `Could not parse input. Usage: \`:config {"x":1,"y":"string"}\`. ${e}`
             )
           )
         }
       } else {
         // Single param
         try {
-          const json = '{' + param + '}'
+          const json = `{${param}}`
           const res = jsonic(json)
           put(update(res))
           return resolve(res)
         } catch (e) {
           return reject(
-            new Error('Could not parse input. Usage: `:config "x": 2`. ' + e)
+            new Error(`Could not parse input. Usage: \`:config "x": 2\`. ${e}`)
           )
         }
       }

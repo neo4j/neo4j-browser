@@ -109,21 +109,11 @@ const createMenuItem = function(
     .classed('context-menu-item', true)
     .attr({
       transform(node) {
-        return (
-          'translate(' +
-          Math.floor(
-            arc(node.radius, itemNumber).centroid()[0] +
-              (position[0] * 100) / 100
-          ) +
-          ',' +
-          Math.floor(
-            arc(node.radius, itemNumber).centroid()[1] +
-              (position[1] * 100) / 100
-          ) +
-          ')' +
-          ' ' +
-          'scale(0.7)'
-        )
+        return `translate(${Math.floor(
+          arc(node.radius, itemNumber).centroid()[0] + (position[0] * 100) / 100
+        )},${Math.floor(
+          arc(node.radius, itemNumber).centroid()[1] + (position[1] * 100) / 100
+        )}) scale(0.7)`
       },
       color(node) {
         return viz.style.forNode(node).get('text-color-internal')

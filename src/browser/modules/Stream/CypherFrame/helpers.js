@@ -46,14 +46,14 @@ export function getBodyAndStatusBarMessages(result, maxRows) {
   const resultAvailableAfter =
     result.summary.resultAvailableAfter.toNumber() === 0
       ? 'in less than 1'
-      : 'after ' + result.summary.resultAvailableAfter.toString()
+      : `after ${result.summary.resultAvailableAfter.toString()}`
   const totalTime = result.summary.resultAvailableAfter.add(
     result.summary.resultConsumedAfter
   )
   const totalTimeString =
     totalTime.toNumber() === 0
       ? 'in less than 1'
-      : 'after ' + totalTime.toString()
+      : `after ${totalTime.toString()}`
   const streamMessageTail =
     result.records.length > maxRows
       ? `ms, displaying first ${maxRows} rows.`
@@ -66,8 +66,8 @@ export function getBodyAndStatusBarMessages(result, maxRows) {
       : `completed ${totalTimeString} ${streamMessageTail}`
 
   if (updateMessages && updateMessages.length > 0) {
-    updateMessages =
-      updateMessages[0].toUpperCase() + updateMessages.slice(1) + ', '
+    updateMessages = `${updateMessages[0].toUpperCase() +
+      updateMessages.slice(1)}, `
   } else {
     streamMessage = streamMessage[0].toUpperCase() + streamMessage.slice(1)
   }
@@ -81,7 +81,7 @@ export function getBodyAndStatusBarMessages(result, maxRows) {
             's') ||
             ''}`) ||
           'no changes'}, no records)`
-      : updateMessages + `completed ${totalTimeString} ms.`
+      : `${updateMessages}completed ${totalTimeString} ms.`
 
   return {
     statusBarMessage: (updateMessages || '') + streamMessage,

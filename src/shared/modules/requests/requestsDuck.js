@@ -23,10 +23,10 @@ import bolt from 'services/bolt/bolt'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'requests'
-export const REQUEST_SENT = NAME + '/SENT'
-export const CANCEL_REQUEST = NAME + '/CANCEL'
-export const REQUEST_CANCELED = NAME + '/CANCELED'
-export const REQUEST_UPDATED = NAME + '/UPDATED'
+export const REQUEST_SENT = `${NAME}/SENT`
+export const CANCEL_REQUEST = `${NAME}/CANCEL`
+export const REQUEST_CANCELED = `${NAME}/CANCELED`
+export const REQUEST_UPDATED = `${NAME}/UPDATED`
 
 export const REQUEST_STATUS_PENDING = 'pending'
 export const REQUEST_STATUS_SUCCESS = 'success'

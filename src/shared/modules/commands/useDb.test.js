@@ -50,7 +50,7 @@ describe(':use', () => {
   test.skip(':use <db-name> is case insensitive', done => {
     // Given
     const dbName = 'System' // uppercase first letter
-    const cmd = store.getState().settings.cmdchar + 'use ' + dbName
+    const cmd = `${store.getState().settings.cmdchar}use ${dbName}`
     const action = commands.executeSingleCommand(cmd)
     const existingDb = store.getState().meta.databases[0]
     bus.take('NOOP', currentAction => {

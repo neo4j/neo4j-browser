@@ -124,7 +124,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
             ...action,
             username,
             password,
-            forceURL: `${protocol ? protocol + '//' : ''}${host}`
+            forceURL: `${protocol ? `${protocol}//` : ''}${host}`
           },
           store
         )

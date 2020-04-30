@@ -44,10 +44,10 @@ import {
 } from '../dbMeta/dbMetaDuck'
 
 const NAME = 'cypher'
-export const CYPHER_REQUEST = NAME + '/REQUEST'
-export const AD_HOC_CYPHER_REQUEST = NAME + '/AD_HOC_REQUEST'
-export const CLUSTER_CYPHER_REQUEST = NAME + '/CLUSTER_REQUEST'
-export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
+export const CYPHER_REQUEST = `${NAME}/REQUEST`
+export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
+export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
+export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
 
 // Helpers
 const queryAndResolve = async (driver, action, host, useDb = {}) => {

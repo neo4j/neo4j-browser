@@ -73,7 +73,7 @@ const square = distance => distance * distance
 const addShortenedNextWord = (line, word, measure) => {
   const result = []
   while (!(word.length <= 2)) {
-    word = word.substr(0, word.length - 2) + '\u2026'
+    word = `${word.substr(0, word.length - 2)}\u2026`
     if (measure(word) < line.remainingWidth) {
       line.text += ` ${word}`
       break

@@ -125,9 +125,9 @@ const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
 export const mapParamToCypherStatement = (key, param) => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
-    ? '`' + quotedKey[1] + '`'
+    ? `\`${quotedKey[1]}\``
     : typeof key !== 'string'
-    ? '`' + key + '`'
+    ? `\`${key}\``
     : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
