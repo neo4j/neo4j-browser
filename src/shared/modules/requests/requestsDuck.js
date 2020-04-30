@@ -71,7 +71,7 @@ export const send = (requestType, id) => {
   return {
     type: REQUEST_SENT,
     requestType,
-    id: id
+    id
   }
 }
 

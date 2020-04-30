@@ -29,7 +29,7 @@ function request(method, url, data = null, extraHeaders = {}) {
   }
   return fetch(url, {
     method,
-    headers: headers,
+    headers,
     body: data
   }).then(checkStatus)
 }

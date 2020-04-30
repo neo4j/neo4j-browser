@@ -312,7 +312,7 @@ describe('boltMappings', () => {
       profile.rows = 14
       const result = {
         summary: {
-          profile: profile
+          profile
         }
       }
       const extractedPlan = extractPlan(result).root

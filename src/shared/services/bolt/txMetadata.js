@@ -45,7 +45,7 @@ export const getUserTxMetadata = type => ({ hasServerSupport = false }) => {
   }
   return {
     txMetadata: {
-      type: type,
+      type,
       app: NEO4J_BROWSER_APP_ID
     }
   }

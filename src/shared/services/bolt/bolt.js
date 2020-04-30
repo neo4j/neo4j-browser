@@ -276,6 +276,6 @@ export default {
       intConverter: val => val.toNumber(),
       objectConverter: mappings.extractFromNeoObjects
     }),
-  neo4j: neo4j,
+  neo4j,
   addTypesAsField
 }

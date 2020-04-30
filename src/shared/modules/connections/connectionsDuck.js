@@ -137,12 +137,7 @@ const addConnectionHelper = (state, obj) => {
   if (state.allConnectionIds.indexOf(obj.id) < 0) {
     allConnectionIds = state.allConnectionIds.concat([obj.id])
   }
-  return Object.assign(
-    {},
-    state,
-    { allConnectionIds: allConnectionIds },
-    { connectionsById: connectionsById }
-  )
+  return Object.assign({}, state, { allConnectionIds }, { connectionsById })
 }
 
 const removeConnectionHelper = (state, connectionId) => {
@@ -153,12 +148,7 @@ const removeConnectionHelper = (state, connectionId) => {
     allConnectionIds.splice(index, 1)
     delete connectionsById[connectionId]
   }
-  return Object.assign(
-    {},
-    state,
-    { allConnectionIds: allConnectionIds },
-    { connectionsById: connectionsById }
-  )
+  return Object.assign({}, state, { allConnectionIds }, { connectionsById })
 }
 
 const mergeConnectionHelper = (state, connection) => {
@@ -176,12 +166,7 @@ const mergeConnectionHelper = (state, connection) => {
     connectionsById[connectionId] = Object.assign({}, connection)
     allConnectionIds.push(connectionId)
   }
-  return Object.assign(
-    {},
-    state,
-    { allConnectionIds: allConnectionIds },
-    { connectionsById: connectionsById }
-  )
+  return Object.assign({}, state, { allConnectionIds }, { connectionsById })
 }
 
 const updateAuthEnabledHelper = (state, authEnabled) => {
@@ -190,7 +175,7 @@ const updateAuthEnabledHelper = (state, authEnabled) => {
     {},
     state.connectionsById[connectionId],
     {
-      authEnabled: authEnabled
+      authEnabled
     }
   )
   const updatedConnectionByIds = Object.assign({}, state.connectionsById)
@@ -258,7 +243,7 @@ export const setActiveConnection = (id, silent = false) => {
   return {
     type: SET_ACTIVE,
     connectionId: id,
-    silent: silent
+    silent
   }
 }
 

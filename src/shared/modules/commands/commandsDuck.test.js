@@ -63,7 +63,7 @@ describe('commandsDuck', () => {
     store = mockStore({
       settings: {
         cmdchar: ':',
-        maxHistory: maxHistory
+        maxHistory
       },
       history: [':xxx'],
       connections: {},

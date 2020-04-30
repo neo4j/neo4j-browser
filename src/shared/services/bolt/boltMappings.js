@@ -235,7 +235,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       properties: itemIntToString(item.properties, converters)
     }
   })
-  return { nodes: nodes, relationships: relationships }
+  return { nodes, relationships }
 }
 
 export const recursivelyExtractGraphItems = (types, item) => {

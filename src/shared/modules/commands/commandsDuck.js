@@ -128,7 +128,7 @@ export const unknownCommand = cmd => ({
 
 export const showErrorMessage = errorMessage => ({
   type: SHOW_ERROR_MESSAGE,
-  errorMessage: errorMessage
+  errorMessage
 })
 export const clearErrorMessage = () => ({
   type: CLEAR_ERROR_MESSAGE
