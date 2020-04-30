@@ -53,6 +53,7 @@ function Sidebar(props) {
   const onNavClick = props.onNavClick
   const { showStaticScripts, showGrassStyling } = props
   const DatabaseDrawer = DBMSInfo
+  console.log('++showGrass', showGrassStyling)
   const FavoritesDrawer = () => (
     <>
       <Favorites />
@@ -166,7 +167,7 @@ const mapStateToProps = state => {
         break
     }
   }
-  const showGrassStyling = showFeature(state, 'grass-sidebar')
+  const showGrassStyling = showFeature(state, 'grass-edit')
   return {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,

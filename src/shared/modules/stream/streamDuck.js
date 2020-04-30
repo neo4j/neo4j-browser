@@ -24,6 +24,7 @@ import 'rxjs/add/operator/mapTo'
 import { moveInArray } from 'services/utils'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { UPDATE as SETTINGS_UPDATE } from '../settings/settingsDuck'
+import { EDIT_GRAPH_STYLE_DATA } from '../grass/grassDuck'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
@@ -34,6 +35,7 @@ export const PIN = `${NAME}/PIN`
 export const UNPIN = `${NAME}/UNPIN`
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
 export const SET_MAX_FRAMES = NAME + '/SET_MAX_FRAMES'
+export const SET_EDIT_MODE = `${NAME}/EDIT`
 
 /**
  * Selectors
@@ -93,6 +95,30 @@ function addFrame(state, newState) {
     allIds,
     byId
   })
+}
+
+function setFrameEditMode(state, id) {
+  console.log('++state', state)
+  console.log('++id', id)
+  let byId = Object.assign({}, state.byId)
+  console.log('++byId[id].stack[0]', byId[id].stack[0])
+  byId = {
+    ...byId,
+    [id]: {
+      ...byId[id],
+      stack: [
+        {
+          ...byId[id].stack[0],
+          edit: true
+        }
+      ]
+    }
+  }
+  console.log('++byId after', byId[id].stack[0])
+  return {
+    ...state,
+    byId
+  }
 }
 
 function insertIntoAllIds(state, allIds, newState) {
@@ -197,6 +223,8 @@ export default function reducer(state = initialState, action) {
     case SET_MAX_FRAMES:
       const newState = { ...state, maxFrames: action.maxFrames }
       return ensureFrameLimit(newState)
+    case EDIT_GRAPH_STYLE_DATA:
+      return setFrameEditMode(state, action.id)
     default:
       return state
   }
@@ -241,6 +269,14 @@ export function setRecentView(view) {
   return {
     type: SET_RECENT_VIEW,
     view
+  }
+}
+
+export function setEditMode(id) {
+  console.log('++id', id)
+  return {
+    type: EDIT_GRAPH_STYLE_DATA,
+    id
   }
 }
 

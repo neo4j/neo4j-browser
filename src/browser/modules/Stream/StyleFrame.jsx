@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { PaddedDiv, StyledOneRowStatsBar, StyledRightPartial } from './styled'
@@ -31,8 +31,15 @@ import {
 import { getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
 import { InfoView } from './InfoView'
+import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
+import { setEditMode } from 'shared/modules/stream/streamDuck'
 
 const StyleFrame = ({ frame }) => {
+  const [grassState, setGrassState] = useState('')
+  const updateGrassState = value => {
+    setGrassState(value)
+  }
+
   let grass = ''
   let contents = (
     <InfoView
@@ -53,9 +60,12 @@ const StyleFrame = ({ frame }) => {
     )
   }
   if (frame.edit && frame.result) {
+    // console.log('++frame.res', frame.result, typeof frame.result)
     grass = objToCss(frame.result)
+    // console.log('++grass', grass, typeof grass)
     contents = grass
   }
+
   return (
     <FrameTemplate
       edit={frame.edit}
@@ -63,23 +73,58 @@ const StyleFrame = ({ frame }) => {
       header={frame}
       numRecords={1}
       getRecords={() => grass}
+      updateGrassValue={value => updateGrassState(value)}
       contents={contents}
-      statusbar={<Statusbar frame={frame} />}
+      statusbar={<Statusbar frame={frame} grassState={grassState} />}
     />
   )
 }
 
-const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
+const StyleStatusbar = ({
+  resetStyleAction,
+  rerunAction,
+  onResetClick,
+  setGrassEditMode,
+  setEditModeAction,
+  isInEditMode,
+  updateStyle,
+  updateStyleAction
+}) => {
   return (
     <StyledOneRowStatsBar>
       <StyledRightPartial>
         <StyledFrameTitlebarButtonSection>
-          <FrameButton
-            data-testid="styleResetButton"
-            onClick={() => onResetClick(resetStyleAction, rerunAction)}
-          >
-            <FireExtinguisherIcon title="Reset style" />
-          </FrameButton>
+          <FeatureToggle
+            name={'grass-edit'}
+            on={
+              <React.Fragment>
+                <FrameButton
+                  // data-testid="styleResetButton"
+                  onClick={() => {
+                    return isInEditMode
+                      ? updateStyle(updateStyleAction)
+                      : setGrassEditMode(setEditModeAction)
+                  }}
+                >
+                  {isInEditMode ? 'Save' : 'Edit'}
+                </FrameButton>
+                <FrameButton
+                  data-testid="styleResetButton"
+                  onClick={() => onResetClick(resetStyleAction, rerunAction)}
+                >
+                  <FireExtinguisherIcon title="Reset style" />
+                </FrameButton>
+              </React.Fragment>
+            }
+            off={
+              <FrameButton
+                data-testid="styleResetButton"
+                onClick={() => onResetClick(resetStyleAction, rerunAction)}
+              >
+                <FireExtinguisherIcon title="Reset style" />
+              </FrameButton>
+            }
+          />
         </StyledFrameTitlebarButtonSection>
       </StyledRightPartial>
     </StyledOneRowStatsBar>
@@ -87,19 +132,42 @@ const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  // console.log('!!!ownProps.grassState', ownProps.grassState)
   return {
     resetStyleAction: executeSystemCommand(`${getCmdChar(state)}style reset`),
     rerunAction: executeCommand(ownProps.frame.cmd, {
       id: ownProps.frame.id
-    })
+    }),
+    setEditModeAction: setEditMode(ownProps.frame.id),
+    isInEditMode:
+      (state.frames.byId[ownProps.frame.id].stack[0].hasOwnProperty('edit') &&
+        state.frames.byId[ownProps.frame.id].stack[0].edit === true) ||
+      false,
+    updateStyleAction: executeSystemCommand(
+      `:style ${ownProps.grassState.replace(/ |\n/g, '')}`
+    )
   }
 }
 const mapDispatchToProps = dispatch => ({
   onResetClick: (resetStyleAction, rerunAction) => {
     dispatch(resetStyleAction)
     dispatch(rerunAction)
+  },
+  setGrassEditMode: setEditModeAction => {
+    dispatch(setEditModeAction)
+  },
+  updateStyle: updateStyleAction => {
+    dispatch(updateStyleAction)
   }
 })
+
+// const mapDispatchToProps = dispatch => ({
+//   updateStyle: (data, frameId) => {
+//     dispatch(executeSystemCommand(`:style ${data}`))
+//     // dispatch(remove(frameId))
+//     // dispatch(executeSystemCommand(':style'))
+//   }
+// })
 
 const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
 
