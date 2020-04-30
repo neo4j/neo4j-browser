@@ -46,22 +46,28 @@ export default function reducer(state = initialState, action) {
     case APP_START:
       return { ...initialState, ...state }
     case REQUEST_SENT:
-      return Object.assign({}, state, {
+      return {
+        ...state,
+
         [action.id]: {
           result: undefined,
           status: 'pending',
           type: action.requestType
         }
-      })
+      }
     case CANCEL_REQUEST:
     case REQUEST_CANCELED:
     case REQUEST_UPDATED:
-      const newRequest = Object.assign({}, state[action.id], {
+      const newRequest = {
+        ...state[action.id],
         result: action.result,
         status: action.status,
         updated: new Date().getTime()
-      })
-      return Object.assign({}, state, { [action.id]: newRequest })
+      }
+      return {
+        ...state,
+        [action.id]: newRequest
+      }
     default:
       return state
   }

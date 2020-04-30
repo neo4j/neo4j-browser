@@ -123,7 +123,10 @@ export function syncReducer(state = initialState, action) {
     case APP_START:
       return { ...initialState, ...state }
     case SET_SYNC_DATA:
-      return Object.assign({}, state, action.obj)
+      return {
+        ...state,
+        ...action.obj
+      }
     case CLEAR_SYNC:
     case CLEAR_SYNC_AND_LOCAL:
       return null
@@ -137,16 +140,23 @@ export function syncConsentReducer(state = initialConsentState, action) {
     case APP_START:
       return { ...initialState, ...state }
     case CONSENT_SYNC:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         consented: action.consent,
         optedOut: action.consent ? false : state.optedOut
-      })
+      }
     case CLEAR_SYNC_AND_LOCAL:
       return { consented: false, optedOut: false }
     case OPT_OUT_SYNC:
-      return Object.assign({}, state, { optedOut: true })
+      return {
+        ...state,
+        optedOut: true
+      }
     case SET_SYNC_DATA:
-      return Object.assign({}, state, { optedOut: false })
+      return {
+        ...state,
+        optedOut: false
+      }
     default:
       return state
   }

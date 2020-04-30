@@ -137,7 +137,11 @@ const addConnectionHelper = (state, obj) => {
   if (state.allConnectionIds.indexOf(obj.id) < 0) {
     allConnectionIds = state.allConnectionIds.concat([obj.id])
   }
-  return Object.assign({}, state, { allConnectionIds }, { connectionsById })
+  return {
+    ...state,
+    allConnectionIds,
+    connectionsById
+  }
 }
 
 const removeConnectionHelper = (state, connectionId) => {
@@ -148,7 +152,11 @@ const removeConnectionHelper = (state, connectionId) => {
     allConnectionIds.splice(index, 1)
     delete connectionsById[connectionId]
   }
-  return Object.assign({}, state, { allConnectionIds }, { connectionsById })
+  return {
+    ...state,
+    allConnectionIds,
+    connectionsById
+  }
 }
 
 const mergeConnectionHelper = (state, connection) => {
@@ -157,31 +165,38 @@ const mergeConnectionHelper = (state, connection) => {
   const allConnectionIds = state.allConnectionIds
   const index = allConnectionIds.indexOf(connectionId)
   if (index >= 0) {
-    connectionsById[connectionId] = Object.assign(
-      {},
-      connectionsById[connectionId],
-      connection
-    )
+    connectionsById[connectionId] = {
+      ...connectionsById[connectionId],
+      ...connection
+    }
   } else {
-    connectionsById[connectionId] = Object.assign({}, connection)
+    connectionsById[connectionId] = {
+      ...connection
+    }
     allConnectionIds.push(connectionId)
   }
-  return Object.assign({}, state, { allConnectionIds }, { connectionsById })
+  return {
+    ...state,
+    allConnectionIds,
+    connectionsById
+  }
 }
 
 const updateAuthEnabledHelper = (state, authEnabled) => {
   const connectionId = state.activeConnection
-  const updatedConnection = Object.assign(
-    {},
-    state.connectionsById[connectionId],
-    {
-      authEnabled
-    }
-  )
-  const updatedConnectionByIds = Object.assign({}, state.connectionsById)
+  const updatedConnection = {
+    ...state.connectionsById[connectionId],
+    authEnabled
+  }
+  const updatedConnectionByIds = {
+    ...state.connectionsById
+  }
   updatedConnectionByIds[connectionId] = updatedConnection
 
-  return Object.assign({}, state, { connectionsById: updatedConnectionByIds })
+  return {
+    ...state,
+    connectionsById: updatedConnectionByIds
+  }
 }
 
 // Local vars

@@ -63,7 +63,10 @@ const queryAndResolve = async (driver, action, host, useDb = {}) => {
         resolve({
           type: action.$$responseChannel,
           success: true,
-          result: Object.assign({}, r, { meta: action.host })
+          result: {
+            ...r,
+            meta: action.host
+          }
         })
       })
       .catch(e => {
@@ -120,7 +123,10 @@ export const cypherRequestEpic = (some$, store) =>
 export const adHocCypherRequestEpic = (some$, store) =>
   some$.ofType(AD_HOC_CYPHER_REQUEST).mergeMap(action => {
     const connection = getActiveConnectionData(store.getState())
-    const tempConnection = Object.assign({}, connection, { host: action.host })
+    const tempConnection = {
+      ...connection,
+      host: action.host
+    }
     return callClusterMember(tempConnection, action, store)
   })
 
@@ -143,7 +149,10 @@ export const clusterCypherRequestEpic = (some$, store) =>
             action,
             observables: addresses.map(host => {
               const connection = getActiveConnectionData(store.getState())
-              const tempConnection = Object.assign({}, connection, { host })
+              const tempConnection = {
+                ...connection,
+                host
+              }
               return Rx.Observable.fromPromise(
                 callClusterMember(tempConnection, action, store)
               )

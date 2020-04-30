@@ -46,7 +46,10 @@ export default function reducer(state = initialState, action = {}) {
     case APP_START:
       return { ...initialState, ...state }
     case SET:
-      return Object.assign({}, state, { boltHost: action.boltHost })
+      return {
+        ...state,
+        boltHost: action.boltHost
+      }
     default:
       return state
   }

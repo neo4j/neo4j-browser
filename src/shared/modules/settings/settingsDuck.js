@@ -106,9 +106,15 @@ export default function settings(state = initialState, action) {
     case APP_START:
       return { ...initialState, ...state }
     case UPDATE:
-      return Object.assign({}, state, action.state)
+      return {
+        ...state,
+        ...action.state
+      }
     case REPLACE:
-      return Object.assign({}, { ...initialState }, action.state)
+      return {
+        ...initialState,
+        ...action.state
+      }
     case USER_CLEAR:
       return initialState
     case DISABLE_IMPLICIT_INIT_COMMANDS:

@@ -24,7 +24,9 @@ export const makeConnectionsInitialState = connectionsReducer => {
     const localVal = val || connectionsReducer(undefined, '')
     const out = {}
     out.allConnectionIds = [].concat(localVal.allConnectionIds)
-    out.connectionsById = Object.assign({}, localVal.connectionsById)
+    out.connectionsById = {
+      ...localVal.connectionsById
+    }
     out.activeConnection = 'offline' // Always start in offline mode
 
     // If offline exists, return
@@ -45,7 +47,9 @@ export const makeConnectionsPersistedState = () => {
     if (!val) return val
     const out = {}
     out.allConnectionIds = [].concat(val.allConnectionIds)
-    out.connectionsById = Object.assign({}, val.connectionsById)
+    out.connectionsById = {
+      ...val.connectionsById
+    }
     out.activeConnection = 'offline' // To start in offline mode
     return out
   }

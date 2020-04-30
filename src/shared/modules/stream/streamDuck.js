@@ -65,7 +65,10 @@ function addFrame(state, newState) {
 
   let frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
   frameObject.stack.unshift(newState)
-  let byId = Object.assign({}, state.byId, { [newState.id]: frameObject })
+  let byId = {
+    ...state.byId,
+    [newState.id]: frameObject
+  }
   let allIds = [].concat(state.allIds)
 
   if (newState.parentId) {
@@ -105,16 +108,24 @@ function insertIntoAllIds(state, allIds, newState) {
 }
 
 function removeFrame(state, id) {
-  const byId = Object.assign({}, state.byId)
+  const byId = {
+    ...state.byId
+  }
   delete byId[id]
   const allIds = state.allIds.filter(fid => fid !== id)
-  return Object.assign({}, state, { allIds, byId })
+  return {
+    ...state,
+    allIds,
+    byId
+  }
 }
 
 function pinFrame(state, id) {
   const pos = state.allIds.indexOf(id)
   const allIds = moveInArray(pos, 0, state.allIds) // immutable operation
-  const byId = Object.assign({}, state.byId)
+  const byId = {
+    ...state.byId
+  }
   byId[id].isPinned = true
   return {
     ...state,
@@ -127,7 +138,9 @@ function unpinFrame(state, id) {
   const currentPos = state.allIds.indexOf(id)
   const pos = findFirstFreePos(state)
   const allIds = moveInArray(currentPos, pos - 1, state.allIds) // immutable operation
-  const byId = Object.assign({}, state.byId)
+  const byId = {
+    ...state.byId
+  }
   byId[id].isPinned = false
   return {
     ...state,
@@ -146,7 +159,10 @@ function findFirstFreePos({ byId, allIds }) {
 }
 
 function setRecentViewHelper(state, recentView) {
-  return Object.assign({}, state, { recentView })
+  return {
+    ...state,
+    recentView
+  }
 }
 
 function ensureFrameLimit(state) {
@@ -204,7 +220,10 @@ export default function reducer(state = initialState, action) {
 export function add(payload) {
   return {
     type: ADD,
-    state: Object.assign({}, payload, { id: payload.id || uuid.v1() })
+    state: {
+      ...payload,
+      id: payload.id || uuid.v1()
+    }
   }
 }
 
