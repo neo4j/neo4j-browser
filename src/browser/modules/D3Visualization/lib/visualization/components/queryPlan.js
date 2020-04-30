@@ -1012,7 +1012,7 @@ function queryPlan(element) {
     })
   }
 
-  var display = function(queryPlan) {
+  const display = function(queryPlan) {
     const [operators, links] = Array.from(transform(queryPlan))
     const [width, height] = Array.from(layout(operators, links))
     return render(operators, links, width, height, () => display(queryPlan))

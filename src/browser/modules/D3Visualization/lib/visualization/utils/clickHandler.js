@@ -50,6 +50,6 @@ export default function clickHandler() {
     })
   }
 
-  var event = d3.dispatch('click', 'dblclick')
+  const event = d3.dispatch('click', 'dblclick')
   return d3.rebind(cc, event, 'on')
 }

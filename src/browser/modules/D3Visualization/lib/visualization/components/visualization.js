@@ -87,7 +87,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     )
   }
 
-  var zoomBehavior = d3.behavior
+  const zoomBehavior = d3.behavior
     .zoom()
     .scaleExtent([0.2, 1])
     .on('zoom', zoomed)
@@ -117,7 +117,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     return zoomClick(this)
   }
 
-  var zoomClick = function(element) {
+  const zoomClick = function(element) {
     draw = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
@@ -350,7 +350,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
 
   viz.boundingBox = () => container.node().getBBox()
 
-  var clickHandler = vizClickHandler()
+  const clickHandler = vizClickHandler()
   clickHandler.on('click', onNodeClick)
   clickHandler.on('dblclick', onNodeDblClick)
 

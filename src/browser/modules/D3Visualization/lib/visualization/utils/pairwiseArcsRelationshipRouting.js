@@ -210,7 +210,7 @@ export default class PairwiseArcsRelationshipRouting {
           (() => {
             const result1 = []
             for (let i = 0; i < nodePair.relationships.length; i++) {
-              var ref
+              let ref
               relationship = nodePair.relationships[i]
               const shaftWidth =
                 parseFloat(

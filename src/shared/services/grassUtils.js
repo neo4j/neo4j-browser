@@ -146,7 +146,7 @@ export const selectorStringToArray = selector => {
     .split('')
     .reverse()
     .join('')
-  var re = /(.+?)(?!\.\\)(?:\.|$)/g
+  const re = /(.+?)(?!\.\\)(?:\.|$)/g
   const out = []
   let m
   while ((m = re.exec(reverseSelector)) !== null) {

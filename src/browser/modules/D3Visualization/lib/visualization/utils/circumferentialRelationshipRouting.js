@@ -152,7 +152,7 @@ export default class circumferentialRelationshipRouting {
               angle = distributedAngles[id]
               relationship = relationshipMap[id]
               if (!relationship.hasOwnProperty('arrow')) {
-                var ref
+                let ref
                 const deflection =
                   node === relationship.source
                     ? angle - relationship.naturalAngle
