@@ -97,7 +97,7 @@ const initialState = {
   editorAutocomplete: true,
   editorLint: false,
   useCypherThread: true,
-  enableMultiStatementMode: false,
+  enableMultiStatementMode: true,
   connectionTimeout: 30 * 1000 // 30 seconds
 }
 
