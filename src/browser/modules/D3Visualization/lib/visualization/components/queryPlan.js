@@ -162,7 +162,7 @@ function queryPlan(element) {
       (expression =
         (left =
           (left1 =
-            operator.Details !== null
+            operator.Details != null
               ? operator.Details
               : operator.Expressions != null
               ? operator.Expressions
