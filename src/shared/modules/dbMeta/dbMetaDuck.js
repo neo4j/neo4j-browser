@@ -315,33 +315,28 @@ export const dbMetaEpic = (some$, store) =>
           .mergeMap(() =>
             Rx.Observable.forkJoin([
               // Labels, types and propertyKeys, and server version
-              Rx.Observable.if(
-                () => {
-                  const state = store.getState()
-                  const db = getUseDb(state)
-                  const isSystem = db === SYSTEM_DB
-                  if (isSystem) {
-                    store.dispatch(updateMeta([]))
-                  }
-                  return isSystem
-                },
-                Rx.Observable.of(null),
-                Rx.Observable.fromPromise(
-                  bolt
-                    .routedReadTransaction(
-                      metaQuery,
-                      {},
-                      {
-                        useCypherThread: shouldUseCypherThread(
-                          store.getState()
-                        ),
-                        onLostConnection: onLostConnection(store.dispatch),
-                        ...getBackgroundTxMetadata({
-                          hasServerSupport: canSendTxMetadata(store.getState())
-                        })
-                      }
-                    )
-                    .catch(() => {})
+              Rx.Observable.of(null).mergeMap(() => {
+                const db = getUseDb(store.getState())
+
+                // System db, do nothing
+                if (db === SYSTEM_DB) {
+                  store.dispatch(updateMeta([]))
+                  return Rx.Observable.of(null)
+                }
+
+                // Not system db, try and fetch meta data
+                return Rx.Observable.fromPromise(
+                  bolt.routedReadTransaction(
+                    metaQuery,
+                    {},
+                    {
+                      useCypherThread: shouldUseCypherThread(store.getState()),
+                      onLostConnection: onLostConnection(store.dispatch),
+                      ...getBackgroundTxMetadata({
+                        hasServerSupport: canSendTxMetadata(store.getState())
+                      })
+                    }
+                  )
                 )
                   .do(res => {
                     if (res) {
@@ -352,7 +347,7 @@ export const dbMetaEpic = (some$, store) =>
                     store.dispatch(updateMeta([]))
                     return Rx.Observable.of(null)
                   })
-              ),
+              }),
               // Server configuration
               Rx.Observable.fromPromise(
                 bolt.directTransaction(
