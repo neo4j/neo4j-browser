@@ -29,6 +29,7 @@ import { canSendTxMetadata } from '../features/versionedFeatures'
 export const NAME = 'features'
 export const RESET = 'features/RESET'
 export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
+export const UPDATE_USER_CAPABILITIES = 'features/UPDATE_USER_CAPABILITIES'
 
 export const getAvailableProcedures = state => state[NAME].availableProcedures
 export const isACausalCluster = state =>
@@ -38,10 +39,20 @@ export const isMultiDatabase = state =>
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
 export const useBrowserSync = state => !!state[NAME].browserSync
+export const getUserCapabilities = state => state[NAME].userCapabilities
+
+export const USER_CAPABILITIES = {
+  serverConfigReadable: 'serverConfigReadable',
+  proceduresReadable: 'proceduresReadable'
+}
 
 const initialState = {
   availableProcedures: [],
-  browserSync: true
+  browserSync: true,
+  userCapabilities: {
+    [USER_CAPABILITIES.serverConfigReadable]: false,
+    [USER_CAPABILITIES.proceduresReadable]: false
+  }
 }
 
 export default function(state = initialState, action) {
@@ -56,6 +67,14 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case UPDATE_ALL_FEATURES:
       return { ...state, availableProcedures: [...action.availableProcedures] }
+    case UPDATE_USER_CAPABILITIES:
+      return {
+        ...state,
+        userCapabilities: {
+          ...state.userCapabilities,
+          [action.capabilityName]: action.capabilityValue
+        }
+      }
     case RESET:
       return initialState
     default:
@@ -73,6 +92,14 @@ export const updateFeatures = availableProcedures => {
   return {
     type: UPDATE_ALL_FEATURES,
     availableProcedures
+  }
+}
+
+export const updateUserCapability = (capabilityName, capabilityValue) => {
+  return {
+    type: UPDATE_USER_CAPABILITIES,
+    capabilityName,
+    capabilityValue
   }
 }
 
@@ -95,9 +122,15 @@ export const featuresDiscoveryEpic = (action$, store) => {
           store.dispatch(
             updateFeatures(res.records.map(record => record.get('name')))
           )
+          store.dispatch(
+            updateUserCapability(USER_CAPABILITIES.proceduresReadable, true)
+          )
           return Rx.Observable.of(null)
         })
         .catch(e => {
+          store.dispatch(
+            updateUserCapability(USER_CAPABILITIES.proceduresReadable, false)
+          )
           return Rx.Observable.of(null)
         })
     })

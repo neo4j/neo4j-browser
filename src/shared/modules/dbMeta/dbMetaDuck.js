@@ -43,6 +43,10 @@ import {
 } from '../features/versionedFeatures'
 import { extractServerInfo } from './dbMeta.utils'
 import { assign, reduce } from 'lodash-es'
+import {
+  updateUserCapability,
+  USER_CAPABILITIES
+} from '../features/featuresDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -362,6 +366,12 @@ export const dbMetaEpic = (some$, store) =>
                 )
               )
                 .catch(e => {
+                  store.dispatch(
+                    updateUserCapability(
+                      USER_CAPABILITIES.serverConfigReadable,
+                      false
+                    )
+                  )
                   return Rx.Observable.of(null)
                 })
                 .do(res => {
@@ -395,6 +405,12 @@ export const dbMetaEpic = (some$, store) =>
                     all[name] = value
                     return all
                   }, {})
+                  store.dispatch(
+                    updateUserCapability(
+                      USER_CAPABILITIES.serverConfigReadable,
+                      true
+                    )
+                  )
                   store.dispatch(updateSettings(settings))
                   return Rx.Observable.of(null)
                 }),
