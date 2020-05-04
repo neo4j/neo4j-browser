@@ -44,6 +44,7 @@ import {
 import { extractServerInfo } from './dbMeta.utils'
 import { assign, reduce } from 'lodash-es'
 import {
+  hasClientConfig,
   updateUserCapability,
   USER_CAPABILITIES
 } from '../features/featuresDuck'
@@ -359,7 +360,12 @@ export const dbMetaEpic = (some$, store) =>
                   const supportsMultiDb = await bolt.hasMultiDbSupport()
                   bolt
                     .directTransaction(
-                      'CALL dbms.listConfig()',
+                      `CALL ${
+                        hasClientConfig(store.getState())
+                          ? 'dbms.clientConfig()'
+                          : 'dbms.listConfig()'
+                      }`,
+
                       {},
                       {
                         useDb: supportsMultiDb ? SYSTEM_DB : '',
@@ -514,7 +520,7 @@ export const serverInfoEpic = (some$, store) =>
     .mergeMap(() => {
       const state = store.getState()
       const db = getUseDb(state)
-      const query = db === 'system' ? 'SHOW DATABASES' : serverInfoQuery
+      const query = db === SYSTEM_DB ? 'SHOW DATABASES' : serverInfoQuery
       return Rx.Observable.fromPromise(
         bolt.directTransaction(
           query,

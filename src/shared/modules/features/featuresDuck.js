@@ -39,6 +39,8 @@ export const isMultiDatabase = state =>
   getAvailableProcedures(state).includes('dbms.databases.overview')
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
+export const hasClientConfig = state =>
+  getAvailableProcedures(state).includes('dbms.clientConfig')
 export const useBrowserSync = state => !!state[NAME].browserSync
 export const getUserCapabilities = state => state[NAME].userCapabilities
 
