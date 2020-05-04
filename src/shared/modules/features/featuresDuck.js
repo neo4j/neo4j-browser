@@ -25,6 +25,7 @@ import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import { canSendTxMetadata } from '../features/versionedFeatures'
+import { SYSTEM_DB } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'features'
 export const RESET = 'features/RESET'
@@ -107,17 +108,23 @@ export const featuresDiscoveryEpic = (action$, store) => {
   return action$
     .ofType(CONNECTION_SUCCESS)
     .mergeMap(() => {
-      return bolt
-        .routedReadTransaction(
-          'CALL dbms.procedures YIELD name',
-          {},
-          {
-            useCypherThread: shouldUseCypherThread(store.getState()),
-            ...getBackgroundTxMetadata({
-              hasServerSupport: canSendTxMetadata(store.getState())
-            })
-          }
-        )
+      return new Promise(async (resolve, reject) => {
+        const supportsMultiDb = await bolt.hasMultiDbSupport()
+        bolt
+          .routedReadTransaction(
+            'CALL dbms.procedures YIELD name',
+            {},
+            {
+              useDb: supportsMultiDb ? SYSTEM_DB : '',
+              useCypherThread: shouldUseCypherThread(store.getState()),
+              ...getBackgroundTxMetadata({
+                hasServerSupport: canSendTxMetadata(store.getState())
+              })
+            }
+          )
+          .then(resolve)
+          .catch(reject)
+      })
         .then(res => {
           store.dispatch(
             updateFeatures(res.records.map(record => record.get('name')))

@@ -355,16 +355,25 @@ export const dbMetaEpic = (some$, store) =>
               }),
               // Server configuration
               Rx.Observable.fromPromise(
-                bolt.directTransaction(
-                  'CALL dbms.listConfig()',
-                  {},
-                  {
-                    useCypherThread: shouldUseCypherThread(store.getState()),
-                    ...getBackgroundTxMetadata({
-                      hasServerSupport: canSendTxMetadata(store.getState())
-                    })
-                  }
-                )
+                new Promise(async (resolve, reject) => {
+                  const supportsMultiDb = await bolt.hasMultiDbSupport()
+                  bolt
+                    .directTransaction(
+                      'CALL dbms.listConfig()',
+                      {},
+                      {
+                        useDb: supportsMultiDb ? SYSTEM_DB : '',
+                        useCypherThread: shouldUseCypherThread(
+                          store.getState()
+                        ),
+                        ...getBackgroundTxMetadata({
+                          hasServerSupport: canSendTxMetadata(store.getState())
+                        })
+                      }
+                    )
+                    .then(resolve)
+                    .catch(reject)
+                })
               )
                 .catch(e => {
                   store.dispatch(
