@@ -31,13 +31,20 @@ import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render'
 import {
   getActiveConnectionData,
-  getActiveConnection
+  getActiveConnection,
+  isConnected
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
+import { ClickToCode } from 'browser/modules/ClickToCode/index'
 
 class ServerStatusFrame extends Component {
   render() {
-    const { frame, activeConnectionData, storeCredentials } = this.props
+    const {
+      frame,
+      activeConnectionData,
+      storeCredentials,
+      isConnected
+    } = this.props
 
     return (
       <FrameTemplate
@@ -51,13 +58,20 @@ class ServerStatusFrame extends Component {
               </span>
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>
-              <Render if={!activeConnectionData}>
+              <Render if={!isConnected || !activeConnectionData}>
                 <StyledConnectionBody>
-                  You are not connected.
+                  You are currently not connected to Neo4j.
+                  <br />
+                  Execute <ClickToCode>:server connect</ClickToCode> any enter
+                  credentials to connect.
                 </StyledConnectionBody>
               </Render>
               <Render
-                if={activeConnectionData && activeConnectionData.authEnabled}
+                if={
+                  isConnected &&
+                  activeConnectionData &&
+                  activeConnectionData.authEnabled
+                }
               >
                 <ConnectedView
                   username={
@@ -69,7 +83,11 @@ class ServerStatusFrame extends Component {
                 />
               </Render>
               <Render
-                if={activeConnectionData && !activeConnectionData.authEnabled}
+                if={
+                  isConnected &&
+                  activeConnectionData &&
+                  !activeConnectionData.authEnabled
+                }
               >
                 <StyledConnectionBody>
                   You have a working connection and server auth is disabled.
@@ -87,7 +105,8 @@ const mapStateToProps = state => {
   return {
     activeConnection: getActiveConnection(state),
     activeConnectionData: getActiveConnectionData(state),
-    storeCredentials: shouldRetainConnectionCredentials(state)
+    storeCredentials: shouldRetainConnectionCredentials(state),
+    isConnected: isConnected(state)
   }
 }
 
