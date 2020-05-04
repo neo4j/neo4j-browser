@@ -62,8 +62,8 @@ class ServerStatusFrame extends Component {
                 <StyledConnectionBody>
                   You are currently not connected to Neo4j.
                   <br />
-                  Execute <ClickToCode>:server connect</ClickToCode> any enter
-                  credentials to connect.
+                  Execute <ClickToCode>:server connect</ClickToCode> and enter
+                  your credentials to connect.
                 </StyledConnectionBody>
               </Render>
               <Render
