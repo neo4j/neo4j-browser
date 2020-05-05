@@ -85,7 +85,8 @@ import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass } from 'shared/services/grassUtils'
 import {
   shouldUseCypherThread,
-  getCmdChar
+  getCmdChar,
+  getSettings
 } from 'shared/modules/settings/settingsDuck'
 import {
   getUserDirectTxMetadata,
@@ -348,7 +349,8 @@ const availableCommands = [
     exec: function(action, cmdchar, put, store) {
       const out = {
         userCapabilities: getUserCapabilities(store.getState()),
-        settings: getAvailableSettings(store.getState())
+        serverConfig: getAvailableSettings(store.getState()),
+        browserSettings: getSettings(store.getState())
       }
       put(
         frames.add({
