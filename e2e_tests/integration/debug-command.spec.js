@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isEnterpriseEdition } from '../support/utils'
-
 /* global Cypress, cy, test, expect, before */
 
 describe(':debug command', () => {
