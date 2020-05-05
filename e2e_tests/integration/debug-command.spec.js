@@ -59,6 +59,6 @@ describe(':debug command', () => {
       .should('contain', 'serverConfig')
       .should('contain', '"proceduresReadable": true')
       .should('contain', '"serverConfigReadable": true')
-      .should('contain', '"dbms.security.auth_enabled": "true"')
+      .should('contain', '"dbms.security.auth_enabled": true')
   })
 })

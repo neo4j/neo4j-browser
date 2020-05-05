@@ -405,6 +405,7 @@ export const dbMetaEpic = (some$, store) =>
                         retainCredentials = false
                       }
                       store.dispatch(setRetainCredentials(retainCredentials))
+                      value = retainCredentials
                     } else if (name === 'browser.allow_outgoing_connections') {
                       // Use isConfigValFalsy to cast undefined to true
                       value = !isConfigValFalsy(value)
@@ -416,6 +417,7 @@ export const dbMetaEpic = (some$, store) =>
                       ) {
                         authEnabled = false
                       }
+                      value = authEnabled
                       store.dispatch(setAuthEnabled(authEnabled))
                     }
                     all[name] = value
