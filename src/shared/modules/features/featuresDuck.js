@@ -34,6 +34,7 @@ export const NAME = 'features'
 const CLEAR = 'features/CLEAR'
 export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
 export const UPDATE_USER_CAPABILITIES = 'features/UPDATE_USER_CAPABILITIES'
+export const FEATURE_DETECTION_DONE = 'features/FEATURE_DETECTION_DONE'
 
 export const getAvailableProcedures = state => state[NAME].availableProcedures
 export const isACausalCluster = state =>
@@ -146,7 +147,7 @@ export const featuresDiscoveryEpic = (action$, store) => {
           return Rx.Observable.of(null)
         })
     })
-    .mapTo({ type: 'NOOP' })
+    .mapTo({ type: FEATURE_DETECTION_DONE })
 }
 
 export const clearOnDisconnectEpic = some$ =>

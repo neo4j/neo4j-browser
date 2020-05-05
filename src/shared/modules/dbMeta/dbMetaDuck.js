@@ -46,7 +46,8 @@ import { assign, reduce } from 'lodash-es'
 import {
   hasClientConfig,
   updateUserCapability,
-  USER_CAPABILITIES
+  USER_CAPABILITIES,
+  FEATURE_DETECTION_DONE
 } from '../features/featuresDuck'
 
 export const NAME = 'meta'
@@ -354,84 +355,6 @@ export const dbMetaEpic = (some$, store) =>
                     return Rx.Observable.of(null)
                   })
               }),
-              // Server configuration
-              Rx.Observable.fromPromise(
-                new Promise(async (resolve, reject) => {
-                  const supportsMultiDb = await bolt.hasMultiDbSupport()
-                  bolt
-                    .directTransaction(
-                      `CALL ${
-                        hasClientConfig(store.getState())
-                          ? 'dbms.clientConfig()'
-                          : 'dbms.listConfig()'
-                      }`,
-
-                      {},
-                      {
-                        useDb: supportsMultiDb ? SYSTEM_DB : '',
-                        useCypherThread: shouldUseCypherThread(
-                          store.getState()
-                        ),
-                        ...getBackgroundTxMetadata({
-                          hasServerSupport: canSendTxMetadata(store.getState())
-                        })
-                      }
-                    )
-                    .then(resolve)
-                    .catch(reject)
-                })
-              )
-                .catch(e => {
-                  store.dispatch(
-                    updateUserCapability(
-                      USER_CAPABILITIES.serverConfigReadable,
-                      false
-                    )
-                  )
-                  return Rx.Observable.of(null)
-                })
-                .do(res => {
-                  if (!res) return Rx.Observable.of(null)
-                  const settings = res.records.reduce((all, record) => {
-                    const name = record.get('name')
-                    let value = record.get('value')
-                    if (name === 'browser.retain_connection_credentials') {
-                      let retainCredentials = true
-                      // Check if we should wipe user creds from localstorage
-                      if (
-                        typeof value !== 'undefined' &&
-                        isConfigValFalsy(value)
-                      ) {
-                        retainCredentials = false
-                      }
-                      store.dispatch(setRetainCredentials(retainCredentials))
-                      value = retainCredentials
-                    } else if (name === 'browser.allow_outgoing_connections') {
-                      // Use isConfigValFalsy to cast undefined to true
-                      value = !isConfigValFalsy(value)
-                    } else if (name === 'dbms.security.auth_enabled') {
-                      let authEnabled = true
-                      if (
-                        typeof value !== 'undefined' &&
-                        isConfigValFalsy(value)
-                      ) {
-                        authEnabled = false
-                      }
-                      value = authEnabled
-                      store.dispatch(setAuthEnabled(authEnabled))
-                    }
-                    all[name] = value
-                    return all
-                  }, {})
-                  store.dispatch(
-                    updateUserCapability(
-                      USER_CAPABILITIES.serverConfigReadable,
-                      true
-                    )
-                  )
-                  store.dispatch(updateSettings(settings))
-                  return Rx.Observable.of(null)
-                }),
               // Cluster role
               Rx.Observable.fromPromise(
                 bolt.directTransaction(
@@ -515,6 +438,78 @@ export const dbMetaEpic = (some$, store) =>
           .mapTo({ type: DB_META_DONE })
       )
     })
+
+export const serverConfigEpic = (some$, store) =>
+  some$
+    .ofType(FEATURE_DETECTION_DONE)
+    .merge(some$.ofType(DB_META_DONE))
+    .mergeMap(() => {
+      // Server configuration
+      return Rx.Observable.fromPromise(
+        new Promise(async (resolve, reject) => {
+          const supportsMultiDb = await bolt.hasMultiDbSupport()
+          bolt
+            .directTransaction(
+              `CALL ${
+                hasClientConfig(store.getState())
+                  ? 'dbms.clientConfig()'
+                  : 'dbms.listConfig()'
+              }`,
+
+              {},
+              {
+                useDb: supportsMultiDb ? SYSTEM_DB : '',
+                useCypherThread: shouldUseCypherThread(store.getState()),
+                ...getBackgroundTxMetadata({
+                  hasServerSupport: canSendTxMetadata(store.getState())
+                })
+              }
+            )
+            .then(resolve)
+            .catch(reject)
+        })
+      )
+        .catch(e => {
+          store.dispatch(
+            updateUserCapability(USER_CAPABILITIES.serverConfigReadable, false)
+          )
+          return Rx.Observable.of(null)
+        })
+        .do(res => {
+          if (!res) return Rx.Observable.of(null)
+          const settings = res.records.reduce((all, record) => {
+            const name = record.get('name')
+            let value = record.get('value')
+            if (name === 'browser.retain_connection_credentials') {
+              let retainCredentials = true
+              // Check if we should wipe user creds from localstorage
+              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
+                retainCredentials = false
+              }
+              store.dispatch(setRetainCredentials(retainCredentials))
+              value = retainCredentials
+            } else if (name === 'browser.allow_outgoing_connections') {
+              // Use isConfigValFalsy to cast undefined to true
+              value = !isConfigValFalsy(value)
+            } else if (name === 'dbms.security.auth_enabled') {
+              let authEnabled = true
+              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
+                authEnabled = false
+              }
+              value = authEnabled
+              store.dispatch(setAuthEnabled(authEnabled))
+            }
+            all[name] = value
+            return all
+          }, {})
+          store.dispatch(
+            updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
+          )
+          store.dispatch(updateSettings(settings))
+          return Rx.Observable.of(null)
+        })
+    })
+    .mapTo({ type: 'SERVER_CONFIG_DONE' })
 
 export const serverInfoEpic = (some$, store) =>
   some$
