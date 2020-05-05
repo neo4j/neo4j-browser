@@ -17,7 +17,16 @@
 
 import React, { useCallback, useMemo } from 'react'
 import Relatable from '@relate-by-ui/relatable'
-import { get, head, map, memoize, slice } from 'lodash-es'
+import {
+  entries,
+  filter,
+  get,
+  head,
+  join,
+  map,
+  memoize,
+  slice
+} from 'lodash-es'
 import { Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
@@ -39,6 +48,7 @@ import ClickableUrls, {
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import { RelatableStyleWrapper, StyledJsonPre } from './relatable-view.styled'
+import { isPoint } from 'neo4j-driver'
 
 const RelatableView = connect(state => ({
   maxRows: getMaxRows(state),
@@ -86,12 +96,11 @@ function CypherCell({ cell }) {
   const { value } = cell
   const mapper = useCallback(
     value => {
-      const memo = memoize(
-        mapNeo4jValuesToPlainValues,
-        ({ elementType, identity }) => {
-          return elementType ? `${elementType}:${identity}` : identity
-        }
-      )
+      const memo = memoize(mapNeo4jValuesToPlainValues, value => {
+        const { elementType, identity } = value || {}
+
+        return elementType ? `${elementType}:${identity}` : identity
+      })
 
       return memo(value)
     },
@@ -99,7 +108,27 @@ function CypherCell({ cell }) {
   )
   const mapped = mapper(value)
 
-  if (typeof mapped === 'object') {
+  if (Number.isInteger(value)) {
+    return `${value}.0`
+  }
+
+  if (typeof mapped === 'string') {
+    return `"${mapped}"`
+  }
+
+  if (isPoint(value)) {
+    const pairs = filter(
+      entries(mapped),
+      ([, val]) => val !== null && val !== undefined
+    )
+
+    return `point({${join(
+      map(pairs, pair => join(pair, ': ')),
+      ', '
+    )}})`
+  }
+
+  if (mapped && typeof mapped === 'object') {
     return (
       <StyledJsonPre
         dangerouslySetInnerHTML={{
