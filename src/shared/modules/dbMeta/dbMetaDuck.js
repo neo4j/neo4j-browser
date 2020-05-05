@@ -43,6 +43,10 @@ import {
 } from '../features/versionedFeatures'
 import { extractServerInfo } from './dbMeta.utils'
 import { assign, reduce } from 'lodash-es'
+import {
+  updateUserCapability,
+  USER_CAPABILITIES
+} from '../features/featuresDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -194,7 +198,8 @@ const initialState = {
   databases: [],
   settings: {
     'browser.allow_outgoing_connections': false,
-    'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost'
+    'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost',
+    'browser.retain_connection_credentials': true
   }
 }
 
@@ -350,18 +355,33 @@ export const dbMetaEpic = (some$, store) =>
               }),
               // Server configuration
               Rx.Observable.fromPromise(
-                bolt.directTransaction(
-                  'CALL dbms.listConfig()',
-                  {},
-                  {
-                    useCypherThread: shouldUseCypherThread(store.getState()),
-                    ...getBackgroundTxMetadata({
-                      hasServerSupport: canSendTxMetadata(store.getState())
-                    })
-                  }
-                )
+                new Promise(async (resolve, reject) => {
+                  const supportsMultiDb = await bolt.hasMultiDbSupport()
+                  bolt
+                    .directTransaction(
+                      'CALL dbms.listConfig()',
+                      {},
+                      {
+                        useDb: supportsMultiDb ? SYSTEM_DB : '',
+                        useCypherThread: shouldUseCypherThread(
+                          store.getState()
+                        ),
+                        ...getBackgroundTxMetadata({
+                          hasServerSupport: canSendTxMetadata(store.getState())
+                        })
+                      }
+                    )
+                    .then(resolve)
+                    .catch(reject)
+                })
               )
                 .catch(e => {
+                  store.dispatch(
+                    updateUserCapability(
+                      USER_CAPABILITIES.serverConfigReadable,
+                      false
+                    )
+                  )
                   return Rx.Observable.of(null)
                 })
                 .do(res => {
@@ -395,6 +415,12 @@ export const dbMetaEpic = (some$, store) =>
                     all[name] = value
                     return all
                   }, {})
+                  store.dispatch(
+                    updateUserCapability(
+                      USER_CAPABILITIES.serverConfigReadable,
+                      true
+                    )
+                  )
                   store.dispatch(updateSettings(settings))
                   return Rx.Observable.of(null)
                 }),

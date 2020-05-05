@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import FrameTemplate from '../../Frame/FrameTemplate'
 import {
@@ -31,64 +31,78 @@ import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render'
 import {
   getActiveConnectionData,
-  getActiveConnection
+  getActiveConnection,
+  isConnected
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
+import { ClickToCode } from 'browser/modules/ClickToCode/index'
 
-class ServerStatusFrame extends Component {
-  render() {
-    const { frame, activeConnectionData, storeCredentials } = this.props
+export const ServerStatusFrame = props => {
+  const { activeConnectionData, storeCredentials, isConnected } = props
 
-    return (
-      <FrameTemplate
-        header={frame}
-        contents={
-          <>
-            <StyledConnectionAside>
-              <span>
-                <H3>Connection status</H3>
-                This is your current connection information.
-              </span>
-            </StyledConnectionAside>
-            <StyledConnectionBodyContainer>
-              <Render if={!activeConnectionData}>
-                <StyledConnectionBody>
-                  You are not connected.
-                </StyledConnectionBody>
-              </Render>
-              <Render
-                if={activeConnectionData && activeConnectionData.authEnabled}
-              >
-                <ConnectedView
-                  username={
-                    activeConnectionData && activeConnectionData.username
-                  }
-                  showHost
-                  host={activeConnectionData && activeConnectionData.host}
-                  storeCredentials={storeCredentials}
-                />
-              </Render>
-              <Render
-                if={activeConnectionData && !activeConnectionData.authEnabled}
-              >
-                <StyledConnectionBody>
-                  You have a working connection and server auth is disabled.
-                </StyledConnectionBody>
-              </Render>
-            </StyledConnectionBodyContainer>
-          </>
-        }
-      />
-    )
-  }
+  return (
+    <>
+      <StyledConnectionAside>
+        <span>
+          <H3>Connection status</H3>
+          This is your current connection information.
+        </span>
+      </StyledConnectionAside>
+      <StyledConnectionBodyContainer>
+        <Render if={!isConnected || !activeConnectionData}>
+          <StyledConnectionBody>
+            You are currently not connected to Neo4j.
+            <br />
+            Execute <ClickToCode>:server connect</ClickToCode> and enter your
+            credentials to connect.
+          </StyledConnectionBody>
+        </Render>
+        <Render
+          if={
+            isConnected &&
+            activeConnectionData &&
+            activeConnectionData.authEnabled
+          }
+        >
+          <ConnectedView
+            username={activeConnectionData && activeConnectionData.username}
+            showHost
+            host={activeConnectionData && activeConnectionData.host}
+            storeCredentials={storeCredentials}
+          />
+        </Render>
+        <Render
+          if={
+            isConnected &&
+            activeConnectionData &&
+            !activeConnectionData.authEnabled
+          }
+        >
+          <StyledConnectionBody>
+            You have a working connection and server auth is disabled.
+          </StyledConnectionBody>
+        </Render>
+      </StyledConnectionBodyContainer>
+    </>
+  )
+}
+
+const Frame = props => {
+  return (
+    <FrameTemplate
+      header={props.frame}
+      contents={<ServerStatusFrame {...props} />}
+    />
+  )
 }
 
 const mapStateToProps = state => {
   return {
     activeConnection: getActiveConnection(state),
     activeConnectionData: getActiveConnectionData(state),
-    storeCredentials: shouldRetainConnectionCredentials(state)
+    storeCredentials: shouldRetainConnectionCredentials(state),
+    isConnected: isConnected(state)
   }
 }
 
-export default connect(mapStateToProps, null)(ServerStatusFrame)
+export default connect(mapStateToProps, null)(Frame)

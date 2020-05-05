@@ -50,6 +50,7 @@ test('should print correct state for retaining credentials', async () => {
       updateConnection={updateConnection}
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
+      isConnected={false}
     />
   )
 
@@ -78,6 +79,7 @@ test('should print correct state for retaining credentials', async () => {
       updateConnection={updateConnection}
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
+      isConnected={true}
     />
   )
 
@@ -100,6 +102,7 @@ test('should print correct state for retaining credentials', async () => {
       updateConnection={updateConnection}
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
+      isConnected={true}
     />
   )
 

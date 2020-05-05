@@ -35,6 +35,7 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
+import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import {
   updateGraphStyleData,
   getGraphStyleData
@@ -42,7 +43,8 @@ import {
 import {
   getRemoteContentHostnameWhitelist,
   getDatabases,
-  fetchMetaData
+  fetchMetaData,
+  getAvailableSettings
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
@@ -83,7 +85,8 @@ import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass } from 'shared/services/grassUtils'
 import {
   shouldUseCypherThread,
-  getCmdChar
+  getCmdChar,
+  getSettings
 } from 'shared/modules/settings/settingsDuck'
 import {
   getUserDirectTxMetadata,
@@ -336,6 +339,25 @@ const availableCommands = [
           ...action,
           type: 'schema',
           schemaRequestId: v4()
+        })
+      )
+    }
+  },
+  {
+    name: 'client-debug',
+    match: cmd => /^debug$/.test(cmd),
+    exec: function(action, cmdchar, put, store) {
+      const out = {
+        userCapabilities: getUserCapabilities(store.getState()),
+        serverConfig: getAvailableSettings(store.getState()),
+        browserSettings: getSettings(store.getState())
+      }
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState()),
+          ...action,
+          type: 'pre',
+          contents: JSON.stringify(out, null, 2)
         })
       )
     }

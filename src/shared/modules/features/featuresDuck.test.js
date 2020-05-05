@@ -28,7 +28,11 @@ describe('features reducer', () => {
     const nextState = reducer(undefined, { type: '' })
     expect(dehydrate(nextState)).toEqual({
       availableProcedures: [],
-      browserSync: true
+      browserSync: true,
+      userCapabilities: {
+        proceduresReadable: false,
+        serverConfigReadable: false
+      }
     })
   })
 
