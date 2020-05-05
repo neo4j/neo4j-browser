@@ -59,7 +59,6 @@ describe(':debug command', () => {
       .should('contain', 'serverConfig')
       .should('contain', '"proceduresReadable": true')
       .should('contain', '"serverConfigReadable": true')
-      .should('contain', '"browser.allow_outgoing_connections": true')
-      .should('contain', '"browser.post_connect_cmd"')
+      .should('contain', '"dbms.security.auth_enabled": true')
   })
 })

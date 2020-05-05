@@ -21,16 +21,20 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { APP_START, DESKTOP, CLOUD } from 'shared/modules/app/appDuck'
-import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
+import {
+  CONNECTION_SUCCESS,
+  DISCONNECTION_SUCCESS
+} from 'shared/modules/connections/connectionsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import { canSendTxMetadata } from '../features/versionedFeatures'
 import { SYSTEM_DB } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'features'
-export const RESET = 'features/RESET'
+const CLEAR = 'features/CLEAR'
 export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
 export const UPDATE_USER_CAPABILITIES = 'features/UPDATE_USER_CAPABILITIES'
+export const FEATURE_DETECTION_DONE = 'features/FEATURE_DETECTION_DONE'
 
 export const getAvailableProcedures = state => state[NAME].availableProcedures
 export const isACausalCluster = state =>
@@ -39,6 +43,8 @@ export const isMultiDatabase = state =>
   getAvailableProcedures(state).includes('dbms.databases.overview')
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
+export const hasClientConfig = state =>
+  getAvailableProcedures(state).includes('dbms.clientConfig')
 export const useBrowserSync = state => !!state[NAME].browserSync
 export const getUserCapabilities = state => state[NAME].userCapabilities
 
@@ -76,7 +82,7 @@ export default function(state = initialState, action) {
           [action.capabilityName]: action.capabilityValue
         }
       }
-    case RESET:
+    case CLEAR:
       return initialState
     default:
       return state
@@ -141,5 +147,8 @@ export const featuresDiscoveryEpic = (action$, store) => {
           return Rx.Observable.of(null)
         })
     })
-    .mapTo({ type: 'NOOP' })
+    .mapTo({ type: FEATURE_DETECTION_DONE })
 }
+
+export const clearOnDisconnectEpic = some$ =>
+  some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })
