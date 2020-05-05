@@ -38,6 +38,7 @@ const commands = [
   ':param x => 1',
   ':param y: 2',
   ':queries',
+  ':debug',
   ':get /',
   ':unknown',
   'RETURN 1',
