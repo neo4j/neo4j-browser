@@ -23,11 +23,14 @@ import uuid from 'uuid'
 import Directives from 'browser-components/Directives'
 import Carousel from '../Carousel/Carousel'
 import Slide from '../Carousel/Slide'
+import MdxSlide from './MDX/MdxSlide'
+import { splitMdxSlides } from './MDX/splitMdx'
 
 export default function Docs({
   slides,
   content,
   html,
+  mdx,
   withDirectives,
   initialSlide,
   onSlide,
@@ -56,6 +59,13 @@ export default function Docs({
         return
       }
       slide = <Slide html={html} />
+    } else if (mdx) {
+      setStateSlides(
+        splitMdxSlides(mdx).map(slide => (
+          <MdxSlide key={uuid.v4()} mdx={slide}></MdxSlide>
+        ))
+      )
+      return
     }
 
     if (withDirectives) {
