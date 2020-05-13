@@ -146,7 +146,7 @@
     "jszip": "^3.2.2",
     "lodash-es": "^4.17.15",
     "mockdate": "^2.0.5",
-    "neo4j-driver": "4.0.1",
+    "neo4j-driver": "^4.0.2",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-addons-pure-render-mixin": "^15.0.2",
