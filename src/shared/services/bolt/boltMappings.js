@@ -91,13 +91,13 @@ const extractPathForRows = (path, converters) => {
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(function(segment) {
-    return [
+  return segments.map(segment =>
+    [
       objIntToString(segment.start, converters),
       objIntToString(segment.relationship, converters),
       objIntToString(segment.end, converters)
     ].filter(part => part !== null)
-  })
+  )
 }
 
 export function extractPlan(result, calculateTotalDbHits = false) {
@@ -235,7 +235,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       properties: itemIntToString(item.properties, converters)
     }
   })
-  return { nodes: nodes, relationships: relationships }
+  return { nodes, relationships }
 }
 
 export const recursivelyExtractGraphItems = (types, item) => {
@@ -483,9 +483,9 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
   }
   if (typeof item === 'object') {
     const typedObject = {}
-    item = escapeReservedProps(item, reservedTypePropertyName)
-    Object.keys(item).forEach(key => {
-      typedObject[key] = recursivelyTypeGraphItems(item[key], types)
+    const localItem = escapeReservedProps(item, reservedTypePropertyName)
+    Object.keys(localItem).forEach(key => {
+      typedObject[key] = recursivelyTypeGraphItems(localItem[key], types)
     })
     return typedObject
   }

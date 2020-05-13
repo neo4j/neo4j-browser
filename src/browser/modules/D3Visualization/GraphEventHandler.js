@@ -107,16 +107,17 @@ export class GraphEventHandler {
     const graph = this.graph
     const graphView = this.graphView
     const graphModelChanged = this.graphModelChanged.bind(this)
-    this.getNodeNeighbours(d, this.graph.findNodeNeighbourIds(d.id), function(
-      err,
-      { nodes, relationships }
-    ) {
-      if (err) return
-      graph.addExpandedNodes(d, mapNodes(nodes))
-      graph.addRelationships(mapRelationships(relationships, graph))
-      graphView.update()
-      graphModelChanged()
-    })
+    this.getNodeNeighbours(
+      d,
+      this.graph.findNodeNeighbourIds(d.id),
+      (err, { nodes, relationships }) => {
+        if (err) return
+        graph.addExpandedNodes(d, mapNodes(nodes))
+        graph.addRelationships(mapRelationships(relationships, graph))
+        graphView.update()
+        graphModelChanged()
+      }
+    )
   }
 
   nodeCollapse(d) {

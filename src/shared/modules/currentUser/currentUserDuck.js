@@ -35,9 +35,9 @@ import {
 import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'user'
-export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
-export const FORCE_FETCH = NAME + '/FORCE_FETCH'
-export const CLEAR = NAME + '/CLEAR'
+export const UPDATE_CURRENT_USER = `${NAME}/UPDATE_CURRENT_USER`
+export const FORCE_FETCH = `${NAME}/FORCE_FETCH`
+export const CLEAR = `${NAME}/CLEAR`
 
 const initialState = {
   username: '',
@@ -56,11 +56,9 @@ export function getCurrentUser(state) {
  * Reducer
  */
 export default function user(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case CLEAR:
       return { ...initialState }
     case UPDATE_CURRENT_USER:

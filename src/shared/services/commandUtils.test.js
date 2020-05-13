@@ -94,8 +94,8 @@ describe('commandutils', () => {
       { str: '   RETURN 1', expect: true }
     ]
     testStrs.forEach(obj => {
-      expect(obj.str + ': ' + utils.isCypherCommand(obj.str, ':')).toEqual(
-        obj.str + ': ' + obj.expect
+      expect(`${obj.str}: ${utils.isCypherCommand(obj.str, ':')}`).toEqual(
+        `${obj.str}: ${obj.expect}`
       )
     })
   })

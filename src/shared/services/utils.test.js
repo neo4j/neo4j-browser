@@ -735,10 +735,9 @@ describe('toKeyString', () => {
         [
           {
             location: {
-              href:
-                'https://mydomain.com:7474?neo4jDesktopApiUrl=' +
-                encodeURIComponent('https://graphql.api.local:3001') +
-                '&neo4jDesktopGraphAppClientId=xxx'
+              href: `https://mydomain.com:7474?neo4jDesktopApiUrl=${encodeURIComponent(
+                'https://graphql.api.local:3001'
+              )}&neo4jDesktopGraphAppClientId=xxx`
             }
           },
           []

@@ -25,8 +25,8 @@ const addClass = (node, className) => {
   }
 
   // normalize node class name
-  var nodeClassName = ' ' + node.className + ' '
-  if (nodeClassName.indexOf(' ' + className + ' ') === -1) {
+  const nodeClassName = ` ${node.className} `
+  if (nodeClassName.indexOf(` ${className} `) === -1) {
     node.className += (node.className ? ' ' : '') + className
   }
 }

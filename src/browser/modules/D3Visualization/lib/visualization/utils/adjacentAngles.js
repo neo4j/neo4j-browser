@@ -32,7 +32,7 @@ export default class AdjacentAngles {
       }
     }
 
-    var scanForDensePair = function() {
+    const scanForDensePair = function() {
       start = p
       end = AngleList.wrapIndex(p + 1)
       if (end === minStart()) {
@@ -47,7 +47,7 @@ export default class AdjacentAngles {
       }
     }
 
-    var extendEnd = function() {
+    const extendEnd = function() {
       if (p === minStart()) {
         return 'done'
       } else if (tooDense(start, AngleList.wrapIndex(p + 1))) {
@@ -60,7 +60,7 @@ export default class AdjacentAngles {
       }
     }
 
-    var extendStart = function() {
+    const extendStart = function() {
       const candidateStart = AngleList.wrapIndex(p - 1)
       if (tooDense(candidateStart, end) && candidateStart !== end) {
         start = candidateStart
@@ -76,7 +76,7 @@ export default class AdjacentAngles {
       }
     }
 
-    var tooDense = function(start, end) {
+    const tooDense = function(start, end) {
       const run = {
         start,
         end

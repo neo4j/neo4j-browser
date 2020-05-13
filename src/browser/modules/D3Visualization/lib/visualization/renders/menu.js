@@ -26,17 +26,15 @@ const noop = function() {}
 const numberOfItemsInContextMenu = 3
 
 const arc = function(radius, itemNumber, width) {
-  if (width == null) {
-    width = 30
-  }
-  itemNumber = itemNumber - 1
-  const startAngle = ((2 * Math.PI) / numberOfItemsInContextMenu) * itemNumber
+  const localWidth = width == null ? 30 : width
+  const startAngle =
+    ((2 * Math.PI) / numberOfItemsInContextMenu) * (itemNumber - 1)
   const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
   const innerRadius = Math.max(radius + 8, 20)
   return d3.svg
     .arc()
     .innerRadius(innerRadius)
-    .outerRadius(innerRadius + width)
+    .outerRadius(innerRadius + localWidth)
     .startAngle(startAngle)
     .endAngle(endAngle)
     .padAngle(0.03)
@@ -54,12 +52,12 @@ const attachContextEvent = (event, elems, viz, content, label) =>
   (() => {
     const result = []
     for (const elem of Array.from(elems)) {
-      elem.on('mousedown.drag', function() {
+      elem.on('mousedown.drag', () => {
         d3.event.stopPropagation()
         return null
       })
       elem.on('mouseup', node => viz.trigger(event, node))
-      elem.on('mouseover', function(node) {
+      elem.on('mouseover', node => {
         node.contextMenu = {
           menuSelection: event,
           menuContent: content,
@@ -68,7 +66,7 @@ const attachContextEvent = (event, elems, viz, content, label) =>
         return viz.trigger('menuMouseOver', node)
       })
       result.push(
-        elem.on('mouseout', function(node) {
+        elem.on('mouseout', node => {
           delete node.contextMenu
           return viz.trigger('menuMouseOut', node)
         })
@@ -111,21 +109,11 @@ const createMenuItem = function(
     .classed('context-menu-item', true)
     .attr({
       transform(node) {
-        return (
-          'translate(' +
-          Math.floor(
-            arc(node.radius, itemNumber).centroid()[0] +
-              (position[0] * 100) / 100
-          ) +
-          ',' +
-          Math.floor(
-            arc(node.radius, itemNumber).centroid()[1] +
-              (position[1] * 100) / 100
-          ) +
-          ')' +
-          ' ' +
-          'scale(0.7)'
-        )
+        return `translate(${Math.floor(
+          arc(node.radius, itemNumber).centroid()[0] + (position[0] * 100) / 100
+        )},${Math.floor(
+          arc(node.radius, itemNumber).centroid()[1] + (position[1] * 100) / 100
+        )}) scale(0.7)`
       },
       color(node) {
         return viz.style.forNode(node).get('text-color-internal')

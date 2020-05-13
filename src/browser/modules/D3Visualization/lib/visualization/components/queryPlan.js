@@ -96,7 +96,7 @@ function queryPlan(element) {
     if (count === 1) {
       return noun
     } else {
-      return noun + 's'
+      return `${noun}s`
     }
   }
 
@@ -502,8 +502,8 @@ function queryPlan(element) {
                 selections(enter, update) {
                   enter.append('path').attr('fill', linkColor)
 
-                  return update.transition().attr('d', function(d) {
-                    width = Math.max(1, d.width)
+                  return update.transition().attr('d', d => {
+                    const width = Math.max(1, d.width)
                     const sourceX = d.source.x + operatorWidth / 2
                     const targetX = d.target.x + d.source.tx
 
@@ -564,7 +564,7 @@ function queryPlan(element) {
                       {
                         x,
                         y,
-                        text: formatNumber(source[key]) + '\u00A0',
+                        text: `${formatNumber(source[key])}\u00A0`,
                         anchor: 'end'
                       },
                       {
@@ -642,7 +642,7 @@ function queryPlan(element) {
                     .append('g')
                     .attr('class', 'header')
                     .attr('pointer-events', 'all')
-                    .on('click', function(d) {
+                    .on('click', d => {
                       d.expanded = !d.expanded
                       return redisplay()
                     })
@@ -656,7 +656,7 @@ function queryPlan(element) {
                       enter.append('path').attr('class', 'banner')
 
                       return update
-                        .attr('d', function(d) {
+                        .attr('d', d => {
                           const shaving =
                             d.height <= operatorHeaderHeight
                               ? operatorCornerRadius
@@ -736,12 +736,10 @@ function queryPlan(element) {
                     selections(enter, update) {
                       const rotateForExpand = function(d) {
                         d3.transform()
-                        return (
-                          `translate(${operatorHeaderHeight /
-                            2}, ${operatorHeaderHeight / 2}) ` +
-                          `rotate(${d.expanded ? 90 : 0}) ` +
-                          'scale(0.5)'
-                        )
+                        return `translate(${operatorHeaderHeight /
+                          2}, ${operatorHeaderHeight / 2}) rotate(${
+                          d.expanded ? 90 : 0
+                        }) scale(0.5)`
                       }
 
                       enter
@@ -795,7 +793,7 @@ function queryPlan(element) {
                       'transform',
                       d => `translate(0, ${operatorHeaderHeight + d.y})`
                     )
-                    .attr('font-family', function(d) {
+                    .attr('font-family', d => {
                       if (
                         d.className === 'expression' ||
                         d.className === 'identifiers'
@@ -814,7 +812,7 @@ function queryPlan(element) {
                       if (d.key) {
                         return [
                           {
-                            text: d.value + '\u00A0',
+                            text: `${d.value}\u00A0`,
                             anchor: 'end',
                             x: operatorWidth / 2
                           },
@@ -884,7 +882,7 @@ function queryPlan(element) {
                     .attr('class', 'cost')
                     .attr('fill', costColor)
 
-                  return update.transition().attr('d', function(d) {
+                  return update.transition().attr('d', d => {
                     if (d.costHeight < operatorCornerRadius) {
                       const shaving =
                         operatorCornerRadius -
@@ -960,7 +958,7 @@ function queryPlan(element) {
                     const y = d.height - d.costHeight + operatorDetailHeight
                     return [
                       {
-                        text: formatNumber(d.DbHits) + '\u00A0',
+                        text: `${formatNumber(d.DbHits)}\u00A0`,
                         anchor: 'end',
                         y
                       },
@@ -1012,7 +1010,7 @@ function queryPlan(element) {
     })
   }
 
-  var display = function(queryPlan) {
+  const display = function(queryPlan) {
     const [operators, links] = Array.from(transform(queryPlan))
     const [width, height] = Array.from(layout(operators, links))
     return render(operators, links, width, height, () => display(queryPlan))

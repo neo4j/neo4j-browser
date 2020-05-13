@@ -29,7 +29,7 @@ function request(method, url, data = null, extraHeaders = {}) {
   }
   return fetch(url, {
     method,
-    headers: headers,
+    headers,
     body: data
   }).then(checkStatus)
 }
@@ -40,9 +40,7 @@ function get(url, headers = {}) {
     headers
   })
     .then(checkStatus)
-    .then(function(response) {
-      return response.text()
-    })
+    .then(response => response.text())
 }
 
 export function getJSON(url) {
@@ -64,7 +62,7 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {
-    var error = new Error(response.status + ' ' + response.statusText)
+    const error = new Error(`${response.status} ${response.statusText}`)
     error.response = response
     throw error
   }

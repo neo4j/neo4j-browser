@@ -88,7 +88,7 @@ describe('HTTP verbs command', () => {
   test('Passes post/put with JSON data', done => {
     // Given
     const data = '{"x": 1}'
-    const input = 'post /test ' + data
+    const input = `post /test ${data}`
 
     // When
     const p = parseHttpVerbCommand(input)

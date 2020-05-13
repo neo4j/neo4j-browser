@@ -56,7 +56,7 @@ describe('postConnectCmdEpic', () => {
       expect(store.getActions()).toEqual([
         action,
         action2,
-        commands.executeSystemCommand(':' + command),
+        commands.executeSystemCommand(`:${command}`),
         { type: 'NOOP' }
       ])
       done()
@@ -70,7 +70,7 @@ describe('postConnectCmdEpic', () => {
     // Given
     const command1 = 'play hello'
     const command2 = 'play intro'
-    const command = command1 + '; ' + command2
+    const command = `${command1}; ${command2}`
     const bus = createBus()
     const epicMiddlewareLocal = createEpicMiddleware(
       commands.postConnectCmdEpic
@@ -97,8 +97,8 @@ describe('postConnectCmdEpic', () => {
       expect(store.getActions()).toEqual([
         action,
         action2,
-        commands.executeSystemCommand(':' + command1),
-        commands.executeSystemCommand(':' + command2),
+        commands.executeSystemCommand(`:${command1}`),
+        commands.executeSystemCommand(`:${command2}`),
         { type: 'NOOP' }
       ])
       done()

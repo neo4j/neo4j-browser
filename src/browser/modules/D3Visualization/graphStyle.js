@@ -260,14 +260,12 @@ export default function neoGraphStyle() {
       }
     }
 
-    const nodeSelector = function(node) {
-      node = node || {}
+    const nodeSelector = function(node = {}) {
       const classes = node.labels != null ? node.labels : []
       return new Selector('node', classes)
     }
 
-    const relationshipSelector = function(rel) {
-      rel = rel || {}
+    const relationshipSelector = function(rel = {}) {
       const classes = rel.type != null ? [rel.type] : []
       return new Selector('relationship', classes)
     }
@@ -311,20 +309,14 @@ export default function neoGraphStyle() {
         /description$/i,
         /^.+/
       ]
-      let defaultCaption = captionPrioOrder.reduceRight(function(
-        leading,
-        current
-      ) {
-        const hits = item.propertyList.filter(function(prop) {
-          return current.test(prop.key)
-        })
+      let defaultCaption = captionPrioOrder.reduceRight((leading, current) => {
+        const hits = item.propertyList.filter(prop => current.test(prop.key))
         if (hits.length) {
-          return '{' + hits[0].key + '}'
+          return `{${hits[0].key}}`
         } else {
           return leading
         }
-      },
-      '')
+      }, '')
       defaultCaption || (defaultCaption = '<id>')
       return {
         caption: defaultCaption
@@ -471,13 +463,13 @@ export default function neoGraphStyle() {
     GraphStyle.prototype.toString = function() {
       let str = ''
       this.rules.forEach(r => {
-        str += r.selector.toString() + ' {\n'
+        str += `${r.selector.toString()} {\n`
         for (const k in r.props) {
           let v = r.props[k]
           if (k === 'caption') {
-            v = "'" + v + "'"
+            v = `'${v}'`
           }
-          str += '  ' + k + ': ' + v + ';\n'
+          str += `  ${k}: ${v};\n`
         }
         str += '}\n\n'
       })
@@ -485,12 +477,10 @@ export default function neoGraphStyle() {
     }
 
     GraphStyle.prototype.loadRules = function(data) {
-      if (typeof data !== 'object') {
-        data = defaultStyle
-      }
+      const localData = typeof data === 'object' ? data : defaultStyle
       this.rules.length = 0
-      for (const key in data) {
-        const props = data[key]
+      for (const key in localData) {
+        const props = localData[key]
         this.rules.push(new StyleRule(parseSelector(key), props))
       }
       return this
@@ -513,7 +503,7 @@ export default function neoGraphStyle() {
     }
 
     GraphStyle.prototype.interpolate = function(str, item) {
-      let ips = str.replace(/\{([^{}]*)\}/g, function(a, b) {
+      let ips = str.replace(/\{([^{}]*)\}/g, (a, b) => {
         const r = item.propertyMap[b]
         if (typeof r === 'object') {
           return r.join(', ')
@@ -529,7 +519,7 @@ export default function neoGraphStyle() {
       if (ips.length < 1 && str === '{id}' && item.isNode) {
         ips = '<id>'
       }
-      return ips.replace(/^<(id|type)>$/, function(a, b) {
+      return ips.replace(/^<(id|type)>$/, (a, b) => {
         const r = item[b]
         if (typeof r === 'string' || typeof r === 'number') {
           return r
@@ -538,8 +528,7 @@ export default function neoGraphStyle() {
       })
     }
 
-    GraphStyle.prototype.forNode = function(node) {
-      node = node || {}
+    GraphStyle.prototype.forNode = function(node = {}) {
       const selector = nodeSelector(node)
       if ((node.labels != null ? node.labels.length : 0) > 0) {
         this.setDefaultNodeStyling(selector, node)

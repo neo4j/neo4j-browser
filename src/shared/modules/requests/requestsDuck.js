@@ -23,10 +23,10 @@ import bolt from 'services/bolt/bolt'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'requests'
-export const REQUEST_SENT = NAME + '/SENT'
-export const CANCEL_REQUEST = NAME + '/CANCEL'
-export const REQUEST_CANCELED = NAME + '/CANCELED'
-export const REQUEST_UPDATED = NAME + '/UPDATED'
+export const REQUEST_SENT = `${NAME}/SENT`
+export const CANCEL_REQUEST = `${NAME}/CANCEL`
+export const REQUEST_CANCELED = `${NAME}/CANCELED`
+export const REQUEST_UPDATED = `${NAME}/UPDATED`
 
 export const REQUEST_STATUS_PENDING = 'pending'
 export const REQUEST_STATUS_SUCCESS = 'success'
@@ -42,28 +42,32 @@ export const isCancelStatus = status =>
   [REQUEST_STATUS_CANCELED, REQUEST_STATUS_CANCELING].includes(status)
 
 export default function reducer(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case REQUEST_SENT:
-      return Object.assign({}, state, {
+      return {
+        ...state,
+
         [action.id]: {
           result: undefined,
           status: 'pending',
           type: action.requestType
         }
-      })
+      }
     case CANCEL_REQUEST:
     case REQUEST_CANCELED:
     case REQUEST_UPDATED:
-      const newRequest = Object.assign({}, state[action.id], {
+      const newRequest = {
+        ...state[action.id],
         result: action.result,
         status: action.status,
         updated: new Date().getTime()
-      })
-      return Object.assign({}, state, { [action.id]: newRequest })
+      }
+      return {
+        ...state,
+        [action.id]: newRequest
+      }
     default:
       return state
   }
@@ -73,7 +77,7 @@ export const send = (requestType, id) => {
   return {
     type: REQUEST_SENT,
     requestType,
-    id: id
+    id
   }
 }
 

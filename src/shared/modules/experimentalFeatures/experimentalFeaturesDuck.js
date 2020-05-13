@@ -1,8 +1,8 @@
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'experimentalFeatures'
-const FEATURE_ON = NAME + '/FEATURE_ON'
-const FEATURE_OFF = NAME + '/FEATURE_OFF'
+const FEATURE_ON = `${NAME}/FEATURE_ON`
+const FEATURE_OFF = `${NAME}/FEATURE_OFF`
 
 export const getExperimentalFeatures = state => state[NAME]
 export const showFeature = (state, name) => !!(state[NAME][name] || {}).on
@@ -36,11 +36,9 @@ const cherrypickAndMergeStates = (base, stored) => {
 
 // Reducer
 export default function experimentalFeatures(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = cherrypickAndMergeStates(initialState, state)
-  }
-
   switch (action.type) {
+    case APP_START:
+      return cherrypickAndMergeStates(initialState, state)
     case FEATURE_ON:
       if (!state.hasOwnProperty(action.name)) {
         return state

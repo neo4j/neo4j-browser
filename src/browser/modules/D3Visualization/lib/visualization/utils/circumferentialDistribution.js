@@ -91,10 +91,10 @@ export default function distributeCircular(arrowAngles, minSeparation) {
   for (const tooDenseRun of Array.from(runsOfTooDenseArrows)) {
     const moveableRuns = splitByFixedArrows(tooDenseRun)
     for (const run of Array.from(moveableRuns)) {
-      var end, i, rawAngle
+      let end, i, rawAngle
       const runLength = AngleList.length(run)
       if (AngleList.fixed(run.start) && AngleList.fixed(run.end)) {
-        var asc
+        let asc
         const separation = AngleList.angle(run) / runLength
         for (
           i = 0, end = runLength, asc = end >= 0;
@@ -107,7 +107,7 @@ export default function distributeCircular(arrowAngles, minSeparation) {
           )
         }
       } else if (AngleList.fixed(run.start) && !AngleList.fixed(run.end)) {
-        var asc1, end1
+        let asc1, end1
         for (
           i = 0, end1 = runLength, asc1 = end1 >= 0;
           asc1 ? i <= end1 : i >= end1;
@@ -119,7 +119,7 @@ export default function distributeCircular(arrowAngles, minSeparation) {
           )
         }
       } else if (!AngleList.fixed(run.start) && AngleList.fixed(run.end)) {
-        var asc2, end2
+        let asc2, end2
         for (
           i = 0, end2 = runLength, asc2 = end2 >= 0;
           asc2 ? i <= end2 : i >= end2;
@@ -131,7 +131,7 @@ export default function distributeCircular(arrowAngles, minSeparation) {
           )
         }
       } else {
-        var asc3, end3
+        let asc3, end3
         const center = list[run.start].angle + AngleList.angle(run) / 2
         for (
           i = 0, end3 = runLength, asc3 = end3 >= 0;

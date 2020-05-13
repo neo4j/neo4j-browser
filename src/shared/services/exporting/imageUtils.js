@@ -33,14 +33,14 @@ export const downloadPNGFromSVG = (svg, graph, type) => {
   canvas.height = svgObj.attr('height')
 
   canvg(canvas, svgData)
-  return downloadWithDataURI(type + '.png', canvas.toDataURL('image/png'))
+  return downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
 }
 
 export const downloadSVG = (svg, graph, type) => {
   const svgObj = prepareForExport(svg, graph, type)
   const svgData = htmlCharacterRefToNumericalRef(svgObj.node())
 
-  return download(type + '.svg', 'image/svg+xml;charset=utf-8', svgData)
+  return download(`${type}.svg`, 'image/svg+xml;charset=utf-8', svgData)
 }
 
 const htmlCharacterRefToNumericalRef = node =>
@@ -54,7 +54,7 @@ const download = (filename, mime, data) => {
 }
 
 const downloadWithDataURI = (filename, dataURI) => {
-  var byteString, i, ia, j, mimeString, ref
+  let byteString, i, ia, j, mimeString, ref
   byteString = null
   if (dataURI.split(',')[0].indexOf('base64') >= 0) {
     byteString = window.atob(dataURI.split(',')[1])

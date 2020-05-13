@@ -35,12 +35,9 @@ export const extractParams = param => {
   if (!matchParam) return {}
   const [, paramName, delimiter, paramValue] = matchParam
   try {
-    const json =
-      '{' +
-      paramName +
-      (paramName.endsWith(':') ? ' ' : ': ') +
-      paramValue +
-      '}'
+    const json = `{${paramName}${
+      paramName.endsWith(':') ? ' ' : ': '
+    }${paramValue}}`
     const res = jsonic(json)
     const key = Object.keys(res)[0]
     const value = res[key]
@@ -67,7 +64,7 @@ const resolveAndStoreJsonValue = (param, put) => {
     put(update(res))
     return { result: res, type: 'param' }
   } catch (e) {
-    throw new Error('Could not parse input. Usage: `:param x => 2`. ' + e)
+    throw new Error(`Could not parse input. Usage: \`:param x => 2\`. ${e}`)
   }
 }
 
@@ -97,7 +94,7 @@ export const handleParamsCommand = (action, cmdchar, put, targetDb) => {
         return { result: res, type: 'params' }
       } catch (e) {
         throw new Error(
-          'Could not parse input. Usage: `:params {"x":1,"y":"string"}`. ' + e
+          `Could not parse input. Usage: \`:params {"x":1,"y":"string"}\`. ${e}`
         )
       }
     }

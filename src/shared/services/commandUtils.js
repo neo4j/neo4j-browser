@@ -97,9 +97,10 @@ const snakeToCamel = str =>
   str.replace(/(-\w)/g, match => match[1].toUpperCase())
 const camelToSnake = (name, separator) => {
   return name
-    .replace(/([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g, function(_, $1, $2) {
-      return $1 + ($2 && (separator || '_') + $2)
-    })
+    .replace(
+      /([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g,
+      (_, $1, $2) => $1 + ($2 && (separator || '_') + $2)
+    )
     .toLowerCase()
 }
 
@@ -124,9 +125,9 @@ const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
 export const mapParamToCypherStatement = (key, param) => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
-    ? '`' + quotedKey[1] + '`'
+    ? `\`${quotedKey[1]}\``
     : typeof key !== 'string'
-    ? '`' + key + '`'
+    ? `\`${key}\``
     : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
