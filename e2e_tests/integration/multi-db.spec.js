@@ -65,7 +65,11 @@ describe('Multi database', () => {
 
         cy.executeCommand('STOP DATABASE test1')
         cy.wait(1000)
-        cy.resultContains('no changes, no records')
+        if (Cypress.config('serverVersion') >= 4.1) {
+          cy.resultContains('1 system update, no records')
+        } else {
+          cy.resultContains('no changes, no records')
+        }
 
         cy.executeCommand('DROP DATABASE test1')
         cy.executeCommand(':clear')
