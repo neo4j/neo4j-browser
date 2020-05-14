@@ -692,31 +692,6 @@ describe('toKeyString', () => {
       expect(utils.toKeyString(str.str)).toEqual(str.expect)
     })
   })
-  describe('generateBoltHost', () => {
-    it('generates a bolt host as expected', () => {
-      const tests = [
-        { host: '', expected: 'neo4j://localhost:7687' },
-        { host: 'localhost', expected: 'neo4j://localhost' },
-        { host: 'localhost:7688', expected: 'neo4j://localhost:7688' },
-        { host: 'bolt://localhost', expected: 'bolt://localhost' },
-        { host: 'bolt://localhost:7688', expected: 'bolt://localhost:7688' },
-        { host: 'neo4j://localhost:7688', expected: 'neo4j://localhost:7688' },
-        {
-          host: 'bolt+routing://localhost',
-          expected: 'neo4j://localhost'
-        },
-        {
-          host: 'bolt+routing://localhost:7688',
-          expected: 'neo4j://localhost:7688'
-        },
-        { host: null, expected: 'neo4j://localhost:7687' }
-      ]
-
-      tests.forEach(test => {
-        expect(utils.generateBoltHost(test.host)).toEqual(test.expected)
-      })
-    })
-  })
   describe('detectRuntimeEnv', () => {
     const tests = [
       [
@@ -784,13 +759,150 @@ describe('toKeyString', () => {
       [
         'https://localhost:7474?connectUrl=neo4j://localhost:7687',
         'localhost:7474?connectUrl=neo4j://localhost:7687'
-      ]
+      ],
+      ['bolt://', '']
     ]
 
     test.each(tests)(
       'strips the scheme correctly for %s',
       (input, expected) => {
         expect(utils.stripScheme(input)).toEqual(expected)
+      }
+    )
+  })
+  describe('isSecureBoltScheme', () => {
+    const tests = [
+      [null, false],
+      [undefined, false],
+      ['localhost:7687', false],
+      ['https://localhost:7687', false],
+      ['bolt+s://localhost:7687', true],
+      ['neo4j+s://localhost:7687', true],
+      ['bolt://localhost:7687', false],
+      ['bolt://localhost:7687/bolt', false],
+      ['bolt://localhost:7474?connectUrl=neo4j+s://localhost:7687', false],
+      ['bolt+ssc://localhost:7687/bolt', true],
+      ['neo4j+ssc://localhost:7687/bolt', true]
+    ]
+
+    test.each(tests)(
+      'grades the encryption correctly for scheme %s',
+      (input, expected) => {
+        expect(utils.isSecureBoltScheme(input)).toEqual(expected)
+      }
+    )
+  })
+  describe('getSchemeFlag', () => {
+    const tests = [
+      [null, ''],
+      [undefined, ''],
+      ['localhost:7687', ''],
+      ['https://localhost:7687', ''],
+      ['bolt+s://localhost:7687', '+s'],
+      ['neo4j+s://localhost:7687', '+s'],
+      ['bolt://localhost:7687', ''],
+      ['bolt://localhost:7687/bolt', ''],
+      ['bolt://localhost:7474?connectUrl=neo4j+s://localhost:7687', ''],
+      ['bolt+ssc://localhost:7687/bolt', '+ssc'],
+      ['neo4j+ssc://localhost:7687/bolt', '+ssc']
+    ]
+
+    test.each(tests)(
+      'extracts the scheme flags correctly for %s',
+      (input, expected) => {
+        expect(utils.getSchemeFlag(input)).toEqual(expected)
+      }
+    )
+  })
+  describe('generateBoltUrl', () => {
+    const tests = [
+      // wrong types
+      [null, undefined, undefined, 'neo4j://'],
+      [undefined, undefined, undefined, 'neo4j://'],
+      ['', undefined, undefined, 'neo4j://'],
+      [true, undefined, undefined, 'neo4j://'],
+      // empty input, but fallback
+      ['', ['bolt'], 'bolt', 'bolt://'],
+      // loose values
+      ['localhost:7687', undefined, undefined, 'neo4j://localhost:7687'],
+      [
+        'https://localhost:7687',
+        undefined,
+        undefined,
+        'https://localhost:7687'
+      ],
+      // Only allow certain schemas. No fallback.
+      [
+        'https://localhost:7687',
+        ['bolt', 'neo4j'],
+        undefined,
+        'bolt://localhost:7687'
+      ],
+      [
+        'bolt+s://localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        undefined,
+        'bolt+s://localhost:7687'
+      ],
+      [
+        'neo4j+s://localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        undefined,
+        'neo4j+s://localhost:7687'
+      ],
+      // Flip encryption flag
+      [
+        'neo4j+s://localhost:7687',
+        ['neo4j', 'bolt'],
+        undefined,
+        'neo4j://localhost:7687'
+      ],
+      [
+        'bolt+s://localhost:7687',
+        ['neo4j', 'bolt'],
+        undefined,
+        'bolt://localhost:7687'
+      ],
+      [
+        'neo4j://localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        undefined,
+        'neo4j+s://localhost:7687'
+      ],
+      [
+        'bolt://localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        undefined,
+        'bolt+s://localhost:7687'
+      ],
+      // Fallback schema
+      [
+        'localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        'bolt+s',
+        'bolt+s://localhost:7687'
+      ],
+      [
+        'localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        'bolt',
+        'neo4j+s://localhost:7687'
+      ],
+      // encryption flip before fallback
+      [
+        'neo4j://localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        'bolt+s',
+        'neo4j+s://localhost:7687'
+      ]
+    ]
+
+    test.each(tests)(
+      'generates a bolt host correctly for %s',
+      (input, allowedSchemes, fallbackScheme, expected) => {
+        expect(
+          utils.generateBoltUrl(allowedSchemes, input, fallbackScheme)
+        ).toEqual(expected)
       }
     )
   })

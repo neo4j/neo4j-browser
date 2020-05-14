@@ -23,7 +23,6 @@ import neo4j from 'neo4j-driver'
 import WorkPool from '../WorkPool'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
-import { generateBoltHost } from 'services/utils'
 import {
   runCypherMessage,
   cancelTransactionMessage,
@@ -89,11 +88,6 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb,
         autoCommit
@@ -136,11 +130,6 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb
       }
@@ -181,11 +170,6 @@ function directTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb
       }

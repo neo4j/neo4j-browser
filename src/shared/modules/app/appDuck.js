@@ -37,6 +37,15 @@ export const hasDiscoveryEndpoint = state =>
   [WEB, CLOUD].includes(getEnv(state))
 export const inWebEnv = state => getEnv(state) === WEB
 export const inWebBrowser = state => [WEB, CLOUD].includes(getEnv(state))
+export const getAllowedBoltSchemes = state => {
+  const isHosted = inWebBrowser(state)
+  const hostedUrl = getHostedUrl(state)
+  return !isHosted
+    ? null
+    : hostedUrl.startsWith('https')
+    ? ['neo4j+s', 'bolt+s']
+    : ['neo4j', 'bolt']
+}
 
 // Reducer
 export default function reducer(state = { hostedUrl: null }, action) {

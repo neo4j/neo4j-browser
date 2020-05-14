@@ -21,40 +21,24 @@
 import neo4j from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
-import { generateBoltHost } from 'services/utils'
 import {
   KERBEROS,
   NATIVE,
   buildTxFunctionByMode
 } from 'services/bolt/boltHelpers'
+import { stripScheme, getSchemeFlag } from 'services/utils'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
 export const ROUTED_READ_CONNECTION = 'ROUTED_READ_CONNECTION'
+const BOLT_DIRECT_SCHEME = 'bolt'
 
 const runningQueryRegister = {}
 let _drivers = null
-let _routingAvailable = false
-const routingSchemes = ['bolt+routing://', 'neo4j://']
 
-export const useRouting = url => isRoutingUrl(url) && _routingAvailable
-const isRoutingUrl = url => {
-  const boltUrl = generateBoltHost(url)
-  for (let i = 0; i < routingSchemes.length; i++) {
-    const routingScheme = routingSchemes[i]
-    if (boltUrl.startsWith(routingScheme)) {
-      return true
-    }
-  }
-  return false
-}
-
-const _routingAvailability = () => {
-  return directTransaction('CALL dbms.procedures() YIELD name').then(res => {
-    const names = res.records.map(r => r.get(0))
-    return names.includes('dbms.cluster.overview')
-  })
-}
+const isNonRoutingScheme = url => url.startsWith(BOLT_DIRECT_SCHEME)
+const toNonRoutingScheme = url =>
+  `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
 
 export const hasMultiDbSupport = async () => {
   if (!_drivers) {
@@ -119,10 +103,9 @@ const buildAuthObj = props => {
   return auth
 }
 
-const getDriver = (host, auth, opts, onConnectFail = () => {}) => {
-  const boltHost = generateBoltHost(host)
+const getDriver = (url, auth, opts, onConnectFail = () => {}) => {
   try {
-    const res = neo4j.driver(boltHost, auth, opts)
+    const res = neo4j.driver(url, auth, opts)
     return res
   } catch (e) {
     onConnectFail(e)
@@ -135,11 +118,12 @@ export const getDriversObj = (props, opts = {}, onConnectFail = () => {}) => {
   const auth = buildAuthObj(props)
   const getDirectDriver = () => {
     if (driversObj.direct) return driversObj.direct
-    driversObj.direct = getDriver(props.host, auth, opts, onConnectFail)
+    const directUrl = toNonRoutingScheme(props.host)
+    driversObj.direct = getDriver(directUrl, auth, opts, onConnectFail)
     return driversObj.direct
   }
   const getRoutedDriver = () => {
-    if (!useRouting(props.host)) return getDirectDriver()
+    if (!isNonRoutingScheme(props.host)) return getDirectDriver()
     if (driversObj.routed) return driversObj.routed
     driversObj.routed = getDriver(props.host, auth, opts, onConnectFail)
     return driversObj.routed
@@ -186,26 +170,7 @@ export function openConnection(props, opts = {}, onLostConnection = () => {}) {
     const driver = driversObj.getDirectDriver()
     const myResolve = driver => {
       _drivers = driversObj
-      if (props.hasOwnProperty('inheritedUseRouting')) {
-        _routingAvailable = props.inheritedUseRouting
-        resolve(driver)
-        return
-      }
-      if (isRoutingUrl(props.host)) {
-        _routingAvailability()
-          .then(r => {
-            if (r) _routingAvailable = true
-            if (!r) _routingAvailable = false
-            resolve(driver)
-          })
-          .catch(e => {
-            _routingAvailable = false
-            resolve(driver)
-          })
-      } else {
-        _routingAvailable = false
-        resolve(driver)
-      }
+      resolve(driver)
     }
     const myReject = err => {
       onLostConnection(err)

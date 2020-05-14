@@ -23,10 +23,7 @@ import Rx from 'rxjs'
 import bolt from 'services/bolt/bolt'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
-import {
-  getEncryptionMode,
-  buildTxFunctionByMode
-} from 'services/bolt/boltHelpers'
+import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getUserTxMetadata } from 'services/bolt/txMetadata'
@@ -212,9 +209,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
       bolt
         .directConnect(
           action,
-          {
-            encrypted: getEncryptionMode(action)
-          },
+          {},
           undefined,
           false // Ignore validation errors
         )

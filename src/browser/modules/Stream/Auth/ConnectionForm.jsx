@@ -37,23 +37,25 @@ import {
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
-import { getEncryptionMode, NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
-import { inWebBrowser, getHostedUrl } from 'shared/modules/app/appDuck'
+import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
+import { generateBoltUrl } from 'services/utils'
 
 export class ConnectionForm extends Component {
   constructor(props) {
     super(props)
     const connection =
-      this.props.activeConnectionData || this.props.frame.connectionData
+      this.props.activeConnectionData || this.props.frame.connectionData || {}
     const authenticationMethod =
       (connection && connection.authenticationMethod) || NATIVE
 
     this.state = {
       ...connection,
+      host: generateBoltUrl(props.allowedSchemes, connection.host),
       authenticationMethod,
       isLoading: false,
       passwordChangeNeeded: props.passwordChangeNeeded || false,
@@ -120,10 +122,11 @@ export class ConnectionForm extends Component {
     this.props.error({})
   }
 
-  onHostChange(host) {
+  onHostChange(fallbackScheme, val) {
+    const url = generateBoltUrl(this.props.allowedSchemes, val, fallbackScheme)
     this.setState({
-      host,
-      hostInputVal: host
+      host: url,
+      hostInputVal: url
     })
     this.props.error({})
   }
@@ -149,7 +152,6 @@ export class ConnectionForm extends Component {
         host: this.state.host,
         username: this.state.username,
         password: this.state.password,
-        encrypted: getEncryptionMode(this.state),
         newPassword
       },
       response => {
@@ -257,7 +259,7 @@ export class ConnectionForm extends Component {
           password={this.state.password}
           authenticationMethod={this.state.authenticationMethod}
           used={this.state.used}
-          enforcedScheme={this.props.enforcedScheme}
+          allowedSchemes={this.props.allowedSchemes}
         />
       )
     }
@@ -266,13 +268,6 @@ export class ConnectionForm extends Component {
 }
 
 const mapStateToProps = state => {
-  const isHosted = inWebBrowser(state)
-  const hostedUrl = getHostedUrl(state)
-  const enforcedScheme = !isHosted
-    ? null
-    : hostedUrl.startsWith('https')
-    ? 'neo4j+s://'
-    : 'neo4j://'
   return {
     initCmd: getInitCmd(state),
     activeConnection: getActiveConnection(state),
@@ -280,7 +275,7 @@ const mapStateToProps = state => {
     playImplicitInitCommands: getPlayImplicitInitCommands(state),
     storeCredentials: shouldRetainConnectionCredentials(state),
     isConnected: isConnected(state),
-    enforcedScheme
+    allowedSchemes: getAllowedBoltSchemes(state)
   }
 }
 
@@ -301,7 +296,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     activeConnectionData: stateProps.activeConnectionData,
     storeCredentials: stateProps.storeCredentials,
     isConnected: stateProps.isConnected,
-    enforcedScheme: stateProps.enforcedScheme,
+    allowedSchemes: stateProps.allowedSchemes,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {

@@ -147,18 +147,6 @@ export const firstSuccessPromise = (list, fn) => {
   }, Promise.reject(new Error()))
 }
 
-export const isRoutingHost = host => {
-  return /^bolt\+routing:\/\//.test(host)
-}
-
-export const toBoltHost = host => {
-  // prepend with neo4j:// and remove bolt or bolt+routing protocol and auth info
-  return `neo4j://${(host || '').replace(
-    /(.*(?=@+)@|(bolt|bolt\+routing):\/\/)/,
-    ''
-  )}`
-}
-
 export const hostIsAllowed = (uri, whitelist = null) => {
   if (whitelist === '*') return true
   const urlInfo = getUrlInfo(uri)
@@ -474,24 +462,112 @@ export const optionalToString = v =>
 
 export const toKeyString = str => btoa(encodeURIComponent(str))
 
-const DEPRECATED_ROUTING_PROTOCOL = 'bolt+routing://'
-
-export const generateBoltHost = host => {
-  const urlParts = (host || '').split('://')
-  const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'neo4j://'
-  const hostName = urlParts.length > 1 ? urlParts[1] : urlParts[0]
-  const aliasedProtocol =
-    protocol !== DEPRECATED_ROUTING_PROTOCOL ? protocol : 'neo4j://'
-
-  return aliasedProtocol + (hostName || 'localhost:7687')
+export const getScheme = url => {
+  if (!url) {
+    return ''
+  }
+  if (url && !url.includes('://')) {
+    return ''
+  }
+  const [scheme] = url.split('://')
+  return scheme
 }
 
 export const stripScheme = url => {
   const [_scheme, ...rest] = (url || '').split('://')
-  if (!rest.filter(p => !!p).length) {
+  if (!rest || !rest.length) {
     return _scheme
   }
   return rest.join('://')
+}
+
+export const isSecureBoltScheme = url => {
+  if (url && !url.includes('://')) {
+    return false
+  }
+  const [scheme] = (url || '').split('://')
+  if (!scheme) {
+    return false
+  }
+  return scheme.endsWith('+s') || scheme.endsWith('+ssc')
+}
+
+export const getSchemeFlag = (url = '') => {
+  if (url && !url.includes('://')) {
+    return ''
+  }
+  const [scheme] = (url || '').split('://')
+  if (!scheme.includes('+')) {
+    return ''
+  }
+  return `+${scheme.split('+').pop()}`
+}
+const stripSchemeFlag = url => {
+  if (url && !url.includes('://')) {
+    return ''
+  }
+  const [scheme] = (url || '').split('://')
+  if (!scheme.includes('+')) {
+    return scheme
+  }
+  return scheme.split('+')[0]
+}
+
+export const toggleSchemeSecurity = url => {
+  if (url && !url.includes('://')) {
+    return url
+  }
+  if (isSecureBoltScheme(url)) {
+    return stripSchemeFlag(url)
+  }
+  return `${getScheme(url)}+s`
+}
+
+export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
+  if (!url || typeof url !== 'string') {
+    if (
+      allowedSchemes &&
+      fallbackScheme &&
+      allowedSchemes.includes(fallbackScheme)
+    ) {
+      return `${fallbackScheme}://`
+    }
+    let scheme = allowedSchemes ? allowedSchemes[0] : fallbackScheme || 'neo4j'
+    return `${scheme}://`
+  }
+  const scheme = getScheme(url)
+
+  // We accept all schemes
+  if (!allowedSchemes) {
+    if (scheme) {
+      return url
+    }
+    return `neo4j://${url}`
+  }
+
+  if (!scheme && fallbackScheme && allowedSchemes.includes(fallbackScheme)) {
+    return `${fallbackScheme}://${url}`
+  }
+
+  // Input scheme allowed
+  if (allowedSchemes.includes(scheme)) {
+    return url
+  }
+
+  // Scheme not allowed, can we toggle encryption to allow it?
+  if (scheme) {
+    const toggledSecurityScheme = toggleSchemeSecurity(url)
+    if (allowedSchemes.includes(toggledSecurityScheme)) {
+      return `${toggledSecurityScheme}://${stripScheme(url)}`
+    }
+  }
+
+  // Either no scheme entered or we can't guess an allowed, let's override it with something default
+  const defaultScheme =
+    fallbackScheme && allowedSchemes.includes(fallbackScheme)
+      ? fallbackScheme
+      : allowedSchemes[0]
+  return `${defaultScheme}://${stripScheme(url)}`
 }
 
 export function flushPromises() {

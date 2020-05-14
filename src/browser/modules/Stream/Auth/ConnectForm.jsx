@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Render from 'browser-components/Render'
 import { FormButton } from 'browser-components/buttons'
 import {
@@ -31,7 +31,7 @@ import {
 } from './styled'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
-import { stripScheme } from 'services/utils'
+import { stripScheme, getScheme } from 'services/utils'
 
 const readableauthenticationMethods = {
   [NATIVE]: 'Username / Password',
@@ -40,6 +40,16 @@ const readableauthenticationMethods = {
 
 export default function ConnectForm(props) {
   const [connecting, setConnecting] = useState(false)
+  const [scheme, setScheme] = useState(
+    props.allowedSchemes ? `${getScheme(props.host)}://` : ''
+  )
+
+  useEffect(() => {
+    if (props.allowedSchemes) {
+      return setScheme(`${getScheme(props.host)}://`)
+    }
+    setScheme('')
+  }, [props.host, props.allowedSchemes])
 
   // Add scheme when copying text from bult url field
   const onCopyBoltUrl = e => {
@@ -50,18 +60,15 @@ export default function ConnectForm(props) {
     e.preventDefault()
     e.stopPropagation()
     let val = selection.toString()
-    if (props.enforcedScheme) {
-      val = `${props.enforcedScheme}${stripScheme(val)}`
+    if (scheme) {
+      val = `${scheme}${stripScheme(val)}`
     }
     e.clipboardData.setData('text', val)
   }
 
   const onHostChange = e => {
-    let val = e.target.value
-    if (props.enforcedScheme) {
-      val = `${props.enforcedScheme}${stripScheme(val)}`
-    }
-    props.onHostChange(val)
+    const val = e.target.value
+    props.onHostChange(getScheme(scheme), val)
   }
 
   const onConnectClick = () => {
@@ -79,9 +86,9 @@ export default function ConnectForm(props) {
             <>
               <StyledConnectionFormEntry>
                 <StyledConnectionLabel>Connect URL</StyledConnectionLabel>
-                {props.enforcedScheme ? (
+                {props.allowedSchemes && props.allowedSchemes.length ? (
                   <StyledSegment>
-                    <div>{props.enforcedScheme}</div>
+                    <div>{scheme}</div>
                     <StyledConnectionTextInput
                       {...getInputPropsForIndex(0, {
                         onCopy: onCopyBoltUrl,

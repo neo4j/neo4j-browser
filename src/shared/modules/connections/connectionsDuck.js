@@ -20,7 +20,7 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { getEncryptionMode, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NO_AUTH } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import {
   fetchMetaData,
@@ -339,7 +339,6 @@ export const connectEpic = (action$, store) => {
     await new Promise(resolve => setTimeout(() => resolve()), 2000)
     return bolt
       .openConnection(action, {
-        encrypted: getEncryptionMode(action),
         connectionTimeout: getConnectionTimeout(store.getState())
       })
       .then(res => ({ type: action.$$responseChannel, success: true }))
@@ -360,11 +359,7 @@ export const verifyConnectionCredentialsEpic = (action$, store) => {
   return action$.ofType(VERIFY_CREDENTIALS).mergeMap(action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
-      .directConnect(
-        action,
-        { encrypted: getEncryptionMode(action) },
-        undefined
-      )
+      .directConnect(action, {}, undefined)
       .then(driver => {
         driver.close()
         return { type: action.$$responseChannel, success: true }
@@ -403,7 +398,6 @@ export const startupConnectEpic = (action$, store) => {
           .openConnection(
             connection,
             {
-              encrypted: getEncryptionMode(connection),
               connectionTimeout: getConnectionTimeout(store.getState())
             },
             onLostConnection(store.dispatch)
@@ -515,7 +509,6 @@ export const connectionLostEpic = (action$, store) =>
                 .directConnect(
                   connection,
                   {
-                    encrypted: getEncryptionMode(connection),
                     connectionTimeout: getConnectionTimeout(store.getState())
                   },
                   e =>
@@ -530,7 +523,6 @@ export const connectionLostEpic = (action$, store) =>
                     .openConnection(
                       connection,
                       {
-                        encrypted: getEncryptionMode(connection),
                         connectionTimeout: getConnectionTimeout(
                           store.getState()
                         )
