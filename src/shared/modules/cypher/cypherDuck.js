@@ -19,7 +19,7 @@
  */
 
 import Rx from 'rxjs'
-
+import neo4j from 'neo4j-driver'
 import bolt from 'services/bolt/bolt'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
@@ -50,7 +50,7 @@ export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
 const queryAndResolve = async (driver, action, host, useDb = {}) => {
   return new Promise(resolve => {
     const session = driver.session({
-      defaultAccessMode: bolt.neo4j.session.WRITE,
+      defaultAccessMode: neo4j.session.WRITE,
       ...useDb
     })
     const txFn = buildTxFunctionByMode(session)

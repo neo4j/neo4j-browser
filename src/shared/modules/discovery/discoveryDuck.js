@@ -95,9 +95,13 @@ const updateDiscoveryState = (action, store) => {
 export const injectDiscoveryEpic = (action$, store) =>
   action$
     .ofType(INJECTED_DISCOVERY)
-    .map(action =>
-      updateDiscoveryState({ ...action, forceURL: action.host }, store)
-    )
+    .map(action => {
+      const connectUrl = generateBoltUrl(
+        getAllowedBoltSchemes(store.getState(), action.encrypted),
+        action.host
+      )
+      return updateDiscoveryState({ ...action, forceURL: connectUrl }, store)
+    })
     .mapTo({ type: DONE })
 
 export const discoveryOnStartupEpic = (some$, store) => {

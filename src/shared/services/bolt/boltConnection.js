@@ -19,32 +19,24 @@
  */
 
 import neo4j from 'neo4j-driver'
-import { v4 } from 'uuid'
-import { BoltConnectionError, createErrorObject } from '../exceptions'
+import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+import { createDriverOrFailFn } from './driverFactory'
 import {
-  KERBEROS,
-  NATIVE,
-  buildTxFunctionByMode
-} from 'services/bolt/boltHelpers'
-import { stripScheme, getSchemeFlag } from 'services/utils'
+  setGlobalDrivers,
+  getGlobalDrivers,
+  unsetGlobalDrivers,
+  buildGlobalDriversObject
+} from './globalDrivers'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
 export const ROUTED_READ_CONNECTION = 'ROUTED_READ_CONNECTION'
-const BOLT_DIRECT_SCHEME = 'bolt'
-
-const runningQueryRegister = {}
-let _drivers = null
-
-const isNonRoutingScheme = url => url.startsWith(BOLT_DIRECT_SCHEME)
-const toNonRoutingScheme = url =>
-  `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
 
 export const hasMultiDbSupport = async () => {
-  if (!_drivers) {
+  if (!getGlobalDrivers()) {
     return false
   }
-  const tmpDriver = _drivers.getRoutedDriver()
+  const tmpDriver = getGlobalDrivers().getRoutedDriver()
   if (!tmpDriver) {
     return false
   }
@@ -88,56 +80,6 @@ const validateConnection = (driver, res, rej) => {
     .catch(rej)
 }
 
-const buildAuthObj = props => {
-  let auth
-  if (props.authenticationMethod === KERBEROS) {
-    auth = neo4j.auth.kerberos(props.password)
-  } else if (
-    props.authenticationMethod === NATIVE ||
-    !props.authenticationMethod
-  ) {
-    auth = neo4j.auth.basic(props.username, props.password)
-  } else {
-    auth = null
-  }
-  return auth
-}
-
-const getDriver = (url, auth, opts, onConnectFail = () => {}) => {
-  try {
-    const res = neo4j.driver(url, auth, opts)
-    return res
-  } catch (e) {
-    onConnectFail(e)
-    return null
-  }
-}
-
-export const getDriversObj = (props, opts = {}, onConnectFail = () => {}) => {
-  const driversObj = {}
-  const auth = buildAuthObj(props)
-  const getDirectDriver = () => {
-    if (driversObj.direct) return driversObj.direct
-    const directUrl = toNonRoutingScheme(props.host)
-    driversObj.direct = getDriver(directUrl, auth, opts, onConnectFail)
-    return driversObj.direct
-  }
-  const getRoutedDriver = () => {
-    if (!isNonRoutingScheme(props.host)) return getDirectDriver()
-    if (driversObj.routed) return driversObj.routed
-    driversObj.routed = getDriver(props.host, auth, opts, onConnectFail)
-    return driversObj.routed
-  }
-  return {
-    getDirectDriver,
-    getRoutedDriver,
-    close: () => {
-      if (driversObj.direct) driversObj.direct.close()
-      if (driversObj.routed) driversObj.routed.close()
-    }
-  }
-}
-
 export function directConnect(
   props,
   opts = {},
@@ -146,7 +88,7 @@ export function directConnect(
 ) {
   const p = new Promise((resolve, reject) => {
     const auth = buildAuthObj(props)
-    const driver = getDriver(props.host, auth, opts, e => {
+    const driver = createDriverOrFailFn(props.host, auth, opts, e => {
       onLostConnection(e)
       reject(e)
     })
@@ -163,18 +105,18 @@ export function openConnection(props, opts = {}, onLostConnection = () => {}) {
   const p = new Promise((resolve, reject) => {
     const onConnectFail = e => {
       onLostConnection(e)
-      _drivers = null
+      unsetGlobalDrivers()
       reject(e)
     }
-    const driversObj = getDriversObj(props, opts, onConnectFail)
+    const driversObj = buildGlobalDriversObject(props, opts, onConnectFail)
     const driver = driversObj.getDirectDriver()
     const myResolve = driver => {
-      _drivers = driversObj
+      setGlobalDrivers(driversObj)
       resolve(driver)
     }
     const myReject = err => {
       onLostConnection(err)
-      _drivers = null
+      unsetGlobalDrivers()
       driversObj.close()
       reject(err)
     }
@@ -183,148 +125,21 @@ export function openConnection(props, opts = {}, onLostConnection = () => {}) {
   return p
 }
 
-function _trackedTransaction(
-  input,
-  parameters = {},
-  session,
-  requestId = null,
-  txMetadata = undefined,
-  autoCommit = false
-) {
-  const id = requestId || v4()
-  if (!session) {
-    return [id, Promise.reject(createErrorObject(BoltConnectionError))]
-  }
-  const closeFn = (cb = () => {}) => {
-    session.close(cb)
-    if (runningQueryRegister[id]) delete runningQueryRegister[id]
-  }
-  runningQueryRegister[id] = closeFn
-
-  const metadata = txMetadata ? { metadata: txMetadata } : undefined
-
-  // Declare variable to store tx function in
-  // so we can use same promise chain further down
-  // for both types of tx functions
-  let runFn
-
-  // Transaction functions are the norm
-  if (!autoCommit) {
-    const txFn = buildTxFunctionByMode(session)
-    // Use same fn signature as session.run
-    runFn = (input, parameters, metadata) =>
-      txFn(tx => tx.run(input, parameters, metadata))
-  } else {
-    // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
-    runFn = session.run.bind(session)
-  }
-
-  const queryPromise = runFn(input, parameters, metadata)
-    .then(result => {
-      closeFn()
-      return result
-    })
-    .catch(e => {
-      closeFn()
-      throw e
-    })
-  return [id, queryPromise]
-}
-
-function _transaction(input, parameters, session, txMetadata = undefined) {
-  if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
-
-  const metadata = txMetadata ? { metadata: txMetadata } : undefined
-  const txFn = buildTxFunctionByMode(session)
-
-  return txFn(tx => tx.run(input, parameters, metadata))
-    .then(r => {
-      session.close()
-      return r
-    })
-    .catch(e => {
-      session.close()
-      throw e
-    })
-}
-
-export function cancelTransaction(id, cb) {
-  if (runningQueryRegister[id]) {
-    runningQueryRegister[id](cb)
-  }
-}
-
-export function directTransaction(input, parameters, opts = {}) {
-  const {
-    requestId = null,
-    cancelable = false,
-    txMetadata = undefined,
-    useDb = undefined
-  } = opts
-  const session = _drivers
-    ? _drivers
-        .getDirectDriver()
-        .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
-    : false
-  if (!cancelable) return _transaction(input, parameters, session, txMetadata)
-  return _trackedTransaction(input, parameters, session, requestId, txMetadata)
-}
-
-export function routedReadTransaction(input, parameters, opts = {}) {
-  const {
-    requestId = null,
-    cancelable = false,
-    txMetadata = undefined,
-    useDb = undefined
-  } = opts
-  const session = _drivers
-    ? _drivers
-        .getRoutedDriver()
-        .session({ defaultAccessMode: neo4j.session.READ, database: useDb })
-    : false
-  if (!cancelable) return _transaction(input, parameters, session, txMetadata)
-  return _trackedTransaction(input, parameters, session, requestId, txMetadata)
-}
-
-export function routedWriteTransaction(input, parameters, opts = {}) {
-  const {
-    requestId = null,
-    cancelable = false,
-    txMetadata = undefined,
-    useDb = undefined,
-    autoCommit = false
-  } = opts
-  const session = _drivers
-    ? _drivers
-        .getRoutedDriver()
-        .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
-    : false
-  if (!cancelable) return _transaction(input, parameters, session, txMetadata)
-  return _trackedTransaction(
-    input,
-    parameters,
-    session,
-    requestId,
-    txMetadata,
-    autoCommit
-  )
-}
-
 export const closeConnection = () => {
-  if (_drivers) {
-    _drivers.close()
-    _drivers = null
+  if (getGlobalDrivers()) {
+    getGlobalDrivers().close()
+    unsetGlobalDrivers()
   }
 }
 
 export const ensureConnection = (props, opts, onLostConnection) => {
-  const session = _drivers
-    ? _drivers
+  const session = getGlobalDrivers()
+    ? getGlobalDrivers()
         .getDirectDriver()
         .session({ defaultAccessMode: neo4j.session.READ })
     : false
   if (session) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       session.close()
       resolve()
     })
