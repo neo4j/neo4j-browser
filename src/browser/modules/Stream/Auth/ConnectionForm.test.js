@@ -51,6 +51,7 @@ test('should print correct state for retaining credentials', async () => {
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
       isConnected={false}
+      enforcedScheme="neo4j://"
     />
   )
 
@@ -80,6 +81,7 @@ test('should print correct state for retaining credentials', async () => {
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
       isConnected={true}
+      enforcedScheme="neo4j://"
     />
   )
 
@@ -103,6 +105,7 @@ test('should print correct state for retaining credentials', async () => {
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
       isConnected={true}
+      enforcedScheme="neo4j://"
     />
   )
 

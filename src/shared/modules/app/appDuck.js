@@ -36,6 +36,7 @@ export const getEnv = state => (state[NAME] || {}).env || WEB
 export const hasDiscoveryEndpoint = state =>
   [WEB, CLOUD].includes(getEnv(state))
 export const inWebEnv = state => getEnv(state) === WEB
+export const inWebBrowser = state => [WEB, CLOUD].includes(getEnv(state))
 
 // Reducer
 export default function reducer(state = { hostedUrl: null }, action) {

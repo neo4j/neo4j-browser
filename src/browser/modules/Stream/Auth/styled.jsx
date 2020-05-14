@@ -47,6 +47,42 @@ export const StyledConnectionTextInput = styled(StyledInput)`
   min-width: 200px;
   width: 44%;
 `
+export const StyledSegment = styled.div`
+  min-width: 200px;
+  width: 44%;
+  position: relative;
+  display: flex;
+  justify-content: left;
+  > div {
+    border-radius: 4px;
+    width: auto;
+    display: inline-block;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    text-align: right;
+    background-color: #ddd;
+    border: ${props => props.theme.formButtonBorder};
+    color: ${props => props.theme.inputText};
+    height: 34px;
+    font-size: 14px;
+    padding: 7px 12px 6px 12px;
+    vertical-align: bottom;
+  }
+  > input {
+    display: inline-block;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+    flex: 1;
+    min-width: unset;
+    width: auto;
+  }
+`
+
+export const StyledSegmentedConnectionTextInput = styled(StyledInput)`
+  min-width: 200px;
+  width: 44%;
+`
 export const StyledRevealablePasswordWrapper = styled.div`
   position: relative;
   display: inline-block;

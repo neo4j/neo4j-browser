@@ -772,4 +772,26 @@ describe('toKeyString', () => {
       }
     )
   })
+  describe('stripScheme', () => {
+    const tests = [
+      [null, ''],
+      [undefined, ''],
+      ['localhost:7687', 'localhost:7687'],
+      ['https://localhost:7687', 'localhost:7687'],
+      ['bolt+s://localhost:7687', 'localhost:7687'],
+      ['bolt://localhost:7687', 'localhost:7687'],
+      ['bolt://localhost:7687/bolt', 'localhost:7687/bolt'],
+      [
+        'https://localhost:7474?connectUrl=neo4j://localhost:7687',
+        'localhost:7474?connectUrl=neo4j://localhost:7687'
+      ]
+    ]
+
+    test.each(tests)(
+      'strips the scheme correctly for %s',
+      (input, expected) => {
+        expect(utils.stripScheme(input)).toEqual(expected)
+      }
+    )
+  })
 })

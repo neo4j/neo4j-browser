@@ -486,6 +486,14 @@ export const generateBoltHost = host => {
   return aliasedProtocol + (hostName || 'localhost:7687')
 }
 
+export const stripScheme = url => {
+  const [_scheme, ...rest] = (url || '').split('://')
+  if (!rest.filter(p => !!p).length) {
+    return _scheme
+  }
+  return rest.join('://')
+}
+
 export function flushPromises() {
   return new Promise(resolve => setImmediate(resolve))
 }

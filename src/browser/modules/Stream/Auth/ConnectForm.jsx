@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import Render from 'browser-components/Render'
 import { FormButton } from 'browser-components/buttons'
 import {
@@ -26,112 +26,144 @@ import {
   StyledConnectionTextInput,
   StyledConnectionSelect,
   StyledConnectionLabel,
-  StyledConnectionFormEntry
+  StyledConnectionFormEntry,
+  StyledSegment
 } from './styled'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+import { stripScheme } from 'services/utils'
 
 const readableauthenticationMethods = {
   [NATIVE]: 'Username / Password',
   [NO_AUTH]: 'No authentication'
 }
 
-export default class ConnectForm extends Component {
-  state = {
-    connecting: false
+export default function ConnectForm(props) {
+  const [connecting, setConnecting] = useState(false)
+
+  // Add scheme when copying text from bult url field
+  const onCopyBoltUrl = e => {
+    let selection = document.getSelection()
+    if (!selection) {
+      return
+    }
+    e.preventDefault()
+    e.stopPropagation()
+    let val = selection.toString()
+    if (props.enforcedScheme) {
+      val = `${props.enforcedScheme}${stripScheme(val)}`
+    }
+    e.clipboardData.setData('text', val)
   }
 
-  onConnectClick = () => {
-    this.setState({ connecting: true }, () => {
-      this.props.onConnectClick(() => this.setState({ connecting: false }))
-    })
+  const onHostChange = e => {
+    let val = e.target.value
+    if (props.enforcedScheme) {
+      val = `${props.enforcedScheme}${stripScheme(val)}`
+    }
+    props.onHostChange(val)
   }
 
-  render() {
-    return (
-      <StyledConnectionForm>
-        <InputEnterStepping
-          steps="3"
-          submitAction={this.onConnectClick}
-          render={({
-            getSubmitProps,
-            getInputPropsForIndex,
-            setRefForIndex
-          }) => {
-            return (
-              <>
-                <StyledConnectionFormEntry>
-                  <StyledConnectionLabel>Connect URL</StyledConnectionLabel>
+  const onConnectClick = () => {
+    setConnecting(true)
+    props.onConnectClick(() => setConnecting(false))
+  }
+
+  return (
+    <StyledConnectionForm>
+      <InputEnterStepping
+        steps="3"
+        submitAction={onConnectClick}
+        render={({ getSubmitProps, getInputPropsForIndex, setRefForIndex }) => {
+          return (
+            <>
+              <StyledConnectionFormEntry>
+                <StyledConnectionLabel>Connect URL</StyledConnectionLabel>
+                {props.enforcedScheme ? (
+                  <StyledSegment>
+                    <div>{props.enforcedScheme}</div>
+                    <StyledConnectionTextInput
+                      {...getInputPropsForIndex(0, {
+                        onCopy: onCopyBoltUrl,
+                        initialFocus: true,
+                        'data-testid': 'boltaddress',
+                        onChange: onHostChange,
+                        value: stripScheme(props.host),
+                        ref: ref => setRefForIndex(0, ref)
+                      })}
+                    />
+                  </StyledSegment>
+                ) : (
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(0, {
                       initialFocus: true,
                       'data-testid': 'boltaddress',
-                      onChange: this.props.onHostChange,
-                      defaultValue: this.props.host,
+                      onChange: onHostChange,
+                      defaultValue: props.host,
                       ref: ref => setRefForIndex(0, ref)
                     })}
                   />
-                </StyledConnectionFormEntry>
+                )}
+              </StyledConnectionFormEntry>
+              <StyledConnectionFormEntry>
+                <StyledConnectionLabel>
+                  Authentication type
+                </StyledConnectionLabel>
+                <StyledConnectionSelect
+                  {...getInputPropsForIndex(1, {
+                    'data-testid': 'authenticationMethod',
+                    onChange: props.onAuthenticationMethodChange,
+                    value: props.authenticationMethod,
+                    ref: ref => setRefForIndex(1, ref)
+                  })}
+                >
+                  {[NATIVE, NO_AUTH].map((auth, i) => (
+                    <option value={auth} key={i}>
+                      {readableauthenticationMethods[auth]}
+                    </option>
+                  ))}
+                </StyledConnectionSelect>
+              </StyledConnectionFormEntry>
+
+              {props.authenticationMethod === NATIVE && (
                 <StyledConnectionFormEntry>
-                  <StyledConnectionLabel>
-                    Authentication type
-                  </StyledConnectionLabel>
-                  <StyledConnectionSelect
-                    {...getInputPropsForIndex(1, {
-                      'data-testid': 'authenticationMethod',
-                      onChange: this.props.onAuthenticationMethodChange,
-                      value: this.props.authenticationMethod,
-                      ref: ref => setRefForIndex(1, ref)
+                  <StyledConnectionLabel>Username</StyledConnectionLabel>
+                  <StyledConnectionTextInput
+                    {...getInputPropsForIndex(2, {
+                      'data-testid': 'username',
+                      onChange: props.onUsernameChange,
+                      defaultValue: props.username,
+                      ref: ref => setRefForIndex(2, ref)
                     })}
-                  >
-                    {[NATIVE, NO_AUTH].map((auth, i) => (
-                      <option value={auth} key={i}>
-                        {readableauthenticationMethods[auth]}
-                      </option>
-                    ))}
-                  </StyledConnectionSelect>
+                  />
                 </StyledConnectionFormEntry>
+              )}
 
-                {this.props.authenticationMethod === NATIVE && (
-                  <StyledConnectionFormEntry>
-                    <StyledConnectionLabel>Username</StyledConnectionLabel>
-                    <StyledConnectionTextInput
-                      {...getInputPropsForIndex(2, {
-                        'data-testid': 'username',
-                        onChange: this.props.onUsernameChange,
-                        defaultValue: this.props.username,
-                        ref: ref => setRefForIndex(2, ref)
-                      })}
-                    />
-                  </StyledConnectionFormEntry>
-                )}
+              {props.authenticationMethod === NATIVE && (
+                <StyledConnectionFormEntry>
+                  <StyledConnectionLabel>Password</StyledConnectionLabel>
+                  <StyledConnectionTextInput
+                    {...getInputPropsForIndex(3, {
+                      'data-testid': 'password',
+                      onChange: props.onPasswordChange,
+                      defaultValue: props.password,
+                      type: 'password',
+                      ref: ref => setRefForIndex(3, ref)
+                    })}
+                  />
+                </StyledConnectionFormEntry>
+              )}
 
-                {this.props.authenticationMethod === NATIVE && (
-                  <StyledConnectionFormEntry>
-                    <StyledConnectionLabel>Password</StyledConnectionLabel>
-                    <StyledConnectionTextInput
-                      {...getInputPropsForIndex(3, {
-                        'data-testid': 'password',
-                        onChange: this.props.onPasswordChange,
-                        defaultValue: this.props.password,
-                        type: 'password',
-                        ref: ref => setRefForIndex(3, ref)
-                      })}
-                    />
-                  </StyledConnectionFormEntry>
-                )}
-
-                <Render if={!this.state.connecting}>
-                  <FormButton data-testid="connect" {...getSubmitProps()}>
-                    Connect
-                  </FormButton>
-                </Render>
-                <Render if={this.state.connecting}>Connecting...</Render>
-              </>
-            )
-          }}
-        />
-      </StyledConnectionForm>
-    )
-  }
+              <Render if={!connecting}>
+                <FormButton data-testid="connect" {...getSubmitProps()}>
+                  Connect
+                </FormButton>
+              </Render>
+              <Render if={connecting}>Connecting...</Render>
+            </>
+          )
+        }}
+      />
+    </StyledConnectionForm>
+  )
 }

@@ -37,12 +37,12 @@ import {
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
-import { generateBoltHost } from 'services/utils'
 import { getEncryptionMode, NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
+import { inWebBrowser, getHostedUrl } from 'shared/modules/app/appDuck'
 
 export class ConnectionForm extends Component {
   constructor(props) {
@@ -120,10 +120,9 @@ export class ConnectionForm extends Component {
     this.props.error({})
   }
 
-  onHostChange(event) {
-    const host = event.target.value
+  onHostChange(host) {
     this.setState({
-      host: generateBoltHost(host),
+      host,
       hostInputVal: host
     })
     this.props.error({})
@@ -258,6 +257,7 @@ export class ConnectionForm extends Component {
           password={this.state.password}
           authenticationMethod={this.state.authenticationMethod}
           used={this.state.used}
+          enforcedScheme={this.props.enforcedScheme}
         />
       )
     }
@@ -266,13 +266,21 @@ export class ConnectionForm extends Component {
 }
 
 const mapStateToProps = state => {
+  const isHosted = inWebBrowser(state)
+  const hostedUrl = getHostedUrl(state)
+  const enforcedScheme = !isHosted
+    ? null
+    : hostedUrl.startsWith('https')
+    ? 'neo4j+s://'
+    : 'neo4j://'
   return {
     initCmd: getInitCmd(state),
     activeConnection: getActiveConnection(state),
     activeConnectionData: getActiveConnectionData(state),
     playImplicitInitCommands: getPlayImplicitInitCommands(state),
     storeCredentials: shouldRetainConnectionCredentials(state),
-    isConnected: isConnected(state)
+    isConnected: isConnected(state),
+    enforcedScheme
   }
 }
 
@@ -293,6 +301,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     activeConnectionData: stateProps.activeConnectionData,
     storeCredentials: stateProps.storeCredentials,
     isConnected: stateProps.isConnected,
+    enforcedScheme: stateProps.enforcedScheme,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {
