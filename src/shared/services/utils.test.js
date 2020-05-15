@@ -919,6 +919,19 @@ describe('toKeyString', () => {
         ['neo4j+s', 'bolt+s'],
         'bolt+s',
         'neo4j+s://localhost:7687'
+      ],
+      // bolt+routing -> neo4j://
+      [
+        'bolt+routing://localhost:7687',
+        ['neo4j+s', 'bolt+s'],
+        'bolt+s',
+        'neo4j+s://localhost:7687'
+      ],
+      [
+        'bolt+routing://localhost:7687',
+        ['neo4j', 'bolt'],
+        'bolt',
+        'neo4j://localhost:7687'
       ]
     ]
 

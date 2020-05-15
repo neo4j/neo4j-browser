@@ -543,6 +543,10 @@ export const toggleSchemeRouting = (url = '') => {
 }
 
 export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
+  const rewrites = {
+    'bolt+routing://': 'neo4j://'
+  }
+
   if (!url || typeof url !== 'string') {
     if (
       allowedSchemes &&
@@ -554,6 +558,15 @@ export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
     let scheme = allowedSchemes ? allowedSchemes[0] : fallbackScheme || 'neo4j'
     return `${scheme}://`
   }
+
+  // Rewrite any alias. Break on first hit.
+  for (const candidate in rewrites) {
+    if (url.startsWith(candidate)) {
+      url = `${rewrites[candidate]}${stripScheme(url)}`
+      break
+    }
+  }
+
   const scheme = getScheme(url)
 
   // We accept all schemes
