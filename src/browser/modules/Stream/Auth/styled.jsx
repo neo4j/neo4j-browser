@@ -53,14 +53,14 @@ export const StyledSegment = styled.div`
   position: relative;
   display: flex;
   justify-content: left;
-  > div {
+  > select {
     border-radius: 4px;
     width: auto;
+    min-width: unset;
     display: inline-block;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     text-align: right;
-    background-color: #ddd;
     border: ${props => props.theme.formButtonBorder};
     color: ${props => props.theme.inputText};
     height: 34px;

@@ -31,7 +31,7 @@ import {
 } from './styled'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
-import { stripScheme, getScheme } from 'services/utils'
+import { stripScheme, getScheme, toKeyString } from 'services/utils'
 
 const readableauthenticationMethods = {
   [NATIVE]: 'Username / Password',
@@ -71,11 +71,15 @@ export default function ConnectForm(props) {
     props.onHostChange(getScheme(scheme), val)
   }
 
+  const onSchemeChange = e => {
+    const val = e.target.value
+    props.onHostChange(getScheme(val), stripScheme(props.host))
+  }
+
   const onConnectClick = () => {
     setConnecting(true)
     props.onConnectClick(() => setConnecting(false))
   }
-
   return (
     <StyledConnectionForm>
       <InputEnterStepping
@@ -88,7 +92,19 @@ export default function ConnectForm(props) {
                 <StyledConnectionLabel>Connect URL</StyledConnectionLabel>
                 {props.allowedSchemes && props.allowedSchemes.length ? (
                   <StyledSegment>
-                    <div>{scheme}</div>
+                    <StyledConnectionSelect
+                      onChange={onSchemeChange}
+                      value={scheme}
+                    >
+                      {props.allowedSchemes.map(s => {
+                        const schemeString = `${s}://`
+                        return (
+                          <option value={schemeString} key={toKeyString(s)}>
+                            {schemeString}
+                          </option>
+                        )
+                      })}
+                    </StyledConnectionSelect>
                     <StyledConnectionTextInput
                       {...getInputPropsForIndex(0, {
                         onCopy: onCopyBoltUrl,

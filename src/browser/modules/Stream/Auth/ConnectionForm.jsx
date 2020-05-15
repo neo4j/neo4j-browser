@@ -96,14 +96,16 @@ export class ConnectionForm extends Component {
             res.error.message.includes('Could not perform discovery')
           ) {
             // Need to switch scheme to bolt:// for Neo4j 3.x connections
+            const url = toggleSchemeRouting(this.state.host)
             this.props.error(
               Error(
                 `Could not connect with the "${getScheme(
                   this.state.host
-                )}://" scheme to this Neoj server. Automatic retry using the "bolt://" scheme in a moment...`
+                )}://" scheme to this Neoj server. Automatic retry using the "${getScheme(
+                  url
+                )}://" scheme in a moment...`
               )
             )
-            const url = toggleSchemeRouting(this.state.host)
             this.setState({ host: url, hostInputVal: url }, () => {
               setTimeout(() => {
                 this.connect(doneFn, onError, noResetConnectionOnFail)
