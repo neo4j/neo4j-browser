@@ -51,3 +51,11 @@ const getBoltConfig = (config, type) => {
   }
   return obj
 }
+
+export const stripScheme = url => {
+  const [_scheme, ...rest] = (url || '').split('://')
+  if (!rest || !rest.length) {
+    return _scheme
+  }
+  return rest.join('://')
+}

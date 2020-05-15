@@ -95,6 +95,7 @@ export default function ConnectForm(props) {
                     <StyledConnectionSelect
                       onChange={onSchemeChange}
                       value={scheme}
+                      data-testid="bolt-scheme-select"
                     >
                       {props.allowedSchemes.map(s => {
                         const schemeString = `${s}://`
