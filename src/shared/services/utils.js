@@ -523,6 +523,25 @@ export const toggleSchemeSecurity = url => {
   return `${getScheme(url)}+s`
 }
 
+export const toggleSchemeRouting = (url = '') => {
+  if (!url) {
+    return ''
+  }
+  if (url && !url.includes('://')) {
+    return url
+  }
+  const routing = 'neo4j'
+  const nonRouting = 'bolt'
+
+  if (url.startsWith(routing)) {
+    return url.replace(routing, nonRouting)
+  }
+  if (url.startsWith(nonRouting)) {
+    return url.replace(nonRouting, routing)
+  }
+  return url
+}
+
 export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
   if (!url || typeof url !== 'string') {
     if (

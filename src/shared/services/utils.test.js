@@ -814,6 +814,31 @@ describe('toKeyString', () => {
       }
     )
   })
+  describe('toggleSchemeRouting', () => {
+    const tests = [
+      [null, ''],
+      [undefined, ''],
+      ['localhost:7687', 'localhost:7687'],
+      ['https://localhost:7687', 'https://localhost:7687'],
+      ['bolt+s://localhost:7687', 'neo4j+s://localhost:7687'],
+      ['neo4j+s://localhost:7687', 'bolt+s://localhost:7687'],
+      ['bolt://localhost:7687', 'neo4j://localhost:7687'],
+      ['bolt://localhost:7687/bolt', 'neo4j://localhost:7687/bolt'],
+      [
+        'bolt://bolt.com:7474?connectUrl=neo4j+s://localhost:7687',
+        'neo4j://bolt.com:7474?connectUrl=neo4j+s://localhost:7687'
+      ],
+      ['bolt+ssc://localhost:7687/bolt', 'neo4j+ssc://localhost:7687/bolt'],
+      ['neo4j+ssc://localhost:7687/bolt', 'bolt+ssc://localhost:7687/bolt']
+    ]
+
+    test.each(tests)(
+      'toggles routing scheme correctly for %s',
+      (input, expected) => {
+        expect(utils.toggleSchemeRouting(input)).toEqual(expected)
+      }
+    )
+  })
   describe('generateBoltUrl', () => {
     const tests = [
       // wrong types

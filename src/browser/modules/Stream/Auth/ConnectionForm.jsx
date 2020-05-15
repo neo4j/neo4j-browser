@@ -43,7 +43,7 @@ import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
 import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
-import { generateBoltUrl } from 'services/utils'
+import { generateBoltUrl, getScheme, toggleSchemeRouting } from 'services/utils'
 
 export class ConnectionForm extends Component {
   constructor(props) {
@@ -82,15 +82,36 @@ export class ConnectionForm extends Component {
       CONNECT,
       { ...this.state, noResetConnectionOnFail },
       res => {
-        doneFn()
         if (res.success) {
+          doneFn()
           this.saveAndStart()
         } else {
           if (
             res.error.code === 'Neo.ClientError.Security.CredentialsExpired'
           ) {
+            doneFn()
             this.setState({ passwordChangeNeeded: true })
+          } else if (
+            res.error.code === 'ServiceUnavailable' &&
+            res.error.message.includes('Could not perform discovery')
+          ) {
+            // Need to switch scheme to bolt:// for Neo4j 3.x connections
+            this.props.error(
+              Error(
+                `Could not connect with the "${getScheme(
+                  this.state.host
+                )}://" scheme to this Neoj server. Automatic retry using the "bolt://" scheme in a moment...`
+              )
+            )
+            const url = toggleSchemeRouting(this.state.host)
+            this.setState({ host: url, hostInputVal: url }, () => {
+              setTimeout(() => {
+                this.connect(doneFn, onError, noResetConnectionOnFail)
+              }, 5000)
+            })
+            return
           } else {
+            doneFn()
             if (onError) {
               return onError(res)
             }

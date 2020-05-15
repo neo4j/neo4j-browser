@@ -102,13 +102,17 @@ export function directConnect(
 }
 
 export function openConnection(props, opts = {}, onLostConnection = () => {}) {
-  const p = new Promise((resolve, reject) => {
+  const p = new Promise(async (resolve, reject) => {
     const onConnectFail = e => {
       onLostConnection(e)
       unsetGlobalDrivers()
       reject(e)
     }
-    const driversObj = buildGlobalDriversObject(props, opts, onConnectFail)
+    const driversObj = await buildGlobalDriversObject(
+      props,
+      opts,
+      onConnectFail
+    )
     const driver = driversObj.getDirectDriver()
     const myResolve = driver => {
       setGlobalDrivers(driversObj)

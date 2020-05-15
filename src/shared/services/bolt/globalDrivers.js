@@ -27,7 +27,7 @@ let _drivers = null
 
 const BOLT_DIRECT_SCHEME = 'bolt'
 
-const isNonRoutingScheme = url => url.startsWith(BOLT_DIRECT_SCHEME)
+const isNonRoutingScheme = (url = '') => url.startsWith(BOLT_DIRECT_SCHEME)
 const toNonRoutingScheme = url =>
   `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
 
@@ -35,13 +35,35 @@ export const getGlobalDrivers = () => _drivers
 export const setGlobalDrivers = drivers => (_drivers = drivers)
 export const unsetGlobalDrivers = () => (_drivers = null)
 
-export const buildGlobalDriversObject = (
+export const buildGlobalDriversObject = async (
   props,
   opts = {},
   failFn = () => {}
 ) => {
   const driversObj = {}
   const auth = buildAuthObj(props)
+  let routingSupported = !isNonRoutingScheme(props.host)
+
+  // Scheme says routing should be supported
+  // but in the Neo4j 3.X case, it might not be true.
+  // We need to verify this.
+  if (routingSupported) {
+    try {
+      const routed = createDriverOrFailFn(props.host, auth, opts, () => {})
+      await routed.verifyConnectivity()
+      routingSupported = true
+    } catch (e) {
+      if (
+        e &&
+        e.code === 'ServiceUnavailable' &&
+        e.message.includes('Could not perform discovery')
+      ) {
+        routingSupported = false
+        failFn(e)
+      }
+    }
+  }
+
   const getDirectDriver = () => {
     if (driversObj.direct) return driversObj.direct
     const directUrl = toNonRoutingScheme(props.host)
@@ -49,7 +71,7 @@ export const buildGlobalDriversObject = (
     return driversObj.direct
   }
   const getRoutedDriver = () => {
-    if (isNonRoutingScheme(props.host)) return getDirectDriver()
+    if (!routingSupported) return getDirectDriver()
     if (driversObj.routed) return driversObj.routed
     driversObj.routed = createDriverOrFailFn(props.host, auth, opts, failFn)
     return driversObj.routed
