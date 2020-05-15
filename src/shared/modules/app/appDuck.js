@@ -46,7 +46,7 @@ export const getAllowedBoltSchemes = (state, encryptionFlag) => {
   return !isHosted
     ? encryptionFlag
       ? SECURE_SCHEMES
-      : INSECURE_SCHEMES
+      : [...SECURE_SCHEMES, ...INSECURE_SCHEMES]
     : (hostedUrl || '').startsWith('https')
     ? SECURE_SCHEMES
     : INSECURE_SCHEMES
