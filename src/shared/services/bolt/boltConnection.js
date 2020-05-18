@@ -25,7 +25,8 @@ import {
   setGlobalDrivers,
   getGlobalDrivers,
   unsetGlobalDrivers,
-  buildGlobalDriversObject
+  buildGlobalDriversObject,
+  buildAuthObj
 } from './globalDrivers'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
