@@ -123,7 +123,7 @@ function CypherCell({ cell }) {
     )
 
     return `point({${join(
-      map(pairs, pair => join(pair, ': ')),
+      map(pairs, pair => join(pair, ':')),
       ', '
     )}})`
   }
