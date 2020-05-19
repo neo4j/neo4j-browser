@@ -18,9 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const BOLT_DIRECT_SCHEME = 'bolt'
+const BOLT_ROUTING_SCHEME = 'neo4j'
+
 export const isNonSupportedRoutingSchemeError = e =>
   e.code === 'ServiceUnavailable' &&
   e.message.includes('Could not perform discovery')
+
+export const isNonRoutingScheme = (url = '') =>
+  typeof url === 'string' && url.startsWith(`${BOLT_DIRECT_SCHEME}://`)
+
+export const toNonRoutingScheme = url =>
+  typeof url === 'string' &&
+  `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
 
 export const getScheme = url => {
   if (!url) {
@@ -90,21 +100,19 @@ export const toggleSchemeRouting = (url = '') => {
   if (url && !url.includes('://')) {
     return url
   }
-  const routing = 'neo4j'
-  const nonRouting = 'bolt'
 
-  if (url.startsWith(routing)) {
-    return url.replace(routing, nonRouting)
+  if (url.startsWith(BOLT_ROUTING_SCHEME)) {
+    return url.replace(BOLT_ROUTING_SCHEME, BOLT_DIRECT_SCHEME)
   }
-  if (url.startsWith(nonRouting)) {
-    return url.replace(nonRouting, routing)
+  if (url.startsWith(BOLT_DIRECT_SCHEME)) {
+    return url.replace(BOLT_DIRECT_SCHEME, BOLT_ROUTING_SCHEME)
   }
   return url
 }
 
 export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
   const rewrites = {
-    'bolt+routing://': 'neo4j://'
+    'bolt+routing://': `${BOLT_ROUTING_SCHEME}://`
   }
 
   if (!url || typeof url !== 'string') {
@@ -134,7 +142,7 @@ export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
     if (scheme) {
       return url
     }
-    return `neo4j://${url}`
+    return `${BOLT_ROUTING_SCHEME}://${url}`
   }
 
   if (!scheme && fallbackScheme && allowedSchemes.includes(fallbackScheme)) {

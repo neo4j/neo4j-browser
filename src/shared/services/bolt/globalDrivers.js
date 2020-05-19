@@ -22,18 +22,12 @@ import neo4j from 'neo4j-driver'
 import { createDriverOrFailFn } from './driverFactory'
 import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
 import {
-  stripScheme,
-  getSchemeFlag,
+  isNonRoutingScheme,
+  toNonRoutingScheme,
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
 
 let _drivers = null
-
-const BOLT_DIRECT_SCHEME = 'bolt'
-
-const isNonRoutingScheme = (url = '') => url.startsWith(BOLT_DIRECT_SCHEME)
-const toNonRoutingScheme = url =>
-  `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
 
 export const getGlobalDrivers = () => _drivers
 export const setGlobalDrivers = drivers => (_drivers = drivers)
