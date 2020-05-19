@@ -43,7 +43,12 @@ import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
 import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
-import { generateBoltUrl, getScheme, toggleSchemeRouting } from 'services/utils'
+import {
+  generateBoltUrl,
+  getScheme,
+  toggleSchemeRouting,
+  isNonSupportedRoutingSchemeError
+} from 'services/boltscheme.utils'
 
 export class ConnectionForm extends Component {
   constructor(props) {
@@ -91,10 +96,7 @@ export class ConnectionForm extends Component {
           ) {
             doneFn()
             this.setState({ passwordChangeNeeded: true })
-          } else if (
-            res.error.code === 'ServiceUnavailable' &&
-            res.error.message.includes('Could not perform discovery')
-          ) {
+          } else if (isNonSupportedRoutingSchemeError(res.error)) {
             // Need to switch scheme to bolt:// for Neo4j 3.x connections
             const url = toggleSchemeRouting(this.state.host)
             this.props.error(

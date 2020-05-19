@@ -29,7 +29,8 @@ import {
   getAllowedBoltSchemes
 } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
-import { getUrlParamValue, generateBoltUrl } from 'services/utils'
+import { getUrlParamValue } from 'services/utils'
+import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
 
 export const NAME = 'discover-bolt-host'

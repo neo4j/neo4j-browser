@@ -21,7 +21,11 @@
 import neo4j from 'neo4j-driver'
 import { createDriverOrFailFn } from './driverFactory'
 import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
-import { stripScheme, getSchemeFlag } from 'services/utils'
+import {
+  stripScheme,
+  getSchemeFlag,
+  isNonSupportedRoutingSchemeError
+} from 'services/boltscheme.utils'
 
 let _drivers = null
 
@@ -53,11 +57,7 @@ export const buildGlobalDriversObject = async (
       await routed.verifyConnectivity()
       routingSupported = true
     } catch (e) {
-      if (
-        e &&
-        e.code === 'ServiceUnavailable' &&
-        e.message.includes('Could not perform discovery')
-      ) {
+      if (e && isNonSupportedRoutingSchemeError(e)) {
         routingSupported = false
         failFn(e)
       }

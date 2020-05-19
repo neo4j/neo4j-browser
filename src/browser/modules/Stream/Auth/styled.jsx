@@ -36,6 +36,9 @@ export const StyledChangePasswordForm = styled(StyledConnectionForm)`
 export const StyledConnectionAside = styled(StyledFrameAside)``
 export const StyledConnectionFormEntry = styled.div`
   padding-bottom: 15px;
+  &:hover .url-hint-text {
+    display: block;
+  }
 `
 export const StyledConnectionLabel = styled.label`
   display: block;
@@ -77,6 +80,13 @@ export const StyledSegment = styled.div`
     min-width: unset;
     width: auto;
   }
+`
+
+export const StyledBoltUrlHintText = styled.span`
+  height: 0;
+  overflow: visible;
+  font-size: 12px;
+  display: none;
 `
 
 export const StyledSegmentedConnectionTextInput = styled(StyledInput)`

@@ -27,11 +27,13 @@ import {
   StyledConnectionSelect,
   StyledConnectionLabel,
   StyledConnectionFormEntry,
-  StyledSegment
+  StyledSegment,
+  StyledBoltUrlHintText
 } from './styled'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
-import { stripScheme, getScheme, toKeyString } from 'services/utils'
+import { toKeyString } from 'services/utils'
+import { stripScheme, getScheme } from 'services/boltscheme.utils'
 
 const readableauthenticationMethods = {
   [NATIVE]: 'Username / Password',
@@ -89,34 +91,42 @@ export default function ConnectForm(props) {
           return (
             <>
               <StyledConnectionFormEntry>
-                <StyledConnectionLabel>Connect URL</StyledConnectionLabel>
+                <StyledConnectionLabel title="Pick neo4j:// for a routed connection, bolt:// for a direct connection to a DBMS instance.">
+                  Connect URL
+                </StyledConnectionLabel>
                 {props.allowedSchemes && props.allowedSchemes.length ? (
-                  <StyledSegment>
-                    <StyledConnectionSelect
-                      onChange={onSchemeChange}
-                      value={scheme}
-                      data-testid="bolt-scheme-select"
-                    >
-                      {props.allowedSchemes.map(s => {
-                        const schemeString = `${s}://`
-                        return (
-                          <option value={schemeString} key={toKeyString(s)}>
-                            {schemeString}
-                          </option>
-                        )
-                      })}
-                    </StyledConnectionSelect>
-                    <StyledConnectionTextInput
-                      {...getInputPropsForIndex(0, {
-                        onCopy: onCopyBoltUrl,
-                        initialFocus: true,
-                        'data-testid': 'boltaddress',
-                        onChange: onHostChange,
-                        value: stripScheme(props.host),
-                        ref: ref => setRefForIndex(0, ref)
-                      })}
-                    />
-                  </StyledSegment>
+                  <div>
+                    <StyledSegment>
+                      <StyledConnectionSelect
+                        onChange={onSchemeChange}
+                        value={scheme}
+                        data-testid="bolt-scheme-select"
+                      >
+                        {props.allowedSchemes.map(s => {
+                          const schemeString = `${s}://`
+                          return (
+                            <option value={schemeString} key={toKeyString(s)}>
+                              {schemeString}
+                            </option>
+                          )
+                        })}
+                      </StyledConnectionSelect>
+                      <StyledConnectionTextInput
+                        {...getInputPropsForIndex(0, {
+                          onCopy: onCopyBoltUrl,
+                          initialFocus: true,
+                          'data-testid': 'boltaddress',
+                          onChange: onHostChange,
+                          value: stripScheme(props.host),
+                          ref: ref => setRefForIndex(0, ref)
+                        })}
+                      />
+                    </StyledSegment>
+                    <StyledBoltUrlHintText className="url-hint-text">
+                      Pick neo4j:// for a routed connection, bolt:// for a
+                      direct connection to a DBMS.
+                    </StyledBoltUrlHintText>
+                  </div>
                 ) : (
                   <StyledConnectionTextInput
                     {...getInputPropsForIndex(0, {
