@@ -50,7 +50,15 @@ const About = ({ serverVersion, serverEdition }) => (
       <DrawerSection>
         <DrawerSubHeader>You are running</DrawerSubHeader>
         <DrawerSectionBody>
-          <p>Neo4j Browser version: {version}</p>
+          <p>
+            Neo4j Browser version:{' '}
+            <a
+              href={`https://github.com/neo4j/neo4j-browser/releases/tag/${version}`}
+              target="_blank"
+            >
+              {version}
+            </a>
+          </p>
           <Render if={serverVersion && serverEdition}>
             <p>
               Neo4j Server version:{' '}
@@ -60,6 +68,14 @@ const About = ({ serverVersion, serverEdition }) => (
               ({serverEdition})
             </p>
           </Render>
+          <p>
+            <a
+              href="https://github.com/neo4j/neo4j-browser/wiki/changelog"
+              target="_blank"
+            >
+              Neo4j Browser Changelog
+            </a>
+          </p>
         </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
