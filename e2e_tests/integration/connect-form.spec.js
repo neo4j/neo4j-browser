@@ -48,7 +48,7 @@ describe('Connect form', () => {
     getBoltUrlField().should('have.value', host)
     getBoltSchemeSelect().should('have.value', scheme)
   })
-  it('extracts the scheme from the bolt url entered with enc flag', () => {
+  it('extracts the scheme from the bolt url entered with encryption flag', () => {
     const scheme = 'neo4j+s://'
     const nonSecureScheme = 'neo4j://'
     const host = 'localhost:7687'

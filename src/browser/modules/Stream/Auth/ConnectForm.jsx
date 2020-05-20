@@ -53,9 +53,9 @@ export default function ConnectForm(props) {
     setScheme('')
   }, [props.host, props.allowedSchemes])
 
-  // Add scheme when copying text from bult url field
+  // Add scheme when copying text from bolt url field
   const onCopyBoltUrl = e => {
-    let selection = document.getSelection()
+    const selection = document.getSelection()
     if (!selection) {
       return
     }
