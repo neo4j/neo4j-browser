@@ -111,6 +111,11 @@ const getReferences = (version, v) => {
       name: 'Knowledge Base',
       command: 'https://neo4j.com/developer/kb/',
       type: 'link'
+    },
+    {
+      name: 'Neo4j Browser Developer Pages',
+      command: 'https://neo4j.com/developer/neo4j-browser/',
+      type: 'link'
     }
   ]
   return [].concat(shouldLinkToNewRefs(version) ? newRefs : oldRefs, commonRefs)
