@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import neo4j from 'neo4j-driver'
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
@@ -132,7 +133,7 @@ function updateMetaForContext(state, meta, context) {
   const mapResult = (metaIndex, mapFunction) =>
     meta.records[metaIndex].get(0).data.map(mapFunction)
   const mapSingleValue = r => ({ val: r, context })
-  const mapInteger = r => (bolt.neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
+  const mapInteger = r => (neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
   const mapInvocableValue = r => {
     const { name, signature, description } = r
     return {

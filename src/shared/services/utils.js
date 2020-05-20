@@ -147,18 +147,6 @@ export const firstSuccessPromise = (list, fn) => {
   }, Promise.reject(new Error()))
 }
 
-export const isRoutingHost = host => {
-  return /^bolt\+routing:\/\//.test(host)
-}
-
-export const toBoltHost = host => {
-  // prepend with neo4j:// and remove bolt or bolt+routing protocol and auth info
-  return `neo4j://${(host || '').replace(
-    /(.*(?=@+)@|(bolt|bolt\+routing):\/\/)/,
-    ''
-  )}`
-}
-
 export const hostIsAllowed = (uri, whitelist = null) => {
   if (whitelist === '*') return true
   const urlInfo = getUrlInfo(uri)
@@ -473,18 +461,6 @@ export const optionalToString = v =>
     : v
 
 export const toKeyString = str => btoa(encodeURIComponent(str))
-
-const DEPRECATED_ROUTING_PROTOCOL = 'bolt+routing://'
-
-export const generateBoltHost = host => {
-  const urlParts = (host || '').split('://')
-  const protocol = urlParts.length > 1 ? `${urlParts[0]}://` : 'neo4j://'
-  const hostName = urlParts.length > 1 ? urlParts[1] : urlParts[0]
-  const aliasedProtocol =
-    protocol !== DEPRECATED_ROUTING_PROTOCOL ? protocol : 'neo4j://'
-
-  return aliasedProtocol + (hostName || 'localhost:7687')
-}
 
 export function flushPromises() {
   return new Promise(resolve => setImmediate(resolve))

@@ -25,10 +25,12 @@ import {
   APP_START,
   USER_CLEAR,
   hasDiscoveryEndpoint,
-  getHostedUrl
+  getHostedUrl,
+  getAllowedBoltSchemes
 } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
+import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
 
 export const NAME = 'discover-bolt-host'
@@ -94,9 +96,13 @@ const updateDiscoveryState = (action, store) => {
 export const injectDiscoveryEpic = (action$, store) =>
   action$
     .ofType(INJECTED_DISCOVERY)
-    .map(action =>
-      updateDiscoveryState({ ...action, forceURL: action.host }, store)
-    )
+    .map(action => {
+      const connectUrl = generateBoltUrl(
+        getAllowedBoltSchemes(store.getState(), action.encrypted),
+        action.host
+      )
+      return updateDiscoveryState({ ...action, forceURL: connectUrl }, store)
+    })
     .mapTo({ type: DONE })
 
 export const discoveryOnStartupEpic = (some$, store) => {
@@ -135,20 +141,24 @@ export const discoveryOnStartupEpic = (some$, store) => {
           .getJSON(getDiscoveryEndpoint(getHostedUrl(store.getState())))
           // Uncomment below and comment out above when doing manual tests in dev mode to
           // fake discovery response
-          // Promise.resolve({ bolt: 'bolt+routing://localhost:7687' })
+          // Promise.resolve({ bolt: 'bolt://localhost:7687' })
           .then(result => {
-            const host =
+            let host =
               result &&
               (result.bolt_routing || result.bolt_direct || result.bolt)
             // Try to get info from server
             if (!host) {
-              throw new Error('No bolt address found') // No bolt info from server, throw
+              throw new Error('No bolt address found')
             }
+            host = generateBoltUrl(
+              getAllowedBoltSchemes(store.getState()),
+              host
+            )
             store.dispatch(updateDiscoveryConnection({ host })) // Update discovery host in redux
             return { type: DONE }
           })
           .catch(e => {
-            throw new Error('No info from endpoint') // No info from server, throw
+            throw new Error('No info from endpoint')
           })
       ).catch(e => {
         return Promise.resolve({ type: DONE })

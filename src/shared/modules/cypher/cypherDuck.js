@@ -19,14 +19,11 @@
  */
 
 import Rx from 'rxjs'
-
+import neo4j from 'neo4j-driver'
 import bolt from 'services/bolt/bolt'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
-import {
-  getEncryptionMode,
-  buildTxFunctionByMode
-} from 'services/bolt/boltHelpers'
+import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getUserTxMetadata } from 'services/bolt/txMetadata'
@@ -53,7 +50,7 @@ export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
 const queryAndResolve = async (driver, action, host, useDb = {}) => {
   return new Promise(resolve => {
     const session = driver.session({
-      defaultAccessMode: bolt.neo4j.session.WRITE,
+      defaultAccessMode: neo4j.session.WRITE,
       ...useDb
     })
     const txFn = buildTxFunctionByMode(session)
@@ -212,9 +209,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
       bolt
         .directConnect(
           action,
-          {
-            encrypted: getEncryptionMode(action)
-          },
+          {},
           undefined,
           false // Ignore validation errors
         )

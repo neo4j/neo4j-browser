@@ -22,15 +22,17 @@ import 'core-js/stable'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 import {
   ensureConnection,
-  routedWriteTransaction,
-  cancelTransaction,
-  routedReadTransaction,
-  directTransaction,
   closeConnection,
   DIRECT_CONNECTION,
   ROUTED_WRITE_CONNECTION,
   ROUTED_READ_CONNECTION
 } from './boltConnection'
+import {
+  routedWriteTransaction,
+  cancelTransaction,
+  routedReadTransaction,
+  directTransaction
+} from './transactions'
 import {
   cypherErrorMessage,
   cypherResponseMessage,

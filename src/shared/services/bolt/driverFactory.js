@@ -18,28 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global location */
-import { getUrlInfo } from 'services/utils'
+import neo4j from 'neo4j-driver'
 
-export const KERBEROS = 'KERBEROS'
-export const NATIVE = 'NATIVE'
-export const NO_AUTH = 'NO_AUTH'
-
-export const getDiscoveryEndpoint = url => {
-  const info = getUrlInfo(url || 'http://localhost:7474/')
-  return `${info.protocol}//${info.host}/`
-}
-
-export const isConfigValTruthy = val =>
-  [true, 'true', 'yes', 1, '1'].indexOf(val) > -1
-export const isConfigValFalsy = val =>
-  [false, 'false', 'no', 0, '0'].indexOf(val) > -1
-
-export const buildTxFunctionByMode = session => {
-  if (!session) {
+export const createDriverOrFailFn = (url, auth, opts, failFn = () => {}) => {
+  // This is needed, I haven't figured out why. I don't find any mutations to
+  // the object, so not sure what's going on.
+  const spreadOpts = { ...opts }
+  try {
+    const res = neo4j.driver(url, auth, spreadOpts)
+    return res
+  } catch (e) {
+    failFn(e)
     return null
   }
-  return session._mode !== 'READ'
-    ? session.writeTransaction.bind(session)
-    : session.readTransaction.bind(session)
 }

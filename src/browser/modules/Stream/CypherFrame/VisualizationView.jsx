@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import neo4j from 'neo4j-driver'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { deepEquals } from 'services/utils'
@@ -129,8 +130,8 @@ export class Visualization extends Component {
   }
 
   getInternalRelationships(existingNodeIds, newNodeIds) {
-    newNodeIds = newNodeIds.map(bolt.neo4j.int)
-    existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
+    newNodeIds = newNodeIds.map(neo4j.int)
+    existingNodeIds = existingNodeIds.map(neo4j.int)
     existingNodeIds = existingNodeIds.concat(newNodeIds)
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
@@ -205,8 +206,5 @@ const mapDispatchToProps = dispatch => {
 }
 
 export const VisualizationConnectedBus = withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Visualization)
+  connect(mapStateToProps, mapDispatchToProps)(Visualization)
 )

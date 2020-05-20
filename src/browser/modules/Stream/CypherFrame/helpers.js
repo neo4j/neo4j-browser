@@ -96,7 +96,7 @@ export const getRecordsToDisplayInTable = (result, maxRows) => {
     : result.records
 }
 
-export const resultHasNodes = (request, types = bolt.neo4j.types) => {
+export const resultHasNodes = (request, types = neo4j.types) => {
   if (!request) return false
   const { result = {} } = request
   if (!result || !result.records) return false

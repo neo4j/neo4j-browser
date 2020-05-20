@@ -23,7 +23,12 @@ import neo4j from 'neo4j-driver'
 import WorkPool from '../WorkPool'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
-import { generateBoltHost } from 'services/utils'
+import {
+  cancelTransaction as globalCancelTransaction,
+  routedReadTransaction as globalRoutedReadTransaction,
+  routedWriteTransaction as globalRoutedWriteTransaction,
+  directTransaction as globalDirectTransaction
+} from './transactions'
 import {
   runCypherMessage,
   cancelTransactionMessage,
@@ -65,7 +70,7 @@ function cancelTransaction(id, cb) {
     work.onFinish(cb)
     work.execute(cancelTransactionMessage(id))
   } else {
-    boltConnection.cancelTransaction(id, cb)
+    globalCancelTransaction(id, cb)
   }
 }
 
@@ -89,11 +94,6 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb,
         autoCommit
@@ -107,7 +107,7 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
     )
     return [id, workerPromise]
   } else {
-    return boltConnection.routedWriteTransaction(input, parameters, {
+    return globalRoutedWriteTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
@@ -136,11 +136,6 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb
       }
@@ -153,7 +148,7 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
     )
     return workerPromise
   } else {
-    return boltConnection.routedReadTransaction(input, parameters, {
+    return globalRoutedReadTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
@@ -181,11 +176,6 @@ function directTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb
       }
@@ -198,7 +188,7 @@ function directTransaction(input, parameters, requestMetaData = {}) {
     )
     return workerPromise
   } else {
-    return boltConnection.directTransaction(input, parameters, {
+    return globalDirectTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
@@ -276,6 +266,5 @@ export default {
       intConverter: val => val.toNumber(),
       objectConverter: mappings.extractFromNeoObjects
     }),
-  neo4j,
   addTypesAsField
 }
