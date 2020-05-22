@@ -387,12 +387,10 @@ export const startupConnectEpic = (action$, store) => {
         !(connection.host && connection.username && connection.password)
       ) {
         store.dispatch(setActiveConnection(null))
-        store.dispatch(
-          discovery.updateDiscoveryConnection({ username: '', password: '' })
-        )
+        store.dispatch(discovery.updateDiscoveryConnection({ password: '' }))
         return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
       }
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         // Try to connect with stored creds
         bolt
           .openConnection(
