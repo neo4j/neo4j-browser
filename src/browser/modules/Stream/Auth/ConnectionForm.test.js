@@ -68,7 +68,8 @@ test('should print correct state for retaining credentials', async () => {
   activeConnection = true
   activeConnectionData = {
     username,
-    host
+    host,
+    authEnabled: true
   }
   rerender(
     <ConnectionForm

@@ -187,6 +187,12 @@ const updateAuthEnabledHelper = (state, authEnabled) => {
     ...state.connectionsById[connectionId],
     authEnabled
   }
+
+  if (!authEnabled) {
+    updatedConnection.username = ''
+    updatedConnection.password = ''
+  }
+
   const updatedConnectionByIds = {
     ...state.connectionsById
   }
@@ -341,7 +347,7 @@ export const connectEpic = (action$, store) => {
       .openConnection(action, {
         connectionTimeout: getConnectionTimeout(store.getState())
       })
-      .then(res => ({ type: action.$$responseChannel, success: true }))
+      .then(() => ({ type: action.$$responseChannel, success: true }))
       .catch(e => {
         if (!action.noResetConnectionOnFail) {
           store.dispatch(setActiveConnection(null))
@@ -587,7 +593,7 @@ export const switchConnectionEpic = (action$, store) => {
             { encrypted: action.encrypted },
             onLostConnection(store.dispatch)
           )
-          .then(connection => {
+          .then(() => {
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
             resolve({ type: SWITCH_CONNECTION_SUCCESS })
           })
