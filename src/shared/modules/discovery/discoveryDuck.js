@@ -80,8 +80,10 @@ export const getBoltHost = state => {
 
 const updateDiscoveryState = (action, store) => {
   const updateObj = { host: action.forceURL }
-  if (action.username && action.password) {
+  if (action.username) {
     updateObj.username = action.username
+  }
+  if (action.password) {
     updateObj.password = action.password
   }
   if (typeof action.encrypted !== 'undefined') {

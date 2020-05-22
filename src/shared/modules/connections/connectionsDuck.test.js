@@ -201,7 +201,7 @@ describe('connectionsDucks Epics', () => {
             action,
             connections.useDb(null),
             connections.setActiveConnection(null),
-            updateDiscoveryConnection({ username: '', password: '' }),
+            updateDiscoveryConnection({ password: '' }),
             currentAction
           ])
           expect(bolt.openConnection).toHaveBeenCalledTimes(0)
