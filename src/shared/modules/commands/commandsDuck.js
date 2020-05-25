@@ -92,7 +92,7 @@ export default function reducer(state = initialState, action) {
 
 export const executeCommand = (
   cmd,
-  { id, requestId, parentId, useDb } = {}
+  { id, requestId, parentId, useDb, isRerun = false } = {}
 ) => {
   return {
     type: COMMAND_QUEUED,
@@ -100,17 +100,22 @@ export const executeCommand = (
     id,
     requestId,
     parentId,
-    useDb
+    useDb,
+    isRerun
   }
 }
 
-export const executeSingleCommand = (cmd, { id, requestId, useDb } = {}) => {
+export const executeSingleCommand = (
+  cmd,
+  { id, requestId, useDb, isRerun = false } = {}
+) => {
   return {
     type: SINGLE_COMMAND_QUEUED,
     cmd,
     id,
     requestId,
-    useDb
+    useDb,
+    isRerun
   }
 }
 
@@ -165,13 +170,7 @@ export const handleCommandEpic = (action$, store) =>
       }
       if (statements.length === 1) {
         // Single command
-        return store.dispatch(
-          executeSingleCommand(statements[0], {
-            id: action.id,
-            requestId: action.requestId,
-            useDb: action.useDb
-          })
-        )
+        return store.dispatch(executeSingleCommand(statements[0], action))
       }
       const parentId = action.parentId || v4()
       store.dispatch(
@@ -233,6 +232,7 @@ export const handleSingleCommandEpic = (action$, store) =>
         if (interpreted.name !== 'cypher') {
           action.cmd = cleanCommand(action.cmd)
         }
+        action.ts = new Date().getTime()
         const res = interpreted.exec(action, cmdchar, store.dispatch, store)
         if (!res || !res.then) {
           resolve(noop)

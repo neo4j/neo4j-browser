@@ -248,15 +248,13 @@ class FrameTitlebar extends Component {
           >
             {expandCollapseIcon}
           </FrameButton>
-          <Render if={['cypher', 'style', 'schema'].includes(frame.type)}>
-            <FrameButton
-              data-testid="rerunFrameButton"
-              title="Rerun"
-              onClick={() => props.onReRunClick(frame)}
-            >
-              <RefreshIcon />
-            </FrameButton>
-          </Render>
+          <FrameButton
+            data-testid="rerunFrameButton"
+            title="Rerun"
+            onClick={() => props.onReRunClick(frame)}
+          >
+            <RefreshIcon />
+          </FrameButton>
           <FrameButton
             title="Close"
             onClick={() =>
@@ -297,7 +295,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
-      dispatch(commands.executeCommand(cmd, { id, useDb }))
+      dispatch(commands.executeCommand(cmd, { id, useDb, isRerun: true }))
     },
     togglePinning: (id, isPinned) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
@@ -306,8 +304,5 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(FrameTitlebar)
+  connect(mapStateToProps, mapDispatchToProps)(FrameTitlebar)
 )
