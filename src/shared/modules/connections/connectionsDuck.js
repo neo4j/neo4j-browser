@@ -118,6 +118,12 @@ export function getActiveConnectionData(state) {
   return getConnectionData(state, state[NAME].activeConnection)
 }
 
+export function getAuthEnabled(state) {
+  if (!state[NAME].activeConnection) return null
+  const data = getConnectionData(state, state[NAME].activeConnection)
+  return data.authEnabled
+}
+
 export function getConnectionData(state, id) {
   if (typeof state[NAME].connectionsById[id] === 'undefined') return null
   const data = state[NAME].connectionsById[id]
