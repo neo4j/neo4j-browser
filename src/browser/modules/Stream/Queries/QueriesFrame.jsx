@@ -50,7 +50,6 @@ import {
 import {
   StyledStatusBar,
   AutoRefreshToggle,
-  RefreshQueriesButton,
   AutoRefreshSpan,
   StatusbarWrapper
 } from '../AutoRefresh/styled'

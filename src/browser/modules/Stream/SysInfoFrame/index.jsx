@@ -31,11 +31,9 @@ import {
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
 import FrameError from 'browser/modules/Frame/FrameError'
 import Render from 'browser-components/Render'
-import { RefreshIcon } from 'browser-components/icons/Icons'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
-  RefreshQueriesButton,
   AutoRefreshSpan,
   StatusbarWrapper
 } from '../AutoRefresh/styled'
