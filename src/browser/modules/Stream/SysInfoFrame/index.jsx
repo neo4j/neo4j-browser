@@ -82,6 +82,12 @@ export class SysInfoFrame extends Component {
         clearInterval(this.timer)
       }
     }
+    if (
+      this.props.frame.ts !== prevProps.frame.ts &&
+      this.props.frame.isRerun
+    ) {
+      this.getSysInfo()
+    }
   }
 
   getSysInfo() {
@@ -147,9 +153,6 @@ export class SysInfoFrame extends Component {
                 {this.state.lastFetch &&
                   `Updated: ${dateFormat(this.state.lastFetch)}`}
                 {this.state.success}
-                <RefreshQueriesButton onClick={() => this.getSysInfo()}>
-                  <RefreshIcon />
-                </RefreshQueriesButton>
                 <AutoRefreshSpan>
                   <AutoRefreshToggle
                     checked={this.state.autoRefresh}
