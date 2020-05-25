@@ -81,6 +81,7 @@ export class SysInfoFrame extends Component {
       }
     }
     if (
+      this.props.frame &&
       this.props.frame.ts !== prevProps.frame.ts &&
       this.props.frame.isRerun
     ) {
