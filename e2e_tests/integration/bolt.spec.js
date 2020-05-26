@@ -54,7 +54,7 @@ describe('Bolt connections', () => {
       .and('contain', 'Database access not available')
       .should('not.contain', 'Connection lost')
   })
-  if (Cypress.config('serverVersion') >= 3.5) {
+  if (Cypress.config('serverVersion') >= 3.5 && isEnterpriseEdition()) {
     it('send tx metadata with queries', () => {
       cy.executeCommand(':clear')
       const password = Cypress.config('password')
