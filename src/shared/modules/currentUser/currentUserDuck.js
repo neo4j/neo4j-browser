@@ -23,7 +23,8 @@ import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTION_SUCCESS,
-  DISCONNECTION_SUCCESS
+  DISCONNECTION_SUCCESS,
+  getAuthEnabled
 } from 'shared/modules/connections/connectionsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
@@ -90,7 +91,11 @@ export const getCurrentUserEpic = (some$, store) =>
     .ofType(CONNECTION_SUCCESS)
     .merge(some$.ofType(DB_META_DONE))
     .mergeMap(() => {
-      return new Promise(async (resolve, reject) => {
+      return new Promise(async resolve => {
+        const authEnabled = getAuthEnabled(store.getState())
+        if (!authEnabled) {
+          return resolve(null)
+        }
         const supportsMultiDb = await bolt.hasMultiDbSupport()
         bolt
           .directTransaction(

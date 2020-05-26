@@ -48,7 +48,8 @@ import {
   hasClientConfig,
   updateUserCapability,
   USER_CAPABILITIES,
-  FEATURE_DETECTION_DONE
+  FEATURE_DETECTION_DONE,
+  isACausalCluster
 } from '../features/featuresDuck'
 
 export const NAME = 'meta'
@@ -356,16 +357,26 @@ export const dbMetaEpic = (some$, store) =>
               }),
               // Cluster role
               Rx.Observable.fromPromise(
-                bolt.directTransaction(
-                  getDbClusterRole(store.getState()),
-                  {},
-                  {
-                    useCypherThread: shouldUseCypherThread(store.getState()),
-                    ...getBackgroundTxMetadata({
-                      hasServerSupport: canSendTxMetadata(store.getState())
-                    })
+                new Promise((resolve, reject) => {
+                  if (!isACausalCluster(store.getState())) {
+                    return resolve(null)
                   }
-                )
+                  bolt
+                    .directTransaction(
+                      getDbClusterRole(store.getState()),
+                      {},
+                      {
+                        useCypherThread: shouldUseCypherThread(
+                          store.getState()
+                        ),
+                        ...getBackgroundTxMetadata({
+                          hasServerSupport: canSendTxMetadata(store.getState())
+                        })
+                      }
+                    )
+                    .then(resolve)
+                    .catch(reject)
+                })
               )
                 .catch(e => {
                   return Rx.Observable.of(null)
