@@ -546,6 +546,7 @@ const availableCommands = [
           useDb: getUseDb(store.getState()),
           ...action,
           id,
+          initialSlide: tryGetRemoteInitialSlideFromUrl(action.cmd),
           type: 'play'
         })
       )
