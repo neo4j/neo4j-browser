@@ -56,7 +56,7 @@ function _trackedTransaction(
     const txFn = buildTxFunctionByMode(session)
     // Use same fn signature as session.run
     runFn = (input, parameters, metadata) =>
-      txFn(tx => tx.run(input, parameters, metadata))
+      txFn(tx => tx.run(input, parameters), metadata)
   } else {
     // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
     runFn = session.run.bind(session)
@@ -80,7 +80,7 @@ function _transaction(input, parameters, session, txMetadata = undefined) {
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
   const txFn = buildTxFunctionByMode(session)
 
-  return txFn(tx => tx.run(input, parameters, metadata))
+  return txFn(tx => tx.run(input, parameters), metadata)
     .then(r => {
       session.close()
       return r
