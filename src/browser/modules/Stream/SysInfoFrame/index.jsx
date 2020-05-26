@@ -31,11 +31,9 @@ import {
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
 import FrameError from 'browser/modules/Frame/FrameError'
 import Render from 'browser-components/Render'
-import { RefreshIcon } from 'browser-components/icons/Icons'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
-  RefreshQueriesButton,
   AutoRefreshSpan,
   StatusbarWrapper
 } from '../AutoRefresh/styled'
@@ -81,6 +79,13 @@ export class SysInfoFrame extends Component {
       } else {
         clearInterval(this.timer)
       }
+    }
+    if (
+      this.props.frame &&
+      this.props.frame.ts !== prevProps.frame.ts &&
+      this.props.frame.isRerun
+    ) {
+      this.getSysInfo()
     }
   }
 
@@ -147,9 +152,6 @@ export class SysInfoFrame extends Component {
                 {this.state.lastFetch &&
                   `Updated: ${dateFormat(this.state.lastFetch)}`}
                 {this.state.success}
-                <RefreshQueriesButton onClick={() => this.getSysInfo()}>
-                  <RefreshIcon />
-                </RefreshQueriesButton>
                 <AutoRefreshSpan>
                   <AutoRefreshToggle
                     checked={this.state.autoRefresh}

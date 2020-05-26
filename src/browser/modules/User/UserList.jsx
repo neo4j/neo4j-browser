@@ -50,10 +50,23 @@ export class UserList extends Component {
       userList: this.props.users || [],
       listRoles: this.props.roles || []
     }
+  }
 
+  componentDidMount() {
     if (this.props.isEnterpriseEdition) {
       this.getUserList()
       this.getRoles()
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.frame.ts !== prevProps.frame.ts &&
+      this.props.frame.isRerun
+    ) {
+      if (this.props.isEnterpriseEdition) {
+        this.getUserList()
+        this.getRoles()
+      }
     }
   }
 
@@ -216,9 +229,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(UserList)
-)
+export default withBus(connect(mapStateToProps, null)(UserList))
