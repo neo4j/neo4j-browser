@@ -277,7 +277,7 @@ export class ConnectionForm extends Component {
     } else if (
       this.props.isConnected &&
       this.props.activeConnectionData &&
-      this.props.activeConnectionData.authEnabled === false // excplicit false = auth enabled for sure
+      this.props.activeConnectionData.authEnabled === false // excplicit false = auth disabled for sure
     ) {
       view = (
         <StyledConnectionBody>
