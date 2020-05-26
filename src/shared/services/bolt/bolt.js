@@ -47,7 +47,7 @@ function openConnection(props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
     boltConnection
       .openConnection(props, opts, onLostConnection)
-      .then(r => {
+      .then(() => {
         connectionProperties = {
           authenticationMethod: props.authenticationMethod || NATIVE,
           username: props.username,
@@ -55,7 +55,7 @@ function openConnection(props, opts = {}, onLostConnection) {
           host: props.host,
           opts
         }
-        resolve(r)
+        resolve()
       })
       .catch(e => {
         connectionProperties = null

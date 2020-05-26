@@ -49,6 +49,7 @@ import {
   toggleSchemeRouting,
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
+import { StyledConnectionBody } from './styled'
 
 export class ConnectionForm extends Component {
   constructor(props) {
@@ -260,14 +261,28 @@ export class ConnectionForm extends Component {
           {this.props.children}
         </ChangePasswordForm>
       )
-    } else if (this.props.isConnected) {
+    } else if (
+      this.props.isConnected &&
+      this.props.activeConnectionData &&
+      this.props.activeConnectionData.authEnabled !== false // falsy value indicates (except false) we don't know yet, so see that as enabled.
+    ) {
       view = (
         <ConnectedView
           host={this.state.host}
-          username={this.state.username}
+          username={this.props.activeConnectionData.username}
           storeCredentials={this.props.storeCredentials}
           hideStoreCredentials={this.state.authenticationMethod === NO_AUTH}
         />
+      )
+    } else if (
+      this.props.isConnected &&
+      this.props.activeConnectionData &&
+      this.props.activeConnectionData.authEnabled === false // excplicit false = auth disabled for sure
+    ) {
+      view = (
+        <StyledConnectionBody>
+          You have a working connection and server auth is disabled.
+        </StyledConnectionBody>
       )
     } else if (!this.props.isConnected && !this.state.passwordChangeNeeded) {
       view = (

@@ -90,7 +90,7 @@ export const buildAuthObj = props => {
   ) {
     auth = neo4j.auth.basic(props.username, props.password)
   } else {
-    auth = null
+    auth = neo4j.auth.basic('', '')
   }
   return auth
 }
