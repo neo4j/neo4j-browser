@@ -252,17 +252,34 @@ export function extractRawNodesAndRelationShipsFromRecords(
     )
   )
 
-  for (const item of flatTruncatedItems) {
+  const findAllEntities = item => {
     if (item instanceof types.Relationship) {
       rawRels.add(item)
+      return
     }
     if (item instanceof types.Node) {
       rawNodes.add(item)
+      return
     }
     if (item instanceof types.Path) {
       paths.add(item)
+      return
+    }
+    if (Array.isArray(item)) {
+      for (const subItem of item) {
+        findAllEntities(subItem)
+      }
+      return
+    }
+    if (item && typeof item === 'object') {
+      for (const subItem of Object.values(item)) {
+        findAllEntities(subItem)
+      }
+      return
     }
   }
+
+  findAllEntities(flatTruncatedItems)
 
   for (const path of paths) {
     if (path.start) {
