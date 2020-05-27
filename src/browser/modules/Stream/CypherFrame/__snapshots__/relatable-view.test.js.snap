@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RelatableViews RelatableView displays bodyMessage if no rows 1`] = `
+<div>
+  <div
+    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+  >
+    <div
+      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
+    >
+      (no changes, no records)
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RelatableViews RelatableView does not display bodyMessage if rows, and escapes HTML 1`] = `
+<div>
+  <div
+    class="relatable-viewstyled__RelatableStyleWrapper-sc-4f9z7m-0 fgUNnb"
+  >
+    <div
+      class="relatable css-1dne9dv"
+    >
+      <table
+        class="ui basic table relatable__table "
+        role="table"
+      >
+        <thead
+          class=""
+        >
+          <tr
+            class="relatable__table-row relatable__table-header-row"
+            role="row"
+          >
+            <th
+              class="collapsing relatable__table-cell relatable__table-header-cell relatable__table-header-actions-cell"
+            >
+              <span
+                class="relatable__table-row-actions"
+              />
+            </th>
+            <th
+              class="relatable__table-cell relatable__table-header-cell"
+              colspan="1"
+              role="columnheader"
+            >
+              x
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          class=""
+        >
+          <tr
+            class="relatable__table-row relatable__table-body-row "
+            role="row"
+          >
+            <td
+              class="relatable__table-cell relatable__table-body-cell relatable__table-row-actions-cell"
+            >
+              <div
+                class="ui label relatable__table-row-number"
+              >
+                1
+              </div>
+              <span
+                class="relatable__table-row-actions"
+              />
+            </td>
+            <td
+              class="relatable__table-cell relatable__table-body-cell"
+              role="cell"
+            >
+              "String with HTML &lt;strong&gt;in&lt;/strong&gt; it"
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RelatableViews TableStatusbar displays no statusBarMessage 1`] = `
+<div>
+  <div
+    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+  >
+    <div
+      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
+    />
+  </div>
+</div>
+`;
+
+exports[`RelatableViews TableStatusbar displays statusBarMessage 1`] = `
+<div>
+  <div
+    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+  >
+    <div
+      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
+    >
+      Started streaming 1 records after 5 ms and completed after 10  ms.
+    </div>
+  </div>
+</div>
+`;

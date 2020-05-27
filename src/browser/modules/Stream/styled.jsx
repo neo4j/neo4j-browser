@@ -177,6 +177,9 @@ export const StyledStatsBar = styled.div`
   padding-left: 24px;
   width: 100%;
 `
+export const StyledTruncatedMessage = styled.span`
+  color: orange;
+`
 
 export const StyledOneRowStatsBar = styled(StyledStatsBar)`
   height: 39px;

@@ -1634,7 +1634,7 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@relate-by-ui/css@^1.0.4":
+"@relate-by-ui/css@1.0.5":
   version "1.0.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/css/-/css-1.0.5.tgz#2c14bc91ebe3c199984d394f9add2f908f9fb695"
   integrity sha1-LBS8kevjwZmYTTlPmt0vkI+ftpU=
@@ -1643,6 +1643,17 @@
     react "^16.8.6"
     react-dom "^16.8.6"
     react-placeholder "^3.0.2"
+
+"@relate-by-ui/relatable@1.0.1":
+  version "1.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/relatable/-/relatable-1.0.1.tgz#7dd117aa19e81b380b1cadeb83f364f93b6e9076"
+  integrity sha1-fdEXqhnoGzgLHK3rg/Nk+TtukHY=
+  dependencies:
+    "@emotion/core" "10.0.10"
+    "@emotion/styled" "10.0.10"
+    lodash-es "4.17.15"
+    react-table "7.0.4"
+    semantic-ui-react "0.88.2"
 
 "@relate-by-ui/saved-scripts@^1.0.4":
   version "1.0.4"
@@ -1659,6 +1670,11 @@
   integrity sha1-7N9I1TLFjqR3rPyrgDSEJPjQZi8=
   dependencies:
     any-observable "^0.3.0"
+
+"@scarf/scarf@^0.1.5":
+  version "0.1.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@scarf/scarf/-/scarf-0.1.7.tgz#e6ffb3660bda77f96037f8c4e21174177fed2d97"
+  integrity sha1-5v+zZgvad/lgN/jE4hF0F3/tLZc=
 
 "@semantic-ui-react/event-stack@^3.1.0":
   version "3.1.1"
@@ -10009,6 +10025,13 @@ react-svg-inline@^2.1.1:
     classnames "^2.2.1"
     prop-types "^15.5.8"
 
+react-table@7.0.4:
+  version "7.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-table/-/react-table-7.0.4.tgz#456838661982c83c3682f156c59a41b4339a2120"
+  integrity sha1-RWg4ZhmCyDw2gvFWxZpBtDOaISA=
+  dependencies:
+    "@scarf/scarf" "^0.1.5"
+
 react-test-renderer@^16.9.0:
   version "16.13.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-test-renderer/-/react-test-renderer-16.13.1.tgz#de25ea358d9012606de51e012d9742e7f0deabc1"
@@ -10703,7 +10726,7 @@ selfsigned@^1.10.7:
   dependencies:
     node-forge "0.9.0"
 
-semantic-ui-react@^0.88.0:
+semantic-ui-react@0.88.2, semantic-ui-react@^0.88.0:
   version "0.88.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/semantic-ui-react/-/semantic-ui-react-0.88.2.tgz#3d4b54f8b799769b412435c8531475fd34aa4149"
   integrity sha1-PUtU+LeZdptBJDXIUxR1/TSqQUk=
