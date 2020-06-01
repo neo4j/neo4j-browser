@@ -191,6 +191,13 @@ function queryPlan(element) {
         value: formatNumber(operator.GlobalMemory)
       })
     }
+    if (operator.Memory) {
+      details.push({
+        className: 'operator-memory',
+        key: 'memory (bytes)',
+        value: formatNumber(operator.Memory)
+      })
+    }
 
     if (operator.PageCacheHits || operator.PageCacheMisses) {
       details.push({
