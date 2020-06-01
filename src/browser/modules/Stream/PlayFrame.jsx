@@ -149,6 +149,7 @@ function generateContent(stackFrame, bus, onSlide) {
     return {
       guide: (
         <Docs
+          lastUpdate={stackFrame.ts}
           originFrameId={stackFrame.id}
           withDirectives
           initialSlide={stackFrame.initialSlide || 1}
@@ -202,6 +203,7 @@ function generateContent(stackFrame, bus, onSlide) {
     return {
       guide: (
         <Docs
+          lastUpdate={stackFrame.ts}
           originFrameId={stackFrame.id}
           withDirectives
           content={slides ? null : content}
@@ -231,6 +233,7 @@ function generateContent(stackFrame, bus, onSlide) {
         return resolve({
           guide: (
             <Docs
+              lastUpdate={stackFrame.ts}
               originFrameId={stackFrame.id}
               withDirectives
               html={res.result}
@@ -251,6 +254,7 @@ const unfound = (frame, { content, title, subtitle }, onSlide) => {
   return {
     guide: (
       <Docs
+        lastUpdate={frame.ts}
         originFrameId={frame.id}
         withDirectives
         content={content}
