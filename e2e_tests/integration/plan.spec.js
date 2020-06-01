@@ -29,13 +29,11 @@ describe('Plan output', () => {
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
     cy.disableEditorAutocomplete()
+    const password = Cypress.config('password')
+    cy.connect('neo4j', password)
   })
   after(function() {
     cy.enableEditorAutocomplete()
-  })
-  it('can connect', () => {
-    const password = Cypress.config('password')
-    cy.connect('neo4j', password)
   })
   it('displays the expanded details by default and displays/hides details when clicking the plan expand/collapse buttons respectively', () => {
     cy.executeCommand(':clear')
@@ -77,8 +75,8 @@ describe('Plan output', () => {
         'PROFILE MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
       )
       cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
-      const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
-      el.should('contain', 'total memory')
+      cy.get('.global-memory').should('contain', 'total memory (bytes)')
+      cy.get('.operator-memory').should('contain', 'memory (bytes)')
     })
   }
   if (
