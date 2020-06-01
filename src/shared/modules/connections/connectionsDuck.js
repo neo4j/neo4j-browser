@@ -218,7 +218,12 @@ let memoryPassword = ''
 export default function(state = initialState, action) {
   switch (action.type) {
     case APP_START:
-      return { ...initialState, ...state, useDb: initialState.useDb }
+      return {
+        ...initialState,
+        ...state,
+        useDb: initialState.useDb,
+        connectionState: DISCONNECTED_STATE
+      }
     case ADD:
       return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:
@@ -505,7 +510,8 @@ export const connectionLostEpic = (action$, store) =>
   action$
     .ofType(LOST_CONNECTION)
     .filter(connectionLossFilter)
-    .filter(() => inWebEnv(store.getState())) // Only retry in web env
+    // Only retry in web env and if we're supposed to be connected
+    .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap(action => {
