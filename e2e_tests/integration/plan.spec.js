@@ -69,6 +69,18 @@ describe('Plan output', () => {
       el.should('contain', 'Ordered by n.age ASC')
     })
   }
+  if (Cypress.config('serverVersion') >= 4.1) {
+    it('print total memory in PROFILE', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand('CREATE INDEX ON :Person(age)')
+      cy.executeCommand(
+        'PROFILE MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
+      )
+      cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
+      const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
+      el.should('contain', 'total memory')
+    })
+  }
   if (
     Cypress.config('serverVersion') >= 3.4 &&
     Cypress.config('serverVersion') < 4.0 &&

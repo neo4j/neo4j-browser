@@ -25,7 +25,7 @@ function queryPlan(element) {
   const maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
   const maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
 
-  const operatorWidth = 180
+  const operatorWidth = 220
   const operatorCornerRadius = 4
   const operatorHeaderHeight = 18
   const operatorHeaderFontSize = 11
@@ -183,6 +183,13 @@ function queryPlan(element) {
     if (operator.Order) {
       wordWrap(`Ordered by ${operator.Order}`, 'order')
       details.push({ className: 'padding' })
+    }
+    if (operator.GlobalMemory) {
+      details.push({
+        className: 'global-memory',
+        key: 'total memory (bytes)',
+        value: formatNumber(operator.GlobalMemory)
+      })
     }
 
     if (operator.PageCacheHits || operator.PageCacheMisses) {
