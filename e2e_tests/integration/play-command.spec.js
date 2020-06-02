@@ -147,4 +147,13 @@ describe('Play command', () => {
     // Assert
     cy.getEditor().should('contain', 'CREATE')
   })
+  it('can link to a specific slide', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(':play concepts#slide-3')
+
+    // Assert
+    cy.getFrames()
+      .should('have.length', 1)
+      .should('contain', 'labels') // slide #3 is about labels
+  })
 })

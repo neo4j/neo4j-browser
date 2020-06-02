@@ -31,7 +31,8 @@ export default function Docs({
   withDirectives,
   initialSlide,
   onSlide,
-  originFrameId
+  originFrameId,
+  lastUpdate
 }) {
   const [stateSlides, setStateSlides] = useState([])
 
@@ -65,7 +66,7 @@ export default function Docs({
     if (onSlide) {
       onSlide({ hasPrev: false, hasNext: false, slideIndex: 0 })
     }
-  }, [slides, content, html, withDirectives])
+  }, [slides, content, html, withDirectives, lastUpdate])
 
   if (stateSlides.length > 1) {
     return (

@@ -90,6 +90,7 @@ export const extractPostConnectCommandsFromServerConfig = str => {
 }
 
 const getHelpTopic = str => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
+const stripPound = str => splitStringOnFirst(str, '#')[0]
 const lowerCase = str => str.toLowerCase()
 const trim = str => str.trim()
 const replaceSpaceWithDash = str => str.replace(/\s/g, '-')
@@ -106,6 +107,7 @@ const camelToSnake = (name, separator) => {
 
 export const transformCommandToHelpTopic = inputStr =>
   [inputStr || '']
+    .map(stripPound)
     .map(getHelpTopic)
     .map(lowerCase)
     .map(trim)

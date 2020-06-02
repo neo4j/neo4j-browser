@@ -55,6 +55,7 @@ export function PlayFrame({ stack, bus }) {
   const [atSlideStart, setAtSlideStart] = useState(null)
   const [atSlideEnd, setAtSlideEnd] = useState(null)
   const [guideObj, setGuideObj] = useState({})
+  const [initialPlay, setInitialPlay] = useState(true)
   const currentFrame = stack[stackIndex]
 
   const onSlide = ({ hasPrev, hasNext }) => {
@@ -64,11 +65,14 @@ export function PlayFrame({ stack, bus }) {
 
   useEffect(() => {
     async function generate() {
+      const shouldUseSlidePointer = initialPlay
       const { guide, aside, hasCarousel, isRemote } = await generateContent(
         currentFrame,
         bus,
-        onSlide
+        onSlide,
+        shouldUseSlidePointer
       )
+      setInitialPlay(false)
       setGuideObj({ guide, aside, hasCarousel, isRemote })
     }
     generate()
@@ -138,20 +142,23 @@ export function PlayFrame({ stack, bus }) {
   )
 }
 
-function generateContent(stackFrame, bus, onSlide) {
+function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
   // Not found
   if (stackFrame.response && stackFrame.response.status === 404) {
     return unfound(stackFrame, chapters.unfound, onSlide)
   }
+
+  const initialSlide = shouldUseSlidePointer ? stackFrame.initialSlide || 1 : 1
 
   // Found a remote guide
   if (stackFrame.result) {
     return {
       guide: (
         <Docs
+          lastUpdate={stackFrame.ts}
           originFrameId={stackFrame.id}
           withDirectives
-          initialSlide={stackFrame.initialSlide || 1}
+          initialSlide={initialSlide}
           html={stackFrame.result}
           onSlide={onSlide}
         />
@@ -202,10 +209,12 @@ function generateContent(stackFrame, bus, onSlide) {
     return {
       guide: (
         <Docs
+          lastUpdate={stackFrame.ts}
           originFrameId={stackFrame.id}
           withDirectives
           content={slides ? null : content}
           slides={slides ? slides : null}
+          initialSlide={initialSlide}
           onSlide={onSlide}
         />
       ),
@@ -231,7 +240,9 @@ function generateContent(stackFrame, bus, onSlide) {
         return resolve({
           guide: (
             <Docs
+              lastUpdate={stackFrame.ts}
               originFrameId={stackFrame.id}
+              initialSlide={initialSlide}
               withDirectives
               html={res.result}
               onSlide={onSlide}
@@ -251,6 +262,7 @@ const unfound = (frame, { content, title, subtitle }, onSlide) => {
   return {
     guide: (
       <Docs
+        lastUpdate={frame.ts}
         originFrameId={frame.id}
         withDirectives
         content={content}

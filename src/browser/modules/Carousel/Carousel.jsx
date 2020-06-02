@@ -57,8 +57,12 @@ export default function Carousel({
   const myRef = useRef()
 
   useEffect(() => {
-    setVisibleSlide(0)
-  }, [slides])
+    let showSlideIndex = 0
+    if (initialSlide <= slides.length) {
+      showSlideIndex = initialSlide - 1
+    }
+    setVisibleSlide(showSlideIndex)
+  }, [slides, initialSlide])
 
   useEffect(() => {
     if (onSlide) {
