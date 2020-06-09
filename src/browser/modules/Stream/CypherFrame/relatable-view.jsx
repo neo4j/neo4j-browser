@@ -48,7 +48,7 @@ import ClickableUrls, {
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import { RelatableStyleWrapper, StyledJsonPre } from './relatable-view.styled'
-import { isPoint } from 'neo4j-driver'
+import { isPoint, isInt } from 'neo4j-driver'
 
 const RelatableView = connect(state => ({
   maxRows: getMaxRows(state),
@@ -107,6 +107,10 @@ function CypherCell({ cell }) {
     [memoize, mapNeo4jValuesToPlainValues]
   )
   const mapped = mapper(value)
+
+  if (isInt(value)) {
+    return value.toString()
+  }
 
   if (Number.isInteger(value)) {
     return `${value}.0`
