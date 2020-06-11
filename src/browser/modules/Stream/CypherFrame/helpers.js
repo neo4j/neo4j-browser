@@ -397,15 +397,27 @@ export function mapNeo4jValuesToPlainValues(values, showRawEntities) {
   // could be a Node or Relationship
   const elementType = lowerCase(get(values, 'constructor.name', ''))
 
+  if (elementType === 'path') {
+    return mapNeo4jValuesToPlainValues(
+      showRawEntities ? { ...values } : [...values.segments],
+      showRawEntities
+    )
+  }
+
+  if (elementType === 'path segment') {
+    return mapNeo4jValuesToPlainValues(
+      [values.start, values.relationship, values.end],
+      showRawEntities
+    )
+  }
+
   if (includes(['relationship', 'node'], elementType)) {
     const all = { ...values }
 
-    return {
-      ...mapNeo4jValuesToPlainValues(
-        showRawEntities ? all : get(all, 'properties', {}),
-        showRawEntities
-      )
-    }
+    return mapNeo4jValuesToPlainValues(
+      showRawEntities ? all : get(all, 'properties', {}),
+      showRawEntities
+    )
   }
 
   return reduce(

@@ -35,6 +35,7 @@ export const RelatableStyleWrapper = styled.div`
   }
   .relatable__table-body-row .relatable__table-cell {
     border-top: ${props => props.theme.inFrameBorder};
+    vertical-align: top;
   }
 `
 
@@ -47,6 +48,6 @@ export const StyledJsonPre = styled.pre`
   color: ${props => props.theme.preText};
   line-height: 26px;
   padding: 2px 10px;
-  max-width: 320px;
+  max-width: 500px;
   white-space: pre-wrap;
 `
