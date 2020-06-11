@@ -134,6 +134,13 @@ const visualSettings = [
           tooltip: 'Automatically scroll stream to top on new frames.',
           type: 'checkbox'
         }
+      },
+      {
+        showRawTableResults: {
+          displayName: 'Show raw results in tables',
+          tooltip: 'If this is checked, relationships are shown raw in tables.',
+          type: 'checkbox'
+        }
       }
     ]
   },

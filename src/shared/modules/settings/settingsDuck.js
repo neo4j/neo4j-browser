@@ -52,6 +52,8 @@ export const getMaxNeighbours = state =>
 export const getMaxRows = state => state[NAME].maxRows || initialState.maxRows
 export const getMaxFieldItems = state =>
   get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
+export const getShowRawTableResults = state =>
+  get(state, [NAME, 'showRawTableResults'], initialState.showRawTableResults)
 export const getInitialNodeDisplay = state =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = state => state[NAME].scrollToTop
@@ -93,6 +95,7 @@ const initialState = {
   browserSyncDebugServer: null,
   maxRows: 1000,
   maxFieldItems: 500,
+  showRawTableResults: false,
   shouldReportUdc: true,
   autoComplete: true,
   scrollToTop: true,

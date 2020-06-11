@@ -39,7 +39,8 @@ import {
 import arrayHasItems from 'shared/utils/array-has-items'
 import {
   getMaxFieldItems,
-  getMaxRows
+  getMaxRows,
+  getShowRawTableResults
 } from 'shared/modules/settings/settingsDuck'
 
 import ClickableUrls, {
@@ -52,7 +53,8 @@ import { isPoint, isInt } from 'neo4j-driver'
 
 const RelatableView = connect(state => ({
   maxRows: getMaxRows(state),
-  maxFieldItems: getMaxFieldItems(state)
+  maxFieldItems: getMaxFieldItems(state),
+  showEntityMeta: getShowRawTableResults(state)
 }))(RelatableViewComponent)
 
 export default RelatableView
@@ -92,19 +94,25 @@ function getColumns(records, maxFieldItems) {
   }))
 }
 
-function CypherCell({ cell }) {
+const CypherCell = connect(state => ({
+  showRawTableResults: getShowRawTableResults(state)
+}))(CypherCellComponent)
+
+function CypherCellComponent({ cell, showRawTableResults }) {
   const { value } = cell
   const mapper = useCallback(
     value => {
       const memo = memoize(mapNeo4jValuesToPlainValues, value => {
         const { elementType, identity } = value || {}
 
-        return elementType ? `${elementType}:${identity}` : identity
+        const key = elementType ? `${elementType}:${identity}` : identity
+
+        return showRawTableResults ? `meta-${key}` : key
       })
 
-      return memo(value)
+      return memo(value, showRawTableResults)
     },
-    [memoize, mapNeo4jValuesToPlainValues]
+    [memoize, mapNeo4jValuesToPlainValues, showRawTableResults]
   )
   const mapped = mapper(value)
 

@@ -376,15 +376,18 @@ export function recordToJSONMapper(record) {
 /**
  * Recursively converts Neo4j values to plain values, leaving other types untouched
  * @param     {*}     values
+ * @param     {Boolean}     showRawEntities
  * @return    {*}
  */
-export function mapNeo4jValuesToPlainValues(values) {
+export function mapNeo4jValuesToPlainValues(values, showRawEntities) {
   if (!isObjectLike(values)) {
     return values
   }
 
   if (Array.isArray(values)) {
-    return map(values, mapNeo4jValuesToPlainValues)
+    return map(values, value =>
+      mapNeo4jValuesToPlainValues(value, showRawEntities)
+    )
   }
 
   if (isNeo4jValue(values)) {
@@ -395,9 +398,13 @@ export function mapNeo4jValuesToPlainValues(values) {
   const elementType = lowerCase(get(values, 'constructor.name', ''))
 
   if (includes(['relationship', 'node'], elementType)) {
+    const all = { ...values }
+
     return {
-      elementType,
-      ...mapNeo4jValuesToPlainValues({ ...values })
+      ...mapNeo4jValuesToPlainValues(
+        showRawEntities ? all : get(all, 'properties', {}),
+        showRawEntities
+      )
     }
   }
 
@@ -405,7 +412,7 @@ export function mapNeo4jValuesToPlainValues(values) {
     entries(values),
     (agg, [key, value]) => ({
       ...agg,
-      [key]: mapNeo4jValuesToPlainValues(value)
+      [key]: mapNeo4jValuesToPlainValues(value, showRawEntities)
     }),
     {}
   )
