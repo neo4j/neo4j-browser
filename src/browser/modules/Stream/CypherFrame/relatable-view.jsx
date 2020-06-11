@@ -98,7 +98,7 @@ const CypherCell = connect(state => ({
   showRawTableResults: getShowRawTableResults(state)
 }))(CypherCellComponent)
 
-function CypherCellComponent({ cell, showRawTableResults }) {
+export function CypherCellComponent({ cell, showRawTableResults }) {
   const { value } = cell
   const mapper = useCallback(
     value => {

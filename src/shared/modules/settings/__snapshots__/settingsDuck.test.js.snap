@@ -21,6 +21,7 @@ Object {
   "playImplicitInitCommands": true,
   "scrollToTop": true,
   "shouldReportUdc": true,
+  "showRawTableResults": false,
   "showSampleScripts": true,
   "theme": "auto",
   "useCypherThread": true,

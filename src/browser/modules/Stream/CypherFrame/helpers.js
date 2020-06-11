@@ -366,7 +366,7 @@ export function recordToJSONMapper(record) {
 
       return {
         ...agg,
-        [key]: mapNeo4jValuesToPlainValues(field)
+        [key]: mapNeo4jValuesToPlainValues(field, true)
       }
     },
     {}
@@ -404,7 +404,7 @@ export function mapNeo4jValuesToPlainValues(values, showRawEntities) {
     )
   }
 
-  if (elementType === 'path segment') {
+  if (!showRawEntities && elementType === 'path segment') {
     return mapNeo4jValuesToPlainValues(
       [values.start, values.relationship, values.end],
       showRawEntities
@@ -414,10 +414,13 @@ export function mapNeo4jValuesToPlainValues(values, showRawEntities) {
   if (includes(['relationship', 'node'], elementType)) {
     const all = { ...values }
 
-    return mapNeo4jValuesToPlainValues(
-      showRawEntities ? all : get(all, 'properties', {}),
-      showRawEntities
-    )
+    return {
+      elementType,
+      ...mapNeo4jValuesToPlainValues(
+        showRawEntities ? all : get(all, 'properties', {}),
+        showRawEntities
+      )
+    }
   }
 
   return reduce(

@@ -21,11 +21,19 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import neo4j from 'neo4j-driver'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
 import {
   RelatableViewComponent as RelatableView,
   RelatableStatusbarComponent as RelatableStatusbar
 } from './relatable-view'
+
+const initialState = { settings: {} }
+const store = createStore(() => initialState, initialState)
+function renderWithRedux(ui) {
+  return render(<Provider store={store}>{ui}</Provider>)
+}
 
 describe('RelatableViews', () => {
   describe('RelatableView', () => {
@@ -42,7 +50,7 @@ describe('RelatableViews', () => {
       }
 
       // When
-      const { container } = render(
+      const { container } = renderWithRedux(
         <RelatableView {...props} maxFieldItems={1000} maxRows={1000} />
       )
 
@@ -60,7 +68,7 @@ describe('RelatableViews', () => {
       }
 
       // When
-      const { container } = render(
+      const { container } = renderWithRedux(
         <RelatableView result={result} maxFieldItems={1000} maxRows={1000} />
       )
 
@@ -74,7 +82,7 @@ describe('RelatableViews', () => {
       const props = { result: {}, maxRows: 0 }
 
       // When
-      const { container } = render(
+      const { container } = renderWithRedux(
         <RelatableStatusbar {...props} maxFieldItems={1000} maxRows={1000} />
       )
 
@@ -97,7 +105,7 @@ describe('RelatableViews', () => {
       }
 
       // When
-      const { container } = render(
+      const { container } = renderWithRedux(
         <RelatableStatusbar {...props} maxFieldItems={1000} maxRows={1000} />
       )
 
