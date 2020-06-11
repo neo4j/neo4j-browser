@@ -138,7 +138,7 @@ const visualSettings = [
       {
         showRawTableResults: {
           displayName: 'Show raw results in tables',
-          tooltip: 'If this is checked, relationships are shown raw in tables.',
+          tooltip: 'If this is checked, results are shown raw in tables.',
           type: 'checkbox'
         }
       }
