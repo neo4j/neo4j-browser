@@ -35,6 +35,7 @@ const CLEAR = 'features/CLEAR'
 export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
 export const UPDATE_USER_CAPABILITIES = 'features/UPDATE_USER_CAPABILITIES'
 export const FEATURE_DETECTION_DONE = 'features/FEATURE_DETECTION_DONE'
+export const DETECTED_CLIENT_CONFIG = 'features/DETECTED_CLIENT_CONFIG'
 
 export const getAvailableProcedures = state => state[NAME].availableProcedures
 export const isACausalCluster = state =>
@@ -43,8 +44,7 @@ export const isMultiDatabase = state =>
   getAvailableProcedures(state).includes('dbms.databases.overview')
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
-export const hasClientConfig = state =>
-  getAvailableProcedures(state).includes('dbms.clientConfig')
+export const hasClientConfig = state => state[NAME].clientConfig
 export const useBrowserSync = state => !!state[NAME].browserSync
 export const getUserCapabilities = state => state[NAME].userCapabilities
 
@@ -56,6 +56,7 @@ export const USER_CAPABILITIES = {
 const initialState = {
   availableProcedures: [],
   browserSync: true,
+  clientConfig: null,
   userCapabilities: {
     [USER_CAPABILITIES.serverConfigReadable]: false,
     [USER_CAPABILITIES.proceduresReadable]: false
@@ -72,6 +73,8 @@ export default function(state = initialState, action) {
       }
     case UPDATE_ALL_FEATURES:
       return { ...state, availableProcedures: [...action.availableProcedures] }
+    case DETECTED_CLIENT_CONFIG:
+      return { ...state, clientConfig: action.isAvailable }
     case UPDATE_USER_CAPABILITIES:
       return {
         ...state,
@@ -105,6 +108,13 @@ export const updateUserCapability = (capabilityName, capabilityValue) => {
     type: UPDATE_USER_CAPABILITIES,
     capabilityName,
     capabilityValue
+  }
+}
+
+export const setClientConfig = isAvailable => {
+  return {
+    type: DETECTED_CLIENT_CONFIG,
+    isAvailable
   }
 }
 

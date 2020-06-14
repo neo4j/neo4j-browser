@@ -123,8 +123,7 @@ describe('Neo4j Browser', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
-    console.log('isEnterpriseEdition(): ', isEnterpriseEdition())
-    cy.get('[data-testid="user-details-roles"]').should(
+    cy.get('[data-testid="user-details-roles"]', { timeout: 30000 }).should(
       'contain',
       isAura()
         ? 'PUBLIC'
