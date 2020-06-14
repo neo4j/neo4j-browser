@@ -485,6 +485,9 @@ export const serverConfigEpic = (some$, store) =>
             .catch(e => {
               // Try older procedure if the new one doesn't exist
               if (e.code === 'Neo.ClientError.Procedure.ProcedureNotFound') {
+                // Store that dbms.clientConfig isn't available
+                store.dispatch(setClientConfig(false))
+
                 bolt
                   .directTransaction(
                     `CALL dbms.listConfig()`,
@@ -497,11 +500,7 @@ export const serverConfigEpic = (some$, store) =>
                       })
                     }
                   )
-                  .then(r => {
-                    // Store that dbms.clientConfig isn't available
-                    store.dispatch(setClientConfig(false))
-                    resolve(r)
-                  })
+                  .then(resolve)
                   .catch(reject)
               } else {
                 reject(e)
