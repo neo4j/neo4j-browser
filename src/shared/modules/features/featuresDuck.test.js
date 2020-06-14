@@ -29,6 +29,7 @@ describe('features reducer', () => {
     expect(dehydrate(nextState)).toEqual({
       availableProcedures: [],
       browserSync: true,
+      clientConfig: null,
       userCapabilities: {
         proceduresReadable: false,
         serverConfigReadable: false
