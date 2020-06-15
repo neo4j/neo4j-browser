@@ -18,7 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isAura, isEnterpriseEdition, stripScheme } from '../support/utils'
+import {
+  schemeWithEncryptionFlag,
+  schemeWithInvertedEncryptionFlag,
+  stripScheme
+} from '../support/utils'
 
 /* global Cypress, cy, test, expect, before */
 
@@ -39,7 +43,7 @@ describe('Connect form', () => {
   })
 
   it('extracts the scheme from the bolt url entered', () => {
-    const scheme = 'bolt://'
+    const scheme = schemeWithEncryptionFlag('bolt')
     const host = 'localhost:1212'
     getBoltUrlField()
       .clear()
@@ -49,20 +53,20 @@ describe('Connect form', () => {
     getBoltSchemeSelect().should('have.value', scheme)
   })
   it('extracts the scheme from the bolt url entered with encryption flag', () => {
-    const scheme = 'neo4j+s://'
-    const nonSecureScheme = 'neo4j://'
+    const input = schemeWithInvertedEncryptionFlag('neo4j')
+    const output = schemeWithEncryptionFlag('neo4j')
     const host = 'localhost:7687'
     getBoltUrlField()
       .clear()
-      .type(scheme + host)
+      .type(input + host)
 
     getBoltUrlField().should('have.value', host)
-    getBoltSchemeSelect().should('have.value', nonSecureScheme)
+    getBoltSchemeSelect().should('have.value', output)
   })
   it('aliases bolt+routing:// to neo4j://', () => {
-    getBoltSchemeSelect().select('bolt://')
+    getBoltSchemeSelect().select(schemeWithEncryptionFlag('bolt'))
     const scheme = 'bolt+routing://'
-    const aliasScheme = 'neo4j://'
+    const aliasScheme = schemeWithEncryptionFlag('neo4j')
     const host = 'localhost:7687'
     getBoltUrlField()
       .clear()
@@ -86,7 +90,7 @@ describe('Connect form', () => {
       cy.connect('neo4j', Cypress.config('password'), boltUrl, false)
       getFirstFrameStatusbar().should(
         'contain',
-        'Automatic retry using the "bolt://"'
+        `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
       )
       cy.wait(7000) // auto retry is in 5 secs
       getFirstFrameCommand().should('contain', ':play start')

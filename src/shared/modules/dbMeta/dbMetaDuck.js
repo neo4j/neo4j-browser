@@ -49,7 +49,8 @@ import {
   updateUserCapability,
   USER_CAPABILITIES,
   FEATURE_DETECTION_DONE,
-  isACausalCluster
+  isACausalCluster,
+  setClientConfig
 } from '../features/featuresDuck'
 
 export const NAME = 'meta'
@@ -461,11 +462,10 @@ export const serverConfigEpic = (some$, store) =>
           bolt
             .directTransaction(
               `CALL ${
-                hasClientConfig(store.getState())
+                hasClientConfig(store.getState()) !== false
                   ? 'dbms.clientConfig()'
                   : 'dbms.listConfig()'
               }`,
-
               {},
               {
                 useDb: supportsMultiDb ? SYSTEM_DB : '',
@@ -475,8 +475,37 @@ export const serverConfigEpic = (some$, store) =>
                 })
               }
             )
-            .then(resolve)
-            .catch(reject)
+            .then(r => {
+              // This is not set yet
+              if (hasClientConfig(store.getState()) === null) {
+                store.dispatch(setClientConfig(true))
+              }
+              resolve(r)
+            })
+            .catch(e => {
+              // Try older procedure if the new one doesn't exist
+              if (e.code === 'Neo.ClientError.Procedure.ProcedureNotFound') {
+                // Store that dbms.clientConfig isn't available
+                store.dispatch(setClientConfig(false))
+
+                bolt
+                  .directTransaction(
+                    `CALL dbms.listConfig()`,
+                    {},
+                    {
+                      useDb: supportsMultiDb ? SYSTEM_DB : '',
+                      useCypherThread: shouldUseCypherThread(store.getState()),
+                      ...getBackgroundTxMetadata({
+                        hasServerSupport: canSendTxMetadata(store.getState())
+                      })
+                    }
+                  )
+                  .then(resolve)
+                  .catch(reject)
+              } else {
+                reject(e)
+              }
+            })
         })
       )
         .catch(e => {
