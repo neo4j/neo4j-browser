@@ -67,7 +67,7 @@ describe('Plan output', () => {
       el.should('contain', 'Ordered by n.age ASC')
     })
   }
-  if (Cypress.config('serverVersion') >= 4.1) {
+  if (Cypress.config('serverVersion') >= 4.1 && isEnterpriseEdition()) {
     it('print total memory in PROFILE', () => {
       cy.executeCommand(':clear')
       cy.executeCommand('CREATE INDEX ON :Person(age)')
