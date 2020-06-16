@@ -83,12 +83,13 @@
     }
     &.runnable {
       cursor: pointer;
-      border: 2px dashed #e1e1e8;
+      border: /*2px dashed #e1e1e8;*/ transparent;
     }
     &.clicked {
       border: 2px solid #8dd465;
       opacity: 0.5;
     }
+
   }
   & .text-right {
     text-align: right;
@@ -289,7 +290,7 @@
   [exec-topic] {
     background-color: #f8f8f8;
     border-radius: 3px;
-    border: 1px solid #dadada;
+    /*border: 1px solid #dadada;*/
     display: inline-block;
     font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
     font-size: 12px;
@@ -313,12 +314,12 @@
     padding: 10px !important;
   }
   & code {
-    color: #c7254e;
-    background-color: #f9f2f4;
-    border-radius: 4px;
+    color: #FD766E;
+    background-color: #31333B;
+    border-radius: 2px;
 
     a {
-      color: #c7254e !important;
+      color: #FD766E !important;
     }
   }
   & figcaption {

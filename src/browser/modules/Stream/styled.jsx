@@ -25,9 +25,9 @@ export const StyledStream = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  margin-top: 17px;
+  /*margin-top: 17px;*/
   overflow: auto;
-  padding: 0px 24px 100px 24px;
+  padding: 0px 10px 100px 10px;
 `
 
 // Frames

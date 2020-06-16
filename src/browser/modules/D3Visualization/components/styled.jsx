@@ -31,7 +31,7 @@ const getColor = (theme, name) => {
       svgBackground: '#f9fbfd'
     },
     dark: {
-      svgBackground: '#5a6070'
+      svgBackground: '#292C33'
     }
   }
   if (themes[theme] === undefined) theme = 'normal'
@@ -97,11 +97,12 @@ export const StyledSvgWrapper = styled.div`
     path {
       &.context-menu-item {
         stroke-width: 2px;
-        fill: #d2d5da;
+        fill: ${props => props.theme.primaryBackground};
       }
     }
     text {
       line-height: normal;
+      fill: ${props => props.theme.primaryText};
       &.context-menu-item {
         fill: #fff;
         text-anchor: middle;
@@ -122,7 +123,6 @@ export const StyledStream = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  margin-top: 17px;
 `
 
 export const p = styled.div`
@@ -198,10 +198,10 @@ export const StyledStatusBar = styled.div`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: absolute;
-  background-color: ${props => props.theme.secondaryBackground};
+  background-color: ${props => props.theme.frameCommandBackground};
   white-space: nowrap;
   overflow: hidden;
-  border-top: 1px solid #e6e9ef;
+  border-top: /*1px solid #e6e9ef;*/ transparent;
   bottom: 0;
   left: 0;
   right: 0;
@@ -266,7 +266,8 @@ export const StyledLegendContents = styled.ul`
 `
 
 export const StyledLegendRow = styled.div`
-  border-bottom: 1px solid #e6e9ef;
+  border-bottom: /*1px solid #e6e9ef;*/ transparent;
+  background-color: ${props => props.theme.frameCommandBackground};
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;

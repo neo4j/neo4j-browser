@@ -21,7 +21,7 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-const editorPadding = 12
+const editorPadding = 10
 
 export const BaseBar = styled.div`
   display: flex;
@@ -32,8 +32,8 @@ export const BaseBar = styled.div`
       ? '100vh'
       : Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  margin: 0 24px;
+
+  margin: 0;
 `
 export const Bar = styled(BaseBar)`
   ${props => {
@@ -56,13 +56,13 @@ export const ActionButtonSection = styled.div`
   padding-top: 21px;
   justify-content: space-between;
   padding-right: ${editorPadding}px;
-  background-color: ${props => props.theme.editorBarBackground};
+  /*background-color: ${props => props.theme.frameCommandBackground};*/
 `
 
 const BaseEditorWrapper = styled.div`
   flex: auto;
   padding: ${editorPadding}px;
-  background-color: ${props => props.theme.editorBarBackground};
+  /*background-color: ${props => props.theme.editorBarBackground};*/
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   min-height: ${props =>
     props.expanded

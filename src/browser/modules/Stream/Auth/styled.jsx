@@ -135,10 +135,10 @@ export const StyledConnectionFooter = styled.span`
   font-weight: 200;
 `
 export const StyledCode = styled.code`
-  color: #c7254e;
-  background-color: #f9f2f4;
-  border-radius: 4px;
-  cursor: pointer;
+  color: #fd766e;
+  background-color: ${props => props.theme.frameCommandBackground};
+  border-radius: 2px;
+  cursor: auto;
   border: none;
   padding: 2px 4px;
 

@@ -70,7 +70,7 @@ export const EditModeEditorButton = styled(EditorButton)`
 export const StyledNavigationButton = styled.button`
   background: transparent;
   border: 0;
-  width: 80px;
+  width: 60px;
   line-height: 67px;
   padding-top: 3px;
   font-size: 28px;
@@ -259,6 +259,7 @@ const StyledCypherFrameButton = styled.li`
   cursor: pointer;
   overflow: hidden;
   text-align: center;
+  fill: ${props => props.theme.secondaryButtonText};
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
     color: ${props => props.theme.secondaryButtonTextHover};
@@ -355,13 +356,12 @@ const BaseCarouselButton = styled.button`
   outline: none;
 
   &.rounded {
-    background-color: ${props =>
-      hexToRgba(props.theme.secondaryButtonText, 0.1)};
-    border-radius: 0 5px 5px 0;
+    background-color: ${props => hexToRgba(props.theme.frameCommandBackground)};
+    border-radius: 0 2px 2px 0;
     position: absolute;
     left: 0;
-    top: 20px;
-    bottom: 59px;
+    top: 0px;
+    bottom: 0px;
     height: auto;
     width: 32px;
 

@@ -128,7 +128,7 @@ export const StyledFrameStatusbar = styled.div`
   flex-direction: row;
   flex: none;
   align-items: center;
-  padding-left: 10px;
+  padding-left: 0px;
 
   .statusbar--success {
     color: ${props => props.theme.success};
@@ -174,9 +174,12 @@ export const StyledFrameStatusbarText = styled.label`
 export const StyledFrameCommand = styled.label`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};
+  background-color: ${props => props.theme.frameSidebarBackground};
+  border-radius: 2px;
+  padding-left: 6px;
   font-size: 1.2em;
   line-height: 2.2em;
-  margin: 3px 5px 3px 15px;
+  margin: 3px 5px 3px 3px;
   flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;
@@ -189,5 +192,5 @@ export const StyledFrameCommand = styled.label`
   }
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;
-  }
+  } 
 `
