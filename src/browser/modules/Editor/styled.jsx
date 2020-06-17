@@ -56,13 +56,11 @@ export const ActionButtonSection = styled.div`
   padding-top: 21px;
   justify-content: space-between;
   padding-right: ${editorPadding}px;
-  /*background-color: ${props => props.theme.frameCommandBackground};*/
 `
 
 const BaseEditorWrapper = styled.div`
   flex: auto;
   padding: ${editorPadding}px;
-  /*background-color: ${props => props.theme.editorBarBackground};*/
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   min-height: ${props =>
     props.expanded

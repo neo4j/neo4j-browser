@@ -24,7 +24,7 @@ import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
 
 const StyledAutoExecButton = styled.button`
   border-radius: 3px;
-  border: /*1px solid #dadada;*/ transparent;
+  border: transparent;
   display: inline-block;
   font-family: 'Fira Code', 'Courier New', 'Courier', monospace, 'Monaco',
     'Courier New', Terminal, monospace;

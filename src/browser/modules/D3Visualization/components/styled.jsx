@@ -201,7 +201,7 @@ export const StyledStatusBar = styled.div`
   background-color: ${props => props.theme.frameCommandBackground};
   white-space: nowrap;
   overflow: hidden;
-  border-top: /*1px solid #e6e9ef;*/ transparent;
+  border-top: transparent;
   bottom: 0;
   left: 0;
   right: 0;
@@ -266,7 +266,7 @@ export const StyledLegendContents = styled.ul`
 `
 
 export const StyledLegendRow = styled.div`
-  border-bottom: /*1px solid #e6e9ef;*/ transparent;
+  border-bottom: transparent;
   background-color: ${props => props.theme.frameCommandBackground};
   &.contracted {
     max-height: ${legendRowHeight}px;
