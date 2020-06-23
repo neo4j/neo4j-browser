@@ -51,13 +51,13 @@ const StyledTabList = styled.ul`
 export const StyledTopNav = styled(StyledTabList)`
   align-self: flex-start;
   & > li {
-    border-bottom: transparent; /*'1px solid #5d6370';*/
+    border-bottom: transparent;
   }
 `
 export const StyledBottomNav = styled(StyledTabList)`
   align-self: flex-end;
   margin-top: auto;
   & > li {
-    border-top: transparent; /*1px solid #5d6370;*/
+    border-top: transparent;
   }
 `
