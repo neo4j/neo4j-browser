@@ -23,6 +23,7 @@ import {
   OUTLINE_THEME,
   DARK_THEME
 } from 'shared/modules/settings/settingsDuck'
+import { rgb } from 'd3'
 
 export const base = {
   name: 'base',
@@ -31,7 +32,7 @@ export const base = {
   secondaryText: '#717172',
   inputText: '#222',
   headerText: '#333',
-  asideText: '#666',
+  asideText: '#292C33',
   link: '#428BCA',
   linkHover: '#5dade2',
   editorCommandColor: '#333',
@@ -48,6 +49,8 @@ export const base = {
   topicBackground: '#f8f8f8',
   preBackground: '#f5f5f5',
   alteringTableRowBackground: '#f5f5f5',
+  frameCommandBackground: '#F8F9FB',
+  runnableBackground: '#f5f5f5',
 
   // Fonts
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -115,20 +118,24 @@ export const dark = {
   headerText: '#f4f4f4',
   primaryHeaderText: '#f4f4f4',
   editorCommandColor: '#1abc9c',
-  link: '#f4f4f4',
+  link: '#5CA6D9',
   topicText: '#fff',
   preText: '#fff',
+  asideText: rgb(255, 255, 255, 0.87),
 
   // Backgrounds
-  primaryBackground: '#282c32',
-  secondaryBackground: '#5a6070',
-  editorBarBackground: '#5a6070',
-  editorBackground: '#282c32',
+  primaryBackground: '#525865',
+  secondaryBackground: '#292C33',
+  editorBarBackground: 'transparent',
+  editorBackground: '#121212',
   drawerBackground: '#30333a',
-  frameSidebarBackground: '#5a6070',
+  frameSidebarBackground: '#31333B',
   topicBackground: 'transparent',
   preBackground: '#282c32',
-  alteringTableRowBackground: '#282c32',
+  alteringTableRowBackground: '#30333a',
+
+  frameCommandBackground: '#31333B',
+  runnableBackground: '#202226',
 
   // Buttons
   primaryButtonText: '#fff',
@@ -138,8 +145,8 @@ export const dark = {
   secondaryButtonBackground: 'transparent',
   secondaryButtonTextHover: '#f4f4f4',
   secondaryButtonBorderHover: '1px solid #888',
-  secondaryButtonBackgroundHover: '#282c32',
+  secondaryButtonBackgroundHover: '#4D4A57',
 
   // Borders
-  inFrameBorder: '1px solid #f4f4f4'
+  inFrameBorder: '1px solid rgba(255,255,255,0.12)'
 }

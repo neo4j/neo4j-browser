@@ -43,7 +43,7 @@ exports[`CodeViews CodeView displays request and response info if successful que
           class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-41 gkKCBY"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Server version
           </td>
@@ -57,7 +57,7 @@ exports[`CodeViews CodeView displays request and response info if successful que
           class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-41 gkKCBY"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Server address
           </td>
@@ -71,7 +71,7 @@ exports[`CodeViews CodeView displays request and response info if successful que
           class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-41 gkKCBY"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Query
           </td>
@@ -85,7 +85,7 @@ exports[`CodeViews CodeView displays request and response info if successful que
           class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-41 gkKCBY"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Summary
             <div
@@ -103,7 +103,7 @@ exports[`CodeViews CodeView displays request and response info if successful que
           class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-41 gkKCBY"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Response
             <div

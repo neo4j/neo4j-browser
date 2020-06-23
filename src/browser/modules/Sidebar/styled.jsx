@@ -49,7 +49,10 @@ export const StyledHelpItem = styled.li`
 
 const StyledDocumentText = styled.a`
   cursor: pointer;
+  -webkit-text-decoration: none;
   text-decoration: none;
+  color: #5ca6d9;
+
   &:hover {
     color: #5dade2;
     text-decoration: none;

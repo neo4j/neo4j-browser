@@ -22,16 +22,15 @@ import styled from 'styled-components'
 
 export const StyledSidebar = styled.div`
   flex: 0 0 auto;
-  background-color: #4c4957;
+  background-color: #4d4a57;
   display: flex;
   flex-direction: row;
-  border-right: 1px solid black;
   color: #fff;
 `
 
 export const StyledDrawer = styled.div`
   flex: 0 0 auto;
-  background-color: #30333a;
+  background-color: #31333b;
   overflow-x: hidden;
   overflow-y: auto;
   width: ${props => (props.open ? '300px' : '0px')};
@@ -52,13 +51,13 @@ const StyledTabList = styled.ul`
 export const StyledTopNav = styled(StyledTabList)`
   align-self: flex-start;
   & > li {
-    border-bottom: 1px solid #5d6370;
+    border-bottom: transparent;
   }
 `
 export const StyledBottomNav = styled(StyledTabList)`
   align-self: flex-end;
   margin-top: auto;
   & > li {
-    border-top: 1px solid #5d6370;
+    border-top: transparent;
   }
 `

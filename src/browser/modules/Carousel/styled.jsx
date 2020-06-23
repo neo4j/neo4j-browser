@@ -276,7 +276,7 @@ export const StyledSlide = styled.div`
   a[server-topic],
   a[exec-topic] {
     background-color: ${props => props.theme.topicBackground} !important;
-    color: ${props => props.theme.topicText} !important;
+    color: #5ca6d9;
   }
   & button [help-topic],
   button [play-topic],

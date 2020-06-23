@@ -36,6 +36,7 @@ export const StyledStatusBar = styled.div`
   overflow: hidden;
   margin-top: 0;
   width: 100%;
+  padding-left: 24px;
 `
 
 export const RefreshQueriesButton = styled(FrameButton)`
