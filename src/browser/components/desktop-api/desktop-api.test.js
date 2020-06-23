@@ -166,7 +166,11 @@ describe('<DesktopApi>', () => {
   test('calls sendMetrics callback if setEventMetricsCallback is set', () => {
     // Given
     let componentMetricsCallback
-    const metricsCallArgs = { name: 'test_metrics', data: { x: 1 } }
+    const metricsCallArgs = {
+      name: 'metrics_test',
+      label: 'runs',
+      data: { x: 1 }
+    }
     const fn = takeMetrics => (componentMetricsCallback = takeMetrics)
     const integrationPoint = {
       sendMetrics: jest.fn()
@@ -189,8 +193,8 @@ describe('<DesktopApi>', () => {
     // Then
     expect(integrationPoint.sendMetrics).toHaveBeenCalledTimes(1)
     expect(integrationPoint.sendMetrics).toHaveBeenLastCalledWith(
-      metricsCallArgs.name,
-      null,
+      metricsCallArgs.category,
+      metricsCallArgs.label,
       metricsCallArgs.data
     )
   })

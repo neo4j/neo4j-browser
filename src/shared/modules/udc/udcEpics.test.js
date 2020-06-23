@@ -28,7 +28,7 @@ import {
   trackConnectsEpic,
   bootEpic,
   METRICS_EVENT,
-  typeToEventName,
+  typeToMetricsObject,
   EVENT_CLIENT_START,
   EVENT_BROWSER_SYNC_LOGOUT,
   EVENT_BROWSER_SYNC_LOGIN,
@@ -57,7 +57,9 @@ describe('Udc Epics', () => {
       const action = { type: APP_START }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
-        expect(currentAction.name).toEqual(typeToEventName[EVENT_CLIENT_START])
+        expect(currentAction).toEqual(
+          expect.objectContaining(typeToMetricsObject[EVENT_CLIENT_START])
+        )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
       })
@@ -85,7 +87,9 @@ describe('Udc Epics', () => {
       const action = { type: CYPHER }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
-        expect(currentAction.name).toEqual(typeToEventName[CYPHER])
+        expect(currentAction).toEqual(
+          expect.objectContaining(typeToMetricsObject[CYPHER])
+        )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
       })
@@ -100,7 +104,9 @@ describe('Udc Epics', () => {
       const action = { type: CYPHER_SUCCEEDED }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
-        expect(currentAction.name).toEqual(typeToEventName[CYPHER_SUCCEEDED])
+        expect(currentAction).toEqual(
+          expect.objectContaining(typeToMetricsObject[CYPHER_SUCCEEDED])
+        )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
       })
@@ -115,7 +121,9 @@ describe('Udc Epics', () => {
       const action = { type: CYPHER_FAILED }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
-        expect(currentAction.name).toEqual(typeToEventName[CYPHER_FAILED])
+        expect(currentAction).toEqual(
+          expect.objectContaining(typeToMetricsObject[CYPHER_FAILED])
+        )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
       })
@@ -143,8 +151,8 @@ describe('Udc Epics', () => {
       const action = { type: AUTHORIZED }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
-        expect(currentAction.name).toEqual(
-          typeToEventName[EVENT_BROWSER_SYNC_LOGIN]
+        expect(currentAction).toEqual(
+          expect.objectContaining(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGIN])
         )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
@@ -173,8 +181,10 @@ describe('Udc Epics', () => {
       const action = { type: CLEAR_SYNC }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
-        expect(currentAction.name).toEqual(
-          typeToEventName[EVENT_BROWSER_SYNC_LOGOUT]
+        expect(currentAction).toEqual(
+          expect.objectContaining(
+            typeToMetricsObject[EVENT_BROWSER_SYNC_LOGOUT]
+          )
         )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
@@ -203,7 +213,9 @@ describe('Udc Epics', () => {
       const action = { type: CONNECTION_SUCCESS }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
-        expect(currentAction.name).toEqual(typeToEventName[EVENT_CONNECT])
+        expect(currentAction).toEqual(
+          expect.objectContaining(typeToMetricsObject[EVENT_CONNECT])
+        )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
       })

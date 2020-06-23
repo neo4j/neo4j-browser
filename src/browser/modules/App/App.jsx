@@ -136,8 +136,8 @@ export function App(props) {
     wrapperClassNames.push('disable-font-ligatures')
   }
   const setEventMetricsCallback = useCallback(fn => {
-    props.bus.take(METRICS_EVENT, ({ type, name, data }) => {
-      fn && fn({ type, name, data })
+    props.bus.take(METRICS_EVENT, ({ category, label, data }) => {
+      fn && fn({ category, label, data })
     })
   })
 

@@ -60,14 +60,24 @@ export const EVENT_BROWSER_SYNC_LOGOUT = 'EVENT_BROWSER_SYNC_LOGOUT'
 export const EVENT_BROWSER_SYNC_LOGIN = 'EVENT_BROWSER_SYNC_LOGIN'
 export const EVENT_CONNECT = 'EVENT_CONNECT'
 
-export const typeToEventName = {
+const typeToEventName = {
   [CYPHER]: 'cypher_attempts',
   [CYPHER_SUCCEEDED]: 'cypher_wins',
   [CYPHER_FAILED]: 'cypher_fails',
-  [EVENT_CLIENT_START]: 'client_starts',
-  [EVENT_BROWSER_SYNC_LOGOUT]: 'browser_sync_logout',
-  [EVENT_BROWSER_SYNC_LOGIN]: 'browser_sync_login',
-  [EVENT_CONNECT]: 'connect'
+  [EVENT_CLIENT_START]: 'client_starts'
+}
+
+export const typeToMetricsObject = {
+  [CYPHER]: { category: 'cypher', label: 'executed' },
+  [CYPHER_SUCCEEDED]: { category: 'cypher', label: 'succeeded' },
+  [CYPHER_FAILED]: { category: 'cypher', label: 'failed' },
+  [EVENT_CLIENT_START]: { category: 'client', label: 'started' },
+  [EVENT_CONNECT]: { category: 'client', label: 'connected' },
+  [EVENT_BROWSER_SYNC_LOGOUT]: {
+    category: 'browser_sync',
+    label: 'logged_out'
+  },
+  [EVENT_BROWSER_SYNC_LOGIN]: { category: 'browser_sync', label: 'logged_in' }
 }
 
 // Selectors
@@ -147,11 +157,10 @@ const eventFired = (name, data = null) => {
   }
 }
 
-const metricsEvent = (name, data) => {
+const metricsEvent = payload => {
   return {
     type: METRICS_EVENT,
-    name,
-    data
+    ...payload
   }
 }
 
@@ -166,7 +175,9 @@ export const updateData = obj => {
 export const udcStartupEpic = (action$, store) =>
   action$
     .ofType(APP_START)
-    .do(() => store.dispatch(metricsEvent(typeToEventName[EVENT_CLIENT_START])))
+    .do(() =>
+      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_CLIENT_START]))
+    )
     .mapTo(increment(typeToEventName[EVENT_CLIENT_START]))
 
 export const incrementEventEpic = (action$, store) =>
@@ -174,7 +185,9 @@ export const incrementEventEpic = (action$, store) =>
     .ofType(CYPHER)
     .merge(action$.ofType(CYPHER_FAILED))
     .merge(action$.ofType(CYPHER_SUCCEEDED))
-    .do(action => store.dispatch(metricsEvent(typeToEventName[action.type])))
+    .do(action =>
+      store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
+    )
     .map(action => increment(typeToEventName[action.type]))
 
 export const trackSyncLogoutEpic = (action$, store) =>
@@ -182,7 +195,9 @@ export const trackSyncLogoutEpic = (action$, store) =>
     .ofType(CLEAR_SYNC)
     .merge(action$.ofType(CLEAR_SYNC_AND_LOCAL))
     .do(() =>
-      store.dispatch(metricsEvent(typeToEventName[EVENT_BROWSER_SYNC_LOGOUT]))
+      store.dispatch(
+        metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGOUT])
+      )
     )
     .map(action => eventFired('syncLogout'))
 
@@ -190,7 +205,9 @@ export const bootEpic = (action$, store) => {
   return action$
     .ofType(AUTHORIZED) // Browser sync auth
     .do(() =>
-      store.dispatch(metricsEvent(typeToEventName[EVENT_BROWSER_SYNC_LOGIN]))
+      store.dispatch(
+        metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGIN])
+      )
     )
     .map(action => {
       // Store name locally
@@ -237,7 +254,7 @@ export const trackConnectsEpic = (
   action$
     .ofType(CONNECTION_SUCCESS)
     .merge(action$.ofType(BOOTED))
-    .do(() => store.dispatch(metricsEvent(typeToEventName[EVENT_CONNECT])))
+    .do(() => store.dispatch(metricsEvent(typeToMetricsObject[EVENT_CONNECT])))
     .map(action => {
       const state = store.getState()
       const data = {
