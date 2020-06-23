@@ -29,10 +29,10 @@ import {
   bootEpic,
   METRICS_EVENT,
   typeToMetricsObject,
-  EVENT_CLIENT_START,
+  EVENT_APP_STARTED,
   EVENT_BROWSER_SYNC_LOGOUT,
   EVENT_BROWSER_SYNC_LOGIN,
-  EVENT_CONNECT
+  EVENT_DRIVER_CONNECTED
 } from './udcDuck'
 import { APP_START } from '../app/appDuck'
 import {
@@ -58,7 +58,7 @@ describe('Udc Epics', () => {
       bus.take(METRICS_EVENT, currentAction => {
         // Then
         expect(currentAction).toEqual(
-          expect.objectContaining(typeToMetricsObject[EVENT_CLIENT_START])
+          expect.objectContaining(typeToMetricsObject[EVENT_APP_STARTED])
         )
         expect(store.getActions()).toEqual([action, currentAction])
         done()
@@ -214,7 +214,7 @@ describe('Udc Epics', () => {
       bus.take(METRICS_EVENT, currentAction => {
         // Then
         expect(currentAction).toEqual(
-          expect.objectContaining(typeToMetricsObject[EVENT_CONNECT])
+          expect.objectContaining(typeToMetricsObject[EVENT_DRIVER_CONNECTED])
         )
         expect(store.getActions()).toEqual([action, currentAction])
         done()

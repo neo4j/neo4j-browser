@@ -55,24 +55,24 @@ export const METRICS_EVENT = `${NAME}/METRICS_EVENT`
 let booted = false
 
 // Event constants
-export const EVENT_CLIENT_START = 'EVENT_CLIENT_START'
+export const EVENT_APP_STARTED = 'EVENT_APP_STARTED'
 export const EVENT_BROWSER_SYNC_LOGOUT = 'EVENT_BROWSER_SYNC_LOGOUT'
 export const EVENT_BROWSER_SYNC_LOGIN = 'EVENT_BROWSER_SYNC_LOGIN'
-export const EVENT_CONNECT = 'EVENT_CONNECT'
+export const EVENT_DRIVER_CONNECTED = 'EVENT_DRIVER_CONNECTED'
 
 const typeToEventName = {
   [CYPHER]: 'cypher_attempts',
   [CYPHER_SUCCEEDED]: 'cypher_wins',
   [CYPHER_FAILED]: 'cypher_fails',
-  [EVENT_CLIENT_START]: 'client_starts'
+  [EVENT_APP_STARTED]: 'client_starts'
 }
 
 export const typeToMetricsObject = {
-  [CYPHER]: { category: 'cypher', label: 'executed' },
+  [CYPHER]: { category: 'cypher', label: 'sent' },
   [CYPHER_SUCCEEDED]: { category: 'cypher', label: 'succeeded' },
   [CYPHER_FAILED]: { category: 'cypher', label: 'failed' },
-  [EVENT_CLIENT_START]: { category: 'client', label: 'started' },
-  [EVENT_CONNECT]: { category: 'client', label: 'connected' },
+  [EVENT_APP_STARTED]: { category: 'app', label: 'started' },
+  [EVENT_DRIVER_CONNECTED]: { category: 'driver', label: 'connected' },
   [EVENT_BROWSER_SYNC_LOGOUT]: {
     category: 'browser_sync',
     label: 'logged_out'
@@ -176,9 +176,9 @@ export const udcStartupEpic = (action$, store) =>
   action$
     .ofType(APP_START)
     .do(() =>
-      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_CLIENT_START]))
+      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
     )
-    .mapTo(increment(typeToEventName[EVENT_CLIENT_START]))
+    .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
 export const incrementEventEpic = (action$, store) =>
   action$
@@ -254,7 +254,9 @@ export const trackConnectsEpic = (
   action$
     .ofType(CONNECTION_SUCCESS)
     .merge(action$.ofType(BOOTED))
-    .do(() => store.dispatch(metricsEvent(typeToMetricsObject[EVENT_CONNECT])))
+    .do(() =>
+      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_DRIVER_CONNECTED]))
+    )
     .map(action => {
       const state = store.getState()
       const data = {
