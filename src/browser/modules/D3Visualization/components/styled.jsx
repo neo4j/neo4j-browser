@@ -102,7 +102,6 @@ export const StyledSvgWrapper = styled.div`
     }
     text {
       line-height: normal;
-      fill: ${props => props.theme.primaryText};
       &.context-menu-item {
         fill: #fff;
         text-anchor: middle;
@@ -201,10 +200,10 @@ export const StyledStatusBar = styled.div`
   background-color: ${props => props.theme.frameCommandBackground};
   white-space: nowrap;
   overflow: hidden;
-  border-top: transparent;
   bottom: 0;
   left: 0;
   right: 0;
+  border-top: ${props => props.theme.inFrameBorder};
 `
 
 export const StyledStatus = styled.div`

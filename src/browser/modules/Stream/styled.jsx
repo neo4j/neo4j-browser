@@ -202,7 +202,6 @@ export const SpinnerContainer = styled.div`
 export const DropdownButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
-  border-left: ${props => props.theme.inFrameBorder};
   height: ${dim.frameTitlebarHeight}px;
   width: 41px;
   cursor: pointer;
@@ -350,6 +349,7 @@ export const StyledAlteringTr = styled.tr`
 
 export const StyledStrongTd = styled.td`
   font-weight: bold;
+  padding-left: 4px;
 `
 
 export const StyledTd = styled.td``

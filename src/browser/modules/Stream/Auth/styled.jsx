@@ -113,6 +113,8 @@ export const StyledRevealablePasswordWrapper = styled.div`
     width: auto;
     padding: 3px;
     cursor: pointer;
+    color: #333333;
+    opacity: 0.5;
   }
 `
 

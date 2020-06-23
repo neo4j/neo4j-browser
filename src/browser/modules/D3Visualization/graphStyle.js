@@ -111,8 +111,8 @@ export default function neoGraphStyle() {
   ]
   const defaultColors = [
     {
-      color: '#FFE081',
-      'border-color': '#9AA1AC',
+      color: '#604A0E',
+      'border-color': '#423204',
       'text-color-internal': '#FFFFFF'
     },
     {
@@ -128,7 +128,7 @@ export default function neoGraphStyle() {
     {
       color: '#57C7E3',
       'border-color': '#23b3d7',
-      'text-color-internal': '#FFFFFF'
+      'text-color-internal': '#2A2C34'
     },
     {
       color: '#F16667',
@@ -138,17 +138,17 @@ export default function neoGraphStyle() {
     {
       color: '#D9C8AE',
       'border-color': '#c0a378',
-      'text-color-internal': '#604A0E'
+      'text-color-internal': '#2A2C34'
     },
     {
       color: '#8DCC93',
       'border-color': '#5db665',
-      'text-color-internal': '#604A0E'
+      'text-color-internal': '#2A2C34'
     },
     {
       color: '#ECB5C9',
       'border-color': '#da7298',
-      'text-color-internal': '#604A0E'
+      'text-color-internal': '#2A2C34'
     },
     {
       color: '#4C8EDA',
@@ -158,7 +158,7 @@ export default function neoGraphStyle() {
     {
       color: '#FFC454',
       'border-color': '#d7a013',
-      'text-color-internal': '#604A0E'
+      'text-color-internal': '#2A2C34'
     },
     {
       color: '#DA7194',

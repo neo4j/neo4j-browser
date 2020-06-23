@@ -250,7 +250,7 @@ export const CypherFrameButton = props => {
 const StyledCypherFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
-  border-bottom: ${props => props.theme.inFrameBorder};
+  border-bottom: 1px transparent;
   height: 58px;
   font-size: 21px !important;
   line-height: 21px;
@@ -284,7 +284,7 @@ export const FrameButton = props => {
 const StyledFrameButton = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
-  border-left: ${props => props.theme.inFrameBorder};
+  border-left: transparent;
   height: ${dim.frameTitlebarHeight}px;
   width: 41px;
   cursor: pointer;
@@ -364,6 +364,7 @@ const BaseCarouselButton = styled.button`
     bottom: 0px;
     height: auto;
     width: 32px;
+    margin-bottom: 39px;
 
     i {
       margin-right: 3px;

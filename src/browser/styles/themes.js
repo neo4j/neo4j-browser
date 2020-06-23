@@ -50,6 +50,7 @@ export const base = {
   preBackground: '#f5f5f5',
   alteringTableRowBackground: '#f5f5f5',
   frameCommandBackground: '#F8F9FB',
+  runnableBackground: '#f5f5f5',
 
   // Fonts
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -131,7 +132,7 @@ export const dark = {
   frameSidebarBackground: '#31333B',
   topicBackground: 'transparent',
   preBackground: '#282c32',
-  alteringTableRowBackground: '#282c32',
+  alteringTableRowBackground: '#30333a',
 
   frameCommandBackground: '#31333B',
   runnableBackground: '#202226',
@@ -147,5 +148,5 @@ export const dark = {
   secondaryButtonBackgroundHover: '#4D4A57',
 
   // Borders
-  inFrameBorder: 'transparent'
+  inFrameBorder: '1px solid rgba(255,255,255,0.12)'
 }

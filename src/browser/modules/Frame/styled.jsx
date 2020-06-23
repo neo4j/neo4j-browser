@@ -143,7 +143,6 @@ export const StyledFrameSidebar = styled.ul`
   padding-left: 0;
   margin: 0;
   flex: 0 0 auto;
-  border-right: ${props => props.theme.inFrameBorder};
   background-color: ${props => props.theme.frameSidebarBackground};
 `
 
@@ -160,7 +159,7 @@ export const StyledFrameTitlebarButtonSection = styled.ul`
 
 export const StyledFrameTitleBar = styled.div`
   height: ${dim.frameTitlebarHeight}px;
-  border-bottom: ${props => props.theme.inFrameBorder};
+  border-bottom: transparent;
   line-height: ${dim.frameTitlebarHeight}px;
   color: ${props => props.theme.frameTitlebarText};
   display: flex;
