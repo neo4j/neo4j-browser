@@ -50,13 +50,24 @@ export const CLEAR_EVENTS = `${NAME}/CLEAR_EVENTS`
 export const UPDATE_SETTINGS = `${NAME}/UPDATE_SETTINGS`
 export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
 export const BOOTED = `${NAME}/BOOTED`
+export const METRICS_EVENT = `${NAME}/METRICS_EVENT`
 
-// Local variables (used in epics)
 let booted = false
-const typeToEventName = {
+
+// Event constants
+export const EVENT_CLIENT_START = 'EVENT_CLIENT_START'
+export const EVENT_BROWSER_SYNC_LOGOUT = 'EVENT_BROWSER_SYNC_LOGOUT'
+export const EVENT_BROWSER_SYNC_LOGIN = 'EVENT_BROWSER_SYNC_LOGIN'
+export const EVENT_CONNECT = 'EVENT_CONNECT'
+
+export const typeToEventName = {
   [CYPHER]: 'cypher_attempts',
   [CYPHER_SUCCEEDED]: 'cypher_wins',
-  [CYPHER_FAILED]: 'cypher_fails'
+  [CYPHER_FAILED]: 'cypher_fails',
+  [EVENT_CLIENT_START]: 'client_starts',
+  [EVENT_BROWSER_SYNC_LOGOUT]: 'browser_sync_logout',
+  [EVENT_BROWSER_SYNC_LOGIN]: 'browser_sync_login',
+  [EVENT_CONNECT]: 'connect'
 }
 
 // Selectors
@@ -135,6 +146,15 @@ const eventFired = (name, data = null) => {
     data
   }
 }
+
+const metricsEvent = (name, data) => {
+  return {
+    type: METRICS_EVENT,
+    name,
+    data
+  }
+}
+
 export const updateData = obj => {
   return {
     type: UPDATE_DATA,
@@ -144,24 +164,34 @@ export const updateData = obj => {
 
 // Epics
 export const udcStartupEpic = (action$, store) =>
-  action$.ofType(APP_START).mapTo(increment('client_starts'))
+  action$
+    .ofType(APP_START)
+    .do(() => store.dispatch(metricsEvent(typeToEventName[EVENT_CLIENT_START])))
+    .mapTo(increment(typeToEventName[EVENT_CLIENT_START]))
 
 export const incrementEventEpic = (action$, store) =>
   action$
     .ofType(CYPHER)
     .merge(action$.ofType(CYPHER_FAILED))
     .merge(action$.ofType(CYPHER_SUCCEEDED))
+    .do(action => store.dispatch(metricsEvent(typeToEventName[action.type])))
     .map(action => increment(typeToEventName[action.type]))
 
 export const trackSyncLogoutEpic = (action$, store) =>
   action$
     .ofType(CLEAR_SYNC)
     .merge(action$.ofType(CLEAR_SYNC_AND_LOCAL))
+    .do(() =>
+      store.dispatch(metricsEvent(typeToEventName[EVENT_BROWSER_SYNC_LOGOUT]))
+    )
     .map(action => eventFired('syncLogout'))
 
 export const bootEpic = (action$, store) => {
   return action$
     .ofType(AUTHORIZED) // Browser sync auth
+    .do(() =>
+      store.dispatch(metricsEvent(typeToEventName[EVENT_BROWSER_SYNC_LOGIN]))
+    )
     .map(action => {
       // Store name locally
       if (!action.userData || !action.userData.name) return action
@@ -207,15 +237,16 @@ export const trackConnectsEpic = (
   action$
     .ofType(CONNECTION_SUCCESS)
     .merge(action$.ofType(BOOTED))
+    .do(() => store.dispatch(metricsEvent(typeToEventName[EVENT_CONNECT])))
     .map(action => {
       const state = store.getState()
       const data = {
         store_id: getStoreId(state),
         neo4j_version: getVersion(state),
-        client_starts: state[NAME].client_starts,
-        cypher_attempts: state[NAME].cypher_attempts,
-        cypher_wins: state[NAME].cypher_wins,
-        cypher_fails: state[NAME].cypher_fails
+        client_starts: state[NAME] ? state[NAME].client_starts : 0,
+        cypher_attempts: state[NAME] ? state[NAME].cypher_attempts : 0,
+        cypher_wins: state[NAME] ? state[NAME].cypher_wins : 0,
+        cypher_fails: state[NAME] ? state[NAME].cypher_fails : 0
       }
       return eventFired('connect', data)
     })

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -80,6 +80,7 @@ import {
   buildConnectionCreds,
   getDesktopTheme
 } from 'browser-components/desktop-api/desktop-api.handlers'
+import { METRICS_EVENT } from 'shared/modules/udc/udcDuck'
 
 export function App(props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
@@ -134,6 +135,11 @@ export function App(props) {
   if (!codeFontLigatures) {
     wrapperClassNames.push('disable-font-ligatures')
   }
+  const setEventMetricsCallback = useCallback(fn => {
+    props.bus.take(METRICS_EVENT, ({ type, name, data }) => {
+      fn && fn({ type, name, data })
+    })
+  })
 
   return (
     <ErrorBoundary>
@@ -160,6 +166,7 @@ export function App(props) {
         onArgumentsChange={argsString =>
           props.bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
         }
+        setEventMetricsCallback={setEventMetricsCallback}
       />
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
@@ -239,9 +246,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(App)
-)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(App))
