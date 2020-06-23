@@ -167,7 +167,7 @@ describe('<DesktopApi>', () => {
     // Given
     let componentMetricsCallback
     const metricsCallArgs = {
-      name: 'metrics_test',
+      category: 'metrics_test',
       label: 'runs',
       data: { x: 1 }
     }
