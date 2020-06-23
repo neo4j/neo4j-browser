@@ -67,6 +67,9 @@ export const StyledSvgWrapper = styled.div`
       }
     }
     .relationship {
+      > text {
+        fill: ${props => props.theme.primaryText};
+      }
       > .overlay {
         opacity: 0;
         fill: #6ac6ff;
