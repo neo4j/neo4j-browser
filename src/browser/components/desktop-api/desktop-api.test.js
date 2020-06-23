@@ -190,6 +190,7 @@ describe('<DesktopApi>', () => {
     expect(integrationPoint.sendMetrics).toHaveBeenCalledTimes(1)
     expect(integrationPoint.sendMetrics).toHaveBeenLastCalledWith(
       metricsCallArgs.name,
+      null,
       metricsCallArgs.data
     )
   })

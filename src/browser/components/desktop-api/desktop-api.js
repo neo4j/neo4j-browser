@@ -36,7 +36,7 @@ function DesktopApi({
     integrationPoint.sendMetrics
   ) {
     const takeMetrics = ({ name, data }) => {
-      integrationPoint.sendMetrics(name, data)
+      integrationPoint.sendMetrics(name, null, data)
     }
     setEventMetricsCallback(takeMetrics)
   }
