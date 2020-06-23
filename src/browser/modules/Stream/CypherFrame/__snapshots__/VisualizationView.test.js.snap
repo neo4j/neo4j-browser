@@ -64,7 +64,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="styled__StyledSvgWrapper-sc-13boxex-0 hkKuRz"
+        class="styled__StyledSvgWrapper-sc-13boxex-0 gcXItp"
       >
         <svg
           class="neod3viz"
@@ -131,7 +131,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </svg>
       </div>
       <div
-        class="styled__StyledStatusBar-sc-13boxex-12 fFarAc status-bar"
+        class="styled__StyledStatusBar-sc-13boxex-12 hrHwkB status-bar"
       >
         <div
           class="styled__StyledStatus-sc-13boxex-13 lfPraq status"
