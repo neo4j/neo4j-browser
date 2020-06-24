@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { withBus } from 'react-suber'
 import { fetchGuideFromWhitelistAction } from 'shared/modules/commands/commandsDuck'
 
@@ -31,13 +31,12 @@ import {
   transformCommandToHelpTopic
 } from 'services/commandUtils'
 import { ErrorsView } from './CypherFrame/ErrorsView'
-import { useState } from 'react'
-import { useEffect } from 'react'
 import { CarouselButton } from 'browser-components/buttons/index'
 import {
   StackPreviousIcon,
   StackNextIcon
 } from 'browser-components/icons/Icons'
+import { splitMdxSlides } from '../Docs/MDX/splitMdx'
 
 const {
   play: { chapters }
@@ -152,6 +151,23 @@ function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
 
   // Found a remote guide
   if (stackFrame.result) {
+    if (['md', 'mdx'].includes(stackFrame.filenameExtension)) {
+      return {
+        guide: (
+          <Docs
+            initialSlide={stackFrame.initialSlide || 1}
+            lastUpdate={stackFrame.ts}
+            mdx={stackFrame.result}
+            onSlide={onSlide}
+            originFrameId={stackFrame.id}
+            withDirectives
+          />
+        ),
+        hasCarousel: splitMdxSlides(stackFrame.result).length > 1,
+        isRemote: true
+      }
+    }
+
     return {
       guide: (
         <Docs

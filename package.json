@@ -20,7 +20,7 @@
   "homepage": "https://neo4j.com/developer/guide-neo4j-browser/",
   "main": "dist/index.html",
   "scripts": {
-    "build": "NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
+    "build": "cross-env NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
     "dev": "jest --watch",
     "e2e": "cypress run",
     "e2e-open": "cypress open",
@@ -126,6 +126,8 @@
     "xml2js": "^0.4.19"
   },
   "dependencies": {
+    "@literal-jsx/parser": "^0.1.7",
+    "@mdx-js/runtime": "^1.6.1",
     "@neo4j/browser-lambda-parser": "1.0.4",
     "@relate-by-ui/css": "1.0.5",
     "@relate-by-ui/relatable": "1.0.1",
@@ -172,6 +174,7 @@
     "stylis": "^3.4.10",
     "suber": "^5.0.1",
     "swipe-js-iso": "^2.0.4",
+    "unist-util-visit": "^2.0.2",
     "url-parse": "^1.1.9",
     "uuid": "^3.0.1"
   }

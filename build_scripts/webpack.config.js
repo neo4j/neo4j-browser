@@ -25,6 +25,9 @@ const helpers = require('./webpack-helpers')
 
 module.exports = {
   mode: helpers.isProduction ? 'production' : 'development',
+  node: {
+    fs: 'empty'
+  },
   entry: [path.resolve(helpers.browserPath, 'index.jsx')],
   output: {
     filename: 'app-[hash].js',

@@ -490,6 +490,11 @@ const availableCommands = [
       }
 
       const url = action.cmd.substr(cmdchar.length + 'play '.length)
+      const urlObject = new URL(url)
+      urlObject.href = url
+      const filenameExtension = urlObject.pathname.includes('.')
+        ? urlObject.pathname.split('.').pop()
+        : 'html'
       const whitelist = getRemoteContentHostnameWhitelist(store.getState())
       fetchRemoteGuide(url, whitelist)
         .then(r => {
@@ -497,6 +502,7 @@ const availableCommands = [
             frames.add({
               useDb: getUseDb(store.getState()),
               ...action,
+              filenameExtension,
               id,
               type: 'play-remote',
               initialSlide: tryGetRemoteInitialSlideFromUrl(url),
@@ -509,6 +515,7 @@ const availableCommands = [
             frames.add({
               useDb: getUseDb(store.getState()),
               ...action,
+              filenameExtension,
               id,
               type: 'play-remote',
               response: e.response || null,
