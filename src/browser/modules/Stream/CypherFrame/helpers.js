@@ -37,7 +37,7 @@ import bolt from 'services/bolt/bolt'
 
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
-import { stringifyMod } from 'services/utils'
+import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 /**
@@ -226,11 +226,16 @@ export const initialView = (props, state = {}) => {
  * It takes a replacer without enforcing quoting rules to it.
  * Used so we can have Neo4j integers as string without quotes.
  */
-export const stringifyResultArray = (formatter = stringModifier, arr = []) => {
+export const stringifyResultArray = (
+  formatter = stringModifier,
+  arr = [],
+  unescapeDoulbeQuotes = false
+) => {
   return arr.map(col => {
     if (!col) return col
     return col.map(fVal => {
-      return stringifyMod(fVal, formatter)
+      const res = stringifyMod(fVal, formatter)
+      return unescapeDoulbeQuotes ? unescapeDoubleQuotesForDisplay(res) : res
     })
   })
 }
@@ -353,13 +358,16 @@ const arrayifyPath = (types = neo4j.types, path) => {
 
 /**
  * Converts a raw Neo4j record into a JSON friendly format, mimicking APOC output
+ * Note: This preservers Neo4j integers as objects because they can't be guaranteed
+ * to be converted to numbers and keeping the precision.
+ * It's up to the serializer to indentify those and write them as fake numbers (strings without quotes)
  * @param     {Record}    record
  * @return    {*}
  */
 export function recordToJSONMapper(record) {
   const keys = get(record, 'keys', [])
 
-  return reduce(
+  const recordObj = reduce(
     keys,
     (agg, key) => {
       const field = record.get(key)
@@ -371,6 +379,7 @@ export function recordToJSONMapper(record) {
     },
     {}
   )
+  return recordObj
 }
 
 /**
@@ -379,6 +388,10 @@ export function recordToJSONMapper(record) {
  * @return    {*}
  */
 export function mapNeo4jValuesToPlainValues(values) {
+  if (neo4j.isInt(values)) {
+    return values
+  }
+
   if (!isObjectLike(values)) {
     return values
   }
@@ -425,8 +438,6 @@ function neo4jValueToPlainValue(value) {
     case neo4j.types.LocalTime:
     case neo4j.types.Time:
       return value.toString()
-    case neo4j.types.Integer: // not exposed in typings but still there
-      return value.inSafeRange() ? value.toInt() : value.toNumber()
     default:
       return value
   }
@@ -445,7 +456,6 @@ function isNeo4jValue(value) {
     case neo4j.types.LocalDateTime:
     case neo4j.types.LocalTime:
     case neo4j.types.Time:
-    case neo4j.types.Integer: // not exposed in typings but still there
       return true
     default:
       return false

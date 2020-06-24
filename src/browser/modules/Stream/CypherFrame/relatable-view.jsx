@@ -15,25 +15,16 @@
  *
  */
 
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
+import { isInt } from 'neo4j-driver'
 import Relatable from '@relate-by-ui/relatable'
-import {
-  entries,
-  filter,
-  get,
-  head,
-  join,
-  map,
-  memoize,
-  slice
-} from 'lodash-es'
+import { get, head, map, slice } from 'lodash-es'
 import { Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import { HTMLEntities } from 'services/santize.utils'
 import {
   getBodyAndStatusBarMessages,
-  mapNeo4jValuesToPlainValues,
   resultHasTruncatedFields
 } from './helpers'
 import arrayHasItems from 'shared/utils/array-has-items'
@@ -41,14 +32,14 @@ import {
   getMaxFieldItems,
   getMaxRows
 } from 'shared/modules/settings/settingsDuck'
-
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import ClickableUrls, {
   convertUrlsToHrefTags
 } from '../../../components/clickable-urls'
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import { RelatableStyleWrapper, StyledJsonPre } from './relatable-view.styled'
-import { isPoint, isInt } from 'neo4j-driver'
+import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 
 const RelatableView = connect(state => ({
   maxRows: getMaxRows(state),
@@ -94,57 +85,46 @@ function getColumns(records, maxFieldItems) {
 
 function CypherCell({ cell }) {
   const { value } = cell
-  const mapper = useCallback(
-    value => {
-      const memo = memoize(mapNeo4jValuesToPlainValues, value => {
-        const { elementType, identity } = value || {}
+  return renderCell(value)
+}
 
-        return elementType ? `${elementType}:${identity}` : identity
-      })
-
-      return memo(value)
-    },
-    [memoize, mapNeo4jValuesToPlainValues]
-  )
-  const mapped = mapper(value)
-
-  if (isInt(value)) {
-    return value.toString()
-  }
-
-  if (Number.isInteger(value)) {
-    return `${value}.0`
-  }
-
-  if (typeof mapped === 'string') {
-    return `"${mapped}"`
-  }
-
-  if (isPoint(value)) {
-    const pairs = filter(
-      entries(mapped),
-      ([, val]) => val !== null && val !== undefined
-    )
-
-    return `point({${join(
-      map(pairs, pair => join(pair, ':')),
-      ', '
-    )}})`
-  }
-
-  if (mapped && typeof mapped === 'object') {
+const renderCell = entry => {
+  if (Array.isArray(entry)) {
+    const children = entry.map((item, index) => (
+      <span key={index}>
+        {renderCell(item)}
+        {index === entry.length - 1 ? null : ', '}
+      </span>
+    ))
+    return <span>[{children}]</span>
+  } else if (typeof entry === 'object') {
+    return renderObject(entry)
+  } else {
     return (
-      <StyledJsonPre
-        dangerouslySetInnerHTML={{
-          __html: convertUrlsToHrefTags(
-            HTMLEntities(JSON.stringify(mapped, null, 2))
-          )
-        }}
+      <ClickableUrls
+        text={unescapeDoubleQuotesForDisplay(
+          stringifyMod(entry, stringModifier, true)
+        )}
       />
     )
   }
-
-  return <ClickableUrls text={mapped} />
+}
+const renderObject = entry => {
+  if (isInt(entry)) return entry.toString()
+  if (entry === null) return <em>null</em>
+  return (
+    <StyledJsonPre
+      dangerouslySetInnerHTML={{
+        __html: convertUrlsToHrefTags(
+          HTMLEntities(
+            unescapeDoubleQuotesForDisplay(
+              stringifyMod(entry, stringModifier, true)
+            )
+          )
+        )
+      }}
+    />
+  )
 }
 
 export function RelatableBodyMessage({ maxRows, result }) {

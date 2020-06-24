@@ -639,7 +639,7 @@ describe('helpers', () => {
         neo4j.isInt,
         step1
       )
-      const res = stringifyResultArray(stringModifier, step2)
+      const res = stringifyResultArray(stringModifier, step2, true)
       // Then
       expect(res).toEqual([
         ['""neoInt""', '""int""', '""any""', '""backslash""'],
@@ -713,7 +713,7 @@ describe('helpers', () => {
         neo4j.isInt,
         step1
       )
-      const res = stringifyResultArray(stringModifier, step2)
+      const res = stringifyResultArray(stringModifier, step2, true)
       // Then
       expect(res).toEqual([
         ['""x""', '""y""', '""n""'],
@@ -730,7 +730,11 @@ describe('helpers', () => {
   describe('recordToJSONMapper', () => {
     describe('Nodes', () => {
       test('handles integer values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], { bar: new neo4j.int(3) })
+        const node = new neo4j.types.Node(1, ['foo'], {
+          bar: new neo4j.int(3),
+          baz: new neo4j.int(1416268800000),
+          bax: new neo4j.int(9907199254740991) // Larger than Number.MAX_SAFE_INTEGER, but still in 64 bit int range
+        })
         const record = new neo4j.types.Record(['n'], [node])
         const expected = {
           n: {
@@ -738,7 +742,9 @@ describe('helpers', () => {
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: 3
+              bar: new neo4j.int(3),
+              baz: new neo4j.int(1416268800000),
+              bax: new neo4j.int(9907199254740991)
             }
           }
         }
@@ -911,7 +917,7 @@ describe('helpers', () => {
             elementType: 'relationship',
             type: 'foo',
             properties: {
-              bar: 3
+              bar: new neo4j.int(3)
             }
           }
         }
@@ -1109,7 +1115,7 @@ describe('helpers', () => {
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: 3
+              bar: new neo4j.int(3)
             }
           },
           r1: {
@@ -1159,7 +1165,7 @@ describe('helpers', () => {
               elementType: 'node',
               labels: ['foo'],
               properties: {
-                bar: 3
+                bar: new neo4j.int(3)
               }
             },
             end: {
@@ -1177,7 +1183,7 @@ describe('helpers', () => {
                   elementType: 'node',
                   labels: ['foo'],
                   properties: {
-                    bar: 3
+                    bar: new neo4j.int(3)
                   }
                 },
                 relationship: {
@@ -1224,7 +1230,12 @@ describe('helpers', () => {
         )
         const expected = {
           foo: {
-            data: [1, 'car', { srid: 1, x: 10, y: 5, z: 15 }, '1970-01-01']
+            data: [
+              new neo4j.int(1),
+              'car',
+              { srid: 1, x: 10, y: 5, z: 15 },
+              '1970-01-01'
+            ]
           }
         }
 
