@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -99,6 +99,17 @@ export function App(props) {
     }
   }, [])
 
+  const eventMetricsCallback = useRef(() => {})
+
+  useEffect(() => {
+    const unsub = props.bus.take(METRICS_EVENT, ({ category, label, data }) => {
+      eventMetricsCallback &&
+        eventMetricsCallback.current &&
+        eventMetricsCallback.current({ category, label, data })
+    })
+    return unsub
+  })
+
   const focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
     if (e.key !== '/') return
@@ -135,11 +146,9 @@ export function App(props) {
   if (!codeFontLigatures) {
     wrapperClassNames.push('disable-font-ligatures')
   }
-  const setEventMetricsCallback = useCallback(fn => {
-    props.bus.take(METRICS_EVENT, ({ category, label, data }) => {
-      fn && fn({ category, label, data })
-    })
-  })
+  const setEventMetricsCallback = fn => {
+    eventMetricsCallback.current = fn
+  }
 
   return (
     <ErrorBoundary>
