@@ -229,13 +229,13 @@ export const initialView = (props, state = {}) => {
 export const stringifyResultArray = (
   formatter = stringModifier,
   arr = [],
-  unescapeDoulbeQuotes = false
+  unescapeDoubleQuotes = false
 ) => {
   return arr.map(col => {
     if (!col) return col
     return col.map(fVal => {
       const res = stringifyMod(fVal, formatter)
-      return unescapeDoulbeQuotes ? unescapeDoubleQuotesForDisplay(res) : res
+      return unescapeDoubleQuotes ? unescapeDoubleQuotesForDisplay(res) : res
     })
   })
 }
@@ -358,9 +358,9 @@ const arrayifyPath = (types = neo4j.types, path) => {
 
 /**
  * Converts a raw Neo4j record into a JSON friendly format, mimicking APOC output
- * Note: This preservers Neo4j integers as objects because they can't be guaranteed
+ * Note: This preserves Neo4j integers as objects because they can't be guaranteed
  * to be converted to numbers and keeping the precision.
- * It's up to the serializer to indentify those and write them as fake numbers (strings without quotes)
+ * It's up to the serializer to identify them and write them as fake numbers (strings without quotes)
  * @param     {Record}    record
  * @return    {*}
  */
