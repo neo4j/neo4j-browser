@@ -102,11 +102,13 @@ export function App(props) {
   const eventMetricsCallback = useRef(() => {})
 
   useEffect(() => {
-    const unsub = props.bus.take(METRICS_EVENT, ({ category, label, data }) => {
-      eventMetricsCallback &&
-        eventMetricsCallback.current &&
-        eventMetricsCallback.current({ category, label, data })
-    })
+    const unsub =
+      props.bus &&
+      props.bus.take(METRICS_EVENT, ({ category, label, data }) => {
+        eventMetricsCallback &&
+          eventMetricsCallback.current &&
+          eventMetricsCallback.current({ category, label, data })
+      })
     return unsub
   })
 
