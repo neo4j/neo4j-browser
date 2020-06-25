@@ -87,7 +87,8 @@ export class AsciiViewComponent extends Component {
     const serializedRows =
       stringifyResultArray(
         stringModifier,
-        transformResultRecordsToResultArray(records, maxFieldItems)
+        transformResultRecordsToResultArray(records, maxFieldItems),
+        true
       ) || []
     this.setState({ serializedRows })
     const maxColWidth = asciitable.maxColumnWidth(serializedRows)

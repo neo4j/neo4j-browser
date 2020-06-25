@@ -328,6 +328,10 @@ export const stringifyMod = (
   const newLine = prettyLevel ? '\n' : ''
   const indentation =
     prettyLevel && !skipOpeningIndentation ? Array(prettyLevel).join('  ') : ''
+  const nextIndentation =
+    nextPrettyLevel && !skipOpeningIndentation
+      ? Array(nextPrettyLevel).join('  ')
+      : ''
   const endIndentation = prettyLevel ? Array(prettyLevel).join('  ') : ''
   const propSpacing = prettyLevel ? ' ' : ''
   const toString = Object.prototype.toString
@@ -337,7 +341,7 @@ export const stringifyMod = (
       return toString.call(a) === '[object Array]'
     }
   const escMap = {
-    '"': '"',
+    '"': '\\"',
     '\\': '\\',
     '\b': '\b',
     '\f': '\f',
@@ -381,10 +385,8 @@ export const stringifyMod = (
       for (const k in value) {
         if (value.hasOwnProperty(k)) {
           tmp.push(
-            `${stringifyMod(
-              k,
-              modFn,
-              nextPrettyLevel
+            `${nextIndentation}${JSON.stringify(
+              k
             )}:${propSpacing}${stringifyMod(
               value[k],
               modFn,
@@ -401,6 +403,8 @@ export const stringifyMod = (
   }
   return `${indentation}"${value.toString().replace(escRE, escFunc)}"`
 }
+
+export const unescapeDoubleQuotesForDisplay = str => str.replace(/\\"/g, '"')
 
 export const safetlyAddObjectProp = (obj, prop, val) => {
   const localObj = escapeReservedProps(obj, prop)
