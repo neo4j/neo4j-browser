@@ -22,10 +22,24 @@ import { eventToHandler } from './desktop-api.utils'
 
 const DEFAULT_INTEGRATION_POINT = window.neo4jDesktopApi
 
-function DesktopApi({ integrationPoint = DEFAULT_INTEGRATION_POINT, ...rest }) {
+function DesktopApi({
+  integrationPoint = DEFAULT_INTEGRATION_POINT,
+  setEventMetricsCallback,
+  ...rest
+}) {
   const getKerberosTicket =
     (integrationPoint && integrationPoint.getKerberosTicket) || undefined
 
+  if (
+    setEventMetricsCallback &&
+    integrationPoint &&
+    integrationPoint.sendMetrics
+  ) {
+    const takeMetrics = ({ category, label, data }) => {
+      integrationPoint.sendMetrics(category, label, data)
+    }
+    setEventMetricsCallback(takeMetrics)
+  }
   useEffect(() => {
     async function mountEvent() {
       if (integrationPoint && integrationPoint.getContext) {

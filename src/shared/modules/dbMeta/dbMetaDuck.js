@@ -93,7 +93,8 @@ export const getStoreSize = state => state[NAME].server.storeSize
 export const getClusterRole = state => state[NAME].role
 export const isEnterprise = state => state[NAME].server.edition === 'enterprise'
 export const isBeta = state => /-/.test(state[NAME].server.version)
-export const getStoreId = state => state[NAME].server.storeId
+export const getStoreId = state =>
+  state[NAME] && state[NAME].server ? state[NAME].server.storeId : null
 
 export const getAvailableSettings = state =>
   (state[NAME] || initialState).settings
