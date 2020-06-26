@@ -109,8 +109,8 @@ export function App(props) {
           eventMetricsCallback.current &&
           eventMetricsCallback.current({ category, label, data })
       })
-    return unsub
-  })
+    return () => unsub && unsub()
+  }, [])
 
   const focusEditorOnSlash = e => {
     if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
