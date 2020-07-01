@@ -16,7 +16,7 @@ const toExport = {
         corejs: 3,
         modules: isTest ? 'commonjs' : false,
         targets: {
-          browsers: ['last 1 version', 'ie >= 11']
+          browsers: ['last 1 version', 'not ie > 0']
         }
       }
     ]
