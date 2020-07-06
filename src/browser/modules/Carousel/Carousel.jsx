@@ -87,13 +87,13 @@ export default function Carousel({
     const slide = visibleSlide + 1
     setVisibleSlide(slide)
     setWasClicked(true)
-    myRef.current.scrollTo(0, 0)
+    myRef.current.scrollTop = 0
   }
 
   const prev = () => {
     const slide = visibleSlide - 1
     setVisibleSlide(slide)
-    myRef.current.scrollTo(0, 0)
+    myRef.current.scrollTop = 0
   }
 
   const getSlide = slideNumber => {
