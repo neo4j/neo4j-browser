@@ -24,6 +24,7 @@ import { dim } from 'browser-styles/constants'
 const editorPadding = 10
 
 export const BaseBar = styled.div`
+  background-color: ${props => props.theme.primaryBackground};
   display: flex;
   flex-direction: row;
   align-items: middle;
