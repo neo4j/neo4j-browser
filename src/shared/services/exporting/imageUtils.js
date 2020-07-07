@@ -27,8 +27,7 @@ export const downloadPNGFromSVG = (svg, graph, type) => {
   const svgObj = prepareForExport(svg, graph, type)
   const svgData = htmlCharacterRefToNumericalRef(svgObj.node())
 
-  let canvas
-  canvas = document.createElement('canvas')
+  const canvas = document.createElement('canvas')
   canvas.width = svgObj.attr('width')
   canvas.height = svgObj.attr('height')
 
