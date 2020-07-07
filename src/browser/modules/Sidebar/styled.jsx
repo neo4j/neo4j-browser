@@ -25,7 +25,7 @@ export const StyledSetting = styled.div`
   padding-bottom: 15px;
 `
 
-export const StyledSettingLabel = styled.div`
+export const StyledSettingLabel = styled.label`
   word-wrap: break-wrap;
   display: inline-block;
 `

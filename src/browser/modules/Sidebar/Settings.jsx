@@ -181,17 +181,17 @@ export const Settings = ({
   if (!settings) return null
   const mappedSettings = visualSettings.map(visualSetting => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
-    const mapSettings = visualSetting.settings
-      .map(settingObj => {
-        const setting = Object.keys(settingObj)[0]
-        if (typeof settings[setting] === 'undefined') return false
-        const visual = settingObj[setting].displayName
-        const tooltip = settingObj[setting].tooltip || ''
+    const mapSettings = visualSetting.settings.map(settingObj => {
+      const setting = Object.keys(settingObj)[0]
+      const visual = settingObj[setting].displayName
+      const tooltip = settingObj[setting].tooltip || ''
+      const type = settingObj[setting].type || 'input'
 
-        if (!settingObj[setting].type || settingObj[setting].type === 'input') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
+      if (type === 'input') {
+        return (
+          <StyledSetting key={toKeyString(visual)}>
+            <StyledSettingLabel title={tooltip}>
+              {visual}
               <StyledSettingTextInput
                 onChange={event => {
                   settings[setting] = event.target.value
@@ -201,25 +201,31 @@ export const Settings = ({
                 title={[tooltip]}
                 className={setting}
               />
-            </StyledSetting>
-          )
-        } else if (settingObj[setting].type === 'radio') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
-              <RadioSelector
-                options={settingObj[setting].options}
-                onChange={event => {
-                  settings[setting] = event.target.value
-                  onSettingsSave(settings)
-                }}
-                selectedValue={settings[setting]}
-              />
-            </StyledSetting>
-          )
-        } else if (settingObj[setting].type === 'checkbox') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
+            </StyledSettingLabel>
+          </StyledSetting>
+        )
+      }
+
+      if (type === 'radio') {
+        return (
+          <StyledSetting key={toKeyString(visual)}>
+            <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
+            <RadioSelector
+              options={settingObj[setting].options}
+              onChange={event => {
+                settings[setting] = event.target.value
+                onSettingsSave(settings)
+              }}
+              selectedValue={settings[setting]}
+            />
+          </StyledSetting>
+        )
+      }
+
+      if (type === 'checkbox') {
+        return (
+          <StyledSetting key={toKeyString(visual)}>
+            <StyledSettingLabel title={tooltip}>
               <CheckboxSelector
                 onChange={event => {
                   settings[setting] = event.target.checked
@@ -228,12 +234,13 @@ export const Settings = ({
                 checked={settings[setting]}
                 data-testid={setting}
               />
-              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
-            </StyledSetting>
-          )
-        }
-      })
-      .filter(setting => setting !== false)
+              {visual}
+            </StyledSettingLabel>
+          </StyledSetting>
+        )
+      }
+    })
+
     return (
       <React.Fragment key={toKeyString(visualSetting.title)}>
         {title}
@@ -265,6 +272,7 @@ export const Settings = ({
       )
     })
     .filter(r => r)
+
   return (
     <Drawer id="db-settings">
       <DrawerHeader>Browser Settings</DrawerHeader>
