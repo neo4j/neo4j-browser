@@ -10,7 +10,7 @@ BEFORE YOU SUBMIT please search open/closed issues since someone might have aske
 
 ### Expected Behavior
 <!--- If you're describing a bug, tell us what should happen -->
-<!--- If you're suggesting a change/improvement, tell us how it should work →
+<!--- If you're suggesting a change/improvement, tell us how it should work -->
 
 ### Current Behavior
 <!--- If describing a bug, tell us what happens instead of the expected behavior.
