@@ -37,7 +37,8 @@ export default class ChangePasswordForm extends Component {
     this.state = {
       password: '',
       newPassword: '',
-      newPassword2: ''
+      newPassword2: '',
+      revealNewPassword: false
     }
   }
 
@@ -62,9 +63,13 @@ export default class ChangePasswordForm extends Component {
     )}`
     this.setState({
       newPassword: suggestedPassword,
-      newPassword2: suggestedPassword
+      newPassword2: suggestedPassword,
+      revealNewPassword: true
     })
   }
+
+  togglePasswordRevealed = () =>
+    this.setState(state => ({ revealNewPassword: !state.revealNewPassword }))
 
   validateSame = () => {
     if (
@@ -143,7 +148,9 @@ export default class ChangePasswordForm extends Component {
                       onChange: this.onNewPasswordChange,
                       value: this.state.newPassword,
                       setRef: ref => setRefForIndex(indexStart, ref),
-                      disabled: isLoading
+                      disabled: isLoading,
+                      isRevealed: this.state.revealNewPassword,
+                      toggleReveal: this.togglePasswordRevealed
                     })}
                   />
                   &nbsp;OR&nbsp;&nbsp;
@@ -162,7 +169,9 @@ export default class ChangePasswordForm extends Component {
                       onChange: this.onNewPasswordChange2,
                       value: this.state.newPassword2,
                       setRef: ref => setRefForIndex(indexStart + 1, ref),
-                      disabled: isLoading
+                      disabled: isLoading,
+                      isRevealed: this.state.revealNewPassword,
+                      toggleReveal: this.togglePasswordRevealed
                     })}
                   />
                 </StyledConnectionFormEntry>
