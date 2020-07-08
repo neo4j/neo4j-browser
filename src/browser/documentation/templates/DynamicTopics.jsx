@@ -21,7 +21,7 @@
 import React from 'react'
 import { transformHelpTopicToCommand } from 'services/commandUtils'
 
-// Avoid duplication and don list error-pages
+// Avoid duplication and don't list error-pages
 const unlistedCommands = [
   'unfound',
   'unknown',
