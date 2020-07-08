@@ -242,7 +242,7 @@ export const Settings = ({
           )
         }
       })
-      .filter(s => s !== null)
+      .filter(setting => setting !== null)
 
     return (
       <React.Fragment key={toKeyString(visualSetting.title)}>
