@@ -181,65 +181,68 @@ export const Settings = ({
   if (!settings) return null
   const mappedSettings = visualSettings.map(visualSetting => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
-    const mapSettings = visualSetting.settings.map(settingObj => {
-      const setting = Object.keys(settingObj)[0]
-      const visual = settingObj[setting].displayName
-      const tooltip = settingObj[setting].tooltip || ''
-      const type = settingObj[setting].type || 'input'
+    const mapSettings = visualSetting.settings
+      .map(settingObj => {
+        const setting = Object.keys(settingObj)[0]
+        if (typeof settings[setting] === 'undefined') return null
+        const visual = settingObj[setting].displayName
+        const tooltip = settingObj[setting].tooltip || ''
+        const type = settingObj[setting].type || 'input'
 
-      if (type === 'input') {
-        return (
-          <StyledSetting key={toKeyString(visual)}>
-            <StyledSettingLabel title={tooltip}>
-              {visual}
-              <StyledSettingTextInput
+        if (type === 'input') {
+          return (
+            <StyledSetting key={toKeyString(visual)}>
+              <StyledSettingLabel title={tooltip}>
+                {visual}
+                <StyledSettingTextInput
+                  onChange={event => {
+                    settings[setting] = event.target.value
+                    onSettingsSave(settings)
+                  }}
+                  defaultValue={settings[setting]}
+                  title={[tooltip]}
+                  className={setting}
+                />
+              </StyledSettingLabel>
+            </StyledSetting>
+          )
+        }
+
+        if (type === 'radio') {
+          return (
+            <StyledSetting key={toKeyString(visual)}>
+              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
+              <RadioSelector
+                options={settingObj[setting].options}
                 onChange={event => {
                   settings[setting] = event.target.value
                   onSettingsSave(settings)
                 }}
-                defaultValue={settings[setting]}
-                title={[tooltip]}
-                className={setting}
+                selectedValue={settings[setting]}
               />
-            </StyledSettingLabel>
-          </StyledSetting>
-        )
-      }
+            </StyledSetting>
+          )
+        }
 
-      if (type === 'radio') {
-        return (
-          <StyledSetting key={toKeyString(visual)}>
-            <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
-            <RadioSelector
-              options={settingObj[setting].options}
-              onChange={event => {
-                settings[setting] = event.target.value
-                onSettingsSave(settings)
-              }}
-              selectedValue={settings[setting]}
-            />
-          </StyledSetting>
-        )
-      }
-
-      if (type === 'checkbox') {
-        return (
-          <StyledSetting key={toKeyString(visual)}>
-            <StyledSettingLabel title={tooltip}>
-              <CheckboxSelector
-                onChange={event => {
-                  settings[setting] = event.target.checked
-                  onSettingsSave(settings)
-                }}
-                checked={settings[setting]}
-                data-testid={setting}
-              />
-              {visual}
-            </StyledSettingLabel>
-          </StyledSetting>
-        )
-      }
-    })
+        if (type === 'checkbox') {
+          return (
+            <StyledSetting key={toKeyString(visual)}>
+              <StyledSettingLabel title={tooltip}>
+                <CheckboxSelector
+                  onChange={event => {
+                    settings[setting] = event.target.checked
+                    onSettingsSave(settings)
+                  }}
+                  checked={settings[setting]}
+                  data-testid={setting}
+                />
+                {visual}
+              </StyledSettingLabel>
+            </StyledSetting>
+          )
+        }
+      })
+      .filter(s => s !== null)
 
     return (
       <React.Fragment key={toKeyString(visualSetting.title)}>
