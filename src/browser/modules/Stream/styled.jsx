@@ -25,7 +25,6 @@ export const StyledStream = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  overflow: auto;
   padding: 0px 10px 100px 10px;
 `
 

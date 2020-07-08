@@ -47,7 +47,7 @@ export const Banner = styled.div`
   min-height: 49px;
   color: white;
   padding: 0 24px;
-  margin: 0 24px;
+  margin: 0 10px 0 10px;
   overflow: hidden;
   animation: ${grow('49px')} 0.3s ease-in;
   flex: 0 0 49px;
