@@ -43,26 +43,26 @@ export default class ChangePasswordForm extends Component {
 
   onExistingPasswordChange = event => {
     const password = event.target.value
-    this.setState({ password, error: {} }, () => this.onChange())
+    this.setState({ password }, () => this.props.onChange())
   }
 
   onNewPasswordChange = event => {
     const newPassword = event.target.value
-    this.setState({ newPassword, error: {} }, () => this.onChange())
+    this.setState({ newPassword }, () => this.props.onChange())
   }
 
   onNewPasswordChange2 = event => {
     const newPassword2 = event.target.value
-    this.setState({ newPassword2, error: {} }, () => this.onChange())
-  }
-
-  onChange = () => {
-    this.props.onChange(this.state.newPassword, this.state.newPassword2)
+    this.setState({ newPassword2 }, () => this.props.onChange())
   }
 
   onSuggestPassword = () => {
+    const suggestedPassword = `${faker.random.words(3)} ${faker.random.number(
+      100
+    )}`
     this.setState({
-      newPassword: `${faker.random.words(3)} ${faker.random.number(100)}`
+      newPassword: suggestedPassword,
+      newPassword2: suggestedPassword
     })
   }
 
@@ -86,9 +86,9 @@ export default class ChangePasswordForm extends Component {
           this.props.onChangePasswordClick({
             newPassword: this.state.newPassword
           })
-          return
+        } else {
+          this.props.onChangePasswordClick(res)
         }
-        this.props.onChangePasswordClick(res)
       })
     } else {
       this.props.onChangePasswordClick({
