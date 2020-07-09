@@ -146,7 +146,7 @@ export default class ChangePasswordForm extends Component {
                       disabled: isLoading
                     })}
                   />
-                  &nbsp;OR&nbsp;
+                  &nbsp;OR&nbsp;&nbsp;
                   <FormButton tabIndex="-1" onClick={this.onSuggestPassword}>
                     Generate
                   </FormButton>
