@@ -42,6 +42,10 @@ export const StyledMain = styled.div`
   height: 100vh;
 `
 
+export const ScrollContainer = styled.div`
+  overflow: auto;
+`
+
 export const Banner = styled.div`
   line-height: 49px;
   min-height: 49px;
