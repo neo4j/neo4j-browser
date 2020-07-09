@@ -19,7 +19,6 @@
  */
 
 import React, { Component } from 'react'
-import classNames from 'classnames'
 import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/edit/closebrackets'
@@ -133,11 +132,11 @@ export default class CodeMirror extends Component {
   }
 
   render() {
-    const editorClassNames = classNames(
+    const editorClassNames = [
       'ReactCodeMirror',
-      { 'ReactCodeMirror--focused': this.state.isFocused },
+      this.state.isFocused ? 'ReactCodeMirror--focused' : '',
       this.props.classNames
-    )
+    ].join(' ')
 
     const setEditorReference = ref => {
       this.editorReference = ref

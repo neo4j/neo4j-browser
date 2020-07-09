@@ -22,8 +22,13 @@ import {
   StyledConnectionTextInput
 } from './styled'
 
-export default function RevealablePasswordInput({ setRef, ...props }) {
-  const [inputRef, isRevealed, toggleReveal] = useReveal()
+export default function RevealablePasswordInput({
+  setRef,
+  isRevealed,
+  toggleReveal,
+  ...props
+}) {
+  const inputRef = useReveal(isRevealed)
 
   return (
     <StyledRevealablePasswordWrapper>
@@ -33,10 +38,8 @@ export default function RevealablePasswordInput({ setRef, ...props }) {
   )
 }
 
-function useReveal() {
+function useReveal(isRevealed) {
   const inputRef = useRef(null)
-  const [isRevealed, setIsRevealed] = useState(false)
-  const toggleReveal = () => setIsRevealed(!isRevealed)
 
   useEffect(() => {
     if (!inputRef.current) {
@@ -50,5 +53,5 @@ function useReveal() {
     }
   }, [inputRef, isRevealed])
 
-  return [inputRef, isRevealed, toggleReveal]
+  return inputRef
 }

@@ -135,7 +135,6 @@
     "@relate-by-ui/saved-scripts": "^1.0.4",
     "ascii-data-table": "^2.1.1",
     "canvg": "^1.5.3",
-    "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
     "core-js": "3",
     "cypher-codemirror": "1.1.6",
