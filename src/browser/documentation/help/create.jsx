@@ -64,8 +64,8 @@ const content = (
     <section className="example">
       <figure>
         <pre className="code runnable">
-          {`CREATE (le:Person {name: Euler }),
-  (db:Person {name: Bernoulli }),
+          {`CREATE (le:Person {name: "Euler" }),
+  (db:Person {name: "Bernoulli" }),
   (le)-[:KNOWS {since:1768}]->(db)
   RETURN le, db`}
         </pre>
