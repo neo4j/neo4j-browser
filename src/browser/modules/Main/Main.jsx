@@ -30,8 +30,7 @@ import {
   StyledMain,
   WarningBanner,
   ErrorBanner,
-  NotAuthedBanner,
-  ScrollContainer
+  NotAuthedBanner
 } from './styled'
 import SyncReminderBanner from './SyncReminderBanner'
 import SyncConsentBanner from './SyncConsentBanner'
@@ -50,55 +49,53 @@ const Main = React.memo(function Main(props) {
       <ErrorBoundary>
         <Editor />
       </ErrorBoundary>
-      <ScrollContainer>
-        <Render if={dbIsUnavailable}>
-          <ErrorBanner>
-            Database '{useDb}' is unavailable. Run{' '}
-            <AutoExecButton cmd="sysinfo" /> for more info.
-          </ErrorBanner>
-        </Render>
-        <Render if={props.errorMessage}>
-          <ErrorBanner data-testid="errorBanner">
-            {props.errorMessage}
-          </ErrorBanner>
-        </Render>
-        <Render if={props.connectionState === DISCONNECTED_STATE}>
-          <NotAuthedBanner data-testid="disconnectedBanner">
-            Database access not available. Please use&nbsp;
-            <AutoExecButton
-              cmd="server connect"
-              data-testid="disconnectedBannerCode"
-            />
-            &nbsp; to establish connection. There's a graph waiting for you.
-          </NotAuthedBanner>
-        </Render>
-        <Render if={props.connectionState === PENDING_STATE && !past10Sec}>
-          <WarningBanner data-testid="reconnectBanner">
-            Connection to server lost. Reconnecting...
-          </WarningBanner>
-        </Render>
-        <Render
-          if={
-            props.connectionState === CONNECTING_STATE && past5Sec && !past10Sec
-          }
-        >
-          <NotAuthedBanner>Still connecting...</NotAuthedBanner>
-        </Render>
-        <Render if={past10Sec}>
-          <WarningBanner>
-            Server is taking a long time to respond...
-          </WarningBanner>
-        </Render>
-        <Render if={props.useBrowserSync}>
-          <SyncReminderBanner />
-        </Render>
-        <Render if={props.useBrowserSync}>
-          <SyncConsentBanner />
-        </Render>
-        <ErrorBoundary>
-          <Stream />
-        </ErrorBoundary>
-      </ScrollContainer>
+      <Render if={dbIsUnavailable}>
+        <ErrorBanner>
+          Database '{useDb}' is unavailable. Run{' '}
+          <AutoExecButton cmd="sysinfo" /> for more info.
+        </ErrorBanner>
+      </Render>
+      <Render if={props.errorMessage}>
+        <ErrorBanner data-testid="errorBanner">
+          {props.errorMessage}
+        </ErrorBanner>
+      </Render>
+      <Render if={props.connectionState === DISCONNECTED_STATE}>
+        <NotAuthedBanner data-testid="disconnectedBanner">
+          Database access not available. Please use&nbsp;
+          <AutoExecButton
+            cmd="server connect"
+            data-testid="disconnectedBannerCode"
+          />
+          &nbsp; to establish connection. There's a graph waiting for you.
+        </NotAuthedBanner>
+      </Render>
+      <Render if={props.connectionState === PENDING_STATE && !past10Sec}>
+        <WarningBanner data-testid="reconnectBanner">
+          Connection to server lost. Reconnecting...
+        </WarningBanner>
+      </Render>
+      <Render
+        if={
+          props.connectionState === CONNECTING_STATE && past5Sec && !past10Sec
+        }
+      >
+        <NotAuthedBanner>Still connecting...</NotAuthedBanner>
+      </Render>
+      <Render if={past10Sec}>
+        <WarningBanner>
+          Server is taking a long time to respond...
+        </WarningBanner>
+      </Render>
+      <Render if={props.useBrowserSync}>
+        <SyncReminderBanner />
+      </Render>
+      <Render if={props.useBrowserSync}>
+        <SyncConsentBanner />
+      </Render>
+      <ErrorBoundary>
+        <Stream />
+      </ErrorBoundary>
     </StyledMain>
   )
 })

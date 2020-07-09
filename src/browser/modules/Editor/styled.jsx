@@ -51,17 +51,16 @@ export const Bar = styled(BaseBar)`
   }};
 `
 export const ActionButtonSection = styled.div`
-  flex: 0 0 130px;
+  flex: 0 0 120px;
   align-items: top;
   display: flex;
   padding-top: 21px;
   justify-content: space-between;
-  padding-right: ${editorPadding}px;
 `
 
 const BaseEditorWrapper = styled.div`
   flex: auto;
-  padding: ${editorPadding}px;
+  padding: ${editorPadding}px ${editorPadding}px ${editorPadding}px 0;
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   min-height: ${props =>
     props.expanded
