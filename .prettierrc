@@ -7,13 +7,5 @@
   "trailingComma": "none",
   "jsxBracketSameLine": false,
   "arrowParens": "avoid",
-  "jsxSingleQuote": false,
-  "overrides": [
-    {
-      "files": ["*.ts", "**/*.ts"],
-      "options": {
-        "semi": true
-      }
-    }
-  ]
+  "jsxSingleQuote": false
 }

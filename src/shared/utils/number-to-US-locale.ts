@@ -17,13 +17,13 @@
 
 export default (value: any): string | null => {
   if (value === null || value === undefined) {
-    return null;
+    return null
   }
 
-  const n = typeof value === 'number' ? value : parseInt(value, 10);
+  const n = typeof value === 'number' ? value : parseInt(value, 10)
   if (isNaN(n)) {
-    return n.toString();
+    return n.toString()
   }
 
-  return n.toLocaleString('en-US');
-};
+  return n.toLocaleString('en-US')
+}
