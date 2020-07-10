@@ -141,7 +141,7 @@ export class RadioSelector extends Component {
                   this.props.onChange(event)
                 }}
               />
-              <StyledLabel for={option}>{option}</StyledLabel>
+              <StyledLabel htmlFor={option}>{option}</StyledLabel>
             </StyledRadioEntry>
           )
         })}
