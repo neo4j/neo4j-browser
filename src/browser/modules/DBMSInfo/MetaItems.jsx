@@ -19,7 +19,6 @@
  */
 import React from 'react'
 import { escapeCypherIdentifier } from 'services/utils'
-import classNames from 'classnames'
 import styles from './style_meta.css'
 import {
   DrawerSubHeader,
@@ -36,12 +35,7 @@ import {
 import Render from 'browser-components/Render'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
-const wrapperStyleObj =
-  styles && styles.wrapper
-    ? {
-        [styles.wrapper]: true
-      }
-    : {}
+const wrapperStyle = (styles && styles.wrapper) || ''
 
 const ShowMore = ({ total, shown, moreStep, onMore }) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown
@@ -117,7 +111,7 @@ const LabelItems = ({
   return (
     <DrawerSection>
       <DrawerSubHeader>Node Labels</DrawerSubHeader>
-      <DrawerSectionBody className={classNames(wrapperStyleObj)}>
+      <DrawerSectionBody className={wrapperStyle}>
         {labelItems}
       </DrawerSectionBody>
       <ShowMore
@@ -159,7 +153,7 @@ const RelationshipItems = ({
   return (
     <DrawerSection>
       <DrawerSubHeader>Relationship Types</DrawerSubHeader>
-      <DrawerSectionBody className={classNames(wrapperStyleObj)}>
+      <DrawerSectionBody className={wrapperStyle}>
         {relationshipItems}
       </DrawerSectionBody>
       <ShowMore
@@ -204,7 +198,7 @@ const PropertyItems = ({
   return (
     <DrawerSection>
       <DrawerSubHeader>Property Keys</DrawerSubHeader>
-      <DrawerSectionBody className={classNames(wrapperStyleObj)}>
+      <DrawerSectionBody className={wrapperStyle}>
         {propertyItems}
       </DrawerSectionBody>
       <ShowMore

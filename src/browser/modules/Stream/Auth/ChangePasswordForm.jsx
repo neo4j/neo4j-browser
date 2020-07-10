@@ -37,34 +37,39 @@ export default class ChangePasswordForm extends Component {
     this.state = {
       password: '',
       newPassword: '',
-      newPassword2: ''
+      newPassword2: '',
+      revealNewPassword: false
     }
   }
 
   onExistingPasswordChange = event => {
     const password = event.target.value
-    this.setState({ password, error: {} }, () => this.onChange())
+    this.setState({ password }, () => this.props.onChange())
   }
 
   onNewPasswordChange = event => {
     const newPassword = event.target.value
-    this.setState({ newPassword, error: {} }, () => this.onChange())
+    this.setState({ newPassword }, () => this.props.onChange())
   }
 
   onNewPasswordChange2 = event => {
     const newPassword2 = event.target.value
-    this.setState({ newPassword2, error: {} }, () => this.onChange())
-  }
-
-  onChange = () => {
-    this.props.onChange(this.state.newPassword, this.state.newPassword2)
+    this.setState({ newPassword2 }, () => this.props.onChange())
   }
 
   onSuggestPassword = () => {
+    const suggestedPassword = `${faker.random.words(3)} ${faker.random.number(
+      100
+    )}`
     this.setState({
-      newPassword: `${faker.random.words(3)} ${faker.random.number(100)}`
+      newPassword: suggestedPassword,
+      newPassword2: suggestedPassword,
+      revealNewPassword: true
     })
   }
+
+  togglePasswordRevealed = () =>
+    this.setState(state => ({ revealNewPassword: !state.revealNewPassword }))
 
   validateSame = () => {
     if (
@@ -86,9 +91,9 @@ export default class ChangePasswordForm extends Component {
           this.props.onChangePasswordClick({
             newPassword: this.state.newPassword
           })
-          return
+        } else {
+          this.props.onChangePasswordClick(res)
         }
-        this.props.onChangePasswordClick(res)
       })
     } else {
       this.props.onChangePasswordClick({
@@ -143,10 +148,12 @@ export default class ChangePasswordForm extends Component {
                       onChange: this.onNewPasswordChange,
                       value: this.state.newPassword,
                       setRef: ref => setRefForIndex(indexStart, ref),
-                      disabled: isLoading
+                      disabled: isLoading,
+                      isRevealed: this.state.revealNewPassword,
+                      toggleReveal: this.togglePasswordRevealed
                     })}
                   />
-                  &nbsp;OR&nbsp;
+                  &nbsp;OR&nbsp;&nbsp;
                   <FormButton tabIndex="-1" onClick={this.onSuggestPassword}>
                     Generate
                   </FormButton>
@@ -162,7 +169,9 @@ export default class ChangePasswordForm extends Component {
                       onChange: this.onNewPasswordChange2,
                       value: this.state.newPassword2,
                       setRef: ref => setRefForIndex(indexStart + 1, ref),
-                      disabled: isLoading
+                      disabled: isLoading,
+                      isRevealed: this.state.revealNewPassword,
+                      toggleReveal: this.togglePasswordRevealed
                     })}
                   />
                 </StyledConnectionFormEntry>

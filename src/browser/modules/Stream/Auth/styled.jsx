@@ -96,25 +96,24 @@ export const StyledSegmentedConnectionTextInput = styled(StyledInput)`
 export const StyledRevealablePasswordWrapper = styled.div`
   position: relative;
   display: inline-block;
-  width: 44%;
+  width: calc(44% + 30px);
   min-width: 200px;
 
   > input {
-    padding-right: 30px;
-    width: 100%;
+    width: calc(100% - 30px);
   }
 
   > .icon {
+    display: inline-block;
+    width: 25px;
+    color: ${props => props.theme.primaryText};
     position: absolute;
     user-select: none;
     right: 0;
-    top: 6px;
+    top: 5px;
     height: auto;
-    width: auto;
     padding: 3px;
     cursor: pointer;
-    color: #333333;
-    opacity: 0.5;
   }
 `
 

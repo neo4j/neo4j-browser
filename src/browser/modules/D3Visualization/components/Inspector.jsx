@@ -42,7 +42,6 @@ import ClickableUrls from '../../../components/clickable-urls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { Icon } from 'semantic-ui-react'
-import Ellipsis from 'browser-components/Ellipsis'
 
 const mapItemProperties = itemProperties =>
   itemProperties
