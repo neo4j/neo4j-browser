@@ -27,22 +27,22 @@ const content = (
   <>
     <p>
       The
-      <code>:param name => 'Stella'</code> command will define a parameter named
-      "name" and it will be sent along with your queries.
+      <code>:param name {'=>'} 'Stella'</code> command will define a parameter
+      named "name" and it will be sent along with your queries.
       <br /> Using parameters, rather than hard coding values, will allow for
       reuse of the query plan cache
     </p>
     <p>
       The right hand side of
-      <code>=></code> is sent to the server and evaluated as Cypher with an
+      <code>{'=>'}</code> is sent to the server and evaluated as Cypher with an
       implicit
       <code>RETURN</code> in front. This gives better type safety since some
       types (especially numbers) in JavaScript are hard to match with Neo4j:s
       type system.
       <br />
       To set a param as an integer, do
-      <code>:param x => 1</code> and to set it as a float, do
-      <code>:param x => 1.0</code>.
+      <code>:param x {'=>'} 1</code> and to set it as a float, do
+      <code>:param x {'=>'} 1.0</code>.
     </p>
     <p>
       If you need more fine-grained control or advanced Cypher queries, you can
