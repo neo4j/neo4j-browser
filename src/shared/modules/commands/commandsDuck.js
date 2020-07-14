@@ -161,7 +161,13 @@ export const handleCommandEpic = (action$, store) =>
       store.dispatch(clearErrorMessage())
       const maxHistory = getMaxHistory(store.getState())
       store.dispatch(addHistory(action.cmd, maxHistory))
-      const statements = shouldEnableMultiStatementMode(store.getState())
+
+      // Semicolons in :style grass break parsing of multiline statements from codemirror.
+      const useMultiLine =
+        !action.cmd.startsWith(':style') &&
+        shouldEnableMultiStatementMode(store.getState())
+
+      const statements = useMultiLine
         ? extractStatementsFromString(action.cmd)
         : [action.cmd]
 
