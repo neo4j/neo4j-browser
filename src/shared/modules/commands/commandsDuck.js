@@ -177,18 +177,17 @@ export const handleCommandEpic = (action$, store) =>
         addFrame({ type: 'cypher-script', id: parentId, cmd: action.cmd })
       )
       const cmdchar = getCmdChar(store.getState())
-      const jobs = []
-      statements.forEach(cmd => {
+      const jobs = statements.map(cmd => {
         const cleanCmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
         const whitelistedCommands = whitelistedMultiCommands()
-        const isWhitelisted =
-          whitelistedCommands.filter(wcmd => !!cleanCmd.startsWith(wcmd))
-            .length > 0
+        const isWhitelisted = whitelistedCommands.some(wcmd =>
+          cleanCmd.startsWith(wcmd)
+        )
 
         // Ignore client commands that aren't whitelisted
-        const ignore = !!cleanCmd.startsWith(cmdchar) && !isWhitelisted
+        const ignore = cleanCmd.startsWith(cmdchar) && !isWhitelisted
 
         const { action, interpreted } = buildCommandObject(
           { cmd: cleanCmd, ignore },
@@ -202,13 +201,13 @@ export const handleCommandEpic = (action$, store) =>
           addFrame({ ...action, requestId, type: interpreted.name })
         )
         store.dispatch(updateQueryResult(requestId, null, 'waiting'))
-        jobs.push({
+        return {
           workFn: () =>
             interpreted.exec(action, cmdchar, store.dispatch, store),
           onStart: () => {},
           onSkip: () =>
             store.dispatch(updateQueryResult(requestId, null, 'skipped'))
-        })
+        }
       })
 
       serialExecution(...jobs).catch(() => {})

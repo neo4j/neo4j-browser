@@ -35,7 +35,10 @@ export function stripEmptyCommandLines(str) {
 }
 
 export function stripCommandComments(str) {
-  return str.replace(/((^|\n)\/\/[^\n$]+\n?)/g, '')
+  return str
+    .split('\n')
+    .filter(line => !line.trim().startsWith('//'))
+    .join('\n')
 }
 
 export function splitStringOnFirst(str, delimiter) {
@@ -141,7 +144,8 @@ export const mapParamToCypherStatement = (key, param) => {
 }
 
 export const extractStatementsFromString = str => {
-  const parsed = extractStatements(str)
+  const cleanCmd = cleanCommand(str)
+  const parsed = extractStatements(cleanCmd)
   const { statements } = parsed.referencesListener
   return statements[0]
     .raw()
