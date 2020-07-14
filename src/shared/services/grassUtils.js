@@ -102,7 +102,6 @@ function parseGrassCSS(string) {
 
 export const objToCss = obj => {
   if (typeof obj !== 'object') {
-    console.error('Need a object but got ', typeof obj, obj)
     return false
   }
   let output = ''
