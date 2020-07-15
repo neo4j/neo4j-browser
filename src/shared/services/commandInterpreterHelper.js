@@ -75,6 +75,7 @@ import {
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError,
+  InvalidGrassError,
   UnsupportedError
 } from 'services/exceptions'
 import {
@@ -726,17 +727,17 @@ const availableCommands = [
         )
       }
 
-      function updateGrassAndShow(newGrass) {
+      function updateAndShowGrass(newGrass) {
         put(updateGraphStyleData(newGrass))
         showGrass()
       }
 
-      function putErrorFrame(error) {
+      function putGrassErrorFrame(message) {
         put(
           frames.add({
             useDb: getUseDb(store.getState()),
             ...action,
-            error,
+            error: createErrorObject(InvalidGrassError, message),
             type: 'error'
           })
         )
@@ -748,11 +749,14 @@ const availableCommands = [
       }
 
       if (param === 'reset') {
-        updateGrassAndShow(null)
+        updateAndShowGrass(null)
         return
       }
 
-      if (isValidURL(param)) {
+      if (
+        isValidURL(param) &&
+        param.includes('.') /* isValid url considers words like rest an url*/
+      ) {
         const url = param.startsWith('http') ? param : `http://${param}`
         const whitelist = getRemoteContentHostnameWhitelist(store.getState())
 
@@ -760,12 +764,15 @@ const availableCommands = [
           .then(response => {
             const parsedGrass = parseGrass(response)
             if (parsedGrass) {
-              updateGrassAndShow(parsedGrass)
+              updateAndShowGrass(parsedGrass)
             } else {
-              putErrorFrame('Could not parse grass file')
+              putGrassErrorFrame(
+                `Could not parse grass file containing: 
+${response}`
+              )
             }
           })
-          .catch(e => putErrorFrame(new Error(e)))
+          .catch(e => putGrassErrorFrame(e.message))
         return
       }
 
@@ -774,9 +781,10 @@ const availableCommands = [
       const parsedGrass = parseGrass(param)
       const validGrass = objToCss(parsedGrass)
       if (parsedGrass && validGrass) {
-        updateGrassAndShow(parsedGrass)
+        updateAndShowGrass(parsedGrass)
       } else {
-        putErrorFrame(new Error('Could not parse grass data'))
+        putGrassErrorFrame(`Could not parse grass data:
+${param}`)
       }
     }
   },

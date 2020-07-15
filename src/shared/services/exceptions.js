@@ -115,3 +115,11 @@ export function NotFoundError(message) {
   }
 }
 errorFunctions.NotFoundError = NotFoundError
+
+export function InvalidGrassError(message) {
+  return {
+    type: 'InvalidGrassError',
+    message
+  }
+}
+errorFunctions.InvalidGrassError = InvalidGrassError
