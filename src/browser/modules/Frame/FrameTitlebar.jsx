@@ -219,7 +219,8 @@ class FrameTitlebar extends Component {
             title="Pin at top"
             onClick={() => {
               props.togglePin()
-              props.togglePinning(frame.id, frame.isPinned)
+              // using frame.isPinned causes issues when there are multiple frames in one
+              props.togglePinning(frame.id, props.pinned)
             }}
             pressed={props.pinned}
           >
