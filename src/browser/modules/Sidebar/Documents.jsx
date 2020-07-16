@@ -86,12 +86,11 @@ const getReferences = (version, v) => {
       command: `https://neo4j.com/docs/operations-manual/${v}/`,
       type: 'link'
     },
-    // Drivers manual needs to wait for the page to be published
-    // {
-    //   name: 'Drivers Manual',
-    //   command: `https://neo4j.com/docs/driver-manual/current/`,
-    //   type: 'link'
-    // },
+    {
+      name: 'Drivers Manual',
+      command: `https://neo4j.com/docs/driver-manual/current/`,
+      type: 'link'
+    },
     {
       name: 'Cypher Refcard',
       command: `https://neo4j.com/docs/cypher-refcard/${v}/`,

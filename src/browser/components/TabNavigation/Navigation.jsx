@@ -51,7 +51,7 @@ class Navigation extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.openDrawer !== this.props.openDrawer) {
-      var newState = {}
+      const newState = {}
       if (this.props.openDrawer) {
         newState.drawerContent = this.props.openDrawer
         if (
@@ -90,8 +90,8 @@ class Navigation extends Component {
   render() {
     const { onNavClick, topNavItems, bottomNavItems = [] } = this.props
 
-    const buildNavList = (list, selected) => {
-      return list.map((item, index) => {
+    const buildNavList = (list, selected) =>
+      list.map(item => {
         const isOpen = item.name.toLowerCase() === selected
         return (
           <NavigationButtonContainer
@@ -107,12 +107,12 @@ class Navigation extends Component {
           </NavigationButtonContainer>
         )
       })
-    }
+
     const getContentToShow = openDrawer => {
       if (openDrawer) {
-        const filteredList = topNavItems.concat(bottomNavItems).filter(item => {
-          return item.name.toLowerCase() === openDrawer
-        })
+        const filteredList = topNavItems
+          .concat(bottomNavItems)
+          .filter(item => item.name.toLowerCase() === openDrawer)
         const TabContent = filteredList[0].content
         return <TabContent />
       }
