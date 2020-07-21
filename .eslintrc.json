@@ -41,7 +41,7 @@
   },
   "overrides": [
     {
-      "files": ["*.ts", "**/*.ts"],
+      "files": ["*.ts", "**/*.ts", "**/*.tsx"],
       "extends": [
         "plugin:@typescript-eslint/recommended",
         "prettier/@typescript-eslint"
