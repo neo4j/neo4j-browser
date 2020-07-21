@@ -3,7 +3,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es5",
+    "target": "ES6",
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,
@@ -17,7 +17,19 @@
     "noFallthroughCasesInSwitch": true,
     "jsx": "react",
     "outDir": "./build",
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "paths": {
+      "services/*": ["shared/services/*"],
+      "browser-services/*": ["browser/services/*"],
+      "browser-components/*": ["browser/components/*"],
+      "browser-hooks/*": ["browser/hooks/*"],
+      "browser-styles/*": ["browser/styles/*"],
+      "project-root/*": ["../*"],
+      "src-root/*": ["./*"],
+      "icons": ["browser/icons/*"]
+    }
   },
   "include": ["./src/**/*"]
 }
