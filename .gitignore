@@ -15,6 +15,7 @@ dist/
 NOTICE.xml
 *.tgz
 *.tar.gz
+release-notes.md
 /stats.json
 signature.pem
 HEAD
