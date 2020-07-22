@@ -27,6 +27,7 @@ import SettingsDrawer from './Settings'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
+import { DrawerHeader } from 'browser-components/drawer'
 import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
@@ -64,7 +65,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const topNavItemsList = [
     {
-      title: 'Database',
+      name: 'DBMS',
+      title: 'Database Information',
       icon: function dbIcon(isOpen: boolean): ReactElement {
         return (
           <DatabaseIcon
@@ -77,6 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       content: DatabaseDrawer
     },
     {
+      name: 'Favorites',
       title: 'Favorites',
       icon: function favIcon(isOpen: boolean): ReactElement {
         return <FavoritesIcon isOpen={isOpen} title="Favorites" />
@@ -84,6 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       content: function FavoritesDrawer(): ReactFragment {
         return (
           <>
+            <DrawerHeader>Favorites</DrawerHeader>
             <Favorites />
             {showStaticScripts && <StaticScripts />}
           </>
@@ -91,9 +95,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       }
     },
     {
-      title: 'Documentation',
+      name: 'Documents',
+      title: 'Help &amp; Resources',
       icon: function docsIcon(isOpen: boolean): ReactElement {
-        return <DocumentsIcon isOpen={isOpen} title="Documentation" />
+        return <DocumentsIcon isOpen={isOpen} title="Help &amp; Resources" />
       },
       content: DocumentsDrawer
     }
@@ -101,6 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const bottomNavItemsList = [
     {
+      name: 'Sync',
       title: 'Browser Sync',
       icon: function syncIcon(isOpen: boolean): ReactElement {
         return (
@@ -114,6 +120,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       content: BrowserSync
     },
     {
+      name: 'Settings',
       title: 'Settings',
       icon: function settingIcon(isOpen: boolean): ReactElement {
         return <SettingsIcon isOpen={isOpen} title="Browser Settings" />
@@ -121,24 +128,21 @@ const Sidebar: React.FC<SidebarProps> = ({
       content: SettingsDrawer
     },
     {
+      name: 'About',
       title: 'About Neo4j',
       icon: function aboutIcon(isOpen: boolean): ReactElement {
         return <AboutIcon isOpen={isOpen} title="About Neo4j" />
       },
       content: AboutDrawer
     }
-  ]
+  ].filter(({ name }) => loadSync || name !== 'Sync')
 
   return (
     <TabNavigation
       openDrawer={openDrawer}
       onNavClick={onNavClick}
       topNavItems={topNavItemsList}
-      bottomNavItems={
-        loadSync
-          ? bottomNavItemsList
-          : bottomNavItemsList.filter(item => item.title !== 'BrowserSync')
-      }
+      bottomNavItems={bottomNavItemsList}
     />
   )
 }

@@ -96,12 +96,14 @@ class Navigation extends Component {
         return (
           <NavigationButtonContainer
             title={item.title}
-            data-testid={'drawer' + item.title}
-            key={item.title}
-            onClick={() => onNavClick(item.title.toLowerCase())}
+            data-testid={'drawer' + item.name}
+            key={item.name}
+            onClick={() => onNavClick(item.name.toLowerCase())}
             isOpen={isOpen}
           >
-            <StyledNavigationButton>{item.icon(isOpen)}</StyledNavigationButton>
+            <StyledNavigationButton name={item.name}>
+              {item.icon(isOpen)}
+            </StyledNavigationButton>
           </NavigationButtonContainer>
         )
       })

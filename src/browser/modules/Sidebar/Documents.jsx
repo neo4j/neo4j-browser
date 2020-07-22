@@ -132,7 +132,7 @@ const Documents = ({ version, urlVersion }) => {
   const items = getStaticItems(version, urlVersion)
   return (
     <Drawer id="db-documents">
-      <DrawerHeader>Documents</DrawerHeader>
+      <DrawerHeader>Help &amp; Resources</DrawerHeader>
       <DrawerBody>
         <DocumentItems header="Introduction" items={items.intro} />
         <DocumentItems header="Help" items={items.help} />
