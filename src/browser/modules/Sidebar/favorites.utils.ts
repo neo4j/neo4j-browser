@@ -38,54 +38,48 @@ import {
 import { SLASH } from 'shared/services/export-favorites'
 import arrayHasItems from 'shared/utils/array-has-items'
 
-/**
- * Get first favorite
- * @param     {Object[]}        favorites
- * @return    {Object|null}
- */
-export function getFirstFavorite(favorites) {
+export type Favorite = {
+  id: string
+  name: string
+  contents: string
+  path: string
+  isSuggestion: boolean
+  folder?: Folder
+}
+
+export function getFirstFavorite(favorites: Favorite[]): Favorite | undefined {
   return head(favorites)
 }
 
-/**
- * Get favorite ids
- * @param     {Object[]}        favorites
- * @return    {string[]}
- */
-export function getFavoriteIds(favorites) {
+export function getFavoriteIds(favorites: Favorite[]): string[] {
   return map(favorites, 'id')
 }
 
-/**
- * Finds a folder for a given path
- * @param     {string}    path
- * @param     {Object[]}  folders
- * @return    {string}
- */
-export function getFolderFromPath(path, folders) {
+// TODO real type
+export type Folder = { id: FolderId; name: string }
+export type FolderId = string
+
+export function getFolderFromPath(
+  path: string,
+  folders: Folder[]
+): Folder | undefined {
   const name = omitScriptPathPrefix(SLASH, path)
 
   return find(folders, folder => folder.name === name)
 }
 
-/**
- * Gets favorites for a given folder
- * @param     {string}      folderId
- * @param     {Object[]}    allFavorites
- * @return    {Object[]}
- */
-export function getFolderFavorites(folderId, allFavorites) {
-  return filter(allFavorites, ({ folder }) => folder && folderId === folder.id)
+export function getFolderFavorites(
+  folderId: FolderId,
+  allFavorites: Favorite[]
+): Favorite[] {
+  return filter(allFavorites, favo => favo.folder?.id === folderId)
 }
 
-/**
- * Returns all favorites for a given folder not present in first list
- * @param     {string}      folderId
- * @param     {Object[]}    favorites
- * @param     {Object[]}    allFavorites
- * @return    {Object[]}
- */
-export function folderHasRemainingFavorites(folderId, favorites, allFavorites) {
+export function folderHasRemainingFavorites(
+  folderId: FolderId,
+  favorites: Favorite[],
+  allFavorites: Favorite[]
+): boolean {
   const folderFavorites = getFolderFavorites(folderId, allFavorites)
 
   return arrayHasItems(
@@ -95,10 +89,10 @@ export function folderHasRemainingFavorites(folderId, favorites, allFavorites) {
 
 /**
  * Gets name and id for a folder given a certain path
- * @param     {string}                      path
- * @return    {{id: string, name: string}}
  */
-export function generateFolderNameAndIdForPath(path) {
+export function generateFolderNameAndIdForPath(
+  path: string
+): Partial<Favorite> {
   return {
     id: uuid.v4(),
     name: omitScriptPathPrefix(SLASH, path)
@@ -107,13 +101,12 @@ export function generateFolderNameAndIdForPath(path) {
 
 /**
  * Adds a name comment on first line of query
- * @param     {string}    contents
- * @param     {string}    newName
- * @return    {string}
  */
-export function addNameComment(contents, newName) {
+export function addNameComment(contents: string, newName: string): string {
   const parts = split(contents, '\n')
   const first = trim(head(parts) || '')
+  // Lib seems to ask for a bigger type than needed
+  // @ts-expect-error
   const oldName = trim(getScriptDisplayName({ contents }))
 
   if (startsWith(first, '//') && first === `// ${oldName}`) {
@@ -123,13 +116,10 @@ export function addNameComment(contents, newName) {
   return join([`// ${newName}`, ...parts], '\n')
 }
 
-/**
- * Converts new favorites to old structure
- * @param     {Object[]}    newFavorites
- * @param     {Object}      update
- * @return    {Object[]}
- */
-export function mapNewFavoritesToOld(newFavorites, update = {}) {
+export function mapNewFavoritesToOld(
+  newFavorites: Favorite[],
+  update: Partial<Favorite> = {}
+): Record<string, any>[] {
   return map(newFavorites, ({ id, folder, contents }) =>
     assign(
       {
@@ -142,7 +132,11 @@ export function mapNewFavoritesToOld(newFavorites, update = {}) {
   )
 }
 
-export function updateFolder(folder, update, allFolders) {
+export function updateFolder(
+  folder: Folder,
+  update: Partial<Folder>,
+  allFolders: Folder[]
+): Folder[] {
   return [
     ...filter(allFolders, ({ id }) => folder.id !== id),
     { ...folder, ...update }

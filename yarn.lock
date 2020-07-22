@@ -2161,6 +2161,18 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/lodash-es@^4.17.3":
+  version "4.17.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/lodash-es/-/lodash-es-4.17.3.tgz#87eb0b3673b076b8ee655f1890260a136af09a2d"
+  integrity sha1-h+sLNnOwdrjuZV8YkCYKE2rwmi0=
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.158"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/lodash/-/lodash-4.14.158.tgz#b38ea8b6fe799acd076d7a8d7ab71c26ef77f785"
+  integrity sha1-s46otv55ms0HbXqNerccJu9394U=
+
 "@types/long@^4.0.1":
   version "4.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
@@ -2310,6 +2322,11 @@
   version "2.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha1-nAiGeYdvN061mD8VDUeHqm+zLX4=
+
+"@types/uuid@^8.0.0":
+  version "8.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/uuid/-/uuid-8.0.0.tgz#165aae4819ad2174a17476dbe66feebd549556c0"
+  integrity sha1-FlquSBmtIXShdHbb5m/uvVSVVsA=
 
 "@types/webpack-sources@*":
   version "0.1.7"

@@ -67,15 +67,6 @@ describe('favorites.utils', () => {
 
       expect(getFolderFavorites('apa', favorites)).toEqual(expected)
     })
-
-    test('does not care what type folder ID is', () => {
-      const expected = filter(
-        favorites,
-        ({ folder }) => folder && folder.id === 'apa'
-      )
-
-      expect(getFolderFavorites('apa', favorites)).toEqual(expected)
-    })
   })
 
   describe('folderHasRemainingFavorites', () => {

@@ -21,6 +21,7 @@
 export const NAME = 'drawer'
 
 export const TOGGLE = 'drawer/TOGGLE'
+export const OPEN = 'drawer/OPEN'
 
 function toggleDrawer(state, newState) {
   if (!newState.drawer) {
@@ -36,6 +37,8 @@ export default function reducer(state = '', action) {
   switch (action.type) {
     case TOGGLE:
       return toggleDrawer(state, action.state)
+    case OPEN:
+      return newState.drawer
   }
   return state
 }
@@ -43,6 +46,13 @@ export default function reducer(state = '', action) {
 export function toggle(id) {
   return {
     type: TOGGLE,
+    state: { drawer: id }
+  }
+}
+
+export function open(id) {
+  return {
+    type: OPEN,
     state: { drawer: id }
   }
 }

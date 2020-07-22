@@ -32,7 +32,7 @@ import {
   StyledDocumentActionLink
 } from './styled'
 
-export const DocumentItems = ({ header, items, onItemClick = null }) => {
+export const DocumentItems = ({ header, items, onItemClick }) => {
   const listOfItems = items.map(item => {
     switch (item.type) {
       case 'link':
