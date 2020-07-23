@@ -68,6 +68,7 @@ const nodeCaption = new Renderer({
 
     text
       .text(line => line.text)
+      .attr('x', 0)
       .attr('y', line => line.baseline)
       .attr('font-size', line => viz.style.forNode(line.node).get('font-size'))
       .attr({

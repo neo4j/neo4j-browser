@@ -120,6 +120,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     font-size="10px"
                     pointer-events="none"
                     text-anchor="middle"
+                    x="0"
                     y="5"
                   >
                      &lt;b&gt;…
