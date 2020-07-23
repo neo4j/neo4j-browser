@@ -75,6 +75,7 @@ import {
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError,
+  InvalidGrassError,
   UnsupportedError
 } from 'services/exceptions'
 import {
@@ -82,7 +83,7 @@ import {
   isValidURL
 } from 'shared/modules/commands/helpers/http'
 import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
-import { parseGrass } from 'shared/services/grassUtils'
+import { parseGrass, objToCss } from 'shared/services/grassUtils'
 import {
   shouldUseCypherThread,
   getCmdChar,
@@ -709,10 +710,12 @@ const availableCommands = [
     name: 'style',
     match: cmd => /^style(\s|$)/.test(cmd),
     exec(action, cmdchar, put, store) {
-      const match = action.cmd.match(/:style\s*(\S.*)$/)
-      let param = match && match[1] ? match[1] : ''
+      const param = action.cmd
+        .trim()
+        .split(':style')[1]
+        .trim()
 
-      if (param === '') {
+      function showGrass() {
         const grassData = getGraphStyleData(store.getState())
         put(
           frames.add({
@@ -722,41 +725,66 @@ const availableCommands = [
             result: grassData
           })
         )
-      } else if (param === 'reset') {
-        put(updateGraphStyleData(null))
-      } else if (isValidURL(param)) {
-        if (!param.startsWith('http')) {
-          param = `http://${param}`
-        }
+      }
 
+      function updateAndShowGrass(newGrass) {
+        put(updateGraphStyleData(newGrass))
+        showGrass()
+      }
+
+      function putGrassErrorFrame(message) {
+        put(
+          frames.add({
+            useDb: getUseDb(store.getState()),
+            ...action,
+            error: createErrorObject(InvalidGrassError, message),
+            type: 'error'
+          })
+        )
+      }
+
+      if (param === '') {
+        showGrass()
+        return
+      }
+
+      if (param === 'reset') {
+        updateAndShowGrass(null)
+        return
+      }
+
+      if (
+        isValidURL(param) &&
+        param.includes('.') /* isValid url considers words like rest an url*/
+      ) {
+        const url = param.startsWith('http') ? param : `http://${param}`
         const whitelist = getRemoteContentHostnameWhitelist(store.getState())
+
         fetchRemoteGrass(param, whitelist)
           .then(response => {
             const parsedGrass = parseGrass(response)
             if (parsedGrass) {
-              put(updateGraphStyleData(parsedGrass))
+              updateAndShowGrass(parsedGrass)
             } else {
-              put(showErrorMessage('Could not parse grass file'))
+              putGrassErrorFrame(
+                `Could not parse grass file containing: 
+${response}`
+              )
             }
           })
-          .catch(e => {
-            const error = new Error(e)
-            put(
-              frames.add({
-                useDb: getUseDb(store.getState()),
-                ...action,
-                error,
-                type: 'error'
-              })
-            )
-          })
+          .catch(e => putGrassErrorFrame(e.message))
+        return
+      }
+
+      // Some dummy data like 23432432 will parse as "valid grass"
+      // try to convert to css to see if actually valid
+      const parsedGrass = parseGrass(param)
+      const validGrass = objToCss(parsedGrass)
+      if (parsedGrass && validGrass) {
+        updateAndShowGrass(parsedGrass)
       } else {
-        const parsedGrass = parseGrass(param)
-        if (parsedGrass) {
-          put(updateGraphStyleData(parsedGrass))
-        } else {
-          put(showErrorMessage('Could not parse grass data'))
-        }
+        putGrassErrorFrame(`Could not parse grass data:
+${param}`)
       }
     }
   },
