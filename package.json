@@ -137,7 +137,7 @@
   "dependencies": {
     "@literal-jsx/parser": "^0.1.7",
     "@mdx-js/runtime": "^1.6.1",
-    "@neo4j/browser-lambda-parser": "1.0.4",
+    "@neo4j/browser-lambda-parser": "1.0.5",
     "@relate-by-ui/css": "1.0.5",
     "@relate-by-ui/relatable": "1.0.1",
     "@relate-by-ui/saved-scripts": "^1.0.4",
