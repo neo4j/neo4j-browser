@@ -1,4 +1,4 @@
-import { isAura } from './utils'
+import { executeCommand } from '../../src/shared/modules/commands/commandsDuck'
 
 const SubmitQueryButton = '[data-testid="submitQuery"]'
 const ClearEditorButton = '[data-testid="clearEditorContent"]'
@@ -104,6 +104,18 @@ Cypress.Commands.add('disconnect', () => {
   const query = ':server disconnect'
   cy.executeCommand(query)
 })
+
+Cypress.Commands.add('clearEditor', () => {
+  const action = executeCommand(cmd)
+  //ownProps.bus.send(action.type, action)
+
+  cy.get(ClearEditorButton).click()
+  cy.get(Editor).type(query, { force: true, ...options })
+  cy.wait(100)
+  cy.get(SubmitQueryButton).click()
+  cy.wait(1000)
+})
+
 Cypress.Commands.add('executeCommand', (query, options = {}) => {
   cy.get(ClearEditorButton).click()
   cy.get(Editor).type(query, { force: true, ...options })

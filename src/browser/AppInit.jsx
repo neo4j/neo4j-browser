@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+window.HEEEJ = 'AA'
 
 import React from 'react'
 import { createEpicMiddleware } from 'redux-observable'
@@ -71,6 +72,13 @@ const store = createStore(
   getAll(), // rehydrate from local storage on app start
   enhancer
 )
+
+// Expose store to cypress, so we don't we can set application state programmatically
+if (window.Cypress && process.env.NODE_ENV !== 'production') {
+  window.Cypress.__store__ = store
+  window.Cypress.__bus__ = bus
+  console.log(window)
+}
 
 // Send everything from suber into Redux
 bus.applyMiddleware((_, origin) => (channel, message, source) => {
