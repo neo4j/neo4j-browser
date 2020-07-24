@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import DBMSInfo from '../DBMSInfo/DBMSInfo'
 import Documents from './Documents'
 import About from './About'
@@ -30,6 +31,9 @@ import Settings from './Settings'
 import BrowserSync from './../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
+import { open } from 'shared/modules/sidebar/sidebarDuck'
+import { ADD_FAVORITE } from 'shared/modules/favorites/favoritesDuck'
+
 import {
   PENDING_STATE,
   CONNECTED_STATE,
@@ -124,6 +128,16 @@ function Sidebar(props) {
     }
   ]
 
+  useEffect(() => {
+    const unsub = props.bus.take(ADD_FAVORITE, fav => {
+      // open fav.id
+      high
+      props.openFavorites()
+    })
+
+    return unsub
+  }, [])
+
   return (
     <TabNavigation
       openDrawer={openDrawer}
@@ -161,7 +175,12 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(Sidebar)
+const mapDispatchToProps = dispatch => {
+  return {
+    openFavorites: () => {
+      dispatch(open('favorites'))
+    }
+  }
+}
+
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(Sidebar))

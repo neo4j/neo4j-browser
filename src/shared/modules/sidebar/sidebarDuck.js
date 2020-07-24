@@ -38,7 +38,7 @@ export default function reducer(state = '', action) {
     case TOGGLE:
       return toggleDrawer(state, action.state)
     case OPEN:
-      return newState.drawer
+      return action.state.drawer
   }
   return state
 }
