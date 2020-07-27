@@ -5,6 +5,13 @@ const ClearEditorButton = '[data-testid="clearEditorContent"]'
 const Editor = '.ReactCodeMirror textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'
 
+const dispatch = action =>
+  cy
+    .window()
+    .its('Cypress')
+    .its('__store__')
+    .invoke('dispatch', action)
+
 /* global Cypress, cy */
 
 Cypress.Commands.add('getEditor', () => cy.get(VisibleEditor))
@@ -105,24 +112,18 @@ Cypress.Commands.add('disconnect', () => {
   cy.executeCommand(query)
 })
 
-Cypress.Commands.add('clearEditor', () => {
-  const action = executeCommand(cmd)
-  //ownProps.bus.send(action.type, action)
-
-  cy.get(ClearEditorButton).click()
-  cy.get(Editor).type(query, { force: true, ...options })
-  cy.wait(100)
-  cy.get(SubmitQueryButton).click()
+Cypress.Commands.add('executeCommand', query => {
+  dispatch(executeCommand(query))
   cy.wait(1000)
 })
 
-Cypress.Commands.add('executeCommand', (query, options = {}) => {
+Cypress.Commands.add('typeAndSubmit', query => {
   cy.get(ClearEditorButton).click()
-  cy.get(Editor).type(query, { force: true, ...options })
+  cy.get(Editor).type(query, { force: true })
   cy.wait(100)
   cy.get(SubmitQueryButton).click()
-  cy.wait(1000)
 })
+
 Cypress.Commands.add('disableEditorAutocomplete', () => {
   cy.get(ClearEditorButton).click()
   cy.executeCommand(':config editorAutocomplete: false')

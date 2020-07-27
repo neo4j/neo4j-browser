@@ -50,6 +50,34 @@ describe('Commands', () => {
     cy.visit(Cypress.config('url'))
     cy.get('input[data-testid="boltaddress"]', { timeout: 40000 })
   })
+  it('can type in edtiro and run commands manually', () => {
+    cy.typeAndSubmit(':help help')
+    cy.get('[data-testid="frameCommand"]').contains(':help help')
+    // lose focus
+    cy.get('[data-testid=drawerFavorites]').click()
+    cy.get('[data-testid=drawerFavorites]').click()
+    cy.get('.ReactCodeMirror textarea').should('not.be', 'focused')
+
+    // we now have 2 cards
+    cy.get('[data-testid="stream"]')
+      .children()
+      .should('have.length', 2)
+
+    // focus editor
+    cy.get('body').type('/')
+    cy.get('.ReactCodeMirror textarea')
+      .should('be', 'focused')
+      .type(':clear{shift}{enter}')
+
+    // we see line number in multiline view
+    cy.get('.CodeMirror-linenumber').should('be', 'visible')
+    // we can run command with ctrl enter
+    cy.get('.ReactCodeMirror textarea').type('{ctrl}{enter}')
+    // editor is now cleared
+    cy.get('[data-testid="stream"]')
+      .children()
+      .should('have.length', 0)
+  })
   it('can run all simple commands not connected without blowing up', () => {
     commands.forEach(cmd => {
       cy.executeCommand(cmd)

@@ -74,7 +74,7 @@ const store = createStore(
 )
 
 // Expose store to cypress, so we don't we can set application state programmatically
-if (window.Cypress && process.env.NODE_ENV !== 'production') {
+if (window.Cypress) {
   window.Cypress.__store__ = store
   window.Cypress.__bus__ = bus
   console.log(window)

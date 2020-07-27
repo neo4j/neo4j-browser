@@ -37,7 +37,7 @@ describe('LOAD CSV', () => {
     }
     cy.executeCommand(':clear')
     cy.executeCommand('MATCH (n) DETACH DELETE n')
-    cy.executeCommand(`LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row{shift}{enter}
+    cy.executeCommand(`LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row
     CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`)
 
     cy.resultContains('Added 3 labels, created 3 nodes, set 11 properties,')
@@ -52,7 +52,7 @@ describe('LOAD CSV', () => {
     if (!Cypress.config('includeImportTests')) {
       return
     }
-    const periodicQuery = `USING PERIODIC COMMIT 1{shift}{enter}
+    const periodicQuery = `USING PERIODIC COMMIT 1
     LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row 
     CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`
 
