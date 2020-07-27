@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-window.HEEEJ = 'AA'
 
 import React from 'react'
 import { createEpicMiddleware } from 'redux-observable'
@@ -77,7 +76,6 @@ const store = createStore(
 if (window.Cypress) {
   window.Cypress.__store__ = store
   window.Cypress.__bus__ = bus
-  console.log(window)
 }
 
 // Send everything from suber into Redux
