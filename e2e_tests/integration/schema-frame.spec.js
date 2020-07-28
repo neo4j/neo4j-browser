@@ -33,9 +33,7 @@ describe('Schema Frame', () => {
   })
   describe('renders schema', () => {
     before(function() {
-      cy.executeCommand(
-        'CREATE (n:SchemaTest {{}prop1: "foo", prop2: "bar"{}})'
-      )
+      cy.executeCommand('CREATE (n:SchemaTest {prop1: "foo", prop2: "bar"})')
 
       if (Cypress.config('serverVersion') >= 4.0) {
         cy.executeCommand(
