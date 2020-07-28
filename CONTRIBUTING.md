@@ -4,16 +4,17 @@
 
 Where you raise an issue depends largely on the nature of the problem.
 
-Firstly, if you are an Enterprise customer, you might want to head over to our [Customer Support Portal](https://support.neo4j.com/).
+Firstly, Enterprise customer might want to head straight over to our [Customer Support Portal](https://support.neo4j.com/).
 
-There are plenty of public channels available too, though.
-If you simply want to get started or have a question on how to use a particular feature, create a post on the [community forum](https://community.neo4j.com/), drop a line to the [mailing list](https://groups.google.com/forum/#!forum/neo4j) or ask a question in [Slack](https://neo4j.com/slack).
-If you think you might have hit a bug in our software (it happens occasionally!) or you have specific feature request then use the issue feature right here in our GitHub repository.
-Check first though as someone else may have already raised something similar.
+There are plenty of public channels available, too.
+
+For getting started or questions about how to use a particular feature, create a post on the [community forum](https://community.neo4j.com/), drop a line to the [mailing list](https://groups.google.com/forum/#!forum/neo4j) or ask a question in [Slack](https://neo4j.com/slack).
+
+If you think you might have hit a bug (it happens occasionally!) or you have specific feature request then use [Github Issues](https://github.com/neo4j/neo4j-browser/issues). Check whether someone else may have already raised something similar, as it is incredibly helpful to have related information all together. 
 
 ## Want to contribute?
 
-If you want to contribute a pull request, we have a little bit of process you'll need to follow:
+We're grateful for any thoughts you share, including in code form. To contribute a fix or a new feature we have a little bit of process you'll need to follow:
 
 - Do all your work in a personal fork of the original repository
 - [Rebase](https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request), don't merge (we prefer to keep our history clean)
