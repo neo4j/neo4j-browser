@@ -4,7 +4,7 @@
 
 Where you raise an issue depends largely on the nature of the problem.
 
-Firstly, Enterprise customer might want to head straight over to our [Customer Support Portal](https://support.neo4j.com/).
+Firstly, Enterprise customers might want to head straight over to our [Customer Support Portal](https://support.neo4j.com/).
 
 There are plenty of public channels available, too.
 
