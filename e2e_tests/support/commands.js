@@ -7,10 +7,11 @@ const VisibleEditor = '[data-testid="editor-wrapper"]'
 
 const dispatch = action =>
   cy
-    .window()
-    .its('Cypress')
-    .its('__store__')
-    .invoke('dispatch', action)
+    .window({ log: false })
+    .its('Cypress', { log: false })
+    .its('__store__', { log: false })
+    .invoke({ log: false }, 'dispatch', action)
+    .log(`Dispatching: ${JSON.stringify(action)}`)
 
 /* global Cypress, cy */
 
