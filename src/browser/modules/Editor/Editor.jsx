@@ -115,7 +115,7 @@ export class Editor extends Component {
     this.setState({ expanded: !this.state.expanded })
   }
 
-  clearEditor() {
+  clearEditor = () => {
     this.setEditorValue('')
     this.setContentId(null)
   }
@@ -137,7 +137,7 @@ export class Editor extends Component {
     this.props.onExecute(cmd)
   }
 
-  execCurrent() {
+  execCurrent = () => {
     const cmd = this.getEditorValue()
     const onlyWhitespace = cmd.trim() === ''
 
