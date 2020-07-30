@@ -70,7 +70,7 @@ describe('Commands', () => {
       .type(':clear{shift}{enter}')
 
     // we see line number in multiline view
-    cy.get('.CodeMirror-linenumber').should('be', 'visible')
+    cy.get('.CodeMirror-linenumber').should('contain', '1')
     // we can run command with ctrl enter
     cy.get('.ReactCodeMirror textarea').type('{ctrl}{enter}')
     // editor is now cleared
