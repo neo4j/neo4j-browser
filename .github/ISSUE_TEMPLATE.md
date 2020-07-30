@@ -1,6 +1,6 @@
 <!---
 BEFORE YOU SUBMIT please search open/closed issues since someone might have asked the same thing before!
-→
+-->
 
 ### Description
 <!--- Explain the issue you met, and describe what you expected to be. If you can write in English, we will be very grateful -->
