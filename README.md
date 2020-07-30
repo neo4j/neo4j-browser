@@ -23,7 +23,7 @@ with modern and easy-to-use tools.
 
 #### E2E Suite
 
-`yarn e2e` to run the cypress js test suite (requires a fresh installation of neo4j to run against, expects neo4j 3.5 by default).
+`yarn e2e` to run the cypress js test suite (requires a **fresh** installation of neo4j to run against, expects neo4j 3.5 by default).
 `yarn e2e --env server=3.3` to only run cypress js tests valid for neo4j server version 3.3.
 
 To run on an existing server (with a password already set), you can use any of these (the default password is set to "newpassword", pass in `--env browser-password=your-password`):  
@@ -37,7 +37,7 @@ Example: `yarn e2e-local-open --env server=3.4,include-import-tests=true`
 Here are the available options / env variables:
 
 ```
-server=3.2|3.3|3.4|3.5|4.0 (default 3.5)
+server=3.2|3.3|3.4|3.5|4.0|4.1 (default 3.5)
 edition=enterprise|community|aura (default enterprise)
 browser-password=<your-pw> (default 'newpassword')
 include-import-tests=true|false (default false)
