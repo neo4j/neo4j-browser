@@ -168,6 +168,7 @@ describe('Multi statements', () => {
         cy.wait(5000) // Wait to ensure last meta update in finished
         cy.executeCommand(':use test1')
         cy.get('[data-testid="drawerDBMS"]').click()
+        cy.wait(1000)
         cy.contains('[data-testid="sidebarMetaItem"]', 'Test1', {
           timeout: 5000
         })
@@ -175,6 +176,7 @@ describe('Multi statements', () => {
 
         cy.wait(5000) // Wait to ensure last meta update in finished
         cy.executeCommand(':use test2')
+        cy.wait(1000)
         cy.get('[data-testid="drawerDBMS"]').click()
         cy.contains('[data-testid="sidebarMetaItem"]', 'Test2', {
           timeout: 5000

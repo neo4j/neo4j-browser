@@ -151,14 +151,16 @@ Cypress.Commands.add('addUser', (userName, password, role, force) => {
 })
 Cypress.Commands.add('enableMultiStatement', () => {
   cy.get('[data-testid="drawerSettings"]').click()
-  cy.get('[data-testid="enableMultiStatementMode"]', { timeout: 30000 }).check()
+  cy.get('[data-testid="enableMultiStatementMode"]', { timeout: 30000 }).check({
+    force: true
+  })
   cy.get('[data-testid="drawerSettings"]').click()
 })
 Cypress.Commands.add('disableMultiStatement', () => {
   cy.get('[data-testid="drawerSettings"]').click()
   cy.get('[data-testid="enableMultiStatementMode"]', {
     timeout: 30000
-  }).uncheck()
+  }).uncheck({ force: true })
   cy.get('[data-testid="drawerSettings"]').click()
 })
 Cypress.Commands.add('createUser', (username, password, forceChangePw) => {
