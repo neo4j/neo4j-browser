@@ -24,51 +24,56 @@ import { dim } from 'browser-styles/constants'
 const editorPadding = 10
 
 export const BaseBar = styled.div`
-  background-color: ${props => props.theme.primaryBackground};
-  display: flex;
-  flex-direction: row;
-  align-items: middle;
-  min-height: ${props =>
-    props.expanded
-      ? '100vh'
-      : Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
-  overflow: hidden;
-
-  margin: 0;
+  background-color: ${props => props.theme.editorBackground};
+  border-radius: 4px;
+  margin: ${editorPadding}px 0px ${editorPadding}px 0;
+  display: grid;
 `
+
+export const Header = styled.div`
+  background-color: gray;
+`
+
 export const Bar = styled(BaseBar)`
   ${props => {
     if (props.expanded) {
-      return (
-        'position: absolute;' +
-        'height: 100vh;' +
-        'z-index: 100;' +
-        'right: 0;' +
-        'left: 0;' +
-        'bottom: 0;'
-      )
+      return `
+position: fixed;
+top: -10px;
+bottom: 0;
+left: 0;
+right: 0;
+height: 100vh;
+border-radius: 0;
+z-index: 1030;`
     }
   }};
 `
 export const ActionButtonSection = styled.div`
-  flex: 0 0 120px;
-  align-items: top;
   display: flex;
-  padding-top: 21px;
   justify-content: space-between;
+  width: ${props => props.width}px;
+  margin-top: 7px;
+  margin-right: 7px;
 `
 
 const BaseEditorWrapper = styled.div`
-  flex: auto;
-  padding: ${editorPadding}px ${editorPadding}px ${editorPadding}px 0;
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
-  min-height: ${props =>
-    props.expanded
-      ? '100vh'
-      : Math.max(dim.editorbarHeight, props.minHeight + editorPadding * 2)}px;
-  width: 0;
+  flex: auto;
+  width: 0; // this makes the editor wrap lines instead of making the editor wider
+
+  min-height: ${props => {
+    if (props.expanded) {
+      return '100vh'
+    }
+    if (props.card) {
+      // 230 is 10 lines + 2*12px padding
+      return '254px'
+    }
+    return '0'
+  }};
+
   .CodeMirror {
-    background-color: ${props => props.theme.editorBackground} !important;
     color: ${props => props.theme.editorCommandColor};
     font-size: 17px;
   }
@@ -81,20 +86,19 @@ const BaseEditorWrapper = styled.div`
 export const EditorWrapper = styled(BaseEditorWrapper)`
   ${props => {
     if (props.expanded) {
-      return (
-        'height: 100%;' +
-        'z-index: 2;' +
-        '.CodeMirror {' +
-        '  position: absolute;' +
-        '  left: 12px;' +
-        '  right: 142px;' +
-        '  top: 12px;' +
-        '  bottom: 12px;' +
-        '}' +
-        '.CodeMirror-scroll {' +
-        '   max-height: initial !important;' +
-        '}'
-      )
+      return `height: 100%;
+        z-index: 2;
+        .CodeMirror {
+          position: absolute;
+          left: 12px;
+          right: 142px;
+          top: 12px;
+          bottom: 12px;
+        }
+        .CodeMirror-scroll {
+           max-height: initial !important;
+        }
+      `
     }
   }};
 `

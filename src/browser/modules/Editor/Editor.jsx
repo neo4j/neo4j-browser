@@ -21,6 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { withTheme } from 'styled-components'
 import uuid from 'uuid'
 import {
   executeCommand,
@@ -55,6 +56,7 @@ import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import ActionButtons from './ActionButtons'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -67,6 +69,13 @@ const shouldCheckForHints = code =>
     .trimLeft()
     .toUpperCase()
     .startsWith('PROFILE')
+
+const view = 'LINE' | 'CARD' | 'FULLSCREEN'
+// CURRENTLY. setting the card/fullscreen/line as statemachine instead of
+// demo new looks. // full screen? change it?
+// rewriting editor to be functional componen
+// pair for first rewriting to functinoal component then for typescripty
+// också. till action buttons. fixa resize uit!
 
 export class Editor extends Component {
   constructor(props) {
@@ -403,12 +412,45 @@ export class Editor extends Component {
 
     this.setGutterMarkers()
 
+    const editorIsEmpty = this.getEditorValue().length > 0
+    const buttons = [
+      {
+        onClick: () => this.setEditorValue(''),
+        icon: eraser2,
+        title: 'Clear',
+        disabled: editorIsEmpty
+      },
+      {
+        onClick: this.state.contentId
+          ? () =>
+              this.props.onFavoriteUpdateClick(
+                this.state.contentId,
+                this.getEditorValue()
+              )
+          : () => {
+              this.props.onFavoriteClick(this.getEditorValue())
+            },
+        icon: this.state.contentId ? pencil : ratingStar,
+        title: this.state.contentId ? 'Update favorite' : 'Favorite',
+        iconColor: this.state.contentId && this.props.theme.editModeButtonText,
+        disabled: editorIsEmpty
+      },
+      {
+        onClick: this.execCurrent,
+        icon: controlsPlay,
+        title: 'Play',
+        disabled: editorIsEmpty
+      }
+    ]
+
+    const cardView = this.codeMirror && this.codeMirror.lineCount() !== 1
+
     return (
-      <Bar expanded={this.state.expanded} minHeight={this.state.editorHeight}>
-        <EditorWrapper
-          expanded={this.state.expanded}
-          minHeight={this.state.editorHeight}
-        >
+      <Bar expanded={this.state.expanded}>
+        <Header style={cardView && { width: '100%' }}>
+          <ActionButtons buttons={buttons} />
+        </Header>
+        <EditorWrapper expanded={this.state.expanded} card={cardView}>
           <Codemirror
             ref={ref => {
               this.editor = ref
@@ -420,47 +462,6 @@ export class Editor extends Component {
             initialPosition={this.state.lastPosition}
           />
         </EditorWrapper>
-        <ActionButtonSection>
-          <Render if={this.state.contentId}>
-            <EditModeEditorButton
-              onClick={() =>
-                this.props.onFavoriteUpdateClick(
-                  this.state.contentId,
-                  this.getEditorValue()
-                )
-              }
-              disabled={this.getEditorValue().length < 1}
-              color="#ffaf00"
-              title="Favorite"
-              icon={pencil}
-            />
-          </Render>
-          <Render if={!this.state.contentId}>
-            <EditorButton
-              data-testid="editorFavorite"
-              onClick={() => {
-                this.props.onFavoriteClick(this.getEditorValue())
-              }}
-              disabled={this.getEditorValue().length < 1}
-              title="Update favorite"
-              icon={ratingStar}
-            />
-          </Render>
-          <EditorButton
-            data-testid="clearEditorContent"
-            onClick={this.clearEditor}
-            disabled={this.getEditorValue().length < 1}
-            title="Clear"
-            icon={eraser2}
-          />
-          <EditorButton
-            data-testid="submitQuery"
-            onClick={this.execCurrent}
-            disabled={this.getEditorValue().length < 1}
-            title="Play"
-            icon={controlsPlay}
-          />
-        </ActionButtonSection>
       </Bar>
     )
   }
@@ -511,4 +512,6 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
+export default withTheme(
+  withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
+)

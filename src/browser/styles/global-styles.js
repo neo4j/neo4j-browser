@@ -88,7 +88,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .CodeMirror-scroll {
     overflow: hidden !important;
-    max-height: 140px !important;
+    max-height: 230px !important;
   }
 
   .CodeMirror div.CodeMirror-cursor {
