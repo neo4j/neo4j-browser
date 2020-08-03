@@ -66,6 +66,7 @@ export class PlanView extends Component {
   shouldComponentUpdate(props, state) {
     if (this.props.result === undefined) return true
     return (
+      props.fullscreen !== this.props.fullscreen ||
       !deepEquals(props.result.summary, this.props.result.summary) ||
       !shallowEquals(state, this.state) ||
       props._planExpand !== this.props._planExpand
