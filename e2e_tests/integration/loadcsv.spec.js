@@ -37,12 +37,14 @@ describe('LOAD CSV', () => {
     }
     cy.executeCommand(':clear')
     cy.executeCommand('MATCH (n) DETACH DELETE n')
-    cy.executeCommand(`LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row
-    CREATE (p:Person {name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`)
+    cy.executeCommand(`LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row{shift}{enter}
+    CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`)
 
     cy.resultContains('Added 3 labels, created 3 nodes, set 11 properties,')
 
-    cy.executeCommand('MATCH (n:Person {born: 2012}) RETURN n.city, n.comment')
+    cy.executeCommand(
+      'MATCH (n:Person {{}born: 2012}) RETURN n.city, n.comment'
+    )
     cy.resultContains('"Borås"')
     cy.resultContains('"I like unicorns, and "flying unicorns""')
   })
@@ -50,9 +52,9 @@ describe('LOAD CSV', () => {
     if (!Cypress.config('includeImportTests')) {
       return
     }
-    const periodicQuery = `USING PERIODIC COMMIT 1
+    const periodicQuery = `USING PERIODIC COMMIT 1{shift}{enter}
     LOAD CSV WITH HEADERS FROM 'file:///import.csv' AS row 
-    CREATE (p:Person {name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`
+    CREATE (p:Person {{}name: row.name, born: toInteger(row.born), city: row.city, comment:row.comment});`
 
     // Let's see it fail when not using auto-committed tx's first
     cy.executeCommand(':clear')
@@ -65,7 +67,9 @@ describe('LOAD CSV', () => {
 
     cy.resultContains('Added 3 labels, created 3 nodes, set 11 properties,')
 
-    cy.executeCommand('MATCH (n:Person {born: 2012}) RETURN n.city, n.comment')
+    cy.executeCommand(
+      'MATCH (n:Person {{}born: 2012}) RETURN n.city, n.comment'
+    )
     cy.resultContains('"Borås"')
     cy.resultContains('"I like unicorns, and "flying unicorns""')
   })

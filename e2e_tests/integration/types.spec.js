@@ -32,7 +32,7 @@ describe('Types in Browser', () => {
   if (Cypress.config('serverVersion') >= 3.4) {
     it('presents large integers correctly', () => {
       cy.executeCommand(':clear')
-      const query = 'RETURN 2467500000 AS bigNumber, {x: 9907199254740991}'
+      const query = 'RETURN 2467500000 AS bigNumber, {{}x: 9907199254740991}'
       cy.executeCommand(query)
       cy.waitForCommandResult()
       cy.resultContains('2467500000')
@@ -48,7 +48,7 @@ describe('Types in Browser', () => {
     it('presents the point type correctly', () => {
       cy.executeCommand(':clear')
       const query =
-        "WITH point({crs: 'wgs-84', longitude: 12.78, latitude: 56.7}) as p1 RETURN p1"
+        "WITH point({{}crs: 'wgs-84', longitude: 12.78, latitude: 56.7}) as p1 RETURN p1"
       cy.executeCommand(query)
       cy.waitForCommandResult()
       cy.resultContains('point({srid:4326, x:12.78, y:56.7})')
@@ -62,7 +62,7 @@ describe('Types in Browser', () => {
     it('presents datetime type correctly', () => {
       cy.executeCommand(':clear')
       const query =
-        'RETURN datetime({year:2015, month:7, day:20, hour:15, minute:11, second:42, timezone:"Europe/Stockholm"}) AS t1'
+        'RETURN datetime({{}year:2015, month:7, day:20, hour:15, minute:11, second:42, timezone:"Europe/Stockholm"}) AS t1'
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
@@ -76,7 +76,7 @@ describe('Types in Browser', () => {
     it('presents local datetime type correctly', () => {
       cy.executeCommand(':clear')
       const query =
-        'RETURN localdatetime({year:2015, month:7, day:20, hour:15, minute:11, second:42}) AS t1'
+        'RETURN localdatetime({{}year:2015, month:7, day:20, hour:15, minute:11, second:42}) AS t1'
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
@@ -89,7 +89,7 @@ describe('Types in Browser', () => {
     })
     it('presents date type correctly', () => {
       cy.executeCommand(':clear')
-      const query = 'RETURN date({year:2015, month:7, day:20}) AS t1'
+      const query = 'RETURN date({{}year:2015, month:7, day:20}) AS t1'
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
@@ -103,7 +103,7 @@ describe('Types in Browser', () => {
     it('presents duration type correctly', () => {
       cy.executeCommand(':clear')
       const query =
-        'RETURN duration({months:14, days:3, seconds:14706, nanoseconds:0}) AS t1'
+        'RETURN duration({{}months:14, days:3, seconds:14706, nanoseconds:0}) AS t1'
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
@@ -117,7 +117,7 @@ describe('Types in Browser', () => {
     it('presents time type correctly', () => {
       cy.executeCommand(':clear')
       const query =
-        'RETURN time({hour:14, minute:3, second:4, timezone: "Europe/Stockholm"}) AS t1'
+        'RETURN time({{}hour:14, minute:3, second:4, timezone: "Europe/Stockholm"}) AS t1'
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
@@ -130,7 +130,7 @@ describe('Types in Browser', () => {
     })
     it('presents localtime type correctly', () => {
       cy.executeCommand(':clear')
-      const query = 'RETURN localtime({hour:14, minute:3, second:4}) AS t1'
+      const query = 'RETURN localtime({{}hour:14, minute:3, second:4}) AS t1'
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
@@ -144,7 +144,7 @@ describe('Types in Browser', () => {
     it('renders types in viz correctly', () => {
       cy.executeCommand(':clear')
       const query =
-        "CREATE (p:Types {location: point({crs: 'wgs-84', x: 12.78, y: 56.7}), date: duration.between(datetime('2014-07-21T21:40:36.143+0200'), date('2015-06-24'))}) RETURN p"
+        "CREATE (p:Types {{}location: point({{}crs: 'wgs-84', x: 12.78, y: 56.7}), date: duration.between(datetime('2014-07-21T21:40:36.143+0200'), date('2015-06-24'))}) RETURN p"
       cy.executeCommand(query)
       // cy.waitForCommandResult()
       cy.get('circle.outline', { timeout: 10000 }).click()

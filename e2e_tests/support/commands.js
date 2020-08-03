@@ -113,14 +113,19 @@ Cypress.Commands.add('disconnect', () => {
   cy.executeCommand(query)
 })
 
-Cypress.Commands.add('executeCommand', query => {
-  dispatch(executeCommand(query))
+Cypress.Commands.add('executeCommand', (query, options) => {
+  const dispatchable = [':server disconnect', ':server connect', ':clear']
+  if (dispatchable.includes(query)) {
+    dispatch(executeCommand(query))
+  } else {
+    cy.typeAndSubmit(query, options)
+  }
   cy.wait(1000)
 })
 
-Cypress.Commands.add('typeAndSubmit', query => {
+Cypress.Commands.add('typeAndSubmit', (query, options = {}) => {
   cy.get(ClearEditorButton).click()
-  cy.get(Editor).type(query, { force: true })
+  cy.get(Editor).type(query, { force: true, ...options })
   cy.wait(100)
   cy.get(SubmitQueryButton).click()
 })

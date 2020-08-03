@@ -100,7 +100,7 @@ describe('Plan output', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (:Tag)')
     cy.executeCommand(':clear')
-    cy.executeCommand(`PROFILE MATCH (tag:Tag)
+    cy.executeCommand(`PROFILE MATCH (tag:Tag){shift}{enter}
     WHERE tag.name IN ["Eutheria"]
     WITH tag
     MATCH (publication)-[:HAS_TAG]->(tag)
