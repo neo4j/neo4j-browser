@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable no-octal-escape */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
@@ -50,7 +49,6 @@ import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
 import Render from 'browser-components/Render'
-
 import ratingStar from 'icons/rating-star.svg'
 import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
@@ -83,7 +81,6 @@ export class Editor extends Component {
       contentId: null,
       editorHeight: 0
     }
-
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
@@ -118,16 +115,18 @@ export class Editor extends Component {
     this.setState({ expanded: !this.state.expanded })
   }
 
-  clearEditor() {
+  clearEditor = () => {
     this.setEditorValue('')
     this.setContentId(null)
   }
 
   handleEnter(cm) {
-    if (cm.lineCount() === 1) {
-      return this.execCurrent(cm)
+    const multiline = cm.lineCount() !== 1 || this.state.expanded
+    if (multiline) {
+      this.newlineAndIndent(cm)
+    } else {
+      this.execCurrent()
     }
-    this.newlineAndIndent(cm)
   }
 
   newlineAndIndent(cm) {
@@ -138,15 +137,20 @@ export class Editor extends Component {
     this.props.onExecute(cmd)
   }
 
-  execCurrent() {
-    this.execCommand(this.getEditorValue())
-    this.clearEditor()
-    this.setState({
-      notifications: [],
-      historyIndex: -1,
-      buffer: null,
-      expanded: false
-    })
+  execCurrent = () => {
+    const cmd = this.getEditorValue()
+    const onlyWhitespace = cmd.trim() === ''
+
+    if (!onlyWhitespace) {
+      this.execCommand(cmd)
+      this.clearEditor()
+      this.setState({
+        notifications: [],
+        historyIndex: -1,
+        buffer: null,
+        expanded: false
+      })
+    }
   }
 
   moveCursorToEndOfLine(cm) {
@@ -340,11 +344,11 @@ export class Editor extends Component {
   }
 
   lineNumberFormatter = line => {
-    const useDbString = this.props.useDb || ''
-    if (!this.codeMirror || this.codeMirror.lineCount() === 1) {
-      return `${useDbString}$`
-    } else {
+    const multiLine = this.codeMirror && this.codeMirror.lineCount() > 1
+    if (this.state.expanded || multiLine) {
       return line
+    } else {
+      return `${this.props.useDb || ''}$`
     }
   }
 
@@ -444,14 +448,14 @@ export class Editor extends Component {
           </Render>
           <EditorButton
             data-testid="clearEditorContent"
-            onClick={() => this.clearEditor()}
+            onClick={this.clearEditor}
             disabled={this.getEditorValue().length < 1}
             title="Clear"
             icon={eraser2}
           />
           <EditorButton
             data-testid="submitQuery"
-            onClick={() => this.execCurrent()}
+            onClick={this.execCurrent}
             disabled={this.getEditorValue().length < 1}
             title="Play"
             icon={controlsPlay}
@@ -507,9 +511,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Editor)
-)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))

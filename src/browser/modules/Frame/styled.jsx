@@ -54,12 +54,15 @@ export const StyledFrame = styled.article`
 
 export const StyledFrameBody = styled.div`
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props =>
-    props.collapsed
-      ? 0
-      : props.fullscreen
-      ? '100%'
-      : dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'};
+  max-height: ${props => {
+    if (props.collapsed) {
+      return 0
+    }
+    if (props.fullscreen) {
+      return '100%'
+    }
+    return dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'
+  }};
   display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
