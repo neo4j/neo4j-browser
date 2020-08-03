@@ -49,7 +49,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .CodeMirror {
     background-color: #fff !important;
-    padding: 12px !important;
+    margin: 12px !important;
     border-radius: 4px !important;
     transition: all !important;
   }

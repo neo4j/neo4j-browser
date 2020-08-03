@@ -70,13 +70,6 @@ const shouldCheckForHints = code =>
     .toUpperCase()
     .startsWith('PROFILE')
 
-const view = 'LINE' | 'CARD' | 'FULLSCREEN'
-// CURRENTLY. setting the card/fullscreen/line as statemachine instead of
-// demo new looks. // full screen? change it?
-// rewriting editor to be functional componen
-// pair for first rewriting to functinoal component then for typescripty
-// också. till action buttons. fixa resize uit!
-
 export class Editor extends Component {
   constructor(props) {
     super(props)
@@ -447,7 +440,7 @@ export class Editor extends Component {
 
     return (
       <Bar expanded={this.state.expanded} card={cardView}>
-        <Header card={cardView}>
+        <Header expanded={this.state.expanded} card={cardView}>
           <ActionButtons buttons={buttons} />
         </Header>
         <EditorWrapper expanded={this.state.expanded} card={cardView}>

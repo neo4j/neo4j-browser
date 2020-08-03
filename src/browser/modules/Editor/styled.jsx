@@ -28,7 +28,8 @@ export const BaseBar = styled.div`
   border-radius: 4px;
   margin: ${editorPadding}px 0px ${editorPadding}px 0;
   display: grid;
-  grid-template-columns: 1fr auto;
+  // minmax(0, 1fr) prevents the editor from growing the text field
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas: ${props => {
     if (props.expanded || props.card) {
       return "'header' 'editor'"
@@ -40,7 +41,12 @@ export const BaseBar = styled.div`
 export const Header = styled.div`
   grid-area: header;
   border-radius: 4px 4px 0 0;
-  ${props => (props.card ? 'background-color: #F8F9FB' : '')};
+  ${props => {
+    if (props.expanded || props.card) {
+      return 'background-color: #F8F9FB'
+    }
+    return ''
+  }};
   display: flex;
   justify-content: flex-end;
 `
@@ -70,8 +76,6 @@ export const ActionButtonSection = styled.div`
 const BaseEditorWrapper = styled.div`
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   grid-area: editor;
-  //flex: auto;
-  //width: 0; // this makes the editor wrap lines instead of making the editor wider
 
   min-height: ${props => {
     if (props.expanded) {
@@ -103,7 +107,7 @@ export const EditorWrapper = styled(BaseEditorWrapper)`
           position: absolute;
           left: 12px;
           right: 142px;
-          top: 12px;
+          top: 42px;
           bottom: 12px;
         }
         .CodeMirror-scroll {
