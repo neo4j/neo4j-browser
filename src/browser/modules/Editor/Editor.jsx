@@ -41,7 +41,7 @@ import {
   shouldEditorAutocomplete,
   shouldEditorLint
 } from 'shared/modules/settings/settingsDuck'
-import { Bar, ActionButtonSection, EditorWrapper } from './styled'
+import { Bar, ActionButtonSection, EditorWrapper, Header } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { deepEquals, shallowEquals } from 'services/utils'
@@ -446,8 +446,8 @@ export class Editor extends Component {
     const cardView = this.codeMirror && this.codeMirror.lineCount() !== 1
 
     return (
-      <Bar expanded={this.state.expanded}>
-        <Header style={cardView && { width: '100%' }}>
+      <Bar expanded={this.state.expanded} card={cardView}>
+        <Header card={cardView}>
           <ActionButtons buttons={buttons} />
         </Header>
         <EditorWrapper expanded={this.state.expanded} card={cardView}>

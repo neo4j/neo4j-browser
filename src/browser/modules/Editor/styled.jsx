@@ -28,10 +28,21 @@ export const BaseBar = styled.div`
   border-radius: 4px;
   margin: ${editorPadding}px 0px ${editorPadding}px 0;
   display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: ${props => {
+    if (props.expanded || props.card) {
+      return "'header' 'editor'"
+    }
+    return "'editor header'"
+  }};
 `
 
 export const Header = styled.div`
-  background-color: gray;
+  grid-area: header;
+  border-radius: 4px 4px 0 0;
+  ${props => (props.card ? 'background-color: #F8F9FB' : '')};
+  display: flex;
+  justify-content: flex-end;
 `
 
 export const Bar = styled(BaseBar)`
@@ -53,14 +64,14 @@ export const ActionButtonSection = styled.div`
   display: flex;
   justify-content: space-between;
   width: ${props => props.width}px;
-  margin-top: 7px;
-  margin-right: 7px;
+  margin: 7px;
 `
 
 const BaseEditorWrapper = styled.div`
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
-  flex: auto;
-  width: 0; // this makes the editor wrap lines instead of making the editor wider
+  grid-area: editor;
+  //flex: auto;
+  //width: 0; // this makes the editor wrap lines instead of making the editor wider
 
   min-height: ${props => {
     if (props.expanded) {
