@@ -178,6 +178,7 @@ describe('Multi statements', () => {
         cy.executeCommand(':use test2')
         cy.wait(1000)
         cy.get('[data-testid="drawerDBMS"]').click()
+        cy.wait(1000)
         cy.contains('[data-testid="sidebarMetaItem"]', 'Test2', {
           timeout: 5000
         })

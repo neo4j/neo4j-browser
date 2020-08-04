@@ -166,7 +166,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/grpc/grpc-node.git
 │  │  ├─ VendorName: Google Inc.
 │  │  └─ VendorUrl: https://grpc.io/
-│  ├─ @neo4j/browser-lambda-parser@1.0.4
+│  ├─ @neo4j/browser-lambda-parser@1.0.5
 │  │  └─ URL: https://github.com/neo4j-apps/lambda-parser
 │  ├─ @relate-by-ui/css@1.0.5
 │  │  └─ URL: https://github.com/neo4j-apps/relate-by-ui
