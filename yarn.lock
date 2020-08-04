@@ -1184,6 +1184,15 @@
     tunnel-agent "^0.6.0"
     uuid "^3.3.2"
 
+"@cypress/webpack-preprocessor@^5.4.2":
+  version "5.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@cypress/webpack-preprocessor/-/webpack-preprocessor-5.4.2.tgz#d40fed6375b09dd16b266a045f4577e9c7a0299a"
+  integrity sha1-1A/tY3WwndFrJmoEX0V36cegKZo=
+  dependencies:
+    bluebird "3.7.1"
+    debug "4.1.1"
+    lodash "4.17.19"
+
 "@cypress/xvfb@1.2.4":
   version "1.2.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@cypress/xvfb/-/xvfb-1.2.4.tgz#2daf42e8275b39f4aa53c14214e557bd14e7748a"
@@ -3317,6 +3326,11 @@ bindings@^1.5.0:
   integrity sha1-EDU8npRTNLwFEabZCzj7x8nFBN8=
   dependencies:
     file-uri-to-path "1.0.0"
+
+bluebird@3.7.1:
+  version "3.7.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/bluebird/-/bluebird-3.7.1.tgz#df70e302b471d7473489acf26a93d63b53f874de"
+  integrity sha1-33DjArRx10c0iazyapPWO1P4dN4=
 
 bluebird@3.7.2, bluebird@^3.5.5:
   version "3.7.2"

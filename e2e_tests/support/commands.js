@@ -1,9 +1,17 @@
-import { isAura } from './utils'
+import { executeCommand } from '../../src/shared/modules/commands/commandsDuck'
 
 const SubmitQueryButton = '[data-testid="submitQuery"]'
 const ClearEditorButton = '[data-testid="clearEditorContent"]'
 const Editor = '.ReactCodeMirror textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'
+
+const dispatch = action =>
+  cy
+    .window({ log: false })
+    .its('Cypress', { log: false })
+    .its('__store__', { log: false })
+    .invoke({ log: false }, 'dispatch', action)
+    .log(`Dispatching: ${JSON.stringify(action)}`)
 
 /* global Cypress, cy */
 
@@ -104,13 +112,24 @@ Cypress.Commands.add('disconnect', () => {
   const query = ':server disconnect'
   cy.executeCommand(query)
 })
-Cypress.Commands.add('executeCommand', (query, options = {}) => {
+
+Cypress.Commands.add('executeCommand', (query, options) => {
+  const dispatchable = [':server disconnect', ':server connect', ':clear']
+  if (dispatchable.includes(query)) {
+    dispatch(executeCommand(query))
+  } else {
+    cy.typeAndSubmit(query, options)
+  }
+  cy.wait(1000)
+})
+
+Cypress.Commands.add('typeAndSubmit', (query, options = {}) => {
   cy.get(ClearEditorButton).click()
   cy.get(Editor).type(query, { force: true, ...options })
   cy.wait(100)
   cy.get(SubmitQueryButton).click()
-  cy.wait(1000)
 })
+
 Cypress.Commands.add('disableEditorAutocomplete', () => {
   cy.get(ClearEditorButton).click()
   cy.executeCommand(':config editorAutocomplete: false')
