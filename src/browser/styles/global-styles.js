@@ -48,7 +48,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .CodeMirror {
-    background-color: #fff !important;
+    background: initial !important; // overrides lib css 
     margin: 12px !important;
     border-radius: 4px !important;
     transition: all !important;
