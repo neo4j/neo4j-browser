@@ -42,11 +42,18 @@ export const Header = styled.div`
   grid-area: header;
   border-radius: 4px 4px 0 0;
   ${props => {
-    if (props.expanded || props.card) {
-      return 'background-color: #F8F9FB'
+    if (props.expanded) {
+      return `background-color: #4d4a57;
+              border-radius: 0;
+      `
+    }
+    if (props.card) {
+      return `background-color: #4d4a57;
+              transition-duration: 0.3s;`
     }
     return ''
-  }};
+  }}
+
   display: flex;
   justify-content: flex-end;
 `
@@ -87,6 +94,8 @@ const BaseEditorWrapper = styled.div`
     }
     return '0'
   }};
+
+  ${props => (props.expanded ? '' : 'transition-duration: 0.1s;')}
 
   .CodeMirror {
     color: ${props => props.theme.editorCommandColor};
