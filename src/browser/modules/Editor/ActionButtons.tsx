@@ -21,11 +21,11 @@
 import React from 'react'
 import { ActionButtonSection } from './styled'
 import { EditorButton } from 'browser-components/buttons'
-export interface ActionButtonProps {
+interface ActionButtonProps {
   buttons: ActionButton[]
 }
 
-export interface ActionButton {
+interface ActionButton {
   onClick: () => void
   disabled: boolean
   title: string
@@ -33,22 +33,20 @@ export interface ActionButton {
   iconColor?: string
 }
 
-const ActionButtons: React.FC<ActionButtonProps> = ({ buttons }) => {
-  return (
-    <ActionButtonSection width={buttons.length * 33}>
-      {buttons.map((btn: ActionButton) => (
-        <EditorButton
-          data-testid={`editor${btn.title}`}
-          onClick={btn.onClick}
-          disabled={btn.disabled}
-          title={btn.title}
-          icon={btn.icon}
-          key={`editor${btn.title}`}
-          color={btn.iconColor}
-        />
-      ))}
-    </ActionButtonSection>
-  )
-}
+const ActionButtons: React.FC<ActionButtonProps> = ({ buttons }) => (
+  <ActionButtonSection containerWidth={buttons.length * 33}>
+    {buttons.map((btn: ActionButton) => (
+      <EditorButton
+        data-testid={`editor${btn.title}`}
+        onClick={btn.onClick}
+        disabled={btn.disabled}
+        title={btn.title}
+        icon={btn.icon}
+        key={`editor${btn.title}`}
+        color={btn.iconColor}
+      />
+    ))}
+  </ActionButtonSection>
+)
 
 export default ActionButtons

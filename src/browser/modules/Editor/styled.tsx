@@ -19,18 +19,22 @@
  */
 
 import styled from 'styled-components'
-import { dim } from 'browser-styles/constants'
+
+interface ResizeableProps {
+  expanded: boolean
+  card: boolean
+}
 
 const editorPadding = 10
 
-export const BaseBar = styled.div`
-  background-color: ${props => props.theme.editorBackground};
+export const BaseBar = styled.div<ResizeableProps>`
+  background-color: ${(props): string => props.theme.editorBackground};
   border-radius: 4px;
   margin: ${editorPadding}px 0px ${editorPadding}px 0;
   display: grid;
   // minmax(0, 1fr) prevents the editor from growing the text field
   grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: ${props => {
+  grid-template-areas: ${(props): string => {
     if (props.expanded || props.card) {
       return "'header' 'editor'"
     }
@@ -38,10 +42,10 @@ export const BaseBar = styled.div`
   }};
 `
 
-export const Header = styled.div`
+export const Header = styled.div<ResizeableProps>`
   grid-area: header;
   border-radius: 4px 4px 0 0;
-  ${props => {
+  ${(props): string => {
     if (props.expanded) {
       return `background-color: #4d4a57;
               border-radius: 0;
@@ -58,8 +62,8 @@ export const Header = styled.div`
   justify-content: flex-end;
 `
 
-export const Bar = styled(BaseBar)`
-  ${props => {
+export const Bar = styled(BaseBar)<ResizeableProps>`
+  ${(props): string => {
     if (props.expanded) {
       return `
 position: fixed;
@@ -71,20 +75,26 @@ height: 100vh;
 border-radius: 0;
 z-index: 1030;`
     }
+    return ''
   }};
 `
-export const ActionButtonSection = styled.div`
+
+interface ActionButtonContainerProps {
+  containerWidth: number
+}
+
+export const ActionButtonSection = styled.div<ActionButtonContainerProps>`
   display: flex;
   justify-content: space-between;
-  width: ${props => props.width}px;
+  width: ${(props): number => props.containerWidth}px;
   margin: 7px;
 `
 
-const BaseEditorWrapper = styled.div`
+const BaseEditorWrapper = styled.div<ResizeableProps>`
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   grid-area: editor;
 
-  min-height: ${props => {
+  min-height: ${(props): string => {
     if (props.expanded) {
       return '100vh'
     }
@@ -95,10 +105,10 @@ const BaseEditorWrapper = styled.div`
     return '0'
   }};
 
-  ${props => (props.expanded ? '' : 'transition-duration: 0.1s;')}
+  ${(props): string => (props.expanded ? '' : 'transition-duration: 0.1s;')}
 
   .CodeMirror {
-    color: ${props => props.theme.editorCommandColor};
+    color: ${(props): string => props.theme.editorCommandColor};
     font-size: 17px;
   }
 
@@ -107,8 +117,8 @@ const BaseEditorWrapper = styled.div`
   }
 `
 
-export const EditorWrapper = styled(BaseEditorWrapper)`
-  ${props => {
+export const EditorWrapper = styled(BaseEditorWrapper)<ResizeableProps>`
+  ${(props): string => {
     if (props.expanded) {
       return `height: 100%;
         z-index: 2;
@@ -123,6 +133,8 @@ export const EditorWrapper = styled(BaseEditorWrapper)`
            max-height: initial !important;
         }
       `
+    } else {
+      return ''
     }
   }};
 `
