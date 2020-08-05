@@ -24,8 +24,8 @@ import { isAura, isEnterpriseEdition } from '../support/utils'
 
 const Editor = '.ReactCodeMirror textarea'
 const Carousel = '[data-testid="carousel"]'
-const SubmitQueryButton = '[data-testid="submitQuery"]'
-const ClearEditorButton = '[data-testid="clearEditorContent"]'
+const SubmitQueryButton = '[data-testid="editorPlay"]'
+const ClearEditorButton = '[data-testid="editorClear"]'
 
 describe('Neo4j Browser', () => {
   before(function() {

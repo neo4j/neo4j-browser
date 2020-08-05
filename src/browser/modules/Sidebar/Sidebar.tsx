@@ -46,7 +46,7 @@ import {
   AboutIcon
 } from 'browser-components/icons/Icons'
 
-export type SidebarProps = {
+interface SidebarProps {
   openDrawer: string
   onNavClick: () => void
   showStaticScripts: boolean

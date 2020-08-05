@@ -43,7 +43,7 @@ function asChangeLogUrl(serverVersion: string): string | undefined {
   return `https://github.com/neo4j/neo4j/wiki/Neo4j-${urlServerVersion}-changelog#${releaseTag}`
 }
 
-export interface AboutProps {
+interface AboutProps {
   serverVersion: string
   serverEdition: string
 }
