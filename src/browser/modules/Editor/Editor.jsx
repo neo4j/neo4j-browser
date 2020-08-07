@@ -39,8 +39,10 @@ import { getHistory } from 'shared/modules/history/historyDuck'
 import {
   getCmdChar,
   shouldEditorAutocomplete,
-  shouldEditorLint
+  shouldEditorLint,
+  shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
+import { add } from 'shared/modules/stream/streamDuck'
 import { Bar, ActionButtonSection, EditorWrapper, Header } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
@@ -269,14 +271,43 @@ export class Editor extends Component {
     this.setState({ contentId: id })
   }
 
+  checkForMultiStatementWarnings(statements) {
+    if (statements.length > 1 && !this.props.enableMultiStatementMode) {
+      const { offset, line, column } = statements[1].start
+      this.setState({
+        notifications: [
+          {
+            code: 'frontendWarning',
+            position: {
+              offset,
+              line,
+              column
+            },
+            severity: 'WARNING',
+            errors: {
+              message:
+                'Multi statement query will be rejected unless multi statement is enabled in settings.'
+            }
+          }
+        ]
+      })
+    }
+  }
+
   updateCode = (statements, change, cb = () => {}) => {
-    if (statements) this.checkForHints(statements)
+    if (statements) {
+      this.checkForHints(statements)
+      this.checkForMultiStatementWarnings(statements)
+    }
+
     const lastPosition = change && change.to
     this.setState(
       {
-        notifications: [],
         lastPosition: lastPosition
-          ? { line: lastPosition.line, column: lastPosition.ch }
+          ? {
+              line: lastPosition.line,
+              column: lastPosition.ch
+            }
           : this.state.lastPosition
       },
       cb
@@ -334,8 +365,13 @@ export class Editor extends Component {
               '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
             gutter.title = `${notification.title}\n${notification.description}`
             gutter.onclick = () => {
-              const action = executeSystemCommand(notification.statement)
-              action.forceView = viewTypes.WARNINGS
+              const action =
+                notification.code === 'frontendWarning'
+                  ? add(notification)
+                  : {
+                      ...executeSystemCommand(notification.statement),
+                      forceView: viewTypes.WARNINGS
+                    }
               this.props.bus.send(action.type, action)
             }
             return gutter
@@ -501,7 +537,8 @@ const mapStateToProps = state => {
         ...state.meta.functions.map(schemaConvert.toFunction)
       ],
       procedures: state.meta.procedures.map(schemaConvert.toProcedure)
-    }
+    },
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state)
   }
 }
 
