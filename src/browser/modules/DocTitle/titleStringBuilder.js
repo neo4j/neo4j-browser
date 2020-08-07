@@ -34,7 +34,7 @@ const asTitleString = connectionData => {
     return null
   }
   const builtTitle = buildTitleFromConnectionData()
-  return (builtTitle ? builtTitle + ' - ' : '') + 'Neo4j Browser'
+  return `${builtTitle ? `${builtTitle} - ` : ''}Neo4j Browser`
 }
 
 export default asTitleString

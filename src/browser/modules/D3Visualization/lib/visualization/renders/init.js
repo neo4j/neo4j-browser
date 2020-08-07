@@ -68,6 +68,7 @@ const nodeCaption = new Renderer({
 
     text
       .text(line => line.text)
+      .attr('x', 0)
       .attr('y', line => line.baseline)
       .attr('font-size', line => viz.style.forNode(line.node).get('font-size'))
       .attr({
@@ -119,7 +120,7 @@ const nodeRing = new Renderer({
       .attr({
         cx: 0,
         cy: 0,
-        'stroke-width': nodeRingStrokeSize + 'px'
+        'stroke-width': `${nodeRingStrokeSize}px`
       })
 
     circles.attr({
@@ -189,7 +190,7 @@ const relationshipType = new Renderer({
           parseFloat(viz.style.forRelationship(rel).get('font-size')) / 2 -
           1
       )
-      .attr('transform', function(rel) {
+      .attr('transform', rel => {
         if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
           return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
         } else {

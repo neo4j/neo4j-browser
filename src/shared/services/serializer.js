@@ -25,7 +25,7 @@ const csvEscape = str => {
   if (!isString(str)) return str
   if (isEmptyString(str)) return '""'
   if (hasQuotes(str) || hasDelimiterChars(str)) {
-    return '"' + str.replace(/"/g, '""') + '"'
+    return `"${str.replace(/"/g, '""')}"`
   }
   return str
 }

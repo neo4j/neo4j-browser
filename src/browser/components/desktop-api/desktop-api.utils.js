@@ -29,14 +29,11 @@ const upperFirst = str => str[0].toUpperCase() + str.substring(1)
 // XXX_YYY -> onXxxYyy
 export const eventToHandler = type => {
   if (typeof type !== 'string') return null
-  return (
-    'on' +
-    splitOnUnderscore(type)
-      .filter(notEmpty)
-      .map(toLower)
-      .map(upperFirst)
-      .join('')
-  )
+  return `on${splitOnUnderscore(type)
+    .filter(notEmpty)
+    .map(toLower)
+    .map(upperFirst)
+    .join('')}`
 }
 
 export const getActiveGraph = (context = {}) => {

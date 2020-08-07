@@ -54,6 +54,16 @@ describe('Bolt connections', () => {
       .and('contain', 'Database access not available')
       .should('not.contain', 'Connection lost')
   })
+  if (Cypress.config('serverVersion') >= 3.5 && isEnterpriseEdition()) {
+    it('send tx metadata with queries', () => {
+      cy.executeCommand(':clear')
+      const password = Cypress.config('password')
+      cy.connect('neo4j', password)
+
+      cy.executeCommand(':queries')
+      cy.resultContains('"type": "user-action"')
+    })
+  }
 
   if (isEnterpriseEdition()) {
     it('users with no role can connect and shows up in sidebar', () => {

@@ -23,7 +23,12 @@ import neo4j from 'neo4j-driver'
 import WorkPool from '../WorkPool'
 import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
-import { generateBoltHost } from 'services/utils'
+import {
+  cancelTransaction as globalCancelTransaction,
+  routedReadTransaction as globalRoutedReadTransaction,
+  routedWriteTransaction as globalRoutedWriteTransaction,
+  directTransaction as globalDirectTransaction
+} from './transactions'
 import {
   runCypherMessage,
   cancelTransactionMessage,
@@ -42,7 +47,7 @@ function openConnection(props, opts = {}, onLostConnection) {
   return new Promise((resolve, reject) => {
     boltConnection
       .openConnection(props, opts, onLostConnection)
-      .then(r => {
+      .then(() => {
         connectionProperties = {
           authenticationMethod: props.authenticationMethod || NATIVE,
           username: props.username,
@@ -50,7 +55,7 @@ function openConnection(props, opts = {}, onLostConnection) {
           host: props.host,
           opts
         }
-        resolve(r)
+        resolve()
       })
       .catch(e => {
         connectionProperties = null
@@ -65,7 +70,7 @@ function cancelTransaction(id, cb) {
     work.onFinish(cb)
     work.execute(cancelTransactionMessage(id))
   } else {
-    boltConnection.cancelTransaction(id, cb)
+    globalCancelTransaction(id, cb)
   }
 }
 
@@ -89,11 +94,6 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb,
         autoCommit
@@ -107,7 +107,7 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
     )
     return [id, workerPromise]
   } else {
-    return boltConnection.routedWriteTransaction(input, parameters, {
+    return globalRoutedWriteTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
@@ -136,11 +136,6 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb
       }
@@ -153,7 +148,7 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
     )
     return workerPromise
   } else {
-    return boltConnection.routedReadTransaction(input, parameters, {
+    return globalRoutedReadTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
@@ -181,11 +176,6 @@ function directTransaction(input, parameters, requestMetaData = {}) {
       cancelable,
       {
         ...connectionProperties,
-        inheritedUseRouting: boltConnection.useRouting(
-          generateBoltHost(
-            connectionProperties ? connectionProperties.host : ''
-          )
-        ),
         txMetadata,
         useDb: useDb || _useDb
       }
@@ -198,7 +188,7 @@ function directTransaction(input, parameters, requestMetaData = {}) {
     )
     return workerPromise
   } else {
-    return boltConnection.directTransaction(input, parameters, {
+    return globalDirectTransaction(input, parameters, {
       requestId,
       cancelable,
       txMetadata,
@@ -243,18 +233,21 @@ export default {
       objectConverter: mappings.extractFromNeoObjects
     })
   },
-  extractNodesAndRelationshipsFromRecords: records => {
+  extractNodesAndRelationshipsFromRecords: (records, maxFieldItems) => {
     return mappings.extractNodesAndRelationshipsFromRecords(
       records,
-      neo4j.types
+      neo4j.types,
+      maxFieldItems
     )
   },
   extractNodesAndRelationshipsFromRecordsForOldVis: (
     records,
-    filterRels = true
+    filterRels = true,
+    maxFieldItems
   ) => {
     const intChecker = neo4j.isInt
     const intConverter = val => val.toString()
+
     return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(
       records,
       neo4j.types,
@@ -263,7 +256,8 @@ export default {
         intChecker,
         intConverter,
         objectConverter: mappings.extractFromNeoObjects
-      }
+      },
+      maxFieldItems
     )
   },
   extractPlan: (result, calculateTotalDbHits) => {
@@ -276,6 +270,5 @@ export default {
       intConverter: val => val.toNumber(),
       objectConverter: mappings.extractFromNeoObjects
     }),
-  neo4j: neo4j,
   addTypesAsField
 }

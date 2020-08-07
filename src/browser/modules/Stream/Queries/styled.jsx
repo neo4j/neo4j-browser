@@ -23,9 +23,10 @@ import styled from 'styled-components'
 export const Code = styled.code`
   white-space: nowrap;
   overflow: hidden;
-  color: #c7254e;
-  background-color: #f9f2f4;
-  border-radius: 4px;
+  color: #fd766e;
+  background-color: ${props => props.theme.frameSidebarBackground};
+  border-radius: 2px;
+  padding: 4px;
 
   a {
     color: #c7254e !important;

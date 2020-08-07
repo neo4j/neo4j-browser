@@ -22,12 +22,19 @@ const path = require('path')
 
 module.exports = [
   {
+    test: /\.tsx?$/,
+    use: 'awesome-typescript-loader',
+    include: [path.resolve('src')],
+    exclude: /node_modules/
+  },
+  {
     test: /\.(js|jsx)$/,
     include: [
       path.resolve('src'),
-      path.resolve('node_modules/@neo4j/browser-lambda-parser')
+      path.resolve('node_modules/@literal-jsx/parser'),
+      path.resolve('node_modules/@neo4j/browser-lambda-parser'),
+      path.resolve('node_modules/remark-mdx')
     ],
-    // exclude: /(node_modules(?!:\/@neo4j))|(cypher-codemirror)|(test_utils)|(dist)/,
     use: 'babel-loader'
   },
   {

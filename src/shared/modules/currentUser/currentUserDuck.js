@@ -23,7 +23,8 @@ import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTION_SUCCESS,
-  DISCONNECTION_SUCCESS
+  DISCONNECTION_SUCCESS,
+  getAuthEnabled
 } from 'shared/modules/connections/connectionsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
@@ -35,9 +36,9 @@ import {
 import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'user'
-export const UPDATE_CURRENT_USER = NAME + '/UPDATE_CURRENT_USER'
-export const FORCE_FETCH = NAME + '/FORCE_FETCH'
-export const CLEAR = NAME + '/CLEAR'
+export const UPDATE_CURRENT_USER = `${NAME}/UPDATE_CURRENT_USER`
+export const FORCE_FETCH = `${NAME}/FORCE_FETCH`
+export const CLEAR = `${NAME}/CLEAR`
 
 const initialState = {
   username: '',
@@ -56,11 +57,9 @@ export function getCurrentUser(state) {
  * Reducer
  */
 export default function user(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case CLEAR:
       return { ...initialState }
     case UPDATE_CURRENT_USER:
@@ -92,7 +91,11 @@ export const getCurrentUserEpic = (some$, store) =>
     .ofType(CONNECTION_SUCCESS)
     .merge(some$.ofType(DB_META_DONE))
     .mergeMap(() => {
-      return new Promise(async (resolve, reject) => {
+      return new Promise(async resolve => {
+        const authEnabled = getAuthEnabled(store.getState())
+        if (!authEnabled) {
+          return resolve(null)
+        }
         const supportsMultiDb = await bolt.hasMultiDbSupport()
         bolt
           .directTransaction(

@@ -32,7 +32,23 @@ import {
 } from 'browser-components/drawer'
 import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
 
-const About = ({ serverVersion, serverEdition }) => (
+function asChangeLogUrl(serverVersion: string): string | undefined {
+  if (!serverVersion) {
+    return undefined
+  }
+  const tokenisedServerVersion = serverVersion.split('.')
+  const releaseTag = tokenisedServerVersion.join('')
+  const urlServerVersion =
+    serverVersion && tokenisedServerVersion.splice(0, 2).join('.')
+  return `https://github.com/neo4j/neo4j/wiki/Neo4j-${urlServerVersion}-changelog#${releaseTag}`
+}
+
+interface AboutProps {
+  serverVersion: string
+  serverEdition: string
+}
+
+const About: React.FC<AboutProps> = ({ serverVersion, serverEdition }) => (
   <Drawer id="db-about">
     <DrawerHeader>About Neo4j</DrawerHeader>
     <DrawerBody>
@@ -50,7 +66,15 @@ const About = ({ serverVersion, serverEdition }) => (
       <DrawerSection>
         <DrawerSubHeader>You are running</DrawerSubHeader>
         <DrawerSectionBody>
-          <p>Neo4j Browser version: {version}</p>
+          <p>
+            Neo4j Browser version:{' '}
+            <a
+              href={`https://github.com/neo4j/neo4j-browser/releases/tag/${version}`}
+              target="_blank"
+            >
+              {version}
+            </a>
+          </p>
           <Render if={serverVersion && serverEdition}>
             <p>
               Neo4j Server version:{' '}
@@ -60,6 +84,14 @@ const About = ({ serverVersion, serverEdition }) => (
               ({serverEdition})
             </p>
           </Render>
+          <p>
+            <a
+              href="https://github.com/neo4j/neo4j-browser/wiki/changelog"
+              target="_blank"
+            >
+              Neo4j Browser Changelog
+            </a>
+          </p>
         </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
@@ -126,19 +158,7 @@ const About = ({ serverVersion, serverEdition }) => (
     <DrawerFooter>With &#9829; from Sweden.</DrawerFooter>
   </Drawer>
 )
-
-const asChangeLogUrl = serverVersion => {
-  if (!serverVersion) {
-    return undefined
-  }
-  const tokenisedServerVersion = serverVersion && serverVersion.split('.')
-  const releaseTag = tokenisedServerVersion.join('')
-  const urlServerVersion =
-    serverVersion && tokenisedServerVersion.splice(0, 2).join('.')
-  return `https://github.com/neo4j/neo4j/wiki/Neo4j-${urlServerVersion}-changelog#${releaseTag}`
-}
-
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     serverVersion: getVersion(state),
     serverEdition: getEdition(state)

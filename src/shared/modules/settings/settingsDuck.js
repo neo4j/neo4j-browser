@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { get } from 'lodash-es'
 
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
@@ -49,6 +50,8 @@ export const getBrowserSyncConfig = (
 export const getMaxNeighbours = state =>
   state[NAME].maxNeighbours || initialState.maxNeighbours
 export const getMaxRows = state => state[NAME].maxRows || initialState.maxRows
+export const getMaxFieldItems = state =>
+  get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
 export const getInitialNodeDisplay = state =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = state => state[NAME].scrollToTop
@@ -89,6 +92,7 @@ const initialState = {
   showSampleScripts: true,
   browserSyncDebugServer: null,
   maxRows: 1000,
+  maxFieldItems: 500,
   shouldReportUdc: true,
   autoComplete: true,
   scrollToTop: true,
@@ -102,15 +106,19 @@ const initialState = {
 }
 
 export default function settings(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case UPDATE:
-      return Object.assign({}, state, action.state)
+      return {
+        ...state,
+        ...action.state
+      }
     case REPLACE:
-      return Object.assign({}, { ...initialState }, action.state)
+      return {
+        ...initialState,
+        ...action.state
+      }
     case USER_CLEAR:
       return initialState
     case DISABLE_IMPLICIT_INIT_COMMANDS:

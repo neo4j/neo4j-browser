@@ -184,26 +184,31 @@ export const Settings = ({
     const mapSettings = visualSetting.settings
       .map(settingObj => {
         const setting = Object.keys(settingObj)[0]
-        if (typeof settings[setting] === 'undefined') return false
+        if (typeof settings[setting] === 'undefined') return null
         const visual = settingObj[setting].displayName
         const tooltip = settingObj[setting].tooltip || ''
+        const type = settingObj[setting].type || 'input'
 
-        if (!settingObj[setting].type || settingObj[setting].type === 'input') {
+        if (type === 'input') {
           return (
             <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
-              <StyledSettingTextInput
-                onChange={event => {
-                  settings[setting] = event.target.value
-                  onSettingsSave(settings)
-                }}
-                defaultValue={settings[setting]}
-                title={[tooltip]}
-                className={setting}
-              />
+              <StyledSettingLabel title={tooltip}>
+                {visual}
+                <StyledSettingTextInput
+                  onChange={event => {
+                    settings[setting] = event.target.value
+                    onSettingsSave(settings)
+                  }}
+                  defaultValue={settings[setting]}
+                  title={[tooltip]}
+                  className={setting}
+                />
+              </StyledSettingLabel>
             </StyledSetting>
           )
-        } else if (settingObj[setting].type === 'radio') {
+        }
+
+        if (type === 'radio') {
           return (
             <StyledSetting key={toKeyString(visual)}>
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
@@ -217,23 +222,28 @@ export const Settings = ({
               />
             </StyledSetting>
           )
-        } else if (settingObj[setting].type === 'checkbox') {
+        }
+
+        if (type === 'checkbox') {
           return (
             <StyledSetting key={toKeyString(visual)}>
-              <CheckboxSelector
-                onChange={event => {
-                  settings[setting] = event.target.checked
-                  onSettingsSave(settings)
-                }}
-                checked={settings[setting]}
-                data-testid={setting}
-              />
-              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
+              <StyledSettingLabel title={tooltip}>
+                <CheckboxSelector
+                  onChange={event => {
+                    settings[setting] = event.target.checked
+                    onSettingsSave(settings)
+                  }}
+                  checked={settings[setting]}
+                  data-testid={setting}
+                />
+                {visual}
+              </StyledSettingLabel>
             </StyledSetting>
           )
         }
       })
-      .filter(setting => setting !== false)
+      .filter(setting => setting !== null)
+
     return (
       <React.Fragment key={toKeyString(visualSetting.title)}>
         {title}
@@ -265,6 +275,7 @@ export const Settings = ({
       )
     })
     .filter(r => r)
+
   return (
     <Drawer id="db-settings">
       <DrawerHeader>Browser Settings</DrawerHeader>

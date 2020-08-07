@@ -70,11 +70,10 @@ export function getGraphStats(graph) {
       }
       if (labelStats[label]) {
         labelStats[label].count = labelStats[label].count + 1
-        labelStats[label].properties = Object.assign(
-          {},
-          labelStats[label].properties,
-          node.propertyMap
-        )
+        labelStats[label].properties = {
+          ...labelStats[label].properties,
+          ...node.propertyMap
+        }
       } else {
         labelStats[label] = {
           count: 1,
@@ -94,11 +93,10 @@ export function getGraphStats(graph) {
     }
     if (relTypeStats[rel.type]) {
       relTypeStats[rel.type].count = relTypeStats[rel.type].count + 1
-      relTypeStats[rel.type].properties = Object.assign(
-        {},
-        relTypeStats[rel.type].properties,
-        rel.propertyMap
-      )
+      relTypeStats[rel.type].properties = {
+        ...relTypeStats[rel.type].properties,
+        ...rel.propertyMap
+      }
     } else {
       relTypeStats[rel.type] = {
         count: 1,

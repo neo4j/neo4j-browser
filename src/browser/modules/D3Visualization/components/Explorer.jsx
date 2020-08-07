@@ -26,6 +26,8 @@ import neoGraphStyle from '../graphStyle'
 import { InspectorComponent } from './Inspector'
 import { LegendComponent } from './Legend'
 import { StyledFullSizeContainer } from './styled'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { connect } from 'react-redux'
 
 const deduplicateNodes = nodes => {
   return nodes.reduce(
@@ -231,6 +233,7 @@ export class ExplorerComponent extends Component {
           setGraph={this.props.setGraph}
         />
         <InspectorComponent
+          hasTruncatedFields={this.props.hasTruncatedFields}
           fullscreen={this.props.fullscreen}
           hoveredItem={this.state.hoveredItem}
           selectedItem={this.state.selectedItem}
@@ -241,4 +244,6 @@ export class ExplorerComponent extends Component {
     )
   }
 }
-export const Explorer = ExplorerComponent
+export const Explorer = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(ExplorerComponent)

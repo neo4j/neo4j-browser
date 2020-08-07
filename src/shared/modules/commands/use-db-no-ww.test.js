@@ -24,8 +24,8 @@ import { flushPromises } from 'services/utils'
 import { executeSingleCommand, handleSingleCommandEpic } from './commandsDuck'
 import bolt from 'services/bolt/bolt'
 
-jest.mock('services/bolt/boltConnection', () => {
-  const orig = require.requireActual('services/bolt/boltConnection')
+jest.mock('services/bolt/transactions', () => {
+  const orig = require.requireActual('services/bolt/transactions')
   return {
     ...orig,
     routedWriteTransaction: jest.fn(() => [
@@ -34,7 +34,7 @@ jest.mock('services/bolt/boltConnection', () => {
     ])
   }
 })
-const boltConnection = require.requireMock('services/bolt/boltConnection')
+const transactions = require.requireMock('services/bolt/transactions')
 
 jest.mock('shared/modules/settings/settingsDuck', () => {
   const orig = require.requireActual('shared/modules/settings/settingsDuck')
@@ -44,7 +44,6 @@ jest.mock('shared/modules/settings/settingsDuck', () => {
     shouldUseCypherThread: () => false
   }
 })
-const settingsDuck = require.requireMock('shared/modules/settings/settingsDuck')
 
 jest.mock('shared/modules/params/paramsDuck', () => {
   const orig = require.requireActual('shared/modules/params/paramsDuck')
@@ -66,7 +65,7 @@ describe('Specified target database', () => {
   test('it uses the db in store if no specific db specified with the action', done => {
     // Given
     bolt.useDb('autoDb') // Fake setting the db
-    boltConnection.routedWriteTransaction.mockClear()
+    transactions.routedWriteTransaction.mockClear()
 
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
@@ -76,8 +75,8 @@ describe('Specified target database', () => {
 
     bus.send(action.type, action)
     flushPromises().then(() => {
-      expect(boltConnection.routedWriteTransaction).toHaveBeenCalledTimes(1)
-      expect(boltConnection.routedWriteTransaction).toHaveBeenCalledWith(
+      expect(transactions.routedWriteTransaction).toHaveBeenCalledTimes(1)
+      expect(transactions.routedWriteTransaction).toHaveBeenCalledWith(
         'RETURN 1',
         {},
         expect.objectContaining({ useDb: 'autoDb' })
@@ -89,7 +88,7 @@ describe('Specified target database', () => {
   test('it uses the specified db if passed in with the action', done => {
     // Given
     bolt.useDb('autoDb') // Fake setting the db
-    boltConnection.routedWriteTransaction.mockClear()
+    transactions.routedWriteTransaction.mockClear()
 
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
@@ -99,8 +98,8 @@ describe('Specified target database', () => {
 
     bus.send(action.type, action)
     flushPromises().then(() => {
-      expect(boltConnection.routedWriteTransaction).toHaveBeenCalledTimes(1)
-      expect(boltConnection.routedWriteTransaction).toHaveBeenCalledWith(
+      expect(transactions.routedWriteTransaction).toHaveBeenCalledTimes(1)
+      expect(transactions.routedWriteTransaction).toHaveBeenCalledWith(
         'RETURN 1',
         {},
         expect.objectContaining({ useDb: 'manualDb' })

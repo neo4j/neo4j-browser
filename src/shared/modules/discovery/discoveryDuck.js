@@ -38,13 +38,14 @@ export const INJECTED_DISCOVERY = `${NAME}/INJECTED_DISCOVERY`
 
 // Reducer
 export default function reducer(state = initialState, action = {}) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case SET:
-      return Object.assign({}, state, { boltHost: action.boltHost })
+      return {
+        ...state,
+        boltHost: action.boltHost
+      }
     default:
       return state
   }
@@ -73,8 +74,10 @@ export const getBoltHost = state => {
 
 const updateDiscoveryState = (action, store) => {
   const updateObj = { host: action.forceURL }
-  if (action.username && action.password) {
+  if (action.username) {
     updateObj.username = action.username
+  }
+  if (action.password) {
     updateObj.password = action.password
   }
   if (typeof action.encrypted !== 'undefined') {
@@ -89,9 +92,13 @@ const updateDiscoveryState = (action, store) => {
 export const injectDiscoveryEpic = (action$, store) =>
   action$
     .ofType(INJECTED_DISCOVERY)
-    .map(action =>
-      updateDiscoveryState({ ...action, forceURL: action.host }, store)
-    )
+    .map(action => {
+      const connectUrl = generateBoltUrl(
+        getAllowedBoltSchemes(store.getState(), action.encrypted),
+        action.host
+      )
+      return updateDiscoveryState({ ...action, forceURL: connectUrl }, store)
+    })
     .mapTo({ type: DONE })
 
 export const discoveryOnStartupEpic = (some$, store) => {

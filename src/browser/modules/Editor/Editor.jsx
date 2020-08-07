@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable no-octal-escape */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { withTheme } from 'styled-components'
 import uuid from 'uuid'
 import {
   executeCommand,
@@ -41,7 +41,7 @@ import {
   shouldEditorAutocomplete,
   shouldEditorLint
 } from 'shared/modules/settings/settingsDuck'
-import { Bar, ActionButtonSection, EditorWrapper } from './styled'
+import { Bar, ActionButtonSection, EditorWrapper, Header } from './styled'
 import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { deepEquals, shallowEquals } from 'services/utils'
@@ -50,13 +50,13 @@ import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
 import Render from 'browser-components/Render'
-
 import ratingStar from 'icons/rating-star.svg'
 import controlsPlay from 'icons/controls-play.svg'
 import eraser2 from 'icons/eraser-2.svg'
 import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import ActionButtons from './ActionButtons'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -83,7 +83,6 @@ export class Editor extends Component {
       contentId: null,
       editorHeight: 0
     }
-
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
         this.setContentId(null)
@@ -118,16 +117,18 @@ export class Editor extends Component {
     this.setState({ expanded: !this.state.expanded })
   }
 
-  clearEditor() {
+  clearEditor = () => {
     this.setEditorValue('')
     this.setContentId(null)
   }
 
   handleEnter(cm) {
-    if (cm.lineCount() === 1) {
-      return this.execCurrent(cm)
+    const multiline = cm.lineCount() !== 1 || this.state.expanded
+    if (multiline) {
+      this.newlineAndIndent(cm)
+    } else {
+      this.execCurrent()
     }
-    this.newlineAndIndent(cm)
   }
 
   newlineAndIndent(cm) {
@@ -138,15 +139,20 @@ export class Editor extends Component {
     this.props.onExecute(cmd)
   }
 
-  execCurrent() {
-    this.execCommand(this.getEditorValue())
-    this.clearEditor()
-    this.setState({
-      notifications: [],
-      historyIndex: -1,
-      buffer: null,
-      expanded: false
-    })
+  execCurrent = () => {
+    const cmd = this.getEditorValue()
+    const onlyWhitespace = cmd.trim() === ''
+
+    if (!onlyWhitespace) {
+      this.execCommand(cmd)
+      this.clearEditor()
+      this.setState({
+        notifications: [],
+        historyIndex: -1,
+        buffer: null,
+        expanded: false
+      })
+    }
   }
 
   moveCursorToEndOfLine(cm) {
@@ -340,11 +346,11 @@ export class Editor extends Component {
   }
 
   lineNumberFormatter = line => {
-    const useDbString = this.props.useDb || ''
-    if (!this.codeMirror || this.codeMirror.lineCount() === 1) {
-      return `${useDbString}$`
-    } else {
+    const multiLine = this.codeMirror && this.codeMirror.lineCount() > 1
+    if (this.state.expanded || multiLine) {
       return line
+    } else {
+      return `${this.props.useDb || ''}$`
     }
   }
 
@@ -399,12 +405,45 @@ export class Editor extends Component {
 
     this.setGutterMarkers()
 
+    const editorIsEmpty = this.getEditorValue().length > 0
+    const buttons = [
+      {
+        onClick: () => this.setEditorValue(''),
+        icon: eraser2,
+        title: 'Clear',
+        disabled: editorIsEmpty
+      },
+      {
+        onClick: this.state.contentId
+          ? () =>
+              this.props.onFavoriteUpdateClick(
+                this.state.contentId,
+                this.getEditorValue()
+              )
+          : () => {
+              this.props.onFavoriteClick(this.getEditorValue())
+            },
+        icon: this.state.contentId ? pencil : ratingStar,
+        title: this.state.contentId ? 'Update favorite' : 'Favorite',
+        iconColor: this.state.contentId && this.props.theme.editModeButtonText,
+        disabled: editorIsEmpty
+      },
+      {
+        onClick: this.execCurrent,
+        icon: controlsPlay,
+        title: 'Play',
+        disabled: editorIsEmpty
+      }
+    ]
+
+    const cardView = this.codeMirror && this.codeMirror.lineCount() !== 1
+
     return (
-      <Bar expanded={this.state.expanded} minHeight={this.state.editorHeight}>
-        <EditorWrapper
-          expanded={this.state.expanded}
-          minHeight={this.state.editorHeight}
-        >
+      <Bar expanded={this.state.expanded} card={cardView}>
+        <Header expanded={this.state.expanded} card={cardView}>
+          <ActionButtons buttons={buttons} />
+        </Header>
+        <EditorWrapper expanded={this.state.expanded} card={cardView}>
           <Codemirror
             ref={ref => {
               this.editor = ref
@@ -416,47 +455,6 @@ export class Editor extends Component {
             initialPosition={this.state.lastPosition}
           />
         </EditorWrapper>
-        <ActionButtonSection>
-          <Render if={this.state.contentId}>
-            <EditModeEditorButton
-              onClick={() =>
-                this.props.onFavoriteUpdateClick(
-                  this.state.contentId,
-                  this.getEditorValue()
-                )
-              }
-              disabled={this.getEditorValue().length < 1}
-              color="#ffaf00"
-              title="Favorite"
-              icon={pencil}
-            />
-          </Render>
-          <Render if={!this.state.contentId}>
-            <EditorButton
-              data-testid="editorFavorite"
-              onClick={() => {
-                this.props.onFavoriteClick(this.getEditorValue())
-              }}
-              disabled={this.getEditorValue().length < 1}
-              title="Update favorite"
-              icon={ratingStar}
-            />
-          </Render>
-          <EditorButton
-            data-testid="clearEditorContent"
-            onClick={() => this.clearEditor()}
-            disabled={this.getEditorValue().length < 1}
-            title="Clear"
-            icon={eraser2}
-          />
-          <EditorButton
-            data-testid="submitQuery"
-            onClick={() => this.execCurrent()}
-            disabled={this.getEditorValue().length < 1}
-            title="Play"
-            icon={controlsPlay}
-          />
-        </ActionButtonSection>
       </Bar>
     )
   }
@@ -507,9 +505,6 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Editor)
+export default withTheme(
+  withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
 )

@@ -25,7 +25,7 @@ export function getErrorMessage(errorObject) {
   if (!str) return
   const keys = Object.keys(errorObject)
   keys.forEach(prop => {
-    const re = new RegExp('(#' + prop + '#)', 'g')
+    const re = new RegExp(`(#${prop}#)`, 'g')
     str = str.replace(re, errorObject[prop])
   })
   return str
@@ -115,3 +115,11 @@ export function NotFoundError(message) {
   }
 }
 errorFunctions.NotFoundError = NotFoundError
+
+export function InvalidGrassError(message) {
+  return {
+    type: 'InvalidGrassError',
+    message
+  }
+}
+errorFunctions.InvalidGrassError = InvalidGrassError

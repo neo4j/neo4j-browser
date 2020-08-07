@@ -67,10 +67,9 @@ import {
   transformResultRecordsToResultArray,
   recordToJSONMapper
 } from 'browser/modules/Stream/CypherFrame/helpers'
-import { csvFormat } from 'services/bolt/cypherTypesFormatting'
+import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
-
-const JSON_EXPORT_INDENT = 2
+import { stringifyMod } from 'services/utils'
 
 class FrameTitlebar extends Component {
   hasData() {
@@ -115,15 +114,11 @@ class FrameTitlebar extends Component {
   }
 
   exportJSON(records) {
-    const data = JSON.stringify(
-      map(records, recordToJSONMapper),
-      null,
-      JSON_EXPORT_INDENT
-    )
+    const exportData = map(records, recordToJSONMapper)
+    const data = stringifyMod(exportData, stringModifier, true)
     const blob = new Blob([data], {
       type: 'text/plain;charset=utf-8'
     })
-
     saveAs(blob, 'records.json')
   }
 
@@ -224,7 +219,8 @@ class FrameTitlebar extends Component {
             title="Pin at top"
             onClick={() => {
               props.togglePin()
-              props.togglePinning(frame.id, frame.isPinned)
+              // using frame.isPinned causes issues when there are multiple frames in one
+              props.togglePinning(frame.id, props.pinned)
             }}
             pressed={props.pinned}
           >
@@ -248,15 +244,13 @@ class FrameTitlebar extends Component {
           >
             {expandCollapseIcon}
           </FrameButton>
-          <Render if={['cypher', 'style', 'schema'].includes(frame.type)}>
-            <FrameButton
-              data-testid="rerunFrameButton"
-              title="Rerun"
-              onClick={() => props.onReRunClick(frame)}
-            >
-              <RefreshIcon />
-            </FrameButton>
-          </Render>
+          <FrameButton
+            data-testid="rerunFrameButton"
+            title="Rerun"
+            onClick={() => props.onReRunClick(frame)}
+          >
+            <RefreshIcon />
+          </FrameButton>
           <FrameButton
             title="Close"
             onClick={() =>
@@ -297,7 +291,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
-      dispatch(commands.executeCommand(cmd, { id, useDb }))
+      dispatch(commands.executeCommand(cmd, { id, useDb, isRerun: true }))
     },
     togglePinning: (id, isPinned) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
@@ -306,8 +300,5 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export default withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(FrameTitlebar)
+  connect(mapStateToProps, mapDispatchToProps)(FrameTitlebar)
 )

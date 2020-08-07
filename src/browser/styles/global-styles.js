@@ -48,8 +48,8 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .CodeMirror {
-    background-color: #fff !important;
-    padding: 12px !important;
+    background: initial !important; // overrides lib css 
+    margin: 12px !important;
     border-radius: 4px !important;
     transition: all !important;
   }
@@ -88,7 +88,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .CodeMirror-scroll {
     overflow: hidden !important;
-    max-height: 140px !important;
+    max-height: 230px !important;
   }
 
   .CodeMirror div.CodeMirror-cursor {

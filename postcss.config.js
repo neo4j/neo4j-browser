@@ -22,7 +22,7 @@ module.exports = {
   plugins: {
     precss: {},
     autoprefixer: {
-      browsers: ['last 3 version', 'ie >= 10']
+      browsers: ['last 1 version', 'not ie > 0']
     }
   }
 }

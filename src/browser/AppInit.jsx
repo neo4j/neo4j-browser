@@ -72,6 +72,12 @@ const store = createStore(
   enhancer
 )
 
+// Expose store to cypress, so we don't we can set application state programmatically
+if (window.Cypress) {
+  window.Cypress.__store__ = store
+  window.Cypress.__bus__ = bus
+}
+
 // Send everything from suber into Redux
 bus.applyMiddleware((_, origin) => (channel, message, source) => {
   // No loop-backs

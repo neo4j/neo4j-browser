@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES6",
+    "strict": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react",
+    "outDir": "./build",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "paths": {
+      "services/*": ["shared/services/*"],
+      "browser-services/*": ["browser/services/*"],
+      "browser-components/*": ["browser/components/*"],
+      "browser-hooks/*": ["browser/hooks/*"],
+      "browser-styles/*": ["browser/styles/*"],
+      "project-root/*": ["../*"],
+      "src-root/*": ["./*"],
+      "icons": ["browser/icons/*"]
+    }
+  },
+  "include": ["./src/**/*"]
+}

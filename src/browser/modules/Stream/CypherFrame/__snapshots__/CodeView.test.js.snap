@@ -34,85 +34,85 @@ exports[`CodeViews CodeView displays request and response info if successful que
     class="styled__PaddedDiv-sc-1dtvgs1-1 kyHRpW"
   >
     <table
-      class="styled__StyledTable-sc-1dtvgs1-36 bXcmxT"
+      class="styled__StyledTable-sc-1dtvgs1-37 hQXYgT"
     >
       <tbody
-        class="styled__StyledTBody-sc-1dtvgs1-37 gZUxwp"
+        class="styled__StyledTBody-sc-1dtvgs1-38 kGUkAE"
       >
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-39 dFJTjq"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-40 fXHrSd"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Server version
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-41 fJfBGu"
+            class="styled__StyledTd-sc-1dtvgs1-42 dGNdSM"
           >
             xx1
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-39 dFJTjq"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-40 fXHrSd"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Server address
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-41 fJfBGu"
+            class="styled__StyledTd-sc-1dtvgs1-42 dGNdSM"
           >
             xx2
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-39 dFJTjq"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-40 fXHrSd"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Query
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-41 fJfBGu"
+            class="styled__StyledTd-sc-1dtvgs1-42 dGNdSM"
           >
             MATCH xx0
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-39 dFJTjq"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-40 fXHrSd"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Summary
             <div
-              class="styled__StyledExpandable-sc-1dtvgs1-38 dMVSiX fa fa-caret-right"
+              class="styled__StyledExpandable-sc-1dtvgs1-39 dxftfv fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-41 fJfBGu"
+            class="styled__StyledTd-sc-1dtvgs1-42 dGNdSM"
           >
             {,  "server": {,    "version": "xx1", ...
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-39 dFJTjq"
+          class="styled__StyledAlteringTr-sc-1dtvgs1-40 iAVdiN"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-40 fXHrSd"
+            class="styled__StyledStrongTd-sc-1dtvgs1-41 jldPxJ"
           >
             Response
             <div
-              class="styled__StyledExpandable-sc-1dtvgs1-38 dMVSiX fa fa-caret-right"
+              class="styled__StyledExpandable-sc-1dtvgs1-39 dxftfv fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-41 fJfBGu"
+            class="styled__StyledTd-sc-1dtvgs1-42 dGNdSM"
           >
             [,  {,    "res": "xx3" ...
           </td>

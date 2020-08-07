@@ -87,7 +87,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     )
   }
 
-  var zoomBehavior = d3.behavior
+  const zoomBehavior = d3.behavior
     .zoom()
     .scaleExtent([0.2, 1])
     .on('zoom', zoomed)
@@ -96,7 +96,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     d3
       .transition()
       .duration(500)
-      .tween('zoom', function() {
+      .tween('zoom', () => {
         const t = d3.interpolate(zoomBehavior.translate(), translate)
         const s = d3.interpolate(zoomBehavior.scale(), scale)
         return function(a) {
@@ -117,7 +117,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     return zoomClick(this)
   }
 
-  var zoomClick = function(element) {
+  const zoomClick = function(element) {
     draw = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
@@ -142,7 +142,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
   }
   // Background click event
   // Check if panning is ongoing
-  rect.on('click', function() {
+  rect.on('click', () => {
     if (!draw) {
       return viz.trigger('canvasClicked', el)
     }
@@ -350,7 +350,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
 
   viz.boundingBox = () => container.node().getBBox()
 
-  var clickHandler = vizClickHandler()
+  const clickHandler = vizClickHandler()
   clickHandler.on('click', onNodeClick)
   clickHandler.on('dblclick', onNodeDblClick)
 

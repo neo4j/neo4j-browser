@@ -51,6 +51,7 @@ test('should print correct state for retaining credentials', async () => {
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
       isConnected={false}
+      allowedSchemes={['neo4j']}
     />
   )
 
@@ -67,7 +68,8 @@ test('should print correct state for retaining credentials', async () => {
   activeConnection = true
   activeConnectionData = {
     username,
-    host
+    host,
+    authEnabled: true
   }
   rerender(
     <ConnectionForm
@@ -80,6 +82,7 @@ test('should print correct state for retaining credentials', async () => {
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
       isConnected={true}
+      allowedSchemes={['neo4j']}
     />
   )
 
@@ -103,6 +106,7 @@ test('should print correct state for retaining credentials', async () => {
       setActiveConnection={setActiveConnection}
       executeInitCmd={executeInitCmd}
       isConnected={true}
+      allowedSchemes={['neo4j']}
     />
   )
 

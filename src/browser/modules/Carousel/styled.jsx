@@ -47,11 +47,10 @@ export const StyledCarouselButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  left: 50%;
   bottom: 0;
   z-index: 10;
   border-top: ${props => props.theme.inFrameBorder};
-  transform: translateX(-50%);
+  margin-left: -40px;
   height: 39px;
   width: 100%;
 
@@ -276,7 +275,7 @@ export const StyledSlide = styled.div`
   a[server-topic],
   a[exec-topic] {
     background-color: ${props => props.theme.topicBackground} !important;
-    color: ${props => props.theme.topicText} !important;
+    color: #5ca6d9;
   }
   & button [help-topic],
   button [play-topic],

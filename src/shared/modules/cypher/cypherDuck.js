@@ -19,14 +19,11 @@
  */
 
 import Rx from 'rxjs'
-
+import neo4j from 'neo4j-driver'
 import bolt from 'services/bolt/bolt'
 import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
-import {
-  getEncryptionMode,
-  buildTxFunctionByMode
-} from 'services/bolt/boltHelpers'
+import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getUserTxMetadata } from 'services/bolt/txMetadata'
@@ -44,16 +41,16 @@ import {
 } from '../dbMeta/dbMetaDuck'
 
 const NAME = 'cypher'
-export const CYPHER_REQUEST = NAME + '/REQUEST'
-export const AD_HOC_CYPHER_REQUEST = NAME + '/AD_HOC_REQUEST'
-export const CLUSTER_CYPHER_REQUEST = NAME + '/CLUSTER_REQUEST'
-export const FORCE_CHANGE_PASSWORD = NAME + '/FORCE_CHANGE_PASSWORD'
+export const CYPHER_REQUEST = `${NAME}/REQUEST`
+export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
+export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
+export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
 
 // Helpers
 const queryAndResolve = async (driver, action, host, useDb = {}) => {
   return new Promise(resolve => {
     const session = driver.session({
-      defaultAccessMode: bolt.neo4j.session.WRITE,
+      defaultAccessMode: neo4j.session.WRITE,
       ...useDb
     })
     const txFn = buildTxFunctionByMode(session)
@@ -63,7 +60,10 @@ const queryAndResolve = async (driver, action, host, useDb = {}) => {
         resolve({
           type: action.$$responseChannel,
           success: true,
-          result: Object.assign({}, r, { meta: action.host })
+          result: {
+            ...r,
+            meta: action.host
+          }
         })
       })
       .catch(e => {
@@ -120,7 +120,10 @@ export const cypherRequestEpic = (some$, store) =>
 export const adHocCypherRequestEpic = (some$, store) =>
   some$.ofType(AD_HOC_CYPHER_REQUEST).mergeMap(action => {
     const connection = getActiveConnectionData(store.getState())
-    const tempConnection = Object.assign({}, connection, { host: action.host })
+    const tempConnection = {
+      ...connection,
+      host: action.host
+    }
     return callClusterMember(tempConnection, action, store)
   })
 
@@ -143,7 +146,10 @@ export const clusterCypherRequestEpic = (some$, store) =>
             action,
             observables: addresses.map(host => {
               const connection = getActiveConnectionData(store.getState())
-              const tempConnection = Object.assign({}, connection, { host })
+              const tempConnection = {
+                ...connection,
+                host
+              }
               return Rx.Observable.fromPromise(
                 callClusterMember(tempConnection, action, store)
               )
@@ -203,9 +209,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
       bolt
         .directConnect(
           action,
-          {
-            encrypted: getEncryptionMode(action)
-          },
+          {},
           undefined,
           false // Ignore validation errors
         )

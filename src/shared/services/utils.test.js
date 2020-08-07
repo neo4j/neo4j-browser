@@ -692,31 +692,6 @@ describe('toKeyString', () => {
       expect(utils.toKeyString(str.str)).toEqual(str.expect)
     })
   })
-  describe('generateBoltHost', () => {
-    it('generates a bolt host as expected', () => {
-      const tests = [
-        { host: '', expected: 'neo4j://localhost:7687' },
-        { host: 'localhost', expected: 'neo4j://localhost' },
-        { host: 'localhost:7688', expected: 'neo4j://localhost:7688' },
-        { host: 'bolt://localhost', expected: 'bolt://localhost' },
-        { host: 'bolt://localhost:7688', expected: 'bolt://localhost:7688' },
-        { host: 'neo4j://localhost:7688', expected: 'neo4j://localhost:7688' },
-        {
-          host: 'bolt+routing://localhost',
-          expected: 'neo4j://localhost'
-        },
-        {
-          host: 'bolt+routing://localhost:7688',
-          expected: 'neo4j://localhost:7688'
-        },
-        { host: null, expected: 'neo4j://localhost:7687' }
-      ]
-
-      tests.forEach(test => {
-        expect(utils.generateBoltHost(test.host)).toEqual(test.expected)
-      })
-    })
-  })
   describe('detectRuntimeEnv', () => {
     const tests = [
       [
@@ -735,10 +710,9 @@ describe('toKeyString', () => {
         [
           {
             location: {
-              href:
-                'https://mydomain.com:7474?neo4jDesktopApiUrl=' +
-                encodeURIComponent('https://graphql.api.local:3001') +
-                '&neo4jDesktopGraphAppClientId=xxx'
+              href: `https://mydomain.com:7474?neo4jDesktopApiUrl=${encodeURIComponent(
+                'https://graphql.api.local:3001'
+              )}&neo4jDesktopGraphAppClientId=xxx`
             }
           },
           []

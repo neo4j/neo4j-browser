@@ -20,8 +20,8 @@
 
 export const shouldTriggerConnectEvent = (state, todayDate = null) => {
   const pingDate = new Date(state.pingTime || 0)
-  todayDate = todayDate || getTodayDate()
-  if (pingDate < todayDate) return true
+  const localTodayDate = todayDate || getTodayDate()
+  if (pingDate < localTodayDate) return true
   return false
 }
 

@@ -110,13 +110,9 @@ export const TextInput = props => {
   return <StyledSettingTextInput {...rest}>{children}</StyledSettingTextInput>
 }
 
-export const CheckboxSelector = props => {
-  return props.checked ? (
-    <StyledCheckbox type="checkbox" {...props} />
-  ) : (
-    <StyledCheckbox type="checkbox" {...props} />
-  )
-}
+export const CheckboxSelector = props => (
+  <StyledCheckbox type="checkbox" {...props} />
+)
 
 export class RadioSelector extends Component {
   state = {}
@@ -138,13 +134,14 @@ export class RadioSelector extends Component {
               <StyledRadio
                 type="radio"
                 value={option}
+                id={option}
                 checked={this.isSelectedValue(option)}
                 onChange={event => {
                   this.setState({ selectedValue: option })
                   this.props.onChange(event)
                 }}
               />
-              <StyledLabel>{option}</StyledLabel>
+              <StyledLabel htmlFor={option}>{option}</StyledLabel>
             </StyledRadioEntry>
           )
         })}

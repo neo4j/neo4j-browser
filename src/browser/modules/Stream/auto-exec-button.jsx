@@ -24,16 +24,17 @@ import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
 
 const StyledAutoExecButton = styled.button`
   border-radius: 3px;
-  border: 1px solid #dadada;
+  border: transparent;
   display: inline-block;
-  font-family: Monaco, 'Courier New', Terminal, monospace;
+  font-family: 'Fira Code', 'Courier New', 'Courier', monospace, 'Monaco',
+    'Courier New', Terminal, monospace;
   font-size: 12px;
   line-height: 18px;
   padding: 0 4px;
-  color: #428bca;
+  color: #5ca6d9;
   cursor: pointer;
   text-decoration: none;
-  background-color: #f8f8f8;
+  background-color: ${props => props.theme.runnableBackground};
   outline: transparent;
 `
 

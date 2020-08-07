@@ -20,14 +20,14 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
     class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
   >
     <div
-      class="styled__StyledRightPartial-sc-1dtvgs1-32 ghhzbn"
+      class="styled__StyledRightPartial-sc-1dtvgs1-33 kITufN"
     >
       <div
-        class="styled__StyledWidthSliderContainer-sc-1dtvgs1-34 idlnPl"
+        class="styled__StyledWidthSliderContainer-sc-1dtvgs1-35 hsuISq"
       >
         Max column width:
         <input
-          class="styled__StyledWidthSlider-sc-1dtvgs1-35 kvIxBa"
+          class="styled__StyledWidthSlider-sc-1dtvgs1-36 cgzxFB"
           max="3"
           min="3"
           type="range"
@@ -45,7 +45,7 @@ exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
     class="styled__PaddedDiv-sc-1dtvgs1-1 kyHRpW"
   >
     <div
-      class="styled__StyledBodyMessage-sc-1dtvgs1-26 gpPoTU"
+      class="styled__StyledBodyMessage-sc-1dtvgs1-27 hpwxul"
     >
       (no changes, no records)
     </div>

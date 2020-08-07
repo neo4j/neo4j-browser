@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import neo4j from 'neo4j-driver'
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
@@ -47,7 +48,9 @@ import {
   hasClientConfig,
   updateUserCapability,
   USER_CAPABILITIES,
-  FEATURE_DETECTION_DONE
+  FEATURE_DETECTION_DONE,
+  isACausalCluster,
+  setClientConfig
 } from '../features/featuresDuck'
 
 export const NAME = 'meta'
@@ -90,7 +93,8 @@ export const getStoreSize = state => state[NAME].server.storeSize
 export const getClusterRole = state => state[NAME].role
 export const isEnterprise = state => state[NAME].server.edition === 'enterprise'
 export const isBeta = state => /-/.test(state[NAME].server.version)
-export const getStoreId = state => state[NAME].server.storeId
+export const getStoreId = state =>
+  state[NAME] && state[NAME].server ? state[NAME].server.storeId : null
 
 export const getAvailableSettings = state =>
   (state[NAME] || initialState).settings
@@ -132,7 +136,7 @@ function updateMetaForContext(state, meta, context) {
   const mapResult = (metaIndex, mapFunction) =>
     meta.records[metaIndex].get(0).data.map(mapFunction)
   const mapSingleValue = r => ({ val: r, context })
-  const mapInteger = r => (bolt.neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
+  const mapInteger = r => (neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
   const mapInvocableValue = r => {
     const { name, signature, description } = r
     return {
@@ -209,11 +213,9 @@ const initialState = {
  * Reducer
  */
 export default function meta(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case UPDATE:
       const { type, ...rest } = action // eslint-disable-line
       return { ...state, ...rest }
@@ -357,16 +359,26 @@ export const dbMetaEpic = (some$, store) =>
               }),
               // Cluster role
               Rx.Observable.fromPromise(
-                bolt.directTransaction(
-                  getDbClusterRole(store.getState()),
-                  {},
-                  {
-                    useCypherThread: shouldUseCypherThread(store.getState()),
-                    ...getBackgroundTxMetadata({
-                      hasServerSupport: canSendTxMetadata(store.getState())
-                    })
+                new Promise((resolve, reject) => {
+                  if (!isACausalCluster(store.getState())) {
+                    return resolve(null)
                   }
-                )
+                  bolt
+                    .directTransaction(
+                      getDbClusterRole(store.getState()),
+                      {},
+                      {
+                        useCypherThread: shouldUseCypherThread(
+                          store.getState()
+                        ),
+                        ...getBackgroundTxMetadata({
+                          hasServerSupport: canSendTxMetadata(store.getState())
+                        })
+                      }
+                    )
+                    .then(resolve)
+                    .catch(reject)
+                })
               )
                 .catch(e => {
                   return Rx.Observable.of(null)
@@ -451,11 +463,10 @@ export const serverConfigEpic = (some$, store) =>
           bolt
             .directTransaction(
               `CALL ${
-                hasClientConfig(store.getState())
+                hasClientConfig(store.getState()) !== false
                   ? 'dbms.clientConfig()'
                   : 'dbms.listConfig()'
               }`,
-
               {},
               {
                 useDb: supportsMultiDb ? SYSTEM_DB : '',
@@ -465,8 +476,37 @@ export const serverConfigEpic = (some$, store) =>
                 })
               }
             )
-            .then(resolve)
-            .catch(reject)
+            .then(r => {
+              // This is not set yet
+              if (hasClientConfig(store.getState()) === null) {
+                store.dispatch(setClientConfig(true))
+              }
+              resolve(r)
+            })
+            .catch(e => {
+              // Try older procedure if the new one doesn't exist
+              if (e.code === 'Neo.ClientError.Procedure.ProcedureNotFound') {
+                // Store that dbms.clientConfig isn't available
+                store.dispatch(setClientConfig(false))
+
+                bolt
+                  .directTransaction(
+                    `CALL dbms.listConfig()`,
+                    {},
+                    {
+                      useDb: supportsMultiDb ? SYSTEM_DB : '',
+                      useCypherThread: shouldUseCypherThread(store.getState()),
+                      ...getBackgroundTxMetadata({
+                        hasServerSupport: canSendTxMetadata(store.getState())
+                      })
+                    }
+                  )
+                  .then(resolve)
+                  .catch(reject)
+              } else {
+                reject(e)
+              }
+            })
         })
       )
         .catch(e => {

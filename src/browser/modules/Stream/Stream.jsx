@@ -100,7 +100,7 @@ class Stream extends PureComponent {
 
   render() {
     return (
-      <StyledStream ref={this.base}>
+      <StyledStream ref={this.base} data-testid="stream">
         {this.props.frames.map(frameObject => {
           const frame = getLatestFromFrameStack(frameObject)
           const frameProps = {

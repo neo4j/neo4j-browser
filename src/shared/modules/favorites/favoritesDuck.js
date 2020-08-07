@@ -43,9 +43,10 @@ export const removeFavoritesById = (state, ids) =>
 const versionSize = 20
 
 // reducer
-const initialState = staticScriptsList.map(script =>
-  Object.assign({}, script, { isStatic: true })
-)
+const initialState = staticScriptsList.map(script => ({
+  ...script,
+  isStatic: true
+}))
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -56,9 +57,10 @@ export default function reducer(state = initialState, action) {
     case ADD_FAVORITE:
       return state.concat([{ id: action.id || uuid.v4(), content: action.cmd }])
     case UPDATE_FAVORITE:
-      const mergedFavorite = Object.assign({}, getFavorite(state, action.id), {
+      const mergedFavorite = {
+        ...getFavorite(state, action.id),
         content: action.cmd
-      })
+      }
       const updatedFavorites = state.map(_ =>
         _.id === action.id ? mergedFavorite : _
       )

@@ -19,6 +19,7 @@
  */
 
 import updateStatsFields from './updateStatisticsFields'
+import { flatten, map, take } from 'lodash-es'
 import neo4j from 'neo4j-driver'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import {
@@ -91,13 +92,13 @@ const extractPathForRows = (path, converters) => {
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(function(segment) {
-    return [
+  return segments.map(segment =>
+    [
       objIntToString(segment.start, converters),
       objIntToString(segment.relationship, converters),
       objIntToString(segment.end, converters)
     ].filter(part => part !== null)
-  })
+  )
 }
 
 export function extractPlan(result, calculateTotalDbHits = false) {
@@ -152,30 +153,19 @@ const collectHits = function(operator) {
 
 export function extractNodesAndRelationshipsFromRecords(
   records,
-  types = neo4j.types
+  types = neo4j.types,
+  maxFieldItems
 ) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
 
-  const keys = records[0].keys
-  let rawNodes = []
-  let rawRels = []
-  records.forEach(record => {
-    const graphItems = keys.map(key => record.get(key))
-    rawNodes = [
-      ...rawNodes,
-      ...graphItems.filter(item => item instanceof types.Node)
-    ]
-    rawRels = [
-      ...rawRels,
-      ...graphItems.filter(item => item instanceof types.Relationship)
-    ]
-    const paths = graphItems.filter(item => item instanceof types.Path)
-    paths.forEach(item =>
-      extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types)
-    )
-  })
+  const { rawNodes, rawRels } = extractRawNodesAndRelationShipsFromRecords(
+    records,
+    types,
+    maxFieldItems
+  )
+
   return { nodes: rawNodes, relationships: rawRels }
 }
 
@@ -183,33 +173,17 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
   records,
   types,
   filterRels,
-  converters
+  converters,
+  maxFieldItems
 ) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
-  const keys = records[0].keys
-  let rawNodes = []
-  let rawRels = []
-
-  records.forEach(record => {
-    let graphItems = keys.map(key => record.get(key))
-    graphItems = flattenArray(
-      recursivelyExtractGraphItems(types, graphItems)
-    ).filter(item => item !== false)
-    rawNodes = [
-      ...rawNodes,
-      ...graphItems.filter(item => item instanceof types.Node)
-    ]
-    rawRels = [
-      ...rawRels,
-      ...graphItems.filter(item => item instanceof types.Relationship)
-    ]
-    const paths = graphItems.filter(item => item instanceof types.Path)
-    paths.forEach(item =>
-      extractNodesAndRelationshipsFromPath(item, rawNodes, rawRels, types)
-    )
-  })
+  const { rawNodes, rawRels } = extractRawNodesAndRelationShipsFromRecords(
+    records,
+    types,
+    maxFieldItems
+  )
 
   const nodes = rawNodes.map(item => {
     return {
@@ -235,7 +209,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       properties: itemIntToString(item.properties, converters)
     }
   })
-  return { nodes: nodes, relationships: relationships }
+  return { nodes, relationships }
 }
 
 export const recursivelyExtractGraphItems = (types, item) => {
@@ -255,27 +229,83 @@ export const recursivelyExtractGraphItems = (types, item) => {
   return item
 }
 
-export const flattenArray = arr => {
-  return arr.reduce((all, curr) => {
-    if (Array.isArray(curr)) return all.concat(flattenArray(curr))
-    return all.concat(curr)
-  }, [])
-}
+export function extractRawNodesAndRelationShipsFromRecords(
+  records,
+  types = neo4j.types,
+  maxFieldItems
+) {
+  const items = new Set()
+  const paths = new Set()
+  const segments = new Set()
+  const rawNodes = new Set()
+  const rawRels = new Set()
 
-const extractNodesAndRelationshipsFromPath = (item, rawNodes, rawRels) => {
-  const paths = Array.isArray(item) ? item : [item]
-  paths.forEach(path => {
-    let segments = path.segments
-    // Zero length path. No relationship, end === start
-    if (!Array.isArray(path.segments) || path.segments.length < 1) {
-      segments = [{ ...path, end: null }]
+  for (const record of records) {
+    for (const key of record.keys) {
+      items.add(record.get(key))
     }
-    segments.forEach(segment => {
-      if (segment.start) rawNodes.push(segment.start)
-      if (segment.end) rawNodes.push(segment.end)
-      if (segment.relationship) rawRels.push(segment.relationship)
-    })
-  })
+  }
+
+  const flatTruncatedItems = flatten(
+    map([...items], item =>
+      maxFieldItems && Array.isArray(item) ? take(item, maxFieldItems) : item
+    )
+  )
+
+  const findAllEntities = item => {
+    if (item instanceof types.Relationship) {
+      rawRels.add(item)
+      return
+    }
+    if (item instanceof types.Node) {
+      rawNodes.add(item)
+      return
+    }
+    if (item instanceof types.Path) {
+      paths.add(item)
+      return
+    }
+    if (Array.isArray(item)) {
+      for (const subItem of item) {
+        findAllEntities(subItem)
+      }
+      return
+    }
+    if (item && typeof item === 'object') {
+      for (const subItem of Object.values(item)) {
+        findAllEntities(subItem)
+      }
+      return
+    }
+  }
+
+  findAllEntities(flatTruncatedItems)
+
+  for (const path of paths) {
+    if (path.start) {
+      rawNodes.add(path.start)
+    }
+    if (path.end) {
+      rawNodes.add(path.end)
+    }
+    for (const segment of path.segments) {
+      segments.add(segment)
+    }
+  }
+
+  for (const segment of segments) {
+    if (segment.start) {
+      rawNodes.add(segment.start)
+    }
+    if (segment.end) {
+      rawNodes.add(segment.end)
+    }
+    if (segment.relationship) {
+      rawRels.add(segment.relationship)
+    }
+  }
+
+  return { rawNodes: [...rawNodes], rawRels: [...rawRels] }
 }
 
 export const retrieveFormattedUpdateStatistics = result => {
@@ -290,7 +320,9 @@ export const retrieveFormattedUpdateStatistics = result => {
           }`
       )
     return statsMessages.join(', ')
-  } else return null
+  } else {
+    return null
+  }
 }
 
 export const flattenProperties = rows => {
@@ -483,9 +515,9 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
   }
   if (typeof item === 'object') {
     const typedObject = {}
-    item = escapeReservedProps(item, reservedTypePropertyName)
-    Object.keys(item).forEach(key => {
-      typedObject[key] = recursivelyTypeGraphItems(item[key], types)
+    const localItem = escapeReservedProps(item, reservedTypePropertyName)
+    Object.keys(localItem).forEach(key => {
+      typedObject[key] = recursivelyTypeGraphItems(localItem[key], types)
     })
     return typedObject
   }

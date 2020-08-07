@@ -73,7 +73,7 @@ export default class PairwiseArcsRelationshipRouting {
       if (shortCaption.length <= 2) {
         return ['', 0]
       }
-      shortCaption = shortCaption.substr(0, shortCaption.length - 2) + '\u2026'
+      shortCaption = `${shortCaption.substr(0, shortCaption.length - 2)}\u2026`
       const width = this.measureRelationshipCaption(relationship, shortCaption)
       if (width < targetWidth) {
         return [shortCaption, width]
@@ -210,7 +210,7 @@ export default class PairwiseArcsRelationshipRouting {
           (() => {
             const result1 = []
             for (let i = 0; i < nodePair.relationships.length; i++) {
-              var ref
+              let ref
               relationship = nodePair.relationships[i]
               const shaftWidth =
                 parseFloat(

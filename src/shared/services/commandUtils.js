@@ -35,7 +35,10 @@ export function stripEmptyCommandLines(str) {
 }
 
 export function stripCommandComments(str) {
-  return str.replace(/((^|\n)\/\/[^\n$]+\n?)/g, '')
+  return str
+    .split('\n')
+    .filter(line => !line.trim().startsWith('//'))
+    .join('\n')
 }
 
 export function splitStringOnFirst(str, delimiter) {
@@ -90,6 +93,7 @@ export const extractPostConnectCommandsFromServerConfig = str => {
 }
 
 const getHelpTopic = str => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
+const stripPound = str => splitStringOnFirst(str, '#')[0]
 const lowerCase = str => str.toLowerCase()
 const trim = str => str.trim()
 const replaceSpaceWithDash = str => str.replace(/\s/g, '-')
@@ -97,14 +101,16 @@ const snakeToCamel = str =>
   str.replace(/(-\w)/g, match => match[1].toUpperCase())
 const camelToSnake = (name, separator) => {
   return name
-    .replace(/([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g, function(_, $1, $2) {
-      return $1 + ($2 && (separator || '_') + $2)
-    })
+    .replace(
+      /([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g,
+      (_, $1, $2) => $1 + ($2 && (separator || '_') + $2)
+    )
     .toLowerCase()
 }
 
 export const transformCommandToHelpTopic = inputStr =>
   [inputStr || '']
+    .map(stripPound)
     .map(getHelpTopic)
     .map(lowerCase)
     .map(trim)
@@ -124,9 +130,9 @@ const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
 export const mapParamToCypherStatement = (key, param) => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
-    ? '`' + quotedKey[1] + '`'
+    ? `\`${quotedKey[1]}\``
     : typeof key !== 'string'
-    ? '`' + key + '`'
+    ? `\`${key}\``
     : key
   const returnAs = value => `RETURN ${value} as ${cleanKey}`
 
@@ -138,7 +144,8 @@ export const mapParamToCypherStatement = (key, param) => {
 }
 
 export const extractStatementsFromString = str => {
-  const parsed = extractStatements(str)
+  const cleanCmd = cleanCommand(str)
+  const parsed = extractStatements(cleanCmd)
   const { statements } = parsed.referencesListener
   return statements[0]
     .raw()

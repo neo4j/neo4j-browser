@@ -204,6 +204,31 @@ describe('boltMappings', () => {
       expect(relationships[0].properties).toEqual({})
     })
 
+    test('should truncate field items when told to do so', () => {
+      let startNode = new neo4j.types.Node('1', ['Person'], {
+        prop1: 'prop1'
+      })
+      let endNode = new neo4j.types.Node('2', ['Movie'], {
+        prop2: 'prop2'
+      })
+      let boltRecord = {
+        keys: ['p'],
+        get: key => [startNode, endNode]
+      }
+
+      let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
+        [boltRecord],
+        neo4j.types,
+        1
+      )
+      expect(nodes.length).toBe(1)
+      expect(relationships.length).toBe(0)
+      let graphNode = nodes[0]
+      expect(graphNode).toBeDefined()
+      expect(graphNode.labels).toEqual(['Person'])
+      expect(graphNode.properties).toEqual({ prop1: 'prop1' })
+    })
+
     test('should map bolt nodes and relationships to graph nodes and relationships', () => {
       const startNode = new neo4j.types.Node('1', ['Person'], {
         prop1: 'prop1'
@@ -312,7 +337,7 @@ describe('boltMappings', () => {
       profile.rows = 14
       const result = {
         summary: {
-          profile: profile
+          profile
         }
       }
       const extractedPlan = extractPlan(result).root
@@ -389,7 +414,7 @@ describe('boltMappings', () => {
       // Then
       expect(out.nodes.length).toEqual(4)
     })
-    test('should find items in paths with segments', () => {
+    test('should find items in paths with segments, and only return unique items', () => {
       // Given
       const converters = {
         intChecker: () => false,
@@ -423,7 +448,7 @@ describe('boltMappings', () => {
       )
 
       // Then
-      expect(out.nodes.length).toEqual(4)
+      expect(out.nodes.length).toEqual(3)
     })
     test('should find items in paths zero segments', () => {
       // Given

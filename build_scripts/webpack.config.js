@@ -25,6 +25,9 @@ const helpers = require('./webpack-helpers')
 
 module.exports = {
   mode: helpers.isProduction ? 'production' : 'development',
+  node: {
+    fs: 'empty'
+  },
   entry: [path.resolve(helpers.browserPath, 'index.jsx')],
   output: {
     filename: 'app-[hash].js',
@@ -49,7 +52,7 @@ module.exports = {
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
       icons: path.resolve(helpers.browserPath, 'icons')
     },
-    extensions: ['.js', '.jsx']
+    extensions: ['.tsx', '.ts', '.js', '.jsx']
   },
   module: {
     rules

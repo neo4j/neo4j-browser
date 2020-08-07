@@ -15,7 +15,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         class="styled__StyledLegend-sc-13boxex-23 epTuur one-row"
       >
         <div
-          class="styled__StyledLegendRow-sc-13boxex-22 btLVbI contracted"
+          class="styled__StyledLegendRow-sc-13boxex-22 tuwwB contracted"
         >
           <ul
             class="styled__StyledInlineList-sc-13boxex-9 styled__StyledLegendInlineList-sc-13boxex-24 bXzLDX list-inline"
@@ -64,7 +64,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="styled__StyledSvgWrapper-sc-13boxex-0 emUVWV"
+        class="styled__StyledSvgWrapper-sc-13boxex-0 eAYujh"
       >
         <svg
           class="neod3viz"
@@ -120,6 +120,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     font-size="10px"
                     pointer-events="none"
                     text-anchor="middle"
+                    x="0"
                     y="5"
                   >
                      &lt;b&gt;…
@@ -131,7 +132,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </svg>
       </div>
       <div
-        class="styled__StyledStatusBar-sc-13boxex-12 fBQkwD status-bar"
+        class="styled__StyledStatusBar-sc-13boxex-12 hrHwkB status-bar"
       >
         <div
           class="styled__StyledStatus-sc-13boxex-13 lfPraq status"

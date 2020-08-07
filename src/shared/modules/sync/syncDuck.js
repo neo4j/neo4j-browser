@@ -62,11 +62,11 @@ export const CLEAR_SYNC_AND_LOCAL = 'sync/CLEAR_SYNC_AND_LOCAL'
 export const CONSENT_SYNC = 'sync/CONSENT_SYNC'
 export const OPT_OUT_SYNC = 'sync/OPT_OUT_SYNC'
 export const AUTHORIZED = 'sync/AUTHORIZED'
-export const SET_AUTH_DATA = NAME_META + '/SET_AUTH_DATA'
-export const SET_SYNC_METADATA = NAME_META + '/SET_SYNC_METADATA'
-export const RESET_METADATA = NAME_META + '/RESET_METADATA'
-export const SERVICE_STATUS_UPDATED = NAME_META + '/SERVICE_STATUS_UPDATED'
-export const USER_AUTH_STATUS_UPDATED = NAME_META + '/USER_AUTH_STATUS_UPDATED'
+export const SET_AUTH_DATA = `${NAME_META}/SET_AUTH_DATA`
+export const SET_SYNC_METADATA = `${NAME_META}/SET_SYNC_METADATA`
+export const RESET_METADATA = `${NAME_META}/RESET_METADATA`
+export const SERVICE_STATUS_UPDATED = `${NAME_META}/SERVICE_STATUS_UPDATED`
+export const USER_AUTH_STATUS_UPDATED = `${NAME_META}/USER_AUTH_STATUS_UPDATED`
 
 export const UP = 'UP'
 export const DOWN = 'DOWN'
@@ -119,13 +119,14 @@ export function getLastSyncedAt(state) {
  */
 
 export function syncReducer(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case SET_SYNC_DATA:
-      return Object.assign({}, state, action.obj)
+      return {
+        ...state,
+        ...action.obj
+      }
     case CLEAR_SYNC:
     case CLEAR_SYNC_AND_LOCAL:
       return null
@@ -135,36 +136,36 @@ export function syncReducer(state = initialState, action) {
 }
 
 export function syncConsentReducer(state = initialConsentState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialState, ...state }
     case CONSENT_SYNC:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         consented: action.consent,
         optedOut: action.consent ? false : state.optedOut
-      })
+      }
     case CLEAR_SYNC_AND_LOCAL:
       return { consented: false, optedOut: false }
     case OPT_OUT_SYNC:
-      return Object.assign({}, state, { optedOut: true })
+      return {
+        ...state,
+        optedOut: true
+      }
     case SET_SYNC_DATA:
-      return Object.assign({}, state, { optedOut: false })
+      return {
+        ...state,
+        optedOut: false
+      }
     default:
       return state
   }
 }
 
 export function syncMetaDataReducer(state = initialMetadataState, action) {
-  if (action.type === APP_START) {
-    state = {
-      ...initialMetadataState,
-      ...state
-    }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return { ...initialMetadataState, ...state }
     case SET_AUTH_DATA:
       return {
         ...state,

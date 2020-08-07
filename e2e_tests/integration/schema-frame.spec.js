@@ -95,19 +95,9 @@ describe('Schema Frame', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':schema')
 
-      if (Cypress.config('serverVersion') <= 4.0) {
-        cy.get('[data-testid="frameContents"]')
-          .should('contain', 'Constraints')
-          .and('contain', 'schematest.prop1')
-          .and('contain', 'IS UNIQUE')
-      }
-
-      if (Cypress.config('serverVersion') >= 4.1) {
-        cy.get('[data-testid="frameContents"]')
-          .should('contain', 'Constraints')
-          .and('contain', 'SchemaTest {prop1}')
-          .and('contain', "type='UNIQUENESS'")
-      }
+      cy.get('[data-testid="frameContents"]')
+        .should('contain', 'Constraints')
+        .and('contain', ':SchemaTest')
     })
   })
 })

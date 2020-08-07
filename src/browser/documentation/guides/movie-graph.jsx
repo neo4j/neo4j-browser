@@ -20,7 +20,6 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import Carousel from '../../modules/Carousel/Carousel'
 import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Movie Graph'
@@ -540,7 +539,7 @@ CREATE
 (PhilipH)-[:ACTED_IN {roles:['Gust Avrakotos']}]->(CharlieWilsonsWar),
 (MikeN)-[:DIRECTED]->(CharlieWilsonsWar)
 
-CREATE (ThePolarExpress:Movie {title:'The Polar Express', released:2004, tagline:'This Holiday Season… Believe'})
+CREATE (ThePolarExpress:Movie {title:'The Polar Express', released:2004, tagline:'This Holiday Season... Believe'})
 CREATE
 (TomH)-[:ACTED_IN {roles:['Hero Boy', 'Father', 'Conductor', 'Hobo', 'Scrooge', 'Santa Claus']}]->(ThePolarExpress),
 (RobertZ)-[:DIRECTED]->(ThePolarExpress)

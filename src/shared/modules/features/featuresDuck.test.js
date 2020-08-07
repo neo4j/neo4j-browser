@@ -29,6 +29,7 @@ describe('features reducer', () => {
     expect(dehydrate(nextState)).toEqual({
       availableProcedures: [],
       browserSync: true,
+      clientConfig: null,
       userCapabilities: {
         proceduresReadable: false,
         serverConfigReadable: false
@@ -96,13 +97,13 @@ describe('feature getters', () => {
 })
 describe('canSendTxMetadata', () => {
   // Valid versions that should send
-  const validSemverVersions = ['3.5.0-alpha02', '3.5.0', '3.6.1']
+  const validSemverVersions = ['3.5.0-alpha02', '3.5.0', '3.6.1', '6.2']
   test.each(validSemverVersions)('version %s returns true', version => {
     expect(canSendTxMetadata(createVersionState(version))).toEqual(true)
   })
 
   // Invalid or old versions that should not send
-  const invalidSemverVersions = ['dev', null, undefined, '6.2', '3.4.10']
+  const invalidSemverVersions = ['dev', null, undefined, '3.4.10']
   test.each(invalidSemverVersions)('version %s returns false', version => {
     expect(canSendTxMetadata(createVersionState(version))).toEqual(false)
   })

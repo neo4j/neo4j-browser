@@ -75,6 +75,7 @@ import {
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError,
+  InvalidGrassError,
   UnsupportedError
 } from 'services/exceptions'
 import {
@@ -82,7 +83,7 @@ import {
   isValidURL
 } from 'shared/modules/commands/helpers/http'
 import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
-import { parseGrass } from 'shared/services/grassUtils'
+import { parseGrass, objToCss } from 'shared/services/grassUtils'
 import {
   shouldUseCypherThread,
   getCmdChar,
@@ -105,14 +106,14 @@ const availableCommands = [
   {
     name: 'clear',
     match: cmd => cmd === 'clear',
-    exec: function(action, cmdchar, put) {
+    exec(action, cmdchar, put) {
       put(frames.clear())
     }
   },
   {
     name: 'noop',
     match: cmd => /^noop$/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -126,7 +127,7 @@ const availableCommands = [
   {
     name: 'config',
     match: cmd => /^config(\s|$)/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       handleUpdateConfigCommand(action, cmdchar, put, store)
         .then(res => {
           put(
@@ -145,7 +146,7 @@ const availableCommands = [
   {
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       return handleParamsCommand(
         action,
         cmdchar,
@@ -191,7 +192,7 @@ const availableCommands = [
   {
     name: 'params',
     match: cmd => /^params$/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -205,7 +206,7 @@ const availableCommands = [
   {
     name: 'use-db',
     match: cmd => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
-    exec: async function(action, cmdchar, put, store) {
+    async exec(action, cmdchar, put, store) {
       const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
       try {
         const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -273,7 +274,7 @@ const availableCommands = [
   {
     name: 'reset-db',
     match: cmd => new RegExp(`^${useDbCommand}$`).test(cmd),
-    exec: async function(action, cmdchar, put, store) {
+    async exec(action, cmdchar, put, store) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(useDb(null))
@@ -303,7 +304,7 @@ const availableCommands = [
   {
     name: 'dbs',
     match: cmd => new RegExp(`^${listDbsCommand}$`).test(cmd),
-    exec: async function(action, cmdchar, put, store) {
+    async exec(action, cmdchar, put, store) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(
@@ -332,7 +333,7 @@ const availableCommands = [
   {
     name: 'schema',
     match: cmd => /^schema$/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -365,7 +366,7 @@ const availableCommands = [
   {
     name: 'sysinfo',
     match: cmd => /^sysinfo$/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -425,7 +426,7 @@ const availableCommands = [
           put(successfulCypher(action.cmd))
           return res
         })
-        .catch(function(e) {
+        .catch(e => {
           const request = getRequest(store.getState(), id)
           // Only update error statuses for pending queries
           if (request.status !== REQUEST_STATUS_PENDING) {
@@ -472,7 +473,7 @@ const availableCommands = [
   {
     name: 'play-remote',
     match: cmd => /^play(\s|$)https?/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       let id
       // We have a frame that generated this command
       if (action.id) {
@@ -490,6 +491,11 @@ const availableCommands = [
       }
 
       const url = action.cmd.substr(cmdchar.length + 'play '.length)
+      const urlObject = new URL(url)
+      urlObject.href = url
+      const filenameExtension = urlObject.pathname.includes('.')
+        ? urlObject.pathname.split('.').pop()
+        : 'html'
       const whitelist = getRemoteContentHostnameWhitelist(store.getState())
       fetchRemoteGuide(url, whitelist)
         .then(r => {
@@ -497,6 +503,7 @@ const availableCommands = [
             frames.add({
               useDb: getUseDb(store.getState()),
               ...action,
+              filenameExtension,
               id,
               type: 'play-remote',
               initialSlide: tryGetRemoteInitialSlideFromUrl(url),
@@ -509,12 +516,13 @@ const availableCommands = [
             frames.add({
               useDb: getUseDb(store.getState()),
               ...action,
+              filenameExtension,
               id,
               type: 'play-remote',
               response: e.response || null,
               initialSlide: tryGetRemoteInitialSlideFromUrl(url),
               error: CouldNotFetchRemoteGuideError({
-                error: e.name + ': ' + e.message
+                error: `${e.name}: ${e.message}`
               })
             })
           )
@@ -524,7 +532,7 @@ const availableCommands = [
   {
     name: 'play',
     match: cmd => /^play(\s|$)/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       let id
       // We have a frame that generated this command
       if (action.id) {
@@ -546,6 +554,7 @@ const availableCommands = [
           useDb: getUseDb(store.getState()),
           ...action,
           id,
+          initialSlide: tryGetRemoteInitialSlideFromUrl(action.cmd),
           type: 'play'
         })
       )
@@ -554,7 +563,7 @@ const availableCommands = [
   {
     name: 'history',
     match: cmd => /^history(\s+clear)?/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       const match = action.cmd.match(/^:history(\s+clear)?/)
       if (match[0] !== match.input) {
         return put(
@@ -599,7 +608,7 @@ const availableCommands = [
   {
     name: 'help',
     match: cmd => /^(help|\?)(\s|$)/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec(action, cmdchar, put, store) {
       const HELP_FRAME_TYPE = 'help'
       let id
 
@@ -653,12 +662,10 @@ const availableCommands = [
           if (isLocal || isSameHostnameAsConnection) {
             if (connectionData.username) {
               authHeaders = {
-                Authorization:
-                  'Basic ' +
-                  authHeaderFromCredentials(
-                    connectionData.username,
-                    connectionData.password
-                  )
+                Authorization: `Basic ${authHeaderFromCredentials(
+                  connectionData.username,
+                  connectionData.password
+                )}`
               }
             }
           }
@@ -702,11 +709,13 @@ const availableCommands = [
   {
     name: 'style',
     match: cmd => /^style(\s|$)/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
-      const match = action.cmd.match(/:style\s*(\S.*)$/)
-      let param = match && match[1] ? match[1] : ''
+    exec(action, cmdchar, put, store) {
+      const param = action.cmd
+        .trim()
+        .split(':style')[1]
+        .trim()
 
-      if (param === '') {
+      function showGrass() {
         const grassData = getGraphStyleData(store.getState())
         put(
           frames.add({
@@ -716,41 +725,66 @@ const availableCommands = [
             result: grassData
           })
         )
-      } else if (param === 'reset') {
-        put(updateGraphStyleData(null))
-      } else if (isValidURL(param)) {
-        if (!param.startsWith('http')) {
-          param = 'http://' + param
-        }
+      }
 
+      function updateAndShowGrass(newGrass) {
+        put(updateGraphStyleData(newGrass))
+        showGrass()
+      }
+
+      function putGrassErrorFrame(message) {
+        put(
+          frames.add({
+            useDb: getUseDb(store.getState()),
+            ...action,
+            error: createErrorObject(InvalidGrassError, message),
+            type: 'error'
+          })
+        )
+      }
+
+      if (param === '') {
+        showGrass()
+        return
+      }
+
+      if (param === 'reset') {
+        updateAndShowGrass(null)
+        return
+      }
+
+      if (
+        isValidURL(param) &&
+        param.includes('.') /* isValid url considers words like rest an url*/
+      ) {
+        const url = param.startsWith('http') ? param : `http://${param}`
         const whitelist = getRemoteContentHostnameWhitelist(store.getState())
+
         fetchRemoteGrass(param, whitelist)
           .then(response => {
             const parsedGrass = parseGrass(response)
             if (parsedGrass) {
-              put(updateGraphStyleData(parsedGrass))
+              updateAndShowGrass(parsedGrass)
             } else {
-              put(showErrorMessage('Could not parse grass file'))
+              putGrassErrorFrame(
+                `Could not parse grass file containing: 
+${response}`
+              )
             }
           })
-          .catch(e => {
-            const error = new Error(e)
-            put(
-              frames.add({
-                useDb: getUseDb(store.getState()),
-                ...action,
-                error,
-                type: 'error'
-              })
-            )
-          })
+          .catch(e => putGrassErrorFrame(e.message))
+        return
+      }
+
+      // Some dummy data like 23432432 will parse as "valid grass"
+      // try to convert to css to see if actually valid
+      const parsedGrass = parseGrass(param)
+      const validGrass = objToCss(parsedGrass)
+      if (parsedGrass && validGrass) {
+        updateAndShowGrass(parsedGrass)
       } else {
-        const parsedGrass = parseGrass(param)
-        if (parsedGrass) {
-          put(updateGraphStyleData(parsedGrass))
-        } else {
-          put(showErrorMessage('Could not parse grass data'))
-        }
+        putGrassErrorFrame(`Could not parse grass data:
+${param}`)
       }
     }
   },

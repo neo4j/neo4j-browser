@@ -58,10 +58,9 @@ function updateStyleData(state, styleData) {
 }
 
 export default function visualization(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = !state ? state : { ...initialState, ...state }
-  }
   switch (action.type) {
+    case APP_START:
+      return !state ? state : { ...initialState, ...state }
     case UPDATE_GRAPH_STYLE_DATA:
       return updateStyleData(state, action.styleData)
     default:

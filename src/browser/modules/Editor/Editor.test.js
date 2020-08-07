@@ -45,7 +45,10 @@ describe('<Editor /> ', () => {
     it('should setup on mount', async () => {
       // Given bus is provided
       const bus = createBus()
-      const { findByText } = render(<Editor {...props} bus={bus} />)
+      const mockTheme = { editModeButtonText: 'red' }
+      const { findByText } = render(
+        <Editor {...props} bus={bus} theme={mockTheme} />
+      )
 
       // The SET_CONTENT action
       // When

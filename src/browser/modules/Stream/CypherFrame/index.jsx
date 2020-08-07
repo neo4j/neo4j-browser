@@ -40,7 +40,6 @@ import {
   Spinner
 } from 'browser-components/icons/Icons'
 import { AsciiView, AsciiStatusbar } from './AsciiView'
-import { TableView, TableStatusbar } from './TableView'
 import { CodeView, CodeStatusbar } from './CodeView'
 import { ErrorsViewBus as ErrorsView, ErrorsStatusbar } from './ErrorsView'
 import { WarningsView, WarningsStatusbar } from './WarningsView'
@@ -67,6 +66,10 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
 import { CancelView } from './CancelView'
+import RelatableView, {
+  RelatableStatusbar
+} from 'browser/modules/Stream/CypherFrame/relatable-view'
+import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 
 export class CypherFrame extends Component {
   visElement = null
@@ -136,9 +139,14 @@ export class CypherFrame extends Component {
   }
 
   sidebar = () => {
+    const canShowViz =
+      !requestExceedsVisLimits(this.props.request) &&
+      resultHasNodes(this.props.request) &&
+      !this.state.errors
+
     return (
       <FrameSidebar>
-        <Render if={resultHasNodes(this.props.request) && !this.state.errors}>
+        <Render if={canShowViz}>
           <CypherFrameButton
             data-testid="cypherFrameSidebarVisualization"
             selected={this.state.openView === viewTypes.VISUALIZATION}
@@ -247,13 +255,7 @@ export class CypherFrame extends Component {
           />
         </Display>
         <Display if={this.state.openView === viewTypes.TABLE} lazy>
-          <TableView
-            {...this.state}
-            maxRows={this.props.maxRows}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <RelatableView updated={this.props.request.updated} result={result} />
         </Display>
         <Display if={this.state.openView === viewTypes.CODE} lazy>
           <CodeView
@@ -326,12 +328,9 @@ export class CypherFrame extends Component {
           />
         </Display>
         <Display if={this.state.openView === viewTypes.TABLE} lazy>
-          <TableStatusbar
-            {...this.state}
-            maxRows={this.props.maxRows}
-            result={result}
+          <RelatableStatusbar
             updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
+            result={result}
           />
         </Display>
         <Display if={this.state.openView === viewTypes.CODE} lazy>

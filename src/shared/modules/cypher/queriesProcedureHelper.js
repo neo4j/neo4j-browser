@@ -26,9 +26,5 @@ export function listQueriesProcedure() {
 }
 
 export function killQueriesProcedure(queryIdList) {
-  return (
-    'CALL dbms.killQueries([' +
-    queryIdList.map(q => '"' + q + '"').join() +
-    '])'
-  )
+  return `CALL dbms.killQueries([${queryIdList.map(q => `"${q}"`).join()}])`
 }

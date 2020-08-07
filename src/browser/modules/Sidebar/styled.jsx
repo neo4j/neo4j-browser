@@ -25,7 +25,7 @@ export const StyledSetting = styled.div`
   padding-bottom: 15px;
 `
 
-export const StyledSettingLabel = styled.div`
+export const StyledSettingLabel = styled.label`
   word-wrap: break-wrap;
   display: inline-block;
 `
@@ -49,7 +49,10 @@ export const StyledHelpItem = styled.li`
 
 const StyledDocumentText = styled.a`
   cursor: pointer;
+  -webkit-text-decoration: none;
   text-decoration: none;
+  color: #5ca6d9;
+
   &:hover {
     color: #5dade2;
     text-decoration: none;

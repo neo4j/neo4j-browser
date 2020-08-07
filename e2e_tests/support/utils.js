@@ -5,6 +5,8 @@ export const isEnterpriseEdition = () =>
 
 export const isAura = () => Cypress.config('serverEdition') === 'aura'
 
+export const isHttps = () => Cypress.config('baseUrl').startsWith('https')
+
 export const getDesktopContext = (
   config,
   connectionCredsType = 'host',
@@ -51,3 +53,16 @@ const getBoltConfig = (config, type) => {
   }
   return obj
 }
+
+export const stripScheme = url => {
+  const [_scheme, ...rest] = (url || '').split('://')
+  if (!rest || !rest.length) {
+    return _scheme
+  }
+  return rest.join('://')
+}
+
+export const schemeWithEncryptionFlag = scheme =>
+  `${scheme}${isHttps() ? '+s' : ''}://`
+export const schemeWithInvertedEncryptionFlag = scheme =>
+  `${scheme}${!isHttps() ? '+s' : ''}://`

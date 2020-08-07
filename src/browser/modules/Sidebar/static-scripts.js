@@ -43,7 +43,7 @@ const mapFavoritesStateToProps = state => {
   return {
     title: 'Sample Scripts',
     scriptsNamespace: SLASH,
-    scripts: scripts,
+    scripts,
     isStatic: true
   }
 }
@@ -60,10 +60,7 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
   onRemoveFolder: Function.prototype
 })
 const Favorites = withBus(
-  connect(
-    mapFavoritesStateToProps,
-    mapFavoritesDispatchToProps
-  )(MyScripts)
+  connect(mapFavoritesStateToProps, mapFavoritesDispatchToProps)(MyScripts)
 )
 
 export default Favorites

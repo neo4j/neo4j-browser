@@ -17,8 +17,8 @@
  * You should have received data copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import neo4j from 'neo4j-driver'
 import React from 'react'
-import bolt from 'services/bolt/bolt'
 import {
   itemIntToString,
   extractFromNeoObjects
@@ -107,7 +107,7 @@ export const flattenAttributes = data => {
       {},
       ...data.attributes.map(({ name, value }) => ({
         [name]: itemIntToString(value, {
-          intChecker: bolt.neo4j.isInt,
+          intChecker: neo4j.isInt,
           intConverter: val => val.toString(),
           objectConverter: extractFromNeoObjects
         })

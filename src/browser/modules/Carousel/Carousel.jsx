@@ -57,8 +57,12 @@ export default function Carousel({
   const myRef = useRef()
 
   useEffect(() => {
-    setVisibleSlide(0)
-  }, [slides])
+    let showSlideIndex = 0
+    if (initialSlide <= slides.length) {
+      showSlideIndex = initialSlide - 1
+    }
+    setVisibleSlide(showSlideIndex)
+  }, [slides, initialSlide])
 
   useEffect(() => {
     if (onSlide) {
@@ -83,13 +87,13 @@ export default function Carousel({
     const slide = visibleSlide + 1
     setVisibleSlide(slide)
     setWasClicked(true)
-    myRef.current.scrollTo(0, 0)
+    myRef.current.scrollTop = 0
   }
 
   const prev = () => {
     const slide = visibleSlide - 1
     setVisibleSlide(slide)
-    myRef.current.scrollTo(0, 0)
+    myRef.current.scrollTop = 0
   }
 
   const getSlide = slideNumber => {

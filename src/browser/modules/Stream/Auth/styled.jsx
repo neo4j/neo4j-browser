@@ -36,6 +36,9 @@ export const StyledChangePasswordForm = styled(StyledConnectionForm)`
 export const StyledConnectionAside = styled(StyledFrameAside)``
 export const StyledConnectionFormEntry = styled.div`
   padding-bottom: 15px;
+  &:hover .url-hint-text {
+    display: block;
+  }
 `
 export const StyledConnectionLabel = styled.label`
   display: block;
@@ -47,24 +50,68 @@ export const StyledConnectionTextInput = styled(StyledInput)`
   min-width: 200px;
   width: 44%;
 `
+export const StyledSegment = styled.div`
+  min-width: 200px;
+  width: 44%;
+  position: relative;
+  display: flex;
+  justify-content: left;
+  > select {
+    border-radius: 4px;
+    width: auto;
+    min-width: unset;
+    display: inline-block;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    text-align: right;
+    border: ${props => props.theme.formButtonBorder};
+    color: ${props => props.theme.inputText};
+    height: 34px;
+    font-size: 14px;
+    padding: 7px 12px 6px 12px;
+    vertical-align: bottom;
+  }
+  > input {
+    display: inline-block;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+    flex: 1;
+    min-width: unset;
+    width: auto;
+  }
+`
+
+export const StyledBoltUrlHintText = styled.span`
+  height: 0;
+  overflow: visible;
+  font-size: 12px;
+  display: none;
+`
+
+export const StyledSegmentedConnectionTextInput = styled(StyledInput)`
+  min-width: 200px;
+  width: 44%;
+`
 export const StyledRevealablePasswordWrapper = styled.div`
   position: relative;
   display: inline-block;
-  width: 44%;
+  width: calc(44% + 30px);
   min-width: 200px;
 
   > input {
-    padding-right: 30px;
-    width: 100%;
+    width: calc(100% - 30px);
   }
 
   > .icon {
+    display: inline-block;
+    width: 25px;
+    color: ${props => props.theme.primaryText};
     position: absolute;
     user-select: none;
     right: 0;
-    top: 6px;
+    top: 5px;
     height: auto;
-    width: auto;
     padding: 3px;
     cursor: pointer;
   }
@@ -89,10 +136,10 @@ export const StyledConnectionFooter = styled.span`
   font-weight: 200;
 `
 export const StyledCode = styled.code`
-  color: #c7254e;
-  background-color: #f9f2f4;
-  border-radius: 4px;
-  cursor: pointer;
+  color: #fd766e;
+  background-color: ${props => props.theme.frameCommandBackground};
+  border-radius: 2px;
+  cursor: auto;
   border: none;
   padding: 2px 4px;
 

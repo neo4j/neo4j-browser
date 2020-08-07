@@ -102,7 +102,6 @@ function parseGrassCSS(string) {
 
 export const objToCss = obj => {
   if (typeof obj !== 'object') {
-    console.error('Need a object but got ', typeof obj, obj)
     return false
   }
   let output = ''
@@ -110,18 +109,16 @@ export const objToCss = obj => {
     const level = '  '
     for (const selector in obj) {
       if (obj.hasOwnProperty(selector)) {
-        output += selector + ' {\n' + level
+        output += `${selector} {\n${level}`
         for (const style in obj[selector]) {
           if (obj[selector].hasOwnProperty(style)) {
-            output +=
-              style +
-              ': ' +
-              quoteSpecialStyles(style, obj[selector][style]) +
-              ';\n' +
-              level
+            output += `${style}: ${quoteSpecialStyles(
+              style,
+              obj[selector][style]
+            )};\n${level}`
           }
         }
-        output = output.trim() + '\n'
+        output = `${output.trim()}\n`
         output += '}\n'
       }
     }
@@ -142,14 +139,14 @@ export const selectorStringToArray = selector => {
   // We want to match all . that are not preceded by \\
   // Instead we reverse and look
   // for . that are not followed by \\ (negative lookahead)
-  selector = selector
+  const reverseSelector = selector
     .split('')
     .reverse()
     .join('')
-  var re = /(.+?)(?!\.\\)(?:\.|$)/g
+  const re = /(.+?)(?!\.\\)(?:\.|$)/g
   const out = []
   let m
-  while ((m = re.exec(selector)) !== null) {
+  while ((m = re.exec(reverseSelector)) !== null) {
     const res = m[1]
       .split('')
       .reverse()

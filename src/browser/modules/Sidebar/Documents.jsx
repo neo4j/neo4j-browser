@@ -86,12 +86,11 @@ const getReferences = (version, v) => {
       command: `https://neo4j.com/docs/operations-manual/${v}/`,
       type: 'link'
     },
-    // Drivers manual needs to wait for the page to be published
-    // {
-    //   name: 'Drivers Manual',
-    //   command: `https://neo4j.com/docs/driver-manual/current/`,
-    //   type: 'link'
-    // },
+    {
+      name: 'Drivers Manual',
+      command: `https://neo4j.com/docs/driver-manual/current/`,
+      type: 'link'
+    },
     {
       name: 'Cypher Refcard',
       command: `https://neo4j.com/docs/cypher-refcard/${v}/`,
@@ -111,6 +110,11 @@ const getReferences = (version, v) => {
       name: 'Knowledge Base',
       command: 'https://neo4j.com/developer/kb/',
       type: 'link'
+    },
+    {
+      name: 'Neo4j Browser Developer Pages',
+      command: 'https://neo4j.com/developer/neo4j-browser/',
+      type: 'link'
     }
   ]
   return [].concat(shouldLinkToNewRefs(version) ? newRefs : oldRefs, commonRefs)
@@ -128,7 +132,7 @@ const Documents = ({ version, urlVersion }) => {
   const items = getStaticItems(version, urlVersion)
   return (
     <Drawer id="db-documents">
-      <DrawerHeader>Documents</DrawerHeader>
+      <DrawerHeader>Help &amp; Resources</DrawerHeader>
       <DrawerBody>
         <DocumentItems header="Introduction" items={items.intro} />
         <DocumentItems header="Help" items={items.help} />

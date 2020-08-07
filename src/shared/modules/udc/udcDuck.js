@@ -50,13 +50,34 @@ export const CLEAR_EVENTS = `${NAME}/CLEAR_EVENTS`
 export const UPDATE_SETTINGS = `${NAME}/UPDATE_SETTINGS`
 export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
 export const BOOTED = `${NAME}/BOOTED`
+export const METRICS_EVENT = `${NAME}/METRICS_EVENT`
 
-// Local variables (used in epics)
 let booted = false
+
+// Event constants
+export const EVENT_APP_STARTED = 'EVENT_APP_STARTED'
+export const EVENT_BROWSER_SYNC_LOGOUT = 'EVENT_BROWSER_SYNC_LOGOUT'
+export const EVENT_BROWSER_SYNC_LOGIN = 'EVENT_BROWSER_SYNC_LOGIN'
+export const EVENT_DRIVER_CONNECTED = 'EVENT_DRIVER_CONNECTED'
+
 const typeToEventName = {
   [CYPHER]: 'cypher_attempts',
   [CYPHER_SUCCEEDED]: 'cypher_wins',
-  [CYPHER_FAILED]: 'cypher_fails'
+  [CYPHER_FAILED]: 'cypher_fails',
+  [EVENT_APP_STARTED]: 'client_starts'
+}
+
+export const typeToMetricsObject = {
+  [CYPHER]: { category: 'cypher', label: 'sent' },
+  [CYPHER_SUCCEEDED]: { category: 'cypher', label: 'succeeded' },
+  [CYPHER_FAILED]: { category: 'cypher', label: 'failed' },
+  [EVENT_APP_STARTED]: { category: 'app', label: 'started' },
+  [EVENT_DRIVER_CONNECTED]: { category: 'driver', label: 'connected' },
+  [EVENT_BROWSER_SYNC_LOGOUT]: {
+    category: 'browser_sync',
+    label: 'logged_out'
+  },
+  [EVENT_BROWSER_SYNC_LOGIN]: { category: 'browser_sync', label: 'logged_in' }
 }
 
 // Selectors
@@ -70,7 +91,7 @@ const getCompanies = state => {
     return [
       {
         type: 'company',
-        name: 'Neo4j ' + getVersion(state) + ' ' + getStoreId(state),
+        name: `Neo4j ${getVersion(state)} ${getStoreId(state)}`,
         company_id: getStoreId(state)
       }
     ]
@@ -135,6 +156,14 @@ const eventFired = (name, data = null) => {
     data
   }
 }
+
+const metricsEvent = payload => {
+  return {
+    type: METRICS_EVENT,
+    ...payload
+  }
+}
+
 export const updateData = obj => {
   return {
     type: UPDATE_DATA,
@@ -144,24 +173,42 @@ export const updateData = obj => {
 
 // Epics
 export const udcStartupEpic = (action$, store) =>
-  action$.ofType(APP_START).mapTo(increment('client_starts'))
+  action$
+    .ofType(APP_START)
+    .do(() =>
+      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
+    )
+    .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
 export const incrementEventEpic = (action$, store) =>
   action$
     .ofType(CYPHER)
     .merge(action$.ofType(CYPHER_FAILED))
     .merge(action$.ofType(CYPHER_SUCCEEDED))
+    .do(action =>
+      store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
+    )
     .map(action => increment(typeToEventName[action.type]))
 
 export const trackSyncLogoutEpic = (action$, store) =>
   action$
     .ofType(CLEAR_SYNC)
     .merge(action$.ofType(CLEAR_SYNC_AND_LOCAL))
+    .do(() =>
+      store.dispatch(
+        metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGOUT])
+      )
+    )
     .map(action => eventFired('syncLogout'))
 
 export const bootEpic = (action$, store) => {
   return action$
     .ofType(AUTHORIZED) // Browser sync auth
+    .do(() =>
+      store.dispatch(
+        metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGIN])
+      )
+    )
     .map(action => {
       // Store name locally
       if (!action.userData || !action.userData.name) return action
@@ -207,15 +254,18 @@ export const trackConnectsEpic = (
   action$
     .ofType(CONNECTION_SUCCESS)
     .merge(action$.ofType(BOOTED))
+    .do(() =>
+      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_DRIVER_CONNECTED]))
+    )
     .map(action => {
       const state = store.getState()
       const data = {
         store_id: getStoreId(state),
         neo4j_version: getVersion(state),
-        client_starts: state[NAME].client_starts,
-        cypher_attempts: state[NAME].cypher_attempts,
-        cypher_wins: state[NAME].cypher_wins,
-        cypher_fails: state[NAME].cypher_fails
+        client_starts: state[NAME] ? state[NAME].client_starts : 0,
+        cypher_attempts: state[NAME] ? state[NAME].cypher_attempts : 0,
+        cypher_wins: state[NAME] ? state[NAME].cypher_wins : 0,
+        cypher_fails: state[NAME] ? state[NAME].cypher_fails : 0
       }
       return eventFired('connect', data)
     })

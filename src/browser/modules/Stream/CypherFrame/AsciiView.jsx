@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { Component, useMemo } from 'react'
 import asciitable from 'ascii-data-table'
 import Render from 'browser-components/Render'
 import Ellipsis from 'browser-components/Ellipsis'
@@ -29,17 +29,22 @@ import {
   StyledBodyMessage,
   StyledRightPartial,
   StyledWidthSliderContainer,
-  StyledWidthSlider
+  StyledWidthSlider,
+  StyledTruncatedMessage
 } from '../styled'
 import {
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
   transformResultRecordsToResultArray,
-  stringifyResultArray
+  stringifyResultArray,
+  resultHasTruncatedFields
 } from './helpers'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { connect } from 'react-redux'
+import { Icon } from 'semantic-ui-react'
 
-export class AsciiView extends Component {
+export class AsciiViewComponent extends Component {
   state = {
     serializedRows: [],
     bodyMessage: ''
@@ -73,7 +78,7 @@ export class AsciiView extends Component {
   }
 
   makeState(props) {
-    const { result, maxRows } = props
+    const { result, maxRows, maxFieldItems } = props
     const { bodyMessage = null } =
       getBodyAndStatusBarMessages(result, maxRows) || {}
     this.setState({ bodyMessage })
@@ -82,7 +87,8 @@ export class AsciiView extends Component {
     const serializedRows =
       stringifyResultArray(
         stringModifier,
-        transformResultRecordsToResultArray(records)
+        transformResultRecordsToResultArray(records, maxFieldItems),
+        true
       ) || []
     this.setState({ serializedRows })
     const maxColWidth = asciitable.maxColumnWidth(serializedRows)
@@ -110,12 +116,17 @@ export class AsciiView extends Component {
   }
 }
 
-export class AsciiStatusbar extends Component {
+export const AsciiView = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(AsciiViewComponent)
+
+export class AsciiStatusbarComponent extends Component {
   state = {
     maxSliderWidth: 140,
     minSliderWidth: 3,
     maxColWidth: 70,
-    statusBarMessage: ''
+    statusBarMessage: '',
+    hasTruncatedFields: false
   }
 
   componentDidUpdate() {
@@ -126,7 +137,11 @@ export class AsciiStatusbar extends Component {
     this.setMaxSliderWidth(props._asciiMaxColWidth)
     const { statusBarMessage = null } =
       getBodyAndStatusBarMessages(props.result, props.maxRows) || {}
-    this.setState({ statusBarMessage })
+    const hasTruncatedFields = resultHasTruncatedFields(
+      props.result,
+      props.maxFieldItems
+    )
+    this.setState({ statusBarMessage, hasTruncatedFields })
   }
 
   shouldComponentUpdate(props, state) {
@@ -156,13 +171,19 @@ export class AsciiStatusbar extends Component {
   render() {
     const hasRecords =
       this.props.result.records && this.props.result.records.length
-    const { maxColWidth, maxSliderWidth } = this.state
+    const { maxColWidth, maxSliderWidth, hasTruncatedFields } = this.state
     return (
       <StyledStatsBar>
         <Render if={!hasRecords}>
           <Ellipsis>{this.state.statusBarMessage}</Ellipsis>
         </Render>
         <Render if={hasRecords}>
+          {hasTruncatedFields && (
+            <StyledTruncatedMessage>
+              <Icon name="warning sign" /> Record fields have been
+              truncated.&nbsp;
+            </StyledTruncatedMessage>
+          )}
           <StyledRightPartial>
             <StyledWidthSliderContainer>
               Max column width:
@@ -180,3 +201,7 @@ export class AsciiStatusbar extends Component {
     )
   }
 }
+
+export const AsciiStatusbar = connect(state => ({
+  maxFieldItems: getMaxFieldItems(state)
+}))(AsciiStatusbarComponent)

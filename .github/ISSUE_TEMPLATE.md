@@ -1,6 +1,6 @@
 <!---
 BEFORE YOU SUBMIT please search open/closed issues since someone might have asked the same thing before!
-→
+-->
 
 ### Description
 <!--- Explain the issue you met, and describe what you expected to be. If you can write in English, we will be very grateful -->
@@ -10,7 +10,7 @@ BEFORE YOU SUBMIT please search open/closed issues since someone might have aske
 
 ### Expected Behavior
 <!--- If you're describing a bug, tell us what should happen -->
-<!--- If you're suggesting a change/improvement, tell us how it should work →
+<!--- If you're suggesting a change/improvement, tell us how it should work -->
 
 ### Current Behavior
 <!--- If describing a bug, tell us what happens instead of the expected behavior.

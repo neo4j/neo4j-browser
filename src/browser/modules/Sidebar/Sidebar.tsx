@@ -18,16 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { ReactFragment, ReactElement } from 'react'
 import { connect } from 'react-redux'
-import DBMSInfo from '../DBMSInfo/DBMSInfo'
-import Documents from './Documents'
-import About from './About'
+import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
+import DocumentsDrawer from './Documents'
+import AboutDrawer from './About'
+import SettingsDrawer from './Settings'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
-import Settings from './Settings'
-import BrowserSync from './../Sync/BrowserSync'
+import { DrawerHeader } from 'browser-components/drawer'
+import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
@@ -45,29 +46,32 @@ import {
   AboutIcon
 } from 'browser-components/icons/Icons'
 
-function Sidebar(props) {
-  const openDrawer = props.openDrawer
-  const onNavClick = props.onNavClick
-  const { showStaticScripts } = props
-  const DatabaseDrawer = DBMSInfo
-  const FavoritesDrawer = () => (
-    <>
-      <Favorites />
-      {showStaticScripts && <StaticScripts />}
-    </>
-  )
-  const DocumentsDrawer = Documents
-  const SettingsDrawer = Settings
-  const AboutDrawer = About
+interface SidebarProps {
+  openDrawer: string
+  onNavClick: () => void
+  showStaticScripts: boolean
+  neo4jConnectionState: string
+  syncConnected: boolean
+  loadSync: boolean
+}
+
+const Sidebar: React.FC<SidebarProps> = ({
+  openDrawer,
+  onNavClick,
+  showStaticScripts,
+  neo4jConnectionState,
+  syncConnected,
+  loadSync
+}) => {
   const topNavItemsList = [
     {
       name: 'DBMS',
-      title: 'Database',
-      icon: function dbIcon(isOpen) {
+      title: 'Database Information',
+      icon: function dbIcon(isOpen: boolean): ReactElement {
         return (
           <DatabaseIcon
             isOpen={isOpen}
-            connectionState={props.neo4jConnectionState}
+            connectionState={neo4jConnectionState}
             title="Database"
           />
         )
@@ -77,30 +81,39 @@ function Sidebar(props) {
     {
       name: 'Favorites',
       title: 'Favorites',
-      icon: function favIcon(isOpen) {
+      icon: function favIcon(isOpen: boolean): ReactElement {
         return <FavoritesIcon isOpen={isOpen} title="Favorites" />
       },
-      content: FavoritesDrawer
+      content: function FavoritesDrawer(): ReactFragment {
+        return (
+          <>
+            <DrawerHeader>Favorites</DrawerHeader>
+            <Favorites />
+            {showStaticScripts && <StaticScripts />}
+          </>
+        )
+      }
     },
     {
       name: 'Documents',
-      title: 'Documentation',
-      icon: function docsIcon(isOpen) {
-        return <DocumentsIcon isOpen={isOpen} title="Documentation" />
+      title: 'Help &amp; Resources',
+      icon: function docsIcon(isOpen: boolean): ReactElement {
+        return <DocumentsIcon isOpen={isOpen} title="Help &amp; Resources" />
       },
       content: DocumentsDrawer
     }
   ]
+
   const bottomNavItemsList = [
     {
       name: 'Sync',
-      title: 'Cloud Services',
-      icon: function syncIcon(isOpen) {
+      title: 'Browser Sync',
+      icon: function syncIcon(isOpen: boolean): ReactElement {
         return (
           <CloudSyncIcon
             isOpen={isOpen}
-            connected={props.syncConnected}
-            title="Cloud Services"
+            connected={syncConnected}
+            title="Browser Sync"
           />
         )
       },
@@ -108,8 +121,8 @@ function Sidebar(props) {
     },
     {
       name: 'Settings',
-      title: 'Browser Settings',
-      icon: function settingIcon(isOpen) {
+      title: 'Settings',
+      icon: function settingIcon(isOpen: boolean): ReactElement {
         return <SettingsIcon isOpen={isOpen} title="Browser Settings" />
       },
       content: SettingsDrawer
@@ -117,28 +130,24 @@ function Sidebar(props) {
     {
       name: 'About',
       title: 'About Neo4j',
-      icon: function aboutIcon(isOpen) {
+      icon: function aboutIcon(isOpen: boolean): ReactElement {
         return <AboutIcon isOpen={isOpen} title="About Neo4j" />
       },
       content: AboutDrawer
     }
-  ]
+  ].filter(({ name }) => loadSync || name !== 'Sync')
 
   return (
     <TabNavigation
       openDrawer={openDrawer}
       onNavClick={onNavClick}
       topNavItems={topNavItemsList}
-      bottomNavItems={
-        props.loadSync
-          ? bottomNavItemsList
-          : bottomNavItemsList.filter(item => item.name !== 'Sync')
-      }
+      bottomNavItems={bottomNavItemsList}
     />
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   let connectionState = 'disconnected'
   if (state.connections) {
     switch (state.connections.connectionState) {
@@ -161,7 +170,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(Sidebar)
+export default connect(mapStateToProps, null)(Sidebar)

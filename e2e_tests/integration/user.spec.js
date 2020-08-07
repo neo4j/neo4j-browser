@@ -29,7 +29,7 @@ describe('User: ', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
-  it('Doesnt throw when listing users', () => {
+  it("Doesn't throw when listing users", () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':server user list')
     cy.get('[data-testid="frame"]', { timeout: 10000 }).should(

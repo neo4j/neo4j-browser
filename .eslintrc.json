@@ -38,5 +38,16 @@
     "react": {
       "version": "16.9.0"
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "**/*.ts", "**/*.tsx"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "prettier/@typescript-eslint"
+      ],
+      "plugins": ["@typescript-eslint/eslint-plugin"],
+      "rules": {}
+    }
+  ]
 }

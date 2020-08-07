@@ -23,12 +23,30 @@ import * as utils from './commandUtils'
 describe('commandutils', () => {
   test('stripCommandComments should remove lines starting with a comment ', () => {
     const testStrs = [
-      '//This is a comment\nRETURN 1',
-      '// Another comment\nRETURN 1',
-      '// Another comment\nRETURN 1\n//Next comment'
+      { str: '//This is a comment\nRETURN 1', expect: 'RETURN 1' },
+      { str: '// Another comment\nRETURN 1', expect: 'RETURN 1' },
+      {
+        str: '// Another comment\nRETURN 1\n//Next comment',
+        expect: 'RETURN 1'
+      },
+      {
+        str: `RETURN 1
+;
+
+// comment 1
+// comment 2
+// comment 3
+RETURN 2
+;`,
+        expect: `RETURN 1
+;
+
+RETURN 2
+;`
+      }
     ]
-    testStrs.forEach(str => {
-      expect(utils.stripCommandComments(str)).toEqual('RETURN 1')
+    testStrs.forEach(item => {
+      expect(utils.stripCommandComments(item.str)).toEqual(item.expect)
     })
   })
 
@@ -94,8 +112,8 @@ describe('commandutils', () => {
       { str: '   RETURN 1', expect: true }
     ]
     testStrs.forEach(obj => {
-      expect(obj.str + ': ' + utils.isCypherCommand(obj.str, ':')).toEqual(
-        obj.str + ': ' + obj.expect
+      expect(`${obj.str}: ${utils.isCypherCommand(obj.str, ':')}`).toEqual(
+        `${obj.str}: ${obj.expect}`
       )
     })
   })
@@ -211,6 +229,23 @@ describe('commandutils', () => {
         {
           stmt: ':history; RETURN 1;\nMATCH (n)\nRETURN n',
           expect: [':history', 'RETURN 1', 'MATCH (n)\nRETURN n']
+        },
+        {
+          stmt: 'RETURN 1\n;\n\n// comment 1\n//comment 2\nRETURN 2\n;',
+          expect: ['RETURN 1', 'RETURN 2']
+        },
+        {
+          stmt: `MATCH (n) return n LIMIT 1;
+MATCH (n)
+UNWIND range(0, 5) as x
+// Return n
+RETURN n`,
+          expect: [
+            'MATCH (n) return n LIMIT 1',
+            `MATCH (n)
+UNWIND range(0, 5) as x
+RETURN n`
+          ]
         }
       ]
 

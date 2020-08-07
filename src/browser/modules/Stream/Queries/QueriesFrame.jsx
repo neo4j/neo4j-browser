@@ -50,12 +50,10 @@ import {
 import {
   StyledStatusBar,
   AutoRefreshToggle,
-  RefreshQueriesButton,
   AutoRefreshSpan,
   StatusbarWrapper
 } from '../AutoRefresh/styled'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
-import { RefreshIcon } from 'browser-components/icons/Icons'
 import Render from 'browser-components/Render'
 import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
@@ -89,6 +87,13 @@ export class QueriesFrame extends Component {
       } else {
         clearInterval(this.timer)
       }
+    }
+    if (
+      this.props.frame &&
+      this.props.frame.ts !== prevProps.frame.ts &&
+      this.props.frame.isRerun
+    ) {
+      this.getRunningQueries()
     }
   }
 
@@ -323,9 +328,6 @@ export class QueriesFrame extends Component {
           <Render if={this.state.success}>
             <StyledStatusBar>
               {this.state.success}
-              <RefreshQueriesButton onClick={() => this.getRunningQueries()}>
-                <RefreshIcon />
-              </RefreshQueriesButton>
               <AutoRefreshSpan>
                 <AutoRefreshToggle
                   checked={this.state.autoRefresh}

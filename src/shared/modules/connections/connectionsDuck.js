@@ -20,7 +20,7 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { getEncryptionMode, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NO_AUTH } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import {
   fetchMetaData,
@@ -52,15 +52,14 @@ export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
 export const LOST_CONNECTION = 'connections/LOST_CONNECTION'
 export const UPDATE_CONNECTION_STATE = 'connections/UPDATE_CONNECTION_STATE'
-export const UPDATE_RETAIN_CREDENTIALS = NAME + '/UPDATE_RETAIN_CREDENTIALS'
-export const UPDATE_AUTH_ENABLED = NAME + '/UPDATE_AUTH_ENABLED'
-export const SWITCH_CONNECTION = NAME + '/SWITCH_CONNECTION'
-export const SWITCH_CONNECTION_SUCCESS = NAME + '/SWITCH_CONNECTION_SUCCESS'
-export const SWITCH_CONNECTION_FAILED = NAME + '/SWITCH_CONNECTION_FAILED'
-export const INITIAL_SWITCH_CONNECTION_FAILED =
-  NAME + '/INITIAL_SWITCH_CONNECTION_FAILED'
-export const VERIFY_CREDENTIALS = NAME + '/VERIFY_CREDENTIALS'
-export const USE_DB = NAME + '/USE_DB'
+export const UPDATE_RETAIN_CREDENTIALS = `${NAME}/UPDATE_RETAIN_CREDENTIALS`
+export const UPDATE_AUTH_ENABLED = `${NAME}/UPDATE_AUTH_ENABLED`
+export const SWITCH_CONNECTION = `${NAME}/SWITCH_CONNECTION`
+export const SWITCH_CONNECTION_SUCCESS = `${NAME}/SWITCH_CONNECTION_SUCCESS`
+export const SWITCH_CONNECTION_FAILED = `${NAME}/SWITCH_CONNECTION_FAILED`
+export const INITIAL_SWITCH_CONNECTION_FAILED = `${NAME}/INITIAL_SWITCH_CONNECTION_FAILED`
+export const VERIFY_CREDENTIALS = `${NAME}/VERIFY_CREDENTIALS`
+export const USE_DB = `${NAME}/USE_DB`
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
@@ -119,6 +118,12 @@ export function getActiveConnectionData(state) {
   return getConnectionData(state, state[NAME].activeConnection)
 }
 
+export function getAuthEnabled(state) {
+  if (!state[NAME].activeConnection) return null
+  const data = getConnectionData(state, state[NAME].activeConnection)
+  return data.authEnabled
+}
+
 export function getConnectionData(state, id) {
   if (typeof state[NAME].connectionsById[id] === 'undefined') return null
   const data = state[NAME].connectionsById[id]
@@ -137,12 +142,11 @@ const addConnectionHelper = (state, obj) => {
   if (state.allConnectionIds.indexOf(obj.id) < 0) {
     allConnectionIds = state.allConnectionIds.concat([obj.id])
   }
-  return Object.assign(
-    {},
-    state,
-    { allConnectionIds: allConnectionIds },
-    { connectionsById: connectionsById }
-  )
+  return {
+    ...state,
+    allConnectionIds,
+    connectionsById
+  }
 }
 
 const removeConnectionHelper = (state, connectionId) => {
@@ -153,12 +157,11 @@ const removeConnectionHelper = (state, connectionId) => {
     allConnectionIds.splice(index, 1)
     delete connectionsById[connectionId]
   }
-  return Object.assign(
-    {},
-    state,
-    { allConnectionIds: allConnectionIds },
-    { connectionsById: connectionsById }
-  )
+  return {
+    ...state,
+    allConnectionIds,
+    connectionsById
+  }
 }
 
 const mergeConnectionHelper = (state, connection) => {
@@ -167,36 +170,44 @@ const mergeConnectionHelper = (state, connection) => {
   const allConnectionIds = state.allConnectionIds
   const index = allConnectionIds.indexOf(connectionId)
   if (index >= 0) {
-    connectionsById[connectionId] = Object.assign(
-      {},
-      connectionsById[connectionId],
-      connection
-    )
+    connectionsById[connectionId] = {
+      ...connectionsById[connectionId],
+      ...connection
+    }
   } else {
-    connectionsById[connectionId] = Object.assign({}, connection)
+    connectionsById[connectionId] = {
+      ...connection
+    }
     allConnectionIds.push(connectionId)
   }
-  return Object.assign(
-    {},
-    state,
-    { allConnectionIds: allConnectionIds },
-    { connectionsById: connectionsById }
-  )
+  return {
+    ...state,
+    allConnectionIds,
+    connectionsById
+  }
 }
 
 const updateAuthEnabledHelper = (state, authEnabled) => {
   const connectionId = state.activeConnection
-  const updatedConnection = Object.assign(
-    {},
-    state.connectionsById[connectionId],
-    {
-      authEnabled: authEnabled
-    }
-  )
-  const updatedConnectionByIds = Object.assign({}, state.connectionsById)
+  const updatedConnection = {
+    ...state.connectionsById[connectionId],
+    authEnabled
+  }
+
+  if (!authEnabled) {
+    updatedConnection.username = ''
+    updatedConnection.password = ''
+  }
+
+  const updatedConnectionByIds = {
+    ...state.connectionsById
+  }
   updatedConnectionByIds[connectionId] = updatedConnection
 
-  return Object.assign({}, state, { connectionsById: updatedConnectionByIds })
+  return {
+    ...state,
+    connectionsById: updatedConnectionByIds
+  }
 }
 
 // Local vars
@@ -205,11 +216,14 @@ let memoryPassword = ''
 
 // Reducer
 export default function(state = initialState, action) {
-  if (action.type === APP_START) {
-    state = { ...initialState, ...state, useDb: initialState.useDb }
-  }
-
   switch (action.type) {
+    case APP_START:
+      return {
+        ...initialState,
+        ...state,
+        useDb: initialState.useDb,
+        connectionState: DISCONNECTED_STATE
+      }
     case ADD:
       return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:
@@ -260,7 +274,7 @@ export const setActiveConnection = (id, silent = false) => {
   return {
     type: SET_ACTIVE,
     connectionId: id,
-    silent: silent
+    silent
   }
 }
 
@@ -342,10 +356,9 @@ export const connectEpic = (action$, store) => {
     await new Promise(resolve => setTimeout(() => resolve()), 2000)
     return bolt
       .openConnection(action, {
-        encrypted: getEncryptionMode(action),
         connectionTimeout: getConnectionTimeout(store.getState())
       })
-      .then(res => ({ type: action.$$responseChannel, success: true }))
+      .then(() => ({ type: action.$$responseChannel, success: true }))
       .catch(e => {
         if (!action.noResetConnectionOnFail) {
           store.dispatch(setActiveConnection(null))
@@ -363,11 +376,7 @@ export const verifyConnectionCredentialsEpic = (action$, store) => {
   return action$.ofType(VERIFY_CREDENTIALS).mergeMap(action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
-      .directConnect(
-        action,
-        { encrypted: getEncryptionMode(action) },
-        undefined
-      )
+      .directConnect(action, {}, undefined)
       .then(driver => {
         driver.close()
         return { type: action.$$responseChannel, success: true }
@@ -395,18 +404,15 @@ export const startupConnectEpic = (action$, store) => {
         !(connection.host && connection.username && connection.password)
       ) {
         store.dispatch(setActiveConnection(null))
-        store.dispatch(
-          discovery.updateDiscoveryConnection({ username: '', password: '' })
-        )
+        store.dispatch(discovery.updateDiscoveryConnection({ password: '' }))
         return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
       }
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         // Try to connect with stored creds
         bolt
           .openConnection(
             connection,
             {
-              encrypted: getEncryptionMode(connection),
               connectionTimeout: getConnectionTimeout(store.getState())
             },
             onLostConnection(store.dispatch)
@@ -435,7 +441,7 @@ export const startupConnectionSuccessEpic = (action$, store) => {
     .do(() => {
       if (getPlayImplicitInitCommands(store.getState())) {
         store.dispatch(
-          executeSystemCommand(getCmdChar(store.getState()) + 'server status')
+          executeSystemCommand(`${getCmdChar(store.getState())}server status`)
         )
         store.dispatch(executeSystemCommand(getInitCmd(store.getState())))
       }
@@ -448,7 +454,7 @@ export const startupConnectionFailEpic = (action$, store) => {
     .do(() => {
       if (getPlayImplicitInitCommands(store.getState())) {
         store.dispatch(
-          executeSystemCommand(getCmdChar(store.getState()) + 'server connect')
+          executeSystemCommand(`${getCmdChar(store.getState())}server connect`)
         )
       }
     })
@@ -496,7 +502,7 @@ export const disconnectSuccessEpic = (action$, store) => {
     .ofType(DISCONNECTION_SUCCESS)
     .mapTo(
       executeSystemCommand(
-        getSettings(store.getState()).cmdchar + 'server connect'
+        `${getSettings(store.getState()).cmdchar}server connect`
       )
     )
 }
@@ -504,7 +510,8 @@ export const connectionLostEpic = (action$, store) =>
   action$
     .ofType(LOST_CONNECTION)
     .filter(connectionLossFilter)
-    .filter(() => inWebEnv(store.getState())) // Only retry in web env
+    // Only retry in web env and if we're supposed to be connected
+    .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap(action => {
@@ -518,7 +525,6 @@ export const connectionLostEpic = (action$, store) =>
                 .directConnect(
                   connection,
                   {
-                    encrypted: getEncryptionMode(connection),
                     connectionTimeout: getConnectionTimeout(store.getState())
                   },
                   e =>
@@ -533,7 +539,6 @@ export const connectionLostEpic = (action$, store) =>
                     .openConnection(
                       connection,
                       {
-                        encrypted: getEncryptionMode(connection),
                         connectionTimeout: getConnectionTimeout(
                           store.getState()
                         )
@@ -598,7 +603,7 @@ export const switchConnectionEpic = (action$, store) => {
             { encrypted: action.encrypted },
             onLostConnection(store.dispatch)
           )
-          .then(connection => {
+          .then(() => {
             store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
             resolve({ type: SWITCH_CONNECTION_SUCCESS })
           })
@@ -623,7 +628,7 @@ export const switchConnectionSuccessEpic = (action$, store) => {
     .do(() => store.dispatch(fetchMetaData()))
     .mapTo(
       executeSystemCommand(
-        getCmdChar(store.getState()) + 'server switch success'
+        `${getCmdChar(store.getState())}server switch success`
       )
     )
 }
@@ -632,7 +637,7 @@ export const switchConnectionFailEpic = (action$, store) => {
     .ofType(SWITCH_CONNECTION_FAILED)
     .do(() => store.dispatch(updateConnectionState(DISCONNECTED_STATE)))
     .mapTo(
-      executeSystemCommand(getCmdChar(store.getState()) + 'server switch fail')
+      executeSystemCommand(`${getCmdChar(store.getState())}server switch fail`)
     )
 }
 export const initialSwitchConnectionFailEpic = (action$, store) => {
@@ -643,7 +648,7 @@ export const initialSwitchConnectionFailEpic = (action$, store) => {
       if (getPlayImplicitInitCommands(store.getState())) {
         store.dispatch(
           executeSystemCommand(
-            getCmdChar(store.getState()) + 'server switch fail'
+            `${getCmdChar(store.getState())}server switch fail`
           )
         )
       }

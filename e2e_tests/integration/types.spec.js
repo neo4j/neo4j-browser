@@ -26,12 +26,25 @@ describe('Types in Browser', () => {
       .title()
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
-  })
-  it('can connect', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
   if (Cypress.config('serverVersion') >= 3.4) {
+    it('presents large integers correctly', () => {
+      cy.executeCommand(':clear')
+      const query = 'RETURN 2467500000 AS bigNumber, {{}x: 9907199254740991}'
+      cy.executeCommand(query)
+      cy.waitForCommandResult()
+      cy.resultContains('2467500000')
+      cy.resultContains('9907199254740991')
+
+      // Go to ascii view
+      cy.get('[data-testid="cypherFrameSidebarAscii"]')
+        .first()
+        .click()
+      cy.resultContains('│2467500000')
+      cy.resultContains('9907199254740991')
+    })
     it('presents the point type correctly', () => {
       cy.executeCommand(':clear')
       const query =
