@@ -18,18 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Rx from 'rxjs/Rx'
-import remote from 'services/remote'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 import {
   APP_START,
   USER_CLEAR,
-  hasDiscoveryEndpoint,
-  getHostedUrl
+  hasDiscoveryEndpoint
 } from 'shared/modules/app/appDuck'
-import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
-import { getUrlInfo } from 'shared/services/utils'
+import neo4jCredential from '../../credential/neo4jCredential'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -114,44 +110,17 @@ export const discoveryOnStartupEpic = (some$, store) => {
       if (!hasDiscoveryEndpoint(store.getState())) {
         return Promise.resolve({ type: 'NOOP' })
       }
-      if (action.forceURL) {
-        const { username, password, protocol, host } = getUrlInfo(
-          action.forceURL
-        )
-        updateDiscoveryState(
-          {
-            ...action,
-            username,
-            password,
-            forceURL: `${protocol ? protocol + '//' : ''}${host}`
-          },
-          store
-        )
-        return Promise.resolve({ type: DONE })
-      }
-      return Rx.Observable.fromPromise(
-        remote
-          .getJSON(getDiscoveryEndpoint(getHostedUrl(store.getState())))
-          // Uncomment below and comment out above when doing manual tests in dev mode to
-          // fake discovery response
-          // Promise.resolve({ bolt: 'bolt+routing://localhost:7687' })
-          .then(result => {
-            const host =
-              result &&
-              (result.bolt_routing || result.bolt_direct || result.bolt)
-            // Try to get info from server
-            if (!host) {
-              throw new Error('No bolt address found') // No bolt info from server, throw
-            }
-            store.dispatch(updateDiscoveryConnection({ host })) // Update discovery host in redux
-            return { type: DONE }
-          })
-          .catch(e => {
-            throw new Error('No info from endpoint') // No info from server, throw
-          })
-      ).catch(e => {
-        return Promise.resolve({ type: DONE })
-      })
+
+      updateDiscoveryState(
+        {
+          ...action,
+          username: neo4jCredential.userName,
+          password: neo4jCredential.password,
+          forceURL: neo4jCredential.host
+        },
+        store
+      )
+      return Promise.resolve({ type: DONE })
     })
     .map(a => a)
 }

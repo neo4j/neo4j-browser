@@ -20,7 +20,7 @@
   "homepage": "https://neo4j.com/developer/guide-neo4j-browser/",
   "main": "dist/index.html",
   "scripts": {
-    "build": "NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
+    "build": "scripts/generate_credentials.sh > src/shared/credential/neo4jCredential.js && NODE_ENV=\"production\" webpack --config ./build_scripts/webpack.config.js",
     "dev": "jest --watch",
     "e2e": "cypress run",
     "e2e-aura": "CYPRESS_E2E_TEST_ENV=\"aura\" cypress run",
