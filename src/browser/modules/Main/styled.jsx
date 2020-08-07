@@ -80,8 +80,8 @@ export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   cursor: pointer;
 `
 
-export const SyncDisconnectedBanner = styled(Banner)`
-  background-color: ${props => props.theme.auth};
+export const NoMutationBannerStyle = styled(Banner)`
+  background-color: #a64452;
   display: flex;
   justify-content: space-between;
 `

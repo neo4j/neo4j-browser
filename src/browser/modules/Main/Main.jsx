@@ -37,6 +37,7 @@ import SyncConsentBanner from './SyncConsentBanner'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { useSlowConnectionState } from './main.hooks'
 import AutoExecButton from '../Stream/auto-exec-button'
+import NoMutationBanner from './NoMutationBanner'
 
 const Main = React.memo(function Main(props) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
@@ -87,12 +88,7 @@ const Main = React.memo(function Main(props) {
           Server is taking a long time to respond...
         </WarningBanner>
       </Render>
-      <Render if={props.useBrowserSync}>
-        <SyncReminderBanner />
-      </Render>
-      <Render if={props.useBrowserSync}>
-        <SyncConsentBanner />
-      </Render>
+      <NoMutationBanner />
       <ErrorBoundary>
         <Stream />
       </ErrorBoundary>
