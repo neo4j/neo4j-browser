@@ -106,7 +106,8 @@ export class Editor extends Component {
       nextState.editorHeight === this.state.editorHeight &&
       shallowEquals(nextState.notifications, this.state.notifications) &&
       deepEquals(nextProps.schema, this.props.schema) &&
-      nextProps.useDb === this.props.useDb
+      nextProps.useDb === this.props.useDb &&
+      nextProps.enableMultiStatementMode === this.props.enableMultiStatementMode
     )
   }
 
@@ -271,6 +272,15 @@ export class Editor extends Component {
     this.setState({ contentId: id })
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.enableMultiStatementMode !== this.props.enableMultiStatementMode
+    ) {
+      // Set value to current value to trigger warning checks
+      this.setEditorValue(this.getEditorValue())
+    }
+  }
+
   checkForMultiStatementWarnings(statements) {
     if (statements.length > 1 && !this.props.enableMultiStatementMode) {
       const { offset, line, column } = statements[1].start
@@ -342,7 +352,10 @@ export class Editor extends Component {
               const notifications = response.result.summary.notifications.map(
                 n => ({
                   ...n,
-                  position: { ...n.position, line: n.position.line + offset },
+                  position: {
+                    ...n.position,
+                    line: n.position.line + offset
+                  },
                   statement: response.result.summary.query.text
                 })
               )
