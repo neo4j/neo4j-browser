@@ -274,10 +274,13 @@ export class Editor extends Component {
   checkForMultiStatementWarnings(statements) {
     if (statements.length > 1 && !this.props.enableMultiStatementMode) {
       const { offset, line, column } = statements[1].start
+      const message =
+        'To use multi statement queries, please enable multi statement in the settings panel.'
       this.setState({
         notifications: [
           {
             code: 'frontendWarning',
+            description: message,
             position: {
               offset,
               line,
@@ -285,12 +288,14 @@ export class Editor extends Component {
             },
             severity: 'WARNING',
             errors: {
-              message:
-                'Multi statement query will be rejected unless multi statement is enabled in settings.'
-            }
+              message
+            },
+            title: 'Multi Statement Query'
           }
         ]
       })
+    } else {
+      this.setState({ notifications: [] })
     }
   }
 
