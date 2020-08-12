@@ -33,11 +33,16 @@ export const CloseButton = props => {
 }
 
 export const EditorButton = props => {
-  const { icon, title, color, ...rest } = props
+  const { icon, title, color, width, ...rest } = props
   const overrideColor = { ...(color ? { color } : {}) }
   return (
-    <BaseButton title={title} style={overrideColor}>
-      <SVGInline svg={icon} accessibilityLabel={title} {...rest} width="24px" />
+    <BaseButton title={title} style={overrideColor} width={width}>
+      <SVGInline
+        svg={icon}
+        accessibilityLabel={title}
+        {...rest}
+        width={`${width}px`}
+      />
     </BaseButton>
   )
 }
@@ -53,8 +58,8 @@ const BaseButton = styled.span`
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.secondaryButtonBackground};
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: ${props => props.width + 10}px;
+  height: ${props => props.width + 10}px;
   font-size: 28px;
   line-height: 28px;
   text-decoration: none;

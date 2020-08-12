@@ -28,10 +28,10 @@ interface ResizeableProps {
 const editorPadding = 10
 
 export const BaseBar = styled.div<ResizeableProps>`
-  background-color: ${(props): string => props.theme.editorBackground};
-  border-radius: 4px;
-  margin: ${editorPadding}px 0px ${editorPadding}px 0;
+  background-color: ${(props): string => props.theme.frameSidebarBackground};
   display: grid;
+  margin: 5px;
+  border-radius: 2px;
   // minmax(0, 1fr) prevents the editor from growing the text field
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas: ${(props): string => {
@@ -60,6 +60,8 @@ export const Header = styled.div<ResizeableProps>`
 
   display: flex;
   justify-content: flex-end;
+  padding-top: 7px
+  padding-right: 7px
 `
 
 export const Bar = styled(BaseBar)<ResizeableProps>`
@@ -78,16 +80,9 @@ z-index: 1030;`
     return ''
   }};
 `
-
-interface ActionButtonContainerProps {
-  containerWidth: number
-}
-
-export const ActionButtonSection = styled.div<ActionButtonContainerProps>`
+export const ActionButtonSection = styled.div`
   display: flex;
   justify-content: space-between;
-  width: ${(props): number => props.containerWidth}px;
-  margin: 7px;
 `
 
 const BaseEditorWrapper = styled.div<ResizeableProps>`
@@ -115,6 +110,33 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;
   }
+`
+
+export const Frame = styled.div`
+  background-color: ${props => props.theme.secondaryBackground};
+  margin: ${editorPadding}px 0px ${editorPadding}px 0;
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
+    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+`
+
+export const FrameHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 7px;
+  margin-right: 7px;
+  height: 33px;
+`
+
+export const UIControls = styled.div`
+  align-self: flex-end;
+`
+
+export const FrameHeaderText = styled.div`
+  color: white;
+  font-family: 'Fira Code', 'Monaco', 'Lucida Console', Courier, monospace;
+  font-size: 1.2em;
+  line-height: 2.2em;
 `
 
 export const EditorWrapper = styled(BaseEditorWrapper)<ResizeableProps>`

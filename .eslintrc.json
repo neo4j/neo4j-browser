@@ -47,7 +47,9 @@
         "prettier/@typescript-eslint"
       ],
       "plugins": ["@typescript-eslint/eslint-plugin"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
     }
   ]
 }

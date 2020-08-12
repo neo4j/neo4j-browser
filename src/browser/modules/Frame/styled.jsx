@@ -36,7 +36,6 @@ const rollDownAnimation = keyframes`
 export const StyledFrame = styled.article`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   animation: ${rollDownAnimation} 0.4s ease-in;
   border: ${props => props.theme.frameBorder};
   margin: ${props => (props.fullscreen ? '0' : '10px 0px 10px 0px')};
@@ -50,6 +49,9 @@ export const StyledFrame = styled.article`
   &:hover .carousel-intro-animation {
     opacity: 0;
   }
+  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
+    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  border-radius: 2px;
 `
 
 export const StyledFrameBody = styled.div`
