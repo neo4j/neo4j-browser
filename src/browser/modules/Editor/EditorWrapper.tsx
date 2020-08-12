@@ -55,27 +55,24 @@ export function EditorFrame({ bus }: EditorFrameProps) {
     bus.send(SET_CONTENT, { message: '' })
   }
 
-  const fullscreenIcon = isFullscreen ? <ContractIcon /> : <ExpandIcon />
-  const expandCollapseIcon = isCardSize ? <UpIcon /> : <DownIcon />
-
   const buttons = [
     {
       onClick: toggleFullscreen,
       disabled: false,
-      title: 'Fullscreen',
-      Icon: fullscreenIcon
+      title: isFullscreen ? 'Close fullscreen' : 'Fullscreen',
+      icon: isFullscreen ? <ContractIcon /> : <ExpandIcon />
     },
     {
       onClick: toggleCardView,
       disabled: false,
       title: isCardSize ? 'Collapse' : 'Cardview',
-      Icon: expandCollapseIcon
+      icon: isCardSize ? <UpIcon /> : <DownIcon />
     },
     {
       onClick: clearEditor,
       disabled: false,
       title: 'Clear',
-      Icon: CloseIcon
+      icon: <CloseIcon />
     }
   ]
 
@@ -84,21 +81,11 @@ export function EditorFrame({ bus }: EditorFrameProps) {
       <FrameHeader>
         <FrameHeaderText> </FrameHeaderText>
         <UIControls>
-          <FrameButton
-            title={isFullscreen ? 'Close fullscreen' : 'Fullscreen'}
-            onClick={onClick}
-          >
-            <fullscreenIcon />
-          </FrameButton>
-          <FrameButton
-            title={isCardSize ? 'Expand' : 'Collapse'}
-            onClick={onClick}
-          >
-            <CloseIcon />
-          </FrameButton>
-          <FrameButton title={'Reset editor'} onClick={clearEditor}>
-            <CloseIcon />
-          </FrameButton>
+          {buttons.map(({ onClick, icon, title }) => (
+            <FrameButton key={`frame-${title}`} title={title} onClick={onClick}>
+              {icon}
+            </FrameButton>
+          ))}
         </UIControls>
       </FrameHeader>
       {

@@ -34,30 +34,12 @@ export const BaseBar = styled.div<ResizeableProps>`
   border-radius: 2px;
   // minmax(0, 1fr) prevents the editor from growing the text field
   grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: ${(props): string => {
-    if (props.expanded || props.card) {
-      return "'header' 'editor'"
-    }
-    return "'editor header'"
-  }};
+  grid-template-areas: 'editor header';
 `
 
 export const Header = styled.div<ResizeableProps>`
   grid-area: header;
   border-radius: 4px 4px 0 0;
-  ${(props): string => {
-    if (props.expanded) {
-      return `background-color: #4d4a57;
-              border-radius: 0;
-      `
-    }
-    if (props.card) {
-      return `background-color: #4d4a57;
-              transition-duration: 0.3s;`
-    }
-    return ''
-  }}
-
   display: flex;
   justify-content: flex-end;
   padding-top: 7px
@@ -100,7 +82,7 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
     return '0'
   }};
 
-  ${(props): string => (props.expanded ? '' : 'transition-duration: 0.1s;')}
+  transition-duration: 0.1s;
 
   .CodeMirror {
     color: ${(props): string => props.theme.editorCommandColor};
@@ -124,7 +106,6 @@ export const FrameHeader = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 7px;
-  margin-right: 7px;
   height: 33px;
 `
 

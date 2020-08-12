@@ -462,12 +462,6 @@ export class Editor extends Component {
     const editorIsEmpty = this.getEditorValue().length > 0
     const buttons = [
       {
-        onClick: () => this.setEditorValue(''),
-        icon: eraser2,
-        title: 'Clear',
-        disabled: editorIsEmpty
-      },
-      {
         onClick: this.state.contentId
           ? () =>
               this.props.onFavoriteUpdateClick(
@@ -486,7 +480,8 @@ export class Editor extends Component {
         onClick: this.execCurrent,
         icon: controlsPlay,
         title: 'Play',
-        disabled: editorIsEmpty
+        disabled: editorIsEmpty,
+        iconColor: this.props.theme.linkHover
       }
     ]
 
@@ -496,7 +491,7 @@ export class Editor extends Component {
     return (
       <Bar expanded={isFullscreen} card={isCardSize}>
         <Header expanded={isFullscreen} card={isCardSize}>
-          <ActionButtons buttons={buttons} />
+          <ActionButtons width={15} buttons={buttons} />
         </Header>
         <EditorWrapper expanded={isFullscreen} card={isCardSize}>
           <Codemirror
