@@ -91,21 +91,21 @@ export function EditorFrame({ bus }: EditorFrameProps) {
   const buttons = [
     {
       onClick: toggleFullscreen,
-      disabled: false,
       title: isFullscreen ? 'Close fullscreen' : 'Fullscreen',
-      icon: isFullscreen ? <ContractIcon /> : <ExpandIcon />
+      icon: isFullscreen ? <ContractIcon /> : <ExpandIcon />,
+      testId: 'fullscreen'
     },
     {
       onClick: toggleCardView,
-      disabled: false,
-      title: isCardSize ? 'Collapse' : 'Cardview',
-      icon: isCardSize ? <UpIcon /> : <DownIcon />
+      title: isCardSize ? 'Collapse' : 'Expand',
+      icon: isCardSize ? <UpIcon /> : <DownIcon />,
+      testId: 'cardSize'
     },
     {
       onClick: discardEditor,
-      disabled: false,
       title: 'Discard',
-      icon: <CloseIcon />
+      icon: <CloseIcon />,
+      testId: 'discard'
     }
   ]
 
@@ -114,8 +114,13 @@ export function EditorFrame({ bus }: EditorFrameProps) {
       <FrameHeader>
         <FrameHeaderText> </FrameHeaderText>
         <UIControls>
-          {buttons.map(({ onClick, icon, title }) => (
-            <FrameButton key={`frame-${title}`} title={title} onClick={onClick}>
+          {buttons.map(({ onClick, icon, title, testId }) => (
+            <FrameButton
+              key={`frame-${title}`}
+              title={title}
+              onClick={onClick}
+              data-testid={`editor-${testId}`}
+            >
               {icon}
             </FrameButton>
           ))}

@@ -19,6 +19,9 @@
  */
 
 /* global Cypress, cy, before */
+const fullscreenButton = '[data-testid="editor-fullscreen"]'
+const cardSizeButton = '[data-testid="editor-cardSize"]'
+const discardButton = '[data-testid="editor-discard"]'
 
 describe('editor', () => {
   before(function() {
@@ -49,5 +52,30 @@ describe('editor', () => {
     // Can still run query, then editor collapses again
     cy.get('.CodeMirror-scroll').type(':history{control}{enter}')
     cy.get('.CodeMirror-linenumber').should('contain', '$')
+  })
+
+  it('supports changing ui size from controls', () => {
+    cy.get('.CodeMirror-linenumber').should('contain', '$')
+
+    // Toggle card view and back
+    cy.get(cardSizeButton).click()
+    cy.get('.CodeMirror-linenumber').should('contain', '1')
+    cy.get(cardSizeButton).click()
+    cy.get('.CodeMirror-linenumber').should('contain', '$')
+
+    // toggle full screen and nback
+    cy.get(fullscreenButton).click()
+    cy.get('.CodeMirror-linenumber').should('contain', '1')
+    cy.get(fullscreenButton).click()
+    cy.get('.CodeMirror-linenumber').should('contain', '$')
+
+    // discard resets size and clears editor
+    cy.get(cardSizeButton).click()
+    cy.get('.CodeMirror-linenumber').should('contain', '1')
+    cy.get('body').type('/test')
+    cy.get('.CodeMirror-line').contains('test')
+    cy.get(discardButton).click()
+    cy.get('.CodeMirror-linenumber').should('contain', '$')
+    cy.get('.CodeMirror-line').should('not.contain.text', 'test')
   })
 })

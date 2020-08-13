@@ -1,7 +1,7 @@
 import { executeCommand } from '../../src/shared/modules/commands/commandsDuck'
 
 const SubmitQueryButton = '[data-testid="editorPlay"]'
-const ClearEditorButton = '[data-testid="editorClear"]'
+const ClearEditorButton = '[data-testid="editor-discard"]'
 const Editor = '.ReactCodeMirror textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'
 
