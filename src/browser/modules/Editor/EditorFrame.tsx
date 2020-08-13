@@ -23,7 +23,12 @@ import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import Editor from './Editor'
 import { Frame, FrameHeader, FrameHeaderText, UIControls } from './styled'
-import { SET_CONTENT, EXPAND } from 'shared/modules/editor/editorDuck'
+import {
+  EDIT_CONTENT,
+  SET_CONTENT,
+  GET_CONTENT,
+  EXPAND
+} from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
 import {
   ExpandIcon,
@@ -42,16 +47,43 @@ export function EditorFrame({ bus }: EditorFrameProps) {
   const isCardSize = sizeState === 'CARD'
 
   function toggleFullscreen() {
-    isFullscreen ? setSize('LINE') : setSize('FULLSCREEN')
+    if (isFullscreen) {
+      bus.self(GET_CONTENT, {}, ({ message }) => {
+        const editorLines = message.split('\n').length
+        if (editorLines > 1) {
+          setSize('CARD')
+        } else {
+          setSize('LINE')
+        }
+      })
+    } else {
+      setSize('FULLSCREEN')
+    }
   }
 
   useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
 
   function toggleCardView() {
-    isCardSize ? setSize('LINE') : setSize('CARD')
+    if (isCardSize) {
+      bus.self(GET_CONTENT, {}, ({ message, id }) => {
+        const editorLines = message.split('\n').length
+        if (editorLines > 1) {
+          bus.send(EDIT_CONTENT, {
+            message: message
+              .split('\n')
+              .filter((nonEmpty: string) => nonEmpty)
+              .join(' '),
+            id
+          })
+        }
+        setSize('LINE')
+      })
+    } else {
+      setSize('CARD')
+    }
   }
 
-  function clearEditor() {
+  function discardEditor() {
     bus.send(SET_CONTENT, { message: '' })
     sizeState !== 'LINE' && setSize('LINE')
   }
@@ -70,7 +102,7 @@ export function EditorFrame({ bus }: EditorFrameProps) {
       icon: isCardSize ? <UpIcon /> : <DownIcon />
     },
     {
-      onClick: clearEditor,
+      onClick: discardEditor,
       disabled: false,
       title: 'Discard',
       icon: <CloseIcon />
