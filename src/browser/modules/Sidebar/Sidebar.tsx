@@ -55,14 +55,14 @@ interface SidebarProps {
   loadSync: boolean
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const Sidebar = ({
   openDrawer,
   onNavClick,
   showStaticScripts,
   neo4jConnectionState,
   syncConnected,
   loadSync
-}) => {
+}: SidebarProps) => {
   const topNavItemsList = [
     {
       name: 'DBMS',

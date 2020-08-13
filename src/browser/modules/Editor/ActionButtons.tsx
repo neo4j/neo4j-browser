@@ -34,10 +34,7 @@ interface ActionButton {
   iconColor?: string
 }
 
-const ActionButtons: React.FC<ActionButtonProps> = ({
-  buttons,
-  width = 24
-}) => (
+const ActionButtons = ({ buttons, width = 24 }: ActionButtonProps) => (
   <ActionButtonSection>
     {buttons.map((btn: ActionButton) => (
       <EditorButton
