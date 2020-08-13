@@ -489,11 +489,11 @@ export class Editor extends Component {
     const isCardSize = this.props.editorSize === 'CARD'
 
     return (
-      <Bar expanded={isFullscreen} card={isCardSize}>
-        <Header expanded={isFullscreen} card={isCardSize}>
+      <Bar>
+        <Header>
           <ActionButtons width={15} buttons={buttons} />
         </Header>
-        <EditorWrapper expanded={isFullscreen} card={isCardSize}>
+        <EditorWrapper fullscreen={isFullscreen} cardSize={isCardSize}>
           <Codemirror
             ref={ref => {
               this.editor = ref

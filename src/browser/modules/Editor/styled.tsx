@@ -20,14 +20,17 @@
 
 import styled from 'styled-components'
 
+interface FullscreenProps {
+  fullscreen: boolean
+}
 interface ResizeableProps {
-  expanded: boolean
-  card: boolean
+  fullscreen: boolean
+  cardSize: boolean
 }
 
 const editorPadding = 10
 
-export const BaseBar = styled.div<ResizeableProps>`
+export const Bar = styled.div`
   background-color: ${(props): string => props.theme.frameSidebarBackground};
   display: grid;
   margin: 5px;
@@ -37,7 +40,7 @@ export const BaseBar = styled.div<ResizeableProps>`
   grid-template-areas: 'editor header';
 `
 
-export const Header = styled.div<ResizeableProps>`
+export const Header = styled.div`
   grid-area: header;
   border-radius: 4px 4px 0 0;
   display: flex;
@@ -46,22 +49,6 @@ export const Header = styled.div<ResizeableProps>`
   padding-right: 7px
 `
 
-export const Bar = styled(BaseBar)<ResizeableProps>`
-  ${(props): string => {
-    if (props.expanded) {
-      return `
-position: fixed;
-top: -10px;
-bottom: 0;
-left: 0;
-right: 0;
-height: 100vh;
-border-radius: 0;
-z-index: 1030;`
-    }
-    return ''
-  }};
-`
 export const ActionButtonSection = styled.div`
   display: flex;
   justify-content: space-between;
@@ -72,10 +59,10 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
   grid-area: editor;
 
   min-height: ${(props): string => {
-    if (props.expanded) {
+    if (props.fullscreen) {
       return '100vh'
     }
-    if (props.card) {
+    if (props.cardSize) {
       // 230 is 10 lines + 2*12px padding
       return '254px'
     }
@@ -94,12 +81,26 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
   }
 `
 
-export const Frame = styled.div`
+export const Frame = styled.div<FullscreenProps>`
   background-color: ${props => props.theme.secondaryBackground};
   margin: ${editorPadding}px 0px ${editorPadding}px 0;
   border-radius: 2px;
   box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
     0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  ${(props): string => {
+    if (props.fullscreen) {
+      return `
+  position: fixed;
+  top: -10px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  border-radius: 0;
+  z-index: 1030;`
+    }
+    return ''
+  }};
 `
 
 export const FrameHeader = styled.div`
@@ -122,7 +123,7 @@ export const FrameHeaderText = styled.div`
 
 export const EditorWrapper = styled(BaseEditorWrapper)<ResizeableProps>`
   ${(props): string => {
-    if (props.expanded) {
+    if (props.fullscreen) {
       return `height: 100%;
         z-index: 2;
         .CodeMirror {

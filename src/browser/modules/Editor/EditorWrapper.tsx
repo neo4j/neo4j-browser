@@ -53,6 +53,7 @@ export function EditorFrame({ bus }: EditorFrameProps) {
 
   function clearEditor() {
     bus.send(SET_CONTENT, { message: '' })
+    sizeState !== 'LINE' && setSize('LINE')
   }
 
   const buttons = [
@@ -71,13 +72,13 @@ export function EditorFrame({ bus }: EditorFrameProps) {
     {
       onClick: clearEditor,
       disabled: false,
-      title: 'Clear',
+      title: 'Discard',
       icon: <CloseIcon />
     }
   ]
 
   return (
-    <Frame>
+    <Frame fullscreen={isFullscreen}>
       <FrameHeader>
         <FrameHeaderText> </FrameHeaderText>
         <UIControls>
