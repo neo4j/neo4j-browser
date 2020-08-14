@@ -48,6 +48,7 @@ import { getActiveConnectionData } from 'shared/modules/connections/connectionsD
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
 import { getLatestFromFrameStack } from './stream.utils'
+import EditFrame from './EditFrame'
 
 const getFrame = type => {
   const trans = {
@@ -76,6 +77,7 @@ const getFrame = type => {
     'reset-db': UseDbFrame,
     dbs: DbsFrame,
     style: StyleFrame,
+    'test-edit': EditFrame,
     default: Frame
   }
   return trans[type] || trans.default

@@ -789,6 +789,13 @@ ${param}`)
     }
   },
   {
+    name: 'test-edit',
+    match: cmd => cmd === 'test-edit',
+    exec: (action, cmdchar, put, store) => {
+      put(frames.add({ type: 'test-edit' }))
+    }
+  },
+  {
     name: 'catch-all',
     match: () => true,
     exec: (action, cmdchar, put, store) => {
