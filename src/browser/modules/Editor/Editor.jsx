@@ -30,7 +30,6 @@ import {
 import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import {
   SET_CONTENT,
-  GET_CONTENT,
   EDIT_CONTENT,
   FOCUS,
   EXPAND,
@@ -92,12 +91,6 @@ export class Editor extends Component {
       this.props.bus.take(EDIT_CONTENT, msg => {
         this.setContentId(msg.id)
         this.setEditorValue(msg.message)
-      })
-      this.props.bus.take(GET_CONTENT, msg => {
-        this.props.bus.send(msg['$$responseChannel'], {
-          message: this.codeMirror ? this.codeMirror.getValue() : '',
-          id: this.state.contentId
-        })
       })
       this.props.bus.take(FOCUS, this.focusEditor.bind(this))
     }
@@ -255,6 +248,9 @@ export class Editor extends Component {
         console.log(e)
       }
     })
+    if (this.props.editorRef) {
+      this.props.editorRef.current = this.codeMirror
+    }
   }
 
   getEditorValue() {

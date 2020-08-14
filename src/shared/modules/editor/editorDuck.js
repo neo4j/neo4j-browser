@@ -29,7 +29,6 @@ import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
 const NAME = 'editor'
 export const SET_CONTENT = `${NAME}/SET_CONTENT`
-export const GET_CONTENT = `${NAME}/GET_CONTENT`
 export const EDIT_CONTENT = `${NAME}/EDIT_CONTENT`
 export const FOCUS = `${NAME}/FOCUS`
 export const EXPAND = `${NAME}/EXPAND`
@@ -46,9 +45,6 @@ const validCommandTypes = {
 export const setContent = newContent => ({
   type: SET_CONTENT,
   message: newContent
-})
-export const getContent = () => ({
-  type: GET_CONTENT
 })
 export const editContent = (id, message) => ({
   type: EDIT_CONTENT,

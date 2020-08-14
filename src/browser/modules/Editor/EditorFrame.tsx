@@ -18,17 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import Editor from './Editor'
 import { Frame, FrameHeader, FrameHeaderText, UIControls } from './styled'
-import {
-  EDIT_CONTENT,
-  SET_CONTENT,
-  GET_CONTENT,
-  EXPAND
-} from 'shared/modules/editor/editorDuck'
+import { EXPAND } from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
 import {
   ExpandIcon,
@@ -40,22 +35,26 @@ import {
 
 type EditorSize = 'CARD' | 'LINE' | 'FULLSCREEN'
 type EditorFrameProps = { bus: Bus }
+type CodeEditor = {
+  getValue: () => string | null
+  setValue: (newText: string) => void
+}
 
 export function EditorFrame({ bus }: EditorFrameProps) {
   const [sizeState, setSize] = useState<EditorSize>('LINE')
   const isFullscreen = sizeState === 'FULLSCREEN'
   const isCardSize = sizeState === 'CARD'
+  const editorRef = useRef<CodeEditor>(null)
 
   function toggleFullscreen() {
+    const editorVal = (editorRef.current && editorRef.current.getValue()) || ''
+    const lineCount = editorVal.split('\n').length
     if (isFullscreen) {
-      bus.self(GET_CONTENT, {}, ({ message }) => {
-        const editorLines = message.split('\n').length
-        if (editorLines > 1) {
-          setSize('CARD')
-        } else {
-          setSize('LINE')
-        }
-      })
+      if (lineCount > 1) {
+        setSize('CARD')
+      } else {
+        setSize('LINE')
+      }
     } else {
       setSize('FULLSCREEN')
     }
@@ -64,27 +63,27 @@ export function EditorFrame({ bus }: EditorFrameProps) {
   useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
 
   function toggleCardView() {
+    const editorVal = (editorRef.current && editorRef.current.getValue()) || ''
+    const lineCount = editorVal.split('\n').length
+
     if (isCardSize) {
-      bus.self(GET_CONTENT, {}, ({ message, id }) => {
-        const editorLines = message.split('\n').length
-        if (editorLines > 1) {
-          bus.send(EDIT_CONTENT, {
-            message: message
+      if (lineCount > 1) {
+        editorRef.current &&
+          editorRef.current.setValue(
+            editorVal
               .split('\n')
               .filter((nonEmpty: string) => nonEmpty)
-              .join(' '),
-            id
-          })
-        }
-        setSize('LINE')
-      })
+              .join(' ')
+          )
+      }
+      setSize('LINE')
     } else {
       setSize('CARD')
     }
   }
 
   function discardEditor() {
-    bus.send(SET_CONTENT, { message: '' })
+    editorRef.current && editorRef.current.setValue('')
     sizeState !== 'LINE' && setSize('LINE')
   }
 
@@ -109,6 +108,8 @@ export function EditorFrame({ bus }: EditorFrameProps) {
     }
   ]
 
+  const TypedEditor: any = Editor // delete this when editor is ts
+
   return (
     <Frame fullscreen={isFullscreen}>
       <FrameHeader>
@@ -126,10 +127,11 @@ export function EditorFrame({ bus }: EditorFrameProps) {
           ))}
         </UIControls>
       </FrameHeader>
-      {
-        // @ts-expect-error, until editor uses ts
-        <Editor editorSize={sizeState} setSize={setSize} />
-      }
+      <TypedEditor
+        editorSize={sizeState}
+        setSize={setSize}
+        editorRef={editorRef}
+      />
     </Frame>
   )
 }
