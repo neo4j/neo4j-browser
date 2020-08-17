@@ -23,7 +23,7 @@ import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import Editor from './Editor'
 import { Frame, FrameHeader, FrameHeaderText, UIControls } from './styled'
-import { EXPAND } from 'shared/modules/editor/editorDuck'
+import { EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
 import {
   ExpandIcon,
@@ -60,8 +60,6 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     }
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
-
   function toggleCardView() {
     const editorVal = (editorRef.current && editorRef.current.getValue()) || ''
     const lineCount = editorVal.split('\n').length
@@ -81,6 +79,9 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       setSize('CARD')
     }
   }
+
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
+  useEffect(() => bus && bus.take(CARDSIZE, toggleCardView))
 
   function discardEditor() {
     editorRef.current && editorRef.current.setValue('')

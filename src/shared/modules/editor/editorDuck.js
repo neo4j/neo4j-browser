@@ -32,6 +32,7 @@ export const SET_CONTENT = `${NAME}/SET_CONTENT`
 export const EDIT_CONTENT = `${NAME}/EDIT_CONTENT`
 export const FOCUS = `${NAME}/FOCUS`
 export const EXPAND = `${NAME}/EXPAND`
+export const CARDSIZE = `${NAME}/CARDSIZE`
 export const NOT_SUPPORTED_URL_PARAM_COMMAND = `${NAME}/NOT_SUPPORTED_URL_PARAM_COMMAND`
 
 // Supported commands

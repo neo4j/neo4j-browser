@@ -90,7 +90,7 @@ export function App(props) {
   )
   const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
 
-  useKeyboardShortcuts()
+  useKeyboardShortcuts(props.bus)
 
   const eventMetricsCallback = useRef(() => {})
 
