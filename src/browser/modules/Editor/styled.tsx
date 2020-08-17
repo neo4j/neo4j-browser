@@ -20,74 +20,38 @@
 
 import styled from 'styled-components'
 
+interface FullscreenProps {
+  fullscreen: boolean
+}
 interface ResizeableProps {
-  expanded: boolean
-  card: boolean
+  fullscreen: boolean
+  cardSize: boolean
 }
 
 const editorPadding = 10
 
-export const BaseBar = styled.div<ResizeableProps>`
-  background-color: ${(props): string => props.theme.editorBackground};
-  border-radius: 4px;
-  margin: ${editorPadding}px 0px ${editorPadding}px 0;
+export const Bar = styled.div`
+  background-color: ${(props): string => props.theme.frameSidebarBackground};
   display: grid;
+  margin: 5px;
+  border-radius: 2px;
   // minmax(0, 1fr) prevents the editor from growing the text field
   grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: ${(props): string => {
-    if (props.expanded || props.card) {
-      return "'header' 'editor'"
-    }
-    return "'editor header'"
-  }};
+  grid-template-areas: 'editor header';
 `
 
-export const Header = styled.div<ResizeableProps>`
+export const Header = styled.div`
   grid-area: header;
   border-radius: 4px 4px 0 0;
-  ${(props): string => {
-    if (props.expanded) {
-      return `background-color: #4d4a57;
-              border-radius: 0;
-      `
-    }
-    if (props.card) {
-      return `background-color: #4d4a57;
-              transition-duration: 0.3s;`
-    }
-    return ''
-  }}
-
   display: flex;
   justify-content: flex-end;
+  padding-top: 7px
+  padding-right: 7px
 `
 
-export const Bar = styled(BaseBar)<ResizeableProps>`
-  ${(props): string => {
-    if (props.expanded) {
-      return `
-position: fixed;
-top: -10px;
-bottom: 0;
-left: 0;
-right: 0;
-height: 100vh;
-border-radius: 0;
-z-index: 1030;`
-    }
-    return ''
-  }};
-`
-
-interface ActionButtonContainerProps {
-  containerWidth: number
-}
-
-export const ActionButtonSection = styled.div<ActionButtonContainerProps>`
+export const ActionButtonSection = styled.div`
   display: flex;
   justify-content: space-between;
-  width: ${(props): number => props.containerWidth}px;
-  margin: 7px;
 `
 
 const BaseEditorWrapper = styled.div<ResizeableProps>`
@@ -95,17 +59,17 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
   grid-area: editor;
 
   min-height: ${(props): string => {
-    if (props.expanded) {
+    if (props.fullscreen) {
       return '100vh'
     }
-    if (props.card) {
+    if (props.cardSize) {
       // 230 is 10 lines + 2*12px padding
       return '254px'
     }
     return '0'
   }};
 
-  ${(props): string => (props.expanded ? '' : 'transition-duration: 0.1s;')}
+  transition-duration: 0.1s;
 
   .CodeMirror {
     color: ${(props): string => props.theme.editorCommandColor};
@@ -117,9 +81,49 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
   }
 `
 
+export const Frame = styled.div<FullscreenProps>`
+  background-color: ${props => props.theme.secondaryBackground};
+  margin: ${editorPadding}px 0px ${editorPadding}px 0;
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
+    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  ${(props): string => {
+    if (props.fullscreen) {
+      return `
+  position: fixed;
+  top: -10px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  border-radius: 0;
+  z-index: 1030;`
+    }
+    return ''
+  }};
+`
+
+export const FrameHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 7px;
+  height: 33px;
+`
+
+export const UIControls = styled.div`
+  align-self: flex-end;
+`
+
+export const FrameHeaderText = styled.div`
+  color: white;
+  font-family: 'Fira Code', 'Monaco', 'Lucida Console', Courier, monospace;
+  font-size: 1.2em;
+  line-height: 2.2em;
+`
+
 export const EditorWrapper = styled(BaseEditorWrapper)<ResizeableProps>`
   ${(props): string => {
-    if (props.expanded) {
+    if (props.fullscreen) {
       return `height: 100%;
         z-index: 2;
         .CodeMirror {

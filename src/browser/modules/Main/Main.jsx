@@ -23,7 +23,7 @@ import {
   PENDING_STATE,
   CONNECTING_STATE
 } from 'shared/modules/connections/connectionsDuck'
-import Editor from '../Editor/Editor'
+import Editor from '../Editor/EditorFrame'
 import Stream from '../Stream/Stream'
 import Render from 'browser-components/Render'
 import {

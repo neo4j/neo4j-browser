@@ -48,7 +48,7 @@ interface AboutProps {
   serverEdition: string
 }
 
-const About: React.FC<AboutProps> = ({ serverVersion, serverEdition }) => (
+const About = ({ serverVersion, serverEdition }: AboutProps) => (
   <Drawer id="db-about">
     <DrawerHeader>About Neo4j</DrawerHeader>
     <DrawerBody>

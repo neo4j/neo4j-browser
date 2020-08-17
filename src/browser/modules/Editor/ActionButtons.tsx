@@ -23,6 +23,7 @@ import { ActionButtonSection } from './styled'
 import { EditorButton } from 'browser-components/buttons'
 interface ActionButtonProps {
   buttons: ActionButton[]
+  width?: number
 }
 
 interface ActionButton {
@@ -33,8 +34,8 @@ interface ActionButton {
   iconColor?: string
 }
 
-const ActionButtons: React.FC<ActionButtonProps> = ({ buttons }) => (
-  <ActionButtonSection containerWidth={buttons.length * 33}>
+const ActionButtons = ({ buttons, width = 24 }: ActionButtonProps) => (
+  <ActionButtonSection>
     {buttons.map((btn: ActionButton) => (
       <EditorButton
         data-testid={`editor${btn.title}`}
@@ -44,6 +45,7 @@ const ActionButtons: React.FC<ActionButtonProps> = ({ buttons }) => (
         icon={btn.icon}
         key={`editor${btn.title}`}
         color={btn.iconColor}
+        width={width}
       />
     ))}
   </ActionButtonSection>

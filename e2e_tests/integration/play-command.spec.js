@@ -109,7 +109,7 @@ describe('Play command', () => {
     nextSlideBtn().click()
 
     // Click link to new guide
-    cy.contains('Procedures').click()
+    cy.contains('Procedures').trigger('click')
 
     // Assert
     cy.getFrames()

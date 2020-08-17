@@ -44,7 +44,6 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { add } from 'shared/modules/stream/streamDuck'
 import { Bar, ActionButtonSection, EditorWrapper, Header } from './styled'
-import { EditorButton, EditModeEditorButton } from 'browser-components/buttons'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { deepEquals, shallowEquals } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
@@ -80,7 +79,6 @@ export class Editor extends Component {
       buffer: '',
       mode: 'cypher',
       notifications: [],
-      expanded: false,
       lastPosition: { line: 0, column: 0 },
       contentId: null,
       editorHeight: 0
@@ -95,17 +93,16 @@ export class Editor extends Component {
         this.setEditorValue(msg.message)
       })
       this.props.bus.take(FOCUS, this.focusEditor.bind(this))
-      this.props.bus.take(EXPAND, this.expandEditorToggle.bind(this))
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !(
-      nextState.expanded === this.state.expanded &&
       nextState.contentId === this.state.contentId &&
       nextState.editorHeight === this.state.editorHeight &&
       shallowEquals(nextState.notifications, this.state.notifications) &&
       deepEquals(nextProps.schema, this.props.schema) &&
+      nextProps.editorSize === this.props.editorSize &&
       nextProps.useDb === this.props.useDb &&
       nextProps.enableMultiStatementMode === this.props.enableMultiStatementMode
     )
@@ -116,17 +113,13 @@ export class Editor extends Component {
     this.codeMirror.setCursor(this.codeMirror.lineCount(), 0)
   }
 
-  expandEditorToggle() {
-    this.setState({ expanded: !this.state.expanded })
-  }
-
   clearEditor = () => {
     this.setEditorValue('')
     this.setContentId(null)
   }
 
   handleEnter(cm) {
-    const multiline = cm.lineCount() !== 1 || this.state.expanded
+    const multiline = this.props.editorSize !== 'LINE'
     if (multiline) {
       this.newlineAndIndent(cm)
     } else {
@@ -152,9 +145,9 @@ export class Editor extends Component {
       this.setState({
         notifications: [],
         historyIndex: -1,
-        buffer: null,
-        expanded: false
+        buffer: null
       })
+      this.props.setSize('LINE')
     }
   }
 
@@ -255,6 +248,9 @@ export class Editor extends Component {
         console.log(e)
       }
     })
+    if (this.props.editorRef) {
+      this.props.editorRef.current = this.codeMirror
+    }
   }
 
   getEditorValue() {
@@ -400,8 +396,8 @@ export class Editor extends Component {
   }
 
   lineNumberFormatter = line => {
-    const multiLine = this.codeMirror && this.codeMirror.lineCount() > 1
-    if (this.state.expanded || multiLine) {
+    const multiline = this.props.editorSize !== 'LINE'
+    if (multiline) {
       return line
     } else {
       return `${this.props.useDb || ''}$`
@@ -414,6 +410,13 @@ export class Editor extends Component {
       if (editorHeight !== this.state.editorHeight) {
         this.setState({ editorHeight })
       }
+    }
+  }
+
+  goToCard(cm) {
+    this.newlineAndIndent(cm)
+    if (this.props.editorSize === 'LINE') {
+      this.props.setSize('CARD')
     }
   }
 
@@ -431,7 +434,7 @@ export class Editor extends Component {
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
         Enter: this.handleEnter.bind(this),
-        'Shift-Enter': this.newlineAndIndent.bind(this),
+        'Shift-Enter': this.goToCard.bind(this),
         'Cmd-Enter': this.execCurrent.bind(this),
         'Ctrl-Enter': this.execCurrent.bind(this),
         'Cmd-Up': this.historyPrev.bind(this),
@@ -462,12 +465,6 @@ export class Editor extends Component {
     const editorIsEmpty = this.getEditorValue().length > 0
     const buttons = [
       {
-        onClick: () => this.setEditorValue(''),
-        icon: eraser2,
-        title: 'Clear',
-        disabled: editorIsEmpty
-      },
-      {
         onClick: this.state.contentId
           ? () =>
               this.props.onFavoriteUpdateClick(
@@ -486,18 +483,20 @@ export class Editor extends Component {
         onClick: this.execCurrent,
         icon: controlsPlay,
         title: 'Play',
-        disabled: editorIsEmpty
+        disabled: editorIsEmpty,
+        iconColor: this.props.theme.linkHover
       }
     ]
 
-    const cardView = this.codeMirror && this.codeMirror.lineCount() !== 1
+    const isFullscreen = this.props.editorSize === 'FULLSCREEN'
+    const isCardSize = this.props.editorSize === 'CARD'
 
     return (
-      <Bar expanded={this.state.expanded} card={cardView}>
-        <Header expanded={this.state.expanded} card={cardView}>
-          <ActionButtons buttons={buttons} />
+      <Bar>
+        <Header>
+          <ActionButtons width={15} buttons={buttons} />
         </Header>
-        <EditorWrapper expanded={this.state.expanded} card={cardView}>
+        <EditorWrapper fullscreen={isFullscreen} cardSize={isCardSize}>
           <Codemirror
             ref={ref => {
               this.editor = ref
