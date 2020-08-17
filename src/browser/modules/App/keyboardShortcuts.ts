@@ -2,50 +2,46 @@ import { useEffect } from 'react'
 import { FOCUS, EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { Bus } from 'suber'
 
-const keycodes = {
-  27: 'esc',
-  esc: 27
+const keycodes = { c: 67, f: 70 }
+
+const isOutsideTextArea = (e: KeyboardEvent): boolean => {
+  const tagName = (e.target as HTMLElement).tagName
+  return ['INPUT', 'TEXTAREA'].indexOf(tagName) > -1
 }
 
 export function useKeyboardShortcuts(bus: Bus): void {
   const trigger = (msg: string): void => bus && bus.send(msg, null)
 
   const focusEditorOnSlash = (e: KeyboardEvent): void => {
-    const tagName = (e.target as HTMLElement).tagName
-    const writingText = ['INPUT', 'TEXTAREA'].indexOf(tagName) > -1
-    const typedSlash = e.key === '/'
-
-    if (!writingText && typedSlash) {
+    if (isOutsideTextArea(e) && e.key === '/') {
       trigger(FOCUS)
     }
   }
 
-  const expandEditorOnEsc = (e: KeyboardEvent): void => {
-    if (e.keyCode === keycodes.esc) {
+  const expandEditor = (e: KeyboardEvent): void => {
+    e.preventDefault()
+    if ((e.ctrlKey || e.metaKey) && e.altKey && e.keyCode === keycodes.f) {
       trigger(EXPAND)
     }
   }
 
   const cardSizeShortcut = (e: KeyboardEvent): void => {
-    if (e.ctrlKey && e.key === 'b') {
+    e.preventDefault()
+    if ((e.ctrlKey || e.metaKey) && e.altKey && e.keyCode === keycodes.c) {
       trigger(CARDSIZE)
     }
   }
 
-  const keyboardShortcuts = [
-    focusEditorOnSlash,
-    expandEditorOnEsc,
-    cardSizeShortcut
-  ]
+  const keyboardShortcuts = [focusEditorOnSlash, expandEditor, cardSizeShortcut]
 
   useEffect(() => {
     keyboardShortcuts.forEach(shortcut =>
-      document.addEventListener('keyup', shortcut)
+      document.addEventListener('keydown', shortcut)
     )
 
     return (): void =>
       keyboardShortcuts.forEach(shortcut =>
-        document.removeEventListener('keyup', shortcut)
+        document.removeEventListener('keydown', shortcut)
       )
   }, [])
 }
