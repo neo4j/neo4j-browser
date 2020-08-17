@@ -32,13 +32,13 @@ export default function ClickableUrls({ text }) {
 const URL_REGEX = /(([a-zA-Z]+):\/\/)(?:(?:[^\s()<>"]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()[\]{};:'".,<>?«»“”‘’]))?/gi
 
 /**
- * Finds all urls in a string and wraps them in <a target="_blank" />
+ * Finds all urls in a string and wraps them in <a target="_blank" rel="noreferrer" />
  * @param     {string}    text
  * @return    {string}
  */
 export function convertUrlsToHrefTags(text) {
   return `${text || ''}`.replace(
     URL_REGEX,
-    match => `<a href="${match}" target="_blank">${match}</a>`
+    match => `<a href="${match}" target="_blank" rel="noreferrer">${match}</a>`
   )
 }

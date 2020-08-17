@@ -42,7 +42,8 @@ describe('clickable-urls', () => {
         'http://www.cool.com:81/index.html'
       ]
       const expected = urls.map(
-        url => `<a href="${url}" target="_blank">${url}</a>`
+        url =>
+          `<a href="${url}" target="_blank" rel="noreferrer" rel="noreferrer">${url}</a>`
       )
 
       expect(urls.map(convertUrlsToHrefTags)).toEqual(expected)
@@ -55,26 +56,26 @@ describe('clickable-urls', () => {
 
     test('handles urls inside parentheses', () => {
       expect(convertUrlsToHrefTags('(http://goo.gl/1)')).toBe(
-        '(<a href="http://goo.gl/1" target="_blank">http://goo.gl/1</a>)'
+        '(<a href="http://goo.gl/1" target="_blank" rel="noreferrer">http://goo.gl/1</a>)'
       )
     })
 
     test('does not include punctuation, comma, exclamation', () => {
       expect(convertUrlsToHrefTags('http://foo.com/.')).toBe(
-        '<a href="http://foo.com/" target="_blank">http://foo.com/</a>.'
+        '<a href="http://foo.com/" target="_blank" rel="noreferrer">http://foo.com/</a>.'
       )
       expect(convertUrlsToHrefTags('http://foo.com/!')).toBe(
-        '<a href="http://foo.com/" target="_blank">http://foo.com/</a>!'
+        '<a href="http://foo.com/" target="_blank" rel="noreferrer">http://foo.com/</a>!'
       )
       expect(convertUrlsToHrefTags('http://foo.com/,')).toBe(
-        '<a href="http://foo.com/" target="_blank">http://foo.com/</a>,'
+        '<a href="http://foo.com/" target="_blank" rel="noreferrer">http://foo.com/</a>,'
       )
     })
 
     test('Handles multiple URLs, even if in a text block', () => {
       const URLs = 'sftp://foo.se is better than ftp://bar.dk'
       const expectedURLs =
-        '<a href="sftp://foo.se" target="_blank">sftp://foo.se</a> is better than <a href="ftp://bar.dk" target="_blank">ftp://bar.dk</a>'
+        '<a href="sftp://foo.se" target="_blank" rel="noreferrer">sftp://foo.se</a> is better than <a href="ftp://bar.dk" target="_blank" rel="noreferrer">ftp://bar.dk</a>'
       const textBlock = `
         Shred all toilet paper and spread around the house grass smells good.
         ${URLs}
@@ -101,6 +102,7 @@ describe('clickable-urls', () => {
             Hello, my &lt;strong&gt;name&lt;/strong&gt; is &lt;a href="
             <a
               href="http://twitter.com/neo4j"
+              rel="noreferrer"
               target="_blank"
             >
               http://twitter.com/neo4j

@@ -29,7 +29,8 @@
       "project-root/*": ["../*"],
       "src-root/*": ["./*"],
       "icons": ["browser/icons/*"]
-    }
+    },
+    "importsNotUsedAsValues": "preserve"
   },
   "include": ["./src/**/*"]
 }

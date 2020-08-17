@@ -53,18 +53,18 @@ const download = (filename, mime, data) => {
 }
 
 const downloadWithDataURI = (filename, dataURI) => {
-  let byteString, i, ia, j, mimeString, ref
+  let byteString, i, j, ref
   byteString = null
   if (dataURI.split(',')[0].indexOf('base64') >= 0) {
     byteString = window.atob(dataURI.split(',')[1])
   } else {
     byteString = unescape(dataURI.split(',')[1])
   }
-  mimeString = dataURI
+  const mimeString = dataURI
     .split(',')[0]
     .split(':')[1]
     .split(';')[0]
-  ia = new Uint8Array(byteString.length)
+  const ia = new Uint8Array(byteString.length)
   for (
     i = j = 0, ref = byteString.length;
     ref >= 0 ? j <= ref : j >= ref;

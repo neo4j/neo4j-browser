@@ -164,7 +164,12 @@ const content = (
     <footer className="tight">
       <p className="text-muted">
         Copyright &copy;
-        <a target="_blank" href="http://neo4j.com/" className="no-icon">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="http://neo4j.com/"
+          className="no-icon"
+        >
           {' '}
           Neo4j, Inc
         </a>

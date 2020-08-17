@@ -40,7 +40,7 @@ type CodeEditor = {
   setValue: (newText: string) => void
 }
 
-export function EditorFrame({ bus }: EditorFrameProps) {
+export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   const [sizeState, setSize] = useState<EditorSize>('LINE')
   const isFullscreen = sizeState === 'FULLSCREEN'
   const isCardSize = sizeState === 'CARD'

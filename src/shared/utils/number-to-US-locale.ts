@@ -15,7 +15,7 @@
  *
  */
 
-export default (value: any): string | null => {
+export default (value: null | undefined | number | string): string | null => {
   if (value === null || value === undefined) {
     return null
   }

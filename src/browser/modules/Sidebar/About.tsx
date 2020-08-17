@@ -55,7 +55,7 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
       <DrawerSection>
         <DrawerSubHeader>
           Made by{' '}
-          <a target="_blank" href="http://neo4j.com/">
+          <a target="_blank" rel="noreferrer" href="http://neo4j.com/">
             Neo4j, Inc
           </a>
         </DrawerSubHeader>
@@ -71,6 +71,7 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
             <a
               href={`https://github.com/neo4j/neo4j-browser/releases/tag/${version}`}
               target="_blank"
+              rel="noreferrer"
             >
               {version}
             </a>
@@ -78,7 +79,11 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
           <Render if={serverVersion && serverEdition}>
             <p>
               Neo4j Server version:{' '}
-              <a target="_blank" href={asChangeLogUrl(serverVersion)}>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={asChangeLogUrl(serverVersion)}
+              >
                 {serverVersion}
               </a>{' '}
               ({serverEdition})
@@ -88,6 +93,7 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
             <a
               href="https://github.com/neo4j/neo4j-browser/wiki/changelog"
               target="_blank"
+              rel="noreferrer"
             >
               Neo4j Browser Changelog
             </a>
@@ -97,15 +103,27 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
       <DrawerSection>
         <DrawerSubHeader>License</DrawerSubHeader>
         <DrawerSectionBody>
-          <a target="_blank" href="http://www.gnu.org/licenses/gpl.html">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="http://www.gnu.org/licenses/gpl.html"
+          >
             GPLv3
           </a>{' '}
           or{' '}
-          <a target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="http://www.gnu.org/licenses/agpl-3.0.html"
+          >
             AGPL
           </a>{' '}
           for Open Source, and{' '}
-          <a target="_blank" href="https://neo4j.com/licensing/">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://neo4j.com/licensing/"
+          >
             NTCL
           </a>{' '}
           Commercial.
@@ -115,29 +133,38 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
         <DrawerSubHeader>Participate</DrawerSubHeader>
         <DrawerSectionBody>
           Discuss on{' '}
-          <a target="_blank" href="https://community.neo4j.com/">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://community.neo4j.com/"
+          >
             Neo4j Community Forum
           </a>{' '}
           <br />
           Ask questions at{' '}
           <a
             target="_blank"
+            rel="noreferrer"
             href="http://stackoverflow.com/questions/tagged/neo4j"
           >
             Stack Overflow
           </a>
           <br />
           Visit a local{' '}
-          <a target="_blank" href="http://neo4j.meetup.com/">
+          <a target="_blank" rel="noreferrer" href="http://neo4j.meetup.com/">
             Meetup Group
           </a>
           <br />
           Contribute code to{' '}
-          <a target="_blank" href="http://github.com/neo4j">
+          <a target="_blank" rel="noreferrer" href="http://github.com/neo4j">
             Neo4j
           </a>{' '}
           or{' '}
-          <a target="_blank" href="http://github.com/neo4j/neo4j-browser">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="http://github.com/neo4j/neo4j-browser"
+          >
             Neo4j Browser
           </a>
           <br />
@@ -150,8 +177,8 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
       <DrawerSection>
         <DrawerSubHeader>Thanks</DrawerSubHeader>
         <DrawerSectionBody>
-          Neo4j wouldn't be possible without a fantastic community. Thanks for
-          all the feedback, discussions and contributions.
+          Neo4j wouldn&apos;t be possible without a fantastic community. Thanks
+          for all the feedback, discussions and contributions.
         </DrawerSectionBody>
       </DrawerSection>
     </DrawerBody>
