@@ -62,7 +62,12 @@ export class IconContainer extends Component {
 
     const currentIcon = icon ? (
       <StyledIconWrapper {...rest}>
-        <SVGInline svg={icon} accessibilityLabel={title} width={width + 'px'} />
+        <SVGInline
+          cleanup={['title']}
+          svg={icon}
+          accessibilityLabel={title}
+          width={width + 'px'}
+        />
       </StyledIconWrapper>
     ) : (
       <StyledIconWrapper {...rest} style={regulateSizeStyle} />

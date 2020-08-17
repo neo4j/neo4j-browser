@@ -19,6 +19,13 @@
  */
 
 import React from 'react'
+import {
+  FULLSCREEN_SHORTCUT,
+  FOCUS_SHORTCUT,
+  CARDSIZE_SHORTCUT,
+  printShortcut,
+  isMac
+} from 'browser/modules/App/keyboardShortcuts'
 const title = 'Keys'
 const subtitle = 'Keyboard shortcuts'
 const category = 'browserUiCommands'
@@ -36,7 +43,9 @@ const content = (
         <tr>
           <td>Execute current command</td>
           <td>
-            <div className="key code">{'<Ctrl-Return>'}</div>
+            <div className="key code">
+              {isMac ? '<Cmd-Return>' : '<Ctrl-Return>'}
+            </div>
           </td>
           <td>
             <div className="key code">{'<Return>'}</div>
@@ -45,7 +54,9 @@ const content = (
         <tr>
           <td>Previous command in history</td>
           <td>
-            <div className="key code">{'<Ctrl-Up-Arrow>'}</div>
+            <div className="key code">
+              {isMac ? '<Cmd-Up-Arrow>' : '<Ctrl-Up-Arrow>'}
+            </div>
           </td>
           <td>
             <div className="key code">{'<Up-Arrow>'}</div>
@@ -54,7 +65,9 @@ const content = (
         <tr>
           <td>Next command in history</td>
           <td>
-            <div className="key code">{'<Ctrl-Down-Arrow>'}</div>
+            <div className="key code">
+              {isMac ? '<Cmd-Down-Arrow>' : '<Ctrl-Down-Arrow>'}
+            </div>
           </td>
           <td>
             <div className="key code">{'<Down-Arrow>'}</div>
@@ -78,29 +91,23 @@ const content = (
         <tr>
           <td>Change focus to editor</td>
           <td>
-            <div className="key code">/</div>
+            <div className="key code">{printShortcut(FOCUS_SHORTCUT)}</div>
           </td>
         </tr>
         <tr>
           <td>Toggle fullscreen editor</td>
           <td>
-            <div className="key code">Esc</div>
+            <div className="key code">{printShortcut(FULLSCREEN_SHORTCUT)}</div>
+          </td>
+        </tr>
+        <tr>
+          <td>Toggle cardsize editor</td>
+          <td>
+            <div className="key code">{printShortcut(CARDSIZE_SHORTCUT)}</div>
           </td>
         </tr>
         <tr>
           <td />
-        </tr>
-        <tr>
-          <th>Platform specific</th>
-          <th />
-          <th />
-        </tr>
-        <tr>
-          <td>Mac users</td>
-          <td>
-            Use <span className="key code">Cmd</span> instead of{' '}
-            <span className="key code">Ctrl</span>
-          </td>
         </tr>
       </tbody>
     </table>

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { FOCUS, EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { Bus } from 'suber'
 
-const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform)
+export const isMac = /Mac|iPad/.test(navigator.platform)
 const modKey = isMac ? 'metaKey' : 'ctrlKey'
 
 type ModifyerKey = 'metaKey' | 'altKey' | 'ctrlKey'
@@ -41,8 +41,8 @@ export const FOCUS_SHORTCUT: Shortcut = {
 export function printShortcut(s: Shortcut): string {
   return s.modifyers
     .map(mod => printModifyers[mod])
-    .concat(decodeKeycode[s.keyCode])
-    .join(' ')
+    .concat(decodeKeycode[s.keyCode].toUpperCase())
+    .join(isMac ? '' : ' + ')
 }
 
 function matchesShortcut(e: KeyboardEvent, shortcut: Shortcut): boolean {
@@ -65,15 +65,15 @@ export function useKeyboardShortcuts(bus: Bus): void {
   }
 
   const expandEditor = (e: KeyboardEvent): void => {
-    e.preventDefault()
     if (matchesShortcut(e, FULLSCREEN_SHORTCUT)) {
+      e.preventDefault()
       trigger(EXPAND)
     }
   }
 
   const cardSizeShortcut = (e: KeyboardEvent): void => {
-    e.preventDefault()
     if (matchesShortcut(e, CARDSIZE_SHORTCUT)) {
+      e.preventDefault()
       trigger(CARDSIZE)
     }
   }
