@@ -22,16 +22,8 @@ const path = require('path')
 
 module.exports = [
   {
-    test: /\.(ts|ts)x?$/,
+    test: /\.(ts|tsx)?$/,
     use: { loader: 'ts-loader', options: { transpileOnly: true } },
-    /* [
-      !helpers.isProduction && {
-        loader: 'babel-loader',
-        options: { plugins: ['react-refresh/babel'] }
-      },
-      { loader: 'ts-loader', options: { transpileOnly: true } }
-    ].filter(Boolean),
-    */
     include: [path.resolve('src')],
     exclude: /node_modules/
   },

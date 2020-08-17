@@ -42,8 +42,7 @@ describe('clickable-urls', () => {
         'http://www.cool.com:81/index.html'
       ]
       const expected = urls.map(
-        url =>
-          `<a href="${url}" target="_blank" rel="noreferrer" rel="noreferrer">${url}</a>`
+        url => `<a href="${url}" target="_blank" rel="noreferrer">${url}</a>`
       )
 
       expect(urls.map(convertUrlsToHrefTags)).toEqual(expected)
