@@ -3,7 +3,7 @@
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+    class="styled__StyledStatsBar-sc-1dtvgs1-24 fieQou"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -17,17 +17,17 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+    class="styled__StyledStatsBar-sc-1dtvgs1-24 fieQou"
   >
     <div
-      class="styled__StyledRightPartial-sc-1dtvgs1-33 kITufN"
+      class="styled__StyledRightPartial-sc-1dtvgs1-34 eerijy"
     >
       <div
-        class="styled__StyledWidthSliderContainer-sc-1dtvgs1-35 hsuISq"
+        class="styled__StyledWidthSliderContainer-sc-1dtvgs1-36 kBNRqF"
       >
         Max column width:
         <input
-          class="styled__StyledWidthSlider-sc-1dtvgs1-36 cgzxFB"
+          class="styled__StyledWidthSlider-sc-1dtvgs1-37 EUoiz"
           max="3"
           min="3"
           type="range"
@@ -42,10 +42,10 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-1 kyHRpW"
+    class="styled__PaddedDiv-sc-1dtvgs1-2 dOjNWv"
   >
     <div
-      class="styled__StyledBodyMessage-sc-1dtvgs1-27 hpwxul"
+      class="styled__StyledBodyMessage-sc-1dtvgs1-28 bImUSw"
     >
       (no changes, no records)
     </div>
@@ -56,7 +56,7 @@ exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 exports[`AsciiViews AsciiView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-1 kyHRpW"
+    class="styled__PaddedDiv-sc-1dtvgs1-2 dOjNWv"
   >
     <pre>
       ╒═══╕
