@@ -25,8 +25,10 @@ export const StyledStream = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  padding: 0px 0px 100px 0px;
   overflow: auto;
+`
+export const Padding = styled.div`
+  padding-top: 100px;
 `
 
 // Frames
