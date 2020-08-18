@@ -32,7 +32,7 @@ describe('editor', () => {
   it('full screen is always in multiline', () => {
     cy.get('.CodeMirror-linenumber').should('contain', '$')
     // Go to full screen
-    cy.get('body').type('{esc}')
+    cy.get('body').type('{cmd}{ctrl}{alt}f')
     cy.get('.CodeMirror-linenumber').should('contain', '1')
 
     // Enter enters more lines

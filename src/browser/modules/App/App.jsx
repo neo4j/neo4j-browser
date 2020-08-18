@@ -81,6 +81,7 @@ import {
   getDesktopTheme
 } from 'browser-components/desktop-api/desktop-api.handlers'
 import { METRICS_EVENT } from 'shared/modules/udc/udcDuck'
+import { useKeyboardShortcuts } from './keyboardShortcuts'
 
 export function App(props) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
@@ -89,15 +90,7 @@ export function App(props) {
   )
   const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
 
-  useEffect(() => {
-    document.addEventListener('keyup', focusEditorOnSlash)
-    document.addEventListener('keyup', expandEditorOnEsc)
-
-    return () => {
-      document.removeEventListener('keyup', focusEditorOnSlash)
-      document.removeEventListener('keyup', expandEditorOnEsc)
-    }
-  }, [])
+  useKeyboardShortcuts(props.bus)
 
   const eventMetricsCallback = useRef(() => {})
 
@@ -111,16 +104,6 @@ export function App(props) {
       })
     return () => unsub && unsub()
   }, [])
-
-  const focusEditorOnSlash = e => {
-    if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) > -1) return
-    if (e.key !== '/') return
-    props.bus && props.bus.send(FOCUS)
-  }
-  const expandEditorOnEsc = e => {
-    if (e.keyCode !== 27) return
-    props.bus && props.bus.send(EXPAND)
-  }
 
   const {
     drawer,

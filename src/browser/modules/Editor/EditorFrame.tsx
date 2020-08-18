@@ -22,8 +22,13 @@ import React, { useState, useEffect, useRef } from 'react'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import Editor from './Editor'
+import {
+  printShortcut,
+  FULLSCREEN_SHORTCUT,
+  CARDSIZE_SHORTCUT
+} from 'browser/modules/App/keyboardShortcuts'
 import { Frame, FrameHeader, FrameHeaderText, UIControls } from './styled'
-import { EXPAND } from 'shared/modules/editor/editorDuck'
+import { EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
 import {
   ExpandIcon,
@@ -60,8 +65,6 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     }
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
-
   function toggleCardView() {
     const editorVal = (editorRef.current && editorRef.current.getValue()) || ''
     const lineCount = editorVal.split('\n').length
@@ -82,6 +85,9 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     }
   }
 
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
+  useEffect(() => bus && bus.take(CARDSIZE, toggleCardView))
+
   function discardEditor() {
     editorRef.current && editorRef.current.setValue('')
     sizeState !== 'LINE' && setSize('LINE')
@@ -90,13 +96,17 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   const buttons = [
     {
       onClick: toggleFullscreen,
-      title: isFullscreen ? 'Close fullscreen' : 'Fullscreen',
+      title: `${
+        isFullscreen ? 'Close fullscreen ' : 'Fullscreen'
+      } (${printShortcut(FULLSCREEN_SHORTCUT)})`,
       icon: isFullscreen ? <ContractIcon /> : <ExpandIcon />,
       testId: 'fullscreen'
     },
     {
       onClick: toggleCardView,
-      title: isCardSize ? 'Collapse' : 'Expand',
+      title: `${isCardSize ? 'Collapse' : 'Expand'} (${printShortcut(
+        CARDSIZE_SHORTCUT
+      )})`,
       icon: isCardSize ? <UpIcon /> : <DownIcon />,
       testId: 'cardSize'
     },
