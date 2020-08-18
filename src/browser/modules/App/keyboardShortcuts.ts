@@ -52,7 +52,7 @@ function matchesShortcut(e: KeyboardEvent, shortcut: Shortcut): boolean {
 
 function isOutsideTextArea(e: KeyboardEvent): boolean {
   const tagName = (e.target as HTMLElement).tagName
-  return ['INPUT', 'TEXTAREA'].indexOf(tagName) > -1
+  return ['INPUT', 'TEXTAREA'].indexOf(tagName) === -1
 }
 
 export function useKeyboardShortcuts(bus: Bus): void {
@@ -60,6 +60,7 @@ export function useKeyboardShortcuts(bus: Bus): void {
 
   const focusEditorOnSlash = (e: KeyboardEvent): void => {
     if (isOutsideTextArea(e) && matchesShortcut(e, FOCUS_SHORTCUT)) {
+      e.preventDefault()
       trigger(FOCUS)
     }
   }

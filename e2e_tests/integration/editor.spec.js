@@ -32,7 +32,7 @@ describe('editor', () => {
   it('full screen is always in multiline', () => {
     cy.get('.CodeMirror-linenumber').should('contain', '$')
     // Go to full screen
-    cy.get('body').type('{esc}')
+    cy.get('body').type('{cmd}{ctrl}{alt}f')
     cy.get('.CodeMirror-linenumber').should('contain', '1')
 
     // Enter enters more lines
@@ -72,7 +72,7 @@ describe('editor', () => {
     // discard resets size and clears editor
     cy.get(cardSizeButton).click()
     cy.get('.CodeMirror-linenumber').should('contain', '1')
-    cy.get('body').type('/test')
+    cy.get('body').type('{shift}7test')
     cy.get('.CodeMirror-line').contains('test')
     cy.get(discardButton).click()
     cy.get('.CodeMirror-linenumber').should('contain', '$')
