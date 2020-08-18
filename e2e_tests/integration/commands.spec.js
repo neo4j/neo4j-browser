@@ -64,7 +64,7 @@ describe('Commands', () => {
       .should('have.length', 2)
 
     // focus editor
-    cy.get('body').type('{shift}7')
+    cy.get('body').type('/')
     cy.get('.ReactCodeMirror textarea')
       .should('be', 'focused')
       .type(':clear{shift}{enter}')

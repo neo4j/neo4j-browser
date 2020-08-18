@@ -72,7 +72,7 @@ describe('editor', () => {
     // discard resets size and clears editor
     cy.get(cardSizeButton).click()
     cy.get('.CodeMirror-linenumber').should('contain', '1')
-    cy.get('body').type('{shift}7test')
+    cy.get('body').type('/test')
     cy.get('.CodeMirror-line').contains('test')
     cy.get(discardButton).click()
     cy.get('.CodeMirror-linenumber').should('contain', '$')
