@@ -49,9 +49,8 @@ export const prepareForExport = (svgElement, graphElement, type) => {
 }
 
 const getSvgDimensions = view => {
-  let boundingBox, dimensions
-  boundingBox = view.boundingBox()
-  dimensions = {
+  const boundingBox = view.boundingBox()
+  const dimensions = {
     width: boundingBox.width,
     height: boundingBox.height,
     viewBox: [

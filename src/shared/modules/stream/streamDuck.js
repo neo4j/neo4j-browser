@@ -63,7 +63,7 @@ function addFrame(state, newState) {
     return state
   }
 
-  let frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
+  const frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
   if (!newState.isRerun) {
     frameObject.stack.unshift(newState)
   } else {

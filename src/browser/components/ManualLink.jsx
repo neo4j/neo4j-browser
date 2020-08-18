@@ -71,7 +71,7 @@ export function ManualLink({
   const url = `https://neo4j.com/docs/${chapter}/${version}/${cleanPage}`
 
   return (
-    <a href={url} target="_blank">
+    <a href={url} target="_blank" rel="noreferrer">
       {content}
     </a>
   )

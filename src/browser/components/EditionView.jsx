@@ -30,7 +30,7 @@ export const EnterpriseOnlyFrame = ({ command }) => {
       </p>
       <p>
         Find out more over at{' '}
-        <a href="https://neo4j.com/editions/" target="_blank">
+        <a href="https://neo4j.com/editions/" target="_blank" rel="noreferrer">
           neo4j.com/editions
         </a>
       </p>

@@ -123,7 +123,9 @@ export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
     ) {
       return `${fallbackScheme}://`
     }
-    let scheme = allowedSchemes ? allowedSchemes[0] : fallbackScheme || 'neo4j'
+    const scheme = allowedSchemes
+      ? allowedSchemes[0]
+      : fallbackScheme || 'neo4j'
     return `${scheme}://`
   }
 

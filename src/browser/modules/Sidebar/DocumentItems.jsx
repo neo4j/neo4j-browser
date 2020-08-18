@@ -38,7 +38,11 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
       case 'link':
         return (
           <StyledHelpItem key={item.command}>
-            <StyledHelpLink href={item.command} target="_blank">
+            <StyledHelpLink
+              href={item.command}
+              target="_blank"
+              rel="noreferrer"
+            >
               {item.name}
             </StyledHelpLink>
           </StyledHelpItem>

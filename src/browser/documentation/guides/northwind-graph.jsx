@@ -154,6 +154,7 @@ CREATE (p)-[:PART_OF]->(c)`}
           Calculate join, materialize relationship. (See{' '}
           <a
             target="_blank"
+            rel="noreferrer"
             href="http://neo4j.com/developer/guide-importing-data-and-etl"
           >
             {' '}
@@ -338,13 +339,18 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
         <li>
           <a
             target="_blank"
+            rel="noreferrer"
             href="https://neo4j.com/developer/guide-importing-data-and-etl/"
           >
             Full Northwind import example
           </a>
         </li>
         <li>
-          <a target="_blank" href="https://neo4j.com/developer/">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://neo4j.com/developer/"
+          >
             Developer resources
           </a>
         </li>

@@ -34,7 +34,10 @@ interface ActionButton {
   iconColor?: string
 }
 
-const ActionButtons = ({ buttons, width = 24 }: ActionButtonProps) => (
+const ActionButtons = ({
+  buttons,
+  width = 24
+}: ActionButtonProps): JSX.Element => (
   <ActionButtonSection>
     {buttons.map((btn: ActionButton) => (
       <EditorButton

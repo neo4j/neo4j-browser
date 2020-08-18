@@ -269,6 +269,7 @@ RETURN DISTINCT surfer`}
         <li>
           <a
             target="_blank"
+            rel="noreferrer"
             href="https://neo4j.com/developer/guide-importing-data-and-etl/"
           >
             Full Northwind import example

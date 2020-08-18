@@ -30,7 +30,11 @@ const content = (
         <h3 className="hbaseline">Fonts</h3>
         <p>
           All regular text is in{' '}
-          <a target="_blank" href="https://fonts.google.com/specimen/Open+Sans">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://fonts.google.com/specimen/Open+Sans"
+          >
             Open Sans
           </a>
           , a &#8220;humanist sans serif typeface designed by Steve
@@ -38,7 +42,11 @@ const content = (
         </p>
         <p>
           Code appears in{' '}
-          <a target="_blank" href="https://github.com/tonsky/FiraCode">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/tonsky/FiraCode"
+          >
             Fira Code
           </a>
           , a &#8220;monospace font, designed for printed code listings and the

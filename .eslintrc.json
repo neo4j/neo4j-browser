@@ -7,7 +7,7 @@
   "rules": {
     "no-case-declarations": "off",
     "no-prototype-builtins": "off",
-    "prefer-const": "off",
+    "prefer-const": "warn",
     "no-async-promise-executor": "off",
     "react/jsx-handler-names": "off",
     "react/jsx-fragments": "off",
@@ -36,19 +36,27 @@
   },
   "settings": {
     "react": {
-      "version": "16.9.0"
+      "version": "detect"
     }
   },
   "overrides": [
     {
+      "parser": "@typescript-eslint/parser",
       "files": ["*.ts", "**/*.ts", "**/*.tsx"],
       "extends": [
-        "plugin:@typescript-eslint/recommended",
-        "prettier/@typescript-eslint"
+        "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+        "prettier/@typescript-eslint", // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
+        "plugin:react/recommended", // Uses the recommended rules from @eslint-plugin-react
+        "prettier/react" // disables react-specific linting rules that conflict with prettier
       ],
-      "plugins": ["@typescript-eslint/eslint-plugin"],
+      "plugins": [
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint",
+        "react"
+      ],
       "rules": {
-        "@typescript-eslint/explicit-function-return-type": "off"
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off" // remove this when migrated fully to ts. right now it makes warnings unreadable
       }
     }
   ]

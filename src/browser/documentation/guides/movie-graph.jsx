@@ -824,7 +824,11 @@ RETURN tom, m, coActors, m2, cruise`}
       <h3>Reference</h3>
       <ul className="undecorated">
         <li>
-          <a target="_blank" href="https://neo4j.com/developer/">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://neo4j.com/developer/"
+          >
             Developer resources
           </a>
         </li>
