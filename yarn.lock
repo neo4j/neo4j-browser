@@ -2359,6 +2359,11 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha1-nAiGeYdvN061mD8VDUeHqm+zLX4=
 
+"@types/uuid@^8.3.0":
+  version "8.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
+  integrity sha1-IVwjHf9zbVupJBDm1gIFDM5+Jz8=
+
 "@types/webpack-sources@*":
   version "0.1.7"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/webpack-sources/-/webpack-sources-0.1.7.tgz#0a330a9456113410c74a5d64180af0cbca007141"
