@@ -4924,7 +4924,7 @@ dom-converter@^0.2:
   dependencies:
     utila "~0.4"
 
-dom-serializer@0, dom-serializer@^0.2.1:
+dom-serializer@0:
   version "0.2.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-serializer/-/dom-serializer-0.2.2.tgz#1afb81f533717175d478655debc5e332d9f9bb51"
   integrity sha1-GvuB9TNxcXXUeGVd68XjMtn5u1E=
@@ -4971,13 +4971,6 @@ domhandler@^2.3.0:
   dependencies:
     domelementtype "1"
 
-domhandler@^3.0.0:
-  version "3.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/domhandler/-/domhandler-3.0.0.tgz#51cd13efca31da95bbb0c5bee3a48300e333b3e9"
-  integrity sha1-Uc0T78ox2pW7sMW+46SDAOMzs+k=
-  dependencies:
-    domelementtype "^2.0.1"
-
 domutils@1.5.1:
   version "1.5.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/domutils/-/domutils-1.5.1.tgz#dcd8488a26f563d61079e48c9f7b7e32373682cf"
@@ -4993,15 +4986,6 @@ domutils@^1.5.1:
   dependencies:
     dom-serializer "0"
     domelementtype "1"
-
-domutils@^2.0.0:
-  version "2.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/domutils/-/domutils-2.1.0.tgz#7ade3201af43703fde154952e3a868eb4b635f16"
-  integrity sha1-et4yAa9DcD/eFUlS46ho60tjXxY=
-  dependencies:
-    dom-serializer "^0.2.1"
-    domelementtype "^2.0.1"
-    domhandler "^3.0.0"
 
 duplexer@^0.1.1:
   version "0.1.1"
@@ -6649,16 +6633,6 @@ htmlparser2@^3.3.0:
     entities "^1.1.1"
     inherits "^2.0.1"
     readable-stream "^3.1.1"
-
-htmlparser2@^4.1.0:
-  version "4.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/htmlparser2/-/htmlparser2-4.1.0.tgz#9a4ef161f2e4625ebf7dfbe6c0a2f52d18a59e78"
-  integrity sha1-mk7xYfLkYl6/ffvmwKL1LRilnng=
-  dependencies:
-    domelementtype "^2.0.1"
-    domhandler "^3.0.0"
-    domutils "^2.0.0"
-    entities "^2.0.0"
 
 http-deceiver@^1.2.7:
   version "1.2.7"
@@ -10151,15 +10125,6 @@ postcss@^7.0.0, postcss@^7.0.14, postcss@^7.0.18, postcss@^7.0.2, postcss@^7.0.2
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-postcss@^7.0.27:
-  version "7.0.32"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/postcss/-/postcss-7.0.32.tgz#4310d6ee347053da3433db2be492883d62cec59d"
-  integrity sha1-QxDW7jRwU9o0M9sr5JKIPWLOxZ0=
-  dependencies:
-    chalk "^2.4.2"
-    source-map "^0.6.1"
-    supports-color "^6.1.0"
-
 precss@^2.0.0:
   version "2.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/precss/-/precss-2.0.0.tgz#7f567e3318e06d44c8fdbf9e58452e8358bf4b71"
@@ -11337,18 +11302,6 @@ sane@^4.0.3:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sanitize-html@^1.21.1:
-  version "1.27.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/sanitize-html/-/sanitize-html-1.27.0.tgz#42104a2d59f1a48b616b5165ad5349824861e580"
-  integrity sha1-QhBKLVnxpItha1FlrVNJgkhh5YA=
-  dependencies:
-    chalk "^2.4.1"
-    htmlparser2 "^4.1.0"
-    lodash "^4.17.15"
-    postcss "^7.0.27"
-    srcset "^2.0.1"
-    xtend "^4.0.1"
-
 sax@>=0.6.0, sax@^1.1.4:
   version "1.2.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -11795,11 +11748,6 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
-
-srcset@^2.0.1:
-  version "2.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/srcset/-/srcset-2.0.1.tgz#8f842d357487eb797f413d9c309de7a5149df5ac"
-  integrity sha1-j4QtNXSH63l/QT2cMJ3npRSd9aw=
 
 sshpk@^1.7.0:
   version "1.16.1"
