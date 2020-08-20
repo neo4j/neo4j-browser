@@ -79,8 +79,6 @@ describe('Multi database', () => {
       cy.executeCommand(':clear')
       const editor = () => cy.get('[data-testid="editor-wrapper"]')
 
-      editor().contains('neo4j$')
-
       cy.executeCommand(':use system')
       editor().contains('system$')
 
