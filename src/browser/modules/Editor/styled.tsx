@@ -82,6 +82,7 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
 `
 export const AnimationContainer = styled.div`
   min-height: 100px;
+  height: 100px;
   padding-top: ${editorPadding}px;
 `
 
