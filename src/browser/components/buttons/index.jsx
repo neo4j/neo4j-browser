@@ -58,8 +58,8 @@ const BaseButton = styled.span`
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.secondaryButtonBackground};
   border-radius: 50%;
-  width: ${props => props.width + 10}px;
-  height: ${props => props.width + 10}px;
+  width: 41px;
+  height: 39px;
   font-size: 28px;
   line-height: 28px;
   text-decoration: none;
