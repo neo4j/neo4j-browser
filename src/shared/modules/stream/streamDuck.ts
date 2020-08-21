@@ -33,10 +33,10 @@ export const ADD = 'frames/ADD'
 export const REMOVE = 'frames/REMOVE'
 export const CLEAR_ALL = 'frames/CLEAR_ALL'
 export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
-export const PIN = `${NAME}/PIN`
-export const UNPIN = `${NAME}/UNPIN`
+export const PIN = 'frames/PIN'
+export const UNPIN = 'frames/UNPIN'
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
-export const SET_MAX_FRAMES = `${NAME}/SET_MAX_FRAMES`
+export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 
 interface GlobalState {
   [NAME]: FramesState
@@ -254,21 +254,21 @@ export default function reducer(
     case APP_START:
       return { ...initialState, ...state }
     case ADD:
-      return addFrame(state, (action as AddFrameAction).state)
+      return addFrame(state, action.state)
     case REMOVE:
-      return removeFrame(state, (action as RemoveFrameAction).id)
+      return removeFrame(state, action.id)
     case CLEAR_ALL:
       return { ...initialState }
     case PIN:
-      return pinFrame(state, (action as PinFrameAction).id)
+      return pinFrame(state, action.id)
     case UNPIN:
-      return unpinFrame(state, (action as UnpinFrameAction).id)
+      return unpinFrame(state, action.id)
     case SET_RECENT_VIEW:
-      return setRecentViewHelper(state, (action as SetRecentViewAction).view)
+      return setRecentViewHelper(state, action.view)
     case SET_MAX_FRAMES:
       const newState = {
         ...state,
-        maxFrames: (action as SetMaxFramesAction).maxFrames
+        maxFrames: action.maxFrames
       }
       return ensureFrameLimit(newState)
     default:
