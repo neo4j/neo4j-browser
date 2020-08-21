@@ -23,10 +23,10 @@ import styled from 'styled-components'
 interface FullscreenProps {
   fullscreen: boolean
 }
-interface ResizeableProps {
-  fullscreen: boolean
+interface CardSizeProps {
   cardSize: boolean
 }
+type ResizeableProps = CardSizeProps & FullscreenProps
 
 const editorPadding = 10
 
@@ -80,9 +80,14 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
     font-variant-ligatures: none !important;
   }
 `
-export const AnimationContainer = styled.div`
-  min-height: 110px;
-  height: 110px;
+export const AnimationContainer = styled.div<CardSizeProps>`
+  ${(props): string => {
+    if (props.cardSize) {
+      return `min-height: 317px;`
+    }
+    return `min-height: 110px;
+height: 110px;`
+  }};
   padding-top: ${editorPadding}px;
   padding-bottom: ${editorPadding}px;
 `

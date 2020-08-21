@@ -143,7 +143,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   })
 
   return (
-    <AnimationContainer>
+    <AnimationContainer cardSize={isCardSize}>
       {transitions.map(
         ({ item, key, props }) =>
           item && (
