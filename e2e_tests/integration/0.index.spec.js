@@ -44,7 +44,9 @@ describe('Neo4j Browser', () => {
     cy.get('[data-testid="frameCommand"]')
       .first()
       .should('contain', ':server connect')
-    cy.get(ClearEditorButton).click()
+    cy.get(ClearEditorButton)
+      .click()
+      .should('not.exist')
   })
   it('can connect', () => {
     const password = Cypress.config('password')

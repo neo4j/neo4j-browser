@@ -19,6 +19,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useTransition, animated } from 'react-spring'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import Editor from './Editor'
@@ -27,7 +28,13 @@ import {
   FULLSCREEN_SHORTCUT,
   CARDSIZE_SHORTCUT
 } from 'browser/modules/App/keyboardShortcuts'
-import { Frame, FrameHeader, FrameHeaderText, UIControls } from './styled'
+import {
+  Frame,
+  FrameHeader,
+  FrameHeaderText,
+  UIControls,
+  AnimationContainer
+} from './styled'
 import { EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
 import {
@@ -46,6 +53,7 @@ type CodeEditor = {
 }
 
 export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
+  const [showEditor, setShowEditor] = useState(true)
   const [sizeState, setSize] = useState<EditorSize>('LINE')
   const isFullscreen = sizeState === 'FULLSCREEN'
   const isCardSize = sizeState === 'CARD'
@@ -91,6 +99,8 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   function discardEditor() {
     editorRef.current && editorRef.current.setValue('')
     sizeState !== 'LINE' && setSize('LINE')
+    setShowEditor(false)
+    setTimeout(() => setShowEditor(true), 500)
   }
 
   const buttons = [
@@ -119,30 +129,51 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   ]
 
   const TypedEditor: any = Editor // delete this when editor is ts
+  const standardStyle = {
+    height: '100%',
+    width: '100%',
+    marginLeft: 0,
+    marginTop: 0,
+    opacity: 1
+  }
+  const transitions = useTransition(showEditor, null, {
+    from: { ...standardStyle, opacity: 0, marginTop: -150 },
+    enter: { ...standardStyle },
+    leave: { ...standardStyle, opacity: 0, marginLeft: -300 }
+  })
 
   return (
-    <Frame fullscreen={isFullscreen}>
-      <FrameHeader>
-        <FrameHeaderText> </FrameHeaderText>
-        <UIControls>
-          {buttons.map(({ onClick, icon, title, testId }) => (
-            <FrameButton
-              key={`frame-${title}`}
-              title={title}
-              onClick={onClick}
-              data-testid={`editor-${testId}`}
-            >
-              {icon}
-            </FrameButton>
-          ))}
-        </UIControls>
-      </FrameHeader>
-      <TypedEditor
-        editorSize={sizeState}
-        setSize={setSize}
-        editorRef={editorRef}
-      />
-    </Frame>
+    <AnimationContainer>
+      {transitions.map(
+        ({ item, key, props }) =>
+          item && (
+            <animated.div key={key} style={props}>
+              <Frame fullscreen={isFullscreen}>
+                <FrameHeader>
+                  <FrameHeaderText> </FrameHeaderText>
+                  <UIControls>
+                    {buttons.map(({ onClick, icon, title, testId }) => (
+                      <FrameButton
+                        key={`frame-${title}`}
+                        title={title}
+                        onClick={onClick}
+                        data-testid={`editor-${testId}`}
+                      >
+                        {icon}
+                      </FrameButton>
+                    ))}
+                  </UIControls>
+                </FrameHeader>
+                <TypedEditor
+                  editorSize={sizeState}
+                  setSize={setSize}
+                  editorRef={editorRef}
+                />
+              </Frame>
+            </animated.div>
+          )
+      )}
+    </AnimationContainer>
   )
 }
 

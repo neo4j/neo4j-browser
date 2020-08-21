@@ -3,7 +3,7 @@
 exports[`RelatableViews RelatableView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+    class="styled__StyledStatsBar-sc-1dtvgs1-24 fieQou"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -87,7 +87,7 @@ exports[`RelatableViews RelatableView does not display bodyMessage if rows, and 
 exports[`RelatableViews TableStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+    class="styled__StyledStatsBar-sc-1dtvgs1-24 fieQou"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"
@@ -99,7 +99,7 @@ exports[`RelatableViews TableStatusbar displays no statusBarMessage 1`] = `
 exports[`RelatableViews TableStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-23 gWjkIU"
+    class="styled__StyledStatsBar-sc-1dtvgs1-24 fieQou"
   >
     <div
       class="Ellipsis-sc-1dn9bou-0 gzqRPC"

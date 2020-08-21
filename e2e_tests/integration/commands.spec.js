@@ -58,10 +58,10 @@ describe('Commands', () => {
     cy.get('[data-testid=drawerFavorites]').click()
     cy.get('.ReactCodeMirror textarea').should('not.be', 'focused')
 
-    // we now have 2 cards
+    // we now have 2 cards, and some hidden padding
     cy.get('[data-testid="stream"]')
       .children()
-      .should('have.length', 2)
+      .should('have.length', 3)
 
     // focus editor
     cy.get('body').type('/')
@@ -76,7 +76,7 @@ describe('Commands', () => {
     // editor is now cleared
     cy.get('[data-testid="stream"]')
       .children()
-      .should('have.length', 0)
+      .should('have.length', 1)
   })
   it('can run all simple commands not connected without blowing up', () => {
     commands.forEach(cmd => {

@@ -20,7 +20,7 @@
 
 import { connect } from 'react-redux'
 import React, { PureComponent } from 'react'
-import { StyledStream } from './styled'
+import { StyledStream, Padding } from './styled'
 
 import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
@@ -121,6 +121,7 @@ class Stream extends PureComponent {
           }
           return <MyFrame {...frameProps} key={frame.id} />
         })}
+        <Padding />
       </StyledStream>
     )
   }
