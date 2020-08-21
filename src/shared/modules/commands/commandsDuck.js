@@ -176,7 +176,7 @@ export const handleCommandEpic = (action$, store) =>
       }
       if (statements.length === 1) {
         // Single command
-        return store.dispatch(executeSingleCommand(statements[0], action))
+        return store.dispatch(executeSingleCommand(action.cmd, action))
       }
       const parentId = action.parentId || v4()
       store.dispatch(
