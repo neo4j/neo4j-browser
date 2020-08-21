@@ -129,10 +129,17 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   ]
 
   const TypedEditor: any = Editor // delete this when editor is ts
+  const standardStyle = {
+    height: '100%',
+    width: '100%',
+    marginLeft: 0,
+    marginTop: 0,
+    opacity: 1
+  }
   const transitions = useTransition(showEditor, null, {
-    from: { width: '100%', marginLeft: 0, marginTop: -150, opacity: 0 },
-    enter: { width: '100%', marginLeft: 0, marginTop: 0, opacity: 1 },
-    leave: { width: '100%', marginLeft: -300, marginTop: 0, opacity: 0 }
+    from: { ...standardStyle, opacity: 0, marginTop: -150 },
+    enter: { ...standardStyle },
+    leave: { ...standardStyle, opacity: 0, marginLeft: -300 }
   })
 
   return (
