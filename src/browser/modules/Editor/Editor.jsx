@@ -494,7 +494,7 @@ export class Editor extends Component {
     return (
       <Bar>
         <Header>
-          <ActionButtons width={15} buttons={buttons} />
+          <ActionButtons width={16} buttons={buttons} />
         </Header>
         <EditorWrapper fullscreen={isFullscreen} cardSize={isCardSize}>
           <Codemirror

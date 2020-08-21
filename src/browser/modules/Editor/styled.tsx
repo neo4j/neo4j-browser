@@ -45,8 +45,8 @@ export const Header = styled.div`
   border-radius: 4px 4px 0 0;
   display: flex;
   justify-content: flex-end;
-  padding-top: 7px
-  padding-right: 7px
+  padding-top: 7px;
+  margin-right: -5px;
 `
 
 export const ActionButtonSection = styled.div`
