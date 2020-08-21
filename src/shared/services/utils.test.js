@@ -155,10 +155,10 @@ describe('utils', () => {
   test('can move items in an array', () => {
     // Given
     const tests = [
-      { test: [1, 2, 3], from: -1, to: 1, expect: false },
-      { test: [1, 2, 3], from: 0, to: 3, expect: false },
-      { test: [1, 2, 3], from: 5, to: 1, expect: false },
-      { test: 'string', from: 0, to: 3, expect: false },
+      { test: [1, 2, 3], from: -1, to: 1, expect: [1, 2, 3] },
+      { test: [1, 2, 3], from: 0, to: 3, expect: [1, 2, 3] },
+      { test: [1, 2, 3], from: 5, to: 1, expect: [1, 2, 3] },
+      { test: 'string', from: 0, to: 3, expect: [] },
       { test: [1, 2, 3], from: 0, to: 1, expect: [2, 1, 3] },
       { test: [1, 2, 3], from: 2, to: 1, expect: [1, 3, 2] },
       { test: [1, 2, 3], from: 2, to: 0, expect: [3, 1, 2] }

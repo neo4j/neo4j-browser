@@ -110,9 +110,9 @@ export const flatten = arr =>
   arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
 
 export const moveInArray = (fromIndex, toIndex, arr) => {
-  if (!Array.isArray(arr)) return false
-  if (fromIndex < 0 || fromIndex >= arr.length) return false
-  if (toIndex < 0 || toIndex >= arr.length) return false
+  if (!Array.isArray(arr)) return []
+  if (fromIndex < 0 || fromIndex >= arr.length) return arr
+  if (toIndex < 0 || toIndex >= arr.length) return arr
   const newArr = [].concat(arr)
   const el = arr[fromIndex]
   newArr.splice(fromIndex, 1)

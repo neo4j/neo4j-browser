@@ -24,40 +24,40 @@ import 'rxjs/add/operator/mapTo'
 import { moveInArray } from 'services/utils'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { UPDATE as SETTINGS_UPDATE } from '../settings/settingsDuck'
+import { Epic } from 'redux-observable'
+import { Action } from 'redux'
+import { FrameView } from 'shared/modules/stream/frameViewTypes'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
 export const REMOVE = 'frames/REMOVE'
 export const CLEAR_ALL = 'frames/CLEAR_ALL'
 export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
-export const PIN = `${NAME}/PIN`
-export const UNPIN = `${NAME}/UNPIN`
+export const PIN = 'frames/PIN'
+export const UNPIN = 'frames/UNPIN'
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
-export const SET_MAX_FRAMES = `${NAME}/SET_MAX_FRAMES`
+export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 
-/**
- * Selectors
- */
-export function getFrame(state, id) {
+interface GlobalState {
+  [NAME]: FramesState
+}
+
+export function getFrame(state: GlobalState, id: string): FrameStack {
   return state[NAME].byId[id]
 }
 
-export function getFrames(state) {
+export function getFrames(state: GlobalState): FrameStack[] {
   return state[NAME].allIds.map(id => state[NAME].byId[id])
 }
 
-export function getFramesInContext(state, context) {
-  return getFrames(state).filter(f => f.context === context)
-}
-
-export function getRecentView(state) {
+export function getRecentView(state: GlobalState): null | FrameView {
   return state[NAME].recentView
 }
 
 /**
  * Reducer helpers
  */
-function addFrame(state, newState) {
+function addFrame(state: FramesState, newState: Frame) {
   if (newState.parentId && state.allIds.indexOf(newState.parentId) < 0) {
     // No parent
     return state
@@ -73,7 +73,7 @@ function addFrame(state, newState) {
     ...state.byId,
     [newState.id]: frameObject
   }
-  let allIds = [].concat(state.allIds)
+  let allIds = [...state.allIds]
 
   if (newState.parentId) {
     const currentStatements = byId[newState.parentId].stack[0].statements || []
@@ -102,7 +102,11 @@ function addFrame(state, newState) {
   })
 }
 
-function insertIntoAllIds(state, allIds, newState) {
+function insertIntoAllIds(
+  state: FramesState,
+  allIds: string[],
+  newState: Frame
+) {
   if (allIds.indexOf(newState.id) < 0) {
     // new frame
     const pos = findFirstFreePos(state)
@@ -111,7 +115,7 @@ function insertIntoAllIds(state, allIds, newState) {
   return allIds
 }
 
-function removeFrame(state, id) {
+function removeFrame(state: FramesState, id: string) {
   const byId = {
     ...state.byId
   }
@@ -124,9 +128,9 @@ function removeFrame(state, id) {
   }
 }
 
-function pinFrame(state, id) {
+function pinFrame(state: FramesState, id: string): FramesState {
   const pos = state.allIds.indexOf(id)
-  const allIds = moveInArray(pos, 0, state.allIds) // immutable operation
+  const allIds = moveInArray(pos, 0, state.allIds)
   const byId = {
     ...state.byId
   }
@@ -138,10 +142,10 @@ function pinFrame(state, id) {
   }
 }
 
-function unpinFrame(state, id) {
+function unpinFrame(state: FramesState, id: string): FramesState {
   const currentPos = state.allIds.indexOf(id)
   const pos = findFirstFreePos(state)
-  const allIds = moveInArray(currentPos, pos - 1, state.allIds) // immutable operation
+  const allIds = moveInArray(currentPos, pos - 1, state.allIds)
   const byId = {
     ...state.byId
   }
@@ -153,7 +157,7 @@ function unpinFrame(state, id) {
   }
 }
 
-function findFirstFreePos({ byId, allIds }) {
+function findFirstFreePos({ byId, allIds }: FramesState) {
   let freePos = -1
   allIds.forEach((id, index) => {
     if (freePos > -1 || byId[id].isPinned) return
@@ -162,14 +166,14 @@ function findFirstFreePos({ byId, allIds }) {
   return freePos === -1 ? allIds.length : freePos
 }
 
-function setRecentViewHelper(state, recentView) {
+function setRecentViewHelper(state: FramesState, recentView: FrameView) {
   return {
     ...state,
     recentView
   }
 }
 
-function ensureFrameLimit(state) {
+function ensureFrameLimit(state: FramesState) {
   const limit = state.maxFrames || 1
   if (state.allIds.length <= limit) return state
   const numToRemove = state.allIds.length - limit
@@ -185,18 +189,67 @@ function ensureFrameLimit(state) {
   }
 }
 
-/** Inital state */
-export const initialState = {
+interface ConnectionData {
+  authEnabled: boolean
+  authenticatedMethod: string
+  db: null
+  host: string
+  id: string
+  name: string
+  password: string
+  type: string
+  username: string
+}
+
+interface FrameError {
+  cmd: string
+  code: string
+  message: string
+  type: string
+}
+
+// When more code is typed, frame should be a union type of different frames
+interface Frame {
+  autoCommit: boolean
+  cmd: string
+  connectionData: ConnectionData
+  error: FrameError
+  id: string
+  initialSlide: number
+  isRerun: boolean
+  parentId: string
+  query: string
+  result: string
+  requestId: string
+  statements: string[]
+  ts: number
+  type: string
+  useDb: string | null
+}
+
+interface FrameStack {
+  stack: Frame[]
+  isPinned: boolean
+}
+
+interface FramesState {
+  allIds: string[]
+  byId: { [key: string]: FrameStack }
+  recentView: null | FrameView
+  maxFrames: number
+}
+
+export const initialState: FramesState = {
   allIds: [],
   byId: {},
   recentView: null,
   maxFrames: 30
 }
 
-/**
- * Reducer
- */
-export default function reducer(state = initialState, action) {
+export default function reducer(
+  state = initialState,
+  action: StreamActions
+): FramesState {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -213,15 +266,22 @@ export default function reducer(state = initialState, action) {
     case SET_RECENT_VIEW:
       return setRecentViewHelper(state, action.view)
     case SET_MAX_FRAMES:
-      const newState = { ...state, maxFrames: action.maxFrames }
+      const newState = {
+        ...state,
+        maxFrames: action.maxFrames
+      }
       return ensureFrameLimit(newState)
     default:
       return state
   }
 }
 
-// Action creators
-export function add(payload) {
+interface AddFrameAction {
+  type: typeof ADD
+  state: Frame
+}
+
+export function add(payload: Frame): AddFrameAction {
   return {
     type: ADD,
     state: {
@@ -231,47 +291,96 @@ export function add(payload) {
   }
 }
 
-export function remove(id) {
+interface RemoveFrameAction {
+  type: typeof REMOVE
+  id: string
+}
+
+export function remove(id: string): RemoveFrameAction {
   return {
     type: REMOVE,
     id
   }
 }
 
-export function clear() {
+interface ClearFramesAction {
+  type: typeof CLEAR_ALL
+}
+
+export function clear(): ClearFramesAction {
   return {
     type: CLEAR_ALL
   }
 }
 
-export function pin(id) {
+interface PinFrameAction {
+  type: typeof PIN
+  id: string
+}
+
+export function pin(id: string): PinFrameAction {
   return {
     type: PIN,
     id
   }
 }
 
-export function unpin(id) {
+interface UnpinFrameAction {
+  type: typeof UNPIN
+  id: string
+}
+
+export function unpin(id: string): UnpinFrameAction {
   return {
     type: UNPIN,
     id
   }
 }
 
-export function setRecentView(view) {
+interface SetRecentViewAction {
+  type: typeof SET_RECENT_VIEW
+  view: FrameView
+}
+
+export function setRecentView(view: FrameView): SetRecentViewAction {
   return {
     type: SET_RECENT_VIEW,
     view
   }
 }
 
+interface SetMaxFramesAction {
+  type: typeof SET_MAX_FRAMES
+  maxFrames: number
+}
+
+type StreamActions =
+  | AddFrameAction
+  | RemoveFrameAction
+  | ClearFramesAction
+  | PinFrameAction
+  | UnpinFrameAction
+  | SetRecentViewAction
+  | SetMaxFramesAction
+
+interface SettingsUpdateAction {
+  type: typeof SETTINGS_UPDATE
+  state: { maxFrames: number }
+}
+
 // Epics
-export const maxFramesConfigEpic = (action$, store) =>
+export const maxFramesConfigEpic: Epic<Action, GlobalState> = (
+  action$,
+  store
+) =>
   action$
     .ofType(SETTINGS_UPDATE)
     .do(action => {
-      const newMaxFrames = action.state.maxFrames
+      const newMaxFrames = (action as SettingsUpdateAction).state.maxFrames
       if (!newMaxFrames) return
-      store.dispatch({ type: SET_MAX_FRAMES, maxFrames: newMaxFrames })
+      store.dispatch({
+        type: SET_MAX_FRAMES,
+        maxFrames: newMaxFrames
+      } as SetMaxFramesAction)
     })
     .mapTo({ type: 'NOOP' })
