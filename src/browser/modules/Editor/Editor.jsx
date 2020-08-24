@@ -258,6 +258,12 @@ export class Editor extends Component {
   }
 
   setEditorValue(cmd) {
+    if (cmd.includes('\n') && this.props.editorSize === 'LINE') {
+      this.props.setSize('CARD')
+    }
+    if (!cmd.includes('\n') && this.props.editorSize === 'CARD') {
+      this.props.setSize('LINE')
+    }
     this.codeMirror.setValue(cmd)
     this.updateCode(undefined, undefined, () => {
       this.focusEditor()
