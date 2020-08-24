@@ -22,7 +22,6 @@ import { get, head, map, slice } from 'lodash-es'
 import { Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { HTMLEntities } from 'services/santize.utils'
 import {
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
@@ -35,7 +34,7 @@ import {
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import ClickableUrls, {
   convertUrlsToHrefTags
-} from '../../../components/clickable-urls'
+} from '../../../components/ClickableUrls'
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import { RelatableStyleWrapper, StyledJsonPre } from './relatable-view.styled'
@@ -113,16 +112,11 @@ const renderObject = entry => {
   if (isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
   return (
-    <StyledJsonPre
-      dangerouslySetInnerHTML={{
-        __html: convertUrlsToHrefTags(
-          HTMLEntities(
-            unescapeDoubleQuotesForDisplay(
-              stringifyMod(entry, stringModifier, true)
-            )
-          )
-        )
-      }}
+    <ClickableUrls
+      text={unescapeDoubleQuotesForDisplay(
+        stringifyMod(entry, stringModifier, true)
+      )}
+      WrappingTag={StyledJsonPre}
     />
   )
 }
