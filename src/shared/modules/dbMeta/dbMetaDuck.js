@@ -92,7 +92,7 @@ export const getEdition = state => state[NAME].server.edition
 export const getStoreSize = state => state[NAME].server.storeSize
 export const getClusterRole = state => state[NAME].role
 export const isEnterprise = state =>
-  ['enterprise', 'auraenterprise'].contains(state[NAME].server.edition)
+  ['enterprise', 'auraenterprise'].includes(state[NAME].server.edition)
 export const isBeta = state => /-/.test(state[NAME].server.version)
 export const getStoreId = state =>
   state[NAME] && state[NAME].server ? state[NAME].server.storeId : null
