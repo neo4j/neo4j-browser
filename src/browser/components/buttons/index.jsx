@@ -67,6 +67,9 @@ const BaseButton = styled.span`
   cursor: pointer;
   vertical-align: middle;
   display: inline-block;
+  &:hover {
+    opacity: 0.55;
+  }
 `
 
 export const StyledNavigationButton = styled.button`

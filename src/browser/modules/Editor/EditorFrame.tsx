@@ -100,7 +100,6 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     editorRef.current && editorRef.current.setValue('')
     sizeState !== 'LINE' && setSize('LINE')
     setShowEditor(false)
-    setTimeout(() => setShowEditor(true), 500)
   }
 
   const buttons = [
@@ -122,7 +121,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     },
     {
       onClick: discardEditor,
-      title: 'Discard',
+      title: 'Reset editor',
       icon: <CloseIcon />,
       testId: 'discard'
     }
@@ -130,27 +129,27 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
 
   const TypedEditor: any = Editor // delete this when editor is ts
   const standardStyle = {
-    height: '100%',
     width: '100%',
     marginLeft: 0,
     marginTop: 0,
     opacity: 1
   }
   const transitions = useTransition(showEditor, null, {
-    from: { ...standardStyle, opacity: 0, marginTop: -150 },
-    enter: { ...standardStyle },
-    leave: { ...standardStyle, opacity: 0, marginLeft: -300 }
+    from: { ...standardStyle, opacity: 0.5 },
+    enter: { ...standardStyle, opacity: 1 },
+    leave: { ...standardStyle, opacity: 0, marginLeft: -500 },
+    onDestroyed: () => setShowEditor(true)
   })
 
   return (
-    <AnimationContainer cardSize={isCardSize}>
+    <AnimationContainer>
       {transitions.map(
         ({ item, key, props }) =>
           item && (
             <animated.div key={key} style={props}>
               <Frame fullscreen={isFullscreen}>
                 <FrameHeader>
-                  <FrameHeaderText> </FrameHeaderText>
+                  <FrameHeaderText />
                   <UIControls>
                     {buttons.map(({ onClick, icon, title, testId }) => (
                       <FrameButton

@@ -80,14 +80,7 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
     font-variant-ligatures: none !important;
   }
 `
-export const AnimationContainer = styled.div<CardSizeProps>`
-  ${(props): string => {
-    if (props.cardSize) {
-      return `min-height: 317px;`
-    }
-    return `min-height: 110px;
-height: 110px;`
-  }};
+export const AnimationContainer = styled.div`
   padding-top: ${editorPadding}px;
   padding-bottom: ${editorPadding}px;
 `
@@ -95,9 +88,9 @@ height: 110px;`
 export const Frame = styled.div<FullscreenProps>`
   background-color: ${props => props.theme.secondaryBackground};
   border-radius: 2px;
+  padding-bottom: 1px;
   box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
     0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
-  height: 100%;
   ${(props): string => {
     if (props.fullscreen) {
       return `
