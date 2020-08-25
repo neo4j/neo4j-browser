@@ -3,7 +3,7 @@
 export const isEnterpriseEdition = () =>
   Cypress.config('serverEdition') === 'enterprise'
 
-export const isAura = () => Cypress.config('serverEdition') === 'aura'
+export const isAura = () => Cypress.config('serverEdition').startsWith('aura')
 
 export const isHttps = () => Cypress.config('baseUrl').startsWith('https')
 

@@ -42,10 +42,14 @@ export function extractServerInfo(res) {
     serverInfo.edition = res.records[0].get('edition')
   }
 
-  // Temporarily hardcoded solution for Aura
-  if (serverInfo.version === '4.0-aura') {
+  // Temporarily hardcoded solutions for Aura
+  if (['4.0-aura', '4.0-AuraProfessional'].includes(serverInfo.version)) {
     serverInfo.version = '4.0.0'
     serverInfo.edition = 'aura'
+  }
+  if (serverInfo.version === '4.0-AuraEnterprise') {
+    serverInfo.version = '4.0.0'
+    serverInfo.edition = 'auraenterprise'
   }
 
   return serverInfo
