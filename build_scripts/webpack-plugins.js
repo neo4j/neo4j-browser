@@ -39,32 +39,34 @@ module.exports = () => {
         NODE_ENV: JSON.stringify(helpers.nodeEnv)
       }
     }),
-    new CopyWebpackPlugin([
-      {
-        // Copy manifest-base file and pick wanted data from package.json
-        // and merge them into the manifest.json output file
-        from: path.resolve(helpers.browserPath, 'manifest-base.json'),
-        to: path.resolve(helpers.buildPath, 'manifest.json'),
-        transform: content => {
-          const packageJsonData = manifestGeneration.loadDataFromFile(
-            path.join(helpers.projectPath, 'package.json')
-          )
-          const wantedData = manifestGeneration.buildTargetObject(
-            packageJsonData,
-            'propertiesToCopyToManifest'
-          )
-          const mergedData = manifestGeneration.mergeObjects(
-            wantedData,
-            JSON.parse(content)
-          )
-          return JSON.stringify(mergedData, null, 2)
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          // Copy manifest-base file and pick wanted data from package.json
+          // and merge them into the manifest.json output file
+          from: path.resolve(helpers.browserPath, 'manifest-base.json'),
+          to: path.resolve(helpers.buildPath, 'manifest.json'),
+          transform: content => {
+            const packageJsonData = manifestGeneration.loadDataFromFile(
+              path.join(helpers.projectPath, 'package.json')
+            )
+            const wantedData = manifestGeneration.buildTargetObject(
+              packageJsonData,
+              'propertiesToCopyToManifest'
+            )
+            const mergedData = manifestGeneration.mergeObjects(
+              wantedData,
+              JSON.parse(content)
+            )
+            return JSON.stringify(mergedData, null, 2)
+          }
+        },
+        {
+          from: path.resolve(helpers.browserPath, 'images'),
+          to: helpers.assetsPath + '/images'
         }
-      },
-      {
-        from: path.resolve(helpers.browserPath, 'images'),
-        to: helpers.assetsPath + '/images'
-      }
-    ]),
+      ]
+    }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
