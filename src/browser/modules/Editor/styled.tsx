@@ -83,6 +83,13 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
 export const AnimationContainer = styled.div`
   padding-top: ${editorPadding}px;
   padding-bottom: ${editorPadding}px;
+
+  /* Workaround to only display one editor instance while react-spring is animating */
+  .springContainer {
+    :not(:first-child) {
+      display: none;
+    }
+  }
 `
 
 export const Frame = styled.div<FullscreenProps>`

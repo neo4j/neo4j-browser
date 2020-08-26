@@ -146,7 +146,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       {transitions.map(
         ({ item, key, props }) =>
           item && (
-            <animated.div key={key} style={props}>
+            <animated.div className="springContainer" key={key} style={props}>
               <Frame fullscreen={isFullscreen}>
                 <FrameHeader>
                   <FrameHeaderText />
