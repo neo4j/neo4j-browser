@@ -137,7 +137,14 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   const transitions = useTransition(showEditor, null, {
     from: { ...standardStyle, opacity: 0.5 },
     enter: { ...standardStyle, opacity: 1 },
-    leave: { ...standardStyle, opacity: 0, marginLeft: -500 },
+    leave: {
+      ...standardStyle,
+      opacity: 0,
+      marginLeft: -500,
+      position: 'absolute',
+      top: 10,
+      left: 0
+    },
     onDestroyed: () => setShowEditor(true)
   })
 

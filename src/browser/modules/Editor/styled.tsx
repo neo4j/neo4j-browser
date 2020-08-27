@@ -83,6 +83,8 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
 export const AnimationContainer = styled.div`
   padding-top: ${editorPadding}px;
   padding-bottom: ${editorPadding}px;
+  position: relative;
+  min-height: 112px;
 `
 
 export const Frame = styled.div<FullscreenProps>`
