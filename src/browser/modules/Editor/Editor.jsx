@@ -58,6 +58,7 @@ import pencil from 'icons/pencil.svg'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import ActionButtons from './ActionButtons'
+import { isMac } from 'browser/modules/App/keyboardShortcuts'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -482,13 +483,12 @@ export class Editor extends Component {
             },
         icon: this.state.contentId ? pencil : ratingStar,
         title: this.state.contentId ? 'Update favorite' : 'Favorite',
-        iconColor: this.state.contentId && this.props.theme.editModeButtonText,
         disabled: editorIsEmpty
       },
       {
         onClick: this.execCurrent,
         icon: controlsPlay,
-        title: 'Play',
+        title: isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)',
         disabled: editorIsEmpty,
         iconColor: this.props.theme.linkHover
       }

@@ -32,7 +32,7 @@ describe(':debug command', () => {
     const query = ':debug'
     cy.executeCommand(query)
 
-    let frame = cy.getFrames()
+    const frame = cy.getFrames()
 
     frame
       .should('have.length', 1)
@@ -52,7 +52,7 @@ describe(':debug command', () => {
     const query = ':debug'
     cy.executeCommand(query)
 
-    let frame = cy.getFrames()
+    const frame = cy.getFrames()
 
     frame
       .should('have.length', 1)
