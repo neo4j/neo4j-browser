@@ -1,6 +1,9 @@
 import { executeCommand } from '../../src/shared/modules/commands/commandsDuck'
+import { isMac } from '../../src/browser/modules/App/keyboardShortcuts'
 
-const SubmitQueryButton = '[data-testid="editorPlay"]'
+const SubmitQueryButton = isMac
+  ? '[data-testid="editorRun (⌘↩)"]'
+  : '[data-testid="editorRun (ctrl+enter)"]'
 const ClearEditorButton = '[data-testid="editor-discard"]'
 const Editor = '.ReactCodeMirror textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'

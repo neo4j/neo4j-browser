@@ -19,12 +19,15 @@
  */
 
 import { isAura, isEnterpriseEdition } from '../support/utils'
+import { isMac } from '../../src/browser/modules/App/keyboardShortcuts'
 
 /* global Cypress, cy, test, expect, before */
 
 const Editor = '.ReactCodeMirror textarea'
 const Carousel = '[data-testid="carousel"]'
-const SubmitQueryButton = '[data-testid="editorPlay"]'
+const SubmitQueryButton = isMac
+  ? '[data-testid="editorRun (⌘↩)"]'
+  : '[data-testid="editorRun (ctrl+enter)"]'
 const ClearEditorButton = '[data-testid="editor-discard"]'
 
 describe('Neo4j Browser', () => {
