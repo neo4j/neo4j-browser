@@ -121,7 +121,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     },
     {
       onClick: discardEditor,
-      title: 'Reset editor',
+      title: 'Close',
       icon: <CloseIcon />,
       testId: 'discard'
     }
