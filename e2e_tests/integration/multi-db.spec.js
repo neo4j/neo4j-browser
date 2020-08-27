@@ -194,7 +194,7 @@ describe('Multi database', () => {
 
         // Close first frame
         cy.get('[title="Close"]', { timeout: 10000 })
-          .first()
+          .eq(1)
           .click()
 
         // Make sure it's closed
