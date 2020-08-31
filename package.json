@@ -64,7 +64,6 @@
     "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "@cypress/webpack-preprocessor": "^5.4.2",
     "@hot-loader/react-dom": "^16.8.6",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
     "@testing-library/jest-dom": "^5.3.0",

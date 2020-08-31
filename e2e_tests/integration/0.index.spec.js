@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isAura, isEnterpriseEdition } from '../support/utils'
-import { isMac } from '../../src/browser/modules/App/keyboardShortcuts'
+import { isAura, isEnterpriseEdition, isMac } from '../support/utils'
 
 /* global Cypress, cy, test, expect, before */
 

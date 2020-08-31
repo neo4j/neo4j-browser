@@ -1,5 +1,4 @@
-import { executeCommand } from '../../src/shared/modules/commands/commandsDuck'
-import { isMac } from '../../src/browser/modules/App/keyboardShortcuts'
+import { isMac } from '../support/utils'
 
 const SubmitQueryButton = isMac
   ? '[data-testid="editorRun (⌘↩)"]'
@@ -7,14 +6,6 @@ const SubmitQueryButton = isMac
 const ClearEditorButton = '[data-testid="editor-discard"]'
 const Editor = '.ReactCodeMirror textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'
-
-const dispatch = action =>
-  cy
-    .window({ log: false })
-    .its('Cypress', { log: false })
-    .its('__store__', { log: false })
-    .invoke({ log: false }, 'dispatch', action)
-    .log(`Dispatching: ${JSON.stringify(action)}`)
 
 /* global Cypress, cy */
 
@@ -116,23 +107,14 @@ Cypress.Commands.add('disconnect', () => {
   cy.executeCommand(query)
 })
 
-Cypress.Commands.add('executeCommand', (query, options) => {
-  const dispatchable = [':server disconnect', ':server connect', ':clear']
-  if (dispatchable.includes(query)) {
-    dispatch(executeCommand(query))
-  } else {
-    cy.typeAndSubmit(query, options)
-  }
-  cy.wait(1000)
-})
-
-Cypress.Commands.add('typeAndSubmit', (query, options = {}) => {
+Cypress.Commands.add('executeCommand', (query, options = {}) => {
   cy.get(ClearEditorButton)
     .click()
     .should('not.exist')
   cy.get(Editor).type(query, { force: true, ...options })
   cy.wait(100)
   cy.get(SubmitQueryButton).click()
+  cy.wait(1000)
 })
 
 Cypress.Commands.add('disableEditorAutocomplete', () => {

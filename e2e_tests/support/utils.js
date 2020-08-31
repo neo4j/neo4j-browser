@@ -7,6 +7,8 @@ export const isAura = () => Cypress.config('serverEdition').startsWith('aura')
 
 export const isHttps = () => Cypress.config('baseUrl').startsWith('https')
 
+export const isMac = /Mac|iPad/.test(navigator.platform)
+
 export const getDesktopContext = (
   config,
   connectionCredsType = 'host',
