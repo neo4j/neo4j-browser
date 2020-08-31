@@ -119,19 +119,11 @@ Cypress.Commands.add('executeCommand', (query, options = {}) => {
 })
 
 Cypress.Commands.add('disableEditorAutocomplete', () => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
   cy.executeCommand(':config editorAutocomplete: false')
-  cy.get(SubmitQueryButton).click()
   cy.executeCommand(':clear')
 })
 Cypress.Commands.add('enableEditorAutocomplete', () => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
   cy.executeCommand(':config editorAutocomplete: true')
-  cy.get(SubmitQueryButton).click()
   cy.executeCommand(':clear')
 })
 Cypress.Commands.add('waitForCommandResult', () => {
