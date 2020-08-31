@@ -51,7 +51,7 @@ describe('Commands', () => {
     cy.get('input[data-testid="boltaddress"]', { timeout: 40000 })
   })
   it('can type in editor and run commands manually', () => {
-    cy.typeAndSubmit(':help help')
+    cy.executeCommand(':help help')
     cy.get('[data-testid="frameCommand"]').contains(':help help')
     // lose focus
     cy.get('[data-testid=drawerFavorites]').click()
