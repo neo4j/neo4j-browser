@@ -41,7 +41,7 @@ const ActionButtons = ({
   <ActionButtonSection>
     {buttons.map((btn: ActionButton) => (
       <EditorButton
-        data-testid={`editor${btn.title}`}
+        data-testid={`editor-${btn.title.split(' ')[0]}`}
         onClick={btn.onClick}
         disabled={btn.disabled}
         title={btn.title}
