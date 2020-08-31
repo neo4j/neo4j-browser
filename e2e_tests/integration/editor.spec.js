@@ -21,7 +21,8 @@
 /* global Cypress, cy, before */
 const fullscreenButton = '[data-testid="editor-fullscreen"]'
 const cardSizeButton = '[data-testid="editor-cardSize"]'
-const discardButton = '[data-testid="editor-discard"]'
+const ClearEditorButton =
+  '[data-testid="activeEditor"] [data-testid="editor-discard"]'
 
 describe('editor', () => {
   before(function() {
@@ -74,9 +75,7 @@ describe('editor', () => {
     cy.get('.CodeMirror-linenumber').should('contain', '1')
     cy.get('body').type('/test')
     cy.get('.CodeMirror-line').contains('test')
-    cy.get(discardButton)
-      .click()
-      .should('not.exist')
+    cy.get(ClearEditorButton).click()
     cy.get('.CodeMirror-linenumber').should('contain', '$')
     cy.get('.CodeMirror-line').should('not.contain.text', 'test')
   })

@@ -433,7 +433,7 @@ export class Editor extends Component {
       mode: this.state.mode,
       theme: 'cypher',
       gutters: ['cypher-hints'],
-      lineWrapping: true,
+      lineWrapping: false,
       autofocus: true,
       smartIndent: false,
       lineNumberFormatter: this.lineNumberFormatter,

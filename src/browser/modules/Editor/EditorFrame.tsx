@@ -33,7 +33,8 @@ import {
   FrameHeader,
   FrameHeaderText,
   UIControls,
-  AnimationContainer
+  AnimationContainer,
+  Padding
 } from './styled'
 import { EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
@@ -135,10 +136,16 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     opacity: 1
   }
   const transitions = useTransition(showEditor, null, {
-    from: { ...standardStyle, opacity: 0.5 },
+    from: {
+      ...standardStyle,
+      opacity: 0,
+      marginTop: -200,
+      position: 'absolute'
+    },
     enter: { ...standardStyle, opacity: 1 },
-    leave: { ...standardStyle, opacity: 0, marginLeft: -500 },
-    onDestroyed: () => setShowEditor(true)
+    leave: { ...standardStyle, opacity: 0, marginLeft: -1000 },
+    onDestroyed: () => setShowEditor(true),
+    config: { mass: 1, tension: 180, friction: 24, clamp: true }
   })
 
   return (
@@ -146,7 +153,12 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       {transitions.map(
         ({ item, key, props }) =>
           item && (
-            <animated.div className="springContainer" key={key} style={props}>
+            <animated.div
+              className="springContainer"
+              key={key}
+              style={props}
+              data-testid={showEditor ? 'activeEditor' : 'discardedEditor'}
+            >
               <Frame fullscreen={isFullscreen}>
                 <FrameHeader>
                   <FrameHeaderText />
@@ -172,6 +184,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
             </animated.div>
           )
       )}
+      <Padding cardSize={isCardSize} />
     </AnimationContainer>
   )
 }

@@ -1,10 +1,7 @@
-import { isMac } from '../support/utils'
-
-const SubmitQueryButton = isMac
-  ? '[data-testid="editorRun (⌘↩)"]'
-  : '[data-testid="editorRun (ctrl+enter)"]'
-const ClearEditorButton = '[data-testid="editor-discard"]'
-const Editor = '.ReactCodeMirror textarea'
+const SubmitQueryButton = '[data-testid="editor-Run"]'
+const ClearEditorButton =
+  '[data-testid="activeEditor"] [data-testid="editor-discard"]'
+const EditorTextField = '[data-testid="activeEditor"] textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'
 
 /* global Cypress, cy */
@@ -108,26 +105,20 @@ Cypress.Commands.add('disconnect', () => {
 })
 
 Cypress.Commands.add('executeCommand', (query, options = {}) => {
-  cy.get(ClearEditorButton).click()
-  cy.wait(1000)
-  cy.get(Editor).type(query, { force: true, ...options })
+  cy.get(EditorTextField).type(query, { force: true, ...options })
   cy.wait(100)
   cy.get(SubmitQueryButton).click()
   cy.wait(1000)
 })
 
 Cypress.Commands.add('disableEditorAutocomplete', () => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
+  cy.get(ClearEditorButton).click()
   cy.executeCommand(':config editorAutocomplete: false')
   cy.get(SubmitQueryButton).click()
   cy.executeCommand(':clear')
 })
 Cypress.Commands.add('enableEditorAutocomplete', () => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
+  cy.get(ClearEditorButton).click()
   cy.executeCommand(':config editorAutocomplete: true')
   cy.get(SubmitQueryButton).click()
   cy.executeCommand(':clear')

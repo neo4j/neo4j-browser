@@ -22,12 +22,11 @@ import { isAura, isEnterpriseEdition, isMac } from '../support/utils'
 
 /* global Cypress, cy, test, expect, before */
 
-const Editor = '.ReactCodeMirror textarea'
+const Editor = '[data-testid="activeEditor"] textarea'
 const Carousel = '[data-testid="carousel"]'
-const SubmitQueryButton = isMac
-  ? '[data-testid="editorRun (⌘↩)"]'
-  : '[data-testid="editorRun (ctrl+enter)"]'
-const ClearEditorButton = '[data-testid="editor-discard"]'
+const SubmitQueryButton = '[data-testid="editor-Run"]'
+const ClearEditorButton =
+  '[data-testid="activeEditor"] [data-testid="editor-discard"]'
 
 describe('Neo4j Browser', () => {
   before(function() {
@@ -47,8 +46,6 @@ describe('Neo4j Browser', () => {
       .first()
       .should('contain', ':server connect')
     cy.get(ClearEditorButton)
-      .click()
-      .should('not.exist')
   })
   it('can connect', () => {
     const password = Cypress.config('password')
@@ -158,7 +155,7 @@ describe('Neo4j Browser', () => {
     it('will clear local storage when clicking "Clear local data"', () => {
       const scriptName = 'foo'
       cy.get(Editor).type(`//${scriptName}`, { force: true })
-      cy.get('[data-testid="editorFavorite"]').click()
+      cy.get('[data-testid="editor-Favorite"]').click()
 
       cy.get('[data-testid="drawerFavorites"]').click()
       cy.get('.saved-scripts-list-item')
