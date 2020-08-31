@@ -108,9 +108,8 @@ Cypress.Commands.add('disconnect', () => {
 })
 
 Cypress.Commands.add('executeCommand', (query, options = {}) => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
+  cy.get(ClearEditorButton).click()
+  cy.wait(1000)
   cy.get(Editor).type(query, { force: true, ...options })
   cy.wait(100)
   cy.get(SubmitQueryButton).click()
