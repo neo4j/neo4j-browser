@@ -84,6 +84,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .CodeMirror {
     height: auto !important;
+  }
 
   .CodeMirror-scroll {
     overflow: hidden !important;
