@@ -70,7 +70,10 @@ class CypherScriptFrame extends Component {
                             {frames[id].cmd}
                           </PointerFrameCommand>
                           <StyledFrameTitlebarButtonSection>
-                            <StyledStatusSection title={`Status: ${status}`}>
+                            <StyledStatusSection
+                              data-testid="multi-statement-list-icon"
+                              title={`Status: ${status}`}
+                            >
                               <Icon status={status} />
                             </StyledStatusSection>
                           </StyledFrameTitlebarButtonSection>

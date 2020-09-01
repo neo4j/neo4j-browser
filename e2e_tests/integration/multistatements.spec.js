@@ -39,6 +39,7 @@ describe('Multi statements', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
+
   it('can run multiple statements (non open by default)', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(validQuery)
@@ -114,6 +115,7 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'ERROR')
   })
+
   if (Cypress.config('serverVersion') >= 4.0) {
     if (isEnterpriseEdition()) {
       it('Can use :use command in multi-statements', () => {
@@ -151,6 +153,7 @@ describe('Multi statements', () => {
           'have.length',
           1
         )
+
         const frame = cy
           .get('[data-testid="frame"]', { timeout: 10000 })
           .first()
@@ -164,24 +167,32 @@ describe('Multi statements', () => {
           .get('[data-testid="multi-statement-list-content"]')
           .should('have.length', 0)
 
-        // Check sidebar for test1
-        cy.wait(5000) // Wait to ensure last meta update in finished
+        // make sure last command finished
+        cy.get('[data-testid="multi-statement-list-icon"]')
+          .last()
+          .invoke('attr', 'title')
+          .should('equal', 'Status: success')
+
         cy.executeCommand(':use test1')
+        cy.executeCommand('MATCH (n) RETURN distinct labels(n);')
+        cy.get('[data-testid="frame"]', { timeout: 10000 })
+          .first()
+          .contains('Test1')
+
+        // Check sidebar for test1
         cy.get('[data-testid="drawerDBMS"]').click()
-        cy.wait(1000)
-        cy.contains('[data-testid="sidebarMetaItem"]', 'Test1', {
-          timeout: 5000
-        })
+        cy.get('[data-testid="sidebarMetaItem"]').contains('Test1')
         cy.get('[data-testid="drawerDBMS"]').click()
 
-        cy.wait(5000) // Wait to ensure last meta update in finished
         cy.executeCommand(':use test2')
-        cy.wait(1000)
+        cy.executeCommand('MATCH (n) RETURN distinct labels(n);')
+        cy.get('[data-testid="frame"]', { timeout: 10000 })
+          .first()
+          .contains('Test2')
+
         cy.get('[data-testid="drawerDBMS"]').click()
-        cy.wait(1000)
-        cy.contains('[data-testid="sidebarMetaItem"]', 'Test2', {
-          timeout: 5000
-        })
+
+        cy.get('[data-testid="sidebarMetaItem"]').contains('Test2')
         cy.get('[data-testid="drawerDBMS"]').click()
 
         cy.executeCommand(':use system')
