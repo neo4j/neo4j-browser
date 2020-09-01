@@ -19,7 +19,7 @@
  */
 
 import React, { Component } from 'react'
-import faker from 'faker'
+import words from './words'
 import { FormButton } from 'browser-components/buttons'
 import {
   StyledConnectionTextInput,
@@ -30,6 +30,11 @@ import {
 import Render from 'browser-components/Render'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import RevealablePasswordInput from './revealable-password-input'
+
+const getRandomWords = count =>
+  Array.from({ length: count }).map(
+    () => words[Math.floor(Math.random() * words.length)]
+  )
 
 export default class ChangePasswordForm extends Component {
   constructor(props) {
@@ -58,8 +63,8 @@ export default class ChangePasswordForm extends Component {
   }
 
   onSuggestPassword = () => {
-    const suggestedPassword = `${faker.random.words(3)} ${faker.random.number(
-      100
+    const suggestedPassword = `${getRandomWords(3).join('-')}-${Math.floor(
+      Math.random() * 1000
     )}`
     this.setState({
       newPassword: suggestedPassword,
