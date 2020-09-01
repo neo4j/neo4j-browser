@@ -2,7 +2,7 @@
   "animationDistanceThreshold": 5,
   "baseUrl": "http://localhost:8080",
   "chromeWebSecurity": false,
-  "defaultCommandTimeout": 4000,
+  "defaultCommandTimeout": 10000,
   "environmentVariables": {},
   "execTimeout": 60000,
   "fileServerFolder": "",
