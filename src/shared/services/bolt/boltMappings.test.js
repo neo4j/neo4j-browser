@@ -205,25 +205,25 @@ describe('boltMappings', () => {
     })
 
     test('should truncate field items when told to do so', () => {
-      let startNode = new neo4j.types.Node('1', ['Person'], {
+      const startNode = new neo4j.types.Node('1', ['Person'], {
         prop1: 'prop1'
       })
-      let endNode = new neo4j.types.Node('2', ['Movie'], {
+      const endNode = new neo4j.types.Node('2', ['Movie'], {
         prop2: 'prop2'
       })
-      let boltRecord = {
+      const boltRecord = {
         keys: ['p'],
         get: key => [startNode, endNode]
       }
 
-      let { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
+      const { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
         [boltRecord],
         neo4j.types,
         1
       )
       expect(nodes.length).toBe(1)
       expect(relationships.length).toBe(0)
-      let graphNode = nodes[0]
+      const graphNode = nodes[0]
       expect(graphNode).toBeDefined()
       expect(graphNode.labels).toEqual(['Person'])
       expect(graphNode.properties).toEqual({ prop1: 'prop1' })

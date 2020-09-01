@@ -21,6 +21,8 @@
 /* global Cypress, cy, test, expect, before */
 
 const nextSlideBtn = () => cy.get('[data-testid="nextSlide"]')
+const ClearEditorButton =
+  '[data-testid="activeEditor"] [data-testid="editor-discard"]'
 
 describe('Play command', () => {
   before(function() {
@@ -146,6 +148,7 @@ describe('Play command', () => {
 
     // Assert
     cy.getEditor().should('contain', 'CREATE')
+    cy.get(ClearEditorButton).click()
   })
   it('can link to a specific slide', () => {
     cy.executeCommand(':clear')

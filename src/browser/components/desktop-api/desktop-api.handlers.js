@@ -44,8 +44,8 @@ export const buildConnectionCreds = async (
 }
 
 export const getDesktopTheme = (_, newContext) => {
-  if (newContext.global.prefersColorScheme) {
+  if (newContext.global && newContext.global.prefersColorScheme) {
     return Promise.resolve(newContext.global.prefersColorScheme)
   }
-  return Promise.reject(new Error('No theme detected'))
+  return Promise.resolve(null)
 }

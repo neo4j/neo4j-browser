@@ -30,6 +30,10 @@ type ResizeableProps = CardSizeProps & FullscreenProps
 
 const editorPadding = 10
 
+export const Padding = styled.div<CardSizeProps>`
+  padding-top: ${props => (props.cardSize ? '300px' : '95px')};
+`
+
 export const Bar = styled.div`
   background-color: ${(props): string => props.theme.frameSidebarBackground};
   display: grid;
@@ -148,8 +152,7 @@ export const EditorWrapper = styled(BaseEditorWrapper)<ResizeableProps>`
            max-height: initial !important;
         }
       `
-    } else {
-      return ''
     }
+    return ''
   }};
 `

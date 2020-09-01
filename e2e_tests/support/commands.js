@@ -1,20 +1,8 @@
-import { executeCommand } from '../../src/shared/modules/commands/commandsDuck'
-import { isMac } from '../../src/browser/modules/App/keyboardShortcuts'
-
-const SubmitQueryButton = isMac
-  ? '[data-testid="editorRun (⌘↩)"]'
-  : '[data-testid="editorRun (ctrl+enter)"]'
-const ClearEditorButton = '[data-testid="editor-discard"]'
-const Editor = '.ReactCodeMirror textarea'
+const SubmitQueryButton = '[data-testid="editor-Run"]'
+const ClearEditorButton =
+  '[data-testid="activeEditor"] [data-testid="editor-discard"]'
+const EditorTextField = '[data-testid="activeEditor"] textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'
-
-const dispatch = action =>
-  cy
-    .window({ log: false })
-    .its('Cypress', { log: false })
-    .its('__store__', { log: false })
-    .invoke({ log: false }, 'dispatch', action)
-    .log(`Dispatching: ${JSON.stringify(action)}`)
 
 /* global Cypress, cy */
 
@@ -116,39 +104,19 @@ Cypress.Commands.add('disconnect', () => {
   cy.executeCommand(query)
 })
 
-Cypress.Commands.add('executeCommand', (query, options) => {
-  const dispatchable = [':server disconnect', ':server connect', ':clear']
-  if (dispatchable.includes(query)) {
-    dispatch(executeCommand(query))
-  } else {
-    cy.typeAndSubmit(query, options)
-  }
+Cypress.Commands.add('executeCommand', (query, options = {}) => {
+  cy.get(EditorTextField).type(query, { force: true, ...options })
+  cy.wait(100)
+  cy.get(SubmitQueryButton).click()
   cy.wait(1000)
 })
 
-Cypress.Commands.add('typeAndSubmit', (query, options = {}) => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
-  cy.get(Editor).type(query, { force: true, ...options })
-  cy.wait(100)
-  cy.get(SubmitQueryButton).click()
-})
-
 Cypress.Commands.add('disableEditorAutocomplete', () => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
   cy.executeCommand(':config editorAutocomplete: false')
-  cy.get(SubmitQueryButton).click()
   cy.executeCommand(':clear')
 })
 Cypress.Commands.add('enableEditorAutocomplete', () => {
-  cy.get(ClearEditorButton)
-    .click()
-    .should('not.exist')
   cy.executeCommand(':config editorAutocomplete: true')
-  cy.get(SubmitQueryButton).click()
   cy.executeCommand(':clear')
 })
 Cypress.Commands.add('waitForCommandResult', () => {
