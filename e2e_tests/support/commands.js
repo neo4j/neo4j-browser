@@ -56,7 +56,7 @@ Cypress.Commands.add(
     cy.get('button[data-testid="changePassword"]').click()
 
     cy.get('input[data-testid="changePassword"]').should('not.be.visible')
-    cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).should(
+    cy.get('[data-testid="frameCommand"]', { timeout: 30000 }).should(
       'contain',
       ':play start'
     )
