@@ -101,7 +101,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
 
     setAnimation({
       from: stable,
-      //  @ts-expect-error, library typing are wrong....
+      //  @ts-expect-error, library typings are wrong....
       to: [end, start, stable],
       config
     })
@@ -158,7 +158,6 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
 
   const TypedEditor: any = Editor // delete this when editor is ts
   const [props, setAnimation] = useSpring(() => ({
-    from: start,
     to: stable,
     config
   }))
@@ -168,7 +167,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       <animated.div
         className="springContainer"
         style={props}
-        data-testid={'activeEditor'}
+        data-testid="activeEditor"
       >
         <Frame fullscreen={isFullscreen}>
           <FrameHeader>
