@@ -233,6 +233,10 @@ export class Editor extends Component {
     this.loadCodeMirror()
   }
 
+  componentWillUnmount() {
+    clearInterval(this.codeMirror.display.blinker)
+  }
+
   loadCodeMirror = () => {
     if (this.codeMirror) {
       return
