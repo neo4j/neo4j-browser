@@ -30,10 +30,6 @@ type ResizeableProps = CardSizeProps & FullscreenProps
 
 const editorPadding = 10
 
-export const Padding = styled.div<CardSizeProps>`
-  padding-top: ${props => (props.cardSize ? '300px' : '95px')};
-`
-
 export const Bar = styled.div`
   background-color: ${(props): string => props.theme.frameSidebarBackground};
   display: grid;
@@ -84,16 +80,11 @@ const BaseEditorWrapper = styled.div<ResizeableProps>`
     font-variant-ligatures: none !important;
   }
 `
-export const AnimationContainer = styled.div`
+export const AnimationContainer = styled.div<CardSizeProps>`
   padding-top: ${editorPadding}px;
   padding-bottom: ${editorPadding}px;
-
-  /* Workaround to only display one editor instance while react-spring is animating */
-  .springContainer {
-    :not(:first-child) {
-      display: none;
-    }
-  }
+  position: relative;
+  min-height: ${props => (props.cardSize ? '317px' : '112px')};
 `
 
 export const Frame = styled.div<FullscreenProps>`

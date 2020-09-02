@@ -56,7 +56,8 @@
       ],
       "rules": {
         "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/no-explicit-any": "off" // remove this when migrated fully to ts. right now it makes warnings unreadable
+        "@typescript-eslint/no-explicit-any": "off", // remove this when migrated fully to ts. right now it makes warnings unreadable
+        "@typescript-eslint/ban-ts-comment": "off" // remove this when typings for react-spring allow multiple animation stages
       }
     }
   ]
