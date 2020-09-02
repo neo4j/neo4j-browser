@@ -19,7 +19,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react'
-import { useTransition, animated } from 'react-spring'
+import { useSpring, animated } from 'react-spring'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import Editor from './Editor'
@@ -53,7 +53,6 @@ type CodeEditor = {
 }
 
 export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
-  const [showEditor, setShowEditor] = useState(true)
   const [sizeState, setSize] = useState<EditorSize>('LINE')
   const isFullscreen = sizeState === 'FULLSCREEN'
   const isCardSize = sizeState === 'CARD'
@@ -99,7 +98,13 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   function discardEditor() {
     editorRef.current && editorRef.current.setValue('')
     sizeState !== 'LINE' && setSize('LINE')
-    setShowEditor(false)
+
+    setAnimation({
+      from: stable,
+      //  @ts-expect-error, library typing are wrong....
+      to: [end, start, stable],
+      config
+    })
   }
 
   const buttons = [
@@ -127,70 +132,67 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     }
   ]
 
-  const TypedEditor: any = Editor // delete this when editor is ts
-  const standardStyle = {
+  const start = {
     width: '100%',
-    marginLeft: 0,
-    marginTop: 0,
-    opacity: 1
+    position: 'absolute',
+    opacity: 0,
+    top: -100,
+    left: '0vw'
   }
-  const transitions = useTransition(showEditor, null, {
-    from: {
-      ...standardStyle,
-      opacity: 0.5,
-      marginTop: -50,
-      position: 'absolute'
-    },
-    enter: { ...standardStyle, opacity: 1 },
-    leave: {
-      ...standardStyle,
-      opacity: 0,
-      marginLeft: -1000,
-      position: 'absolute',
-      top: 10,
-      left: 0
-    },
-    // prevents batching of show editor true to avoid true+false in the same batch
-    onDestroyed: () => setTimeout(setShowEditor(true), 0),
-    config: { mass: 1, tension: 180, friction: 24, clamp: true }
-  })
+  const stable = {
+    width: '100%',
+    position: 'absolute',
+    opacity: 1,
+    top: 10,
+    left: '0vw'
+  }
+  const end = {
+    width: '100%',
+    position: 'absolute',
+    opacity: 0,
+    left: '-100vw',
+    top: 10
+  }
+
+  const config = { mass: 1, tension: 180, friction: 24, clamp: true }
+
+  const TypedEditor: any = Editor // delete this when editor is ts
+  const [props, setAnimation] = useSpring(() => ({
+    from: start,
+    to: stable,
+    config
+  }))
 
   return (
     <AnimationContainer cardSize={isCardSize}>
-      {transitions.map(
-        ({ item, key, props }) =>
-          item && (
-            <animated.div
-              className="springContainer"
-              key={key}
-              style={props}
-              data-testid={showEditor ? 'activeEditor' : 'discardedEditor'}
-            >
-              <Frame fullscreen={isFullscreen}>
-                <FrameHeader>
-                  <FrameHeaderText />
-                  <UIControls>
-                    {buttons.map(({ onClick, icon, title, testId }) => (
-                      <FrameButton
-                        key={`frame-${title}`}
-                        title={title}
-                        onClick={onClick}
-                        data-testid={`editor-${testId}`}
-                      >
-                        {icon}
-                      </FrameButton>
-                    ))}
-                  </UIControls>
-                </FrameHeader>
-                <TypedEditor
-                  editorSize={sizeState}
-                  setSize={setSize}
-                  editorRef={editorRef}
-                />
-              </Frame>
-            </animated.div>
-          )
-      )}
+      <animated.div
+        className="springContainer"
+        style={props}
+        data-testid={'activeEditor'}
+      >
+        <Frame fullscreen={isFullscreen}>
+          <FrameHeader>
+            <FrameHeaderText />
+            <UIControls>
+              {buttons.map(({ onClick, icon, title, testId }) => (
+                <FrameButton
+                  key={`frame-${title}`}
+                  title={title}
+                  onClick={onClick}
+                  data-testid={`editor-${testId}`}
+                >
+                  {icon}
+                </FrameButton>
+              ))}
+            </UIControls>
+          </FrameHeader>
+          <TypedEditor
+            editorSize={sizeState}
+            setSize={setSize}
+            editorRef={editorRef}
+          />
+        </Frame>
+      </animated.div>
     </AnimationContainer>
   )
 }
