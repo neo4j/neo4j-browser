@@ -150,7 +150,8 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       top: 10,
       left: 0
     },
-    onDestroyed: () => setShowEditor(true),
+    // prevents batching of show editor true to avoid true+false in the same batch
+    onDestroyed: () => setTimeout(setShowEditor(true), 0),
     config: { mass: 1, tension: 180, friction: 24, clamp: true }
   })
 
