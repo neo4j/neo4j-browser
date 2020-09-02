@@ -168,7 +168,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       <animated.div
         className="springContainer"
         style={props}
-        data-testid={'activeEditor'}
+        data-testid="activeEditor"
       >
         <Frame fullscreen={isFullscreen}>
           <FrameHeader>

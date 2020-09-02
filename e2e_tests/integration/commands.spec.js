@@ -56,7 +56,7 @@ describe('Commands', () => {
     // lose focus
     cy.get('[data-testid=drawerFavorites]').click()
     cy.get('[data-testid=drawerFavorites]').click()
-    cy.get('.ReactCodeMirror textarea').should('not.be', 'focused')
+    cy.get('.ReactCodeMirror textarea').should('not.have.focus')
 
     // we now have 2 cards, and some hidden padding
     cy.get('[data-testid="stream"]')
@@ -66,7 +66,7 @@ describe('Commands', () => {
     // focus editor
     cy.get('body').type('/')
     cy.get('.ReactCodeMirror textarea')
-      .should('be', 'focused')
+      .should('have.focus')
       .type(':clear{shift}{enter}')
 
     // we see line number in multiline view

@@ -160,7 +160,7 @@ describe('Neo4j Browser', () => {
       cy.get('[data-testid="drawerFavorites"]').click()
       cy.get('.saved-scripts-list-item')
         .first()
-        .should('be', scriptName)
+        .contains(scriptName)
 
       cy.get('[data-testid="drawerSync"]').click()
       cy.get('[data-testid="clearLocalData"]').click()
