@@ -33,8 +33,7 @@ import {
   FrameHeader,
   FrameHeaderText,
   UIControls,
-  AnimationContainer,
-  Padding
+  AnimationContainer
 } from './styled'
 import { EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
@@ -138,18 +137,25 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   const transitions = useTransition(showEditor, null, {
     from: {
       ...standardStyle,
-      opacity: 0,
-      marginTop: -200,
+      opacity: 0.5,
+      marginTop: -50,
       position: 'absolute'
     },
     enter: { ...standardStyle, opacity: 1 },
-    leave: { ...standardStyle, opacity: 0, marginLeft: -1000 },
+    leave: {
+      ...standardStyle,
+      opacity: 0,
+      marginLeft: -1000,
+      position: 'absolute',
+      top: 10,
+      left: 0
+    },
     onDestroyed: () => setShowEditor(true),
     config: { mass: 1, tension: 180, friction: 24, clamp: true }
   })
 
   return (
-    <AnimationContainer>
+    <AnimationContainer cardSize={isCardSize}>
       {transitions.map(
         ({ item, key, props }) =>
           item && (
@@ -184,7 +190,6 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
             </animated.div>
           )
       )}
-      <Padding cardSize={isCardSize} />
     </AnimationContainer>
   )
 }
