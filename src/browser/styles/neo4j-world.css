@@ -10,8 +10,7 @@
 }
 
 .nw {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'neo4j-world' !important;
+  font-family: 'neo4j-world', sans-serif !important;
   speak: none;
   font-style: normal;
   font-weight: normal;

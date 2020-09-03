@@ -145,7 +145,7 @@ export const DynamicTopics = ({ docs = {}, description = '', filter = [] }) => {
   }
 
   const types = {}
-  Object.keys(filteredDocs).map(key => {
+  Object.keys(filteredDocs).forEach(key => {
     const { title, chapters } = filteredDocs[key]
     types[key] = {
       title,
