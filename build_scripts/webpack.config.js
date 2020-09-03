@@ -62,7 +62,7 @@ module.exports = {
         splitChunks: {
           cacheGroups: {
             vendor: {
-              test: /[\\/]node_modules[\\/](react|react-dom|@firebase|d3|codemirror)[\\/]/,
+              test: /[\\/]node_modules[\\/](react|react-dom|@firebase|d3|codemirror|faker|remark-mdx|@mdx-js)[\\/]/,
               name: 'vendor',
               chunks: 'all'
             },
