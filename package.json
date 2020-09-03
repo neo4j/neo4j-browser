@@ -87,7 +87,7 @@
     "babel-runtime": "^6.26.0",
     "caniuse-lite": "^1.0.30001020",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.1.1",
+    "copy-webpack-plugin": "^6.0.3",
     "cross-env": "^6.0.3",
     "css-loader": "^1.0.0",
     "cypress": "4.12.1",
