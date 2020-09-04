@@ -9,7 +9,6 @@ describe('getRandomWords', () => {
     expect(oneWord.length).toEqual(1)
     expect(oneWord[0].length).toBeGreaterThan(2)
     expect(threeWords.length).toEqual(3)
-    expect(threeWords.length).toEqual(3)
     threeWords.forEach(word => expect(word.length).toBeGreaterThan(2))
   })
 })
