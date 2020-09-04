@@ -104,10 +104,7 @@ export function exportFavorites(favorites) {
   const grouped = sortAndGroupScriptsByPath(SLASH, favorites)
   const zipArchive = new JSZip()
   const dirMap = new Map([[SLASH, zipArchive]])
-  const joinPathParts = pathParts =>
-    pathParts.length > 1
-      ? `${SLASH}${join(pathParts, SLASH)}`
-      : `${SLASH}${join(pathParts, SLASH)}`
+  const joinPathParts = pathParts => `${SLASH}${join(pathParts, SLASH)}`
 
   zipArchive.file('.placeholder', 'forces directory creation')
   forEach(grouped, ([path, favorites]) => {

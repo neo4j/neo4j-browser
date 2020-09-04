@@ -295,7 +295,7 @@ export const parseTimeMillis = timeWithOrWithoutUnit => {
   const readUnit = time.match(/\D+/)
   const value = parseInt(time)
 
-  const unit = readUnit === undefined || readUnit === null ? 's' : readUnit[0] // Assume seconds
+  const unit = readUnit === null ? 's' : readUnit[0] // Assume seconds
 
   switch (unit) {
     case 'ms':

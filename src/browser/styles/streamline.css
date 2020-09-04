@@ -12,7 +12,7 @@
 }
 
 [data-icon]:before {
-  font-family: 'streamline' !important;
+  font-family: 'streamline', sans-serif !important;
   content: attr(data-icon);
   font-style: normal !important;
   font-weight: normal !important;
@@ -26,7 +26,7 @@
 
 [class^='sl-']:before,
 [class*=' sl-']:before {
-  font-family: 'streamline' !important;
+  font-family: 'streamline', sans-serif !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;

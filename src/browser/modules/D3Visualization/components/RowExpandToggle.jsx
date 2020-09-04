@@ -22,7 +22,7 @@ import React, { Component } from 'react'
 import { StyledRowToggle, StyledCaret } from './styled'
 
 const getHeightFromElem = rowElem =>
-  rowElem && rowElem ? rowElem.clientHeight : 0
+  rowElem && (rowElem ? rowElem.clientHeight : 0)
 
 export class RowExpandToggleComponent extends Component {
   state = {}
