@@ -8,5 +8,5 @@
     "allowJs": true,
     "noEmit": true
   },
-  "include": ["**/*.js"]
+  "include": ["**/*.ts"]
 }
