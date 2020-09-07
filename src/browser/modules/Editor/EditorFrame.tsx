@@ -35,7 +35,7 @@ import {
   UIControls,
   AnimationContainer
 } from './styled'
-import { EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
+import { EXPAND, SET_CONTENT, CARDSIZE } from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
 import {
   ExpandIcon,
@@ -96,8 +96,8 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   useEffect(() => bus && bus.take(CARDSIZE, toggleCardView))
 
   function discardEditor() {
-    editorRef.current && editorRef.current.setValue('')
     sizeState !== 'LINE' && setSize('LINE')
+    bus && bus.send(SET_CONTENT, { message: '' })
 
     setAnimation({
       from: stable,
