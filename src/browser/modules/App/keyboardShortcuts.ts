@@ -17,6 +17,10 @@ interface Shortcut {
   modifyers: ModifierKey[]
   key: string
 }
+export const OLD_FULLSCREEN_SHORTCUT: Shortcut = {
+  modifyers: [],
+  key: 'Escape'
+}
 export const FULLSCREEN_SHORTCUT: Shortcut = {
   modifyers: [modKey, 'altKey'],
   key: 'f'
@@ -65,8 +69,11 @@ export function useKeyboardShortcuts(bus: Bus): void {
     }
   }
 
-  const expandEditor = (e: KeyboardEvent): void => {
-    if (matchesShortcut(e, FULLSCREEN_SHORTCUT)) {
+  const fullscreenEditor = (e: KeyboardEvent): void => {
+    if (
+      matchesShortcut(e, FULLSCREEN_SHORTCUT) ||
+      matchesShortcut(e, OLD_FULLSCREEN_SHORTCUT)
+    ) {
       e.preventDefault()
       trigger(EXPAND)
     }
@@ -79,7 +86,11 @@ export function useKeyboardShortcuts(bus: Bus): void {
     }
   }
 
-  const keyboardShortcuts = [focusEditorOnSlash, expandEditor, cardSizeShortcut]
+  const keyboardShortcuts = [
+    focusEditorOnSlash,
+    fullscreenEditor,
+    cardSizeShortcut
+  ]
 
   useEffect(() => {
     keyboardShortcuts.forEach(shortcut =>
