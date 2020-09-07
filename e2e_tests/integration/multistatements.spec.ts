@@ -20,7 +20,7 @@
 
 import { isEnterpriseEdition } from '../support/utils'
 
-/* global Cypress, cy, test, expect, before, after */
+/* global Cypress, cy, before, after */
 
 describe('Multi statements', () => {
   const validQuery = 'RETURN 1; :config; RETURN 2;'

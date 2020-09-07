@@ -1,17 +1,19 @@
 /* global Cypress */
 
-export const isEnterpriseEdition = () =>
+export const isEnterpriseEdition = (): boolean =>
   Cypress.config('serverEdition') === 'enterprise'
 
-export const isAura = () => Cypress.config('serverEdition').startsWith('aura')
+export const isAura = (): boolean =>
+  Cypress.config('serverEdition').startsWith('aura')
 
-export const isHttps = () => Cypress.config('baseUrl').startsWith('https')
+export const isHttps = (): boolean =>
+  Cypress.config('baseUrl').startsWith('https')
 
 export const getDesktopContext = (
-  config,
+  config: (config: string) => any,
   connectionCredsType = 'host',
   status = 'ACTIVE'
-) => ({
+): any => ({
   projects: [
     {
       graphs: [
@@ -38,8 +40,8 @@ export const getDesktopContext = (
   ]
 })
 
-const getBoltConfig = (config, type) => {
-  const obj = {
+const getBoltConfig = (config: any, type: any) => {
+  const obj: any = {
     enabled: true,
     username: 'neo4j',
     password: config('password'),
@@ -54,7 +56,7 @@ const getBoltConfig = (config, type) => {
   return obj
 }
 
-export const stripScheme = url => {
+export const stripScheme = (url: string): string => {
   const [_scheme, ...rest] = (url || '').split('://')
   if (!rest || !rest.length) {
     return _scheme
@@ -62,7 +64,7 @@ export const stripScheme = url => {
   return rest.join('://')
 }
 
-export const schemeWithEncryptionFlag = scheme =>
+export const schemeWithEncryptionFlag = (scheme: string): string =>
   `${scheme}${isHttps() ? '+s' : ''}://`
-export const schemeWithInvertedEncryptionFlag = scheme =>
+export const schemeWithInvertedEncryptionFlag = (scheme: string): string =>
   `${scheme}${!isHttps() ? '+s' : ''}://`

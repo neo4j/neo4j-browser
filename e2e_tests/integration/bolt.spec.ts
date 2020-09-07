@@ -20,7 +20,7 @@
 
 import { isEnterpriseEdition } from '../support/utils'
 
-/* global Cypress, cy, test, expect, before */
+/* global Cypress, cy, before */
 
 describe('Bolt connections', () => {
   before(function() {

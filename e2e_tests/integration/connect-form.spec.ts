@@ -24,7 +24,7 @@ import {
   stripScheme
 } from '../support/utils'
 
-/* global Cypress, cy, test, expect, before */
+/* global Cypress, cy, before */
 
 const getBoltUrlField = () => cy.get('input[data-testid="boltaddress"]')
 const getBoltSchemeSelect = () =>

@@ -18,15 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isAura, isEnterpriseEdition, isMac } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
-/* global Cypress, cy, test, expect, before */
+/* global Cypress, cy, expect, before */
 
 const Editor = '[data-testid="activeEditor"] textarea'
 const Carousel = '[data-testid="carousel"]'
 const SubmitQueryButton = '[data-testid="editor-Run"]'
-const ClearEditorButton =
-  '[data-testid="activeEditor"] [data-testid="editor-discard"]'
 
 describe('Neo4j Browser', () => {
   before(function() {
@@ -45,7 +43,7 @@ describe('Neo4j Browser', () => {
     cy.get('[data-testid="frameCommand"]')
       .first()
       .should('contain', ':server connect')
-    cy.get(ClearEditorButton)
+    cy.get('[data-testid="activeEditor"] [data-testid="editor-discard"]')
   })
   it('can connect', () => {
     const password = Cypress.config('password')

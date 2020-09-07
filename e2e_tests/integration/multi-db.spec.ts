@@ -20,7 +20,7 @@
 
 import { isEnterpriseEdition } from '../support/utils'
 
-/* global Cypress, cy, test, expect, before, after */
+/* global Cypress, cy, expect, before */
 
 describe('Multi database', () => {
   const databaseList = () =>
@@ -42,14 +42,13 @@ describe('Multi database', () => {
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
-  after(() => {})
   it('can connect', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
   if (Cypress.config('serverVersion') >= 4.0) {
     if (isEnterpriseEdition()) {
-      it('shows a message indicating whether system updates have occured', () => {
+      it('shows a message indicating whether system updates have occurred', () => {
         cy.executeCommand(':clear')
 
         cy.executeCommand(':use system')

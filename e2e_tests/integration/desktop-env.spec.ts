@@ -21,7 +21,7 @@
 /* global Cypress, cy, before */
 import { isAura, getDesktopContext } from '../support/utils'
 
-let appContextListener
+let appContextListener: any
 
 describe('Neo4j Desktop environment', () => {
   before(() => {
@@ -30,7 +30,7 @@ describe('Neo4j Desktop environment', () => {
         win.neo4jDesktopApi = {
           getContext: () =>
             Promise.resolve(getDesktopContext(Cypress.config, 'host')),
-          onContextUpdate: fn => (appContextListener = fn.bind(fn))
+          onContextUpdate: (fn: any) => (appContextListener = fn.bind(fn))
         }
       }
     })

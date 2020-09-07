@@ -4,7 +4,7 @@ import './defaults'
 /* global Cypress */
 before(() => {
   const log = console.error
-  console.error = e => {
+  console.error = (e: any) => {
     const error = JSON.stringify(e)
     log(error)
     cy.log(`Got error: ${error}`)
@@ -14,7 +14,7 @@ before(() => {
 })
 
 afterEach(function() {
-  if (this.currentTest.state === 'failed') {
+  if (this.currentTest?.state === 'failed') {
     Cypress.runner.stop()
   }
 })
