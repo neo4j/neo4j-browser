@@ -81,8 +81,7 @@ export class Editor extends Component {
       mode: 'cypher',
       notifications: [],
       lastPosition: { line: 0, column: 0 },
-      contentId: null,
-      editorHeight: 0
+      contentId: null
     }
     if (this.props.bus) {
       this.props.bus.take(SET_CONTENT, msg => {
@@ -100,7 +99,6 @@ export class Editor extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !(
       nextState.contentId === this.state.contentId &&
-      nextState.editorHeight === this.state.editorHeight &&
       shallowEquals(nextState.notifications, this.state.notifications) &&
       deepEquals(nextProps.schema, this.props.schema) &&
       nextProps.editorSize === this.props.editorSize &&
@@ -263,9 +261,6 @@ export class Editor extends Component {
   }
 
   setEditorValue(cmd) {
-    if (cmd.includes('\n') && this.props.editorSize === 'LINE') {
-      this.props.setSize('CARD')
-    }
     if (!cmd.includes('\n') && this.props.editorSize === 'CARD') {
       this.props.setSize('LINE')
     }
@@ -415,12 +410,12 @@ export class Editor extends Component {
     }
   }
 
-  updateHeight = () => {
-    if (this.editor) {
-      const editorHeight = this.editor.editorReference.clientHeight
-      if (editorHeight !== this.state.editorHeight) {
-        this.setState({ editorHeight })
-      }
+  updateSize = () => {
+    const isLineSize = this.props.editorSize === 'LINE'
+    const hasOverflow =
+      this.codeMirror && this.codeMirror.getValue().includes('\n')
+    if (isLineSize && hasOverflow) {
+      this.props.setSize('CARD')
     }
   }
 
@@ -512,7 +507,7 @@ export class Editor extends Component {
               this.editor = ref
             }}
             onParsed={this.updateCode}
-            onChanges={this.updateHeight}
+            onChanges={this.updateSize}
             options={options}
             schema={this.props.schema}
             initialPosition={this.state.lastPosition}
