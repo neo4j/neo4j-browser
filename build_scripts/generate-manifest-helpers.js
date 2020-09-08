@@ -29,6 +29,14 @@ function loadDataFromFile(file) {
   }
 }
 
+function writeDataToFile(file, data) {
+  try {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2))
+  } catch (e) {
+    throw new Error('Could not write to file: ' + file + '. Error: ' + e)
+  }
+}
+
 function buildTargetObject(data, dataProp) {
   const out = {}
   const keys = data[dataProp] || []
@@ -42,6 +50,7 @@ function mergeObjects(source, target) {
 
 module.exports = {
   loadDataFromFile,
+  writeDataToFile,
   buildTargetObject,
   mergeObjects
 }
