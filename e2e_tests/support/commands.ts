@@ -1,6 +1,4 @@
 const SubmitQueryButton = '[data-testid="editor-Run"]'
-const ClearEditorButton =
-  '[data-testid="activeEditor"] [data-testid="editor-discard"]'
 const EditorTextField = '[data-testid="activeEditor"] textarea'
 const VisibleEditor = '[data-testid="editor-wrapper"]'
 

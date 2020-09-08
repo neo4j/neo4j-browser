@@ -26,7 +26,7 @@ Cypress.config(
   'boltPort',
   Cypress.env('bolt-url')
     ? removeUriScheme(Cypress.env('bolt-url')).split(':')[1]
-    : 7687
+    : '7687'
 )
 Cypress.config(
   'boltUrl',
@@ -37,8 +37,6 @@ Cypress.config(
 
 function removeUriScheme(uri = '') {
   const SEPARATOR = '://'
-  const [_skip, ...rest] = uri.includes(SEPARATOR)
-    ? uri.split(SEPARATOR)
-    : [, uri]
+  const [, ...rest] = uri.includes(SEPARATOR) ? uri.split(SEPARATOR) : [, uri]
   return rest.join(SEPARATOR)
 }

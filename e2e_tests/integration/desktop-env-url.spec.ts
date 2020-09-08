@@ -21,8 +21,8 @@
 /* global Cypress, cy, before */
 
 import { isAura, getDesktopContext } from '../support/utils'
-let appContextListener
-let appOnAgumentsChange
+let appContextListener: any
+let appOnAgumentsChange: any
 
 // This file only esists to be able to test the auto connect using
 // the host field.
@@ -35,8 +35,8 @@ describe('Neo4j Desktop environment using url field', () => {
         win.neo4jDesktopApi = {
           getContext: () =>
             Promise.resolve(getDesktopContext(Cypress.config, 'url')),
-          onContextUpdate: fn => (appContextListener = fn.bind(fn)),
-          onArgumentsChange: fn => (appOnAgumentsChange = fn.bind(fn))
+          onContextUpdate: (fn: any) => (appContextListener = fn.bind(fn)),
+          onArgumentsChange: (fn: any) => (appOnAgumentsChange = fn.bind(fn))
         }
       }
     })

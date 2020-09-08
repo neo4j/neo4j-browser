@@ -3,10 +3,10 @@
     "strict": true,
     "baseUrl": "../node_modules",
     "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress"],
+    "lib": ["es6", "dom", "es2017"],
+    "types": ["cypress", "node"],
     "allowJs": true,
     "noEmit": true
   },
-  "include": ["**/*.js"]
+  "include": ["**/*.ts"]
 }
