@@ -55,6 +55,7 @@ export const StyledFrame = styled.article`
 `
 
 export const StyledFrameBody = styled.div`
+  overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
     if (props.collapsed) {
