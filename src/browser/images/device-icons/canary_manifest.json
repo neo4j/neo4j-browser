@@ -1,0 +1,10 @@
+{
+  "name": "Neo4j Browser Canary",
+  "icons": [
+    {
+      "src": "/images/device-icons/64x64-canary.png",
+      "sizes": "64x6436",
+      "type": "image/png"
+    }
+  ]
+}
