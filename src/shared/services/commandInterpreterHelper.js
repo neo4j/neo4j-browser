@@ -789,10 +789,16 @@ ${param}`)
     }
   },
   {
-    name: 'test-edit',
-    match: cmd => cmd === 'test-edit',
-    exec: (action, cmdchar, put, store) => {
-      put(frames.add({ type: 'test-edit' }))
+    name: 'edit',
+    match: cmd => cmd.startsWith('edit'),
+    exec: (action, cmdchar, put) => {
+      put(
+        frames.add({
+          ...action,
+          query: action.cmd.split(`${cmdchar}edit`)[1].trim(),
+          type: 'edit'
+        })
+      )
     }
   },
   {

@@ -77,7 +77,7 @@ const getFrame = type => {
     'reset-db': UseDbFrame,
     dbs: DbsFrame,
     style: StyleFrame,
-    'test-edit': EditFrame,
+    edit: EditFrame,
     default: Frame
   }
   return trans[type] || trans.default
