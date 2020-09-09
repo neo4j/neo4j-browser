@@ -28,3 +28,5 @@ global.document.createRange = () => {
     getClientRects: () => []
   }
 }
+// needed for jest to import monaco
+document.queryCommandSupported = () => false
