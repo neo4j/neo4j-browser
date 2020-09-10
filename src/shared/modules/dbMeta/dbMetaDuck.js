@@ -34,8 +34,10 @@ import {
   setAuthEnabled,
   onLostConnection,
   getUseDb,
-  useDb
+  useDb,
+  getActiveConnectionData
 } from 'shared/modules/connections/connectionsDuck'
+import { executeSingleCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
@@ -448,11 +450,26 @@ export const dbMetaEpic = (some$, store) =>
 
                   store.dispatch(update({ databases }))
 
-                  // Currently not using a db
-                  if (!getUseDb(store.getState())) {
-                    const defaultDb = databases.filter(db => db.default)
-                    if (defaultDb.length) {
-                      store.dispatch(useDb(defaultDb[0].name))
+                  if (getUseDb(store.getState())) return Rx.Observable.of(null)
+
+                  const connectTo = getActiveConnectionData(store.getState())
+                    ?.connectTo
+
+                  if (connectTo) {
+                    const wantedDb = databases.find(
+                      ({ name }) =>
+                        name.toLowerCase() === connectTo.toLowerCase()
+                    )
+                    if (wantedDb) {
+                      store.dispatch(useDb(wantedDb.name))
+                    } else {
+                      // this will show the db not found frame
+                      store.dispatch(executeSingleCommand(`:use ${connectTo}`))
+                    }
+                  } else {
+                    const defaultDb = databases.find(db => db.default)
+                    if (defaultDb) {
+                      store.dispatch(useDb(defaultDb.name))
                     }
                   }
                   return Rx.Observable.of(null)

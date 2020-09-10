@@ -30,7 +30,8 @@ export default class InputEnterStepping extends Component {
   }
 
   onKeyDown = (e, i) => {
-    if (e.keyCode === 13) {
+    const ENTER_KEYCODE = 13
+    if (e.keyCode === ENTER_KEYCODE) {
       e.preventDefault()
       if (i !== this.steps.length - 1) {
         this.steps[i + 1].focusFn && this.steps[i + 1].focusFn()

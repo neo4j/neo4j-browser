@@ -86,6 +86,9 @@ const updateDiscoveryState = (action, store) => {
   if (action.password) {
     updateObj.password = action.password
   }
+  if (action.connectTo) {
+    updateObj.connectTo = action.connectTo
+  }
   if (typeof action.encrypted !== 'undefined') {
     updateObj.encrypted = action.encrypted
   }
@@ -112,9 +115,15 @@ export const discoveryOnStartupEpic = (some$, store) => {
     .ofType(APP_START)
     .map(action => {
       if (!action.url) return action
-      const passedURL = getUrlParamValue('connectURL', action.url)
+      const passedURL =
+        getUrlParamValue('dbms', action.url) ||
+        getUrlParamValue('connectURL', action.url)
+
+      const passedDb = getUrlParamValue('db', action.url)
+
       if (!passedURL || !passedURL.length) return action
       action.forceURL = decodeURIComponent(passedURL[0])
+      action.connectTo = passedDb && passedDb[0]
       return action
     })
     .merge(some$.ofType(USER_CLEAR))

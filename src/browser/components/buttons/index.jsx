@@ -217,27 +217,27 @@ export const FormButton = props => {
 
   if (icon && label) {
     return (
-      <ButtonType {...rest} type="button">
+      <ButtonType type="button" {...rest}>
         {label} {icon}
       </ButtonType>
     )
   }
   if (icon) {
     return (
-      <ButtonType {...rest} type="button">
+      <ButtonType type="button" {...rest}>
         {icon}
       </ButtonType>
     )
   }
   if (label) {
     return (
-      <ButtonType {...rest} type="button">
+      <ButtonType type="button" {...rest}>
         {label}
       </ButtonType>
     )
   }
   return (
-    <ButtonType {...props} type="button">
+    <ButtonType type="button" {...props}>
       {children}
     </ButtonType>
   )
