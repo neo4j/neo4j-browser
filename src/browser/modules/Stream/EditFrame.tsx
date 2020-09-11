@@ -18,14 +18,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
-import Monaco from '../Editor/Monaco'
+import React, { Dispatch, useRef } from 'react'
+import { connect } from 'react-redux'
+import { Action } from 'redux'
+import Monaco, { monacoHandles } from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import { Frame } from 'shared/modules/stream/streamDuck'
 
-const EditFrame = (props: { query: string }): JSX.Element => {
-  const { query } = props
-  console.log(query)
-  return <FrameTemplate header={'query'} contents={<Monaco></Monaco>} />
+interface EditFrameProps {
+  frame: Frame
+  runQuery: (query: string) => void
 }
 
-export default EditFrame
+const EditFrame = ({ frame, runQuery }: EditFrameProps): JSX.Element => {
+  const monaco = useRef<monacoHandles>(null)
+
+  return (
+    <FrameTemplate
+      contents={<Monaco ref={monaco}></Monaco>}
+      header={frame}
+      runQuery={() => {
+        const value = monaco.current?.getValue() || ''
+        runQuery(value)
+      }}
+    />
+  )
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  runQuery: (query: string) => {
+    dispatch(executeCommand(query))
+    // todo update query and cmd in store.frames?
+  }
+})
+
+export default connect(null, mapDispatchToProps)(EditFrame)

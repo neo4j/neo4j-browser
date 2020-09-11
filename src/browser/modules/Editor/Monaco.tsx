@@ -19,32 +19,52 @@
  */
 
 import * as monaco from 'monaco-editor'
-import React, { useEffect, useState, useRef } from 'react'
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef
+} from 'react'
 
-const Monaco: React.FC = () => {
-  const editorRef = (useRef(null) as unknown) as React.MutableRefObject<
-    monaco.editor.IStandaloneCodeEditor
-  >
-  const [text, setText] = useState('')
-  console.log(text)
-
-  useEffect(() => {
-    editorRef.current = monaco.editor.create(
-      document.getElementById('mon-editor') as HTMLElement
-    )
-
-    editorRef.current.onDidChangeModelContent(() => {
-      setText(editorRef.current.getValue())
-      console.log(editorRef.current.getValue())
-    })
-
-    // todo dispose of editor
-  }, [])
-  return (
-    <>
-      <div id="mon-editor" style={{ height: '700px', width: '500px' }} />
-    </>
-  )
+export interface monacoHandles {
+  getValue: () => string
+  setValue: (value: string) => void
+  dispose: () => void
 }
+
+const Monaco = forwardRef<monacoHandles, any>(
+  (_props, ref): JSX.Element => {
+    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+
+    useEffect(() => {
+      editorRef.current = monaco.editor.create(
+        document.getElementById('mon-editor') as HTMLElement,
+        { automaticLayout: true }
+      )
+
+      editorRef.current.onDidChangeModelContent(() => {
+        console.log(editorRef.current?.getValue())
+      })
+
+      return () => {
+        editorRef.current?.dispose()
+      }
+    }, [])
+
+    useImperativeHandle(ref, () => ({
+      getValue() {
+        return editorRef.current?.getValue() || ''
+      },
+      setValue(value) {
+        editorRef.current?.setValue(value)
+      },
+      dispose() {
+        editorRef.current?.dispose()
+      }
+    }))
+
+    return <div id="mon-editor" style={{ height: 'auto', width: '100%' }} />
+  }
+)
 
 export default Monaco

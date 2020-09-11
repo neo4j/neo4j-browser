@@ -209,7 +209,7 @@ interface FrameError {
 }
 
 // When more code is typed, frame should be a union type of different frames
-interface Frame {
+export interface Frame {
   autoCommit: boolean
   cmd: string
   connectionData: ConnectionData
