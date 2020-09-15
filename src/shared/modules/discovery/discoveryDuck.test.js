@@ -145,7 +145,7 @@ describe('discoveryOnStartupEpic', () => {
     // When
     store.dispatch(action)
   })
-  test('listens on APP_START and finds all of bolt_routing, bolt_direct and a bold host and dispatches an action with the found bolt_routing host', done => {
+  test('listens on APP_START and finds all of bolt_routing, bolt_direct and a bolt host and dispatches an action with the found bolt_routing host', done => {
     // Given
     const action = { type: APP_START, env: WEB }
     const expectedHost = 'neo4j://myhost:7777'
@@ -189,6 +189,52 @@ describe('discoveryOnStartupEpic', () => {
     // When
     store.dispatch(action)
   })
+
+  test('also reads to dbms param', done => {
+    // Given
+    const action = {
+      type: APP_START,
+      url: 'http://localhost/?dbms=myhost:8888'
+    }
+    const expectedURL = 'myhost:8888'
+    bus.take(discovery.DONE, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        discovery.updateDiscoveryConnection({ host: expectedURL }),
+        currentAction
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+
+  test('dispatches a useDb action when given gb param', done => {
+    // Given
+    const action = {
+      type: APP_START,
+      url: 'http://localhost/?dbms=myhost:8888&db=test'
+    }
+    const expectedURL = 'myhost:8888'
+    bus.take(discovery.DONE, currentAction => {
+      // Then
+      expect(store.getActions()).toEqual([
+        action,
+        discovery.updateDiscoveryConnection({
+          host: expectedURL,
+          connectTo: 'test'
+        }),
+        currentAction
+      ])
+      done()
+    })
+
+    // When
+    store.dispatch(action)
+  })
+
   test('listens on APP_START and reads bolt URL from location URL and dispatches an action with the found host, incl protocol', done => {
     // Given
     const action = {

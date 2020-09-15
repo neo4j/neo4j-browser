@@ -105,5 +105,19 @@ describe('Connect form', () => {
       cy.connect('neo4j', Cypress.config('password'), boltUrl)
       cy.executeCommand(':server disconnect')
     })
+
+    it.only('extracts params and prefills form', () => {
+      cy.visit('/?dbms=bolt://username@localhost:7687&db=system')
+
+      cy.get('[data-testid=database]').should('have.value', 'system')
+      cy.get('[data-testid=username]')
+        .should('have.value', 'username')
+        .clear()
+        .type('neo4j')
+      cy.get('[data-testid=password]')
+        .type(Cypress.config('password'))
+        .type('{enter}')
+      cy.get('[data-testid="editor-wrapper"]').contains('system')
+    })
   }
 })

@@ -79,20 +79,15 @@ export const getBoltHost = state => {
 }
 
 const updateDiscoveryState = (action, store) => {
-  const updateObj = { host: action.forceURL }
-  if (action.username) {
-    updateObj.username = action.username
-  }
-  if (action.password) {
-    updateObj.password = action.password
-  }
-  if (action.connectTo) {
-    updateObj.connectTo = action.connectTo
-  }
+  const keysToCopy = ['username', 'password', 'connectTo', 'restApi']
+  const updateObj = keysToCopy.reduce(
+    (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
+    { host: action.forceURL }
+  )
+
   if (typeof action.encrypted !== 'undefined') {
     updateObj.encrypted = action.encrypted
   }
-  updateObj.restApi = action.restApi
 
   const updateAction = updateDiscoveryConnection(updateObj)
   store.dispatch(updateAction)
