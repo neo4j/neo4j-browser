@@ -79,7 +79,7 @@ export const getBoltHost = state => {
 }
 
 const updateDiscoveryState = (action, store) => {
-  const keysToCopy = ['username', 'connectTo', 'restApi']
+  const keysToCopy = ['username', 'connectTo', 'restApi', 'showDbField']
   const updateObj = keysToCopy.reduce(
     (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
     { host: action.forceURL }
@@ -133,6 +133,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
           {
             ...action,
             username,
+            showDbField: !!action.connectTo,
             forceURL: `${protocol ? `${protocol}//` : ''}${host}`
           },
           store
@@ -144,7 +145,10 @@ export const discoveryOnStartupEpic = (some$, store) => {
           .getJSON(getDiscoveryEndpoint(getHostedUrl(store.getState())))
           // Uncomment below and comment out above when doing manual tests in dev mode to
           // fake discovery response
-          // Promise.resolve({ bolt: 'bolt://localhost:7687' })
+          //Promise.resolve({
+          // bolt: 'bolt://localhost:7687',
+          //neo4j_version: '4.0.3'
+          //})
           .then(result => {
             let host =
               result &&
@@ -157,7 +161,11 @@ export const discoveryOnStartupEpic = (some$, store) => {
               getAllowedBoltSchemes(store.getState()),
               host
             )
-            store.dispatch(updateDiscoveryConnection({ host })) // Update discovery host in redux
+            const supportsMultiDb =
+              parseInt((result.neo4j_version || '0').charAt(0)) >= 4
+            store.dispatch(
+              updateDiscoveryConnection({ host, showDbField: supportsMultiDb })
+            ) // Update discovery host in redux
             return { type: DONE }
           })
           .catch(e => {

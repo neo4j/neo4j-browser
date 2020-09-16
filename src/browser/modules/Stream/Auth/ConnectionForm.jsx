@@ -316,6 +316,7 @@ export class ConnectionForm extends Component {
           authenticationMethod={this.state.authenticationMethod}
           used={this.state.used}
           allowedSchemes={this.props.allowedSchemes}
+          showDbField={this.state.showDbField}
         />
       )
     }

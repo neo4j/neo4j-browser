@@ -55,6 +55,7 @@ interface ConnectFormProps {
   password: string
   username: string
   used: boolean
+  showDbField: boolean
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
@@ -149,17 +150,19 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             />
           )}
         </StyledConnectionFormEntry>
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>
-            Database
-            <StyledConnectionTextInput
-              data-testid="database"
-              onChange={props.onDatabaseChange}
-              value={props.database}
-              placeholder="default database"
-            />
-          </StyledConnectionLabel>
-        </StyledConnectionFormEntry>
+        {props.showDbField && (
+          <StyledConnectionFormEntry>
+            <StyledConnectionLabel>
+              Database
+              <StyledConnectionTextInput
+                data-testid="database"
+                onChange={props.onDatabaseChange}
+                value={props.database}
+                placeholder="default database"
+              />
+            </StyledConnectionLabel>
+          </StyledConnectionFormEntry>
+        )}
       </div>
 
       <div style={{ display: 'flex' }}>
