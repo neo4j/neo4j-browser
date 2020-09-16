@@ -94,7 +94,10 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        discovery.updateDiscoveryConnection({
+          host: expectedHost,
+          showDbField: false
+        }),
         { type: discovery.DONE }
       ])
       done()
@@ -115,7 +118,10 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        discovery.updateDiscoveryConnection({
+          host: expectedHost,
+          showDbField: false
+        }),
         { type: discovery.DONE }
       ])
       done()
@@ -136,7 +142,10 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        discovery.updateDiscoveryConnection({
+          host: expectedHost,
+          showDbField: false
+        }),
         { type: discovery.DONE }
       ])
       done()
@@ -160,7 +169,10 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        discovery.updateDiscoveryConnection({
+          host: expectedHost,
+          showDbField: false
+        }),
         { type: discovery.DONE }
       ])
       done()
@@ -180,7 +192,9 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedURL }),
+        discovery.updateDiscoveryConnection({
+          host: expectedURL
+        }),
         currentAction
       ])
       done()
@@ -201,7 +215,9 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedURL }),
+        discovery.updateDiscoveryConnection({
+          host: expectedURL
+        }),
         currentAction
       ])
       done()
@@ -224,7 +240,8 @@ describe('discoveryOnStartupEpic', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedURL,
-          connectTo: 'test'
+          connectTo: 'test',
+          showDbField: true
         }),
         currentAction
       ])
@@ -246,7 +263,9 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedURL }),
+        discovery.updateDiscoveryConnection({
+          host: expectedURL
+        }),
         currentAction
       ])
       done()
@@ -269,8 +288,7 @@ describe('discoveryOnStartupEpic', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedURL,
-          username: 'neo4j',
-          password: 'neo4j'
+          username: 'neo4j'
         }),
         currentAction
       ])
@@ -314,7 +332,10 @@ describe('discoveryOnStartupEpic cloud env', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        discovery.updateDiscoveryConnection({ host: expectedHost }),
+        discovery.updateDiscoveryConnection({
+          host: expectedHost,
+          showDbField: false
+        }),
         { type: discovery.DONE }
       ])
       done()

@@ -79,7 +79,13 @@ export const getBoltHost = state => {
 }
 
 const updateDiscoveryState = (action, store) => {
-  const keysToCopy = ['username', 'connectTo', 'restApi', 'showDbField']
+  const keysToCopy = [
+    'username',
+    'password',
+    'connectTo',
+    'restApi',
+    'showDbField'
+  ]
   const updateObj = keysToCopy.reduce(
     (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
     { host: action.forceURL }
