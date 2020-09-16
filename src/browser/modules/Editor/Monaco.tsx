@@ -26,25 +26,25 @@ import React, {
   useRef
 } from 'react'
 
-export interface monacoHandles {
+export interface MonacoHandles {
   getValue: () => string
   setValue: (value: string) => void
-  dispose: () => void
 }
 
-const Monaco = forwardRef<monacoHandles, any>(
-  (_props, ref): JSX.Element => {
+interface MonacoProps {
+  id: string
+}
+
+const Monaco = forwardRef<MonacoHandles, MonacoProps>(
+  (props: MonacoProps, ref): JSX.Element => {
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+    const id = `monaco-${props.id}`
 
     useEffect(() => {
       editorRef.current = monaco.editor.create(
-        document.getElementById('mon-editor') as HTMLElement,
+        document.getElementById(id) as HTMLElement,
         { automaticLayout: true }
       )
-
-      editorRef.current.onDidChangeModelContent(() => {
-        console.log(editorRef.current?.getValue())
-      })
 
       return () => {
         editorRef.current?.dispose()
@@ -57,13 +57,10 @@ const Monaco = forwardRef<monacoHandles, any>(
       },
       setValue(value) {
         editorRef.current?.setValue(value)
-      },
-      dispose() {
-        editorRef.current?.dispose()
       }
     }))
 
-    return <div id="mon-editor" style={{ height: 'auto', width: '100%' }} />
+    return <div id={id} style={{ height: 'auto', width: '100%' }} />
   }
 )
 

@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Dispatch, useRef } from 'react'
+import React, { Dispatch, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
-import Monaco, { monacoHandles } from '../Editor/Monaco'
+import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { Frame } from 'shared/modules/stream/streamDuck'
@@ -32,11 +32,15 @@ interface EditFrameProps {
 }
 
 const EditFrame = ({ frame, runQuery }: EditFrameProps): JSX.Element => {
-  const monaco = useRef<monacoHandles>(null)
+  const monaco = useRef<MonacoHandles>(null)
+
+  useEffect(() => {
+    monaco.current?.setValue(frame.query)
+  }, [])
 
   return (
     <FrameTemplate
-      contents={<Monaco ref={monaco}></Monaco>}
+      contents={<Monaco ref={monaco} id={frame.id}></Monaco>}
       header={frame}
       runQuery={() => {
         const value = monaco.current?.getValue() || ''
