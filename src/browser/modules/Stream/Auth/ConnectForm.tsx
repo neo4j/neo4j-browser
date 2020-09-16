@@ -28,7 +28,10 @@ import {
   StyledConnectionLabel,
   StyledConnectionFormEntry,
   StyledSegment,
-  StyledBoltUrlHintText
+  StyledBoltUrlHintText,
+  Flex,
+  FlexSpaceBetween,
+  FlexEnd
 } from './styled'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
@@ -104,7 +107,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <FlexSpaceBetween>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel
             htmlFor="url-input"
@@ -163,9 +166,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             </StyledConnectionLabel>
           </StyledConnectionFormEntry>
         )}
-      </div>
+      </FlexSpaceBetween>
 
-      <div style={{ display: 'flex' }}>
+      <Flex>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>
             Authentication type
@@ -182,9 +185,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             </StyledConnectionSelect>
           </StyledConnectionLabel>
         </StyledConnectionFormEntry>
-      </div>
+      </Flex>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <FlexSpaceBetween>
         {props.authenticationMethod === NATIVE && (
           <StyledConnectionFormEntry>
             <StyledConnectionLabel>
@@ -213,9 +216,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             </StyledConnectionLabel>
           </StyledConnectionFormEntry>
         )}
-      </div>
+      </FlexSpaceBetween>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <FlexEnd>
         <Render if={!connecting}>
           <FormButton
             data-testid="connect"
@@ -225,7 +228,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             Connect
           </FormButton>
         </Render>
-      </div>
+      </FlexEnd>
       <Render if={connecting}>Connecting...</Render>
     </StyledConnectionForm>
   )

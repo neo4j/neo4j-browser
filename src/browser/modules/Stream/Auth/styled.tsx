@@ -33,6 +33,17 @@ export const StyledConnectionForm = styled.form`
 export const StyledChangePasswordForm = styled(StyledConnectionForm)`
   flex: 1;
 `
+export const Flex = styled.div`
+  display: flex;
+`
+export const FlexSpaceBetween = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+export const FlexEnd = styled.div`
+  display: flex;
+  justify-content: end;
+`
 
 export const StyledConnectionAside = styled(StyledFrameAside)``
 export const StyledConnectionFormEntry = styled.div`
