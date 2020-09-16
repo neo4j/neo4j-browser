@@ -79,7 +79,7 @@ export const getBoltHost = state => {
 }
 
 const updateDiscoveryState = (action, store) => {
-  const keysToCopy = ['username', 'password', 'connectTo', 'restApi']
+  const keysToCopy = ['username', 'connectTo', 'restApi']
   const updateObj = keysToCopy.reduce(
     (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
     { host: action.forceURL }
@@ -128,14 +128,11 @@ export const discoveryOnStartupEpic = (some$, store) => {
         return Promise.resolve({ type: 'NOOP' })
       }
       if (action.forceURL) {
-        const { username, password, protocol, host } = getUrlInfo(
-          action.forceURL
-        )
+        const { username, protocol, host } = getUrlInfo(action.forceURL)
         updateDiscoveryState(
           {
             ...action,
             username,
-            password,
             forceURL: `${protocol ? `${protocol}//` : ''}${host}`
           },
           store
