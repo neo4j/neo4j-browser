@@ -26,6 +26,7 @@ import {
   useDbCommand
 } from 'shared/modules/commands/commandsDuck'
 import { getCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
+import { getGraphStyleData } from 'shared/modules/grass/grassDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import { UserDetails } from './UserDetails'
 import DatabaseKernelInfo from './DatabaseKernelInfo'
@@ -75,6 +76,7 @@ export function DBMSInfo(props) {
           onItemClick={onItemClick}
           onMoreClick={onMoreClick('labels', labelsMax)}
           moreStep={moreStep}
+          graphStyleData={props.graphStyleData}
         />
         <RelationshipItems
           count={relationships}
@@ -107,6 +109,7 @@ const mapStateToProps = state => {
   const useDb = getUseDb(state)
   const databases = getDatabases(state)
   return {
+    graphStyleData: getGraphStyleData(state),
     meta: state.meta,
     user: getCurrentUser(state),
     useDb,
