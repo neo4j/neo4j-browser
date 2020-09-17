@@ -32,20 +32,20 @@ jest.mock('services/remote', () => {
 })
 
 describe('Grass remote fetch', () => {
-  test('should not fetch from url not in the whitelist', () => {
-    const whitelist = 'http://foo'
-    const urlNotInWhitelist = 'http://bar'
+  test('should not fetch from url not in the allowlist', () => {
+    const allowlist = 'http://foo'
+    const urlNotInAllowlist = 'http://bar'
     return expect(
-      fetchRemoteGrass(urlNotInWhitelist, whitelist)
+      fetchRemoteGrass(urlNotInAllowlist, allowlist)
     ).rejects.toMatchObject(
-      new Error('Hostname is not allowed according to server whitelist')
+      new Error('Hostname is not allowed according to server allowlist')
     )
   })
-  test('should fetch from url in the whitelist', () => {
-    const whitelist = 'http://foo'
-    const urlInWhitelist = 'http://foo'
-    return expect(fetchRemoteGrass(urlInWhitelist, whitelist)).resolves.toBe(
-      urlInWhitelist
+  test('should fetch from url in the allowlist', () => {
+    const allowlist = 'http://foo'
+    const urlInAllowlist = 'http://foo'
+    return expect(fetchRemoteGrass(urlInAllowlist, allowlist)).resolves.toBe(
+      urlInAllowlist
     )
   })
 })

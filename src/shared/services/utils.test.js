@@ -332,13 +332,13 @@ describe('utils', () => {
       password: 'neoPass'
     })
   })
-  describe('extractWhitelistFromConfigString', () => {
+  describe('extractAllowlistFromConfigString', () => {
     test('extracts comma separated string of hosts to array', () => {
       // Given
       const input = 'localhost,guides.neo4j.com'
 
       // When
-      const res = utils.extractWhitelistFromConfigString(input)
+      const res = utils.extractAllowlistFromConfigString(input)
 
       // Then
       expect(res).toEqual(['localhost', 'guides.neo4j.com'])
@@ -348,7 +348,7 @@ describe('utils', () => {
       const input = 'localhost , guides.neo4j.com/ , neo4j.com'
 
       // When
-      const res = utils.extractWhitelistFromConfigString(input)
+      const res = utils.extractAllowlistFromConfigString(input)
 
       // Then
       expect(res).toEqual(['localhost', 'guides.neo4j.com', 'neo4j.com'])
@@ -377,14 +377,14 @@ describe('utils', () => {
       ])
     })
   })
-  describe('resolveWhitelistWildcard', () => {
+  describe('resolveAllowlistWildcard', () => {
     test('Resolves * to given urls', () => {
       // Given
       const input = ['*']
       const resolveTo = ['guides.neo4j.com', 'localhost']
 
       // When
-      const res = utils.resolveWhitelistWildcard(input, resolveTo)
+      const res = utils.resolveAllowlistWildcard(input, resolveTo)
 
       // Then
       expect(res).toEqual(['guides.neo4j.com', 'localhost'])
@@ -401,7 +401,7 @@ describe('utils', () => {
       const resolveTo = ['guides.neo4j.com', 'localhost']
 
       // When
-      const res = utils.resolveWhitelistWildcard(input, resolveTo)
+      const res = utils.resolveAllowlistWildcard(input, resolveTo)
 
       // Then
       expect(res).toEqual([
@@ -415,23 +415,23 @@ describe('utils', () => {
     })
   })
   describe('hostIsAllowed', () => {
-    test('should respect host whitelist', () => {
+    test('should respect host allowlist', () => {
       // Given
-      const whitelist = 'https://second.com,fourth.com'
+      const allowlist = 'https://second.com,fourth.com'
 
       // When && Then
-      expect(utils.hostIsAllowed('http://first.com', whitelist)).toEqual(false)
-      expect(utils.hostIsAllowed('http://second.com', whitelist)).toEqual(false)
-      expect(utils.hostIsAllowed('https://second.com', whitelist)).toEqual(true)
-      expect(utils.hostIsAllowed('http://fourth.com', whitelist)).toEqual(true)
-      expect(utils.hostIsAllowed('https://fourth.com', whitelist)).toEqual(true)
+      expect(utils.hostIsAllowed('http://first.com', allowlist)).toEqual(false)
+      expect(utils.hostIsAllowed('http://second.com', allowlist)).toEqual(false)
+      expect(utils.hostIsAllowed('https://second.com', allowlist)).toEqual(true)
+      expect(utils.hostIsAllowed('http://fourth.com', allowlist)).toEqual(true)
+      expect(utils.hostIsAllowed('https://fourth.com', allowlist)).toEqual(true)
     })
-    test('should pass everything when whitelist is *', () => {
+    test('should pass everything when allowlist is *', () => {
       // Given
-      const whitelist = '*'
+      const allowlist = '*'
 
       // When && Then
-      expect(utils.hostIsAllowed('anything', whitelist)).toEqual(true)
+      expect(utils.hostIsAllowed('anything', allowlist)).toEqual(true)
     })
     test('can parse url params correctly', () => {
       // Given

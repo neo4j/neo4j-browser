@@ -103,11 +103,10 @@ export const allowOutgoingConnections = state =>
   getAvailableSettings(state)['browser.allow_outgoing_connections']
 export const credentialsTimeout = state =>
   getAvailableSettings(state)['browser.credential_timeout'] || 0
-export const getRemoteContentHostnameWhitelist = state =>
-  getAvailableSettings(state)['browser.remote_content_hostname_whitelist'] ||
-  initialState.settings['browser.remote_content_hostname_whitelist']
-export const getDefaultRemoteContentHostnameWhitelist = () =>
-  initialState.settings['browser.remote_content_hostname_whitelist']
+export const getRemoteContentHostnameAllowlist = state =>
+  getAvailableSettings(state)['browser.remote_content_hostname_allowlist']
+export const getDefaultRemoteContentHostnameAllowlist = state =>
+  initialState.settings['browser.remote_content_hostname_allowlist']
 export const shouldRetainConnectionCredentials = state => {
   const settings = getAvailableSettings(state)
   const conf = settings['browser.retain_connection_credentials']
@@ -205,7 +204,7 @@ const initialState = {
   databases: [],
   settings: {
     'browser.allow_outgoing_connections': false,
-    'browser.remote_content_hostname_whitelist': 'guides.neo4j.com, localhost',
+    'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
     'browser.retain_connection_credentials': true
   }
 }
@@ -213,7 +212,25 @@ const initialState = {
 /**
  * Reducer
  */
-export default function meta(state = initialState, action) {
+export default function meta(state = initialState, unalteredAction) {
+  let action = unalteredAction
+  if (unalteredAction && unalteredAction.settings) {
+    const allowlist =
+      unalteredAction.settings['browser.remote_content_hostname_allowlist'] ||
+      unalteredAction.settings['browser.remote_content_hostname_whitelist']
+
+    action = allowlist
+      ? {
+          ...unalteredAction,
+          settings: {
+            ...unalteredAction.settings,
+            ['browser.remote_content_hostname_allowlist']: allowlist
+          }
+        }
+      : unalteredAction
+    delete action.settings['browser.remote_content_hostname_whitelist']
+  }
+
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }

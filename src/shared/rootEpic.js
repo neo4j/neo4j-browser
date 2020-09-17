@@ -23,7 +23,7 @@ import {
   handleCommandEpic,
   handleSingleCommandEpic,
   postConnectCmdEpic,
-  fetchGuideFromWhitelistEpic
+  fetchGuideFromAllowlistEpic
 } from './modules/commands/commandsDuck'
 import {
   retainCredentialsSettingsEpic,
@@ -95,7 +95,7 @@ export default combineEpics(
   handleCommandEpic,
   handleSingleCommandEpic,
   postConnectCmdEpic,
-  fetchGuideFromWhitelistEpic,
+  fetchGuideFromAllowlistEpic,
   connectionLostEpic,
   switchConnectionEpic,
   switchConnectionSuccessEpic,

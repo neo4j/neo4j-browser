@@ -21,6 +21,7 @@
 import nock from 'nock'
 import * as config from './config'
 import { update, replace } from 'shared/modules/settings/settingsDuck'
+import dbMetaReducer, { updateSettings } from 'shared/modules/dbMeta/dbMetaDuck'
 
 function FetchError(message) {
   this.name = 'FetchError'
@@ -35,7 +36,7 @@ describe('commandsDuck config helper', () => {
       return {
         meta: {
           settings: {
-            'browser.remote_content_hostname_whitelist': 'okurl.com'
+            'browser.remote_content_hostname_allowlist': 'okurl.com'
           }
         }
       }
@@ -137,7 +138,7 @@ describe('commandsDuck config helper', () => {
       expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2 }))
     })
   })
-  test('rejects hostnames not in whitelist', () => {
+  test('rejects hostnames not in allowlist', () => {
     // Given
     const action = { cmd: ':config https://bad.com/cnf.json' }
     const cmdchar = ':'
@@ -149,7 +150,38 @@ describe('commandsDuck config helper', () => {
     // Then
     return expect(p)
       .rejects.toEqual(
-        new Error('Hostname is not allowed according to server whitelist')
+        new Error('Hostname is not allowed according to server allowlist')
+      )
+      .then(() => expect(put).not.toHaveBeenCalled())
+  })
+  test('allowlist and whitelist both update allowlist', () => {
+    // Given
+    const action = { cmd: ':config https://okurl.com/cnf.json' }
+    const cmdchar = ':'
+    const put = jest.fn()
+
+    const updatedStore = {
+      getState: () => ({
+        meta: dbMetaReducer(
+          store.getState(),
+          updateSettings({
+            'browser.remote_content_hostname_whitelist': 'replaceUrl.com'
+          })
+        )
+      })
+    }
+    // When
+    const p = config.handleUpdateConfigCommand(
+      action,
+      cmdchar,
+      put,
+      updatedStore
+    )
+
+    // Then
+    return expect(p)
+      .rejects.toEqual(
+        new Error('Hostname is not allowed according to server allowlist')
       )
       .then(() => expect(put).not.toHaveBeenCalled())
   })

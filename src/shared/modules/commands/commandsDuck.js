@@ -27,11 +27,11 @@ import {
   extractStatementsFromString
 } from 'services/commandUtils'
 import {
-  extractWhitelistFromConfigString,
+  extractAllowlistFromConfigString,
   addProtocolsToUrlList,
   firstSuccessPromise,
   serialExecution,
-  resolveWhitelistWildcard
+  resolveAllowlistWildcard
 } from 'services/utils'
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
@@ -46,8 +46,8 @@ import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import {
   UPDATE_SETTINGS,
   getAvailableSettings,
-  getRemoteContentHostnameWhitelist,
-  getDefaultRemoteContentHostnameWhitelist
+  getRemoteContentHostnameAllowlist,
+  getDefaultRemoteContentHostnameAllowlist
 } from '../dbMeta/dbMetaDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/stream/streamDuck'
@@ -63,7 +63,7 @@ export const CLEAR_ERROR_MESSAGE = `${NAME}/CLEAR_ERROR_MESSAGE`
 export const CYPHER = `${NAME}/CYPHER`
 export const CYPHER_SUCCEEDED = `${NAME}/CYPHER_SUCCEEDED`
 export const CYPHER_FAILED = `${NAME}/CYPHER_FAILED`
-export const FETCH_GUIDE_FROM_WHITELIST = `${NAME}FETCH_GUIDE_FROM_WHITELIST`
+export const FETCH_GUIDE_FROM_ALLOWLIST = `${NAME}FETCH_GUIDE_FROM_ALLOWLIST`
 
 export const useDbCommand = 'use'
 export const listDbsCommand = 'dbs'
@@ -71,7 +71,7 @@ export const autoCommitTxCommand = 'auto'
 
 const initialState = {}
 export const getErrorMessage = state => state[NAME].errorMessage
-export const whitelistedMultiCommands = () => [':param', ':use']
+export const allowlistedMultiCommands = () => [':param', ':use']
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -142,8 +142,8 @@ export const clearErrorMessage = () => ({
 export const cypher = query => ({ type: CYPHER, query })
 export const successfulCypher = query => ({ type: CYPHER_SUCCEEDED, query })
 export const unsuccessfulCypher = query => ({ type: CYPHER_FAILED, query })
-export const fetchGuideFromWhitelistAction = url => ({
-  type: FETCH_GUIDE_FROM_WHITELIST,
+export const fetchGuideFromAllowlistAction = url => ({
+  type: FETCH_GUIDE_FROM_ALLOWLIST,
   url
 })
 
@@ -187,13 +187,13 @@ export const handleCommandEpic = (action$, store) =>
         const cleanCmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
-        const whitelistedCommands = whitelistedMultiCommands()
-        const isWhitelisted = whitelistedCommands.some(wcmd =>
+        const allowlistedCommands = allowlistedMultiCommands()
+        const isAllowlisted = allowlistedCommands.some(wcmd =>
           cleanCmd.startsWith(wcmd)
         )
 
-        // Ignore client commands that aren't whitelisted
-        const ignore = cleanCmd.startsWith(cmdchar) && !isWhitelisted
+        // Ignore client commands that aren't allowlisted
+        const ignore = cleanCmd.startsWith(cmdchar) && !isAllowlisted
 
         const { action, interpreted } = buildCommandObject(
           { cmd: cleanCmd, ignore },
@@ -276,26 +276,26 @@ export const postConnectCmdEpic = (some$, store) =>
       .take(1)
   )
 
-export const fetchGuideFromWhitelistEpic = (some$, store) =>
-  some$.ofType(FETCH_GUIDE_FROM_WHITELIST).mergeMap(action => {
+export const fetchGuideFromAllowlistEpic = (some$, store) =>
+  some$.ofType(FETCH_GUIDE_FROM_ALLOWLIST).mergeMap(action => {
     if (!action.$$responseChannel || !action.url) {
       return Rx.Observable.of({ type: 'NOOP' })
     }
-    const whitelistStr = getRemoteContentHostnameWhitelist(store.getState())
-    const whitelist = extractWhitelistFromConfigString(whitelistStr)
-    const defaultWhitelist = extractWhitelistFromConfigString(
-      getDefaultRemoteContentHostnameWhitelist(store.getState())
+    const allowlistStr = getRemoteContentHostnameAllowlist(store.getState())
+    const allowlist = extractAllowlistFromConfigString(allowlistStr)
+    const defaultAllowlist = extractAllowlistFromConfigString(
+      getDefaultRemoteContentHostnameAllowlist(store.getState())
     )
-    const resolvedWildcardWhitelist = resolveWhitelistWildcard(
-      whitelist,
-      defaultWhitelist
+    const resolvedWildcardAllowlist = resolveAllowlistWildcard(
+      allowlist,
+      defaultAllowlist
     )
-    const urlWhitelist = addProtocolsToUrlList(resolvedWildcardWhitelist)
-    const guidesUrls = urlWhitelist.map(url => `${url}/${action.url}`)
+    const urlAllowlist = addProtocolsToUrlList(resolvedWildcardAllowlist)
+    const guidesUrls = urlAllowlist.map(url => `${url}/${action.url}`)
 
     return firstSuccessPromise(guidesUrls, url => {
       // Get first successful fetch
-      return fetchRemoteGuide(url, whitelistStr).then(r => ({
+      return fetchRemoteGuide(url, allowlistStr).then(r => ({
         type: action.$$responseChannel,
         success: true,
         result: r
