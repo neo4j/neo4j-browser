@@ -25,14 +25,18 @@ import React, {
   useImperativeHandle,
   useRef
 } from 'react'
+import { Theme } from '../Stream/EditFrame'
 
 export interface MonacoHandles {
   getValue: () => string
   setValue: (value: string) => void
+  setOptions: (options: monaco.editor.IGlobalEditorOptions) => void
+  setTheme: (theme: string) => void
 }
 
 interface MonacoProps {
   id: string
+  theme: Theme
 }
 
 const Monaco = forwardRef<MonacoHandles, MonacoProps>(
@@ -57,6 +61,12 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       },
       setValue(value) {
         editorRef.current?.setValue(value)
+      },
+      setOptions(options) {
+        editorRef.current?.updateOptions(options)
+      },
+      setTheme(theme) {
+        monaco.editor.setTheme(theme)
       }
     }))
 

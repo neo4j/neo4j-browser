@@ -24,23 +24,47 @@ import { Action } from 'redux'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
-import { Frame } from 'shared/modules/stream/streamDuck'
+import {
+  DARK_THEME,
+  getTheme,
+  LIGHT_THEME,
+  OUTLINE_THEME
+} from 'shared/modules/settings/settingsDuck'
+import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
+import useDerivedTheme from 'browser-hooks/useDerivedTheme'
+
+export type Theme =
+  | typeof LIGHT_THEME
+  | typeof OUTLINE_THEME
+  | typeof DARK_THEME
 
 interface EditFrameProps {
   frame: Frame
   runQuery: (query: string) => void
+  theme: Theme
 }
 
-const EditFrame = ({ frame, runQuery }: EditFrameProps): JSX.Element => {
+const EditFrame = ({ frame, runQuery, theme }: EditFrameProps): JSX.Element => {
   const monaco = useRef<MonacoHandles>(null)
 
   useEffect(() => {
     monaco.current?.setValue(frame.query)
   }, [])
 
+  const [derivedTheme] = useDerivedTheme(theme, LIGHT_THEME) as [Theme]
+
+  useEffect(() => {
+    const themeMap = {
+      [LIGHT_THEME]: 'vs',
+      [OUTLINE_THEME]: 'hc-black',
+      [DARK_THEME]: 'vs-dark'
+    }
+    monaco.current?.setTheme(themeMap[derivedTheme])
+  }, [derivedTheme])
+
   return (
     <FrameTemplate
-      contents={<Monaco ref={monaco} id={frame.id}></Monaco>}
+      contents={<Monaco ref={monaco} id={frame.id} theme={theme}></Monaco>}
       header={frame}
       runQuery={() => {
         const value = monaco.current?.getValue() || ''
@@ -50,11 +74,14 @@ const EditFrame = ({ frame, runQuery }: EditFrameProps): JSX.Element => {
   )
 }
 
+const mapStateToProps = (state: GlobalState) => ({
+  theme: getTheme(state)
+})
+
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-  runQuery: (query: string) => {
+  runQuery(query: string) {
     dispatch(executeCommand(query))
-    // todo update query and cmd in store.frames?
   }
 })
 
-export default connect(null, mapDispatchToProps)(EditFrame)
+export default connect(mapStateToProps, mapDispatchToProps)(EditFrame)
