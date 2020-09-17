@@ -97,7 +97,7 @@ export const Frame = styled.div<FullscreenProps>`
     if (props.fullscreen) {
       return `
   position: fixed;
-  top: -10px;
+  top: 0px;
   bottom: 0;
   left: 0;
   right: 0;
