@@ -47,10 +47,6 @@ interface EditFrameProps {
 const EditFrame = ({ frame, runQuery, theme }: EditFrameProps): JSX.Element => {
   const monaco = useRef<MonacoHandles>(null)
 
-  useEffect(() => {
-    monaco.current?.setValue(frame.query)
-  }, [])
-
   const [derivedTheme] = useDerivedTheme(theme, LIGHT_THEME) as [Theme]
 
   useEffect(() => {
@@ -64,7 +60,9 @@ const EditFrame = ({ frame, runQuery, theme }: EditFrameProps): JSX.Element => {
 
   return (
     <FrameTemplate
-      contents={<Monaco ref={monaco} id={frame.id} theme={theme}></Monaco>}
+      contents={
+        <Monaco id={frame.id} ref={monaco} value={frame.query}></Monaco>
+      }
       header={frame}
       runQuery={() => {
         const value = monaco.current?.getValue() || ''

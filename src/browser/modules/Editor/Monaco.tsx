@@ -25,7 +25,6 @@ import React, {
   useImperativeHandle,
   useRef
 } from 'react'
-import { Theme } from '../Stream/EditFrame'
 
 export interface MonacoHandles {
   getValue: () => string
@@ -36,7 +35,7 @@ export interface MonacoHandles {
 
 interface MonacoProps {
   id: string
-  theme: Theme
+  value: string
 }
 
 const Monaco = forwardRef<MonacoHandles, MonacoProps>(
@@ -47,7 +46,19 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     useEffect(() => {
       editorRef.current = monaco.editor.create(
         document.getElementById(id) as HTMLElement,
-        { automaticLayout: true }
+        {
+          automaticLayout: true,
+          contextmenu: false,
+          cursorStyle: 'block',
+          fontSize: 16,
+          lightbulb: { enabled: false },
+          links: false,
+          minimap: { enabled: false },
+          scrollBeyondLastColumn: 0,
+          scrollBeyondLastLine: false,
+          value: props.value,
+          wordWrap: 'on'
+        }
       )
 
       return () => {
