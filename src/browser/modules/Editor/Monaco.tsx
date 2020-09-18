@@ -81,7 +81,15 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       }
     }))
 
-    return <div id={id} style={{ height: 'auto', width: '100%' }} />
+    return (
+      <div
+        id={id}
+        style={{
+          overflow: 'hidden',
+          width: '100%'
+        }}
+      />
+    )
   }
 )
 

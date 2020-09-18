@@ -21,8 +21,10 @@
 import React, { Dispatch, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
+import styled from 'styled-components'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
+import { StyledFrameBody } from '../Frame/styled'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import {
   DARK_THEME,
@@ -44,6 +46,12 @@ interface EditFrameProps {
   theme: Theme
 }
 
+const ForceFullSizeFrameContent = styled.div`
+  ${StyledFrameBody} {
+    padding: 0;
+  }
+`
+
 const EditFrame = ({ frame, runQuery, theme }: EditFrameProps): JSX.Element => {
   const monaco = useRef<MonacoHandles>(null)
 
@@ -59,16 +67,18 @@ const EditFrame = ({ frame, runQuery, theme }: EditFrameProps): JSX.Element => {
   }, [derivedTheme])
 
   return (
-    <FrameTemplate
-      contents={
-        <Monaco id={frame.id} ref={monaco} value={frame.query}></Monaco>
-      }
-      header={frame}
-      runQuery={() => {
-        const value = monaco.current?.getValue() || ''
-        runQuery(value)
-      }}
-    />
+    <ForceFullSizeFrameContent>
+      <FrameTemplate
+        contents={
+          <Monaco id={frame.id} ref={monaco} value={frame.query}></Monaco>
+        }
+        header={frame}
+        runQuery={() => {
+          const value = monaco.current?.getValue() || ''
+          runQuery(value)
+        }}
+      />
+    </ForceFullSizeFrameContent>
   )
 }
 
