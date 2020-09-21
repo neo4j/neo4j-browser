@@ -339,9 +339,12 @@ export const connectEpic = (action$, store) => {
         connectionTimeout: getConnectionTimeout(store.getState())
       })
       .then(() => {
-        if (action.connectTo) {
+        if (action.requestedUseDb) {
           store.dispatch(
-            updateConnection({ id: action.id, connectTo: action.connectTo })
+            updateConnection({
+              id: action.id,
+              requestedUseDb: action.requestedUseDb
+            })
           )
         }
         return {

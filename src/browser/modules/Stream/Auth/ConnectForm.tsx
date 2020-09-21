@@ -58,7 +58,7 @@ interface ConnectFormProps {
   password: string
   username: string
   used: boolean
-  showDbField: boolean
+  supportsMultiDb: boolean
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
@@ -153,10 +153,10 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             />
           )}
         </StyledConnectionFormEntry>
-        {props.showDbField && (
+        {props.supportsMultiDb && (
           <StyledConnectionFormEntry>
             <StyledConnectionLabel>
-              Database
+              Database to use
               <StyledConnectionTextInput
                 data-testid="database"
                 onChange={props.onDatabaseChange}

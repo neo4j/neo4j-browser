@@ -96,7 +96,7 @@ describe('discoveryOnStartupEpic', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedHost,
-          showDbField: false
+          supportsMultiDb: false
         }),
         { type: discovery.DONE }
       ])
@@ -120,7 +120,7 @@ describe('discoveryOnStartupEpic', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedHost,
-          showDbField: false
+          supportsMultiDb: false
         }),
         { type: discovery.DONE }
       ])
@@ -144,7 +144,7 @@ describe('discoveryOnStartupEpic', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedHost,
-          showDbField: false
+          supportsMultiDb: false
         }),
         { type: discovery.DONE }
       ])
@@ -171,7 +171,7 @@ describe('discoveryOnStartupEpic', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedHost,
-          showDbField: false
+          supportsMultiDb: false
         }),
         { type: discovery.DONE }
       ])
@@ -240,8 +240,8 @@ describe('discoveryOnStartupEpic', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedURL,
-          connectTo: 'test',
-          showDbField: true
+          requestedUseDb: 'test',
+          supportsMultiDb: true
         }),
         currentAction
       ])
@@ -334,7 +334,7 @@ describe('discoveryOnStartupEpic cloud env', () => {
         action,
         discovery.updateDiscoveryConnection({
           host: expectedHost,
-          showDbField: false
+          supportsMultiDb: false
         }),
         { type: discovery.DONE }
       ])

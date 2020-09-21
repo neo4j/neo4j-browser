@@ -64,7 +64,7 @@ export class ConnectionForm extends Component {
       (connection && connection.authenticationMethod) || NATIVE
 
     this.state = {
-      connectTo: '',
+      requestedUseDb: '',
       ...connection,
       host: generateBoltUrl(props.allowedSchemes, connection.host),
       authenticationMethod,
@@ -136,8 +136,8 @@ export class ConnectionForm extends Component {
   }
 
   onDatebaseChange = event => {
-    const connectTo = event.target.value
-    this.setState({ connectTo })
+    const requestedUseDb = event.target.value
+    this.setState({ requestedUseDb })
     this.props.error({})
   }
 
@@ -312,11 +312,11 @@ export class ConnectionForm extends Component {
           host={this.state.hostInputVal || this.state.host}
           username={this.state.username}
           password={this.state.password}
-          database={this.state.connectTo}
+          database={this.state.requestedUseDb}
           authenticationMethod={this.state.authenticationMethod}
           used={this.state.used}
           allowedSchemes={this.props.allowedSchemes}
-          showDbField={this.state.showDbField}
+          supportsMultiDb={this.state.supportsMultiDb}
         />
       )
     }

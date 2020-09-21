@@ -82,9 +82,9 @@ const updateDiscoveryState = (action, store) => {
   const keysToCopy = [
     'username',
     'password',
-    'connectTo',
+    'requestedUseDb',
     'restApi',
-    'showDbField'
+    'supportsMultiDb'
   ]
   const updateObj = keysToCopy.reduce(
     (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
@@ -124,7 +124,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
 
       if (!passedURL || !passedURL.length) return action
       action.forceURL = decodeURIComponent(passedURL[0])
-      action.connectTo = passedDb && passedDb[0]
+      action.requestedUseDb = passedDb && passedDb[0]
       return action
     })
     .merge(some$.ofType(USER_CLEAR))
@@ -139,7 +139,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
           {
             ...action,
             username,
-            showDbField: !!action.connectTo,
+            supportsMultiDb: !!action.requestedUseDb,
             forceURL: `${protocol ? `${protocol}//` : ''}${host}`
           },
           store
@@ -169,9 +169,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
             )
             const supportsMultiDb =
               parseInt((result.neo4j_version || '0').charAt(0)) >= 4
-            store.dispatch(
-              updateDiscoveryConnection({ host, showDbField: supportsMultiDb })
-            ) // Update discovery host in redux
+            store.dispatch(updateDiscoveryConnection({ host, supportsMultiDb })) // Update discovery host in redux
             return { type: DONE }
           })
           .catch(e => {

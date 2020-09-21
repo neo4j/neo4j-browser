@@ -452,19 +452,22 @@ export const dbMetaEpic = (some$, store) =>
 
                   if (getUseDb(store.getState())) return Rx.Observable.of(null)
 
-                  const connectTo = getActiveConnectionData(store.getState())
-                    ?.connectTo
+                  const requestedUseDb = getActiveConnectionData(
+                    store.getState()
+                  )?.requestedUseDb
 
-                  if (connectTo) {
+                  if (requestedUseDb) {
                     const wantedDb = databases.find(
                       ({ name }) =>
-                        name.toLowerCase() === connectTo.toLowerCase()
+                        name.toLowerCase() === requestedUseDb.toLowerCase()
                     )
                     if (wantedDb) {
                       store.dispatch(useDb(wantedDb.name))
                     } else {
                       // this will show the db not found frame
-                      store.dispatch(executeSingleCommand(`:use ${connectTo}`))
+                      store.dispatch(
+                        executeSingleCommand(`:use ${requestedUseDb}`)
+                      )
                     }
                   } else {
                     const defaultDb = databases.find(db => db.default)
