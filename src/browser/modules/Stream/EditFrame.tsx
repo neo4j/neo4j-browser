@@ -18,11 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Dispatch, useEffect, useRef } from 'react'
+import React, { Dispatch, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
 import styled from 'styled-components'
-import Monaco, { MonacoHandles } from '../Editor/Monaco'
+import Monaco, {
+  VS_DARK_THEME,
+  VS_HIGH_CONTRAST_THEME,
+  VS_LIGHT_THEME,
+  VSTheme
+} from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledFrameBody } from '../Frame/styled'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
@@ -35,15 +40,15 @@ import {
 import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 
-export type Theme =
+export type BrowserTheme =
   | typeof LIGHT_THEME
   | typeof OUTLINE_THEME
   | typeof DARK_THEME
 
 interface EditFrameProps {
+  browserTheme: BrowserTheme
   frame: Frame
   runQuery: (query: string) => void
-  theme: Theme
 }
 
 const ForceFullSizeFrameContent = styled.div`
@@ -52,30 +57,37 @@ const ForceFullSizeFrameContent = styled.div`
   }
 `
 
-const EditFrame = ({ frame, runQuery, theme }: EditFrameProps): JSX.Element => {
-  const monaco = useRef<MonacoHandles>(null)
+const EditFrame = (props: EditFrameProps): JSX.Element => {
+  const [text, setText] = useState(props.frame.query)
 
-  const [derivedTheme] = useDerivedTheme(theme, LIGHT_THEME) as [Theme]
+  const [derivedTheme] = useDerivedTheme(props.browserTheme, LIGHT_THEME) as [
+    BrowserTheme
+  ]
+  const [theme, setTheme] = useState<VSTheme>(VS_LIGHT_THEME)
 
   useEffect(() => {
-    const themeMap = {
-      [LIGHT_THEME]: 'vs',
-      [OUTLINE_THEME]: 'hc-black',
-      [DARK_THEME]: 'vs-dark'
+    const themeMap: { [key in BrowserTheme]: VSTheme } = {
+      [LIGHT_THEME]: VS_LIGHT_THEME,
+      [OUTLINE_THEME]: VS_DARK_THEME,
+      [DARK_THEME]: VS_HIGH_CONTRAST_THEME
     }
-    monaco.current?.setTheme(themeMap[derivedTheme])
+    setTheme(themeMap[derivedTheme])
   }, [derivedTheme])
 
   return (
     <ForceFullSizeFrameContent>
       <FrameTemplate
         contents={
-          <Monaco id={frame.id} ref={monaco} value={frame.query}></Monaco>
+          <Monaco
+            id={props.frame.id}
+            onChange={setText}
+            theme={theme}
+            value={text}
+          ></Monaco>
         }
-        header={frame}
+        header={props.frame}
         runQuery={() => {
-          const value = monaco.current?.getValue() || ''
-          runQuery(value)
+          props.runQuery(text)
         }}
       />
     </ForceFullSizeFrameContent>
@@ -83,12 +95,13 @@ const EditFrame = ({ frame, runQuery, theme }: EditFrameProps): JSX.Element => {
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  theme: getTheme(state)
+  browserTheme: getTheme(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   runQuery(query: string) {
     dispatch(executeCommand(query))
+    // TODO: dispatch update frame.query with text
   }
 })
 

@@ -19,78 +19,74 @@
  */
 
 import * as monaco from 'monaco-editor'
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef
-} from 'react'
+import React, { useEffect, useRef } from 'react'
 
-export interface MonacoHandles {
-  getValue: () => string
-  setValue: (value: string) => void
-  setOptions: (options: monaco.editor.IGlobalEditorOptions) => void
-  setTheme: (theme: string) => void
-}
+export const VS_LIGHT_THEME = 'vs'
+export const VS_DARK_THEME = 'vs-dark'
+export const VS_HIGH_CONTRAST_THEME = 'hc-black'
+
+export type VSTheme =
+  | typeof VS_LIGHT_THEME
+  | typeof VS_DARK_THEME
+  | typeof VS_HIGH_CONTRAST_THEME
 
 interface MonacoProps {
   id: string
-  value: string
+  value?: string
+  onChange?: (value: string) => void
+  options?: monaco.editor.IGlobalEditorOptions
+  theme?: VSTheme
 }
 
-const Monaco = forwardRef<MonacoHandles, MonacoProps>(
-  (props: MonacoProps, ref): JSX.Element => {
-    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
-    const id = `monaco-${props.id}`
+const Monaco = ({
+  id,
+  value = '',
+  onChange = () => undefined,
+  theme = VS_LIGHT_THEME
+}: MonacoProps): JSX.Element => {
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+  const monacoId = `monaco-${id}`
 
-    useEffect(() => {
-      editorRef.current = monaco.editor.create(
-        document.getElementById(id) as HTMLElement,
-        {
-          automaticLayout: true,
-          contextmenu: false,
-          cursorStyle: 'block',
-          fontSize: 16,
-          lightbulb: { enabled: false },
-          links: false,
-          minimap: { enabled: false },
-          scrollBeyondLastColumn: 0,
-          scrollBeyondLastLine: false,
-          value: props.value,
-          wordWrap: 'on'
-        }
-      )
-
-      return () => {
-        editorRef.current?.dispose()
+  useEffect(() => {
+    editorRef.current = monaco.editor.create(
+      document.getElementById(monacoId) as HTMLElement,
+      {
+        automaticLayout: true,
+        contextmenu: false,
+        cursorStyle: 'block',
+        fontSize: 16,
+        lightbulb: { enabled: false },
+        links: false,
+        minimap: { enabled: false },
+        scrollBeyondLastColumn: 0,
+        scrollBeyondLastLine: false,
+        value: value,
+        wordWrap: 'on'
       }
-    }, [])
-
-    useImperativeHandle(ref, () => ({
-      getValue() {
-        return editorRef.current?.getValue() || ''
-      },
-      setValue(value) {
-        editorRef.current?.setValue(value)
-      },
-      setOptions(options) {
-        editorRef.current?.updateOptions(options)
-      },
-      setTheme(theme) {
-        monaco.editor.setTheme(theme)
-      }
-    }))
-
-    return (
-      <div
-        id={id}
-        style={{
-          overflow: 'hidden',
-          width: '100%'
-        }}
-      />
     )
-  }
-)
+
+    editorRef.current?.onDidChangeModelContent(() => {
+      onChange(editorRef.current?.getValue() || '')
+    })
+
+    return () => {
+      editorRef.current?.dispose()
+    }
+  }, [])
+
+  useEffect(() => {
+    monaco.editor.setTheme(theme)
+  }, [theme])
+
+  return (
+    <div
+      id={monacoId}
+      style={{
+        overflow: 'hidden',
+        width: '100%'
+      }}
+    />
+  )
+}
 
 export default Monaco
