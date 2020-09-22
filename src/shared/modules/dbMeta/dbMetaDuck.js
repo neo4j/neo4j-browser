@@ -35,7 +35,8 @@ import {
   onLostConnection,
   getUseDb,
   useDb,
-  getActiveConnectionData
+  getActiveConnectionData,
+  updateConnection
 } from 'shared/modules/connections/connectionsDuck'
 import { executeSingleCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
@@ -452,9 +453,10 @@ export const dbMetaEpic = (some$, store) =>
 
                   if (getUseDb(store.getState())) return Rx.Observable.of(null)
 
-                  const requestedUseDb = getActiveConnectionData(
+                  const activeConnection = getActiveConnectionData(
                     store.getState()
-                  )?.requestedUseDb
+                  )
+                  const requestedUseDb = activeConnection?.requestedUseDb
 
                   if (requestedUseDb) {
                     const wantedDb = databases.find(
@@ -467,6 +469,12 @@ export const dbMetaEpic = (some$, store) =>
                       // this will show the db not found frame
                       store.dispatch(
                         executeSingleCommand(`:use ${requestedUseDb}`)
+                      )
+                      store.dispatch(
+                        updateConnection({
+                          id: activeConnection.id,
+                          requestedUseDb: ''
+                        })
                       )
                     }
                   } else {
