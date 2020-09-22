@@ -28,10 +28,7 @@ import {
   StyledConnectionLabel,
   StyledConnectionFormEntry,
   StyledSegment,
-  StyledBoltUrlHintText,
-  Flex,
-  FlexSpaceBetween,
-  FlexEnd
+  StyledBoltUrlHintText
 } from './styled'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
@@ -107,128 +104,120 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
-      <FlexSpaceBetween>
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel
-            htmlFor="url-input"
-            title="Pick neo4j:// for a routed connection, bolt:// for a direct connection to a DBMS instance."
-          >
-            Connect URL
-          </StyledConnectionLabel>
-          {props.allowedSchemes && props.allowedSchemes.length ? (
-            <>
-              <StyledSegment>
-                <StyledConnectionSelect
-                  onChange={onSchemeChange}
-                  value={scheme}
-                  data-testid="bolt-scheme-select"
-                >
-                  {props.allowedSchemes.map(s => {
-                    const schemeString = `${s}://`
-                    return (
-                      <option value={schemeString} key={toKeyString(s)}>
-                        {schemeString}
-                      </option>
-                    )
-                  })}
-                </StyledConnectionSelect>
-                <StyledConnectionTextInput
-                  onCopy={onCopyBoltUrl}
-                  data-testid="boltaddress"
-                  onChange={onHostChange}
-                  value={stripScheme(props.host)}
-                  id="url-input"
-                />
-              </StyledSegment>
-              <StyledBoltUrlHintText className="url-hint-text">
-                Pick neo4j:// for a routed connection, bolt:// for a direct
-                connection to a DBMS.
-              </StyledBoltUrlHintText>
-            </>
-          ) : (
-            <StyledConnectionTextInput
-              data-testid="boltaddress"
-              onChange={onHostChange}
-              defaultValue={props.host}
-            />
-          )}
-        </StyledConnectionFormEntry>
-        {props.supportsMultiDb && (
-          <StyledConnectionFormEntry>
-            <StyledConnectionLabel>
-              Database to use
+      <StyledConnectionFormEntry>
+        <StyledConnectionLabel
+          htmlFor="url-input"
+          title="Pick neo4j:// for a routed connection, bolt:// for a direct connection to a DBMS instance."
+        >
+          Connect URL
+        </StyledConnectionLabel>
+        {props.allowedSchemes && props.allowedSchemes.length ? (
+          <>
+            <StyledSegment>
+              <StyledConnectionSelect
+                onChange={onSchemeChange}
+                value={scheme}
+                data-testid="bolt-scheme-select"
+              >
+                {props.allowedSchemes.map(s => {
+                  const schemeString = `${s}://`
+                  return (
+                    <option value={schemeString} key={toKeyString(s)}>
+                      {schemeString}
+                    </option>
+                  )
+                })}
+              </StyledConnectionSelect>
               <StyledConnectionTextInput
-                data-testid="database"
-                onChange={props.onDatabaseChange}
-                value={props.database}
-                placeholder="default database"
+                onCopy={onCopyBoltUrl}
+                data-testid="boltaddress"
+                onChange={onHostChange}
+                value={stripScheme(props.host)}
+                id="url-input"
               />
-            </StyledConnectionLabel>
-          </StyledConnectionFormEntry>
+            </StyledSegment>
+            <StyledBoltUrlHintText className="url-hint-text">
+              Pick neo4j:// for a routed connection, bolt:// for a direct
+              connection to a DBMS.
+            </StyledBoltUrlHintText>
+          </>
+        ) : (
+          <StyledConnectionTextInput
+            data-testid="boltaddress"
+            onChange={onHostChange}
+            defaultValue={props.host}
+          />
         )}
-      </FlexSpaceBetween>
-
-      <Flex>
+      </StyledConnectionFormEntry>
+      {props.supportsMultiDb && (
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>
-            Authentication type
-            <StyledConnectionSelect
-              data-testid="authenticationMethod"
-              onChange={props.onAuthenticationMethodChange}
-              value={props.authenticationMethod}
-            >
-              {authMethods.map(auth => (
-                <option value={auth} key={auth}>
-                  {readableauthenticationMethods[auth]}
-                </option>
-              ))}
-            </StyledConnectionSelect>
+            Database to use
+            <StyledConnectionTextInput
+              data-testid="database"
+              onChange={props.onDatabaseChange}
+              value={props.database}
+              placeholder="default database"
+            />
           </StyledConnectionLabel>
         </StyledConnectionFormEntry>
-      </Flex>
+      )}
 
-      <FlexSpaceBetween>
-        {props.authenticationMethod === NATIVE && (
-          <StyledConnectionFormEntry>
-            <StyledConnectionLabel>
-              Username
-              <StyledConnectionTextInput
-                data-testid="username"
-                onChange={props.onUsernameChange}
-                defaultValue={props.username}
-                required
-              />
-            </StyledConnectionLabel>
-          </StyledConnectionFormEntry>
-        )}
-
-        {props.authenticationMethod === NATIVE && (
-          <StyledConnectionFormEntry>
-            <StyledConnectionLabel>
-              Password
-              <StyledConnectionTextInput
-                data-testid="password"
-                onChange={props.onPasswordChange}
-                defaultValue={props.password}
-                type="password"
-                required
-              />
-            </StyledConnectionLabel>
-          </StyledConnectionFormEntry>
-        )}
-      </FlexSpaceBetween>
-
-      <FlexEnd>
-        <Render if={!connecting}>
-          <FormButton
-            data-testid="connect"
-            type="submit"
-            style={{ marginRight: 0 }}
+      <StyledConnectionFormEntry>
+        <StyledConnectionLabel>
+          Authentication type
+          <StyledConnectionSelect
+            data-testid="authenticationMethod"
+            onChange={props.onAuthenticationMethodChange}
+            value={props.authenticationMethod}
           >
-            Connect
-          </FormButton>
-        </Render>
-      </FlexEnd>
+            {authMethods.map(auth => (
+              <option value={auth} key={auth}>
+                {readableauthenticationMethods[auth]}
+              </option>
+            ))}
+          </StyledConnectionSelect>
+        </StyledConnectionLabel>
+      </StyledConnectionFormEntry>
+
+      {props.authenticationMethod === NATIVE && (
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>
+            Username
+            <StyledConnectionTextInput
+              data-testid="username"
+              onChange={props.onUsernameChange}
+              defaultValue={props.username}
+              required
+            />
+          </StyledConnectionLabel>
+        </StyledConnectionFormEntry>
+      )}
+
+      {props.authenticationMethod === NATIVE && (
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>
+            Password
+            <StyledConnectionTextInput
+              data-testid="password"
+              onChange={props.onPasswordChange}
+              defaultValue={props.password}
+              type="password"
+              required
+            />
+          </StyledConnectionLabel>
+        </StyledConnectionFormEntry>
+      )}
+
+      <Render if={!connecting}>
+        <FormButton
+          data-testid="connect"
+          type="submit"
+          style={{ marginRight: 0 }}
+        >
+          Connect
+        </FormButton>
+      </Render>
       <Render if={connecting}>Connecting...</Render>
     </StyledConnectionForm>
   )

@@ -24,7 +24,6 @@ import { StyledFrameAside } from '../../Frame/styled'
 
 export const StyledConnectionForm = styled.form`
   padding: 0 15px;
-  width: 465px;
 
   &.isLoading {
     opacity: 0.5;
@@ -32,17 +31,6 @@ export const StyledConnectionForm = styled.form`
 `
 export const StyledChangePasswordForm = styled(StyledConnectionForm)`
   flex: 1;
-`
-export const Flex = styled.div`
-  display: flex;
-`
-export const FlexSpaceBetween = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-export const FlexEnd = styled.div`
-  display: flex;
-  justify-content: end;
 `
 
 export const StyledConnectionAside = styled(StyledFrameAside)``
@@ -57,14 +45,13 @@ export const StyledConnectionLabel = styled.label`
   font-size: 13px;
   font-weight: 600;
   line-height: 2;
-  min-width: 200px;
   * {
     font-weight: normal;
   }
 `
-
 export const StyledConnectionTextInput = styled(StyledInput)`
-  width: 207px;
+  min-width: 200px;
+  width: 44%;
 `
 
 export const StyledSegment = styled.div`
@@ -93,8 +80,9 @@ export const StyledSegment = styled.div`
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     margin-left: -1px;
-    min-width: 120px;
-    width: 120px;
+    flex: 1;
+    min-width: unset;
+    width: auto;
   }
 `
 
@@ -103,12 +91,11 @@ export const StyledBoltUrlHintText = styled.span`
   overflow: visible;
   font-size: 12px;
   display: none;
-  position: absolute;
 `
 
 export const StyledSegmentedConnectionTextInput = styled(StyledInput)`
   min-width: 200px;
-  font-weight: normal;
+  width: 44%;
 `
 export const StyledRevealablePasswordWrapper = styled.div`
   position: relative;
@@ -135,7 +122,8 @@ export const StyledRevealablePasswordWrapper = styled.div`
 `
 
 export const StyledConnectionSelect = styled(StyledSelect)`
-  width: 207px;
+  min-width: 200px;
+  width: 44%;
 `
 
 export const StyledConnectionBodyContainer = styled.div`
