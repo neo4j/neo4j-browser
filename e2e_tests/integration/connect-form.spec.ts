@@ -80,6 +80,9 @@ describe('Connect form', () => {
     cy.executeCommand(':clear')
     const boltUrl = 'bolt://' + stripScheme(Cypress.config('boltUrl'))
     cy.connect('neo4j', Cypress.config('password'), boltUrl)
+    cy.get('[data-testid="editor-wrapper"]').contains('neo4j')
+    cy.reload()
+    cy.get('[data-testid="editor-wrapper"]').contains('neo4j')
     cy.executeCommand(':server disconnect')
   })
   // Check auto switching protocols for non supporting neo4j://
