@@ -167,8 +167,9 @@ export const discoveryOnStartupEpic = (some$, store) => {
               getAllowedBoltSchemes(store.getState()),
               host
             )
+            const isAura = result.neo4j_version.toLowerCase().includes('aura')
             const supportsMultiDb =
-              parseInt((result.neo4j_version || '0').charAt(0)) >= 4
+              !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
             store.dispatch(updateDiscoveryConnection({ host, supportsMultiDb })) // Update discovery host in redux
             return { type: DONE }
           })
