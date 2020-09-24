@@ -217,7 +217,10 @@ function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
   }
 
   // Local guides
-  const guideName = transformCommandToHelpTopic(stackFrame.cmd || 'start')
+  const guideName = transformCommandToHelpTopic(
+    stackFrame.cmd.trim() === ':play' ? ':play start' : stackFrame.cmd
+  )
+
   const guide = chapters[guideName] || {}
   // Check if content exists locally
   if (Object.keys(guide).length) {
