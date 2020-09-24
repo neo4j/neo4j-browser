@@ -2,6 +2,26 @@
 # yarn lockfile v1
 
 
+"@apollo/client@^3.1.3", "@apollo/client@^3.1.5", "@apollo/client@^3.2.0":
+  version "3.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@apollo/client/-/client-3.2.0.tgz#d16ea4384a2126bf60e7d87b0a6c6df00382220b"
+  integrity sha1-0W6kOEohJr9g59h7Cmxt8AOCIgs=
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.0.0"
+    "@types/zen-observable" "^0.8.0"
+    "@wry/context" "^0.5.2"
+    "@wry/equality" "^0.2.0"
+    fast-json-stable-stringify "^2.0.0"
+    graphql-tag "^2.11.0"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.12.1"
+    prop-types "^15.7.2"
+    symbol-observable "^2.0.0"
+    terser "^5.2.0"
+    ts-invariant "^0.4.4"
+    tslib "^1.10.0"
+    zen-observable "^0.8.14"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.8.3":
   version "7.10.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/code-frame/-/code-frame-7.10.4.tgz#168da1a36e90da68ae8d49c0f1b48c7c6249213a"
@@ -18,35 +38,13 @@
     invariant "^2.2.4"
     semver "^5.5.0"
 
-"@babel/core@7.10.5":
-  version "7.10.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/core/-/core-7.10.5.tgz#1f15e2cca8ad9a1d78a38ddba612f5e7cdbbd330"
-  integrity sha1-HxXizKitmh14o43bphL158270zA=
+"@babel/core@7.11.6", "@babel/core@^7.1.0", "@babel/core@^7.1.2", "@babel/core@^7.7.5":
+  version "7.11.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/core/-/core-7.11.6.tgz#3a9455dc7387ff1bac45770650bc13ba04a15651"
+  integrity sha1-OpRV3HOH/xusRXcGULwTugShVlE=
   dependencies:
     "@babel/code-frame" "^7.10.4"
-    "@babel/generator" "^7.10.5"
-    "@babel/helper-module-transforms" "^7.10.5"
-    "@babel/helpers" "^7.10.4"
-    "@babel/parser" "^7.10.5"
-    "@babel/template" "^7.10.4"
-    "@babel/traverse" "^7.10.5"
-    "@babel/types" "^7.10.5"
-    convert-source-map "^1.7.0"
-    debug "^4.1.0"
-    gensync "^1.0.0-beta.1"
-    json5 "^2.1.2"
-    lodash "^4.17.19"
-    resolve "^1.3.2"
-    semver "^5.4.1"
-    source-map "^0.5.0"
-
-"@babel/core@^7.1.0", "@babel/core@^7.1.2", "@babel/core@^7.7.5":
-  version "7.11.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/core/-/core-7.11.5.tgz#6ad96e2f71899ea3f9b651f0a911e85205d1ff6d"
-  integrity sha1-atluL3GJnqP5tlHwqRHoUgXR/20=
-  dependencies:
-    "@babel/code-frame" "^7.10.4"
-    "@babel/generator" "^7.11.5"
+    "@babel/generator" "^7.11.6"
     "@babel/helper-module-transforms" "^7.11.0"
     "@babel/helpers" "^7.10.4"
     "@babel/parser" "^7.11.5"
@@ -60,16 +58,16 @@
     lodash "^4.17.19"
     resolve "^1.3.2"
     semver "^5.4.1"
-    source-map "^0.6.1"
+    source-map "^0.5.0"
 
-"@babel/generator@^7.10.5", "@babel/generator@^7.11.5":
-  version "7.11.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/generator/-/generator-7.11.5.tgz#a5582773425a468e4ba269d9a1f701fbca6a7a82"
-  integrity sha1-pVgnc0JaRo5LomnZofcB+8pqeoI=
+"@babel/generator@^7.11.5", "@babel/generator@^7.11.6":
+  version "7.11.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/generator/-/generator-7.11.6.tgz#b868900f81b163b4d464ea24545c61cbac4dc620"
+  integrity sha1-uGiQD4GxY7TUZOokVFxhy6xNxiA=
   dependencies:
     "@babel/types" "^7.11.5"
     jsesc "^2.5.1"
-    source-map "^0.6.1"
+    source-map "^0.5.0"
 
 "@babel/helper-annotate-as-pure@^7.0.0", "@babel/helper-annotate-as-pure@^7.10.4":
   version "7.10.4"
@@ -295,7 +293,7 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@babel/parser@^7.1.0", "@babel/parser@^7.10.4", "@babel/parser@^7.10.5", "@babel/parser@^7.11.5", "@babel/parser@^7.7.0":
+"@babel/parser@^7.1.0", "@babel/parser@^7.10.4", "@babel/parser@^7.11.5", "@babel/parser@^7.7.0":
   version "7.11.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/parser/-/parser-7.11.5.tgz#c7ff6303df71080ec7a4f5b8c003c58f1cf51037"
   integrity sha1-x/9jA99xCA7HpPW4wAPFjxz1EDc=
@@ -365,16 +363,7 @@
     "@babel/helper-plugin-utils" "^7.10.4"
     "@babel/plugin-syntax-numeric-separator" "^7.10.4"
 
-"@babel/plugin-proposal-object-rest-spread@7.10.4":
-  version "7.10.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.10.4.tgz#50129ac216b9a6a55b3853fdd923e74bf553a4c0"
-  integrity sha1-UBKawha5pqVbOFP92SPnS/VTpMA=
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.10.4"
-    "@babel/plugin-syntax-object-rest-spread" "^7.8.0"
-    "@babel/plugin-transform-parameters" "^7.10.4"
-
-"@babel/plugin-proposal-object-rest-spread@^7.11.0":
+"@babel/plugin-proposal-object-rest-spread@7.11.0", "@babel/plugin-proposal-object-rest-spread@^7.11.0":
   version "7.11.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.11.0.tgz#bd81f95a1f746760ea43b6c2d3d62b11790ad0af"
   integrity sha1-vYH5Wh90Z2DqQ7bC09YrEXkK0K8=
@@ -928,7 +917,7 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2", "@babel/runtime@^7.9.6":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.11.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.11.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
   integrity sha1-9UnBPHVMxAuHZEufqfCaapX+BzY=
@@ -944,7 +933,7 @@
     "@babel/parser" "^7.10.4"
     "@babel/types" "^7.10.4"
 
-"@babel/traverse@^7.0.0", "@babel/traverse@^7.1.0", "@babel/traverse@^7.10.4", "@babel/traverse@^7.10.5", "@babel/traverse@^7.11.5", "@babel/traverse@^7.7.0":
+"@babel/traverse@^7.0.0", "@babel/traverse@^7.1.0", "@babel/traverse@^7.10.4", "@babel/traverse@^7.11.5", "@babel/traverse@^7.7.0":
   version "7.11.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/traverse/-/traverse-7.11.5.tgz#be777b93b518eb6d76ee2e1ea1d143daa11e61c3"
   integrity sha1-vnd7k7UY62127i4eodFD2qEeYcM=
@@ -1152,21 +1141,21 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@firebase/analytics-types@0.3.1":
-  version "0.3.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/analytics-types/-/analytics-types-0.3.1.tgz#3c5f5d71129c88295e17e914e34b391ffda1723c"
-  integrity sha1-PF9dcRKciCleF+kU40s5H/2hcjw=
+"@firebase/analytics-types@0.4.0":
+  version "0.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/analytics-types/-/analytics-types-0.4.0.tgz#d6716f9fa36a6e340bc0ecfe68af325aa6f60508"
+  integrity sha1-1nFvn6NqbjQLwOz+aK8yWqb2BQg=
 
-"@firebase/analytics@0.4.2":
-  version "0.4.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/analytics/-/analytics-0.4.2.tgz#b4869df9efc0334ae2fe3eba19b65b845a190012"
-  integrity sha1-tIad+e/AM0ri/j66GbZbhFoZABI=
+"@firebase/analytics@0.5.0":
+  version "0.5.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/analytics/-/analytics-0.5.0.tgz#587292ec9a24410ad795a65c07fb1ea238ccef95"
+  integrity sha1-WHKS7JokQQrXlaZcB/seojjM75U=
   dependencies:
-    "@firebase/analytics-types" "0.3.1"
-    "@firebase/component" "0.1.18"
-    "@firebase/installations" "0.4.16"
+    "@firebase/analytics-types" "0.4.0"
+    "@firebase/component" "0.1.19"
+    "@firebase/installations" "0.4.17"
     "@firebase/logger" "0.2.6"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     tslib "^1.11.1"
 
 "@firebase/app-types@0.6.1":
@@ -1174,15 +1163,15 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/app-types/-/app-types-0.6.1.tgz#dcbd23030a71c0c74fc95d4a3f75ba81653850e9"
   integrity sha1-3L0jAwpxwMdPyV1KP3W6gWU4UOk=
 
-"@firebase/app@0.6.10":
-  version "0.6.10"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/app/-/app-0.6.10.tgz#520798f76906897284742b6eeb43257ec73f67a5"
-  integrity sha1-UgeY92kGiXKEdCtu60Mlfsc/Z6U=
+"@firebase/app@0.6.11":
+  version "0.6.11"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/app/-/app-0.6.11.tgz#f73f9e4571ba62f4029d8f9c9880a97e5a94eb1d"
+  integrity sha1-9z+eRXG6YvQCnY+cmICpflqU6x0=
   dependencies:
     "@firebase/app-types" "0.6.1"
-    "@firebase/component" "0.1.18"
+    "@firebase/component" "0.1.19"
     "@firebase/logger" "0.2.6"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     dom-storage "2.1.0"
     tslib "^1.11.1"
     xmlhttprequest "1.8.0"
@@ -1204,12 +1193,12 @@
   dependencies:
     "@firebase/auth-types" "0.10.1"
 
-"@firebase/component@0.1.18":
-  version "0.1.18"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/component/-/component-0.1.18.tgz#28e69e54b79953376283464cb0543bde4c104140"
-  integrity sha1-KOaeVLeZUzdig0ZMsFQ73kwQQUA=
+"@firebase/component@0.1.19":
+  version "0.1.19"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/component/-/component-0.1.19.tgz#bd2ac601652c22576b574c08c40da245933dbac7"
+  integrity sha1-vSrGAWUsIldrV0wIxA2iRZM9usc=
   dependencies:
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     tslib "^1.11.1"
 
 "@firebase/database-types@0.5.2":
@@ -1219,37 +1208,37 @@
   dependencies:
     "@firebase/app-types" "0.6.1"
 
-"@firebase/database@0.6.11":
-  version "0.6.11"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/database/-/database-0.6.11.tgz#74a09d5f4769eb97c00bc2f7621f54efbccea6f2"
-  integrity sha1-dKCdX0dp65fAC8L3Yh9U77zOpvI=
+"@firebase/database@0.6.13":
+  version "0.6.13"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/database/-/database-0.6.13.tgz#b96fe0c53757dd6404ee085fdcb45c0f9f525c17"
+  integrity sha1-uW/gxTdX3WQE7ghf3LRcD59SXBc=
   dependencies:
     "@firebase/auth-interop-types" "0.1.5"
-    "@firebase/component" "0.1.18"
+    "@firebase/component" "0.1.19"
     "@firebase/database-types" "0.5.2"
     "@firebase/logger" "0.2.6"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     faye-websocket "0.11.3"
     tslib "^1.11.1"
 
-"@firebase/firestore-types@1.12.1":
-  version "1.12.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/firestore-types/-/firestore-types-1.12.1.tgz#67e999798043d1b3156d0a2c52d4299a92345deb"
-  integrity sha1-Z+mZeYBD0bMVbQosUtQpmpI0Xes=
+"@firebase/firestore-types@1.13.0":
+  version "1.13.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/firestore-types/-/firestore-types-1.13.0.tgz#4ab9c40e1e66e8193a929460d64507acd07d9230"
+  integrity sha1-SrnEDh5m6Bk6kpRg1kUHrNB9kjA=
 
-"@firebase/firestore@1.16.6":
-  version "1.16.6"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/firestore/-/firestore-1.16.6.tgz#a38d02b525cb19a12b28d580403c20cc215a2330"
-  integrity sha1-o40CtSXLGaErKNWAQDwgzCFaIzA=
+"@firebase/firestore@1.17.0":
+  version "1.17.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/firestore/-/firestore-1.17.0.tgz#f452b6387749d74a66173c74654fdf915a1241d4"
+  integrity sha1-9FK2OHdJ10pmFzx0ZU/fkVoSQdQ=
   dependencies:
-    "@firebase/component" "0.1.18"
-    "@firebase/firestore-types" "1.12.1"
+    "@firebase/component" "0.1.19"
+    "@firebase/firestore-types" "1.13.0"
     "@firebase/logger" "0.2.6"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     "@firebase/webchannel-wrapper" "0.3.0"
     "@grpc/grpc-js" "^1.0.0"
     "@grpc/proto-loader" "^0.5.0"
-    node-fetch "2.6.0"
+    node-fetch "2.6.1"
     tslib "^1.11.1"
 
 "@firebase/functions-types@0.3.17":
@@ -1257,12 +1246,12 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/functions-types/-/functions-types-0.3.17.tgz#348bf5528b238eeeeeae1d52e8ca547b21d33a94"
   integrity sha1-NIv1Uosjju7urh1S6MpUeyHTOpQ=
 
-"@firebase/functions@0.4.50":
-  version "0.4.50"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/functions/-/functions-0.4.50.tgz#02ae1a2a42de9c4c73f13c00043dbba6546248a0"
-  integrity sha1-Aq4aKkLenExz8TwABD27plRiSKA=
+"@firebase/functions@0.4.51":
+  version "0.4.51"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/functions/-/functions-0.4.51.tgz#97be571cfe3b9ee3bf289b9dc5194e3ae49a4819"
+  integrity sha1-l75XHP47nuO/KJudxRlOOuSaSBk=
   dependencies:
-    "@firebase/component" "0.1.18"
+    "@firebase/component" "0.1.19"
     "@firebase/functions-types" "0.3.17"
     "@firebase/messaging-types" "0.5.0"
     isomorphic-fetch "2.2.1"
@@ -1273,14 +1262,14 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/installations-types/-/installations-types-0.3.4.tgz#589a941d713f4f64bf9f4feb7f463505bab1afa2"
   integrity sha1-WJqUHXE/T2S/n0/rf0Y1Bbqxr6I=
 
-"@firebase/installations@0.4.16":
-  version "0.4.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/installations/-/installations-0.4.16.tgz#5c3f2e542308f06439aeddb0f456f3f36ae808eb"
-  integrity sha1-XD8uVCMI8GQ5rt2w9Fbz82roCOs=
+"@firebase/installations@0.4.17":
+  version "0.4.17"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/installations/-/installations-0.4.17.tgz#1367b721e2c6c4880646bbc4f257e8616986a004"
+  integrity sha1-E2e3IeLGxIgGRrvE8lfoYWmGoAQ=
   dependencies:
-    "@firebase/component" "0.1.18"
+    "@firebase/component" "0.1.19"
     "@firebase/installations-types" "0.3.4"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     idb "3.0.2"
     tslib "^1.11.1"
 
@@ -1294,15 +1283,15 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/messaging-types/-/messaging-types-0.5.0.tgz#c5d0ef309ced1758fda93ef3ac70a786de2e73c4"
   integrity sha1-xdDvMJztF1j9qT7zrHCnht4uc8Q=
 
-"@firebase/messaging@0.7.0":
-  version "0.7.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/messaging/-/messaging-0.7.0.tgz#6932f6bfcc04148891751aecce426cafe76e0a06"
-  integrity sha1-aTL2v8wEFIiRdRrszkJsr+duCgY=
+"@firebase/messaging@0.7.1":
+  version "0.7.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/messaging/-/messaging-0.7.1.tgz#debbe7eb17c5b789231da6c166c506e19ecf1ed4"
+  integrity sha1-3rvn6xfFt4kjHabBZsUG4Z7PHtQ=
   dependencies:
-    "@firebase/component" "0.1.18"
-    "@firebase/installations" "0.4.16"
+    "@firebase/component" "0.1.19"
+    "@firebase/installations" "0.4.17"
     "@firebase/messaging-types" "0.5.0"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     idb "3.0.2"
     tslib "^1.11.1"
 
@@ -1311,16 +1300,16 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/performance-types/-/performance-types-0.0.13.tgz#58ce5453f57e34b18186f74ef11550dfc558ede6"
   integrity sha1-WM5UU/V+NLGBhvdO8RVQ38VY7eY=
 
-"@firebase/performance@0.4.0":
-  version "0.4.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/performance/-/performance-0.4.0.tgz#7f5bb47ef085cd83bf331b19d3213e11fbe88941"
-  integrity sha1-f1u0fvCFzYO/MxsZ0yE+EfvoiUE=
+"@firebase/performance@0.4.1":
+  version "0.4.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/performance/-/performance-0.4.1.tgz#4e78f406ef2bc0eec2ce67cdfc57a53a55c31476"
+  integrity sha1-Tnj0Bu8rwO7CzmfN/FelOlXDFHY=
   dependencies:
-    "@firebase/component" "0.1.18"
-    "@firebase/installations" "0.4.16"
+    "@firebase/component" "0.1.19"
+    "@firebase/installations" "0.4.17"
     "@firebase/logger" "0.2.6"
     "@firebase/performance-types" "0.0.13"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     tslib "^1.11.1"
 
 "@firebase/polyfill@0.3.36":
@@ -1337,16 +1326,16 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/remote-config-types/-/remote-config-types-0.1.9.tgz#fe6bbe4d08f3b6e92fce30e4b7a9f4d6a96d6965"
   integrity sha1-/mu+TQjztukvzjDkt6n01qltaWU=
 
-"@firebase/remote-config@0.1.27":
-  version "0.1.27"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/remote-config/-/remote-config-0.1.27.tgz#b581cb7d870e7d32bac5967acbbb5d7ec593a2f3"
-  integrity sha1-tYHLfYcOfTK6xZZ6y7tdfsWTovM=
+"@firebase/remote-config@0.1.28":
+  version "0.1.28"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/remote-config/-/remote-config-0.1.28.tgz#1c39916446f1ed82b4c07e556455bd232fcfd8e1"
+  integrity sha1-HDmRZEbx7YK0wH5VZFW9Iy/P2OE=
   dependencies:
-    "@firebase/component" "0.1.18"
-    "@firebase/installations" "0.4.16"
+    "@firebase/component" "0.1.19"
+    "@firebase/installations" "0.4.17"
     "@firebase/logger" "0.2.6"
     "@firebase/remote-config-types" "0.1.9"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     tslib "^1.11.1"
 
 "@firebase/storage-types@0.3.13":
@@ -1354,20 +1343,20 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/storage-types/-/storage-types-0.3.13.tgz#cd43e939a2ab5742e109eb639a313673a48b5458"
   integrity sha1-zUPpOaKrV0LhCetjmjE2c6SLVFg=
 
-"@firebase/storage@0.3.42":
-  version "0.3.42"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/storage/-/storage-0.3.42.tgz#e2fe1aa54c004852a848b50f34c2f351e6e517e5"
-  integrity sha1-4v4apUwASFKoSLUPNMLzUeblF+U=
+"@firebase/storage@0.3.43":
+  version "0.3.43"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/storage/-/storage-0.3.43.tgz#107fb5db2eff2561b5c4e35ee4cbff48f28c7e77"
+  integrity sha1-EH+12y7/JWG1xONe5Mv/SPKMfnc=
   dependencies:
-    "@firebase/component" "0.1.18"
+    "@firebase/component" "0.1.19"
     "@firebase/storage-types" "0.3.13"
-    "@firebase/util" "0.3.1"
+    "@firebase/util" "0.3.2"
     tslib "^1.11.1"
 
-"@firebase/util@0.3.1":
-  version "0.3.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/util/-/util-0.3.1.tgz#8c95152a00121bd31fb7c1fc6520ca208976e384"
-  integrity sha1-jJUVKgASG9Mft8H8ZSDKIIl244Q=
+"@firebase/util@0.3.2":
+  version "0.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/util/-/util-0.3.2.tgz#87de27f9cffc2324651cabf6ec133d0a9eb21b52"
+  integrity sha1-h94n+c/8IyRlHKv27BM9Cp6yG1I=
   dependencies:
     tslib "^1.11.1"
 
@@ -1376,10 +1365,15 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.3.0.tgz#d1689566b94c25423d1fb2cb031c5c2ea4c9f939"
   integrity sha1-0WiVZrlMJUI9H7LLAxxcLqTJ+Tk=
 
+"@graphql-typed-document-node/core@^3.0.0":
+  version "3.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@graphql-typed-document-node/core/-/core-3.1.0.tgz#0eee6373e11418bfe0b5638f654df7a4ca6a3950"
+  integrity sha1-Du5jc+EUGL/gtWOPZU33pMpqOVA=
+
 "@grpc/grpc-js@^1.0.0":
-  version "1.1.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@grpc/grpc-js/-/grpc-js-1.1.5.tgz#2d0b261cd54a529f6b78ac0de9d6fd91a9a3129c"
-  integrity sha1-LQsmHNVKUp9reKwN6db9kamjEpw=
+  version "1.1.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@grpc/grpc-js/-/grpc-js-1.1.6.tgz#43ab7bcb1aec071e18d7b45f8920afc0c9fcfb8e"
+  integrity sha1-Q6t7yxrsBx4Y17RfiSCvwMn8+44=
   dependencies:
     "@grpc/proto-loader" "^0.6.0-pre14"
     "@types/node" "^12.12.47"
@@ -1659,49 +1653,49 @@
     deepmerge "^3.2.0"
     nearley "^2.16.0"
 
-"@mdx-js/mdx@1.6.16":
-  version "1.6.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/mdx/-/mdx-1.6.16.tgz#f01af0140539c1ce043d246259d8becd2153b2bb"
-  integrity sha1-8BrwFAU5wc4EPSRiWdi+zSFTsrs=
+"@mdx-js/mdx@1.6.18":
+  version "1.6.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/mdx/-/mdx-1.6.18.tgz#c73345ef75be0ec303c5d87f3b95cbe55c192742"
+  integrity sha1-xzNF73W+DsMDxdh/O5XL5VwZJ0I=
   dependencies:
-    "@babel/core" "7.10.5"
+    "@babel/core" "7.11.6"
     "@babel/plugin-syntax-jsx" "7.10.4"
     "@babel/plugin-syntax-object-rest-spread" "7.8.3"
-    "@mdx-js/util" "1.6.16"
-    babel-plugin-apply-mdx-type-prop "1.6.16"
-    babel-plugin-extract-import-names "1.6.16"
+    "@mdx-js/util" "1.6.18"
+    babel-plugin-apply-mdx-type-prop "1.6.18"
+    babel-plugin-extract-import-names "1.6.18"
     camelcase-css "2.0.1"
     detab "2.0.3"
-    hast-util-raw "6.0.0"
+    hast-util-raw "6.0.1"
     lodash.uniq "4.5.0"
-    mdast-util-to-hast "9.1.0"
-    remark-footnotes "1.0.0"
-    remark-mdx "1.6.16"
+    mdast-util-to-hast "9.1.1"
+    remark-footnotes "2.0.0"
+    remark-mdx "1.6.18"
     remark-parse "8.0.3"
     remark-squeeze-paragraphs "4.0.0"
     style-to-object "0.3.0"
-    unified "9.1.0"
+    unified "9.2.0"
     unist-builder "2.0.3"
     unist-util-visit "2.0.3"
 
-"@mdx-js/react@1.6.16":
-  version "1.6.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/react/-/react-1.6.16.tgz#538eb14473194d0b3c54020cb230e426174315cd"
-  integrity sha1-U46xRHMZTQs8VAIMsjDkJhdDFc0=
+"@mdx-js/react@1.6.18":
+  version "1.6.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/react/-/react-1.6.18.tgz#f83cbb2355de9cf36a213140ce21647da1e34fa7"
+  integrity sha1-+Dy7I1XenPNqITFAziFkfaHjT6c=
 
 "@mdx-js/runtime@^1.6.1":
-  version "1.6.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/runtime/-/runtime-1.6.16.tgz#44166bcd2cc49831d1bb62e6c59509a4ec052650"
-  integrity sha1-RBZrzSzEmDHRu2LmxZUJpOwFJlA=
+  version "1.6.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/runtime/-/runtime-1.6.18.tgz#43787450c663520e74ad9ebc61d0eeda63ee9fb9"
+  integrity sha1-Q3h0UMZjUg50rZ68YdDu2mPun7k=
   dependencies:
-    "@mdx-js/mdx" "1.6.16"
-    "@mdx-js/react" "1.6.16"
+    "@mdx-js/mdx" "1.6.18"
+    "@mdx-js/react" "1.6.18"
     buble-jsx-only "^0.19.8"
 
-"@mdx-js/util@1.6.16":
-  version "1.6.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/util/-/util-1.6.16.tgz#07a7342f6b61ea1ecbfb31e6e23bf7a8c79b9b57"
-  integrity sha1-B6c0L2th6h7L+zHm4jv3qMebm1c=
+"@mdx-js/util@1.6.18":
+  version "1.6.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@mdx-js/util/-/util-1.6.18.tgz#c7563bf72cb4520b8b7100b64006a64be717e936"
+  integrity sha1-x1Y79yy0UguLcQC2QAamS+cX6TY=
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -1752,9 +1746,9 @@
     mkdirp "^1.0.4"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.4.1":
-  version "0.4.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.1.tgz#a4db0ed8e58c2f8566161c9a8cdf1d095c9a891b"
-  integrity sha1-pNsO2OWML4VmFhyajN8dCVyaiRs=
+  version "0.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.2.tgz#1f9741e0bde9790a0e13272082ed7272a083620d"
+  integrity sha1-H5dB4L3peQoOEycggu1ycqCDYg0=
   dependencies:
     ansi-html "^0.0.7"
     error-stack-parser "^2.0.6"
@@ -1837,10 +1831,10 @@
     react-table "7.0.4"
     semantic-ui-react "0.88.2"
 
-"@relate-by-ui/saved-scripts@^1.0.4":
-  version "1.0.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/saved-scripts/-/saved-scripts-1.0.4.tgz#df50dae1c98c589637e12097031a42311e78279f"
-  integrity sha1-31Da4cmMWJY34SCXAxpCMR54J58=
+"@relate-by-ui/saved-scripts@^1.0.5":
+  version "1.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/saved-scripts/-/saved-scripts-1.0.5.tgz#40b8833bc07771398f605fd7f07bf50923e1a629"
+  integrity sha1-QLiDO8B3cTmPYF/X8Hv1CSPhpik=
   dependencies:
     "@emotion/core" "10.0.10"
     "@emotion/styled" "10.0.10"
@@ -1896,9 +1890,9 @@
     react-is "^16.6.3"
 
 "@testing-library/dom@*":
-  version "7.24.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/dom/-/dom-7.24.0.tgz#b50066100947e4d1bd0f2f6855c7ff3f2a8770e2"
-  integrity sha1-tQBmEAlH5NG9Dy9oVcf/PyqHcOI=
+  version "7.24.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/dom/-/dom-7.24.2.tgz#6d2b7dd21efbd5358b98c2777fc47c252f3ae55e"
+  integrity sha1-bSt90h771TWLmMJ3f8R8JS865V4=
   dependencies:
     "@babel/code-frame" "^7.10.4"
     "@babel/runtime" "^7.10.3"
@@ -1957,6 +1951,15 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/anymatch/-/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
   integrity sha1-M2utwb7sudrMOL6izzKt9ieoQho=
 
+"@types/apollo-upload-client@^14.1.0":
+  version "14.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/apollo-upload-client/-/apollo-upload-client-14.1.0.tgz#21a57d7e3f29ff946ba51a53b3d7da46ddd21fbc"
+  integrity sha1-IaV9fj8p/5RrpRpTs9faRt3SH7w=
+  dependencies:
+    "@apollo/client" "^3.1.3"
+    "@types/extract-files" "*"
+    graphql "^15.3.0"
+
 "@types/aria-query@^4.2.0":
   version "4.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/aria-query/-/aria-query-4.2.0.tgz#14264692a9d6e2fa4db3df5e56e94b5e25647ac0"
@@ -1994,9 +1997,9 @@
     "@babel/types" "^7.0.0"
 
 "@types/babel__traverse@*", "@types/babel__traverse@^7.0.6":
-  version "7.0.13"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/babel__traverse/-/babel__traverse-7.0.13.tgz#1874914be974a492e1b4cb00585cabb274e8ba18"
-  integrity sha1-GHSRS+l0pJLhtMsAWFyrsnTouhg=
+  version "7.0.14"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/babel__traverse/-/babel__traverse-7.0.14.tgz#e99da8c075d4fb098c774ba65dabf7dc9954bd13"
+  integrity sha1-6Z2owHXU+wmMd0umXav33JlUvRM=
   dependencies:
     "@babel/types" "^7.3.0"
 
@@ -2009,6 +2012,11 @@
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha1-HuMNeVRMqE1o1LPNsK9PIFZj3S0=
+
+"@types/extract-files@*":
+  version "8.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/extract-files/-/extract-files-8.1.0.tgz#4728440e1d92a6d1d11ac47f5a10e3f9ce47f044"
+  integrity sha1-RyhEDh2SptHRGsR/WhDj+c5H8EQ=
 
 "@types/glob@^7.1.1":
   version "7.1.3"
@@ -2073,9 +2081,9 @@
     "@types/istanbul-lib-report" "*"
 
 "@types/jest@*":
-  version "26.0.13"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/jest/-/jest-26.0.13.tgz#5a7b9d5312f5dd521a38329c38ee9d3802a0b85e"
-  integrity sha1-WnudUxL13VIaODKcOO6dOAKguF4=
+  version "26.0.14"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/jest/-/jest-26.0.14.tgz#078695f8f65cb55c5a98450d65083b2b73e5a3f3"
+  integrity sha1-B4aV+PZctVxamEUNZQg7K3Plo/M=
   dependencies:
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
@@ -2097,6 +2105,18 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/lodash-es@^4.17.3":
+  version "4.17.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/lodash-es/-/lodash-es-4.17.3.tgz#87eb0b3673b076b8ee655f1890260a136af09a2d"
+  integrity sha1-h+sLNnOwdrjuZV8YkCYKE2rwmi0=
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.161"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/lodash/-/lodash-4.14.161.tgz#a21ca0777dabc6e4f44f3d07f37b765f54188b18"
+  integrity sha1-ohygd32rxuT0Tz0H83t2X1QYixg=
+
 "@types/long@^4.0.1":
   version "4.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
@@ -2115,19 +2135,19 @@
   integrity sha1-PcoOPzOyAPx9ETnAzZbBJoyt/Z0=
 
 "@types/node@*":
-  version "14.6.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-14.6.3.tgz#cc4f979548ca4d8e7b90bc0180052ab99ee64224"
-  integrity sha1-zE+XlUjKTY57kLwBgAUquZ7mQiQ=
+  version "14.11.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-14.11.1.tgz#56af902ad157e763f9ba63d671c39cda3193c835"
+  integrity sha1-Vq+QKtFX52P5umPWccOc2jGTyDU=
 
 "@types/node@^12.12.47":
-  version "12.12.55"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-12.12.55.tgz#0aa266441cb9e1fd3e415a8f619cb7d776667cdd"
-  integrity sha1-CqJmRBy54f0+QVqPYZy313ZmfN0=
+  version "12.12.62"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
+  integrity sha1-czkj1zZpGI01lQJT3RiiFXAIXSs=
 
 "@types/node@^13.7.0":
-  version "13.13.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-13.13.16.tgz#66f2177047b61131eaac18c47eb25d6f1317070a"
-  integrity sha1-ZvIXcEe2ETHqrBjEfrJdbxMXBwo=
+  version "13.13.21"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-13.13.21.tgz#e48d3c2e266253405cf404c8654d1bcf0d333e5c"
+  integrity sha1-5I08LiZiU0Bc9ATIZU0bzw0zPlw=
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -2154,7 +2174,7 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha1-KrDV2i5YFflLC51LldHl8kOrLKc=
 
-"@types/react-dom@*":
+"@types/react-dom@*", "@types/react-dom@^16.9.8":
   version "16.9.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-dom/-/react-dom-16.9.8.tgz#fe4c1e11dfc67155733dfa6aa65108b4971cb423"
   integrity sha1-/kweEd/GcVVzPfpqplEItJcctCM=
@@ -2162,9 +2182,9 @@
     "@types/react" "*"
 
 "@types/react-native@*":
-  version "0.63.13"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-native/-/react-native-0.63.13.tgz#e119c6921c78abdde52a68d0bd7f0effc6191f51"
-  integrity sha1-4RnGkhx4q93lKmjQvX8O/8YZH1E=
+  version "0.63.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-native/-/react-native-0.63.18.tgz#748d82c6453befe97285393ad9530472d8de56af"
+  integrity sha1-dI2CxkU77+lyhTk62VMEctjeVq8=
   dependencies:
     "@types/react" "*"
 
@@ -2327,6 +2347,11 @@
   integrity sha1-lH6aZWFIO97prf/Jg+kaaQKvi3k=
   dependencies:
     "@types/yargs-parser" "*"
+
+"@types/zen-observable@^0.8.0":
+  version "0.8.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/zen-observable/-/zen-observable-0.8.1.tgz#5668c0bce55a91f2b9566b1d8a4c0a8dbbc79764"
+  integrity sha1-VmjAvOVakfK5VmsdikwKjbvHl2Q=
 
 "@typescript-eslint/eslint-plugin@^3.9.0":
   version "3.10.1"
@@ -2560,6 +2585,20 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wry/context@^0.5.2":
+  version "0.5.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@wry/context/-/context-0.5.2.tgz#f2a5d5ab9227343aa74c81e06533c1ef84598ec7"
+  integrity sha1-8qXVq5InNDqnTIHgZTPB74RZjsc=
+  dependencies:
+    tslib "^1.9.3"
+
+"@wry/equality@^0.2.0":
+  version "0.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@wry/equality/-/equality-0.2.0.tgz#a312d1b6a682d0909904c2bcd355b02303104fb7"
+  integrity sha1-oxLRtqaC0JCZBMK801WwIwMQT7c=
+  dependencies:
+    tslib "^1.9.3"
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
@@ -2576,9 +2615,9 @@ abab@^1.0.0:
   integrity sha1-X6rZwsB/YN12dw9xzwJbYqY8/U4=
 
 abab@^2.0.0:
-  version "2.0.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/abab/-/abab-2.0.4.tgz#6dfa57b417ca06d21b2478f0e638302f99c2405c"
-  integrity sha1-bfpXtBfKBtIbJHjw5jgwL5nCQFw=
+  version "2.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/abab/-/abab-2.0.5.tgz#c0b678fb32d60fc1219c784d6a826fe385aeb79a"
+  integrity sha1-wLZ4+zLWD8EhnHhNaoJv44Wut5o=
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -2623,9 +2662,9 @@ acorn-jsx@^3.0.0:
     acorn "^3.0.4"
 
 acorn-jsx@^5.0.0, acorn-jsx@^5.0.1, acorn-jsx@^5.2.0:
-  version "5.2.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/acorn-jsx/-/acorn-jsx-5.2.0.tgz#4c66069173d6fdd68ed85239fc256226182b2ebe"
-  integrity sha1-TGYGkXPW/daO2FI5/CViJhgrLr4=
+  version "5.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/acorn-jsx/-/acorn-jsx-5.3.1.tgz#fc8661e11b7ac1539c47dbfea2e72b3af34d267b"
+  integrity sha1-/IZh4Rt6wVOcR9v+oucrOvNNJns=
 
 acorn-walk@^6.0.1:
   version "6.2.0"
@@ -2688,9 +2727,9 @@ ajv-keywords@^3.1.0, ajv-keywords@^3.4.1, ajv-keywords@^3.5.2:
   integrity sha1-MfKdpatuANHC0yms97WSlhTVAU0=
 
 ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.9.1:
-  version "6.12.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/ajv/-/ajv-6.12.4.tgz#0614facc4522127fa713445c6bfd3ebd376e2234"
-  integrity sha1-BhT6zEUiEn+nE0Rca/0+vTduIjQ=
+  version "6.12.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ajv/-/ajv-6.12.5.tgz#19b0e8bae8f476e5ba666300387775fb1a00a4da"
+  integrity sha1-GbDouuj0duW6ZmMAOHd1+xoApNo=
   dependencies:
     fast-deep-equal "^3.1.1"
     fast-json-stable-stringify "^2.0.0"
@@ -2794,6 +2833,15 @@ anymatch@^3.0.3, anymatch@~3.1.1:
   dependencies:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
+
+apollo-upload-client@^14.1.2:
+  version "14.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/apollo-upload-client/-/apollo-upload-client-14.1.2.tgz#7a72b000f1cd67eaf8f12b4bda2796d0898c0dae"
+  integrity sha1-enKwAPHNZ+r48StL2ieW0ImMDa4=
+  dependencies:
+    "@apollo/client" "^3.1.5"
+    "@babel/runtime" "^7.11.2"
+    extract-files "^9.0.0"
 
 app-root-path@^2.0.0:
   version "2.2.1"
@@ -3084,13 +3132,13 @@ babel-loader@^8.0.4:
     pify "^4.0.1"
     schema-utils "^2.6.5"
 
-babel-plugin-apply-mdx-type-prop@1.6.16:
-  version "1.6.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-apply-mdx-type-prop/-/babel-plugin-apply-mdx-type-prop-1.6.16.tgz#4becd65b3aa108f15c524a0b125ca7c81f3443d8"
-  integrity sha1-S+zWWzqhCPFcUkoLElynyB80Q9g=
+babel-plugin-apply-mdx-type-prop@1.6.18:
+  version "1.6.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-apply-mdx-type-prop/-/babel-plugin-apply-mdx-type-prop-1.6.18.tgz#81f31b472f3b28289d4cea0f76c0315e6b85394f"
+  integrity sha1-gfMbRy87KCidTOoPdsAxXmuFOU8=
   dependencies:
     "@babel/helper-plugin-utils" "7.10.4"
-    "@mdx-js/util" "1.6.16"
+    "@mdx-js/util" "1.6.18"
 
 babel-plugin-dynamic-import-node@^2.2.0, babel-plugin-dynamic-import-node@^2.3.3:
   version "2.3.3"
@@ -3115,10 +3163,10 @@ babel-plugin-emotion@^10.0.27, babel-plugin-emotion@^10.0.9:
     find-root "^1.1.0"
     source-map "^0.5.7"
 
-babel-plugin-extract-import-names@1.6.16:
-  version "1.6.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-extract-import-names/-/babel-plugin-extract-import-names-1.6.16.tgz#b964004e794bdd62534c525db67d9e890d5cc079"
-  integrity sha1-uWQATnlL3WJTTFJdtn2eiQ1cwHk=
+babel-plugin-extract-import-names@1.6.18:
+  version "1.6.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-extract-import-names/-/babel-plugin-extract-import-names-1.6.18.tgz#be74a5e12e1b5a5db5af53015a6a62ad16ac18f5"
+  integrity sha1-vnSl4S4bWl21r1MBWmpirRasGPU=
   dependencies:
     "@babel/helper-plugin-utils" "7.10.4"
 
@@ -3490,14 +3538,14 @@ browserslist@^2.0.0, browserslist@^2.11.3:
     electron-to-chromium "^1.3.30"
 
 browserslist@^4.12.0, browserslist@^4.8.5:
-  version "4.14.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/browserslist/-/browserslist-4.14.0.tgz#2908951abfe4ec98737b72f34c3bcedc8d43b000"
-  integrity sha1-KQiVGr/k7Jhze3LzTDvO3I1DsAA=
+  version "4.14.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/browserslist/-/browserslist-4.14.3.tgz#381f9e7f13794b2eb17e1761b4f118e8ae665a53"
+  integrity sha1-OB+efxN5Sy6xfhdhtPEY6K5mWlM=
   dependencies:
-    caniuse-lite "^1.0.30001111"
-    electron-to-chromium "^1.3.523"
-    escalade "^3.0.2"
-    node-releases "^1.1.60"
+    caniuse-lite "^1.0.30001131"
+    electron-to-chromium "^1.3.570"
+    escalade "^3.1.0"
+    node-releases "^1.1.61"
 
 bs-logger@0.x:
   version "0.2.6"
@@ -3710,10 +3758,10 @@ caniuse-api@^2.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000805, caniuse-lite@^1.0.30001020, caniuse-lite@^1.0.30001111:
-  version "1.0.30001123"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30001123.tgz#7b981d81382ab2c8fd062f3e6439215e8c503c22"
-  integrity sha1-e5gdgTgqssj9Bi8+ZDkhXoxQPCI=
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000805, caniuse-lite@^1.0.30001020, caniuse-lite@^1.0.30001131:
+  version "1.0.30001131"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30001131.tgz#afad8a28fc2b7a0d3ae9407e71085a0ead905d54"
+  integrity sha1-r62KKPwreg066UB+cQhaDq2QXVQ=
 
 canvg@^1.5.3:
   version "1.5.3"
@@ -3992,7 +4040,7 @@ codemirror@^5.29.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.57.0.tgz#d26365b72f909f5d2dbb6b1209349ca1daeb2d50"
   integrity sha1-0mNlty+Qn10tu2sSCTScodrrLVA=
 
-collapse-white-space@^1.0.0, collapse-white-space@^1.0.2:
+collapse-white-space@^1.0.2:
   version "1.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/collapse-white-space/-/collapse-white-space-1.0.6.tgz#e63629c0016665792060dbbeb79c42239d2c5287"
   integrity sha1-5jYpwAFmZXkgYNu+t5xCI50sUoc=
@@ -4753,7 +4801,7 @@ destroy@~1.0.4:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-detab@2.0.3, detab@^2.0.0:
+detab@2.0.3:
   version "2.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/detab/-/detab-2.0.3.tgz#33e5dd74d230501bd69985a0d2b9a3382699a130"
   integrity sha1-M+XddNIwUBvWmYWg0rmjOCaZoTA=
@@ -4918,9 +4966,9 @@ domelementtype@1, domelementtype@^1.3.1:
   integrity sha1-0EjESzew0Qp/Kj1f7j9DM9eQSB8=
 
 domelementtype@^2.0.1:
-  version "2.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/domelementtype/-/domelementtype-2.0.1.tgz#1f8bdfe91f5a78063274e803b4bdcedf6e94f94d"
-  integrity sha1-H4vf6R9aeAYydOgDtL3O326U+U0=
+  version "2.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/domelementtype/-/domelementtype-2.0.2.tgz#f3b6e549201e46f588b59463dd77187131fe6971"
+  integrity sha1-87blSSAeRvWItZRj3XcYcTH+aXE=
 
 domexception@^1.0.1:
   version "1.0.1"
@@ -4992,10 +5040,10 @@ ejs@^2.6.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ejs/-/ejs-2.7.4.tgz#48661287573dcc53e366c7a1ae52c3a120eec9ba"
   integrity sha1-SGYSh1c9zFPjZsehrlLDoSDuybo=
 
-electron-to-chromium@^1.3.30, electron-to-chromium@^1.3.523:
-  version "1.3.559"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.3.559.tgz#698e231046e9c7438a42f310373c2d5ba76ea1de"
-  integrity sha1-aY4jEEbpx0OKQvMQNzwtW6duod4=
+electron-to-chromium@^1.3.30, electron-to-chromium@^1.3.570:
+  version "1.3.570"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.3.570.tgz#3f5141cc39b4e3892a276b4889980dabf1d29c7f"
+  integrity sha1-P1FBzDm044kqJ2tIiZgNq/HSnH8=
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -5153,10 +5201,10 @@ es6-templates@^0.2.3:
     recast "~0.11.12"
     through "~2.3.6"
 
-escalade@^3.0.2:
-  version "3.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/escalade/-/escalade-3.0.2.tgz#6a580d70edb87880f22b4c91d0d56078df6962c4"
-  integrity sha1-algNcO24eIDyK0yR0NVgeN9pYsQ=
+escalade@^3.1.0:
+  version "3.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/escalade/-/escalade-3.1.0.tgz#e8e2d7c7a8b76f6ee64c2181d6b8151441602d4e"
+  integrity sha1-6OLXx6i3b27mTCGB1rgVFEFgLU4=
 
 escape-html@~1.0.3:
   version "1.0.3"
@@ -5295,11 +5343,11 @@ eslint-scope@^4.0.0, eslint-scope@^4.0.3:
     estraverse "^4.1.1"
 
 eslint-scope@^5.0.0, eslint-scope@^5.1.0:
-  version "5.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-scope/-/eslint-scope-5.1.0.tgz#d0f971dfe59c69e0cada684b23d49dbf82600ce5"
-  integrity sha1-0Plx3+WcaeDK2mhLI9Sdv4JgDOU=
+  version "5.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-scope/-/eslint-scope-5.1.1.tgz#e786e59a66cb92b3f6c1fb0d508aab174848f48c"
+  integrity sha1-54blmmbLkrP2wfsNUIqrF0hI9Iw=
   dependencies:
-    esrecurse "^4.1.0"
+    esrecurse "^4.3.0"
     estraverse "^4.1.1"
 
 eslint-utils@^1.3.1, eslint-utils@^1.4.2:
@@ -5364,9 +5412,9 @@ eslint@^5.0.0:
     text-table "^0.2.0"
 
 eslint@^7.7.0:
-  version "7.8.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint/-/eslint-7.8.1.tgz#e59de3573fb6a5be8ff526c791571646d124a8fa"
-  integrity sha1-5Z3jVz+2pb6P9SbHkVcWRtEkqPo=
+  version "7.9.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint/-/eslint-7.9.0.tgz#522aeccc5c3a19017cf0cb46ebfd660a79acf337"
+  integrity sha1-UirszFw6GQF88MtG6/1mCnms8zc=
   dependencies:
     "@babel/code-frame" "^7.0.0"
     "@eslint/eslintrc" "^0.1.3"
@@ -5449,7 +5497,7 @@ esquery@^1.0.0, esquery@^1.0.1, esquery@^1.2.0:
   dependencies:
     estraverse "^5.1.0"
 
-esrecurse@^4.1.0:
+esrecurse@^4.1.0, esrecurse@^4.3.0:
   version "4.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/esrecurse/-/esrecurse-4.3.0.tgz#7ad7964d679abb28bee72cec63758b1c5d2c9921"
   integrity sha1-eteWTWeauyi+5yzsY3WLHF0smSE=
@@ -5690,6 +5738,11 @@ extglob@^2.0.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+extract-files@^9.0.0:
+  version "9.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/extract-files/-/extract-files-9.0.0.tgz#8a7744f2437f81f5ed3250ed9f1550de902fe54a"
+  integrity sha1-indE8kN/gfXtMlDtnxVQ3pAv5Uo=
 
 extract-zip@^1.7.0:
   version "1.7.0"
@@ -5944,24 +5997,24 @@ findup-sync@^3.0.0:
     resolve-dir "^1.0.1"
 
 firebase@^7.13.1:
-  version "7.19.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/firebase/-/firebase-7.19.1.tgz#e77c778117c92206c4806c15a0513f33b625ad05"
-  integrity sha1-53x3gRfJIgbEgGwVoFE/M7YlrQU=
+  version "7.21.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/firebase/-/firebase-7.21.0.tgz#bb64f99fad2e1fe755e321a42b1377da537081e5"
+  integrity sha1-u2T5n60uH+dV4yGkKxN32lNwgeU=
   dependencies:
-    "@firebase/analytics" "0.4.2"
-    "@firebase/app" "0.6.10"
+    "@firebase/analytics" "0.5.0"
+    "@firebase/app" "0.6.11"
     "@firebase/app-types" "0.6.1"
     "@firebase/auth" "0.14.9"
-    "@firebase/database" "0.6.11"
-    "@firebase/firestore" "1.16.6"
-    "@firebase/functions" "0.4.50"
-    "@firebase/installations" "0.4.16"
-    "@firebase/messaging" "0.7.0"
-    "@firebase/performance" "0.4.0"
+    "@firebase/database" "0.6.13"
+    "@firebase/firestore" "1.17.0"
+    "@firebase/functions" "0.4.51"
+    "@firebase/installations" "0.4.17"
+    "@firebase/messaging" "0.7.1"
+    "@firebase/performance" "0.4.1"
     "@firebase/polyfill" "0.3.36"
-    "@firebase/remote-config" "0.1.27"
-    "@firebase/storage" "0.3.42"
-    "@firebase/util" "0.3.1"
+    "@firebase/remote-config" "0.1.28"
+    "@firebase/storage" "0.3.43"
+    "@firebase/util" "0.3.2"
 
 flat-cache@^2.0.1:
   version "2.0.1"
@@ -6013,9 +6066,9 @@ fork-ts-checker-notifier-webpack-plugin@^3.0.0:
     node-notifier "^6.0.0"
 
 fork-ts-checker-webpack-plugin@^5.0.14:
-  version "5.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-5.1.0.tgz#586fbee24aeea950c53bab529e32017f543e71cf"
-  integrity sha1-WG++4kruqVDFO6tSnjIBf1Q+cc8=
+  version "5.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-5.2.0.tgz#780a14fb0da02a892baedd7aa0d089a1eda7b3e5"
+  integrity sha1-eAoU+w2gKokrrt16oNCJoe2ns+U=
   dependencies:
     "@babel/code-frame" "^7.8.3"
     "@types/json-schema" "^7.0.5"
@@ -6138,9 +6191,9 @@ fuzzaldrin@2.1.0:
   integrity sha1-kCBMPi/appQbso0WZF1BgGOpDps=
 
 gaxios@^3.0.0:
-  version "3.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/gaxios/-/gaxios-3.1.0.tgz#95f65f5a335f61aff602fe124cfdba8524f765fa"
-  integrity sha1-lfZfWjNfYa/2Av4STP26hST3Zfo=
+  version "3.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/gaxios/-/gaxios-3.2.0.tgz#11b6f0e8fb08d94a10d4d58b044ad3bec6dd486a"
+  integrity sha1-Ebbw6PsI2UoQ1NWLBErTvsbdSGo=
   dependencies:
     abort-controller "^3.0.0"
     extend "^3.0.2"
@@ -6149,9 +6202,9 @@ gaxios@^3.0.0:
     node-fetch "^2.3.0"
 
 gcp-metadata@^4.1.0:
-  version "4.1.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/gcp-metadata/-/gcp-metadata-4.1.4.tgz#3adadb9158c716c325849ee893741721a3c09e7e"
-  integrity sha1-OtrbkVjHFsMlhJ7ok3QXIaPAnn4=
+  version "4.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/gcp-metadata/-/gcp-metadata-4.2.0.tgz#3b424355ccdc240ee07c5791e2fd6a60a283d89a"
+  integrity sha1-O0JDVczcJA7gfFeR4v1qYKKD2Jo=
   dependencies:
     gaxios "^3.0.0"
     json-bigint "^1.0.0"
@@ -6382,6 +6435,16 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://neo.jfrog.io/neo/api/npm/npm/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha1-Ila94U02MpWMRl68ltxGfKB6Kfs=
 
+graphql-tag@^2.11.0:
+  version "2.11.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/graphql-tag/-/graphql-tag-2.11.0.tgz#1deb53a01c46a7eb401d6cb59dec86fa1cccbffd"
+  integrity sha1-HetToBxGp+tAHWy1neyG+hzMv/0=
+
+graphql@^15.3.0:
+  version "15.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/graphql/-/graphql-15.3.0.tgz#3ad2b0caab0d110e3be4a5a9b2aa281e362b5278"
+  integrity sha1-OtKwyqsNEQ475KWpsqooHjYrUng=
+
 growly@^1.3.0:
   version "1.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
@@ -6450,7 +6513,7 @@ has-flag@^4.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha1-lEdx/ZyByBJlxNaUGGDaBrtZR5s=
 
-has-symbols@^1.0.0, has-symbols@^1.0.1:
+has-symbols@^1.0.1:
   version "1.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/has-symbols/-/has-symbols-1.0.1.tgz#9f5214758a44196c406d9bd76cebf81ec2dd31e8"
   integrity sha1-n1IUdYpEGWxAbZvXbOv4HsLdMeg=
@@ -6540,10 +6603,10 @@ hast-util-parse-selector@^2.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/hast-util-parse-selector/-/hast-util-parse-selector-2.2.4.tgz#60c99d0b519e12ab4ed32e58f150ec3f61ed1974"
   integrity sha1-YMmdC1GeEqtO0y5Y8VDsP2HtGXQ=
 
-hast-util-raw@6.0.0:
-  version "6.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/hast-util-raw/-/hast-util-raw-6.0.0.tgz#49a38f5107d483f83a139709f2f705f22e7e7d32"
-  integrity sha1-SaOPUQfUg/g6E5cJ8vcF8i5+fTI=
+hast-util-raw@6.0.1:
+  version "6.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/hast-util-raw/-/hast-util-raw-6.0.1.tgz#973b15930b7529a7b66984c98148b46526885977"
+  integrity sha1-lzsVkwt1Kae2aYTJgUi0ZSaIWXc=
   dependencies:
     "@types/hast" "^2.0.0"
     hast-util-from-parse5 "^6.0.0"
@@ -6596,7 +6659,7 @@ hoist-non-react-statics@^2.5.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
   integrity sha1-xZA89AnA39kI84jmGdhrnBF0y0c=
 
-hoist-non-react-statics@^3.3.0:
+hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
   integrity sha1-7OCsr3HWLClpwuxZ/v9CpLGoW0U=
@@ -7110,9 +7173,9 @@ is-buffer@^2.0.0:
   integrity sha1-PlcvI8hBGlz9lVfISeNmXgspBiM=
 
 is-callable@^1.1.4, is-callable@^1.2.0:
-  version "1.2.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-callable/-/is-callable-1.2.0.tgz#83336560b54a38e35e3a2df7afd0454d691468bb"
-  integrity sha1-gzNlYLVKOONeOi33r9BFTWkUaLs=
+  version "1.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-callable/-/is-callable-1.2.1.tgz#4d1e21a4f437509d25ce55f8184350771421c96d"
+  integrity sha1-TR4hpPQ3UJ0lzlX4GENQdxQhyW0=
 
 is-ci@^1.0.10:
   version "1.2.1"
@@ -8633,18 +8696,15 @@ mdast-util-definitions@^3.0.0:
   dependencies:
     unist-util-visit "^2.0.0"
 
-mdast-util-to-hast@9.1.0:
-  version "9.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/mdast-util-to-hast/-/mdast-util-to-hast-9.1.0.tgz#6ef121dd3cd3b006bf8650b1b9454da0faf79ffe"
-  integrity sha1-bvEh3TzTsAa/hlCxuUVNoPr3n/4=
+mdast-util-to-hast@9.1.1:
+  version "9.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/mdast-util-to-hast/-/mdast-util-to-hast-9.1.1.tgz#953ff12aed57464b11d7e5549a45913e561909fa"
+  integrity sha1-lT/xKu1XRksR1+VUmkWRPlYZCfo=
   dependencies:
     "@types/mdast" "^3.0.0"
     "@types/unist" "^2.0.3"
-    collapse-white-space "^1.0.0"
-    detab "^2.0.0"
     mdast-util-definitions "^3.0.0"
     mdurl "^1.0.0"
-    trim-lines "^1.0.0"
     unist-builder "^2.0.0"
     unist-util-generated "^1.0.0"
     unist-util-position "^3.0.0"
@@ -8922,9 +8982,9 @@ mockdate@^2.0.5:
   integrity sha1-cMar+e1LLa5lyB38Fw3Rpc7FNiA=
 
 moment@^2.27.0:
-  version "2.27.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/moment/-/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
-  integrity sha1-i/9OPiaiNiIN/j423nVrbrqgEF0=
+  version "2.28.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/moment/-/moment-2.28.0.tgz#cdfe73ce01327cee6537b0fafac2e0f21a237d75"
+  integrity sha1-zf5zzgEyfO5lN7D6+sLg8hojfXU=
 
 moo@^0.4.3:
   version "0.4.3"
@@ -9053,12 +9113,12 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
 
 neo4j-driver@^4.1.0:
-  version "4.1.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-4.1.1.tgz#0d25de398256117b6088fc5e4466100ee4ae5f57"
-  integrity sha1-DSXeOYJWEXtgiPxeRGYQDuSuX1c=
+  version "4.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-4.1.2.tgz#b7dc520a8b64b7dccd143058cf6cdf6fd6cb9ccd"
+  integrity sha1-t9xSCotkt9zNFDBYz2zfb9bLnM0=
   dependencies:
-    "@babel/runtime" "^7.9.6"
-    rxjs "^6.5.5"
+    "@babel/runtime" "^7.5.5"
+    rxjs "^6.5.2"
     text-encoding-utf-8 "^1.0.2"
     uri-js "^4.2.2"
 
@@ -9084,10 +9144,10 @@ nock@^12.0.3:
     lodash "^4.17.13"
     propagate "^2.0.0"
 
-node-fetch@2.6.0, node-fetch@^2.3.0:
-  version "2.6.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha1-5jNFY4bUqlWGP2dqerDaqP3ssP0=
+node-fetch@2.6.1, node-fetch@^2.3.0:
+  version "2.6.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha1-BFvTI2Mfdu0uK1VXM5RBa2OaAFI=
 
 node-fetch@^1.0.1:
   version "1.7.3"
@@ -9096,11 +9156,6 @@ node-fetch@^1.0.1:
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
-
-node-forge@0.9.0:
-  version "0.9.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
-  integrity sha1-1iQFDtu0SHStyhK7mlLsY8t4JXk=
 
 node-forge@^0.10.0:
   version "0.10.0"
@@ -9157,10 +9212,10 @@ node-notifier@^6.0.0:
     shellwords "^0.1.1"
     which "^1.3.1"
 
-node-releases@^1.1.60:
-  version "1.1.60"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/node-releases/-/node-releases-1.1.60.tgz#6948bdfce8286f0b5d0e5a88e8384e954dfe7084"
-  integrity sha1-aUi9/OgobwtdDlqI6DhOlU3+cIQ=
+node-releases@^1.1.61:
+  version "1.1.61"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/node-releases/-/node-releases-1.1.61.tgz#707b0fca9ce4e11783612ba4a2fcba09047af16e"
+  integrity sha1-cHsPypzk4ReDYSukovy6CQR68W4=
 
 normalize-package-data@^2.3.2, normalize-package-data@^2.5.0:
   version "2.5.0"
@@ -9283,7 +9338,7 @@ object-is@^1.0.1:
     define-properties "^1.1.3"
     es-abstract "^1.17.5"
 
-object-keys@^1.0.11, object-keys@^1.0.12, object-keys@^1.1.1:
+object-keys@^1.0.12, object-keys@^1.1.1:
   version "1.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
   integrity sha1-HEfyct8nfzsdrwYWd9nILiMixg4=
@@ -9296,14 +9351,14 @@ object-visit@^1.0.0:
     isobject "^3.0.0"
 
 object.assign@^4.1.0:
-  version "4.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/object.assign/-/object.assign-4.1.0.tgz#968bf1100d7956bb3ca086f006f846b3bc4008da"
-  integrity sha1-lovxEA15Vrs8oIbwBvhGs7xACNo=
+  version "4.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/object.assign/-/object.assign-4.1.1.tgz#303867a666cdd41936ecdedfb1f8f3e32a478cdd"
+  integrity sha1-MDhnpmbN1Bk27N7fsfjz4ypHjN0=
   dependencies:
-    define-properties "^1.1.2"
-    function-bind "^1.1.1"
-    has-symbols "^1.0.0"
-    object-keys "^1.0.11"
+    define-properties "^1.1.3"
+    es-abstract "^1.18.0-next.0"
+    has-symbols "^1.0.1"
+    object-keys "^1.1.1"
 
 object.entries@^1.1.2:
   version "1.1.2"
@@ -9408,6 +9463,13 @@ opn@^5.5.0:
   integrity sha1-/HFk+rVtI1kExRw7J9pnWMo7m/w=
   dependencies:
     is-wsl "^1.1.0"
+
+optimism@^0.12.1:
+  version "0.12.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/optimism/-/optimism-0.12.1.tgz#933f9467b9aef0e601655adb9638f893e486ad02"
+  integrity sha1-kz+UZ7mu8OYBZVrbljj4k+SGrQI=
+  dependencies:
+    "@wry/context" "^0.5.2"
 
 optionator@^0.8.1, optionator@^0.8.2:
   version "0.8.3"
@@ -10285,9 +10347,9 @@ postcss@^6.0, postcss@^6.0.0, postcss@^6.0.1, postcss@^6.0.11, postcss@^6.0.14, 
     supports-color "^5.4.0"
 
 postcss@^7.0.0, postcss@^7.0.14, postcss@^7.0.18, postcss@^7.0.2, postcss@^7.0.21:
-  version "7.0.32"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/postcss/-/postcss-7.0.32.tgz#4310d6ee347053da3433db2be492883d62cec59d"
-  integrity sha1-QxDW7jRwU9o0M9sr5JKIPWLOxZ0=
+  version "7.0.34"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/postcss/-/postcss-7.0.34.tgz#f2baf57c36010df7de4009940f21532c16d65c20"
+  integrity sha1-8rr1fDYBDffeQAmUDyFTLBbWXCA=
   dependencies:
     chalk "^2.4.2"
     source-map "^0.6.1"
@@ -10692,7 +10754,7 @@ react-dnd@9.3.2:
     hoist-non-react-statics "^3.3.0"
     shallowequal "^1.1.0"
 
-react-dom@^16.8.1, react-dom@^16.8.6:
+react-dom@^16.8.6, react-dom@^16.9.0:
   version "16.13.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
   integrity sha1-wb03MxoEhsB47lTEdAcgmTsuDn8=
@@ -11060,24 +11122,24 @@ relateurl@0.2.x:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
-remark-footnotes@1.0.0:
-  version "1.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/remark-footnotes/-/remark-footnotes-1.0.0.tgz#9c7a97f9a89397858a50033373020b1ea2aad011"
-  integrity sha1-nHqX+aiTl4WKUAMzcwILHqKq0BE=
+remark-footnotes@2.0.0:
+  version "2.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/remark-footnotes/-/remark-footnotes-2.0.0.tgz#9001c4c2ffebba55695d2dd80ffb8b82f7e6303f"
+  integrity sha1-kAHEwv/rulVpXS3YD/uLgvfmMD8=
 
-remark-mdx@1.6.16:
-  version "1.6.16"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/remark-mdx/-/remark-mdx-1.6.16.tgz#13ee40ad0614a1cc179aca3604d7f1b79e498a2f"
-  integrity sha1-E+5ArQYUocwXmso2BNfxt55Jii8=
+remark-mdx@1.6.18:
+  version "1.6.18"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/remark-mdx/-/remark-mdx-1.6.18.tgz#d8c76017c95824cc7fb853bb2759add8ba0cf319"
+  integrity sha1-2MdgF8lYJMx/uFO7J1mt2LoM8xk=
   dependencies:
-    "@babel/core" "7.10.5"
+    "@babel/core" "7.11.6"
     "@babel/helper-plugin-utils" "7.10.4"
-    "@babel/plugin-proposal-object-rest-spread" "7.10.4"
+    "@babel/plugin-proposal-object-rest-spread" "7.11.0"
     "@babel/plugin-syntax-jsx" "7.10.4"
-    "@mdx-js/util" "1.6.16"
+    "@mdx-js/util" "1.6.18"
     is-alphabetical "1.0.4"
     remark-parse "8.0.3"
-    unified "9.1.0"
+    unified "9.2.0"
 
 remark-parse@8.0.3:
   version "8.0.3"
@@ -11383,10 +11445,10 @@ rxjs@^5.0.0-beta.11, rxjs@^5.4.2:
   dependencies:
     symbol-observable "1.0.1"
 
-rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.2, rxjs@^6.5.5:
-  version "6.6.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-6.6.2.tgz#8096a7ac03f2cc4fe5860ef6e572810d9e01c0d2"
-  integrity sha1-gJanrAPyzE/lhg725XKBDZ4BwNI=
+rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.2:
+  version "6.6.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
+  integrity sha1-jKhGNcTaqQDA05Z6buesYCce5VI=
   dependencies:
     tslib "^1.9.0"
 
@@ -11488,11 +11550,11 @@ select-hose@^2.0.0:
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
 selfsigned@^1.10.7:
-  version "1.10.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/selfsigned/-/selfsigned-1.10.7.tgz#da5819fd049d5574f28e88a9bcc6dbc6e6f3906b"
-  integrity sha1-2lgZ/QSdVXTyjoipvMbbxubzkGs=
+  version "1.10.8"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/selfsigned/-/selfsigned-1.10.8.tgz#0d17208b7d12c33f8eac85c41835f27fc3d81a30"
+  integrity sha1-DRcgi30Swz+OrIXEGDXyf8PYGjA=
   dependencies:
-    node-forge "0.9.0"
+    node-forge "^0.10.0"
 
 semantic-ui-react@0.88.2, semantic-ui-react@^0.88.0:
   version "0.88.2"
@@ -11846,9 +11908,9 @@ spdx-expression-parse@^3.0.0:
     spdx-license-ids "^3.0.0"
 
 spdx-license-ids@^3.0.0:
-  version "3.0.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/spdx-license-ids/-/spdx-license-ids-3.0.5.tgz#3694b5804567a458d3c8045842a6358632f62654"
-  integrity sha1-NpS1gEVnpFjTyARYQqY1hjL2JlQ=
+  version "3.0.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/spdx-license-ids/-/spdx-license-ids-3.0.6.tgz#c80757383c28abf7296744998cbc106ae8b854ce"
+  integrity sha1-yAdXODwoq/cpZ0SZjLwQaui4VM4=
 
 spdy-transport@^3.0.0:
   version "3.0.0"
@@ -12270,6 +12332,11 @@ symbol-observable@^1.0.3, symbol-observable@^1.1.0, symbol-observable@^1.2.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha1-wiaIrtTqs83C3+rLtWFmBWCgCAQ=
 
+symbol-observable@^2.0.0:
+  version "2.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/symbol-observable/-/symbol-observable-2.0.1.tgz#ce66c36a04ed0f3056e7293184749a6fdd7063ea"
+  integrity sha1-zmbDagTtDzBW5ykxhHSab91wY+o=
+
 "symbol-tree@>= 3.1.0 < 4.0.0", symbol-tree@^3.2.2:
   version "3.2.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
@@ -12334,6 +12401,15 @@ terser@^4.1.2:
   version "4.8.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/terser/-/terser-4.8.0.tgz#63056343d7c70bb29f3af665865a46fe03a0df17"
   integrity sha1-YwVjQ9fHC7KfOvZlhlpG/gOg3xc=
+  dependencies:
+    commander "^2.20.0"
+    source-map "~0.6.1"
+    source-map-support "~0.5.12"
+
+terser@^5.2.0:
+  version "5.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/terser/-/terser-5.3.2.tgz#f4bea90eb92945b2a028ceef79181b9bb586e7af"
+  integrity sha1-9L6pDrkpRbKgKM7veRgbm7WG568=
   dependencies:
     commander "^2.20.0"
     source-map "~0.6.1"
@@ -12498,11 +12574,6 @@ tr46@~0.0.3:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
 
-trim-lines@^1.0.0:
-  version "1.1.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/trim-lines/-/trim-lines-1.1.3.tgz#839514be82428fd9e7ec89e35081afe8f6f93115"
-  integrity sha1-g5UUvoJCj9nn7InjUIGv6Pb5MRU=
-
 trim-trailing-lines@^1.0.0:
   version "1.1.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/trim-trailing-lines/-/trim-trailing-lines-1.1.3.tgz#7f0739881ff76657b7776e10874128004b625a94"
@@ -12522,6 +12593,13 @@ tryer@^1.0.1:
   version "1.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha1-8shUBoALmw90yfdGW4HqrSQSUvg=
+
+ts-invariant@^0.4.4:
+  version "0.4.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ts-invariant/-/ts-invariant-0.4.4.tgz#97a523518688f93aafad01b0e80eb803eb2abd86"
+  integrity sha1-l6UjUYaI+TqvrQGw6A64A+sqvYY=
+  dependencies:
+    tslib "^1.9.3"
 
 ts-jest@^25.0.0:
   version "25.5.1"
@@ -12560,7 +12638,7 @@ tsconfig-paths@^3.9.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0:
+tslib@^1.10.0, tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   version "1.13.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha1-yIHhPMcBWJTtkUhi0nZDb6mkcEM=
@@ -12692,10 +12770,10 @@ unicode-property-aliases-ecmascript@^1.0.4:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-1.1.0.tgz#dd57a99f6207bedff4628abefb94c50db941c8f4"
   integrity sha1-3Vepn2IHvt/0Yoq++5TFDblByPQ=
 
-unified@9.1.0:
-  version "9.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/unified/-/unified-9.1.0.tgz#7ba82e5db4740c47a04e688a9ca8335980547410"
-  integrity sha1-e6guXbR0DEegTmiKnKgzWYBUdBA=
+unified@9.2.0:
+  version "9.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/unified/-/unified-9.2.0.tgz#67a62c627c40589edebbf60f53edfd4d822027f8"
+  integrity sha1-Z6YsYnxAWJ7eu/YPU+39TYIgJ/g=
   dependencies:
     bail "^1.0.0"
     extend "^3.0.0"
@@ -13090,9 +13168,9 @@ webidl-conversions@^4.0.2:
   integrity sha1-qFWYCx8LazWbodXZ+zmulB+qY60=
 
 webpack-bundle-analyzer@^3.6.1:
-  version "3.8.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/webpack-bundle-analyzer/-/webpack-bundle-analyzer-3.8.0.tgz#ce6b3f908daf069fd1f7266f692cbb3bded9ba16"
-  integrity sha1-zms/kI2vBp/R9yZvaSy7O97ZuhY=
+  version "3.9.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/webpack-bundle-analyzer/-/webpack-bundle-analyzer-3.9.0.tgz#f6f94db108fb574e415ad313de41a2707d33ef3c"
+  integrity sha1-9vlNsQj7V05BWtMT3kGicH0z7zw=
   dependencies:
     acorn "^7.1.1"
     acorn-walk "^7.1.1"
@@ -13103,7 +13181,7 @@ webpack-bundle-analyzer@^3.6.1:
     express "^4.16.3"
     filesize "^3.6.1"
     gzip-size "^5.0.0"
-    lodash "^4.17.15"
+    lodash "^4.17.19"
     mkdirp "^0.5.1"
     opener "^1.5.1"
     ws "^6.0.0"
@@ -13254,9 +13332,9 @@ whatwg-fetch@2.0.4:
   integrity sha1-3eal3zFfnTmZGqF2IYU9cguFVm8=
 
 whatwg-fetch@>=0.10.0:
-  version "3.4.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/whatwg-fetch/-/whatwg-fetch-3.4.0.tgz#e11de14f4878f773fbebcde8871b2c0699af8b30"
-  integrity sha1-4R3hT0h493P7683ohxssBpmvizA=
+  version "3.4.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/whatwg-fetch/-/whatwg-fetch-3.4.1.tgz#e5f871572d6879663fa5674c8f833f15a8425ab3"
+  integrity sha1-5fhxVy1oeWY/pWdMj4M/FahCWrM=
 
 whatwg-mimetype@^2.2.0, whatwg-mimetype@^2.3.0:
   version "2.3.0"
@@ -13508,6 +13586,11 @@ yauzl@^2.10.0:
   dependencies:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
+
+zen-observable@^0.8.14:
+  version "0.8.15"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
+  integrity sha1-lkFcUS2OP/2SCv04iWBOMLnqrBU=
 
 zwitch@^1.0.0:
   version "1.0.5"

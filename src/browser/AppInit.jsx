@@ -30,6 +30,8 @@ import { BusProvider } from 'react-suber'
 import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import { createUploadLink } from 'apollo-upload-client'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -89,13 +91,40 @@ const url = window.location.href
 // Signal app upstart (for epics)
 store.dispatch({ type: APP_START, url, env })
 
+// @todo: will clean this Apollo stuff up in next PR
+// typePolicies allow apollo cache to use these fields as 'id'
+// for automated cache updates when updating a single existing entity
+const apolloCache = new InMemoryCache({
+  typePolicies: {
+    RelateFile: {
+      keyFields: ['name', 'directory']
+    }
+  }
+})
+
+// apollo-upload-client
+// https://www.apollographql.com/blog/file-uploads-with-apollo-server-2-0-5db2f3f60675/
+const uploadLink = createUploadLink({
+  uri: '/graphql',
+  headers: {
+    'keep-alive': 'true'
+  }
+})
+
+const client = new ApolloClient({
+  cache: apolloCache,
+  link: uploadLink
+})
+
 const AppInit = () => {
   return (
     <Provider store={store}>
       <BusProvider bus={bus}>
         <>
           <GlobalStyle />
-          <App />
+          <ApolloProvider client={client}>
+            <App />
+          </ApolloProvider>
         </>
       </BusProvider>
     </Provider>

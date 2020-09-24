@@ -25,6 +25,7 @@ import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
 import Favorites from './favorites'
+import ProjectFilesDrawer from './ProjectFiles'
 import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer'
@@ -54,6 +55,8 @@ interface SidebarProps {
   syncConnected: boolean
   loadSync: boolean
 }
+
+const IS_RELATE_AVAILABLE = true
 
 const Sidebar = ({
   openDrawer,
@@ -103,6 +106,18 @@ const Sidebar = ({
       content: DocumentsDrawer
     }
   ]
+
+  // @todo: IS_RELATE_AVAILABLE will come from Redux eventually
+  if (IS_RELATE_AVAILABLE) {
+    topNavItemsList.push({
+      name: 'Project Files',
+      title: 'Project Files',
+      icon: function favIcon(isOpen: boolean): ReactElement {
+        return <FavoritesIcon isOpen={isOpen} title="Project Files" />
+      },
+      content: ProjectFilesDrawer
+    })
+  }
 
   const bottomNavItemsList = [
     {

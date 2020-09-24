@@ -35,7 +35,12 @@ import {
   UIControls,
   AnimationContainer
 } from './styled'
-import { EXPAND, SET_CONTENT, CARDSIZE } from 'shared/modules/editor/editorDuck'
+import {
+  EXPAND,
+  SET_CONTENT,
+  CARDSIZE,
+  EDIT_CONTENT
+} from 'shared/modules/editor/editorDuck'
 import { FrameButton } from 'browser-components/buttons'
 import {
   ExpandIcon,
@@ -44,6 +49,14 @@ import {
   UpIcon,
   DownIcon
 } from 'browser-components/icons/Icons'
+import {
+  SELECT_PROJECT_FILE,
+  IProjectFile,
+  PROJECT_FILE_ERROR,
+  EDIT_PROJECT_FILE_START,
+  EDIT_PROJECT_FILE_END,
+  REMOVE_PROJECT_FILE
+} from 'browser/modules/Sidebar/project-files.constants'
 
 type EditorSize = 'CARD' | 'LINE' | 'FULLSCREEN'
 type EditorFrameProps = { bus: Bus }
@@ -52,8 +65,17 @@ type CodeEditor = {
   setValue: (newText: string) => void
 }
 
+type IActiveRelateFile = Omit<IProjectFile, 'downloadToken'>
+
 export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   const [sizeState, setSize] = useState<EditorSize>('LINE')
+  const [
+    activeProjectFile,
+    setActiveProjectFile
+  ] = useState<IActiveRelateFile | null>(null)
+  const [activeProjectFileStatus, setActiveProjectFileStatus] = useState<
+    string | null
+  >(null)
   const isFullscreen = sizeState === 'FULLSCREEN'
   const isCardSize = sizeState === 'CARD'
   const editorRef = useRef<CodeEditor>(null)
@@ -94,6 +116,71 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
 
   useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
   useEffect(() => bus && bus.take(CARDSIZE, toggleCardView))
+  useEffect(() => {
+    let isStillMounted = true
+    // when a saved Project Script or Local Cache Script is clicked
+    // not sure at this point which it could be
+    bus &&
+      bus.take(EDIT_CONTENT, () => {
+        if (isStillMounted) {
+          setActiveProjectFile(null)
+          setActiveProjectFileStatus(null)
+        }
+      })
+    // only when a Project Script is clicked
+    bus &&
+      bus.take(SELECT_PROJECT_FILE, projectFile => {
+        if (isStillMounted) {
+          setActiveProjectFile(projectFile)
+          setActiveProjectFileStatus(null)
+        }
+      })
+    // when a non-Project File action sets content in the editor
+    bus &&
+      bus.take(SET_CONTENT, () => {
+        if (isStillMounted) {
+          setActiveProjectFile(null)
+          setActiveProjectFileStatus(null)
+        }
+      })
+    // start of Project File edit (ProjectFileButton)
+    bus &&
+      bus.take(EDIT_PROJECT_FILE_START, () => {
+        if (isStillMounted) {
+          setActiveProjectFileStatus('saving edit...')
+        }
+      })
+    // successful completion of Project File edit (ProjectFilesButton)
+    bus &&
+      bus.take(EDIT_PROJECT_FILE_END, () => {
+        if (isStillMounted) {
+          setActiveProjectFileStatus(null)
+        }
+      })
+    // Edit error (ProjectFilesButton)
+    bus &&
+      bus.take(PROJECT_FILE_ERROR, () => {
+        if (isStillMounted) {
+          setActiveProjectFileStatus('error saving...')
+        }
+      })
+    // close editor if active Relate file is deleted
+    bus &&
+      bus.take(REMOVE_PROJECT_FILE, (removedProjectFile: IActiveRelateFile) => {
+        if (isStillMounted) {
+          if (
+            activeProjectFile &&
+            removedProjectFile.directory === activeProjectFile.directory &&
+            removedProjectFile.name === activeProjectFile.name
+          ) {
+            bus.send(SET_CONTENT, { message: '' })
+          }
+        }
+      })
+    return () => {
+      isStillMounted = false
+    }
+  })
 
   function discardEditor() {
     sizeState !== 'LINE' && setSize('LINE')
@@ -162,6 +249,13 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     config
   }))
 
+  const activeProjectFileName = activeProjectFile && activeProjectFile.name
+  const activeProjectFileHeading =
+    activeProjectFileName &&
+    `${activeProjectFileName}${
+      activeProjectFileStatus ? ` - ${activeProjectFileStatus}` : ''
+    }`
+
   return (
     <AnimationContainer cardSize={isCardSize}>
       <animated.div
@@ -171,7 +265,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       >
         <Frame fullscreen={isFullscreen}>
           <FrameHeader>
-            <FrameHeaderText />
+            <FrameHeaderText>{activeProjectFileHeading}</FrameHeaderText>
             <UIControls>
               {buttons.map(({ onClick, icon, title, testId }) => (
                 <FrameButton
