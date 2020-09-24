@@ -22,11 +22,11 @@ import { hostIsAllowed } from 'services/utils'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 
-export const fetchRemoteGuide = (url, whitelist = null) => {
+export const fetchRemoteGuide = (url, allowlist = null) => {
   return new Promise((resolve, reject) => {
-    if (!hostIsAllowed(url, whitelist)) {
+    if (!hostIsAllowed(url, allowlist)) {
       return reject(
-        new Error('Hostname is not allowed according to server whitelist')
+        new Error('Hostname is not allowed according to server allowlist')
       )
     }
     resolve()

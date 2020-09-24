@@ -41,7 +41,7 @@ import {
   getGraphStyleData
 } from 'shared/modules/grass/grassDuck'
 import {
-  getRemoteContentHostnameWhitelist,
+  getRemoteContentHostnameAllowlist,
   getDatabases,
   fetchMetaData,
   getAvailableSettings
@@ -496,8 +496,8 @@ const availableCommands = [
       const filenameExtension = urlObject.pathname.includes('.')
         ? urlObject.pathname.split('.').pop()
         : 'html'
-      const whitelist = getRemoteContentHostnameWhitelist(store.getState())
-      fetchRemoteGuide(url, whitelist)
+      const allowlist = getRemoteContentHostnameAllowlist(store.getState())
+      fetchRemoteGuide(url, allowlist)
         .then(r => {
           put(
             frames.add({
@@ -758,9 +758,9 @@ const availableCommands = [
         param.includes('.') /* isValid url considers words like rest an url*/
       ) {
         const url = param.startsWith('http') ? param : `http://${param}`
-        const whitelist = getRemoteContentHostnameWhitelist(store.getState())
+        const allowlist = getRemoteContentHostnameAllowlist(store.getState())
 
-        fetchRemoteGrass(param, whitelist)
+        fetchRemoteGrass(param, allowlist)
           .then(response => {
             const parsedGrass = parseGrass(response)
             if (parsedGrass) {

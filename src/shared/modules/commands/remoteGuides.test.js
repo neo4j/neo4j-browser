@@ -21,8 +21,8 @@
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
 import {
-  fetchGuideFromWhitelistAction,
-  fetchGuideFromWhitelistEpic
+  fetchGuideFromAllowlistAction,
+  fetchGuideFromAllowlistEpic
 } from './commandsDuck'
 
 jest.mock('services/remote', () => {
@@ -38,36 +38,36 @@ jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
   const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
   return {
     ...orig,
-    getRemoteContentHostnameWhitelist: jest.fn(),
-    getDefaultRemoteContentHostnameWhitelist: jest.fn()
+    getRemoteContentHostnameAllowlist: jest.fn(),
+    getDefaultRemoteContentHostnameAllowlist: jest.fn()
   }
 })
 const dbMeta = require.requireMock('shared/modules/dbMeta/dbMetaDuck')
 
-describe('fetchGuideFromWhitelistEpic', () => {
+describe('fetchGuideFromAllowlistEpic', () => {
   afterEach(() => {
     remote.get.mockReset()
-    dbMeta.getRemoteContentHostnameWhitelist.mockReset()
-    dbMeta.getDefaultRemoteContentHostnameWhitelist.mockReset()
+    dbMeta.getRemoteContentHostnameAllowlist.mockReset()
+    dbMeta.getDefaultRemoteContentHostnameAllowlist.mockReset()
   })
 
-  it('resolves * to default whitelist when looking for a guide', done => {
+  it('resolves * to default allowlist when looking for a guide', done => {
     // Given
     const bus = createBus()
-    bus.applyReduxMiddleware(createEpicMiddleware(fetchGuideFromWhitelistEpic))
+    bus.applyReduxMiddleware(createEpicMiddleware(fetchGuideFromAllowlistEpic))
     remote.get.mockImplementation(() => Promise.reject(new Error('test')))
-    dbMeta.getRemoteContentHostnameWhitelist.mockImplementation(() => '*')
-    dbMeta.getDefaultRemoteContentHostnameWhitelist.mockImplementation(
+    dbMeta.getRemoteContentHostnameAllowlist.mockImplementation(() => '*')
+    dbMeta.getDefaultRemoteContentHostnameAllowlist.mockImplementation(
       () => 'testurl1.test, testurl2.test'
     )
     const $$responseChannel = 'test-channel'
-    const action = fetchGuideFromWhitelistAction('reco')
+    const action = fetchGuideFromAllowlistAction('reco')
     action.$$responseChannel = $$responseChannel
     bus.one($$responseChannel, res => {
       // Then
-      expect(dbMeta.getRemoteContentHostnameWhitelist).toHaveBeenCalledTimes(1)
+      expect(dbMeta.getRemoteContentHostnameAllowlist).toHaveBeenCalledTimes(1)
       expect(
-        dbMeta.getDefaultRemoteContentHostnameWhitelist
+        dbMeta.getDefaultRemoteContentHostnameAllowlist
       ).toHaveBeenCalledTimes(1)
       expect(remote.get).toHaveBeenCalledTimes(4) // 2 times per hostname
       expect(remote.get).toHaveBeenCalledWith('http://testurl1.test/reco', {
@@ -93,23 +93,23 @@ describe('fetchGuideFromWhitelistEpic', () => {
   it('does not change behavior when * isnt involved', done => {
     // Given
     const bus = createBus()
-    bus.applyReduxMiddleware(createEpicMiddleware(fetchGuideFromWhitelistEpic))
+    bus.applyReduxMiddleware(createEpicMiddleware(fetchGuideFromAllowlistEpic))
     remote.get.mockImplementation(() => Promise.reject(new Error('test')))
-    dbMeta.getRemoteContentHostnameWhitelist.mockImplementation(
+    dbMeta.getRemoteContentHostnameAllowlist.mockImplementation(
       () => 'configurl1.test'
     )
 
-    dbMeta.getDefaultRemoteContentHostnameWhitelist.mockImplementation(
+    dbMeta.getDefaultRemoteContentHostnameAllowlist.mockImplementation(
       () => 'test1.test, test2.test'
     )
     const $$responseChannel = 'test-channel'
-    const action = fetchGuideFromWhitelistAction('reco')
+    const action = fetchGuideFromAllowlistAction('reco')
     action.$$responseChannel = $$responseChannel
     bus.one($$responseChannel, res => {
       // Then
-      expect(dbMeta.getRemoteContentHostnameWhitelist).toHaveBeenCalledTimes(1)
+      expect(dbMeta.getRemoteContentHostnameAllowlist).toHaveBeenCalledTimes(1)
       expect(
-        dbMeta.getDefaultRemoteContentHostnameWhitelist
+        dbMeta.getDefaultRemoteContentHostnameAllowlist
       ).toHaveBeenCalledTimes(1)
       expect(remote.get).toHaveBeenCalledTimes(2)
       expect(remote.get).toHaveBeenCalledWith('http://configurl1.test/reco', {

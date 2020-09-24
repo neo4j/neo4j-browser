@@ -147,22 +147,22 @@ export const firstSuccessPromise = (list, fn) => {
   }, Promise.reject(new Error()))
 }
 
-export const hostIsAllowed = (uri, whitelist = null) => {
-  if (whitelist === '*') return true
+export const hostIsAllowed = (uri, allowlist = null) => {
+  if (allowlist === '*') return true
   const urlInfo = getUrlInfo(uri)
   const hostname = urlInfo.hostname
   const hostnamePlusProtocol = `${urlInfo.protocol}//${hostname}`
-  const whitelistedHosts =
-    whitelist && whitelist !== ''
-      ? extractWhitelistFromConfigString(whitelist)
+  const allowlistedHosts =
+    allowlist && allowlist !== ''
+      ? extractAllowlistFromConfigString(allowlist)
       : []
   return (
-    whitelistedHosts.indexOf(hostname) > -1 ||
-    whitelistedHosts.indexOf(hostnamePlusProtocol) > -1
+    allowlistedHosts.indexOf(hostname) > -1 ||
+    allowlistedHosts.indexOf(hostnamePlusProtocol) > -1
   )
 }
 
-export const extractWhitelistFromConfigString = str =>
+export const extractAllowlistFromConfigString = str =>
   str.split(',').map(s => s.trim().replace(/\/$/, ''))
 
 export const addProtocolsToUrlList = list => {
@@ -174,7 +174,7 @@ export const addProtocolsToUrlList = list => {
   }, [])
 }
 
-export const resolveWhitelistWildcard = (list, resolveTo = []) => {
+export const resolveAllowlistWildcard = (list, resolveTo = []) => {
   return list.reduce((all, entry) => {
     return all.concat(entry && entry.trim() === '*' ? resolveTo : entry)
   }, [])

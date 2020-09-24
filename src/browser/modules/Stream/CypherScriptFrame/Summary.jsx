@@ -27,7 +27,7 @@ import {
   StyledCypherInfoMessage
 } from 'browser/modules/Stream/styled'
 import { MessageArea, PaddedStatsBar } from './styled'
-import { whitelistedMultiCommands } from 'shared/modules/commands/commandsDuck'
+import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 
 const ucFirst = str => str[0].toUpperCase() + str.slice(1)
 
@@ -65,7 +65,7 @@ const GenericSummary = ({ status }) => {
           <StyledCypherWarningMessage>WARNING</StyledCypherWarningMessage>
           <MessageArea>
             Only the commands{' '}
-            {whitelistedMultiCommands().map((cmd, i) => {
+            {allowlistedMultiCommands().map((cmd, i) => {
               const maybeComma = i > 0 ? ', ' : ''
               return [maybeComma, <code key={cmd}>{cmd}</code>]
             })}{' '}

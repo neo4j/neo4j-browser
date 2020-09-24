@@ -24,7 +24,7 @@ import {
   replace
 } from 'shared/modules/settings/settingsDuck'
 import { splitStringOnFirst } from 'services/commandUtils'
-import { getRemoteContentHostnameWhitelist } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/dbMetaDuck'
 import { hostIsAllowed } from 'services/utils'
 import { getJSON } from 'services/remote'
 import { isValidURL } from 'shared/modules/commands/helpers/http'
@@ -72,11 +72,11 @@ export function handleUpdateConfigCommand(action, cmdchar, put, store) {
       }
     }
     // It's an URL
-    const whitelist = getRemoteContentHostnameWhitelist(store.getState())
-    if (!hostIsAllowed(param, whitelist)) {
+    const allowlist = getRemoteContentHostnameAllowlist(store.getState())
+    if (!hostIsAllowed(param, allowlist)) {
       // Make sure we're allowed to request entities on this host
       return reject(
-        new Error('Hostname is not allowed according to server whitelist')
+        new Error('Hostname is not allowed according to server allowlist')
       )
     }
     getJSON(param)

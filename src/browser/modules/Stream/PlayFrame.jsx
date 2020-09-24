@@ -20,7 +20,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { withBus } from 'react-suber'
-import { fetchGuideFromWhitelistAction } from 'shared/modules/commands/commandsDuck'
+import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
 
 import Docs from '../Docs/Docs'
 import docs from '../../documentation'
@@ -201,7 +201,7 @@ function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
     }
   }
 
-  // Some other error. Whitelist error etc.
+  // Some other error. Allowlist error etc.
   if (stackFrame.error && stackFrame.error.error) {
     return {
       guide: (
@@ -245,10 +245,10 @@ function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
     }
   }
 
-  // Check whitelisted remote URLs for name matches
+  // Check allowlisted remote URLs for name matches
   if (bus) {
     const topicInput = (splitStringOnFirst(stackFrame.cmd, ' ')[1] || '').trim()
-    const action = fetchGuideFromWhitelistAction(topicInput)
+    const action = fetchGuideFromAllowlistAction(topicInput)
     return new Promise(resolve => {
       bus.self(action.type, action, res => {
         if (!res.success) {
