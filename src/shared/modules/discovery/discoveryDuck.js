@@ -32,6 +32,7 @@ import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
+import { CLOUD, getEnv } from 'shared/modules/app/appDuck'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -167,7 +168,8 @@ export const discoveryOnStartupEpic = (some$, store) => {
               getAllowedBoltSchemes(store.getState()),
               host
             )
-            const isAura = result.neo4j_version.toLowerCase().includes('aura')
+
+            const isAura = getEnv(store.getState()) === CLOUD
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
             store.dispatch(updateDiscoveryConnection({ host, supportsMultiDb })) // Update discovery host in redux
