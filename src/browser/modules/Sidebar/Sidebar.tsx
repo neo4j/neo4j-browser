@@ -25,6 +25,7 @@ import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
 import Favorites from './favorites'
+import RelateScripts from './relate-scripts'
 import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer'
@@ -89,6 +90,7 @@ const Sidebar = ({
           <>
             <DrawerHeader>Favorites</DrawerHeader>
             <Favorites />
+            <RelateScripts />
             {showStaticScripts && <StaticScripts />}
           </>
         )

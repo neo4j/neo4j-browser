@@ -30,6 +30,8 @@ import { BusProvider } from 'react-suber'
 import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import { createUploadLink } from 'apollo-upload-client'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -89,13 +91,31 @@ const url = window.location.href
 // Signal app upstart (for epics)
 store.dispatch({ type: APP_START, url, env })
 
+// @todo: will clean this up in later work
+// Apollo Client (https://medium.com/@enespalaz/file-upload-with-graphql-9a4927775ef7)
+const apolloCache = new InMemoryCache()
+
+const uploadLink = createUploadLink({
+  uri: '/graphql',
+  headers: {
+    'keep-alive': 'true'
+  }
+})
+
+const client = new ApolloClient({
+  cache: apolloCache,
+  link: uploadLink
+})
+
 const AppInit = () => {
   return (
     <Provider store={store}>
       <BusProvider bus={bus}>
         <>
           <GlobalStyle />
-          <App />
+          <ApolloProvider client={client}>
+            <App />
+          </ApolloProvider>
         </>
       </BusProvider>
     </Provider>
