@@ -7,7 +7,9 @@ declare module 'react-suber' {
   interface BusProps {
     bus: Bus
   }
-  const withBus: (comp: any) => React.ComponentType
+  const withBus: (
+    comp: React.ComponentType<P>
+  ) => React.ComponentType<P & BusProps>
   const BusProvider: React.ComponentType
   export { withBus, BusProvider, BusProps }
 }

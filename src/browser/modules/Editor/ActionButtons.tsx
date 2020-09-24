@@ -19,11 +19,15 @@
  */
 
 import React from 'react'
+
 import { ActionButtonSection } from './styled'
 import { EditorButton } from 'browser-components/buttons'
+import ProjectFilesButton from './ProjectFilesButton'
+
 interface ActionButtonProps {
   buttons: ActionButton[]
   width?: number
+  editorValue: () => string
 }
 
 interface ActionButton {
@@ -36,9 +40,11 @@ interface ActionButton {
 
 const ActionButtons = ({
   buttons,
-  width = 24
+  width = 24,
+  editorValue
 }: ActionButtonProps): JSX.Element => (
   <ActionButtonSection>
+    <ProjectFilesButton width={width} editorValue={editorValue} />
     {buttons.map((btn: ActionButton) => (
       <EditorButton
         data-testid={`editor-${btn.title.split(' ')[0]}`}

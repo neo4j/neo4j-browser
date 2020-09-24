@@ -47,10 +47,11 @@ export const setContent = newContent => ({
   type: SET_CONTENT,
   message: newContent
 })
-export const editContent = (id, message) => ({
+export const editContent = (id, message, isProjectFile) => ({
   type: EDIT_CONTENT,
   message,
-  id
+  id,
+  isProjectFile
 })
 
 export const populateEditorFromUrlEpic = (some$, store) => {
