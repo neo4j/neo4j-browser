@@ -82,7 +82,6 @@ describe('Connect form', () => {
     cy.connect('neo4j', Cypress.config('password'), boltUrl)
     cy.executeCommand('RETURN "Hello World";')
     cy.contains('Hello World')
-    cy.get('[data-testid="editor-wrapper"]').contains('neo4j')
     cy.reload()
     cy.executeCommand('RETURN "Hello again";')
     cy.contains('Hello again')
