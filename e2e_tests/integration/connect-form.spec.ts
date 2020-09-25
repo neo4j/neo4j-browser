@@ -76,13 +76,16 @@ describe('Connect form', () => {
     getBoltSchemeSelect().should('have.value', aliasScheme)
   })
 
-  it('can connect with bolt:// protocol', () => {
+  it.only('can connect with bolt:// protocol', () => {
     cy.executeCommand(':clear')
     const boltUrl = 'bolt://' + stripScheme(Cypress.config('boltUrl'))
     cy.connect('neo4j', Cypress.config('password'), boltUrl)
+    cy.executeCommand('RETURN "Hello World";')
+    cy.contains('Hello World')
     cy.get('[data-testid="editor-wrapper"]').contains('neo4j')
     cy.reload()
-    cy.get('[data-testid="editor-wrapper"]').contains('neo4j')
+    cy.executeCommand('RETURN "Hello again";')
+    cy.contains('Hello again')
     cy.executeCommand(':server disconnect')
   })
   // Check auto switching protocols for non supporting neo4j://
