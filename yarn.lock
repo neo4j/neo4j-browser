@@ -4592,7 +4592,7 @@ cypher-codemirror@1.1.6:
   dependencies:
     cypher-editor-support "1.1.6"
 
-cypher-editor-support@1.1.6:
+cypher-editor-support@1.1.6, cypher-editor-support@^1.1.6:
   version "1.1.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.6.tgz#a9bad1e9c67a91d8bcd7066e0498130de43ed84a"
   integrity sha1-qbrR6cZ6kdi81wZuBJgTDeQ+2Eo=

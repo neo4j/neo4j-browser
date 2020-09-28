@@ -88,7 +88,6 @@ export function tokensForLine(input: string): monaco.languages.ILineTokens {
     myTokens.push(new CypherToken('error.cypher', e))
   }
   myTokens.sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
-  console.log(myTokens)
 
   return new CypherLineTokens(myTokens)
 }

@@ -38,3 +38,23 @@ declare module 'suber' {
   const createBus: () => Bus
   export { Bus, createBus }
 }
+
+declare module 'cypher-editor-support' {
+  class CypherLexer extends (await import('antlr4/index.js')).Lexer {
+    constructor(input: unknown)
+    channelNames: string[]
+    modeNames: string[]
+    literalNames: string[]
+    symbolicNames: string[]
+    ruleNames: string[]
+    grammarFileName: string;
+    [key: string]: number
+  }
+
+  class CypherParser extends (await import('antlr4/index.js')).Parser {
+    constructor(input: unknown)
+    ruleNames: string[]
+  }
+
+  export { CypherLexer, CypherParser }
+}

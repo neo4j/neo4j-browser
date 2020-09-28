@@ -159,6 +159,7 @@
     "codemirror": "^5.29.0",
     "core-js": "3",
     "cypher-codemirror": "1.1.6",
+    "cypher-editor-support": "^1.1.6",
     "d3": "3",
     "dateformat": "^3.0.3",
     "deepmerge": "^2.1.1",

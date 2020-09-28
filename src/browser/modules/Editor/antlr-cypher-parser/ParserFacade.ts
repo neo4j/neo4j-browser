@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   CommonTokenStream,
   InputStream,
@@ -8,8 +7,8 @@ import {
   Lexer
 } from 'antlr4/index.js'
 // import { DefaultErrorStrategy } from 'antlr4/error/ErrorStrategy.js'
-import { CypherLexer } from './CypherLexer'
-import { CypherParser } from './CypherParser'
+
+import { CypherLexer, CypherParser } from 'cypher-editor-support'
 
 // class ConsoleErrorListener extends error.ErrorListener {
 //   syntaxError(_recognizer: any, _offendingSymbol: any, _line: any, _column: any, msg: string) {
@@ -56,11 +55,11 @@ export class Error {
 //   }
 // }
 
-export function createLexer(input: string) {
+export function createLexer(input: string): CypherLexer {
   const chars = new InputStream(input)
-  const lexer = new CypherLexer(chars) as any
+  const lexer = new CypherLexer(chars)
 
-  lexer.strictMode = false
+  // lexer.strictMode = false
 
   return lexer
 }
@@ -86,19 +85,19 @@ function createParserFromLexer(lexer: Lexer) {
 //   return parser.compilationUnit()
 // }
 
-export function parseTreeStr(input: string) {
-  const lexer = createLexer(input)
-  lexer.removeErrorListeners()
-  // lexer.addErrorListener(new ConsoleErrorListener())
+// export function parseTreeStr(input: string) {
+//   const lexer = createLexer(input)
+//   lexer.removeErrorListeners()
+//   lexer.addErrorListener(new ConsoleErrorListener())
 
-  const parser = createParserFromLexer(lexer) as any
-  parser.removeErrorListeners()
-  // parser.addErrorListener(new ConsoleErrorListener())
+//   const parser = createParserFromLexer(lexer as any)
+//   parser.removeErrorListeners()
+//   parser.addErrorListener(new ConsoleErrorListener())
 
-  const tree = parser.compilationUnit()
+//   const tree = parser.compilationUnit()
 
-  return tree.tostringTree(parser.ruleNames)
-}
+//   return tree.tostringTree(parser.ruleNames)
+// }
 
 // class CypherErrorStrategy extends DefaultErrorStrategy {
 //   reportUnwantedToken(recognizer: Parser) {
@@ -138,11 +137,11 @@ export function validate(input: string): Error[] {
   lexer.removeErrorListeners()
   // lexer.addErrorListener(new ConsoleErrorListener())
 
-  const parser = createParserFromLexer(lexer) as any
+  const parser = createParserFromLexer(lexer as any)
   parser.removeErrorListeners()
   // parser.addErrorListener(new CollectorErrorListener(errors))
   // parser._errHandler = new CypherErrorStrategy()
 
-  parser.compilationUnit()
+  // parser.compilationUnit()
   return errors
 }
