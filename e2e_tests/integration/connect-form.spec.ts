@@ -76,7 +76,7 @@ describe('Connect form', () => {
     getBoltSchemeSelect().should('have.value', aliasScheme)
   })
 
-  it.only('can connect with bolt:// protocol', () => {
+  it('can connect with bolt:// protocol', () => {
     cy.executeCommand(':clear')
     const boltUrl = 'bolt://' + stripScheme(Cypress.config('boltUrl'))
     cy.connect('neo4j', Cypress.config('password'), boltUrl)
