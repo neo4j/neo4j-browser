@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// import * as antlr4 from 'antlr4'
 import React, { Dispatch, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
@@ -68,8 +69,8 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
   useEffect(() => {
     const themeMap: { [key in BrowserTheme]: VSTheme } = {
       [LIGHT_THEME]: VS_LIGHT_THEME,
-      [OUTLINE_THEME]: VS_DARK_THEME,
-      [DARK_THEME]: VS_HIGH_CONTRAST_THEME
+      [OUTLINE_THEME]: VS_HIGH_CONTRAST_THEME,
+      [DARK_THEME]: VS_DARK_THEME
     }
     setTheme(themeMap[derivedTheme])
   }, [derivedTheme])

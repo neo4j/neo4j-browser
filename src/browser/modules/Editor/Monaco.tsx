@@ -20,6 +20,7 @@
 
 import * as monaco from 'monaco-editor'
 import React, { useEffect, useRef } from 'react'
+import { CypherTokensProvider } from './antlr-cypher-parser/CypherTokensProvider'
 
 export const VS_LIGHT_THEME = 'vs'
 export const VS_DARK_THEME = 'vs-dark'
@@ -48,6 +49,148 @@ const Monaco = ({
   const monacoId = `monaco-${id}`
 
   useEffect(() => {
+    monaco.languages.register({ id: 'cypher' })
+    monaco.languages.setTokensProvider('cypher', new CypherTokensProvider())
+
+    // colors from cypher-editor/cypher-codemirror/src/css/_solarized.css
+    const enum Color {
+      blue = '#268bd2',
+      cyan = '#2aa198',
+      cyan_grey = '#586e75',
+      green = '#859900',
+      light_grey = '#93a1a1',
+      magenta = '#d33682',
+      orange = '#cb4b16',
+      red = '#dc322f',
+      violet = '#6c71c4',
+      yellow = '#b58900'
+    }
+
+    // syntax highlighting from cypher-editor/cypher-codemirror/src/css/syntax.css
+    const rules = [
+      // { token: 'p-label', foreGround: Color.orange },
+      // { token: 'p-relationshipType', foreGround: Color.orange },
+      // { token: 'p-variable', foreGround: Color.blue },
+      // { token: 'p-procedure', foreGround: Color.violet },
+      // { token: 'p-function', foreGround: Color.violet },
+      // {
+      //   token: 'p-parameter',
+      //   foreGround: Color.red
+      // },
+      // { token: 'p-property', foreGround: Color.cyan_grey },
+      // {
+      //   token: 's-cypher s-cypher-dark  p-property',
+      //   foreGround: Color.light_grey
+      // },
+      // { token: 'p-consoleCommand', foreGround: Color.magenta },
+      // { token: 'p-procedureOutput', foreGround: Color.blue },
+
+      ...[
+        'all',
+        'allshortestpaths',
+        'and',
+        'any',
+        'as',
+        'asc',
+        'ascending',
+        'assert',
+        'by',
+        'call',
+        'case',
+        'commit',
+        'constraint',
+        'contains',
+        'count',
+        'create',
+        'csv',
+        'cypher',
+        'delete',
+        'desc',
+        'descending',
+        'detach',
+        'distinct',
+        'drop',
+        'else',
+        'end',
+        'ends',
+        'enterrule',
+        'exists',
+        'exitrule',
+        'explain',
+        'extract',
+        'false',
+        'fieldterminator',
+        'filter',
+        'foreach',
+        'from',
+        'headers',
+        'in',
+        'index',
+        'is',
+        'join',
+        'key',
+        'l_skip',
+        'limit',
+        'load',
+        'match',
+        'merge',
+        'node',
+        'none',
+        'not',
+        'null',
+        'on',
+        'optional',
+        'or',
+        'order',
+        'periodic',
+        'profile',
+        'reduce',
+        'rel',
+        'relationship',
+        'remove',
+        'return',
+        'scan',
+        'set',
+        'shortestpath',
+        'single',
+        'start',
+        'starts',
+        'then',
+        'true',
+        'union',
+        'unique',
+        'unwind',
+        'using',
+        'when',
+        'where',
+        'with',
+        'xor',
+        'yield'
+      ].map((keyword: string) => ({
+        token: `${keyword}.cypher`,
+        foreground: Color.green
+      })),
+      ...['regulardecimalreal.cypher', 'decimalinteger.cypher'].map(token => ({
+        token,
+        foreground: Color.cyan
+      })),
+      { token: 'stringliteral.cypher', foreground: Color.yellow }
+    ]
+
+    // Use colors and rules, only add default foreground and background colors
+    monaco.editor.defineTheme(VS_LIGHT_THEME, {
+      base: VS_LIGHT_THEME,
+      inherit: false,
+      rules: [...rules, { token: 'sp.cypher', foreground: Color.light_grey }],
+      colors: {}
+    })
+    monaco.editor.defineTheme(VS_DARK_THEME, {
+      base: VS_DARK_THEME,
+      inherit: false,
+      rules: [...rules, { token: 'sp.cypher', foreground: Color.cyan_grey }],
+      colors: {}
+    })
+
     editorRef.current = monaco.editor.create(
       document.getElementById(monacoId) as HTMLElement,
       {
@@ -55,12 +198,14 @@ const Monaco = ({
         contextmenu: false,
         cursorStyle: 'block',
         fontSize: 16,
+        language: 'cypher',
         lightbulb: { enabled: false },
         links: false,
         minimap: { enabled: false },
         scrollBeyondLastColumn: 0,
         scrollBeyondLastLine: false,
-        value: value,
+        theme: VS_LIGHT_THEME,
+        value,
         wordWrap: 'on'
       }
     )
