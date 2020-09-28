@@ -15,11 +15,11 @@
  *
  */
 
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 import MyScripts from '@relate-by-ui/saved-scripts'
-import { useQuery, gql, useMutation, NetworkStatus } from '@apollo/client'
+import { useQuery, gql, useMutation } from '@apollo/client'
 import path from 'path'
 
 import * as editor from 'shared/modules/editor/editorDuck'
@@ -28,7 +28,9 @@ import { SLASH } from 'shared/services/export-favorites'
 import {
   getProjectFilesQueryVars,
   removeProjectFileMutationVars,
-  mapRelateFavorites
+  mapRelateFavorites,
+  ProjectFile,
+  Favorite
 } from './relate-scripts.utils'
 
 const GET_PROJECT_FILES = gql`
@@ -54,31 +56,41 @@ const DELETE_PROJECT_FILE = gql`
   }
 `
 
-const MyScriptsComponent = props => {
+interface ProjectFilesResult {
+  getProject: { files: ProjectFile[] }
+}
+
+interface ProjectVariables {
+  projectId: string
+}
+
+function RelateScripts(props: any): JSX.Element {
   // @todo: handling loading and error?? Pass to MyScripts??
-  const { loading, error, data, refetch } = useQuery(GET_PROJECT_FILES, {
-    variables: getProjectFilesQueryVars
-  })
+  const { data, refetch } = useQuery<ProjectFilesResult, ProjectVariables>(
+    GET_PROJECT_FILES,
+    {
+      variables: getProjectFilesQueryVars
+    }
+  )
   const [removeFavorite] = useMutation(DELETE_PROJECT_FILE)
 
-  const [scripts, setScripts] = useState([])
-  const isMountedRef = useRef(false)
+  const [scripts, setScripts] = useState<Favorite[]>([])
 
   useEffect(() => {
-    isMountedRef.current = true
+    let isStillMounted = true
     if (data) {
-      // get cypher file contents
-      const getRelateFilePromises = data.getProject.files.map(file =>
-        mapRelateFavorites(file)
+      const getRelateFilePromises = data.getProject.files.map(
+        mapRelateFavorites
       )
-      Promise.all(getRelateFilePromises).then(mappedRelateFiles => {
-        if (isMountedRef.current) {
-          setScripts([...mappedRelateFiles])
+      Promise.all(getRelateFilePromises).then((files: Favorite[]) => {
+        if (isStillMounted) {
+          setScripts(files)
         }
       })
     }
-    // cleanup to prevent setting state on unmounted component
-    return () => (isMountedRef.current = false)
+    return () => {
+      isStillMounted = false
+    }
   }, [data])
 
   useEffect(() => {
@@ -99,11 +111,11 @@ const MyScriptsComponent = props => {
       return removeFavorite({
         variables: removeProjectFileMutationVars(filePath),
         update: (cache, { data: { removeProjectFile } }) => {
-          const data = cache.readQuery({
+          const data = cache.readQuery<ProjectFilesResult>({
             query: GET_PROJECT_FILES,
             variables: getProjectFilesQueryVars
           })
-          const filteredProjectFiles = data.getProject.files.filter(
+          const filteredProjectFiles = data?.getProject.files.filter(
             file =>
               file.directory !== removeProjectFile.directory ||
               file.name !== removeProjectFile.name
@@ -123,35 +135,39 @@ const MyScriptsComponent = props => {
   })
 }
 
-const mapFavoritesStateToProps = state => {
+const mapFavoritesStateToProps = () => {
   return {
     scriptsNamespace: SLASH,
     title: 'Project Scripts'
   }
 }
-const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
-  onSelectScript: favorite =>
+
+const mapFavoritesDispatchToProps = (
+  dispatch: any,
+  ownProps: { bus: { send: any } }
+) => ({
+  onSelectScript: (favorite: any) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
       editor.editContent(favorite.id, favorite.contents)
     ),
-  onExecScript: favorite => dispatch(executeCommand(favorite.contents)),
+  onExecScript: (favorite: any) => dispatch(executeCommand(favorite.contents)),
   onExportScripts: Function.prototype,
   onUpdateFolder: Function.prototype,
   onRemoveFolder: Function.prototype
 })
-const mergeProps = (stateProps, dispatchProps) => {
+
+const mergeProps = (stateProps: any, dispatchProps: any) => {
   return {
     ...stateProps,
     ...dispatchProps
   }
 }
-const RelateScripts = withBus(
+
+export default withBus(
   connect(
     mapFavoritesStateToProps,
     mapFavoritesDispatchToProps,
     mergeProps
-  )(MyScriptsComponent)
+  )(RelateScripts)
 )
-
-export default RelateScripts
