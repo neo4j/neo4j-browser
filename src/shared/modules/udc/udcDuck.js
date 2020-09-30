@@ -35,7 +35,18 @@ import {
   CYPHER_SUCCEEDED,
   CYPHER_FAILED
 } from 'shared/modules/commands/commandsDuck'
-import { shouldReportUdc } from 'shared/modules/settings/settingsDuck'
+import {
+  ADD_FAVORITE,
+  LOAD_FAVORITES,
+  UPDATE_FAVORITE,
+  REMOVE_FAVORITE,
+  getFavorites
+} from 'shared/modules/favorites/favoritesDuck'
+import {
+  shouldReportUdc,
+  REPLACE,
+  UPDATE
+} from 'shared/modules/settings/settingsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
@@ -189,6 +200,26 @@ export const incrementEventEpic = (action$, store) =>
       store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
     )
     .map(action => increment(typeToEventName[action.type]))
+
+const favoriteActionToMetric = {
+  [ADD_FAVORITE]: { category: 'favorite', label: 'add' },
+  [LOAD_FAVORITES]: { category: 'favorite', label: 'drag_n_drop' },
+  [UPDATE_FAVORITE]: { category: 'favorite', label: 'update' },
+  [REMOVE_FAVORITE]: { category: 'favorite', label: 'remove' }
+}
+const favoriteActions = Object.keys(favoriteActionToMetric)
+export const trackFavoriteUsageEpic = (action$, store) =>
+  action$
+    .filter(action => favoriteActions.includes(action.type))
+    .map(action => {
+      const favoriteCount = getFavorites(store.getState()).filter(
+        script => !script.isStatic
+      ).length
+      return {
+        ...metricsEvent(favoriteActionToMetric[action.type]),
+        data: { favoriteCount }
+      }
+    })
 
 export const trackSyncLogoutEpic = (action$, store) =>
   action$

@@ -82,6 +82,7 @@ import {
   incrementEventEpic,
   udcStartupEpic,
   trackSyncLogoutEpic,
+  trackFavoriteUsageEpic,
   trackConnectsEpic,
   eventFiredEpic
 } from './modules/udc/udcDuck'
@@ -142,6 +143,7 @@ export default combineEpics(
   trackSyncLogoutEpic,
   trackConnectsEpic,
   eventFiredEpic,
+  trackFavoriteUsageEpic,
   maxFramesConfigEpic,
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic
