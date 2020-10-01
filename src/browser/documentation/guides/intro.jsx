@@ -62,7 +62,7 @@ const slides = [
       </p>
       <ul>
         <li>Single line editing for brief queries or commands</li>
-        <li>Switch to multi-line editing with {'<shift-enter'}</li>
+        <li>Switch to multi-line editing with {'<shift-enter>'}</li>
         <li>Run a query with {'<ctrl-enter>'}</li>
         <li>History is kept for easily retrieving previous commands</li>
       </ul>
