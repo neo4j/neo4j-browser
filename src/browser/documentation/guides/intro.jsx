@@ -149,15 +149,17 @@ const slides = [
         Neo4j is like a mashup of a REPL + lightweight IDE + graph
         visualization.
       </p>
+      <a play-topic="start">Play start</a> - Back to getting started
     </div>
     <div className="col-sm-4">
       <h3>Keep getting started</h3>
       <ul className="undecorated">
         <li>
-          <a play-topic="concepts">Concepts</a> - GraphDB 101
+          <a help-topic="commands">Help commands</a> - Useful Neo4j Browser
+          commands
         </li>
         <li>
-          <a play-topic="cypher">Cypher</a> - query language
+          <a help-topic="keys">Help keys</a> - Keyboard shortcuts
         </li>
       </ul>
     </div>
@@ -165,7 +167,7 @@ const slides = [
       <h3>Jump into code</h3>
       <ul className="undecorated">
         <li>
-          <a play-topic="movie-graph">The Movie Graph</a>
+          <a play-topic="cypher">Play Cypher</a> - Learn Cypher basics
         </li>
       </ul>
     </div>

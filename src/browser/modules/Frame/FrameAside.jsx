@@ -21,6 +21,10 @@
 import React, { Component } from 'react'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
+import {
+  DARK_THEME,
+  LIGHT_THEME
+} from 'src-root/shared/modules/settings/settingsDuck'
 
 class FrameAside extends Component {
   render() {
@@ -28,7 +32,7 @@ class FrameAside extends Component {
     let { title } = this.props
 
     // Use logo as title if title is only Neo4j
-    if (title === 'Neo4j') {
+    if ((title === 'Neo4j', LIGHT_THEME)) {
       title = (
         <img
           src="./assets/images/neo4j-world.png"
@@ -36,6 +40,13 @@ class FrameAside extends Component {
           className="frame-title-logo"
         />
       )
+    }
+    if ((title === 'Neo4j', DARK_THEME)) {
+      ;<img
+        src="./assets/images/neo4j-world-inverted.png"
+        alt="Neo4j"
+        className="frame-title-logo"
+      />
     }
 
     return title ? (

@@ -298,4 +298,7 @@ export const StyledSlide = styled.div`
   .has-carousel & {
     overflow: visible;
   }
+  &.slide .teaser {
+    background-color: ${props => props.theme.teaserCardBackground} !important;
+  }
 `

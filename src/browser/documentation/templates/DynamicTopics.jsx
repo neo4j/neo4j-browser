@@ -132,7 +132,12 @@ const Categories = ({ types, type, i }) => {
   )
 }
 
-export const DynamicTopics = ({ docs = {}, description = '', filter = [] }) => {
+export const DynamicTopics = ({
+  docs = {},
+  description = '',
+  footer = '',
+  filter = []
+}) => {
   let filteredDocs = {}
   if (filter.length) {
     Object.keys(docs)
@@ -155,7 +160,7 @@ export const DynamicTopics = ({ docs = {}, description = '', filter = [] }) => {
 
   return (
     <>
-      {description && <React.Fragment>{description}</React.Fragment>}
+      {description && <>{description}</>}
       {Object.keys(types) && (
         <table className="table-condensed table-help table-help--commands">
           <tbody>
@@ -170,6 +175,7 @@ export const DynamicTopics = ({ docs = {}, description = '', filter = [] }) => {
           </tbody>
         </table>
       )}
+      <div style={{ padding: '20px' }}>{footer && <>{footer}</>}</div>
     </>
   )
 }

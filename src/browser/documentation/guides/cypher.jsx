@@ -245,36 +245,18 @@ RETURN DISTINCT surfer`}
       </p>
     </div>
     <div className="col-sm-4">
-      <h3>Keep getting started</h3>
-      <ul className="undecorated">
+      <ul>
         <li>
-          <a play-topic="intro">Intro</a> - a guided tour
+          <a help-topic="cypher">Help Cypher</a> - Try more Cypher syntax
         </li>
         <li>
-          <a play-topic="concepts">Concepts</a> - GraphDB 101
-        </li>
-        <li>
-          <a play-topic="movie-graph">The Movie Graph</a> - create the movie
-          graph
-        </li>
-        <li>
-          <a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to
-          graph
+          <a play-topic="start">Play start</a> - Back to getting started
         </li>
       </ul>
     </div>
     <div className="col-sm-4">
-      <h3>Reference</h3>
+      <h3>Documentation</h3>
       <ul className="undecorated">
-        <li>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://neo4j.com/developer/guide-importing-data-and-etl/"
-          >
-            Full Northwind import example
-          </a>
-        </li>
         <li>
           <ManualLink chapter="cypher-refcard" page="/">
             Cypher Refcard
