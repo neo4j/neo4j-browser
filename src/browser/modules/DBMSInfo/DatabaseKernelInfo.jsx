@@ -135,7 +135,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: cmd => {
-      const action = executeCommand(cmd)
+      const action = executeCommand(cmd, { source: 'button-press' })
       ownProps.bus.send(action.type, action)
     }
   }

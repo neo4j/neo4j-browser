@@ -119,13 +119,17 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: cmd => {
-      const action = executeCommand(cmd)
+      const action = executeCommand(cmd, { source: 'button-press' })
       ownProps.bus.send(action.type, action)
     },
     onDbSelect: dbName =>
       dbName
-        ? dispatch(executeCommand(`:${useDbCommand} ${dbName}`))
-        : dispatch(executeCommand(`:${useDbCommand}`))
+        ? dispatch(executeCommand(`:${useDbCommand} ${dbName}`), {
+            source: 'button-press'
+          })
+        : dispatch(executeCommand(`:${useDbCommand}`), {
+            source: 'button-press'
+          })
   }
 }
 

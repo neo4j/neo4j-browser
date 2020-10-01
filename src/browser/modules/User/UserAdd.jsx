@@ -247,7 +247,9 @@ export class UserAdd extends Component {
   }
 
   openListUsersFrame() {
-    const action = executeCommand(':server user list')
+    const action = executeCommand(':server user list', {
+      source: 'button-press'
+    })
     this.props.bus.send(action.type, action)
   }
 
@@ -402,9 +404,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(UserAdd)
-)
+export default withBus(connect(mapStateToProps, null)(UserAdd))

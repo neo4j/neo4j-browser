@@ -189,7 +189,9 @@ export class UserList extends Component {
   }
 
   openAddNewUserFrame() {
-    const action = executeCommand(':server user add')
+    const action = executeCommand(':server user add', {
+      source: 'button-press'
+    })
     this.props.bus.send(action.type, action)
   }
 

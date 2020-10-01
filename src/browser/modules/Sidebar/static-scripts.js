@@ -53,7 +53,8 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
       editor.EDIT_CONTENT,
       editor.editContent(favorite.id, favorite.contents, { isStatic: true })
     ),
-  onExecScript: favorite => dispatch(executeCommand(favorite.contents)),
+  onExecScript: favorite =>
+    dispatch(executeCommand(favorite.contents), { source: 'sidebar' }),
   onExportScripts: Function.prototype,
   onRemoveScript: Function.prototype,
   onUpdateFolder: Function.prototype,

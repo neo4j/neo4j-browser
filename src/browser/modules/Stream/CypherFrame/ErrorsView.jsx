@@ -110,7 +110,7 @@ export class ErrorsView extends Component {
 }
 
 const onItemClick = (bus, statement) => {
-  const action = executeCommand(statement)
+  const action = executeCommand(statement, { source: 'button-press' })
   bus.send(action.type, action)
 }
 

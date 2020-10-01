@@ -28,7 +28,7 @@ const setOnClick = (bus, code) => {
   bus.send(SET_CONTENT, setContent(code))
 }
 const execOnClick = (bus, code) => {
-  const cmd = executeCommand(code)
+  const cmd = executeCommand(code, { source: 'button-press' })
   bus.send(cmd.type, cmd)
 }
 

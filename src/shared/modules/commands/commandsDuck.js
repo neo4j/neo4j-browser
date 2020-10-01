@@ -91,7 +91,7 @@ export default function reducer(state = initialState, action) {
 
 export const executeCommand = (
   cmd,
-  { id, requestId, parentId, useDb, isRerun = false } = {}
+  { id, requestId, parentId, useDb, isRerun = false, source } = {}
 ) => {
   return {
     type: COMMAND_QUEUED,
@@ -100,7 +100,8 @@ export const executeCommand = (
     requestId,
     parentId,
     useDb,
-    isRerun
+    isRerun,
+    source
   }
 }
 

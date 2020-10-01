@@ -33,7 +33,8 @@ import {
 import {
   CYPHER,
   CYPHER_SUCCEEDED,
-  CYPHER_FAILED
+  CYPHER_FAILED,
+  COMMAND_QUEUED
 } from 'shared/modules/commands/commandsDuck'
 import {
   ADD_FAVORITE,
@@ -220,6 +221,17 @@ export const trackFavoriteUsageEpic = (action$, store) =>
         data: { favoriteCount }
       }
     })
+
+export const trackCommandUsageEpic = (action$, store) =>
+  action$.ofType(COMMAND_QUEUED).map(action => {
+    const isCypher = !action.cmd.startsWith(':')
+    const label = isCypher ? 'cypher' : action.cmd.slice(1).split(' ')[0]
+    return metricsEvent({
+      category: 'command',
+      label,
+      data: { source: action.source || 'unknown' }
+    })
+  })
 
 export const trackSyncLogoutEpic = (action$, store) =>
   action$

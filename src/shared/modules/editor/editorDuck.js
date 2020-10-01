@@ -103,7 +103,7 @@ export const populateEditorFromUrlEpic = (some$, store) => {
       // When running the explicit command, also set flag to skip any implicit init commands
       if (commandType === 'play') {
         return [
-          executeCommand(fullCommand),
+          executeCommand(fullCommand, { source: 'url' }),
           { type: DISABLE_IMPLICIT_INIT_COMMANDS }
         ]
       }

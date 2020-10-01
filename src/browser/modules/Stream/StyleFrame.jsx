@@ -83,7 +83,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     resetStyleAction: executeSystemCommand(':style reset'),
     rerunAction: executeCommand(ownProps.frame.cmd, {
-      id: ownProps.frame.id
+      id: ownProps.frame.id,
+      source: 'button-press'
     })
   }
 }

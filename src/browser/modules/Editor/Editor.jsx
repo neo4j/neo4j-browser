@@ -462,7 +462,7 @@ export class Editor extends Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onExecute: cmd => {
-      const action = executeCommand(cmd)
+      const action = executeCommand(cmd, { source: 'editor' })
       ownProps.bus.send(action.type, action)
     }
   }

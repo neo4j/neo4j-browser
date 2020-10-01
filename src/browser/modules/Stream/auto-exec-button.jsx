@@ -40,7 +40,7 @@ const StyledAutoExecButton = styled.button`
 
 export function AutoExecButtonComponent({ bus, cmd, ...rest }) {
   const onClick = useCallback(() => {
-    const action = executeCommand(`:${cmd}`)
+    const action = executeCommand(`:${cmd}`, { source: 'button-press' })
 
     bus.send(action.type, action)
   }, [cmd])

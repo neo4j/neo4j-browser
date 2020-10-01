@@ -143,7 +143,7 @@ export function FileDrop(props) {
     if (extension === 'grass') {
       fileLoader(files[0], result => {
         importGrass(result)
-        const action = executeCommand(':style')
+        const action = executeCommand(':style', { source: 'automatic' })
         props.bus.send(action.type, action)
       })
 

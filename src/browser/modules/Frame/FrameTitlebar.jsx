@@ -339,7 +339,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
-      dispatch(commands.executeCommand(cmd, { id, useDb, isRerun: true }))
+      dispatch(
+        commands.executeCommand(cmd, {
+          id,
+          useDb,
+          isRerun: true,
+          source: 'button-press'
+        })
+      )
     },
     togglePinning: (id, isPinned) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))

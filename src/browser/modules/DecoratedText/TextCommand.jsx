@@ -49,7 +49,7 @@ export const TextCommand = ({ command, onClick, ...rest }) => (
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClick: cmd => dispatch(executeCommand(cmd))
+    onClick: cmd => dispatch(executeCommand(cmd, { source: 'button-press' }))
   }
 }
 

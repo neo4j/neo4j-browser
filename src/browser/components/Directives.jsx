@@ -126,7 +126,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onItemClick: (cmd, autoExec, id) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
         if (autoExec) {
-          const action = executeCommand(cmd, { id })
+          const action = executeCommand(cmd, { id, source: 'button-press' })
           ownProps.bus.send(action.type, action)
         } else {
           ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
@@ -136,9 +136,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default withBus(
-  connect(
-    null,
-    mapDispatchToProps
-  )(Directives)
-)
+export default withBus(connect(null, mapDispatchToProps)(Directives))
