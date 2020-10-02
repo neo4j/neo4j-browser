@@ -338,12 +338,12 @@ const actionsOfInterest = [
   REMOVE_FAVORITE,
   UPDATE
 ]
-export const miscActionsTracker = (action$, store) =>
+export const trackReduxActionsEpic = (action$, store) =>
   action$
     .filter(action => actionsOfInterest.includes(action.type))
     .map(action => {
       const [category, label] = action.type.split('/')
-      metricsEvent({ category, label })
+      return metricsEvent({ category, label })
     })
 
 export const trackConnectsEpic = (
