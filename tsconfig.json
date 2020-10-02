@@ -27,7 +27,6 @@
       "browser-hooks/*": ["browser/hooks/*"],
       "browser-styles/*": ["browser/styles/*"],
       "project-root/*": ["../*"],
-      "src-root/*": ["./*"],
       "icons": ["browser/icons/*"]
     }
   },

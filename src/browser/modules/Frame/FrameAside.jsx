@@ -21,10 +21,7 @@
 import React, { Component } from 'react'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
-import {
-  DARK_THEME,
-  LIGHT_THEME
-} from 'src-root/shared/modules/settings/settingsDuck'
+import { DARK_THEME, LIGHT_THEME } from 'shared/modules/settings/settingsDuck'
 
 class FrameAside extends Component {
   render() {

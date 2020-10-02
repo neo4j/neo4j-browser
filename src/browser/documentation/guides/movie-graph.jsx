@@ -21,12 +21,9 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import Slide from '../../modules/Carousel/Slide'
-import { useDbCommand } from 'src-root/shared/modules/commands/commandsDuck'
+import { useDbCommand } from 'shared/modules/commands/commandsDuck'
 import createDatabase from '../help/create-database'
-import {
-  useDb,
-  USE_DB
-} from 'src-root/shared/modules/connections/connectionsDuck'
+import { useDb, USE_DB } from 'shared/modules/connections/connectionsDuck'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 
 const title = 'Movie Graph'

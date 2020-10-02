@@ -41,7 +41,6 @@ module.exports = {
     symlinks: false,
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      'src-root': path.resolve(helpers.sourcePath),
       'project-root': path.resolve(__dirname, '../'),
       services: path.resolve(helpers.sourcePath, 'shared/services'),
       'browser-services': path.resolve(helpers.browserPath, 'services'),
