@@ -45,12 +45,14 @@ import {
 } from 'shared/modules/favorites/favoritesDuck'
 import {
   shouldReportUdc,
+  getSettings,
   REPLACE,
   UPDATE
 } from 'shared/modules/settings/settingsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
+import cmdHelper from 'shared/services/commandInterpreterHelper'
 
 // Action types
 export const NAME = 'udc'
@@ -182,7 +184,6 @@ export const updateData = obj => {
     ...obj
   }
 }
-
 // Epics
 export const udcStartupEpic = (action$, store) =>
   action$
@@ -225,7 +226,9 @@ export const trackFavoriteUsageEpic = (action$, store) =>
 export const trackCommandUsageEpic = (action$, store) =>
   action$.ofType(COMMAND_QUEUED).map(action => {
     const isCypher = !action.cmd.startsWith(':')
-    const label = isCypher ? 'cypher' : action.cmd.slice(1).split(' ')[0]
+    const label = isCypher
+      ? 'cypher'
+      : cmdHelper.interpret(action.cmd.slice(1))?.name
     return metricsEvent({
       category: 'command',
       label,
@@ -289,6 +292,36 @@ export const bootEpic = (action$, store) => {
       return didBoot ? { type: BOOTED } : { type: 'NOOP' }
     })
 }
+
+export const trackSettingsEpic = (action$, store) =>
+  action$.ofType(UPDATE).map(() => {
+    const settings = getSettings(store.getState())
+    const nonSensitiveSettings = [
+      'cmdchar',
+      'maxHistory',
+      'theme',
+      'playImplicitInitCommands',
+      'initialNodeDisplay',
+      'maxNeighbours',
+      'showSampleScripts',
+      'maxRows',
+      'maxFieldItems',
+      'autoComplete',
+      'scrollToTop',
+      'maxFrames',
+      'codeFontLigatures',
+      'editorAutocomplete',
+      'editorLint',
+      'useCypherThread',
+      'enableMultiStatementMode',
+      'connectionTimeout'
+    ]
+    const data = nonSensitiveSettings.reduce(
+      (acc, curr) => ({ ...acc, [curr]: settings[curr] }),
+      {}
+    )
+    return metricsEvent({ category: 'settings', label: 'update', data })
+  })
 
 export const trackConnectsEpic = (
   action$,
