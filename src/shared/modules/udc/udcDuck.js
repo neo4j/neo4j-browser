@@ -30,6 +30,7 @@ import {
   getStoreId,
   isBeta
 } from 'shared/modules/dbMeta/dbMetaDuck'
+import { ADD, PIN, UNPIN, REMOVE } from 'shared/modules/stream/streamDuck'
 import {
   CYPHER,
   CYPHER_SUCCEEDED,
@@ -49,6 +50,7 @@ import {
   REPLACE,
   UPDATE
 } from 'shared/modules/settings/settingsDuck'
+import { EXPAND } from 'shared/modules/editor/editorDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
@@ -229,6 +231,10 @@ export const trackCommandUsageEpic = (action$, store) =>
     const label = isCypher
       ? 'cypher'
       : cmdHelper.interpret(action.cmd.slice(1))?.name
+    if (label === 'catch-all') {
+      // already tracked as error frame
+      return { type: 'NOOP' }
+    }
     return metricsEvent({
       category: 'command',
       label,
@@ -323,6 +329,15 @@ export const trackSettingsEpic = (action$, store) =>
     return metricsEvent({ category: 'settings', label: 'update', data })
   })
 
+const actionsOfInterest = [PIN, UNPIN, REMOVE, EXPAND]
+export const miscActionsTracker = (action$, store) =>
+  action$
+    .filter(action => actionsOfInterest.includes(action.type))
+    .map(action => {
+      const [category, label] = action.type.split('/')
+      metricsEvent({ category, label })
+    })
+
 export const trackConnectsEpic = (
   action$,
   store // Decide what to do with events
@@ -345,6 +360,22 @@ export const trackConnectsEpic = (
       }
       return eventFired('connect', data)
     })
+
+export const trackErrorFramesEpic = (action$, store) =>
+  action$.ofType(ADD).map(action => {
+    console.log(action)
+    const error = action.state.error
+    if (error) {
+      const { message, code, type } = error
+      return metricsEvent({
+        category: 'stream',
+        label: 'errorframe',
+        data: { message, code, type }
+      })
+    } else {
+      return { type: 'NOOP' }
+    }
+  })
 
 export const eventFiredEpic = (
   action$,
