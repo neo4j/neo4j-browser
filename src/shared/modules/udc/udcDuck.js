@@ -67,6 +67,7 @@ export const UPDATE_SETTINGS = `${NAME}/UPDATE_SETTINGS`
 export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
 export const BOOTED = `${NAME}/BOOTED`
 export const METRICS_EVENT = `${NAME}/METRICS_EVENT`
+export const UPC_STARTUP = `${NAME}/STARTUP`
 
 let booted = false
 
@@ -156,6 +157,11 @@ const increment = what => {
     what
   }
 }
+export const udcInit = () => {
+  return {
+    type: UPC_STARTUP
+  }
+}
 export const addToEventQueue = (name, data) => {
   return {
     type: EVENT_QUEUE,
@@ -189,7 +195,7 @@ export const updateData = obj => {
 // Epics
 export const udcStartupEpic = (action$, store) =>
   action$
-    .ofType(APP_START)
+    .ofType(UPC_STARTUP)
     .do(() =>
       store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
     )
