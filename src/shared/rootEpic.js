@@ -82,11 +82,9 @@ import {
   incrementEventEpic,
   udcStartupEpic,
   trackSyncLogoutEpic,
-  trackFavoriteUsageEpic,
   trackConnectsEpic,
   eventFiredEpic,
   trackCommandUsageEpic,
-  trackSettingsEpic,
   trackErrorFramesEpic
 } from './modules/udc/udcDuck'
 import { maxFramesConfigEpic } from './modules/stream/streamDuck'
@@ -146,11 +144,9 @@ export default combineEpics(
   trackSyncLogoutEpic,
   trackConnectsEpic,
   eventFiredEpic,
-  trackFavoriteUsageEpic,
   maxFramesConfigEpic,
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic,
   trackCommandUsageEpic,
-  trackErrorFramesEpic,
-  trackSettingsEpic
+  trackErrorFramesEpic
 )

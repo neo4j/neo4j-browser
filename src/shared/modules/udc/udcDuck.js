@@ -193,6 +193,48 @@ export const udcStartupEpic = (action$, store) =>
     .do(() =>
       store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
     )
+    .do(() => {
+      const settings = getSettings(store.getState())
+      const nonSensitiveSettings = [
+        'cmdchar',
+        'maxHistory',
+        'theme',
+        'playImplicitInitCommands',
+        'initialNodeDisplay',
+        'maxNeighbours',
+        'showSampleScripts',
+        'maxRows',
+        'maxFieldItems',
+        'autoComplete',
+        'scrollToTop',
+        'maxFrames',
+        'codeFontLigatures',
+        'editorAutocomplete',
+        'editorLint',
+        'useCypherThread',
+        'enableMultiStatementMode',
+        'connectionTimeout'
+      ]
+      const data = nonSensitiveSettings.reduce(
+        (acc, curr) => ({ ...acc, [curr]: settings[curr] }),
+        {}
+      )
+      store.dispatch(
+        metricsEvent({ category: 'settings', label: 'snapshot', data })
+      )
+    })
+    .do(() => {
+      const count = getFavorites(store.getState()).filter(
+        script => !script.isStatic
+      ).length
+      store.dispatch(
+        metricsEvent({
+          category: 'favorites',
+          label: 'snapshot',
+          data: { count }
+        })
+      )
+    })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
 export const incrementEventEpic = (action$, store) =>
@@ -204,26 +246,6 @@ export const incrementEventEpic = (action$, store) =>
       store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
     )
     .map(action => increment(typeToEventName[action.type]))
-
-const favoriteActionToMetric = {
-  [ADD_FAVORITE]: { category: 'favorite', label: 'add' },
-  [LOAD_FAVORITES]: { category: 'favorite', label: 'drag_n_drop' },
-  [UPDATE_FAVORITE]: { category: 'favorite', label: 'update' },
-  [REMOVE_FAVORITE]: { category: 'favorite', label: 'remove' }
-}
-const favoriteActions = Object.keys(favoriteActionToMetric)
-export const trackFavoriteUsageEpic = (action$, store) =>
-  action$
-    .filter(action => favoriteActions.includes(action.type))
-    .map(action => {
-      const favoriteCount = getFavorites(store.getState()).filter(
-        script => !script.isStatic
-      ).length
-      return {
-        ...metricsEvent(favoriteActionToMetric[action.type]),
-        data: { favoriteCount }
-      }
-    })
 
 export const trackCommandUsageEpic = (action$, store) =>
   action$.ofType(COMMAND_QUEUED).map(action => {
@@ -299,37 +321,17 @@ export const bootEpic = (action$, store) => {
     })
 }
 
-export const trackSettingsEpic = (action$, store) =>
-  action$.ofType(UPDATE).map(() => {
-    const settings = getSettings(store.getState())
-    const nonSensitiveSettings = [
-      'cmdchar',
-      'maxHistory',
-      'theme',
-      'playImplicitInitCommands',
-      'initialNodeDisplay',
-      'maxNeighbours',
-      'showSampleScripts',
-      'maxRows',
-      'maxFieldItems',
-      'autoComplete',
-      'scrollToTop',
-      'maxFrames',
-      'codeFontLigatures',
-      'editorAutocomplete',
-      'editorLint',
-      'useCypherThread',
-      'enableMultiStatementMode',
-      'connectionTimeout'
-    ]
-    const data = nonSensitiveSettings.reduce(
-      (acc, curr) => ({ ...acc, [curr]: settings[curr] }),
-      {}
-    )
-    return metricsEvent({ category: 'settings', label: 'update', data })
-  })
-
-const actionsOfInterest = [PIN, UNPIN, REMOVE, EXPAND]
+const actionsOfInterest = [
+  PIN,
+  UNPIN,
+  REMOVE,
+  EXPAND,
+  ADD_FAVORITE,
+  LOAD_FAVORITES,
+  UPDATE_FAVORITE,
+  REMOVE_FAVORITE,
+  UPDATE
+]
 export const miscActionsTracker = (action$, store) =>
   action$
     .filter(action => actionsOfInterest.includes(action.type))
