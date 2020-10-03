@@ -21,7 +21,8 @@
 import {
   schemeWithEncryptionFlag,
   schemeWithInvertedEncryptionFlag,
-  stripScheme
+  stripScheme,
+  isEnterpriseEdition
 } from '../support/utils'
 
 /* global Cypress, cy, before */
@@ -110,6 +111,55 @@ describe('Connect form', () => {
       cy.connect('neo4j', Cypress.config('password'), boltUrl)
       cy.executeCommand(':server disconnect')
     })
+
+    if (isEnterpriseEdition()) {
+      it.only('shows correct metadata when using db field', () => {
+        cy.connect('neo4j', Cypress.config('password'))
+        cy.executeCommand(':use system')
+        cy.executeCommand('DROP DATABASE sidebartest IF EXISTS')
+        cy.executeCommand('CREATE DATABASE sidebartest')
+        cy.contains('1 system update, no records')
+        cy.executeCommand(':use sidebartest')
+        cy.executeCommand('create (:TestLabel)')
+        cy.executeCommand(':use neo4j')
+        cy.executeCommand('create (:MovieLabel)')
+
+        cy.executeCommand(':server disconnect')
+        cy.visit('/?dbms=bolt://localhost:7687&db=sidebartest')
+        cy.get('[data-testid=username]')
+          .clear()
+          .type('neo4j')
+        cy.get('[data-testid=password]')
+          .type(Cypress.config('password'))
+          .type('{enter}')
+        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).contains(
+          'TestLabel'
+        )
+        cy.get('[data-testid="drawerDBMS"]').click()
+
+        // unkonwn db leads to default db
+        cy.executeCommand(':server disconnect')
+        cy.visit('/?dbms=bolt://username@localhost:7687&db=unknowndb')
+
+        cy.get('[data-testid=username]')
+          .should('have.value', 'username')
+          .clear()
+          .type('neo4j')
+        cy.get('[data-testid=password]')
+          .type(Cypress.config('password'))
+          .type('{enter}')
+        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).contains(
+          'MovieLabel'
+        )
+        cy.get('[data-testid="drawerDBMS"]').click()
+
+        cy.executeCommand('match (n:MovieLabel) delete n')
+        cy.executeCommand(':use system')
+        cy.executeCommand('DROP DATABASE sidebartest')
+      })
+    }
 
     it('extracts params and prefills form', () => {
       cy.visit('/?dbms=bolt://username@localhost:7687&db=system')
