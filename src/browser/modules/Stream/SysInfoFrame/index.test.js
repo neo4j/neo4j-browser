@@ -70,4 +70,65 @@ describe('sysinfo component', () => {
     // Then
     expect(getByText(/No connection available/i)).not.toBeNull()
   })
+
+  test('should display all sysinfo content for enterprise edition', () => {
+    // Given
+    const databases = [
+      { name: 'neo4j', address: '0.0.0.0:7687', status: 'online' },
+      { name: 'system', address: '0.0.0.0:7687', status: 'online' }
+    ]
+    const props = {
+      isConnected: true,
+      isEnterprise: true,
+      hasMultiDbSupport: true,
+      databases: databases
+    }
+
+    // When
+    const { queryByText } = render(<SysInfoFrame {...props} />)
+
+    // Then
+    expect(queryByText('Databases')).not.toBeNull()
+    expect(queryByText('Store Size')).not.toBeNull()
+    expect(queryByText('Id Allocation')).not.toBeNull()
+    expect(queryByText('Page Cache')).not.toBeNull()
+    expect(queryByText('Transactions')).not.toBeNull()
+
+    expect(
+      queryByText(
+        'Complete sysinfo is available only in Neo4j Enterprise Edition.'
+      )
+    ).toBeNull()
+  })
+
+  test('should display only databases table and disclaimer for not enterprise editions', () => {
+    // Given
+    const databases = [
+      { name: 'neo4j', address: '0.0.0.0:7687', status: 'online' },
+      { name: 'system', address: '0.0.0.0:7687', status: 'online' }
+    ]
+    const props = {
+      isConnected: true,
+      isEnterprise: false,
+      hasMultiDbSupport: true,
+      databases: databases
+    }
+
+    // When
+    const { queryByText } = render(<SysInfoFrame {...props} />)
+
+    // Then
+    expect(queryByText('Databases')).not.toBeNull()
+    expect(
+      queryByText(
+        'Complete sysinfo is available only in Neo4j Enterprise Edition.'
+      )
+    ).not.toBeNull()
+
+    // And
+    expect(queryByText('Store Size')).toBeNull()
+    expect(queryByText('Id Allocation')).toBeNull()
+    expect(queryByText('Page Cache')).toBeNull()
+    expect(queryByText('Transactions')).toBeNull()
+  })
 })

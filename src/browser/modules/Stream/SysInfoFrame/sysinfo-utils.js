@@ -23,7 +23,7 @@ import {
   itemIntToString,
   extractFromNeoObjects
 } from 'services/bolt/boltMappings'
-import { SysInfoTableEntry } from 'browser-components/Tables'
+import { SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
 import { toKeyString } from 'services/utils'
 
 export const getTableDataFromRecords = records => {
@@ -130,4 +130,16 @@ export function buildTableData(data) {
     }
     return <SysInfoTableEntry key={props.label} {...props} />
   })
+}
+
+export function buildDatabaseTable(mappedDatabases) {
+  return (
+    <SysInfoTable key="database-table" header="Databases" colspan="6">
+      <SysInfoTableEntry
+        key="database-entry"
+        headers={['Name', 'Address', 'Role', 'Status', 'Default', 'Error']}
+      />
+      {buildTableData(mappedDatabases)}
+    </SysInfoTable>
+  )
 }

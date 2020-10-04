@@ -24,6 +24,7 @@ import { withBus } from 'react-suber'
 import dateFormat from 'dateformat'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
+import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   isConnected,
   getUseDb
@@ -134,6 +135,7 @@ export class SysInfoFrame extends Component {
         {...this.state}
         databases={this.props.databases}
         isACausalCluster={this.props.isACausalCluster}
+        isEnterpriseEdition={this.props.isEnterprise}
         useDb={this.props.useDb}
       />
     )
@@ -144,7 +146,7 @@ export class SysInfoFrame extends Component {
         contents={content}
         statusbar={
           <StatusbarWrapper>
-            <Render if={this.state.errors}>
+            <Render if={this.state.error}>
               <FrameError message={this.state.error} />
             </Render>
             <Render if={this.state.success}>
@@ -171,6 +173,7 @@ const mapStateToProps = state => {
   return {
     hasMultiDbSupport: hasMultiDbSupport(state),
     isACausalCluster: isACausalCluster(state),
+    isEnterprise: isEnterprise(state),
     isConnected: isConnected(state),
     databases: getDatabases(state),
     useDb: getUseDb(state)
