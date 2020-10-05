@@ -29,11 +29,6 @@ import reducer, {
 import { dehydrate } from 'services/duckUtils'
 
 describe('settings reducer', () => {
-  test('handles initial value', () => {
-    const nextState = dehydrate(reducer(undefined, { type: '' }))
-    expect(nextState.cmdchar).toEqual(':')
-  })
-
   test('handles UPDATE without initial state', () => {
     const action = {
       type: UPDATE,
@@ -46,7 +41,7 @@ describe('settings reducer', () => {
   })
 
   test('handles UPDATE', () => {
-    const initialState = { cmdchar: ':', greeting: 'hello', type: 'human' }
+    const initialState = { greeting: 'hello', type: 'human' }
     const action = {
       type: UPDATE,
       state: {
@@ -55,7 +50,6 @@ describe('settings reducer', () => {
       }
     }
     const nextState = dehydrate(reducer(initialState, action))
-    expect(nextState.cmdchar).toEqual(':')
     expect(nextState.greeting).toEqual('woff')
     expect(nextState.type).toEqual('dog')
   })

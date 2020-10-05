@@ -4,7 +4,6 @@ exports[`settings reducer handles REPLACE 1`] = `
 Object {
   "autoComplete": true,
   "browserSyncDebugServer": null,
-  "cmdchar": ":",
   "codeFontLigatures": true,
   "connectionTimeout": 30000,
   "editorAutocomplete": true,

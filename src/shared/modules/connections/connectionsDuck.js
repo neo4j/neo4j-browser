@@ -624,11 +624,7 @@ export const initialSwitchConnectionFailEpic = (action$, store) => {
     .do(() => {
       store.dispatch(updateConnectionState(DISCONNECTED_STATE))
       if (getPlayImplicitInitCommands(store.getState())) {
-        store.dispatch(
-          executeSystemCommand(
-            `${getCmdChar(store.getState())}server switch fail`
-          )
-        )
+        store.dispatch(executeSystemCommand(`:server switch fail`))
       }
     })
     .mapTo({ type: 'NOOP' })
