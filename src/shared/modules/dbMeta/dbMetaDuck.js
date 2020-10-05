@@ -398,6 +398,7 @@ const getLabelsAndTypes = store =>
         if (res) {
           store.dispatch(updateMeta(res))
         }
+        return Rx.Observable.of(null)
       })
       .catch(e => {
         store.dispatch(updateMeta([]))

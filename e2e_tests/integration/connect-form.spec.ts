@@ -113,7 +113,7 @@ describe('Connect form', () => {
     })
 
     if (isEnterpriseEdition()) {
-      it.only('shows correct metadata when using db field', () => {
+      it('shows correct metadata when using db field', () => {
         cy.connect('neo4j', Cypress.config('password'))
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE sidebartest IF EXISTS')
