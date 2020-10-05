@@ -8,7 +8,8 @@ import {
 } from 'antlr4/index.js'
 // import { DefaultErrorStrategy } from 'antlr4/error/ErrorStrategy.js'
 
-import { CypherLexer, CypherParser } from 'cypher-editor-support'
+import { CypherLexer } from 'cypher-editor-support/src/_generated/CypherLexer'
+import { CypherParser } from 'cypher-editor-support/src/_generated/CypherParser'
 
 // class ConsoleErrorListener extends error.ErrorListener {
 //   syntaxError(_recognizer: any, _offendingSymbol: any, _line: any, _column: any, msg: string) {

@@ -39,8 +39,8 @@ declare module 'suber' {
   export { Bus, createBus }
 }
 
-declare module 'cypher-editor-support' {
-  class CypherLexer extends (await import('antlr4/index.js')).Lexer {
+declare module 'cypher-editor-support/src/_generated/CypherLexer' {
+  export class CypherLexer extends (await import('antlr4/index.js')).Lexer {
     constructor(input: unknown)
     channelNames: string[]
     modeNames: string[]
@@ -50,11 +50,21 @@ declare module 'cypher-editor-support' {
     grammarFileName: string;
     [key: string]: number
   }
+}
 
-  class CypherParser extends (await import('antlr4/index.js')).Parser {
+declare module 'cypher-editor-support/src/_generated/CypherParser' {
+  export class CypherParser extends (await import('antlr4/index.js')).Parser {
     constructor(input: unknown)
     ruleNames: string[]
   }
+}
 
-  export { CypherLexer, CypherParser }
+declare module 'cypher-editor-support' {
+  export function parse(
+    input: string
+  ): {
+    referencesListener: {
+      queriesAndCommands: { getText: () => string; start: { line: number } }[]
+    }
+  }
 }

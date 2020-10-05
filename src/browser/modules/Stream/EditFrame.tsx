@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import * as antlr4 from 'antlr4'
 import React, { Dispatch, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
 import styled from 'styled-components'
+
 import Monaco, {
   VS_DARK_THEME,
   VS_HIGH_CONTRAST_THEME,
@@ -31,6 +31,7 @@ import Monaco, {
 } from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledFrameBody } from '../Frame/styled'
+import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import {
   DARK_THEME,
@@ -39,7 +40,6 @@ import {
   OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
 import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
-import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 
 export type BrowserTheme =
   | typeof LIGHT_THEME

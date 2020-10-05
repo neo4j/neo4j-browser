@@ -64,7 +64,7 @@ import {
   EXECUTE_COMMAND_ORIGINS
 } from 'browser/modules/Sidebar/project-files.constants'
 
-const shouldCheckForHints = code =>
+export const shouldCheckForHints = code =>
   code.trim().length > 0 &&
   !code.trimLeft().startsWith(':') &&
   !code

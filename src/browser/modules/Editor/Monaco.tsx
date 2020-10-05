@@ -18,9 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { parse } from 'cypher-editor-support'
 import * as monaco from 'monaco-editor'
 import React, { useEffect, useRef } from 'react'
+import { withBus } from 'react-suber'
+import { Bus } from 'suber'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { CypherTokensProvider } from './antlr-cypher-parser/CypherTokensProvider'
+import { shouldCheckForHints } from './Editor'
 
 export const VS_LIGHT_THEME = 'vs'
 export const VS_DARK_THEME = 'vs-dark'
@@ -32,6 +38,7 @@ export type VSTheme =
   | typeof VS_HIGH_CONTRAST_THEME
 
 interface MonacoProps {
+  bus: Bus
   id: string
   value?: string
   onChange?: (value: string) => void
@@ -40,6 +47,7 @@ interface MonacoProps {
 }
 
 const Monaco = ({
+  bus,
   id,
   value = '',
   onChange = () => undefined,
@@ -211,7 +219,15 @@ const Monaco = ({
     )
 
     editorRef.current?.onDidChangeModelContent(() => {
-      onChange(editorRef.current?.getValue() || '')
+      const text =
+        editorRef.current
+          ?.getModel()
+          ?.getLinesContent()
+          .join('\n') || ''
+
+      const { queriesAndCommands } = parse(text).referencesListener
+      onChange(text)
+      checkForHints(queriesAndCommands)
     })
 
     return () => {
@@ -222,6 +238,54 @@ const Monaco = ({
   useEffect(() => {
     monaco.editor.setTheme(theme)
   }, [theme])
+
+  const checkForHints = (
+    statements: { start: { line: number }; getText: () => string }[]
+  ) => {
+    if (!statements.length) return
+    statements.forEach(stmt => {
+      const text = stmt.getText()
+      if (!shouldCheckForHints(text)) {
+        return
+      }
+      const statementLineNumber = stmt.start.line - 1
+
+      bus.self(
+        CYPHER_REQUEST,
+        {
+          query: 'EXPLAIN ' + text,
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
+        response => {
+          if (
+            response.success === true &&
+            response.result.summary.notifications.length > 0
+          ) {
+            monaco.editor.setModelMarkers(
+              editorRef.current?.getModel() as monaco.editor.ITextModel,
+              monacoId,
+              response.result.summary.notifications.map(
+                ({
+                  position: { offset, line, column },
+                  title
+                }: {
+                  position: any
+                  title: string
+                }) => ({
+                  startLineNumber: statementLineNumber + line,
+                  startColumn: column - offset,
+                  endLineNumber: statementLineNumber + line,
+                  endColumn: 1000,
+                  message: title,
+                  severity: monaco.MarkerSeverity.Warning
+                })
+              )
+            )
+          }
+        }
+      )
+    })
+  }
 
   return (
     <div
@@ -234,4 +298,4 @@ const Monaco = ({
   )
 }
 
-export default Monaco
+export default withBus(Monaco)
