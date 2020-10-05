@@ -24,7 +24,9 @@ import { NO_AUTH } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import {
   fetchMetaData,
-  CLEAR as CLEAR_META
+  getDatabases,
+  CLEAR as CLEAR_META,
+  DB_META_DONE
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
@@ -37,7 +39,6 @@ import {
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'connections'
-export const ADD = 'connections/ADD'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
 export const SELECT = 'connections/SELECT'
 export const REMOVE = 'connections/REMOVE'
@@ -79,14 +80,11 @@ const initialState = {
  * Selectors
  */
 export function getConnection(state, id) {
-  const connections = getConnections(state).filter(
-    connection => connection && connection.id === id
+  return (
+    getConnections(state).find(
+      connection => connection && connection.id === id
+    ) || null
   )
-  if (connections && connections.length > 0) {
-    return connections[0]
-  } else {
-    return null
-  }
 }
 
 export function getUseDb(state) {
@@ -94,7 +92,7 @@ export function getUseDb(state) {
 }
 
 export function getConnections(state) {
-  return state[NAME].allConnectionIds.map(id => state[NAME].connectionsById[id])
+  return Object.values(state[NAME].connectionsById)
 }
 
 export function getConnectionState(state) {
@@ -165,25 +163,17 @@ const removeConnectionHelper = (state, connectionId) => {
 }
 
 const mergeConnectionHelper = (state, connection) => {
-  const connectionId = connection.id
-  const connectionsById = { ...state.connectionsById }
-  const allConnectionIds = state.allConnectionIds
-  const index = allConnectionIds.indexOf(connectionId)
-  if (index >= 0) {
-    connectionsById[connectionId] = {
-      ...connectionsById[connectionId],
-      ...connection
-    }
-  } else {
-    connectionsById[connectionId] = {
-      ...connection
-    }
-    allConnectionIds.push(connectionId)
-  }
+  const { connectionsById, allConnectionIds } = state
+  const { id } = connection
   return {
     ...state,
-    allConnectionIds,
-    connectionsById
+    connectionsById: {
+      ...connectionsById,
+      [id]: { ...connectionsById[id], ...connection }
+    },
+    allConnectionIds: allConnectionIds.includes(id)
+      ? allConnectionIds
+      : [...allConnectionIds, id]
   }
 }
 
@@ -224,8 +214,6 @@ export default function(state = initialState, action) {
         useDb: initialState.useDb,
         connectionState: DISCONNECTED_STATE
       }
-    case ADD:
-      return addConnectionHelper(state, action.connection)
     case SET_ACTIVE:
       let cState = CONNECTED_STATE
       if (!action.connectionId) cState = DISCONNECTED_STATE
@@ -277,14 +265,6 @@ export const setActiveConnection = (id, silent = false) => {
     silent
   }
 }
-
-export const addConnection = ({ name, username, password, host }) => {
-  return {
-    type: ADD,
-    connection: { id: name, name, username, password, host, type: 'bolt' }
-  }
-}
-
 export const updateConnection = connection => {
   return {
     type: MERGE,
@@ -358,7 +338,20 @@ export const connectEpic = (action$, store) => {
       .openConnection(action, {
         connectionTimeout: getConnectionTimeout(store.getState())
       })
-      .then(() => ({ type: action.$$responseChannel, success: true }))
+      .then(() => {
+        if (action.requestedUseDb) {
+          store.dispatch(
+            updateConnection({
+              id: action.id,
+              requestedUseDb: action.requestedUseDb
+            })
+          )
+        }
+        return {
+          type: action.$$responseChannel,
+          success: true
+        }
+      })
       .catch(e => {
         if (!action.noResetConnectionOnFail) {
           store.dispatch(setActiveConnection(null))

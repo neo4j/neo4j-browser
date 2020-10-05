@@ -66,7 +66,7 @@ describe('Bolt connections', () => {
   }
 
   if (isEnterpriseEdition()) {
-    it('users with no role can connect and shows up in sidebar', () => {
+    it.only('users with no role can connect and shows up in sidebar', () => {
       cy.executeCommand(':clear')
       const password = Cypress.config('password')
       cy.connect('neo4j', password)

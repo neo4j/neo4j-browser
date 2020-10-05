@@ -113,9 +113,13 @@ describe('Neo4j Browser', () => {
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
-    cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).should(p => {
-      expect(p).to.have.length.above(17)
-    })
+
+    cy.executeCommand('MATCH (n) RETURN DISTINCT labels(n);')
+    cy.contains('Movie')
+    cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).should(
+      'have.length.above',
+      17
+    )
     cy.get('[data-testid="drawerDBMS"]').click()
   })
   it('displays user info in sidebar (when connected)', () => {

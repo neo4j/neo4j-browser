@@ -45,11 +45,15 @@ export const StyledConnectionLabel = styled.label`
   font-size: 13px;
   font-weight: 600;
   line-height: 2;
+  * {
+    font-weight: normal;
+  }
 `
 export const StyledConnectionTextInput = styled(StyledInput)`
   min-width: 200px;
   width: 44%;
 `
+
 export const StyledSegment = styled.div`
   min-width: 200px;
   width: 44%;

@@ -37,24 +37,6 @@ jest.mock('services/bolt/bolt', () => {
 })
 
 describe('connections reducer', () => {
-  test('handles connections.ADD', () => {
-    const action = {
-      type: connections.ADD,
-      connection: {
-        id: 'x',
-        name: 'bm'
-      }
-    }
-    const nextState = reducer(undefined, action)
-    expect(nextState.allConnectionIds).toEqual(['x'])
-    expect(nextState.connectionsById).toEqual({
-      x: {
-        id: 'x',
-        name: 'bm'
-      }
-    })
-  })
-
   test('handles connections.SET_ACTIVE', () => {
     const initialState = {
       allConnectionIds: [1, 2, 3],

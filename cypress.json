@@ -9,7 +9,7 @@
   "fixturesFolder": "e2e_tests/fixtures",
   "hosts": null,
   "integrationFolder": "e2e_tests/integration",
-  "numTestsKeptInMemory": 1,
+  "numTestsKeptInMemory": 2,
   "pageLoadTimeout": 60000,
   "pluginsFile": "e2e_tests/plugins/index.ts",
   "port": null,

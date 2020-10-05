@@ -32,6 +32,7 @@ import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
+import { CLOUD, getEnv } from 'shared/modules/app/appDuck'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -79,17 +80,21 @@ export const getBoltHost = state => {
 }
 
 const updateDiscoveryState = (action, store) => {
-  const updateObj = { host: action.forceURL }
-  if (action.username) {
-    updateObj.username = action.username
-  }
-  if (action.password) {
-    updateObj.password = action.password
-  }
+  const keysToCopy = [
+    'username',
+    'password',
+    'requestedUseDb',
+    'restApi',
+    'supportsMultiDb'
+  ]
+  const updateObj = keysToCopy.reduce(
+    (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
+    { host: action.forceURL }
+  )
+
   if (typeof action.encrypted !== 'undefined') {
     updateObj.encrypted = action.encrypted
   }
-  updateObj.restApi = action.restApi
 
   const updateAction = updateDiscoveryConnection(updateObj)
   store.dispatch(updateAction)
@@ -112,9 +117,15 @@ export const discoveryOnStartupEpic = (some$, store) => {
     .ofType(APP_START)
     .map(action => {
       if (!action.url) return action
-      const passedURL = getUrlParamValue('connectURL', action.url)
+      const passedURL =
+        getUrlParamValue('dbms', action.url) ||
+        getUrlParamValue('connectURL', action.url)
+
+      const passedDb = getUrlParamValue('db', action.url)
+
       if (!passedURL || !passedURL.length) return action
       action.forceURL = decodeURIComponent(passedURL[0])
+      action.requestedUseDb = passedDb && passedDb[0]
       return action
     })
     .merge(some$.ofType(USER_CLEAR))
@@ -124,14 +135,12 @@ export const discoveryOnStartupEpic = (some$, store) => {
         return Promise.resolve({ type: 'NOOP' })
       }
       if (action.forceURL) {
-        const { username, password, protocol, host } = getUrlInfo(
-          action.forceURL
-        )
+        const { username, protocol, host } = getUrlInfo(action.forceURL)
         updateDiscoveryState(
           {
             ...action,
             username,
-            password,
+            supportsMultiDb: !!action.requestedUseDb,
             forceURL: `${protocol ? `${protocol}//` : ''}${host}`
           },
           store
@@ -143,7 +152,10 @@ export const discoveryOnStartupEpic = (some$, store) => {
           .getJSON(getDiscoveryEndpoint(getHostedUrl(store.getState())))
           // Uncomment below and comment out above when doing manual tests in dev mode to
           // fake discovery response
-          // Promise.resolve({ bolt: 'bolt://localhost:7687' })
+          //Promise.resolve({
+          // bolt: 'bolt://localhost:7687',
+          //neo4j_version: '4.0.3'
+          //})
           .then(result => {
             let host =
               result &&
@@ -156,7 +168,11 @@ export const discoveryOnStartupEpic = (some$, store) => {
               getAllowedBoltSchemes(store.getState()),
               host
             )
-            store.dispatch(updateDiscoveryConnection({ host })) // Update discovery host in redux
+
+            const isAura = getEnv(store.getState()) === CLOUD
+            const supportsMultiDb =
+              !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
+            store.dispatch(updateDiscoveryConnection({ host, supportsMultiDb })) // Update discovery host in redux
             return { type: DONE }
           })
           .catch(e => {

@@ -34,8 +34,11 @@ import {
   setAuthEnabled,
   onLostConnection,
   getUseDb,
-  useDb
+  useDb,
+  getActiveConnectionData,
+  updateConnection
 } from 'shared/modules/connections/connectionsDuck'
+import { executeSingleCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
@@ -326,6 +329,153 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 export const serverInfoQuery =
   'CALL dbms.components() YIELD name, versions, edition'
 
+const databaseList = store =>
+  Rx.Observable.fromPromise(
+    new Promise(async (resolve, reject) => {
+      const supportsMultiDb = await bolt.hasMultiDbSupport()
+      if (!supportsMultiDb) {
+        return resolve(null)
+      }
+      bolt
+        .directTransaction(
+          'SHOW DATABASES',
+          {},
+          {
+            useCypherThread: shouldUseCypherThread(store.getState()),
+            ...getBackgroundTxMetadata({
+              hasServerSupport: canSendTxMetadata(store.getState())
+            }),
+            useDb: SYSTEM_DB
+          }
+        )
+        .then(resolve)
+        .catch(reject)
+    })
+  )
+    .catch(e => {
+      return Rx.Observable.of(null)
+    })
+    .do(res => {
+      if (!res) return Rx.Observable.of(null)
+      const databases = res.records.map(record => ({
+        ...reduce(
+          record.keys,
+          (agg, key) => assign(agg, { [key]: record.get(key) }),
+          {}
+        ),
+        status: record.get('currentStatus')
+      }))
+
+      store.dispatch(update({ databases }))
+
+      return Rx.Observable.of(null)
+    })
+
+const getLabelsAndTypes = store =>
+  Rx.Observable.of(null).mergeMap(() => {
+    const db = getUseDb(store.getState())
+
+    // System db, do nothing
+    if (db === SYSTEM_DB) {
+      store.dispatch(updateMeta([]))
+      return Rx.Observable.of(null)
+    }
+    // Not system db, try and fetch meta data
+    return Rx.Observable.fromPromise(
+      bolt.routedReadTransaction(
+        metaQuery,
+        {},
+        {
+          useCypherThread: shouldUseCypherThread(store.getState()),
+          onLostConnection: onLostConnection(store.dispatch),
+          ...getBackgroundTxMetadata({
+            hasServerSupport: canSendTxMetadata(store.getState())
+          })
+        }
+      )
+    )
+      .do(res => {
+        if (res) {
+          store.dispatch(updateMeta(res))
+        }
+        return Rx.Observable.of(null)
+      })
+      .catch(e => {
+        store.dispatch(updateMeta([]))
+        return Rx.Observable.of(null)
+      })
+  })
+
+const clusterRole = store =>
+  Rx.Observable.fromPromise(
+    new Promise((resolve, reject) => {
+      if (!isACausalCluster(store.getState())) {
+        return resolve(null)
+      }
+      bolt
+        .directTransaction(
+          getDbClusterRole(store.getState()),
+          {},
+          {
+            useCypherThread: shouldUseCypherThread(store.getState()),
+            ...getBackgroundTxMetadata({
+              hasServerSupport: canSendTxMetadata(store.getState())
+            })
+          }
+        )
+        .then(resolve)
+        .catch(reject)
+    })
+  )
+    .catch(e => {
+      return Rx.Observable.of(null)
+    })
+    .do(res => {
+      if (!res) return Rx.Observable.of(null)
+      const role = res.records[0].get(0)
+      store.dispatch(update({ role }))
+      return Rx.Observable.of(null)
+    })
+
+const switchToRequestedDb = store => {
+  if (getUseDb(store.getState())) return Rx.Observable.of(null)
+
+  const databases = getDatabases(store.getState())
+  const activeConnection = getActiveConnectionData(store.getState())
+  const requestedUseDb = activeConnection?.requestedUseDb
+
+  const useDefaultDb = () => {
+    const defaultDb = databases.find(db => db.default)
+    if (defaultDb) {
+      store.dispatch(useDb(defaultDb.name))
+    }
+  }
+
+  if (requestedUseDb) {
+    const wantedDb = databases.find(
+      ({ name }) => name.toLowerCase() === requestedUseDb.toLowerCase()
+    )
+    store.dispatch(
+      updateConnection({
+        id: activeConnection.id,
+        requestedUseDb: ''
+      })
+    )
+    if (wantedDb) {
+      store.dispatch(useDb(wantedDb.name))
+      // update labels and such for new db
+      return getLabelsAndTypes(store)
+    } else {
+      // this will show the db not found frame
+      store.dispatch(executeSingleCommand(`:use ${requestedUseDb}`))
+      useDefaultDb()
+    }
+  } else {
+    useDefaultDb()
+  }
+  return Rx.Observable.of(null)
+}
+
 export const dbMetaEpic = (some$, store) =>
   some$
     .ofType(UPDATE_CONNECTION_STATE)
@@ -339,132 +489,20 @@ export const dbMetaEpic = (some$, store) =>
           .throttle(() => some$.ofType(DB_META_DONE))
           // Server version and edition
           .do(store.dispatch({ type: FETCH_SERVER_INFO }))
-          .mergeMap(() =>
-            Rx.Observable.forkJoin([
-              // Labels, types and propertyKeys, and server version
-              Rx.Observable.of(null).mergeMap(() => {
-                const db = getUseDb(store.getState())
-
-                // System db, do nothing
-                if (db === SYSTEM_DB) {
-                  store.dispatch(updateMeta([]))
-                  return Rx.Observable.of(null)
-                }
-
-                // Not system db, try and fetch meta data
-                return Rx.Observable.fromPromise(
-                  bolt.routedReadTransaction(
-                    metaQuery,
-                    {},
-                    {
-                      useCypherThread: shouldUseCypherThread(store.getState()),
-                      onLostConnection: onLostConnection(store.dispatch),
-                      ...getBackgroundTxMetadata({
-                        hasServerSupport: canSendTxMetadata(store.getState())
-                      })
-                    }
-                  )
-                )
-                  .do(res => {
-                    if (res) {
-                      store.dispatch(updateMeta(res))
-                    }
-                  })
-                  .catch(e => {
-                    store.dispatch(updateMeta([]))
-                    return Rx.Observable.of(null)
-                  })
-              }),
-              // Cluster role
-              Rx.Observable.fromPromise(
-                new Promise((resolve, reject) => {
-                  if (!isACausalCluster(store.getState())) {
-                    return resolve(null)
-                  }
-                  bolt
-                    .directTransaction(
-                      getDbClusterRole(store.getState()),
-                      {},
-                      {
-                        useCypherThread: shouldUseCypherThread(
-                          store.getState()
-                        ),
-                        ...getBackgroundTxMetadata({
-                          hasServerSupport: canSendTxMetadata(store.getState())
-                        })
-                      }
-                    )
-                    .then(resolve)
-                    .catch(reject)
-                })
-              )
-                .catch(e => {
-                  return Rx.Observable.of(null)
-                })
-                .do(res => {
-                  if (!res) return Rx.Observable.of(null)
-                  const role = res.records[0].get(0)
-                  store.dispatch(update({ role }))
-                  return Rx.Observable.of(null)
-                }),
-              // Database list
-              Rx.Observable.fromPromise(
-                new Promise(async (resolve, reject) => {
-                  const supportsMultiDb = await bolt.hasMultiDbSupport()
-                  if (!supportsMultiDb) {
-                    return resolve(null)
-                  }
-                  bolt
-                    .directTransaction(
-                      'SHOW DATABASES',
-                      {},
-                      {
-                        useCypherThread: shouldUseCypherThread(
-                          store.getState()
-                        ),
-                        ...getBackgroundTxMetadata({
-                          hasServerSupport: canSendTxMetadata(store.getState())
-                        }),
-                        useDb: SYSTEM_DB // System db
-                      }
-                    )
-                    .then(resolve)
-                    .catch(reject)
-                })
-              )
-                .catch(e => {
-                  return Rx.Observable.of(null)
-                })
-                .do(res => {
-                  if (!res) return Rx.Observable.of(null)
-                  const databases = res.records.map(record => ({
-                    ...reduce(
-                      record.keys,
-                      (agg, key) => assign(agg, { [key]: record.get(key) }),
-                      {}
-                    ),
-                    status: record.get('currentStatus')
-                  }))
-
-                  store.dispatch(update({ databases }))
-
-                  // Currently not using a db
-                  if (!getUseDb(store.getState())) {
-                    const defaultDb = databases.filter(db => db.default)
-                    if (defaultDb.length) {
-                      store.dispatch(useDb(defaultDb[0].name))
-                    }
-                  }
-                  return Rx.Observable.of(null)
-                })
+          .mergeMap(() => {
+            return Rx.Observable.forkJoin([
+              getLabelsAndTypes(store),
+              clusterRole(store),
+              databaseList(store)
             ])
-          )
+          })
           .takeUntil(
             some$
               .ofType(LOST_CONNECTION)
               .filter(connectionLossFilter)
               .merge(some$.ofType(DISCONNECTION_SUCCESS))
           )
+          .mergeMap(() => switchToRequestedDb(store))
           .mapTo({ type: DB_META_DONE })
       )
     })

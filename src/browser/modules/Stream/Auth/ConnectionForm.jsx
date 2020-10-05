@@ -28,13 +28,17 @@ import {
   updateConnection,
   CONNECT,
   VERIFY_CREDENTIALS,
-  isConnected
+  isConnected,
+  USE_DB
 } from 'shared/modules/connections/connectionsDuck'
 import {
   getInitCmd,
   getPlayImplicitInitCommands
 } from 'shared/modules/settings/settingsDuck'
-import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeSystemCommand,
+  executeSingleCommand
+} from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
@@ -60,6 +64,7 @@ export class ConnectionForm extends Component {
       (connection && connection.authenticationMethod) || NATIVE
 
     this.state = {
+      requestedUseDb: '',
       ...connection,
       host: generateBoltUrl(props.allowedSchemes, connection.host),
       authenticationMethod,
@@ -86,7 +91,10 @@ export class ConnectionForm extends Component {
     this.props.error({})
     this.props.bus.self(
       CONNECT,
-      { ...this.state, noResetConnectionOnFail },
+      {
+        ...this.state,
+        noResetConnectionOnFail
+      },
       res => {
         if (res.success) {
           doneFn()
@@ -127,13 +135,19 @@ export class ConnectionForm extends Component {
     )
   }
 
-  onUsernameChange(event) {
+  onDatebaseChange = event => {
+    const requestedUseDb = event.target.value
+    this.setState({ requestedUseDb })
+    this.props.error({})
+  }
+
+  onUsernameChange = event => {
     const username = event.target.value
     this.setState({ username })
     this.props.error({})
   }
 
-  onPasswordChange(event) {
+  onPasswordChange = event => {
     const password = event.target.value
     this.setState({ password })
     this.props.error({})
@@ -289,17 +303,20 @@ export class ConnectionForm extends Component {
         <ConnectForm
           onConnectClick={this.connect.bind(this)}
           onHostChange={this.onHostChange.bind(this)}
-          onUsernameChange={this.onUsernameChange.bind(this)}
-          onPasswordChange={this.onPasswordChange.bind(this)}
+          onUsernameChange={this.onUsernameChange}
+          onPasswordChange={this.onPasswordChange}
+          onDatabaseChange={this.onDatebaseChange}
           onAuthenticationMethodChange={this.onAuthenticationMethodChange.bind(
             this
           )}
           host={this.state.hostInputVal || this.state.host}
           username={this.state.username}
           password={this.state.password}
+          database={this.state.requestedUseDb}
           authenticationMethod={this.state.authenticationMethod}
           used={this.state.used}
           allowedSchemes={this.props.allowedSchemes}
+          supportsMultiDb={this.state.supportsMultiDb}
         />
       )
     }
