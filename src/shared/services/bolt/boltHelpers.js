@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global location */
 import { getUrlInfo } from 'services/utils'
 
 export const KERBEROS = 'KERBEROS'

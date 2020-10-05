@@ -444,7 +444,12 @@ const switchToRequestedDb = store => {
   const activeConnection = getActiveConnectionData(store.getState())
   const requestedUseDb = activeConnection?.requestedUseDb
 
-  const defaultDb = databases.find(db => db.default)
+  const useDefaultDb = () => {
+    const defaultDb = databases.find(db => db.default)
+    if (defaultDb) {
+      store.dispatch(useDb(defaultDb.name))
+    }
+  }
 
   if (requestedUseDb) {
     const wantedDb = databases.find(
@@ -463,10 +468,10 @@ const switchToRequestedDb = store => {
     } else {
       // this will show the db not found frame
       store.dispatch(executeSingleCommand(`:use ${requestedUseDb}`))
-      store.dispatch(useDb(defaultDb.name))
+      useDefaultDb()
     }
   } else {
-    store.dispatch(useDb(defaultDb.name))
+    useDefaultDb()
   }
   return Rx.Observable.of(null)
 }

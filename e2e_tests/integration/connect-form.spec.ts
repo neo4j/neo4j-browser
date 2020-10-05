@@ -162,6 +162,7 @@ describe('Connect form', () => {
     }
 
     it('extracts params and prefills form', () => {
+      cy.disconnect()
       cy.visit('/?dbms=bolt://username@localhost:7687&db=system')
 
       cy.get('[data-testid=database]').should('have.value', 'system')
