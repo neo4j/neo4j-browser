@@ -152,12 +152,11 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       {props.supportsMultiDb && (
         <StyledConnectionFormEntry>
           <StyledConnectionLabel>
-            Database to use
+            Database - leave empty for default
             <StyledConnectionTextInput
               data-testid="database"
               onChange={props.onDatabaseChange}
               value={props.database}
-              placeholder="default database"
             />
           </StyledConnectionLabel>
         </StyledConnectionFormEntry>
