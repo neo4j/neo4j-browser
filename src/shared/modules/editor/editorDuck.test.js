@@ -56,7 +56,7 @@ describe('editorDuck Epics', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        executeCommand(`:${cmd} ${arg}`)
+        executeCommand(`:${cmd} ${arg}`, { source: 'url' })
       ])
       done()
     })

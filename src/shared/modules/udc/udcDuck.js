@@ -221,25 +221,29 @@ export const udcStartupEpic = (action$, store) =>
         'enableMultiStatementMode',
         'connectionTimeout'
       ]
-      const data = nonSensitiveSettings.reduce(
-        (acc, curr) => ({ ...acc, [curr]: settings[curr] }),
-        {}
-      )
-      store.dispatch(
-        metricsEvent({ category: 'settings', label: 'snapshot', data })
-      )
+      if (settings) {
+        const data = nonSensitiveSettings.reduce(
+          (acc, curr) => ({ ...acc, [curr]: settings[curr] }),
+          {}
+        )
+        store.dispatch(
+          metricsEvent({ category: 'settings', label: 'snapshot', data })
+        )
+      }
     })
     .do(() => {
-      const count = getFavorites(store.getState()).filter(
-        script => !script.isStatic
-      ).length
-      store.dispatch(
-        metricsEvent({
-          category: 'favorites',
-          label: 'snapshot',
-          data: { count }
-        })
-      )
+      const favorites = getFavorites(store.getState())
+
+      if (favorites) {
+        const count = favorites.filter(script => !script.isStatic).length
+        store.dispatch(
+          metricsEvent({
+            category: 'favorites',
+            label: 'snapshot',
+            data: { count }
+          })
+        )
+      }
     })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
@@ -371,7 +375,6 @@ export const trackConnectsEpic = (
 
 export const trackErrorFramesEpic = (action$, store) =>
   action$.ofType(ADD).map(action => {
-    console.log(action)
     const error = action.state.error
     if (error) {
       const { message, code, type } = error

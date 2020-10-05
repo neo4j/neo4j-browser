@@ -57,7 +57,9 @@ describe('AutoExecButton', function() {
       parentId: undefined,
       requestId: undefined,
       type: 'commands/COMMAND_QUEUED',
-      isRerun: false
+      source: 'button-press',
+      isRerun: false,
+      useDb: undefined
     })
   })
 
@@ -78,6 +80,7 @@ describe('AutoExecButton', function() {
       parentId: undefined,
       requestId: undefined,
       type: 'commands/COMMAND_QUEUED',
+      source: 'button-press',
       isRerun: false
     })
   })
