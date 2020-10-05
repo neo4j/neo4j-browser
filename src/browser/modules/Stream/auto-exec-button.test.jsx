@@ -25,21 +25,13 @@ import { AutoExecButtonNoBus } from './auto-exec-button'
 
 const send = jest.fn()
 
-// credit: https://testing-library.com/docs/example-react-redux
-const initialState = { settings: { cmdchar: ':' } }
-const store = createStore(() => initialState, initialState)
-
-function renderWithRedux(ui) {
-  return render(<Provider store={store}>{ui}</Provider>)
-}
-
 describe('AutoExecButton', function() {
   beforeEach(() => {
     jest.resetAllMocks()
   })
   test('should display command with cmd char', () => {
     // Given
-    const { getByText } = renderWithRedux(
+    const { getByText } = render(
       <AutoExecButtonNoBus bus={{ send }} cmd="help params" />
     )
 
@@ -50,7 +42,7 @@ describe('AutoExecButton', function() {
 
   test('should auto execute when clicked', () => {
     // Given
-    const { getByText } = renderWithRedux(
+    const { getByText } = render(
       <AutoExecButtonNoBus bus={{ send }} cmd="help params" />
     )
 
@@ -71,7 +63,7 @@ describe('AutoExecButton', function() {
 
   test('supports any random cmd string', () => {
     // Given
-    const { getByText } = renderWithRedux(
+    const { getByText } = render(
       <AutoExecButtonNoBus bus={{ send }} cmd="foo bar" />
     )
 

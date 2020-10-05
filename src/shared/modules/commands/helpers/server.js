@@ -25,10 +25,8 @@ import { CONNECTION_ID as DISCOVERY_CONNECTION_ID } from 'shared/modules/discove
 import { UnknownCommandError, getErrorMessage } from 'services/exceptions'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
-export function handleServerCommand(action, cmdchar, put, store) {
-  const [serverCmd, props] = getCommandAndParam(
-    action.cmd.substr(cmdchar.length)
-  )
+export function handleServerCommand(action, put, store) {
+  const [serverCmd, props] = getCommandAndParam(action.cmd.substr(1))
 
   if (serverCmd === 'connect') {
     return connectToConnection(action, props, put, store)
@@ -37,10 +35,10 @@ export function handleServerCommand(action, cmdchar, put, store) {
     return handleDisconnectCommand(action, props, put, store)
   }
   if (serverCmd === 'user') {
-    return handleUserCommand(action, props, cmdchar)
+    return handleUserCommand(action, props)
   }
   if (serverCmd === 'change-password') {
-    return handleChangePasswordCommand(action, props, cmdchar)
+    return handleChangePasswordCommand(action, props)
   }
   if (serverCmd === 'status') {
     return handleServerStatusCommand(action)
@@ -55,7 +53,7 @@ export function handleServerCommand(action, cmdchar, put, store) {
   }
 }
 
-function handleDisconnectCommand(action, cmdchar, put, store) {
+function handleDisconnectCommand(action, put, store) {
   put(addFrameAction({ ...action, type: 'disconnect' }))
   const activeConnection = connections.getActiveConnection(store.getState())
   const disconnectAction = connections.disconnectAction(activeConnection)
@@ -63,7 +61,7 @@ function handleDisconnectCommand(action, cmdchar, put, store) {
   return null
 }
 
-function handleUserCommand(action, props, cmdchar) {
+function handleUserCommand(action, props) {
   switch (props) {
     case 'list':
       return { ...action, type: 'user-list' }
@@ -72,7 +70,7 @@ function handleUserCommand(action, props, cmdchar) {
   }
 }
 
-function handleChangePasswordCommand(action, props, cmdchar) {
+function handleChangePasswordCommand(action, props) {
   return { ...action, type: 'change-password' }
 }
 

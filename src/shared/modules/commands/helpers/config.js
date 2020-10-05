@@ -30,14 +30,14 @@ import { getJSON } from 'services/remote'
 import { isValidURL } from 'shared/modules/commands/helpers/http'
 import jsonic from 'jsonic'
 
-export function handleGetConfigCommand(action, cmdchar, store) {
+export function handleGetConfigCommand(action, store) {
   const settingsState = getSettings(store.getState())
   const res = JSON.stringify(settingsState, null, 2)
   return { result: res, type: 'pre' }
 }
 
-export function handleUpdateConfigCommand(action, cmdchar, put, store) {
-  const strippedCmd = action.cmd.substr(cmdchar.length)
+export function handleUpdateConfigCommand(action, put, store) {
+  const strippedCmd = action.cmd.substr(1)
   const parts = splitStringOnFirst(strippedCmd, ' ')
   const p = new Promise((resolve, reject) => {
     if (parts[1] === undefined || parts[1] === '') return resolve(true) // Nothing to do

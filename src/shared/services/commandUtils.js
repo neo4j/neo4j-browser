@@ -54,25 +54,20 @@ export function splitStringOnLast(str, delimiter) {
   )
 }
 
-export const isCypherCommand = (cmd, cmdchar) => {
+export const isCypherCommand = cmd => {
   const cleanCmd = cleanCommand(cmd)
-  return cleanCmd[0] !== cmdchar
+  return cleanCmd[0] !== ':'
 }
 
-export const buildCommandObject = (action, interpret, cmdchar) => {
-  const interpreted = getInterpreter(
-    interpret,
-    action.cmd,
-    cmdchar,
-    action.ignore
-  )
-  return { action, interpreted, cmdchar, useDb: action.useDb }
+export const buildCommandObject = (action, interpret) => {
+  const interpreted = getInterpreter(interpret, action.cmd, action.ignore)
+  return { action, interpreted, useDb: action.useDb }
 }
 
-export const getInterpreter = (interpret, cmd, cmdchar, ignore = false) => {
+export const getInterpreter = (interpret, cmd, ignore = false) => {
   if (ignore) return interpret('noop')
-  if (isCypherCommand(cmd, cmdchar)) return interpret('cypher')
-  return interpret(cleanCommand(cmd).substr(cmdchar.length))
+  if (isCypherCommand(cmd)) return interpret('cypher')
+  return interpret(cleanCommand(cmd).substr(1))
 }
 
 export const isNamedInterpreter = interpreter =>

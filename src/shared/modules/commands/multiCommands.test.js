@@ -45,7 +45,6 @@ describe('handleCommandEpic', () => {
   beforeAll(() => {
     store = mockStore({
       settings: {
-        cmdchar: ':',
         maxHistory,
         enableMultiStatementMode: true
       },

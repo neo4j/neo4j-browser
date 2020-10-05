@@ -38,27 +38,20 @@ const StyledAutoExecButton = styled.button`
   outline: transparent;
 `
 
-function AutoExecButtonComponent({ bus, cmd, cmdChar, ...rest }) {
+function AutoExecButtonComponent({ bus, cmd, ...rest }) {
   const onClick = useCallback(() => {
-    const action = executeCommand(`${cmdChar}${cmd}`)
+    const action = executeCommand(`:${cmd}`)
 
     bus.send(action.type, action)
   }, [cmd])
 
   return (
     <StyledAutoExecButton type="button" onClick={onClick} {...rest}>
-      <i className="fa fa-play-circle-o" /> {cmdChar}
-      {cmd}
+      <i className="fa fa-play-circle-o" /> :{cmd}
     </StyledAutoExecButton>
   )
 }
 
-const mapStateToProps = ({ settings }) => ({
-  cmdChar: settings.cmdchar
-})
+const AutoExecButton = withBus(AutoExecButtonComponent)
 
-export const AutoExecButtonNoBus = connect(mapStateToProps)(
-  AutoExecButtonComponent
-)
-
-export default withBus(AutoExecButtonNoBus)
+export default AutoExecButton

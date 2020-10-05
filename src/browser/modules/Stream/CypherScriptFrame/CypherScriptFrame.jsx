@@ -28,16 +28,15 @@ import { StyledStatusSection } from 'browser-components/buttons'
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { WrapperCenter, ContentSizer, PointerFrameCommand } from './styled'
 import Accordion from 'browser-components/Accordion/Accordion'
-import { getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { Summary, CypherSummary } from './Summary'
 import { Icon } from './Icon'
 import { getLatestFromFrameStack } from '../stream.utils'
 
-const isCypher = (str, cmdchar) => !str.startsWith(cmdchar)
+const isCypher = str => !str.startsWith(':')
 
 class CypherScriptFrame extends Component {
   render() {
-    const { frame, frames, requests = {}, cmdchar = ':' } = this.props
+    const { frame, frames, requests = {} } = this.props
     const contents = (
       <WrapperCenter>
         <ContentSizer>
@@ -57,7 +56,7 @@ class CypherScriptFrame extends Component {
                       index,
                       defaultActive: ['error'].includes(status)
                     })
-                    const SummaryC = isCypher(frames[id].cmd, cmdchar)
+                    const SummaryC = isCypher(frames[id].cmd)
                       ? CypherSummary
                       : Summary
                     return (
@@ -131,8 +130,7 @@ const mapStateToProps = (state, ownProps) => {
     }, {})
   return {
     frames,
-    requests,
-    cmdchar: getCmdChar(state)
+    requests
   }
 }
 
