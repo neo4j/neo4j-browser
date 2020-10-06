@@ -103,10 +103,6 @@ module.exports = {
     host: '0.0.0.0',
     port: 8080,
     disableHostCheck: true,
-    hot: !helpers.isProduction,
-    proxy: {
-      context: ['/graphql', '/files'],
-      target: 'http://localhost:3000'
-    }
+    hot: !helpers.isProduction
   }
 }

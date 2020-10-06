@@ -15,20 +15,8 @@
  *
  */
 
-import remote from 'services/remote'
-import { SLASH, CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
-import { pick } from 'lodash-es'
 import uuid from 'uuid'
 import { split, trim, head, startsWith } from 'lodash-es'
-
-import {
-  IProjectFile,
-  IFavorite,
-  IProjectFilesResult,
-  GET_PROJECT_FILES,
-  IAddProjectFile,
-  IRemoveProjectFile
-} from './project-files.constants'
 import {
   ApolloCache,
   FetchResult,
@@ -36,33 +24,66 @@ import {
   Reference
 } from '@apollo/client'
 
-export const ProjectFilesQueryVars = {
-  projectId: 'project-03688c10-a811-4c0c-85d4-581e88c2183a', // @todo: hardcoded for now
+import remote from 'services/remote'
+import { SLASH, CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import {
+  IProjectFile,
+  IFavorite,
+  IProjectFilesResult,
+  GET_PROJECT_FILES,
+  IAddProjectFile,
+  IRemoveProjectFile,
+  IProjectFileMapping
+} from './project-files.constants'
+
+export const ProjectFilesQueryVars = (
+  projectId: string
+): { projectId: string; filterValue: string } => ({
+  projectId,
   filterValue: CYPHER_FILE_EXTENSION
-}
+})
 
 export const ProjectFileMutationVars = (
-  filePath: string
-): { projectId: string; filePath: string } => ({
-  ...pick(ProjectFilesQueryVars, ['projectId']),
+  filePath: string,
+  projectId: string
+): { filePath: string; projectId: string } => ({
+  projectId,
   filePath
 })
 
 export const mapProjectFileToFavorites = async ({
   downloadToken,
   name,
-  directory
-}: IProjectFile): Promise<IFavorite> => ({
+  directory,
+  apiToken,
+  clientId,
+  relateUrl
+}: IProjectFileMapping): Promise<IFavorite> => ({
   id: uuid.v4(),
   name,
   directory,
-  path: directory.startsWith('.') ? SLASH : `${SLASH}${directory}`, // @todo: have to add SLASH to show files/folders
-  contents: await getProjectFileContents(downloadToken, name)
+  path: directory.startsWith('.') ? SLASH : `${SLASH}${directory}`, // add SLASH to show files/folders
+  contents: await getProjectFileContents(
+    downloadToken,
+    name,
+    apiToken,
+    clientId,
+    relateUrl
+  )
 })
 
-const getProjectFileContents = (token: string, name: string): Promise<any> =>
+const getProjectFileContents = (
+  token: string,
+  name: string,
+  apiToken: string,
+  clientId: string,
+  relateUrl: string
+): Promise<any> =>
   remote
-    .request('GET', `/files/${token}/${name}`)
+    .request('GET', `${relateUrl}/files/${token}/${name}`, null, {
+      'X-API-Token': apiToken,
+      'X-Client-Id': clientId
+    })
     .then(body => body.text())
     .catch(e => console.log(`Unable to get file ${name}\n`, e))
 
@@ -89,17 +110,19 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
 }
 
 const readCacheQuery = (
-  cache: ApolloCache<NormalizedCacheObject>
+  cache: ApolloCache<NormalizedCacheObject>,
+  projectId: string
 ): IProjectFilesResult | null => {
   return cache.readQuery<IProjectFilesResult>({
     query: GET_PROJECT_FILES,
-    variables: ProjectFilesQueryVars
+    variables: ProjectFilesQueryVars(projectId)
   })
 }
 
 const writeCacheQuery = (
   cache: ApolloCache<NormalizedCacheObject>,
-  files: IProjectFile[]
+  files: IProjectFile[],
+  projectId: string
 ): Reference | undefined => {
   return cache.writeQuery({
     query: GET_PROJECT_FILES,
@@ -108,15 +131,16 @@ const writeCacheQuery = (
         files
       }
     },
-    variables: ProjectFilesQueryVars
+    variables: ProjectFilesQueryVars(projectId)
   })
 }
 
 export const updateCacheRemoveProjectFile = (
   cache: ApolloCache<NormalizedCacheObject>,
-  result: FetchResult<IRemoveProjectFile>
+  result: FetchResult<IRemoveProjectFile>,
+  projectId: string
 ): void => {
-  const data = readCacheQuery(cache)
+  const data = readCacheQuery(cache, projectId)
   if (!data) {
     return
   }
@@ -125,14 +149,15 @@ export const updateCacheRemoveProjectFile = (
       file.directory !== result.data?.removeProjectFile.directory ||
       file.name !== result.data?.removeProjectFile.name
   )
-  writeCacheQuery(cache, filteredProjectFiles)
+  writeCacheQuery(cache, filteredProjectFiles, projectId)
 }
 
 export const updateCacheAddProjectFile = (
   cache: ApolloCache<NormalizedCacheObject>,
-  result: FetchResult<IAddProjectFile>
+  result: FetchResult<IAddProjectFile>,
+  projectId: string
 ): void => {
-  const data = readCacheQuery(cache)
+  const data = readCacheQuery(cache, projectId)
   if (!data || !result.data) {
     return
   }
@@ -141,5 +166,5 @@ export const updateCacheAddProjectFile = (
     ...currentProjectFiles,
     result.data.addProjectFile
   ]
-  writeCacheQuery(cache, updatedProjectFilesArray)
+  writeCacheQuery(cache, updatedProjectFilesArray, projectId)
 }

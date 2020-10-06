@@ -41,6 +41,15 @@ export interface IProjectFile {
   extension: string
 }
 
+export interface IProjectFileMapping {
+  downloadToken: string
+  name: string
+  directory: string
+  apiToken: string
+  clientId: string
+  relateUrl: string
+}
+
 // needed for MyScripts component
 export interface IFavorite {
   id: string

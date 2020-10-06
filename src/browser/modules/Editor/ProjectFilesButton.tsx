@@ -40,7 +40,6 @@ import {
 } from 'browser/modules/Sidebar/project-files.constants'
 import { useMutation } from '@apollo/client'
 
-const IS_RELATE_AVAILABLE = true // @todo: will come from Redux store eventually
 const PROJECT_EDITOR_BUTTON_TITLE = 'Project File'
 const PROJECT_SAVE_EDITOR_BUTTON_TITLE = 'Save Project File'
 const PROJECT_EDIT_EDITOR_BUTTON_TITLE = 'Edit Project File'
@@ -52,6 +51,8 @@ interface ProjectFilesButtonProps {
   bus: Bus
   toggleDrawer: () => void
   isDrawerOpen: boolean
+  isRelateAvailable: boolean
+  projectId: string
 }
 
 type IActiveRelateFile = Omit<IProjectFile, 'downloadToken'>
@@ -61,7 +62,9 @@ const ProjectFileButton = ({
   editorValue,
   bus,
   toggleDrawer,
-  isDrawerOpen
+  isDrawerOpen,
+  isRelateAvailable,
+  projectId
 }: ProjectFilesButtonProps): JSX.Element | null => {
   const [addFile, { error }] = useMutation(ADD_PROJECT_FILE)
   const [isEditMode, setEditMode] = useState(false)
@@ -135,7 +138,7 @@ const ProjectFileButton = ({
     }
   })
 
-  if (!IS_RELATE_AVAILABLE) return null
+  if (!isRelateAvailable) return null
 
   return (
     <>
@@ -149,7 +152,7 @@ const ProjectFileButton = ({
               try {
                 const { data } = await addFile({
                   variables: {
-                    projectId: 'project-03688c10-a811-4c0c-85d4-581e88c2183a', // @todo: hardcoded for now
+                    projectId,
                     fileUpload: new File(
                       [editorValue()],
                       activeRelateFile.name
@@ -192,7 +195,12 @@ const ProjectFileButton = ({
 
 const mapStateToProps = (state: any) => {
   return {
-    isDrawerOpen: state.drawer === PROJECT_FILES_DRAWER_NAME
+    isDrawerOpen: state.drawer === PROJECT_FILES_DRAWER_NAME,
+    isRelateAvailable:
+      state.app.relateUrl &&
+      state.app.relateApiToken &&
+      state.app.neo4jDesktopProjectId,
+    projectId: state.app.neo4jDesktopProjectId
   }
 }
 

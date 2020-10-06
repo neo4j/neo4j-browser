@@ -49,9 +49,10 @@ import {
 
 interface IProjectFiles {
   bus: Bus
+  projectId: string
 }
 
-const ProjectFiles = ({ bus }: IProjectFiles) => {
+const ProjectFiles = ({ bus, projectId }: IProjectFiles) => {
   const [addFile, { error: apolloError }] = useMutation(ADD_PROJECT_FILE)
   const [isSaveMode, setSaveMode] = useState(false)
   const [fileName, setFileName] = useState('')
@@ -123,13 +124,14 @@ const ProjectFiles = ({ bus }: IProjectFiles) => {
                   data: { addProjectFile }
                 } = await addFile({
                   variables: {
-                    projectId: 'project-03688c10-a811-4c0c-85d4-581e88c2183a', // @todo: hardcoded for now
+                    projectId,
                     fileUpload: new File(
                       [fileContents],
                       `${fileName}${CYPHER_FILE_EXTENSION}`
                     )
                   },
-                  update: updateCacheAddProjectFile
+                  update: (cache, result) =>
+                    updateCacheAddProjectFile(cache, result, projectId)
                 })
                 const addedFile = {
                   name: addProjectFile.name,
@@ -165,7 +167,9 @@ const ProjectFiles = ({ bus }: IProjectFiles) => {
 }
 
 const mapStateToProps = (state: any) => {
-  return state
+  return {
+    projectId: state.app.neo4jDesktopProjectId
+  }
 }
 
 export default withBus(connect(mapStateToProps)(ProjectFiles))

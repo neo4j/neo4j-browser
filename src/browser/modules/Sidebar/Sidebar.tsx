@@ -54,9 +54,8 @@ interface SidebarProps {
   neo4jConnectionState: string
   syncConnected: boolean
   loadSync: boolean
+  isRelateAvailable: boolean
 }
-
-const IS_RELATE_AVAILABLE = true
 
 const Sidebar = ({
   openDrawer,
@@ -64,7 +63,8 @@ const Sidebar = ({
   showStaticScripts,
   neo4jConnectionState,
   syncConnected,
-  loadSync
+  loadSync,
+  isRelateAvailable
 }: SidebarProps) => {
   const topNavItemsList = [
     {
@@ -107,8 +107,7 @@ const Sidebar = ({
     }
   ]
 
-  // @todo: IS_RELATE_AVAILABLE will come from Redux eventually
-  if (IS_RELATE_AVAILABLE) {
+  if (isRelateAvailable) {
     topNavItemsList.push({
       name: 'Project Files',
       title: 'Project Files',
@@ -181,7 +180,11 @@ const mapStateToProps = (state: any) => {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
     loadSync: useBrowserSync(state),
-    showStaticScripts: state.settings.showSampleScripts
+    showStaticScripts: state.settings.showSampleScripts,
+    isRelateAvailable:
+      state.app.relateUrl &&
+      state.app.relateApiToken &&
+      state.app.neo4jDesktopProjectId
   }
 }
 

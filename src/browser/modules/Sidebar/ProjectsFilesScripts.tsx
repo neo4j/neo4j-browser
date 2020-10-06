@@ -96,6 +96,10 @@ interface IProjectFilesScripts {
   onRemoveFolder: () => void
   scriptsNamespace: string
   title: string
+  projectId: string
+  relateApiToken: string
+  neo4jDesktopGraphAppId: string
+  relateUrl: string
 }
 
 function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
@@ -103,7 +107,7 @@ function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
     IProjectFilesResult,
     IProjectFilesVariables
   >(GET_PROJECT_FILES, {
-    variables: ProjectFilesQueryVars
+    variables: ProjectFilesQueryVars(props.projectId)
   })
   const [removeFile, { error: removeProjectFileError }] = useMutation(
     DELETE_PROJECT_FILE
@@ -115,7 +119,15 @@ function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
     if (data) {
       const getProjectFiles = async () => {
         const getProjectFilePromises = data.getProject.files.map(
-          mapProjectFileToFavorites
+          ({ downloadToken, name, directory }) =>
+            mapProjectFileToFavorites({
+              downloadToken,
+              name,
+              directory,
+              apiToken: props.relateApiToken,
+              clientId: props.neo4jDesktopGraphAppId,
+              relateUrl: props.relateUrl
+            })
         )
         const projectFiles = await Promise.all(getProjectFilePromises)
         if (isStillMounted) {
@@ -136,16 +148,23 @@ function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
   }, [data, refetch])
 
   const myScriptsProps = {
-    ...omit(props, 'bus'),
+    ...omit(props, [
+      'bus',
+      'projectId',
+      'relateApiToken',
+      'neo4jDesktopGraphAppId',
+      'relateUrl'
+    ]),
     scripts: projectFiles,
     isProjectFiles: true,
     onRemoveScript: async (favorite: IFavorite) => {
-      const directory = favorite.path.substring(1) // @todo: adding in SLASH to path
+      const directory = favorite.path.substring(1) // remove SLASH from path
       const filePath = path.join(directory, favorite.name)
       try {
         const { data } = await removeFile({
-          variables: ProjectFileMutationVars(filePath),
-          update: updateCacheRemoveProjectFile
+          variables: ProjectFileMutationVars(filePath, props.projectId),
+          update: (cache, result) =>
+            updateCacheRemoveProjectFile(cache, result, props.projectId)
         })
         props.bus.send(REMOVE_PROJECT_FILE, {
           name: data.removeProjectFile.name,
@@ -167,10 +186,14 @@ function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
   )
 }
 
-const mapFavoritesStateToProps = () => {
+const mapFavoritesStateToProps = (state: any) => {
   return {
     scriptsNamespace: SLASH,
-    title: 'Project Files'
+    title: 'Project Files',
+    projectId: state.app.neo4jDesktopProjectId,
+    relateApiToken: state.app.relateApiToken,
+    neo4jDesktopGraphAppId: state.app.neo4jDesktopGraphAppId,
+    relateUrl: state.app.relateUrl
   }
 }
 
