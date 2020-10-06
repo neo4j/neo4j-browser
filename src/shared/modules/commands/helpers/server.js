@@ -32,7 +32,7 @@ export function handleServerCommand(action, put, store) {
     return connectToConnection(action, props, put, store)
   }
   if (serverCmd === 'disconnect') {
-    return handleDisconnectCommand(action, props, put, store)
+    return handleDisconnectCommand(action, put, store)
   }
   if (serverCmd === 'user') {
     return handleUserCommand(action, props)

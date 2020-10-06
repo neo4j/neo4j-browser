@@ -21,7 +21,7 @@ import { render, fireEvent } from '@testing-library/react'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
-import { AutoExecButtonNoBus } from './auto-exec-button'
+import { AutoExecButtonComponent } from './auto-exec-button'
 
 const send = jest.fn()
 
@@ -32,7 +32,7 @@ describe('AutoExecButton', function() {
   test('should display command with cmd char', () => {
     // Given
     const { getByText } = render(
-      <AutoExecButtonNoBus bus={{ send }} cmd="help params" />
+      <AutoExecButtonComponent bus={{ send }} cmd="help params" />
     )
 
     // Then
@@ -43,7 +43,7 @@ describe('AutoExecButton', function() {
   test('should auto execute when clicked', () => {
     // Given
     const { getByText } = render(
-      <AutoExecButtonNoBus bus={{ send }} cmd="help params" />
+      <AutoExecButtonComponent bus={{ send }} cmd="help params" />
     )
 
     fireEvent.click(getByText(':help params'))
@@ -64,7 +64,7 @@ describe('AutoExecButton', function() {
   test('supports any random cmd string', () => {
     // Given
     const { getByText } = render(
-      <AutoExecButtonNoBus bus={{ send }} cmd="foo bar" />
+      <AutoExecButtonComponent bus={{ send }} cmd="foo bar" />
     )
 
     fireEvent.click(getByText(':foo bar'))

@@ -38,7 +38,7 @@ const StyledAutoExecButton = styled.button`
   outline: transparent;
 `
 
-function AutoExecButtonComponent({ bus, cmd, ...rest }) {
+export function AutoExecButtonComponent({ bus, cmd, ...rest }) {
   const onClick = useCallback(() => {
     const action = executeCommand(`:${cmd}`)
 
@@ -52,6 +52,4 @@ function AutoExecButtonComponent({ bus, cmd, ...rest }) {
   )
 }
 
-const AutoExecButton = withBus(AutoExecButtonComponent)
-
-export default AutoExecButton
+export default withBus(AutoExecButtonComponent)

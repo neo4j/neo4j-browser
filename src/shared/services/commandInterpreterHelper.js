@@ -782,7 +782,7 @@ ${param}`)
   {
     name: 'edit',
     match: cmd => cmd.startsWith('edit'),
-    exec: (action, cmdchar, put) => {
+    exec: (action, put) => {
       put(
         frames.add({
           ...action,
