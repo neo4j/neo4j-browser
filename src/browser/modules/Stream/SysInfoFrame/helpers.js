@@ -21,16 +21,14 @@
 import React from 'react'
 import {
   buildTableData,
+  buildDatabaseTable,
   flattenAttributes,
   mapSysInfoRecords
 } from './sysinfo-utils'
 import { toHumanReadableBytes, toKeyString } from 'services/utils'
-import {
-  SysInfoTableContainer,
-  SysInfoTable,
-  SysInfoTableEntry
-} from 'browser-components/Tables'
+import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
 import Render from 'browser-components/Render/index'
+import { StyledInfoMessage } from './../../Stream/styled'
 
 const jmxPrefix = 'neo4j.metrics:name='
 
@@ -95,6 +93,7 @@ export const Sysinfo = ({
   idAllocation,
   transactions,
   isACausalCluster,
+  isEnterpriseEdition,
   cc
 }) => {
   const mappedDatabases = [
@@ -112,7 +111,7 @@ export const Sysinfo = ({
     }
   ]
 
-  return (
+  return isEnterpriseEdition ? (
     <SysInfoTableContainer>
       <SysInfoTable key="StoreSize" header="Store Size" colspan="2">
         {buildTableData(storeSizes)}
@@ -123,17 +122,20 @@ export const Sysinfo = ({
       <SysInfoTable key="PageCache" header="Page Cache">
         {buildTableData(pageCache)}
       </SysInfoTable>
-      <SysInfoTable key="Transactionss" header="Transactions">
+      <SysInfoTable key="Transactions" header="Transactions">
         {buildTableData(transactions)}
       </SysInfoTable>
-      <SysInfoTable key="database-table" header="Databases" colspan="6">
-        <SysInfoTableEntry
-          key="database-entry"
-          headers={['Name', 'Address', 'Role', 'Status', 'Default', 'Error']}
-        />
-        {buildTableData(mappedDatabases)}
-      </SysInfoTable>
+      {buildDatabaseTable(mappedDatabases)}
     </SysInfoTableContainer>
+  ) : (
+    <div>
+      <StyledInfoMessage>
+        Complete sysinfo is available only in Neo4j Enterprise Edition.
+      </StyledInfoMessage>
+      <SysInfoTableContainer>
+        {buildDatabaseTable(mappedDatabases)}
+      </SysInfoTableContainer>
+    </div>
   )
 }
 
