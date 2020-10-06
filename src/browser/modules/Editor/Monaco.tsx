@@ -185,7 +185,6 @@ const Monaco = ({
       { token: 'stringliteral.cypher', foreground: Color.yellow }
     ]
 
-    // Use colors and rules, only add default foreground and background colors
     monaco.editor.defineTheme(VS_LIGHT_THEME, {
       base: VS_LIGHT_THEME,
       inherit: false,
@@ -218,17 +217,9 @@ const Monaco = ({
       }
     )
 
-    editorRef.current?.onDidChangeModelContent(() => {
-      const text =
-        editorRef.current
-          ?.getModel()
-          ?.getLinesContent()
-          .join('\n') || ''
+    updateCode()
 
-      const { queriesAndCommands } = parse(text).referencesListener
-      onChange(text)
-      checkForHints(queriesAndCommands)
-    })
+    editorRef.current?.onDidChangeModelContent(updateCode)
 
     return () => {
       editorRef.current?.dispose()
@@ -238,6 +229,18 @@ const Monaco = ({
   useEffect(() => {
     monaco.editor.setTheme(theme)
   }, [theme])
+
+  const updateCode = () => {
+    const text =
+      editorRef.current
+        ?.getModel()
+        ?.getLinesContent()
+        .join('\n') || ''
+
+    const { queriesAndCommands } = parse(text).referencesListener
+    onChange(text)
+    checkForHints(queriesAndCommands)
+  }
 
   const checkForHints = (
     statements: { start: { line: number }; getText: () => string }[]
@@ -266,14 +269,14 @@ const Monaco = ({
               monacoId,
               response.result.summary.notifications.map(
                 ({
-                  position: { offset, line, column },
+                  position: { line },
                   title
                 }: {
-                  position: any
+                  position: { line: number }
                   title: string
                 }) => ({
                   startLineNumber: statementLineNumber + line,
-                  startColumn: column - offset,
+                  startColumn: 1,
                   endLineNumber: statementLineNumber + line,
                   endColumn: 1000,
                   message: title,
