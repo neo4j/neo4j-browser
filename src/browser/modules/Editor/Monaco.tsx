@@ -269,9 +269,11 @@ const Monaco = ({
               monacoId,
               response.result.summary.notifications.map(
                 ({
+                  description,
                   position: { line },
                   title
                 }: {
+                  description: string
                   position: { line: number }
                   title: string
                 }) => ({
@@ -279,7 +281,7 @@ const Monaco = ({
                   startColumn: 1,
                   endLineNumber: statementLineNumber + line,
                   endColumn: 1000,
-                  message: title,
+                  message: title + '\n\n' + description,
                   severity: monaco.MarkerSeverity.Warning
                 })
               )
