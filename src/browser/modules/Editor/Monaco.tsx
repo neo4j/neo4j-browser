@@ -19,6 +19,7 @@
  */
 
 import { parse } from 'cypher-editor-support'
+import { debounce } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import React, { useEffect, useRef } from 'react'
 import { withBus } from 'react-suber'
@@ -217,9 +218,9 @@ const Monaco = ({
       }
     )
 
-    updateCode()
+    onContentUpdate()
 
-    editorRef.current?.onDidChangeModelContent(updateCode)
+    editorRef.current?.onDidChangeModelContent(onContentUpdate)
 
     return () => {
       editorRef.current?.dispose()
@@ -241,6 +242,17 @@ const Monaco = ({
     onChange(text)
     checkForHints(queriesAndCommands)
   }
+
+  const onContentUpdate = () => {
+    monaco.editor.setModelMarkers(
+      editorRef.current?.getModel() as monaco.editor.ITextModel,
+      monacoId,
+      []
+    )
+    debouncedUpdateCode()
+  }
+
+  const debouncedUpdateCode = debounce(updateCode, 300)
 
   const checkForHints = (
     statements: { start: { line: number }; getText: () => string }[]
