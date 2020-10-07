@@ -18,17 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Dispatch, useEffect, useState } from 'react'
+import React, { Dispatch, useState } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
 import styled from 'styled-components'
 
-import Monaco, {
-  VS_DARK_THEME,
-  VS_HIGH_CONTRAST_THEME,
-  VS_LIGHT_THEME,
-  VSTheme
-} from '../Editor/Monaco'
+import Monaco from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledFrameBody } from '../Frame/styled'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
@@ -42,7 +37,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
 
-export type BrowserTheme =
+type BrowserTheme =
   | typeof LIGHT_THEME
   | typeof OUTLINE_THEME
   | typeof DARK_THEME
@@ -66,16 +61,6 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
   const [derivedTheme] = useDerivedTheme(props.browserTheme, LIGHT_THEME) as [
     BrowserTheme
   ]
-  const [theme, setTheme] = useState<VSTheme>(VS_LIGHT_THEME)
-
-  useEffect(() => {
-    const themeMap: { [key in BrowserTheme]: VSTheme } = {
-      [LIGHT_THEME]: VS_LIGHT_THEME,
-      [OUTLINE_THEME]: VS_HIGH_CONTRAST_THEME,
-      [DARK_THEME]: VS_DARK_THEME
-    }
-    setTheme(themeMap[derivedTheme])
-  }, [derivedTheme])
 
   return (
     <ForceFullSizeFrameContent>
@@ -85,9 +70,9 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
             id={props.frame.id}
             enableMultiStatementMode={props.enableMultiStatementMode}
             onChange={setText}
-            theme={theme}
+            theme={derivedTheme}
             value={text}
-          ></Monaco>
+          />
         }
         header={props.frame}
         runQuery={() => {
@@ -106,7 +91,6 @@ const mapStateToProps = (state: GlobalState) => ({
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   runQuery(query: string) {
     dispatch(executeCommand(query))
-    // TODO: dispatch update frame.query with text
   }
 })
 

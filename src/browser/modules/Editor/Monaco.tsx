@@ -26,26 +26,27 @@ import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { CypherTokensProvider } from './antlr-cypher-parser/CypherTokensProvider'
+import {
+  DARK_THEME,
+  LIGHT_THEME,
+  OUTLINE_THEME
+} from 'shared/modules/settings/settingsDuck'
+import { CypherTokensProvider } from './CypherTokensProvider'
 import { shouldCheckForHints } from './Editor'
 
-export const VS_LIGHT_THEME = 'vs'
-export const VS_DARK_THEME = 'vs-dark'
-export const VS_HIGH_CONTRAST_THEME = 'hc-black'
-
-export type VSTheme =
-  | typeof VS_LIGHT_THEME
-  | typeof VS_DARK_THEME
-  | typeof VS_HIGH_CONTRAST_THEME
+type BrowserTheme =
+  | typeof LIGHT_THEME
+  | typeof OUTLINE_THEME
+  | typeof DARK_THEME
 
 interface MonacoProps {
   bus: Bus
-  enableMultiStatementMode: boolean
+  enableMultiStatementMode?: boolean
   id: string
   value?: string
   onChange?: (value: string) => void
   options?: monaco.editor.IGlobalEditorOptions
-  theme?: VSTheme
+  theme?: BrowserTheme
 }
 
 const Monaco = ({
@@ -54,7 +55,7 @@ const Monaco = ({
   id,
   value = '',
   onChange = () => undefined,
-  theme = VS_LIGHT_THEME
+  theme = LIGHT_THEME
 }: MonacoProps): JSX.Element => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
   const monacoId = `monaco-${id}`
@@ -188,14 +189,14 @@ const Monaco = ({
       { token: 'stringliteral.cypher', foreground: Color.yellow }
     ]
 
-    monaco.editor.defineTheme(VS_LIGHT_THEME, {
-      base: VS_LIGHT_THEME,
+    monaco.editor.defineTheme(LIGHT_THEME, {
+      base: 'vs',
       inherit: false,
       rules: [...rules, { token: 'sp.cypher', foreground: Color.light_grey }],
       colors: {}
     })
-    monaco.editor.defineTheme(VS_DARK_THEME, {
-      base: VS_DARK_THEME,
+    monaco.editor.defineTheme(DARK_THEME, {
+      base: 'vs-dark',
       inherit: false,
       rules: [...rules, { token: 'sp.cypher', foreground: Color.cyan_grey }],
       colors: {}
@@ -214,7 +215,7 @@ const Monaco = ({
         minimap: { enabled: false },
         scrollBeyondLastColumn: 0,
         scrollBeyondLastLine: false,
-        theme: VS_LIGHT_THEME,
+        theme: LIGHT_THEME,
         value,
         wordWrap: 'on'
       }
@@ -244,9 +245,8 @@ const Monaco = ({
         ?.getLinesContent()
         .join('\n') || ''
 
-    const { queriesAndCommands } = parse(text).referencesListener
     onChange(text)
-    checkForHints(queriesAndCommands)
+    addWarnings(parse(text).referencesListener.queriesAndCommands)
   }
 
   const onContentUpdate = () => {
@@ -260,12 +260,14 @@ const Monaco = ({
 
   const debouncedUpdateCode = debounce(updateCode, 300)
 
-  const checkForHints = (
+  const addWarnings = (
     statements: { start: { line: number }; getText: () => string }[]
   ) => {
     if (!statements.length) return
 
     const model = editorRef.current?.getModel() as monaco.editor.ITextModel
+
+    // add multi statement warning if multi setting is off
     if (statements.length > 1 && !enableMultiStatementMode) {
       const secondStatementLine = statements[1].start.line
       monaco.editor.setModelMarkers(model, monacoId, [
@@ -281,6 +283,7 @@ const Monaco = ({
       ])
     }
 
+    // add a warning for each notification returned by explain query
     statements.forEach(statement => {
       const text = statement.getText()
       if (!shouldCheckForHints(text)) {

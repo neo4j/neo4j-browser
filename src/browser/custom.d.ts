@@ -52,13 +52,6 @@ declare module 'cypher-editor-support/src/_generated/CypherLexer' {
   }
 }
 
-declare module 'cypher-editor-support/src/_generated/CypherParser' {
-  export class CypherParser extends (await import('antlr4/index.js')).Parser {
-    constructor(input: unknown)
-    ruleNames: string[]
-  }
-}
-
 declare module 'cypher-editor-support' {
   export function parse(
     input: string

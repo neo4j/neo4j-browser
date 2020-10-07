@@ -795,7 +795,7 @@ ${param}`)
       put(
         frames.add({
           ...action,
-          query: action.cmd.split(`${cmdchar}edit`)[1].trim(),
+          query: action.cmd.split(':edit')[1].trim(),
           type: 'edit'
         })
       )
