@@ -37,7 +37,8 @@ import {
   DARK_THEME,
   getTheme,
   LIGHT_THEME,
-  OUTLINE_THEME
+  OUTLINE_THEME,
+  shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
 
@@ -48,6 +49,7 @@ export type BrowserTheme =
 
 interface EditFrameProps {
   browserTheme: BrowserTheme
+  enableMultiStatementMode: boolean
   frame: Frame
   runQuery: (query: string) => void
 }
@@ -81,6 +83,7 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
         contents={
           <Monaco
             id={props.frame.id}
+            enableMultiStatementMode={props.enableMultiStatementMode}
             onChange={setText}
             theme={theme}
             value={text}
@@ -96,7 +99,8 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  browserTheme: getTheme(state)
+  browserTheme: getTheme(state),
+  enableMultiStatementMode: shouldEnableMultiStatementMode(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({

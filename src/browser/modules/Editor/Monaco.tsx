@@ -40,6 +40,7 @@ export type VSTheme =
 
 interface MonacoProps {
   bus: Bus
+  enableMultiStatementMode: boolean
   id: string
   value?: string
   onChange?: (value: string) => void
@@ -49,6 +50,7 @@ interface MonacoProps {
 
 const Monaco = ({
   bus,
+  enableMultiStatementMode = true,
   id,
   value = '',
   onChange = () => undefined,
@@ -231,6 +233,10 @@ const Monaco = ({
     monaco.editor.setTheme(theme)
   }, [theme])
 
+  useEffect(() => {
+    onContentUpdate()
+  }, [enableMultiStatementMode])
+
   const updateCode = () => {
     const text =
       editorRef.current
@@ -258,12 +264,29 @@ const Monaco = ({
     statements: { start: { line: number }; getText: () => string }[]
   ) => {
     if (!statements.length) return
-    statements.forEach(stmt => {
-      const text = stmt.getText()
+
+    const model = editorRef.current?.getModel() as monaco.editor.ITextModel
+    if (statements.length > 1 && !enableMultiStatementMode) {
+      const secondStatementLine = statements[1].start.line
+      monaco.editor.setModelMarkers(model, monacoId, [
+        {
+          startLineNumber: secondStatementLine,
+          startColumn: 1,
+          endLineNumber: secondStatementLine,
+          endColumn: 1000,
+          message:
+            'To use multi statement queries, please enable multi statement in the settings panel.',
+          severity: monaco.MarkerSeverity.Warning
+        }
+      ])
+    }
+
+    statements.forEach(statement => {
+      const text = statement.getText()
       if (!shouldCheckForHints(text)) {
         return
       }
-      const statementLineNumber = stmt.start.line - 1
+      const statementLineNumber = statement.start.line - 1
 
       bus.self(
         CYPHER_REQUEST,
@@ -276,10 +299,9 @@ const Monaco = ({
             response.success === true &&
             response.result.summary.notifications.length > 0
           ) {
-            monaco.editor.setModelMarkers(
-              editorRef.current?.getModel() as monaco.editor.ITextModel,
-              monacoId,
-              response.result.summary.notifications.map(
+            monaco.editor.setModelMarkers(model, monacoId, [
+              ...monaco.editor.getModelMarkers({ owner: monacoId }),
+              ...response.result.summary.notifications.map(
                 ({
                   description,
                   position: { line },
@@ -297,7 +319,7 @@ const Monaco = ({
                   severity: monaco.MarkerSeverity.Warning
                 })
               )
-            )
+            ])
           }
         }
       )
