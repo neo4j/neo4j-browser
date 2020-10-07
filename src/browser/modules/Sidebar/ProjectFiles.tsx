@@ -25,9 +25,7 @@ import { useMutation } from '@apollo/client'
 
 import Render from 'browser-components/Render'
 import { Drawer, DrawerHeader } from 'browser-components/drawer'
-import ProjectFilesScripts, {
-  ProjectFilesError
-} from 'src-root/browser/modules/Sidebar/ProjectsFilesScripts'
+import ProjectFilesScripts, { ProjectFilesError } from './ProjectsFilesScripts'
 import {
   StyledSetting,
   StyledSettingLabel,
@@ -36,7 +34,7 @@ import {
 import {
   setProjectFileDefaultFileName,
   updateCacheAddProjectFile
-} from 'src-root/browser/modules/Sidebar/project-files.utils'
+} from './project-files.utils'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import {
@@ -45,14 +43,14 @@ import {
   ADD_PROJECT_FILE,
   PROJECT_FILES_MOUNTED,
   PROJECT_FILES_UNMOUNTED
-} from 'src-root/browser/modules/Sidebar/project-files.constants'
+} from './project-files.constants'
 
-interface IProjectFiles {
+interface ProjectFiles {
   bus: Bus
   projectId: string
 }
 
-const ProjectFiles = ({ bus, projectId }: IProjectFiles) => {
+const ProjectFiles = ({ bus, projectId }: ProjectFiles) => {
   const [addFile, { error: apolloError }] = useMutation(ADD_PROJECT_FILE)
   const [isSaveMode, setSaveMode] = useState(false)
   const [fileName, setFileName] = useState('')
@@ -84,7 +82,7 @@ const ProjectFiles = ({ bus, projectId }: IProjectFiles) => {
     return () => {
       isStillMounted = false
     }
-  })
+  }, [])
 
   useEffect(() => {
     // send mounted/unmounted message
@@ -93,7 +91,7 @@ const ProjectFiles = ({ bus, projectId }: IProjectFiles) => {
   }, [])
 
   return (
-    <Drawer id="ProjectFiles">
+    <Drawer id="db-project-files">
       <DrawerHeader>Project Files</DrawerHeader>
       <Render if={isSaveMode}>
         <StyledSetting>
@@ -118,7 +116,6 @@ const ProjectFiles = ({ bus, projectId }: IProjectFiles) => {
               return
             }
             if (fileName.length) {
-              console.log('filename', fileName)
               try {
                 const {
                   data: { addProjectFile }
@@ -144,7 +141,7 @@ const ProjectFiles = ({ bus, projectId }: IProjectFiles) => {
                 setError('')
                 bus.send(SELECT_PROJECT_FILE, addedFile) // set ProjectFileButton to edit mode
               } catch (e) {
-                console.log('++here', e)
+                console.log(e)
               }
             }
           }}

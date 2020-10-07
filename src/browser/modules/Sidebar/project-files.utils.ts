@@ -14,7 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import remote from 'services/remote'
+import { SLASH, CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import uuid from 'uuid'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {
@@ -24,16 +25,14 @@ import {
   Reference
 } from '@apollo/client'
 
-import remote from 'services/remote'
-import { SLASH, CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import {
-  IProjectFile,
-  IFavorite,
-  IProjectFilesResult,
+  ProjectFile,
+  Favorite,
+  ProjectFilesResult,
   GET_PROJECT_FILES,
-  IAddProjectFile,
-  IRemoveProjectFile,
-  IProjectFileMapping
+  AddProjectFile,
+  RemoveProjectFile,
+  ProjectFileMapping
 } from './project-files.constants'
 
 export const ProjectFilesQueryVars = (
@@ -58,7 +57,7 @@ export const mapProjectFileToFavorites = async ({
   apiToken,
   clientId,
   relateUrl
-}: IProjectFileMapping): Promise<IFavorite> => ({
+}: ProjectFileMapping): Promise<Favorite> => ({
   id: uuid.v4(),
   name,
   directory,
@@ -91,7 +90,7 @@ const NEW_LINE = '\n'
 const COMMENT_PREFIX = '//'
 
 const isNonEmptyString = (toTest: string): boolean => {
-  return Boolean(toTest)
+  return typeof toTest === 'string' && Boolean(toTest)
 }
 
 // adapted from @relate-by-ui/saved-scripts utils
@@ -112,8 +111,8 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
 const readCacheQuery = (
   cache: ApolloCache<NormalizedCacheObject>,
   projectId: string
-): IProjectFilesResult | null => {
-  return cache.readQuery<IProjectFilesResult>({
+): ProjectFilesResult | null => {
+  return cache.readQuery<ProjectFilesResult>({
     query: GET_PROJECT_FILES,
     variables: ProjectFilesQueryVars(projectId)
   })
@@ -121,7 +120,7 @@ const readCacheQuery = (
 
 const writeCacheQuery = (
   cache: ApolloCache<NormalizedCacheObject>,
-  files: IProjectFile[],
+  files: ProjectFile[],
   projectId: string
 ): Reference | undefined => {
   return cache.writeQuery({
@@ -137,7 +136,7 @@ const writeCacheQuery = (
 
 export const updateCacheRemoveProjectFile = (
   cache: ApolloCache<NormalizedCacheObject>,
-  result: FetchResult<IRemoveProjectFile>,
+  result: FetchResult<RemoveProjectFile>,
   projectId: string
 ): void => {
   const data = readCacheQuery(cache, projectId)
@@ -154,7 +153,7 @@ export const updateCacheRemoveProjectFile = (
 
 export const updateCacheAddProjectFile = (
   cache: ApolloCache<NormalizedCacheObject>,
-  result: FetchResult<IAddProjectFile>,
+  result: FetchResult<AddProjectFile>,
   projectId: string
 ): void => {
   const data = readCacheQuery(cache, projectId)

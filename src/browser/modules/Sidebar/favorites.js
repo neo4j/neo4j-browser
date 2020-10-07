@@ -49,7 +49,7 @@ const mapFavoritesStateToProps = state => {
     scriptsNamespace: SLASH,
     scripts,
     folders,
-    title: 'Local Cache Files'
+    title: 'Local Cache Scripts'
   }
 }
 const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({

@@ -31,20 +31,20 @@ import {
   ProjectFileMutationVars,
   mapProjectFileToFavorites,
   updateCacheRemoveProjectFile
-} from 'src-root/browser/modules/Sidebar/project-files.utils'
+} from './project-files.utils'
 import {
-  IFavorite,
-  IProjectFilesResult,
-  IProjectFilesVariables,
+  Favorite,
+  ProjectFilesResult,
+  ProjectFilesVariables,
   SELECT_PROJECT_FILE,
   GET_PROJECT_FILES,
   DELETE_PROJECT_FILE,
   REMOVE_PROJECT_FILE
-} from 'src-root/browser/modules/Sidebar/project-files.constants'
+} from './project-files.constants'
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
 
-interface IProjectFilesError {
+interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
   errors?: string[]
 }
@@ -52,32 +52,41 @@ interface IProjectFilesError {
 export const ProjectFilesError = ({
   apolloErrors,
   errors
-}: IProjectFilesError): JSX.Element => {
+}: ProjectFilesError): JSX.Element => {
   const definedApolloErrors = filter(
     apolloErrors,
     apolloError => apolloError !== undefined
   )
   const definedErrors = filter(errors, error => error !== '')
   const ErrorsList = () => {
+    let errorsList: JSX.Element[] = []
     if (size(definedErrors)) {
-      return definedErrors.map((definedError, i) => (
-        <span key={`${definedError}-${i}`}>{definedError}</span>
-      ))
+      errorsList = [
+        ...errorsList,
+        ...definedErrors.map((definedError, i) => (
+          <span key={`${definedError}-${i}`}>{definedError}</span>
+        ))
+      ]
     }
     if (size(definedApolloErrors)) {
-      return definedApolloErrors.map((definedApolloError, j) => {
+      definedApolloErrors.map((definedApolloError, j) => {
         if (definedApolloError?.graphQLErrors.length) {
-          return definedApolloError.graphQLErrors.map(({ message }, k) => (
-            <span key={`${message}-${j}-${k}`}>{message}</span>
-          ))
+          errorsList = [
+            ...errorsList,
+            ...definedApolloError.graphQLErrors.map(({ message }, k) => (
+              <span key={`${message}-${j}-${k}`}>{message}</span>
+            ))
+          ]
         }
         if (definedApolloError?.networkError) {
-          return <span key={j}>A network error has occurred.</span>
+          errorsList = [
+            ...errorsList,
+            <span key={j}>A network error has occurred.</span>
+          ]
         }
-        return null
       })
     }
-    return null
+    return errorsList
   }
 
   return (
@@ -87,10 +96,10 @@ export const ProjectFilesError = ({
   )
 }
 
-interface IProjectFilesScripts {
+interface ProjectFilesScripts {
   bus: Bus
-  onSelectScript: (favorite: IFavorite) => void
-  onExecScript: (favorite: IFavorite) => void
+  onSelectScript: (favorite: Favorite) => void
+  onExecScript: (favorite: Favorite) => void
   onExportScripts: () => void
   onUpdateFolder: () => void
   onRemoveFolder: () => void
@@ -102,10 +111,10 @@ interface IProjectFilesScripts {
   relateUrl: string
 }
 
-function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
+function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   const { data, error: getProjectFilesError, refetch } = useQuery<
-    IProjectFilesResult,
-    IProjectFilesVariables
+    ProjectFilesResult,
+    ProjectFilesVariables
   >(GET_PROJECT_FILES, {
     variables: ProjectFilesQueryVars(props.projectId)
   })
@@ -157,7 +166,9 @@ function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
     ]),
     scripts: projectFiles,
     isProjectFiles: true,
-    onRemoveScript: async (favorite: IFavorite) => {
+    scriptsNamespace: SLASH,
+    title: 'Project Files',
+    onRemoveScript: async (favorite: Favorite) => {
       const directory = favorite.path.substring(1) // remove SLASH from path
       const filePath = path.join(directory, favorite.name)
       try {
@@ -174,8 +185,23 @@ function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
       } catch (e) {
         console.log(e)
       }
-    }
+    },
+    onSelectScript: (favorite: Favorite) => {
+      props.bus.send(
+        editor.EDIT_CONTENT,
+        editor.editContent(favorite.id, favorite.contents, true)
+      )
+      props.bus.send(SELECT_PROJECT_FILE, {
+        name: favorite.name,
+        directory: favorite.directory,
+        extension: CYPHER_FILE_EXTENSION
+      })
+    },
+    onExportScripts: Function.prototype,
+    onUpdateFolder: Function.prototype,
+    onRemoveFolder: Function.prototype
   }
+
   return (
     <>
       <MyScripts {...myScriptsProps} />
@@ -188,8 +214,6 @@ function ProjectFilesScripts(props: IProjectFilesScripts): JSX.Element {
 
 const mapFavoritesStateToProps = (state: any) => {
   return {
-    scriptsNamespace: SLASH,
-    title: 'Project Files',
     projectId: state.app.neo4jDesktopProjectId,
     relateApiToken: state.app.relateApiToken,
     neo4jDesktopGraphAppId: state.app.neo4jDesktopGraphAppId,
@@ -197,40 +221,14 @@ const mapFavoritesStateToProps = (state: any) => {
   }
 }
 
-const mapFavoritesDispatchToProps = (
-  dispatch: any,
-  ownProps: { bus: Bus }
-) => ({
-  onSelectScript: (favorite: IFavorite) => {
-    ownProps.bus.send(
-      editor.EDIT_CONTENT,
-      editor.editContent(favorite.id, favorite.contents, true)
-    )
-    ownProps.bus.send(SELECT_PROJECT_FILE, {
-      name: favorite.name,
-      directory: favorite.directory,
-      extension: CYPHER_FILE_EXTENSION
-    })
-  },
-  bus: ownProps.bus,
-  onExecScript: (favorite: IFavorite) =>
-    dispatch(executeCommand(favorite.contents)),
-  onExportScripts: Function.prototype,
-  onUpdateFolder: Function.prototype,
-  onRemoveFolder: Function.prototype
+const mapFavoritesDispatchToProps = (dispatch: any) => ({
+  onExecScript: (favorite: Favorite) =>
+    dispatch(executeCommand(favorite.contents))
 })
-
-const mergeProps = (stateProps: any, dispatchProps: any) => {
-  return {
-    ...stateProps,
-    ...dispatchProps
-  }
-}
 
 export default withBus(
   connect(
     mapFavoritesStateToProps,
-    mapFavoritesDispatchToProps,
-    mergeProps
+    mapFavoritesDispatchToProps
   )(ProjectFilesScripts)
 )

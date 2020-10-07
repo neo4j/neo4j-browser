@@ -26,22 +26,22 @@ export const PROJECT_FILE_ERROR = 'PROJECT_FILE_ERROR'
 export const PROJECT_FILES_MOUNTED = 'PROJECT_FILES_MOUNTED'
 export const PROJECT_FILES_UNMOUNTED = 'PROJECT_FILES_UNMOUNTED'
 
-export interface IAddProjectFile {
-  addProjectFile: IProjectFile
+export interface AddProjectFile {
+  addProjectFile: ProjectFile
 }
 
-export interface IRemoveProjectFile {
-  removeProjectFile: Omit<IProjectFile, 'downloadToken'>
+export interface RemoveProjectFile {
+  removeProjectFile: Omit<ProjectFile, 'downloadToken'>
 }
 
-export interface IProjectFile {
+export interface ProjectFile {
   downloadToken: string
   name: string
   directory: string
   extension: string
 }
 
-export interface IProjectFileMapping {
+export interface ProjectFileMapping {
   downloadToken: string
   name: string
   directory: string
@@ -51,7 +51,7 @@ export interface IProjectFileMapping {
 }
 
 // needed for MyScripts component
-export interface IFavorite {
+export interface Favorite {
   id: string
   name: string
   path: string
@@ -59,11 +59,11 @@ export interface IFavorite {
   directory?: string
 }
 
-export interface IProjectFilesResult {
-  getProject: { files: IProjectFile[] }
+export interface ProjectFilesResult {
+  getProject: { files: ProjectFile[] }
 }
 
-export interface IProjectFilesVariables {
+export interface ProjectFilesVariables {
   projectId: string
 }
 

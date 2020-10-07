@@ -42,26 +42,22 @@ const ActionButtons = ({
   buttons,
   width = 24,
   editorValue
-}: ActionButtonProps): JSX.Element => {
-  return (
-    <>
-      <ActionButtonSection>
-        <ProjectFilesButton width={width} editorValue={editorValue} />
-        {buttons.map((btn: ActionButton) => (
-          <EditorButton
-            data-testid={`editor-${btn.title.split(' ')[0]}`}
-            onClick={btn.onClick}
-            disabled={btn.disabled}
-            title={btn.title}
-            icon={btn.icon}
-            key={`editor${btn.title}`}
-            color={btn.iconColor}
-            width={width}
-          />
-        ))}
-      </ActionButtonSection>
-    </>
-  )
-}
+}: ActionButtonProps): JSX.Element => (
+  <ActionButtonSection>
+    <ProjectFilesButton width={width} editorValue={editorValue} />
+    {buttons.map((btn: ActionButton) => (
+      <EditorButton
+        data-testid={`editor-${btn.title.split(' ')[0]}`}
+        onClick={btn.onClick}
+        disabled={btn.disabled}
+        title={btn.title}
+        icon={btn.icon}
+        key={`editor${btn.title}`}
+        color={btn.iconColor}
+        width={width}
+      />
+    ))}
+  </ActionButtonSection>
+)
 
 export default ActionButtons

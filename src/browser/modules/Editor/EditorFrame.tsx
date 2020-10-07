@@ -51,7 +51,7 @@ import {
 } from 'browser-components/icons/Icons'
 import {
   SELECT_PROJECT_FILE,
-  IProjectFile,
+  ProjectFile,
   PROJECT_FILE_ERROR,
   EDIT_PROJECT_FILE_START,
   EDIT_PROJECT_FILE_END,
@@ -65,14 +65,14 @@ type CodeEditor = {
   setValue: (newText: string) => void
 }
 
-type IActiveRelateFile = Omit<IProjectFile, 'downloadToken'>
+type ActiveRelateFile = Omit<ProjectFile, 'downloadToken'>
 
 export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   const [sizeState, setSize] = useState<EditorSize>('LINE')
   const [
     activeProjectFile,
     setActiveProjectFile
-  ] = useState<IActiveRelateFile | null>(null)
+  ] = useState<ActiveRelateFile | null>(null)
   const [activeProjectFileStatus, setActiveProjectFileStatus] = useState<
     string | null
   >(null)
@@ -164,9 +164,17 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
           setActiveProjectFileStatus('error saving...')
         }
       })
-    // close editor if active Relate file is deleted
+
+    return () => {
+      isStillMounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    let isStillMounted = true
+    // clear editor if active Relate file is deleted from sidebar
     bus &&
-      bus.take(REMOVE_PROJECT_FILE, (removedProjectFile: IActiveRelateFile) => {
+      bus.take(REMOVE_PROJECT_FILE, (removedProjectFile: ActiveRelateFile) => {
         if (isStillMounted) {
           if (
             activeProjectFile &&
@@ -177,6 +185,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
           }
         }
       })
+
     return () => {
       isStillMounted = false
     }

@@ -30,7 +30,7 @@ import { EDIT_CONTENT, SET_CONTENT } from 'shared/modules/editor/editorDuck'
 import {
   ADD_PROJECT_FILE,
   SELECT_PROJECT_FILE,
-  IProjectFile,
+  ProjectFile,
   SAVE_PROJECT_FILE,
   PROJECT_FILE_ERROR,
   EDIT_PROJECT_FILE_START,
@@ -55,7 +55,7 @@ interface ProjectFilesButtonProps {
   projectId: string
 }
 
-type IActiveRelateFile = Omit<IProjectFile, 'downloadToken'>
+type ActiveRelateFile = Omit<ProjectFile, 'downloadToken'>
 
 const ProjectFileButton = ({
   width = 24,
@@ -73,7 +73,7 @@ const ProjectFileButton = ({
   const [
     activeRelateFile,
     setActiveRelateFile
-  ] = useState<IActiveRelateFile | null>(null)
+  ] = useState<ActiveRelateFile | null>(null)
 
   useEffect(() => {
     let isStillMounted = true
@@ -121,7 +121,7 @@ const ProjectFileButton = ({
     return () => {
       isStillMounted = false
     }
-  })
+  }, [])
 
   useEffect(() => {
     // to report an error in the EditorFrame
