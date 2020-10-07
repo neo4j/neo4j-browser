@@ -20,7 +20,6 @@ import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 import MyScripts from '@relate-by-ui/saved-scripts'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
-import path from 'path'
 import { filter, size, omit } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
@@ -43,6 +42,7 @@ import {
 } from './project-files.constants'
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
+import { isWindows } from 'browser/modules/App/keyboardShortcuts'
 
 interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
@@ -121,7 +121,7 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   const [removeFile, { error: removeProjectFileError }] = useMutation(
     DELETE_PROJECT_FILE
   )
-  const [projectFiles, setProjectFiles] = useState<IFavorite[]>([])
+  const [projectFiles, setProjectFiles] = useState<Favorite[]>([])
 
   useEffect(() => {
     let isStillMounted = true
@@ -170,7 +170,9 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
     title: 'Project Files',
     onRemoveScript: async (favorite: Favorite) => {
       const directory = favorite.path.substring(1) // remove SLASH from path
-      const filePath = path.join(directory, favorite.name)
+      const filePath = isWindows
+        ? `${directory}\\${favorite.name}`
+        : `${directory}/${favorite.name}`
       try {
         const { data } = await removeFile({
           variables: ProjectFileMutationVars(filePath, props.projectId),

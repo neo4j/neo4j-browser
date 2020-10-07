@@ -39,6 +39,7 @@ import {
   PROJECT_FILES_UNMOUNTED
 } from 'browser/modules/Sidebar/project-files.constants'
 import { useMutation } from '@apollo/client'
+import { isWindows } from '../App/keyboardShortcuts'
 
 const PROJECT_EDITOR_BUTTON_TITLE = 'Project File'
 const PROJECT_SAVE_EDITOR_BUTTON_TITLE = 'Save Project File'
@@ -157,6 +158,9 @@ const ProjectFileButton = ({
                       [editorValue()],
                       activeRelateFile.name
                     ),
+                    destination: isWindows
+                      ? `${activeRelateFile.directory}\\${activeRelateFile.name}`
+                      : `${activeRelateFile.directory}/${activeRelateFile.name}`,
                     overwrite: true
                   }
                 })
@@ -196,6 +200,7 @@ const ProjectFileButton = ({
 const mapStateToProps = (state: any) => {
   return {
     isDrawerOpen: state.drawer === PROJECT_FILES_DRAWER_NAME,
+    // currently only Desktop specific
     isRelateAvailable:
       state.app.relateUrl &&
       state.app.relateApiToken &&

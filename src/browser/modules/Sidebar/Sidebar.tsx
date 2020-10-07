@@ -181,6 +181,7 @@ const mapStateToProps = (state: any) => {
     neo4jConnectionState: connectionState,
     loadSync: useBrowserSync(state),
     showStaticScripts: state.settings.showSampleScripts,
+    // currently only Desktop specific
     isRelateAvailable:
       state.app.relateUrl &&
       state.app.relateApiToken &&

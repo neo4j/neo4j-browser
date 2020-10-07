@@ -5,6 +5,8 @@ import { Bus } from 'suber'
 export const isMac = /Mac|iPad/.test(navigator.platform)
 const modKey = isMac ? 'metaKey' : 'ctrlKey'
 
+export const isWindows = /Win32/.test(navigator.platform)
+
 type ModifierKey = 'metaKey' | 'altKey' | 'ctrlKey'
 const printModifiers: Record<ModifierKey, string> = {
   altKey: isMac ? '⌥' : 'alt',

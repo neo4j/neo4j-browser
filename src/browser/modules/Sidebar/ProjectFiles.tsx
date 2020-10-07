@@ -125,7 +125,7 @@ const ProjectFiles = ({ bus, projectId }: ProjectFiles) => {
                     fileUpload: new File(
                       [fileContents],
                       `${fileName}${CYPHER_FILE_EXTENSION}`
-                    )
+                    ) // no destination; only saving to Project root at this point
                   },
                   update: (cache, result) =>
                     updateCacheAddProjectFile(cache, result, projectId)

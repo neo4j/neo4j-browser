@@ -83,7 +83,7 @@ const getProjectFileContents = (
       'X-API-Token': apiToken,
       'X-Client-Id': clientId
     })
-    .then(body => body.text())
+    .then(body => body.text()) // currently cypher/text file specific
     .catch(e => console.log(`Unable to get file ${name}\n`, e))
 
 const NEW_LINE = '\n'
