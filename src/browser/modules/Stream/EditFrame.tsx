@@ -23,24 +23,18 @@ import { connect } from 'react-redux'
 import { Action } from 'redux'
 import styled from 'styled-components'
 
+import { BrowserTheme } from '../Editor/CypherMonacoThemes'
 import Monaco from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledFrameBody } from '../Frame/styled'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import {
-  DARK_THEME,
   getTheme,
   LIGHT_THEME,
-  OUTLINE_THEME,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
-
-type BrowserTheme =
-  | typeof LIGHT_THEME
-  | typeof OUTLINE_THEME
-  | typeof DARK_THEME
 
 interface EditFrameProps {
   browserTheme: BrowserTheme
@@ -58,7 +52,7 @@ const ForceFullSizeFrameContent = styled.div`
 const EditFrame = (props: EditFrameProps): JSX.Element => {
   const [text, setText] = useState(props.frame.query)
 
-  const [derivedTheme] = useDerivedTheme(props.browserTheme, LIGHT_THEME) as [
+  const [theme] = useDerivedTheme(props.browserTheme, LIGHT_THEME) as [
     BrowserTheme
   ]
 
@@ -70,7 +64,7 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
             id={props.frame.id}
             enableMultiStatementMode={props.enableMultiStatementMode}
             onChange={setText}
-            theme={derivedTheme}
+            theme={theme}
             value={text}
           />
         }

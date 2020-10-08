@@ -31,13 +31,13 @@ import {
   LIGHT_THEME,
   OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
+import {
+  BrowserTheme,
+  monacoDarkTheme,
+  monacoLightTheme
+} from './CypherMonacoThemes'
 import { CypherTokensProvider } from './CypherTokensProvider'
 import { shouldCheckForHints } from './Editor'
-
-type BrowserTheme =
-  | typeof LIGHT_THEME
-  | typeof OUTLINE_THEME
-  | typeof DARK_THEME
 
 interface MonacoProps {
   bus: Bus
@@ -60,147 +60,14 @@ const Monaco = ({
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
   const monacoId = `monaco-${id}`
 
+  // Create monaco instance, listen to text changes and destroy
   useEffect(() => {
     monaco.languages.register({ id: 'cypher' })
     monaco.languages.setTokensProvider('cypher', new CypherTokensProvider())
 
-    // colors from cypher-editor/cypher-codemirror/src/css/_solarized.css
-    const enum Color {
-      blue = '#268bd2',
-      cyan = '#2aa198',
-      cyan_grey = '#586e75',
-      green = '#859900',
-      light_grey = '#93a1a1',
-      magenta = '#d33682',
-      orange = '#cb4b16',
-      red = '#dc322f',
-      violet = '#6c71c4',
-      yellow = '#b58900'
-    }
-
-    // syntax highlighting from cypher-editor/cypher-codemirror/src/css/syntax.css
-    const rules = [
-      // { token: 'p-label', foreGround: Color.orange },
-      // { token: 'p-relationshipType', foreGround: Color.orange },
-      // { token: 'p-variable', foreGround: Color.blue },
-      // { token: 'p-procedure', foreGround: Color.violet },
-      // { token: 'p-function', foreGround: Color.violet },
-      // {
-      //   token: 'p-parameter',
-      //   foreGround: Color.red
-      // },
-      // { token: 'p-property', foreGround: Color.cyan_grey },
-      // {
-      //   token: 's-cypher s-cypher-dark  p-property',
-      //   foreGround: Color.light_grey
-      // },
-      // { token: 'p-consoleCommand', foreGround: Color.magenta },
-      // { token: 'p-procedureOutput', foreGround: Color.blue },
-
-      ...[
-        'all',
-        'allshortestpaths',
-        'and',
-        'any',
-        'as',
-        'asc',
-        'ascending',
-        'assert',
-        'by',
-        'call',
-        'case',
-        'commit',
-        'constraint',
-        'contains',
-        'count',
-        'create',
-        'csv',
-        'cypher',
-        'delete',
-        'desc',
-        'descending',
-        'detach',
-        'distinct',
-        'drop',
-        'else',
-        'end',
-        'ends',
-        'enterrule',
-        'exists',
-        'exitrule',
-        'explain',
-        'extract',
-        'false',
-        'fieldterminator',
-        'filter',
-        'foreach',
-        'from',
-        'headers',
-        'in',
-        'index',
-        'is',
-        'join',
-        'key',
-        'l_skip',
-        'limit',
-        'load',
-        'match',
-        'merge',
-        'node',
-        'none',
-        'not',
-        'null',
-        'on',
-        'optional',
-        'or',
-        'order',
-        'periodic',
-        'profile',
-        'reduce',
-        'rel',
-        'relationship',
-        'remove',
-        'return',
-        'scan',
-        'set',
-        'shortestpath',
-        'single',
-        'start',
-        'starts',
-        'then',
-        'true',
-        'union',
-        'unique',
-        'unwind',
-        'using',
-        'when',
-        'where',
-        'with',
-        'xor',
-        'yield'
-      ].map((keyword: string) => ({
-        token: `${keyword}.cypher`,
-        foreground: Color.green
-      })),
-      ...['regulardecimalreal.cypher', 'decimalinteger.cypher'].map(token => ({
-        token,
-        foreground: Color.cyan
-      })),
-      { token: 'stringliteral.cypher', foreground: Color.yellow }
-    ]
-
-    monaco.editor.defineTheme(LIGHT_THEME, {
-      base: 'vs',
-      inherit: false,
-      rules: [...rules, { token: 'sp.cypher', foreground: Color.light_grey }],
-      colors: {}
-    })
-    monaco.editor.defineTheme(DARK_THEME, {
-      base: 'vs-dark',
-      inherit: false,
-      rules: [...rules, { token: 'sp.cypher', foreground: Color.cyan_grey }],
-      colors: {}
-    })
+    monaco.editor.defineTheme(DARK_THEME, monacoDarkTheme)
+    monaco.editor.defineTheme(LIGHT_THEME, monacoLightTheme)
+    monaco.editor.defineTheme(OUTLINE_THEME, monacoLightTheme)
 
     editorRef.current = monaco.editor.create(
       document.getElementById(monacoId) as HTMLElement,
@@ -208,9 +75,12 @@ const Monaco = ({
         automaticLayout: true,
         contextmenu: false,
         cursorStyle: 'block',
-        fontSize: 16,
+        fontFamily: 'Fira Code',
+        fontSize: 17,
+        fontWeight: '500',
         language: 'cypher',
         lightbulb: { enabled: false },
+        lineHeight: 23,
         links: false,
         minimap: { enabled: false },
         scrollBeyondLastColumn: 0,
@@ -230,14 +100,17 @@ const Monaco = ({
     }
   }, [])
 
+  // Update theme when setting is changed
   useEffect(() => {
     monaco.editor.setTheme(theme)
   }, [theme])
 
+  // Trigger update when multi statement setting is changed to update warnings
   useEffect(() => {
     onContentUpdate()
   }, [enableMultiStatementMode])
 
+  // Share current text with parent and add warnings
   const updateCode = () => {
     const text =
       editorRef.current
@@ -249,6 +122,9 @@ const Monaco = ({
     addWarnings(parse(text).referencesListener.queriesAndCommands)
   }
 
+  const debouncedUpdateCode = debounce(updateCode, 300)
+
+  // On each text change, clear warnings and reset countdown to adding warnings
   const onContentUpdate = () => {
     monaco.editor.setModelMarkers(
       editorRef.current?.getModel() as monaco.editor.ITextModel,
@@ -257,8 +133,6 @@ const Monaco = ({
     )
     debouncedUpdateCode()
   }
-
-  const debouncedUpdateCode = debounce(updateCode, 300)
 
   const addWarnings = (
     statements: { start: { line: number }; getText: () => string }[]
