@@ -122,12 +122,12 @@ const ProjectFileButton = ({
     return () => {
       isStillMounted = false
     }
-  }, [])
+  }, [bus])
 
   useEffect(() => {
     // to report an error in the EditorFrame
     bus && bus.send(PROJECT_FILE_ERROR, '')
-  }, [error])
+  }, [bus, error])
 
   useEffect(() => {
     // bus sends message too quickly before ProjectFiles is mounted,
@@ -137,63 +137,58 @@ const ProjectFileButton = ({
       bus.send(SAVE_PROJECT_FILE, editorValue())
       setSaveModeClick(false)
     }
-  })
+  }, [bus, isSaveModeClick, isProjectFilesMounted])
 
   if (!isRelateAvailable) return null
 
   return (
-    <>
-      <EditorButton
-        data-testid={`editor-${PROJECT_EDITOR_BUTTON_TITLE.split(' ')[0]}`}
-        onClick={async () => {
-          if (editorValue().length) {
-            if (isEditMode && activeRelateFile) {
-              // edit mode
-              bus.send(EDIT_PROJECT_FILE_START, '') // display status in the EditorFrame
-              try {
-                const { data } = await addFile({
-                  variables: {
-                    projectId,
-                    fileUpload: new File(
-                      [editorValue()],
-                      activeRelateFile.name
-                    ),
-                    destination: isWindows
-                      ? `${activeRelateFile.directory}\\${activeRelateFile.name}`
-                      : `${activeRelateFile.directory}/${activeRelateFile.name}`,
-                    overwrite: true
-                  }
-                })
-                const addedFile = {
-                  name: data.addProjectFile.name,
-                  directory: data.addProjectFile.directory,
-                  extension: data.addProjectFile.extension
+    <EditorButton
+      data-testid={`editor-${PROJECT_EDITOR_BUTTON_TITLE.split(' ')[0]}`}
+      onClick={async () => {
+        if (editorValue().length) {
+          if (isEditMode && activeRelateFile) {
+            // edit mode
+            bus.send(EDIT_PROJECT_FILE_START, '') // display status in the EditorFrame
+            try {
+              const { data } = await addFile({
+                variables: {
+                  projectId,
+                  fileUpload: new File([editorValue()], activeRelateFile.name),
+                  destination: isWindows
+                    ? `${activeRelateFile.directory}\\${activeRelateFile.name}`
+                    : `${activeRelateFile.directory}/${activeRelateFile.name}`,
+                  overwrite: true
                 }
-                setActiveRelateFile(addedFile)
-                setEditMode(true)
-                bus.send(EDIT_PROJECT_FILE_END, '')
-              } catch (e) {
-                console.log(e)
+              })
+              const addedFile = {
+                name: data.addProjectFile.name,
+                directory: data.addProjectFile.directory,
+                extension: data.addProjectFile.extension
               }
-            } else {
-              // save mode
-              if (!isDrawerOpen) {
-                toggleDrawer()
-              }
-              setSaveModeClick(true)
+              setActiveRelateFile(addedFile)
+              setEditMode(true)
+              bus.send(EDIT_PROJECT_FILE_END, '')
+            } catch (e) {
+              console.log(e)
             }
+          } else {
+            // save mode
+            if (!isDrawerOpen) {
+              toggleDrawer()
+            }
+            setSaveModeClick(true)
           }
-        }}
-        title={
-          isEditMode && activeRelateFile
-            ? PROJECT_EDIT_EDITOR_BUTTON_TITLE
-            : PROJECT_SAVE_EDITOR_BUTTON_TITLE
         }
-        icon={floppyDisk}
-        key={`editor${PROJECT_EDITOR_BUTTON_TITLE}`}
-        width={width}
-      />
-    </>
+      }}
+      title={
+        isEditMode && activeRelateFile
+          ? PROJECT_EDIT_EDITOR_BUTTON_TITLE
+          : PROJECT_SAVE_EDITOR_BUTTON_TITLE
+      }
+      icon={floppyDisk}
+      key={`editor${PROJECT_EDITOR_BUTTON_TITLE}`}
+      width={width}
+    />
   )
 }
 

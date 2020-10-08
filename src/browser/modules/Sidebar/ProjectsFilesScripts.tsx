@@ -24,7 +24,7 @@ import { filter, size, omit } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
-import { SLASH, CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import { CYPHER_FILE_EXTENSION, DOT } from 'shared/services/export-favorites'
 import {
   ProjectFilesQueryVars,
   ProjectFileMutationVars,
@@ -166,10 +166,13 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
     ]),
     scripts: projectFiles,
     isProjectFiles: true,
-    scriptsNamespace: SLASH,
+    scriptsNamespace: DOT,
     title: 'Project Files',
     onRemoveScript: async (favorite: Favorite) => {
-      const directory = favorite.path.substring(1) // remove SLASH from path
+      const directory =
+        favorite.path.length == 1 && favorite.path === DOT
+          ? DOT
+          : favorite.path.substring(1) // remove DOT from path
       const filePath = isWindows
         ? `${directory}\\${favorite.name}`
         : `${directory}/${favorite.name}`

@@ -82,13 +82,13 @@ const ProjectFiles = ({ bus, projectId }: ProjectFiles) => {
     return () => {
       isStillMounted = false
     }
-  }, [])
+  }, [bus])
 
   useEffect(() => {
     // send mounted/unmounted message
     bus && bus.send(PROJECT_FILES_MOUNTED, '')
     return () => bus && bus.send(PROJECT_FILES_UNMOUNTED, '')
-  }, [])
+  }, [bus])
 
   return (
     <Drawer id="db-project-files">

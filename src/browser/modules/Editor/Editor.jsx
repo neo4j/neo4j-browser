@@ -505,6 +505,7 @@ export class Editor extends Component {
             width={16}
             buttons={buttons}
             editorValue={() => this.getEditorValue()}
+            isRelateAvailable={this.props.isRelateAvailable}
           />
         </Header>
         <EditorWrapper fullscreen={isFullscreen} cardSize={isCardSize}>
@@ -566,7 +567,11 @@ const mapStateToProps = state => {
       ],
       procedures: state.meta.procedures.map(schemaConvert.toProcedure)
     },
-    enableMultiStatementMode: shouldEnableMultiStatementMode(state)
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+    isRelateAvailable:
+      state.app.relateUrl &&
+      state.app.relateApiToken &&
+      state.app.neo4jDesktopProjectId
   }
 }
 

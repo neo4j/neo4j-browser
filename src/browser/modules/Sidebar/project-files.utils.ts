@@ -15,7 +15,7 @@
  *
  */
 import remote from 'services/remote'
-import { SLASH, CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import { CYPHER_FILE_EXTENSION, DOT } from 'shared/services/export-favorites'
 import uuid from 'uuid'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {
@@ -61,7 +61,7 @@ export const mapProjectFileToFavorites = async ({
   id: uuid.v4(),
   name,
   directory,
-  path: directory.startsWith('.') ? SLASH : `${SLASH}${directory}`, // add SLASH to show files/folders
+  path: directory.startsWith(DOT) ? directory : `${DOT}${directory}`, // works with scriptsNamespace
   contents: await getProjectFileContents(
     downloadToken,
     name,

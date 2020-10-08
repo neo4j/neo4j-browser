@@ -168,7 +168,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     return () => {
       isStillMounted = false
     }
-  }, [])
+  }, [bus])
 
   useEffect(() => {
     let isStillMounted = true
@@ -189,7 +189,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
     return () => {
       isStillMounted = false
     }
-  })
+  }, [bus, activeProjectFile])
 
   function discardEditor() {
     sizeState !== 'LINE' && setSize('LINE')

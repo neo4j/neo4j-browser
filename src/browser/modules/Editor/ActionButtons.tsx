@@ -28,6 +28,7 @@ interface ActionButtonProps {
   buttons: ActionButton[]
   width?: number
   editorValue: () => string
+  isRelateAvailable: boolean
 }
 
 interface ActionButton {
@@ -41,10 +42,13 @@ interface ActionButton {
 const ActionButtons = ({
   buttons,
   width = 24,
-  editorValue
+  editorValue,
+  isRelateAvailable
 }: ActionButtonProps): JSX.Element => (
   <ActionButtonSection>
-    <ProjectFilesButton width={width} editorValue={editorValue} />
+    {isRelateAvailable && (
+      <ProjectFilesButton width={width} editorValue={editorValue} />
+    )}
     {buttons.map((btn: ActionButton) => (
       <EditorButton
         data-testid={`editor-${btn.title.split(' ')[0]}`}
