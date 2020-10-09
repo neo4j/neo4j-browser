@@ -89,7 +89,9 @@ export class Editor extends Component {
         this.setEditorValue(msg.message)
       })
       this.props.bus.take(EDIT_CONTENT, msg => {
-        this.setContentId(msg.id)
+        if (!msg.isProjectFile) {
+          this.setContentId(msg.id)
+        }
         this.setEditorValue(msg.message)
       })
       this.props.bus.take(FOCUS, this.focusEditor.bind(this))
@@ -499,7 +501,12 @@ export class Editor extends Component {
     return (
       <Bar>
         <Header>
-          <ActionButtons width={16} buttons={buttons} />
+          <ActionButtons
+            width={16}
+            buttons={buttons}
+            editorValue={() => this.getEditorValue()}
+            isRelateAvailable={this.props.isRelateAvailable}
+          />
         </Header>
         <EditorWrapper fullscreen={isFullscreen} cardSize={isCardSize}>
           <Codemirror
@@ -560,7 +567,11 @@ const mapStateToProps = state => {
       ],
       procedures: state.meta.procedures.map(schemaConvert.toProcedure)
     },
-    enableMultiStatementMode: shouldEnableMultiStatementMode(state)
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+    isRelateAvailable:
+      state.app.relateUrl &&
+      state.app.relateApiToken &&
+      state.app.neo4jDesktopProjectId
   }
 }
 

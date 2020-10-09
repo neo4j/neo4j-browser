@@ -111,13 +111,13 @@ export const Frame = styled.div<FullscreenProps>`
 
 export const FrameHeader = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   margin-left: 7px;
   height: 33px;
 `
 
 export const UIControls = styled.div`
-  align-self: flex-end;
+  align-self: auto;
 `
 
 export const FrameHeaderText = styled.div`

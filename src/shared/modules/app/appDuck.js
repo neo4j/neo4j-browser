@@ -56,7 +56,15 @@ export const getAllowedBoltSchemes = (state, encryptionFlag) => {
 export default function reducer(state = { hostedUrl: null }, action) {
   switch (action.type) {
     case APP_START:
-      return { ...state, hostedUrl: action.url, env: action.env }
+      return {
+        ...state,
+        hostedUrl: action.url,
+        env: action.env,
+        relateUrl: action.relateUrl,
+        relateApiToken: action.relateApiToken,
+        neo4jDesktopProjectId: action.neo4jDesktopProjectId,
+        neo4jDesktopGraphAppId: action.neo4jDesktopGraphAppId
+      }
     default:
       return state
   }

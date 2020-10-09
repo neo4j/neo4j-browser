@@ -30,6 +30,8 @@ import { BusProvider } from 'react-suber'
 import App from './modules/App/App'
 import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import { createUploadLink } from 'apollo-upload-client'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -86,8 +88,51 @@ const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 // URL we're on
 const url = window.location.href
 
+const searchParams = new URL(url).searchParams
+
+// Desktop/Relate params
+const relateUrl = searchParams.get('relateUrl')
+const relateApiToken = searchParams.get('relateApiToken')
+const neo4jDesktopProjectId = searchParams.get('neo4jDesktopProjectId')
+const neo4jDesktopGraphAppId = searchParams.get('neo4jDesktopGraphAppId')
+
 // Signal app upstart (for epics)
-store.dispatch({ type: APP_START, url, env })
+store.dispatch({
+  type: APP_START,
+  url,
+  env,
+  relateUrl,
+  relateApiToken,
+  neo4jDesktopProjectId,
+  neo4jDesktopGraphAppId
+})
+
+// typePolicies allow apollo cache to use these fields as 'id'
+// for automated cache updates when updating a single existing entity
+// https://www.apollographql.com/docs/react/caching/cache-configuration/#customizing-identifier-generation-by-type
+const apolloCache = new InMemoryCache({
+  typePolicies: {
+    RelateFile: {
+      keyFields: ['name', 'directory']
+    }
+  }
+})
+
+// https://www.apollographql.com/blog/file-uploads-with-apollo-server-2-0-5db2f3f60675/
+const uploadLink = createUploadLink({
+  uri: `${relateUrl || ''}/graphql`,
+  credentials: 'same-origin',
+  headers: {
+    'keep-alive': 'true',
+    'X-API-Token': relateApiToken,
+    'X-Client-Id': neo4jDesktopGraphAppId
+  }
+})
+
+const client = new ApolloClient({
+  cache: apolloCache,
+  link: uploadLink
+})
 
 const AppInit = () => {
   return (
@@ -95,7 +140,9 @@ const AppInit = () => {
       <BusProvider bus={bus}>
         <>
           <GlobalStyle />
-          <App />
+          <ApolloProvider client={client}>
+            <App />
+          </ApolloProvider>
         </>
       </BusProvider>
     </Provider>

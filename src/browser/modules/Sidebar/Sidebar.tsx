@@ -25,6 +25,7 @@ import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
 import Favorites from './favorites'
+import ProjectFilesDrawer from './ProjectFiles'
 import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer'
@@ -53,6 +54,7 @@ interface SidebarProps {
   neo4jConnectionState: string
   syncConnected: boolean
   loadSync: boolean
+  isRelateAvailable: boolean
 }
 
 const Sidebar = ({
@@ -61,7 +63,8 @@ const Sidebar = ({
   showStaticScripts,
   neo4jConnectionState,
   syncConnected,
-  loadSync
+  loadSync,
+  isRelateAvailable
 }: SidebarProps) => {
   const topNavItemsList = [
     {
@@ -103,6 +106,17 @@ const Sidebar = ({
       content: DocumentsDrawer
     }
   ]
+
+  if (isRelateAvailable) {
+    topNavItemsList.push({
+      name: 'Project Files',
+      title: 'Project Files',
+      icon: function favIcon(isOpen: boolean): ReactElement {
+        return <FavoritesIcon isOpen={isOpen} title="Project Files" />
+      },
+      content: ProjectFilesDrawer
+    })
+  }
 
   const bottomNavItemsList = [
     {
@@ -166,7 +180,12 @@ const mapStateToProps = (state: any) => {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
     loadSync: useBrowserSync(state),
-    showStaticScripts: state.settings.showSampleScripts
+    showStaticScripts: state.settings.showSampleScripts,
+    // currently only Desktop specific
+    isRelateAvailable:
+      state.app.relateUrl &&
+      state.app.relateApiToken &&
+      state.app.neo4jDesktopProjectId
   }
 }
 
