@@ -62,19 +62,32 @@ module.exports = {
         splitChunks: {
           cacheGroups: {
             vendor: {
-              test: /[\\/]node_modules[\\/](react|react-dom|@firebase|d3|codemirror|faker|remark-mdx|@mdx-js)[\\/]/,
+              test: /[\\/]node_modules[\\/](react|react-dom|@firebase|d3)[\\/]/,
               name: 'vendor',
-              chunks: 'all'
-            },
-            'cypher-codemirror': {
-              test: /[\\/]node_modules[\\/](cypher-codemirror|cypher-editor-support)[\\/]/,
-              name: 'cypher-codemirror',
               chunks: 'all',
               enforce: true
             },
-            ui: {
+            'cypher-editor': {
+              test: /[\\/]node_modules[\\/](antlr4|codemirror|cypher-codemirror|cypher-editor-support)[\\/]/,
+              name: 'cypher-editor',
+              chunks: 'all',
+              enforce: true
+            },
+            mdx: {
+              test: /[\\/]node_modules[\\/](@babel|@literal-jsx|@mdx-js|acorn|acorn-jsx|hast-util-raw|mdast-util-to-hast|remark-mdx|remark-parse)[\\/]/,
+              name: 'mdx',
+              chunks: 'all',
+              enforce: true
+            },
+            monaco: {
+              test: /[\\/]node_modules[\\/](monaco-editor)[\\/]/,
+              name: 'monaco',
+              chunks: 'all',
+              enforce: true
+            },
+            'relate-by-ui': {
               test: /[\\/]node_modules[\\/](@relate-by-ui|semantic-ui-react)[\\/]/,
-              name: 'ui',
+              name: 'relate-by-ui',
               chunks: 'all',
               enforce: true
             },

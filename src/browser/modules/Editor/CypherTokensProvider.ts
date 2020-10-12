@@ -20,9 +20,9 @@
 
 import { InputStream } from 'antlr4/index.js'
 import { CypherLexer } from 'cypher-editor-support/src/_generated/CypherLexer'
-import * as monaco from 'monaco-editor'
+import { languages } from 'monaco-editor/esm/vs/editor/editor.api'
 
-class CypherState implements monaco.languages.IState {
+class CypherState implements languages.IState {
   clone() {
     return new CypherState()
   }
@@ -32,12 +32,12 @@ class CypherState implements monaco.languages.IState {
   }
 }
 
-export class CypherTokensProvider implements monaco.languages.TokensProvider {
+export class CypherTokensProvider implements languages.TokensProvider {
   getInitialState(): CypherState {
     return new CypherState()
   }
 
-  tokenize(line: string): monaco.languages.ILineTokens {
+  tokenize(line: string): languages.ILineTokens {
     const lexer = new CypherLexer(new InputStream(line))
 
     return {

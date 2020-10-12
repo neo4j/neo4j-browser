@@ -93,7 +93,38 @@ module.exports = () => {
       title: 'TypeScript',
       excludeWarnings: false
     }),
-    new MonacoWebpackPlugin()
+    new MonacoWebpackPlugin({
+      features: [
+        '!accessibilityHelp',
+        '!anchorSelect',
+        '!caretOperations',
+        '!clipboard',
+        '!codeAction',
+        '!codelens',
+        '!colorDetector',
+        '!contextmenu',
+        '!coreCommands',
+        '!cursorUndo',
+        '!dnd',
+        '!fontZoom',
+        '!gotoError',
+        '!gotoLine',
+        '!gotoSymbol',
+        '!iPadShowKeyboard',
+        '!inspectTokens',
+        '!links',
+        '!parameterHints',
+        '!quickHelp',
+        '!referenceSearch',
+        '!snippets',
+        '!toggleHighContrast',
+        '!toggleTabFocusMode',
+        '!transpose',
+        '!unusualLineTerminators',
+        '!viewportSemanticTokens'
+      ],
+      languages: []
+    })
   ]
 
   if (!helpers.isProduction) {

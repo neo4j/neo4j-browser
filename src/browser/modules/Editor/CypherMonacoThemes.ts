@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as monaco from 'monaco-editor'
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { base } from 'browser-styles/themes'
 import {
   LIGHT_THEME,
@@ -224,7 +224,7 @@ const tokensWithoutSyntaxHighlighting: string[] = [
 ]
 
 // syntax highlighting from cypher-editor/cypher-codemirror/src/css/syntax.css
-const sharedRules: monaco.editor.ITokenThemeRule[] = [
+const sharedRules: editor.ITokenThemeRule[] = [
   ...strings.map(token => makeCypherTokenThemeRule(token, CypherColor.yellow)),
   ...numbers.map(token => makeCypherTokenThemeRule(token, CypherColor.cyan)),
 
@@ -279,7 +279,7 @@ const lightThemeRules = [
   )
 ]
 
-export const monacoDarkTheme: monaco.editor.IStandaloneThemeData = {
+export const monacoDarkTheme: editor.IStandaloneThemeData = {
   base: 'vs-dark',
   inherit: false,
   rules: darkThemeRules,
@@ -288,7 +288,7 @@ export const monacoDarkTheme: monaco.editor.IStandaloneThemeData = {
     foreground: CypherColor.white
   }
 }
-export const monacoLightTheme: monaco.editor.IStandaloneThemeData = {
+export const monacoLightTheme: editor.IStandaloneThemeData = {
   base: 'vs',
   inherit: false,
   rules: lightThemeRules,

@@ -20,7 +20,11 @@
 
 import { parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
-import * as monaco from 'monaco-editor'
+import {
+  editor,
+  languages,
+  MarkerSeverity
+} from 'monaco-editor/esm/vs/editor/editor.api'
 import React, { useEffect, useRef } from 'react'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
@@ -45,7 +49,7 @@ interface MonacoProps {
   id: string
   value?: string
   onChange?: (value: string) => void
-  options?: monaco.editor.IGlobalEditorOptions
+  options?: editor.IGlobalEditorOptions
   theme?: BrowserTheme
 }
 
@@ -57,19 +61,19 @@ const Monaco = ({
   onChange = () => undefined,
   theme = LIGHT_THEME
 }: MonacoProps): JSX.Element => {
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const monacoId = `monaco-${id}`
 
   // Create monaco instance, listen to text changes and destroy
   useEffect(() => {
-    monaco.languages.register({ id: 'cypher' })
-    monaco.languages.setTokensProvider('cypher', new CypherTokensProvider())
+    languages.register({ id: 'cypher' })
+    languages.setTokensProvider('cypher', new CypherTokensProvider())
 
-    monaco.editor.defineTheme(DARK_THEME, monacoDarkTheme)
-    monaco.editor.defineTheme(LIGHT_THEME, monacoLightTheme)
-    monaco.editor.defineTheme(OUTLINE_THEME, monacoLightTheme)
+    editor.defineTheme(DARK_THEME, monacoDarkTheme)
+    editor.defineTheme(LIGHT_THEME, monacoLightTheme)
+    editor.defineTheme(OUTLINE_THEME, monacoLightTheme)
 
-    editorRef.current = monaco.editor.create(
+    editorRef.current = editor.create(
       document.getElementById(monacoId) as HTMLElement,
       {
         automaticLayout: true,
@@ -102,7 +106,7 @@ const Monaco = ({
 
   // Update theme when setting is changed
   useEffect(() => {
-    monaco.editor.setTheme(theme)
+    editor.setTheme(theme)
   }, [theme])
 
   // Trigger update when multi statement setting is changed to update warnings
@@ -126,8 +130,8 @@ const Monaco = ({
 
   // On each text change, clear warnings and reset countdown to adding warnings
   const onContentUpdate = () => {
-    monaco.editor.setModelMarkers(
-      editorRef.current?.getModel() as monaco.editor.ITextModel,
+    editor.setModelMarkers(
+      editorRef.current?.getModel() as editor.ITextModel,
       monacoId,
       []
     )
@@ -139,12 +143,12 @@ const Monaco = ({
   ) => {
     if (!statements.length) return
 
-    const model = editorRef.current?.getModel() as monaco.editor.ITextModel
+    const model = editorRef.current?.getModel() as editor.ITextModel
 
     // add multi statement warning if multi setting is off
     if (statements.length > 1 && !enableMultiStatementMode) {
       const secondStatementLine = statements[1].start.line
-      monaco.editor.setModelMarkers(model, monacoId, [
+      editor.setModelMarkers(model, monacoId, [
         {
           startLineNumber: secondStatementLine,
           startColumn: 1,
@@ -152,7 +156,7 @@ const Monaco = ({
           endColumn: 1000,
           message:
             'To use multi statement queries, please enable multi statement in the settings panel.',
-          severity: monaco.MarkerSeverity.Warning
+          severity: MarkerSeverity.Warning
         }
       ])
     }
@@ -176,8 +180,8 @@ const Monaco = ({
             response.success === true &&
             response.result.summary.notifications.length > 0
           ) {
-            monaco.editor.setModelMarkers(model, monacoId, [
-              ...monaco.editor.getModelMarkers({ owner: monacoId }),
+            editor.setModelMarkers(model, monacoId, [
+              ...editor.getModelMarkers({ owner: monacoId }),
               ...response.result.summary.notifications.map(
                 ({
                   description,
@@ -193,7 +197,7 @@ const Monaco = ({
                   endLineNumber: statementLineNumber + line,
                   endColumn: 1000,
                   message: title + '\n\n' + description,
-                  severity: monaco.MarkerSeverity.Warning
+                  severity: MarkerSeverity.Warning
                 })
               )
             ])
