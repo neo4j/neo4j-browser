@@ -25,6 +25,13 @@ export const REMOVE_PROJECT_FILE = 'REMOVE_PROJECT_FILE'
 export const PROJECT_FILE_ERROR = 'PROJECT_FILE_ERROR'
 export const PROJECT_FILES_MOUNTED = 'PROJECT_FILES_MOUNTED'
 export const PROJECT_FILES_UNMOUNTED = 'PROJECT_FILES_UNMOUNTED'
+export const EXECUTE_COMMAND_ORIGIN = 'EXECUTE_COMMAND_ORIGIN'
+
+export enum EXECUTE_COMMAND_ORIGINS {
+  EDITOR = 'editor',
+  SIDEBAR = 'sidebar',
+  NONE = ''
+}
 
 export interface AddProjectFile {
   addProjectFile: ProjectFile

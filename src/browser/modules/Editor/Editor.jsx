@@ -59,6 +59,10 @@ import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import ActionButtons from './ActionButtons'
 import { isMac } from 'browser/modules/App/keyboardShortcuts'
+import {
+  EXECUTE_COMMAND_ORIGIN,
+  EXECUTE_COMMAND_ORIGINS
+} from 'browser/modules/Sidebar/project-files.constants'
 
 const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -89,9 +93,7 @@ export class Editor extends Component {
         this.setEditorValue(msg.message)
       })
       this.props.bus.take(EDIT_CONTENT, msg => {
-        if (!msg.isProjectFile) {
-          this.setContentId(msg.id)
-        }
+        this.setContentId(msg.isProjectFile ? null : msg.id)
         this.setEditorValue(msg.message)
       })
       this.props.bus.take(FOCUS, this.focusEditor.bind(this))
@@ -141,6 +143,10 @@ export class Editor extends Component {
     const onlyWhitespace = cmd.trim() === ''
 
     if (!onlyWhitespace) {
+      this.props.bus.send(
+        EXECUTE_COMMAND_ORIGIN,
+        EXECUTE_COMMAND_ORIGINS.EDITOR
+      )
       this.execCommand(cmd)
       this.clearEditor()
       this.setState({
