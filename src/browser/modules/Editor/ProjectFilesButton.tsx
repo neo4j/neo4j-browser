@@ -27,6 +27,7 @@ import { EditorButton } from 'browser-components/buttons'
 import floppyDisk from 'icons/floppy-disk.svg'
 import * as drawer from 'shared/modules/sidebar/sidebarDuck'
 import { EDIT_CONTENT, SET_CONTENT } from 'shared/modules/editor/editorDuck'
+import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
 import {
   ADD_PROJECT_FILE,
   SELECT_PROJECT_FILE,
@@ -111,11 +112,19 @@ const ProjectFileButton = ({
           setProjectFilesMounted(true)
         }
       })
-    // Prject Files is unmounted
+    // Project Files is unmounted
     bus &&
       bus.take(PROJECT_FILES_UNMOUNTED, () => {
         if (isStillMounted) {
           setProjectFilesMounted(false)
+        }
+      })
+    // When execute button is clicked
+    bus &&
+      bus.take(COMMAND_QUEUED, () => {
+        if (isStillMounted) {
+          setEditMode(false)
+          setActiveRelateFile(null)
         }
       })
 

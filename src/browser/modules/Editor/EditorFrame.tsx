@@ -57,6 +57,7 @@ import {
   EDIT_PROJECT_FILE_END,
   REMOVE_PROJECT_FILE
 } from 'browser/modules/Sidebar/project-files.constants'
+import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
 
 type EditorSize = 'CARD' | 'LINE' | 'FULLSCREEN'
 type EditorFrameProps = { bus: Bus }
@@ -162,6 +163,14 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       bus.take(PROJECT_FILE_ERROR, () => {
         if (isStillMounted) {
           setActiveProjectFileStatus('error saving...')
+        }
+      })
+    // On Execute command, clear the heading
+    bus &&
+      bus.take(COMMAND_QUEUED, () => {
+        if (isStillMounted) {
+          setActiveProjectFile(null)
+          setActiveProjectFileStatus(null)
         }
       })
 
