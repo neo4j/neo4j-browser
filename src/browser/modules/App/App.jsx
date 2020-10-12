@@ -31,6 +31,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
+import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
   allowOutgoingConnections,
@@ -209,7 +210,7 @@ const mapStateToProps = state => {
   const connectionData = getActiveConnectionData(state)
   return {
     experimentalFeatures: getExperimentalFeatures(state),
-    drawer: state.drawer,
+    drawer: getOpenDrawer(state),
     activeConnection: getActiveConnection(state),
     theme: getTheme(state),
     codeFontLigatures: codeFontLigatures(state),

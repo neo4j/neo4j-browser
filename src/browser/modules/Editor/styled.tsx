@@ -23,30 +23,12 @@ import styled from 'styled-components'
 interface FullscreenProps {
   fullscreen: boolean
 }
-interface CardSizeProps {
-  cardSize: boolean
-}
-type ResizeableProps = CardSizeProps & FullscreenProps
-
-const editorPadding = 10
-
-export const Bar = styled.div`
-  background-color: ${(props): string => props.theme.frameSidebarBackground};
-  display: grid;
-  margin: 5px;
-  border-radius: 2px;
-  // minmax(0, 1fr) prevents the editor from growing the text field
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: 'editor header';
-`
 
 export const Header = styled.div`
-  grid-area: header;
-  border-radius: 4px 4px 0 0;
+  background-color: ${(props): string => props.theme.frameSidebarBackground};
+  flex-grow: 1;
+
   display: flex;
-  justify-content: flex-end;
-  padding-top: 7px;
-  margin-right: -5px;
 `
 
 export const ActionButtonSection = styled.div`
@@ -54,45 +36,13 @@ export const ActionButtonSection = styled.div`
   justify-content: space-between;
 `
 
-const BaseEditorWrapper = styled.div<ResizeableProps>`
-  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
-  grid-area: editor;
-
-  min-height: ${(props): string => {
-    if (props.fullscreen) {
-      return '100vh'
-    }
-    if (props.cardSize) {
-      // 230 is 10 lines + 2*12px padding
-      return '254px'
-    }
-    return '0'
-  }};
-
-  transition-duration: 0.1s;
-
-  .CodeMirror {
-    color: ${(props): string => props.theme.editorCommandColor};
-    font-size: 17px;
-  }
-
-  .disable-font-ligatures & {
-    font-variant-ligatures: none !important;
-  }
-`
-export const AnimationContainer = styled.div<CardSizeProps>`
-  padding-top: ${editorPadding}px;
-  padding-bottom: ${editorPadding}px;
-  position: relative;
-  min-height: ${props => (props.cardSize ? '317px' : '112px')};
-`
-
 export const Frame = styled.div<FullscreenProps>`
+  padding: 3px;
   background-color: ${props => props.theme.secondaryBackground};
   border-radius: 2px;
-  padding-bottom: 1px;
   box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
     0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  margin: 10px 0 10px 0;
   ${(props): string => {
     if (props.fullscreen) {
       return `
@@ -103,35 +53,48 @@ export const Frame = styled.div<FullscreenProps>`
   right: 0;
   height: 100vh;
   border-radius: 0;
-  z-index: 1030;`
+  z-index: 1030;
+  margin: 0;
+  `
     }
     return ''
   }};
 `
 
-export const FrameHeader = styled.div`
+export const EditorContainer = styled.div`
+  flex-grow: 1;
+  width: 0; // needed to prevent the editor from growing the text field
+`
+export const FlexContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-left: 7px;
-  height: 33px;
+`
+export const ScriptTitle = styled.div<{ unsaved: boolean }>`
+  font-style: ${props => (props.unsaved ? 'italic' : 'normal')};
+  border-bottom: 1px solid rgb(77, 74, 87, 0.3);
+  padding: 1px;
+  padding-left: 5px;
+  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
+  font-size: 14px;
+  line-height: 23px;
 `
 
-export const UIControls = styled.div`
-  align-self: auto;
-`
+export const EditorWrapper = styled.div<FullscreenProps>`
+  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
 
-export const FrameHeaderText = styled.div`
-  color: ${props => props.theme.secondaryText};
-  font-family: 'Fira Code', 'Monaco', 'Lucida Console', Courier, monospace;
-  font-size: 1.2em;
-  line-height: 2.2em;
-`
+  .CodeMirror {
+    color: ${(props): string => props.theme.editorCommandColor};
+    font-size: 17px;
+  }
 
-export const EditorWrapper = styled(BaseEditorWrapper)<ResizeableProps>`
+  .disable-font-ligatures & {
+    font-variant-ligatures: none !important;
+  }
+
   ${(props): string => {
     if (props.fullscreen) {
       return `height: 100%;
-        z-index: 2;
+        min-height: 100vh;
+        z-index: 1030;
         .CodeMirror {
           position: absolute;
           left: 12px;

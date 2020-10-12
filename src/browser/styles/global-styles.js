@@ -49,7 +49,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .CodeMirror {
     background: initial !important; // overrides lib css 
-    margin: 12px !important;
+    margin: 9px !important;
     border-radius: 4px !important;
     transition: all !important;
   }
@@ -88,7 +88,8 @@ export const GlobalStyle = createGlobalStyle`
 
   .CodeMirror-scroll {
     overflow: hidden !important;
-    max-height: 230px !important;
+    // 12 lines each 23px
+    max-height: 276px !important;
   }
 
   .CodeMirror div.CodeMirror-cursor {

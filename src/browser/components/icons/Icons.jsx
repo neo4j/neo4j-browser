@@ -41,6 +41,11 @@ import arrowLeft1 from 'icons/arrow-left-1.svg'
 import arrowRight1 from 'icons/arrow-right-1.svg'
 import skipPrev from 'icons/skip-prev.svg'
 import file from 'icons/file.svg'
+import floppyDisk from 'icons/floppy-disk.svg'
+import update_file from 'icons/update_file.svg'
+import save_file from 'icons/save_file.svg'
+import update_favorite from 'icons/update_favorite.svg'
+import save_favorite from 'icons/save_favorite.svg'
 
 const inactive = `
   color: #797979;
@@ -49,6 +54,10 @@ const inactive = `
 const green = `
   color: #4cd950;
 `
+const lightGreen = `
+  color: #61B88C
+`
+
 const successGreen = `
   color: #4cd950;
 `
@@ -124,7 +133,6 @@ export const FavoritesIcon = props => (
     {...props}
   />
 )
-
 export const ProjectFilesIcon = props => (
   <IconContainer
     activeStyle={white}
@@ -268,6 +276,13 @@ export const DownIcon = () => <IconContainer className="sl-chevron-down" />
 export const DoubleUpIcon = () => <IconContainer className="sl-double-up" />
 export const DoubleDownIcon = () => <IconContainer className="sl-double-down" />
 export const PinIcon = () => <IconContainer icon={pin} width={12} />
+export const SaveFavorite = () => (
+  <IconContainer inactiveStyle={lightBlue} icon={save_favorite} width={12} />
+)
+export const SaveFile = () => (
+  <IconContainer inactiveStyle={lightGreen} icon={save_file} width={12} />
+)
+
 export const MinusIcon = () => (
   <IconContainer
     activeStyle={blue}
@@ -305,6 +320,7 @@ export const PlayIcon = () => (
     className="fa fa-play-circle-o"
   />
 )
+
 export const PlainPlayIcon = () => (
   <IconContainer className="fa fa-play-circle" />
 )

@@ -32,7 +32,6 @@ export const SET_CONTENT = `${NAME}/SET_CONTENT`
 export const EDIT_CONTENT = `${NAME}/EDIT_CONTENT`
 export const FOCUS = `${NAME}/FOCUS`
 export const EXPAND = `${NAME}/EXPAND`
-export const CARDSIZE = `${NAME}/CARDSIZE`
 export const NOT_SUPPORTED_URL_PARAM_COMMAND = `${NAME}/NOT_SUPPORTED_URL_PARAM_COMMAND`
 
 // Supported commands
@@ -47,11 +46,19 @@ export const setContent = newContent => ({
   type: SET_CONTENT,
   message: newContent
 })
-export const editContent = (id, message, isProjectFile) => ({
+export const editContent = (
+  id,
+  message,
+  isProjectFile = false,
+  name,
+  directory
+) => ({
   type: EDIT_CONTENT,
   message,
   id,
-  isProjectFile
+  isProjectFile,
+  name,
+  directory
 })
 
 export const populateEditorFromUrlEpic = (some$, store) => {

@@ -20,61 +20,47 @@
 
 import reducer, * as sidebar from './sidebarDuck'
 
-describe('sidebar reducer', () => {
-  test('should set to undefined if no drawer is in payload', () => {
-    const action = {
-      type: sidebar.TOGGLE,
-      state: {}
-    }
-    const nextState = reducer(undefined, action)
-    expect(nextState).toEqual(null)
-  })
-
-  test('should set to undefined if drawer in payload is falsy', () => {
-    const action = {
-      type: sidebar.TOGGLE,
-      state: { drawer: '' }
-    }
-    const nextState = reducer(undefined, action)
-    expect(nextState).toEqual(null)
-  })
-
+describe('sidebarDuck', () => {
   test('should open a drawer when closed', () => {
-    const action = {
-      type: sidebar.TOGGLE,
-      state: { drawer: 'db' }
-    }
+    const action = sidebar.toggle('db')
+
     const nextState = reducer(undefined, action)
-    expect(nextState).toEqual('db')
+    expect(nextState).toEqual({ drawer: 'db', draftScript: null })
   })
 
   test('should switch drawer when a different one already is open', () => {
-    const initialState = 'profile'
-    const action = {
-      type: sidebar.TOGGLE,
-      state: { drawer: 'db' }
+    const initialState = {
+      drawer: 'favorites',
+      draftScript: null
     }
+    const action = sidebar.toggle('db')
     const nextState = reducer(initialState, action)
-    expect(nextState).toEqual('db')
+    expect(nextState.drawer).toEqual('db')
   })
 
   test('should close drawer when the opened one is toggled', () => {
-    const initialState = 'db'
-    const action = {
-      type: sidebar.TOGGLE,
-      state: { drawer: 'db' }
+    const initialState = {
+      drawer: 'db',
+      draftScript: null
     }
+    const action = sidebar.toggle('db')
     const nextState = reducer(initialState, action)
-    expect(nextState).toEqual(null)
+    expect(nextState.drawer).toEqual(null)
   })
-})
 
-describe('Sidebar actions', () => {
-  test('should handle toggling drawer', () => {
-    const drawerId = 'db'
-    expect(sidebar.toggle(drawerId)).toEqual({
-      type: sidebar.TOGGLE,
-      state: { drawer: drawerId }
-    })
+  test('should support setting a draft script', () => {
+    const action = sidebar.setDraftScript('test', 'favorites')
+    const nextState = reducer(undefined, action)
+    expect(nextState.draftScript).toEqual('test')
+  })
+
+  test('clears draft script when toggled', () => {
+    const action = sidebar.setDraftScript('test', 'favorites')
+    const nextState = reducer(undefined, action)
+    expect(nextState.draftScript).toEqual('test')
+
+    const toggleAction = sidebar.toggle('favorites')
+    const lastState = reducer(nextState, toggleAction)
+    expect(lastState.draftScript).toEqual(null)
   })
 })

@@ -33,10 +33,15 @@ export const CloseButton = props => {
 }
 
 export const EditorButton = props => {
-  const { icon, title, color, width, ...rest } = props
+  const { icon, title, color, width, onClick, ...rest } = props
   const overrideColor = { ...(color ? { color } : {}) }
   return (
-    <BaseButton title={title} style={overrideColor} width={width}>
+    <BaseButton
+      onClick={onClick}
+      title={title}
+      style={overrideColor}
+      width={width}
+    >
       <SVGInline
         svg={icon}
         accessibilityLabel={title}

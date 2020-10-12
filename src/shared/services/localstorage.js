@@ -54,7 +54,9 @@ export function getAll() {
         const { playImplicitInitCommands, ...otherSettings } = current
         out[key] = { ...otherSettings, playImplicitInitCommands: true }
       } else {
-        out[key] = current
+        if (key !== 'drawer') {
+          out[key] = current
+        }
       }
     }
   })

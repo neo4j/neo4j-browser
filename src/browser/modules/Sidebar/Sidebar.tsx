@@ -19,6 +19,7 @@
  */
 
 import React, { ReactFragment, ReactElement } from 'react'
+import uuid from 'uuid'
 import { connect } from 'react-redux'
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
@@ -26,17 +27,30 @@ import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
 import Favorites from './favorites'
 import ProjectFilesDrawer from './ProjectFiles'
-import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer'
+import NewSavedScript from './NewSavedScript'
 import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
+import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
   DISCONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
+import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
+import { isRelateAvailable } from 'shared/modules/app/appDuck'
+
+function favoriteName(cmd: string) {
+  const firstLine = cmd.split('\n')[0]
+
+  if (firstLine.startsWith('//')) {
+    return firstLine.slice(2)
+  } else {
+    return firstLine
+  }
+}
 
 import {
   DatabaseIcon,
@@ -51,21 +65,23 @@ import {
 interface SidebarProps {
   openDrawer: string
   onNavClick: () => void
-  showStaticScripts: boolean
   neo4jConnectionState: string
   syncConnected: boolean
   loadSync: boolean
   isRelateAvailable: boolean
+  addFavorite: (cmd: string) => void
+  scriptDraft: string | null
 }
 
 const Sidebar = ({
   openDrawer,
   onNavClick,
-  showStaticScripts,
   neo4jConnectionState,
   syncConnected,
   loadSync,
-  isRelateAvailable
+  isRelateAvailable,
+  addFavorite,
+  scriptDraft
 }: SidebarProps) => {
   const topNavItemsList = [
     {
@@ -92,8 +108,27 @@ const Sidebar = ({
         return (
           <>
             <DrawerHeader>Favorites</DrawerHeader>
+            <NewSavedScript
+              onSubmit={input => {
+                const draft = scriptDraft || ''
+                if (input === favoriteName(draft)) {
+                  addFavorite(draft)
+                } else {
+                  const alreadyHasName = draft.startsWith('//')
+                  const replaceName = [
+                    `// ${input}`,
+                    draft.split('\n').slice(1)
+                  ].join('\n')
+
+                  addFavorite(
+                    alreadyHasName ? replaceName : `//${input}\n${draft}`
+                  )
+                }
+              }}
+              defaultName={favoriteName(scriptDraft || '')}
+              headerText={'Save as'}
+            />
             <Favorites />
-            {showStaticScripts && <StaticScripts />}
           </>
         )
       }
@@ -115,7 +150,9 @@ const Sidebar = ({
       icon: function projectFilesIcon(isOpen: boolean): ReactElement {
         return <ProjectFilesIcon isOpen={isOpen} title="Project Files" />
       },
-      content: ProjectFilesDrawer
+      content: function ProjectDrawer(): JSX.Element {
+        return <ProjectFilesDrawer scriptDraft={scriptDraft || ''} />
+      }
     })
   }
 
@@ -181,13 +218,17 @@ const mapStateToProps = (state: any) => {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
     loadSync: useBrowserSync(state),
-    showStaticScripts: state.settings.showSampleScripts,
-    // currently only Desktop specific
-    isRelateAvailable:
-      state.app.relateUrl &&
-      state.app.relateApiToken &&
-      state.app.neo4jDesktopProjectId
+    isRelateAvailable: isRelateAvailable(state),
+    scriptDraft: getCurrentDraft(state)
   }
 }
 
-export default connect(mapStateToProps, null)(Sidebar)
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    addFavorite: (cmd: string) => {
+      dispatch(addFavorite(cmd, uuid.v4()))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
