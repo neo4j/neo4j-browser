@@ -145,6 +145,13 @@ const Monaco = ({
 
     const model = editorRef.current?.getModel() as editor.ITextModel
 
+    // clearing markers again solves issue with incorrect multi-statement warning when user spam clicks setting on and off
+    editor.setModelMarkers(
+      editorRef.current?.getModel() as editor.ITextModel,
+      monacoId,
+      []
+    )
+
     // add multi statement warning if multi setting is off
     if (statements.length > 1 && !enableMultiStatementMode) {
       const secondStatementLine = statements[1].start.line
