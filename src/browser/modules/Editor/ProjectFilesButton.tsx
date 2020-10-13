@@ -27,7 +27,6 @@ import { EditorButton } from 'browser-components/buttons'
 import floppyDisk from 'icons/floppy-disk.svg'
 import * as drawer from 'shared/modules/sidebar/sidebarDuck'
 import { EDIT_CONTENT, SET_CONTENT } from 'shared/modules/editor/editorDuck'
-import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
 import {
   ADD_PROJECT_FILE,
   SELECT_PROJECT_FILE,
@@ -37,7 +36,9 @@ import {
   EDIT_PROJECT_FILE_START,
   EDIT_PROJECT_FILE_END,
   PROJECT_FILES_MOUNTED,
-  PROJECT_FILES_UNMOUNTED
+  PROJECT_FILES_UNMOUNTED,
+  EXECUTE_COMMAND_ORIGIN,
+  EXECUTE_COMMAND_ORIGINS
 } from 'browser/modules/Sidebar/project-files.constants'
 import { useMutation } from '@apollo/client'
 import { isWindows } from '../App/keyboardShortcuts'
@@ -72,10 +73,36 @@ const ProjectFileButton = ({
   const [isEditMode, setEditMode] = useState(false)
   const [isSaveModeClick, setSaveModeClick] = useState(false)
   const [isProjectFilesMounted, setProjectFilesMounted] = useState(false)
+  const [executeCommandOrigin, setExecuteCommandOrigin] = useState('')
   const [
     activeRelateFile,
     setActiveRelateFile
   ] = useState<ActiveRelateFile | null>(null)
+
+  useEffect(() => {
+    let isStillMounted = true
+    // When execute button is clicked
+    bus &&
+      bus.take(EXECUTE_COMMAND_ORIGIN, origin => {
+        if (isStillMounted) {
+          setExecuteCommandOrigin(origin)
+        }
+      })
+
+    if (
+      isStillMounted &&
+      executeCommandOrigin.length &&
+      executeCommandOrigin === EXECUTE_COMMAND_ORIGINS.EDITOR
+    ) {
+      setEditMode(false)
+      setActiveRelateFile(null)
+      setExecuteCommandOrigin(EXECUTE_COMMAND_ORIGINS.NONE)
+    }
+
+    return () => {
+      isStillMounted = false
+    }
+  }, [bus, executeCommandOrigin])
 
   useEffect(() => {
     let isStillMounted = true
@@ -117,14 +144,6 @@ const ProjectFileButton = ({
       bus.take(PROJECT_FILES_UNMOUNTED, () => {
         if (isStillMounted) {
           setProjectFilesMounted(false)
-        }
-      })
-    // When execute button is clicked
-    bus &&
-      bus.take(COMMAND_QUEUED, () => {
-        if (isStillMounted) {
-          setEditMode(false)
-          setActiveRelateFile(null)
         }
       })
 

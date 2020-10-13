@@ -55,9 +55,10 @@ import {
   PROJECT_FILE_ERROR,
   EDIT_PROJECT_FILE_START,
   EDIT_PROJECT_FILE_END,
-  REMOVE_PROJECT_FILE
+  REMOVE_PROJECT_FILE,
+  EXECUTE_COMMAND_ORIGIN,
+  EXECUTE_COMMAND_ORIGINS
 } from 'browser/modules/Sidebar/project-files.constants'
-import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
 
 type EditorSize = 'CARD' | 'LINE' | 'FULLSCREEN'
 type EditorFrameProps = { bus: Bus }
@@ -77,6 +78,7 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
   const [activeProjectFileStatus, setActiveProjectFileStatus] = useState<
     string | null
   >(null)
+  const [executeCommandOrigin, setExecuteCommandOrigin] = useState('')
   const isFullscreen = sizeState === 'FULLSCREEN'
   const isCardSize = sizeState === 'CARD'
   const editorRef = useRef<CodeEditor>(null)
@@ -117,6 +119,30 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
 
   useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
   useEffect(() => bus && bus.take(CARDSIZE, toggleCardView))
+  useEffect(() => {
+    let isStillMounted = true
+    // When execute button is clicked
+    bus &&
+      bus.take(EXECUTE_COMMAND_ORIGIN, origin => {
+        if (isStillMounted) {
+          setExecuteCommandOrigin(origin)
+        }
+      })
+
+    if (
+      isStillMounted &&
+      executeCommandOrigin.length &&
+      executeCommandOrigin === EXECUTE_COMMAND_ORIGINS.EDITOR
+    ) {
+      setActiveProjectFile(null)
+      setActiveProjectFileStatus(null)
+      setExecuteCommandOrigin(EXECUTE_COMMAND_ORIGINS.NONE)
+    }
+
+    return () => {
+      isStillMounted = false
+    }
+  }, [bus, executeCommandOrigin])
   useEffect(() => {
     let isStillMounted = true
     // when a saved Project Script or Local Cache Script is clicked
@@ -163,14 +189,6 @@ export function EditorFrame({ bus }: EditorFrameProps): JSX.Element {
       bus.take(PROJECT_FILE_ERROR, () => {
         if (isStillMounted) {
           setActiveProjectFileStatus('error saving...')
-        }
-      })
-    // On Execute command, clear the heading
-    bus &&
-      bus.take(COMMAND_QUEUED, () => {
-        if (isStillMounted) {
-          setActiveProjectFile(null)
-          setActiveProjectFileStatus(null)
         }
       })
 

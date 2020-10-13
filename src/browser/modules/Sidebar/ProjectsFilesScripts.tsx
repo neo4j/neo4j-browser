@@ -38,7 +38,9 @@ import {
   SELECT_PROJECT_FILE,
   GET_PROJECT_FILES,
   DELETE_PROJECT_FILE,
-  REMOVE_PROJECT_FILE
+  REMOVE_PROJECT_FILE,
+  EXECUTE_COMMAND_ORIGIN,
+  EXECUTE_COMMAND_ORIGINS
 } from './project-files.constants'
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
@@ -226,9 +228,14 @@ const mapFavoritesStateToProps = (state: any) => {
   }
 }
 
-const mapFavoritesDispatchToProps = (dispatch: any) => ({
-  onExecScript: (favorite: Favorite) =>
+const mapFavoritesDispatchToProps = (
+  dispatch: any,
+  ownProps: { bus: Bus }
+) => ({
+  onExecScript: (favorite: Favorite) => {
+    ownProps.bus.send(EXECUTE_COMMAND_ORIGIN, EXECUTE_COMMAND_ORIGINS.SIDEBAR)
     dispatch(executeCommand(favorite.contents))
+  }
 })
 
 export default withBus(
