@@ -111,8 +111,14 @@ const ProjectFiles = ({ bus, projectId }: ProjectFiles) => {
               setError('File name cannot be empty')
               return
             }
-            if (fileName.includes('/') || fileName.includes('\\')) {
-              setError('File name cannot include / or \\')
+            // @todo: this needs more thought and extracting to a util
+            if (
+              fileName.includes('/') ||
+              fileName.includes('\\') ||
+              fileName.includes('..') ||
+              fileName.includes(':') // Windows
+            ) {
+              setError('File name cannot include /, \\ , .. or :')
               return
             }
             if (fileName.length) {
