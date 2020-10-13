@@ -40,6 +40,7 @@ import appWindowCode from 'icons/app-window-code.svg'
 import arrowLeft1 from 'icons/arrow-left-1.svg'
 import arrowRight1 from 'icons/arrow-right-1.svg'
 import skipPrev from 'icons/skip-prev.svg'
+import file from 'icons/file.svg'
 
 const inactive = `
   color: #797979;
@@ -123,6 +124,17 @@ export const FavoritesIcon = props => (
     {...props}
   />
 )
+
+export const ProjectFilesIcon = props => (
+  <IconContainer
+    activeStyle={white}
+    inactiveStyle={inactive}
+    icon={file}
+    width={28}
+    {...props}
+  />
+)
+
 export const DocumentsIcon = props => (
   <IconContainer
     activeStyle={white}

@@ -102,10 +102,17 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
     return ''
   }
 
-  // remove comment lines and any forward or back slashes (replace with spaces)
-  return startsWith(firstLine, COMMENT_PREFIX)
-    ? trim(firstLine.slice(COMMENT_PREFIX.length)).replace(/\/|\\/g, ' ')
-    : firstLine.replace(/\/|\\/g, ' ')
+  // remove comment lines (if they exist)
+  const firstLineStr = startsWith(firstLine, COMMENT_PREFIX)
+    ? trim(firstLine.slice(COMMENT_PREFIX.length))
+    : firstLine
+
+  // @todo: this should be ok but could do with looking at again
+  return firstLineStr
+    .replace(/\/|\\/g, '') // replace any forward or back slashes
+    .replace(/[^\w]/g, '-') // replace any non-word chars with dashes
+    .replace(/-+/g, '-') // replace 1 or more dashes with single dash
+    .replace(/-$/, '') // remove dash from end of line
 }
 
 const readCacheQuery = (
