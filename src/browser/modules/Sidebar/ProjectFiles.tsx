@@ -22,15 +22,11 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 import { useMutation } from '@apollo/client'
+import styled from 'styled-components'
 
 import Render from 'browser-components/Render'
 import { Drawer, DrawerHeader } from 'browser-components/drawer'
 import ProjectFilesScripts, { ProjectFilesError } from './ProjectsFilesScripts'
-import {
-  StyledSetting,
-  StyledSettingLabel,
-  StyledSettingTextInput
-} from './styled'
 import {
   setProjectFileDefaultFileName,
   updateCacheAddProjectFile
@@ -44,6 +40,47 @@ import {
   PROJECT_FILES_MOUNTED,
   PROJECT_FILES_UNMOUNTED
 } from './project-files.constants'
+
+// @todo: Styled elements temporary until next set of work goes in
+const StyledHeaderText = styled.div`
+  font-family: 'Open Sans';
+  color: white;
+`
+
+const StyledInputField = styled.input`
+  height: 25px;
+  width: 140px;
+`
+
+const StyledSubmitButton = styled.button`
+  color: #fff;
+  background-color: #428bca;
+  border: none;
+  border-radius: 3px;
+  padding: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  height: 25px;
+  margin: 5px 0 0 5px;
+`
+
+const StyledCancelButton = styled.button`
+  color: #fff;
+  background-color: #e74c3c;
+  border: none;
+  border-radius: 3px;
+  padding: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  height: 25px;
+  margin: 5px 0 0 5px;
+`
+
+const StyledSaveArea = styled.div`
+  color: black;
+  padding-left: 25px;
+  margin-bottom: 20px;
+`
 
 interface ProjectFiles {
   bus: Bus
@@ -94,74 +131,75 @@ const ProjectFiles = ({ bus, projectId }: ProjectFiles) => {
     <Drawer id="db-project-files">
       <DrawerHeader>Project Files</DrawerHeader>
       <Render if={isSaveMode}>
-        <StyledSetting>
-          <StyledSettingLabel title={'Enter a file name'}>
-            {'File Name'}
-            <StyledSettingTextInput
-              onChange={event => {
-                setFileName(event.target.value)
-              }}
-              value={fileName}
-            />
-          </StyledSettingLabel>
-        </StyledSetting>
-        <a
-          onClick={async () => {
-            if (!fileName.length) {
-              setError('File name cannot be empty')
-              return
-            }
-            // @todo: this needs more thought and extracting to a util
-            if (
-              fileName.includes('/') ||
-              fileName.includes('\\') ||
-              fileName.includes('..') ||
-              fileName.includes(':') // Windows
-            ) {
-              setError('File name cannot include /, \\ , .. or :')
-              return
-            }
-            if (fileName.length) {
-              try {
-                const {
-                  data: { addProjectFile }
-                } = await addFile({
-                  variables: {
-                    projectId,
-                    fileUpload: new File(
-                      [fileContents],
-                      `${fileName}${CYPHER_FILE_EXTENSION}`
-                    ) // no destination; only saving to Project root at this point
-                  },
-                  update: (cache, result) =>
-                    updateCacheAddProjectFile(cache, result, projectId)
-                })
-                const addedFile = {
-                  name: addProjectFile.name,
-                  directory: addProjectFile.directory,
-                  extension: addProjectFile.extension
-                }
-                setSaveMode(false)
-                setFileName('')
-                setFileContents('')
-                setError('')
-                bus.send(SELECT_PROJECT_FILE, addedFile) // set ProjectFileButton to edit mode
-              } catch (e) {
-                console.log(e)
+        <StyledSaveArea>
+          <StyledHeaderText>Enter a file name</StyledHeaderText>
+          <StyledInputField
+            value={fileName}
+            onChange={event => {
+              setFileName(event.target.value)
+            }}
+          />
+          <StyledSubmitButton
+            onClick={async () => {
+              if (!fileName.length) {
+                setError('File name cannot be empty')
+                return
               }
-            }
-          }}
-        >
-          Save
-        </a>
-        <a
-          onClick={() => {
-            setSaveMode(false)
-            setError('')
-          }}
-        >
-          Cancel
-        </a>
+              // @todo: this needs more thought and extracting to a util
+              if (
+                fileName.includes('/') ||
+                fileName.includes('\\') ||
+                fileName.includes('..') ||
+                fileName.startsWith('.') ||
+                fileName.includes(':') // Windows
+              ) {
+                setError(
+                  "File name cannot include /, \\, .., : or start with '.'"
+                )
+                return
+              }
+              if (fileName.length) {
+                try {
+                  const {
+                    data: { addProjectFile }
+                  } = await addFile({
+                    variables: {
+                      projectId,
+                      fileUpload: new File(
+                        [fileContents],
+                        `${fileName}${CYPHER_FILE_EXTENSION}`
+                      ) // no destination; only saving to Project root at this point
+                    },
+                    update: (cache, result) =>
+                      updateCacheAddProjectFile(cache, result, projectId)
+                  })
+                  const addedFile = {
+                    name: addProjectFile.name,
+                    directory: addProjectFile.directory,
+                    extension: addProjectFile.extension
+                  }
+                  setSaveMode(false)
+                  setFileName('')
+                  setFileContents('')
+                  setError('')
+                  bus.send(SELECT_PROJECT_FILE, addedFile) // set ProjectFileButton to edit mode
+                } catch (e) {
+                  console.log(e)
+                }
+              }
+            }}
+          >
+            Save
+          </StyledSubmitButton>
+          <StyledCancelButton
+            onClick={() => {
+              setSaveMode(false)
+              setError('')
+            }}
+          >
+            Cancel
+          </StyledCancelButton>
+        </StyledSaveArea>
       </Render>
       <ProjectFilesError apolloErrors={[apolloError]} errors={[error]} />
       <ProjectFilesScripts />
