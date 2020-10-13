@@ -72,6 +72,9 @@ const Monaco = ({
     editor.defineTheme(DARK_THEME, monacoDarkTheme)
     editor.defineTheme(LIGHT_THEME, monacoLightTheme)
     editor.defineTheme(OUTLINE_THEME, monacoLightTheme)
+    // Browser's light theme is called 'normal', but OS's light theme is called 'light'
+    // 'light' is used when theme is set to light in OS and auto in browser
+    editor.defineTheme('light', monacoLightTheme)
 
     editorRef.current = editor.create(
       document.getElementById(monacoId) as HTMLElement,
