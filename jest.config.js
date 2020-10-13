@@ -15,17 +15,19 @@ module.exports = {
     '/node_modules/'
   ],
   transformIgnorePatterns: [
-    '/node_modules/(?!lodash-es|@neo4j/browser-lambda-parser|react-dnd|dnd-core)'
+    '/node_modules/(?!lodash-es|@neo4j/browser-lambda-parser|react-dnd|dnd-core|monaco-editor)'
   ],
   moduleNameMapper: {
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html)$':
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|html|css)$':
       '<rootDir>/test_utils/__mocks__/fileMock.js',
     '\\.(css|less)$': '<rootDir>/test_utils/__mocks__/styleMock.js',
     '^browser-styles(.*)$': '<rootDir>/src/browser/styles$1',
     '^browser-components(.*)$': '<rootDir>/src/browser/components$1',
     '^browser-hooks(.*)$': '<rootDir>/src/browser/hooks$1',
     'worker-loader': '<rootDir>/test_utils/__mocks__/workerLoaderMock.js',
-    'project-root(.*)$': '<rootDir>$1'
+    'project-root(.*)$': '<rootDir>$1',
+    '^monaco-editor$':
+      '<rootDir>/node_modules/monaco-editor/esm/vs/editor/editor.main.js'
   },
   modulePaths: ['<rootDir>/src', '<rootDir>/src/shared'],
   collectCoverageFrom: [

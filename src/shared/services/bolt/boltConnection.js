@@ -45,7 +45,12 @@ export const hasMultiDbSupport = async () => {
   return supportsMultiDb
 }
 
-const validateConnection = (driver, res, rej) => {
+export const validateConnection = (driver, res, rej) => {
+  if (driver === null) {
+    rej()
+    return
+  }
+
   driver
     .supportsMultiDb()
     .then(multiDbSupport => {

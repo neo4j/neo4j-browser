@@ -127,6 +127,7 @@ class FrameTemplate extends Component {
             numRecords={this.props.numRecords || 0}
             getRecords={this.props.getRecords}
             visElement={this.props.visElement}
+            runQuery={this.props.runQuery}
           />
         )}
         <StyledFrameBody

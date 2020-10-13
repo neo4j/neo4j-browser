@@ -18,15 +18,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// polyfill for jsdom (for tests only)
-// tests with codemirror breaks without it
-global.document.createRange = () => {
-  return {
-    setEnd: () => {},
-    setStart: () => {},
-    getBoundingClientRect: () => {},
-    getClientRects: () => []
-  }
-}
-// needed for jest to import monaco
-document.queryCommandSupported = () => false
+import React from 'react'
+import { render } from '@testing-library/react'
+import { Provider } from 'react-redux'
+import configureStore from 'redux-mock-store'
+
+import EditFrame from './EditFrame'
+import { Frame } from 'shared/modules/stream/streamDuck'
+
+describe('EditFrame', () => {
+  it('creates a monaco instance with a unique id based on frame id', () => {
+    const id = 'some-frame-id'
+    const frame = { id } as Frame
+    const { container } = render(
+      <Provider store={configureStore()({ settings: {} })}>
+        <EditFrame frame={frame} />
+      </Provider>
+    )
+    expect(container.querySelector(`#monaco-${id}`)).toBeDefined()
+  })
+})

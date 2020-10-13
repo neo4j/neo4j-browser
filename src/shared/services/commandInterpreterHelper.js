@@ -789,6 +789,19 @@ ${param}`)
     }
   },
   {
+    name: 'edit',
+    match: cmd => cmd.startsWith('edit'),
+    exec: (action, cmdchar, put) => {
+      put(
+        frames.add({
+          ...action,
+          query: action.cmd.split(':edit')[1].trim(),
+          type: 'edit'
+        })
+      )
+    }
+  },
+  {
     name: 'catch-all',
     match: () => true,
     exec: (action, cmdchar, put, store) => {

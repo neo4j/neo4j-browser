@@ -38,7 +38,7 @@ export const UNPIN = 'frames/UNPIN'
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
 export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 
-interface GlobalState {
+export interface GlobalState {
   [NAME]: FramesState
 }
 
@@ -209,7 +209,7 @@ interface FrameError {
 }
 
 // When more code is typed, frame should be a union type of different frames
-interface Frame {
+export interface Frame {
   autoCommit: boolean
   cmd: string
   connectionData: ConnectionData

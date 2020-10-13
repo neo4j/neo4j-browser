@@ -18,15 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// polyfill for jsdom (for tests only)
-// tests with codemirror breaks without it
-global.document.createRange = () => {
-  return {
-    setEnd: () => {},
-    setStart: () => {},
-    getBoundingClientRect: () => {},
-    getClientRects: () => []
-  }
-}
-// needed for jest to import monaco
-document.queryCommandSupported = () => false
+import { CypherTokensProvider } from './CypherTokensProvider'
+
+describe('CypherTokensProvider', () => {
+  it('takes a line of cypher and returns a set of tokens', () => {
+    const cypher = 'RETURN 1'
+
+    const expectedTokens = [
+      { scopes: 'return.cypher', startIndex: 0 },
+      { scopes: 'sp.cypher', startIndex: 6 },
+      { scopes: 'decimalinteger.cypher', startIndex: 7 }
+    ]
+
+    const actualTokens = new CypherTokensProvider().tokenize(cypher).tokens
+
+    expect(actualTokens).toEqual(expectedTokens)
+  })
+})

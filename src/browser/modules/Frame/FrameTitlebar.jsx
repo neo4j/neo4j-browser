@@ -23,6 +23,8 @@ import React, { Component } from 'react'
 import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
+import SVGInline from 'react-svg-inline'
+import controlsPlay from 'icons/controls-play.svg'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
@@ -37,14 +39,15 @@ import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
 import {
-  ExpandIcon,
-  ContractIcon,
-  RefreshIcon,
   CloseIcon,
-  UpIcon,
+  ContractIcon,
   DownIcon,
+  DownloadIcon,
+  ExpandIcon,
   PinIcon,
-  DownloadIcon
+  PlainPlayIcon,
+  RefreshIcon,
+  UpIcon
 } from 'browser-components/icons/Icons'
 import {
   DottedLineHover,
@@ -244,13 +247,20 @@ class FrameTitlebar extends Component {
           >
             {expandCollapseIcon}
           </FrameButton>
-          <FrameButton
-            data-testid="rerunFrameButton"
-            title="Rerun"
-            onClick={() => props.onReRunClick(frame)}
-          >
-            <RefreshIcon />
-          </FrameButton>
+          <Render if={frame.type === 'edit'}>
+            <FrameButton title="Run" onClick={() => props.onRunClick()}>
+              <SVGInline svg={controlsPlay} width="12px" />
+            </FrameButton>
+          </Render>
+          <Render if={frame.type !== 'edit'}>
+            <FrameButton
+              data-testid="rerunFrameButton"
+              title="Rerun"
+              onClick={() => props.onReRunClick(frame)}
+            >
+              <RefreshIcon />
+            </FrameButton>
+          </Render>
           <FrameButton
             title="Close"
             onClick={() =>
@@ -286,6 +296,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         await sleep(3000) // sleep for 3000 ms to let user read the cancel info
       }
       dispatch(remove(id))
+    },
+    onRunClick: () => {
+      ownProps.runQuery()
     },
     onReRunClick: ({ cmd, useDb, id, requestId }) => {
       if (requestId) {

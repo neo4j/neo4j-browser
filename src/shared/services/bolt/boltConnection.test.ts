@@ -18,15 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// polyfill for jsdom (for tests only)
-// tests with codemirror breaks without it
-global.document.createRange = () => {
-  return {
-    setEnd: () => {},
-    setStart: () => {},
-    getBoundingClientRect: () => {},
-    getClientRects: () => []
-  }
-}
-// needed for jest to import monaco
-document.queryCommandSupported = () => false
+import { validateConnection } from './boltConnection'
+
+describe('validateConnection', () => {
+  it('should reject if driver is `null`', () => {
+    // validate can be called before driver is in store, which used to result in a `TypeError: Cannot read property 'supportsMultiDb' of null` error,
+    // reject if driver is null is a fix to not have that error in console
+    const driver = null
+    const resolve = jest.fn()
+    const reject = jest.fn()
+
+    validateConnection(driver, resolve, reject)
+
+    expect(resolve).not.toHaveBeenCalled()
+    expect(reject).toHaveBeenCalled()
+  })
+})

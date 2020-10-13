@@ -18,15 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// polyfill for jsdom (for tests only)
-// tests with codemirror breaks without it
-global.document.createRange = () => {
-  return {
-    setEnd: () => {},
-    setStart: () => {},
-    getBoundingClientRect: () => {},
-    getClientRects: () => []
-  }
-}
-// needed for jest to import monaco
-document.queryCommandSupported = () => false
+import React from 'react'
+import { fireEvent, render } from '@testing-library/react'
+
+import Monaco from './Monaco'
+
+describe('Monaco', () => {
+  it('renders a component that functions as a textbox', () => {
+    const { getByRole, queryByDisplayValue } = render(<Monaco />)
+
+    const value = 'hello world'
+    fireEvent.input(getByRole('textbox'), { target: { value } })
+
+    expect(queryByDisplayValue(value)).toBeDefined()
+  })
+})
