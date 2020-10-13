@@ -121,7 +121,7 @@ export const UIControls = styled.div`
 `
 
 export const FrameHeaderText = styled.div`
-  color: white;
+  color: ${props => props.theme.secondaryText};
   font-family: 'Fira Code', 'Monaco', 'Lucida Console', Courier, monospace;
   font-size: 1.2em;
   line-height: 2.2em;
