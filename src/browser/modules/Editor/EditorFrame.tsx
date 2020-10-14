@@ -19,6 +19,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react'
+import SVGInline from 'react-svg-inline'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { useMutation } from '@apollo/client'
@@ -53,11 +54,21 @@ import {
 } from 'browser-components/icons/Icons'
 import update_file from 'icons/update_file.svg'
 import update_favorite from 'icons/update_favorite.svg'
+import file from 'icons/file.svg'
 import controlsPlay from 'icons/controls-play.svg'
 import Editor from './Editor'
 import { ADD_PROJECT_FILE } from 'browser/modules/Sidebar/project-files.constants'
 import { isWindows } from '../App/keyboardShortcuts'
 import { setProjectFileDefaultFileName } from 'browser/modules/Sidebar/project-files.utils'
+function favoriteName(cmd: string) {
+  const firstLine = cmd.split('\n')[0]
+
+  if (firstLine.startsWith('//')) {
+    return firstLine.slice(2)
+  } else {
+    return firstLine
+  }
+}
 
 type EditorFrameProps = {
   bus: Bus
@@ -168,10 +179,14 @@ export function EditorFrame({
       {currentlyEditing && (
         <animated.div style={props}>
           <ScriptTitle unsaved={unsaved}>
-            Editing{' '}
-            {currentlyEditing.isProjectFile ? 'project file: ' : 'favorite: '}
-            {currentlyEditing.name ||
-              setProjectFileDefaultFileName(currentlyEditing.content)}
+            <SVGInline
+              svg={currentlyEditing.isProjectFile ? file : update_favorite}
+              width="12px"
+            />
+            {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
+            {currentlyEditing.name || currentlyEditing.isProjectFile
+              ? setProjectFileDefaultFileName(currentlyEditing.content)
+              : favoriteName(currentlyEditing.content)}
             {unsaved ? '*' : ''}
           </ScriptTitle>
         </animated.div>

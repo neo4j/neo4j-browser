@@ -2185,6 +2185,13 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
+"@types/react-svg-inline@^2.1.1":
+  version "2.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-svg-inline/-/react-svg-inline-2.1.1.tgz#29a9b22fc3445f1fd6549405daee48e07aa2c120"
+  integrity sha1-KamyL8NEXx/WVJQF2u5I4HqiwSA=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-test-renderer@*":
   version "16.9.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-test-renderer/-/react-test-renderer-16.9.3.tgz#96bab1860904366f4e848b739ba0e2f67bcae87e"
