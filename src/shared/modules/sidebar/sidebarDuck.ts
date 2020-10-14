@@ -35,8 +35,18 @@ export function getCurrentDraft(state: GlobalState): string | null {
 }
 
 // SIDEBAR
+type DrawerId =
+  | 'dbms'
+  | 'db'
+  | 'documents'
+  | 'sync'
+  | 'favorites'
+  | 'about'
+  | 'project files'
+  | 'settings'
+  | null
 interface SidebarState {
-  drawer: string | null
+  drawer: DrawerId | null
   draftScript: string | null
 }
 const initialState: SidebarState = {
@@ -44,7 +54,7 @@ const initialState: SidebarState = {
   draftScript: null
 }
 
-function toggleDrawer(state: SidebarState, drawer: string): SidebarState {
+function toggleDrawer(state: SidebarState, drawer: DrawerId): SidebarState {
   // When toggling the drawer we clear the script draft
   if (drawer === state.drawer) {
     return { draftScript: null, drawer: null }
@@ -56,13 +66,13 @@ type SidebarAction = ToggleAction | SetDraftScriptAction
 
 interface ToggleAction {
   type: typeof TOGGLE
-  drawerId: string
+  drawerId: DrawerId
 }
 
 interface SetDraftScriptAction {
   type: typeof SET_DRAFT_SCRIPT
   cmd: string | null
-  drawerId: string
+  drawerId: DrawerId
 }
 
 export default function reducer(
@@ -78,13 +88,13 @@ export default function reducer(
   return state
 }
 
-export function toggle(drawerId: string): ToggleAction {
+export function toggle(drawerId: DrawerId): ToggleAction {
   return { type: TOGGLE, drawerId }
 }
 
 export function setDraftScript(
   cmd: string | null,
-  drawerId: string
+  drawerId: DrawerId
 ): SetDraftScriptAction {
   return { type: SET_DRAFT_SCRIPT, cmd, drawerId }
 }
