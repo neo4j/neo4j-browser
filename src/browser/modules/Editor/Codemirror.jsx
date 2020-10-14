@@ -117,9 +117,12 @@ export default class CodeMirror extends Component {
     this.debouncedOnParse()
   }
 
-  codemirrorValueChanges = (doc, change) => {
-    if (this.props.onChanges && change.origin !== 'setValue') {
-      this.props.onChanges(doc.getValue(), change)
+  codemirrorValueChanges = (doc, changes) => {
+    if (
+      this.props.onChanges &&
+      changes.some(change => change.origin !== 'setValue')
+    ) {
+      this.props.onChanges(doc.getValue(), changes)
     }
   }
 

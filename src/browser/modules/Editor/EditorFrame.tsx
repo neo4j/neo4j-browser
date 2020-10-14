@@ -206,7 +206,9 @@ export function EditorFrame({
           <EditorContainer>
             <TypedEditor
               editorRef={editorRef}
-              onChange={() => setUnsaved(true)}
+              onChange={() => {
+                setUnsaved(true)
+              }}
               runCommand={runCommand}
             />
           </EditorContainer>
