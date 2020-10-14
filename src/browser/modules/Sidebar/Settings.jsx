@@ -88,13 +88,6 @@ const visualSettings = [
     title: 'Preferences',
     settings: [
       {
-        showSampleScripts: {
-          displayName: 'Show sample scripts',
-          tooltip: 'Show sample scripts in favorites drawer.',
-          type: 'checkbox'
-        }
-      },
-      {
         initCmd: {
           displayName: 'Initial command to execute',
           tooltip: 'This commands is executed once connected to a graph.',
