@@ -37,28 +37,31 @@ describe('Play command', () => {
     let frame = cy.getFrames()
 
     // Make sure first loads
-    frame.should('have.length', 1).should('contain', 'Learn about Neo4j')
+    frame
+      .should('have.length', 1)
+      .should('contain', 'Getting started with Neo4j Browser')
 
     // Click a guide button
-    frame.contains('Start Learning').click()
+    frame.contains('Get started').click()
 
     frame = cy.getFrames()
 
     // Make sure it loads in same frame
-    frame.should('have.length', 1).should('contain', 'Graph Fundamentals')
+    frame.should('have.length', 1).should('contain', 'Introduction')
 
     // Click back in stack
     cy.getPrevInFrameStackBtn().click()
     frame = cy.getFrames()
 
     // Make sure we're back
-    frame.should('have.length', 1).should('contain', 'Learn about Neo4j')
+    frame
+      .should('have.length', 1)
+      .should('contain', 'Getting started with Neo4j Browser')
 
     // Go to next again
     cy.getNextInFrameStackBtn().click()
 
     // Click forward 7 times (to last slide)
-    nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
@@ -70,15 +73,14 @@ describe('Play command', () => {
     frame.should('have.length', 1).should('contain', 'Keep getting started')
 
     // Click new guide
-    frame.contains('The Movie Graph').click()
+    frame.contains('Play Cypher').click()
     frame = cy.getFrames()
 
-    frame.should('have.length', 1).should('contain', 'Pop-cultural connections')
+    frame.should('have.length', 1).should('contain', 'SQL-like clauses')
 
     // Then click back in stack once
     cy.getPrevInFrameStackBtn().click()
     // Click to last slide again
-    nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
@@ -92,8 +94,8 @@ describe('Play command', () => {
     cy.getNextInFrameStackBtn().click()
     frame = cy.getFrames()
 
-    // And we should be back on the movie
-    frame.should('have.length', 1).should('contain', 'Pop-cultural connections')
+    // And we should be back play cypher
+    frame.should('have.length', 1).should('contain', 'SQL-like clauses')
   })
   it('can execute remote types of `:play`', () => {
     cy.executeCommand(':clear')
@@ -130,7 +132,7 @@ describe('Play command', () => {
 
     cy.getFrames()
       .should('have.length', 1)
-      .should('contain', 'Not found')
+      .should('contain', 'No guide')
   })
   it('populates editor on code click', () => {
     cy.executeCommand(':clear')
