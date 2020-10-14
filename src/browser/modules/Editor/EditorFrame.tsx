@@ -60,10 +60,8 @@ import run from 'icons/run.svg'
 import Editor from './Editor'
 import { ADD_PROJECT_FILE } from 'browser/modules/Sidebar/project-files.constants'
 import { isWindows } from '../App/keyboardShortcuts'
-import {
-  setProjectFileDefaultFileName,
-  defaultFavoriteName
-} from 'browser/modules/Sidebar/project-files.utils'
+import { setProjectFileDefaultFileName } from 'browser/modules/Sidebar/project-files.utils'
+import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 
 type EditorFrameProps = {
   bus: Bus

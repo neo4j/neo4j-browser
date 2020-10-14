@@ -115,17 +115,6 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
     .replace(/-$/, '') // remove dash from end of line
 }
 
-// favorite default names have less restrictions than file names
-export function defaultFavoriteName(cmd: string): string {
-  const firstLine = cmd.split('\n')[0]
-
-  if (firstLine.startsWith('//')) {
-    return firstLine.slice(2)
-  } else {
-    return firstLine
-  }
-}
-
 const readCacheQuery = (
   cache: ApolloCache<NormalizedCacheObject>,
   projectId: string

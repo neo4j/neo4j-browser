@@ -45,7 +45,7 @@ import {
   setDraftScript
 } from 'shared/modules/sidebar/sidebarDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
-import { defaultFavoriteName } from 'browser/modules/Sidebar/project-files.utils'
+import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 
 import {
   DatabaseIcon,
