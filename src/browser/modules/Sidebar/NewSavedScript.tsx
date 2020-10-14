@@ -17,23 +17,14 @@
 
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-const StyledForm = styled.form`
-  color: black;
-  padding-left: 25px;
-  margin-bottom: 20px;
-  display: flex;
-  font-size: 16px;
-`
 
+// @todo: Styled elements temporary until next set of work goes in
 const StyledHeaderText = styled.div`
   font-family: 'Open Sans';
   color: white;
 `
+
 const StyledInputField = styled.input`
-  margin-left: 8px;
-  margin-bottom: -3px;
-  border: none;
-  border-radius: 3px 0 0 3px;
   height: 25px;
   width: 140px;
 `
@@ -42,11 +33,30 @@ const StyledSubmitButton = styled.button`
   color: #fff;
   background-color: #428bca;
   border: none;
-  border-radius: 0 3px 3px 0;
+  border-radius: 3px;
   padding: 3px;
   font-weight: 500;
   font-size: 14px;
   height: 25px;
+  margin: 5px 0 0 5px;
+`
+
+const StyledCancelButton = styled.button`
+  color: #fff;
+  background-color: #e74c3c;
+  border: none;
+  border-radius: 3px;
+  padding: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  height: 25px;
+  margin: 5px 0 0 5px;
+`
+
+const StyledSaveArea = styled.form`
+  color: black;
+  padding-left: 25px;
+  margin-bottom: 20px;
 `
 
 interface NewSavedScriptProps {
@@ -78,13 +88,16 @@ function NewSavedScript({
 
   return shouldShow ? (
     <>
-      <StyledForm onSubmit={formSubmit}>
+      <StyledSaveArea onSubmit={formSubmit}>
         <StyledHeaderText> {headerText} </StyledHeaderText>
         <StyledInputField value={name} onChange={onChange} />
         <StyledSubmitButton data-testid="saveScript" type="submit">
-          save
+          Save
         </StyledSubmitButton>
-      </StyledForm>
+        <StyledCancelButton onClick={() => setShouldShow(false)}>
+          Cancel
+        </StyledCancelButton>
+      </StyledSaveArea>
     </>
   ) : (
     <span />
