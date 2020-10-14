@@ -60,16 +60,10 @@ import run from 'icons/run.svg'
 import Editor from './Editor'
 import { ADD_PROJECT_FILE } from 'browser/modules/Sidebar/project-files.constants'
 import { isWindows } from '../App/keyboardShortcuts'
-import { setProjectFileDefaultFileName } from 'browser/modules/Sidebar/project-files.utils'
-function favoriteName(cmd: string) {
-  const firstLine = cmd.split('\n')[0]
-
-  if (firstLine.startsWith('//')) {
-    return firstLine.slice(2)
-  } else {
-    return firstLine
-  }
-}
+import {
+  setProjectFileDefaultFileName,
+  defaultFavoriteName
+} from 'browser/modules/Sidebar/project-files.utils'
 
 type EditorFrameProps = {
   bus: Bus
@@ -183,7 +177,7 @@ export function EditorFrame({
       return setProjectFileDefaultFileName(content)
     }
 
-    return favoriteName(content)
+    return defaultFavoriteName(content)
   }
 
   return (

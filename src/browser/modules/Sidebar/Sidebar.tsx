@@ -44,16 +44,7 @@ import {
   setDraftScript
 } from 'shared/modules/sidebar/sidebarDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
-
-function favoriteName(cmd: string) {
-  const firstLine = cmd.split('\n')[0]
-
-  if (firstLine.startsWith('//')) {
-    return firstLine.slice(2)
-  } else {
-    return firstLine
-  }
-}
+import { defaultFavoriteName } from 'browser/modules/Sidebar/project-files.utils'
 
 import {
   DatabaseIcon,
@@ -117,7 +108,7 @@ const Sidebar = ({
               <NewSavedScript
                 onSubmit={input => {
                   const draft = scriptDraft || ''
-                  if (input === favoriteName(draft)) {
+                  if (input === defaultFavoriteName(draft)) {
                     addFavorite(draft)
                   } else {
                     const alreadyHasName = draft.startsWith('//')
@@ -132,7 +123,7 @@ const Sidebar = ({
                   }
                   resetDraft()
                 }}
-                defaultName={favoriteName(scriptDraft || '')}
+                defaultName={defaultFavoriteName(scriptDraft || '')}
                 headerText={'Save as'}
                 onCancel={resetDraft}
               />

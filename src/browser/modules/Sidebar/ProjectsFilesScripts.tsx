@@ -169,7 +169,6 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
     scripts: projectFiles,
     isProjectFiles: true,
     scriptsNamespace: DOT,
-    title: 'Cypher files',
     onRemoveScript: async (favorite: Favorite) => {
       const directory =
         favorite.path.length == 1 && favorite.path === DOT
