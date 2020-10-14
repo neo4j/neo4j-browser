@@ -63,6 +63,7 @@ import {
   EXECUTE_COMMAND_ORIGIN,
   EXECUTE_COMMAND_ORIGINS
 } from 'browser/modules/Sidebar/project-files.constants'
+import { isRelateAvailable } from 'src-root/shared/modules/app/appDuck'
 
 export const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -461,10 +462,6 @@ export class Editor extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFavoriteUpdateClick: (id, cmd) => {
-      const action = favorites.updateFavorite(id, cmd)
-      ownProps.bus.send(action.type, action)
-    },
     onExecute: cmd => {
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
@@ -478,7 +475,6 @@ const mapStateToProps = state => {
     enableEditorAutocomplete: shouldEditorAutocomplete(state),
     enableEditorLint: shouldEditorLint(state),
     history: getHistory(state),
-    cmdchar: getCmdChar(state),
     schema: {
       parameters: Object.keys(state.params),
       labels: state.meta.labels.map(schemaConvert.toLabel),
@@ -493,10 +489,7 @@ const mapStateToProps = state => {
       procedures: state.meta.procedures.map(schemaConvert.toProcedure)
     },
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
-    isRelateAvailable:
-      state.app.relateUrl &&
-      state.app.relateApiToken &&
-      state.app.neo4jDesktopProjectId
+    isRelateAvailable: isRelateAvailable(state)
   }
 }
 
