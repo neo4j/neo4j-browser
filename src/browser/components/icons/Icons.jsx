@@ -46,6 +46,7 @@ import update_file from 'icons/update_file.svg'
 import save_file from 'icons/save_file.svg'
 import update_favorite from 'icons/update_favorite.svg'
 import save_favorite from 'icons/save_favorite.svg'
+import help from 'icons/help.svg'
 
 const inactive = `
   color: #797979;
@@ -147,7 +148,7 @@ export const DocumentsIcon = props => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
-    icon={bookSearch}
+    icon={help}
     width={28}
     {...props}
   />

@@ -185,6 +185,25 @@ class FrameTitlebar extends Component {
           </DottedLineHover>
         </StyledFrameCommand>
         <StyledFrameTitlebarButtonSection>
+          <FrameButton
+            title="Save as Favorite"
+            data-testid="frame-Favorite"
+            onClick={() => {
+              props.newFavorite(frame.cmd)
+            }}
+          >
+            <SaveFavorite width={12} />
+          </FrameButton>
+          <Render if={props.isRelateAvailable}>
+            <FrameButton
+              title="Save as project file"
+              onClick={() => {
+                props.newProjectFile(frame.cmd)
+              }}
+            >
+              <SaveFile width={12} />
+            </FrameButton>
+          </Render>
           <Render if={this.canExport()}>
             <DropdownButton data-testid="frame-export-dropdown">
               <DownloadIcon />
@@ -226,25 +245,6 @@ class FrameTitlebar extends Component {
                 </DropdownContent>
               </DropdownList>
             </DropdownButton>
-          </Render>
-          <FrameButton
-            title="Save as Favorite"
-            data-testid="frame-Favorite"
-            onClick={() => {
-              props.newFavorite(frame.cmd)
-            }}
-          >
-            <SaveFavorite width={12} />
-          </FrameButton>
-          <Render if={props.isRelateAvailable}>
-            <FrameButton
-              title="Save as project file"
-              onClick={() => {
-                props.newProjectFile(frame.cmd)
-              }}
-            >
-              <SaveFile width={12} />
-            </FrameButton>
           </Render>
           <FrameButton
             title="Pin at top"
