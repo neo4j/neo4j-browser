@@ -42,6 +42,13 @@ jest.mock(
     }
 )
 jest.mock(
+  '../Editor/EditorFrame',
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
+)
+jest.mock(
   '../Stream/Stream',
   () =>
     function EmptyDiv() {
