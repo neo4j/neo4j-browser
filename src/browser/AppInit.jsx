@@ -114,6 +114,13 @@ const apolloCache = new InMemoryCache({
   typePolicies: {
     RelateFile: {
       keyFields: ['name', 'directory']
+    },
+    Project: {
+      fields: {
+        files: {
+          merge: false // prefer incoming over existing data.
+        }
+      }
     }
   }
 })
