@@ -51,6 +51,8 @@ const ProjectFiles = ({ projectId, scriptDraft, resetDraft }: ProjectFiles) => {
       setError('File name cannot be empty')
       return
     }
+
+    // @todo: this needs more thought and extracting to a util
     if (
       fileName.includes('/') ||
       fileName.includes('\\') ||
