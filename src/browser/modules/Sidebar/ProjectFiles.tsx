@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useState } from 'react'
+import React, { useState, Dispatch } from 'react'
+import { Action } from 'redux'
 import { connect } from 'react-redux'
 import { useMutation } from '@apollo/client'
 import { getProjectId } from 'shared/modules/app/appDuck'
@@ -102,7 +103,7 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     resetDraft: () => {
       dispatch(setDraftScript(null, 'project files'))

@@ -15,7 +15,8 @@
  *
  */
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Dispatch } from 'react'
+import { Action } from 'redux'
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 import MyScripts from '@relate-by-ui/saved-scripts'
@@ -234,7 +235,7 @@ const mapFavoritesStateToProps = (state: any) => {
 }
 
 const mapFavoritesDispatchToProps = (
-  dispatch: any,
+  dispatch: Dispatch<Action>,
   ownProps: { bus: Bus }
 ) => ({
   onExecScript: (favorite: Favorite) => {

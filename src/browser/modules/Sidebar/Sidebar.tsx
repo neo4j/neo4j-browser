@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { ReactFragment, ReactElement } from 'react'
+import React, { ReactFragment, ReactElement, Dispatch } from 'react'
+import { Action } from 'redux'
 import uuid from 'uuid'
 import { connect } from 'react-redux'
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
@@ -225,7 +226,7 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     addFavorite: (cmd: string) => {
       dispatch(addFavorite(cmd, uuid.v4()))
