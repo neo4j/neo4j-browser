@@ -174,6 +174,17 @@ export function EditorFrame({
     setCurrentlyEditing(null)
   }
 
+  function getName({ name, content, isProjectFile }: SavedScript) {
+    if (name) {
+      return name
+    }
+    if (isProjectFile) {
+      return setProjectFileDefaultFileName(content)
+    }
+
+    return favoriteName(content)
+  }
+
   return (
     <Frame fullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
@@ -184,9 +195,7 @@ export function EditorFrame({
               width="12px"
             />
             {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
-            {currentlyEditing.name || currentlyEditing.isProjectFile
-              ? setProjectFileDefaultFileName(currentlyEditing.content)
-              : favoriteName(currentlyEditing.content)}
+            {getName(currentlyEditing)}
             {unsaved ? '*' : ''}
           </ScriptTitle>
         </animated.div>
