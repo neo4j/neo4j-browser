@@ -31,13 +31,15 @@ import {
 } from './project-files.utils'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import { ADD_PROJECT_FILE } from './project-files.constants'
+import { setDraftScript } from 'src-root/shared/modules/sidebar/sidebarDuck'
 
 interface ProjectFiles {
   projectId: string
   scriptDraft: string
+  resetDraft: () => void
 }
 
-const ProjectFiles = ({ projectId, scriptDraft }: ProjectFiles) => {
+const ProjectFiles = ({ projectId, scriptDraft, resetDraft }: ProjectFiles) => {
   const [addFile, { error: apolloError }] = useMutation(ADD_PROJECT_FILE)
   const [error, setError] = useState('')
 
@@ -64,17 +66,22 @@ const ProjectFiles = ({ projectId, scriptDraft }: ProjectFiles) => {
       },
       update: (cache, result) =>
         updateCacheAddProjectFile(cache, result, projectId)
-    }).catch(e => e)
+    })
+      .then(resetDraft)
+      .catch(e => e)
   }
 
   return (
     <Drawer id="db-project-files">
       <DrawerHeader>Project Files</DrawerHeader>
-      <NewSavedScript
-        defaultName={setProjectFileDefaultFileName(scriptDraft)}
-        headerText="Save as"
-        onSubmit={save}
-      />
+      {scriptDraft && (
+        <NewSavedScript
+          defaultName={setProjectFileDefaultFileName(scriptDraft)}
+          headerText="Save as"
+          onSubmit={save}
+          onCancel={resetDraft}
+        />
+      )}
       <ProjectFilesError apolloErrors={[apolloError]} errors={[error]} />
       <ProjectFilesScripts />
     </Drawer>
@@ -87,4 +94,12 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default connect(mapStateToProps)(ProjectFiles)
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    resetDraft: () => {
+      dispatch(setDraftScript(null, 'project files'))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectFiles)

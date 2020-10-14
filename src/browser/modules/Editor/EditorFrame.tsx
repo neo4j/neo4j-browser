@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, Dispatch, useEffect, useRef } from 'react'
+import { Action } from 'redux'
 import SVGInline from 'react-svg-inline'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
@@ -274,7 +275,8 @@ export function EditorFrame({
 const mapStateToProps = (state: any) => {
   return { projectId: getProjectId(state) }
 }
-const mapDispatchToProps = (dispatch: any) => {
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     updateFavorite: (id: string, cmd: string) => {
       dispatch(updateFavorite(id, cmd))

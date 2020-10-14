@@ -39,7 +39,10 @@ import {
   CONNECTED_STATE,
   DISCONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
-import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
+import {
+  getCurrentDraft,
+  setDraftScript
+} from 'shared/modules/sidebar/sidebarDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
 
 function favoriteName(cmd: string) {
@@ -70,6 +73,7 @@ interface SidebarProps {
   loadSync: boolean
   isRelateAvailable: boolean
   addFavorite: (cmd: string) => void
+  resetDraft: () => void
   scriptDraft: string | null
 }
 
@@ -81,7 +85,8 @@ const Sidebar = ({
   loadSync,
   isRelateAvailable,
   addFavorite,
-  scriptDraft
+  scriptDraft,
+  resetDraft
 }: SidebarProps) => {
   const topNavItemsList = [
     {
@@ -108,26 +113,30 @@ const Sidebar = ({
         return (
           <>
             <DrawerHeader>Favorites</DrawerHeader>
-            <NewSavedScript
-              onSubmit={input => {
-                const draft = scriptDraft || ''
-                if (input === favoriteName(draft)) {
-                  addFavorite(draft)
-                } else {
-                  const alreadyHasName = draft.startsWith('//')
-                  const replaceName = [
-                    `// ${input}`,
-                    draft.split('\n').slice(1)
-                  ].join('\n')
+            {scriptDraft && (
+              <NewSavedScript
+                onSubmit={input => {
+                  const draft = scriptDraft || ''
+                  if (input === favoriteName(draft)) {
+                    addFavorite(draft)
+                  } else {
+                    const alreadyHasName = draft.startsWith('//')
+                    const replaceName = [
+                      `// ${input}`,
+                      draft.split('\n').slice(1)
+                    ].join('\n')
 
-                  addFavorite(
-                    alreadyHasName ? replaceName : `//${input}\n${draft}`
-                  )
-                }
-              }}
-              defaultName={favoriteName(scriptDraft || '')}
-              headerText={'Save as'}
-            />
+                    addFavorite(
+                      alreadyHasName ? replaceName : `//${input}\n${draft}`
+                    )
+                  }
+                  resetDraft()
+                }}
+                defaultName={favoriteName(scriptDraft || '')}
+                headerText={'Save as'}
+                onCancel={resetDraft}
+              />
+            )}
             <Favorites />
           </>
         )
@@ -227,6 +236,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     addFavorite: (cmd: string) => {
       dispatch(addFavorite(cmd, uuid.v4()))
+    },
+    resetDraft: () => {
+      dispatch(setDraftScript(null, 'favorites'))
     }
   }
 }

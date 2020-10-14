@@ -15,7 +15,7 @@
  *
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 // @todo: Styled elements temporary until next set of work goes in
@@ -61,6 +61,7 @@ const StyledSaveArea = styled.form`
 
 interface NewSavedScriptProps {
   onSubmit: (name: string) => void
+  onCancel: () => void
   defaultName: string
   headerText: string
 }
@@ -68,39 +69,29 @@ interface NewSavedScriptProps {
 function NewSavedScript({
   onSubmit,
   defaultName,
-  headerText
+  headerText,
+  onCancel
 }: NewSavedScriptProps): JSX.Element {
   const [name, setName] = useState(defaultName)
-  const [shouldShow, setShouldShow] = useState(!!defaultName)
-  useEffect(() => {
-    setShouldShow(!!defaultName)
-  }, [defaultName])
 
   function formSubmit(e: React.FormEvent) {
     e.preventDefault()
     onSubmit(name)
-    setShouldShow(false)
   }
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setName(e.target.value)
   }
 
-  return shouldShow ? (
-    <>
-      <StyledSaveArea onSubmit={formSubmit}>
-        <StyledHeaderText> {headerText} </StyledHeaderText>
-        <StyledInputField value={name} onChange={onChange} />
-        <StyledSubmitButton data-testid="saveScript" type="submit">
-          Save
-        </StyledSubmitButton>
-        <StyledCancelButton onClick={() => setShouldShow(false)}>
-          Cancel
-        </StyledCancelButton>
-      </StyledSaveArea>
-    </>
-  ) : (
-    <span />
+  return (
+    <StyledSaveArea onSubmit={formSubmit}>
+      <StyledHeaderText> {headerText} </StyledHeaderText>
+      <StyledInputField value={name} onChange={onChange} />
+      <StyledSubmitButton data-testid="saveScript" type="submit">
+        Save
+      </StyledSubmitButton>
+      <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>
+    </StyledSaveArea>
   )
 }
 

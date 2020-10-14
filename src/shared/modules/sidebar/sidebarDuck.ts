@@ -61,7 +61,7 @@ interface ToggleAction {
 
 interface SetDraftScriptAction {
   type: typeof SET_DRAFT_SCRIPT
-  cmd: string
+  cmd: string | null
   drawerId: string
 }
 
@@ -83,7 +83,7 @@ export function toggle(drawerId: string): ToggleAction {
 }
 
 export function setDraftScript(
-  cmd: string,
+  cmd: string | null,
   drawerId: string
 ): SetDraftScriptAction {
   return { type: SET_DRAFT_SCRIPT, cmd, drawerId }
