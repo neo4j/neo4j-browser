@@ -181,7 +181,7 @@ Third-party licenses
 │  │  └─ URL: https://github.com/neo4j-apps/relate-by-ui
 │  ├─ @relate-by-ui/relatable@1.0.1
 │  │  └─ URL: https://github.com/neo4j-apps/relatable
-│  ├─ @relate-by-ui/saved-scripts@1.0.4
+│  ├─ @relate-by-ui/saved-scripts@1.0.5
 │  │  └─ URL: https://github.com/neo4j-apps/relate-by-ui
 │  ├─ aws-sign2@0.7.0
 │  │  ├─ URL: https://github.com/mikeal/aws-sign
@@ -316,6 +316,9 @@ Third-party licenses
 │  ├─ @protobufjs/utf8@1.1.0
 │  │  ├─ URL: https://github.com/dcodeIO/protobuf.js.git
 │  │  └─ VendorName: Daniel Wirtz
+│  ├─ antlr4@4.8.0
+│  │  ├─ URL: https://github.com/antlr/antlr4.git
+│  │  └─ VendorUrl: https://github.com/antlr/antlr4
 │  ├─ bcrypt-pbkdf@1.0.2
 │  │  └─ URL: git://github.com/joyent/node-bcrypt-pbkdf.git
 │  ├─ buffer-equal-constant-time@1.0.1
@@ -1300,6 +1303,9 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/substack/minimist.git
 │  │  ├─ VendorName: James Halliday
 │  │  └─ VendorUrl: https://github.com/substack/minimist
+│  ├─ monaco-editor@0.20.0
+│  │  ├─ URL: https://github.com/Microsoft/monaco-editor
+│  │  └─ VendorName: Microsoft Corporation
 │  ├─ ms@2.1.2
 │  │  └─ URL: https://github.com/zeit/ms.git
 │  ├─ nearley@2.18.0
