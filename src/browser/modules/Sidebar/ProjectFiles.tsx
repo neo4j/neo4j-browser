@@ -51,8 +51,14 @@ const ProjectFiles = ({ projectId, scriptDraft, resetDraft }: ProjectFiles) => {
       setError('File name cannot be empty')
       return
     }
-    if (fileName.includes('/') || fileName.includes('\\')) {
-      setError('File name cannot include / or \\')
+    if (
+      fileName.includes('/') ||
+      fileName.includes('\\') ||
+      fileName.includes('..') ||
+      fileName.startsWith('.') ||
+      fileName.includes(':') // Windows
+    ) {
+      setError("File name cannot include /, \\, .., : or start with '.'")
       return
     }
 
