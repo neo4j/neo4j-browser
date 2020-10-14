@@ -45,7 +45,7 @@ type DrawerId =
   | 'project files'
   | 'settings'
   | null
-interface SidebarState {
+export interface SidebarState {
   drawer: DrawerId | null
   draftScript: string | null
 }

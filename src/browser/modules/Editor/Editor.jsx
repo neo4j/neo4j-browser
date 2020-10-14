@@ -63,7 +63,7 @@ import {
   EXECUTE_COMMAND_ORIGIN,
   EXECUTE_COMMAND_ORIGINS
 } from 'browser/modules/Sidebar/project-files.constants'
-import { isRelateAvailable } from 'src-root/shared/modules/app/appDuck'
+import { isRelateAvailable } from 'shared/modules/app/appDuck'
 
 export const shouldCheckForHints = code =>
   code.trim().length > 0 &&

@@ -32,7 +32,7 @@ import {
 } from './project-files.utils'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import { ADD_PROJECT_FILE } from './project-files.constants'
-import { setDraftScript } from 'src-root/shared/modules/sidebar/sidebarDuck'
+import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
 
 interface ProjectFiles {
   projectId: string

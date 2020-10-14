@@ -27,9 +27,27 @@ import Main from './Main'
 const mockStore = configureMockStore()
 const store = mockStore({})
 
-jest.mock('../Stream/auto-exec-button', () => () => <div></div>)
-jest.mock('../Editor/Editor', () => () => <div></div>)
-jest.mock('../Stream/Stream', () => () => <div></div>)
+jest.mock(
+  '../Stream/auto-exec-button',
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
+)
+jest.mock(
+  '../Editor/Editor',
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
+)
+jest.mock(
+  '../Stream/Stream',
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
+)
 
 describe('<Main />', () => {
   it('should display an ErrorBanner when useDb is not in databases list', () => {

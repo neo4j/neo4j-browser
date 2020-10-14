@@ -18,48 +18,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import reducer, * as sidebar from './sidebarDuck'
+import reducer, { SidebarState, toggle, setDraftScript } from './sidebarDuck'
 
 describe('sidebarDuck', () => {
   test('should open a drawer when closed', () => {
-    const action = sidebar.toggle('db')
+    const action = toggle('db')
 
     const nextState = reducer(undefined, action)
     expect(nextState).toEqual({ drawer: 'db', draftScript: null })
   })
 
   test('should switch drawer when a different one already is open', () => {
-    const initialState = {
+    const initialState: SidebarState = {
       drawer: 'favorites',
       draftScript: null
     }
-    const action = sidebar.toggle('db')
+    const action = toggle('db')
     const nextState = reducer(initialState, action)
     expect(nextState.drawer).toEqual('db')
   })
 
   test('should close drawer when the opened one is toggled', () => {
-    const initialState = {
+    const initialState: SidebarState = {
       drawer: 'db',
       draftScript: null
     }
-    const action = sidebar.toggle('db')
+    const action = toggle('db')
     const nextState = reducer(initialState, action)
     expect(nextState.drawer).toEqual(null)
   })
 
   test('should support setting a draft script', () => {
-    const action = sidebar.setDraftScript('test', 'favorites')
+    const action = setDraftScript('test', 'favorites')
     const nextState = reducer(undefined, action)
     expect(nextState.draftScript).toEqual('test')
   })
 
   test('clears draft script when toggled', () => {
-    const action = sidebar.setDraftScript('test', 'favorites')
+    const action = setDraftScript('test', 'favorites')
     const nextState = reducer(undefined, action)
     expect(nextState.draftScript).toEqual('test')
 
-    const toggleAction = sidebar.toggle('favorites')
+    const toggleAction = toggle('favorites')
     const lastState = reducer(nextState, toggleAction)
     expect(lastState.draftScript).toEqual(null)
   })

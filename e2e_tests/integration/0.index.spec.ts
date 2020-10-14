@@ -20,7 +20,7 @@
 
 import { isAura, isEnterpriseEdition } from '../support/utils'
 
-/* global Cypress, cy, expect, before */
+/* global Cypress, cy, before */
 
 const Editor = '[data-testid="activeEditor"] textarea'
 const Carousel = '[data-testid="carousel"]'
