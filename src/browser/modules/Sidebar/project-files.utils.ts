@@ -116,7 +116,7 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
 }
 
 // favorite default names have less restrictions than file names
-export function defaultFavoriteName(cmd: string) {
+export function defaultFavoriteName(cmd: string): string {
   const firstLine = cmd.split('\n')[0]
 
   if (firstLine.startsWith('//')) {
