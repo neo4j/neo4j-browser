@@ -64,6 +64,15 @@ export const Frame = styled.div<FullscreenProps>`
 export const EditorContainer = styled.div`
   flex-grow: 1;
   width: 0; // needed to prevent the editor from growing the text field
+  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
+  .CodeMirror {
+    color: ${(props): string => props.theme.editorCommandColor};
+    font-size: 17px;
+  }
+
+  .disable-font-ligatures & {
+    font-variant-ligatures: none !important;
+  }
 `
 export const FlexContainer = styled.div`
   display: flex;
@@ -76,37 +85,4 @@ export const ScriptTitle = styled.div<{ unsaved: boolean }>`
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
   font-size: 14px;
   line-height: 23px;
-`
-
-export const EditorWrapper = styled.div<FullscreenProps>`
-  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
-
-  .CodeMirror {
-    color: ${(props): string => props.theme.editorCommandColor};
-    font-size: 17px;
-  }
-
-  .disable-font-ligatures & {
-    font-variant-ligatures: none !important;
-  }
-
-  ${(props): string => {
-    if (props.fullscreen) {
-      return `height: 100%;
-        min-height: 100vh;
-        z-index: 1030;
-        .CodeMirror {
-          position: absolute;
-          left: 12px;
-          right: 142px;
-          top: 42px;
-          bottom: 12px;
-        }
-        .CodeMirror-scroll {
-           max-height: initial !important;
-        }
-      `
-    }
-    return ''
-  }};
 `

@@ -18,7 +18,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-// @todo: Styled elements temporary until next set of work goes in
 const StyledHeaderText = styled.div`
   font-family: 'Open Sans';
   color: white;
