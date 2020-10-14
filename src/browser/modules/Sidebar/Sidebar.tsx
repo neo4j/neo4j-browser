@@ -107,23 +107,24 @@ const Sidebar = ({
             {scriptDraft && (
               <NewSavedScript
                 onSubmit={input => {
-                  const draft = scriptDraft || ''
-                  if (input === defaultFavoriteName(draft)) {
-                    addFavorite(draft)
+                  if (input === defaultFavoriteName(scriptDraft)) {
+                    addFavorite(scriptDraft)
                   } else {
-                    const alreadyHasName = draft.startsWith('//')
+                    const alreadyHasName = scriptDraft.startsWith('//')
                     const replaceName = [
                       `// ${input}`,
-                      draft.split('\n').slice(1)
+                      scriptDraft.split('\n').slice(1)
                     ].join('\n')
 
                     addFavorite(
-                      alreadyHasName ? replaceName : `//${input}\n${draft}`
+                      alreadyHasName
+                        ? replaceName
+                        : `//${input}\n${scriptDraft}`
                     )
                   }
                   resetDraft()
                 }}
-                defaultName={defaultFavoriteName(scriptDraft || '')}
+                defaultName={defaultFavoriteName(scriptDraft)}
                 headerText={'Save as'}
                 onCancel={resetDraft}
               />
