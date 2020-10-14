@@ -134,19 +134,20 @@ const Sidebar = ({
         )
       }
     },
-    isRelateAvailable
-      ? {
-          name: 'Project Files',
-          title: 'Project Files',
-          icon: function projectFilesIcon(isOpen: boolean): ReactElement {
-            return <ProjectFilesIcon isOpen={isOpen} title="Project Files" />
-          },
-          content: function ProjectDrawer(): JSX.Element {
-            return <ProjectFilesDrawer scriptDraft={scriptDraft || ''} />
+    ...(isRelateAvailable
+      ? [
+          {
+            name: 'Project Files',
+            title: 'Project Files',
+            icon: function projectFilesIcon(isOpen: boolean): ReactElement {
+              return <ProjectFilesIcon isOpen={isOpen} title="Project Files" />
+            },
+            content: function ProjectDrawer(): JSX.Element {
+              return <ProjectFilesDrawer scriptDraft={scriptDraft || ''} />
+            }
           }
-        }
-      : null,
-
+        ]
+      : []),
     {
       name: 'Documents',
       title: 'Help &amp; Resources',
@@ -155,7 +156,7 @@ const Sidebar = ({
       },
       content: DocumentsDrawer
     }
-  ].filter(a => a)
+  ]
 
   const bottomNavItemsList = [
     {
