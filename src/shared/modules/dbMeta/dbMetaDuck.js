@@ -113,7 +113,7 @@ export const getDefaultRemoteContentHostnameAllowlist = state =>
 export const shouldRetainConnectionCredentials = state => {
   const settings = getAvailableSettings(state)
   const conf = settings['browser.retain_connection_credentials']
-  if (conf === null || typeof conf === 'undefined') return true
+  if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
 export const getDatabases = state => (state[NAME] || initialState).databases
@@ -208,7 +208,7 @@ const initialState = {
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
-    'browser.retain_connection_credentials': true
+    'browser.retain_connection_credentials': false
   }
 }
 
