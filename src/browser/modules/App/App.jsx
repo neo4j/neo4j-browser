@@ -29,7 +29,7 @@ import {
   LIGHT_THEME
 } from 'shared/modules/settings/settingsDuck'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
-import { useBrowserSync } from 'shared/modules/features/featuresDuck'
+import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
@@ -188,7 +188,7 @@ export function App(props) {
                       connectionState={connectionState}
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
-                      useBrowserSync={loadSync}
+                      utilizeBrowserSync={loadSync}
                       useDb={useDb}
                       databases={databases}
                     />
@@ -222,7 +222,7 @@ const mapStateToProps = state => {
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),
     browserSyncAuthStatus: getUserAuthStatus(state),
-    loadSync: useBrowserSync(state),
+    loadSync: utilizeBrowserSync(state),
     isWebEnv: inWebEnv(state),
     useDb: getUseDb(state),
     databases: getDatabases(state)

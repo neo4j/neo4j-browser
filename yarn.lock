@@ -5282,6 +5282,11 @@ eslint-plugin-promise@^4.2.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-plugin-promise/-/eslint-plugin-promise-4.2.1.tgz#845fd8b2260ad8f82564c1222fce44ad71d9418a"
   integrity sha1-hF/YsiYK2PglZMEiL85ErXHZQYo=
 
+eslint-plugin-react-hooks@^4.1.2:
+  version "4.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.1.2.tgz#2eb53731d11c95826ef7a7272303eabb5c9a271e"
+  integrity sha1-LrU3MdEclYJu96cnIwPqu1yaJx4=
+
 eslint-plugin-react@3.4.2:
   version "3.4.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/eslint-plugin-react/-/eslint-plugin-react-3.4.2.tgz#9e6ef8a8054f8ac3b87b97236e7b849e5835dc6c"

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { Bus } from 'suber'
 
@@ -57,26 +57,38 @@ function isOutsideTextArea(e: KeyboardEvent): boolean {
 }
 
 export function useKeyboardShortcuts(bus: Bus): void {
-  const trigger = (msg: string): void => bus && bus.send(msg, null)
+  const trigger = useCallback(
+    (msg: string): void => bus && bus.send(msg, null),
+    [bus]
+  )
 
-  const focusEditorOnSlash = (e: KeyboardEvent): void => {
-    if (isOutsideTextArea(e) && matchesShortcut(e, FOCUS_SHORTCUT)) {
-      e.preventDefault()
-      trigger(FOCUS)
-    }
-  }
+  const focusEditorOnSlash = useCallback(
+    (e: KeyboardEvent): void => {
+      if (isOutsideTextArea(e) && matchesShortcut(e, FOCUS_SHORTCUT)) {
+        e.preventDefault()
+        trigger(FOCUS)
+      }
+    },
+    [trigger]
+  )
 
-  const fullscreenEditor = (e: KeyboardEvent): void => {
-    if (
-      matchesShortcut(e, FULLSCREEN_SHORTCUT) ||
-      matchesShortcut(e, OLD_FULLSCREEN_SHORTCUT)
-    ) {
-      e.preventDefault()
-      trigger(EXPAND)
-    }
-  }
+  const fullscreenEditor = useCallback(
+    (e: KeyboardEvent): void => {
+      if (
+        matchesShortcut(e, FULLSCREEN_SHORTCUT) ||
+        matchesShortcut(e, OLD_FULLSCREEN_SHORTCUT)
+      ) {
+        e.preventDefault()
+        trigger(EXPAND)
+      }
+    },
+    [trigger]
+  )
 
-  const keyboardShortcuts = [focusEditorOnSlash, fullscreenEditor]
+  const keyboardShortcuts = useMemo(
+    () => [focusEditorOnSlash, fullscreenEditor],
+    [focusEditorOnSlash, fullscreenEditor]
+  )
 
   useEffect(() => {
     keyboardShortcuts.forEach(shortcut =>
@@ -87,5 +99,5 @@ export function useKeyboardShortcuts(bus: Bus): void {
       keyboardShortcuts.forEach(shortcut =>
         document.removeEventListener('keydown', shortcut)
       )
-  }, [])
+  }, [keyboardShortcuts])
 }
