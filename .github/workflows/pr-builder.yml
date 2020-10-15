@@ -1,0 +1,32 @@
+name: PR builder
+
+on: pull_request_target
+
+jobs:
+  build-pr:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Action
+      uses: actions/checkout@v2
+      with:
+        ref: ${{github.event.pull_request.head.ref}}
+        repository: ${{github.event.pull_request.head.repo.full_name}}
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Build project
+      run: yarn && yarn build
+    - name: Deploy to surge.sh
+      env:
+        SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+        SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+      run: npx surge dist ${{github.event.pull_request.head.ref}}-neo4j-browser.surge.sh
+    - name: Add comment to PR
+      id: comment_to_pr
+      uses: marocchino/sticky-pull-request-comment@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        header: Deployed to surge
+        message: | 
+          Preview at http://${{github.event.pull_request.head.ref}}-neo4j-browser.surge.sh
