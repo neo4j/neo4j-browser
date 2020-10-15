@@ -115,6 +115,10 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
     .replace(/-$/, '') // remove dash from end of line
 }
 
+export const createFilePath = (paths: string[]): string => {
+  return paths.join(/Win32/.test(navigator.platform) ? '\\' : '/')
+}
+
 const readCacheQuery = (
   cache: ApolloCache<NormalizedCacheObject>,
   projectId: string
