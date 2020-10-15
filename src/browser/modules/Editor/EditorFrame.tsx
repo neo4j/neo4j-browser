@@ -56,7 +56,7 @@ import {
 import update_file from 'icons/update_file.svg'
 import update_favorite from 'icons/update_favorite.svg'
 import file from 'icons/file.svg'
-import run from 'icons/run.svg'
+import run_icon from 'icons/run_icon.svg'
 import Editor from './Editor'
 import { ADD_PROJECT_FILE } from 'browser/modules/Sidebar/project-files.constants'
 import { isWindows } from '../App/keyboardShortcuts'
@@ -245,7 +245,7 @@ export function EditorFrame({
             data-testid="editor-Run"
             onClick={runCommand}
             title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
-            icon={run}
+            icon={run_icon}
             color={theme.linkHover}
             key="editor-Run"
             width={16}
