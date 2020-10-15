@@ -60,14 +60,18 @@ const slides = [
             <TextCommand command={'use system'}></TextCommand>
           </li>
           <li>
-            Create a new databse{' '}
+            Create a new database called movies{' '}
             <pre
               mode="cypher"
               className="pre-scrollable code runnable"
               style={{ width: 'fit-content' }}
             >
-              create database
+              create database movies
             </pre>
+          </li>
+          <li>
+            Switch to the new movies database{' '}
+            <TextCommand command={'use movies'}></TextCommand>
           </li>
         </ol>
       </div>
