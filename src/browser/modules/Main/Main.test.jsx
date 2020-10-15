@@ -27,19 +27,34 @@ import Main from './Main'
 const mockStore = configureMockStore()
 const store = mockStore({})
 
-;[
-  ('../Stream/auto-exec-button',
-  '../Editor/Editor',
+jest.mock(
   '../Editor/EditorFrame',
-  '../Stream/Stream')
-].forEach(path =>
-  jest.mock(
-    path,
-    () =>
-      function EmptyDiv() {
-        return <div />
-      }
-  )
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
+)
+jest.mock(
+  '../Stream/Stream',
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
+)
+jest.mock(
+  '../Editor/Editor',
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
+)
+
+jest.mock(
+  '../Stream/auto-exec-button',
+  () =>
+    function EmptyDiv() {
+      return <div />
+    }
 )
 
 describe('<Main />', () => {
