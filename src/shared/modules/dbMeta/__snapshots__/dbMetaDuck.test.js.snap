@@ -20,7 +20,7 @@ Object {
   "settings": Object {
     "browser.allow_outgoing_connections": false,
     "browser.remote_content_hostname_allowlist": "guides.neo4j.com, localhost",
-    "browser.retain_connection_credentials": true,
+    "browser.retain_connection_credentials": false,
   },
 }
 `;
@@ -44,7 +44,7 @@ Object {
   "settings": Object {
     "browser.allow_outgoing_connections": false,
     "browser.remote_content_hostname_allowlist": "guides.neo4j.com, localhost",
-    "browser.retain_connection_credentials": true,
+    "browser.retain_connection_credentials": false,
   },
 }
 `;
