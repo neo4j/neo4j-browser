@@ -104,6 +104,18 @@ const content = (
         </tr>
       </tbody>
     </table>
+    <div>
+      <h3>Next steps </h3>
+      <ul>
+        <li>
+          <a help-topic="commands">Help commands</a> - Useful Neo4j Browser
+          commands
+        </li>
+        <li>
+          <a play-topic="cypher">Play Cypher</a> - Learn Cypher basics
+        </li>
+      </ul>
+    </div>
   </>
 )
 

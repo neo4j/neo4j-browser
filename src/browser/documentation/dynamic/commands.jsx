@@ -44,5 +44,29 @@ const description = (
     </table>
   </>
 )
+const footer = (
+  <>
+    <h3>Next steps</h3>
+    <ul>
+      <li>
+        <a help-topic="keys">Help keys</a> - Keyboard shortcuts
+      </li>
+      <li>
+        <a play-topic="cypher">Cypher</a> - Learn Cypher basics
+      </li>
+      <li>
+        <a play-topic="start">Play start</a> - Back to getting started
+      </li>
+    </ul>
+  </>
+)
 
-export default { title, subtitle, category, content: null, description, filter }
+export default {
+  title,
+  subtitle,
+  category,
+  content: null,
+  description,
+  filter,
+  footer
+}

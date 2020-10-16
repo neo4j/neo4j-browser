@@ -38,7 +38,7 @@ const description = (
     </p>
     <div className="links">
       <div className="link">
-        <p className="title">Reference</p>
+        <p className="title">Documentation</p>
         <p className="content">
           <ManualLink chapter="cypher-manual" page="/">
             Cypher introduction
@@ -67,9 +67,9 @@ const description = (
         </p>
       </div>
       <div className="link">
-        <p className="title">Guide</p>
+        <p className="title">Cypher basics guide</p>
         <p className="content">
-          <a play-topic="cypher">Cypher</a>
+          <a play-topic="cypher">Play Cypher</a>
         </p>
       </div>
     </div>
@@ -88,11 +88,45 @@ RETURN <expressions>`}
   </>
 )
 
+const footer = (
+  <>
+    <div className="col-sm-4">
+      <h3>Next steps</h3>
+      <ul>
+        <li>
+          <a play-topic="movie-graph">Play movie-graph</a> - Try guides with a
+          sample database
+        </li>
+        <li>
+          <a play-topic="start">Play start</a> - Back to getting started
+        </li>
+      </ul>
+    </div>
+    <div className="col-sm-4">
+      <h3>Documentation</h3>
+      <ul className="undecorated">
+        <li>
+          <ManualLink chapter="cypher-refcard" page="/">
+            Cypher Refcard
+          </ManualLink>
+        </li>
+        <li>
+          <ManualLink chapter="cypher-manual" page="/">
+            The Cypher chapter
+          </ManualLink>{' '}
+          of the Neo4j Developer Manual
+        </li>
+      </ul>
+    </div>
+  </>
+)
+
 export default {
   title,
   subtitle,
   category,
   content: null,
   description,
-  filter
+  filter,
+  footer
 }

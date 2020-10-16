@@ -51,6 +51,7 @@ export const base = {
   alteringTableRowBackground: '#f5f5f5',
   frameCommandBackground: '#F8F9FB',
   runnableBackground: '#f5f5f5',
+  teaserCardBackground: '#fff',
 
   // Fonts
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -133,9 +134,9 @@ export const dark = {
   topicBackground: 'transparent',
   preBackground: '#282c32',
   alteringTableRowBackground: '#30333a',
-
   frameCommandBackground: '#31333B',
   runnableBackground: '#202226',
+  teaserCardBackground: '#31333B',
 
   // Buttons
   primaryButtonText: '#fff',

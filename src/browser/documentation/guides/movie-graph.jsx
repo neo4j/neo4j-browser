@@ -21,6 +21,10 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import Slide from '../../modules/Carousel/Slide'
+import { useDbCommand } from 'shared/modules/commands/commandsDuck'
+import createDatabase from '../help/create-database'
+import { useDb, USE_DB } from 'shared/modules/connections/connectionsDuck'
+import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'
@@ -43,6 +47,34 @@ const slides = [
         <li>Query: discover related actors and directors</li>
         <li>Solve: the Bacon Path</li>
       </ol>
+      <p></p>
+      <p>
+        WARNING: This guide will modify the data in the currently active
+        database.{' '}
+      </p>
+      <div>
+        If you don't want to modify your data:
+        <ol>
+          <li>
+            Switch to system database{' '}
+            <TextCommand command={'use system'}></TextCommand>
+          </li>
+          <li>
+            Create a new database called movies{' '}
+            <pre
+              mode="cypher"
+              className="pre-scrollable code runnable"
+              style={{ width: 'fit-content' }}
+            >
+              create database movies
+            </pre>
+          </li>
+          <li>
+            Switch to the new movies database{' '}
+            <TextCommand command={'use movies'}></TextCommand>
+          </li>
+        </ol>
+      </div>
     </div>
   </Slide>,
   <Slide key="s2">
@@ -807,21 +839,28 @@ RETURN tom, m, coActors, m2, cruise`}
   <Slide key="s8">
     <div className="col-sm-4">
       <h3>Next steps</h3>
-    </div>
-    <div className="col-sm-4">
-      <h3>More code</h3>
+
       <ul className="undecorated">
         <li>
           <a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to
           graph
         </li>
         <li>
-          <a play-topic="cypher">Cypher</a> - query language fundamentals
+          <a help-topic="cypher">Cypher</a> - Learn Cypher syntax
+        </li>
+        <li>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://portal.graphgist.org/"
+          >
+            Explore more guides: Graph Gists Portal
+          </a>
         </li>
       </ul>
     </div>
     <div className="col-sm-4">
-      <h3>Reference</h3>
+      <h3>Documentation</h3>
       <ul className="undecorated">
         <li>
           <a

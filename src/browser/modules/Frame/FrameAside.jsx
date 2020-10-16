@@ -18,17 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
+import { DARK_THEME, LIGHT_THEME } from 'shared/modules/settings/settingsDuck'
+import { ThemeContext } from 'styled-components'
 
-class FrameAside extends Component {
-  render() {
-    const { subtitle } = this.props
-    let { title } = this.props
+function FrameAside(props) {
+  const theme = useContext(ThemeContext)
+  const { subtitle, selectedTheme } = props
+  let { title } = props
 
-    // Use logo as title if title is only Neo4j
-    if (title === 'Neo4j') {
+  // Use logo as title if title is only Neo4j
+  if (title === 'Neo4j') {
+    if (theme.name === DARK_THEME) {
+      title = (
+        <img
+          src="./assets/images/neo4j-world-inverted.png"
+          alt="Neo4j"
+          className="frame-title-logo"
+        />
+      )
+    } else {
       title = (
         <img
           src="./assets/images/neo4j-world.png"
@@ -37,14 +48,14 @@ class FrameAside extends Component {
         />
       )
     }
-
-    return title ? (
-      <>
-        {title && <H3>{title}</H3>}
-        {subtitle && <Lead>{subtitle}</Lead>}
-      </>
-    ) : null
   }
+
+  return title ? (
+    <>
+      {title && <H3>{title}</H3>}
+      {subtitle && <Lead>{subtitle}</Lead>}
+    </>
+  ) : null
 }
 
 export default FrameAside
