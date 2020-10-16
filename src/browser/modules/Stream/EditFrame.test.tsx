@@ -31,7 +31,7 @@ describe('EditFrame', () => {
     const id = 'some-frame-id'
     const frame = { id } as Frame
     const { container } = render(
-      <Provider store={configureStore()({ settings: {} })}>
+      <Provider store={configureStore()({ settings: {}, app: {} })}>
         <EditFrame frame={frame} />
       </Provider>
     )

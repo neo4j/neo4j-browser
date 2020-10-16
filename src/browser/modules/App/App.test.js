@@ -33,7 +33,7 @@ jest.mock('../FeatureToggle/FeatureToggleProvider', () => {
   return ({ children }) => <div>{children}</div>
 })
 jest.mock('./styled', () => {
-  const orig = require.requireActual('./styled')
+  const orig = jest.requireActual('./styled')
   return {
     ...orig,
     StyledApp: () => <div>Loaded</div>

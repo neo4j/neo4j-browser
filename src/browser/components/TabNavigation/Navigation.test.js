@@ -24,7 +24,10 @@ import { render, fireEvent } from '@testing-library/react'
 import Navigation from './Navigation'
 
 describe('<Navigation />', () => {
-  const div = testid => () => <div data-testid={testid}></div>
+  const div = testid =>
+    function Testdiv() {
+      return <div data-testid={testid}></div>
+    }
 
   const topNavItems = [
     {

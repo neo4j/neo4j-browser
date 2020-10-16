@@ -148,3 +148,13 @@ export function updateFolder(folder, update, allFolders) {
     { ...folder, ...update }
   ]
 }
+
+export function defaultFavoriteName(cmd) {
+  const firstLine = cmd.split('\n')[0]
+
+  if (firstLine.startsWith('//')) {
+    return firstLine.slice(2)
+  } else {
+    return firstLine
+  }
+}

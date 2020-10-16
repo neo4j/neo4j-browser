@@ -21,7 +21,6 @@
 import uuid from 'uuid'
 import { USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { getBrowserName } from 'services/utils'
-import { scripts as staticScriptsList } from './staticScripts'
 
 export const NAME = 'documents'
 
@@ -43,10 +42,7 @@ export const removeFavoritesById = (state, ids) =>
 const versionSize = 20
 
 // reducer
-const initialState = staticScriptsList.map(script => ({
-  ...script,
-  isStatic: true
-}))
+const initialState = []
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {

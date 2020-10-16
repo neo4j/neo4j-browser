@@ -20,7 +20,7 @@
 
 import { isAura, isEnterpriseEdition } from '../support/utils'
 
-/* global Cypress, cy, expect, before */
+/* global Cypress, cy, before */
 
 const Editor = '[data-testid="activeEditor"] textarea'
 const Carousel = '[data-testid="carousel"]'
@@ -156,10 +156,15 @@ describe('Neo4j Browser', () => {
   if (!isAura()) {
     it('will clear local storage when clicking "Clear local data"', () => {
       const scriptName = 'foo'
-      cy.get(Editor).type(`//${scriptName}`, { force: true })
-      cy.get('[data-testid="editor-Favorite"]').click()
+      cy.get(Editor).type(
+        `//${scriptName}
+      RETURN 1{enter}`,
+        { force: true }
+      )
 
-      cy.get('[data-testid="drawerFavorites"]').click()
+      cy.get('[data-testid="frame-Favorite"]').click()
+      cy.get('[data-testid="saveScript"]').click()
+
       cy.get('.saved-scripts-list-item')
         .first()
         .should('be', scriptName)

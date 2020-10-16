@@ -29,6 +29,10 @@ export const StyledSettingLabel = styled.label`
   word-wrap: break-wrap;
   display: inline-block;
 `
+export const StyledErrorListContainer = styled.div`
+  margin-left: 24px;
+  color: #ffaf00;
+`
 
 export const StyledSettingTextInput = styled.input`
   height: 34px;

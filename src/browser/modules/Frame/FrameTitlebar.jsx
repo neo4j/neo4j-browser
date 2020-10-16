@@ -25,9 +25,13 @@ import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
 import SVGInline from 'react-svg-inline'
 import controlsPlay from 'icons/controls-play.svg'
+import uuid from 'uuid'
 
+import * as app from 'shared/modules/app/appDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
+import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
+import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import {
   cancel as cancelRequest,
   getRequest,
@@ -38,6 +42,7 @@ import { removeComments, sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
+
 import {
   CloseIcon,
   ContractIcon,
@@ -47,7 +52,11 @@ import {
   PinIcon,
   PlainPlayIcon,
   RefreshIcon,
-  UpIcon
+  UpIcon,
+  FavoritesIcon,
+  ProjectFilesIcon,
+  SaveFavorite,
+  SaveFile
 } from 'browser-components/icons/Icons'
 import {
   DottedLineHover,
@@ -176,6 +185,25 @@ class FrameTitlebar extends Component {
           </DottedLineHover>
         </StyledFrameCommand>
         <StyledFrameTitlebarButtonSection>
+          <FrameButton
+            title="Save as Favorite"
+            data-testid="frame-Favorite"
+            onClick={() => {
+              props.newFavorite(frame.cmd)
+            }}
+          >
+            <SaveFavorite width={12} />
+          </FrameButton>
+          <Render if={props.isRelateAvailable}>
+            <FrameButton
+              title="Save as project file"
+              onClick={() => {
+                props.newProjectFile(frame.cmd)
+              }}
+            >
+              <SaveFile width={12} />
+            </FrameButton>
+          </Render>
           <Render if={this.canExport()}>
             <DropdownButton data-testid="frame-export-dropdown">
               <DownloadIcon />
@@ -281,12 +309,19 @@ const mapStateToProps = (state, ownProps) => {
     : null
 
   return {
-    request
+    request,
+    isRelateAvailable: app.isRelateAvailable(state)
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    newFavorite: cmd => {
+      dispatch(sidebar.setDraftScript(cmd, 'favorites'))
+    },
+    newProjectFile: cmd => {
+      dispatch(sidebar.setDraftScript(cmd, 'project files'))
+    },
     onTitlebarClick: cmd => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     },

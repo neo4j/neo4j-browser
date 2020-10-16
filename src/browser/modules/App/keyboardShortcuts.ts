@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { FOCUS, EXPAND, CARDSIZE } from 'shared/modules/editor/editorDuck'
+import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { Bus } from 'suber'
 
 export const isMac = /Mac|iPad/.test(navigator.platform)
@@ -27,10 +27,7 @@ export const FULLSCREEN_SHORTCUT: Shortcut = {
   modifyers: [modKey, 'altKey'],
   key: 'f'
 }
-export const CARDSIZE_SHORTCUT: Shortcut = {
-  modifyers: [modKey, 'altKey'],
-  key: 'c'
-}
+
 export const FOCUS_SHORTCUT: Shortcut = {
   modifyers: [],
   key: '/'
@@ -81,18 +78,7 @@ export function useKeyboardShortcuts(bus: Bus): void {
     }
   }
 
-  const cardSizeShortcut = (e: KeyboardEvent): void => {
-    if (matchesShortcut(e, CARDSIZE_SHORTCUT)) {
-      e.preventDefault()
-      trigger(CARDSIZE)
-    }
-  }
-
-  const keyboardShortcuts = [
-    focusEditorOnSlash,
-    fullscreenEditor,
-    cardSizeShortcut
-  ]
+  const keyboardShortcuts = [focusEditorOnSlash, fullscreenEditor]
 
   useEffect(() => {
     keyboardShortcuts.forEach(shortcut =>

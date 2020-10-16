@@ -18,7 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { ReactFragment, ReactElement } from 'react'
+import React, { ReactFragment, ReactElement, Dispatch } from 'react'
+import { Action } from 'redux'
+import uuid from 'uuid'
 import { connect } from 'react-redux'
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
@@ -26,17 +28,24 @@ import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
 import Favorites from './favorites'
 import ProjectFilesDrawer from './ProjectFiles'
-import StaticScripts from './static-scripts'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer'
+import NewSavedScript from './NewSavedScript'
 import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
+import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import { useBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
   DISCONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
+import {
+  getCurrentDraft,
+  setDraftScript
+} from 'shared/modules/sidebar/sidebarDuck'
+import { isRelateAvailable } from 'shared/modules/app/appDuck'
+import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 
 import {
   DatabaseIcon,
@@ -51,21 +60,25 @@ import {
 interface SidebarProps {
   openDrawer: string
   onNavClick: () => void
-  showStaticScripts: boolean
   neo4jConnectionState: string
   syncConnected: boolean
   loadSync: boolean
   isRelateAvailable: boolean
+  addFavorite: (cmd: string) => void
+  resetDraft: () => void
+  scriptDraft: string | null
 }
 
 const Sidebar = ({
   openDrawer,
   onNavClick,
-  showStaticScripts,
   neo4jConnectionState,
   syncConnected,
   loadSync,
-  isRelateAvailable
+  isRelateAvailable,
+  addFavorite,
+  scriptDraft,
+  resetDraft
 }: SidebarProps) => {
   const topNavItemsList = [
     {
@@ -92,12 +105,50 @@ const Sidebar = ({
         return (
           <>
             <DrawerHeader>Favorites</DrawerHeader>
+            {scriptDraft && (
+              <NewSavedScript
+                onSubmit={input => {
+                  if (input === defaultFavoriteName(scriptDraft)) {
+                    addFavorite(scriptDraft)
+                  } else {
+                    const alreadyHasName = scriptDraft.startsWith('//')
+                    const replaceName = [
+                      `// ${input}`,
+                      scriptDraft.split('\n').slice(1)
+                    ].join('\n')
+
+                    addFavorite(
+                      alreadyHasName
+                        ? replaceName
+                        : `//${input}\n${scriptDraft}`
+                    )
+                  }
+                  resetDraft()
+                }}
+                defaultName={defaultFavoriteName(scriptDraft)}
+                headerText={'Save as'}
+                onCancel={resetDraft}
+              />
+            )}
             <Favorites />
-            {showStaticScripts && <StaticScripts />}
           </>
         )
       }
     },
+    ...(isRelateAvailable
+      ? [
+          {
+            name: 'Project Files',
+            title: 'Project Files',
+            icon: function projectFilesIcon(isOpen: boolean): ReactElement {
+              return <ProjectFilesIcon isOpen={isOpen} title="Project Files" />
+            },
+            content: function ProjectDrawer(): JSX.Element {
+              return <ProjectFilesDrawer scriptDraft={scriptDraft || ''} />
+            }
+          }
+        ]
+      : []),
     {
       name: 'Documents',
       title: 'Help &amp; Resources',
@@ -107,17 +158,6 @@ const Sidebar = ({
       content: DocumentsDrawer
     }
   ]
-
-  if (isRelateAvailable) {
-    topNavItemsList.push({
-      name: 'Project Files',
-      title: 'Project Files',
-      icon: function projectFilesIcon(isOpen: boolean): ReactElement {
-        return <ProjectFilesIcon isOpen={isOpen} title="Project Files" />
-      },
-      content: ProjectFilesDrawer
-    })
-  }
 
   const bottomNavItemsList = [
     {
@@ -181,13 +221,20 @@ const mapStateToProps = (state: any) => {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
     loadSync: useBrowserSync(state),
-    showStaticScripts: state.settings.showSampleScripts,
-    // currently only Desktop specific
-    isRelateAvailable:
-      state.app.relateUrl &&
-      state.app.relateApiToken &&
-      state.app.neo4jDesktopProjectId
+    isRelateAvailable: isRelateAvailable(state),
+    scriptDraft: getCurrentDraft(state)
   }
 }
 
-export default connect(mapStateToProps, null)(Sidebar)
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return {
+    addFavorite: (cmd: string) => {
+      dispatch(addFavorite(cmd, uuid.v4()))
+    },
+    resetDraft: () => {
+      dispatch(setDraftScript(null, 'favorites'))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)

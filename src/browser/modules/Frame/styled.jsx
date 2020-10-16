@@ -38,7 +38,7 @@ export const StyledFrame = styled.article`
   background-color: ${props => props.theme.secondaryBackground};
   animation: ${rollDownAnimation} 0.4s ease-in;
   border: ${props => props.theme.frameBorder};
-  margin: ${props => (props.fullscreen ? '0' : '10px 0px 10px 0px')};
+  margin: ${props => (props.fullscreen ? '0' : '0 0 10px 0')};
   ${props => (props.fullscreen ? 'position: fixed' : null)};
   ${props => (props.fullscreen ? 'left: 0' : null)};
   ${props => (props.fullscreen ? 'top: 0' : null)};

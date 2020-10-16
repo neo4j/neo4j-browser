@@ -49,7 +49,7 @@ const mapFavoritesStateToProps = state => {
     scriptsNamespace: SLASH,
     scripts,
     folders,
-    title: 'Local Cache Scripts'
+    title: 'Local Scripts'
   }
 }
 const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
@@ -137,12 +137,11 @@ const mergeProps = (stateProps, dispatchProps) => {
       )
   }
 }
-const Favorites = withBus(
+
+export default withBus(
   connect(
     mapFavoritesStateToProps,
     mapFavoritesDispatchToProps,
     mergeProps
   )(MyScripts)
 )
-
-export default Favorites

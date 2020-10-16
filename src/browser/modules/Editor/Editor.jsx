@@ -43,7 +43,7 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { add } from 'shared/modules/stream/streamDuck'
-import { Bar, ActionButtonSection, EditorWrapper, Header } from './styled'
+import { Bar, ActionButtonSection, Header } from './styled'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { deepEquals, shallowEquals } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
@@ -63,6 +63,7 @@ import {
   EXECUTE_COMMAND_ORIGIN,
   EXECUTE_COMMAND_ORIGINS
 } from 'browser/modules/Sidebar/project-files.constants'
+import { isRelateAvailable } from 'shared/modules/app/appDuck'
 
 export const shouldCheckForHints = code =>
   code.trim().length > 0 &&
@@ -88,14 +89,6 @@ export class Editor extends Component {
       contentId: null
     }
     if (this.props.bus) {
-      this.props.bus.take(SET_CONTENT, msg => {
-        this.setContentId(null)
-        this.setEditorValue(msg.message)
-      })
-      this.props.bus.take(EDIT_CONTENT, msg => {
-        this.setContentId(msg.isProjectFile ? null : msg.id)
-        this.setEditorValue(msg.message)
-      })
       this.props.bus.take(FOCUS, this.focusEditor.bind(this))
     }
   }
@@ -105,7 +98,6 @@ export class Editor extends Component {
       nextState.contentId === this.state.contentId &&
       shallowEquals(nextState.notifications, this.state.notifications) &&
       deepEquals(nextProps.schema, this.props.schema) &&
-      nextProps.editorSize === this.props.editorSize &&
       nextProps.useDb === this.props.useDb &&
       nextProps.enableMultiStatementMode === this.props.enableMultiStatementMode
     )
@@ -122,7 +114,7 @@ export class Editor extends Component {
   }
 
   handleEnter(cm) {
-    const multiline = this.props.editorSize !== 'LINE'
+    const multiline = cm.lineCount() > 1
     if (multiline) {
       this.newlineAndIndent(cm)
     } else {
@@ -143,18 +135,13 @@ export class Editor extends Component {
     const onlyWhitespace = cmd.trim() === ''
 
     if (!onlyWhitespace) {
-      this.props.bus.send(
-        EXECUTE_COMMAND_ORIGIN,
-        EXECUTE_COMMAND_ORIGINS.EDITOR
-      )
-      this.execCommand(cmd)
+      this.props.runCommand()
       this.clearEditor()
       this.setState({
         notifications: [],
         historyIndex: -1,
         buffer: null
       })
-      this.props.setSize('LINE')
     }
   }
 
@@ -269,9 +256,6 @@ export class Editor extends Component {
   }
 
   setEditorValue(cmd) {
-    if (!cmd.includes('\n') && this.props.editorSize === 'CARD') {
-      this.props.setSize('LINE')
-    }
     this.codeMirror.setValue(cmd)
     this.updateCode(undefined, undefined, () => {
       this.focusEditor()
@@ -410,27 +394,10 @@ export class Editor extends Component {
   }
 
   lineNumberFormatter = line => {
-    const multiline = this.props.editorSize !== 'LINE'
-    if (multiline) {
+    if (this.codeMirror && this.codeMirror.lineCount() > 1) {
       return line
     } else {
       return `${this.props.useDb || ''}$`
-    }
-  }
-
-  updateSize = () => {
-    const isLineSize = this.props.editorSize === 'LINE'
-    const hasOverflow =
-      this.codeMirror && this.codeMirror.getValue().includes('\n')
-    if (isLineSize && hasOverflow) {
-      this.props.setSize('CARD')
-    }
-  }
-
-  goToCard(cm) {
-    this.newlineAndIndent(cm)
-    if (this.props.editorSize === 'LINE') {
-      this.props.setSize('CARD')
     }
   }
 
@@ -440,7 +407,7 @@ export class Editor extends Component {
       mode: this.state.mode,
       theme: 'cypher',
       gutters: ['cypher-hints'],
-      lineWrapping: false,
+      lineWrapping: true,
       autofocus: true,
       smartIndent: false,
       lineNumberFormatter: this.lineNumberFormatter,
@@ -448,7 +415,7 @@ export class Editor extends Component {
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
         Enter: this.handleEnter.bind(this),
-        'Shift-Enter': this.goToCard.bind(this),
+        'Shift-Enter': this.newlineAndIndent.bind(this),
         'Cmd-Enter': this.execCurrent.bind(this),
         'Ctrl-Enter': this.execCurrent.bind(this),
         'Cmd-Up': this.historyPrev.bind(this),
@@ -477,75 +444,24 @@ export class Editor extends Component {
     this.setGutterMarkers()
 
     const editorIsEmpty = this.getEditorValue().length > 0
-    const buttons = [
-      {
-        onClick: this.state.contentId
-          ? () =>
-              this.props.onFavoriteUpdateClick(
-                this.state.contentId,
-                this.getEditorValue()
-              )
-          : () => {
-              this.props.onFavoriteClick(this.getEditorValue())
-            },
-        icon: this.state.contentId ? pencil : ratingStar,
-        title: this.state.contentId ? 'Update favorite' : 'Favorite',
-        disabled: editorIsEmpty
-      },
-      {
-        onClick: this.execCurrent,
-        icon: controlsPlay,
-        title: isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)',
-        disabled: editorIsEmpty,
-        iconColor: this.props.theme.linkHover
-      }
-    ]
-
-    const isFullscreen = this.props.editorSize === 'FULLSCREEN'
-    const isCardSize = this.props.editorSize === 'CARD'
 
     return (
-      <Bar>
-        <Header>
-          <ActionButtons
-            width={16}
-            buttons={buttons}
-            editorValue={() => this.getEditorValue()}
-            isRelateAvailable={this.props.isRelateAvailable}
-          />
-        </Header>
-        <EditorWrapper fullscreen={isFullscreen} cardSize={isCardSize}>
-          <Codemirror
-            ref={ref => {
-              this.editor = ref
-            }}
-            onParsed={this.updateCode}
-            onChanges={this.updateSize}
-            options={options}
-            schema={this.props.schema}
-            initialPosition={this.state.lastPosition}
-          />
-        </EditorWrapper>
-      </Bar>
+      <Codemirror
+        ref={ref => {
+          this.editor = ref
+        }}
+        onParsed={this.updateCode}
+        onChanges={this.props.onChange}
+        options={options}
+        schema={this.props.schema}
+        initialPosition={this.state.lastPosition}
+      />
     )
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onFavoriteClick: cmd => {
-      const id = uuid.v4()
-
-      const addAction = favorites.addFavorite(cmd, id)
-      ownProps.bus.send(addAction.type, addAction)
-
-      const updateAction = editContent(id, cmd)
-      ownProps.bus.send(updateAction.type, updateAction)
-    },
-    onFavoriteUpdateClick: (id, cmd) => {
-      const action = favorites.updateFavorite(id, cmd)
-      ownProps.bus.send(action.type, action)
-    },
     onExecute: cmd => {
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
@@ -559,7 +475,6 @@ const mapStateToProps = state => {
     enableEditorAutocomplete: shouldEditorAutocomplete(state),
     enableEditorLint: shouldEditorLint(state),
     history: getHistory(state),
-    cmdchar: getCmdChar(state),
     schema: {
       parameters: Object.keys(state.params),
       labels: state.meta.labels.map(schemaConvert.toLabel),
@@ -574,10 +489,7 @@ const mapStateToProps = state => {
       procedures: state.meta.procedures.map(schemaConvert.toProcedure)
     },
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
-    isRelateAvailable:
-      state.app.relateUrl &&
-      state.app.relateApiToken &&
-      state.app.neo4jDesktopProjectId
+    isRelateAvailable: isRelateAvailable(state)
   }
 }
 

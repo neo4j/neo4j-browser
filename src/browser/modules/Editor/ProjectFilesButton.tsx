@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, useEffect, useState } from 'react'
+import { Action } from 'redux'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
@@ -232,7 +233,7 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   toggleDrawer: () => dispatch(drawer.toggle(PROJECT_FILES_DRAWER_NAME))
 })
 

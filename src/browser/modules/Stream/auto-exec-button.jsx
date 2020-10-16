@@ -61,6 +61,4 @@ export const AutoExecButtonNoBus = connect(mapStateToProps)(
   AutoExecButtonComponent
 )
 
-const AutoExecButton = withBus(AutoExecButtonNoBus)
-
-export default AutoExecButton
+export default withBus(AutoExecButtonNoBus)

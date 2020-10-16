@@ -22,7 +22,6 @@ import React from 'react'
 import {
   FULLSCREEN_SHORTCUT,
   FOCUS_SHORTCUT,
-  CARDSIZE_SHORTCUT,
   printShortcut,
   isMac
 } from 'browser/modules/App/keyboardShortcuts'
@@ -98,12 +97,6 @@ const content = (
           <td>Toggle fullscreen editor</td>
           <td>
             <div className="key code">{printShortcut(FULLSCREEN_SHORTCUT)}</div>
-          </td>
-        </tr>
-        <tr>
-          <td>Toggle cardsize editor</td>
-          <td>
-            <div className="key code">{printShortcut(CARDSIZE_SHORTCUT)}</div>
           </td>
         </tr>
         <tr>
