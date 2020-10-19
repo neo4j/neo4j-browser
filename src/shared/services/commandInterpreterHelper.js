@@ -380,12 +380,20 @@ const availableCommands = [
 
       // Since we now also handle queries with the :auto prefix,
       // we need to strip that and attach to the actions object
+      // note that comment removal is crude and will remove
+      // false positives inside strings. but it's good enough
+      // for our use case here
       const query = action.cmd.trim()
 
-      const isAutocommit = query.startsWith(`:${autoCommitTxCommand}`)
+      const autoPrefix = getCmdChar(state) + autoCommitTxCommand
+      const isAutocommit = query
+        .replace(/\/\*(.|\n)*?\*\//g, '') // mutliline comment
+        .replace(/\/\/[^\n]*\n/g, '') // singleline comment
+        .trim()
+        .startsWith(autoPrefix)
 
       action.autoCommit = isAutocommit
-      action.query = isAutocommit ? query.slice(1).trim() : query
+      action.query = isAutocommit ? query.replace(autoPrefix, '').trim() : query
 
       const [id, request] = handleCypherCommand(
         action,

@@ -143,12 +143,49 @@ describe('Implicit vs explicit transactions', () => {
       done()
     })
   })
+  test('Sets autocommit flag = true even with leading comments in cypher', done => {
+    // Given
+    const bus = createBus()
+    bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
+    const $$responseChannel = 'test-channel3'
+    const action = executeSingleCommand(
+      `// comment
+/* 
+multiline comment
+*/
+// comment
+
+// comment
+:${autoCommitTxCommand} RETURN 1`
+    )
+    action.$$responseChannel = $$responseChannel
+
+    bus.send(action.type, action)
+    flushPromises().then(() => {
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
+      expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
+        `// comment
+/* 
+multiline comment
+*/
+// comment
+
+// comment
+ RETURN 1`,
+        {},
+        expect.objectContaining({
+          autoCommit: true
+        })
+      )
+      done()
+    })
+  })
   test('it sends the autoCommit flag = false to tx functions on regular cypher', done => {
     // Given
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel4'
-    const action = executeSingleCommand(`RETURN 1`)
+    const action = executeSingleCommand('RETURN 1')
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)
