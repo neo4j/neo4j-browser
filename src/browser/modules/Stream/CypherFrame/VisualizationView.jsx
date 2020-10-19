@@ -93,7 +93,6 @@ export class Visualization extends Component {
 
       this.getInternalRelationships(existingNodeIds, newNodeIds)
         .then(graph => {
-          console.log(graph.relationships)
           this.autoCompleteCallback &&
             this.autoCompleteCallback(graph.relationships)
         })
