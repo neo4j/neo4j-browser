@@ -28,7 +28,8 @@ import ProjectFilesScripts, { ProjectFilesError } from './ProjectsFilesScripts'
 import NewSavedScript from './NewSavedScript'
 import {
   setProjectFileDefaultFileName,
-  updateCacheAddProjectFile
+  updateCacheAddProjectFile,
+  checkFileNameInput
 } from './project-files.utils'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import { ADD_PROJECT_FILE } from './project-files.constants'
@@ -45,23 +46,12 @@ const ProjectFiles = ({ projectId, scriptDraft, resetDraft }: ProjectFiles) => {
   const [error, setError] = useState('')
 
   function save(inputedFileName: string) {
-    const fileName = inputedFileName.replace(/\.cypher$/, '')
+    const cypherFileExt = new RegExp(`${CYPHER_FILE_EXTENSION}$`)
+    const fileName = inputedFileName.replace(cypherFileExt, '')
     setError('')
 
-    if (!fileName.length) {
-      setError('File name cannot be empty')
-      return
-    }
-
-    // @todo: this needs more thought and extracting to a util
-    if (
-      fileName.includes('/') ||
-      fileName.includes('\\') ||
-      fileName.includes('..') ||
-      fileName.startsWith('.') ||
-      fileName.includes(':') // Windows
-    ) {
-      setError("File name cannot include /, \\, .., : or start with '.'")
+    if (checkFileNameInput(fileName)) {
+      setError(checkFileNameInput(fileName))
       return
     }
 
