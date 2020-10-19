@@ -378,15 +378,14 @@ const availableCommands = [
     exec: (action, put, store) => {
       const state = store.getState()
 
-      // Since we now also handle queries with the :auto prefix, we need to strip that
-      // and attach to the actions object
-      const query = action.cmd.replace(`:${autoCommitTxCommand}`, '')
-      action.query = query.trim()
+      // Since we now also handle queries with the :auto prefix,
+      // we need to strip that and attach to the actions object
+      const query = action.cmd.trim()
 
-      // We need to find out if this is an auto-committing tx or not
-      // i.e. Did we strip something off above here?
-      const autoCommit = action.query.length < action.cmd.trim().length
-      action.autoCommit = autoCommit
+      const isAutocommit = query.startsWith(`:${autoCommitTxCommand}`)
+
+      action.autoCommit = isAutocommit
+      action.query = isAutocommit ? query.slice(1) : query
 
       const [id, request] = handleCypherCommand(
         action,
@@ -400,7 +399,7 @@ const availableCommands = [
           : getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
             }),
-        autoCommit
+        isAutocommit
       )
       put(cypher(action.cmd))
       put(
