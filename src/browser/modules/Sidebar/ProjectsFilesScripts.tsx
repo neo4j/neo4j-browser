@@ -21,7 +21,7 @@ import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 import MyScripts from '@relate-by-ui/saved-scripts'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
-import { filter, size, omit } from 'lodash-es'
+import { filter, size } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
@@ -160,13 +160,7 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   }, [data, refetch])
 
   const myScriptsProps = {
-    ...omit(props, [
-      'bus',
-      'projectId',
-      'relateApiToken',
-      'neo4jDesktopGraphAppId',
-      'relateUrl'
-    ]),
+    onExecScript: props.onExecScript,
     scripts: projectFiles,
     isProjectFiles: true,
     scriptsNamespace: DOT,

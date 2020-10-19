@@ -108,7 +108,7 @@ export function EditorFrame({
     setFullscreen(!isFullscreen)
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [])
   useEffect(
     () =>
       bus &&
@@ -117,7 +117,8 @@ export function EditorFrame({
           setCurrentlyEditing(null)
           editorRef.current?.setValue('')
         }
-      })
+      }),
+    []
   )
   useEffect(
     () =>
@@ -127,7 +128,8 @@ export function EditorFrame({
           setCurrentlyEditing(null)
           editorRef.current?.setValue('')
         }
-      })
+      }),
+    []
   )
 
   useEffect(
@@ -146,7 +148,8 @@ export function EditorFrame({
           })
           editorRef.current?.setValue(message)
         }
-      )
+      ),
+    []
   )
 
   useEffect(
@@ -156,7 +159,8 @@ export function EditorFrame({
         setUnsaved(false)
         setCurrentlyEditing(null)
         editorRef.current?.setValue(message)
-      })
+      }),
+    []
   )
 
   function discardEditor() {
