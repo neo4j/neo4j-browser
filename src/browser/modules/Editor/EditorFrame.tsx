@@ -26,7 +26,10 @@ import { withBus } from 'react-suber'
 import { useMutation } from '@apollo/client'
 import { withTheme } from 'styled-components'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
-import { updateFavorite } from 'shared/modules/favorites/favoritesDuck'
+import {
+  REMOVE_FAVORITE,
+  updateFavorite
+} from 'shared/modules/favorites/favoritesDuck'
 import { useSpring, animated } from 'react-spring'
 import { Bus } from 'suber'
 import {
@@ -58,7 +61,10 @@ import update_favorite from 'icons/update_favorite.svg'
 import file from 'icons/file.svg'
 import run_icon from 'icons/run_icon.svg'
 import Editor from './Editor'
-import { ADD_PROJECT_FILE } from 'browser/modules/Sidebar/project-files.constants'
+import {
+  ADD_PROJECT_FILE,
+  REMOVE_PROJECT_FILE
+} from 'browser/modules/Sidebar/project-files.constants'
 import { isWindows } from '../App/keyboardShortcuts'
 import { setProjectFileDefaultFileName } from 'browser/modules/Sidebar/project-files.utils'
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
@@ -102,7 +108,30 @@ export function EditorFrame({
     setFullscreen(!isFullscreen)
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [])
+  useEffect(
+    () =>
+      bus &&
+      bus.take(REMOVE_FAVORITE, ({ id }) => {
+        if (id === currentlyEditing?.id) {
+          setCurrentlyEditing(null)
+          editorRef.current?.setValue('')
+        }
+      }),
+    []
+  )
+  useEffect(
+    () =>
+      bus &&
+      bus.take(REMOVE_PROJECT_FILE, ({ name }) => {
+        if (name === currentlyEditing?.name) {
+          setCurrentlyEditing(null)
+          editorRef.current?.setValue('')
+        }
+      }),
+    []
+  )
+
   useEffect(
     () =>
       bus &&
@@ -119,7 +148,8 @@ export function EditorFrame({
           })
           editorRef.current?.setValue(message)
         }
-      )
+      ),
+    []
   )
 
   useEffect(
@@ -129,7 +159,8 @@ export function EditorFrame({
         setUnsaved(false)
         setCurrentlyEditing(null)
         editorRef.current?.setValue(message)
-      })
+      }),
+    []
   )
 
   function discardEditor() {
