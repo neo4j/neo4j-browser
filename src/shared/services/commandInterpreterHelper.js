@@ -385,7 +385,7 @@ const availableCommands = [
       const isAutocommit = query.startsWith(`:${autoCommitTxCommand}`)
 
       action.autoCommit = isAutocommit
-      action.query = isAutocommit ? query.slice(1) : query
+      action.query = isAutocommit ? query.slice(1).trim() : query
 
       const [id, request] = handleCypherCommand(
         action,
