@@ -28,7 +28,6 @@ import {
   executeSystemCommand,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { getCmdChar } from 'shared/modules/settings/settingsDuck'
 import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
 import { InfoView } from './InfoView'
 
@@ -82,7 +81,7 @@ const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    resetStyleAction: executeSystemCommand(`${getCmdChar(state)}style reset`),
+    resetStyleAction: executeSystemCommand(':style reset'),
     rerunAction: executeCommand(ownProps.frame.cmd, {
       id: ownProps.frame.id
     })
@@ -95,9 +94,6 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-const Statusbar = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StyleStatusbar)
+const Statusbar = connect(mapStateToProps, mapDispatchToProps)(StyleStatusbar)
 
 export default StyleFrame

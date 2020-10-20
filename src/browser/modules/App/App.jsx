@@ -24,7 +24,6 @@ import { ThemeProvider } from 'styled-components'
 import * as themes from 'browser/styles/themes'
 import {
   getTheme,
-  getCmdChar,
   getBrowserSyncConfig,
   codeFontLigatures,
   LIGHT_THEME
@@ -108,7 +107,6 @@ export function App(props) {
 
   const {
     drawer,
-    cmdchar,
     handleNavClick,
     activeConnection,
     connectionState,
@@ -186,7 +184,6 @@ export function App(props) {
                   </ErrorBoundary>
                   <StyledMainWrapper>
                     <Main
-                      cmdchar={cmdchar}
                       activeConnection={activeConnection}
                       connectionState={connectionState}
                       lastConnectionUpdate={lastConnectionUpdate}
@@ -216,7 +213,6 @@ const mapStateToProps = state => {
     codeFontLigatures: codeFontLigatures(state),
     connectionState: getConnectionState(state),
     lastConnectionUpdate: getLastConnectionUpdate(state),
-    cmdchar: getCmdChar(state),
     errorMessage: getErrorMessage(state),
     loadExternalScripts:
       allowOutgoingConnections(state) !== false && isConnected(state),

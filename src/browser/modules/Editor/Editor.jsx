@@ -37,7 +37,6 @@ import {
 } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import {
-  getCmdChar,
   shouldEditorAutocomplete,
   shouldEditorLint,
   shouldEnableMultiStatementMode

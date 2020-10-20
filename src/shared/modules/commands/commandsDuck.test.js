@@ -62,7 +62,6 @@ describe('commandsDuck', () => {
   beforeAll(() => {
     store = mockStore({
       settings: {
-        cmdchar: ':',
         maxHistory
       },
       history: [':xxx'],
@@ -138,7 +137,7 @@ describe('commandsDuck', () => {
 
     test('does the right thing for :param x: 2', done => {
       // Given
-      const cmd = `${store.getState().settings.cmdchar}param`
+      const cmd = ':param'
       const cmdString = `${cmd} x: 2`
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
@@ -174,7 +173,7 @@ describe('commandsDuck', () => {
     })
     test('does the right thing for :param x => 2', done => {
       // Given
-      const cmd = `${store.getState().settings.cmdchar}param`
+      const cmd = ':param'
       const cmdString = `${cmd} x => 2`
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
@@ -209,7 +208,7 @@ describe('commandsDuck', () => {
     })
     test('does the right thing for :params {x: 2, y: 3}', done => {
       // Given
-      const cmd = `${store.getState().settings.cmdchar}params`
+      const cmd = ':params'
       const cmdString = `${cmd} {x: 2, y: 3}`
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
@@ -239,7 +238,7 @@ describe('commandsDuck', () => {
     })
     test('does the right thing for :params', done => {
       // Given
-      const cmdString = `${store.getState().settings.cmdchar}params`
+      const cmdString = ':params'
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
         id
@@ -262,7 +261,7 @@ describe('commandsDuck', () => {
     })
     test('does the right thing for :config x: 2', done => {
       // Given
-      const cmd = `${store.getState().settings.cmdchar}config`
+      const cmd = ':config'
       const cmdString = `${cmd} "x": 2`
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
@@ -276,7 +275,7 @@ describe('commandsDuck', () => {
           frames.add({
             ...action,
             type: 'pre',
-            result: JSON.stringify({ cmdchar: ':', maxHistory: 20 }, null, 2)
+            result: JSON.stringify({ maxHistory: 20 }, null, 2)
           }),
           { type: 'NOOP' }
         ])
@@ -291,7 +290,7 @@ describe('commandsDuck', () => {
     })
     test('does the right thing for :config {"x": 2, "y":3}', done => {
       // Given
-      const cmd = `${store.getState().settings.cmdchar}config`
+      const cmd = ':config'
       const cmdString = `${cmd} {"x": 2, "y":3}`
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
@@ -305,7 +304,7 @@ describe('commandsDuck', () => {
           frames.add({
             ...action,
             type: 'pre',
-            result: JSON.stringify({ cmdchar: ':', maxHistory: 20 }, null, 2)
+            result: JSON.stringify({ maxHistory: 20 }, null, 2)
           }),
           { type: 'NOOP' }
         ])
@@ -321,7 +320,7 @@ describe('commandsDuck', () => {
 
     test('does the right thing for :config', done => {
       // Given
-      const cmd = `${store.getState().settings.cmdchar}config`
+      const cmd = ':config'
       const cmdString = cmd
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
@@ -334,7 +333,7 @@ describe('commandsDuck', () => {
           frames.add({
             ...action,
             type: 'pre',
-            result: JSON.stringify({ cmdchar: ':', maxHistory: 20 }, null, 2)
+            result: JSON.stringify({ maxHistory: 20 }, null, 2)
           }),
           { type: 'NOOP' }
         ])
@@ -350,7 +349,7 @@ describe('commandsDuck', () => {
 
     test('does the right thing for :style', done => {
       // Given
-      const cmd = `${store.getState().settings.cmdchar}style`
+      const cmd = ':style'
       const cmdString = cmd
       const id = 1
       const action = commands.executeSingleCommand(cmdString, {
@@ -378,7 +377,7 @@ describe('commandsDuck', () => {
     })
 
     test('does the right thing for list queries', done => {
-      const cmd = `${store.getState().settings.cmdchar}queries`
+      const cmd = ':queries'
       const id = 1
       const action = commands.executeSingleCommand(cmd, { id })
 
@@ -433,18 +432,16 @@ describe('commandsDuck', () => {
       // Given
       const comment = '//COMMENT FOR HISTORY'
       const cmdString = 'history'
-      const cmd = `${comment}\n${store.getState().settings.cmdchar}${cmdString}`
+      const cmd = `:${cmdString}`
       const id = 1
       const action = commands.executeSingleCommand(cmd, { id })
-      const cmdChar = store.getState().settings.cmdchar
 
       bus.take('NOOP', currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          getInterpreter(helper.interpret, action.cmd, cmdChar).exec(
+          getInterpreter(helper.interpret, action.cmd).exec(
             Object.assign(action, { cmd: cleanCommand(action.cmd) }),
-            cmdChar,
             a => a,
             store
           ),
@@ -461,7 +458,7 @@ describe('commandsDuck', () => {
     test(':server disconnect produces a DISCONNECT action and a action for a "disconnect" frame', done => {
       // Given
       const serverCmd = 'disconnect'
-      const cmd = `${store.getState().settings.cmdchar}server ${serverCmd}`
+      const cmd = `:server ${serverCmd}`
       const id = 3
       const action = commands.executeSingleCommand(cmd, { id })
       bus.take('NOOP', currentAction => {

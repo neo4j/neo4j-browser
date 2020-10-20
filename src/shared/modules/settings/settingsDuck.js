@@ -73,7 +73,6 @@ const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
   }
 })
 export const getUseNewVisualization = state => state[NAME].useNewVis
-export const getCmdChar = state => state[NAME].cmdchar || initialState.cmdchar
 export const shouldEditorAutocomplete = state =>
   state[NAME].editorAutocomplete !== false
 export const shouldUseCypherThread = state => state[NAME].useCypherThread
@@ -82,7 +81,6 @@ export const getConnectionTimeout = state =>
 export const codeFontLigatures = state => state[NAME].codeFontLigatures
 
 const initialState = {
-  cmdchar: ':',
   maxHistory: 30,
   theme: AUTO_THEME,
   initCmd: ':play start',

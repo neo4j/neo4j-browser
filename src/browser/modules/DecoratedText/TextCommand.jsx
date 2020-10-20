@@ -22,7 +22,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
-import { getCmdChar } from 'shared/modules/settings/settingsDuck'
 
 const ExecutableIcon = styled.i`
   padding-right: 4px;
@@ -42,21 +41,11 @@ const ExecutableText = styled.a`
   background-color: ${props => props.theme.topicBackground};
   color: ${props => props.theme.topicText};
 `
-export const TextCommand = ({ command, onClick, cmdchar, ...rest }) => {
-  return (
-    <ExecutableText {...rest} onClick={() => onClick(`${cmdchar}${command}`)}>
-      <ExecutableIcon className="fa fa-play-circle-o" />
-      {cmdchar}
-      {command}
-    </ExecutableText>
-  )
-}
-
-const mapStateToProps = state => {
-  return {
-    cmdchar: getCmdChar(state)
-  }
-}
+export const TextCommand = ({ command, onClick, ...rest }) => (
+  <ExecutableText {...rest} onClick={() => onClick(`:${command}`)}>
+    <ExecutableIcon className="fa fa-play-circle-o" />:{command}
+  </ExecutableText>
+)
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -64,4 +53,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextCommand)
+export default connect(null, mapDispatchToProps)(TextCommand)

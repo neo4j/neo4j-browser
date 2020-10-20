@@ -37,7 +37,6 @@ jest.mock('shared/modules/settings/settingsDuck', () => {
   const orig = require.requireActual('shared/modules/settings/settingsDuck')
   return {
     ...orig,
-    getCmdChar: () => ':',
     shouldUseCypherThread: () => true
   }
 })

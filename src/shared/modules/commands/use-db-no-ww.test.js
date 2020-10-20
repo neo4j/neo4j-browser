@@ -25,7 +25,7 @@ import { executeSingleCommand, handleSingleCommandEpic } from './commandsDuck'
 import bolt from 'services/bolt/bolt'
 
 jest.mock('services/bolt/transactions', () => {
-  const orig = require.requireActual('services/bolt/transactions')
+  const orig = jest.requireActual('services/bolt/transactions')
   return {
     ...orig,
     routedWriteTransaction: jest.fn(() => [
@@ -34,19 +34,18 @@ jest.mock('services/bolt/transactions', () => {
     ])
   }
 })
-const transactions = require.requireMock('services/bolt/transactions')
+const transactions = jest.requireMock('services/bolt/transactions')
 
 jest.mock('shared/modules/settings/settingsDuck', () => {
-  const orig = require.requireActual('shared/modules/settings/settingsDuck')
+  const orig = jest.requireActual('shared/modules/settings/settingsDuck')
   return {
     ...orig,
-    getCmdChar: () => ':',
     shouldUseCypherThread: () => false
   }
 })
 
 jest.mock('shared/modules/params/paramsDuck', () => {
-  const orig = require.requireActual('shared/modules/params/paramsDuck')
+  const orig = jest.requireActual('shared/modules/params/paramsDuck')
   return {
     ...orig,
     getParams: () => ({})
@@ -54,7 +53,7 @@ jest.mock('shared/modules/params/paramsDuck', () => {
 })
 
 jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
+  const orig = jest.requireActual('shared/modules/dbMeta/dbMetaDuck')
   return {
     ...orig,
     getVersion: () => '4.0.0'

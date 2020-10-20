@@ -25,25 +25,17 @@ import { ErrorView } from './ErrorFrame'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
-// credit: https://testing-library.com/docs/example-react-redux
-
-const initialState = { settings: { cmdchar: ':' } }
-const store = createStore(() => initialState, initialState)
-function renderWithRedux(ui) {
-  return render(<Provider store={store}>{ui}</Provider>)
-}
-
 describe('ErrorFrame', () => {
   test('displays UndefinedError if no error specified', async () => {
     // Given
-    const { getByText } = renderWithRedux(<ErrorView frame={{}} />)
+    const { getByText } = render(<ErrorView frame={{}} />)
 
     // Then
     expect(getByText('UndefinedError')).toBeInTheDocument()
   })
   test('does display an error if info provided', () => {
     // Given
-    const { getByText } = renderWithRedux(
+    const { getByText } = render(
       <ErrorView
         frame={{
           error: {
@@ -61,7 +53,7 @@ describe('ErrorFrame', () => {
   })
   test('does display a known error if only code provided', () => {
     // Given
-    const { getByText } = renderWithRedux(
+    const { getByText } = render(
       <ErrorView
         frame={{
           error: {
