@@ -108,7 +108,7 @@ export function EditorFrame({
     setFullscreen(!isFullscreen)
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [])
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [isFullscreen])
   useEffect(
     () =>
       bus &&
@@ -118,7 +118,7 @@ export function EditorFrame({
           editorRef.current?.setValue('')
         }
       }),
-    []
+    [currentlyEditing]
   )
   useEffect(
     () =>
@@ -129,7 +129,7 @@ export function EditorFrame({
           editorRef.current?.setValue('')
         }
       }),
-    []
+    [currentlyEditing]
   )
 
   useEffect(
