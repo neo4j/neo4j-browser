@@ -49,14 +49,18 @@ export const setContent = newContent => ({
 export const editContent = (
   id,
   message,
-  isProjectFile = false,
-  name,
-  directory
+  {
+    directory = null,
+    name = null,
+    isStatic = false,
+    isProjectFile = false
+  } = {}
 ) => ({
   type: EDIT_CONTENT,
   message,
   id,
   isProjectFile,
+  isStatic,
   name,
   directory
 })
