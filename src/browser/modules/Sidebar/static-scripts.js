@@ -51,7 +51,7 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
   onSelectScript: favorite =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
-      editor.editContent(favorite.id, favorite.contents)
+      editor.editContent(favorite.id, favorite.contents, { isStatic: true })
     ),
   onExecScript: favorite => dispatch(executeCommand(favorite.contents)),
   onExportScripts: Function.prototype,

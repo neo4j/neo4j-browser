@@ -85,6 +85,7 @@ type SavedScript = {
   id: string
   content: string
   isProjectFile: boolean
+  isStatic: boolean
   name?: string
   directory?: string
 }
@@ -137,14 +138,15 @@ export function EditorFrame({
       bus &&
       bus.take(
         EDIT_CONTENT,
-        ({ message, id, isProjectFile, name, directory }) => {
+        ({ message, id, isProjectFile, name, directory, isStatic }) => {
           setUnsaved(false)
           setCurrentlyEditing({
             content: message,
             id,
             isProjectFile,
             name,
-            directory
+            directory,
+            isStatic
           })
           editorRef.current?.setValue(message)
         }
@@ -209,18 +211,24 @@ export function EditorFrame({
     return defaultFavoriteName(content)
   }
 
+  const showUnsaved = !!(
+    unsaved &&
+    currentlyEditing &&
+    !currentlyEditing?.isStatic
+  )
   return (
     <Frame fullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
         <animated.div style={props}>
-          <ScriptTitle unsaved={unsaved}>
+          <ScriptTitle unsaved={showUnsaved}>
             <SVGInline
               svg={currentlyEditing.isProjectFile ? file : update_favorite}
               width="12px"
             />
             {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
             {getName(currentlyEditing)}
-            {unsaved ? '*' : ''}
+            {showUnsaved ? '*' : ''}
+            {currentlyEditing.isStatic ? ' (read-only)' : ''}
           </ScriptTitle>
         </animated.div>
       )}
@@ -235,7 +243,7 @@ export function EditorFrame({
               runCommand={runCommand}
             />
           </EditorContainer>
-          {currentlyEditing && (
+          {currentlyEditing && !currentlyEditing.isStatic && (
             <EditorButton
               data-testid="editor-Favorite"
               onClick={() => {
