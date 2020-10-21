@@ -196,13 +196,11 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
 
       props.bus.send(
         editor.EDIT_CONTENT,
-        editor.editContent(
-          favorite.id,
-          favorite.contents,
-          true,
-          favorite.name,
-          directory
-        )
+        editor.editContent(favorite.id, favorite.contents, {
+          directory,
+          name: favorite.name,
+          isProjectFile: true
+        })
       )
     },
     onExportScripts: Function.prototype,
