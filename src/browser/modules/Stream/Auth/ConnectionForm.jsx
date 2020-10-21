@@ -47,6 +47,7 @@ import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
 import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
+import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
   generateBoltUrl,
   getScheme,
@@ -237,6 +238,7 @@ export class ConnectionForm extends Component {
   saveAndStart() {
     this.setState({ forcePasswordChange: false, used: true })
     this.state.successCallback()
+    this.props.bus.send(FOCUS)
     this.saveCredentials()
     this.props.setActiveConnection(this.state.id)
     if (this.props.playImplicitInitCommands) {
