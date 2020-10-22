@@ -25,7 +25,8 @@ import { ConnectionForm } from './ConnectionForm'
 test('should print correct state for retaining credentials', async () => {
   const bus = {
     //  eslint-disable-next-line
-    self: jest.fn((x, y, cb) => cb({ success: true }))
+    self: jest.fn((x, y, cb) => cb({ success: true })),
+    send: jest.fn()
   }
   const updateConnection = jest.fn()
   const setActiveConnection = jest.fn()
