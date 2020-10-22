@@ -238,7 +238,7 @@ export class ConnectionForm extends Component {
   saveAndStart() {
     this.setState({ forcePasswordChange: false, used: true })
     this.state.successCallback()
-    this.props.bus.send(FOCUS)
+    this.props.bus && this.props.bus.send(FOCUS)
     this.saveCredentials()
     this.props.setActiveConnection(this.state.id)
     if (this.props.playImplicitInitCommands) {
