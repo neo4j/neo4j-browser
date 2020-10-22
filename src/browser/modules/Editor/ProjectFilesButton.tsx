@@ -41,8 +41,8 @@ import {
   EXECUTE_COMMAND_ORIGIN,
   EXECUTE_COMMAND_ORIGINS
 } from 'browser/modules/Sidebar/project-files.constants'
+import { createFilePath } from 'browser/modules/Sidebar/project-files.utils'
 import { useMutation } from '@apollo/client'
-import { isWindows } from '../App/keyboardShortcuts'
 
 const PROJECT_EDITOR_BUTTON_TITLE = 'Project File'
 const PROJECT_SAVE_EDITOR_BUTTON_TITLE = 'Save Project File'
@@ -183,9 +183,10 @@ const ProjectFileButton = ({
                 variables: {
                   projectId,
                   fileUpload: new File([editorValue()], activeRelateFile.name),
-                  destination: isWindows
-                    ? `${activeRelateFile.directory}\\${activeRelateFile.name}`
-                    : `${activeRelateFile.directory}/${activeRelateFile.name}`,
+                  destination: createFilePath([
+                    activeRelateFile.directory,
+                    activeRelateFile.name
+                  ]),
                   overwrite: true
                 }
               })

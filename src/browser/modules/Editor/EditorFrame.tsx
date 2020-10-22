@@ -65,8 +65,10 @@ import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
 } from 'browser/modules/Sidebar/project-files.constants'
-import { isWindows } from '../App/keyboardShortcuts'
-import { setProjectFileDefaultFileName } from 'browser/modules/Sidebar/project-files.utils'
+import {
+  setProjectFileDefaultFileName,
+  createFilePath
+} from 'browser/modules/Sidebar/project-files.utils'
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 
 type EditorFrameProps = {
@@ -256,9 +258,7 @@ export function EditorFrame({
                     variables: {
                       projectId,
                       fileUpload: new File([editorValue], name),
-                      destination: isWindows
-                        ? `${directory}\\${name}`
-                        : `${directory}/${name}`,
+                      destination: createFilePath([directory, name]),
                       overwrite: true
                     }
                   })

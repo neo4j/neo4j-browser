@@ -89,7 +89,9 @@ function NewSavedScript({
       <StyledSubmitButton data-testid="saveScript" type="submit">
         Save
       </StyledSubmitButton>
-      <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>
+      <StyledCancelButton onClick={onCancel} type="button">
+        Cancel
+      </StyledCancelButton>
     </StyledSaveArea>
   )
 }
