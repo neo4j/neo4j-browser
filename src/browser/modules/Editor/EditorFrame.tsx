@@ -26,7 +26,10 @@ import { withBus } from 'react-suber'
 import { useMutation } from '@apollo/client'
 import { withTheme } from 'styled-components'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
-import { updateFavorite } from 'shared/modules/favorites/favoritesDuck'
+import {
+  REMOVE_FAVORITE,
+  updateFavorite
+} from 'shared/modules/favorites/favoritesDuck'
 import { useSpring, animated } from 'react-spring'
 import { Bus } from 'suber'
 import {
@@ -58,9 +61,14 @@ import update_favorite from 'icons/update_favorite.svg'
 import file from 'icons/file.svg'
 import run_icon from 'icons/run_icon.svg'
 import Editor from './Editor'
-import { ADD_PROJECT_FILE } from 'browser/modules/Sidebar/project-files.constants'
-import { isWindows } from '../App/keyboardShortcuts'
-import { setProjectFileDefaultFileName } from 'browser/modules/Sidebar/project-files.utils'
+import {
+  ADD_PROJECT_FILE,
+  REMOVE_PROJECT_FILE
+} from 'browser/modules/Sidebar/project-files.constants'
+import {
+  setProjectFileDefaultFileName,
+  createFilePath
+} from 'browser/modules/Sidebar/project-files.utils'
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 
 type EditorFrameProps = {
@@ -79,6 +87,7 @@ type SavedScript = {
   id: string
   content: string
   isProjectFile: boolean
+  isStatic: boolean
   name?: string
   directory?: string
 }
@@ -102,24 +111,49 @@ export function EditorFrame({
     setFullscreen(!isFullscreen)
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen))
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [isFullscreen])
+  useEffect(
+    () =>
+      bus &&
+      bus.take(REMOVE_FAVORITE, ({ id }) => {
+        if (id === currentlyEditing?.id) {
+          setCurrentlyEditing(null)
+          editorRef.current?.setValue('')
+        }
+      }),
+    [currentlyEditing]
+  )
+  useEffect(
+    () =>
+      bus &&
+      bus.take(REMOVE_PROJECT_FILE, ({ name }) => {
+        if (name === currentlyEditing?.name) {
+          setCurrentlyEditing(null)
+          editorRef.current?.setValue('')
+        }
+      }),
+    [currentlyEditing]
+  )
+
   useEffect(
     () =>
       bus &&
       bus.take(
         EDIT_CONTENT,
-        ({ message, id, isProjectFile, name, directory }) => {
+        ({ message, id, isProjectFile, name, directory, isStatic }) => {
           setUnsaved(false)
           setCurrentlyEditing({
             content: message,
             id,
             isProjectFile,
             name,
-            directory
+            directory,
+            isStatic
           })
           editorRef.current?.setValue(message)
         }
-      )
+      ),
+    []
   )
 
   useEffect(
@@ -129,7 +163,8 @@ export function EditorFrame({
         setUnsaved(false)
         setCurrentlyEditing(null)
         editorRef.current?.setValue(message)
-      })
+      }),
+    []
   )
 
   function discardEditor() {
@@ -178,18 +213,24 @@ export function EditorFrame({
     return defaultFavoriteName(content)
   }
 
+  const showUnsaved = !!(
+    unsaved &&
+    currentlyEditing &&
+    !currentlyEditing?.isStatic
+  )
   return (
     <Frame fullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
         <animated.div style={props}>
-          <ScriptTitle unsaved={unsaved}>
+          <ScriptTitle unsaved={showUnsaved}>
             <SVGInline
               svg={currentlyEditing.isProjectFile ? file : update_favorite}
               width="12px"
             />
             {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
             {getName(currentlyEditing)}
-            {unsaved ? '*' : ''}
+            {showUnsaved ? '*' : ''}
+            {currentlyEditing.isStatic ? ' (read-only)' : ''}
           </ScriptTitle>
         </animated.div>
       )}
@@ -204,7 +245,7 @@ export function EditorFrame({
               runCommand={runCommand}
             />
           </EditorContainer>
-          {currentlyEditing && (
+          {currentlyEditing && !currentlyEditing.isStatic && (
             <EditorButton
               data-testid="editor-Favorite"
               onClick={() => {
@@ -217,9 +258,7 @@ export function EditorFrame({
                     variables: {
                       projectId,
                       fileUpload: new File([editorValue], name),
-                      destination: isWindows
-                        ? `${directory}\\${name}`
-                        : `${directory}/${name}`,
+                      destination: createFilePath([directory, name]),
                       overwrite: true
                     }
                   })

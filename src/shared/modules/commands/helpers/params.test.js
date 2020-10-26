@@ -31,12 +31,11 @@ describe('commandsDuck params helper', () => {
   test('fails on :param x x x and shows error hint', () => {
     // Given
     const action = { cmd: ':param x x x: 2' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
     return params
-      .handleParamsCommand(action, cmdchar, put)
+      .handleParamsCommand(action, put)
       .then(() => {
         throw Error('THIS SHOULD NEVER HAPPEN')
       })
@@ -48,11 +47,10 @@ describe('commandsDuck params helper', () => {
   test('handles :param "x": 2 and calls the update action creator', () => {
     // Given
     const action = { cmd: ':param "x": 2' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, put)
 
     // Then
     return p.then(res => {
@@ -63,11 +61,10 @@ describe('commandsDuck params helper', () => {
   test('handles :param x: 2 and calls the update action creator', () => {
     // Given
     const action = { cmd: ':param x: 2' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, put)
 
     // Then
     return p.then(res => {
@@ -78,11 +75,10 @@ describe('commandsDuck params helper', () => {
   test('handles :params {"hej": "ho", "let\'s": "go"} and calls the replace action creator', () => {
     // Given
     const action = { cmd: ':params {"hej": "ho", "let\'s": "go"}' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, put)
 
     // Then
     return p.then(res => {
@@ -93,11 +89,10 @@ describe('commandsDuck params helper', () => {
   test('handles :params {x: 1, y: 2} and calls the replace action creator', () => {
     // Given
     const action = { cmd: ':params {x: 1, y: 2}' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, put)
 
     // Then
     return p.then(res => {
@@ -108,11 +103,10 @@ describe('commandsDuck params helper', () => {
   test('handles :params {x: 1, y: 2, z: {a: 3}} and calls the replace action creator', () => {
     // Given
     const action = { cmd: ':params {x: 1, y: 2, z: {a: 3}}' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, cmdchar, put)
+    const p = params.handleParamsCommand(action, put)
 
     // Then
     return p.then(res => {

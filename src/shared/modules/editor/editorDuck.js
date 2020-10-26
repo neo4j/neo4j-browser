@@ -36,10 +36,10 @@ export const NOT_SUPPORTED_URL_PARAM_COMMAND = `${NAME}/NOT_SUPPORTED_URL_PARAM_
 
 // Supported commands
 const validCommandTypes = {
-  play: (cmdchar, args) => `${cmdchar}play ${args.join(' ')}`,
-  edit: (_, args) => args.join('\n'),
-  param: (cmdchar, args) => `${cmdchar}param ${args.join(' ')}`,
-  params: (cmdchar, args) => `${cmdchar}params ${args.join(' ')}`
+  play: args => `:play ${args.join(' ')}`,
+  edit: args => args.join('\n'),
+  param: args => `:param ${args.join(' ')}`,
+  params: args => `:params ${args.join(' ')}`
 }
 
 export const setContent = newContent => ({
@@ -49,14 +49,18 @@ export const setContent = newContent => ({
 export const editContent = (
   id,
   message,
-  isProjectFile = false,
-  name,
-  directory
+  {
+    directory = null,
+    name = null,
+    isStatic = false,
+    isProjectFile = false
+  } = {}
 ) => ({
   type: EDIT_CONTENT,
   message,
   id,
   isProjectFile,
+  isStatic,
   name,
   directory
 })
@@ -86,7 +90,6 @@ export const populateEditorFromUrlEpic = (some$, store) => {
       }
 
       const commandType = cmdParam[0]
-      const cmdchar = getSettings(store.getState()).cmdchar
       // Credits to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent
       // for the "decodeURIComponent cannot be used directly to parse query parameters"
       const cmdArgs =
@@ -94,7 +97,7 @@ export const populateEditorFromUrlEpic = (some$, store) => {
           'arg',
           decodeURIComponent(action.url.replace(/\+/g, ' '))
         ) || []
-      const fullCommand = validCommandTypes[commandType](cmdchar, cmdArgs)
+      const fullCommand = validCommandTypes[commandType](cmdArgs)
 
       // Play command is considered safe and can run automatically
       // When running the explicit command, also set flag to skip any implicit init commands

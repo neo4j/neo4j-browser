@@ -48,11 +48,10 @@ describe('commandsDuck config helper', () => {
   test('fails on :config x x x and shows error hint', () => {
     // Given
     const action = { cmd: ':config x x x: 2' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return expect(p)
@@ -66,11 +65,10 @@ describe('commandsDuck config helper', () => {
   test('handles :config "x": 2 and calls the update action creator', () => {
     // Given
     const action = { cmd: ':config "x": 2' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return p.then(res => {
@@ -81,11 +79,10 @@ describe('commandsDuck config helper', () => {
   test('handles :config x: 2 and calls the update action creator', () => {
     // Given
     const action = { cmd: ':config x: 2' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return p.then(res => {
@@ -96,11 +93,10 @@ describe('commandsDuck config helper', () => {
   test('handles :config "x y": 2 and calls the update action creator', () => {
     // Given
     const action = { cmd: ':config "x y": 2' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return p.then(res => {
@@ -111,11 +107,10 @@ describe('commandsDuck config helper', () => {
   test('handles :config {"hej": "ho", "let\'s": "go"} and calls the replace action creator', () => {
     // Given
     const action = { cmd: ':config {"hej": "ho", "let\'s": "go"}' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return p.then(res => {
@@ -126,11 +121,10 @@ describe('commandsDuck config helper', () => {
   test('handles :config {x: 1, y: 2} and calls the replace action creator', () => {
     // Given
     const action = { cmd: ':config {x: 1, y: 2}' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return p.then(res => {
@@ -141,11 +135,10 @@ describe('commandsDuck config helper', () => {
   test('rejects hostnames not in allowlist', () => {
     // Given
     const action = { cmd: ':config https://bad.com/cnf.json' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return expect(p)
@@ -157,7 +150,6 @@ describe('commandsDuck config helper', () => {
   test('allowlist and whitelist both update allowlist', () => {
     // Given
     const action = { cmd: ':config https://okurl.com/cnf.json' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     const updatedStore = {
@@ -171,12 +163,7 @@ describe('commandsDuck config helper', () => {
       })
     }
     // When
-    const p = config.handleUpdateConfigCommand(
-      action,
-      cmdchar,
-      put,
-      updatedStore
-    )
+    const p = config.handleUpdateConfigCommand(action, put, updatedStore)
 
     // Then
     return expect(p)
@@ -192,11 +179,10 @@ describe('commandsDuck config helper', () => {
       .get('/cnf.json')
       .reply(200, json)
     const action = { cmd: ':config https://okurl.com/cnf.json' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return p.then(res => {
@@ -211,11 +197,10 @@ describe('commandsDuck config helper', () => {
       .get('/cnf.json')
       .reply(200, json)
     const action = { cmd: ':config https://okurl.com/cnf.json' }
-    const cmdchar = ':'
     const put = jest.fn()
 
     // When
-    const p = config.handleUpdateConfigCommand(action, cmdchar, put, store)
+    const p = config.handleUpdateConfigCommand(action, put, store)
 
     // Then
     return expect(p)

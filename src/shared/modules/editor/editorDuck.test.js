@@ -38,11 +38,7 @@ describe('editorDuck Epics', () => {
     createReduxMiddleware(bus)
   ])
   beforeAll(() => {
-    store = mockStore({
-      settings: {
-        cmdchar: ':'
-      }
-    })
+    store = mockStore()
   })
   afterEach(() => {
     bus.reset()

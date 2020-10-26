@@ -27,6 +27,7 @@ import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
 import Favorites from './favorites'
+import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer'
@@ -61,6 +62,7 @@ interface SidebarProps {
   openDrawer: string
   onNavClick: () => void
   neo4jConnectionState: string
+  showStaticScripts: boolean
   syncConnected: boolean
   loadSync: boolean
   isRelateAvailable: boolean
@@ -73,6 +75,7 @@ const Sidebar = ({
   openDrawer,
   onNavClick,
   neo4jConnectionState,
+  showStaticScripts,
   syncConnected,
   loadSync,
   isRelateAvailable,
@@ -131,6 +134,7 @@ const Sidebar = ({
               />
             )}
             <Favorites />
+            {showStaticScripts && <StaticScripts />}
           </>
         )
       }
@@ -221,6 +225,7 @@ const mapStateToProps = (state: any) => {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
     loadSync: useBrowserSync(state),
+    showStaticScripts: state.settings.showSampleScripts,
     isRelateAvailable: isRelateAvailable(state),
     scriptDraft: getCurrentDraft(state)
   }

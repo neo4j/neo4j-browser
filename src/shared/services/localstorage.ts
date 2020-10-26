@@ -18,13 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dehydrate } from 'services/duckUtils'
+import { Middleware } from 'redux'
+import { shouldRetainConnectionCredentials } from '../modules/dbMeta/dbMetaDuck'
+import { GlobalState } from '../modules/stream/streamDuck'
 
-export let keyPrefix = 'neo4j.'
+export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
-const keys = []
+const keys: string[] = []
 
-export function getItem(key) {
+export function getItem(key: string): Record<string, unknown> | undefined {
   try {
     const serializedVal = storage.getItem(keyPrefix + key)
     if (serializedVal === null) return undefined
@@ -35,7 +37,7 @@ export function getItem(key) {
   }
 }
 
-export function setItem(key, val) {
+export function setItem(key: string, val: unknown): boolean {
   try {
     const serializedVal = JSON.stringify(val)
     storage.setItem(keyPrefix + key, serializedVal)
@@ -45,14 +47,13 @@ export function setItem(key, val) {
   }
 }
 
-export function getAll() {
-  const out = {}
+export function getAll(): Record<string, unknown> {
+  const out: Record<string, unknown> = {}
   keys.forEach(key => {
     const current = getItem(key)
     if (current !== undefined) {
       if (key === 'settings') {
-        const { playImplicitInitCommands, ...otherSettings } = current
-        out[key] = { ...otherSettings, playImplicitInitCommands: true }
+        out[key] = { ...current, playImplicitInitCommands: true }
       } else {
         out[key] = current
       }
@@ -61,19 +62,39 @@ export function getAll() {
   return out
 }
 
-export const clear = () => storage.clear()
-
-export function createReduxMiddleware() {
+export function createReduxMiddleware(): Middleware {
   return store => next => action => {
     const result = next(action)
-    const state = store.getState()
-    keys.forEach(key => setItem(key, dehydrate(state[key])))
+    const state = (store.getState() as unknown) as GlobalState
+
+    keys.forEach(key => {
+      if (key === 'connections' && !shouldRetainConnectionCredentials(state)) {
+        // if browser.retain_connection_credentials is not true, overwrite password value on all connections
+        setItem(key, {
+          ...state[key],
+          connectionsById: Object.assign(
+            {},
+            ...Object.entries(state[key].connectionsById).map(
+              ([id, connection]) => ({
+                [id]: {
+                  ...(connection as Record<string, unknown>),
+                  password: ''
+                }
+              })
+            )
+          )
+        })
+      } else {
+        setItem(key, state[key])
+      }
+    })
     return result
   }
 }
 
-export function applyKeys() {
-  Array.from(arguments).forEach(arg => keys.push(arg))
+export function applyKeys(...newKeys: string[]): void {
+  keys.push(...newKeys)
 }
-export const setPrefix = p => (keyPrefix = p)
-export const setStorage = s => (storage = s)
+export const setStorage = (s: Storage): void => {
+  storage = s
+}

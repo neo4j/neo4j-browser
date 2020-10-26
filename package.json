@@ -1,6 +1,6 @@
 {
   "name": "neo4j-browser",
-  "version": "4.1.2",
+  "version": "4.1.3",
   "description": "Neo4j Browser is the general purpose user interface for working with Neo4j. Query, visualize, administrate and monitor the database.",
   "neo4jDesktop": {
     "apiVersion": "^1.4.0"
@@ -28,7 +28,6 @@
     "e2e-local": "CYPRESS_E2E_TEST_ENV=\"local\" cypress run",
     "e2e-local-open": "CYPRESS_E2E_TEST_ENV=\"local\" cypress open",
     "format": "prettier-eslint --write 'src/**/!(*.min).{js,jsx,ts,tsx,css,json}' 'e2e_tests/**/*.{js,jsx,ts,tsx,css,json}' 'scripts/**/*.{js,jsx,ts,tsx,css,json}' 'build_scripts/**/*.{js,jsx,ts,tsx,css,json}'",
-    "jar": "yarn build && mvn package",
     "jest": "jest --coverage",
     "lint": "eslint --fix --ext .js --ext .jsx --ext .ts --ext .tsx ./",
     "precommit": "lint-staged",

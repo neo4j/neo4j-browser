@@ -33,7 +33,6 @@ import {
   getInitCmd,
   getPlayImplicitInitCommands,
   getSettings,
-  getCmdChar,
   getConnectionTimeout
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
@@ -433,9 +432,7 @@ export const startupConnectionSuccessEpic = (action$, store) => {
     .ofType(STARTUP_CONNECTION_SUCCESS)
     .do(() => {
       if (getPlayImplicitInitCommands(store.getState())) {
-        store.dispatch(
-          executeSystemCommand(`${getCmdChar(store.getState())}server status`)
-        )
+        store.dispatch(executeSystemCommand(`:server status`))
         store.dispatch(executeSystemCommand(getInitCmd(store.getState())))
       }
     })
@@ -446,9 +443,7 @@ export const startupConnectionFailEpic = (action$, store) => {
     .ofType(STARTUP_CONNECTION_FAILED)
     .do(() => {
       if (getPlayImplicitInitCommands(store.getState())) {
-        store.dispatch(
-          executeSystemCommand(`${getCmdChar(store.getState())}server connect`)
-        )
+        store.dispatch(executeSystemCommand(`:server connect`))
       }
     })
     .mapTo({ type: 'NOOP' })
@@ -493,11 +488,7 @@ export const silentDisconnectEpic = (action$, store) => {
 export const disconnectSuccessEpic = (action$, store) => {
   return action$
     .ofType(DISCONNECTION_SUCCESS)
-    .mapTo(
-      executeSystemCommand(
-        `${getSettings(store.getState()).cmdchar}server connect`
-      )
-    )
+    .mapTo(executeSystemCommand(':server connect'))
 }
 export const connectionLostEpic = (action$, store) =>
   action$
@@ -619,19 +610,13 @@ export const switchConnectionSuccessEpic = (action$, store) => {
     .ofType(SWITCH_CONNECTION_SUCCESS)
     .do(() => store.dispatch(updateConnectionState(CONNECTED_STATE)))
     .do(() => store.dispatch(fetchMetaData()))
-    .mapTo(
-      executeSystemCommand(
-        `${getCmdChar(store.getState())}server switch success`
-      )
-    )
+    .mapTo(executeSystemCommand(':server switch success'))
 }
 export const switchConnectionFailEpic = (action$, store) => {
   return action$
     .ofType(SWITCH_CONNECTION_FAILED)
     .do(() => store.dispatch(updateConnectionState(DISCONNECTED_STATE)))
-    .mapTo(
-      executeSystemCommand(`${getCmdChar(store.getState())}server switch fail`)
-    )
+    .mapTo(executeSystemCommand(`:server switch fail`))
 }
 export const initialSwitchConnectionFailEpic = (action$, store) => {
   return action$
@@ -639,11 +624,7 @@ export const initialSwitchConnectionFailEpic = (action$, store) => {
     .do(() => {
       store.dispatch(updateConnectionState(DISCONNECTED_STATE))
       if (getPlayImplicitInitCommands(store.getState())) {
-        store.dispatch(
-          executeSystemCommand(
-            `${getCmdChar(store.getState())}server switch fail`
-          )
-        )
+        store.dispatch(executeSystemCommand(`:server switch fail`))
       }
     })
     .mapTo({ type: 'NOOP' })

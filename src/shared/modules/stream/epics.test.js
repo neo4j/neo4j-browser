@@ -37,7 +37,6 @@ describe('streamDuckEpics', () => {
   beforeAll(() => {
     store = mockStore({
       settings: {
-        cmdchar: ':',
         maxFrames: 50
       },
       frames: {

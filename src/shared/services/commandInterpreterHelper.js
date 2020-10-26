@@ -86,7 +86,6 @@ import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass, objToCss } from 'shared/services/grassUtils'
 import {
   shouldUseCypherThread,
-  getCmdChar,
   getSettings
 } from 'shared/modules/settings/settingsDuck'
 import {
@@ -106,14 +105,14 @@ const availableCommands = [
   {
     name: 'clear',
     match: cmd => cmd === 'clear',
-    exec(action, cmdchar, put) {
+    exec(action, put) {
       put(frames.clear())
     }
   },
   {
     name: 'noop',
     match: cmd => /^noop$/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -127,14 +126,14 @@ const availableCommands = [
   {
     name: 'config',
     match: cmd => /^config(\s|$)/.test(cmd),
-    exec(action, cmdchar, put, store) {
-      handleUpdateConfigCommand(action, cmdchar, put, store)
+    exec(action, put, store) {
+      handleUpdateConfigCommand(action, put, store)
         .then(res => {
           put(
             frames.add({
               useDb: getUseDb(store.getState()),
               ...action,
-              ...handleGetConfigCommand(action, cmdchar, store)
+              ...handleGetConfigCommand(action, store)
             })
           )
         })
@@ -146,13 +145,8 @@ const availableCommands = [
   {
     name: 'set-params',
     match: cmd => /^params?\s/.test(cmd),
-    exec(action, cmdchar, put, store) {
-      return handleParamsCommand(
-        action,
-        cmdchar,
-        put,
-        getUseDb(store.getState())
-      )
+    exec(action, put, store) {
+      return handleParamsCommand(action, put, getUseDb(store.getState()))
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
@@ -179,7 +173,7 @@ const availableCommands = [
                   type: 'Syntax Error',
                   message: error.message.replace(/^Error: /, '')
                 },
-                showHelpForCmd: getParamName(action, cmdchar),
+                showHelpForCmd: getParamName(action),
                 type: 'error'
               })
             )
@@ -192,7 +186,7 @@ const availableCommands = [
   {
     name: 'params',
     match: cmd => /^params$/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -206,8 +200,8 @@ const availableCommands = [
   {
     name: 'use-db',
     match: cmd => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
-    async exec(action, cmdchar, put, store) {
-      const [dbName] = getCommandAndParam(action.cmd.substr(cmdchar.length))
+    async exec(action, put, store) {
+      const [dbName] = getCommandAndParam(action.cmd.substr(1))
       try {
         const supportsMultiDb = await bolt.hasMultiDbSupport()
         if (!supportsMultiDb) {
@@ -274,7 +268,7 @@ const availableCommands = [
   {
     name: 'reset-db',
     match: cmd => new RegExp(`^${useDbCommand}$`).test(cmd),
-    async exec(action, cmdchar, put, store) {
+    async exec(action, put, store) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(useDb(null))
@@ -304,7 +298,7 @@ const availableCommands = [
   {
     name: 'dbs',
     match: cmd => new RegExp(`^${listDbsCommand}$`).test(cmd),
-    async exec(action, cmdchar, put, store) {
+    async exec(action, put, store) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(
@@ -333,7 +327,7 @@ const availableCommands = [
   {
     name: 'schema',
     match: cmd => /^schema$/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -347,7 +341,7 @@ const availableCommands = [
   {
     name: 'client-debug',
     match: cmd => /^debug$/.test(cmd),
-    exec: function(action, cmdchar, put, store) {
+    exec: function(action, put, store) {
       const out = {
         userCapabilities: getUserCapabilities(store.getState()),
         serverConfig: getAvailableSettings(store.getState()),
@@ -366,7 +360,7 @@ const availableCommands = [
   {
     name: 'sysinfo',
     match: cmd => /^sysinfo$/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -381,15 +375,12 @@ const availableCommands = [
     match: cmd =>
       /^cypher$/.test(cmd) ||
       new RegExp(`^${autoCommitTxCommand}`, 'i').test(cmd),
-    exec: (action, cmdchar, put, store) => {
+    exec: (action, put, store) => {
       const state = store.getState()
 
       // Since we now also handle queries with the :auto prefix, we need to strip that
       // and attach to the actions object
-      const query = action.cmd.replace(
-        getCmdChar(state) + autoCommitTxCommand,
-        ''
-      )
+      const query = action.cmd.replace(`:${autoCommitTxCommand}`, '')
       action.query = query.trim()
 
       // We need to find out if this is an auto-committing tx or not
@@ -444,8 +435,8 @@ const availableCommands = [
   {
     name: 'server',
     match: cmd => /^server(\s)/.test(cmd),
-    exec: (action, cmdchar, put, store) => {
-      const response = handleServerCommand(action, cmdchar, put, store)
+    exec: (action, put, store) => {
+      const response = handleServerCommand(action, put, store)
       if (response && response.then) {
         response.then(res => {
           if (res) {
@@ -473,7 +464,7 @@ const availableCommands = [
   {
     name: 'play-remote',
     match: cmd => /^play(\s|$)https?/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       let id
       // We have a frame that generated this command
       if (action.id) {
@@ -490,7 +481,7 @@ const availableCommands = [
         }
       }
 
-      const url = action.cmd.substr(cmdchar.length + 'play '.length)
+      const url = action.cmd.substr(':play '.length)
       const urlObject = new URL(url)
       urlObject.href = url
       const filenameExtension = urlObject.pathname.includes('.')
@@ -532,7 +523,7 @@ const availableCommands = [
   {
     name: 'play',
     match: cmd => /^play(\s|$)/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       let id
       // We have a frame that generated this command
       if (action.id) {
@@ -563,7 +554,7 @@ const availableCommands = [
   {
     name: 'history',
     match: cmd => /^history(\s+clear)?/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       const match = action.cmd.match(/^:history(\s+clear)?/)
       if (match[0] !== match.input) {
         return put(
@@ -594,7 +585,7 @@ const availableCommands = [
   {
     name: 'queries',
     match: cmd => cmd === 'queries',
-    exec: (action, cmdchar, put, store) => {
+    exec: (action, put, store) => {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -608,7 +599,7 @@ const availableCommands = [
   {
     name: 'help',
     match: cmd => /^(help|\?)(\s|$)/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       const HELP_FRAME_TYPE = 'help'
       let id
 
@@ -639,7 +630,7 @@ const availableCommands = [
   {
     name: 'http',
     match: cmd => /^(get|post|put|delete|head)/i.test(cmd),
-    exec: (action, cmdchar, put, store) => {
+    exec: (action, put, store) => {
       return parseHttpVerbCommand(action.cmd)
         .then(r => {
           const hostedUrl = getHostedUrl(store.getState())
@@ -709,7 +700,7 @@ const availableCommands = [
   {
     name: 'style',
     match: cmd => /^style(\s|$)/.test(cmd),
-    exec(action, cmdchar, put, store) {
+    exec(action, put, store) {
       const param = action.cmd
         .trim()
         .split(':style')[1]
@@ -791,7 +782,7 @@ ${param}`)
   {
     name: 'edit',
     match: cmd => cmd.startsWith('edit'),
-    exec: (action, cmdchar, put) => {
+    exec: (action, put) => {
       put(
         frames.add({
           ...action,
@@ -804,7 +795,7 @@ ${param}`)
   {
     name: 'catch-all',
     match: () => true,
-    exec: (action, cmdchar, put, store) => {
+    exec: (action, put, store) => {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),

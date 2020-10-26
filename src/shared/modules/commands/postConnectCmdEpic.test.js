@@ -40,7 +40,6 @@ describe('postConnectCmdEpic', () => {
     const command = 'play hello'
     const store = mockStoreLocal({
       settings: {
-        cmdchar: ':',
         playImplicitInitCommands: true
       },
       meta: {
@@ -81,7 +80,6 @@ describe('postConnectCmdEpic', () => {
     ])
     const store = mockStoreLocal({
       settings: {
-        cmdchar: ':',
         playImplicitInitCommands: true
       },
       meta: {
@@ -119,9 +117,7 @@ describe('postConnectCmdEpic', () => {
       createReduxMiddleware(bus)
     ])
     const store = mockStoreLocal({
-      settings: {
-        cmdchar: ':'
-      },
+      settings: {},
       history: {
         history: [':xxx']
       },

@@ -26,11 +26,11 @@ describe('localstorage', () => {
     const givenKey = 'myKey'
     const givenVal = 'myVal'
     const storage = {
-      getItem: key => {
+      getItem: (key: string) => {
         expect(key).toEqual(ls.keyPrefix + givenKey)
         return JSON.stringify(givenVal)
       }
-    }
+    } as Storage
     ls.setStorage(storage)
 
     // When
@@ -49,7 +49,7 @@ describe('localstorage', () => {
         expect(key).toEqual(ls.keyPrefix + givenKey)
         expect(val).toEqual(JSON.stringify(givenVal))
       }
-    }
+    } as Storage
     ls.setStorage(storage)
 
     // When
@@ -68,9 +68,11 @@ describe('localstorage', () => {
     }
     const storage = {
       getItem: key => {
-        return JSON.stringify(vals[key.substring(ls.keyPrefix.length)])
+        return JSON.stringify(
+          vals[key.substring(ls.keyPrefix.length) as 'key1' | 'key2']
+        )
       }
-    }
+    } as Storage
     ls.applyKeys(...keys)
     ls.setStorage(storage)
 
@@ -83,14 +85,68 @@ describe('localstorage', () => {
 
   it('returns "settings" with the playImplicitInitCommands flag set true', () => {
     ls.applyKeys('settings')
-    ls.setStorage({
+    ls.setStorage(({
       getItem: () => JSON.stringify({})
-    })
+    } as Partial<Storage>) as Storage)
 
     expect(ls.getAll()).toEqual(
       expect.objectContaining({
         settings: { playImplicitInitCommands: true }
       })
     )
+  })
+
+  describe('localstorage redux middleware', () => {
+    const createAndInvokeMiddlewareWithRetainFlag = (retain: boolean) => {
+      const setItemMock = jest.fn()
+      ls.applyKeys('connections')
+      ls.setStorage(({
+        setItem: setItemMock
+      } as Partial<Storage>) as Storage)
+
+      const state = {
+        connections: {
+          connectionsById: { $$discovery: { password: 'secret password' } }
+        },
+        meta: {
+          settings: {
+            'browser.retain_connection_credentials': retain
+          }
+        }
+      }
+
+      const store = {
+        getState: () => state,
+        dispatch: jest.fn()
+      }
+      const next = jest.fn(action => action)
+      const action = { type: 'some action' }
+
+      ls.createReduxMiddleware()(store)(next)(action)
+
+      return setItemMock
+    }
+
+    it('removes passwords from connection data if browser.retain_connection_credentials is false', () => {
+      const setItemMock = createAndInvokeMiddlewareWithRetainFlag(false)
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        'neo4j.connections',
+        JSON.stringify({
+          connectionsById: { $$discovery: { password: '' } }
+        })
+      )
+    })
+
+    it('retains passwords in connection data if browser.retain_connection_credentials is true', () => {
+      const setItemMock = createAndInvokeMiddlewareWithRetainFlag(true)
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        'neo4j.connections',
+        JSON.stringify({
+          connectionsById: { $$discovery: { password: 'secret password' } }
+        })
+      )
+    })
   })
 })

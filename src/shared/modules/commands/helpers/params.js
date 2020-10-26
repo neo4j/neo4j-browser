@@ -68,20 +68,20 @@ const resolveAndStoreJsonValue = (param, put) => {
   }
 }
 
-export const getParamName = (input, cmdchar) => {
-  const strippedCmd = input.cmd.substr(cmdchar.length)
+export const getParamName = input => {
+  const strippedCmd = input.cmd.substr(1)
   const parts = splitStringOnFirst(strippedCmd, ' ')
 
   return parts[0].trim()
 }
 
-export const handleParamsCommand = (action, cmdchar, put, targetDb) => {
+export const handleParamsCommand = (action, put, targetDb) => {
   if (targetDb === SYSTEM_DB) {
     return Promise.reject(
       new Error('Parameters cannot be declared when using system database.')
     )
   }
-  const strippedCmd = action.cmd.substr(cmdchar.length)
+  const strippedCmd = action.cmd.substr(1)
   const parts = splitStringOnFirst(strippedCmd, ' ')
   const param = parts[1].trim()
 

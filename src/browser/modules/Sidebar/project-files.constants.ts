@@ -63,7 +63,7 @@ export interface Favorite {
   name: string
   path: string
   contents: string
-  directory?: string
+  directory: string
 }
 
 export interface ProjectFilesResult {

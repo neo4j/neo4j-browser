@@ -36,7 +36,6 @@ import {
 import helper from 'services/commandInterpreterHelper'
 import { addHistory } from '../history/historyDuck'
 import {
-  getCmdChar,
   getMaxHistory,
   getPlayImplicitInitCommands,
   shouldEnableMultiStatementMode
@@ -182,7 +181,6 @@ export const handleCommandEpic = (action$, store) =>
       store.dispatch(
         addFrame({ type: 'cypher-script', id: parentId, cmd: action.cmd })
       )
-      const cmdchar = getCmdChar(store.getState())
       const jobs = statements.map(cmd => {
         const cleanCmd = cleanCommand(cmd)
         const requestId = v4()
@@ -193,12 +191,11 @@ export const handleCommandEpic = (action$, store) =>
         )
 
         // Ignore client commands that aren't allowlisted
-        const ignore = cleanCmd.startsWith(cmdchar) && !isAllowlisted
+        const ignore = cleanCmd.startsWith(':') && !isAllowlisted
 
         const { action, interpreted } = buildCommandObject(
           { cmd: cleanCmd, ignore },
-          helper.interpret,
-          getCmdChar(store.getState())
+          helper.interpret
         )
         action.requestId = requestId
         action.parentId = parentId
@@ -208,8 +205,7 @@ export const handleCommandEpic = (action$, store) =>
         )
         store.dispatch(updateQueryResult(requestId, null, 'waiting'))
         return {
-          workFn: () =>
-            interpreted.exec(action, cmdchar, store.dispatch, store),
+          workFn: () => interpreted.exec(action, store.dispatch, store),
           onStart: () => {},
           onSkip: () =>
             store.dispatch(updateQueryResult(requestId, null, 'skipped'))
@@ -224,10 +220,8 @@ export const handleSingleCommandEpic = (action$, store) =>
   action$
     .ofType(SINGLE_COMMAND_QUEUED)
     .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
-    .map(action =>
-      buildCommandObject(action, helper.interpret, getCmdChar(store.getState()))
-    )
-    .mergeMap(({ action, interpreted, cmdchar }) => {
+    .map(action => buildCommandObject(action, helper.interpret))
+    .mergeMap(({ action, interpreted }) => {
       return new Promise((resolve, reject) => {
         const noop = { type: 'NOOP' }
         if (!(action.cmd || '').trim().length) {
@@ -238,7 +232,7 @@ export const handleSingleCommandEpic = (action$, store) =>
           action.cmd = cleanCommand(action.cmd)
         }
         action.ts = new Date().getTime()
-        const res = interpreted.exec(action, cmdchar, store.dispatch, store)
+        const res = interpreted.exec(action, store.dispatch, store)
         if (!res || !res.then) {
           resolve(noop)
         } else {
@@ -258,7 +252,6 @@ export const postConnectCmdEpic = (some$, store) =>
       .map(() => {
         const serverSettings = getAvailableSettings(store.getState())
         if (serverSettings && serverSettings['browser.post_connect_cmd']) {
-          const cmdchar = getCmdChar(store.getState())
           const cmds = extractPostConnectCommandsFromServerConfig(
             serverSettings['browser.post_connect_cmd']
           )
@@ -267,7 +260,7 @@ export const postConnectCmdEpic = (some$, store) =>
           )
           if (playImplicitInitCommands && cmds !== undefined) {
             cmds.forEach(cmd => {
-              store.dispatch(executeSystemCommand(`${cmdchar}${cmd}`))
+              store.dispatch(executeSystemCommand(`:${cmd}`))
             })
           }
         }

@@ -21,7 +21,7 @@ import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
 import MyScripts from '@relate-by-ui/saved-scripts'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
-import { filter, size, omit } from 'lodash-es'
+import { filter, size } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
@@ -30,7 +30,8 @@ import {
   ProjectFilesQueryVars,
   ProjectFileMutationVars,
   mapProjectFileToFavorites,
-  updateCacheRemoveProjectFile
+  updateCacheRemoveProjectFile,
+  createFilePath
 } from './project-files.utils'
 import {
   Favorite,
@@ -45,7 +46,6 @@ import {
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
 import { StyledErrorListContainer } from './styled'
-import { isWindows } from 'browser/modules/App/keyboardShortcuts'
 
 interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
@@ -160,28 +160,18 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   }, [data, refetch])
 
   const myScriptsProps = {
-    ...omit(props, [
-      'bus',
-      'projectId',
-      'relateApiToken',
-      'neo4jDesktopGraphAppId',
-      'relateUrl'
-    ]),
+    onExecScript: props.onExecScript,
     scripts: projectFiles,
     isProjectFiles: true,
     scriptsNamespace: DOT,
     title: 'Cypher files',
     onRemoveScript: async (favorite: Favorite) => {
-      const directory =
-        favorite.path.length == 1 && favorite.path === DOT
-          ? DOT
-          : favorite.path.substring(1) // remove DOT from path
-      const filePath = isWindows
-        ? `${directory}\\${favorite.name}`
-        : `${directory}/${favorite.name}`
       try {
         const { data } = await removeFile({
-          variables: ProjectFileMutationVars(filePath, props.projectId),
+          variables: ProjectFileMutationVars(
+            createFilePath([favorite.directory, favorite.name]),
+            props.projectId
+          ),
           update: (cache, result) =>
             updateCacheRemoveProjectFile(cache, result, props.projectId)
         })
@@ -202,13 +192,11 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
 
       props.bus.send(
         editor.EDIT_CONTENT,
-        editor.editContent(
-          favorite.id,
-          favorite.contents,
-          true,
-          favorite.name,
-          directory
-        )
+        editor.editContent(favorite.id, favorite.contents, {
+          directory,
+          name: favorite.name,
+          isProjectFile: true
+        })
       )
     },
     onExportScripts: Function.prototype,
