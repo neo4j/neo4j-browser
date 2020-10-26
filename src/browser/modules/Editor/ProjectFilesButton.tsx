@@ -166,7 +166,7 @@ const ProjectFileButton = ({
       bus.send(SAVE_PROJECT_FILE, editorValue())
       setSaveModeClick(false)
     }
-  }, [bus, isSaveModeClick, isProjectFilesMounted])
+  }, [bus, isSaveModeClick, isProjectFilesMounted, editorValue])
 
   if (!isRelateAvailable) return null
 

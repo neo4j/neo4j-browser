@@ -151,7 +151,12 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
     return () => {
       isStillMounted = false
     }
-  }, [data])
+  }, [
+    data,
+    props.relateApiToken,
+    props.neo4jDesktopGraphAppId,
+    props.relateUrl
+  ])
 
   useEffect(() => {
     if (data && refetch) {

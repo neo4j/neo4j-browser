@@ -35,7 +35,7 @@ import NewSavedScript from './NewSavedScript'
 import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
-import { useBrowserSync } from 'shared/modules/features/featuresDuck'
+import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
@@ -224,7 +224,7 @@ const mapStateToProps = (state: any) => {
   return {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
-    loadSync: useBrowserSync(state),
+    loadSync: utilizeBrowserSync(state),
     showStaticScripts: state.settings.showSampleScripts,
     isRelateAvailable: isRelateAvailable(state),
     scriptDraft: getCurrentDraft(state)

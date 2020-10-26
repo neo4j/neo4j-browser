@@ -45,7 +45,7 @@ export const isMultiDatabase = state =>
 export const canAssignRolesToUser = state =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
 export const hasClientConfig = state => state[NAME].clientConfig
-export const useBrowserSync = state => !!state[NAME].browserSync
+export const utilizeBrowserSync = state => !!state[NAME].browserSync
 export const getUserCapabilities = state => state[NAME].userCapabilities
 
 export const USER_CAPABILITIES = {
@@ -69,7 +69,7 @@ export default function(state = initialState, action) {
       return {
         ...initialState,
         ...state,
-        browserSync: shouldUseBrowserSync(action)
+        browserSync: shouldUtilizeBrowserSync(action)
       }
     case UPDATE_ALL_FEATURES:
       return { ...state, availableProcedures: [...action.availableProcedures] }
@@ -91,7 +91,7 @@ export default function(state = initialState, action) {
 }
 
 // Helper functions
-const shouldUseBrowserSync = action => {
+const shouldUtilizeBrowserSync = action => {
   return ![DESKTOP, CLOUD].includes(action.env)
 }
 

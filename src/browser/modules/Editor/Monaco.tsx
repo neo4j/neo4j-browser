@@ -105,6 +105,7 @@ const Monaco = ({
     return () => {
       editorRef.current?.dispose()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Update theme when setting is changed
@@ -115,6 +116,7 @@ const Monaco = ({
   // Trigger update when multi statement setting is changed to update warnings
   useEffect(() => {
     onContentUpdate()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableMultiStatementMode])
 
   // Share current text with parent and add warnings
