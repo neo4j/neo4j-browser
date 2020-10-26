@@ -156,7 +156,7 @@ multiline comment
 // comment
 
 // comment
-/*cmnt*/:${autoCommitTxCommand} RETURN 1`
+/*:auto*/:${autoCommitTxCommand} RETURN ":auto"`
     )
     action.$$responseChannel = $$responseChannel
 
@@ -171,7 +171,7 @@ multiline comment
 // comment
 
 // comment
-/*cmnt*/ RETURN 1`,
+/*:auto*/RETURN ":auto"`,
         {},
         expect.objectContaining({
           autoCommit: true
