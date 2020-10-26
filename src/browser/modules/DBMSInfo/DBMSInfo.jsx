@@ -87,6 +87,7 @@ export function DBMSInfo(props) {
           totalNumItems={relationshipTypes.length}
           onMoreClick={onMoreClick('relationships', relationshipsMax)}
           moreStep={moreStep}
+          graphStyleData={props.graphStyleData}
         />
         <PropertyItems
           properties={properties.slice(0, propertiesMax).map(l => l.val)}
